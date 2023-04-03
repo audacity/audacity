@@ -195,7 +195,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    ParseFile();
 
    if (!mOK && mInitError.empty())
-      mInitError = XO("Ill-formed Nyquist plug-in header");   
+      mInitError = XO("Ill-formed Nyquist plug-in header");
 }
 
 NyquistEffect::~NyquistEffect()
@@ -2962,11 +2962,11 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                                           .ReadOnly(false);
 
                   NumericTextCtrl *time = safenew
-                     NumericTextCtrl(S.GetParent(), (ID_Time + i),
-                                     NumericConverter::TIME,
+                     NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                                     S.GetParent(), (ID_Time + i),
+                                     NumericConverterType_TIME,
                                      GetSelectionFormat(),
                                      ctrl.val,
-                                     mProjectRate,
                                      options);
                   S
                      .Name( prompt )

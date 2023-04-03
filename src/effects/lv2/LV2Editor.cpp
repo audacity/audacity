@@ -416,9 +416,10 @@ bool LV2Editor::BuildPlain(EffectSettingsAccess &access)
          auto item = safenew wxStaticText(w, 0, _("&Duration:"));
          sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
          auto &extra = settings.extra;
-         mDuration = safenew NumericTextCtrl(w, ID_Duration,
-            NumericConverter::TIME, extra.GetDurationFormat(),
-            extra.GetDuration(), mSampleRate,
+         mDuration = safenew NumericTextCtrl(
+            FormatterContext::SampleRateContext(mSampleRate), w, ID_Duration,
+            NumericConverterType_TIME, extra.GetDurationFormat(),
+            extra.GetDuration(),
             NumericTextCtrl::Options{}.AutoPos(true));
          mDuration->SetName( XO("Duration") );
          sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
@@ -858,7 +859,7 @@ void LV2Editor::OnIdle(wxIdleEvent &evt)
 
    size_t index = 0; for (auto &state : portUIStates.mControlPortStates) {
       auto &port = state.mpPort;
-      
+
       const auto pValue = port->mIsInput
          ? &values[index]
          : pOutputValues ? &pOutputValues->values[index]
@@ -979,8 +980,8 @@ void LV2Editor::suil_port_write(uint32_t port_index,
                GetSettings(settings).values[it->second] = value;
                return nullptr;
             });
-      
-         
+
+
          Publish({ size_t(port_index), value });
       }
    }

@@ -259,7 +259,7 @@ size_t EffectDtmf::Instance::ProcessBlock(EffectSettings &settings,
 
          // the statement takes care of extracting one sample from the diff bin and
          // adding it into the current block until depletion
-         numRemaining += (diff-- > 0 ? 1 : 0);         
+         numRemaining += (diff-- > 0 ? 1 : 0);
       }
 
       const auto len = limitSampleBufferSize( size, numRemaining );
@@ -363,11 +363,11 @@ void EffectDtmf::Editor::PopulateOrExchange(ShuttleGui & S,
       S.AddPrompt(XXO("&Duration:"));
       auto &extra = settings.extra;
       mDtmfDurationT = safenew
-         NumericTextCtrl(S.GetParent(), wxID_ANY,
-                         NumericConverter::TIME,
+         NumericTextCtrl(FormatterContext::SampleRateContext(projectRate),
+                         S.GetParent(), wxID_ANY,
+                         NumericConverterType_TIME,
                          extra.GetDurationFormat(),
                          extra.GetDuration(),
-                         projectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
       S.Name(XO("Duration"))
@@ -393,7 +393,7 @@ void EffectDtmf::Editor::PopulateOrExchange(ShuttleGui & S,
       mDtmfDutyT =
       S.AddVariableText(XO("%.1f %%")
          .Format( dtmfSettings.dtmfDutyCycle ), false);
-      
+
       S.AddFixedText(XO("Tone duration:"), false);
       mDtmfSilenceT =
       /* i18n-hint milliseconds */

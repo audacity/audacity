@@ -2275,13 +2275,12 @@ void LabelTrackView::DoEditLabels
    auto format = formats.GetSelectionFormat(),
       freqFormat = formats.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
-   auto rate = ProjectRate::Get( project ).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    LabelDialog dlg(&window, project, &tracks,
                    lt, index,
-                   viewInfo, rate,
+                   viewInfo,
                    format, freqFormat);
 #ifdef __WXGTK__
    dlg.Raise();

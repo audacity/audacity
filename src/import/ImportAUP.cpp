@@ -33,8 +33,10 @@
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
+#include "ProjectRate.h"
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
+#include "ProjectSnap.h"
 #include "ProjectWindows.h"
 #include "Sequence.h"
 #include "Tags.h"
@@ -48,6 +50,8 @@
 #include "ProgressDialog.h"
 #include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"
+
+#include "NumericConverterFormats.h"
 
 #include <map>
 
@@ -74,7 +78,7 @@ public:
    ~AUPImportPlugin();
 
    wxString GetPluginStringID() override;
-   
+
    TranslatableString GetPluginFormatDescription() override;
 
    ImportHandle Open(const FilePath &fileName,
@@ -252,7 +256,7 @@ wxString AUPImportPlugin::GetPluginStringID()
 {
    return wxT("legacyaup");
 }
-   
+
 TranslatableString AUPImportPlugin::GetPluginFormatDescription()
 {
    return DESC;
@@ -401,34 +405,44 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    }
 
    if (mProjectAttrs.haverate)
-   {
-      auto &bar = SelectionBar::Get(mProject);
-      bar.SetRate(mProjectAttrs.rate);
-   }
+      ProjectRate::Get(mProject).SetRate(mProjectAttrs.rate);
 
    if (mProjectAttrs.havesnapto)
    {
-      selman.AS_SetSnapTo(mProjectAttrs.snapto ? SNAP_NEAREST : SNAP_OFF);
+      ProjectSnap::Get(mProject).SetSnapMode(
+         mProjectAttrs.snapto ? SnapMode::SNAP_NEAREST : SnapMode::SNAP_OFF);
    }
 
    if (mProjectAttrs.haveselectionformat)
    {
-      selman.AS_SetSelectionFormat(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.selectionformat));
+      selman.AS_SetSelectionFormat(NumericConverterFormats::Lookup(
+         FormatterContext::ProjectContext(mProject), NumericConverterType_TIME,
+         mProjectAttrs.selectionformat));
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
-      selman.TT_SetAudioTimeFormat(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.audiotimeformat));
+      selman.TT_SetAudioTimeFormat(NumericConverterFormats::Lookup(
+         FormatterContext::ProjectContext(mProject), NumericConverterType_TIME,
+         mProjectAttrs.audiotimeformat));
    }
 
    if (mProjectAttrs.havefrequencyformat)
    {
-      selman.SSBL_SetFrequencySelectionFormatName(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.frequencyformat));
+      selman.SSBL_SetFrequencySelectionFormatName(
+         NumericConverterFormats::Lookup(
+            FormatterContext::ProjectContext(mProject),
+            NumericConverterType_FREQUENCY,
+         mProjectAttrs.frequencyformat));
    }
 
    if (mProjectAttrs.havebandwidthformat)
    {
-      selman.SSBL_SetBandwidthSelectionFormatName(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.bandwidthformat));
+      selman.SSBL_SetBandwidthSelectionFormatName(
+         NumericConverterFormats::Lookup(
+            FormatterContext::ProjectContext(mProject),
+            NumericConverterType_BANDWIDTH,
+         mProjectAttrs.bandwidthformat));
    }
 
    // PRL: It seems this must happen after SetSnapTo
@@ -495,7 +509,7 @@ bool AUPImportFileHandle::Open()
       char buf[256];
 
       int numRead = ff.Read(buf, sizeof(buf));
-      
+
       ff.Close();
 
       buf[sizeof(buf) - 1] = '\0';
@@ -548,7 +562,7 @@ void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
    {
       node.handler->HandleXMLEndTag(tag);
    }
-   
+
    mHandlers.pop_back();
 
    if (mHandlers.size())
@@ -1461,8 +1475,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
 
 #ifndef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
    const auto uncaughtExceptionsCount = std::uncaught_exceptions();
-#endif  
-   
+#endif
+
    auto cleanup = finally([&]
    {
       // Do this before any throwing might happen
@@ -1526,7 +1540,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    samplePtr bufptr = buffer.ptr();
 
    size_t framesRead = 0;
-   
+
    // These cases preserve the logic formerly in BlockFile.cpp,
    // which was deleted at commit 98d1468.
    if (channels == 1 && format == int16Sample && sf_subtype_is_integer(info.format))

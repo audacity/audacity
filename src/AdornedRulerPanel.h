@@ -174,6 +174,7 @@ private:
    void ShowScrubMenu(const wxPoint & pos);
    static void DragSelection(AudacityProject &project);
    void HandleSnapping(size_t index);
+   void UpdateBeatsAndMeasuresFormat();
    void RefreshTimelineFormat();
    void OnTimelineFormatChange(wxCommandEvent& evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
@@ -252,7 +253,8 @@ private:
 
    Observer::Subscription mAudioIOSubscription,
       mPlayRegionSubscription,
-      mThemeChangeSubscription;
+      mThemeChangeSubscription,
+      mProjectTimeSignatureChangedSubscription;
 
    // classes implementing subdivision for CellularPanel
    struct Subgroup;
@@ -278,6 +280,6 @@ private:
    RulerTypeValues mRulerType;
 };
 
-extern TIME_FREQUENCY_SELECTION_API EnumSetting<AdornedRulerPanel::RulerTypeValues> RulerPanelViewPreference;
+extern EnumSetting<AdornedRulerPanel::RulerTypeValues> RulerPanelViewPreference;
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

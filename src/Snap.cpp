@@ -17,7 +17,7 @@
 #include "Project.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "ProjectSettings.h"
+#include "ProjectSnap.h"
 #include "Track.h"
 #include "ViewInfo.h"
 
@@ -37,7 +37,6 @@ SnapManager::SnapManager(const AudacityProject &project,
 , mNoTimeSnap{ noTimeSnap }
 , mCandidates{ move( candidates ) }
 , mSnapPoints{}
-, mConverter{ NumericConverter::TIME }
 {
    Reinit();
 }
@@ -79,8 +78,11 @@ SnapManager::~SnapManager()
 void SnapManager::Reinit()
 {
    const auto &formats = ProjectNumericFormats::Get(*mProject);
-   const auto &settings = ProjectSettings::Get( *mProject );
-   int snapTo = settings.GetSnapTo();
+   const auto &settings = ProjectSnap::Get( *mProject );
+   
+   auto snapTo = settings.GetSnapTo();
+   auto snapMode = settings.GetSnapMode();
+   
    auto rate = ProjectRate::Get(*mProject).GetRate();
    auto format = formats.GetSelectionFormat();
 
@@ -98,16 +100,8 @@ void SnapManager::Reinit()
    mSnapPoints.clear();
 
    // Grab time-snapping prefs (unless otherwise requested)
-   mSnapToTime = false;
-
-   // Look up the format string
-   if (mSnapTo != SNAP_OFF && !mNoTimeSnap)
-   {
-      mSnapToTime = true;
-      mConverter.SetSampleRate(mRate);
-      mConverter.SetFormatName(mFormat);
-   }
-
+   mSnapToTime = snapMode != SnapMode::SNAP_OFF && !mNoTimeSnap;
+ 
    // Add a SnapPoint at t=0
    mSnapPoints.push_back(SnapPoint{});
 
@@ -122,14 +116,9 @@ void SnapManager::Reinit()
 // Adds to mSnapPoints, filtering by TimeConverter
 void SnapManager::CondListAdd(double t, const Track *track)
 {
-   if (mSnapToTime)
+   if (!mSnapToTime || ProjectSnap::Get(*mProject).SnapTime(t).time == t)
    {
-      mConverter.SetValue(t);
-   }
-
-   if (!mSnapToTime || mConverter.GetValue() == t)
-   {
-      mSnapPoints.push_back(SnapPoint{ t, track });
+      mSnapPoints.push_back(SnapPoint { t, track });
    }
 }
 
@@ -288,12 +277,7 @@ SnapResults SnapManager::Snap
 
    if (mSnapToTime) {
       // Find where it would snap time to the grid
-      mConverter.ValueToControls(
-         t,
-         ProjectSettings::Get( *mProject ).GetSnapTo() == SNAP_NEAREST
-      );
-      mConverter.ControlsToValue();
-      results.timeSnappedTime = mConverter.GetValue();
+      results.timeSnappedTime = ProjectSnap::Get(*mProject).SnapTime(t).time;
    }
 
    results.snappedTime = false;
@@ -315,16 +299,6 @@ SnapResults SnapManager::Snap
       results.outCoord = mZoomInfo->TimeToPosition(results.outTime);
 
    return results;
-}
-
-/* static */ const TranslatableStrings &SnapManager::GetSnapLabels()
-{
-   static const TranslatableStrings result{
-      XO("Off") ,
-      XO("Nearest") ,
-      XO("Prior") ,
-   };
-   return result;
 }
 
 #include "AColor.h"

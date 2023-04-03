@@ -46,6 +46,7 @@ set( LIBRARIES
    lib-wx-init
    lib-time-track
    lib-vst3
+   lib-snapping
 )
 
 if ( ${_OPT}has_networking )

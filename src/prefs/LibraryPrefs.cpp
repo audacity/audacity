@@ -54,7 +54,7 @@ bool LibraryPrefs::RegisteredControls::Any()
 }
 
 LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
-/* i18-hint: refers to optional plug-in software libraries */
+/* i18n-hint: refers to optional plug-in software libraries */
 :   PrefsPanel(parent, winid, XO("Libraries"))
 {
    Populate();

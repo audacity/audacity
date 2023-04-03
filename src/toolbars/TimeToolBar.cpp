@@ -1,14 +1,14 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  TimeToolBar.cpp
- 
+
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
- 
+
  *//*******************************************************************/
 
 
@@ -31,7 +31,10 @@
 #include "ProjectAudioIO.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
+#include "ProjectTimeSignature.h"
 #include "ViewInfo.h"
+
+#include "NumericConverterFormats.h"
 
 IMPLEMENT_CLASS(TimeToolBar, ToolBar);
 
@@ -55,11 +58,8 @@ Identifier TimeToolBar::ID()
 
 TimeToolBar::TimeToolBar(AudacityProject &project)
 :  ToolBar(project, XO("Time"), ID(), true),
-   mListener(NULL),
-   mAudioTime(NULL)
+   mListener(NULL), mAudioTime(NULL)
 {
-   mSubscription =
-      ProjectRate::Get(project).Subscribe(*this, &TimeToolBar::OnRateChanged);
 }
 
 TimeToolBar::~TimeToolBar()
@@ -86,14 +86,11 @@ void TimeToolBar::Populate()
 {
    const auto &formats = ProjectNumericFormats::Get(mProject);
 
-   // Get the default sample rate
-   auto rate = ProjectRate::Get(mProject).GetRate();
-
    // Get the default time format
    auto format = formats.GetAudioTimeFormat();
 
    // Create the read-only time control
-   mAudioTime = safenew NumericTextCtrl(this, AudioPositionID, NumericConverter::TIME, format, 0.0, rate);
+   mAudioTime = safenew NumericTextCtrl(FormatterContext::ProjectContext(mProject), this, AudioPositionID, NumericConverterType_TIME, format, 0.0);
    mAudioTime->SetName(XO("Audio Position"));
    mAudioTime->SetReadOnly(true);
 
@@ -118,7 +115,7 @@ void TimeToolBar::UpdatePrefs()
    // Since the language may have changed, we need to force an update to accommodate
    // different length text
    wxCommandEvent e;
-   e.SetInt(mAudioTime->GetFormatIndex());
+   e.SetString(mAudioTime->GetFormatName().Internal());
    OnUpdate(e);
 
    // Language may have changed so reset label
@@ -130,12 +127,12 @@ void TimeToolBar::UpdatePrefs()
 
 void TimeToolBar::SetToDefaultSize()
 {
-   // Reset 
+   // Reset
    SetMaxSize(wxDefaultSize);
    SetMinSize(wxDefaultSize);
 
    // Set the default time format
-   SetAudioTimeFormat(NumericConverter::HoursMinsSecondsFormat());
+   SetAudioTimeFormat(NumericConverterFormats::HoursMinsSecondsFormat());
 
    // Set the default size
    SetSize(GetInitialWidth(), 48);
@@ -197,7 +194,7 @@ void TimeToolBar::SetListener(TimeToolBarListener *l)
    // OnUpdate() will not be called and need it to set the initial size.
    if (mSettingInitialSize) {
       wxCommandEvent e;
-      e.SetInt(mAudioTime->GetFormatIndex());
+      e.SetString(mAudioTime->GetFormatName().Internal());
       OnUpdate(e);
    }
 }
@@ -205,10 +202,10 @@ void TimeToolBar::SetListener(TimeToolBarListener *l)
 void TimeToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
 {
    // Set the format if it's different from previous
-   if (mAudioTime->SetFormatString(mAudioTime->GetBuiltinFormat(format))) {
+   if (mAudioTime->SetFormatName(format)) {
       // Simulate an update since the format has changed.
       wxCommandEvent e;
-      e.SetInt(mAudioTime->GetFormatIndex());
+      e.SetString(format.Internal());
       OnUpdate(e);
    }
 }
@@ -272,13 +269,6 @@ void TimeToolBar::SetResizingLimits()
    SetMaxSize(maxSize);
 }
 
-// Called when the project rate changes
-void TimeToolBar::OnRateChanged(double rate)
-{
-   if (mAudioTime)
-      mAudioTime->SetSampleRate(rate);
-}
-
 // Called when the format drop downs is changed.
 // This causes recreation of the toolbar contents.
 void TimeToolBar::OnUpdate(wxCommandEvent &evt)
@@ -293,9 +283,9 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
 
    // Save format name before recreating the controls so they resize properly
    if (mListener) {
-      mListener->TT_SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
+      mListener->TT_SetAudioTimeFormat(evt.GetString());
    }
-
+   
    // During initialization, the desired size will have already been set at this point
    // and the "best" size" would override it, so we simply send a size event to force
    // the content to fit inside the toolbar.

@@ -17,7 +17,7 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include "widgets/NumericTextCtrl.h" // member variable
+#include "ComponentInterfaceSymbol.h"
 
 class AudacityProject;
 class Track;
@@ -80,9 +80,7 @@ public:
    SnapResults Snap(Track *currentTrack,
              double t,
              bool rightEdge);
-
-   static const TranslatableStrings &GetSnapLabels();
-
+   
    // The two coordinates need not be ordered:
    static void Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 );
 
@@ -109,10 +107,9 @@ private:
    SnapPointArray mSnapPoints;
 
    // Info for snap-to-time
-   NumericConverter mConverter;
    bool mSnapToTime{ false };
 
-   int mSnapTo{ 0 };
+   Identifier mSnapTo {};
    double mRate{ 0.0 };
    NumericFormatSymbol mFormat{};
 };

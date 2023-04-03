@@ -8,6 +8,7 @@
 #include "ProjectHistory.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
+#include "ProjectSnap.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -23,6 +24,7 @@
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "NumericConverter.h"
 
 // private helper classes and functions
 namespace {
@@ -72,7 +74,7 @@ double NearestZeroCrossing
 
          dist[i] += oneDist[j];
          // Apply a small penalty for distance from the original endpoint
-         // We'll always prefer an upward  
+         // We'll always prefer an upward
          dist[i] +=
             0.1 * (abs(int(i) - int(windowSize/2))) / float(windowSize/2);
       }
@@ -165,11 +167,10 @@ double GridMove
 (AudacityProject &project, double t, int minPix)
 {
    auto &formats = ProjectNumericFormats::Get(project);
-   auto rate = ProjectRate::Get(project).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
    auto format = formats.GetSelectionFormat();
 
-   NumericConverter nc(NumericConverter::TIME, format, t, rate);
+   NumericConverter nc(FormatterContext::ProjectContext(project), NumericConverterType_TIME, format, t);
 
    // Try incrementing/decrementing the value; if we've moved far enough we're
    // done
@@ -189,14 +190,14 @@ double GridMove
 
 double OffsetTime
 (AudacityProject &project,
- double t, double offset, TimeUnit timeUnit, int snapToTime)
+ double t, double offset, TimeUnit timeUnit, SnapMode snapMode)
 {
    auto &viewInfo = ViewInfo::Get( project );
 
     if (timeUnit == TIME_UNIT_SECONDS)
         return t + offset; // snapping is currently ignored for non-pixel moves
 
-    if (snapToTime == SNAP_OFF)
+    if (snapMode == SnapMode::SNAP_OFF)
         return viewInfo.OffsetTimeByPixels(t, (int)offset);
 
     return GridMove(project, t, (int)offset);
@@ -210,13 +211,13 @@ void MoveWhenAudioInactive
    auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &ruler = AdornedRulerPanel::Get( project );
-   const auto &settings = ProjectSettings::Get( project );
+   const auto &settings = ProjectSnap::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
-   int snapToTime = settings.GetSnapTo();
+   auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
-   const double end = std::max( 
+   const double end = std::max(
       tracks.GetEndTime(),
       viewInfo.GetScreenEndTime());
 
@@ -225,11 +226,11 @@ void MoveWhenAudioInactive
    if( viewInfo.selectedRegion.isPoint() )
    {
       double newT = OffsetTime(project,
-         t0, seekStep, timeUnit, snapToTime);
+         t0, seekStep, timeUnit, snapMode);
       // constrain.
       newT = std::max(0.0, newT);
       newT = std::min(newT, end);
-      // Move 
+      // Move
       viewInfo.selectedRegion.setT0(
          newT,
          false); // do not swap selection boundaries
@@ -260,7 +261,7 @@ SelectionOperation operation)
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto &tracks = TrackList::Get( project );
-   const auto &settings = ProjectSettings::Get( project );
+   const auto &settings = ProjectSnap::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if( operation == CURSOR_MOVE )
@@ -269,10 +270,10 @@ SelectionOperation operation)
       return;
    }
 
-   int snapToTime = settings.GetSnapTo();
+   auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
-   const double end = std::max( 
+   const double end = std::max(
       tracks.GetEndTime(),
       viewInfo.GetScreenEndTime());
 
@@ -281,7 +282,7 @@ SelectionOperation operation)
 	   (operation == SELECTION_EXTEND && seekStep < 0);
    // newT is where we want to move to
    double newT = OffsetTime( project,
-      bMoveT0 ? t0 : t1, seekStep, timeUnit, snapToTime);
+      bMoveT0 ? t0 : t1, seekStep, timeUnit, snapMode);
    // constrain to be in the track/screen limits.
    newT = std::max( 0.0, newT );
    newT = std::min( newT, end);
@@ -292,7 +293,7 @@ SelectionOperation operation)
    // Actually move
    if( bMoveT0 )
       viewInfo.selectedRegion.setT0( newT );
-   else 
+   else
       viewInfo.selectedRegion.setT1( newT );
 
    // Ensure it is visible
@@ -392,7 +393,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
-   const double end = std::max( 
+   const double end = std::max(
       tracks.GetEndTime(),
       viewInfo.GetScreenEndTime());
 
@@ -407,7 +408,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    // Actually move
    if( bMoveT0 )
       viewInfo.selectedRegion.setT0( newT );
-   else 
+   else
       viewInfo.selectedRegion.setT1( newT );
 
    // Ensure it is visible
@@ -433,7 +434,7 @@ void OnSelectAll(const CommandContext &context)
 {
    auto& trackPanel = TrackPanel::Get(context.project);
    auto& tracks = TrackList::Get(context.project);
-   
+
    for (auto lt : tracks.Selected< LabelTrack >()) {
       auto& view = LabelTrackView::Get(*lt);
       if (view.SelectAllText(context.project)) {
@@ -645,19 +646,19 @@ void OnZeroCrossing(const CommandContext &context)
 void OnSnapToOff(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_OFF);
+   ProjectSnap::Get(project).SetSnapMode(SnapMode::SNAP_OFF);
 }
 
 void OnSnapToNearest(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_NEAREST);
+   ProjectSnap::Get( project ).SetSnapMode(SnapMode::SNAP_NEAREST);
 }
 
 void OnSnapToPrior(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_PRIOR);
+   ProjectSnap::Get(project).SetSnapMode(SnapMode::SNAP_PRIOR);
 }
 
 void OnSelToStart(const CommandContext &context)

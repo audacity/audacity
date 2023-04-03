@@ -79,7 +79,7 @@ const static wxChar *kShippedEffects[] =
 // Tolerance to be used when comparing control values.
 constexpr float ControlValueTolerance = 1.0e-5f;
 // ============================================================================
- 
+
 // ============================================================================
 // Module registration entry point
 //
@@ -1290,11 +1290,11 @@ void LadspaEffect::Editor::PopulateUI(ShuttleGui &S)
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
             auto &extra = mAccess.Get().extra;
             mDuration = safenew
-               NumericTextCtrl(w, ID_Duration,
-                  NumericConverter::TIME,
+               NumericTextCtrl(FormatterContext::SampleRateContext(mSampleRate),
+                  w, ID_Duration,
+                  NumericConverterType_TIME,
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
-                  mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
             mDuration->SetName( XO("Duration") );
@@ -1834,7 +1834,7 @@ void LadspaEffect::Editor::UpdateControls(const LadspaEffectSettings& src)
         ++portIndex)
    {
       LADSPA_PortDescriptor d = data.PortDescriptors[portIndex];
-      
+
       if (!(LADSPA_IS_PORT_CONTROL(d)) || (LADSPA_IS_PORT_OUTPUT(d)))
          continue;
 
@@ -1843,7 +1843,7 @@ void LadspaEffect::Editor::UpdateControls(const LadspaEffectSettings& src)
       const bool isIntValue = (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor)) ||
                               (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor)) ||
                               (LADSPA_IS_HINT_SAMPLE_RATE(hint.HintDescriptor));
-      
+
       UpdateControl(
          portIndex, src.controls[portIndex],
          isIntValue ? 0.5f : ControlValueTolerance);

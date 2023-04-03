@@ -603,9 +603,12 @@ auto CollectedItems::MergeItems(
                force = true;
          }
       }
-      else if ( iPass == OrderingHint::End && endItemsCount == 0 )
+      else if (iPass == OrderingHint::End && endItemsCount == 0)
+      {
+         assert(newSize >= prevSize || newSize == 0);
          // Remember the size before we put the ending items in place
          endItemsCount = newSize - prevSize;
+      }
 
       prevSize = newSize;
    }

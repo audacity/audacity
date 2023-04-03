@@ -29,11 +29,11 @@ VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
 
       auto &extra = access.Get().extra;
       mDuration = safenew NumericTextCtrl(
+            FormatterContext::SampleRateContext(mWrapper.mSetup.sampleRate),
             parent, wxID_ANY,
-            NumericConverter::TIME,
+            NumericConverterType_TIME,
             extra.GetDurationFormat(),
             extra.GetDuration(),
-            mWrapper.mSetup.sampleRate,
             NumericTextCtrl::Options{}
                .AutoPos(true)
          );
@@ -62,7 +62,7 @@ VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
       [this](Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue value) {
          Publish({ static_cast<size_t>(id), static_cast<float>(value) });
       };
-   
+
    mWrapper.BeginParameterEdit(mAccess);
 
    Bind(wxEVT_IDLE, &VST3Editor::OnIdle, this);
@@ -96,7 +96,7 @@ bool VST3Editor::TryLoadNativeUI(wxWindow* parent)
 {
    using namespace Steinberg;
 
-   if(const auto view = owned (mWrapper.mEditController->createView (Vst::ViewType::kEditor))) 
+   if(const auto view = owned (mWrapper.mEditController->createView (Vst::ViewType::kEditor)))
    {
       //Workaround: override default min size set by EffectUIHost::Initialize()
       parent->SetMinSize(wxDefaultSize);
@@ -166,7 +166,7 @@ void VST3Editor::OnClose()
    }
 
    mWrapper.EndParameterEdit();
-   
+
    mAccess.ModifySettings([&](EffectSettings &settings){
       if (mDuration != nullptr)
          settings.extra.SetDuration(mDuration->GetValue());
@@ -189,7 +189,7 @@ bool VST3Editor::UpdateUI()
       mWrapper.FetchSettings(settings);
       return nullptr;
    });
-   
+
    if (mPlainUI != nullptr)
       mPlainUI->ReloadParameters();
 

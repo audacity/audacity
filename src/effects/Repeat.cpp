@@ -139,7 +139,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
             t0 += tLen;
          }
          if (t0 > maxDestLen)
-            maxDestLen = t0; 
+            maxDestLen = t0;
 
          auto clips = track->SortedClipArray();
          for(size_t i = 0; i < clips.size(); ++i)
@@ -233,10 +233,10 @@ void EffectRepeat::DisplayNewTime()
    wxString str;
    mRepeatCount->GetValue().ToLong(&l);
 
-   NumericConverter nc(NumericConverter::TIME,
+   NumericConverter nc(FormatterContext::SampleRateContext(mProjectRate),
+                       NumericConverterType_TIME,
                        GetSelectionFormat(),
-                       mT1 - mT0,
-                       mProjectRate);
+                       mT1 - mT0);
 
    str = wxString::Format( _("Current selection length: %s"), nc.GetString() );
 

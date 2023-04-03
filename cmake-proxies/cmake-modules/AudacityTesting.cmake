@@ -9,7 +9,12 @@ if( ${_OPT}has_tests )
    enable_testing()
 
    #[[
-      add_unit_test(NAME name SOURCES file1 ... LIBRARIES lib1 ...)
+      add_unit_test(NAME name [MOCK_PREFS] [MOCK_AUDIO] SOURCES file1 ... LIBRARIES lib1 ...)
+
+      If MOCK_PREFS is specified, a test can instantiate a mocked Prefs object.
+      If MOCK_AUDIO is specified, a test will initialize PortAudio.
+
+      Audio mocking is a subject to change when Audio I/O is refactored.
 
       Creates an executable called ${name}-test from the source files ${file1}, ... and linked
       to libraries ${lib1}, ... Catch2 is linked implicitly.
@@ -19,7 +24,7 @@ if( ${_OPT}has_tests )
    function( add_unit_test )
       cmake_parse_arguments(
          ADD_UNIT_TEST # Prefix
-         "" # Options
+         "MOCK_PREFS;MOCK_AUDIO" # Options
          "NAME" # One value keywords
          "SOURCES;LIBRARIES"
          ${ARGN}
@@ -34,7 +39,19 @@ if( ${_OPT}has_tests )
       # Create test executable
 
       add_executable( ${test_executable_name} ${ADD_UNIT_TEST_SOURCES} "${CMAKE_SOURCE_DIR}/tests/Catch2Main.cpp")
-      target_link_libraries( ${test_executable_name} ${ADD_UNIT_TEST_LIBRARIES} Catch2::Catch2 )
+      target_link_libraries( ${test_executable_name} PRIVATE ${ADD_UNIT_TEST_LIBRARIES} Catch2::Catch2 )
+
+      if (ADD_UNIT_TEST_MOCK_PREFS)
+         target_compile_definitions( ${test_executable_name} PRIVATE MOCK_PREFS )
+         target_sources( ${test_executable_name} PRIVATE "${CMAKE_SOURCE_DIR}/tests/MockedPrefs.cpp" "${CMAKE_SOURCE_DIR}/tests/MockedPrefs.h" )
+         target_include_directories( ${test_executable_name} PRIVATE "${CMAKE_SOURCE_DIR}/tests" )
+         target_link_libraries( ${test_executable_name} PRIVATE lib-preferences-interface )
+      endif()
+
+      if (ADD_UNIT_TEST_MOCK_AUDIO)
+         target_compile_definitions( ${test_executable_name} PRIVATE MOCK_AUDIO )
+         target_sources( ${test_executable_name} PRIVATE "${CMAKE_SOURCE_DIR}/tests/MockedAudio.cpp" "${CMAKE_SOURCE_DIR}/tests/MockedAudio.h" )
+      endif()
 
       set( OPTIONS )
       audacity_append_common_compiler_options( OPTIONS NO )

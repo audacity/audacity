@@ -31,7 +31,7 @@
 #include "TransactionScope.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "NumericConverter.h"
+#include "NumericConverterFormats.h"
 
 // Effect application counter
 int EffectBase::nEffectsDone = 0;
@@ -136,8 +136,8 @@ bool EffectBase::DoEffect(EffectSettings &settings,
 
    // This is happening inside EffectSettingsAccess::ModifySettings
    auto newFormat = isSelection
-      ? NumericConverter::TimeAndSampleFormat()
-      : NumericConverter::DefaultSelectionFormat();
+      ? NumericConverterFormats::TimeAndSampleFormat()
+      : NumericConverterFormats::DefaultSelectionFormat();
    auto updater = [&](EffectSettings &settings) {
       settings.extra.SetDuration(duration);
       settings.extra.SetDurationFormat( newFormat );

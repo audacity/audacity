@@ -778,9 +778,13 @@ list( APPEND SOURCES
       toolbars/SelectionBar.cpp
       toolbars/SelectionBar.h
       toolbars/SelectionBarListener.h
+      toolbars/SnappingToolBar.cpp
+      toolbars/SnappingToolBar.h
       toolbars/SpectralSelectionBar.cpp
       toolbars/SpectralSelectionBar.h
       toolbars/SpectralSelectionBarListener.h
+      toolbars/TimeSignatureToolBar.cpp
+      toolbars/TimeSignatureToolBar.h
       toolbars/TimeToolBar.cpp
       toolbars/TimeToolBar.h
       toolbars/ToolBar.cpp
@@ -1464,6 +1468,7 @@ set( AUDACITY_LIBRARIES
    lib-effects-interface
    lib-wx-init-interface
    lib-time-track-interface
+   lib-snapping-interface
 )
 
 if (${_OPT}has_vst3)

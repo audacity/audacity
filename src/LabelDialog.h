@@ -48,7 +48,6 @@ class LabelDialog final : public wxDialogWrapper
                int index,
 
                ViewInfo &viewinfo,
-               double rate,
                const NumericFormatSymbol & format,
                const NumericFormatSymbol &freqFormat);
    ~LabelDialog();
@@ -107,7 +106,6 @@ class LabelDialog final : public wxDialogWrapper
    int mIndex { -1 };
    ViewInfo *mViewInfo;
    wxArrayString mTrackNames;
-   double mRate;
    NumericFormatSymbol mFormat, mFreqFormat;
 
    int mInitialRow;
