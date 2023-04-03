@@ -307,9 +307,11 @@ SnapFunctor SnapToTriplets(int divisor)
 {
    return [divisor](SnapConfig cfg, double value, bool nearest)
    {
+      const auto quarterDuration = 60.0 / cfg.tempo;
       const auto tripletDivisor = 3 * (divisor / 2);
-      const auto multiplier =
-         (cfg.tempo / 60.0) * tripletDivisor / cfg.timeSignature.second;
+      const auto fracDuration = quarterDuration * 4.0 / tripletDivisor;
+      const auto multiplier = 1.0 / fracDuration;
+         
       return SnapWithMultiplier(value, multiplier, nearest);
    };
 }
