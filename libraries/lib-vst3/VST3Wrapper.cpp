@@ -147,7 +147,7 @@ bool ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
       arrangement =
          busInfo.busType == Vst::kMain
             ? GetBusArragementForChannels(busInfo.channelCount, defaultArragement)
-            : Vst::SpeakerArr::kEmpty;
+            : defaultArragement;
       
       component.activateBus(Vst::kAudio, Vst::kInput, i, busInfo.busType == Vst::kMain);
       defaultInputSpeakerArrangements.push_back(arrangement);
@@ -165,7 +165,7 @@ bool ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
       arrangement =
          busInfo.busType == Vst::kMain
             ? GetBusArragementForChannels(busInfo.channelCount, defaultArragement)
-            : Vst::SpeakerArr::kEmpty;
+            : defaultArragement;
 
       component.activateBus(Vst::kAudio, Vst::kOutput, i, busInfo.busType == Vst::kMain);
       defaultOutputSpeakerArrangements.push_back(arrangement);
