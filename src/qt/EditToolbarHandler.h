@@ -1,5 +1,5 @@
 #ifndef EDIT_TOOLBAR_HANDLER_H
-#define EDIT_TOOLBAR_HANDELR_H
+#define EDIT_TOOLBAR_HANDLER_H
 
 #include <QtCore/QObject>
 #include <QtQml/qqmlregistration.h>
