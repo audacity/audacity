@@ -251,7 +251,7 @@ public:
 
 //-- Add functions.  These only add a widget or 2.
    void HandleOptionality(const TranslatableString &Prompt);
-   void AddPrompt(const TranslatableString &Prompt, int wrapWidth = 0);
+   wxStaticText* AddPrompt(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddUnits(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddTitle(const TranslatableString &Prompt, int wrapWidth = 0);
    wxWindow * AddWindow(wxWindow* pWindow, int PositionFlags = wxALIGN_CENTRE);

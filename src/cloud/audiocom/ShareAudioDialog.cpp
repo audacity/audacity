@@ -43,6 +43,7 @@
 
 #include "export/Export.h"
 #include "export/ExportProgressListener.h"
+#include "export/ExportUtils.h"
 #include "ui/AccessibleLinksFormatter.h"
 
 #include "WindowAccessible.h"
@@ -344,10 +345,13 @@ wxString ShareAudioDialog::ExportProject()
    bool success = false;
    if(auto plugin = e.FindPluginByType(exporter->GetExporterID()))
    {
+      auto editor = plugin->CreateOptionsEditor(0, nullptr);
+      editor->Load(*gPrefs);
+
       mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this, *plugin);
       
       e.Process(*mExportProgressUpdater.get(),
-                {},
+                ExportUtils::ParametersFromEditor(*editor),
                 nChannels,                 // numChannels,
                 exporter->GetExporterID(), // type,
                 path,                      // full path,

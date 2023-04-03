@@ -234,10 +234,10 @@ void ShuttleGuiBase::HandleOptionality(const TranslatableString &Prompt)
 }
 
 /// Right aligned text string.
-void ShuttleGuiBase::AddPrompt(const TranslatableString &Prompt, int wrapWidth)
+wxStaticText* ShuttleGuiBase::AddPrompt(const TranslatableString &Prompt, int wrapWidth)
 {
    if( mShuttleMode != eIsCreating )
-      return;
+      return nullptr;
    //wxLogDebug( "Prompt: [%s] Id:%i (%i)", Prompt.c_str(), miId, miIdSetByUser ) ;
    if( mpbOptionalFlag ){
       bool * pVar = mpbOptionalFlag;
@@ -246,7 +246,7 @@ void ShuttleGuiBase::AddPrompt(const TranslatableString &Prompt, int wrapWidth)
       //return;
    }
    if( Prompt.empty() )
-      return;
+      return nullptr;
    miProp=1;
    const auto translated = Prompt.Translation();
    auto text = safenew wxStaticText(GetParent(), -1, translated, wxDefaultPosition, wxDefaultSize,
@@ -256,6 +256,8 @@ void ShuttleGuiBase::AddPrompt(const TranslatableString &Prompt, int wrapWidth)
       text->Wrap(wrapWidth);
    mpWind->SetName(wxStripMenuCodes(translated)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_CENTRE_VERTICAL, true );
+
+   return text;
 }
 
 /// Left aligned text string.

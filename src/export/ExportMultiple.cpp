@@ -51,6 +51,7 @@
 #include "HelpSystem.h"
 #include "AudacityMessageBox.h"
 #include "AudacityTextEntryDialog.h"
+#include "ExportUtils.h"
 #include "ProgressDialog.h"
 #include "../prefs/ImportExportPrefs.h"
 #include "GenericExportProgressListener.h"
@@ -1126,11 +1127,13 @@ ExportMultipleDialog::DoExport(unsigned channels,
    } );
 
    auto plugin = mPlugins[mPluginIndex];
+   auto editor = plugin->CreateOptionsEditor(mSubFormatIndex, nullptr);
+   editor->Load(*gPrefs);
    GenericExportProgressListener progressListener(*plugin);
    // Call the format export routine
    plugin->Export(mProject,
                   progressListener,
-                  {},
+                  ExportUtils::ParametersFromEditor(*editor),
                   channels,
                   fullPath,
                   selectedOnly,

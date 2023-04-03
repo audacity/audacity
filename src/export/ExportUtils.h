@@ -15,6 +15,7 @@
 #include <memory>
 
 #include "SampleFormat.h"
+#include "ExportPlugin.h"
 
 class TrackList;
 class WaveTrack;
@@ -44,5 +45,7 @@ public:
    static double EvalExportProgress(Mixer& mixer, double t0, double t1);
    
    static TrackIterRange<const WaveTrack> FindExportWaveTracks(const TrackList& tracks, bool selectedOnly);
+
+   static ExportPlugin::Parameters ParametersFromEditor(const ExportOptionsEditor& editor);
 };
 
