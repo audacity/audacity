@@ -338,12 +338,12 @@ NumericConverterItemRegistrator beatsTime {
    NumericConverterFormatterGroup(
       "beats", NumericConverterType_TIME,
       NumericConverterFormatterItem(
-         /* i18n-hint: The music theory "beats" */
-         "beats", XO("beats"),
+         /* i18n-hint: "bar" and "beat" are musical notation elements. */
+         "beats", XO("bar:beat"),
          std::make_unique<BeatsNumericConverterFormatterFactory>(0)),
       NumericConverterFormatterItem(
-         /* i18n-hint: The music theory "beats". 16th is a note duration. */
-         "beats16", XO("beats and 16th"),
+         /* i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.  */
+         "beats16", XO("bar:beat:tick"),
          std::make_unique<BeatsNumericConverterFormatterFactory>(16)))
 };
 } // namespace
