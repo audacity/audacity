@@ -134,12 +134,14 @@ public:
       return true;
    }
 
-   bool Attach( Intervals intervals ) override
+   bool Attach( Intervals intervals, double offset ) override
    {
       auto pTrack = mpTrack.get();
       std::for_each( intervals.rbegin(), intervals.rend(),
-         [this, pTrack](auto &interval){
+         [this, pTrack, offset](auto &interval){
             auto pData = static_cast<IntervalData*>( interval.Extra() );
+            if(offset != .0)
+               pData->region.move(offset);
             auto index = pTrack->AddLabel(pData->region, pData->title);
             // Recreate the simpler TrackInterval as would be reported by LabelTrack
             mMoving.emplace_back( pTrack->MakeInterval(index) );
