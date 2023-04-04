@@ -263,6 +263,8 @@ void SelectionBar::AddSelectionSetupButton(wxSizer* pSizer)
 
    setupBtn->Bind(wxEVT_BUTTON, [this, showMenu](auto&) { showMenu(); });
    pSizer->Add(setupBtn, 0, wxALIGN_RIGHT | wxBOTTOM | wxRIGHT, 5);
+
+   mSetupButton = setupBtn;
 }
 
 void SelectionBar::Populate()
@@ -282,6 +284,8 @@ void SelectionBar::Populate()
    AddTime(0, mainSizer);
    AddSelectionSetupButton(mainSizer);
    AddTime(1, mainSizer);
+
+   mSetupButton->MoveBeforeInTabOrder(mTimeControls[0]);
 
    // Update the selection mode before the layout
    SetSelectionMode(mSelectionMode);

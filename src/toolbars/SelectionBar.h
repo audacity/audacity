@@ -98,6 +98,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    SelectionMode mLastSelectionMode {};
 
    std::array<NumericTextCtrl*, 2> mTimeControls {};
+   AButton* mSetupButton{};
 
    wxString mLastValidText;
    
