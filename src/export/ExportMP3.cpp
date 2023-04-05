@@ -65,26 +65,19 @@
 #include <wx/app.h>
 #include <wx/defs.h>
 
-#include <wx/choice.h>
-#include <wx/checkbox.h>
 #include <wx/dynlib.h>
 #include <wx/ffile.h>
 #include <wx/log.h>
 #include <wx/mimetype.h>
-#include <wx/radiobut.h>
-#include <wx/stattext.h>
+
 #include <wx/textctrl.h>
-#include <wx/window.h>
+#include <wx/choice.h>
 
 #include "FileNames.h"
 #include "float_cast.h"
 #include "Mix.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "SelectFile.h"
-#include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
 #include "HelpSystem.h"
@@ -103,6 +96,9 @@
 
 #include "ExportOptionsEditor.h"
 #include "ExportUtils.h"
+#include "SelectFile.h"
+#include "ShuttleGui.h"
+#include "ProjectWindow.h"
 
 //----------------------------------------------------------------------------
 // ExportMP3Options
@@ -129,8 +125,6 @@ enum : int {
 /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
 inline TranslatableString n_kbps( int n ){ return XO("%d kbps").Format( n ); }
 
-static BoolSetting MP3ForceMono { L"/FileFormats/MP3ForceMono", false };
-
 static const TranslatableStrings fixRateNames {
    n_kbps(320),
    n_kbps(256),
@@ -152,7 +146,7 @@ static const TranslatableStrings fixRateNames {
    n_kbps(8),
 };
 
-static const std::vector<int> fixRateValues {
+static const std::vector<ExportValue> fixRateValues {
    320,
    256,
    224,
@@ -219,261 +213,261 @@ static const std::vector< int > sampRates {
    48000,
 };
 
-#define ID_SET 7000
-#define ID_VBR 7001
-#define ID_ABR 7002
-#define ID_CBR 7003
-#define ID_QUALITY 7004
-#define ID_MONO 7005
+enum MP3OptionID : int {
+   MP3OptionIDMode = 0,
+   MP3OptionIDQualitySET,
+   MP3OptionIDQualityVBR,
+   MP3OptionIDQualityABR,
+   MP3OptionIDQualityCBR,
+   MP3OptionIDChannels,
+   MP3OptionIDForceMono
+};
 
-class ExportMP3Options final : public wxPanelWrapper
+//Option order should exactly match to the id values
+const std::initializer_list<ExportOption> MP3Options {
+   {
+      MP3OptionIDMode, XO("Bit Rate Mode"),
+      std::string("SET"),
+      ExportOption::TypeEnum,
+      {
+         // for migrating old preferences the
+         // order should be preserved
+         std::string("SET"),
+         std::string("VBR"),
+         std::string("ABR"),
+         std::string("CBR")
+      },
+      {
+         XO("Preset"),
+         XO("Variable"),
+         XO("Average"),
+         XO("Constant")
+      }
+   },
+   {
+      MP3OptionIDQualitySET, XO("Quality"),
+      PRESET_STANDARD,
+      ExportOption::TypeEnum,
+      { 0, 1, 2, 3 },
+      setRateNames
+   },
+   {
+      MP3OptionIDQualityVBR, XO("Quality"),
+      QUALITY_2,
+      ExportOption::TypeEnum | ExportOption::Hidden,
+      { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+      varRateNames
+   },
+   {
+      MP3OptionIDQualityABR, XO("Quality"),
+      192,
+      ExportOption::TypeEnum | ExportOption::Hidden,
+      fixRateValues,
+      fixRateNames
+   },
+   {
+      MP3OptionIDQualityCBR, XO("Quality"),
+      192,
+      ExportOption::TypeEnum | ExportOption::Hidden,
+      fixRateValues,
+      fixRateNames
+   },
+   {
+      MP3OptionIDChannels, XO("Channel Mode"),
+      std::string("JOINT"),
+      ExportOption::TypeEnum,
+      {
+         // for migrating old preferences the
+         // order should be preserved
+         std::string("JOINT"),
+         std::string("STEREO")
+      },
+      { XO("Joint Stereo"), XO("Stereo") }
+   },
+   {
+      MP3OptionIDForceMono, XO("Force export to mono"),
+      false
+   }
+};
+
+class MP3ExportOptionsEditor final : public ExportOptionsEditor
 {
+   std::vector<ExportOption> mOptions;
+   std::unordered_map<int, ExportValue> mValues;
+   Listener* mListener{nullptr};
 public:
 
-   ExportMP3Options(wxWindow *parent, int format);
-   virtual ~ExportMP3Options();
+   explicit MP3ExportOptionsEditor(Listener* listener)
+      : mOptions(MP3Options)
+      , mListener(listener)
+   {
+      mValues.reserve(mOptions.size());
+      for(auto& option : mOptions)
+         mValues[option.id] = option.defaultValue;
+   }
 
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   int GetOptionsCount() const override
+   {
+      return static_cast<int>(mOptions.size());
+   }
 
-   void OnSET(wxCommandEvent& evt);
-   void OnVBR(wxCommandEvent& evt);
-   void OnABR(wxCommandEvent& evt);
-   void OnCBR(wxCommandEvent& evt);
-   void OnQuality(wxCommandEvent& evt);
-   void OnMono(wxCommandEvent& evt);
+   bool GetOption(int index, ExportOption& option) const override
+   {
+      if(index >= 0 && index < static_cast<int>(mOptions.size()))
+      {
+         option = mOptions[index];
+         return true;
+      }
+      return false;
+   }
 
-   void LoadNames(const TranslatableStrings &choices);
+   bool SetValue(int id, const ExportValue& value) override
+   {
+      const auto it = mValues.find(id);
+      if(it == mValues.end())
+         return false;
+      if(value.index() != it->second.index())
+         return false;
 
+      it->second = value;
+
+      switch(id)
+      { 
+      case MP3OptionIDMode:
+         {
+            const auto mode = *std::get_if<std::string>(&value);
+            OnModeChange(mode);
+            if(mListener)
+            {
+               mListener->OnExportOptionChangeBegin();
+               mListener->OnExportOptionChange(mOptions[MP3OptionIDQualitySET]);
+               mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityABR]);
+               mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityCBR]);
+               mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityVBR]);
+               mListener->OnExportOptionChangeEnd();
+            }
+         } break;
+      case MP3OptionIDForceMono:
+         {
+            const auto forceMono = *std::get_if<bool>(&value);
+            OnForceMonoChange(forceMono);
+            if(mListener)
+            {
+               mListener->OnExportOptionChangeBegin();
+               mListener->OnExportOptionChange(mOptions[MP3OptionIDChannels]);
+               mListener->OnExportOptionChangeEnd();
+            }
+         } break;
+      default: break;
+      }
+      return true;
+   }
+
+   bool GetValue(int id, ExportValue& value) const override
+   {
+      const auto it = mValues.find(id);
+      if(it != mValues.end())
+      {
+         value = it->second;
+         return true;
+      }
+      return false;
+   }
+
+   void Load(const wxConfigBase& config) override
+   {
+      wxString mode;
+      if(config.Read(wxT("/FileFormats/MP3RateModeChoice"), &mode))
+         mValues[MP3OptionIDMode] = mode.ToStdString();
+      else
+      {
+         //attempt to recover from old-style preference
+         int index;
+         if(config.Read(wxT("/FileFormats/MP3RateMode"), &index))
+            mValues[MP3OptionIDMode] = mOptions[MP3OptionIDMode].values[index];
+      }
+
+      config.Read(wxT("/FileFormats/MP3SetRate"), std::get_if<int>(&mValues[MP3OptionIDQualitySET]));
+      config.Read(wxT("/FileFormats/MP3AbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityABR]));
+      config.Read(wxT("/FileFormats/MP3CbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityCBR]));
+      config.Read(wxT("/FileFormats/MP3VbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityVBR]));
+
+      wxString channels;
+      if(config.Read(wxT("/FileFormats/MP3ChannelModeChoice"), &channels))
+      {
+         mValues[MP3OptionIDChannels] = channels.ToStdString();
+         config.Read(wxT("/FileFormats/MP3ForceMono"), std::get_if<bool>(&mValues[MP3OptionIDForceMono]));
+      }
+      else
+      {
+         int index;
+         //attempt to recover from old-style preference
+         if(config.Read(wxT("/FileFormats/MP3ChannelMode"), &index))
+         {
+            switch(index)
+            {
+            case CHANNEL_STEREO:
+            case CHANNEL_JOINT:
+               mValues[MP3OptionIDChannels] = mOptions[MP3OptionIDChannels].values[index];
+               mValues[MP3OptionIDForceMono] = false;
+               break;
+            case CHANNEL_MONO:
+               mValues[MP3OptionIDForceMono] = true;
+            }
+         }
+      }
+      OnModeChange(*std::get_if<std::string>(&mValues[MP3OptionIDMode]));
+      OnForceMonoChange(*std::get_if<bool>(&mValues[MP3OptionIDForceMono]));
+   }
+
+   void Store(wxConfigBase& config) const override
+   {
+      auto it = mValues.find(MP3OptionIDMode);
+      config.Write(wxT("/FileFormats/MP3RateModeChoice"), wxString(*std::get_if<std::string>(&it->second)));
+
+      it = mValues.find(MP3OptionIDQualitySET);
+      config.Write(wxT("/FileFormats/MP3SetRate"), *std::get_if<int>(&it->second));
+      it = mValues.find(MP3OptionIDQualityABR);
+      config.Write(wxT("/FileFormats/MP3AbrRate"), *std::get_if<int>(&it->second));
+      it = mValues.find(MP3OptionIDQualityCBR);
+      config.Write(wxT("/FileFormats/MP3CbrRate"), *std::get_if<int>(&it->second));
+      it = mValues.find(MP3OptionIDQualityVBR);
+      config.Write(wxT("/FileFormats/MP3VbrRate"), *std::get_if<int>(&it->second));
+
+      it = mValues.find(MP3OptionIDChannels);
+      config.Write(wxT("/FileFormats/MP3ChannelModeChoice"), wxString(*std::get_if<std::string>(&it->second)));
+      it = mValues.find(MP3OptionIDForceMono);
+      config.Write(wxT("/FileFormats/MP3ForceMono"), *std::get_if<bool>(&it->second));
+   }
+   
 private:
 
-   wxRadioButton *mStereo;
-   wxRadioButton *mJoint;
-   wxCheckBox    *mMono;
-   wxRadioButton *mSET;
-   wxRadioButton *mVBR;
-   wxRadioButton *mABR;
-   wxRadioButton *mCBR;
-   wxChoice *mRate;
-   //wxChoice *mMode;
-
-   long mSetRate;
-   long mVbrRate;
-   long mAbrRate;
-   long mCbrRate;
-
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(ExportMP3Options, wxPanelWrapper)
-   EVT_RADIOBUTTON(ID_SET,    ExportMP3Options::OnSET)
-   EVT_RADIOBUTTON(ID_VBR,    ExportMP3Options::OnVBR)
-   EVT_RADIOBUTTON(ID_ABR,    ExportMP3Options::OnABR)
-   EVT_RADIOBUTTON(ID_CBR,    ExportMP3Options::OnCBR)
-   EVT_CHOICE(wxID_ANY,       ExportMP3Options::OnQuality)
-   EVT_CHECKBOX(ID_MONO,      ExportMP3Options::OnMono)
-END_EVENT_TABLE()
-
-///
-///
-ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
-:  wxPanelWrapper(parent, wxID_ANY)
-{
-   mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
-   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_2);
-   mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 192);
-   mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 192);
-
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-   PopulateOrExchange(S);
-
-   TransferDataToWindow();
-}
-
-ExportMP3Options::~ExportMP3Options()
-{
-   TransferDataFromWindow();
-}
-
-EnumSetting< MP3RateMode > MP3RateModeSetting{
-   wxT("/FileFormats/MP3RateModeChoice"),
+   void OnModeChange(const std::string& mode)
    {
-      { wxT("SET"), XXO("Preset") },
-      { wxT("VBR"), XXO("Variable") },
-      { wxT("ABR"), XXO("Average") },
-      { wxT("CBR"), XXO("Constant") },
-   },
-   0, // MODE_SET
+      mOptions[MP3OptionIDQualitySET].flags |= ExportOption::Hidden;
+      mOptions[MP3OptionIDQualityABR].flags |= ExportOption::Hidden;
+      mOptions[MP3OptionIDQualityCBR].flags |= ExportOption::Hidden;
+      mOptions[MP3OptionIDQualityVBR].flags |= ExportOption::Hidden;
 
-   // for migrating old preferences:
-   {
-      MODE_SET, MODE_VBR, MODE_ABR, MODE_CBR
-   },
-   wxT("/FileFormats/MP3RateMode"),
-};
-
-static EnumSetting< MP3ChannelMode > MP3ChannelModeSetting{
-   wxT("/FileFormats/MP3ChannelModeChoice"),
-   {
-      EnumValueSymbol{ wxT("JOINT"), XXO("Joint Stereo") },
-      EnumValueSymbol{ wxT("STEREO"), XXO("Stereo") },
-   },
-   0, // CHANNEL_JOINT
-
-   // for migrating old preferences:
-   {
-      CHANNEL_JOINT, CHANNEL_STEREO,
-   },
-   wxT("/FileFormats/MP3ChannelMode"),
-};
-
-///
-///
-void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
-{
-   bool mono = MP3ForceMono.Read();
-   
-   const TranslatableStrings *choices = nullptr;
-   const std::vector< int > *codes = nullptr;
-   //bool enable;
-   int defrate;
-
-   S.StartVerticalLay();
-   {
-      S.StartHorizontalLay(wxCENTER);
-      {
-         S.StartMultiColumn(2, wxCENTER);
-         {
-            S.SetStretchyCol(1);
-            S.StartTwoColumn();
-            {
-               S.AddPrompt(XXO("Bit Rate Mode:"));
-
-               // Bug 2692: Place button group in panel so tabbing will work and,
-               // on the Mac, VoiceOver will announce as radio buttons.
-               S.StartPanel();
-               {
-                  S.StartHorizontalLay();
-                  {
-                     S.StartRadioButtonGroup(MP3RateModeSetting);
-                     {
-                        mSET = S.Id(ID_SET).TieRadioButton();
-                        mVBR = S.Id(ID_VBR).TieRadioButton();
-                        mABR = S.Id(ID_ABR).TieRadioButton();
-                        mCBR = S.Id(ID_CBR).TieRadioButton();
-                     }
-                     S.EndRadioButtonGroup();
-                  }
-                  S.EndHorizontalLay();
-               }
-               S.EndPanel();
-
-               /* PRL: unfortunately this bit of procedural code must
-                interrupt the mostly-declarative dialog description, until
-                we find a better solution.  Because when shuttling values
-                from the dialog, we must shuttle out the MP3RateModeSetting
-                first. */
-
-               switch( MP3RateModeSetting.ReadEnum() ) {
-                  case MODE_SET:
-                     choices = &setRateNames;
-                     //enable = true;
-                     defrate = mSetRate;
-                     break;
-
-                  case MODE_VBR:
-                     choices = &varRateNames;
-                     //enable = true;
-                     defrate = mVbrRate;
-                     break;
-
-                  case MODE_ABR:
-                     choices = &fixRateNames;
-                     codes = &fixRateValues;
-                     //enable = false;
-                     defrate = mAbrRate;
-                     break;
-
-                  case MODE_CBR:
-                  default:
-                     choices = &fixRateNames;
-                     codes = &fixRateValues;
-                     //enable = false;
-                     defrate = mCbrRate;
-                     break;
-               }
-
-               IntSetting Setting{ L"/FileFormats/MP3Bitrate", defrate };
-
-               mRate = S.Id(ID_QUALITY).TieNumberAsChoice(
-                  XXO("Quality"),
-                  Setting,
-                  *choices,
-                  codes
-               );
-               /*
-               mMode = S.Disable(!enable)
-                  .TieNumberAsChoice(
-                     XXO("Variable Speed:"),
-                     { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
-                     varModeNames );
-               */
-               S.AddPrompt(XXO("Channel Mode:"));
-               S.StartMultiColumn(2, wxEXPAND);
-               {
-                  // Bug 2692: Place button group in panel so tabbing will work and,
-                  // on the Mac, VoiceOver will announce as radio buttons.
-                  S.StartPanel();
-                  {
-                     S.StartHorizontalLay();
-                     {
-                        S.StartRadioButtonGroup(MP3ChannelModeSetting);
-                        {
-                           mJoint = S.Disable(mono)
-                              .TieRadioButton();
-                           mStereo = S.Disable(mono)
-                              .TieRadioButton();
-                        }
-                        S.EndRadioButtonGroup();
-                     }
-                     S.EndHorizontalLay();
-                  }
-                  S.EndPanel();
-
-                  mMono = S.Id(ID_MONO).AddCheckBox(XXO("Force export to mono"), mono);
-               }
-               S.EndMultiColumn();
-            }
-            S.EndTwoColumn();
-         }
-         S.EndMultiColumn();
-      }
-      S.EndHorizontalLay();
+      if(mode == "SET")
+         mOptions[MP3OptionIDQualitySET].flags &= ~ExportOption::Hidden;
+      else if(mode == "ABR")
+         mOptions[MP3OptionIDQualityABR].flags &= ~ExportOption::Hidden;
+      else if(mode == "CBR")
+         mOptions[MP3OptionIDQualityCBR].flags &= ~ExportOption::Hidden;
+      else if(mode == "VBR")
+         mOptions[MP3OptionIDQualityVBR].flags &= ~ExportOption::Hidden;
    }
-   S.EndVerticalLay();
-}
-
-///
-///
-bool ExportMP3Options::TransferDataToWindow()
-{
-   return true;
-}
-
-bool ExportMP3Options::TransferDataFromWindow()
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Write(wxT("/FileFormats/MP3SetRate"), mSetRate);
-   gPrefs->Write(wxT("/FileFormats/MP3VbrRate"), mVbrRate);
-   gPrefs->Write(wxT("/FileFormats/MP3AbrRate"), mAbrRate);
-   gPrefs->Write(wxT("/FileFormats/MP3CbrRate"), mCbrRate);
-   gPrefs->Flush();
-
-   return true;
-}
+   
+   void OnForceMonoChange(bool forceMono)
+   {
+      if(forceMono)
+         mOptions[MP3OptionIDChannels].flags |= ExportOption::ReadOnly;
+      else
+         mOptions[MP3OptionIDChannels].flags &= ~ExportOption::ReadOnly;
+   }
+   
+};
 
 namespace {
 
@@ -496,86 +490,6 @@ int ValidateIndex( const std::vector<int> &values, int value, int defaultIndex )
    return ( iter != finish ) ? static_cast<int>( iter - start ) : defaultIndex;
 }
 
-}
-
-///
-///
-void ExportMP3Options::OnSET(wxCommandEvent& WXUNUSED(event))
-{
-   LoadNames(setRateNames);
-
-   mRate->SetSelection(ValidateValue(setRateNames.size(), mSetRate, 2));
-   mRate->Refresh();
-   //mMode->Enable(true);
-}
-
-///
-///
-void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
-{
-   LoadNames(varRateNames);
-
-   mRate->SetSelection(ValidateValue(varRateNames.size(), mVbrRate, 2));
-   mRate->Refresh();
-   //mMode->Enable(true);
-}
-
-///
-///
-void ExportMP3Options::OnABR(wxCommandEvent& WXUNUSED(event))
-{
-   LoadNames(fixRateNames);
-
-   mRate->SetSelection(ValidateIndex(fixRateValues, mAbrRate, 10));
-   mRate->Refresh();
-   //mMode->Enable(false);
-}
-
-///
-///
-void ExportMP3Options::OnCBR(wxCommandEvent& WXUNUSED(event))
-{
-   LoadNames(fixRateNames);
-
-   mRate->SetSelection(ValidateIndex(fixRateValues, mCbrRate, 10));
-   mRate->Refresh();
-   //mMode->Enable(false);
-}
-
-void ExportMP3Options::OnQuality(wxCommandEvent& WXUNUSED(event))
-{
-   int sel = mRate->GetSelection();
-
-   if (mSET->GetValue()) {
-      mSetRate = sel;
-   }
-   else if (mVBR->GetValue()) {
-      mVbrRate = sel;
-   }
-   else if (mABR->GetValue()) {
-      mAbrRate = fixRateValues[ sel ];
-   }
-   else {
-      mCbrRate = fixRateValues[ sel ];
-   }
-}
-
-void ExportMP3Options::OnMono(wxCommandEvent& /*evt*/)
-{
-   bool mono = false;
-   mono = mMono->GetValue();
-   mJoint->Enable(!mono);
-   mStereo->Enable(!mono);
-
-   MP3ForceMono.Write(mono);
-   gPrefs->Flush();
-}
-
-void ExportMP3Options::LoadNames(const TranslatableStrings &names)
-{
-   mRate->Clear();
-   for (const auto &name : names)
-      mRate->Append( name.Translation() );
 }
 
 //----------------------------------------------------------------------------
@@ -1740,18 +1654,16 @@ int ExportMP3::GetFormatCount() const
 
 FormatInfo ExportMP3::GetFormatInfo(int) const
 {
-   const bool mono = MP3ForceMono.Read();
    return {
-      wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, mono ? 1u : 2u, true
+      wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, 2u, true
    };
 }
 
 std::unique_ptr<ExportOptionsEditor>
 ExportMP3::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const
 {
-   return { };
+   return std::make_unique<MP3ExportOptionsEditor>(listener);
 }
-
 
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
 {
@@ -1775,7 +1687,7 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
 
 void ExportMP3::Export(AudacityProject *project,
                        ExportProgressListener &progressListener,
-                       const Parameters&,
+                       const Parameters& parameters,
                        unsigned channels,
                        const wxFileNameWrapper &fName,
                        bool selectionOnly,
@@ -1824,31 +1736,44 @@ void ExportMP3::Export(AudacityProject *project,
    int highrate = 48000;
    int lowrate = 8000;
    int bitrate = 0;
-   int brate;
+   int quality;
    //int vmode;
-   bool forceMono = MP3ForceMono.Read();
-
-   gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), &brate, 128);
-   auto rmode = MP3RateModeSetting.ReadEnumWithDefault( MODE_CBR );
-   //gPrefs->Read(wxT("/FileFormats/MP3VarMode"), &vmode, ROUTINE_FAST);
-   auto cmode = MP3ChannelModeSetting.ReadEnumWithDefault( CHANNEL_STEREO );
-
+   bool forceMono = ExportUtils::GetParameterValue(
+      parameters,
+      MP3OptionIDForceMono,
+      false);
+   
+   auto rmode = ExportUtils::GetParameterValue(
+      parameters,
+      MP3OptionIDMode,
+      std::string("CBR"));
+   auto cmode = ExportUtils::GetParameterValue(
+      parameters,
+      MP3OptionIDChannels,
+      std::string("STEREO")
+   );
    // Set the bitrate/quality and mode
-   if (rmode == MODE_SET) {
-      brate = ValidateValue(setRateNames.size(), brate, PRESET_STANDARD);
-      //int r = ValidateValue( varModeNames.size(), vmode, ROUTINE_FAST );
+   if (rmode == "SET") {
+      quality = ExportUtils::GetParameterValue<int>(
+         parameters,
+         MP3OptionIDQualitySET,
+         PRESET_STANDARD);
       exporter.SetMode(MODE_SET);
-      exporter.SetQuality(brate/*, r*/);
+      exporter.SetQuality(quality);
    }
-   else if (rmode == MODE_VBR) {
-      brate = ValidateValue( varRateNames.size(), brate, QUALITY_2 );
-      //int r = ValidateValue( varModeNames.size(), vmode, ROUTINE_FAST );
+   else if (rmode == "VBR") {
+      quality = ExportUtils::GetParameterValue<int>(
+         parameters,
+         MP3OptionIDQualityVBR,
+         QUALITY_2);
       exporter.SetMode(MODE_VBR);
-      exporter.SetQuality(brate/*, r*/);
+      exporter.SetQuality(quality);
    }
-   else if (rmode == MODE_ABR) {
-      brate = ValidateIndex( fixRateValues, brate, 6 /* 128 kbps */ );
-      bitrate = fixRateValues[ brate ];
+   else if (rmode == "ABR") {
+      bitrate = ExportUtils::GetParameterValue(
+         parameters,
+         MP3OptionIDQualityABR,
+         128);
       exporter.SetMode(MODE_ABR);
       exporter.SetBitrate(bitrate);
       if (bitrate > 160) {
@@ -1859,8 +1784,7 @@ void ExportMP3::Export(AudacityProject *project,
       }
    }
    else {
-      brate = ValidateIndex( fixRateValues, brate, 6 /* 128 kbps */ );
-      bitrate = fixRateValues[ brate ];
+      bitrate = ExportUtils::GetParameterValue(parameters, MP3OptionIDQualityCBR, 128);
       exporter.SetMode(MODE_CBR);
       exporter.SetBitrate(bitrate);
 
@@ -1906,7 +1830,7 @@ void ExportMP3::Export(AudacityProject *project,
    if (forceMono) {
       exporter.SetChannel(CHANNEL_MONO);
    }
-   else if (cmode == CHANNEL_JOINT) {
+   else if (cmode == "JOINT") {
       exporter.SetChannel(CHANNEL_JOINT);
    }
    else {
@@ -1966,17 +1890,17 @@ void ExportMP3::Export(AudacityProject *project,
          channels, inSamples, true,
          rate, floatSample, mixerSpec);
 
-      if (rmode == MODE_SET) {
+      if (rmode == "SET") {
          SetStatusString((selectionOnly ?
             XO("Exporting selected audio with %s preset") :
             XO("Exporting the audio with %s preset"))
-               .Format( setRateNamesShort[brate] ));
+               .Format( setRateNamesShort[quality] ));
       }
-      else if (rmode == MODE_VBR) {
+      else if (rmode == "VBR") {
          SetStatusString((selectionOnly ?
             XO("Exporting selected audio with VBR quality %s") :
             XO("Exporting the audio with VBR quality %s"))
-               .Format( varRateNames[brate] ));
+               .Format( varRateNames[quality] ));
       }
       else {
          SetStatusString((selectionOnly ?
@@ -2079,7 +2003,6 @@ void ExportMP3::Export(AudacityProject *project,
 
 void ExportMP3::OptionsCreate(ShuttleGui &S, int format)
 {
-   S.AddWindow( safenew ExportMP3Options{ S.GetParent(), format } );
 }
 
 int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
