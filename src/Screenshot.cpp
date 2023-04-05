@@ -828,9 +828,9 @@ void OnScreenshot(const CommandContext &context )
 
 using namespace MenuTable;
 AttachedItem sAttachment{
-   { wxT("Tools/Other"), { OrderingHint::After, wxT("ConfigReset") } },
    Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
-      OnScreenshot, AudioIONotBusyFlag() )
+      OnScreenshot, AudioIONotBusyFlag() ),
+   { wxT("Tools/Other"), { OrderingHint::After, wxT("ConfigReset") } }
 };
 
 }

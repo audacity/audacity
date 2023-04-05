@@ -219,9 +219,10 @@ void OnKaraoke(const CommandContext &context)
 // Register that menu item
 
 using namespace MenuTable;
-AttachedItem sAttachment{ wxT("View/Windows"),
+AttachedItem sAttachment{
    Command( wxT("Karaoke"), XXO("&Karaoke"), OnKaraoke,
-      LabelTracksExistFlag() )
+      LabelTracksExistFlag() ),
+   wxT("View/Windows")
 };
 
 }

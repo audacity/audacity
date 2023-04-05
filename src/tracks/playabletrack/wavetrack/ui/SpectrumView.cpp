@@ -1181,9 +1181,9 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 using namespace MenuTable;
 #define FN(X) (& Handler :: X)
 
-BaseItemSharedPtr SpectralSelectionMenu()
+auto SpectralSelectionMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Spectral"), XXO("S&pectral"),
       Command( wxT("ToggleSpectralSelection"),
@@ -1201,9 +1201,8 @@ BaseItemSharedPtr SpectralSelectionMenu()
 
 #undef FN
 
-AttachedItem sAttachment2{
-   Placement{ wxT("Select/Basic"), { OrderingHint::After, wxT("Region") } },
-   Indirect(SpectralSelectionMenu())
+AttachedItem sAttachment2{ Indirect(SpectralSelectionMenu()),
+   Placement{ wxT("Select/Basic"), { OrderingHint::After, wxT("Region") } }
 };
 
 }

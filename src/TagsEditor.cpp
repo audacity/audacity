@@ -1039,8 +1039,8 @@ void OnEditMetadata(const CommandContext &context)
 using namespace MenuTable;
 
 AttachedItem sAttachment{
-   wxT("Edit/Other"),
    Command( wxT("EditMetaData"), XXO("&Metadata Editor"), OnEditMetadata,
-      AudioIONotBusyFlag() )
+      AudioIONotBusyFlag() ),
+   wxT("Edit/Other")
 };
 }

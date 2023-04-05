@@ -135,7 +135,7 @@ Identifier ReadSnapTo()
    return snapTo;
 }
 
-Registry::GroupItemBase& SnapFunctionsRegistry::Registry()
+Registry::GroupItem<SnapRegistryTraits>& SnapFunctionsRegistry::Registry()
 {
    static Registry::GroupItem<SnapRegistryTraits> registry { PathStart };
    return registry;
@@ -232,12 +232,6 @@ SnapRegistryItem::SnapRegistryItem(
 }
 
 SnapRegistryItem::~SnapRegistryItem()
-{
-}
-
-SnapRegistryItemRegistrator::SnapRegistryItemRegistrator(
-   const Registry::Placement& placement, Registry::BaseItemPtr pItem)
-    : RegisteredItem { std::move(pItem), placement }
 {
 }
 

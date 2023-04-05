@@ -592,9 +592,9 @@ void OnInputGainDec(const CommandContext &context)
 }
    
 using namespace MenuTable;
-BaseItemSharedPtr ExtraMixerMenu()
+auto ExtraMixerMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Mixer"), XXO("Mi&xer"),
       Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
          OnOutputGain, AlwaysEnabledFlag ),
@@ -612,9 +612,8 @@ BaseItemSharedPtr ExtraMixerMenu()
    return menu;
 }
 
-AttachedItem sAttachment4{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraMixerMenu())
+AttachedItem sAttachment4{ Indirect(ExtraMixerMenu()),
+   wxT("Optional/Extra/Part1")
 };
 
 }

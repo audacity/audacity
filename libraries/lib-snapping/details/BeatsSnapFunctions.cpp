@@ -64,7 +64,6 @@ MultiplierFunctor SnapToTriplets(int divisor)
 }
 
 SnapRegistryItemRegistrator beats {
-   Registry::Placement { {}, { Registry::OrderingHint::Begin } },
    SnapFunctionItems( "beats",
       SnapFunctionGroup(
          /* i18n-hint: The music theory "beat"*/
@@ -95,7 +94,8 @@ SnapRegistryItemRegistrator beats {
             "triplet_1_64", XO("1/64 (triplets)"), SnapToTriplets(64)),
          TimeInvariantSnapFunction(
             "triplet_1_128", XO("1/128 (triplets)"), SnapToTriplets(128)))
-   )
+   ),
+   Registry::Placement { {}, { Registry::OrderingHint::Begin } }
 };
 
 }

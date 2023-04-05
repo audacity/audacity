@@ -216,9 +216,9 @@ void OnPrint(const CommandContext &context)
 }
 
 using namespace MenuTable;
-BaseItemSharedPtr PrintingItems()
+auto PrintingItems()
 {
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Section( "Print",
       Command( wxT("PageSetup"), XXO("Pa&ge Setup..."), OnPageSetup,
          AudioIONotBusyFlag() | TracksExistFlag() ),
@@ -229,8 +229,8 @@ BaseItemSharedPtr PrintingItems()
    return items;
 }
 
-AttachedItem sAttachment{ { "File", { OrderingHint::Before, "Exit" } },
-   Indirect(PrintingItems())
+AttachedItem sAttachment{ Indirect(PrintingItems()),
+   { "File", { OrderingHint::Before, "Exit" } }
 };
 
 }

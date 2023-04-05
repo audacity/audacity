@@ -49,10 +49,11 @@ void OnNewTimeTrack(const CommandContext &context)
    t->EnsureVisible();
 }
 
-AttachedItem sAttachment{ wxT("Tracks/Add/Add"),
-     Command( wxT("NewTimeTrack"), XXO("&Time Track"),
+AttachedItem sAttachment{
+   Command( wxT("NewTimeTrack"), XXO("&Time Track"),
         OnNewTimeTrack, AudioIONotBusyFlag()
- )
+   ),
+   wxT("Tracks/Add/Add")
 };
 
 }

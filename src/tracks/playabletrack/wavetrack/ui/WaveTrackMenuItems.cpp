@@ -71,13 +71,14 @@ void OnNewStereoTrack(const CommandContext &context)
    (*tracks.rbegin())->EnsureVisible();
 }
 
-AttachedItem sAttachment{ wxT("Tracks/Add/Add"),
+AttachedItem sAttachment{
    Items( "",
       Command( wxT("NewMonoTrack"), XXO("&Mono Track"), OnNewWaveTrack,
          AudioIONotBusyFlag(), wxT("Ctrl+Shift+N") ),
       Command( wxT("NewStereoTrack"), XXO("&Stereo Track"),
          OnNewStereoTrack, AudioIONotBusyFlag() )
-   )
+   ),
+   wxT("Tracks/Add/Add")
 };
 
 }

@@ -160,12 +160,6 @@ void PopupMenuTable::ExtendMenu( PopupMenu &menu, PopupMenuTable &table )
       visitor, table.Get( theMenu.pUserData ).get(), table.GetRegistry() );
 }
 
-void PopupMenuTable::RegisterItem(
-   const Registry::Placement &placement, Registry::BaseItemPtr pItem )
-{
-   Registry::RegisterItem( *mRegistry, placement, std::move( pItem ) );
-}
-
 void PopupMenuTable::Append(
    const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
    const TranslatableString &string, wxCommandEventFunction memFn,

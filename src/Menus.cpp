@@ -257,16 +257,10 @@ const auto MenuPathStart = wxT("MenuBar");
 
 }
 
-Registry::GroupItemBase &MenuTable::ItemRegistry::Registry()
+auto MenuTable::ItemRegistry::Registry() -> Registry::GroupItem<Traits> &
 {
    static GroupItem<Traits> registry{ MenuPathStart };
    return registry;
-}
-
-MenuTable::AttachedItem::AttachedItem(
-   const Placement &placement, BaseItemPtr pItem )
-   : RegisteredItem{ std::move(pItem), placement }
-{
 }
 
 namespace {

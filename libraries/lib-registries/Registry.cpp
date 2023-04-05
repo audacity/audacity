@@ -773,8 +773,8 @@ void OrderingPreferenceInitializer::operator () ()
       gPrefs->Flush();
 }
 
-void RegisterItem( GroupItemBase &registry, const Placement &placement,
-   BaseItemPtr pItem )
+void detail::RegisterItem(GroupItemBase &registry, const Placement &placement,
+   BaseItemPtr pItem)
 {
    // Since registration determines only an unordered tree of menu items,
    // we can sort children of each node lexicographically for our convenience.

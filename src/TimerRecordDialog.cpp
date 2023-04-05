@@ -1326,10 +1326,10 @@ const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
 using namespace MenuTable;
 AttachedItem sAttachment{
-   { wxT("Transport/Basic/Record"),
-      { OrderingHint::After, wxT("Record2ndChoice") } },
    Command( wxT("TimerRecord"), XXO("&Timer Record..."),
-      OnTimerRecord, CanStopFlags, wxT("Shift+T") )
+      OnTimerRecord, CanStopFlags, wxT("Shift+T") ),
+   { wxT("Transport/Basic/Record"),
+      { OrderingHint::After, wxT("Record2ndChoice") } }
 };
 
 }

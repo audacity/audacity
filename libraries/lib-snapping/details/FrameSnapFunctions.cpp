@@ -15,7 +15,6 @@
 namespace
 {
 SnapRegistryItemRegistrator videoFrames {
-   Registry::Placement { {}, { Registry::OrderingHint::After, "time" } },
    SnapFunctionItems("frames",
       SnapFunctionGroup(
          "video", { XO("Video frames"), false },
@@ -29,6 +28,7 @@ SnapRegistryItemRegistrator videoFrames {
       SnapFunctionGroup(
          "cd", { XO("CD frames"), false },
          TimeInvariantSnapFunction("cd_75_fps", XO("CDDA frames (75 fps)"), 75.0))
-   )
+   ),
+   Registry::Placement { {}, { Registry::OrderingHint::After, "time" } }
 };
 }

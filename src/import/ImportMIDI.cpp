@@ -162,10 +162,10 @@ void OnImportMIDI(const CommandContext &context)
 }
 
 AttachedItem sAttachment{
-   { wxT("File/Import-Export/Import"),
-      { OrderingHint::After, {"ImportAudio"} } },
    Command( wxT("ImportMIDI"), XXO("&MIDI..."), OnImportMIDI,
-      AudioIONotBusyFlag() )
+      AudioIONotBusyFlag() ),
+   { wxT("File/Import-Export/Import"),
+      { OrderingHint::After, {"ImportAudio"} } }
 };
 
 }

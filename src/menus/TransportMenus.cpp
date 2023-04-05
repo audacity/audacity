@@ -734,13 +734,12 @@ void OnStopSelect(const CommandContext &context)
 
 // Under /MenuBar
 using namespace MenuTable;
-BaseItemSharedPtr TransportMenu()
+auto TransportMenu()
 {
    using Options = CommandManager::Options;
-
-   static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
-
-   static BaseItemSharedPtr menu{
+   static const auto CanStopFlags =
+      AudioIONotBusyFlag() | CanStopAudioStreamFlag();
+   static auto menu = std::shared_ptr{
    /* i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
    Menu( wxT("Transport"), XXO("Tra&nsport"),
@@ -865,14 +864,11 @@ BaseItemSharedPtr TransportMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(TransportMenu())
-};
+AttachedItem sAttachment1{ Indirect(TransportMenu()) };
 
-BaseItemSharedPtr ExtraTransportMenu()
+auto ExtraTransportMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Transport"), XXO("T&ransport"),
       // PlayStop is already in the menus.
       /* i18n-hint: (verb) Start playing audio*/
@@ -913,15 +909,14 @@ BaseItemSharedPtr ExtraTransportMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraTransportMenu())
+AttachedItem sAttachment2{ Indirect(ExtraTransportMenu()),
+   wxT("Optional/Extra/Part1")
 };
 
-BaseItemSharedPtr ExtraSelectionItems()
+auto ExtraSelectionItems()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items(wxT("MoveToLabel"),
       Command(wxT("MoveToPrevLabel"), XXO("Move to Pre&vious Label"),
          OnMoveToPrevLabel,
@@ -933,9 +928,8 @@ BaseItemSharedPtr ExtraSelectionItems()
    return items;
 }
 
-AttachedItem sAttachment4{
-  { wxT("Optional/Extra/Part1/Select"), { OrderingHint::End, {} } },
-   Indirect(ExtraSelectionItems())
+AttachedItem sAttachment4{ Indirect(ExtraSelectionItems()),
+  { wxT("Optional/Extra/Part1/Select"), { OrderingHint::End, {} } }
 };
 
 }

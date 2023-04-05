@@ -1135,12 +1135,11 @@ void OnTrackMoveBottom(const CommandContext &context)
 
 // Under /MenuBar
 using namespace MenuTable;
-BaseItemSharedPtr TracksMenu()
+auto TracksMenu()
 {
    // Tracks Menu (formerly Project Menu)
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Tracks"), XXO("&Tracks"),
       Section( "Add",
          Menu( wxT("Add"), XXO("Add &New") )
@@ -1282,15 +1281,12 @@ BaseItemSharedPtr TracksMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(TracksMenu())
-};
+AttachedItem sAttachment1{ Indirect(TracksMenu()) };
 
-BaseItemSharedPtr ExtraTrackMenu()
+auto ExtraTrackMenu()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Track"), XXO("&Track"),
       Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),
          OnTrackPan,
@@ -1340,9 +1336,8 @@ BaseItemSharedPtr ExtraTrackMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraTrackMenu())
+AttachedItem sAttachment2{ Indirect(ExtraTrackMenu()),
+   wxT("Optional/Extra/Part2")
 };
 
 }

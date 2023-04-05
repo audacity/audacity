@@ -428,9 +428,9 @@ void OnHelpWelcome(const CommandContext &context)
 // Menu definitions
 
 using namespace MenuTable;
-BaseItemSharedPtr HelpMenu()
+auto HelpMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Help"), XXO("&Help"),
       Section( "Basic",
          // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
@@ -511,9 +511,6 @@ BaseItemSharedPtr HelpMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(HelpMenu())
-};
+AttachedItem sAttachment1{ Indirect(HelpMenu()) };
 
 }

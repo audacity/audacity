@@ -1133,7 +1133,7 @@ static const auto finder =
      { return Scrubber::Get( project ); };
 
 using namespace MenuTable;
-BaseItemSharedPtr ToolbarMenu()
+auto ToolbarMenu()
 {
    using Options = CommandManager::Options;
    static auto menu = []{
@@ -1156,16 +1156,12 @@ BaseItemSharedPtr ToolbarMenu()
    return menu;
 }
 
-AttachedItem sAttachment{
-   wxT("Transport/Basic"),
-   Indirect(ToolbarMenu())
-};
+AttachedItem sAttachment{ Indirect(ToolbarMenu()), wxT("Transport/Basic") };
 
-BaseItemSharedPtr KeyboardScrubbingItems()
+auto KeyboardScrubbingItems()
 {
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    ( FinderScope{ finder },
    Items( wxT("KeyboardScrubbing"),
       Command(wxT("KeyboardScrubBackwards"), XXO("Scrub Bac&kwards"),
@@ -1180,9 +1176,8 @@ BaseItemSharedPtr KeyboardScrubbingItems()
    return items;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1/Transport"),
-   Indirect(KeyboardScrubbingItems())
+AttachedItem sAttachment2{ Indirect(KeyboardScrubbingItems()),
+   wxT("Optional/Extra/Part1/Transport")
 };
 
 }

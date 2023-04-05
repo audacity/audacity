@@ -92,7 +92,8 @@ struct RegistryVisitor : public Registry::Visitor
  {
  }
 
-Registry::GroupItemBase& NumericConverterRegistry::Registry()
+Registry::GroupItem<NumericConverterRegistryTraits>&
+   NumericConverterRegistry::Registry()
 {
    static Registry::GroupItem<NumericConverterRegistryTraits>
       registry { PathStart };
@@ -133,11 +134,5 @@ const NumericConverterRegistryItem* NumericConverterRegistry::Find(
 }
 
 NumericConverterRegistryGroup::~NumericConverterRegistryGroup()
-{
-}
-
-NumericConverterItemRegistrator::NumericConverterItemRegistrator(
-   const Registry::Placement& placement, Registry::BaseItemPtr pItem)
-    : RegisteredItem { std::move(pItem), placement }
 {
 }

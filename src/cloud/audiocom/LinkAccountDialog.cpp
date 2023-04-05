@@ -142,9 +142,9 @@ void OnLinkAccount(const CommandContext&)
 
 using namespace MenuTable;
 AttachedItem sAttachment{
-   Placement{ wxT("Help/Extra"), { OrderingHint::Begin } },
       Command(
          wxT("LinkAccount"), XXO("L&ink audio.com account..."),
-         OnLinkAccount, AlwaysEnabledFlag) 
+         OnLinkAccount, AlwaysEnabledFlag),
+   Placement{ wxT("Help/Extra"), { OrderingHint::Begin } }
 };
 }

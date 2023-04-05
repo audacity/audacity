@@ -334,9 +334,9 @@ void OnNextTool(const CommandContext &context)
 }
 
 using namespace MenuTable;
-BaseItemSharedPtr ExtraToolsMenu()
+auto ExtraToolsMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Tools"), XXO("T&ools"),
       Command( wxT("SelectTool"), XXO("&Selection Tool"), OnSelectTool,
          AlwaysEnabledFlag, wxT("F1") ),
@@ -354,8 +354,7 @@ BaseItemSharedPtr ExtraToolsMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraToolsMenu())
+AttachedItem sAttachment2{ Indirect(ExtraToolsMenu()),
+   wxT("Optional/Extra/Part1")
 };
 }

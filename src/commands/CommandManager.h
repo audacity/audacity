@@ -423,8 +423,17 @@ struct ProjectMenuVisitor : MenuVisitor
 namespace MenuTable {
    using namespace Registry;
 
+   struct CommandItem;
+   struct ConditionalGroupItem;
+   struct MenuItem;
+   struct MenuItems;
+   struct MenuPart;
+
    struct Traits : Registry::DefaultTraits {
       using ComputedItemContextType = AudacityProject;
+      using LeafTypes = List<CommandItem>;
+      using NodeTypes = List<
+         ConditionalGroupItem, MenuItem, MenuItems, MenuPart>;
    };
 
    // These are found by dynamic_cast
@@ -685,22 +694,13 @@ namespace MenuTable {
    //! @}
 
    struct ItemRegistry {
-      static GroupItemBase &Registry();
+      static GroupItem<Traits> &Registry();
    };
 
    // Typically you make a static object of this type in the .cpp file that
    // also defines the added menu actions.
    // pItem can be specified by an expression using the inline functions above.
-   struct AUDACITY_DLL_API AttachedItem final
-      : public RegisteredItem<BaseItem, ItemRegistry>
-   {
-      AttachedItem( const Placement &placement, BaseItemPtr pItem );
-
-      AttachedItem( const wxString &path, BaseItemPtr pItem )
-         // Delegating constructor
-         : AttachedItem( Placement{ path }, std::move( pItem ) )
-      {}
-   };
+   using AttachedItem = RegisteredItem<ItemRegistry>;
 }
 
 #endif
