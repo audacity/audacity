@@ -5,7 +5,7 @@ $preview enabled
 $name (_ "Clip Fix")
 $debugbutton false
 $author (_ "Benjamin Schwartz and Steve Daulton")
-$release 2.3.0-1
+$release 2.3.0-2
 $copyright (_ "GNU General Public License v2.0")
 
 ;; License: GPL v2
@@ -23,17 +23,17 @@ $copyright (_ "GNU General Public License v2.0")
 ;; 4. Go to next region
 
 
-$control threshold (_ "Threshold of Clipping (%)") float "" 95 0 100
-$control gain (_ "Reduce amplitude to allow for restored peaks (dB)") float "" -9 -30 0
+$control THRESHOLD (_ "Threshold of Clipping (%)") float "" 95 0 100
+$control GAIN (_ "Reduce amplitude to allow for restored peaks (dB)") float "" -9 -30 0
 
-(setf threshold (/ threshold 100))
-(setf gain (db-to-linear gain))
+(setf thresh-ratio (/ THRESHOLD 100))
+(setf gain-lin (db-to-linear GAIN))
 (setf buffersize 100000)
 (setf slopelength 4)  ; number of samples used to calculate the exit / re-entry slope
 
 
 (defun declip (sig thresh peak)
-  (let* ((threshold (* thresh peak))
+  (let* ((thresh (* thresh peak))
          (ln (truncate len))
          (finalbufsize (rem ln buffersize)))
     ;; Calculate the number of buffers we can process.
@@ -47,21 +47,21 @@ $control gain (_ "Reduce amplitude to allow for restored peaks (dB)") float "" -
       (seqrep (i buffercount)
         (let* ((step (min buffersize (- ln (* i buffersize))))
                (buffer (snd-fetch-array sig step step))
-               (processed (process buffer threshold step)))
-          (cue (mult gain
+               (processed (process buffer thresh step)))
+          (cue (mult gain-lin
                     (snd-from-array 0 *sound-srate* processed))))))
     ;;; If there's unprocessed audio remaining, add it to the end
     (if (and (> finalbufsize 0)(< finalbufsize slopelength))
-        (seq out (cue (getfinalblock sig finalbufsize gain)))
+        (seq out (cue (getfinalblock sig finalbufsize gain-lin)))
         out)))
 
 
-(defun getfinalblock (sig step gain)
+(defun getfinalblock (sig step gain-lin)
   (let ((block (snd-fetch-array sig step step)))
-    (mult gain (snd-from-array 0 *sound-srate* block))))
+    (mult gain-lin (snd-from-array 0 *sound-srate* block))))
 
 
-(defun process (buffer threshold bufferlength)
+(defun process (buffer thresh bufferlength)
   ;;; Find threshold crossings
   (setf exit-list ())         ; list of times when waveform exceeds threshold
   (setf return-list ())       ; list of times when waveform returns below threshold
@@ -70,17 +70,17 @@ $control gain (_ "Reduce amplitude to allow for restored peaks (dB)") float "" -
   (let ((last-sample (- bufferlength slopelength)))
     (do ((i slopelength (1+ i)))
         ((>= i last-sample))
-      (if (>= (abs (aref buffer i)) threshold)
-          (when (< (abs (aref buffer (- i 1))) threshold)   ; we just crossed threshold
+      (if (>= (abs (aref buffer i)) thresh)
+          (when (< (abs (aref buffer (- i 1))) thresh)   ; we just crossed threshold
             (push (- i 1) exit-list))
-          (when (>= (abs (aref buffer (- i 1))) threshold)  ; we just got back in range
+          (when (>= (abs (aref buffer (- i 1))) thresh)  ; we just got back in range
             (push i return-list)))))
   ;; Reverse lists back into chronological order.
   ;; This is faster than appending values in chronological order.
   (setf exit-list (reverse exit-list))
   (setf return-list (reverse return-list))
   ;; If the audio begins in a clipped region, discard the first return
-  (when (>= (abs (aref buffer (1- slopelength))) threshold)
+  (when (>= (abs (aref buffer (1- slopelength))) thresh)
     (setq return-list (cdr return-list)))
   ;; Interpolate between each pair of exit / entry points
   (let ((slopelen (1- slopelength)))
@@ -105,4 +105,4 @@ $control gain (_ "Reduce amplitude to allow for restored peaks (dB)") float "" -
 
 
 ;; (get '*selection* 'peak) introduced in Audacity 2.1.3
-(multichan-expand #'declip *track* threshold (get '*selection* 'peak))
+(multichan-expand #'declip *track* thresh-ratio (get '*selection* 'peak))
