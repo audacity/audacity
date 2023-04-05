@@ -18,6 +18,7 @@
 #include <wx/app.h>
 #include <wx/cmdline.h>
 #include <wx/combobox.h>
+#include <wx/button.h>
 #include <wx/log.h>
 #include <wx/process.h>
 #include <wx/sizer.h>
@@ -45,6 +46,7 @@
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
 #include "ExportOptionsEditor.h"
+#include "ExportOptionsUIServices.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -52,168 +54,6 @@
       struct id3_frame *id3_frame_new(char const *);
    }
 #endif
-
-//----------------------------------------------------------------------------
-// ExportCLOptions
-//----------------------------------------------------------------------------
-
-class ExportCLOptions final : public wxPanelWrapper
-{
-public:
-   ExportCLOptions(wxWindow *parent, int format);
-   virtual ~ExportCLOptions();
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-
-   void OnBrowse(wxCommandEvent & event);
-
-private:
-   wxComboBox *mCmd;
-   FileHistory mHistory;
-
-   DECLARE_EVENT_TABLE()
-};
-
-#define ID_BROWSE 5000
-
-BEGIN_EVENT_TABLE(ExportCLOptions, wxPanelWrapper)
-   EVT_BUTTON(ID_BROWSE, ExportCLOptions::OnBrowse)
-END_EVENT_TABLE()
-
-///
-///
-ExportCLOptions::ExportCLOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanelWrapper(parent, wxID_ANY)
-{
-   mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
-
-   if (mHistory.empty()) {
-      mHistory.Append(wxT("ffmpeg -i - \"%f.opus\""));
-      mHistory.Append(wxT("ffmpeg -i - \"%f.wav\""));
-      mHistory.Append(wxT("ffmpeg -i - \"%f\""));
-      mHistory.Append(wxT("lame - \"%f\""));
-   }
-
-   mHistory.Append(gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"),
-                                          mHistory[ 0 ]));
-
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-   PopulateOrExchange(S);
-
-   TransferDataToWindow();
-
-   parent->Layout();
-}
-
-ExportCLOptions::~ExportCLOptions()
-{
-   TransferDataFromWindow();
-}
-
-///
-///
-void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
-{
-   wxArrayStringEx cmds( mHistory.begin(), mHistory.end() );
-   auto cmd = cmds[0];
-
-   S.StartVerticalLay();
-   {
-      S.StartHorizontalLay(wxEXPAND);
-      {
-         S.SetSizerProportion(1);
-         S.StartMultiColumn(3, wxEXPAND);
-         {
-            S.SetStretchyCol(1);
-            mCmd = S.AddCombo(XXO("Command:"),
-                              cmd,
-                              cmds);
-            S.Id(ID_BROWSE).AddButton(XXO("Browse..."),
-                                      wxALIGN_CENTER_VERTICAL);
-            S.AddFixedText( {} );
-            S.TieCheckBox(XXO("Show output"),
-                          {wxT("/FileFormats/ExternalProgramShowOutput"),
-                           false});
-         }
-         S.EndMultiColumn();
-      }
-      S.EndHorizontalLay();
-
-      S.AddTitle(XO(
-/* i18n-hint: Some programmer-oriented terminology here:
-   "Data" refers to the sound to be exported, "piped" means sent,
-   and "standard in" means the default input stream that the external program,
-   named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
-   in the program as a format string.  Keep %f unchanged. */
-"Data will be piped to standard in. \"%f\" uses the file name in the export window."), 250);
-   }
-   S.EndVerticalLay();
-}
-
-///
-///
-bool ExportCLOptions::TransferDataToWindow()
-{
-   return true;
-}
-
-///
-///
-bool ExportCLOptions::TransferDataFromWindow()
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   wxString cmd = mCmd->GetValue();
-
-   mHistory.Append(cmd);
-   mHistory.Save(*gPrefs);
-
-   gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);
-   gPrefs->Flush();
-
-   return true;
-}
-
-///
-///
-void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
-{
-   wxString path;
-   FileExtension ext;
-   FileNames::FileType type = FileNames::AllFiles;
-
-#if defined(__WXMSW__)
-   ext = wxT("exe");
-   /* i18n-hint files that can be run as programs */
-   type = { XO("Executables"), { ext } };
-#endif
-
-   path = SelectFile(FileNames::Operation::Open,
-      XO("Find path to command"),
-      wxEmptyString,
-      wxEmptyString,
-      ext,
-      { type },
-      wxFD_OPEN | wxRESIZE_BORDER,
-      this);
-   if (path.empty()) {
-      return;
-   }
-
-   if (path.Find(wxT(' ')) == wxNOT_FOUND) {
-      mCmd->SetValue(path);
-   }
-   else {
-      mCmd->SetValue(wxT('"') + path + wxT('"'));
-   }
-
-   mCmd->SetInsertionPointEnd();
-
-   return;
-}
 
 //----------------------------------------------------------------------------
 // ExportCLProcess
@@ -271,11 +111,188 @@ private:
    int mStatus;
 };
 
-//----------------------------------------------------------------------------
-// ExportCL
-//----------------------------------------------------------------------------
+enum : int {
+   CLOptionIDCommand = 0,
+   CLOptionIDShowOutput
+};
 
-class ExportCL final : public ExportPluginEx
+const std::vector<ExportOption> CLOptions {
+   { CLOptionIDCommand, {}, std::string() },
+   { CLOptionIDShowOutput, {}, false }
+};
+
+class ExportOptionsCLEditor final
+   : public ExportOptionsEditor
+   , public ExportOptionsUIServices
+{
+   wxString mCommand;
+   bool mShowOutput {false};
+public:
+
+   ExportOptionsCLEditor(const wxString defaultCommand)
+      : mCommand(defaultCommand)
+   {
+   }
+
+   void PopulateUI(ShuttleGui& S) override
+   {
+      mHistory.Clear();
+
+      mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
+
+      if (mHistory.empty()) {
+         mHistory.Append(wxT("ffmpeg -i - \"%f.opus\""));
+         mHistory.Append(wxT("ffmpeg -i - \"%f.wav\""));
+         mHistory.Append(wxT("ffmpeg -i - \"%f\""));
+         mHistory.Append(wxT("lame - \"%f\""));
+      }
+
+      if(!mCommand.empty())
+         mHistory.Append(mCommand);
+
+      mParent = wxGetTopLevelParent(S.GetParent());
+
+      wxArrayStringEx cmds( mHistory.begin(), mHistory.end() );
+      auto cmd = cmds[0];
+      
+      S.StartVerticalLay();
+      {
+         S.StartHorizontalLay(wxEXPAND);
+         {
+            S.SetSizerProportion(1);
+            S.StartMultiColumn(3, wxEXPAND);
+            {
+               S.SetStretchyCol(1);
+               mCommandBox = S.AddCombo(XXO("Command:"),
+                                 cmd,
+                                 cmds);
+               S.AddButton(XXO("Browse..."), wxALIGN_CENTER_VERTICAL)
+                  ->Bind(wxEVT_BUTTON, &ExportOptionsCLEditor::OnBrowse, this);
+
+               S.AddFixedText( {} );
+               S.TieCheckBox(XXO("Show output"), mShowOutput);
+            }
+            S.EndMultiColumn();
+         }
+         S.EndHorizontalLay();
+
+         S.AddTitle(XO(
+   /* i18n-hint: Some programmer-oriented terminology here:
+      "Data" refers to the sound to be exported, "piped" means sent,
+      and "standard in" means the default input stream that the external program,
+      named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
+      in the program as a format string.  Keep %f unchanged. */
+   "Data will be piped to standard in. \"%f\" uses the file name in the export window."), 250);
+      }
+      S.EndVerticalLay();
+   }
+
+   void TransferDataFromWindow() override
+   {
+      mCommand = mCommandBox->GetValue();
+
+      mHistory.Append(mCommand);
+      mHistory.Save(*gPrefs);
+   }
+
+   int GetOptionsCount() const override
+   {
+      return static_cast<int>(CLOptions.size());
+   }
+
+   bool GetOption(int index, ExportOption& option) const override
+   {
+      if(index >= 0 && index < static_cast<int>(CLOptions.size()))
+      {
+         option = CLOptions[index];
+         return true;
+      }
+      return false;
+   }
+
+   bool GetValue(int id, ExportValue& value) const override
+   {
+      if(id == CLOptionIDCommand)
+      {
+         value = std::string(mCommand.ToUTF8());
+         return true;
+      }
+      if(id == CLOptionIDShowOutput)
+      {
+         value = mShowOutput;
+         return true;
+      }
+      return false;
+   }
+
+   bool SetValue(int id, const ExportValue& value) override
+   {
+      if(id == CLOptionIDCommand && std::holds_alternative<std::string>(value))
+      {
+         mCommand = wxString::FromUTF8(*std::get_if<std::string>(&value));
+         return true;
+      }
+      if(id == CLOptionIDShowOutput && std::holds_alternative<bool>(value))
+      {
+         mShowOutput = *std::get_if<bool>(&value);
+         return true;
+      }
+      return false;
+   }
+
+   void Load(const wxConfigBase& config) override
+   {
+      (void)config.Read(wxT("/FileFormats/ExternalProgramExportCommand"), mCommand);
+      (void)config.Read(wxT("/FileFormats/ExternalProgramShowOutput"), mShowOutput);
+   }
+
+   void Store(wxConfigBase& config) const override
+   {
+      config.Write(wxT("/FileFormats/ExternalProgramExportCommand"), mCommand);
+      config.Write(wxT("/FileFormats/ExternalProgramShowOutput"), mShowOutput);
+   }
+
+private:
+
+   void OnBrowse(const wxCommandEvent&)
+   {
+      wxString path;
+      FileExtension ext;
+      FileNames::FileType type = FileNames::AllFiles;
+
+   #if defined(__WXMSW__)
+      ext = wxT("exe");
+      /* i18n-hint files that can be run as programs */
+      type = { XO("Executables"), { ext } };
+   #endif
+
+      path = SelectFile(FileNames::Operation::Open,
+         XO("Find path to command"),
+         wxEmptyString,
+         wxEmptyString,
+         ext,
+         { type },
+         wxFD_OPEN | wxRESIZE_BORDER,
+         mParent);
+      if (path.empty()) {
+         return;
+      }
+
+      if (path.Find(wxT(' ')) != wxNOT_FOUND)
+         path = wxT('"') + path + wxT('"');
+
+      mCommandBox->SetValue(path);
+      mCommandBox->SetInsertionPointEnd();
+   }
+
+   wxWindow* mParent{nullptr};
+   wxComboBox* mCommandBox{nullptr};
+
+   FileHistory mHistory;
+};
+
+class ExportCL final
+   : public ExportPluginEx
 {
 public:
 
@@ -307,7 +324,6 @@ public:
    bool CheckFileName(wxFileName &filename, int format) override;
 
 private:
-   void GetSettings();
 
    std::vector<char> GetMetaChunk(const Tags *metadata);
    wxString mCmd;
@@ -355,7 +371,11 @@ private:
    };
 };
 
-ExportCL::ExportCL() = default;
+ExportCL::ExportCL()
+   : mCmd(wxT("lame - \"%f\""))
+{
+   
+}
 
 int ExportCL::GetFormatCount() const
 {
@@ -372,12 +392,12 @@ FormatInfo ExportCL::GetFormatInfo(int) const
 std::unique_ptr<ExportOptionsEditor>
 ExportCL::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
 {
-   return { };
+   return std::make_unique<ExportOptionsCLEditor>(mCmd);
 }
 
 void ExportCL::Export(AudacityProject *project,
                       ExportProgressListener &progressListener,
-                      const Parameters&,
+                      const Parameters& parameters,
                       unsigned channels,
                       const wxFileNameWrapper &fName,
                       bool selectionOnly,
@@ -395,7 +415,8 @@ void ExportCL::Export(AudacityProject *project,
 
    const auto path = fName.GetFullPath();
 
-   GetSettings();
+   mCmd = wxString::FromUTF8(ExportUtils::GetParameterValue<std::string>(parameters, CLOptionIDCommand));
+   mShow = ExportUtils::GetParameterValue(parameters, CLOptionIDShowOutput, false);
 
    // Bug 2178 - users who don't know what they are doing will 
    // now get a file extension of .wav appended to their ffmpeg filename
@@ -736,7 +757,6 @@ std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
 
 void ExportCL::OptionsCreate(ShuttleGui &S, int format)
 {
-   S.AddWindow( safenew ExportCLOptions{ S.GetParent(), format } );
 }
 
 bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
@@ -752,7 +772,7 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
       }
    }
 
-   GetSettings();
+   //TODO: Check parameters!!!
 
    wxArrayString argv = wxCmdLineParser::ConvertStringToArgs(mCmd,
 #if defined(__WXMSW__)
@@ -806,13 +826,6 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    }
 
    return true;
-}
-
-void ExportCL::GetSettings()
-{
-   // Retrieve settings
-   gPrefs->Read(wxT("/FileFormats/ExternalProgramShowOutput"), &mShow, false);
-   mCmd = gPrefs->Read(wxT("/FileFormats/ExternalProgramExportCommand"), wxT("lame - \"%f.mp3\""));
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "CommandLine",
