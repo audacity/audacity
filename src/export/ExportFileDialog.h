@@ -17,9 +17,7 @@ class wxFileCtrlEvent;
 
 class Exporter;
 
-// For a file suffix change from the options.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-   AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
+class ExportOptionsHandler;
 
 class AUDACITY_DLL_API ExportFileDialog final : public FileDialogWrapper
 {
@@ -63,8 +61,7 @@ private:
    Exporter& mExporter;
    
    wxSimplebook *mBook {nullptr};
-
-   class ExportOptionsHandler;
+   
    std::vector<std::unique_ptr<ExportOptionsHandler>> mOptionsHandlers;
 
    DECLARE_EVENT_TABLE()

@@ -306,8 +306,6 @@ public:
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
 
-   void OptionsCreate(ShuttleGui &S, int format) override;
-
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
                const Parameters& parameters,
@@ -753,10 +751,6 @@ std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
 #endif
 
    return buffer;
-}
-
-void ExportCL::OptionsCreate(ShuttleGui &S, int format)
-{
 }
 
 bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))

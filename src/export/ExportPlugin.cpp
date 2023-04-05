@@ -20,19 +20,6 @@ bool ExportPlugin::CheckFileName(wxFileName&, int)
   return true;
 }
 
-void ExportPlugin::OptionsCreate(ShuttleGui &S, int WXUNUSED(format))
-{
-   S.StartHorizontalLay(wxCENTER);
-   {
-      S.StartHorizontalLay(wxCENTER, 0);
-      {
-         S.Prop(1).AddTitle(XO("No format specific options"));
-      }
-      S.EndHorizontalLay();
-   }
-   S.EndHorizontalLay();
-}
-
 TranslatableString ExportPluginEx::GetStatusString() const
 {
    return mStatus;

@@ -1623,7 +1623,6 @@ public:
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const override;
 
-   void OptionsCreate(ShuttleGui &S, int format) override;
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
                const Parameters& parameters,
@@ -1999,10 +1998,6 @@ void ExportMP3::Export(AudacityProject *project,
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
    else
       ExportFinish(progressListener);
-}
-
-void ExportMP3::OptionsCreate(ShuttleGui &S, int format)
-{
 }
 
 int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)

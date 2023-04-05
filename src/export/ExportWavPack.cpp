@@ -250,8 +250,6 @@ public:
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
 
-   void OptionsCreate(ShuttleGui &S, int format) override;
-
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
                const Parameters& parameters,
@@ -526,11 +524,6 @@ int ExportWavPack::WriteBlock(void *id, void *data, int32_t length)
         outId->firstBlockSize = length;
 
     return true;
-}
-
-void ExportWavPack::OptionsCreate(ShuttleGui &S, int format)
-{
-
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "WavPack",

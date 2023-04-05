@@ -613,6 +613,8 @@ list( APPEND SOURCES
       export/ExportMixerDialog.h
       export/GenericExportProgressListener.cpp
       export/GenericExportProgressListener.h
+      export/ExportOptionsHandler.cpp
+      export/ExportOptionsHandler.h
 
       # Standard exporters
       export/ExportCL.cpp
