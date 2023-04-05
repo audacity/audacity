@@ -18,6 +18,7 @@
 #include <wx/checkbox.h>
 #include <wx/combo.h>
 #include <wx/menu.h>
+#include <wx/textctrl.h>
 
 #include "ToolManager.h"
 
@@ -347,12 +348,17 @@ void SnappingToolBar::Populate()
       this, wxID_ANY, {}, wxDefaultPosition, wxDefaultSize /*, wxCB_READONLY*/);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
-   mSnapToCombo->SetAccessible(safenew WindowAccessible(mSnapToCombo));
+   mSnapToCombo->GetTextCtrl()->SetAccessible(
+      safenew WindowAccessible(mSnapToCombo->GetTextCtrl()));
 #endif
 
    //mSnapToCombo->SetEditable(false);
    mSnapToCombo->SetPopupControl(safenew SnapModePopup(mProject));
-   mSnapToCombo->SetName(mSnapToCombo->GetValue());
+   /* i18n-hint: combo box is the type of the control/widget */
+   mSnapToCombo->GetTextCtrl()->SetName(XO("Snap to combo box").Translation());
+   /* Narrator screen reader by default reads the accessibility name of the
+   containing window, which by default is combobox, so set it to an empty string. */
+   mSnapToCombo->SetLabel(wxT(""));
    mSnapToCombo->Enable(snapEnabled);
    mSnapToCombo->SetMinSize(wxSize(150, -1));
    
