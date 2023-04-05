@@ -1,19 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2022 Audacity Team
+# Copyright (C) 2023 Audacity Team
 # This file is distributed under the same license as the audacity package.
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2013.
 #
 # Translators:
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2022
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2023
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
+"Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2022-12-28 01:24+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
-"Language-Team: Polish (https://www.transifex.com/klyok/teams/690/pl/)\n"
+"PO-Revision-Date: 2023-04-05 21:26+0000\n"
+"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -744,24 +744,23 @@ msgstr "oktaw"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
-#, fuzzy
 msgid "bar"
-msgstr "Pasek narzędzi"
+msgstr "takt"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr ""
+msgstr "miara"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr ""
+msgstr "takt:miara"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr ""
+msgstr "takt:miara:tyknięcie"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -773,9 +772,8 @@ msgstr "01000,01000 sekundy"
 #. i18n-hint: Name of time display format that shows time in seconds
 #. * and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "seconds + milliseconds"
-msgstr "gg:mm:ss + milisekundy"
+msgstr "sekundy + milisekundy"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
 #. * as fractional seconds. Change the comma in the middle to the 1000s separator
@@ -783,9 +781,8 @@ msgstr "gg:mm:ss + milisekundy"
 #. * Don't change the numbers. The decimal separator is specified using '<' if
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "01000,01000>01000 seconds"
-msgstr "01000,01000 sekundy"
+msgstr "01000,01000>01000 sekundy"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -1577,83 +1574,78 @@ msgstr "Debu&guj"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Beats"
-msgstr "&Uderzenia"
+msgstr "Miary"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Bar"
-msgstr "Bark"
+msgstr "Takt"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "1/2"
-msgstr "128"
+msgstr "1/2"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/4"
-msgstr ""
+msgstr "1/4"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "1/8"
-msgstr "128"
+msgstr "1/8"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/16"
-msgstr ""
+msgstr "1/16"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/32"
-msgstr ""
+msgstr "1/32"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/64"
-msgstr ""
+msgstr "1/64"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/128"
-msgstr ""
+msgstr "1/128"
 
 #. i18n-hint: The music theory "triplet"
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Triplets"
-msgstr ""
+msgstr "Triole"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/2 (triplets)"
-msgstr ""
+msgstr "1/2 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/4 (triplets)"
-msgstr ""
+msgstr "1/4 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/8 (triplets)"
-msgstr ""
+msgstr "1/8 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/16 (triplets)"
-msgstr ""
+msgstr "1/16 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/32 (triplets)"
-msgstr ""
+msgstr "1/32 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/64 (triplets)"
-msgstr ""
+msgstr "1/64 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/128 (triplets)"
-msgstr ""
+msgstr "1/128 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Seconds && samples"
-msgstr "Drugi największy"
+msgstr "Sekund &i sampli"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 #: plug-ins/sample-data-export.ny
@@ -1661,48 +1653,40 @@ msgid "Seconds"
 msgstr "Sekund"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Deciseconds"
-msgstr "setnych sekundy"
+msgstr "Decysekund"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Centiseconds"
-msgstr "setnych sekundy"
+msgstr "Centysekund"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Milliseconds"
-msgstr "milisekundy"
+msgstr "Milisekund"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 msgid "Samples"
 msgstr "Sampli"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Video frames"
-msgstr "klatki NTSC"
+msgstr "Klatki wideo"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Film frames (24 fps)"
-msgstr "klatki filmu (24 fps)"
+msgstr "Klatki filmu (24 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "NTSC frames (29.97 fps)"
-msgstr "klatki CDDA (75 fps)"
+msgstr "Klatki NTSC (29,97 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "NTSC frames (30 fps)"
-msgstr "klatki CDDA (75 fps)"
+msgstr "Klatki NTSC (30 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "CD frames"
-msgstr "klatki NTSC"
+msgstr "Klatki CD"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
@@ -2156,16 +2140,16 @@ msgstr "To są nasze metody wsparcia:"
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[help:Quick_Help|Quick Help]]"
-msgstr ""
+msgstr "[[help:Quick_Help|Szybka pomoc]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid " [[help:Main_Page|Manual]]"
-msgstr ""
+msgstr "[[help:Main_Page|Podręcznik]]"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr ""
+msgstr "[[https://support.audacityteam.org/|Samouczki i porady]]"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
@@ -2866,9 +2850,9 @@ msgstr "Strona internetowa %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2023 %s Team."
-msgstr "%s jest chroniony prawem autorskim %s 1999-2021 Zespół %s."
+msgstr "%s jest chroniony prawem autorskim %s 1999-2023 Zespół %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -3063,14 +3047,12 @@ msgid "our Privacy Policy"
 msgstr "naszą Politykę prywatności"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Minutes and Seconds"
-msgstr "Piąte sekundy"
+msgstr "Minuty i sekundy"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Beats and Measures"
-msgstr "Szukaj uderzenia"
+msgstr "Miary i takty"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
@@ -3494,30 +3476,34 @@ msgid ""
 "The entire source clip will be pasted into your project, allowing you to access\n"
 "trimmed audio data anytime."
 msgstr ""
+"Inteligentny klip.\n"
+"Cały klip źródłowy zostanie wklejony do projektu, umożliwiając dostęp\n"
+"do przyciętych danych dźwiękowych w dowolnym momencie."
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Selected audio only.\n"
 "Only the selected portion of the source clip will be pasted."
 msgstr ""
+"Tylko zaznaczony dźwięk.\n"
+"Wklejony zostanie tylko zaznaczony fragment klipu źródłowego."
 
 #: src/AudioPasteDialog.cpp
-#, fuzzy
 msgid "Paste audio"
-msgstr "Udostępnij nagranie"
+msgstr "Wklej dźwięk"
 
 #: src/AudioPasteDialog.cpp
 msgid "How would you like to paste your audio?"
-msgstr ""
+msgstr "Jak chcesz wkleić swój dźwięk?"
 
 #: src/AudioPasteDialog.cpp
 #, c-format
 msgid "Audio data is %s. Larger sizes will take longer to paste."
-msgstr ""
+msgstr "Dane dźwiękowe są %s. Wklejenie większych rozmiarów będzie trwać dłużej."
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
-msgstr ""
+msgstr "Zapamiętaj mój wybór i nie pytaj więcej"
 
 #: src/AudioPasteDialog.cpp
 msgid "Continue"
@@ -4675,9 +4661,8 @@ msgid "Incompatible plugin(s) found"
 msgstr "Znaleziono niekompatybilną(e) wtyczkę(i)"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "&Manage Plugins"
-msgstr "Zarządzaj wtyczkami"
+msgstr "&Zarządzaj wtyczkami"
 
 #: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
@@ -4695,9 +4680,9 @@ msgid "Audacity has found %d incompatible plugins which could not be loaded. We 
 msgstr "Audacity znalazł %d niekompatybilne wtyczki, których nie można załadować. Wyłączyliśmy je, aby uniknąć przestojów lub awarii. Jeśli nadal chcesz spróbować z nich skorzystać, możesz je włączyć za pomocą \"Zarządzaj wtyczkami\". W przeciwnym razie wybierz \"Kontynuuj\"."
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
-msgstr "Audacity znalazł %d niekompatybilne wtyczki, których nie można załadować. Wyłączyliśmy je, aby uniknąć przestojów lub awarii. Jeśli nadal chcesz spróbować z nich skorzystać, możesz je włączyć za pomocą \"Zarządzaj wtyczkami\". W przeciwnym razie wybierz \"Kontynuuj\"."
+msgstr "Audacity znalazł %d niekompatybilne wtyczki, których nie można załadować. Wyłączyliśmy je, aby uniknąć przestojów lub awarii."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -5915,9 +5900,8 @@ msgid ""
 msgstr ""
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-#, fuzzy
 msgid "Plugin Error"
-msgstr "Błąd wartości"
+msgstr "Błąd wtyczki"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -7716,9 +7700,8 @@ msgstr "Ustaw ślady ścieżki"
 #. i18n-hint: abbreviates amplitude
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (amp)"
-msgstr "Liniowe zgłośnienie"
+msgstr "Liniowa (amp)"
 
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
@@ -7729,9 +7712,8 @@ msgstr "Logarytmiczna (dB)"
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (dB)"
-msgstr "Liniowa"
+msgstr "Liniowa (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -7855,7 +7837,7 @@ msgstr "db"
 
 #: src/effects/AutoDuck.cpp
 msgid "Duck &amount:"
-msgstr "Liczba &duck:"
+msgstr "Wartość &duck:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Ma&ximum pause:"
@@ -13395,11 +13377,8 @@ msgid "FFmpeg-compatible files"
 msgstr "Pliki kompatybilne z FFmpeg"
 
 #: src/import/ImportFFmpeg.cpp
-#, fuzzy
 msgid "Try installing FFmpeg.\n"
-msgstr ""
-"Spróbuj zainstalować FFmpeg.\n"
-"\n"
+msgstr "Spróbuj zainstalować FFmpeg.\n"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
@@ -13840,7 +13819,7 @@ msgstr "bajtów"
 
 #: src/import/ImportRaw.cpp
 msgid "Amount to import:"
-msgstr "Wielkość do importu:"
+msgstr "Wartość do importu:"
 
 #. i18n-hint: (noun)
 #: src/import/ImportRaw.cpp
@@ -14041,13 +14020,12 @@ msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Usunięto %.2f sekund w t=%.2f"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Paste clip"
-msgstr "Wklej ze schowka"
+msgstr "Wklej klip"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting clip contents, please wait"
-msgstr ""
+msgstr "Wklejanie zawartości klipu. Czekaj"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
@@ -15739,9 +15717,8 @@ msgid "&Don't apply effects in batch mode"
 msgstr "&Nie stosuje efektów w trybie wsadowym"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "Audio Settings"
-msgstr "Ustawienia dźwięku:"
+msgstr "Ustawienia dźwięku"
 
 #: src/prefs/DevicePrefs.cpp
 #, c-format
@@ -15792,18 +15769,16 @@ msgid "Cha&nnels:"
 msgstr "Ka&nały:"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "&Project Sample Rate:"
-msgstr "Częstotliwość próbkowania:"
+msgstr "Częstotliwość próbkowania &projektu:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Project Sample Rate used when recording new tracks and for playback, mixdowns and exports in this project"
-msgstr ""
+msgstr "Częstotliwość próbkowania projektu używana przy nagrywaniu nowych ścieżek oraz do odtwarzania, miksowania i eksportowania w tym projekcie"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "D&efault Sample Rate:"
-msgstr "Domyślna częstotliwość p&róbkowania:"
+msgstr "D&omyślna częstotliwość próbkowania:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Default Sample &Format:"
@@ -16008,39 +15983,32 @@ msgid "Preferences for Effects"
 msgstr "Ustawienia efektów"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by effect name"
 msgstr "Sortuj według nazwy efektu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by publisher and effect name"
 msgstr "Sortuj według wydawcy i nazwy efektu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by type and effect name"
 msgstr "Sortuj według typu i nazwy efektu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by publisher"
 msgstr "Grupuj według wydawcy"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type"
 msgstr "Grupuj według typu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by category"
-msgstr "Grupuj według typu"
+msgstr "Grupuj według kategorii"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type and publisher"
-msgstr "Grupuj według wydawcy"
+msgstr "Grupuj typu i wydawcy"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -16048,12 +16016,11 @@ msgstr "Opcje efektu"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
-msgstr ""
+msgstr "&Organizacja menu efektów:"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Realtime effect o&rganization:"
-msgstr "Efekty w czasie rzeczywistym dla %s"
+msgstr "O&rganizacja efektów w czasie rzeczywistym:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -16064,9 +16031,8 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "&Użyj SSE/SSE2/.../AVX"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Open Plugin Manager"
-msgstr "Menedżer wtyczek"
+msgstr "Otwórz Menedżera wtyczek"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -16222,7 +16188,7 @@ msgstr "&Daj sygnał dźwiękowy po ukończeniu czynności"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Re&tain labels if selection snaps to a label"
-msgstr "&Zachowaj etykiety, jeśli zaznaczenie jest przyciągane do etykiety"
+msgstr "&Zachowaj etykiety, jeśli zaznaczenie jest przyczepiane do etykiety"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
@@ -16285,7 +16251,7 @@ msgstr "&Sekundy"
 #. i18n-hint: The music theory "beat"
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Beats"
-msgstr "&Uderzenia"
+msgstr "&Miary"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When exporting tracks to an audio file"
@@ -17361,14 +17327,12 @@ msgid "Solo &Button:"
 msgstr "&Przycisk Solo:"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Pasted audio"
-msgstr "Ety&kieta dźwięku"
+msgstr "Wklejony dźwięk"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Paste audio from other Audacity project as"
-msgstr "Wklejone ze schowka"
+msgstr "Wklej dźwięk z innego projektu Audacity jako"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -17925,9 +17889,8 @@ msgid "Center"
 msgstr "Wyśrodkuj"
 
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy
 msgid "Selection Toolbar Setup"
-msgstr "Pasek narzędzi &zaznaczenia"
+msgstr "Ustawienia paska narzędzi zaznaczenia"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and End of Selection"
@@ -17952,26 +17915,23 @@ msgid "&Selection Toolbar"
 msgstr "Pasek narzędzi &zaznaczenia"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snapping"
-msgstr "(podpinanie)"
+msgstr "Przyczepianie"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snap"
-msgstr "Przyczep do:"
+msgstr "Przyczep"
 
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap to combo box"
-msgstr ""
+msgstr "Przyczep do ramki combo"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "&Snapping Toolbar"
-msgstr "Pasek narzędzi &zaznaczenia"
+msgstr "Pasek narzędzi &przyczepiania"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18004,41 +17964,38 @@ msgid "Spe&ctral Selection Toolbar"
 msgstr "Pasek narzędzi &widmowego zaznaczenia"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Time Signature"
-msgstr "Oś czasu"
+msgstr "Oznaczenie metryczne"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo"
-msgstr "Wysokość/tempo"
+msgstr "Tempo"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature"
-msgstr ""
+msgstr "Górne oznaczenie metryczne"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature"
-msgstr ""
+msgstr "Dolne oznaczenie metryczne"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo Changed"
-msgstr "Końcowa zmiana tempa (%):"
+msgstr "Tempo zmienione"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature Changed"
-msgstr ""
+msgstr "Górne oznaczenie metryczne zmienione"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature Changed"
-msgstr ""
+msgstr "Dolne oznaczenie metryczne zmienione"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Time Signature Toolbar (Beta)"
-msgstr ""
+msgstr "Pasek narzędzi oznaczenia metrycznego (beta)"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -18981,7 +18938,7 @@ msgstr "Kliknij i przeciągnij, aby zaznaczyć dźwięk."
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
-msgstr "(podpinanie)"
+msgstr "(przyczepianie)"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Click and drag to move a track in time"
@@ -19350,23 +19307,22 @@ msgid "Vertical"
 msgstr "Pionowa"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-#, fuzzy
 msgid "Missing Plugins"
-msgstr "Zarządzaj wtyczkami"
+msgstr "Brakujące wtyczki"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "This project contains some realtime effect plugins that cannot be found on this system."
-msgstr ""
+msgstr "Ten projekt zawiera kilka wtyczek efektów w czasie rzeczywistym, których nie można znaleźć w tym systemie."
 
 #. i18n-hint: %s will be replaced with "Learn more"
 #: src/widgets/MissingPluginsErrorDialog.cpp
 #, c-format
 msgid "The project may sound different than intended. %s"
-msgstr ""
+msgstr "Projekt może brzmieć inaczej niż zamierzono. %s"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "Learn more"
-msgstr ""
+msgstr "Dowiedz się więcej"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -19456,9 +19412,8 @@ msgid "Value must not be greater than %s"
 msgstr "Wartość nie może być większa niż %s"
 
 #: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Shelf Filter"
-msgstr "Filtr Notch"
+msgstr "Filtr półkowy"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
@@ -19478,17 +19433,16 @@ msgid "GNU General Public License v2.0"
 msgstr "Licencja GNU General Public License wersja 2.0"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Filter type"
-msgstr "Typ pliku:"
+msgstr "Typ filtra"
 
 #: plug-ins/ShelfFilter.ny
 msgid "Low-shelf"
-msgstr ""
+msgstr "Dolnopółkowy"
 
 #: plug-ins/ShelfFilter.ny
 msgid "High-shelf"
-msgstr ""
+msgstr "Górnopółkowy"
 
 #: plug-ins/ShelfFilter.ny plug-ins/highpass.ny plug-ins/lowpass.ny
 #: plug-ins/notch.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
@@ -19496,14 +19450,13 @@ msgid "Frequency (Hz)"
 msgstr "Częstotliwość (Hz)"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Amount (dB)"
-msgstr "Lewy (dB)"
+msgstr "Wartość (dB)"
 
 #: plug-ins/ShelfFilter.ny
 #, lisp-format
 msgid "Error.~%Frequency set too high for selected track."
-msgstr ""
+msgstr "Błąd.~%FCzęstotliwość jest za wysoka dla zaznaczonej ścieżki."
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Multi Tool"
@@ -19749,7 +19702,7 @@ msgstr ""
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
-msgstr "Szukaj uderzenia"
+msgstr "Szukaj miary"
 
 #: plug-ins/beat.ny
 msgid "Threshold Percentage"
@@ -19876,9 +19829,8 @@ msgid "Low-quality Pitch Shift"
 msgstr "Przesunięcie wysokości niskiej jakości"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "High-quality Pitch Shift"
-msgstr "Przesunięcie wysokości niskiej jakości"
+msgstr "Przesunięcie wysokości wysokiej jakości"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
@@ -20186,9 +20138,9 @@ msgid "Error.~%Selection must be less than ~a."
 msgstr "Błąd.~%Zaznaczenie musi być mniejsze niż ~a."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "No sounds found.~%Try lowering 'Threshold level (dB)'."
-msgstr "Nie znaleziono dźwięków.~%Spróbuj obniżyć 'Próg' lub zredukuj 'Minimalną długość dźwięku'."
+msgstr "Nie znaleziono dźwięków.~%Spróbuj zmniejszyć 'Poziom progowy (dB)'."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -20625,7 +20577,7 @@ msgstr "Szerokość pasma szumów (Hz)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Amount of noise in mix (percent)"
-msgstr "Ilość szumu w miksie (procent)"
+msgstr "Wartość szumu w miksie (procent)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Amplitude (0 - 1)"
