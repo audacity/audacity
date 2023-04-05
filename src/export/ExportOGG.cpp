@@ -18,7 +18,6 @@
 #include "Export.h"
 
 #include <wx/log.h>
-#include <wx/slider.h>
 #include <wx/stream.h>
  
 #include <vorbis/vorbisenc.h>
@@ -26,100 +25,76 @@
 #include "FileIO.h"
 #include "ProjectRate.h"
 #include "Mix.h"
-#include "Prefs.h"
-#include "ShuttleGui.h"
 
 #include "Tags.h"
 #include "Track.h"
-#include "wxPanelWrapper.h"
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
-#include "ExportOptionsEditor.h"
+#include "PlainExportOptionsEditor.h"
 
-//----------------------------------------------------------------------------
-// ExportOGGOptions
-//----------------------------------------------------------------------------
-
-class ExportOGGOptions final : public wxPanelWrapper
+namespace
 {
-public:
+   enum : int {
+      OptionIDOGGQuality = 0
+   };
 
-   ExportOGGOptions(wxWindow *parent, int format);
-   virtual ~ExportOGGOptions();
+   const ExportOption OGGQualityOption {
+         OptionIDOGGQuality, XO("Quality"),
+         5,
+         ExportOption::TypeRange,
+         { 0, 10 }
+   };
 
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-
-private:
-
-   int mOggQualityUnscaled;
-};
-
-///
-///
-ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanelWrapper(parent, wxID_ANY)
-{
-   mOggQualityUnscaled = gPrefs->Read(wxT("/FileFormats/OggExportQuality"),50)/10;
-
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-   PopulateOrExchange(S);
-
-   TransferDataToWindow();
-}
-
-ExportOGGOptions::~ExportOGGOptions()
-{
-   TransferDataFromWindow();
-}
-
-///
-///
-void ExportOGGOptions::PopulateOrExchange(ShuttleGui & S)
-{
-   S.StartVerticalLay();
+   class ExportOptionOGGEditor final : public ExportOptionsEditor
    {
-      S.StartHorizontalLay(wxEXPAND);
+      int mQualityUnscaled;
+   public:
+
+      ExportOptionOGGEditor()
       {
-         S.SetSizerProportion(1);
-         S.StartMultiColumn(2, wxCENTER);
-         {
-            S.SetStretchyCol(1);
-            S.Prop(1).TieSlider(
-               XXO("Quality:"), mOggQualityUnscaled, 10);
-         }
-         S.EndMultiColumn();
+         mQualityUnscaled = *std::get_if<int>(&OGGQualityOption.defaultValue);
       }
-      S.EndHorizontalLay();
-   }
-   S.EndVerticalLay();
+
+      int GetOptionsCount() const override
+      {
+         return 1;
+      }
+
+      bool GetOption(int, ExportOption& option) const override
+      {
+         option = OGGQualityOption;
+         return true;
+      }
+
+      bool GetValue(ExportOptionID, ExportValue& value) const override
+      {
+         value = mQualityUnscaled;
+         return true;
+      }
+
+      bool SetValue(ExportOptionID, const ExportValue& value) override
+      {
+         if(auto num = std::get_if<int>(&value))
+         {
+            mQualityUnscaled = *num;
+            return true;
+         }
+         return false;
+      }
+
+      void Load(const wxConfigBase& config) override
+      {
+         mQualityUnscaled = config.Read(wxT("/FileFormats/OggExportQuality"),50)/10;
+      }
+
+      void Store(wxConfigBase& config) const override
+      {
+         config.Write(wxT("/FileFormats/OggExportQuality"), mQualityUnscaled * 10);
+      }
+
+   };
 }
-
-///
-///
-bool ExportOGGOptions::TransferDataToWindow()
-{
-   return true;
-}
-
-///
-///
-bool ExportOGGOptions::TransferDataFromWindow()
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Write(wxT("/FileFormats/OggExportQuality"),mOggQualityUnscaled * 10);
-   gPrefs->Flush();
-
-   return true;
-}
-
-//----------------------------------------------------------------------------
-// ExportOGG
-//----------------------------------------------------------------------------
 
 #define SAMPLES_PER_RUN 8192u
 
@@ -171,7 +146,7 @@ FormatInfo ExportOGG::GetFormatInfo(int) const
 
 void ExportOGG::Export(AudacityProject *project,
                        ExportProgressListener &progressListener,
-                       const Parameters&,
+                       const Parameters& parameters,
                        unsigned numChannels,
                        const wxFileNameWrapper &fName,
                        bool selectionOnly,
@@ -185,7 +160,7 @@ void ExportOGG::Export(AudacityProject *project,
    
    double    rate    = ProjectRate::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
-   double    quality = (gPrefs->Read(wxT("/FileFormats/OggExportQuality"), 50)/(float)100.0);
+   double    quality = ExportUtils::GetParameterValue(parameters, 0, 5) / 10.0;
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
    int       eos = 0;
@@ -391,13 +366,13 @@ void ExportOGG::Export(AudacityProject *project,
 
 void ExportOGG::OptionsCreate(ShuttleGui &S, int format)
 {
-   S.AddWindow( safenew ExportOGGOptions{ S.GetParent(), format } );
+
 }
 
 std::unique_ptr<ExportOptionsEditor>
 ExportOGG::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
 {
-   return {};
+   return std::make_unique<ExportOptionOGGEditor>();
 }
 
 
