@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-05 21:26+0000\n"
+"PO-Revision-Date: 2023-04-05 21:38+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -16008,7 +16008,7 @@ msgstr "Grupuj według kategorii"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Group by type and publisher"
-msgstr "Grupuj typu i wydawcy"
+msgstr "Grupuj według typu i wydawcy"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
