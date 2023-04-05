@@ -13,11 +13,8 @@
 #include <wx/defs.h>
 
 #include <wx/app.h>
-#include <wx/choice.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>
-#include <wx/textctrl.h>
-#include <wx/window.h>
 
 #include "sndfile.h"
 
@@ -26,12 +23,10 @@
 #include "Mix.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
-#include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
 #include "wxWidgetsWindowPlacement.h"
 #include "wxFileNameWrapper.h"
-#include "ExportFileDialog.h"
 
 #include "Export.h"
 #include "ExportProgressListener.h"
@@ -51,13 +46,15 @@
    }
 #endif
 
+namespace {
+
 struct
 {
    int format;
    const wxChar *name;
    const TranslatableString desc;
 }
-static const kFormats[] =
+const kFormats[] =
 {
 #if defined(__WXMAC__)
    {SF_FORMAT_AIFF | SF_FORMAT_PCM_16, wxT("AIFF"),   XO("AIFF (Apple/SGI)")},
@@ -74,310 +71,301 @@ enum
    FMT_OTHER
 };
 
-//----------------------------------------------------------------------------
-// Statics
-//----------------------------------------------------------------------------
-
-static int LoadOtherFormat(int def = 0)
+int LoadOtherFormat(const wxConfigBase& config, int def)
 {
-   return gPrefs->Read(wxT("/FileFormats/ExportFormat_SF1"),
-                       kFormats[0].format & SF_FORMAT_TYPEMASK);
+   return config.Read(wxString("/FileFormats/ExportFormat_SF1"), def);
 }
 
-static void SaveOtherFormat(int val)
+void SaveOtherFormat(wxConfigBase& config, int val)
 {
-   gPrefs->Write(wxT("/FileFormats/ExportFormat_SF1"), val);
-   gPrefs->Flush();
+   config.Write(wxT("/FileFormats/ExportFormat_SF1"), val);
 }
 
-static int LoadEncoding(int type)
+int LoadEncoding(const wxConfigBase& config, int type, int def)
 {
-   return gPrefs->Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
-                                        sf_header_shortname(type), type), (long int) 0);
+   return config.Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
+                                        sf_header_shortname(type), type), def);
 }
 
-static void SaveEncoding(int type, int val)
+void SaveEncoding(wxConfigBase& config, int type, int val)
 {
-   gPrefs->Write(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
+   config.Write(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
                                   sf_header_shortname(type), type), val);
-   gPrefs->Flush();
 }
 
-//----------------------------------------------------------------------------
-// ExportPCMOptions Class
-//----------------------------------------------------------------------------
-
-#define ID_HEADER_CHOICE           7102
-#define ID_ENCODING_CHOICE         7103
-
-class ExportPCMOptions final : public wxPanelWrapper
-{
-public:
-
-   ExportPCMOptions(wxWindow *parent, int format);
-   virtual ~ExportPCMOptions();
-
-   void PopulateOrExchange(ShuttleGui & S);
-
-   void OnShow(wxShowEvent & evt);
-   void OnHeaderChoice(wxCommandEvent & evt);
-   void OnEncodingChoice(wxCommandEvent & evt);
-
-private:
-
-   void GetTypes();
-   void GetEncodings(int enc = 0);
-   void SendSuffixEvent();
-
-private:
-
-   std::vector<int> mHeaderIndexes;
-   TranslatableStrings mHeaderNames;
-   wxChoice *mHeaderChoice;
-   int mHeaderFromChoice;
-
-   std::vector<int> mEncodingIndexes;
-   TranslatableStrings mEncodingNames;
-   wxChoice *mEncodingChoice;
-   int mEncodingFromChoice;
-
-   int mSelFormat;
-   int mType;
-
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(ExportPCMOptions, wxPanelWrapper)
-   EVT_CHOICE(ID_HEADER_CHOICE, ExportPCMOptions::OnHeaderChoice)
-   EVT_CHOICE(ID_ENCODING_CHOICE, ExportPCMOptions::OnEncodingChoice)
-END_EVENT_TABLE()
-
-ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
-:  wxPanelWrapper(parent, wxID_ANY)
-{
-   // Remember the selection format
-   mSelFormat = selformat;
-
-   // Init choices
-   mHeaderFromChoice = 0;
-   mEncodingFromChoice = 0;
-
-   if (mSelFormat < FMT_OTHER)
-   {
-      mType = kFormats[selformat].format & SF_FORMAT_TYPEMASK;
-      GetEncodings(mType & SF_FORMAT_SUBMASK);   
-   }
-   else
-   {
-      GetTypes();
-      GetEncodings();
-   }
-
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-   PopulateOrExchange(S);
-
-   parent->Bind(wxEVT_SHOW, &ExportPCMOptions::OnShow, this);
-}
-
-ExportPCMOptions::~ExportPCMOptions()
-{
-   // Save the encoding
-   SaveOtherFormat(mType);
-   SaveEncoding(mType, sf_encoding_index_to_subtype(mEncodingIndexes[mEncodingFromChoice]));
-}
-
-void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
-{
-   S.StartVerticalLay();
-   {
-      S.StartHorizontalLay(wxCENTER);
-      {
-         S.StartMultiColumn(2, wxCENTER);
-         {
-            S.SetStretchyCol(1);
-            if (mSelFormat == FMT_OTHER)
-            {
-               mHeaderChoice = S.Id(ID_HEADER_CHOICE)
-                  .AddChoice(XXO("Header:"),
-                             mHeaderNames,
-                             mHeaderFromChoice);
-            }
-            mEncodingChoice = S.Id(ID_ENCODING_CHOICE)
-               .AddChoice(XXO("Encoding:"),
-                          mEncodingNames,
-                          mEncodingFromChoice);
-         }
-         S.EndMultiColumn();
-      }
-      S.EndHorizontalLay();
-   }
-   S.EndVerticalLay();
-
-   return;
-}
-
-void ExportPCMOptions::OnShow(wxShowEvent & evt)
-{
-   evt.Skip();
-
-   // Since the initial file name may not have the "correct" extension,
-   // send off an event to have it changed.  Note that this will be
-   // done every time a user changes filters in the dialog.
-   if (evt.IsShown())
-   {
-      SendSuffixEvent();
-   }
-}
-
-void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & evt)
-{
-   evt.Skip();
-
-   // Remember new selection
-   mHeaderFromChoice = evt.GetInt();
-
-   // Get the type for this selection
-   mType = sf_header_index_to_type(mHeaderIndexes[mHeaderFromChoice]);
-
-   // Save the newly selected type
-   SaveOtherFormat(mType);
-
-   // Reload the encodings valid for this new type
-   GetEncodings();
-
-   // Repopulate the encoding choices
-   mEncodingChoice->Clear();
-   for (int i = 0, num = mEncodingNames.size(); i < num; ++i)
-   {
-      mEncodingChoice->AppendString(mEncodingNames[i].StrippedTranslation());
-   }
-
-   // Select the desired encoding
-   mEncodingChoice->SetSelection(mEncodingFromChoice);
-
-   // Send the event indicating a file suffix change.
-   SendSuffixEvent();
-}
-
-void ExportPCMOptions::OnEncodingChoice(wxCommandEvent & evt)
-{
-   evt.Skip();
-
-   // Remember new selection
-   mEncodingFromChoice = evt.GetInt();
-
-   // And save it
-   SaveEncoding(mType, sf_encoding_index_to_subtype(mEncodingIndexes[mEncodingFromChoice]));
-}
- 
-void ExportPCMOptions::GetTypes()
-{
-   // Reset arrays
-   mHeaderIndexes.clear();
-   mHeaderNames.clear();
-
-   // Get the previously saved type. Note that this is ONLY used for
-   // the FMT_OTHER ("Other uncompressed files") types.
-   int typ = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
-
-   // Rebuild the arrays
-   mHeaderFromChoice = 0;
-   for (int i = 0, num = sf_num_headers(); i < num; ++i)
-   {
-      int type = sf_header_index_to_type(i);
-
-      switch (type)
-      {
-         // On the Mac, do not include in header list
-#if defined(__WXMAC__)
-         case SF_FORMAT_AIFF:
-         break;
-#endif
-
-         // Do not include in header list
-         case SF_FORMAT_WAV:
-         break;
-
-         default:
-            // Remember the index if this is the desired type
-            if (type == typ)
-            {
-               mHeaderFromChoice = mHeaderIndexes.size();
-            }
-
-            // Store index and name
-            mHeaderIndexes.push_back(i);
-            mHeaderNames.push_back(Verbatim(sf_header_index_name(i)));
-         break;
-      }
-   }
-
-   // Refresh the current type
-   mType = sf_header_index_to_type(mHeaderIndexes[mHeaderFromChoice]);
-}
- 
-void ExportPCMOptions::GetEncodings(int enc)
+void GetEncodings(int type, std::vector<ExportValue>& values, TranslatableStrings& names)
 {
    // Setup for queries
    SF_INFO info = {};
    info.samplerate = 44100;
    info.channels = 1;
    info.sections = 1;
-
-   // Reset arrays
-   mEncodingIndexes.clear();
-   mEncodingNames.clear();
-
-   // If the encoding wasn't supplied, look it up
-   if (!(enc & SF_FORMAT_SUBMASK))
-   {
-      enc = LoadEncoding(mType);
-   }
-   enc &= SF_FORMAT_SUBMASK;
-
-   // Fix for Bug 1218 - AIFF with no encoding should default to 16 bit.
-   if (mType == SF_FORMAT_AIFF && enc == 0)
-   {
-      enc = SF_FORMAT_PCM_16;
-   }
-
-   // Rebuild the arrays
-   mEncodingFromChoice = 0;
+   
    for (int i = 0, num = sf_num_encodings(); i < num; ++i)
    {
       int sub = sf_encoding_index_to_subtype(i);
 
       // Since we're traversing the subtypes linearly, we have to
       // make sure it can be paired with our current type.
-      info.format = mType | sub;
+      info.format = type | sub;
       if (sf_format_check(&info))
       {
-         // If this subtype matches our last saved encoding, remember
-         // its index so we can set it in the dialog.
-         if (sub == enc)
-         {
-            mEncodingFromChoice = mEncodingIndexes.size();
-         }
-
-         // Store index and name
-         mEncodingIndexes.push_back(i);
-         mEncodingNames.push_back(Verbatim(sf_encoding_index_name(i)));
+         // Store subtype and name
+         values.emplace_back(sub);
+         names.push_back(Verbatim(sf_encoding_index_name(i)));
       }
    }
 }
 
-void ExportPCMOptions::SendSuffixEvent()
+enum : int
 {
-   // Synchronously process a change in suffix.
-   wxCommandEvent evt(AUDACITY_FILE_SUFFIX_EVENT, GetId());
-   evt.SetEventObject(this);
-   evt.SetString(sf_header_extension(mType));
-   ProcessWindowEvent(evt);
-}
+   OptionIDSFType = 0
+};
 
-//----------------------------------------------------------------------------
-// ExportPCM Class
-//----------------------------------------------------------------------------
+class ExportOptionsSFTypedEditor final : public ExportOptionsEditor
+{
+   const int mType;
+   ExportOption mEncodingOption;
+   int mEncoding;
+public:
+
+   explicit ExportOptionsSFTypedEditor(int type)
+      : mType(type)
+   {
+      GetEncodings(type, mEncodingOption.values, mEncodingOption.names);
+
+      mEncodingOption.id = type;
+      mEncodingOption.title = XO("Encoding");
+      mEncodingOption.flags = ExportOption::TypeEnum;
+      mEncodingOption.defaultValue = mEncodingOption.values[0];
+
+      mEncoding = *std::get_if<int>(&mEncodingOption.defaultValue);
+   }
+
+   int GetOptionsCount() const override
+   {
+      return 1;
+   }
+
+   bool GetOption(int, ExportOption& option) const override
+   {
+      option = mEncodingOption;
+      return true;
+   }
+
+   bool GetValue(ExportOptionID, ExportValue& value) const override
+   {
+      value = mEncoding;
+      return true;
+   }
+
+   bool SetValue(ExportOptionID, const ExportValue& value) override
+   {
+      if(std::find(mEncodingOption.values.begin(),
+         mEncodingOption.values.end(), value) != mEncodingOption.values.end())
+      {
+         mEncoding = *std::get_if<int>(&value);
+         return true;
+      }
+      return false;
+   }
+
+   void Load(const wxConfigBase& config) override
+   {
+      mEncoding = LoadEncoding(config, mType, mEncoding);
+   }
+
+   void Store(wxConfigBase& config) const override
+   {
+      SaveEncoding(config, mType, mEncoding);
+   }
+};
+
+class ExportOptionsSFEditor final : public ExportOptionsEditor
+{
+   Listener* const mListener;
+   int mType;
+   std::unordered_map<int, int> mEncodings;
+   
+   std::vector<ExportOption> mOptions;
+
+   bool IsValidType(const ExportValue& typeValue) const
+   {
+      if(std::holds_alternative<int>(typeValue))
+      {
+         const auto& typeOption = mOptions.front();
+         return std::find(typeOption.values.begin(),
+            typeOption.values.end(),
+            typeValue) != typeOption.values.end();
+      }
+      return false;
+   }
+   
+
+public:
+
+   explicit ExportOptionsSFEditor(Listener* listener)
+      : mListener(listener)
+   {
+      ExportOption typeOption {
+         OptionIDSFType, XO("Header"),
+         0,
+         ExportOption::TypeEnum
+      };
+
+      auto hasDefaultType = false;
+      for (int i = 0, num = sf_num_headers(); i < num; ++i)
+      {
+         const auto type = static_cast<int>(sf_header_index_to_type(i));
+         switch (type)
+         {
+            // On the Mac, do not include in header list
+#if defined(__WXMAC__)
+            case SF_FORMAT_AIFF: break;
+#endif
+            // Do not include in header list
+            case SF_FORMAT_WAV: break;
+            default:
+               {
+                  typeOption.values.emplace_back(type);
+                  typeOption.names.push_back(Verbatim(sf_header_index_name(i)));
+                  ExportOption encodingOption {
+                     type,
+                     XO("Encoding"),
+                     0,
+                     ExportOption::TypeEnum
+                  };
+                  GetEncodings(type, encodingOption.values, encodingOption.names);
+                  encodingOption.defaultValue = encodingOption.values[0];
+                  if(!hasDefaultType)
+                  {
+                     mType = type;
+                     typeOption.defaultValue = type;
+                     hasDefaultType = true;
+                  }
+                  else
+                     encodingOption.flags |= ExportOption::Hidden;
+                  mOptions.push_back(std::move(encodingOption));
+                  mEncodings[type] = *std::get_if<int>(&encodingOption.defaultValue);
+               } break;
+         }
+      }
+      typeOption.defaultValue = typeOption.values[0];
+      mOptions.insert(mOptions.begin(), std::move(typeOption));
+   }
+
+   int GetOptionsCount() const override
+   {
+      return static_cast<int>(mOptions.size());
+   }
+
+   bool GetOption(int index, ExportOption& option) const override
+   {
+      if (index >= 0 && index < static_cast<int>(mOptions.size()))
+      {
+         option = mOptions[index];
+         return true;
+      }
+      return false;
+   }
+
+   bool GetValue(ExportOptionID id, ExportValue& value) const override
+   {
+      if(id == OptionIDSFType)
+      {
+         value = mType;
+         return true;
+      }
+      auto it = mEncodings.find(id);
+      if(it != mEncodings.end())
+      {
+         value = it->second;
+         return true;
+      }
+      return false;
+   }
+
+   bool SetValue(ExportOptionID id, const ExportValue& value) override
+   {
+      if(id == OptionIDSFType && IsValidType(value))
+      {
+         const auto newType = *std::get_if<int>(&value);
+         if(newType == mType)
+            return true;
+         
+         if(mListener)
+            mListener->OnExportOptionChangeBegin();
+
+         for(auto& option : mOptions)
+         {
+            if(option.id == mType)
+            {
+               option.flags |= ExportOption::Hidden;
+               if(mListener)
+                  mListener->OnExportOptionChange(option);
+            }
+            else if(option.id == newType)
+            {
+               option.flags &= ~ExportOption::Hidden;
+               if(mListener)
+                  mListener->OnExportOptionChange(option);
+            }
+         }
+         if(mListener)
+         {
+            mListener->OnExportOptionChangeEnd();
+            mListener->OnExtensionChange(sf_header_extension(newType));
+         }
+         mType = newType;
+         return true;
+      }
+
+      auto it = mEncodings.find(id);
+      if(it != mEncodings.end() && std::holds_alternative<int>(value))
+      {
+         it->second = *std::get_if<int>(&value);
+         return true;
+      }
+      return false;
+   }
+
+   void Load(const wxConfigBase& config) override
+   {
+      mType = LoadOtherFormat(config, mType);
+      for(auto& p : mEncodings)
+         p.second = LoadEncoding(config, p.first, p.second);
+
+      // Prior to v2.4.0, sf_format will include the subtype.
+      if (mType & SF_FORMAT_SUBMASK)
+      {
+         const auto type = mType & SF_FORMAT_TYPEMASK;
+         const auto enc = mType & SF_FORMAT_SUBMASK;
+         mEncodings[type] = enc;
+         mType = type;
+      }
+
+      for(auto& option : mOptions)
+      {
+         const auto it = mEncodings.find(option.id);
+         if(it == mEncodings.end())
+            continue;
+
+         if(mType == it->first)
+            option.flags &= ~ExportOption::Hidden;
+         else
+            option.flags |= ExportOption::Hidden;
+      }
+   }
+
+   void Store(wxConfigBase& config) const override
+   {
+      SaveOtherFormat(config, mType);
+      for(auto& [type, encoding] : mEncodings)
+         SaveEncoding(config, type, encoding);
+   }
+};
+
+}
 
 class ExportPCM final : public ExportPluginEx
 {
@@ -427,9 +415,10 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
    if(index == FMT_OTHER)
    {
       SF_INFO si = {};
-
-      si.format = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
-      si.format |= LoadEncoding(si.format);
+      //VS: returned format info depends on the format that was used last time.
+      //That could be a source of unexpected behavior
+      si.format = LoadOtherFormat(*gPrefs, kFormats[0].format & SF_FORMAT_TYPEMASK);
+      si.format |= LoadEncoding(*gPrefs, si.format, kFormats[0].format);
 
       for (si.channels = 1; sf_format_check(&si); si.channels++)
       {
@@ -455,9 +444,12 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
 }
 
 std::unique_ptr<ExportOptionsEditor>
-ExportPCM::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+ExportPCM::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const
 {
-   return {};
+   if(format < FMT_OTHER)
+      return std::make_unique<ExportOptionsSFTypedEditor>(
+         kFormats[format].format & SF_FORMAT_TYPEMASK);
+   return std::make_unique<ExportOptionsSFEditor>(listener);
 }
 
 
@@ -520,18 +512,13 @@ void ExportPCM::Export(AudacityProject *project,
          sf_format = SF_FORMAT_WAV;
       break;
 
-      default:
-         // Retrieve the current format.
-         sf_format = LoadOtherFormat();
+   default:
+      // Retrieve the current format.
+      sf_format = ExportUtils::GetParameterValue(parameters, OptionIDSFType, 0);
       break;
    }
 
-   // Prior to v2.4.0, sf_format will include the subtype. If not present,
-   // check for the format specific preference.
-   if (!(sf_format & SF_FORMAT_SUBMASK))
-   {
-      sf_format |= LoadEncoding(sf_format);
-   }
+   sf_format |= ExportUtils::GetParameterValue(parameters, sf_format, 0);
 
    // If subtype is still not specified, supply a default.
    if (!(sf_format & SF_FORMAT_SUBMASK))
@@ -1065,20 +1052,6 @@ bool ExportPCM::AddID3Chunk(
 
 void ExportPCM::OptionsCreate(ShuttleGui &S, int format)
 {
-   switch (format)
-   {
-#if defined(__WXMAC__)
-      case FMT_AIFF:
-#endif
-      case FMT_WAV:
-      case FMT_OTHER:
-         S.AddWindow(safenew ExportPCMOptions{ S.GetParent(), format });
-      break;
-
-      default:
-         ExportPlugin::OptionsCreate(S, format);
-      break;
-   }
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "PCM",
