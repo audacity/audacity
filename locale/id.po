@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-12-20 09:37-0500\n"
+"POT-Creation-Date: 2023-04-05 16:57+0300\n"
 "PO-Revision-Date: 2012-01-16 15:00-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: \n"
@@ -15,74 +15,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#. i18n-hint C++ programming assertion
-#: crashreports/crashreporter/CrashReportApp.cpp
-#, c-format
-msgid "Exception code 0x%x"
-msgstr ""
-
-#. i18n-hint C++ programming assertion
-#: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
-msgid "Unknown exception"
-msgstr "Opsi baris komando tidak diketahui: %s\n"
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-msgid "Unknown error"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
-msgid "Problem Report for Audacity"
-msgstr "Preferensi..."
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgid "Problem details"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
-msgid "Comments"
-msgstr "Kommentar"
-
-#. i18n-hint: %s will be replaced with "our Privacy Policy"
-#: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
-msgid "See %s for more info."
-msgstr "Pilih satu atau lebih file audio..."
-
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an
-#. object of "See".
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
-#: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgid "our Privacy Policy"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgctxt "crash reporter button"
-msgid "&Don't send"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgctxt "crash reporter button"
-msgid "&Send"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
-msgid "Failed to send crash report"
-msgstr "Tidak bisa membuka atau membuat file tes"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
@@ -222,9 +154,96 @@ msgstr "Selesai merekam"
 msgid "Recording volume is native\n"
 msgstr "Selesai merekam"
 
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Could not find any audio devices.\n"
+msgstr "Tidak dapat mencari perangkat audio.\n"
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid ""
+"You will not be able to play or record audio.\n"
+"\n"
+msgstr ""
+"Anda tidak akan bisa memainkan ataupun merekam audio.\n"
+"\n"
+
+#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
+#, fuzzy, c-format
+msgid "Error: %s"
+msgstr "Error:"
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Error Initializing Audio"
+msgstr "Error Menginisialisasi audio"
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy
+msgid "Audacity Audio"
+msgstr "Proyek Audacity"
+
+#: libraries/lib-audio-io/AudioIO.cpp src/ProjectAudioManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Error opening recording device.\n"
+"Error code: %s"
+msgstr "Error ketika membuka perangkat suara."
+
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-effects/EffectBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny
+msgid "Error"
+msgstr "Error"
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Out of memory!"
+msgstr ""
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr "Perubahan Level Input Otomatis dihentikan. Tidak mungkin membenahi lebih jauh. Tetap terlalu tinggi."
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Automated Recording Level Adjustment decreased the volume to %f."
+msgstr "Perubahan Level Input Otomatis mengurangi volume ke %f"
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr "Perubahan Level Input Otomatis dihentikan. Tidak mungkin membenahi lebih jauh. Tetap terlalu rendah."
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Automated Recording Level Adjustment increased the volume to %.2f."
+msgstr "Perubahan Level Input Otomatis menaikkan volume ke %f"
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
+msgstr "Perubahan Level Input Otomatis dihentikan. Angka total analisis telah melebihi batas tanpa menemukan volume yang cocok. tetap terlalu tinggi."
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
+msgstr "Perubahan Level Input Otomatis dihentikan. Angka total analisis telah melebihi batas tanpa menemukan volume yang cocok. tetap terlalu rendah."
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy, c-format
+msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr "Perubahan Level Input Otomatis dihentikan. %.2f sepertinya volume yang cocok."
+
 #: libraries/lib-basic-ui/BasicUI.cpp
-#: libraries/lib-exceptions/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.h
+#: libraries/lib-exceptions/AudacityException.h
+#: libraries/lib-wx-init/AudacityMessageBox.h src/commands/MessageCommand.cpp
 msgid "Message"
 msgstr ""
 
@@ -232,6 +251,84 @@ msgstr ""
 #, fuzzy
 msgid "Cannot proceed to upload."
 msgstr "Tidak ada label untuk diekspor."
+
+#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#, fuzzy
+msgid "Audacity"
+msgstr "Proyek Audacity"
+
+#: libraries/lib-effects/Effect.cpp
+#, fuzzy
+msgid "Built-in"
+msgstr "Efek Unit Audio"
+
+#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
+#, c-format
+msgid ""
+"%s: Could not load settings below. Default settings will be used.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: libraries/lib-effects/EffectBase.cpp src/commands/AudacityCommand.cpp
+#, fuzzy, c-format
+msgid "Applying %s..."
+msgstr "Mengaplikasikan..."
+
+#: libraries/lib-effects/EffectBase.cpp
+msgid "Preparing preview"
+msgstr "Meyiapkan preview"
+
+#: libraries/lib-effects/EffectBase.cpp
+msgid "Previewing"
+msgstr "Melihat preview"
+
+#: libraries/lib-effects/EffectBase.cpp src/ProjectAudioManager.cpp
+#, fuzzy
+msgid ""
+"Error opening sound device.\n"
+"Try changing the audio host, playback device and the project sample rate."
+msgstr "Error ketika membuka perangkat suara. Tolong cek pengaturan perangkat output dan rate sampel proyek."
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: libraries/lib-effects/EffectBase.h
+msgid "Nyquist"
+msgstr "Nyquist"
+
+#: libraries/lib-effects/LoadEffects.cpp
+#, fuzzy
+msgid "Builtin Effects"
+msgstr "Efek Unit Audio"
+
+#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
+#: src/effects/VST/VSTEffect.cpp
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#, fuzzy
+msgid "The Audacity Team"
+msgstr "Tim Pendukung Audacity %s"
+
+#: libraries/lib-effects/LoadEffects.cpp
+msgid "Provides builtin effects to Audacity"
+msgstr ""
+
+#: libraries/lib-effects/LoadEffects.cpp
+msgid "Unknown built-in effect name"
+msgstr ""
+
+#: libraries/lib-effects/MixAndRender.cpp src/menus/TrackMenus.cpp
+msgid "Mix and Render"
+msgstr "Mix dan Render"
+
+#: libraries/lib-effects/MixAndRender.cpp
+msgid "Mixing and rendering tracks"
+msgstr "Trek Mix dan Render"
 
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
@@ -331,7 +428,7 @@ msgid "%s files"
 msgstr "File MP3"
 
 #: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
-#: src/effects/lv2/LV2Validator.cpp
+#: src/effects/lv2/LV2Editor.cpp
 #, c-format
 msgid "(%s)"
 msgstr ""
@@ -342,21 +439,6 @@ msgid ""
 "\n"
 "%s does not have write permissions."
 msgstr "Direktori %s belum ada. Buat dulu?"
-
-#: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectBase.cpp
-#: src/effects/Generator.cpp src/effects/VST3/VST3Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-#: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Error"
-msgstr "Error"
 
 #: libraries/lib-files/TempDirectory.cpp
 #, fuzzy
@@ -609,6 +691,792 @@ msgstr "Prompt Nyquist..."
 msgid "Failed to open the file for upload: %s"
 msgstr "Tidak bisa membuang '%s'"
 
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and samples (at the current project sample rate)
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+msgid "hh:mm:ss + samples"
+msgstr "jj:mm:dd: + sampel"
+
+#. i18n-hint: Name of time display format that shows time in seconds
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
+msgid "seconds"
+msgstr "detik"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes
+#. * and seconds
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+msgid "hh:mm:ss"
+msgstr "jj:mm:dd"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and milliseconds (1/1000 second)
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+msgid "hh:mm:ss + milliseconds"
+msgstr "jj:mm:dd: + milidetik"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and hundredths of a second (1/100 second)
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+msgid "hh:mm:ss + hundredths"
+msgstr "jj:mm:dd + seperseratus"
+
+#. i18n-hint: Name of display format that shows frequency in hertz
+#. i18n-hint: This is the abbreviation for "Hertz", or
+#. cycles per second.
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp src/FreqWindow.cpp
+#: src/effects/ChangePitch.cpp src/effects/EqualizationUI.cpp
+#: src/effects/ScienFilter.cpp src/import/ImportRaw.cpp
+msgid "Hz"
+msgstr "Hz"
+
+#. i18n-hint: Name of display format that shows log of frequency
+#. * in octaves
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+#, fuzzy
+msgid "octaves"
+msgstr "Oktaf Bawah"
+
+#. i18n-hint: The music theory "bar"
+#: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
+#, fuzzy
+msgid "bar"
+msgstr "&Toolbar"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
+msgid "beat"
+msgstr ""
+
+#. i18n-hint: "bar" and "beat" are musical notation elements.
+#: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
+msgid "bar:beat"
+msgstr ""
+
+#. i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.
+#: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
+msgid "bar:beat:tick"
+msgstr ""
+
+#. i18n-hint: Format string for displaying time in seconds. Change the comma
+#. * in the middle to the 1000s separator for your locale, and the 'seconds'
+#. * on the end to the word for seconds. Don't change the numbers.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 seconds"
+msgstr "01000,01000 detik"
+
+#. i18n-hint: Name of time display format that shows time in seconds
+#. * and milliseconds (1/1000 second)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "seconds + milliseconds"
+msgstr "jj:mm:dd: + milidetik"
+
+#. i18n-hint: Format string for displaying time in seconds and milliseconds
+#. * as fractional seconds. Change the comma in the middle to the 1000s separator
+#. * for your locale, and the 'seconds' on the end to the word for seconds.
+#. * Don't change the numbers. The decimal separator is specified using '<' if
+#. * your languages uses a ',' or to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "01000,01000>01000 seconds"
+msgstr "01000,01000 detik"
+
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+msgid "milliseconds"
+msgstr "milidetik"
+
+#. i18n-hint: Format string for displaying time in hours, minutes and
+#. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
+#. * change the numbers unless there aren't 60 seconds in a minute in your
+#. * locale
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s"
+msgstr "0100 jam 060 mnt 060 dtk"
+
+#. i18n-hint: Name of time display format that shows time in days, hours,
+#. * minutes and seconds
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "dd:hh:mm:ss"
+msgstr "hh:jj:mm:dd"
+
+#. i18n-hint: Format string for displaying time in days, hours, minutes and
+#. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes and 's' to the
+#. * abbreviation for seconds. Don't change the numbers unless there aren't
+#. * 24 hours in a day in your locale
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 days 024 h 060 m 060 s"
+msgstr "0100 hari 024 jam 060 mnt 060 dtk"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
+#. * (the hundredths are shown as decimal seconds). Don't change the numbers
+#. * unless there aren't 60 minutes in an hour in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060>0100 s"
+msgstr "0100 j 060 m 060>0100 d"
+
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "centiseconds"
+msgstr "sentidetik"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * abbreviation for minutes and 's' to the abbreviation for seconds (the
+#. * milliseconds are shown as decimal seconds) . Don't change the numbers
+#. * unless there aren't 60 minutes in an hour in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060>01000 s"
+msgstr "0100 jam 060 mnt 060>01000 dtk"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * abbreviation for minutes, 's' to the abbreviation for seconds and
+#. * translate samples . Don't change the numbers
+#. * unless there aren't 60 seconds in a minute in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+># samples"
+msgstr "0100 jam 060 mnt 060 dtk+># sampel"
+
+#. i18n-hint: Name of time display format that shows time in samples (at the
+#. * current project sample rate).  For example the number of a sample at 1
+#. * second into a recording at 44.1KHz would be 44,100.
+#.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#: plug-ins/sample-data-export.ny
+msgid "samples"
+msgstr "sampel"
+
+#. i18n-hint: Format string for displaying time in samples (lots of samples).
+#. * Change the ',' to the 1000s separator for your locale, and translate
+#. * samples. If 1000s aren't a base multiple for your number system, then you
+#. * can change the numbers to an appropriate one, and put a 0 on the front
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000,01000 samples|#"
+msgstr "01000,01000,01000 sampel|#"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at 24 frames per second (commonly used for films)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + film frames (24 fps)"
+msgstr "jj:mm:dd: + Bingkai film (24 bpd)"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames at 24 frames per second. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames' . Don't change the numbers
+#. * unless there aren't 60 seconds in a minute in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>24 frames"
+msgstr "0100 jam 060 mnt 060 dtk+>24 bingkai"
+
+#. i18n-hint: Name of time display format that shows time in frames (lots of
+#. * frames) at 24 frames per second (commonly used for films)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "film frames (24 fps)"
+msgstr "Bingkai PAL (25 bpd)"
+
+#. i18n-hint: Format string for displaying time in frames at 24 frames per
+#. * second. Change the comma
+#. * in the middle to the 1000s separator for your locale,
+#. * translate 'frames' and leave the rest alone
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 frames|24"
+msgstr "01000,01000 bingkai|24"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at NTSC TV drop-frame rate (used for American /
+#. * Japanese TV, and very odd)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + NTSC drop frames"
+msgstr "jj:mm:dd: + Bingkai NTSC dengan drop"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames'. Leave the |N alone, it's important!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>30 frames|N"
+msgstr "0100 jam 060 mnt 060 dtk+>30 bingkai|N"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
+#. * Japanese TV, and doesn't quite match wall time
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + NTSC non-drop frames"
+msgstr "jj:mm:dd: + Bingkai NTSC non-drop"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames'. Leave the | .999000999 alone,
+#. * the whole things really is slightly off-speed!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>030 frames| .999000999"
+msgstr "0100 jam 060 mnt 060 dtk+>030 bingkai| .999000999"
+
+#. i18n-hint: Name of time display format that shows time in frames at NTSC
+#. * TV frame rate (used for American / Japanese TV
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "NTSC frames"
+msgstr "Bingkai NTSC"
+
+#. i18n-hint: Format string for displaying time in frames with NTSC frames.
+#. * Change the comma
+#. * in the middle to the 1000s separator for your locale,
+#. * translate 'frames' and leave the rest alone. That really is the frame
+#. * rate!
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 frames|29.97002997"
+msgstr "01000,01000 bingkai|29.97002997"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at PAL TV frame rate (used for European TV)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + PAL frames (25 fps)"
+msgstr "jj:mm:dd: + Bingkai PAL (25 bpd)"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames with PAL TV frames. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames'. Nice simple time code!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>25 frames"
+msgstr "0100 jam 060 mnt 060 dtk+>25 bingkai"
+
+#. i18n-hint: Name of time display format that shows time in frames at PAL
+#. * TV frame rate (used for European TV)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "PAL frames (25 fps)"
+msgstr "Bingkai PAL (25 bpd)"
+
+#. i18n-hint: Format string for displaying time in frames with NTSC frames.
+#. * Change the comma
+#. * in the middle to the 1000s separator for your locale,
+#. * translate 'frames' and leave the rest alone.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 frames|25"
+msgstr "01000,01000 bingkai|25"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at CD Audio frame rate (75 frames per second)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + CDDA frames (75 fps)"
+msgstr "jj:mm:dd: + Bingkai CDDA (75 bpd)"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames with CD Audio frames. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames'.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>75 frames"
+msgstr "0100 jam 060 mnt 060 dtk+>75 bingkai"
+
+#. i18n-hint: Name of time display format that shows time in frames at CD
+#. * Audio frame rate (75 frames per second)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "CDDA frames (75 fps)"
+msgstr "Bingkai CCDA (75 bpd)"
+
+#. i18n-hint: Format string for displaying time in frames with CD Audio
+#. * frames. Change the comma
+#. * in the middle to the 1000s separator for your locale,
+#. * translate 'frames' and leave the rest alone
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 frames|75"
+msgstr "01000,01000 bingkai|75"
+
+#. i18n-hint: Format string for displaying frequency in hertz. Change
+#. * the decimal point for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "010,01000>0100 Hz"
+msgstr "0100 j 060 m 060>0100 d"
+
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "centihertz"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows frequency in kilohertz
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "kHz"
+msgstr "kHz"
+
+#. i18n-hint: Format string for displaying frequency in kilohertz. Change
+#. * the decimal point for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "01000>01000 kHz|0.001"
+msgstr "0100 j 060 m 060>0100 d"
+
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hertz"
+msgstr ""
+
+#. i18n-hint: Format string for displaying log of frequency in octaves.
+#. * Change the decimal points for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "100>01000 octaves|1.442695041"
+msgstr "01000,01000 bingkai|24"
+
+#. i18n-hint: an octave is a doubling of frequency
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "thousandths of octaves"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows log of frequency
+#. * in semitones and cents
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "semitones + cents"
+msgstr "Seminada dalam separuh langkah"
+
+#. i18n-hint: Format string for displaying log of frequency in semitones
+#. * and cents.
+#. * Change the decimal points for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "1000 semitones >0100 cents|17.312340491"
+msgstr ""
+
+#. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hundredths of cents"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows log of frequency
+#. * in decades
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "decades"
+msgstr ""
+
+#. i18n-hint: Format string for displaying log of frequency in decades.
+#. * Change the decimal points for your locale. Don't change the numbers.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "10>01000 decades|0.434294482"
+msgstr "01000,01000 bingkai|24"
+
+#. i18n-hint: a decade is a tenfold increase of frequency
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "thousandths of decades"
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set page size for database %s"
+msgstr "Tidak bisa membuang '%s'"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Gagal mencari codec"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Tidak bisa menerima deskripsi aliran"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy
+msgid "Checkpointing project"
+msgstr "Aplikasikan ke proyek yang tersedia"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Checkpointing %s"
+msgstr "Mengimpor %s"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#: libraries/lib-project-file-io/ProjectFileIO.cpp src/CrashReport.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Could not write to %s.\n"
+msgstr "Tidak bisa menulis file:"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, c-format
+msgid ""
+"Disk is full.\n"
+"%s\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#: libraries/lib-project-file-io/SqliteSampleBlock.cpp
+#: libraries/lib-transactions/TransactionScope.cpp
+#: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
+#: libraries/lib-wx-init/LogWindow.cpp modules/mod-nyq-bench/NyqBench.cpp
+#: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportMultiple.cpp
+#: src/import/RawAudioGuess.cpp src/menus/EditMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
+msgid "Warning"
+msgstr "Perhatian"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to create savepoint:\n"
+"\n"
+"%s"
+msgstr "Tidak bisa membuang '%s'"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to release savepoint:\n"
+"\n"
+"%s"
+msgstr "Tidak bisa membuang '%s'"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"There is very little free disk space left on %s\n"
+"Please select a bigger temporary directory location in\n"
+"Directories Preferences."
+msgstr ""
+"Ruang disk yang tersisa tinggal sedikit.\n"
+"Mohon pilih direktori temporer lainnya dalam Preferensi."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to open the project's database"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Tidak bisa membuang '%s'"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to discard connection"
+msgstr "Gagal mencari codec"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to restore connection"
+msgstr "Tidak bisa menerima deskripsi aliran"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to execute a project file command:\n"
+"\n"
+"%s"
+msgstr "Tidak bisa membuang '%s'"
+
+#. i18n-hint: An error message.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "This is not an Audacity project file"
+msgstr "Menyimpan Proyek Audacity"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"This project was created with a newer version of Audacity.\n"
+"\n"
+"You will need to upgrade to open it."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to initialize the project file"
+msgstr "Tidak bisa menginisialisasi strim MP3"
+
+#. i18n-hint: An error message.  Don't translate inset or blockids.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Tidak bisa menginisialisasi strim MP3"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "Total orphan blocks deleted %d"
+msgstr "Anak file blok: (%s)"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Failed to rollback transaction during import"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to attach destination database"
+msgstr "Tidak bisa meganti nama '%s' ke '%s'"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Unable to switch to fast journaling mode"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to prepare project file command:\n"
+"\n"
+"%s"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#: libraries/lib-project-file-io/SqliteSampleBlock.cpp src/ProjectFSCK.cpp
+#: src/TransportUtilities.cpp
+msgid "Progress"
+msgstr "Kemajuan"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to bind SQL parameter"
+msgstr "Gagal mencari codec"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to update the project file.\n"
+"The following command failed:\n"
+"\n"
+"%s"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Destination project could not be detached"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Copying Project"
+msgstr "Error dalam membuka proyek"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Error Writing to File"
+msgstr "Error menulis ke file"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Audacity failed to write file %s.\n"
+"Perhaps disk is full or not writable.\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+"Tidak bisa menyimpan proyek. Mungkin %s \n"
+"tidak bisa ditulis atau disk penuh."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Compacting project"
+msgstr "Menyimpan &proyek"
+
+#. i18n-hint: The %02i is the project number, the %s is the project name.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "[Project %02i] Audacity \"%s\""
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp src/ProjectFileManager.cpp
+#, fuzzy
+msgid "<untitled>"
+msgstr "tak berjudul"
+
+#. i18n-hint: E.g this is recovered audio that had been lost.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "(Recovered)"
+msgstr "(Terkembalikan)"
+
+#. i18n-hint: %s will be replaced by the version number.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"This file was saved using Audacity %s.\n"
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
+msgstr ""
+"File ini disimpan dengan Audacity %s.\n"
+"Anda menggunakan Audacity %s - anda diharuskan untuk\n"
+"meng-upgrade versi terbaru untuk membuka file ini."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Can't open project file"
+msgstr "Tidak bisa membuka file proyek"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Failed to remove the autosave information from the project file."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Gagal mencari codec"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to parse project information."
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Saving project"
+msgstr "Menyimpan &proyek"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp src/ProjectFileManager.cpp
+msgid "Error Saving Project"
+msgstr "Error Meyimpan Proyek"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Syncing"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"The project failed to open, possibly due to limited space\n"
+"on the storage device.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Unable to remove autosave information, possibly due to limited space\n"
+"on the storage device.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Backing up project"
+msgstr "M&enyimpan proyek kosong"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Automatic database backup failed."
+msgstr "Pengembalian Otomatis Akibat Crash"
+
+#: libraries/lib-project-file-io/ProjectSerializer.cpp
+msgid ""
+"This recovery file was saved by Audacity 2.3.0 or before.\n"
+"You need to run that version of Audacity to recover the project."
+msgstr ""
+
+#: libraries/lib-project-file-io/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Memeriksa data file proyek..."
+
+#: libraries/lib-project-file-io/SqliteSampleBlock.cpp
+msgid "Discarding undo/redo history"
+msgstr ""
+
 #: libraries/lib-project-history/ProjectHistory.cpp
 msgid "Created new project"
 msgstr "Membuat proyek baru"
@@ -648,15 +1516,177 @@ msgstr "Menyempel Ulang Trek"
 msgid "Writable Sample Track"
 msgstr "Menyempel Ulang Trek"
 
-#: libraries/lib-screen-geometry/ViewInfo.cpp
-msgid "&Loop On/Off"
+#: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
+msgid "&Close"
+msgstr "&Tutup"
+
+#: libraries/lib-shuttlegui/ShuttleGui.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp src/AudacityFileConfig.cpp
+#: src/commands/HelpCommand.cpp src/effects/EqualizationCurvesDialog.cpp
+#: src/export/Export.cpp src/menus/HelpMenus.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Help"
+msgstr "Bantuan"
+
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
+#: libraries/lib-shuttlegui/ShuttleGui.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "&Preview"
+msgstr "Pre&view"
+
+#: libraries/lib-shuttlegui/ShuttleGui.cpp
+#, fuzzy
+msgid "Dry Previe&w"
+msgstr "Preview Potongan"
+
+#: libraries/lib-shuttlegui/ShuttleGui.cpp
+#, fuzzy
+msgid "&Settings"
+msgstr "&Opsi..."
+
+#: libraries/lib-shuttlegui/ShuttleGui.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "Debu&g"
+msgstr "&Benah"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Beats"
+msgstr "Ulang"
+
+#. i18n-hint: The music theory "bar"
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "Bar"
 msgstr ""
 
-#: libraries/lib-strings/FutureStrings.h
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "1/2"
+msgstr "128"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/4"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "1/8"
+msgstr "128"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/16"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/32"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/64"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/128"
+msgstr ""
+
+#. i18n-hint: The music theory "triplet"
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "Triplets"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/2 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/4 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/8 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/16 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/32 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/64 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/128 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Seconds && samples"
+msgstr "Trek Kedua"
+
+#: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Seconds"
+msgstr "detik"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Deciseconds"
+msgstr "sentidetik"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Centiseconds"
+msgstr "sentidetik"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Milliseconds"
+msgstr "milidetik"
+
+#: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Samples"
+msgstr "sampel"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Video frames"
+msgstr "Bingkai NTSC"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Film frames (24 fps)"
+msgstr "Bingkai PAL (25 bpd)"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "NTSC frames (29.97 fps)"
+msgstr "Bingkai CCDA (75 bpd)"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "NTSC frames (30 fps)"
+msgstr "Bingkai CCDA (75 bpd)"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "CD frames"
+msgstr "Bingkai NTSC"
+
+#: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
 msgstr ""
 
-#: libraries/lib-strings/FutureStrings.h
+#: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
@@ -861,6 +1891,16 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
+#: libraries/lib-time-frequency-selection/ViewInfo.cpp
+msgid "&Loop On/Off"
+msgstr ""
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Time track.
+#: libraries/lib-time-track/TimeTrack.cpp src/TrackPanelAx.cpp
+msgid "Time Track"
+msgstr "Trek Waktu"
+
 #: libraries/lib-track/Track.cpp
 #, fuzzy
 msgid "Generic Track"
@@ -879,17 +1919,405 @@ msgstr "Memainkan"
 msgid "Database error.  Sorry, but we don't have more details."
 msgstr ""
 
-#: libraries/lib-transactions/TransactionScope.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
-#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
-#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
-#: src/menus/EditMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
-msgid "Warning"
-msgstr "Perhatian"
+#: libraries/lib-vst3/VST3EffectBase.cpp
+msgid "VST3"
+msgstr ""
 
-#: libraries/lib-xml/XMLFileReader.cpp src/effects/Effect.cpp
+#. i18n-hint VST3 effect description string
+#: libraries/lib-vst3/VST3EffectBase.cpp
+#, c-format
+msgid "SubCategories: %s"
+msgstr ""
+
+#: libraries/lib-vst3/VST3EffectsModule.cpp
+#, fuzzy
+msgid "VST3 Effects"
+msgstr "Efek VST"
+
+#: libraries/lib-vst3/VST3EffectsModule.cpp
+msgid "Adds the ability to use VST3 effects in Audacity."
+msgstr ""
+
+#: libraries/lib-vst3/VST3EffectsModule.cpp
+#, fuzzy, c-format
+msgid "VST3 module error: %s"
+msgstr "GStreamer %s: %s"
+
+#: libraries/lib-vst3/VST3Wrapper.cpp
+#, fuzzy, c-format
+msgid "Unable to apply VST3 preset file %s"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: libraries/lib-vst3/VST3Wrapper.cpp
+#, fuzzy
+msgid "Failed to save VST3 preset to file"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: libraries/lib-wave-track/Sequence.cpp
+#, c-format
+msgid ""
+"Sequence has block file exceeding maximum %s samples per block.\n"
+"Truncating to this maximum length."
+msgstr ""
+
+#: libraries/lib-wave-track/Sequence.cpp
+#, fuzzy
+msgid "Warning - Truncating Overlong Block File"
+msgstr "Anak file blok: (%s)"
+
+#: libraries/lib-wave-track/WaveClip.cpp
+#, fuzzy
+msgid "Resampling failed."
+msgstr "Sampel ulang dimatikan."
+
+#: libraries/lib-wave-track/WaveTrack.cpp src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
+msgid "Audio"
+msgstr "&Audio..."
+
+#: libraries/lib-wave-track/WaveTrack.cpp
+#, fuzzy
+msgid "Wave Track"
+msgstr "Pindahkan Trek"
+
+#. i18n-hint Template for clip name generation on copy-paste
+#: libraries/lib-wave-track/WaveTrack.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s.%i"
+msgstr ""
+
+#. i18n-hint Template for clip name generation on inserting new empty clip
+#: libraries/lib-wave-track/WaveTrack.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s %i"
+msgstr ""
+
+#: libraries/lib-wave-track/WaveTrack.cpp
+msgid "There is not enough room available to paste the selection"
+msgstr "Tidak ada ruang cukup untuk menempel itu"
+
+#: libraries/lib-wave-track/WaveTrack.cpp
+msgid "There is not enough room available to expand the cut line"
+msgstr "Tidak ada ruang yang tersedia untuk menyebarkan garis potong"
+
+#: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr "Tunjukkan &Log..."
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "Backwards"
+msgstr "Percepat ke Awal"
+
+#. i18n-hint arrowhead meaning backward movement
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "<"
+msgstr "<"
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "Forwards"
+msgstr "Percepat ke Akhir"
+
+#. i18n-hint arrowhead meaning forward movement
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid ">"
+msgstr ">"
+
+#. i18n-hint verb
+#: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
+#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+msgid "Close"
+msgstr "Tutup"
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "Help on the Internet"
+msgstr "Bantuan di Internet"
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "Local"
+msgstr "Lokal"
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "From Internet"
+msgstr "Dari Internet"
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Welcome!"
+msgstr "Selamat Datang!"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Playing Audio"
+msgstr "Memeainkan Audio"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Recording Audio"
+msgstr "Merekam Audio"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid "Recording - Choosing the Recording Device"
+msgstr "Merekam - Memilih Perangkat Input"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid "Recording - Choosing the Recording Source"
+msgstr "Merekam - Memilih Sumber Input"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid "Recording - Setting the Recording Level"
+msgstr "Merekam - Mengatur Tingkatan Input"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Editing and greyed out Menus"
+msgstr "Mengedit dan mengabu-abukan Menu"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Exporting an Audio File"
+msgstr "Mengekspor File Audio"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Saving an Audacity Project"
+msgstr "Menyimpan Proyek Audacity"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid "Support for Other Formats"
+msgstr "Format yang tidak mendukung"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Burn to CD"
+msgstr "Bakar ke CD"
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "No Local Help"
+msgstr "Tidak Ada Bantuan lokal"
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Get the Official Released Version of Audacity"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgstr ""
+
+#. i18n-hint: %s is replaced with Audacity version
+#: libraries/lib-wx-init/HelpText.cpp
+#, c-format
+msgid "What's new in Audacity %s"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "How to get help"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "These are our support methods:"
+msgstr "Ini adalah metode dukungan kami:"
+
+#. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "[[help:Quick_Help|Quick Help]]"
+msgstr ""
+
+#. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid " [[help:Main_Page|Manual]]"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+msgstr " <a href=\"http://forum.audacityteam.org/\">Forum</a> (tanyakan secara langsung di internet)"
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid "Check Online"
+msgstr "Mengecek %s"
+
+#: libraries/lib-wx-init/LogWindow.cpp
+#, fuzzy
+msgid "Audacity Log"
+msgstr "Proyek Audacity"
+
+#: libraries/lib-wx-init/LogWindow.cpp src/TagsEditor.cpp
+msgid "&Save..."
+msgstr "Sim&pan..."
+
+#. i18n-hint: (verb)
+#: libraries/lib-wx-init/LogWindow.cpp src/TagsEditor.cpp
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Cl&ear"
+msgstr "Hap&us"
+
+#: libraries/lib-wx-init/LogWindow.cpp
+msgid "log.txt"
+msgstr ""
+
+#: libraries/lib-wx-init/LogWindow.cpp
+#, fuzzy
+msgid "Save log to:"
+msgstr "Simpan Gambar ke:"
+
+#: libraries/lib-wx-init/LogWindow.cpp
+#, fuzzy, c-format
+msgid "Couldn't save log to file: %s"
+msgstr "Tidak bisa menulis file:"
+
+#: libraries/lib-wx-init/MultiDialog.cpp
+msgid "Show Log for Details"
+msgstr ""
+
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
+#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+msgid "OK"
+msgstr "OK"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Waktu Berjalan:"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Remaining Time:"
+msgstr "Waktu Tersisa:"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp modules/mod-nyq-bench/NyqBench.cpp
+#: src/toolbars/ControlToolBar.cpp
+msgid "Stop"
+msgstr "Berhenti"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+msgid "Cancel"
+msgstr "Batal"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Are you sure you wish to cancel?"
+msgstr "anda yakin mau menghapus %s?"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Confirm Cancel"
+msgstr "Konfirmasi Penghapusan"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Are you sure you wish to stop?"
+msgstr "anda yakin mau menghapus %s?"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Confirm Stop"
+msgstr "Konfirmasi"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Are you sure you wish to close?"
+msgstr "anda yakin mau menghapus %s?"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Confirm Close"
+msgstr "Konfirmasi"
+
+#: libraries/lib-wx-init/SelectFile.cpp
+msgid "The specified filename could not be converted due to Unicode character use."
+msgstr "Nama file yang dipilih tidak bisa diubah karena penggunaan karakter Unicode."
+
+#: libraries/lib-wx-init/SelectFile.cpp
+msgid "Specify New Filename:"
+msgstr "Tentukan Nama File Baru:"
+
+#: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
+#, c-format
+msgid "File '%s' already exists, do you really want to overwrite it?"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
+#, fuzzy
+msgid "Please choose an existing file."
+msgstr " Mohon pilih aksinya"
+
+#: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
+#, fuzzy
+msgid "File type:"
+msgstr "Penyaring"
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Panel"
+msgstr "Panel Trek"
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+msgid "Dialog"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a directory"
+msgstr "Membuat proyek baru"
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+#, fuzzy
+msgid "Directory Dialog"
+msgstr "Direktori"
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+msgid "File Dialog"
+msgstr ""
+
+#: libraries/lib-xml/XMLFileReader.cpp src/effects/BasicEffectUIServices.cpp
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
 msgid "Could not open file: \"%s\""
@@ -1154,6 +2582,7 @@ msgid "Save script as..."
 msgstr "Simpan &Proyek Sebagai..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Copy"
 msgstr "Salin"
@@ -1164,6 +2593,7 @@ msgid "Copy to clipboard"
 msgstr "Potong ke Clipboard"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Cut"
 msgstr "Potong"
@@ -1174,6 +2604,7 @@ msgid "Cut to clipboard"
 msgstr "Potong ke Clipboard"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Paste"
 msgstr "Tempel"
@@ -1287,11 +2718,6 @@ msgstr "Awal"
 #, fuzzy
 msgid "Start script"
 msgstr "Prompt Nyquist..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
-#: src/widgets/ProgressDialog.cpp
-msgid "Stop"
-msgstr "Berhenti"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -1409,12 +2835,6 @@ msgstr ""
 msgid "About %s"
 msgstr ""
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
-msgid "OK"
-msgstr "OK"
-
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
 #. *  your own name(s) to the credits.
@@ -1444,11 +2864,6 @@ msgstr "Orang-Orang yang Berjasa"
 msgid "%s Team Members"
 msgstr "Anggota Tim Emeritus Lainnya"
 
-#. i18n-hint: Musers are people working at Muse Group
-#: src/AboutDialog.cpp
-msgid "Former Musers"
-msgstr ""
-
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
 msgstr ""
@@ -1473,6 +2888,7 @@ msgstr ""
 msgid "Translators"
 msgstr "T&ransportasi"
 
+#. i18n-hint: refers to optional plug-in software libraries
 #: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
 msgid "Libraries"
 msgstr "Referensi"
@@ -1497,7 +2913,7 @@ msgstr "Pengoperasian Pertama Audacity"
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2021 %s Team."
+msgid "%s software is copyright %s 1999-2023 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -1691,6 +3107,29 @@ msgstr ""
 msgid "App update checking and error reporting require network access. These features are optional."
 msgstr ""
 
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "See %s for more info."
+msgstr "Pilih satu atau lebih file audio..."
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp src/widgets/ErrorReportDialog.cpp
+msgid "our Privacy Policy"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Minutes and Seconds"
+msgstr "detik"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Beats and Measures"
+msgstr "Ulang"
+
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
 msgid "Click and drag to define a looping region."
@@ -1810,6 +3249,10 @@ msgstr "Perbesar Ter&pilih"
 #, fuzzy
 msgid "Pinned Play Head"
 msgstr "Selesai merekam"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy, c-format
@@ -2084,12 +3527,6 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
-#: src/widgets/ErrorReportDialog.cpp src/widgets/MultiDialog.cpp
-msgid "Help"
-msgstr "Bantuan"
-
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid "&Quit Audacity"
@@ -2099,77 +3536,41 @@ msgstr "Keluar dari Audacity"
 msgid "&Retry"
 msgstr ""
 
-#: src/AudioIO.cpp
-msgid "Could not find any audio devices.\n"
-msgstr "Tidak dapat mencari perangkat audio.\n"
-
-#: src/AudioIO.cpp
+#: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
-"You will not be able to play or record audio.\n"
-"\n"
-msgstr ""
-"Anda tidak akan bisa memainkan ataupun merekam audio.\n"
-"\n"
-
-#: src/AudioIO.cpp src/MIDIPlay.cpp
-#, fuzzy, c-format
-msgid "Error: %s"
-msgstr "Error:"
-
-#: src/AudioIO.cpp
-msgid "Error Initializing Audio"
-msgstr "Error Menginisialisasi audio"
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Audacity Audio"
-msgstr "Proyek Audacity"
-
-#: src/AudioIO.cpp src/ProjectAudioManager.cpp
-#, fuzzy, c-format
-msgid ""
-"Error opening recording device.\n"
-"Error code: %s"
-msgstr "Error ketika membuka perangkat suara."
-
-#: src/AudioIO.cpp
-msgid "Out of memory!"
+"Smart clip.\n"
+"The entire source clip will be pasted into your project, allowing you to access\n"
+"trimmed audio data anytime."
 msgstr ""
 
-#: src/AudioIO.cpp
+#: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
+msgid ""
+"Selected audio only.\n"
+"Only the selected portion of the source clip will be pasted."
+msgstr ""
+
+#: src/AudioPasteDialog.cpp
 #, fuzzy
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
-msgstr "Perubahan Level Input Otomatis dihentikan. Tidak mungkin membenahi lebih jauh. Tetap terlalu tinggi."
+msgid "Paste audio"
+msgstr "Salin Label"
 
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "Perubahan Level Input Otomatis mengurangi volume ke %f"
+#: src/AudioPasteDialog.cpp
+msgid "How would you like to paste your audio?"
+msgstr ""
 
-#: src/AudioIO.cpp
+#: src/AudioPasteDialog.cpp
+#, c-format
+msgid "Audio data is %s. Larger sizes will take longer to paste."
+msgstr ""
+
+#: src/AudioPasteDialog.cpp
+msgid "Remember my choice and don't ask again"
+msgstr ""
+
+#: src/AudioPasteDialog.cpp
 #, fuzzy
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
-msgstr "Perubahan Level Input Otomatis dihentikan. Tidak mungkin membenahi lebih jauh. Tetap terlalu rendah."
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "Perubahan Level Input Otomatis menaikkan volume ke %f"
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
-msgstr "Perubahan Level Input Otomatis dihentikan. Angka total analisis telah melebihi batas tanpa menemukan volume yang cocok. tetap terlalu tinggi."
-
-#: src/AudioIO.cpp
-#, fuzzy
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
-msgstr "Perubahan Level Input Otomatis dihentikan. Angka total analisis telah melebihi batas tanpa menemukan volume yang cocok. tetap terlalu rendah."
-
-#: src/AudioIO.cpp
-#, fuzzy, c-format
-msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
-msgstr "Perubahan Level Input Otomatis dihentikan. %.2f sepertinya volume yang cocok."
+msgid "Continue"
+msgstr "Kontributor Lainnya"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
@@ -2443,7 +3844,7 @@ msgstr "&Batal"
 msgid "Remo&ve"
 msgstr "Buang"
 
-#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+#: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 #, fuzzy
 msgid "&Rename..."
 msgstr "&Sampel Ulang..."
@@ -2453,13 +3854,14 @@ msgstr "&Sampel Ulang..."
 msgid "Re&store"
 msgstr "Wila&yah Pengembalian"
 
-#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
+#: src/effects/EqualizationCurvesDialog.cpp
 #, fuzzy
 msgid "I&mport..."
 msgstr "&Impor..."
 
 #: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
-#: src/effects/Equalization.cpp
+#: src/effects/EqualizationCurvesDialog.cpp
 #, fuzzy
 msgid "E&xport..."
 msgstr "&Ekspor"
@@ -2496,11 +3898,11 @@ msgstr "E&dit..."
 msgid "De&lete"
 msgstr "&Hapus"
 
-#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+#: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "Move &Up"
 msgstr "Pindah ke &Atas"
 
-#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+#: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "Move &Down"
 msgstr "Pindak ke &Bawah"
 
@@ -2555,6 +3957,49 @@ msgstr "Nama tidak mungkin mengandung '%c' and '%c'"
 msgid "Are you sure you want to delete %s?"
 msgstr "anda yakin mau menghapus %s?"
 
+#: src/BatchProcessDialog.cpp
+#, fuzzy, c-format
+msgid "&Repeat %s"
+msgstr "Ulangi %s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Ulangi %s"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Repeat Last Tool"
+msgstr "Ulangi Efek Terakhir"
+
+#: src/BatchProcessDialog.cpp
+msgid "&Macro Manager"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "Mengaplikasikan %s"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "Hapus"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "Variabel"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/BatchProcessDialog.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
 #, fuzzy
@@ -2591,12 +4036,6 @@ msgstr ""
 #: src/Benchmark.cpp
 msgid "Run"
 msgstr ""
-
-#. i18n-hint verb
-#: src/Benchmark.cpp src/RealtimeEffectPanel.cpp
-#: src/tracks/ui/TrackButtonHandles.cpp src/widgets/HelpSystem.cpp
-msgid "Close"
-msgstr "Tutup"
 
 #. i18n-hint: Benchmark means a software speed test;
 #. leave untranslated file extension .txt
@@ -2806,72 +4245,9 @@ msgstr ""
 msgid "Audacity Support Data"
 msgstr "Tim Pendukung Audacity %s"
 
-#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
-
 #: src/CrashReport.cpp
 msgid "Report generated to:"
 msgstr ""
-
-#: src/DBConnection.cpp
-#, c-format
-msgid "(%d): %s"
-msgstr ""
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Failed to set page size for database %s"
-msgstr "Tidak bisa membuang '%s'"
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Gagal mencari codec"
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Tidak bisa menerima deskripsi aliran"
-
-#: src/DBConnection.cpp
-#, fuzzy
-msgid "Checkpointing project"
-msgstr "Aplikasikan ke proyek yang tersedia"
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Checkpointing %s"
-msgstr "Mengimpor %s"
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Could not write to %s.\n"
-msgstr "Tidak bisa menulis file:"
-
-#: src/DBConnection.cpp
-#, c-format
-msgid ""
-"Disk is full.\n"
-"%s\n"
-"For tips on freeing up space, click the help button."
-msgstr ""
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to create savepoint:\n"
-"\n"
-"%s"
-msgstr "Tidak bisa membuang '%s'"
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to release savepoint:\n"
-"\n"
-"%s"
-msgstr "Tidak bisa membuang '%s'"
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -3198,13 +4574,12 @@ msgstr "Frekuensi linier"
 msgid "Log frequency"
 msgstr "Frekuensi logaritma"
 
-#. i18n-hint: abbreviates decibels
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/Equalization.cpp src/effects/Loudness.cpp
+#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
+#: src/effects/EqualizationUI.cpp src/effects/Loudness.cpp
 #: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
-#: src/effects/TruncSilence.cpp src/prefs/WaveformSettings.cpp
+#: src/effects/TruncSilence.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
@@ -3216,15 +4591,6 @@ msgstr ""
 #: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
 msgid "Zoom"
 msgstr "Zoom"
-
-#. i18n-hint: This is the abbreviation for "Hertz", or
-#. cycles per second.
-#. i18n-hint: Name of display format that shows frequency in hertz
-#: src/FreqWindow.cpp src/effects/ChangePitch.cpp src/effects/Equalization.cpp
-#: src/effects/ScienFilter.cpp src/import/ImportRaw.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "Hz"
-msgstr "Hz"
 
 #: src/FreqWindow.cpp
 #, fuzzy
@@ -3333,145 +4699,6 @@ msgstr "Waktu (detik)\tFrekuensi (Hz)\tTingkat"
 msgid "Plot Spectrum..."
 msgstr "Spektrum Plot..."
 
-#: src/HelpText.cpp
-msgid "Welcome!"
-msgstr "Selamat Datang!"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Playing Audio"
-msgstr "Memeainkan Audio"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Recording Audio"
-msgstr "Merekam Audio"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-#, fuzzy
-msgid "Recording - Choosing the Recording Device"
-msgstr "Merekam - Memilih Perangkat Input"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-#, fuzzy
-msgid "Recording - Choosing the Recording Source"
-msgstr "Merekam - Memilih Sumber Input"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-#, fuzzy
-msgid "Recording - Setting the Recording Level"
-msgstr "Merekam - Mengatur Tingkatan Input"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Editing and greyed out Menus"
-msgstr "Mengedit dan mengabu-abukan Menu"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Exporting an Audio File"
-msgstr "Mengekspor File Audio"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Saving an Audacity Project"
-msgstr "Menyimpan Proyek Audacity"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-#, fuzzy
-msgid "Support for Other Formats"
-msgstr "Format yang tidak mendukung"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Burn to CD"
-msgstr "Bakar ke CD"
-
-#: src/HelpText.cpp
-msgid "No Local Help"
-msgstr "Tidak Ada Bantuan lokal"
-
-#: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "Get the Official Released Version of Audacity"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
-msgstr ""
-
-#. i18n-hint: %s is replaced with Audacity version
-#: src/HelpText.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "How to get help"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "These are our support methods:"
-msgstr "Ini adalah metode dukungan kami:"
-
-#. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
-#: src/HelpText.cpp
-#, fuzzy
-msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
-msgstr " [[file:quick_help.html|Bantuan Kilat]] (seharusnya diinstal dahulu, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">gunakan versi internet jika tidak ada</a>)"
-
-#. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
-#: src/HelpText.cpp
-#, fuzzy
-msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
-msgstr " [[file:index.html|Manual]] (seharusnya diinstal dahulu, <a href=\"http://manual.audacityteam.org/index.php\">gunakan versi internet jika tidak ada</a>)"
-
-#: src/HelpText.cpp
-#, fuzzy
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr " <a href=\"http://forum.audacityteam.org/\">Forum</a> (tanyakan secara langsung di internet)"
-
-#: src/HelpText.cpp
-#, fuzzy
-msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
-msgstr " [[http://wiki.audacityteam.org/index.php|Wiki]] (tips, trik dan tutorial terbaru di internet)"
-
-#: src/HelpText.cpp
-msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-
-#: src/HelpText.cpp
-#, fuzzy
-msgid "Check Online"
-msgstr "Mengecek %s"
-
 #: src/HelpUtilities.cpp
 #, fuzzy, c-format
 msgid "Save %s"
@@ -3556,19 +4783,29 @@ msgstr "Maaf, gagal mengambil Plug-in Vamp."
 msgid "Incompatible plugin(s) found"
 msgstr "Referensi FFmpeg yang tidak kompetibel ditemukan"
 
-#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "Manage Plugins"
-msgstr "Maaf, gagal mengambil Plug-in Vamp."
-
 #: src/IncompatiblePluginsDialog.cpp
 #, fuzzy
-msgid "Continue"
-msgstr "Kontributor Lainnya"
+msgid "&Manage Plugins"
+msgstr "Maaf, gagal mengambil Plug-in Vamp."
+
+#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: src/IncompatiblePluginsDialog.cpp src/export/ExportCL.cpp
+#: src/update/UpdateNoticeDialog.cpp
+msgid "&OK"
+msgstr "&OK"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
+
+#: src/IncompatiblePluginsDialog.cpp
+#, c-format
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
 msgstr ""
 
 #: src/JournalEvents.cpp
@@ -3682,11 +4919,6 @@ msgstr "Pilih Bahasa untuk digunakan pada Audacity:"
 msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
 msgstr "Bahasa yang Anda gunakan, %s (%s), tidak sama dengan bahasa sistem, %s (%s)."
 
-#: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-msgid "Confirm"
-msgstr "Konfirmasi"
-
 #: src/Legacy.cpp
 #, fuzzy
 msgid "Error Converting Legacy Project File"
@@ -3704,39 +4936,6 @@ msgstr ""
 #: src/Legacy.cpp
 msgid "Opening Audacity Project"
 msgstr "Membuka Proyek Audacity"
-
-#: src/LogWindow.cpp
-#, fuzzy
-msgid "Audacity Log"
-msgstr "Proyek Audacity"
-
-#: src/LogWindow.cpp src/TagsEditor.cpp
-msgid "&Save..."
-msgstr "Sim&pan..."
-
-#. i18n-hint: (verb)
-#: src/LogWindow.cpp src/TagsEditor.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Cl&ear"
-msgstr "Hap&us"
-
-#: src/LogWindow.cpp src/ShuttleGui.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
-msgid "&Close"
-msgstr "&Tutup"
-
-#: src/LogWindow.cpp
-msgid "log.txt"
-msgstr ""
-
-#: src/LogWindow.cpp
-#, fuzzy
-msgid "Save log to:"
-msgstr "Simpan Gambar ke:"
-
-#: src/LogWindow.cpp
-#, fuzzy, c-format
-msgid "Couldn't save log to file: %s"
-msgstr "Tidak bisa menulis file:"
 
 #: src/LyricsWindow.cpp
 #, c-format
@@ -3793,14 +4992,6 @@ msgstr ""
 #: src/Menus.cpp
 msgid "Disallowed"
 msgstr "Tidak Diperbolehkan"
-
-#: src/MixAndRender.cpp src/menus/TrackMenus.cpp
-msgid "Mix and Render"
-msgstr "Mix dan Render"
-
-#: src/MixAndRender.cpp
-msgid "Mixing and rendering tracks"
-msgstr "Trek Mix dan Render"
 
 #: src/MixerBoard.cpp
 #, fuzzy, c-format
@@ -4031,6 +5222,11 @@ msgid "A♯/B♭"
 msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Manage Plugins"
+msgstr "Maaf, gagal mengambil Plug-in Vamp."
+
+#: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
 
@@ -4142,11 +5338,6 @@ msgstr ""
 "Encoder FLAC gagal menginisialisasi\n"
 "Status: %d"
 
-#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-#: src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Waktu Berjalan:"
-
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr ""
@@ -4159,35 +5350,39 @@ msgstr "Ada masalah dalam mencetak"
 msgid "Print"
 msgstr "Cetak"
 
+#: src/Printing.cpp
+msgid "Pa&ge Setup..."
+msgstr "Setup &Halaman..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/Printing.cpp
+msgid "&Print..."
+msgstr "P&rint..."
+
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "Rate Asli: %d"
 
-#: src/ProjectAudioManager.cpp src/effects/EffectBase.cpp
-#, fuzzy
-msgid ""
-"Error opening sound device.\n"
-"Try changing the audio host, playback device and the project sample rate."
-msgstr "Error ketika membuka perangkat suara. Tolong cek pengaturan perangkat output dan rate sampel proyek."
-
-#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "The tracks selected for recording must all have the same sampling rate"
 msgstr "Untuk memplot spektrum, semua trek yang dipilih harus mempunyai rate sampel yang sama."
 
-#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
 msgstr ""
 
-#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 msgid ""
 "Too few tracks are selected for recording at this sample rate.\n"
 "(Audacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
 
-#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 msgid "Too Few Compatible Tracks Selected"
 msgstr ""
 
@@ -4355,13 +5550,6 @@ msgstr "Hapus anak file [Aman dan direkomendasikan]"
 msgid "Warning - Orphan Block File(s)"
 msgstr "Anak file blok: (%s)"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress
-#. in doing something.
-#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
-#: src/TransportUtilities.cpp
-msgid "Progress"
-msgstr "Kemajuan"
-
 #: src/ProjectFSCK.cpp
 #, fuzzy
 msgid "Cleaning up unused directories in project data"
@@ -4377,295 +5565,6 @@ msgstr ""
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
 msgstr ""
-
-#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
-#, fuzzy
-msgid "<untitled>"
-msgstr "tak berjudul"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid "[Project %02i] "
-msgstr "Proyek"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"There is very little free disk space left on %s\n"
-"Please select a bigger temporary directory location in\n"
-"Directories Preferences."
-msgstr ""
-"Ruang disk yang tersisa tinggal sedikit.\n"
-"Mohon pilih direktori temporer lainnya dalam Preferensi."
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to open the project's database"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to open database file:\n"
-"\n"
-"%s"
-msgstr "Tidak bisa membuang '%s'"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to discard connection"
-msgstr "Gagal mencari codec"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to restore connection"
-msgstr "Tidak bisa menerima deskripsi aliran"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to execute a project file command:\n"
-"\n"
-"%s"
-msgstr "Tidak bisa membuang '%s'"
-
-#. i18n-hint: An error message.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is in a read only directory\n"
-"(Unable to create the required temporary files)"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "This is not an Audacity project file"
-msgstr "Menyimpan Proyek Audacity"
-
-#: src/ProjectFileIO.cpp
-msgid ""
-"This project was created with a newer version of Audacity.\n"
-"\n"
-"You will need to upgrade to open it."
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to initialize the project file"
-msgstr "Tidak bisa menginisialisasi strim MP3"
-
-#. i18n-hint: An error message.  Don't translate inset or blockids.
-#: src/ProjectFileIO.cpp
-msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is read only\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is locked\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is busy\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is corrupt\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Some permissions issue\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"A disk I/O error\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Not authorized\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to work with the blockfiles"
-msgstr "Tidak bisa menginisialisasi strim MP3"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid "Total orphan blocks deleted %d"
-msgstr "Anak file blok: (%s)"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to rollback transaction during import"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to attach destination database"
-msgstr "Tidak bisa meganti nama '%s' ke '%s'"
-
-#: src/ProjectFileIO.cpp
-msgid "Unable to switch to fast journaling mode"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Unable to prepare project file command:\n"
-"\n"
-"%s"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to bind SQL parameter"
-msgstr "Gagal mencari codec"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Failed to update the project file.\n"
-"The following command failed:\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-msgid "Destination project could not be detached"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Copying Project"
-msgstr "Error dalam membuka proyek"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Error Writing to File"
-msgstr "Error menulis ke file"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Audacity failed to write file %s.\n"
-"Perhaps disk is full or not writable.\n"
-"For tips on freeing up space, click the help button."
-msgstr ""
-"Tidak bisa menyimpan proyek. Mungkin %s \n"
-"tidak bisa ditulis atau disk penuh."
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Compacting project"
-msgstr "Menyimpan &proyek"
-
-#. i18n-hint: The %02i is the project number, the %s is the project name.
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid "[Project %02i] Audacity \"%s\""
-msgstr ""
-
-#. i18n-hint: E.g this is recovered audio that had been lost.
-#: src/ProjectFileIO.cpp
-msgid "(Recovered)"
-msgstr "(Terkembalikan)"
-
-#. i18n-hint: %s will be replaced by the version number.
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
-msgstr ""
-"File ini disimpan dengan Audacity %s.\n"
-"Anda menggunakan Audacity %s - anda diharuskan untuk\n"
-"meng-upgrade versi terbaru untuk membuka file ini."
-
-#: src/ProjectFileIO.cpp
-msgid "Can't open project file"
-msgstr "Tidak bisa membuka file proyek"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to remove the autosave information from the project file."
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to bind to blob"
-msgstr "Gagal mencari codec"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to parse project information."
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/ProjectFileIO.cpp
-msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Saving project"
-msgstr "Menyimpan &proyek"
-
-#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
-msgid "Error Saving Project"
-msgstr "Error Meyimpan Proyek"
-
-#: src/ProjectFileIO.cpp
-msgid "Syncing"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"The project failed to open, possibly due to limited space\n"
-"on the storage device.\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Unable to remove autosave information, possibly due to limited space\n"
-"on the storage device.\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Backing up project"
-msgstr "M&enyimpan proyek kosong"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Automatic database backup failed."
-msgstr "Pengembalian Otomatis Akibat Crash"
 
 #: src/ProjectFileManager.cpp
 #, fuzzy
@@ -4931,6 +5830,11 @@ msgstr "Tidak bisa membuka file proyek"
 msgid "Compact"
 msgstr ""
 
+#: src/ProjectFileManager.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "Proyek"
+
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
@@ -4992,17 +5896,6 @@ msgstr[1] ""
 msgid "%s and %s."
 msgstr ""
 
-#: src/ProjectSerializer.cpp
-msgid ""
-"This recovery file was saved by Audacity 2.3.0 or before.\n"
-"You need to run that version of Audacity to recover the project."
-msgstr ""
-
-#: src/ProjectWindow.cpp
-#, fuzzy
-msgid "Realtime effects"
-msgstr "Pre&view"
-
 #: src/ProjectWindow.cpp
 #, fuzzy
 msgid "Horizontal Scrollbar"
@@ -5019,7 +5912,7 @@ msgstr "Stereo Vertikal"
 msgid "Effect %d"
 msgstr "Efek"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
 msgstr ""
 
@@ -5064,19 +5957,10 @@ msgstr "Hapus aturan lanjut '%s'?"
 msgid "Replace %s"
 msgstr "Hapus aturan lanjut '%s'?"
 
-#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+#: src/RealtimeEffectPanel.cpp src/menus/MenuHelper.cpp
+#: src/toolbars/SnappingToolBar.cpp
 msgid "Unknown"
 msgstr ""
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "No Effect"
-msgstr "Efek"
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "Get more effects..."
-msgstr "Preferensi..."
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
@@ -5112,8 +5996,34 @@ msgid "Change effect order"
 msgstr "Mengubah Kecepatan"
 
 #: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "Efek"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "Preferensi..."
+
+#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Analyze"
+msgstr "&Analisa"
+
+#: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
 msgstr ""
+
+#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "Plugin Error"
+msgstr "Error LOF"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -5129,6 +6039,11 @@ msgstr "Diubah '%s' ke %s"
 #, fuzzy, c-format
 msgid "Add %s"
 msgstr "Diratakan"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime effects"
+msgstr "Pre&view"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
@@ -5224,68 +6139,6 @@ msgstr "Semua File (*)|*"
 msgid "All Preferences"
 msgstr "Preferensi..."
 
-#: src/Screenshot.cpp
-msgid "SelectionBar"
-msgstr "BarSeleksi"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
-msgid "Spectral Selection"
-msgstr "Pilihan"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Timer"
-msgstr "Waktu"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/ToolsToolBar.cpp
-msgid "Tools"
-msgstr "Alat"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/ControlToolBar.cpp
-#, fuzzy
-msgid "Transport"
-msgstr "T&ransportasi"
-
-#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/widgets/MeterPanel.cpp
-msgid "Meter"
-msgstr "Meter"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Play Meter"
-msgstr "Pengukur Permainan"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
-msgid "Record Meter"
-msgstr "Pengukur Rekaman"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/EditToolBar.cpp
-msgid "Edit"
-msgstr "Edit"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
-msgid "Device"
-msgstr "Perangkat"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
-#, fuzzy
-msgid "Play-at-Speed"
-msgstr "Memainkan berkecepatan"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr ""
-
 #: src/Screenshot.cpp src/TrackPanel.cpp
 msgid "Track Panel"
 msgstr "Panel Trek"
@@ -5360,63 +6213,14 @@ msgstr ""
 msgid "Long Message"
 msgstr ""
 
-#: src/SelectFile.cpp
-msgid "The specified filename could not be converted due to Unicode character use."
-msgstr "Nama file yang dipilih tidak bisa diubah karena penggunaan karakter Unicode."
-
-#: src/SelectFile.cpp
-msgid "Specify New Filename:"
-msgstr "Tentukan Nama File Baru:"
+#: src/Screenshot.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Alat Screenshot..."
 
 #: src/SelectUtilities.cpp
 msgid "Position"
 msgstr "Posisi"
-
-#: src/Sequence.cpp
-#, c-format
-msgid ""
-"Sequence has block file exceeding maximum %s samples per block.\n"
-"Truncating to this maximum length."
-msgstr ""
-
-#: src/Sequence.cpp
-#, fuzzy
-msgid "Warning - Truncating Overlong Block File"
-msgstr "Anak file blok: (%s)"
-
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Preview" and "Start &Preview"
-#: src/ShuttleGui.cpp src/effects/EffectUI.cpp
-#, fuzzy
-msgid "&Preview"
-msgstr "Pre&view"
-
-#: src/ShuttleGui.cpp
-#, fuzzy
-msgid "Dry Previe&w"
-msgstr "Preview Potongan"
-
-#: src/ShuttleGui.cpp
-#, fuzzy
-msgid "&Settings"
-msgstr "&Opsi..."
-
-#: src/ShuttleGui.cpp src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Debu&g"
-msgstr "&Benah"
-
-#: src/Snap.cpp src/export/ExportFFmpegDialogs.cpp
-msgid "Off"
-msgstr ""
-
-#: src/Snap.cpp
-msgid "Nearest"
-msgstr ""
-
-#: src/Snap.cpp
-msgid "Prior"
-msgstr ""
 
 #: src/SoundActivatedRecord.cpp
 msgid "Sound Activated Record"
@@ -5482,15 +6286,6 @@ msgstr "Selamat datang di Audacity!"
 msgid "Don't show this again at start up"
 msgstr "Jangan tampilkan lagi waktu start up"
 
-#: src/SqliteSampleBlock.cpp
-#, fuzzy
-msgid "Connection to project file is null"
-msgstr "Memeriksa data file proyek..."
-
-#: src/SqliteSampleBlock.cpp
-msgid "Discarding undo/redo history"
-msgstr ""
-
 #: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "Nama Artis"
@@ -5514,6 +6309,11 @@ msgstr "Tahun"
 #: src/TagsEditor.cpp
 msgid "Genre"
 msgstr "Genre"
+
+#: src/TagsEditor.cpp src/prefs/MousePrefs.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "Kommentar"
 
 #: src/TagsEditor.cpp
 #, fuzzy
@@ -5603,6 +6403,21 @@ msgstr "Simpan Metadata Sebagai:"
 msgid "Error Saving Tags File"
 msgstr "Error menyimpan file tags"
 
+#: src/TagsEditor.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
+#, fuzzy
+msgid "Edit Metadata Tags"
+msgstr "Edit Tag Metadata"
+
+#: src/TagsEditor.cpp
+#, fuzzy
+msgid "Metadata Tags"
+msgstr "Edit Tag Metadata"
+
+#: src/TagsEditor.cpp
+#, fuzzy
+msgid "&Metadata"
+msgstr "Edit Metadata"
+
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -5613,16 +6428,10 @@ msgstr "Error menyimpan file tags"
 #.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3UIValidator.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Validator.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3Editor.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Editor.cpp
 msgid "Duration"
 msgstr "Durasi"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Time track.
-#: src/TimeTrack.cpp src/TrackPanelAx.cpp
-msgid "Time Track"
-msgstr "Trek Waktu"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
@@ -5700,7 +6509,7 @@ msgid "Recording start:"
 msgstr "Mulai merekam"
 
 #: src/TimerRecordDialog.cpp src/effects/VST/VSTEffect.cpp
-#: src/effects/VST3/VST3UIValidator.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/VST3/VST3Editor.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr "Durasi"
 
@@ -5786,7 +6595,7 @@ msgid ""
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
 
-#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+#: src/TimerRecordDialog.cpp
 #, fuzzy
 msgid "Timer Recording"
 msgstr "Merekam"
@@ -5840,7 +6649,7 @@ msgstr "Kompresi diam:"
 msgid "Save Project As:"
 msgstr "Simpan &Proyek Sebagai..."
 
-#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+#: src/TimerRecordDialog.cpp src/commands/SelectCommand.cpp
 #, fuzzy
 msgid "Select..."
 msgstr "Pilih"
@@ -5936,6 +6745,24 @@ msgstr "Selesai merekam"
 #, fuzzy
 msgid "Audacity Timer Record - Waiting"
 msgstr "Pencatat Waktu Rekaman Audacity - Menunggu untuk mulai"
+
+#: src/TimerRecordDialog.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+
+#: src/TimerRecordDialog.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+
+#: src/TimerRecordDialog.cpp
+msgid "&Timer Record..."
+msgstr "Pen&catat waktu rekaman..."
 
 #: src/TrackInfo.cpp
 msgid "Stereo, 999999Hz"
@@ -6117,43 +6944,6 @@ msgstr "Pengubahan Arah        -- mean: %1.4f  sd: (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr "Hasil Kalibrasi\n"
 
-#: src/WaveClip.cpp
-#, fuzzy
-msgid "Resampling failed."
-msgstr "Sampel ulang dimatikan."
-
-#: src/WaveTrack.cpp src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
-msgid "Audio"
-msgstr "&Audio..."
-
-#: src/WaveTrack.cpp
-#, fuzzy
-msgid "Wave Track"
-msgstr "Pindahkan Trek"
-
-#. i18n-hint Template for clip name generation on copy-paste
-#: src/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: src/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr ""
-
-#: src/WaveTrack.cpp
-msgid "There is not enough room available to paste the selection"
-msgstr "Tidak ada ruang cukup untuk menempel itu"
-
-#: src/WaveTrack.cpp
-msgid "There is not enough room available to expand the cut line"
-msgstr "Tidak ada ruang yang tersedia untuk menyebarkan garis potong"
-
 #. i18n-hint: Share audio button text, keep as short as possible
 #: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
@@ -6183,8 +6973,7 @@ msgid "Token"
 msgstr ""
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
+msgid "L&ink audio.com account..."
 msgstr ""
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
@@ -6302,37 +7091,14 @@ msgstr ""
 msgid "Preparing audio..."
 msgstr "Membuat cache audio"
 
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Remaining Time:"
-msgstr "Waktu Tersisa:"
-
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
-#, fuzzy
-msgid "Audacity"
-msgstr "Proyek Audacity"
-
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#, c-format
-msgid ""
-"%s: Could not load settings below. Default settings will be used.\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/commands/AudacityCommand.cpp src/effects/EffectBase.cpp
-#, fuzzy, c-format
-msgid "Applying %s..."
-msgstr "Mengaplikasikan..."
-
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/vamp/VampEffect.cpp src/import/ImportRaw.cpp
-#: src/menus/PluginMenus.cpp
+#: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
+#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -6364,14 +7130,6 @@ msgstr ""
 msgid "Command"
 msgstr "Perintah"
 
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/commands/CommandManager.cpp src/effects/EffectUI.cpp
-#: src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Ulangi %s"
-
 #: src/commands/CommandManager.cpp
 #, c-format
 msgid ""
@@ -6395,6 +7153,11 @@ msgstr "Salin Label"
 #: src/commands/CompareAudioCommand.cpp
 msgid "Threshold:"
 msgstr "Ambang Batas:"
+
+#: src/commands/CompareAudioCommand.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "Kompresor..."
 
 #: src/commands/CompareAudioCommand.h
 #, fuzzy
@@ -6421,11 +7184,6 @@ msgstr ""
 #, fuzzy
 msgid "Drag"
 msgstr "Klik Kiri dan Dorong"
-
-#: src/commands/DragCommand.cpp src/widgets/wxPanelWrapper.h
-#, fuzzy
-msgid "Panel"
-msgstr "Panel Trek"
 
 #: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
@@ -6474,6 +7232,11 @@ msgstr ""
 #: src/commands/DragCommand.cpp src/commands/SelectCommand.cpp
 msgid "Relative To:"
 msgstr ""
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "&History..."
 
 #: src/commands/DragCommand.h
 msgid "Drags mouse from one place to another."
@@ -6536,6 +7299,11 @@ msgstr ""
 msgid "Format:"
 msgstr "Format:"
 
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Get Info..."
+msgstr "&History..."
+
 #: src/commands/GetInfoCommand.h
 msgid "Gets information in JSON format."
 msgstr ""
@@ -6567,6 +7335,11 @@ msgstr "Perintah:"
 msgid "_"
 msgstr ""
 
+#: src/commands/HelpCommand.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "Bantuan"
+
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
 msgstr ""
@@ -6595,6 +7368,16 @@ msgstr "Ekspor"
 msgid "Number of Channels:"
 msgstr "Number of times to repeat:"
 
+#: src/commands/ImportExportCommands.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "Import..."
+msgstr "&Impor..."
+
+#: src/commands/ImportExportCommands.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "Export..."
+msgstr "&Ekspor"
+
 #: src/commands/ImportExportCommands.h
 msgid "Imports from a file."
 msgstr ""
@@ -6609,15 +7392,6 @@ msgstr "Ekspor Banyak"
 msgid "Builtin Commands"
 msgstr "Pilih Komando"
 
-#: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3EffectsModule.cpp
-#: src/effects/audiounits/AudioUnitEffectsModule.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
-#, fuzzy
-msgid "The Audacity Team"
-msgstr "Tim Pendukung Audacity %s"
-
 #: src/commands/LoadCommands.cpp
 msgid "Provides builtin commands to Audacity"
 msgstr ""
@@ -6629,6 +7403,11 @@ msgstr ""
 #: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
 msgid "Text:"
 msgstr ""
+
+#: src/commands/MessageCommand.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "&Sampel Ulang..."
 
 #: src/commands/MessageCommand.h
 #, fuzzy
@@ -6664,6 +7443,16 @@ msgstr "Tersimpan"
 #, fuzzy
 msgid "Clear Log"
 msgstr "&Hapus"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "Buka yang &Sebelumnya..."
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Simpan &Proyek Sebagai..."
 
 #: src/commands/OpenSaveCommands.h
 #, fuzzy
@@ -6716,6 +7505,16 @@ msgstr "Nilai"
 msgid "Reload"
 msgstr ""
 
+#: src/commands/PreferenceCommands.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "Preferensi..."
+
+#: src/commands/PreferenceCommands.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "Preferensi..."
+
 #: src/commands/PreferenceCommands.h
 msgid "Gets the value of a single preference."
 msgstr ""
@@ -6765,11 +7564,6 @@ msgstr "Efek"
 #, fuzzy
 msgid "Scriptables"
 msgstr "Variabel"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Selectionbar"
-msgstr "BarSeleksi"
 
 #: src/commands/ScreenshotCommand.cpp
 #, fuzzy
@@ -6843,6 +7637,12 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Error trying to save file: %s"
 msgstr "error dalam menyimpan file:"
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&Alat Screenshot..."
 
 #: src/commands/ScreenshotCommand.h
 msgid "Takes screenshots."
@@ -6941,6 +7741,21 @@ msgstr "Banyak Duck:"
 msgid "Mode:"
 msgstr "Mode"
 
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Pilih"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Frekuensi (Hz)"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Pilih"
+
 #: src/commands/SelectCommand.h
 #, fuzzy
 msgid "Selects a time range."
@@ -6994,6 +7809,11 @@ msgstr ""
 msgid "Start:"
 msgstr "Awal"
 
+#: src/commands/SetClipCommand.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "Alat Selanjutnya"
+
 #: src/commands/SetClipCommand.h
 msgid "Sets various values for a clip."
 msgstr ""
@@ -7009,6 +7829,7 @@ msgid "Time:"
 msgstr "Waktu"
 
 #: src/commands/SetEnvelopeCommand.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Delete"
 msgstr "Hapus"
 
@@ -7021,6 +7842,11 @@ msgstr "Amplop"
 #: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
+msgstr "Amplop"
+
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Set Envelope..."
 msgstr "Amplop"
 
 #: src/commands/SetEnvelopeCommand.h
@@ -7050,6 +7876,11 @@ msgstr "Pilih"
 #, fuzzy
 msgid "Edited Label"
 msgstr "Label yang diedit"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "&Edit Label"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -7086,6 +7917,11 @@ msgstr ""
 #, fuzzy
 msgid "Height:"
 msgstr "Cahaya"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Simpan &Proyek Sebagai..."
 
 #: src/commands/SetProjectCommand.h
 msgid "Sets various values for a project."
@@ -7134,11 +7970,25 @@ msgstr ""
 msgid "Set Track Visuals"
 msgstr "Trek Kecil"
 
-#: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
-#: src/prefs/SpectrogramSettings.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp src/widgets/MeterPanel.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Linear"
+#. i18n-hint: abbreviates amplitude
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformSettings.cpp
+#, fuzzy
+msgid "Linear (amp)"
+msgstr "Linier"
+
+#. i18n-hint: abbreviates decibels
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformSettings.cpp
+#, fuzzy
+msgid "Logarithmic (dB)"
+msgstr "Logaritmik"
+
+#. i18n-hint: abbreviates decibels
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformSettings.cpp
+#, fuzzy
+msgid "Linear (dB)"
 msgstr "Linier"
 
 #: src/commands/SetTrackInfoCommand.cpp
@@ -7200,6 +8050,24 @@ msgstr ""
 #, fuzzy
 msgid "Set Track"
 msgstr "Trek Baru"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "ke &Awal Trek"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "Trek Kecil"
 
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
@@ -7263,13 +8131,6 @@ msgstr ""
 msgid "Duck &amount:"
 msgstr "Banyak Duck:"
 
-#. i18n-hint: Name of time display format that shows time in seconds
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
-#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "seconds"
-msgstr "detik"
-
 #: src/effects/AutoDuck.cpp
 #, fuzzy
 msgid "Ma&ximum pause:"
@@ -7304,6 +8165,43 @@ msgstr "Ambang Batas:"
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
 msgstr "Preview tidak tersedia"
+
+#: src/effects/BasicEffectUIServices.cpp
+#, fuzzy
+msgid "Presets"
+msgstr "Aturan Lanjut:"
+
+#: src/effects/BasicEffectUIServices.cpp
+#, fuzzy
+msgid "Export Effect Parameters"
+msgstr "&Edit Parameter"
+
+#: src/effects/BasicEffectUIServices.cpp src/effects/VST/VSTEffect.cpp
+#, fuzzy
+msgid "Error Saving Effect Presets"
+msgstr "Error Meyimpan Proyek"
+
+#: src/effects/BasicEffectUIServices.cpp src/effects/VST/VSTEffect.cpp
+#, fuzzy, c-format
+msgid "Error writing to file: \"%s\""
+msgstr "Error menulis ke file"
+
+#: src/effects/BasicEffectUIServices.cpp
+#, fuzzy
+msgid "Import Effect Parameters"
+msgstr "&Edit Parameter"
+
+#. i18n-hint %s will be replaced by a file name
+#: src/effects/BasicEffectUIServices.cpp
+#, fuzzy, c-format
+msgid "%s: is not a valid presets file.\n"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#. i18n-hint %s will be replaced by a file name
+#: src/effects/BasicEffectUIServices.cpp
+#, c-format
+msgid "%s: is for a different Effect, Generator or Analyzer.\n"
+msgstr ""
 
 #: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
@@ -8381,7 +9279,7 @@ msgstr "Amplitudo (0-1)"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/lv2/LV2Validator.cpp
+#: src/effects/lv2/LV2Editor.cpp
 #, fuzzy
 msgid "&Duration:"
 msgstr "Durasi"
@@ -8443,64 +9341,6 @@ msgstr "Waktu tenggang (detk):"
 #, fuzzy
 msgid "D&ecay factor:"
 msgstr "Faktor kekurangan:"
-
-#: src/effects/Effect.cpp
-#, fuzzy
-msgid "Built-in"
-msgstr "Efek Unit Audio"
-
-#: src/effects/Effect.cpp
-#, fuzzy
-msgid "Presets"
-msgstr "Aturan Lanjut:"
-
-#: src/effects/Effect.cpp
-#, fuzzy
-msgid "Export Effect Parameters"
-msgstr "&Edit Parameter"
-
-#: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
-#, fuzzy
-msgid "Error Saving Effect Presets"
-msgstr "Error Meyimpan Proyek"
-
-#: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
-#, fuzzy, c-format
-msgid "Error writing to file: \"%s\""
-msgstr "Error menulis ke file"
-
-#: src/effects/Effect.cpp
-#, fuzzy
-msgid "Import Effect Parameters"
-msgstr "&Edit Parameter"
-
-#. i18n-hint %s will be replaced by a file name
-#: src/effects/Effect.cpp
-#, fuzzy, c-format
-msgid "%s: is not a valid presets file.\n"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#. i18n-hint %s will be replaced by a file name
-#: src/effects/Effect.cpp
-#, c-format
-msgid "%s: is for a different Effect, Generator or Analyzer.\n"
-msgstr ""
-
-#: src/effects/EffectBase.cpp
-msgid "Preparing preview"
-msgstr "Meyiapkan preview"
-
-#: src/effects/EffectBase.cpp
-msgid "Previewing"
-msgstr "Melihat preview"
-
-#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-#. In the translations of this and other strings, you may transliterate the
-#. name into another alphabet.
-#: src/effects/EffectBase.h
-msgid "Nyquist"
-msgstr "Nyquist"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -8581,11 +9421,6 @@ msgid "&Generate"
 msgstr "&Buat"
 
 #: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Enable"
-msgstr "Dibolehkan"
-
-#: src/effects/EffectUI.cpp
 msgid "Manage presets and options"
 msgstr ""
 
@@ -8628,16 +9463,6 @@ msgstr "Hapus Aturan Lanjut"
 #, fuzzy
 msgid "Defaults"
 msgstr "&Normal"
-
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Import..."
-msgstr "&Impor..."
-
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Export..."
-msgstr "&Ekspor"
 
 #: src/effects/EffectUI.cpp src/widgets/MeterPanel.cpp
 msgid "Options..."
@@ -8699,19 +9524,6 @@ msgid ""
 "Replace?"
 msgstr "File bernama \"%s\" telah ada. Ganti?"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/Equalization.cpp
-msgid "B-spline"
-msgstr "Papan Bergelombang"
-
-#: src/effects/Equalization.cpp
-msgid "Cosine"
-msgstr "Kosinus"
-
-#: src/effects/Equalization.cpp
-msgid "Cubic"
-msgstr "Kubik"
-
 #: src/effects/Equalization.cpp
 msgid "Equalization"
 msgstr "Ekualisasi"
@@ -8722,8 +9534,8 @@ msgstr "Ekualisasi"
 msgid "Filter Curve EQ"
 msgstr "Pilih kurva:"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Grafik EQ"
 
@@ -8772,18 +9584,6 @@ msgstr "Label Edit"
 
 #: src/effects/Equalization.cpp
 #, fuzzy
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr "Untuk menggunakan kurva EQ pada untaian batch, silahkan pilih nama baru untuknya."
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Filter Curve EQ needs a different name"
-msgstr "Kurva EQ memerlukan nama yang berbeda"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
 msgid "To apply Equalization, all selected tracks must have the same sample rate."
 msgstr "Untuk memplot spektrum, semua trek yang dipilih harus mempunyai rate sampel yang sama."
 
@@ -8797,327 +9597,6 @@ msgstr "Trek yang dipilih terlalu panjang untuk diulang."
 msgid "Effect Unavailable"
 msgstr "Preview tidak tersedia"
 
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-msgid "+ dB"
-msgstr ""
-
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-msgid "Max dB"
-msgstr "dB Maks"
-
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-#, fuzzy, c-format
-msgid "%d dB"
-msgstr "%3d dB"
-
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-msgid "Min dB"
-msgstr "dB Min"
-
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-msgid "- dB"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, c-format
-msgid "%d Hz"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, c-format
-msgid "%g kHz"
-msgstr ""
-
-#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
-#: src/effects/Equalization.cpp
-#, c-format
-msgid "%gk"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "&EQ Type:"
-msgstr "Penyaring"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Draw Curves"
-msgstr "Gambar kurva"
-
-#: src/effects/Equalization.cpp
-msgid "&Draw"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "&Graphic"
-msgstr "Grafik EQ"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Interpolation type"
-msgstr "Interpolasi:"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Linear Frequency Scale"
-msgstr "Skala frekuensi linier"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Li&near Frequency Scale"
-msgstr "Skala frekuensi linier"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Length of &Filter:"
-msgstr "Panjang filter:"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Length of Filter"
-msgstr "Panjang filter:"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "&Select Curve:"
-msgstr "Pilih kurva:"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Select Curve"
-msgstr "Pilih kurva:"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "S&ave/Manage Curves..."
-msgstr "Atur History"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Fla&tten"
-msgstr "Flatten"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "&Invert"
-msgstr "Tukar"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Show grid lines"
-msgstr "Lihat batas sepanjang sumbu &Y"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Show g&rid lines"
-msgstr "Lihat batas sepanjang sumbu &Y"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "&Processing: "
-msgstr "Memproses Auto Duck..."
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "D&efault"
-msgstr "&Normal"
-
-#: src/effects/Equalization.cpp
-msgid "&SSE"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "SSE &Threaded"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "A&VX"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "AV&X Threaded"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "&Bench"
-msgstr ""
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/Equalization.cpp
-msgid "unnamed"
-msgstr ""
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/Equalization.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Error Loading EQ Curves"
-msgstr "Error mengambil kurva EQ"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Error Saving Equalization Curves"
-msgstr "Error dalam menyimpan equalizer"
-
-#: src/effects/Equalization.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Curve not found"
-msgstr "FFmpeg tidak ada"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Manage Curves List"
-msgstr "Atur History"
-
-#: src/effects/Equalization.cpp
-msgid "Manage Curves"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "&Curves"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Curve Name"
-msgstr "Buat"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "D&elete..."
-msgstr "Hapus"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "&Get More..."
-msgstr "&History..."
-
-#: src/effects/Equalization.cpp
-msgid "De&faults"
-msgstr "Se&mula"
-
-#: src/effects/Equalization.cpp
-msgid ""
-"Rename 'unnamed' to save a new entry.\n"
-"'OK' saves all changes, 'Cancel' doesn't."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "'unnamed' always stays at the bottom of the list"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "'unnamed' is special"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Rename '%s' to..."
-msgstr "Diubah nama '%s' ke '%s'"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Rename..."
-msgstr "&Sampel Ulang..."
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Rename '%s'"
-msgstr "&Ganti Nama"
-
-#: src/effects/Equalization.cpp
-msgid "Name is the same as the original one"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Same name"
-msgstr "Nama depan"
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Overwrite existing curve '%s'?"
-msgstr "Meniban file yang sudah ada"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Curve exists"
-msgstr "Orang-Orang yang Berjasa"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "You cannot delete the 'unnamed' curve."
-msgstr "Anda tidak bisa menghapus preset tanpa nama"
-
-#: src/effects/Equalization.cpp
-msgid "Can't delete 'unnamed'"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Delete '%s'?"
-msgstr "Hapus"
-
-#: src/effects/Equalization.cpp src/export/ExportFFmpegDialogs.cpp
-msgid "Confirm Deletion"
-msgstr "Konfirmasi Penghapusan"
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Delete %d items?"
-msgstr "Diulang %d kali"
-
-#: src/effects/Equalization.cpp
-msgid "You cannot delete the 'unnamed' curve, it is special."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Choose an EQ curve file"
-msgstr "Pilih lokasi untuk menyimpan file"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Export EQ curves as..."
-msgstr "Ekspor &Label..."
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "You cannot export 'unnamed' curve, it is special."
-msgstr "Anda tidak bisa menghapus preset tanpa nama"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Cannot Export 'unnamed'"
-msgstr "Tidak dapat mengekspor audio ke %s"
-
-#: src/effects/Equalization.cpp
-#, c-format
-msgid "%d curves exported to %s"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Curves exported"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "No curves exported"
-msgstr "Tidak ada label untuk diekspor."
-
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -9128,6 +9607,323 @@ msgid ""
 "SSE: %s\n"
 "SSE Threaded: %s\n"
 msgstr ""
+
+#: src/effects/EqualizationBandSliders.cpp
+#, c-format
+msgid "%d Hz"
+msgstr ""
+
+#: src/effects/EqualizationBandSliders.cpp
+#, c-format
+msgid "%g kHz"
+msgstr ""
+
+#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
+#: src/effects/EqualizationBandSliders.cpp
+#, c-format
+msgid "%gk"
+msgstr ""
+
+#: src/effects/EqualizationBandSliders.cpp src/effects/EqualizationUI.cpp
+#: src/effects/ScienFilter.cpp
+#, fuzzy, c-format
+msgid "%d dB"
+msgstr "%3d dB"
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: src/effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr ""
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: src/effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+
+#: src/effects/EqualizationCurves.cpp
+#, fuzzy
+msgid "Error Loading EQ Curves"
+msgstr "Error mengambil kurva EQ"
+
+#: src/effects/EqualizationCurves.cpp
+#, fuzzy
+msgid "Error Saving Equalization Curves"
+msgstr "Error dalam menyimpan equalizer"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Manage Curves List"
+msgstr "Atur History"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Manage Curves"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "&Curves"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Curve Name"
+msgstr "Buat"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "D&elete..."
+msgstr "Hapus"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "&Get More..."
+msgstr "&History..."
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "De&faults"
+msgstr "Se&mula"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid ""
+"Rename 'unnamed' to save a new entry.\n"
+"'OK' saves all changes, 'Cancel' doesn't."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "'unnamed' always stays at the bottom of the list"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "'unnamed' is special"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Rename '%s' to..."
+msgstr "Diubah nama '%s' ke '%s'"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Rename..."
+msgstr "&Sampel Ulang..."
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Rename '%s'"
+msgstr "&Ganti Nama"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Name is the same as the original one"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Same name"
+msgstr "Nama depan"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Overwrite existing curve '%s'?"
+msgstr "Meniban file yang sudah ada"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Curve exists"
+msgstr "Orang-Orang yang Berjasa"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "You cannot delete the 'unnamed' curve."
+msgstr "Anda tidak bisa menghapus preset tanpa nama"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Can't delete 'unnamed'"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Delete '%s'?"
+msgstr "Hapus"
+
+#: src/effects/EqualizationCurvesDialog.cpp src/export/ExportFFmpegDialogs.cpp
+msgid "Confirm Deletion"
+msgstr "Konfirmasi Penghapusan"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Delete %d items?"
+msgstr "Diulang %d kali"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "You cannot delete the 'unnamed' curve, it is special."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Choose an EQ curve file"
+msgstr "Pilih lokasi untuk menyimpan file"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Export EQ curves as..."
+msgstr "Ekspor &Label..."
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "You cannot export 'unnamed' curve, it is special."
+msgstr "Anda tidak bisa menghapus preset tanpa nama"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Cannot Export 'unnamed'"
+msgstr "Tidak dapat mengekspor audio ke %s"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, c-format
+msgid "%d curves exported to %s"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Curves exported"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "No curves exported"
+msgstr "Tidak ada label untuk diekspor."
+
+#. i18n-hint: Technical term for a kind of curve.
+#: src/effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "Papan Bergelombang"
+
+#: src/effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "Kosinus"
+
+#: src/effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "Kubik"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid ""
+"To use this filter curve in a macro, please choose a new name for it.\n"
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+msgstr "Untuk menggunakan kurva EQ pada untaian batch, silahkan pilih nama baru untuknya."
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Filter Curve EQ needs a different name"
+msgstr "Kurva EQ memerlukan nama yang berbeda"
+
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+msgid "+ dB"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+msgid "Max dB"
+msgstr "dB Maks"
+
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+msgid "Min dB"
+msgstr "dB Min"
+
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+msgid "- dB"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "&EQ Type:"
+msgstr "Penyaring"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Draw Curves"
+msgstr "Gambar kurva"
+
+#: src/effects/EqualizationUI.cpp
+msgid "&Draw"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "&Graphic"
+msgstr "Grafik EQ"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Interpolation type"
+msgstr "Interpolasi:"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Linear Frequency Scale"
+msgstr "Skala frekuensi linier"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Li&near Frequency Scale"
+msgstr "Skala frekuensi linier"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Length of &Filter:"
+msgstr "Panjang filter:"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Length of Filter"
+msgstr "Panjang filter:"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "&Select Curve:"
+msgstr "Pilih kurva:"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Select Curve"
+msgstr "Pilih kurva:"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "S&ave/Manage Curves..."
+msgstr "Atur History"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Fla&tten"
+msgstr "Flatten"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "&Invert"
+msgstr "Tukar"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Show grid lines"
+msgstr "Lihat batas sepanjang sumbu &Y"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Show g&rid lines"
+msgstr "Lihat batas sepanjang sumbu &Y"
+
+#: src/effects/EqualizationUI.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Curve not found"
+msgstr "FFmpeg tidak ada"
 
 #: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade In"
@@ -9178,19 +9974,6 @@ msgstr "Tukar"
 
 #: src/effects/Invert.cpp
 msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr ""
-
-#: src/effects/LoadEffects.cpp
-#, fuzzy
-msgid "Builtin Effects"
-msgstr "Efek Unit Audio"
-
-#: src/effects/LoadEffects.cpp
-msgid "Provides builtin effects to Audacity"
-msgstr ""
-
-#: src/effects/LoadEffects.cpp
-msgid "Unknown built-in effect name"
 msgstr ""
 
 #: src/effects/Loudness.cpp
@@ -9306,7 +10089,7 @@ msgstr "Trek Kedua"
 msgid "Old"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
 #: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Noise Reduction"
@@ -9981,7 +10764,7 @@ msgstr "Batas Bawah"
 msgid "Highpass"
 msgstr "Batas Atas"
 
-#: src/effects/ScienFilter.cpp
+#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
 msgid "Classic Filters"
 msgstr ""
 
@@ -10220,6 +11003,11 @@ msgstr "Penyingkat Pitch"
 #, fuzzy
 msgid "(s&emitones) [-12 to 12]:"
 msgstr "Pitch Shift Total (seminada) [-12 to 12]:"
+
+#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "Linier"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 msgid "Logarithmic"
@@ -10486,16 +11274,6 @@ msgid "VST"
 msgstr "V&ST"
 
 #: src/effects/VST3/VST3Effect.cpp
-msgid "VST3"
-msgstr ""
-
-#. i18n-hint VST3 effect description string
-#: src/effects/VST3/VST3Effect.cpp
-#, c-format
-msgid "SubCategories: %s"
-msgstr ""
-
-#: src/effects/VST3/VST3Effect.cpp
 #, fuzzy
 msgid "Save VST3 Preset As:"
 msgstr "Simpan Program VST sebagai:"
@@ -10505,45 +11283,10 @@ msgstr "Simpan Program VST sebagai:"
 msgid "VST3 preset file"
 msgstr "Pilih file MIDI..."
 
-#. i18n-hint: VST3 preset export error
-#: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
-msgid "Cannot open file"
-msgstr "Tidak bisa membuka file"
-
-#: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
-msgid "Failed to save VST3 preset to file"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
 #: src/effects/VST3/VST3Effect.cpp
 #, fuzzy
 msgid "Load VST3 preset:"
 msgstr "Ambil Aturan Lanjut"
-
-#: src/effects/VST3/VST3Effect.cpp
-#, fuzzy, c-format
-msgid "Cannot open VST3 preset file %s"
-msgstr "Tidak bisa membuka file proyek"
-
-#: src/effects/VST3/VST3Effect.cpp
-#, fuzzy, c-format
-msgid "Unable to apply VST3 preset file %s"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/effects/VST3/VST3EffectsModule.cpp
-#, fuzzy
-msgid "VST3 Effects"
-msgstr "Efek VST"
-
-#: src/effects/VST3/VST3EffectsModule.cpp
-msgid "Adds the ability to use VST3 effects in Audacity."
-msgstr ""
-
-#: src/effects/VST3/VST3EffectsModule.cpp
-#, fuzzy, c-format
-msgid "VST3 module error: %s"
-msgstr "GStreamer %s: %s"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
@@ -10655,8 +11398,7 @@ msgid "Unable to read the preset from \"%s\""
 msgstr "Tidak bisa membuka atau membuat file tes"
 
 #. i18n-hint: the name of an Apple audio software protocol
-#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
-#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+#: src/effects/audiounits/AudioUnitEffect.h
 msgid "Audio Unit"
 msgstr "Unit Audio"
 
@@ -10802,6 +11544,10 @@ msgstr "Aturan Efek"
 msgid "LADSPA"
 msgstr "&LADSPA"
 
+#: src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr "Generator"
+
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
@@ -10829,10 +11575,6 @@ msgstr ""
 #: src/effects/lv2/LV2Preferences.cpp
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
-
-#: src/effects/lv2/LV2Validator.cpp
-msgid "Generator"
-msgstr "Generator"
 
 #: src/effects/lv2/LoadLV2.cpp
 #, fuzzy
@@ -11126,11 +11868,6 @@ msgstr ""
 msgid "Export Audio"
 msgstr "Mengekpor File"
 
-#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
-#, fuzzy
-msgid "Edit Metadata Tags"
-msgstr "Edit Tag Metadata"
-
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Exported Tags"
@@ -11281,10 +12018,6 @@ msgstr "Mengekspor audio terpilih dengan encoder baris perintah"
 #: src/export/ExportCL.cpp
 msgid "Command Output"
 msgstr "Output Perintah"
-
-#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
-msgid "&OK"
-msgstr "&OK"
 
 #: src/export/ExportCL.cpp
 #, fuzzy
@@ -11519,6 +12252,10 @@ msgstr "96"
 #, fuzzy
 msgid "10"
 msgstr "120"
+
+#: src/export/ExportFFmpegDialogs.cpp
+msgid "Off"
+msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -12150,6 +12887,47 @@ msgstr "Mengekspor audio yang dipilih ke FLAC"
 msgid "Exporting the audio as FLAC"
 msgstr "Mengekspor audio yang dipilih ke FLAC"
 
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "Silahkan pilih aksinya"
+
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "Silahkan pilih aksinya"
+
+#: src/export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "Ekspor MIDI Sebagai:"
+
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "MIDI file"
+msgstr "Pilih file MIDI..."
+
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "Allegro file"
+msgstr "Semua File (*)|*"
+
+#: src/export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Anda memilih nama file yang ekstensinya tidak bisa dibaca.\n"
+" Anda ingin meneruskan?"
+
+#: src/export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "Ekspor MIDI"
+
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "Ekspor MIDI..."
+
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
 msgstr "File MP2"
@@ -12281,7 +13059,8 @@ msgstr "Mode Bit Rate:"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
 #: src/export/ExportMP3.cpp src/export/ExportWavPack.cpp
-#: src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
+#: src/prefs/DevicePrefs.cpp src/prefs/QualityPrefs.cpp
+#: src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Kualitas"
 
@@ -12774,6 +13553,56 @@ msgstr "Exporting selected audio as %s"
 msgid "Exporting the audio as WavPack"
 msgstr "Exporting selected audio as %s"
 
+#: src/export/FFmpegPrefs.cpp
+msgid "FFmpeg Import/Export Library"
+msgstr "Referensi Impor/Ekspor FFmpeg"
+
+#: src/export/FFmpegPrefs.cpp
+msgid "No compatible FFmpeg library was found"
+msgstr "Referensi FFmpeg yang tidak kompetibel ditemukan"
+
+#: src/export/FFmpegPrefs.cpp
+#, fuzzy
+msgid "FFmpeg support is not compiled in"
+msgstr "Dukungan FFMpeg tidak terkompilasi"
+
+#: src/export/FFmpegPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "Versi Referensi FFmpeg:"
+
+#: src/export/FFmpegPrefs.cpp
+msgid "FFmpeg Library:"
+msgstr "Referensi FFmpeg:"
+
+#: src/export/FFmpegPrefs.cpp
+msgid "Loca&te..."
+msgstr "Loca&te..."
+
+#: src/export/FFmpegPrefs.cpp
+msgid "Dow&nload"
+msgstr "U&nduh"
+
+#: src/export/FFmpegPrefs.cpp
+msgid ""
+"Audacity has automatically detected valid FFmpeg libraries.\n"
+"Do you still want to locate them manually?"
+msgstr ""
+"Audacity telah mendeteksi referensi FFmpeg yang valid.\n"
+"Apakah Anda tetap ingin meletakkannya sendiri?"
+
+#: src/export/FFmpegPrefs.cpp
+msgid "Success"
+msgstr ""
+
+#: src/export/MP3Prefs.cpp
+#, fuzzy
+msgid "LAME MP3 Export Library"
+msgstr "Referensi Pengeksporan  MP3"
+
+#: src/export/MP3Prefs.cpp
+msgid "MP3 Library Version:"
+msgstr "Versi Referensi MP3:"
+
 #: src/import/Import.cpp
 #, fuzzy
 msgid "All supported files"
@@ -12985,12 +13814,6 @@ msgstr ""
 "Audacity tidak dapat membaca tipe file '%s'.\n"
 "Jika ini tidak dikompres, coba mengimpornya dengan menggunakan \"Import Raw\""
 
-#: src/import/Import.cpp
-msgid ""
-"Try installing FFmpeg.\n"
-"\n"
-msgstr ""
-
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s, %s"
@@ -13165,6 +13988,10 @@ msgstr "Tidak bisa membuka atau membuat file tes"
 msgid "FFmpeg-compatible files"
 msgstr "File yang berkompetibel dengan FFmpeg"
 
+#: src/import/ImportFFmpeg.cpp
+msgid "Try installing FFmpeg.\n"
+msgstr ""
+
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
 #, c-format
@@ -13266,6 +14093,29 @@ msgstr ": Tipe file tidak benar."
 #, fuzzy, c-format
 msgid "Could not open file %s."
 msgstr "Tidak bisa membuka file"
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "Pilih file MIDI..."
+
+#: src/import/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr ""
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy
+msgid "MIDI files"
+msgstr "File MP3"
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy
+msgid "Allegro files"
+msgstr "Semua File (*)|*"
+
+#: src/import/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
 
 #: src/import/ImportMP3_MAD.cpp src/import/ImportMP3_MPG123.cpp
 msgid "MP3 files"
@@ -13807,6 +14657,15 @@ msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Terhapus %.2f detik pada t=%.2f"
 
 #: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Paste clip"
+msgstr "Ditempel dari clipboard"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting clip contents, please wait"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
 msgstr "Menempelkan satu tipe audio ke tipe lainnya tidak diperbolehkan."
 
@@ -13893,11 +14752,6 @@ msgid "Detach"
 msgstr "Lepas"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
-msgid "Metadata Tags"
-msgstr "Edit Tag Metadata"
-
-#: src/menus/EditMenus.cpp
 msgid "&Edit"
 msgstr "&Edit"
 
@@ -13971,11 +14825,6 @@ msgstr "Membuat tugas di Diam"
 
 #: src/menus/EditMenus.cpp
 #, fuzzy
-msgid "&Metadata"
-msgstr "Edit Metadata"
-
-#: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Pre&ferences"
 msgstr "Preferensi..."
 
@@ -13992,66 +14841,6 @@ msgstr "KunciHapus2"
 #: src/menus/ExtraMenus.cpp
 msgid "Ext&ra"
 msgstr ""
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Mi&xer"
-msgstr "Toolbar Mi&xer"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "Ubah kecepatan bermain"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "Tingkatkan kecepatan bermain"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "Turunkan kecepatan bermain"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "Selesai merekam"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "Tingkatkan kecepatan bermain"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "Turunkan kecepatan bermain"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "De&vice"
-msgstr "Perang&kat"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "Mengubah Pitch"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "Mengubah Pitch"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "Membuat cache audio"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Mengubah Pitch"
 
 #: src/menus/ExtraMenus.cpp
 #, fuzzy
@@ -14085,42 +14874,6 @@ msgid "There are no label tracks to export."
 msgstr "Tidak ada label yang diekspor"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "Silahkan pilih aksinya"
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "Silahkan pilih aksinya"
-
-#: src/menus/FileMenus.cpp
-msgid "Export MIDI As:"
-msgstr "Ekspor MIDI Sebagai:"
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "MIDI file"
-msgstr "Pilih file MIDI..."
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Allegro file"
-msgstr "Semua File (*)|*"
-
-#: src/menus/FileMenus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Anda memilih nama file yang ekstensinya tidak bisa dibaca.\n"
-" Anda ingin meneruskan?"
-
-#: src/menus/FileMenus.cpp
-msgid "Export MIDI"
-msgstr "Ekspor MIDI"
-
-#: src/menus/FileMenus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "Diimpor label dari '%s'"
@@ -14128,25 +14881,6 @@ msgstr "Diimpor label dari '%s'"
 #: src/menus/FileMenus.cpp
 msgid "Import Labels"
 msgstr "Impor label"
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "Pilih file MIDI..."
-
-#: src/menus/FileMenus.cpp
-msgid "MIDI and Allegro files"
-msgstr ""
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "MIDI files"
-msgstr "File MP3"
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Allegro files"
-msgstr "Semua File (*)|*"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
@@ -14215,11 +14949,6 @@ msgid "Export &Multiple..."
 msgstr "Ekspor &Multipel..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "Ekspor MIDI..."
-
-#: src/menus/FileMenus.cpp
 msgid "&Audio..."
 msgstr "&Audio..."
 
@@ -14228,21 +14957,8 @@ msgid "&Labels..."
 msgstr "&Label..."
 
 #: src/menus/FileMenus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
 msgstr "&Data Raw..."
-
-#: src/menus/FileMenus.cpp
-msgid "Pa&ge Setup..."
-msgstr "Setup &Halaman..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/menus/FileMenus.cpp
-msgid "&Print..."
-msgstr "P&rint..."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
@@ -14338,16 +15054,8 @@ msgstr "\t-test (jalankan diagnosa otomatis)"
 msgid "Au&dio Device Info..."
 msgstr ""
 
-#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
-msgid "Show &Log..."
-msgstr "Tunjukkan &Log..."
-
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
-msgstr ""
-
-#: src/menus/HelpMenus.cpp
-msgid "L&ink audio.com account..."
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
@@ -14599,6 +15307,15 @@ msgstr "Label Edit"
 msgid "&Label Track"
 msgstr "&Trek Label"
 
+#: src/menus/MenuHelper.cpp
+#, fuzzy
+msgid "..."
+msgstr "Baru..."
+
+#: src/menus/MenuHelper.cpp
+msgid "Uncategorized"
+msgstr ""
+
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
 msgstr ""
@@ -14661,15 +15378,6 @@ msgstr "Fokuskan ke Trek Terpilih"
 msgid "Toggle Focuse&d Track"
 msgstr "Fokuskan ke Trek Terpilih"
 
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "..."
-msgstr "Baru..."
-
-#: src/menus/PluginMenus.cpp
-msgid "Uncategorized"
-msgstr ""
-
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
@@ -14681,16 +15389,6 @@ msgstr ""
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
 msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy, c-format
-msgid "&Repeat %s"
-msgstr "Ulangi %s"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy, c-format
-msgid "Plugin %d to %d"
-msgstr "Plugin %i ke %i"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -14731,32 +15429,8 @@ msgstr "Alat"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
-msgid "Repeat Last Tool"
-msgstr "Ulangi Efek Terakhir"
-
-#: src/menus/PluginMenus.cpp
-msgid "&Macro Manager"
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "Mengaplikasikan %s"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Palette..."
-msgstr "Hapus"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Reset &Configuration"
 msgstr "Informasi Perubahan"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&Alat Screenshot..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Run Benchmark..."
@@ -14777,121 +15451,6 @@ msgstr "Pilih stream untuk diimpor"
 #: src/menus/PluginMenus.cpp
 msgid "Write Journal"
 msgstr ""
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Script&ables I"
-msgstr "Variabel"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "Pilih"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "Frekuensi (Hz)"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "Pilih"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "ke &Awal Trek"
-
-#: src/menus/PluginMenus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "Preferensi..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "Preferensi..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "Alat Selanjutnya"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "Amplop"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "&Edit Label"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "Simpan &Proyek Sebagai..."
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/menus/PluginMenus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "Trek Kecil"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Get Info..."
-msgstr "&History..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "&Sampel Ulang..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "Bantuan"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "Buka yang &Sebelumnya..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "Simpan &Proyek Sebagai..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "&History..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "Kompresor..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Screenshot (short format)..."
-msgstr "&Alat Screenshot..."
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Left Selection Boundary"
@@ -14994,26 +15553,6 @@ msgstr "Pilihan"
 #, fuzzy
 msgid "Retrieve Selectio&n"
 msgstr "Pilihan"
-
-#: src/menus/SelectMenus.cpp
-#, fuzzy
-msgid "S&pectral"
-msgstr "Spektrum"
-
-#: src/menus/SelectMenus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "Pilihan"
-
-#: src/menus/SelectMenus.cpp
-#, fuzzy
-msgid "Next &Higher Peak Frequency"
-msgstr "Frekuensi (Hz)"
-
-#: src/menus/SelectMenus.cpp
-#, fuzzy
-msgid "Next &Lower Peak Frequency"
-msgstr "Frekuensi linier"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Stored &Cursor Position"
@@ -15745,20 +16284,6 @@ msgid "Set Loop &Out"
 msgstr "Per&kecil"
 
 #: src/menus/TransportMenus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-
-#: src/menus/TransportMenus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-
-#: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "Please select in a mono track."
 msgstr "Silahkan pilih aksinya"
@@ -15831,10 +16356,6 @@ msgid "Record &New Track"
 msgstr "&Buang Trek"
 
 #: src/menus/TransportMenus.cpp
-msgid "&Timer Record..."
-msgstr "Pen&catat waktu rekaman..."
-
-#: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
 msgstr ""
 
@@ -15871,10 +16392,6 @@ msgstr "Level Pengaktifan Suara..."
 #, fuzzy
 msgid "Sound A&ctivated Recording (on/off)"
 msgstr "Merekam dengan Suara Diaktifkan (nyala/mati)"
-
-#: src/menus/TransportMenus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
-msgstr ""
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
@@ -15951,37 +16468,6 @@ msgstr "ke A&khiran yang Dipilih"
 msgid "Play C&ut Preview"
 msgstr "Mainkan Preview POtongan"
 
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "Memainkan berkecepatan"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "Play-at-Speed &Once"
-msgstr "Memainkan berkecepatan"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "Play C&ut Preview-at-Speed"
-msgstr "Mainkan Preview POtongan"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "Ubah kecepatan bermain"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "Tingkatkan kecepatan bermain"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "Turunkan kecepatan bermain"
-
 #: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "Move to Pre&vious Label"
@@ -15996,9 +16482,7 @@ msgstr "Pindahkan Fokus ke Trek Selanjutnya dan Pilih"
 msgid "&View"
 msgstr "&Lihat"
 
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+#: src/menus/ViewMenus.cpp
 #, fuzzy
 msgid "&Zoom"
 msgstr "Zoom"
@@ -16087,30 +16571,6 @@ msgstr "Overdub (nyala/mati)"
 msgid "&Show Clipping (on/off)"
 msgstr "&Lihat Clipping"
 
-#: src/menus/WindowMenus.cpp
-#, fuzzy
-msgid "&Window"
-msgstr " jendela"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/menus/WindowMenus.cpp
-msgid "&Minimize"
-msgstr ""
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make all project
-#. * windows un-hidden
-#: src/menus/WindowMenus.cpp
-msgid "&Bring All to Front"
-msgstr ""
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh
-#. tooldock
-#: src/menus/WindowMenus.cpp
-#, fuzzy
-msgid "Minimize All Projects"
-msgstr "&Normalkan semua trek pada proyek"
-
 #: src/prefs/ApplicationPrefs.cpp
 #, fuzzy
 msgid "Preferences for Application"
@@ -16150,13 +16610,18 @@ msgid "&Don't apply effects in batch mode"
 msgstr "&Jangan aplikasikan efek pada mode batch"
 
 #: src/prefs/DevicePrefs.cpp
-msgid "Devices"
-msgstr "Perangkat"
+#, fuzzy
+msgid "Audio Settings"
+msgstr "Aturan Plugin"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
-msgid "Preferences for Device"
-msgstr "Preferensi..."
+#, c-format
+msgid "%i Hz"
+msgstr ""
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Other..."
+msgstr "Lainnya..."
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
@@ -16204,13 +16669,26 @@ msgid "Cha&nnels:"
 msgstr "Salura&n"
 
 #: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "&Project Sample Rate:"
+msgstr "Rate Sampel:"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Project Sample Rate used when recording new tracks and for playback, mixdowns and exports in this project"
+msgstr ""
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "D&efault Sample Rate:"
+msgstr "&Rate Sampel Normal:"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Default Sample &Format:"
+msgstr "&Format Sampel Normal:"
+
+#: src/prefs/DevicePrefs.cpp
 msgid "Latency"
 msgstr "Laten"
-
-#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "milliseconds"
-msgstr "milidetik"
 
 #: src/prefs/DevicePrefs.cpp
 #, fuzzy
@@ -16237,6 +16715,10 @@ msgstr "1 (Mono)"
 #: src/prefs/DevicePrefs.cpp
 msgid "2 (Stereo)"
 msgstr "2 (Stereo)"
+
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
+msgid "Device"
+msgstr "Perangkat"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
@@ -16423,67 +16905,34 @@ msgstr "Preferensi..."
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
-msgid "Sorted by Effect Name"
+msgid "Sort by effect name"
 msgstr "Urutkan dari Nama"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Sorted by Publisher and Effect Name"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Sorted by Type and Effect Name"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Grouped by Publisher"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Grouped by Type"
-msgstr ""
+#, fuzzy
+msgid "Sort by publisher and effect name"
+msgstr "Urutkan dari Nama"
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
-msgid "Default"
-msgstr "&Normal"
+msgid "Sort by type and effect name"
+msgstr "Urutkan dari Nama"
 
-#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-#. (Application programming interface)
-#.
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
-msgid "&LADSPA"
-msgstr "&LADSPA"
-
-#. i18n-hint: abbreviates
-#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
-#: src/prefs/EffectsPrefs.cpp
-msgid "LV&2"
-msgstr ""
-
-#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-#. In the translations of this and other strings, you may transliterate the
-#. name into another alphabet.
-#: src/prefs/EffectsPrefs.cpp
-msgid "N&yquist"
-msgstr "N&yquist"
-
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
-#. It is not an abbreviation for anything.  See http://vamp-plugins.org
-#: src/prefs/EffectsPrefs.cpp
-msgid "&Vamp"
-msgstr ""
-
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-#. developed by Steinberg GmbH
-#: src/prefs/EffectsPrefs.cpp
-msgid "V&ST"
+msgid "Group by publisher"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Enable Effects"
-msgstr "Bolehkan efek"
+msgid "Group by type"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "Group by category"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "Group by type and publisher"
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
@@ -16491,12 +16940,13 @@ msgid "Effect Options"
 msgstr "Aturan Efek"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "S&ort or Group:"
+msgid "Effect menu &organization:"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "&Maximum effects per group (0 to disable):"
-msgstr ""
+#, fuzzy
+msgid "Realtime effect o&rganization:"
+msgstr "Efek teraplikasi: %s"
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
@@ -16506,6 +16956,11 @@ msgstr "Instrumen"
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
 msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Open Plugin Manager"
+msgstr "Aturan Plugin"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -16644,14 +17099,6 @@ msgstr "-120 dB (batas terbaik untuk pendengaran manusia)"
 msgid "-145 dB (PCM range of 24 bit samples)"
 msgstr "-145 dB (range PCM dari sampel 24 bit)"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Local"
-msgstr "Lokal"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "From Internet"
-msgstr "Dari Internet"
-
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "Tampilan"
@@ -16753,6 +17200,7 @@ msgstr ""
 msgid "&Seconds"
 msgstr "detik"
 
+#. i18n-hint: The music theory "beat"
 #: src/prefs/ImportExportPrefs.cpp
 #, fuzzy
 msgid "&Beats"
@@ -16961,56 +17409,6 @@ msgstr "Kombinasi Tombol Keyboard"
 #, fuzzy
 msgid "Preferences for Library"
 msgstr "Preferensi..."
-
-#: src/prefs/LibraryPrefs.cpp
-#, fuzzy
-msgid "LAME MP3 Export Library"
-msgstr "Referensi Pengeksporan  MP3"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library Version:"
-msgstr "Versi Referensi MP3:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Import/Export Library"
-msgstr "Referensi Impor/Ekspor FFmpeg"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "No compatible FFmpeg library was found"
-msgstr "Referensi FFmpeg yang tidak kompetibel ditemukan"
-
-#: src/prefs/LibraryPrefs.cpp
-#, fuzzy
-msgid "FFmpeg support is not compiled in"
-msgstr "Dukungan FFMpeg tidak terkompilasi"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "Versi Referensi FFmpeg:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library:"
-msgstr "Referensi FFmpeg:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Loca&te..."
-msgstr "Loca&te..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Dow&nload"
-msgstr "U&nduh"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
-"Do you still want to locate them manually?"
-msgstr ""
-"Audacity telah mendeteksi referensi FFmpeg yang valid.\n"
-"Apakah Anda tetap ingin meletakkannya sendiri?"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Success"
-msgstr ""
 
 #: src/prefs/LibraryPrefs.h
 #, fuzzy
@@ -17372,10 +17770,6 @@ msgid "Lo&ng period:"
 msgstr "Periode pan&jang:"
 
 #: src/prefs/PlaybackPrefs.cpp
-msgid "&Vari-Speed Play"
-msgstr ""
-
-#: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
 msgstr ""
 
@@ -17401,27 +17795,6 @@ msgstr "Preferensi..."
 #, fuzzy
 msgid "Preferences for Quality"
 msgstr "Preferensi..."
-
-#: src/prefs/QualityPrefs.cpp
-#, c-format
-msgid "%i Hz"
-msgstr ""
-
-#: src/prefs/QualityPrefs.cpp
-msgid "Other..."
-msgstr "Lainnya..."
-
-#: src/prefs/QualityPrefs.cpp
-msgid "Sampling"
-msgstr "Menyampel"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "Default Sample &Rate:"
-msgstr "&Rate Sampel Normal:"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "Default Sample &Format:"
-msgstr "&Format Sampel Normal:"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Real-time Conversion"
@@ -17920,6 +18293,12 @@ msgid "Multi-track"
 msgstr "Banyak"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+msgid ""
+"Ask me each time.\n"
+"Show dialog each time audio is pasted."
+msgstr ""
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
 #, fuzzy
 msgid "&Select all audio, if selection required"
 msgstr "Diratakan dengan akhir pilihan"
@@ -17964,10 +18343,15 @@ msgstr "Opsi Mixing Lanjut"
 msgid "Solo &Button:"
 msgstr "Tombol &Solo:"
 
-#: src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp
 #, fuzzy
-msgid "Logarithmic (dB)"
-msgstr "Logaritmik"
+msgid "Pasted audio"
+msgstr "&Wilayah Terlabel"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+msgid "Paste audio from other Audacity project as"
+msgstr "Ditempel dari clipboard"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -18006,11 +18390,6 @@ msgstr "Normalkan"
 msgid "Minutes"
 msgstr ""
 
-#: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
-#, fuzzy
-msgid "Seconds"
-msgstr "detik"
-
 #: src/prefs/TracksPrefs.cpp
 #, fuzzy
 msgid "5ths of Seconds"
@@ -18043,11 +18422,6 @@ msgstr ""
 #, fuzzy
 msgid "MilliSeconds"
 msgstr "milidetik"
-
-#: src/prefs/TracksPrefs.cpp
-#, fuzzy
-msgid "Samples"
-msgstr "sampel"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "4 Pixels per Sample"
@@ -18188,19 +18562,16 @@ msgstr "File audio"
 msgid "&Host"
 msgstr "&Host"
 
-#. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
 #, fuzzy
 msgid "&Playback Device"
 msgstr "Memainkan Berdasarkan Kecepatan"
 
-#. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
 #, fuzzy
 msgid "&Recording Device"
 msgstr "Selesai merekam"
 
-#. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
 #, fuzzy
 msgid "Recording &Channels"
@@ -18221,11 +18592,6 @@ msgstr "Selesai merekam"
 msgid "2 (Stereo) Recording Channels"
 msgstr "%d Saluran"
 
-#: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
-msgid "Audio Settings:"
-msgstr "Aturan Plugin"
-
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
@@ -18240,6 +18606,11 @@ msgstr "Toolbar &Edit"
 #, fuzzy
 msgid "Stopped"
 msgstr "Berhenti"
+
+#: src/toolbars/ControlToolBar.cpp
+#, fuzzy
+msgid "Transport"
+msgstr "T&ransportasi"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
@@ -18354,6 +18725,31 @@ msgstr "Informasi sumber input tidak ada"
 msgid "&Device Toolbar"
 msgstr "Toolbar &Perangkat"
 
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "De&vice"
+msgstr "Perang&kat"
+
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "Mengubah Pitch"
+
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "Mengubah Pitch"
+
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "Membuat cache audio"
+
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Mengubah Pitch"
+
 #: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
@@ -18367,6 +18763,16 @@ msgstr "Perbesar"
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Out"
 msgstr "Perkecil"
+
+#: src/toolbars/EditToolBar.cpp
+#, fuzzy
+msgid "Fit selection to width"
+msgstr "Fit-kan pilihan dengan jendela"
+
+#: src/toolbars/EditToolBar.cpp
+#, fuzzy
+msgid "Fit project to width"
+msgstr "Fit-kan proyek dengan jendela"
 
 #: src/toolbars/EditToolBar.cpp
 #, fuzzy
@@ -18384,14 +18790,8 @@ msgid "Sync-Lock Tracks"
 msgstr "Link Trek"
 
 #: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Fit selection to width"
-msgstr "Fit-kan pilihan dengan jendela"
-
-#: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Fit project to width"
-msgstr "Fit-kan proyek dengan jendela"
+msgid "Edit"
+msgstr "Edit"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
@@ -18422,19 +18822,8 @@ msgid " Clipped "
 msgstr ""
 
 #: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Combined Meter"
+msgid "Record Meter"
 msgstr "Pengukur Rekaman"
-
-#: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Meter"
-msgstr "Pengukur Rekaman"
-
-#: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Playback Meter"
-msgstr "Pengukur Permainan"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/toolbars/MeterToolBar.cpp
@@ -18449,6 +18838,11 @@ msgstr "Selesai merekam"
 msgid "Meter-Record"
 msgstr "Meter Rekaman"
 
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Playback Meter"
+msgstr "Pengukur Permainan"
+
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
@@ -18462,19 +18856,64 @@ msgstr "Memainkan Berdasarkan Kecepatan"
 msgid "Meter-Play"
 msgstr "Meter Memainkan"
 
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. with the recording level meters
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Meter"
+msgstr "Pengukur Rekaman"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Combined Meter"
+msgstr "Pengukur Rekaman"
+
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "&Recording Meter Toolbar"
 msgstr "Pengukur Rekaman"
 
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. with the playback level meter
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "&Playback Meter Toolbar"
 msgstr "Pengukur Permainan"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Mi&xer"
+msgstr "Toolbar Mi&xer"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "Ubah kecepatan bermain"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "Tingkatkan kecepatan bermain"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "Turunkan kecepatan bermain"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "Selesai merekam"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "Tingkatkan kecepatan bermain"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "Turunkan kecepatan bermain"
+
+#: src/toolbars/ScrubbingToolBar.cpp
+msgid "Scrub"
+msgstr ""
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
@@ -18535,20 +18974,22 @@ msgstr ""
 msgid "Scru&b Toolbar"
 msgstr "&Toolbar"
 
+#. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Project Rate (Hz)"
-msgstr "Rate Proyek (Hz):"
+msgid "Length"
+msgstr "Panjang"
+
+#. i18n-hint noun
+#: src/toolbars/SelectionBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
+#: src/widgets/ASlider.cpp
+msgid "Center"
+msgstr "Tengah"
 
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
-msgid "Snap-To"
-msgstr "Patokan"
-
-#: src/toolbars/SelectionBar.cpp src/toolbars/TimeToolBar.cpp
-#, fuzzy
-msgid "Audio Position"
-msgstr "Posisi Audio:"
+msgid "Selection Toolbar Setup"
+msgstr "Toolbar &Terpilih"
 
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
@@ -18570,50 +19011,38 @@ msgstr "Atur (atau Mengecualikan) Yang Terpilih di Kiri"
 msgid "Length and Center of Selection"
 msgstr "Trim file ke bagian terpilih"
 
-#: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
-msgid "Show"
-msgstr "Tunjukkan Semua Codec"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Snap To"
-msgstr "Patokan"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length"
-msgstr "Panjang"
-
-#: src/toolbars/SelectionBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#: src/widgets/ASlider.cpp
-msgid "Center"
-msgstr "Tengah"
-
-#: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Snap Clicks/Selections to %s"
-msgstr ""
-
-#. i18n-hint: %s is replaced e.g by one of 'Length', 'Center',
-#. 'Start', or 'End' (translated), to indicate that it will be
-#. calculated from other parameters.
-#: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "%s - driven"
-msgstr ""
-
-#. i18n-hint: each string is replaced by one of 'Length', 'Center',
-#. 'Start', or 'End' (translated)
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy, c-format
-msgid "Selection %s. %s won't change."
-msgstr "Pilih file MIDI..."
-
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/SelectionBar.cpp
 msgid "&Selection Toolbar"
 msgstr "Toolbar &Terpilih"
+
+#: src/toolbars/SnappingToolBar.cpp
+#, fuzzy
+msgid "Snapping"
+msgstr "Clipping"
+
+#: src/toolbars/SnappingToolBar.cpp
+#, fuzzy
+msgid "Snap"
+msgstr "Patokan"
+
+#. i18n-hint: combo box is the type of the control/widget
+#: src/toolbars/SnappingToolBar.cpp
+msgid "Snap to combo box"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/toolbars/SnappingToolBar.cpp
+#, fuzzy
+msgid "&Snapping Toolbar"
+msgstr "Toolbar &Terpilih"
+
+#: src/toolbars/SpectralSelectionBar.cpp
+#, fuzzy
+msgid "Spectral Selection"
+msgstr "Pilihan"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -18624,6 +19053,11 @@ msgstr "Frekuensi linier"
 #, fuzzy
 msgid "Low and High Frequencies"
 msgstr "Memboosting Frekuensi Bass"
+
+#: src/toolbars/SpectralSelectionBar.cpp
+#, fuzzy
+msgid "Show"
+msgstr "Tunjukkan Semua Codec"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -18641,10 +19075,52 @@ msgstr ""
 msgid "Spe&ctral Selection Toolbar"
 msgstr "Toolbar &Terpilih"
 
+#: src/toolbars/TimeSignatureToolBar.cpp
+#, fuzzy
+msgid "Time Signature"
+msgstr "Skala Waktu"
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+#, fuzzy
+msgid "Tempo"
+msgstr "Pitch dan Tempo"
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Upper Time Signature"
+msgstr ""
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Lower Time Signature"
+msgstr ""
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+#, fuzzy
+msgid "Tempo Changed"
+msgstr "Perubahan Tempo Final (%)"
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Upper Time Signature Changed"
+msgstr ""
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Lower Time Signature Changed"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Time Signature Toolbar (Beta)"
+msgstr ""
+
 #: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "Time"
 msgstr "Waktu"
+
+#: src/toolbars/TimeToolBar.cpp
+#, fuzzy
+msgid "Audio Position"
+msgstr "Posisi Audio:"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
@@ -18667,6 +19143,10 @@ msgstr "Klik dan dorong untuk mengubah ukuran trek"
 #: src/toolbars/ToolDock.cpp
 msgid "ToolDock"
 msgstr "Alat Dock"
+
+#: src/toolbars/ToolsToolBar.cpp
+msgid "Tools"
+msgstr "Alat"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Selection Tool"
@@ -18723,6 +19203,11 @@ msgid "&Next Tool"
 msgstr "Alat Selanjutnya"
 
 #: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "Play-at-Speed"
+msgstr "Memainkan berkecepatan"
+
+#: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play at selected speed"
 msgstr "Mainkan padakecepatan terpilih"
 
@@ -18735,12 +19220,41 @@ msgstr "Memainkan Berdasarkan Kecepatan"
 msgid "Play-at-Speed Once"
 msgstr "Memainkan berkecepatan"
 
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. for transcription (currently just vary play speed)
 #: src/toolbars/TranscriptionToolBar.cpp
 #, fuzzy
 msgid "Pla&y-at-Speed Toolbar"
 msgstr "Memainkan berkecepatan"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Memainkan berkecepatan"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "Play-at-Speed &Once"
+msgstr "Memainkan berkecepatan"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "Play C&ut Preview-at-Speed"
+msgstr "Mainkan Preview POtongan"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "Ubah kecepatan bermain"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "Tingkatkan kecepatan bermain"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "Turunkan kecepatan bermain"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
@@ -18978,6 +19492,26 @@ msgstr ""
 msgid "S&pectrogram Settings..."
 msgstr "Spektrogram"
 
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+#, fuzzy
+msgid "S&pectral"
+msgstr "Spektrum"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "Pilihan"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+#, fuzzy
+msgid "Next &Higher Peak Frequency"
+msgstr "Frekuensi (Hz)"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+#, fuzzy
+msgid "Next &Lower Peak Frequency"
+msgstr "Frekuensi linier"
+
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
 msgstr ""
@@ -19023,6 +19557,7 @@ msgid "Clip Name Edit"
 msgstr "Sampel Edit"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 #, fuzzy
 msgid "Rename Clip..."
 msgstr "&Sampel Ulang..."
@@ -19297,11 +19832,6 @@ msgstr "Alat Selanjutnya"
 #, fuzzy
 msgid "Mute/Unmute Track"
 msgstr "Diam/Hidupkan suara trek yang terfokus"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
-msgid "Rename clip..."
-msgstr "&Sampel Ulang..."
 
 #. i18n-hint:
 #. string is the name of a clip
@@ -19798,14 +20328,17 @@ msgstr "Unduh"
 msgid "App update checking"
 msgstr ""
 
+#. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
 msgstr ""
 
+#. i18n-hint: The second paragraph of app update notice dialog
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
 msgstr ""
 
+#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
@@ -19910,20 +20443,19 @@ msgstr ""
 msgid "All reports are anonymous. See %s for more info."
 msgstr "Pilih satu atau lebih file audio..."
 
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-#, c-format
-msgid "File '%s' already exists, do you really want to overwrite it?"
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
 msgstr ""
 
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-#, fuzzy
-msgid "Please choose an existing file."
-msgstr " Mohon pilih aksinya"
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
 
-#: src/widgets/FileDialog/mac/FileDialogPrivate.mm
-#, fuzzy
-msgid "File type:"
-msgstr "Penyaring"
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -19941,31 +20473,14 @@ msgstr "Pendorong"
 msgid "Empty"
 msgstr "Kosong"
 
-#: src/widgets/HelpSystem.cpp
-msgid "Backwards"
-msgstr "Percepat ke Awal"
-
-#. i18n-hint arrowhead meaning backward movement
-#: src/widgets/HelpSystem.cpp
-msgid "<"
-msgstr "<"
-
-#: src/widgets/HelpSystem.cpp
-msgid "Forwards"
-msgstr "Percepat ke Akhir"
-
-#. i18n-hint arrowhead meaning forward movement
-#: src/widgets/HelpSystem.cpp
-msgid ">"
-msgstr ">"
-
-#: src/widgets/HelpSystem.cpp
-msgid "Help on the Internet"
-msgstr "Bantuan di Internet"
-
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
+
+#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
+#: src/widgets/MeterPanel.cpp
+msgid "Meter"
+msgstr "Meter"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Stop Monitoring"
@@ -20042,344 +20557,23 @@ msgstr "Stereo Horizontal"
 msgid "Vertical"
 msgstr "Penunjuk Vertikal"
 
-#: src/widgets/MultiDialog.cpp
-msgid "Show Log for Details"
-msgstr ""
-
-#. i18n-hint: Format string for displaying time in seconds. Change the comma
-#. * in the middle to the 1000s separator for your locale, and the 'seconds'
-#. * on the end to the word for seconds. Don't change the numbers.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 seconds"
-msgstr "01000,01000 detik"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes
-#. * and seconds
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss"
-msgstr "jj:mm:dd"
-
-#. i18n-hint: Format string for displaying time in hours, minutes and
-#. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
-#. * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
-#. * change the numbers unless there aren't 60 seconds in a minute in your
-#. * locale
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s"
-msgstr "0100 jam 060 mnt 060 dtk"
-
-#. i18n-hint: Name of time display format that shows time in days, hours,
-#. * minutes and seconds
-#: src/widgets/NumericTextCtrl.cpp
-msgid "dd:hh:mm:ss"
-msgstr "hh:jj:mm:dd"
-
-#. i18n-hint: Format string for displaying time in days, hours, minutes and
-#. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes and 's' to the
-#. * abbreviation for seconds. Don't change the numbers unless there aren't
-#. * 24 hours in a day in your locale
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 days 024 h 060 m 060 s"
-msgstr "0100 hari 024 jam 060 mnt 060 dtk"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundredths of a second (1/100 second)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + hundredths"
-msgstr "jj:mm:dd + seperseratus"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
-#. * (the hundredths are shown as decimal seconds). Don't change the numbers
-#. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060>0100 s"
-msgstr "0100 j 060 m 060>0100 d"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and milliseconds (1/1000 second)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + milliseconds"
-msgstr "jj:mm:dd: + milidetik"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
-#. * abbreviation for minutes and 's' to the abbreviation for seconds (the
-#. * milliseconds are shown as decimal seconds) . Don't change the numbers
-#. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060>01000 s"
-msgstr "0100 jam 060 mnt 060>01000 dtk"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and samples (at the current project sample rate)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + samples"
-msgstr "jj:mm:dd: + sampel"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
-#. * abbreviation for minutes, 's' to the abbreviation for seconds and
-#. * translate samples . Don't change the numbers
-#. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+># samples"
-msgstr "0100 jam 060 mnt 060 dtk+># sampel"
-
-#. i18n-hint: Name of time display format that shows time in samples (at the
-#. * current project sample rate).  For example the number of a sample at 1
-#. * second into a recording at 44.1KHz would be 44,100.
-#.
-#: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
-msgid "samples"
-msgstr "sampel"
-
-#. i18n-hint: Format string for displaying time in samples (lots of samples).
-#. * Change the ',' to the 1000s separator for your locale, and translate
-#. * samples. If 1000s aren't a base multiple for your number system, then you
-#. * can change the numbers to an appropriate one, and put a 0 on the front
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000,01000 samples|#"
-msgstr "01000,01000,01000 sampel|#"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at 24 frames per second (commonly used for films)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + film frames (24 fps)"
-msgstr "jj:mm:dd: + Bingkai film (24 bpd)"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames at 24 frames per second. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames' . Don't change the numbers
-#. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>24 frames"
-msgstr "0100 jam 060 mnt 060 dtk+>24 bingkai"
-
-#. i18n-hint: Name of time display format that shows time in frames (lots of
-#. * frames) at 24 frames per second (commonly used for films)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "film frames (24 fps)"
-msgstr "Bingkai PAL (25 bpd)"
-
-#. i18n-hint: Format string for displaying time in frames at 24 frames per
-#. * second. Change the comma
-#. * in the middle to the 1000s separator for your locale,
-#. * translate 'frames' and leave the rest alone
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 frames|24"
-msgstr "01000,01000 bingkai|24"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at NTSC TV drop-frame rate (used for American /
-#. * Japanese TV, and very odd)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + NTSC drop frames"
-msgstr "jj:mm:dd: + Bingkai NTSC dengan drop"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Leave the |N alone, it's important!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>30 frames|N"
-msgstr "0100 jam 060 mnt 060 dtk+>30 bingkai|N"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
-#. * Japanese TV, and doesn't quite match wall time
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + NTSC non-drop frames"
-msgstr "jj:mm:dd: + Bingkai NTSC non-drop"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Leave the | .999000999 alone,
-#. * the whole things really is slightly off-speed!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>030 frames| .999000999"
-msgstr "0100 jam 060 mnt 060 dtk+>030 bingkai| .999000999"
-
-#. i18n-hint: Name of time display format that shows time in frames at NTSC
-#. * TV frame rate (used for American / Japanese TV
-#: src/widgets/NumericTextCtrl.cpp
-msgid "NTSC frames"
-msgstr "Bingkai NTSC"
-
-#. i18n-hint: Format string for displaying time in frames with NTSC frames.
-#. * Change the comma
-#. * in the middle to the 1000s separator for your locale,
-#. * translate 'frames' and leave the rest alone. That really is the frame
-#. * rate!
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 frames|29.97002997"
-msgstr "01000,01000 bingkai|29.97002997"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at PAL TV frame rate (used for European TV)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + PAL frames (25 fps)"
-msgstr "jj:mm:dd: + Bingkai PAL (25 bpd)"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with PAL TV frames. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Nice simple time code!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>25 frames"
-msgstr "0100 jam 060 mnt 060 dtk+>25 bingkai"
-
-#. i18n-hint: Name of time display format that shows time in frames at PAL
-#. * TV frame rate (used for European TV)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "PAL frames (25 fps)"
-msgstr "Bingkai PAL (25 bpd)"
-
-#. i18n-hint: Format string for displaying time in frames with NTSC frames.
-#. * Change the comma
-#. * in the middle to the 1000s separator for your locale,
-#. * translate 'frames' and leave the rest alone.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 frames|25"
-msgstr "01000,01000 bingkai|25"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at CD Audio frame rate (75 frames per second)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + CDDA frames (75 fps)"
-msgstr "jj:mm:dd: + Bingkai CDDA (75 bpd)"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with CD Audio frames. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>75 frames"
-msgstr "0100 jam 060 mnt 060 dtk+>75 bingkai"
-
-#. i18n-hint: Name of time display format that shows time in frames at CD
-#. * Audio frame rate (75 frames per second)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "CDDA frames (75 fps)"
-msgstr "Bingkai CCDA (75 bpd)"
-
-#. i18n-hint: Format string for displaying time in frames with CD Audio
-#. * frames. Change the comma
-#. * in the middle to the 1000s separator for your locale,
-#. * translate 'frames' and leave the rest alone
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 frames|75"
-msgstr "01000,01000 bingkai|75"
-
-#. i18n-hint: Format string for displaying frequency in hertz. Change
-#. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
+#: src/widgets/MissingPluginsErrorDialog.cpp
 #, fuzzy
-msgid "010,01000>0100 Hz"
-msgstr "0100 j 060 m 060>0100 d"
+msgid "Missing Plugins"
+msgstr "Maaf, gagal mengambil Plug-in Vamp."
 
-#: src/widgets/NumericTextCtrl.cpp
-msgid "centihertz"
+#: src/widgets/MissingPluginsErrorDialog.cpp
+msgid "This project contains some realtime effect plugins that cannot be found on this system."
 msgstr ""
 
-#. i18n-hint: Name of display format that shows frequency in kilohertz
-#: src/widgets/NumericTextCtrl.cpp
-msgid "kHz"
-msgstr "kHz"
-
-#. i18n-hint: Format string for displaying frequency in kilohertz. Change
-#. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "01000>01000 kHz|0.001"
-msgstr "0100 j 060 m 060>0100 d"
-
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hertz"
+#. i18n-hint: %s will be replaced with "Learn more"
+#: src/widgets/MissingPluginsErrorDialog.cpp
+#, c-format
+msgid "The project may sound different than intended. %s"
 msgstr ""
 
-#. i18n-hint: Name of display format that shows log of frequency
-#. * in octaves
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "octaves"
-msgstr "Oktaf Bawah"
-
-#. i18n-hint: Format string for displaying log of frequency in octaves.
-#. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "100>01000 octaves|1.442695041"
-msgstr "01000,01000 bingkai|24"
-
-#. i18n-hint: an octave is a doubling of frequency
-#: src/widgets/NumericTextCtrl.cpp
-msgid "thousandths of octaves"
-msgstr ""
-
-#. i18n-hint: Name of display format that shows log of frequency
-#. * in semitones and cents
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "semitones + cents"
-msgstr "Seminada dalam separuh langkah"
-
-#. i18n-hint: Format string for displaying log of frequency in semitones
-#. * and cents.
-#. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "1000 semitones >0100 cents|17.312340491"
-msgstr ""
-
-#. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hundredths of cents"
-msgstr ""
-
-#. i18n-hint: Name of display format that shows log of frequency
-#. * in decades
-#: src/widgets/NumericTextCtrl.cpp
-msgid "decades"
-msgstr ""
-
-#. i18n-hint: Format string for displaying log of frequency in decades.
-#. * Change the decimal points for your locale. Don't change the numbers.
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "10>01000 decades|0.434294482"
-msgstr "01000,01000 bingkai|24"
-
-#. i18n-hint: a decade is a tenfold increase of frequency
-#: src/widgets/NumericTextCtrl.cpp
-msgid "thousandths of decades"
+#: src/widgets/MissingPluginsErrorDialog.cpp
+msgid "Learn more"
 msgstr ""
 
 #: src/widgets/NumericTextCtrl.cpp
@@ -20387,48 +20581,10 @@ msgstr ""
 msgid "(Use context menu to change format.)"
 msgstr "Gunakan tombol kanan mouse atau kunci konteks untuk mengubah format"
 
-#: src/widgets/NumericTextCtrl.cpp
-msgid "centiseconds"
-msgstr "sentidetik"
-
 #: src/widgets/PopupMenuTable.h
 #, c-format
 msgid "%s (%s)"
 msgstr ""
-
-#: src/widgets/ProgressDialog.cpp
-msgid "Cancel"
-msgstr "Batal"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Are you sure you wish to cancel?"
-msgstr "anda yakin mau menghapus %s?"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Confirm Cancel"
-msgstr "Konfirmasi Penghapusan"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Are you sure you wish to stop?"
-msgstr "anda yakin mau menghapus %s?"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Confirm Stop"
-msgstr "Konfirmasi"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Are you sure you wish to close?"
-msgstr "anda yakin mau menghapus %s?"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Confirm Close"
-msgstr "Konfirmasi"
 
 #. i18n-hint: %s is replaced with a directory path.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -20513,22 +20669,55 @@ msgstr "Nama seharusnya tidak kosong"
 msgid "Value must not be greater than %s"
 msgstr "Awal dan akhir harus lebih dari 0."
 
-#: src/widgets/wxPanelWrapper.h
-msgid "Dialog"
+#: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Shelf Filter"
+msgstr "Panjang filter:"
+
+#: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
+#, fuzzy
+msgid "Steve Daulton"
+msgstr "Atur Nor&mal"
+
+#: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
+#: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
+msgid "GNU General Public License v2.0"
 msgstr ""
 
-#: src/widgets/wxPanelWrapper.h
+#: plug-ins/ShelfFilter.ny
 #, fuzzy
-msgid "Select a directory"
-msgstr "Membuat proyek baru"
+msgid "Filter type"
+msgstr "Penyaring"
 
-#: src/widgets/wxPanelWrapper.h
+#: plug-ins/ShelfFilter.ny
+msgid "Low-shelf"
+msgstr ""
+
+#: plug-ins/ShelfFilter.ny
+msgid "High-shelf"
+msgstr ""
+
+#: plug-ins/ShelfFilter.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+msgid "Frequency (Hz)"
+msgstr "Frekuensi (Hz)"
+
+#: plug-ins/ShelfFilter.ny
 #, fuzzy
-msgid "Directory Dialog"
-msgstr "Direktori"
+msgid "Amount (dB)"
+msgstr "Ja&rak (dB):"
 
-#: src/widgets/wxPanelWrapper.h
-msgid "File Dialog"
+#: plug-ins/ShelfFilter.ny
+#, lisp-format
+msgid "Error.~%Frequency set too high for selected track."
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
@@ -20539,13 +20728,6 @@ msgstr "Pilihan"
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
 msgid "Paul Licameli"
-msgstr ""
-
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/beat.ny plug-ins/clipfix.ny plug-ins/delay.ny plug-ins/highpass.ny
-#: plug-ins/lowpass.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
-msgid "GNU General Public License v2.0"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -20637,16 +20819,6 @@ msgstr ""
 #, fuzzy
 msgid "Studio Fade Out"
 msgstr "Fade Keluar"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
-#, fuzzy
-msgid "Steve Daulton"
-msgstr "Atur Nor&mal"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
@@ -20948,6 +21120,11 @@ msgstr "Penyingkat Pitch"
 
 #: plug-ins/delay.ny
 #, fuzzy
+msgid "High-quality Pitch Shift"
+msgstr "Penyingkat Pitch"
+
+#: plug-ins/delay.ny
+#, fuzzy
 msgid "Pitch change per echo (semitones)"
 msgstr "Pre&view"
 
@@ -21152,11 +21329,6 @@ msgstr "Ambil File"
 msgid "Dominic Mazzoni"
 msgstr "dari Dominic Mazzoni"
 
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
-#: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
-msgid "Frequency (Hz)"
-msgstr "Frekuensi (Hz)"
-
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Roll-off (dB per octave)"
 msgstr ""
@@ -21291,7 +21463,7 @@ msgstr "Nama seharusnya tidak kosong"
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound duration'."
+msgid "No sounds found.~%Try lowering 'Threshold level (dB)'."
 msgstr ""
 
 #: plug-ins/label-sounds.ny
@@ -22196,11 +22368,6 @@ msgstr "Tengah"
 
 #: plug-ins/vocalrediso.ny
 #, fuzzy
-msgid "Analyze"
-msgstr "&Analisa"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Strength"
 msgstr "Penyaring"
 
@@ -22389,6 +22556,115 @@ msgstr "Pembuangan Trek"
 #, fuzzy
 msgid "Spectral Tools"
 msgstr "Spektrum"
+
+#, fuzzy
+#~ msgid "Unknown exception"
+#~ msgstr "Opsi baris komando tidak diketahui: %s\n"
+
+#, fuzzy
+#~ msgid "Problem Report for Audacity"
+#~ msgstr "Preferensi..."
+
+#, fuzzy
+#~ msgid "Failed to send crash report"
+#~ msgstr "Tidak bisa membuka atau membuat file tes"
+
+#, fuzzy
+#~ msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+#~ msgstr " [[file:quick_help.html|Bantuan Kilat]] (seharusnya diinstal dahulu, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">gunakan versi internet jika tidak ada</a>)"
+
+#, fuzzy
+#~ msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
+#~ msgstr " [[file:index.html|Manual]] (seharusnya diinstal dahulu, <a href=\"http://manual.audacityteam.org/index.php\">gunakan versi internet jika tidak ada</a>)"
+
+#, fuzzy
+#~ msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
+#~ msgstr " [[http://wiki.audacityteam.org/index.php|Wiki]] (tips, trik dan tutorial terbaru di internet)"
+
+#~ msgid "SelectionBar"
+#~ msgstr "BarSeleksi"
+
+#, fuzzy
+#~ msgid "Timer"
+#~ msgstr "Waktu"
+
+#~ msgid "Play Meter"
+#~ msgstr "Pengukur Permainan"
+
+#, fuzzy
+#~ msgid "Selectionbar"
+#~ msgstr "BarSeleksi"
+
+#, fuzzy
+#~ msgid "Enable"
+#~ msgstr "Dibolehkan"
+
+#, fuzzy
+#~ msgid "&Processing: "
+#~ msgstr "Memproses Auto Duck..."
+
+#, fuzzy
+#~ msgid "D&efault"
+#~ msgstr "&Normal"
+
+#, fuzzy
+#~ msgid "Cannot open file"
+#~ msgstr "Tidak bisa membuka file"
+
+#, fuzzy, c-format
+#~ msgid "Cannot open VST3 preset file %s"
+#~ msgstr "Tidak bisa membuka file proyek"
+
+#, fuzzy, c-format
+#~ msgid "Plugin %d to %d"
+#~ msgstr "Plugin %i ke %i"
+
+#, fuzzy
+#~ msgid "&Window"
+#~ msgstr " jendela"
+
+#, fuzzy
+#~ msgid "Minimize All Projects"
+#~ msgstr "&Normalkan semua trek pada proyek"
+
+#~ msgid "Devices"
+#~ msgstr "Perangkat"
+
+#, fuzzy
+#~ msgid "Preferences for Device"
+#~ msgstr "Preferensi..."
+
+#, fuzzy
+#~ msgid "Default"
+#~ msgstr "&Normal"
+
+#, fuzzy
+#~ msgid "&LADSPA"
+#~ msgstr "&LADSPA"
+
+#~ msgid "N&yquist"
+#~ msgstr "N&yquist"
+
+#~ msgid "Enable Effects"
+#~ msgstr "Bolehkan efek"
+
+#~ msgid "Sampling"
+#~ msgstr "Menyampel"
+
+#, fuzzy
+#~ msgid "Project Rate (Hz)"
+#~ msgstr "Rate Proyek (Hz):"
+
+#~ msgid "Snap To"
+#~ msgstr "Patokan"
+
+#, fuzzy, c-format
+#~ msgid "Selection %s. %s won't change."
+#~ msgstr "Pilih file MIDI..."
+
+#, fuzzy
+#~ msgid "Rename clip..."
+#~ msgstr "&Sampel Ulang..."
 
 #~ msgid "Mixer"
 #~ msgstr "Mixer"
@@ -23443,9 +23719,6 @@ msgstr "Spektrum"
 #~ msgid "Sliding Time Scale/Pitch Shift"
 #~ msgstr "Menggeser geseran waktu skala/pitch"
 
-#~ msgid "Time Scale"
-#~ msgstr "Skala Waktu"
-
 #~ msgid "Your tracks will be mixed down to a single mono channel in the exported file."
 #~ msgstr "Trek Anda akan di-mix ke mono pada pengeksporan file."
 
@@ -23783,10 +24056,6 @@ msgstr "Spektrum"
 #, fuzzy
 #~ msgid "StereoWidth"
 #~ msgstr "Stereo"
-
-#, fuzzy
-#~ msgid "FilterType"
-#~ msgstr "Penyaring"
 
 #, fuzzy
 #~ msgid "FilterSubtype"
