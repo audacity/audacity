@@ -31,7 +31,7 @@ endif()
 # Increment as appropriate after release of a new version, and set back
 # AUDACITY_BUILD_LEVEL to 0
 set( AUDACITY_VERSION 3 )
-set( AUDACITY_RELEASE 3 )
+set( AUDACITY_RELEASE 4 )
 set( AUDACITY_REVISION 0 )
 set( AUDACITY_MODLEVEL 0 )
 
