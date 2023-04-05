@@ -23,9 +23,9 @@ using namespace Registry;
 using namespace detail;
 
 //! Used only internally
-struct PlaceHolder : GroupItem<> {
+struct PlaceHolder : GroupItemBase {
    PlaceHolder(const Identifier &identifier, Ordering ordering)
-      : GroupItem{ identifier }
+      : GroupItemBase{ identifier }
       , ordering{ ordering == Strong ? Weak : ordering }
    {}
    ~PlaceHolder() = default;
@@ -146,8 +146,8 @@ void CollectItem( Registry::Visitor &visitor,
    }
    else
    if (const auto pComputed =
-       dynamic_cast<ComputedItem*>( pItem )) {
-      auto result = pComputed->factory( visitor );
+       dynamic_cast<ComputedItemBase*>(pItem)) {
+      auto result = pComputed->factory(visitor.GetComputedItemContext());
       if (result) {
          // Guarantee long enough lifetime of the result
          collection.computedItems.push_back( result );
@@ -719,7 +719,7 @@ BaseItem::~BaseItem() {}
 
 IndirectItemBase::~IndirectItemBase() {}
 
-ComputedItem::~ComputedItem() {}
+ComputedItemBase::~ComputedItemBase() {}
 
 SingleItem::~SingleItem() {}
 
@@ -727,6 +727,11 @@ GroupItemBase::~GroupItemBase() {}
 auto GroupItemBase::GetOrdering() const -> Ordering { return Strong; }
 
 Visitor::~Visitor(){}
+void *Visitor::GetComputedItemContext()
+{
+   static EmptyContext context;
+   return &context;
+}
 void Visitor::BeginGroup(GroupItemBase &, const Path &) {}
 void Visitor::EndGroup(GroupItemBase &, const Path &) {}
 void Visitor::Visit(SingleItem &, const Path &) {}
@@ -836,5 +841,5 @@ void RegisterItem( GroupItemBase &registry, const Placement &placement,
    pItems->insert( find( pItem->name ).second, std::move( pItem ) );
 }
 
-template struct GroupItem<>;
+template struct GroupItem<DefaultTraits>;
 }

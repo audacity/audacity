@@ -35,8 +35,7 @@ public:
 using NumericConverterFormatterFactoryPtr =
    std::unique_ptr<NumericConverterFormatterFactory>;
 
-// NumericConverterRegistryGroupTag is a fake type needed to fix the link on Windows
-struct NumericConverterRegistryGroupTag {};
+struct NumericConverterRegistryTraits : Registry::DefaultTraits{};
 
 struct NumericConverterRegistryGroupData {
    NumericConverterType type;
@@ -47,7 +46,7 @@ struct NumericConverterRegistryGroupData {
 
 struct NUMERIC_FORMATS_API NumericConverterRegistryGroup final
    : Composite::Extension<
-      Registry::GroupItem<NumericConverterRegistryGroupTag>,
+      Registry::GroupItem<NumericConverterRegistryTraits>,
       NumericConverterRegistryGroupData,
       const Identifier &
    >

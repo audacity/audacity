@@ -28,6 +28,13 @@ PopupSubMenu::PopupSubMenu(const Identifier &stringId,
 {
 }
 
+PopupMenuVisitor::~PopupMenuVisitor() = default;
+
+void *PopupMenuVisitor::GetComputedItemContext()
+{
+   return this;
+}
+
 PopupMenu::~PopupMenu() = default;
 
 namespace {
@@ -157,11 +164,6 @@ void PopupMenuTable::RegisterItem(
    const Registry::Placement &placement, Registry::BaseItemPtr pItem )
 {
    Registry::RegisterItem( *mRegistry, placement, std::move( pItem ) );
-}
-
-void PopupMenuTable::Append( Registry::BaseItemPtr pItem )
-{
-   mStack.back()->push_back( std::move( pItem ) );
 }
 
 void PopupMenuTable::Append(

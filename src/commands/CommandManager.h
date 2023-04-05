@@ -390,6 +390,8 @@ private:
 
 struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
 {
+   ~MenuVisitor() override;
+
    // final overrides
    void BeginGroup( Registry::GroupItemBase &item, const Path &path ) final;
    void EndGroup( Registry::GroupItemBase &item, const Path& ) final;
@@ -409,16 +411,21 @@ private:
    std::vector<bool> needSeparator;
 };
 
-struct ToolbarMenuVisitor : MenuVisitor
+struct ProjectMenuVisitor : MenuVisitor
 {
-   explicit ToolbarMenuVisitor( AudacityProject &p ) : project{ p } {}
-   operator AudacityProject & () const { return project; }
-   AudacityProject &project;
+   explicit ProjectMenuVisitor(AudacityProject &p) : mProject{ p } {}
+   ~ProjectMenuVisitor() override;
+   virtual void *GetComputedItemContext() override;
+   AudacityProject &mProject;
 };
 
 // Define items that populate tables that specifically describe menu trees
 namespace MenuTable {
    using namespace Registry;
+
+   struct Traits : Registry::DefaultTraits {
+      using ComputedItemContextType = AudacityProject;
+   };
 
    // These are found by dynamic_cast
    struct AUDACITY_DLL_API MenuSection {
@@ -438,7 +445,7 @@ namespace MenuTable {
    // Describes a main menu in the toolbar, or a sub-menu
    struct AUDACITY_DLL_API MenuItem final
       : Composite::Extension<
-         GroupItem<ToolbarMenuVisitor>, MenuItemData, const Identifier&
+         GroupItem<Traits>, MenuItemData, const Identifier&
       >
       , WholeMenu
    {
@@ -453,7 +460,7 @@ namespace MenuTable {
    // always available to macro programming
    struct ConditionalGroupItem final
       : Composite::Extension<
-         GroupItem<ToolbarMenuVisitor>, Condition, const Identifier &
+         GroupItem<Traits>, Condition, const Identifier &
       >
    {
       using Extension::Extension;
@@ -605,7 +612,7 @@ namespace MenuTable {
    //! MenuVisitor
    struct MenuItems
       : Composite::Extension<
-         GroupItem<ToolbarMenuVisitor>, void, const Identifier &
+         GroupItem<Traits>, void, const Identifier &
       >
    {
       using Extension::Extension;
@@ -616,7 +623,7 @@ namespace MenuTable {
 
    struct MenuPart
       : Composite::Extension<
-         GroupItem<ToolbarMenuVisitor>, void, const Identifier &
+         GroupItem<Traits>, void, const Identifier &
       >
       , MenuSection
    {

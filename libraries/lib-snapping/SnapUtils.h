@@ -55,6 +55,8 @@ struct SNAPPING_API SnapResult final
    bool snapped {};
 };
 
+struct SnapRegistryTraits : Registry::DefaultTraits{};
+
 struct SnapRegistryGroupData {
    const TranslatableString label;
    const bool inlined;
@@ -62,7 +64,7 @@ struct SnapRegistryGroupData {
 
 struct SNAPPING_API SnapRegistryGroup final
    : Composite::Extension<
-      Registry::GroupItem<SnapRegistryVisitor>,
+      Registry::GroupItem<SnapRegistryTraits>,
       SnapRegistryGroupData,
       const Identifier &
    >

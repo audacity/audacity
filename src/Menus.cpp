@@ -103,6 +103,8 @@ void MenuManager::UpdatePrefs()
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
 }
 
+MenuVisitor::~MenuVisitor() = default;
+
 void MenuVisitor::BeginGroup( Registry::GroupItemBase &item, const Path &path )
 {
    bool isMenu = false;
@@ -184,6 +186,13 @@ void MenuVisitor::DoSeparator()
 {
 }
 
+ProjectMenuVisitor::~ProjectMenuVisitor() = default;
+
+void *ProjectMenuVisitor::GetComputedItemContext()
+{
+   return &mProject;
+}
+
 namespace MenuTable {
 
 MenuItem::~MenuItem() {}
@@ -250,7 +259,7 @@ const auto MenuPathStart = wxT("MenuBar");
 
 Registry::GroupItemBase &MenuTable::ItemRegistry::Registry()
 {
-   static GroupItem<> registry{ MenuPathStart };
+   static GroupItem<Traits> registry{ MenuPathStart };
    return registry;
 }
 
@@ -264,10 +273,10 @@ namespace {
 
 using namespace MenuTable;
 
-struct MenuItemVisitor : ToolbarMenuVisitor
+struct MenuItemVisitor : ProjectMenuVisitor
 {
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
-      : ToolbarMenuVisitor(proj), manager( man ) {}
+      : ProjectMenuVisitor{ proj }, manager{ man } {}
 
    void DoBeginGroup( GroupItemBase &item, const Path& ) override
    {
@@ -324,7 +333,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
       auto pItem = &item;
       if (const auto pCommand =
           dynamic_cast<CommandItem*>( pItem )) {
-         manager.AddItem( project,
+         manager.AddItem(mProject,
             pCommand->name, pCommand->label_in,
             pCommand->finder, pCommand->callback,
             pCommand->flags, pCommand->options
@@ -342,7 +351,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
       if (const auto pSpecial =
           dynamic_cast<SpecialItem*>( pItem )) {
          wxASSERT( pCurrentMenu );
-         pSpecial->fn( project, *pCurrentMenu );
+         pSpecial->fn(mProject, *pCurrentMenu);
       }
       else
          wxASSERT( false );
@@ -422,7 +431,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #endif
 }
 
-void MenuManager::Visit( ToolbarMenuVisitor &visitor )
+void MenuManager::Visit(ProjectMenuVisitor &visitor)
 {
    static const auto menuTree = MenuTable::Items( MenuPathStart );
 
