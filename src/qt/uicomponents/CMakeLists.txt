@@ -19,6 +19,7 @@ set(MODULE_SOURCES
 set(MODULE_QML_SOURCES
    qml/FlatButton.qml
    qml/MeterPanel.qml
+   qml/StyledDial.qml
    qml/StyledIconLabel.qml
    qml/StyledSlider.qml
    qml/StyledTextLabel.qml
