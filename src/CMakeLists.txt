@@ -592,8 +592,6 @@ list( APPEND SOURCES
 
       export/ExportFileDialog.cpp
       export/ExportFileDialog.h
-      export/ExportOptionsUIServices.cpp
-      export/ExportOptionsUIServices.h
       export/ExportMixerPanel.cpp
       export/ExportMixerPanel.h
       export/ExportMixerDialog.cpp
@@ -1490,6 +1488,7 @@ set( AUDACITY_LIBRARIES
    lib-time-track-interface
    lib-snapping-interface
    lib-import-export-interface
+   lib-export-ui-interface
 )
 
 if (${_OPT}has_vst3)

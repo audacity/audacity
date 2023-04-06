@@ -10,6 +10,7 @@ set( LIBRARIES
    lib-components
    lib-basic-ui
    lib-exceptions
+   lib-export-ui
    lib-preferences
    lib-math
    lib-files
