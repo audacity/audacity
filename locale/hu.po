@@ -10,10 +10,10 @@
 # Márton Balázs <documan@mailbox.hu>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
+"Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2022-12-23 13:02+0100\n"
+"PO-Revision-Date: 2023-04-06 19:27+0200\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -745,24 +745,23 @@ msgstr "oktávok"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
-#, fuzzy
 msgid "bar"
-msgstr "Eszköztár"
+msgstr "eszköztár"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr ""
+msgstr "ütem"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr ""
+msgstr "sáv:ütem"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr ""
+msgstr "sáv:ütem:tik"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -774,9 +773,8 @@ msgstr "01000,01000 másodperc"
 #. i18n-hint: Name of time display format that shows time in seconds
 #. * and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "seconds + milliseconds"
-msgstr "óó:pp:mm + ezredmásodperc"
+msgstr "másodperc + ezredmásodperc"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
 #. * as fractional seconds. Change the comma in the middle to the 1000s separator
@@ -784,9 +782,8 @@ msgstr "óó:pp:mm + ezredmásodperc"
 #. * Don't change the numbers. The decimal separator is specified using '<' if
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "01000,01000>01000 seconds"
-msgstr "01000,01000 másodperc"
+msgstr "01000,01000>01000 másodperc"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -1580,83 +1577,78 @@ msgstr "Hibake&resés"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Beats"
-msgstr "Ü&temek"
+msgstr "Ütemek"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Bar"
-msgstr "Bark"
+msgstr "Eszköztár"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "1/2"
-msgstr "128"
+msgstr "1/2"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/4"
-msgstr ""
+msgstr "1/4"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "1/8"
-msgstr "128"
+msgstr "1/8"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/16"
-msgstr ""
+msgstr "1/16"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/32"
-msgstr ""
+msgstr "1/32"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/64"
-msgstr ""
+msgstr "1/64"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/128"
-msgstr ""
+msgstr "1/128"
 
 #. i18n-hint: The music theory "triplet"
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Triplets"
-msgstr ""
+msgstr "Hármasok"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/2 (triplets)"
-msgstr ""
+msgstr "1/2 (hármasok)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/4 (triplets)"
-msgstr ""
+msgstr "1/4 (hármasok)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/8 (triplets)"
-msgstr ""
+msgstr "1/8 (hármasok)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/16 (triplets)"
-msgstr ""
+msgstr "1/16 (hármasok)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/32 (triplets)"
-msgstr ""
+msgstr "1/32 (hármasok)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/64 (triplets)"
-msgstr ""
+msgstr "1/64 (hármasok)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/128 (triplets)"
-msgstr ""
+msgstr "1/128 (hármasok)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Seconds && samples"
-msgstr "Második legnagyobb"
+msgstr "Másodpercek és minták"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 #: plug-ins/sample-data-export.ny
@@ -1664,48 +1656,40 @@ msgid "Seconds"
 msgstr "Másodperc"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Deciseconds"
-msgstr "századmásodperc"
+msgstr "Tizedmásodperc"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Centiseconds"
-msgstr "századmásodperc"
+msgstr "Századmásodperc"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Milliseconds"
-msgstr "ezredmásodperc"
+msgstr "Ezredmásodperc"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 msgid "Samples"
 msgstr "Minták"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Video frames"
-msgstr "NTSC-képkocka"
+msgstr "Videó-képkockák"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Film frames (24 fps)"
-msgstr "film képkocka (24 fps)"
+msgstr "Film-képkockák (24 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "NTSC frames (29.97 fps)"
-msgstr "CDDA-képkocka (75 fps)"
+msgstr "NTSC-képkockák (75 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "NTSC frames (30 fps)"
-msgstr "CDDA-képkocka (75 fps)"
+msgstr "NTSC-képkockák (75 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "CD frames"
-msgstr "NTSC-képkocka"
+msgstr "CD-képkockák"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
@@ -2158,16 +2142,16 @@ msgstr "Ezek a támogatási módszereink:"
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[help:Quick_Help|Quick Help]]"
-msgstr ""
+msgstr "[[help:Quick_Help|Gyors segítség]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid " [[help:Main_Page|Manual]]"
-msgstr ""
+msgstr " [[help:Main_Page|Kézikönyv]]"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr ""
+msgstr "[[https://support.audacityteam.org/|Oktatóanyagok & útmutatók]]"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
@@ -2874,9 +2858,9 @@ msgstr "%s weboldal: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2023 %s Team."
-msgstr "%s software is copyright %s 1999-2021 %s Team."
+msgstr "%s software is copyright %s 1999-2023 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -3071,14 +3055,12 @@ msgid "our Privacy Policy"
 msgstr "Adatvédelmi Szabályzatunk"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Minutes and Seconds"
-msgstr "Minden 5. másodperc"
+msgstr "Percek és másodpercek"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Beats and Measures"
-msgstr "Ütemkereső"
+msgstr "Ütemek és mértékek"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
@@ -3503,30 +3485,34 @@ msgid ""
 "The entire source clip will be pasted into your project, allowing you to access\n"
 "trimmed audio data anytime."
 msgstr ""
+"Smart klipet.\n"
+"A teljes forrásklipet beilleszti a projektbe, így bármikor hozzáférhet\n"
+" a kivágott hangadatokhoz."
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Selected audio only.\n"
 "Only the selected portion of the source clip will be pasted."
 msgstr ""
+"Csak a kijelölt hangot.\n"
+"Csak a forrásklip kiválasztott részét illeszti be."
 
 #: src/AudioPasteDialog.cpp
-#, fuzzy
 msgid "Paste audio"
-msgstr "Megosztás"
+msgstr "Hang beillesztése"
 
 #: src/AudioPasteDialog.cpp
 msgid "How would you like to paste your audio?"
-msgstr ""
+msgstr "Hogyan illeszted ne a hangot?"
 
 #: src/AudioPasteDialog.cpp
 #, c-format
 msgid "Audio data is %s. Larger sizes will take longer to paste."
-msgstr ""
+msgstr "A hangadat %s. Minél nagyobb, annál tovább tart a beillesztése."
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
-msgstr ""
+msgstr "Emlékezz a választásomra és többé ne kérdezd"
 
 #: src/AudioPasteDialog.cpp
 msgid "Continue"
@@ -4690,9 +4676,8 @@ msgid "Incompatible plugin(s) found"
 msgstr "Nem megfelelő bővítmény(eke)t találtunk"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "&Manage Plugins"
-msgstr "Bővítmények kezelése"
+msgstr "&Bővítmények kezelése"
 
 #: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
@@ -4710,9 +4695,9 @@ msgid "Audacity has found %d incompatible plugins which could not be loaded. We 
 msgstr "Az Audacity %d inkompatibilis bővítményt talált, amelyeket nem lehetett betölteni. Ezeket a bővítményeket letiltottuk, hogy elkerüljük a leállást vagy összeomlást. Ha továbbra is szeretnéd használni ezeket a bővítményeket, engedélyezheted őket a \"Bővítmények kezelése\" menüpontban. Ellenkező esetben válaszd a \"Folytatás\" lehetőséget."
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
-msgstr "Az Audacity %d inkompatibilis bővítményt talált, amelyeket nem lehetett betölteni. Ezeket a bővítményeket letiltottuk, hogy elkerüljük a leállást vagy összeomlást. Ha továbbra is szeretnéd használni ezeket a bővítményeket, engedélyezheted őket a \"Bővítmények kezelése\" menüpontban. Ellenkező esetben válaszd a \"Folytatás\" lehetőséget."
+msgstr "Az Audacity %d inkompatibilis bővítményt talált, amelyeket nem lehetett betölteni. Ezeket a bővítményeket letiltottuk, hogy elkerüljük a leállást vagy összeomlást."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -5927,11 +5912,12 @@ msgid ""
 "This plugin could not be loaded.\n"
 "It may have been deleted."
 msgstr ""
+"Ez a bővítmény nem tölthető be.\n"
+"Valószínű letörölték."
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-#, fuzzy
 msgid "Plugin Error"
-msgstr "Értékhiba"
+msgstr "Bővítmény-hiba"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -7730,9 +7716,8 @@ msgstr "Sávmegjelenítők beállítása"
 #. i18n-hint: abbreviates amplitude
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (amp)"
-msgstr "Lineáris be"
+msgstr "Lineáris (amp)"
 
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
@@ -7743,9 +7728,8 @@ msgstr "Logaritmikus (dB)"
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (dB)"
-msgstr "Lineáris"
+msgstr "Lineáris (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -13413,11 +13397,8 @@ msgid "FFmpeg-compatible files"
 msgstr "FFmpeg-kompatibilis fájlok"
 
 #: src/import/ImportFFmpeg.cpp
-#, fuzzy
 msgid "Try installing FFmpeg.\n"
-msgstr ""
-"Próbáld meg telepíteni az FFmpeg-et.\n"
-"\n"
+msgstr "Próbáld meg telepíteni az FFmpeg-et.\n"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
@@ -14053,13 +14034,12 @@ msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "%.2f másodperc törölve t=%.2f helyen"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Paste clip"
-msgstr "Beillesztés a vágólapról"
+msgstr "Klip beillesztése"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting clip contents, please wait"
-msgstr ""
+msgstr "Klip tartalmának beillesztése, kicsit várj"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
@@ -15751,9 +15731,8 @@ msgid "&Don't apply effects in batch mode"
 msgstr "&Ne alkalmazzon hatásokat kötegelt módban"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "Audio Settings"
-msgstr "Hangbeállítások:"
+msgstr "Hangbeállítások"
 
 #: src/prefs/DevicePrefs.cpp
 #, c-format
@@ -15804,16 +15783,14 @@ msgid "Cha&nnels:"
 msgstr "&Csatornák:"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "&Project Sample Rate:"
-msgstr "Mintavételezési gyakoriság:"
+msgstr "&Projekt mintavételezési gyakorisága:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Project Sample Rate used when recording new tracks and for playback, mixdowns and exports in this project"
-msgstr ""
+msgstr "A projekt mintavételi gyakoriságát használjuk ebben a projektben új sávok rögzítéséhez, lejátszáshoz, keveréshez és exportáláshoz is"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "D&efault Sample Rate:"
 msgstr "&Alapértelmezett mintavételezési gyakoriság:"
 
@@ -16020,39 +15997,32 @@ msgid "Preferences for Effects"
 msgstr "Hatások beállításai"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by effect name"
-msgstr "Hatásnév szerint rendezve"
+msgstr "Rendezés hatásnév szerint"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by publisher and effect name"
-msgstr "Kiadó és hatásnév szerint rendezve"
+msgstr "Rendezés kiadó és hatásnév szerint"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by type and effect name"
-msgstr "Típus és hatásnév szerint rendezve"
+msgstr "Rendezés típus és hatásnév szerint"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by publisher"
-msgstr "Kiadó szerint csoportosítva"
+msgstr "Csoportosítás kiadó szerint"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type"
-msgstr "Típus szerint csoportosítva"
+msgstr "Csoportosítás típus szerint"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by category"
-msgstr "Típus szerint csoportosítva"
+msgstr "Csoportosítás kategória szerint"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type and publisher"
-msgstr "Kiadó szerint csoportosítva"
+msgstr "Csoportosítás  típus és kiadó szerint"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -16060,12 +16030,11 @@ msgstr "Hatás beállításai"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
-msgstr ""
+msgstr "Hatás menü &szervezése:"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Realtime effect o&rganization:"
-msgstr "Valósidejű hatás: %s"
+msgstr "Valósidejű &hatás szervezése:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -16076,9 +16045,8 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "SSE/SSE2/…/AVX &használata"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Open Plugin Manager"
-msgstr "Bővítménykezelő"
+msgstr "Bővítménykezelő megnyitása"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -17329,6 +17297,8 @@ msgid ""
 "Ask me each time.\n"
 "Show dialog each time audio is pasted."
 msgstr ""
+"Minden alkalommal kérdezd meg.\n"
+"A dialógus ablak megjelenítése minden hangbeillesztésnél."
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Select all audio, if selection required"
@@ -17372,14 +17342,12 @@ msgid "Solo &Button:"
 msgstr "Szóló &gomb:"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Pasted audio"
-msgstr "&Címkézett hang"
+msgstr "Beillesztett hang"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Paste audio from other Audacity project as"
-msgstr "Beillesztve a vágólapról"
+msgstr "Hang beillesztése másik Audacity projektből mint"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -17936,9 +17904,8 @@ msgid "Center"
 msgstr "Közép"
 
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy
 msgid "Selection Toolbar Setup"
-msgstr "K&ijelölés eszköztár"
+msgstr "Kijelölés eszköztár beállításai"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and End of Selection"
@@ -17963,26 +17930,23 @@ msgid "&Selection Toolbar"
 msgstr "K&ijelölés eszköztár"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snapping"
-msgstr "(csattanva)"
+msgstr "Illesztése"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snap"
-msgstr "Illesztés"
+msgstr "Illeszt"
 
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap to combo box"
-msgstr ""
+msgstr "Illesztés kombinált dobozhoz"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "&Snapping Toolbar"
-msgstr "K&ijelölés eszköztár"
+msgstr "&Illesztés eszköztár"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18015,41 +17979,38 @@ msgid "Spe&ctral Selection Toolbar"
 msgstr "Spe&ktrális kijelölés eszköztár"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Time Signature"
-msgstr "Időskála"
+msgstr "Időjelzés"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo"
-msgstr "Hangmagasság/Tempó"
+msgstr "Tempó"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature"
-msgstr ""
+msgstr "Felső ütemjelzés"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature"
-msgstr ""
+msgstr "Alsó ütemjelzés"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo Changed"
-msgstr "Végső tempóváltoztatás (%)"
+msgstr "A tempó módosult"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature Changed"
-msgstr ""
+msgstr "Felső ütemjelzés módosult"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature Changed"
-msgstr ""
+msgstr "Alsó ütemjelzés módosult"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Time Signature Toolbar (Beta)"
-msgstr ""
+msgstr "Ütemjelzés eszköztár (Béta)"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -18990,7 +18951,7 @@ msgstr "Kattintás és húzás a hang kiválasztásához"
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
-msgstr "(csattanva)"
+msgstr "(pattintás)"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Click and drag to move a track in time"
@@ -19360,23 +19321,22 @@ msgid "Vertical"
 msgstr "Függőleges"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-#, fuzzy
 msgid "Missing Plugins"
-msgstr "Bővítmények kezelése"
+msgstr "Hiányzó bővítmények"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "This project contains some realtime effect plugins that cannot be found on this system."
-msgstr ""
+msgstr "Ez a projekt néhány olyan valósidejű hatást tartalmaz, melyek nem találhatók meg ebben a rendszerben."
 
 #. i18n-hint: %s will be replaced with "Learn more"
 #: src/widgets/MissingPluginsErrorDialog.cpp
 #, c-format
 msgid "The project may sound different than intended. %s"
-msgstr ""
+msgstr "A projekt a tervezetttől eltérően hangozhat. %s"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "Learn more"
-msgstr ""
+msgstr "Tudj meg többet"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -19466,9 +19426,8 @@ msgid "Value must not be greater than %s"
 msgstr "Az érték nem lehet nagyobb, mint %s"
 
 #: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Shelf Filter"
-msgstr "Bevágás szűrő"
+msgstr "Polc szűrő"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
@@ -19488,17 +19447,16 @@ msgid "GNU General Public License v2.0"
 msgstr "GNU General Public License v2.0"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Filter type"
 msgstr "Szűrőtípus"
 
 #: plug-ins/ShelfFilter.ny
 msgid "Low-shelf"
-msgstr ""
+msgstr "Alacsony-polc"
 
 #: plug-ins/ShelfFilter.ny
 msgid "High-shelf"
-msgstr ""
+msgstr "Magas-polc"
 
 #: plug-ins/ShelfFilter.ny plug-ins/highpass.ny plug-ins/lowpass.ny
 #: plug-ins/notch.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
@@ -19506,14 +19464,13 @@ msgid "Frequency (Hz)"
 msgstr "Frekvencia (Hz)"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Amount (dB)"
-msgstr "Bal (dB)"
+msgstr "Mennyiség (dB)"
 
 #: plug-ins/ShelfFilter.ny
 #, lisp-format
 msgid "Error.~%Frequency set too high for selected track."
-msgstr ""
+msgstr "Hiba.~%A kijelölt sáv frekvenciájának értéke túl magas."
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Multi Tool"
@@ -19886,9 +19843,8 @@ msgid "Low-quality Pitch Shift"
 msgstr "Gyenge minőségű hangmagasság-eltolás"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "High-quality Pitch Shift"
-msgstr "Gyenge minőségű hangmagasság-eltolás"
+msgstr "Magas minőségű hangmagasság-eltolás"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
@@ -20196,9 +20152,9 @@ msgid "Error.~%Selection must be less than ~a."
 msgstr "Hiba.~%A kijelölésnek kisebbnek kell lennie, mint ~a."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "No sounds found.~%Try lowering 'Threshold level (dB)'."
-msgstr "Nem találhatók hangok.~%Próbálkozz csökkenteni a 'Küszöbérték'-et, vagy csökkentsd a 'Minimális hangidőtartam'-ot."
+msgstr "Nem találhatók hangok.~%Próbáld csökkenteni a 'Küszöbérték (dB)' értékét."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -21242,7 +21198,6 @@ msgstr "Énekeltávolító"
 msgid "Spectral Tools"
 msgstr "Spektrális eszközök"
 
-#, c-format
 #~ msgid "Exception code 0x%x"
 #~ msgstr "Kivétel kód: 0x%x"
 
@@ -21318,11 +21273,9 @@ msgstr "Spektrális eszközök"
 #~ msgid "Cannot open file"
 #~ msgstr "Nem sikerült megnyitni a fájlt"
 
-#, c-format
 #~ msgid "Cannot open VST3 preset file %s"
 #~ msgstr "Nem lehet megnyitni a VST3 előbeállítás fájlt: %s"
 
-#, c-format
 #~ msgid "Plugin %d to %d"
 #~ msgstr "Bővítmény %d -> %d"
 
@@ -21383,15 +21336,12 @@ msgstr "Spektrális eszközök"
 #~ msgid "Snap To"
 #~ msgstr "Igazítás"
 
-#, c-format
 #~ msgid "Snap Clicks/Selections to %s"
 #~ msgstr "Kattintások / kijelölések illesztése ehhez: %s"
 
-#, c-format
 #~ msgid "%s - driven"
 #~ msgstr "%s - vezetve"
 
-#, c-format
 #~ msgid "Selection %s. %s won't change."
 #~ msgstr "%s kijelölése. %s nem fog módosulni."
 
