@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-06 20:46+0000\n"
+"PO-Revision-Date: 2023-04-06 23:06+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -888,7 +888,7 @@ msgstr "0100 g 060 m 060 s+>24 klatki"
 #. * frames) at 24 frames per second (commonly used for films)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "film frames (24 fps)"
-msgstr "klatki filmu (24 fps)"
+msgstr "Klatki filmu (24 fps)"
 
 #. i18n-hint: Format string for displaying time in frames at 24 frames per
 #. * second. Change the comma
@@ -937,7 +937,7 @@ msgstr "0100 g 060 m 060 s+>030 klatek| .999000999"
 #. * TV frame rate (used for American / Japanese TV
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "NTSC frames"
-msgstr "klatki NTSC"
+msgstr "Klatki NTSC"
 
 #. i18n-hint: Format string for displaying time in frames with NTSC frames.
 #. * Change the comma
@@ -969,7 +969,7 @@ msgstr "0100 g 060 m 060 s+>25 klatek"
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "PAL frames (25 fps)"
-msgstr "klatki PAL (25 fps)"
+msgstr "Klatki PAL (25 fps)"
 
 #. i18n-hint: Format string for displaying time in frames with NTSC frames.
 #. * Change the comma
@@ -1000,7 +1000,7 @@ msgstr "0100 g 060 m 060 s+>75 klatek"
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "CDDA frames (75 fps)"
-msgstr "klatki CDDA (75 fps)"
+msgstr "Klatki CDDA (75 fps)"
 
 #. i18n-hint: Format string for displaying time in frames with CD Audio
 #. * frames. Change the comma
@@ -1645,28 +1645,28 @@ msgstr "1/128 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Seconds && samples"
-msgstr "Sekund &i sampli"
+msgstr "Sekundy &i sample"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Seconds"
-msgstr "Sekund"
+msgstr "Sekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Deciseconds"
-msgstr "Decysekund"
+msgstr "Decysekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Centiseconds"
-msgstr "Centysekund"
+msgstr "Centysekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Milliseconds"
-msgstr "Milisekund"
+msgstr "Milisekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 msgid "Samples"
-msgstr "Sampli"
+msgstr "Sample"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Video frames"
