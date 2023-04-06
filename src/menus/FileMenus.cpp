@@ -31,7 +31,7 @@
 #include "../prefs/ImportExportPrefs.h"
 
 #include "export/ExportFileDialog.h"
-#include "export/ExportUtils.h"
+#include "ExportUtils.h"
 #include "export/ExportMixerDialog.h"
 #include "export/GenericExportProgressListener.h"
 

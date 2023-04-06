@@ -9,7 +9,6 @@
 **********************************************************************/
 
 #include "ExportPlugin.h"
-#include "ShuttleGui.h"
 #include "ExportProgressListener.h"
 
 ExportPlugin::ExportPlugin() = default;

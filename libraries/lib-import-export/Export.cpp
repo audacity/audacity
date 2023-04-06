@@ -15,14 +15,10 @@
 
 #include "Export.h"
 
-#include "sndfile.h"
-
 #include "BasicUI.h"
 #include "Mix.h"
-#include "MixAndRender.h"
 #include "Project.h"
 #include "WaveTrack.h"
-#include "FileNames.h"
 #include "wxFileNameWrapper.h"
 
 #include "ExportUtils.h"

@@ -16,7 +16,7 @@
 #include <vector>
 #include <unordered_map>
 
-class PlainExportOptionsEditor : public ExportOptionsEditor
+class IMPORT_EXPORT_API PlainExportOptionsEditor final : public ExportOptionsEditor
 {
    std::vector<ExportOption> mOptions;
    wxArrayString mConfigKeys;

@@ -29,7 +29,7 @@ class ExportProgressListener;
 namespace MixerOptions{ class Downmix; }
 
 
-struct AUDACITY_DLL_API FormatInfo
+struct IMPORT_EXPORT_API FormatInfo
 {
    wxString mFormat;
    TranslatableString mDescription;
@@ -41,7 +41,7 @@ struct AUDACITY_DLL_API FormatInfo
 //----------------------------------------------------------------------------
 // ExportPlugin
 //----------------------------------------------------------------------------
-class AUDACITY_DLL_API ExportPlugin /* not final */
+class IMPORT_EXPORT_API ExportPlugin /* not final */
 {
 public:
 
@@ -53,6 +53,12 @@ public:
    virtual int GetFormatCount() const = 0;
    virtual FormatInfo GetFormatInfo(int index) const = 0;
    
+   /** \brief Creates format-dependent options editor, that is used to create
+    * a valid set of parameters to be used in exporting.
+    *
+    * \param listener Option listener object that could be used by the editor
+    * to report on option changes.
+    */
    virtual std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int formatIndex, ExportOptionsEditor::Listener* listener) const = 0;
    
@@ -67,6 +73,7 @@ public:
    /** \brief called to export audio into a file.
     *
     * @param progressListener  Used to report on export progress and result
+    * @param parameters A format-dependent set of parameters used in exporting
     * @param selectedOnly Set to true if all tracks should be mixed, to false
     * if only the selected tracks should be mixed and exported.
     * @param metadata A Tags object that will over-ride the one in *project and
@@ -96,7 +103,7 @@ public:
    virtual void Stop() = 0;
 };
 
-class ExportPluginEx : public ExportPlugin
+class IMPORT_EXPORT_API ExportPluginEx : public ExportPlugin
 {
    TranslatableString mStatus;
    TranslatableString mError;
