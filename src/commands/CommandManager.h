@@ -418,7 +418,6 @@ struct ProjectMenuVisitor : MenuVisitor
 {
    explicit ProjectMenuVisitor(AudacityProject &p) : mProject{ p } {}
    ~ProjectMenuVisitor() override;
-   virtual void *GetComputedItemContext() override;
    AudacityProject &mProject;
 };
 

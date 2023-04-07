@@ -19,7 +19,9 @@ Paul Licameli split from CommandManager.h
 // Define classes and functions that associate parts of the user interface
 // with path names
 namespace Registry {
-   struct EmptyContext{};
+   struct REGISTRIES_API EmptyContext{
+      static EmptyContext Instance;
+   };
    struct DefaultTraits {
       template<typename... T> using List = TypeList::List<T...>;
       using ComputedItemContextType = EmptyContext;
@@ -185,8 +187,8 @@ namespace detail {
        */
       template<typename Factory> ComputedItem(const Factory &factory)
          : ComputedItemBase{ [factory](void *p) -> BaseItemSharedPtr {
-            // p comes from RegistryVisitor::GetComputedItemContext which must
-            // return non-null
+            // p comes from the compute item context argument of
+            // Registry::Visit, passed by reference
             assert(p);
             return factory(*static_cast<Context *>(p));
          } }
@@ -373,12 +375,6 @@ namespace detail {
    public:
       virtual ~Visitor();
       using Path = std::vector< Identifier >;
-      //! Get context given to Computed items during visitation
-      /*!
-       Default returns a pointer to a static EmptyContext
-       @post result: `result != nullptr`
-       */
-      virtual void *GetComputedItemContext();
       virtual void BeginGroup(const GroupItemBase &item, const Path &path);
       virtual void EndGroup(const GroupItemBase &item, const Path &path);
       virtual void Visit(const SingleItem &item, const Path &path);
@@ -388,24 +384,32 @@ namespace detail {
    REGISTRIES_API void Visit(
       Visitor &visitor,
       const GroupItemBase *pTopItem,
-      const GroupItemBase *pRegistry);
+      const GroupItemBase *pRegistry,
+      void *pComputedItemContext);
 }
 
-   // Top-down visitation of all items and groups in a tree rooted in
-   // pTopItem, as merged with pRegistry.
-   // The merger of the trees is recomputed in each call, not saved.
-   // So neither given tree is modified.
-   // But there may be a side effect on preferences to remember the ordering
-   // imposed on each node of the unordered tree of registered items; each item
-   // seen in the registry for the first time is placed somehere, and that
-   // ordering should be kept the same thereafter in later runs (which may add
-   // yet other previously unknown items).
-   template<typename RegistryTraits> void Visit(Visitor &visitor,
+   //! Top-down visitation of all items and groups in a tree rooted in
+   //! pTopItem, as merged with pRegistry.
+   /*!
+    The merger of the trees is recomputed in each call, not saved.
+    So neither given tree is modified.
+    But there may be a side effect on preferences to remember the ordering
+    imposed on each node of the unordered tree of registered items; each item
+    seen in the registry for the first time is placed somewhere, and that
+    ordering should be kept the same thereafter in later runs (which may add
+    yet other previously unknown items).
+
+    @param computedItemContext is passed to factory functions of computed items
+    */
+   template<typename RegistryTraits> void Visit(
+      Visitor &visitor,
       const GroupItem<RegistryTraits> *pTopItem,
-      const GroupItem<RegistryTraits> *pRegistry = {})
+      const GroupItem<RegistryTraits> *pRegistry = {},
+      typename RegistryTraits::ComputedItemContextType &computedItemContext =
+         RegistryTraits::ComputedItemContextType::Instance)
    {
       static_assert(AcceptableTraits_v<RegistryTraits>);
-      detail::Visit(visitor, pTopItem, pRegistry);
+      detail::Visit(visitor, pTopItem, pRegistry, &computedItemContext);
    }
 
    // Typically a static object.  Constructor initializes certain preferences

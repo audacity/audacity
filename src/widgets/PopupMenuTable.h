@@ -109,7 +109,6 @@ public:
 struct PopupMenuVisitor : public MenuVisitor {
    explicit PopupMenuVisitor( PopupMenuTable &table ) : mTable{ table } {}
    ~PopupMenuVisitor() override;
-   void *GetComputedItemContext() override;
    PopupMenuTable &mTable;
 };
 

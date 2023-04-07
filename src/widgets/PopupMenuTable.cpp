@@ -30,11 +30,6 @@ PopupSubMenu::PopupSubMenu(const Identifier &stringId,
 
 PopupMenuVisitor::~PopupMenuVisitor() = default;
 
-void *PopupMenuVisitor::GetComputedItemContext()
-{
-   return this;
-}
-
 PopupMenu::~PopupMenu() = default;
 
 namespace {
@@ -161,8 +156,8 @@ void PopupMenuTable::ExtendMenu( PopupMenu &menu, PopupMenuTable &table )
    auto &theMenu = dynamic_cast<PopupMenuImpl&>(menu);
 
    PopupMenuBuilder visitor{ table, theMenu, theMenu.pUserData };
-   Registry::Visit(
-      visitor, table.Get( theMenu.pUserData ).get(), table.GetRegistry() );
+   Registry::Visit(visitor, table.Get( theMenu.pUserData ).get(),
+      table.GetRegistry(), visitor);
 }
 
 void PopupMenuTable::Append(

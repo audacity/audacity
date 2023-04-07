@@ -190,11 +190,6 @@ void MenuVisitor::DoSeparator()
 
 ProjectMenuVisitor::~ProjectMenuVisitor() = default;
 
-void *ProjectMenuVisitor::GetComputedItemContext()
-{
-   return &mProject;
-}
-
 namespace MenuTable {
 
 MenuItem::~MenuItem() {}
@@ -432,8 +427,8 @@ void MenuManager::Visit(ProjectMenuVisitor &visitor)
    static const auto menuTree = MenuTable::Items( MenuPathStart );
 
    wxLogNull nolog;
-   Registry::Visit( visitor, menuTree.get(),
-      &MenuTable::ItemRegistry::Registry() );
+   Registry::Visit(visitor, menuTree.get(),
+      &MenuTable::ItemRegistry::Registry(), visitor.mProject);
 }
 
 // TODO: This surely belongs in CommandManager?

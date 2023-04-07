@@ -752,6 +752,9 @@ public:
    
    std::optional<wxString> PickEffect(wxWindow* parent, const wxString& selectedEffectID) override
    {
+      if (mProject == nullptr)
+         return {};
+   
       wxMenu menu;
       if(!selectedEffectID.empty())
       {
@@ -762,7 +765,7 @@ public:
       
       RealtimeEffectsMenuVisitor visitor { menu };
       
-      Registry::Visit(visitor, mEffectMenuRoot.get());
+      Registry::Visit(visitor, mEffectMenuRoot.get(), {}, *mProject);
       
       int commandId = wxID_NONE;
       
