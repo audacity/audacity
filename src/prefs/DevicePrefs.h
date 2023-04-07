@@ -59,8 +59,8 @@ class DevicePrefs final : public PrefsPanel
    wxChoice *mRecord;
    wxChoice *mChannels;
 
-   wxChoice* mProjectSampleRates;
-   wxTextCtrl* mOtherProjectSampleRate;
+   wxChoice* mProjectSampleRates { nullptr };
+   wxTextCtrl* mOtherProjectSampleRate { nullptr };
    
    int mProjectSampleRateIndex;
    int mOtherProjectSampleRateValue;
