@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-05 22:02+0000\n"
+"PO-Revision-Date: 2023-04-06 23:22+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -1645,28 +1645,28 @@ msgstr "1/128 (triole)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Seconds && samples"
-msgstr "Sekund &i sampli"
+msgstr "Sekundy &i sample"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Seconds"
-msgstr "Sekund"
+msgstr "Sekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Deciseconds"
-msgstr "Decysekund"
+msgstr "Decysekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Centiseconds"
-msgstr "Centysekund"
+msgstr "Centysekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Milliseconds"
-msgstr "Milisekund"
+msgstr "Milisekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 msgid "Samples"
-msgstr "Sampli"
+msgstr "Sample"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Video frames"
@@ -1674,15 +1674,15 @@ msgstr "Klatki wideo"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Film frames (24 fps)"
-msgstr "Klatki filmu (24 fps)"
+msgstr "klatki filmu (24 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "NTSC frames (29.97 fps)"
-msgstr "Klatki NTSC (29,97 fps)"
+msgstr "klatki NTSC (29,97 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "NTSC frames (30 fps)"
-msgstr "Klatki NTSC (30 fps)"
+msgstr "klatki NTSC (30 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "CD frames"
@@ -5898,6 +5898,8 @@ msgid ""
 "This plugin could not be loaded.\n"
 "It may have been deleted."
 msgstr ""
+"Nie można załadować tej wtyczki.\n"
+"Być może została usunięta."
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Plugin Error"
@@ -17927,7 +17929,7 @@ msgstr "Przyczep"
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap to combo box"
-msgstr "Przyczep do ramki combo"
+msgstr "Przyczep do pola kombi"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
