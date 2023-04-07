@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-05 22:48+0000\n"
+"PO-Revision-Date: 2023-04-06 21:08+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (http://app.transifex.com/klyok/teams/690/de/)\n"
 "Language: de\n"
@@ -5920,6 +5920,8 @@ msgid ""
 "This plugin could not be loaded.\n"
 "It may have been deleted."
 msgstr ""
+"Diese Erweiterung konnte nicht geladen werden.\n"
+"Sie wurde möglicherweise gelöscht."
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Plugin Error"
@@ -17951,7 +17953,7 @@ msgstr "Schnapp"
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap to combo box"
-msgstr "Schnapp"
+msgstr "Schnapp zu Kombinationsfeld"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
