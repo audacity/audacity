@@ -116,9 +116,9 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
          Registry::Visit( *this, &top, &PopulatorItem::Registry() );
       }
 
-      void Visit( Registry::SingleItem &item, const Path &path ) override
+      void Visit(const Registry::SingleItem &item, const Path &path) override
       {
-         static_cast<PopulatorItem&>(item).mPopulator(S);
+         static_cast<const PopulatorItem&>(item).mPopulator(S);
       }
 
       ShuttleGui &S;

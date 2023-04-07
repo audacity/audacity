@@ -635,7 +635,7 @@ auto CollectedItems::MergeItems(
 // forward declaration for mutually recursive functions
 void VisitItem(
    Registry::Visitor &visitor, CollectedItems &collection,
-   Path &path, BaseItem *pItem,
+   Path &path, const BaseItem *pItem,
    const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush );
 void VisitItems(
@@ -687,7 +687,7 @@ void VisitItems(
 }
 void VisitItem(
    Registry::Visitor &visitor, CollectedItems &collection,
-   Path &path, BaseItem *pItem,
+   Path &path, const BaseItem *pItem,
    const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush )
 {
@@ -695,14 +695,14 @@ void VisitItem(
       return;
 
    if (const auto pSingle =
-       dynamic_cast<SingleItem*>( pItem )) {
+       dynamic_cast<const SingleItem*>(pItem)) {
       wxASSERT( !pToMerge );
       visitor.Visit( *pSingle, path );
    }
    else
    if (const auto pGroup =
-       dynamic_cast<GroupItemBase*>( pItem )) {
-      visitor.BeginGroup( *pGroup, path );
+       dynamic_cast<const GroupItemBase*>(pItem)) {
+      visitor.BeginGroup(*pGroup, path);
       // recursion
       VisitItems(visitor, collection, path, *pGroup, pToMerge, hint, doFlush);
       visitor.EndGroup(*pGroup, path);
@@ -732,12 +732,12 @@ void *Visitor::GetComputedItemContext()
    static EmptyContext context;
    return &context;
 }
-void Visitor::BeginGroup(GroupItemBase &, const Path &) {}
-void Visitor::EndGroup(GroupItemBase &, const Path &) {}
-void Visitor::Visit(SingleItem &, const Path &) {}
+void Visitor::BeginGroup(const GroupItemBase &, const Path &) {}
+void Visitor::EndGroup(const GroupItemBase &, const Path &) {}
+void Visitor::Visit(const SingleItem &, const Path &) {}
 
 void detail::Visit(Visitor &visitor,
-   GroupItemBase *pTopItem, const GroupItemBase *pRegistry)
+   const GroupItemBase *pTopItem, const GroupItemBase *pRegistry)
 {
    std::vector< BaseItemSharedPtr > computedItems;
    bool doFlush = false;

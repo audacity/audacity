@@ -25,25 +25,27 @@ struct RegistryVisitor : public Registry::Visitor
    {
    }
 
-   void BeginGroup(Registry::GroupItemBase& item, const Path&) override
+   void BeginGroup(const Registry::GroupItemBase& item, const Path&) override
    {
-      auto concreteGroup = dynamic_cast<NumericConverterRegistryGroup*>(&item);
+      auto concreteGroup =
+         dynamic_cast<const NumericConverterRegistryGroup*>(&item);
 
       mInMatchingGroup =
          concreteGroup != nullptr && concreteGroup->GetType() == requestedType;
    }
 
-   void EndGroup(Registry::GroupItemBase&, const Path&) override
+   void EndGroup(const Registry::GroupItemBase&, const Path&) override
    {
       mInMatchingGroup = false;
    }
 
-   void Visit(Registry::SingleItem& item, const Path&) override
+   void Visit(const Registry::SingleItem& item, const Path&) override
    {
       if (!mInMatchingGroup)
          return;
 
-      auto concreteItem = dynamic_cast<NumericConverterRegistryItem*>(&item);
+      auto concreteItem =
+         dynamic_cast<const NumericConverterRegistryItem*>(&item);
 
       if (concreteItem == nullptr)
       {

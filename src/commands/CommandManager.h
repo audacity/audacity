@@ -393,16 +393,19 @@ struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
    ~MenuVisitor() override;
 
    // final overrides
-   void BeginGroup( Registry::GroupItemBase &item, const Path &path ) final;
-   void EndGroup( Registry::GroupItemBase &item, const Path& ) final;
-   void Visit( Registry::SingleItem &item, const Path &path ) final;
+   void BeginGroup(const Registry::GroupItemBase &item, const Path &path )
+      final;
+   void EndGroup(const Registry::GroupItemBase &item, const Path& ) final;
+   void Visit(const Registry::SingleItem &item, const Path &path ) final;
 
    // added virtuals
    //! Groups of type MenuItems are excluded from this callback
-   virtual void DoBeginGroup( Registry::GroupItemBase &item, const Path &path );
+   virtual void DoBeginGroup(
+      const Registry::GroupItemBase &item, const Path &path);
    //! Groups of type MenuItems are excluded from this callback
-   virtual void DoEndGroup( Registry::GroupItemBase &item, const Path &path );
-   virtual void DoVisit( Registry::SingleItem &item, const Path &path );
+   virtual void DoEndGroup(
+      const Registry::GroupItemBase &item, const Path &path);
+   virtual void DoVisit(const Registry::SingleItem &item, const Path &path);
    virtual void DoSeparator();
 
 private:

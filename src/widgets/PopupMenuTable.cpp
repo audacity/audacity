@@ -62,9 +62,11 @@ public:
       , mpUserData{ pUserData }
    {}
 
-   void DoBeginGroup( Registry::GroupItemBase &item, const Path &path ) override;
-   void DoEndGroup( Registry::GroupItemBase &item, const Path &path ) override;
-   void DoVisit( Registry::SingleItem &item, const Path &path ) override;
+   void DoBeginGroup(const Registry::GroupItemBase &item, const Path &path)
+      override;
+   void DoEndGroup(const Registry::GroupItemBase &item, const Path &path)
+      override;
+   void DoVisit(const Registry::SingleItem &item, const Path &path) override;
    void DoSeparator() override;
 
    std::vector< std::unique_ptr<PopupMenuImpl> > mMenus;
@@ -72,9 +74,10 @@ public:
    void *const mpUserData;
 };
 
-void PopupMenuBuilder::DoBeginGroup( Registry::GroupItemBase &item, const Path &path )
+void PopupMenuBuilder::DoBeginGroup(
+   const Registry::GroupItemBase &item, const Path &path)
 {
-   if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
+   if ( auto pItem = dynamic_cast<const PopupSubMenu*>(&item) ) {
       if ( !pItem->caption.empty() ) {
          auto newMenu =
             std::make_unique<PopupMenuImpl>( mMenu->pUserData );
@@ -84,9 +87,10 @@ void PopupMenuBuilder::DoBeginGroup( Registry::GroupItemBase &item, const Path &
    }
 }
 
-void PopupMenuBuilder::DoEndGroup( Registry::GroupItemBase &item, const Path &path )
+void PopupMenuBuilder::DoEndGroup(
+   const Registry::GroupItemBase &item, const Path &path)
 {
-   if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
+   if ( auto pItem = dynamic_cast<const PopupSubMenu*>(&item) ) {
       if ( !pItem->caption.empty() ) {
          auto subMenu = std::move( mMenus.back() );
          mMenus.pop_back();
@@ -96,9 +100,10 @@ void PopupMenuBuilder::DoEndGroup( Registry::GroupItemBase &item, const Path &pa
    }
 }
 
-void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
+void PopupMenuBuilder::DoVisit(
+   const Registry::SingleItem &item, const Path &path)
 {
-   auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
+   auto pEntry = static_cast<const PopupMenuTableEntry*>( &item );
    switch (pEntry->type) {
       case PopupMenuTable::Entry::Item:
       {

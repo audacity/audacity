@@ -65,10 +65,10 @@ void ExportPluginRegistry::Initialize()
       {
       }
 
-      void Visit( SingleItem &item, const Path &path ) override
+      void Visit(const SingleItem &item, const Path &path) override
       {
          mPlugins.emplace_back(
-            static_cast<ExportPluginRegistryItem&>( item ).mFactory() );
+            static_cast<const ExportPluginRegistryItem&>(item).mFactory() );
       }
 
       ExportPlugins& mPlugins;

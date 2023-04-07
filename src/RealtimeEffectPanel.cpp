@@ -69,9 +69,9 @@ namespace
       RealtimeEffectsMenuVisitor(wxMenu& menu)
          : mMenu(menu), mMenuPtr(&mMenu) { }
       
-      void DoBeginGroup( MenuTable::GroupItemBase &item, const Path& ) override
+      void DoBeginGroup(const MenuTable::GroupItemBase &item, const Path&) override
       {
-         if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
+         if(auto menuItem = dynamic_cast<const MenuTable::MenuItem*>(&item))
          {
             //Don't create a group item for root
             if (mMenuLevelCounter != 0)
@@ -84,9 +84,9 @@ namespace
          }
       }
 
-      void DoEndGroup( MenuTable::GroupItemBase &item, const Path& ) override
+      void DoEndGroup(const MenuTable::GroupItemBase &item, const Path&) override
       {
-         if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
+         if(auto menuItem = dynamic_cast<const MenuTable::MenuItem*>(&item))
          {
             --mMenuLevelCounter;
             if (mMenuLevelCounter != 0)
@@ -97,9 +97,9 @@ namespace
          }
       }
 
-      void DoVisit( MenuTable::SingleItem &item, const Path& ) override
+      void DoVisit(const MenuTable::SingleItem &item, const Path&) override
       {
-         if(auto commandItem = dynamic_cast<MenuTable::CommandItem*>(&item))
+         if(auto commandItem = dynamic_cast<const MenuTable::CommandItem*>(&item))
          {
             mMenuPtr->Append(mMenuItemIdCounter, commandItem->label_in.Translation());
             mIndexedPluginList.push_back(commandItem->name);

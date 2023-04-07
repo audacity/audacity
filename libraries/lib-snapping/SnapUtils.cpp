@@ -32,25 +32,25 @@ struct RegistryVisitor : public Registry::Visitor
    {
    }
    
-   void BeginGroup(Registry::GroupItemBase& item, const Path&) final
+   void BeginGroup(const Registry::GroupItemBase& item, const Path&) final
    {
-      auto group = dynamic_cast<SnapRegistryGroup*>(&item);
+      auto group = dynamic_cast<const SnapRegistryGroup*>(&item);
 
       if (group != nullptr)
          visitor.BeginGroup(*group);
    }
 
-   void EndGroup(Registry::GroupItemBase& item, const Path&) final
+   void EndGroup(const Registry::GroupItemBase& item, const Path&) final
    {
-      auto group = dynamic_cast<SnapRegistryGroup*>(&item);
+      auto group = dynamic_cast<const SnapRegistryGroup*>(&item);
 
       if (group != nullptr)
          visitor.EndGroup(*group);
    }
 
-   void Visit(Registry::SingleItem& item, const Path&) final
+   void Visit(const Registry::SingleItem& item, const Path&) final
    {
-      auto concreteItem = dynamic_cast<SnapRegistryItem*>(&item);
+      auto concreteItem = dynamic_cast<const SnapRegistryItem*>(&item);
 
       if (concreteItem != nullptr)
          visitor.Visit(*concreteItem);
@@ -153,9 +153,9 @@ void SnapFunctionsRegistry::Visit(SnapRegistryVisitor& visitor)
    Registry::Visit(registryVisitor, &top, &Registry());
 }
 
-SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
+const SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
 {
-   using Cache = std::unordered_map<Identifier, SnapRegistryItem*>;
+   using Cache = std::unordered_map<Identifier, const SnapRegistryItem*>;
    static Cache cache;
 
    auto it = cache.find(id);
@@ -169,9 +169,9 @@ SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
       {
       }
 
-      void Visit(Registry::SingleItem& item, const Path&) override
+      void Visit(const Registry::SingleItem& item, const Path&) override
       {
-         auto concreteItem = dynamic_cast<SnapRegistryItem*>(&item);
+         auto concreteItem = dynamic_cast<const SnapRegistryItem*>(&item);
 
          if (concreteItem == nullptr)
             return;

@@ -187,10 +187,10 @@ bool Importer::Initialize()
          Registry::Visit( *this, &top, &ImporterItem::Registry() );
       }
 
-      void Visit( SingleItem &item, const Path &path ) override
+      void Visit(const SingleItem &item, const Path &path) override
       {
          sImportPluginList().push_back(
-            static_cast<ImporterItem&>( item ).mpPlugin.get() );
+            static_cast<const ImporterItem&>( item ).mpPlugin.get() );
       }
    } visitor;
 

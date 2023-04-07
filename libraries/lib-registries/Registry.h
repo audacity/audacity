@@ -379,15 +379,15 @@ namespace detail {
        @post result: `result != nullptr`
        */
       virtual void *GetComputedItemContext();
-      virtual void BeginGroup( GroupItemBase &item, const Path &path );
-      virtual void EndGroup( GroupItemBase &item, const Path &path );
-      virtual void Visit( SingleItem &item, const Path &path );
+      virtual void BeginGroup(const GroupItemBase &item, const Path &path);
+      virtual void EndGroup(const GroupItemBase &item, const Path &path);
+      virtual void Visit(const SingleItem &item, const Path &path);
    };
 
 namespace detail {
    REGISTRIES_API void Visit(
       Visitor &visitor,
-      GroupItemBase *pTopItem,
+      const GroupItemBase *pTopItem,
       const GroupItemBase *pRegistry);
 }
 
@@ -401,7 +401,7 @@ namespace detail {
    // ordering should be kept the same thereafter in later runs (which may add
    // yet other previously unknown items).
    template<typename RegistryTraits> void Visit(Visitor &visitor,
-      GroupItem<RegistryTraits> *pTopItem,
+      const GroupItem<RegistryTraits> *pTopItem,
       const GroupItem<RegistryTraits> *pRegistry = {})
    {
       static_assert(AcceptableTraits_v<RegistryTraits>);

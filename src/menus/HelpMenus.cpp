@@ -330,9 +330,9 @@ void OnMenuTree(const CommandContext &context)
       using ProjectMenuVisitor::ProjectMenuVisitor;
 
       enum : unsigned { TAB = 3 };
-      void DoBeginGroup( GroupItemBase &item, const Path& ) override
+      void DoBeginGroup(const GroupItemBase &item, const Path&) override
       {
-         if ( dynamic_cast<MenuItem*>( &item ) ) {
+         if ( dynamic_cast<const MenuItem*>( &item ) ) {
             Indent();
             // using GET for alpha only diagnostic tool
             info += item.name.GET();
@@ -341,13 +341,13 @@ void OnMenuTree(const CommandContext &context)
          }
       }
 
-      void DoEndGroup( GroupItemBase &item, const Path& ) override
+      void DoEndGroup(const GroupItemBase &item, const Path&) override
       {
-         if ( dynamic_cast<MenuItem*>( &item ) )
+         if ( dynamic_cast<const MenuItem*>( &item ) )
             indentation = wxString{ ' ', TAB * --level };
       }
 
-      void DoVisit( SingleItem &item, const Path& ) override
+      void DoVisit(const SingleItem &item, const Path&) override
       {
          // using GET for alpha only diagnostic tool
          Indent();

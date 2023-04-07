@@ -109,7 +109,7 @@ struct SNAPPING_API SnapFunctionsRegistry final {
 
    static void Visit(SnapRegistryVisitor& visitor);
 
-   static SnapRegistryItem* Find(const Identifier& id);
+   static const SnapRegistryItem* Find(const Identifier& id);
 
    static SnapResult Snap(const Identifier& id, const AudacityProject& project, double time, bool nearest);
    static SnapResult SingleStep(
