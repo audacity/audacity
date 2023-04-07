@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-06 21:08+0000\n"
+"PO-Revision-Date: 2023-04-07 23:36+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (http://app.transifex.com/klyok/teams/690/de/)\n"
 "Language: de\n"
@@ -92,9 +92,7 @@ msgstr "Wiedergabekanäle: %d\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Low Recording Latency: %g\n"
-msgstr ""
-"Niedrige Aufnahmelatenz: %g\n"
-"\n"
+msgstr "Niedrige Aufnahmelatenz: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -104,9 +102,7 @@ msgstr "Niedrige Wiedergabelatenz: %g\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "High Recording Latency: %g\n"
-msgstr ""
-"Hohe Aufnahmelatenz: %g\n"
-"\n"
+msgstr "Hohe Aufnahmelatenz: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -126,7 +122,7 @@ msgstr "Aufnahmegerät ausgewählt: %d - %s\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No recording device found for '%s'.\n"
-msgstr "Kein Aufnahmegerät für ' %s ' gefunden.\n"
+msgstr "Kein Aufnahmegerät für „%s“ gefunden.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -136,7 +132,7 @@ msgstr "Wiedergabegerät ausgewählt: %d - %s\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No playback device found for '%s'.\n"
-msgstr "Kein Wiedergabegerät für '%s' gefunden.\n"
+msgstr "Kein Wiedergabegerät für „%s“ gefunden.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
@@ -166,9 +162,7 @@ msgstr "Verfügbare Aufnahmequellen:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available playback volumes:\n"
-msgstr ""
-"Verfügbare Wiedergabelautstärken:\n"
-"\n"
+msgstr "Verfügbare Wiedergabelautstärken:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Recording volume is emulated\n"
@@ -971,7 +965,7 @@ msgstr "NTSC-Frames"
 #. * rate!
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000 frames|29.97002997"
-msgstr "01000 01000 Frames|29.97002997"
+msgstr "01000 01000 Frames|29,97002997"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at PAL TV frame rate (used for European TV)
@@ -1701,7 +1695,7 @@ msgstr "Film-Frames (24 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "NTSC frames (29.97 fps)"
-msgstr "NTSC-Frames (29.97 fps)"
+msgstr "NTSC-Frames (29,97 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "NTSC frames (30 fps)"
@@ -2289,7 +2283,7 @@ msgstr "Neuen Dateinamen auswählen:"
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "Datei '%s' existiert bereits, möchten Sie diese wirklich überschreiben?"
+msgstr "Datei „%s“ existiert bereits, möchten Sie diese wirklich überschreiben?"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
@@ -3673,12 +3667,12 @@ msgstr "Makro anwenden"
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Applied Macro '%s'"
-msgstr "Makro '%s' angewendet"
+msgstr "Makro „%s“ angewendet"
 
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Apply '%s'"
-msgstr "'%s' wird angewendet"
+msgstr "„%s“ wird angewendet"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -3751,7 +3745,7 @@ msgstr "Kein Makro ausgewählt"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Applying '%s' to current project"
-msgstr "'%s' wird auf aktuelles Projekt angewendet"
+msgstr "„%s“ wird auf aktuelles Projekt angewendet"
 
 #: src/BatchProcessDialog.cpp
 msgid "Please save and close the current project first."
@@ -3874,7 +3868,7 @@ msgstr "Das Name darf nicht leer sein"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
-msgstr "Namen dürfen '%c' und '%c' nicht enthalten"
+msgstr "Namen dürfen „%c“ und „%c“ nicht enthalten"
 
 #. i18n-hint: %s will be replaced by the name of a file.
 #: src/BatchProcessDialog.cpp
@@ -4101,7 +4095,7 @@ msgid ""
 "\n"
 "Ctrl + A selects all audio."
 msgstr ""
-"Für die Aktion '%s' bitte zuerst Audio auswählen.\n"
+"Für die Aktion „%s“ bitte zuerst Audio auswählen.\n"
 "\n"
 "Strg + A wählt alles aus."
 
@@ -4988,7 +4982,7 @@ msgstr "Ausgewähltes MIDI-Aufnahmegerät: %d - %s\n"
 #: src/NoteTrack.cpp
 #, c-format
 msgid "No MIDI recording device found for '%s'.\n"
-msgstr "Kein MIDI-Aufnahmegerät gefunden für '%s'.\n"
+msgstr "Kein MIDI-Aufnahmegerät gefunden für „%s“.\n"
 
 #: src/NoteTrack.cpp
 #, c-format
@@ -4998,7 +4992,7 @@ msgstr "Ausgewähltes MIDI-Wiedergabegerät: %d - %s\n"
 #: src/NoteTrack.cpp
 #, c-format
 msgid "No MIDI playback device found for '%s'.\n"
-msgstr "Kein MIDI-Wiedergabegerät gefunden für '%s'.\n"
+msgstr "Kein MIDI-Wiedergabegerät gefunden für „%s“.\n"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -5691,7 +5685,7 @@ msgstr "%s %d"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "Imported '%s'"
-msgstr "'%s' importiert"
+msgstr "„%s“ importiert"
 
 #: src/ProjectFileManager.cpp
 msgid "Import"
@@ -6480,7 +6474,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"'%s' wurde wegen den oben erwähnten Fehler(n) abgebrochen."
+"„%s“ wurde wegen den oben erwähnten Fehler(n) abgebrochen."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6491,7 +6485,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"'%s' wurde abgerochen weil die Aufnahme angehalten wurde."
+"„%s“ wurde abgerochen weil die Aufnahme angehalten wurde."
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording"
@@ -6734,7 +6728,7 @@ msgstr "Spur entfernen"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Moved '%s' to Top"
-msgstr "'%s' nach Oben geschoben"
+msgstr "„%s“ nach Oben geschoben"
 
 #: src/TrackUtilities.cpp
 msgid "Move Track to Top"
@@ -6744,7 +6738,7 @@ msgstr "Spur nach Oben schieben"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Moved '%s' to Bottom"
-msgstr "'%s' nach Unten geschoben"
+msgstr "„%s“ nach Unten geschoben"
 
 #: src/TrackUtilities.cpp
 msgid "Move Track to Bottom"
@@ -6754,12 +6748,12 @@ msgstr "Spur nach Unten schieben"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Moved '%s' Up"
-msgstr "'%s' hoch geschoben"
+msgstr "„%s“ hoch geschoben"
 
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Moved '%s' Down"
-msgstr "'%s' runter geschoben"
+msgstr "„%s“ runter geschoben"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/TrackUtilities.cpp
@@ -6985,7 +6979,7 @@ msgstr "%s ist kein Parameter der von %s akzeptiert wird"
 #: src/commands/Command.cpp
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
-msgstr "Ungültiger Wert für Parameter '%s': Sollte %s sein"
+msgstr "Ungültiger Wert für Parameter „%s“: Sollte %s sein"
 
 #: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
 #: src/widgets/KeyView.cpp
@@ -9327,7 +9321,7 @@ msgstr "„unbenannt“ ist ein Sonderfall"
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
 msgid "Rename '%s' to..."
-msgstr "'%s' umbenennen zu..."
+msgstr "„%s“ umbenennen zu..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Rename..."
@@ -9336,7 +9330,7 @@ msgstr "Umbenennen..."
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
 msgid "Rename '%s'"
-msgstr "'%s' umbenennen"
+msgstr "„%s“ umbenennen"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Name is the same as the original one"
@@ -9349,7 +9343,7 @@ msgstr "Gleicher Name"
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
 msgid "Overwrite existing curve '%s'?"
-msgstr "Existierende Kurve '%s' überschreiben?"
+msgstr "Existierende Kurve „%s“ überschreiben?"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Curve exists"
@@ -9366,7 +9360,7 @@ msgstr "„Unbenannt“ kann nicht gelöscht werden"
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
 msgid "Delete '%s'?"
-msgstr "'%s' löschen?"
+msgstr "„%s“ löschen?"
 
 #: src/effects/EqualizationCurvesDialog.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Confirm Deletion"
@@ -13217,7 +13211,7 @@ msgid ""
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
-"Audacity hat den Typ der Datei '%s' nicht erkannt.\n"
+"Audacity hat den Typ der Datei „%s“ nicht erkannt.\n"
 "\n"
 "%sVersuchen Sie auch Datei > Importieren > Rohdaten bei unkomprimierte Dateien."
 
@@ -14237,7 +14231,7 @@ msgid ""
 "Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
 msgstr ""
-"Verzeichnis '%s' kann nicht angelegt werden.\n"
+"Verzeichnis „%s“ kann nicht angelegt werden.\n"
 "Es existiert bereits eine Datei, die kein Verzeichnis ist"
 
 #: src/menus/FileMenus.cpp
@@ -16473,7 +16467,7 @@ msgid ""
 "\n"
 "instead. Otherwise, click Cancel."
 msgstr ""
-"Die Tastaturverknüpfung '%s' ist bereits zugewiesen:\n"
+"Die Tastaturverknüpfung „%s“ ist bereits zugewiesen:\n"
 "\n"
 "\t%s\n"
 "\n"
@@ -18430,12 +18424,12 @@ msgstr "Ändere Abtastformat"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Processing...   0%%"
-msgstr "Verarbeite... 0%%"
+msgstr "Verarbeite...   0%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Processing...   %i%%"
-msgstr "Verarbeite...  %i%%"
+msgstr "Verarbeite...   %i%%"
 
 #. i18n-hint: The strings name a track and a format
 #. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
@@ -18499,7 +18493,7 @@ msgstr "352800 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "384000 Hz"
-msgstr "352800 Hz"
+msgstr "384000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Other..."
@@ -19034,12 +19028,12 @@ msgstr "%s um Spur auszuwählen oder abzuwählen."
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "Moved '%s' up"
-msgstr "'%s' hoch geschoben"
+msgstr "„%s“ hoch geschoben"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "Moved '%s' down"
-msgstr "'%s' runter geschoben"
+msgstr "„%s“ runter geschoben"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Move Track"
@@ -21238,7 +21232,7 @@ msgstr "Spektralwerkzeuge"
 #~ msgstr "[[file:Quick_Help|Schnellhilfe]] - wenn nicht lokal installiert, [[https://manual.audacityteam.org/quick_help.html|Online anschauen]]"
 
 #~ msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
-#~ msgstr " [[file:Main_Page|Handbuch]] - wenn nicht lokal installiert, [[https://manual.audacityteam.org/|Online anschauen]]"
+#~ msgstr "[[file:Main_Page|Handbuch]] - wenn nicht lokal installiert, [[https://manual.audacityteam.org/|Online anschauen]]"
 
 #~ msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
 #~ msgstr "Mehr:</b> Besuchen Sie unser [[https://wiki.audacityteam.org/index.php|Wiki]] für Tipps, Tricks, weitere Tutorials und Effekt-Erweiterungen."
