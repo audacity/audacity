@@ -188,7 +188,8 @@ SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
    };
 
    CacheUpdater update { cache };
-   Registry::Visit(update, &Registry());
+   Registry::TransparentGroupItem<> top { PathStart };
+   Registry::Visit(update, &top, &Registry());
 
    it = cache.find(id);
 
