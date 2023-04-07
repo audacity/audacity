@@ -505,6 +505,9 @@ void DevicePrefs::OnDefaultSampleRateChoice(wxCommandEvent& e)
 
 void DevicePrefs::OnProjectSampleRateChoice(wxCommandEvent& e)
 {
+   if (mProjectSampleRates == nullptr)
+      return;
+
    const int sel = mProjectSampleRates->GetSelection();
    mOtherProjectSampleRate->Enable(
       sel == (int)mDefaultSampleRates->GetCount() - 1);
