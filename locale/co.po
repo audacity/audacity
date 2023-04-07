@@ -5,19 +5,20 @@
 # Translators:
 # Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021
 # Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2022
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2023
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2022-12-20 18:29+0100\n"
+"PO-Revision-Date: 2023-04-07 19:35+0200\n"
 "Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (http://www.transifex.com/klyok/audacity/language/co/)\n"
 "Language: co\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
@@ -741,24 +742,23 @@ msgstr "ottave"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
-#, fuzzy
 msgid "bar"
-msgstr "Barra d’attrezzi"
+msgstr "misura"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr ""
+msgstr "palpitu"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr ""
+msgstr "misura:palpitu"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr ""
+msgstr "misura:palitu:16esimu"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -770,9 +770,8 @@ msgstr "01000.01000 seconde"
 #. i18n-hint: Name of time display format that shows time in seconds
 #. * and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "seconds + milliseconds"
-msgstr "oo:mm:ss + milliseconde"
+msgstr "seconde + milliseconde"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
 #. * as fractional seconds. Change the comma in the middle to the 1000s separator
@@ -780,9 +779,8 @@ msgstr "oo:mm:ss + milliseconde"
 #. * Don't change the numbers. The decimal separator is specified using '<' if
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "01000,01000>01000 seconds"
-msgstr "01000.01000 seconde"
+msgstr "01000,01000>01000 seconde"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -1575,83 +1573,78 @@ msgstr "&Spannà"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Beats"
-msgstr "&Palpiti"
+msgstr "Palpiti"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Bar"
-msgstr "Bark(hausen)"
+msgstr "Misura"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "1/2"
-msgstr "128"
+msgstr "1/2"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/4"
-msgstr ""
+msgstr "1/4"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "1/8"
-msgstr "128"
+msgstr "1/8"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/16"
-msgstr ""
+msgstr "1/16"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/32"
-msgstr ""
+msgstr "1/32"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/64"
-msgstr ""
+msgstr "1/64"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/128"
-msgstr ""
+msgstr "1/128"
 
 #. i18n-hint: The music theory "triplet"
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Triplets"
-msgstr ""
+msgstr "Triplicati"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/2 (triplets)"
-msgstr ""
+msgstr "1/2 (triplicati)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/4 (triplets)"
-msgstr ""
+msgstr "1/4 (triplicati)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/8 (triplets)"
-msgstr ""
+msgstr "1/8 (triplicati)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/16 (triplets)"
-msgstr ""
+msgstr "1/16 (triplicati)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/32 (triplets)"
-msgstr ""
+msgstr "1/32 (triplicati)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/64 (triplets)"
-msgstr ""
+msgstr "1/64 (triplicati)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/128 (triplets)"
-msgstr ""
+msgstr "1/128 (triplicati)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Seconds && samples"
-msgstr "Secondu più maiò"
+msgstr "Seconde è campioni"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 #: plug-ins/sample-data-export.ny
@@ -1659,48 +1652,40 @@ msgid "Seconds"
 msgstr "Seconde"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Deciseconds"
-msgstr "centesimi di seconda"
+msgstr "Decesimi di seconda"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Centiseconds"
-msgstr "centesimi di seconda"
+msgstr "Centesimi di seconda"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Milliseconds"
-msgstr "milliseconde"
+msgstr "Milliseconde"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 msgid "Samples"
 msgstr "Campioni"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Video frames"
-msgstr "Fiure NTSC"
+msgstr "Fiure video"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Film frames (24 fps)"
-msgstr "fiure filmu (24 f/s)"
+msgstr "Fiure filmu (24 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "NTSC frames (29.97 fps)"
-msgstr "Fiure CDDA (75 f/s)"
+msgstr "Fiure NTSC (29,97 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "NTSC frames (30 fps)"
-msgstr "Fiure CDDA (75 f/s)"
+msgstr "Fiure NTSC (30 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "CD frames"
-msgstr "Fiure NTSC"
+msgstr "Fiure CD"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
@@ -2156,16 +2141,16 @@ msgstr "Eccu e nostre metode d’assistenza - in inglese - per aiutavvi :"
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[help:Quick_Help|Quick Help]]"
-msgstr ""
+msgstr "[[help:Quick_Help|Aiutu prestu]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid " [[help:Main_Page|Manual]]"
-msgstr ""
+msgstr " [[help:Main_Page|Manuale]]"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr ""
+msgstr "[[https://support.audacityteam.org/|Furmazioni autonome è Cumu fà]]"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
@@ -2866,9 +2851,9 @@ msgstr "Situ web di %s : "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2023 %s Team."
-msgstr "U prugramma %s hè prutettu da diritti di copia %s 1999-2021 da a squadra %s."
+msgstr "U prugramma %s hè prutettu da i diritti d’autore : copyright %s 1999-2023 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -3063,14 +3048,12 @@ msgid "our Privacy Policy"
 msgstr "a nostra pulitica di cunfidenzialità"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Minutes and Seconds"
-msgstr "5esimi di seconda"
+msgstr "Minuti è seconde"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Beats and Measures"
-msgstr "Circatore di palpitu"
+msgstr "Palpiti è misure"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
@@ -3494,30 +3477,34 @@ msgid ""
 "The entire source clip will be pasted into your project, allowing you to access\n"
 "trimmed audio data anytime."
 msgstr ""
+"Pezzu astutu.\n"
+"U pezzu sanu di fonte serà incullatu in u vostru prughjettu, vi permettendu\n"
+"d’accede à ogni mumentu à i dati audio tagliati."
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Selected audio only.\n"
 "Only the selected portion of the source clip will be pasted."
 msgstr ""
+"Solu l’audio selezziunatu.\n"
+"Solu a parte selezziunata di u pezzu di fonte serà incullata."
 
 #: src/AudioPasteDialog.cpp
-#, fuzzy
 msgid "Paste audio"
-msgstr "Sparte l’audio"
+msgstr "Incullà l’audio"
 
 #: src/AudioPasteDialog.cpp
 msgid "How would you like to paste your audio?"
-msgstr ""
+msgstr "Cumu vi piaceria d’incullà u vostru audio ?"
 
 #: src/AudioPasteDialog.cpp
 #, c-format
 msgid "Audio data is %s. Larger sizes will take longer to paste."
-msgstr ""
+msgstr "I dati audio facenu %s. Una dimensione più maiò serà più longa à incullà."
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
-msgstr ""
+msgstr "Arricurdassi di a mo scelta è ùn mi dumandà più"
 
 #: src/AudioPasteDialog.cpp
 msgid "Continue"
@@ -4676,9 +4663,8 @@ msgid "Incompatible plugin(s) found"
 msgstr "Modulu(i) d’estensione incumpatibile trovu(i)"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "&Manage Plugins"
-msgstr "Urganizà i moduli d’estensione"
+msgstr "&Urganizà i moduli d’estensione"
 
 #: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
@@ -4696,9 +4682,9 @@ msgid "Audacity has found %d incompatible plugins which could not be loaded. We 
 msgstr "Audacity hà trovu %dd modulu(i) d’estensione incumpatibile chì ùn pò(nu) micca esse caricatu(i). Avemu disattivatu sti moduli d’estensione per impedisce qualsisia blucchime o accidente. S’è vo vulete quantunque pruvà d’impiegà sti moduli d’estensione, pudete attivalli via « Urganizà i moduli d’estensione ». Osinnò, fate un cliccu nant’à « Cuntinuà »."
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
-msgstr "Audacity hà trovu %dd modulu(i) d’estensione incumpatibile chì ùn pò(nu) micca esse caricatu(i). Avemu disattivatu sti moduli d’estensione per impedisce qualsisia blucchime o accidente. S’è vo vulete quantunque pruvà d’impiegà sti moduli d’estensione, pudete attivalli via « Urganizà i moduli d’estensione ». Osinnò, fate un cliccu nant’à « Cuntinuà »."
+msgstr "Audacity hà trovu %d modulu(i) d’estensione incumpatibile chì ùn pò(nu) micca esse caricatu(i). Avemu disattivatu sti moduli d’estensione per impedisce qualsiasi blucchime o accidente."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -5478,7 +5464,8 @@ msgid ""
 msgstr ""
 "Stu prughjettu ùn hè statu micca arregistratu bè l’ultima volta chì Audacity era in funzione.\n"
 "\n"
-"Hè statu ricuperatu à l’ultima fotò istantanea, ma duvete arregistrallu per cunservà u so cuntenutu."
+"Hè statu ricuperatu à l’ultima fotò istantanea, ma duvete arregistrallu\n"
+"per cunservà u so cuntenutu."
 
 #: src/ProjectFileManager.cpp
 msgid "Project Recovered"
@@ -5910,11 +5897,12 @@ msgid ""
 "This plugin could not be loaded.\n"
 "It may have been deleted."
 msgstr ""
+"Ùn si pò micca caricà stu modulu d’estensione.\n"
+"Forse hè statu squassatu."
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-#, fuzzy
 msgid "Plugin Error"
-msgstr "Sbagliu di valore"
+msgstr "Sbagliu di u modulu d’estensione"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -7713,9 +7701,8 @@ msgstr "Definisce l’aspetti di a traccia"
 #. i18n-hint: abbreviates amplitude
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (amp)"
-msgstr "Entrata lineare"
+msgstr "Lineare (amp)"
 
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
@@ -7726,9 +7713,8 @@ msgstr "Lugaritmicu (dB)"
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (dB)"
-msgstr "Lineare"
+msgstr "Lineare (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -13394,11 +13380,8 @@ msgid "FFmpeg-compatible files"
 msgstr "Schedarii cunciliabile cù FFmpeg"
 
 #: src/import/ImportFFmpeg.cpp
-#, fuzzy
 msgid "Try installing FFmpeg.\n"
-msgstr ""
-"Pruvate d’installà FFmpeg.\n"
-"\n"
+msgstr "Pruvate d’installà FFmpeg.\n"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
@@ -14035,13 +14018,12 @@ msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Squassatura di %.2f seconde à t=%.2f"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Paste clip"
-msgstr "Incullà da u preme’papei"
+msgstr "Incullà u pezzu"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting clip contents, please wait"
-msgstr ""
+msgstr "Aspittate durante l’incullatura di u cuntenutu di u pezzu"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
@@ -14864,15 +14846,15 @@ msgstr "&Selezzione"
 
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Off"
-msgstr "Azzin&gatura disattivata"
+msgstr "&Fissazione disattivata"
 
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Nearest"
-msgstr "Azziccassi à u più &vicinu"
+msgstr "Fissà à u più &vicinu"
 
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Prior"
-msgstr "Azziccassi à u più &precedente"
+msgstr "Fissà à u &precedente"
 
 #: src/menus/SelectMenus.cpp
 msgid "Selection to &Start"
@@ -15733,9 +15715,8 @@ msgid "&Don't apply effects in batch mode"
 msgstr "Ùn appiecà &alcunu effettu in modu di trattamentu da lottu"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "Audio Settings"
-msgstr "Preferenze audio :"
+msgstr "Preferenze audio"
 
 #: src/prefs/DevicePrefs.cpp
 #, c-format
@@ -15786,16 +15767,14 @@ msgid "Cha&nnels:"
 msgstr "&Canali :"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "&Project Sample Rate:"
-msgstr "Frequenza di campiunariu :"
+msgstr "Frequenza di campiunariu di &prughjettu :"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Project Sample Rate used when recording new tracks and for playback, mixdowns and exports in this project"
-msgstr ""
+msgstr "A frequenza di campiunariu di prughjettu hè impiegata durante l’arregistramentu di e traccie nove ma dinù per a ripruduzzione, è mischiere è l’espurtazioni in stu prughjettu"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "D&efault Sample Rate:"
 msgstr "Frequenza predefinita di &campiunariu :"
 
@@ -16002,39 +15981,32 @@ msgid "Preferences for Effects"
 msgstr "Preferenze per l’effetti"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by effect name"
-msgstr "Ordinatu da nome d’effettu"
+msgstr "Ordinà da nome d’effettu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by publisher and effect name"
-msgstr "Ordinatu da editore è nome d’effettu"
+msgstr "Ordinà da editore è nome d’effettu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by type and effect name"
-msgstr "Ordinatu da tipu è nome d’effettu"
+msgstr "Ordinà da tipu è nome d’effettu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by publisher"
-msgstr "Adunitu da editore"
+msgstr "Gruppà da editore"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type"
-msgstr "Adunitu da tipu"
+msgstr "Gruppà da tipu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by category"
-msgstr "Adunitu da tipu"
+msgstr "Gruppà da categuria"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type and publisher"
-msgstr "Adunitu da editore"
+msgstr "Gruppà da tipu è editore"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -16042,12 +16014,11 @@ msgstr "Ozzioni d’effettu"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
-msgstr ""
+msgstr "&Urganizazione di u listinu d’effetti :"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Realtime effect o&rganization:"
-msgstr "Effetti in tempu reale per %s"
+msgstr "U&rganizazione di l’effettu in tempu reale :"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -16058,9 +16029,8 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "&Impiegà SSE/SSE2/…/AVX"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Open Plugin Manager"
-msgstr "Ghjestiunariu di modulu d’estensione"
+msgstr "Apre u ghjestiunariu di modulu d’estension"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -16216,7 +16186,7 @@ msgstr "Sonu quandu si &compienu e longhe attività"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Re&tain labels if selection snaps to a label"
-msgstr "Cunservà l’&etichette s’è a selezzione s’azzicca à un’etichetta"
+msgstr "Cunservà l’&etichette s’è a selezzione si fissa à un’etichetta"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
@@ -17311,6 +17281,8 @@ msgid ""
 "Ask me each time.\n"
 "Show dialog each time audio is pasted."
 msgstr ""
+"Dumandami ogni volta.\n"
+"Affissà u dialogu ogni volta chì l’audio hè incullatu."
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Select all audio, if selection required"
@@ -17354,14 +17326,12 @@ msgid "Solo &Button:"
 msgstr "&Buttone solo :"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Pasted audio"
-msgstr "&Audio marcatu"
+msgstr "Audio incullatu"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Paste audio from other Audacity project as"
-msgstr "Incullatu da u preme’papei"
+msgstr "Incullà l’audio d’un altru prughjettu Audacity cum’è"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -17918,9 +17888,8 @@ msgid "Center"
 msgstr "Centru"
 
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy
 msgid "Selection Toolbar Setup"
-msgstr "Barra d’attrezzi di &selezzione"
+msgstr "Cunfigurazione di a barra d’attrezzi di selezzione"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and End of Selection"
@@ -17945,26 +17914,23 @@ msgid "&Selection Toolbar"
 msgstr "Barra d’attrezzi di &selezzione"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snapping"
-msgstr "(magneticu)"
+msgstr "Fissazione"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snap"
-msgstr "Azziccassi"
+msgstr "Fissà"
 
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap to combo box"
-msgstr ""
+msgstr "Zona di lista sbucinante di fissazione"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "&Snapping Toolbar"
-msgstr "Barra d’attrezzi di &selezzione"
+msgstr "Barra d’attrezzi di &fissazione"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -17997,41 +17963,38 @@ msgid "Spe&ctral Selection Toolbar"
 msgstr "Barra d’attrezzi di selezzione sp&ettrale"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Time Signature"
-msgstr "Linea tempurale"
+msgstr "Indicazione tempurale"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo"
-msgstr "Intunazione/tempo"
+msgstr "Tempo"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature"
-msgstr ""
+msgstr "Indicazione tempurale superiore"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature"
-msgstr ""
+msgstr "Indicazione tempurale inferiore"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo Changed"
-msgstr "Cambiamentu finale di u tempo (%)"
+msgstr "Tempo mudificatu"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature Changed"
-msgstr ""
+msgstr "Indicazione tempurale superiore mudificata"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature Changed"
-msgstr ""
+msgstr "Indicazione tempurale inferiore mudificata"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Time Signature Toolbar (Beta)"
-msgstr ""
+msgstr "Barra d’attrezzi di l’indicazione tempurale (Beta)"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -18972,7 +18935,7 @@ msgstr "Cliccu è fate trascinà per selezziunà l’audio"
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
-msgstr "(magneticu)"
+msgstr "(fissazione)"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Click and drag to move a track in time"
@@ -19341,23 +19304,22 @@ msgid "Vertical"
 msgstr "Verticale"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-#, fuzzy
 msgid "Missing Plugins"
-msgstr "Urganizà i moduli d’estensione"
+msgstr "Moduli d’estensione assenti"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "This project contains some realtime effect plugins that cannot be found on this system."
-msgstr ""
+msgstr "Stu prughjettu cuntene parechji moduli d’estensione d’effetti in tempu reale ch’ùn si pò micca truvà nant’à stu sistema."
 
 #. i18n-hint: %s will be replaced with "Learn more"
 #: src/widgets/MissingPluginsErrorDialog.cpp
 #, c-format
 msgid "The project may sound different than intended. %s"
-msgstr ""
+msgstr "Stu prughjettu pò parè sfarente di ciò chì era previstu. %s"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "Learn more"
-msgstr ""
+msgstr "Per sapene di più"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -19447,9 +19409,8 @@ msgid "Value must not be greater than %s"
 msgstr "U valore ùn pò micca esse più chì %s"
 
 #: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Shelf Filter"
-msgstr "Filtru taglia-striscia"
+msgstr "Filtru Shelf"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
@@ -19469,17 +19430,16 @@ msgid "GNU General Public License v2.0"
 msgstr "Licenza publica generale GNU v2.0"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Filter type"
-msgstr "Tipu di schedariu :"
+msgstr "Tipu di filtru"
 
 #: plug-ins/ShelfFilter.ny
 msgid "Low-shelf"
-msgstr ""
+msgstr "Low-shelf"
 
 #: plug-ins/ShelfFilter.ny
 msgid "High-shelf"
-msgstr ""
+msgstr "High-shelf"
 
 #: plug-ins/ShelfFilter.ny plug-ins/highpass.ny plug-ins/lowpass.ny
 #: plug-ins/notch.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
@@ -19487,14 +19447,13 @@ msgid "Frequency (Hz)"
 msgstr "Frequenza (Hz)"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Amount (dB)"
-msgstr "Manca (dB)"
+msgstr "Quantità (dB)"
 
 #: plug-ins/ShelfFilter.ny
 #, lisp-format
 msgid "Error.~%Frequency set too high for selected track."
-msgstr ""
+msgstr "Sbagliu:~%Frequenza definita troppu alta per a traccia selezziunata."
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Multi Tool"
@@ -19867,9 +19826,8 @@ msgid "Low-quality Pitch Shift"
 msgstr "Spustata d’intunazione di bassa qualità"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "High-quality Pitch Shift"
-msgstr "Spustata d’intunazione di bassa qualità"
+msgstr "Spustata d’intunazione d’alta qualità"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
@@ -20177,9 +20135,9 @@ msgid "Error.~%Selection must be less than ~a."
 msgstr "Sbagliu.~%A selezzione deve esse inferiore à ~a."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "No sounds found.~%Try lowering 'Threshold level (dB)'."
-msgstr "Nisunu sonu trovu.~%Pruvate di diminuisce u « Threshold » o di riduce a « Durata minima di sonu »."
+msgstr "Nisunu sonu trovu.~%Pruvate di diminuisce u « Livellu di sogliu (dB) »."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
