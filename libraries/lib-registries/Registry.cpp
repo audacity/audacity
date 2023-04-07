@@ -736,7 +736,8 @@ void Visitor::BeginGroup(GroupItemBase &, const Path &) {}
 void Visitor::EndGroup(GroupItemBase &, const Path &) {}
 void Visitor::Visit(SingleItem &, const Path &) {}
 
-void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItemBase *pRegistry )
+void Visit(Visitor &visitor,
+   GroupItemBase *pTopItem, const GroupItemBase *pRegistry)
 {
    std::vector< BaseItemSharedPtr > computedItems;
    bool doFlush = false;

@@ -395,7 +395,7 @@ namespace detail {
    // yet other previously unknown items).
    REGISTRIES_API void Visit(
       Visitor &visitor,
-      detail::BaseItem *pTopItem,
+      GroupItemBase *pTopItem,
       const GroupItemBase *pRegistry = nullptr );
 
    // Typically a static object.  Constructor initializes certain preferences
