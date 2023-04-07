@@ -384,6 +384,13 @@ namespace detail {
       virtual void Visit( SingleItem &item, const Path &path );
    };
 
+namespace detail {
+   REGISTRIES_API void Visit(
+      Visitor &visitor,
+      GroupItemBase *pTopItem,
+      const GroupItemBase *pRegistry);
+}
+
    // Top-down visitation of all items and groups in a tree rooted in
    // pTopItem, as merged with pRegistry.
    // The merger of the trees is recomputed in each call, not saved.
@@ -393,10 +400,13 @@ namespace detail {
    // seen in the registry for the first time is placed somehere, and that
    // ordering should be kept the same thereafter in later runs (which may add
    // yet other previously unknown items).
-   REGISTRIES_API void Visit(
-      Visitor &visitor,
-      GroupItemBase *pTopItem,
-      const GroupItemBase *pRegistry = nullptr );
+   template<typename RegistryTraits> void Visit(Visitor &visitor,
+      GroupItem<RegistryTraits> *pTopItem,
+      const GroupItem<RegistryTraits> *pRegistry = {})
+   {
+      static_assert(AcceptableTraits_v<RegistryTraits>);
+      detail::Visit(visitor, pTopItem, pRegistry);
+   }
 
    // Typically a static object.  Constructor initializes certain preferences
    // if they are not present.  These preferences determine an extrinsic

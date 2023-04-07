@@ -33,10 +33,11 @@ struct PopupMenuSection;
 class PopupMenuTable;
 struct PopupMenuTableEntry;
 struct PopupMenuVisitor;
+struct PopupSubMenu;
 struct PopupMenuTableTraits : Registry::DefaultTraits {
    using ComputedItemContextType = PopupMenuVisitor;
    using LeafTypes = List<PopupMenuTableEntry>;
-   using NodeTypes = List<PopupMenuSection>;
+   using NodeTypes = List<PopupMenuSection, PopupSubMenu>;
 };
 using PopupMenuGroupItem = Registry::GroupItem<PopupMenuTableTraits>;
 
