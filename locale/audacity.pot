@@ -16385,7 +16385,7 @@ msgid "Show Warnings/Prompts for"
 msgstr ""
 
 #: src/prefs/WarningsPrefs.cpp
-msgid "Saving &projects"
+msgid "Saving &projects versus exporting audio"
 msgstr ""
 
 #: src/prefs/WarningsPrefs.cpp
