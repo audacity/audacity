@@ -1048,10 +1048,9 @@ Registry::BaseItemPtr MakeGroup (
 
    for (size_t index = 0; index < count; ++index)
    {
-      const auto functionIdentifier =
-         wxString::Format(L"%s_%zu", identifier.GET(), index);
-
       auto& formatString = formatStrings[index];
+
+      const auto functionIdentifier = formatString.name.Internal();
 
       group->items.push_back(std::make_unique<NumericConverterRegistryItem>(
          functionIdentifier, formatString.name,
