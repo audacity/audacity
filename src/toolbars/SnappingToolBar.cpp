@@ -344,6 +344,9 @@ void SnappingToolBar::Populate()
 
    mSnapModeCheckBox->SetValue(snapEnabled);
 
+   mSnapModeCheckBox->SetBackgroundColour(theTheme.Colour(clrMedium));
+   mSnapModeCheckBox->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+
    mSnapToCombo = safenew wxComboCtrl(
       this, wxID_ANY, {}, wxDefaultPosition, wxDefaultSize /*, wxCB_READONLY*/);
 #if wxUSE_ACCESSIBILITY
