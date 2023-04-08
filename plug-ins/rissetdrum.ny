@@ -6,7 +6,7 @@ $i18n-hint named for Jean-Claude Risset (silent t)
 $name (_ "Risset Drum")
 $debugbutton false
 $author (_ "Steven Jones")
-$release 2.3.0-1
+$release 2.3.0-2
 $copyright (_ "GNU General Public License v2.0 or later")
 
 ;; rissetdrum.ny by Steven Jones, after Jean Claude Risset.
@@ -19,31 +19,20 @@ $copyright (_ "GNU General Public License v2.0 or later")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control freq (_ "Frequency (Hz)") real "" 100 50 2000
-$control decay (_ "Decay (seconds)") real "" 2 0.1 60
-$control cf (_ "Center frequency of noise (Hz)") real "" 500 100 5000
-$control bw (_ "Width of noise band (Hz)") real "" 400 10 1000
-$control noise (_ "Amount of noise in mix (percent)") real "" 25 0 100
-$control gain (_ "Amplitude (0 - 1)") real "" 0.8 0 1
+$control FREQ (_ "Frequency (Hz)") real "" 100 50 2000
+$control DECAY (_ "Decay (seconds)") real "" 2 0.1 60
+$control CF (_ "Center frequency of noise (Hz)") real "" 500 100 5000
+$control BW (_ "Width of noise band (Hz)") real "" 400 10 1000
+$control NOISE (_ "Amount of noise in mix (percent)") real "" 25 0 100
+$control GAIN (_ "Amplitude (0 - 1)") real "" 0.8 0 1
 
 
-(defun sanitise (val minx maxx)
-  (min (max val minx) maxx))
-
-;; Not required with validation in Audacity 2.1.1 but left
-;; for compatibility.
-(setq freq (sanitise freq 1 (/ *sound-srate* 2)))
-(setq decay (sanitise decay 0.1 600))
-(setq cf (sanitise cf 1 (/ *sound-srate* 2)))
-(setq bw (sanitise bw 10 1000))
-(setq noise (sanitise (/ noise 100) 0 1))
-(setq gain (sanitise gain 0 1))
-
-;; Get length of preview
+;; Reduce length when previewing.
 (setq pdur
-  (if (get '*track* 'view) ;NIL if preview
-      decay
-      (get '*project* 'preview-duration)))
+  (if *previewp*
+      (get '*project* 'preview-duration)
+      DECAY))
+
 
 (setq *rdrum-table* 
   (list 
@@ -55,36 +44,39 @@ $control gain (_ "Amplitude (0 - 1)") real "" 0.8 0 1
         (scale 1.50 (build-harmonic 23 2048))))
     (hz-to-step 1) t))
 
+
 (defun log2 (n)
   (/ (log (float n))(log 2.0)))
 
-(defun percussion-env (decay)
-  (let* ((half-life (expt 2.0 (- (log2 decay) 3))))
-    (exp-dec 0 half-life decay)))
+
+(defun percussion-env (dur)
+  (let* ((half-life (expt 2.0 (- (log2 dur) 3))))
+    (exp-dec 0 half-life dur)))
 
  
-(defun risset-drum (freq decay cf bw noise-gain)
-  (let* ((decay2 (* decay 0.50))
-         (low-note (* freq 0.10))
-         (tone-gain (- 1 noise-gain)))
-    (setf pink (lowpass6 (noise decay2) bw))
+(defun risset-drum ()
+  (let* ((decay2 (* DECAY 0.50))
+         (low-note (* FREQ 0.10))
+         (tone-gain (- 1 NOISE)))
+    (setf pink (lowpass6 (noise decay2) BW))
     (setf rdrum 
       (mult tone-gain 
         (osc (hz-to-step low-note) decay2 *rdrum-table*)))
     (setf noise-band 
-      (mult noise-gain 
-        (sine (hz-to-step cf) decay2)
+      (mult NOISE 
+        (sine (hz-to-step CF) decay2)
         pink))
     (sum 
       (mult 
         (percussion-env decay2)
         (sum noise-band rdrum ))
       (mult tone-gain 
-        (percussion-env decay)
-        (sine (hz-to-step freq) decay)))))
+        (percussion-env DECAY)
+        (sine (hz-to-step FREQ) DECAY)))))
+
 
 ;; Generate and normalize
-(let* ((output (risset-drum freq decay cf bw noise))
+(let* ((output (risset-drum))
        (output (extract-abs 0 pdur output)) ; shorten if necessary for preview.
        (peakval (peak output ny:all)))
-  (scale (/ gain peakval) output))
+  (scale (/ GAIN peakval) output))
