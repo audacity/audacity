@@ -5,7 +5,7 @@ $preview linear
 $name (_ "Vocal Reduction and Isolation")
 $debugbutton false
 $author (_ "Robert Haenggi")
-$release 3.0.1-1
+$release 3.0.1-2
 $copyright (_ "GNU General Public License v2.0")
 
 
@@ -18,25 +18,26 @@ $copyright (_ "GNU General Public License v2.0")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control action (_ "Action") choice (
-    ("RemoveToMono" (_ "Remove Vocals: to mono"))
-    ("Remove" (_ "Remove Vocals"))
-    ("Isolate" (_ "Isolate Vocals"))
-    ("IsolateInvert" (_ "Isolate Vocals and Invert"))
-    ("RemoveCenterToMono" (_ "Remove Center: to mono"))
-    ("RemoveCenter" (_ "Remove Center"))
-    ("IsolateCenter" (_ "Isolate Center"))
-    ("IsolateCenterInvert" (_ "Isolate Center and Invert"))
-    (_ "Analyze")) 0
-$control strength (_ "Strength") real "" 1.0 0.0 50.0
-$control low-transition (_ "Low Cut for Vocals (Hz)") real "" 120 1 24000
-$control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
+$control ACTION (_ "Action") choice (("RemoveToMono" (_ "Remove Vocals: to mono"))
+                                     ("Remove" (_ "Remove Vocals"))
+                                     ("Isolate" (_ "Isolate Vocals"))
+                                     ("IsolateInvert" (_ "Isolate Vocals and Invert"))
+                                     ("RemoveCenterToMono" (_ "Remove Center: to mono"))
+                                     ("RemoveCenter" (_ "Remove Center"))
+                                     ("IsolateCenter" (_ "Isolate Center"))
+                                     ("IsolateCenterInvert" (_ "Isolate Center and Invert"))
+                                     (_ "Analyze")) 0
+
+$control STRENGTH (_ "Strength") real "" 1.0 0.0 50.0
+$control LOW-TRANSITION (_ "Low Cut for Vocals (Hz)") real "" 120 1 24000
+$control HIGH-TRANSITION (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
 
 
-(setf bignum 1000000000)
+; Global constant.
+(setf BIGNUM 1000000000)
 
-;;control rotation "Rotation (Degrees)" real "" 0 -180 180
-(setf rotation 0.0)
+;;control ROTATION "Rotation (Degrees)" real "" 0 -180 180
+(setf ROTATION 0.0)
 
 ;; make aref shorter
 (defmacro  : (array index) (backquote (aref ,array ,index)))
@@ -199,12 +200,12 @@ $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
     ((and mid side)
         (let* ((power-sum  (power-spectrum mid fs 2))
                (power-dif (power-spectrum side fs 2))
-               (wt-exp (s-exp   (scale strength    (diff power-dif power-sum))))
+               (wt-exp (s-exp   (scale STRENGTH (diff power-dif power-sum))))
                (weight (shape wt-exp *map* 0))
-               ;(weight (shape (db-to-linear power-dif)  (s-exp  (mult 2 (s-log *map2*))) 1))
-               (weight (snd-samples weight bignum)))  ;Fix for bug 2706
-          (do ((i low-transition (+ i 2)))
-              ((>= i high-transition))
+               ;(weight (shape (db-to-linear power-dif) (s-exp (mult 2 (s-log *map2*))) 1))
+               (weight (snd-samples weight BIGNUM)))  ;Fix for bug 2706
+          (do ((i LOW-TRANSITION (+ i 2)))
+              ((>= i HIGH-TRANSITION))
             (setf (: out i) (: weight (/ (1+ i) 2)))
             (setf (: out (1+ i)) (: weight (/ (1+ i) 2))))
           (snd-samples  (mult (snd-from-array 0 1 mid) (snd-from-array 0 1 out)) fs)))
@@ -215,9 +216,9 @@ $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
 ;;
 ;; rotate the stereo field around the center point
 ;; between the two speakers
-(defun transform  (snd &optional (cosine (cos (abs rotation))) (sine (sin (abs rotation))))
-  (let* ((direction (/  (+ 1e-15 rotation) (abs  (+ 1e-15 rotation))))
-         (fft-offset (s-rest (if (< action 8) (/ hop (get-duration *sr*)) 0)))
+(defun transform  (snd &optional (cosine (cos (abs ROTATION))) (sine (sin (abs ROTATION))))
+  (let* ((direction (/  (+ 1e-15 ROTATION) (abs  (+ 1e-15 ROTATION))))
+         (fft-offset (s-rest (if (< ACTION 8) (/ hop (get-duration *sr*)) 0)))
          (L (seq (cue fft-offset) (cue (: snd 0))))
          (R (seq (cue fft-offset) (cue (: snd 1)))))
     (vector (sum (mult cosine  L) (mult (- direction) sine R))
@@ -230,17 +231,17 @@ $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
       (return-from catalog  (_ "This plug-in works only with stereo tracks."))
       (setf snd (vector (snd-copy (: *track* 0)) (snd-copy (: *track* 1)))))
   (cond
-    ((= action 8)
+    ((= ACTION 8)
         (return-from catalog (summary (least-squares-xy (: snd 0) (: snd 1) :show nil))))
-    ((= action 0)
-        (display "" low-transition high-transition) ;values are quantized to bins
+    ((= ACTION 0)
+        (display "" LOW-TRANSITION HIGH-TRANSITION) ;values are quantized to bins
         (return-from catalog
                      (sum (: snd 0)
                           (mult -1 (: snd 1))
-                          (lowpass8 (: snd 1) low-transition)
-                          (highpass8 (diff (: snd 1) (lowpass8 (: snd 1) low-transition))
-                                     high-transition))))
-    ((= action 4)
+                          (lowpass8 (: snd 1) LOW-TRANSITION)
+                          (highpass8 (diff (: snd 1) (lowpass8 (: snd 1) LOW-TRANSITION))
+                                     HIGH-TRANSITION))))
+    ((= ACTION 4)
         (return-from catalog (diff (: snd 0) (: snd 1))))
     (t  ;For everything that involves center isolation
         (setf snd  (transform  snd))
@@ -254,14 +255,16 @@ $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
         (setf dif-fft (stft (diff (: snd 0) (: snd 1)) fs hop analyze-win 'steer sum-fft))
         (setf c (snd-ifft 0 *sr* dif-fft hop  synthesis-win))
         (cond
-          ((member action '(1 5))
+          ((member ACTION '(1 5))
               (setf output (vector (extract-abs  (/ hop *sr*) original-len (diff (: snd 0) c))
                                    (extract-abs  (/ hop *sr*) original-len (diff (: snd 1)  c)))))
-          ((member action '(2 6))
-              (setf strength (recip strength))
+          ((member ACTION '(2 6))
+              ; Caution: modifying global variable 'STRENGTH'.
+              (setf STRENGTH (recip STRENGTH))
               (setf output (extract-abs (/ hop *sr*) original-len c)))
-          ((member action '(3 7))
-              (setf strength (recip strength))
+          ((member ACTION '(3 7))
+              ; Caution: modifying global variable 'STRENGTH'.
+              (setf STRENGTH (recip STRENGTH))
               (setf output (extract-abs  (/ hop *sr*) original-len (mult -1 c)))))))
     (if (soundp output)
         (setf output (vector output output)))
@@ -284,24 +287,29 @@ $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
 (setf zs (- fs (* 2 hop))); zero-padding
 
 ;; Some input corrections
-(setf strength  (expt (limit strength 0.02 50.0) 2.0))
+; Caution: modifying global variable 'STRENGTH'.
+(setf STRENGTH  (expt (limit STRENGTH 0.02 50.0) 2.0))
 
 ; bins to be ignored (bass and treble)
-(if (> action 3)
-    (psetq low-transition 0.0 high-transition 24000.0))
+(if (> ACTION 3)
+    ; Caution: modifying global variables 'LOW-TRANSITION' and 'HIGH-TRANSITION'.
+    (psetq LOW-TRANSITION 0.0
+           HIGH-TRANSITION 24000.0))
 
-(let* ((ltrans (logior (truncate (/ (* 2 (1- fs) (limit low-transition 1 (/ *sr* 2.0))) *sr*)) 1))
-       (htrans (logior  (limit (truncate (/ (* 2 fs  high-transition) *sr*)) 1 (1- fs)) 1)))
-  (psetq low-transition (min ltrans htrans)
-         high-transition (max ltrans htrans)))
+(let* ((ltrans (logior (truncate (/ (* 2 (1- fs) (limit LOW-TRANSITION 1 (/ *sr* 2.0))) *sr*)) 1))
+       (htrans (logior  (limit (truncate (/ (* 2 fs  HIGH-TRANSITION) *sr*)) 1 (1- fs)) 1)))
+  ; Caution: modifying global variables 'LOW-TRANSITION' and 'HIGH-TRANSITION'.
+  (psetq LOW-TRANSITION (min ltrans htrans)
+         HIGH-TRANSITION (max ltrans htrans)))
 
 ; back to real frequencies for the classic Vocal Remover
 ; Note: Fqs are quantized as if FFT would be used
 ; ca. 2.6 Hz bin-distance @ 44.1 kHz
-(when (= action 0)
+(when (= ACTION 0)
   (setq bin-distance (/ *sr* 2.0 fs))
-  (psetq low-transition (* low-transition bin-distance)
-         high-transition (* high-transition bin-distance)))
+  ; Caution: modifying global variables 'LOW-TRANSITION' and 'HIGH-TRANSITION'.
+  (psetq LOW-TRANSITION (* LOW-TRANSITION bin-distance)
+         HIGH-TRANSITION (* HIGH-TRANSITION bin-distance)))
 
 (setf out (snd-samples (snd-const 0.0 0 fs fs) fs)); holds the left/right weights (removal)
 (setf *map* (snd-pwl 0 10000 (list 0 0.5 10000 0.0 20000 -0.5 20001)))
