@@ -322,7 +322,7 @@ void HandlerClass::Populate() { \
 #define POPUP_MENU_FN( memFn ) ( (wxCommandEventFunction) (&My::memFn) )
 
 #define POPUP_MENU_SUB_MENU(stringId, classname, pUserData ) \
-   mStack.back()->items.push_back( \
+   mStack.back()->push_back( \
       Registry::Indirect(classname::Instance().Get(pUserData)));
 
 // ends function

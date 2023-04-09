@@ -53,12 +53,9 @@ namespace Registry {
       }
    };
 
-   // TODO C++17: maybe use std::variant (discriminated unions) to achieve
-   // polymorphism by other means, not needing unique_ptr and dynamic_cast
-   // and using less heap.
-   // Most items in the table will be the large ones describing commands, so the
-   // waste of space in unions for separators and sub-menus should not be
-   // large.
+   struct Placement;
+   struct GroupItemBase;
+
    struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
       explicit
@@ -145,12 +142,8 @@ namespace detail {
    struct REGISTRIES_API GroupItemBase : BaseItem {
       using BaseItem::BaseItem;
 
-      //! Construction from an internal name and a previously built-up
-      //! vector of pointers
-      GroupItemBase( const Identifier &internalName, BaseItemPtrs &&items_ )
-         : BaseItem{ internalName }, items{ std::move( items_ ) }
-      {}
-      GroupItemBase( const GroupItemBase& ) PROHIBITED;
+      GroupItemBase(const GroupItemBase&) = delete;
+      GroupItemBase& operator=(const GroupItemBase&) = delete;
       ~GroupItemBase() override = 0;
 
       //! Choose treatment of the children of the group when merging trees
@@ -170,14 +163,32 @@ namespace detail {
       //! Default implementation returns Strong
       virtual Ordering GetOrdering() const;
 
-      BaseItemPtrs items;
+      //! This class works with back_inserter and range-for
+      auto begin() const { return items.begin(); }
+      auto end() const { return items.end(); }
+      auto cbegin() const { return items.cbegin(); }
+      auto cend() const { return items.cend(); }
+      auto rbegin() const { return items.rbegin(); }
+      auto rend() const { return items.rend(); }
+      auto crbegin() const { return items.crbegin(); }
+      auto crend() const { return items.crend(); }
+
+      using value_type = BaseItemPtr;
+      void push_back(value_type ptr){ return items.push_back(move(ptr)); }
+
+      [[nodiscard]] bool empty() const { return items.empty(); }
+
+   private:
+      friend REGISTRIES_API void RegisterItem(GroupItemBase &registry,
+         const Placement &placement, BaseItemPtr pItem);
+      std::vector<BaseItemPtr> items;
    };
    
    // GroupItemBase adding variadic constructor conveniences
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct GroupItem : GroupItemBase {
       using GroupItemBase::GroupItemBase;
-      // In-line, variadic constructor that doesn't require building a vector
+      // In-line, variadic constructor
       template< typename... Args >
          GroupItem( const Identifier &internalName, Args&&... args )
          : GroupItemBase( internalName )
@@ -200,10 +211,7 @@ namespace detail {
          };
 
       // Move one unique_ptr to an item into our array
-      void AppendOne( BaseItemPtr&& ptr )
-      {
-         items.push_back( std::move( ptr ) );
-      }
+      void AppendOne( BaseItemPtr&& ptr ) { this->push_back(move(ptr)); }
       // This overload allows a lambda or function pointer in the variadic
       // argument lists without any other syntactic wrapping, and also
       // allows implicit conversions to type Factory.

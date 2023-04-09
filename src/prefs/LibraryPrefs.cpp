@@ -50,7 +50,7 @@ LibraryPrefs::RegisteredControls::RegisteredControls(
 
 bool LibraryPrefs::RegisteredControls::Any()
 {
-   return !PopulatorItem::Registry().items.empty();
+   return !PopulatorItem::Registry().empty();
 }
 
 LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)

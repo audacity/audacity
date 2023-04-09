@@ -161,7 +161,7 @@ void PopupMenuTable::RegisterItem(
 
 void PopupMenuTable::Append( Registry::BaseItemPtr pItem )
 {
-   mStack.back()->items.push_back( std::move( pItem ) );
+   mStack.back()->push_back( std::move( pItem ) );
 }
 
 void PopupMenuTable::Append(
@@ -177,7 +177,7 @@ void PopupMenuTable::BeginSection( const Identifier &name )
 {
    auto uSection = std::make_unique< PopupMenuSection >( name );
    auto section = uSection.get();
-   mStack.back()->items.push_back( std::move( uSection ) );
+   mStack.back()->push_back( std::move( uSection ) );
    mStack.push_back( section );
 }
 

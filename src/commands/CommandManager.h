@@ -434,11 +434,6 @@ namespace MenuTable {
    struct AUDACITY_DLL_API MenuItem final
       : GroupItem<ToolbarMenuVisitor>
       , WholeMenu {
-      // Construction from an internal name and a previously built-up
-      // vector of pointers
-      MenuItem(const Identifier &internalName,
-         const TranslatableString &title, BaseItemPtrs &&items);
-      // In-line, variadic constructor that doesn't require building a vector
       template<typename... Args>
          MenuItem(const Identifier &internalName,
             const TranslatableString &title, Args&&... args
@@ -455,11 +450,6 @@ namespace MenuTable {
    struct ConditionalGroupItem final : GroupItem<ToolbarMenuVisitor> {
       using Condition = std::function<bool()>;
 
-      // Construction from an internal name and a previously built-up
-      // vector of pointers
-      ConditionalGroupItem(const Identifier &internalName,
-         Condition condition, BaseItemPtrs &&items);
-      // In-line, variadic constructor that doesn't require building a vector
       template<typename... Args>
          ConditionalGroupItem(const Identifier &internalName,
             Condition condition, Args&&... args
@@ -467,8 +457,7 @@ namespace MenuTable {
             , condition{ condition }
          {}
       ~ConditionalGroupItem() override;
-
-      Condition condition;
+      const Condition condition;
    };
 
    // usage:
@@ -630,39 +619,48 @@ namespace MenuTable {
       Ordering GetOrdering() const override;
    };
 
-   // The following, and Registry::Indirect(), are the functions to use directly
-   // in writing table definitions.
+   /*! @name Factories
+      The following, and Registry::Indirect(), are the functions to use directly
+      to specify elements of menu groupings.
+    */
+   //! @{
 
-   // Group items can be constructed two ways.
-   // Pointers to subordinate items are moved into the result.
-   // Null pointers are permitted, and ignored when building the menu.
-   // Items are spliced into the enclosing menu.
-   // The name is untranslated and may be empty, to make the group transparent
-   // in identification of items by path.  Otherwise try to keep the name
-   // stable across Audacity versions.
+   //! Variadic constructor from pointers to subordinate items, which are moved
+   //! into the result.
+   /*!
+    Null pointers are permitted, and ignored when building the menu.
+    Items are spliced into the enclosing menu.
+    The name is untranslated and may be empty, to make the group transparent
+    in identification of items by path.  Otherwise try to keep the name
+    stable across Audacity versions.
+    */
    constexpr auto Items = Callable::UniqueMaker<MenuItems>();
 
-   // Like Items, but insert a menu separator between the menu section and
-   // any other items or sections before or after it in the same (innermost,
-   // enclosing) menu.
-   // It's not necessary that the sisters of sections be other sections, but it
-   // might clarify the logical groupings.
+   //! Like Items, but insert a menu separator between the menu section and
+   //! any other items or sections before or after it in the same (innermost,
+   //! enclosing) menu.
+   /*!
+    It's not necessary that the sisters of sections be other sections, but it
+    might clarify the logical groupings.
+    */
    constexpr auto Section = Callable::UniqueMaker<MenuPart>();
    
-   // Menu items can be constructed two ways, as for group items
-   // Items will appear in a main toolbar menu or in a sub-menu.
-   // The name is untranslated.  Try to keep the name stable across Audacity
-   // versions.
-   // If the name of a menu is empty, then subordinate items cannot be located
-   // by path.
+   //! Items will appear in a main toolbar menu or in a sub-menu.
+   /*!
+    The name is untranslated.  Try to keep the name stable across Audacity
+    versions.
+    If the name of a menu is empty, then subordinate items cannot be located
+    by path.
+    */
    constexpr auto Menu = Callable::UniqueMaker<MenuItem>();
 
-   // Conditional group items can be constructed two ways, as for group items
-   // These items register in the CommandManager but are not shown in menus
-   // if the condition evaluates false.
-   // The name is untranslated.  Try to keep the name stable across Audacity
-   // versions.
-   // Name for conditional group must be non-empty.
+   //! These items register in the CommandManager but are not shown in menus
+   //! if the condition evaluates false.
+   /*!
+    The name is untranslated.  Try to keep the name stable across Audacity
+    versions.
+    Name for conditional group must be non-empty.
+    */
    constexpr auto ConditionalItems = Callable::UniqueMaker<ConditionalGroupItem>();
 
    constexpr auto Command = Callable::UniqueMaker<CommandItem>();
@@ -671,6 +669,8 @@ namespace MenuTable {
       const Identifier &, std::vector<ComponentInterfaceSymbol>>();
 
    constexpr auto Special = Callable::UniqueMaker<SpecialItem>();
+
+   //! @}
 
    struct ItemRegistry {
       static GroupItemBase &Registry();
@@ -689,9 +689,6 @@ namespace MenuTable {
          : AttachedItem( Placement{ path }, std::move( pItem ) )
       {}
    };
-
-   void DestroyRegistry();
-
 }
 
 #endif

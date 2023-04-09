@@ -1496,24 +1496,18 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 
 }
 
-MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
+void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
 {
-   MenuTable::BaseItemPtrs result;
    auto names = MacroCommands::GetNames(); // these names come from filenames
-   int i;
-
-   // This finder scope may be redundant, but harmless
-   for (i = 0; i < (int)names.size(); i++) {
-      auto MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
-      result.push_back( MenuTable::Command( MacroID,
-         Verbatim( names[i] ), // file name verbatim
+   for (const auto &name : names) {
+      auto MacroID = ApplyMacroDialog::MacroIdOfName(name);
+      items.push_back(MenuTable::Command(MacroID,
+         Verbatim(name), // file name verbatim
          OnApplyMacroDirectly,
          flags,
          CommandManager::Options{}.AllowInMacros()
-      ) );
+      ));
    }
-
-   return result;
 }
 
 const ReservedCommandFlag&
@@ -1567,8 +1561,11 @@ BaseItemSharedPtr PluginMenuItems()
 
          Section( "",
             // Delayed evaluation:
-            [](AudacityProject&)
-            { return Items( wxEmptyString, PopulateMacrosMenu( AudioIONotBusyFlag() ) ); }
+            [](AudacityProject&) {
+               auto result = Items("");
+               PopulateMacrosMenu(*result, AudioIONotBusyFlag());
+               return result;
+            }
          )
       )
    ) };

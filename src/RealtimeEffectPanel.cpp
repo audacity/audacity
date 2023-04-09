@@ -785,7 +785,8 @@ public:
    
    void UpdateEffectMenuItems()
    {
-      auto root = std::make_unique<MenuTable::MenuItem>(Identifier {}, TranslatableString {});
+      using namespace MenuTable;
+      auto root = Menu("", TranslatableString{});
 
       static auto realtimeEffectPredicate = [](const PluginDescriptor& desc)
       {
@@ -794,32 +795,27 @@ public:
 
       const auto groupby = RealtimeEffectsGroupBy.Read();
 
-      auto analyzeItems = MenuHelper::PopulateEffectsMenu(
+      auto analyzeSection = Section("", Menu("", XO("Analyze")));
+      auto submenu =
+         static_cast<MenuItem*>(analyzeSection->begin()->get());
+      MenuHelper::PopulateEffectsMenu(
+         *submenu,
          EffectTypeAnalyze,
          {}, groupby, nullptr,
          realtimeEffectPredicate
       );
       
-      if(!analyzeItems.empty())
+      if(!submenu->empty())
       {
-         auto analyzeSection = MenuTable::Section(
-            wxEmptyString,
-            std::make_unique<MenuTable::MenuItem>(
-               wxEmptyString,
-               XO("Analyze"),
-               std::move(analyzeItems)
-            )
-         );
-         root->items.push_back(std::move(analyzeSection));
+         root->push_back(move(analyzeSection));
       }
    
-      auto processItems = MenuHelper::PopulateEffectsMenu(
+      MenuHelper::PopulateEffectsMenu(
+         *root,
          EffectTypeProcess,
          {}, groupby, nullptr,
          realtimeEffectPredicate
       );
-      
-      std::move(processItems.begin(), processItems.end(), std::back_inserter(root->items));
       
       mEffectMenuRoot.swap(root);
    }

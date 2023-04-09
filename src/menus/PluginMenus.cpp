@@ -306,13 +306,16 @@ BaseItemSharedPtr GenerateMenu()
 
       Section( "Generators",
          // Delayed evaluation:
-         [](AudacityProject &)
-         { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
-            EffectTypeGenerate,
-            AudioIONotBusyFlag(),
-            EffectsGroupBy.Read(),
-            &OnEffect)
-         ); }
+         [](AudacityProject &) {
+            auto result = Items("");
+            MenuHelper::PopulateEffectsMenu(
+               *result,
+               EffectTypeGenerate,
+               AudioIONotBusyFlag(),
+               EffectsGroupBy.Read(),
+               &OnEffect);
+            return result;
+         }
       )
    ) };
    return menu;
@@ -387,13 +390,16 @@ BaseItemSharedPtr EffectMenu()
 
       Section( "Effects",
          // Delayed evaluation:
-         [](AudacityProject &)
-         { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
-            EffectTypeProcess,
-            AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            EffectsGroupBy.Read(),
-            &OnEffect)
-         ); }
+         [](AudacityProject &) {
+            auto result = Items("");
+            MenuHelper::PopulateEffectsMenu(
+               *result,
+               EffectTypeProcess,
+               AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+               EffectsGroupBy.Read(),
+               &OnEffect);
+            return result;
+         }
       )
    ) };
    return menu;
@@ -451,13 +457,16 @@ BaseItemSharedPtr AnalyzeMenu()
          Items( "Windows" ),
 
          // Delayed evaluation:
-         [](AudacityProject&)
-         { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
-            EffectTypeAnalyze,
-            AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            EffectsGroupBy.Read(),
-            &OnEffect)
-         ); }
+         [](AudacityProject &) {
+            auto result = Items("");
+            MenuHelper::PopulateEffectsMenu(
+               *result,
+               EffectTypeAnalyze,
+               AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+               EffectsGroupBy.Read(),
+               &OnEffect);
+            return result;
+         }
       )
    ) };
    return menu;
@@ -498,13 +507,16 @@ BaseItemSharedPtr ToolsMenu()
 
       Section( "Tools",
          // Delayed evaluation:
-         [](AudacityProject&)
-         { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
-            EffectTypeTool,
-            AudioIONotBusyFlag(),
-            EffectsGroupBy.Read(),
-            OnEffect)
-         ); }
+         [](AudacityProject &) {
+            auto result = Items("");
+            MenuHelper::PopulateEffectsMenu(
+               *result,
+               EffectTypeTool,
+               AudioIONotBusyFlag(),
+               EffectsGroupBy.Read(),
+               &OnEffect);
+            return result;
+         }
       )
 
 #ifdef IS_ALPHA

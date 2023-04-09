@@ -186,21 +186,8 @@ void MenuVisitor::DoSeparator()
 
 namespace MenuTable {
 
-MenuItem::MenuItem(const Identifier &internalName,
-   const TranslatableString &title, BaseItemPtrs &&items
-)  : GroupItem{ internalName, move(items) }
-   , title{ title }
-{
-   wxASSERT( !title.empty() );
-}
 MenuItem::~MenuItem() {}
 
-ConditionalGroupItem::ConditionalGroupItem(
-   const Identifier &internalName, Condition condition, BaseItemPtrs &&items
-)  : GroupItem{ internalName, move(items) }
-   , condition{ condition }
-{
-}
 ConditionalGroupItem::~ConditionalGroupItem() {}
 
 CommandItem::CommandItem(const CommandID &name_,
@@ -271,11 +258,6 @@ MenuTable::AttachedItem::AttachedItem(
    const Placement &placement, BaseItemPtr pItem )
    : RegisteredItem{ std::move(pItem), placement }
 {
-}
-
-void MenuTable::DestroyRegistry()
-{
-   MenuTable::ItemRegistry::Registry().items.clear();
 }
 
 namespace {

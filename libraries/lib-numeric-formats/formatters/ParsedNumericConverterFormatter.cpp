@@ -1061,7 +1061,7 @@ Registry::BaseItemPtr MakeGroup (
 
       auto& formatString = formatStrings[index];
 
-      group->items.push_back(std::make_unique<NumericConverterRegistryItem>(
+      group->push_back(std::make_unique<NumericConverterRegistryItem>(
          functionIdentifier, formatString.name,
          formatString.formatStrings.fraction,
          std::make_unique<ParsedNumericConverterFormatterFactory>(type, formatString.formatStrings.formatStr)));
