@@ -83,7 +83,6 @@ namespace detail {
 }
 
    using BaseItemPtr = std::unique_ptr<detail::BaseItem>;
-   using BaseItemPtrs = std::vector<BaseItemPtr>;
 
    class Visitor;
    
