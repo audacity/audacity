@@ -91,13 +91,13 @@ struct SNAPPING_API SnapRegistryItem : public Registry::SingleItem
    virtual SnapResult SingleStep(const AudacityProject& project, double time, bool upwards) const = 0;
 };
 
-SNAPPING_API Registry::BaseItemPtr TimeInvariantSnapFunction(
+std::unique_ptr<SnapRegistryItem> TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    double multiplier);
 
 using MultiplierFunctor = std::function<double(const AudacityProject&)>;
 
-SNAPPING_API Registry::BaseItemPtr TimeInvariantSnapFunction(
+std::unique_ptr<SnapRegistryItem> TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    MultiplierFunctor functor);
 

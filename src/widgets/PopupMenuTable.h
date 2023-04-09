@@ -227,7 +227,7 @@ protected:
    void BeginSection( const Identifier &name );
    void EndSection();
 
-   std::shared_ptr<PopupMenuGroupItem> mTop;
+   std::shared_ptr<PopupSubMenu> mTop;
    std::vector<PopupMenuGroupItem*> mStack;
    Identifier mId;
    TranslatableString mCaption;

@@ -426,14 +426,17 @@ namespace MenuTable {
    using namespace Registry;
 
    struct CommandItem;
+   struct CommandGroupItem;
    struct ConditionalGroupItem;
    struct MenuItem;
    struct MenuItems;
+   struct SpecialItem;
    struct MenuPart;
 
    struct Traits : Registry::DefaultTraits {
       using ComputedItemContextType = AudacityProject;
-      using LeafTypes = List<CommandItem>;
+      using LeafTypes = List<
+         CommandItem, CommandGroupItem, SpecialItem>;
       using NodeTypes = List<
          ConditionalGroupItem, MenuItem, MenuItems, MenuPart>;
    };

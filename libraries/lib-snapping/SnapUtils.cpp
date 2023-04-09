@@ -336,7 +336,7 @@ private:
 
 }
 
-Registry::BaseItemPtr TimeInvariantSnapFunction(
+std::unique_ptr<SnapRegistryItem> TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    MultiplierFunctor functor)
 {
@@ -344,7 +344,7 @@ Registry::BaseItemPtr TimeInvariantSnapFunction(
       functionId, label, std::move(functor));
 }
 
-Registry::BaseItemPtr TimeInvariantSnapFunction(
+std::unique_ptr<SnapRegistryItem> TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    double multiplier)
 {

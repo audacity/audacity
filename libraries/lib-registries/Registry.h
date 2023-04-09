@@ -80,9 +80,9 @@ namespace detail {
 
       OrderingHint orderingHint;
    };
-}
 
    using BaseItemPtr = std::unique_ptr<detail::BaseItem>;
+}
 
    class Visitor;
    
@@ -236,7 +236,7 @@ namespace detail {
 
    private:
       friend REGISTRIES_API void detail::RegisterItem(GroupItemBase &registry,
-         const Placement &placement, BaseItemPtr pItem);
+         const Placement &placement, detail::BaseItemPtr pItem);
    };
 
    // Forward declarations necessary before customizing Composite::Traits
@@ -252,11 +252,12 @@ template<typename RegistryTraits> struct Composite::Traits<
    static constexpr auto ItemBuilder =
    Registry::detail::Builder<RegistryTraits>{};
    //! Prohibit pushing-back of type-unchecked BaseItemPtr directly
-   template<typename T> static constexpr auto enables_item_type_v = true;
+   template<typename T> static constexpr auto enables_item_type_v =
+      !std::is_same_v<T, Registry::detail::BaseItemPtr>;
 };
 
 namespace Registry {
-   //! Extends GroupItemBase with a variadic constructor
+   //! Extends GroupItemBase with a variadic constructor that checks types
    /*!
     @tparam RegistryTraits defines associated types
     */
@@ -313,6 +314,7 @@ namespace detail {
 
       template<typename ItemType>
       auto operator () (std::unique_ptr<ItemType> ptr) const {
+         static_assert(AcceptableType_v<RegistryTraits, ItemType>);
          return move(ptr);
       }
       //! This overload allows a lambda or function pointer in the variadic
@@ -322,11 +324,13 @@ namespace detail {
          typename std::invoke_result_t<Factory, Context&>::element_type
       >
       auto operator () (const Factory &factory) const {
+         static_assert(AcceptableType_v<RegistryTraits, ItemType>);
          return std::make_unique<ComputedItem<Context, ItemType>>(factory);
       }
       //! This overload lets you supply a shared pointer to an item, directly
       template<typename ItemType>
       auto operator () (const std::shared_ptr<ItemType> &ptr) const {
+         static_assert(AcceptableType_v<RegistryTraits, ItemType>);
          return std::make_unique<IndirectItem<ItemType>>(ptr);
       }
    };
