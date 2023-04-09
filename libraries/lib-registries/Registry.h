@@ -12,6 +12,7 @@ Paul Licameli split from CommandManager.h
 #define __AUDACITY_REGISTRY__
 
 #include "Prefs.h"
+#include "Composite.h"
 #include <type_traits>
 
 // Define classes and functions that associate parts of the user interface
@@ -132,16 +133,18 @@ namespace detail {
       Factory< DefaultVisitor > factory;
    };
 
-   // Common abstract base class for items that are not groups
+   //! Common abstract base class for items that are not groups
    struct REGISTRIES_API SingleItem : BaseItem {
       using BaseItem::BaseItem;
       ~SingleItem() override = 0;
    };
 
    //! Common abstract base class for items that group other items
-   struct REGISTRIES_API GroupItemBase : BaseItem {
-      using BaseItem::BaseItem;
-
+   struct REGISTRIES_API GroupItemBase : Composite::Base<
+      BaseItem, std::unique_ptr<BaseItem>, const Identifier &
+   > {
+      using Base::Base;
+   
       GroupItemBase(const GroupItemBase&) = delete;
       GroupItemBase& operator=(const GroupItemBase&) = delete;
       ~GroupItemBase() override = 0;
@@ -163,72 +166,41 @@ namespace detail {
       //! Default implementation returns Strong
       virtual Ordering GetOrdering() const;
 
-      //! This class works with back_inserter and range-for
-      auto begin() const { return items.begin(); }
-      auto end() const { return items.end(); }
-      auto cbegin() const { return items.cbegin(); }
-      auto cend() const { return items.cend(); }
-      auto rbegin() const { return items.rbegin(); }
-      auto rend() const { return items.rend(); }
-      auto crbegin() const { return items.crbegin(); }
-      auto crend() const { return items.crend(); }
-
-      using value_type = BaseItemPtr;
-      void push_back(value_type ptr){ return items.push_back(move(ptr)); }
-
-      [[nodiscard]] bool empty() const { return items.empty(); }
-
    private:
       friend REGISTRIES_API void RegisterItem(GroupItemBase &registry,
          const Placement &placement, BaseItemPtr pItem);
-      std::vector<BaseItemPtr> items;
    };
    
-   // GroupItemBase adding variadic constructor conveniences
-   template< typename VisitorType = ComputedItem::DefaultVisitor >
+   //! Extends GroupItemBase with a variadic constructor
+   template<typename VisitorType = ComputedItem::DefaultVisitor>
    struct GroupItem : GroupItemBase {
       using GroupItemBase::GroupItemBase;
-      // In-line, variadic constructor
-      template< typename... Args >
-         GroupItem( const Identifier &internalName, Args&&... args )
-         : GroupItemBase( internalName )
-         { Append( std::forward< Args >( args )... ); }
 
-   private:
-      // nullary overload grounds the recursion
-      void Append() {}
-      // recursive overload
-      template< typename Arg, typename... Args >
-         void Append( Arg &&arg, Args&&... moreArgs )
-         {
-            // Dispatch one argument to the proper overload of AppendOne.
-            // std::forward preserves rvalue/lvalue distinction of the actual
-            // argument of the constructor call; that is, it inserts a
-            // std::move() if and only if the original argument is rvalue
-            AppendOne( std::forward<Arg>( arg ) );
-            // recur with the rest of the arguments
-            Append( std::forward<Args>(moreArgs)... );
-         };
-
-      // Move one unique_ptr to an item into our array
-      void AppendOne( BaseItemPtr&& ptr ) { this->push_back(move(ptr)); }
-      // This overload allows a lambda or function pointer in the variadic
-      // argument lists without any other syntactic wrapping, and also
-      // allows implicit conversions to type Factory.
-      // (Thus, a lambda can return a unique_ptr<BaseItem> rvalue even though
-      // Factory's return type is shared_ptr, and the needed conversion is
-      // applied implicitly.)
-      void AppendOne( const ComputedItem::Factory<VisitorType> &factory )
+      template<typename... Args>
+      GroupItem(const Identifier &internalName, Args&&... args)
+         : GroupItemBase{ internalName }
       {
-         auto adaptedFactory = [factory]( Registry::Visitor &visitor ){
-            return factory( dynamic_cast< VisitorType& >( visitor ) );
-         };
-         AppendOne( std::make_unique<ComputedItem>( adaptedFactory ) );
+         (..., push_back(std::forward<Args>(args)));
       }
-      // This overload lets you supply a shared pointer to an item, directly
-      template<typename Subtype>
-      void AppendOne(const std::shared_ptr<Subtype> &ptr) {
-         AppendOne(std::make_unique<IndirectItem<Subtype>>(ptr));
+
+      template<typename ItemType>
+      void push_back(std::unique_ptr<ItemType> ptr) {
+         this->GroupItemBase::push_back(move(ptr));
+      }
+      //! This overload allows a lambda or function pointer in the variadic
+      //! argument lists without any other syntactic wrapping.
+      template<typename Factory> void push_back(const Factory &factory) {
+         auto adaptedFactory = [factory](Registry::Visitor &visitor){
+             return factory(dynamic_cast<VisitorType&>(visitor));
+         };
+         this->GroupItemBase
+            ::push_back(std::make_unique<ComputedItem>(adaptedFactory));
+      }
+      //! This overload lets you supply a shared pointer to an item, directly
+      template<typename ItemType>
+      void push_back(const std::shared_ptr<ItemType> &ptr) {
+         this->GroupItemBase
+            ::push_back(std::make_unique<IndirectItem<ItemType>>(ptr));
       }
    };
 
@@ -332,4 +304,3 @@ extern template struct GroupItem<>;
 }
 
 #endif
-
