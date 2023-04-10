@@ -524,3 +524,18 @@ void EffectBase::Preview(
       }
    }
 }
+
+auto EffectBase::FindInstance(EffectPlugin &plugin)
+   -> std::optional<InstancePointer>
+{
+   auto result = plugin.MakeInstance();
+   if (auto pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(result)
+      ; pInstanceEx && pInstanceEx->Init())
+      return { pInstanceEx };
+   return {};
+}
+
+auto EffectBase::DefaultInstanceFinder(EffectPlugin &plugin) -> InstanceFinder
+{
+   return [&plugin](auto&) { return FindInstance(plugin); };
+}
