@@ -55,6 +55,9 @@ protected:
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
 
+   static std::optional<InstancePointer> FindInstance(EffectPlugin &plugin);
+   static InstanceFinder DefaultInstanceFinder(EffectPlugin &plugin);
+
 protected:
    //! After Init(), tell whether Process() should be skipped
    /*
