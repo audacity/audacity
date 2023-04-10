@@ -2388,7 +2388,7 @@ msgstr "無法開啟檔案：\"%s\""
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format
 msgid "Error: %s at line %lu"
-msgstr "錯誤：第 $lu 行有 %s"
+msgstr "錯誤：第 %2$lu 行有 %1$s"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format
@@ -20044,7 +20044,7 @@ msgstr "錯誤。~%選取區域無效。~%選擇多於  2 個音訊剪輯。"
 #, lisp-format
 msgid ""
 "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "錯誤。~%選取區域無效~ %E選取區域的開頭或結尾有空白。"
+msgstr "錯誤。~%選取區域無效~%E選取區域的開頭或結尾有空白。"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
