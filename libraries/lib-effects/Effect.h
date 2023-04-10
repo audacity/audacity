@@ -105,7 +105,8 @@ class EFFECTS_API Effect /* not final */
    unsigned TestUIFlags(unsigned mask);
 
    //! Re-invoke DoEffect on another Effect object that implements the work
-   bool Delegate(Effect &delegate, EffectSettings &settings);
+   bool Delegate(Effect &delegate, EffectSettings &settings,
+      InstanceFinder finder = {});
 
    static void IncEffectCounter(){ nEffectsDone++;}
 

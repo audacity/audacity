@@ -326,12 +326,16 @@ void Effect::UnsetBatchProcessing()
    (void ) LoadUserPreset(GetSavedStateGroup(), dummySettings);
 }
 
-bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
+bool Effect::Delegate(Effect &delegate, EffectSettings &settings,
+   InstanceFinder finder)
 {
+   if (!finder)
+      finder = DefaultInstanceFinder(delegate);
+
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect(settings, {}, mProjectRate, mTracks, mFactory,
+   return delegate.DoEffect(settings, finder, mProjectRate, mTracks, mFactory,
       region, mUIFlags, nullptr);
 }
 
