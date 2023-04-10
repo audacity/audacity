@@ -170,7 +170,7 @@ public:
    {
       UpdateFormat();
 
-      if (mType == NumericConverterType_TIME)
+      if (IsTimeRelatedFormat())
       {
          auto project = mContext.GetProject();
 
@@ -182,6 +182,12 @@ public:
                   .Subscribe([this](const auto&) { UpdateFormat(); });
          }
       }
+   }
+
+   bool IsTimeRelatedFormat() const
+   {
+      return mType == NumericConverterType_TIME ||
+             mType == NumericConverterType_DURATION;
    }
 
    void
@@ -381,7 +387,7 @@ public:
    {
       ConversionResult result;
 
-      if (mType == NumericConverterType_TIME && mContext.HasSampleRate())
+      if (IsTimeRelatedFormat() && mContext.HasSampleRate())
          rawValue = floor(rawValue * mSampleRate + (nearest ? 0.5f : 0.0f)) /
                     mSampleRate; // put on a sample
       double theValue = rawValue * mScalingFactor
@@ -1013,9 +1019,10 @@ public:
        : mType { std::move(type) }
        , mFormat { std::move(format) }
    {
-      // Only TIME with # in the format depends on sample rate now
-      mDependsOnSampleRate = mType != NumericConverterType_TIME ||
-                             mFormat.Debug().find(L'#') != wxString::npos;
+      // # in the format means that Sample Rate is used
+      // to calculate the values. Otherwise, Sample Rate is optional for
+      // the TIME and DURATION formats and ignored by the others.
+      mDependsOnSampleRate = mFormat.Debug().find(L'#') != wxString::npos;
    }
    
    std::unique_ptr<NumericConverterFormatter>
@@ -1066,6 +1073,13 @@ NumericConverterItemRegistrator parsedTime {
    Registry::Placement { {}, {} },
    MakeGroup(
       "parsedTime", NumericConverterType_TIME, TimeConverterFormats_,
+      WXSIZEOF(TimeConverterFormats_))
+};
+
+NumericConverterItemRegistrator parsedDuration {
+   Registry::Placement { {}, {} },
+   MakeGroup(
+      "parsedDuration", NumericConverterType_DURATION, TimeConverterFormats_,
       WXSIZEOF(TimeConverterFormats_))
 };
 
