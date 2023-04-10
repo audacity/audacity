@@ -1021,7 +1021,7 @@ finish:
    mDebug = (mTrace && !mDebugOutput.Translation().empty())? true : mDebug;
 
    if (mDebug && !mRedirectOutput) {
-      NyquistOutputDialog dlog(mUIParent, -1,
+      NyquistOutputDialog dlog(nullptr, -1,
                                mName,
                                XO("Debug Output: "),
                                mDebugOutput);
