@@ -49,6 +49,8 @@ private:
    bool ParseFormatString(const TranslatableString & untranslatedFormat);
 
 public:
+   // returns true if the format type really changed:
+   bool SetTypeAndFormatName(const NumericConverterType& type, const NumericFormatSymbol& formatName);
    // returns true if the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
    // Could be empty if custom format is used
@@ -78,7 +80,7 @@ protected:
 
    FormatterContext mContext;
 
-   const NumericConverterType mType;
+   NumericConverterType mType;
 
    double         mValue;
 
