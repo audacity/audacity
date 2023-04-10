@@ -44,4 +44,8 @@ NUMERIC_FORMATS_API NumericFormatSymbol HundredthsFormat();
 NUMERIC_FORMATS_API NumericFormatSymbol MillisecondsFormat();
 NUMERIC_FORMATS_API NumericFormatSymbol HertzFormat();
 NUMERIC_FORMATS_API NumericFormatSymbol OctavesFormat();
+
+//! Return the best duration format for the given time format. Currently is an identity function
+NUMERIC_FORMATS_API NumericFormatSymbol
+GetBestDurationFormat(const NumericFormatSymbol& timeFormat);
 }
