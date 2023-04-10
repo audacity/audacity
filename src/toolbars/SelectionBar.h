@@ -90,6 +90,8 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void ModifySelection(int driver, bool done = false);
    void SelectionModeUpdated();
 
+   void UpdateTimeControlsFormat(const NumericFormatSymbol& format);
+
    SelectionBarListener * mListener;
    double mRate;
    double mStart, mEnd, mLength, mCenter;
