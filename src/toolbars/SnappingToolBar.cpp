@@ -387,6 +387,11 @@ void SnappingToolBar::Populate()
          OnSnapModeChanged();
       });
 
+   // When the focus is lost, clear out any text selection.
+   // See https://github.com/audacity/audacity/issues/4427
+   mSnapToCombo->Bind(
+      wxEVT_KILL_FOCUS, [this](auto&) { mSnapToCombo->SelectNone(); });
+
    RegenerateTooltips();
    Fit();
    Layout();
@@ -421,6 +426,12 @@ void SnappingToolBar::OnSnapModeChanged()
       snapEnabled ? SnapMode::SNAP_NEAREST : SnapMode::SNAP_OFF);
 
    mSnapToCombo->Enable(snapEnabled);
+
+   
+   // wxEVT_KILL_FOCUS is not always sent by wxWidgets.
+   // Remove any selection from the combo box if we've disabled it.
+   if (!snapEnabled)
+      mSnapToCombo->SelectNone();
 }
 
 static RegisteredToolbarFactory factory{
