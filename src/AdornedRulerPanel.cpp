@@ -1383,6 +1383,7 @@ void AdornedRulerPanel::UpdatePrefs()
 #endif
 #endif
 
+   mRulerType = RulerPanelViewPreference.ReadEnum();
    RefreshTimelineFormat();
    // Update();
 }
