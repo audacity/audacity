@@ -164,7 +164,9 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    std::shared_ptr<EffectInstance> pInstance;
 
    if (IsInteractive()) {
-      if (auto result = finder(settings))
+      if (!finder)
+         return false;
+      else if (auto result = finder(settings))
          pInstance = *result;
       else
          return false;
