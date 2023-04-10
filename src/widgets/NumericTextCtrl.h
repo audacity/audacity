@@ -86,7 +86,10 @@ class AUDACITY_DLL_API NumericTextCtrl final
    void Fit() override;
 
    void SetValue(double newValue);
-   
+
+   // returns true if the format type really changed:
+   bool SetTypeAndFormatName(
+      const NumericConverterType& type, const NumericFormatSymbol& formatName);
    // returns true iff the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
    bool SetCustomFormat(const TranslatableString& customFormat);
