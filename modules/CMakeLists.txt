@@ -20,6 +20,10 @@ if ( USE_LIBFLAC )
    list( APPEND MODULES mod-flac )
 endif()
 
+if ( USE_LIBTWOLAME )
+   list ( APPEND MODULES mod-mp2)
+endif()
+
 foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()
