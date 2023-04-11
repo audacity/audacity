@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_COMPOSITE__
 #define __AUDACITY_COMPOSITE__
 
+#include <algorithm>
 #include <cassert>
 #include <iterator>
 #include <type_traits>
@@ -132,6 +133,31 @@ struct Builder : Base
       : Base{ std::forward<BaseArgs>(args)... }
    {
       (..., push_back(std::forward<Items>(items)));
+   }
+
+   //! Iterator range constructor, with default transformer
+   template<typename InputIterator,
+      typename Arg = decltype(*std::declval<InputIterator>()),
+      typename ItemBuilder = decltype(Traits<Base, Derived>::ItemBuilder),
+      typename sfinae = std::enable_if_t<std::is_invocable_v<ItemBuilder, Arg>>>
+   Builder(BaseArgs... args, InputIterator begin, InputIterator end)
+      : Builder{
+         std::forward<BaseArgs>(args)..., begin, end,
+         [](Arg &&arg) -> decltype(auto) { return std::forward<Arg>(arg); }
+      }
+   {}
+
+   //! Iterator range constructor, with explicit transformer
+   template<typename InputIterator, typename Transformer,
+      typename Arg = decltype(*std::declval<InputIterator>()),
+      typename ItemBuilder = decltype(Traits<Base, Derived>::ItemBuilder),
+      typename sfinae = std::enable_if_t<std::is_invocable_v<
+         ItemBuilder, std::invoke_result_t<Transformer, Arg>>>>
+   Builder(BaseArgs... args,
+      InputIterator begin, InputIterator end, Transformer transformer
+   )  : Base{ std::forward<BaseArgs>(args)... } {
+      std::for_each(begin, end,
+         [this, &transformer](Arg &&arg){ push_back(transformer(arg)); });
    }
 
 private:

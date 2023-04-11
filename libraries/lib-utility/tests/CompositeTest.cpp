@@ -13,6 +13,7 @@
 #include "Callable.h"
 #include <algorithm>
 #include <array>
+#include <functional>
 #include <iterator>
 #include <numeric>
 
@@ -161,6 +162,7 @@ struct MyBuilder : Composite::Builder<MyCompositeBase, MyBuilder, int> {
 
 TEST_CASE("Composite::Builder")
 {
+   using namespace placeholders;
    std::array values{ 0, 1, 2, 3, 4 };
 
    DoTest<MyBuilder, Maker>(0);
@@ -170,6 +172,16 @@ TEST_CASE("Composite::Builder")
    MyBuilder builder{ 0, 0, 1, 2, 3, 4 };
 
    REQUIRE(compareSequences(values, builder));
+
+   // Forward range
+   MyBuilder builder2{ 0, begin(values), end(values) };
+   REQUIRE(compareSequences(values, builder2));
+
+   // Transform range
+   std::array values2{ 1, 2, 3, 4, 5 };
+   MyBuilder builder3{ 0, begin(values2), end(values2),
+      bind( minus{}, _1, -1 ) };
+   REQUIRE(compareSequences(values, builder2));
 }
 
 TEST_CASE("Composite::Extension")
