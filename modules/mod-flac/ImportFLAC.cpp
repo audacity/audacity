@@ -23,22 +23,12 @@
 *//*******************************************************************/
 
 
-
-// For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
-
-#ifndef WX_PRECOMP
-// Include your minimal set of headers here, or wx.h
-#include <wx/window.h>
-#endif
-
 #include <wx/defs.h>
 
 #include "Import.h"
 #include "ImportPlugin.h"
 #include "ImportProgressListener.h"
 
-#include "SelectFile.h"
 #include "Tags.h"
 
 #define FLAC_HEADER "fLaC"
@@ -50,23 +40,12 @@ static const auto exts = {
    wxT("flc")
 };
 
-#ifndef USE_LIBFLAC
-
-static Importer::RegisteredUnusableImportPlugin registered{
-      std::make_unique<UnusableImportPlugin>
-         (DESC, FileExtensions( exts.begin(), exts.end() ) )
-};
-
-#else /* USE_LIBFLAC */
-
 #include <wx/file.h>
 #include <wx/ffile.h>
 
 #include "FLAC++/decoder.h"
 
-#include "Prefs.h"
 #include "WaveTrack.h"
-#include "ImportPlugin.h"
 #include "ImportUtils.h"
 
 #ifdef USE_LIBID3TAG
@@ -500,5 +479,3 @@ FLACImportFileHandle::~FLACImportFileHandle()
 {
    mFile->finish();
 }
-
-#endif /* USE_LIBFLAC */
