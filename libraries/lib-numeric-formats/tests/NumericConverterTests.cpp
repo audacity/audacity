@@ -156,7 +156,44 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
    REQUIRE(fracFormatter->SingleStep(0.0, 1, true) == Approx(15.0));
    REQUIRE(fracFormatter->SingleStep(0.0, 4, true) == Approx(0.5));
    REQUIRE(fracFormatter->SingleStep(0.0, 3, true) == Approx(5));
-   
+
+   auto durationFormatter = CreateBeatsNumericConverterFormatter(
+      FormatterContext::ProjectContext(*project), 16, false);
+
+   REQUIRE(
+      durationFormatter->ValueToString(-1.0, false).valueString ==
+      "--- bar -- beat --");
+
+   REQUIRE(
+      durationFormatter->ValueToString(0.0, false).valueString ==
+      "000 bar 00 beat 00");
+
+   REQUIRE(
+      durationFormatter->ValueToString(0.6, false).valueString ==
+      "000 bar 01 beat 00");
+
+   REQUIRE(
+      durationFormatter->ValueToString(1.0, false).valueString ==
+      "000 bar 02 beat 00");
+
+   REQUIRE(
+      durationFormatter->ValueToString(1.9, false).valueString ==
+      "001 bar 00 beat 03");
+   REQUIRE(*durationFormatter->StringToValue("000 bar 00 beat 00") == Approx(0));
+   REQUIRE(*durationFormatter->StringToValue("000 bar 01 beat 00") == Approx(0.5));
+   REQUIRE(*durationFormatter->StringToValue("001 bar 00 beat 00") == Approx(1.5));
+   REQUIRE(
+      *durationFormatter->StringToValue("000 bar 00 beat 01") == Approx(0.125));
+   REQUIRE(
+      *durationFormatter->StringToValue("000 bar 01 beat 03") == Approx(0.875));
+   REQUIRE(
+      *durationFormatter->StringToValue("001 bar 00 beat 08") ==
+      Approx(1.5 + 0.0 + 8 * (0.5 / 4)));
+
+   REQUIRE(durationFormatter->SingleStep(0.0, 2, true) == Approx(1.5));
+   REQUIRE(durationFormatter->SingleStep(0.0, 1, true) == Approx(15.0));
+   REQUIRE(durationFormatter->SingleStep(0.0, 4, true) == Approx(0.5));
+   REQUIRE(durationFormatter->SingleStep(0.0, 3, true) == Approx(5));
 }
 
 

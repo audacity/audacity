@@ -48,9 +48,10 @@ public:
       Get10Pow(MIN_DIGITS[2] - 1) + 1
    };
    
-   BeatsFormatter(const FormatterContext& context, int fracPart)
+   BeatsFormatter(const FormatterContext& context, int fracPart, bool timeFormat)
        : mContext { context }
        , mFracPart { fracPart }
+       , mFieldValueOffset { timeFormat ? 1 : 0 }
    {
       auto project = mContext.GetProject();
 
@@ -213,8 +214,8 @@ public:
          const auto fieldLength = mFieldLengths[fieldIndex];
          const auto fieldValue = static_cast<int>(std::floor(value / fieldLength));
 
-         result.fieldValueStrings[fieldIndex] =
-            wxString::Format(mFields[fieldIndex].formatStr, fieldValue + 1);
+         result.fieldValueStrings[fieldIndex] = wxString::Format(
+            mFields[fieldIndex].formatStr, fieldValue + mFieldValueOffset);
 
          value = value - fieldValue * fieldLength;
       }
@@ -248,7 +249,7 @@ public:
          if (!fieldStringValue.ToLong(&val))
             return std::nullopt;
 
-         t += (val - 1) * mFieldLengths[i];
+         t += (val - mFieldValueOffset) * mFieldLengths[i];
       }
 
       return t;
@@ -300,6 +301,8 @@ private:
    
    const int mFracPart;
 
+   const int mFieldValueOffset;
+
    std::array<double, 3> mFieldLengths {};
 
    wxString mBarString;
@@ -310,8 +313,9 @@ class BeatsNumericConverterFormatterFactory final :
     public NumericConverterFormatterFactory
 {
 public:
-   explicit BeatsNumericConverterFormatterFactory (int fracPart)
-      : mFracPart { fracPart }
+   BeatsNumericConverterFormatterFactory (int fracPart, bool timeFormat)
+       : mFracPart { fracPart }
+       , mTimeFormat { timeFormat }
    {
    }
 
@@ -321,7 +325,7 @@ public:
       if (!IsAcceptableInContext(context))
          return {};
 
-      return std::make_unique<BeatsFormatter>(context, mFracPart);
+      return std::make_unique<BeatsFormatter>(context, mFracPart, mTimeFormat);
    }
 
    bool IsAcceptableInContext(const FormatterContext& context) const override
@@ -331,25 +335,39 @@ public:
 
 private:
    const int mFracPart;
+   const bool mTimeFormat;
 };
 
-NumericConverterItemRegistrator beatsTime {
-   Registry::Placement { {}, { Registry::OrderingHint::After, L"parsedTime" } },
-   NumericConverterFormatterGroup(
-      "beats", NumericConverterType_TIME,
+Registry::BaseItemPtr BuildBeatsGroup(bool timeFormat)
+{
+   return NumericConverterFormatterGroup(
+      timeFormat ? "beatsTime" : "beatsDuration",
+      timeFormat ? NumericConverterType_TIME : NumericConverterType_DURATION,
       NumericConverterFormatterItem(
          /* i18n-hint: "bar" and "beat" are musical notation elements. */
          "beats", XO("bar:beat"),
-         std::make_unique<BeatsNumericConverterFormatterFactory>(0)),
+         std::make_unique<BeatsNumericConverterFormatterFactory>(0, timeFormat)),
       NumericConverterFormatterItem(
-         /* i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.  */
+         /* i18n-hint: "bar" and "beat" are musical notation elements. "tick"
+            corresponds to a 16th note.  */
          "beats16", XO("bar:beat:tick"),
-         std::make_unique<BeatsNumericConverterFormatterFactory>(16)))
+         std::make_unique<BeatsNumericConverterFormatterFactory>(16, timeFormat)));
+}
+
+NumericConverterItemRegistrator beatsTime {
+   Registry::Placement { {}, { Registry::OrderingHint::After, L"parsedTime" } },
+   BuildBeatsGroup(true)
+};
+
+NumericConverterItemRegistrator beatsDuration {
+   Registry::Placement { {}, { Registry::OrderingHint::After, L"parsedDuration" } },
+   BuildBeatsGroup(false)
 };
 } // namespace
 
 std::unique_ptr<NumericConverterFormatter> CreateBeatsNumericConverterFormatter(
-   const FormatterContext& context, int fracPart /*= 0*/)
+   const FormatterContext& context, int fracPart /*= 0*/,
+   bool timeFormat /*= true*/)
 {
-   return std::make_unique<BeatsFormatter>(context, fracPart);
+   return std::make_unique<BeatsFormatter>(context, fracPart, timeFormat);
 }

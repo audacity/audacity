@@ -235,6 +235,16 @@ void NumericTextCtrl::UpdateAutoFocus()
    }
 }
 
+bool NumericTextCtrl::SetTypeAndFormatName(const NumericConverterType& type, const NumericFormatSymbol& formatName)
+{
+   if (!NumericConverter::SetTypeAndFormatName(type, formatName))
+      return false;
+
+   HandleFormatterChanged();
+
+   return true;
+}
+
 bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol& formatName)
 {
    if (!NumericConverter::SetFormatName(formatName))

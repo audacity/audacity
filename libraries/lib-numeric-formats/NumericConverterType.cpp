@@ -11,5 +11,6 @@
 #include "NumericConverterType.h"
 
 const NumericConverterType NumericConverterType_TIME { L"time" };
+const NumericConverterType NumericConverterType_DURATION { L"duration" };
 const NumericConverterType NumericConverterType_FREQUENCY { L"frequency" };
 const NumericConverterType NumericConverterType_BANDWIDTH { L"bandwidth" };

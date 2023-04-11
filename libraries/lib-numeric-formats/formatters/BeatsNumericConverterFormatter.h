@@ -17,6 +17,6 @@ class FormatterContext;
 
 NUMERIC_FORMATS_API std::unique_ptr<NumericConverterFormatter>
 CreateBeatsNumericConverterFormatter(
-   const FormatterContext& context, int fracPart = 0);
+   const FormatterContext& context, int fracPart = 0, bool timeFormat = true);
 
 
