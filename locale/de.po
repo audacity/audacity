@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-06 21:08+0000\n"
+"PO-Revision-Date: 2023-04-07 23:36+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (http://app.transifex.com/klyok/teams/690/de/)\n"
 "Language: de\n"
@@ -92,9 +92,7 @@ msgstr "Wiedergabekanäle: %d\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Low Recording Latency: %g\n"
-msgstr ""
-"Niedrige Aufnahmelatenz: %g\n"
-"\n"
+msgstr "Niedrige Aufnahmelatenz: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -104,9 +102,7 @@ msgstr "Niedrige Wiedergabelatenz: %g\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "High Recording Latency: %g\n"
-msgstr ""
-"Hohe Aufnahmelatenz: %g\n"
-"\n"
+msgstr "Hohe Aufnahmelatenz: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -126,7 +122,7 @@ msgstr "Aufnahmegerät ausgewählt: %d - %s\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No recording device found for '%s'.\n"
-msgstr "Kein Aufnahmegerät für ' %s ' gefunden.\n"
+msgstr "Kein Aufnahmegerät für '%s' gefunden.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -166,9 +162,7 @@ msgstr "Verfügbare Aufnahmequellen:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available playback volumes:\n"
-msgstr ""
-"Verfügbare Wiedergabelautstärken:\n"
-"\n"
+msgstr "Verfügbare Wiedergabelautstärken:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Recording volume is emulated\n"
@@ -971,7 +965,7 @@ msgstr "NTSC-Frames"
 #. * rate!
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000 frames|29.97002997"
-msgstr "01000 01000 Frames|29.97002997"
+msgstr "01000 01000 Frames|29,97002997"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at PAL TV frame rate (used for European TV)
@@ -1701,7 +1695,7 @@ msgstr "Film-Frames (24 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "NTSC frames (29.97 fps)"
-msgstr "NTSC-Frames (29.97 fps)"
+msgstr "NTSC-Frames (29,97 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "NTSC frames (30 fps)"
@@ -18430,12 +18424,12 @@ msgstr "Ändere Abtastformat"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Processing...   0%%"
-msgstr "Verarbeite... 0%%"
+msgstr "Verarbeite...   0%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Processing...   %i%%"
-msgstr "Verarbeite...  %i%%"
+msgstr "Verarbeite...   %i%%"
 
 #. i18n-hint: The strings name a track and a format
 #. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
@@ -18499,7 +18493,7 @@ msgstr "352800 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "384000 Hz"
-msgstr "352800 Hz"
+msgstr "384000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Other..."
@@ -21238,7 +21232,7 @@ msgstr "Spektralwerkzeuge"
 #~ msgstr "[[file:Quick_Help|Schnellhilfe]] - wenn nicht lokal installiert, [[https://manual.audacityteam.org/quick_help.html|Online anschauen]]"
 
 #~ msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
-#~ msgstr " [[file:Main_Page|Handbuch]] - wenn nicht lokal installiert, [[https://manual.audacityteam.org/|Online anschauen]]"
+#~ msgstr "[[file:Main_Page|Handbuch]] - wenn nicht lokal installiert, [[https://manual.audacityteam.org/|Online anschauen]]"
 
 #~ msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
 #~ msgstr "Mehr:</b> Besuchen Sie unser [[https://wiki.audacityteam.org/index.php|Wiki]] für Tipps, Tricks, weitere Tutorials und Effekt-Erweiterungen."
