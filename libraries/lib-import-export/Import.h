@@ -75,13 +75,13 @@ class ExtImportItem
   wxArrayString mime_types;
 };
 
-class AUDACITY_DLL_API  Importer {
+class IMPORT_EXPORT_API Importer {
    struct ImporterItem;
 public:
 
    // Objects of this type are statically constructed in files implementing
    // subclasses of ImportPlugin
-   struct AUDACITY_DLL_API RegisteredImportPlugin final
+   struct IMPORT_EXPORT_API RegisteredImportPlugin final
       : public Registry::RegisteredItem<ImporterItem>
    {
       RegisteredImportPlugin(
@@ -178,7 +178,7 @@ public:
               TranslatableString &errorMessage);
 
 private:
-   struct AUDACITY_DLL_API ImporterItem final : Registry::SingleItem {
+   struct IMPORT_EXPORT_API ImporterItem final : Registry::SingleItem {
       static Registry::GroupItem &Registry();
 
       ImporterItem( const Identifier &id, std::unique_ptr<ImportPlugin> pPlugin );
@@ -193,6 +193,6 @@ private:
    static UnusableImportPluginList &sUnusableImportPluginList();
 };
 
-extern AUDACITY_DLL_API BoolSetting NewImportingSession;
+extern IMPORT_EXPORT_API BoolSetting NewImportingSession;
 
 #endif
