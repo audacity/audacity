@@ -30,7 +30,7 @@ struct RegistryVisitor : public Registry::Visitor
       auto concreteGroup = dynamic_cast<NumericConverterRegistryGroup*>(&item);
 
       mInMatchingGroup =
-         concreteGroup != nullptr && concreteGroup->type == requestedType;
+         concreteGroup != nullptr && concreteGroup->GetType() == requestedType;
    }
 
    void EndGroup(Registry::GroupItemBase&, const Path&) override

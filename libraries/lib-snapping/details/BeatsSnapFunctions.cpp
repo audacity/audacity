@@ -71,7 +71,7 @@ SnapRegistryItemRegistrator beats {
    Registry::Placement { {}, { Registry::OrderingHint::Begin } },
    SnapFunctionGroup(
       /* i18n-hint: The music theory "beat"*/
-      "beats", XO("Beats"), true,
+      "beats", { XO("Beats"), true },
       /* i18n-hint: The music theory "bar"*/
       TimeInvariantSnapFunction("bar", XO("Bar"), SnapToBar),
       TimeInvariantSnapFunction("bar_1_2", XO("1/2"), SnapToBeat(2)),
@@ -87,7 +87,7 @@ SnapRegistryItemRegistrator triplets {
    Registry::Placement { {}, { Registry::OrderingHint::After, "beats" } },
    SnapFunctionGroup(
       /* i18n-hint: The music theory "triplet"*/
-      "triplets", XO("Triplets"), true,
+      "triplets", { XO("Triplets"), true },
       TimeInvariantSnapFunction(
          "triplet_1_2", XO("1/2 (triplets)"), SnapToTriplets(2)),
       TimeInvariantSnapFunction(

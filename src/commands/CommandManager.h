@@ -430,34 +430,35 @@ namespace MenuTable {
       bool extension;
    };
 
+   struct MenuItemData {
+      MenuItemData(TranslatableString title) : mTitle{ std::move(title) } {}
+      const TranslatableString mTitle;
+   };
+
    // Describes a main menu in the toolbar, or a sub-menu
    struct AUDACITY_DLL_API MenuItem final
-      : GroupItem<ToolbarMenuVisitor>
-      , WholeMenu {
-      template<typename... Args>
-         MenuItem(const Identifier &internalName,
-            const TranslatableString &title, Args&&... args
-         )  : GroupItem{ internalName, std::forward<Args>(args)... }
-            , title{ title }
-         {}
+      : Composite::Extension<
+         GroupItem<ToolbarMenuVisitor>, MenuItemData, const Identifier&
+      >
+      , WholeMenu
+   {
+      using Extension::Extension;
       ~MenuItem() override;
-
-      TranslatableString title;
+      const auto &GetTitle() const { return mTitle; }
    };
+
+   using Condition = std::function<bool()>;
 
    // Collects other items that are conditionally shown or hidden, but are
    // always available to macro programming
-   struct ConditionalGroupItem final : GroupItem<ToolbarMenuVisitor> {
-      using Condition = std::function<bool()>;
-
-      template<typename... Args>
-         ConditionalGroupItem(const Identifier &internalName,
-            Condition condition, Args&&... args
-         )  : GroupItem{ internalName, std::forward<Args>(args)... }
-            , condition{ condition }
-         {}
+   struct ConditionalGroupItem final
+      : Composite::Extension<
+         GroupItem<ToolbarMenuVisitor>, Condition, const Identifier &
+      >
+   {
+      using Extension::Extension;
       ~ConditionalGroupItem() override;
-      const Condition condition;
+      using Condition::operator();
    };
 
    // usage:
@@ -599,24 +600,28 @@ namespace MenuTable {
       Appender fn;
    };
 
-   struct MenuPart : GroupItem<ToolbarMenuVisitor>, MenuSection
-   {
-      template< typename... Args >
-      explicit
-      MenuPart(const Identifier &internalName, Args&&... args )
-         : GroupItem{ internalName, std::forward<Args>(args)... }
-      {}
-      ~MenuPart() override;
-   };
-
    //! Groups of this type are inlined in the menu tree organization.  They
    //! (but not their contained items) are excluded from visitations using
    //! MenuVisitor
-   struct MenuItems : GroupItem<ToolbarMenuVisitor> {
-      using GroupItem::GroupItem;
+   struct MenuItems
+      : Composite::Extension<
+         GroupItem<ToolbarMenuVisitor>, void, const Identifier &
+      >
+   {
+      using Extension::Extension;
       ~MenuItems() override;
       //! Anonymous if its name is empty, else weakly ordered
       Ordering GetOrdering() const override;
+   };
+
+   struct MenuPart
+      : Composite::Extension<
+         GroupItem<ToolbarMenuVisitor>, void, const Identifier &
+      >
+      , MenuSection
+   {
+      using Extension::Extension;
+      ~MenuPart() override;
    };
 
    /*! @name Factories

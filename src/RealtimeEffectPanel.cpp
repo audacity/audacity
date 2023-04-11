@@ -78,7 +78,7 @@ namespace
             if (mMenuLevelCounter != 0)
             {
                auto submenu = std::make_unique<wxMenu>();
-               mMenuPtr->AppendSubMenu(submenu.get(), menuItem->title.Translation());
+               mMenuPtr->AppendSubMenu(submenu.get(), menuItem->GetTitle().Translation());
                mMenuPtr = submenu.release();
             }
             ++mMenuLevelCounter;

@@ -23,7 +23,7 @@ double SnapToSamples(const AudacityProject& project)
 SnapRegistryItemRegistrator secondsAndSamples {
    Registry::Placement { {}, { Registry::OrderingHint::After, "triplets" } },
    SnapFunctionGroup(
-      "time", XO("Seconds && samples"), false,
+      "time", { XO("Seconds && samples"), false },
       TimeInvariantSnapFunction("seconds", XO("Seconds"), 1.0),
       TimeInvariantSnapFunction("deciseconds", XO("Deciseconds"), 10.0),
       TimeInvariantSnapFunction("centiseconds", XO("Centiseconds"), 100.0),

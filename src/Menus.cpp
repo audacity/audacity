@@ -272,21 +272,19 @@ struct MenuItemVisitor : ToolbarMenuVisitor
    void DoBeginGroup( GroupItemBase &item, const Path& ) override
    {
       auto pItem = &item;
-      if (const auto pMenu =
-          dynamic_cast<MenuItem*>( pItem )) {
-         manager.BeginMenu( pMenu->title );
+      if (const auto pMenu = dynamic_cast<const MenuItem*>(pItem)) {
+         manager.BeginMenu(pMenu->GetTitle());
       }
-      else
-      if (const auto pConditionalGroup =
-          dynamic_cast<ConditionalGroupItem*>( pItem )) {
-         const auto flag = pConditionalGroup->condition();
+      else if (const auto pConditionalGroup =
+          dynamic_cast<const ConditionalGroupItem*>(pItem)
+      ) {
+         const auto flag = (*pConditionalGroup)();
          if (!flag)
             manager.BeginOccultCommands();
          // to avoid repeated call of condition predicate in EndGroup():
          flags.push_back(flag);
       }
-      else
-      if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+      else if (const auto pGroup = dynamic_cast<const MenuSection*>(pItem)) {
       }
       else
          wxASSERT( false );

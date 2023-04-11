@@ -38,21 +38,24 @@ using NumericConverterFormatterFactoryPtr =
 // NumericConverterRegistryGroupTag is a fake type needed to fix the link on Windows
 struct NumericConverterRegistryGroupTag {};
 
-struct NUMERIC_FORMATS_API NumericConverterRegistryGroup :
-    public Registry::GroupItem<NumericConverterRegistryGroupTag>
-{
-   template <typename... Args>
-   NumericConverterRegistryGroup(
-      const Identifier& internalName, NumericConverterType _type,
-      Args&&... args)
-       : GroupItem { internalName, std::forward<Args>(args)... }
-       , type { std::move(_type) }
-   {
-   }
+struct NumericConverterRegistryGroupData {
+   NumericConverterType type;
+   NumericConverterRegistryGroupData(NumericConverterType type)
+      : type{ std::move(type) }
+   {}
+};
 
+struct NUMERIC_FORMATS_API NumericConverterRegistryGroup final
+   : Composite::Extension<
+      Registry::GroupItem<NumericConverterRegistryGroupTag>,
+      NumericConverterRegistryGroupData,
+      const Identifier &
+   >
+{
+   using Extension::Extension;
    ~NumericConverterRegistryGroup() override;
 
-   NumericConverterType type;
+   const auto &GetType() const { return type; }
 };
 
 struct NUMERIC_FORMATS_API NumericConverterRegistryItem : public Registry::SingleItem

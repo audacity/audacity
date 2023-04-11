@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include "Callable.h"
 #include "Prefs.h"
 #include "Registry.h"
 
@@ -54,22 +55,22 @@ struct SNAPPING_API SnapResult final
    bool snapped {};
 };
 
-struct SNAPPING_API SnapRegistryGroup :
-    public Registry::GroupItem<SnapRegistryVisitor>
-{
-   template <typename... Args>
-   SnapRegistryGroup(
-      const Identifier& internalName, const TranslatableString& _label,
-      bool _inlined, Args&&... args)
-       : GroupItem { internalName, std::forward<Args>(args)... }
-       , label { _label }
-       , inlined { _inlined}
-   {}
-   
-   ~SnapRegistryGroup() override;
-
+struct SnapRegistryGroupData {
    const TranslatableString label;
    const bool inlined;
+};
+
+struct SNAPPING_API SnapRegistryGroup final
+   : Composite::Extension<
+      Registry::GroupItem<SnapRegistryVisitor>,
+      SnapRegistryGroupData,
+      const Identifier &
+   >
+{
+   using Extension::Extension;
+   ~SnapRegistryGroup() override;
+   bool Inlined() const { return inlined; }
+   const TranslatableString &Label() const { return label; }
 };
 
 struct SNAPPING_API SnapRegistryItem : public Registry::SingleItem
@@ -94,13 +95,8 @@ SNAPPING_API Registry::BaseItemPtr TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    MultiplierFunctor functor);
 
-template <typename... Args>
-Registry::BaseItemPtr SnapFunctionGroup (
-   const Identifier& groupId, TranslatableString label, bool inlined, Args&&... args)
-{
-   return std::make_unique<SnapRegistryGroup>(
-      groupId, label, inlined, std::forward<Args>(args)...);
-}
+constexpr auto SnapFunctionGroup = Callable::UniqueMaker<
+   SnapRegistryGroup, const Identifier &, SnapRegistryGroupData>();
 
 struct SNAPPING_API SnapFunctionsRegistry final {
    static Registry::GroupItemBase& Registry();
