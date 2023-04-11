@@ -603,7 +603,6 @@ list( APPEND SOURCES
       export/ExportCL.cpp
       export/ExportMultiple.cpp
       export/ExportMultiple.h
-      export/ExportPCM.cpp
 
       # Optional exporters
       $<$<BOOL:${USE_FFMPEG}>:
@@ -633,7 +632,6 @@ list( APPEND SOURCES
 
       import/ImportAUP.cpp
       import/ImportLOF.cpp
-      import/ImportPCM.cpp
       
       import/ImportRaw.cpp
       import/ImportRaw.h
@@ -1336,6 +1334,9 @@ else()
    set( MIMETYPES
       application/x-audacity-project
       application/x-audacity-project+sqlite3
+      audio/basic
+      audio/x-aiff
+      audio/x-wav
    )
    if( USE_FFMPEG )
       list( APPEND MIMETYPES
@@ -1355,13 +1356,6 @@ else()
    if( USE_LIBMAD OR USE_LIBMPG123)
       list( APPEND MIMETYPES
          audio/mpeg
-      )
-   endif()
-   if( USE_SNDFILE )
-      list( APPEND MIMETYPES
-         audio/basic
-         audio/x-aiff
-         audio/x-wav
       )
    endif()
    if( USE_LIBOGG AND USE_LIBVORBIS )
