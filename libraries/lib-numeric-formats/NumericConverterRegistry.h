@@ -95,7 +95,8 @@ constexpr auto NumericConverterFormatterItem =
    Callable::UniqueMaker<NumericConverterRegistryItem>();
 
 constexpr auto NumericConverterFormatterGroup =
-   Callable::UniqueMaker<NumericConverterRegistryGroup>();
+   Callable::UniqueMaker<NumericConverterRegistryGroup,
+      const Identifier&, NumericConverterRegistryGroupData>();
 
 struct NUMERIC_FORMATS_API NumericConverterItemRegistrator final :
     public Registry::RegisteredItem<
