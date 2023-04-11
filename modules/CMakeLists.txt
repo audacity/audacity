@@ -4,6 +4,7 @@
 # that it depends on
 set( MODULES
    mod-script-pipe
+   mod-mp3
 )
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
    list( APPEND MODULES
