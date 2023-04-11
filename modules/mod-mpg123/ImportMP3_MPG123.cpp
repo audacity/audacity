@@ -28,7 +28,6 @@
 
 #include <mpg123.h>
 
-#include "Prefs.h"
 #include "Tags.h"
 #include "WaveTrack.h"
 
@@ -38,7 +37,7 @@
 namespace
 {
 
-static const auto exts = { wxT("mp3"), wxT("mp2"), wxT("mpa") };
+const auto exts = { wxT("mp3"), wxT("mp2"), wxT("mpa") };
 
 // ID2V2 genre can be quite complex:
 // (from https://id3.org/id3v2.3.0)

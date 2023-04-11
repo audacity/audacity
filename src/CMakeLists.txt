@@ -660,10 +660,6 @@ list( APPEND SOURCES
          import/ImportMP3_MAD.cpp
       >
 
-      $<$<BOOL:${USE_LIBMPG123}>:
-         import/ImportMP3_MPG123.cpp
-      >
-
       # Menus
 
       menus/ClipMenus.cpp
@@ -1133,7 +1129,6 @@ set( LIBRARIES
       SndFile::sndfile
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
-      $<$<BOOL:${USE_LIBMPG123}>:mpg123::libmpg123>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
