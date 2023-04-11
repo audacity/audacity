@@ -28,17 +28,7 @@
 
 *//*******************************************************************/
 
-
-
-// For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
-
-#ifndef WX_PRECOMP
-#include <wx/window.h>
-#endif
-
 #include "Import.h"
-#include "Prefs.h"
 #include "Tags.h"
 
 
@@ -47,17 +37,6 @@
 static const auto exts = {
    wxT("ogg")
 };
-
-#ifndef USE_LIBVORBIS
-/* BPF There is no real reason to compile without LIBVORBIS, but if you do, you will needs this header */
-#include "ImportPlugin.h"
-
-static Importer::RegisteredUnusableImportPlugin registered{
-      std::make_unique<UnusableImportPlugin>
-         (DESC, FileExtensions( exts.begin(), exts.end() ) )
-};
-
-#else /* USE_LIBVORBIS */
 
 #include <wx/log.h>
 #include <wx/setup.h> // see next comment
@@ -393,5 +372,3 @@ OggImportFileHandle::~OggImportFileHandle()
    mFile->Detach();    // so that it doesn't try to close the file (ov_clear()
                        // did that already)
 }
-
-#endif                          /* USE_LIBVORBIS */
