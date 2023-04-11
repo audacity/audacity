@@ -153,7 +153,4 @@ struct SFFile : public std::unique_ptr<SNDFILE, ::SFFileCloser>
    }
 };
 
-extern ChoiceSetting FileFormatsCopyOrEditSetting;
-extern ChoiceSetting FileFormatsSaveWithDependenciesSetting;
-
 #endif
