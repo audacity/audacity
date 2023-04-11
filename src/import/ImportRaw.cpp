@@ -28,7 +28,7 @@ and sample size to help you importing data of an unknown format.
 #include "ImportUtils.h"
 
 #include "AudioIOBase.h"
-#include "../FileFormats.h"
+#include "FileFormats.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
 #include "SelectFile.h"

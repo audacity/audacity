@@ -119,8 +119,6 @@ list( APPEND SOURCES
       EnvelopeEditor.h
       FFmpeg.cpp
       FFmpeg.h
-      FileFormats.cpp
-      FileFormats.h
       FrameStatisticsDialog.cpp
       FrameStatisticsDialog.h
       FreqWindow.cpp
@@ -1126,7 +1124,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      SndFile::sndfile
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
@@ -1435,6 +1432,7 @@ set( AUDACITY_LIBRARIES
    lib-snapping-interface
    lib-import-export-interface
    lib-export-ui-interface
+   lib-file-formats-interface
 )
 
 if (${_OPT}has_vst3)

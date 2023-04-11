@@ -35,7 +35,7 @@
 #error Requires libsndfile 1.0 or higher
 #endif
 
-#include "../FileFormats.h"
+#include "FileFormats.h"
 #include "Prefs.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
