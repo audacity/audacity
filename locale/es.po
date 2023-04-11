@@ -1,12 +1,13 @@
 # Header entry was created by Lokalize.
 #
 # Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Francisco Vila <paconet@gmx.es>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-10 09:44+0200\n"
+"PO-Revision-Date: 2023-04-11 16:50+0200\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist at gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -377,8 +378,8 @@ msgstr "Audacity no ha podido leer de un archivo en %s."
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
-"Audacity ha escrito correctamente un archivo en %s pero ha podido renombrarlo"
-" como %s."
+"Audacity ha escrito correctamente un archivo en %s pero no ha podido"
+" renombrarlo como %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -546,7 +547,7 @@ msgstr "Gausiano (a=4.5)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
-msgstr "Baja calidad (más rápido)"
+msgstr "Baja calidad (el más rápido)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Medium Quality"
@@ -558,7 +559,7 @@ msgstr "Calidad alta"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Best Quality (Slowest)"
-msgstr "Mejor calidad (más lento)"
+msgstr "Mejor calidad (el más lento)"
 
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: libraries/lib-math/SampleFormat.cpp
@@ -604,7 +605,7 @@ msgid ""
 msgstr ""
 "El módulo \"%s\" no tiene un indicador de versión.\n"
 "\n"
-"No será cargado."
+"No se cargará."
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, c-format
@@ -615,7 +616,7 @@ msgid ""
 msgstr ""
 "El módulo \"%s\" está vinculado a la versión \"%s\" de Audacity.\n"
 "\n"
-"No será cargado."
+"No se cargará."
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, c-format
@@ -626,7 +627,7 @@ msgid ""
 msgstr ""
 "No se ha podido inicializar el módulo \"%s\".\n"
 "\n"
-"No será cargado."
+"No se cargará."
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, c-format
@@ -671,7 +672,7 @@ msgid ""
 msgstr ""
 "El módulo \"%s\" no tiene alguna de las funciones requeridas.\n"
 "\n"
-"No será cargado."
+"No se cargará."
 
 #: libraries/lib-module-manager/PluginManager.cpp
 #, c-format
@@ -771,17 +772,17 @@ msgstr "compás"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr "ritmo"
+msgstr "pulso"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr "compás:ritmo"
+msgstr "compás:pulso"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr "compás:ritmo:semicorchea"
+msgstr "compás:pulso:semicorchea"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -1615,7 +1616,7 @@ msgstr "De&purar"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Beats"
-msgstr "Ritmos"
+msgstr "Pulsos"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/SnapUtils.cpp
@@ -3161,7 +3162,7 @@ msgstr "Minutos y segundos"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Beats and Measures"
-msgstr "Ritmos y medidas"
+msgstr "Pulsos y medidas"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
@@ -4421,7 +4422,8 @@ msgstr ""
 " externo.\n"
 "\n"
 "Algunos proyectos antiguos de Audacity pueden no ser independientes por que"
-" se debe tener precaución para mantener las dependencias externas en el lugar"
+" se "
+"debe tener precaución para mantener las dependencias externas en el lugar"
 " adecuado.\n"
 "Los nuevos proyectos serán independientes por lo que se corren menos riegos."
 
@@ -4865,8 +4867,9 @@ msgid ""
 " disabled these plugins to avoid any stalling or crashes."
 msgstr ""
 "Audacity ha encontrado %d complementos incompatibles que no se han podido"
-" cargar. Hemos deshabilitado esos complementos para evitar cualquier"
-" incidencia con la aplicación."
+" cargar. "
+"Hemos deshabilitado esos complementos para evitar cualquier incidencia con la"
+" aplicación."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -8866,11 +8869,11 @@ msgstr "Resultados"
 
 #: src/effects/Contrast.cpp
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Pass"
-msgstr "Criterio de éxito 1.4.7 de WCAG 2.0: Superado"
+msgstr "Success Criteria 1.4.7 de WCAG 2.0: Superado"
 
 #: src/effects/Contrast.cpp
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Fail"
-msgstr "Criterio de éxito 1.4.7 de WCAG 2.0: No superado"
+msgstr "Success Criteria 1.4.7 de WCAG 2.0: No superado"
 
 #: src/effects/Contrast.cpp
 msgid "Data gathered"
@@ -13150,7 +13153,7 @@ msgstr "Sobrescribir archivos existentes"
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "\"%s\" successfully created."
-msgstr "\"%s\" creada con éxito."
+msgstr "\"%s\" creada correctamente."
 
 #: src/export/ExportMultiple.cpp
 msgid "Choose a location to save the exported files"
@@ -13351,7 +13354,7 @@ msgstr "Calidad alta (lento)"
 
 #: src/export/ExportWavPack.cpp
 msgid "Very High Quality (Slowest)"
-msgstr "Mejor calidad (más lento)"
+msgstr "Mejor calidad (el más lento)"
 
 #: src/export/ExportWavPack.cpp
 msgid "32 bit float "
@@ -15153,7 +15156,7 @@ msgstr "Cambiar la pista en&focada"
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "A journal will be recorded after Audacity restarts."
-msgstr "Una secuencia será registrada cuando se reinicie Audacity."
+msgstr "Un registro será guardado cuando se reinicie Audacity."
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
@@ -20972,7 +20975,7 @@ msgstr "Permitido"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr "Operación realizada con éxito.~%Archivos escritos en:~%~s~%"
+msgstr "Operación realizada correctamente.~%Archivos escritos en:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -21091,7 +21094,7 @@ msgstr "1 - 1000 compases"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm track duration"
-msgstr "Duración de pista de ritmos"
+msgstr "Duración de pista de ritmo"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Used if 'Number of bars' = 0"
@@ -21780,7 +21783,7 @@ msgstr "Volumen y compresión"
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
 msgid "Fading"
-msgstr "Aplicando Aparecer progresivamente"
+msgstr "Aplicando Atenuación"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Pitch and Tempo"
@@ -21813,7 +21816,7 @@ msgstr "Eliminación vocal"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
-msgstr "Herramienta espectral"
+msgstr "Herramientas espectrales"
 
 #, c-format
 #~ msgid "Exception code 0x%x"
