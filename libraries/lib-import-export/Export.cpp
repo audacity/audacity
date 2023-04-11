@@ -128,32 +128,6 @@ const ExportPluginArray &Exporter::GetPlugins()
    return mPlugins;
 }
 
-ExportPlugin* Exporter::GetPlugin()
-{
-   return mPlugins[mFormat].get();
-}
-
-ExportPlugin* Exporter::GetPlugin(int pluginIndex)
-{
-   if(pluginIndex >= 0 && pluginIndex < mPlugins.size())
-      return mPlugins[pluginIndex].get();
-   return nullptr;
-}
-
-ExportPlugin* Exporter::FindPluginByType(const FileExtension &type)
-{
-   for (const auto& plugin : mPlugins)
-   {
-      for (int j = 0; j < plugin->GetFormatCount(); j++)
-      {
-         auto formatInfo = plugin->GetFormatInfo(j);
-         if (formatInfo.mFormat.IsSameAs(type, false))
-            return plugin.get();
-      }
-   }
-   return nullptr;
-}
-
 void Exporter::Configure(const wxFileName &filename,
                          int pluginIndex,
                          int formatIndex,

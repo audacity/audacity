@@ -10,6 +10,8 @@
 **********************************************************************/
 #include "ShareAudioDialog.h"
 
+#include <rapidjson/document.h>
+
 #include <wx/bmpbuttn.h>
 #include <wx/button.h>
 #include <wx/clipbrd.h>
@@ -31,9 +33,6 @@
 #include "OAuthService.h"
 #include "UploadService.h"
 #include "UserService.h"
-
-#include "CloudExportersRegistry.h"
-#include "CloudExporterPlugin.h"
 
 #include "AuthorizationHandler.h"
 #include "LinkAccountDialog.h"
@@ -317,22 +316,6 @@ void ShareAudioDialog::OnClose()
 
 wxString ShareAudioDialog::ExportProject()
 {
-   auto exporter = CreatePreferredExporter(GetServiceConfig().GetPreferredAudioFormats(), mProject);
-
-   if (!exporter)
-      return {};
-
-   const auto path = GenerateTempPath(exporter->GetFileExtension());
-
-   if (path.empty())
-      return {};
-   
-
-   SettingScope scope;
-   exporter->OnBeforeExport();
-
-   auto cleanupExporter = finally([&]() { exporter->OnAfterExport(); });
-
    Exporter e { const_cast<AudacityProject&>(mProject) };
 
    auto& tracks = TrackList::Get(mProject);
@@ -342,30 +325,46 @@ wxString ShareAudioDialog::ExportProject()
 
    const int nChannels = (tracks.Any() - &Track::IsLeader).empty() ? 1 : 2;
 
-   bool success = false;
-   if(auto plugin = e.FindPluginByType(exporter->GetExporterID()))
+   auto hasMimeType = [](const auto&& mimeTypes, const std::string& mimeType)
    {
-      auto editor = plugin->CreateOptionsEditor(0, nullptr);
-      editor->Load(*gPrefs);
+      return std::find(mimeTypes.begin(), mimeTypes.end(), mimeType) != mimeTypes.end();
+   };
+   
+   for(const auto& preferredMimeType : GetServiceConfig().GetPreferredAudioFormats())
+   {
+      auto config = GetServiceConfig().GetExportConfig(preferredMimeType);
 
-      mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this, *plugin);
-      
-      e.Process(*mExportProgressUpdater.get(),
-                ExportUtils::ParametersFromEditor(*editor),
-                nChannels,                 // numChannels,
-                exporter->GetExporterID(), // type,
-                path,                      // full path,
-                false,                     // selectedOnly,
-                t0,                        // t0
-                t1                         // t1
-                );
-      success = mExportProgressUpdater->GetResult() == ExportProgressListener::ExportResult::Success;
+      for(auto& plugin : e.GetPlugins())
+      {
+         for(int i = 0, formatCount = plugin->GetFormatCount(); i < formatCount; ++i)
+         {
+            ExportPlugin::Parameters parameters;
+            if(hasMimeType(plugin->GetMimeTypes(i), preferredMimeType) &&
+               plugin->ParseConfig(i, config, parameters))
+            {
+               const auto formatInfo = plugin->GetFormatInfo(i);
+               const auto path = GenerateTempPath(formatInfo.mExtensions[0]);
+
+               if(path.empty())
+                  continue;
+
+               mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this, *plugin);
+               e.Process(*mExportProgressUpdater,
+                  parameters,
+                  nChannels,
+                  formatInfo.mFormat,
+                  path,
+                  false, t0, t1);
+               const auto success = mExportProgressUpdater->GetResult() == ExportProgressListener::ExportResult::Success;
+               if(!success && wxFileExists(path))
+                  wxRemoveFile(path);
+               if(success)
+                  return path;
+            }
+         }
+      }
    }
-   if (!success && wxFileExists(path))
-      // Try to remove the file if exporting has failed (or was canceled)
-      wxRemoveFile(path);
-
-   return success ? path : wxString {};
+   return {};
 }
 
 void ShareAudioDialog::StartUploadProcess()

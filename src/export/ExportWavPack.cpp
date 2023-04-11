@@ -14,13 +14,14 @@
 
 **********************************************************************/
 
-
 #include "Export.h"
 #include "wxFileNameWrapper.h"
 #include "Prefs.h"
 #include "Mix.h"
 
 #include <wavpack/wavpack.h>
+
+#include <rapidjson/document.h>
 
 #include "../ProjectSettings.h"
 #include "Track.h"
@@ -247,6 +248,10 @@ public:
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
 
+   std::vector<std::string> GetMimeTypes(int) const override;
+
+   bool ParseConfig(int formatIndex, const rapidjson::Value& document, Parameters& parameters) const override;
+
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
 
@@ -277,6 +282,54 @@ FormatInfo ExportWavPack::GetFormatInfo(int) const
    return {
       wxT("WavPack"), XO("WavPack Files"), { wxT("wv") }, 255, true
    };
+}
+
+std::vector<std::string> ExportWavPack::GetMimeTypes(int) const
+{
+   return { "audio/x-wavpack" };
+}
+
+bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, Parameters& parameters) const
+{
+   if(!config.IsObject() || 
+      !config.HasMember("quality") || !config["quality"].IsNumber() ||
+      !config.HasMember("bit_rate") || !config["bit_rate"].IsNumber() ||
+      !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber() ||
+      !config.HasMember("hybrid_mode") || !config["hybrid_mode"].IsBool())
+      return false;
+
+   const auto quality = ExportValue(config["quality"].GetInt());
+   const auto bitRate = ExportValue(config["bit_rate"].GetInt());
+   const auto bitDepth = ExportValue(config["bit_depth"].GetInt());
+   const auto hybridMode = ExportValue(config["hybrid_mode"].GetBool());
+
+   for(const auto& option : ExportWavPackOptions)
+   {
+      if((option.id == OptionIDQuality &&
+         std::find(option.values.begin(),
+            option.values.end(),
+            quality) == option.values.end())
+         ||
+         (option.id == OptionIDBitRate &&
+         std::find(option.values.begin(),
+            option.values.end(),
+            bitRate) == option.values.end())
+         ||
+         (option.id == OptionIDBitDepth &&
+         std::find(option.values.begin(),
+            option.values.end(),
+            bitDepth) == option.values.end()))
+         return false;
+   }
+   Parameters result {
+      { OptionIDQuality, quality },
+      { OptionIDBitRate, bitRate },
+      { OptionIDBitDepth, bitDepth },
+      { OptionIDHybridMode, hybridMode },
+      { OptionIDCreateCorrection, false }
+   };
+   std::swap(parameters, result);
+   return true;
 }
 
 std::unique_ptr<ExportOptionsEditor>
@@ -529,35 +582,3 @@ int ExportWavPack::WriteBlock(void *id, void *data, int32_t length)
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "WavPack",
    []{ return std::make_unique< ExportWavPack >(); }
 };
-
-#ifdef HAS_CLOUD_UPLOAD
-#include "CloudExporterPlugin.h"
-#include "CloudExportersRegistry.h"
-
-class WavPackCloudHelper : public cloud::CloudExporterPlugin
-{
-public:
-   wxString GetExporterID() const override
-   {
-      return "WavPack";
-   }
-
-   FileExtension GetFileExtension() const override
-   {
-      return "wv";
-   }
-
-   void OnBeforeExport() override
-   {
-      QualitySetting.Write(2);
-      BitrateSetting.Write(40);
-      BitDepthSetting.Write(24);
-      HybridModeSetting.Write(false);
-   }
-
-}; // WavPackCloudHelper
-
-static bool cloudExporterRegisterd = cloud::RegisterCloudExporter(
-   "audio/x-wavpack",
-   [](const AudacityProject&) { return std::make_unique<WavPackCloudHelper>(); });
-#endif
