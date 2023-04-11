@@ -10,6 +10,7 @@
 **********************************************************************/
 #include <catch2/catch.hpp>
 #include "Composite.h"
+#include "Callable.h"
 #include <algorithm>
 #include <iterator>
 #include <numeric>
@@ -18,14 +19,21 @@ using namespace Composite;
 using namespace std;
 
 namespace {
+struct Ignore{};
+
 struct MyComponent {
    MyComponent(int value) : value{ value } {}
+   MyComponent(int value, Ignore ignored) : value{ value } {}
    virtual ~MyComponent() = default;
    const int value;
    operator int() const { return value; }
 };
 
+constexpr auto Component = Callable::UniqueMaker<MyComponent, int>();
+
 using MyCompositeBase = Base<MyComponent, unique_ptr<MyComponent>, int>;
+using MyCompositeBase2 =
+   Base<MyComponent, unique_ptr<MyComponent>, int, Ignore>;
 
 inline bool operator== (int n, const unique_ptr<MyComponent> &p)
 {
@@ -61,12 +69,13 @@ bool compareSequences(const Container1 &c1, const Container2 &c2)
 }
 }
 
-TEST_CASE("Composite")
+template<typename Container, typename... Args>
+void DoTest(Args ...args)
 {
    // CompositeBase passes constructor arguments to its Component
-   MyCompositeBase compositeBase{ 0 };
-   REQUIRE(0 == compositeBase);
-   REQUIRE(compositeBase.empty());
+   Container container{ args... };
+   REQUIRE(0 == container);
+   REQUIRE(container.empty());
 
    constexpr int N = 4;
 
@@ -86,14 +95,40 @@ TEST_CASE("Composite")
    REQUIRE(compareSequences(values, components));
 
    // Composite works with push_back and back_inserter
-   move(components.begin(), components.end(),
-      back_inserter(compositeBase));
-   REQUIRE(!compositeBase.empty());
-   REQUIRE(compareSequences(values, compositeBase));
+   move(components.begin(), components.end(), back_inserter(container));
+   REQUIRE(!container.empty());
+   REQUIRE(compareSequences(values, container));
+   
    // Break equality of sequences
    values.push_back(N + 1);
-   REQUIRE(!compareSequences(values, compositeBase));
-   // Restore it
-   compositeBase.push_back(make_unique<MyComponent>(N + 1));
-   REQUIRE(compareSequences(values, compositeBase));
+   REQUIRE(!compareSequences(values, container));
+
+   // Restore equality (and note, Component can take more arguments)
+   container.push_back(Component(N + 1, Ignore{}));
+   REQUIRE(compareSequences(values, container));
 }
+
+TEST_CASE("Composite::Base")
+{
+   DoTest<MyCompositeBase>(0);
+   // Also test the extra arguments of MyComponent
+   DoTest<MyCompositeBase2>(0, Ignore{});
+}
+
+TEST_CASE("Composite::Extension")
+{
+   struct X{};
+   using Container = Extension<MyCompositeBase, X, int>;
+   DoTest<Container>(0, X{});
+   using Container2 = Extension<MyCompositeBase2, X, int, Ignore>;
+   DoTest<Container2>(0, Ignore{}, X{});
+}
+
+TEST_CASE("Composite::Extension specialized for void")
+{
+   using Container = Extension<MyCompositeBase, void, int>;
+   DoTest<Container>(0);
+   using Container2 = Extension<MyCompositeBase2, void, int, Ignore>;
+   DoTest<Container2>(0, Ignore{});
+}
+

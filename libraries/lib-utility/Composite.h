@@ -64,6 +64,45 @@ protected:
    Items items;
 };
 
+//! Extend Base with extra fields, in a second, protected base class
+template<
+   typename Base,
+   typename Base2,
+   typename... RequiredBaseArgs
+>
+struct Extension
+   : public Base
+   , protected Base2
+{
+   template<typename... OtherBaseArgs>
+   Extension(RequiredBaseArgs... args, Base2 arg2,
+      OtherBaseArgs &&...otherArgs
+   )  : Base{ std::forward<RequiredBaseArgs>(args)...,
+         std::forward<OtherBaseArgs>(otherArgs)...
+      }
+      , Base2{ std::move(arg2) }
+   {}
+};
+
+//! Specialization when there is no need for the second base
+template<
+   typename Base,
+   typename... RequiredBaseArgs
+> struct Extension<
+   Base,
+   void,
+   RequiredBaseArgs...
+>
+   : public Base
+{
+   template<typename... OtherBaseArgs>
+   Extension(RequiredBaseArgs... args, OtherBaseArgs &&...otherArgs)
+      : Base{ std::forward<RequiredBaseArgs>(args)...,
+         std::forward<OtherBaseArgs>(otherArgs)...
+      }
+   {}
+};
+
 }
 
 #endif
