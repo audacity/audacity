@@ -75,20 +75,18 @@
 #include <wx/tokenzr.h>
 
 #ifdef USE_MIDI
-#include "ImportMIDI.h"
+#include "import/ImportMIDI.h"
 #endif // USE_MIDI
 #include "FileNames.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
 #include "ImportProgressListener.h"
 #include "Import.h"
-#include "ImportProgressListener.h"
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "../ProjectManager.h"
-#include "../ProjectWindow.h"
-#include "../ProjectWindows.h"
-#include "Prefs.h"
+#include "ProjectManager.h"
+#include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "ImportUtils.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024

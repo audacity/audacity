@@ -26,7 +26,7 @@ into a NoteTrack.
 class AudacityProject;
 class NoteTrack;
 
-bool DoImportMIDI( AudacityProject &project, const FilePath &fileName );
+bool AUDACITY_DLL_API DoImportMIDI( AudacityProject &project, const FilePath &fileName );
 
 bool ImportMIDI(const FilePath &fName, NoteTrack * dest);
 
