@@ -40,18 +40,17 @@ function.
 
 #include "ExportFFmpegOptions.h"
 #include "SelectFile.h"
+#include "ShuttleGui.h"
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
 #include "PlainExportOptionsEditor.h"
-#include "FFmpegTypes.h"
+#include "FFmpegDefines.h"
 #include "ExportOptionsUIServices.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
-
-#if defined(USE_FFMPEG)
 
 // Define this to automatically resample audio to the nearest supported sample rate
 #define FFMPEG_AUTO_RESAMPLE 1
@@ -1732,6 +1731,4 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FFmpeg",
    []{ return std::make_unique< ExportFFmpeg >(); }
 };
-
-#endif
 

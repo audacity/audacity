@@ -34,6 +34,10 @@ if ( USE_LIBMPG123 )
    list ( APPEND MODULES mod-mpg123 )
 endif()
 
+if ( USE_FFMPEG )
+   list ( APPEND MODULES mod-ffmpeg )
+endif()
+
 foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()

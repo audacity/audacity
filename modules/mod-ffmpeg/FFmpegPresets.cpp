@@ -21,7 +21,7 @@
 #include <wx/choice.h>
 #include <wx/textctrl.h>
 
-#include "FFmpegTypes.h"
+#include "FFmpegDefines.h"
 #include "ExportFFmpegOptions.h"
 
 #include "XMLFileReader.h"

@@ -117,8 +117,6 @@ list( APPEND SOURCES
       DropoutDetector.cpp
       EnvelopeEditor.cpp
       EnvelopeEditor.h
-      FFmpeg.cpp
-      FFmpeg.h
       FrameStatisticsDialog.cpp
       FrameStatisticsDialog.h
       FreqWindow.cpp
@@ -604,17 +602,6 @@ list( APPEND SOURCES
       export/ExportMultiple.cpp
       export/ExportMultiple.h
 
-      # Optional exporters
-      $<$<BOOL:${USE_FFMPEG}>:
-         export/ExportFFmpeg.cpp
-         export/ExportFFmpegOptions.cpp
-         export/ExportFFmpegOptions.h
-         export/FFmpegPresets.cpp
-         export/FFmpegPresets.h
-         export/FFmpegTypes.h
-         export/FFmpegPrefs.cpp
-      >
-
       # Import
 
       import/FormatClassifier.cpp
@@ -637,10 +624,6 @@ list( APPEND SOURCES
       import/ImportRaw.h
 
       # Optional importers
-
-      $<$<BOOL:${USE_FFMPEG}>:
-         import/ImportFFmpeg.cpp
-      >
 
       $<$<BOOL:${USE_GSTREAMER}>:
          import/ImportGStreamer.cpp
@@ -1171,10 +1154,6 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
    if( "${${_OPT}use_lame}" STREQUAL "local" )
       set( DISABLE_DYNAMIC_LOADING_LAME YES )
    endif()
-
-   if( "${${_OPT}use_ffmpeg}" STREQUAL "linked" )
-      set( DISABLE_DYNAMIC_LOADING_FFMPEG YES )
-   endif()
 endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
@@ -1432,12 +1411,6 @@ set( AUDACITY_LIBRARIES
 if (${_OPT}has_vst3)
    list( APPEND AUDACITY_LIBRARIES
       lib-vst3-interface
-   )
-endif()
-
-if (${_OPT}use_ffmpeg)
-   list( APPEND AUDACITY_LIBRARIES
-      lib-ffmpeg-support-interface
    )
 endif()
 

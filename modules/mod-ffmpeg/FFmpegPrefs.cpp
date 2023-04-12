@@ -12,7 +12,7 @@
 #include "../FFmpeg.h"
 #include "Internat.h"
 #include "ShuttleGui.h"
-#include "../prefs/LibraryPrefs.h"
+#include "prefs/LibraryPrefs.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 #include "ReadOnlyText.h"
@@ -43,11 +43,7 @@ void AddControls( ShuttleGui &S )
       S.StartTwoColumn();
       {
          auto version =
- #if defined(USE_FFMPEG)
             XO("No compatible FFmpeg library was found");
- #else
-            XO("FFmpeg support is not compiled in");
- #endif
 
          pState->FFmpegVersion = S
            .Position(wxALIGN_CENTRE_VERTICAL)
@@ -58,7 +54,7 @@ void AddControls( ShuttleGui &S )
 
          auto pFindButton =
          S
-#if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
+#if defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
             .Disable()
 #endif
             .AddButton(XXO("Loca&te..."),
@@ -72,7 +68,7 @@ void AddControls( ShuttleGui &S )
 
          auto pDownButton =
          S
-#if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
+#if defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
             .Disable()
 #endif
             .AddButton(XXO("Dow&nload"),
@@ -91,7 +87,6 @@ void AddControls( ShuttleGui &S )
 
 void OnFFmpegFindButton(State &state)
 {
-#ifdef USE_FFMPEG
    bool showerrs =
 #if defined(_DEBUG)
       true;
@@ -119,7 +114,6 @@ void OnFFmpegFindButton(State &state)
       LoadFFmpeg(showerrs);
    }
    SetFFmpegVersionText(state);
-#endif
 }
 
 LibraryPrefs::RegisteredControls reg{ wxT("FFmpeg"), AddControls };

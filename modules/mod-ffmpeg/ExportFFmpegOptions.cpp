@@ -21,7 +21,7 @@
 
 #include "ShuttleGui.h"
 #include "FFmpegPresets.h"
-#include "FFmpegTypes.h"
+#include "FFmpegDefines.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 
