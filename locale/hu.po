@@ -1,9 +1,9 @@
 # Hungarian translation for Audacity.
-# Copyright (C) 2008, 2014, 2015, 2016, 2022 Audacity Team
+# Copyright (C) 2008, 2014, 2015, 2016, 2022, 2023 Audacity Team
 # This file is distributed under the same license as the Audacity package.
 #
 # Translators:
-# Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2022.
+# Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2022, 2023.
 # Balázs Úr <urbalazs@gmail.com>, 2014, 2015, 2016.
 # Koncz László <koncz.l@upcmail.hu>, 2014.
 # Pelládi Gábor <pelladigabor@gmail.com>, 2008.
@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-06 19:27+0200\n"
+"PO-Revision-Date: 2023-04-12 14:43+0200\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -25,7 +25,7 @@ msgstr ""
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "A stream aktív … nem sikerül az információgyújtés.\n"
+msgstr "A stream aktív … nem sikerül az információgyűjtés.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 #, c-format
@@ -746,7 +746,7 @@ msgstr "oktávok"
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar"
-msgstr "eszköztár"
+msgstr "sáv"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
@@ -970,7 +970,7 @@ msgstr "0100 ó 060 p 060 m+>25 képkocka"
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "PAL frames (25 fps)"
-msgstr "PAL-képkocka (25 fps)"
+msgstr "PAL-képkockák (25 fps)"
 
 #. i18n-hint: Format string for displaying time in frames with NTSC frames.
 #. * Change the comma
@@ -1583,7 +1583,7 @@ msgstr "Ütemek"
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Bar"
-msgstr "Eszköztár"
+msgstr "Sáv"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/2"
@@ -1653,19 +1653,19 @@ msgstr "Másodpercek és minták"
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Seconds"
-msgstr "Másodperc"
+msgstr "Másodpercek"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Deciseconds"
-msgstr "Tizedmásodperc"
+msgstr "Tizedmásodpercek"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Centiseconds"
-msgstr "Századmásodperc"
+msgstr "Századmásodpercek"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Milliseconds"
-msgstr "Ezredmásodperc"
+msgstr "Ezredmásodpercek"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 msgid "Samples"
@@ -8378,7 +8378,7 @@ msgstr "Lecsengési idő %.1f mp"
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
-msgstr "Egyszerre csak egy sávot mérhet."
+msgstr "Egyszerre csak egy sávot mérhetsz."
 
 #: src/effects/Contrast.cpp
 msgid "Please select an audio track."
@@ -17935,7 +17935,7 @@ msgstr "Illesztése"
 
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap"
-msgstr "Illeszt"
+msgstr "Illesztés"
 
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
@@ -19860,7 +19860,7 @@ msgstr "Időtartam módosításának engedélyezése"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "EQ XML to TXT Converter"
-msgstr "EQ XML -> TXT Konvertáló"
+msgstr "EQ XML -> TXT konvertáló"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Select target EQ effect"
