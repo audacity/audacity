@@ -628,10 +628,6 @@ list( APPEND SOURCES
          import/ImportMIDI.h
       >
 
-      $<$<BOOL:${USE_LIBMAD}>:
-         import/ImportMP3_MAD.cpp
-      >
-
       # Menus
 
       menus/ClipMenus.cpp
@@ -1098,7 +1094,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
@@ -1324,7 +1319,7 @@ else()
          audio/x-flac
       )
    endif()
-   if( USE_LIBMAD OR USE_LIBMPG123)
+   if( USE_LIBMPG123)
       list( APPEND MIMETYPES
          audio/mpeg
       )

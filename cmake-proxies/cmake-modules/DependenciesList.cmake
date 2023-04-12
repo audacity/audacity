@@ -11,15 +11,6 @@ audacity_find_package(libmp3lame REQUIRED)
 
 audacity_find_package(mpg123 OPTION_NAME libmpg123)
 
-if( NOT ${_OPT}use_libmpg123 STREQUAL "off" )
-   # If we are building against libmpg123, we need to drop
-   # the previos configuration, which may used libmad
-   set( USE_LIBMAD OFF CACHE INTERNAL "" FORCE )
-   set( ${_OPT}use_libmad "off" )
-else()
-   audacity_find_package(libmad)
-endif()
-
 audacity_find_package(libid3tag)
 
 audacity_find_package(WavPack)
