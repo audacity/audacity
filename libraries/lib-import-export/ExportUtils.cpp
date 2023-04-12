@@ -68,7 +68,7 @@ ExportPlugin::Parameters ExportUtils::ParametersFromEditor(const ExportOptionsEd
       ExportOption option;
       ExportValue value;
       if(editor.GetOption(i, option) && editor.GetValue(option.id, value))
-         parameters.emplace_back(i, value);
+         parameters.emplace_back(option.id, value);
    }
    return parameters;
 }
