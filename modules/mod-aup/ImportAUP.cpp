@@ -25,12 +25,10 @@
 
 #include "Envelope.h"
 #include "FileFormats.h"
-#include "FileNames.h"
 #include "LabelTrack.h"
 #if defined(USE_MIDI)
 #include "NoteTrack.h"
 #endif
-#include "Prefs.h"
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
@@ -62,7 +60,6 @@ static const auto exts = {wxT("aup")};
 #include <wx/dir.h>
 #include <wx/ffile.h>
 #include <wx/file.h>
-#include <wx/frame.h>
 #include <wx/log.h>
 #include <wx/string.h>
 
