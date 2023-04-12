@@ -101,6 +101,19 @@ void NumericConverter::ControlsToValue()
                mInvalidValue;
 }
 
+bool NumericConverter::SetTypeAndFormatName (const NumericConverterType& type, const NumericFormatSymbol& formatName)
+{
+   if (mType != type)
+   {
+      // Ensure that the format change will happen,
+      // duration formats lists matches the time list
+      mFormatSymbol = {};
+      mType = type;
+   }
+
+   return SetFormatName(formatName);
+}
+
 bool NumericConverter::SetFormatName(const NumericFormatSymbol& formatName)
 {
    if (mFormatSymbol == formatName && !formatName.empty())

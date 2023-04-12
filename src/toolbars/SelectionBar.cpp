@@ -100,6 +100,13 @@ std::pair<const TranslatableString&, const TranslatableString&> ModeNames[] = {
    { LengthTimeText, EndTimeText    },
    { LengthTimeText, CenterTimeText },
 };
+
+const NumericConverterType TimeConverterType[][2] {
+   { NumericConverterType_TIME, NumericConverterType_TIME },
+   { NumericConverterType_TIME, NumericConverterType_DURATION },
+   { NumericConverterType_DURATION, NumericConverterType_TIME },
+   { NumericConverterType_DURATION, NumericConverterType_TIME },
+};
 }
 
 IMPLEMENT_CLASS(SelectionBar, ToolBar);
@@ -263,6 +270,8 @@ void SelectionBar::AddSelectionSetupButton(wxSizer* pSizer)
 
    setupBtn->Bind(wxEVT_BUTTON, [this, showMenu](auto&) { showMenu(); });
    pSizer->Add(setupBtn, 0, wxALIGN_RIGHT | wxBOTTOM | wxRIGHT, 5);
+
+   mSetupButton = setupBtn;
 }
 
 void SelectionBar::Populate()
@@ -282,6 +291,8 @@ void SelectionBar::Populate()
    AddTime(0, mainSizer);
    AddSelectionSetupButton(mainSizer);
    AddTime(1, mainSizer);
+
+   mSetupButton->MoveBeforeInTabOrder(mTimeControls[0]);
 
    // Update the selection mode before the layout
    SetSelectionMode(mSelectionMode);
@@ -465,11 +476,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    ValuesToControls();
 
-   for (auto ctrl : mTimeControls)
-   {
-      if (ctrl)
-         ctrl->SetFormatName(format);
-   }
+   UpdateTimeControlsFormat(format);
 
    if (focusedCtrlIdx >= 0 && mTimeControls[focusedCtrlIdx])
       mTimeControls[focusedCtrlIdx]->SetFocus();
@@ -515,6 +522,8 @@ void SelectionBar::SetSelectionMode(SelectionMode mode)
 
    if (mTimeControls[1])
       mTimeControls[1]->SetName(modeName.second);
+
+   UpdateTimeControlsFormat(mTimeControls[0]->GetFormatName());
 
    ValuesToControls();
 }
@@ -591,6 +600,26 @@ void SelectionBar::OnCaptureKey(wxCommandEvent &event)
    }
 
    event.Skip();
+}
+
+void SelectionBar::UpdateTimeControlsFormat(const NumericFormatSymbol& format)
+{
+   for (size_t controlIndex = 0; controlIndex < mTimeControls.size();
+        ++controlIndex)
+   {
+      auto ctrl = mTimeControls[controlIndex];
+
+      if (ctrl == nullptr)
+         continue;
+
+      const auto type =
+         TimeConverterType[static_cast<size_t>(mSelectionMode)][controlIndex];
+
+      ctrl->SetTypeAndFormatName(
+         type, type != NumericConverterType_DURATION ?
+                  format :
+                  NumericConverterFormats::GetBestDurationFormat(format));
+   }
 }
 
 static RegisteredToolbarFactory factory{

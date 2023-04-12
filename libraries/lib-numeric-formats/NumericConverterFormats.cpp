@@ -134,4 +134,9 @@ NUMERIC_FORMATS_API NumericFormatSymbol OctavesFormat()
     * in octaves */
    return { XO("octaves") };
 }
+NUMERIC_FORMATS_API NumericFormatSymbol
+GetBestDurationFormat(const NumericFormatSymbol& timeFormat)
+{
+   return timeFormat;
+}
 } // namespace NumericConverterFormats

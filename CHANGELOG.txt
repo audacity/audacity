@@ -1,5 +1,32 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.3.0
+
+ Changes
+   * Some of the built-in effects are now realtime capable (Bass & Treble, Distortion, Phaser, Reverb and Wahwah).
+   * #4352 Added a new effect: Shelf Filter.
+   * Added an initial (beta) version of Beats and Bars. 
+   * #4414 Reworked the bottom toolbar dock:
+      * Project Sample Rate is now found in Audio Setup -> Audio Settings (formerly known as Project Rate).
+      * The Snapping Toolbar (formerly known as Snap-To) is now independent of the Selection Toolbar.
+      * Added a new Time Signature Toolbar (beta). It is hidden by default. 
+   * #4212 Improved Zooming behavior slightly (more to come in the future).
+   * #4393 Added a new ruler, Linear (dB). This ruler goes from 0 dBFS to -∞ dBFS and better reflects the volume as shown in the recording/playback meters.
+   * #3820 When copying clips between projects, you now can choose between whether to copy smart clips or just the visible portion.
+   * #4133 Added a delete button to the Cut/Copy/Paste toolbar.
+
+ Bugfixes
+   * #1584 Audacity no longer dithers tracks unnecessarily.
+   * #2427 Linux playback now handles output latency better (less stutters).
+   * #3796 The EQ effect no longer resets clip names.
+   * #3801 Audacity no longer crashes when trying to load projects with plugins that since have been deleted.
+   * #4417 Resampling a track no longer trims it.
+
+ Libraries
+   * FFmpeg 6 (avformat 60) is now supported.
+   * Moved from Breakpad to Crashpad.
+   * Extracted various libraries from within Audacity.
+
 Changes in version 3.2.5
 
    * #4373 Fixes authorization flow for the audio.com sharing service

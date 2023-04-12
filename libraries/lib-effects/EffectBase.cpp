@@ -164,7 +164,9 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    std::shared_ptr<EffectInstance> pInstance;
 
    if (IsInteractive()) {
-      if (auto result = finder(settings))
+      if (!finder)
+         return false;
+      else if (auto result = finder(settings))
          pInstance = *result;
       else
          return false;
@@ -521,4 +523,19 @@ void EffectBase::Preview(
             ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       }
    }
+}
+
+auto EffectBase::FindInstance(EffectPlugin &plugin)
+   -> std::optional<InstancePointer>
+{
+   auto result = plugin.MakeInstance();
+   if (auto pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(result)
+      ; pInstanceEx && pInstanceEx->Init())
+      return { pInstanceEx };
+   return {};
+}
+
+auto EffectBase::DefaultInstanceFinder(EffectPlugin &plugin) -> InstanceFinder
+{
+   return [&plugin](auto&) { return FindInstance(plugin); };
 }
