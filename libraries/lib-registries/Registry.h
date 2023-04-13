@@ -123,6 +123,10 @@ namespace detail {
    template<typename RegistryTraits> using AllTypes_t =
       typename AllTypes<RegistryTraits>::type;
 
+   template<typename RegistryTraits> constexpr auto AcceptableTraits_v =
+      TypeList::Every_v<TypeList::Fn<AcceptableBaseItem>,
+         AllTypes_t<RegistryTraits>>;
+
 namespace detail {
    //! An item that delegates to another held in a shared pointer
    /*!
@@ -337,6 +341,7 @@ namespace detail {
    void RegisterItem(GroupItem<RegistryTraits> &registry,
       const Placement &placement, std::unique_ptr<Item> pItem)
    {
+      static_assert(AcceptableTraits_v<RegistryTraits>);
       static_assert(AcceptableType_v<RegistryTraits, Item>,
          "Registered item must be of one of the types listed in the registry's "
          "traits");
