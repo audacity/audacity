@@ -371,6 +371,7 @@ list( APPEND SOURCES
       effects/EffectManager.cpp
       effects/EffectManager.h
       effects/EffectUI.cpp
+      $<$<BOOL:${wxIS_MAC}>:effects/EffectUI.mm>
       effects/EffectUI.h
       effects/EffectUIServices.cpp
       effects/EffectUIServices.h
@@ -1294,7 +1295,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set_source_files_properties(
       AudacityApp.mm
       KeyboardCapture.cpp
-      effects/EffectUI.cpp
+      effects/EffectUI.mm
       effects/VST/VSTControlOSX.mm
       effects/audiounits/AUControl.mm
       widgets/FileDialog/mac/FileDialogPrivate.mm
