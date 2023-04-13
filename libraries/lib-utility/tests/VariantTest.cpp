@@ -208,7 +208,8 @@ struct TestVisitor {
    int & operator () (std::monostate) const { return x; }
 };
 
-using TestVariant = std::variant<std::monostate>;
+// Visit() can be called for a proper subclasses of a std::variant<> too
+struct TestVariant : std::variant<std::monostate> {};
 
 void compileTest()
 {

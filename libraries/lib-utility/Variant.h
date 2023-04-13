@@ -23,6 +23,7 @@
 namespace Variant {
 
 namespace detail {
+
 //! Help to define Visit() below
 template <typename Visitor, typename Variant>
 struct VisitHelperReturn {
@@ -93,6 +94,36 @@ VisitHelper(std::index_sequence<Indices...>, Visitor &&vis, Variant &&var)
    return function(std::forward<Visitor>(vis), std::forward<Variant>(var));
 }
 
+//! Standard in C++20
+template<typename T> struct type_identity{ using type = T; };
+
+//! Unevaluated
+auto deduce_variant(...) -> void;
+template<typename... Types>
+auto deduce_variant(std::variant<Types...>& v)
+   -> type_identity<std::remove_reference_t<decltype(v)>>;
+template<typename... Types>
+auto deduce_variant(std::variant<Types...>&& v)
+   -> type_identity<std::remove_reference_t<decltype(v)>>;
+template<typename... Types>
+auto deduce_variant(const std::variant<Types...>& v)
+   -> type_identity<std::remove_reference_t<decltype(v)>>;
+template<typename... Types>
+auto deduce_variant(const std::variant<Types...>&& v)
+   -> type_identity<std::remove_reference_t<decltype(v)>>;
+
+template<typename T> using deduced_variant =
+   typename decltype(deduce_variant(std::declval<T>()))::type;
+
+template<typename ForwardType, typename Variant>
+decltype(auto) forward_variant(Variant &var) {
+   return std::forward<ForwardType>(var);
+   
+}
+template<typename ForwardType, typename Variant>
+decltype(auto) forward_variant(const Variant &var) {
+   return std::forward<ForwardType>(var);
+}
 }
 
 //! Mimic some of std::visit, for the case of one visitor only
@@ -101,18 +132,18 @@ VisitHelper(std::index_sequence<Indices...>, Visitor &&vis, Variant &&var)
  so let's use this even when not needed on the other platforms, instead of
  having too much conditional compilation
  */
-template <typename Visitor, typename Variant>
+template <typename Visitor, typename Variant,
+   typename VariantBase = detail::deduced_variant<Variant &&>>
 decltype(auto) Visit(Visitor &&vis, Variant &&var)
 {
-   constexpr auto size = std::variant_size_v<std::remove_reference_t<Variant>>;
-   return detail::VisitHelper( std::make_index_sequence<size>{},
-      std::forward<Visitor>(vis), std::forward<Variant>(var) );
+   using ForwardType = std::conditional_t<std::is_lvalue_reference_v<Variant>,
+      std::add_lvalue_reference_t<VariantBase>, VariantBase>;
+   constexpr auto size = std::variant_size_v<VariantBase>;
+   return detail::VisitHelper(std::make_index_sequence<size>{},
+      std::forward<Visitor>(vis), detail::forward_variant<ForwardType>(var));
 }
 
 namespace detail {
-//! Standard in C++20
-template<typename T> struct type_identity{ using type = T; };
-
 template<typename T> struct to_std_function{
    using type = decltype(std::function{ std::declval<T>() });
 };
