@@ -98,7 +98,21 @@ namespace detail {
 
       BaseItemSharedPtr ptr;
    };
+
+   struct ComputedItemBase;
 }
+
+   //! The underlying registry merging procedure assumes the listed types
+   //! are an exhaustive partition
+   using BaseItemTypes = TypeList::List<
+      detail::IndirectItemBase, detail::ComputedItemBase,
+      // see below
+      struct SingleItem, struct GroupItemBase
+   >;
+   template<typename Item> using AcceptableBaseItem =
+      TypeList::HasBaseIn<Item, BaseItemTypes>;
+   template<typename Item> constexpr auto AcceptableBaseItem_v =
+      AcceptableBaseItem<Item>::value;
 
    template<typename RegistryTraits> struct AllTypes {
       using type = TypeList::Append_t<
@@ -119,7 +133,7 @@ namespace detail {
    template<typename Item>
    struct IndirectItem final : IndirectItemBase {
       using ItemType = Item;
-      static_assert(std::is_base_of_v<BaseItem, ItemType>);
+      static_assert(AcceptableBaseItem_v<ItemType>);
       explicit IndirectItem(const std::shared_ptr<Item> &ptr)
          : IndirectItemBase{ ptr }
       {}
@@ -156,7 +170,7 @@ namespace detail {
    template<typename Context, typename Item>
    struct ComputedItem final : ComputedItemBase {
       using ItemType = Item;
-      static_assert(std::is_base_of_v<BaseItem, ItemType>);
+      static_assert(AcceptableBaseItem_v<ItemType>);
 
       //! Type-erasing constructor template
       /*!

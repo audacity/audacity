@@ -1153,7 +1153,7 @@ auto TracksMenu()
             // Stereo to Mono is an oddball command that is also subject to control
             // by the plug-in manager, as if an effect.  Decide whether to show or
             // hide it.
-            [](AudacityProject&) -> BaseItemPtr {
+            [](AudacityProject&) -> std::unique_ptr<CommandItem> {
                const PluginID ID =
                   EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
                const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
