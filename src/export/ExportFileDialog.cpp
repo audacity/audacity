@@ -295,31 +295,25 @@ void ExportFileDialog::OnFilterChanged(wxFileCtrlEvent & evt)
       return;
    }
 
-#if defined(__WXGTK__)
-   // On Windows and MacOS, changing the filter in the dialog
-   // automatically changes the extension of the current file
-   // name. GTK doesn't, so do it here.
+   
    {
       FileNames::FileTypes fileTypes;
 
-      int i = -1;
+      int counter = 0;
       for (const auto &plugin : mExporter.GetPlugins())
       {
-         ++i;
          for (int j = 0; j < plugin->GetFormatCount(); j++)
          {
-            const auto formatInfo = plugin->GetFormatInfo(j);
-            fileTypes.insert( fileTypes.end(), { formatInfo.mDescription, formatInfo.mExtensions } );
+            if(counter == index)
+            {
+               const auto formatInfo = plugin->GetFormatInfo(j);
+               if(!formatInfo.mExtensions.empty())
+                  SetFileExtension(formatInfo.mExtensions[0]);
+            }
+            ++counter;
          }
       }
-
-      if (index < fileTypes.size())
-      {
-         SetFileExtension(fileTypes[index].extensions[0].Lower());
-      }
    }
-#endif
-
    mBook->ChangeSelection(index);
 }
 
