@@ -1,4 +1,5 @@
 #include <QFontDatabase>
+#include <QGuiApplication>
 #include "ApplicationConfiguration.h"
 
 namespace {
@@ -27,7 +28,9 @@ namespace {
 ApplicationConfiguration::ApplicationConfiguration()
 {
    m_iconFont = GetApplicationFont(":/fonts/MusescoreIcon.ttf");
-   m_bodyFont = GetApplicationFont(":/fonts/Inter-Regular.ttf");
+
+   m_bodyFont = QGuiApplication::font();
+   m_bodyFont.setPixelSize(16);
 }
 
 QFont ApplicationConfiguration::IconFont() const
