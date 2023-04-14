@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-06 23:22+0000\n"
+"PO-Revision-Date: 2023-04-14 08:12+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -946,7 +946,7 @@ msgstr "klatki NTSC"
 #. * rate!
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000 frames|29.97002997"
-msgstr "01000,01000 klatki|29.97002997"
+msgstr "01000,01000 klatki|29,97002997"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at PAL TV frame rate (used for European TV)
@@ -1033,7 +1033,7 @@ msgstr "kHz"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000>01000 kHz|0.001"
-msgstr "01000>01000 kHz|0.001"
+msgstr "01000>01000 kHz|0,001"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hertz"
@@ -1045,7 +1045,7 @@ msgstr "herc"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "100>01000 octaves|1.442695041"
-msgstr "100>01000 oktaw|1.442695041"
+msgstr "100>01000 oktaw|1,442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
@@ -1065,7 +1065,7 @@ msgstr "półtonów + centów"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
-msgstr "1000 półtonów >0100 centów|17.312340491"
+msgstr "1000 półtonów >0100 centów|17,312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
@@ -1082,7 +1082,7 @@ msgstr "dekad"
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "10>01000 decades|0.434294482"
-msgstr "10>01000 dekad|0.434294482"
+msgstr "10>01000 dekad|0,434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
@@ -20046,7 +20046,7 @@ msgstr "48 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 msgid "Frequency must be at least 0.1 Hz."
-msgstr "Częstotliwość musi wynosić przynajmniej 0.1 Hz."
+msgstr "Częstotliwość musi wynosić przynajmniej 0,1 Hz."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, lisp-format
