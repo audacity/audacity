@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-07 23:36+0000\n"
+"PO-Revision-Date: 2023-04-14 23:36+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (http://app.transifex.com/klyok/teams/690/de/)\n"
 "Language: de\n"
@@ -544,7 +544,7 @@ msgstr "Gauß (a=4,5)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
-msgstr "Geringe Qualität (am schnellsten)"
+msgstr "Niedrige Qualität (am schnellsten)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Medium Quality"
@@ -11714,7 +11714,7 @@ msgstr "VOIP"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Low Delay"
-msgstr "Geringe Verzögerung"
+msgstr "Niedrige Verzögerung"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2.5 ms"
@@ -12019,7 +12019,7 @@ msgid ""
 "Most players won't play anything other than LC"
 msgstr ""
 "AAC-Profil\n"
-"Geringe Komplexität (LC) -Standard\n"
+"Niedrige Komplexität (LC) - Standard\n"
 "Die meisten Player spielen nur LC"
 
 #: src/export/ExportFFmpegDialogs.cpp
@@ -20064,7 +20064,7 @@ msgstr "48 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 msgid "Frequency must be at least 0.1 Hz."
-msgstr "Frequenz muss mindestens 0.1 Hz betragen."
+msgstr "Frequenz muss mindestens 0,1 Hz betragen."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, lisp-format
