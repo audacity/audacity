@@ -2916,6 +2916,21 @@ void AdornedRulerPanel::TogglePinnedHead()
       scrubber.SetScrollScrubbing(value);
 }
 
+AdornedRulerPanel::RulerTypeValues AdornedRulerPanel::GetRulerType() const
+{
+   return mRulerType;
+}
+
+void AdornedRulerPanel::SetRulerType (RulerTypeValues type)
+{
+   if (mRulerType == type)
+      return;
+
+   mRulerType = type;
+   RulerPanelViewPreference.WriteEnum(mRulerType);
+   RefreshTimelineFormat();
+}
+
 // Attach menu item
 
 #include "commands/CommandContext.h"

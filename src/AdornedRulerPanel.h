@@ -275,6 +275,9 @@ public:
       stNumRulerTypes,
    };
 
+   RulerTypeValues GetRulerType() const;
+   void SetRulerType(RulerTypeValues rulerType);
+
 private:
 
    RulerTypeValues mRulerType;
