@@ -4,13 +4,13 @@
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2013.
 #
 # Translators:
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2023
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2023
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-04-05 16:57+0300\n"
+"POT-Creation-Date: 2023-04-13 08:18+0000\n"
 "PO-Revision-Date: 2023-04-14 08:12+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
@@ -289,7 +289,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"%s: Nie udało się wczytać poniższych ustawień. Zostaną użyte domyślne ustawienia.\n"
+"%s: Nie udało się załadować poniższych ustawień. Zostaną użyte ustawienia domyślne.\n"
 "\n"
 "%s"
 
@@ -457,7 +457,7 @@ msgid ""
 "%s does not have write permissions."
 msgstr ""
 "\n"
-"%s nie ma uprawnień do zapisu"
+"%s nie ma uprawnień do zapisu."
 
 #: libraries/lib-files/TempDirectory.cpp
 msgid "Unsuitable"
@@ -3189,7 +3189,7 @@ msgstr "Zobacz %s, aby uzyskać więcej informacji."
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp src/widgets/ErrorReportDialog.cpp
 msgid "our Privacy Policy"
-msgstr "naszą Politykę Prywatności"
+msgstr "naszą Politykę prywatności"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Minutes and Seconds"
@@ -5685,7 +5685,7 @@ msgstr "Projekt odzyskany"
 
 #: src/ProjectFileManager.cpp src/prefs/DirectoriesPrefs.cpp
 msgid "Projects cannot be saved to FAT drives."
-msgstr "Projekty nie mogą być zapisywane na dyskach z system plików FAT."
+msgstr "Projekty nie mogą być zapisywane na nośnikach z system plików FAT."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -5864,7 +5864,7 @@ msgid ""
 "Copy it to another drive to open it."
 msgstr ""
 "Projekt znajduje się na nośniku sformatowanym w systemie plików FAT.\n"
-"Skopiuj go na inny dysk, aby go otworzyć."
+"Skopiuj go na inny nośnik, aby go otworzyć."
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
@@ -6329,7 +6329,7 @@ msgstr "Panel sterowania danymi widma"
 
 #: src/SpectralDataDialog.cpp
 msgid "Brush Tool"
-msgstr "Narzędzie Pędzel"
+msgstr "Narzędzie pędzel"
 
 #: src/SpectralDataDialog.cpp
 msgid "Spectral Brush"
@@ -6337,7 +6337,7 @@ msgstr "Pędzel widmowy"
 
 #: src/SpectralDataDialog.cpp
 msgid "Brush radius"
-msgstr "Promień Pędzla"
+msgstr "Promień pędzla"
 
 #: src/SpectralDataDialog.cpp
 msgid "Custom brush size"
@@ -6345,7 +6345,7 @@ msgstr "Niestandardowy rozmiar pędzla"
 
 #: src/SpectralDataDialog.cpp
 msgid "Auto-select overtones (beta)"
-msgstr "Autozaznaczanie podtekstów (beta)"
+msgstr "Autozaznaczanie alikwotów (beta)"
 
 #: src/SpectralDataDialog.cpp
 msgid "Enable smart selection"
@@ -6576,7 +6576,7 @@ msgid ""
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
-"Biorąc pod uwagę bieżące ustawienia, nie masz wystarczająco wolnego miejsca na ukończenie tego nagrywania.\n"
+"Biorąc pod uwagę bieżące ustawienia, nie masz wystarczająco wolnego miejsca na dysku na ukończenie tego nagrywania.\n"
 "\n"
 "Chcesz kontynuować?\n"
 "\n"
@@ -11058,7 +11058,7 @@ msgstr "Ustawienia efektu"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to allocate memory when loading presets file."
-msgstr "Nie można przydzielić pamięci podczas wczytywania pliku presetów."
+msgstr "Nie można przydzielić pamięci przy ładowaniu pliku presetów."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to read presets file."
@@ -14351,8 +14351,9 @@ msgstr "%s prawo"
 msgid "%s %s, %d of %d clip %s"
 msgid_plural "%s %s, %d of %d clips %s"
 msgstr[0] "%s %s, %d z %d klip %s"
-msgstr[1] "%s %s, %d z %d klipów %s"
-msgstr[2] "%s %s, %d z %d klipy %s"
+msgstr[1] "%s %s, %d z %d klipy %s"
+msgstr[2] "%s %s, %d z %d klipów %s"
+msgstr[3] "%s %s, %d z %d klipy %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
@@ -14377,6 +14378,8 @@ msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
 msgstr[0] "%s %s i %s %s, %d i %d z %d klip %s"
 msgstr[1] "%s %s i %s %s, %d i %d z %d klipy %s"
+msgstr[2] "%s %s i %s %s, %d i %d z %d klipów %s"
+msgstr[3] "%s %s i %s %s, %d i %d z %d klipy %s"
 
 #. i18n-hint:
 #. first string is the name of a clip,
@@ -14390,7 +14393,8 @@ msgid "%s, %d of %d clip %s"
 msgid_plural "%s, %d of %d clips %s"
 msgstr[0] "%s, %d z %d klip %s"
 msgstr[1] "%s, %d z %d klipy %s"
-msgstr[2] "%s, %d z %d klipy %s"
+msgstr[2] "%s, %d z %d klipów %s"
+msgstr[3] "%s, %d z %d klipy %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -19183,9 +19187,10 @@ msgstr "Wycisz/zgłośnij ścieżkę"
 #, c-format
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
-msgstr[0] "%s, %d z %d klipy"
-msgstr[1] "%s, %d z %d klipów"
-msgstr[2] "%s, %d z %d klipy"
+msgstr[0] "%s, %d z %d klip"
+msgstr[1] "%s, %d z %d klipy"
+msgstr[2] "%s, %d z %d klipów"
+msgstr[3] "%s, %d z %d klipy"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -19328,11 +19333,11 @@ msgstr "Usunięto zaznaczony obszar"
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Selected area using Brush Tool"
-msgstr "Zaznaczono obszar za pomocą narzędzia pędzel"
+msgstr "Zaznaczono obszar przy użyciu narzędzia pędzel"
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Brush tool selection"
-msgstr "Zaznaczenie narzędzia pędzel"
+msgstr "Zaznaczanie narzędziem pędzel"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "&Name..."
