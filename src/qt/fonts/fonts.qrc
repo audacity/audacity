@@ -1,5 +1,9 @@
 <RCC>
    <qresource prefix="/fonts">
       <file>MusescoreIcon.ttf</file>
+      <file>Lato-Bold.ttf</file>
+      <file>Lato-BoldItalic.ttf</file>
+      <file>Lato-Italic.ttf</file>
+      <file>Lato-Regular.ttf</file>
    </qresource>
 </RCC>
