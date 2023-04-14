@@ -110,7 +110,7 @@ enum
 };
 
 // Protect Nyquist from selections greater than 2^31 samples (bug 439)
-#define NYQ_MAX_LEN (std::numeric_limits<long>::max())
+#define NYQ_MAX_LEN (std::numeric_limits<int64_t>::max())
 
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
@@ -916,20 +916,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             auto end = mCurTrack[0]->TimeToLongSamples(mT1);
             mCurLen = end - mCurStart[0];
 
-            if (mCurLen > NYQ_MAX_LEN) {
-               float hours = (float)NYQ_MAX_LEN / (44100 * 60 * 60);
-               const auto message =
-                  XO(
-"Selection too long for Nyquist code.\nMaximum allowed selection is %ld samples\n(about %.1f hours at 44100 Hz sample rate).")
-                     .Format((long)NYQ_MAX_LEN, hours);
-               EffectUIServices::DoMessageBox(*this,
-                  message,
-                  wxOK | wxCENTRE,
-                  XO("Nyquist Error") );
-               if (!mProjectChanged)
-                  em.SetSkipStateFlag(true);
-               return false;
-            }
+            wxASSERT(mCurLen <= NYQ_MAX_LEN);
 
             mCurLen = std::min(mCurLen, mMaxLen);
          }
