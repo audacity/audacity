@@ -242,4 +242,12 @@ void compileTest()
    static_assert(std::is_same_v<int&, decltype(Visit(cvis, std::move(cvar)))>);
    static_assert(std::is_same_v<int&, decltype(Visit(std::move(vis), std::move(cvar)))>);
    static_assert(std::is_same_v<int&, decltype(Visit(std::move(cvis), std::move(cvar)))>);
+
+   // Test contexpr-ness of Visitor constructor, and MemberInvoker too
+   using X = Tester<false>::X;
+   constexpr auto visitor = Visitor{ TestVisitor{}, &X::member },
+      // and copy constructor
+      visitor2{ visitor },
+      // and move constructor
+      visitor3{ Visitor{ TestVisitor{}, &X::member } };
 }

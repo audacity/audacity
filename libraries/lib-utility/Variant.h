@@ -156,7 +156,7 @@ template<typename M, typename C> struct MemberInvoker {
    template<typename T> struct CanAccept<T, std::void_t<Result<T>>>
       : std::true_type {};
 
-   explicit MemberInvoker(Member member) : member{ member } {}
+   explicit constexpr MemberInvoker(Member member) : member{ member } {}
    //! Cover all cases of std::invoke, with perfect forwarding, and
    //! sfinae eliminates the overloads for argument types for which it
    //! is inapplicable
@@ -188,14 +188,17 @@ template<typename... Invocables> struct VisitorBase
 {
    //! Variadic constructor allowing arguments with different value categories
    template<typename... Is>
-   VisitorBase(Is&&... invocables)
+   constexpr VisitorBase(Is&&... invocables)
       : detail::InvocableBase_t<Invocables>{ std::forward<Is>(invocables) }...
    {}
+   constexpr VisitorBase(const VisitorBase&) = default;
+   constexpr VisitorBase(VisitorBase&&) = default;
    using detail::InvocableBase_t<Invocables>::operator() ...;
 };
 }
 
-//! Construct from multiple invocables to get overloaded operator ()
+//! Construct from multiple invocables to get overloaded operator ().
+//! It is a literal type when all its base classes are
 template<typename... Invocables> struct Visitor
    : detail::VisitorBase<std::remove_reference_t<Invocables>...>
 {
