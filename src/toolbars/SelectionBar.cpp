@@ -183,7 +183,7 @@ void SelectionBar::Create(wxWindow * parent)
 AButton* SelectionBar::MakeSetupButton()
 {
    wxImage up = theTheme.Image(bmpRecoloredUpSmall);
-   up.Rescale(20, 20, wxIMAGE_QUALITY_HIGH);
+   up.Rescale(20, 18, wxIMAGE_QUALITY_HIGH);
    wxImage down = theTheme.Image(bmpRecoloredDownSmall);
    down.Rescale(20, 20, wxIMAGE_QUALITY_HIGH);
    wxImage hiliteUp = theTheme.Image(bmpRecoloredUpHiliteSmall);
