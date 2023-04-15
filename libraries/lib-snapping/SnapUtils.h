@@ -32,6 +32,7 @@ SNAPPING_API Identifier ReadSnapTo();
 
 struct SnapRegistryGroup;
 struct SnapRegistryItem;
+struct SnapFunctionSuperGroup;
 
 struct SNAPPING_API SnapRegistryVisitor /* not final */
 {
@@ -128,3 +129,11 @@ struct SNAPPING_API SnapRegistryItemRegistrator final :
    }
 };
 
+struct SnapFunctionSuperGroup : Composite::Extension<
+   Registry::GroupItem<SnapRegistryTraits>, void, const Identifier&
+> {
+   using Extension::Extension;
+};
+
+constexpr auto SnapFunctionItems =
+   Callable::UniqueMaker<SnapFunctionSuperGroup>();

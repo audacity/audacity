@@ -113,3 +113,13 @@ struct NUMERIC_FORMATS_API NumericConverterItemRegistrator final :
    {
    }
 };
+
+struct NumericConverterRegistrySuperGroup : Composite::Extension<
+   Registry::GroupItem<NumericConverterRegistryTraits>,
+   void, const Identifier&
+> {
+   using Extension::Extension;
+};
+
+constexpr auto NumericConverterItems =
+   Callable::UniqueMaker<NumericConverterRegistrySuperGroup>();

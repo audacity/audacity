@@ -1068,27 +1068,20 @@ static auto MakeGroup (const Identifier& identifier, NumericConverterType type,
       MakeItem(type));
 }
 
-NumericConverterItemRegistrator parsedTime {
+static NumericConverterItemRegistrator sRegistration {
    Registry::Placement { {}, {} },
-   MakeGroup("parsedTime", NumericConverterType_TIME(), TimeConverterFormats_)
-};
-
-NumericConverterItemRegistrator parsedDuration {
-   Registry::Placement { {}, {} },
-   MakeGroup("parsedDuration", NumericConverterType_DURATION(),
-      TimeConverterFormats_)
-};
-
-NumericConverterItemRegistrator parsedFrequency {
-   Registry::Placement { {}, {} },
-   MakeGroup( "parsedFrequency", NumericConverterType_FREQUENCY(),
-      FrequencyConverterFormats_)
-};
-
-NumericConverterItemRegistrator parsedBandwith {
-   Registry::Placement { {}, {} },
-   MakeGroup("parsedBandwith", NumericConverterType_BANDWIDTH(),
-      BandwidthConverterFormats_)
+   NumericConverterItems("parsed",
+      // The sequence of these groups is unimportant because their numeric
+      // converter types are all different
+      MakeGroup("parsedTime",
+         NumericConverterType_TIME(), TimeConverterFormats_),
+      MakeGroup("parsedDuration", NumericConverterType_DURATION(),
+         TimeConverterFormats_),
+      MakeGroup( "parsedFrequency", NumericConverterType_FREQUENCY(),
+         FrequencyConverterFormats_),
+      MakeGroup("parsedBandwith", NumericConverterType_BANDWIDTH(),
+         BandwidthConverterFormats_)
+   )
 };
 } // namespace
 
