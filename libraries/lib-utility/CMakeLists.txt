@@ -36,6 +36,8 @@ set( SOURCES
    Observer.h
    PackedArray.h
    spinlock.h
+   Tuple.cpp
+   Tuple.h
    TypeEnumerator.cpp
    TypeEnumerator.h
    TypeList.cpp
