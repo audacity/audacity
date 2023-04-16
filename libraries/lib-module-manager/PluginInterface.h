@@ -46,6 +46,7 @@
 #include "ComponentInterface.h"
 #include "Identifier.h"
 #include "PluginProvider.h"
+#include "TypeListVisitor.h"
 #include <variant>
 
 class PluginProvider;
@@ -57,7 +58,7 @@ enum ConfigurationType : unsigned {
 };
 
 //! Supported types for settings
-using ConfigValueTypes = std::tuple<
+using ConfigValueTypes = TypeList::List<
      wxString
    , int
    , bool
@@ -66,17 +67,10 @@ using ConfigValueTypes = std::tuple<
 >;
 
 //! Define a reference to a variable of one of the types in ConfigValueTypes
-/*! Avoid repetition of the list of types */
-template<bool is_const, typename> struct ConfigReferenceGenerator;
-template<bool is_const, typename... Types>
-struct ConfigReferenceGenerator<is_const, std::tuple<Types...>> {
-   using type = std::variant< std::reference_wrapper<
-      std::conditional_t<is_const, const Types, Types> >... >;
-};
 using ConfigReference =
-   ConfigReferenceGenerator<false, ConfigValueTypes>::type;
+   TypeListVisitor::VariantOfReferences_t<false, ConfigValueTypes>;
 using ConfigConstReference =
-   ConfigReferenceGenerator<true, ConfigValueTypes>::type;
+   TypeListVisitor::VariantOfReferences_t<true, ConfigValueTypes>;
 
 }
 

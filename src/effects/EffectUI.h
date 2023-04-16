@@ -213,4 +213,8 @@ private:
    wxDECLARE_NO_COPY_CLASS(EffectDialog);
 };
 
+#if defined(__WXMAC__)
+void MacMakeWindowFloating(NSView *handle);
+#endif
+
 #endif // __AUDACITY_EFFECTUI_H__

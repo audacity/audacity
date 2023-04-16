@@ -116,10 +116,6 @@ private:
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
 
-#if defined(__WXMAC__)
-#include <Cocoa/Cocoa.h>
-#endif
-
 static const int kDummyID = 20000;
 static const int kSaveAsID = 20001;
 static const int kImportID = 20002;
@@ -251,8 +247,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    // Assign the out parameter
    pInstance = mpInstance;
 #if defined(__WXMAC__)
-   // Make sure the effect window actually floats above the main window
-   [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
+   MacMakeWindowFloating(GetHandle());
 #endif
    
    SetName( effect.GetDefinition().GetName() );
