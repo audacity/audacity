@@ -37,6 +37,7 @@ set( SOURCES
    TypeList.h
    TypeListVisitor.h
    TypedAny.h
+   Variant.h
 )
 audacity_library( lib-utility "${SOURCES}" ""
    "" ""
