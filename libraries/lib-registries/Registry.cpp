@@ -23,9 +23,9 @@ struct ItemOrdering;
 using namespace Registry;
 
 //! Used only internally
-struct PlaceHolder : InlineGroupItem<> {
+struct PlaceHolder : GroupItem<> {
    PlaceHolder(const Identifier &identifier, Ordering ordering)
-      : InlineGroupItem{ identifier }
+      : GroupItem{ identifier }
       , ordering{ ordering == Strong ? Weak : ordering }
    {}
    ~PlaceHolder() = default;
@@ -42,7 +42,7 @@ struct CollectedItems
       // Predefined, or merged from registry already:
       BaseItem *visitNow;
       // Corresponding item from the registry, its sub-items to be merged:
-      GroupItem *mergeLater;
+      GroupItemBase *mergeLater;
       // Ordering hint for the merged item:
       OrderingHint hint;
    };
@@ -70,11 +70,11 @@ struct CollectedItems
          -> bool;
 
    auto MergeLater(Item &found, const Identifier &name,
-      GroupItem::Ordering ordering) -> GroupItem *;
+      GroupItemBase::Ordering ordering) -> GroupItemBase *;
 
    void SubordinateSingleItem(Item &found, BaseItem *pItem);
 
-   void SubordinateMultipleItems(Item &found, GroupItem *pItems);
+   void SubordinateMultipleItems(Item &found, GroupItemBase *pItems);
 
    auto MergeWithExistingItem(
       Visitor &visitor, ItemOrdering &itemOrdering, BaseItem *pItem ) -> bool;
@@ -157,8 +157,8 @@ void CollectItem( Registry::Visitor &visitor,
       }
    }
    else
-   if (auto pGroup = dynamic_cast<GroupItem*>(pItem)) {
-      if (pGroup->GetOrdering() == GroupItem::Anonymous)
+   if (auto pGroup = dynamic_cast<GroupItemBase*>(pItem)) {
+      if (pGroup->GetOrdering() == GroupItemBase::Anonymous)
          // anonymous grouping item is transparent to path calculations
          // collect group members now
          // recursion
@@ -346,7 +346,7 @@ auto CollectedItems::InsertNewItemUsingHint(
 }
 
 auto CollectedItems::MergeLater(Item &found, const Identifier &name,
-   GroupItem::Ordering ordering) -> GroupItem *
+   GroupItemBase::Ordering ordering) -> GroupItemBase *
 {
    auto subGroup = found.mergeLater;
    if (!subGroup) {
@@ -359,13 +359,14 @@ auto CollectedItems::MergeLater(Item &found, const Identifier &name,
 
 void CollectedItems::SubordinateSingleItem(Item &found, BaseItem *pItem)
 {
-   MergeLater(found, pItem->name, GroupItem::Weak)->items.push_back(
+   MergeLater(found, pItem->name, GroupItemBase::Weak)->items.push_back(
       std::make_unique<SharedItem>(
          // shared pointer with vacuous deleter
          std::shared_ptr<BaseItem>( pItem, [](void*){})));
 }
 
-void CollectedItems::SubordinateMultipleItems(Item &found, GroupItem *pItems)
+void CollectedItems::SubordinateMultipleItems(
+   Item &found, GroupItemBase *pItems)
 {
    auto subGroup = MergeLater(found, pItems->name, pItems->GetOrdering());
    for ( const auto &pItem : pItems->items )
@@ -384,8 +385,8 @@ auto CollectedItems::MergeWithExistingItem(
       // Collision of names between collection and registry!
       // There are 2 * 2 = 4 cases, as each of the two are group items or
       // not.
-      auto pCollectionGroup = dynamic_cast< GroupItem * >( found->visitNow );
-      auto pRegistryGroup = dynamic_cast< GroupItem * >( pItem );
+      auto pCollectionGroup = dynamic_cast< GroupItemBase * >( found->visitNow );
+      auto pRegistryGroup = dynamic_cast< GroupItemBase * >( pItem );
       if (pCollectionGroup) {
          if (pRegistryGroup) {
             // This is the expected case of collision.
@@ -395,9 +396,9 @@ auto CollectedItems::MergeWithExistingItem(
             // strongly ordered item; if not, we must lose the extra
             // information carried by one of them.
             bool pCollectionGrouping =
-               (pCollectionGroup->GetOrdering() != GroupItem::Strong);
+               (pCollectionGroup->GetOrdering() != GroupItemBase::Strong);
             auto pRegistryGrouping =
-               (pRegistryGroup->GetOrdering() != GroupItem::Strong);
+               (pRegistryGroup->GetOrdering() != GroupItemBase::Strong);
             if ( !(pCollectionGrouping || pRegistryGrouping) )
                ReportGroupGroupCollision( itemOrdering.key, name );
 
@@ -637,12 +638,12 @@ auto CollectedItems::MergeItems(
 void VisitItem(
    Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, BaseItem *pItem,
-   const GroupItem *pToMerge, const OrderingHint &hint,
+   const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush );
 void VisitItems(
    Registry::Visitor &visitor, CollectedItems &collection,
-   Path &path, GroupItem *pGroup,
-   const GroupItem *pToMerge, const OrderingHint &hint,
+   Path &path, GroupItemBase *pGroup,
+   const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush )
 {
    // Make a NEW collection for this subtree, sharing the memo cache
@@ -689,7 +690,7 @@ void VisitItems(
 void VisitItem(
    Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, BaseItem *pItem,
-   const GroupItem *pToMerge, const OrderingHint &hint,
+   const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush )
 {
    if (!pItem)
@@ -702,7 +703,7 @@ void VisitItem(
    }
    else
    if (const auto pGroup =
-       dynamic_cast<GroupItem*>( pItem )) {
+       dynamic_cast<GroupItemBase*>( pItem )) {
       visitor.BeginGroup( *pGroup, path );
       // recursion
       VisitItems(
@@ -725,15 +726,15 @@ ComputedItem::~ComputedItem() {}
 
 SingleItem::~SingleItem() {}
 
-GroupItem::~GroupItem() {}
-auto GroupItem::GetOrdering() const -> Ordering { return Strong; }
+GroupItemBase::~GroupItemBase() {}
+auto GroupItemBase::GetOrdering() const -> Ordering { return Strong; }
 
 Visitor::~Visitor(){}
-void Visitor::BeginGroup(GroupItem &, const Path &) {}
-void Visitor::EndGroup(GroupItem &, const Path &) {}
+void Visitor::BeginGroup(GroupItemBase &, const Path &) {}
+void Visitor::EndGroup(GroupItemBase &, const Path &) {}
 void Visitor::Visit(SingleItem &, const Path &) {}
 
-void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItem *pRegistry )
+void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItemBase *pRegistry )
 {
    std::vector< BaseItemSharedPtr > computedItems;
    bool doFlush = false;
@@ -770,7 +771,7 @@ void OrderingPreferenceInitializer::operator () ()
       gPrefs->Flush();
 }
 
-void RegisterItem( GroupItem &registry, const Placement &placement,
+void RegisterItem( GroupItemBase &registry, const Placement &placement,
    BaseItemPtr pItem )
 {
    // Since registration determines only an unordered tree of menu items,
@@ -804,11 +805,11 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
       const auto range = find( pathComponent );
       const auto iter2 = std::find_if( range.first, range.second,
          [](const BaseItemPtr &pItem){
-            return dynamic_cast< GroupItem* >( pItem.get() ); } );
+            return dynamic_cast< GroupItemBase* >( pItem.get() ); } );
 
       if ( iter2 != range.second ) {
          // A matching group in the registry, so descend
-         pNode = static_cast< GroupItem* >( iter2->get() );
+         pNode = static_cast< GroupItemBase* >( iter2->get() );
          pItems = &pNode->items;
          debugPath += '/' + pathComponent;
          ++pComponent;
@@ -824,7 +825,7 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
    // Create path group items for remaining components
    while ( pComponent != end ) {
       auto newNode =
-         std::make_unique<PlaceHolder>(*pComponent, GroupItem::Weak);
+         std::make_unique<PlaceHolder>(*pComponent, GroupItemBase::Weak);
       pNode = newNode.get();
       pItems->insert( find( pNode->name ).second, std::move( newNode ) );
       pItems = &pNode->items;
@@ -838,5 +839,5 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
    pItems->insert( find( pItem->name ).second, std::move( pItem ) );
 }
 
-template struct InlineGroupItem<>;
+template struct GroupItem<>;
 }

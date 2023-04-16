@@ -103,7 +103,7 @@ void MenuManager::UpdatePrefs()
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
 }
 
-void MenuVisitor::BeginGroup( Registry::GroupItem &item, const Path &path )
+void MenuVisitor::BeginGroup( Registry::GroupItemBase &item, const Path &path )
 {
    bool isMenu = false;
    bool isExtension = false;
@@ -130,7 +130,7 @@ void MenuVisitor::BeginGroup( Registry::GroupItem &item, const Path &path )
    }
 }
 
-void MenuVisitor::EndGroup( Registry::GroupItem &item, const Path &path )
+void MenuVisitor::EndGroup( Registry::GroupItemBase &item, const Path &path )
 {
    auto pItem = &item;
    const bool inlined = dynamic_cast<MenuTable::MenuItems*>(pItem);
@@ -168,11 +168,11 @@ void MenuVisitor::MaybeDoSeparator()
       DoSeparator();
 }
 
-void MenuVisitor::DoBeginGroup( Registry::GroupItem &, const Path & )
+void MenuVisitor::DoBeginGroup( Registry::GroupItemBase &, const Path & )
 {
 }
 
-void MenuVisitor::DoEndGroup( Registry::GroupItem &, const Path & )
+void MenuVisitor::DoEndGroup( Registry::GroupItemBase &, const Path & )
 {
 }
 
@@ -188,7 +188,7 @@ namespace MenuTable {
 
 MenuItem::MenuItem(const Identifier &internalName,
    const TranslatableString &title, BaseItemPtrs &&items
-)  : InlineGroupItem{ internalName, move(items) }
+)  : GroupItem{ internalName, move(items) }
    , title{ title }
 {
    wxASSERT( !title.empty() );
@@ -197,7 +197,7 @@ MenuItem::~MenuItem() {}
 
 ConditionalGroupItem::ConditionalGroupItem(
    const Identifier &internalName, Condition condition, BaseItemPtrs &&items
-)  : InlineGroupItem{ internalName, move(items) }
+)  : GroupItem{ internalName, move(items) }
    , condition{ condition }
 {
 }
@@ -261,9 +261,9 @@ const auto MenuPathStart = wxT("MenuBar");
 
 }
 
-Registry::GroupItem &MenuTable::ItemRegistry::Registry()
+Registry::GroupItemBase &MenuTable::ItemRegistry::Registry()
 {
-   static InlineGroupItem<> registry{ MenuPathStart };
+   static GroupItem<> registry{ MenuPathStart };
    return registry;
 }
 
@@ -287,7 +287,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
       : ToolbarMenuVisitor(proj), manager( man ) {}
 
-   void DoBeginGroup( GroupItem &item, const Path& ) override
+   void DoBeginGroup( GroupItemBase &item, const Path& ) override
    {
       auto pItem = &item;
       if (const auto pMenu =
@@ -310,7 +310,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
          wxASSERT( false );
    }
 
-   void DoEndGroup( GroupItem &item, const Path& ) override
+   void DoEndGroup( GroupItemBase &item, const Path& ) override
    {
       auto pItem = &item;
       if (const auto pMenu =

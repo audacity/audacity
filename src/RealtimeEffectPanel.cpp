@@ -70,7 +70,7 @@ namespace
       RealtimeEffectsMenuVisitor(wxMenu& menu)
          : mMenu(menu), mMenuPtr(&mMenu) { }
       
-      void DoBeginGroup( MenuTable::GroupItem &item, const Path& ) override
+      void DoBeginGroup( MenuTable::GroupItemBase &item, const Path& ) override
       {
          if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
          {
@@ -85,7 +85,7 @@ namespace
          }
       }
 
-      void DoEndGroup( MenuTable::GroupItem &item, const Path& ) override
+      void DoEndGroup( MenuTable::GroupItemBase &item, const Path& ) override
       {
          if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
          {

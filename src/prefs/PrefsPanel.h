@@ -126,11 +126,11 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    virtual void Cancel();
 
  private:
-   struct AUDACITY_DLL_API PrefsItem final : Registry::InlineGroupItem<> {
+   struct AUDACITY_DLL_API PrefsItem final : Registry::GroupItem<> {
       PrefsPanel::Factory factory;
       bool expanded{ false };
 
-      static Registry::GroupItem &Registry();
+      static Registry::GroupItemBase &Registry();
 
       PrefsItem(const wxString &name,
          const PrefsPanel::Factory &factory, bool expanded);

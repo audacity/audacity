@@ -125,16 +125,16 @@ namespace Registry {
    };
 
    //! Common abstract base class for items that group other items
-   struct REGISTRIES_API GroupItem : BaseItem {
+   struct REGISTRIES_API GroupItemBase : BaseItem {
       using BaseItem::BaseItem;
 
       //! Construction from an internal name and a previously built-up
       //! vector of pointers
-      GroupItem( const Identifier &internalName, BaseItemPtrs &&items_ )
+      GroupItemBase( const Identifier &internalName, BaseItemPtrs &&items_ )
          : BaseItem{ internalName }, items{ std::move( items_ ) }
       {}
-      GroupItem( const GroupItem& ) PROHIBITED;
-      ~GroupItem() override = 0;
+      GroupItemBase( const GroupItemBase& ) PROHIBITED;
+      ~GroupItemBase() override = 0;
 
       //! Choose treatment of the children of the group when merging trees
       enum Ordering {
@@ -156,14 +156,14 @@ namespace Registry {
       BaseItemPtrs items;
    };
    
-   // GroupItem adding variadic constructor conveniences
+   // GroupItemBase adding variadic constructor conveniences
    template< typename VisitorType = ComputedItem::DefaultVisitor >
-   struct InlineGroupItem : GroupItem {
-      using GroupItem::GroupItem;
+   struct GroupItem : GroupItemBase {
+      using GroupItemBase::GroupItemBase;
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         InlineGroupItem( const Identifier &internalName, Args&&... args )
-         : GroupItem( internalName )
+         GroupItem( const Identifier &internalName, Args&&... args )
+         : GroupItemBase( internalName )
          { Append( std::forward< Args >( args )... ); }
 
    private:
@@ -226,7 +226,7 @@ namespace Registry {
    // determining the visitation ordering.  When sequence is important, register
    // a GroupItem.
    REGISTRIES_API
-   void RegisterItem( GroupItem &registry, const Placement &placement,
+   void RegisterItem( GroupItemBase &registry, const Placement &placement,
       BaseItemPtr pItem //!< Registry takes ownership
    );
    
@@ -234,7 +234,7 @@ namespace Registry {
    /*!
        Usually constructed statically
        @tparam Item inherits `BaseItem`
-       @tparam RegistryClass defines static member `Registry()` returning `GroupItem&`
+       @tparam RegistryClass defines static member `Registry()` returning `GroupItemBase&`
     */
    template<typename Item, typename RegistryClass = Item> class RegisteredItem {
    public:
@@ -254,8 +254,8 @@ namespace Registry {
    public:
       virtual ~Visitor();
       using Path = std::vector< Identifier >;
-      virtual void BeginGroup( GroupItem &item, const Path &path );
-      virtual void EndGroup( GroupItem &item, const Path &path );
+      virtual void BeginGroup( GroupItemBase &item, const Path &path );
+      virtual void EndGroup( GroupItemBase &item, const Path &path );
       virtual void Visit( SingleItem &item, const Path &path );
    };
 
@@ -271,7 +271,7 @@ namespace Registry {
    REGISTRIES_API void Visit(
       Visitor &visitor,
       BaseItem *pTopItem,
-      const GroupItem *pRegistry = nullptr );
+      const GroupItemBase *pRegistry = nullptr );
 
    // Typically a static object.  Constructor initializes certain preferences
    // if they are not present.  These preferences determine an extrinsic
@@ -301,7 +301,7 @@ namespace Registry {
       Literal mRoot;
    };
 
-extern template struct InlineGroupItem<>;
+extern template struct GroupItem<>;
 }
 
 #endif

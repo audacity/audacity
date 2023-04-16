@@ -21,7 +21,7 @@ PopupSubMenu::~PopupSubMenu()
 
 PopupSubMenu::PopupSubMenu(const Identifier &stringId,
    const TranslatableString &caption, PopupMenuTable &table
-)  : InlineGroupItem{ stringId }
+)  : GroupItem{ stringId }
    , WholeMenu{ caption.empty() }
    , caption{ caption }
    , table{ table }
@@ -55,8 +55,8 @@ public:
       , mpUserData{ pUserData }
    {}
 
-   void DoBeginGroup( Registry::GroupItem &item, const Path &path ) override;
-   void DoEndGroup( Registry::GroupItem &item, const Path &path ) override;
+   void DoBeginGroup( Registry::GroupItemBase &item, const Path &path ) override;
+   void DoEndGroup( Registry::GroupItemBase &item, const Path &path ) override;
    void DoVisit( Registry::SingleItem &item, const Path &path ) override;
    void DoSeparator() override;
 
@@ -65,7 +65,7 @@ public:
    void *const mpUserData;
 };
 
-void PopupMenuBuilder::DoBeginGroup( Registry::GroupItem &item, const Path &path )
+void PopupMenuBuilder::DoBeginGroup( Registry::GroupItemBase &item, const Path &path )
 {
    if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
       if ( !pItem->caption.empty() ) {
@@ -77,7 +77,7 @@ void PopupMenuBuilder::DoBeginGroup( Registry::GroupItem &item, const Path &path
    }
 }
 
-void PopupMenuBuilder::DoEndGroup( Registry::GroupItem &item, const Path &path )
+void PopupMenuBuilder::DoEndGroup( Registry::GroupItemBase &item, const Path &path )
 {
    if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
       if ( !pItem->caption.empty() ) {

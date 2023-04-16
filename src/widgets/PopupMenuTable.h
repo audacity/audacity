@@ -63,7 +63,7 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    ~PopupMenuTableEntry() override;
 };
 
-struct AUDACITY_DLL_API PopupSubMenu : Registry::InlineGroupItem<>
+struct AUDACITY_DLL_API PopupSubMenu : Registry::GroupItem<>
    , MenuTable::WholeMenu
 {
    TranslatableString caption;
@@ -75,8 +75,8 @@ struct AUDACITY_DLL_API PopupSubMenu : Registry::InlineGroupItem<>
    ~PopupSubMenu() override;
 };
 
-struct PopupMenuSection : Registry::InlineGroupItem<>, MenuTable::MenuSection {
-   using InlineGroupItem::InlineGroupItem;
+struct PopupMenuSection : Registry::GroupItem<>, MenuTable::MenuSection {
+   using GroupItem::GroupItem;
 };
 
 class PopupMenuHandler : public wxEvtHandler
@@ -118,7 +118,7 @@ public:
    PopupMenuTable( const Identifier &id, const TranslatableString &caption = {} )
       : mId{ id }
       , mCaption{ caption }
-      , mRegistry{ std::make_unique<Registry::InlineGroupItem<>>(mId) }
+      , mRegistry{ std::make_unique<Registry::GroupItem<>>(mId) }
    {}
 
    // Optional pUserData gets passed to the InitUserData routines of tables.
@@ -128,7 +128,7 @@ public:
 
    const Identifier &Id() const { return mId; }
    const TranslatableString &Caption() const { return mCaption; }
-   const Registry::GroupItem *GetRegistry() const { return mRegistry.get(); }
+   const Registry::GroupItemBase *GetRegistry() const { return mRegistry.get(); }
 
    // Typically statically constructed:
    struct AttachedItem {
@@ -141,7 +141,7 @@ public:
    // More items get added to the end of it
    static void ExtendMenu( PopupMenu &menu, PopupMenuTable &otherTable );
    
-   const std::shared_ptr< Registry::GroupItem > &Get( void *pUserData )
+   const std::shared_ptr< Registry::GroupItemBase > &Get( void *pUserData )
    {
       if ( pUserData )
          this->InitUserData( pUserData );
@@ -217,11 +217,11 @@ protected:
    void BeginSection( const Identifier &name );
    void EndSection();
 
-   std::shared_ptr< Registry::GroupItem > mTop;
-   std::vector< Registry::GroupItem* > mStack;
+   std::shared_ptr< Registry::GroupItemBase > mTop;
+   std::vector< Registry::GroupItemBase* > mStack;
    Identifier mId;
    TranslatableString mCaption;
-   std::unique_ptr<Registry::GroupItem> mRegistry;
+   std::unique_ptr<Registry::GroupItemBase> mRegistry;
 };
 
 // A "CRTP" class that injects a convenience function, which appends a menu item

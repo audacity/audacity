@@ -55,13 +55,13 @@ struct SNAPPING_API SnapResult final
 };
 
 struct SNAPPING_API SnapRegistryGroup :
-    public Registry::InlineGroupItem<SnapRegistryVisitor>
+    public Registry::GroupItem<SnapRegistryVisitor>
 {
    template <typename... Args>
    SnapRegistryGroup(
       const Identifier& internalName, const TranslatableString& _label,
       bool _inlined, Args&&... args)
-       : InlineGroupItem { internalName, std::forward<Args>(args)... }
+       : GroupItem { internalName, std::forward<Args>(args)... }
        , label { _label }
        , inlined { _inlined}
    {}
@@ -103,7 +103,7 @@ Registry::BaseItemPtr SnapFunctionGroup (
 }
 
 struct SNAPPING_API SnapFunctionsRegistry final {
-   static Registry::GroupItem& Registry();
+   static Registry::GroupItemBase& Registry();
 
    static void Visit(SnapRegistryVisitor& visitor);
 

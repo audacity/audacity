@@ -13,15 +13,15 @@ Paul Licameli split from PrefsDialog.cpp
 
 static const auto PathStart = L"Preferences";
 
-Registry::GroupItem &PrefsPanel::PrefsItem::Registry()
+Registry::GroupItemBase &PrefsPanel::PrefsItem::Registry()
 {
-   static Registry::InlineGroupItem<> registry{ PathStart };
+   static Registry::GroupItem<> registry{ PathStart };
    return registry;
 }
 
 PrefsPanel::PrefsItem::PrefsItem(const wxString &name,
    const PrefsPanel::Factory &factory, bool expanded
-)  : InlineGroupItem{ name }
+)  : GroupItem{ name }
    , factory{ factory }
    , expanded{ expanded }
 {}
@@ -33,7 +33,7 @@ struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
    {
       childCounts.push_back( 0 );
    }
-   void BeginGroup( Registry::GroupItem &item, const Path & ) override
+   void BeginGroup( Registry::GroupItemBase &item, const Path & ) override
    {
       auto pItem = dynamic_cast<PrefsItem*>( &item );
       if (!pItem || !pItem->factory)
@@ -43,7 +43,7 @@ struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
       ++childCounts.back();
       childCounts.push_back( 0 );
    }
-   void EndGroup( Registry::GroupItem &item, const Path & ) override
+   void EndGroup( Registry::GroupItemBase &item, const Path & ) override
    {
       auto pItem = dynamic_cast<PrefsItem*>( &item );
       if (!pItem || !pItem->factory)
@@ -120,7 +120,7 @@ PrefsPanel::Factories
 
    std::call_once( flag, []{
       PrefsItem::Visitor visitor{ factories };
-      Registry::InlineGroupItem<> top{ PathStart };
+      Registry::GroupItem<> top{ PathStart };
       Registry::Visit( visitor, &top, &PrefsItem::Registry() );
    } );
    return factories;

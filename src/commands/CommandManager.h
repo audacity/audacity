@@ -391,15 +391,15 @@ private:
 struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
 {
    // final overrides
-   void BeginGroup( Registry::GroupItem &item, const Path &path ) final;
-   void EndGroup( Registry::GroupItem &item, const Path& ) final;
+   void BeginGroup( Registry::GroupItemBase &item, const Path &path ) final;
+   void EndGroup( Registry::GroupItemBase &item, const Path& ) final;
    void Visit( Registry::SingleItem &item, const Path &path ) final;
 
    // added virtuals
    //! Groups of type MenuItems are excluded from this callback
-   virtual void DoBeginGroup( Registry::GroupItem &item, const Path &path );
+   virtual void DoBeginGroup( Registry::GroupItemBase &item, const Path &path );
    //! Groups of type MenuItems are excluded from this callback
-   virtual void DoEndGroup( Registry::GroupItem &item, const Path &path );
+   virtual void DoEndGroup( Registry::GroupItemBase &item, const Path &path );
    virtual void DoVisit( Registry::SingleItem &item, const Path &path );
    virtual void DoSeparator();
 
@@ -432,7 +432,7 @@ namespace MenuTable {
 
    // Describes a main menu in the toolbar, or a sub-menu
    struct AUDACITY_DLL_API MenuItem final
-      : InlineGroupItem<ToolbarMenuVisitor>
+      : GroupItem<ToolbarMenuVisitor>
       , WholeMenu {
       // Construction from an internal name and a previously built-up
       // vector of pointers
@@ -442,7 +442,7 @@ namespace MenuTable {
       template<typename... Args>
          MenuItem(const Identifier &internalName,
             const TranslatableString &title, Args&&... args
-         )  : InlineGroupItem{ internalName, std::forward<Args>(args)... }
+         )  : GroupItem{ internalName, std::forward<Args>(args)... }
             , title{ title }
          {}
       ~MenuItem() override;
@@ -452,7 +452,7 @@ namespace MenuTable {
 
    // Collects other items that are conditionally shown or hidden, but are
    // always available to macro programming
-   struct ConditionalGroupItem final : InlineGroupItem<ToolbarMenuVisitor> {
+   struct ConditionalGroupItem final : GroupItem<ToolbarMenuVisitor> {
       using Condition = std::function<bool()>;
 
       // Construction from an internal name and a previously built-up
@@ -463,7 +463,7 @@ namespace MenuTable {
       template<typename... Args>
          ConditionalGroupItem(const Identifier &internalName,
             Condition condition, Args&&... args
-         )  : InlineGroupItem{ internalName, std::forward<Args>(args)... }
+         )  : GroupItem{ internalName, std::forward<Args>(args)... }
             , condition{ condition }
          {}
       ~ConditionalGroupItem() override;
@@ -610,12 +610,12 @@ namespace MenuTable {
       Appender fn;
    };
 
-   struct MenuPart : InlineGroupItem<ToolbarMenuVisitor>, MenuSection
+   struct MenuPart : GroupItem<ToolbarMenuVisitor>, MenuSection
    {
       template< typename... Args >
       explicit
       MenuPart(const Identifier &internalName, Args&&... args )
-         : InlineGroupItem{ internalName, std::forward<Args>(args)... }
+         : GroupItem{ internalName, std::forward<Args>(args)... }
       {}
       ~MenuPart() override;
    };
@@ -623,8 +623,8 @@ namespace MenuTable {
    //! Groups of this type are inlined in the menu tree organization.  They
    //! (but not their contained items) are excluded from visitations using
    //! MenuVisitor
-   struct MenuItems : InlineGroupItem<ToolbarMenuVisitor> {
-      using InlineGroupItem::InlineGroupItem;
+   struct MenuItems : GroupItem<ToolbarMenuVisitor> {
+      using GroupItem::GroupItem;
       ~MenuItems() override;
       //! Anonymous if its name is empty, else weakly ordered
       Ordering GetOrdering() const override;
@@ -673,7 +673,7 @@ namespace MenuTable {
    constexpr auto Special = Callable::UniqueMaker<SpecialItem>();
 
    struct ItemRegistry {
-      static GroupItem &Registry();
+      static GroupItemBase &Registry();
    };
 
    // Typically you make a static object of this type in the .cpp file that
