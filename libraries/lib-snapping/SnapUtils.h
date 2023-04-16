@@ -68,8 +68,6 @@ struct SNAPPING_API SnapRegistryGroup :
    
    ~SnapRegistryGroup() override;
 
-   bool Transparent() const override;
-   
    const TranslatableString label;
    const bool inlined;
 };

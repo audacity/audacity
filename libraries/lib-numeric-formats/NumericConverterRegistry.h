@@ -52,8 +52,6 @@ struct NUMERIC_FORMATS_API NumericConverterRegistryGroup :
 
    ~NumericConverterRegistryGroup() override;
 
-   bool Transparent() const override;
-   
    NumericConverterType type;
 };
 

@@ -15,14 +15,15 @@ static const auto PathStart = L"Preferences";
 
 Registry::GroupItem &PrefsPanel::PrefsItem::Registry()
 {
-   static Registry::TransparentGroupItem<> registry{ PathStart };
+   static Registry::InlineGroupItem<> registry{ PathStart };
    return registry;
 }
 
-PrefsPanel::PrefsItem::PrefsItem( const wxString &name,
-   const PrefsPanel::Factory &factory_, bool expanded_ )
-      : ConcreteGroupItem<false>{ name }
-      , factory{ factory_ }, expanded{ expanded_ }
+PrefsPanel::PrefsItem::PrefsItem(const wxString &name,
+   const PrefsPanel::Factory &factory, bool expanded
+)  : InlineGroupItem{ name }
+   , factory{ factory }
+   , expanded{ expanded }
 {}
 
 // Collects registry tree nodes into a vector, in preorder.
@@ -119,7 +120,7 @@ PrefsPanel::Factories
 
    std::call_once( flag, []{
       PrefsItem::Visitor visitor{ factories };
-      Registry::TransparentGroupItem<> top{ PathStart };
+      Registry::InlineGroupItem<> top{ PathStart };
       Registry::Visit( visitor, &top, &PrefsItem::Registry() );
    } );
    return factories;

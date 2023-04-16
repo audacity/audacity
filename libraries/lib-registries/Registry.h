@@ -22,9 +22,11 @@ namespace Registry {
    // the same ordering), but this is not treated as an error.
    struct OrderingHint
    {
-      // The default Unspecified hint is just like End, except that in case the
-      // item is delegated to (by a SharedItem, ComputedItem, or nameless
-      // transparent group), the delegating item's hint will be used instead
+      /*!
+       The default Unspecified hint is just like End, except that in case the
+       item is delegated to (by a SharedItem, ComputedItem, or anonymous
+       group), the delegating item's hint will be used instead
+       */
       enum Type : int {
          Before, After,
          Begin, End,
@@ -122,21 +124,34 @@ namespace Registry {
       ~SingleItem() override = 0;
    };
 
-   // Common abstract base class for items that group other items
+   //! Common abstract base class for items that group other items
    struct REGISTRIES_API GroupItem : BaseItem {
       using BaseItem::BaseItem;
 
-      // Construction from an internal name and a previously built-up
-      // vector of pointers
+      //! Construction from an internal name and a previously built-up
+      //! vector of pointers
       GroupItem( const Identifier &internalName, BaseItemPtrs &&items_ )
          : BaseItem{ internalName }, items{ std::move( items_ ) }
       {}
       GroupItem( const GroupItem& ) PROHIBITED;
       ~GroupItem() override = 0;
 
-      // Whether the item is non-significant for path naming
-      // when it also has an empty name
-      virtual bool Transparent() const = 0;
+      //! Choose treatment of the children of the group when merging trees
+      enum Ordering {
+         //! Item's name is ignored (omitted from paths) and sub-items are
+         //! merged individually, sequenced by preferences or ordering hints
+         Anonymous,
+         //! Item's name is significant in paths, but its sequence of children
+         //! may be overridden if it merges with another group at the same path
+         Weak,
+         //! Item's name is significant and it is intended to be the unique
+         //! strongly ordered group at its path (but this could fail and
+         //! cause an alpha-build-only error message during merging)
+         Strong,
+      };
+
+      //! Default implementation returns Strong
+      virtual Ordering GetOrdering() const;
 
       BaseItemPtrs items;
    };
@@ -189,27 +204,6 @@ namespace Registry {
       template<typename Subtype>
       void AppendOne( const std::shared_ptr<Subtype> &ptr )
       { AppendOne( std::make_unique<SharedItem>(ptr) ); }
-   };
-
-   // Inline group item also specifying transparency
-   template< bool transparent,
-      typename VisitorType = ComputedItem::DefaultVisitor >
-   struct ConcreteGroupItem : InlineGroupItem< VisitorType >
-   {
-      using InlineGroupItem< VisitorType >::InlineGroupItem;
-      ~ConcreteGroupItem() {}
-      bool Transparent() const override { return transparent; }
-   };
-
-   // Concrete subclass of GroupItem that adds nothing else
-   // TransparentGroupItem with an empty name is transparent to item path calculations
-   // and propagates its ordering hint if subordinates don't specify hints
-   // and it does specify one
-   template< typename VisitorType = ComputedItem::DefaultVisitor >
-   struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
-   {
-      using ConcreteGroupItem< true, VisitorType >::ConcreteGroupItem;
-      ~TransparentGroupItem() override {}
    };
 
    // The /-separated path is relative to the GroupItem supplied to
@@ -306,6 +300,8 @@ namespace Registry {
       Pairs mPairs;
       Literal mRoot;
    };
+
+extern template struct InlineGroupItem<>;
 }
 
 #endif

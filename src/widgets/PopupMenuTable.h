@@ -63,7 +63,7 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    ~PopupMenuTableEntry() override;
 };
 
-struct AUDACITY_DLL_API PopupSubMenu : Registry::ConcreteGroupItem< false >
+struct AUDACITY_DLL_API PopupSubMenu : Registry::InlineGroupItem<>
    , MenuTable::WholeMenu
 {
    TranslatableString caption;
@@ -75,10 +75,8 @@ struct AUDACITY_DLL_API PopupSubMenu : Registry::ConcreteGroupItem< false >
    ~PopupSubMenu() override;
 };
 
-struct PopupMenuSection
-   : Registry::ConcreteGroupItem< false >
-   , MenuTable::MenuSection {
-   using ConcreteGroupItem< false >::ConcreteGroupItem;
+struct PopupMenuSection : Registry::InlineGroupItem<>, MenuTable::MenuSection {
+   using InlineGroupItem::InlineGroupItem;
 };
 
 class PopupMenuHandler : public wxEvtHandler
@@ -120,7 +118,7 @@ public:
    PopupMenuTable( const Identifier &id, const TranslatableString &caption = {} )
       : mId{ id }
       , mCaption{ caption }
-      , mRegistry{ std::make_unique<Registry::TransparentGroupItem<>>( mId ) }
+      , mRegistry{ std::make_unique<Registry::InlineGroupItem<>>(mId) }
    {}
 
    // Optional pUserData gets passed to the InitUserData routines of tables.

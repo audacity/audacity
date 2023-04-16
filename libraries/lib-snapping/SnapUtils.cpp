@@ -137,7 +137,7 @@ Identifier ReadSnapTo()
 
 Registry::GroupItem& SnapFunctionsRegistry::Registry()
 {
-   static Registry::TransparentGroupItem<> registry { PathStart };
+   static Registry::InlineGroupItem<> registry { PathStart };
    return registry;
 }
 
@@ -149,7 +149,7 @@ void SnapFunctionsRegistry::Visit(SnapRegistryVisitor& visitor)
    };
 
    RegistryVisitor registryVisitor { visitor };
-   Registry::TransparentGroupItem<> top { PathStart };
+   Registry::InlineGroupItem<> top { PathStart };
    Registry::Visit(registryVisitor, &top, &Registry());
 }
 
@@ -222,11 +222,6 @@ SnapResult SnapFunctionsRegistry::SingleStep(
 
 SnapRegistryGroup::~SnapRegistryGroup()
 {
-}
-
-bool SnapRegistryGroup::Transparent() const
-{
-   return false;
 }
 
 SnapRegistryItem::SnapRegistryItem(

@@ -186,19 +186,19 @@ void MenuVisitor::DoSeparator()
 
 namespace MenuTable {
 
-MenuItem::MenuItem( const Identifier &internalName,
-   const TranslatableString &title_, BaseItemPtrs &&items_ )
-: ConcreteGroupItem< false, ToolbarMenuVisitor >{
-   internalName, std::move( items_ ) }, title{ title_ }
+MenuItem::MenuItem(const Identifier &internalName,
+   const TranslatableString &title, BaseItemPtrs &&items
+)  : InlineGroupItem{ internalName, move(items) }
+   , title{ title }
 {
    wxASSERT( !title.empty() );
 }
 MenuItem::~MenuItem() {}
 
 ConditionalGroupItem::ConditionalGroupItem(
-   const Identifier &internalName, Condition condition_, BaseItemPtrs &&items_ )
-: ConcreteGroupItem< false, ToolbarMenuVisitor >{
-   internalName, std::move( items_ ) }, condition{ condition_ }
+   const Identifier &internalName, Condition condition, BaseItemPtrs &&items
+)  : InlineGroupItem{ internalName, move(items) }
+   , condition{ condition }
 {
 }
 ConditionalGroupItem::~ConditionalGroupItem() {}
@@ -229,7 +229,12 @@ CommandGroupItem::~CommandGroupItem() {}
 
 SpecialItem::~SpecialItem() {}
 MenuPart::~MenuPart() {}
+
 MenuItems::~MenuItems() {}
+auto MenuItems::GetOrdering() const -> Ordering {
+   return name.empty() ? Anonymous : Weak;
+}
+
 MenuSection::~MenuSection() {}
 WholeMenu::~WholeMenu() {}
 
@@ -258,7 +263,7 @@ const auto MenuPathStart = wxT("MenuBar");
 
 Registry::GroupItem &MenuTable::ItemRegistry::Registry()
 {
-   static TransparentGroupItem<> registry{ MenuPathStart };
+   static InlineGroupItem<> registry{ MenuPathStart };
    return registry;
 }
 

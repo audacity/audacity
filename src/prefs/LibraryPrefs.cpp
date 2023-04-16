@@ -29,7 +29,7 @@ static const auto PathStart = wxT("LibraryPreferences");
 
 Registry::GroupItem &LibraryPrefs::PopulatorItem::Registry()
 {
-   static Registry::TransparentGroupItem<> registry{ PathStart };
+   static Registry::InlineGroupItem<> registry{ PathStart };
    return registry;
 }
 
@@ -112,7 +112,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          // visit the registry to collect the plug-ins properly
          // sorted
-         TransparentGroupItem<> top{ PathStart };
+         InlineGroupItem<> top{ PathStart };
          Registry::Visit( *this, &top, &PopulatorItem::Registry() );
       }
 

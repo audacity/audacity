@@ -19,12 +19,12 @@ PopupMenuTableEntry::~PopupMenuTableEntry()
 PopupSubMenu::~PopupSubMenu()
 {}
 
-PopupSubMenu::PopupSubMenu( const Identifier &stringId,
-   const TranslatableString &caption_, PopupMenuTable &table_ )
-   : ConcreteGroupItem< false >{ stringId }
-   , WholeMenu{ caption_.empty() }
-   , caption{ caption_ }
-   , table{ table_ }
+PopupSubMenu::PopupSubMenu(const Identifier &stringId,
+   const TranslatableString &caption, PopupMenuTable &table
+)  : InlineGroupItem{ stringId }
+   , WholeMenu{ caption.empty() }
+   , caption{ caption }
+   , table{ table }
 {
 }
 

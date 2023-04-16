@@ -21,6 +21,21 @@ namespace {
 struct ItemOrdering;
 
 using namespace Registry;
+
+//! Used only internally
+struct PlaceHolder : InlineGroupItem<> {
+   PlaceHolder(const Identifier &identifier, Ordering ordering)
+      : InlineGroupItem{ identifier }
+      , ordering{ ordering == Strong ? Weak : ordering }
+   {}
+   ~PlaceHolder() = default;
+   Ordering GetOrdering() const override
+   {
+      return ordering;
+   }
+   Ordering ordering;
+};
+
 struct CollectedItems
 {
    struct Item{
@@ -54,11 +69,12 @@ struct CollectedItems
       bool force )
          -> bool;
 
-   auto MergeLater( Item &found, const Identifier &name ) -> GroupItem *;
+   auto MergeLater(Item &found, const Identifier &name,
+      GroupItem::Ordering ordering) -> GroupItem *;
 
-   auto SubordinateSingleItem( Item &found, BaseItem *pItem ) -> void;
+   void SubordinateSingleItem(Item &found, BaseItem *pItem);
 
-   auto SubordinateMultipleItems( Item &found, GroupItem *pItems ) -> void;
+   void SubordinateMultipleItems(Item &found, GroupItem *pItems);
 
    auto MergeWithExistingItem(
       Visitor &visitor, ItemOrdering &itemOrdering, BaseItem *pItem ) -> bool;
@@ -97,7 +113,7 @@ const OrderingHint &ChooseHint(BaseItem *delegate, const OrderingHint &hint)
 }
 
 // "Collection" of items is the first pass of visitation, and resolves
-// delegation and delayed computation and splices transparent group nodes.
+// delegation and delayed computation and splices anonymous group nodes.
 // This first pass is done at each group, starting with a top-level group.
 // This pass does not descend to the leaves.  Rather, the visitation passes
 // alternate as the entire tree is recursively visited.
@@ -142,8 +158,8 @@ void CollectItem( Registry::Visitor &visitor,
    }
    else
    if (auto pGroup = dynamic_cast<GroupItem*>(pItem)) {
-      if (pGroup->Transparent() && pItem->name.empty())
-         // nameless grouping item is transparent to path calculations
+      if (pGroup->GetOrdering() == GroupItem::Anonymous)
+         // anonymous grouping item is transparent to path calculations
          // collect group members now
          // recursion
          CollectItems(
@@ -329,31 +345,29 @@ auto CollectedItems::InsertNewItemUsingHint(
    return true;
 }
 
-auto CollectedItems::MergeLater( Item &found, const Identifier &name )
-   -> GroupItem *
+auto CollectedItems::MergeLater(Item &found, const Identifier &name,
+   GroupItem::Ordering ordering) -> GroupItem *
 {
    auto subGroup = found.mergeLater;
-   if ( !subGroup ) {
-      auto newGroup = std::make_shared<TransparentGroupItem<>>( name );
-      computedItems.push_back( newGroup );
+   if (!subGroup) {
+      auto newGroup = std::make_shared<PlaceHolder>(name, ordering);
+      computedItems.push_back(newGroup);
       subGroup = found.mergeLater = newGroup.get();
    }
    return subGroup;
 }
 
-auto CollectedItems::SubordinateSingleItem( Item &found, BaseItem *pItem )
-   -> void
+void CollectedItems::SubordinateSingleItem(Item &found, BaseItem *pItem)
 {
-   MergeLater( found, pItem->name )->items.push_back(
+   MergeLater(found, pItem->name, GroupItem::Weak)->items.push_back(
       std::make_unique<SharedItem>(
          // shared pointer with vacuous deleter
-         std::shared_ptr<BaseItem>( pItem, [](void*){} ) ) );
+         std::shared_ptr<BaseItem>( pItem, [](void*){})));
 }
 
-auto CollectedItems::SubordinateMultipleItems( Item &found, GroupItem *pItems )
-   -> void
+void CollectedItems::SubordinateMultipleItems(Item &found, GroupItem *pItems)
 {
-   auto subGroup = MergeLater( found, pItems->name );
+   auto subGroup = MergeLater(found, pItems->name, pItems->GetOrdering());
    for ( const auto &pItem : pItems->items )
       subGroup->items.push_back( std::make_unique<SharedItem>(
          // shared pointer with vacuous deleter
@@ -377,28 +391,30 @@ auto CollectedItems::MergeWithExistingItem(
             // This is the expected case of collision.
             // Subordinate items from one of the groups will be merged in
             // another call to MergeItems at a lower level of path.
-            // Note, however, that at most one of the two should be other
-            // than a plain grouping item; if not, we must lose the extra
+            // Note, however, that at most one of the two should be a
+            // strongly ordered item; if not, we must lose the extra
             // information carried by one of them.
-            bool pCollectionGrouping = pCollectionGroup->Transparent();
-            auto pRegistryGrouping = pRegistryGroup->Transparent();
+            bool pCollectionGrouping =
+               (pCollectionGroup->GetOrdering() != GroupItem::Strong);
+            auto pRegistryGrouping =
+               (pRegistryGroup->GetOrdering() != GroupItem::Strong);
             if ( !(pCollectionGrouping || pRegistryGrouping) )
                ReportGroupGroupCollision( itemOrdering.key, name );
 
             if ( pCollectionGrouping && !pRegistryGrouping ) {
                // Swap their roles
                found->visitNow = pRegistryGroup;
-               SubordinateMultipleItems( *found, pCollectionGroup );
+               SubordinateMultipleItems(*found, pCollectionGroup);
             }
             else
-               SubordinateMultipleItems( *found, pRegistryGroup );
+               SubordinateMultipleItems(*found, pRegistryGroup);
          }
          else {
             // Registered non-group item collides with a previously defined
             // group.
             // Resolve this by subordinating the non-group item below
             // that group.
-            SubordinateSingleItem( *found, pItem );
+            SubordinateSingleItem(*found, pItem);
          }
       }
       else {
@@ -409,7 +425,7 @@ auto CollectedItems::MergeWithExistingItem(
             // the final merge is the same, no matter which is treated first.
             auto demoted = found->visitNow;
             found->visitNow = pRegistryGroup;
-            SubordinateSingleItem( *found, demoted );
+            SubordinateSingleItem(*found, demoted);
          }
          else
             // Collision of non-group items is the worst case!
@@ -544,17 +560,20 @@ auto CollectedItems::MergeItems(
   Visitor &visitor, ItemOrdering &itemOrdering,
   const BaseItemPtrs &toMerge, const OrderingHint &hint ) -> void
 {
-   // First do expansion of nameless groupings, and caching of computed
-   // items, just as for the previously collected items.
-   CollectedItems newCollection{ {}, computedItems };
-   CollectItems( visitor, newCollection, toMerge, hint );
-
-   // Try to merge each, resolving name collisions with items already in the
-   // tree, and collecting those with names that don't collide.
    NewItems newItems;
-   for ( const auto &item : newCollection.items )
-      if ( !MergeWithExistingItem( visitor, itemOrdering, item.visitNow ) )
-          newItems.push_back( { item.visitNow, item.hint } );
+
+   {
+      // First do expansion of nameless groupings, and caching of computed
+      // items, just as for the previously collected items.
+      CollectedItems newCollection{ {}, computedItems };
+      CollectItems(visitor, newCollection, toMerge, hint);
+
+      // Try to merge each, resolving name collisions with items already in the
+      // tree, and collecting those with names that don't collide.
+      for (const auto &item : newCollection.items)
+         if (!MergeWithExistingItem(visitor, itemOrdering, item.visitNow))
+             newItems.push_back({ item.visitNow, item.hint });
+   }
 
    // Choose placements for items with NEW names.
 
@@ -707,6 +726,7 @@ ComputedItem::~ComputedItem() {}
 SingleItem::~SingleItem() {}
 
 GroupItem::~GroupItem() {}
+auto GroupItem::GetOrdering() const -> Ordering { return Strong; }
 
 Visitor::~Visitor(){}
 void Visitor::BeginGroup(GroupItem &, const Path &) {}
@@ -803,7 +823,8 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
 
    // Create path group items for remaining components
    while ( pComponent != end ) {
-      auto newNode = std::make_unique<TransparentGroupItem<>>( *pComponent );
+      auto newNode =
+         std::make_unique<PlaceHolder>(*pComponent, GroupItem::Weak);
       pNode = newNode.get();
       pItems->insert( find( pNode->name ).second, std::move( newNode ) );
       pItems = &pNode->items;
@@ -817,4 +838,5 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
    pItems->insert( find( pItem->name ).second, std::move( pItem ) );
 }
 
+template struct InlineGroupItem<>;
 }
