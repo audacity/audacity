@@ -60,10 +60,10 @@ struct SNAPPING_API SnapRegistryGroup :
    template <typename... Args>
    SnapRegistryGroup(
       const Identifier& internalName, const TranslatableString& _label,
-      bool _transparent, Args&&... args)
+      bool _inlined, Args&&... args)
        : InlineGroupItem { internalName, std::forward<Args>(args)... }
        , label { _label }
-       , transparent { _transparent}
+       , inlined { _inlined}
    {}
    
    ~SnapRegistryGroup() override;
@@ -71,7 +71,7 @@ struct SNAPPING_API SnapRegistryGroup :
    bool Transparent() const override;
    
    const TranslatableString label;
-   const bool transparent;
+   const bool inlined;
 };
 
 struct SNAPPING_API SnapRegistryItem : public Registry::SingleItem
@@ -98,10 +98,10 @@ SNAPPING_API Registry::BaseItemPtr TimeInvariantSnapFunction(
 
 template <typename... Args>
 Registry::BaseItemPtr SnapFunctionGroup (
-   const Identifier& groupId, TranslatableString label, bool transparent, Args&&... args)
+   const Identifier& groupId, TranslatableString label, bool inlined, Args&&... args)
 {
    return std::make_unique<SnapRegistryGroup>(
-      groupId, label, transparent, std::forward<Args>(args)...);
+      groupId, label, inlined, std::forward<Args>(args)...);
 }
 
 struct SNAPPING_API SnapFunctionsRegistry final {

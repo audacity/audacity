@@ -137,7 +137,7 @@ NumericConverterRegistryGroup::~NumericConverterRegistryGroup()
 
 bool NumericConverterRegistryGroup::Transparent() const
 {
-   return true;
+   return false;
 }
 
 NumericConverterItemRegistrator::NumericConverterItemRegistrator(

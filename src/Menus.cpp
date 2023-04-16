@@ -108,41 +108,45 @@ void MenuVisitor::BeginGroup( Registry::GroupItem &item, const Path &path )
    bool isMenu = false;
    bool isExtension = false;
    auto pItem = &item;
-   if ( pItem->Transparent() ) {
+   const bool inlined = dynamic_cast<MenuTable::MenuItems*>(pItem);
+   if (inlined) {
    }
-   else if ( dynamic_cast<MenuTable::MenuSection*>( pItem ) ) {
+   else if (dynamic_cast<MenuTable::MenuSection*>(pItem)) {
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
    }
-   else if ( auto pWhole = dynamic_cast<MenuTable::WholeMenu*>( pItem ) ) {
+   else if (auto pWhole = dynamic_cast<MenuTable::WholeMenu*>(pItem)) {
       isMenu = true;
       isExtension = pWhole->extension;
       MaybeDoSeparator();
    }
 
-   DoBeginGroup( item, path );
+   if (!inlined)
+      DoBeginGroup(item, path);
 
-   if ( isMenu ) {
-      needSeparator.push_back( false );
-      firstItem.push_back( !isExtension );
+   if (isMenu) {
+      needSeparator.push_back(false);
+      firstItem.push_back(!isExtension);
    }
 }
 
 void MenuVisitor::EndGroup( Registry::GroupItem &item, const Path &path )
 {
    auto pItem = &item;
-   if ( pItem->Transparent() ) {
+   const bool inlined = dynamic_cast<MenuTable::MenuItems*>(pItem);
+   if (inlined) {
    }
-   else if ( dynamic_cast<MenuTable::MenuSection*>( pItem ) ) {
+   else if (dynamic_cast<MenuTable::MenuSection*>(pItem)) {
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
    }
-   else if ( dynamic_cast<MenuTable::WholeMenu*>( pItem ) ) {
+   else if ( dynamic_cast<MenuTable::WholeMenu*>(pItem)) {
       firstItem.pop_back();
       needSeparator.pop_back();
    }
 
-   DoEndGroup( item, path );
+   if (!inlined)
+      DoEndGroup(item, path);
 }
 
 void MenuVisitor::Visit( Registry::SingleItem &item, const Path &path )
@@ -224,7 +228,8 @@ CommandGroupItem::CommandGroupItem(const Identifier &name_,
 CommandGroupItem::~CommandGroupItem() {}
 
 SpecialItem::~SpecialItem() {}
-
+MenuPart::~MenuPart() {}
+MenuItems::~MenuItems() {}
 MenuSection::~MenuSection() {}
 WholeMenu::~WholeMenu() {}
 
@@ -294,9 +299,6 @@ struct MenuItemVisitor : ToolbarMenuVisitor
          flags.push_back(flag);
       }
       else
-      if ( pItem->Transparent() ) {
-      }
-      else
       if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
       }
       else
@@ -317,9 +319,6 @@ struct MenuItemVisitor : ToolbarMenuVisitor
          if (!flag)
             manager.EndOccultCommands();
          flags.pop_back();
-      }
-      else
-      if ( pItem->Transparent() ) {
       }
       else
       if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {

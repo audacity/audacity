@@ -75,7 +75,7 @@ namespace
          if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
          {
             //Don't create a group item for root
-            if(mMenuLevelCounter != 0 && !menuItem->Transparent())
+            if (mMenuLevelCounter != 0)
             {
                auto submenu = std::make_unique<wxMenu>();
                mMenuPtr->AppendSubMenu(submenu.get(), menuItem->title.Translation());
@@ -90,7 +90,7 @@ namespace
          if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
          {
             --mMenuLevelCounter;
-            if(mMenuLevelCounter != 0 && !menuItem->Transparent())
+            if (mMenuLevelCounter != 0)
             {
                assert(mMenuPtr->GetParent() != nullptr);
                mMenuPtr = mMenuPtr->GetParent();

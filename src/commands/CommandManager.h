@@ -396,7 +396,9 @@ struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
    void Visit( Registry::SingleItem &item, const Path &path ) final;
 
    // added virtuals
+   //! Groups of type MenuItems are excluded from this callback
    virtual void DoBeginGroup( Registry::GroupItem &item, const Path &path );
+   //! Groups of type MenuItems are excluded from this callback
    virtual void DoEndGroup( Registry::GroupItem &item, const Path &path );
    virtual void DoVisit( Registry::SingleItem &item, const Path &path );
    virtual void DoSeparator();
@@ -619,8 +621,16 @@ namespace MenuTable {
          : ConcreteGroupItem< false, ToolbarMenuVisitor >{
             internalName, std::forward< Args >( args )... }
       {}
+      ~MenuPart() override;
    };
-   using MenuItems = ConcreteGroupItem< true, ToolbarMenuVisitor >;
+
+   //! Groups of this type are inlined in the menu tree organization.  They
+   //! (but not their contained items) are excluded from visitations using
+   //! MenuVisitor
+   struct MenuItems : ConcreteGroupItem<true, ToolbarMenuVisitor> {
+      using ConcreteGroupItem::ConcreteGroupItem;
+      ~MenuItems() override;
+   };
 
    // The following, and Shared(), are the functions to use directly
    // in writing table definitions.

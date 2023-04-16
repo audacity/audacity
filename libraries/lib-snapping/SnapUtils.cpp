@@ -226,7 +226,7 @@ SnapRegistryGroup::~SnapRegistryGroup()
 
 bool SnapRegistryGroup::Transparent() const
 {
-   return transparent;
+   return false;
 }
 
 SnapRegistryItem::SnapRegistryItem(
