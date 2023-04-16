@@ -323,7 +323,7 @@ void HandlerClass::Populate() { \
 
 #define POPUP_MENU_SUB_MENU(stringId, classname, pUserData ) \
    mStack.back()->items.push_back( \
-      Registry::Shared( classname::Instance().Get( pUserData ) ) );
+      Registry::Indirect(classname::Instance().Get(pUserData)));
 
 // ends function
 #define END_POPUP_MENU() }

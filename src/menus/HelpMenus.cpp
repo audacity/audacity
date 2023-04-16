@@ -513,7 +513,7 @@ BaseItemSharedPtr HelpMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( HelpMenu() )
+   Indirect(HelpMenu())
 };
 
 }

@@ -462,7 +462,7 @@ BaseItemSharedPtr ViewMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( ViewMenu() )
+   Indirect(ViewMenu())
 };
 }
 

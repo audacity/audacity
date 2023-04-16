@@ -1204,8 +1204,8 @@ PopupMenuTable::AttachedItem sAttachment{
                WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
             ) );
             if( hasWaveform )
-               return Registry::Shared( WaveColorMenuTable::Instance()
-                  .Get( table.mpData ) );
+               return Registry::Indirect(WaveColorMenuTable::Instance()
+                  .Get(table.mpData));
             else
                return nullptr;
          } ) )

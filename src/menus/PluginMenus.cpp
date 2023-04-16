@@ -327,7 +327,7 @@ static const ReservedCommandFlag
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( GenerateMenu() )
+   Indirect(GenerateMenu())
 };
 
 const ReservedCommandFlag&
@@ -401,7 +401,7 @@ BaseItemSharedPtr EffectMenu()
 
 AttachedItem sAttachment2{
    wxT(""),
-   Shared( EffectMenu() )
+   Indirect(EffectMenu())
 };
 
 const ReservedCommandFlag&
@@ -465,7 +465,7 @@ BaseItemSharedPtr AnalyzeMenu()
 
 AttachedItem sAttachment3{
    wxT(""),
-   Shared( AnalyzeMenu() )
+   Indirect(AnalyzeMenu())
 };
 
 BaseItemSharedPtr ToolsMenu()
@@ -548,7 +548,7 @@ BaseItemSharedPtr ToolsMenu()
 
 AttachedItem sAttachment4{
    wxT(""),
-   Shared( ToolsMenu() )
+   Indirect(ToolsMenu())
 };
 
 }

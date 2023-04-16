@@ -24,7 +24,7 @@ namespace Registry {
    {
       /*!
        The default Unspecified hint is just like End, except that in case the
-       item is delegated to (by a SharedItem, ComputedItem, or anonymous
+       item is delegated to (by an IndirectItem, ComputedItem, or anonymous
        group), the delegating item's hint will be used instead
        */
       enum Type : int {
@@ -77,23 +77,25 @@ namespace Registry {
    class Visitor;
    
 
-   // An item that delegates to another held in a shared pointer; this allows
-   // static tables of items to be computed once and reused
-   // The name of the delegate is significant for path calculations, but the
-   // SharedItem's ordering hint is used if the delegate has none
-   struct REGISTRIES_API SharedItem final : BaseItem {
-      explicit SharedItem( const BaseItemSharedPtr &ptr_ )
+   //! An item that delegates to another held in a shared pointer
+   /*!
+    This allows static tables of items to be computed once and reused.
+    The name of the delegate is significant for path calculations, but the
+    IndirectItem's ordering hint is used if the delegate has none
+   */
+   struct REGISTRIES_API IndirectItem final : BaseItem {
+      explicit IndirectItem( const BaseItemSharedPtr &ptr_ )
          : BaseItem{ wxEmptyString }
          , ptr{ ptr_ }
       {}
-      ~SharedItem() override;
+      ~IndirectItem() override;
 
       BaseItemSharedPtr ptr;
    };
 
-   // A convenience function
-   inline std::unique_ptr<SharedItem> Shared( const BaseItemSharedPtr &ptr )
-      { return std::make_unique<SharedItem>( ptr ); }
+   //! A convenience function
+   inline std::unique_ptr<IndirectItem> Indirect(const BaseItemSharedPtr &ptr)
+      { return std::make_unique<IndirectItem>(ptr); }
 
    // An item that computes some other item to substitute for it, each time
    // the ComputedItem is visited
@@ -203,7 +205,7 @@ namespace Registry {
       // This overload lets you supply a shared pointer to an item, directly
       template<typename Subtype>
       void AppendOne( const std::shared_ptr<Subtype> &ptr )
-      { AppendOne( std::make_unique<SharedItem>(ptr) ); }
+      { AppendOne( std::make_unique<IndirectItem>(ptr) ); }
    };
 
    // The /-separated path is relative to the GroupItem supplied to
@@ -234,7 +236,8 @@ namespace Registry {
    /*!
        Usually constructed statically
        @tparam Item inherits `BaseItem`
-       @tparam RegistryClass defines static member `Registry()` returning `GroupItemBase&`
+       @tparam RegistryClass defines static member `Registry()`
+          returning `GroupItemBase&`
     */
    template<typename Item, typename RegistryClass = Item> class RegisteredItem {
    public:

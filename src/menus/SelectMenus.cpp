@@ -997,7 +997,7 @@ BaseItemSharedPtr SelectMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( SelectMenu() )
+   Indirect(SelectMenu())
 };
 
 BaseItemSharedPtr ExtraSelectionMenu()
@@ -1044,7 +1044,7 @@ BaseItemSharedPtr ExtraSelectionMenu()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),
-   Shared( ExtraSelectionMenu() )
+   Indirect(ExtraSelectionMenu())
 };
 }
 
@@ -1093,7 +1093,7 @@ BaseItemSharedPtr CursorMenu()
 
 AttachedItem sAttachment0{
    wxT("Transport/Basic"),
-   Shared( CursorMenu() )
+   Indirect(CursorMenu())
 };
 
 BaseItemSharedPtr ExtraCursorMenu()
@@ -1126,7 +1126,7 @@ BaseItemSharedPtr ExtraCursorMenu()
 
 AttachedItem sAttachment4{
    wxT("Optional/Extra/Part2"),
-   Shared( ExtraCursorMenu() )
+   Indirect(ExtraCursorMenu())
 };
 
 BaseItemSharedPtr ExtraSeekMenu()
@@ -1154,7 +1154,7 @@ BaseItemSharedPtr ExtraSeekMenu()
 
 AttachedItem sAttachment5{
    wxT("Optional/Extra/Part1"),
-   Shared( ExtraSeekMenu() )
+   Indirect(ExtraSeekMenu())
 };
 
 }

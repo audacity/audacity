@@ -103,7 +103,7 @@ struct CollectedItems
       const BaseItemPtrs &toMerge, const OrderingHint &hint ) -> void;
 };
 
-// When a computed or shared item, or nameless grouping, specifies a hint and
+// When a computed or indirect item, or nameless grouping, specifies a hint and
 // the subordinate does not, propagate the hint.
 const OrderingHint &ChooseHint(BaseItem *delegate, const OrderingHint &hint)
 {
@@ -136,13 +136,13 @@ void CollectItem( Registry::Visitor &visitor,
       return;
 
    using namespace Registry;
-   if (const auto pShared =
-       dynamic_cast<SharedItem*>( pItem )) {
-      auto delegate = pShared->ptr.get();
-      if ( delegate )
+   if (const auto pIndirect =
+       dynamic_cast<IndirectItem*>(pItem)) {
+      auto delegate = pIndirect->ptr.get();
+      if (delegate)
          // recursion
-         CollectItem( visitor, collection, delegate,
-            ChooseHint( delegate, pShared->orderingHint ) );
+         CollectItem(visitor, collection, delegate,
+            ChooseHint(delegate, pIndirect->orderingHint));
    }
    else
    if (const auto pComputed =
@@ -360,19 +360,19 @@ auto CollectedItems::MergeLater(Item &found, const Identifier &name,
 void CollectedItems::SubordinateSingleItem(Item &found, BaseItem *pItem)
 {
    MergeLater(found, pItem->name, GroupItemBase::Weak)->items.push_back(
-      std::make_unique<SharedItem>(
+      std::make_unique<IndirectItem>(
          // shared pointer with vacuous deleter
-         std::shared_ptr<BaseItem>( pItem, [](void*){})));
+         std::shared_ptr<BaseItem>(pItem, [](void*){})));
 }
 
 void CollectedItems::SubordinateMultipleItems(
    Item &found, GroupItemBase *pItems)
 {
    auto subGroup = MergeLater(found, pItems->name, pItems->GetOrdering());
-   for ( const auto &pItem : pItems->items )
-      subGroup->items.push_back( std::make_unique<SharedItem>(
+   for (const auto &pItem : pItems->items)
+      subGroup->items.push_back( std::make_unique<IndirectItem>(
          // shared pointer with vacuous deleter
-         std::shared_ptr<BaseItem>( pItem.get(), [](void*){} ) ) );
+         std::shared_ptr<BaseItem>(pItem.get(), [](void*){})));
 }
 
 auto CollectedItems::MergeWithExistingItem(
@@ -720,7 +720,7 @@ namespace Registry {
 
 BaseItem::~BaseItem() {}
 
-SharedItem::~SharedItem() {}
+IndirectItem::~IndirectItem() {}
 
 ComputedItem::~ComputedItem() {}
 

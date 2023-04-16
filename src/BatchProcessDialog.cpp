@@ -1577,7 +1577,7 @@ BaseItemSharedPtr PluginMenuItems()
 
 AttachedItem sAttachment1{
    wxT("Tools/Manage"),
-   Shared( PluginMenuItems() )
+   Indirect(PluginMenuItems())
 };
 
 BaseItemSharedPtr ExtraScriptablesIMenu()
@@ -1592,7 +1592,7 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part2"),
-   Shared( ExtraScriptablesIMenu() )
+   Indirect(ExtraScriptablesIMenu())
 };
 
 BaseItemSharedPtr ExtraScriptablesIIMenu()
@@ -1607,5 +1607,5 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
 
 AttachedItem sAttachment3{
    wxT("Optional/Extra/Part2"),
-   Shared( ExtraScriptablesIIMenu() )
+   Indirect(ExtraScriptablesIIMenu())
 };

@@ -1343,7 +1343,7 @@ BaseItemSharedPtr EditMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( EditMenu() )
+   Indirect(EditMenu())
 };
 
 BaseItemSharedPtr ExtraEditMenu()
@@ -1403,7 +1403,7 @@ RegisteredMenuItemEnabler selectWaveTracks2{{
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),
-   Shared( ExtraEditMenu() )
+   Indirect(ExtraEditMenu())
 };
 
 }

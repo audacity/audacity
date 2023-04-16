@@ -630,7 +630,7 @@ namespace MenuTable {
       Ordering GetOrdering() const override;
    };
 
-   // The following, and Shared(), are the functions to use directly
+   // The following, and Registry::Indirect(), are the functions to use directly
    // in writing table definitions.
 
    // Group items can be constructed two ways.

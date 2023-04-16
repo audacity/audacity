@@ -794,7 +794,7 @@ BaseItemSharedPtr LabelEditMenus()
 AttachedItem sAttachment1{
    { wxT("Edit/Other"),
      { OrderingHint::Before, wxT("EditMetaData") } },
-   Shared( LabelEditMenus() )
+   Indirect(LabelEditMenus())
 };
 
 AttachedItem sAttachment2{ wxT("Tracks/Add/Add"),
