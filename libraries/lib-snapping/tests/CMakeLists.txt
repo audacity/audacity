@@ -3,6 +3,8 @@
 add_unit_test(
    NAME
       lib-snapping
+   MOCK_PREFS
+   MOCK_AUDIO
    SOURCES
       SnappingTest.cpp
    LIBRARIES

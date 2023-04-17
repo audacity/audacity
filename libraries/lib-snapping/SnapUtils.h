@@ -39,12 +39,7 @@ struct SNAPPING_API SnapRegistryVisitor /* not final */
    virtual void Visit(const SnapRegistryItem& item) = 0;
 };
 
-struct SNAPPING_API SnapConfig final
-{
-   double rate {};
-   double tempo {};
-   std::pair<int, int> timeSignature {};
-};
+class AudacityProject;
 
 struct SNAPPING_API SnapResult final
 {
@@ -79,7 +74,7 @@ struct SNAPPING_API SnapRegistryGroup :
    const bool transparent;
 };
 
-using SnapFunctor = std::function<SnapResult(SnapConfig, double, bool)>;
+using SnapFunctor = std::function<SnapResult(const AudacityProject&, double, bool)>;
 
 struct SNAPPING_API SnapRegistryItem : public Registry::SingleItem
 {
@@ -111,7 +106,7 @@ struct SNAPPING_API SnapFunctionsRegistry final {
 
    static SnapRegistryItem* Find(const Identifier& id);
 
-   static SnapResult Snap(const Identifier& id, SnapConfig config, double time, bool nearest);
+   static SnapResult Snap(const Identifier& id, const AudacityProject& project, double time, bool nearest);
 };
 
 struct SNAPPING_API SnapRegistryItemRegistrator final :

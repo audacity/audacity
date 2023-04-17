@@ -15,6 +15,9 @@
 #include <cmath>
 #include <unordered_map>
 
+#include "ProjectRate.h"
+#include "ProjectTimeSignature.h"
+
 namespace
 {
 const wxString SnapModeKey = L"/Snap/Mode";
@@ -196,14 +199,15 @@ SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
 }
 
 SnapResult SnapFunctionsRegistry::Snap(
-   const Identifier& id, SnapConfig config, double time, bool nearest)
+   const Identifier& id, const AudacityProject& project, double time,
+   bool nearest)
 {
    auto item = Find(id);
 
    if (item == nullptr)
       return SnapResult { time, false };
 
-   return item->snapFunction(config, time, nearest);
+   return item->snapFunction(project, time, nearest);
 }
 
 SnapRegistryGroup::~SnapRegistryGroup()
@@ -254,18 +258,19 @@ SnapResult SnapWithMultiplier (double value, double multiplier, bool nearest)
 
 
 SnapFunctor SnapToTime(double multiplier) {
-   return [multiplier](SnapConfig, double value, bool nearest)
+   return [multiplier](const AudacityProject&, double value, bool nearest)
    { return SnapWithMultiplier(value, multiplier, nearest); };
 }
 
-SnapResult SnapToSamples (SnapConfig cfg, double value, bool nearest)
+SnapResult SnapToSamples(const AudacityProject& project, double value, bool nearest)
 {
-   return SnapWithMultiplier(value, cfg.rate, nearest);
+   return SnapWithMultiplier(
+      value, ProjectRate::Get(project).GetRate(), nearest);
 }
 
 SnapFunctor SnapToFrames(double fps)
 {
-   return [fps](SnapConfig, double value, bool nearest)
+   return [fps](const AudacityProject&, double value, bool nearest)
    { return SnapWithMultiplier(value, fps, nearest); };
 }
 
@@ -276,12 +281,13 @@ SnapFunctor SnapToFrames(double fps)
 
 SnapFunctor SnapToBar ()
 {
-   return [](SnapConfig cfg, double value, bool nearest)
+   return [](const AudacityProject& project, double value, bool nearest)
    {
+      auto& timeSignature = ProjectTimeSignature::Get(project);
       // DV: For now, BPM uses quarter notes, i. e. 1/4 = BPM in musical notation
-      const auto quarterDuration = 60.0 / cfg.tempo;
-      const auto beatDuration = quarterDuration * 4.0 / cfg.timeSignature.second;
-      const auto barDuration = beatDuration * cfg.timeSignature.first;
+      const auto quarterDuration = 60.0 / timeSignature.GetTempo();
+      const auto beatDuration = quarterDuration * 4.0 / timeSignature.GetLowerTimeSignature();
+      const auto barDuration = beatDuration * timeSignature.GetUpperTimeSignature();
       const auto multiplier = 1 / barDuration;
       
       return SnapWithMultiplier(value, multiplier, nearest);
@@ -290,9 +296,11 @@ SnapFunctor SnapToBar ()
 
 SnapFunctor SnapToBeat(int divisor)
 {
-   return [divisor](SnapConfig cfg, double value, bool nearest)
+   return [divisor](const AudacityProject& project, double value, bool nearest)
    {
-      const auto quarterDuration = 60.0 / cfg.tempo;
+      auto& timeSignature = ProjectTimeSignature::Get(project);
+      
+      const auto quarterDuration = 60.0 / timeSignature.GetTempo();
       // DV: It was decided that for the time being,
       // BPM sets the duration for quarter notes.
       // For this reason, `cfg.timeSignature.second` is ignored
@@ -305,9 +313,11 @@ SnapFunctor SnapToBeat(int divisor)
 
 SnapFunctor SnapToTriplets(int divisor)
 {
-   return [divisor](SnapConfig cfg, double value, bool nearest)
+   return [divisor](const AudacityProject& project, double value, bool nearest)
    {
-      const auto quarterDuration = 60.0 / cfg.tempo;
+      auto& timeSignature = ProjectTimeSignature::Get(project);
+      
+      const auto quarterDuration = 60.0 / timeSignature.GetTempo();
       const auto tripletDivisor = 3 * (divisor / 2);
       const auto fracDuration = quarterDuration * 4.0 / tripletDivisor;
       const auto multiplier = 1.0 / fracDuration;
