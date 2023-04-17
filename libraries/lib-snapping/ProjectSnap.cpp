@@ -82,6 +82,14 @@ SnapResult ProjectSnap::SnapTime(double time) const
    return SnapFunctionsRegistry::Snap(mSnapTo, mProject, time, mSnapMode == SnapMode::SNAP_NEAREST);
 }
 
+SnapResult ProjectSnap::SingleStep(double time, bool upwards) const
+{
+   if (mSnapMode == SnapMode::SNAP_OFF)
+      return { time, false };
+
+   return SnapFunctionsRegistry::SingleStep(mSnapTo, mProject, time, upwards);
+}
+
 static ProjectFileIORegistry::AttributeWriterEntry entry {
    [](const AudacityProject& project, XMLWriter& xmlFile)
    {

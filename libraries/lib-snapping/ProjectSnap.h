@@ -42,6 +42,7 @@ public:
    Identifier GetSnapTo() const;
 
    SnapResult SnapTime(double time) const;
+   SnapResult SingleStep(double time, bool upwards) const;
 
 private:
    const AudacityProject& mProject;
