@@ -6,8 +6,9 @@ import Audacity.UiComponents
 
 Item {
    id: root
-   height: 28
-   width: formatType === TimeControl.FormatType.HoursMinutesSeconds ? 134 : 111
+   width: implicitWidth
+   height: implicitHeight
+   implicitHeight: 28
    objectName: "TimeControl"
    onFormatTypeChanged: reset()
 
@@ -66,125 +67,130 @@ Item {
          property var groupSeparator: ' '
          property int value: 0
 
-         function displaySeconds() {
-            var text = String(display.value).padStart(6, '0')
-            seconds.text = text.slice(0, 3) + display.groupSeparator + text.slice(3)
+         function valueInSecondsFormat() {
+            return String(display.value).padStart(6, '0')
          }
 
-         function displayHoursMinutesSeconds() {
+         function valueInHoursMinutesSecondsFormat() {
             var hrs = Math.floor(display.value / 3600)
             var mins = Math.floor((display.value - hrs * 3600) / 60)
             var secs = display.value - mins * 60 - hrs * 3600
 
-            hours.text = String(hrs).padStart(2, '0')
-            minutes.text = String(mins).padStart(2, '0')
-            seconds.text = String(secs).padStart(2, '0')
+            return String(hrs).padStart(2, '0')
+               + String(mins).padStart(2, '0')
+               + String(secs).padStart(2, '0')
          }
 
          function update() {
+            var text = ""
+
             if (formatType === TimeControl.FormatType.Seconds) {
-               displaySeconds()
+               text = valueInSecondsFormat()
             } else if (formatType === TimeControl.FormatType.HoursMinutesSeconds) {
-               displayHoursMinutesSeconds()
+               text = valueInHoursMinutesSecondsFormat()
+            }
+
+            for (var i = 0; i < text.length; i++) {
+               displayPart.digits[i].text = text[i]
             }
          }
       }
 
-      Text {
-         id: hours
-         x: 8
-         width: 23
-         height: 16
-         anchors.verticalCenter: parent.verticalCenter
-         horizontalAlignment: Text.AlignRight
-         color: appConfig.fontColor2
-         visible: formatType === TimeControl.FormatType.HoursMinutesSeconds
-
-         font {
-            family: appConfig.bodyFont.family
-            pixelSize: 16
+      property list<Text> digits: [
+         Text {
+            x: 8
+            height: root.height
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            width: 12
+            color: appConfig.fontColor2
+            font: appConfig.timecodeFont
+         },
+         Text {
+            x: 20
+            height: root.height
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            width: 12
+            color: appConfig.fontColor2
+            font: appConfig.timecodeFont
+         },
+         Text {
+            width: 12
+            height: root.height
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            color: appConfig.fontColor2
+            font: appConfig.timecodeFont
+         },
+         Text {
+            width: 12
+            height: root.height
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            color: appConfig.fontColor2
+            font: appConfig.timecodeFont
+         },
+         Text {
+            width: 12
+            height: root.height
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            color: appConfig.fontColor2
+            font: appConfig.timecodeFont
+         },
+         Text {
+            width: 12
+            height: root.height
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            color: appConfig.fontColor2
+            font: appConfig.timecodeFont
          }
+      ]
+
+      Text {
+         id: separator
+         text:  display.groupSeparator
+         x: 44
+         width: 4
+         height: root.height
+         verticalAlignment: Text.AlignVCenter
+         color: appConfig.fontColor2
+         font: appConfig.bodyFont
       }
 
       Text {
-         id: hoursSuffix
+         id: hours
          text: "h"
-         x: hours.x + hours.width
          width: 10
-         height: 16
-         anchors.verticalCenter: parent.verticalCenter
+         height: root.height
+         verticalAlignment: Text.AlignVCenter
          color: appConfig.fontColor2
+         font: appConfig.bodyFont
          opacity: 0.7
-         visible: formatType === TimeControl.FormatType.HoursMinutesSeconds
-
-         font {
-            family: appConfig.bodyFont.family
-            pixelSize: 16
-         }
       }
 
       Text {
          id: minutes
-         x: 41
-         width: 23
-         height: 16
-         anchors.verticalCenter: parent.verticalCenter
-         horizontalAlignment: Text.AlignRight
-         color: appConfig.fontColor2
-         visible: formatType === TimeControl.FormatType.HoursMinutesSeconds
-
-         font {
-            family: appConfig.bodyFont.family
-            pixelSize: 16
-         }
-      }
-
-      Text {
-         id: minutesSuffix
          text: "m"
-         x: minutes.x + minutes.width
          width: 14
-         height: 16
-         anchors.verticalCenter: parent.verticalCenter
+         height: root.height
+         verticalAlignment: Text.AlignVCenter
          color: appConfig.fontColor2
+         font: appConfig.bodyFont
          opacity: 0.7
-         visible: formatType === TimeControl.FormatType.HoursMinutesSeconds
-
-         font {
-            family: appConfig.bodyFont.family
-            pixelSize: 16
-         }
       }
 
       Text {
          id: seconds
-         x: formatType === TimeControl.FormatType.HoursMinutesSeconds ? 78 : 8
-         width: formatType === TimeControl.FormatType.HoursMinutesSeconds ? 23 : 70
-         height: 16
-         anchors.verticalCenter: parent.verticalCenter
-         horizontalAlignment: Text.AlignRight
-         color: appConfig.fontColor2
-
-         font {
-            family: appConfig.bodyFont.family
-            pixelSize: 16
-         }
-      }
-
-      Text {
-         id: secondsSuffix
          text: "s"
-         x: seconds.x + seconds.width
          width: 9
-         height: 16
-         anchors.verticalCenter: parent.verticalCenter
+         height: root.height
+         verticalAlignment: Text.AlignVCenter
          color: appConfig.fontColor2
+         font: appConfig.bodyFont
          opacity: 0.7
-
-         font {
-            family: appConfig.bodyFont.family
-            pixelSize: 16
-         }
       }
 
       Rectangle {
@@ -196,7 +202,40 @@ Item {
 
       Component.onCompleted: {
          display.groupSeparator = Qt.locale().groupSeparator
+
+         for (var i = 0; i < digits.length; i++) {
+            displayPart.children.push(digits[i])
+         }
       }
+
+      states: [
+         State {
+            name: "Seconds"
+            when: formatType === TimeControl.FormatType.Seconds
+            PropertyChanges { target: root; implicitWidth: 121 }
+            PropertyChanges { target: hours; visible: false }
+            PropertyChanges { target: minutes; visible: false }
+            PropertyChanges { target: seconds; x: 86; visible: true }
+            PropertyChanges { target: separator; visible: true }
+            PropertyChanges { target: displayPart.digits[2]; x: 32 }
+            PropertyChanges { target: displayPart.digits[3]; x: 48 }
+            PropertyChanges { target: displayPart.digits[4]; x: 60 }
+            PropertyChanges { target: displayPart.digits[5]; x: 72 }
+         },
+         State {
+            name: "HoursMinutesSeconds"
+            when: formatType === TimeControl.FormatType.HoursMinutesSeconds
+            PropertyChanges { target: root; implicitWidth: 145 }
+            PropertyChanges { target: hours; x:33; visible: true }
+            PropertyChanges { target: minutes; x: 69; visible: true }
+            PropertyChanges { target: seconds; x: 110; visible: true }
+            PropertyChanges { target: separator; visible: false }
+            PropertyChanges { target: displayPart.digits[2]; x: 44 }
+            PropertyChanges { target: displayPart.digits[3]; x: 56 }
+            PropertyChanges { target: displayPart.digits[4]; x: 84 }
+            PropertyChanges { target: displayPart.digits[5]; x: 96 }
+         }
+      ]
    }
 
    Rectangle {
