@@ -18,8 +18,8 @@
 ********************************************************************//**
 
 \class AudioIoCallback
-\brief AudioIoCallback is a class that implements the callback required 
-by PortAudio.  The callback needs to be responsive, has no GUI, and 
+\brief AudioIoCallback is a class that implements the callback required
+by PortAudio.  The callback needs to be responsive, has no GUI, and
 copies data into and out of the sound card buffers.  It also sends data
 to the meters.
 
@@ -54,7 +54,7 @@ callbacks for these events.
 *//****************************************************************//**
 
 \class AudioIOStartStreamOptions
-\brief struct holding stream options, including a pointer to the 
+\brief struct holding stream options, including a pointer to the
 time warp info and AudioIOListener and whether the playback is looped.
 
 *//*******************************************************************/
@@ -261,7 +261,7 @@ AudioIO::AudioIO()
       wxASSERT(false);
    }
 
-   // This ASSERT because of casting in the callback 
+   // This ASSERT because of casting in the callback
    // functions where we cast a tempFloats buffer to a (short*) buffer.
    // We have to ASSERT in the GUI thread, if we are to see it properly.
    wxASSERT( sizeof( short ) <= sizeof( float ));
@@ -503,7 +503,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       if (!success)
          ResetOwningProject();
    });
-   
+
    // PRL:  Protection from crash reported by David Bailes, involving starting
    // and stopping with frequent changes of active window, hard to reproduce
    if (mOwningProject.expired())
@@ -518,13 +518,13 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
 
    // July 2016 (Carsten and Uwe)
-   // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using 
+   // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using
    // userData.
    auto captureFormat_saved = captureFormat;
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
    // since we need float values anyway to apply the gain.
-   // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to 
+   // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to
    // be set to floatSample below.
    // JKC: YES that's right.  Internally Audacity uses float, and float has space for
    // 24 bits as well as exponent.  Actual 24 bit would require packing and
@@ -612,7 +612,11 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
                               Pa_GetDeviceInfo(playbackParameters.device) :
                               Pa_GetDeviceInfo(captureParameters.device);
 
-   mUsingAlsa = deviceInfo && deviceInfo->hostApi == paALSA;
+   if (deviceInfo != nullptr)
+   {
+      const auto hostApiInfo = Pa_GetHostApiInfo(deviceInfo->hostApi);
+      mUsingAlsa = hostApiInfo && hostApiInfo->type == paALSA;
+   }
 
    SetMeters();
 
@@ -653,7 +657,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          const auto stream = Pa_GetStreamInfo(mPortStreamV19);
          // Use the reported latency as a hint about the hardware buffer size
          // required for uninterrupted playback.
-         mHardwarePlaybackLatencyFrames = lrint(stream->outputLatency * mRate);         
+         mHardwarePlaybackLatencyFrames = lrint(stream->outputLatency * mRate);
 #ifdef __WXGTK__
          // DV: When using ALSA PortAudio does not report the buffer size.
          // Instead, it reports periodSize * (periodsCount - 1). It is impossible
@@ -661,9 +665,9 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          // periodsCount to 4. However it was observed, that PA reports back ~100msec
          // latency and expects a buffer of ~200msecs on Audacity default settings
          // which suggests that ALSA changes the periodsCount to suit its needs.
-         // 
+         //
          // Why 3? 2 doesn't work for me, 3 does :-) So similar to PA - this
-         // is the value that works for author setup. 
+         // is the value that works for author setup.
          if (mUsingAlsa)
             mHardwarePlaybackLatencyFrames *= 3;
 #endif
@@ -767,7 +771,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 
    // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
    // Now start the PortAudio stream!
-   // TODO: ? Factor out and reuse error reporting code from end of 
+   // TODO: ? Factor out and reuse error reporting code from end of
    // AudioIO::StartStream?
    mLastPaError = Pa_StartStream( mPortStreamV19 );
 
@@ -971,7 +975,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       for (auto &mixer : mPlaybackMixers)
          mixer->Reposition( time );
    }
-   
+
    // Now that we are done with AllocateBuffers() and SetTrackTime():
    mPlaybackSchedule.mTimeQueue.Prime(mPlaybackSchedule.GetTrackTime());
    // else recording only without overdub
@@ -1137,7 +1141,7 @@ bool AudioIO::AllocateBuffers(
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
    double playbackTime = lrint(times.batchSize.count() * mRate) / mRate;
-   
+
    wxASSERT( playbackTime >= 0 );
    mPlaybackSamplesToCopy = playbackTime * mRate;
 
@@ -1167,7 +1171,7 @@ bool AudioIO::AllocateBuffers(
 
             // Adjust mPlaybackRingBufferSecs correspondingly
             mPlaybackRingBufferSecs = PlaybackPolicy::Duration { playbackBufferSize / mRate };
-            
+
             // Always make at least one playback buffer
             mPlaybackBuffers.reinit(
                std::max<size_t>(1, mPlaybackTracks.size()));
@@ -1197,7 +1201,7 @@ bool AudioIO::AllocateBuffers(
             // Make mPlaybackQueueMinimum a multiple of mPlaybackSamplesToCopy
             mPlaybackQueueMinimum = mPlaybackSamplesToCopy *
                ((mPlaybackQueueMinimum + mPlaybackSamplesToCopy - 1) / mPlaybackSamplesToCopy);
-            
+
             if (mPlaybackTracks.empty())
                // Make at least one playback buffer
                mPlaybackBuffers[0] =
@@ -1310,7 +1314,7 @@ bool AudioIO::AllocateBuffers(
          }
       }
    } while(!bDone);
-   
+
    success = true;
    return true;
 }
@@ -1363,10 +1367,10 @@ void AudioIO::StopStream()
       return;
 
    // DV: This code seems to be unnecessary.
-   // We do not leave mPortStreamV19 open in stopped 
+   // We do not leave mPortStreamV19 open in stopped
    // state. (Do we?)
    // This breaks WASAPI backend, as it sets the `running`
-   // flag to `false` asynchronously. 
+   // flag to `false` asynchronously.
    // Previously we have patched PortAudio and the patch
    // was breaking IsStreamStopped() == !IsStreamActive()
    // invariant.
@@ -1379,7 +1383,7 @@ void AudioIO::StopStream()
    // Re-enable system sleep
    wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
 #endif
- 
+
    if( mAudioThreadTrackBufferExchangeLoopRunning
       .load(std::memory_order_relaxed) )
    {
@@ -1457,12 +1461,12 @@ void AudioIO::StopStream()
    // be sure it has really stopped before resetting mpTransportState
    WaitForAudioThreadStopped();
 
-   
+
    for( auto &ext : Extensions() )
       ext.StopOtherStream();
 
    auto pListener = GetListener();
-   
+
    // If there's no token, we were just monitoring, so we can
    // skip this next part...
    if (mStreamToken > 0) {
@@ -1531,7 +1535,7 @@ void AudioIO::StopStream()
             } );
          }
 
-         
+
          if (!mLostCaptureIntervals.empty())
          {
             // This scope may combine many splittings of wave tracks
@@ -1556,7 +1560,7 @@ void AudioIO::StopStream()
             pListener->OnCommitRecording();
       }
    }
-      
+
 
 
    if (auto pInputMeter = mInputMeter.lock())
@@ -1768,11 +1772,11 @@ void AudioIO::AudioThread(std::atomic<bool> &finish)
 
          // We call the processing after raising the acknowledge flag, because the main thread
          // only needs to know that the message was seen.
-         // 
+         //
          // This is unlike the case with mAudioThreadShouldCallTrackBufferExchangeOnce where the
-         // store really means that the one-time exchange was done. 
+         // store really means that the one-time exchange was done.
 
-         gAudioIO->TrackBufferExchange();         
+         gAudioIO->TrackBufferExchange();
       }
       else
       {
@@ -2606,7 +2610,7 @@ bool AudioIoCallback::FillOutputBuffers(
    // The drop and dropQuickly booleans are so named for historical reasons.
    // JKC: The original code attempted to be faster by doing nothing on silenced audio.
    // This, IMHO, is 'premature optimisation'.  Instead clearer and cleaner code would
-   // simply use a gain of 0.0 for silent audio and go on through to the stage of 
+   // simply use a gain of 0.0 for silent audio and go on through to the stage of
    // applying that 0.0 gain to the data mixed into the buffer.
    // Then (and only then) we would have if needed fast paths for:
    // - Applying a uniform gain of 0.0.
@@ -2649,13 +2653,13 @@ bool AudioIoCallback::FillOutputBuffers(
       if( mbMicroFades )
          dropQuickly = dropQuickly &&
             TrackHasBeenFadedOut( *vt, mOldChannelGains[t] );
-         
+
       decltype(framesPerBuffer) len = 0;
 
       if (dropQuickly)
       {
          len = mPlaybackBuffers[t]->Discard(toGet);
-         // keep going here.  
+         // keep going here.
          // we may still need to issue a paComplete.
       }
       else
@@ -2838,10 +2842,10 @@ void AudioIoCallback::DrainInputBuffers(
       wxPrintf(wxT("lost %d samples\n"), (int)(framesPerBuffer - len));
    }
 
-   if (len <= 0) 
+   if (len <= 0)
       return;
 
-   // We have an ASSERT in the AudioIO constructor to alert us to 
+   // We have an ASSERT in the AudioIO constructor to alert us to
    // possible issues with the (short*) cast.  We'd have a problem if
    // sizeof(short) > sizeof(float) since our buffers are sized for floats.
    for(unsigned t = 0; t < numCaptureChannels; t++) {
@@ -2878,7 +2882,7 @@ void AudioIoCallback::DrainInputBuffers(
       } // switch
 
       // JKC: mCaptureFormat must be for samples with sizeof(float) or
-      // fewer bytes (because tempFloats is sized for floats).  All 
+      // fewer bytes (because tempFloats is sized for floats).  All
       // formats are 2 or 4 bytes, so we are OK.
       const auto put =
          mCaptureBuffers[t]->Put(
@@ -2987,7 +2991,7 @@ void AudioIoCallback::SendVuOutputMeterData(
       return;
    if( pOutputMeter->IsMeterDisabled() )
       return;
-   if( !outputMeterFloats) 
+   if( !outputMeterFloats)
       return;
    pOutputMeter->UpdateDisplay(
       numPlaybackChannels, framesPerBuffer, outputMeterFloats);
@@ -3022,7 +3026,7 @@ unsigned AudioIoCallback::CountSoloingTracks(){
 // TODO: Consider making the two Track status functions into functions of
 // WaveTrack.
 
-// true IFF the track should be silent. 
+// true IFF the track should be silent.
 // The track may not yet be silent, since it may still be
 // fading out.
 bool AudioIoCallback::TrackShouldBeSilent( const SampleTrack &wt )
@@ -3137,10 +3141,10 @@ int AudioIoCallback::AudioCallback(
 
       // This function may queue up a pause or resume.
       // TODO this is a bit dodgy as it toggles the Pause, and
-      // relies on an idle event to have handled that, so could 
+      // relies on an idle event to have handled that, so could
       // queue up multiple toggle requests and so do nothing.
       // Eventually it will sort itself out by random luck, but
-      // the net effect is a delay in starting/stopping sound activated 
+      // the net effect is a delay in starting/stopping sound activated
       // recording.
       CheckSoundActivatedRecordingLevel(
          inputSamples,
@@ -3151,7 +3155,7 @@ int AudioIoCallback::AudioCallback(
    // Initialise output buffer to zero or to playthrough data.
    // Initialise output meter values.
    DoPlaythrough(
-      inputBuffer, 
+      inputBuffer,
       outputBuffer,
       framesPerBuffer,
       outputMeterFloats);
@@ -3198,13 +3202,13 @@ int AudioIoCallback::CallbackDoSeek()
    const auto numPlaybackTracks = mPlaybackTracks.size();
 
    // Pause audio thread and wait for it to finish
-   // 
+   //
    // [PM] the following 8 lines of code could be probably replaced by
    // a single call to StopAudioThreadAndWait()
-   // 
+   //
    // CAUTION: when trying the above, you must also replace the setting of the
-   // atomic before the return, with a call to StartAudioThread() 
-   // 
+   // atomic before the return, with a call to StartAudioThread()
+   //
    // If that works, then we can remove mAudioThreadTrackBufferExchangeLoopActive,
    // as it will become unused; consequently, the AudioThread loop would get simpler too.
    //
