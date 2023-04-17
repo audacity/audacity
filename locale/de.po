@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-04-14 21:00+0000\n"
+"PO-Revision-Date: 2023-04-17 10:30+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (https://app.transifex.com/klyok/teams/690/de/)\n"
 "MIME-Version: 1.0\n"
@@ -814,7 +814,7 @@ msgstr "Sekunden + Millisekunden"
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000>01000 seconds"
-msgstr "01000,01000>01000 Sekunden"
+msgstr "01000 01000<01000 Sekunden"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -933,7 +933,7 @@ msgstr "Film-Frames (24 fps)"
 #. * translate 'frames' and leave the rest alone
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000 frames|24"
-msgstr "01000 01000 Frames |24"
+msgstr "01000 01000 Frames|24"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV drop-frame rate (used for American /
@@ -9717,11 +9717,11 @@ msgstr "+ dB"
 
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "Max dB"
-msgstr "Max dB"
+msgstr "Max. dB"
 
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "Min dB"
-msgstr "Min dB"
+msgstr "Min. dB"
 
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "- dB"
