@@ -1183,6 +1183,10 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
          case '8':
          case '9':
             return false;
+         case ',':
+         case '.':
+            if (!evt.HasAnyModifiers())
+               return false;
          }
       }
    }
