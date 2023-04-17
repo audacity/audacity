@@ -12,6 +12,7 @@ Paul Licameli split from CommandManager.h
 #define __AUDACITY_REGISTRY__
 
 #include "Prefs.h"
+#include <type_traits>
 
 // Define classes and functions that associate parts of the user interface
 // with path names
@@ -77,25 +78,39 @@ namespace Registry {
    class Visitor;
    
 
+namespace detail {
+   struct REGISTRIES_API IndirectItemBase : BaseItem {
+      explicit IndirectItemBase(const BaseItemSharedPtr &ptr)
+         : BaseItem{ wxEmptyString }
+         , ptr{ ptr }
+      {}
+      ~IndirectItemBase() override;
+
+      BaseItemSharedPtr ptr;
+   };
+}
+
    //! An item that delegates to another held in a shared pointer
    /*!
     This allows static tables of items to be computed once and reused.
     The name of the delegate is significant for path calculations, but the
     IndirectItem's ordering hint is used if the delegate has none
-   */
-   struct REGISTRIES_API IndirectItem final : BaseItem {
-      explicit IndirectItem( const BaseItemSharedPtr &ptr_ )
-         : BaseItem{ wxEmptyString }
-         , ptr{ ptr_ }
+    */
+   template<typename Item>
+   struct IndirectItem final : detail::IndirectItemBase {
+      using ItemType = Item;
+      static_assert(std::is_base_of_v<BaseItem, ItemType>);
+      explicit IndirectItem(const std::shared_ptr<Item> &ptr)
+         : IndirectItemBase{ ptr }
       {}
-      ~IndirectItem() override;
-
-      BaseItemSharedPtr ptr;
    };
 
    //! A convenience function
-   inline std::unique_ptr<IndirectItem> Indirect(const BaseItemSharedPtr &ptr)
-      { return std::make_unique<IndirectItem>(ptr); }
+   template<typename Item> inline std::unique_ptr<IndirectItem<Item>> Indirect(
+      const std::shared_ptr<Item> &ptr)
+   {
+      return std::make_unique<IndirectItem<Item>>( ptr );
+   }
 
    // An item that computes some other item to substitute for it, each time
    // the ComputedItem is visited
@@ -204,8 +219,9 @@ namespace Registry {
       }
       // This overload lets you supply a shared pointer to an item, directly
       template<typename Subtype>
-      void AppendOne( const std::shared_ptr<Subtype> &ptr )
-      { AppendOne( std::make_unique<IndirectItem>(ptr) ); }
+      void AppendOne(const std::shared_ptr<Subtype> &ptr) {
+         AppendOne(std::make_unique<IndirectItem<Subtype>>(ptr));
+      }
    };
 
    // The /-separated path is relative to the GroupItem supplied to

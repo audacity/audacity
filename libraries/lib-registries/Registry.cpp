@@ -21,6 +21,7 @@ namespace {
 struct ItemOrdering;
 
 using namespace Registry;
+using namespace detail;
 
 //! Used only internally
 struct PlaceHolder : GroupItem<> {
@@ -137,7 +138,7 @@ void CollectItem( Registry::Visitor &visitor,
 
    using namespace Registry;
    if (const auto pIndirect =
-       dynamic_cast<IndirectItem*>(pItem)) {
+       dynamic_cast<IndirectItemBase*>(pItem)) {
       auto delegate = pIndirect->ptr.get();
       if (delegate)
          // recursion
@@ -360,7 +361,7 @@ auto CollectedItems::MergeLater(Item &found, const Identifier &name,
 void CollectedItems::SubordinateSingleItem(Item &found, BaseItem *pItem)
 {
    MergeLater(found, pItem->name, GroupItemBase::Weak)->items.push_back(
-      std::make_unique<IndirectItem>(
+      std::make_unique<IndirectItemBase>(
          // shared pointer with vacuous deleter
          std::shared_ptr<BaseItem>(pItem, [](void*){})));
 }
@@ -370,7 +371,7 @@ void CollectedItems::SubordinateMultipleItems(
 {
    auto subGroup = MergeLater(found, pItems->name, pItems->GetOrdering());
    for (const auto &pItem : pItems->items)
-      subGroup->items.push_back( std::make_unique<IndirectItem>(
+      subGroup->items.push_back(std::make_unique<IndirectItemBase>(
          // shared pointer with vacuous deleter
          std::shared_ptr<BaseItem>(pItem.get(), [](void*){})));
 }
@@ -720,7 +721,7 @@ namespace Registry {
 
 BaseItem::~BaseItem() {}
 
-IndirectItem::~IndirectItem() {}
+IndirectItemBase::~IndirectItemBase() {}
 
 ComputedItem::~ComputedItem() {}
 
