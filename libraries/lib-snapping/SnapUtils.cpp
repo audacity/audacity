@@ -15,8 +15,6 @@
 #include <cmath>
 #include <unordered_map>
 
-#include "ProjectRate.h"
-#include "ProjectTimeSignature.h"
 
 namespace
 {
@@ -333,128 +331,6 @@ public:
 
 private:
    const MultiplierFunctor mMultiplierFunctor;
-};
-
-double SnapToSamples(const AudacityProject& project)
-{
-   return ProjectRate::Get(project).GetRate();
-}
-
-/*
-   bps = tempo / 60
-   1/lower takes 1/bps
-*/
-
-double SnapToBar(const AudacityProject& project)
-{
-      auto& timeSignature = ProjectTimeSignature::Get(project);
-      // DV: For now, BPM uses quarter notes, i. e. 1/4 = BPM in musical notation
-      const auto quarterDuration = 60.0 / timeSignature.GetTempo();
-      const auto beatDuration = quarterDuration * 4.0 / timeSignature.GetLowerTimeSignature();
-      const auto barDuration = beatDuration * timeSignature.GetUpperTimeSignature();
-      const auto multiplier = 1 / barDuration;
-      
-      return multiplier;
-}
-
-MultiplierFunctor SnapToBeat(int divisor)
-{
-   return [divisor](const AudacityProject& project)
-   {
-      auto& timeSignature = ProjectTimeSignature::Get(project);
-      
-      const auto quarterDuration = 60.0 / timeSignature.GetTempo();
-      // DV: It was decided that for the time being,
-      // BPM sets the duration for quarter notes.
-      // For this reason, `cfg.timeSignature.second` is ignored
-      const auto fracDuration = quarterDuration * 4.0 / divisor;
-      const auto multiplier = 1.0 / fracDuration;
-
-      return multiplier;
-   };
-}
-
-MultiplierFunctor SnapToTriplets(int divisor)
-{
-   return [divisor](const AudacityProject& project)
-   {
-      auto& timeSignature = ProjectTimeSignature::Get(project);
-      
-      const auto quarterDuration = 60.0 / timeSignature.GetTempo();
-      const auto tripletDivisor = 3 * (divisor / 2);
-      const auto fracDuration = quarterDuration * 4.0 / tripletDivisor;
-      const auto multiplier = 1.0 / fracDuration;
-         
-      return multiplier;
-   };
-}
-
-SnapRegistryItemRegistrator beats {
-   Registry::Placement { {}, { Registry::OrderingHint::Begin } },
-   SnapFunctionGroup(
-      /* i18n-hint: The music theory "beat"*/
-      "beats", XO("Beats"), true,
-      /* i18n-hint: The music theory "bar"*/
-      TimeInvariantSnapFunction("bar", XO("Bar"), SnapToBar),
-      TimeInvariantSnapFunction("bar_1_2", XO("1/2"), SnapToBeat(2)),
-      TimeInvariantSnapFunction("bar_1_4", XO("1/4"), SnapToBeat(4)),
-      TimeInvariantSnapFunction("bar_1_8", XO("1/8"), SnapToBeat(8)),
-      TimeInvariantSnapFunction("bar_1_16", XO("1/16"), SnapToBeat(16)),
-      TimeInvariantSnapFunction("bar_1_32", XO("1/32"), SnapToBeat(32)),
-      TimeInvariantSnapFunction("bar_1_64", XO("1/64"), SnapToBeat(64)),
-      TimeInvariantSnapFunction("bar_1_128", XO("1/128"), SnapToBeat(128)))
-};
-
-SnapRegistryItemRegistrator triplets {
-   Registry::Placement { {},
-                         { Registry::OrderingHint::After, "beats" } },
-   SnapFunctionGroup(
-      /* i18n-hint: The music theory "triplet"*/
-      "triplets", XO("Triplets"), true,
-      TimeInvariantSnapFunction("triplet_1_2", XO("1/2 (triplets)"), SnapToTriplets(2)),
-      TimeInvariantSnapFunction("triplet_1_4", XO("1/4 (triplets)"), SnapToTriplets(4)),
-      TimeInvariantSnapFunction("triplet_1_8", XO("1/8 (triplets)"), SnapToTriplets(8)),
-      TimeInvariantSnapFunction("triplet_1_16", XO("1/16 (triplets)"), SnapToTriplets(16)),
-      TimeInvariantSnapFunction("triplet_1_32", XO("1/32 (triplets)"), SnapToTriplets(32)),
-      TimeInvariantSnapFunction("triplet_1_64", XO("1/64 (triplets)"), SnapToTriplets(64)),
-      TimeInvariantSnapFunction(
-         "triplet_1_128", XO("1/128 (triplets)"), SnapToTriplets(128)))
-};
-
-SnapRegistryItemRegistrator secondsAndSamples {
-   Registry::Placement { {},
-                         { Registry::OrderingHint::After, "triplets" } },
-   SnapFunctionGroup(
-      "time", XO("Seconds && samples"), false,
-      TimeInvariantSnapFunction("seconds", XO("Seconds"), 1.0),
-      TimeInvariantSnapFunction("deciseconds", XO("Deciseconds"), 10.0),
-      TimeInvariantSnapFunction("centiseconds", XO("Centiseconds"), 100.0),
-      TimeInvariantSnapFunction("milliseconds", XO("Milliseconds"), 1000.0),
-      TimeInvariantSnapFunction("samples", XO("Samples"), SnapToSamples))
-};
-
-SnapRegistryItemRegistrator videoFrames {
-   Registry::Placement { {},
-                         { Registry::OrderingHint::After, "time" } },
-   SnapFunctionGroup(
-      "video", XO("Video frames"), false,
-      TimeInvariantSnapFunction(
-         "film_24_fps", XO("Film frames (24 fps)"), 24.0),
-      TimeInvariantSnapFunction(
-         "ntsc_29.97_fps", XO("NTSC frames (29.97 fps)"),
-         30.0 / 1.001),
-      TimeInvariantSnapFunction(
-         "ntsc_30_fps", XO("NTSC frames (30 fps)"),
-         30.0 / 1.001),
-      TimeInvariantSnapFunction("film_25_fps", XO("PAL frames (25 fps)"), 25.0))
-};
-
-SnapRegistryItemRegistrator cdFrames {
-   Registry::Placement { {},
-                         { Registry::OrderingHint::After, "video" } },
-   SnapFunctionGroup(
-      "cd", XO("CD frames"), false,
-      TimeInvariantSnapFunction("cd_75_fps", XO("CDDA frames (75 fps)"), 75.0))
 };
 
 }
