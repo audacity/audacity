@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-12 23:36+0900\n"
+"PO-Revision-Date: 2023-04-18 17:38+0900\n"
 "Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
 "Language-Team: Atsushi YOSHIDA, Phroneris, SakiPapa\n"
 "Language: ja\n"
@@ -119,7 +119,7 @@ msgstr "両デバイスがそろわないと、相互のサンプリング周波
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Received %d while opening devices\n"
-msgstr "デバイスを開く際にエラー %d が生じました\n"
+msgstr "デバイスを開く際にエラー %d が起きました\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Unable to open Portmixer\n"
@@ -181,7 +181,7 @@ msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
 msgstr ""
-"録音デバイスを開く際にエラーが発生しました。\n"
+"録音デバイスを開く際にエラーが起きました。\n"
 "エラーコード: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-effects/EffectBase.cpp
@@ -302,7 +302,7 @@ msgid ""
 "Error opening sound device.\n"
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
-"サウンドデバイスを開く際にエラーが発生しました。\n"
+"サウンドデバイスを開く際にエラーが起きました。\n"
 "オーディオホスト、再生デバイス、プロジェクトのサンプリング周波数を変えてくだ"
 "さい。"
 
@@ -375,7 +375,7 @@ msgstr "%s にあるファイルを開くことができません。"
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity failed to read from a file in %s."
-msgstr "%s にあるファイルを読み込むことができません。"
+msgstr "%s にあるファイルを読むことができません。"
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -1469,7 +1469,7 @@ msgstr "プロジェクトファイルを開けません"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
-msgstr "プロジェクトファイルから自動保存情報を除去できませんでした。"
+msgstr "プロジェクトファイルから自動保存情報を削除できませんでした。"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
@@ -1520,7 +1520,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"自動保存情報を除去できません。\n"
+"自動保存情報を削除できません。\n"
 "ストレージデバイスの空き容量が不足していると思われます。\n"
 "\n"
 "%s"
@@ -2189,7 +2189,7 @@ msgstr "Audacity %s の更新内容"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "How to get help"
-msgstr "ヘルプ情報のご案内"
+msgstr "ヘルプ情報の案内"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "These are our support methods:"
@@ -3173,7 +3173,7 @@ msgstr "拍と小節(&B)"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
-msgstr "クリック＆ドラッグでループ範囲を指定します。"
+msgstr "クリック＆ドラッグしてループ範囲を指定します。"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -3181,7 +3181,7 @@ msgstr "録音中にタイムライン操作はできません"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr "クリック＆ドラッグで調整、ダブルクリックでリセット"
+msgstr "クリック＆ドラッグして調整、ダブルクリックしてリセット"
 
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
@@ -3199,7 +3199,7 @@ msgstr "タイムライン"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
-msgstr "クリックまたはドラッグでシーク開始"
+msgstr "クリックまたはドラッグしてシーク開始"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -3207,7 +3207,7 @@ msgstr "クリックまたはドラッグでシーク開始"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
-msgstr "クリックまたはドラッグでスクラブ開始"
+msgstr "クリックまたはドラッグしてスクラブ開始"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -3215,7 +3215,7 @@ msgstr "クリックまたはドラッグでスクラブ開始"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "クリック＆移動でスクラブ、クリック＆ドラッグでシークします。"
+msgstr "クリック＆移動してスクラブ、クリック＆ドラッグしてシークします。"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -3223,7 +3223,7 @@ msgstr "クリック＆移動でスクラブ、クリック＆ドラッグでシ
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
-msgstr "移動でシーク"
+msgstr "移動してシーク"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -3231,19 +3231,19 @@ msgstr "移動でシーク"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
-msgstr "移動でスクラブ"
+msgstr "移動してスクラブ"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release to stop seeking."
-msgstr "ドラッグでシーク、放すとシークを停止します。"
+msgstr "ドラッグしてシーク、放すとシークを停止します。"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
-msgstr "ドラッグでシーク、放して動かすとスクラブします。"
+msgstr "ドラッグしてシーク、放して動かすとスクラブします。"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
-msgstr "移動でスクラブ、ドラッグでシークします。"
+msgstr "移動してスクラブ、ドラッグしてシークします。"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play disabled"
@@ -3290,7 +3290,7 @@ msgstr "録音/再生ヘッドをピン留め（オン/オフ）(&H)"
 #: src/AudacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
-msgstr "%s を除去できません"
+msgstr "%s を削除できません"
 
 #: src/AudacityApp.cpp
 msgid "Failed!"
@@ -3322,7 +3322,7 @@ msgid ""
 msgstr ""
 "%s が見つかりません。\n"
 "\n"
-"最近使ったファイルの一覧から除去しました。"
+"最近使ったファイルの一覧から削除しました。"
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
@@ -3509,7 +3509,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
-msgstr "起動時に回復不能なエラーが発生しました"
+msgstr "起動時に回復不能なエラーが起きました"
 
 # ja: audacity --help で出る説明
 #. i18n-hint: This controls the number of bytes that Audacity will
@@ -3567,7 +3567,7 @@ msgstr ""
 "Audacity プロジェクト（.aup3）ファイルが\n"
 "Audacity に関連付けられていません。\n"
 "\n"
-"関連付けを行い、ダブルクリックで開けるようにしますか?"
+"関連付けを行い、ダブルクリックして開けるようにしますか?"
 
 #: src/AudacityApp.cpp
 msgid "Audacity Project Files"
@@ -3835,9 +3835,10 @@ msgstr "%s を適用"
 msgid "Macros Palette"
 msgstr "マクロパレット"
 
+# マクロマネジャーから呼ばれるパネルウインドウのタイトルとして使用?
 #: src/BatchProcessDialog.cpp
 msgid "Manage Macros"
-msgstr "マクロを管理"
+msgstr "マクロの管理"
 
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
@@ -3908,7 +3909,7 @@ msgstr "キャンセル(&C)"
 
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
-msgstr "除去(&V)"
+msgstr "削除(&V)"
 
 #: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "&Rename..."
@@ -4601,7 +4602,7 @@ msgstr "非圧縮ファイルをプロジェクトにコピー（安全）(&C)"
 
 #: src/FileFormats.cpp
 msgid "&Read uncompressed files from original location (faster)"
-msgstr "非圧縮ファイルを元の場所から読み込む（高速）(&R)"
+msgstr "非圧縮ファイルを元の場所から読む（高速）(&R)"
 
 #: src/FileFormats.cpp
 msgid "&Copy all audio into project (safest)"
@@ -4621,7 +4622,7 @@ msgstr "周波数解析"
 
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
-msgstr "スペクトラム"
+msgstr "スペクトル"
 
 #: src/FreqWindow.cpp
 msgid "Standard Autocorrelation"
@@ -4641,7 +4642,7 @@ msgstr "立方根自己相関"
 # 拡張自己相関関数( Extended Autocorrelation
 # Function ）
 # というのも検索で見つかるが、これではない。
-# 音声分野でSpeech enhancement Autocorrelation に対
+# オーディオ分野でSpeech enhancement Autocorrelation に対
 # し「音声強調自己相関」という訳語をあてている。
 #: src/FreqWindow.cpp
 msgid "Enhanced Autocorrelation"
@@ -4873,9 +4874,10 @@ msgstr "新規プラグイン"
 msgid "Incompatible plugin(s) found"
 msgstr "互換性が無いプラグインが見つかりました"
 
+# メニュー「プラグインマネージャー」から開くパネルウインドウのタイトルとして使用されている。もともとはメニュー項目として使われていた? アクセスキー(&M)が使用されていないため削除
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
-msgstr "プラグインを管理(&M)"
+msgstr "プラグインの管理"
 
 #: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
@@ -4897,8 +4899,8 @@ msgid ""
 msgstr ""
 "Audacity は互換性が無く読み込みできないプラグインを %d 個見つけました。停止や"
 "クラッシュを防ぐため、これらのプラグインを使用停止にしました。どうしても使用"
-"したい場合には、「プラグインを管理」でプラグインを有効にすることができます。"
-"そうでなければ「続ける」を選択してください。"
+"したい場合には、［プラグインを管理］でプラグインを有効にすることができます。"
+"そうでなければ［続ける］を選択してください。"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -5046,7 +5048,7 @@ msgstr "カラオケ(&K)"
 
 #: src/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "MIDI I/O レイヤーの初期化にエラーが発生しました。\n"
+msgstr "MIDI I/O レイヤーの初期化にエラーが起きました。\n"
 
 #: src/MIDIPlay.cpp
 msgid ""
@@ -5314,13 +5316,13 @@ msgstr "A♯/B♭"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Manage Plugins"
-msgstr "プラグインを管理"
+msgstr "プラグインの管理"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
-"エフェクトを選んで［有効にする］または［無効］をクリックし、［OK］をクリック"
-"してください。"
+"エフェクトを選んで［有効］または［無効］をクリックしてから［OK］してくださ"
+"い。"
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginRegistrationDialog.cpp
@@ -5389,7 +5391,7 @@ msgstr "再スキャン"
 
 #: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
 msgid "&Enable"
-msgstr "有効にする(&E)"
+msgstr "有効(&E)"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "&Disable"
@@ -5682,7 +5684,7 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
-msgstr "警告: 自動復旧に問題が発生しました"
+msgstr "警告: 自動復旧に問題が起きました"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -5725,14 +5727,15 @@ msgid ""
 "\n"
 "Save anyway?"
 msgstr ""
-"プロジェクトは空です。\n"
-"保存すると、プロジェクトにはトラックが無くなります。\n"
+"プロジェクトの内容が空になりました。\n"
+"このまま保存すると、トラックの無いプロジェクトとなります。\n"
 "\n"
-"以前開いていたトラックを保存する方法は次の通りです:\n"
-"［いいえ］をクリックし、［編集］>［元に戻す］ですべてのトラックを\n"
-"開いてから、［ファイル］>［プロジェクトを保存］を実行してください。\n"
+"以前に開いたトラックを保存する方法：\n"
+"［いいえ］をクリックし、すべてのトラックが開くまで\n"
+"［編集］>［元に戻す］を繰り返してから、\n"
+"［ファイル］>［プロジェクトを保存］を実行してください。\n"
 "\n"
-"本当に保存してもよろしいですか?"
+"本当に保存してよろしいですか?"
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Empty Project"
@@ -5750,7 +5753,7 @@ msgid ""
 msgstr ""
 "プロジェクトのサイズが、保存先ストレージの空き容量を上回りました。\n"
 "\n"
-"より空き容量に余裕のある、他のストレージを選択してください。"
+"より空き容量に余裕がある、他のストレージを選択してください。"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -5975,7 +5978,7 @@ msgstr "圧縮"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "[Project %02i] "
-msgstr "［プロジェクト %02i］"
+msgstr "［プロジェクト %02i］ "
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -6069,14 +6072,14 @@ msgstr "%s（未検出）"
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Removed %s from %s"
-msgstr "「%s」を「%s」から除去"
+msgstr "「%s」を「%s」から削除"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Remove %s"
-msgstr "%s を除去"
+msgstr "%s を削除"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
@@ -6444,8 +6447,7 @@ msgstr "コメント"
 
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr ""
-"矢印キー（編集後は Enter キー）を使ってフィールド内を移動してください。"
+msgstr "矢印キー（編集後は Enter キー）を使ってフィールド内を移動します。"
 
 #: src/TagsEditor.cpp
 msgid "Tag"
@@ -6461,7 +6463,7 @@ msgstr "追加(&A)"
 
 #: src/TagsEditor.cpp
 msgid "&Remove"
-msgstr "除去(&R)"
+msgstr "削除(&R)"
 
 #: src/TagsEditor.cpp
 msgid "Genres"
@@ -6529,7 +6531,7 @@ msgstr "タグファイル保存エラー"
 
 #: src/TagsEditor.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
 msgid "Edit Metadata Tags"
-msgstr "メタデータタグを編集"
+msgstr "メタデータタグの編集"
 
 #: src/TagsEditor.cpp
 msgid "Metadata Tags"
@@ -6684,7 +6686,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"録音ファイルの保存時にエラーが発生しました。"
+"録音ファイルの保存時にエラーが起きました。"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6706,7 +6708,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"録音のエクスポート時にエラーが発生しました。"
+"録音のエクスポート時にエラーが起きました。"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6947,29 +6949,29 @@ msgid ""
 "Click and drag to adjust relative size of stereo tracks, double-click to "
 "make heights equal"
 msgstr ""
-"クリック＆ドラッグでステレオトラックの相対的大きさを変更、ダブルクリックで高"
-"さを揃える"
+"クリック＆ドラッグしてステレオトラックの相対的大きさを変更、ダブルクリックし"
+"て高さを揃える"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
-msgstr "クリック＆ドラッグでトラックの大きさを変更。"
+msgstr "クリック＆ドラッグしてトラックの大きさを変更。"
 
 #: src/TrackUtilities.cpp
 msgid "Removed audio track(s)"
-msgstr "除去したオーディオトラック"
+msgstr "削除したオーディオトラック"
 
 #: src/TrackUtilities.cpp
 msgid "Remove Track"
-msgstr "トラックを除去"
+msgstr "トラックを削除"
 
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "トラック「%s」を除去しました"
+msgstr "トラック「%s」を削除しました"
 
 #: src/TrackUtilities.cpp
 msgid "Track Remove"
-msgstr "トラックを除去"
+msgstr "トラックを削除"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/TrackUtilities.cpp
@@ -7090,7 +7092,7 @@ msgstr "audio.com アカウントにリンク(&L)..."
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
-msgstr "アカウントをリンクできません。再試行してください。"
+msgstr "アカウントをリンクできません。やり直してください。"
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "&Try again"
@@ -7261,14 +7263,14 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
-"以下のコマンドのショートカットを除去しました。\n"
+"以下のコマンドのショートカットを削除しました。\n"
 "このバージョンでは該当コマンドのデフォルトショートカットが新設または変更され"
 "ており、それが過去に他のコマンドに割り当てたショートカットと競合してしまうた"
 "めです。"
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr "ショートカットは除去されています"
+msgstr "ショートカットは削除されています"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -7774,7 +7776,7 @@ msgstr "追加"
 #: src/commands/SelectCommand.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
-msgstr "除去"
+msgstr "削除"
 
 #: src/commands/SelectCommand.cpp
 msgid "First Track:"
@@ -8250,12 +8252,12 @@ msgstr "レベル"
 
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
-msgstr "音量調整を音色調整とリンクさせる(&L)"
+msgstr "音量調整を音色調整とリンク(&L)"
 
 # ja: 独自アクセスキー
 #: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Pitch"
-msgstr "変更: ピッチの変更(&P)"
+msgstr "ピッチを変更(&P)"
 
 # ja: 説明
 #: src/effects/ChangePitch.cpp
@@ -8377,16 +8379,16 @@ msgstr "情報なし"
 # ja: 独自アクセスキー
 #: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Speed"
-msgstr "変更: 速度を変更(&G)"
+msgstr "速度を変更(&G)"
 
 # ja: 説明
 #: src/effects/ChangeSpeed.cpp
 msgid "Changes the speed of a track, also changing its pitch"
-msgstr "トラックの再生速度を変更し、ピッチも同時に変わります"
+msgstr "トラックの再生速度を変更します。ピッチも変化します"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed, affecting both Tempo and Pitch"
-msgstr "速度を変更（テンポとピッチの双方に影響します）"
+msgstr "速度を変更（テンポとピッチの双方に影響）"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
@@ -8455,7 +8457,7 @@ msgstr "→ 変更後"
 # ja: 独自アクセスキー
 #: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Tempo"
-msgstr "変更: テンポの変更(&T)"
+msgstr "テンポを変更(&T)"
 
 # ja: 説明
 #: src/effects/ChangeTempo.cpp
@@ -8525,7 +8527,7 @@ msgstr "クリックノイズを除去(&K)"
 # ja: 説明
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "オーディオトラックのクリックノイズを除去します"
+msgstr "オーディオトラックのクリックノイズを削除します"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -9375,7 +9377,7 @@ msgstr "コマンドの初期化に失敗しました"
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "&Generate"
-msgstr "ジェネレーター(&G)"
+msgstr "生成(&G)"
 
 #: src/effects/EffectUI.cpp
 msgid "Manage presets and options"
@@ -9617,7 +9619,7 @@ msgid ""
 "Error message says:\n"
 "%s"
 msgstr ""
-"EQ 曲線ファイルの読み込みにエラーが発生しました:\n"
+"EQ 曲線ファイルの読み込みにエラーが起きました:\n"
 "%s\n"
 "エラーメッセージ:\n"
 "%s"
@@ -9780,8 +9782,8 @@ msgid ""
 "then use that one."
 msgstr ""
 "このフィルター曲線をマクロの中で使うには、新しい名前を選択してください。\n"
-"「曲線を保存/管理...」を選択し、「無題」曲線の名前を変更してからご使用くださ"
-"い。"
+"「曲線を保存/管理...」を選択し、「無題」曲線の名前を変更してから使用してくだ"
+"さい。"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Filter Curve EQ needs a different name"
@@ -10042,7 +10044,7 @@ msgstr "ノイズを低減(&N)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "テープノイズやハムなどのバックグランドノイズを除去します"
+msgstr "テープノイズやハムなどのバックグランドノイズを削除します"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Steps per block are too few for the window types."
@@ -10261,16 +10263,16 @@ msgstr "ノイズを除去"
 #: src/effects/NoiseRemoval.cpp
 msgid "Removes constant background noise such as fans, tape noise, or hums"
 msgstr ""
-"扇風機やテープノイズ、ハムなどの定常的なバックグランドノイズを除去します"
+"扇風機やテープノイズ、ハムなどの定常的なバックグランドノイズを削除します"
 
 #: src/effects/NoiseRemoval.cpp
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
 msgstr ""
-"フィルタリングしたいオーディオをすべて選択し、除去の程度を選択、最後に［OK］"
-"を\n"
-"クリックしてノイズを除去します。\n"
+"フィルタリングしたいオーディオをすべて選択し、削除する程度を選択、最後に"
+"［OK］を\n"
+"クリックしてノイズを削除します。\n"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise re&duction (dB):"
@@ -10294,7 +10296,7 @@ msgstr "アタック/ディケイ時間"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Re&move"
-msgstr "除去(&M)"
+msgstr "削除(&M)"
 
 # ja: 独自アクセスキー
 #: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
@@ -10363,16 +10365,15 @@ msgid "N&ormalize stereo channels independently"
 msgstr "ステレオチャンネルごとにノーマライズ(&O)"
 
 # ja: 独自アクセスキー
-# ja: 連続的伸縮は「伸縮」なのに対しこちらは「ストレッチ」なので、特別に同じグループになるようまとめる。
 #: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
 msgid "Paulstretch"
-msgstr "伸縮: Paul ストレッチ(&S)"
+msgstr "Paul ストレッチ(&S)"
 
 # ja: 説明
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
-"Paul ストレッチは、極端な時間伸縮か「停滞」的エフェクトの用途だけに使用します"
+"Paul ストレッチは、極端な時間伸縮や「停滞的」エフェクトだけに使用します"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -10681,20 +10682,20 @@ msgstr "バターワース"
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type I"
-msgstr "第一種チェビシェフ"
+msgstr "チェビシェフ（タイプ 1）"
 
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type II"
-msgstr "第二種チェビシェフ"
+msgstr "チェビシェフ（タイプ 2）"
 
 #: src/effects/ScienFilter.cpp
 msgid "Lowpass"
-msgstr "ローパスフィルター"
+msgstr "ローパス"
 
 #: src/effects/ScienFilter.cpp
 msgid "Highpass"
-msgstr "ハイパスフィルター"
+msgstr "ハイパス"
 
 # ja: 独自アクセスキー
 #: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
@@ -10881,10 +10882,9 @@ msgid "Mixing down to mono"
 msgstr "モノラルにミックスダウンしています"
 
 # ja: 独自アクセスキー
-# ja: Paul ストレッチは「ストレッチ」なのに対しこちらは「伸縮」なので、特別に同じグループになるようまとめる。
 #: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
 msgid "Sliding Stretch"
-msgstr "伸縮: 連続的伸縮(&H)"
+msgstr "連続的伸縮(&H)"
 
 #: src/effects/TimeScale.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
@@ -11005,7 +11005,7 @@ msgstr "過剰な無音を圧縮"
 # ja: 独自アクセスキー
 #: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
-msgstr "無音を切り詰める(&U)"
+msgstr "無音を切り詰め(&U)"
 
 # ja: 説明
 #: src/effects/TruncSilence.cpp
@@ -12087,8 +12087,7 @@ msgstr ""
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
-"FFmpeg : エラー - オーディオ FIFO から読み込むためのバッファーを確保できませ"
-"ん。"
+"FFmpeg : エラー - オーディオ FIFO から読むためのバッファーを確保できません。"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
@@ -13278,7 +13277,7 @@ msgstr "次の %lld ファイルのエクスポートに成功しました。"
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Something went wrong after exporting the following %lld file(s)."
-msgstr "次の %lld ファイルのエクスポート後、問題が生じました。"
+msgstr "次の %lld ファイルのエクスポート後、問題が起きました。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -13293,7 +13292,7 @@ msgstr "エクスポートは次の %lld ファイルの後に停止しました
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Something went really wrong after exporting the following %lld file(s)."
-msgstr "次の %lld ファイルのエクスポート後、重大な問題が生じました。"
+msgstr "次の %lld ファイルのエクスポート後、重大な問題が起きました。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -13449,7 +13448,7 @@ msgid ""
 "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
 msgstr ""
-"ファイル %s の書き込み中にエラーが発生しました（ストレージに空きはあります"
+"ファイル %s の書き込み中にエラーが起きました（ストレージに空きはあります"
 "か?）。\n"
 "Libsndfile メッセージ: %s"
 
@@ -13956,7 +13955,7 @@ msgid ""
 "\n"
 "Inserting silence."
 msgstr ""
-"「%s」の処理中にエラーが発生しました\n"
+"「%s」の処理中にエラーが起きました\n"
 "\n"
 "無音を挿入します。"
 
@@ -14745,7 +14744,7 @@ msgstr "複製(&A)"
 
 #: src/menus/EditMenus.cpp
 msgid "R&emove Special"
-msgstr "特殊な除去(&E)"
+msgstr "特殊な削除(&E)"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
@@ -14994,7 +14993,7 @@ msgstr "オーディオデバイス情報(&D)..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
-msgstr "サポートデータの生成(&G)..."
+msgstr "サポートデータを生成(&G)..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -15130,11 +15129,11 @@ msgstr "ラベルを編集(&E)..."
 
 #: src/menus/LabelMenus.cpp
 msgid "Add Label at &Selection"
-msgstr "選択範囲にラベルを付ける(&S)"
+msgstr "選択範囲にラベル付け(&S)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Add Label at &Playback Position"
-msgstr "再生位置にラベルを付ける(&P)"
+msgstr "再生位置にラベル付け(&P)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Paste Te&xt to New Label"
@@ -15235,11 +15234,11 @@ msgstr "フォーカス(&U)"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move &Backward from Toolbars to Tracks"
-msgstr "ツールバー‐トラック間を戻る(&B)"
+msgstr "ツールバー‐トラック間でフォーカスを戻す(&B)"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move F&orward from Toolbars to Tracks"
-msgstr "ツールバー‐トラック間を進む(&O)"
+msgstr "ツールバー‐トラック間でフォーカスを進める(&O)"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Previous Track"
@@ -15283,8 +15282,9 @@ msgstr "Audacity の再起動後に実行記録を作成します。"
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
-msgstr "Audacity の再起動後に実行記録は作成されません。"
+msgstr "Audacity の再起動後は実行記録を作成しません。"
 
+# ジェネレーター、エフェクト、ツールのメニュー項目
 #: src/menus/PluginMenus.cpp
 msgid "Plugin Manager"
 msgstr "プラグインマネージャー"
@@ -15433,11 +15433,11 @@ msgstr "記憶した選択範囲を再現(&N)"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Stored &Cursor Position"
-msgstr "現在カーソルから記憶したカーソル位置まで(&C)"
+msgstr "現在のカーソル位置から記憶位置まで(&C)"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Cursor to Stored"
-msgstr "現在カーソルから記憶したカーソル位置までを選択"
+msgstr "現在のカーソル位置から記憶したカーソル位置までを選択"
 
 #: src/menus/SelectMenus.cpp
 msgid "Store Cursor Pos&ition"
@@ -15828,7 +15828,7 @@ msgstr ""
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
-msgstr "整列処理中に内部エラーが発生しました。"
+msgstr "整列処理中に内部エラーが起きました。"
 
 #: src/menus/TrackMenus.cpp
 msgid "Tracks sorted by time"
@@ -15876,7 +15876,7 @@ msgstr "再サンプリング(&R)..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Remo&ve Tracks"
-msgstr "トラックを除去(&V)"
+msgstr "トラックを削除(&V)"
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute"
@@ -15948,7 +15948,7 @@ msgstr "トラックと選択範囲を移動(&C)"
 
 #: src/menus/TrackMenus.cpp
 msgid "S&ort Tracks"
-msgstr "トラックの並べ替え(&O)"
+msgstr "トラックを並べ替え(&O)"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Start Time"
@@ -16117,7 +16117,7 @@ msgstr "追加録音(&A)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Record &New Track"
-msgstr "新規トラックを録音(&N)"
+msgstr "新規トラック録音(&N)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
@@ -16299,7 +16299,7 @@ msgstr "トラック名（オン/オフ）(&N)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
-msgstr "クリッピングを表示（オン/オフ）(&S)"
+msgstr "クリッピング表示（オン/オフ）(&S)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -16321,8 +16321,9 @@ msgid ""
 "App update checking requires network access. In order to protect your "
 "privacy, Audacity does not store any personal information."
 msgstr ""
-"アプリケーションの更新の確認には、ネットワーク接続が必要です。プライバシー保"
-"護のため、Audacity が個人情報を保管することはありません。"
+"アプリケーションの更新を確認するには、ネットワーク接続が必要です。\n"
+"あなたのプライバシーを保護するため、Audacity はいかなる個人情報も保存しませ"
+"ん。"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -16342,7 +16343,7 @@ msgstr "自動実行モードでは、エフェクトを適用しない(&D)"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Audio Settings"
-msgstr "オーディオを設定"
+msgstr "オーディオ設定"
 
 #: src/prefs/DevicePrefs.cpp
 #, c-format
@@ -16401,8 +16402,8 @@ msgid ""
 "Project Sample Rate used when recording new tracks and for playback, "
 "mixdowns and exports in this project"
 msgstr ""
-"新規トラックの録音・再生、プロジェクトのミックスダウンやエクスポート時に使用"
-"されるプロジェクトのサンプリング周波数。"
+"新規トラックの録音・再生、ミックスダウンやエクスポート時に使用されるこのプロ"
+"ジェクトのサンプリング周波数。"
 
 # ショートカットを&Rから&Eに変更（3.3.0）
 #: src/prefs/DevicePrefs.cpp
@@ -16812,7 +16813,7 @@ msgstr "メーター dB 表示範囲(&R):"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show 'How to Get &Help' at launch"
-msgstr "起動時に「ヘルプ情報のご案内」を表示(&H)"
+msgstr "起動時に「ヘルプ情報の案内」を表示(&H)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show e&xtra menus"
@@ -17048,7 +17049,7 @@ msgid ""
 msgstr ""
 "\n"
 "インポートしたファイルには以下のコマンドは記載されていませんが、他の新しい"
-"ショートカットと競合するため、これらのショートカットを除去しました。\n"
+"ショートカットと競合するため、これらのショートカットを削除しました。\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -17973,7 +17974,7 @@ msgstr "「トラックのフォーカスを移動」矢印キーでトラック
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Type to create a label"
-msgstr "タイピングでラベル作成(&T)"
+msgstr "タイピングしてラベル作成(&T)"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
@@ -18180,7 +18181,7 @@ msgstr "波形 dB 表示範囲(&R):"
 #. i18n-hint: Audio setup button text, keep as short as possible
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "Audio Setup"
-msgstr "オーディオを設定"
+msgstr "オーディオ設定"
 
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
@@ -18205,11 +18206,11 @@ msgstr "オーディオ環境設定(&P)..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
-msgstr "1(モノラル）録音チャンネル"
+msgstr "1（モノラル）録音チャンネル"
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "2 (Stereo) Recording Channels"
-msgstr "2(ステレオ）録音チャンネル"
+msgstr "2（ステレオ）録音チャンネル"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that manages the audio devices
@@ -18466,7 +18467,7 @@ msgstr "ミキサー(&X)"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Ad&just Playback Volume..."
-msgstr "再生音量調整(&J)..."
+msgstr "再生音量を調整(&J)..."
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Increase Playback Volume"
@@ -18478,7 +18479,7 @@ msgstr "再生音量を下げる(&D)"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Adj&ust Recording Volume..."
-msgstr "録音音量調整(&U)..."
+msgstr "録音音量を調整(&U)..."
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "I&ncrease Recording Volume"
@@ -18605,7 +18606,7 @@ msgstr "コンボボックスにスナップ"
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
 msgid "&Snapping Toolbar"
-msgstr "スナップツールバー(&S)"
+msgstr "スナップ ツールバー(&S)"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18695,7 +18696,7 @@ msgstr "Audacity %sツールバー"
 
 #: src/toolbars/ToolBar.cpp
 msgid "Click and drag to resize toolbar"
-msgstr "クリック＆ドラッグでツールバーの大きさを変更"
+msgstr "クリック＆ドラッグしてツールバーの大きさを変更"
 
 #: src/toolbars/ToolDock.cpp
 msgid "ToolDock"
@@ -18800,8 +18801,8 @@ msgstr "再生速度を下げる(&D)"
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
 msgstr ""
-"ラベルをドラッグします。Shift+ドラッグで同じトラックのすべてのラベルを移動で"
-"きます。"
+"ラベルをドラッグします。Shift+ドラッグして同じトラックのすべてのラベルを移動"
+"できます。"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -18823,7 +18824,7 @@ msgstr "ラベルを編集"
 
 #: src/tracks/labeltrack/ui/LabelTextHandle.cpp
 msgid "Click to edit label text"
-msgstr "クリックでラベル文字を編集"
+msgstr "クリックしてラベル文字を編集"
 
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
 msgid "&Font..."
@@ -18896,14 +18897,14 @@ msgid ""
 "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
 "region."
 msgstr ""
-"クリックで垂直方向に拡大、Shift+クリックで縮小、ドラッグで拡大範囲を指定しま"
-"す。"
+"クリックして垂直方向に拡大、Shift+クリックして縮小、ドラッグして拡大範囲を指"
+"定します。"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
 msgid "Right-click for menu."
-msgstr "右クリックでメニューを表示します。"
+msgstr "右クリックしてメニューを表示します。"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
@@ -18925,7 +18926,7 @@ msgstr "左クリック/左ドラッグ"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
-msgstr "クリック＆ドラッグで選択範囲を伸縮します。"
+msgstr "クリック＆ドラッグして選択範囲を伸縮します。"
 
 #. i18n-hint: (noun) The track that is used for MIDI notes which can be
 #. dragged to change their duration.
@@ -18943,11 +18944,11 @@ msgstr "伸縮"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
-msgstr "左クリックで展開、右クリックで除去"
+msgstr "左クリックして展開、右クリックして削除"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to merge clips"
-msgstr "左クリックでクリップを結合"
+msgstr "左クリックしてクリップを結合"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Merged Clips"
@@ -18968,11 +18969,11 @@ msgstr "展開"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
-msgstr "カットラインを除去しました"
+msgstr "カットラインを削除しました"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
-msgstr "クリック＆ドラッグでサンプルを編集"
+msgstr "クリック＆ドラッグしてサンプルを編集"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
@@ -19050,7 +19051,7 @@ msgstr "クリップの左右境界を編集"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Click and drag to move clip boundary in time"
-msgstr "クリック＆ドラッグでクリップの境界を時間移動"
+msgstr "クリック＆ドラッグしてクリップの境界を時間移動"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Set Wave Clip Name"
@@ -19058,7 +19059,7 @@ msgstr "波形クリップ名を設定"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Click and drag to select text"
-msgstr "クリック＆ドラッグでテキストを選択"
+msgstr "クリック＆ドラッグしてテキストを選択"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Modified Clip Name"
@@ -19307,8 +19308,8 @@ msgstr "%.0f%%右"
 msgid ""
 "Click and drag to adjust sizes of sub-views, double-click to split evenly"
 msgstr ""
-"クリック＆ドラッグでサブ表示の大きさを調整、ダブルクリックで同じ大きさに揃え"
-"る"
+"クリック＆ドラッグしてサブ表示の大きさを調整、ダブルクリックして同じ大きさに"
+"揃える"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -19456,8 +19457,8 @@ msgid ""
 "Drag clips to reposition them. Hold Shift and drag to move all clips on the "
 "same track."
 msgstr ""
-"ドラッグでクリップを移動させます。Shift+ドラッグで同じトラックのすべてのク"
-"リップを移動できます。"
+"ドラッグしてクリップを移動させます。Shift+ドラッグして同じトラックのすべての"
+"クリップを移動できます。"
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -19522,11 +19523,11 @@ msgstr "名前の変更"
 
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Click and drag to warp playback time"
-msgstr "クリック＆ドラッグで再生時間を移動"
+msgstr "クリック＆ドラッグして再生時間を移動"
 
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Click and drag to edit the amplitude envelope"
-msgstr "クリック＆ドラッグで振幅エンベロープを編集"
+msgstr "クリック＆ドラッグして振幅エンベロープを編集"
 
 #. i18n-hint: (verb) Audacity has just adjusted the envelope .
 #: src/tracks/ui/EnvelopeHandle.cpp
@@ -19579,31 +19580,31 @@ msgstr "前方へスクラブ(&W)"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
-msgstr "クリック＆ドラッグで選択範囲の左端を移動します。"
+msgstr "クリック＆ドラッグして選択範囲の左端を移動します。"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move right selection boundary."
-msgstr "クリック＆ドラッグで選択範囲の右端を移動します。"
+msgstr "クリック＆ドラッグして選択範囲の右端を移動します。"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move bottom selection frequency."
-msgstr "クリック＆ドラッグで最低選択周波数を移動します。"
+msgstr "クリック＆ドラッグして最低選択周波数を移動します。"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move top selection frequency."
-msgstr "クリック＆ドラッグで最高選択周波数を移動します。"
+msgstr "クリック＆ドラッグして最高選択周波数を移動します。"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr "クリック＆ドラッグで選択中心周波数をスペクトルピークに移動します。"
+msgstr "クリック＆ドラッグして選択中心周波数をスペクトルのピークに移動します。"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
-msgstr "クリック＆ドラッグで中心選択周波数を移動します。"
+msgstr "クリック＆ドラッグして中心選択周波数を移動します。"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to adjust frequency bandwidth."
-msgstr "クリック＆ドラッグで周波数帯域を調整します。"
+msgstr "クリック＆ドラッグして周波数帯域を調整します。"
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
@@ -19631,7 +19632,7 @@ msgstr "(スナップ中)"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Click and drag to move a track in time"
-msgstr "クリック＆ドラッグでトラックを時間移動"
+msgstr "クリック＆ドラッグしてトラックを時間移動"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Could not shift between tracks"
@@ -19657,7 +19658,7 @@ msgstr "折りたたむ"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Command+Click to deselect"
-msgstr "Command+クリックで選択解除"
+msgstr "Command+クリックして選択解除"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Select track"
@@ -19665,7 +19666,7 @@ msgstr "トラック選択"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to deselect"
-msgstr "Ctrl+クリックで選択解除"
+msgstr "Ctrl+クリックして選択解除"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -19686,14 +19687,14 @@ msgstr "Ctrl+クリック"
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
 msgstr ""
-"%s でトラックを選択/選択解除します。上下ドラッグでトラックの順番を変更しま"
-"す。"
+"%s してトラックを選択/選択解除します。上下にドラッグしてトラックの順番を変更"
+"します。"
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track."
-msgstr "%s でトラックを選択/選択解除します。"
+msgstr "%s してトラックを選択/選択解除します。"
 
 #. i18n-hint: will substitute name of track for %s
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -19712,11 +19713,11 @@ msgstr "トラックの移動"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
-msgstr "クリックで拡大、Shift+クリックで縮小"
+msgstr "クリックして拡大、Shift+クリックして縮小"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "ドラッグで範囲を拡大、右クリックで縮小"
+msgstr "ドラッグして範囲を拡大、右クリックして縮小"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
@@ -20342,11 +20343,11 @@ msgstr "選択なし"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Linear In"
-msgstr "直線イン"
+msgstr "線型イン"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Linear Out"
-msgstr "直線アウト"
+msgstr "線型アウト"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Exponential In"
@@ -20438,7 +20439,7 @@ msgstr "クリッピングしきい値（%）"
 
 #: plug-ins/clipfix.ny
 msgid "Reduce amplitude to allow for restored peaks (dB)"
-msgstr "修復ピークがとり得る振幅を低減（dB）"
+msgstr "ピークを修復するための振幅の低減（dB）"
 
 # ja: 独自アクセスキー
 #: plug-ins/crossfadeclips.ny resources/EffectsMenuDefaults.xml
@@ -21337,11 +21338,11 @@ msgstr "振幅（0～1)"
 # ja: 独自アクセスキー
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
-msgstr "サンプリングデータをエクスポート(&E)"
+msgstr "サンプルデータをエクスポート(&E)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
-msgstr "上限先頭サンプル数"
+msgstr "処理サンプル数の上限"
 
 #: plug-ins/sample-data-export.ny
 msgid "Measurement scale"
@@ -21361,7 +21362,7 @@ msgstr "HTML ファイル"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
-msgstr "インデックス（テキストファイル時のみ）"
+msgstr "インデックス（テキストファイルのみ）"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample Count"
@@ -21389,7 +21390,7 @@ msgstr "ヘッダー追記文"
 
 #: plug-ins/sample-data-export.ny
 msgid "Channel layout for stereo"
-msgstr "ステレオチャンネル記述順"
+msgstr "ステレオチャンネルの記述順"
 
 #. i18n-hint: Left and Right
 #: plug-ins/sample-data-export.ny
@@ -21638,7 +21639,7 @@ msgstr "ファイルを選択"
 
 #: plug-ins/sample-data-import.ny
 msgid "Invalid data handling"
-msgstr "不正データとして扱う"
+msgstr "不正データの扱い"
 
 #: plug-ins/sample-data-import.ny
 msgid "Throw Error"
@@ -21677,8 +21678,8 @@ msgstr ""
 "※訳註:~%~\n"
 "「サンプルデータをエクスポート」機能でエクスポートしたファイルの場合、日本語"
 "ヘッダーがエラーの原因となります。~%~\n"
-"Audacity の言語設定を変更してエクスポートしたとしても、ヘッダー自体を行頭セミ"
-"コロンでコメントアウトしないと別のエラーが出てしまいます。~%~\n"
+"Audacity の言語設定を変更してエクスポートしても、ヘッダー自体を行頭セミコロン"
+"でコメントアウトしないと別のエラーが出てしまいます。~%~\n"
 "他にも色々と制限があるので、詳細はマニュアルの「Tools > Sample Data Import > "
 "Obtaining suitable data」を参照してください（英語）。"
 
@@ -21713,7 +21714,7 @@ msgstr "エラー。~%ファイルを開けません"
 # ja: 独自アクセスキー
 #: plug-ins/spectral-delete.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Delete"
-msgstr "スペクトル編集: 削除(&D)"
+msgstr "スペクトル削除(&D)"
 
 #: plug-ins/spectral-delete.ny
 #, lisp-format
@@ -21754,35 +21755,35 @@ msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals: to mono"
-msgstr "ボーカル音を除去: モノラル化"
+msgstr "ボーカルを削除: モノラル化"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals"
-msgstr "ボーカル音を除去"
+msgstr "ボーカルを削除"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Vocals"
-msgstr "ボーカル音を分離"
+msgstr "ボーカルを分離"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Vocals and Invert"
-msgstr "ボーカル音の分離と位相反転"
+msgstr "ボーカルの分離と位相反転"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center: to mono"
-msgstr "中央の音を除去: モノラル化"
+msgstr "中央音を削除: モノラル化"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center"
-msgstr "中央の音を除去"
+msgstr "中央音を削除"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Center"
-msgstr "中央の音を分離"
+msgstr "中央音を分離"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Center and Invert"
-msgstr "中央の音を分離と位相反転"
+msgstr "中央音の分離と位相反転"
 
 #: plug-ins/vocalrediso.ny
 msgid "Strength"
@@ -21790,11 +21791,11 @@ msgstr "強度"
 
 #: plug-ins/vocalrediso.ny
 msgid "Low Cut for Vocals (Hz)"
-msgstr "ボーカル音をローカット（Hz）"
+msgstr "ボーカルをローカット（Hz）"
 
 #: plug-ins/vocalrediso.ny
 msgid "High Cut for Vocals (Hz)"
-msgstr "ボーカル音をハイカット（Hz）"
+msgstr "ボーカルをハイカット（Hz）"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -21833,8 +21834,8 @@ msgid ""
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
 " - 2 本のチャンネルが完全に同一、すなわち両モノラル。\n"
-"                中央の音を除去することはできません。\n"
-"                差があるのなら、それはエンコード時の劣化のためでしょう。"
+"                中央音を削除することはできません。\n"
+"                差があるのなら、それはエンコード時に劣化したためでしょう。"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -21989,7 +21990,7 @@ msgstr "特殊"
 # ja: 独自アクセスキー
 #: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
-msgstr "ボーカルを除去(&O)"
+msgstr "ボーカルを削除(&O)"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
