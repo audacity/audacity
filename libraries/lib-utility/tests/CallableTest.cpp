@@ -8,6 +8,7 @@
   Paul Licameli
 
 **********************************************************************/
+#include <catch2/catch.hpp>
 #include "Callable.h"
 #include <variant>
 
@@ -16,7 +17,12 @@
 using namespace Callable;
 
 namespace {
-struct X{ int member{ 0 }; };
+struct X {
+   int member{ 0 };
+
+   X() = default;
+   explicit X(int value) : member{ value } {}
+};
 
 struct TestVisitor {
    static int x;
@@ -24,14 +30,58 @@ struct TestVisitor {
 };
 
 int TestVisitor::x{};
+
+template<auto T> struct TakesNonTypeParameter {};
 }
 
-static void compileTest()
+TEST_CASE("Compilation")
 {
-   // Test contexpr-ness of OverloadSet constructor, and MemberInvoker too
-   constexpr auto visitor = OverloadSet{ TestVisitor{}, &X::member },
-      // and copy constructor
-      visitor2{ visitor },
-      // and move constructor
-      visitor3{ OverloadSet{ TestVisitor{}, &X::member } };
+   {
+      // Test contexpr-ness of OverloadSet constructor, and MemberInvoker too
+      constexpr auto visitor = OverloadSet{ TestVisitor{}, &X::member },
+         // and copy constructor
+         visitor2{ visitor },
+         // and move constructor
+         visitor3{ OverloadSet{ TestVisitor{}, &X::member } };
+   }
+   
+   {
+      // These function objects are of literal types
+      constexpr auto f1 = UniquePtrFactory<X>::Function;
+      constexpr auto f2 = UniquePtrFactory<X, int>::Function;
+
+      auto p1 = f1();
+      REQUIRE(p1->member == 0);
+      auto p2 = f2(1);
+      REQUIRE(p2->member == 1);
+
+      TakesNonTypeParameter<f1> t1{};
+      TakesNonTypeParameter<f2> t2{};
+   }
+   
+   {
+      // These function objects are of literal types
+      constexpr auto f1 = SharedPtrFactory<X>::Function;
+      constexpr auto f2 = SharedPtrFactory<X, int>::Function;
+
+      auto p1 = f1();
+      REQUIRE(p1->member == 0);
+      auto p2 = f2(1);
+      REQUIRE(p2->member == 1);
+
+      TakesNonTypeParameter<f1> t1{};
+      TakesNonTypeParameter<f2> t2{};
+   }
+   
+   {
+      // These function objects are of literal types
+      constexpr auto f1 = Constantly<0>::Function;
+      constexpr auto f2 = Constantly<0, int>::Function;
+
+      REQUIRE(f1() == 0);
+      REQUIRE(f2(1) == 0);
+
+      TakesNonTypeParameter<f1> t1{};
+      TakesNonTypeParameter<f2> t2{};
+   }
 }

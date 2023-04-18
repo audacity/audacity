@@ -14,6 +14,7 @@
 #define __AUDACITY_CALLABLE__
 
 #include <functional>
+#include <memory>
 #include <type_traits>
 #include <utility>
 
@@ -86,6 +87,29 @@ template<typename... Invocables> struct OverloadSet
 };
 template<typename... Is> OverloadSet(Is&&... invocables)
    -> OverloadSet<Is&&...>;
+
+//! Generates functions useable as non-type template parameters
+template<typename Type, typename... Arguments> struct UniquePtrFactory {
+   [[nodiscard]]
+   static auto Function(Arguments... arguments) -> std::unique_ptr<Type>
+   {
+      return std::make_unique<Type>(std::forward<Arguments&&>(arguments)...);
+   }
+};
+
+//! Generates functions useable as non-type template parameters
+template<typename Type, typename... Arguments> struct SharedPtrFactory {
+   [[nodiscard]]
+   static auto Function(Arguments... arguments) -> std::shared_ptr<Type>
+   {
+      return std::make_shared<Type>(std::forward<Arguments&&>(arguments)...);
+   }
+};
+
+//! Generates functions useable as non-type template parameters
+template<auto Value, typename... Arguments> struct Constantly {
+   static decltype(Value) Function (Arguments...) { return Value; }
+};
 
 }
 
