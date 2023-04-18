@@ -22,6 +22,7 @@ struct X {
 
    X() = default;
    explicit X(int value) : member{ value } {}
+   explicit X(int value, std::shared_ptr<X>) : member{ value } {}
 };
 
 struct TestVisitor {
@@ -51,12 +52,19 @@ TEST_CASE("Compilation")
       constexpr auto f2 = UniquePtrFactory<X, int>::Function;
       // How to get multiple signatures
       constexpr auto f3 = OverloadSet{ f1, f2 };
+      constexpr auto f4 =
+         UniquePtrFactory<X, int, std::unique_ptr<X>>::Function;
 
       {
          auto p1 = f1();
          REQUIRE(p1->member == 0);
          auto p2 = f2(1);
          REQUIRE(p2->member == 1);
+
+         // Demonstrate move of argument
+         auto p3 = f4(2, move(p2));
+         REQUIRE(p3->member == 2);
+         REQUIRE(!p2);
       }
 
       {
@@ -77,12 +85,19 @@ TEST_CASE("Compilation")
       constexpr auto f2 = SharedPtrFactory<X, int>::Function;
       // How to get multiple signatures
       constexpr auto f3 = OverloadSet{ f1, f2 };
+      constexpr auto f4 =
+         UniquePtrFactory<X, int, std::shared_ptr<X>>::Function;
 
       {
          auto p1 = f1();
          REQUIRE(p1->member == 0);
          auto p2 = f2(1);
          REQUIRE(p2->member == 1);
+
+         // Demonstrate move of argument
+         auto p3 = f4(2, move(p2));
+         REQUIRE(p3->member == 2);
+         REQUIRE(!p2);
       }
 
       {
