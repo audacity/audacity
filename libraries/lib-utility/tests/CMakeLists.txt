@@ -4,6 +4,7 @@ add_unit_test(
    NAME
       lib-utility
    SOURCES
+      CallableTest.cpp
       VariantTest.cpp
    LIBRARIES
       lib-utility

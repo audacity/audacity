@@ -10,6 +10,7 @@
 **********************************************************************/
 #include <catch2/catch.hpp>
 
+#include "Callable.h"
 #include "Variant.h"
 using namespace Variant;
 
@@ -131,11 +132,11 @@ static void testCase(const Visitor &visitor, int result, Arg &arg)
 
 void DoTests()
 {
-   // Variant::Visitor can capture many kinds of things.  Test each.
-   // This also tests compilation of the variadic constructor of visitor
+   // Callable::OverloadSet can capture many kinds of things.  Test each.
+   // This also tests compilation of the variadic constructor of OverloadSet
    // which can take a mix of l- and rvalues.
    CopyOnly copyOnly;
-   const auto visitor = Visitor(
+   const auto visitor = Callable::OverloadSet(
       &X::member,
       &Y::template memberfunction<Const>,
       &Z::constmemberfunction,
@@ -211,7 +212,7 @@ struct TestVisitor {
 // Visit() can be called for a proper subclasses of a std::variant<> too
 struct TestVariant : std::variant<std::monostate> {};
 
-void compileTest()
+static void compileTest()
 {
    // Test compilation of all 16 combinations of constness and value category
    // of the visitor and the variant
@@ -242,12 +243,4 @@ void compileTest()
    static_assert(std::is_same_v<int&, decltype(Visit(cvis, std::move(cvar)))>);
    static_assert(std::is_same_v<int&, decltype(Visit(std::move(vis), std::move(cvar)))>);
    static_assert(std::is_same_v<int&, decltype(Visit(std::move(cvis), std::move(cvar)))>);
-
-   // Test contexpr-ness of Visitor constructor, and MemberInvoker too
-   using X = Tester<false>::X;
-   constexpr auto visitor = Visitor{ TestVisitor{}, &X::member },
-      // and copy constructor
-      visitor2{ visitor },
-      // and move constructor
-      visitor3{ Visitor{ TestVisitor{}, &X::member } };
 }
