@@ -169,12 +169,9 @@ fallback_libraries=(
   libjack.so.0 # https://github.com/LMMS/lmms/pull/3958
   libportaudio.so # This is required to enable system PortAudio (so Jack is enabled!)
   libgmodule-2.0.so.0 # Otherwise - Manjaro/Arch will crash, because of libgio mismatch
-  # But if gmodule is present - glib2 is too
-  # Some of the GTK libraries are balcklisted from being included
-  # by the AppImage builder itself
-  # libgio-2.0.so.0
-  # libglib-2.0.so.0
-  # libgobject-2.0.so.0
+  libgio-2.0.so.0
+  libglib-2.0.so.0
+  libgobject-2.0.so.0
   libgthread-2.0.so.0
 )
 
