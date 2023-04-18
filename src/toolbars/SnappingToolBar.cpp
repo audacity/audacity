@@ -24,6 +24,8 @@
 
 
 #include "widgets/BasicMenu.h"
+#include "widgets/auStaticText.h"
+
 #include "wxWidgetsWindowPlacement.h"
 
 #include "Prefs.h"
@@ -41,6 +43,7 @@
 
 namespace
 {
+const TranslatableString SnapLabel = XO("Snap");
 TranslatableString GetSnapToLabel(Identifier snapTo)
 {
    auto item = SnapFunctionsRegistry::Find(snapTo);
@@ -328,24 +331,29 @@ void SnappingToolBar::Populate()
    auto sizer = safenew wxFlexGridSizer(1, 1, 1);
    Add(sizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
-   mSnapModeCheckBox =
-      safenew wxCheckBox(this, wxID_ANY, XO("Snap").Translation());
-   mSnapModeCheckBox->SetName(XO("Snap").Translation());
+   auto boxSizer = safenew wxBoxSizer(wxHORIZONTAL);
+
+   mSnapModeCheckBox = safenew wxCheckBox(this, wxID_ANY, {});
+   
+   mSnapModeCheckBox->SetName(SnapLabel.Stripped().Translation());
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mSnapModeCheckBox->SetAccessible(
       safenew WindowAccessible(mSnapModeCheckBox));
 #endif
 
-   sizer->Add(mSnapModeCheckBox, 0, wxBOTTOM | wxRIGHT | wxEXPAND, 5);
+   auto snapLabelCtrl = safenew auStaticText(this, SnapLabel.Translation());
+
+   boxSizer->Add(mSnapModeCheckBox, 0, wxEXPAND, 0);
+   boxSizer->Add(snapLabelCtrl, 0, wxEXPAND, 0);
+
+   sizer->Add(boxSizer, 0, wxBOTTOM | wxRIGHT | wxEXPAND, 5);
 
    const bool snapEnabled =
       ProjectSnap::Get(mProject).GetSnapMode() != SnapMode::SNAP_OFF;
 
    mSnapModeCheckBox->SetValue(snapEnabled);
-
-   mSnapModeCheckBox->SetBackgroundColour(theTheme.Colour(clrMedium));
-   mSnapModeCheckBox->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+   
 
    mSnapToCombo = safenew wxComboCtrl(
       this, wxID_ANY, {}, wxDefaultPosition, wxDefaultSize /*, wxCB_READONLY*/);
@@ -386,6 +394,14 @@ void SnappingToolBar::Populate()
 
          OnSnapModeChanged();
       });
+
+   mSnapModeCheckBox->Bind(
+      wxEVT_SET_FOCUS,
+      [snapLabelCtrl](auto&) { snapLabelCtrl->SetSelected(true); });
+
+   mSnapModeCheckBox->Bind(
+      wxEVT_KILL_FOCUS,
+      [snapLabelCtrl](auto&) { snapLabelCtrl->SetSelected(false); });
 
    // When the focus is lost, clear out any text selection.
    // See https://github.com/audacity/audacity/issues/4427
