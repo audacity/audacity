@@ -657,30 +657,6 @@ namespace MenuTable {
    // Name for conditional group must be non-empty.
    constexpr auto ConditionalItems = Callable::UniqueMaker<ConditionalGroupItem>();
 
-   // Make either a menu item or just a group, depending on the nonemptiness
-   // of the title.
-   // The name is untranslated and may be empty, to make the group transparent
-   // in identification of items by path.  Otherwise try to keep the name
-   // stable across Audacity versions.
-   // If the name of a menu is empty, then subordinate items cannot be located
-   // by path.
-   template< typename... Args >
-   inline BaseItemPtr MenuOrItems(
-      const Identifier &internalName, const TranslatableString &title, Args&&... args )
-         {  if ( title.empty() )
-               return Items( internalName, std::forward<Args>(args)... );
-            else
-               return std::make_unique<MenuItem>(
-                  internalName, title, std::forward<Args>(args)... ); }
-   inline BaseItemPtr MenuOrItems(
-      const Identifier &internalName,
-      const TranslatableString &title, BaseItemPtrs &&items )
-         {  if ( title.empty() )
-               return Items( internalName, std::move( items ) );
-            else
-               return std::make_unique<MenuItem>(
-                  internalName, title, std::move( items ) ); }
-
    constexpr auto Command = Callable::UniqueMaker<CommandItem>();
 
    constexpr auto CommandGroup = Callable::UniqueMaker<CommandGroupItem,

@@ -254,6 +254,17 @@ void AddSortedEffectMenuItems(
    }
 }
 
+static Registry::BaseItemPtr MenuOrItems(
+   const Identifier &id, const TranslatableString &label,
+   Registry::BaseItemPtrs ptrs)
+{
+   using namespace MenuTable;
+   if (label.empty())
+      return Items(id, move(ptrs));
+   else
+      return Menu(id, label, move(ptrs));
+}
+
 auto MakeAddGroupItems(
    const EffectsMenuGroups& list,
    CommandFlag batchflags,
