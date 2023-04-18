@@ -24,8 +24,11 @@ namespace Callable {
 template<typename T> struct type_identity { using type = T; };
 
 namespace detail {
-template<typename T> struct to_std_function{
-   using type = decltype(std::function{ std::declval<T>() });
+template<typename> struct FunctionInvoker;
+template<typename R, typename... Args> struct FunctionInvoker<R(Args...)> {
+   using type = R(Args...);
+   type *const f;
+   R operator()(Args... args) const { return f(std::forward<Args>(args)...); }
 };
 
 //! Capture pointer to member
@@ -51,14 +54,13 @@ template<typename M, typename C> struct MemberInvoker {
 //! Capture any invocable as a class, using std::function only when needed
 template<typename Invocable> struct InvocableBase {
    using type = typename std::conditional_t<std::is_class_v<Invocable>,
-      type_identity<Invocable>,
-      to_std_function<Invocable>
-   >::type;
+      Invocable,
+      FunctionInvoker<std::remove_pointer_t<Invocable>>
+   >;
 };
 template<typename Invocable> using InvocableBase_t =
    typename InvocableBase<Invocable>::type;
-//! partial specialization for pointers to members because CTAD fails for
-//! std::function
+//! partial specialization for pointers to members
 template<typename M, typename C> struct InvocableBase<M C::*> {
    using type = MemberInvoker<M, C>;
 };

@@ -49,39 +49,69 @@ TEST_CASE("Compilation")
       // These function objects are of literal types
       constexpr auto f1 = UniquePtrFactory<X>::Function;
       constexpr auto f2 = UniquePtrFactory<X, int>::Function;
+      // How to get multiple signatures
+      constexpr auto f3 = OverloadSet{ f1, f2 };
 
-      auto p1 = f1();
-      REQUIRE(p1->member == 0);
-      auto p2 = f2(1);
-      REQUIRE(p2->member == 1);
+      {
+         auto p1 = f1();
+         REQUIRE(p1->member == 0);
+         auto p2 = f2(1);
+         REQUIRE(p2->member == 1);
+      }
+
+      {
+         auto p1 = f3();
+         REQUIRE(p1->member == 0);
+         auto p2 = f3(1);
+         REQUIRE(p2->member == 1);
+      }
 
       TakesNonTypeParameter<f1> t1{};
       TakesNonTypeParameter<f2> t2{};
+      // Doesn't work with f3 in C++17
    }
    
    {
       // These function objects are of literal types
       constexpr auto f1 = SharedPtrFactory<X>::Function;
       constexpr auto f2 = SharedPtrFactory<X, int>::Function;
+      // How to get multiple signatures
+      constexpr auto f3 = OverloadSet{ f1, f2 };
 
-      auto p1 = f1();
-      REQUIRE(p1->member == 0);
-      auto p2 = f2(1);
-      REQUIRE(p2->member == 1);
+      {
+         auto p1 = f1();
+         REQUIRE(p1->member == 0);
+         auto p2 = f2(1);
+         REQUIRE(p2->member == 1);
+      }
+
+      {
+         auto p1 = f3();
+         REQUIRE(p1->member == 0);
+         auto p2 = f3(1);
+         REQUIRE(p2->member == 1);
+      }
 
       TakesNonTypeParameter<f1> t1{};
       TakesNonTypeParameter<f2> t2{};
+      // Doesn't work with f3 in C++17
    }
    
    {
       // These function objects are of literal types
       constexpr auto f1 = Constantly<0>::Function;
       constexpr auto f2 = Constantly<0, int>::Function;
+      // How to get multiple signatures
+      constexpr auto f3 = OverloadSet{ f1, f2 };
 
       REQUIRE(f1() == 0);
       REQUIRE(f2(1) == 0);
 
+      REQUIRE(f3() == 0);
+      REQUIRE(f3(1) == 0);
+
       TakesNonTypeParameter<f1> t1{};
       TakesNonTypeParameter<f2> t2{};
+      // Doesn't work with f3 in C++17
    }
 }
