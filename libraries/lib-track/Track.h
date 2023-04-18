@@ -17,6 +17,7 @@
 #include <vector>
 #include <list>
 #include <functional>
+#include <optional>
 #include <wx/longlong.h>
 
 #include "ClientData.h"
@@ -864,6 +865,7 @@ template<typename T>
 }
 
 struct OldTrackIterTag{};
+struct NewTrackIterTag{};
 
 template<typename TrackType, typename Tag, typename> struct TrackIterRange;
 
@@ -1037,6 +1039,12 @@ private:
       mEnd; //!< Allows end of iteration to be detected without comparison to other TrackIter
    FunctionType mPred; //!< %Optional filter
 };
+
+template<typename TrackType = Track>
+using TrackIterator = TrackIter<TrackType, NewTrackIterTag>;
+
+template<typename TrackType = Track>
+using OptionalTrackIterator = std::optional<TrackIterator<TrackType>>;
 
 //! Range between two @ref TrackIter "TrackIters", usable in range-for statements, and with Visit member functions
 /*!
@@ -1352,14 +1360,14 @@ class TRACK_API TrackList final
    }
 
 
-   template<typename TrackType = Track, typename Tag = OldTrackIterTag>
+   template<typename TrackType = Track, typename Tag = NewTrackIterTag>
       auto Leaders()
          -> TrackIterRange<TrackType, Tag>
    {
       return Tracks<TrackType, Tag>(&Track::IsLeader);
    }
 
-   template<typename TrackType = const Track, typename Tag = OldTrackIterTag>
+   template<typename TrackType = const Track, typename Tag = NewTrackIterTag>
       auto Leaders() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIterRange<TrackType, Tag>
@@ -1369,14 +1377,14 @@ class TRACK_API TrackList final
    }
 
 
-   template<typename TrackType = Track, typename Tag = OldTrackIterTag>
+   template<typename TrackType = Track, typename Tag = NewTrackIterTag>
       auto SelectedLeaders()
          -> TrackIterRange<TrackType, Tag>
    {
       return Tracks<TrackType, Tag>(&Track::IsSelectedLeader);
    }
 
-   template <typename TrackType = const Track, typename Tag = OldTrackIterTag>
+   template <typename TrackType = const Track, typename Tag = NewTrackIterTag>
       auto SelectedLeaders() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIterRange<TrackType, Tag>
