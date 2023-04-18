@@ -1280,28 +1280,28 @@ class TRACK_API TrackList final
    const_iterator cend() const { return end(); }
 
    //! Turn a pointer into a TrackIter (constant time); get end iterator if this does not own the track
-   template < typename TrackType = Track >
+   template <typename TrackType = Track, typename Tag = OldTrackIterTag>
       auto Find(Track *pTrack)
-         -> TrackIter<TrackType, OldTrackIterTag>
+         -> TrackIter<TrackType, Tag>
    {
       if (!pTrack || pTrack->GetOwner().get() != this)
-         return EndIterator<TrackType>();
+         return EndIterator<TrackType, Tag>();
       else
-         return MakeTrackIterator<TrackType>( pTrack->GetNode() );
+         return MakeTrackIterator<TrackType, Tag>(pTrack->GetNode());
    }
 
    //! @copydoc Find
    /*! const overload will only produce iterators over const TrackType */
-   template < typename TrackType = const Track >
+   template <typename TrackType = const Track, typename Tag = OldTrackIterTag>
       auto Find(const Track *pTrack) const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIter<TrackType, OldTrackIterTag>
+            TrackIter<TrackType, Tag>
          >
    {
       if (!pTrack || pTrack->GetOwner().get() != this)
-         return EndIterator<TrackType>();
+         return EndIterator<TrackType, Tag>();
       else
-         return MakeTrackIterator<TrackType>( pTrack->GetNode() );
+         return MakeTrackIterator<TrackType, Tag>(pTrack->GetNode());
    }
 
    // If the track is not an audio track, or not one of a group of channels,
@@ -1318,71 +1318,71 @@ class TRACK_API TrackList final
    }
 
 
-   template < typename TrackType = Track >
+   template<typename TrackType = Track, typename Tag = OldTrackIterTag>
       auto Any()
-         -> TrackIterRange<TrackType, OldTrackIterTag>
+         -> TrackIterRange<TrackType, Tag>
    {
-      return Tracks< TrackType >();
+      return Tracks<TrackType, Tag>();
    }
 
-   template < typename TrackType = const Track >
+   template<typename TrackType = const Track, typename Tag = OldTrackIterTag>
       auto Any() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange<TrackType, OldTrackIterTag>
+            TrackIterRange<TrackType, Tag>
          >
    {
-      return Tracks< TrackType >();
+      return Tracks<TrackType, Tag>();
    }
 
    // Abbreviating some frequently used cases
-   template < typename TrackType = Track >
+   template<typename TrackType = Track, typename Tag = OldTrackIterTag>
       auto Selected()
-         -> TrackIterRange<TrackType, OldTrackIterTag>
+         -> TrackIterRange<TrackType, Tag>
    {
-      return Tracks< TrackType >( &Track::IsSelected );
+      return Tracks<TrackType, Tag>(&Track::IsSelected);
    }
 
-   template < typename TrackType = const Track >
+   template<typename TrackType = const Track, typename Tag = OldTrackIterTag>
       auto Selected() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange<TrackType, OldTrackIterTag>
+            TrackIterRange<TrackType, Tag>
          >
    {
-      return Tracks< TrackType >( &Track::IsSelected );
+      return Tracks<TrackType, Tag>(&Track::IsSelected);
    }
 
 
-   template < typename TrackType = Track >
+   template<typename TrackType = Track, typename Tag = OldTrackIterTag>
       auto Leaders()
-         -> TrackIterRange<TrackType, OldTrackIterTag>
+         -> TrackIterRange<TrackType, Tag>
    {
-      return Tracks< TrackType >( &Track::IsLeader );
+      return Tracks<TrackType, Tag>(&Track::IsLeader);
    }
 
-   template < typename TrackType = const Track >
+   template<typename TrackType = const Track, typename Tag = OldTrackIterTag>
       auto Leaders() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange<TrackType, OldTrackIterTag>
+            TrackIterRange<TrackType, Tag>
          >
    {
-      return Tracks< TrackType >( &Track::IsLeader );
+      return Tracks<TrackType, Tag>(&Track::IsLeader);
    }
 
 
-   template < typename TrackType = Track >
+   template<typename TrackType = Track, typename Tag = OldTrackIterTag>
       auto SelectedLeaders()
-         -> TrackIterRange<TrackType, OldTrackIterTag>
+         -> TrackIterRange<TrackType, Tag>
    {
-      return Tracks< TrackType >( &Track::IsSelectedLeader );
+      return Tracks<TrackType, Tag>(&Track::IsSelectedLeader);
    }
 
-   template < typename TrackType = const Track >
+   template <typename TrackType = const Track, typename Tag = OldTrackIterTag>
       auto SelectedLeaders() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange<TrackType, OldTrackIterTag>
+            TrackIterRange<TrackType, Tag>
          >
    {
-      return Tracks< TrackType >( &Track::IsSelectedLeader );
+      return Tracks<TrackType, Tag>(&Track::IsSelectedLeader);
    }
 
 
@@ -1515,12 +1515,13 @@ private:
    // Visit all tracks satisfying a predicate, mutative access
    template <
       typename TrackType = Track,
+      typename Tag = OldTrackIterTag,
       typename Pred =
-         typename TrackIterRange<TrackType, OldTrackIterTag>
+         typename TrackIterRange<TrackType, Tag>
             ::iterator::FunctionType
    >
       auto Tracks( const Pred &pred = {} )
-         -> TrackIterRange<TrackType, OldTrackIterTag>
+         -> TrackIterRange<TrackType, Tag>
    {
       auto b = getBegin(), e = getEnd();
       return { { b, b, e, pred }, { b, e, e, pred } };
@@ -1529,13 +1530,14 @@ private:
    // Visit all tracks satisfying a predicate, const access
    template <
       typename TrackType = const Track,
+      typename Tag = OldTrackIterTag,
       typename Pred =
-         typename TrackIterRange<TrackType, OldTrackIterTag>
+         typename TrackIterRange<TrackType, Tag>
             ::iterator::FunctionType
    >
       auto Tracks( const Pred &pred = {} ) const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange<TrackType, OldTrackIterTag>
+            TrackIterRange<TrackType, Tag>
          >
    {
       auto b = const_cast<TrackList*>(this)->getBegin();
@@ -1546,8 +1548,8 @@ private:
    Track *GetPrev(Track * t, bool linked = false) const;
    Track *GetNext(Track * t, bool linked = false) const;
    
-   template < typename TrackType >
-      TrackIter<TrackType, OldTrackIterTag>
+   template <typename TrackType, typename Tag = OldTrackIterTag>
+      TrackIter<TrackType, Tag>
          MakeTrackIterator( TrackNodePointer iter ) const
    {
       auto b = const_cast<TrackList*>(this)->getBegin();
@@ -1555,8 +1557,8 @@ private:
       return { b, iter, e };
    }
 
-   template < typename TrackType >
-      TrackIter<TrackType, OldTrackIterTag>
+   template <typename TrackType, typename Tag = OldTrackIterTag>
+      TrackIter<TrackType, Tag>
          EndIterator() const
    {
       auto e = const_cast<TrackList*>(this)->getEnd();
