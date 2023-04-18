@@ -196,6 +196,7 @@ public:
       mPrefix.clear();
       mFields.clear();
       mDigits.clear();
+      mFieldConfigs.clear();
 
       mScalingFactor = 1.0;
 
