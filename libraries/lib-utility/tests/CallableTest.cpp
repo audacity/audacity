@@ -129,4 +129,40 @@ TEST_CASE("Compilation")
       TakesNonTypeParameter<f2> t2{};
       // Doesn't work with f3 in C++17
    }
+
+   {
+      // These function objects are of literal types
+      constexpr auto f1 = UniqueMaker<X>();
+      constexpr auto f2 = UniqueMaker<X, int>();
+      // How to get multiple signatures
+      constexpr auto f3 = OverloadSet{ f1, f2 };
+      constexpr auto f4 =
+         UniqueMaker<X, int, std::shared_ptr<X>>();
+
+      {
+         auto p1 = f1();
+         REQUIRE(p1->member == 0);
+         auto p2 = f2(1);
+         REQUIRE(p2->member == 1);
+
+         // Demonstrate move of argument
+         auto p3 = f4(2, move(p2));
+         REQUIRE(p3->member == 2);
+         REQUIRE(!p2);
+
+         // Demonstrate how {} can work as an argument
+         auto p4 = f2({});
+         // auto p4 = f1({}); sorry
+         auto p5 = f1(0); // But this works, f1 is still variadic
+      }
+
+      {
+         auto p1 = f3();
+         REQUIRE(p1->member == 0);
+         auto p2 = f3(1);
+         REQUIRE(p2->member == 1);
+      }
+
+      // generat3ed lambdas won't work as template arguments in C++17
+   }
 }

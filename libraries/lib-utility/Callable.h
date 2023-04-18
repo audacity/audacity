@@ -113,6 +113,19 @@ template<auto Value, typename... Arguments> struct Constantly {
    static decltype(Value) Function (Arguments...) { return Value; }
 };
 
+//! Generate variadic factory functions
+/*!
+ @tparam FixedArgs can be useful to enable initializer-list syntax for an
+ argument, where otherwise type deduction would fail
+ */
+template<typename T, typename... FixedArgs> constexpr auto UniqueMaker() {
+   return [](FixedArgs... fixedArgs, auto&&... args) {
+       return std::make_unique<T>(
+         std::forward<FixedArgs>(fixedArgs)...,
+          std::forward<decltype(args)>(args)...);
+    };
+ }
+
 }
 
 #endif
