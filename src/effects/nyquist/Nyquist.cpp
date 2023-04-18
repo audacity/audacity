@@ -864,7 +864,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          XO("Nyquist Error") );
    }
 
-   std::optional<TrackIterRange<WaveTrack>> pRange;
+   std::optional<TrackIterRange<WaveTrack, OldTrackIterTag>> pRange;
    if (!bOnePassTool)
       pRange.emplace(mOutputTracks->SelectedLeaders<WaveTrack>());
 

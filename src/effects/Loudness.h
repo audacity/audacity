@@ -21,7 +21,7 @@
 #include "Biquad.h"
 #include "EBUR128.h"
 #include "ShuttleAutomation.h"
-#include "Track.h"
+#include "WaveTrack.h"
 
 class wxChoice;
 class wxSimplebook;
@@ -69,12 +69,12 @@ private:
    void AllocBuffers();
    void FreeBuffers();
    bool GetTrackRMS(WaveTrack* track, float& rms);
-   bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
-   void LoadBufferBlock(TrackIterRange<WaveTrack> range,
+   bool ProcessOne(TrackIterRange<WaveTrack, OldTrackIterTag> range, bool analyse);
+   void LoadBufferBlock(TrackIterRange<WaveTrack, OldTrackIterTag> range,
                         sampleCount pos, size_t len);
    bool AnalyseBufferBlock();
    bool ProcessBufferBlock();
-   void StoreBufferBlock(TrackIterRange<WaveTrack> range,
+   void StoreBufferBlock(TrackIterRange<WaveTrack, OldTrackIterTag> range,
                          sampleCount pos, size_t len);
 
    bool UpdateProgress();

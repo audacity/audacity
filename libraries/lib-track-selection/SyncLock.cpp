@@ -158,7 +158,7 @@ std::pair<Track *, Track *> FindSyncLockGroup(  Track *pMember)
 
 }
 
-TrackIterRange< Track > SyncLock::Group( Track *pTrack )
+TrackIterRange<Track, OldTrackIterTag> SyncLock::Group( Track *pTrack )
 {
    auto pList = pTrack->GetOwner();
    auto tracks = FindSyncLockGroup(const_cast<Track*>( pTrack ) );

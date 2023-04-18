@@ -47,10 +47,10 @@ public:
    static bool IsSelectedOrSyncLockSelected( const Track *pTrack );
 
    /*! @pre `pTrack->GetOwner() != nullptr` */
-   static TrackIterRange< Track > Group( Track *pTrack );
+   static TrackIterRange<Track, OldTrackIterTag> Group( Track *pTrack );
 
    /*! @copydoc Group */
-   static TrackIterRange< const Track > Group( const Track *pTrack )
+   static TrackIterRange<const Track, OldTrackIterTag> Group( const Track *pTrack )
    {
       return Group(const_cast<Track*>(pTrack)).Filter<const Track>();
    }

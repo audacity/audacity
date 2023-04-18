@@ -24,7 +24,6 @@
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "ShuttleGui.h"
-#include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "ProgressDialog.h"
 
@@ -380,7 +379,7 @@ bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
+bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack, OldTrackIterTag> range, bool analyse)
 {
    WaveTrack* track = *range.begin();
 
@@ -433,7 +432,7 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
    return true;
 }
 
-void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
+void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack, OldTrackIterTag> range,
                                      sampleCount pos, size_t len)
 {
    // Get the samples from the track and put them in the buffer
@@ -477,7 +476,7 @@ bool EffectLoudness::ProcessBufferBlock()
    return true;
 }
 
-void EffectLoudness::StoreBufferBlock(TrackIterRange<WaveTrack> range,
+void EffectLoudness::StoreBufferBlock(TrackIterRange<WaveTrack, OldTrackIterTag> range,
                                       sampleCount pos, size_t len)
 {
    int idx = 0;

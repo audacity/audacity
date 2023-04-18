@@ -540,7 +540,7 @@ void TrackList::ResizingEvent(TrackNodePointer node)
 }
 
 auto TrackList::EmptyRange() const
-   -> TrackIterRange< Track >
+   -> TrackIterRange<Track, OldTrackIterTag>
 {
    auto it = const_cast<TrackList*>(this)->getEnd();
    return {
@@ -550,7 +550,7 @@ auto TrackList::EmptyRange() const
 }
 
 auto TrackList::FindLeader( Track *pTrack )
-   -> TrackIter< Track >
+   -> TrackIter<Track, OldTrackIterTag>
 {
    auto iter = Find(pTrack);
    while( *iter && ! ( *iter )->IsLeader() )

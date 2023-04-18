@@ -14,9 +14,8 @@ Paul Licameli split from Mix.h
 
 #include "Mix.h"
 #include "SampleFormat.h"
-#include "Track.h"
+#include "WaveTrack.h"
 
-class WaveTrack;
 class WaveTrackFactory;
 
 #include <memory>
@@ -38,7 +37,7 @@ class WaveTrackFactory;
  * mono channel or a stereo pair); else the unique track's name is copied
  */
 void EFFECTS_API MixAndRender(
-   const TrackIterRange<const WaveTrack> &trackRange,
+   const TrackIterRange<const WaveTrack, OldTrackIterTag> &trackRange,
    const Mixer::WarpOptions &warpOptions,
    const wxString &newTrackName,
    WaveTrackFactory *factory,

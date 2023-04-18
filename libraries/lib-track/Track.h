@@ -863,7 +863,9 @@ template<typename T>
       return nullptr;
 }
 
-template < typename TrackType > struct TrackIterRange;
+struct OldTrackIterTag{};
+
+template<typename TrackType, typename Tag, typename> struct TrackIterRange;
 
 //! Iterator over only members of a TrackList of the specified subtype, optionally filtered by a predicate; past-end value dereferenceable, to nullptr
 /*! Does not suffer invalidation when an underlying std::list iterator is deleted, provided that is not
@@ -872,10 +874,13 @@ template < typename TrackType > struct TrackIterRange;
     The filtering predicate is tested only when the iterator is constructed or advanced.
  
     @tparam TrackType Track or a subclass, maybe const-qualified
+    @tparam Tag transitional, for type distinction between iterators over
+       leaders only and (to be eliminated) iterators that may visit channels
 */
-template <
-   typename TrackType
-> class TrackIter
+template<typename TrackType, typename Tag,
+   typename sfinae = std::enable_if_t<std::is_base_of_v<Track, TrackType>>
+>
+class TrackIter
    : public ValueIterator< TrackType *, std::bidirectional_iterator_tag >
 {
 public:
@@ -917,7 +922,7 @@ public:
             std::is_base_of_v< TrackType, TrackType2 > &&
                (!std::is_const_v<TrackType> ||
                  std::is_const_v<TrackType2>),
-            TrackIter< TrackType2 >
+            TrackIter<TrackType2, Tag>
          >
    {
       return { this->mBegin, this->mIter, this->mEnd, this->mPred };
@@ -1024,7 +1029,7 @@ private:
    }
 
    //! This friendship is needed in TrackIterRange::StartingWith and TrackIterRange::EndingAfter()
-   friend TrackIterRange< TrackType >;
+   friend TrackIterRange<TrackType, Tag, void>;
 
    TrackNodePointer
       mBegin, //!< Allows end of reverse iteration to be detected without comparison to other TrackIter
@@ -1034,16 +1039,20 @@ private:
 };
 
 //! Range between two @ref TrackIter "TrackIters", usable in range-for statements, and with Visit member functions
-template <
-   typename TrackType // Track or a subclass, maybe const-qualified
-> struct TrackIterRange
-   : public IteratorRange< TrackIter< TrackType > >
+/*!
+ @tparam TrackType Track or a subclass, maybe const-qualified
+ @tparam Tag transitional, for type distinction between iterators over
+ leaders only and (to be eliminated) iterators that may visit channels
+ */
+template <typename TrackType, typename Tag,
+   typename sfinae = std::enable_if_t<std::is_base_of_v<Track, TrackType>>
+>
+struct TrackIterRange
+   : public IteratorRange<TrackIter<TrackType, Tag>>
 {
-   TrackIterRange
-      ( const TrackIter< TrackType > &begin,
-        const TrackIter< TrackType > &end )
-         : IteratorRange< TrackIter< TrackType > >
-            ( begin, end )
+   TrackIterRange(const TrackIter<TrackType, Tag> &begin,
+      const TrackIter<TrackType, Tag> &end
+   )  : IteratorRange<TrackIter<TrackType, Tag>>{ begin, end }
    {}
 
    // Conjoin the filter predicate with another predicate
@@ -1052,7 +1061,7 @@ template <
       TrackIterRange operator + ( const Predicate2 &pred2 ) const
    {
       const auto &pred1 = this->first.GetPredicate();
-      using Function = typename TrackIter<TrackType>::FunctionType;
+      using Function = typename TrackIter<TrackType, Tag>::FunctionType;
       const auto &newPred = pred1
          ? Function{ [=] (typename Function::argument_type track) {
             return pred1(track) && pred2(track);
@@ -1092,7 +1101,7 @@ template <
    }
 
    template< typename TrackType2 >
-      TrackIterRange< TrackType2 > Filter() const
+      TrackIterRange<TrackType2, Tag> Filter() const
    {
       return {
          this-> first.template Filter< TrackType2 >(),
@@ -1260,8 +1269,8 @@ class TRACK_API TrackList final
    // Iteration
 
    // Hide the inherited begin() and end()
-   using iterator = TrackIter<Track>;
-   using const_iterator = TrackIter<const Track>;
+   using iterator = TrackIter<Track, OldTrackIterTag>;
+   using const_iterator = TrackIter<const Track, OldTrackIterTag>;
    using value_type = Track *;
    iterator begin() { return Any().begin(); }
    iterator end() { return Any().end(); }
@@ -1273,7 +1282,7 @@ class TRACK_API TrackList final
    //! Turn a pointer into a TrackIter (constant time); get end iterator if this does not own the track
    template < typename TrackType = Track >
       auto Find(Track *pTrack)
-         -> TrackIter< TrackType >
+         -> TrackIter<TrackType, OldTrackIterTag>
    {
       if (!pTrack || pTrack->GetOwner().get() != this)
          return EndIterator<TrackType>();
@@ -1286,7 +1295,7 @@ class TRACK_API TrackList final
    template < typename TrackType = const Track >
       auto Find(const Track *pTrack) const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIter< TrackType >
+            TrackIter<TrackType, OldTrackIterTag>
          >
    {
       if (!pTrack || pTrack->GetOwner().get() != this)
@@ -1299,9 +1308,9 @@ class TRACK_API TrackList final
    // return the track itself; else return the first channel of its group --
    // in either case as an iterator that will only visit other leader tracks.
    // (Generalizing away from the assumption of at most stereo)
-   TrackIter< Track > FindLeader( Track *pTrack );
+   TrackIter<Track, OldTrackIterTag> FindLeader( Track *pTrack );
 
-   TrackIter< const Track >
+   TrackIter<const Track, OldTrackIterTag>
       FindLeader( const Track *pTrack ) const
    {
       return const_cast<TrackList*>(this)->
@@ -1311,7 +1320,7 @@ class TRACK_API TrackList final
 
    template < typename TrackType = Track >
       auto Any()
-         -> TrackIterRange< TrackType >
+         -> TrackIterRange<TrackType, OldTrackIterTag>
    {
       return Tracks< TrackType >();
    }
@@ -1319,7 +1328,7 @@ class TRACK_API TrackList final
    template < typename TrackType = const Track >
       auto Any() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange< TrackType >
+            TrackIterRange<TrackType, OldTrackIterTag>
          >
    {
       return Tracks< TrackType >();
@@ -1328,7 +1337,7 @@ class TRACK_API TrackList final
    // Abbreviating some frequently used cases
    template < typename TrackType = Track >
       auto Selected()
-         -> TrackIterRange< TrackType >
+         -> TrackIterRange<TrackType, OldTrackIterTag>
    {
       return Tracks< TrackType >( &Track::IsSelected );
    }
@@ -1336,7 +1345,7 @@ class TRACK_API TrackList final
    template < typename TrackType = const Track >
       auto Selected() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange< TrackType >
+            TrackIterRange<TrackType, OldTrackIterTag>
          >
    {
       return Tracks< TrackType >( &Track::IsSelected );
@@ -1345,7 +1354,7 @@ class TRACK_API TrackList final
 
    template < typename TrackType = Track >
       auto Leaders()
-         -> TrackIterRange< TrackType >
+         -> TrackIterRange<TrackType, OldTrackIterTag>
    {
       return Tracks< TrackType >( &Track::IsLeader );
    }
@@ -1353,7 +1362,7 @@ class TRACK_API TrackList final
    template < typename TrackType = const Track >
       auto Leaders() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange< TrackType >
+            TrackIterRange<TrackType, OldTrackIterTag>
          >
    {
       return Tracks< TrackType >( &Track::IsLeader );
@@ -1362,7 +1371,7 @@ class TRACK_API TrackList final
 
    template < typename TrackType = Track >
       auto SelectedLeaders()
-         -> TrackIterRange< TrackType >
+         -> TrackIterRange<TrackType, OldTrackIterTag>
    {
       return Tracks< TrackType >( &Track::IsSelectedLeader );
    }
@@ -1370,7 +1379,7 @@ class TRACK_API TrackList final
    template < typename TrackType = const Track >
       auto SelectedLeaders() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange< TrackType >
+            TrackIterRange<TrackType, OldTrackIterTag>
          >
    {
       return Tracks< TrackType >( &Track::IsSelectedLeader );
@@ -1379,7 +1388,7 @@ class TRACK_API TrackList final
 
    template<typename TrackType>
       static auto SingletonRange( TrackType *pTrack )
-         -> TrackIterRange< TrackType >
+         -> TrackIterRange<TrackType, OldTrackIterTag>
    {
       return pTrack->GetOwner()->template Any<TrackType>()
          .StartingWith( pTrack ).EndingAfter( pTrack );
@@ -1391,8 +1400,8 @@ private:
    Track *DoAdd(const std::shared_ptr<Track> &t);
 
    template< typename TrackType, typename InTrackType >
-      static TrackIterRange< TrackType >
-         Channels_( TrackIter< InTrackType > iter1 )
+      static TrackIterRange<TrackType, OldTrackIterTag>
+         Channels_( TrackIter<InTrackType, OldTrackIterTag> iter1 )
    {
       // Assume iterator filters leader tracks
       if (*iter1) {
@@ -1415,7 +1424,7 @@ public:
    // Find an iterator range of channels including the given track.
    template< typename TrackType >
       static auto Channels( TrackType *pTrack )
-         -> TrackIterRange< TrackType >
+         -> TrackIterRange<TrackType, OldTrackIterTag>
    {
       return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
    }
@@ -1507,10 +1516,11 @@ private:
    template <
       typename TrackType = Track,
       typename Pred =
-         typename TrackIterRange< TrackType >::iterator::FunctionType
+         typename TrackIterRange<TrackType, OldTrackIterTag>
+            ::iterator::FunctionType
    >
       auto Tracks( const Pred &pred = {} )
-         -> TrackIterRange< TrackType >
+         -> TrackIterRange<TrackType, OldTrackIterTag>
    {
       auto b = getBegin(), e = getEnd();
       return { { b, b, e, pred }, { b, e, e, pred } };
@@ -1520,11 +1530,12 @@ private:
    template <
       typename TrackType = const Track,
       typename Pred =
-         typename TrackIterRange< TrackType >::iterator::FunctionType
+         typename TrackIterRange<TrackType, OldTrackIterTag>
+            ::iterator::FunctionType
    >
       auto Tracks( const Pred &pred = {} ) const
          -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange< TrackType >
+            TrackIterRange<TrackType, OldTrackIterTag>
          >
    {
       auto b = const_cast<TrackList*>(this)->getBegin();
@@ -1536,7 +1547,7 @@ private:
    Track *GetNext(Track * t, bool linked = false) const;
    
    template < typename TrackType >
-      TrackIter< TrackType >
+      TrackIter<TrackType, OldTrackIterTag>
          MakeTrackIterator( TrackNodePointer iter ) const
    {
       auto b = const_cast<TrackList*>(this)->getBegin();
@@ -1545,14 +1556,14 @@ private:
    }
 
    template < typename TrackType >
-      TrackIter< TrackType >
+      TrackIter<TrackType, OldTrackIterTag>
          EndIterator() const
    {
       auto e = const_cast<TrackList*>(this)->getEnd();
       return { e, e, e };
    }
 
-   TrackIterRange< Track > EmptyRange() const;
+   TrackIterRange<Track, OldTrackIterTag> EmptyRange() const;
 
    bool isNull(TrackNodePointer p) const
    { return (p.second == this && p.first == ListOfTracks::end())

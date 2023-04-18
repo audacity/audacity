@@ -13,12 +13,11 @@ Paul Licameli split from Mix.cpp
 #include "BasicUI.h"
 #include "Mix.h"
 #include "RealtimeEffectList.h"
-#include "WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
-void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
+void MixAndRender(const TrackIterRange<const WaveTrack, OldTrackIterTag> &trackRange,
    const Mixer::WarpOptions &warpOptions,
    const wxString &newTrackName,
    WaveTrackFactory *trackFactory,
