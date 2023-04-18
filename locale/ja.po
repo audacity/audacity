@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-16 17:34+0900\n"
+"PO-Revision-Date: 2023-04-18 17:38+0900\n"
 "Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
 "Language-Team: Atsushi YOSHIDA, Phroneris, SakiPapa\n"
 "Language: ja\n"
@@ -119,7 +119,7 @@ msgstr "両デバイスがそろわないと、相互のサンプリング周波
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Received %d while opening devices\n"
-msgstr "デバイスを開く際にエラー %d が生じました\n"
+msgstr "デバイスを開く際にエラー %d が起きました\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Unable to open Portmixer\n"
@@ -181,7 +181,7 @@ msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
 msgstr ""
-"録音デバイスを開く際にエラーが発生しました。\n"
+"録音デバイスを開く際にエラーが起きました。\n"
 "エラーコード: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-effects/EffectBase.cpp
@@ -302,7 +302,7 @@ msgid ""
 "Error opening sound device.\n"
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
-"サウンドデバイスを開く際にエラーが発生しました。\n"
+"サウンドデバイスを開く際にエラーが起きました。\n"
 "オーディオホスト、再生デバイス、プロジェクトのサンプリング周波数を変えてくだ"
 "さい。"
 
@@ -375,7 +375,7 @@ msgstr "%s にあるファイルを開くことができません。"
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity failed to read from a file in %s."
-msgstr "%s にあるファイルを読み込むことができません。"
+msgstr "%s にあるファイルを読むことができません。"
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -1469,7 +1469,7 @@ msgstr "プロジェクトファイルを開けません"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
-msgstr "プロジェクトファイルから自動保存情報を除去できませんでした。"
+msgstr "プロジェクトファイルから自動保存情報を削除できませんでした。"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
@@ -1520,7 +1520,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"自動保存情報を除去できません。\n"
+"自動保存情報を削除できません。\n"
 "ストレージデバイスの空き容量が不足していると思われます。\n"
 "\n"
 "%s"
@@ -3290,7 +3290,7 @@ msgstr "録音/再生ヘッドをピン留め（オン/オフ）(&H)"
 #: src/AudacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
-msgstr "%s を除去できません"
+msgstr "%s を削除できません"
 
 #: src/AudacityApp.cpp
 msgid "Failed!"
@@ -3322,7 +3322,7 @@ msgid ""
 msgstr ""
 "%s が見つかりません。\n"
 "\n"
-"最近使ったファイルの一覧から除去しました。"
+"最近使ったファイルの一覧から削除しました。"
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
@@ -3509,7 +3509,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
-msgstr "起動時に回復不能なエラーが発生しました"
+msgstr "起動時に回復不能なエラーが起きました"
 
 # ja: audacity --help で出る説明
 #. i18n-hint: This controls the number of bytes that Audacity will
@@ -3909,7 +3909,7 @@ msgstr "キャンセル(&C)"
 
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
-msgstr "除去(&V)"
+msgstr "削除(&V)"
 
 #: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "&Rename..."
@@ -4602,7 +4602,7 @@ msgstr "非圧縮ファイルをプロジェクトにコピー（安全）(&C)"
 
 #: src/FileFormats.cpp
 msgid "&Read uncompressed files from original location (faster)"
-msgstr "非圧縮ファイルを元の場所から読み込む（高速）(&R)"
+msgstr "非圧縮ファイルを元の場所から読む（高速）(&R)"
 
 #: src/FileFormats.cpp
 msgid "&Copy all audio into project (safest)"
@@ -4899,8 +4899,8 @@ msgid ""
 msgstr ""
 "Audacity は互換性が無く読み込みできないプラグインを %d 個見つけました。停止や"
 "クラッシュを防ぐため、これらのプラグインを使用停止にしました。どうしても使用"
-"したい場合には、「プラグインを管理」でプラグインを有効にすることができます。"
-"そうでなければ「続ける」を選択してください。"
+"したい場合には、［プラグインを管理］でプラグインを有効にすることができます。"
+"そうでなければ［続ける］を選択してください。"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -5048,7 +5048,7 @@ msgstr "カラオケ(&K)"
 
 #: src/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "MIDI I/O レイヤーの初期化にエラーが発生しました。\n"
+msgstr "MIDI I/O レイヤーの初期化にエラーが起きました。\n"
 
 #: src/MIDIPlay.cpp
 msgid ""
@@ -5684,7 +5684,7 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
-msgstr "警告: 自動復旧に問題が発生しました"
+msgstr "警告: 自動復旧に問題が起きました"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -5727,6 +5727,15 @@ msgid ""
 "\n"
 "Save anyway?"
 msgstr ""
+"プロジェクトの内容が空になりました。\n"
+"このまま保存すると、トラックの無いプロジェクトとなります。\n"
+"\n"
+"以前に開いたトラックを保存する方法：\n"
+"［いいえ］をクリックし、すべてのトラックが開くまで\n"
+"［編集］>［元に戻す］を繰り返してから、\n"
+"［ファイル］>［プロジェクトを保存］を実行してください。\n"
+"\n"
+"本当に保存してよろしいですか?"
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Empty Project"
@@ -5744,7 +5753,7 @@ msgid ""
 msgstr ""
 "プロジェクトのサイズが、保存先ストレージの空き容量を上回りました。\n"
 "\n"
-"より空き容量に余裕のある、他のストレージを選択してください。"
+"より空き容量に余裕がある、他のストレージを選択してください。"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -6063,14 +6072,14 @@ msgstr "%s（未検出）"
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Removed %s from %s"
-msgstr "「%s」を「%s」から除去"
+msgstr "「%s」を「%s」から削除"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Remove %s"
-msgstr "%s を除去"
+msgstr "%s を削除"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
@@ -6454,7 +6463,7 @@ msgstr "追加(&A)"
 
 #: src/TagsEditor.cpp
 msgid "&Remove"
-msgstr "除去(&R)"
+msgstr "削除(&R)"
 
 #: src/TagsEditor.cpp
 msgid "Genres"
@@ -6677,7 +6686,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"録音ファイルの保存時にエラーが発生しました。"
+"録音ファイルの保存時にエラーが起きました。"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6699,7 +6708,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"録音のエクスポート時にエラーが発生しました。"
+"録音のエクスポート時にエラーが起きました。"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6949,20 +6958,20 @@ msgstr "クリック＆ドラッグしてトラックの大きさを変更。"
 
 #: src/TrackUtilities.cpp
 msgid "Removed audio track(s)"
-msgstr "除去したオーディオトラック"
+msgstr "削除したオーディオトラック"
 
 #: src/TrackUtilities.cpp
 msgid "Remove Track"
-msgstr "トラックを除去"
+msgstr "トラックを削除"
 
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "トラック「%s」を除去しました"
+msgstr "トラック「%s」を削除しました"
 
 #: src/TrackUtilities.cpp
 msgid "Track Remove"
-msgstr "トラックを除去"
+msgstr "トラックを削除"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/TrackUtilities.cpp
@@ -7254,14 +7263,14 @@ msgid ""
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
 msgstr ""
-"以下のコマンドのショートカットを除去しました。\n"
+"以下のコマンドのショートカットを削除しました。\n"
 "このバージョンでは該当コマンドのデフォルトショートカットが新設または変更され"
 "ており、それが過去に他のコマンドに割り当てたショートカットと競合してしまうた"
 "めです。"
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr "ショートカットは除去されています"
+msgstr "ショートカットは削除されています"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -7767,7 +7776,7 @@ msgstr "追加"
 #: src/commands/SelectCommand.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
-msgstr "除去"
+msgstr "削除"
 
 #: src/commands/SelectCommand.cpp
 msgid "First Track:"
@@ -8375,7 +8384,7 @@ msgstr "速度を変更(&G)"
 # ja: 説明
 #: src/effects/ChangeSpeed.cpp
 msgid "Changes the speed of a track, also changing its pitch"
-msgstr "トラックの再生速度を変更し、同時にピッチも変化します"
+msgstr "トラックの再生速度を変更します。ピッチも変化します"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed, affecting both Tempo and Pitch"
@@ -8518,7 +8527,7 @@ msgstr "クリックノイズを除去(&K)"
 # ja: 説明
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "オーディオトラックのクリックノイズを除去します"
+msgstr "オーディオトラックのクリックノイズを削除します"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -9610,7 +9619,7 @@ msgid ""
 "Error message says:\n"
 "%s"
 msgstr ""
-"EQ 曲線ファイルの読み込みにエラーが発生しました:\n"
+"EQ 曲線ファイルの読み込みにエラーが起きました:\n"
 "%s\n"
 "エラーメッセージ:\n"
 "%s"
@@ -10035,7 +10044,7 @@ msgstr "ノイズを低減(&N)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "テープノイズやハムなどのバックグランドノイズを除去します"
+msgstr "テープノイズやハムなどのバックグランドノイズを削除します"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Steps per block are too few for the window types."
@@ -10254,16 +10263,16 @@ msgstr "ノイズを除去"
 #: src/effects/NoiseRemoval.cpp
 msgid "Removes constant background noise such as fans, tape noise, or hums"
 msgstr ""
-"扇風機やテープノイズ、ハムなどの定常的なバックグランドノイズを除去します"
+"扇風機やテープノイズ、ハムなどの定常的なバックグランドノイズを削除します"
 
 #: src/effects/NoiseRemoval.cpp
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
 msgstr ""
-"フィルタリングしたいオーディオをすべて選択し、除去の程度を選択、最後に［OK］"
-"を\n"
-"クリックしてノイズを除去します。\n"
+"フィルタリングしたいオーディオをすべて選択し、削除する程度を選択、最後に"
+"［OK］を\n"
+"クリックしてノイズを削除します。\n"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise re&duction (dB):"
@@ -10287,7 +10296,7 @@ msgstr "アタック/ディケイ時間"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Re&move"
-msgstr "除去(&M)"
+msgstr "削除(&M)"
 
 # ja: 独自アクセスキー
 #: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
@@ -10356,7 +10365,6 @@ msgid "N&ormalize stereo channels independently"
 msgstr "ステレオチャンネルごとにノーマライズ(&O)"
 
 # ja: 独自アクセスキー
-# ja: 連続的伸縮は「伸縮」なのに対しこちらは「ストレッチ」なので、特別に同じグループになるようまとめる。
 #: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
 msgid "Paulstretch"
 msgstr "Paul ストレッチ(&S)"
@@ -10874,7 +10882,6 @@ msgid "Mixing down to mono"
 msgstr "モノラルにミックスダウンしています"
 
 # ja: 独自アクセスキー
-# ja: Paul ストレッチは「ストレッチ」なのに対しこちらは「伸縮」なので、特別に同じグループになるようまとめる。
 #: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
 msgid "Sliding Stretch"
 msgstr "連続的伸縮(&H)"
@@ -10998,7 +11005,7 @@ msgstr "過剰な無音を圧縮"
 # ja: 独自アクセスキー
 #: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
-msgstr "無音を切り詰める(&U)"
+msgstr "無音を切り詰め(&U)"
 
 # ja: 説明
 #: src/effects/TruncSilence.cpp
@@ -12080,8 +12087,7 @@ msgstr ""
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
-"FFmpeg : エラー - オーディオ FIFO から読み込むためのバッファーを確保できませ"
-"ん。"
+"FFmpeg : エラー - オーディオ FIFO から読むためのバッファーを確保できません。"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
@@ -13271,7 +13277,7 @@ msgstr "次の %lld ファイルのエクスポートに成功しました。"
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Something went wrong after exporting the following %lld file(s)."
-msgstr "次の %lld ファイルのエクスポート後、問題が生じました。"
+msgstr "次の %lld ファイルのエクスポート後、問題が起きました。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -13286,7 +13292,7 @@ msgstr "エクスポートは次の %lld ファイルの後に停止しました
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Something went really wrong after exporting the following %lld file(s)."
-msgstr "次の %lld ファイルのエクスポート後、重大な問題が生じました。"
+msgstr "次の %lld ファイルのエクスポート後、重大な問題が起きました。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -13442,7 +13448,7 @@ msgid ""
 "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
 msgstr ""
-"ファイル %s の書き込み中にエラーが発生しました（ストレージに空きはあります"
+"ファイル %s の書き込み中にエラーが起きました（ストレージに空きはあります"
 "か?）。\n"
 "Libsndfile メッセージ: %s"
 
@@ -13949,7 +13955,7 @@ msgid ""
 "\n"
 "Inserting silence."
 msgstr ""
-"「%s」の処理中にエラーが発生しました\n"
+"「%s」の処理中にエラーが起きました\n"
 "\n"
 "無音を挿入します。"
 
@@ -14738,7 +14744,7 @@ msgstr "複製(&A)"
 
 #: src/menus/EditMenus.cpp
 msgid "R&emove Special"
-msgstr "特殊な除去(&E)"
+msgstr "特殊な削除(&E)"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
@@ -15822,7 +15828,7 @@ msgstr ""
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
-msgstr "整列処理中に内部エラーが発生しました。"
+msgstr "整列処理中に内部エラーが起きました。"
 
 #: src/menus/TrackMenus.cpp
 msgid "Tracks sorted by time"
@@ -15870,7 +15876,7 @@ msgstr "再サンプリング(&R)..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Remo&ve Tracks"
-msgstr "トラックを除去(&V)"
+msgstr "トラックを削除(&V)"
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute"
@@ -15942,7 +15948,7 @@ msgstr "トラックと選択範囲を移動(&C)"
 
 #: src/menus/TrackMenus.cpp
 msgid "S&ort Tracks"
-msgstr "トラックの並べ替え(&O)"
+msgstr "トラックを並べ替え(&O)"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Start Time"
@@ -17043,7 +17049,7 @@ msgid ""
 msgstr ""
 "\n"
 "インポートしたファイルには以下のコマンドは記載されていませんが、他の新しい"
-"ショートカットと競合するため、これらのショートカットを除去しました。\n"
+"ショートカットと競合するため、これらのショートカットを削除しました。\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -18200,11 +18206,11 @@ msgstr "オーディオ環境設定(&P)..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
-msgstr "1(モノラル）録音チャンネル"
+msgstr "1（モノラル）録音チャンネル"
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "2 (Stereo) Recording Channels"
-msgstr "2(ステレオ）録音チャンネル"
+msgstr "2（ステレオ）録音チャンネル"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that manages the audio devices
@@ -18600,7 +18606,7 @@ msgstr "コンボボックスにスナップ"
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
 msgid "&Snapping Toolbar"
-msgstr "スナップツールバー(&S)"
+msgstr "スナップ ツールバー(&S)"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18938,7 +18944,7 @@ msgstr "伸縮"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
-msgstr "左クリックして展開、右クリックして除去"
+msgstr "左クリックして展開、右クリックして削除"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to merge clips"
@@ -18963,7 +18969,7 @@ msgstr "展開"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
-msgstr "カットラインを除去しました"
+msgstr "カットラインを削除しました"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -21332,7 +21338,7 @@ msgstr "振幅（0～1)"
 # ja: 独自アクセスキー
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
-msgstr "サンプリングデータをエクスポート(&E)"
+msgstr "サンプルデータをエクスポート(&E)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -21749,11 +21755,11 @@ msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals: to mono"
-msgstr "ボーカルを除去: モノラル化"
+msgstr "ボーカルを削除: モノラル化"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals"
-msgstr "ボーカルを除去"
+msgstr "ボーカルを削除"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Vocals"
@@ -21765,11 +21771,11 @@ msgstr "ボーカルの分離と位相反転"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center: to mono"
-msgstr "中央音を除去: モノラル化"
+msgstr "中央音を削除: モノラル化"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center"
-msgstr "中央音を除去"
+msgstr "中央音を削除"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Center"
@@ -21828,8 +21834,8 @@ msgid ""
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
 " - 2 本のチャンネルが完全に同一、すなわち両モノラル。\n"
-"                中央の音を除去することはできません。\n"
-"                差があるのなら、それはエンコード時の劣化のためでしょう。"
+"                中央音を削除することはできません。\n"
+"                差があるのなら、それはエンコード時に劣化したためでしょう。"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -21984,7 +21990,7 @@ msgstr "特殊"
 # ja: 独自アクセスキー
 #: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
-msgstr "ボーカルを除去(&O)"
+msgstr "ボーカルを削除(&O)"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
