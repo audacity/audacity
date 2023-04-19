@@ -19,6 +19,7 @@
 #include "lv2/log/log.h"
 #include "lv2/uri-map/uri-map.h"
 
+#include "ComponentInterfaceSymbol.h"
 #include "LV2Symbols.h"
 #include "LV2Preferences.h" // for DEFAULT_BLOCKSIZE
 
@@ -29,7 +30,7 @@ using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
 
 //! Abstraction of a list of features, with a check for satisfaction of
 //! requirements of a given lv2 "subject"
-class LV2FeaturesListBase {
+class LV2_API LV2FeaturesListBase {
 public:
    explicit LV2FeaturesListBase(const LilvPlugin &plug);
    virtual ~LV2FeaturesListBase();
@@ -63,7 +64,7 @@ struct WithBase_t{};
 constexpr WithBase_t WithBase;
 
 //! Extends one (immutable) feature list (whose lifetime contains this one's)
-class ExtendedLV2FeaturesList : public LV2FeaturesListBase {
+class LV2_API ExtendedLV2FeaturesList : public LV2FeaturesListBase {
 public:
    explicit ExtendedLV2FeaturesList(WithBase_t,
       const LV2FeaturesListBase &baseFeatures);
@@ -75,7 +76,7 @@ protected:
    std::vector<LV2_Feature> mFeatures;
 };
 
-class LV2FeaturesList : public LV2FeaturesListBase {
+class LV2_API LV2FeaturesList : public LV2FeaturesListBase {
 public:
    static ComponentInterfaceSymbol GetPluginSymbol(const LilvPlugin &plug);
 

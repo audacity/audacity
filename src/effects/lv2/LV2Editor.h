@@ -23,6 +23,7 @@
 #include <vector>
 
 #include <wx/timer.h>
+#include <wx/weakref.h>
 #include <wx/window.h>
 #include <wx/windowptr.h>
 
@@ -36,6 +37,7 @@ using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
 // plug-ins, so disable warnings
 LV2_DISABLE_DEPRECATION_WARNINGS
 
+class wxButton;
 class wxCheckBox;
 class wxChoice;
 class wxSlider;
@@ -45,14 +47,14 @@ class NumericTextCtrl;
 class LV2EffectMeter;
 class LV2Instance;
 class LV2Wrapper;
-class StatelessPerTrackEffect;
+class StatelessEffectUIServices;
 
 class LV2Editor final : public EffectEditor
    , public wxEvtHandler
    , LV2UIFeaturesList::UIHandler
 {
 public:
-   LV2Editor(const StatelessPerTrackEffect &effect,
+   LV2Editor(const StatelessEffectUIServices &effect, EffectType type,
       const LilvPlugin &plug, LV2Instance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs,
       double sampleRate,

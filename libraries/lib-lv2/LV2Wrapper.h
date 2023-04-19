@@ -41,7 +41,7 @@ using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
 LV2_DISABLE_DEPRECATION_WARNINGS
 
 //! Manager of a handle to an LV2 plug-in instantiation
-class LV2Wrapper final
+class LV2_API LV2Wrapper final
 {
    //! To compel use of the factory
    struct CreateToken{};

@@ -25,10 +25,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
-#include "wxPanelWrapper.h"
-
 class EffectDefinitionInterface;
-class ShuttleGui;
 
 
 namespace LV2Preferences {
@@ -38,36 +35,23 @@ constexpr auto DEFAULT_BLOCKSIZE = 1048576;
 /*! @name Persistent settings that can apply to any LV2 effect
  @{
  */
+LV2_API
 bool GetBufferSize(const EffectDefinitionInterface &effect, int &bufferSize);
+LV2_API
 bool SetBufferSize(const EffectDefinitionInterface &effect, int bufferSize);
 
+LV2_API
 bool GetUseLatency(const EffectDefinitionInterface &effect, bool &useLatency);
+LV2_API
 bool SetUseLatency(const EffectDefinitionInterface &effect, bool useLatency);
 
+LV2_API
 bool GetUseGUI(const EffectDefinitionInterface &effect, bool &useGUI);
+LV2_API
 bool SetUseGUI(const EffectDefinitionInterface &effect, bool useGUI);
 /*!
  @}
 */
-
-class Dialog final : public wxDialogWrapper
-{
-public:
-   explicit Dialog(const EffectDefinitionInterface &effect);
-   virtual ~Dialog();
-
-   void PopulateOrExchange(ShuttleGui &S);
-
-   void OnOk(wxCommandEvent &evt);
-
-private:
-   const EffectDefinitionInterface &mEffect;
-   int mBufferSize{};
-   bool mUseLatency{};
-   bool mUseGUI{};
-
-   DECLARE_EVENT_TABLE()
-};
 }
 
 #endif
