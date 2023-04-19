@@ -115,7 +115,7 @@ template<typename Tag, typename Location> class CollectTypes {
    template<unsigned U, typename Type, typename... Types> struct AccumulateType
       : std::conditional_t<std::is_same_v<Unenumerated, Type>,
          Stop<Types...>,
-         Accumulate<U + 1, Type, Types...>
+         Accumulate<U + 1, Types..., Type>
       >
    {};
    template<unsigned U, typename... Types> struct Accumulate
@@ -745,8 +745,9 @@ private:
          Dispatcher::Switch<Tag, R, ArgumentType,
             // Each track subtype occurs earlier than its base classes in this
             // list of types
-            typename CollectTypes<TrackTypeTag, Tag>::type>
-               ::template test<Function, Functions...>())
+            TypeList::Reverse_t<
+               typename CollectTypes<TrackTypeTag, Tag>::type>
+         >::template test<Function, Functions... >())
    {
       using NominalType = ArgumentType;
    };
@@ -860,7 +861,8 @@ public:
    {
       struct Tag : TrackTypeTag {};
       // Collect all concrete and abstract track types known at compile time
-      using TrackTypes = typename CollectTypes<TrackTypeTag, Tag>::type;
+      using TrackTypes = TypeList::Reverse_t<
+         typename CollectTypes<TrackTypeTag, Tag>::type>;
       // Generate a function that dispatches dynamically on track type
       return DoTypeSwitch<Tag, false, R>(*this, TrackTypes{}, functions...);
    }
@@ -876,7 +878,8 @@ public:
    {
       struct Tag : TrackTypeTag {};
       // Collect all concrete and abstract track types known at compile time
-      using TrackTypes = typename CollectTypes<TrackTypeTag, Tag>::type;
+      using TrackTypes = TypeList::Reverse_t<
+         typename CollectTypes<TrackTypeTag, Tag>::type>;
       // Generate a function that dispatches dynamically on track type
       return DoTypeSwitch<Tag, true, R>(*this, TrackTypes{}, functions...);
    }
