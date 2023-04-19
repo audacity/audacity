@@ -45,12 +45,17 @@ Dial {
       readonly property color innerArcColor: colorWithAlpha(appConfig.fontColor1, 0.5)
       readonly property color dialNeedleColor: appConfig.fontColor1
 
+      property int initialValue: 0
+      property real dragStartX: 0
+      property real dragStartY: 0
+
       function colorWithAlpha(color, alpha) {
          return Qt.rgba(color.r, color.g, color.b, alpha)
       }
    }
 
    onAngleChanged: canvas.requestPaint()
+   onValueChanged: canvas.requestPaint()
 
    background: Canvas {
       id: canvas
@@ -101,5 +106,31 @@ Dial {
 
       transformOrigin: Item.Bottom
       rotation: root.angle
+   }
+
+   MouseArea {
+      id: mouseArea
+      anchors.fill: parent
+      preventStealing: true
+
+      onDoubleClicked: {
+         value = 0
+      }
+
+      onPressed: function(mouse) {
+         prv.initialValue = root.value
+         prv.dragStartX = mouse.x
+         prv.dragStartY = mouse.y
+      }
+
+      onPositionChanged: function(mouse) {
+         let dx = mouse.x - prv.dragStartX
+         let dy = mouse.y - prv.dragStartY
+         let dist = Math.sqrt(dx * dx + dy * dy)
+         let sgn = (dy < dx) ? 1 : -1
+         let newValue = (prv.initialValue + dist * sgn) / 100.0
+
+         root.value = Math.max(root.from, Math.min(newValue, root.to))
+      }
    }
 }
