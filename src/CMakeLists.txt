@@ -53,14 +53,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( USE_AUDIO_UNITS ${${_OPT}use_audio_units} CACHE INTERNAL "" )
 endif()
 
-# Handle Ladspa option
-cmd_option(
-   ${_OPT}use_ladspa
-   "Use LADSPA plug-in support [on, off]"
-   ON
-)
-set( USE_LADSPA ${${_OPT}use_ladspa} CACHE INTERNAL "" )
-
 # Handle VST option
 cmd_option(
    ${_OPT}use_vst
@@ -534,9 +526,12 @@ list( APPEND SOURCES
       # Ladspa Effects
 
       $<$<BOOL:${USE_LADSPA}>:
+         effects/ladspa/LadspaEditor.cpp
+         effects/ladspa/LadspaEditor.h
          effects/ladspa/LadspaEffect.cpp
          effects/ladspa/LadspaEffect.h
-         effects/ladspa/ladspa.h
+	 effects/ladspa/LadspaEffectOptionsDialog.cpp
+	 effects/ladspa/LadspaEffectOptionsDialog.h
       >
 
       # LV2 Effects
@@ -1465,6 +1460,12 @@ endif()
 if (USE_LV2)
    list( APPEND AUDACITY_LIBRARIES
       lib-lv2-interface
+   )
+endif()
+
+if (${_OPT}use_ladspa)
+   list( APPEND AUDACITY_LIBRARIES
+      lib-ladspa-interface
    )
 endif()
 
