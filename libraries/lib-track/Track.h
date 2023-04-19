@@ -54,78 +54,99 @@ inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
 inline bool operator != (const TrackNodePointer &a, const TrackNodePointer &b)
 { return !(a == b); }
 
-namespace {
+//! Standard in C++20
+template<typename T> struct type_identity{ using type = T; };
+
+//! A type excluded from any enumeration
+struct Unenumerated : type_identity<Unenumerated> {};
+
+/*!
+ Inject an unevaluated function, whose overloads will help to define a
+ metafunction from an initial segment of the unsigned integers to distinct
+ types.
+ `Tag` will name an empty structure type to distinguish this enumeration.
+ The macro call must occur at file scope, not within any other namespace.
+ */
+#define BEGIN_TYPE_ENUMERATION(Tag) namespace { \
+   struct Tag{}; \
+   auto enumerateTypes(Tag, Tag, ...) -> Unenumerated; }
 
 //! Empty class which will have subclasses
-struct TrackTypeCountTag{};
+BEGIN_TYPE_ENUMERATION(TrackTypeTag)
 
-/*! Declared but undefined function, whose overloads will define a compile-time
-  function from integers to known sub-types of Track
- */
-auto enumerateTrackTypes(TrackTypeCountTag, ...) -> void;
+namespace {
 
-//! What type is associated with `U` (at the point of instantiation for Tag)?
-template<unsigned U, typename Tag> using EnumeratedTrackType =
-   std::remove_reference_t< decltype( enumerateTrackTypes( Tag{},
-      std::integral_constant<unsigned, U>{} ) ) >;
+//! What type is associated with `U`, at the point of instantiation of the
+//! template specialization?  (Location is a struct type local to a function)
+template<typename Tag, typename Location, unsigned U> using EnumeratedType =
+   typename decltype(enumerateTypes(
+      Tag{}, Location{}, std::integral_constant<unsigned, U>{}))::type;
 
-//! Embedded `value` member counts track types so far declared in the compilation unit
+//! Embedded `value` member counts enumerated types so far declared in the
+//! translation unit, where instantiated for `Location`
 /*!
- @tparam Tag a distinct subclass of TrackTypeCountTag for one point of instantiation of the template
+ @tparam Tag distinguishes different enumerations
+ @tparam Location a distinct subclass of Tag for one point of instantiation of
+ the template
  */
-template<typename Tag>
-class CountTrackTypes {
-   template<unsigned U> struct Stop{
-      static constexpr unsigned value = U; };
-   template<unsigned U> struct Count
-      : std::conditional_t<
-         std::is_void_v<EnumeratedTrackType<U, Tag>>,
-         Stop<U>,
-         Count<U + 1>
-      >
-   {};
+template<typename Tag, typename Location> class CountTypes {
+   template<unsigned U> struct Stop{ static constexpr unsigned value = U; };
+   template<unsigned U> struct Count : std::conditional_t<
+      std::is_same_v<Unenumerated, EnumeratedType<Tag, Location, U>>,
+      Stop<U>,
+      Count<U + 1>
+   > {};
 public:
    static constexpr unsigned value = Count<0>::value;
 };
 
-//! Embedded `type` member is the tuple of track types so far declared in the compilation unit
+//! Embedded `type` member is the tuple of enumerated types so far declared in
+//! the compilation unit at first instantiation for `Location`
 /*!
- Each track subtype occurs earlier than its base classes in the tuple of types
-
- @tparam Tag a distinct subclass of TrackTypeCountTag for one point of instantiation of the template
+ @tparam Tag distinguishes enumerations
+ @tparam Location a structure type inheriting Tag
  */
-template<typename Tag>
-class CollectTrackTypes {
+template<typename Tag, typename Location> class CollectTypes {
    template<typename... Types> struct Stop{
       using type = std::tuple<Types...>; };
+   // This works by mutual recursion of Accumulate and AccumulateType
    template<unsigned U, typename... Types> struct Accumulate;
    template<unsigned U, typename Type, typename... Types> struct AccumulateType
-      : std::conditional_t< std::is_void_v<Type>,
+      : std::conditional_t<std::is_same_v<Unenumerated, Type>,
          Stop<Types...>,
          Accumulate<U + 1, Type, Types...>
       >
    {};
    template<unsigned U, typename... Types> struct Accumulate
-      : AccumulateType<U, EnumeratedTrackType<U, Tag>, Types...>
+      : AccumulateType<U, EnumeratedType<Tag, Location, U>, Types...>
    {};
 public:
    using type = typename Accumulate<0>::type;
 };
 
-//! Implements the ENUMERATE_TRACK_TYPE macro
-template<typename T>
-struct TrackTypeCounter {
-   struct Tag : TrackTypeCountTag {};
-   static constexpr unsigned value = CountTrackTypes<Tag>::value;
+//! Implements the ENUMERATE_TYPE macro
+template<typename Tag, typename T>
+struct TypeCounter {
+   // Generate a type for the location of the macro call
+   struct Location : Tag {};
+   // Count types for this new location, stopping one later than for the
+   // last specialization
+   static constexpr unsigned value = CountTypes<Tag, Location>::value;
+   // value is then used to make a new association for the next TypeCounter
+   // with a previously unseen T
 };
 
 }
 
-//! This macro should be called immediately after each definition of a track subtype
+//! This macro must occur at file scope, not within any other namespace
+#define ENUMERATE_TYPE(Tag, T) namespace { auto enumerateTypes(\
+   Tag, Tag, std::integral_constant<unsigned, TypeCounter<Tag, T>::value>) \
+      -> type_identity<T>; }
+
+//! This macro should be called immediately after the definition of each Track
+//! subclass
 /*! It must occur at file scope, not within any other namespace */
-#define ENUMERATE_TRACK_TYPE(T) namespace { auto enumerateTrackTypes(\
-   TrackTypeCountTag, \
-   std::integral_constant<unsigned, TrackTypeCounter<T>::value>) -> T&; }
+#define ENUMERATE_TRACK_TYPE(T) ENUMERATE_TYPE(TrackTypeTag, T)
 
 // forward declarations, so we can make them friends
 template<typename T>
@@ -720,7 +741,9 @@ private:
    struct Executor< Tag, R, ArgumentType, Function, Functions... >
       : decltype(
          Dispatcher::Switch< Tag, R, ArgumentType,
-            typename CollectTrackTypes<Tag>::type >
+            // Each track subtype occurs earlier than its base classes in the
+            // tuple of types
+            typename CollectTypes<TrackTypeTag, Tag>::type >
                ::template test<Function, Functions... >())
    {
       using NominalType = ArgumentType;
@@ -832,9 +855,9 @@ public:
    >
    R TypeSwitch(const Functions &...functions)
    {
-      struct Tag : TrackTypeCountTag {};
+      struct Tag : TrackTypeTag {};
       // Collect all concrete and abstract track types known at compile time
-      using TrackTypes = typename CollectTrackTypes<Tag>::type;
+      using TrackTypes = typename CollectTypes<TrackTypeTag, Tag>::type;
       TrackTypes *const trackTypes = nullptr;
       // Generate a function that dispatches dynamically on track type
       return DoTypeSwitch<Tag, false, R>(*this, trackTypes, functions...);
@@ -849,9 +872,9 @@ public:
    >
    R TypeSwitch(const Functions &...functions) const
    {
-      struct Tag : TrackTypeCountTag {};
+      struct Tag : TrackTypeTag {};
       // Collect all concrete and abstract track types known at compile time
-      using TrackTypes = typename CollectTrackTypes<Tag>::type;
+      using TrackTypes = typename CollectTypes<TrackTypeTag, Tag>::type;
       TrackTypes *const trackTypes = nullptr;
       // Generate a function that dispatches dynamically on track type
       return DoTypeSwitch<Tag, true, R>(*this, trackTypes, functions...);
