@@ -79,14 +79,15 @@ SnapResult ProjectSnap::SnapTime(double time) const
    if (mSnapMode == SnapMode::SNAP_OFF)
       return { time, false };
 
-   auto& timeSignature = ProjectTimeSignature::Get(mProject);
-   
-   const SnapConfig config { ProjectRate::Get(mProject).GetRate(),
-                       timeSignature.GetTempo(),
-                       { timeSignature.GetUpperTimeSignature(),
-                         timeSignature.GetLowerTimeSignature() } };
-   
-   return SnapFunctionsRegistry::Snap(mSnapTo, config, time, mSnapMode == SnapMode::SNAP_NEAREST);
+   return SnapFunctionsRegistry::Snap(mSnapTo, mProject, time, mSnapMode == SnapMode::SNAP_NEAREST);
+}
+
+SnapResult ProjectSnap::SingleStep(double time, bool upwards) const
+{
+   if (mSnapMode == SnapMode::SNAP_OFF)
+      return { time, false };
+
+   return SnapFunctionsRegistry::SingleStep(mSnapTo, mProject, time, upwards);
 }
 
 static ProjectFileIORegistry::AttributeWriterEntry entry {

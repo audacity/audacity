@@ -15,6 +15,7 @@
 #include <cmath>
 #include <unordered_map>
 
+
 namespace
 {
 const wxString SnapModeKey = L"/Snap/Mode";
@@ -196,14 +197,27 @@ SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
 }
 
 SnapResult SnapFunctionsRegistry::Snap(
-   const Identifier& id, SnapConfig config, double time, bool nearest)
+   const Identifier& id, const AudacityProject& project, double time,
+   bool nearest)
 {
    auto item = Find(id);
 
    if (item == nullptr)
       return SnapResult { time, false };
 
-   return item->snapFunction(config, time, nearest);
+   return item->Snap(project, time, nearest);
+}
+
+SnapResult SnapFunctionsRegistry::SingleStep(
+   const Identifier& id, const AudacityProject& project, double time,
+   bool upwards)
+{
+   auto item = Find(id);
+
+   if (item == nullptr)
+      return SnapResult { time, false };
+
+   return item->SingleStep(project, time, upwards);
 }
 
 SnapRegistryGroup::~SnapRegistryGroup()
@@ -216,24 +230,14 @@ bool SnapRegistryGroup::Transparent() const
 }
 
 SnapRegistryItem::SnapRegistryItem(
-   const Identifier& internalName, const TranslatableString& _label,
-   SnapFunctor _snapFunction)
+   const Identifier& internalName, const TranslatableString& _label)
     : SingleItem { internalName }
     , label { _label }
-    , snapFunction { _snapFunction }
 {
 }
 
 SnapRegistryItem::~SnapRegistryItem()
 {
-}
-
-Registry::BaseItemPtr SnapFunction(
-   const Identifier& functionId, const TranslatableString& label,
-   SnapFunctor functor)
-{
-   return std::make_unique<SnapRegistryItem>(
-      functionId, label, std::move(functor));
 }
 
 SnapRegistryItemRegistrator::SnapRegistryItemRegistrator(
@@ -246,142 +250,103 @@ namespace
 {
 SnapResult SnapWithMultiplier (double value, double multiplier, bool nearest)
 {
+   if (multiplier <= 0.0)
+      return SnapResult { value, false };
+   
    auto result = nearest ? std::round(value * multiplier) / multiplier :
                            std::floor(value * multiplier) / multiplier;
 
    return SnapResult { result, true };
 }
 
-
-SnapFunctor SnapToTime(double multiplier) {
-   return [multiplier](SnapConfig, double value, bool nearest)
-   { return SnapWithMultiplier(value, multiplier, nearest); };
-}
-
-SnapResult SnapToSamples (SnapConfig cfg, double value, bool nearest)
+class ConstantMultiplierSnapItem final : public SnapRegistryItem
 {
-   return SnapWithMultiplier(value, cfg.rate, nearest);
-}
-
-SnapFunctor SnapToFrames(double fps)
-{
-   return [fps](SnapConfig, double value, bool nearest)
-   { return SnapWithMultiplier(value, fps, nearest); };
-}
-
-/*
-   bps = tempo / 60
-   1/lower takes 1/bps
-*/
-
-SnapFunctor SnapToBar ()
-{
-   return [](SnapConfig cfg, double value, bool nearest)
+public:
+   ConstantMultiplierSnapItem(
+      const Identifier& internalName, const TranslatableString& label,
+      double multiplier)
+       : SnapRegistryItem { internalName, label }
+       , mMultiplier { multiplier }
    {
-      // DV: For now, BPM uses quarter notes, i. e. 1/4 = BPM in musical notation
-      const auto quarterDuration = 60.0 / cfg.tempo;
-      const auto beatDuration = quarterDuration * 4.0 / cfg.timeSignature.second;
-      const auto barDuration = beatDuration * cfg.timeSignature.first;
-      const auto multiplier = 1 / barDuration;
+      assert(mMultiplier > 0.0);
+   }
+
+   SnapResult
+   Snap(const AudacityProject&, double time, bool nearest) const override
+   {      
+      return SnapWithMultiplier(time, mMultiplier, nearest);
+   }
+
+   SnapResult SingleStep(
+      const AudacityProject& project, double time, bool upwards) const override
+   {
+      const auto step = (upwards ? 1.0 : -1.0) / mMultiplier;
+      const double result = time + step;
+
+      if (result < 0.0)
+         return { 0.0, false };
       
-      return SnapWithMultiplier(value, multiplier, nearest);
-   };
-}
+      return SnapWithMultiplier(result, mMultiplier, true);
+   }
 
-SnapFunctor SnapToBeat(int divisor)
+private:
+   const double mMultiplier;
+};
+
+class ProjectDependentMultiplierSnapItem final : public SnapRegistryItem
 {
-   return [divisor](SnapConfig cfg, double value, bool nearest)
+public:
+   ProjectDependentMultiplierSnapItem(
+      const Identifier& internalName, const TranslatableString& label,
+      MultiplierFunctor functor)
+       : SnapRegistryItem { internalName, label }
+       , mMultiplierFunctor { std::move(functor) }
    {
-      const auto quarterDuration = 60.0 / cfg.tempo;
-      // DV: It was decided that for the time being,
-      // BPM sets the duration for quarter notes.
-      // For this reason, `cfg.timeSignature.second` is ignored
-      const auto fracDuration = quarterDuration * 4.0 / divisor;
-      const auto multiplier = 1.0 / fracDuration;
+      assert(mMultiplierFunctor);
+   }
 
-      return SnapWithMultiplier(value, multiplier, nearest);
-   };
+   SnapResult
+   Snap(const AudacityProject& project, double time, bool nearest) const override
+   {
+      if (!mMultiplierFunctor)
+         return { time, false };
+      return SnapWithMultiplier(time, mMultiplierFunctor(project), nearest);
+   }
+
+   SnapResult SingleStep(
+      const AudacityProject& project, double time, bool upwards) const override
+   {
+      if (!mMultiplierFunctor)
+         return { time, false };
+      
+      const auto multiplier = mMultiplierFunctor(project);
+      const auto step = (upwards ? 1.0 : -1.0) / multiplier;
+      const double result = time + step;
+
+      if (result < 0.0)
+         return { 0.0, false };
+
+      return SnapWithMultiplier(result, multiplier, true);
+   }
+
+private:
+   const MultiplierFunctor mMultiplierFunctor;
+};
+
 }
 
-SnapFunctor SnapToTriplets(int divisor)
+Registry::BaseItemPtr TimeInvariantSnapFunction(
+   const Identifier& functionId, const TranslatableString& label,
+   MultiplierFunctor functor)
 {
-   return [divisor](SnapConfig cfg, double value, bool nearest)
-   {
-      const auto quarterDuration = 60.0 / cfg.tempo;
-      const auto tripletDivisor = 3 * (divisor / 2);
-      const auto fracDuration = quarterDuration * 4.0 / tripletDivisor;
-      const auto multiplier = 1.0 / fracDuration;
-         
-      return SnapWithMultiplier(value, multiplier, nearest);
-   };
+   return std::make_unique<ProjectDependentMultiplierSnapItem>(
+      functionId, label, std::move(functor));
 }
 
-SnapRegistryItemRegistrator beats {
-   Registry::Placement { {}, { Registry::OrderingHint::Begin } },
-   SnapFunctionGroup(
-      /* i18n-hint: The music theory "beat"*/
-      "beats", XO("Beats"), true,
-      /* i18n-hint: The music theory "bar"*/
-      SnapFunction("bar", XO("Bar"), SnapToBar()),
-      SnapFunction("bar_1_2", XO("1/2"), SnapToBeat(2)),
-      SnapFunction("bar_1_4", XO("1/4"), SnapToBeat(4)),
-      SnapFunction("bar_1_8", XO("1/8"), SnapToBeat(8)),
-      SnapFunction("bar_1_16", XO("1/16"), SnapToBeat(16)),
-      SnapFunction("bar_1_32", XO("1/32"), SnapToBeat(32)),
-      SnapFunction("bar_1_64", XO("1/64"), SnapToBeat(64)),
-      SnapFunction("bar_1_128", XO("1/128"), SnapToBeat(128)))
-};
-
-SnapRegistryItemRegistrator triplets {
-   Registry::Placement { {},
-                         { Registry::OrderingHint::After, "beats" } },
-   SnapFunctionGroup(
-      /* i18n-hint: The music theory "triplet"*/
-      "triplets", XO("Triplets"), true,
-      SnapFunction("triplet_1_2", XO("1/2 (triplets)"), SnapToTriplets(2)),
-      SnapFunction("triplet_1_4", XO("1/4 (triplets)"), SnapToTriplets(4)),
-      SnapFunction("triplet_1_8", XO("1/8 (triplets)"), SnapToTriplets(8)),
-      SnapFunction("triplet_1_16", XO("1/16 (triplets)"), SnapToTriplets(16)),
-      SnapFunction("triplet_1_32", XO("1/32 (triplets)"), SnapToTriplets(32)),
-      SnapFunction("triplet_1_64", XO("1/64 (triplets)"), SnapToTriplets(64)),
-      SnapFunction(
-         "triplet_1_128", XO("1/128 (triplets)"), SnapToTriplets(128)))
-};
-
-SnapRegistryItemRegistrator secondsAndSamples {
-   Registry::Placement { {},
-                         { Registry::OrderingHint::After, "triplets" } },
-   SnapFunctionGroup(
-      "time", XO("Seconds && samples"), false,
-      SnapFunction("seconds", XO("Seconds"), SnapToTime(1.0)),
-      SnapFunction("deciseconds", XO("Deciseconds"), SnapToTime(10.0)),
-      SnapFunction("centiseconds", XO("Centiseconds"), SnapToTime(100.0)),
-      SnapFunction("milliseconds", XO("Milliseconds"), SnapToTime(1000.0)),
-      SnapFunction("samples", XO("Samples"), SnapToSamples))
-};
-
-SnapRegistryItemRegistrator videoFrames {
-   Registry::Placement { {},
-                         { Registry::OrderingHint::After, "time" } },
-   SnapFunctionGroup(
-      "video", XO("Video frames"), false,
-      SnapFunction(
-         "film_24_fps", XO("Film frames (24 fps)"), SnapToFrames(24.0)),
-      SnapFunction(
-         "ntsc_29.97_fps", XO("NTSC frames (29.97 fps)"),
-         SnapToFrames(30.0 / 1.001)),
-      SnapFunction(
-         "ntsc_30_fps", XO("NTSC frames (30 fps)"),
-         SnapToFrames(30.0 / 1.001)),
-      SnapFunction("film_25_fps", XO("PAL frames (25 fps)"), SnapToFrames(25.0)))
-};
-
-SnapRegistryItemRegistrator cdFrames {
-   Registry::Placement { {},
-                         { Registry::OrderingHint::After, "video" } },
-   SnapFunctionGroup(
-      "cd", XO("CD frames"), false,
-      SnapFunction("cd_75_fps", XO("CDDA frames (75 fps)"), SnapToFrames(75.0)))
-};
-
+Registry::BaseItemPtr TimeInvariantSnapFunction(
+   const Identifier& functionId, const TranslatableString& label,
+   double multiplier)
+{
+   return std::make_unique<ConstantMultiplierSnapItem>(
+      functionId, label, multiplier);
 }

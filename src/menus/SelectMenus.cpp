@@ -6,7 +6,6 @@
 #include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "ProjectHistory.h"
-#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
 #include "../ProjectSelectionManager.h"
@@ -24,7 +23,6 @@
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "NumericConverter.h"
 
 // private helper classes and functions
 namespace {
@@ -166,26 +164,19 @@ void SeekWhenAudioActive(double seekStep, wxLongLong &lastSelectionAdjustment)
 double GridMove
 (AudacityProject &project, double t, int minPix)
 {
-   auto &formats = ProjectNumericFormats::Get(project);
+   auto& projectSnap = ProjectSnap::Get(project);
    auto &viewInfo = ViewInfo::Get( project );
-   auto format = formats.GetSelectionFormat();
+   
+   auto result = projectSnap.SingleStep(t, minPix >= 0).time;
 
-   NumericConverter nc(FormatterContext::ProjectContext(project), NumericConverterType_TIME, format, t);
-
-   // Try incrementing/decrementing the value; if we've moved far enough we're
-   // done
-   double result;
-   minPix >= 0 ? nc.Increment() : nc.Decrement();
-   result = nc.GetValue();
-   if (std::abs(viewInfo.TimeToPosition(result) - viewInfo.TimeToPosition(t))
-       >= abs(minPix))
-       return result;
+   if (
+      std::abs(viewInfo.TimeToPosition(result) - viewInfo.TimeToPosition(t)) >=
+      abs(minPix))
+      return result;
 
    // Otherwise, move minPix pixels, then snap to the time.
    result = viewInfo.OffsetTimeByPixels(t, minPix);
-   nc.SetValue(result);
-   result = nc.GetValue();
-   return result;
+   return projectSnap.SnapTime(t).time;
 }
 
 double OffsetTime
