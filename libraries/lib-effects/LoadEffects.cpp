@@ -154,9 +154,9 @@ void BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       if (rediscoverAll ||
          !pm.IsPluginRegistered(path, &pair.second->name.Msgid())
       ){
-         DiscoverPluginsAtPath(path, ignoredErrMsg, [&](PluginProvider *provider, ComponentInterface *ident)
+         DiscoverPluginsAtPath(path, ignoredErrMsg, [&](PluginProvider *provider, ComponentInterface *ident) -> const PluginID&
          {
-            const auto pluginId = PluginManagerInterface::DefaultRegistrationCallback(provider, ident);
+            const auto& pluginId = PluginManagerInterface::DefaultRegistrationCallback(provider, ident);
             if(pair.second->excluded)
                PluginManager::Get().EnablePlugin(pluginId, false);
             return pluginId;
