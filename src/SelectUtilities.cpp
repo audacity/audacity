@@ -276,10 +276,9 @@ void OnSetRegion(AudacityProject &project,
    else
    {
       auto fmt = formats.GetSelectionFormat();
-      auto rate = ProjectRate::Get(project).GetRate();
 
       TimeDialog dlg(&window, dialogTitle,
-         fmt, rate, getValue(), XO("Position"));
+         fmt, project, getValue(), XO("Position"));
 
       if (wxID_OK == dlg.ShowModal())
       {
