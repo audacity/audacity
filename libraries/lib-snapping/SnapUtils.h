@@ -74,22 +74,27 @@ struct SNAPPING_API SnapRegistryGroup :
    const bool transparent;
 };
 
-using SnapFunctor = std::function<SnapResult(const AudacityProject&, double, bool)>;
-
 struct SNAPPING_API SnapRegistryItem : public Registry::SingleItem
 {
    SnapRegistryItem(
-      const Identifier& internalName, const TranslatableString& label,
-      SnapFunctor snapFunction);
+      const Identifier& internalName, const TranslatableString& label);
    ~SnapRegistryItem() override;
 
    const TranslatableString label;
-   const SnapFunctor snapFunction;
+
+   virtual SnapResult Snap(const AudacityProject& project, double time, bool nearest) const = 0;
+   virtual SnapResult SingleStep(const AudacityProject& project, double time, bool upwards) const = 0;
 };
 
-SNAPPING_API Registry::BaseItemPtr SnapFunction(
+SNAPPING_API Registry::BaseItemPtr TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
-   SnapFunctor functor);
+   double multiplier);
+
+using MultiplierFunctor = std::function<double(const AudacityProject&)>;
+
+SNAPPING_API Registry::BaseItemPtr TimeInvariantSnapFunction(
+   const Identifier& functionId, const TranslatableString& label,
+   MultiplierFunctor functor);
 
 template <typename... Args>
 Registry::BaseItemPtr SnapFunctionGroup (
@@ -107,6 +112,9 @@ struct SNAPPING_API SnapFunctionsRegistry final {
    static SnapRegistryItem* Find(const Identifier& id);
 
    static SnapResult Snap(const Identifier& id, const AudacityProject& project, double time, bool nearest);
+   static SnapResult SingleStep(
+      const Identifier& id, const AudacityProject& project, double time,
+      bool upwards);
 };
 
 struct SNAPPING_API SnapRegistryItemRegistrator final :

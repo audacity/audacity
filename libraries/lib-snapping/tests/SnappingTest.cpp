@@ -45,6 +45,37 @@ void BeatsCase(
       Approx(expected));
 }
 
+void TimeStepCase(
+   const AudacityProject& project, const char* format, double time,
+   double expected, bool upwards, bool successful)
+{
+   REQUIRE(
+      SnapFunctionsRegistry::SingleStep(format, project, time, upwards)
+         .snapped == successful);
+   
+   REQUIRE(
+      SnapFunctionsRegistry::SingleStep(format, project, time, upwards).time ==
+      Approx(expected));
+}
+
+void BarStepCase(
+   AudacityProject& project, const char* format, double time,
+   double expected, bool upwards)
+{
+   auto& timeSignature = ProjectTimeSignature::Get(project);
+   
+   timeSignature.SetTempo(60.0);
+   timeSignature.SetUpperTimeSignature(4);
+   timeSignature.SetLowerTimeSignature(4);
+   
+   REQUIRE(SnapFunctionsRegistry::SingleStep(format, project, time, upwards)
+              .snapped);
+
+   REQUIRE(
+      SnapFunctionsRegistry::SingleStep(format, project, time, upwards).time ==
+      Approx(expected));
+}
+
 TEST_CASE("Snapping", "")
 {
    MockedPrefs mockedPrefs;
@@ -105,6 +136,15 @@ TEST_CASE("Snapping", "")
    TimeCase(*project, "samples", 1.1 / 44100, 1.0 / 44100, false);
    TimeCase(*project, "samples", 1.6 / 44100, 2.0 / 44100, true);
    TimeCase(*project, "samples", 1.6 / 44100, 1.0 / 44100, false);
+
+   TimeStepCase(*project, "seconds", 1.0, 2.0, true, true);
+   TimeStepCase(*project, "seconds", 1.0, 0.0, false, true);
+   TimeStepCase(*project, "seconds", 0.5, 0.0, false, false);
+   TimeStepCase(*project, "seconds", 0.4, 1.0, true, true);
+   TimeStepCase(*project, "deciseconds", 1.0, 1.1, true, true);
+   TimeStepCase(*project, "deciseconds", 1.0, 0.9, false, true);
+   TimeStepCase(*project, "samples", 1.0, 1.0 + 1.0 / 44100, true, true);
+   TimeStepCase(*project, "samples", 1.0, 1.0 - 1.0 / 44100, false, true);
 
    BeatsCase(*project, "bar", 1.0, 0.0, true, 3, 4);
    BeatsCase(*project, "bar", 1.0, 0.0, false, 3, 4);
@@ -177,4 +217,9 @@ TEST_CASE("Snapping", "")
    BeatsCase(*project, "triplet_1_4", 1.0, 1 + 1.0 / 3.0, true, 4, 4);
    BeatsCase(*project, "triplet_1_4", 2.0, 2.0, true, 4, 4);
    BeatsCase(*project, "triplet_1_4", 4.0, 4.0, true, 4, 4);
+
+   BarStepCase(*project, "bar", 0.0, 4.0, true);
+   BarStepCase(*project, "bar", 4.0, 0.0, false);
+   BarStepCase(*project, "bar_1_4", 0.0, 1.0, true);
+   BarStepCase(*project, "bar_1_4", 4.0, 3.0, false);
 }
