@@ -46,7 +46,8 @@ typedef uint64_t uintmax_t;
 */
 #endif
 
-#include <stddef.h>
+#include <cstddef>
+#include <cstdint>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -355,10 +356,6 @@ typedef signed short SINT16;
 typedef signed int SINT32;
 typedef float FLOAT32;
 typedef double FLOAT64;
-// added by RBD
-#ifdef __linux__
-#define intptr_t long
-#endif
 
 // The default sampling rate.
 const StkFloat SRATE = 44100.0;
