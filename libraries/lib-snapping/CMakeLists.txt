@@ -12,6 +12,10 @@ set(TARGET lib-snapping)
 set(TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set(SOURCES
+   details/BeatsSnapFunctions.cpp
+   details/FrameSnapFunctions.cpp
+   details/TimeSnapFunctions.cpp
+
    ProjectSnap.cpp
    ProjectSnap.h
    SnapUtils.cpp
