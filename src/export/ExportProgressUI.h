@@ -2,12 +2,21 @@
 
   Audacity: A Digital Audio Editor
 
-  ExportProgressListener.cpp
+  ExportProgressUI.h
 
   Vitaly Sverchinsky
 
 **********************************************************************/
 
-#include "ExportProgressListener.h"
+#pragma once
 
-ExportProgressListener::~ExportProgressListener() { }
+#include <future>
+
+#include "ExportTypes.h"
+
+class ExportPluginDelegate;
+
+namespace ExportProgressUI
+{
+   ExportResult Show(ExportTask exportTask);
+}

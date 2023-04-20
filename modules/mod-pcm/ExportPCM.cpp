@@ -27,10 +27,9 @@
 #include "wxFileNameWrapper.h"
 
 #include "Export.h"
-#include "ExportProgressListener.h"
 #include "ExportOptionsEditor.h"
 
-#include "ExportUtils.h"
+#include "ExportPluginHelpers.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -365,7 +364,7 @@ public:
 
 }
 
-class ExportPCM final : public ExportPluginEx
+class ExportPCM final : public ExportPlugin
 {
 public:
 
@@ -383,8 +382,8 @@ public:
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
    
-   void Export(AudacityProject *project,
-               ExportProgressListener &progressListener,
+   ExportResult Export(AudacityProject *project,
+               ExportPluginDelegate &delegate,
                const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
@@ -499,8 +498,8 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
  * @param subformat Control whether we are doing a "preset" export to a popular
  * file type, or giving the user full control over libsndfile.
  */
-void ExportPCM::Export(AudacityProject *project,
-                       ExportProgressListener &progressListener,
+ExportResult ExportPCM::Export(AudacityProject *project,
+                       ExportPluginDelegate &delegate,
                        const Parameters& parameters,
                        unsigned numChannels,
                        const wxFileNameWrapper &fName,
@@ -511,8 +510,6 @@ void ExportPCM::Export(AudacityProject *project,
                        const Tags *metadata,
                        int subformat)
 {
-   ExportBegin();
-   
    double rate = ProjectRate::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
@@ -533,11 +530,11 @@ void ExportPCM::Export(AudacityProject *project,
 
    default:
       // Retrieve the current format.
-      sf_format = ExportUtils::GetParameterValue(parameters, OptionIDSFType, 0);
+      sf_format = ExportPluginHelpers::GetParameterValue(parameters, OptionIDSFType, 0);
       break;
    }
 
-   sf_format |= ExportUtils::GetParameterValue(parameters, sf_format, 0);
+   sf_format |= ExportPluginHelpers::GetParameterValue(parameters, sf_format, 0);
 
    // If subtype is still not specified, supply a default.
    if (!(sf_format & SF_FORMAT_SUBMASK))
@@ -547,7 +544,7 @@ void ExportPCM::Export(AudacityProject *project,
 
    int fileFormat = sf_format & SF_FORMAT_TYPEMASK;
    
-   bool hasError {false};
+   auto exportResult = ExportResult::Success;
    
    {
       wxFile f;   // will be closed when it goes out of scope
@@ -574,15 +571,13 @@ void ExportPCM::Export(AudacityProject *project,
       // Bug 46.  Trap here, as sndfile.c does not trap it properly.
       if( (numChannels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610) )
       {
-         SetErrorString(XO("GSM 6.10 requires mono"));
-         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-         return;
+         delegate.SetErrorString(XO("GSM 6.10 requires mono"));
+         return ExportResult::Error;
       }
 
       if (sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610) {
-         SetErrorString(XO("WAVEX and GSM 6.10 formats are not compatible"));
-         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-         return;
+         delegate.SetErrorString(XO("WAVEX and GSM 6.10 formats are not compatible"));
+         return ExportResult::Error;
       }
 
       // If we can't export exactly the format they requested,
@@ -594,9 +589,8 @@ void ExportPCM::Export(AudacityProject *project,
       if (!sf_format_check(&info))
          info.format = (info.format & SF_FORMAT_TYPEMASK);
       if (!sf_format_check(&info)) {
-         SetErrorString(XO("Cannot export audio in this format."));
-         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-         return;
+         delegate.SetErrorString(XO("Cannot export audio in this format."));
+         return ExportResult::Error;
       }
       const auto path = fName.GetFullPath();
       if (f.Open(path, wxFile::write)) {
@@ -609,9 +603,8 @@ void ExportPCM::Export(AudacityProject *project,
       }
 
       if (!sf) {
-         SetErrorString(XO("Cannot export audio to %s").Format( path ));
-         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-         return;
+         delegate.SetErrorString(XO("Cannot export audio to %s").Format( path ));
+         return ExportResult::Error;
       }
       // Retrieve tags if not given a set
       if (metadata == NULL)
@@ -622,8 +615,7 @@ void ExportPCM::Export(AudacityProject *project,
       if (fileFormat != SF_FORMAT_WAV &&
           fileFormat != SF_FORMAT_WAVEX) {
          if (!AddStrings(project, sf.get(), metadata, sf_format)) {
-            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-            return;
+            return ExportResult::Error;
          }
       }
 
@@ -646,8 +638,7 @@ void ExportPCM::Export(AudacityProject *project,
          if( byteCount > 4.295e9)
          {
             ReportTooBigError( wxTheApp->GetTopWindow() );
-            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-            return;
+            return ExportResult::Error;
          }
       }
       size_t maxBlockLen = 44100 * 5;
@@ -659,16 +650,16 @@ void ExportPCM::Export(AudacityProject *project,
          }
 
          wxASSERT(info.channels >= 0);
-         auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
+         auto mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
                                   t0, t1,
                                   info.channels, maxBlockLen, true,
                                   rate, format, mixerSpec);
          
-         SetStatusString((selectionOnly
+         delegate.SetStatusString((selectionOnly
             ? XO("Exporting the selected audio as %s")
             : XO("Exporting the audio as %s")).Format( formatStr ));
          
-         while (!IsCancelled() && !IsStopped() && !hasError) {
+         while (exportResult == ExportResult::Success) {
             sf_count_t samplesWritten;
             size_t numSamples = mixer->Process();
             if (numSamples == 0)
@@ -719,35 +710,34 @@ void ExportPCM::Export(AudacityProject *project,
                   throw FileException{
                      FileException::Cause::Write, fName }; });
 #endif
-               hasError = true;
+               exportResult = ExportResult::Error;
                break;
             }
-               
-            progressListener.OnExportProgress(ExportUtils::EvalExportProgress(*mixer, t0, t1));
+            if(exportResult == ExportResult::Success)
+               exportResult = ExportPluginHelpers::UpdateProgress(
+                  delegate, *mixer, t0, t1);
          }
       }
       
       // Install the WAV metata in a "LIST" chunk at the end of the file
-      if (!IsCancelled() && !hasError) {
+      if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error) {
          if (fileFormat == SF_FORMAT_WAV ||
              fileFormat == SF_FORMAT_WAVEX) {
             if (!AddStrings(project, sf.get(), metadata, sf_format)) {
                // TODO: more precise message
                ShowExportErrorDialog("PCM:675");
-               progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-               return;
+               return ExportResult::Error;
             }
          }
          if (0 != sf.close()) {
             // TODO: more precise message
             ShowExportErrorDialog("PCM:681");
-            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-            return;
+            return ExportResult::Error;
          }
       }
    }
 
-   if (!IsCancelled() && !hasError)
+   if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error)
    {
       if ((fileFormat == SF_FORMAT_AIFF) ||
           (fileFormat == SF_FORMAT_WAV))
@@ -755,14 +745,10 @@ void ExportPCM::Export(AudacityProject *project,
          if (!AddID3Chunk(fName, metadata, sf_format) ) {
             // TODO: more precise message
             ShowExportErrorDialog("PCM:694");
-            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-            return;
+            return ExportResult::Error;
          }
    }
-   if(hasError)
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-   else
-      ExportFinish(progressListener);
+   return exportResult;
 }
 
 ArrayOf<char> ExportPCM::AdjustString(const wxString & wxStr, int sf_format)

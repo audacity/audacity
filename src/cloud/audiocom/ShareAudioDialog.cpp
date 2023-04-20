@@ -41,7 +41,6 @@
 #include "CodeConversions.h"
 
 #include "Export.h"
-#include "ExportProgressListener.h"
 #include "ExportUtils.h"
 #include "ui/AccessibleLinksFormatter.h"
 
@@ -111,11 +110,11 @@ struct ShareAudioDialog::Services final
    }
 };
 
-class ShareAudioDialog::ExportProgressUpdater final : public ExportProgressListener
+class ShareAudioDialog::ExportProgressUpdater final : public ExportPluginDelegate
 {
 public:
-   ExportProgressUpdater(ShareAudioDialog& parent, ExportPlugin& plugin)
-      : mParent(parent), mPlugin(plugin)
+   ExportProgressUpdater(ShareAudioDialog& parent)
+      : mParent(parent)
    {
       
    }
@@ -124,15 +123,44 @@ public:
    
    void Cancel()
    {
-      mPlugin.Cancel();
+      mCancelled = true;
+   }
+
+   const TranslatableString& GetErrorString() const noexcept
+   {
+      return mError;
    }
    
    ExportResult GetResult() const
    {
       return mResult;
    }
+
+   void SetResult(ExportResult result)
+   {
+      mResult = result;
+   }
+
+   void SetErrorString(const TranslatableString& str) override
+   {
+      mError = str;
+   }
+
+   void SetStatusString(const TranslatableString& str) override
+   {
+   }
+
+   bool IsCancelled() const
+   {
+      return mCancelled;
+   }
+
+   bool IsStopped() const
+   {
+      return false;
+   }
    
-   void OnExportProgress(double value) override
+   void OnProgress(double value) override
    {
       constexpr auto ProgressSteps = 1000ull;
       
@@ -148,25 +176,6 @@ public:
          mLastYield = now;
       }
    }
-   
-   void OnExportResult(ExportResult result) override
-   {
-      BasicUI::Yield();
-      mResult = result;
-      if(result == ExportResult::Error)
-      {
-         const auto errorString = mPlugin.GetErrorString();
-         if(!errorString.empty())
-         {
-            const auto errorString = mPlugin.GetErrorString();
-            if(!errorString.empty())
-               BasicUI::ShowMessageBox(errorString,
-                                       BasicUI::MessageBoxOptions()
-                                          .IconStyle(BasicUI::Icon::Error)
-                                          .Caption(XO("Error")));
-         }
-      }
-   }
 
 private:
    
@@ -174,10 +183,10 @@ private:
 
    using Clock = std::chrono::steady_clock;
    Clock::time_point mLastYield;
-   
-   ExportPlugin& mPlugin;
-   
-   ExportResult mResult { ExportResult::Error };
+
+   bool mCancelled{false};
+   TranslatableString mError;
+   ExportResult mResult;
 };
 
 ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
@@ -348,14 +357,16 @@ wxString ShareAudioDialog::ExportProject()
                if(path.empty())
                   continue;
 
-               mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this, *plugin);
-               e.Process(*mExportProgressUpdater,
+               mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this);
+               
+               const auto result = e.Process(*mExportProgressUpdater,
                   parameters,
                   nChannels,
                   formatInfo.mFormat,
                   path,
                   false, t0, t1);
-               const auto success = mExportProgressUpdater->GetResult() == ExportProgressListener::ExportResult::Success;
+               mExportProgressUpdater->SetResult(result);
+               const auto success = result == ExportResult::Success;
                if(!success && wxFileExists(path))
                   wxRemoveFile(path);
                if(success)
@@ -389,8 +400,16 @@ void ShareAudioDialog::StartUploadProcess()
    if(mFilePath.empty())
    {
       if(!mExportProgressUpdater ||
-         mExportProgressUpdater->GetResult() != ExportProgressListener::ExportResult::Cancelled)
+         mExportProgressUpdater->GetResult() != ExportResult::Cancelled)
       {
+         auto errorString = mExportProgressUpdater->GetErrorString();
+         if(!errorString.empty())
+         {
+            BasicUI::ShowMessageBox(errorString,
+                                    BasicUI::MessageBoxOptions()
+                                       .IconStyle(BasicUI::Icon::Error)
+                                       .Caption(XO("Error")));
+         }
          HandleExportFailure();
       }
 

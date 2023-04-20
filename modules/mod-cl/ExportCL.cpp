@@ -43,10 +43,9 @@
 #include "wxFileNameWrapper.h"
 #include "BasicUI.h"
 
-#include "ExportUtils.h"
-#include "ExportProgressListener.h"
 #include "ExportOptionsEditor.h"
 #include "ExportOptionsUIServices.h"
+#include "ExportPluginHelpers.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -292,7 +291,7 @@ private:
 };
 
 class ExportCL final
-   : public ExportPluginEx
+   : public ExportPlugin
 {
 public:
 
@@ -306,8 +305,8 @@ public:
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
 
-   void Export(AudacityProject *project,
-               ExportProgressListener &progressListener,
+   ExportResult Export(AudacityProject *project,
+               ExportPluginDelegate &delegate,
                const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
@@ -393,8 +392,8 @@ ExportCL::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
    return std::make_unique<ExportOptionsCLEditor>(mCmd);
 }
 
-void ExportCL::Export(AudacityProject *project,
-                      ExportProgressListener &progressListener,
+ExportResult ExportCL::Export(AudacityProject *project,
+                      ExportPluginDelegate &delegate,
                       const Parameters& parameters,
                       unsigned channels,
                       const wxFileNameWrapper &fName,
@@ -405,16 +404,14 @@ void ExportCL::Export(AudacityProject *project,
                       const Tags *metadata,
                       int)
 {
-   ExportBegin();
-   
    ExtendPath ep;
    wxString output;
    long rc;
 
    const auto path = fName.GetFullPath();
 
-   mCmd = wxString::FromUTF8(ExportUtils::GetParameterValue<std::string>(parameters, CLOptionIDCommand));
-   mShow = ExportUtils::GetParameterValue(parameters, CLOptionIDShowOutput, false);
+   mCmd = wxString::FromUTF8(ExportPluginHelpers::GetParameterValue<std::string>(parameters, CLOptionIDCommand));
+   mShow = ExportPluginHelpers::GetParameterValue(parameters, CLOptionIDShowOutput, false);
 
    // Bug 2178 - users who don't know what they are doing will 
    // now get a file extension of .wav appended to their ffmpeg filename
@@ -430,9 +427,8 @@ void ExportCL::Export(AudacityProject *project,
    if (!rc) {
       process.Detach();
       process.CloseOutput();
-      SetErrorString(XO("Cannot export audio to %s").Format( path ));
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-      return;
+      delegate.SetErrorString(XO("Cannot export audio to %s").Format( path ));
+      return ExportResult::Error;
    }
 
    // Turn off logging to prevent broken pipe messages
@@ -536,7 +532,7 @@ void ExportCL::Export(AudacityProject *project,
 
    // Mix 'em up
    const auto &tracks = TrackList::Get( *project );
-   auto mixer = ExportUtils::CreateMixer(
+   auto mixer = ExportPluginHelpers::CreateMixer(
                             tracks,
                             selectionOnly,
                             t0,
@@ -551,18 +547,18 @@ void ExportCL::Export(AudacityProject *project,
    size_t numBytes = 0;
    constSamplePtr mixed = NULL;
 
-   bool hasError{false};
+   auto exportResult = ExportResult::Success;
    {
       auto closeIt = finally ( [&] {
          // Should make the process die, before propagating any exception
          process.CloseOutput();
       } );
-      SetStatusString(selectionOnly
+      delegate.SetStatusString(selectionOnly
          ? XO("Exporting the selected audio using command-line encoder")
          : XO("Exporting the audio using command-line encoder"));
 
       // Start piping the mixed data to the command
-      while (!IsCancelled() && !IsStopped() && !hasError && process.IsActive() && os->IsOk()) {
+      while (exportResult != ExportResult::Success && process.IsActive() && os->IsOk()) {
          // Capture any stdout and stderr from the command
          Drain(process.GetInputStream(), &output);
          Drain(process.GetErrorStream(), &output);
@@ -594,15 +590,16 @@ void ExportCL::Export(AudacityProject *project,
          while (bytes > 0) {
             os->Write(mixed, bytes);
             if (!os->IsOk()) {
-               hasError = true;
+               exportResult = ExportResult::Error;
                break;
             }
             bytes -= os->LastWrite();
             mixed += os->LastWrite();
          }
 
-         if(!hasError)
-            progressListener.OnExportProgress(ExportUtils::EvalExportProgress(*mixer, t0, t1));
+         if(exportResult == ExportResult::Success)
+            exportResult = ExportPluginHelpers::UpdateProgress(
+               delegate, *mixer, t0, t1);
       }
       // Done with the progress display
    }
@@ -611,7 +608,7 @@ void ExportCL::Export(AudacityProject *project,
    while (process.IsActive()) {
       using namespace std::chrono;
       std::this_thread::sleep_for(10ms);
-      wxTheApp->Yield();
+      BasicUI::Yield();
    }
 
    // Display output on error or if the user wants to see it
@@ -641,13 +638,10 @@ void ExportCL::Export(AudacityProject *project,
       dlg.ShowModal();
 
       if (process.GetStatus() != 0)
-         hasError = true;
+         exportResult = ExportResult::Error;
    }
-   
-   if(hasError)
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-   else
-      ExportFinish(progressListener);
+
+   return exportResult;
 }
 
 std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
