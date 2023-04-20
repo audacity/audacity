@@ -14,6 +14,7 @@
 #include <memory>
 #include <optional>
 
+#include "Callable.h"
 #include "Registry.h"
 #include "NumericConverterType.h"
 
@@ -90,24 +91,11 @@ struct NUMERIC_FORMATS_API NumericConverterRegistry final
       const NumericFormatSymbol& symbol);
 };
 
-NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
-   const Identifier& functionId, const TranslatableString& label,
-   NumericConverterFormatterFactoryPtr factory);
+constexpr auto NumericConverterFormatterItem =
+   Callable::UniqueMaker<NumericConverterRegistryItem>();
 
-NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
-   const Identifier& functionId, const TranslatableString& label,
-   const TranslatableString& fractionLabel,
-   NumericConverterFormatterFactoryPtr factory);
-
-template <typename... Args>
-Registry::BaseItemPtr NumericConverterFormatterGroup(
-   const Identifier& groupId, const NumericConverterType& type,
-   Args&&... args)
-{
-   return std::make_unique<NumericConverterRegistryGroup>(
-      groupId, type, std::forward<Args>(args)...);
-}
-
+constexpr auto NumericConverterFormatterGroup =
+   Callable::UniqueMaker<NumericConverterRegistryGroup>();
 
 struct NUMERIC_FORMATS_API NumericConverterItemRegistrator final :
     public Registry::RegisteredItem<

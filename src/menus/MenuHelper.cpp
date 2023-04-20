@@ -369,7 +369,7 @@ void AddGroupedEffectMenuItems(
          {
             doAddGroup();
             path = { effectFamilyName, vendorName };
-            auto menu = Menu({}, effectFamilyName, {});
+            auto menu = Menu("", effectFamilyName, BaseItemPtrs{});
             parentTable = &menu->items;
             table.push_back(std::move(menu));
          }

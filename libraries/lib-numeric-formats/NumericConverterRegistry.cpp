@@ -145,21 +145,3 @@ NumericConverterItemRegistrator::NumericConverterItemRegistrator(
     : RegisteredItem { std::move(pItem), placement }
 {
 }
-
-NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
-   const Identifier& functionId, const TranslatableString& label,
-   NumericConverterFormatterFactoryPtr factory)
-{
-   return std::make_unique<NumericConverterRegistryItem>(
-      functionId, label, std::move(factory));
-}
-
-NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
-   const Identifier& functionId, const TranslatableString& label,
-   const TranslatableString& fractionLabel,
-   NumericConverterFormatterFactoryPtr factory)
-{
-   return std::make_unique<NumericConverterRegistryItem>(
-      functionId, label, fractionLabel, std::move(factory));
-}
-
