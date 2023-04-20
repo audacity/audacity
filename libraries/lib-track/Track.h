@@ -12,6 +12,7 @@
 #define __AUDACITY_TRACK__
 
 #include <atomic>
+#include <cassert>
 #include <utility>
 #include <vector>
 #include <list>
@@ -25,6 +26,7 @@
 // not the others, so there is a nested include here:
 #include "TrackAttachment.h"
 #include "TypeEnumerator.h"
+#include "TypeList.h"
 #include "XMLTagHandler.h"
 
 #ifdef __WXMSW__
@@ -463,6 +465,9 @@ public:
    
 private:
    template<typename... T> using List = TypeList::List<T...>;
+   template<typename T> using Head_t = TypeList::Head_t<T>;
+   template<typename T> using Tail_t = TypeList::Tail_t<T>;
+   template<typename T> static constexpr bool Null_v = TypeList::Null_v<T>;
    template<template<typename...> class Template, typename TypeList>
    using Apply_t = typename ::TypeList::template Apply_t<Template, TypeList>;
 
@@ -627,43 +632,39 @@ private:
 
 public:
 
-   template<typename R, typename Object, typename... Functions>
-   static R CallExecutor(R*, std::tuple<>*, Object&, const Functions&...)
+   template<typename R, typename Executors,
+      typename Object, typename... Functions>
+   static R CallExecutor(Object &object, const Functions &...functions)
    {
-      // This overload is needed so that the other overload of CallExecutor
-      // compiles, but it should never be reached at run-time, because an
-      // Executor generated for (const) Object should have been the catch-all.
-      wxASSERT(false);
-      if constexpr (std::is_void_v<R>)
-         return;
-      else
-         return R{};
-   }
-   template<
-      typename R, typename Object, typename... Functions,
-      typename Executor, typename... Executors>
-   static R CallExecutor(
-      R*, std::tuple<Executor, Executors...>*, Object &object,
-      const Functions &...functions)
-   {
-      const auto &info = Executor::NominalType::ClassTypeInfo();
-      // Dynamic type test of object
-      // Assumes Executor classes are sequenced with more specific accepted
-      // types earlier
-      if (info.IsBaseOf(object.GetTypeInfo()))
-         // Dispatch to an Executor that knows which of functions applies
-         return Executor{}(&object, functions...);
-      else
-         // Recur, with fewer candidate Executors and all of functions
-         return CallExecutor( (R*)nullptr,
-            (std::tuple<Executors...>*)nullptr, object, functions...);
+      if constexpr (Null_v<Executors>) {
+         // This branch is needed so that the other branch
+         // compiles, but it should never be reached at run-time, because an
+         // Executor generated for (const) Object should have been the catch-all.
+         assert(false);
+         if constexpr (std::is_void_v<R>)
+            return;
+         else
+            return R{};
+      }
+      else {
+         using Executor = Head_t<Executors>;
+         const auto &info = Executor::NominalType::ClassTypeInfo();
+         // Dynamic type test of object
+         // Assumes Executor classes are sequenced with more specific accepted
+         // types earlier
+         if (info.IsBaseOf(object.GetTypeInfo()))
+            // Dispatch to an Executor that knows which of functions applies
+            return Executor{}(&object, functions...);
+         else
+            // Recur, with fewer candidate Executors and all of functions
+            return CallExecutor<R, Tail_t<Executors>>(
+               object, functions...);
+      }
    }
 
-   template<typename ...Executors>
-   static constexpr unsigned UsedCases(std::tuple<Executors...>*)
-   {
-      return (Executors::SetUsed | ...); // My very first fold expression :-)
-   }
+   template<typename ...Executors> struct UsedCases {
+      constexpr unsigned operator ()() { return (Executors::SetUsed | ...); };
+   };
 
    //! Deduce two packs from arguments
    template<
@@ -681,21 +682,19 @@ public:
       // Generate Executor classes, for each of ObjectTypes,
       // each zero-sized and with an operator () that calls the correct
       // one of functions, assuming the object is of the corresponding type
-      using Executors = std::tuple<Executor<
+      using Executors = List<Executor<
          Location, R,
          std::conditional_t<IsConst, const ObjectTypes, ObjectTypes>,
          Functions...
       >...>;
-      // Don't even construct the tuple of zero-sized types, just point
-      constexpr Executors *executors = nullptr;
 
       // Compile time reachability check of the given functions
       enum { All = sizeof...( functions ) };
-      static_assert( (1u << All) - 1u == UsedCases(executors),
+      static_assert((1u << All) - 1u == Apply_t<UsedCases, Executors>{}(),
          "Uncallable case in TypeSwitch");
 
       // Do dynamic dispatch to one of the Executors
-      return CallExecutor((R *)nullptr, executors, object, functions...);
+      return CallExecutor<R, Executors>(object, functions...);
    }
 
    /*!
