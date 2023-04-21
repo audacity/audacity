@@ -14,6 +14,7 @@
 #ifndef __AUDACITY_VST_EFFECTS_MODULE__
 #define __AUDACITY_VST_EFFECTS_MODULE__
 
+#include "Callable.h"
 #include "GlobalVariable.h"
 #include "PluginProvider.h"
 #include "VSTEffectBase.h"
@@ -22,8 +23,8 @@ class VST_API VSTEffectsModule final : public PluginProvider
 {
 public:
  public:
-   struct VST_API Factory : DefaultedGlobalHook< Factory,
-      UniquePtrFactory<VSTEffectBase, const PluginPath&>::Function
+   struct VST_API Factory : DefaultedGlobalHook<Factory,
+      Callable::UniquePtrFactory<VSTEffectBase, const PluginPath&>::Function
    >{};
 
    VSTEffectsModule();

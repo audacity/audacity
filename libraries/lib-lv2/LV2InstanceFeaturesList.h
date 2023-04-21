@@ -17,6 +17,7 @@
 #if USE_LV2
 
 #include "LV2FeaturesList.h"
+#include "Callable.h"
 #include "GlobalVariable.h"
 #include "lv2/options/options.h"
 #include "lv2/worker/worker.h"
@@ -24,7 +25,8 @@
 struct LV2_API LV2InstanceFeaturesList final : ExtendedLV2FeaturesList {
    //! Perform extra initialization-time checks
    struct LV2_API ValidatePlugin : DefaultedGlobalHook<ValidatePlugin,
-      Constantly<true, const LilvPlugin &, LV2InstanceFeaturesList &>::Function
+      Callable::Constantly<true, const LilvPlugin &, LV2InstanceFeaturesList &>
+         ::Function
    >{};
 
    explicit LV2InstanceFeaturesList(

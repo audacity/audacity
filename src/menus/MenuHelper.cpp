@@ -254,6 +254,17 @@ void AddSortedEffectMenuItems(
    }
 }
 
+static Registry::BaseItemPtr MenuOrItems(
+   const Identifier &id, const TranslatableString &label,
+   Registry::BaseItemPtrs ptrs)
+{
+   using namespace MenuTable;
+   if (label.empty())
+      return Items(id, move(ptrs));
+   else
+      return Menu(id, label, move(ptrs));
+}
+
 auto MakeAddGroupItems(
    const EffectsMenuGroups& list,
    CommandFlag batchflags,
@@ -369,7 +380,7 @@ void AddGroupedEffectMenuItems(
          {
             doAddGroup();
             path = { effectFamilyName, vendorName };
-            auto menu = Menu({}, effectFamilyName, {});
+            auto menu = Menu("", effectFamilyName, BaseItemPtrs{});
             parentTable = &menu->items;
             table.push_back(std::move(menu));
          }

@@ -18,10 +18,12 @@ correspond to things in the standard.
 set( SOURCES
    BufferedStreamReader.cpp
    BufferedStreamReader.h
-   CommandLineArgs.cpp
-   CommandLineArgs.h
    CFResources.cpp
    CFResources.h
+   Callable.cpp
+   Callable.h
+   CommandLineArgs.cpp
+   CommandLineArgs.h
    GlobalVariable.h
    MemoryX.cpp
    MemoryX.h
@@ -38,6 +40,7 @@ set( SOURCES
    TypeList.h
    TypeListVisitor.h
    TypedAny.h
+   Variant.cpp
    Variant.h
 )
 set( LIBRARIES

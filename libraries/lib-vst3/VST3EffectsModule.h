@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <memory>
 
+#include "Callable.h"
 #include "GlobalVariable.h"
 #include "PluginProvider.h"
 #include "VST3EffectBase.h"
@@ -42,7 +43,7 @@ class VST3EffectsModule final : public PluginProvider
 
 public:
    struct VST3_API Factory : DefaultedGlobalHook<Factory,
-      UniquePtrFactory<VST3EffectBase,
+      Callable::UniquePtrFactory<VST3EffectBase,
          std::shared_ptr<VST3::Hosting::Module>, VST3::Hosting::ClassInfo
       >::Function
    >{};

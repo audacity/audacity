@@ -16,6 +16,7 @@
 
 #include "lilv/lilv.h"
 
+#include "Callable.h"
 #include "GlobalVariable.h"
 #include "LV2EffectBase.h"
 #include "PluginProvider.h"
@@ -29,8 +30,8 @@
 class LV2_API LV2EffectsModule final : public PluginProvider
 {
 public:
-   struct LV2_API Factory : DefaultedGlobalHook< Factory,
-      UniquePtrFactory<LV2EffectBase, const LilvPlugin &>::Function
+   struct LV2_API Factory : DefaultedGlobalHook<Factory,
+      Callable::UniquePtrFactory<LV2EffectBase, const LilvPlugin &>::Function
    >{};
 
    LV2EffectsModule();

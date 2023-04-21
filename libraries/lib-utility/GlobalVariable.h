@@ -209,26 +209,4 @@ class DefaultedGlobalHook : public GlobalHook< Tag,
 {
 };
 
-//! Generates functions useful as defaults of hooks
-template<typename Type, typename... Arguments> struct UniquePtrFactory {
-   static auto Function(Arguments... arguments) -> std::unique_ptr<Type>
-   {
-      return std::make_unique<Type>(std::forward<Arguments&&>(arguments)...);
-   }
-};
-
-//! Generates functions useful as defaults of hooks
-template<typename Type, typename... Arguments> struct SharedPtrFactory {
-   static auto Function(Arguments... arguments) -> std::shared_ptr<Type>
-   {
-      return std::make_shared<Type>(std::forward<Arguments&&>(arguments)...);
-   }
-};
-
-//! Generates functions returning a constant
-//! (not needed for the default-constructed value of a hook's return type)
-template<auto Value, typename... Arguments> struct Constantly {
-   static decltype(Value) Function (Arguments...) { return Value; }
-};
-
 #endif
