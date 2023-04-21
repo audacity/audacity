@@ -176,7 +176,7 @@ double GridMove
 
    // Otherwise, move minPix pixels, then snap to the time.
    result = viewInfo.OffsetTimeByPixels(t, minPix);
-   return projectSnap.SnapTime(t).time;
+   return projectSnap.SnapTime(result).time;
 }
 
 double OffsetTime

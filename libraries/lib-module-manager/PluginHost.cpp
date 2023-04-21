@@ -37,11 +37,11 @@ namespace
             TranslatableString errorMessage{};
             auto validator = provider->MakeValidator();
             auto numPlugins = provider->DiscoverPluginsAtPath(
-               pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
+               pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident) -> const PluginID&
             {
                //Workaround: use DefaultRegistrationCallback to create all descriptors for us
                //and then put a copy into result
-               auto id = PluginManager::DefaultRegistrationCallback(provider, ident);
+               auto& id = PluginManager::DefaultRegistrationCallback(provider, ident);
                if(const auto ptr = PluginManager::Get().GetPlugin(id))
                {
                   auto desc = *ptr;
