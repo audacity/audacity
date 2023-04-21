@@ -624,7 +624,8 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
                mPluginIndex = i;
                mSubFormatIndex = j;
                mBook->GetPage(mFilterIndex)->TransferDataFromWindow();
-               mOptionHandlers[mFilterIndex]->TransferDataFromEditor();
+               if(!mOptionHandlers[mFilterIndex]->TransferDataFromEditor())
+                  return;
             }
          }
       }

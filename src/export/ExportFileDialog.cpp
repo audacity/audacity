@@ -185,6 +185,9 @@ int ExportFileDialog::RunModal(wxWindow* parent,
       
       if(!formatFound)
          continue;
+
+      if(!dialog.mOptionsHandlers[dialog.GetFilterIndex()]->TransferDataFromEditor())
+         continue;
       
       filename = dialog.GetPath();
       const auto ext = filename.GetExt();
@@ -256,8 +259,6 @@ int ExportFileDialog::RunModal(wxWindow* parent,
             }
          }
    #endif
-
-      dialog.mOptionsHandlers[dialog.GetFilterIndex()]->TransferDataFromEditor();
 
       exporter.Configure(filename,
                          pluginIndex,
