@@ -13,11 +13,22 @@ Item {
 
    objectName: "TimeToolbar"
 
-   property bool testerVisible: false
    property bool gripVisible: false
    property bool separatorVisible: false
 
    signal updateStatusBar(status: string)
+
+   function start() {
+      timeControl.start()
+   }
+
+   function stop() {
+      timeControl.reset()
+   }
+
+   function pause() {
+      timeControl.stop()
+   }
 
    RowLayout {
       id: contents
@@ -40,15 +51,6 @@ Item {
 
          TimeControl {
             id: timeControl
-         }
-
-         TimeControlTester {
-            id: timeControlTester
-            visible: testerVisible
-
-            onStart: timeControl.start()
-            onStop: timeControl.stop()
-            onReset: timeControl.reset()
          }
       }
 

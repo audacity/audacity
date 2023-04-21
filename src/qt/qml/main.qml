@@ -17,7 +17,6 @@ ApplicationWindow {
    required property ApplicationConfiguration appConfig
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
-   property alias enableTimeTester: toolsToolbar.enableTimeTester
 
    QtObject {
       id: testers
@@ -85,15 +84,6 @@ ApplicationWindow {
             checked: enableVolumeTester
             onTriggered: {
                enableVolumeTester = !enableVolumeTester
-            }
-         }
-
-         MenuItem {
-            text: qsTr("TimeControl")
-            checkable: true
-            checked: enableTimeTester
-            onTriggered: {
-               enableTimeTester = !enableTimeTester
             }
          }
       }

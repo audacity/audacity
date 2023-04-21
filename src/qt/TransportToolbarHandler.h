@@ -14,6 +14,7 @@ class TransportToolbarHandler : public QObject
 signals:
    void updateStatusBar(QString status);
    void playStateChanged(bool isPlaying);
+   void playbackStopped();
 
 public:
    explicit TransportToolbarHandler(QObject *parent = nullptr);

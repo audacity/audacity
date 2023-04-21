@@ -10,7 +10,6 @@ Item {
    height: implicitHeight
    implicitHeight: 28
    objectName: "TimeControl"
-   onFormatTypeChanged: reset()
 
    property alias formatType: display.formatType
 

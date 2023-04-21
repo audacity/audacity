@@ -23,12 +23,12 @@ void TransportToolbarHandler::SetPlaying(bool state)
 void TransportToolbarHandler::Play()
 {
    SetPlaying(!Playing());
-   emit updateStatusBar(Playing() ? "Play clicked" : "Pause clicked");
 }
 
 void TransportToolbarHandler::Stop()
 {
-   emit updateStatusBar("Stop clicked");
+   SetPlaying(false);
+   emit playbackStopped();
 }
 
 void TransportToolbarHandler::Rewind()
