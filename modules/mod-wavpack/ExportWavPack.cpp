@@ -256,7 +256,7 @@ public:
                double t1,
                MixerSpec *mixerSpec = NULL,
                const Tags *metadata = NULL,
-               int subformat = 0) override;
+               int subformat = 0) const override;
 
    static int WriteBlock(void *id, void *data, int32_t length);
 };
@@ -340,7 +340,7 @@ ExportResult ExportWavPack::Export(AudacityProject *project,
                            double t1,
                            MixerSpec *mixerSpec,
                            const Tags *metadata,
-                           int)
+                           int) const
 {
    WavpackConfig config = {};
    WriteId outWvFile, outWvcFile;

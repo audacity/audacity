@@ -124,14 +124,11 @@ class ExportOptionsCLEditor final
    : public ExportOptionsEditor
    , public ExportOptionsUIServices
 {
-   wxString mCommand;
+   wxString mCommand {wxT("lame - \"%f\"")};
    bool mShowOutput {false};
 public:
 
-   ExportOptionsCLEditor(const wxString defaultCommand)
-      : mCommand(defaultCommand)
-   {
-   }
+   ExportOptionsCLEditor() = default;
 
    void PopulateUI(ShuttleGui& S) override
    {
@@ -365,7 +362,7 @@ class ExportCL final
 {
 public:
 
-   ExportCL();
+   ExportCL() = default;
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
@@ -385,17 +382,15 @@ public:
                double t1,
                MixerSpec *mixerSpec,
                const Tags *metadata,
-               int subformat) override;
+               int subformat) const override;
    
    // Optional   
-   bool CheckFileName(wxFileName &filename, int format) override;
+   bool CheckFileName(wxFileName &filename, int format) const override;
 
 private:
 
-   std::vector<char> GetMetaChunk(const Tags *metadata);
-   wxString mCmd;
-   bool mShow;
-
+   static std::vector<char> GetMetaChunk(const Tags *metadata);
+   
    struct ExtendPath
    {
 #if defined(__WXMSW__)
@@ -438,12 +433,6 @@ private:
    };
 };
 
-ExportCL::ExportCL()
-   : mCmd(wxT("lame - \"%f\""))
-{
-   
-}
-
 int ExportCL::GetFormatCount() const
 {
    return 1;
@@ -459,7 +448,7 @@ FormatInfo ExportCL::GetFormatInfo(int) const
 std::unique_ptr<ExportOptionsEditor>
 ExportCL::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
 {
-   return std::make_unique<ExportOptionsCLEditor>(mCmd);
+   return std::make_unique<ExportOptionsCLEditor>();
 }
 
 ExportResult ExportCL::Export(AudacityProject *project,
@@ -472,7 +461,7 @@ ExportResult ExportCL::Export(AudacityProject *project,
                       double t1,
                       MixerSpec *mixerSpec,
                       const Tags *metadata,
-                      int)
+                      int) const
 {
    ExtendPath ep;
    wxString output;
@@ -480,20 +469,20 @@ ExportResult ExportCL::Export(AudacityProject *project,
 
    const auto path = fName.GetFullPath();
 
-   mCmd = wxString::FromUTF8(ExportPluginHelpers::GetParameterValue<std::string>(parameters, CLOptionIDCommand));
-   mShow = ExportPluginHelpers::GetParameterValue(parameters, CLOptionIDShowOutput, false);
+   auto cmd = wxString::FromUTF8(ExportPluginHelpers::GetParameterValue<std::string>(parameters, CLOptionIDCommand));
+   const auto showOutput = ExportPluginHelpers::GetParameterValue(parameters, CLOptionIDShowOutput, false);
 
    // Bug 2178 - users who don't know what they are doing will 
    // now get a file extension of .wav appended to their ffmpeg filename
    // and therefore ffmpeg will be able to choose a file type.
-   if( mCmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
-      mCmd.Replace( "%f", "%f.wav" );
-   mCmd.Replace(wxT("%f"), path);
+   if( cmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
+      cmd.Replace( "%f", "%f.wav" );
+   cmd.Replace(wxT("%f"), path);
 
    // Kick off the command
    ExportCLProcess process(&output);
 
-   rc = wxExecute(mCmd, wxEXEC_ASYNC, &process);
+   rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
    if (!rc) {
       process.Detach();
       process.CloseOutput();
@@ -682,7 +671,7 @@ ExportResult ExportCL::Export(AudacityProject *project,
    }
 
    // Display output on error or if the user wants to see it
-   if (process.GetStatus() != 0 || mShow) {
+   if (process.GetStatus() != 0 || showOutput) {
       // TODO use ShowInfoDialog() instead.
       wxDialogWrapper dlg(nullptr,
                    wxID_ANY,
@@ -695,7 +684,7 @@ ExportResult ExportCL::Export(AudacityProject *project,
       ShuttleGui S(&dlg, eIsCreating);
       S
          .Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH )
-         .AddTextWindow(mCmd + wxT("\n\n") + output);
+         .AddTextWindow(cmd + wxT("\n\n") + output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {
          S.Id(wxID_OK).AddButton(XXO("&OK"), wxALIGN_CENTER, true);
@@ -817,7 +806,7 @@ std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
    return buffer;
 }
 
-bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
+bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format)) const
 {
    ExtendPath ep;
 
