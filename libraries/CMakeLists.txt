@@ -50,6 +50,7 @@ set( LIBRARIES
    lib-vst
    lib-lv2
    lib-ladspa
+   lib-audio-unit
 )
 
 if ( ${_OPT}has_networking )

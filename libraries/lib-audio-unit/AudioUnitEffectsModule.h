@@ -16,7 +16,10 @@
 #if USE_AUDIO_UNITS
 
 #include <AudioToolbox/AudioUnitUtilities.h>
+#include "Callable.h"
+#include "GlobalVariable.h"
 #include "PluginProvider.h"
+#include "AudioUnitEffectBase.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -27,6 +30,11 @@
 class AudioUnitEffectsModule final : public PluginProvider
 {
 public:
+   struct Factory : DefaultedGlobalHook<Factory,
+      Callable::UniquePtrFactory<AudioUnitEffectBase,
+         const PluginPath &, const wxString &/*name*/, AudioComponent>::Function
+   >{};
+
    AudioUnitEffectsModule();
    virtual ~AudioUnitEffectsModule();
 

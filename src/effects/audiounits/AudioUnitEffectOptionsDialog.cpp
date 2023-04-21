@@ -13,6 +13,7 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffectOptionsDialog.h"
+#include "AudioUnitEffectBase.h"
 #include "ConfigInterface.h"
 #include "ShuttleGui.h"
 
