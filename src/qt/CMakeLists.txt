@@ -32,6 +32,7 @@ set(QML_SOURCES
    qml/MasterVolumeToolbar.qml
    qml/Sidebar.qml
    qml/SnappingButton.qml
+   qml/TimelineRuler.qml
    qml/TimeToolbar.qml
    qml/ToolsToolbar.qml
    qml/TransportToolbar.qml

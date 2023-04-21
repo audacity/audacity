@@ -91,6 +91,11 @@ ApplicationWindow {
 
    header: ToolsToolbar {
       id: toolsToolbar
+
+      onPlaybackStarted: timelineRuler.start()
+      onPlaybackStopped: timelineRuler.stop()
+      onPlaybackPaused: timelineRuler.pause()
+
       onUpdateStatusBar: function(status) {
          statusBar.text = status
          timer.restart()
@@ -121,6 +126,14 @@ ApplicationWindow {
       interval: 1000
       repeat: false
       onTriggered: statusBar.text = ""
+   }
+
+   TimelineRuler {
+      id: timelineRuler
+      x: sidebar.width + 1
+      width: root.width - sidebar.width - 1
+      height: 28
+      playheadCursorHeight: height / 2 + trackCanvas.height
    }
 
    footer: Rectangle {
