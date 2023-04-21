@@ -47,16 +47,19 @@ Rectangle {
          onPlaybackStarted: {
             timeToolbar.start()
             root.playbackStarted()
+            masterVolumeToolbar.startDemo()
          }
 
          onPlaybackStopped: {
             timeToolbar.stop()
             root.playbackStopped()
+            masterVolumeToolbar.stopDemo()
          }
 
          onPlaybackPaused:  {
             timeToolbar.pause()
             root.playbackPaused()
+            masterVolumeToolbar.pauseDemo()
          }
 
          onUpdateStatusBar: function(status) {

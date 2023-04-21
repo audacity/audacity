@@ -9,18 +9,28 @@ Item {
    width: contents.width
    objectName: "VolumeControlTester"
 
-   Layout.alignment: Qt.AlignVCenter
-
-   property alias enableRandom: sendRandom.checked
    property int channels: 1
 
    signal sendData(channel: int, data: double)
    signal sendRandomData(data: double)
    signal reset()
 
+   function startDemo() {
+      sendingDataTimer.start()
+   }
+
+   function stopDemo() {
+      sendingDataTimer.stop()
+      root.reset()
+   }
+
+   function pauseDemo() {
+      sendingDataTimer.stop()
+   }
+
    Timer {
       id: sendingDataTimer
-      interval: sendingInterval.value
+      interval: 100
       repeat: true
 
       onTriggered: {
@@ -31,119 +41,85 @@ Item {
       }
    }
 
-   ColumnLayout {
+   RowLayout {
       id: contents
-      spacing: 0
+      anchors.centerIn: parent
+      Layout.alignment: Qt.AlignVCenter
 
-      RowLayout {
-         CheckBox {
-            id: sendRandom
-            text: qsTr("Random")
-            checked: false
+      ColumnLayout {
+         spacing: 1
 
-            onCheckedChanged: {
-               sendingDataTimer.running = checked
+         RowLayout {
+            Label {
+               text: qsTr("L")
+            }
+
+            SpinBox {
+               id: leftChannel
+               implicitWidth: 60
+               value: 50
+               from: 0
+               to: 100
+               stepSize: 1
+               enabled: !sendingDataTimer.running
+               editable: true
+
+               validator: DoubleValidator {
+                  bottom: 0.0
+                  top: 1.0
+                  decimals: 2
+               }
+
+               textFromValue: function(value) {
+                  return (value / 100).toFixed(2)
+               }
+
+               valueFromText: function(text) {
+                  return Number(text) * 100
+               }
             }
          }
 
-         SpinBox {
-            id: sendingInterval
-            implicitWidth: 60
-            value: 100
-            from: 10
-            to: 1000
-            stepSize: 10
-            enabled: !sendRandom.checked
-            editable: true
-
-            textFromValue: function(value) {
-               return value
+         RowLayout {
+            Label {
+               text: qsTr("R")
             }
-         }
 
-         Label {
-            text: qsTr("ms")
-         }
+            SpinBox {
+               id: rightChannel
+               implicitWidth: 60
+               value: 50
+               from: 0
+               to: 100
+               stepSize: 1
+               enabled: !sendingDataTimer.running
+               editable: true
 
-         Button {
-            id: reset
-            text: qsTr("Reset")
+               validator: DoubleValidator {
+                  bottom: 0.0
+                  top: 1.0
+                  decimals: 2
+               }
 
-            onClicked: {
-               sendRandom.checked = false
-               root.reset()
+               textFromValue: function(value) {
+                  return (value / 100).toFixed(2)
+               }
+
+               valueFromText: function(text) {
+                  return Number(text) * 100
+               }
             }
          }
       }
 
-      RowLayout {
-         Label {
-            text: qsTr("L")
-         }
+      Button {
+         id: send
+         text: qsTr("Send")
+         enabled: !sendingDataTimer.running
 
-         SpinBox {
-            id: leftChannel
-            implicitWidth: 60
-            value: 50
-            from: 0
-            to: 100
-            stepSize: 1
-            enabled: !sendRandom.checked
-            editable: true
-
-            validator: DoubleValidator {
-               bottom: 0.0
-               top: 1.0
-               decimals: 2
-            }
-
-            textFromValue: function(value) {
-               return (value / 100).toFixed(2)
-            }
-
-            valueFromText: function(text) {
-               return Number(text) * 100
-            }
-         }
-
-         Label {
-            text: qsTr("R")
-         }
-
-         SpinBox {
-            id: rightChannel
-            implicitWidth: 60
-            value: 50
-            from: 0
-            to: 100
-            stepSize: 1
-            enabled: !sendRandom.checked
-            editable: true
-
-            validator: DoubleValidator {
-               bottom: 0.0
-               top: 1.0
-               decimals: 2
-            }
-
-            textFromValue: function(value) {
-               return (value / 100).toFixed(2)
-            }
-
-            valueFromText: function(text) {
-               return Number(text) * 100
-            }
-         }
-
-         Button {
-            id: send
-            text: qsTr("Send")
-            enabled: !sendRandom.checked
-
-            onClicked: {
-               root.sendData(0, leftChannel.displayText)
-               root.sendData(1, rightChannel.displayText)
-            }
+         onClicked: {
+            root.sendData(0, leftChannel.displayText)
+            root.sendData(1, rightChannel.displayText)
          }
       }
    }
