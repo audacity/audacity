@@ -24,6 +24,7 @@
 // TrackAttachment needs to be a complete type for the Windows build, though
 // not the others, so there is a nested include here:
 #include "TrackAttachment.h"
+#include "TypeEnumerator.h"
 #include "XMLTagHandler.h"
 
 #ifdef __WXMSW__
@@ -54,78 +55,13 @@ inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
 inline bool operator != (const TrackNodePointer &a, const TrackNodePointer &b)
 { return !(a == b); }
 
-namespace {
-
 //! Empty class which will have subclasses
-struct TrackTypeCountTag{};
+BEGIN_TYPE_ENUMERATION(TrackTypeTag)
 
-/*! Declared but undefined function, whose overloads will define a compile-time
-  function from integers to known sub-types of Track
- */
-auto enumerateTrackTypes(TrackTypeCountTag, ...) -> void;
-
-//! What type is associated with `U` (at the point of instantiation for Tag)?
-template<unsigned U, typename Tag> using EnumeratedTrackType =
-   std::remove_reference_t< decltype( enumerateTrackTypes( Tag{},
-      std::integral_constant<unsigned, U>{} ) ) >;
-
-//! Embedded `value` member counts track types so far declared in the compilation unit
-/*!
- @tparam Tag a distinct subclass of TrackTypeCountTag for one point of instantiation of the template
- */
-template<typename Tag>
-class CountTrackTypes {
-   template<unsigned U> struct Stop{
-      static constexpr unsigned value = U; };
-   template<unsigned U> struct Count
-      : std::conditional_t<
-         std::is_void_v<EnumeratedTrackType<U, Tag>>,
-         Stop<U>,
-         Count<U + 1>
-      >
-   {};
-public:
-   static constexpr unsigned value = Count<0>::value;
-};
-
-//! Embedded `type` member is the tuple of track types so far declared in the compilation unit
-/*!
- Each track subtype occurs earlier than its base classes in the tuple of types
-
- @tparam Tag a distinct subclass of TrackTypeCountTag for one point of instantiation of the template
- */
-template<typename Tag>
-class CollectTrackTypes {
-   template<typename... Types> struct Stop{
-      using type = std::tuple<Types...>; };
-   template<unsigned U, typename... Types> struct Accumulate;
-   template<unsigned U, typename Type, typename... Types> struct AccumulateType
-      : std::conditional_t< std::is_void_v<Type>,
-         Stop<Types...>,
-         Accumulate<U + 1, Type, Types...>
-      >
-   {};
-   template<unsigned U, typename... Types> struct Accumulate
-      : AccumulateType<U, EnumeratedTrackType<U, Tag>, Types...>
-   {};
-public:
-   using type = typename Accumulate<0>::type;
-};
-
-//! Implements the ENUMERATE_TRACK_TYPE macro
-template<typename T>
-struct TrackTypeCounter {
-   struct Tag : TrackTypeCountTag {};
-   static constexpr unsigned value = CountTrackTypes<Tag>::value;
-};
-
-}
-
-//! This macro should be called immediately after each definition of a track subtype
+//! This macro should be called immediately after the definition of each Track
+//! subclass
 /*! It must occur at file scope, not within any other namespace */
-#define ENUMERATE_TRACK_TYPE(T) namespace { auto enumerateTrackTypes(\
-   TrackTypeCountTag, \
-   std::integral_constant<unsigned, TrackTypeCounter<T>::value>) -> T&; }
+#define ENUMERATE_TRACK_TYPE(T) ENUMERATE_TYPE(TrackTypeTag, T)
 
 // forward declarations, so we can make them friends
 template<typename T>
@@ -627,8 +563,8 @@ private:
 
       //! Base case, no more base classes of ArgumentType
       /*! Computes a type as the return type of undefined member test() */
-      template< typename Tag, typename R, typename ArgumentType >
-      struct Switch< Tag, R, ArgumentType, std::tuple<> >
+      template<typename Tag, typename R, typename ArgumentType>
+      struct Switch<Tag, R, ArgumentType, TypeList::Nil>
       {
          //! No BaseClass of ArgumentType is acceptable to Function.
          template< typename Function, typename ...Functions >
@@ -638,9 +574,10 @@ private:
 
       //! Recursive case, tries to match function with one base class of ArgumentType
       /*! Computes a type as the return type of undefined member test() */
-      template< typename Tag, typename R, typename ArgumentType,
-                typename BaseClass, typename ...BaseClasses >
-      struct Switch< Tag, R, ArgumentType, std::tuple<BaseClass, BaseClasses...> >
+      template<typename Tag, typename R, typename ArgumentType,
+         typename BaseClass, typename ...BaseClasses>
+      struct Switch<Tag, R, ArgumentType,
+         TypeList::List<BaseClass, BaseClasses...>>
       {
          using QualifiedBaseClass =
             std::conditional_t< std::is_const_v<ArgumentType>,
@@ -648,7 +585,7 @@ private:
 
          //! Recur to this type to try the next base class
          using Retry =
-            Switch< Tag, R, ArgumentType, std::tuple<BaseClasses...> >;
+            Switch<Tag, R, ArgumentType, TypeList::List<BaseClasses...>>;
 
          //! Catch-all overload of undefined function used in decltype only
          /*! If ArgumentType is not compatible with BaseClass, or if
@@ -719,9 +656,12 @@ private:
              typename Function, typename ...Functions >
    struct Executor< Tag, R, ArgumentType, Function, Functions... >
       : decltype(
-         Dispatcher::Switch< Tag, R, ArgumentType,
-            typename CollectTrackTypes<Tag>::type >
-               ::template test<Function, Functions... >())
+         Dispatcher::Switch<Tag, R, ArgumentType,
+            // Each track subtype occurs earlier than its base classes in this
+            // list of types
+            TypeList::Reverse_t<
+               typename TypeEnumerator::CollectTypes<TrackTypeTag, Tag>::type>
+         >::template test<Function, Functions... >())
    {
       using NominalType = ArgumentType;
    };
@@ -775,6 +715,7 @@ public:
       return (Executors::SetUsed | ...); // My very first fold expression :-)
    }
 
+   //! Deduce two packs from arguments
    template<
       typename Tag,
       bool IsConst,
@@ -784,7 +725,7 @@ public:
    >
    static R DoTypeSwitch(
       std::conditional_t<IsConst, const Track, Track> &track,
-      std::tuple<TrackTypes...>*,
+      TypeList::List<TrackTypes...>,
       const Functions &...functions )
    {
       // Generate Executor classes, for each of TrackTypes,
@@ -832,12 +773,12 @@ public:
    >
    R TypeSwitch(const Functions &...functions)
    {
-      struct Tag : TrackTypeCountTag {};
+      struct Tag : TrackTypeTag {};
       // Collect all concrete and abstract track types known at compile time
-      using TrackTypes = typename CollectTrackTypes<Tag>::type;
-      TrackTypes *const trackTypes = nullptr;
+      using TrackTypes = TypeList::Reverse_t<
+         typename TypeEnumerator::CollectTypes<TrackTypeTag, Tag>::type>;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Tag, false, R>(*this, trackTypes, functions...);
+      return DoTypeSwitch<Tag, false, R>(*this, TrackTypes{}, functions...);
    }
 
    /*! @copydoc Track::TypeSwitch */
@@ -849,12 +790,12 @@ public:
    >
    R TypeSwitch(const Functions &...functions) const
    {
-      struct Tag : TrackTypeCountTag {};
+      struct Tag : TrackTypeTag {};
       // Collect all concrete and abstract track types known at compile time
-      using TrackTypes = typename CollectTrackTypes<Tag>::type;
-      TrackTypes *const trackTypes = nullptr;
+      using TrackTypes = TypeList::Reverse_t<
+         typename TypeEnumerator::CollectTypes<TrackTypeTag, Tag>::type>;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Tag, true, R>(*this, trackTypes, functions...);
+      return DoTypeSwitch<Tag, true, R>(*this, TrackTypes{}, functions...);
    }
 
    // XMLTagHandler callback methods -- NEW virtual for writing

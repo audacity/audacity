@@ -5,6 +5,7 @@ add_unit_test(
       lib-utility
    SOURCES
       CallableTest.cpp
+      TypeEnumeratorTest.cpp
       VariantTest.cpp
    LIBRARIES
       lib-utility
