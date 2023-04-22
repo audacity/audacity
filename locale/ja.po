@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-18 17:38+0900\n"
+"PO-Revision-Date: 2023-04-23 00:33+0900\n"
 "Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
 "Language-Team: Atsushi YOSHIDA, Phroneris, SakiPapa\n"
 "Language: ja\n"
@@ -4496,7 +4496,7 @@ msgid ""
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"FFmpeg が設定済みで、以前は正常に読み込まれていましたが、\n"
+"以前は FFmpeg が設定済みで、正常に読み込まれていましたが、\n"
 "今回の Audacity 起動時に読み込みできませんでした。\n"
 "\n"
 "［環境設定］>［ライブラリ］で再設定してください。"
@@ -4517,7 +4517,7 @@ msgstr "FFmpeg の場所を指定"
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr ""
-"FFmpeg を使ったオーディオのインポートとエクスポートには、ファイル「%s」が必要"
+"FFmpeg を使ったオーディオのインポート/エクスポートには、ファイル「%s」が必要"
 "です。"
 
 # ja: 独自アクセスキー
@@ -9923,11 +9923,11 @@ msgstr "オーディオを生成する十分なスペースがありません"
 # ja: 独自アクセスキー
 #: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
 msgid "Invert"
-msgstr "上下を反転(&I)"
+msgstr "位相を反転(&I)"
 
 #: src/effects/Invert.cpp
 msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr "オーディオサンプルを上下逆にして、極性を反転します"
+msgstr "オーディオサンプルの上下を逆にして、極性（位相）を反転します"
 
 #: src/effects/Loudness.cpp
 msgid "perceived loudness"
@@ -10662,11 +10662,11 @@ msgstr "ウェットのみ(&N)"
 # ja: 独自アクセスキー
 #: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverse"
-msgstr "前後を反転(&V)"
+msgstr "リバース（逆方向）(&V)"
 
 #: src/effects/Reverse.cpp
 msgid "Reverses the selected audio"
-msgstr "選択したオーディオを反転"
+msgstr "選択したオーディオを逆方向に反転"
 
 # ja: “in fact this symbol does not get used”
 # Subband Sinusoidal Modeling Synthesis
@@ -12016,7 +12016,7 @@ msgid ""
 "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
 msgstr ""
-"続けるには正しく設定された FFmpeg が必要です。\n"
+"続けるには FFmpeg を正しく設定する必要があります。\n"
 "[環境設定］>［ライブラリ］にて設定できます。"
 
 #: src/export/ExportFFmpeg.cpp
@@ -12043,8 +12043,7 @@ msgstr ""
 msgid ""
 "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr ""
-"FFmpeg : エラー - 書き込むべき出力ファイル「%s」を開けません。エラーコード "
-"%d。"
+"FFmpeg : エラー - 書き込む出力ファイル「%s」を開けません。エラーコード %d。"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -12087,7 +12086,7 @@ msgstr ""
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
-"FFmpeg : エラー - オーディオ FIFO から読むためのバッファーを確保できません。"
+"FFmpeg : エラー - オーディオ FIFO からの読み込みバッファーを確保できません。"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
@@ -12095,11 +12094,11 @@ msgstr "FFmpeg : エラー - 出力ファイルにオーディオフレームを
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
-msgstr "FFmpeg : エラー - サンプルバッファーサイズを獲得できません"
+msgstr "FFmpeg : エラー - サンプルバッファーサイズを取得できません"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
-msgstr "FFmpeg : エラー - サンプルバッファー用のバイトを割り当てられません"
+msgstr "FFmpeg : エラー - サンプルバッファー用のバイトを確保できません"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
@@ -12127,8 +12126,8 @@ msgid ""
 "Attempted to export %d channels, but maximum number of channels for selected "
 "output format is %d"
 msgstr ""
-"%d 本のチャンネルをエクスポートしようとしましたが、選択された出力形式では最"
-"大 %d 本です"
+"%d 本のチャンネルをエクスポートしようとしましたが、選択された出力形式ではチャ"
+"ンネルは最大 %d 本です"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -12385,7 +12384,7 @@ msgstr "AC3 ファイル（FFmpeg）"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "AMR（狭帯域）ファイル（FFmpeg)"
+msgstr "AMR（狭帯域）ファイル（FFmpeg）"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Opus (OggOpus) Files (FFmpeg)"
