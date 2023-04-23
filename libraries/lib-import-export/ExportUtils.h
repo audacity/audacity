@@ -26,6 +26,6 @@ public:
 
    static TrackIterRange<const WaveTrack> FindExportWaveTracks(const TrackList& tracks, bool selectedOnly);
 
-   static ExportPlugin::Parameters ParametersFromEditor(const ExportOptionsEditor& editor);
+   static ExportProcessor::Parameters ParametersFromEditor(const ExportOptionsEditor& editor);
 };
 

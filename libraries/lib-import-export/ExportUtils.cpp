@@ -24,9 +24,9 @@ TrackIterRange<const WaveTrack> ExportUtils::FindExportWaveTracks(const TrackLis
             - ( anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute);
 }
 
-ExportPlugin::Parameters ExportUtils::ParametersFromEditor(const ExportOptionsEditor& editor)
+ExportProcessor::Parameters ExportUtils::ParametersFromEditor(const ExportOptionsEditor& editor)
 {
-   ExportPlugin::Parameters parameters;
+   ExportProcessor::Parameters parameters;
    for(int i = 0, count = editor.GetOptionsCount(); i < count; ++i)
    {
       ExportOption option;

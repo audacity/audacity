@@ -21,7 +21,7 @@ namespace
    {
       bool mCancelled {false};
       bool mStopped {false};
-
+      
       TranslatableString mStatus;
       TranslatableString mError;
 
@@ -51,12 +51,12 @@ namespace
       void OnProgress(double progress) override
       {
          constexpr long long ProgressSteps = 1000ul;
-
+         
          if(!mProgressDialog)
             mProgressDialog = BasicUI::MakeProgress(XO("Export"), mStatus);
          else
             mProgressDialog->SetMessage(mStatus);
-         
+
          const auto result = mProgressDialog->Poll(progress * ProgressSteps, ProgressSteps);
 
          if(result == BasicUI::ProgressResult::Cancelled)
@@ -75,6 +75,7 @@ namespace
       {
          return mError;
       }
+      
    };
 
 }

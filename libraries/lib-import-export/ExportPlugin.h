@@ -51,6 +51,25 @@ public:
    virtual void OnProgress(double progress) = 0;
 };
 
+class IMPORT_EXPORT_API ExportProcessor
+{
+public:
+   using Parameters = std::vector<std::tuple<ExportOptionID, ExportValue>>;
+
+   virtual ~ExportProcessor();
+
+   virtual bool Initialize(ExportPluginDelegate& delegate,
+      AudacityProject& project,
+      const Parameters& parameters,
+      wxFileNameWrapper filename,
+      double t0, double t1, bool selectedOnly,
+      int channels,
+      MixerOptions::Downmix* mixerSpec = nullptr,
+      const Tags* tags = nullptr) = 0;
+   virtual void Process(ExportPluginDelegate& delegate) = 0;
+   virtual ExportResult Finalize() = 0;
+};
+
 //----------------------------------------------------------------------------
 // ExportPlugin
 //----------------------------------------------------------------------------
@@ -58,7 +77,7 @@ class IMPORT_EXPORT_API ExportPlugin /* not final */
 {
 public:
 
-   using Parameters = std::vector<std::tuple<ExportOptionID, ExportValue>>;
+   
 
    ExportPlugin();
    virtual ~ExportPlugin();
@@ -84,33 +103,9 @@ public:
    ///\param config Configuration JSON object
    ///\param parameters Where to put parameters
    ///\return Whether the parsing was successful
-   virtual bool ParseConfig(int formatIndex, const rapidjson::Value& config, Parameters& parameters) const;
+   virtual bool ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const;
 
    virtual bool CheckFileName(wxFileName &filename, int format = 0) const;
 
-   /** \brief called to export audio into a file.
-    *
-    * @param delegate Used to report on export progress
-    * @param parameters A format-dependent set of parameters used in exporting
-    * @param selectedOnly Set to true if all tracks should be mixed, to false
-    * if only the selected tracks should be mixed and exported.
-    * @param metadata A Tags object that will over-ride the one in *project and
-    * be used to tag the file that is exported.
-    * @param subformat Control which of the multiple formats this exporter is
-    * capable of exporting should be used. Used where a single export plug-in
-    * handles a number of related formats, but they have separate
-    * entries in the Format drop-down list box. For example, the options to
-    * export to "Other PCM", "AIFF 16 Bit" and "WAV 16 Bit" are all the same
-    * libsndfile export plug-in, but with subformat set to 0, 1, and 2
-    * respectively.
-    */
-   virtual ExportResult Export(AudacityProject *project,
-                       ExportPluginDelegate& delegate,
-                       const Parameters& parameters,
-                       unsigned channels,
-                       const wxFileNameWrapper &fName,
-                       bool selectedOnly, double t0, double t1,
-                       MixerOptions::Downmix *mixerSpec = nullptr,
-                       const Tags *metadata = nullptr,
-                       int subformat = 0) const = 0;
+   virtual std::unique_ptr<ExportProcessor> CreateProcessor(int format) const = 0;
 };

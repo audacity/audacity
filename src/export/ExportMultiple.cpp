@@ -1138,15 +1138,13 @@ ExportMultipleDialog::DoExport(unsigned channels,
       auto plugin = mPlugins[mPluginIndex];
       auto editor = plugin->CreateOptionsEditor(mSubFormatIndex, nullptr);
       editor->Load(*gPrefs);
-      return plugin->Export(mProject,
-                  delegate,
-                  ExportUtils::ParametersFromEditor(*editor),
-                  channels,
-                  fullPath,
-                  selectedOnly, t0, t1,
-                  nullptr,
-                  &tags,
-                  mSubFormatIndex);
+      auto processor = plugin->CreateProcessor(mSubFormatIndex);
+      if(!processor->Initialize(delegate, *mProject, ExportUtils::ParametersFromEditor(*editor), fullPath, t0, t1, selectedOnly, channels, nullptr, &tags))
+         return ExportResult::Error;
+
+      processor->Process(delegate);
+
+      return processor->Finalize();
    }));
    
    success = result == ExportResult::Success || result == ExportResult::Stopped;

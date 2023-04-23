@@ -890,7 +890,7 @@ bool FFmpegExporter::CheckSampleRate(int rate, int lowrate, int highrate, const 
 }
 
 bool FFmpegExporter::InitCodecs(ExportPluginDelegate& delegate,
-                                AudacityProject *project,
+                                AudacityProject *project1,
                                 const ExportPlugin::Parameters& parameters)
 {
    const auto &settings = ProjectSettings::Get( *project );

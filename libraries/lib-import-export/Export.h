@@ -62,7 +62,7 @@ public:
    Exporter( AudacityProject &project );
    ~Exporter();
 
-   void Configure(const wxFileName& filename, int pluginIndex, int formatIndex, const ExportPlugin::Parameters& parameters);
+   void Configure(const wxFileName& filename, int pluginIndex, int formatIndex, const ExportProcessor::Parameters& parameters);
    
    bool SetExportRange(double t0, double t1, bool selectedOnly, bool skipSilenceAtBeginning = false);
    
@@ -75,7 +75,7 @@ public:
    ExportResult Process(ExportPluginDelegate& delegate);
    
    ExportResult Process(ExportPluginDelegate& delegate,
-                const ExportPlugin::Parameters& parameters,
+                const ExportProcessor::Parameters& parameters,
                 unsigned numChannels,
                 const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
@@ -85,7 +85,7 @@ public:
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
    wxFileName GetAutoExportFileName();
-   ExportPlugin::Parameters GetAutoExportParameters();
+   ExportProcessor::Parameters GetAutoExportParameters();
 
 private:
    struct IMPORT_EXPORT_API ExporterItem final : Registry::SingleItem {
@@ -95,7 +95,7 @@ private:
       Exporter::ExportPluginFactory mFactory;
    };
 
-   ExportResult ExportTracks(ExportPluginDelegate& delegate, const ExportPlugin::Parameters& parameters);
+   ExportResult ExportTracks(ExportPluginDelegate& delegate, const ExportProcessor::Parameters& parameters);
 
 private:
    AudacityProject *mProject;
@@ -104,7 +104,7 @@ private:
    ExportPluginArray mPlugins;
 
    wxFileName mFilename;
-   ExportPlugin::Parameters mParameters;
+   ExportProcessor::Parameters mParameters;
 
    double mT0;
    double mT1;

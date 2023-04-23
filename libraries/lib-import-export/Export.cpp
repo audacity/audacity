@@ -103,7 +103,7 @@ const ExportPluginArray &Exporter::GetPlugins()
 void Exporter::Configure(const wxFileName &filename,
                          int pluginIndex,
                          int formatIndex,
-                         const ExportPlugin::Parameters& parameters)
+                         const ExportProcessor::Parameters& parameters)
 {
    mFilename = filename;
    mFormat = pluginIndex;
@@ -202,7 +202,7 @@ ExportResult Exporter::Process(ExportPluginDelegate& delegate)
 }
 
 ExportResult Exporter::Process(ExportPluginDelegate& delegate,
-                       const ExportPlugin::Parameters& parameters,
+                       const ExportProcessor::Parameters& parameters,
                        unsigned numChannels,
                        const FileExtension &type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
@@ -230,7 +230,7 @@ ExportResult Exporter::Process(ExportPluginDelegate& delegate,
 }
 
 ExportResult Exporter::ExportTracks(ExportPluginDelegate& delegate,
-                            const ExportPlugin::Parameters& parameters)
+                            const ExportProcessor::Parameters& parameters)
 {
    auto filename = mFilename;
 
@@ -242,34 +242,41 @@ ExportResult Exporter::ExportTracks(ExportPluginDelegate& delegate,
                         wxString::Format(wxT("%d"), suffix));
       suffix++;
    }
-   
-   auto result = ExportResult::Success;
-   auto cleanup = finally( [&] {
-      const auto success = result == ExportResult::Success
-         || result == ExportResult::Stopped;
 
-      if(success)
-      {
-         if (filename != mFilename)
-            ::wxRenameFile(filename.GetFullPath(),
-               mFilename.GetFullPath(),
-               true /*overwrite*/);
-      }
-      else
-         ::wxRemoveFile(filename.GetFullPath());
-   } );
+   auto result = ExportResult::Error;
 
-   result = mPlugins[mFormat]->Export(mProject,
-                             delegate,
-                             parameters,
-                             mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
-                             filename.GetFullPath(),
-                             mSelectedOnly,
-                             mT0,
-                             mT1,
-                             mMixerSpec.get(),
-                             nullptr,
-                             mSubFormat);
+   auto processor = mPlugins[mFormat]->CreateProcessor(mSubFormat);
+   if(!processor->Initialize(delegate,
+      *mProject,
+      parameters,
+      mFilename.GetFullPath(),
+      mT0, mT1, mSelectedOnly,
+      mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
+      mMixerSpec.get()))
+   {
+      return result;
+   }
+
+   {
+      auto cleanup = finally( [&] {
+         result = processor->Finalize();
+         const auto success = result == ExportResult::Success
+            || result == ExportResult::Stopped;
+         
+         if(success)
+         {
+            if (filename != mFilename)
+               ::wxRenameFile(filename.GetFullPath(),
+                  mFilename.GetFullPath(),
+                  true /*overwrite*/);
+         }
+         else
+            ::wxRemoveFile(filename.GetFullPath());
+      } );
+      
+      processor->Process(delegate);
+   }
+
    return result;
 }
 
@@ -285,7 +292,7 @@ wxFileName Exporter::GetAutoExportFileName() {
    return mFilename;
 }
 
-ExportPlugin::Parameters Exporter::GetAutoExportParameters()
+ExportProcessor::Parameters Exporter::GetAutoExportParameters()
 {
    return mParameters;
 }

@@ -57,7 +57,7 @@ bool ExportOptionsHandler::TransferDataFromEditor()
    return true;
 }
 
-ExportPlugin::Parameters ExportOptionsHandler::GetParameters() const
+ExportProcessor::Parameters ExportOptionsHandler::GetParameters() const
 {
    if(mEditor)
       return ExportUtils::ParametersFromEditor(*mEditor);

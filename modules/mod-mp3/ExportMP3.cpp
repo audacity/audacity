@@ -1621,26 +1621,7 @@ public:
 
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const override;
-
-   ExportResult Export(AudacityProject *project,
-               ExportPluginDelegate &delegate,
-               const Parameters& parameters,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec,
-               const Tags *metadata,
-               int subformat) const override;
-
-private:
-
-   static int AskResample(int bitrate, int rate, int lowrate, int highrate);
-   static unsigned long AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
-#ifdef USE_LIBID3TAG
-   static void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
-#endif
+   std::unique_ptr<ExportProcessor> CreateProcessor(int) const override;
 };
 
 ExportMP3::ExportMP3() = default;
@@ -1683,200 +1664,210 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
    return true;
 }
 
-ExportResult ExportMP3::Export(AudacityProject *project,
-                       ExportPluginDelegate &delegate,
-                       const Parameters& parameters,
-                       unsigned channels,
-                       const wxFileNameWrapper &fName,
-                       bool selectionOnly,
-                       double t0,
-                       double t1,
-                       MixerSpec *mixerSpec,
-                       const Tags *metadata,
-                       int) const
+class MP3ExportProcessor final : public ExportProcessor
 {
-   int rate = lrint( ProjectRate::Get( *project ).GetRate());
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-   wxWindow *parent = ProjectWindow::Find( project );
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-   const auto &tracks = TrackList::Get( *project );
-   MP3Exporter exporter;
+   MP3Exporter mExporter;
 
-#ifdef DISABLE_DYNAMIC_LOADING_LAME
-   if (!exporter.InitLibrary(wxT(""))) {
-      AudacityMessageBox( XO("Could not initialize MP3 encoding library!") );
-      gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
-      gPrefs->Flush();
+   std::unique_ptr<Mixer> mMixer;
+   wxFFile mFile;
+   wxFileOffset mInfoTagPos{0};
+   double mT0{};
+   double mT1{};
+   int mInSamples{};
+   int mChannels{};
 
-      return ExportResult::Cancelled;
-   }
-#else
-   if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
-      gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
-      gPrefs->Flush();
-      delegate.SetErrorString(XO("Could not open MP3 encoding library!"));
-      return ExportResult::Error;
-   }
+   ArrayOf<char> mId3buffer;
+   unsigned long mId3Len{};
 
-   if (!exporter.ValidLibraryLoaded()) {
-      gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
-      gPrefs->Flush();
-      delegate.SetErrorString(XO("Not a valid or supported MP3 encoding library!"));
-      return ExportResult::Error;
-   }
-#endif // DISABLE_DYNAMIC_LOADING_LAME
+   std::function<ExportResult()> mProcessingCleanup {};
 
-   // Retrieve preferences
-   int highrate = 48000;
-   int lowrate = 8000;
-   int bitrate = 0;
-   int quality;
-   //int vmode;
-   bool forceMono = ExportPluginHelpers::GetParameterValue(
-      parameters,
-      MP3OptionIDForceMono,
-      false);
-   
-   auto rmode = ExportPluginHelpers::GetParameterValue(
-      parameters,
-      MP3OptionIDMode,
-      std::string("CBR"));
-   auto cmode = ExportPluginHelpers::GetParameterValue(
-      parameters,
-      MP3OptionIDChannels,
-      std::string("STEREO")
-   );
-   // Set the bitrate/quality and mode
-   if (rmode == "SET") {
-      quality = ExportPluginHelpers::GetParameterValue<int>(
-         parameters,
-         MP3OptionIDQualitySET,
-         PRESET_STANDARD);
-      exporter.SetMode(MODE_SET);
-      exporter.SetQuality(quality);
-   }
-   else if (rmode == "VBR") {
-      quality = ExportPluginHelpers::GetParameterValue<int>(
-         parameters,
-         MP3OptionIDQualityVBR,
-         QUALITY_2);
-      exporter.SetMode(MODE_VBR);
-      exporter.SetQuality(quality);
-   }
-   else if (rmode == "ABR") {
-      bitrate = ExportPluginHelpers::GetParameterValue(
-         parameters,
-         MP3OptionIDQualityABR,
-         128);
-      exporter.SetMode(MODE_ABR);
-      exporter.SetBitrate(bitrate);
-      if (bitrate > 160) {
-         lowrate = 32000;
-      }
-      else if (bitrate < 32 || bitrate == 144) {
-         highrate = 24000;
-      }
-   }
-   else {
-      bitrate = ExportPluginHelpers::GetParameterValue(parameters, MP3OptionIDQualityCBR, 128);
-      exporter.SetMode(MODE_CBR);
-      exporter.SetBitrate(bitrate);
-
-      if (bitrate > 160) {
-         lowrate = 32000;
-      }
-      else if (bitrate < 32 || bitrate == 144) {
-         highrate = 24000;
-      }
-   }
-
-   // Verify sample rate
-   if (!make_iterator_range( sampRates ).contains( rate ) ||
-      (rate < lowrate) || (rate > highrate)) {
-        // Force valid sample rate in macros.
-		if (project->mBatchMode) {
-			if (!make_iterator_range( sampRates ).contains( rate )) {
-				auto const bestRateIt = std::lower_bound(sampRates.begin(),
-				sampRates.end(), rate);
-				rate = (bestRateIt == sampRates.end()) ? highrate : *bestRateIt;
-			}
-			if (rate < lowrate) {
-				rate = lowrate;
-			}
-			else if (rate > highrate) {
-				rate = highrate;
-			}
-		}
-		// else validate or prompt
-		else {
-			if (!make_iterator_range( sampRates ).contains( rate ) ||
-				(rate < lowrate) || (rate > highrate)) {
-				rate = AskResample(bitrate, rate, lowrate, highrate);
-			}
-			if (rate == 0) {
-            return ExportResult::Error;
-			}
-		}
-	}
-
-   // Set the channel mode
-   if (forceMono) {
-      exporter.SetChannel(CHANNEL_MONO);
-   }
-   else if (cmode == "JOINT") {
-      exporter.SetChannel(CHANNEL_JOINT);
-   }
-   else {
-      exporter.SetChannel(CHANNEL_STEREO);
-   }
-
-   auto inSamples = exporter.InitializeStream(channels, rate);
-   if (((int)inSamples) < 0) {
-      delegate.SetErrorString(XO("Unable to initialize MP3 stream"));
-      return ExportResult::Error;
-   }
-
-   // Put ID3 tags at beginning of file
-   if (metadata == NULL)
-      metadata = &Tags::Get( *project );
-
-   // Open file for writing
-   wxFFile outFile(fName.GetFullPath(), wxT("w+b"));
-   if (!outFile.IsOpened()) {
-      delegate.SetErrorString(XO("Unable to open target file for writing"));
-      return ExportResult::Error;
-   }
-
-   ArrayOf<char> id3buffer;
-   bool endOfFile;
-   unsigned long id3len = AddTags(project, id3buffer, &endOfFile, metadata);
-   if (id3len && !endOfFile) {
-      if (id3len > outFile.Write(id3buffer.get(), id3len)) {
-         // TODO: more precise message
-         ShowExportErrorDialog("MP3:1882");
-         return ExportResult::Error;
-      }
-   }
-
-   wxFileOffset pos = outFile.Tell();
-   int bytes = 0;
-
-   size_t bufferSize = std::max(0, exporter.GetOutBufferSize());
-   if (bufferSize <= 0) {
-      // TODO: more precise message
-      ShowExportErrorDialog("MP3:1849");
-      return ExportResult::Error;
-   }
-
-   ArrayOf<unsigned char> buffer{ bufferSize };
-   wxASSERT(buffer);
-
-   auto exportResult = ExportResult::Success;
-   
+public:
+   bool Initialize(ExportPluginDelegate& delegate,
+      AudacityProject& project,
+      const Parameters& parameters,
+      wxFileNameWrapper fName,
+      double t0, double t1, bool selectionOnly,
+      int channels,
+      MixerOptions::Downmix* mixerSpec,
+      const Tags* metadata) override
    {
-      auto mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
+      mT0 = t0;
+      mT1 = t1;
+      mChannels = channels;
+      int rate = lrint( ProjectRate::Get( project ).GetRate());
+#ifndef DISABLE_DYNAMIC_LOADING_LAME
+      wxWindow *parent = ProjectWindow::Find( &project );
+#endif // DISABLE_DYNAMIC_LOADING_LAME
+      const auto &tracks = TrackList::Get( project );
+
+   #ifdef DISABLE_DYNAMIC_LOADING_LAME
+      if (!exporter.InitLibrary(wxT(""))) {
+         AudacityMessageBox( XO("Could not initialize MP3 encoding library!") );
+         gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
+         gPrefs->Flush();
+
+         return ExportResult::Cancelled;
+      }
+   #else
+      if (!mExporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
+         gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
+         gPrefs->Flush();
+         delegate.SetErrorString(XO("Could not open MP3 encoding library!"));
+         return false;
+      }
+
+      if (!mExporter.ValidLibraryLoaded()) {
+         gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
+         gPrefs->Flush();
+         delegate.SetErrorString(XO("Not a valid or supported MP3 encoding library!"));
+         return false;
+      }
+   #endif // DISABLE_DYNAMIC_LOADING_LAME
+
+      // Retrieve preferences
+      int highrate = 48000;
+      int lowrate = 8000;
+      int bitrate = 0;
+      int quality;
+      //int vmode;
+      bool forceMono = ExportPluginHelpers::GetParameterValue(
+         parameters,
+         MP3OptionIDForceMono,
+         false);
+      
+      auto rmode = ExportPluginHelpers::GetParameterValue(
+         parameters,
+         MP3OptionIDMode,
+         std::string("CBR"));
+      auto cmode = ExportPluginHelpers::GetParameterValue(
+         parameters,
+         MP3OptionIDChannels,
+         std::string("STEREO")
+      );
+      // Set the bitrate/quality and mode
+      if (rmode == "SET") {
+         quality = ExportPluginHelpers::GetParameterValue<int>(
+            parameters,
+            MP3OptionIDQualitySET,
+            PRESET_STANDARD);
+         mExporter.SetMode(MODE_SET);
+         mExporter.SetQuality(quality);
+      }
+      else if (rmode == "VBR") {
+         quality = ExportPluginHelpers::GetParameterValue<int>(
+            parameters,
+            MP3OptionIDQualityVBR,
+            QUALITY_2);
+         mExporter.SetMode(MODE_VBR);
+         mExporter.SetQuality(quality);
+      }
+      else if (rmode == "ABR") {
+         bitrate = ExportPluginHelpers::GetParameterValue(
+            parameters,
+            MP3OptionIDQualityABR,
+            128);
+         mExporter.SetMode(MODE_ABR);
+         mExporter.SetBitrate(bitrate);
+         if (bitrate > 160) {
+            lowrate = 32000;
+         }
+         else if (bitrate < 32 || bitrate == 144) {
+            highrate = 24000;
+         }
+      }
+      else {
+         bitrate = ExportPluginHelpers::GetParameterValue(parameters, MP3OptionIDQualityCBR, 128);
+         mExporter.SetMode(MODE_CBR);
+         mExporter.SetBitrate(bitrate);
+
+         if (bitrate > 160) {
+            lowrate = 32000;
+         }
+         else if (bitrate < 32 || bitrate == 144) {
+            highrate = 24000;
+         }
+      }
+
+      // Verify sample rate
+      if (!make_iterator_range( sampRates ).contains( rate ) ||
+         (rate < lowrate) || (rate > highrate)) {
+           // Force valid sample rate in macros.
+		   if (project.mBatchMode) {
+			   if (!make_iterator_range( sampRates ).contains( rate )) {
+				   auto const bestRateIt = std::lower_bound(sampRates.begin(),
+				   sampRates.end(), rate);
+				   rate = (bestRateIt == sampRates.end()) ? highrate : *bestRateIt;
+			   }
+			   if (rate < lowrate) {
+				   rate = lowrate;
+			   }
+			   else if (rate > highrate) {
+				   rate = highrate;
+			   }
+		   }
+		   // else validate or prompt
+		   else {
+			   if (!make_iterator_range( sampRates ).contains( rate ) ||
+				   (rate < lowrate) || (rate > highrate)) {
+				   rate = AskResample(bitrate, rate, lowrate, highrate);
+			   }
+			   if (rate == 0) {
+               return false;
+			   }
+		   }
+	   }
+
+      // Set the channel mode
+      if (forceMono) {
+         mExporter.SetChannel(CHANNEL_MONO);
+      }
+      else if (cmode == "JOINT") {
+         mExporter.SetChannel(CHANNEL_JOINT);
+      }
+      else {
+         mExporter.SetChannel(CHANNEL_STEREO);
+      }
+
+      mInSamples = mExporter.InitializeStream(channels, rate);
+      if (mInSamples < 0) {
+         delegate.SetErrorString(XO("Unable to initialize MP3 stream"));
+         return false;
+      }
+
+      // Put ID3 tags at beginning of file
+      if (metadata == nullptr)
+         metadata = &Tags::Get( project );
+
+      // Open file for writing
+      if (!mFile.Open(fName.GetFullPath(), wxT("w+b"))) {
+         delegate.SetErrorString(XO("Unable to open target file for writing"));
+         return false;
+      }
+      
+      bool endOfFile;
+      mId3Len = AddTags(&project, mId3buffer, &endOfFile, metadata);
+      if (mId3Len && !endOfFile) {
+         if (mId3Len > mFile.Write(mId3buffer.get(), mId3Len)) {
+            // TODO: more precise message
+            ShowExportErrorDialog("MP3:1882");
+            return false;
+         }
+         mId3Len = 0;
+         mId3buffer.reset();
+      }
+
+      mInfoTagPos = mFile.Tell();
+
+      size_t bufferSize = std::max(0, mExporter.GetOutBufferSize());
+      if (bufferSize == 0) {
+         // TODO: more precise message
+         ShowExportErrorDialog("MP3:1849");
+         return false;
+      }
+
+      mMixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
          t0, t1,
-         channels, inSamples, true,
+         channels, mInSamples, true,
          rate, floatSample, mixerSpec);
 
       if (rmode == "SET") {
@@ -1897,28 +1888,41 @@ ExportResult ExportMP3::Export(AudacityProject *project,
             XO("Exporting the audio at %d Kbps"))
                .Format( bitrate ));
       }
+      return true;
+   }
+
+   void Process(ExportPluginDelegate& delegate) override
+   {
+      auto exportResult = ExportResult::Success;
+
+      ArrayOf<unsigned char> buffer{ static_cast<size_t>(mExporter.GetOutBufferSize()) };
+      wxASSERT(buffer);
+
+      int bytes = 0;
+      bool fileWriteError{false};
+      bool finishStreamError{false};
       
       while (exportResult == ExportResult::Success) {
-         auto blockLen = mixer->Process();
+         auto blockLen = mMixer->Process();
          if (blockLen == 0)
             break;
 
-         float *mixed = (float *)mixer->GetBuffer();
+         float *mixed = (float *)mMixer->GetBuffer();
 
-         if ((int)blockLen < inSamples) {
-            if (channels > 1) {
-               bytes = exporter.EncodeRemainder(mixed, blockLen, buffer.get());
+         if ((int)blockLen < mInSamples) {
+            if (mChannels > 1) {
+               bytes = mExporter.EncodeRemainder(mixed, blockLen, buffer.get());
             }
             else {
-               bytes = exporter.EncodeRemainderMono(mixed, blockLen, buffer.get());
+               bytes = mExporter.EncodeRemainderMono(mixed, blockLen, buffer.get());
             }
          }
          else {
-            if (channels > 1) {
-               bytes = exporter.EncodeBuffer(mixed, buffer.get());
+            if (mChannels > 1) {
+               bytes = mExporter.EncodeBuffer(mixed, buffer.get());
             }
             else {
-               bytes = exporter.EncodeBufferMono(mixed, buffer.get());
+               bytes = mExporter.EncodeBufferMono(mixed, buffer.get());
             }
          }
 
@@ -1929,63 +1933,100 @@ ExportResult ExportMP3::Export(AudacityProject *project,
             break;
          }
 
-         if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
-            // TODO: more precise message
-            ShowDiskFullExportErrorDialog(fName);
+         if (bytes > (int)mFile.Write(buffer.get(), bytes)) {
+            fileWriteError = true;
             exportResult = ExportResult::Error;
             break;
          }
 
          if(exportResult == ExportResult::Success)
             exportResult = ExportPluginHelpers::UpdateProgress(
-               delegate, *mixer, t0, t1);
-      }
-   }
-
-   if (exportResult == ExportResult::Success) {
-      bytes = exporter.FinishStream(buffer.get());
-
-      if (bytes < 0) {
-         // TODO: more precise message
-         ShowExportErrorDialog("MP3:1981");
-         return ExportResult::Error;
+               delegate, *mMixer, mT0, mT1);
       }
 
-      if (bytes > 0) {
-         if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
+      if(exportResult == ExportResult::Success)
+      {
+         bytes = mExporter.FinishStream(buffer.get());
+         if (bytes > 0) {
+            if (bytes > (int)mFile.Write(buffer.get(), bytes)) {
+               finishStreamError = true;
+            }
+         }
+      }
+      mProcessingCleanup = [=]() mutable
+      {
+         if(fileWriteError)
+         {
+            // TODO: more precise message
+            ShowDiskFullExportErrorDialog(mFile.GetName());
+            return ExportResult::Error;
+         }
+         if(finishStreamError)
+         {
             // TODO: more precise message
             ShowExportErrorDialog("MP3:1988");
             return ExportResult::Error;
          }
-      }
 
-      // Write ID3 tag if it was supposed to be at the end of the file
-      if (id3len > 0 && endOfFile) {
-         if (bytes > (int)outFile.Write(id3buffer.get(), id3len)) {
-            // TODO: more precise message
-            ShowExportErrorDialog("MP3:1997");
-            return ExportResult::Error;
+         if(exportResult == ExportResult::Success)
+         {
+            if (bytes < 0) {
+               // TODO: more precise message
+               ShowExportErrorDialog("MP3:1981");
+               return ExportResult::Error;
+            }
+
+            // Write ID3 tag if it was supposed to be at the end of the file
+            if (mId3Len > 0) {
+               if (bytes > (int)mFile.Write(mId3buffer.get(), mId3Len)) {
+                  // TODO: more precise message
+                  ShowExportErrorDialog("MP3:1997");
+                  return ExportResult::Error;
+               }
+               mId3Len = 0;
+               mId3buffer.reset();
+            }
+
+            // Always write the info (Xing/Lame) tag.  Until we stop supporting Lame
+            // versions before 3.98, we must do this after the MP3 file has been
+            // closed.
+            //
+            // Also, if beWriteInfoTag() is used, mGF will no longer be valid after
+            // this call, so do not use it.
+            if (!mExporter.PutInfoTag(mFile, mInfoTagPos) ||
+                !mFile.Flush() ||
+                !mFile.Close()) {
+               // TODO: more precise message
+               ShowExportErrorDialog("MP3:2012");
+               return ExportResult::Error;
+            }
          }
-      }
 
-      // Always write the info (Xing/Lame) tag.  Until we stop supporting Lame
-      // versions before 3.98, we must do this after the MP3 file has been
-      // closed.
-      //
-      // Also, if beWriteInfoTag() is used, mGF will no longer be valid after
-      // this call, so do not use it.
-      if (!exporter.PutInfoTag(outFile, pos) ||
-          !outFile.Flush() ||
-          !outFile.Close()) {
-         // TODO: more precise message
-         ShowExportErrorDialog("MP3:2012");
-         return ExportResult::Error;
-      }
+         return exportResult;
+      };
    }
-   return exportResult;
+
+   ExportResult Finalize() override
+   {
+      if(mProcessingCleanup)
+         return mProcessingCleanup();
+      return ExportResult::Error;
+   }
+
+private:
+   static int AskResample(int bitrate, int rate, int lowrate, int highrate);
+   static unsigned long AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
+#ifdef USE_LIBID3TAG
+   static void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
+#endif
+};
+
+std::unique_ptr<ExportProcessor> ExportMP3::CreateProcessor(int) const
+{
+   return std::make_unique<MP3ExportProcessor>();
 }
 
-int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
+int MP3ExportProcessor::AskResample(int bitrate, int rate, int lowrate, int highrate)
 {
    wxDialogWrapper d(nullptr, wxID_ANY, XO("Invalid sample rate"));
    d.SetName();
@@ -2060,7 +2101,7 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
 // returns buffer len; caller frees
-unsigned long ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
+unsigned long MP3ExportProcessor::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
    id3_tag_holder tp { id3_tag_new() };
@@ -2122,7 +2163,7 @@ unsigned long ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<cha
 }
 
 #ifdef USE_LIBID3TAG
-void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name)
+void MP3ExportProcessor::AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name)
 {
    struct id3_frame *frame = id3_frame_new(name);
 

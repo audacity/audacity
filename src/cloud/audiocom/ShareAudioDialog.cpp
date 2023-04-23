@@ -347,7 +347,7 @@ wxString ShareAudioDialog::ExportProject()
       {
          for(int i = 0, formatCount = plugin->GetFormatCount(); i < formatCount; ++i)
          {
-            ExportPlugin::Parameters parameters;
+            ExportProcessor::Parameters parameters;
             if(hasMimeType(plugin->GetMimeTypes(i), preferredMimeType) &&
                plugin->ParseConfig(i, config, parameters))
             {
