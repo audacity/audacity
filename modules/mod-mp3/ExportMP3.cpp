@@ -1670,24 +1670,28 @@ class MP3ExportProcessor final : public ExportProcessor
 
    std::unique_ptr<Mixer> mMixer;
    wxFFile mFile;
-   wxFileOffset mInfoTagPos{0};
    double mT0{};
    double mT1{};
    int mInSamples{};
-   int mChannels{};
+   unsigned mChannels{};
 
-   ArrayOf<char> mId3buffer;
+   ArrayOf<char> mId3Buffer;
    unsigned long mId3Len{};
+   wxFileOffset mInfoTagPos{};
 
-   std::function<ExportResult()> mProcessingCleanup {};
+   TranslatableString mStatus;
 
 public:
-   bool Initialize(ExportPluginDelegate& delegate,
-      AudacityProject& project,
+   MP3ExportProcessor() {}
+
+   MP3ExportProcessor(const MP3ExportProcessor&) = delete;
+   MP3ExportProcessor& operator=(const MP3ExportProcessor&) = delete;
+
+   void Initialize(AudacityProject& project,
       const Parameters& parameters,
-      wxFileNameWrapper fName,
+      const wxFileNameWrapper& fName,
       double t0, double t1, bool selectionOnly,
-      int channels,
+      unsigned channels,
       MixerOptions::Downmix* mixerSpec,
       const Tags* metadata) override
    {
@@ -1702,25 +1706,24 @@ public:
 
    #ifdef DISABLE_DYNAMIC_LOADING_LAME
       if (!exporter.InitLibrary(wxT(""))) {
-         AudacityMessageBox( XO("Could not initialize MP3 encoding library!") );
          gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
          gPrefs->Flush();
 
-         return ExportResult::Cancelled;
+         throw ExportException(_("Could not initialize MP3 encoding library!"))
       }
    #else
       if (!mExporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
          gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
          gPrefs->Flush();
-         delegate.SetErrorString(XO("Could not open MP3 encoding library!"));
-         return false;
+
+         throw ExportException(_("Could not open MP3 encoding library!"));
       }
 
       if (!mExporter.ValidLibraryLoaded()) {
          gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
          gPrefs->Flush();
-         delegate.SetErrorString(XO("Not a valid or supported MP3 encoding library!"));
-         return false;
+
+         throw ExportException(_("Not a valid or supported MP3 encoding library!"));
       }
    #endif // DISABLE_DYNAMIC_LOADING_LAME
 
@@ -1809,10 +1812,12 @@ public:
 		   else {
 			   if (!make_iterator_range( sampRates ).contains( rate ) ||
 				   (rate < lowrate) || (rate > highrate)) {
+               //Ideally, that should throw an exception, and AskResample
+               //should perform outside exporter
 				   rate = AskResample(bitrate, rate, lowrate, highrate);
 			   }
 			   if (rate == 0) {
-               return false;
+               throw ExportException("Bad project rate");
 			   }
 		   }
 	   }
@@ -1830,8 +1835,7 @@ public:
 
       mInSamples = mExporter.InitializeStream(channels, rate);
       if (mInSamples < 0) {
-         delegate.SetErrorString(XO("Unable to initialize MP3 stream"));
-         return false;
+         throw ExportException(_("Unable to initialize MP3 stream"));
       }
 
       // Put ID3 tags at beginning of file
@@ -1840,20 +1844,18 @@ public:
 
       // Open file for writing
       if (!mFile.Open(fName.GetFullPath(), wxT("w+b"))) {
-         delegate.SetErrorString(XO("Unable to open target file for writing"));
-         return false;
+         throw ExportException(_("Unable to open target file for writing"));
       }
       
       bool endOfFile;
-      mId3Len = AddTags(&project, mId3buffer, &endOfFile, metadata);
+      mId3Len = AddTags(&project, mId3Buffer, &endOfFile, metadata);
       if (mId3Len && !endOfFile) {
-         if (mId3Len > mFile.Write(mId3buffer.get(), mId3Len)) {
+         if (mId3Len > mFile.Write(mId3Buffer.get(), mId3Len)) {
             // TODO: more precise message
-            ShowExportErrorDialog("MP3:1882");
-            return false;
+            throw ExportErrorCodeException("MP3:1882");
          }
          mId3Len = 0;
-         mId3buffer.reset();
+         mId3Buffer.reset();
       }
 
       mInfoTagPos = mFile.Tell();
@@ -1861,8 +1863,7 @@ public:
       size_t bufferSize = std::max(0, mExporter.GetOutBufferSize());
       if (bufferSize == 0) {
          // TODO: more precise message
-         ShowExportErrorDialog("MP3:1849");
-         return false;
+         throw ExportErrorCodeException("MP3:1849");
       }
 
       mMixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
@@ -1871,36 +1872,35 @@ public:
          rate, floatSample, mixerSpec);
 
       if (rmode == "SET") {
-         delegate.SetStatusString((selectionOnly ?
+         mStatus = ((selectionOnly ?
             XO("Exporting selected audio with %s preset") :
             XO("Exporting the audio with %s preset"))
                .Format( setRateNamesShort[quality] ));
       }
       else if (rmode == "VBR") {
-         delegate.SetStatusString((selectionOnly ?
+         mStatus = ((selectionOnly ?
             XO("Exporting selected audio with VBR quality %s") :
             XO("Exporting the audio with VBR quality %s"))
                .Format( varRateNames[quality] ));
       }
       else {
-         delegate.SetStatusString((selectionOnly ?
+         mStatus = ((selectionOnly ?
             XO("Exporting selected audio at %d Kbps") :
             XO("Exporting the audio at %d Kbps"))
                .Format( bitrate ));
       }
-      return true;
    }
 
-   void Process(ExportPluginDelegate& delegate) override
+   ExportResult Process(ExportPluginDelegate& delegate) override
    {
+      delegate.SetStatusString(mStatus);
+
       auto exportResult = ExportResult::Success;
 
       ArrayOf<unsigned char> buffer{ static_cast<size_t>(mExporter.GetOutBufferSize()) };
       wxASSERT(buffer);
 
       int bytes = 0;
-      bool fileWriteError{false};
-      bool finishStreamError{false};
       
       while (exportResult == ExportResult::Success) {
          auto blockLen = mMixer->Process();
@@ -1929,14 +1929,11 @@ public:
          if (bytes < 0) {
             delegate.SetErrorString(XO("Error %ld returned from MP3 encoder")
                .Format( bytes ));
-            exportResult = ExportResult::Error;
-            break;
+            return ExportResult::Error;
          }
 
          if (bytes > (int)mFile.Write(buffer.get(), bytes)) {
-            fileWriteError = true;
-            exportResult = ExportResult::Error;
-            break;
+            throw ExportDiskFullError {mFile.GetName()};
          }
 
          if(exportResult == ExportResult::Success)
@@ -1949,42 +1946,24 @@ public:
          bytes = mExporter.FinishStream(buffer.get());
          if (bytes > 0) {
             if (bytes > (int)mFile.Write(buffer.get(), bytes)) {
-               finishStreamError = true;
+               // TODO: more precise message
+               throw ExportErrorCodeException("MP3:1988");
             }
-         }
-      }
-      mProcessingCleanup = [=]() mutable
-      {
-         if(fileWriteError)
-         {
-            // TODO: more precise message
-            ShowDiskFullExportErrorDialog(mFile.GetName());
-            return ExportResult::Error;
-         }
-         if(finishStreamError)
-         {
-            // TODO: more precise message
-            ShowExportErrorDialog("MP3:1988");
-            return ExportResult::Error;
          }
 
          if(exportResult == ExportResult::Success)
          {
             if (bytes < 0) {
                // TODO: more precise message
-               ShowExportErrorDialog("MP3:1981");
-               return ExportResult::Error;
+               throw ExportErrorCodeException("MP3:1981");
             }
 
             // Write ID3 tag if it was supposed to be at the end of the file
             if (mId3Len > 0) {
-               if (bytes > (int)mFile.Write(mId3buffer.get(), mId3Len)) {
+               if (bytes > (int)mFile.Write(mId3Buffer.get(), mId3Len)) {
                   // TODO: more precise message
-                  ShowExportErrorDialog("MP3:1997");
-                  return ExportResult::Error;
+                  throw ExportErrorCodeException("MP3:1997");
                }
-               mId3Len = 0;
-               mId3buffer.reset();
             }
 
             // Always write the info (Xing/Lame) tag.  Until we stop supporting Lame
@@ -1997,20 +1976,12 @@ public:
                 !mFile.Flush() ||
                 !mFile.Close()) {
                // TODO: more precise message
-               ShowExportErrorDialog("MP3:2012");
-               return ExportResult::Error;
+               throw ExportErrorCodeException("MP3:2012");
             }
          }
 
          return exportResult;
-      };
-   }
-
-   ExportResult Finalize() override
-   {
-      if(mProcessingCleanup)
-         return mProcessingCleanup();
-      return ExportResult::Error;
+      }
    }
 
 private:

@@ -41,6 +41,7 @@
 #include "CodeConversions.h"
 
 #include "Export.h"
+#include "export/ExportProgressUI.h"
 #include "ExportUtils.h"
 #include "ui/AccessibleLinksFormatter.h"
 
@@ -358,13 +359,23 @@ wxString ShareAudioDialog::ExportProject()
                   continue;
 
                mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this);
+
+               auto result = ExportResult::Error;
+               ExportProgressUI::ExceptionWrappedCall([&]
+               {
+                  auto exportTask = e.CreateExportTask(parameters,
+                     nChannels,
+                     formatInfo.mFormat,
+                     path,
+                     false, t0, t1);
+
+                  auto f = exportTask.get_future();
+                  std::thread(std::move(exportTask), std::ref(*mExportProgressUpdater)).join();
+                  //exportTask(*mExportProgressUpdater);
+
+                  ExportProgressUI::ExceptionWrappedCall([&]{ result = f.get(); });
+               });
                
-               const auto result = e.Process(*mExportProgressUpdater,
-                  parameters,
-                  nChannels,
-                  formatInfo.mFormat,
-                  path,
-                  false, t0, t1);
                mExportProgressUpdater->SetResult(result);
                const auto success = result == ExportResult::Success;
                if(!success && wxFileExists(path))

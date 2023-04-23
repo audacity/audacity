@@ -192,17 +192,12 @@ bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skip
    return true;
 }
 
-ExportResult Exporter::Process(ExportPluginDelegate& delegate)
+ExportTask Exporter::CreateExportTask()
 {
-   const auto result = ExportTracks(delegate, mParameters);
-   // Get rid of mixerspec
-   mMixerSpec.reset();
-
-   return result;
+   return CreateExportTask(mParameters);
 }
 
-ExportResult Exporter::Process(ExportPluginDelegate& delegate,
-                       const ExportProcessor::Parameters& parameters,
+ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& parameters,
                        unsigned numChannels,
                        const FileExtension &type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
@@ -222,16 +217,19 @@ ExportResult Exporter::Process(ExportPluginDelegate& delegate,
             mT1 = t1;
             
             Configure(filename, i, j, parameters);
-            return ExportTracks(delegate, parameters);
+            return CreateExportTask(parameters);
          }
       }
    }
-   return ExportResult::Error;
+   return {};
 }
 
-ExportResult Exporter::ExportTracks(ExportPluginDelegate& delegate,
-                            const ExportProcessor::Parameters& parameters)
+
+
+ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& parameters)
 {
+   //File rename stuff should be moved out to somewhere else...
+
    auto filename = mFilename;
 
    //For safety, if the file already exists we use temporary filename
@@ -243,41 +241,40 @@ ExportResult Exporter::ExportTracks(ExportPluginDelegate& delegate,
       suffix++;
    }
 
-   auto result = ExportResult::Error;
-
    auto processor = mPlugins[mFormat]->CreateProcessor(mSubFormat);
-   if(!processor->Initialize(delegate,
-      *mProject,
+   processor->Initialize(*mProject,
       parameters,
       mFilename.GetFullPath(),
       mT0, mT1, mSelectedOnly,
       mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
-      mMixerSpec.get()))
-   {
-      return result;
-   }
+      mMixerSpec.get());
 
-   {
-      auto cleanup = finally( [&] {
-         result = processor->Finalize();
-         const auto success = result == ExportResult::Success
-            || result == ExportResult::Stopped;
-         
-         if(success)
-         {
-            if (filename != mFilename)
-               ::wxRenameFile(filename.GetFullPath(),
-                  mFilename.GetFullPath(),
-                  true /*overwrite*/);
-         }
-         else
-            ::wxRemoveFile(filename.GetFullPath());
-      } );
-      
-      processor->Process(delegate);
-   }
-
-   return result;
+   return ExportTask([actualFilename = filename,
+      mixer = mMixerSpec.release(),// Get rid of mixerspec
+      targetFilename = mFilename,
+      processor = processor.release()]
+      (ExportPluginDelegate& delegate)
+      {
+         auto result = ExportResult::Error;
+         auto cleanup = finally( [&] {
+            delete processor;
+            delete mixer;
+            if(result == ExportResult::Success || result == ExportResult::Stopped)
+            {
+               if (actualFilename != targetFilename)
+               {
+                  //may fail...
+                  ::wxRenameFile(actualFilename.GetFullPath(),
+                     targetFilename.GetFullPath(),
+                     true);
+               }
+            }
+            else
+               ::wxRemoveFile(actualFilename.GetFullPath());
+         } );
+         result = processor->Process(delegate);
+         return result;
+      });
 }
 
 int Exporter::GetAutoExportFormat() {

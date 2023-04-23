@@ -375,32 +375,14 @@ public:
    
    std::vector<std::string> GetMimeTypes(int formatIndex) const override;
 
-   bool ParseConfig(int formatIndex, const rapidjson::Value&, Parameters& parameters) const override;
+   bool ParseConfig(int formatIndex, const rapidjson::Value&, ExportProcessor::Parameters& parameters) const override;
 
    // Required
 
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
-   
-   ExportResult Export(AudacityProject *project,
-               ExportPluginDelegate &delegate,
-               const Parameters& parameters,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec,
-               const Tags *metadata,
-               int subformat) const override;
 
-private:
-   static void ReportTooBigError(wxWindow * pParent);
-   static ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
-   static bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
-   static bool AddID3Chunk(
-      const wxFileNameWrapper &fName, const Tags *tags, int sf_format);
-
+   std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
 };
 
 ExportPCM::ExportPCM() = default;
@@ -450,7 +432,7 @@ std::vector<std::string> ExportPCM::GetMimeTypes(int formatIndex) const
    return {};
 }
 
-bool ExportPCM::ParseConfig(int formatIndex, const rapidjson::Value&, Parameters& parameters) const
+bool ExportPCM::ParseConfig(int formatIndex, const rapidjson::Value&, ExportProcessor::Parameters& parameters) const
 {
    if(formatIndex == FMT_WAV)
    {
@@ -470,88 +452,94 @@ ExportPCM::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listen
    return std::make_unique<ExportOptionsSFEditor>(listener);
 }
 
-
-void ExportPCM::ReportTooBigError(wxWindow * pParent)
+class PCMExportProcessor final : public ExportProcessor
 {
-   //Temporary translation hack, to say 'WAV or AIFF' rather than 'WAV'
-   auto message =
-      XO("You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
-      "Audacity cannot do this, the Export was abandoned.");
-
-   BasicUI::ShowErrorDialog( wxWidgetsWindowPlacement{ pParent },
-      XO("Error Exporting"), message,
-      wxT("Size_limits_for_WAV_and_AIFF_files"));
-
-// This alternative error dialog was to cover the possibility we could not 
-// compute the size in advance.
-#if 0
-   BasicUI::ShowErrorDialog( wxWidgetsWindowPlacement{ pParent },
-                  XO("Error Exporting"),
-                  XO("Your exported WAV file has been truncated as Audacity cannot export WAV\n"
-                    "files bigger than 4GB."),
-                  wxT("Size_limits_for_WAV_files"));
-#endif
-}
-
-/**
- *
- * @param subformat Control whether we are doing a "preset" export to a popular
- * file type, or giving the user full control over libsndfile.
- */
-ExportResult ExportPCM::Export(AudacityProject *project,
-                       ExportPluginDelegate &delegate,
-                       const Parameters& parameters,
-                       unsigned numChannels,
-                       const wxFileNameWrapper &fName,
-                       bool selectionOnly,
-                       double t0,
-                       double t1,
-                       MixerSpec *mixerSpec,
-                       const Tags *metadata,
-                       int subformat) const
-{
-   double rate = ProjectRate::Get( *project ).GetRate();
-   const auto &tracks = TrackList::Get( *project );
-
-   // Set a default in case the settings aren't found
+   int mFormat{FMT_OTHER};
+   wxFileNameWrapper mFileName;
+   double mT0{};
+   double mT1{};
+   TranslatableString mStatus;
+   
+   SF_INFO info{};
+   std::unique_ptr<Mixer> mixer;
+   sampleFormat format{};
+   wxFile f;
+   SNDFILE* sndfile{};
+   int fileFormat;
+   Tags metadata;
    int sf_format;
-
-   switch (subformat)
+   
+public:
+   /**
+    *
+    * @param format Control whether we are doing a "preset" export to a popular
+    * file type, or giving the user full control over libsndfile.
+    */
+   PCMExportProcessor(int format) : mFormat(format) { }
+   ~PCMExportProcessor() override
    {
-#if defined(__WXMAC__)
-      case FMT_AIFF:
-         sf_format = SF_FORMAT_AIFF;
-      break;
-#endif
-
-      case FMT_WAV:
-         sf_format = SF_FORMAT_WAV;
-      break;
-
-   default:
-      // Retrieve the current format.
-      sf_format = ExportPluginHelpers::GetParameterValue(parameters, OptionIDSFType, 0);
-      break;
+      if(sndfile)
+         (void)sf_close(sndfile);
    }
 
-   sf_format |= ExportPluginHelpers::GetParameterValue(parameters, sf_format, 0);
 
-   // If subtype is still not specified, supply a default.
-   if (!(sf_format & SF_FORMAT_SUBMASK))
-   {
-      sf_format |= SF_FORMAT_PCM_16;
-   }
+   PCMExportProcessor(const PCMExportProcessor&) = delete;
+   PCMExportProcessor& operator=(const PCMExportProcessor&) = delete;
 
-   int fileFormat = sf_format & SF_FORMAT_TYPEMASK;
-   
-   auto exportResult = ExportResult::Success;
-   
+   void Initialize(AudacityProject& project,
+      const Parameters& parameters,
+      const wxFileNameWrapper& filename,
+      double t0, double t1, bool selectionOnly,
+      unsigned channels,
+      MixerOptions::Downmix* mixerSpec,
+      const Tags* tags) override
    {
-      wxFile f;   // will be closed when it goes out of scope
-      SFFile       sf; // wraps f
+      mT0 = t0;
+      mT1 = t1;
+      mFileName = filename;
+
+      double rate = ProjectRate::Get( project ).GetRate();
+      const auto &tracks = TrackList::Get( project );
+
+      switch (mFormat)
+      {
+   #if defined(__WXMAC__)
+         case FMT_AIFF:
+            sf_format = SF_FORMAT_AIFF;
+         break;
+   #endif
+
+         case FMT_WAV:
+            sf_format = SF_FORMAT_WAV;
+         break;
+
+      default:
+         // Retrieve the current format.
+         sf_format = ExportPluginHelpers::GetParameterValue(parameters, OptionIDSFType, 0);
+         break;
+      }
+
+      sf_format |= ExportPluginHelpers::GetParameterValue(parameters, sf_format, 0);
+
+      // If subtype is still not specified, supply a default.
+      if (!(sf_format & SF_FORMAT_SUBMASK))
+      {
+         sf_format |= SF_FORMAT_PCM_16;
+      }
+
+      fileFormat = sf_format & SF_FORMAT_TYPEMASK;
+
+      //wxFile f;   // will be closed when it goes out of scope
+      SNDFILE* sf{};
+      auto sfcleanup = finally([&]
+      {
+         if(sf)
+            //ignore error, if we are here, then
+            //something already went wrong...
+            (void)sf_close(sf);
+      });
 
       wxString     formatStr;
-      SF_INFO      info;
       //int          err;
 
       //This whole operation should not occur while a file is being loaded on OD,
@@ -563,21 +551,18 @@ ExportResult ExportPCM::Export(AudacityProject *project,
 
       info.samplerate = (unsigned int)(rate + 0.5);
       info.frames = (unsigned int)((t1 - t0)*rate + 0.5);
-      info.channels = numChannels;
+      info.channels = channels;
       info.format = sf_format;
       info.sections = 1;
       info.seekable = 0;
 
       // Bug 46.  Trap here, as sndfile.c does not trap it properly.
-      if( (numChannels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610) )
-      {
-         delegate.SetErrorString(XO("GSM 6.10 requires mono"));
-         return ExportResult::Error;
+      if( (channels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610) ) {
+         throw ExportException(_("GSM 6.10 requires mono"));
       }
 
       if (sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610) {
-         delegate.SetErrorString(XO("WAVEX and GSM 6.10 formats are not compatible"));
-         return ExportResult::Error;
+         throw ExportException(_("WAVEX and GSM 6.10 formats are not compatible"));
       }
 
       // If we can't export exactly the format they requested,
@@ -589,37 +574,35 @@ ExportResult ExportPCM::Export(AudacityProject *project,
       if (!sf_format_check(&info))
          info.format = (info.format & SF_FORMAT_TYPEMASK);
       if (!sf_format_check(&info)) {
-         delegate.SetErrorString(XO("Cannot export audio in this format."));
-         return ExportResult::Error;
+         throw ExportException(_("Cannot export audio in this format."));
       }
-      const auto path = fName.GetFullPath();
+      const auto path = filename.GetFullPath();
       if (f.Open(path, wxFile::write)) {
          // Even though there is an sf_open() that takes a filename, use the one that
          // takes a file descriptor since wxWidgets can open a file with a Unicode name and
          // libsndfile can't (under Windows).
-         sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_WRITE, &info, FALSE));
+         sf = sf_open_fd(f.fd(), SFM_WRITE, &info, FALSE);
          //add clipping for integer formats.  We allow floats to clip.
-         sf_command(sf.get(), SFC_SET_CLIPPING, NULL, sf_subtype_is_integer(sf_format)?SF_TRUE:SF_FALSE) ;
+         sf_command(sf, SFC_SET_CLIPPING, NULL, sf_subtype_is_integer(sf_format)?SF_TRUE:SF_FALSE) ;
       }
 
       if (!sf) {
-         delegate.SetErrorString(XO("Cannot export audio to %s").Format( path ));
-         return ExportResult::Error;
+         throw ExportException(XO("Cannot export audio to %s").Format( path ).Translation());
       }
       // Retrieve tags if not given a set
-      if (metadata == NULL)
-         metadata = &Tags::Get( *project );
+      if (tags == nullptr)
+         metadata = Tags::Get( project );
+      else
+         metadata = *tags;
 
       // Install the meta data at the beginning of the file (except for
       // WAV and WAVEX formats)
       if (fileFormat != SF_FORMAT_WAV &&
-          fileFormat != SF_FORMAT_WAVEX) {
-         if (!AddStrings(project, sf.get(), metadata, sf_format)) {
-            return ExportResult::Error;
-         }
+          fileFormat != SF_FORMAT_WAVEX)
+      {
+         AddStrings(sf, &metadata, sf_format);
       }
-
-      sampleFormat format;
+      
       if (sf_subtype_more_than_16_bits(info.format))
          format = floatSample;
       else
@@ -637,121 +620,140 @@ ExportResult ExportPCM::Export(AudacityProject *project,
          // Test for 4 Gibibytes, rather than 4 Gigabytes
          if( byteCount > 4.295e9)
          {
-            ReportTooBigError( wxTheApp->GetTopWindow() );
-            return ExportResult::Error;
+            throw ExportErrorException(
+               _("You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
+                  "Audacity cannot do this, the Export was abandoned."),
+               "Size_limits_for_WAV_and_AIFF_files");
          }
       }
       size_t maxBlockLen = 44100 * 5;
 
       {
-         std::vector<char> dither;
-         if ((info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
-            dither.reserve(maxBlockLen * info.channels * SAMPLE_SIZE(int24Sample));
-         }
+         
 
          wxASSERT(info.channels >= 0);
-         auto mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
+         mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
                                   t0, t1,
                                   info.channels, maxBlockLen, true,
                                   rate, format, mixerSpec);
          
-         delegate.SetStatusString((selectionOnly
+         mStatus = ((selectionOnly
             ? XO("Exporting the selected audio as %s")
             : XO("Exporting the audio as %s")).Format( formatStr ));
-         
-         while (exportResult == ExportResult::Success) {
-            sf_count_t samplesWritten;
-            size_t numSamples = mixer->Process();
-            if (numSamples == 0)
-               break;
+      }
 
-            auto mixed = mixer->GetBuffer();
+      std::swap(sf,sndfile);
+   }
 
-            // Bug 1572: Not ideal, but it does add the desired dither
-            if ((info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
-               for (int c = 0; c < info.channels; ++c) {
-                  CopySamples(
-                     mixed + (c * SAMPLE_SIZE(format)), format,
-                     dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
-                     numSamples, gHighQualityDither, info.channels, info.channels
-                  );
-                  // Copy back without dither
-                  CopySamples(
-                     dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
-                     const_cast<samplePtr>(mixed) // PRL fix this!
-                        + (c * SAMPLE_SIZE(format)), format,
-                     numSamples, DitherType::none, info.channels, info.channels);
-               }
-            }
+   ExportResult Process(ExportPluginDelegate& delegate) override
+   {
+      size_t maxBlockLen = 44100 * 5;
 
-            if (format == int16Sample)
-               samplesWritten = SFCall<sf_count_t>(sf_writef_short, sf.get(), (const short *)mixed, numSamples);
-            else
-               samplesWritten = SFCall<sf_count_t>(sf_writef_float, sf.get(), (const float *)mixed, numSamples);
-
-            if (static_cast<size_t>(samplesWritten) != numSamples) {
-               char buffer2[1000];
-               sf_error_str(sf.get(), buffer2, 1000);
-               //Used to give this error message
-#if 0
-               AudacityMessageBox(
-                  XO(
-                  /* i18n-hint: %s will be the error message from libsndfile, which
-                   * is usually something unhelpful (and untranslated) like "system
-                   * error" */
-"Error while writing %s file (disk full?).\nLibsndfile says \"%s\"")
-                     .Format( formatStr, wxString::FromAscii(buffer2) ));
-#else
-               // But better to give the same error message as for
-               // other cases of disk exhaustion.
-               // The thrown exception doesn't escape but GuardedCall
-               // will enqueue a message.
-               GuardedCall([&fName]{
-                  throw FileException{
-                     FileException::Cause::Write, fName }; });
-#endif
-               exportResult = ExportResult::Error;
-               break;
-            }
-            if(exportResult == ExportResult::Success)
-               exportResult = ExportPluginHelpers::UpdateProgress(
-                  delegate, *mixer, t0, t1);
+      std::vector<char> dither;
+         if ((info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
+            dither.reserve(maxBlockLen * info.channels * SAMPLE_SIZE(int24Sample));
          }
+
+      auto exportResult = ExportResult::Success;
+
+      while (exportResult == ExportResult::Success) {
+         sf_count_t samplesWritten;
+         size_t numSamples = mixer->Process();
+         if (numSamples == 0)
+            break;
+
+         auto mixed = mixer->GetBuffer();
+
+         // Bug 1572: Not ideal, but it does add the desired dither
+         if ((info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
+            for (int c = 0; c < info.channels; ++c) {
+               CopySamples(
+                  mixed + (c * SAMPLE_SIZE(format)), format,
+                  dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
+                  numSamples, gHighQualityDither, info.channels, info.channels
+               );
+               // Copy back without dither
+               CopySamples(
+                  dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
+                  const_cast<samplePtr>(mixed) // PRL fix this!
+                     + (c * SAMPLE_SIZE(format)), format,
+                  numSamples, DitherType::none, info.channels, info.channels);
+            }
+         }
+
+         if (format == int16Sample)
+            samplesWritten = SFCall<sf_count_t>(sf_writef_short, sndfile, (const short *)mixed, numSamples);
+         else
+            samplesWritten = SFCall<sf_count_t>(sf_writef_float, sndfile, (const float *)mixed, numSamples);
+
+         if (static_cast<size_t>(samplesWritten) != numSamples) {
+            char buffer2[1000];
+            sf_error_str(sndfile, buffer2, 1000);
+            //Used to give this error message
+#if 0
+            AudacityMessageBox(
+               XO(
+               /* i18n-hint: %s will be the error message from libsndfile, which
+                * is usually something unhelpful (and untranslated) like "system
+                * error" */
+"Error while writing %s file (disk full?).\nLibsndfile says \"%s\"")
+                  .Format( formatStr, wxString::FromAscii(buffer2) ));
+#else
+            // But better to give the same error message as for
+            // other cases of disk exhaustion.
+            // The thrown exception doesn't escape but GuardedCall
+            // will enqueue a message.
+            GuardedCall([=]{
+               throw FileException{
+                  FileException::Cause::Write, mFileName }; });
+#endif
+            exportResult = ExportResult::Error;
+            break;
+         }
+         if(exportResult == ExportResult::Success)
+            exportResult = ExportPluginHelpers::UpdateProgress(
+               delegate, *mixer, mT0, mT1);
       }
       
       // Install the WAV metata in a "LIST" chunk at the end of the file
       if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error) {
          if (fileFormat == SF_FORMAT_WAV ||
              fileFormat == SF_FORMAT_WAVEX) {
-            if (!AddStrings(project, sf.get(), metadata, sf_format)) {
-               // TODO: more precise message
-               ShowExportErrorDialog("PCM:675");
-               return ExportResult::Error;
-            }
+            AddStrings(sndfile, &metadata, sf_format);
          }
-         if (0 != sf.close()) {
+         SNDFILE* sf{};
+         std::swap(sf, sndfile);
+         if (0 != sf_close(sf)) {
             // TODO: more precise message
-            ShowExportErrorDialog("PCM:681");
-            return ExportResult::Error;
+            throw ExportException("PCM:681");
          }
-      }
-   }
+         f.Close();
 
-   if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error)
-   {
-      if ((fileFormat == SF_FORMAT_AIFF) ||
-          (fileFormat == SF_FORMAT_WAV))
-         // Note: file has closed, and gets reopened and closed again here:
-         if (!AddID3Chunk(fName, metadata, sf_format) ) {
-            // TODO: more precise message
-            ShowExportErrorDialog("PCM:694");
-            return ExportResult::Error;
-         }
+         if ((fileFormat == SF_FORMAT_AIFF) ||
+             (fileFormat == SF_FORMAT_WAV))
+            // Note: file has closed, and gets reopened and closed again here:
+            if (!AddID3Chunk(mFileName, &metadata, sf_format) ) {
+               // TODO: more precise message
+               throw ExportErrorCodeException("PCM:694");
+            }
+      }
+      
+      return exportResult;
    }
-   return exportResult;
+private:
+
+   static void AddStrings(SNDFILE *sf, const Tags *tags, int sf_format);
+   static bool AddID3Chunk(
+      const wxFileNameWrapper &fName, const Tags *tags, int sf_format);
+   static ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
+};
+
+std::unique_ptr<ExportProcessor> ExportPCM::CreateProcessor(int format) const
+{
+   return std::make_unique<PCMExportProcessor>(format);
 }
 
-ArrayOf<char> ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
+ArrayOf<char> PCMExportProcessor::AdjustString(const wxString & wxStr, int sf_format)
 {
    bool b_aiff = false;
    if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF)
@@ -838,7 +840,7 @@ ArrayOf<char> ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
    return pDest;
 }
 
-bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, const Tags *tags, int sf_format)
+void PCMExportProcessor::AddStrings(SNDFILE *sf, const Tags *tags, int sf_format)
 {
    if (tags->HasTag(TAG_TITLE)) {
       auto ascii7Str = AdjustString(tags->GetTag(TAG_TITLE), sf_format);
@@ -902,8 +904,6 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, con
          sf_set_string(sf, SF_STR_TRACKNUMBER, ascii7Str.get());
       }
    }
-
-   return true;
 }
 
 #ifdef USE_LIBID3TAG
@@ -913,7 +913,7 @@ struct id3_tag_deleter {
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
-bool ExportPCM::AddID3Chunk(
+bool PCMExportProcessor::AddID3Chunk(
    const wxFileNameWrapper &fName, const Tags *tags, int sf_format)
 {
 #ifdef USE_LIBID3TAG

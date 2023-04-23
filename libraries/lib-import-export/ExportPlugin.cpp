@@ -10,10 +10,29 @@
 
 #include "ExportPlugin.h"
 
+ExportException::ExportException(const wxString& msg)
+   : mMessage(msg)
+{
+}
+
+const wxString& ExportException::What() const noexcept
+{
+   return mMessage;
+}
+
+ExportErrorException::ExportErrorException(const wxString& message, const wxString& helpPage)
+   : ExportException(message), mHelpPage(helpPage)
+{
+}
+
+const wxString& ExportErrorException::GetHelpPage() const noexcept
+{
+   return mHelpPage;
+}
+
 ExportPluginDelegate::~ExportPluginDelegate() = default;
 
 ExportProcessor::~ExportProcessor() = default;
-
 
 ExportPlugin::ExportPlugin() = default;
 ExportPlugin::~ExportPlugin() = default;

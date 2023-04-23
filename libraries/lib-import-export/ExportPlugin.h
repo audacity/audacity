@@ -39,6 +39,39 @@ struct IMPORT_EXPORT_API FormatInfo
    bool mCanMetaData;
 };
 
+
+class IMPORT_EXPORT_API ExportException
+{
+   const wxString mMessage;
+public:
+   
+   ExportException(const wxString& msg);
+
+   const wxString& What() const noexcept;
+};
+
+class IMPORT_EXPORT_API ExportErrorCodeException : public ExportException
+{
+public:
+   using ExportException::ExportException;
+};
+
+class IMPORT_EXPORT_API ExportDiskFullError : public ExportException
+{
+public:
+   using ExportException::ExportException;
+};
+
+class IMPORT_EXPORT_API ExportErrorException : public ExportException
+{
+   const wxString mHelpPage;
+public:
+   ExportErrorException(const wxString& message, const wxString& helpPage);
+   
+   const wxString& GetHelpPage() const noexcept;
+
+};
+
 class IMPORT_EXPORT_API ExportPluginDelegate
 {
 public:
@@ -56,18 +89,21 @@ class IMPORT_EXPORT_API ExportProcessor
 public:
    using Parameters = std::vector<std::tuple<ExportOptionID, ExportValue>>;
 
-   virtual ~ExportProcessor();
+   ExportProcessor(const ExportProcessor&) = delete;
+   ExportProcessor& operator=(const ExportProcessor&) = delete;
 
-   virtual bool Initialize(ExportPluginDelegate& delegate,
-      AudacityProject& project,
+   ExportProcessor() = default;
+   virtual ~ExportProcessor();
+   
+   virtual void Initialize(AudacityProject& project,
       const Parameters& parameters,
-      wxFileNameWrapper filename,
+      const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      int channels,
+      unsigned channels,
       MixerOptions::Downmix* mixerSpec = nullptr,
       const Tags* tags = nullptr) = 0;
-   virtual void Process(ExportPluginDelegate& delegate) = 0;
-   virtual ExportResult Finalize() = 0;
+
+   virtual ExportResult Process(ExportPluginDelegate& delegate) = 0;
 };
 
 //----------------------------------------------------------------------------
@@ -76,9 +112,7 @@ public:
 class IMPORT_EXPORT_API ExportPlugin /* not final */
 {
 public:
-
    
-
    ExportPlugin();
    virtual ~ExportPlugin();
 

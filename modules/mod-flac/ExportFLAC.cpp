@@ -181,7 +181,7 @@ public:
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
    
-   bool ParseConfig(int, const rapidjson::Value& config, Parameters& parameters) const override;
+   bool ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const override;
 
    std::vector<std::string> GetMimeTypes(int) const override;
 
@@ -189,22 +189,8 @@ public:
 
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
-   
-   ExportResult Export(AudacityProject *project,
-               ExportPluginDelegate &delegate,
-               const Parameters& parameters,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec,
-               const Tags *metadata,
-               int subformat) const override;
 
-private:
-
-   FLAC__StreamMetadataHandle MakeMetadata(AudacityProject *project, const Tags *tags) const;
+   std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
 };
 
 //----------------------------------------------------------------------------
@@ -223,7 +209,7 @@ FormatInfo ExportFLAC::GetFormatInfo(int) const
    };
 }
 
-bool ExportFLAC::ParseConfig(int, const rapidjson::Value& config, Parameters& parameters) const
+bool ExportFLAC::ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
 {
    if(!config.IsObject() ||
       !config.HasMember("level") || !config["level"].IsNumber() ||
@@ -247,7 +233,7 @@ bool ExportFLAC::ParseConfig(int, const rapidjson::Value& config, Parameters& pa
             bitDepth) == option.values.end()))
          return false;
    }
-   Parameters result {
+   ExportProcessor::Parameters result {
       { FlacOptionIDLevel, level },
       { FlacOptionIDBitDepth, bitDepth }
    };
@@ -266,189 +252,208 @@ ExportFLAC::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
    return std::make_unique<PlainExportOptionsEditor>(FlacOptions);
 }
 
-
-ExportResult ExportFLAC::Export(AudacityProject *project,
-                        ExportPluginDelegate &delegate,
-                        const Parameters& parameters,
-                        unsigned numChannels,
-                        const wxFileNameWrapper &fName,
-                        bool selectionOnly,
-                        double t0,
-                        double t1,
-                        MixerSpec *mixerSpec,
-                        const Tags *tags,
-                        int) const
+class FLACExportProcessor final : public ExportProcessor
 {
-   double    rate    = ProjectRate::Get(*project).GetRate();
-   const auto &tracks = TrackList::Get( *project );
+   TranslatableString mStatus;
+   double mT0;
+   double mT1;
+   unsigned mChannels;
+   wxFileNameWrapper mFileName;
 
-   wxLogNull logNo;            // temporarily disable wxWidgets error messages
-
-   long levelPref = std::stol(ExportPluginHelpers::GetParameterValue<std::string>(parameters, FlacOptionIDLevel));
-   auto bitDepthPref = ExportPluginHelpers::GetParameterValue<std::string>(parameters, FlacOptionIDBitDepth);
-
+   std::unique_ptr<Mixer> mixer;
    FLAC::Encoder::File encoder;
-
-   bool success = true;
-   success = success &&
-#ifdef LEGACY_FLAC
-   encoder.set_filename(OSOUTPUT(fName)) &&
-#endif
-   encoder.set_channels(numChannels) &&
-   encoder.set_sample_rate(lrint(rate));
-
-   // See note in MakeMetadata() about a bug in libflac++ 1.1.2
-   FLAC__StreamMetadataHandle metadata;
-   if (success)
-      metadata = MakeMetadata(project, tags);
-
-   if (success && !metadata) {
-      // TODO: more precise message
-      ShowExportErrorDialog("FLAC:283");
-      return ExportResult::Error;
-   }
-
-   if (success && metadata) {
-      // set_metadata expects an array of pointers to metadata and a size.
-      // The size is 1.
-      FLAC__StreamMetadata *p = metadata.get();
-      success = encoder.set_metadata(&p, 1);
-   }
-
+   wxFFile f;
    sampleFormat format;
-   if (bitDepthPref == "24") {
-      format = int24Sample;
-      success = success && encoder.set_bits_per_sample(24);
-   } else { //convert float to 16 bits
-      format = int16Sample;
-      success = success && encoder.set_bits_per_sample(16);
-   }
+public:
 
+   void Initialize(AudacityProject& project,
+      const Parameters& parameters,
+      const wxFileNameWrapper& fName,
+      double t0, double t1, bool selectionOnly,
+      unsigned numChannels,
+      MixerOptions::Downmix* mixerSpec,
+      const Tags* tags) override
+   {
+      mChannels = numChannels;
+      mFileName = fName;
+      mT0 = t0;
+      mT1 = t1;
 
-   // Duplicate the flac command line compression levels
-   if (levelPref < 0 || levelPref > 8) {
-      levelPref = 5;
-   }
-   success = success &&
-   encoder.set_do_exhaustive_model_search(flacLevels[levelPref].do_exhaustive_model_search) &&
-   encoder.set_do_escape_coding(flacLevels[levelPref].do_escape_coding);
+      double    rate    = ProjectRate::Get(project).GetRate();
+      const auto &tracks = TrackList::Get( project );
 
-   if (numChannels != 2) {
+      wxLogNull logNo;            // temporarily disable wxWidgets error messages
+
+      long levelPref = std::stol(ExportPluginHelpers::GetParameterValue<std::string>(parameters, FlacOptionIDLevel));
+      auto bitDepthPref = ExportPluginHelpers::GetParameterValue<std::string>(parameters, FlacOptionIDBitDepth);
+
+      bool success = true;
       success = success &&
-      encoder.set_do_mid_side_stereo(false) &&
-      encoder.set_loose_mid_side_stereo(false);
-   }
-   else {
-      success = success &&
-      encoder.set_do_mid_side_stereo(flacLevels[levelPref].do_mid_side_stereo) &&
-      encoder.set_loose_mid_side_stereo(flacLevels[levelPref].loose_mid_side_stereo);
-   }
+   #ifdef LEGACY_FLAC
+      encoder.set_filename(OSOUTPUT(fName)) &&
+   #endif
+      encoder.set_channels(numChannels) &&
+      encoder.set_sample_rate(lrint(rate));
 
-   success = success &&
-   encoder.set_qlp_coeff_precision(flacLevels[levelPref].qlp_coeff_precision) &&
-   encoder.set_min_residual_partition_order(flacLevels[levelPref].min_residual_partition_order) &&
-   encoder.set_max_residual_partition_order(flacLevels[levelPref].max_residual_partition_order) &&
-   encoder.set_rice_parameter_search_dist(flacLevels[levelPref].rice_parameter_search_dist) &&
-   encoder.set_max_lpc_order(flacLevels[levelPref].max_lpc_order);
+      // See note in MakeMetadata() about a bug in libflac++ 1.1.2
+      FLAC__StreamMetadataHandle metadata;
+      if (success)
+         metadata = MakeMetadata(&project, tags);
 
-   if (!success) {
-      // TODO: more precise message
-      ShowExportErrorDialog("FLAC:336");
-      return ExportResult::Error;
-   }
-
-#ifdef LEGACY_FLAC
-   encoder.init();
-#else
-   wxFFile f;     // will be closed when it goes out of scope
-   const auto path = fName.GetFullPath();
-   if (!f.Open(path, wxT("w+b"))) {
-      delegate.SetErrorString(XO("FLAC export couldn't open %s").Format( path ));
-      return ExportResult::Error;
-   }
-
-   // Even though there is an init() method that takes a filename, use the one that
-   // takes a file handle because wxWidgets can open a file with a Unicode name and
-   // libflac can't (under Windows).
-   int status = encoder.init(f.fp());
-   if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-      delegate.SetErrorString(XO("FLAC encoder failed to initialize\nStatus: %d")
-            .Format( status ));
-      return ExportResult::Error;
-   }
-#endif
-
-   metadata.reset();
-
-   auto exportResult = ExportResult::Success;
-   
-   auto cleanup2 = finally( [&] {
-      if (exportResult == ExportResult::Cancelled || exportResult == ExportResult::Error) {
-#ifndef LEGACY_FLAC
-         f.Detach(); // libflac closes the file
-#endif
-         encoder.finish();
-      }
-   } );
-
-   auto mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-                            t0, t1,
-                            numChannels, SAMPLES_PER_RUN, false,
-                            rate, format, mixerSpec);
-
-   ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
-
-   delegate.SetStatusString(selectionOnly
-      ? XO("Exporting the selected audio as FLAC")
-      : XO("Exporting the audio as FLAC"));
-
-   while (exportResult == ExportResult::Success) {
-      auto samplesThisRun = mixer->Process();
-      if (samplesThisRun == 0) //stop encoding
-         break;
-
-      for (size_t i = 0; i < numChannels; i++) {
-         auto mixed = mixer->GetBuffer(i);
-         if (format == int24Sample) {
-            for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-               tmpsmplbuf[i][j] = ((const int *)mixed)[j];
-            }
-         }
-         else {
-            for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-               tmpsmplbuf[i][j] = ((const short *)mixed)[j];
-            }
-         }
-      }
-      if (! encoder.process(
-            reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
-            samplesThisRun) ) {
+      if (success && !metadata) {
          // TODO: more precise message
-         ShowDiskFullExportErrorDialog(fName);
-         exportResult = ExportResult::Error;
-         break;
+         throw ExportErrorCodeException("FLAC:283");
       }
-      exportResult = ExportPluginHelpers::UpdateProgress(
-         delegate, *mixer, t0, t1);
+
+      if (success && metadata) {
+         // set_metadata expects an array of pointers to metadata and a size.
+         // The size is 1.
+         FLAC__StreamMetadata *p = metadata.get();
+         success = encoder.set_metadata(&p, 1);
+      }
+
+      if (bitDepthPref == "24") {
+         format = int24Sample;
+         success = success && encoder.set_bits_per_sample(24);
+      } else { //convert float to 16 bits
+         format = int16Sample;
+         success = success && encoder.set_bits_per_sample(16);
+      }
+
+
+      // Duplicate the flac command line compression levels
+      if (levelPref < 0 || levelPref > 8) {
+         levelPref = 5;
+      }
+      success = success &&
+      encoder.set_do_exhaustive_model_search(flacLevels[levelPref].do_exhaustive_model_search) &&
+      encoder.set_do_escape_coding(flacLevels[levelPref].do_escape_coding);
+
+      if (numChannels != 2) {
+         success = success &&
+         encoder.set_do_mid_side_stereo(false) &&
+         encoder.set_loose_mid_side_stereo(false);
+      }
+      else {
+         success = success &&
+         encoder.set_do_mid_side_stereo(flacLevels[levelPref].do_mid_side_stereo) &&
+         encoder.set_loose_mid_side_stereo(flacLevels[levelPref].loose_mid_side_stereo);
+      }
+
+      success = success &&
+      encoder.set_qlp_coeff_precision(flacLevels[levelPref].qlp_coeff_precision) &&
+      encoder.set_min_residual_partition_order(flacLevels[levelPref].min_residual_partition_order) &&
+      encoder.set_max_residual_partition_order(flacLevels[levelPref].max_residual_partition_order) &&
+      encoder.set_rice_parameter_search_dist(flacLevels[levelPref].rice_parameter_search_dist) &&
+      encoder.set_max_lpc_order(flacLevels[levelPref].max_lpc_order);
+
+      if (!success) {
+         // TODO: more precise message
+         throw ExportErrorCodeException("FLAC:336");
+      }
+
+   #ifdef LEGACY_FLAC
+      encoder.init();
+   #else
+      const auto path = fName.GetFullPath();
+      if (!f.Open(path, wxT("w+b"))) {
+         throw ExportException(XO("FLAC export couldn't open %s").Format( path ).Translation());
+      }
+
+      // Even though there is an init() method that takes a filename, use the one that
+      // takes a file handle because wxWidgets can open a file with a Unicode name and
+      // libflac can't (under Windows).
+      int status = encoder.init(f.fp());
+      if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
+         throw ExportException(XO("FLAC encoder failed to initialize\nStatus: %d")
+               .Format( status ).Translation());
+      }
+   #endif
+
+      metadata.reset();
+
+      mStatus = selectionOnly
+         ? XO("Exporting the selected audio as FLAC")
+         : XO("Exporting the audio as FLAC");
+
+      mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
+                               t0, t1,
+                               numChannels, SAMPLES_PER_RUN, false,
+                               rate, format, mixerSpec);
    }
 
-   if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error) {
-#ifndef LEGACY_FLAC
-      f.Detach(); // libflac closes the file
-#endif
-      if (!encoder.finish())
-      {
-         return ExportResult::Error;
+   ExportResult Process(ExportPluginDelegate& delegate) override
+   {
+      ArraysOf<FLAC__int32> tmpsmplbuf{ mChannels, SAMPLES_PER_RUN, true };
+
+      auto exportResult = ExportResult::Success;
+      auto cleanup2 = finally( [&] {
+         if (exportResult == ExportResult::Cancelled || exportResult == ExportResult::Error) {
+   #ifndef LEGACY_FLAC
+            f.Detach(); // libflac closes the file
+   #endif
+            encoder.finish();
+         }
+      } );
+
+      while (exportResult == ExportResult::Success) {
+         auto samplesThisRun = mixer->Process();
+         if (samplesThisRun == 0) //stop encoding
+            break;
+
+         for (size_t i = 0; i < mChannels; i++) {
+            auto mixed = mixer->GetBuffer(i);
+            if (format == int24Sample) {
+               for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
+                  tmpsmplbuf[i][j] = ((const int *)mixed)[j];
+               }
+            }
+            else {
+               for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
+                  tmpsmplbuf[i][j] = ((const short *)mixed)[j];
+               }
+            }
+         }
+         if (! encoder.process(
+               reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
+               samplesThisRun) ) {
+            exportResult = ExportResult::Error;
+            // TODO: more precise message
+            throw ExportDiskFullError(mFileName.GetName());
+         }
+         exportResult = ExportPluginHelpers::UpdateProgress(
+            delegate, *mixer, mT0, mT1);
       }
-#ifdef LEGACY_FLAC
-      if (!f.Flush() || !f.Close())
-      {
-         return ExportResult::Error;
+
+      if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error) {
+   #ifndef LEGACY_FLAC
+         f.Detach(); // libflac closes the file
+   #endif
+         if (!encoder.finish())
+         {
+            return ExportResult::Error;
+         }
+   #ifdef LEGACY_FLAC
+         if (!f.Flush() || !f.Close())
+         {
+            return ExportResult::Error;
+         }
+   #endif
       }
-#endif
+      return exportResult;
    }
-   return exportResult;
+
+private:
+   
+   FLAC__StreamMetadataHandle MakeMetadata(AudacityProject *project, const Tags *tags) const;
+
+};
+
+std::unique_ptr<ExportProcessor> ExportFLAC::CreateProcessor(int) const
+{
+   return std::make_unique<FLACExportProcessor>();
 }
+
 
 // LL:  There's a bug in libflac++ 1.1.2 that prevents us from using
 //      FLAC::Metadata::VorbisComment directly.  The set_metadata()
@@ -456,7 +461,7 @@ ExportResult ExportFLAC::Export(AudacityProject *project,
 //      expects that array to be valid until the stream is initialized.
 //
 //      This has been fixed in 1.1.4.
-FLAC__StreamMetadataHandle ExportFLAC::MakeMetadata(AudacityProject *project, const Tags *tags) const
+FLAC__StreamMetadataHandle FLACExportProcessor::MakeMetadata(AudacityProject *project, const Tags *tags) const
 {
    // Retrieve tags if needed
    if (tags == NULL)

@@ -72,10 +72,9 @@ public:
    
    bool CanMetaData() const;
    
-   ExportResult Process(ExportPluginDelegate& delegate);
+   ExportTask CreateExportTask();
    
-   ExportResult Process(ExportPluginDelegate& delegate,
-                const ExportProcessor::Parameters& parameters,
+   ExportTask CreateExportTask(const ExportProcessor::Parameters& parameters,
                 unsigned numChannels,
                 const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
@@ -95,7 +94,7 @@ private:
       Exporter::ExportPluginFactory mFactory;
    };
 
-   ExportResult ExportTracks(ExportPluginDelegate& delegate, const ExportProcessor::Parameters& parameters);
+   ExportTask CreateExportTask(const ExportProcessor::Parameters& parameters);
 
 private:
    AudacityProject *mProject;

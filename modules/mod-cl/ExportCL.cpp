@@ -58,7 +58,9 @@
 // ExportCLProcess
 //----------------------------------------------------------------------------
 
-static void Drain(wxInputStream *s, wxString *o)
+namespace
+{
+void Drain(wxInputStream *s, wxString *o)
 {
    while (s->CanRead()) {
       char buffer[4096];
@@ -67,6 +69,49 @@ static void Drain(wxInputStream *s, wxString *o)
       buffer[s->LastRead()] = wxT('\0');
       *o += LAT1CTOWX(buffer);
    }
+}
+
+struct ExtendPath
+{
+#if defined(__WXMSW__)
+   wxString opath;
+
+   ExtendPath()
+   {
+      // Give Windows a chance at finding lame command in the default location.
+      wxString paths[] = {wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Audacity"),
+                          wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity")};
+      wxString npath;
+      wxRegKey reg;
+
+      wxGetEnv(wxT("PATH"), &opath);
+      npath = opath;
+
+      for (int i = 0; i < WXSIZEOF(paths); i++) {
+         reg.SetName(paths[i]);
+
+         if (reg.Exists()) {
+            wxString ipath;
+            reg.QueryValue(wxT("InstallPath"), ipath);
+            if (!ipath.empty()) {
+               npath += wxPATH_SEP + ipath;
+            }
+         }
+      }
+
+      wxSetEnv(wxT("PATH"),npath);
+   };
+
+   ~ExtendPath()
+   {
+      if (!opath.empty())
+      {
+         wxSetEnv(wxT("PATH"),opath);
+      }
+   }
+#endif
+};
+
 }
 
 class ExportCLProcess final : public wxProcess
@@ -372,65 +417,10 @@ public:
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
 
-   ExportResult Export(AudacityProject *project,
-               ExportPluginDelegate &delegate,
-               const Parameters& parameters,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec,
-               const Tags *metadata,
-               int subformat) const override;
+   std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
    
    // Optional   
    bool CheckFileName(wxFileName &filename, int format) const override;
-
-private:
-
-   static std::vector<char> GetMetaChunk(const Tags *metadata);
-   
-   struct ExtendPath
-   {
-#if defined(__WXMSW__)
-      wxString opath;
-
-      ExtendPath()
-      {
-         // Give Windows a chance at finding lame command in the default location.
-         wxString paths[] = {wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Audacity"),
-                             wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity")};
-         wxString npath;
-         wxRegKey reg;
-
-         wxGetEnv(wxT("PATH"), &opath);
-         npath = opath;
-
-         for (int i = 0; i < WXSIZEOF(paths); i++) {
-            reg.SetName(paths[i]);
-
-            if (reg.Exists()) {
-               wxString ipath;
-               reg.QueryValue(wxT("InstallPath"), ipath);
-               if (!ipath.empty()) {
-                  npath += wxPATH_SEP + ipath;
-               }
-            }
-         }
-
-         wxSetEnv(wxT("PATH"),npath);
-      };
-
-      ~ExtendPath()
-      {
-         if (!opath.empty())
-         {
-            wxSetEnv(wxT("PATH"),opath);
-         }
-      }
-#endif
-   };
 };
 
 int ExportCL::GetFormatCount() const
@@ -451,259 +441,288 @@ ExportCL::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
    return std::make_unique<ExportOptionsCLEditor>();
 }
 
-ExportResult ExportCL::Export(AudacityProject *project,
-                      ExportPluginDelegate &delegate,
-                      const Parameters& parameters,
-                      unsigned channels,
-                      const wxFileNameWrapper &fName,
-                      bool selectionOnly,
-                      double t0,
-                      double t1,
-                      MixerSpec *mixerSpec,
-                      const Tags *metadata,
-                      int) const
+class CLExportProcessor final : public ExportProcessor
 {
-   ExtendPath ep;
+   unsigned mChannels;
+   double mT0;
+   double mT1;
+   TranslatableString mStatus;
+
+   std::unique_ptr<ExportCLProcess> process;
+   std::unique_ptr<Mixer> mixer;
    wxString output;
-   long rc;
-
-   const auto path = fName.GetFullPath();
-
-   auto cmd = wxString::FromUTF8(ExportPluginHelpers::GetParameterValue<std::string>(parameters, CLOptionIDCommand));
-   const auto showOutput = ExportPluginHelpers::GetParameterValue(parameters, CLOptionIDShowOutput, false);
-
-   // Bug 2178 - users who don't know what they are doing will 
-   // now get a file extension of .wav appended to their ffmpeg filename
-   // and therefore ffmpeg will be able to choose a file type.
-   if( cmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
-      cmd.Replace( "%f", "%f.wav" );
-   cmd.Replace(wxT("%f"), path);
-
-   // Kick off the command
-   ExportCLProcess process(&output);
-
-   rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
-   if (!rc) {
-      process.Detach();
-      process.CloseOutput();
-      delegate.SetErrorString(XO("Cannot export audio to %s").Format( path ));
-      return ExportResult::Error;
-   }
-
-   // Turn off logging to prevent broken pipe messages
-   wxLogNull nolog;
-
-   // establish parameters
-   int rate = lrint( ProjectRate::Get( *project ).GetRate());
-   const size_t maxBlockLen = 44100 * 5;
-   unsigned long totalSamples = lrint((t1 - t0) * rate);
-   unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(floatSample);
-
-   wxOutputStream *os = process.GetOutputStream();
-
-   // RIFF header
-   struct {
-      char riffID[4];            // "RIFF"
-      wxUint32 riffLen;          // basically the file len - 8
-      char riffType[4];          // "WAVE"
-   } riff;
-
-   // format chunk */
-   struct {
-      char fmtID[4];             // "fmt " */
-      wxUint32 formatChunkLen;   // (format chunk len - first two fields) 16 in our case
-      wxUint16 formatTag;        // 1 for PCM
-      wxUint16 channels;
-      wxUint32 sampleRate;
-      wxUint32 avgBytesPerSec;   // sampleRate * blockAlign
-      wxUint16 blockAlign;       // bitsPerSample * channels (assume bps % 8 = 0)
-      wxUint16 bitsPerSample;
-   } fmt;
-
-   // id3 chunk header
-   struct {
-      char id3ID[4];             // "id3 "
-      wxUint32 id3Len;           // length of metadata in bytes
-   } id3;
-
-   // data chunk header
-   struct {
-      char dataID[4];            // "data"
-      wxUint32 dataLen;          // length of all samples in bytes
-   } data;
-
-   riff.riffID[0] = 'R';
-   riff.riffID[1] = 'I';
-   riff.riffID[2] = 'F';
-   riff.riffID[3] = 'F';
-   riff.riffLen   = wxUINT32_SWAP_ON_BE(sizeof(riff) +
-                                        sizeof(fmt) +
-                                        sizeof(data) +
-                                        sampleBytes -
-                                        8);
-   riff.riffType[0]  = 'W';
-   riff.riffType[1]  = 'A';
-   riff.riffType[2]  = 'V';
-   riff.riffType[3]  = 'E';
-
-   fmt.fmtID[0]        = 'f';
-   fmt.fmtID[1]        = 'm';
-   fmt.fmtID[2]        = 't';
-   fmt.fmtID[3]        = ' ';
-   fmt.formatChunkLen  = wxUINT32_SWAP_ON_BE(16);
-   fmt.formatTag       = wxUINT16_SWAP_ON_BE(3);
-   fmt.channels        = wxUINT16_SWAP_ON_BE(channels);
-   fmt.sampleRate      = wxUINT32_SWAP_ON_BE(rate);
-   fmt.bitsPerSample   = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(floatSample) * 8);
-   fmt.blockAlign      = wxUINT16_SWAP_ON_BE(fmt.bitsPerSample * fmt.channels / 8);
-   fmt.avgBytesPerSec  = wxUINT32_SWAP_ON_BE(fmt.sampleRate * fmt.blockAlign);
-
-   // Retrieve tags if not given a set
-   if (metadata == NULL) {
-      metadata = &Tags::Get(*project);
-   }
-   auto metachunk = GetMetaChunk(metadata);
-
-   if (metachunk.size()) {
-
-      id3.id3ID[0] = 'i';
-      id3.id3ID[1] = 'd';
-      id3.id3ID[2] = '3';
-      id3.id3ID[3] = ' ';
-      id3.id3Len   = wxUINT32_SWAP_ON_BE(metachunk.size());
-      riff.riffLen += sizeof(id3) + metachunk.size();
-   }
-
-   data.dataID[0] = 'd';
-   data.dataID[1] = 'a';
-   data.dataID[2] = 't';
-   data.dataID[3] = 'a';
-   data.dataLen   = wxUINT32_SWAP_ON_BE(sampleBytes);
-
-   // write the headers and metadata
-   os->Write(&riff, sizeof(riff));
-   os->Write(&fmt, sizeof(fmt));
-   if (metachunk.size()) {
-      os->Write(&id3, sizeof(id3));
-      os->Write(metachunk.data(), metachunk.size());
-   }
-   os->Write(&data, sizeof(data));
-
-   // Mix 'em up
-   const auto &tracks = TrackList::Get( *project );
-   auto mixer = ExportPluginHelpers::CreateMixer(
-                            tracks,
-                            selectionOnly,
-                            t0,
-                            t1,
-                            channels,
-                            maxBlockLen,
-                            true,
-                            rate,
-                            floatSample,
-                            mixerSpec);
-
-   size_t numBytes = 0;
-   constSamplePtr mixed = NULL;
-
-   auto exportResult = ExportResult::Success;
+   int channels;
+   bool showOutput;
+   wxString cmd;
+public:
+   void Initialize(AudacityProject& project,
+      const Parameters& parameters,
+      const wxFileNameWrapper& filename,
+      double t0, double t1, bool selectionOnly,
+      unsigned channels,
+      MixerOptions::Downmix* mixerSpec,
+      const Tags* tags) override
    {
-      auto closeIt = finally ( [&] {
-         // Should make the process die, before propagating any exception
-         process.CloseOutput();
-      } );
-      delegate.SetStatusString(selectionOnly
-         ? XO("Exporting the selected audio using command-line encoder")
-         : XO("Exporting the audio using command-line encoder"));
+      mChannels = channels;
+      mT0 = t0;
+      mT1 = t1;
+      ExtendPath ep;
+      long rc;
 
-      // Start piping the mixed data to the command
-      while (exportResult != ExportResult::Success && process.IsActive() && os->IsOk()) {
-         // Capture any stdout and stderr from the command
-         Drain(process.GetInputStream(), &output);
-         Drain(process.GetErrorStream(), &output);
+      const auto path = filename.GetFullPath();
 
-         // Need to mix another block
-         if (numBytes == 0) {
-            auto numSamples = mixer->Process();
-            if (numSamples == 0)
-               break;
+      cmd = wxString::FromUTF8(ExportPluginHelpers::GetParameterValue<std::string>(parameters, CLOptionIDCommand));
+      showOutput = ExportPluginHelpers::GetParameterValue(parameters, CLOptionIDShowOutput, false);
 
-            mixed = mixer->GetBuffer();
-            numBytes = numSamples * channels;
+      // Bug 2178 - users who don't know what they are doing will 
+      // now get a file extension of .wav appended to their ffmpeg filename
+      // and therefore ffmpeg will be able to choose a file type.
+      if( cmd == wxT("ffmpeg -i - \"%f\"") && !filename.HasExt())
+         cmd.Replace( "%f", "%f.wav" );
+      cmd.Replace(wxT("%f"), path);
 
-            // Byte-swapping is necessary on big-endian machines, since
-            // WAV files are little-endian
-#if wxBYTE_ORDER == wxBIG_ENDIAN
-            auto buffer = (const float *) mixed;
-            for (int i = 0; i < numBytes; i++) {
-               buffer[i] = wxUINT32_SWAP_ON_BE(buffer[i]);
-            }
-#endif
-            numBytes *= SAMPLE_SIZE(floatSample);
-         }
+      // Kick off the command
+      process = std::make_unique<ExportCLProcess>(&output);
 
-         // Don't write too much at once...pipes may not be able to handle it
-         size_t bytes = wxMin(numBytes, 4096);
-         numBytes -= bytes;
-
-         while (bytes > 0) {
-            os->Write(mixed, bytes);
-            if (!os->IsOk()) {
-               exportResult = ExportResult::Error;
-               break;
-            }
-            bytes -= os->LastWrite();
-            mixed += os->LastWrite();
-         }
-
-         if(exportResult == ExportResult::Success)
-            exportResult = ExportPluginHelpers::UpdateProgress(
-               delegate, *mixer, t0, t1);
+      rc = wxExecute(cmd, wxEXEC_ASYNC, process.get());
+      if (!rc) {
+         process->Detach();
+         process->CloseOutput();
+         throw ExportException(XO("Cannot export audio to %s").Format( path ).Translation());
       }
-      // Done with the progress display
+
+      // Turn off logging to prevent broken pipe messages
+      wxLogNull nolog;
+
+      // establish parameters
+      int rate = lrint( ProjectRate::Get( project ).GetRate());
+      const size_t maxBlockLen = 44100 * 5;
+      unsigned long totalSamples = lrint((t1 - t0) * rate);
+      unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(floatSample);
+
+      wxOutputStream *os = process->GetOutputStream();
+
+      // RIFF header
+      struct {
+         char riffID[4];            // "RIFF"
+         wxUint32 riffLen;          // basically the file len - 8
+         char riffType[4];          // "WAVE"
+      } riff;
+
+      // format chunk */
+      struct {
+         char fmtID[4];             // "fmt " */
+         wxUint32 formatChunkLen;   // (format chunk len - first two fields) 16 in our case
+         wxUint16 formatTag;        // 1 for PCM
+         wxUint16 channels;
+         wxUint32 sampleRate;
+         wxUint32 avgBytesPerSec;   // sampleRate * blockAlign
+         wxUint16 blockAlign;       // bitsPerSample * channels (assume bps % 8 = 0)
+         wxUint16 bitsPerSample;
+      } fmt;
+
+      // id3 chunk header
+      struct {
+         char id3ID[4];             // "id3 "
+         wxUint32 id3Len;           // length of metadata in bytes
+      } id3;
+
+      // data chunk header
+      struct {
+         char dataID[4];            // "data"
+         wxUint32 dataLen;          // length of all samples in bytes
+      } data;
+
+      riff.riffID[0] = 'R';
+      riff.riffID[1] = 'I';
+      riff.riffID[2] = 'F';
+      riff.riffID[3] = 'F';
+      riff.riffLen   = wxUINT32_SWAP_ON_BE(sizeof(riff) +
+                                           sizeof(fmt) +
+                                           sizeof(data) +
+                                           sampleBytes -
+                                           8);
+      riff.riffType[0]  = 'W';
+      riff.riffType[1]  = 'A';
+      riff.riffType[2]  = 'V';
+      riff.riffType[3]  = 'E';
+
+      fmt.fmtID[0]        = 'f';
+      fmt.fmtID[1]        = 'm';
+      fmt.fmtID[2]        = 't';
+      fmt.fmtID[3]        = ' ';
+      fmt.formatChunkLen  = wxUINT32_SWAP_ON_BE(16);
+      fmt.formatTag       = wxUINT16_SWAP_ON_BE(3);
+      fmt.channels        = wxUINT16_SWAP_ON_BE(channels);
+      fmt.sampleRate      = wxUINT32_SWAP_ON_BE(rate);
+      fmt.bitsPerSample   = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(floatSample) * 8);
+      fmt.blockAlign      = wxUINT16_SWAP_ON_BE(fmt.bitsPerSample * fmt.channels / 8);
+      fmt.avgBytesPerSec  = wxUINT32_SWAP_ON_BE(fmt.sampleRate * fmt.blockAlign);
+
+      // Retrieve tags if not given a set
+      if (tags == NULL) {
+         tags = &Tags::Get(project);
+      }
+      auto metachunk = GetMetaChunk(tags);
+
+      if (metachunk.size()) {
+
+         id3.id3ID[0] = 'i';
+         id3.id3ID[1] = 'd';
+         id3.id3ID[2] = '3';
+         id3.id3ID[3] = ' ';
+         id3.id3Len   = wxUINT32_SWAP_ON_BE(metachunk.size());
+         riff.riffLen += sizeof(id3) + metachunk.size();
+      }
+
+      data.dataID[0] = 'd';
+      data.dataID[1] = 'a';
+      data.dataID[2] = 't';
+      data.dataID[3] = 'a';
+      data.dataLen   = wxUINT32_SWAP_ON_BE(sampleBytes);
+
+      // write the headers and metadata
+      os->Write(&riff, sizeof(riff));
+      os->Write(&fmt, sizeof(fmt));
+      if (metachunk.size()) {
+         os->Write(&id3, sizeof(id3));
+         os->Write(metachunk.data(), metachunk.size());
+      }
+      os->Write(&data, sizeof(data));
+
+      // Mix 'em up
+      const auto &tracks = TrackList::Get( project );
+      mixer = ExportPluginHelpers::CreateMixer(
+                               tracks,
+                               selectionOnly,
+                               t0,
+                               t1,
+                               channels,
+                               maxBlockLen,
+                               true,
+                               rate,
+                               floatSample,
+                               mixerSpec);
+
+      mStatus = selectionOnly
+            ? XO("Exporting the selected audio using command-line encoder")
+            : XO("Exporting the audio using command-line encoder");
    }
 
-   // Wait for process to terminate
-   while (process.IsActive()) {
-      using namespace std::chrono;
-      std::this_thread::sleep_for(10ms);
-      BasicUI::Yield();
-   }
+   ExportResult Process(ExportPluginDelegate& delegate) override
+   {
+      size_t numBytes = 0;
+      constSamplePtr mixed = NULL;
+      wxOutputStream *os = process->GetOutputStream();
 
-   // Display output on error or if the user wants to see it
-   if (process.GetStatus() != 0 || showOutput) {
-      // TODO use ShowInfoDialog() instead.
-      wxDialogWrapper dlg(nullptr,
-                   wxID_ANY,
-                   XO("Command Output"),
-                   wxDefaultPosition,
-                   wxSize(600, 400),
-                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
-      dlg.SetName();
-
-      ShuttleGui S(&dlg, eIsCreating);
-      S
-         .Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH )
-         .AddTextWindow(cmd + wxT("\n\n") + output);
-      S.StartHorizontalLay(wxALIGN_CENTER, false);
+      auto exportResult = ExportResult::Success;
       {
-         S.Id(wxID_OK).AddButton(XXO("&OK"), wxALIGN_CENTER, true);
+         auto closeIt = finally ( [&] {
+            // Should make the process die, before propagating any exception
+            process->CloseOutput();
+         } );
+
+         // Start piping the mixed data to the command
+         while (exportResult != ExportResult::Success && process->IsActive() && os->IsOk()) {
+            // Capture any stdout and stderr from the command
+            Drain(process->GetInputStream(), &output);
+            Drain(process->GetErrorStream(), &output);
+
+            // Need to mix another block
+            if (numBytes == 0) {
+               auto numSamples = mixer->Process();
+               if (numSamples == 0)
+                  break;
+
+               mixed = mixer->GetBuffer();
+               numBytes = numSamples * channels;
+
+               // Byte-swapping is necessary on big-endian machines, since
+               // WAV files are little-endian
+   #if wxBYTE_ORDER == wxBIG_ENDIAN
+               auto buffer = (const float *) mixed;
+               for (int i = 0; i < numBytes; i++) {
+                  buffer[i] = wxUINT32_SWAP_ON_BE(buffer[i]);
+               }
+   #endif
+               numBytes *= SAMPLE_SIZE(floatSample);
+            }
+
+            // Don't write too much at once...pipes may not be able to handle it
+            size_t bytes = wxMin(numBytes, 4096);
+            numBytes -= bytes;
+
+            while (bytes > 0) {
+               os->Write(mixed, bytes);
+               if (!os->IsOk()) {
+                  exportResult = ExportResult::Error;
+                  break;
+               }
+               bytes -= os->LastWrite();
+               mixed += os->LastWrite();
+            }
+
+            if(exportResult == ExportResult::Success)
+               exportResult = ExportPluginHelpers::UpdateProgress(
+                  delegate, *mixer, mT0, mT1);
+         }
+         // Done with the progress display
       }
-      dlg.GetSizer()->AddSpacer(5);
-      dlg.Layout();
-      dlg.SetMinSize(dlg.GetSize());
-      dlg.Center();
 
-      dlg.ShowModal();
+      // Wait for process to terminate
+      while (process->IsActive()) {
+         using namespace std::chrono;
+         std::this_thread::sleep_for(10ms);
+         BasicUI::Yield();
+      }
 
-      if (process.GetStatus() != 0)
-         exportResult = ExportResult::Error;
+      // Display output on error or if the user wants to see it
+      if (process->GetStatus() != 0 || showOutput) {
+         // TODO use ShowInfoDialog() instead.
+         BasicUI::CallAfter([=]
+         {
+            wxDialogWrapper dlg(nullptr,
+                      wxID_ANY,
+                      XO("Command Output"),
+                      wxDefaultPosition,
+                      wxSize(600, 400),
+                      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+            dlg.SetName();
+
+            ShuttleGui S(&dlg, eIsCreating);
+            S
+               .Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH )
+               .AddTextWindow(cmd + wxT("\n\n") + output);
+            S.StartHorizontalLay(wxALIGN_CENTER, false);
+            {
+               S.Id(wxID_OK).AddButton(XXO("&OK"), wxALIGN_CENTER, true);
+            }
+            dlg.GetSizer()->AddSpacer(5);
+            dlg.Layout();
+            dlg.SetMinSize(dlg.GetSize());
+            dlg.Center();
+
+            dlg.ShowModal();
+         });
+
+         if (process->GetStatus() != 0)
+            exportResult = ExportResult::Error;
+      }
+
+      return exportResult;
    }
 
-   return exportResult;
+private:
+   static std::vector<char> GetMetaChunk(const Tags *metadata);
+};
+
+std::unique_ptr<ExportProcessor> ExportCL::CreateProcessor(int) const
+{
+   return std::make_unique<CLExportProcessor>();
 }
 
-std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
+
+std::vector<char> CLExportProcessor::GetMetaChunk(const Tags *tags)
 {
    std::vector<char> buffer;
 

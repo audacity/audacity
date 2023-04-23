@@ -626,13 +626,13 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          e.SetUseStereoOrMonoOutput();
       else
          e.CreateMixerSpec();
-      
-      
-      const auto result = ExportProgressUI::Show(ExportTask(
-      [&](auto& delegate) { return e.Process(delegate); })
-      );
-      bExportOK = result == ExportResult::Success ||
-         result == ExportResult::Stopped;
+
+      ExportProgressUI::ExceptionWrappedCall([&]
+      {
+         const auto result = ExportProgressUI::Show(e.CreateExportTask());
+         bExportOK = result == ExportResult::Success ||
+            result == ExportResult::Stopped;
+      });
    }
 
    // Check if we need to override the post recording action
