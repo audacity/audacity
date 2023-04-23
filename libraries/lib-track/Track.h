@@ -481,7 +481,7 @@ public:
    using Fallthrough = NextFunction<>;
    
 private:
-   template<typename... T> using List = TypeList::List<T...>;
+     template<typename... T> using List = TypeList::List<T...>;
    using Nil = TypeList::Nil;
    template<typename T> using Head_t = TypeList::Head_t<T>;
    template<typename T> using Tail_t = TypeList::Tail_t<T>;
@@ -497,11 +497,25 @@ private:
    using LeftFold_t =
       typename ::TypeList::LeftFold<Op, TypeList, Initial>::type;
 
-   //! Implements metafunction with specializations, to dispatch TypeSwitch
+   //! Implements metafunction to dispatch TypeSwitch
    template<
       typename Location, typename R, typename RootType, typename ArgumentType,
       typename Functions>
    struct Executor;
+
+   template<typename R> struct NoOp {
+      template<typename> struct type {
+         //! Constant used in a compile-time check
+         enum : unsigned { SetUsed = 0 };
+         //! No functions matched, so do nothing
+         R operator ()(...) const {
+            if constexpr (std::is_void_v<R>)
+               return;
+            else
+               return R{};
+         }
+      };
+   };
 
    //! Helper for recursive case of metafunction implementing TypeSwitch
    /*! Mutually recursive (in compile time) with template Executor. */
@@ -529,20 +543,12 @@ private:
          }
       };
 
-      //! Metafunction with specializations, to choose among implementations of
-      //! operator ()
-      template<typename...> struct Combine_ {};
-
-      //! Base case, no more base classes of ArgumentType
-      template<> struct Combine_<> {
+      struct Base {
          //! No BaseClass of ArgumentType is acceptable to the first Function.
          template<typename Functions> using type = Transparent<Functions>;
       };
 
-      //! Recursive case, tries to match function with one base class of
-      //! ArgumentType
-      template<typename BaseClass, typename ...BaseClasses>
-      struct Combine_<BaseClass, BaseClasses...> {
+      template<typename BaseClass, typename Retry> struct Op {
          using QualifiedBaseClass = std::conditional_t<
             std::is_const_v<ArgumentType>, const BaseClass, BaseClass>;
          //! Whether upcast of ArgumentType* to first BaseClass* works
@@ -605,8 +611,7 @@ private:
             struct Default {
                static constexpr bool value = true;
                //! Recur to this type to try the next base class
-               using type =
-                  typename Combine_<BaseClasses...>::template type<Functions>;
+               using type = typename Retry::template type<Functions>;
             };
             using type = typename std::disjunction<Case1, Case2, Default>::type;
          };
@@ -614,40 +619,27 @@ private:
             typename Switch<Functions>::type;
       };
 
-      template<typename List> using Combine = Apply_t<Combine_, List>;
+      template<typename BaseClasses>
+         using Combine = LeftFold_t<Op, BaseClasses, Base>;
    };
 
-   //! Primary template
    //! Synthesize a function appropriate for ArgumentType
    /*! Mutually recursive (in compile time) with template Combiner. */
    template<
       typename Location, typename R, typename RootType, typename ArgumentType,
       typename Functions>
    struct Executor
-      : Combiner<Location, R, RootType, ArgumentType>::template Combine<
-         // More derived classes earlier
-         TypeList::Reverse_t<typename
-            TypeEnumerator::CollectTypes<TrackTypeTag, Location>::type>
+      : std::conditional_t<
+         Null_v<Functions>,
+         NoOp<R>,
+         typename Combiner<Location, R, RootType, ArgumentType>
+         ::template Combine<
+            // More derived classes later
+            typename TypeEnumerator::CollectTypes<TrackTypeTag, Location>::type
+         >
       >::template type<Functions>
    {
       using NominalType = ArgumentType;
-   };
-
-   //! Partial specialization
-   //! Base case of metafunction implementing Track::TypeSwitch
-   template<
-      typename Location, typename R, typename RootType, typename ArgumentType>
-   struct Executor<Location, R, RootType, ArgumentType, Nil> {
-      using NominalType = ArgumentType;
-      //! Constant used in a compile-time check
-      enum : unsigned { SetUsed = 0 };
-      //! No functions matched, so do nothing
-      R operator ()(...) const {
-         if constexpr (std::is_void_v<R>)
-            return;
-         else
-            return R{};
-      }
    };
 
 public:
