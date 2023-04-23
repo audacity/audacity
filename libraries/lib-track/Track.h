@@ -534,16 +534,13 @@ private:
       template<typename...> struct Combine_ {};
 
       //! Base case, no more base classes of ArgumentType
-      /*! Computes a type as the return type of unevaluated member test() */
       template<> struct Combine_<> {
          //! No BaseClass of ArgumentType is acceptable to the first Function.
-         template<typename Functions>
-         static auto test() -> Transparent<Functions>;
+         template<typename Functions> using type = Transparent<Functions>;
       };
 
       //! Recursive case, tries to match function with one base class of
       //! ArgumentType
-      /*! Computes a type as the return type of unevaluated member test() */
       template<typename BaseClass, typename ...BaseClasses>
       struct Combine_<BaseClass, BaseClasses...> {
          using QualifiedBaseClass = std::conditional_t<
@@ -592,48 +589,29 @@ private:
             }
          };
 
-         //! Recur to this type to try the next base class
-         using Retry = Combine_<BaseClasses...>;
-
-         //! Catch-all overload of unevaluated function
-         /*! If ArgumentType is not compatible with BaseClass, or if
-          Function does not accept QualifiedBaseClass*, try other BaseClasses.
-          */
-         template<typename Functions>
-         static auto test(const void *)
-            -> decltype(Retry::template test<Functions>());
-
-         //! overload when upcast of ArgumentType* works, with sfinae'd return
-         //! type
-         /*!
-          If BaseClass is a base of ArgumentType and Function can take a
-          pointer to it, then overload resolution chooses this.
-          If not, then the sfinae rule makes this overload unavailable.
-          */
          template<typename Functions, typename Function = Head_t<Functions>>
-         static auto test(std::true_type *) -> decltype(
-            (void) std::declval<Function>()((QualifiedBaseClass*)nullptr),
-               Opaque<Function>{});
-
-         //! overload when upcast of ArgumentType* works, with sfinae'd return
-         //! type
-         /*!
-          If BaseClass is a base of ArgumentType and Function can take a
-          pointer to it, with a second argument for a next function,
-          then overload resolution chooses this.
-          If not, then the sfinae rule makes this overload unavailable.
-          */
-         template<typename Functions, typename Function = Head_t<Functions>>
-         static auto test(std::true_type *)
-            -> decltype(
-               (void) std::declval<Function>()((QualifiedBaseClass*)nullptr,
-               std::declval<NextFunction<R>>()),
-               Wrapper<Functions>{});
-
-         //! unevaluated
-         template<typename Functions>
-         static auto test() -> decltype(test<Functions>(
-            (std::integral_constant<bool, Compatible>*)nullptr));
+         struct Switch {
+            struct Case1 {
+               static constexpr bool value = Compatible &&
+                  std::is_invocable_v<Function, QualifiedBaseClass*>;
+               using type = Opaque<Function>;
+            };
+            struct Case2 {
+               static constexpr bool value = Compatible &&
+                  std::is_invocable_v<
+                     Function, QualifiedBaseClass*, NextFunction<R>>;
+               using type = Wrapper<Functions>;
+            };
+            struct Default {
+               static constexpr bool value = true;
+               //! Recur to this type to try the next base class
+               using type =
+                  typename Combine_<BaseClasses...>::template type<Functions>;
+            };
+            using type = typename std::disjunction<Case1, Case2, Default>::type;
+         };
+         template<typename Functions> using type =
+            typename Switch<Functions>::type;
       };
 
       template<typename List> using Combine = Apply_t<Combine_, List>;
@@ -646,12 +624,11 @@ private:
       typename Location, typename R, typename RootType, typename ArgumentType,
       typename Functions>
    struct Executor
-      : decltype(Combiner<Location, R, RootType, ArgumentType>
-      ::template Combine<
+      : Combiner<Location, R, RootType, ArgumentType>::template Combine<
          // More derived classes earlier
          TypeList::Reverse_t<typename
             TypeEnumerator::CollectTypes<TrackTypeTag, Location>::type>
-      >::template test<Functions>())
+      >::template type<Functions>
    {
       using NominalType = ArgumentType;
    };
