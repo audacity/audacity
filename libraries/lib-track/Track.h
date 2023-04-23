@@ -519,20 +519,16 @@ private:
          }
       };
 
-      /*! Computes a type as the return type of unevaluated member test() */
       struct CombineBase {
          //! No BaseClass of ArgumentType is acceptable to the first Function.
-         template<typename Functions>
-         static auto test() -> Transparent<Functions>;
+         template<typename Functions> using type = Transparent<Functions>;
       };
 
-      /*! Computes a type as the return type of unevaluated member test() */
       template<typename BaseClass, typename NextBase> struct CombineOp {
          static_assert(
             std::is_const_v<BaseClass> == std::is_const_v<ArgumentType>);
          //! Whether upcast of ArgumentType* to first BaseClass* works
-         static constexpr bool Compatible =
-            std::is_base_of_v<BaseClass, ArgumentType>;
+         using Compatible = std::is_base_of<BaseClass, ArgumentType>;
 
          //! Generates operator () that calls one function only, shadowing those
          //! taking less derived base classes
@@ -569,47 +565,30 @@ private:
             }
          };
 
-         //! Catch-all overload of unevaluated function
-         /*! If ArgumentType is not compatible with BaseClass, or if
-          Function does not accept BaseClass*, try other BaseClasses.
-          */
-         template<typename Functions>
-         static auto test(const void *)
-            -> decltype(NextBase::template test<Functions>());
-
-         //! overload when upcast of ArgumentType* works, with sfinae'd return
-         //! type
-         /*!
-          If BaseClass is a base of ArgumentType and Function can take a
-          pointer to it, then overload resolution chooses this.
-          If not, then the sfinae rule makes this overload unavailable.
-          */
          template<typename Functions, typename Function = Head_t<Functions>>
-         static auto test(std::true_type *) -> decltype(
-            (void) std::declval<Function>()((BaseClass*)nullptr),
-               Opaque<Functions>{});
-
-         //! overload when upcast of ArgumentType* works, with sfinae'd return
-         //! type
-         /*!
-          If BaseClass is a base of ArgumentType and Function can take a
-          pointer to it, with a second argument for a next function,
-          then overload resolution chooses this.
-          If not, then the sfinae rule makes this overload unavailable.
-          */
-         template<typename Functions, typename Function = Head_t<Functions>>
-         static auto test(std::true_type *)
-            -> decltype(
-               (void) std::declval<Function>()((BaseClass*)nullptr,
-               std::declval<NextFunction<R>>()),
-               Wrapper<Functions>{});
-
-         //! unevaluated
-         template<typename Functions>
-         static auto test() -> decltype(test<Functions>(
-            (std::integral_constant<bool, Compatible>*)nullptr));
+         struct Switch {
+            struct Case1 : std::conjunction<Compatible, std::is_invocable<
+               Function, BaseClass*, NextFunction<R>
+            >> {
+               using type = Wrapper<Functions>;
+            };
+            struct Case2 : std::conjunction<Compatible, std::is_invocable<
+               Function, BaseClass*
+            >> {
+               using type = Opaque<Functions>;
+            };
+            struct Default : std::true_type {
+               //! Recur to the next base class
+               using type = typename NextBase::template type<Functions>;
+            };
+            using type = typename std::disjunction<Case1, Case2, Default>::type;
+         };
+         template<typename Functions> using type =
+            typename Switch<Functions>::type;
       };
-      using type = LeftFold_t<CombineOp, ArgumentTypes, CombineBase>;
+      template<typename Functions> using type =
+         typename LeftFold_t<CombineOp, ArgumentTypes, CombineBase>
+            ::template type<Functions>;
    };
 
    //! Primary template
@@ -619,8 +598,7 @@ private:
     @tparam ArgumentTypes nonempty; more derived types later
     */
    template<typename R, typename ArgumentTypes, typename Functions>
-   struct Executor
-      : decltype(Combiner<R, ArgumentTypes>::type::template test<Functions>())
+   struct Executor : Combiner<R, ArgumentTypes>::template type<Functions>
    {
       static_assert(!Null_v<ArgumentTypes>);
    };
