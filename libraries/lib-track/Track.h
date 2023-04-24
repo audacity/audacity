@@ -471,178 +471,157 @@ public:
    bool SameKindAs(const Track &track) const
       { return &GetTypeInfo() == &track.GetTypeInfo(); }
 
-   //! Type of arguments passed as optional second parameter to TypeSwitch() cases
-   template < typename R = void >
-   using Continuation = std::function< R() >;
-   //! Type of arguments passed as optional second parameter to TypeSwitch<void>() cases
-   using Fallthrough = Continuation<>;
+   //! Type of arguments passed as optional second parameter to TypeSwitch()
+   //! cases
+   template<typename R = void> using NextFunction = std::function<R()>;
+   using Fallthrough = NextFunction<>;
    
 private:
-   //! Variadic template implements metafunction with specializations, to dispatch Track::TypeSwitch
-   template< typename ...Params >
-   struct Executor{};
+   template<typename... T> using List = TypeList::List<T...>;
+   template<template<typename...> class Template, typename TypeList>
+   using Apply_t = typename ::TypeList::template Apply_t<Template, TypeList>;
 
-   //! Helper for recursive case of metafunction implementing Track::TypeSwitch
-   /*! Mutually recursive (in compile time) with template Track::Executor. */
-   struct Dispatcher {
-      //! First, recursive case of metafunction, defers generation of operator ()
-      template< typename Tag, typename R, typename ArgumentType,
-                typename Function, typename ...Functions >
-      struct inapplicable
-      {
-         using QualifiedTrackType =
-            std::conditional_t< std::is_const_v<ArgumentType>,
-               const Track, Track >;
-   
+   //! Variadic template implements metafunction with specializations, to
+   //! dispatch TypeSwitch
+   template<typename ...Params> struct Executor{};
+
+   //! Helper for recursive case of metafunction implementing TypeSwitch
+   /*! Mutually recursive (in compile time) with template Executor. */
+   template<typename Location, typename R, typename RootType,
+      typename ArgumentType>
+   struct Combiner {
+         using QualifiedRootType = std::conditional_t<
+            std::is_const_v<ArgumentType>, const RootType, RootType>;
+
+      //! Recur with the next Function
+      template<typename Function, typename ...Functions> struct Transparent {
          //! The template specialization to recur with
-         using Tail = Executor< Tag, R, ArgumentType, Functions... >;
+         using Next =
+            Executor<Location, R, RootType, ArgumentType, Functions...>;
          //! Constant used in a compile-time check
-         enum : unsigned { SetUsed = Tail::SetUsed << 1 };
+         enum : unsigned { SetUsed = Next::SetUsed << 1 };
 
          //! Ignore the first, inapplicable function and try others.
-         R operator ()
-            (QualifiedTrackType *pTrack,
-             const Function &, const Functions &...functions) const
-         { return Tail{}( pTrack, functions... ); }
+         R operator ()(QualifiedRootType *pObject,
+            const Function &, const Functions &...functions) const
+         { return Next{}( pObject, functions... ); }
       };
 
-      //! Second, nonrecursive case of metafunction, generates operator () that calls function without fallthrough
-      template< typename R, typename BaseClass, typename ArgumentType,
-                typename Function >
-      struct applicable1
-      {
-         using QualifiedTrackType =
-            std::conditional_t< std::is_const_v<ArgumentType>,
-               const Track, Track >;
-         using QualifiedBaseClass =
-            std::conditional_t< std::is_const_v<ArgumentType>,
-               const BaseClass, BaseClass >;
-   
-         //! Constant used in a compile-time check
-         enum : unsigned { SetUsed = 1u };
-
-         //! Ignore the remaining functions and call the first only.
-         R operator ()
-            (QualifiedTrackType *pTrack, const Function &function, ...) const
-         { return function( static_cast<QualifiedBaseClass *>(pTrack) ); }
-      };
-
-      //! Third, recursive case of metafunction, generates operator () that calls function with fallthrough
-      template< typename Tag,
-                typename R, typename BaseClass, typename ArgumentType,
-                typename Function, typename ...Functions >
-      struct applicable2
-      {
-         using QualifiedTrackType =
-            std::conditional_t< std::is_const_v<ArgumentType>,
-               const Track, Track >;
-         using QualifiedBaseClass =
-            std::conditional_t< std::is_const_v<ArgumentType>,
-               const BaseClass, BaseClass >;
-   
-         //! The template specialization to recur with
-         using Tail = Executor< Tag, R, ArgumentType, Functions... >;
-         //! Constant used in a compile-time check
-         enum : unsigned { SetUsed = (Tail::SetUsed << 1) | 1u };
-
-         //! Call the first function, which may request dispatch to the further functions by invoking a continuation.
-         R operator ()
-            (QualifiedTrackType *pTrack, const Function &function,
-             const Functions &...functions) const
-         {
-            auto continuation = Continuation<R>{ [&] {
-               return Tail{}( pTrack, functions... );
-            } };
-            return function( static_cast<QualifiedBaseClass *>(pTrack),
-               continuation );
-         }
-      };
-
-      //! Variadic template implements metafunction with specializations, to choose among implementations of operator ()
-      template< typename ... > struct Switch {};
+      //! Metafunction with specializations, to choose among implementations of
+      //! operator ()
+      template<typename...> struct Combine_ {};
 
       //! Base case, no more base classes of ArgumentType
-      /*! Computes a type as the return type of undefined member test() */
-      template<typename Tag, typename R, typename ArgumentType>
-      struct Switch<Tag, R, ArgumentType, TypeList::Nil>
-      {
-         //! No BaseClass of ArgumentType is acceptable to Function.
-         template< typename Function, typename ...Functions >
-            static auto test()
-               -> inapplicable< Tag, R, ArgumentType, Function, Functions... >;
+      /*! Computes a type as the return type of unevaluated member test() */
+      template<> struct Combine_<> {
+         //! No BaseClass of ArgumentType is acceptable to the first Function.
+         template<typename ...Functions>
+         static auto test() -> Transparent<Functions...>;
       };
 
-      //! Recursive case, tries to match function with one base class of ArgumentType
-      /*! Computes a type as the return type of undefined member test() */
-      template<typename Tag, typename R, typename ArgumentType,
-         typename BaseClass, typename ...BaseClasses>
-      struct Switch<Tag, R, ArgumentType,
-         TypeList::List<BaseClass, BaseClasses...>>
-      {
-         using QualifiedBaseClass =
-            std::conditional_t< std::is_const_v<ArgumentType>,
-               const BaseClass, BaseClass >;
-
-         //! Recur to this type to try the next base class
-         using Retry =
-            Switch<Tag, R, ArgumentType, TypeList::List<BaseClasses...>>;
-
-         //! Catch-all overload of undefined function used in decltype only
-         /*! If ArgumentType is not compatible with BaseClass, or if
-          Function does not accept QualifiedBaseClass*, try other BaseClasses. */
-         template< typename Function, typename ...Functions >
-            static auto test( const void * )
-               -> decltype( Retry::template test< Function, Functions... >() );
-
-         //! overload when upcast of ArgumentType* works, with sfinae'd return type
-         /*! If BaseClass is a base of ArgumentType and Function can take a pointer to it,
-           then overload resolution chooses this.
-           If not, then the sfinae rule makes this overload unavailable. */
-         template< typename Function, typename ...Functions >
-            static auto test( std::true_type * )
-               -> decltype(
-                  (void) std::declval<Function>()
-                     ( (QualifiedBaseClass*)nullptr ),
-                  applicable1< R, BaseClass, ArgumentType, Function>{}
-               );
-
-         //! overload when upcast of ArgumentType* works, with sfinae'd return type
-         /*! If BaseClass is a base of ArgumentType and Function can take a pointer to it,
-           with a second argument for a continuation,
-           then overload resolution chooses this.
-           If not, then the sfinae rule makes this overload unavailable. */
-         template< typename Function, typename ...Functions >
-            static auto test( std::true_type * )
-               -> decltype(
-                  (void) std::declval<Function>()
-                     ( (QualifiedBaseClass*)nullptr,
-                       std::declval< Continuation<R> >() ),
-                  applicable2< Tag, R, BaseClass, ArgumentType,
-                               Function, Functions... >{}
-               );
-
+      //! Recursive case, tries to match function with one base class of
+      //! ArgumentType
+      /*! Computes a type as the return type of unevaluated member test() */
+      template<typename BaseClass, typename ...BaseClasses>
+      struct Combine_<BaseClass, BaseClasses...> {
+         using QualifiedBaseClass = std::conditional_t<
+            std::is_const_v<ArgumentType>, const BaseClass, BaseClass>;
          //! Whether upcast of ArgumentType* to first BaseClass* works
          static constexpr bool Compatible =
             std::is_base_of_v<BaseClass, ArgumentType>;
-         //! undefined function used in decltype only to compute a type, using other overloads
-         template< typename Function, typename ...Functions >
-            static auto test()
-               -> decltype(
-                  test< Function, Functions... >(
-                     (std::integral_constant<bool, Compatible>*)nullptr) );
+
+         //! Generates operator () that calls one function only, shadowing those
+         //! taking less derived base classes
+         template<typename Function> struct Opaque {
+            //! Constant used in a compile-time check
+            enum : unsigned { SetUsed = 1u };
+
+            //! Ignore the remaining functions and call the first only.
+            R operator ()(
+               QualifiedRootType *pObject, const Function &function, ...) const
+            { return function( static_cast<QualifiedBaseClass *>(pObject) ); }
+         };
+
+         //! Generates operator () that calls a function that accepts a next
+         //! function
+         template<typename Function, typename ...Functions>
+         struct Wrapper {
+            //! The template specialization to recur with
+            using Next =
+               Executor<Location, R, RootType, ArgumentType, Functions...>;
+            //! Constant used in a compile-time check
+            enum : unsigned { SetUsed = (Next::SetUsed << 1) | 1u };
+
+            //! Call the first function, which may request dispatch to the
+            //! further functions
+            R operator ()(QualifiedRootType *pObject, const Function &function,
+                const Functions &...functions) const
+            {
+               // Construct a std::function
+               NextFunction<R> next{
+                  [&]{ return Next{}(pObject, functions...); } };
+               return function(
+                  static_cast<QualifiedBaseClass *>(pObject), next);
+            }
+         };
+
+         //! Recur to this type to try the next base class
+         using Retry = Combine_<BaseClasses...>;
+
+         //! Catch-all overload of unevaluated function
+         /*! If ArgumentType is not compatible with BaseClass, or if
+          Function does not accept QualifiedBaseClass*, try other BaseClasses.
+          */
+         template<typename ...Functions>
+         static auto test(const void *)
+            -> decltype(Retry::template test<Functions...>());
+
+         //! overload when upcast of ArgumentType* works, with sfinae'd return
+         //! type
+         /*!
+          If BaseClass is a base of ArgumentType and Function can take a
+          pointer to it, then overload resolution chooses this.
+          If not, then the sfinae rule makes this overload unavailable.
+          */
+         template<typename Function, typename ...Functions>
+         static auto test(std::true_type *)
+            -> decltype(
+               (void) std::declval<Function>()((QualifiedBaseClass*)nullptr),
+               Opaque<Function>{});
+
+         //! overload when upcast of ArgumentType* works, with sfinae'd return
+         //! type
+         /*!
+          If BaseClass is a base of ArgumentType and Function can take a
+          pointer to it, with a second argument for a next function,
+          then overload resolution chooses this.
+          If not, then the sfinae rule makes this overload unavailable.
+          */
+         template<typename Function, typename ...Functions>
+         static auto test(std::true_type *)
+            -> decltype(
+               (void) std::declval<Function>()((QualifiedBaseClass*)nullptr,
+                  std::declval<NextFunction<R>>()),
+               Wrapper<Function, Functions...>{});
+
+         //! unevaluated
+         template<typename ...Functions>
+         static auto test() -> decltype(test<Functions...>(
+            (std::integral_constant<bool, Compatible>*)nullptr));
       };
+
+      template<typename List> using Combine = Apply_t<Combine_, List>;
    };
 
-   //! Base case of metafunction implementing Track::TypeSwitch
-   template< typename Tag, typename R, typename ArgumentType >
-   struct Executor< Tag, R, ArgumentType >
-   {
+   //! Base case of metafunction implementing TypeSwitch
+   template<
+      typename Location, typename R, typename BaseType, typename ArgumentType>
+   struct Executor<Location, R, BaseType, ArgumentType> {
       using NominalType = ArgumentType;
       //! Constant used in a compile-time check
       enum : unsigned { SetUsed = 0 };
       //! No functions matched, so do nothing
-      R operator () (const void *, ...)
-      {
+      R operator ()(...) const {
          if constexpr (std::is_void_v<R>)
             return;
          else
@@ -650,63 +629,54 @@ private:
       }
    };
 
-   //! Implements Track::TypeSwitch, its operator() invokes the first function that can accept ArgumentType*
-   /*! Mutually recursive (in compile time) with template Track::Dispatcher. */
-   template< typename Tag, typename R, typename ArgumentType,
-             typename Function, typename ...Functions >
-   struct Executor< Tag, R, ArgumentType, Function, Functions... >
+   //! Synthesize a function appropriate for ArgumentType
+   /*! Mutually recursive (in compile time) with template Combiner. */
+   template<
+      typename Location, typename R, typename BaseType, typename ArgumentType,
+      typename ...Functions>
+   struct Executor<Location, R, BaseType, ArgumentType, Functions...>
       : decltype(
-         Dispatcher::Switch<Tag, R, ArgumentType,
-            // Each track subtype occurs earlier than its base classes in this
-            // list of types
-            TypeList::Reverse_t<
-               typename TypeEnumerator::CollectTypes<TrackTypeTag, Tag>::type>
-         >::template test<Function, Functions... >())
+         Combiner<Location, R, BaseType, ArgumentType>::template Combine<
+            // More derived classes earlier
+            TypeList::Reverse_t<typename
+               TypeEnumerator::CollectTypes<TrackTypeTag, Location>::type>
+         >::template test<Functions... >())
    {
       using NominalType = ArgumentType;
    };
 
 public:
 
-   template<typename TrackType>
-   static void checkTrackType()
-   {
-      static_assert(
-         std::is_same_v<Track, TrackType> ||
-         std::is_same_v<const Track, TrackType>, "Error" );
-   }
-   template<typename R, typename TrackType, typename... Functions>
-   static R CallExecutor(R*, std::tuple<>*, TrackType&, const Functions&...)
+   template<typename R, typename Object, typename... Functions>
+   static R CallExecutor(R*, std::tuple<>*, Object&, const Functions&...)
    {
       // This overload is needed so that the other overload of CallExecutor
       // compiles, but it should never be reached at run-time, because an
-      // Executor generated for (const) Track should have been the catch-all.
+      // Executor generated for (const) Object should have been the catch-all.
       wxASSERT(false);
-      checkTrackType<TrackType>();
       if constexpr (std::is_void_v<R>)
          return;
       else
          return R{};
    }
    template<
-      typename R, typename TrackType, typename... Functions,
+      typename R, typename Object, typename... Functions,
       typename Executor, typename... Executors>
    static R CallExecutor(
-      R*, std::tuple<Executor, Executors...>*, TrackType &track,
+      R*, std::tuple<Executor, Executors...>*, Object &object,
       const Functions &...functions)
    {
-      checkTrackType<TrackType>();
       const auto &info = Executor::NominalType::ClassTypeInfo();
-      // Dynamic type test of track
+      // Dynamic type test of object
       // Assumes Executor classes are sequenced with more specific accepted
       // types earlier
-      if ( info.IsBaseOf(track.GetTypeInfo()) )
+      if (info.IsBaseOf(object.GetTypeInfo()))
          // Dispatch to an Executor that knows which of functions applies
-         return Executor{}(&track, functions...);
+         return Executor{}(&object, functions...);
       else
          // Recur, with fewer candidate Executors and all of functions
          return CallExecutor( (R*)nullptr,
-            (std::tuple<Executors...>*)nullptr, track, functions...);
+            (std::tuple<Executors...>*)nullptr, object, functions...);
    }
 
    template<typename ...Executors>
@@ -717,55 +687,56 @@ public:
 
    //! Deduce two packs from arguments
    template<
-      typename Tag,
+      typename Location,
       bool IsConst,
       typename R,
-      typename ...TrackTypes,
-      typename ...Functions
+      typename ...ObjectTypes,
+      typename ...Functions,
+      typename Object = Track
    >
    static R DoTypeSwitch(
-      std::conditional_t<IsConst, const Track, Track> &track,
-      TypeList::List<TrackTypes...>,
-      const Functions &...functions )
+      std::conditional_t<IsConst, const Object, Object> &object,
+      List<ObjectTypes...>, const Functions &...functions)
    {
-      // Generate Executor classes, for each of TrackTypes,
+      // Generate Executor classes, for each of ObjectTypes,
       // each zero-sized and with an operator () that calls the correct
-      // one of functions, assuming the track is of the corresponding type
-      using Executors = std::tuple< Executor<
-         Tag, R,
-         std::conditional_t<IsConst, const TrackTypes, TrackTypes>,
+      // one of functions, assuming the object is of the corresponding type
+      using Executors = std::tuple<Executor<
+         Location, R, Object,
+         std::conditional_t<IsConst, const ObjectTypes, ObjectTypes>,
          Functions...
-      >... >;
+      >...>;
       // Don't even construct the tuple of zero-sized types, just point
       constexpr Executors *executors = nullptr;
 
       // Compile time reachability check of the given functions
       enum { All = sizeof...( functions ) };
       static_assert( (1u << All) - 1u == UsedCases(executors),
-         "Uncallable case in Track::TypeSwitch");
+         "Uncallable case in TypeSwitch");
 
       // Do dynamic dispatch to one of the Executors
-      return CallExecutor((R *)nullptr, executors, track, functions...);
+      return CallExecutor((R *)nullptr, executors, object, functions...);
    }
 
-   //! Use this function rather than testing track type explicitly and making down-casts.
    /*!
-   A variadic function taking any number of function objects, each taking
-   a pointer to Track or a subclass, maybe const-qualified, and maybe a
-   second argument which is a fall-through continuation.
+    A variadic function taking any number of function objects, each taking
+    a pointer to Track or a subclass, maybe const-qualified, and maybe a
+    second argument which is a next function.
    
-   Each of the function objects (and supplied continuations) returns R (or a type convertible to R).
-   Calls the first in the sequence that accepts the actual type of the track.
+    Each of the function objects (and supplied next functions) returns R (or a
+    type convertible to R).
+    Calls the first in the sequence that accepts the actual type of the track.
    
-   If no function accepts the track, do nothing and return R{}
-   if R is not void.
+    If no function accepts the track, do nothing and return R{} (if R is not
+    void).
    
-   If one of the functions invokes the fall-through, then the next following
-   applicable function is called.
+    If one of the functions invokes the no-argument function passed into it,
+    then the next following applicable function is called.
 
-   @tparam R Return type of this function and each function argument
-   @tparam Functions callable types deduced from arguments
-   @param functions typically lambdas, taking a pointer to a track subclass, and optionally a fall-through call-back
+    @tparam R Return type of this function and each function argument
+    @tparam Functions callable types deduced from arguments
+    @param functions typically lambdas, taking a pointer to a track subclass,
+     and optionally a next function
     */
    template<
       typename R = void,
@@ -773,29 +744,31 @@ public:
    >
    R TypeSwitch(const Functions &...functions)
    {
-      struct Tag : TrackTypeTag {};
-      // Collect all concrete and abstract track types known at compile time
+      struct Here : TrackTypeTag {};
+      // More derived classes earlier
       using TrackTypes = TypeList::Reverse_t<
-         typename TypeEnumerator::CollectTypes<TrackTypeTag, Tag>::type>;
+         typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type>;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Tag, false, R>(*this, TrackTypes{}, functions...);
+      return DoTypeSwitch<Here, false, R>(*this, TrackTypes{}, functions...);
    }
 
    /*! @copydoc Track::TypeSwitch */
-   /*! This is the overload for const tracks, only taking
-   callable arguments that accept first arguments that are pointers to const. */
+   /*!
+    This is the overload for const tracks, only taking
+    callable arguments that accept first arguments that are pointers to const
+    */
    template<
       typename R = void,
       typename ...Functions
    >
    R TypeSwitch(const Functions &...functions) const
    {
-      struct Tag : TrackTypeTag {};
-      // Collect all concrete and abstract track types known at compile time
+      struct Here : TrackTypeTag {};
+      // More derived classes earlier
       using TrackTypes = TypeList::Reverse_t<
-         typename TypeEnumerator::CollectTypes<TrackTypeTag, Tag>::type>;
+         typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type>;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Tag, true, R>(*this, TrackTypes{}, functions...);
+      return DoTypeSwitch<Here, true, R>(*this, TrackTypes{}, functions...);
    }
 
    // XMLTagHandler callback methods -- NEW virtual for writing
@@ -940,7 +913,7 @@ template < typename TrackType > struct TrackIterRange;
     The filtering predicate is tested only when the iterator is constructed or advanced.
  
     @tparam TrackType Track or a subclass, maybe const-qualified
-*/
+ */
 template <
    typename TrackType
 > class TrackIter
