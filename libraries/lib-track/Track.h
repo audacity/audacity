@@ -492,154 +492,156 @@ private:
       typename TypeList::template Fn<Template...>;
    template<typename Metafunction, typename TypeList> using Map_t =
       typename ::TypeList::Map_t<Metafunction, TypeList>;
+   template<typename Metafunction, typename TypeList> using MapList_t
+      = typename ::TypeList::MapList_t<Metafunction, TypeList>;
    template<template<typename Type, typename Accumulator> class Op,
       typename TypeList, typename Initial>
    using LeftFold_t =
       typename ::TypeList::LeftFold<Op, TypeList, Initial>::type;
+   template<template<typename Type, typename Accumulator> class Op,
+      typename TypeList, typename Initial>
+   using RightFold_t =
+      typename ::TypeList::RightFold<Op, TypeList, Initial>::type;
+
+   // standard in C++20
+   template<typename T> struct type_identity{ using type = T; };
 
    //! Implements metafunction to dispatch TypeSwitch
    template<
-      typename Location, typename R, typename RootType, typename ArgumentType,
-      typename Functions>
+      typename R, typename RootType, typename ArgumentTypes, typename Functions>
    struct Executor;
 
-   template<typename R> struct NoOp {
-      template<typename> struct type {
-         //! Constant used in a compile-time check
-         enum : unsigned { SetUsed = 0 };
-         //! No functions matched, so do nothing
-         R operator ()(...) const {
-            if constexpr (std::is_void_v<R>)
-               return;
-            else
-               return R{};
-         }
-      };
-   };
-
    //! Helper for recursive case of metafunction implementing TypeSwitch
-   /*! Mutually recursive (in compile time) with template Executor. */
-   template<typename Location, typename R, typename RootType,
-      typename ArgumentType>
+   /*!
+    @tparam ArgumentTypes nonempty and lists more derived classes later
+    */
+   template<typename R, typename RootType, typename ArgumentTypes>
    struct Combiner {
+      static_assert(!Null_v<ArgumentTypes>);
+      using ArgumentType = Head_t<ArgumentTypes>;
+
+      struct NoOp {
+         struct type {
+            //! Constant used in a compile-time check
+            enum : unsigned { SetUsed = 0 };
+            //! No functions matched, so do nothing
+            R operator ()(...) const {
+               if constexpr (std::is_void_v<R>)
+                  return;
+               else
+                  return R{};
+            }
+         };
+      };
+
+      template<typename Function, typename WrappedFunction> struct Op1 {
          using QualifiedRootType = std::conditional_t<
             std::is_const_v<ArgumentType>, const RootType, RootType>;
+         struct Transparent {
+            using Next = typename WrappedFunction::type;
 
-      //! Recur with the next Function
-      template<typename Fs> struct Transparent {
-         //! The template specialization to recur with
-         using Next =
-            Executor<Location, R, RootType, ArgumentType, Tail_t<Fs>>;
-
-         //! Constant used in a compile-time check
-         enum : unsigned { SetUsed = Next::SetUsed << 1 };
-
-         //! Ignore the first, inapplicable function and try others.
-         template<typename Functions>
-         R operator ()(
-            QualifiedRootType *pObject, const Functions &functions) const
-         {
-            return Next{}(pObject, Tuple::ForwardNext(functions));
-         }
-      };
-
-      struct Base {
-         //! No BaseClass of ArgumentType is acceptable to the first Function.
-         template<typename Functions> using type = Transparent<Functions>;
-      };
-
-      template<typename BaseClass, typename Retry> struct Op {
-         using QualifiedBaseClass = std::conditional_t<
-            std::is_const_v<ArgumentType>, const BaseClass, BaseClass>;
-         //! Whether upcast of ArgumentType* to first BaseClass* works
-         static constexpr bool Compatible =
-            std::is_base_of_v<BaseClass, ArgumentType>;
-
-         //! Generates operator () that calls one function only, shadowing those
-         //! taking less derived base classes
-         template<typename Function> struct Opaque {
             //! Constant used in a compile-time check
-            enum : unsigned { SetUsed = 1u };
+            enum : unsigned { SetUsed = Next::SetUsed << 1 };
 
-            //! Ignore the remaining functions and call the first only.
+            //! Ignore the first, inapplicable function and try others.
             template<typename Functions>
             R operator ()(
                QualifiedRootType *pObject, const Functions &functions) const
             {
-               return std::get<0>(functions)(
-                  static_cast<QualifiedBaseClass *>(pObject));
+               return Next{}(pObject, Tuple::ForwardNext(functions));
             }
          };
 
-         //! Generates operator () that calls a function that accepts a next
-         //! function
-         template<typename Fs> struct Wrapper {
-            //! The template specialization to recur with
-            using Next =
-               Executor<Location, R, RootType, ArgumentType, Tail_t<Fs>>;
-            //! Constant used in a compile-time check
-            enum : unsigned { SetUsed = (Next::SetUsed << 1) | 1u };
+         template<typename BaseClass, typename Retry,
+            typename QualifiedBaseClass = std::conditional_t<
+               std::is_const_v<ArgumentType>, const BaseClass, BaseClass>,
+            //! Whether upcast of ArgumentType* to first BaseClass* works
+            bool Compatible = std::is_base_of_v<BaseClass, ArgumentType>
+         >
+         struct Op2_ {
+            //! Generates operator () that calls one function only, shadowing
+            //! those taking less derived base classes
+            struct Opaque {
+               //! Constant used in a compile-time check
+               enum : unsigned { SetUsed = 1u };
 
-            //! Call the first function, which may request dispatch to the
-            //! further functions
-            template<typename Functions>
-            R operator ()(
-               QualifiedRootType *pObject, const Functions &functions) const
-            {
-               // Construct a std::function
-               NextFunction<R> next{
-                  [&]{ return Next{}(pObject, Tuple::ForwardNext(functions)); }
-               };
-               return std::get<0>(functions)(
-                  static_cast<QualifiedBaseClass *>(pObject), next);
-            }
-         };
+               //! Ignore the remaining functions and call the first only.
+               template<typename Functions>
+               R operator ()(
+                  QualifiedRootType *pObject, const Functions &functions) const
+               {
+                  return std::get<0>(functions)(
+                     static_cast<QualifiedBaseClass *>(pObject));
+               }
+            };
 
-         template<typename Functions, typename Function = Head_t<Functions>>
-         struct Switch {
+            //! Generates operator () that calls a function that accepts a next
+            //! function
+            struct Wrapper {
+               using Next = typename WrappedFunction::type;
+
+               //! Constant used in a compile-time check
+               enum : unsigned { SetUsed = (Next::SetUsed << 1) | 1u };
+
+               //! Call the first function, which may request dispatch to the
+               //! further functions
+               template<typename Functions>
+               R operator ()(
+                  QualifiedRootType *pObject, const Functions &functions) const
+               {
+                  // Construct a std::function
+                  NextFunction<R> next{ [&]{
+                     return Next{}(pObject, Tuple::ForwardNext(functions));
+                  } };
+                  return std::get<0>(functions)(
+                     static_cast<QualifiedBaseClass *>(pObject), next);
+               }
+            };
+
             struct Case1 {
                static constexpr bool value = Compatible &&
                   std::is_invocable_v<Function, QualifiedBaseClass*>;
-               using type = Opaque<Function>;
+               using type = Opaque;
             };
             struct Case2 {
                static constexpr bool value = Compatible &&
                   std::is_invocable_v<
                      Function, QualifiedBaseClass*, NextFunction<R>>;
-               using type = Wrapper<Functions>;
+               using type = Wrapper;
             };
             struct Default {
                static constexpr bool value = true;
-               //! Recur to this type to try the next base class
-               using type = typename Retry::template type<Functions>;
+               using type = Retry;
             };
             using type = typename std::disjunction<Case1, Case2, Default>::type;
          };
-         template<typename Functions> using type =
-            typename Switch<Functions>::type;
+         template<typename BaseClass, typename Retry> using Op2 =
+            typename Op2_<BaseClass, Retry>::type;
+
+         // inner fold over types, testing whether the functions take them
+         // and ArgumentType can also upcast to them
+         // and whether each function may fall-through to base class handlers
+         // More derived classes later
+         using type = LeftFold_t<Op2, ArgumentTypes, Transparent>;
       };
 
-      template<typename BaseClasses>
-         using Combine = LeftFold_t<Op, BaseClasses, Base>;
+      template<typename Functions> using Combine =
+         RightFold_t<Op1, Functions, NoOp>;
    };
 
    //! Synthesize a function appropriate for ArgumentType
-   /*! Mutually recursive (in compile time) with template Combiner. */
+   /*!
+    @tparam ArgumentTypes nonempty and lists more derived classes later
+    */
    template<
-      typename Location, typename R, typename RootType, typename ArgumentType,
-      typename Functions>
-   struct Executor
-      : std::conditional_t<
-         Null_v<Functions>,
-         NoOp<R>,
-         typename Combiner<Location, R, RootType, ArgumentType>
-         ::template Combine<
-            // More derived classes later
-            typename TypeEnumerator::CollectTypes<TrackTypeTag, Location>::type
-         >
-      >::template type<Functions>
+      typename R, typename RootType, typename ArgumentTypes, typename Functions
+   >
+   struct Executor : Combiner<R, RootType, ArgumentTypes>
+      // outer fold over the list of functions
+      ::template Combine<Functions>::type
    {
-      using NominalType = ArgumentType;
+      static_assert(!Null_v<ArgumentTypes>);
+      using NominalType = Head_t<ArgumentTypes>;
    };
 
 public:
@@ -692,30 +694,30 @@ public:
       typename Location,
       typename R,
       typename Object,
-      typename ...ObjectTypes,
+      typename ObjectTypes,
       typename ...Functions
    >
-   static R DoTypeSwitch(Object &object,
-      List<ObjectTypes...>, const Functions &...functions)
-   {
+   struct TypeSwitcher {
+      static_assert(!Null_v<ObjectTypes>);
       // Generate Executor classes, for each of ObjectTypes,
       // each zero-sized and with an operator () that calls the correct
       // one of functions, assuming the object is of the corresponding type
-      using Executors = List<Executor<
-         Location, R, Object,
-         ObjectTypes,
-         List<Functions...>
-      >...>;
+      using FunctionList = List<Functions...>;
+      template<typename Tail>
+         using Executor_ = Executor<R, Object, Tail, FunctionList>;
+      using Executors = MapList_t<Fn<Executor_>, ObjectTypes>;
 
       // Compile time reachability check of the given functions
-      enum { All = sizeof...( functions ) };
+      enum { All = sizeof...(Functions) };
       static_assert((1u << All) - 1u == Apply_t<UsedCases, Executors>{}(),
          "Uncallable case in TypeSwitch");
 
-      // Do dynamic dispatch to one of the Executors
-      return Invoker<R, Executors>{}(
-         object, References<Functions...>{ functions... });
-   }
+      R operator ()(Object &object, const Functions &...functions) const {
+         // Do dynamic dispatch to one of the Executors
+         return Invoker<R, Executors>{}(
+            object, References<Functions...>{ functions... });
+      }
+   };
 
    /*!
     A variadic function taking any number of function objects, each taking
@@ -748,7 +750,8 @@ public:
       using TrackTypes =
          typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Here, R>(*this, TrackTypes{}, functions...);
+      return TypeSwitcher<Here, R, Track, TrackTypes, Functions...>{}(
+         *this, functions...);
    }
 
    /*! @copydoc Track::TypeSwitch */
@@ -767,7 +770,8 @@ public:
       using TrackTypes = Map_t<Fn<std::add_const_t>,
          typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type>;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Here, R>(*this, TrackTypes{}, functions...);
+      return TypeSwitcher<Here, R, const Track, TrackTypes, Functions...>{}(
+         *this, functions...);
    }
 
    // XMLTagHandler callback methods -- NEW virtual for writing
