@@ -70,6 +70,6 @@ BaseItemSharedPtr ExtraSelectionMenu()
 }
 
 AttachedItem sAttachment2 { wxT("Optional/Extra/Part1"),
-                            Shared(ExtraSelectionMenu()) };
+   Indirect(ExtraSelectionMenu()) };
 
 } // namespace

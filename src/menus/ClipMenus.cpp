@@ -846,7 +846,7 @@ BaseItemSharedPtr ClipSelectMenu()
 
 AttachedItem sAttachment1{
    wxT("Select/Basic"),
-   Shared( ClipSelectMenu() )
+   Indirect(ClipSelectMenu())
 };
 
 BaseItemSharedPtr ClipCursorItems()
@@ -870,7 +870,7 @@ BaseItemSharedPtr ClipCursorItems()
 AttachedItem sAttachment2{
    { wxT("Transport/Basic/Cursor"),
      { OrderingHint::Before, wxT("CursProjectStart") } },
-   Shared( ClipCursorItems() )
+   Indirect(ClipCursorItems())
 };
 
 BaseItemSharedPtr ExtraTimeShiftItems()
@@ -888,7 +888,7 @@ BaseItemSharedPtr ExtraTimeShiftItems()
 
 AttachedItem sAttachment3{
   { wxT("Optional/Extra/Part1/Edit"), { OrderingHint::End, {} } },
-  Shared( ExtraTimeShiftItems() )
+   Indirect(ExtraTimeShiftItems())
 };
 
 }

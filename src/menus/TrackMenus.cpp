@@ -1335,7 +1335,7 @@ BaseItemSharedPtr TracksMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( TracksMenu() )
+   Indirect(TracksMenu())
 };
 
 BaseItemSharedPtr ExtraTrackMenu()
@@ -1393,7 +1393,7 @@ BaseItemSharedPtr ExtraTrackMenu()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part2"),
-   Shared( ExtraTrackMenu() )
+   Indirect(ExtraTrackMenu())
 };
 
 }

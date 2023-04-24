@@ -63,7 +63,7 @@ struct PopupMenuBuilder final : public SnapRegistryVisitor
    
    void BeginGroup(const SnapRegistryGroup& item) override
    {
-      if (item.transparent)
+      if (item.inlined)
          return;
 
       auto menu = safenew wxMenu;
@@ -76,7 +76,7 @@ struct PopupMenuBuilder final : public SnapRegistryVisitor
    {
       assert(!menuStack.empty());
       
-      if (item.transparent)
+      if (item.inlined)
       {
          menuStack.back()->AppendSeparator();
          return;

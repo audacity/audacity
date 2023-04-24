@@ -566,7 +566,7 @@ BaseItemSharedPtr ExtraGlobalCommands()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part2"),
-   Shared( ExtraGlobalCommands() )
+   Indirect(ExtraGlobalCommands())
 };
 
 BaseItemSharedPtr ExtraFocusMenu()
@@ -604,7 +604,7 @@ BaseItemSharedPtr ExtraFocusMenu()
 
 AttachedItem sAttachment3{
    wxT("Optional/Extra/Part2"),
-   Shared( ExtraFocusMenu() )
+   Indirect(ExtraFocusMenu())
 };
 
 }

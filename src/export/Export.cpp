@@ -295,9 +295,9 @@ namespace {
    }
 }
 
-Registry::GroupItem &Exporter::ExporterItem::Registry()
+Registry::GroupItemBase &Exporter::ExporterItem::Registry()
 {
-   static Registry::TransparentGroupItem<> registry{ PathStart };
+   static Registry::GroupItem<> registry{ PathStart };
    return registry;
 }
 
@@ -339,7 +339,7 @@ Exporter::Exporter( AudacityProject &project )
       {
          // visit the registry to collect the plug-ins properly
          // sorted
-         TransparentGroupItem<> top{ PathStart };
+         GroupItem<> top{ PathStart };
          Registry::Visit( *this, &top, &ExporterItem::Registry() );
       }
 

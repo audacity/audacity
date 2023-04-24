@@ -857,7 +857,7 @@ BaseItemSharedPtr TransportMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( TransportMenu() )
+   Indirect(TransportMenu())
 };
 
 BaseItemSharedPtr ExtraTransportMenu()
@@ -905,7 +905,7 @@ BaseItemSharedPtr ExtraTransportMenu()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),
-   Shared( ExtraTransportMenu() )
+   Indirect(ExtraTransportMenu())
 };
 
 BaseItemSharedPtr ExtraSelectionItems()
@@ -925,7 +925,7 @@ BaseItemSharedPtr ExtraSelectionItems()
 
 AttachedItem sAttachment4{
   { wxT("Optional/Extra/Part1/Select"), { OrderingHint::End, {} } },
-  Shared(ExtraSelectionItems())
+   Indirect(ExtraSelectionItems())
 };
 
 }

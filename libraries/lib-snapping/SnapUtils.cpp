@@ -32,7 +32,7 @@ struct RegistryVisitor : public Registry::Visitor
    {
    }
    
-   void BeginGroup(Registry::GroupItem& item, const Path&) final
+   void BeginGroup(Registry::GroupItemBase& item, const Path&) final
    {
       auto group = dynamic_cast<SnapRegistryGroup*>(&item);
 
@@ -40,7 +40,7 @@ struct RegistryVisitor : public Registry::Visitor
          visitor.BeginGroup(*group);
    }
 
-   void EndGroup(Registry::GroupItem& item, const Path&) final
+   void EndGroup(Registry::GroupItemBase& item, const Path&) final
    {
       auto group = dynamic_cast<SnapRegistryGroup*>(&item);
 
@@ -135,9 +135,9 @@ Identifier ReadSnapTo()
    return snapTo;
 }
 
-Registry::GroupItem& SnapFunctionsRegistry::Registry()
+Registry::GroupItemBase& SnapFunctionsRegistry::Registry()
 {
-   static Registry::TransparentGroupItem<> registry { PathStart };
+   static Registry::GroupItem<> registry { PathStart };
    return registry;
 }
 
@@ -149,7 +149,7 @@ void SnapFunctionsRegistry::Visit(SnapRegistryVisitor& visitor)
    };
 
    RegistryVisitor registryVisitor { visitor };
-   Registry::TransparentGroupItem<> top { PathStart };
+   Registry::GroupItem<> top { PathStart };
    Registry::Visit(registryVisitor, &top, &Registry());
 }
 
@@ -222,11 +222,6 @@ SnapResult SnapFunctionsRegistry::SingleStep(
 
 SnapRegistryGroup::~SnapRegistryGroup()
 {
-}
-
-bool SnapRegistryGroup::Transparent() const
-{
-   return transparent;
 }
 
 SnapRegistryItem::SnapRegistryItem(

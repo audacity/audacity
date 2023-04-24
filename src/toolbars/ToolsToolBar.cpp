@@ -356,6 +356,6 @@ BaseItemSharedPtr ExtraToolsMenu()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),
-   Shared( ExtraToolsMenu() )
+   Indirect(ExtraToolsMenu())
 };
 }

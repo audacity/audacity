@@ -1160,7 +1160,7 @@ BaseItemSharedPtr ExtraPlayAtSpeedMenu()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),
-   Shared( ExtraPlayAtSpeedMenu() )
+   Indirect(ExtraPlayAtSpeedMenu())
 };
 
 BaseItemSharedPtr ExtraPlayAtSpeedItems()
@@ -1187,7 +1187,7 @@ BaseItemSharedPtr ExtraPlayAtSpeedItems()
 AttachedItem sAttachment3{
    Placement{ wxT("Optional/Extra/Part1/PlayAtSpeed"),
      OrderingHint::Begin },
-   Shared( ExtraPlayAtSpeedItems() )
+   Indirect(ExtraPlayAtSpeedItems())
 };
 
 }

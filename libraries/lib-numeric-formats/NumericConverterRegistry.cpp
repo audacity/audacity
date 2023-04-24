@@ -25,7 +25,7 @@ struct RegistryVisitor : public Registry::Visitor
    {
    }
 
-   void BeginGroup(Registry::GroupItem& item, const Path&) override
+   void BeginGroup(Registry::GroupItemBase& item, const Path&) override
    {
       auto concreteGroup = dynamic_cast<NumericConverterRegistryGroup*>(&item);
 
@@ -33,7 +33,7 @@ struct RegistryVisitor : public Registry::Visitor
          concreteGroup != nullptr && concreteGroup->type == requestedType;
    }
 
-   void EndGroup(Registry::GroupItem&, const Path&) override
+   void EndGroup(Registry::GroupItemBase&, const Path&) override
    {
       mInMatchingGroup = false;
    }
@@ -92,9 +92,9 @@ struct RegistryVisitor : public Registry::Visitor
  {
  }
 
-Registry::GroupItem& NumericConverterRegistry::Registry()
+Registry::GroupItemBase& NumericConverterRegistry::Registry()
 {
-   static Registry::TransparentGroupItem<> registry { PathStart };
+   static Registry::GroupItem<> registry { PathStart };
    return registry;
 }
 
@@ -109,7 +109,7 @@ void NumericConverterRegistry::Visit(
 
    RegistryVisitor registryVisitor { std::move(visitor), context, type };
 
-   Registry::TransparentGroupItem<> top { PathStart };
+   Registry::GroupItem<> top { PathStart };
    Registry::Visit(registryVisitor, &top, &Registry());
 }
 
@@ -133,11 +133,6 @@ const NumericConverterRegistryItem* NumericConverterRegistry::Find(
 
 NumericConverterRegistryGroup::~NumericConverterRegistryGroup()
 {
-}
-
-bool NumericConverterRegistryGroup::Transparent() const
-{
-   return true;
 }
 
 NumericConverterItemRegistrator::NumericConverterItemRegistrator(

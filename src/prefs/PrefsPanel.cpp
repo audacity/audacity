@@ -13,16 +13,17 @@ Paul Licameli split from PrefsDialog.cpp
 
 static const auto PathStart = L"Preferences";
 
-Registry::GroupItem &PrefsPanel::PrefsItem::Registry()
+Registry::GroupItemBase &PrefsPanel::PrefsItem::Registry()
 {
-   static Registry::TransparentGroupItem<> registry{ PathStart };
+   static Registry::GroupItem<> registry{ PathStart };
    return registry;
 }
 
-PrefsPanel::PrefsItem::PrefsItem( const wxString &name,
-   const PrefsPanel::Factory &factory_, bool expanded_ )
-      : ConcreteGroupItem<false>{ name }
-      , factory{ factory_ }, expanded{ expanded_ }
+PrefsPanel::PrefsItem::PrefsItem(const wxString &name,
+   const PrefsPanel::Factory &factory, bool expanded
+)  : GroupItem{ name }
+   , factory{ factory }
+   , expanded{ expanded }
 {}
 
 // Collects registry tree nodes into a vector, in preorder.
@@ -32,7 +33,7 @@ struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
    {
       childCounts.push_back( 0 );
    }
-   void BeginGroup( Registry::GroupItem &item, const Path & ) override
+   void BeginGroup( Registry::GroupItemBase &item, const Path & ) override
    {
       auto pItem = dynamic_cast<PrefsItem*>( &item );
       if (!pItem || !pItem->factory)
@@ -42,7 +43,7 @@ struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
       ++childCounts.back();
       childCounts.push_back( 0 );
    }
-   void EndGroup( Registry::GroupItem &item, const Path & ) override
+   void EndGroup( Registry::GroupItemBase &item, const Path & ) override
    {
       auto pItem = dynamic_cast<PrefsItem*>( &item );
       if (!pItem || !pItem->factory)
@@ -119,7 +120,7 @@ PrefsPanel::Factories
 
    std::call_once( flag, []{
       PrefsItem::Visitor visitor{ factories };
-      Registry::TransparentGroupItem<> top{ PathStart };
+      Registry::GroupItem<> top{ PathStart };
       Registry::Visit( visitor, &top, &PrefsItem::Registry() );
    } );
    return factories;

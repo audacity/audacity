@@ -330,7 +330,7 @@ void OnMenuTree(const CommandContext &context)
       using ToolbarMenuVisitor::ToolbarMenuVisitor;
 
       enum : unsigned { TAB = 3 };
-      void DoBeginGroup( GroupItem &item, const Path& ) override
+      void DoBeginGroup( GroupItemBase &item, const Path& ) override
       {
          if ( dynamic_cast<MenuItem*>( &item ) ) {
             Indent();
@@ -341,7 +341,7 @@ void OnMenuTree(const CommandContext &context)
          }
       }
 
-      void DoEndGroup( GroupItem &item, const Path& ) override
+      void DoEndGroup( GroupItemBase &item, const Path& ) override
       {
          if ( dynamic_cast<MenuItem*>( &item ) )
             indentation = wxString{ ' ', TAB * --level };
@@ -513,7 +513,7 @@ BaseItemSharedPtr HelpMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( HelpMenu() )
+   Indirect(HelpMenu())
 };
 
 }

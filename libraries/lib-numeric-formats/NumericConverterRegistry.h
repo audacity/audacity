@@ -39,21 +39,19 @@ using NumericConverterFormatterFactoryPtr =
 struct NumericConverterRegistryGroupTag {};
 
 struct NUMERIC_FORMATS_API NumericConverterRegistryGroup :
-    public Registry::InlineGroupItem<NumericConverterRegistryGroupTag>
+    public Registry::GroupItem<NumericConverterRegistryGroupTag>
 {
    template <typename... Args>
    NumericConverterRegistryGroup(
       const Identifier& internalName, NumericConverterType _type,
       Args&&... args)
-       : InlineGroupItem { internalName, std::forward<Args>(args)... }
+       : GroupItem { internalName, std::forward<Args>(args)... }
        , type { std::move(_type) }
    {
    }
 
    ~NumericConverterRegistryGroup() override;
 
-   bool Transparent() const override;
-   
    NumericConverterType type;
 };
 
@@ -78,7 +76,7 @@ struct NUMERIC_FORMATS_API NumericConverterRegistryItem : public Registry::Singl
 
 struct NUMERIC_FORMATS_API NumericConverterRegistry final
 {
-   static Registry::GroupItem& Registry();
+   static Registry::GroupItemBase& Registry();
 
    using Visitor = std::function<void(const NumericConverterRegistryItem&)>;
    

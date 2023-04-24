@@ -48,7 +48,7 @@ BaseItemSharedPtr ExtraMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( ExtraMenu() )
+   Indirect(ExtraMenu())
 };
 
 // Under /MenuBar/Optional/Extra/Part2
@@ -86,7 +86,7 @@ BaseItemSharedPtr ExtraMiscItems()
 
 AttachedItem sAttachment2{
    Placement{ wxT("Optional/Extra/Part2"), { OrderingHint::End } },
-   Shared( ExtraMiscItems() )
+   Indirect(ExtraMiscItems())
 };
 
 }

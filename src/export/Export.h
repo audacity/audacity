@@ -230,7 +230,7 @@ public:
 
 private:
    struct AUDACITY_DLL_API ExporterItem final : Registry::SingleItem {
-      static Registry::GroupItem &Registry();
+      static Registry::GroupItemBase &Registry();
       ExporterItem(
          const Identifier &id, const Exporter::ExportPluginFactory &factory );
       Exporter::ExportPluginFactory mFactory;

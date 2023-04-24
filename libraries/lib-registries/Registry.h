@@ -22,9 +22,11 @@ namespace Registry {
    // the same ordering), but this is not treated as an error.
    struct OrderingHint
    {
-      // The default Unspecified hint is just like End, except that in case the
-      // item is delegated to (by a SharedItem, ComputedItem, or nameless
-      // transparent group), the delegating item's hint will be used instead
+      /*!
+       The default Unspecified hint is just like End, except that in case the
+       item is delegated to (by an IndirectItem, ComputedItem, or anonymous
+       group), the delegating item's hint will be used instead
+       */
       enum Type : int {
          Before, After,
          Begin, End,
@@ -75,23 +77,25 @@ namespace Registry {
    class Visitor;
    
 
-   // An item that delegates to another held in a shared pointer; this allows
-   // static tables of items to be computed once and reused
-   // The name of the delegate is significant for path calculations, but the
-   // SharedItem's ordering hint is used if the delegate has none
-   struct REGISTRIES_API SharedItem final : BaseItem {
-      explicit SharedItem( const BaseItemSharedPtr &ptr_ )
+   //! An item that delegates to another held in a shared pointer
+   /*!
+    This allows static tables of items to be computed once and reused.
+    The name of the delegate is significant for path calculations, but the
+    IndirectItem's ordering hint is used if the delegate has none
+   */
+   struct REGISTRIES_API IndirectItem final : BaseItem {
+      explicit IndirectItem( const BaseItemSharedPtr &ptr_ )
          : BaseItem{ wxEmptyString }
          , ptr{ ptr_ }
       {}
-      ~SharedItem() override;
+      ~IndirectItem() override;
 
       BaseItemSharedPtr ptr;
    };
 
-   // A convenience function
-   inline std::unique_ptr<SharedItem> Shared( const BaseItemSharedPtr &ptr )
-      { return std::make_unique<SharedItem>( ptr ); }
+   //! A convenience function
+   inline std::unique_ptr<IndirectItem> Indirect(const BaseItemSharedPtr &ptr)
+      { return std::make_unique<IndirectItem>(ptr); }
 
    // An item that computes some other item to substitute for it, each time
    // the ComputedItem is visited
@@ -122,33 +126,46 @@ namespace Registry {
       ~SingleItem() override = 0;
    };
 
-   // Common abstract base class for items that group other items
-   struct REGISTRIES_API GroupItem : BaseItem {
+   //! Common abstract base class for items that group other items
+   struct REGISTRIES_API GroupItemBase : BaseItem {
       using BaseItem::BaseItem;
 
-      // Construction from an internal name and a previously built-up
-      // vector of pointers
-      GroupItem( const Identifier &internalName, BaseItemPtrs &&items_ )
+      //! Construction from an internal name and a previously built-up
+      //! vector of pointers
+      GroupItemBase( const Identifier &internalName, BaseItemPtrs &&items_ )
          : BaseItem{ internalName }, items{ std::move( items_ ) }
       {}
-      GroupItem( const GroupItem& ) PROHIBITED;
-      ~GroupItem() override = 0;
+      GroupItemBase( const GroupItemBase& ) PROHIBITED;
+      ~GroupItemBase() override = 0;
 
-      // Whether the item is non-significant for path naming
-      // when it also has an empty name
-      virtual bool Transparent() const = 0;
+      //! Choose treatment of the children of the group when merging trees
+      enum Ordering {
+         //! Item's name is ignored (omitted from paths) and sub-items are
+         //! merged individually, sequenced by preferences or ordering hints
+         Anonymous,
+         //! Item's name is significant in paths, but its sequence of children
+         //! may be overridden if it merges with another group at the same path
+         Weak,
+         //! Item's name is significant and it is intended to be the unique
+         //! strongly ordered group at its path (but this could fail and
+         //! cause an alpha-build-only error message during merging)
+         Strong,
+      };
+
+      //! Default implementation returns Strong
+      virtual Ordering GetOrdering() const;
 
       BaseItemPtrs items;
    };
    
-   // GroupItem adding variadic constructor conveniences
+   // GroupItemBase adding variadic constructor conveniences
    template< typename VisitorType = ComputedItem::DefaultVisitor >
-   struct InlineGroupItem : GroupItem {
-      using GroupItem::GroupItem;
+   struct GroupItem : GroupItemBase {
+      using GroupItemBase::GroupItemBase;
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
-         InlineGroupItem( const Identifier &internalName, Args&&... args )
-         : GroupItem( internalName )
+         GroupItem( const Identifier &internalName, Args&&... args )
+         : GroupItemBase( internalName )
          { Append( std::forward< Args >( args )... ); }
 
    private:
@@ -188,28 +205,7 @@ namespace Registry {
       // This overload lets you supply a shared pointer to an item, directly
       template<typename Subtype>
       void AppendOne( const std::shared_ptr<Subtype> &ptr )
-      { AppendOne( std::make_unique<SharedItem>(ptr) ); }
-   };
-
-   // Inline group item also specifying transparency
-   template< bool transparent,
-      typename VisitorType = ComputedItem::DefaultVisitor >
-   struct ConcreteGroupItem : InlineGroupItem< VisitorType >
-   {
-      using InlineGroupItem< VisitorType >::InlineGroupItem;
-      ~ConcreteGroupItem() {}
-      bool Transparent() const override { return transparent; }
-   };
-
-   // Concrete subclass of GroupItem that adds nothing else
-   // TransparentGroupItem with an empty name is transparent to item path calculations
-   // and propagates its ordering hint if subordinates don't specify hints
-   // and it does specify one
-   template< typename VisitorType = ComputedItem::DefaultVisitor >
-   struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
-   {
-      using ConcreteGroupItem< true, VisitorType >::ConcreteGroupItem;
-      ~TransparentGroupItem() override {}
+      { AppendOne( std::make_unique<IndirectItem>(ptr) ); }
    };
 
    // The /-separated path is relative to the GroupItem supplied to
@@ -232,7 +228,7 @@ namespace Registry {
    // determining the visitation ordering.  When sequence is important, register
    // a GroupItem.
    REGISTRIES_API
-   void RegisterItem( GroupItem &registry, const Placement &placement,
+   void RegisterItem( GroupItemBase &registry, const Placement &placement,
       BaseItemPtr pItem //!< Registry takes ownership
    );
    
@@ -240,7 +236,8 @@ namespace Registry {
    /*!
        Usually constructed statically
        @tparam Item inherits `BaseItem`
-       @tparam RegistryClass defines static member `Registry()` returning `GroupItem&`
+       @tparam RegistryClass defines static member `Registry()`
+          returning `GroupItemBase&`
     */
    template<typename Item, typename RegistryClass = Item> class RegisteredItem {
    public:
@@ -260,8 +257,8 @@ namespace Registry {
    public:
       virtual ~Visitor();
       using Path = std::vector< Identifier >;
-      virtual void BeginGroup( GroupItem &item, const Path &path );
-      virtual void EndGroup( GroupItem &item, const Path &path );
+      virtual void BeginGroup( GroupItemBase &item, const Path &path );
+      virtual void EndGroup( GroupItemBase &item, const Path &path );
       virtual void Visit( SingleItem &item, const Path &path );
    };
 
@@ -277,7 +274,7 @@ namespace Registry {
    REGISTRIES_API void Visit(
       Visitor &visitor,
       BaseItem *pTopItem,
-      const GroupItem *pRegistry = nullptr );
+      const GroupItemBase *pRegistry = nullptr );
 
    // Typically a static object.  Constructor initializes certain preferences
    // if they are not present.  These preferences determine an extrinsic
@@ -306,6 +303,8 @@ namespace Registry {
       Pairs mPairs;
       Literal mRoot;
    };
+
+extern template struct GroupItem<>;
 }
 
 #endif
