@@ -12,6 +12,9 @@
 
 #include <functional>
 #include <memory>
+#include <utility>
+#include <variant>
+#include <vector>
 
 #include <wx/string.h>
 
@@ -19,6 +22,28 @@ namespace cloud::audiocom
 {
 class ServiceConfig;
 class OAuthService;
+
+//! This structure represents an upload error as returned by the server.
+struct CLOUD_AUDIOCOM_API UploadFailedPayload final
+{
+   int32_t code {};
+   int32_t status {};
+   
+   std::string name;
+   std::string message;
+
+   using AdditionalError = std::pair<std::string, std::string>;
+   std::vector<AdditionalError> additionalErrors;
+};
+
+//! This structure represents the payload associated with successful upload
+struct CLOUD_AUDIOCOM_API UploadSuccessfulPayload final
+{
+   //! URL to open in browser to finish up the anonymous upload
+   std::string finishUploadURL;
+   //! "Slug" to be used for shareable URL construction
+   std::string audioSlug;
+};
 
 //! Message that is sent when upload is finished.
 //! This message is sent from the network thread.
@@ -46,13 +71,14 @@ struct CLOUD_AUDIOCOM_API UploadOperationCompleted final
    //! Upload result
    Result result;
 
-   //! Error message if result is not Success
-   std::string errorMessage;
+   using Payload = std::variant<
+      std::monostate,
+      UploadSuccessfulPayload,
+      UploadFailedPayload
+   >;
 
-   //! URL to open in browser to finish up the anonymous upload
-   std::string finishUploadURL;
-   //! "Slug" to be used for shareable URL construction
-   std::string audioSlug;
+   //! Operation payload
+   Payload payload;
 };
 
 //! Class used to track the upload operation
