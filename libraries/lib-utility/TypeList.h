@@ -19,6 +19,9 @@
 //! Utilities for compile-time type manipulation.  Some terminology as in Lisp
 namespace TypeList {
 
+//! standard in C++20; add a level of indirection to a type
+template<typename T> struct type_identity { using type = T; };
+
 /*
  Some of these utilities use "metafunctions." These are classes with a nested
  class template or type alias template, named `typemap`, which takes one type
@@ -75,7 +78,8 @@ template<typename... Types> struct Null<List<Types...>>
    : std::bool_constant<sizeof...(Types) == 0> {};
 
 template<typename TypeList> struct Length;
-template<typename TypeList> constexpr auto Length_v = Length<TypeList>::value;
+template<typename TypeList> using Length_t = typename Length<TypeList>::type;
+template<typename TypeList> constexpr auto Length_v = Length_t<TypeList>::value;
 template<typename... Types> struct Length<List<Types...>>
    : std::integral_constant<size_t, sizeof...(Types)>{};
 
@@ -151,6 +155,29 @@ template<typename TypeList, typename Type> using PushBack_t =
 template<typename Type, typename... Types> struct
 PushBack<List<Types...>, Type> { using type = List<Types..., Type>; };
 
+//! List of the tails of the given list (by decreasing length, excluding Nil,
+//! otherwise including itself)
+template<typename TypeList> struct NonEmptyTails {
+private:
+   struct Next {
+      using type =
+         Cons_t<TypeList, typename NonEmptyTails<Tail_t<TypeList>>::type>;
+   };
+public:
+   using type = typename std::conditional_t<
+      Null_v<TypeList>, type_identity<Nil>, Next
+   >::type;
+};
+template<typename TypeList> using NonEmptyTails_t =
+   typename NonEmptyTails<TypeList>::type;
+
+//! List of the tails of the given list (by decreasing length, including itself
+//! and Nil)
+template<typename TypeList> struct Tails {
+   using type = PushBack_t<NonEmptyTails_t<TypeList>, Nil>;
+};
+template<typename TypeList> using Tails_t = typename Tails<TypeList>::type;
+
 template<typename TypeList> struct Last;
 template<typename TypeList> using Last_t = typename Last<TypeList>::type;
 template<typename Type> struct Last<List<Type>> { using type = Type; };
@@ -189,9 +216,6 @@ struct Compose<Metafunction, Metafunctions...> {
 
 using Identity = Compose<>;
 
-//! standard in C++20; add a level of indirection to a type
-template<typename T> struct type_identity { using type = T; };
-
 //! Given a binary template and a fixed argument, make a metafunction
 template<template<typename, typename> class BinaryTemplate, typename First>
 struct Bind1st {
@@ -222,6 +246,14 @@ public:
 };
 template<typename Metafunction, typename TypeList> using Map_t =
    typename Map<Metafunction, TypeList>::type;
+
+//! Transform the list of nonempty tails of a list of types by the given
+//! metafunction
+template<typename Metafunction, typename TypeList> struct MapList {
+   using type = Map_t<Metafunction, NonEmptyTails_t<TypeList>>;
+};
+template<typename Metafunction, typename TypeList> using MapList_t
+   = typename MapList<Metafunction, TypeList>::type;
 
 template<typename... Lists> struct Append;
 template<typename... Lists> using Append_t = typename Append<Lists...>::type;

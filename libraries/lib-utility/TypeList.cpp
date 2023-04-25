@@ -41,6 +41,13 @@ static_assert(is_same_v<Example, Cons_t<int, Cons_t<double, Nil>>>);
 static_assert(is_same_v<Example, PushFront_t<PushFront_t<Nil, double>, int>>);
 static_assert(is_same_v<Example, PushBack_t<PushBack_t<Nil, int>, double>>);
 
+static_assert(is_same_v<Nil, NonEmptyTails_t<Nil>>);
+static_assert(is_same_v<List<Example, Tail_t<Example>>,
+   NonEmptyTails_t<Example>>);
+
+static_assert(is_same_v<List<Nil>, Tails_t<Nil>>);
+static_assert(is_same_v<List<Example, Tail_t<Example>, Nil>, Tails_t<Example>>);
+
 static_assert(is_same_v<double, Last_t<Example>>);
 static_assert(is_same_v<List<int>, ButLast_t<Example>>);
 
@@ -59,6 +66,11 @@ static_assert(is_same_v<List<int *const &, double *const &>,
          Fn<add_lvalue_reference_t>,
          Fn<add_const_t, add_pointer_t>>,
       Example>>);
+
+static_assert(is_same_v<Nil, MapList_t<Fn<Length_t>, Nil>>);
+static_assert(is_same_v<
+   List<std::integral_constant<size_t, 2>, std::integral_constant<size_t, 1>>,
+   MapList_t<Fn<Length_t>, Example>>);
 
 static_assert(is_same_v<tuple<int, double>, Apply_t<tuple, Example>>);
 static_assert(is_same_v<tuple<const int, const double>,
