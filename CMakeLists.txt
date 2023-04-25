@@ -241,22 +241,6 @@ cmake_dependent_option(
 )
 
 cmake_dependent_option(
-   ${_OPT}has_sentry_reporting
-   "Build support for sending errors to Sentry"
-   On
-   "${_OPT}has_networking;DEFINED SENTRY_DSN_KEY;DEFINED SENTRY_HOST;DEFINED SENTRY_PROJECT"
-   Off
-)
-
-cmake_dependent_option(
-   ${_OPT}has_crashreports
-   "Enables crash reporting for Audacity"
-   On
-   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
-   Off
-)
-
-cmake_dependent_option(
    ${_OPT}has_updates_check
    "Build updates checking features into Audacity"
    On
@@ -296,6 +280,22 @@ set_from_env(SENTRY_DSN_KEY)
 set_from_env(SENTRY_HOST)
 set_from_env(SENTRY_PROJECT)
 set_from_env(CRASH_REPORT_URL)
+
+cmake_dependent_option(
+   ${_OPT}has_crashreports
+   "Enables crash reporting for Audacity"
+   On
+   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
+   Off
+)
+
+cmake_dependent_option(
+   ${_OPT}has_sentry_reporting
+   "Build support for sending errors to Sentry"
+   On
+   "${_OPT}has_networking;DEFINED SENTRY_DSN_KEY;DEFINED SENTRY_HOST;DEFINED SENTRY_PROJECT"
+   Off
+)
 
 # Determine 32-bit or 64-bit target
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
