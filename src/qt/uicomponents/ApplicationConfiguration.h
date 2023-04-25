@@ -13,6 +13,7 @@ class ApplicationConfiguration : public QObject
 
    Q_PROPERTY(QFont iconFont READ IconFont NOTIFY themeChanged FINAL)
    Q_PROPERTY(QFont bodyFont READ BodyFont NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QFont timecodeFont READ TimecodeFont NOTIFY themeChanged FINAL)
 
    Q_PROPERTY(QColor backgroundColor1 READ BackgroundColor1 NOTIFY themeChanged FINAL)
    Q_PROPERTY(QColor backgroundColor2 READ BackgroundColor2 NOTIFY themeChanged FINAL)
@@ -48,6 +49,7 @@ public:
 
    QFont IconFont() const;
    QFont BodyFont() const;
+   QFont TimecodeFont() const;
 
    QColor BackgroundColor1() const;
    QColor BackgroundColor2() const;
@@ -78,6 +80,7 @@ public:
 private:
    QFont m_iconFont;
    QFont m_bodyFont;
+   QFont m_timecodeFont;
    QColor m_backgroundColor1{ "#F5F5F6" };
    QColor m_backgroundColor2{ "#E6E9ED" };
    QColor m_backgroundColor3{ "#333640" };

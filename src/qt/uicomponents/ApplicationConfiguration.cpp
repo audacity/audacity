@@ -1,33 +1,19 @@
 #include <QFontDatabase>
+#include <QGuiApplication>
 #include "ApplicationConfiguration.h"
-
-namespace {
-   QMap<QString, QFont> applicationFonts;
-
-   void LoadApplicationFont(const QString& filename)
-   {
-      if (applicationFonts.contains(filename))
-         return;
-
-      auto id = QFontDatabase::addApplicationFont(filename);
-      if (id == -1)
-         return;
-
-      auto family = QFontDatabase::applicationFontFamilies(id).at(0);
-      applicationFonts.insert(filename, QFont(family));
-   }
-
-   QFont GetApplicationFont(const QString& filename)
-   {
-      LoadApplicationFont(filename);
-      return applicationFonts[filename];
-   }
-}
 
 ApplicationConfiguration::ApplicationConfiguration()
 {
-   m_iconFont = GetApplicationFont(":/fonts/MusescoreIcon.ttf");
-   m_bodyFont = GetApplicationFont(":/fonts/Inter-Regular.ttf");
+   QFontDatabase::addApplicationFont(":/fonts/MusescoreIcon.ttf");
+   QFontDatabase::addApplicationFont(":/fonts/Lato-Bold.ttf");
+   QFontDatabase::addApplicationFont(":/fonts/Lato-BoldItalic.ttf");
+   QFontDatabase::addApplicationFont(":/fonts/Lato-Italic.ttf");
+   QFontDatabase::addApplicationFont(":/fonts/Lato-Regular.ttf");
+
+   m_timecodeFont = QFontDatabase::font("Lato", "Bold", 14);
+   m_iconFont = QFontDatabase::font("MusescoreIcon", "", 12);
+   m_bodyFont = QGuiApplication::font();
+   m_bodyFont.setPixelSize(16);
 }
 
 QFont ApplicationConfiguration::IconFont() const
@@ -38,6 +24,11 @@ QFont ApplicationConfiguration::IconFont() const
 QFont ApplicationConfiguration::BodyFont() const
 {
    return m_bodyFont;
+}
+
+QFont ApplicationConfiguration::TimecodeFont() const
+{
+   return m_timecodeFont;
 }
 
 QColor ApplicationConfiguration::BackgroundColor1() const
