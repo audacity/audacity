@@ -941,10 +941,6 @@ list( APPEND SOURCES
       tracks/ui/ZoomHandle.cpp
       tracks/ui/ZoomHandle.h
 
-      # ui helpers
-      ui/AccessibleLinksFormatter.h
-      ui/AccessibleLinksFormatter.cpp
-
       # Widgets
 
       widgets/AButton.cpp
@@ -1011,10 +1007,6 @@ list( APPEND SOURCES
       widgets/RulerPanel.h
       widgets/RulerUpdater.cpp
       widgets/RulerUpdater.h
-      $<$<BOOL:${${_OPT}has_sentry_reporting}>:
-         widgets/ErrorReportDialog.cpp
-         widgets/ErrorReportDialog.h
-      >
       widgets/TimeFormat.cpp
       widgets/TimeFormat.h
       widgets/UnwritableLocationErrorDialog.cpp

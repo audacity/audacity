@@ -9,7 +9,7 @@
 #include <wx/artprov.h>
 #include <wx/statbmp.h>
 
-#include "ui/AccessibleLinksFormatter.h"
+#include "AccessibleLinksFormatter.h"
 #include "MissingPluginsErrorDialog.h"
 #include "ShuttleGui.h"
 #include "Theme.h"

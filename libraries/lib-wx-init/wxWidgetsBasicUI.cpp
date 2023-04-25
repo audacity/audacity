@@ -12,7 +12,7 @@ Paul Licameli
 #include "MemoryX.h" // for Destroy_ptr
 #include "ErrorDialog.h"
 #ifdef HAS_SENTRY_REPORTING
-#include "widgets/ErrorReportDialog.h"
+#include "ErrorReportDialog.h"
 #endif
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
