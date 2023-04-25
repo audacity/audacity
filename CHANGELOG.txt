@@ -5,7 +5,7 @@ Changes in version 3.3.0
  Changes
    * Some of the built-in effects are now realtime capable (Bass & Treble, Distortion, Phaser, Reverb and Wahwah).
    * #4352 Added a new effect: Shelf Filter.
-   * Added an initial (beta) version of Beats and Bars. 
+   * Added an initial (beta) version of Beats and Measures. 
    * #4414 Reworked the bottom toolbar dock:
       * Project Sample Rate is now found in Audio Setup -> Audio Settings (formerly known as Project Rate).
       * The Snapping Toolbar (formerly known as Snap-To) is now independent of the Selection Toolbar.
