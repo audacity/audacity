@@ -21,6 +21,8 @@ set(MODULE_QML_SOURCES
    qml/LabelTrackControlPanel.qml
    qml/MeterPanel.qml
    qml/MonoTrackControlPanel.qml
+   qml/PlayheadCursor.qml
+   qml/PlayheadCursorHead.qml
    qml/StereoTrackControlPanel.qml
    qml/StyledDial.qml
    qml/StyledIconLabel.qml
