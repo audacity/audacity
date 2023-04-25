@@ -485,6 +485,10 @@ private:
    template<typename T> static constexpr bool Null_v = TypeList::Null_v<T>;
    template<template<typename...> class Template, typename TypeList>
    using Apply_t = typename ::TypeList::template Apply_t<Template, TypeList>;
+   template<template<typename> class... Template> using Fn =
+      typename TypeList::template Fn<Template...>;
+   template<typename Metafunction, typename TypeList> using Map_t =
+      typename ::TypeList::Map_t<Metafunction, TypeList>;
    template<template<typename Type, typename Accumulator> class Op,
       typename TypeList, typename Initial>
    using LeftFold_t =
@@ -702,14 +706,12 @@ public:
    //! Deduce two packs from arguments
    template<
       typename Location,
-      bool IsConst,
       typename R,
+      typename Object,
       typename ...ObjectTypes,
-      typename ...Functions,
-      typename Object = Track
+      typename ...Functions
    >
-   static R DoTypeSwitch(
-      std::conditional_t<IsConst, const Object, Object> &object,
+   static R DoTypeSwitch(Object &object,
       List<ObjectTypes...>, const Functions &...functions)
    {
       // Generate Executor classes, for each of ObjectTypes,
@@ -717,7 +719,7 @@ public:
       // one of functions, assuming the object is of the corresponding type
       using Executors = List<Executor<
          Location, R, Object,
-         std::conditional_t<IsConst, const ObjectTypes, ObjectTypes>,
+         ObjectTypes,
          Functions...
       >...>;
 
@@ -761,7 +763,7 @@ public:
       using TrackTypes =
          typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Here, false, R>(*this, TrackTypes{}, functions...);
+      return DoTypeSwitch<Here, R>(*this, TrackTypes{}, functions...);
    }
 
    /*! @copydoc Track::TypeSwitch */
@@ -777,10 +779,10 @@ public:
    {
       struct Here : TrackTypeTag {};
       // More derived classes later
-      using TrackTypes =
-         typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type;
+      using TrackTypes = Map_t<Fn<std::add_const_t>,
+         typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type>;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Here, true, R>(*this, TrackTypes{}, functions...);
+      return DoTypeSwitch<Here, R>(*this, TrackTypes{}, functions...);
    }
 
    // XMLTagHandler callback methods -- NEW virtual for writing
