@@ -42,7 +42,7 @@
 #include "CodeConversions.h"
 
 #include "export/Export.h"
-#include "ui/AccessibleLinksFormatter.h"
+#include "AccessibleLinksFormatter.h"
 
 #include "WindowAccessible.h"
 #include "HelpSystem.h"

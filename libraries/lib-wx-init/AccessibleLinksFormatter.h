@@ -26,7 +26,7 @@ class ShuttleGui;
 * In case there are multiple placeholders with the same name - they will be replaced in order
 * they appear in the message.
 */
-class AccessibleLinksFormatter final
+class WX_INIT_API AccessibleLinksFormatter final
 {
 public:
    //! Handler to be called, when the Link is activated

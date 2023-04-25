@@ -40,7 +40,7 @@ hold information about one contributor to Audacity.
 #include "HelpText.h"
 #include "ShuttleGui.h"
 #include "HelpSystem.h"
-#include "ui/AccessibleLinksFormatter.h"
+#include "AccessibleLinksFormatter.h"
 
 #include "AllThemeResources.h"
 #include "Theme.h"
