@@ -470,6 +470,10 @@ private:
    template<typename T> static constexpr bool Null_v = TypeList::Null_v<T>;
    template<template<typename...> class Template, typename TypeList>
    using Apply_t = typename ::TypeList::template Apply_t<Template, TypeList>;
+   template<template<typename Type, typename Accumulator> class Op,
+      typename TypeList, typename Initial>
+   using LeftFold_t =
+      typename ::TypeList::LeftFold<Op, TypeList, Initial>::type;
 
    //! Variadic template implements metafunction with specializations, to
    //! dispatch TypeSwitch
@@ -632,35 +636,41 @@ private:
 
 public:
 
-   template<typename R, typename Executors,
-      typename Object, typename... Functions>
-   static R CallExecutor(Object &object, const Functions &...functions)
-   {
-      if constexpr (Null_v<Executors>) {
-         // This branch is needed so that the other branch
-         // compiles, but it should never be reached at run-time, because an
-         // Executor generated for (const) Object should have been the catch-all.
-         assert(false);
-         if constexpr (std::is_void_v<R>)
-            return;
-         else
-            return R{};
+   // Executors for more derived classes are later in the given type list
+   template<typename R, typename Executors> struct Invoker {
+   private:
+      struct Base {
+         template<typename Object, typename... Functions>
+         R operator ()(Object &object, const Functions &...functions) const {
+            // This should never be reached at run-time, because an Executor
+            // generated for (const) Object should have been the catch-all.
+            assert(false);
+            if constexpr (std::is_void_v<R>)
+               return;
+            else
+               return R{};
+         }
+      };
+      template<typename Executor, typename Recur> struct Op {
+         template<typename Object, typename... Functions>
+         R operator ()(Object &object, const Functions &...functions) const {
+            const auto &info = Executor::NominalType::ClassTypeInfo();
+            // Dynamic type test of object
+            if (info.IsBaseOf(object.GetTypeInfo()))
+               // Dispatch to an Executor that knows which of functions applies
+               return Executor{}(&object, functions...);
+            else
+               // Recur, with fewer candidate Executors and all of functions
+               return Recur{}(object, functions...);
+         }
+      };
+   public:
+      template<typename Object, typename... Functions>
+      R operator ()(Object &object, const Functions &...functions) const {
+         const auto fn = LeftFold_t<Op, Executors, Base>{};
+         return fn(object, functions...);
       }
-      else {
-         using Executor = Head_t<Executors>;
-         const auto &info = Executor::NominalType::ClassTypeInfo();
-         // Dynamic type test of object
-         // Assumes Executor classes are sequenced with more specific accepted
-         // types earlier
-         if (info.IsBaseOf(object.GetTypeInfo()))
-            // Dispatch to an Executor that knows which of functions applies
-            return Executor{}(&object, functions...);
-         else
-            // Recur, with fewer candidate Executors and all of functions
-            return CallExecutor<R, Tail_t<Executors>>(
-               object, functions...);
-      }
-   }
+   };
 
    template<typename ...Executors> struct UsedCases {
       constexpr unsigned operator ()() { return (Executors::SetUsed | ...); };
@@ -694,7 +704,7 @@ public:
          "Uncallable case in TypeSwitch");
 
       // Do dynamic dispatch to one of the Executors
-      return CallExecutor<R, Executors>(object, functions...);
+      return Invoker<R, Executors>{}(object, functions...);
    }
 
    /*!
@@ -724,9 +734,9 @@ public:
    R TypeSwitch(const Functions &...functions)
    {
       struct Here : TrackTypeTag {};
-      // List more derived classes earlier
-      using TrackTypes = TypeList::Reverse_t<
-         typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type>;
+      // List more derived classes later
+      using TrackTypes =
+         typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type;
       // Generate a function that dispatches dynamically on track type
       return DoTypeSwitch<Here, false, R>(*this, TrackTypes{}, functions...);
    }
@@ -743,9 +753,9 @@ public:
    R TypeSwitch(const Functions &...functions) const
    {
       struct Here : TrackTypeTag {};
-      // List more derived classes earlier
-      using TrackTypes = TypeList::Reverse_t<
-         typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type>;
+      // List more derived classes later
+      using TrackTypes =
+         typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type;
       // Generate a function that dispatches dynamically on track type
       return DoTypeSwitch<Here, true, R>(*this, TrackTypes{}, functions...);
    }
