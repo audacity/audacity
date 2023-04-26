@@ -10,6 +10,8 @@
 **********************************************************************/
 #include "ShareAudioDialog.h"
 
+#include <cassert>
+
 #include <wx/bmpbuttn.h>
 #include <wx/button.h>
 #include <wx/clipbrd.h>
@@ -398,9 +400,28 @@ void ShareAudioDialog::StartUploadProcess()
                mInProgress = false;
                
                if (result.result == UploadOperationCompleted::Result::Success)
-                  HandleUploadSucceeded(result.finishUploadURL, result.audioSlug);
-               else if (result.result != UploadOperationCompleted::Result::Aborted)
-                  HandleUploadFailed(result.errorMessage);
+               {
+                  // Success indicates that UploadSuccessfulPayload is in the payload
+                  assert(std::holds_alternative<UploadSuccessfulPayload>());
+
+                  if (
+                     auto payload =
+                        std::get_if<UploadSuccessfulPayload>(&result.payload))
+                     HandleUploadSucceeded(*payload);
+                  else
+                     HandleUploadSucceeded({});
+                  
+               }
+               else if (
+                  result.result != UploadOperationCompleted::Result::Aborted)
+               {
+                  if (
+                     auto payload =
+                        std::get_if<UploadFailedPayload>(&result.payload))
+                     HandleUploadFailed(*payload);
+                  else
+                     HandleUploadFailed({});
+               }
             });
       },
       [this](auto current, auto total)
@@ -414,7 +435,7 @@ void ShareAudioDialog::StartUploadProcess()
 }
 
 void ShareAudioDialog::HandleUploadSucceeded(
-   std::string_view finishUploadURL, std::string_view audioSlug)
+   const UploadSuccessfulPayload& payload)
 {
    mProgressPanel.timePanel->Hide();
    mProgressPanel.title->SetLabel(XO("Upload complete!").Translation());
@@ -429,7 +450,7 @@ void ShareAudioDialog::HandleUploadSucceeded(
          "By pressing continue, you will be taken to audio.com and given a shareable link.");
       mProgressPanel.info->Wrap(mProgressPanel.root->GetSize().GetWidth());
 
-      mContinueAction = [this, url = std::string(finishUploadURL)]()
+      mContinueAction = [this, url = std::string(payload.finishUploadURL)]()
       {
          EndModal(wxID_CLOSE);
          OpenInDefaultBrowser({ url });
@@ -441,7 +462,7 @@ void ShareAudioDialog::HandleUploadSucceeded(
    {
       auto shareableLink = wxString::Format(
          "https://audio.com/%s/%s", GetUserService().GetUserSlug(),
-         audacity::ToWXString(audioSlug));
+         audacity::ToWXString(payload.audioSlug));
 
       mGotoButton->Show();
       mCloseButton->Show();
@@ -463,16 +484,33 @@ void ShareAudioDialog::HandleUploadSucceeded(
    Fit();
 }
 
-void ShareAudioDialog::HandleUploadFailed(std::string_view errorMessage)
+void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
 {
    EndModal(wxID_ABORT);
 
+   TranslatableString message;
+
+   if (payload.status == 401)
+   {
+      message = XO(
+         "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.");
+   }
+   else
+   {
+      auto details = payload.message;
+
+      for (auto& err : payload.additionalErrors)
+         details += " " + err.second;
+      
+      message = XO("Error: %s").Format(details);
+   }
+
    BasicUI::ShowErrorDialog(
       {}, XO("Upload error"),
-      XO("We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."),
+      message,
       {},
-      BasicUI::ErrorDialogOptions { BasicUI::ErrorDialogType::ModalError }.Log(
-         audacity::ToWString(errorMessage)));
+      BasicUI::ErrorDialogOptions { BasicUI::ErrorDialogType::ModalError });
+         
 }
 
 void ShareAudioDialog::HandleExportFailure()

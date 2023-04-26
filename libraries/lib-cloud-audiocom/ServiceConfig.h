@@ -41,6 +41,8 @@ public:
    MimeTypesList GetPreferredAudioFormats() const;
    //! Return the mime type server should store the file. This is a requirement from audiocom
    MimeType GetDownloadMime() const;
+   //! Returns the preferred language
+   std::string GetAcceptLanguageValue() const;
 };
 
 //! Returns the instance of the ServiceConfig

@@ -23,6 +23,7 @@ set ( LIBRARIES
    lib-cloud-upload-interface
    lib-network-manager-interface # Required for the networking
    lib-files-interface # FileNames
+   lib-strings-interface # Languages
 
    PRIVATE
       rapidjson::rapidjson # Protocol is JSON based
