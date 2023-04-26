@@ -28,6 +28,7 @@
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "Track.h"
+#include "WaveTrack.h"
 
 #include "ServiceConfig.h"
 #include "OAuthService.h"
@@ -308,6 +309,30 @@ void ShareAudioDialog::OnClose()
    EndModal(wxID_CLOSE);
 }
 
+namespace
+{
+int CalculateChannels(const TrackList& trackList)
+{
+   for (auto track : trackList.Any<const WaveTrack>())
+   {
+      const auto channel = track->GetChannel();
+
+      // Looks like we have a stereo track
+      if (channel == Track::LeftChannel || channel == Track::RightChannel)
+         return 2;
+
+      const auto pan = track->GetPan();
+
+      // We found a mono track with non zero pan
+      // We treat equality in the same way Export
+      if (pan != 0.0)
+         return 2;
+   }
+
+   // All the wave tracks were mono with zero pan
+   return 1;
+}
+}
 
 wxString ShareAudioDialog::ExportProject()
 {
@@ -336,7 +361,7 @@ wxString ShareAudioDialog::ExportProject()
    const double t0 = 0.0;
    const double t1 = tracks.GetEndTime();
 
-   const int nChannels = (tracks.Any() - &Track::IsLeader).empty() ? 1 : 2;
+   const int nChannels = CalculateChannels(tracks);
 
    const bool success = e.Process(
       nChannels,                 // numChannels,
