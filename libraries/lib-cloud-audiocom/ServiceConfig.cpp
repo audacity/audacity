@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #include "ServiceConfig.h"
+#include "Languages.h"
 
 namespace cloud::audiocom
 {
@@ -63,6 +64,16 @@ MimeTypesList ServiceConfig::GetPreferredAudioFormats() const
 MimeType ServiceConfig::GetDownloadMime() const
 {
    return "audio/x-wav";
+}
+
+std::string ServiceConfig::GetAcceptLanguageValue() const
+{
+   auto language = Languages::GetLang();
+
+   if (language.Contains(L"-") && language.Length() > 2)
+      return wxString::Format("%s;q=1.0, %s;q=0.7, *;q=0.5", language, language.Left(2)).ToStdString();
+   else
+      return wxString::Format("%s;q=1.0, *;q=0.5", language).ToStdString();
 }
 
 const ServiceConfig& GetServiceConfig()
