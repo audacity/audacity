@@ -64,7 +64,7 @@ BEGIN_EVENT_TABLE(DevicePrefs, PrefsPanel)
    EVT_CHOICE(HostID, DevicePrefs::OnHost)
    EVT_CHOICE(RecordID, DevicePrefs::OnDevice)
    EVT_CHOICE(DefaultSampleRateChoice, DevicePrefs::OnDefaultSampleRateChoice)
-   EVT_CHOICE(DefaultSampleRateChoice, DevicePrefs::OnProjectSampleRateChoice)
+   EVT_CHOICE(ProjectSampleRateChoice, DevicePrefs::OnProjectSampleRateChoice)
 END_EVENT_TABLE()
 
 DevicePrefs::DevicePrefs(wxWindow * parent, wxWindowID winid, AudacityProject* project)
@@ -510,7 +510,7 @@ void DevicePrefs::OnProjectSampleRateChoice(wxCommandEvent& e)
 
    const int sel = mProjectSampleRates->GetSelection();
    mOtherProjectSampleRate->Enable(
-      sel == (int)mDefaultSampleRates->GetCount() - 1);
+      sel == (int)mProjectSampleRates->GetCount() - 1);
 }
 
 bool DevicePrefs::Commit()
