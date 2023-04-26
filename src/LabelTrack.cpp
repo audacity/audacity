@@ -757,14 +757,14 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 
 bool LabelTrack::PasteOver(double t, const Track * src)
 {
-   auto result = src->TypeSwitch< bool >( [&](const LabelTrack *sl) {
+   auto result = src->TypeSwitch< bool >( [&](const LabelTrack &sl) {
       int len = mLabels.size();
       int pos = 0;
 
       while (pos < len && mLabels[pos].getT0() < t)
          pos++;
 
-      for (auto &labelStruct: sl->mLabels) {
+      for (auto &labelStruct: sl.mLabels) {
          LabelStruct l {
             labelStruct.selectedRegion,
             labelStruct.getT0() + t,
@@ -786,8 +786,8 @@ bool LabelTrack::PasteOver(double t, const Track * src)
 
 void LabelTrack::Paste(double t, const Track *src)
 {
-   bool bOk = src->TypeSwitch< bool >( [&](const LabelTrack *lt) {
-      double shiftAmt = lt->mClipLen > 0.0 ? lt->mClipLen : lt->GetEndTime();
+   bool bOk = src->TypeSwitch< bool >( [&](const LabelTrack &lt) {
+      double shiftAmt = lt.mClipLen > 0.0 ? lt.mClipLen : lt.GetEndTime();
 
       ShiftLabelsOnInsert(shiftAmt, t);
       PasteOver(t, src);

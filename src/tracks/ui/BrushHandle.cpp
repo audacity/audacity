@@ -127,8 +127,8 @@ namespace
             pTrackView->IsSpectral() &&
             pTrackView->FindTrack() &&
             pTrackView->FindTrack()->TypeSwitch< bool >(
-                  [&](const WaveTrack *wt) {
-                     const auto &settings = SpectrogramSettings::Get(*wt);
+                  [&](const WaveTrack &wt) {
+                     const auto &settings = SpectrogramSettings::Get(wt);
                      return settings.SpectralSelectionEnabled();
                   });
    }

@@ -561,7 +561,7 @@ void NoteTrack::Paste(double t, const Track *src)
    // the destination track).
 
    //Check that src is a non-NULL NoteTrack
-   bool bOk = src && src->TypeSwitch< bool >( [&](const NoteTrack *other) {
+   bool bOk = src && src->TypeSwitch<bool>( [&](const NoteTrack &other) {
 
       auto myOffset = this->GetOffset();
       if (t < myOffset) {
@@ -573,7 +573,7 @@ void NoteTrack::Paste(double t, const Track *src)
 
       double delta = 0.0;
       auto &seq = GetSeq();
-      auto offset = other->GetOffset();
+      auto offset = other.GetOffset();
       if ( offset > 0 ) {
          seq.convert_to_seconds();
          seq.insert_silence( t - GetOffset(), offset );
@@ -586,9 +586,9 @@ void NoteTrack::Paste(double t, const Track *src)
       delta += std::max( 0.0, t - GetEndTime() );
 
       // This, not:
-      //delta += other->GetSeq().get_real_dur();
+      //delta += other.GetSeq().get_real_dur();
 
-      seq.paste(t - GetOffset(), &other->GetSeq());
+      seq.paste(t - GetOffset(), &other.GetSeq());
 
       AddToDuration( delta );
 

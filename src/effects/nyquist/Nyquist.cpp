@@ -812,7 +812,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       {
          auto countRange = TrackList::Get( *project ).Leaders();
          for (auto t : countRange) {
-            t->TypeSwitch( [&](const WaveTrack *) {
+            t->TypeSwitch( [&](const WaveTrack &) {
                numWave++;
                if (t->GetSelected())
                   waveTrackList += wxString::Format(wxT("%d "), 1 + numTracks);
@@ -1211,14 +1211,14 @@ bool NyquistEffect::ProcessOne()
       wxString spectralEditp;
 
       mCurTrack[0]->TypeSwitch(
-         [&](const WaveTrack *wt) {
+         [&](const WaveTrack &wt) {
             type = wxT("wave");
             spectralEditp = SpectrogramSettings::Get(*mCurTrack[0])
                .SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
-            if ( const auto pView = WaveTrackView::Find( wt ) ) {
+            if ( const auto pView = WaveTrackView::Find(&wt) ) {
                auto displays = pView->GetDisplays();
                auto format = [&]( decltype(displays[0]) display ) {
                   // Get the English name of the view type, without menu codes,
@@ -1239,16 +1239,16 @@ bool NyquistEffect::ProcessOne()
             }
          },
 #if defined(USE_MIDI)
-         [&](const NoteTrack *) {
+         [&](const NoteTrack &) {
             type = wxT("midi");
             view = wxT("\"Midi\"");
          },
 #endif
-         [&](const LabelTrack *) {
+         [&](const LabelTrack &) {
             type = wxT("label");
             view = wxT("\"Label\"");
          },
-         [&](const TimeTrack *) {
+         [&](const TimeTrack &) {
             type = wxT("time");
             view = wxT("\"Time\"");
          }

@@ -112,9 +112,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
       ? mOutputTracks->Leaders()
       : mOutputTracks->Any();
    range.VisitWhile( bGoodResult,
-      [&](auto &&fallthrough){ return [&](WaveTrack *pLeft) {
+      [&](auto &&fallthrough){ return [&](WaveTrack &left) {
          // Track range visitor functions receive a pointer that is never null
-         auto &left = *pLeft;
          if (!left.GetSelected())
             return fallthrough();
 
@@ -279,9 +278,9 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             return;
          ++count;
       }; },
-      [&](Track *t) {
-         if (SyncLock::IsSyncLockSelected(t))
-            t->SyncLockAdjust(mT1, mT0 + duration);
+      [&](Track &t) {
+         if (SyncLock::IsSyncLockSelected(&t))
+            t.SyncLockAdjust(mT1, mT0 + duration);
       }
    );
 

@@ -74,8 +74,8 @@ bool SetEnvelopeCommand::ApplyInner( const CommandContext &context, Track * t )
    // if no time is specified, then
    //   - delete deletes any envelope in selected tracks.
    //   - value is not set for any clip
-   t->TypeSwitch([&](WaveTrack *waveTrack) {
-      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+   t->TypeSwitch([&](WaveTrack &waveTrack) {
+      WaveClipPointers ptrs( waveTrack.SortedClipArray());
       for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
          WaveClip * pClip = *it;
          bool bFound =

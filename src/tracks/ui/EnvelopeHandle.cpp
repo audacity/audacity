@@ -187,17 +187,17 @@ UIHandle::Result EnvelopeHandle::Click
    unsigned result = Cancelled;
    if (pTrack)
       result = pTrack->TypeSwitch< decltype(RefreshNone) >(
-      [&](WaveTrack *wt) {
+      [&](WaveTrack &wt) {
          if (!mEnvelope)
             return Cancelled;
 
-         mLog = !WaveformSettings::Get(*wt).isLinear();
-         auto &cache = WaveformScale::Get(*wt);
+         mLog = !WaveformSettings::Get(wt).isLinear();
+         auto &cache = WaveformScale::Get(wt);
          cache.GetDisplayBounds(mLower, mUpper);
-         mdBRange = WaveformSettings::Get(*wt).dBRange;
-         auto channels = TrackList::Channels( wt );
+         mdBRange = WaveformSettings::Get(wt).dBRange;
+         auto channels = TrackList::Channels(&wt);
          for ( auto channel : channels ) {
-            if (channel == wt)
+            if (channel == &wt)
                mEnvelopeEditors.push_back(
                   std::make_unique< EnvelopeEditor >( *mEnvelope, true ) );
             else {
@@ -216,17 +216,17 @@ UIHandle::Result EnvelopeHandle::Click
 
          return RefreshNone;
       },
-      [&](TimeTrack *tt) {
+      [&](TimeTrack &tt) {
          if (!mEnvelope)
             return Cancelled;
-         GetTimeTrackData( *pProject, *tt, mdBRange, mLog, mLower, mUpper);
+         GetTimeTrackData( *pProject, tt, mdBRange, mLog, mLower, mUpper);
          mEnvelopeEditors.push_back(
             std::make_unique< EnvelopeEditor >( *mEnvelope, false )
          );
 
          return RefreshNone;
       },
-      [](Track *) {
+      [](Track &) {
          return Cancelled;
       }
    );

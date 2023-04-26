@@ -138,11 +138,11 @@ bool EffectAutoDuck::Init()
 
       if (t->GetSelected()) {
          bool ok = t->TypeSwitch<bool>(
-            [&](const WaveTrack *) {
+            [&](const WaveTrack &) {
                lastWasSelectedWaveTrack = true;
                return true;
             },
-            [&](const Track *) {
+            [&](const Track &) {
                EffectUIServices::DoMessageBox(*this,
                   /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
                    * of the audio automatically when there is sound on another track.  Not as

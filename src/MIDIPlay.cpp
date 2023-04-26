@@ -556,9 +556,9 @@ bool MIDIPlay::StartOtherStream(const TransportTracks &tracks,
 {
    mMidiPlaybackTracks.clear();
    for (const auto &pTrack : tracks.otherPlayableTracks) {
-      pTrack->TypeSwitch( [&](const NoteTrack *pNoteTrack){
+      pTrack->TypeSwitch( [&](const NoteTrack &noteTrack){
          mMidiPlaybackTracks.push_back(
-            pNoteTrack->SharedPointer<const NoteTrack>());
+            noteTrack.SharedPointer<const NoteTrack>());
       } );
    }
 

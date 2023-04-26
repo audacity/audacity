@@ -566,7 +566,7 @@ private:
                   QualifiedRootType *pObject, const Functions &functions) const
                {
                   return std::get<0>(functions)(
-                     static_cast<QualifiedBaseClass *>(pObject));
+                     *static_cast<QualifiedBaseClass *>(pObject));
                }
             };
 
@@ -591,7 +591,7 @@ private:
                      [&](){ return Next{}(
                         pObject, Tuple::ForwardNext(functions)); }
                   )(
-                    static_cast<QualifiedBaseClass *>(pObject)
+                    *static_cast<QualifiedBaseClass *>(pObject)
                   );
                }
             };
@@ -604,7 +604,7 @@ private:
             // but invocable directly on the object
             struct Case1 : std::conjunction<
                Compatible, std::negation<curried>,
-               std::is_invocable<Function, QualifiedBaseClass*>
+               std::is_invocable<Function, QualifiedBaseClass&>
             > {
                using type = Opaque;
             };
@@ -615,7 +615,7 @@ private:
             struct Case2_ {
                static constexpr bool value = std::is_invocable_v<
                   std::invoke_result_t<Function, Dummy &&>,
-                  QualifiedBaseClass*
+                  QualifiedBaseClass&
                >;
                using type = Wrapper;
             };
@@ -732,9 +732,9 @@ public:
 
    /*!
     A variadic function taking any number of function objects, each taking
-    - a pointer to Track or a subclass, or
+    - a reference to Track or a subclass, or
     - a first, callable next-function argument, and returning a function, which
-      takes a pointer to Track or a subclass.  (Typically, a generic lambda
+      takes a reference to Track or a subclass.  (Typically, a generic lambda
       returning a lambda.  That is, it's curried.)
    
     In the first case, the function object returns R or a type convertible to R.
@@ -774,7 +774,7 @@ public:
    /*!
     This is the overload for const tracks, only taking
     callable arguments that (after any needed partial application) accept first
-    arguments that are pointers to const
+    arguments that are references to const
     */
    template<
       typename R = void,

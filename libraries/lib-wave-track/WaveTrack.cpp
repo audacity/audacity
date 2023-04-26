@@ -178,13 +178,12 @@ void WaveTrack::Reinit(const WaveTrack &orig)
 
 void WaveTrack::Merge(const Track &orig)
 {
-   orig.TypeSwitch( [&](const WaveTrack *pwt) {
-      const WaveTrack &wt = *pwt;
+   orig.TypeSwitch( [&](const WaveTrack &wt) {
       DoSetGain(wt.GetGain());
       DoSetPan(wt.GetPan());
       // Copy attached data from orig.  Nullify data in this where orig had null.
       Attachments &attachments = *this;
-      attachments = *pwt;
+      attachments = wt;
    });
    WritableSampleTrack::Merge(orig);
 }
