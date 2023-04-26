@@ -500,20 +500,20 @@ void DoSortTracks( AudacityProject &project, int flags )
 {
    auto GetTime = [](const Track *t) {
       return t->TypeSwitch< double >(
-         [&](const WaveTrack* w) {
-            auto stime = w->GetEndTime();
+         [&](const WaveTrack& w) {
+            auto stime = w.GetEndTime();
 
             int ndx;
-            for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
-               const auto c = w->GetClipByIndex(ndx);
+            for (ndx = 0; ndx < w.GetNumClips(); ndx++) {
+               const auto c = w.GetClipByIndex(ndx);
                if (c->GetPlaySamplesCount() == 0)
                   continue;
                stime = std::min(stime, c->GetPlayStartTime());
             }
             return stime;
          },
-         [&](const LabelTrack* l) {
-            return l->GetStartTime();
+         [&](const LabelTrack& l) {
+            return l.GetStartTime();
          }
       );
    };
@@ -996,10 +996,10 @@ void OnTrackPan(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, wt );
       if (slider->ShowDialog())
-         SetTrackPan(project, wt, slider);
+         SetTrackPan(project, &wt, slider);
    });
 }
 
@@ -1009,10 +1009,10 @@ void OnTrackPanLeft(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, wt );
       slider->Decrease(1);
-      SetTrackPan(project, wt, slider);
+      SetTrackPan(project, &wt, slider);
    });
 }
 
@@ -1022,10 +1022,10 @@ void OnTrackPanRight(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, wt );
       slider->Increase(1);
-      SetTrackPan(project, wt, slider);
+      SetTrackPan(project, &wt, slider);
    });
 }
 
@@ -1036,10 +1036,10 @@ void OnTrackGain(const CommandContext &context)
 
    /// This will pop up the track gain dialog for specified track
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
       if (slider->ShowDialog())
-         SetTrackGain(project, wt, slider);
+         SetTrackGain(project, &wt, slider);
    });
 }
 
@@ -1049,10 +1049,10 @@ void OnTrackGainInc(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
       slider->Increase(1);
-      SetTrackGain(project, wt, slider);
+      SetTrackGain(project, &wt, slider);
    });
 }
 
@@ -1062,10 +1062,10 @@ void OnTrackGainDec(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
       slider->Decrease(1);
-      SetTrackGain(project, wt, slider);
+      SetTrackGain(project, &wt, slider);
    });
 }
 
@@ -1086,8 +1086,8 @@ void OnTrackMute(const CommandContext &context)
    if (!track)
       track = TrackFocus::Get( project ).Get();
 
-   if (track) track->TypeSwitch( [&](PlayableTrack *t) {
-      TrackUtilities::DoTrackMute(project, t, false);
+   if (track) track->TypeSwitch( [&](PlayableTrack &t) {
+      TrackUtilities::DoTrackMute(project, &t, false);
    });
 }
 
@@ -1096,8 +1096,8 @@ void OnTrackSolo(const CommandContext &context)
    auto &project = context.project;
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](PlayableTrack *t) {
-      TrackUtilities::DoTrackSolo(project, t, false);
+   if (track) track->TypeSwitch( [&](PlayableTrack &t) {
+      TrackUtilities::DoTrackSolo(project, &t, false);
    });
 }
 

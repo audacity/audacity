@@ -78,19 +78,19 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
    auto trackRange =
       mOutputTracks->Any() + &SyncLock::IsSelectedOrSyncLockSelected;
    trackRange.VisitWhile( bGoodResult,
-      [&](WaveTrack * track) {
+      [&](WaveTrack &track) {
          if (mT1 > mT0) {
-            auto start = track->TimeToLongSamples(mT0);
-            auto end = track->TimeToLongSamples(mT1);
+            auto start = track.TimeToLongSamples(mT0);
+            auto end = track.TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!ProcessOneWave(count, track, start, len))
+            if (!ProcessOneWave(count, &track, start, len))
                bGoodResult = false;
          }
          count++;
       },
-      [&](LabelTrack * track) {
-         track->ChangeLabelsOnReverse(mT0, mT1);
+      [&](LabelTrack &track) {
+         track.ChangeLabelsOnReverse(mT0, mT1);
          count++;
       }
    );

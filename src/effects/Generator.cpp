@@ -39,17 +39,17 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
    int ntrack = 0;
 
    mOutputTracks->Any().VisitWhile( bGoodResult,
-      [&](auto &&fallthrough){ return [&](WaveTrack *track) {
-         if (!track->GetSelected())
+      [&](auto &&fallthrough){ return [&](WaveTrack &track) {
+         if (!track.GetSelected())
             return fallthrough();
          bool editClipCanMove = GetEditClipsCanMove();
 
          //if we can't move clips, and we're generating into an empty space,
          //make sure there's room.
          if (!editClipCanMove &&
-             track->IsEmpty(mT0, mT1+1.0/track->GetRate()) &&
-             !track->IsEmpty(mT0,
-               mT0 + duration - (mT1 - mT0) - 1.0 / track->GetRate()))
+             track.IsEmpty(mT0, mT1 + 1.0 / track.GetRate()) &&
+             !track.IsEmpty(mT0,
+               mT0 + duration - (mT1 - mT0) - 1.0 / track.GetRate()))
          {
             EffectUIServices::DoMessageBox(*this,
                XO("There is not enough room available to generate the audio"),
@@ -64,12 +64,12 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
          {
             auto pProject = FindProject();
             // Create a temporary track
-            auto tmp = track->EmptyCopy();
-            BeforeTrack(*track);
+            auto tmp = track.EmptyCopy();
+            BeforeTrack(track);
             BeforeGenerate();
 
             // Fill it with data
-            if (!GenerateTrack(settings, &*tmp, *track, ntrack))
+            if (!GenerateTrack(settings, &*tmp, track, ntrack))
                bGoodResult = false;
             else {
                // Transfer the data from the temporary track to the actual one
@@ -77,7 +77,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
                PasteTimeWarper warper{ mT1, mT0 + duration };
                const auto &selectedRegion =
                   ViewInfo::Get( *pProject ).selectedRegion;
-               track->ClearAndPaste(
+               track.ClearAndPaste(
                   selectedRegion.t0(), selectedRegion.t1(),
                   &*tmp, true, false, &warper);
             }
@@ -91,14 +91,14 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
          {
             // If the duration is zero, there's no need to actually
             // generate anything
-            track->Clear(mT0, mT1);
+            track.Clear(mT0, mT1);
          }
 
          ntrack++;
       }; },
-      [&](Track *t) {
-         if (SyncLock::IsSyncLockSelected(t)) {
-            t->SyncLockAdjust(mT1, mT0 + duration);
+      [&](Track &t) {
+         if (SyncLock::IsSyncLockSelected(&t)) {
+            t.SyncLockAdjust(mT1, mT0 + duration);
          }
       }
    );

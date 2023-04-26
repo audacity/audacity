@@ -399,9 +399,9 @@ void OnCutLabels(const CommandContext &context)
    {
       Track::Holder dest = nullptr;
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
-            dest = t->CopyNonconst(t0, t1);
+            dest = t.CopyNonconst(t0, t1);
          }
       );
       return dest;
@@ -412,20 +412,20 @@ void OnCutLabels(const CommandContext &context)
    auto editfunc = [&](Track *track, double t0, double t1)
    {
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
             if (enableCutlines)
             {
-               t->ClearAndAddCutLine(t0, t1);
+               t.ClearAndAddCutLine(t0, t1);
             }
             else
             {
-               t->Clear(t0, t1);
+               t.Clear(t0, t1);
             }
          },
-         [&](Track *t)
+         [&](Track &t)
          {
-            t->Clear(t0, t1);
+            t.Clear(t0, t1);
          }
       );
    };
@@ -478,14 +478,14 @@ void OnSplitCutLabels(const CommandContext &context)
    {
       Track::Holder dest = nullptr;
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
-            dest = t->SplitCut(t0, t1);
+            dest = t.SplitCut(t0, t1);
          },
-         [&](Track *t)
+         [&](Track &t)
          {
-            dest = t->Copy(t0, t1);
-            t->Silence(t0, t1);
+            dest = t.Copy(t0, t1);
+            t.Silence(t0, t1);
          }
       );
       return dest;
@@ -512,13 +512,13 @@ void OnSplitDeleteLabels(const CommandContext &context)
    auto editfunc = [&](Track *track, double t0, double t1)
    {
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
-            t->SplitDelete(t0, t1);
+            t.SplitDelete(t0, t1);
          },
-         [&](Track *t)
+         [&](Track &t)
          {
-            t->Silence(t0, t1);
+            t.Silence(t0, t1);
          }
       );
    };
@@ -545,9 +545,9 @@ void OnSilenceLabels(const CommandContext &context)
    auto editfunc = [&](Track *track, double t0, double t1)
    {
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
-            t->Silence(t0, t1);
+            t.Silence(t0, t1);
          }
       );
    };
@@ -573,9 +573,9 @@ void OnCopyLabels(const CommandContext &context)
    {
       Track::Holder dest = nullptr;
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
-            dest = t->CopyNonconst(t0, t1);
+            dest = t.CopyNonconst(t0, t1);
          });
       return dest;
    };
@@ -598,9 +598,9 @@ void OnSplitLabels(const CommandContext &context)
    auto editfunc = [&](Track *track, double t0, double t1)
    {
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
-            t->Split(t0, t1);
+            t.Split(t0, t1);
          }
       );
    };
@@ -626,9 +626,9 @@ void OnJoinLabels(const CommandContext &context)
    auto editfunc = [&](Track *track, double t0, double t1)
    {
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
-            t->Join(t0, t1);
+            t.Join(t0, t1);
          }
       );
    };
@@ -654,10 +654,10 @@ void OnDisjoinLabels(const CommandContext &context)
    auto editfunc = [&](Track *track, double t0, double t1)
    {
       track->TypeSwitch(
-         [&](WaveTrack *t)
+         [&](WaveTrack &t)
          {
             wxBusyCursor busy;
-            t->Disjoin(t0, t1);
+            t.Disjoin(t0, t1);
          }
       );
    };

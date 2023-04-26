@@ -509,8 +509,8 @@ private:
 
          //! Ignore the first, inapplicable function and try others.
          R operator ()(
-            ArgumentType *pObject, const Functions &functions) const {
-            return Next{}(pObject, Tuple::ForwardNext(functions));
+            ArgumentType &object, const Functions &functions) const {
+            return Next{}(object, Tuple::ForwardNext(functions));
          }
       };
 
@@ -534,8 +534,8 @@ private:
 
             //! Ignore the remaining functions and call the first only.
             R operator ()(
-               BaseClass *pObject, const Functions &functions) const {
-               return std::get<0>(functions)(pObject);
+               BaseClass &object, const Functions &functions) const {
+               return std::get<0>(functions)(object);
             }
          };
 
@@ -551,13 +551,13 @@ private:
             //! Call the first function, which may request dispatch to the
             //! further functions
             R operator ()(
-               BaseClass *pObject, const Functions &functions) const {
+               BaseClass &object, const Functions &functions) const {
                // The first function in the tuple is curried!
                // Its first argument is the call-through and its second
                // is the object
                const auto next = [&](){ return
-                  Next{}(pObject, Tuple::ForwardNext(functions)); };
-               return std::get<0>(functions)(next)(pObject);
+                  Next{}(object, Tuple::ForwardNext(functions)); };
+               return std::get<0>(functions)(next)(object);
             }
          };
 
@@ -575,14 +575,14 @@ private:
             using Case1 = std::conjunction<Compatible, curried, Case1_>;
             struct Case1_ {
                static constexpr bool value = std::is_invocable_v<
-                  std::invoke_result_t<Function, Dummy &&>, BaseClass*>;
+                  std::invoke_result_t<Function, Dummy &&>, BaseClass&>;
                using type = Wrapper<Functions>;
             };
 
             // Case 2: Invocable directly on the object
             struct Case2 : std::conjunction<
                Compatible, std::negation<curried>,
-               std::is_invocable<Function, BaseClass*>
+               std::is_invocable<Function, BaseClass&>
             > {
                using type = Opaque<Functions>;
             };
@@ -621,7 +621,7 @@ private:
       //! Constant used in a compile-time check
       enum : unsigned { SetUsed = 0 };
       //! No functions matched, so do nothing
-      R operator ()(ArgumentType *, const std::tuple<> &) const {
+      R operator ()(ArgumentType &, const std::tuple<> &) const {
          if constexpr (std::is_void_v<R>)
             return;
          else
@@ -652,7 +652,7 @@ public:
             // Dynamic type test of object
             if (const auto pObject = dynamic_cast<ObjectType*>(&object))
                // Dispatch to an Executor that knows which of functions applies
-               return Exec{}(pObject, functions);
+               return Exec{}(*pObject, functions);
             else
                // Recur, with fewer candidate Executors and all of functions
                return Recur{}(object, functions);
@@ -705,9 +705,9 @@ public:
 
    /*!
     A variadic function taking any number of function objects, each taking
-    - a pointer to Track or a subclass, or
+    - a reference to Track or a subclass, or
     - a first, callable next-function argument, and returning a function, which
-      takes a pointer to Track or a subclass.  (Typically, a generic lambda
+      takes a reference to Track or a subclass.  (Typically, a generic lambda
       returning a lambda.  That is, it's curried.)
    
     In the first case, the function object returns R or a type convertible to R.
@@ -747,7 +747,7 @@ public:
    /*!
     This is the overload for const tracks, only taking
     callable arguments that (after any needed partial application) accept first
-    arguments that are pointers to const
+    arguments that are references to const
     */
    template<
       typename R = void,

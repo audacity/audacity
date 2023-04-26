@@ -163,13 +163,13 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 
    // Sync lock adjustment of other tracks
    mOutputTracks->Any().Visit(
-      [&](auto &&fallthrough){ return [&](WaveTrack *track) {
-         if (!track->IsSelected())
+      [&](auto &&fallthrough){ return [&](WaveTrack &track) {
+         if (!track.IsSelected())
             fallthrough();
       }; },
-      [&](Track *track) {
-         if (SyncLock::IsSyncLockSelected(track))
-            track->SyncLockAdjust(mT1, m_t1);
+      [&](Track &track) {
+         if (SyncLock::IsSyncLockSelected(&track))
+            track.SyncLockAdjust(mT1, m_t1);
       }
    );
    mT1 = m_t1;

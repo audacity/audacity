@@ -193,10 +193,10 @@ void TimeTrack::Clear(double t0, double t1)
 
 void TimeTrack::Paste(double t, const Track * src)
 {
-   bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack *tt) {
+   bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack &tt) {
       auto sampleTime = 1.0 / GetRate(*this);
       mEnvelope->PasteEnvelope
-         (t, tt->mEnvelope.get(), sampleTime);
+         (t, tt.mEnvelope.get(), sampleTime);
       return true;
    } );
 

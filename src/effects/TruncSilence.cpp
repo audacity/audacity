@@ -455,29 +455,28 @@ bool EffectTruncSilence::DoRemoval
            pTrack->GetEndTime() < r->start;
          }
       ).Visit(
-         [&](WaveTrack *wt) {
-
+         [&](WaveTrack &wt) {
             // In WaveTracks, clear with a cross-fade
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
-            cutStart = wt->LongSamplesToTime(wt->TimeToLongSamples(cutStart));
-            cutEnd = wt->LongSamplesToTime(wt->TimeToLongSamples(cutEnd));
+            cutStart = wt.LongSamplesToTime(wt.TimeToLongSamples(cutStart));
+            cutEnd = wt.LongSamplesToTime(wt.TimeToLongSamples(cutEnd));
 
             // Make sure the cross-fade does not affect non-silent frames
-            if (wt->LongSamplesToTime(blendFrames) > inLength)
+            if (wt.LongSamplesToTime(blendFrames) > inLength)
             {
                // Result is not more than blendFrames:
-               blendFrames = wt->TimeToLongSamples(inLength).as_size_t();
+               blendFrames = wt.TimeToLongSamples(inLength).as_size_t();
             }
 
             // Perform cross-fade in memory
             Floats buf1{ blendFrames };
             Floats buf2{ blendFrames };
-            auto t1 = wt->TimeToLongSamples(cutStart) - blendFrames / 2;
-            auto t2 = wt->TimeToLongSamples(cutEnd) - blendFrames / 2;
+            auto t1 = wt.TimeToLongSamples(cutStart) - blendFrames / 2;
+            auto t2 = wt.TimeToLongSamples(cutEnd) - blendFrames / 2;
 
-            wt->GetFloats(buf1.get(), t1, blendFrames);
-            wt->GetFloats(buf2.get(), t2, blendFrames);
+            wt.GetFloats(buf1.get(), t1, blendFrames);
+            wt.GetFloats(buf2.get(), t2, blendFrames);
 
             for (decltype(blendFrames) i = 0; i < blendFrames; ++i)
             {
@@ -486,19 +485,19 @@ bool EffectTruncSilence::DoRemoval
             }
 
             // Perform the cut
-            wt->Clear(cutStart, cutEnd);
+            wt.Clear(cutStart, cutEnd);
 
             // Write cross-faded data
-            wt->Set((samplePtr)buf1.get(), floatSample, t1, blendFrames,
+            wt.Set((samplePtr)buf1.get(), floatSample, t1, blendFrames,
                // This effect mostly shifts samples to remove silences, and
                // does only a little bit of floating point calculations to
                // cross-fade the splices, over a 100 sample interval by default.
                // Don't dither.
                narrowestSampleFormat);
          },
-         [&](Track *t) {
+         [&](Track &t) {
             // Non-wave tracks: just do a sync-lock adjust
-            t->SyncLockAdjust(cutEnd, cutStart);
+            t.SyncLockAdjust(cutEnd, cutStart);
          }
       );
       ++whichReg;

@@ -1773,16 +1773,16 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
 
    ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
-   tracklist.Any().Visit([&](const Track *t)
+   tracklist.Any().Visit([&](const Track &t)
    {
-      auto useTrack = t;
+      auto useTrack = &t;
       if ( recording ) {
          // When append-recording, there is a temporary "shadow" track accumulating
          // changes and displayed on the screen but it is not yet part of the
          // regular track list.  That is the one that we want to back up.
          // SubstitutePendingChangedTrack() fetches the shadow, if the track has
          // one, else it gives the same track back.
-         useTrack = t->SubstitutePendingChangedTrack().get();
+         useTrack = t.SubstitutePendingChangedTrack().get();
       }
       else if ( useTrack->GetId() == TrackId{} ) {
          // This is a track added during a non-appending recording that is
