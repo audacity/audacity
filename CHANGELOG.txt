@@ -1,5 +1,14 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.3.1
+
+ This is a hotfix release. It fixes the following bugs:
+   * #4600 Fixed cut lines massively inflating project size.
+   * #4612 Fixed custom project sample rates being uneditable.
+   * #4604 Fixed crash reporting being disabled.
+   * #4234 Audacity now shows an error if the upload to audio.com exceeds file size limits.
+   * #4114 Fixed an error in calculating channels when uploading to audio.com.
+
 Changes in version 3.3.0
 
  Changes
