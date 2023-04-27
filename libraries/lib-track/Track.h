@@ -20,6 +20,7 @@
 #include <functional>
 #include <wx/longlong.h>
 
+#include "Callable.h"
 #include "ClientData.h"
 #include "Observer.h"
 // TrackAttachment needs to be a complete type for the Windows build, though
@@ -514,8 +515,6 @@ private:
    struct Combiner {
       static_assert(!Null_v<ArgumentTypes>);
       using ArgumentType = Head_t<ArgumentTypes>;
-      using QualifiedRootType = std::conditional_t<
-         std::is_const_v<ArgumentType>, const RootType, RootType>;
 
       struct NoOp {
          struct type {
@@ -523,7 +522,7 @@ private:
             enum : unsigned { SetUsed = 0 };
             //! No functions matched, so do nothing
             template<typename Functions>
-            R operator ()(QualifiedRootType &, const Functions &) const {
+            R operator ()(ArgumentType &, const Functions &) const {
                if constexpr (std::is_void_v<R>)
                   return;
                else
@@ -540,9 +539,9 @@ private:
             enum : unsigned { SetUsed = Next::SetUsed << 1 };
 
             //! Ignore the first, inapplicable function and try others.
-            template<typename Object, typename Functions>
+            template<typename Functions>
             R operator ()(
-               Object &object, const Functions &functions) const
+               ArgumentType &object, const Functions &functions) const
             {
                return Next{}(object, Tuple::ForwardNext(functions));
             }
@@ -650,13 +649,14 @@ private:
       ::template Combine<Functions>::type
    {
       static_assert(!Null_v<ArgumentTypes>);
-      using NominalType = Head_t<ArgumentTypes>;
    };
 
 public:
 
    // Executors for more derived classes are later in the given type list
-   template<typename R, typename Object, typename Executors> struct Invoker {
+   template<
+      typename R, typename Executor, typename Object, typename ObjectTypes>
+   struct Invoker {
    private:
       struct Base {
          template<typename Functions>
@@ -671,13 +671,12 @@ public:
                return R{};
          }
       };
-      template<typename Executor, typename Recur> struct Op {
+      template<typename ObjectType, typename Recur> struct Op {
          template<typename Functions>
          R operator ()(Object &object, const Functions &functions) const
          {
             // Dynamic type test of object
-            if (const auto pObject =
-                dynamic_cast<typename Executor::NominalType*>(&object))
+            if (const auto pObject = dynamic_cast<ObjectType*>(&object))
                // Dispatch to an Executor that knows which of functions applies
                return Executor{}(*pObject, functions);
             else
@@ -689,7 +688,7 @@ public:
       template<typename Functions>
       R operator ()(Object &object, const Functions &functions) const
       {
-         const auto fn = LeftFold_t<Op, Executors, Base>{};
+         const auto fn = LeftFold_t<Op, ObjectTypes, Base>{};
          return fn(object, functions);
       }
    };
@@ -716,6 +715,8 @@ public:
          using Executor_ = Executor<R, Object, Tail, FunctionList>;
       using Executors = MapList_t<Fn<Executor_>, ObjectTypes>;
 
+      using Executor = Apply_t<Callable::OverloadSet, Executors>;
+
       // Compile time reachability check of the given functions
       enum { All = sizeof...(Functions) };
       static_assert((1u << All) - 1u == Apply_t<UsedCases, Executors>{}(),
@@ -723,7 +724,7 @@ public:
 
       R operator ()(Object &object, const Functions &...functions) const {
          // Do dynamic dispatch to one of the Executors
-         return Invoker<R, Object, Executors>{}(
+         return Invoker<R, Executor, Object, ObjectTypes>{}(
             object, References<Functions...>{ functions... });
       }
    };
