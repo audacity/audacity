@@ -107,8 +107,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
          }
       },
-      [&](WaveTrack *track, const Track::Fallthrough &fallthrough)
-      {
+      [&](auto &&fallthrough){ return [&](WaveTrack *track) {
          if (!track->GetSelected())
             return fallthrough(); // Fall through to next lambda
          auto start = track->TimeToLongSamples(mT0);
@@ -160,7 +159,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          }
 
          nTrack++;
-      },
+      }; },
       [&](Track *t)
       {
          if( SyncLock::IsSyncLockSelected(t) )

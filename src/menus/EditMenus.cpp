@@ -398,7 +398,7 @@ void OnCut(const CommandContext &context)
          // PRL:  But what if it was sync lock selected only, not selected?
       },
 #endif
-      [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
+      [&](auto &&fallthrough){ return [&](WaveTrack *wt) {
          if (gPrefs->Read(wxT("/GUI/EnableCutLines"), (long)0)) {
             wt->ClearAndAddCutLine(
                selectedRegion.t0(),
@@ -406,7 +406,7 @@ void OnCut(const CommandContext &context)
          }
          else
             fallthrough();
-      },
+      }; },
       [&](Track *n) {
          if (n->SupportsBasicEditing())
             n->Clear(selectedRegion.t0(), selectedRegion.t1());
@@ -782,7 +782,7 @@ void OnPaste(const CommandContext &context)
          *srcTracks->Any< const WaveTrack >().rbegin();
 
       tracks.Any().StartingWith(*pN).Visit(
-         [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
+         [&](auto &&fallthrough){ return [&](WaveTrack *wt) {
             if (!wt->GetSelected())
                return fallthrough();
 
@@ -798,8 +798,8 @@ void OnPaste(const CommandContext &context)
 
                pasteWaveTrack(wt, tmp.get());
             }
-         },
-         [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
+         }; },
+         [&](auto &&fallthrough){ return [&](LabelTrack *lt) {
             if (!SyncLock::IsSelectedOrSyncLockSelected(lt))
                return fallthrough();
 
@@ -809,7 +809,7 @@ void OnPaste(const CommandContext &context)
             if (isSyncLocked)
                lt->ShiftLabelsOnInsert(
                   clipboard.Duration(), t0);
-         },
+         }; },
          [&](Track *n) {
             if (SyncLock::IsSyncLockSelected(n))
                n->SyncLockAdjust(t1, t0 + clipboard.Duration() );

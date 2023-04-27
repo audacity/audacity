@@ -40,7 +40,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
    int ntrack = 0;
 
    mOutputTracks->Any().VisitWhile( bGoodResult,
-      [&](WaveTrack *track, const Track::Fallthrough &fallthrough) {
+      [&](auto &&fallthrough){ return [&](WaveTrack *track) {
          if (!track->GetSelected())
             return fallthrough();
          bool editClipCanMove = GetEditClipsCanMove();
@@ -96,7 +96,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
          }
 
          ntrack++;
-      },
+      }; },
       [&](Track *t) {
          if (SyncLock::IsSyncLockSelected(t)) {
             t->SyncLockAdjust(mT1, mT0 + duration);

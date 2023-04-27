@@ -200,7 +200,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
          }
       },
-      [&](WaveTrack *pOutWaveTrack, const Track::Fallthrough &fallthrough) {
+      [&](auto &&fallthrough){ return [&](WaveTrack *pOutWaveTrack) {
          if (!pOutWaveTrack->GetSelected())
             return fallthrough();
 
@@ -224,7 +224,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
          }
          mCurTrackNum++;
-      },
+      }; },
       [&](Track *t) {
          if (SyncLock::IsSyncLockSelected(t))
             t->SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
