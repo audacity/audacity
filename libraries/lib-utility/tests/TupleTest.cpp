@@ -41,18 +41,18 @@ TEST_CASE("Tuple")
 
    SECTION("Projections")
    {
-      auto p0 = Projection<>(ex1);
+      auto p0 = Project<>(ex1);
       static_assert(is_same_v<decltype(p0), tuple<>>);
 
-      auto p1 = Projection<2>(cex1);
+      auto p1 = Project<2>(cex1);
       static_assert(is_same_v<decltype(p1), tuple<double>>);
       REQUIRE(get<0>(p1) == 2.0);
 
-      auto p2 = Projection<0, 2>(move(cex1));
+      auto p2 = Project<0, 2>(move(cex1));
       static_assert(is_same_v<decltype(p2), tuple<unsigned char, double>>);
       REQUIRE(get<0>(p2) == '\0');
 
-      auto p3 = Projection<0, 1, 2>(ex1);
+      auto p3 = Project<0, 1, 2>(ex1);
       static_assert(is_same_v<decltype(p3), tuple<unsigned char, int, double>>);
       REQUIRE(get<1>(ex1) == 1);
       REQUIRE(get<1>(p3) == 1);
@@ -66,7 +66,7 @@ TEST_CASE("Tuple")
 
       const auto pX = get<3>(ex1).get();
       REQUIRE(pX);
-      auto p4 = Projection<0, 1, 2, 3>(move(ex1));
+      auto p4 = Project<0, 1, 2, 3>(move(ex1));
       static_assert(is_same_v<decltype(p4), Example>);
       REQUIRE(get<3>(p4).get() == pX);
       // The unique pointer moved when making p4
@@ -75,19 +75,19 @@ TEST_CASE("Tuple")
 
    SECTION("Forwarding Projections")
    {
-      auto p0 = ForwardingProjection<>(ex1);
+      auto p0 = ForwardProject<>(ex1);
       static_assert(is_same_v<decltype(p0), tuple<>>);
 
-      auto p1 = ForwardingProjection<2>(cex1);
+      auto p1 = ForwardProject<2>(cex1);
       static_assert(is_same_v<decltype(p1), tuple<const double&>>);
       REQUIRE(get<0>(p1) == 2.0);
 
-      auto p2 = ForwardingProjection<0, 2>(move(cex1));
+      auto p2 = ForwardProject<0, 2>(move(cex1));
       static_assert(is_same_v<decltype(p2),
          tuple<const unsigned char &&, const double&&>>);
       REQUIRE(get<0>(p2) == '\0');
 
-      auto p3 = ForwardingProjection<0, 1, 2>(ex1);
+      auto p3 = ForwardProject<0, 1, 2>(ex1);
       static_assert(is_same_v<decltype(p3),
          tuple<unsigned char&, int&, double&>>);
       REQUIRE(get<1>(ex1) == 1);
@@ -102,7 +102,7 @@ TEST_CASE("Tuple")
 
       const auto pX = get<3>(ex1).get();
       REQUIRE(pX);
-      auto p4 = ForwardingProjection<0, 1, 2, 3>(move(ex1));
+      auto p4 = ForwardProject<0, 1, 2, 3>(move(ex1));
       static_assert(is_same_v<decltype(p4),
          tuple<unsigned char &&, int&&, double &&, unique_ptr<X>&&>>);
       REQUIRE(get<3>(p4).get() == pX);

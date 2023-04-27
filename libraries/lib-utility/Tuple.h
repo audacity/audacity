@@ -62,8 +62,9 @@ template<size_t Index, size_t... Indices> struct increasing<Index, Indices...> {
 }
 
 //! Return a tuple of values initialized from a subsequence of a tuple
-template<size_t... Indices, typename Tuple> auto Projection(Tuple &&tuple)
+template<size_t... Indices> constexpr auto Project = [](auto &&tuple)
 {
+   using Tuple = decltype(tuple);
    constexpr auto size = std::tuple_size_v<std::remove_reference_t<Tuple>>;
    static_assert(((Indices < size) && ...), "Indices must be in range");
    // Increasing indices will also be unique, preventing the possibility
@@ -72,19 +73,19 @@ template<size_t... Indices, typename Tuple> auto Projection(Tuple &&tuple)
    static_assert(detail::increasing<Indices...>::value,
       "Indices must be strictly increasing");
    return std::make_tuple(std::get<Indices>(std::forward<Tuple>(tuple))...);
-}
+};
 
-//! Overload of Projection destructures a std::index_sequence argument
+//! Destructures a std::index_sequence argument
 template<size_t... Indices, typename Tuple> auto Projection(
    const std::index_sequence<Indices...> &, Tuple &&tuple)
 {
-   return Projection<Indices...>(std::forward<Tuple>(tuple));
+   return Project<Indices...>(std::forward<Tuple>(tuple));
 }
 
 //! Forwarding of a subsequence of a tuple
-template<size_t... Indices, typename Tuple>
-auto ForwardingProjection(Tuple &&tuple)
+template<size_t... Indices> constexpr auto ForwardProject = [](auto &&tuple)
 {
+   using Tuple = decltype(tuple);
    constexpr auto size = std::tuple_size_v<std::remove_reference_t<Tuple>>;
    static_assert(((Indices < size) && ...), "Indices must be in range");
    // Increasing indices will also be unique, preventing the possibility
@@ -94,13 +95,13 @@ auto ForwardingProjection(Tuple &&tuple)
       "Indices must be strictly increasing");
    return
       std::forward_as_tuple(std::get<Indices>(std::forward<Tuple>(tuple))...);
-}
+};
 
-//! Overload of ForwardingProjection destructures a std::index_sequence argument
-template<size_t... Indices, typename Tuple> auto ForwardingProjection(
+//! Destructures a std::index_sequence argument
+template<size_t... Indices, typename Tuple> constexpr auto ForwardingProjection(
    const std::index_sequence<Indices...> &, Tuple &&tuple)
 {
-   return ForwardingProjection<Indices...>(std::forward<Tuple>(tuple));
+   return ForwardProject<Indices...>(std::forward<Tuple>(tuple));
 }
 
 //! Projection of the tail of a tuple
