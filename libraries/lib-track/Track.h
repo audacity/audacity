@@ -677,9 +677,8 @@ public:
          template<typename Object, typename Functions>
          R operator ()(Object &object, const Functions &functions) const
          {
-            const auto &info = Executor::NominalType::ClassTypeInfo();
             // Dynamic type test of object
-            if (info.IsBaseOf(object.GetTypeInfo()))
+            if (dynamic_cast<typename Executor::NominalType*>(&object))
                // Dispatch to an Executor that knows which of functions applies
                return Executor{}(&object, functions);
             else
