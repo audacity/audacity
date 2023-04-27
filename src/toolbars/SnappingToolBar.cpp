@@ -408,6 +408,14 @@ void SnappingToolBar::Populate()
    mSnapToCombo->Bind(
       wxEVT_KILL_FOCUS, [this](auto&) { mSnapToCombo->SelectNone(); });
 
+   snapLabelCtrl->Bind(
+      wxEVT_LEFT_UP,
+      [this](auto&)
+      {
+         mSnapModeCheckBox->SetValue(!mSnapModeCheckBox->GetValue());
+         OnSnapModeChanged();
+      });
+
    RegenerateTooltips();
    Fit();
    Layout();

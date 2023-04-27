@@ -37,6 +37,9 @@ namespace cloud::audiocom
 {
 class UserImage;
 
+struct UploadFailedPayload;
+struct UploadSuccessfulPayload;
+
 class ShareAudioDialog final :
     public wxDialogWrapper
 {
@@ -54,8 +57,8 @@ private:
    wxString ExportProject();
    
    void StartUploadProcess();
-   void HandleUploadSucceeded(std::string_view finishUploadURL, std::string_view audioSlug);
-   void HandleUploadFailed(std::string_view errorMessage);
+   void HandleUploadSucceeded(const UploadSuccessfulPayload& payload);
+   void HandleUploadFailed(const UploadFailedPayload& payload);
    void HandleExportFailure();
 
    void ResetProgress();

@@ -4,9 +4,15 @@ toolkit-neutral facades
 ]]#
 
 set( SOURCES
+   AccessibleLinksFormatter.cpp
+   AccessibleLinksFormatter.h
    AudacityLogoAlpha.xpm
    AudacityMessageBox.cpp
    AudacityMessageBox.h
+   $<$<BOOL:${${_OPT}has_sentry_reporting}>:
+      ErrorReportDialog.cpp
+      ErrorReportDialog.h
+   >
    ErrorDialog.cpp
    ErrorDialog.h
    HelpSystem.cpp
@@ -39,7 +45,13 @@ set( LIBRARIES
    lib-string-utils-interface
    lib-theme-interface
    lib-wx-wrappers-interface
+   # If Sentry reporting is enabled, this library depends on
+   # lib-network-manager-interface
+   # If Sentry reporting is disabled, an INTERFACE library
+   # will be defined
+   lib-sentry-reporting-interface
 )
+
 audacity_library( lib-wx-init "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

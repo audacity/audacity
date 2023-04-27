@@ -110,8 +110,6 @@ private:
 
    void CleanupRealtime();
 
-   void StopPlayback();
-
 private:
    Observer::Subscription mAudioIOSubscription, mEffectStateSubscription;
 
@@ -141,8 +139,6 @@ private:
 
    bool mEnabled{ true };
 
-   bool mDisableTransport{ true };
-   bool mPlaying{};
    bool mCapturing{};
 
    SelectedRegion mRegion;

@@ -26,7 +26,7 @@
 #include <wx/textctrl.h>
 #include <wx/bmpbuttn.h>
 
-#include "ui/AccessibleLinksFormatter.h"
+#include "AccessibleLinksFormatter.h"
 #include "AllThemeResources.h"
 #include "Theme.h"
 #include "HelpText.h"

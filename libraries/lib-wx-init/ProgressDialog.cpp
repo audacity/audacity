@@ -1104,6 +1104,7 @@ void ProgressDialog::Reinit()
       button->Enable();
 
    wxDialogWrapper::Show(true);
+   wxDialogWrapper::Raise();
 
    mTotalPollTime = {};
    mPollsCount = {};

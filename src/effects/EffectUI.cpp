@@ -380,17 +380,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 
          if (!mIsBatch)
          {
-            if (mSupportsRealtime)
-            {
-               if (mpTempProjectState)
-               {
-                  mPlayToggleBtn = S.Id(kPlayID)
-                     .ToolTip(XO("Start and stop preview"))
-                     .AddButton( { },
-                                 wxALIGN_CENTER | wxTOP | wxBOTTOM );
-               }
-            }
-            else if (
+            if (
                (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
                (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
             {
@@ -532,9 +522,6 @@ void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 {
-   if (mPlaying)
-      StopPlayback();
-
    DoCancel();
    CleanupRealtime();
 
@@ -563,9 +550,6 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
 
-   if (mPlaying)
-      StopPlayback();
-   
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch &&
        mEffectUIHost.GetDefinition().GetType() != EffectTypeGenerate &&
@@ -765,84 +749,25 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!mSupportsRealtime)
-   {
-      if (!TransferDataFromWindow())
-         return;
-      
-      auto updater = [this]{ TransferDataToWindow(); };
-      mEffectUIHost.Preview(*mpAccess, updater, false);
-      // After restoration of settings and effect state:
-      // In case any dialog control depends on mT1 or mDuration:
-      updater();
-
+   if (!TransferDataFromWindow())
       return;
-   }
    
-   if (mPlaying)
-   {
-      StopPlayback();
-   }
-   else
-   {
-      auto &viewInfo = ViewInfo::Get( mProject );
-      const auto &selectedRegion = viewInfo.selectedRegion;
-      const auto &playRegion = viewInfo.playRegion;
-      if ( playRegion.Active() )
-      {
-         mRegion.setTimes(playRegion.GetStart(), playRegion.GetEnd());
-         mPlayPos = mRegion.t0();
-      }
-      else if (selectedRegion.t0() != mRegion.t0() ||
-               selectedRegion.t1() != mRegion.t1())
-      {
-         mRegion = selectedRegion;
-         mPlayPos = mRegion.t0();
-      }
-      
-      if (mPlayPos > mRegion.t1())
-      {
-         mPlayPos = mRegion.t1();
-      }
-      
-      auto &projectAudioManager = ProjectAudioManager::Get( mProject );
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion{ mPlayPos, mRegion.t1() },
-         ProjectAudioIO::GetDefaultOptions(mProject),
-         PlayMode::normalPlay);
-   }
-}
+   auto updater = [this]{ TransferDataToWindow(); };
+   mEffectUIHost.Preview(*mpAccess, updater, false);
+   // After restoration of settings and effect state:
+   // In case any dialog control depends on mT1 or mDuration:
+   updater();
 
-void EffectUIHost::OnPlayback(AudioIOEvent evt)
-{
-   if (evt.on) {
-      if (evt.pProject != &mProject)
-         mDisableTransport = true;
-      else
-         mPlaying = true;
-   }
-   else {
-      mDisableTransport = false;
-      mPlaying = false;
-   }
-   
-   if (mPlaying) {
-      mRegion = ViewInfo::Get( mProject ).selectedRegion;
-      mPlayPos = mRegion.t0();
-   }
-   UpdateControls();
+   return;
 }
 
 void EffectUIHost::OnCapture(AudioIOEvent evt)
 {
    if (evt.on) {
-      if (evt.pProject != &mProject)
-         mDisableTransport = true;
-      else
+      if (evt.pProject == &mProject)
          mCapturing = true;
    }
    else {
-      mDisableTransport = false;
       mCapturing = false;
    }
    UpdateControls();
@@ -1088,26 +1013,6 @@ void EffectUIHost::UpdateControls()
    }
 
    mApplyBtn->Enable(!mCapturing);
-
-   if (mSupportsRealtime)
-   {
-      mPlayToggleBtn->Enable(!(mCapturing || mDisableTransport));
-
-      if (mPlaying)
-      {
-         /* i18n-hint: The access key "&P" should be the same in
-          "Stop &Preview" and "Start &Preview" */
-         mPlayToggleBtn->SetLabel(_("Stop &Preview"));
-         mPlayToggleBtn->Refresh();
-      }
-      else
-      {
-         /* i18n-hint: The access key "&P" should be the same in
-          "Stop &Preview" and "Start &Preview" */
-         mPlayToggleBtn->SetLabel(_("&Preview"));
-         mPlayToggleBtn->Refresh();
-      }
-   }
 }
 
 void EffectUIHost::LoadUserPresets()
@@ -1132,8 +1037,6 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
    bool priorState = (mpState != nullptr);
    if (!priorState) {
       auto gAudioIO = AudioIO::Get();
-      mDisableTransport = !gAudioIO->IsAvailable(mProject);
-      mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
       mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
 
@@ -1161,8 +1064,6 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
       if (!priorState) {
          mAudioIOSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
             switch (event.type) {
-            case AudioIOEvent::PLAYBACK:
-               OnPlayback(event); break;
             case AudioIOEvent::CAPTURE:
                OnCapture(event); break;
             default:
@@ -1198,17 +1099,6 @@ void EffectUIHost::CleanupRealtime()
       }
       mInitialized = false;
    }
-}
-
-void EffectUIHost::StopPlayback()
-{
-   if (!mPlaying)
-      return;
-   
-   auto gAudioIO = AudioIO::Get();
-   mPlayPos = gAudioIO->GetStreamTime();
-   auto& projectAudioManager = ProjectAudioManager::Get(mProject);
-   projectAudioManager.Stop();
 }
 
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
