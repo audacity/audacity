@@ -226,13 +226,13 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
    mTotalStretch = rateSlide.getTotalStretch();
 
    mOutputTracks->Leaders().VisitWhile( bGoodResult,
-      [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
+      [&](auto &&fallthrough){ return [&](LabelTrack *lt) {
          if (!(lt->GetSelected() || SyncLock::IsSyncLockSelected(lt)))
             return fallthrough();
          if (!ProcessLabelTrack(lt))
             bGoodResult = false;
-      },
-      [&](WaveTrack *leftTrack, const Track::Fallthrough &fallthrough) {
+      }; },
+      [&](auto &&fallthrough){ return [&](WaveTrack *leftTrack) {
          if (!leftTrack->GetSelected())
             return fallthrough();
 
@@ -410,7 +410,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
                Finalize(rightTrack, rb.outputRightTrack.get(), warper.get());
          }
          mCurTrackNum++;
-      },
+      }; },
       [&](Track *t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels

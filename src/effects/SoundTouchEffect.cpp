@@ -94,22 +94,22 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
    m_maxNewLength = 0.0;
 
    mOutputTracks->Leaders().VisitWhile( bGoodResult,
-      [&]( LabelTrack *lt, const Track::Fallthrough &fallthrough ) {
+      [&](auto &&fallthrough){ return [&](LabelTrack *lt) {
          if ( !(lt->GetSelected() ||
                 (mustSync && SyncLock::IsSyncLockSelected(lt))) )
             return fallthrough();
          if (!ProcessLabelTrack(lt, warper))
             bGoodResult = false;
-      },
+      }; },
 #ifdef USE_MIDI
-      [&]( NoteTrack *nt, const Track::Fallthrough &fallthrough ) {
+      [&](auto &&fallthrough){ return [&](NoteTrack *nt) {
          if ( !(nt->GetSelected() || (mustSync && SyncLock::IsSyncLockSelected(nt))) )
             return fallthrough();
          if (!ProcessNoteTrack(nt, warper))
             bGoodResult = false;
-      },
+      }; },
 #endif
-      [&]( WaveTrack *leftTrack, const Track::Fallthrough &fallthrough ) {
+      [&](auto &&fallthrough){ return [&](WaveTrack *leftTrack) {
          if (!leftTrack->GetSelected())
             return fallthrough();
 
@@ -170,7 +170,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
             // pSoundTouch is destroyed here
          }
          mCurTrackNum++;
-      },
+      }; },
       [&]( Track *t ) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels

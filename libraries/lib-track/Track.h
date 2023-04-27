@@ -460,11 +460,6 @@ public:
    bool SameKindAs(const Track &track) const
       { return &GetTypeInfo() == &track.GetTypeInfo(); }
 
-   //! Type of arguments passed as optional second parameter to TypeSwitch()
-   //! cases
-   template<typename R = void> using NextFunction = std::function<R()>;
-   using Fallthrough = NextFunction<>;
-   
 private:
    template<typename... T> using List = TypeList::List<T...>;
    using Nil = TypeList::Nil;
@@ -557,24 +552,38 @@ private:
             //! further functions
             R operator ()(
                BaseClass *pObject, const Functions &functions) const {
-               // Construct a std::function
-               NextFunction<R> next{
-                  [&]{ return Next{}(pObject, Tuple::ForwardNext(functions)); }
-               };
-               return std::get<0>(functions)(pObject, next);
+               // The first function in the tuple is curried!
+               // Its first argument is the call-through and its second
+               // is the object
+               const auto next = [&](){ return
+                  Next{}(pObject, Tuple::ForwardNext(functions)); };
+               return std::get<0>(functions)(next)(pObject);
             }
          };
 
          template<typename Functions, typename Function = Head_t<Functions>>
          struct Switch {
-            struct Case1 : std::conjunction<Compatible, std::is_invocable<
-               Function, BaseClass*, NextFunction<R>
-            >> {
+            // whether Function looks like a generic callable
+            struct Dummy { R operator ()() const {
+               if constexpr(std::is_void_v<R>) return; else return R{};
+            } };
+            using curried = std::is_invocable<Function, Dummy&&>;
+
+            // Case 1: Compatible, and invocable on the next function, giving
+            // another function, that accepts BaseClass:
+            struct Case1_;
+            using Case1 = std::conjunction<Compatible, curried, Case1_>;
+            struct Case1_ {
+               static constexpr bool value = std::is_invocable_v<
+                  std::invoke_result_t<Function, Dummy &&>, BaseClass*>;
                using type = Wrapper<Functions>;
             };
-            struct Case2 : std::conjunction<Compatible, std::is_invocable<
-               Function, BaseClass*
-            >> {
+
+            // Case 2: Invocable directly on the object
+            struct Case2 : std::conjunction<
+               Compatible, std::negation<curried>,
+               std::is_invocable<Function, BaseClass*>
+            > {
                using type = Opaque<Functions>;
             };
             struct Default : std::true_type {
@@ -696,23 +705,28 @@ public:
 
    /*!
     A variadic function taking any number of function objects, each taking
-    a pointer to Track or a subclass, maybe const-qualified, and maybe a
-    second argument which is a next function.
+    - a pointer to Track or a subclass, or
+    - a first, callable next-function argument, and returning a function, which
+      takes a pointer to Track or a subclass.  (Typically, a generic lambda
+      returning a lambda.  That is, it's curried.)
    
-    Each of the function objects (and supplied next functions) returns R (or a
-    type convertible to R).
-    Calls the first in the sequence that accepts the actual type of the track.
+    In the first case, the function object returns R or a type convertible to R.
+
+    In the second case, the next-function takes no arguments and returns
+    likewise; the partial application of the curried function is then like
+    the first case.
+
+    Calls the first in the sequence that accepts the actual type of the track
+    (after any needed partial application).
    
-    If no function accepts the track, do nothing and return R{} (if R is not
-    void).
+    If none accepts, do nothing and return R{} (or void when R is void).
    
-    If one of the functions invokes the no-argument function passed into it,
-    then the next following applicable function is called.
+    If one of the curried functions invokes the no-argument function passed into
+    it, the inner call invokes the next applicable function.
 
     @tparam R Return type of this function and each function argument
     @tparam Functions callable types deduced from arguments
-    @param functions typically lambdas, taking a pointer to a track subclass,
-     and optionally a next function
+    @param functions typically lambdas; see above
     */
    template<
       typename R = void,
@@ -732,7 +746,8 @@ public:
    /*! @copydoc Track::TypeSwitch */
    /*!
     This is the overload for const tracks, only taking
-    callable arguments that accept first arguments that are pointers to const
+    callable arguments that (after any needed partial application) accept first
+    arguments that are pointers to const
     */
    template<
       typename R = void,
