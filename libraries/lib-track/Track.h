@@ -665,11 +665,11 @@ public:
       template<typename Executor, typename Recur> struct Op {
          template<typename Object, typename Functions>
          R operator ()(Object &object, const Functions &functions) const {
-            const auto &info = Executor::ArgumentType::ClassTypeInfo();
             // Dynamic type test of object
-            if (info.IsBaseOf(object.GetTypeInfo()))
+            if (const auto pObject =
+                dynamic_cast<typename Executor::ArgumentType*>(&object))
                // Dispatch to an Executor that knows which of functions applies
-               return Executor{}(&object, functions);
+               return Executor{}(pObject, functions);
             else
                // Recur, with fewer candidate Executors and all of functions
                return Recur{}(object, functions);
