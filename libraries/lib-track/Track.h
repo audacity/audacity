@@ -20,15 +20,13 @@
 #include <functional>
 #include <wx/longlong.h>
 
-#include "Callable.h"
 #include "ClientData.h"
 #include "Observer.h"
 // TrackAttachment needs to be a complete type for the Windows build, though
 // not the others, so there is a nested include here:
 #include "TrackAttachment.h"
 #include "TypeEnumerator.h"
-#include "Tuple.h"
-#include "TypeList.h"
+#include "TypeSwitch.h"
 #include "XMLTagHandler.h"
 
 #ifdef __WXMSW__
@@ -460,297 +458,30 @@ public:
    bool SameKindAs(const Track &track) const
       { return &GetTypeInfo() == &track.GetTypeInfo(); }
 
-private:
-   template<typename... T> using List = TypeList::List<T...>;
-   using Nil = TypeList::Nil;
-   template<typename T> using Head_t = TypeList::Head_t<T>;
-   template<typename T> using Tail_t = TypeList::Tail_t<T>;
-   template<typename T> static constexpr bool Null_v = TypeList::Null_v<T>;
-   template<typename T> static constexpr size_t Length_v =
-      TypeList::Length_v<T>;
-   template<typename T, typename L> using Cons_t = TypeList::Cons_t<T, L>;
-   template<template<typename...> class Template, typename TypeList>
-   using Apply_t = typename ::TypeList::template Apply_t<Template, TypeList>;
-   template<template<typename> class... Template> using Fn =
-      typename TypeList::template Fn<Template...>;
-   template<typename Metafunction, typename TypeList> using Map_t =
-      typename ::TypeList::Map_t<Metafunction, TypeList>;
-   template<typename Metafunction, typename TypeList> using MapList_t =
-      typename ::TypeList::MapList_t<Metafunction, TypeList>;
-   template<template<typename Type, typename Accumulator> class Op,
-      typename TypeList, typename Initial>
-   using LeftFold_t = typename ::TypeList::LeftFold_t<Op, TypeList, Initial>;
-   template<template<typename Type, typename Accumulator> class Op,
-      typename TypeList, typename Initial>
-   using RightFoldList_t =
-      typename ::TypeList::RightFoldList_t<Op, TypeList, Initial>;
-
-   template<typename... Functions> using FunctionTupleType =
-      std::tuple<const Functions &...>;
-   template<typename Functions> using FunctionTuple =
-      Apply_t<FunctionTupleType, Functions>;
-
-   //! Metafunction implementing TypeSwitch
    /*!
-    @tparam ArgumentTypes nonempty; more derived types later
-    @tparam Funs those applicable to more derived types are earlier
+    Do a TypeSwitch on this track, among all subtypes enumerated up to the point
+    of the call
     */
-   template<typename R, typename ArgumentTypes, typename Funs>
-   struct Executor {
-      static_assert(!Null_v<ArgumentTypes>);
-      using ArgumentType = Head_t<ArgumentTypes>;
-
-      struct NoOp {
-         struct type {
-            using Functions = FunctionTuple<Nil>;
-
-            //! Constant used in a compile-time check
-            enum : unsigned { SetUsed = 0 };
-            //! No functions matched, so do nothing
-            R operator ()(ArgumentType &, const Functions &) const {
-               if constexpr (std::is_void_v<R>)
-                  return;
-               else
-                  return R{};
-            }
-         };
-      };
-
-      template<typename Fs, typename Wrapped> struct Combine {
-         using Functions = FunctionTuple<Fs>;
-         struct Transparent {
-            //! No BaseClass of ArgumentType is acceptable to the first function
-            struct type {
-               using Next = typename Wrapped::type;
-
-               //! Constant used in a compile-time check
-               enum : unsigned { SetUsed = Next::SetUsed << 1 };
-
-               //! Ignore the first, inapplicable function and try others.
-               R operator ()(
-                  ArgumentType &object, const Functions &functions) const {
-                  return Next{}(object, Tuple::ForwardNext(functions));
-               }
-            };
-         };
-
-         template<typename BaseClass, typename NextBase> struct CombineOp {
-            static_assert(
-               std::is_const_v<BaseClass> == std::is_const_v<ArgumentType>);
-            //! Whether upcast of ArgumentType* to BaseClass* works
-            using Compatible = std::is_base_of<BaseClass, ArgumentType>;
-
-            //! Generates operator () that calls one function only, shadowing
-            //! those taking less derived base classes
-            struct Opaque {
-               //! Constant used in a compile-time check
-               enum : unsigned { SetUsed = 1u };
-
-               //! Ignore the remaining functions and call the first only.
-               R operator ()(
-                  BaseClass &object, const Functions &functions) const {
-                  return std::get<0>(functions)(object);
-               }
-            };
-
-            //! Generates operator () that calls a function that accepts a next
-            //! function
-            struct Wrapper {
-               using Next = typename Wrapped::type;
-               //! Constant used in a compile-time check
-               enum : unsigned { SetUsed = (Next::SetUsed << 1) | 1u };
-
-               //! Call the first function, which may request dispatch to the
-               //! further functions
-               R operator ()(
-                  BaseClass &object, const Functions &functions) const {
-                  // The first function in the tuple is curried!
-                  // Its first argument is the call-through and its second
-                  // is the object
-                  const auto next = [&](){ return
-                     Next{}(object, Tuple::ForwardNext(functions)); };
-                  return std::get<0>(functions)(next)(object);
-               }
-            };
-
-            using F = Head_t<Fs>;
-
-            // whether Function looks like a generic callable
-            struct Dummy { R operator ()() const {
-               if constexpr(std::is_void_v<R>) return; else return R{};
-            } };
-            using curried = std::is_invocable<F, Dummy&&>;
-
-            // Case 1: Compatible, and invocable on the next function, giving
-            // another function, that accepts BaseClass:
-            struct Case1_;
-            using Case1 = std::conjunction<Compatible, curried, Case1_>;
-            struct Case1_ {
-               static constexpr bool value = std::is_invocable_v<
-                  std::invoke_result_t<F, Dummy &&>, BaseClass&>;
-               using type = Wrapper;
-            };
-
-            // Case 2: Invocable directly on the object
-            struct Case2 : std::conjunction<
-               Compatible, std::negation<curried>,
-               std::is_invocable<F, BaseClass&>
-            > {
-               using type = Opaque;
-            };
-            struct Default : std::true_type {
-               using type = typename NextBase::type;
-            };
-            using type = typename std::disjunction<Case1, Case2, Default>::type;
-         };
-         using type =
-            typename LeftFold_t<CombineOp, ArgumentTypes, Transparent>::type;
-      };
-
-      using type = typename RightFoldList_t<Combine, Funs, NoOp>::type;
-   };
-
-   //! Synthesize a function appropriate for ArgumentType
-   /*!
-    @tparam ArgumentTypes nonempty; more derived types later
-    @tparam Functions those applicable to more derived types are earlier
-    */
-   template<typename R, typename ArgumentTypes, typename Functions>
-   using Executor_t = typename Executor<R, ArgumentTypes, Functions>::type;
-
-public:
-
-   // Executors for more derived classes are later in the given type list
-   template<typename R, typename Exec, typename ObjectTypes> struct Invoker {
-   private:
-      struct Base {
-         template<typename Object, typename Functions>
-         R operator ()(Object &object, const Functions &functions) const {
-            // This should never be reached at run-time, because an Executor
-            // generated for (const) Object should have been the catch-all.
-            assert(false);
-            if constexpr (std::is_void_v<R>)
-               return;
-            else
-               return R{};
-         }
-      };
-      template<typename ObjectType, typename Recur> struct Op {
-         template<typename Object, typename Functions>
-         R operator ()(Object &object, const Functions &functions) const {
-            // Dynamic type test of object
-            if (const auto pObject = dynamic_cast<ObjectType*>(&object))
-               // Dispatch to an Executor that knows which of functions applies
-               return Exec{}(*pObject, functions);
-            else
-               // Recur, with fewer candidate Executors and all of functions
-               return Recur{}(object, functions);
-         }
-      };
-   public:
-      template<typename Object, typename Functions>
-      R operator ()(Object &object, const Functions &functions) const {
-         const auto fn = LeftFold_t<Op, ObjectTypes, Base>{};
-         return fn(object, functions);
-      }
-   };
-
-   template<typename ...Executors> struct UsedCases {
-      constexpr unsigned operator ()() { return (Executors::SetUsed | ...); };
-   };
-
-   template<size_t... Is, typename TupleLike> static auto MakeFunctionTuple(
-      std::index_sequence<Is...>, const TupleLike &functions) {
-      return std::forward_as_tuple(std::get<Is>(functions)...);
-   }
-
-   template<
-      typename R,
-      typename ObjectTypes,
-      typename Functions
-   >
-   struct TypeSwitcher {
-      static_assert(!Null_v<ObjectTypes>);
-      using Object = Head_t<ObjectTypes>;
-      // Generate Executor classes, for each of ObjectTypes,
-      // each zero-sized and with an operator () that calls the correct
-      // one of functions, assuming the object is of the corresponding type
-      template<typename Tail> using Executor_ = Executor_t<R, Tail, Functions>;
-      using Executors = MapList_t<Fn<Executor_>, ObjectTypes>;
-
-      // Compile time reachability check of the given functions
-      enum { All = Length_v<Functions> };
-      static_assert((1u << All) - 1u == Apply_t<UsedCases, Executors>{}(),
-         "Uncallable case in TypeSwitch");
-
-      using Exec = Apply_t<Callable::OverloadSet, Executors>;
-      template<typename TupleLike> R operator ()(
-         Object &object, const TupleLike &functions) const {
-         // Do dynamic dispatch to one of the Executors
-         return Invoker<R, Exec, ObjectTypes>{}(object,
-            MakeFunctionTuple(std::make_index_sequence<All>{}, functions));
-      }
-   };
-
-   /*!
-    A variadic function taking any number of function objects, each taking
-    - a reference to Track or a subclass, or
-    - a first, callable next-function argument, and returning a function, which
-      takes a reference to Track or a subclass.  (Typically, a generic lambda
-      returning a lambda.  That is, it's curried.)
-   
-    In the first case, the function object returns R or a type convertible to R.
-
-    In the second case, the next-function takes no arguments and returns
-    likewise; the partial application of the curried function is then like
-    the first case.
-
-    Calls the first in the sequence that accepts the actual type of the track
-    (after any needed partial application).
-   
-    If none accepts, do nothing and return R{} (or void when R is void).
-   
-    If one of the curried functions invokes the no-argument function passed into
-    it, the inner call invokes the next applicable function.
-
-    @tparam R Return type of this function and each function argument
-    @tparam Functions callable types deduced from arguments
-    @param functions typically lambdas; see above
-    */
-   template<
-      typename R = void,
-      typename ...Functions
-   >
+   template<typename R = void, typename ...Functions>
    R TypeSwitch(const Functions &...functions)
    {
       struct Here : TrackTypeTag {};
       // List more derived classes later
       using TrackTypes =
          typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type;
-      // Generate a function that dispatches dynamically on track type
-      return TypeSwitcher<R, TrackTypes, List<Functions...>>{}
-         (*this, std::tuple{ functions... });
+      return TypeSwitch::VDispatch<R, TrackTypes>(*this, functions...);
    }
 
    /*! @copydoc Track::TypeSwitch */
-   /*!
-    This is the overload for const tracks, only taking
-    callable arguments that (after any needed partial application) accept first
-    arguments that are references to const
-    */
-   template<
-      typename R = void,
-      typename ...Functions
-   >
+   template<typename R = void, typename ...Functions>
    R TypeSwitch(const Functions &...functions) const
    {
       struct Here : TrackTypeTag {};
       // List more derived classes later
+      using namespace TypeList;
       using TrackTypes = Map_t<Fn<std::add_const_t>,
          typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type>;
-      // Generate a function that dispatches dynamically on track type
-      return TypeSwitcher<R, TrackTypes, List<Functions...>>{}
-         (*this, std::tuple{ functions... });
+      return TypeSwitch::VDispatch<R, TrackTypes>(*this, functions...);
    }
 
    // XMLTagHandler callback methods -- NEW virtual for writing
