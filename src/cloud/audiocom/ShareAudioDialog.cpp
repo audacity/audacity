@@ -427,7 +427,7 @@ void ShareAudioDialog::StartUploadProcess()
                if (result.result == UploadOperationCompleted::Result::Success)
                {
                   // Success indicates that UploadSuccessfulPayload is in the payload
-                  assert(std::holds_alternative<UploadSuccessfulPayload>());
+                  assert(std::holds_alternative<UploadSuccessfulPayload>(result.payload));
 
                   if (
                      auto payload =
