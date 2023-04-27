@@ -514,13 +514,16 @@ private:
    struct Combiner {
       static_assert(!Null_v<ArgumentTypes>);
       using ArgumentType = Head_t<ArgumentTypes>;
+      using QualifiedRootType = std::conditional_t<
+         std::is_const_v<ArgumentType>, const RootType, RootType>;
 
       struct NoOp {
          struct type {
             //! Constant used in a compile-time check
             enum : unsigned { SetUsed = 0 };
             //! No functions matched, so do nothing
-            R operator ()(...) const {
+            template<typename Functions>
+            R operator ()(QualifiedRootType &, const Functions &) const {
                if constexpr (std::is_void_v<R>)
                   return;
                else
@@ -530,8 +533,6 @@ private:
       };
 
       template<typename Function, typename WrappedFunction> struct Op1 {
-         using QualifiedRootType = std::conditional_t<
-            std::is_const_v<ArgumentType>, const RootType, RootType>;
          struct Transparent {
             using Next = typename WrappedFunction::type;
 
@@ -539,11 +540,11 @@ private:
             enum : unsigned { SetUsed = Next::SetUsed << 1 };
 
             //! Ignore the first, inapplicable function and try others.
-            template<typename Functions>
+            template<typename Object, typename Functions>
             R operator ()(
-               QualifiedRootType *pObject, const Functions &functions) const
+               Object &object, const Functions &functions) const
             {
-               return Next{}(pObject, Tuple::ForwardNext(functions));
+               return Next{}(object, Tuple::ForwardNext(functions));
             }
          };
 
@@ -563,10 +564,9 @@ private:
                //! Ignore the remaining functions and call the first only.
                template<typename Functions>
                R operator ()(
-                  QualifiedRootType *pObject, const Functions &functions) const
+                  QualifiedBaseClass &object, const Functions &functions) const
                {
-                  return std::get<0>(functions)(
-                     *static_cast<QualifiedBaseClass *>(pObject));
+                  return std::get<0>(functions)(object);
                }
             };
 
@@ -582,17 +582,15 @@ private:
                //! further functions
                template<typename Functions>
                R operator ()(
-                  QualifiedRootType *pObject, const Functions &functions) const
+                  QualifiedBaseClass &object, const Functions &functions) const
                {
                   // The first function in the tuple is curried!
                   // Its first argument is the call-through and its second
                   // is the object
                   return std::get<0>(functions)(
                      [&](){ return Next{}(
-                        pObject, Tuple::ForwardNext(functions)); }
-                  )(
-                    *static_cast<QualifiedBaseClass *>(pObject)
-                  );
+                        object, Tuple::ForwardNext(functions)); }
+                  )(object);
                }
             };
 
@@ -658,10 +656,10 @@ private:
 public:
 
    // Executors for more derived classes are later in the given type list
-   template<typename R, typename Executors> struct Invoker {
+   template<typename R, typename Object, typename Executors> struct Invoker {
    private:
       struct Base {
-         template<typename Object, typename Functions>
+         template<typename Functions>
          R operator ()(Object &object, const Functions &functions) const
          {
             // This should never be reached at run-time, because an Executor
@@ -674,20 +672,21 @@ public:
          }
       };
       template<typename Executor, typename Recur> struct Op {
-         template<typename Object, typename Functions>
+         template<typename Functions>
          R operator ()(Object &object, const Functions &functions) const
          {
             // Dynamic type test of object
-            if (dynamic_cast<typename Executor::NominalType*>(&object))
+            if (const auto pObject =
+                dynamic_cast<typename Executor::NominalType*>(&object))
                // Dispatch to an Executor that knows which of functions applies
-               return Executor{}(&object, functions);
+               return Executor{}(*pObject, functions);
             else
                // Recur, with fewer candidate Executors and all of functions
                return Recur{}(object, functions);
          }
       };
    public:
-      template<typename Object, typename Functions>
+      template<typename Functions>
       R operator ()(Object &object, const Functions &functions) const
       {
          const auto fn = LeftFold_t<Op, Executors, Base>{};
@@ -724,7 +723,7 @@ public:
 
       R operator ()(Object &object, const Functions &...functions) const {
          // Do dynamic dispatch to one of the Executors
-         return Invoker<R, Executors>{}(
+         return Invoker<R, Object, Executors>{}(
             object, References<Functions...>{ functions... });
       }
    };
