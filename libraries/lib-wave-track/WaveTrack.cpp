@@ -476,6 +476,11 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
    if (t0 > t1)
       return true;
 
+   // We don't allow trimming or moving by a fraction of sample ; keep it
+   // consistent for copy.
+   t0 = std::round(t0 * static_cast<double>(mRate) + 0.5) / mRate;
+   t1 = std::round(t1 * static_cast<double>(mRate) + 0.5) / mRate;
+
    //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
    for (const auto &clip : mClips)
    {
