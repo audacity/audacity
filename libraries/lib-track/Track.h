@@ -529,8 +529,8 @@ private:
 
       /*! Computes a type as the return type of unevaluated member test() */
       template<typename BaseClass, typename NextBase> struct CombineOp {
-         using QualifiedBaseClass = std::conditional_t<
-            std::is_const_v<ArgumentType>, const BaseClass, BaseClass>;
+         static_assert(
+            std::is_const_v<BaseClass> == std::is_const_v<ArgumentType>);
          //! Whether upcast of ArgumentType* to first BaseClass* works
          static constexpr bool Compatible =
             std::is_base_of_v<BaseClass, ArgumentType>;
@@ -545,8 +545,7 @@ private:
             //! Ignore the remaining functions and call the first only.
             R operator ()(
                QualifiedTrackType *pObject, const Functions &functions) const {
-               return std::get<0>(functions)(
-                  static_cast<QualifiedBaseClass *>(pObject));
+               return std::get<0>(functions)(static_cast<BaseClass *>(pObject));
             }
          };
 
@@ -568,13 +567,13 @@ private:
                   [&]{ return Next{}(pObject, Tuple::ForwardNext(functions)); }
                };
                return std::get<0>(functions)(
-                  static_cast<QualifiedBaseClass *>(pObject), next);
+                  static_cast<BaseClass *>(pObject), next);
             }
          };
 
          //! Catch-all overload of unevaluated function
          /*! If ArgumentType is not compatible with BaseClass, or if
-          Function does not accept QualifiedBaseClass*, try other BaseClasses.
+          Function does not accept BaseClass*, try other BaseClasses.
           */
          template<typename Functions>
          static auto test(const void *)
@@ -589,7 +588,7 @@ private:
           */
          template<typename Functions, typename Function = Head_t<Functions>>
          static auto test(std::true_type *) -> decltype(
-            (void) std::declval<Function>()((QualifiedBaseClass*)nullptr),
+            (void) std::declval<Function>()((BaseClass*)nullptr),
                Opaque<Functions>{});
 
          //! overload when upcast of ArgumentType* works, with sfinae'd return
@@ -603,7 +602,7 @@ private:
          template<typename Functions, typename Function = Head_t<Functions>>
          static auto test(std::true_type *)
             -> decltype(
-               (void) std::declval<Function>()((QualifiedBaseClass*)nullptr,
+               (void) std::declval<Function>()((BaseClass*)nullptr,
                std::declval<NextFunction<R>>()),
                Wrapper<Functions>{});
 
