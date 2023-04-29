@@ -470,12 +470,16 @@ private:
    template<typename T> using Head_t = TypeList::Head_t<T>;
    template<typename T> using Tail_t = TypeList::Tail_t<T>;
    template<typename T> static constexpr bool Null_v = TypeList::Null_v<T>;
+   template<typename T> static constexpr size_t Length_v =
+      TypeList::Length_v<T>;
    template<template<typename...> class Template, typename TypeList>
    using Apply_t = typename ::TypeList::template Apply_t<Template, TypeList>;
    template<template<typename> class... Template> using Fn =
       typename TypeList::template Fn<Template...>;
    template<typename Metafunction, typename TypeList> using Map_t =
       typename ::TypeList::Map_t<Metafunction, TypeList>;
+   template<typename Metafunction, typename TypeList> using MapList_t =
+      typename ::TypeList::MapList_t<Metafunction, TypeList>;
    template<template<typename Type, typename Accumulator> class Op,
       typename TypeList, typename Initial>
    using LeftFold_t =
@@ -487,14 +491,17 @@ private:
       Apply_t<FunctionTupleType, Functions>;
 
    //! Implements metafunction with specializations, to dispatch TypeSwitch
-   template<
-      typename Location, typename R, typename ArgumentType, typename Functions>
+   template<typename R, typename ArgumentTypes, typename Functions>
    struct Executor;
 
    //! Helper for recursive case of metafunction implementing TypeSwitch
    /*! Mutually recursive (in compile time) with template Executor. */
-   template<typename Location, typename R, typename ArgumentType>
-   struct Combiner {
+   /*!
+    @tparam ArgumentTypes nonempty; more derived types later
+    */
+   template<typename R, typename ArgumentTypes> struct Combiner {
+      static_assert(!Null_v<ArgumentTypes>);
+      using ArgumentType = Head_t<ArgumentTypes>;
       using QualifiedTrackType = std::conditional_t<
          std::is_const_v<ArgumentType>, const Track, Track>;
 
@@ -502,7 +509,7 @@ private:
       template<typename Fs> struct Transparent {
          using Functions = FunctionTuple<Fs>;
          //! The template specialization to recur with
-         using Next = Executor<Location, R, ArgumentType, Tail_t<Fs>>;
+         using Next = Executor<R, ArgumentTypes, Tail_t<Fs>>;
 
          //! Constant used in a compile-time check
          enum : unsigned { SetUsed = Next::SetUsed << 1 };
@@ -557,7 +564,7 @@ private:
          template<typename Fs> struct Wrapper {
             using Functions = FunctionTuple<Fs>;
             //! The template specialization to recur with
-            using Next = Executor<Location, R, ArgumentType, Tail_t<Fs>>;
+            using Next = Executor<R, ArgumentTypes, Tail_t<Fs>>;
             //! Constant used in a compile-time check
             enum : unsigned { SetUsed = (Next::SetUsed << 1) | 1u };
 
@@ -617,30 +624,29 @@ private:
          static auto test() -> decltype(test<Functions>(
             (std::integral_constant<bool, Compatible>*)nullptr));
       };
-
-      template<typename List> using Combine = Apply_t<Combine_, List>;
+      using type = Apply_t<Combine_, TypeList::Reverse_t<ArgumentTypes>>;
    };
 
    //! Primary template
    //! Synthesize a function appropriate for ArgumentType
    /*! Mutually recursive (in compile time) with template Combiner. */
-   template<
-      typename Location, typename R, typename ArgumentType, typename Functions>
+   /*!
+    @tparam ArgumentTypes nonempty; more derived types later
+    */
+   template<typename R, typename ArgumentTypes, typename Functions>
    struct Executor
-   : decltype(Combiner<Location, R, ArgumentType>::template Combine<
-      // More derived classes earlier
-      TypeList::Reverse_t<typename
-         TypeEnumerator::CollectTypes<TrackTypeTag, Location>::type>
-   >::template test<Functions>())
+      : decltype(Combiner<R, ArgumentTypes>::type::template test<Functions>())
    {
-      using NominalType = ArgumentType;
+      static_assert(!Null_v<ArgumentTypes>);
+      using ArgumentType = Head_t<ArgumentTypes>;
    };
 
    //! Partial specialization
    //! Base case of metafunction implementing Track::TypeSwitch
-   template<typename Location, typename R, typename ArgumentType>
-   struct Executor<Location, R, ArgumentType, Nil> {
-      using NominalType = ArgumentType;
+   template<typename R, typename ArgumentTypes>
+   struct Executor<R, ArgumentTypes, Nil> {
+      static_assert(!Null_v<ArgumentTypes>);
+      using ArgumentType = Head_t<ArgumentTypes>;
       //! Constant used in a compile-time check
       enum : unsigned { SetUsed = 0 };
       //! No functions matched, so do nothing
@@ -672,7 +678,7 @@ public:
       template<typename Executor, typename Recur> struct Op {
          template<typename Object, typename Functions>
          R operator ()(Object &object, const Functions &functions) const {
-            const auto &info = Executor::NominalType::ClassTypeInfo();
+            const auto &info = Executor::ArgumentType::ClassTypeInfo();
             // Dynamic type test of object
             if (info.IsBaseOf(object.GetTypeInfo()))
                // Dispatch to an Executor that knows which of functions applies
@@ -700,31 +706,31 @@ public:
    }
 
    template<
-      typename Location,
       typename R,
-      typename ...Functions,
-      typename Object,
-      class TupleLike,
-      typename ...ObjectTypes
+      typename ObjectTypes,
+      typename Functions
    >
-   static R DoTypeSwitch(Object &object,
-      List<ObjectTypes...>, const TupleLike &functions)
-   {
+   struct TypeSwitcher {
+      static_assert(!Null_v<ObjectTypes>);
+      using Object = Head_t<ObjectTypes>;
       // Generate Executor classes, for each of ObjectTypes,
       // each zero-sized and with an operator () that calls the correct
       // one of functions, assuming the object is of the corresponding type
-      using Executors =
-         List<Executor<Location, R, ObjectTypes, List<Functions...>>...>;
+      template<typename Tail> using Executor_ = Executor<R, Tail, Functions>;
+      using Executors = MapList_t<Fn<Executor_>, ObjectTypes>;
 
       // Compile time reachability check of the given functions
-      enum { All = sizeof...(Functions) };
+      enum { All = Length_v<Functions> };
       static_assert((1u << All) - 1u == Apply_t<UsedCases, Executors>{}(),
          "Uncallable case in TypeSwitch");
 
-      // Do dynamic dispatch to one of the Executors
-      return Invoker<R, Executors>{}(
-         object, MakeFunctionTuple(std::make_index_sequence<All>{}, functions));
-   }
+      template<typename TupleLike> R operator ()(
+         Object &object, const TupleLike &functions) const {
+         // Do dynamic dispatch to one of the Executors
+         return Invoker<R, Executors>{}(object,
+            MakeFunctionTuple(std::make_index_sequence<All>{}, functions));
+      }
+   };
 
    /*!
     A variadic function taking any number of function objects, each taking
@@ -757,8 +763,8 @@ public:
       using TrackTypes =
          typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Here, R, Functions...>(
-         *this, TrackTypes{}, std::tuple{ functions... });
+      return TypeSwitcher<R, TrackTypes, List<Functions...>>{}
+         (*this, std::tuple{ functions... });
    }
 
    /*! @copydoc Track::TypeSwitch */
@@ -777,8 +783,8 @@ public:
       using TrackTypes = Map_t<Fn<std::add_const_t>,
          typename TypeEnumerator::CollectTypes<TrackTypeTag, Here>::type>;
       // Generate a function that dispatches dynamically on track type
-      return DoTypeSwitch<Here, R, Functions...>(
-         *this, TrackTypes{}, std::tuple{ functions...});
+      return TypeSwitcher<R, TrackTypes, List<Functions...>>{}
+         (*this, std::tuple{ functions... });
    }
 
    // XMLTagHandler callback methods -- NEW virtual for writing
