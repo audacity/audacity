@@ -1,4 +1,4 @@
-[![Audacity](https://forum.audacityteam.org/styles/prosilver/theme/images/Audacity-logo_75px_trans_forum.png)](https://www.audacityteam.org) 
+[![Audacity](https://forum.audacityteam.org/uploads/default/original/1X/7c7a29ccbb7674ad02ad303287ce585b2613c239.png)](https://www.audacityteam.org) 
 =========================
 
 [**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux and other operating systems. 
