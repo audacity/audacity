@@ -482,8 +482,7 @@ private:
       typename ::TypeList::MapList_t<Metafunction, TypeList>;
    template<template<typename Type, typename Accumulator> class Op,
       typename TypeList, typename Initial>
-   using LeftFold_t =
-      typename ::TypeList::LeftFold<Op, TypeList, Initial>::type;
+   using LeftFold_t = typename ::TypeList::LeftFold_t<Op, TypeList, Initial>;
 
    template<typename... Functions> using FunctionTupleType =
       std::tuple<const Functions &...>;
@@ -521,23 +520,15 @@ private:
          }
       };
 
-      //! Metafunction with specializations, to choose among implementations of
-      //! operator ()
-      template<typename...> struct Combine_ {};
-
-      //! Base case, no more base classes of ArgumentType
       /*! Computes a type as the return type of unevaluated member test() */
-      template<> struct Combine_<> {
+      struct CombineBase {
          //! No BaseClass of ArgumentType is acceptable to the first Function.
          template<typename Functions>
          static auto test() -> Transparent<Functions>;
       };
 
-      //! Recursive case, tries to match function with one base class of
-      //! ArgumentType
       /*! Computes a type as the return type of unevaluated member test() */
-      template<typename BaseClass, typename ...BaseClasses>
-      struct Combine_<BaseClass, BaseClasses...> {
+      template<typename BaseClass, typename NextBase> struct CombineOp {
          using QualifiedBaseClass = std::conditional_t<
             std::is_const_v<ArgumentType>, const BaseClass, BaseClass>;
          //! Whether upcast of ArgumentType* to first BaseClass* works
@@ -581,16 +572,13 @@ private:
             }
          };
 
-         //! Recur to this type to try the next base class
-         using Retry = Combine_<BaseClasses...>;
-
          //! Catch-all overload of unevaluated function
          /*! If ArgumentType is not compatible with BaseClass, or if
           Function does not accept QualifiedBaseClass*, try other BaseClasses.
           */
          template<typename Functions>
          static auto test(const void *)
-            -> decltype(Retry::template test<Functions>());
+            -> decltype(NextBase::template test<Functions>());
 
          //! overload when upcast of ArgumentType* works, with sfinae'd return
          //! type
@@ -624,7 +612,7 @@ private:
          static auto test() -> decltype(test<Functions>(
             (std::integral_constant<bool, Compatible>*)nullptr));
       };
-      using type = Apply_t<Combine_, TypeList::Reverse_t<ArgumentTypes>>;
+      using type = LeftFold_t<CombineOp, ArgumentTypes, CombineBase>;
    };
 
    //! Primary template
