@@ -20,6 +20,7 @@
 #include <functional>
 #include <wx/longlong.h>
 
+#include "Callable.h"
 #include "ClientData.h"
 #include "Observer.h"
 // TrackAttachment needs to be a complete type for the Windows build, though
@@ -501,8 +502,6 @@ private:
    template<typename R, typename ArgumentTypes> struct Combiner {
       static_assert(!Null_v<ArgumentTypes>);
       using ArgumentType = Head_t<ArgumentTypes>;
-      using QualifiedTrackType = std::conditional_t<
-         std::is_const_v<ArgumentType>, const Track, Track>;
 
       //! Recur with the next Function
       template<typename Fs> struct Transparent {
@@ -515,7 +514,7 @@ private:
 
          //! Ignore the first, inapplicable function and try others.
          R operator ()(
-            QualifiedTrackType *pObject, const Functions &functions) const {
+            ArgumentType *pObject, const Functions &functions) const {
             return Next{}(pObject, Tuple::ForwardNext(functions));
          }
       };
@@ -544,8 +543,8 @@ private:
 
             //! Ignore the remaining functions and call the first only.
             R operator ()(
-               QualifiedTrackType *pObject, const Functions &functions) const {
-               return std::get<0>(functions)(static_cast<BaseClass *>(pObject));
+               BaseClass *pObject, const Functions &functions) const {
+               return std::get<0>(functions)(pObject);
             }
          };
 
@@ -561,13 +560,12 @@ private:
             //! Call the first function, which may request dispatch to the
             //! further functions
             R operator ()(
-               QualifiedTrackType *pObject, const Functions &functions) const {
+               BaseClass *pObject, const Functions &functions) const {
                // Construct a std::function
                NextFunction<R> next{
                   [&]{ return Next{}(pObject, Tuple::ForwardNext(functions)); }
                };
-               return std::get<0>(functions)(
-                  static_cast<BaseClass *>(pObject), next);
+               return std::get<0>(functions)(pObject, next);
             }
          };
 
@@ -625,7 +623,6 @@ private:
       : decltype(Combiner<R, ArgumentTypes>::type::template test<Functions>())
    {
       static_assert(!Null_v<ArgumentTypes>);
-      using ArgumentType = Head_t<ArgumentTypes>;
    };
 
    //! Partial specialization
@@ -637,7 +634,7 @@ private:
       //! Constant used in a compile-time check
       enum : unsigned { SetUsed = 0 };
       //! No functions matched, so do nothing
-      R operator ()(...) const {
+      R operator ()(ArgumentType *, const std::tuple<> &) const {
          if constexpr (std::is_void_v<R>)
             return;
          else
@@ -648,7 +645,7 @@ private:
 public:
 
    // Executors for more derived classes are later in the given type list
-   template<typename R, typename Executors> struct Invoker {
+   template<typename R, typename Exec, typename ObjectTypes> struct Invoker {
    private:
       struct Base {
          template<typename Object, typename Functions>
@@ -662,14 +659,13 @@ public:
                return R{};
          }
       };
-      template<typename Executor, typename Recur> struct Op {
+      template<typename ObjectType, typename Recur> struct Op {
          template<typename Object, typename Functions>
          R operator ()(Object &object, const Functions &functions) const {
             // Dynamic type test of object
-            if (const auto pObject =
-                dynamic_cast<typename Executor::ArgumentType*>(&object))
+            if (const auto pObject = dynamic_cast<ObjectType*>(&object))
                // Dispatch to an Executor that knows which of functions applies
-               return Executor{}(pObject, functions);
+               return Exec{}(pObject, functions);
             else
                // Recur, with fewer candidate Executors and all of functions
                return Recur{}(object, functions);
@@ -678,7 +674,7 @@ public:
    public:
       template<typename Object, typename Functions>
       R operator ()(Object &object, const Functions &functions) const {
-         const auto fn = LeftFold_t<Op, Executors, Base>{};
+         const auto fn = LeftFold_t<Op, ObjectTypes, Base>{};
          return fn(object, functions);
       }
    };
@@ -711,10 +707,11 @@ public:
       static_assert((1u << All) - 1u == Apply_t<UsedCases, Executors>{}(),
          "Uncallable case in TypeSwitch");
 
+      using Exec = Apply_t<Callable::OverloadSet, Executors>;
       template<typename TupleLike> R operator ()(
          Object &object, const TupleLike &functions) const {
          // Do dynamic dispatch to one of the Executors
-         return Invoker<R, Executors>{}(object,
+         return Invoker<R, Exec, ObjectTypes>{}(object,
             MakeFunctionTuple(std::make_index_sequence<All>{}, functions));
       }
    };
