@@ -276,9 +276,26 @@ template<typename TypeList> constexpr bool TypeCheck_v =
  @tparam Types a non-empty TypeList; the first is polymorphic and a proper base
     of all other types; no type is a subclass of any type left of it;
     and either all are const-qualified, or none are
- @tparam Functions... callable types deduced from argument
+ @tparam TupleLike deduced from argument
  @param object determines the function to call by its run-time type
  @param functions typically lambdas; see above
+ */
+template<
+   typename R = void,
+   typename Types,
+   class TupleLike
+>
+auto Dispatch(Head_t<Types> &object, const TupleLike &functions)
+   -> std::enable_if_t<detail::TypeCheck_v<Types>, R>
+{
+   // Generate a function that dispatches dynamically on track type
+   return detail::TypeSwitcher<R, Types, Bind_t<TupleLike>>{}(
+      object, functions);
+}
+
+//! @copydoc Dispatch
+/*!
+ Variadic overload of Dispatch
  */
 template<
    typename R = void,
@@ -286,11 +303,8 @@ template<
    typename ...Functions
 >
 auto VDispatch(Head_t<Types> &object, const Functions &...functions)
-   -> std::enable_if_t<detail::TypeCheck_v<Types>, R>
 {
-   // Generate a function that dispatches dynamically on track type
-   return detail::TypeSwitcher<R, Types, List<Functions...>>{}(
-      object, std::tuple{ functions... });
+   return Dispatch<R, Types>(object, std::forward_as_tuple(functions...));
 }
 
 }
