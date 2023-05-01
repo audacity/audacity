@@ -5,6 +5,8 @@ set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml)
 
 set(SOURCES
    main.cpp
+   ApplicationHandler.cpp
+   ApplicationHandler.h
    EditToolbarHandler.cpp
    EditToolbarHandler.h
    ToolsToolbarHandler.cpp
@@ -24,7 +26,17 @@ qt_add_resources(QT_RESOURCES
 
 add_subdirectory(uicomponents)
 
+set(QT_TRANSLATION_SOURCES
+   translations/de.ts
+)
+
 qt_add_executable(${QAUDACITY} ${SOURCES} ${QT_RESOURCES} MANUAL_FINALIZATION)
+
+qt_add_translations(
+   ${QAUDACITY}
+   RESOURCE_PREFIX "/translations"
+   TS_FILES ${QT_TRANSLATION_SOURCES}
+)
 
 set(QML_SOURCES
    qml/main.qml
