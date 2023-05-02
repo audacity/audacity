@@ -2650,7 +2650,7 @@ void VSTEffectEditor::BuildPlain(EffectSettingsAccess &access, EffectType effect
             mDuration = safenew
                NumericTextCtrl(FormatterContext::SampleRateContext(projectRate),
                   scroller, ID_Duration,
-                  NumericConverterType_TIME,
+                  NumericConverterType_TIME(),
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
                   NumericTextCtrl::Options{}

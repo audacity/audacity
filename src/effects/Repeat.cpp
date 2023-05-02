@@ -234,7 +234,7 @@ void EffectRepeat::DisplayNewTime()
    mRepeatCount->GetValue().ToLong(&l);
 
    NumericConverter nc(FormatterContext::SampleRateContext(mProjectRate),
-                       NumericConverterType_TIME,
+                       NumericConverterType_TIME(),
                        GetSelectionFormat(),
                        mT1 - mT0);
 

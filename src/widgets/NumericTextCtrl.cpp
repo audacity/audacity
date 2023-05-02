@@ -607,11 +607,11 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 
    int eventType = 0;
 
-   if (mType == NumericConverterType_TIME)
+   if (mType == NumericConverterType_TIME())
       eventType = EVT_TIMETEXTCTRL_UPDATED;
-   else if (mType == NumericConverterType_FREQUENCY)
+   else if (mType == NumericConverterType_FREQUENCY())
       eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
-   else if (mType == NumericConverterType_BANDWIDTH)
+   else if (mType == NumericConverterType_BANDWIDTH())
       eventType = EVT_BANDWIDTHTEXTCTRL_UPDATED;
    else
    {

@@ -2964,7 +2964,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   NumericTextCtrl *time = safenew
                      NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                                      S.GetParent(), (ID_Time + i),
-                                     NumericConverterType_TIME,
+                                     NumericConverterType_TIME(),
                                      GetSelectionFormat(),
                                      ctrl.val,
                                      options);

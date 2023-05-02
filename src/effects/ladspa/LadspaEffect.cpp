@@ -1292,7 +1292,7 @@ void LadspaEffect::Editor::PopulateUI(ShuttleGui &S)
             mDuration = safenew
                NumericTextCtrl(FormatterContext::SampleRateContext(mSampleRate),
                   w, ID_Duration,
-                  NumericConverterType_TIME,
+                  NumericConverterType_TIME(),
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
                   NumericTextCtrl::Options{}

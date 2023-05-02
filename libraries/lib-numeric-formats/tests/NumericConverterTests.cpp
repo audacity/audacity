@@ -28,7 +28,7 @@ TEST_CASE("ParsedNumericConverterFormatter", "")
    auto context = FormatterContext::SampleRateContext(44100.0);
    
    auto hhmmssFormatter = CreateParsedNumericConverterFormatter(
-      context, NumericConverterType_TIME, Verbatim("0100 h 060 m 060 s"));
+      context, NumericConverterType_TIME(), Verbatim("0100 h 060 m 060 s"));
 
    REQUIRE(
       hhmmssFormatter->ValueToString(0.0, false).valueString ==
