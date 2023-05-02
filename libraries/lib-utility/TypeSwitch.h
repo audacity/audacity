@@ -31,7 +31,7 @@ template<typename Functions> using FunctionTuple =
  @tparam ArgumentTypes nonempty; more derived types later
  @tparam Funs those applicable to more derived types are earlier
  */
-template<typename R, typename ArgumentTypes, typename Funs>
+template<typename R, typename ArgumentTypes, typename Funs, typename... Args>
 struct Executor {
    static_assert(!Null_v<ArgumentTypes>);
    using ArgumentType = Head_t<ArgumentTypes>;
@@ -43,7 +43,7 @@ struct Executor {
          //! Constant used in a compile-time check
          enum : unsigned { SetUsed = 0 };
          //! No functions matched, so do nothing
-         R operator ()(ArgumentType &, const Functions &) const {
+         R operator ()(ArgumentType &, const Functions &, Args&&...) const {
             if constexpr (std::is_void_v<R>)
                return;
             else
@@ -64,8 +64,10 @@ struct Executor {
 
             //! Ignore the first, inapplicable function and try others.
             R operator ()(
-               ArgumentType &object, const Functions &functions) const {
-               return Next{}(object, Tuple::ForwardNext(functions));
+               ArgumentType &object, const Functions &functions, Args&&... args)
+            const {
+               return Next{}(object, Tuple::ForwardNext(functions),
+                  std::forward<Args>(args)...);
             }
          };
       };
@@ -84,8 +86,10 @@ struct Executor {
 
             //! Ignore the remaining functions and call the first only.
             R operator ()(
-               BaseClass &object, const Functions &functions) const {
-               return std::get<0>(functions)(object);
+               BaseClass &object, const Functions &functions, Args&&... args)
+            const {
+               return std::get<0>(functions)(
+                  object, std::forward<Args>(args)...);
             }
          };
 
@@ -99,13 +103,16 @@ struct Executor {
             //! Call the first function, which may request dispatch to the
             //! further functions
             R operator ()(
-               BaseClass &object, const Functions &functions) const {
+               BaseClass &object, const Functions &functions, Args&&... args)
+            const {
                // The first function in the tuple is curried!
                // Its first argument is the call-through and its second
                // is the object
                const auto next = [&](){ return
-                  Next{}(object, Tuple::ForwardNext(functions)); };
-               return std::get<0>(functions)(next)(object);
+                  Next{}(object, Tuple::ForwardNext(functions),
+                     std::forward<Args>(args)...); };
+               return std::get<0>(functions)(next)(
+                  object, std::forward<Args>(args)...);
             }
          };
 
@@ -123,14 +130,14 @@ struct Executor {
          using Case1 = std::conjunction<Compatible, curried, Case1_>;
          struct Case1_ {
             static constexpr bool value = std::is_invocable_v<
-               std::invoke_result_t<F, Dummy &&>, BaseClass&>;
+               std::invoke_result_t<F, Dummy &&>, BaseClass&, Args&&...>;
             using type = Wrapper;
          };
 
          // Case 2: Invocable directly on the object
          struct Case2 : std::conjunction<
             Compatible, std::negation<curried>,
-            std::is_invocable<F, BaseClass&>
+            std::is_invocable<F, BaseClass&, Args&&...>
          > {
             using type = Opaque;
          };
@@ -151,15 +158,19 @@ struct Executor {
  @tparam ArgumentTypes nonempty; more derived types later
  @tparam Functions those applicable to more derived types are earlier
  */
-template<typename R, typename ArgumentTypes, typename Functions>
-using Executor_t = typename Executor<R, ArgumentTypes, Functions>::type;
+template<
+   typename R, typename ArgumentTypes, typename Functions, typename... Args>
+using Executor_t =
+   typename Executor<R, ArgumentTypes, Functions, Args...>::type;
 
 // Executors for more derived classes are later in the given type list
-template<typename R, typename Exec, typename ObjectTypes> struct Invoker {
+template<typename R, typename Exec, typename ObjectTypes>
+struct Invoker {
 private:
    struct Base {
-      template<typename Object, typename Functions>
-      R operator ()(Object &object, const Functions &functions) const {
+      template<typename Object, typename Functions, typename... Args>
+      R operator ()(Object &object, const Functions &functions, Args&&...)
+      const {
          // This should never be reached at run-time, because an Executor
          // generated for (const) Object should have been the catch-all.
          assert(false);
@@ -170,22 +181,24 @@ private:
       }
    };
    template<typename ObjectType, typename Recur> struct Op {
-      template<typename Object, typename Functions>
-      R operator ()(Object &object, const Functions &functions) const {
+      template<typename Object, typename Functions, typename... Args>
+      R operator ()(Object &object, const Functions &functions, Args&&... args)
+      const {
          // Dynamic type test of object
          if (const auto pObject = dynamic_cast<ObjectType*>(&object))
             // Dispatch to an Executor that knows which of functions applies
-            return Exec{}(*pObject, functions);
+            return Exec{}(*pObject, functions, std::forward<Args>(args)...);
          else
             // Recur, with fewer candidate Executors and all of functions
-            return Recur{}(object, functions);
+            return Recur{}(object, functions, std::forward<Args>(args)...);
       }
    };
 public:
-   template<typename Object, typename Functions>
-   R operator ()(Object &object, const Functions &functions) const {
+   template<typename Object, typename Functions, typename... Args>
+   R operator ()(Object &object, const Functions &functions, Args&&... args)
+   const {
       const auto fn = LeftFold_t<Op, ObjectTypes, Base>{};
-      return fn(object, functions);
+      return fn(object, functions, std::forward<Args>(args)...);
    }
 };
 
@@ -201,7 +214,8 @@ template<size_t... Is, typename TupleLike> auto MakeFunctionTuple(
 template<
    typename R,
    typename ObjectTypes,
-   typename Functions
+   typename Functions,
+   typename... Args
 >
 struct TypeSwitcher {
    static_assert(!Null_v<ObjectTypes>);
@@ -209,7 +223,8 @@ struct TypeSwitcher {
    // Generate Executor classes, for each of ObjectTypes,
    // each zero-sized and with an operator () that calls the correct
    // one of functions, assuming the object is of the corresponding type
-   template<typename Tail> using Executor_ = Executor_t<R, Tail, Functions>;
+   template<typename Tail> using Executor_ =
+      Executor_t<R, Tail, Functions, Args...>;
    using Executors = MapList_t<Fn<Executor_>, ObjectTypes>;
 
    // Compile time reachability check of the given functions
@@ -219,10 +234,12 @@ struct TypeSwitcher {
 
    using Exec = Apply_t<Callable::OverloadSet, Executors>;
    template<typename TupleLike> R operator ()(
-      Object &object, const TupleLike &functions) const {
+      Object &object, const TupleLike &functions,
+      Args&&... args) const {
       // Do dynamic dispatch to one of the Executors
       return Invoker<R, Exec, ObjectTypes>{}(object,
-         MakeFunctionTuple(std::make_index_sequence<All>{}, functions));
+         MakeFunctionTuple(std::make_index_sequence<All>{}, functions),
+         std::forward<Args>(args)...);
    }
 };
 
@@ -243,10 +260,11 @@ template<typename TypeList> constexpr bool TypeCheck_v =
 
 /*!
  A variadic function taking any number of function objects, each taking
- - a reference to the first of Types or a subclass of it, or
+ - a reference to the first of Types or a subclass of it, plus extra aruments,
+   or
  - a first, callable next-function argument, and returning a function, which
-   takes a reference to the first of Types or a subclass.  (Typically, a generic
-   lambda returning a lambda.  That is, it's curried.)
+   takes a reference to the first of Types or a subclass, plus extra arguments.
+   (Typically, a generic lambda returning a lambda.  That is, it's curried.)
 
  In the first case, the function object returns R or a type convertible to R.
 
@@ -277,25 +295,28 @@ template<typename TypeList> constexpr bool TypeCheck_v =
     of all other types; no type is a subclass of any type left of it;
     and either all are const-qualified, or none are
  @tparam TupleLike deduced from argument
+ @tparam Args... extra arguments, passed to the functions
  @param object determines the function to call by its run-time type
  @param functions typically lambdas; see above
  */
 template<
    typename R = void,
    typename Types,
-   class TupleLike
+   class TupleLike,
+   typename... Args
 >
-auto Dispatch(Head_t<Types> &object, const TupleLike &functions)
+auto Dispatch(Head_t<Types> &object, const TupleLike &functions,
+   Args&&... args)
    -> std::enable_if_t<detail::TypeCheck_v<Types>, R>
 {
    // Generate a function that dispatches dynamically on track type
-   return detail::TypeSwitcher<R, Types, Bind_t<TupleLike>>{}(
-      object, functions);
+   return detail::TypeSwitcher<R, Types, Bind_t<TupleLike>, Args...>{}(
+      object, functions, std::forward<Args>(args)...);
 }
 
 //! @copydoc Dispatch
 /*!
- Variadic overload of Dispatch
+ Variadic overload of Dispatch; doesn't accept extra arguments
  */
 template<
    typename R = void,
