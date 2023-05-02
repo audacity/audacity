@@ -103,8 +103,6 @@ void MenuManager::UpdatePrefs()
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
 }
 
-MenuVisitor::~MenuVisitor() = default;
-
 std::pair<bool, bool> MenuTable::detail::VisitorBase::ShouldBeginGroup(
    const MenuItemProperties *pProperties)
 {
@@ -204,24 +202,6 @@ bool MenuTable::detail::VisitorBase::ShouldDoSeparator()
    return separate;
 }
 
-void MenuVisitor::DoBeginGroup(const Registry::GroupItemBase &, const Path &)
-{
-}
-
-void MenuVisitor::DoEndGroup(const Registry::GroupItemBase &, const Path &)
-{
-}
-
-void MenuVisitor::DoVisit(const Registry::SingleItem &, const Path &)
-{
-}
-
-void MenuVisitor::DoSeparator()
-{
-}
-
-ProjectMenuVisitor::~ProjectMenuVisitor() = default;
-
 namespace MenuTable {
 
 MenuItem::~MenuItem() {}
@@ -298,90 +278,78 @@ namespace {
 
 using namespace MenuTable;
 
-struct MenuItemVisitor : ProjectMenuVisitor
-{
-   MenuItemVisitor( AudacityProject &proj, CommandManager &man )
-      : ProjectMenuVisitor{ proj }, manager{ man } {}
+struct MenuItemVisitor : Visitor<Traits> {
+   MenuItemVisitor(AudacityProject &proj, CommandManager &man)
+   : Visitor<Traits> { std::tuple{
+      // pre-visit
+      std::tuple {
+         [this](const MenuItem &menu, auto&) {
+            manager.BeginMenu(menu.GetTitle());
+         },
+         [this](const ConditionalGroupItem &conditionalGroup, auto&) {
+            const auto flag = conditionalGroup();
+            if (!flag)
+               manager.BeginOccultCommands();
+            // to avoid repeated call of condition predicate in EndGroup():
+            flags.push_back(flag);
+         },
+         [this](auto &item, auto&) {
+            assert(IsSection(item));
+         }
+      },
 
-   void DoBeginGroup(const GroupItemBase &item, const Path&) override
-   {
-      auto pItem = &item;
-      if (const auto pMenu = dynamic_cast<const MenuItem*>(pItem)) {
-         manager.BeginMenu(pMenu->GetTitle());
-      }
-      else if (const auto pConditionalGroup =
-          dynamic_cast<const ConditionalGroupItem*>(pItem)
-      ) {
-         const auto flag = (*pConditionalGroup)();
-         if (!flag)
-            manager.BeginOccultCommands();
-         // to avoid repeated call of condition predicate in EndGroup():
-         flags.push_back(flag);
-      }
-      else
-         assert(IsSection(item));
-   }
-
-   void DoEndGroup(const GroupItemBase &item, const Path&) override
-   {
-      auto pItem = &item;
-      if (const auto pMenu =
-          dynamic_cast<const MenuItem*>( pItem )) {
-         manager.EndMenu();
-      }
-      else
-      if (const auto pConditionalGroup =
-          dynamic_cast<const ConditionalGroupItem*>( pItem )) {
-         const bool flag = flags.back();
-         if (!flag)
-            manager.EndOccultCommands();
-         flags.pop_back();
-      }
-      else
-         assert(IsSection(item));
-   }
-
-   void DoVisit(const SingleItem &item, const Path&) override
-   {
-      const auto pCurrentMenu = manager.CurrentMenu();
-      if ( !pCurrentMenu ) {
-         // There may have been a mistake in the placement hint that registered
-         // this single item.  It's not within any menu.
-         wxASSERT( false );
-         return;
-      }
-      auto pItem = &item;
-      if (const auto pCommand =
-          dynamic_cast<const CommandItem*>(pItem)) {
-         manager.AddItem(mProject,
-            pCommand->name, pCommand->label_in,
-            pCommand->finder, pCommand->callback,
-            pCommand->flags, pCommand->options
+      // leaf visit
+      [this](const auto &item, const auto&) {
+         const auto pCurrentMenu = manager.CurrentMenu();
+         if (!pCurrentMenu) {
+            // There may have been a mistake in the placement hint that registered
+            // this single item.  It's not within any menu.
+            assert(false);
+         }
+         else TypeSwitch::VDispatch<void, LeafTypes>(item,
+            [&](const CommandItem &command) {
+               manager.AddItem(mProject,
+                  command.name, command.label_in,
+                  command.finder, command.callback,
+                  command.flags, command.options);
+            },
+            [&](const CommandGroupItem &commandList) {
+               manager.AddItemList(commandList.name,
+                  commandList.items.data(), commandList.items.size(),
+                  commandList.finder, commandList.callback,
+                  commandList.flags, commandList.isEffect);
+            },
+            [&](const SpecialItem &special) {
+               special.fn(mProject, *pCurrentMenu);
+            }
          );
-      }
-      else
-      if (const auto pCommandList =
-         dynamic_cast<const CommandGroupItem*>(pItem)) {
-         manager.AddItemList(pCommandList->name,
-            pCommandList->items.data(), pCommandList->items.size(),
-            pCommandList->finder, pCommandList->callback,
-            pCommandList->flags, pCommandList->isEffect);
-      }
-      else
-      if (const auto pSpecial =
-          dynamic_cast<const SpecialItem*>(pItem)) {
-         wxASSERT( pCurrentMenu );
-         pSpecial->fn(mProject, *pCurrentMenu);
-      }
-      else
-         wxASSERT( false );
-   }
+      },
 
-   void DoSeparator() override
-   {
-      manager.AddSeparator();
-   }
+      // post-visit
+      std::tuple {
+         [this](const MenuItem &, const auto&) {
+            manager.EndMenu();
+         },
+         [this](const ConditionalGroupItem &, const auto&) {
+            const bool flag = flags.back();
+            if (!flag)
+               manager.EndOccultCommands();
+            flags.pop_back();
+         },
+         [this](auto &item, auto&) {
+            assert(IsSection(item));
+         }
+      }},
 
+      [this]() {
+         manager.AddSeparator();
+      }
+   }
+   , mProject{ proj }
+   , manager{ man }
+   {}
+
+   AudacityProject &mProject;
    CommandManager &manager;
    std::vector<bool> flags;
 };
@@ -440,7 +408,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    wxASSERT(menubar);
 
    MenuItemVisitor visitor{ project, commandManager };
-   MenuManager::Visit( visitor );
+   MenuManager::Visit(visitor, project);
 
    GetProjectFrame( project ).SetMenuBar(menubar.release());
 
@@ -451,13 +419,14 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #endif
 }
 
-void MenuManager::Visit(ProjectMenuVisitor &visitor)
+void MenuManager::Visit(
+   MenuTable::Visitor<MenuTable::Traits> &visitor, AudacityProject &project)
 {
    static const auto menuTree = MenuTable::Items( MenuPathStart );
 
    wxLogNull nolog;
-   Registry::Visit(visitor, menuTree.get(),
-      &MenuTable::ItemRegistry::Registry(), visitor.mProject);
+   Registry::VisitWithFunctions(visitor, menuTree.get(),
+      &MenuTable::ItemRegistry::Registry(), project);
 }
 
 // TODO: This surely belongs in CommandManager?

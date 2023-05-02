@@ -417,63 +417,54 @@ namespace detail {
       std::vector<bool> needSeparator;
    };
 }
-}
 
-struct AUDACITY_DLL_API MenuVisitor
-   : Registry::Visitor
-   , MenuTable::detail::VisitorBase
-{
-   ~MenuVisitor() override;
-
-   // final overrides
-   void BeginGroup(
-      const Registry::GroupItemBase &item, const Path &path) final
+   //! Wraps the behavior of another VisitorFuntions<MenuTraits>, and also
+   //! needs a callback for what to do at separator lines
+   template<typename MenuTraits> struct Visitor
+      : VisitorFunctions<MenuTraits>
+      , detail::VisitorBase
    {
-      using namespace MenuTable;
-      const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
-      auto [begin, separate] = ShouldBeginGroup(pProperties);
-      if (separate)
-         DoSeparator();
-      if (begin)
-         DoBeginGroup(item, path);
-      AfterBeginGroup(pProperties);
-   }
+      Visitor(VisitorFunctions<MenuTraits> functions,
+         std::function<void()> doSeparator
+      )  : VisitorFunctions<MenuTraits>{ std::tuple{
 
-   void Visit(const Registry::SingleItem &item, const Path &path) final
-   {
-      if (ShouldDoSeparator())
-         DoSeparator();
-      DoVisit(item, path);
-   }
+      [this](const GroupItem<MenuTraits> &item, const Path &path)
+      {
+         using namespace MenuTable;
+         const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
+         auto [begin, separate] = ShouldBeginGroup(pProperties);
+         if (separate)
+            mDoSeparator();
+         if (begin)
+            mWrapped.BeginGroup(item, path);
+         AfterBeginGroup(pProperties);
+      },
 
-   void EndGroup(
-      const Registry::GroupItemBase &item, const Path &path) final
-   {
-      using namespace MenuTable;
-      const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
-      if (ShouldEndGroup(pProperties))
-         DoEndGroup(item, path);
-   }
+      [this](const Registry::SingleItem &item, const Path &path)
+      {
+         if (ShouldDoSeparator())
+            mDoSeparator();
+         mWrapped.Visit(item, path);
+      },
 
-   // added virtuals
-   //! Groups of type MenuItems are excluded from this callback
-   virtual void DoBeginGroup(
-      const Registry::GroupItemBase &item, const Path &path);
-   //! Groups of type MenuItems are excluded from this callback
-   virtual void DoEndGroup(
-      const Registry::GroupItemBase &item, const Path &path);
-   virtual void DoVisit(const Registry::SingleItem &item, const Path &path);
-   virtual void DoSeparator();
-};
+      [this](const GroupItem<MenuTraits> &item, const Path &path)
+      {
+         using namespace MenuTable;
+         const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
+         if (ShouldEndGroup(pProperties))
+            mWrapped.EndGroup(item, path);
+      }
 
-struct ProjectMenuVisitor : MenuVisitor
-{
-   explicit ProjectMenuVisitor(AudacityProject &p) : mProject{ p } {}
-   ~ProjectMenuVisitor() override;
-   AudacityProject &mProject;
-};
+      }}
+      , mWrapped{ move(functions) }
+      , mDoSeparator{ move(doSeparator) }
+      {}
 
-namespace MenuTable {
+   private:
+      const VisitorFunctions<MenuTraits> mWrapped;
+      const std::function<void()> mDoSeparator;
+   };
+
    struct CommandItem;
    struct CommandGroupItem;
    struct ConditionalGroupItem;

@@ -110,10 +110,6 @@ public:
    virtual void InitUserData(void *pUserData) = 0;
 };
 
-struct PopupMenuVisitor : public MenuVisitor {
-   ~PopupMenuVisitor() override;
-};
-
 // Opaque structure built by PopupMenuTable::BuildMenu
 class AUDACITY_DLL_API PopupMenu
 {

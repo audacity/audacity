@@ -13,61 +13,6 @@
 namespace
 {
 const auto PathStart = L"NumericConverterRegistry";
-
-struct RegistryVisitor : public Registry::Visitor
-{
-   RegistryVisitor(
-      NumericConverterRegistry::Visitor _visitor,
-      const FormatterContext& context, NumericConverterType requestedType)
-       : visitor { std::move(_visitor) }
-       , mContext { context }
-       , requestedType { std::move(requestedType) }
-   {
-   }
-
-   void BeginGroup(const Registry::GroupItemBase& item, const Path&) override
-   {
-      auto concreteGroup =
-         dynamic_cast<const NumericConverterRegistryGroup*>(&item);
-
-      mInMatchingGroup =
-         concreteGroup != nullptr && concreteGroup->GetType() == requestedType;
-   }
-
-   void EndGroup(const Registry::GroupItemBase&, const Path&) override
-   {
-      mInMatchingGroup = false;
-   }
-
-   void Visit(const Registry::SingleItem& item, const Path&) override
-   {
-      if (!mInMatchingGroup)
-         return;
-
-      auto concreteItem =
-         dynamic_cast<const NumericConverterRegistryItem*>(&item);
-
-      if (concreteItem == nullptr)
-      {
-         // This is unexpected so fail the debug build early
-         assert(false);
-         return;
-      }
-
-      // Skip the items that are not acceptable in this context
-      if (!concreteItem->factory->IsAcceptableInContext(mContext))
-         return;
-
-      visitor(*concreteItem);
-   }
-
-   NumericConverterRegistry::Visitor visitor;
-   const NumericConverterType requestedType;
-   // Visitor life time is always shorter than the Visit has,
-   // which guarantees that FormatterContext outlives the visitor
-   const FormatterContext& mContext;
-   bool mInMatchingGroup { false };
-};
 }
 
  NumericConverterRegistryItem::NumericConverterRegistryItem(
@@ -77,7 +22,7 @@ struct RegistryVisitor : public Registry::Visitor
     , symbol { _symbol }
     , factory { std::move(_factory) }
 {
- }
+}
 
  NumericConverterRegistryItem::NumericConverterRegistryItem(
     const Identifier& internalName, const NumericFormatSymbol& _symbol,
@@ -111,10 +56,22 @@ void NumericConverterRegistry::Visit(
       { { L"", L"parsedTime,beats,parsedFrequency,parsedBandwith" } },
    };
 
-   RegistryVisitor registryVisitor { std::move(visitor), context, type };
-
    Registry::GroupItem<NumericConverterRegistryTraits> top { PathStart };
-   Registry::Visit(registryVisitor, &top, &Registry());
+   bool inMatchingGroup = false;
+   Registry::Visit(std::tuple{
+      [&](const NumericConverterRegistryGroup &group, auto&) {
+         inMatchingGroup = group.GetType() == type; },
+      [&](const NumericConverterRegistryItem &item, auto&) {
+         if (!inMatchingGroup)
+            return;
+         // Skip the items that are not acceptable in this context
+         if (!item.factory->IsAcceptableInContext(context))
+            return;
+         visitor(item);
+      },
+      [&](const NumericConverterRegistryGroup &, auto&) {
+         inMatchingGroup = false; }
+   }, &top, &Registry());
 }
 
 const NumericConverterRegistryItem* NumericConverterRegistry::Find(
