@@ -10,7 +10,26 @@
  **********************************************************************/
 #include "NumericConverterType.h"
 
-const NumericConverterType NumericConverterType_TIME { L"time" };
-const NumericConverterType NumericConverterType_DURATION { L"duration" };
-const NumericConverterType NumericConverterType_FREQUENCY { L"frequency" };
-const NumericConverterType NumericConverterType_BANDWIDTH { L"bandwidth" };
+const NumericConverterType& NumericConverterType_TIME()
+{
+   static NumericConverterType value { L"time" };
+   return value;
+}
+
+const NumericConverterType& NumericConverterType_DURATION()
+{
+   static NumericConverterType value { L"duration" };
+   return value;
+}
+
+const NumericConverterType& NumericConverterType_FREQUENCY()
+{
+   static NumericConverterType value { L"frequency" };
+   return value;
+}
+
+const NumericConverterType& NumericConverterType_BANDWIDTH()
+{
+   static NumericConverterType value { L"bandwidth" };
+   return value;
+}

@@ -102,10 +102,10 @@ std::pair<const TranslatableString&, const TranslatableString&> ModeNames[] = {
 };
 
 const NumericConverterType TimeConverterType[][2] {
-   { NumericConverterType_TIME, NumericConverterType_TIME },
-   { NumericConverterType_TIME, NumericConverterType_DURATION },
-   { NumericConverterType_DURATION, NumericConverterType_TIME },
-   { NumericConverterType_DURATION, NumericConverterType_TIME },
+   { NumericConverterType_TIME(), NumericConverterType_TIME() },
+   { NumericConverterType_TIME(), NumericConverterType_DURATION() },
+   { NumericConverterType_DURATION(), NumericConverterType_TIME() },
+   { NumericConverterType_DURATION(), NumericConverterType_TIME() },
 };
 }
 
@@ -218,7 +218,7 @@ void SelectionBar::AddTime(
    auto formatName = mListener ? mListener->AS_GetSelectionFormat()
       : NumericFormatSymbol{};
    auto pCtrl = safenew NumericTextCtrl(FormatterContext::ProjectContext(mProject),
-      this, id, NumericConverterType_TIME, formatName, 0.0);
+      this, id, NumericConverterType_TIME(), formatName, 0.0);
 
    pCtrl->Bind(
       wxEVT_TEXT,
@@ -321,7 +321,7 @@ void SelectionBar::UpdatePrefs()
    wxCommandEvent e;
    e.SetString(NumericConverterFormats::Lookup(
                FormatterContext::ProjectContext(mProject),
-               NumericConverterType_TIME,
+               NumericConverterType_TIME(),
                gPrefs->Read(wxT("/SelectionFormat"), wxT(""))).Internal());
    OnUpdate(e);
 
@@ -458,7 +458,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
          -1;
 
    auto format = NumericConverterFormats::Lookup(
-      FormatterContext::ProjectContext(mProject), NumericConverterType_TIME,
+      FormatterContext::ProjectContext(mProject), NumericConverterType_TIME(),
       evt.GetString());
 
    // Save format name before recreating the controls so they resize properly
@@ -616,7 +616,7 @@ void SelectionBar::UpdateTimeControlsFormat(const NumericFormatSymbol& format)
          TimeConverterType[static_cast<size_t>(mSelectionMode)][controlIndex];
 
       ctrl->SetTypeAndFormatName(
-         type, type != NumericConverterType_DURATION ?
+         type, type != NumericConverterType_DURATION() ?
                   format :
                   NumericConverterFormats::GetBestDurationFormat(format));
    }

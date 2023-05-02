@@ -253,7 +253,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
          wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverterFormats::Lookup(
          FormatterContext::SampleRateContext(mProjectRate),
-         NumericConverterType_TIME, formatId );
+         NumericConverterType_TIME(), formatId);
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(),
@@ -333,7 +333,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
             mpFromLengthCtrl = safenew
                   NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                                  S.GetParent(), wxID_ANY,
-                                 NumericConverterType_TIME,
+                                 NumericConverterType_TIME(),
                                  mFormat,
                                  mFromLength,
                                  NumericTextCtrl::Options{}
@@ -351,7 +351,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
             mpToLengthCtrl = safenew
                   NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                                  S.GetParent(), ID_ToLength,
-                                 NumericConverterType_TIME,
+                                 NumericConverterType_TIME(),
                                  mFormat,
                                  mToLength);
 
@@ -680,7 +680,7 @@ void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 {
    mFormat = NumericConverterFormats::Lookup(
       FormatterContext::SampleRateContext(mProjectRate),
-      NumericConverterType_TIME, evt.GetString() );
+      NumericConverterType_TIME(), evt.GetString());
 
    mpFromLengthCtrl->SetFormatName(mFormat);
    // Update From/To Length controls (precision has changed).

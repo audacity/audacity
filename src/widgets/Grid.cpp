@@ -145,7 +145,7 @@ void NumericEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handle
       mOld,
       NumericTextCtrl::Options{}
          .AutoPos(true)
-         .InvalidValue(mType == NumericConverterType_FREQUENCY,
+         .InvalidValue(mType == NumericConverterType_FREQUENCY(),
                        SelectedRegion::UndefinedFrequency)
    );
    m_control = control;
@@ -478,15 +478,13 @@ Grid::Grid(
    // RegisterDataType takes ownership of renderer and editor
 
    RegisterDataType(GRID_VALUE_TIME,
-                    safenew NumericRenderer{ mContext, NumericConverterType_TIME },
-                    safenew NumericEditor
-                      { mContext, NumericConverterType_TIME,
+                    safenew NumericRenderer{ mContext, NumericConverterType_TIME() },
+                    safenew NumericEditor { mContext, NumericConverterType_TIME(),
                         NumericConverterFormats::SecondsFormat() });
 
    RegisterDataType(GRID_VALUE_FREQUENCY,
-                    safenew NumericRenderer{ mContext, NumericConverterType_FREQUENCY },
-                    safenew NumericEditor
-                    { mContext, NumericConverterType_FREQUENCY,
+                    safenew NumericRenderer{ mContext, NumericConverterType_FREQUENCY() },
+                    safenew NumericEditor { mContext, NumericConverterType_FREQUENCY(),
                       NumericConverterFormats::HertzFormat() });
 
    RegisterDataType(GRID_VALUE_CHOICE,
@@ -962,7 +960,7 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
       if (c && dt && df && ( c == dt || c == df)) {
          double value;
          v.ToDouble(&value);
-         NumericConverter converter(mContext, c == dt ? NumericConverterType_TIME : NumericConverterType_FREQUENCY,
+         NumericConverter converter(mContext, c == dt ? NumericConverterType_TIME() : NumericConverterType_FREQUENCY(),
                         c->GetFormat(),
                         value);
 
