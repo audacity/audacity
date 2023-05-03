@@ -12,6 +12,7 @@
 
 #include "Tuple.h"
 #include "TypeList.h"
+#include <array>
 #include <memory>
 
 using namespace Tuple;
@@ -27,8 +28,16 @@ using ExampleList = List<unsigned char, int, double, unique_ptr<X>>;
 TEST_CASE("Tuple")
 {
    static_assert(is_same_v<Example, Apply_t<tuple, ExampleList>>);
+
    static_assert(is_tuple_v<Example>);
+   static_assert(!is_tuple_v<std::pair<int, double>>);
+   static_assert(!is_tuple_v<std::array<int, 2>>);
    static_assert(!is_tuple_v<ExampleList>);
+
+   static_assert(is_tuple_like_v<Example>);
+   static_assert(is_tuple_like_v<std::pair<int, double>>);
+   static_assert(is_tuple_like_v<std::array<int, 2>>);
+   static_assert(!is_tuple_like_v<ExampleList>);
 
    static_assert(Empty_v<tuple<>>);
    REQUIRE(Empty(tuple{}));
