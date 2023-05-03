@@ -32,10 +32,9 @@ class PopupMenuHandler;
 struct PopupMenuSection;
 class PopupMenuTable;
 struct PopupMenuTableEntry;
-struct PopupMenuVisitor;
 struct PopupSubMenu;
 struct PopupMenuTableTraits : Registry::DefaultTraits {
-   using ComputedItemContextType = PopupMenuVisitor;
+   using ComputedItemContextType = PopupMenuTable;
    using LeafTypes = List<PopupMenuTableEntry>;
    using NodeTypes = List<PopupMenuSection, PopupSubMenu>;
 };
@@ -107,9 +106,7 @@ public:
 };
 
 struct PopupMenuVisitor : public MenuVisitor {
-   explicit PopupMenuVisitor( PopupMenuTable &table ) : mTable{ table } {}
    ~PopupMenuVisitor() override;
-   PopupMenuTable &mTable;
 };
 
 // Opaque structure built by PopupMenuTable::BuildMenu
@@ -171,9 +168,8 @@ public:
    template<typename Table, typename Factory>
    static auto Adapt(const Factory &factory)
    {
-      return [factory](PopupMenuVisitor &visitor){
-         auto &table = static_cast<Table&>(visitor.mTable);
-         return std::shared_ptr{ factory(table) };
+      return [factory](PopupMenuTable &table){
+         return std::shared_ptr{ factory(static_cast<Table&>(table)) };
       };
    }
 

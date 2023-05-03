@@ -51,7 +51,7 @@ class PopupMenuBuilder : public PopupMenuVisitor {
 public:
    explicit
    PopupMenuBuilder( PopupMenuTable &table, PopupMenuImpl &menu, void *pUserData )
-      : PopupMenuVisitor{ table }
+      : PopupMenuVisitor{}
       , mMenu{ &menu }
       , mRoot{ mMenu }
       , mpUserData{ pUserData }
@@ -157,7 +157,7 @@ void PopupMenuTable::ExtendMenu( PopupMenu &menu, PopupMenuTable &table )
 
    PopupMenuBuilder visitor{ table, theMenu, theMenu.pUserData };
    Registry::Visit(visitor, table.Get( theMenu.pUserData ).get(),
-      table.GetRegistry(), visitor);
+      table.GetRegistry(), table);
 }
 
 void PopupMenuTable::Append(
