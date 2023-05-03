@@ -7227,16 +7227,8 @@ msgstr "Stlač \"pokračovať\" pre nahratie na audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a "
-"free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Vaše audio bude nahraté na našu zdieľaciu službu: %s,%%ktorá požaduje účet "
-"zdarma na použitie.\n"
-"\n"
-"Ak máte problém s nahratím súboru, vyskúšajte tlačidlo \"prepojiť účet\"."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Vaše audio bude nahraté na našu zdieľaciu službu: %s,%%ktorá požaduje účet zdarma na použitie."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

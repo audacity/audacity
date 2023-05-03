@@ -768,7 +768,7 @@ void ShareAudioDialog::InitialStatePanel::PopulateFirstTimeNotice(ShuttleGui& s)
    s.SetBorder(30);
    {
       AccessibleLinksFormatter privacyPolicy(XO(
-         "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n\nIf you have problems uploading, try the Link Account button."));
+         "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."));
 
       privacyPolicy.FormatLink(
          L"%s", XO("audio.com"),

@@ -7184,17 +7184,8 @@ msgstr "［続ける］をクリックして audio.com にアップロード"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a "
-"free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"あなたのオーディオは、共有サービス：%s、%%にアップロードされます。使用するに"
-"は無料のアカウントが必要です。\n"
-"\n"
-"アップロードに問題がある場合は、［アカウントをリンク］ボタンを試してくださ"
-"い。"
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "あなたのオーディオは、共有サービス：%s、%%にアップロードされます。使用するには無料のアカウントが必要です。"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"
