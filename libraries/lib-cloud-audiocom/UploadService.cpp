@@ -267,9 +267,7 @@ struct AudiocomUploadOperation final :
 
          mCompletedCallback(
             { UploadOperationCompleted::Result::Success,
-              UploadSuccessfulPayload {
-                 mServiceConfig.GetFinishUploadPage(mAudioID, mUploadToken),
-                 mAudioSlug } });
+              UploadSuccessfulPayload { mAudioID, mAudioSlug } });
       }
       
       mProgressCallback = {};
