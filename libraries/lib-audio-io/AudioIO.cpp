@@ -615,7 +615,12 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    if (deviceInfo != nullptr)
    {
       const auto hostApiInfo = Pa_GetHostApiInfo(deviceInfo->hostApi);
-      mUsingAlsa = hostApiInfo && hostApiInfo->type == paALSA;
+
+      if (hostApiInfo)
+      {
+         mUsingAlsa = hostApiInfo->type == paALSA;
+         mUsingJack = hostApiInfo->type == paJACK;
+      }
    }
 
    SetMeters();
@@ -657,7 +662,17 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          const auto stream = Pa_GetStreamInfo(mPortStreamV19);
          // Use the reported latency as a hint about the hardware buffer size
          // required for uninterrupted playback.
-         mHardwarePlaybackLatencyFrames = lrint(stream->outputLatency * mRate);
+         const auto outputLatency =
+            mUsingJack ?
+               // When using Jack as a host, PA calculates the wrong latency
+               // if a non system port is used. Assume, that Jack provides a very
+               // low latency, lower than user requested
+               // (https://github.com/audacity/audacity/issues/4646)
+               (latencyDuration / 1000.0) :
+               // Otherwise, use the (likely incorrect) latency reported by PA
+               stream->outputLatency;
+         
+         mHardwarePlaybackLatencyFrames = lrint(outputLatency * mRate);
 #ifdef __WXGTK__
          // DV: When using ALSA PortAudio does not report the buffer size.
          // Instead, it reports periodSize * (periodsCount - 1). It is impossible
