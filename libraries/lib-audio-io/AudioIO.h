@@ -364,6 +364,7 @@ protected:
    std::weak_ptr< AudioIOListener > mListener;
 
    bool mUsingAlsa { false };
+   bool mUsingJack { false };
 
    // For cacheing supported sample rates
    static double mCachedBestRateOut;
