@@ -6784,14 +6784,8 @@ msgstr "Для загрузки в audio.com нажмите 'Продолжит�
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Ваше аудио будет загружено в наш сервис обмена: %s,%%который требует бесплатную учётнуюая запись.\n"
-"\n"
-"Если возникли проблемы с загрузкой, попробуйте нажать кнопку 'Подключить учётную запись'."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Ваше аудио будет загружено в наш сервис обмена: %s,%%который требует бесплатную учётнуюая запись."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

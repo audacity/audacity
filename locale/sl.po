@@ -2,10 +2,10 @@
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Martin Srebotnjak <miles@filmsi.net>, 2023
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -7130,14 +7130,8 @@ msgstr "Pritisnite \"Nadaljuj\", da jo naložite na audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Vaša zvokovna vsebina bo naložena na našo storitev skupne rabe: %s,%%za kar je potreben brezplačen račun.\n"
-"\n"
-"Če imate težave pri nalaganju vsebine, poskusite z gumbom Poveži račun."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Vaša zvokovna vsebina bo naložena na našo storitev skupne rabe: %s,%%za kar je potreben brezplačen račun."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

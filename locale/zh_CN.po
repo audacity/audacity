@@ -6910,14 +6910,8 @@ msgstr "点击“继续”以上传到 audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"你的音频将被上传到我们的共享服务：%s,%%需要一个免费账户来使用。\n"
-"\n"
-"如果你在上传过程中遇到问题，尝试点击关联账户。"
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "你的音频将被上传到我们的共享服务：%s,%%需要一个免费账户来使用。"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

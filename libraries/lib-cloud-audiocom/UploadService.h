@@ -39,8 +39,8 @@ struct CLOUD_AUDIOCOM_API UploadFailedPayload final
 //! This structure represents the payload associated with successful upload
 struct CLOUD_AUDIOCOM_API UploadSuccessfulPayload final
 {
-   //! URL to open in browser to finish up the anonymous upload
-   std::string finishUploadURL;
+   //! ID of the uploaded audio
+   std::string audioId;
    //! "Slug" to be used for shareable URL construction
    std::string audioSlug;
 };

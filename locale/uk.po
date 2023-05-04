@@ -7165,17 +7165,8 @@ msgstr "Натисніть «Продовжити», щоб вивантажит
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a"
-" free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Ваші звукові дані буде вивантажено до нашої служби оприлюднення: %s,%%для"
-" чого знадобиться безкоштовний обліковий запис.\n"
-"\n"
-"Якщо у вас виникають проблеми із вивантаженням, спробуйте натиснути кнопку"
-" «Прив'язати обліковий запис»."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Ваші звукові дані буде вивантажено до нашої служби оприлюднення: %s,%%для чого знадобиться безкоштовний обліковий запис."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"
