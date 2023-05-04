@@ -72,7 +72,8 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    ~PopupMenuTableEntry() override;
 };
 
-struct AUDACITY_DLL_API PopupSubMenu : PopupMenuGroupItem, MenuTable::WholeMenu
+struct AUDACITY_DLL_API PopupSubMenu
+   : PopupMenuGroupItem, MenuTable::MenuItemProperties
 {
    TranslatableString caption;
    PopupMenuTable &table;
@@ -81,11 +82,15 @@ struct AUDACITY_DLL_API PopupSubMenu : PopupMenuGroupItem, MenuTable::WholeMenu
       const TranslatableString &caption_, PopupMenuTable &table );
 
    ~PopupSubMenu() override;
+   Properties GetProperties() const override;
 };
 
-struct PopupMenuSection : PopupMenuGroupItem, MenuTable::MenuSection
+struct PopupMenuSection
+   : PopupMenuGroupItem, MenuTable::MenuItemProperties
 {
    using PopupMenuGroupItem::PopupMenuGroupItem;
+   ~PopupMenuSection() override;
+   Properties GetProperties() const override { return Section; }
 };
 
 class PopupMenuHandler : public wxEvtHandler

@@ -388,6 +388,25 @@ private:
    std::unique_ptr< wxMenuBar > mTempMenuBar;
 };
 
+// Define items that populate tables that specifically describe menu trees
+namespace MenuTable {
+using namespace Registry;
+
+   //! A mix-in discovered by dynamic_cast; independent of the Traits
+   struct MenuItemProperties {
+      enum Properties {
+         None,
+         Inline,
+         Section,
+         Whole,
+         Extension,
+      };
+      virtual ~MenuItemProperties();
+      virtual Properties GetProperties() const = 0;
+   };
+
+}
+
 struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
 {
    ~MenuVisitor() override;
@@ -421,10 +440,7 @@ struct ProjectMenuVisitor : MenuVisitor
    AudacityProject &mProject;
 };
 
-// Define items that populate tables that specifically describe menu trees
 namespace MenuTable {
-   using namespace Registry;
-
    struct CommandItem;
    struct CommandGroupItem;
    struct ConditionalGroupItem;
@@ -441,14 +457,10 @@ namespace MenuTable {
          ConditionalGroupItem, MenuItem, MenuItems, MenuPart>;
    };
 
-   // These are found by dynamic_cast
-   struct AUDACITY_DLL_API MenuSection {
-      virtual ~MenuSection();
-   };
-   struct AUDACITY_DLL_API WholeMenu {
-      WholeMenu( bool extend = false ) : extension{ extend }  {}
-      virtual ~WholeMenu();
-      bool extension;
+   static inline bool IsSection(const GroupItemBase &item) {
+      auto pProperties = dynamic_cast<const MenuItemProperties *>(&item);
+      return pProperties && pProperties->GetProperties() ==
+         MenuItemProperties::Section;
    };
 
    struct MenuItemData {
@@ -461,11 +473,12 @@ namespace MenuTable {
       : Composite::Extension<
          GroupItem<Traits>, MenuItemData, const Identifier&
       >
-      , WholeMenu
+      , MenuItemProperties
    {
       using Extension::Extension;
       ~MenuItem() override;
       const auto &GetTitle() const { return mTitle; }
+      Properties GetProperties() const override;
    };
 
    using Condition = std::function<bool()>;
@@ -628,21 +641,24 @@ namespace MenuTable {
       : Composite::Extension<
          GroupItem<Traits>, void, const Identifier &
       >
+      , MenuItemProperties
    {
       using Extension::Extension;
       ~MenuItems() override;
       //! Anonymous if its name is empty, else weakly ordered
       Ordering GetOrdering() const override;
+      Properties GetProperties() const override;
    };
 
    struct MenuPart
       : Composite::Extension<
          GroupItem<Traits>, void, const Identifier &
       >
-      , MenuSection
+      , MenuItemProperties
    {
       using Extension::Extension;
       ~MenuPart() override;
+      Properties GetProperties() const override;
    };
 
    /*! @name Factories

@@ -16,17 +16,22 @@ Paul Licameli split from TrackPanel.cpp
 PopupMenuTableEntry::~PopupMenuTableEntry()
 {}
 
-PopupSubMenu::~PopupSubMenu()
-{}
-
 PopupSubMenu::PopupSubMenu(const Identifier &stringId,
    const TranslatableString &caption, PopupMenuTable &table
 )  : GroupItem{ stringId }
-   , WholeMenu{ caption.empty() }
    , caption{ caption }
    , table{ table }
 {
 }
+
+PopupSubMenu::~PopupSubMenu()
+{}
+
+auto PopupSubMenu::GetProperties() const -> Properties
+{ return caption.empty() ? Extension : Whole; }
+
+PopupMenuSection::~PopupMenuSection()
+{}
 
 PopupMenuVisitor::~PopupMenuVisitor() = default;
 

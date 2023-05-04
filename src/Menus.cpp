@@ -108,20 +108,34 @@ MenuVisitor::~MenuVisitor() = default;
 void MenuVisitor::BeginGroup(
    const Registry::GroupItemBase &item, const Path &path)
 {
+   using namespace MenuTable;
+   auto properties = MenuItemProperties::None;
+   if (const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item))
+      properties = pProperties->GetProperties();
+
    bool isMenu = false;
    bool isExtension = false;
-   auto pItem = &item;
-   const bool inlined = dynamic_cast<const MenuTable::MenuItems*>(pItem);
-   if (inlined) {
+   bool inlined = false;
+
+   switch (properties) {
+   case MenuItemProperties::Inline: {
+      inlined = true;
+      break;
    }
-   else if (dynamic_cast<const MenuTable::MenuSection*>(pItem)) {
-      if ( !needSeparator.empty() )
+   case MenuItemProperties::Section: {
+      if (!needSeparator.empty())
          needSeparator.back() = true;
+      break;
    }
-   else if (auto pWhole = dynamic_cast<const MenuTable::WholeMenu*>(pItem)) {
+   case MenuItemProperties::Whole:
+   case MenuItemProperties::Extension: {
       isMenu = true;
-      isExtension = pWhole->extension;
+      isExtension = (properties == MenuItemProperties::Extension);
       MaybeDoSeparator();
+      break;
+   }
+   default:
+      break;
    }
 
    if (!inlined)
@@ -136,17 +150,31 @@ void MenuVisitor::BeginGroup(
 void MenuVisitor::EndGroup(
    const Registry::GroupItemBase &item, const Path &path)
 {
-   auto pItem = &item;
-   const bool inlined = dynamic_cast<const MenuTable::MenuItems*>(pItem);
-   if (inlined) {
+   using namespace MenuTable;
+   auto properties = MenuItemProperties::None;
+   if (const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item))
+      properties = pProperties->GetProperties();
+
+   bool inlined = false;
+
+   switch (properties) {
+   case MenuItemProperties::Inline: {
+      inlined = true;
+      break;
    }
-   else if (dynamic_cast<const MenuTable::MenuSection*>(pItem)) {
+   case MenuItemProperties::Section: {
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
+      break;
    }
-   else if ( dynamic_cast<const MenuTable::WholeMenu*>(pItem)) {
+   case MenuItemProperties::Whole:
+   case MenuItemProperties::Extension: {
       firstItem.pop_back();
       needSeparator.pop_back();
+      break;
+   }
+   default:
+      break;
    }
 
    if (!inlined)
@@ -193,6 +221,7 @@ ProjectMenuVisitor::~ProjectMenuVisitor() = default;
 namespace MenuTable {
 
 MenuItem::~MenuItem() {}
+auto MenuItem::GetProperties() const -> Properties { return Whole; }
 
 ConditionalGroupItem::~ConditionalGroupItem() {}
 
@@ -222,14 +251,15 @@ CommandGroupItem::~CommandGroupItem() {}
 
 SpecialItem::~SpecialItem() {}
 MenuPart::~MenuPart() {}
+auto MenuPart::GetProperties() const -> Properties { return Section; }
 
 MenuItems::~MenuItems() {}
 auto MenuItems::GetOrdering() const -> Ordering {
    return name.empty() ? Anonymous : Weak;
 }
+auto MenuItems::GetProperties() const -> Properties { return Inline; }
 
-MenuSection::~MenuSection() {}
-WholeMenu::~WholeMenu() {}
+MenuItemProperties::~MenuItemProperties() {}
 
 CommandHandlerFinder FinderScope::sFinder =
    [](AudacityProject &project) -> CommandHandlerObject & {
@@ -284,10 +314,8 @@ struct MenuItemVisitor : ProjectMenuVisitor
          // to avoid repeated call of condition predicate in EndGroup():
          flags.push_back(flag);
       }
-      else if (const auto pGroup = dynamic_cast<const MenuSection*>(pItem)) {
-      }
       else
-         wxASSERT( false );
+         assert(IsSection(item));
    }
 
    void DoEndGroup(const GroupItemBase &item, const Path&) override
@@ -306,10 +334,7 @@ struct MenuItemVisitor : ProjectMenuVisitor
          flags.pop_back();
       }
       else
-      if ( const auto pGroup = dynamic_cast<const MenuSection*>( pItem ) ) {
-      }
-      else
-         wxASSERT( false );
+         assert(IsSection(item));
    }
 
    void DoVisit(const SingleItem &item, const Path&) override
