@@ -18,8 +18,13 @@
 #include "Prefs.h"
 
 class wxTextCtrl;
-class wxSpinButton;
 class wxKeyEvent;
+
+#ifndef __WXGTK__
+class wxSpinButton;
+#else
+class wxButton;
+#endif
 
 class WX_WRAPPERS_API SpinControl final
    : public wxControl
@@ -27,7 +32,7 @@ class WX_WRAPPERS_API SpinControl final
 {
 public:
    using ValueType = double;
-   
+
    SpinControl(
       wxWindow* parent, wxWindowID winid = wxID_ANY, ValueType value = 0.0,
       ValueType min = 0.0f, ValueType max = 100.0, ValueType step = 1.0,
@@ -53,7 +58,7 @@ public:
 
 private:
    void UpdatePrefs() override;
-   
+
    void CreateUI();
    void SetupControls();
    void CommitTextControlValue();
@@ -64,17 +69,22 @@ private:
    void DoSteps(double direction);
 
    void NotifyValueChanged();
-   
+
    ValueType mValue { std::numeric_limits<ValueType>::quiet_NaN() };
    ValueType mMinValue { -std::numeric_limits<ValueType>::infinity() };
    ValueType mMaxValue { std::numeric_limits<ValueType>::infinity() };
    ValueType mStep;
-   int mPrecision { 2 }; 
+   int mPrecision { 2 };
 
    bool mFractionalAllowed;
-   
+
    wxTextCtrl* mTextControl { nullptr };
+#ifndef __WXGTK__
    wxSpinButton* mSpinButton { nullptr };
+#else
+   wxButton* mUpButton { nullptr };
+   wxButton* mDownButton { nullptr };
+#endif
 
 #if wxUSE_ACCESSIBILITY
    class SpinControlAx;

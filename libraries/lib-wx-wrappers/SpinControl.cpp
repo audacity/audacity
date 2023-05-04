@@ -13,11 +13,16 @@
 #include <algorithm>
 
 #include <wx/textctrl.h>
-#include <wx/spinbutt.h>
 #include <wx/sizer.h>
 #include <wx/valnum.h>
 // For wxEVT_SPINCTRL
 #include <wx/spinctrl.h>
+
+#ifndef __WXGTK__
+#include <wx/spinbutt.h>
+#else
+#include <wx/button.h>
+#endif
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -66,12 +71,12 @@ SpinControl::SpinControl(
     , mFractionalAllowed(allowFractional)
 {
    CreateUI();
-   
+
    // Call setter explicitly to ensure that all the clamping happens correctly
    SetMinValue(min);
    SetMaxValue(max);
    SetValue(value);
-   
+
    SetupControls();
 
    SetName(name);
@@ -150,14 +155,26 @@ void SpinControl::SetName(const TranslatableString& name)
 }
 
 void SpinControl::UpdatePrefs()
-{  
+{
 }
 
 void SpinControl::CreateUI()
 {
    mTextControl = safenew wxTextCtrl(this, wxID_ANY);
+#ifndef __WXGTK__
    const auto editorHeight = mTextControl->GetSize().y;
+#else
+   // GTK requires the buttons to be at least 16x16
+   // TODO: rely on GTK_ICON_SIZE_BUTTON instead of hardcoding the size
+   constexpr auto minGtkSize = 16;
+   const auto editorHeight = std::max(minGtkSize * 2, mTextControl->GetSize().y);
+#endif
 
+   auto boxSizer = safenew wxBoxSizer(wxHORIZONTAL);
+
+   boxSizer->Add(mTextControl, wxSizerFlags().Border(wxALL, 0));
+
+#ifndef __WXGTK__
    mSpinButton = safenew wxSpinButton(this);
    mSpinButton->SetMaxSize({ -1, editorHeight });
 
@@ -165,21 +182,43 @@ void SpinControl::CreateUI()
    // so keep the value between min (0 by default) and max (100 by default)
    mSpinButton->SetValue(50);
 
-   auto boxSizer = safenew wxBoxSizer(wxHORIZONTAL);
-
-   boxSizer->Add(mTextControl, wxSizerFlags().Border(wxALL, 0));
    boxSizer->Add(mSpinButton, wxSizerFlags().Border(wxALL, 0));
+#else
+   auto buttonsSizer = safenew wxBoxSizer(wxVERTICAL);
+
+   const auto buttonSize = wxSize { editorHeight / 2, editorHeight / 2 };
+
+   mUpButton = safenew wxButton(this, wxID_ANY, L"+", wxDefaultPosition, buttonSize);
+   mUpButton->SetMinSize(buttonSize);
+   mUpButton->SetMaxSize(buttonSize);
+   buttonsSizer->Add(mUpButton, wxSizerFlags().Border(wxALL, 0));
+
+   mDownButton = safenew wxButton(this, wxID_ANY, L"-", wxDefaultPosition, buttonSize);
+   mDownButton->SetMinSize(buttonSize);
+   mDownButton->SetMaxSize(buttonSize);
+   buttonsSizer->Add(mDownButton, wxSizerFlags().Border(wxALL, 0));
+
+   boxSizer->Add(buttonsSizer, wxSizerFlags().Border(wxALL, 0));
+#endif
 
    const auto width = GetSize().x;
 
    if (width > 0)
    {
+#ifndef __WXGTK__
       auto spinWidth = mSpinButton->GetSize().x;
-      const auto editorWidth = std::max(spinWidth, width - spinWidth);
+      const auto editorWidth = std::max(10, width - spinWidth);
       mTextControl->SetMaxSize({ editorWidth, editorHeight });
+#else
+      const auto editorWidth = std::max(10, width - editorHeight / 2);
+
+      mTextControl->SetMinSize({ editorWidth, editorHeight });
+      mTextControl->SetMaxSize({ editorWidth, editorHeight });
+      mTextControl->SetSize({ editorWidth, editorHeight });
+#endif
    }
 
-   SetSizer(boxSizer);
+   SetSizerAndFit(boxSizer);
    Layout();
 
    Bind(
@@ -213,6 +252,7 @@ void SpinControl::CreateUI()
             DoSteps(evt.ShiftDown() ? -10 : -1);
       });
 
+#ifndef __WXGTK__
    mSpinButton->Bind(
       wxEVT_SPIN_UP,
       [this](auto& evt)
@@ -228,6 +268,21 @@ void SpinControl::CreateUI()
          DoSteps(-1);
          evt.Veto();
       });
+#else
+   mUpButton->Bind(
+      wxEVT_BUTTON,
+      [this](auto&)
+      {
+         DoSteps(1);
+      });
+
+   mDownButton->Bind(
+      wxEVT_BUTTON,
+      [this](auto&)
+      {
+         DoSteps(-1);
+      });
+#endif
 }
 
 void SpinControl::SetupControls()
