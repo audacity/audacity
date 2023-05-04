@@ -60,22 +60,22 @@ struct PopupMenuBuilder final : public SnapRegistryVisitor
    {
       SnapFunctionsRegistry::Visit(*this);
    }
-   
+
    void BeginGroup(const SnapRegistryGroup& item) override
    {
       if (item.transparent)
          return;
 
       auto menu = safenew wxMenu;
-      
+
       menuStack.back()->AppendSubMenu(menu, item.label.Translation());
       menuStack.push_back(menu);
    }
-   
+
    void EndGroup(const SnapRegistryGroup& item) override
    {
       assert(!menuStack.empty());
-      
+
       if (item.transparent)
       {
          menuStack.back()->AppendSeparator();
@@ -139,9 +139,9 @@ public:
        , mSnappingModeChangedSubscription(ProjectSnap::Get(project).Subscribe(
             [this](auto& msg) {
                UpdateCurrentIndex(msg.newSnapTo);
-               
+
                auto comboCtrl = GetComboCtrl();
-               
+
                comboCtrl->SetValue(
                   GetSnapToLabel(msg.newSnapTo).Translation());
 
@@ -156,7 +156,7 @@ public:
 
       UpdateCurrentIndex(ReadSnapTo());
    }
-   
+
    bool Create(wxWindow* parent) override
    {
       mControl = safenew wxWindow(parent, wxID_ANY);
@@ -166,7 +166,7 @@ public:
       // as in some cases Audacity recreates the combobox multiple times before the next
       // event loop iteration.
       GetComboCtrl()->SetValue(GetStringValue());
-      
+
       return mControl;
    }
 
@@ -224,7 +224,7 @@ public:
          keyCode == WXK_DOWN || keyCode == WXK_NUMPAD_DOWN ||
          keyCode == WXK_RIGHT || keyCode == WXK_NUMPAD_RIGHT)
          direction = 1;
-  
+
       if (direction == 0)
          return;
 
@@ -291,6 +291,11 @@ SnappingToolBar::SnappingToolBar(AudacityProject& project)
                mSnapToCombo->Enable(settings.newSnapMode != SnapMode::SNAP_OFF);
          }))
 {
+#ifdef __WXGTK__
+   const auto height = 2 * toolbarSingle;
+   SetMinSize({ -1, height });
+   SetMaxSize({ -1, height });
+#endif
 }
 
 SnappingToolBar::~SnappingToolBar()
@@ -334,7 +339,7 @@ void SnappingToolBar::Populate()
    auto boxSizer = safenew wxBoxSizer(wxHORIZONTAL);
 
    mSnapModeCheckBox = safenew wxCheckBox(this, wxID_ANY, {});
-   
+
    mSnapModeCheckBox->SetName(SnapLabel.Stripped().Translation());
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
@@ -353,7 +358,7 @@ void SnappingToolBar::Populate()
       ProjectSnap::Get(mProject).GetSnapMode() != SnapMode::SNAP_OFF;
 
    mSnapModeCheckBox->SetValue(snapEnabled);
-   
+
 
    mSnapToCombo = safenew wxComboCtrl(
       this, wxID_ANY, {}, wxDefaultPosition, wxDefaultSize /*, wxCB_READONLY*/);
@@ -372,7 +377,7 @@ void SnappingToolBar::Populate()
    mSnapToCombo->SetLabel(wxT(""));
    mSnapToCombo->Enable(snapEnabled);
    mSnapToCombo->SetMinSize(wxSize(150, -1));
-   
+
    sizer->Add(mSnapToCombo, 1, wxRIGHT | wxEXPAND, 5);
 
    mSnapModeCheckBox->Bind(
@@ -381,7 +386,7 @@ void SnappingToolBar::Populate()
    mSnapModeCheckBox->Bind(
       wxEVT_CHAR_HOOK,
       [this](auto& evt)
-      {         
+      {
          const auto keyCode = evt.GetKeyCode();
 
          if (keyCode != WXK_NUMPAD_ENTER && keyCode != WXK_RETURN)
@@ -451,7 +456,7 @@ void SnappingToolBar::OnSnapModeChanged()
 
    mSnapToCombo->Enable(snapEnabled);
 
-   
+
    // wxEVT_KILL_FOCUS is not always sent by wxWidgets.
    // Remove any selection from the combo box if we've disabled it.
    if (!snapEnabled)
