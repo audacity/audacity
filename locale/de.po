@@ -12,10 +12,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.3.0\n"
+"Project-Id-Version: audacity 3.3.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-04-21 17:00+0000\n"
+"PO-Revision-Date: 2023-04-29 10:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (https://app.transifex.com/klyok/teams/690/de/)\n"
 "MIME-Version: 1.0\n"
@@ -7137,7 +7137,7 @@ msgid ""
 "We are unable to upload this file. Please try again and make sure to link to"
 " your audio.com account before uploading."
 msgstr ""
-"Wir können diese Datei nicht uploaden. Bitte versuchen Sie es erneut und "
+"Wir können diese Datei nicht hochladen. Bitte versuchen Sie es erneut und "
 "stellen Sie sicher, dass Ihr audio.com-Konto verbunden ist, bevor Sie "
 "hochladen."
 
@@ -19659,7 +19659,7 @@ msgstr ""
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr "Update-Daten waren beschädigt."
+msgstr "Aktualisierungsdaten waren beschädigt."
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
