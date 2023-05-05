@@ -385,7 +385,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 
          if (!mIsBatch)
          {
-            if (mpTempProjectState &&
+            if (!IsOpenedFromEffectPanel() &&
                (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
                (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
             {
