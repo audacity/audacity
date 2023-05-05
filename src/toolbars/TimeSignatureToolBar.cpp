@@ -61,7 +61,7 @@ TimeSignatureToolBar::TimeSignatureToolBar(AudacityProject& project)
             {
                if (mTempoControl)
                   mTempoControl->SetValue(settings.newTempo);
-               
+
                if (mUpperSignatureControl)
                   mUpperSignatureControl->SetValue(
                      settings.newUpperTimeSignature);
@@ -104,11 +104,16 @@ void TimeSignatureToolBar::Create(wxWindow* parent)
 
 void TimeSignatureToolBar::Populate()
 {
+#ifndef __WXGTK__
    const auto tempoSigSize = wxSize(60, -1);
    auto timeSigSize = wxSize(50, -1);
+#else
+   const auto tempoSigSize = wxSize(60, -1);
+   auto timeSigSize = wxSize(60, -1);
+#endif
 
    auto& projectTimeSignature = ProjectTimeSignature::Get(mProject);
-   
+
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
 
    auto sizer = safenew wxFlexGridSizer(2, 5, 1);
@@ -122,7 +127,7 @@ void TimeSignatureToolBar::Populate()
       wxDefaultPosition, tempoSigSize);
 
    mTempoControl->SetName(XO("Tempo"));
-   
+
    sizer->Add(mTempoControl, 0, wxEXPAND | wxRIGHT, 5);
 
    auto tempoSizer = safenew wxBoxSizer(wxHORIZONTAL);
@@ -158,7 +163,7 @@ void TimeSignatureToolBar::Populate()
       [this](auto)
       {
          const auto tempo = mTempoControl->GetValue();
-         
+
          ProjectTimeSignature::Get(mProject).SetTempo(tempo);
 
          ProjectHistory::Get(mProject).PushState(
@@ -183,7 +188,7 @@ void TimeSignatureToolBar::Populate()
       [this](auto)
       {
          long value;
-         
+
          if (!mLowerSignatureControl->GetValue().ToLong(&value))
             return;
 
@@ -201,7 +206,7 @@ void TimeSignatureToolBar::Populate()
    mLowerSignatureControl->SetAccessible(
       safenew WindowAccessible(mLowerSignatureControl));
 #endif
-   
+
    RegenerateTooltips();
    Fit();
    Layout();
@@ -233,9 +238,9 @@ void TimeSignatureToolBar::AddTitle(
    double fontMultiplier)
 {
    const auto translated = Title.Translation();
-   
+
    auStaticText* pTitle = safenew auStaticText(this, translated);
-   
+
    pTitle->SetBackgroundColour(theTheme.Colour(clrMedium));
    pTitle->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
    pTitle->ScaleFont(fontMultiplier);
@@ -274,7 +279,7 @@ struct TimeSignatureRestorer final : UndoStateExtension
       timeSignature.SetUpperTimeSignature(mUpper);
       timeSignature.SetLowerTimeSignature(mLower);
    }
-   
+
    double mTempo;
    int mUpper;
    int mLower;
