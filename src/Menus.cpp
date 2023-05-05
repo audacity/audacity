@@ -105,17 +105,14 @@ void MenuManager::UpdatePrefs()
 
 MenuVisitor::~MenuVisitor() = default;
 
-void MenuVisitor::BeginGroup(
-   const Registry::GroupItemBase &item, const Path &path)
+std::pair<bool, bool> MenuTable::detail::VisitorBase::ShouldBeginGroup(
+   const MenuItemProperties *pProperties)
 {
-   using namespace MenuTable;
-   auto properties = MenuItemProperties::None;
-   if (const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item))
-      properties = pProperties->GetProperties();
+   const auto properties =
+      pProperties ? pProperties->GetProperties() : MenuItemProperties::None;
 
-   bool isMenu = false;
-   bool isExtension = false;
    bool inlined = false;
+   bool shouldDoSeparator = false;
 
    switch (properties) {
    case MenuItemProperties::Inline: {
@@ -129,17 +126,35 @@ void MenuVisitor::BeginGroup(
    }
    case MenuItemProperties::Whole:
    case MenuItemProperties::Extension: {
-      isMenu = true;
-      isExtension = (properties == MenuItemProperties::Extension);
-      MaybeDoSeparator();
+      shouldDoSeparator = ShouldDoSeparator();
       break;
    }
    default:
       break;
    }
 
-   if (!inlined)
-      DoBeginGroup(item, path);
+   return { !inlined, shouldDoSeparator };
+}
+
+void MenuTable::detail::VisitorBase::AfterBeginGroup(
+   const MenuItemProperties *pProperties)
+{
+   const auto properties =
+      pProperties ? pProperties->GetProperties() : MenuItemProperties::None;
+
+   bool isMenu = false;
+   bool isExtension = false;
+
+   switch (properties) {
+   case MenuItemProperties::Whole:
+   case MenuItemProperties::Extension: {
+      isMenu = true;
+      isExtension = (properties == MenuItemProperties::Extension);
+      break;
+   }
+   default:
+      break;
+   }
 
    if (isMenu) {
       needSeparator.push_back(false);
@@ -147,13 +162,11 @@ void MenuVisitor::BeginGroup(
    }
 }
 
-void MenuVisitor::EndGroup(
-   const Registry::GroupItemBase &item, const Path &path)
+bool MenuTable::detail::VisitorBase::ShouldEndGroup(
+   const MenuItemProperties *pProperties)
 {
-   using namespace MenuTable;
-   auto properties = MenuItemProperties::None;
-   if (const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item))
-      properties = pProperties->GetProperties();
+   const auto properties =
+      pProperties ? pProperties->GetProperties() : MenuItemProperties::None;
 
    bool inlined = false;
 
@@ -177,27 +190,18 @@ void MenuVisitor::EndGroup(
       break;
    }
 
-   if (!inlined)
-      DoEndGroup(item, path);
+   return !inlined;
 }
 
-void MenuVisitor::Visit(const Registry::SingleItem &item, const Path &path)
-{
-   MaybeDoSeparator();
-   DoVisit(item, path);
-}
-
-void MenuVisitor::MaybeDoSeparator()
+bool MenuTable::detail::VisitorBase::ShouldDoSeparator()
 {
    bool separate = false;
-   if ( !needSeparator.empty() ) {
+   if (!needSeparator.empty()) {
       separate = needSeparator.back() && !firstItem.back();
       needSeparator.back() = false;
       firstItem.back() = false;
    }
-
-   if ( separate )
-      DoSeparator();
+   return separate;
 }
 
 void MenuVisitor::DoBeginGroup(const Registry::GroupItemBase &, const Path &)

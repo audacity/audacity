@@ -405,17 +405,55 @@ using namespace Registry;
       virtual Properties GetProperties() const = 0;
    };
 
+namespace detail {
+   struct VisitorBase {
+      std::pair<bool, bool>
+         ShouldBeginGroup(const MenuItemProperties *pProperties);
+      void AfterBeginGroup(const MenuItemProperties *pProperties);
+      bool ShouldEndGroup(const MenuItemProperties *pProperties);
+      bool ShouldDoSeparator();
+
+      std::vector<bool> firstItem;
+      std::vector<bool> needSeparator;
+   };
+}
 }
 
-struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
+struct AUDACITY_DLL_API MenuVisitor
+   : Registry::Visitor
+   , MenuTable::detail::VisitorBase
 {
    ~MenuVisitor() override;
 
    // final overrides
-   void BeginGroup(const Registry::GroupItemBase &item, const Path &path )
-      final;
-   void EndGroup(const Registry::GroupItemBase &item, const Path& ) final;
-   void Visit(const Registry::SingleItem &item, const Path &path ) final;
+   void BeginGroup(
+      const Registry::GroupItemBase &item, const Path &path) final
+   {
+      using namespace MenuTable;
+      const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
+      auto [begin, separate] = ShouldBeginGroup(pProperties);
+      if (separate)
+         DoSeparator();
+      if (begin)
+         DoBeginGroup(item, path);
+      AfterBeginGroup(pProperties);
+   }
+
+   void Visit(const Registry::SingleItem &item, const Path &path) final
+   {
+      if (ShouldDoSeparator())
+         DoSeparator();
+      DoVisit(item, path);
+   }
+
+   void EndGroup(
+      const Registry::GroupItemBase &item, const Path &path) final
+   {
+      using namespace MenuTable;
+      const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
+      if (ShouldEndGroup(pProperties))
+         DoEndGroup(item, path);
+   }
 
    // added virtuals
    //! Groups of type MenuItems are excluded from this callback
@@ -426,11 +464,6 @@ struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
       const Registry::GroupItemBase &item, const Path &path);
    virtual void DoVisit(const Registry::SingleItem &item, const Path &path);
    virtual void DoSeparator();
-
-private:
-   void MaybeDoSeparator();
-   std::vector<bool> firstItem;
-   std::vector<bool> needSeparator;
 };
 
 struct ProjectMenuVisitor : MenuVisitor
