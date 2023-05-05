@@ -8,7 +8,7 @@ class PluginDescriptor;
 
 namespace MenuHelper
 {
-using Group = MenuTable::GroupItemBase;
+using Group = MenuTable::GroupItem<MenuTable::Traits>;
 
 /// The effects come from a plug in list
 /// This code iterates through the list, adding effects into

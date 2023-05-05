@@ -481,7 +481,8 @@ namespace detail {
          ConditionalGroupItem, MenuItem, MenuItems, MenuPart>;
    };
 
-   static inline bool IsSection(const GroupItemBase &item) {
+   template<typename RegistryTraits>
+   static inline bool IsSection(const GroupItem<RegistryTraits> &item) {
       auto pProperties = dynamic_cast<const MenuItemProperties *>(&item);
       return pProperties && pProperties->GetProperties() ==
          MenuItemProperties::Section;

@@ -73,6 +73,8 @@ namespace Registry {
    struct SingleItem;
 
 namespace detail { using namespace TypeList;
+   struct GroupItemBase;
+
    struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
       explicit
@@ -129,7 +131,7 @@ namespace detail { using namespace TypeList;
    using BaseItemTypes = TypeList::List<
       detail::IndirectItemBase, detail::ComputedItemBase,
       // see below
-      struct SingleItem, struct GroupItemBase
+      struct SingleItem, struct detail::GroupItemBase
    >;
    template<typename Item> using AcceptableBaseItem =
       TypeList::HasBaseIn<Item, BaseItemTypes>;
@@ -226,11 +228,10 @@ namespace detail {
    //! Type-erased implementation details, don't call directly
    REGISTRIES_API void RegisterItem(GroupItemBase &registry,
       const Placement &placement, BaseItemPtr pItem);
-}
 
    //! Common abstract base class for items that group other items
    struct REGISTRIES_API GroupItemBase : Composite::Base<
-      detail::BaseItem, std::unique_ptr<detail::BaseItem>, const Identifier &
+      BaseItem, std::unique_ptr<BaseItem>, const Identifier &
    > {
       using Base::Base;
    
@@ -256,9 +257,10 @@ namespace detail {
       virtual Ordering GetOrdering() const;
 
    private:
-      friend REGISTRIES_API void detail::RegisterItem(GroupItemBase &registry,
-         const Placement &placement, detail::BaseItemPtr pItem);
+      friend REGISTRIES_API void RegisterItem(GroupItemBase &registry,
+         const Placement &placement, BaseItemPtr pItem);
    };
+}
 
    // Forward declarations necessary before customizing Composite::Traits
    template<typename RegistryTraits> struct GroupItem;
@@ -268,7 +270,7 @@ namespace detail {
 }
 
 template<typename RegistryTraits> struct Composite::Traits<
-   Registry::GroupItemBase, Registry::GroupItem<RegistryTraits>
+   Registry::detail::GroupItemBase, Registry::GroupItem<RegistryTraits>
 > {
    static constexpr auto ItemBuilder =
    Registry::detail::Builder<RegistryTraits>{};
@@ -278,17 +280,17 @@ template<typename RegistryTraits> struct Composite::Traits<
 };
 
 namespace Registry {
-   //! Extends GroupItemBase with a variadic constructor that checks types
+   //! Has variadic and range constructors that check types
    /*!
     @tparam RegistryTraits defines associated types
     */
    template<typename RegistryTraits>
    struct GroupItem : Composite::Builder<
-      GroupItemBase, GroupItem<RegistryTraits>, const Identifier &
+      detail::GroupItemBase, GroupItem<RegistryTraits>, const Identifier &
    > {
       ~GroupItem() override = default;
       using Composite::Builder<
-         GroupItemBase, GroupItem<RegistryTraits>, const Identifier &
+         detail::GroupItemBase, GroupItem<RegistryTraits>, const Identifier &
       >::Builder;
    };
 
