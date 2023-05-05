@@ -1,5 +1,14 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.3.2
+
+ This is a hotfix release. It fixes the following bugs:
+   * #4629 Linux AppImage fails to start.
+   * #4637 Issues with selection and time toolbars on Linux packages.
+   * #4639 Missing duration input in generators on Linux packages.
+   * #4646 Potentialy extreme memory usage with Jack host.
+   * #4654 Anonymous upload to audio.com is disabled.
+
 Changes in version 3.3.1
 
  This is a hotfix release. It fixes the following bugs:
