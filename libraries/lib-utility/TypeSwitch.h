@@ -203,7 +203,9 @@ public:
 };
 
 template<typename ...Executors> struct UsedCases {
-   constexpr unsigned operator ()() { return (Executors::SetUsed | ...); };
+   constexpr auto operator ()() {
+      return std::integral_constant<unsigned, (Executors::SetUsed | ...)>{};
+   };
 };
 
 template<size_t... Is, typename TupleLike> auto MakeFunctionTuple(
@@ -228,8 +230,11 @@ struct TypeSwitcher {
    using Executors = MapList_t<Fn<Executor_>, ObjectTypes>;
 
    // Compile time reachability check of the given functions
-   enum { All = Length_v<Functions> };
-   static_assert((1u << All) - 1u == Apply_t<UsedCases, Executors>{}(),
+   enum { All = Length_v<Functions>, AllBits = (1u << All) - 1u };
+   static_assert(std::is_same_v<
+         std::integral_constant<unsigned, AllBits>,
+         decltype(Apply_t<UsedCases, Executors>{}())
+      >,
       "Uncallable case in TypeSwitch");
 
    using Exec = Apply_t<Callable::OverloadSet, Executors>;
@@ -249,14 +254,14 @@ template<typename TypeList> constexpr bool RootTypeCheck_v =
 template<typename TypeList> using InheritanceCheck =
    NotAny<Bind2nd<std::is_base_of, Head_t<TypeList>>, Tail_t<TypeList>>;
 
-template<typename TypeList> constexpr bool TypeCheck_v =
+}
+
+template<typename TypeList> constexpr bool TypeListCheck_v =
    std::is_polymorphic_v<Head_t<TypeList>> &&
-   RootTypeCheck_v<TypeList> &&
-   Every_v<Fn<InheritanceCheck>, NonEmptyTails_t<TypeList>> &&
+   detail::RootTypeCheck_v<TypeList> &&
+   Every_v<Fn<detail::InheritanceCheck>, NonEmptyTails_t<TypeList>> &&
    (Every_v<Fn<std::is_const>, TypeList> ||
     NotAny_v<Fn<std::is_const>, TypeList>);
-
-}
 
 /*!
  A variadic function taking any number of function objects, each taking
@@ -307,7 +312,7 @@ template<
 >
 auto Dispatch(Head_t<Types> &object, const TupleLike &functions,
    Args&&... args)
-   -> std::enable_if_t<detail::TypeCheck_v<Types>, R>
+   -> std::enable_if_t<TypeListCheck_v<Types>, R>
 {
    // Generate a function that dispatches dynamically on track type
    return detail::TypeSwitcher<R, Types, Bind_t<TupleLike>, Args...>{}(
