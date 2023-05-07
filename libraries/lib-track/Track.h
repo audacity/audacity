@@ -1435,6 +1435,20 @@ public:
       return Channels(&track).size();
    }
 
+   //! Apply a function (taking TrackType&) to each of the channels of a
+   //! track
+   template<typename TrackType, typename F>
+   static auto VisitChannels(TrackType &track, const F &f)
+      -> std::enable_if_t<std::is_invocable_v<F, TrackType &>, void>
+   {
+      for (auto pChannel : Channels(&track)) {
+         // Track iterators that are not end iterators always dereference to
+         // non-null pointers
+         assert(pChannel);
+         f(*pChannel);
+      }
+   }
+
    //! If the given track is one of a pair of channels, swap them
    /*! @return success */
    static bool SwapChannels(Track &track);
