@@ -547,7 +547,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    []( PopupMenuHandler &handler ) -> bool {
       auto &track =
          static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
-      return 1 == TrackList::Channels( &track ).size();
+      return 1 == TrackList::NChannels(track);
    };
 
    static const auto isUnsafe =
@@ -667,7 +667,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                auto next = * ++ tracks.Find(&track);
                canMakeStereo =
                   (next &&
-                   TrackList::Channels(next).size() == 1 &&
+                   TrackList::NChannels(*next) == 1 &&
                    track_cast<WaveTrack*>(next));
             }
             menu.Enable( id, canMakeStereo );
@@ -680,7 +680,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
             auto &track =
                static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
             bool isStereo =
-               2 == TrackList::Channels( &track ).size();
+               2 == TrackList::NChannels(track);
             menu.Enable( id, isStereo && !isUnsafe( handler ) );
          }
       );
