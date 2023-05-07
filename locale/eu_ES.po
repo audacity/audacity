@@ -6995,10 +6995,7 @@ msgstr ""
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
 msgstr ""
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp

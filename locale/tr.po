@@ -6923,14 +6923,8 @@ msgstr "audio.com üzerine yüklemek için \"İlerle\" üzerine basın"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Ses dosyanız paylaşma aygıtımıza yüklenecek: %s,%%kullanmak için ücretsiz bir hesap açmalısınız.\n"
-"\n"
-"Yükleme sorunları yaşıyorsanız Hesap bağla düğmesine basın."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Ses dosyanız paylaşma aygıtımıza yüklenecek: %s,%%kullanmak için ücretsiz bir hesap açmalısınız."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

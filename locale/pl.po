@@ -2,10 +2,10 @@
 # Copyright (C) 2023 Audacity Team
 # This file is distributed under the same license as the audacity package.
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2013.
-# 
+#
 # Translators:
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
@@ -7152,14 +7152,8 @@ msgstr "Naciśnij \"Kontynuuj\", aby przesłać na Audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Twoje nagranie zostanie przesłane do naszego serwisu udostępniania: %s,%%który do użycia wymaga darmowego konta.\n"
-"\n"
-"Jeśli masz problemy z przesyłaniem, wypróbuj przycisk Połącz konto."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Twoje nagranie zostanie przesłane do naszego serwisu udostępniania: %s,%%który do użycia wymaga darmowego konta."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

@@ -6985,14 +6985,8 @@ msgstr "Trykk “Fortsett” for å laste opp til audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Lyden din lastes opp til vår delingstjeneste: %s,%%som krever en gratis konto for bruk.\n"
-"\n"
-"Har du problemer med å laste opp, prøv Koble sammen konto-knappen."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Lyden din lastes opp til vår delingstjeneste: %s,%%som krever en gratis konto for bruk."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

@@ -6910,14 +6910,8 @@ msgstr "audio.com에 업로드 하려면 \"계속\"을 누르세요"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-" 오디오 파일을 공유 서비스에 업로드합니다: %s,%% 업로드하려면 무료 계정이 필요합니다.\n"
-"\n"
-"업로드에 문제가 있다면, 계정 연결 버튼을 누르세요. "
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr " 오디오 파일을 공유 서비스에 업로드합니다: %s,%% 업로드하려면 무료 계정이 필요합니다."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

@@ -342,7 +342,7 @@ Registry::BaseItemPtr BuildBeatsGroup(bool timeFormat)
 {
    return NumericConverterFormatterGroup(
       timeFormat ? "beatsTime" : "beatsDuration",
-      timeFormat ? NumericConverterType_TIME : NumericConverterType_DURATION,
+      timeFormat ? NumericConverterType_TIME() : NumericConverterType_DURATION(),
       NumericConverterFormatterItem(
          /* i18n-hint: "bar" and "beat" are musical notation elements. */
          "beats", XO("bar:beat"),

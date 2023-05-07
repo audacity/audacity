@@ -6924,14 +6924,8 @@ msgstr "Kattints a \"Folytatás\" gombra az audio.com-ra feltölthez"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"A hangod feltöltöttük a megosztó szolgáltatásunkba: %s,%%, amelynek használatához ingyenes fiók szükséges.\n"
-"\n"
-"Ha problémád vannak a feltöltéssel, próbáld meg a Fiók összekapcsolása lehetőséget."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "A hangod feltöltöttük a megosztó szolgáltatásunkba: %s,%%, amelynek használatához ingyenes fiók szükséges."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

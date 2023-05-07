@@ -2,11 +2,11 @@
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Paval Shalamitski <yehekim@gmail.com>, 2023
 # Thomas De Rocker, 2023
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -7141,14 +7141,8 @@ msgstr "Druk op \"doorgaan\" om naar audio.com te uploaden"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Uw audio zal worden geüpload naar onze sharing-service: %s,%%waarvoor een gratis account nodig is.\n"
-"\n"
-"Als u problemen hebt met uploaden, probeer dan de knop \"account koppelen\"."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Uw audio zal worden geüpload naar onze sharing-service: %s,%%waarvoor een gratis account nodig is."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"

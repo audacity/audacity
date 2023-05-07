@@ -170,7 +170,7 @@ std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
    {
       auto trackCopy = track->Copy(track->GetStartTime(), track->GetEndTime(), false);
       trackCopy->Init(*track);
-      trackCopy->SetOffset(track->GetOffset());
+      trackCopy->SetOffset(track->GetStartTime());
       
       if(auto waveTrack = dynamic_cast<WaveTrack*>(trackCopy.get()))
       {

@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2023 Audacity Team
 # This file is distributed under the same license as the audacity package.
-# 
+#
 # Translators:
 # Ettore Atalan <atalanttore@googlemail.com>, 2023
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2023
@@ -9,13 +9,13 @@
 # Link Winterberg, 2023
 # Michał Trzebiatowski <michtrz@gmail.com>, 2023
 # Paval Shalamitski <yehekim@gmail.com>, 2023
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.3.0\n"
+"Project-Id-Version: audacity 3.3.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-04-21 17:00+0000\n"
+"PO-Revision-Date: 2023-04-29 10:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (https://app.transifex.com/klyok/teams/690/de/)\n"
 "MIME-Version: 1.0\n"
@@ -7137,7 +7137,7 @@ msgid ""
 "We are unable to upload this file. Please try again and make sure to link to"
 " your audio.com account before uploading."
 msgstr ""
-"Wir können diese Datei nicht uploaden. Bitte versuchen Sie es erneut und "
+"Wir können diese Datei nicht hochladen. Bitte versuchen Sie es erneut und "
 "stellen Sie sicher, dass Ihr audio.com-Konto verbunden ist, bevor Sie "
 "hochladen."
 
@@ -7167,14 +7167,8 @@ msgstr "Drücken Sie „Fortsetzen“, um zu audio.com zu hochgeladen"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"Ihr Audio wird auf unseren Sharingdienst hochgeladen: %s,%%dieser erfordert ein kostenloses Konto.\n"
-"\n"
-"Wenn Sie Probleme beim Hochladen haben, versuchen Sie den Konto verbinden-Knopf."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "Ihr Audio wird auf unseren Sharingdienst hochgeladen: %s,%%dieser erfordert ein kostenloses Konto."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"
@@ -19659,7 +19653,7 @@ msgstr ""
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr "Update-Daten waren beschädigt."
+msgstr "Aktualisierungsdaten waren beschädigt."
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"

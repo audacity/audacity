@@ -186,8 +186,8 @@ public:
 
    bool IsTimeRelatedFormat() const
    {
-      return mType == NumericConverterType_TIME ||
-             mType == NumericConverterType_DURATION;
+      return mType == NumericConverterType_TIME() ||
+             mType == NumericConverterType_DURATION();
    }
 
    void
@@ -921,7 +921,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
 };
 
 NumericConverterFormats::DefaultFormatRegistrator timeDefault {
-   NumericConverterType_TIME, NumericConverterFormats::MillisecondsFormat()
+   NumericConverterType_TIME(), NumericConverterFormats::MillisecondsFormat()
 };
 
 /** \brief array of formats the control knows about internally
@@ -956,7 +956,7 @@ static const BuiltinFormatString FrequencyConverterFormats_[] = {
 };
 
 NumericConverterFormats::DefaultFormatRegistrator frequencyDefault {
-   NumericConverterType_FREQUENCY, NumericConverterFormats::HertzFormat()
+   NumericConverterType_FREQUENCY(), NumericConverterFormats::HertzFormat()
 };
 
 /** \brief array of formats the control knows about internally
@@ -1008,7 +1008,7 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
 };
 
 NumericConverterFormats::DefaultFormatRegistrator bandwidthDefault {
-   NumericConverterType_BANDWIDTH, NumericConverterFormats::OctavesFormat()
+   NumericConverterType_BANDWIDTH(), NumericConverterFormats::OctavesFormat()
 };
 
 class ParsedNumericConverterFormatterFactory final :
@@ -1073,28 +1073,28 @@ Registry::BaseItemPtr MakeGroup (
 NumericConverterItemRegistrator parsedTime {
    Registry::Placement { {}, {} },
    MakeGroup(
-      "parsedTime", NumericConverterType_TIME, TimeConverterFormats_,
+      "parsedTime", NumericConverterType_TIME(), TimeConverterFormats_,
       WXSIZEOF(TimeConverterFormats_))
 };
 
 NumericConverterItemRegistrator parsedDuration {
    Registry::Placement { {}, {} },
    MakeGroup(
-      "parsedDuration", NumericConverterType_DURATION, TimeConverterFormats_,
+      "parsedDuration", NumericConverterType_DURATION(), TimeConverterFormats_,
       WXSIZEOF(TimeConverterFormats_))
 };
 
 NumericConverterItemRegistrator parsedFrequency {
    Registry::Placement { {}, {} },
    MakeGroup(
-      "parsedFrequency", NumericConverterType_FREQUENCY,
+      "parsedFrequency", NumericConverterType_FREQUENCY(),
       FrequencyConverterFormats_, WXSIZEOF(FrequencyConverterFormats_))
 };
 
 NumericConverterItemRegistrator parsedBandwith {
    Registry::Placement { {}, {} },
    MakeGroup(
-      "parsedBandwith", NumericConverterType_BANDWIDTH,
+      "parsedBandwith", NumericConverterType_BANDWIDTH(),
       BandwidthConverterFormats_, WXSIZEOF(BandwidthConverterFormats_))
 };
 } // namespace

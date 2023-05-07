@@ -24,6 +24,7 @@ class ShuttleGui;
 class wxBitmapButton;
 class wxButton;
 class wxGauge;
+class wxPanel;
 class wxStaticText;
 class wxTextCtrl;
 class wxRadioButton;
@@ -52,7 +53,6 @@ private:
 
    void OnCancel();
    void OnContinue();
-   void OnClose();
    
    wxString ExportProject();
    
@@ -68,20 +68,21 @@ private:
 
    struct InitialStatePanel final
    {
-      InitialStatePanel();
+      explicit InitialStatePanel(ShareAudioDialog& parent);
+
+      ShareAudioDialog& parent;
       
       wxWindow* root { nullptr };
 
       UserImage* avatar { nullptr };
       wxStaticText* name { nullptr };
       wxButton* oauthButton { nullptr };
-
-      wxRadioButton* isPublic { nullptr };
+      wxPanel* anonInfoPanel { nullptr };
+      wxPanel* authorizedInfoPanel { nullptr };
 
       Observer::Subscription mUserDataChangedSubscription;
 
       void PopulateInitialStatePanel(ShuttleGui& s);
-      void PopulateFirstTimeNotice(ShuttleGui& s);
 
       void UpdateUserData();
       void OnLinkButtonPressed();
@@ -101,10 +102,6 @@ private:
       wxStaticText* elapsedTime { nullptr };
       wxStaticText* remainingTime { nullptr };
 
-      wxWindow* linkPanel { nullptr };
-      wxTextCtrl* link { nullptr };
-      wxButton* copyButton { nullptr };
-
       wxStaticText* info { nullptr };
 
       void PopulateProgressPanel(ShuttleGui& s);
@@ -113,8 +110,6 @@ private:
 
    wxButton* mContinueButton { nullptr };
    wxButton* mCancelButton { nullptr };
-   wxButton* mCloseButton { nullptr };
-   wxButton* mGotoButton { nullptr };
 
    struct Services;
    std::unique_ptr<Services> mServices;
@@ -132,6 +127,7 @@ private:
 
    std::function<void()> mContinueAction;
 
+   bool mIsAuthorised { false };
    bool mInProgress { false };
 };
 } // namespace cloud::audiocom

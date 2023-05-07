@@ -169,7 +169,7 @@ void SpectralSelectionBar::Populate()
    mChoice->SetAccessible(safenew WindowAccessible(mChoice));
 #endif
    mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, toolbarSingle));
-
+   
    mainSizer->Add(mChoice, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 6);
 
    //
@@ -181,7 +181,7 @@ void SpectralSelectionBar::Populate()
 
       mCenterCtrl = safenew NumericTextCtrl(FormatterContext::ProjectContext(mProject),
          this, OnCenterID,
-         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0,
+         NumericConverterType_FREQUENCY(), frequencyFormatName, 0.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
@@ -191,7 +191,7 @@ void SpectralSelectionBar::Populate()
       mWidthCtrl = safenew NumericTextCtrl(
          FormatterContext::ProjectContext(mProject),
          this, OnWidthID,
-         NumericConverterType_BANDWIDTH, bandwidthFormatName, 0.0,
+         NumericConverterType_BANDWIDTH(), bandwidthFormatName, 0.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, -1.0 )
       );
@@ -201,7 +201,7 @@ void SpectralSelectionBar::Populate()
       mLowCtrl = safenew NumericTextCtrl(
          FormatterContext::ProjectContext(mProject),
          this, OnLowID,
-         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0,
+         NumericConverterType_FREQUENCY(), frequencyFormatName, 0.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
@@ -211,7 +211,7 @@ void SpectralSelectionBar::Populate()
       mHighCtrl = safenew NumericTextCtrl(
          FormatterContext::ProjectContext(mProject),
          this, OnHighID,
-         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0,
+         NumericConverterType_FREQUENCY(), frequencyFormatName, 0.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );

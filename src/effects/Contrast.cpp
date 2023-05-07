@@ -252,7 +252,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mForegroundStartT = safenew
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_FOREGROUNDSTART_T,
-                         NumericConverterType_TIME,
+                         NumericConverterType_TIME(),
                          NumericConverterFormats::HundredthsFormat(),
                          0.0,
                          options);
@@ -265,7 +265,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mForegroundEndT = safenew
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_FOREGROUNDEND_T,
-                         NumericConverterType_TIME,
+                         NumericConverterType_TIME(),
                          NumericConverterFormats::HundredthsFormat(),
                          0.0,
                          options);
@@ -286,7 +286,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mBackgroundStartT = safenew
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_BACKGROUNDSTART_T,
-                         NumericConverterType_TIME,
+                         NumericConverterType_TIME(),
                          NumericConverterFormats::HundredthsFormat(),
                          0.0,
                          options);
@@ -299,7 +299,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mBackgroundEndT = safenew
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_BACKGROUNDEND_T,
-                         NumericConverterType_TIME,
+                         NumericConverterType_TIME(),
                          NumericConverterFormats::HundredthsFormat(),
                          0.0,
                          options);

@@ -377,7 +377,7 @@ std::unique_ptr<EffectEditor> EffectToneGen::PopulateOrExchange(
       mToneDurationT = safenew
          NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), wxID_ANY,
-                         NumericConverterType_TIME,
+                         NumericConverterType_TIME(),
                          extra.GetDurationFormat(),
                          extra.GetDuration(),
                          NumericTextCtrl::Options{}

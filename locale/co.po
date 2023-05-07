@@ -6909,14 +6909,8 @@ msgstr "Appughjate nant’à « Cuntinuà » per incaricà versu audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
-msgstr ""
-"U vostru audio serà incaricatu nant’à u nostru serviziu di scumpartimentu : %s,%%chì richiede un contu di rigalu per esse impiegatu.\n"
-"\n"
-"In casu di prublema d’incaricamentu, pruvate u buttone « Ligà u contu »."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
+msgstr "U vostru audio serà incaricatu nant’à u nostru serviziu di scumpartimentu : %s,%%chì richiede un contu di rigalu per esse impiegatu."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"
