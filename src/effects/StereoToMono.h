@@ -42,6 +42,7 @@ public:
 private:
    // EffectStereoToMono implementation
 
+   //! @pre `*right` is a channel paired with `*left`
    bool ProcessOne(sampleCount & curTime, sampleCount totalTime, WaveTrack *left, WaveTrack *right);
 
 };

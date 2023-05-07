@@ -47,9 +47,8 @@ class SAMPLE_TRACK_API Mixer {
    //
 
    /*!
-    @pre all `inputTracks` are non-null
-    @pre any left channels in inputTracks are immediately followed by their
-       partners
+    @pre all `inputs` are non-null
+    @pre `inputs` is the concatenation of complete ranges of channels
     @post `BufferSize() <= outBufferSize` (equality when no inputs have stages)
     */
    Mixer(Inputs inputs, bool mayThrow,
@@ -120,7 +119,7 @@ class SAMPLE_TRACK_API Mixer {
 
    // Input
    const unsigned   mNumChannels;
-   Inputs           mInputs;
+   const Inputs     mInputs;
 
    // Transformations
    const size_t     mBufferSize;

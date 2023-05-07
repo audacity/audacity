@@ -237,6 +237,8 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
       inputs.emplace_back(
          pTrack->SharedPointer<const SampleTrack>(), GetEffectStages(*pTrack));
    // MB: the stop time should not be warped, this was a bug.
+   // pre of Mixer::Mixer is satisfied assuming all channels have the same
+   // selectedness, muteness, solo-ness
    return std::make_unique<Mixer>(move(inputs),
                   // Throw, to stop exporting, if read fails:
                   true,

@@ -1257,6 +1257,8 @@ bool AudioIO::AllocateBuffers(
                   for (auto channel : range)
                      mixTracks.push_back(
                         channel->SharedPointer<const SampleTrack>());
+                  // range of all channels of one track, so the
+                  // pre of Mixer::Mixer is satisfied
                   mPlaybackMixers.emplace_back(std::make_unique<Mixer>(
                      move(mixTracks),
                      // Don't throw for read errors, just play silence:

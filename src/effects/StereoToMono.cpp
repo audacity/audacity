@@ -138,6 +138,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
       {
          auto right = *channels.rbegin();
 
+         // pre of ProcessOne is satisfied
          bGoodResult = ProcessOne(curTime, totalTime, left, right);
          if (!bGoodResult)
          {
@@ -177,6 +178,7 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
       tracks.emplace_back(
          pTrack->SharedPointer<const SampleTrack>(), GetEffectStages(*pTrack));
 
+   // pre of this function proves pre of Mixer::Mixer
    Mixer mixer(move(tracks),
                true,                // Throw to abort mix-and-render if read fails:
                Mixer::WarpOptions{*inputTracks()},

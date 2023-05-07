@@ -34,6 +34,7 @@ public:
    //! Don't call directly but use Create()
    /*!
     @param factory used only in construction, will be invoked one or more times
+    @pre `!multi || track.IsLeader()`
     @pre `upstream.AcceptsBlockSize(inBuffers.BlockSize())`
     @post `AcceptsBlockSize(inBuffers.BlockSize())`
     @post `ProcessInitialize()` succeeded on each instance that was made by
@@ -104,6 +105,8 @@ private:
  @param multichannel true only when effect does not process each channel
     of track independently
  @param[out] map terminated with ChannelNameEOL
+
+ @pre `!multichannel || track.IsLeader()`
  */
 AUDIO_GRAPH_API
 unsigned MakeChannelMap(const Track &track, bool multichannel,

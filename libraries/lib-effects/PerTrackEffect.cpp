@@ -122,6 +122,9 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          sampleCount start = 0;
          WaveTrack *pRight{};
 
+         // By construction of range, we satisfy pre of MakeChannelMap
+         // and of ProcessTrack
+         assert(!multichannel || left.IsLeader());
          const auto numChannels =
             AudioGraph::MakeChannelMap(left, multichannel, map);
          if (multichannel) {
@@ -298,6 +301,7 @@ bool PerTrackEffect::ProcessTrack(bool multi, const Factory &factory,
    const double sampleRate, const Track &track,
    Buffers &inBuffers, Buffers &outBuffers)
 {
+   assert(!multi || track.IsLeader()); // pre of this function and of Create
    assert(upstream.AcceptsBuffers(inBuffers));
    assert(sink.AcceptsBuffers(outBuffers));
 

@@ -57,6 +57,8 @@ void DoMixAndRender
 
    auto trackRange = tracks.Selected< WaveTrack >();
    WaveTrack::Holder uNewLeft, uNewRight;
+   // pre of MixAndRender is satisfied assuming channels always agree for
+   // selectedness
    ::MixAndRender(trackRange.Filter<const WaveTrack>(),
       Mixer::WarpOptions{ tracks },
       tracks.MakeUniqueTrackName(_("Mix")),
@@ -894,6 +896,8 @@ void OnScoreAlign(const CommandContext &context)
 
    int result;
    {
+      // pre of Mixer::Mixer is satisfied assuming all channels agree for
+      // selectedness
       Mixer mix(
          waveTracks,              // const WaveTrackConstArray &inputTracks
          false, // mayThrow -- is this right?

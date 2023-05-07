@@ -72,6 +72,7 @@ private:
    /*!
     Previous contents of inBuffers and outBuffers are ignored
 
+    @pre `!multi || track.IsLeader()`
     @pre `source.AcceptsBuffers(inBuffers)`
     @pre `source.AcceptsBlockSize(inBuffers.BlockSize())`
     @pre `sink.AcceptsBuffers(outBuffers)`

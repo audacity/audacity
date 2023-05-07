@@ -20,32 +20,34 @@
 #include <cassert>
 
 namespace {
+// @pre `!multi || track.IsLeader()`
 std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
    const AudioGraph::EffectStage::Factory &factory,
    EffectSettings &settings, double sampleRate, const Track &track
    , std::optional<sampleCount> genLength, bool multi)
 {
+   // must satisfy pre of MakeChannelMap
+   assert(!multi || track.IsLeader());
    std::vector<std::shared_ptr<EffectInstance>> instances;
    // Make as many instances as needed for the channels of the track, which
    // depends on how the instances report how many channels they accept
-   const auto range = multi
-      ? TrackList::Channels(&track)
-      : TrackList::Channels(&track).StartingWith(&track).EndingAfter(&track);
-   const auto nChannels = range.size();
-   size_t ii = 0;
-   for (auto iter = range.begin(); iter != range.end();) {
-      auto channel = *iter;
+   const auto nChannels = multi ? TrackList::NChannels(track) : 1;
+   bool done = false;
+   TrackList::VisitChannels(track, [&](auto &channel) {
+      if (done)
+         return;
+      if (!multi && &channel != &track)
+         return;
       auto pInstance = factory();
       if (!pInstance)
          // A constructor that can't satisfy its post should throw instead
          throw std::exception{};
       auto count = pInstance->GetAudioInCount();
       ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
-      AudioGraph::MakeChannelMap(*channel, count > 1, map);
+      AudioGraph::MakeChannelMap(channel, multi && count > 1, map);
       // Give the plugin a chance to initialize
       if (!pInstance->ProcessInitialize(settings, sampleRate, map))
          throw std::exception{};
-      instances.resize(ii);
    
       // Beware generators with zero in count
       if (genLength)
@@ -53,15 +55,11 @@ std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
    
       instances.push_back(move(pInstance));
 
-      // Advance ii and iter
       if (count == 0)
          // What? Can't make progress
          throw std::exception();
-      ii += count;
-      if (ii >= nChannels)
-         break;
-      std::advance(iter, count);
-   }
+      done = (count > 1);
+   });
    return instances;
 }
 }
@@ -77,6 +75,7 @@ AudioGraph::EffectStage::EffectStage(CreateToken, bool multi,
    , mIsProcessor{ !genLength.has_value() }
    , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
 {
+   assert(!multi || track.IsLeader());
    assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
    assert(this->AcceptsBlockSize(inBuffers.BlockSize()));
 
@@ -379,26 +378,28 @@ bool AudioGraph::EffectStage::Release()
 unsigned AudioGraph::MakeChannelMap(
    const Track &track, bool multichannel, ChannelName map[3])
 {
+   assert(!multichannel || track.IsLeader());
    // Iterate either over one track which could be any channel,
    // or if multichannel, then over all channels of track,
    // which is a leader.
    unsigned numChannels = 0;
-   for (auto channel : TrackList::Channels(&track).StartingWith(&track)) {
-      if (channel->GetChannel() == Track::LeftChannel)
+   TrackList::VisitChannels(track, [&](auto &channel) {
+      if (!multichannel && &channel != &track)
+         return;
+
+      // TODO: more-than-two-channels
+      // Ignore other channels
+      if (numChannels > 2)
+         return;
+   
+      if (channel.GetChannel() == Track::LeftChannel)
          map[numChannels] = ChannelNameFrontLeft;
-      else if (channel->GetChannel() == Track::RightChannel)
+      else if (channel.GetChannel() == Track::RightChannel)
          map[numChannels] = ChannelNameFrontRight;
       else
          map[numChannels] = ChannelNameMono;
       ++ numChannels;
       map[numChannels] = ChannelNameEOL;
-      if (! multichannel)
-         break;
-      if (numChannels == 2) {
-         // TODO: more-than-two-channels
-         // Ignore other channels
-         break;
-      }
-   }
-   return numChannels;
+   });
+   return std::min(2u, numChannels);
 }

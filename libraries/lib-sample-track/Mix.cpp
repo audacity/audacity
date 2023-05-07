@@ -111,7 +111,7 @@ Mixer::Mixer(Inputs inputs,
    , mEffectiveFormat{ floatSample }
 {
    assert(BufferSize() <= outBufferSize);
-   const auto nTracks =  mInputs.size();
+   const auto nTracks = mInputs.size();
 
    // Examine the temporary instances that were made in FindBufferSize
    // This finds a sufficient, but not necessary, condition to do dithering
@@ -138,7 +138,9 @@ Mixer::Mixer(Inputs inputs,
       const auto &input = mInputs[i];
       const auto leader = input.pTrack.get();
       const auto nInChannels = TrackList::NChannels(*leader);
-      if (!leader || i + nInChannels > nTracks) {
+      // pre of constructor implies this assertion, if also i is incremented
+      // by the channel range size
+      if (!leader || !leader->IsLeader() || i + nInChannels > nTracks) {
          assert(false);
          break;
       }
@@ -162,6 +164,7 @@ Mixer::Mixer(Inputs inputs,
                ? move(stage.mpFirstInstance)
                : stage.factory();
          };
+         assert(leader->IsLeader()); // pre of Create
          auto &pNewDownstream =
          mStages.emplace_back(AudioGraph::EffectStage::Create(true,
             *pDownstream, stageInput,

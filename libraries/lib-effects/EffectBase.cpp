@@ -419,6 +419,8 @@ void EffectBase::Preview(
    // Generators need to generate per track.
    if (mIsLinearEffect && !isGenerator) {
       WaveTrack::Holder mixLeft, mixRight;
+      // pre of MixAndRender is satisfied assuming channels always agree for
+      // selectedness
       MixAndRender(saveTracks->Selected<const WaveTrack>(),
          Mixer::WarpOptions{ *saveTracks },
          wxString{}, // Don't care about the name of the temporary tracks

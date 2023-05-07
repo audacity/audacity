@@ -35,6 +35,8 @@ class WaveTrackFactory;
  *
  * @param newTrackName used only when there is more than one input track (one
  * mono channel or a stereo pair); else the unique track's name is copied
+ *
+ * @pre `trackRange` is the concatenation of complete ranges of channels
  */
 void EFFECTS_API MixAndRender(
    const TrackIterRange<const WaveTrack, OldTrackIterTag> &trackRange,
