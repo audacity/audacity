@@ -112,8 +112,8 @@ void ForEachCopiedWaveTrack(const TrackList& src,
             continue;
          }
          
-         auto srcChannelCount = TrackList::Channels(*srcTrack).size();
-         auto dstChannelCount = TrackList::Channels(*dstTrack).size();
+         auto srcChannelCount = TrackList::NChannels(**srcTrack);
+         auto dstChannelCount = TrackList::NChannels(**dstTrack);
                   
          while(srcChannelCount > 0 && dstChannelCount > 0)
          {
@@ -680,10 +680,8 @@ void OnPaste(const CommandContext &context)
          if ( n->IsLeader() ) {
             wxASSERT( c->IsLeader() ); // the iteration logic should ensure this
 
-            auto cChannels = TrackList::Channels(c);
-            ncChannels = cChannels.size();
-            auto nChannels = TrackList::Channels(n);
-            nnChannels = nChannels.size();
+            auto ncChannels = TrackList::NChannels(*c);
+            auto nnChannels = TrackList::NChannels(*n);
 
             // When trying to copy from stereo to mono track, show error and
             // exit

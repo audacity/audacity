@@ -1420,6 +1420,12 @@ public:
       return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
    }
 
+   //! Count channels of a track
+   static size_t NChannels(const Track &track)
+   {
+      return Channels(&track).size();
+   }
+
    //! If the given track is one of a pair of channels, swap them
    /*! @return success */
    static bool SwapChannels(Track &track);

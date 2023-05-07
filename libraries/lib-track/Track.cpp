@@ -847,7 +847,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    Saved saved1, saved2;
 
    auto doSave = [&] ( Saved &saved, TrackNodePointer &s ) {
-      size_t nn = Channels( s.first->get() ).size();
+      size_t nn = NChannels(**s.first);
       saved.resize( nn );
       // Save them in backwards order
       while( nn-- )

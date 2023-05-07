@@ -285,7 +285,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
    bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
    const ArrayOf<bool> *pMap
 )  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
-   , mnChannels{ TrackList::Channels(&leader).size() }
+   , mnChannels{ TrackList::NChannels(leader) }
    , mRate{ rate }
    , mEnvelope{ options.envelope }
    , mMayThrow{ mayThrow }

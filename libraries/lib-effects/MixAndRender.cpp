@@ -90,7 +90,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 
    /* create the destination track (NEW track) */
-   if (numWaves == (int)TrackList::Channels(first).size())
+   if (numWaves == (int)TrackList::NChannels(*first))
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
