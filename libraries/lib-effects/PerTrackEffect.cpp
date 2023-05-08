@@ -117,8 +117,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          sampleCount start = 0;
          WaveTrack *pRight{};
 
-         // By construction of range, we satisfy pre of MakeChannelMap
-         // and of ProcessTrack
+         // Test of multichannel, in VisitWhile below, guarantees that we
+         // satisfy pre of MakeChannelMap and of ProcessTrack
          assert(!multichannel || left.IsLeader());
          const auto numChannels =
             AudioGraph::MakeChannelMap(left, multichannel, map);
@@ -284,16 +284,26 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             t->SyncLockAdjust(mT1, mT0 + duration);
       };
 
-   auto range = multichannel
-      ? mOutputTracks->Leaders()
-      : mOutputTracks->Any();
+   auto range = mOutputTracks->Leaders();
    range.VisitWhile(bGoodResult,
       [&](WaveTrack *pLeft, const Track::Fallthrough &fallthrough) {
          if (!pLeft->GetSelected())
             return fallthrough();
-         waveTrackVisitor(pLeft);
+         if (!multichannel)
+            TrackList::VisitChannels(*pLeft, [&](auto &channel){
+               waveTrackVisitor(&channel);
+            });
+         else
+            waveTrackVisitor(pLeft);
       },
-      defaultTrackVisitor
+      [&](Track *t) {
+         if (!multichannel)
+            TrackList::VisitChannels(*t, [&](auto &channel) {
+               defaultTrackVisitor(&channel);
+            });
+         else
+            defaultTrackVisitor(t);
+      }
    );
 
    if (bGoodResult && GetType() == EffectTypeGenerate)
