@@ -135,7 +135,7 @@ std::unique_ptr<EffectEditor> VSTEffect::PopulateUI(const EffectPlugin &,
 
 
    // Build the appropriate dialog type
-   if (mGui)
+   if (gui)
    {
       editor->BuildFancy(instance);
    }
