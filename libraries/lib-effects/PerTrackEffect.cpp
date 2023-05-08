@@ -109,11 +109,9 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
    const bool multichannel = numAudioIn > 1;
    const auto waveTrackVisitor =
-      [&](WaveTrack *pLeft, const Track::Fallthrough &fallthrough) {
+      [&](WaveTrack *pLeft) {
          // Track range visitor functions receive a pointer that is never null
          auto &left = *pLeft;
-         if (!left.GetSelected())
-            return fallthrough();
 
          sampleCount len = 0;
          sampleCount start = 0;
@@ -290,7 +288,11 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
       ? mOutputTracks->Leaders()
       : mOutputTracks->Any();
    range.VisitWhile(bGoodResult,
-      waveTrackVisitor,
+      [&](WaveTrack *pLeft, const Track::Fallthrough &fallthrough) {
+         if (!pLeft->GetSelected())
+            return fallthrough();
+         waveTrackVisitor(pLeft);
+      },
       defaultTrackVisitor
    );
 
