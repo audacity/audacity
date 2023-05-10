@@ -136,8 +136,15 @@ ApplicationWindow {
       x: sidebar.width
       width: root.width - sidebar.width
       color: appConfig.backgroundColor3
-      anchors.top: toolsToolbar.bottom
+      anchors.top: timelineRuler.bottom
       anchors.bottom: footerId.top
+
+      Waveform {
+         id: waveform
+         x: 13
+         y: 0
+         height: 84
+      }
    }
 
    Sidebar {

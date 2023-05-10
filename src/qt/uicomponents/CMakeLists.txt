@@ -35,6 +35,8 @@ set(MODULE_QML_SOURCES
    qml/VideoTrackControlPanel.qml
    qml/VolumeControl.qml
    qml/VolumeControlTester.qml
+   qml/WaveClipView.qml
+   qml/Waveform.qml
 )
 
 qt_add_qml_module(${MODULE_NAME}
