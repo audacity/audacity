@@ -12,45 +12,7 @@
 
 #include "ExportUtils.h"
 #include "Track.h"
-#include "Mix.h"
-#include "BasicUI.h"
 #include "WaveTrack.h"
-#include "MixAndRender.h"
-#include "StretchingSequence.h"
-#include "wxFileNameWrapper.h"
-
-//Create a mixer by computing the time warp factor
-std::unique_ptr<Mixer> ExportUtils::CreateMixer(const TrackList &tracks,
-         bool selectionOnly,
-         double startTime, double stopTime,
-         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
-         double outRate, sampleFormat outFormat,
-         MixerOptions::Downmix *mixerSpec)
-{
-   Mixer::Inputs inputs;
-   
-   for (auto pTrack: FindExportWaveTracks(tracks, selectionOnly))
-      inputs.emplace_back(
-         StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()),
-         GetEffectStages(*pTrack));
-   // MB: the stop time should not be warped, this was a bug.
-   return std::make_unique<Mixer>(move(inputs),
-                  // Throw, to stop exporting, if read fails:
-                  true,
-                  Mixer::WarpOptions{ tracks.GetOwner() },
-                  startTime, stopTime,
-                  numOutChannels, outBufferSize, outInterleaved,
-                  outRate, outFormat,
-                  true, mixerSpec);
-}
-
-double ExportUtils::EvalExportProgress(Mixer &mixer, double t0, double t1)
-{
-   const auto duration = t1 - t0;
-   if(duration > 0)
-      return std::clamp(mixer.MixGetCurrentTime() - t0, .0, duration) / duration;
-   return .0;
-}
 
 //TODO: used in many places in anticipation that Exporter yields same result, fix that
 TrackIterRange<const WaveTrack> ExportUtils::FindExportWaveTracks(const TrackList& tracks, bool selectedOnly)

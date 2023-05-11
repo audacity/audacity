@@ -555,10 +555,10 @@ list( APPEND SOURCES
       export/ExportMixerPanel.h
       export/ExportMixerDialog.cpp
       export/ExportMixerDialog.h
-      export/GenericExportProgressListener.cpp
-      export/GenericExportProgressListener.h
       export/ExportOptionsHandler.cpp
       export/ExportOptionsHandler.h
+      export/ExportProgressUI.cpp
+      export/ExportProgressUI.h
 
       # Standard exporters
       export/ExportMultiple.cpp

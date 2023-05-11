@@ -31,7 +31,7 @@
 #include "wxFileNameWrapper.h"
 #include "CommandContext.h"
 #include "ExportUtils.h"
-#include "export/GenericExportProgressListener.h"
+#include "export/ExportProgressUI.h"
 
 
 const ComponentInterfaceSymbol ImportCommand::Symbol
@@ -135,15 +135,18 @@ bool ExportCommand::Apply(const CommandContext & context)
          auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
          editor->Load(*gPrefs);
 
-         GenericExportProgressListener progressListener(*plugin);
-         exporter.Process(progressListener,
+         const auto result = ExportProgressUI::Show(ExportTask(
+            [&](auto& delegate)
+            {
+               return exporter.Process(delegate,
                           ExportUtils::ParametersFromEditor(*editor),
                           std::max(0, mnChannels),
                           extension, mFileName,
                           true, t0, t1);
-         const auto result = progressListener.ConsumeResult();
-         if (result == ExportProgressListener::ExportResult::Success ||
-             result == ExportProgressListener::ExportResult::Stopped)
+            }
+         ));
+         
+         if (result == ExportResult::Success || result == ExportResult::Stopped)
          {
             context.Status(wxString::Format(wxT("Exported to %s format: %s"),
                                             extension, mFileName));

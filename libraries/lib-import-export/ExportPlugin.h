@@ -26,7 +26,6 @@ class wxFileNameWrapper;
 
 class AudacityProject;
 class Tags;
-class ExportProgressListener;
 
 namespace MixerOptions{ class Downmix; }
 
@@ -38,6 +37,18 @@ struct IMPORT_EXPORT_API FormatInfo
    FileExtensions mExtensions;
    unsigned mMaxChannels;
    bool mCanMetaData;
+};
+
+class IMPORT_EXPORT_API ExportPluginDelegate
+{
+public:
+   virtual ~ExportPluginDelegate();
+
+   virtual bool IsCancelled() const = 0;
+   virtual bool IsStopped() const = 0;
+   virtual void SetErrorString(const TranslatableString& str) = 0;
+   virtual void SetStatusString(const TranslatableString& str) = 0;
+   virtual void OnProgress(double progress) = 0;
 };
 
 //----------------------------------------------------------------------------
@@ -63,12 +74,6 @@ public:
     */
    virtual std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int formatIndex, ExportOptionsEditor::Listener* listener) const = 0;
-   
-   ///\brief Can be used to retrieve description of current export status in human-readable form
-   virtual TranslatableString GetStatusString() const = 0;
-   
-   ///\return Optional detailed problem description in case of export failure.
-   virtual TranslatableString GetErrorString() const = 0;
  
    /// \return Mime type(s) supported by the format.
    virtual std::vector<std::string> GetMimeTypes(int formatIndex) const;
@@ -85,7 +90,7 @@ public:
 
    /** \brief called to export audio into a file.
     *
-    * @param progressListener  Used to report on export progress and result
+    * @param delegate Used to report on export progress
     * @param parameters A format-dependent set of parameters used in exporting
     * @param selectedOnly Set to true if all tracks should be mixed, to false
     * if only the selected tracks should be mixed and exported.
@@ -99,42 +104,13 @@ public:
     * libsndfile export plug-in, but with subformat set to 0, 1, and 2
     * respectively.
     */
-   virtual void Export(AudacityProject *project,
-                       ExportProgressListener &progressListener,
+   virtual ExportResult Export(AudacityProject *project,
+                       ExportPluginDelegate& delegate,
                        const Parameters& parameters,
                        unsigned channels,
                        const wxFileNameWrapper &fName,
-                       bool selectedOnly,
-                       double t0,
-                       double t1,
+                       bool selectedOnly, double t0, double t1,
                        MixerOptions::Downmix *mixerSpec = nullptr,
                        const Tags *metadata = nullptr,
                        int subformat = 0) = 0;
-   
-   virtual void Cancel() = 0;
-   
-   virtual void Stop() = 0;
-};
-
-class IMPORT_EXPORT_API ExportPluginEx : public ExportPlugin
-{
-   TranslatableString mStatus;
-   TranslatableString mError;
-   bool mCancelled{false};
-   bool mStopped{false};
-public:
-   TranslatableString GetErrorString() const override;
-   TranslatableString GetStatusString() const override;
-   void Cancel() override;
-   void Stop() override;
-   
-protected:
-   void ExportBegin();
-   void ExportFinish(ExportProgressListener& progressListener);
-   
-   bool IsCancelled() const noexcept;
-   bool IsStopped() const noexcept;
-   
-   void SetStatusString(const TranslatableString& status);
-   void SetErrorString(const TranslatableString& error);
 };
