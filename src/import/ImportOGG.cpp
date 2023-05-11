@@ -72,6 +72,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
+#include "ImportUtils.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
@@ -255,7 +256,7 @@ ProgressResult OggImportFileHandle::Import(
 
       for (auto &channel : link)
          // The format agrees with what is always passed to Append() below
-         channel = NewWaveTrack(*trackFactory, int16Sample, vi->rate);
+         channel = ImportUtils::NewWaveTrack(*trackFactory, int16Sample, vi->rate);
    }
 
    /* The number of bytes to get from the codec in each run */

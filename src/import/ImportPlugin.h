@@ -112,6 +112,7 @@ class AUDACITY_DLL_API ImportFileHandle /* not final */
 {
 public:
    using ProgressResult = BasicUI::ProgressResult;
+   using ByteCount = unsigned long long;
 
    ImportFileHandle(const FilePath & filename);
 
@@ -129,7 +130,6 @@ public:
    // Return an estimate of how many bytes the file will occupy once
    // imported.  In principle this may exceed main memory, so don't use
    // size_t.
-   using ByteCount = unsigned long long;
    virtual ByteCount GetFileUncompressedBytes() = 0;
 
    // Return number of elements in stream list
@@ -152,13 +152,8 @@ public:
    virtual ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
                       Tags *tags) = 0;
 
-   //! Choose appropriate format, which will not be narrower than the specified one
-   static sampleFormat ChooseFormat(sampleFormat effectiveFormat);
-
 protected:
-   //! Build a wave track with appropriate format, which will not be narrower than the specified one
-   std::shared_ptr<WaveTrack> NewWaveTrack( WaveTrackFactory &trackFactory,
-      sampleFormat effectiveFormat, double rate);
+   
 
    FilePath mFilename;
    std::unique_ptr<ProgressDialog> mProgress;

@@ -605,6 +605,10 @@ list( APPEND SOURCES
       import/Import.cpp
       import/Import.h
       import/ImportForwards.h
+      import/ImportPlugin.cpp
+      import/ImportPlugin.h
+      import/ImportUtils.cpp
+      import/ImportUtils.h
       import/MultiFormatReader.cpp
       import/MultiFormatReader.h
       import/RawAudioGuess.cpp
@@ -617,8 +621,7 @@ list( APPEND SOURCES
       import/ImportAUP.cpp
       import/ImportLOF.cpp
       import/ImportPCM.cpp
-      import/ImportPlugin.h
-      import/ImportPlugin.cpp
+      
       import/ImportRaw.cpp
       import/ImportRaw.h
 
