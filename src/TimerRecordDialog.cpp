@@ -370,6 +370,7 @@ void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(ev
    m_fnAutoExportFile = eExporter.GetAutoExportFileName();
    m_iAutoExportFormat = eExporter.GetAutoExportFormat();
    m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
+   m_AutoExportParameters = eExporter.GetAutoExportParameters();
 
    // Update the text controls
    this->UpdateTextBoxControls();
@@ -618,7 +619,10 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          ShowExportErrorDialog(
             ":576", XO("All audio is muted."), XO("Warning"), false);
       }
-      e.Configure(m_fnAutoExportFile, m_iAutoExportFormat, m_iAutoExportSubFormat, {});
+      e.Configure(m_fnAutoExportFile,
+         m_iAutoExportFormat,
+         m_iAutoExportSubFormat,
+         m_AutoExportParameters);
       
       if(ImportExportPrefs::ExportDownMixSetting.ReadEnum())
          e.SetUseStereoOrMonoOutput();

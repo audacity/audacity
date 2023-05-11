@@ -30,6 +30,7 @@
 #include "Track.h"
 #include "wxFileNameWrapper.h"
 #include "CommandContext.h"
+#include "export/ExportUtils.h"
 #include "export/GenericExportProgressListener.h"
 
 
@@ -124,20 +125,30 @@ bool ExportCommand::Apply(const CommandContext & context)
    wxString extension = mFileName.Mid(splitAt+1).MakeUpper();
 
    Exporter exporter{ context.project };
-   auto plugin = exporter.FindPluginByType(extension);
-   if(plugin != nullptr)
+   for(auto& plugin : exporter.GetPlugins())
    {
-      GenericExportProgressListener progressListener(*plugin);
-      exporter.Process(progressListener, {}, std::max(0, mnChannels),
-                       extension, mFileName,
-                       true, t0, t1);
-      const auto result = progressListener.ConsumeResult();
-      if (result == ExportProgressListener::ExportResult::Success ||
-          result == ExportProgressListener::ExportResult::Stopped)
+      for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
       {
-         context.Status(wxString::Format(wxT("Exported to %s format: %s"),
-                                         extension, mFileName));
-         return true;
+         auto formatInfo = plugin->GetFormatInfo(formatIndex);
+         if(!formatInfo.mFormat.IsSameAs(extension, false))
+            continue;
+         auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+         editor->Load(*gPrefs);
+
+         GenericExportProgressListener progressListener(*plugin);
+         exporter.Process(progressListener,
+                          ExportUtils::ParametersFromEditor(*editor),
+                          std::max(0, mnChannels),
+                          extension, mFileName,
+                          true, t0, t1);
+         const auto result = progressListener.ConsumeResult();
+         if (result == ExportProgressListener::ExportResult::Success ||
+             result == ExportProgressListener::ExportResult::Stopped)
+         {
+            context.Status(wxString::Format(wxT("Exported to %s format: %s"),
+                                            extension, mFileName));
+            return true;
+         }
       }
    }
 

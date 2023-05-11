@@ -59,3 +59,17 @@ TrackIterRange<const WaveTrack> ExportUtils::FindExportWaveTracks(const TrackLis
             + ( selectedOnly ? &Track::IsSelected : &Track::Any  )
             - ( anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute);
 }
+
+ExportPlugin::Parameters ExportUtils::ParametersFromEditor(const ExportOptionsEditor& editor)
+{
+   ExportPlugin::Parameters parameters;
+   for(int i = 0, count = editor.GetOptionsCount(); i < count; ++i)
+   {
+      ExportOption option;
+      ExportValue value;
+      if(editor.GetOption(i, option) && editor.GetValue(option.id, value))
+         parameters.emplace_back(option.id, value);
+   }
+   return parameters;
+}
+
