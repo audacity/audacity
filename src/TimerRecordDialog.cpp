@@ -56,6 +56,8 @@
 #include "ProgressDialog.h"
 #include "wxTextCtrlWrapper.h"
 
+#include "prefs/ImportExportPrefs.h"
+
 #include "export/ExportFileDialog.h"
 
 #include "prefs/ImportExportPrefs.h"
@@ -604,10 +606,14 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          ShowExportErrorDialog(
             ":576", XO("All audio is muted."), XO("Warning"), false);
       }
+      e.Configure(m_fnAutoExportFile, m_iAutoExportFormat, m_iAutoExportSubFormat);
       
-      bExportOK = e.ProcessFromTimerRecording(
-            m_fnAutoExportFile, m_iAutoExportFormat,
-            m_iAutoExportSubFormat);
+      if(ImportExportPrefs::ExportDownMixSetting.ReadEnum())
+         e.SetUseStereoOrMonoOutput();
+      else
+         e.CreateMixerSpec();
+      
+      bExportOK = e.ProcessFromTimerRecording();
    }
 
    // Check if we need to override the post recording action

@@ -25,9 +25,12 @@
 #include "../widgets/FileHistory.h"
 #include "../widgets/MissingPluginsErrorDialog.h"
 #include "wxPanelWrapper.h"
+#include "../widgets/Warning.h"
 #include "../prefs/ImportExportPrefs.h"
 
 #include "export/ExportFileDialog.h"
+#include "export/ExportUtils.h"
+#include "export/ExportMixerDialog.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -56,10 +59,49 @@ bool ExportWithPrompt(AudacityProject &project,
                                            project.GetProjectName(),
                                            format,
                                            selectedOnly ? XO("Export Selected Audio") : XO("Export Audio"));
-   if(ret == wxID_OK)
-      return exporter.Process();
+   if(ret != wxID_OK)
+      return false;
    
-   return false;
+   if(ImportExportPrefs::ExportDownMixSetting.ReadEnum())
+   {
+      const auto downMixMode = exporter.SetUseStereoOrMonoOutput();
+      
+      auto pWindow = ProjectWindow::Find(&project);
+      if (downMixMode == Exporter::DownMixMode::Mono) {
+         if (ShowWarningDialog(pWindow,
+            wxT("MixMono"),
+            XO("Your tracks will be mixed down and exported as one mono file."),
+            true) == wxID_CANCEL)
+            return false;
+      }
+      else if (downMixMode == Exporter::DownMixMode::Stereo) {
+         if (ShowWarningDialog(pWindow,
+            wxT("MixStereo"),
+            XO("Your tracks will be mixed down and exported as one stereo file."),
+            true) == wxID_CANCEL)
+            return false;
+      }
+      else if (downMixMode == Exporter::DownMixMode::FormatDefined) {
+         if (ShowWarningDialog(pWindow,
+            wxT("MixUnknownChannels"),
+            XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
+            true) == wxID_CANCEL)
+            return false;
+      }
+   }
+   else
+   {
+      auto mixerSpec = exporter.CreateMixerSpec();
+      ExportMixerDialog md(ExportUtils::FindExportWaveTracks(TrackList::Get(project), selectedOnly),
+                           mixerSpec,
+                           nullptr,
+                           1,
+                           XO("Advanced Mixing Options"));
+      if(md.ShowModal() != wxID_OK)
+         return false;
+   }
+   
+   return exporter.Process();
 }
 
 void DoExport(AudacityProject &project, const FileExtension &format)
