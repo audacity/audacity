@@ -119,11 +119,6 @@ public:
    {
       mCancelled.store(std::memory_order_release);
    }
-
-   const TranslatableString& GetErrorString() const noexcept
-   {
-      return mError;
-   }
    
    ExportResult GetResult() const
    {
@@ -133,11 +128,6 @@ public:
    void SetResult(ExportResult result)
    {
       mResult = result;
-   }
-
-   void SetErrorString(const TranslatableString& str) override
-   {
-      mError = str;
    }
 
    void SetStatusString(const TranslatableString& str) override
@@ -172,7 +162,6 @@ private:
 
    std::atomic<bool> mCancelled{false};
    std::atomic<double> mProgress;
-   TranslatableString mError;
    ExportResult mResult;
 };
 
@@ -414,14 +403,6 @@ void ShareAudioDialog::StartUploadProcess()
       if(!mExportProgressUpdater ||
          mExportProgressUpdater->GetResult() != ExportResult::Cancelled)
       {
-         auto errorString = mExportProgressUpdater->GetErrorString();
-         if(!errorString.empty())
-         {
-            BasicUI::ShowMessageBox(errorString,
-                                    BasicUI::MessageBoxOptions()
-                                       .IconStyle(BasicUI::Icon::Error)
-                                       .Caption(XO("Error")));
-         }
          HandleExportFailure();
       }
 

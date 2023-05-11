@@ -83,7 +83,6 @@ public:
 
    virtual bool IsCancelled() const = 0;
    virtual bool IsStopped() const = 0;
-   virtual void SetErrorString(const TranslatableString& str) = 0;
    virtual void SetStatusString(const TranslatableString& str) = 0;
    virtual void OnProgress(double progress) = 0;
 };
