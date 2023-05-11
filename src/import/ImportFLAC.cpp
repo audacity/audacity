@@ -36,10 +36,10 @@
 
 #include "Import.h"
 #include "ImportPlugin.h"
+#include "ImportProgressListener.h"
 
 #include "SelectFile.h"
 #include "Tags.h"
-#include "ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
 
@@ -101,6 +101,9 @@ class MyFLACFile final : public FLAC::Decoder::File
    {
       return mWasError;
    }
+   
+   ImportProgressListener *mImportProgressListener {nullptr};
+   
  private:
    friend class FLACImportFileHandle;
    FLACImportFileHandle *mFile;
@@ -131,7 +134,7 @@ class FLACImportPlugin final : public ImportPlugin
 };
 
 
-class FLACImportFileHandle final : public ImportFileHandle
+class FLACImportFileHandle final : public ImportFileHandleEx
 {
    friend class MyFLACFile;
 public:
@@ -142,8 +145,10 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-              Tags *tags) override;
+   void Import(ImportProgressListener& progressListener,
+               WaveTrackFactory *trackFactory,
+               TrackHolders &outTracks,
+               Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
 
@@ -166,7 +171,6 @@ private:
    FLAC__uint64          mNumSamples;
    FLAC__uint64          mSamplesDone;
    bool                  mStreamInfoDone;
-   ProgressResult        mUpdateResult;
    NewChannelGroup       mChannels;
 };
 
@@ -269,8 +273,11 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 
       mFile->mSamplesDone += frame->header.blocksize;
 
-      mFile->mUpdateResult = mFile->mProgress->Update((wxULongLong_t) mFile->mSamplesDone, mFile->mNumSamples != 0 ? (wxULongLong_t)mFile->mNumSamples : 1);
-      if (mFile->mUpdateResult != ProgressResult::Success)
+      if(mFile->mNumSamples > 0)
+         mImportProgressListener->OnImportProgress(static_cast<double>(mFile->mSamplesDone) /
+                                                   static_cast<double>(mFile->mNumSamples));
+      
+      if (mFile->IsCancelled() || mFile->IsStopped())
       {
          return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
       }
@@ -332,10 +339,9 @@ static Importer::RegisteredImportPlugin registered{ "FLAC",
 };
 
 FLACImportFileHandle::FLACImportFileHandle(const FilePath & name)
-:  ImportFileHandle(name),
+:  ImportFileHandleEx(name),
    mSamplesDone(0),
-   mStreamInfoDone(false),
-   mUpdateResult(ProgressResult::Success)
+   mStreamInfoDone(false)
 {
    // Initialize mFormat as narrowest
    mFormat = narrowestSampleFormat;
@@ -356,7 +362,7 @@ bool FLACImportFileHandle::Init()
       return false;
    }
 #else
-   if (!mHandle.Open(mFilename, wxT("rb"))) {
+   if (!mHandle.Open(GetFilename(), wxT("rb"))) {
       return false;
    }
 
@@ -407,15 +413,18 @@ auto FLACImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 }
 
 
-ProgressResult FLACImportFileHandle::Import(WaveTrackFactory *trackFactory,
-                                 TrackHolders &outTracks,
-                                 Tags *tags)
+void FLACImportFileHandle::Import(ImportProgressListener& progressListener,
+                                  WaveTrackFactory *trackFactory,
+                                  TrackHolders &outTracks,
+                                  Tags *tags)
 {
+   BeginImport();
+   
    outTracks.clear();
 
+   auto cleanup = finally([&]{ mFile->mImportProgressListener = nullptr; });
+   
    wxASSERT(mStreamInfoDone);
-
-   CreateProgress();
 
    mChannels.resize(mNumChannels);
 
@@ -424,6 +433,8 @@ ProgressResult FLACImportFileHandle::Import(WaveTrackFactory *trackFactory,
       for (size_t c = 0; c < mNumChannels; ++iter, ++c)
          *iter = ImportUtils::NewWaveTrack(*trackFactory, mFormat, mSampleRate);
    }
+   
+   mFile->mImportProgressListener = &progressListener;
 
    // TODO: Vigilant Sentry: Variable res unused after assignment (error code DA1)
    //    Should check the result.
@@ -432,10 +443,11 @@ ProgressResult FLACImportFileHandle::Import(WaveTrackFactory *trackFactory,
    #else
       bool res = (mFile->process_until_end_of_stream() != 0);
    #endif
-      wxUnusedVar(res);
-
-   if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled) {
-      return mUpdateResult;
+   
+   if(IsCancelled())
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
+      return;
    }
 
    for (const auto &channel : mChannels)
@@ -479,9 +491,10 @@ ProgressResult FLACImportFileHandle::Import(WaveTrackFactory *trackFactory,
       }
    }
 
-   return mUpdateResult;
+   progressListener.OnImportResult(IsStopped()
+                                   ? ImportProgressListener::ImportResult::Stopped
+                                   : ImportProgressListener::ImportResult::Success);
 }
-
 
 FLACImportFileHandle::~FLACImportFileHandle()
 {

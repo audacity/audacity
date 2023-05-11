@@ -81,6 +81,7 @@
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
 #include "Import.h"
+#include "ImportProgressListener.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "../ProjectManager.h"
@@ -88,7 +89,6 @@
 #include "../ProjectWindows.h"
 #include "Prefs.h"
 #include "AudacityMessageBox.h"
-#include "ProgressDialog.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024
 
@@ -124,8 +124,16 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-              Tags *tags) override;
+   void Import(ImportProgressListener& progressListener,
+               WaveTrackFactory *trackFactory,
+               TrackHolders &outTracks,
+               Tags *tags) override;
+   
+   FilePath GetFilename() const override;
+   
+   void Cancel() override;
+   
+   void Stop() override;
 
    wxInt32 GetStreamCount() override { return 1; }
 
@@ -144,7 +152,7 @@ private:
    void doDurationAndScrollOffset();
 
    std::unique_ptr<wxTextFile> mTextFile;
-   wxFileName mLOFFileName;  /**< The name of the LOF file, which is used to
+   const wxFileName mLOFFileName;  /**< The name of the LOF file, which is used to
                                 interpret relative paths in it */
    AudacityProject *mProject{};
 
@@ -162,8 +170,7 @@ private:
 
 LOFImportFileHandle::LOFImportFileHandle( AudacityProject *pProject,
    const FilePath & name, std::unique_ptr<wxTextFile> &&file)
-:  ImportFileHandle(name)
-   , mTextFile(std::move(file))
+:  mTextFile(std::move(file))
    , mLOFFileName{name}
    , mProject{ pProject }
 {
@@ -266,9 +273,10 @@ auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult LOFImportFileHandle::Import(
-   WaveTrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
-   Tags * WXUNUSED(tags))
+void LOFImportFileHandle::Import(ImportProgressListener& progressListener,
+                                 WaveTrackFactory*,
+                                 TrackHolders &outTracks,
+                                 Tags*)
 {
    // Unlike other ImportFileHandle subclasses, this one never gives any tracks
    // back to the caller.
@@ -289,7 +297,8 @@ ProgressResult LOFImportFileHandle::Import(
    if(mTextFile->Eof())
    {
       mTextFile->Close();
-      return ProgressResult::Failed;
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
    }
 
    wxString line = mTextFile->GetFirstLine();
@@ -304,12 +313,28 @@ ProgressResult LOFImportFileHandle::Import(
    lofOpenFiles(&line);
 
    if(!mTextFile->Close())
-      return ProgressResult::Failed;
-
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
+   }
    // set any duration/offset factors for last window, as all files were called
    doDurationAndScrollOffset();
+   progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
+}
 
-   return ProgressResult::Success;
+FilePath LOFImportFileHandle::GetFilename() const
+{
+   return mLOFFileName.GetFullPath();
+}
+
+void LOFImportFileHandle::Cancel()
+{
+   //LOFImport delegates import to other plugins
+}
+
+void LOFImportFileHandle::Stop()
+{
+   //LOFImport delegates import to other plugins
 }
 
 static Importer::RegisteredImportPlugin registered{ "LOF",

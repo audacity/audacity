@@ -40,7 +40,6 @@
 #include "Import.h"
 #include "Prefs.h"
 #include "Tags.h"
-#include "ProgressDialog.h"
 
 
 #define DESC XO("Ogg Vorbis files")
@@ -72,6 +71,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
+#include "ImportProgressListener.h"
 #include "ImportUtils.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
@@ -93,13 +93,13 @@ public:
 };
 
 
-class OggImportFileHandle final : public ImportFileHandle
+class OggImportFileHandle final : public ImportFileHandleEx
 {
 public:
    OggImportFileHandle(const FilePath & filename,
                        std::unique_ptr<wxFFile> &&file,
                        std::unique_ptr<OggVorbis_File> &&vorbisFile)
-   :  ImportFileHandle(filename),
+   :  ImportFileHandleEx(filename),
       mFile(std::move(file)),
       mVorbisFile(std::move(vorbisFile))
       , mStreamUsage{ static_cast<size_t>(mVorbisFile->links) }
@@ -121,8 +121,10 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-              Tags *tags) override;
+   void Import(ImportProgressListener &progressListener,
+               WaveTrackFactory *trackFactory,
+               TrackHolders &outTracks,
+               Tags *tags) override;
 
    wxInt32 GetStreamCount() override
    {
@@ -223,15 +225,16 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult OggImportFileHandle::Import(
-   WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-   Tags *tags)
+void OggImportFileHandle::Import(ImportProgressListener &progressListener,
+                                 WaveTrackFactory *trackFactory,
+                                 TrackHolders &outTracks,
+                                 Tags *tags)
 {
+   BeginImport();
+   
    outTracks.clear();
 
    wxASSERT(mFile->IsOpened());
-
-   CreateProgress();
 
    //Number of streams used may be less than mVorbisFile->links,
    //but this way bitstream matches array index.
@@ -266,7 +269,6 @@ ProgressResult OggImportFileHandle::Import(
     * Balance between responsiveness of the GUI and throughput of import. */
 #define SAMPLES_PER_CALLBACK 100000
 
-   auto updateResult = ProgressResult::Success;
    long bytesRead = 0;
    {
       ArrayOf<short> mainBuffer{ CODEC_TRANSFER_SIZE };
@@ -301,7 +303,7 @@ ProgressResult OggImportFileHandle::Import(
             &bitstream);
 
          if (bytesRead == OV_HOLE) {
-            wxFileName ff(mFilename);
+            wxFileName ff(GetFilename());
             wxLogError(wxT("Ogg Vorbis importer: file %s is malformed, ov_read() reported a hole"),
                ff.GetFullName());
             /* http://lists.xiph.org/pipermail/vorbis-dev/2001-February/003223.html
@@ -336,19 +338,24 @@ ProgressResult OggImportFileHandle::Import(
 
          samplesSinceLastCallback += samplesRead;
          if (samplesSinceLastCallback > SAMPLES_PER_CALLBACK) {
-            updateResult = mProgress->Update(ov_time_tell(mVorbisFile.get()),
-               ov_time_total(mVorbisFile.get(), bitstream));
+            const auto timeTotal = ov_time_total(mVorbisFile.get(), bitstream);
+            if(timeTotal > 0)
+               progressListener.OnImportProgress(ov_time_tell(mVorbisFile.get()) / timeTotal);
             samplesSinceLastCallback -= SAMPLES_PER_CALLBACK;
          }
-      } while (updateResult == ProgressResult::Success && bytesRead != 0);
+      } while (!IsCancelled() && !IsStopped() && bytesRead != 0);
    }
 
-   auto res = updateResult;
    if (bytesRead < 0)
-     res = ProgressResult::Failed;
-
-   if (res == ProgressResult::Failed || res == ProgressResult::Cancelled) {
-      return res;
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
+   }
+   
+   if(IsCancelled())
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
+      return;
    }
 
    for (auto &link : mChannels)
@@ -374,8 +381,10 @@ ProgressResult OggImportFileHandle::Import(
          tags->SetTag(name, value);
       }
    }
-
-   return res;
+   
+   progressListener.OnImportResult(IsStopped()
+                                   ? ImportProgressListener::ImportResult::Stopped
+                                   : ImportProgressListener::ImportResult::Success);
 }
 
 OggImportFileHandle::~OggImportFileHandle()

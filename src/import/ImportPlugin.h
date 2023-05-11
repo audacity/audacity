@@ -55,14 +55,14 @@ but little else.
 #include "wxArrayStringEx.h"
 
 class AudacityProject;
-class ProgressDialog;
-namespace BasicUI{ enum class ProgressResult : unsigned; }
 class WaveTrackFactory;
 class Track;
 class TranslatableString;
 class Tags;
 
 class ImportFileHandle;
+
+class ImportProgressListener;
 
 class AUDACITY_DLL_API ImportPlugin /* not final */
 {
@@ -111,16 +111,12 @@ using TrackHolders = std::vector< std::vector< std::shared_ptr<WaveTrack> > >;
 class AUDACITY_DLL_API ImportFileHandle /* not final */
 {
 public:
-   using ProgressResult = BasicUI::ProgressResult;
+
    using ByteCount = unsigned long long;
 
-   ImportFileHandle(const FilePath & filename);
-
    virtual ~ImportFileHandle();
-
-   // The importer should call this to create the progress dialog and
-   // identify the filename being imported.
-   void CreateProgress();
+   
+   virtual FilePath GetFilename() const = 0;
 
    // This is similar to GetPluginFormatDescription, but if possible the
    // importer will return a more specific description of the
@@ -149,17 +145,33 @@ public:
    // or tags unmodified.
    // If resulting outTracks is not empty,
    // then each member of it must be a nonempty vector.
-   virtual ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-                      Tags *tags) = 0;
+   virtual void Import(ImportProgressListener &progressListener,
+                       WaveTrackFactory *trackFactory,
+                       TrackHolders &outTracks,
+                       Tags *tags) = 0;
 
-protected:
+   virtual void Cancel() = 0;
    
-
-   FilePath mFilename;
-   std::unique_ptr<ProgressDialog> mProgress;
+   virtual void Stop() = 0;
 };
 
+class AUDACITY_DLL_API ImportFileHandleEx : public ImportFileHandle
+{
+   FilePath mFilename;
+   bool mCancelled{false};
+   bool mStopped{false};
+public:
+   ImportFileHandleEx(const FilePath& filename);
+   
+   FilePath GetFilename() const override;
+   void Cancel() override;
+   void Stop() override;
 
+protected:
+   void BeginImport();
+   bool IsCancelled() const noexcept;
+   bool IsStopped() const noexcept;
+};
 
 class UnusableImportPlugin
 {

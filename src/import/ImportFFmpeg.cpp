@@ -34,9 +34,6 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #endif
 
-#include "ProgressDialog.h"
-
-
 #define DESC XO("FFmpeg-compatible files")
 
 //TODO: remove non-audio extensions
@@ -157,6 +154,7 @@ static const auto exts = {
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
 #include "ImportUtils.h"
+#include "ImportProgressListener.h"
 
 class FFmpegImportFileHandle;
 
@@ -217,14 +215,20 @@ public:
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
-   ///! Imports audio
-   ///\return import status (see Import.cpp)
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-      Tags *tags) override;
+   void Import(ImportProgressListener& progressListener,
+               WaveTrackFactory *trackFactory,
+               TrackHolders &outTracks,
+               Tags *tags) override;
 
+   FilePath GetFilename() const override;
+   
+   void Cancel() override;
+   
+   void Stop() override;
+   
    ///! Writes decoded data into WaveTracks.
    ///\param sc - stream context
-   ProgressResult WriteData(StreamContext* sc, const AVPacketWrapper* packet);
+   void WriteData(StreamContext* sc, const AVPacketWrapper* packet);
 
    ///! Writes extracted metadata to tags object
    ///\param avf - file context
@@ -342,8 +346,7 @@ static Importer::RegisteredImportPlugin registered{ "FFmpeg",
 
 
 FFmpegImportFileHandle::FFmpegImportFileHandle(const FilePath & name)
-:  ImportFileHandle(name)
-,  mName{ name }
+   : mName{ name }
 {
 }
 
@@ -457,13 +460,14 @@ auto FFmpegImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
-              TrackHolders &outTracks,
-              Tags *tags)
+void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
+                                    WaveTrackFactory *trackFactory,
+                                    TrackHolders &outTracks,
+                                    Tags *tags)
 {
    outTracks.clear();
-
-   CreateProgress();
+   mCancelled = false;
+   mStopped = false;
 
    //! This may break the correspondence with mStreamInfo
    mStreamContexts.erase (std::remove_if (mStreamContexts.begin (), mStreamContexts.end (), [](const StreamContext& ctx) {
@@ -521,13 +525,11 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
       }
    }
    // This is the heart of the importing process
-   // The result of Import() to be returned. It will be something other than zero if user canceled or some error appears.
-   auto res = ProgressResult::Success;
-
+   
    // Read frames.
    for (std::unique_ptr<AVPacketWrapper> packet;
         (packet = mAVFormatContext->ReadNextPacket()) != nullptr &&
-        (res == ProgressResult::Success);)
+        !mCancelled && !mStopped;)
    {
       // Find a matching StreamContext
       auto streamContextIt = std::find_if(
@@ -539,11 +541,14 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
       if (streamContextIt == mStreamContexts.end())
          continue;
 
-      res = WriteData(&(*streamContextIt), packet.get());
+      WriteData(&(*streamContextIt), packet.get());
+      if(mProgressLen > 0)
+         progressListener.OnImportProgress(static_cast<double>(mProgressPos) /
+                                           static_cast<double>(mProgressLen));
    }
 
    // Flush the decoders.
-   if (!mStreamContexts.empty() && (res == ProgressResult::Success || res == ProgressResult::Stopped))
+   if (!mStreamContexts.empty() && !mCancelled)
    {
       auto emptyPacket = mFFmpeg->CreateAVPacketWrapper();
 
@@ -551,10 +556,11 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
          WriteData(&sc, emptyPacket.get());
    }
 
-   // Something bad happened - destroy everything!
-   if (res == ProgressResult::Cancelled || res == ProgressResult::Failed)
-      return res;
-   //else if (res == 2), we just stop the decoding as if the file has ended
+   if(mCancelled)
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
+      return;
+   }
 
    // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)
    for (auto &stream : mChannels)
@@ -565,11 +571,29 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
 
    // Save metadata
    WriteMetadata(tags);
-
-   return res;
+   progressListener.OnImportResult(mStopped
+                                   ? ImportProgressListener::ImportResult::Stopped
+                                   : ImportProgressListener::ImportResult::Success);
 }
 
-ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper* packet)
+FilePath FFmpegImportFileHandle::GetFilename() const
+{
+   return mName;
+}
+
+void FFmpegImportFileHandle::Cancel()
+{
+   if(!mStopped)
+      mCancelled = true;
+}
+
+void FFmpegImportFileHandle::Stop()
+{
+   if(!mCancelled)
+      mStopped = true;
+}
+
+void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper* packet)
 {
    // Find the stream index in mStreamContexts array
    int streamid = -1;
@@ -586,7 +610,8 @@ ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPack
    // Stream is not found. This should not really happen
    if (streamid == -1)
    {
-      return ProgressResult::Success;
+      //VS: Shouldn't this mean import failure?
+      return;
    }
 
    size_t nChannels = std::min(sc->CodecContext->GetChannels(), sc->InitialChannels);
@@ -628,8 +653,6 @@ ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPack
 
    const AVStreamWrapper* avStream = mAVFormatContext->GetStream(sc->StreamIndex);
 
-   // Try to update the progress indicator (and see if user wants to cancel)
-   auto updateResult = ProgressResult::Success;
    int64_t filesize = mFFmpeg->avio_size(mAVFormatContext->GetAVIOContext()->GetWrappedValue());
    // PTS (presentation time) is the proper way of getting current position
    if (
@@ -661,9 +684,6 @@ ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPack
       mProgressPos = packet->GetPos();
       mProgressLen = filesize;
    }
-   updateResult = mProgress->Update(mProgressPos, mProgressLen != 0 ? mProgressLen : 1);
-
-   return updateResult;
 }
 
 void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
