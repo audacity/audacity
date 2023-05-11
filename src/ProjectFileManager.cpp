@@ -1219,7 +1219,14 @@ bool ImportProject(AudacityProject &dest, const FilePath &fileName)
 class ImportProgress final
    : public ImportProgressListener
 {
+   wxWeakRef<AudacityProject> mProject;
 public:
+   
+   ImportProgress(AudacityProject& project)
+      : mProject(&project)
+   {
+
+   }
    
    bool OnImportFileOpened(ImportFileHandle& importFileHandle) override
    {
@@ -1254,9 +1261,18 @@ public:
          mImportFileHandle->Stop();
    }
    
-   void OnImportResult(ImportResult) override
+   void OnImportResult(ImportResult result) override
    {
       mProgressDialog.reset();
+      if(result == ImportResult::Error)
+      {
+         auto message = mImportFileHandle->GetErrorMessage();
+         if(!message.empty())
+         {
+            AudacityMessageBox(message, XO("Import"), wxOK | wxCENTRE | wxICON_ERROR,
+                               mProject ? &GetProjectFrame(*mProject) : nullptr);
+         }
+      }
    }
    
 private:
@@ -1337,7 +1353,7 @@ bool ProjectFileManager::Import(
          return false;
       }
 #endif
-      ImportProgress importProgress;
+      ImportProgress importProgress(project);
       bool success = Importer::Get().Import(project, fileName,
                                             &importProgress,
                                             &WaveTrackFactory::Get( project ),
