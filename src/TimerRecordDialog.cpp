@@ -614,8 +614,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       if(!e.SetExportRange(0, tracks.GetEndTime(), false, skipSilenceAtBeginning))
       {
          //But there should be at least one recorded track...
-         ShowExportErrorDialog(
-            ":576", XO("All audio is muted."), XO("Warning"), false);
+         ShowExportErrorDialog(XO("All audio is muted."), XO("Warning"), false);
       }
       e.Configure(m_fnAutoExportFile,
          m_iAutoExportFormat,
@@ -626,13 +625,13 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          e.SetUseStereoOrMonoOutput();
       else
          e.CreateMixerSpec();
-      
-      
-      const auto result = ExportProgressUI::Show(ExportTask(
-      [&](auto& delegate) { return e.Process(delegate); })
-      );
-      bExportOK = result == ExportResult::Success ||
-         result == ExportResult::Stopped;
+
+      ExportProgressUI::ExceptionWrappedCall([&]
+      {
+         const auto result = ExportProgressUI::Show(e.CreateExportTask());
+         bExportOK = result == ExportResult::Success ||
+            result == ExportResult::Stopped;
+      });
    }
 
    // Check if we need to override the post recording action

@@ -145,7 +145,7 @@ private:
    wxFileName m_fnAutoExportFile;
    int m_iAutoExportFormat;
    int m_iAutoExportSubFormat;
-   ExportPlugin::Parameters m_AutoExportParameters;
+   ExportProcessor::Parameters m_AutoExportParameters;
    bool m_bProjectAlreadySaved;
 
    DECLARE_EVENT_TABLE()

@@ -106,7 +106,7 @@ const ExportPluginArray &Exporter::GetPlugins()
 void Exporter::Configure(const wxFileName &filename,
                          int pluginIndex,
                          int formatIndex,
-                         const ExportPlugin::Parameters& parameters)
+                         const ExportProcessor::Parameters& parameters)
 {
    mFilename = filename;
    mFormat = pluginIndex;
@@ -168,17 +168,12 @@ bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skip
    return true;
 }
 
-ExportResult Exporter::Process(ExportPluginDelegate& delegate)
+ExportTask Exporter::CreateExportTask()
 {
-   const auto result = ExportTracks(delegate, mParameters);
-   // Get rid of mixerspec
-   mMixerSpec.reset();
-
-   return result;
+   return CreateExportTask(mParameters);
 }
 
-ExportResult Exporter::Process(ExportPluginDelegate& delegate,
-                       const ExportPlugin::Parameters& parameters,
+ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& parameters,
                        unsigned numChannels,
                        const FileExtension &type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
@@ -198,16 +193,19 @@ ExportResult Exporter::Process(ExportPluginDelegate& delegate,
             mT1 = t1;
             
             Configure(filename, i, j, parameters);
-            return ExportTracks(delegate, parameters);
+            return CreateExportTask(parameters);
          }
       }
    }
-   return ExportResult::Error;
+   return {};
 }
 
-ExportResult Exporter::ExportTracks(ExportPluginDelegate& delegate,
-                            const ExportPlugin::Parameters& parameters)
+
+
+ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& parameters)
 {
+   //File rename stuff should be moved out to somewhere else...
+
    auto filename = mFilename;
 
    //For safety, if the file already exists we use temporary filename
@@ -218,35 +216,44 @@ ExportResult Exporter::ExportTracks(ExportPluginDelegate& delegate,
                         wxString::Format(wxT("%d"), suffix));
       suffix++;
    }
-   
-   auto result = ExportResult::Success;
-   auto cleanup = finally( [&] {
-      const auto success = result == ExportResult::Success
-         || result == ExportResult::Stopped;
 
-      if(success)
+   auto processor = mPlugins[mFormat]->CreateProcessor(mSubFormat);
+   if(!processor->Initialize(*mProject,
+      parameters,
+      mFilename.GetFullPath(),
+      mT0, mT1, mSelectedOnly,
+      mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
+      mMixerSpec.get()))
+   {
+      return ExportTask([](ExportPluginDelegate&){ return ExportResult::Cancelled; });
+   }
+
+   return ExportTask([actualFilename = filename,
+      mixer = mMixerSpec.release(),// Get rid of mixerspec
+      targetFilename = mFilename,
+      processor = processor.release()]
+      (ExportPluginDelegate& delegate)
       {
-         if (filename != mFilename)
-            ::wxRenameFile(filename.GetFullPath(),
-               mFilename.GetFullPath(),
-               true /*overwrite*/);
-      }
-      else
-         ::wxRemoveFile(filename.GetFullPath());
-   } );
-
-   result = mPlugins[mFormat]->Export(mProject,
-                             delegate,
-                             parameters,
-                             mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
-                             filename.GetFullPath(),
-                             mSelectedOnly,
-                             mT0,
-                             mT1,
-                             mMixerSpec.get(),
-                             nullptr,
-                             mSubFormat);
-   return result;
+         auto result = ExportResult::Error;
+         auto cleanup = finally( [&] {
+            delete processor;
+            delete mixer;
+            if(result == ExportResult::Success || result == ExportResult::Stopped)
+            {
+               if (actualFilename != targetFilename)
+               {
+                  //may fail...
+                  ::wxRenameFile(actualFilename.GetFullPath(),
+                     targetFilename.GetFullPath(),
+                     true);
+               }
+            }
+            else
+               ::wxRemoveFile(actualFilename.GetFullPath());
+         } );
+         result = processor->Process(delegate);
+         return result;
+      });
 }
 
 int Exporter::GetAutoExportFormat() {
@@ -261,7 +268,7 @@ wxFileName Exporter::GetAutoExportFileName() {
    return mFilename;
 }
 
-ExportPlugin::Parameters Exporter::GetAutoExportParameters()
+ExportProcessor::Parameters Exporter::GetAutoExportParameters()
 {
    return mParameters;
 }
@@ -317,36 +324,6 @@ bool Exporter::CanMetaData() const
    return mPlugins[mFormat]->GetFormatInfo(mSubFormat).mCanMetaData;
 }
 
-TranslatableString AudacityExportCaptionStr()
-{
-   return XO("Warning");
-}
-TranslatableString AudacityExportMessageStr()
-{
-   return XO("Unable to export.\nError %s");
-}
-
-
-// This creates a generic export error dialog
-// Untranslated ErrorCodes like "MP3:1882" are used since we don't yet have
-// a good user facing error message.  They allow us to 
-// distinguish where the error occurred, and we can update the landing
-// page as we learn more about when (if ever) these errors actually happen.
-// The number happens to at one time have been a line number, but all
-// we need from them is that they be distinct.
-void ShowExportErrorDialog(wxString ErrorCode,
-   TranslatableString message,
-   const TranslatableString& caption,
-   bool allowReporting)
-{
-   using namespace BasicUI;
-   ShowErrorDialog( {},
-      caption,
-      message.Format( ErrorCode ),
-      "Error:_Unable_to_export", // URL.
-      ErrorDialogOptions { allowReporting ? ErrorDialogType::ModalErrorReport : ErrorDialogType::ModalError });
-}
-
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)
 {
    BasicUI::ShowErrorDialog( {},
@@ -356,4 +333,22 @@ void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)
    );
 }
 
+void ShowExportErrorDialog(const TranslatableString& message,
+      const TranslatableString& caption,
+      bool allowReporting)
+{
+   ShowExportErrorDialog(message, caption, {}, allowReporting);
+}
 
+void ShowExportErrorDialog(const TranslatableString& message,
+   const TranslatableString& caption,
+   const ManualPageID& helpPageId,
+   bool allowReporting)
+{
+   using namespace BasicUI;
+   ShowErrorDialog( {},
+      caption,
+      message,
+      helpPageId,
+      ErrorDialogOptions { allowReporting ? ErrorDialogType::ModalErrorReport : ErrorDialogType::ModalError });
+}

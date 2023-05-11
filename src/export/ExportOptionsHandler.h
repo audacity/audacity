@@ -36,7 +36,7 @@ public:
    ~ExportOptionsHandler();
 
    bool TransferDataFromEditor();
-   ExportPlugin::Parameters GetParameters() const;
+   ExportProcessor::Parameters GetParameters() const;
 
 
    void OnExportOptionChangeBegin() override;

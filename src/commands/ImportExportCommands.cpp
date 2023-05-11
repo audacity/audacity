@@ -134,18 +134,16 @@ bool ExportCommand::Apply(const CommandContext & context)
             continue;
          auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
          editor->Load(*gPrefs);
-
-         const auto result = ExportProgressUI::Show(ExportTask(
-            [&](auto& delegate)
-            {
-               return exporter.Process(delegate,
-                          ExportUtils::ParametersFromEditor(*editor),
-                          std::max(0, mnChannels),
-                          extension, mFileName,
-                          true, t0, t1);
-            }
-         ));
          
+         auto result = ExportResult::Error;
+         ExportProgressUI::ExceptionWrappedCall([&]
+         {
+            result = ExportProgressUI::Show(exporter.CreateExportTask(
+                  ExportUtils::ParametersFromEditor(*editor),
+                  std::max(0, mnChannels),
+                  extension, mFileName,
+                  true, t0, t1));
+         });
          if (result == ExportResult::Success || result == ExportResult::Stopped)
          {
             context.Status(wxString::Format(wxT("Exported to %s format: %s"),
