@@ -29,6 +29,7 @@
 #include <wx/choice.h>
 #include <wx/stattext.h>
 
+#include "ExportOptionsUIServices.h"
 #include "widgets/FileHistory.h"
 
 wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
@@ -68,16 +69,23 @@ public:
       if(mEditor)
       {
          mEditor->Load(*gPrefs);
-         PopulateOptions(S);
+         if(auto uiServices = dynamic_cast<ExportOptionsUIServices*>(mEditor.get()))
+            uiServices->PopulateUI(S);
+         else
+            PopulateOptions(S);
       }
       else
-         plugin.OptionsCreate(S, format);
+         PopulateEmpty(S);
    }
 
    void TransferDataFromEditor()
    {
       if(mEditor)
+      {
+         if(auto uiServices = dynamic_cast<ExportOptionsUIServices*>(mEditor.get()))
+            uiServices->TransferDataFromWindow();
          mEditor->Store(*gPrefs);
+      }
    }
 
    ExportPlugin::Parameters GetParameters() const
@@ -85,6 +93,19 @@ public:
       if(mEditor)
          return ExportUtils::ParametersFromEditor(*mEditor);
       return {};
+   }
+
+   void PopulateEmpty(ShuttleGui& S)
+   {
+      S.StartHorizontalLay(wxCENTER);
+      {
+         S.StartHorizontalLay(wxCENTER, 0);
+         {
+            S.Prop(1).AddTitle(XO("No format specific options"));
+         }
+         S.EndHorizontalLay();
+      }
+      S.EndHorizontalLay();
    }
 
    void PopulateOptions(ShuttleGui& S)

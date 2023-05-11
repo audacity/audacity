@@ -567,6 +567,8 @@ list( APPEND SOURCES
       export/ExportTypes.h
       export/ExportUtils.cpp
       export/ExportUtils.h
+      export/ExportOptionsUIServices.cpp
+      export/ExportOptionsUIServices.h
       export/PlainExportOptionsEditor.cpp
       export/PlainExportOptionsEditor.h
       export/ExportMixerPanel.cpp
