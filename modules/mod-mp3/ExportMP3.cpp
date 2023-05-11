@@ -85,7 +85,6 @@
 #include "Project.h"
 
 #include "Export.h"
-#include "ExportProgressListener.h"
 #include "BasicUI.h"
 
 #include <lame/lame.h>
@@ -95,7 +94,7 @@
 #endif
 
 #include "ExportOptionsEditor.h"
-#include "ExportUtils.h"
+#include "ExportPluginHelpers.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "ProjectWindow.h"
@@ -1608,7 +1607,7 @@ static void dump_config( 	lame_global_flags*	gfp )
 // ExportMP3
 //----------------------------------------------------------------------------
 
-class ExportMP3 final : public ExportPluginEx
+class ExportMP3 final : public ExportPlugin
 {
 public:
 
@@ -1623,8 +1622,8 @@ public:
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const override;
 
-   void Export(AudacityProject *project,
-               ExportProgressListener &progressListener,
+   ExportResult Export(AudacityProject *project,
+               ExportPluginDelegate &delegate,
                const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
@@ -1684,8 +1683,8 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
    return true;
 }
 
-void ExportMP3::Export(AudacityProject *project,
-                       ExportProgressListener &progressListener,
+ExportResult ExportMP3::Export(AudacityProject *project,
+                       ExportPluginDelegate &delegate,
                        const Parameters& parameters,
                        unsigned channels,
                        const wxFileNameWrapper &fName,
@@ -1696,8 +1695,6 @@ void ExportMP3::Export(AudacityProject *project,
                        const Tags *metadata,
                        int)
 {
-   ExportBegin();
-   
    int rate = lrint( ProjectRate::Get( *project ).GetRate());
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    wxWindow *parent = ProjectWindow::Find( project );
@@ -1711,23 +1708,21 @@ void ExportMP3::Export(AudacityProject *project,
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
-      return ProgressResult::Cancelled;
+      return ExportResult::Cancelled;
    }
 #else
    if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
-      SetErrorString(XO("Could not open MP3 encoding library!"));
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-      return;
+      delegate.SetErrorString(XO("Could not open MP3 encoding library!"));
+      return ExportResult::Error;
    }
 
    if (!exporter.ValidLibraryLoaded()) {
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
-      SetErrorString(XO("Not a valid or supported MP3 encoding library!"));
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-      return;
+      delegate.SetErrorString(XO("Not a valid or supported MP3 encoding library!"));
+      return ExportResult::Error;
    }
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
@@ -1737,23 +1732,23 @@ void ExportMP3::Export(AudacityProject *project,
    int bitrate = 0;
    int quality;
    //int vmode;
-   bool forceMono = ExportUtils::GetParameterValue(
+   bool forceMono = ExportPluginHelpers::GetParameterValue(
       parameters,
       MP3OptionIDForceMono,
       false);
    
-   auto rmode = ExportUtils::GetParameterValue(
+   auto rmode = ExportPluginHelpers::GetParameterValue(
       parameters,
       MP3OptionIDMode,
       std::string("CBR"));
-   auto cmode = ExportUtils::GetParameterValue(
+   auto cmode = ExportPluginHelpers::GetParameterValue(
       parameters,
       MP3OptionIDChannels,
       std::string("STEREO")
    );
    // Set the bitrate/quality and mode
    if (rmode == "SET") {
-      quality = ExportUtils::GetParameterValue<int>(
+      quality = ExportPluginHelpers::GetParameterValue<int>(
          parameters,
          MP3OptionIDQualitySET,
          PRESET_STANDARD);
@@ -1761,7 +1756,7 @@ void ExportMP3::Export(AudacityProject *project,
       exporter.SetQuality(quality);
    }
    else if (rmode == "VBR") {
-      quality = ExportUtils::GetParameterValue<int>(
+      quality = ExportPluginHelpers::GetParameterValue<int>(
          parameters,
          MP3OptionIDQualityVBR,
          QUALITY_2);
@@ -1769,7 +1764,7 @@ void ExportMP3::Export(AudacityProject *project,
       exporter.SetQuality(quality);
    }
    else if (rmode == "ABR") {
-      bitrate = ExportUtils::GetParameterValue(
+      bitrate = ExportPluginHelpers::GetParameterValue(
          parameters,
          MP3OptionIDQualityABR,
          128);
@@ -1783,7 +1778,7 @@ void ExportMP3::Export(AudacityProject *project,
       }
    }
    else {
-      bitrate = ExportUtils::GetParameterValue(parameters, MP3OptionIDQualityCBR, 128);
+      bitrate = ExportPluginHelpers::GetParameterValue(parameters, MP3OptionIDQualityCBR, 128);
       exporter.SetMode(MODE_CBR);
       exporter.SetBitrate(bitrate);
 
@@ -1819,8 +1814,7 @@ void ExportMP3::Export(AudacityProject *project,
 				rate = AskResample(bitrate, rate, lowrate, highrate);
 			}
 			if (rate == 0) {
-            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-            return;
+            return ExportResult::Error;
 			}
 		}
 	}
@@ -1838,9 +1832,8 @@ void ExportMP3::Export(AudacityProject *project,
 
    auto inSamples = exporter.InitializeStream(channels, rate);
    if (((int)inSamples) < 0) {
-      SetErrorString(XO("Unable to initialize MP3 stream"));
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-      return;
+      delegate.SetErrorString(XO("Unable to initialize MP3 stream"));
+      return ExportResult::Error;
    }
 
    // Put ID3 tags at beginning of file
@@ -1850,9 +1843,8 @@ void ExportMP3::Export(AudacityProject *project,
    // Open file for writing
    wxFFile outFile(fName.GetFullPath(), wxT("w+b"));
    if (!outFile.IsOpened()) {
-      SetErrorString(XO("Unable to open target file for writing"));
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-      return;
+      delegate.SetErrorString(XO("Unable to open target file for writing"));
+      return ExportResult::Error;
    }
 
    ArrayOf<char> id3buffer;
@@ -1862,8 +1854,7 @@ void ExportMP3::Export(AudacityProject *project,
       if (id3len > outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
          ShowExportErrorDialog("MP3:1882");
-         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-         return;
+         return ExportResult::Error;
       }
    }
 
@@ -1874,41 +1865,40 @@ void ExportMP3::Export(AudacityProject *project,
    if (bufferSize <= 0) {
       // TODO: more precise message
       ShowExportErrorDialog("MP3:1849");
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-      return;
+      return ExportResult::Error;
    }
 
    ArrayOf<unsigned char> buffer{ bufferSize };
    wxASSERT(buffer);
 
-   bool hasError{false};
+   auto exportResult = ExportResult::Success;
    
    {
-      auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
+      auto mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
          t0, t1,
          channels, inSamples, true,
          rate, floatSample, mixerSpec);
 
       if (rmode == "SET") {
-         SetStatusString((selectionOnly ?
+         delegate.SetStatusString((selectionOnly ?
             XO("Exporting selected audio with %s preset") :
             XO("Exporting the audio with %s preset"))
                .Format( setRateNamesShort[quality] ));
       }
       else if (rmode == "VBR") {
-         SetStatusString((selectionOnly ?
+         delegate.SetStatusString((selectionOnly ?
             XO("Exporting selected audio with VBR quality %s") :
             XO("Exporting the audio with VBR quality %s"))
                .Format( varRateNames[quality] ));
       }
       else {
-         SetStatusString((selectionOnly ?
+         delegate.SetStatusString((selectionOnly ?
             XO("Exporting selected audio at %d Kbps") :
             XO("Exporting the audio at %d Kbps"))
                .Format( bitrate ));
       }
       
-      while (!IsCancelled() && !IsStopped() && !hasError) {
+      while (exportResult == ExportResult::Success) {
          auto blockLen = mixer->Process();
          if (blockLen == 0)
             break;
@@ -1933,39 +1923,39 @@ void ExportMP3::Export(AudacityProject *project,
          }
 
          if (bytes < 0) {
-            SetErrorString(XO("Error %ld returned from MP3 encoder")
+            delegate.SetErrorString(XO("Error %ld returned from MP3 encoder")
                .Format( bytes ));
-            hasError = true;
+            exportResult = ExportResult::Error;
             break;
          }
 
          if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
             ShowDiskFullExportErrorDialog(fName);
-            hasError = true;
+            exportResult = ExportResult::Error;
             break;
          }
 
-         progressListener.OnExportProgress(ExportUtils::EvalExportProgress(*mixer, t0, t1));
+         if(exportResult == ExportResult::Success)
+            exportResult = ExportPluginHelpers::UpdateProgress(
+               delegate, *mixer, t0, t1);
       }
    }
 
-   if (!IsCancelled() && !IsStopped() && !hasError) {
+   if (exportResult == ExportResult::Success) {
       bytes = exporter.FinishStream(buffer.get());
 
       if (bytes < 0) {
          // TODO: more precise message
          ShowExportErrorDialog("MP3:1981");
-         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-         return;
+         return ExportResult::Error;
       }
 
       if (bytes > 0) {
          if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
             ShowExportErrorDialog("MP3:1988");
-            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-            return;
+            return ExportResult::Error;
          }
       }
 
@@ -1974,8 +1964,7 @@ void ExportMP3::Export(AudacityProject *project,
          if (bytes > (int)outFile.Write(id3buffer.get(), id3len)) {
             // TODO: more precise message
             ShowExportErrorDialog("MP3:1997");
-            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-            return;
+            return ExportResult::Error;
          }
       }
 
@@ -1990,14 +1979,10 @@ void ExportMP3::Export(AudacityProject *project,
           !outFile.Close()) {
          // TODO: more precise message
          ShowExportErrorDialog("MP3:2012");
-         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-         return;
+         return ExportResult::Error;
       }
    }
-   if(hasError)
-      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
-   else
-      ExportFinish(progressListener);
+   return exportResult;
 }
 
 int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)

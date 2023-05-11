@@ -33,7 +33,7 @@
 #include "export/ExportFileDialog.h"
 #include "ExportUtils.h"
 #include "export/ExportMixerDialog.h"
-#include "export/GenericExportProgressListener.h"
+#include "export/ExportProgressUI.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -113,9 +113,9 @@ bool ExportWithPrompt(AudacityProject &project,
       }
    }
    
-   GenericExportProgressListener progressListener(*exporter.GetPlugin());
-   exporter.Process(progressListener);
-   return progressListener.ConsumeResult() == ExportProgressListener::ExportResult::Success;
+   return ExportProgressUI::Show(ExportTask(
+      [&](auto& delegate) { return exporter.Process(delegate); })
+   ) == ExportResult::Success;
 }
 
 void DoExport(AudacityProject &project, const FileExtension &format)
@@ -189,21 +189,20 @@ void DoExport(AudacityProject &project, const FileExtension &format)
             auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
             editor->Load(*gPrefs);
 
-            GenericExportProgressListener progressListener(*plugin);
-            // We're in batch mode, the file does not exist already.
-            // We really can proceed without prompting.
-            e.Process(progressListener,
-                      ExportUtils::ParametersFromEditor(*editor),
-                      nChannels,  // numChannels,
-                      format,     // type,
-                      fullPath,   // full path,
-                      false,      // selectedOnly,
-                      t0,         // t0
-                      t1          // t1
-                      );
-            const auto result = progressListener.ConsumeResult();
-            success = result == ExportProgressListener::ExportResult::Success ||
-            result == ExportProgressListener::ExportResult::Stopped;
+            const auto result = ExportProgressUI::Show(ExportTask(
+               [&](ExportPluginDelegate& delegate) {
+                  // We're in batch mode, the file does not exist already.
+                  // We really can proceed without prompting.
+                  return e.Process(delegate,
+                            ExportUtils::ParametersFromEditor(*editor),
+                            nChannels,  // numChannels,
+                            format,     // type,
+                            fullPath,   // full path,
+                            false, t0, t1);
+               }
+            ));
+            
+            success = result == ExportResult::Success || result == ExportResult::Stopped;
          }
       }
    }

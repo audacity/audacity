@@ -14,8 +14,8 @@ set( SOURCES
    ExportOptionsEditor.h
    ExportPlugin.cpp
    ExportPlugin.h
-   ExportProgressListener.cpp
-   ExportProgressListener.h
+   ExportPluginHelpers.cpp
+   ExportPluginHelpers.h
    ExportTypes.h
    ExportUtils.cpp
    ExportUtils.h

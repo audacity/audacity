@@ -14,7 +14,6 @@
 #include "Export.h"
 #include "wxFileNameWrapper.h" // member variable
 #include "wxPanelWrapper.h"
-#include "ExportProgressListener.h"
 
 class wxButton;
 class wxCheckBox;
@@ -56,7 +55,7 @@ private:
     * labels that define them (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
-   ExportProgressListener::ExportResult ExportMultipleByLabel(bool byName, const wxString &prefix, bool addNumber);
+   ExportResult ExportMultipleByLabel(bool byName, const wxString &prefix, bool addNumber);
 
    /** \brief Export each track in the project to a separate file
     *
@@ -64,7 +63,7 @@ private:
     * (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
-   ExportProgressListener::ExportResult ExportMultipleByTrack(bool byName, const wxString &prefix, bool addNumber);
+   ExportResult ExportMultipleByTrack(bool byName, const wxString &prefix, bool addNumber);
 
    /** Export one file of an export multiple set
     *
@@ -76,7 +75,7 @@ private:
     * @param t1 End time for export
     * @param tags Metadata to include in the file (if possible).
     */
-   ExportProgressListener::ExportResult DoExport(unsigned channels,
+   ExportResult DoExport(unsigned channels,
                                                  const wxFileName &name,
                                                  bool selectedOnly,
                                                  double t0,

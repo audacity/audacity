@@ -61,9 +61,7 @@
 #include "prefs/ImportExportPrefs.h"
 
 #include "export/ExportFileDialog.h"
-#include "export/GenericExportProgressListener.h"
-
-#include "prefs/ImportExportPrefs.h"
+#include "export/ExportProgressUI.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -629,14 +627,12 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       else
          e.CreateMixerSpec();
       
-      if(auto plugin = e.GetPlugin(m_iAutoExportFormat))
-      {
-         GenericExportProgressListener progressListener(*plugin);
-         e.Process(progressListener);
-         const auto result = progressListener.ConsumeResult();
-         bExportOK = result == ExportProgressListener::ExportResult::Success ||
-            result == ExportProgressListener::ExportResult::Stopped;
-      }
+      
+      const auto result = ExportProgressUI::Show(ExportTask(
+      [&](auto& delegate) { return e.Process(delegate); })
+      );
+      bExportOK = result == ExportResult::Success ||
+         result == ExportResult::Stopped;
    }
 
    // Check if we need to override the post recording action

@@ -22,7 +22,6 @@
 #include "wxFileNameWrapper.h"
 
 #include "ExportUtils.h"
-#include "ExportProgressListener.h"
 
 namespace {
    const auto PathStart = L"Exporters";
@@ -33,33 +32,6 @@ namespace {
       static ExportPluginFactories theList;
       return theList;
    }
-
-   class ExportProgressResultProxy final : public ExportProgressListener
-   {
-      ExportProgressListener& mListener;
-      ExportResult mResult{ExportResult::Error};
-   public:
-      ExportProgressResultProxy(ExportProgressListener& listener)
-         : mListener(listener)
-      {
-         
-      }
-      
-      void OnExportProgress(double value) override
-      {
-         mListener.OnExportProgress(value);
-      }
-      void OnExportResult(ExportResult result) override
-      {
-         mListener.OnExportResult(result);
-         mResult = result;
-      }
-      
-      ExportResult GetResult() const noexcept
-      {
-         return mResult;
-      }
-   };
 }
 
 Registry::GroupItemBase &Exporter::ExporterItem::Registry()
@@ -128,17 +100,6 @@ const ExportPluginArray &Exporter::GetPlugins()
    return mPlugins;
 }
 
-ExportPlugin* Exporter::GetPlugin()
-{
-   return mPlugins[mFormat].get();
-}
-
-ExportPlugin* Exporter::GetPlugin(int pluginIndex)
-{
-   if(pluginIndex >= 0 && pluginIndex < mPlugins.size())
-      return mPlugins[pluginIndex].get();
-   return nullptr;
-}
 void Exporter::Configure(const wxFileName &filename,
                          int pluginIndex,
                          int formatIndex,
@@ -205,18 +166,20 @@ bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skip
    return true;
 }
 
-void Exporter::Process(ExportProgressListener& progressListener)
+ExportResult Exporter::Process(ExportPluginDelegate& delegate)
 {
    // Ensure filename doesn't interfere with project files.
    FixFilename();
 
-   ExportTracks(progressListener, mParameters);
+   const auto result = ExportTracks(delegate, mParameters);
 
    // Get rid of mixerspec
    mMixerSpec.reset();
+
+   return result;
 }
 
-void Exporter::Process(ExportProgressListener& progressListener,
+ExportResult Exporter::Process(ExportPluginDelegate& delegate,
                        const ExportPlugin::Parameters& parameters,
                        unsigned numChannels,
                        const FileExtension &type, const wxString & filename,
@@ -238,12 +201,11 @@ void Exporter::Process(ExportProgressListener& progressListener,
             
             Configure(filename, i, j, parameters);
             FixFilename();
-            ExportTracks(progressListener, parameters);
-            return;
+            return ExportTracks(delegate, parameters);
          }
       }
    }
-   progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+   return ExportResult::Error;
 }
 
 //
@@ -269,7 +231,7 @@ void Exporter::FixFilename()
    }
 }
 
-void Exporter::ExportTracks(ExportProgressListener& progressListener,
+ExportResult Exporter::ExportTracks(ExportPluginDelegate& delegate,
                             const ExportPlugin::Parameters& parameters)
 {
    // Keep original in case of failure
@@ -277,11 +239,10 @@ void Exporter::ExportTracks(ExportProgressListener& progressListener,
       ::wxRenameFile(mActualName.GetFullPath(), mFilename.GetFullPath());
    }
 
-   ExportProgressResultProxy progressProxy(progressListener);
-
+   auto result = ExportResult::Success;
    auto cleanup = finally( [&] {
-      const auto success = progressProxy.GetResult() == ExportProgressListener::ExportResult::Success
-         || progressProxy.GetResult() == ExportProgressListener::ExportResult::Stopped;
+      const auto success = result == ExportResult::Success
+         || result == ExportResult::Stopped;
       
       if (mActualName != mFilename) {
          // Remove backup
@@ -302,8 +263,8 @@ void Exporter::ExportTracks(ExportProgressListener& progressListener,
       }
    } );
 
-   mPlugins[mFormat]->Export(mProject,
-                             progressProxy,
+   result = mPlugins[mFormat]->Export(mProject,
+                             delegate,
                              parameters,
                              mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
                              mActualName.GetFullPath(),
@@ -311,8 +272,9 @@ void Exporter::ExportTracks(ExportProgressListener& progressListener,
                              mT0,
                              mT1,
                              mMixerSpec.get(),
-                             NULL,
+                             nullptr,
                              mSubFormat);
+   return result;
 }
 
 int Exporter::GetAutoExportFormat() {
