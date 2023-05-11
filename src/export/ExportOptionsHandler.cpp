@@ -238,9 +238,11 @@ void ExportOptionsHandler::OnExtensionChange(const wxString& extension)
       evt.SetString(extension);
       mParent->ProcessWindowEvent(evt);
    }
+   Publish({ ExportOptionsHandlerEvent::FileSuffixChange, extension });
 }
 
 void ExportOptionsHandler::OnSampleRateListChange()
 {
+   Publish({ ExportOptionsHandlerEvent::SampleRateListChange });
 }
 

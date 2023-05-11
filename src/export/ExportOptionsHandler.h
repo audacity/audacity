@@ -15,6 +15,7 @@
 #include <wx/event.h>
 #include "ExportOptionsEditor.h"
 #include "ExportPlugin.h"
+#include "Observer.h"
 
 class ShuttleGui;
 
@@ -26,8 +27,18 @@ class wxControl;
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
    AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
+struct ExportOptionsHandlerEvent
+{
+   enum {
+      FileSuffixChange,
+      SampleRateListChange
+   } type;
+   wxString tag;
+};
+
 class ExportOptionsHandler final
    : public ExportOptionsEditor::Listener
+   , public Observer::Publisher<ExportOptionsHandlerEvent>
 {
 public:
 
