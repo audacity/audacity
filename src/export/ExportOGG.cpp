@@ -35,6 +35,7 @@
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
+#include "ExportOptionsEditor.h"
 
 //----------------------------------------------------------------------------
 // ExportOGGOptions
@@ -134,8 +135,12 @@ public:
    // Required
    void OptionsCreate(ShuttleGui &S, int format) override;
 
+   std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+
    void Export(AudacityProject *project,
                ExportProgressListener &pDialog,
+               const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -166,6 +171,7 @@ FormatInfo ExportOGG::GetFormatInfo(int) const
 
 void ExportOGG::Export(AudacityProject *project,
                        ExportProgressListener &progressListener,
+                       const Parameters&,
                        unsigned numChannels,
                        const wxFileNameWrapper &fName,
                        bool selectionOnly,
@@ -387,6 +393,13 @@ void ExportOGG::OptionsCreate(ShuttleGui &S, int format)
 {
    S.AddWindow( safenew ExportOGGOptions{ S.GetParent(), format } );
 }
+
+std::unique_ptr<ExportOptionsEditor>
+ExportOGG::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+{
+   return {};
+}
+
 
 bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata)
 {

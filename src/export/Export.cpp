@@ -161,12 +161,16 @@ ExportPlugin* Exporter::FindPluginByType(const FileExtension &type)
    return nullptr;
 }
 
-void Exporter::Configure(const wxFileName &filename, int pluginIndex, int formatIndex)
+void Exporter::Configure(const wxFileName &filename,
+                         int pluginIndex,
+                         int formatIndex,
+                         const ExportPlugin::Parameters& parameters)
 {
    mFilename = filename;
    mActualName = filename;
    mFormat = pluginIndex;
    mSubFormat = formatIndex;
+   mParameters = parameters;
 }
 
 bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skipSilenceAtBeginning)
@@ -228,13 +232,14 @@ void Exporter::Process(ExportProgressListener& progressListener)
    // Ensure filename doesn't interfere with project files.
    FixFilename();
 
-   ExportTracks(progressListener);
+   ExportTracks(progressListener, mParameters);
 
    // Get rid of mixerspec
    mMixerSpec.reset();
 }
 
 void Exporter::Process(ExportProgressListener& progressListener,
+                       const ExportPlugin::Parameters& parameters,
                        unsigned numChannels,
                        const FileExtension &type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
@@ -253,9 +258,9 @@ void Exporter::Process(ExportProgressListener& progressListener,
             mT0 = t0;
             mT1 = t1;
             
-            Configure(filename, i, j);
+            Configure(filename, i, j, parameters);
             FixFilename();
-            ExportTracks(progressListener);
+            ExportTracks(progressListener, parameters);
             return;
          }
       }
@@ -286,7 +291,8 @@ void Exporter::FixFilename()
    }
 }
 
-void Exporter::ExportTracks(ExportProgressListener& progressListener)
+void Exporter::ExportTracks(ExportProgressListener& progressListener,
+                            const ExportPlugin::Parameters& parameters)
 {
    // Keep original in case of failure
    if (mActualName != mFilename) {
@@ -320,6 +326,7 @@ void Exporter::ExportTracks(ExportProgressListener& progressListener)
 
    mPlugins[mFormat]->Export(mProject,
                              progressProxy,
+                             parameters,
                              mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
                              mActualName.GetFullPath(),
                              mSelectedOnly,
@@ -341,6 +348,12 @@ int Exporter::GetAutoExportSubFormat() {
 wxFileName Exporter::GetAutoExportFileName() {
    return mFilename;
 }
+
+ExportPlugin::Parameters Exporter::GetAutoExportParameters()
+{
+   return mParameters;
+}
+
 
 MixerOptions::Downmix* Exporter::CreateMixerSpec()
 {

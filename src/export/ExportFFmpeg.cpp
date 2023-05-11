@@ -46,6 +46,7 @@ function.
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
+#include "ExportOptionsEditor.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
@@ -82,6 +83,9 @@ public:
    ExportFFmpeg();
    ~ExportFFmpeg() override;
 
+   std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const override;
+
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int index) const override;
    
@@ -117,6 +121,7 @@ public:
 
    void Export(AudacityProject *project,
       ExportProgressListener &progressListener,
+      const Parameters& parameters,
       unsigned channels,
       const wxFileNameWrapper &fName,
       bool selectedOnly,
@@ -218,6 +223,12 @@ ExportFFmpeg::ExportFFmpeg()
 }
 
 ExportFFmpeg::~ExportFFmpeg() = default;
+
+std::unique_ptr<ExportOptionsEditor>
+ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const
+{
+   return {};
+}
 
 int ExportFFmpeg::GetFormatCount() const
 {
@@ -1014,7 +1025,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 
 void ExportFFmpeg::Export(
    AudacityProject *project, ExportProgressListener &progressListener,
-   unsigned channels, const wxFileNameWrapper& fName,
+   const Parameters&, unsigned channels, const wxFileNameWrapper& fName,
    bool selectionOnly, double t0, double t1,
    MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {

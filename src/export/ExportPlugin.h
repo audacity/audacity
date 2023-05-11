@@ -13,6 +13,7 @@
 
 #include <wx/string.h>
 
+#include "ExportOptionsEditor.h"
 #include "wxArrayStringEx.h"
 #include "Identifier.h"
 #include "TranslatableString.h"
@@ -45,6 +46,9 @@ struct AUDACITY_DLL_API FormatInfo
 class AUDACITY_DLL_API ExportPlugin /* not final */
 {
 public:
+
+   using Parameters = std::vector<std::tuple<ExportOptionID, ExportValue>>;
+
    ExportPlugin();
    virtual ~ExportPlugin();
 
@@ -52,6 +56,9 @@ public:
    virtual FormatInfo GetFormatInfo(int index) const = 0;
 
    virtual void OptionsCreate(ShuttleGui &S, int format) = 0;
+
+   virtual std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int formatIndex, ExportOptionsEditor::Listener* listener) const = 0;
    
    ///\brief Can be used to retrieve description of current export status in human-readable form
    virtual TranslatableString GetStatusString() const = 0;
@@ -75,13 +82,10 @@ public:
     * export to "Other PCM", "AIFF 16 Bit" and "WAV 16 Bit" are all the same
     * libsndfile export plug-in, but with subformat set to 0, 1, and 2
     * respectively.
-    * @return ProgressResult::Failed or ProgressResult::Cancelled if export
-    * fails to complete for any reason, in which case this function is
-    * responsible for alerting the user.  Otherwise ProgressResult::Success or
-    * ProgressResult::Stopped
     */
    virtual void Export(AudacityProject *project,
                        ExportProgressListener &progressListener,
+                       const Parameters& parameters,
                        unsigned channels,
                        const wxFileNameWrapper &fName,
                        bool selectedOnly,

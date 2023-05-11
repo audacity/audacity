@@ -39,6 +39,7 @@ Joshua Haberman
 
 #include "ExportProgressListener.h"
 #include "ExportUtils.h"
+#include "ExportOptionsEditor.h"
 
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
@@ -212,9 +213,14 @@ public:
    
    // Required
 
+   std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+
    void OptionsCreate(ShuttleGui &S, int format) override;
+   
    void Export(AudacityProject *project,
                ExportProgressListener &pDialog,
+               const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -248,8 +254,16 @@ FormatInfo ExportFLAC::GetFormatInfo(int) const
    };
 }
 
+std::unique_ptr<ExportOptionsEditor>
+ExportFLAC::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+{
+   return { };
+}
+
+
 void ExportFLAC::Export(AudacityProject *project,
                         ExportProgressListener &progressListener,
+                        const Parameters&,
                         unsigned numChannels,
                         const wxFileNameWrapper &fName,
                         bool selectionOnly,

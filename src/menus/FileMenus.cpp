@@ -184,6 +184,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
          // We're in batch mode, the file does not exist already.
          // We really can proceed without prompting.
          e.Process(progressListener,
+                   {},
                    nChannels,  // numChannels,
                    format,     // type,
                    fullPath,   // full path,

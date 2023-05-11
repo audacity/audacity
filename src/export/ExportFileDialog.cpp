@@ -253,7 +253,7 @@ int ExportFileDialog::RunModal(wxWindow* parent,
          }
    #endif
       
-      exporter.Configure(filename, pluginIndex, formatIndex);
+      exporter.Configure(filename, pluginIndex, formatIndex, {});
       
       if(defaultFormatName.empty())
          DefaultExportFormat.Write(plugins[pluginIndex]->GetFormatInfo(formatIndex).mFormat);

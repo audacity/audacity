@@ -101,6 +101,7 @@
 #include <id3tag.h>
 #endif
 
+#include "ExportOptionsEditor.h"
 #include "ExportUtils.h"
 
 //----------------------------------------------------------------------------
@@ -1705,9 +1706,13 @@ public:
    
    // Required
 
+   std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const override;
+
    void OptionsCreate(ShuttleGui &S, int format) override;
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
+               const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -1741,6 +1746,13 @@ FormatInfo ExportMP3::GetFormatInfo(int) const
    };
 }
 
+std::unique_ptr<ExportOptionsEditor>
+ExportMP3::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const
+{
+   return { };
+}
+
+
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
 {
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
@@ -1763,6 +1775,7 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
 
 void ExportMP3::Export(AudacityProject *project,
                        ExportProgressListener &progressListener,
+                       const Parameters&,
                        unsigned channels,
                        const wxFileNameWrapper &fName,
                        bool selectionOnly,

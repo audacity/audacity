@@ -35,6 +35,7 @@
 
 #include "Export.h"
 #include "ExportProgressListener.h"
+#include "ExportOptionsEditor.h"
 
 #include "ExportUtils.h"
 
@@ -389,9 +390,13 @@ public:
    
    // Required
 
+   std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+
    void OptionsCreate(ShuttleGui &S, int format) override;
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
+               const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -449,6 +454,13 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
    };
 }
 
+std::unique_ptr<ExportOptionsEditor>
+ExportPCM::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+{
+   return {};
+}
+
+
 void ExportPCM::ReportTooBigError(wxWindow * pParent)
 {
    //Temporary translation hack, to say 'WAV or AIFF' rather than 'WAV'
@@ -478,6 +490,7 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
  */
 void ExportPCM::Export(AudacityProject *project,
                        ExportProgressListener &progressListener,
+                       const Parameters& parameters,
                        unsigned numChannels,
                        const wxFileNameWrapper &fName,
                        bool selectionOnly,

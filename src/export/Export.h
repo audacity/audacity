@@ -60,9 +60,9 @@ public:
    };
 
    Exporter( AudacityProject &project );
-   virtual ~Exporter();
+   ~Exporter();
 
-   void Configure(const wxFileName& filename, int pluginIndex, int formatIndex);
+   void Configure(const wxFileName& filename, int pluginIndex, int formatIndex, const ExportPlugin::Parameters& parameters);
    
    bool SetExportRange(double t0, double t1, bool selectedOnly, bool skipSilenceAtBeginning = false);
    
@@ -75,6 +75,7 @@ public:
    void Process(ExportProgressListener& progressListener);
    
    void Process(ExportProgressListener& progressListener,
+                const ExportPlugin::Parameters& parameters,
                 unsigned numChannels,
                 const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
@@ -88,6 +89,7 @@ public:
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
    wxFileName GetAutoExportFileName();
+   ExportPlugin::Parameters GetAutoExportParameters();
 
 private:
    struct AUDACITY_DLL_API ExporterItem final : Registry::SingleItem {
@@ -98,7 +100,7 @@ private:
    };
 
    void FixFilename();
-   void ExportTracks(ExportProgressListener& progressListener);
+   void ExportTracks(ExportProgressListener& progressListener, const ExportPlugin::Parameters& parameters);
 
 private:
    AudacityProject *mProject;
@@ -108,6 +110,7 @@ private:
 
    wxFileName mFilename;
    wxFileName mActualName;
+   ExportPlugin::Parameters mParameters;
 
    double mT0;
    double mT1;
