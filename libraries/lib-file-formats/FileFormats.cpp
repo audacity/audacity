@@ -19,11 +19,10 @@ information.
 #include "FileFormats.h"
 
 #include <wx/arrstr.h>
-#include "sndfile.h"
 #include "Internat.h"
 #include "MemoryX.h"
-#include "AudacityMessageBox.h"
 #include "Prefs.h"
+#include "BasicUI.h"
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher
@@ -339,7 +338,7 @@ int SFFileCloser::operator() (SNDFILE *sf) const
    if (err) {
       char buffer[1000];
       sf_error_str(sf, buffer, 1000);
-      AudacityMessageBox(
+      BasicUI::ShowMessageBox(
          /* i18n-hint: %s will be the error message from the libsndfile software library */
          XO( "Error (file may not have been written): %s" )
             // Not attempting to localize error messages
