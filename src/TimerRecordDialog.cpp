@@ -47,9 +47,11 @@
 #include "ProjectManager.h"
 #include "ProjectRate.h"
 #include "ProjectWindow.h"
+#include "ProjectSettings.h"
 #include "Project.h"
 #include "Prefs.h"
 #include "Track.h"
+#include "TagsEditor.h"
 #include "widgets/NumericTextCtrl.h"
 #include "HelpSystem.h"
 #include "AudacityMessageBox.h"
@@ -348,19 +350,28 @@ void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(ev
 {
    Exporter eExporter{ mProject };
 
+   // Set the options required
    const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&mProject), eExporter,
                                               mProject.GetProjectName());
-   // Call the Exporter to set the options required
-   if(ret == wxID_OK && eExporter.SetAutoExportOptions())
+   if(ret != wxID_OK)
+      return;
+   
+   if(eExporter.CanMetaData())
    {
-      // Populate the options so that we can destroy this instance of the Exporter
-      m_fnAutoExportFile = eExporter.GetAutoExportFileName();
-      m_iAutoExportFormat = eExporter.GetAutoExportFormat();
-      m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
-
-      // Update the text controls
-      this->UpdateTextBoxControls();
+      if (!TagsEditorDialog::DoEditMetadata( mProject,
+         XO("Edit Metadata Tags"),
+         XO("Exported Tags"),
+         ProjectSettings::Get(mProject).GetShowId3Dialog())) {
+         return;
+      }
    }
+   // Populate the options so that we can destroy this instance of the Exporter
+   m_fnAutoExportFile = eExporter.GetAutoExportFileName();
+   m_iAutoExportFormat = eExporter.GetAutoExportFormat();
+   m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
+
+   // Update the text controls
+   this->UpdateTextBoxControls();
 }
 
 void TimerRecordDialog::OnAutoSaveCheckBox_Change(wxCommandEvent& WXUNUSED(event)) {
@@ -613,7 +624,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       else
          e.CreateMixerSpec();
       
-      bExportOK = e.ProcessFromTimerRecording();
+      bExportOK = e.Process();
    }
 
    // Check if we need to override the post recording action
