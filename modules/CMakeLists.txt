@@ -8,6 +8,7 @@ set( MODULES
    mod-pcm
    mod-cl
    mod-lof
+   mod-aup
 )
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
    list( APPEND MODULES
