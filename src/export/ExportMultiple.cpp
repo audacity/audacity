@@ -44,6 +44,7 @@
 #include "ProjectWindows.h"
 #include "Prefs.h"
 #include "SelectionState.h"
+#include "ExportFileDialog.h"
 #include "ShuttleGui.h"
 #include "../TagsEditor.h"
 #include "WaveTrack.h"
@@ -240,7 +241,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
    };
 
    wxString name = mProject->GetProjectName();
-   wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"), wxT("WAV"));
+   wxString defaultFormat = DefaultExportFormat.Read();// gPrefs->Read(wxT("/Export/Format"), wxT("WAV"));
 
    TranslatableStrings visibleFormats;
    wxArrayStringEx formats;
