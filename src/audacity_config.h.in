@@ -60,9 +60,6 @@
 /* Define if libid3tag is present */
 #cmakedefine USE_LIBID3TAG 1
 
-/* Define if mp3 support is implemented with the libmad library */
-#cmakedefine USE_LIBMAD 1
-
 /* Define if mp3 support is implemented with the libmpg123 library */
 #cmakedefine USE_LIBMPG123 1
 
