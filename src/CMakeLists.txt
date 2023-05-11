@@ -555,8 +555,14 @@ list( APPEND SOURCES
 
       export/Export.cpp
       export/Export.h
+      export/ExportPlugin.cpp
+      export/ExportPlugin.h
       export/ExportUtils.cpp
       export/ExportUtils.h
+      export/ExportMixerPanel.cpp
+      export/ExportMixerPanel.h
+      export/ExportMixerDialog.cpp
+      export/ExportMixerDialog.h
 
       # Standard exporters
       export/ExportCL.cpp

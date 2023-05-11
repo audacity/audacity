@@ -28,6 +28,7 @@ class LabelTrack;
 class SelectionState;
 class ShuttleGui;
 class Track;
+class TrackList;
 
 class AUDACITY_DLL_API ExportMultipleDialog final : public wxDialogWrapper
 {
