@@ -29,50 +29,68 @@ Joshua Haberman
 #include "ProjectRate.h"
 #include "Mix.h"
 #include "Prefs.h"
-#include "ShuttleGui.h"
 
 #include "Tags.h"
 #include "Track.h"
 
-#include "wxPanelWrapper.h"
 #include "wxFileNameWrapper.h"
 
 #include "ExportProgressListener.h"
 #include "ExportUtils.h"
-#include "ExportOptionsEditor.h"
+#include "PlainExportOptionsEditor.h"
 
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
 //----------------------------------------------------------------------------
 
-class ExportFLACOptions final : public wxPanelWrapper
+namespace
 {
-public:
-
-   ExportFLACOptions(wxWindow *parent, int format);
-   virtual ~ExportFLACOptions();
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+enum : int {
+   FlacOptionIDBitDepth = 0,
+   FlacOptionIDLevel
 };
 
-///
-///
-ExportFLACOptions::ExportFLACOptions(wxWindow *parent, int WXUNUSED(format))
-:  wxPanelWrapper(parent, wxID_ANY)
-{
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-   PopulateOrExchange(S);
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> FlacOptions {
+   {
+      {
+         FlacOptionIDBitDepth, XO("Bit Depth"),
+         std::string("16"),
+         ExportOption::TypeEnum,
+         { std::string("16"), std::string("24") },
+         { XO("16 bit") , XO("24 bit") }
+      }, wxT("/FileFormats/FLACBitDepth")
+   },
+   {
+      {
+         FlacOptionIDLevel, XO("Level"),
+         std::string("5"),
+         ExportOption::TypeEnum,
+         {
+            std::string("0"),
+            std::string("1"),
+            std::string("2"),
+            std::string("3"),
+            std::string("4"),
+            std::string("5"),
+            std::string("6"),
+            std::string("7"),
+            std::string("8"),
+         },
+         {
+            XO("0 (fastest)") ,
+            XO("1") ,
+            XO("2") ,
+            XO("3") ,
+            XO("4") ,
+            XO("5") ,
+            XO("6") ,
+            XO("7") ,
+            XO("8 (best)") ,
+         }
+      }, wxT("/FileFormats/FLACLevel")
+   }
+};
 
-   TransferDataToWindow();
-}
-
-///
-///
-ExportFLACOptions::~ExportFLACOptions()
-{
-   TransferDataFromWindow();
 }
 
 ChoiceSetting FLACBitDepth{
@@ -114,51 +132,6 @@ ChoiceSetting FLACLevel{
    },
    5 //"5"
 };
-
-///
-///
-void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
-{
-   S.StartVerticalLay();
-   {
-      S.StartHorizontalLay(wxCENTER);
-      {
-         S.StartMultiColumn(2, wxCENTER);
-         {
-            S.TieChoice( XXO("Level:"), FLACLevel);
-            S.TieChoice( XXO("Bit depth:"), FLACBitDepth);
-         }
-         S.EndMultiColumn();
-      }
-      S.EndHorizontalLay();
-   }
-   S.EndVerticalLay();
-
-   return;
-}
-
-///
-///
-bool ExportFLACOptions::TransferDataToWindow()
-{
-   return true;
-}
-
-///
-///
-bool ExportFLACOptions::TransferDataFromWindow()
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Flush();
-
-   return true;
-}
-
-//----------------------------------------------------------------------------
-// ExportFLAC Class
-//----------------------------------------------------------------------------
 
 #define SAMPLES_PER_RUN 8192u
 
@@ -257,13 +230,13 @@ FormatInfo ExportFLAC::GetFormatInfo(int) const
 std::unique_ptr<ExportOptionsEditor>
 ExportFLAC::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
 {
-   return { };
+   return std::make_unique<PlainExportOptionsEditor>(FlacOptions);
 }
 
 
 void ExportFLAC::Export(AudacityProject *project,
                         ExportProgressListener &progressListener,
-                        const Parameters&,
+                        const Parameters& parameters,
                         unsigned numChannels,
                         const wxFileNameWrapper &fName,
                         bool selectionOnly,
@@ -280,10 +253,8 @@ void ExportFLAC::Export(AudacityProject *project,
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
 
-   long levelPref;
-   FLACLevel.Read().ToLong( &levelPref );
-
-   auto bitDepthPref = FLACBitDepth.Read();
+   long levelPref = std::stol(ExportUtils::GetParameterValue<std::string>(parameters, FlacOptionIDLevel));
+   auto bitDepthPref = ExportUtils::GetParameterValue<std::string>(parameters, FlacOptionIDBitDepth);
 
    FLAC::Encoder::File encoder;
 
@@ -315,7 +286,7 @@ void ExportFLAC::Export(AudacityProject *project,
    } );
 
    sampleFormat format;
-   if (bitDepthPref == wxT("24")) {
+   if (bitDepthPref == "24") {
       format = int24Sample;
       success = success && encoder.set_bits_per_sample(24);
    } else { //convert float to 16 bits
@@ -461,7 +432,6 @@ void ExportFLAC::Export(AudacityProject *project,
 
 void ExportFLAC::OptionsCreate(ShuttleGui &S, int format)
 {
-   S.AddWindow( safenew ExportFLACOptions{ S.GetParent(), format } );
 }
 
 // LL:  There's a bug in libflac++ 1.1.2 that prevents us from using
