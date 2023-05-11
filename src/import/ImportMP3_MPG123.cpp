@@ -16,6 +16,7 @@
 #include "Import.h"
 #include "BasicUI.h"
 #include "ImportPlugin.h"
+#include "ImportUtils.h"
 #include "Project.h"
 
 #define DESC XO("MP3 files")
@@ -368,7 +369,7 @@ bool MP3ImportFileHandle::SetupOutputFormat()
    mFloat64Output = encoding == MPG123_ENC_FLOAT_64;
 
    for (unsigned i = 0; i < mNumChannels; ++i)
-      mChannels[i] = NewWaveTrack(*mTrackFactory, floatSample, rate);
+      mChannels[i] = ImportUtils::NewWaveTrack(*mTrackFactory, floatSample, rate);
 
    return true;
 }

@@ -25,6 +25,7 @@ and sample size to help you importing data of an unknown format.
 #include "ImportRaw.h"
 
 #include "ImportPlugin.h"
+#include "ImportUtils.h"
 
 #include "AudioIOBase.h"
 #include "../FileFormats.h"
@@ -174,7 +175,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       // the quality of the original file.
       //
 
-      const auto format = ImportFileHandle::ChooseFormat(
+      const auto format = ImportUtils::ChooseFormat(
          sf_subtype_to_effective_format(encoding));
 
       results.resize(1);

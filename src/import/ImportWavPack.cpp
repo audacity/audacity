@@ -34,6 +34,7 @@
 #include "ProgressDialog.h"
 #include "AudacityMessageBox.h"
 #include "CodeConversions.h"
+#include "ImportUtils.h"
 
 #define DESC XO("WavPack files")
 
@@ -170,7 +171,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
    {
       auto iter = mChannels.begin();
       for (size_t c = 0; c < mNumChannels; ++iter, ++c)
-         *iter = NewWaveTrack(*trackFactory, mFormat, mSampleRate);
+         *iter = ImportUtils::NewWaveTrack(*trackFactory, mFormat, mSampleRate);
    }
 
    /* The number of samples to read in each loop */
