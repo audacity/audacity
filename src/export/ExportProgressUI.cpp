@@ -16,7 +16,6 @@
 #include "BasicUI.h"
 #include "AudacityMessageBox.h"
 #include "FileException.h"
-#include "wxFileNameWrapper.h"
 
 namespace
 {
@@ -27,7 +26,6 @@ namespace
       std::atomic<double> mProgress {};
       
       TranslatableString mStatus;
-      TranslatableString mError;
 
       std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
    public:
@@ -41,12 +39,7 @@ namespace
       {
          return mStopped;
       }
-
-      void SetErrorString(const TranslatableString& str) override
-      {
-         mError = str;
-      }
-
+      
       void SetStatusString(const TranslatableString& str) override
       {
          mStatus = str;
@@ -56,12 +49,7 @@ namespace
       {
          mProgress = progress;
       }
-
-      const TranslatableString& GetErrorString() const noexcept
-      {
-         return mError;
-      }
-
+      
       void UpdateUI()
       {
          constexpr long long ProgressSteps = 1000ul;
@@ -105,10 +93,10 @@ ExportResult ExportProgressUI::Show(ExportTask exportTask)
 
    if(result == ExportResult::Error)
    {
-      if(!delegate.GetErrorString().empty())
-         AudacityMessageBox(delegate.GetErrorString(),
-                            XO("Error"),
-                            wxOK | wxCENTRE | wxICON_EXCLAMATION);
+      BasicUI::ShowErrorDialog(
+         {}, XO("Export error"),
+         XO("Export completed with error."), {},
+         BasicUI::ErrorDialogOptions { BasicUI::ErrorDialogType::ModalError });
    }
 
    return result;
