@@ -580,11 +580,7 @@ list( APPEND SOURCES
       import/ImportRaw.h
 
       # Optional importers
-
-      $<$<BOOL:${USE_GSTREAMER}>:
-         import/ImportGStreamer.cpp
-      >
-
+      
       $<$<BOOL:${USE_MIDI}>:
          export/ExportMIDI.cpp
          import/ImportMIDI.cpp

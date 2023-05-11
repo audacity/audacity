@@ -48,9 +48,6 @@
    */
 #cmakedefine USE_FFMPEG 1
 
-/* Define if GStreamer 1 is present */
-#cmakedefine USE_GSTREAMER 1
-
 /* Define if LADSPA plug-ins are enabled */
 #cmakedefine USE_LADSPA 1
 
