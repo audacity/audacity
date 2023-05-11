@@ -178,23 +178,33 @@ void DoExport(AudacityProject &project, const FileExtension &format)
 
       int nChannels = tracks.Leaders().max(&Track::NChannels);
 
-      if(auto plugin = e.FindPluginByType(format))
+      for(auto& plugin : e.GetPlugins())
       {
-         GenericExportProgressListener progressListener(*plugin);
-         // We're in batch mode, the file does not exist already.
-         // We really can proceed without prompting.
-         e.Process(progressListener,
-                   {},
-                   nChannels,  // numChannels,
-                   format,     // type,
-                   fullPath,   // full path,
-                   false,      // selectedOnly,
-                   t0,         // t0
-                   t1          // t1
-                   );
-         const auto result = progressListener.ConsumeResult();
-         success = result == ExportProgressListener::ExportResult::Success ||
-         result == ExportProgressListener::ExportResult::Stopped;
+         for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
+         {
+            auto formatInfo = plugin->GetFormatInfo(formatIndex);
+            if(!formatInfo.mFormat.IsSameAs(format, false))
+               continue;
+
+            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+            editor->Load(*gPrefs);
+
+            GenericExportProgressListener progressListener(*plugin);
+            // We're in batch mode, the file does not exist already.
+            // We really can proceed without prompting.
+            e.Process(progressListener,
+                      ExportUtils::ParametersFromEditor(*editor),
+                      nChannels,  // numChannels,
+                      format,     // type,
+                      fullPath,   // full path,
+                      false,      // selectedOnly,
+                      t0,         // t0
+                      t1          // t1
+                      );
+            const auto result = progressListener.ConsumeResult();
+            success = result == ExportProgressListener::ExportResult::Success ||
+            result == ExportProgressListener::ExportResult::Stopped;
+         }
       }
    }
 

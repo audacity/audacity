@@ -35,6 +35,8 @@ class AUDACITY_DLL_API ExportFileDialog final : public FileDialogWrapper
    
 public:
 
+   ~ExportFileDialog() override;
+
    ///\brief Shows export file dialog and configures exporter according to user selection and
    ///handles input errors/inconsistencies, which isn't possible with regular `wxDialog::Show`
    ///or `wxDialog::ShowModal`
@@ -61,7 +63,10 @@ private:
    Exporter& mExporter;
    
    wxSimplebook *mBook {nullptr};
-   
+
+   class ExportOptionsHandler;
+   std::vector<std::unique_ptr<ExportOptionsHandler>> mOptionsHandlers;
+
    DECLARE_EVENT_TABLE()
 };
 

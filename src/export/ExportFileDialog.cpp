@@ -17,10 +17,19 @@
 #include "AllThemeResources.h"
 #include "HelpSystem.h"
 #include "AudacityMessageBox.h"
+#include "ExportOptionsEditor.h"
+#include "ExportUtils.h"
 
 #include <wx/bmpbuttn.h>
 #include <wx/simplebook.h>
 #include <wx/filectrl.h>
+#include <wx/checkbox.h>
+#include <wx/spinctrl.h>
+#include <wx/wupdlock.h>
+#include <wx/choice.h>
+#include <wx/stattext.h>
+
+#include "widgets/FileHistory.h"
 
 wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
@@ -45,6 +54,190 @@ bool IsExtension(const ExportPlugin& plugin, int formatIndex, const FileExtensio
 }
 
 }
+
+class ExportFileDialog::ExportOptionsHandler final
+   : public ExportOptionsEditor::Listener
+{
+public:
+
+   ExportOptionsHandler(ShuttleGui& S, ExportPlugin& plugin, int format)
+   {
+      mParent = S.GetParent();
+
+      mEditor = plugin.CreateOptionsEditor(format, this);
+      if(mEditor)
+      {
+         mEditor->Load(*gPrefs);
+         PopulateOptions(S);
+      }
+      else
+         plugin.OptionsCreate(S, format);
+   }
+
+   void TransferDataFromEditor()
+   {
+      if(mEditor)
+         mEditor->Store(*gPrefs);
+   }
+
+   ExportPlugin::Parameters GetParameters() const
+   {
+      if(mEditor)
+         return ExportUtils::ParametersFromEditor(*mEditor);
+      return {};
+   }
+
+   void PopulateOptions(ShuttleGui& S)
+   {
+      S.StartVerticalLay();
+      {
+         S.StartHorizontalLay(wxCENTER);
+         {
+            S.StartMultiColumn(2, wxCENTER);
+            {
+               for(int i = 0; i < mEditor->GetOptionsCount(); ++i)
+               {
+                  ExportOption option;
+                  if(!mEditor->GetOption(i, option))
+                     continue;
+
+                  ExportValue value;
+                  if(!mEditor->GetValue(option.id, value))
+                     continue;
+                  
+                  wxControl* control { nullptr };
+
+                  auto prompt = S.AddPrompt(option.title);
+                  if((option.flags & ExportOption::TypeMask) == ExportOption::TypeEnum)
+                  {
+                     int selected = -1;
+                     TranslatableStrings list;
+
+                     int index { 0 };
+                     std::unordered_map<int, ExportValue> indexValueMap;
+                     indexValueMap.reserve(option.values.size());
+                     for(auto& e : option.values)
+                     {
+                        list.push_back(option.names[index]);
+                        if(value == e)
+                           selected = index;
+                        indexValueMap[index] = e;
+                        ++index;
+                     }
+                     control = S.AddChoice({}, list, selected);
+                     control->Bind(wxEVT_CHOICE, [this, id = option.id, indexValueMap](const wxCommandEvent& evt)
+                     {
+                        const auto it = indexValueMap.find(evt.GetInt());
+                        if(it != indexValueMap.end())
+                           mEditor->SetValue(id, it->second);
+                     });
+                  }
+                  else if(auto selected = std::get_if<bool>(&value))
+                  {
+                     control = S.AddCheckBox({}, *selected);
+                     control->Bind(wxEVT_CHECKBOX, [this, id = option.id](const wxCommandEvent& evt)
+                     {
+                        const auto checked = evt.GetInt() != 0;
+                        mEditor->SetValue(id, checked);
+                     });
+                  }
+                  else if(auto num = std::get_if<int>(&value))
+                  {
+                     if((option.flags & ExportOption::TypeMask) == ExportOption::TypeRange)
+                     {
+                        const int min = *std::get_if<int>(&option.values[0]);
+                        const int max = *std::get_if<int>(&option.values[1]);
+                        if(max - min < 20)
+                        {
+                           control = S.AddSlider({}, *num, max, min);
+                           control->Bind(wxEVT_SLIDER, [this, id = option.id](const wxCommandEvent& evt)
+                           {
+                              mEditor->SetValue(id, evt.GetInt());
+                           });
+                        }
+                        else
+                        {
+                           control = S.AddSpinCtrl({}, *num, max, min);
+                           control->Bind(wxEVT_SPINCTRL, [this, id = option.id](const wxSpinEvent& evt)
+                           {
+                              mEditor->SetValue(id, evt.GetInt());
+                           });
+                        }
+                     }
+                     else
+                     {
+                        control = S.AddNumericTextBox({}, wxString::Format("%d", *num), 0);
+                        control->Bind(wxEVT_TEXT, [this, id = option.id](const wxCommandEvent& evt)
+                        {
+                           long num;
+                           if(evt.GetString().ToLong(&num))
+                              mEditor->SetValue(id, static_cast<int>(num));
+                        });
+                     }
+                  }
+                  else if(auto str = std::get_if<std::string>(&value))
+                  {
+                     control = S.AddTextBox({}, wxString::FromUTF8(*str), 0);
+                     control->Bind(wxEVT_TEXT, [this, id = option.id](const wxCommandEvent& evt)
+                     {
+                        mEditor->SetValue(id, evt.GetString().ToStdString());
+                     });
+                  }
+                  mIDRowIndexMap[option.id] = static_cast<int>(mRows.size());
+                  mRows.emplace_back(prompt, control);
+                  
+                  if(option.flags & ExportOption::ReadOnly)
+                     control->Disable();
+                  if(option.flags & ExportOption::Hidden)
+                  {
+                     prompt->Hide();
+                     control->Hide();
+                  }
+               }
+            }
+            S.EndMultiColumn();
+         }
+         S.EndHorizontalLay();
+      }
+      S.EndVerticalLay();
+   }
+
+   void OnExportOptionChangeBegin() override
+   {
+      mUpdateLocker = std::make_unique<wxWindowUpdateLocker>(mParent);
+   }
+
+   void OnExportOptionChangeEnd() override
+   {
+      mParent->Layout();
+      mUpdateLocker.reset();
+   }
+
+   void OnExportOptionChange(const ExportOption& option) override
+   {
+      const auto it = mIDRowIndexMap.find(option.id);
+      if(it == mIDRowIndexMap.end())
+         return;
+
+      const auto index = it->second;
+      const auto [prompt, control] = mRows[index];
+
+      const auto visible = (option.flags & ExportOption::Hidden) == 0;
+      
+      prompt->Show(visible);
+      control->Show(visible);
+      
+      const auto enabled = (option.flags & ExportOption::ReadOnly) == 0;
+      control->Enable(enabled);
+   }
+
+private:
+   wxWindow* mParent { nullptr };
+   std::unique_ptr<wxWindowUpdateLocker> mUpdateLocker;
+   std::unique_ptr<ExportOptionsEditor> mEditor;
+   std::vector<std::tuple<wxStaticText*, wxControl*>> mRows;
+   std::unordered_map<int, int> mIDRowIndexMap;
+};
 
 ExportFileDialog::ExportFileDialog(wxWindow *parent,
                                    Exporter& exporter,
@@ -114,6 +307,9 @@ ExportFileDialog::ExportFileDialog(wxWindow *parent,
    SetUserPaneCreator(CreateUserPaneCallback, (wxUIntPtr) this);
    SetFilterIndex(filterIndex);
 }
+
+ExportFileDialog::~ExportFileDialog() = default;
+
 
 int ExportFileDialog::RunModal(wxWindow* parent,
                                Exporter& exporter,
@@ -252,16 +448,23 @@ int ExportFileDialog::RunModal(wxWindow* parent,
             }
          }
    #endif
-      
-      exporter.Configure(filename, pluginIndex, formatIndex, {});
+
+      dialog.mOptionsHandlers[dialog.GetFilterIndex()]->TransferDataFromEditor();
+
+      exporter.Configure(filename,
+                         pluginIndex,
+                         formatIndex,
+                         dialog.mOptionsHandlers[dialog.GetFilterIndex()]->GetParameters());
       
       if(defaultFormatName.empty())
          DefaultExportFormat.Write(plugins[pluginIndex]->GetFormatInfo(formatIndex).mFormat);
       
       FileNames::UpdateDefaultPath(FileNames::Operation::Export, filename.GetPath());
-      
-      return wxID_OK;
+
+      break;
    }
+   gPrefs->Flush();
+   return wxID_OK;
 }
 
 void ExportFileDialog::OnExtensionChanged(wxCommandEvent &evt)
@@ -329,7 +532,8 @@ void ExportFileDialog::CreateExportOptions(wxWindow *exportOptionsPane)
                   // Name of simple book page is not displayed
                   S.StartNotebookPage( {} );
                   {
-                     plugin->OptionsCreate(S, j);
+                     mOptionsHandlers.push_back(
+                        std::make_unique<ExportOptionsHandler>(S, *plugin, j));
                   }
                   S.EndNotebookPage();
                }
