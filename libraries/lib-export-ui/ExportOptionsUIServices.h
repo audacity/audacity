@@ -10,10 +10,9 @@
 
 #pragma once
 
-class ExportPlugin;
 class ShuttleGui;
 
-class ExportOptionsUIServices
+class EXPORT_UI_API ExportOptionsUIServices
 {
 public:
    
