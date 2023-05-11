@@ -45,7 +45,10 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "export/Export.h"
 #include "import/Import.h"
+#include "import/ImportProgressListener.h"
+#include "import/ImportPlugin.h"
 #include "import/ImportMIDI.h"
+#include "import/ImportStreamDialog.h"
 #include "toolbars/SelectionBar.h"
 #include "AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
@@ -1204,6 +1207,57 @@ bool ImportProject(AudacityProject &dest, const FilePath &fileName)
 
    return true;
 }
+
+class ImportProgress final
+   : public ImportProgressListener
+{
+public:
+   
+   bool OnImportFileOpened(ImportFileHandle& importFileHandle) override
+   {
+      mImportFileHandle = &importFileHandle;
+      // File has more than one stream - display stream selector
+      if (importFileHandle.GetStreamCount() > 1)
+      {
+         ImportStreamDialog ImportDlg(&importFileHandle, NULL, -1, XO("Select stream(s) to import"));
+
+         if (ImportDlg.ShowModal() == wxID_CANCEL)
+            return false;
+      }
+      // One stream - import it by default
+      else
+         importFileHandle.SetStreamUsage(0,TRUE);
+      return true;
+   }
+   
+   void OnImportProgress(double progress) override
+   {
+      constexpr double ProgressSteps { 1000.0 };
+      if(!mProgressDialog)
+      {
+         wxFileName ff( mImportFileHandle->GetFilename() );
+         auto title = XO("Importing %s").Format(  mImportFileHandle->GetFileDescription() );
+         mProgressDialog = BasicUI::MakeProgress(title, Verbatim(ff.GetFullName()));
+      }
+      auto result = mProgressDialog->Poll(progress * ProgressSteps, ProgressSteps);
+      if(result == BasicUI::ProgressResult::Cancelled)
+         mImportFileHandle->Cancel();
+      else if(result == BasicUI::ProgressResult::Stopped)
+         mImportFileHandle->Stop();
+   }
+   
+   void OnImportResult(ImportResult) override
+   {
+      mProgressDialog.reset();
+   }
+   
+private:
+   
+   ImportFileHandle* mImportFileHandle {nullptr};
+   std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
+};
+
+
 }
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
@@ -1275,7 +1329,9 @@ bool ProjectFileManager::Import(
          return false;
       }
 #endif
+      ImportProgress importProgress;
       bool success = Importer::Get().Import(project, fileName,
+                                            &importProgress,
                                             &WaveTrackFactory::Get( project ),
                                             newTracks,
                                             newTags.get(),

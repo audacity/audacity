@@ -606,6 +606,8 @@ list( APPEND SOURCES
       import/ImportForwards.h
       import/ImportPlugin.cpp
       import/ImportPlugin.h
+      import/ImportProgressListener.cpp
+      import/ImportProgressListener.h
       import/ImportStreamDialog.cpp
       import/ImportStreamDialog.h
       import/ImportUtils.cpp

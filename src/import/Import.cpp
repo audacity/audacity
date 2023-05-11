@@ -47,11 +47,53 @@ ImportLOF.cpp, and ImportAUP.cpp.
 
 #include "Prefs.h"
 
-#include "ProgressDialog.h"
-
-#include "ImportStreamDialog.h"
+#include "ImportProgressListener.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+
+namespace {
+
+//Proxy class used by importer to capture import result
+class ImportProgressResultProxy final : public ImportProgressListener
+{
+   ImportProgressListener* mListener{nullptr};
+   ImportResult mResult { ImportResult::Error };
+public:
+
+   ImportProgressResultProxy(ImportProgressListener* listener)
+      : mListener(listener)
+   {
+      
+   }
+   
+   bool OnImportFileOpened(ImportFileHandle& importFileHandle) override
+   {
+      mResult = ImportResult::Error;
+      if(mListener)
+         return mListener->OnImportFileOpened(importFileHandle);
+      return true;
+   }
+   
+   void OnImportProgress(double progress) override
+   {
+      if(mListener)
+         mListener->OnImportProgress(progress);
+   }
+   
+   void OnImportResult(ImportResult result) override
+   {
+      mResult = result;
+      if(mListener)
+         mListener->OnImportResult(result);
+   }
+   
+   ImportResult GetResult() const noexcept
+   {
+      return mResult;
+   }
+};
+
+}
 
 // ============================================================================
 //
@@ -451,6 +493,7 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 // returns number of tracks imported
 bool Importer::Import( AudacityProject &project,
                      const FilePath &fName,
+                     ImportProgressListener* importProgressListener,
                      WaveTrackFactory *trackFactory,
                      TrackHolders &tracks,
                      Tags *tags,
@@ -599,6 +642,8 @@ bool Importer::Import( AudacityProject &project,
       }
    }
 
+   ImportProgressResultProxy importResultProxy(importProgressListener);
+   
    // Try the import plugins, in the permuted sequences just determined
    for (const auto plugin : importPlugins)
    {
@@ -608,23 +653,13 @@ bool Importer::Import( AudacityProject &project,
       if ( (inFile != NULL) && (inFile->GetStreamCount() > 0) )
       {
          wxLogMessage(wxT("Open(%s) succeeded"), fName);
-         // File has more than one stream - display stream selector
-         if (inFile->GetStreamCount() > 1)
-         {
-            ImportStreamDialog ImportDlg(inFile.get(), NULL, -1, XO("Select stream(s) to import"));
-
-            if (ImportDlg.ShowModal() == wxID_CANCEL)
-            {
-               return false;
-            }
-         }
-         // One stream - import it by default
-         else
-            inFile->SetStreamUsage(0,TRUE);
-
-         auto res = inFile->Import(trackFactory, tracks, tags);
-
-         if (res == ProgressResult::Success || res == ProgressResult::Stopped)
+         if(!importResultProxy.OnImportFileOpened(*inFile))
+            return false;
+         
+         inFile->Import(importResultProxy, trackFactory, tracks, tags);
+         const auto importResult = importResultProxy.GetResult();
+         if (importResult == ImportProgressListener::ImportResult::Success ||
+             importResult == ImportProgressListener::ImportResult::Stopped)
          {
             // LOF ("list-of-files") has different semantics
             if (extension.IsSameAs(wxT("lof"), false))
@@ -654,7 +689,7 @@ bool Importer::Import( AudacityProject &project,
             }
          }
 
-         if (res == ProgressResult::Cancelled)
+         if (importResultProxy.GetResult() == ImportProgressListener::ImportResult::Cancelled)
             return false;
 
          // We could exit here since we had a match on the file extension,

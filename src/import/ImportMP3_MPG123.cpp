@@ -17,6 +17,7 @@
 #include "BasicUI.h"
 #include "ImportPlugin.h"
 #include "ImportUtils.h"
+#include "ImportProgressListener.h"
 #include "Project.h"
 
 #define DESC XO("MP3 files")
@@ -30,8 +31,6 @@
 #include "Prefs.h"
 #include "Tags.h"
 #include "WaveTrack.h"
-#include "AudacityMessageBox.h"
-#include "ProgressDialog.h"
 
 #include "CodeConversions.h"
 #include "FromChars.h"
@@ -124,7 +123,7 @@ public:
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
-class MP3ImportFileHandle final : public ImportFileHandle
+class MP3ImportFileHandle final : public ImportFileHandleEx
 {
 public:
    MP3ImportFileHandle(const FilePath &filename);
@@ -132,7 +131,10 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags) override;
+   void Import(ImportProgressListener &progressListener,
+               WaveTrackFactory *trackFactory,
+               TrackHolders &outTracks,
+               Tags *tags) override;
 
    bool SetupOutputFormat();
 
@@ -155,8 +157,6 @@ private:
    WaveTrackFactory* mTrackFactory { nullptr };
    NewChannelGroup mChannels;
    unsigned mNumChannels { 0 };
-
-   ProgressResult mUpdateResult { ProgressResult::Success };
 
    mpg123_handle* mHandle { nullptr };
 
@@ -187,7 +187,7 @@ static Importer::RegisteredImportPlugin registered
 // ============================================================================
 
 MP3ImportFileHandle::MP3ImportFileHandle(const FilePath& filename)
-    : ImportFileHandle(filename)
+    : ImportFileHandleEx(filename)
 {
    int errorCode = MPG123_OK;
    mHandle = mpg123_new(nullptr, &errorCode);
@@ -263,27 +263,26 @@ void MP3ImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUS
 {
 }
 
-ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
-                                           TrackHolders &outTracks,
-                                           Tags *tags)
+void MP3ImportFileHandle::Import(ImportProgressListener &progressListener,
+                                 WaveTrackFactory *trackFactory,
+                                 TrackHolders &outTracks,
+                                 Tags *tags)
 {
+   BeginImport();
+   
    auto finalAction = finally([handle = mHandle]() { mpg123_close(handle); });
 
    outTracks.clear();
    mTrackFactory = trackFactory;
 
-   CreateProgress();
-
    long long framesCount = mpg123_framelength(mHandle);
-
-   mUpdateResult = mProgress->Update(0ll, framesCount);
-
-   if (mUpdateResult == ProgressResult::Cancelled)
-      return ProgressResult::Cancelled;
-
+   
    if (!SetupOutputFormat())
-      return ProgressResult::Failed;
-
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
+   }
+   
    off_t frameIndex { 0 };
    unsigned char* data { nullptr };
    size_t dataSize { 0 };
@@ -295,12 +294,16 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
    while ((ret = mpg123_decode_frame(mHandle, &frameIndex, &data, &dataSize)) ==
                  MPG123_OK)
    {
-      mUpdateResult = mProgress->Update(
-         static_cast<long long>(frameIndex), framesCount);
+      if(framesCount > 0)
+         progressListener.OnImportProgress(static_cast<double>(frameIndex) / static_cast<double>(framesCount));
 
-      if (mUpdateResult == ProgressResult::Cancelled)
-         return ProgressResult::Cancelled;
-
+      if(IsCancelled())
+      {
+         progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
+         return;
+      }
+      //VS: doesn't implement Stop behavior...
+      
       constSamplePtr samples = reinterpret_cast<constSamplePtr>(data);
       const size_t samplesCount = dataSize / sizeof(float) / mNumChannels;
 
@@ -333,7 +336,8 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
       wxLogError(
          "Failed to decode MP3 file: %s", mpg123_plain_strerror(ret));
 
-      return ProgressResult::Failed;
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
    }
 
    // Flush and trim the channels
@@ -345,8 +349,8 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
    outTracks.push_back(std::move(mChannels));
 
    ReadTags(tags);
-
-   return mUpdateResult;
+   
+   progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
 }
 
 bool MP3ImportFileHandle::SetupOutputFormat()
@@ -455,7 +459,7 @@ bool MP3ImportFileHandle::Open()
       return false;
 
    // Open the file
-   if (!mFile.Open(mFilename))
+   if (!mFile.Open(GetFilename()))
    {
       return false;
    }

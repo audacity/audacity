@@ -11,7 +11,6 @@ Paul Licameli split from Import.cpp
 #include "ImportPlugin.h"
 
 #include <wx/filename.h>
-#include "ProgressDialog.h"
 
 ImportPlugin::ImportPlugin(FileExtensions supportedExtensions):
    mExtensions( std::move( supportedExtensions ) )
@@ -36,18 +35,43 @@ TranslatableString ImportPlugin::FailureHint() const
    return {};
 }
 
-ImportFileHandle::ImportFileHandle(const FilePath & filename)
+
+ImportFileHandle::~ImportFileHandle() = default;
+
+ImportFileHandleEx::ImportFileHandleEx(const FilePath & filename)
 :  mFilename(filename)
 {
 }
 
-ImportFileHandle::~ImportFileHandle() = default;
-
-void ImportFileHandle::CreateProgress()
+FilePath ImportFileHandleEx::GetFilename() const
 {
-   wxFileName ff( mFilename );
+   return mFilename;
+}
 
-   auto title = XO("Importing %s").Format( GetFileDescription() );
-   mProgress = std::make_unique< ProgressDialog >(
-      title, Verbatim( ff.GetFullName() ) );
+void ImportFileHandleEx::Cancel()
+{
+   if(!mStopped)
+      mCancelled = true;
+}
+
+void ImportFileHandleEx::Stop()
+{
+   if(!mCancelled)
+      mStopped = true;
+}
+
+void ImportFileHandleEx::BeginImport()
+{
+   mCancelled = false;
+   mStopped = false;
+}
+
+bool ImportFileHandleEx::IsCancelled() const noexcept
+{
+   return mCancelled;
+}
+
+bool ImportFileHandleEx::IsStopped() const noexcept
+{
+   return mStopped;
 }
