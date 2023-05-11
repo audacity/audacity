@@ -29,6 +29,38 @@ using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
 using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
 
+class IMPORT_EXPORT_API ExportTaskBuilder final
+{
+public:
+
+   ExportTaskBuilder();
+   ~ExportTaskBuilder();
+   
+   ExportTaskBuilder& SetFileName(const wxFileName& filename);
+   ExportTaskBuilder& SetRange(double t0, double t1, bool selectedOnly = false) noexcept;
+   ExportTaskBuilder& SetParameters(ExportProcessor::Parameters parameters) noexcept;
+   ExportTaskBuilder& SetNumChannels(unsigned numChannels) noexcept;
+   ExportTaskBuilder& SetPlugin(const ExportPlugin* plugin, int format = 0) noexcept;
+   ExportTaskBuilder& SetTags(const Tags* tags) noexcept;
+   ExportTaskBuilder& SetSampleRate(double sampleRate) noexcept;
+   ExportTaskBuilder& SetMixerSpec(MixerOptions::Downmix* mixerSpec) noexcept;
+   
+   ExportTask Build(AudacityProject& project);
+   
+private:
+   wxFileName mFileName;
+   double mT0 {};
+   double mT1 {};
+   bool mSelectedOnly{};
+   unsigned mNumChannels{1};
+   double mSampleRate{44100};
+   ExportProcessor::Parameters mParameters;
+   const ExportPlugin* mPlugin{};
+   int mFormat{};
+   MixerOptions::Downmix* mMixerSpec{};//Should be const
+   const Tags* mTags{};
+};
+
 class IMPORT_EXPORT_API Exporter final
 {
    struct ExporterItem;
