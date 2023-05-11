@@ -42,6 +42,8 @@
 #include "../widgets/Warning.h"
 #include "wxFileNameWrapper.h"
 
+#include "ExportUtils.h"
+
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
    extern "C" {
@@ -498,7 +500,7 @@ ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicU
 
    // Mix 'em up
    const auto &tracks = TrackList::Get( *project );
-   auto mixer = CreateMixer(
+   auto mixer = ExportUtils::CreateMixer(
                             tracks,
                             selectionOnly,
                             t0,
@@ -521,7 +523,7 @@ ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicU
       } );
 
       // Prepare the progress display
-      InitProgress( pDialog, XO("Export"),
+      ExportUtils::InitProgress( pDialog, XO("Export"),
          selectionOnly
             ? XO("Exporting the selected audio using command-line encoder")
             : XO("Exporting the audio using command-line encoder") );

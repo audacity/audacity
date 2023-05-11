@@ -36,6 +36,8 @@
 
 #include "Export.h"
 
+#include "ExportUtils.h"
+
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
    // DM: the following functions were supposed to have been
@@ -630,12 +632,12 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          }
 
          wxASSERT(info.channels >= 0);
-         auto mixer = CreateMixer(tracks, selectionOnly,
+         auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
                                   t0, t1,
                                   info.channels, maxBlockLen, true,
                                   rate, format, mixerSpec);
 
-         InitProgress( pDialog, fName,
+         ExportUtils::InitProgress( pDialog, fName,
             (selectionOnly
                ? XO("Exporting the selected audio as %s")
                : XO("Exporting the audio as %s"))

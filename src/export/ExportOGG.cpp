@@ -34,6 +34,8 @@
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
 
+#include "ExportUtils.h"
+
 //----------------------------------------------------------------------------
 // ExportOGGOptions
 //----------------------------------------------------------------------------
@@ -278,12 +280,12 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    }
 
    {
-      auto mixer = CreateMixer(tracks, selectionOnly,
+      auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, false,
          rate, floatSample, mixerSpec);
 
-      InitProgress( pDialog, fName,
+      ExportUtils::InitProgress( pDialog, fName,
          selectionOnly
             ? XO("Exporting the selected audio as Ogg Vorbis")
             : XO("Exporting the audio as Ogg Vorbis") );

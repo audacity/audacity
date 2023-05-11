@@ -34,6 +34,8 @@
 #include "ProjectRate.h"
 #include "Tags.h"
 
+#include "ExportUtils.h"
+
 //---------------------------------------------------------------------------
 // ExportWavPackOptions
 //---------------------------------------------------------------------------
@@ -369,12 +371,12 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
    ArrayOf<int32_t> wavpackBuffer{ bufferSize };
    auto updateResult = ProgressResult::Success;
    {
-      auto mixer = CreateMixer(tracks, selectionOnly,
+      auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, true,
          rate, format, mixerSpec);
 
-      InitProgress( pDialog, fName,
+      ExportUtils::InitProgress( pDialog, fName,
          selectionOnly
             ? XO("Exporting selected audio as WavPack")
             : XO("Exporting the audio as WavPack") );
