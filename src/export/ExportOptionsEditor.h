@@ -25,6 +25,8 @@ public:
       virtual void OnExportOptionChangeBegin() = 0;
       virtual void OnExportOptionChangeEnd() = 0;
       virtual void OnExportOptionChange(const ExportOption& option) = 0;
+
+      virtual void OnExtensionChange(const wxString& extension) = 0;
    };
 
    virtual ~ExportOptionsEditor();

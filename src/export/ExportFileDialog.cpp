@@ -231,6 +231,18 @@ public:
       control->Enable(enabled);
    }
 
+   void OnExtensionChange(const wxString& extension) override
+   {
+      if(mParent != nullptr)
+      {
+         // Synchronously process a change in suffix.
+         wxCommandEvent evt(AUDACITY_FILE_SUFFIX_EVENT, mParent->GetId());
+         evt.SetEventObject(mParent);
+         evt.SetString(extension);
+         mParent->ProcessWindowEvent(evt);
+      }
+   }
+
 private:
    wxWindow* mParent { nullptr };
    std::unique_ptr<wxWindowUpdateLocker> mUpdateLocker;
