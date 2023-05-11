@@ -29,7 +29,7 @@ using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
 using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
 
-class  AUDACITY_DLL_API Exporter final
+class IMPORT_EXPORT_API Exporter final
 {
    struct ExporterItem;
 public:
@@ -50,7 +50,7 @@ public:
    // Register factories, not plugin objects themselves, which allows them
    // to have some fresh state variables each time export begins again
    // and to compute translated strings for the current locale
-   struct AUDACITY_DLL_API RegisteredExportPlugin
+   struct IMPORT_EXPORT_API RegisteredExportPlugin
       : public Registry::RegisteredItem<ExporterItem>
    {
       RegisteredExportPlugin(
@@ -92,7 +92,7 @@ public:
    ExportPlugin::Parameters GetAutoExportParameters();
 
 private:
-   struct AUDACITY_DLL_API ExporterItem final : Registry::SingleItem {
+   struct IMPORT_EXPORT_API ExporterItem final : Registry::SingleItem {
       static Registry::GroupItemBase &Registry();
       ExporterItem(
          const Identifier &id, const Exporter::ExportPluginFactory &factory );
@@ -124,18 +124,18 @@ private:
 };
 
 
-AUDACITY_DLL_API TranslatableString AudacityExportCaptionStr();
-AUDACITY_DLL_API TranslatableString AudacityExportMessageStr();
+IMPORT_EXPORT_API TranslatableString AudacityExportCaptionStr();
+IMPORT_EXPORT_API TranslatableString AudacityExportMessageStr();
 
 /// We have many Export errors that are essentially anonymous
 /// and are distinguished only by an error code number.
 /// Rather than repeat the code, we have it just once.
-AUDACITY_DLL_API void ShowExportErrorDialog(wxString ErrorCode,
+IMPORT_EXPORT_API void ShowExportErrorDialog(wxString ErrorCode,
    TranslatableString message = AudacityExportMessageStr(),
    const TranslatableString& caption = AudacityExportCaptionStr(),
    bool allowReporting = true);
 
-AUDACITY_DLL_API
+IMPORT_EXPORT_API
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName);
 
 #endif

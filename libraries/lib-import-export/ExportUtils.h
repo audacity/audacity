@@ -31,7 +31,7 @@ class Downmix;
 
 template <typename TrackType> struct TrackIterRange;
 
-class ExportUtils final
+class IMPORT_EXPORT_API ExportUtils final
 {
 public:
 
