@@ -45,6 +45,7 @@
 #include "Prefs.h"
 #include "SelectionState.h"
 #include "ExportFileDialog.h"
+#include "ExportOptionsHandler.h"
 #include "ShuttleGui.h"
 #include "../TagsEditor.h"
 #include "WaveTrack.h"
@@ -55,7 +56,6 @@
 #include "ProgressDialog.h"
 #include "../prefs/ImportExportPrefs.h"
 #include "GenericExportProgressListener.h"
-
 
 namespace {
 /** \brief A private class used to store the information needed to do an
@@ -328,7 +328,9 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
                   {
                      // Name of simple book page is not displayed
                      S.StartNotebookPage( {} );
-                     pPlugin->OptionsCreate(S, j);
+                     mOptionHandlers.push_back(
+                        std::make_unique<ExportOptionsHandler>(S, *pPlugin, j)
+                     );
                      S.EndNotebookPage();
                   }
                }
@@ -620,6 +622,7 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
                mPluginIndex = i;
                mSubFormatIndex = j;
                mBook->GetPage(mFilterIndex)->TransferDataFromWindow();
+               mOptionHandlers[mFilterIndex]->TransferDataFromEditor();
             }
          }
       }

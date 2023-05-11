@@ -106,9 +106,6 @@ public:
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
-   
-   // Required
-   void OptionsCreate(ShuttleGui &S, int format) override;
 
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
@@ -362,11 +359,6 @@ void ExportOGG::Export(AudacityProject *project,
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
    else
       ExportFinish(progressListener);
-}
-
-void ExportOGG::OptionsCreate(ShuttleGui &S, int format)
-{
-
 }
 
 std::unique_ptr<ExportOptionsEditor>

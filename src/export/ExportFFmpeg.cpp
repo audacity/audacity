@@ -556,10 +556,6 @@ public:
 
    void FreeResources();
 
-   /// Creates options panel
-   ///\param format - index of export type
-   void OptionsCreate(ShuttleGui &S, int format) override;
-
    /// Check whether or not current project sample rate is compatible with the export codec
    bool CheckSampleRate(int rate, int lowrate, int highrate, const int *sampRates);
 
@@ -1731,11 +1727,6 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
 
    return wxAtoi(choice->GetStringSelection());
 #endif
-}
-
-void ExportFFmpeg::OptionsCreate(ShuttleGui &S, int format)
-{
-   
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FFmpeg",

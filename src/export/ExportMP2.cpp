@@ -145,8 +145,6 @@ public:
 
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
-
-   void OptionsCreate(ShuttleGui &S, int format) override;
    
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
@@ -336,12 +334,6 @@ void ExportMP2::Export(AudacityProject *project,
    else
       ExportFinish(progressListener);
 }
-
-void ExportMP2::OptionsCreate(ShuttleGui &S, int format)
-{
-
-}
-
 
 #ifdef USE_LIBID3TAG
 struct id3_tag_deleter {
