@@ -21,6 +21,9 @@ class IMPORT_EXPORT_API PlainExportOptionsEditor final : public ExportOptionsEdi
    std::vector<ExportOption> mOptions;
    wxArrayString mConfigKeys;
    std::unordered_map<int, ExportValue> mValues;
+   SampleRateList mRates;
+   Listener* mOptionsListener{};
+
 public:
    struct OptionDesc
    {
@@ -28,7 +31,11 @@ public:
       wxString configKey;
    };
 
-   explicit PlainExportOptionsEditor(std::initializer_list<OptionDesc> options);
+   explicit PlainExportOptionsEditor(std::initializer_list<OptionDesc> options,
+                                     Listener* listener = nullptr);
+   explicit PlainExportOptionsEditor(std::initializer_list<OptionDesc> options,
+                                     SampleRateList samplerates,
+                                     Listener* listener = nullptr);
 
    int GetOptionsCount() const override;
    bool GetOption(int index, ExportOption& option) const override;
@@ -38,4 +45,11 @@ public:
 
    void Load(const wxConfigBase& config) override;
    void Store(wxConfigBase& config) const override;
+   
+   SampleRateList GetSampleRateList() const override;
+   
+   void SetSampleRateList(SampleRateList rates);
+
+private:
+   void InitOptions(std::initializer_list<OptionDesc> options);
 };

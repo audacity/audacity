@@ -219,7 +219,7 @@ public:
    // Required
 
    std::unique_ptr<ExportOptionsEditor>
-   CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+   CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const override;
 
    std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
 };
@@ -278,9 +278,9 @@ std::vector<std::string> ExportFLAC::GetMimeTypes(int) const
 }
 
 std::unique_ptr<ExportOptionsEditor>
-ExportFLAC::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+ExportFLAC::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const
 {
-   return std::make_unique<PlainExportOptionsEditor>(FlacOptions);
+   return std::make_unique<PlainExportOptionsEditor>(FlacOptions, listener);
 }
 
 std::unique_ptr<ExportProcessor> ExportFLAC::CreateProcessor(int) const

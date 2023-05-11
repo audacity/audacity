@@ -37,17 +37,20 @@ public:
 
    bool TransferDataFromEditor();
    ExportProcessor::Parameters GetParameters() const;
-
+   ExportOptionsEditor::SampleRateList GetSampleRateList() const;
 
    void OnExportOptionChangeBegin() override;
    void OnExportOptionChangeEnd() override;
    void OnExportOptionChange(const ExportOption& option) override;
    void OnExtensionChange(const wxString& extension) override;
-
+   void OnSampleRateListChange() override;
+   
 private:
    
    void PopulateEmpty(ShuttleGui& S);
    void PopulateOptions(ShuttleGui& S);
+   
+   void UpdateSampleRateList();
 
    wxWindow* mParent { nullptr };
    std::unique_ptr<wxWindowUpdateLocker> mUpdateLocker;

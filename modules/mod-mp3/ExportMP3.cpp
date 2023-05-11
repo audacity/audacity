@@ -343,7 +343,17 @@ public:
                mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityCBR]);
                mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityVBR]);
                mListener->OnExportOptionChangeEnd();
+               
+               mListener->OnSampleRateListChange();
             }
+         } break;
+      case MP3OptionIDQualityABR:
+      case MP3OptionIDQualityCBR:
+      case MP3OptionIDQualitySET:
+      case MP3OptionIDQualityVBR:
+         {
+            if(mListener)
+               mListener->OnSampleRateListChange();
          } break;
       case MP3OptionIDForceMono:
          {
@@ -370,6 +380,43 @@ public:
          return true;
       }
       return false;
+   }
+   
+   SampleRateList GetSampleRateList() const override
+   {
+      // Retrieve preferences
+      int highrate = 48000;
+      int lowrate = 8000;
+      
+      const auto rmode = *std::get_if<std::string>(&mValues.find(MP3OptionIDMode)->second);
+      
+      if (rmode == "ABR") {
+         auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityABR)->second);
+         if (bitrate > 160) {
+            lowrate = 32000;
+         }
+         else if (bitrate < 32 || bitrate == 144) {
+            highrate = 24000;
+         }
+      }
+      else if (rmode == "CBR") {
+         auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityCBR)->second);
+
+         if (bitrate > 160) {
+            lowrate = 32000;
+         }
+         else if (bitrate < 32 || bitrate == 144) {
+            highrate = 24000;
+         }
+      }
+
+      SampleRateList result;
+      result.reserve(sampRates.size());
+      for(auto rate : sampRates)
+         if(rate >= lowrate && rate <= highrate)
+            result.push_back(rate);
+      
+      return result;
    }
 
    void Load(const wxConfigBase& config) override

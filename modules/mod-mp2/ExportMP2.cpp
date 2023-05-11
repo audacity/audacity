@@ -200,9 +200,9 @@ FormatInfo ExportMP2::GetFormatInfo(int) const
 }
 
 std::unique_ptr<ExportOptionsEditor>
-ExportMP2::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+ExportMP2::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const
 {
-   return std::make_unique<PlainExportOptionsEditor>(MP2Options);
+   return std::make_unique<PlainExportOptionsEditor>(MP2Options, listener);
 }
 
 std::unique_ptr<ExportProcessor> ExportMP2::CreateProcessor(int) const

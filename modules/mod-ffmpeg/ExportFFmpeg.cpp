@@ -76,6 +76,16 @@ const int iAC3SampleRates[] =
 const int iWMASampleRates[] =
 { 8000, 11025, 16000, 22050, 44100, 0};
 
+///\param rates 0-terminated array
+ExportOptionsEditor::SampleRateList ToSampleRateList(const int* rates)
+{
+   ExportOptionsEditor::SampleRateList list;
+   int index = 0;
+   while(rates[index] != 0)
+      list.push_back(rates[index++]);
+   return list;
+}
+
 // i18n-hint kbps abbreviates "thousands of bits per second"
 TranslatableString n_kbps(int n) { return XO("%d kbps").Format( n ); }
 TranslatableString f_kbps( double d ) { return XO("%.2f kbps").Format( d ); }
@@ -383,10 +393,23 @@ class ExportOptionsFFmpegCustomEditor
    , public ExportOptionsUIServices
 {
    std::unordered_map<int, ExportValue> mValues;
+   std::shared_ptr<FFmpegFunctions> mFFmpeg;
+   ExportOptionsEditor::Listener* mListener{};
+   //created on-demand
+   mutable std::unique_ptr<AVCodecWrapper> mAVCodec;
 public:
+
+   ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener = nullptr)
+      : mListener(listener)
+   {
+      
+   }
 
    void PopulateUI(ShuttleGui& S) override
    {
+      CheckFFmpeg(true);
+      //Continue anyway, as we do not need ffmpeg functions to build and fill in the UI
+
       mParent = S.GetParent();
       
       S.StartHorizontalLay(wxCENTER);
@@ -442,6 +465,25 @@ public:
    {
       return false;
    }
+   
+   SampleRateList GetSampleRateList() const override
+   {
+      if(!mAVCodec)
+      {
+         auto it = mValues.find(FECodecID);
+         if(it == mValues.end())
+            return {};
+
+         const auto codecId = *std::get_if<std::string>(&it->second); 
+         mAVCodec = mFFmpeg->CreateEncoder(codecId.c_str());
+      }
+      if(!mAVCodec)
+         return {};
+      
+      if(const auto rates = mAVCodec->GetSupportedSamplerates())
+         return ToSampleRateList(rates);
+      return {};
+   }
 
    void Load(const wxConfigBase& config) override
    {
@@ -476,6 +518,21 @@ public:
 
 private:
 
+   bool CheckFFmpeg(bool showError)
+   {
+      // Show "Locate FFmpeg" dialog
+      if(!mFFmpeg)
+      {
+         mFFmpeg = FFmpegFunctions::Load();
+         if (!mFFmpeg)
+         {
+            FindFFmpegLibs();
+            return LoadFFmpeg(showError);
+         }
+      }
+      return true;
+   }
+
    void UpdateCodecAndFormat()
    {
       mFormat->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegFormat"), wxT("")));
@@ -484,17 +541,9 @@ private:
 
    void OnOpen(const wxCommandEvent&)
    {
-      // Show "Locate FFmpeg" dialog
-      auto ffmpeg = FFmpegFunctions::Load();
-      if (!ffmpeg)
-      {
-         FindFFmpegLibs();
-         if (!LoadFFmpeg(true))
-         {
-            return;
-         }
-      }
-
+      if(!CheckFFmpeg(true))
+         return;
+      
    #ifdef __WXMAC__
       // Bug 2077 Must be a parent window on OSX or we will appear behind.
       auto pWin = wxGetTopLevelParent( mParent );
@@ -505,8 +554,15 @@ private:
 
       ExportFFmpegOptions od(pWin);
       od.ShowModal();
+      //ExportFFmpegOptions uses gPrefs to store options
+      //Instead we could provide it with instance of wxConfigBase
+      //constructed locally and read from it later
+      Load(*gPrefs);
+      mAVCodec.reset();
 
       UpdateCodecAndFormat();
+      if(mListener)
+         mListener->OnSampleRateListChange();
    }
 
    wxWindow   *mParent {nullptr};
@@ -720,17 +776,26 @@ ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* lis
    switch(AdjustFormatIndex(format))
    {
    case FMT_M4A:
-      return std::make_unique<PlainExportOptionsEditor>(AACOptions);
+      return std::make_unique<PlainExportOptionsEditor>(AACOptions, listener);
    case FMT_AC3:
-      return std::make_unique<PlainExportOptionsEditor>(AC3Options);
+      return std::make_unique<PlainExportOptionsEditor>(
+         AC3Options,
+         ToSampleRateList(iAC3SampleRates),
+         listener);
    case FMT_AMRNB:
-      return std::make_unique<PlainExportOptionsEditor>(AMRNBOptions);
+      return std::make_unique<PlainExportOptionsEditor>(
+         AMRNBOptions,
+         ExportOptionsEditor::SampleRateList {8000},
+         listener);
    case FMT_OPUS:
-      return std::make_unique<PlainExportOptionsEditor>(OPUSOptions);
+      return std::make_unique<PlainExportOptionsEditor>(OPUSOptions, listener);
    case FMT_WMA2:
-      return std::make_unique<PlainExportOptionsEditor>(WMAOptions);
+      return std::make_unique<PlainExportOptionsEditor>(
+         WMAOptions,
+         ToSampleRateList(iWMASampleRates),
+         listener);
    case FMT_OTHER:
-      return std::make_unique<ExportOptionsFFmpegCustomEditor>();
+      return std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
    }
    return {};
 }

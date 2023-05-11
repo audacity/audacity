@@ -77,6 +77,11 @@ namespace
          }
          return false;
       }
+      
+      SampleRateList GetSampleRateList() const override
+      {
+         return {};
+      }
 
       void Load(const wxConfigBase& config) override
       {

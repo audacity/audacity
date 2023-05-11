@@ -64,6 +64,13 @@ ExportProcessor::Parameters ExportOptionsHandler::GetParameters() const
    return {};
 }
 
+ExportOptionsEditor::SampleRateList ExportOptionsHandler::GetSampleRateList() const
+{
+   if(mEditor)
+      return mEditor->GetSampleRateList();
+   return {};
+}
+
 void ExportOptionsHandler::PopulateEmpty(ShuttleGui& S)
 {
    S.StartHorizontalLay(wxCENTER);
@@ -232,3 +239,8 @@ void ExportOptionsHandler::OnExtensionChange(const wxString& extension)
       mParent->ProcessWindowEvent(evt);
    }
 }
+
+void ExportOptionsHandler::OnSampleRateListChange()
+{
+}
+

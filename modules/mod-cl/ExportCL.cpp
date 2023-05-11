@@ -302,6 +302,11 @@ public:
       }
       return false;
    }
+   
+   SampleRateList GetSampleRateList() const override
+   {
+      return {};
+   }
 
    int GetOptionsCount() const override
    {

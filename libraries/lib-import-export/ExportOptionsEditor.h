@@ -20,6 +20,8 @@ class wxConfigBase;
 class IMPORT_EXPORT_API ExportOptionsEditor
 {
 public:
+   using SampleRateList = std::vector<int>;
+   
    ///\brief Listener object that is used to report on option changes.
    class IMPORT_EXPORT_API Listener
    {
@@ -34,6 +36,8 @@ public:
       virtual void OnExportOptionChange(const ExportOption& option) = 0;
       ///\brief Called when format extension change (usually in response parameter change)
       virtual void OnExtensionChange(const wxString& extension) = 0;
+
+      virtual void OnSampleRateListChange() = 0;
    };
 
    virtual ~ExportOptionsEditor();
@@ -44,6 +48,8 @@ public:
    virtual bool GetValue(ExportOptionID id, ExportValue& value) const = 0;
    virtual bool SetValue(ExportOptionID id, const ExportValue& value) = 0;
 
+   virtual SampleRateList GetSampleRateList() const = 0;
+   
    virtual void Store(wxConfigBase& config) const = 0;
    virtual void Load(const wxConfigBase& config) = 0;
 };

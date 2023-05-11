@@ -11,16 +11,20 @@
 #include "PlainExportOptionsEditor.h"
 #include <wx/config.h>
 
-PlainExportOptionsEditor::PlainExportOptionsEditor(std::initializer_list<OptionDesc> options)
+PlainExportOptionsEditor::PlainExportOptionsEditor(std::initializer_list<OptionDesc> options,
+                                                   Listener* listener)
+   : mOptionsListener(listener)
 {
-   mOptions.reserve(options.size());
-   mValues.reserve(options.size());
-   for(auto& desc : options)
-   {
-      mValues[desc.option.id] = desc.option.defaultValue;
-      mOptions.emplace_back(desc.option);
-      mConfigKeys.push_back(desc.configKey);
-   }
+   InitOptions(options);
+}
+
+PlainExportOptionsEditor::PlainExportOptionsEditor(std::initializer_list<OptionDesc> options,
+                                                   SampleRateList sampleRates,
+                                                   Listener* listener)
+   : mRates(std::move(sampleRates))
+   , mOptionsListener(listener)
+{
+   InitOptions(options);
 }
 
 int PlainExportOptionsEditor::GetOptionsCount() const
@@ -103,4 +107,29 @@ void PlainExportOptionsEditor::Store(wxConfigBase& config) const
    }
 }
 
+ExportOptionsEditor::SampleRateList PlainExportOptionsEditor::GetSampleRateList() const
+{
+   return mRates;
+}
+
+void PlainExportOptionsEditor::SetSampleRateList(SampleRateList rates)
+{
+   mRates = std::move(rates);
+   if(mOptionsListener)
+      mOptionsListener->OnSampleRateListChange();
+}
+
+void PlainExportOptionsEditor::InitOptions(std::initializer_list<OptionDesc> options)
+{
+   assert(mOptions.empty());
+
+   mOptions.reserve(options.size());
+   mValues.reserve(options.size());
+   for(auto& desc : options)
+   {
+      mValues[desc.option.id] = desc.option.defaultValue;
+      mOptions.emplace_back(desc.option);
+      mConfigKeys.push_back(desc.configKey);
+   }
+}
 
