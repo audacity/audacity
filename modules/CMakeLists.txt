@@ -6,6 +6,7 @@ set( MODULES
    mod-script-pipe
    mod-mp3
    mod-pcm
+   mod-cl
 )
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
    list( APPEND MODULES

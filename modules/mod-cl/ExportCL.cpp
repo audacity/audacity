@@ -37,9 +37,9 @@
 #include "Tags.h"
 #include "Track.h"
 #include "float_cast.h"
-#include "../widgets/FileHistory.h"
+#include "widgets/FileHistory.h"
 #include "wxPanelWrapper.h"
-#include "../widgets/Warning.h"
+#include "widgets/Warning.h"
 #include "wxFileNameWrapper.h"
 #include "BasicUI.h"
 

@@ -562,7 +562,6 @@ list( APPEND SOURCES
       export/ExportOptionsHandler.h
 
       # Standard exporters
-      export/ExportCL.cpp
       export/ExportMultiple.cpp
       export/ExportMultiple.h
 
@@ -1062,7 +1061,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
