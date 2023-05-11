@@ -25,6 +25,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-mp2",
       "mod-wavpack",
       "mod-mp3",
+      "mod-mpg123",
    };
    return modules;
 }
