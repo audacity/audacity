@@ -38,14 +38,14 @@ function.
 
 #include "Export.h"
 
-#include "ExportFFmpegDialogs.h"
 #include "ExportFFmpegOptions.h"
 #include "SelectFile.h"
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
-#include "ExportOptionsEditor.h"
+#include "PlainExportOptionsEditor.h"
 #include "FFmpegTypes.h"
+#include "ExportOptionsUIServices.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
@@ -71,6 +71,454 @@ static int AdjustFormatIndex(int format)
    return subFormat;
 }
 
+namespace
+{
+
+const int iAC3SampleRates[] =
+{ 32000, 44100, 48000, 0 };
+
+const int iWMASampleRates[] =
+{ 8000, 11025, 16000, 22050, 44100, 0};
+
+// i18n-hint kbps abbreviates "thousands of bits per second"
+TranslatableString n_kbps(int n) { return XO("%d kbps").Format( n ); }
+TranslatableString f_kbps( double d ) { return XO("%.2f kbps").Format( d ); }
+
+enum : int
+{
+   AC3OptionIDBitRate = 0
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> AC3Options {
+   {
+      {
+         AC3OptionIDBitRate, XO("Bit Rate"),
+         160000,
+         ExportOption::TypeEnum,
+         {
+            32000,
+            40000,
+            48000,
+            56000,
+            64000,
+            80000,
+            96000,
+            112000,
+            128000,
+            160000,
+            192000,
+            224000,
+            256000,
+            320000,
+            384000,
+            448000,
+            512000,
+            576000,
+            640000
+         },
+         {
+            n_kbps( 32 ),
+            n_kbps( 40 ),
+            n_kbps( 48 ),
+            n_kbps( 56 ),
+            n_kbps( 64 ),
+            n_kbps( 80 ),
+            n_kbps( 96 ),
+            n_kbps( 112 ),
+            n_kbps( 128 ),
+            n_kbps( 160 ),
+            n_kbps( 192 ),
+            n_kbps( 224 ),
+            n_kbps( 256 ),
+            n_kbps( 320 ),
+            n_kbps( 384 ),
+            n_kbps( 448 ),
+            n_kbps( 512 ),
+            n_kbps( 576 ),
+            n_kbps( 640 ),
+         }
+      }, wxT("/FileFormats/AC3BitRate")
+   }
+};
+
+enum : int
+{
+   AACOptionIDQuality = 0
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> AACOptions {
+   {
+      {
+         AACOptionIDQuality, XO("Quality (kbps)"),
+         98,
+         ExportOption::TypeRange,
+         {98, 320}
+      }, wxT("/FileFormats/AACQuality")
+   }
+};
+
+enum : int
+{
+   AMRNBOptionIDBitRate = 0
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> AMRNBOptions {
+   {
+      {
+         AMRNBOptionIDBitRate, XO("Bit Rate"),
+         12200,
+         ExportOption::TypeEnum,
+         {
+            4750,
+            5150,
+            5900,
+            6700,
+            7400,
+            7950,
+            10200,
+            12200,
+         },
+         {
+            f_kbps( 4.75 ),
+            f_kbps( 5.15 ),
+            f_kbps( 5.90 ),
+            f_kbps( 6.70 ),
+            f_kbps( 7.40 ),
+            f_kbps( 7.95 ),
+            f_kbps( 10.20 ),
+            f_kbps( 12.20 ),
+         }
+      }, wxT("/FileFormats/AMRNBBitRate")
+   }
+};
+
+enum : int
+{
+   OPUSOptionIDBitRate = 0,
+   OPUSOptionIDCompression,
+   OPUSOptionIDFrameDuration,
+   OPUSOptionIDVBRMode,
+   OPUSOptionIDApplication,
+   OPUSOptionIDCutoff
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
+   {
+      {
+         OPUSOptionIDBitRate, XO("Bit Rate"),
+         128000,
+         ExportOption::TypeEnum,
+         {
+            6000,
+            8000,
+            16000,
+            24000,
+            32000,
+            40000,
+            48000,
+            64000,
+            80000,
+            96000,
+            128000,
+            160000,
+            192000,
+            256000
+         },
+         {
+            n_kbps( 6 ),
+            n_kbps( 8 ),
+            n_kbps( 16 ),
+            n_kbps( 24 ),
+            n_kbps( 32 ),
+            n_kbps( 40 ),
+            n_kbps( 48 ),
+            n_kbps( 64 ),
+            n_kbps( 80 ),
+            n_kbps( 96 ),
+            n_kbps( 128 ),
+            n_kbps( 160 ),
+            n_kbps( 192 ),
+            n_kbps( 256 ),
+         }
+      }, wxT("/FileFormats/OPUSBitrate")
+   },
+   {
+      {
+         OPUSOptionIDCompression, XO("Compression"),
+         10,
+         ExportOption::TypeRange,
+         { 0, 10 }
+      }, wxT("/FileFormats/OPUSCompression")
+   },
+   {
+      {
+         OPUSOptionIDFrameDuration, XO("Frame Duration"),
+         std::string("20"),
+         ExportOption::TypeEnum,
+         {
+            std::string("2.5"),
+            std::string("5"),
+            std::string("10"),
+            std::string("20"),
+            std::string("40"),
+            std::string("60")
+         },
+         {
+            XO("2.5 ms"),
+            XO("5 ms"),
+            XO("10 ms"),
+            XO("20 ms"),
+            XO("40 ms"),
+            XO("60 ms"),
+         }
+      }, wxT("/FileFormats/OPUSFrameDuration")
+   },
+   {
+      {
+         OPUSOptionIDVBRMode, XO("Vbr Mode"),
+         std::string("on"),
+         ExportOption::TypeEnum,
+         { std::string("off"), std::string("on"), std::string("constrained") },
+         { XO("Off"), XO("On"), XO("Constrained") }
+      }, wxT("/FileFormats/OPUSVbrMode")
+   },
+   {
+      {
+         OPUSOptionIDApplication, XO("Application"),
+         std::string("audio"),
+         ExportOption::TypeEnum,
+         { std::string("voip"), std::string("audio"), std::string("lowdelay") },
+         { XO("VOIP"), XO("Audio"), XO("Low Delay") }
+      }, wxT("/FileFormats/OPUSApplication")
+   },
+   {
+      {
+         OPUSOptionIDCutoff, XO("Cutoff"),
+         std::string("0"),
+         ExportOption::TypeEnum,
+         {
+            std::string("0"),
+            std::string("4000"),
+            std::string("6000"),
+            std::string("8000"),
+            std::string("12000"),
+            std::string("20000")
+         },
+         {
+            XO("Disabled"),
+            XO("Narrowband"),
+            XO("Mediumband"),
+            XO("Wideband"),
+            XO("Super Wideband"),
+            XO("Fullband")
+         }
+      }, wxT("/FileFormats/OPUSCutoff")
+   },
+};
+
+enum : int
+{
+   WMAOptionIDBitRate = 0
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> WMAOptions {
+   {
+      {
+         WMAOptionIDBitRate, XO("Bit Rate"),
+         128000,
+         ExportOption::TypeEnum,
+         {
+            24000,
+            32000,
+            40000,
+            48000,
+            64000,
+            80000,
+            96000,
+            128000,
+            160000,
+            192000,
+            256000,
+            320000
+         },
+         {
+            n_kbps(24),
+            n_kbps(32),
+            n_kbps(40),
+            n_kbps(48),
+            n_kbps(64),
+            n_kbps(80),
+            n_kbps(96),
+            n_kbps(128),
+            n_kbps(160),
+            n_kbps(192),
+            n_kbps(256),
+            n_kbps(320),
+         }
+      }, wxT("/FileFormats/WMABitRate")
+   }
+};
+
+const std::vector<ExportOption> FFmpegOptions {
+   { FELanguageID, {}, std::string() },
+   { FESampleRateID, {}, 0 },
+   { FEBitrateID, {}, 0 },
+   { FETagID, {}, std::string() },
+   { FEQualityID, {}, 0 },
+   { FECutoffID, {}, 0},
+   { FEBitReservoirID, {}, true },
+   { FEVariableBlockLenID, {}, true },
+   { FECompLevelID, {}, -1 },
+   { FEFrameSizeID, {}, 0 },
+   { FELPCCoeffsID, {}, 0 },
+   { FEMinPredID, {}, -1 },
+   { FEMaxPredID, {}, -1 },
+   { FEMinPartOrderID, {}, -1 },
+   { FEMaxPartOrderID, {}, -1 },
+   { FEPredOrderID, {}, 0 },
+   { FEMuxRateID, {}, 0 },
+   { FEPacketSizeID, {}, 0 },
+   { FECodecID, {}, std::string() },
+   { FEFormatID, {}, std::string() }
+};
+
+class ExportOptionsFFmpegCustomEditor
+   : public ExportOptionsEditor
+   , public ExportOptionsUIServices
+{
+   std::unordered_map<int, ExportValue> mValues;
+public:
+
+   void PopulateUI(ShuttleGui& S) override
+   {
+      mParent = S.GetParent();
+      
+      S.StartHorizontalLay(wxCENTER);
+      {
+         S.StartVerticalLay(wxCENTER, 0);
+         {
+            S.AddButton(XXO("Open custom FFmpeg format options"))
+               ->Bind(wxEVT_BUTTON, &ExportOptionsFFmpegCustomEditor::OnOpen, this);
+            S.StartMultiColumn(2, wxCENTER);
+            {
+               S.AddPrompt(XXO("Current Format:"));
+               mFormat = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
+               S.AddPrompt(XXO("Current Codec:"));
+               mCodec = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
+            }
+            S.EndMultiColumn();
+         }
+         S.EndHorizontalLay();
+      }
+      S.EndHorizontalLay();
+
+      UpdateCodecAndFormat();
+   }
+
+   void TransferDataFromWindow() override
+   {
+      Load(*gPrefs);
+   }
+
+   int GetOptionsCount() const override
+   {
+      return static_cast<int>(FFmpegOptions.size());
+   }
+
+   bool GetOption(int, ExportOption&) const override
+   {
+      return false;
+   }
+
+   bool GetValue(int id, ExportValue& value) const override
+   {
+      auto it = mValues.find(id);
+      if(it != mValues.end())
+      {
+         value = it->second;
+         return true;
+      }
+      return false;
+   }
+
+   bool SetValue(int id, const ExportValue& value) override
+   {
+      return false;
+   }
+
+   void Load(const wxConfigBase& config) override
+   {
+      mValues[FELanguageID] = std::string(config.Read(wxT("/FileFormats/FFmpegLanguage"), wxT("")).ToUTF8());
+      mValues[FESampleRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegSampleRate"), 0L));
+      mValues[FEBitrateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegBitRate"), 0L));
+      mValues[FETagID] = std::string(config.Read(wxT("/FileFormats/FFmpegTag"), wxT(""))
+            .mb_str(wxConvUTF8));
+      mValues[FEQualityID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegQuality"), -99999L));
+      mValues[FECutoffID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegCutOff"), 0L));
+      mValues[FEBitReservoirID] = config.ReadBool(wxT("/FileFormats/FFmpegBitReservoir"), true);
+      mValues[FEVariableBlockLenID] = config.ReadBool(wxT("/FileFormats/FFmpegVariableBlockLen"), true);
+      mValues[FECompLevelID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegCompLevel"), -1L));
+      mValues[FEFrameSizeID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegFrameSize"), 0L));
+
+      mValues[FELPCCoeffsID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegLPCCoefPrec"), 0L));
+      mValues[FEMinPredID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMinPredOrder"), -1L));
+      mValues[FEMaxPredID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMaxPredOrder"), -1L));
+      mValues[FEMinPartOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMinPartOrder"), -1L));
+      mValues[FEMaxPartOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMaxPartOrder"), -1L));
+      mValues[FEPredOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegPredOrderMethod"), 0L));
+      mValues[FEMuxRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMuxRate"), 0L));
+      mValues[FEPacketSizeID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegPacketSize"), 0L));
+      mValues[FECodecID] = std::string(config.Read(wxT("/FileFormats/FFmpegCodec")));
+      mValues[FEFormatID] = std::string(config.Read(wxT("/FileFormats/FFmpegFormat")));
+   }
+
+   void Store(wxConfigBase& config) const override
+   {
+      
+   }
+
+private:
+
+   void UpdateCodecAndFormat()
+   {
+      mFormat->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegFormat"), wxT("")));
+      mCodec->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegCodec"), wxT("")));
+   }
+
+   void OnOpen(const wxCommandEvent&)
+   {
+      // Show "Locate FFmpeg" dialog
+      auto ffmpeg = FFmpegFunctions::Load();
+      if (!ffmpeg)
+      {
+         FindFFmpegLibs();
+         if (!LoadFFmpeg(true))
+         {
+            return;
+         }
+      }
+
+   #ifdef __WXMAC__
+      // Bug 2077 Must be a parent window on OSX or we will appear behind.
+      auto pWin = wxGetTopLevelParent( mParent );
+   #else
+      // Use GetTopWindow on windows as there is no hWnd with top level parent.
+      auto pWin = wxTheApp->GetTopWindow();
+   #endif
+
+      ExportFFmpegOptions od(pWin);
+      od.ShowModal();
+
+      UpdateCodecAndFormat();
+   }
+
+   wxWindow   *mParent {nullptr};
+   wxTextCtrl *mFormat {nullptr};
+   wxTextCtrl *mCodec {nullptr};
+};
+
+}
+
 //----------------------------------------------------------------------------
 // ExportFFmpeg
 //----------------------------------------------------------------------------
@@ -92,7 +540,7 @@ public:
    bool CheckFileName(wxFileName &filename, int format = 0) override;
 
    /// Format initialization
-   bool Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat);
+   bool Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat, const Parameters& parameters);
 
    /// Writes metadata
    bool AddTags(const Tags *metadata);
@@ -132,7 +580,7 @@ public:
 
 private:
    /// Codec initialization
-   bool InitCodecs(AudacityProject* project);
+   bool InitCodecs(AudacityProject* project, const Parameters& parameters);
 
    bool WritePacket(AVPacketWrapper& packet);
 
@@ -226,6 +674,21 @@ ExportFFmpeg::~ExportFFmpeg() = default;
 std::unique_ptr<ExportOptionsEditor>
 ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const
 {
+   switch(AdjustFormatIndex(format))
+   {
+   case FMT_M4A:
+      return std::make_unique<PlainExportOptionsEditor>(AACOptions);
+   case FMT_AC3:
+      return std::make_unique<PlainExportOptionsEditor>(AC3Options);
+   case FMT_AMRNB:
+      return std::make_unique<PlainExportOptionsEditor>(AMRNBOptions);
+   case FMT_OPUS:
+      return std::make_unique<PlainExportOptionsEditor>(OPUSOptions);
+   case FMT_WMA2:
+      return std::make_unique<PlainExportOptionsEditor>(WMAOptions);
+   case FMT_OTHER:
+      return std::make_unique<ExportOptionsFFmpegCustomEditor>();
+   }
    return {};
 }
 
@@ -256,7 +719,7 @@ bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
    return result;
 }
 
-bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat)
+bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat, const Parameters& parameters)
 {
    // This will undo the acquisition of resources along any early exit path:
    auto deleter = [](ExportFFmpeg *This) {
@@ -329,7 +792,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    }
 
    // Open the audio stream's codec and initialise any stream related data.
-   if (!InitCodecs(project))
+   if (!InitCodecs(project, parameters))
       return false;
 
    if (mEncAudioStream->SetParametersFromContext(*mEncAudioCodecCtx) < 0)
@@ -388,7 +851,7 @@ bool ExportFFmpeg::CheckSampleRate(int rate, int lowrate, int highrate, const in
    return false;
 }
 
-bool ExportFFmpeg::InitCodecs(AudacityProject *project)
+bool ExportFFmpeg::InitCodecs(AudacityProject *project, const Parameters& parameters)
 {
    const auto &settings = ProjectSettings::Get( *project );
    std::unique_ptr<AVCodecWrapper> codec;
@@ -415,7 +878,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    {
    case FMT_M4A:
    {
-      int q = gPrefs->Read(wxT("/FileFormats/AACQuality"),-99999);
+      int q = ExportUtils::GetParameterValue(parameters, AACOptionIDQuality, -99999);
 
       q = wxClip( q, 98 * mChannels, 160 * mChannels );
       // Set bit rate to between 98 kbps and 320 kbps (if two channels)
@@ -426,44 +889,44 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       break;
    }
    case FMT_AC3:
-      mEncAudioCodecCtx->SetBitRate(gPrefs->Read(wxT("/FileFormats/AC3BitRate"), 192000));
+      mEncAudioCodecCtx->SetBitRate(ExportUtils::GetParameterValue(parameters, AC3OptionIDBitRate, 192000));
       if (!CheckSampleRate(
-             mSampleRate, ExportFFmpegAC3Options::iAC3SampleRates[0],
-             ExportFFmpegAC3Options::iAC3SampleRates[2],
-             &ExportFFmpegAC3Options::iAC3SampleRates[0]))
+             mSampleRate, iAC3SampleRates[0],
+             iAC3SampleRates[2],
+             &iAC3SampleRates[0]))
       {
          mSampleRate = AskResample(
             mEncAudioCodecCtx->GetBitRate(), mSampleRate,
-            ExportFFmpegAC3Options::iAC3SampleRates[0],
-            ExportFFmpegAC3Options::iAC3SampleRates[2],
-            &ExportFFmpegAC3Options::iAC3SampleRates[0]);
+            iAC3SampleRates[0],
+            iAC3SampleRates[2],
+            &iAC3SampleRates[0]);
       }
       break;
    case FMT_AMRNB:
       mSampleRate = 8000;
-      mEncAudioCodecCtx->SetBitRate(gPrefs->Read(wxT("/FileFormats/AMRNBBitRate"), 12200));
+      mEncAudioCodecCtx->SetBitRate(ExportUtils::GetParameterValue(parameters, AMRNBOptionIDBitRate, 12200));
       break;
    case FMT_OPUS:
-      options.Set("b", gPrefs->Read(wxT("/FileFormats/OPUSBitRate"), wxT("128000")), 0);
-      options.Set("vbr", gPrefs->Read(wxT("/FileFormats/OPUSVbrMode"), wxT("on")), 0);
-      options.Set("compression_level", gPrefs->Read(wxT("/FileFormats/OPUSCompression"), wxT("10")), 0);
-      options.Set("frame_duration", gPrefs->Read(wxT("/FileFormats/OPUSFrameDuration"), wxT("20")), 0);
-      options.Set("application", gPrefs->Read(wxT("/FileFormats/OPUSApplication"), wxT("audio")), 0);
-      options.Set("cutoff", gPrefs->Read(wxT("/FileFormats/OPUSCutoff"), wxT("0")), 0);
+      options.Set("b", ExportUtils::GetParameterValue<std::string>(parameters, OPUSOptionIDBitRate, "128000"), 0);
+      options.Set("vbr", ExportUtils::GetParameterValue<std::string>(parameters, OPUSOptionIDVBRMode, "on"), 0);
+      options.Set("compression_level", ExportUtils::GetParameterValue<std::string>(parameters, OPUSOptionIDCompression, "10"), 0);
+      options.Set("frame_duration", ExportUtils::GetParameterValue<std::string>(parameters, OPUSOptionIDFrameDuration, "20"), 0);
+      options.Set("application", ExportUtils::GetParameterValue<std::string>(parameters, OPUSOptionIDApplication, "audio"), 0);
+      options.Set("cutoff", ExportUtils::GetParameterValue<std::string>(parameters, OPUSOptionIDCutoff, "0"), 0);
       options.Set("mapping_family", mChannels <= 2 ? "0" : "255", 0);
       break;
    case FMT_WMA2:
-      mEncAudioCodecCtx->SetBitRate(gPrefs->Read(wxT("/FileFormats/WMABitRate"), 198000));
+      mEncAudioCodecCtx->SetBitRate(ExportUtils::GetParameterValue(parameters, WMAOptionIDBitRate, 198000));
       if (!CheckSampleRate(
-             mSampleRate, ExportFFmpegWMAOptions::iWMASampleRates[0],
-             ExportFFmpegWMAOptions::iWMASampleRates[4],
-             &ExportFFmpegWMAOptions::iWMASampleRates[0]))
+             mSampleRate, iWMASampleRates[0],
+             iWMASampleRates[4],
+             &iWMASampleRates[0]))
       {
          mSampleRate = AskResample(
             mEncAudioCodecCtx->GetBitRate(), mSampleRate,
-            ExportFFmpegWMAOptions::iWMASampleRates[0],
-            ExportFFmpegWMAOptions::iWMASampleRates[4],
-            &ExportFFmpegWMAOptions::iWMASampleRates[0]);
+            iWMASampleRates[0],
+            iWMASampleRates[4],
+            &iWMASampleRates[0]);
       }
       break;
    case FMT_OTHER:
@@ -471,69 +934,70 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       AVDictionaryWrapper streamMetadata = mEncAudioStream->GetMetadata();
       streamMetadata.Set(
          "language",
-         gPrefs->Read(wxT("/FileFormats/FFmpegLanguage"), wxT("")), 0);
+         ExportUtils::GetParameterValue<std::string>(parameters, FELanguageID), 0);
 
       mEncAudioStream->SetMetadata(streamMetadata);
 
       mEncAudioCodecCtx->SetSampleRate(
-         gPrefs->Read(wxT("/FileFormats/FFmpegSampleRate"), (long)0));
+         ExportUtils::GetParameterValue(parameters, FESampleRateID, 0));
 
       if (mEncAudioCodecCtx->GetSampleRate() != 0)
          mSampleRate = mEncAudioCodecCtx->GetSampleRate();
 
       mEncAudioCodecCtx->SetBitRate(
-         gPrefs->Read(wxT("/FileFormats/FFmpegBitRate"), (long)0));
+         ExportUtils::GetParameterValue(parameters, FEBitrateID, 0));
 
       mEncAudioCodecCtx->SetCodecTagFourCC(
-         gPrefs->Read(wxT("/FileFormats/FFmpegTag"), wxT(""))
-            .mb_str(wxConvUTF8));
+         ExportUtils::GetParameterValue<std::string>(parameters, FETagID).c_str());
 
       mEncAudioCodecCtx->SetGlobalQuality(
-         gPrefs->Read(wxT("/FileFormats/FFmpegQuality"), (long)-99999));
+         ExportUtils::GetParameterValue(parameters, FEQualityID, -99999));
       mEncAudioCodecCtx->SetCutoff(
-         gPrefs->Read(wxT("/FileFormats/FFmpegCutOff"), (long)0));
+         ExportUtils::GetParameterValue(parameters, FECutoffID, 0));
       mEncAudioCodecCtx->SetFlags2(0);
 
-      if (gPrefs->Read(wxT("/FileFormats/FFmpegBitReservoir"), true))
+      if (ExportUtils::GetParameterValue(parameters, FEBitReservoirID, true))
          options.Set("reservoir", "1", 0);
 
-      if (gPrefs->Read(wxT("/FileFormats/FFmpegVariableBlockLen"), true))
+      if (ExportUtils::GetParameterValue(parameters, FEVariableBlockLenID, true))
          mEncAudioCodecCtx->SetFlags2(
             mEncAudioCodecCtx->GetFlags2() | 0x0004); // WMA only?
 
       mEncAudioCodecCtx->SetCompressionLevel(
-         gPrefs->Read(wxT("/FileFormats/FFmpegCompLevel"), -1));
+         ExportUtils::GetParameterValue(parameters, FECompLevelID, -1));
       mEncAudioCodecCtx->SetFrameSize(
-         gPrefs->Read(wxT("/FileFormats/FFmpegFrameSize"), (long)0));
+         ExportUtils::GetParameterValue(parameters, FEFrameSizeID, 0));
 
       // FIXME The list of supported options for the selected encoder should be
       // extracted instead of a few hardcoded
+      
       options.Set(
          "lpc_coeff_precision",
-         gPrefs->Read(wxT("/FileFormats/FFmpegLPCCoefPrec"), (long)0));
+         ExportUtils::GetParameterValue(parameters, FELPCCoeffsID, 0));
       options.Set(
          "min_prediction_order",
-         gPrefs->Read(wxT("/FileFormats/FFmpegMinPredOrder"), (long)-1));
+         ExportUtils::GetParameterValue(parameters, FEMinPredID, -1));
       options.Set(
          "max_prediction_order",
-         gPrefs->Read(wxT("/FileFormats/FFmpegMaxPredOrder"), (long)-1));
+         ExportUtils::GetParameterValue(parameters, FEMaxPredID, -1));
       options.Set(
          "min_partition_order",
-         gPrefs->Read(wxT("/FileFormats/FFmpegMinPartOrder"), (long)-1));
+         ExportUtils::GetParameterValue(parameters, FEMinPartOrderID, -1));
       options.Set(
          "max_partition_order",
-         gPrefs->Read(wxT("/FileFormats/FFmpegMaxPartOrder"), (long)-1));
+         ExportUtils::GetParameterValue(parameters, FEMaxPartOrderID, -1));
       options.Set(
          "prediction_order_method",
-         gPrefs->Read(wxT("/FileFormats/FFmpegPredOrderMethod"), (long)0));
+         ExportUtils::GetParameterValue(parameters, FEPredOrderID, 0));
       options.Set(
-         "muxrate", gPrefs->Read(wxT("/FileFormats/FFmpegMuxRate"), (long)0));
+         "muxrate",
+         ExportUtils::GetParameterValue(parameters, FEMuxRateID, 0));
 
       mEncFormatCtx->SetPacketSize(
-         gPrefs->Read(wxT("/FileFormats/FFmpegPacketSize"), (long)0));
+         ExportUtils::GetParameterValue(parameters, FEPacketSizeID, 0));
 
       codec = mFFmpeg->CreateEncoder(
-         gPrefs->Read(wxT("/FileFormats/FFmpegCodec")));
+         ExportUtils::GetParameterValue<std::string>(parameters, FECodecID).c_str());
 
       if (!codec)
          codec = mFFmpeg->CreateEncoder(mEncFormatDesc->GetAudioCodec());
@@ -1024,7 +1488,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 
 void ExportFFmpeg::Export(
    AudacityProject *project, ExportProgressListener &progressListener,
-   const Parameters&, unsigned channels, const wxFileNameWrapper& fName,
+   const Parameters& parameters, unsigned channels, const wxFileNameWrapper& fName,
    bool selectionOnly, double t0, double t1,
    MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
@@ -1061,8 +1525,8 @@ void ExportFFmpeg::Export(
 
    wxString shortname(ExportFFmpegOptions::fmts[mSubFormat].shortname);
    if (mSubFormat == FMT_OTHER)
-      shortname = gPrefs->Read(wxT("/FileFormats/FFmpegFormat"),wxT("matroska"));
-   ret = Init(shortname.mb_str(),project, metadata, subformat);
+      shortname = ExportUtils::GetParameterValue<std::string>(parameters, FEFormatID, "matroska");
+   ret = Init(shortname.mb_str(),project, metadata, subformat, parameters);
    auto cleanup = finally ( [&] { FreeResources(); } );
 
    if (!ret) {
@@ -1271,46 +1735,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
 
 void ExportFFmpeg::OptionsCreate(ShuttleGui &S, int format)
 {
-   // subformat index may not correspond directly to fmts[] index, convert it
-   mSubFormat = AdjustFormatIndex(format);
-   if (mSubFormat == FMT_M4A)
-   {
-      S.AddWindow(
-         safenew ExportFFmpegAACOptions{ S.GetParent(), format } );
-      return;
-   }
-   else if (mSubFormat == FMT_AC3)
-   {
-      S.AddWindow(
-         safenew ExportFFmpegAC3Options{ S.GetParent(), format } );
-      return;
-   }
-   else if (mSubFormat == FMT_AMRNB)
-   {
-      S.AddWindow(
-         safenew ExportFFmpegAMRNBOptions{ S.GetParent(), format } );
-      return;
-   }
-   else if (mSubFormat == FMT_OPUS)
-   {
-      S.AddWindow(
-         safenew ExportFFmpegOPUSOptions{ S.GetParent(), format });
-      return;
-   }
-   else if (mSubFormat == FMT_WMA2)
-   {
-      S.AddWindow(
-         safenew ExportFFmpegWMAOptions{ S.GetParent(), format } );
-      return;
-   }
-   else if (mSubFormat == FMT_OTHER)
-   {
-      S.AddWindow(
-         safenew ExportFFmpegCustomOptions{ S.GetParent(), format } );
-      return;
-   }
-
-   ExportPlugin::OptionsCreate(S, format);
+   
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FFmpeg",

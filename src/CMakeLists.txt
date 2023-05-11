@@ -589,8 +589,6 @@ list( APPEND SOURCES
       # Optional exporters
       $<$<BOOL:${USE_FFMPEG}>:
          export/ExportFFmpeg.cpp
-         export/ExportFFmpegDialogs.cpp
-         export/ExportFFmpegDialogs.h
          export/ExportFFmpegOptions.cpp
          export/ExportFFmpegOptions.h
          export/FFmpegPresets.cpp
