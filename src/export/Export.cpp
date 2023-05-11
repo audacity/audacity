@@ -15,6 +15,8 @@
 
 #include "Export.h"
 
+#include <numeric>
+
 #include "sndfile.h"
 
 #include "BasicUI.h"
@@ -37,6 +39,7 @@
 #include "StretchingSequence.h"
 
 #include "ExportMixerDialog.h"
+#include "ExportUtils.h"
 
 namespace {
    const auto PathStart = L"Exporters";
@@ -80,8 +83,6 @@ Exporter::Exporter( AudacityProject &project )
       PathStart,
       { {wxT(""), wxT("PCM,MP3,OGG,FLAC,MP2,CommandLine,FFmpeg") } },
    };
-
-   mMixerSpec = NULL;
 
    // build the list of export plugins.
    for ( const auto &factory : sFactories() )
@@ -154,9 +155,7 @@ bool Exporter::Process(bool selectedOnly, double t0, double t1)
    }
 
    // Ensure filename doesn't interfere with project files.
-   if (!CheckFilename()) {
-      return false;
-   }
+   FixFilename();
 
    // Export the tracks
    std::unique_ptr<BasicUI::ProgressDialog> pDialog;
@@ -201,7 +200,8 @@ bool Exporter::Process(
          {
             mFormat = i;
             mSubFormat = j;
-            return CheckFilename() && ExportTracks(progressDialog);
+            FixFilename();
+            return ExportTracks(progressDialog);
          }
       }
    }
@@ -212,7 +212,6 @@ bool Exporter::Process(
 bool Exporter::ExamineTracks()
 {
    // Init
-   mNumSelected = 0;
 
    // First analyze the selected audio, perform sanity checks, and provide
    // information as appropriate.
@@ -224,14 +223,9 @@ bool Exporter::ExamineTracks()
    double latestEnd = mT0;
 
    auto &tracks = TrackList::Get(*mProject);
+   
 
-   bool anySolo =
-      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
-
-   const auto range = tracks.Leaders<const WaveTrack>()
-      + (mSelectedOnly ? &Track::IsSelected : &Track::Any)
-      - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
-
+   const auto range = ExportUtils::FindExportWaveTracks(tracks, mSelectedOnly);
    mMono = std::all_of(range.begin(), range.end(), [](const WaveTrack *pTrack){
       return IsMono(*pTrack) && pTrack->GetPan() == 0.0;
    });
@@ -289,7 +283,7 @@ bool Exporter::ExamineTracks()
 // The calling function should rename the file when it's successfully
 // exported.
 //
-bool Exporter::CheckFilename()
+void Exporter::FixFilename()
 {
    //
    // To be even safer, return a temporary file name based
@@ -304,8 +298,6 @@ bool Exporter::CheckFilename()
                         wxString::Format(wxT("%d"), suffix));
       suffix++;
    }
-
-   return true;
 }
 
 bool Exporter::CheckMix(bool prompt /*= true*/ )
@@ -358,22 +350,36 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    }
    else
    {
+      constexpr auto MaxExportChannels = 32;
+      
       if (exportedChannels < 0)
          exportedChannels = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels;
 
-      ExportMixerDialog md(&TrackList::Get( *mProject ),
-                           mSelectedOnly,
-                           exportedChannels,
-                           NULL,
-                           1,
-                           XO("Advanced Mixing Options"));
-      if (prompt) {
-         if (md.ShowModal() != wxID_OK) {
+      const auto exportTracks = ExportUtils::FindExportWaveTracks(TrackList::Get( *mProject ), mSelectedOnly);
+      mMixerSpec = std::make_unique<MixerOptions::Downmix>(
+         std::accumulate(
+            exportTracks.begin(),
+            exportTracks.end(),
+            0,
+            [](int sum, const auto& track) { return sum + track->NChannels(); }),
+         // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is
+         // sometimes not slidable.  My suspicion is that a mixer may incorrectly
+         // state the number of channels - so we assume there are always at least two.
+         // The downside is that if someone is exporting to a mono device, the dialog
+         // will allow them to output to two channels. Hmm.  We may need to revisit this.
+         // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
+         std::clamp(exportedChannels,
+            1,
+            MaxExportChannels));
+      if(prompt)
+      {
+         ExportMixerDialog md(exportTracks, mMixerSpec.get(),
+                              NULL,
+                              1,
+                              XO("Advanced Mixing Options"));
+         if(md.ShowModal() != wxID_OK)
             return false;
-         }
       }
-
-      mMixerSpec = std::make_unique<MixerSpec>(*(md.GetMixerSpec()));
       mChannels = mMixerSpec->GetNumChannels();
    }
 
@@ -427,15 +433,14 @@ bool Exporter::ExportTracks(
    return success;
 }
 
-bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
-                                         double t0,
+bool Exporter::ProcessFromTimerRecording(double t0,
                                          double t1,
                                          wxFileName fnFile,
                                          int iFormat,
                                          int iSubFormat)
 {
    // Save parms
-   mSelectedOnly = selectedOnly;
+   mSelectedOnly = false;
    mT0 = t0;
    mT1 = t1;
 
@@ -455,9 +460,7 @@ bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
    }
 
    // Ensure filename doesn't interfere with project files.
-   if (!CheckFilename()) {
-      return false;
-   }
+   FixFilename();
 
    // Export the tracks
    std::unique_ptr<BasicUI::ProgressDialog> pDialog;
