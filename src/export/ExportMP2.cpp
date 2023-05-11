@@ -51,7 +51,6 @@
 #include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
-#include "AudacityMessageBox.h"
 #include "wxPanelWrapper.h"
 
 #include "ExportUtils.h"
@@ -268,10 +267,7 @@ void ExportMP2::Export(AudacityProject *project,
 
    if (twolame_init_params(encodeOptions) != 0)
    {
-      AudacityMessageBox(
-         XO("Cannot export MP2 with this sample rate and bit rate"),
-         XO("Error"),
-         wxICON_STOP);
+      SetErrorString(XO("Cannot export MP2 with this sample rate and bit rate"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -282,7 +278,7 @@ void ExportMP2::Export(AudacityProject *project,
 
    FileIO outFile(fName, FileIO::Output);
    if (!outFile.IsOpened()) {
-      AudacityMessageBox( XO("Unable to open target file for writing") );
+      SetErrorString(XO("Unable to open target file for writing"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }

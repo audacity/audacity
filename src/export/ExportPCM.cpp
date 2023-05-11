@@ -29,7 +29,6 @@
 #include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
-#include "AudacityMessageBox.h"
 #include "wxWidgetsWindowPlacement.h"
 #include "wxFileNameWrapper.h"
 #include "ExportFileDialog.h"
@@ -556,14 +555,13 @@ void ExportPCM::Export(AudacityProject *project,
       // Bug 46.  Trap here, as sndfile.c does not trap it properly.
       if( (numChannels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610) )
       {
-         AudacityMessageBox( XO("GSM 6.10 requires mono") );
+         SetErrorString(XO("GSM 6.10 requires mono"));
          progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
          return;
       }
 
       if (sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610) {
-         AudacityMessageBox(
-            XO("WAVEX and GSM 6.10 formats are not compatible") );
+         SetErrorString(XO("WAVEX and GSM 6.10 formats are not compatible"));
          progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
          return;
       }
@@ -577,7 +575,7 @@ void ExportPCM::Export(AudacityProject *project,
       if (!sf_format_check(&info))
          info.format = (info.format & SF_FORMAT_TYPEMASK);
       if (!sf_format_check(&info)) {
-         AudacityMessageBox( XO("Cannot export audio in this format.") );
+         SetErrorString(XO("Cannot export audio in this format."));
          progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
          return;
       }
@@ -592,7 +590,7 @@ void ExportPCM::Export(AudacityProject *project,
       }
 
       if (!sf) {
-         AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
+         SetErrorString(XO("Cannot export audio to %s").Format( path ));
          progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
          return;
       }
