@@ -22,11 +22,6 @@ class Mixer;
 class TranslatableString;
 class wxFileNameWrapper;
 
-namespace BasicUI
-{
-class ProgressDialog;
-}
-
 namespace MixerOptions
 {
 class Downmix;
@@ -45,12 +40,9 @@ public:
          double outRate, sampleFormat outFormat,
          MixerOptions::Downmix *mixerSpec);
 
-   // Create or recycle a dialog.
-   static void InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-         const TranslatableString &title, const TranslatableString &message);
-   static void InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-         const wxFileNameWrapper &title, const TranslatableString &message);
-
+   ///\return Mixer current position relative to the [t0, t1]
+   static double EvalExportProgress(Mixer& mixer, double t0, double t1);
+   
    static TrackIterRange<const WaveTrack> FindExportWaveTracks(const TrackList& tracks, bool selectedOnly);
 };
 

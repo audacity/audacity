@@ -29,11 +29,6 @@ class wxStaticText;
 class wxTextCtrl;
 class wxRadioButton;
 
-namespace BasicUI
-{
-class ProgressDialog;
-}
-
 namespace cloud::audiocom
 {
 class UserImage;
@@ -117,8 +112,8 @@ private:
    struct Services;
    std::unique_ptr<Services> mServices;
 
-   struct ExportProgressHelper;
-   std::unique_ptr<BasicUI::ProgressDialog> mExportProgressHelper;
+   class ExportProgressUpdater;
+   std::unique_ptr<ExportProgressUpdater> mExportProgressUpdater;
 
    using Clock = std::chrono::steady_clock;
 

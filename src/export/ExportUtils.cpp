@@ -16,7 +16,6 @@
 #include "BasicUI.h"
 #include "WaveTrack.h"
 #include "MixAndRender.h"
-#include "ProgressDialog.h"
 #include "StretchingSequence.h"
 #include "wxFileNameWrapper.h"
 
@@ -45,28 +44,12 @@ std::unique_ptr<Mixer> ExportUtils::CreateMixer(const TrackList &tracks,
                   true, mixerSpec);
 }
 
-void ExportUtils::InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-   const TranslatableString &title, const TranslatableString &message)
+double ExportUtils::EvalExportProgress(Mixer &mixer, double t0, double t1)
 {
-   if (!pDialog)
-      pDialog = std::make_unique<ProgressDialog>( title, message );
-   else
-   {
-      if (auto pd = dynamic_cast<ProgressDialog*>(pDialog.get()))
-      {
-         pd->SetTitle(title);
-         pd->Reinit();
-      }
-
-      pDialog->SetMessage(message);
-   }
-}
-
-void ExportUtils::InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-   const wxFileNameWrapper &title, const TranslatableString &message)
-{
-   return InitProgress(
-      pDialog, Verbatim( title.GetName() ), message );
+   const auto duration = t1 - t0;
+   if(duration > 0)
+      return std::clamp(mixer.MixGetCurrentTime() - t0, .0, duration) / duration;
+   return .0;
 }
 
 //TODO: used in many places in anticipation that Exporter yields same result, fix that

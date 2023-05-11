@@ -30,6 +30,8 @@
 #include "Track.h"
 #include "wxFileNameWrapper.h"
 #include "CommandContext.h"
+#include "export/GenericExportProgressListener.h"
+
 
 const ComponentInterfaceSymbol ImportCommand::Symbol
 { XO("Import2") };
@@ -122,16 +124,21 @@ bool ExportCommand::Apply(const CommandContext & context)
    wxString extension = mFileName.Mid(splitAt+1).MakeUpper();
 
    Exporter exporter{ context.project };
-
-   bool exportSuccess = exporter.Process(std::max(0, mnChannels),
-                                         extension, mFileName,
-                                         true, t0, t1);
-
-   if (exportSuccess)
+   auto plugin = exporter.FindPluginByType(extension);
+   if(plugin != nullptr)
    {
-      context.Status(wxString::Format(wxT("Exported to %s format: %s"),
-                              extension, mFileName));
-      return true;
+      GenericExportProgressListener progressListener(*plugin);
+      exporter.Process(progressListener, std::max(0, mnChannels),
+                       extension, mFileName,
+                       true, t0, t1);
+      const auto result = progressListener.ConsumeResult();
+      if (result == ExportProgressListener::ExportResult::Success ||
+          result == ExportProgressListener::ExportResult::Stopped)
+      {
+         context.Status(wxString::Format(wxT("Exported to %s format: %s"),
+                                         extension, mFileName));
+         return true;
+      }
    }
 
    context.Error(wxString::Format(wxT("Could not export to %s format!"), extension));

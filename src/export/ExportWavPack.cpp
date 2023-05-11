@@ -29,11 +29,12 @@
 #include "ShuttleGui.h"
 #include "../ProjectSettings.h"
 #include "AudacityMessageBox.h"
-#include "ProgressDialog.h"
+#include "wxPanelWrapper.h"
 #include "Track.h"
 #include "ProjectRate.h"
 #include "Tags.h"
 
+#include "ExportProgressListener.h"
 #include "ExportUtils.h"
 
 //---------------------------------------------------------------------------
@@ -239,7 +240,7 @@ struct WriteId final
    std::unique_ptr<wxFile> file;
 };
 
-class ExportWavPack final : public ExportPlugin
+class ExportWavPack final : public ExportPluginEx
 {
 public:
 
@@ -250,8 +251,8 @@ public:
    
    void OptionsCreate(ShuttleGui &S, int format) override;
 
-   ProgressResult Export(AudacityProject *project,
-      std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
+   void Export(AudacityProject *project,
+               ExportProgressListener &progressListener,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -278,24 +279,27 @@ FormatInfo ExportWavPack::GetFormatInfo(int) const
    };
 }
 
-ProgressResult ExportWavPack::Export(AudacityProject *project,
-                       std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-                       unsigned numChannels,
-                       const wxFileNameWrapper &fName,
-                       bool selectionOnly,
-                       double t0,
-                       double t1,
-                       MixerSpec *mixerSpec,
-                       const Tags *metadata,
-                       int WXUNUSED(subformat))
+void ExportWavPack::Export(AudacityProject *project,
+                           ExportProgressListener &progressListener,
+                           unsigned numChannels,
+                           const wxFileNameWrapper &fName,
+                           bool selectionOnly,
+                           double t0,
+                           double t1,
+                           MixerSpec *mixerSpec,
+                           const Tags *metadata,
+                           int)
 {
+   ExportBegin();
+   
    WavpackConfig config = {};
    WriteId outWvFile, outWvcFile;
    outWvFile.file = std::make_unique< wxFile >();
 
    if (!outWvFile.file->Create(fName.GetFullPath(), true) || !outWvFile.file.get()->IsOpened()) {
       AudacityMessageBox( XO("Unable to open target file for writing") );
-      return ProgressResult::Failed;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
    
    double rate = ProjectRate::Get( *project ).GetRate();
@@ -345,7 +349,8 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
          outWvcFile.file = std::make_unique< wxFile >();
          if (!outWvcFile.file->Create(fName.GetFullPath().Append("c"), true)) {
             AudacityMessageBox( XO("Unable to create target file for writing") );
-            return ProgressResult::Failed;
+            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+            return;
          }
       }
    }
@@ -361,7 +366,8 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
    if (!WavpackSetConfiguration64(wpc, &config, -1, nullptr) || !WavpackPackInit(wpc)) {
       ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
-      return ProgressResult::Failed;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    // Samples to write per run
@@ -369,20 +375,18 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
    const size_t bufferSize = SAMPLES_PER_RUN * numChannels;
    ArrayOf<int32_t> wavpackBuffer{ bufferSize };
-   auto updateResult = ProgressResult::Success;
+   
    {
       auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, true,
          rate, format, mixerSpec);
 
-      ExportUtils::InitProgress( pDialog, fName,
-         selectionOnly
-            ? XO("Exporting selected audio as WavPack")
-            : XO("Exporting the audio as WavPack") );
-      auto &progress = *pDialog;
+      SetStatusString(selectionOnly
+         ? XO("Exporting selected audio as WavPack")
+         : XO("Exporting the audio as WavPack"));
 
-      while (updateResult == ProgressResult::Success) {
+      while (!IsCancelled() && !IsStopped()) {
          auto samplesThisRun = mixer->Process();
 
          if (samplesThisRun == 0)
@@ -406,18 +410,18 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
          if (!WavpackPackSamples(wpc, wavpackBuffer.get(), samplesThisRun)) {
             ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
-            return ProgressResult::Failed;
+            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+            return;
          }
 
-         if (updateResult == ProgressResult::Success)
-            updateResult =
-               progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         progressListener.OnExportProgress(ExportUtils::EvalExportProgress(*mixer, t0, t1));
       }
    }
 
    if (!WavpackFlushSamples(wpc)) {
       ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
-      return ProgressResult::Failed;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    } else {
       if (metadata == NULL)
          metadata = &Tags::Get( *project );
@@ -435,20 +439,23 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
       if (!WavpackWriteTag(wpc)) {
          ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
-         return ProgressResult::Failed;
+         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+         return;
       }
    }
 
    if ( !outWvFile.file.get()->Close()
       || ( outWvcFile.file && outWvcFile.file.get() && !outWvcFile.file.get()->Close())) {
-      return ProgressResult::Failed;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    // wxFile::Create opens the file with only write access
    // So, need to open the file again with both read and write access
    if (!outWvFile.file->Open(fName.GetFullPath(), wxFile::read_write)) {
       ShowExportErrorDialog( "Unable to update the actual length of the file" );
-      return ProgressResult::Failed;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    ArrayOf<int32_t> firstBlockBuffer { outWvFile.firstBlockSize };
@@ -460,10 +467,11 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
    size_t bytesWritten = outWvFile.file->Write(firstBlockBuffer.get(), outWvFile.firstBlockSize);
 
    if ( !outWvFile.file.get()->Close() ) {
-      return ProgressResult::Failed;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
-
-   return updateResult;
+   
+   ExportFinish(progressListener);
 }
 
 // Based on the implementation of write_block in dbry/WavPack

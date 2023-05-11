@@ -33,6 +33,7 @@
 #include "export/ExportFileDialog.h"
 #include "export/ExportUtils.h"
 #include "export/ExportMixerDialog.h"
+#include "export/GenericExportProgressListener.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -112,7 +113,9 @@ bool ExportWithPrompt(AudacityProject &project,
       }
    }
    
-   return exporter.Process();
+   GenericExportProgressListener progressListener(*exporter.GetPlugin());
+   exporter.Process(progressListener);
+   return progressListener.ConsumeResult() == ExportProgressListener::ExportResult::Success;
 }
 
 void DoExport(AudacityProject &project, const FileExtension &format)
@@ -175,16 +178,23 @@ void DoExport(AudacityProject &project, const FileExtension &format)
 
       int nChannels = tracks.Leaders().max(&Track::NChannels);
 
-      // We're in batch mode, the file does not exist already.
-      // We really can proceed without prompting.
-      success = e.Process(
-         nChannels,  // numChannels,
-         format,     // type, 
-         fullPath,   // full path,
-         false,      // selectedOnly, 
-         t0,         // t0
-         t1          // t1
-      );
+      if(auto plugin = e.FindPluginByType(format))
+      {
+         GenericExportProgressListener progressListener(*plugin);
+         // We're in batch mode, the file does not exist already.
+         // We really can proceed without prompting.
+         e.Process(progressListener,
+                   nChannels,  // numChannels,
+                   format,     // type,
+                   fullPath,   // full path,
+                   false,      // selectedOnly,
+                   t0,         // t0
+                   t1          // t1
+                   );
+         const auto result = progressListener.ConsumeResult();
+         success = result == ExportProgressListener::ExportResult::Success ||
+         result == ExportProgressListener::ExportResult::Stopped;
+      }
    }
 
    if (success && !project.mBatchMode) {

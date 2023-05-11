@@ -35,9 +35,10 @@ Joshua Haberman
 #include "Track.h"
 
 #include "AudacityMessageBox.h"
-#include "ProgressDialog.h"
+#include "wxPanelWrapper.h"
 #include "wxFileNameWrapper.h"
 
+#include "ExportProgressListener.h"
 #include "ExportUtils.h"
 
 //----------------------------------------------------------------------------
@@ -201,7 +202,7 @@ using FLAC__StreamMetadataHandle = std::unique_ptr<
    FLAC__StreamMetadata, FLAC__StreamMetadataDeleter
 >;
 
-class ExportFLAC final : public ExportPlugin
+class ExportFLAC final : public ExportPluginEx
 {
 public:
 
@@ -213,16 +214,16 @@ public:
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
-   ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
+   void Export(AudacityProject *project,
+               ExportProgressListener &pDialog,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
                double t0,
                double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
-               int subformat = 0) override;
+               MixerSpec *mixerSpec,
+               const Tags *metadata,
+               int subformat) override;
 
 private:
 
@@ -248,8 +249,8 @@ FormatInfo ExportFLAC::GetFormatInfo(int) const
    };
 }
 
-ProgressResult ExportFLAC::Export(AudacityProject *project,
-                        std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
+void ExportFLAC::Export(AudacityProject *project,
+                        ExportProgressListener &progressListener,
                         unsigned numChannels,
                         const wxFileNameWrapper &fName,
                         bool selectionOnly,
@@ -257,13 +258,14 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                         double t1,
                         MixerSpec *mixerSpec,
                         const Tags *metadata,
-                        int WXUNUSED(subformat))
+                        int)
 {
+   ExportBegin();
+
    double    rate    = ProjectRate::Get(*project).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
-   auto updateResult = ProgressResult::Success;
 
    long levelPref;
    FLACLevel.Read().ToLong( &levelPref );
@@ -284,7 +286,8 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    if (success && !GetMetadata(project, metadata)) {
       // TODO: more precise message
       ShowExportErrorDialog("FLAC:283");
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    if (success && mMetadata) {
@@ -337,7 +340,8 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    if (!success) {
       // TODO: more precise message
       ShowExportErrorDialog("FLAC:336");
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
 #ifdef LEGACY_FLAC
@@ -347,7 +351,8 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    const auto path = fName.GetFullPath();
    if (!f.Open(path, wxT("w+b"))) {
       AudacityMessageBox( XO("FLAC export couldn't open %s").Format( path ) );
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    // Even though there is an init() method that takes a filename, use the one that
@@ -358,15 +363,17 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
       AudacityMessageBox(
          XO("FLAC encoder failed to initialize\nStatus: %d")
             .Format( status ) );
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 #endif
 
    mMetadata.reset();
 
+   bool hasError {false};
+   
    auto cleanup2 = finally( [&] {
-      if (!(updateResult == ProgressResult::Success ||
-            updateResult == ProgressResult::Stopped)) {
+      if (IsCancelled() || hasError) {
 #ifndef LEGACY_FLAC
          f.Detach(); // libflac closes the file
 #endif
@@ -381,13 +388,11 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 
-   ExportUtils::InitProgress( pDialog, fName,
-      selectionOnly
-         ? XO("Exporting the selected audio as FLAC")
-         : XO("Exporting the audio as FLAC") );
-   auto &progress = *pDialog;
+   SetStatusString(selectionOnly
+      ? XO("Exporting the selected audio as FLAC")
+      : XO("Exporting the audio as FLAC"));
 
-   while (updateResult == ProgressResult::Success) {
+   while (!IsCancelled() && !IsStopped()) {
       auto samplesThisRun = mixer->Process();
       if (samplesThisRun == 0) //stop encoding
          break;
@@ -410,30 +415,36 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                samplesThisRun) ) {
             // TODO: more precise message
             ShowDiskFullExportErrorDialog(fName);
-            updateResult = ProgressResult::Cancelled;
+            hasError = true;
+            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
             break;
          }
-         if (updateResult == ProgressResult::Success)
-            updateResult =
-               progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         else
+            progressListener.OnExportProgress(ExportUtils::EvalExportProgress(*mixer, t0, t1));
       }
    }
 
-   if (updateResult == ProgressResult::Success ||
-       updateResult == ProgressResult::Stopped) {
+   if (!IsCancelled() && !hasError) {
 #ifndef LEGACY_FLAC
       f.Detach(); // libflac closes the file
 #endif
       if (!encoder.finish())
-         // Do not reassign updateResult, see cleanup2
-         return ProgressResult::Failed;
+      {
+         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+         return;
+      }
 #ifdef LEGACY_FLAC
       if (!f.Flush() || !f.Close())
-         return ProgressResult::Failed;
+      {
+         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+         return;
+      }
 #endif
    }
-
-   return updateResult;
+   if(hasError)
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+   else
+      ExportFinish(progressListener);
 }
 
 void ExportFLAC::OptionsCreate(ShuttleGui &S, int format)
