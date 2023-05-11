@@ -424,7 +424,7 @@ public:
       const Parameters& parameters,
       const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      unsigned channels,
+      double rate, unsigned channels,
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
@@ -482,7 +482,7 @@ bool CLExportProcessor::Initialize(AudacityProject& project,
    const Parameters& parameters,
    const wxFileNameWrapper& fName,
    double t0, double t1, bool selectionOnly,
-   unsigned channels,
+   double sampleRate, unsigned channels,
    MixerOptions::Downmix* mixerSpec,
    const Tags* metadata)
 {
@@ -522,7 +522,7 @@ bool CLExportProcessor::Initialize(AudacityProject& project,
    wxLogNull nolog;
 
    // establish parameters
-   int rate = lrint( ProjectRate::Get( project ).GetRate());
+   int rate = lrint(sampleRate);
    const size_t maxBlockLen = 44100 * 5;
    unsigned long totalSamples = lrint((t1 - t0) * rate);
    unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(floatSample);

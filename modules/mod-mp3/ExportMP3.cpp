@@ -77,7 +77,6 @@
 #include "float_cast.h"
 #include "Mix.h"
 #include "Prefs.h"
-#include "ProjectRate.h"
 #include "Tags.h"
 #include "Track.h"
 #include "HelpSystem.h"
@@ -1626,7 +1625,7 @@ public:
       const Parameters& parameters,
       const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      unsigned channels,
+      double sampleRate, unsigned channels,
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
@@ -1710,7 +1709,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
    const Parameters& parameters,
    const wxFileNameWrapper& fName,
    double t0, double t1, bool selectionOnly,
-   unsigned channels,
+   double sampleRate, unsigned channels,
    MixerOptions::Downmix* mixerSpec,
    const Tags* metadata)
 {
@@ -1718,7 +1717,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
    context.t1 = t1;
    context.channels = channels;
 
-   int rate = lrint( ProjectRate::Get( project ).GetRate());
+   int rate = lrint(sampleRate);
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    wxWindow *parent = ProjectWindow::Find( &project );
 #endif // DISABLE_DYNAMIC_LOADING_LAME

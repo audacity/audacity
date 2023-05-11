@@ -30,8 +30,6 @@ function.
 #include <wx/textctrl.h>
 
 #include "Mix.h"
-#include "ProjectRate.h"
-#include "ProjectSettings.h"
 #include "Tags.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
@@ -531,6 +529,7 @@ public:
    /// Format initialization
    bool Init(const char *shortname,
       AudacityProject *project,
+      int sampleRate,
       const Tags *metadata,
       const ExportProcessor::Parameters& parameters);
 
@@ -560,7 +559,7 @@ private:
    int AskResample(int bitrate, int rate, int lowrate, int highrate, const int *sampRates);
 
    /// Codec initialization
-   bool InitCodecs(AudacityProject* project,
+   bool InitCodecs(int sampleRate,
       const ExportProcessor::Parameters& parameters);
 
    void WritePacket(AVPacketWrapper& packet);
@@ -611,7 +610,7 @@ public:
       const Parameters& parameters,
       const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      unsigned channels,
+      double sampleRate, unsigned channels,
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
@@ -771,6 +770,7 @@ std::unique_ptr<ExportProcessor> ExportFFmpeg::CreateProcessor(int format) const
 
 bool FFmpegExporter::Init(const char *shortname,
                         AudacityProject *project,
+                        int sampleRate,
                         const Tags *metadata,
                         const ExportProcessor::Parameters& parameters)
 {
@@ -832,7 +832,7 @@ bool FFmpegExporter::Init(const char *shortname,
    }
 
    // Open the audio stream's codec and initialise any stream related data.
-   if(!InitCodecs(project, parameters))
+   if(!InitCodecs(sampleRate, parameters))
       return false;
 
    if (mEncAudioStream->SetParametersFromContext(*mEncAudioCodecCtx) < 0)
@@ -889,10 +889,9 @@ bool FFmpegExporter::CheckSampleRate(int rate, int lowrate, int highrate, const 
    return false;
 }
 
-bool FFmpegExporter::InitCodecs(AudacityProject *project,
+bool FFmpegExporter::InitCodecs(int sampleRate,
                                 const ExportProcessor::Parameters& parameters)
 {
-   const auto &settings = ProjectSettings::Get( *project );
    std::unique_ptr<AVCodecWrapper> codec;
 
    AVDictionaryWrapper options(*mFFmpeg);
@@ -903,7 +902,8 @@ bool FFmpegExporter::InitCodecs(AudacityProject *project,
    // dialogs in the event the codec can't support the specified rate.
    if (!mSampleRate)
    {
-      mSampleRate = (int)ProjectRate::Get(*project).GetRate();
+      //TODO: Does not work with export multiple any more...
+      mSampleRate = sampleRate;
    }
 
    // Configure the audio stream's codec context.
@@ -1512,7 +1512,7 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
    const Parameters& parameters,
    const wxFileNameWrapper& fName,
    double t0, double t1, bool selectionOnly,
-   unsigned channels,
+   double sampleRate, unsigned channels,
    MixerOptions::Downmix* mixerSpec,
    const Tags* metadata)
 {
@@ -1548,7 +1548,7 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
 
    context.exporter = std::make_unique<FFmpegExporter>(mFFmpeg, fName, channels);
 
-   ret = context.exporter->Init(shortname.mb_str(), &project, metadata, parameters);
+   ret = context.exporter->Init(shortname.mb_str(), &project, (int)sampleRate, metadata, parameters);
    
    if (!ret) {
       // TODO: more precise message

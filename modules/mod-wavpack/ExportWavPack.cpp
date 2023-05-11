@@ -23,7 +23,6 @@
 #include <rapidjson/document.h>
 
 #include "Track.h"
-#include "ProjectRate.h"
 #include "Tags.h"
 
 #include "ExportPluginHelpers.h"
@@ -256,7 +255,7 @@ public:
       const Parameters& parameters,
       const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      unsigned channels,
+      double sampleRate, unsigned channels,
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
@@ -369,7 +368,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
    const Parameters& parameters,
    const wxFileNameWrapper& fName,
    double t0, double t1, bool selectionOnly,
-   unsigned numChannels,
+   double sampleRate, unsigned numChannels,
    MixerOptions::Downmix* mixerSpec,
    const Tags* metadata)
 {
@@ -387,7 +386,6 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
       throw ExportException(_("Unable to open target file for writing"));
    }
    
-   double rate = ProjectRate::Get( project ).GetRate();
    const auto &tracks = TrackList::Get( project );
 
    const auto quality = ExportPluginHelpers::GetParameterValue<int>(
@@ -420,7 +418,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
    }
 
    config.num_channels = numChannels;
-   config.sample_rate = rate;
+   config.sample_rate = sampleRate;
    config.bits_per_sample = bitDepth;
    config.bytes_per_sample = bitDepth/8;
    config.float_norm_exp = context.format == floatSample ? 127 : 0;
@@ -478,7 +476,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
    context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, true,
-         rate, context.format, mixerSpec);
+         sampleRate, context.format, mixerSpec);
 
    return true;
 }

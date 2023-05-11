@@ -20,7 +20,6 @@
 #include "FileFormats.h"
 #include "Mix.h"
 #include "Prefs.h"
-#include "ProjectRate.h"
 #include "Tags.h"
 #include "Track.h"
 #include "wxWidgetsWindowPlacement.h"
@@ -407,7 +406,7 @@ public:
       const Parameters& parameters,
       const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      unsigned channels,
+      double sampleRate, unsigned channels,
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
@@ -522,7 +521,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
    const Parameters& parameters,
    const wxFileNameWrapper& fName,
    double t0, double t1, bool selectionOnly,
-   unsigned numChannels,
+   double sampleRate, unsigned numChannels,
    MixerOptions::Downmix* mixerSpec,
    const Tags* metadata)
 {
@@ -530,7 +529,6 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
    context.t1 = t1;
    context.fName = fName;
 
-   double rate = ProjectRate::Get( project ).GetRate();
    const auto &tracks = TrackList::Get( project );
 
    // Set a default in case the settings aren't found
@@ -580,8 +578,8 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
 
       // Use libsndfile to export file
 
-      info.samplerate = (unsigned int)(rate + 0.5);
-      info.frames = (unsigned int)((t1 - t0)*rate + 0.5);
+      info.samplerate = (unsigned int)(sampleRate + 0.5);
+      info.frames = (unsigned int)((t1 - t0)*sampleRate + 0.5);
       info.channels = numChannels;
       info.format = sf_format;
       info.sections = 1;
@@ -645,7 +643,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
           (fileFormat == SF_FORMAT_WAVEX) ||
           (fileFormat == SF_FORMAT_AIFF ))
       {
-         float sampleCount = (float)(t1-t0)*rate*info.channels;
+         float sampleCount = (float)(t1-t0)*sampleRate*info.channels;
          float byteCount = sampleCount * sf_subtype_bytes_per_sample( info.format);
          // Test for 4 Gibibytes, rather than 4 Gigabytes
          if( byteCount > 4.295e9)
@@ -669,7 +667,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
       context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
                                t0, t1,
                                info.channels, maxBlockLen, true,
-                               rate, context.format, mixerSpec);
+                               sampleRate, context.format, mixerSpec);
    }
 
    return true;

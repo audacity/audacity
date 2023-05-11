@@ -24,7 +24,6 @@ Joshua Haberman
 #include "FLAC++/encoder.h"
 
 #include "float_cast.h"
-#include "ProjectRate.h"
 #include "Mix.h"
 #include "Prefs.h"
 
@@ -193,7 +192,7 @@ public:
       const Parameters& parameters,
       const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      unsigned channels,
+      double sampleFormat, unsigned channels,
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
@@ -294,7 +293,7 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
    const Parameters& parameters,
    const wxFileNameWrapper& fName,
    double t0, double t1, bool selectionOnly,
-   unsigned numChannels,
+   double sampleRate, unsigned numChannels,
    MixerOptions::Downmix* mixerSpec,
    const Tags* tags)
 {
@@ -303,7 +302,6 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
    context.numChannels = numChannels;
    context.fName = fName;
 
-   double    rate    = ProjectRate::Get(project).GetRate();
    const auto &tracks = TrackList::Get( project );
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
@@ -320,7 +318,7 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
    encoder.set_filename(OSOUTPUT(fName)) &&
 #endif
    encoder.set_channels(numChannels) &&
-   encoder.set_sample_rate(lrint(rate));
+   encoder.set_sample_rate(lrint(sampleRate));
 
    // See note in MakeMetadata() about a bug in libflac++ 1.1.2
    FLAC__StreamMetadataHandle metadata;
@@ -406,7 +404,7 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
    context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
                             t0, t1,
                             numChannels, SAMPLES_PER_RUN, false,
-                            rate, context.format, mixerSpec);
+                            sampleRate, context.format, mixerSpec);
 
    context.status = selectionOnly
       ? XO("Exporting the selected audio as FLAC")

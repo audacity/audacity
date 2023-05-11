@@ -41,7 +41,6 @@
 #include "Export.h"
 #include "FileIO.h"
 #include "Mix.h"
-#include "ProjectRate.h"
 #include "Tags.h"
 #include "Track.h"
 
@@ -155,7 +154,7 @@ public:
       const Parameters& parameters,
       const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      unsigned channels,
+      double sampleRate, unsigned channels,
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
@@ -222,7 +221,7 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
    const Parameters& parameters,
    const wxFileNameWrapper& fName,
    double t0, double t1, bool selectionOnly,
-   unsigned channels,
+   double sampleRate, unsigned channels,
    MixerOptions::Downmix* mixerSpec,
    const Tags* metadata)
 {
@@ -232,7 +231,6 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
 
    bool stereo = (channels == 2);
    long bitrate = ExportPluginHelpers::GetParameterValue(parameters, MP2OptionIDBitRate, 160);
-   double rate = ProjectRate::Get(project).GetRate();
    const auto &tracks = TrackList::Get( project );
 
    wxLogNull logNo;             /* temporarily disable wxWidgets error messages */
@@ -240,8 +238,8 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
    twolame_options *&encodeOptions = context.encodeOptions;
    encodeOptions = twolame_init();
 
-   twolame_set_in_samplerate(encodeOptions, (int)(rate + 0.5));
-   twolame_set_out_samplerate(encodeOptions, (int)(rate + 0.5));
+   twolame_set_in_samplerate(encodeOptions, (int)(sampleRate + 0.5));
+   twolame_set_out_samplerate(encodeOptions, (int)(sampleRate + 0.5));
    twolame_set_bitrate(encodeOptions, bitrate);
    twolame_set_num_channels(encodeOptions, stereo ? 2 : 1);
 
@@ -279,7 +277,7 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
    context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
          t0, t1,
          stereo ? 2 : 1, pcmBufferSize, true,
-         rate, int16Sample, mixerSpec);
+         sampleRate, int16Sample, mixerSpec);
 
    return true;
 }

@@ -42,6 +42,7 @@
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
+#include "ProjectRate.h"
 #include "Prefs.h"
 #include "SelectionState.h"
 #include "ExportFileDialog.h"
@@ -1103,7 +1104,7 @@ ExportMultipleDialog::DoExport(unsigned channels,
          ExportUtils::ParametersFromEditor(*editor),
          fullPath,
          t0, t1, selectedOnly,
-         channels,
+         ProjectRate::Get(*mProject).GetRate(), channels,
          nullptr,
          &tags))
       {

@@ -115,7 +115,7 @@ public:
       const Parameters& parameters,
       const wxFileNameWrapper& filename,
       double t0, double t1, bool selectedOnly,
-      unsigned channels,
+      double rate, unsigned channels,
       MixerOptions::Downmix* mixerSpec = nullptr,
       const Tags* tags = nullptr) = 0;
    

@@ -21,6 +21,7 @@
 #include "Mix.h"
 #include "Project.h"
 #include "WaveTrack.h"
+#include "ProjectRate.h"
 #include "wxFileNameWrapper.h"
 #include "StretchingSequence.h"
 
@@ -222,6 +223,7 @@ ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& paramet
       parameters,
       mFilename.GetFullPath(),
       mT0, mT1, mSelectedOnly,
+      ProjectRate::Get(*mProject).GetRate(),
       mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
       mMixerSpec.get()))
    {
