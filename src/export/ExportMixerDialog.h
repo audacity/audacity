@@ -14,9 +14,11 @@
 
 #include "wxPanelWrapper.h"
 
+#include "Track.h"
+
 class wxStaticText;
 
-class TrackList;
+class WaveTrack;
 
 class TranslatableString;
 
@@ -28,18 +30,16 @@ class ExportMixerDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
-   ExportMixerDialog( const TrackList * tracks, bool selectedOnly, unsigned maxNumChannels,
+   ExportMixerDialog(TrackIterRange<const WaveTrack> tracks, MixerOptions::Downmix* mixerSpec,
          wxWindow *parent, wxWindowID id, const TranslatableString &title,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,
          long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
    virtual ~ExportMixerDialog();
 
-   MixerOptions::Downmix* GetMixerSpec() { return mMixerSpec.get(); }
-
 private:
    wxStaticText *mChannelsText;
-   std::unique_ptr<MixerOptions::Downmix> mMixerSpec;
+   MixerOptions::Downmix *mMixerSpec;
    wxArrayString mTrackNames;
 
 private:

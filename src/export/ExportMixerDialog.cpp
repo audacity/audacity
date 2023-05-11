@@ -10,11 +10,11 @@
 
 #include "ExportMixerDialog.h"
 #include "ExportMixerPanel.h"
+#include "ExportUtils.h"
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
-#include "Track.h"
 #include "WaveTrack.h"
 #include "MixerOptions.h"
 
@@ -37,23 +37,16 @@ END_EVENT_TABLE()
 
 ExportMixerDialog::~ExportMixerDialog() = default;
 
-ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly,
-      unsigned maxNumChannels, wxWindow *parent, wxWindowID id, const TranslatableString &title,
-      const wxPoint &position, const wxSize& size, long style ) :
-   wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
+ExportMixerDialog::ExportMixerDialog(TrackIterRange<const WaveTrack> tracks, MixerOptions::Downmix* mixerSpec,
+      wxWindow *parent, wxWindowID id, const TranslatableString &title,
+      const wxPoint &position, const wxSize& size, long style )
+   : wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
+   , mMixerSpec(mixerSpec)
 {
    SetName();
 
-   unsigned numTracks = 0;
-
-   bool anySolo = !(( tracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
-
-   for (auto t :
-         tracks->Any< const WaveTrack >()
-            + ( selectedOnly ? &Track::IsSelected : &Track::Any  )
-            - ( anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute)
-   ) {
-      numTracks++;
+   for (auto t : tracks)
+   {
       const wxString sTrackName = (t->GetName()).Left(20);
       if (IsMono(*t))
          // No matter whether it's panned hard left or right
@@ -66,21 +59,6 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
          mTrackNames.push_back( wxString::Format( _( "%s - R" ), sTrackName ) );
    }
 
-   // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is
-   // sometimes not slidable.  My suspicion is that a mixer may incorrectly
-   // state the number of channels - so we assume there are always at least two.
-   // The downside is that if someone is exporting to a mono device, the dialog
-   // will allow them to output to two channels. Hmm.  We may need to revisit this.
-
-   if (maxNumChannels < 2 )
-      // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
-      // maxNumChannels = 2;
-      maxNumChannels = 1;
-   if (maxNumChannels > 32)
-      maxNumChannels = 32;
-
-   mMixerSpec = std::make_unique<MixerOptions::Downmix>(numTracks, maxNumChannels);
-
    auto label = XO("Output Channels: %2d")
       .Format( mMixerSpec->GetNumChannels() );
 
@@ -89,7 +67,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
       S.SetBorder( 5 );
 
       auto mixerPanel = safenew ExportMixerPanel(
-         S.GetParent(), ID_MIXERPANEL, mMixerSpec.get(),
+         S.GetParent(), ID_MIXERPANEL, mMixerSpec,
          mTrackNames, wxDefaultPosition, wxSize(400, -1));
       S.Prop(1)
          .Name(XO("Mixer Panel"))
