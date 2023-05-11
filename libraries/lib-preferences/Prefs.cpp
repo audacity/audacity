@@ -23,8 +23,6 @@
       Version					- Audacity Version that created these prefs
       DefaultOpenPath			- Default directory for NEW file selector
    /FileFormats
-      CopyOrEditUncompressedData - Copy data from uncompressed files or
-         [ "copy", "edit"]   - edit in place?
       ExportFormat_SF1		   - Format to export PCM data in
                              (this number is a libsndfile1.0 format)
    /SamplingRate

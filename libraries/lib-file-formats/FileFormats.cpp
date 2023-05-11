@@ -14,14 +14,11 @@ information.
 
 *//*******************************************************************/
 
-
-
 #include "FileFormats.h"
 
-#include <wx/arrstr.h>
+#include "wxArrayStringEx.h"
 #include "Internat.h"
 #include "MemoryX.h"
-#include "Prefs.h"
 #include "BasicUI.h"
 
 #ifndef SNDFILE_1
@@ -347,28 +344,3 @@ int SFFileCloser::operator() (SNDFILE *sf) const
    }
    return err;
 }
-
-ChoiceSetting FileFormatsCopyOrEditSetting{
-   wxT("/FileFormats/CopyOrEditUncompressedData"),
-   {
-      EnumValueSymbol{
-         wxT("copy"),
-         XXO("&Copy uncompressed files into the project (safer)")
-      },
-      EnumValueSymbol{
-         wxT("edit"),
-         XXO("&Read uncompressed files from original location (faster)")
-      },
-   },
-   0 // copy
-};
-
-ChoiceSetting FileFormatsSaveWithDependenciesSetting{
-   wxT("/FileFormats/SaveProjectWithDependencies"),
-   {
-      { wxT("copy"), XXO("&Copy all audio into project (safest)") },
-      { wxT("never"), XXO("Do &not copy any audio") },
-      { wxT("ask"), XXO("As&k") },
-   },
-   2 // ask
-};

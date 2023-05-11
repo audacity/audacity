@@ -11,7 +11,6 @@ set( LIBRARIES
    lib-basic-ui-interface
    lib-math-interface
    lib-strings-interface
-   lib-preferences-interface
    PUBLIC
       SndFile::sndfile
 )
