@@ -15,6 +15,7 @@
 #include <memory>
 
 #include "SampleFormat.h"
+#include "ExportTypes.h"
 #include "ExportPlugin.h"
 
 class TrackList;
@@ -47,5 +48,20 @@ public:
    static TrackIterRange<const WaveTrack> FindExportWaveTracks(const TrackList& tracks, bool selectedOnly);
 
    static ExportPlugin::Parameters ParametersFromEditor(const ExportOptionsEditor& editor);
+
+   template<typename T>
+   static T GetParameterValue(const ExportPlugin::Parameters& parameters, int id, T defaultValue = T())
+   {
+      auto it = std::find_if(
+         parameters.begin(),
+         parameters.end(),
+         [=](const auto& t) { return std::get<0>(t) == id; });
+      if(it != parameters.end())
+      {
+         if(auto value = std::get_if<T>(&std::get<1>(*it)))
+            return *value;
+      }
+      return defaultValue;
+   }
 };
 
