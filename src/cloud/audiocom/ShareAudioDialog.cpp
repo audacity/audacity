@@ -104,7 +104,7 @@ struct ShareAudioDialog::Services final
    }
 };
 
-class ShareAudioDialog::ExportProgressUpdater final : public ExportPluginDelegate
+class ShareAudioDialog::ExportProgressUpdater final : public ExportProcessorDelegate
 {
 public:
    ExportProgressUpdater(ShareAudioDialog& parent)

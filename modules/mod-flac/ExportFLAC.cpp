@@ -197,7 +197,7 @@ public:
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
-   ExportResult Process(ExportPluginDelegate& delegate) override;
+   ExportResult Process(ExportProcessorDelegate& delegate) override;
 
 private:
 
@@ -415,7 +415,7 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
    return true;
 }
 
-ExportResult FLACExportProcessor::Process(ExportPluginDelegate& delegate)
+ExportResult FLACExportProcessor::Process(ExportProcessorDelegate& delegate)
 {
    delegate.SetStatusString(context.status);
 

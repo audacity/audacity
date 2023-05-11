@@ -159,7 +159,7 @@ public:
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
-   ExportResult Process(ExportPluginDelegate& delegate) override;
+   ExportResult Process(ExportProcessorDelegate& delegate) override;
 
 private:
    static int AddTags(ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
@@ -284,7 +284,7 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
    return true;
 }
 
-ExportResult MP2ExportProcessor::Process(ExportPluginDelegate& delegate)
+ExportResult MP2ExportProcessor::Process(ExportProcessorDelegate& delegate)
 {
    delegate.SetStatusString(context.status);
    // We allocate a buffer which is twice as big as the

@@ -19,7 +19,7 @@
 
 namespace
 {
-   class DialogExportProgressDelegate : public ExportPluginDelegate
+   class DialogExportProgressDelegate : public ExportProcessorDelegate
    {
       std::atomic<bool> mCancelled {false};
       std::atomic<bool> mStopped {false};

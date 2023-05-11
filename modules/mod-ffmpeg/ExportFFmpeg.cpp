@@ -615,7 +615,7 @@ public:
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
-   ExportResult Process(ExportPluginDelegate& delegate) override;
+   ExportResult Process(ExportProcessorDelegate& delegate) override;
 
 };
 
@@ -1568,7 +1568,7 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
    return true;
 }
 
-ExportResult FFmpegExportProcessor::Process(ExportPluginDelegate& delegate)
+ExportResult FFmpegExportProcessor::Process(ExportProcessorDelegate& delegate)
 {
    delegate.SetStatusString(context.status);
    auto exportResult = ExportResult::Success;

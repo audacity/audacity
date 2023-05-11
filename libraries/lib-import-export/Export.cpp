@@ -222,14 +222,14 @@ ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& paramet
       mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
       mMixerSpec.get()))
    {
-      return ExportTask([](ExportPluginDelegate&){ return ExportResult::Cancelled; });
+      return ExportTask([](ExportProcessorDelegate&){ return ExportResult::Cancelled; });
    }
 
    return ExportTask([actualFilename = filename,
       mixer = mMixerSpec.release(),// Get rid of mixerspec
       targetFilename = mFilename,
       processor = processor.release()]
-      (ExportPluginDelegate& delegate)
+      (ExportProcessorDelegate& delegate)
       {
          auto result = ExportResult::Error;
          auto cleanup = finally( [&] {

@@ -1110,7 +1110,7 @@ ExportMultipleDialog::DoExport(unsigned channels,
       }
 
       result = ExportProgressUI::Show(
-         ExportTask([processor = processor.release()] (ExportPluginDelegate& delegate)
+         ExportTask([processor = processor.release()] (ExportProcessorDelegate& delegate)
          {
             auto cleanup = finally([&]{ delete processor; });
             return processor->Process(delegate);

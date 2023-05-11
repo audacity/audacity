@@ -129,7 +129,7 @@ public:
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
-   ExportResult Process(ExportPluginDelegate& delegate) override;
+   ExportResult Process(ExportProcessorDelegate& delegate) override;
 
 private:
    static void FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata);
@@ -277,7 +277,7 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
    return true;
 }
 
-ExportResult OGGExportProcessor::Process(ExportPluginDelegate& delegate)
+ExportResult OGGExportProcessor::Process(ExportProcessorDelegate& delegate)
 {
    delegate.SetStatusString(context.status);
    auto exportResult = ExportResult::Success;

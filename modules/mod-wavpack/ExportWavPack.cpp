@@ -260,7 +260,7 @@ public:
       MixerOptions::Downmix* mixerSpec,
       const Tags* tags) override;
 
-   ExportResult Process(ExportPluginDelegate& delegate) override;
+   ExportResult Process(ExportProcessorDelegate& delegate) override;
 
 private:
    static int WriteBlock(void *id, void *data, int32_t length);
@@ -483,7 +483,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
    return true;
 }
 
-ExportResult WavPackExportProcessor::Process(ExportPluginDelegate& delegate)
+ExportResult WavPackExportProcessor::Process(ExportProcessorDelegate& delegate)
 {
    delegate.SetStatusString(context.status);
 

@@ -16,7 +16,7 @@
 #include <future>
 #include "Internat.h"
 
-class ExportPluginDelegate;
+class ExportProcessorDelegate;
 
 using ExportOptionID = int;
 
@@ -28,7 +28,7 @@ enum class ExportResult
    Stopped
 };
 
-using ExportTask = std::packaged_task<ExportResult(ExportPluginDelegate&)>;
+using ExportTask = std::packaged_task<ExportResult(ExportProcessorDelegate&)>;
 
 ///\brief A type of option values (parameters) used by exporting plugins
 using ExportValue = std::variant<
