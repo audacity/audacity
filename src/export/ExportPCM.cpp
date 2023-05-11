@@ -382,6 +382,9 @@ public:
 
    ExportPCM();
 
+   int GetFormatCount() const override;
+   FormatInfo GetFormatInfo(int index) const override;
+   
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
@@ -395,10 +398,6 @@ public:
                          MixerSpec *mixerSpec = NULL,
                          const Tags *metadata = NULL,
                          int subformat = 0) override;
-   // optional
-   wxString GetFormat(int index) override;
-   FileExtension GetExtension(int index) override;
-   unsigned GetMaxChannels(int index) override;
 
 private:
    void ReportTooBigError(wxWindow * pParent);
@@ -409,29 +408,45 @@ private:
 
 };
 
-ExportPCM::ExportPCM()
-   : ExportPlugin()
+ExportPCM::ExportPCM() = default;
+
+int ExportPCM::GetFormatCount() const
 {
-   int selformat; // the index of the format we are setting up at the moment
+   return WXSIZEOF(kFormats) + 1;// + FMT_OTHER
+}
 
-   // Add the "special" formats first
-   for (size_t i = 0; i < WXSIZEOF(kFormats); ++i)
+FormatInfo ExportPCM::GetFormatInfo(int index) const
+{
+   if(index == FMT_OTHER)
    {
-      selformat = AddFormat() - 1;
-      AddExtension(sf_header_extension(kFormats[i].format), selformat);
-      SetFormat(kFormats[i].name, selformat);
-      SetDescription(kFormats[i].desc, selformat);
-      SetCanMetaData(true, selformat);
-      SetMaxChannels(255, selformat);
-   }
+      SF_INFO si = {};
 
-   // Then add the generic libsndfile "format"
-   selformat = AddFormat() - 1;     // Matches FMT_OTHER
-   SetExtensions(sf_get_all_extensions(), selformat);
-   SetFormat(wxT("LIBSNDFILE"), selformat);
-   SetDescription(XO("Other uncompressed files"), selformat);
-   SetCanMetaData(true, selformat);
-   SetMaxChannels(255, selformat);
+      si.format = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
+      si.format |= LoadEncoding(si.format);
+
+      for (si.channels = 1; sf_format_check(&si); si.channels++)
+      {
+         // just counting
+      }
+      --si.channels;
+
+      return {
+         sf_header_shortname(si.format),
+         XO("Other uncompressed files"),
+         { sf_header_extension(si.format) },
+         {},
+         static_cast<unsigned>(si.channels),
+         true
+      };
+   }
+   return {
+      kFormats[index].name,
+      kFormats[index].desc,
+      { sf_header_extension(kFormats[index].format) },
+      {},
+      255,
+      true
+   };
 }
 
 void ExportPCM::ReportTooBigError(wxWindow * pParent)
@@ -1041,58 +1056,6 @@ void ExportPCM::OptionsCreate(ShuttleGui &S, int format)
          ExportPlugin::OptionsCreate(S, format);
       break;
    }
-}
-
-wxString ExportPCM::GetFormat(int index)
-{
-   if (index != FMT_OTHER)
-   {
-      return ExportPlugin::GetFormat(index);
-   }
-
-   // Get the saved type
-   int typ = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
-
-   // Return the format name for that type
-   return sf_header_shortname(typ);
-}
-
-FileExtension ExportPCM::GetExtension(int index)
-{
-   if (index != FMT_OTHER)
-   {
-      return ExportPlugin::GetExtension(index);
-   }
-
-   // Get the saved type
-   int typ = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
-
-   // Return the extension for that type
-   return sf_header_extension(typ);
-}
-
-unsigned ExportPCM::GetMaxChannels(int index)
-{
-   SF_INFO si = {};
-
-   if (index < FMT_OTHER)
-   {
-      si.format = kFormats[index].format;
-   }
-   else
-   {
-      // Get the saved type
-      si.format = LoadOtherFormat() & SF_FORMAT_TYPEMASK;
-      si.format |= LoadEncoding(si.format);
-   }
-
-   for (si.channels = 1; sf_format_check(&si); si.channels++)
-   {
-      // just counting
-   }
-
-   // Return the max number of channels
-   return si.channels - 1;
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "PCM",

@@ -99,6 +99,9 @@ public:
    ExportFFmpeg();
    ~ExportFFmpeg() override;
 
+   int GetFormatCount() const override;
+   FormatInfo GetFormatInfo(int index) const override;
+   
    /// Callback, called from GetFilename
    bool CheckFileName(wxFileName &filename, int format = 0) override;
 
@@ -178,6 +181,7 @@ private:
    AVDataBuffer<int16_t> mEncAudioFifoOutBuf; // buffer to read _out_ of the FIFO into
    std::unique_ptr<AVFormatContextWrapper> mEncFormatCtx; // libavformat's context for our output file
    std::unique_ptr<AVCodecContextWrapper> mEncAudioCodecCtx;    // the encoder for the output audio stream
+   std::vector<FormatInfo> mFormatInfos;
 };
 
 ExportFFmpeg::ExportFFmpeg()
@@ -213,42 +217,44 @@ ExportFFmpeg::ExportFFmpeg()
             continue;
          }
       }
-      int fmtindex = AddFormat() - 1;
-      SetFormat(ExportFFmpegOptions::fmts[newfmt].name,fmtindex);
-      AddExtension(ExportFFmpegOptions::fmts[newfmt].extension,fmtindex);
+      FormatInfo formatInfo {};
+      formatInfo.mFormat = ExportFFmpegOptions::fmts[newfmt].name;
+      formatInfo.mExtensions.push_back(ExportFFmpegOptions::fmts[newfmt].extension);
       // For some types add other extensions
       switch(newfmt)
       {
       case FMT_M4A:
-         AddExtension(wxT("3gp"),fmtindex);
-         AddExtension(wxT("m4r"),fmtindex);
-         AddExtension(wxT("mp4"),fmtindex);
+         formatInfo.mExtensions.push_back(wxT("3gp"));
+         formatInfo.mExtensions.push_back(wxT("m4r"));
+         formatInfo.mExtensions.push_back(wxT("mp4"));
          break;
       case FMT_WMA2:
-         AddExtension(wxT("asf"),fmtindex);
-         AddExtension(wxT("wmv"),fmtindex);
+         formatInfo.mExtensions.push_back(wxT("asf"));
+         formatInfo.mExtensions.push_back(wxT("wmv"));
          break;
       default:
          break;
       }
+      formatInfo.mMaxChannels = ExportFFmpegOptions::fmts[newfmt].maxchannels;
+      formatInfo.mDescription = ExportFFmpegOptions::fmts[newfmt].description;
 
-      SetMaxChannels(ExportFFmpegOptions::fmts[newfmt].maxchannels,fmtindex);
-      SetDescription(ExportFFmpegOptions::fmts[newfmt].description, fmtindex);
-
-      int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
-      if (canmeta && (canmeta == AV_CANMETA || canmeta <= avfver))
-      {
-         SetCanMetaData(true,fmtindex);
-      }
-      else
-      {
-         SetCanMetaData(false,fmtindex);
-      }
+      const int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
+      formatInfo.mCanMetaData = canmeta && (canmeta == AV_CANMETA || canmeta <= avfver);
+      
+      mFormatInfos.push_back(std::move(formatInfo));
    }
 }
 
-ExportFFmpeg::~ExportFFmpeg()
+ExportFFmpeg::~ExportFFmpeg() = default;
+
+int ExportFFmpeg::GetFormatCount() const
 {
+   return static_cast<int>(mFormatInfos.size());
+}
+
+FormatInfo ExportFFmpeg::GetFormatInfo(int index) const
+{
+   return mFormatInfos[index];
 }
 
 bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
@@ -367,7 +373,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
 
    // Add metadata BEFORE writing the header.
    // At the moment that works with ffmpeg-git and ffmpeg-0.5 for MP4.
-   if (GetCanMetaData(subformat))
+   if (mFormatInfos[subformat].mCanMetaData)
    {
       mSupportsUTF8 = ExportFFmpegOptions::fmts[mSubFormat].canutf8;
       AddTags(metadata);

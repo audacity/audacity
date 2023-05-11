@@ -90,114 +90,15 @@ bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
   return true;
 }
 
-/** \brief Add a NEW entry to the list of formats this plug-in can export
- *
- * To configure the format use SetFormat, SetCanMetaData etc with the index of
- * the format.
- * @return The number of formats currently set up. This is one more than the
- * index of the newly added format.
- */
-int ExportPlugin::AddFormat()
-{
-   FormatInfo nf;
-   mFormatInfos.push_back(nf);
-   return mFormatInfos.size();
-}
-
-int ExportPlugin::GetFormatCount()
-{
-   return mFormatInfos.size();
-}
-
-/**
- * @param index The plugin to set the format for (range 0 to one less than the
- * count of formats)
- */
-void ExportPlugin::SetFormat(const wxString & format, int index)
-{
-   mFormatInfos[index].mFormat = format;
-}
-
-void ExportPlugin::SetDescription(const TranslatableString & description, int index)
-{
-   mFormatInfos[index].mDescription = description;
-}
-
-void ExportPlugin::AddExtension(const FileExtension &extension, int index)
-{
-   mFormatInfos[index].mExtensions.push_back(extension);
-}
-
-void ExportPlugin::SetExtensions(FileExtensions extensions, int index)
-{
-   mFormatInfos[index].mExtensions = std::move(extensions);
-}
-
-void ExportPlugin::SetMask(FileNames::FileTypes mask, int index)
-{
-   mFormatInfos[index].mMask = std::move( mask );
-}
-
-void ExportPlugin::SetMaxChannels(unsigned maxchannels, unsigned index)
-{
-   mFormatInfos[index].mMaxChannels = maxchannels;
-}
-
-void ExportPlugin::SetCanMetaData(bool canmetadata, int index)
-{
-   mFormatInfos[index].mCanMetaData = canmetadata;
-}
-
-wxString ExportPlugin::GetFormat(int index)
-{
-   return mFormatInfos[index].mFormat;
-}
-
-TranslatableString ExportPlugin::GetDescription(int index)
-{
-   return mFormatInfos[index].mDescription;
-}
-
-FileExtension ExportPlugin::GetExtension(int index)
-{
-   return mFormatInfos[index].mExtensions[0];
-}
-
-FileExtensions ExportPlugin::GetExtensions(int index)
-{
-   return mFormatInfos[index].mExtensions;
-}
-
-FileNames::FileTypes ExportPlugin::GetMask(int index)
-{
-   if (!mFormatInfos[index].mMask.empty())
-      return mFormatInfos[index].mMask;
-
-   return { { GetDescription(index), GetExtensions(index) } };
-}
-
-unsigned ExportPlugin::GetMaxChannels(int index)
-{
-   return mFormatInfos[index].mMaxChannels;
-}
-
-bool ExportPlugin::GetCanMetaData(int index)
-{
-   return mFormatInfos[index].mCanMetaData;
-}
-
 bool ExportPlugin::IsExtension(const FileExtension & ext, int index)
 {
-   bool isext = false;
-   for (int i = index; i < GetFormatCount(); i = GetFormatCount())
+   if(index >= 0 && index < GetFormatCount())
    {
-      const auto &defext = GetExtension(i);
-      const auto &defexts = GetExtensions(i);
-      int indofext = defexts.Index(ext, false);
-      if (defext.empty() || (indofext != wxNOT_FOUND))
-         isext = true;
+      auto formatInfo = GetFormatInfo(index);
+      if(formatInfo.mExtensions[0].empty() || formatInfo.mExtensions.Index(ext, false) != wxNOT_FOUND)
+         return true;
    }
-   return isext;
+   return false;
 }
 
 bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(format))
@@ -418,9 +319,11 @@ bool Exporter::Process(bool selectedOnly, double t0, double t1)
    if (!CheckMix()) {
       return false;
    }
+   
+   auto exportFormatInfo = mPlugins[mFormat]->GetFormatInfo(mSubFormat);
 
    // Let user edit MetaData
-   if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
+   if (exportFormatInfo.mCanMetaData) {
       if (!TagsEditorDialog::DoEditMetadata( *mProject,
          XO("Edit Metadata Tags"), XO("Exported Tags"),
          ProjectSettings::Get( *mProject ).GetShowId3Dialog())) {
@@ -442,7 +345,7 @@ bool Exporter::Process(bool selectedOnly, double t0, double t1)
 
    if (success) {
       if (mFormatName.empty()) {
-         gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
+         gPrefs->Write(wxT("/Export/Format"), exportFormatInfo.mFormat);
       }
 
       FileNames::UpdateDefaultPath(FileNames::Operation::Export, mFilename.GetPath());
@@ -478,7 +381,8 @@ bool Exporter::Process(
       ++i;
       for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
-         if (pPlugin->GetFormat(j).IsSameAs(type, false))
+         auto formatInfo = pPlugin->GetFormatInfo(j);
+         if (formatInfo.mFormat.IsSameAs(type, false))
          {
             mFormat = i;
             mSubFormat = j;
@@ -582,9 +486,9 @@ bool Exporter::GetFilename()
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            auto mask = pPlugin->GetMask(j);
-            fileTypes.insert( fileTypes.end(), mask.begin(), mask.end() );
-            if (mPlugins[i]->GetFormat(j) == defaultFormat) {
+            auto formatInfo = pPlugin->GetFormatInfo(j);
+            fileTypes.insert(fileTypes.end(), { formatInfo.mDescription, formatInfo.mExtensions });
+            if (formatInfo.mFormat == defaultFormat) {
                mFormat = i;
                mSubFormat = j;
             }
@@ -598,7 +502,7 @@ bool Exporter::GetFilename()
       mFilterIndex = 0;
       mSubFormat = 0;
    }
-   wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
+   wxString defext = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mExtensions[0].Lower();
 
    //Bug 1304: Set a default path if none was given.  For Export.
    mFilename.SetPath(FileNames::FindDefaultPath(FileNames::Operation::Export));
@@ -661,7 +565,7 @@ bool Exporter::GetFilename()
       }
 
       const auto ext = mFilename.GetExt();
-      defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
+      defext = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mExtensions[0].Lower();
 
       //
       // Check the extension - add the default if it's not there,
@@ -695,7 +599,7 @@ bool Exporter::GetFilename()
       }
       else if (!ext.empty() && !mPlugins[mFormat]->IsExtension(ext,mSubFormat) && ext.CmpNoCase(defext)) {
          auto prompt = XO("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?")
-               .Format(mPlugins[mFormat]->GetFormat(mSubFormat),
+               .Format(mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat,
                        mFilename.GetFullName(),
                        defext);
 
@@ -805,11 +709,11 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    if (downMix) {
       unsigned channels = mMono ? 1 : 2;
       mChannels =
-         std::min(channels, mPlugins[mFormat]->GetMaxChannels(mSubFormat));
+         std::min(channels, mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels);
 
       if (mNumSelected > 1 || channels > mChannels) {
          // May give a message about mixing-down
-         wxString exportFormat = mPlugins[mFormat]->GetFormat(mSubFormat);
+         wxString exportFormat = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat;
          if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
             exportedChannels = mChannels;
 
@@ -842,7 +746,7 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    else
    {
       if (exportedChannels < 0)
-         exportedChannels = mPlugins[mFormat]->GetMaxChannels(mSubFormat);
+         exportedChannels = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels;
 
       ExportMixerDialog md(&TrackList::Get( *mProject ),
                            mSelectedOnly,
@@ -979,8 +883,8 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            auto mask = pPlugin->GetMask(j);
-            fileTypes.insert( fileTypes.end(), mask.begin(), mask.end() );
+            const auto formatInfo = pPlugin->GetFormatInfo(j);
+            fileTypes.insert( fileTypes.end(), { formatInfo.mDescription, formatInfo.mExtensions } );
          }
       }
 
@@ -1061,7 +965,7 @@ bool Exporter::SetAutoExportOptions() {
         return false;
 
    // Let user edit MetaData
-   if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
+   if (mPlugins[mFormat]->GetFormatInfo(mSubFormat).mCanMetaData) {
       if (!TagsEditorDialog::DoEditMetadata( *mProject,
          XO("Edit Metadata Tags"),
          XO("Exported Tags"),

@@ -45,23 +45,14 @@ namespace BasicUI
 class ProgressDialog;
 }
 
-class AUDACITY_DLL_API FormatInfo
+struct AUDACITY_DLL_API FormatInfo
 {
-   public:
-      FormatInfo() {}
-      FormatInfo( const FormatInfo & ) = default;
-      FormatInfo &operator = ( const FormatInfo & ) = default;
-      //FormatInfo( FormatInfo && ) = default;
-      //FormatInfo &operator = ( FormatInfo && ) = default;
-      ~FormatInfo() {}
-
-      wxString mFormat;
-      TranslatableString mDescription;
-      // wxString mExtension;
-      FileExtensions mExtensions;
-      FileNames::FileTypes mMask;
-      unsigned mMaxChannels;
-      bool mCanMetaData;
+   wxString mFormat;
+   TranslatableString mDescription;
+   FileExtensions mExtensions;
+   FileNames::FileTypes mMask;
+   unsigned mMaxChannels;
+   bool mCanMetaData;
 };
 
 //----------------------------------------------------------------------------
@@ -75,27 +66,8 @@ public:
    ExportPlugin();
    virtual ~ExportPlugin();
 
-   int AddFormat();
-   void SetFormat(const wxString & format, int index);
-   void SetDescription(const TranslatableString & description, int index);
-   void AddExtension(const FileExtension &extension, int index);
-   void SetExtensions(FileExtensions extensions, int index);
-   void SetMask(FileNames::FileTypes mask, int index);
-   void SetMaxChannels(unsigned maxchannels, unsigned index);
-   void SetCanMetaData(bool canmetadata, int index);
-
-   virtual int GetFormatCount();
-   virtual wxString GetFormat(int index);
-   TranslatableString GetDescription(int index);
-   /** @brief Return the (first) file name extension for the sub-format.
-    * @param index The sub-format for which the extension is wanted */
-   virtual FileExtension GetExtension(int index = 0);
-   /** @brief Return all the file name extensions used for the sub-format.
-    * @param index the sub-format for which the extension is required */
-   virtual FileExtensions GetExtensions(int index = 0);
-   FileNames::FileTypes GetMask(int index);
-   virtual unsigned GetMaxChannels(int index);
-   virtual bool GetCanMetaData(int index);
+   virtual int GetFormatCount() const = 0;
+   virtual FormatInfo GetFormatInfo(int index) const = 0;
 
    virtual bool IsExtension(const FileExtension & ext, int index);
 
@@ -153,9 +125,6 @@ protected:
          const TranslatableString &title, const TranslatableString &message);
    static void InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
          const wxFileNameWrapper &title, const TranslatableString &message);
-
-private:
-   std::vector<FormatInfo> mFormatInfos;
 };
 
 using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;

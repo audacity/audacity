@@ -199,6 +199,9 @@ public:
 
    ExportMP2();
 
+   int GetFormatCount() const override;
+   FormatInfo GetFormatInfo(int) const override;
+   
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
@@ -222,15 +225,18 @@ private:
 
 };
 
-ExportMP2::ExportMP2()
-:  ExportPlugin()
+ExportMP2::ExportMP2() = default;
+
+int ExportMP2::GetFormatCount() const
 {
-   AddFormat();
-   SetFormat(wxT("MP2"),0);
-   AddExtension(wxT("mp2"),0);
-   SetMaxChannels(2,0);
-   SetCanMetaData(true,0);
-   SetDescription(XO("MP2 Files"),0);
+   return 1;
+}
+
+FormatInfo ExportMP2::GetFormatInfo(int) const
+{
+   return {
+      wxT("MP2"), XO("MP2 Files"), { wxT("mp2") }, {}, 2, true
+   };
 }
 
 ProgressResult ExportMP2::Export(AudacityProject *project,
