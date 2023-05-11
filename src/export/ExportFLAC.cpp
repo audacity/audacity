@@ -188,8 +188,6 @@ public:
 
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
-
-   void OptionsCreate(ShuttleGui &S, int format) override;
    
    void Export(AudacityProject *project,
                ExportProgressListener &pDialog,
@@ -428,10 +426,6 @@ void ExportFLAC::Export(AudacityProject *project,
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
    else
       ExportFinish(progressListener);
-}
-
-void ExportFLAC::OptionsCreate(ShuttleGui &S, int format)
-{
 }
 
 // LL:  There's a bug in libflac++ 1.1.2 that prevents us from using

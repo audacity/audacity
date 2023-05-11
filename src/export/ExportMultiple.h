@@ -32,6 +32,8 @@ class ShuttleGui;
 class Track;
 class TrackList;
 
+class ExportOptionsHandler;
+
 class AUDACITY_DLL_API ExportMultipleDialog final : public wxDialogWrapper
 {
 public:
@@ -107,6 +109,8 @@ private:
    Exporter mExporter;
    std::vector<ExportPlugin*> mPlugins;   /**< Array of references to available exporter
                                    plug-ins */
+   std::vector<std::unique_ptr<ExportOptionsHandler>> mOptionHandlers;
+
    AudacityProject *mProject;
    TrackList *mTracks;           /**< The list of tracks in the project that is
                                    being exported */

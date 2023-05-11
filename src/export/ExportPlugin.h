@@ -18,8 +18,6 @@
 #include "Identifier.h"
 #include "TranslatableString.h"
 
-class ShuttleGui;
-
 class wxFileName;
 class wxString;
 class wxFileNameWrapper;
@@ -54,9 +52,7 @@ public:
 
    virtual int GetFormatCount() const = 0;
    virtual FormatInfo GetFormatInfo(int index) const = 0;
-
-   virtual void OptionsCreate(ShuttleGui &S, int format) = 0;
-
+   
    virtual std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int formatIndex, ExportOptionsEditor::Listener* listener) const = 0;
    
