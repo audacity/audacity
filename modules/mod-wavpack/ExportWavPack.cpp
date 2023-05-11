@@ -16,14 +16,12 @@
 
 #include "Export.h"
 #include "wxFileNameWrapper.h"
-#include "Prefs.h"
 #include "Mix.h"
 
 #include <wavpack/wavpack.h>
 
 #include <rapidjson/document.h>
 
-#include "../ProjectSettings.h"
 #include "Track.h"
 #include "ProjectRate.h"
 #include "Tags.h"
@@ -56,12 +54,6 @@ const TranslatableStrings ExportBitDepthNames {
    XO("32 bit float "),
 };
 
-IntSetting QualitySetting{ L"/FileFormats/WavPackEncodeQuality", 1 };
-IntSetting BitrateSetting{ L"/FileFormats/WavPackBitrate", 40 };
-IntSetting BitDepthSetting{ L"/FileFormats/WavPackBitDepth", 16 };
-
-BoolSetting HybridModeSetting{ L"/FileFormats/WavPackHybridMode", false };
-BoolSetting CreateCorrectionFileSetting{ L"/FileFormats/WavPackCreateCorrectionFile", false };
 /* 
 Copied from ExportMP2.cpp by
    Joshua Haberman
