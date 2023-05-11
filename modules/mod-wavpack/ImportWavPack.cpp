@@ -28,7 +28,6 @@
 #include<stdlib.h>
 #include<wavpack/wavpack.h>
 
-#include "Prefs.h"
 #include "Tags.h"
 #include "WaveTrack.h"
 #include "CodeConversions.h"

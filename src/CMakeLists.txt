@@ -584,10 +584,6 @@ list( APPEND SOURCES
          export/FFmpegPrefs.cpp
       >
 
-      $<$<BOOL:${USE_WAVPACK}>:
-         export/ExportWavPack.cpp
-      >
-
       # Import
 
       import/FormatClassifier.cpp
@@ -632,10 +628,6 @@ list( APPEND SOURCES
 
       $<$<BOOL:${USE_LIBMPG123}>:
          import/ImportMP3_MPG123.cpp
-      >
-
-      $<$<BOOL:${USE_WAVPACK}>:
-         import/ImportWavPack.cpp
       >
 
       # Menus
@@ -1102,7 +1094,6 @@ set( LIBRARIES
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBMPG123}>:mpg123::libmpg123>
-      $<$<BOOL:${USE_WAVPACK}>:wavpack::wavpack>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>

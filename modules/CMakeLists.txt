@@ -24,6 +24,10 @@ if ( USE_LIBTWOLAME )
    list ( APPEND MODULES mod-mp2)
 endif()
 
+if ( USE_WAVPACK )
+   list ( APPEND MODULES mod-wavpack )
+endif()
+
 foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()
