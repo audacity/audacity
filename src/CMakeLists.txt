@@ -584,10 +584,6 @@ list( APPEND SOURCES
          export/FFmpegPrefs.cpp
       >
 
-      $<$<BOOL:${USE_LIBTWOLAME}>:
-         export/ExportMP2.cpp
-      >
-
       $<$<BOOL:${USE_WAVPACK}>:
          export/ExportWavPack.cpp
       >
@@ -1108,7 +1104,6 @@ set( LIBRARIES
       $<$<BOOL:${USE_LIBMPG123}>:mpg123::libmpg123>
       $<$<BOOL:${USE_WAVPACK}>:wavpack::wavpack>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
-      $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
