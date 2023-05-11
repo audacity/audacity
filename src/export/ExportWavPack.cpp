@@ -272,7 +272,7 @@ int ExportWavPack::GetFormatCount() const
 FormatInfo ExportWavPack::GetFormatInfo(int) const
 {
    return {
-      wxT("WavPack"), XO("WavPack Files"), { wxT("wv") }, {}, 255, true
+      wxT("WavPack"), XO("WavPack Files"), { wxT("wv") }, 255, true
    };
 }
 
