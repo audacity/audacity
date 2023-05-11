@@ -7,7 +7,6 @@ set( SOURCES
 
 set( LIBRARIES
       lib-utility-interface
-      lib-tags-interface
       lib-import-export-interface
       twolame
 )

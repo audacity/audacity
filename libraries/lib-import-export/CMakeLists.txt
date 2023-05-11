@@ -45,6 +45,7 @@ set( LIBRARIES
    lib-stretching-sequence-interface
    PUBLIC
       rapidjson::rapidjson
+      lib-tags-interface
 )
 audacity_library( lib-import-export "${SOURCES}" "${LIBRARIES}"
    "" ""
