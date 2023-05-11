@@ -106,7 +106,7 @@ private:
 
 private:
    Exporter mExporter;
-   std::vector<ExportPlugin*> mPlugins;   /**< Array of references to available exporter
+   std::vector<const ExportPlugin*> mPlugins;   /**< Array of references to available exporter
                                    plug-ins */
    std::vector<std::unique_ptr<ExportOptionsHandler>> mOptionHandlers;
 

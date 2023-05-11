@@ -86,7 +86,7 @@ public:
    ///\return Whether the parsing was successful
    virtual bool ParseConfig(int formatIndex, const rapidjson::Value& config, Parameters& parameters) const;
 
-   virtual bool CheckFileName(wxFileName &filename, int format = 0);
+   virtual bool CheckFileName(wxFileName &filename, int format = 0) const;
 
    /** \brief called to export audio into a file.
     *
@@ -112,5 +112,5 @@ public:
                        bool selectedOnly, double t0, double t1,
                        MixerOptions::Downmix *mixerSpec = nullptr,
                        const Tags *metadata = nullptr,
-                       int subformat = 0) = 0;
+                       int subformat = 0) const = 0;
 };

@@ -115,11 +115,11 @@ public:
                double t1,
                MixerSpec *mixerSpec,
                const Tags *metadata,
-               int subformat) override;
+               int subformat) const override;
 
 private:
 
-   bool FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata);
+   static bool FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata);
 };
 
 ExportOGG::ExportOGG() = default;
@@ -146,7 +146,7 @@ ExportResult ExportOGG::Export(AudacityProject *project,
                        double t1,
                        MixerSpec *mixerSpec,
                        const Tags *metadata,
-                       int)
+                       int) const
 {
    double    rate    = ProjectRate::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
