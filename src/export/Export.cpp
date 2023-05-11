@@ -77,6 +77,21 @@
 // ExportPlugin
 //----------------------------------------------------------------------------
 
+namespace {
+
+bool IsExtension(const ExportPlugin& plugin, int formatIndex, const FileExtension& ext)
+{
+   if(formatIndex >= 0 && formatIndex < plugin.GetFormatCount())
+   {
+      auto formatInfo = plugin.GetFormatInfo(formatIndex);
+      if(formatInfo.mExtensions[0].empty() || formatInfo.mExtensions.Index(ext, false) != wxNOT_FOUND)
+         return true;
+   }
+   return false;
+}
+
+}
+
 ExportPlugin::ExportPlugin()
 {
 }
@@ -88,22 +103,6 @@ ExportPlugin::~ExportPlugin()
 bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
 {
   return true;
-}
-
-bool ExportPlugin::IsExtension(const FileExtension & ext, int index)
-{
-   if(index >= 0 && index < GetFormatCount())
-   {
-      auto formatInfo = GetFormatInfo(index);
-      if(formatInfo.mExtensions[0].empty() || formatInfo.mExtensions.Index(ext, false) != wxNOT_FOUND)
-         return true;
-   }
-   return false;
-}
-
-bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(format))
-{
-   return false;
 }
 
 void ExportPlugin::OptionsCreate(ShuttleGui &S, int WXUNUSED(format))
@@ -226,20 +225,6 @@ void Exporter::SetFileDialogTitle( const TranslatableString & DialogTitle )
 {
    // The default title is "Export File"
    mFileDialogTitle = DialogTitle;
-}
-
-int Exporter::FindFormatIndex(int exportindex)
-{
-   int c = 0;
-   for (const auto &pPlugin : mPlugins)
-   {
-      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
-      {
-         if (exportindex == c) return j;
-         c++;
-      }
-   }
-   return 0;
 }
 
 const ExportPluginArray &Exporter::GetPlugins()
@@ -546,7 +531,7 @@ bool Exporter::GetFilename()
       {
          continue;
       }
-      else if (!ext.empty() && !mPlugins[mFormat]->IsExtension(ext,mSubFormat) && ext.CmpNoCase(defext)) {
+      else if (!ext.empty() && IsExtension(*mPlugins[mFormat], mSubFormat, ext) && ext.CmpNoCase(defext)) {
          auto prompt = XO("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?")
                .Format(mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat,
                        mFilename.GetFullName(),
@@ -612,36 +597,6 @@ bool Exporter::CheckFilename()
    }
 
    return true;
-}
-
-void Exporter::DisplayOptions(int index)
-{
-   int c = 0;
-   int mf = -1, msf = -1;
-   int i = -1;
-   for (const auto &pPlugin : mPlugins)
-   {
-      ++i;
-      for (int j = 0; j < pPlugin->GetFormatCount(); j++)
-      {
-         if (index == c)
-         {
-            mf = i;
-            msf = j;
-         }
-         c++;
-      }
-   }
-   // This shouldn't happen...
-   if (index >= c) {
-      return;
-   }
-
-#if defined(__WXMSW__)
-   mPlugins[mf]->DisplayOptions( FindProjectFrame( mProject ), msf);
-#else
-   mPlugins[mf]->DisplayOptions(mDialog, msf);
-#endif
 }
 
 bool Exporter::CheckMix(bool prompt /*= true*/ )
