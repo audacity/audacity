@@ -45,6 +45,7 @@
 #include "CodeConversions.h"
 
 #include "export/Export.h"
+#include "export/ExportProgressListener.h"
 #include "AccessibleLinksFormatter.h"
 
 #include "WindowAccessible.h"
@@ -104,64 +105,60 @@ struct ShareAudioDialog::Services final
    }
 };
 
-// Implementation of the ProgressDialog, which is not a dialog.
-// Instead, progress is forwarded to the parent
-struct ShareAudioDialog::ExportProgressHelper final :
-    public BasicUI::ProgressDialog
+class ShareAudioDialog::ExportProgressUpdater final : public ExportProgressListener
 {
-   explicit ExportProgressHelper(ShareAudioDialog& parent)
-       : mParent(parent)
+public:
+   ExportProgressUpdater(ShareAudioDialog& parent, ExportPlugin& plugin)
+      : mParent(parent), mPlugin(plugin)
    {
+      
    }
-
+   
+   ~ExportProgressUpdater() override { }
+   
    void Cancel()
    {
-      mCancelled = true;
+      mPlugin.Cancel();
    }
-
-   bool WasCancelled()
+   
+   ExportResult GetResult() const
    {
-      return mCancelled;
+      return mResult;
    }
-
-   BasicUI::ProgressResult Poll(
-      unsigned long long numerator, unsigned long long denominator,
-      const TranslatableString&) override
+   
+   void OnExportProgress(double value) override
    {
-      mParent.UpdateProgress(numerator, denominator);
-
+      constexpr auto ProgressSteps = 1000ull;
+      
+      mParent.UpdateProgress(value * ProgressSteps, ProgressSteps);
+      
       const auto now = Clock::now();
 
       // Exporter polls in the main thread. To make the dialog responsive
       // periodic yielding is required
-      if ((now - mLastYield > std::chrono::milliseconds(50)) || (numerator == denominator))
+      if ((now - mLastYield > std::chrono::milliseconds(50)))
       {
          BasicUI::Yield();
          mLastYield = now;
       }
-
-      return mCancelled ? BasicUI::ProgressResult::Cancelled :
-                          BasicUI::ProgressResult::Success;
    }
-
-   void SetMessage(const TranslatableString&) override
+   
+   void OnExportResult(ExportResult result) override
    {
+      BasicUI::Yield();
+      mResult = result;
    }
 
-   void SetDialogTitle(const TranslatableString&) override
-   {
-   }
-
-   void Reinit() override
-   {
-   }
-
+private:
+   
    ShareAudioDialog& mParent;
 
    using Clock = std::chrono::steady_clock;
    Clock::time_point mLastYield;
-
-   bool mCancelled { false };
+   
+   ExportPlugin& mPlugin;
+   
+   ExportResult mResult { ExportResult::Error };
 };
 
 ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
@@ -267,9 +264,6 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
 void ShareAudioDialog::OnCancel()
 {
-   const auto hasExportStarted = mExportProgressHelper != nullptr;
-   const auto hasUploadStarted = !!mServices->uploadPromise;
-
    if (mInProgress)
    {
       AudacityMessageDialog dlgMessage(
@@ -282,8 +276,8 @@ void ShareAudioDialog::OnCancel()
          return;
 
       // If export has started, notify it that it should be canceled
-      if (mExportProgressHelper != nullptr)
-         static_cast<ExportProgressHelper&>(*mExportProgressHelper).Cancel();
+      if (mExportProgressUpdater)
+         mExportProgressUpdater->Cancel();
    }
 
    
@@ -313,8 +307,6 @@ int CalculateChannels(const TrackList& trackList)
 
 wxString ShareAudioDialog::ExportProject()
 {
-   mExportProgressHelper = std::make_unique<ExportProgressHelper>(*this);
-
    auto exporter = CreatePreferredExporter(GetServiceConfig().GetPreferredAudioFormats(), mProject);
 
    if (!exporter)
@@ -340,16 +332,21 @@ wxString ShareAudioDialog::ExportProject()
 
    const int nChannels = CalculateChannels(tracks);
 
-   const bool success = e.Process(
-      nChannels,                 // numChannels,
-      exporter->GetExporterID(), // type,
-      path,                      // full path,
-      false,                     // selectedOnly,
-      t0,                        // t0
-      t1,                        // t1
-      mExportProgressHelper      // progress dialog
-   );
-
+   bool success = false;
+   if(auto plugin = e.FindPluginByType(exporter->GetExporterID()))
+   {
+      mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this, *plugin);
+      
+      e.Process(*mExportProgressUpdater.get(),
+                nChannels,                 // numChannels,
+                exporter->GetExporterID(), // type,
+                path,                      // full path,
+                false,                     // selectedOnly,
+                t0,                        // t0
+                t1                         // t1
+                );
+      success = mExportProgressUpdater->GetResult() == ExportProgressListener::ExportResult::Success;
+   }
    if (!success && wxFileExists(path))
       // Try to remove the file if exporting has failed (or was canceled)
       wxRemoveFile(path);
@@ -375,10 +372,10 @@ void ShareAudioDialog::StartUploadProcess()
 
    mFilePath = ExportProject();
 
-   if (mFilePath.empty())
+   if(mFilePath.empty())
    {
-      if (!static_cast<ExportProgressHelper&>(*mExportProgressHelper)
-              .WasCancelled())
+      if(!mExportProgressUpdater ||
+         mExportProgressUpdater->GetResult() != ExportProgressListener::ExportResult::Cancelled)
       {
          HandleExportFailure();
       }
@@ -491,6 +488,8 @@ void ShareAudioDialog::ResetProgress()
    mProgressPanel.progress->SetValue(0);
 
    mLastProgressValue = 0;
+   
+   mExportProgressUpdater.reset();
 
    BasicUI::Yield();
 }

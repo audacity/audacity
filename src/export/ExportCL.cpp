@@ -38,11 +38,12 @@
 #include "float_cast.h"
 #include "../widgets/FileHistory.h"
 #include "AudacityMessageBox.h"
-#include "ProgressDialog.h"
+#include "wxPanelWrapper.h"
 #include "../widgets/Warning.h"
 #include "wxFileNameWrapper.h"
 
 #include "ExportUtils.h"
+#include "ExportProgressListener.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -273,7 +274,7 @@ private:
 // ExportCL
 //----------------------------------------------------------------------------
 
-class ExportCL final : public ExportPlugin
+class ExportCL final : public ExportPluginEx
 {
 public:
 
@@ -285,19 +286,19 @@ public:
    // Required
    void OptionsCreate(ShuttleGui &S, int format) override;
 
-   ProgressResult Export(AudacityProject *project,
-                         std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-                         unsigned channels,
-                         const wxFileNameWrapper &fName,
-                         bool selectedOnly,
-                         double t0,
-                         double t1,
-                         MixerSpec *mixerSpec = NULL,
-                         const Tags *metadata = NULL,
-                         int subformat = 0) override;
-
+   void Export(AudacityProject *project,
+               ExportProgressListener &progressListener,
+               unsigned channels,
+               const wxFileNameWrapper &fName,
+               bool selectedOnly,
+               double t0,
+               double t1,
+               MixerSpec *mixerSpec,
+               const Tags *metadata,
+               int subformat) override;
+   
    // Optional   
-   bool CheckFileName(wxFileName &filename, int format = 0) override;
+   bool CheckFileName(wxFileName &filename, int format) override;
 
 private:
    void GetSettings();
@@ -362,16 +363,19 @@ FormatInfo ExportCL::GetFormatInfo(int) const
    };
 }
 
-ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
-                                unsigned channels,
-                                const wxFileNameWrapper &fName,
-                                bool selectionOnly,
-                                double t0,
-                                double t1,
-                                MixerSpec *mixerSpec,
-                                const Tags *metadata,
-                                int WXUNUSED(subformat))
+void ExportCL::Export(AudacityProject *project,
+                      ExportProgressListener &progressListener,
+                      unsigned channels,
+                      const wxFileNameWrapper &fName,
+                      bool selectionOnly,
+                      double t0,
+                      double t1,
+                      MixerSpec *mixerSpec,
+                      const Tags *metadata,
+                      int)
 {
+   ExportBegin();
+   
    ExtendPath ep;
    wxString output;
    long rc;
@@ -396,7 +400,8 @@ ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicU
       process.Detach();
       process.CloseOutput();
 
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    // Turn off logging to prevent broken pipe messages
@@ -514,23 +519,19 @@ ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicU
 
    size_t numBytes = 0;
    constSamplePtr mixed = NULL;
-   auto updateResult = ProgressResult::Success;
 
+   bool hasError{false};
    {
       auto closeIt = finally ( [&] {
          // Should make the process die, before propagating any exception
          process.CloseOutput();
       } );
-
-      // Prepare the progress display
-      ExportUtils::InitProgress( pDialog, XO("Export"),
-         selectionOnly
-            ? XO("Exporting the selected audio using command-line encoder")
-            : XO("Exporting the audio using command-line encoder") );
-      auto &progress = *pDialog;
+      SetStatusString(selectionOnly
+         ? XO("Exporting the selected audio using command-line encoder")
+         : XO("Exporting the audio using command-line encoder"));
 
       // Start piping the mixed data to the command
-      while (updateResult == ProgressResult::Success && process.IsActive() && os->IsOk()) {
+      while (!IsCancelled() && !IsStopped() && !hasError && process.IsActive() && os->IsOk()) {
          // Capture any stdout and stderr from the command
          Drain(process.GetInputStream(), &output);
          Drain(process.GetErrorStream(), &output);
@@ -562,15 +563,15 @@ ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicU
          while (bytes > 0) {
             os->Write(mixed, bytes);
             if (!os->IsOk()) {
-               updateResult = ProgressResult::Cancelled;
+               hasError = true;
                break;
             }
             bytes -= os->LastWrite();
             mixed += os->LastWrite();
          }
 
-         // Update the progress display
-         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         if(!hasError)
+            progressListener.OnExportProgress(ExportUtils::EvalExportProgress(*mixer, t0, t1));
       }
       // Done with the progress display
    }
@@ -609,10 +610,13 @@ ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicU
       dlg.ShowModal();
 
       if (process.GetStatus() != 0)
-         updateResult = ProgressResult::Failed;
+         hasError = true;
    }
-
-   return updateResult;
+   
+   if(hasError)
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+   else
+      ExportFinish(progressListener);
 }
 
 std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)

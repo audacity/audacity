@@ -22,10 +22,10 @@
 
 class AudacityProject;
 class WaveTrack;
+class ExportProgressListener;
 namespace MixerOptions{ class Downmix; }
 using MixerSpec = MixerOptions::Downmix;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
-
 
 using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
 
@@ -72,17 +72,18 @@ public:
    
    bool CanMetaData() const;
    
-   bool Process();
-   bool Process(unsigned numChannels,
+   void Process(ExportProgressListener& progressListener);
+   
+   void Process(ExportProgressListener& progressListener,
+                unsigned numChannels,
                 const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
 
-   bool Process(
-      unsigned numChannels, const FileExtension& type, const wxString& filename,
-      bool selectedOnly, double t0, double t1,
-      std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);
-
    const ExportPluginArray &GetPlugins();
+   
+   ExportPlugin* GetPlugin();
+   ExportPlugin* GetPlugin(int pluginIndex);
+   ExportPlugin* FindPluginByType(const FileExtension& type);
    
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
@@ -97,7 +98,7 @@ private:
    };
 
    void FixFilename();
-   bool ExportTracks(std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);
+   void ExportTracks(ExportProgressListener& progressListener);
 
 private:
    AudacityProject *mProject;

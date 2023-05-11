@@ -38,7 +38,6 @@ function.
 #include "Tags.h"
 #include "Track.h"
 #include "AudacityMessageBox.h"
-#include "ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 
 #include "Export.h"
@@ -47,6 +46,7 @@ function.
 #include "SelectFile.h"
 
 #include "ExportUtils.h"
+#include "ExportProgressListener.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
@@ -94,7 +94,7 @@ static int AdjustFormatIndex(int format)
 // ExportFFmpeg
 //----------------------------------------------------------------------------
 
-class ExportFFmpeg final : public ExportPlugin
+class ExportFFmpeg final : public ExportPluginEx
 {
 public:
 
@@ -134,26 +134,16 @@ public:
    /// Asks user to resample the project or cancel the export procedure
    int  AskResample(int bitrate, int rate, int lowrate, int highrate, const int *sampRates);
 
-   /// Exports audio
-   ///\param project Audacity project
-   ///\param fName output file name
-   ///\param selectedOnly true if exporting only selected audio
-   ///\param t0 audio start time
-   ///\param t1 audio end time
-   ///\param mixerSpec mixer
-   ///\param metadata tags to write into file
-   ///\param subformat index of export type
-   ///\return true if export succeeded
-   ProgressResult Export(AudacityProject *project,
-      std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
+   void Export(AudacityProject *project,
+      ExportProgressListener &progressListener,
       unsigned channels,
       const wxFileNameWrapper &fName,
       bool selectedOnly,
       double t0,
       double t1,
-      MixerSpec *mixerSpec = NULL,
-      const Tags *metadata = NULL,
-      int subformat = 0) override;
+      MixerSpec *mixerSpec,
+      const Tags *metadata,
+      int subformat) override;
 
 private:
    /// Codec initialization
@@ -187,7 +177,6 @@ private:
 };
 
 ExportFFmpeg::ExportFFmpeg()
-:  ExportPlugin()
 {
    mEncFormatDesc = NULL;      // describes our output file to libavformat
    mEncAudioStream = NULL;     // the output audio stream (may remain NULL)
@@ -1105,14 +1094,19 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 }
 
 
-ProgressResult ExportFFmpeg::Export(
-   AudacityProject* project, std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
+void ExportFFmpeg::Export(
+   AudacityProject *project, ExportProgressListener &progressListener,
    unsigned channels, const wxFileNameWrapper& fName,
    bool selectionOnly, double t0, double t1,
    MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
+   ExportBegin();
+   
    if (!CheckFFmpegPresence())
-      return ProgressResult::Cancelled;
+   {
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
+   }
    mChannels = channels;
    // subformat index may not correspond directly to fmts[] index, convert it
    mSubFormat = AdjustFormatIndex(subformat);
@@ -1125,7 +1119,8 @@ ProgressResult ExportFFmpeg::Export(
                channels,
                ExportFFmpegOptions::fmts[mSubFormat].maxchannels ),
          XO("Error"));
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
    mName = fName;
    const auto &tracks = TrackList::Get( *project );
@@ -1134,7 +1129,8 @@ ProgressResult ExportFFmpeg::Export(
    if (mSubFormat >= FMT_LAST) {
       // TODO: more precise message
       ShowExportErrorDialog("FFmpeg:996");
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    wxString shortname(ExportFFmpegOptions::fmts[mSubFormat].shortname);
@@ -1146,7 +1142,8 @@ ProgressResult ExportFFmpeg::Export(
    if (!ret) {
       // TODO: more precise message
       ShowExportErrorDialog("FFmpeg:1008");
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    size_t pcmBufferSize = mDefaultFrameSize;
@@ -1156,17 +1153,14 @@ ProgressResult ExportFFmpeg::Export(
       channels, pcmBufferSize, true,
       mSampleRate, int16Sample, mixerSpec);
 
-   auto updateResult = ProgressResult::Success;
    {
-      ExportUtils::InitProgress( pDialog, fName,
-         selectionOnly
-            ? XO("Exporting selected audio as %s")
-                 .Format( ExportFFmpegOptions::fmts[mSubFormat].description )
-            : XO("Exporting the audio as %s")
-                 .Format( ExportFFmpegOptions::fmts[mSubFormat].description ) );
-      auto &progress = *pDialog;
+      SetStatusString(selectionOnly
+         ? XO("Exporting selected audio as %s")
+              .Format( ExportFFmpegOptions::fmts[mSubFormat].description )
+         : XO("Exporting the audio as %s")
+              .Format( ExportFFmpegOptions::fmts[mSubFormat].description ));
 
-      while (updateResult == ProgressResult::Success) {
+      while (!IsCancelled() && !IsStopped()) {
          auto pcmNumSamples = mixer->Process();
          if (pcmNumSamples == 0)
             break;
@@ -1177,22 +1171,25 @@ ProgressResult ExportFFmpeg::Export(
             pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels)) {
             // All errors should already have been reported.
             //ShowDiskFullExportErrorDialog(mName);
-            updateResult = ProgressResult::Cancelled;
-            break;
+            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+            mEncFormatCtx.reset();
+            return;
          }
 
-         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         progressListener.OnExportProgress(ExportUtils::EvalExportProgress(*mixer, t0, t1));
       }
    }
 
-   if ( updateResult != ProgressResult::Cancelled )
+   if ( !IsCancelled() )
       if ( !Finalize() ) // Finalize makes its own messages
-         return ProgressResult::Cancelled;
-
+      {
+         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+         return;
+      }
    // Flush the file
    mEncFormatCtx.reset();
-
-   return updateResult;
+   
+   ExportFinish(progressListener);
 }
 
 void AddStringTagUTF8(char field[], int size, wxString value)
