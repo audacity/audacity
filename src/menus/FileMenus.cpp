@@ -4,12 +4,14 @@
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "../ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
 #include "SelectFile.h"
+#include "../TagsEditor.h"
 #include "../SelectUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -99,6 +101,15 @@ bool ExportWithPrompt(AudacityProject &project,
                            XO("Advanced Mixing Options"));
       if(md.ShowModal() != wxID_OK)
          return false;
+   }
+   
+   if(exporter.CanMetaData())
+   {
+      if (!TagsEditorDialog::DoEditMetadata( project,
+         XO("Edit Metadata Tags"), XO("Exported Tags"),
+         ProjectSettings::Get( project ).GetShowId3Dialog())) {
+         return false;
+      }
    }
    
    return exporter.Process();
