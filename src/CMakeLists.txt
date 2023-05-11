@@ -588,6 +588,11 @@ list( APPEND SOURCES
          export/ExportFFmpeg.cpp
          export/ExportFFmpegDialogs.cpp
          export/ExportFFmpegDialogs.h
+         export/ExportFFmpegOptions.cpp
+         export/ExportFFmpegOptions.h
+         export/FFmpegPresets.cpp
+         export/FFmpegPresets.h
+         export/FFmpegTypes.h
          export/FFmpegPrefs.cpp
       >
 
