@@ -230,6 +230,42 @@ struct WriteId final
    std::unique_ptr<wxFile> file;
 };
 
+class WavPackExportProcessor final : public ExportProcessor
+{
+   // Samples to write per run
+   static constexpr size_t SAMPLES_PER_RUN = 8192u;
+
+   struct
+   {
+      TranslatableString status;
+      double t0;
+      double t1;
+      unsigned numChannels;
+      wxFileNameWrapper fName;
+      sampleFormat format;
+      WriteId outWvFile, outWvcFile;
+      WavpackContext *wpc{};
+      std::unique_ptr<Mixer> mixer;
+      std::unique_ptr<Tags> metadata;
+   } context;
+public:
+
+   ~WavPackExportProcessor();
+
+   bool Initialize(AudacityProject& project,
+      const Parameters& parameters,
+      const wxFileNameWrapper& filename,
+      double t0, double t1, bool selectedOnly,
+      unsigned channels,
+      MixerOptions::Downmix* mixerSpec,
+      const Tags* tags) override;
+
+   ExportResult Process(ExportPluginDelegate& delegate) override;
+
+private:
+   static int WriteBlock(void *id, void *data, int32_t length);
+};
+
 class ExportWavPack final : public ExportPlugin
 {
 public:
@@ -241,24 +277,12 @@ public:
 
    std::vector<std::string> GetMimeTypes(int) const override;
 
-   bool ParseConfig(int formatIndex, const rapidjson::Value& document, Parameters& parameters) const override;
+   bool ParseConfig(int formatIndex, const rapidjson::Value& document, ExportProcessor::Parameters& parameters) const override;
 
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
 
-   ExportResult Export(AudacityProject *project,
-               ExportPluginDelegate &delegate,
-               const Parameters& parameters,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
-               int subformat = 0) const override;
-
-   static int WriteBlock(void *id, void *data, int32_t length);
+   std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
 };
 
 ExportWavPack::ExportWavPack() = default;
@@ -280,7 +304,7 @@ std::vector<std::string> ExportWavPack::GetMimeTypes(int) const
    return { "audio/x-wavpack" };
 }
 
-bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, Parameters& parameters) const
+bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
 {
    if(!config.IsObject() || 
       !config.HasMember("quality") || !config["quality"].IsNumber() ||
@@ -312,7 +336,7 @@ bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config,
             bitDepth) == option.values.end()))
          return false;
    }
-   Parameters result {
+   ExportProcessor::Parameters result {
       { OptionIDQuality, quality },
       { OptionIDBitRate, bitRate },
       { OptionIDBitDepth, bitDepth },
@@ -329,30 +353,42 @@ ExportWavPack::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener)
    return std::make_unique<ExportOptionsWavPackEditor>(listener);
 }
 
-
-ExportResult ExportWavPack::Export(AudacityProject *project,
-                           ExportPluginDelegate &delegate,
-                           const Parameters& parameters,
-                           unsigned numChannels,
-                           const wxFileNameWrapper &fName,
-                           bool selectionOnly,
-                           double t0,
-                           double t1,
-                           MixerSpec *mixerSpec,
-                           const Tags *metadata,
-                           int) const
+std::unique_ptr<ExportProcessor> ExportWavPack::CreateProcessor(int) const
 {
+   return std::make_unique<WavPackExportProcessor>();
+}
+
+
+WavPackExportProcessor::~WavPackExportProcessor()
+{
+   if(context.wpc)
+      WavpackCloseFile(context.wpc);
+}
+
+bool WavPackExportProcessor::Initialize(AudacityProject& project,
+   const Parameters& parameters,
+   const wxFileNameWrapper& fName,
+   double t0, double t1, bool selectionOnly,
+   unsigned numChannels,
+   MixerOptions::Downmix* mixerSpec,
+   const Tags* metadata)
+{
+   context.t0 = t0;
+   context.t1 = t1;
+   context.numChannels = numChannels;
+   context.fName = fName;
+
    WavpackConfig config = {};
-   WriteId outWvFile, outWvcFile;
+   auto& outWvFile = context.outWvFile;
+   auto& outWvcFile = context.outWvcFile;
    outWvFile.file = std::make_unique< wxFile >();
 
-   if (!outWvFile.file->Create(fName.GetFullPath(), true) || !outWvFile.file.get()->IsOpened()) {
-      delegate.SetErrorString(XO("Unable to open target file for writing"));
-      return ExportResult::Error;
+   if (!outWvFile.file->Create(fName.GetFullPath(), true) || !outWvFile.file->IsOpened()) {
+      throw ExportException(_("Unable to open target file for writing"));
    }
    
-   double rate = ProjectRate::Get( *project ).GetRate();
-   const auto &tracks = TrackList::Get( *project );
+   double rate = ProjectRate::Get( project ).GetRate();
+   const auto &tracks = TrackList::Get( project );
 
    const auto quality = ExportPluginHelpers::GetParameterValue<int>(
       parameters,
@@ -376,18 +412,18 @@ ExportResult ExportWavPack::Export(AudacityProject *project,
       16);
 
 
-   sampleFormat format = int16Sample;
+   context.format = int16Sample;
    if (bitDepth == 24) {
-      format = int24Sample;
+      context.format = int24Sample;
    } else if (bitDepth == 32) {
-      format = floatSample;
+      context.format = floatSample;
    }
 
    config.num_channels = numChannels;
    config.sample_rate = rate;
    config.bits_per_sample = bitDepth;
    config.bytes_per_sample = bitDepth/8;
-   config.float_norm_exp = format == floatSample ? 127 : 0;
+   config.float_norm_exp = context.format == floatSample ? 127 : 0;
 
    if (config.num_channels <= 2)
       config.channel_mask = 0x5 - config.num_channels;
@@ -413,8 +449,7 @@ ExportResult ExportWavPack::Export(AudacityProject *project,
 
          outWvcFile.file = std::make_unique< wxFile >();
          if (!outWvcFile.file->Create(fName.GetFullPath().Append("c"), true)) {
-            delegate.SetErrorString(XO("Unable to create target file for writing"));
-            return ExportResult::Error;
+            throw ExportException(_("Unable to create target file for writing"));
          }
       }
    }
@@ -425,115 +460,120 @@ ExportResult ExportWavPack::Export(AudacityProject *project,
    if (!hybridMode || !createCorrectionFile)
       wxRemoveFile(fName.GetFullPath().Append("c"));
 
-   WavpackContext *wpc = WavpackOpenFileOutput(WriteBlock, &outWvFile, createCorrectionFile ? &outWvcFile : nullptr);
-   auto closeWavPackContext = finally([wpc]() { WavpackCloseFile(wpc); });
-
-   if (!WavpackSetConfiguration64(wpc, &config, -1, nullptr) || !WavpackPackInit(wpc)) {
-      ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
-      return ExportResult::Error;
+   context.wpc = WavpackOpenFileOutput(WriteBlock, &outWvFile, createCorrectionFile ? &outWvcFile : nullptr);
+   if (!WavpackSetConfiguration64(context.wpc, &config, -1, nullptr) || !WavpackPackInit(context.wpc)) {
+      throw ExportErrorException( WavpackGetErrorMessage(context.wpc) );
    }
+   
+   context.status = selectionOnly
+      ? XO("Exporting selected audio as WavPack")
+      : XO("Exporting the audio as WavPack");
+   
+   context.metadata = std::make_unique<Tags>(
+      metadata == nullptr
+         ? Tags::Get( project )
+         : *metadata
+      );
 
-   // Samples to write per run
-   constexpr size_t SAMPLES_PER_RUN = 8192u;
+   context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
+         t0, t1,
+         numChannels, SAMPLES_PER_RUN, true,
+         rate, context.format, mixerSpec);
 
-   const size_t bufferSize = SAMPLES_PER_RUN * numChannels;
+   return true;
+}
+
+ExportResult WavPackExportProcessor::Process(ExportPluginDelegate& delegate)
+{
+   delegate.SetStatusString(context.status);
+
+   const size_t bufferSize = SAMPLES_PER_RUN * context.numChannels;
+
    ArrayOf<int32_t> wavpackBuffer{ bufferSize };
 
    auto exportResult = ExportResult::Success;
    {
-      auto mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-         t0, t1,
-         numChannels, SAMPLES_PER_RUN, true,
-         rate, format, mixerSpec);
-
-      delegate.SetStatusString(selectionOnly
-         ? XO("Exporting selected audio as WavPack")
-         : XO("Exporting the audio as WavPack"));
 
       while (exportResult == ExportResult::Success) {
-         auto samplesThisRun = mixer->Process();
+         auto samplesThisRun = context.mixer->Process();
 
          if (samplesThisRun == 0)
             break;
          
-         if (format == int16Sample) {
-            const int16_t *mixed = reinterpret_cast<const int16_t*>(mixer->GetBuffer());
+         if (context.format == int16Sample) {
+            const int16_t *mixed = reinterpret_cast<const int16_t*>(context.mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-               for (size_t i = 0; i < numChannels; i++) {
-                  wavpackBuffer[j*numChannels + i] = (static_cast<int32_t>(*mixed++) * 65536) >> 16;
+               for (size_t i = 0; i < context.numChannels; i++) {
+                  wavpackBuffer[j*context.numChannels + i] = (static_cast<int32_t>(*mixed++) * 65536) >> 16;
                }
             }
          } else {
-            const int *mixed = reinterpret_cast<const int*>(mixer->GetBuffer());
+            const int *mixed = reinterpret_cast<const int*>(context.mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-               for (size_t i = 0; i < numChannels; i++) {
-                  wavpackBuffer[j*numChannels + i] = *mixed++;
+               for (size_t i = 0; i < context.numChannels; i++) {
+                  wavpackBuffer[j*context.numChannels + i] = *mixed++;
                }
             }
          }
 
-         if (!WavpackPackSamples(wpc, wavpackBuffer.get(), samplesThisRun)) {
-            ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
-            return ExportResult::Error;
+         if (!WavpackPackSamples(context.wpc, wavpackBuffer.get(), samplesThisRun)) {
+            throw ExportErrorException(WavpackGetErrorMessage(context.wpc));
          }
          exportResult = ExportPluginHelpers::UpdateProgress(
-            delegate, *mixer, t0, t1);
+            delegate, *context.mixer, context.t0, context.t1);
       }
    }
 
-   if (!WavpackFlushSamples(wpc)) {
-      ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
-      return ExportResult::Error;
+   if (!WavpackFlushSamples(context.wpc)) {
+      throw ExportErrorException( WavpackGetErrorMessage(context.wpc) );
    } else {
-      if (metadata == NULL)
-         metadata = &Tags::Get( *project );
+      
 
       wxString n;
-      for (const auto &pair : metadata->GetRange()) {
+      for (const auto &pair : context.metadata->GetRange()) {
          n = pair.first;
          const auto &v = pair.second;
 
-         WavpackAppendTagItem(wpc,
+         WavpackAppendTagItem(context.wpc,
                               n.mb_str(wxConvUTF8),
                               v.mb_str(wxConvUTF8),
                               static_cast<int>( strlen(v.mb_str(wxConvUTF8)) ));
       }
 
-      if (!WavpackWriteTag(wpc)) {
-         ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
-         return ExportResult::Error;
+      if (!WavpackWriteTag(context.wpc)) {
+         throw ExportErrorException( WavpackGetErrorMessage(context.wpc) );
       }
    }
 
-   if ( !outWvFile.file.get()->Close()
-      || ( outWvcFile.file && outWvcFile.file.get() && !outWvcFile.file.get()->Close())) {
+   if ( !context.outWvFile.file.get()->Close()
+      || ( context.outWvcFile.file && context.outWvcFile.file.get() && !context.outWvcFile.file.get()->Close())) {
       return ExportResult::Error;
    }
 
    // wxFile::Create opens the file with only write access
    // So, need to open the file again with both read and write access
-   if (!outWvFile.file->Open(fName.GetFullPath(), wxFile::read_write)) {
-      ShowExportErrorDialog( "Unable to update the actual length of the file" );
-      return ExportResult::Error;
+   if (!context.outWvFile.file->Open(context.fName.GetFullPath(), wxFile::read_write)) {
+      throw ExportErrorException("Unable to update the actual length of the file");
    }
 
-   ArrayOf<int32_t> firstBlockBuffer { outWvFile.firstBlockSize };
-   size_t bytesRead = outWvFile.file->Read(firstBlockBuffer.get(), outWvFile.firstBlockSize);
+   ArrayOf<int32_t> firstBlockBuffer { context.outWvFile.firstBlockSize };
+   context.outWvFile.file->Read(firstBlockBuffer.get(), context.outWvFile.firstBlockSize);
 
    // Update the first block written with the actual number of samples written
-   WavpackUpdateNumSamples(wpc, firstBlockBuffer.get());
-   outWvFile.file->Seek(0);
-   size_t bytesWritten = outWvFile.file->Write(firstBlockBuffer.get(), outWvFile.firstBlockSize);
+   WavpackUpdateNumSamples(context.wpc, firstBlockBuffer.get());
+   context.outWvFile.file->Seek(0);
+   context.outWvFile.file->Write(firstBlockBuffer.get(), context.outWvFile.firstBlockSize);
 
-   if ( !outWvFile.file.get()->Close() ) {
+   if ( !context.outWvFile.file.get()->Close() ) {
       return ExportResult::Error;
    }
    return exportResult;
 }
 
+
 // Based on the implementation of write_block in dbry/WavPack
 // src: https://github.com/dbry/WavPack/blob/master/cli/wavpack.c
-int ExportWavPack::WriteBlock(void *id, void *data, int32_t length)
+int WavPackExportProcessor::WriteBlock(void *id, void *data, int32_t length)
 {
     if (id == nullptr || data == nullptr || length == 0)
         return true; // This is considered to be success in wavpack.c reference code

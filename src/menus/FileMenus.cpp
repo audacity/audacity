@@ -50,10 +50,10 @@ bool ExportWithPrompt(AudacityProject &project,
    
    if(!exporter.SetExportRange(t0, t1, selectedOnly, skipSilenceAtBeginning))
    {
-      ShowExportErrorDialog(":576",
-                            selectedOnly ? XO("All selected audio is muted.") : XO("All audio is muted."),
-                            XO("Warning"),
-                            false);
+      ShowExportErrorDialog(
+         selectedOnly ? XO("All selected audio is muted.") : XO("All audio is muted."), //":576"
+         XO("Warning"),
+         false);
       return false;
    }
    
@@ -113,9 +113,7 @@ bool ExportWithPrompt(AudacityProject &project,
       }
    }
    
-   return ExportProgressUI::Show(ExportTask(
-      [&](auto& delegate) { return exporter.Process(delegate); })
-   ) == ExportResult::Success;
+   return ExportProgressUI::Show(exporter.CreateExportTask()) == ExportResult::Success;
 }
 
 void DoExport(AudacityProject &project, const FileExtension &format)
@@ -189,20 +187,18 @@ void DoExport(AudacityProject &project, const FileExtension &format)
             auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
             editor->Load(*gPrefs);
 
-            const auto result = ExportProgressUI::Show(ExportTask(
-               [&](ExportPluginDelegate& delegate) {
-                  // We're in batch mode, the file does not exist already.
-                  // We really can proceed without prompting.
-                  return e.Process(delegate,
+            ExportProgressUI::ExceptionWrappedCall([&]
+            {
+               // We're in batch mode, the file does not exist already.
+               // We really can proceed without prompting.
+               const auto result = ExportProgressUI::Show(e.CreateExportTask(
                             ExportUtils::ParametersFromEditor(*editor),
                             nChannels,  // numChannels,
                             format,     // type,
                             fullPath,   // full path,
-                            false, t0, t1);
-               }
-            ));
-            
-            success = result == ExportResult::Success || result == ExportResult::Stopped;
+                            false, t0, t1));
+               success = result == ExportResult::Success || result == ExportResult::Stopped;
+            });
          }
       }
    }

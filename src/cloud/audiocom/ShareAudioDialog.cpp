@@ -43,6 +43,7 @@
 #include "CodeConversions.h"
 
 #include "Export.h"
+#include "export/ExportProgressUI.h"
 #include "ExportUtils.h"
 #include "AccessibleLinksFormatter.h"
 
@@ -116,7 +117,7 @@ public:
    
    void Cancel()
    {
-      mCancelled = true;
+      mCancelled.store(std::memory_order_release);
    }
 
    const TranslatableString& GetErrorString() const noexcept
@@ -143,41 +144,34 @@ public:
    {
    }
 
-   bool IsCancelled() const
+   bool IsCancelled() const override
    {
-      return mCancelled;
+      return mCancelled.load(std::memory_order_acquire);
    }
 
-   bool IsStopped() const
+   bool IsStopped() const override
    {
       return false;
    }
    
    void OnProgress(double value) override
    {
+      mProgress.store(std::memory_order_release);
+   }
+
+   void UpdateUI()
+   {
       constexpr auto ProgressSteps = 1000ull;
       
-      mParent.UpdateProgress(value * ProgressSteps, ProgressSteps);
-      
-      const auto now = Clock::now();
-
-      // Exporter polls in the main thread. To make the dialog responsive
-      // periodic yielding is required
-      if ((now - mLastYield > std::chrono::milliseconds(50)))
-      {
-         BasicUI::Yield();
-         mLastYield = now;
-      }
+      mParent.UpdateProgress(mProgress.load(std::memory_order_acquire) * ProgressSteps, ProgressSteps);
    }
 
 private:
    
    ShareAudioDialog& mParent;
 
-   using Clock = std::chrono::steady_clock;
-   Clock::time_point mLastYield;
-
-   bool mCancelled{false};
+   std::atomic<bool> mCancelled{false};
+   std::atomic<double> mProgress;
    TranslatableString mError;
    ExportResult mResult;
 };
@@ -350,7 +344,7 @@ wxString ShareAudioDialog::ExportProject()
       {
          for(int i = 0, formatCount = plugin->GetFormatCount(); i < formatCount; ++i)
          {
-            ExportPlugin::Parameters parameters;
+            ExportProcessor::Parameters parameters;
             if(hasMimeType(plugin->GetMimeTypes(i), preferredMimeType) &&
                plugin->ParseConfig(i, config, parameters))
             {
@@ -361,13 +355,27 @@ wxString ShareAudioDialog::ExportProject()
                   continue;
 
                mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this);
+
+               auto result = ExportResult::Error;
+               ExportProgressUI::ExceptionWrappedCall([&]
+               {
+                  auto exportTask = e.CreateExportTask(parameters,
+                     nChannels,
+                     formatInfo.mFormat,
+                     path,
+                     false, t0, t1);
+
+                  auto f = exportTask.get_future();
+                  std::thread(std::move(exportTask), std::ref(*mExportProgressUpdater)).detach();
+
+                  ExportProgressUI::ExceptionWrappedCall([&]
+                  {
+                     if(f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready)
+                        mExportProgressUpdater->UpdateUI();
+                     result = f.get();
+                  });
+               });
                
-               const auto result = e.Process(*mExportProgressUpdater,
-                  parameters,
-                  nChannels,
-                  formatInfo.mFormat,
-                  path,
-                  false, t0, t1);
                mExportProgressUpdater->SetResult(result);
                const auto success = result == ExportResult::Success;
                if(!success && wxFileExists(path))

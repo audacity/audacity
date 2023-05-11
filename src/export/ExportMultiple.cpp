@@ -1089,23 +1089,36 @@ ExportMultipleDialog::DoExport(unsigned channels,
       }
    } );
 
-   const auto result = ExportProgressUI::Show(ExportTask([&](auto& delegate)
+   auto plugin = mPlugins[mPluginIndex];
+   auto editor = plugin->CreateOptionsEditor(mSubFormatIndex, nullptr);
+   editor->Load(*gPrefs);
+
+   auto result = ExportResult::Error;
+   ExportProgressUI::ExceptionWrappedCall([&]
    {
-      auto plugin = mPlugins[mPluginIndex];
-      auto editor = plugin->CreateOptionsEditor(mSubFormatIndex, nullptr);
-      editor->Load(*gPrefs);
-      return plugin->Export(mProject,
-                  delegate,
-                  ExportUtils::ParametersFromEditor(*editor),
-                  channels,
-                  fullPath,
-                  selectedOnly, t0, t1,
-                  nullptr,
-                  &tags,
-                  mSubFormatIndex);
-   }));
-   
+      auto processor = plugin->CreateProcessor(mSubFormatIndex);
+      if(!processor->Initialize(*mProject,
+         ExportUtils::ParametersFromEditor(*editor),
+         fullPath,
+         t0, t1, selectedOnly,
+         channels,
+         nullptr,
+         &tags))
+      {
+         result = ExportResult::Cancelled;
+         return;
+      }
+
+      result = ExportProgressUI::Show(
+         ExportTask([processor = processor.release()] (ExportPluginDelegate& delegate)
+         {
+            auto cleanup = finally([&]{ delete processor; });
+            return processor->Process(delegate);
+         })
+      );
+   });
    success = result == ExportResult::Success || result == ExportResult::Stopped;
+   
    if(success)
       mExported.push_back(fullPath);
    

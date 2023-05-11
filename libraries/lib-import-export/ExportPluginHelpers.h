@@ -44,7 +44,7 @@ public:
    static ExportResult UpdateProgress(ExportPluginDelegate& delegate, Mixer& mixer, double t0, double t1);
 
    template<typename T>
-   static T GetParameterValue(const ExportPlugin::Parameters& parameters, int id, T defaultValue = T())
+   static T GetParameterValue(const ExportProcessor::Parameters& parameters, int id, T defaultValue = T())
    {
       auto it = std::find_if(
          parameters.begin(),

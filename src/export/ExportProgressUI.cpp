@@ -10,18 +10,22 @@
 
 #include "ExportProgressUI.h"
 
+#include "Export.h"
 #include "ExportPlugin.h"
 #include "Internat.h"
 #include "BasicUI.h"
 #include "AudacityMessageBox.h"
+#include "FileException.h"
+#include "wxFileNameWrapper.h"
 
 namespace
 {
    class DialogExportProgressDelegate : public ExportPluginDelegate
    {
-      bool mCancelled {false};
-      bool mStopped {false};
-
+      std::atomic<bool> mCancelled {false};
+      std::atomic<bool> mStopped {false};
+      std::atomic<double> mProgress {};
+      
       TranslatableString mStatus;
       TranslatableString mError;
 
@@ -50,14 +54,24 @@ namespace
 
       void OnProgress(double progress) override
       {
-         constexpr long long ProgressSteps = 1000ul;
+         mProgress = progress;
+      }
 
+      const TranslatableString& GetErrorString() const noexcept
+      {
+         return mError;
+      }
+
+      void UpdateUI()
+      {
+         constexpr long long ProgressSteps = 1000ul;
+         
          if(!mProgressDialog)
             mProgressDialog = BasicUI::MakeProgress(XO("Export"), mStatus);
          else
             mProgressDialog->SetMessage(mStatus);
-         
-         const auto result = mProgressDialog->Poll(progress * ProgressSteps, ProgressSteps);
+
+         const auto result = mProgressDialog->Poll(mProgress * ProgressSteps, ProgressSteps);
 
          if(result == BasicUI::ProgressResult::Cancelled)
          {
@@ -71,22 +85,24 @@ namespace
          }
       }
 
-      const TranslatableString& GetErrorString() const noexcept
-      {
-         return mError;
-      }
+      
    };
 
 }
 
 ExportResult ExportProgressUI::Show(ExportTask exportTask)
 {
+   assert(exportTask.valid());
+
    auto f = exportTask.get_future();
-
    DialogExportProgressDelegate delegate;
-   exportTask(delegate);
+   std::thread(std::move(exportTask), std::ref(delegate)).detach();
+   auto result = ExportResult::Error;
+   while(f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready)
+      delegate.UpdateUI();
 
-   const auto result = f.get();
+   ExceptionWrappedCall([&] { result = f.get(); });
+
    if(result == ExportResult::Error)
    {
       if(!delegate.GetErrorString().empty())
@@ -94,5 +110,6 @@ ExportResult ExportProgressUI::Show(ExportTask exportTask)
                             XO("Error"),
                             wxOK | wxCENTRE | wxICON_EXCLAMATION);
    }
+
    return result;
 }

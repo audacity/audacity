@@ -18,6 +18,7 @@
  
 #include <vorbis/vorbisenc.h>
 
+#include "wxFileNameWrapper.h"
 #include "ExportPluginHelpers.h"
 #include "FileIO.h"
 #include "ProjectRate.h"
@@ -93,6 +94,47 @@ namespace
 
 #define SAMPLES_PER_RUN 8192u
 
+class OGGExportProcessor final : public ExportProcessor
+{
+   struct
+   {
+      TranslatableString status;
+      double t0;
+      double t1;
+      unsigned numChannels;
+      std::unique_ptr<Mixer> mixer;
+      std::unique_ptr<FileIO> outFile;
+      wxFileNameWrapper fName;
+
+      // All the Ogg and Vorbis encoding data
+      ogg_stream_state stream;
+      ogg_page         page;
+      ogg_packet       packet;
+
+      vorbis_info      info;
+      vorbis_comment   comment;
+      vorbis_dsp_state dsp;
+      vorbis_block     block;
+      bool stream_ok{false};
+      bool analysis_state_ok{false};
+   } context;
+public:
+   ~OGGExportProcessor();
+
+   bool Initialize(AudacityProject& project,
+      const Parameters& parameters,
+      const wxFileNameWrapper& filename,
+      double t0, double t1, bool selectedOnly,
+      unsigned channels,
+      MixerOptions::Downmix* mixerSpec,
+      const Tags* tags) override;
+
+   ExportResult Process(ExportPluginDelegate& delegate) override;
+
+private:
+   static void FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata);
+};
+
 class ExportOGG final : public ExportPlugin
 {
 public:
@@ -105,21 +147,7 @@ public:
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
 
-   ExportResult Export(AudacityProject *project,
-               ExportPluginDelegate &delegate,
-               const Parameters& parameters,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec,
-               const Tags *metadata,
-               int subformat) const override;
-
-private:
-
-   static bool FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata);
+   std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
 };
 
 ExportOGG::ExportOGG() = default;
@@ -136,87 +164,75 @@ FormatInfo ExportOGG::GetFormatInfo(int) const
    };
 }
 
-ExportResult ExportOGG::Export(AudacityProject *project,
-                       ExportPluginDelegate &delegate,
-                       const Parameters& parameters,
-                       unsigned numChannels,
-                       const wxFileNameWrapper &fName,
-                       bool selectionOnly,
-                       double t0,
-                       double t1,
-                       MixerSpec *mixerSpec,
-                       const Tags *metadata,
-                       int) const
+OGGExportProcessor::~OGGExportProcessor()
 {
-   double    rate    = ProjectRate::Get( *project ).GetRate();
-   const auto &tracks = TrackList::Get( *project );
+   if(context.stream_ok)
+      ogg_stream_clear(&context.stream);
+
+   if(context.analysis_state_ok)
+   {
+      vorbis_comment_clear(&context.comment);
+      vorbis_block_clear(&context.block);
+      vorbis_dsp_clear(&context.dsp);
+   }
+   
+   vorbis_info_clear(&context.info);
+}
+
+
+bool OGGExportProcessor::Initialize(AudacityProject& project,
+   const Parameters& parameters,
+   const wxFileNameWrapper& fName,
+   double t0, double t1, bool selectionOnly,
+   unsigned numChannels,
+   MixerOptions::Downmix* mixerSpec,
+   const Tags* metadata)
+{
+   context.t0 = t0;
+   context.t1 = t1;
+   context.numChannels = numChannels;
+
+   double    rate    = ProjectRate::Get( project ).GetRate();
+   const auto &tracks = TrackList::Get( project );
    double    quality = ExportPluginHelpers::GetParameterValue(parameters, 0, 5) / 10.0;
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
-   int       eos = 0;
-
-   FileIO outFile(fName, FileIO::Output);
-
-   if (!outFile.IsOpened()) {
-      delegate.SetErrorString(XO("Unable to open target file for writing"));
-      return ExportResult::Error;
-   }
-
-   // All the Ogg and Vorbis encoding data
-   ogg_stream_state stream;
-   ogg_page         page;
-   ogg_packet       packet;
-
-   vorbis_info      info;
-   vorbis_comment   comment;
-   vorbis_dsp_state dsp;
-   vorbis_block     block;
-
-
-   auto cleanup1 = finally( [&] {
-      vorbis_info_clear(&info);
-   } );
-
 
    // Many of the library functions called below return 0 for success and
    // various nonzero codes for failure.
 
    // Encoding setup
-   vorbis_info_init(&info);
-   if (vorbis_encode_init_vbr(&info, numChannels, (int)(rate + 0.5), quality)) {
+
+   vorbis_info_init(&context.info);
+   
+   if (vorbis_encode_init_vbr(&context.info, numChannels, (int)(rate + 0.5), quality)) {
       // TODO: more precise message
-      delegate.SetErrorString(XO("Unable to export - rate or quality problem"));
-      return ExportResult::Error;
+      throw ExportException(_("Unable to export - rate or quality problem"));
    }
 
-   auto cleanup2 = finally( [&] {
-      ogg_stream_clear(&stream);
+   context.outFile = std::make_unique<FileIO>(fName, FileIO::Output);
 
-      vorbis_block_clear(&block);
-      vorbis_dsp_clear(&dsp);
-      vorbis_comment_clear(&comment);
-   } );
+   if (!context.outFile->IsOpened()) {
+      throw ExportException(_("Unable to open target file for writing"));
+   }
+
+   context.analysis_state_ok = vorbis_analysis_init(&context.dsp, &context.info) == 0 &&
+       vorbis_block_init(&context.dsp, &context.block) == 0;
+   // Set up analysis state and auxiliary encoding storage
+   if (!context.analysis_state_ok) {
+      throw ExportException(_("Unable to export - problem initialising"));
+   }
 
    // Retrieve tags
-   if (!FillComment(project, &comment, metadata)) {
-      delegate.SetErrorString(XO("Unable to export - problem with metadata"));
-      return ExportResult::Error;
-   }
-
-   // Set up analysis state and auxiliary encoding storage
-   if (vorbis_analysis_init(&dsp, &info) ||
-       vorbis_block_init(&dsp, &block)) {
-      delegate.SetErrorString(XO("Unable to export - problem initialising"));
-      return ExportResult::Error;
-   }
+   FillComment(&project, &context.comment, metadata);
 
    // Set up packet->stream encoder.  According to encoder example,
    // a random serial number makes it more likely that you can make
    // chained streams with concatenation.
    srand(time(NULL));
-   if (ogg_stream_init(&stream, rand())) {
-      delegate.SetErrorString(XO("Unable to export - problem creating stream"));
-      return ExportResult::Error;
+   context.stream_ok = ogg_stream_init(&context.stream, rand()) == 0;
+   if (!context.stream_ok) {
+      throw ExportException(_("Unable to export - problem creating stream"));
    }
 
    // First we need to write the required headers:
@@ -231,57 +247,60 @@ ExportResult ExportOGG::Export(AudacityProject *project,
    ogg_packet comment_header;
    ogg_packet codebook_header;
 
-   if(vorbis_analysis_headerout(&dsp, &comment, &bitstream_header, &comment_header,
+   if(vorbis_analysis_headerout(&context.dsp, &context.comment, &bitstream_header, &comment_header,
          &codebook_header) ||
       // Place these headers into the stream
-      ogg_stream_packetin(&stream, &bitstream_header) ||
-      ogg_stream_packetin(&stream, &comment_header) ||
-      ogg_stream_packetin(&stream, &codebook_header)) {
-      delegate.SetErrorString(XO("Unable to export - problem with packets"));
-      return ExportResult::Error;
+      ogg_stream_packetin(&context.stream, &bitstream_header) ||
+      ogg_stream_packetin(&context.stream, &comment_header) ||
+      ogg_stream_packetin(&context.stream, &codebook_header)) {
+      throw ExportException(_("Unable to export - problem with packets"));
    }
 
    // Flushing these headers now guarantees that audio data will
    // start on a NEW page, which apparently makes streaming easier
-   while (ogg_stream_flush(&stream, &page)) {
-      if ( outFile.Write(page.header, page.header_len).GetLastError() ||
-           outFile.Write(page.body, page.body_len).GetLastError()) {
-         delegate.SetErrorString(XO("Unable to export - problem with file"));
-         return ExportResult::Error;
+   while (ogg_stream_flush(&context.stream, &context.page)) {
+      if ( context.outFile->Write(context.page.header, context.page.header_len).GetLastError() ||
+           context.outFile->Write(context.page.body, context.page.body_len).GetLastError()) {
+         throw ExportException(_("Unable to export - problem with file"));
       }
    }
 
-   int err;
-
-   auto exportResult = ExportResult::Success;
-
-   {
-      auto mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
+   context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, false,
          rate, floatSample, mixerSpec);
 
-      delegate.SetStatusString(selectionOnly
-         ? XO("Exporting the selected audio as Ogg Vorbis")
-         : XO("Exporting the audio as Ogg Vorbis"));
+   context.status = selectionOnly
+      ? XO("Exporting the selected audio as Ogg Vorbis")
+      : XO("Exporting the audio as Ogg Vorbis");
 
+   return true;
+}
+
+ExportResult OGGExportProcessor::Process(ExportPluginDelegate& delegate)
+{
+   delegate.SetStatusString(context.status);
+   auto exportResult = ExportResult::Success;
+   {
+      int err;
+      int eos = 0;
       while (exportResult == ExportResult::Success && !eos) {
-         float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);
-         auto samplesThisRun = mixer->Process();
+         float **vorbis_buffer = vorbis_analysis_buffer(&context.dsp, SAMPLES_PER_RUN);
+         auto samplesThisRun = context.mixer->Process();
 
          if (samplesThisRun == 0) {
             // Tell the library that we wrote 0 bytes - signalling the end.
-            err = vorbis_analysis_wrote(&dsp, 0);
+            err = vorbis_analysis_wrote(&context.dsp, 0);
          }
          else {
 
-            for (size_t i = 0; i < numChannels; i++) {
-               float *temp = (float *)mixer->GetBuffer(i);
+            for (size_t i = 0; i < context.numChannels; i++) {
+               float *temp = (float *)context.mixer->GetBuffer(i);
                memcpy(vorbis_buffer[i], temp, sizeof(float)*SAMPLES_PER_RUN);
             }
 
             // tell the encoder how many samples we have
-            err = vorbis_analysis_wrote(&dsp, samplesThisRun);
+            err = vorbis_analysis_wrote(&context.dsp, samplesThisRun);
          }
 
          // I don't understand what this call does, so here is the comment
@@ -290,36 +309,35 @@ ExportResult ExportOGG::Export(AudacityProject *project,
          //    vorbis does some data preanalysis, then divvies up blocks
          //    for more involved (potentially parallel) processing. Get
          //    a single block for encoding now
-         while (!err && vorbis_analysis_blockout(&dsp, &block) == 1) {
+         while (!err && vorbis_analysis_blockout(&context.dsp, &context.block) == 1) {
 
             // analysis, assume we want to use bitrate management
-            err = vorbis_analysis(&block, NULL);
+            err = vorbis_analysis(&context.block, NULL);
             if (!err)
-               err = vorbis_bitrate_addblock(&block);
+               err = vorbis_bitrate_addblock(&context.block);
 
-            while (!err && vorbis_bitrate_flushpacket(&dsp, &packet)) {
+            while (!err && vorbis_bitrate_flushpacket(&context.dsp, &context.packet)) {
 
                // add the packet to the bitstream
-               err = ogg_stream_packetin(&stream, &packet);
+               err = ogg_stream_packetin(&context.stream, &context.packet);
 
                // From vorbis-tools-1.0/oggenc/encode.c:
                //   If we've gone over a page boundary, we can do actual output,
                //   so do so (for however many pages are available).
 
                while (!err && !eos) {
-                  int result = ogg_stream_pageout(&stream, &page);
+                  int result = ogg_stream_pageout(&context.stream, &context.page);
                   if (!result) {
                      break;
                   }
 
-                  if ( outFile.Write(page.header, page.header_len).GetLastError() ||
-                       outFile.Write(page.body, page.body_len).GetLastError()) {
+                  if ( context.outFile->Write(context.page.header, context.page.header_len).GetLastError() ||
+                       context.outFile->Write(context.page.body, context.page.body_len).GetLastError()) {
                      // TODO: more precise message
-                     ShowDiskFullExportErrorDialog(fName);
-                     return ExportResult::Error;
+                     throw ExportDiskFullError(context.fName);
                   }
 
-                  if (ogg_page_eos(&page)) {
+                  if (ogg_page_eos(&context.page)) {
                      eos = 1;
                   }
                }
@@ -328,24 +346,21 @@ ExportResult ExportOGG::Export(AudacityProject *project,
 
          if (err) {
             // TODO: more precise message
-            ShowExportErrorDialog("OGG:355");
-            break;
+            throw ExportErrorException("OGG:355");
          }
          exportResult = ExportPluginHelpers::UpdateProgress(
-            delegate, *mixer, t0, t1);
+            delegate, *context.mixer, context.t0, context.t1);
       }
    }
 
-   if ( !outFile.Close() ) {
+   if ( !context.outFile->Close() ) {
       // TODO: more precise message
-      ShowExportErrorDialog("OGG:366");
-      return ExportResult::Error;
+      throw ExportErrorException("OGG:366");
    }
-
-   if(err)
-      exportResult = ExportResult::Error;
+   
    return exportResult;
 }
+
 
 std::unique_ptr<ExportOptionsEditor>
 ExportOGG::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
@@ -353,8 +368,13 @@ ExportOGG::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
    return std::make_unique<ExportOptionOGGEditor>();
 }
 
+std::unique_ptr<ExportProcessor> ExportOGG::CreateProcessor(int format) const
+{
+   return std::make_unique<OGGExportProcessor>();
+}
 
-bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata)
+
+void OGGExportProcessor::FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata)
 {
    // Retrieve tags from project if not over-ridden
    if (metadata == NULL)
@@ -373,8 +393,6 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
                              (char *) (const char *) n.mb_str(wxConvUTF8),
                              (char *) (const char *) v.mb_str(wxConvUTF8));
    }
-
-   return true;
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "OGG",

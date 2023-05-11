@@ -128,6 +128,47 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> MP2Options {
 
 }
 
+class MP2ExportProcessor final : public ExportProcessor
+{
+   // Values taken from the twolame simple encoder sample
+   constexpr static size_t pcmBufferSize = 9216 / 2; // number of samples
+   constexpr static size_t mp2BufferSize = 16384u; // bytes
+
+   struct
+   {
+      TranslatableString status;
+      double t0;
+      double t1;
+      wxFileNameWrapper fName;
+      std::unique_ptr<Mixer> mixer;
+      ArrayOf<char> id3buffer;
+      int id3len;
+      twolame_options* encodeOptions{};
+      std::unique_ptr<FileIO> outFile;
+   } context;
+
+public:
+
+   ~MP2ExportProcessor() override;
+
+   bool Initialize(AudacityProject& project,
+      const Parameters& parameters,
+      const wxFileNameWrapper& filename,
+      double t0, double t1, bool selectedOnly,
+      unsigned channels,
+      MixerOptions::Downmix* mixerSpec,
+      const Tags* tags) override;
+
+   ExportResult Process(ExportPluginDelegate& delegate) override;
+
+private:
+   static int AddTags(ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
+#ifdef USE_LIBID3TAG
+   static void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
+#endif
+
+};
+
 class ExportMP2 final : public ExportPlugin
 {
 public:
@@ -141,25 +182,8 @@ public:
 
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
-   
-   ExportResult Export(AudacityProject *project,
-               ExportPluginDelegate &delegate,
-               const Parameters& parameters,
-               unsigned channels,
-               const wxFileNameWrapper &fName,
-               bool selectedOnly,
-               double t0,
-               double t1,
-               MixerSpec *mixerSpec,
-               const Tags *metadata,
-               int subformat) const override;
-private:
 
-   static int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
-#ifdef USE_LIBID3TAG
-   static void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
-#endif
-
+   std::unique_ptr<ExportProcessor> CreateProcessor(int) const override;
 };
 
 ExportMP2::ExportMP2() = default;
@@ -182,23 +206,39 @@ ExportMP2::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
    return std::make_unique<PlainExportOptionsEditor>(MP2Options);
 }
 
-
-ExportResult ExportMP2::Export(AudacityProject *project,
-   ExportPluginDelegate &delegate, const Parameters& parameters,
-   unsigned channels, const wxFileNameWrapper &fName,
-   bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
-   int) const
+std::unique_ptr<ExportProcessor> ExportMP2::CreateProcessor(int) const
 {
+   return std::make_unique<MP2ExportProcessor>();
+}
+
+MP2ExportProcessor::~MP2ExportProcessor()
+{
+   if(context.encodeOptions)
+      twolame_close(&context.encodeOptions);
+}
+
+
+bool MP2ExportProcessor::Initialize(AudacityProject& project,
+   const Parameters& parameters,
+   const wxFileNameWrapper& fName,
+   double t0, double t1, bool selectionOnly,
+   unsigned channels,
+   MixerOptions::Downmix* mixerSpec,
+   const Tags* metadata)
+{
+   context.t0 = t0;
+   context.t1 = t1;
+   context.fName = fName;
+
    bool stereo = (channels == 2);
    long bitrate = ExportPluginHelpers::GetParameterValue(parameters, MP2OptionIDBitRate, 160);
-   double rate = ProjectRate::Get(*project).GetRate();
-   const auto &tracks = TrackList::Get( *project );
+   double rate = ProjectRate::Get(project).GetRate();
+   const auto &tracks = TrackList::Get( project );
 
    wxLogNull logNo;             /* temporarily disable wxWidgets error messages */
 
-   twolame_options *encodeOptions;
+   twolame_options *&encodeOptions = context.encodeOptions;
    encodeOptions = twolame_init();
-   auto cleanup = finally( [&] { twolame_close(&encodeOptions); } );
 
    twolame_set_in_samplerate(encodeOptions, (int)(rate + 0.5));
    twolame_set_out_samplerate(encodeOptions, (int)(rate + 0.5));
@@ -207,64 +247,63 @@ ExportResult ExportMP2::Export(AudacityProject *project,
 
    if (twolame_init_params(encodeOptions) != 0)
    {
-      delegate.SetErrorString(XO("Cannot export MP2 with this sample rate and bit rate"));
-      return ExportResult::Error;
+      throw ExportException(_("Cannot export MP2 with this sample rate and bit rate"));
    }
 
    // Put ID3 tags at beginning of file
    if (metadata == NULL)
-      metadata = &Tags::Get( *project );
+      metadata = &Tags::Get( project );
 
-   FileIO outFile(fName, FileIO::Output);
-   if (!outFile.IsOpened()) {
-      delegate.SetErrorString(XO("Unable to open target file for writing"));
-      return ExportResult::Error;
+   context.outFile = std::make_unique<FileIO>(fName, FileIO::Output);
+   if (!context.outFile->IsOpened()) {
+      throw ExportException(_("Unable to open target file for writing"));
    }
-
-   ArrayOf<char> id3buffer;
-   int id3len;
+   
    bool endOfFile;
-   id3len = AddTags(project, id3buffer, &endOfFile, metadata);
-   if (id3len && !endOfFile) {
-      if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
+   context.id3len = AddTags(context.id3buffer, &endOfFile, metadata);
+   if (context.id3len && !endOfFile) {
+      if ( context.outFile->Write(context.id3buffer.get(), context.id3len).GetLastError() ) {
          // TODO: more precise message
-         ShowExportErrorDialog("MP2:292");
-         return ExportResult::Error;
+         throw ExportErrorException("MP2:292");
       }
+      context.id3len = 0;
+      context.id3buffer.reset();
    }
 
-   // Values taken from the twolame simple encoder sample
-   const size_t pcmBufferSize = 9216 / 2; // number of samples
-   const size_t mp2BufferSize = 16384u; // bytes
+   context.status = selectionOnly
+      ? XO("Exporting selected audio at %ld kbps")
+           .Format( bitrate )
+      : XO("Exporting the audio at %ld kbps")
+           .Format( bitrate );
 
+   context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
+         t0, t1,
+         stereo ? 2 : 1, pcmBufferSize, true,
+         rate, int16Sample, mixerSpec);
+
+   return true;
+}
+
+ExportResult MP2ExportProcessor::Process(ExportPluginDelegate& delegate)
+{
+   delegate.SetStatusString(context.status);
    // We allocate a buffer which is twice as big as the
    // input buffer, which should always be enough.
    // We have to multiply by 4 because one sample is 2 bytes wide!
    ArrayOf<unsigned char> mp2Buffer{ mp2BufferSize };
 
    auto exportResult = ExportResult::Success;
-   
+
    {
-      auto mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-         t0, t1,
-         stereo ? 2 : 1, pcmBufferSize, true,
-         rate, int16Sample, mixerSpec);
-
-      delegate.SetStatusString(selectionOnly
-         ? XO("Exporting selected audio at %ld kbps")
-              .Format( bitrate )
-         : XO("Exporting the audio at %ld kbps")
-              .Format( bitrate ));
-
       while (exportResult == ExportResult::Success) {
-         auto pcmNumSamples = mixer->Process();
+         auto pcmNumSamples = context.mixer->Process();
          if (pcmNumSamples == 0)
             break;
 
-         short *pcmBuffer = (short *)mixer->GetBuffer();
+         short *pcmBuffer = (short *)context.mixer->GetBuffer();
 
          int mp2BufferNumBytes = twolame_encode_buffer_interleaved(
-            encodeOptions,
+            context.encodeOptions,
             pcmBuffer,
             pcmNumSamples,
             mp2Buffer.get(),
@@ -272,49 +311,44 @@ ExportResult ExportMP2::Export(AudacityProject *project,
 
          if (mp2BufferNumBytes < 0) {
             // TODO: more precise message
-            ShowExportErrorDialog("MP2:339");
-            exportResult = ExportResult::Error;
-            break;
+            throw ExportErrorException("MP2:339");
          }
 
-         if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
+         if ( context.outFile->Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
             // TODO: more precise message
-            ShowDiskFullExportErrorDialog(fName);
-            return ExportResult::Error;
+            throw ExportDiskFullError(context.fName);
          }
          exportResult = ExportPluginHelpers::UpdateProgress(
-            delegate, *mixer, t0, t1);
+            delegate, *context.mixer, context.t0, context.t1);
       }
    }
 
    int mp2BufferNumBytes = twolame_encode_flush(
-      encodeOptions,
+      context.encodeOptions,
       mp2Buffer.get(),
       mp2BufferSize);
 
    if (mp2BufferNumBytes > 0)
-      if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
+      if ( context.outFile->Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
          // TODO: more precise message
-         ShowExportErrorDialog("MP2:362");
-         return ExportResult::Error;
+         throw ExportErrorException("MP2:362");
       }
 
    /* Write ID3 tag if it was supposed to be at the end of the file */
 
-   if (id3len && endOfFile)
-      if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
+   if (context.id3len)
+      if ( context.outFile->Write(context.id3buffer.get(), context.id3len).GetLastError() ) {
          // TODO: more precise message
-         ShowExportErrorDialog("MP2:371");
-         return ExportResult::Error;
+         throw ExportErrorException("MP2:371");
       }
 
-   if ( !outFile.Close() ) {
+   if ( !context.outFile->Close() ) {
       // TODO: more precise message
-      ShowExportErrorDialog("MP2:377");
-      return ExportResult::Error;
+      throw ExportErrorException("MP2:377");
    }
    return exportResult;
 }
+
 
 #ifdef USE_LIBID3TAG
 struct id3_tag_deleter {
@@ -324,8 +358,7 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
 // returns buffer len; caller frees
-int ExportMP2::AddTags(
-   AudacityProject * WXUNUSED(project), ArrayOf< char > &buffer,
+int MP2ExportProcessor::AddTags(ArrayOf< char > &buffer,
    bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
@@ -389,7 +422,7 @@ int ExportMP2::AddTags(
 }
 
 #ifdef USE_LIBID3TAG
-void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name)
+void MP2ExportProcessor::AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name)
 {
    struct id3_frame *frame = id3_frame_new(name);
 

@@ -529,19 +529,16 @@ public:
       int numChannels);
 
    /// Format initialization
-   bool Init(ExportPluginDelegate& delegate,
-      const char *shortname,
+   bool Init(const char *shortname,
       AudacityProject *project,
       const Tags *metadata,
-      int subformat, const ExportPlugin::Parameters& parameters);
+      const ExportProcessor::Parameters& parameters);
 
    /// Encodes audio
-   bool EncodeAudioFrame(ExportPluginDelegate& delegate, int16_t *pFrame, size_t frameSize);
+   bool EncodeAudioFrame(int16_t *pFrame, size_t frameSize);
 
    /// Flushes audio encoder
-   bool Finalize(ExportPluginDelegate& delegate);
-
-   void FreeResources();
+   bool Finalize();
 
    std::unique_ptr<Mixer> CreateMixer(const TrackList &tracks,
          bool selectionOnly,
@@ -563,14 +560,12 @@ private:
    int AskResample(int bitrate, int rate, int lowrate, int highrate, const int *sampRates);
 
    /// Codec initialization
-   bool InitCodecs(ExportPluginDelegate& delegate,
-      AudacityProject* project,
-      const ExportPlugin::Parameters& parameters);
+   bool InitCodecs(AudacityProject* project,
+      const ExportProcessor::Parameters& parameters);
 
-   bool WritePacket(ExportPluginDelegate& delegate, AVPacketWrapper& packet);
+   void WritePacket(AVPacketWrapper& packet);
 
-   int EncodeAudio(ExportPluginDelegate& delegate,
-      AVPacketWrapper& pkt,
+   int EncodeAudio(AVPacketWrapper& pkt,
       int16_t* audio_samples,
       int nb_samples);
 
@@ -596,6 +591,34 @@ private:
    std::unique_ptr<AVCodecContextWrapper> mEncAudioCodecCtx;    // the encoder for the output audio stream
 };
 
+class FFmpegExportProcessor final : public ExportProcessor
+{
+   std::shared_ptr<FFmpegFunctions> mFFmpeg;
+   struct
+   {
+      int subformat;
+      TranslatableString status;
+      double t0;
+      double t1;
+      std::unique_ptr<Mixer> mixer;
+      std::unique_ptr<FFmpegExporter> exporter;
+   } context;
+
+public:
+   FFmpegExportProcessor(std::shared_ptr<FFmpegFunctions> ffmpeg, int format);
+
+   bool Initialize(AudacityProject& project,
+      const Parameters& parameters,
+      const wxFileNameWrapper& filename,
+      double t0, double t1, bool selectedOnly,
+      unsigned channels,
+      MixerOptions::Downmix* mixerSpec,
+      const Tags* tags) override;
+
+   ExportResult Process(ExportPluginDelegate& delegate) override;
+
+};
+
 class ExportFFmpeg final : public ExportPlugin
 {
 public:
@@ -612,17 +635,7 @@ public:
    /// Callback, called from GetFilename
    bool CheckFileName(wxFileName &filename, int format = 0) const override;
 
-   ExportResult Export(AudacityProject *project,
-      ExportPluginDelegate &delegate,
-      const Parameters& parameters,
-      unsigned channels,
-      const wxFileNameWrapper &fName,
-      bool selectedOnly,
-      double t0,
-      double t1,
-      MixerSpec *mixerSpec,
-      const Tags *metadata,
-      int subformat) const override;
+   std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
 
 private:
    mutable std::shared_ptr<FFmpegFunctions> mFFmpeg;
@@ -750,24 +763,19 @@ bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
    return result;
 }
 
-bool FFmpegExporter::Init(ExportPluginDelegate& delegate,
-                        const char *shortname,
+std::unique_ptr<ExportProcessor> ExportFFmpeg::CreateProcessor(int format) const
+{
+   return std::make_unique<FFmpegExportProcessor>(mFFmpeg, format);
+}
+
+
+bool FFmpegExporter::Init(const char *shortname,
                         AudacityProject *project,
                         const Tags *metadata,
-                        int subformat,
-                        const ExportPlugin::Parameters& parameters)
+                        const ExportProcessor::Parameters& parameters)
 {
-   // This will undo the acquisition of resources along any early exit path:
-   auto deleter = [](FFmpegExporter *This) {
-      if (This)
-         This->FreeResources();
-   };
-   std::unique_ptr<FFmpegExporter, decltype(deleter)> cleanup{ this, deleter };
-   //FFmpegLibsInst()->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
-
    if (!mFFmpeg)
       return false;
-
 
    // See if libavformat has modules that can write our output format. If so, mEncFormatDesc
    // will describe the functions used to write the format (used internally by libavformat)
@@ -775,16 +783,14 @@ bool FFmpegExporter::Init(ExportPluginDelegate& delegate,
    const auto path = mName.GetFullPath();
    if ((mEncFormatDesc = mFFmpeg->GuessOutputFormat(shortname, OSINPUT(path), nullptr)) == nullptr)
    {
-      delegate.SetErrorString(XO("FFmpeg : ERROR - Can't determine format description for file \"%s\".").Format(path));
-      return false;
+      throw ExportException(_("FFmpeg : ERROR - Can't determine format description for file \"%s\".").Format(path));
    }
 
    // mEncFormatCtx is used by libavformat to carry around context data re our output file.
    mEncFormatCtx = mFFmpeg->CreateAVFormatContext();
    if (!mEncFormatCtx)
    {
-      delegate.SetErrorString(XO("FFmpeg : ERROR - Can't allocate output format context."));
-      return false;
+      throw ExportException(_("FFmpeg : ERROR - Can't allocate output format context."));
    }
 
    // Initialise the output format context.
@@ -794,8 +800,7 @@ bool FFmpegExporter::Init(ExportPluginDelegate& delegate,
    // At the moment Audacity can export only one audio stream
    if ((mEncAudioStream = mEncFormatCtx->CreateStream()) == nullptr)
    {
-      delegate.SetErrorString(XO("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."));
-      return false;
+      throw ExportException(_("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."));
    }
 
    // Documentation for avformat_new_stream says
@@ -821,14 +826,13 @@ bool FFmpegExporter::Init(ExportPluginDelegate& delegate,
 
       if (result != AVIOContextWrapper::OpenResult::Success)
       {
-         delegate.SetErrorString(XO("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d.")
+         throw ExportException(_("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d.")
             .Format(path, static_cast<int>(result)));
-         return false;
       }
    }
 
    // Open the audio stream's codec and initialise any stream related data.
-   if (!InitCodecs(delegate, project, parameters))
+   if(!InitCodecs(project, parameters))
       return false;
 
    if (mEncAudioStream->SetParametersFromContext(*mEncAudioCodecCtx) < 0)
@@ -853,14 +857,10 @@ bool FFmpegExporter::Init(ExportPluginDelegate& delegate,
 
    if (err < 0)
    {
-      delegate.SetErrorString(XO("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d.")
-         .Format( path, err ));
-      return false;
+      throw ExportException(XO("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d.")
+         .Format( path, err )
+         .Translation());
    }
-
-   // Only now, we can keep all the resources until after Finalize().
-   // Cancel the local cleanup.
-   cleanup.release();
 
    return true;
 }
@@ -889,9 +889,8 @@ bool FFmpegExporter::CheckSampleRate(int rate, int lowrate, int highrate, const 
    return false;
 }
 
-bool FFmpegExporter::InitCodecs(ExportPluginDelegate& delegate,
-                                AudacityProject *project,
-                                const ExportPlugin::Parameters& parameters)
+bool FFmpegExporter::InitCodecs(AudacityProject *project,
+                                const ExportProcessor::Parameters& parameters)
 {
    const auto &settings = ProjectSettings::Get( *project );
    std::unique_ptr<AVCodecWrapper> codec;
@@ -1087,9 +1086,9 @@ bool FFmpegExporter::InitCodecs(ExportPluginDelegate& delegate,
    if (codec == NULL)
    {
       /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-      delegate.SetErrorString(XO("FFmpeg cannot find audio codec 0x%x.\nSupport for this codec is probably not compiled in.")
-                  .Format(static_cast<const unsigned int>(codecID.value)));
-      return false;
+      throw ExportException(XO("FFmpeg cannot find audio codec 0x%x.\nSupport for this codec is probably not compiled in.")
+                  .Format(static_cast<const unsigned int>(codecID.value))
+                  .Translation());
    }
 
    if (codec->GetSampleFmts()) {
@@ -1184,9 +1183,9 @@ bool FFmpegExporter::InitCodecs(ExportPluginDelegate& delegate,
       }
       
       /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-      delegate.SetErrorString(XO("Can't open audio codec \"%s\" (0x%x)\n\n%s")
-         .Format(codec->GetName(), codecID.value, errmsg));
-      return false;
+      throw ExportException(XO("Can't open audio codec \"%s\" (0x%x)\n\n%s")
+         .Format(codec->GetName(), codecID.value, errmsg)
+         .Translation());
    }
 
    mDefaultFrameSize = mEncAudioCodecCtx->GetFrameSize();
@@ -1209,14 +1208,13 @@ bool FFmpegExporter::InitCodecs(ExportPluginDelegate& delegate,
 
    if (mEncAudioFifoOutBuf.empty())
    {
-      delegate.SetErrorString(XO("FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."));
-      return false;
+      throw ExportException(_("FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."));
    }
 
    return true;
 }
 
-bool FFmpegExporter::WritePacket(ExportPluginDelegate& delegate, AVPacketWrapper& pkt)
+void FFmpegExporter::WritePacket(AVPacketWrapper& pkt)
 {
    // Set presentation time of frame (currently in the codec's timebase) in the
    // stream timebase.
@@ -1236,15 +1234,12 @@ bool FFmpegExporter::WritePacket(ExportPluginDelegate& delegate, AVPacketWrapper
       mFFmpeg->av_interleaved_write_frame(
          mEncFormatCtx->GetWrappedValue(), pkt.GetWrappedValue()) != 0)
    {
-      delegate.SetErrorString(XO("FFmpeg : ERROR - Couldn't write audio frame to output file."));
-      return false;
+      throw ExportException(_("FFmpeg : ERROR - Couldn't write audio frame to output file."));
    }
-
-   return true;
 }
 
 // Returns 0 if no more output, 1 if more output, negative if error
-int FFmpegExporter::EncodeAudio(ExportPluginDelegate& delegate, AVPacketWrapper& pkt, int16_t* audio_samples, int nb_samples)
+int FFmpegExporter::EncodeAudio(AVPacketWrapper& pkt, int16_t* audio_samples, int nb_samples)
 {
    // Assume *pkt is already initialized.
 
@@ -1268,15 +1263,13 @@ int FFmpegExporter::EncodeAudio(ExportPluginDelegate& delegate, AVPacketWrapper&
          mEncAudioCodecCtx->GetSampleFmt(), 0);
 
       if (buffer_size < 0) {
-         delegate.SetErrorString(XO("FFmpeg : ERROR - Could not get sample buffer size"));
-         return buffer_size;
+         throw ExportException(_("FFmpeg : ERROR - Could not get sample buffer size"));
       }
 
       samples = mFFmpeg->CreateMemoryBuffer<uint8_t>(buffer_size);
 
       if (samples.empty()) {
-         delegate.SetErrorString(XO("FFmpeg : ERROR - Could not allocate bytes for samples buffer"));
-         return AUDACITY_AVERROR(ENOMEM);
+         throw ExportException(_("FFmpeg : ERROR - Could not allocate bytes for samples buffer"));
       }
       /* setup the data pointers in the AVFrame */
       ret = mFFmpeg->avcodec_fill_audio_frame(
@@ -1284,8 +1277,7 @@ int FFmpegExporter::EncodeAudio(ExportPluginDelegate& delegate, AVPacketWrapper&
          mEncAudioCodecCtx->GetSampleFmt(), samples.data(), buffer_size, 0);
 
       if (ret < 0) {
-         delegate.SetErrorString(XO("FFmpeg : ERROR - Could not setup audio frame"));
-         return ret;
+         throw ExportException(_("FFmpeg : ERROR - Could not setup audio frame"));
       }
 
       const int channelsCount = mEncAudioCodecCtx->GetChannels();
@@ -1351,8 +1343,7 @@ int FFmpegExporter::EncodeAudio(ExportPluginDelegate& delegate, AVPacketWrapper&
          else if (ret < 0)
             break;
 
-         if (!WritePacket(delegate, pkt))
-            return -1;
+         WritePacket(pkt);
 
          got_output = true;
       }
@@ -1365,19 +1356,17 @@ int FFmpegExporter::EncodeAudio(ExportPluginDelegate& delegate, AVPacketWrapper&
 
       if (ret == 0)
       {
-         if (!WritePacket(delegate, pkt))
-            return -1;
+         WritePacket(pkt);
       }
    }
 
    if (ret < 0 && ret != AUDACITY_AVERROR_EOF) {
-      delegate.SetErrorString(XO("FFmpeg : ERROR - encoding frame failed"));
-
+      
       char buf[64];
       mFFmpeg->av_strerror(ret, buf, sizeof(buf));
       wxLogDebug(buf);
 
-      return ret;
+      throw ExportException(_("FFmpeg : ERROR - encoding frame failed"));
    }
 
    pkt.ResetTimestamps(); // We don't set frame timestamps thus don't trust the AVPacket timestamps
@@ -1386,7 +1375,7 @@ int FFmpegExporter::EncodeAudio(ExportPluginDelegate& delegate, AVPacketWrapper&
 }
 
 
-bool FFmpegExporter::Finalize(ExportPluginDelegate& delegate)
+bool FFmpegExporter::Finalize()
 {
    // Flush the audio FIFO and encoder.
    for (;;)
@@ -1405,8 +1394,7 @@ bool FFmpegExporter::Finalize(ExportPluginDelegate& delegate)
          const int nAudioFrameSizeOut = mDefaultFrameSize * mEncAudioCodecCtx->GetChannels() * sizeof(int16_t);
 
          if (nAudioFrameSizeOut > mEncAudioFifoOutBufSize || nFifoBytes > mEncAudioFifoOutBufSize) {
-            delegate.SetErrorString(XO("FFmpeg : ERROR - Too much remaining data."));
-            return false;
+            throw ExportException(_("FFmpeg : ERROR - Too much remaining data."));
          }
 
          // We have an incomplete buffer of samples left, encode it.
@@ -1434,27 +1422,25 @@ bool FFmpegExporter::Finalize(ExportPluginDelegate& delegate)
          // Pull the bytes out from the FIFO and feed them to the encoder.
          if (mFFmpeg->av_fifo_generic_read(mEncAudioFifo->GetWrappedValue(), mEncAudioFifoOutBuf.data(), nFifoBytes, nullptr) == 0)
          {
-            encodeResult = EncodeAudio(delegate, *pkt, mEncAudioFifoOutBuf.data(), frame_size);
+            encodeResult = EncodeAudio(*pkt, mEncAudioFifoOutBuf.data(), frame_size);
          }
          else
          {
             wxLogDebug(wxT("FFmpeg : Reading from Audio FIFO failed, aborting"));
             // TODO: more precise message
-            ShowExportErrorDialog("FFmpeg:825");
-            return false;
+            throw ExportErrorException("FFmpeg:825");
          }
       }
       else
       {
          // Fifo is empty, flush encoder. May be called multiple times.
          encodeResult =
-            EncodeAudio(delegate, *pkt.get(), nullptr, 0);
+            EncodeAudio(*pkt.get(), nullptr, 0);
       }
 
       if (encodeResult < 0) {
          // TODO: more precise message
-            ShowExportErrorDialog("FFmpeg:837");
-         return false;
+         throw ExportErrorException("FFmpeg:837");
       }
       else if (encodeResult == 0)
          break;      
@@ -1464,20 +1450,14 @@ bool FFmpegExporter::Finalize(ExportPluginDelegate& delegate)
    if (mFFmpeg->av_write_trailer(mEncFormatCtx->GetWrappedValue()) != 0)
    {
       // TODO: more precise message
-      ShowExportErrorDialog("FFmpeg:868");
-      return false;
+      throw ExportErrorException("FFmpeg:868");
    }
 
    return true;
 }
 
-void FFmpegExporter::FreeResources()
-{
-
-}
-
 // All paths in this that fail must report their error to the user.
-bool FFmpegExporter::EncodeAudioFrame(ExportPluginDelegate& delegate, int16_t *pFrame, size_t numSamples)
+bool FFmpegExporter::EncodeAudioFrame(int16_t *pFrame, size_t numSamples)
 {
    const auto frameSize = numSamples * sizeof(int16_t) *  mChannels;
    int nBytesToWrite = 0;
@@ -1488,8 +1468,7 @@ bool FFmpegExporter::EncodeAudioFrame(ExportPluginDelegate& delegate, int16_t *p
    nBytesToWrite = frameSize;
    pRawSamples  = (uint8_t*)pFrame;
    if (mFFmpeg->av_fifo_realloc2(mEncAudioFifo->GetWrappedValue(), mFFmpeg->av_fifo_size(mEncAudioFifo->GetWrappedValue()) + frameSize) < 0) {
-      ShowExportErrorDialog("FFmpeg:905");
-      return false;
+      throw ExportErrorException("FFmpeg:905");
    }
 
    // Put the raw audio samples into the FIFO.
@@ -1497,13 +1476,11 @@ bool FFmpegExporter::EncodeAudioFrame(ExportPluginDelegate& delegate, int16_t *p
       mEncAudioFifo->GetWrappedValue(), pRawSamples, nBytesToWrite, nullptr);
 
    if (ret != nBytesToWrite) {
-      ShowExportErrorDialog("FFmpeg:913");
-      return false;
+      throw ExportErrorException("FFmpeg:913");
    }
 
    if (nAudioFrameSizeOut > mEncAudioFifoOutBufSize) {
-      delegate.SetErrorString(XO("FFmpeg : ERROR - nAudioFrameSizeOut too large."));
-      return false;
+      throw ExportException(_("FFmpeg : ERROR - nAudioFrameSizeOut too large."));
    }
 
    // Read raw audio samples out of the FIFO in nAudioFrameSizeOut byte-sized groups to encode.
@@ -1515,8 +1492,7 @@ bool FFmpegExporter::EncodeAudioFrame(ExportPluginDelegate& delegate, int16_t *p
 
       std::unique_ptr<AVPacketWrapper> pkt = mFFmpeg->CreateAVPacketWrapper();
 
-      ret = EncodeAudio(delegate,
-         *pkt,                       // out
+      ret = EncodeAudio(*pkt,                       // out
          mEncAudioFifoOutBuf.data(), // in
          mDefaultFrameSize);
 
@@ -1526,87 +1502,100 @@ bool FFmpegExporter::EncodeAudioFrame(ExportPluginDelegate& delegate, int16_t *p
    return true;
 }
 
-
-ExportResult ExportFFmpeg::Export(
-   AudacityProject *project, ExportPluginDelegate &delegate,
-   const Parameters& parameters, unsigned channels, const wxFileNameWrapper& fName,
-   bool selectionOnly, double t0, double t1,
-   MixerSpec *mixerSpec, const Tags *metadata, int subformat) const
+FFmpegExportProcessor::FFmpegExportProcessor(std::shared_ptr<FFmpegFunctions> ffmpeg, int subformat )
+   : mFFmpeg(std::move(ffmpeg))
 {
+   context.subformat = subformat;
+}
+
+bool FFmpegExportProcessor::Initialize(AudacityProject& project,
+   const Parameters& parameters,
+   const wxFileNameWrapper& fName,
+   double t0, double t1, bool selectionOnly,
+   unsigned channels,
+   MixerOptions::Downmix* mixerSpec,
+   const Tags* metadata)
+{
+   context.t0 = t0;
+   context.t1 = t1;
+   
    if (!FFmpegFunctions::Load())
    {
-      delegate.SetErrorString(XO("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
-      return ExportResult::Error;
+      throw ExportException(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
    }
    // subformat index may not correspond directly to fmts[] index, convert it
-   const auto adjustedFormatIndex = AdjustFormatIndex(subformat);
+   const auto adjustedFormatIndex = AdjustFormatIndex(context.subformat);
    if (channels > ExportFFmpegOptions::fmts[adjustedFormatIndex].maxchannels)
    {
-      delegate.SetErrorString(XO("Attempted to export %d channels, but maximum number of channels for selected output format is %d")
+      throw ExportException(XO("Attempted to export %d channels, but maximum number of channels for selected output format is %d")
          .Format(
             channels,
-            ExportFFmpegOptions::fmts[adjustedFormatIndex].maxchannels ));
-      return ExportResult::Error;
+            ExportFFmpegOptions::fmts[adjustedFormatIndex].maxchannels )
+         .Translation());
    }
 
-   const auto &tracks = TrackList::Get( *project );
+   const auto &tracks = TrackList::Get( project );
    bool ret = true;
 
    if (adjustedFormatIndex >= FMT_LAST) {
       // TODO: more precise message
-      ShowExportErrorDialog("FFmpeg:996");
-      return ExportResult::Error;
+      throw ExportErrorException("FFmpeg:996");
    }
 
    wxString shortname(ExportFFmpegOptions::fmts[adjustedFormatIndex].shortname);
    if (adjustedFormatIndex == FMT_OTHER)
       shortname = ExportPluginHelpers::GetParameterValue<std::string>(parameters, FEFormatID, "matroska");
 
-   FFmpegExporter exporter(mFFmpeg, fName, channels);
+   context.exporter = std::make_unique<FFmpegExporter>(mFFmpeg, fName, channels);
 
-   ret = exporter.Init(delegate, shortname.mb_str(),project, metadata, subformat, parameters);
-   auto cleanup = finally ( [&] { exporter.FreeResources(); } );
-
+   ret = context.exporter->Init(shortname.mb_str(), &project, metadata, parameters);
+   
    if (!ret) {
       // TODO: more precise message
-      ShowExportErrorDialog("FFmpeg:1008");
-      return ExportResult::Error;
+      throw ExportErrorException("FFmpeg:1008");
    }
 
-   auto mixer = exporter.CreateMixer(tracks, selectionOnly,
+   context.mixer = context.exporter->CreateMixer(tracks, selectionOnly,
       t0, t1,
       mixerSpec);
 
-   auto exportResult = ExportResult::Success;
-   {
-      delegate.SetStatusString(selectionOnly
+   context.status = selectionOnly
          ? XO("Exporting selected audio as %s")
               .Format( ExportFFmpegOptions::fmts[adjustedFormatIndex].description )
          : XO("Exporting the audio as %s")
-              .Format( ExportFFmpegOptions::fmts[adjustedFormatIndex].description ));
+              .Format( ExportFFmpegOptions::fmts[adjustedFormatIndex].description );
 
+   return true;
+}
+
+ExportResult FFmpegExportProcessor::Process(ExportPluginDelegate& delegate)
+{
+   delegate.SetStatusString(context.status);
+   auto exportResult = ExportResult::Success;
+   {
       while (exportResult == ExportResult::Success) {
-         auto pcmNumSamples = mixer->Process();
+         auto pcmNumSamples = context.mixer->Process();
          if (pcmNumSamples == 0)
             break;
 
-         short *pcmBuffer = (short *)mixer->GetBuffer();
+         short *pcmBuffer = (short *)context.mixer->GetBuffer();
 
-         if (!exporter.EncodeAudioFrame(delegate, pcmBuffer, pcmNumSamples))
+         if (!context.exporter->EncodeAudioFrame(pcmBuffer, pcmNumSamples))
             // All errors should already have been reported.
             return ExportResult::Error;
 
          if(exportResult == ExportResult::Success)
             exportResult = ExportPluginHelpers::UpdateProgress(
-               delegate, *mixer, t0, t1);
+               delegate, *context.mixer, context.t0, context.t1);
       }
    }
 
    if ( exportResult != ExportResult::Cancelled )
-      if ( !exporter.Finalize(delegate) ) // Finalize makes its own messages
+      if ( !context.exporter->Finalize() ) // Finalize makes its own messages
          return ExportResult::Error;
    return exportResult;
 }
+
 
 void AddStringTagUTF8(char field[], int size, wxString value)
 {
