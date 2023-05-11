@@ -1612,7 +1612,7 @@ class ExportMP3 final : public ExportPlugin
 public:
 
    ExportMP3();
-   bool CheckFileName(wxFileName & filename, int format) override;
+   bool CheckFileName(wxFileName & filename, int format) const override;
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
@@ -1632,14 +1632,14 @@ public:
                double t1,
                MixerSpec *mixerSpec,
                const Tags *metadata,
-               int subformat) override;
+               int subformat) const override;
 
 private:
 
-   int AskResample(int bitrate, int rate, int lowrate, int highrate);
-   unsigned long AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
+   static int AskResample(int bitrate, int rate, int lowrate, int highrate);
+   static unsigned long AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
-   void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
+   static void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
 };
 
@@ -1663,7 +1663,7 @@ ExportMP3::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) con
    return std::make_unique<MP3ExportOptionsEditor>(listener);
 }
 
-bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
+bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format)) const
 {
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    MP3Exporter exporter;
@@ -1693,7 +1693,7 @@ ExportResult ExportMP3::Export(AudacityProject *project,
                        double t1,
                        MixerSpec *mixerSpec,
                        const Tags *metadata,
-                       int)
+                       int) const
 {
    int rate = lrint( ProjectRate::Get( *project ).GetRate());
 #ifndef DISABLE_DYNAMIC_LOADING_LAME

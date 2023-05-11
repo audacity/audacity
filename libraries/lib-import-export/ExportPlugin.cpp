@@ -26,7 +26,7 @@ bool ExportPlugin::ParseConfig(int, const rapidjson::Value&, Parameters&) const
    return false;
 }
 
-bool ExportPlugin::CheckFileName(wxFileName&, int)
+bool ExportPlugin::CheckFileName(wxFileName&, int) const
 {
   return true;
 }

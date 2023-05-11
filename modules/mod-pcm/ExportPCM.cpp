@@ -392,13 +392,13 @@ public:
                double t1,
                MixerSpec *mixerSpec,
                const Tags *metadata,
-               int subformat) override;
+               int subformat) const override;
 
 private:
-   void ReportTooBigError(wxWindow * pParent);
-   ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
-   bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
-   bool AddID3Chunk(
+   static void ReportTooBigError(wxWindow * pParent);
+   static ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
+   static bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
+   static bool AddID3Chunk(
       const wxFileNameWrapper &fName, const Tags *tags, int sf_format);
 
 };
@@ -508,7 +508,7 @@ ExportResult ExportPCM::Export(AudacityProject *project,
                        double t1,
                        MixerSpec *mixerSpec,
                        const Tags *metadata,
-                       int subformat)
+                       int subformat) const
 {
    double rate = ProjectRate::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );

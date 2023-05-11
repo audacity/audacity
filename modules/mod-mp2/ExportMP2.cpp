@@ -152,12 +152,12 @@ public:
                double t1,
                MixerSpec *mixerSpec,
                const Tags *metadata,
-               int subformat) override;
+               int subformat) const override;
 private:
 
-   int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
+   static int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
-   void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
+   static void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
 
 };
@@ -187,7 +187,7 @@ ExportResult ExportMP2::Export(AudacityProject *project,
    ExportPluginDelegate &delegate, const Parameters& parameters,
    unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
-   int)
+   int) const
 {
    bool stereo = (channels == 2);
    long bitrate = ExportPluginHelpers::GetParameterValue(parameters, MP2OptionIDBitRate, 160);

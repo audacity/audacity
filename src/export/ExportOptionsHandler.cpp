@@ -26,7 +26,7 @@ wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
 ExportOptionsHandler::~ExportOptionsHandler() = default;
 
-ExportOptionsHandler::ExportOptionsHandler(ShuttleGui& S, ExportPlugin& plugin, int format)
+ExportOptionsHandler::ExportOptionsHandler(ShuttleGui& S, const ExportPlugin& plugin, int format)
 {
    mParent = S.GetParent();
 

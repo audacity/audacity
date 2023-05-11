@@ -31,7 +31,7 @@ class ExportOptionsHandler final
 {
 public:
 
-   ExportOptionsHandler(ShuttleGui& S, ExportPlugin& plugin, int format);
+   ExportOptionsHandler(ShuttleGui& S, const ExportPlugin& plugin, int format);
 
    ~ExportOptionsHandler();
 

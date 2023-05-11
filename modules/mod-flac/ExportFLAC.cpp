@@ -200,14 +200,11 @@ public:
                double t1,
                MixerSpec *mixerSpec,
                const Tags *metadata,
-               int subformat) override;
+               int subformat) const override;
 
 private:
 
-   bool GetMetadata(AudacityProject *project, const Tags *tags);
-
-   // Should this be a stack variable instead in Export?
-   FLAC__StreamMetadataHandle mMetadata;
+   FLAC__StreamMetadataHandle MakeMetadata(AudacityProject *project, const Tags *tags) const;
 };
 
 //----------------------------------------------------------------------------
@@ -279,8 +276,8 @@ ExportResult ExportFLAC::Export(AudacityProject *project,
                         double t0,
                         double t1,
                         MixerSpec *mixerSpec,
-                        const Tags *metadata,
-                        int)
+                        const Tags *tags,
+                        int) const
 {
    double    rate    = ProjectRate::Get(*project).GetRate();
    const auto &tracks = TrackList::Get( *project );
@@ -300,23 +297,23 @@ ExportResult ExportFLAC::Export(AudacityProject *project,
    encoder.set_channels(numChannels) &&
    encoder.set_sample_rate(lrint(rate));
 
-   // See note in GetMetadata() about a bug in libflac++ 1.1.2
-   if (success && !GetMetadata(project, metadata)) {
+   // See note in MakeMetadata() about a bug in libflac++ 1.1.2
+   FLAC__StreamMetadataHandle metadata;
+   if (success)
+      metadata = MakeMetadata(project, tags);
+
+   if (success && !metadata) {
       // TODO: more precise message
       ShowExportErrorDialog("FLAC:283");
       return ExportResult::Error;
    }
 
-   if (success && mMetadata) {
+   if (success && metadata) {
       // set_metadata expects an array of pointers to metadata and a size.
       // The size is 1.
-      FLAC__StreamMetadata *p = mMetadata.get();
+      FLAC__StreamMetadata *p = metadata.get();
       success = encoder.set_metadata(&p, 1);
    }
-
-   auto cleanup1 = finally( [&] {
-      mMetadata.reset(); // need this?
-   } );
 
    sampleFormat format;
    if (bitDepthPref == "24") {
@@ -381,7 +378,7 @@ ExportResult ExportFLAC::Export(AudacityProject *project,
    }
 #endif
 
-   mMetadata.reset();
+   metadata.reset();
 
    auto exportResult = ExportResult::Success;
    
@@ -459,13 +456,15 @@ ExportResult ExportFLAC::Export(AudacityProject *project,
 //      expects that array to be valid until the stream is initialized.
 //
 //      This has been fixed in 1.1.4.
-bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
+FLAC__StreamMetadataHandle ExportFLAC::MakeMetadata(AudacityProject *project, const Tags *tags) const
 {
    // Retrieve tags if needed
    if (tags == NULL)
       tags = &Tags::Get( *project );
 
-   mMetadata.reset(::FLAC__metadata_object_new(FLAC__METADATA_TYPE_VORBIS_COMMENT));
+   auto metadata = FLAC__StreamMetadataHandle(
+      ::FLAC__metadata_object_new(FLAC__METADATA_TYPE_VORBIS_COMMENT)
+   );
 
    wxString n;
    for (const auto &pair : tags->GetRange()) {
@@ -480,23 +479,23 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
          n = wxT("COMMENT");
          FLAC::Metadata::VorbisComment::Entry entry(n.mb_str(wxConvUTF8),
                                                     v.mb_str(wxConvUTF8));
-         if (! ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
+         if (! ::FLAC__metadata_object_vorbiscomment_append_comment(metadata.get(),
                                                               entry.get_entry(),
                                                               true) ) {
-            return false;
+            return {};
          }
          n = wxT("DESCRIPTION");
       }
       FLAC::Metadata::VorbisComment::Entry entry(n.mb_str(wxConvUTF8),
                                                  v.mb_str(wxConvUTF8));
-      if (! ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
+      if (! ::FLAC__metadata_object_vorbiscomment_append_comment(metadata.get(),
                                                            entry.get_entry(),
                                                            true) ) {
-         return false;
+         return {};
       }
    }
 
-   return true;
+   return metadata;
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FLAC",
