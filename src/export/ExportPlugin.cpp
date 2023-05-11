@@ -38,6 +38,10 @@ TranslatableString ExportPluginEx::GetStatusString() const
    return mStatus;
 }
 
+TranslatableString ExportPluginEx::GetErrorString() const
+{
+   return mError;
+}
 
 void ExportPluginEx::Cancel()
 {
@@ -81,4 +85,9 @@ bool ExportPluginEx::IsStopped() const noexcept
 void ExportPluginEx::SetStatusString(const TranslatableString &status)
 {
    mStatus = status;
+}
+
+void ExportPluginEx::SetErrorString(const TranslatableString &error)
+{
+   mError = error;
 }

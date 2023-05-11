@@ -55,6 +55,9 @@ public:
    
    ///\brief Can be used to retrieve description of current export status in human-readable form
    virtual TranslatableString GetStatusString() const = 0;
+   
+   ///\return Optional detailed problem description in case of export failure.
+   virtual TranslatableString GetErrorString() const = 0;
 
    virtual bool CheckFileName(wxFileName &filename, int format = 0);
 
@@ -96,9 +99,11 @@ public:
 class ExportPluginEx : public ExportPlugin
 {
    TranslatableString mStatus;
+   TranslatableString mError;
    bool mCancelled{false};
    bool mStopped{false};
 public:
+   TranslatableString GetErrorString() const override;
    TranslatableString GetStatusString() const override;
    void Cancel() override;
    void Stop() override;
@@ -111,4 +116,5 @@ protected:
    bool IsStopped() const noexcept;
    
    void SetStatusString(const TranslatableString& status);
+   void SetErrorString(const TranslatableString& error);
 };

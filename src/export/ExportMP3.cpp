@@ -88,12 +88,12 @@
 #include "Tags.h"
 #include "Track.h"
 #include "HelpSystem.h"
-#include "AudacityMessageBox.h"
 #include "wxFileNameWrapper.h"
 #include "Project.h"
 
 #include "Export.h"
 #include "ExportProgressListener.h"
+#include "BasicUI.h"
 
 #include <lame/lame.h>
 
@@ -1047,7 +1047,7 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
    if (!ValidLibraryLoaded()) {
 #if defined(__WXMSW__)
       if (askuser && !mBladeVersion.empty()) {
-         AudacityMessageBox( mBladeVersion );
+         BasicUI::ShowMessageBox(mBladeVersion);
       }
 #endif
       wxLogMessage(wxT("Failed to locate LAME library"));
@@ -1747,7 +1747,10 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
    MP3Exporter exporter;
 
    if (!exporter.LoadLibrary(wxTheApp->GetTopWindow(), MP3Exporter::Maybe)) {
-      AudacityMessageBox( XO("Could not open MP3 encoding library!") );
+      BasicUI::ShowMessageBox(XO("Could not open MP3 encoding library!"),
+                              BasicUI::MessageBoxOptions()
+                                 .IconStyle(BasicUI::Icon::Error)
+                                 .Caption(XO("Error")));
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
@@ -1788,17 +1791,17 @@ void ExportMP3::Export(AudacityProject *project,
    }
 #else
    if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
-      AudacityMessageBox( XO("Could not open MP3 encoding library!") );
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
+      SetErrorString(XO("Could not open MP3 encoding library!"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
 
    if (!exporter.ValidLibraryLoaded()) {
-      AudacityMessageBox( XO("Not a valid or supported MP3 encoding library!") );
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
+      SetErrorString(XO("Not a valid or supported MP3 encoding library!"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -1899,7 +1902,7 @@ void ExportMP3::Export(AudacityProject *project,
 
    auto inSamples = exporter.InitializeStream(channels, rate);
    if (((int)inSamples) < 0) {
-      AudacityMessageBox( XO("Unable to initialize MP3 stream") );
+      SetErrorString(XO("Unable to initialize MP3 stream"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -1911,7 +1914,7 @@ void ExportMP3::Export(AudacityProject *project,
    // Open file for writing
    wxFFile outFile(fName.GetFullPath(), wxT("w+b"));
    if (!outFile.IsOpened()) {
-      AudacityMessageBox( XO("Unable to open target file for writing") );
+      SetErrorString(XO("Unable to open target file for writing"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -1994,9 +1997,8 @@ void ExportMP3::Export(AudacityProject *project,
          }
 
          if (bytes < 0) {
-            auto msg = XO("Error %ld returned from MP3 encoder")
-               .Format( bytes );
-            AudacityMessageBox( msg );
+            SetErrorString(XO("Error %ld returned from MP3 encoder")
+               .Format( bytes ));
             hasError = true;
             break;
          }
