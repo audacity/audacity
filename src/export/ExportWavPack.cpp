@@ -21,14 +21,8 @@
 #include "Mix.h"
 
 #include <wavpack/wavpack.h>
-#include <wx/log.h>
-#include <wx/checkbox.h>
-#include <wx/choice.h>
-#include <wx/stream.h>
 
-#include "ShuttleGui.h"
 #include "../ProjectSettings.h"
-#include "wxPanelWrapper.h"
 #include "Track.h"
 #include "ProjectRate.h"
 #include "Tags.h"
@@ -37,52 +31,16 @@
 #include "ExportUtils.h"
 #include "ExportOptionsEditor.h"
 
-//---------------------------------------------------------------------------
-// ExportWavPackOptions
-//---------------------------------------------------------------------------
-
-#define ID_HYBRID_MODE 9000
-#define ID_CREATE_WVC  9001
-
-class ExportWavPackOptions final : public wxPanelWrapper
+namespace
 {
-public:
 
-   ExportWavPackOptions(wxWindow *parent, int format);
-   virtual ~ExportWavPackOptions();
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-
-   void OnHybridMode(wxCommandEvent& evt);
-   void OnCreateCorrection(wxCommandEvent& evt);
-
-private:
-   wxCheckBox *mCreateCorrectionFile { nullptr };
-   wxChoice   *mBitRate;
-
-   DECLARE_EVENT_TABLE()
+enum : int {
+   OptionIDQuality = 0,
+   OptionIDBitDepth,
+   OptionIDHybridMode,
+   OptionIDCreateCorrection,
+   OptionIDBitRate
 };
-
-BEGIN_EVENT_TABLE(ExportWavPackOptions, wxPanelWrapper)
-   EVT_CHECKBOX(ID_HYBRID_MODE, ExportWavPackOptions::OnHybridMode)
-   EVT_CHECKBOX(ID_CREATE_WVC,  ExportWavPackOptions::OnCreateCorrection)
-END_EVENT_TABLE()
-
-ExportWavPackOptions::ExportWavPackOptions(wxWindow *parent, int WXUNUSED(format))
-: wxPanelWrapper(parent, wxID_ANY)
-{
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-   PopulateOrExchange(S);
-
-   TransferDataToWindow();
-}
-
-ExportWavPackOptions::~ExportWavPackOptions()
-{
-   TransferDataFromWindow();
-}
 
 const TranslatableStrings ExportQualityNames{
    XO("Low Quality (Fast)") ,
@@ -91,25 +49,10 @@ const TranslatableStrings ExportQualityNames{
    XO("Very High Quality (Slowest)") ,
 };
 
-const std::vector< int > ExportQualityValues{
-   0,
-   1,
-   2,
-   3,
-};
-
-namespace
-{
 const TranslatableStrings ExportBitDepthNames {
    XO("16 bit"),
    XO("24 bit"),
    XO("32 bit float "),
-};
-
-const std::vector<int> ExportBitDepthValues {
-   16,
-   24,
-   32,
 };
 
 IntSetting QualitySetting{ L"/FileFormats/WavPackEncodeQuality", 1 };
@@ -118,7 +61,6 @@ IntSetting BitDepthSetting{ L"/FileFormats/WavPackBitDepth", 16 };
 
 BoolSetting HybridModeSetting{ L"/FileFormats/WavPackHybridMode", false };
 BoolSetting CreateCorrectionFileSetting{ L"/FileFormats/WavPackCreateCorrectionFile", false };
-
 /* 
 Copied from ExportMP2.cpp by
    Joshua Haberman
@@ -141,97 +83,153 @@ const TranslatableStrings BitRateNames {
    n_bps(80),
 };
 
-const std::vector< int > BitRateValues {
-   22,
-   25,
-   30,
-   35,
-   40,
-   45,
-   50,
-   60,
-   70,
-   80,
-};
 
-}
-
-void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
-{
-   bool hybridMode = HybridModeSetting.Read();
-
-   S.StartVerticalLay();
+const std::initializer_list<ExportOption> ExportWavPackOptions {
    {
-      S.StartHorizontalLay(wxEXPAND);
-      {
-         S.SetSizerProportion(1);
-         S.StartMultiColumn(2, wxCENTER);
-         {
-            S.TieNumberAsChoice(
-               XXO("Quality"),
-               QualitySetting,
-               ExportQualityNames,
-               &ExportQualityValues
-            );
-
-            S.TieNumberAsChoice(
-               XXO("Bit Depth"),
-               BitDepthSetting,
-               ExportBitDepthNames,
-               &ExportBitDepthValues
-            );
-
-            S.Id(ID_HYBRID_MODE).TieCheckBox( XXO("Hybrid Mode"), HybridModeSetting);
-
-            mCreateCorrectionFile = S.Id(ID_CREATE_WVC).Disable(!hybridMode).TieCheckBox(
-               XXO("Create Correction(.wvc) File"),
-               CreateCorrectionFileSetting
-            );
-
-            mBitRate = S.Disable(!hybridMode).TieNumberAsChoice(
-               XXO("Bit Rate:"),
-               BitrateSetting,
-               BitRateNames,
-               &BitRateValues
-            );
-         }
-         S.EndMultiColumn();
-      }
-      S.EndHorizontalLay();
+      
+      OptionIDQuality, XO("Quality"),
+      1,
+      ExportOption::TypeEnum,
+      { 0, 1, 2, 3 },
+      ExportQualityNames
+   },
+   {
+      OptionIDBitDepth, XO("Bit Depth"),
+      16,
+      ExportOption::TypeEnum,
+      { 16, 24, 32 },
+      ExportBitDepthNames
+   },
+   {
+      OptionIDHybridMode, XO("Hybrid Mode"),
+      false
+   },
+   {
+      OptionIDCreateCorrection, XO("Create Correction(.wvc) File"),
+      false,
+      ExportOption::ReadOnly
+   },
+   {
+      OptionIDBitRate, XO("Bit Rate"),
+      40,
+      ExportOption::TypeEnum,
+      { 22, 25, 30, 35, 40, 45, 50, 60, 70, 80 },
+      BitRateNames
    }
-   S.EndVerticalLay();
-}
-
-bool ExportWavPackOptions::TransferDataToWindow()
-{
-   return true;
-}
-
-bool ExportWavPackOptions::TransferDataFromWindow()
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Flush();
-
-   return true;
-}
-
-void ExportWavPackOptions::OnHybridMode(wxCommandEvent&)
-{
-   const auto hybridMode = HybridModeSetting.Toggle();
-   mCreateCorrectionFile->Enable(hybridMode);
-   mBitRate->Enable(hybridMode);
 };
 
-void ExportWavPackOptions::OnCreateCorrection(wxCommandEvent&)
+class ExportOptionsWavPackEditor final : public ExportOptionsEditor
 {
-   CreateCorrectionFileSetting.Toggle();
+   Listener* mListener{nullptr};
+   std::vector<ExportOption> mOptions = ExportWavPackOptions;
+   std::unordered_map<ExportOptionID, ExportValue> mValues;
+public:
+
+   ExportOptionsWavPackEditor(Listener* listener)
+      : mListener(listener)
+   {
+      for(const auto& option : mOptions)
+         mValues[option.id] = option.defaultValue;
+   }
+
+   int GetOptionsCount() const override
+   {
+      return static_cast<int>(mOptions.size());
+   }
+
+   bool GetOption(int index, ExportOption& option) const override
+   {
+      if(index >= 0 && index < mOptions.size())
+      {
+         option = mOptions[index];
+         return true;
+      }
+      return false;
+   }
+
+   bool GetValue(ExportOptionID id, ExportValue& value) const override
+   {
+      const auto it = mValues.find(id);
+      if(it != mValues.end())
+      {
+         value = it->second;
+         return true;
+      }
+      return false;
+   }
+
+   bool SetValue(ExportOptionID id, const ExportValue& value) override
+   {
+      auto it = mValues.find(id);
+      if(it == mValues.end() || value.index() != it->second.index())
+         return false;
+
+      it->second = value;
+      if(id == OptionIDHybridMode)
+      {
+         OnHybridModeChange(*std::get_if<bool>(&value));
+
+         if(mListener)
+         {
+            mListener->OnExportOptionChangeBegin();
+            mListener->OnExportOptionChange(mOptions[OptionIDCreateCorrection]);
+            mListener->OnExportOptionChangeEnd();
+         }
+      }
+      return true;
+   }
+
+   void Load(const wxConfigBase& config) override
+   {
+      auto quality = std::get_if<int>(&mValues[OptionIDQuality]);
+      auto bitDepth = std::get_if<int>(&mValues[OptionIDBitDepth]);
+      auto hybridMode = std::get_if<bool>(&mValues[OptionIDHybridMode]);
+      auto createCorrection = std::get_if<bool>(&mValues[OptionIDCreateCorrection]);
+      auto bitRate = std::get_if<int>(&mValues[OptionIDBitRate]);
+
+      config.Read(L"/FileFormats/WavPackEncodeQuality", quality);
+      config.Read(L"/FileFormats/WavPackBitDepth", bitDepth);
+      config.Read(L"/FileFormats/WavPackHybridMode", hybridMode);
+      config.Read(L"/FileFormats/WavPackCreateCorrectionFile", createCorrection);
+      config.Read(L"/FileFormats/WavPackBitrate", bitRate);
+      
+      OnHybridModeChange(*hybridMode);
+   }
+
+   void Store(wxConfigBase& config) const override
+   {
+      auto it = mValues.find(OptionIDQuality);
+      if(it != mValues.end())
+         config.Write(L"/FileFormats/WavPackEncodeQuality", *std::get_if<int>(&it->second));
+
+      it = mValues.find(OptionIDBitDepth);
+      if(it != mValues.end())
+         config.Write(L"/FileFormats/WavPackBitDepth", *std::get_if<int>(&it->second));
+
+      it = mValues.find(OptionIDHybridMode);
+      if(it != mValues.end())
+         config.Write(L"/FileFormats/WavPackHybridMode", *std::get_if<bool>(&it->second));
+
+      it = mValues.find(OptionIDCreateCorrection);
+      if(it != mValues.end())
+         config.Write(L"/FileFormats/WavPackCreateCorrectionFile", *std::get_if<bool>(&it->second));
+
+      it = mValues.find(OptionIDBitRate);
+      if(it != mValues.end())
+         config.Write(L"/FileFormats/WavPackBitrate", *std::get_if<int>(&it->second));
+   }
+   
+private:
+   void OnHybridModeChange(bool hybridMode)
+   {
+      if(hybridMode)
+         mOptions[OptionIDCreateCorrection].flags &= ~ExportOption::Flags::ReadOnly;
+      else
+         mOptions[OptionIDCreateCorrection].flags |= ExportOption::Flags::ReadOnly;
+   }
 };
 
-//---------------------------------------------------------------------------
-// ExportWavPack
-//---------------------------------------------------------------------------
+}
 
 struct WriteId final
 {
@@ -284,15 +282,15 @@ FormatInfo ExportWavPack::GetFormatInfo(int) const
 }
 
 std::unique_ptr<ExportOptionsEditor>
-ExportWavPack::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+ExportWavPack::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const
 {
-   return {};
+   return std::make_unique<ExportOptionsWavPackEditor>(listener);
 }
 
 
 void ExportWavPack::Export(AudacityProject *project,
                            ExportProgressListener &progressListener,
-                           const Parameters&,
+                           const Parameters& parameters,
                            unsigned numChannels,
                            const wxFileNameWrapper &fName,
                            bool selectionOnly,
@@ -317,11 +315,27 @@ void ExportWavPack::Export(AudacityProject *project,
    double rate = ProjectRate::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
-   int quality = QualitySetting.Read();
-   bool hybridMode = HybridModeSetting.Read();
-   bool createCorrectionFile = CreateCorrectionFileSetting.Read();
-   int bitRate = BitrateSetting.Read();
-   int bitDepth = BitDepthSetting.Read();
+   const auto quality = ExportUtils::GetParameterValue<int>(
+      parameters,
+      OptionIDQuality,
+      1);
+   const auto hybridMode = ExportUtils::GetParameterValue<bool>(
+      parameters,
+      OptionIDHybridMode,
+      false);
+   const auto createCorrectionFile = ExportUtils::GetParameterValue<bool>(
+      parameters,
+      OptionIDCreateCorrection,
+      false);
+   const auto bitRate = ExportUtils::GetParameterValue<int>(
+      parameters,
+      OptionIDBitRate,
+      40);
+   const auto bitDepth = ExportUtils::GetParameterValue<int>(
+      parameters,
+      OptionIDBitDepth,
+      16);
+
 
    sampleFormat format = int16Sample;
    if (bitDepth == 24) {
@@ -516,7 +530,7 @@ int ExportWavPack::WriteBlock(void *id, void *data, int32_t length)
 
 void ExportWavPack::OptionsCreate(ShuttleGui &S, int format)
 {
-   S.AddWindow( safenew ExportWavPackOptions{ S.GetParent(), format } );
+
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "WavPack",
