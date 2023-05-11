@@ -19,11 +19,13 @@ License: GPL v2 or later.  See License.txt.
 
 
 #include "FFmpeg.h"
-
+#include "FFmpegFunctions.h"
+#include "ModuleConstants.h"
 #include "FileNames.h"
 #include "SelectFile.h"
 #include "HelpSystem.h"
 #include "AudacityMessageBox.h"
+#include "ShuttleGui.h"
 
 #include <wx/checkbox.h>
 #include <wx/dynlib.h>
@@ -31,15 +33,6 @@ License: GPL v2 or later.  See License.txt.
 #include <wx/log.h>
 #include <wx/textctrl.h>
 
-#if !defined(USE_FFMPEG)
-/// FFmpeg support may or may not be compiled in,
-/// but Preferences dialog requires this function nevertheless
-TranslatableString GetFFmpegVersion()
-{
-   return XO("FFmpeg support not compiled in");
-}
-
-#else
 
 static BoolSetting FFmpegEnabled{ L"/FFmpeg/Enabled", false };
 
@@ -361,4 +354,11 @@ bool FindFFmpegLibs(wxWindow* parent)
 
 BoolSetting FFmpegNotFoundDontShow{ L"/FFmpeg/NotFoundDontShow", false };
 
-#endif //USE_FFMPEG
+DEFINE_VERSION_CHECK
+
+extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
+{
+   if(type == ModuleInitialize)
+      FFmpegStartup();
+   return 1;
+}
