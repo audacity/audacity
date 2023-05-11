@@ -413,9 +413,10 @@ public:
       UpdateCodecAndFormat();
    }
 
-   void TransferDataFromWindow() override
+   bool TransferDataFromWindow() override
    {
       Load(*gPrefs);
+      return true;
    }
 
    int GetOptionsCount() const override

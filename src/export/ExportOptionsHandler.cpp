@@ -43,14 +43,18 @@ ExportOptionsHandler::ExportOptionsHandler(ShuttleGui& S, ExportPlugin& plugin, 
       PopulateEmpty(S);
 }
 
-void ExportOptionsHandler::TransferDataFromEditor()
+bool ExportOptionsHandler::TransferDataFromEditor()
 {
    if(mEditor)
    {
       if(auto uiServices = dynamic_cast<ExportOptionsUIServices*>(mEditor.get()))
-         uiServices->TransferDataFromWindow();
+      {
+         if(!uiServices->TransferDataFromWindow())
+            return false;
+      }
       mEditor->Store(*gPrefs);
    }
+   return true;
 }
 
 ExportPlugin::Parameters ExportOptionsHandler::GetParameters() const
