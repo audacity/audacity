@@ -356,7 +356,7 @@ int ExportCL::GetFormatCount() const
 FormatInfo ExportCL::GetFormatInfo(int) const
 {
    return {
-      wxT("CL"), XO("(external program)"), {""}, {}, 255, false
+      wxT("CL"), XO("(external program)"), {""}, 255, false
    };
 }
 

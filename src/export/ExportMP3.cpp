@@ -1734,7 +1734,7 @@ int ExportMP3::GetFormatCount() const
 FormatInfo ExportMP3::GetFormatInfo(int) const
 {
    return {
-      wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, {}, 2, true
+      wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, 2, true
    };
 }
 

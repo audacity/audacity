@@ -158,7 +158,7 @@ int ExportOGG::GetFormatCount() const
 FormatInfo ExportOGG::GetFormatInfo(int) const
 {
    return {
-      wxT("OGG"), XO("Ogg Vorbis Files"), { wxT("ogg") }, {}, 255, true
+      wxT("OGG"), XO("Ogg Vorbis Files"), { wxT("ogg") }, 255, true
    };
 }
 
