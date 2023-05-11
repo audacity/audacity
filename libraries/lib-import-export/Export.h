@@ -95,7 +95,6 @@ private:
       Exporter::ExportPluginFactory mFactory;
    };
 
-   void FixFilename();
    ExportResult ExportTracks(ExportPluginDelegate& delegate, const ExportPlugin::Parameters& parameters);
 
 private:
@@ -105,7 +104,6 @@ private:
    ExportPluginArray mPlugins;
 
    wxFileName mFilename;
-   wxFileName mActualName;
    ExportPlugin::Parameters mParameters;
 
    double mT0;

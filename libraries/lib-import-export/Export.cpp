@@ -106,7 +106,6 @@ void Exporter::Configure(const wxFileName &filename,
                          const ExportPlugin::Parameters& parameters)
 {
    mFilename = filename;
-   mActualName = filename;
    mFormat = pluginIndex;
    mSubFormat = formatIndex;
    mParameters = parameters;
@@ -168,11 +167,7 @@ bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skip
 
 ExportResult Exporter::Process(ExportPluginDelegate& delegate)
 {
-   // Ensure filename doesn't interfere with project files.
-   FixFilename();
-
    const auto result = ExportTracks(delegate, mParameters);
-
    // Get rid of mixerspec
    mMixerSpec.reset();
 
@@ -200,7 +195,6 @@ ExportResult Exporter::Process(ExportPluginDelegate& delegate,
             mT1 = t1;
             
             Configure(filename, i, j, parameters);
-            FixFilename();
             return ExportTracks(delegate, parameters);
          }
       }
@@ -208,66 +202,41 @@ ExportResult Exporter::Process(ExportPluginDelegate& delegate,
    return ExportResult::Error;
 }
 
-//
-// For safety, if the file already exists it stores the filename
-// the user wants in actualName, and returns a temporary file name.
-// The calling function should rename the file when it's successfully
-// exported.
-//
-void Exporter::FixFilename()
-{
-   //
-   // To be even safer, return a temporary file name based
-   // on this one...
-   //
-
-   mActualName = mFilename;
-
-   int suffix = 0;
-   while (mFilename.FileExists()) {
-      mFilename.SetName(mActualName.GetName() +
-                        wxString::Format(wxT("%d"), suffix));
-      suffix++;
-   }
-}
-
 ExportResult Exporter::ExportTracks(ExportPluginDelegate& delegate,
                             const ExportPlugin::Parameters& parameters)
 {
-   // Keep original in case of failure
-   if (mActualName != mFilename) {
-      ::wxRenameFile(mActualName.GetFullPath(), mFilename.GetFullPath());
-   }
+   auto filename = mFilename;
 
+   //For safety, if the file already exists we use temporary filename
+   //and replace original one export succeeded
+   int suffix = 0;
+   while (filename.FileExists()) {
+      filename.SetName(mFilename.GetName() +
+                        wxString::Format(wxT("%d"), suffix));
+      suffix++;
+   }
+   
    auto result = ExportResult::Success;
    auto cleanup = finally( [&] {
       const auto success = result == ExportResult::Success
          || result == ExportResult::Stopped;
-      
-      if (mActualName != mFilename) {
-         // Remove backup
-         if ( success )
-            ::wxRemoveFile(mFilename.GetFullPath());
-         else {
-            // Restore original, if needed
-            ::wxRemoveFile(mActualName.GetFullPath());
-            ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
-         }
-         // Restore filename
-         mFilename = mActualName;
+
+      if(success)
+      {
+         if (filename != mFilename)
+            ::wxRenameFile(filename.GetFullPath(),
+               mFilename.GetFullPath(),
+               true /*overwrite*/);
       }
-      else {
-         if ( ! success )
-            // Remove any new, and only partially written, file.
-            ::wxRemoveFile(mFilename.GetFullPath());
-      }
+      else
+         ::wxRemoveFile(filename.GetFullPath());
    } );
 
    result = mPlugins[mFormat]->Export(mProject,
                              delegate,
                              parameters,
                              mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
-                             mActualName.GetFullPath(),
+                             filename.GetFullPath(),
                              mSelectedOnly,
                              mT0,
                              mT1,
