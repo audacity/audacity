@@ -46,10 +46,10 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "toolbars/SelectionBar.h"
-#include "AudacityMessageBox.h"
 #include "widgets/NumericTextCtrl.h"
 #include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"
+#include "ImportUtils.h"
 
 #include "NumericConverterFormats.h"
 
@@ -93,6 +93,8 @@ public:
                        AudacityProject *project);
    ~AUPImportFileHandle();
 
+   TranslatableString GetErrorMessage() const override;
+   
    TranslatableString GetFileDescription() override;
 
    ByteCount GetFileUncompressedBytes() override;
@@ -298,6 +300,11 @@ TranslatableString AUPImportFileHandle::GetFileDescription()
    return DESC;
 }
 
+TranslatableString AUPImportFileHandle::GetErrorMessage() const
+{
+   return mErrorMsg;
+}
+
 auto AUPImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    // TODO: Get Uncompressed byte count.
@@ -339,31 +346,18 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
    bool success = xmlFile.Parse(this, GetFilename());
    if (!success)
    {
-      AudacityMessageBox(
-         XO("Couldn't import the project:\n\n%s").Format(xmlFile.GetErrorStr()),
-         XO("Import Project"),
-         wxOK | wxCENTRE,
-         &GetProjectFrame(mProject));
-      
+      mErrorMsg = XO("Couldn't import the project:\n\n%s").Format(xmlFile.GetErrorStr());
       progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
       return;
    }
 
-   //Could be set by `SetWarning` but without setting the `mHasParseError` flag
-   if (!mErrorMsg.empty())
-   {
-      // Error or warning
-      AudacityMessageBox(
-         mErrorMsg,
-         XO("Import Project"),
-         wxOK | wxCENTRE,
-         &GetProjectFrame(mProject));
-   }
    if(mHasParseError)
    {
       progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
       return;
    }
+   else if(!mErrorMsg.empty())//i.e. warning
+      ImportUtils::ShowMessageBox(mErrorMsg);
    
    sampleCount processed = 0;
    for (auto fi : mFiles)
@@ -523,15 +517,11 @@ bool AUPImportFileHandle::Open()
 
       if (!wxStrncmp(buf, wxT("AudacityProject"), 15))
       {
-         AudacityMessageBox(
+         ImportUtils::ShowMessageBox(
             XO("This project was saved by Audacity version 1.0 or earlier. The format has\n"
                "changed and this version of Audacity is unable to import the project.\n\n"
                "Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
-               "you may import it with this version of Audacity."),
-            XO("Import Project"),
-            wxOK | wxCENTRE,
-            &GetProjectFrame(mProject));
-
+               "you may import it with this version of Audacity."));
          return false;
       }
 
@@ -806,12 +796,8 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          // No luck...complain and bail
          if (projName.empty())
          {
-            AudacityMessageBox(
-               XO("Couldn't find the project data folder: \"%s\"").Format(value.ToWString()),
-               XO("Error Opening Project"),
-               wxOK | wxCENTRE,
-               &window);
-
+            ImportUtils::ShowMessageBox(
+               XO("Couldn't find the project data folder: \"%s\"").Format(value.ToWString()));
             return false;
          }
 
@@ -882,12 +868,8 @@ bool AUPImportFileHandle::HandleNoteTrack(XMLTagHandler *&handler)
 
    return true;
 #else
-   AudacityMessageBox(
-      XO("MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."),
-      XO("Project Import"),
-      wxOK | wxICON_EXCLAMATION | wxCENTRE,
-      &GetProjectFrame(mProject));
-
+   ImportUtils::ShowMessageBox(
+      XO("MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."));
    return false;
 #endif
 }
@@ -900,12 +882,8 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
    // (See HandleTimeEnvelope and HandleControlPoint also)
    if (*tracks.Leaders<TimeTrack>().begin())
    {
-      AudacityMessageBox(
-         XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."),
-         XO("Project Import"),
-         wxOK | wxICON_EXCLAMATION | wxCENTRE,
-         &GetProjectFrame(mProject));
-
+      ImportUtils::ShowMessageBox(
+         XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."));
       return true;
    }
 

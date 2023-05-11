@@ -75,3 +75,8 @@ bool ImportFileHandleEx::IsStopped() const noexcept
 {
    return mStopped;
 }
+
+TranslatableString ImportFileHandle::GetErrorMessage() const
+{
+   return {};
+}

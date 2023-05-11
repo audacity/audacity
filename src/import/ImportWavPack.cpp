@@ -31,7 +31,6 @@
 #include "Prefs.h"
 #include "Tags.h"
 #include "WaveTrack.h"
-#include "AudacityMessageBox.h"
 #include "CodeConversions.h"
 #include "ImportUtils.h"
 #include "ImportProgressListener.h"
@@ -239,8 +238,8 @@ void WavPackImportFileHandle::Import(ImportProgressListener &progressListener,
    }
 
    if (WavpackGetNumErrors(mWavPackContext))
-      AudacityMessageBox( XO( "Encountered %d errors decoding WavPack file!" ).Format( WavpackGetNumErrors(mWavPackContext) ),
-                          XO( "WavPack Importer" ), wxOK | wxICON_EXCLAMATION | wxCENTRE);
+      ImportUtils::ShowMessageBox(
+         XO( "Encountered %d errors decoding WavPack file!" ).Format( WavpackGetNumErrors(mWavPackContext) ));
 
    if(IsCancelled())
    {

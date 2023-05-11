@@ -80,6 +80,7 @@
 #include "FileNames.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
+#include "ImportProgressListener.h"
 #include "Import.h"
 #include "ImportProgressListener.h"
 #include "Project.h"
@@ -88,7 +89,7 @@
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "Prefs.h"
-#include "AudacityMessageBox.h"
+#include "ImportUtils.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024
 
@@ -405,12 +406,9 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             }
             else
             {
-               AudacityMessageBox(
+               ImportUtils::ShowMessageBox(
                   /* i18n-hint: You do not need to translate "LOF" */
-                  XO("Invalid window offset in LOF file."),
-                  /* i18n-hint: You do not need to translate "LOF" */
-                  XO("LOF Error"),
-                  wxOK | wxCENTRE);
+                  XO("Invalid window offset in LOF file."));
             }
 
             if (tok.HasMoreTokens())
@@ -428,12 +426,9 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             }
             else
             {
-               AudacityMessageBox(
+               ImportUtils::ShowMessageBox(
                   /* i18n-hint: You do not need to translate "LOF" */
-                  XO("Invalid duration in LOF file."),
-                  /* i18n-hint: You do not need to translate "LOF" */
-                  XO("LOF Error"),
-                  wxOK | wxCENTRE);
+                  XO("Invalid duration in LOF file."));
             }
          }     // End if statement
 
@@ -524,10 +519,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false) ||
                    targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
                {
-                  AudacityMessageBox(
-                     XO("MIDI tracks cannot be offset individually, only audio files can be."),
-                     XO("LOF Error"),
-                     wxOK | wxCENTRE);
+                  ImportUtils::ShowMessageBox(XO("MIDI tracks cannot be offset individually, only audio files can be."));
                }
                else
 #endif
@@ -541,12 +533,9 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             } // end of converting "offset" argument
             else
             {
-               AudacityMessageBox(
+               ImportUtils::ShowMessageBox(
                   /* i18n-hint: You do not need to translate "LOF" */
-                  XO("Invalid track offset in LOF file."),
-                  /* i18n-hint: You do not need to translate "LOF" */
-                  XO("LOF Error"),
-                  wxOK | wxCENTRE);
+                  XO("Invalid track offset in LOF file."));
             }
          }     // End if statement for "offset" parameters
       }     // End if statement (more tokens after file name)
