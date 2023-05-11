@@ -46,6 +46,8 @@ function.
 #include "ExportFFmpegDialogs.h"
 #include "SelectFile.h"
 
+#include "ExportUtils.h"
+
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
@@ -1149,14 +1151,14 @@ ProgressResult ExportFFmpeg::Export(
 
    size_t pcmBufferSize = mDefaultFrameSize;
 
-   auto mixer = CreateMixer(tracks, selectionOnly,
+   auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
       t0, t1,
       channels, pcmBufferSize, true,
       mSampleRate, int16Sample, mixerSpec);
 
    auto updateResult = ProgressResult::Success;
    {
-      InitProgress( pDialog, fName,
+      ExportUtils::InitProgress( pDialog, fName,
          selectionOnly
             ? XO("Exporting selected audio as %s")
                  .Format( ExportFFmpegOptions::fmts[mSubFormat].description )

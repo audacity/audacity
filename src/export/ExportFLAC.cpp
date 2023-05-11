@@ -38,6 +38,8 @@ Joshua Haberman
 #include "ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 
+#include "ExportUtils.h"
+
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
 //----------------------------------------------------------------------------
@@ -372,14 +374,14 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
       }
    } );
 
-   auto mixer = CreateMixer(tracks, selectionOnly,
+   auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
                             t0, t1,
                             numChannels, SAMPLES_PER_RUN, false,
                             rate, format, mixerSpec);
 
    ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 
-   InitProgress( pDialog, fName,
+   ExportUtils::InitProgress( pDialog, fName,
       selectionOnly
          ? XO("Exporting the selected audio as FLAC")
          : XO("Exporting the audio as FLAC") );
