@@ -508,7 +508,6 @@ void ExportMultipleDialog::OnOptions(wxCommandEvent& WXUNUSED(event))
        }
      }
    }
-   mPlugins[mPluginIndex]->DisplayOptions(this,mSubFormatIndex);
 }
 
 void ExportMultipleDialog::OnCreate(wxCommandEvent& WXUNUSED(event))
