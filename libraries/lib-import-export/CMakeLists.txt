@@ -44,6 +44,7 @@ set( LIBRARIES
    lib-effects-interface
    PUBLIC
       rapidjson::rapidjson
+      lib-tags
 )
 audacity_library( lib-import-export "${SOURCES}" "${LIBRARIES}"
    "" ""

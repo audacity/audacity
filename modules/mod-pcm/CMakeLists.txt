@@ -8,7 +8,6 @@ set( SOURCES
 
 set( LIBRARIES
       lib-utility-interface
-      lib-tags-interface
       lib-import-export-interface
       lib-file-formats-interface
       lib-wx-init-interface
