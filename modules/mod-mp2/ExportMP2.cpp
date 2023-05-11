@@ -33,9 +33,6 @@
 */
 
 
-
-#ifdef USE_LIBTWOLAME
-
 #include <wx/defs.h>
 #include <wx/dynlib.h>
 #include <wx/log.h>
@@ -451,6 +448,3 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "MP2",
    []{ return std::make_unique< ExportMP2 >(); }
 };
-
-#endif // #ifdef USE_LIBTWOLAME
-
