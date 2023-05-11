@@ -14,18 +14,25 @@
 
 class wxConfigBase;
 
-class ExportOptionsEditor
+///\brief Editor objects are used to retrieve a set of export options,
+///and configure exporting parameters according the plugin internal logic.
+///Each option is assigned with internal index that should not change.
+class IMPORT_EXPORT_API ExportOptionsEditor
 {
 public:
-   
-   class Listener
+   ///\brief Listener object that is used to report on option changes.
+   class IMPORT_EXPORT_API Listener
    {
    public:
       virtual ~Listener();
-      virtual void OnExportOptionChangeBegin() = 0;
-      virtual void OnExportOptionChangeEnd() = 0;
-      virtual void OnExportOptionChange(const ExportOption& option) = 0;
 
+      ///\brief Called before `OnExportOptionChange`
+      virtual void OnExportOptionChangeBegin() = 0;
+      ///\brief Called after `OnExportOptionChange`
+      virtual void OnExportOptionChangeEnd() = 0;
+      ///\brief Called when option change
+      virtual void OnExportOptionChange(const ExportOption& option) = 0;
+      ///\brief Called when format extension change (usually in response parameter change)
       virtual void OnExtensionChange(const wxString& extension) = 0;
    };
 

@@ -23,14 +23,14 @@
 #include "LoadCommands.h"
 #include "../ProjectFileManager.h"
 #include "ViewInfo.h"
-#include "../export/Export.h"
+#include "Export.h"
 #include "../SelectUtilities.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
 #include "CommandContext.h"
-#include "export/ExportUtils.h"
+#include "ExportUtils.h"
 #include "export/GenericExportProgressListener.h"
 
 

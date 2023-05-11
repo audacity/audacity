@@ -43,7 +43,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveTrack.h"
 #include "WaveClip.h"
 #include "wxFileNameWrapper.h"
-#include "export/Export.h"
+#include "Export.h"
 #include "import/Import.h"
 #include "import/ImportProgressListener.h"
 #include "import/ImportPlugin.h"

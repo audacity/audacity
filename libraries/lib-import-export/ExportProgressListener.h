@@ -11,7 +11,7 @@
 #pragma once
 
 ///\brief Used by `ExportPlugin` to report on export progress and status changes
-class AUDACITY_DLL_API ExportProgressListener
+class IMPORT_EXPORT_API ExportProgressListener
 {
 public:
    enum class ExportResult

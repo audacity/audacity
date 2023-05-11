@@ -44,9 +44,9 @@
 
 #include "CodeConversions.h"
 
-#include "export/Export.h"
-#include "export/ExportProgressListener.h"
-#include "export/ExportUtils.h"
+#include "Export.h"
+#include "ExportProgressListener.h"
+#include "ExportUtils.h"
 #include "AccessibleLinksFormatter.h"
 
 #include "WindowAccessible.h"

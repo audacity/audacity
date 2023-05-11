@@ -14,7 +14,7 @@
 #include "Export.h"
 #include "wxFileNameWrapper.h" // member variable
 #include "wxPanelWrapper.h"
-#include "export/ExportProgressListener.h"
+#include "ExportProgressListener.h"
 
 class wxButton;
 class wxCheckBox;

@@ -13,6 +13,7 @@ set( LIBRARIES
    lib-preferences
    lib-math
    lib-files
+   lib-import-export
    lib-ipc
    lib-registries
    lib-xml

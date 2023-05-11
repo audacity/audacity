@@ -554,23 +554,10 @@ list( APPEND SOURCES
 
       # Export
 
-      export/Export.cpp
-      export/Export.h
       export/ExportFileDialog.cpp
       export/ExportFileDialog.h
-      export/ExportOptionsEditor.h
-      export/ExportOptionsEditor.cpp
-      export/ExportPlugin.cpp
-      export/ExportPlugin.h
-      export/ExportProgressListener.cpp
-      export/ExportProgressListener.h
-      export/ExportTypes.h
-      export/ExportUtils.cpp
-      export/ExportUtils.h
       export/ExportOptionsUIServices.cpp
       export/ExportOptionsUIServices.h
-      export/PlainExportOptionsEditor.cpp
-      export/PlainExportOptionsEditor.h
       export/ExportMixerPanel.cpp
       export/ExportMixerPanel.h
       export/ExportMixerDialog.cpp
@@ -1458,6 +1445,7 @@ set( AUDACITY_LIBRARIES
    lib-time-track-interface
    lib-snapping-interface
    lib-audio-io-interface
+   lib-import-export-interface
 )
 
 if (USE_VST)
