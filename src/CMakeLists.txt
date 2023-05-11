@@ -201,6 +201,8 @@ list( APPEND SOURCES
       TimeDialog.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
+      TimerRecordExportDialog.cpp
+      TimerRecordExportDialog.h
       TrackArt.cpp
       TrackArt.h
       TrackArtist.cpp
@@ -549,8 +551,10 @@ list( APPEND SOURCES
 
       # Export
 
-      export/ExportFileDialog.cpp
-      export/ExportFileDialog.h
+      export/ExportAudioDialog.cpp
+      export/ExportAudioDialog.h
+      export/ExportFilePanel.cpp
+      export/ExportFilePanel.h
       export/ExportMixerPanel.cpp
       export/ExportMixerPanel.h
       export/ExportMixerDialog.cpp
@@ -559,10 +563,6 @@ list( APPEND SOURCES
       export/ExportOptionsHandler.h
       export/ExportProgressUI.cpp
       export/ExportProgressUI.h
-
-      # Standard exporters
-      export/ExportMultiple.cpp
-      export/ExportMultiple.h
 
       # Import
 

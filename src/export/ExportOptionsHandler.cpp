@@ -64,6 +64,15 @@ ExportProcessor::Parameters ExportOptionsHandler::GetParameters() const
    return {};
 }
 
+void ExportOptionsHandler::SetParameters(const ExportProcessor::Parameters& parameters)
+{
+   if(mEditor)
+   {
+      for(const auto& p : parameters)
+         mEditor->SetValue(std::get<0>(p), std::get<1>(p));
+   }
+}
+
 ExportOptionsEditor::SampleRateList ExportOptionsHandler::GetSampleRateList() const
 {
    if(mEditor)
@@ -86,117 +95,113 @@ void ExportOptionsHandler::PopulateEmpty(ShuttleGui& S)
 
 void ExportOptionsHandler::PopulateOptions(ShuttleGui& S)
 {
-   S.StartVerticalLay();
    {
-      S.StartHorizontalLay(wxCENTER);
+      S.StartMultiColumn(2, wxALIGN_LEFT);
       {
-         S.StartMultiColumn(2, wxCENTER);
+         for(int i = 0; i < mEditor->GetOptionsCount(); ++i)
          {
-            for(int i = 0; i < mEditor->GetOptionsCount(); ++i)
+            ExportOption option;
+            if(!mEditor->GetOption(i, option))
+               continue;
+
+            ExportValue value;
+            if(!mEditor->GetValue(option.id, value))
+               continue;
+            
+            wxControl* control { nullptr };
+
+            auto prompt = S.AddPrompt(option.title);
+            prompt->SetMinSize({140, -1});
+
+            if((option.flags & ExportOption::TypeMask) == ExportOption::TypeEnum)
             {
-               ExportOption option;
-               if(!mEditor->GetOption(i, option))
-                  continue;
+               int selected = -1;
+               TranslatableStrings list;
 
-               ExportValue value;
-               if(!mEditor->GetValue(option.id, value))
-                  continue;
-               
-               wxControl* control { nullptr };
-
-               auto prompt = S.AddPrompt(option.title);
-               if((option.flags & ExportOption::TypeMask) == ExportOption::TypeEnum)
+               int index { 0 };
+               std::unordered_map<int, ExportValue> indexValueMap;
+               indexValueMap.reserve(option.values.size());
+               for(auto& e : option.values)
                {
-                  int selected = -1;
-                  TranslatableStrings list;
-
-                  int index { 0 };
-                  std::unordered_map<int, ExportValue> indexValueMap;
-                  indexValueMap.reserve(option.values.size());
-                  for(auto& e : option.values)
-                  {
-                     list.push_back(option.names[index]);
-                     if(value == e)
-                        selected = index;
-                     indexValueMap[index] = e;
-                     ++index;
-                  }
-                  control = S.AddChoice({}, list, selected);
-                  control->Bind(wxEVT_CHOICE, [this, id = option.id, indexValueMap](const wxCommandEvent& evt)
-                  {
-                     const auto it = indexValueMap.find(evt.GetInt());
-                     if(it != indexValueMap.end())
-                        mEditor->SetValue(id, it->second);
-                  });
+                  list.push_back(option.names[index]);
+                  if(value == e)
+                     selected = index;
+                  indexValueMap[index] = e;
+                  ++index;
                }
-               else if(auto selected = std::get_if<bool>(&value))
+               control = S.AddChoice({}, list, selected);
+               control->Bind(wxEVT_CHOICE, [this, id = option.id, indexValueMap](const wxCommandEvent& evt)
                {
-                  control = S.AddCheckBox({}, *selected);
-                  control->Bind(wxEVT_CHECKBOX, [this, id = option.id](const wxCommandEvent& evt)
-                  {
-                     const auto checked = evt.GetInt() != 0;
-                     mEditor->SetValue(id, checked);
-                  });
-               }
-               else if(auto num = std::get_if<int>(&value))
+                  const auto it = indexValueMap.find(evt.GetInt());
+                  if(it != indexValueMap.end())
+                     mEditor->SetValue(id, it->second);
+               });
+            }
+            else if(auto selected = std::get_if<bool>(&value))
+            {
+               control = S.AddCheckBox({}, *selected);
+               control->Bind(wxEVT_CHECKBOX, [this, id = option.id](const wxCommandEvent& evt)
                {
-                  if((option.flags & ExportOption::TypeMask) == ExportOption::TypeRange)
+                  const auto checked = evt.GetInt() != 0;
+                  mEditor->SetValue(id, checked);
+               });
+            }
+            else if(auto num = std::get_if<int>(&value))
+            {
+               if((option.flags & ExportOption::TypeMask) == ExportOption::TypeRange)
+               {
+                  const int min = *std::get_if<int>(&option.values[0]);
+                  const int max = *std::get_if<int>(&option.values[1]);
+                  if(max - min < 20)
                   {
-                     const int min = *std::get_if<int>(&option.values[0]);
-                     const int max = *std::get_if<int>(&option.values[1]);
-                     if(max - min < 20)
+                     control = S.AddSlider({}, *num, max, min);
+                     control->Bind(wxEVT_SLIDER, [this, id = option.id](const wxCommandEvent& evt)
                      {
-                        control = S.AddSlider({}, *num, max, min);
-                        control->Bind(wxEVT_SLIDER, [this, id = option.id](const wxCommandEvent& evt)
-                        {
-                           mEditor->SetValue(id, evt.GetInt());
-                        });
-                     }
-                     else
-                     {
-                        control = S.AddSpinCtrl({}, *num, max, min);
-                        control->Bind(wxEVT_SPINCTRL, [this, id = option.id](const wxSpinEvent& evt)
-                        {
-                           mEditor->SetValue(id, evt.GetInt());
-                        });
-                     }
+                        mEditor->SetValue(id, evt.GetInt());
+                     });
                   }
                   else
                   {
-                     control = S.AddNumericTextBox({}, wxString::Format("%d", *num), 0);
-                     control->Bind(wxEVT_TEXT, [this, id = option.id](const wxCommandEvent& evt)
+                     control = S.AddSpinCtrl({}, *num, max, min);
+                     control->Bind(wxEVT_SPINCTRL, [this, id = option.id](const wxSpinEvent& evt)
                      {
-                        long num;
-                        if(evt.GetString().ToLong(&num))
-                           mEditor->SetValue(id, static_cast<int>(num));
+                        mEditor->SetValue(id, evt.GetInt());
                      });
                   }
                }
-               else if(auto str = std::get_if<std::string>(&value))
+               else
                {
-                  control = S.AddTextBox({}, wxString::FromUTF8(*str), 0);
+                  control = S.AddNumericTextBox({}, wxString::Format("%d", *num), 0);
                   control->Bind(wxEVT_TEXT, [this, id = option.id](const wxCommandEvent& evt)
                   {
-                     mEditor->SetValue(id, evt.GetString().ToStdString());
+                     long num;
+                     if(evt.GetString().ToLong(&num))
+                        mEditor->SetValue(id, static_cast<int>(num));
                   });
                }
-               mIDRowIndexMap[option.id] = static_cast<int>(mRows.size());
-               mRows.emplace_back(prompt, control);
-               
-               if(option.flags & ExportOption::ReadOnly)
-                  control->Disable();
-               if(option.flags & ExportOption::Hidden)
+            }
+            else if(auto str = std::get_if<std::string>(&value))
+            {
+               control = S.AddTextBox({}, wxString::FromUTF8(*str), 0);
+               control->Bind(wxEVT_TEXT, [this, id = option.id](const wxCommandEvent& evt)
                {
-                  prompt->Hide();
-                  control->Hide();
-               }
+                  mEditor->SetValue(id, evt.GetString().ToStdString());
+               });
+            }
+            mIDRowIndexMap[option.id] = static_cast<int>(mRows.size());
+            mRows.emplace_back(prompt, control);
+            
+            if(option.flags & ExportOption::ReadOnly)
+               control->Disable();
+            if(option.flags & ExportOption::Hidden)
+            {
+               prompt->Hide();
+               control->Hide();
             }
          }
-         S.EndMultiColumn();
       }
-      S.EndHorizontalLay();
+      S.EndMultiColumn();
    }
-   S.EndVerticalLay();
 }
 
 void ExportOptionsHandler::OnExportOptionChangeBegin()

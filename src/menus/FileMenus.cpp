@@ -29,100 +29,22 @@
 #include "../widgets/Warning.h"
 #include "../prefs/ImportExportPrefs.h"
 
-#include "export/ExportFileDialog.h"
 #include "ExportUtils.h"
-#include "export/ExportMixerDialog.h"
 #include "export/ExportProgressUI.h"
+#include "export/ExportAudioDialog.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
 
+#include "ProjectRate.h"
+
 // private helper classes and functions
 namespace {
-
-bool ExportWithPrompt(AudacityProject &project,
-                      Exporter &exporter,
-                      const FileExtension& format,
-                      double t0, double t1, bool selectedOnly)
-{
-   bool skipSilenceAtBeginning = ExportSkipSilenceAtBeginning.Read();
-   
-   if(!exporter.SetExportRange(t0, t1, selectedOnly, skipSilenceAtBeginning))
-   {
-      ShowExportErrorDialog(
-         selectedOnly ? XO("All selected audio is muted.") : XO("All audio is muted."), //":576"
-         XO("Warning"),
-         false);
-      return false;
-   }
-   
-   const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&project),
-                                           exporter,
-                                           project.GetProjectName(),
-                                           format,
-                                           selectedOnly ? XO("Export Selected Audio") : XO("Export Audio"));
-   if(ret != wxID_OK)
-      return false;
-   
-   if(ImportExportPrefs::ExportDownMixSetting.ReadEnum())
-   {
-      const auto downMixMode = exporter.SetUseStereoOrMonoOutput();
-      
-      auto pWindow = ProjectWindow::Find(&project);
-      if (downMixMode == Exporter::DownMixMode::Mono) {
-         if (ShowWarningDialog(pWindow,
-            wxT("MixMono"),
-            XO("Your tracks will be mixed down and exported as one mono file."),
-            true) == wxID_CANCEL)
-            return false;
-      }
-      else if (downMixMode == Exporter::DownMixMode::Stereo) {
-         if (ShowWarningDialog(pWindow,
-            wxT("MixStereo"),
-            XO("Your tracks will be mixed down and exported as one stereo file."),
-            true) == wxID_CANCEL)
-            return false;
-      }
-      else if (downMixMode == Exporter::DownMixMode::FormatDefined) {
-         if (ShowWarningDialog(pWindow,
-            wxT("MixUnknownChannels"),
-            XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
-            true) == wxID_CANCEL)
-            return false;
-      }
-   }
-   else
-   {
-      auto mixerSpec = exporter.CreateMixerSpec();
-      ExportMixerDialog md(ExportUtils::FindExportWaveTracks(TrackList::Get(project), selectedOnly),
-                           mixerSpec,
-                           nullptr,
-                           1,
-                           XO("Advanced Mixing Options"));
-      if(md.ShowModal() != wxID_OK)
-         return false;
-   }
-   
-   if(exporter.CanMetaData())
-   {
-      if (!TagsEditorDialog::DoEditMetadata( project,
-         XO("Edit Metadata Tags"), XO("Exported Tags"),
-         ProjectSettings::Get( project ).GetShowId3Dialog())) {
-         return false;
-      }
-   }
-   
-   return ExportProgressUI::Show(exporter.CreateExportTask()) == ExportResult::Success;
-}
 
 void DoExport(AudacityProject &project, const FileExtension &format)
 {
    auto &tracks = TrackList::Get( project );
-   
-   Exporter e{ project };
 
-   double t0 = 0.0;
-   double t1 = tracks.GetEndTime();
    wxString projectName = project.GetProjectName();
 
    // Prompt for file name and/or extension?
@@ -130,9 +52,12 @@ void DoExport(AudacityProject &project, const FileExtension &format)
                              projectName.empty() ||
                              format.empty();
 
-   bool success = false;
    if (bPromptingRequired) {
-      success = ExportWithPrompt(project, e, format, t0, t1, false);
+      ExportAudioDialog dialog(&ProjectWindow::Get(project),
+                               project,
+                               project.GetProjectName(),
+                               format);
+      dialog.ShowModal();
    }
    else {
       // We either use a configured output path,
@@ -175,6 +100,8 @@ void DoExport(AudacityProject &project, const FileExtension &format)
 
       int nChannels = tracks.Leaders().max(&Track::NChannels);
 
+      Exporter e{ project };
+      
       for(auto& plugin : e.GetPlugins())
       {
          for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
@@ -186,6 +113,10 @@ void DoExport(AudacityProject &project, const FileExtension &format)
             auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
             editor->Load(*gPrefs);
 
+            double t0 = 0.0;
+            double t1 = tracks.GetEndTime();
+            
+            bool success = false;
             ExportProgressUI::ExceptionWrappedCall([&]
             {
                // We're in batch mode, the file does not exist already.
@@ -193,17 +124,20 @@ void DoExport(AudacityProject &project, const FileExtension &format)
                const auto result = ExportProgressUI::Show(e.CreateExportTask(
                             ExportUtils::ParametersFromEditor(*editor),
                             nChannels,  // numChannels,
+                            ProjectRate::Get(project).GetRate(),
                             format,     // type,
                             fullPath,   // full path,
                             false, t0, t1));
                success = result == ExportResult::Success || result == ExportResult::Stopped;
             });
+            
+            if (success && !project.mBatchMode) {
+               FileHistory::Global().Append(e.GetAutoExportFileName().GetFullPath());
+            }
+            break;
          }
       }
-   }
-
-   if (success && !project.mBatchMode) {
-      FileHistory::Global().Append(e.GetAutoExportFileName().GetFullPath());
+      
    }
 }
 

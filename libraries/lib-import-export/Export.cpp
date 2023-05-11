@@ -212,12 +212,14 @@ const ExportPluginArray &Exporter::GetPlugins()
 void Exporter::Configure(const wxFileName &filename,
                          int pluginIndex,
                          int formatIndex,
+                         int sampleRate,
                          const ExportProcessor::Parameters& parameters)
 {
    mFilename = filename;
    mFormat = pluginIndex;
    mSubFormat = formatIndex;
    mParameters = parameters;
+   mSampleRate = sampleRate;
 }
 
 bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skipSilenceAtBeginning)
@@ -280,7 +282,7 @@ ExportTask Exporter::CreateExportTask()
 }
 
 ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& parameters,
-                       unsigned numChannels,
+                       unsigned numChannels, int sampleRate,
                        const FileExtension &type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
 {
@@ -298,7 +300,7 @@ ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& paramet
             mT0 = t0;
             mT1 = t1;
             
-            Configure(filename, i, j, parameters);
+            Configure(filename, i, j, sampleRate, parameters);
             return CreateExportTask(parameters);
          }
       }
@@ -328,7 +330,7 @@ ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& paramet
       parameters,
       mFilename.GetFullPath(),
       mT0, mT1, mSelectedOnly,
-      ProjectRate::Get(*mProject).GetRate(),
+      mSampleRate,
       mMixerSpec ? mMixerSpec->GetNumChannels() : mChannels,
       mMixerSpec.get()))
    {
@@ -369,6 +371,11 @@ int Exporter::GetAutoExportFormat() {
 
 int Exporter::GetAutoExportSubFormat() {
    return mSubFormat;
+}
+
+int Exporter::GetAutoExportSampleRate()
+{
+   return mSampleRate;
 }
 
 wxFileName Exporter::GetAutoExportFileName() {

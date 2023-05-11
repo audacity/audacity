@@ -60,7 +60,7 @@
 
 #include "prefs/ImportExportPrefs.h"
 
-#include "export/ExportFileDialog.h"
+#include "TimerRecordExportDialog.h"
 #include "export/ExportProgressUI.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -183,6 +183,11 @@ TimerRecordDialog::TimerRecordDialog(
 
    // Do we allow the user to change the Automatic Save file?
    m_bProjectAlreadySaved = bAlreadySaved;
+
+   m_fnAutoExportFile.SetPath(FileNames::FindDefaultPath(FileNames::Operation::Export));
+   m_fnAutoExportFile.SetName(mProject.GetProjectName());
+   if(m_fnAutoExportFile.GetName().IsEmpty())
+      m_fnAutoExportFile.SetName(_("untitled"));
 
    ShuttleGui S(this, eIsCreating);
    this->PopulateOrExchange(S);
@@ -347,26 +352,27 @@ would overwrite another project.\nPlease try again and select an original name."
 
 void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(event))
 {
+   int sampleRate = m_iAutoExportSampleRate;
+   if(sampleRate == 0)
+      sampleRate = ProjectRate::Get(mProject).GetRate();
+   
    Exporter eExporter{ mProject };
+   eExporter.Configure(
+      m_fnAutoExportFile,
+      m_iAutoExportFormat,
+      m_iAutoExportSubFormat,
+      sampleRate,
+      m_AutoExportParameters);
 
    // Set the options required
-   const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&mProject), eExporter,
-                                              mProject.GetProjectName());
-   if(ret != wxID_OK)
+   TimerRecordExportDialog exportDialog(mProject, eExporter, this);
+   if(exportDialog.ShowModal() != wxID_OK)
       return;
    
-   if(eExporter.CanMetaData())
-   {
-      if (!TagsEditorDialog::DoEditMetadata( mProject,
-         XO("Edit Metadata Tags"),
-         XO("Exported Tags"),
-         ProjectSettings::Get(mProject).GetShowId3Dialog())) {
-         return;
-      }
-   }
    // Populate the options so that we can destroy this instance of the Exporter
    m_fnAutoExportFile = eExporter.GetAutoExportFileName();
    m_iAutoExportFormat = eExporter.GetAutoExportFormat();
+   m_iAutoExportSampleRate = eExporter.GetAutoExportSampleRate();
    m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
    m_AutoExportParameters = eExporter.GetAutoExportParameters();
 
@@ -619,6 +625,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       e.Configure(m_fnAutoExportFile,
          m_iAutoExportFormat,
          m_iAutoExportSubFormat,
+         m_iAutoExportSampleRate,
          m_AutoExportParameters);
       
       if(ImportExportPrefs::ExportDownMixSetting.ReadEnum())
@@ -921,6 +928,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   S.GetParent(), ID_AUTOEXPORTPATH_TEXT,
                   XO("Export Project As:"), {});
                m_pTimerExportPathTextCtrl->SetReadOnly(true);
+               m_pTimerExportPathTextCtrl->SetValue(m_fnAutoExportFile.GetFullPath());
                S.AddWindow(m_pTimerExportPathTextCtrl);
                m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(XXO("Select..."));
             }

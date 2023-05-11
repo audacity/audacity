@@ -31,6 +31,7 @@
 #include "wxFileNameWrapper.h"
 #include "CommandContext.h"
 #include "ExportUtils.h"
+#include "ProjectRate.h"
 #include "export/ExportProgressUI.h"
 
 
@@ -141,6 +142,7 @@ bool ExportCommand::Apply(const CommandContext & context)
             result = ExportProgressUI::Show(exporter.CreateExportTask(
                   ExportUtils::ParametersFromEditor(*editor),
                   std::max(0, mnChannels),
+                  ProjectRate::Get(context.project).GetRate(),
                   extension, mFileName,
                   true, t0, t1));
          });

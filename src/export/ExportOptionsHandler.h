@@ -48,6 +48,7 @@ public:
 
    bool TransferDataFromEditor();
    ExportProcessor::Parameters GetParameters() const;
+   void SetParameters(const ExportProcessor::Parameters& parameters);
    ExportOptionsEditor::SampleRateList GetSampleRateList() const;
 
    void OnExportOptionChangeBegin() override;

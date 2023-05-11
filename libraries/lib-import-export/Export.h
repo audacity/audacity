@@ -94,7 +94,7 @@ public:
    Exporter( AudacityProject &project );
    ~Exporter();
 
-   void Configure(const wxFileName& filename, int pluginIndex, int formatIndex, const ExportProcessor::Parameters& parameters);
+   void Configure(const wxFileName& filename, int pluginIndex, int formatIndex, int sampleRate, const ExportProcessor::Parameters& parameters);
    
    bool SetExportRange(double t0, double t1, bool selectedOnly, bool skipSilenceAtBeginning = false);
    
@@ -107,7 +107,7 @@ public:
    ExportTask CreateExportTask();
    
    ExportTask CreateExportTask(const ExportProcessor::Parameters& parameters,
-                unsigned numChannels,
+                unsigned numChannels, int sampleRate,
                 const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
 
@@ -115,6 +115,7 @@ public:
    
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
+   int GetAutoExportSampleRate();
    wxFileName GetAutoExportFileName();
    ExportProcessor::Parameters GetAutoExportParameters();
 
@@ -146,6 +147,7 @@ private:
    unsigned mNumMono;
    unsigned mChannels;
    bool mSelectedOnly;
+   int mSampleRate;
 };
 
 void IMPORT_EXPORT_API ShowExportErrorDialog(const TranslatableString& message,

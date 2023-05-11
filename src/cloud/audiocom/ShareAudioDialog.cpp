@@ -49,6 +49,7 @@
 
 #include "WindowAccessible.h"
 #include "HelpSystem.h"
+#include "ProjectRate.h"
 
 #ifdef HAS_CUSTOM_URL_HANDLING
 #include "URLSchemesRegistry.h"
@@ -353,6 +354,7 @@ wxString ShareAudioDialog::ExportProject()
             {
                auto exportTask = e.CreateExportTask(parameters,
                   nChannels,
+                  ProjectRate::Get(mProject).GetRate(),
                   formatInfo.format,
                   path,
                   false, t0, t1);
