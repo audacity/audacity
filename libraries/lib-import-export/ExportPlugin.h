@@ -76,10 +76,10 @@ public:
    const wxFileNameWrapper& GetFileName() const noexcept;
 };
 
-class IMPORT_EXPORT_API ExportPluginDelegate
+class IMPORT_EXPORT_API ExportProcessorDelegate
 {
 public:
-   virtual ~ExportPluginDelegate();
+   virtual ~ExportProcessorDelegate();
 
    virtual bool IsCancelled() const = 0;
    virtual bool IsStopped() const = 0;
@@ -119,7 +119,7 @@ public:
       MixerOptions::Downmix* mixerSpec = nullptr,
       const Tags* tags = nullptr) = 0;
    
-   virtual ExportResult Process(ExportPluginDelegate& delegate) = 0;
+   virtual ExportResult Process(ExportProcessorDelegate& delegate) = 0;
 };
 
 //----------------------------------------------------------------------------

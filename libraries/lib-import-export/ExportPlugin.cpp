@@ -62,7 +62,7 @@ const TranslatableString& ExportErrorException::GetMessage() const noexcept
    return mMessage;
 }
 
-ExportPluginDelegate::~ExportPluginDelegate() = default;
+ExportProcessorDelegate::~ExportProcessorDelegate() = default;
 
 ExportProcessor::~ExportProcessor() = default;
 

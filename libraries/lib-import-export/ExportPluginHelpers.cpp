@@ -55,7 +55,7 @@ namespace
    }
 }
 
-ExportResult ExportPluginHelpers::UpdateProgress(ExportPluginDelegate& delegate, Mixer &mixer, double t0, double t1)
+ExportResult ExportPluginHelpers::UpdateProgress(ExportProcessorDelegate& delegate, Mixer &mixer, double t0, double t1)
 {
    delegate.OnProgress(EvalExportProgress(mixer, t0, t1));
    if(delegate.IsStopped())

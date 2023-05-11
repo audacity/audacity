@@ -18,7 +18,7 @@
 #include "ExportPlugin.h"
 #include "wxFileNameWrapper.h"
 
-class ExportPluginDelegate;
+class ExportProcessorDelegate;
 class Exporter;
 
 namespace ExportProgressUI

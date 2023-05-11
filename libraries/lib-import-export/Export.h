@@ -22,7 +22,7 @@
 
 class AudacityProject;
 class WaveTrack;
-class ExportPluginDelegate;
+class ExportProcessorDelegate;
 namespace MixerOptions{ class Downmix; }
 using MixerSpec = MixerOptions::Downmix;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;

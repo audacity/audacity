@@ -41,7 +41,7 @@ public:
 
    ///\brief Sends progress update to delegate and retrieves state update from it.
    ///Typically used inside each export iteration.
-   static ExportResult UpdateProgress(ExportPluginDelegate& delegate, Mixer& mixer, double t0, double t1);
+   static ExportResult UpdateProgress(ExportProcessorDelegate& delegate, Mixer& mixer, double t0, double t1);
 
    template<typename T>
    static T GetParameterValue(const ExportProcessor::Parameters& parameters, int id, T defaultValue = T())
