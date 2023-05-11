@@ -15,7 +15,7 @@
   and return the tracks that were imported.  This function just
   figures out which one to call; the actual importers are in
   ImportPCM, ImportMP3, ImportOGG, ImportRawData, ImportLOF,
-  ImportQT, ImportFLAC and ImportAUP.
+  ImportFLAC and ImportAUP.
 
 *//***************************************************************//**
 
