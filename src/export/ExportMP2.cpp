@@ -55,6 +55,7 @@
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
+#include "ExportOptionsEditor.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
@@ -206,9 +207,14 @@ public:
    
    // Required
 
+   std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+
    void OptionsCreate(ShuttleGui &S, int format) override;
+   
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
+               const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -241,8 +247,15 @@ FormatInfo ExportMP2::GetFormatInfo(int) const
    };
 }
 
+std::unique_ptr<ExportOptionsEditor>
+ExportMP2::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+{
+   return { };
+}
+
+
 void ExportMP2::Export(AudacityProject *project,
-   ExportProgressListener &progressListener,
+   ExportProgressListener &progressListener, const Parameters&,
    unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
    int)

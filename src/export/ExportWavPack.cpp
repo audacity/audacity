@@ -35,6 +35,7 @@
 
 #include "ExportProgressListener.h"
 #include "ExportUtils.h"
+#include "ExportOptionsEditor.h"
 
 //---------------------------------------------------------------------------
 // ExportWavPackOptions
@@ -247,11 +248,15 @@ public:
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
-   
+
+   std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
+               const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -278,8 +283,16 @@ FormatInfo ExportWavPack::GetFormatInfo(int) const
    };
 }
 
+std::unique_ptr<ExportOptionsEditor>
+ExportWavPack::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+{
+   return {};
+}
+
+
 void ExportWavPack::Export(AudacityProject *project,
                            ExportProgressListener &progressListener,
+                           const Parameters&,
                            unsigned numChannels,
                            const wxFileNameWrapper &fName,
                            bool selectionOnly,

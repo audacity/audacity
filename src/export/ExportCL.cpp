@@ -44,6 +44,7 @@
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
+#include "ExportOptionsEditor.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -284,10 +285,15 @@ public:
    FormatInfo GetFormatInfo(int) const override;
    
    // Required
+
+   std::unique_ptr<ExportOptionsEditor>
+   CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    void Export(AudacityProject *project,
                ExportProgressListener &progressListener,
+               const Parameters& parameters,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -363,8 +369,15 @@ FormatInfo ExportCL::GetFormatInfo(int) const
    };
 }
 
+std::unique_ptr<ExportOptionsEditor>
+ExportCL::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
+{
+   return { };
+}
+
 void ExportCL::Export(AudacityProject *project,
                       ExportProgressListener &progressListener,
+                      const Parameters&,
                       unsigned channels,
                       const wxFileNameWrapper &fName,
                       bool selectionOnly,

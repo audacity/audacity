@@ -618,7 +618,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          ShowExportErrorDialog(
             ":576", XO("All audio is muted."), XO("Warning"), false);
       }
-      e.Configure(m_fnAutoExportFile, m_iAutoExportFormat, m_iAutoExportSubFormat);
+      e.Configure(m_fnAutoExportFile, m_iAutoExportFormat, m_iAutoExportSubFormat, {});
       
       if(ImportExportPrefs::ExportDownMixSetting.ReadEnum())
          e.SetUseStereoOrMonoOutput();
