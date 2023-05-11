@@ -580,7 +580,6 @@ list( APPEND SOURCES
       # Standard importers
 
       import/ImportAUP.cpp
-      import/ImportLOF.cpp
       
       import/ImportRaw.cpp
       import/ImportRaw.h
