@@ -12,6 +12,10 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
    )
 endif()
 
+if ( USE_LIBOGG AND USE_LIBVORBIS )
+   list( APPEND MODULES mod-ogg )
+endif()
+
 foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()
