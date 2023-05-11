@@ -567,12 +567,9 @@ list( APPEND SOURCES
 
       # Standard exporters
       export/ExportCL.cpp
-      export/ExportMP3.cpp
-      export/ExportMP3.h
       export/ExportMultiple.cpp
       export/ExportMultiple.h
       export/ExportPCM.cpp
-      export/MP3Prefs.cpp
 
       # Optional exporters
       $<$<BOOL:${USE_FFMPEG}>:
@@ -1090,7 +1087,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      libmp3lame::libmp3lame
       SndFile::sndfile
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
