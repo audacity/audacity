@@ -11,10 +11,6 @@
 
 **********************************************************************/
 
-
-
-#ifdef USE_LIBVORBIS
-
 #include "Export.h"
 
 #include <wx/log.h>
@@ -394,6 +390,3 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "OGG",
    []{ return std::make_unique< ExportOGG >(); }
 };
-
-#endif // USE_LIBVORBIS
-
