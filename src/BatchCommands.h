@@ -19,6 +19,7 @@
 #include "PluginProvider.h" // for PluginID
 
 class wxArrayString;
+class wxWindow;
 class Effect;
 class CommandContext;
 class CommandManager;

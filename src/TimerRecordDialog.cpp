@@ -46,6 +46,8 @@
 #include "ProjectFileManager.h"
 #include "ProjectManager.h"
 #include "ProjectRate.h"
+#include "ProjectWindow.h"
+#include "Project.h"
 #include "Prefs.h"
 #include "Track.h"
 #include "widgets/NumericTextCtrl.h"
@@ -53,6 +55,8 @@
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
 #include "wxTextCtrlWrapper.h"
+
+#include "export/ExportFileDialog.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -340,13 +344,15 @@ void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(ev
 {
    Exporter eExporter{ mProject };
 
+   const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&mProject), eExporter,
+                                              mProject.GetProjectName());
    // Call the Exporter to set the options required
-   if (eExporter.SetAutoExportOptions()) {
+   if(ret == wxID_OK && eExporter.SetAutoExportOptions())
+   {
       // Populate the options so that we can destroy this instance of the Exporter
       m_fnAutoExportFile = eExporter.GetAutoExportFileName();
       m_iAutoExportFormat = eExporter.GetAutoExportFormat();
       m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
-      m_iAutoExportFilterIndex = eExporter.GetAutoExportFilterIndex();
 
       // Update the text controls
       this->UpdateTextBoxControls();
@@ -589,7 +595,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       bExportOK = e.ProcessFromTimerRecording(
          false, 0.0, TrackList::Get( mProject ).GetEndTime(),
             m_fnAutoExportFile, m_iAutoExportFormat,
-            m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
+            m_iAutoExportSubFormat);
    }
 
    // Check if we need to override the post recording action

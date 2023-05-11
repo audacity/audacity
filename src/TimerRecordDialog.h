@@ -19,6 +19,7 @@
 #include <wx/textctrl.h> // to inherit
 #include <wx/timer.h> // member variable
 #include "export/Export.h"
+#include "wxPanelWrapper.h"
 
 class wxCheckBox;
 class wxChoice;
@@ -143,7 +144,6 @@ private:
    wxFileName m_fnAutoExportFile;
    int m_iAutoExportFormat;
    int m_iAutoExportSubFormat;
-   int m_iAutoExportFilterIndex;
    bool m_bProjectAlreadySaved;
 
    DECLARE_EVENT_TABLE()

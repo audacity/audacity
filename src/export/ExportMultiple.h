@@ -13,6 +13,7 @@
 
 #include "Export.h"
 #include "wxFileNameWrapper.h" // member variable
+#include "wxPanelWrapper.h"
 
 class wxButton;
 class wxCheckBox;
