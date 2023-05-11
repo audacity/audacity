@@ -37,25 +37,20 @@
 #ifdef USE_LIBTWOLAME
 
 #include <wx/defs.h>
-#include <wx/textctrl.h>
 #include <wx/dynlib.h>
-#include <wx/window.h>
 #include <wx/log.h>
 #include <wx/stream.h>
 
 #include "Export.h"
 #include "FileIO.h"
 #include "Mix.h"
-#include "Prefs.h"
 #include "ProjectRate.h"
-#include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
-#include "wxPanelWrapper.h"
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
-#include "ExportOptionsEditor.h"
+#include "PlainExportOptionsEditor.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
@@ -101,100 +96,41 @@ const TranslatableStrings BitRateNames {
    n_kbps(384),
 };
 
-const std::vector< int > BitRateValues {
-   16,
-   24,
-   32,
-   40,
-   48,
-   56,
-   64,
-   80,
-   96,
-   112,
-   128,
-   160,
-   192,
-   224,
-   256,
-   320,
-   384,
+enum : int {
+   MP2OptionIDBitRate = 0
 };
 
-}
-
-class ExportMP2Options final : public wxPanelWrapper
-{
-public:
-   ExportMP2Options(wxWindow *parent, int format);
-   virtual ~ExportMP2Options();
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-};
-
-///
-///
-ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
-:  wxPanelWrapper(parent, wxID_ANY)
-{
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-   PopulateOrExchange(S);
-
-   TransferDataToWindow();
-}
-
-///
-///
-ExportMP2Options::~ExportMP2Options()
-{
-   TransferDataFromWindow();
-}
-
-///
-///
-void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
-{
-   IntSetting Setting{ L"/FileFormats/MP2Bitrate", 160 };
-   S.StartVerticalLay();
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> MP2Options {
    {
-      S.StartHorizontalLay(wxCENTER);
       {
-         S.StartMultiColumn(2, wxCENTER);
+         MP2OptionIDBitRate, XO("Bit Rate"),
+         160,
+         ExportOption::TypeEnum,
          {
-            S.TieNumberAsChoice(XXO("Bit Rate:"), Setting,
-               BitRateNames, &BitRateValues);
-         }
-         S.EndMultiColumn();
-      }
-      S.EndHorizontalLay();
+            16,
+            24,
+            32,
+            40,
+            48,
+            56,
+            64,
+            80,
+            96,
+            112,
+            128,
+            160,
+            192,
+            224,
+            256,
+            320,
+            384,
+         }, BitRateNames
+      },
+      wxT("/FileFormats/MP2Bitrate")
    }
-   S.EndVerticalLay();
+};
+
 }
-
-///
-///
-bool ExportMP2Options::TransferDataToWindow()
-{
-   return true;
-}
-
-///
-///
-bool ExportMP2Options::TransferDataFromWindow()
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   gPrefs->Flush();
-
-   return true;
-}
-
-//----------------------------------------------------------------------------
-// ExportMP2
-//----------------------------------------------------------------------------
 
 class ExportMP2 final : public ExportPluginEx
 {
@@ -250,12 +186,12 @@ FormatInfo ExportMP2::GetFormatInfo(int) const
 std::unique_ptr<ExportOptionsEditor>
 ExportMP2::CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const
 {
-   return { };
+   return std::make_unique<PlainExportOptionsEditor>(MP2Options);
 }
 
 
 void ExportMP2::Export(AudacityProject *project,
-   ExportProgressListener &progressListener, const Parameters&,
+   ExportProgressListener &progressListener, const Parameters& parameters,
    unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
    int)
@@ -263,7 +199,7 @@ void ExportMP2::Export(AudacityProject *project,
    ExportBegin();
    
    bool stereo = (channels == 2);
-   long bitrate = gPrefs->Read(wxT("/FileFormats/MP2Bitrate"), 160);
+   long bitrate = ExportUtils::GetParameterValue(parameters, MP2OptionIDBitRate, 160);
    double rate = ProjectRate::Get(*project).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
@@ -403,7 +339,7 @@ void ExportMP2::Export(AudacityProject *project,
 
 void ExportMP2::OptionsCreate(ShuttleGui &S, int format)
 {
-   S.AddWindow( safenew ExportMP2Options{ S.GetParent(), format } );
+
 }
 
 
