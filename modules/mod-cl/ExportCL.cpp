@@ -165,6 +165,11 @@ public:
                mCommandBox = S.AddCombo(XXO("Command:"),
                                  cmd,
                                  cmds);
+               mCommandBox->Bind(wxEVT_TEXT, [this](wxCommandEvent& event) {
+                  mLastCommand = event.GetString();
+               });
+               mLastCommand = mCommandBox->GetValue();
+
                S.AddButton(XXO("Browse..."), wxALIGN_CENTER_VERTICAL)
                   ->Bind(wxEVT_BUTTON, &ExportOptionsCLEditor::OnBrowse, this);
 
@@ -186,12 +191,72 @@ public:
       S.EndVerticalLay();
    }
 
-   void TransferDataFromWindow() override
+   static bool IsValidCommand(const wxString& command)
    {
-      mCommand = mCommandBox->GetValue();
+      wxArrayString argv = wxCmdLineParser::ConvertStringToArgs(command,
+#if defined(__WXMSW__)
+         wxCMD_LINE_SPLIT_DOS
+#else
+         wxCMD_LINE_SPLIT_UNIX
+#endif
+      );
 
-      mHistory.Append(mCommand);
-      mHistory.Save(*gPrefs);
+      if (argv.size() == 0) {
+         ShowExportErrorDialog(
+            ":745",
+            XO("Program name appears to be missing."));
+         return false;
+      }
+         
+      // Normalize the path (makes absolute and resolves variables)   
+      wxFileName cmd(argv[0]);
+      cmd.Normalize(wxPATH_NORM_ALL & ~wxPATH_NORM_ABSOLUTE);
+
+      // Just verify the given path exists if it is absolute.
+      if (cmd.IsAbsolute()) {
+         if (!cmd.Exists()) {
+            BasicUI::ShowMessageBox(XO("\"%s\" couldn't be found.").Format(cmd.GetFullPath()),
+                                    BasicUI::MessageBoxOptions()
+                                       .IconStyle(BasicUI::Icon::Warning)
+                                       .Caption(XO("Warning")));
+            return false;
+         }
+
+         return true;
+      }
+    
+      // Search for the command in the PATH list
+      wxPathList pathlist;
+      pathlist.AddEnvList(wxT("PATH"));
+      wxString path = pathlist.FindAbsoluteValidPath(argv[0]);
+
+   #if defined(__WXMSW__)
+      if (path.empty()) {
+         path = pathlist.FindAbsoluteValidPath(argv[0] + wxT(".exe"));
+      }
+   #endif
+
+      if (path.empty()) {
+         BasicUI::ShowMessageBox(XO("Unable to locate \"%s\" in your path.").Format(cmd.GetFullPath()),
+                                 BasicUI::MessageBoxOptions()
+                                    .IconStyle(BasicUI::Icon::Warning)
+                                    .Caption(XO("Warning")));
+         return false;
+      }
+
+      return true;
+   }
+
+   bool TransferDataFromWindow() override
+   {
+      if(IsValidCommand(mLastCommand))
+      {
+         mCommand = mLastCommand;
+         mHistory.Append(mCommand);
+         mHistory.Save(*gPrefs);
+         return true;
+      }
+      return false;
    }
 
    int GetOptionsCount() const override
@@ -286,6 +351,11 @@ private:
 
    wxWindow* mParent{nullptr};
    wxComboBox* mCommandBox{nullptr};
+
+   //Caches latest value in mCommandBox.
+   //Currently mCommandBox isn't available from
+   //`TransferDataFromWindow` since parent window is destroyed.
+   wxString mLastCommand;
 
    FileHistory mHistory;
 };
@@ -759,60 +829,6 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
          return false;
       }
    }
-
-   //TODO: Check parameters!!!
-
-   wxArrayString argv = wxCmdLineParser::ConvertStringToArgs(mCmd,
-#if defined(__WXMSW__)
-      wxCMD_LINE_SPLIT_DOS
-#else
-      wxCMD_LINE_SPLIT_UNIX
-#endif
-   );
-
-   if (argv.size() == 0) {
-      ShowExportErrorDialog(
-         ":745",
-         XO("Program name appears to be missing."));
-      return false;
-   }
-      
-   // Normalize the path (makes absolute and resolves variables)   
-   wxFileName cmd(argv[0]);
-   cmd.Normalize(wxPATH_NORM_ALL & ~wxPATH_NORM_ABSOLUTE);
-
-   // Just verify the given path exists if it is absolute.
-   if (cmd.IsAbsolute()) {
-      if (!cmd.Exists()) {
-         BasicUI::ShowMessageBox(XO("\"%s\" couldn't be found.").Format(cmd.GetFullPath()),
-                                 BasicUI::MessageBoxOptions()
-                                    .IconStyle(BasicUI::Icon::Warning)
-                                    .Caption(XO("Warning")));
-         return false;
-      }
-
-      return true;
-   }
- 
-   // Search for the command in the PATH list
-   wxPathList pathlist;
-   pathlist.AddEnvList(wxT("PATH"));
-   wxString path = pathlist.FindAbsoluteValidPath(argv[0]);
-
-#if defined(__WXMSW__)
-   if (path.empty()) {
-      path = pathlist.FindAbsoluteValidPath(argv[0] + wxT(".exe"));
-   }
-#endif
-
-   if (path.empty()) {
-      BasicUI::ShowMessageBox(XO("Unable to locate \"%s\" in your path.").Format(cmd.GetFullPath()),
-                              BasicUI::MessageBoxOptions()
-                                 .IconStyle(BasicUI::Icon::Warning)
-                                 .Caption(XO("Warning")));
-      return false;
-   }
-
    return true;
 }
 

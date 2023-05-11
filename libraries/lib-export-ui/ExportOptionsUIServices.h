@@ -19,5 +19,5 @@ public:
    virtual ~ExportOptionsUIServices();
 
    virtual void PopulateUI(ShuttleGui&) = 0;
-   virtual void TransferDataFromWindow() = 0;
+   virtual bool TransferDataFromWindow() = 0;
 };
