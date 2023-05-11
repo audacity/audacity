@@ -577,11 +577,6 @@ list( APPEND SOURCES
       import/RawAudioGuess.h
       import/SpecPowerMeter.cpp
       import/SpecPowerMeter.h
-
-      # Standard importers
-
-      import/ImportAUP.cpp
-      
       import/ImportRaw.cpp
       import/ImportRaw.h
 
