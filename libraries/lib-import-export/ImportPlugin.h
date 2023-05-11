@@ -48,10 +48,8 @@ but little else.
 
 
 #include <memory>
-#include "audacity/Types.h"
 #include "Identifier.h"
 #include "Internat.h"
-#include "SampleFormat.h"
 #include "wxArrayStringEx.h"
 
 class AudacityProject;
@@ -64,7 +62,7 @@ class ImportFileHandle;
 
 class ImportProgressListener;
 
-class AUDACITY_DLL_API ImportPlugin /* not final */
+class IMPORT_EXPORT_API ImportPlugin /* not final */
 {
 public:
 
@@ -108,7 +106,7 @@ protected:
 class WaveTrack;
 using TrackHolders = std::vector< std::vector< std::shared_ptr<WaveTrack> > >;
 
-class AUDACITY_DLL_API ImportFileHandle /* not final */
+class IMPORT_EXPORT_API ImportFileHandle /* not final */
 {
 public:
 
@@ -157,7 +155,7 @@ public:
    virtual void Stop() = 0;
 };
 
-class AUDACITY_DLL_API ImportFileHandleEx : public ImportFileHandle
+class IMPORT_EXPORT_API ImportFileHandleEx : public ImportFileHandle
 {
    FilePath mFilename;
    bool mCancelled{false};
@@ -175,7 +173,7 @@ protected:
    bool IsStopped() const noexcept;
 };
 
-class UnusableImportPlugin
+class IMPORT_EXPORT_API UnusableImportPlugin
 {
 public:
    UnusableImportPlugin(

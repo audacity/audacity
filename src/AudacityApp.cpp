@@ -137,7 +137,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "ModuleManager.h"
 #include "PluginHost.h"
 
-#include "import/Import.h"
+#include "Import.h"
 
 #if defined(USE_BREAKPAD)
 #include "BreakpadConfigurer.h"

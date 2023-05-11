@@ -15,7 +15,7 @@ class TranslatableString;
 class ImportFileHandle;
 
 ///\brief Interface used to report on import state and progress
-class AUDACITY_DLL_API ImportProgressListener
+class IMPORT_EXPORT_API ImportProgressListener
 {
 public:
    enum class ImportResult {

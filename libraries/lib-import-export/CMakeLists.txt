@@ -19,6 +19,17 @@ set( SOURCES
    ExportTypes.h
    ExportUtils.cpp
    ExportUtils.h
+
+   Import.cpp
+   Import.h
+   ImportForwards.h
+   ImportPlugin.cpp
+   ImportPlugin.h
+   ImportProgressListener.cpp
+   ImportProgressListener.h
+   ImportUtils.cpp
+   ImportUtils.h
+
    PlainExportOptionsEditor.cpp
    PlainExportOptionsEditor.h
 )

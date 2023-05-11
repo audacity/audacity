@@ -21,7 +21,7 @@ class wxString;
 class WaveTrackFactory;
 class WaveTrack;
 
-class ImportUtils final
+class IMPORT_EXPORT_API ImportUtils final
 {
 public:
    

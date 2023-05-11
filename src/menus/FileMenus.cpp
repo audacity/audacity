@@ -21,7 +21,7 @@
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 #include "../export/ExportMultiple.h"
-#include "../import/Import.h"
+#include "Import.h"
 #include "../import/ImportRaw.h"
 #include "AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
