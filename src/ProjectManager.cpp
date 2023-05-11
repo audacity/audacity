@@ -37,7 +37,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "UndoManager.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
-#include "import/Import.h"
+#include "Import.h"
 #include "import/ImportMIDI.h"
 #include "QualitySettings.h"
 #include "toolbars/MeterToolBar.h"

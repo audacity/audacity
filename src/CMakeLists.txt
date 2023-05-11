@@ -604,17 +604,8 @@ list( APPEND SOURCES
 
       import/FormatClassifier.cpp
       import/FormatClassifier.h
-      import/Import.cpp
-      import/Import.h
-      import/ImportForwards.h
-      import/ImportPlugin.cpp
-      import/ImportPlugin.h
-      import/ImportProgressListener.cpp
-      import/ImportProgressListener.h
       import/ImportStreamDialog.cpp
       import/ImportStreamDialog.h
-      import/ImportUtils.cpp
-      import/ImportUtils.h
       import/MultiFormatReader.cpp
       import/MultiFormatReader.h
       import/RawAudioGuess.cpp
