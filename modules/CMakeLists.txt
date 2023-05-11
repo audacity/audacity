@@ -16,6 +16,10 @@ if ( USE_LIBOGG AND USE_LIBVORBIS )
    list( APPEND MODULES mod-ogg )
 endif()
 
+if ( USE_LIBFLAC )
+   list( APPEND MODULES mod-flac )
+endif()
+
 foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()

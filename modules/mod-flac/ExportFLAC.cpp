@@ -14,8 +14,6 @@ Joshua Haberman
 
 **********************************************************************/
 
-#ifdef USE_LIBFLAC
-
 #include <rapidjson/document.h>
 
 #include "Export.h"
@@ -518,6 +516,3 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FLAC",
    []{ return std::make_unique< ExportFLAC >(); }
 };
-
-#endif // USE_LIBFLAC
-

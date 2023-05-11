@@ -585,10 +585,6 @@ list( APPEND SOURCES
          export/FFmpegPrefs.cpp
       >
 
-      $<$<BOOL:${USE_LIBFLAC}>:
-         export/ExportFLAC.cpp
-      >
-
       $<$<BOOL:${USE_LIBTWOLAME}>:
          export/ExportMP2.cpp
       >
@@ -623,10 +619,6 @@ list( APPEND SOURCES
 
       $<$<BOOL:${USE_FFMPEG}>:
          import/ImportFFmpeg.cpp
-      >
-
-      $<$<BOOL:${USE_LIBFLAC}>:
-         import/ImportFLAC.cpp
       >
 
       $<$<BOOL:${USE_GSTREAMER}>:
@@ -1113,8 +1105,6 @@ set( LIBRARIES
       libmp3lame::libmp3lame
       SndFile::sndfile
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
-      $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
-      $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBMPG123}>:mpg123::libmpg123>
       $<$<BOOL:${USE_WAVPACK}>:wavpack::wavpack>
