@@ -243,6 +243,9 @@ public:
 
    ExportWavPack();
 
+   int GetFormatCount() const override;
+   FormatInfo GetFormatInfo(int) const override;
+   
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
@@ -259,15 +262,18 @@ public:
    static int WriteBlock(void *id, void *data, int32_t length);
 };
 
-ExportWavPack::ExportWavPack()
-:  ExportPlugin()
+ExportWavPack::ExportWavPack() = default;
+
+int ExportWavPack::GetFormatCount() const
 {
-   AddFormat();
-   SetFormat(wxT("WavPack"),0);
-   AddExtension(wxT("wv"),0);
-   SetMaxChannels(255,0);
-   SetCanMetaData(true,0);
-   SetDescription(XO("WavPack Files"),0);
+   return 1;
+}
+
+FormatInfo ExportWavPack::GetFormatInfo(int) const
+{
+   return {
+      wxT("WavPack"), XO("WavPack Files"), { wxT("wv") }, {}, 255, true
+   };
 }
 
 ProgressResult ExportWavPack::Export(AudacityProject *project,
