@@ -607,6 +607,8 @@ list( APPEND SOURCES
       import/ImportForwards.h
       import/ImportPlugin.cpp
       import/ImportPlugin.h
+      import/ImportStreamDialog.cpp
+      import/ImportStreamDialog.h
       import/ImportUtils.cpp
       import/ImportUtils.h
       import/MultiFormatReader.cpp
