@@ -29,6 +29,10 @@ if ( USE_WAVPACK )
    list ( APPEND MODULES mod-wavpack )
 endif()
 
+if ( USE_LIBMPG123 )
+   list ( APPEND MODULES mod-mpg123 )
+endif()
+
 foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()
