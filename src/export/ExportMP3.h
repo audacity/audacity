@@ -22,9 +22,6 @@ enum MP3RateMode : unsigned {
    MODE_CBR,
 };
 
-template< typename Enum > class EnumSetting;
-extern EnumSetting< MP3RateMode > MP3RateModeSetting;
-
 #if defined(__WXMSW__) || defined(__WXMAC__)
 #define MP3_EXPORT_BUILT_IN 1
 #endif
