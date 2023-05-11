@@ -87,6 +87,25 @@ MixerOptions::Downmix::Downmix(const Downmix &mixerSpec)
          mMap[ i ][ j ] = mixerSpec.mMap[ i ][ j ];
 }
 
+MixerOptions::Downmix::Downmix(const Downmix &mixerSpec, const std::vector<bool>& tracksMask)
+   : mMaxNumChannels(mixerSpec.mMaxNumChannels)
+   , mNumChannels(mixerSpec.mNumChannels)
+{
+   mNumTracks = static_cast<unsigned>(std::count(tracksMask.begin(), tracksMask.end(), true));
+   Alloc();
+   unsigned int dstTrackIndex = 0;
+   for( unsigned int srcTrackIndex = 0; srcTrackIndex < mNumTracks; srcTrackIndex++ )
+   {
+      if(!tracksMask[srcTrackIndex])
+         continue;
+      
+      for( unsigned int j = 0; j < mNumChannels; j++ )
+         mMap[ dstTrackIndex ][ j ] = mixerSpec.mMap[ srcTrackIndex ][ j ] ;
+      
+      ++dstTrackIndex;
+   }
+}
+
 void MixerOptions::Downmix::Alloc()
 {
    mMap.reinit(mNumTracks, mMaxNumChannels);
