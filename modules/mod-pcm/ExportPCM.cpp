@@ -14,7 +14,7 @@
 #include <wx/dynlib.h>
 #include <wx/filename.h>
 
-#include "sndfile.h"
+#include <sndfile.h>
 
 #include "Dither.h"
 #include "FileFormats.h"

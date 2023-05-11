@@ -26,8 +26,6 @@
 
 #include <wx/wx.h>
 #include <wx/ffile.h>
-#include <wx/checkbox.h>
-#include <wx/stattext.h>
 
 #include "sndfile.h"
 
@@ -36,7 +34,6 @@
 #endif
 
 #include "FileFormats.h"
-#include "Prefs.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
 #include "ImportUtils.h"
