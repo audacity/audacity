@@ -555,8 +555,6 @@ list( APPEND SOURCES
 
       export/ExportFileDialog.cpp
       export/ExportFileDialog.h
-      export/ExportOptionsUIServices.cpp
-      export/ExportOptionsUIServices.h
       export/ExportMixerPanel.cpp
       export/ExportMixerPanel.h
       export/ExportMixerDialog.cpp
@@ -1446,6 +1444,7 @@ set( AUDACITY_LIBRARIES
    lib-audio-io-interface
    lib-stretching-sequence-interface
    lib-import-export-interface
+   lib-export-ui-interface
 )
 
 if (USE_VST)
