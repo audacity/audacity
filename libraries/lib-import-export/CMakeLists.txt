@@ -2,6 +2,11 @@
 Implements audio import and export pipelines.
 ]]
 
+set( TARGET lib-import-export )
+set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
+
+def_vars()
+
 set( SOURCES
    Export.cpp
    Export.h
@@ -27,6 +32,8 @@ set( LIBRARIES
    lib-wave-track-interface
    lib-effects-interface
    lib-stretching-sequence-interface
+   PUBLIC
+      rapidjson::rapidjson
 )
 audacity_library( lib-import-export "${SOURCES}" "${LIBRARIES}"
    "" ""

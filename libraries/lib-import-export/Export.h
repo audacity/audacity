@@ -84,8 +84,6 @@ public:
    
    ExportPlugin* GetPlugin();
    ExportPlugin* GetPlugin(int pluginIndex);
-   ExportPlugin* FindPluginByType(const FileExtension& type);
-   
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
    wxFileName GetAutoExportFileName();
