@@ -8,8 +8,6 @@
 
 **********************************************************************/
 
-
-
 #include <wx/defs.h>
 
 #include <wx/app.h>
@@ -376,6 +374,10 @@ public:
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int index) const override;
    
+   std::vector<std::string> GetMimeTypes(int formatIndex) const override;
+
+   bool ParseConfig(int formatIndex, const rapidjson::Value&, Parameters& parameters) const override;
+
    // Required
 
    std::unique_ptr<ExportOptionsEditor>
@@ -440,6 +442,24 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
       255,
       true
    };
+}
+
+std::vector<std::string> ExportPCM::GetMimeTypes(int formatIndex) const
+{
+   if(formatIndex == FMT_WAV)
+      return { "audio/x-wav" };
+   return {};
+}
+
+bool ExportPCM::ParseConfig(int formatIndex, const rapidjson::Value&, Parameters& parameters) const
+{
+   if(formatIndex == FMT_WAV)
+   {
+      //no parameters available...
+      parameters = {};
+      return true;
+   }
+   return false;
 }
 
 std::unique_ptr<ExportOptionsEditor>
@@ -1052,31 +1072,3 @@ bool ExportPCM::AddID3Chunk(
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "PCM",
    []{ return std::make_unique< ExportPCM >(); }
 };
-
-#ifdef HAS_CLOUD_UPLOAD
-#   include "CloudExporterPlugin.h"
-#   include "CloudExportersRegistry.h"
-
-class PCMCloudHelper : public cloud::CloudExporterPlugin
-{
-public:
-   wxString GetExporterID() const override
-   {
-      return "WAV";
-   }
-
-   FileExtension GetFileExtension() const override
-   {
-      return "wav";
-   }
-
-   void OnBeforeExport() override
-   {
-   }
-
-}; // WavPackCloudHelper
-
-static bool cloudExporterRegisterd = cloud::RegisterCloudExporter(
-   "audio/x-wav",
-   [](const AudacityProject&) { return std::make_unique<PCMCloudHelper>(); });
-#endif

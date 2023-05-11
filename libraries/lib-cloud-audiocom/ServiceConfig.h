@@ -13,8 +13,8 @@
 #include <chrono>
 #include <string>
 #include <string_view>
-
-#include "MimeTypesList.h"
+#include <vector>
+#include <rapidjson/fwd.h>
 
 namespace cloud::audiocom
 {
@@ -40,9 +40,11 @@ public:
    //! Timeout between progress callbacks
    std::chrono::milliseconds GetProgressCallbackTimeout() const;
    //! Preferred audio format
-   MimeTypesList GetPreferredAudioFormats() const;
+   std::vector<std::string> GetPreferredAudioFormats() const;
+   //! Export configuration suitable for the mime type provided
+   rapidjson::Document GetExportConfig(const std::string& exporterName) const;
    //! Return the mime type server should store the file. This is a requirement from audiocom
-   MimeType GetDownloadMime() const;
+   std::string GetDownloadMime() const;
    //! Returns the preferred language
    std::string GetAcceptLanguageValue() const;
 };

@@ -60,9 +60,7 @@ if( ${_OPT}has_networking )
    audacity_find_package(CURL REQUIRED CONAN_PACKAGE_NAME libcurl)
 endif()
 
-if( ${_OPT}has_sentry_reporting OR ${_OPT}has_audiocom_upload )
-   audacity_find_package(RapidJSON REQUIRED)
-endif()
+audacity_find_package(RapidJSON REQUIRED)
 
 audacity_find_package(PortMidi OPTION_NAME midi)
 

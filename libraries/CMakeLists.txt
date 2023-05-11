@@ -68,7 +68,6 @@ endif()
 
 if ( ${_OPT}has_audiocom_upload)
    list( APPEND LIBRARIES
-      lib-cloud-upload
       lib-cloud-audiocom
    )
 endif()

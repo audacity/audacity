@@ -10,8 +10,6 @@
 **********************************************************************/
 #pragma once
 
-#include <string_view>
-
 #include <wx/string.h>
 
 #include "Observer.h"
