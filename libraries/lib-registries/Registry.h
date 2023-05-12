@@ -149,7 +149,9 @@ namespace detail { using namespace TypeList;
 
    template<typename RegistryTraits> constexpr auto AcceptableTraits_v =
       TypeList::Every_v<TypeList::Fn<AcceptableBaseItem>,
-         AllTypes_t<RegistryTraits>>;
+         AllTypes_t<RegistryTraits>> &&
+      TypeSwitch::TypeListCheck_v<detail::VisitedNodeTypes<RegistryTraits>> &&
+      TypeSwitch::TypeListCheck_v<detail::VisitedLeafTypes<RegistryTraits>>;
 
 namespace detail {
    //! An item that delegates to another held in a shared pointer
