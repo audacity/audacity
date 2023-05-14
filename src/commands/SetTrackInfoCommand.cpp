@@ -15,8 +15,8 @@ SetTrackBase, SetTrackStatusCommand, SetTrackAudioCommand and
 SetTrackVisualsCommand
 
 \class SetTrackBase
-\brief Base class for the various SetTrackCommand classes.  
-Sbclasses provide the settings that are relevant to them.
+\brief Base class for the various track modifying command classes, that
+loops over channels. Subclasses override ApplyInner() to change one channel.
 
 \class SetTrackStatusCommand
 \brief A SetTrackBase that sets name, selected and focus.
@@ -53,54 +53,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "CommandContext.h"
 
 SetTrackBase::SetTrackBase(){
-   mbPromptForTracks = true;
    bIsSecondChannel = false;
-}
-
-//Define for the old scheme, where SetTrack defines its own track selection.
-//rather than using the current selection.
-//#define USE_OWN_TRACK_SELECTION
-
-
-bool SetTrackBase::ApplyInner( const CommandContext &context, Track *t  )
-{
-      static_cast<void>(&context);
-      static_cast<void>(&t);
-      return true;
-};
-
-template<bool Const>
-bool SetTrackBase::VisitSettings( SettingsVisitorBase<Const> & S)
-{
-   static_cast<void>(S);
-#ifdef USE_OWN_TRACK_SELECTION
-   S.OptionalY( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
-   S.OptionalN( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
-#endif
-   return true;
-}
-
-bool SetTrackBase::VisitSettings( SettingsVisitor & S )
-   { return VisitSettings<false>(S); }
-
-bool SetTrackBase::VisitSettings( ConstSettingsVisitor & S )
-   { return VisitSettings<true>(S); }
-
-void SetTrackBase::PopulateOrExchange(ShuttleGui & S)
-{
-   static_cast<void>(S);
-#ifdef USE_OWN_TRACK_SELECTION
-   if( !mbPromptForTracks )
-      return;
-   S.AddSpace(0, 5);
-   S.StartMultiColumn(3, wxEXPAND);
-   {
-      S.SetStretchyCol( 2 );
-      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  XO("Track Index:"),   mTrackIndex );
-      S.Optional( bHasChannelIndex).TieNumericTextBox(  XO("Channel Index:"), mChannelIndex );
-   }
-   S.EndMultiColumn();
-#endif
 }
 
 bool SetTrackBase::Apply(const CommandContext & context  )
@@ -113,13 +66,7 @@ bool SetTrackBase::Apply(const CommandContext & context  )
       auto channels = TrackList::Channels(t);
       for ( auto channel : channels ) {
          bool bThisTrack =
-#ifdef USE_OWN_TRACK_SELECTION
-         (bHasTrackIndex && (i==mTrackIndex)) ||
-         (bHasChannelIndex && (j==mChannelIndex ) ) ||
-         (!bHasTrackIndex && !bHasChannelIndex) ;
-#else
          channel->GetSelected();
-#endif
 
          if( bThisTrack ){
             ApplyInner( context, channel );
@@ -138,7 +85,6 @@ namespace{ BuiltinCommandsModule::Registration< SetTrackStatusCommand > reg; }
 
 template<bool Const>
 bool SetTrackStatusCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
-   SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       _("Unnamed") );
    // There is also a select command.  This is an alternative.
    S.OptionalN( bHasSelected       ).Define(     bSelected,       wxT("Selected"),   false );
@@ -154,7 +100,6 @@ bool SetTrackStatusCommand::VisitSettings( ConstSettingsVisitor & S )
 
 void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   SetTrackBase::PopulateOrExchange( S );
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
@@ -207,7 +152,6 @@ namespace{ BuiltinCommandsModule::Registration< SetTrackAudioCommand > reg2; }
 
 template<bool Const>
 bool SetTrackAudioCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
-   SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
    S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
 
@@ -224,7 +168,6 @@ bool SetTrackAudioCommand::VisitSettings( ConstSettingsVisitor & S )
 
 void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   SetTrackBase::PopulateOrExchange( S );
    S.StartMultiColumn(2, wxEXPAND);
    {
       S.SetStretchyCol( 1 );
@@ -331,7 +274,6 @@ static EnumValueSymbols DiscoverSubViewTypes()
 
 template<bool Const>
 bool SetTrackVisualsCommand::VisitSettings( SettingsVisitorBase<Const> & S ){ 
-   SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 2000 );
 
    {
@@ -362,7 +304,6 @@ bool SetTrackVisualsCommand::VisitSettings( ConstSettingsVisitor & S )
 
 void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   SetTrackBase::PopulateOrExchange( S );
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
@@ -501,13 +442,6 @@ const ComponentInterfaceSymbol SetTrackCommand::Symbol
 { XO("Set Track") };
 
 namespace{ BuiltinCommandsModule::Registration< SetTrackCommand > reg4; }
-
-SetTrackCommand::SetTrackCommand()
-{
-   mSetStatus.mbPromptForTracks = false;
-   mSetAudio.mbPromptForTracks = false;
-   mSetVisuals.mbPromptForTracks = false;
-}
 
 bool SetTrackCommand::VisitSettings( SettingsVisitor & S )
    { return VisitSettings<false>(S); }
