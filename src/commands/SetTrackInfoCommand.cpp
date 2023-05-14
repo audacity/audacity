@@ -52,10 +52,6 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "CommandContext.h"
 
-SetTrackBase::SetTrackBase(){
-   bIsSecondChannel = false;
-}
-
 bool SetTrackBase::Apply(const CommandContext & context  )
 {
    long i = 0;// track counter
@@ -129,16 +125,13 @@ bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t
    if( bHasSelected )
       t->SetSelected(bSelected);
 
-   // These ones don't make sense on the second channel of a stereo track.
-   if( !bIsSecondChannel ){
-      if( bHasFocused )
-      {
-         auto &trackFocus = TrackFocus::Get( context.project );
-         if( bFocused)
-            trackFocus.Set( t );
-         else if( t == trackFocus.Get() )
-            trackFocus.Set( nullptr );
-      }
+   if( bHasFocused )
+   {
+      auto &trackFocus = TrackFocus::Get( context.project );
+      if( bFocused)
+         trackFocus.Set( t );
+      else if( t == trackFocus.Get() )
+         trackFocus.Set( nullptr );
    }
    return true;
 }
@@ -195,13 +188,10 @@ bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track * t 
    if( wt && bHasPan )
       wt->SetPan(mPan/100.0);
 
-   // These ones don't make sense on the second channel of a stereo track.
-   if( !bIsSecondChannel ){
-      if( pt && bHasSolo )
-         pt->SetSolo(bSolo);
-      if( pt && bHasMute )
-         pt->SetMute(bMute);
-   }
+   if( pt && bHasSolo )
+      pt->SetSolo(bSolo);
+   if( pt && bHasMute )
+      pt->SetMute(bMute);
    return true;
 }
 
