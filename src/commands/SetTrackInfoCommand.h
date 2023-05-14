@@ -25,10 +25,8 @@ class Track;
 class SetTrackBase : public AudacityCommand
 {
 public:
-   SetTrackBase();
    bool Apply(const CommandContext & context) final;
    virtual bool ApplyInner(const CommandContext &context, Track *t) = 0;
-   bool bIsSecondChannel;
 };
 
 
@@ -164,9 +162,6 @@ public:
       mSetVisuals.PopulateOrExchange(S);
    };
    bool ApplyInner(const CommandContext & context, Track * t ) override {
-      mSetStatus.bIsSecondChannel = bIsSecondChannel;
-      mSetAudio.bIsSecondChannel = bIsSecondChannel;
-      mSetVisuals.bIsSecondChannel = bIsSecondChannel;
       return 
          mSetStatus.ApplyInner( context, t ) &&  
          mSetAudio.ApplyInner( context, t )&&
