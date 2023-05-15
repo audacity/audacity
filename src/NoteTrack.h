@@ -13,7 +13,7 @@
 
 #include <utility>
 #include "Prefs.h"
-#include "Track.h"
+#include "PlayableTrack.h"
 
 #if defined(USE_MIDI)
 
