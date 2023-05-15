@@ -29,8 +29,6 @@
   match the look and feel of each platform.
 
 *//*******************************************************************/
-
-
 #include "ControlToolBar.h"
 
 #include <algorithm>
@@ -54,6 +52,7 @@
 #include "AllThemeResources.h"
 #include "AudioIO.h"
 #include "ImageManipulation.h"
+#include "PlayableTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -62,7 +61,6 @@
 #include "ProjectStatus.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "Track.h"
 #include "ViewInfo.h"
 #include "../widgets/AButton.h"
 #include "FileNames.h"

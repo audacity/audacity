@@ -7,17 +7,14 @@ PlayableTrackButtonHandles.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
-
 #include "PlayableTrackButtonHandles.h"
-
+#include "PlayableTrack.h"
 #include "PlayableTrackControls.h"
 #include "../../../commands/CommandManager.h"
 #include "Project.h"
 #include "../../../ProjectSettings.h"
 #include "../../../RefreshCode.h"
 #include "../../../RealtimeEffectPanel.h"
-#include "Track.h"
 #include "../../../TrackPanelAx.h"
 #include "../../../TrackInfo.h"
 #include "../../../TrackPanelMouseEvent.h"

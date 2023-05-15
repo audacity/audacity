@@ -10,10 +10,10 @@
 
 #include "TrackUtilities.h"
 
+#include "PlayableTrack.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
-#include "Track.h"
 #include "TrackPanelAx.h"
 #include "TrackPanel.h"
 
