@@ -134,9 +134,9 @@ public:
    void SetDisplay(Display display, bool exclusive = true);
 
    const WaveTrackSubViewPlacements &SavePlacements() const
-      { return mPlacements; }
+      { return DoGetPlacements(); }
    void RestorePlacements( const WaveTrackSubViewPlacements &placements )
-      { mPlacements = placements; }
+      { DoGetPlacements() = placements; }
 
    // Return true if successful.  Fails if you try to toggle off the only
    // sub-view.
@@ -209,7 +209,7 @@ private:
    // TrackView implementation
    Refinement GetSubViews(const wxRect& rect) override;
 
-protected:
+private:
    std::shared_ptr<CommonTrackCell> GetAffordanceControls() override;
 
    void DoSetMinimized( bool minimized ) override;
@@ -217,12 +217,12 @@ protected:
    // Placements are in correspondence with the array of sub-views
    // in the WaveTrackSubViews base class, though their sequence is
    // unspecified and maybe different in different platforms.
-   WaveTrackSubViewPlacements mPlacements;
+   WaveTrackSubViewPlacements &DoGetPlacements();
+   const WaveTrackSubViewPlacements &DoGetPlacements() const;
    mutable wxCoord mLastHeight{};
 
    bool mMultiView{ false };
 
-private:
    std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
 
    std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;

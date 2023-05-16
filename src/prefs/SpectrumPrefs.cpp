@@ -413,9 +413,7 @@ void SpectrumPrefs::Rollback()
 
    const bool isOpenPage = this->IsShown();
    if (mWt && isOpenPage) {
-      auto channels = TrackList::Channels(mWt);
-      for (auto channel : channels)
-         WaveTrackView::Get( *channel ).RestorePlacements( mOrigPlacements );
+      WaveTrackView::Get(*mWt).RestorePlacements(mOrigPlacements);
    }
 
    if (isOpenPage) {

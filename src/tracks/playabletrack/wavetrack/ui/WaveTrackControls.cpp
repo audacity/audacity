@@ -739,28 +739,23 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
 
    auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
-   auto &view = WaveTrackView::Get( *pTrack );
-   if ( view.GetMultiView() ) {
-      for (auto channel : TrackList::Channels(pTrack)) {
-         if ( !WaveTrackView::Get( *channel )
-               .ToggleSubView( WaveTrackView::Display{ id } ) ) {
-            // Trying to toggle off the last sub-view.  It was refused.
-            // Decide what to do here.  Turn off multi-view instead?
-            // PRL:  I don't agree that it makes sense
-         }
-         else
-            ProjectHistory::Get( mpData->project ).ModifyState(true);
+   auto &view = WaveTrackView::Get(*pTrack);
+   if (view.GetMultiView()) {
+      if (!WaveTrackView::Get(*pTrack)
+            .ToggleSubView(WaveTrackView::Display{ id } )) {
+         // Trying to toggle off the last sub-view.  It was refused.
+         // Decide what to do here.  Turn off multi-view instead?
+         // PRL:  I don't agree that it makes sense
       }
+      else
+         ProjectHistory::Get(mpData->project).ModifyState(true);
    }
    else {
       const auto displays = view.GetDisplays();
       const bool wrongType =
          !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
-         for (auto channel : TrackList::Channels(pTrack)) {
-            WaveTrackView::Get( *channel )
-               .SetDisplay( WaveTrackView::Display{ id } );
-         }
+         WaveTrackView::Get(*pTrack).SetDisplay(WaveTrackView::Display{ id });
 
          AudacityProject *const project = &mpData->project;
          ProjectHistory::Get( *project ).ModifyState(true);
@@ -841,7 +836,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    view.SetMinimized(bBothMinimizedp);
    partnerView.SetMinimized(bBothMinimizedp);
 
-   partnerView.RestorePlacements( view.SavePlacements() );
    partnerView.SetMultiView( view.GetMultiView() );
 
    ProjectHistory::Get( *project ).PushState(
