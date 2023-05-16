@@ -149,8 +149,8 @@ public:
    // Return cached height of rect in last call of GetSubViews
    wxCoord GetLastHeight() const { return mLastHeight; }
 
-   bool GetMultiView() const { return mMultiView; }
-   void SetMultiView( bool value ) { mMultiView = value; }
+   bool GetMultiView() const { return DoGetMultiView(); }
+   void SetMultiView( bool value ) { DoGetMultiView() = value; }
 
 
    std::weak_ptr<WaveClip> GetSelectedClip();
@@ -221,7 +221,8 @@ private:
    const WaveTrackSubViewPlacements &DoGetPlacements() const;
    mutable wxCoord mLastHeight{};
 
-   bool mMultiView{ false };
+   bool &DoGetMultiView();
+   bool DoGetMultiView() const;
 
    std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
 
