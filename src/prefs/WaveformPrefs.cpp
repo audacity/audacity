@@ -184,9 +184,7 @@ bool WaveformPrefs::Commit()
    mTempSettings.ConvertToEnumeratedDBRange();
 
    if (mWt && isOpenPage) {
-      for (auto channel : TrackList::Channels(mWt))
-         WaveTrackView::Get( *channel )
-            .SetDisplay( WaveTrackViewConstants::Waveform );
+      WaveTrackView::Get(*mWt).SetDisplay(WaveTrackViewConstants::Waveform);
    }
 
    if (isOpenPage) {
