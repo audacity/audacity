@@ -159,14 +159,12 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          return RefreshNone;
 
       float olddBRange = settings.dBRange;
-      for (auto channel : TrackList::Channels(wt)) {
-         auto &channelSettings = WaveformSettings::Get(*channel);
-         if (steps < 0)
-            // Zoom out
-            channelSettings.NextLowerDBRange();
-         else
-            channelSettings.NextHigherDBRange();
-      }
+      auto &settings = WaveformSettings::Get(*wt);
+      if (steps < 0)
+         // Zoom out
+         settings.NextLowerDBRange();
+      else
+         settings.NextHigherDBRange();
 
       float newdBRange = settings.dBRange;
 

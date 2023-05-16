@@ -46,23 +46,22 @@ WaveformSettings::Globals
    return instance;
 }
 
-static WaveTrack::Attachments::RegisteredFactory key1{
-   [](SampleTrack&){
-      return std::make_unique<WaveformSettings>(WaveformSettings::defaults());
-   }
-};
+static const Track::ChannelGroupAttachments::RegisteredFactory
+key1{ [](auto &) {
+   return std::make_unique<WaveformSettings>(WaveformSettings::defaults()); } };
 
 WaveformSettings &WaveformSettings::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   return static_cast<WaveformSettings&>(
-      mutTrack.WaveTrack::Attachments::Get(key1));
+   return mutTrack.GetGroupData().Track::ChannelGroupAttachments
+      ::Get<WaveformSettings>(key1);
 }
 
 void WaveformSettings::Set(
    WaveTrack &track, std::unique_ptr<WaveformSettings> pSettings)
 {
-   track.WaveTrack::Attachments::Assign(key1, move(pSettings));
+   track.GetGroupData().Track::ChannelGroupAttachments
+      ::Assign(key1, move(pSettings));
 }
 
 WaveformSettings::WaveformSettings()
