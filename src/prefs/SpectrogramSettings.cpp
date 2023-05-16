@@ -104,17 +104,14 @@ SpectrogramSettings::Globals
    return instance;
 }
 
-static WaveTrack::Attachments::RegisteredFactory key1{
-   [](SampleTrack&){
-      return nullptr;
-   }
-};
+static const Track::ChannelGroupAttachments::RegisteredFactory
+key1{ [](auto &) { return nullptr; } };
 
 SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   auto pSettings = static_cast<SpectrogramSettings*>(
-      mutTrack.WaveTrack::Attachments::Find(key1));
+   auto pSettings = mutTrack.GetGroupData().Track::ChannelGroupAttachments
+      ::Find<SpectrogramSettings>(key1);
    if (pSettings)
       return *pSettings;
    else
@@ -123,19 +120,21 @@ SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
 
 SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
 {
-   auto pSettings = static_cast<SpectrogramSettings*>(
-      track.WaveTrack::Attachments::Find(key1));
+   auto pSettings = track.GetGroupData().Track::ChannelGroupAttachments
+      ::Find<SpectrogramSettings>(key1);
    if (!pSettings) {
       auto uSettings = std::make_unique<SpectrogramSettings>();
       pSettings = uSettings.get();
-      track.WaveTrack::Attachments::Assign(key1, std::move(uSettings));
+      track.GetGroupData().Track::ChannelGroupAttachments
+         ::Assign(key1, std::move(uSettings));
    }
    return *pSettings;
 }
 
 void SpectrogramSettings::Reset(WaveTrack &track)
 {
-   track.WaveTrack::Attachments::Assign(key1, nullptr);
+   track.GetGroupData().Track::ChannelGroupAttachments
+      ::Assign(key1, nullptr);
 }
 
 SpectrogramSettings::SpectrogramSettings()

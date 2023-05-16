@@ -323,8 +323,7 @@ void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
                evt.GetId() - OnFirstSpectrumScaleID
       )));
    if (SpectrogramSettings::Get(*wt).scaleType != newScaleType) {
-      for (auto channel : TrackList::Channels(wt))
-         SpectrogramSettings::Own(*channel).scaleType = newScaleType;
+      SpectrogramSettings::Own(*wt).scaleType = newScaleType;
 
       ProjectHistory::Get( mpData->project ).ModifyState(true);
 
