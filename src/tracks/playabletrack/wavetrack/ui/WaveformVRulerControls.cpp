@@ -182,11 +182,9 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
          max = std::min(extreme, max * olddBRange / newdBRange);
          min = std::max(-extreme, min * olddBRange / newdBRange);
-         for (auto channel : TrackList::Channels(wt)) {
-            auto &cache = WaveformScale::Get(*channel);
-            SetLastdBRange(cache, *channel);
-            cache.SetDisplayBounds(min, max);
-         }
+         auto &cache = WaveformScale::Get(*wt);
+         SetLastdBRange(cache, *wt);
+         cache.SetDisplayBounds(min, max);
       }
    }
    else if (event.CmdDown() && !event.ShiftDown()) {
@@ -217,9 +215,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          float newTop = std::min(topLimit, top + delta);
          const float newBottom = std::max(bottomLimit, newTop - range);
          newTop = std::min(topLimit, newBottom + range);
-         for (auto channel : TrackList::Channels(wt))
-            WaveformScale::Get(*channel)
-               .SetDisplayBounds(newBottom, newTop);
+         WaveformScale::Get(*wt).SetDisplayBounds(newBottom, newTop);
       }
    }
    else
