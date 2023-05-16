@@ -395,20 +395,13 @@ bool SpectrumPrefs::Validate()
 void SpectrumPrefs::Rollback()
 {
    if (mWt) {
-      auto channels = TrackList::Channels(mWt);
-
       if (mOrigDefaulted) {
          SpectrogramSettings::Reset(*mWt);
-         for (auto channel : channels) {
-            SpectrogramBounds::Get(*channel).SetBounds(-1, -1);
-         }
+         SpectrogramBounds::Get(*mWt).SetBounds(-1, -1);
       }
       else {
          auto &settings = SpectrogramSettings::Own(*mWt);
-         for (auto channel : channels) {
-            SpectrogramBounds::Get(*channel)
-               .SetBounds(mOrigMin, mOrigMax);
-         }
+         SpectrogramBounds::Get(*mWt).SetBounds(mOrigMin, mOrigMax);
          settings = mOrigSettings;
       }
    }
@@ -450,18 +443,13 @@ void SpectrumPrefs::Preview()
    if (mWt) {
       if (mDefaulted) {
          SpectrogramSettings::Reset(*mWt);
-         for (auto channel : TrackList::Channels(mWt)) {
-            // ... and so that the vertical scale also defaults:
-            SpectrogramBounds::Get(*channel)
-               .SetBounds(-1, -1);
-         }
+         // ... and so that the vertical scale also defaults:
+         SpectrogramBounds::Get(*mWt).SetBounds(-1, -1);
       }
       else {
          SpectrogramSettings &settings = SpectrogramSettings::Own(*mWt);
-         for (auto channel : TrackList::Channels(mWt)) {
-            SpectrogramBounds::Get(*channel)
-               .SetBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
-         }
+         SpectrogramBounds::Get(*mWt)
+            .SetBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
          settings = mTempSettings;
       }
    }

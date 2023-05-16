@@ -251,8 +251,7 @@ void SpectrumVZoomHandle::DoZoom(
    }
 
    // Now actually apply the zoom.
-   for (auto channel : TrackList::Channels(pTrack))
-      SpectrogramBounds::Get(*channel).SetBounds(min, max);
+   SpectrogramBounds::Get(*pTrack).SetBounds(min, max);
 
    zoomEnd = zoomStart = 0;
    if( pProject )

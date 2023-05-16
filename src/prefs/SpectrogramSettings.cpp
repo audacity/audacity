@@ -693,16 +693,13 @@ bool SpectrogramSettings::SpectralSelectionEnabled() const
 #endif
 }
 
-static WaveTrack::Attachments::RegisteredFactory key2{
-   [](SampleTrack&){
-      return std::make_unique<SpectrogramBounds>();
-   }
-};
+static const Track::ChannelGroupAttachments::RegisteredFactory
+key2{ [](auto &) { return std::make_unique<SpectrogramBounds>(); } };
 
 SpectrogramBounds &SpectrogramBounds::Get( WaveTrack &track )
 {
-   return static_cast<SpectrogramBounds&>(
-      track.WaveTrack::Attachments::Get(key2));
+   return track.GetGroupData().Track::ChannelGroupAttachments
+      ::Get<SpectrogramBounds>(key2);
 }
 
 const SpectrogramBounds &SpectrogramBounds::Get(

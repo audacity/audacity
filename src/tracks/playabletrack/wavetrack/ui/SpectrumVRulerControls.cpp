@@ -107,9 +107,7 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
          std::min(bound,
                   numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
          
-         for (auto channel : TrackList::Channels(wt))
-            SpectrogramBounds::Get(*channel)
-               .SetBounds(newBottom, newTop);
+         SpectrogramBounds::Get(*wt).SetBounds(newBottom, newTop);
       }
    }
    else
