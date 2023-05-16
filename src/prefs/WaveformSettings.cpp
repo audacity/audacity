@@ -197,17 +197,14 @@ auto WaveformSettings::Clone() const -> PointerType
    return std::make_unique<WaveformSettings>(*this);
 }
 
-static WaveTrack::Attachments::RegisteredFactory key2{
-   [](SampleTrack&){
-      return std::make_unique<WaveformScale>();
-   }
-};
+static const Track::ChannelGroupAttachments::RegisteredFactory
+key2{ [](auto &) { return std::make_unique<WaveformScale>(); } };
 
 WaveformScale &WaveformScale::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   return static_cast<WaveformScale&>(
-      mutTrack.WaveTrack::Attachments::Get(key2));
+   return mutTrack.GetGroupData().Track::ChannelGroupAttachments
+      ::Get<WaveformScale>(key2);
 }
 
 WaveformScale::~WaveformScale() = default;
