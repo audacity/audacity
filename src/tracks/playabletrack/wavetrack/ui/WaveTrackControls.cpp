@@ -713,20 +713,17 @@ END_POPUP_MENU()
 void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 {
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   const auto &view = WaveTrackView::Get( *pTrack );
+   auto &view = WaveTrackView::Get(*pTrack);
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
       ? WaveTrackViewConstants::Waveform : displays.begin()->id;
-   for (const auto channel : TrackList::Channels(pTrack)) {
-      auto &channelView = WaveTrackView::Get( *channel );
-      channelView.SetMultiView( multi );
+   view.SetMultiView(multi);
 
-      // Whichever sub-view was on top stays on top
-      // If going into Multi-view, it will be 1/nth the height.
-      // If exiting multi-view, it will be full height.
-      channelView.SetDisplay(display, !multi);
-   }
+   // Whichever sub-view was on top stays on top
+   // If going into Multi-view, it will be 1/nth the height.
+   // If exiting multi-view, it will be full height.
+   view.SetDisplay(display, !multi);
 }
 
 ///  Set the Display mode based on the menu choice in the Track Menu.
@@ -835,8 +832,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partnerView.SetExpandedHeight(AverageHeight);
    view.SetMinimized(bBothMinimizedp);
    partnerView.SetMinimized(bBothMinimizedp);
-
-   partnerView.SetMultiView( view.GetMultiView() );
 
    ProjectHistory::Get( *project ).PushState(
       /* i18n-hint: The string names a track */

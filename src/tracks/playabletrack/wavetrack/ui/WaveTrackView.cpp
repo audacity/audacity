@@ -61,6 +61,7 @@ struct PlacementArray : ClientData::Cloneable<> {
    std::unique_ptr<Cloneable<>> Clone() const {
       return std::make_unique<PlacementArray>(*this); }
    WaveTrackSubViewPlacements mPlacements;
+   bool mMultiView{ false };
 };
 
 static const Track::ChannelGroupAttachments::RegisteredFactory
@@ -88,6 +89,17 @@ WaveTrackSubViewPlacements &WaveTrackView::DoGetPlacements()
 const WaveTrackSubViewPlacements &WaveTrackView::DoGetPlacements() const
 {
    return const_cast<WaveTrackView&>(*this).DoGetPlacements();
+}
+
+bool &WaveTrackView::DoGetMultiView()
+{
+   auto &waveTrack = *std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+   return PlacementArray::Get(waveTrack).mMultiView;
+}
+
+bool WaveTrackView::DoGetMultiView() const
+{
+   return const_cast<WaveTrackView&>(*this).DoGetMultiView();
 }
 
 // Structure that collects and modifies information on sub-view positions
@@ -935,7 +947,7 @@ void WaveTrackView::CopyTo( Track &track ) const
    if ( const auto pOther = dynamic_cast< WaveTrackView* >( &other ) ) {
       // only these fields are important to preserve in undo/redo history
       pOther->RestorePlacements( SavePlacements() );
-      pOther->mMultiView = mMultiView;
+      pOther->DoGetMultiView() = DoGetMultiView();
 
       auto srcSubViewsPtrs  = const_cast<WaveTrackView*>( this )->GetAllSubViews();
       auto destSubViewsPtrs  = const_cast<WaveTrackView*>( pOther )->GetAllSubViews();
