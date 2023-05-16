@@ -590,8 +590,8 @@ bool NyquistEffect::Init()
       if (const auto project = FindProject()) {
          bool bAllowSpectralEditing = false;
          bool hasSpectral = false;
-         for ( auto t :
-                  TrackList::Get( *project ).Selected< const WaveTrack >() ) {
+         for (auto t :
+            TrackList::Get( *project ).SelectedLeaders<const WaveTrack>()) {
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
             auto pView = WaveTrackView::Find( t );
@@ -866,7 +866,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    std::optional<TrackIterRange<WaveTrack>> pRange;
    if (!bOnePassTool)
-      pRange.emplace(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
+      pRange.emplace(mOutputTracks->SelectedLeaders<WaveTrack>());
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
