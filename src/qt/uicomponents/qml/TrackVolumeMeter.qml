@@ -1,14 +1,21 @@
 import QtQuick
 
-import Audacity
 import Audacity.UiComponents
 
 Item {
    id: root
-   width: 24
+   width: implicitWidth
+   height: implicitHeight
+   implicitWidth: 24
+   implicitHeight: 124
    objectName: "TrackVolumeMeter"
 
-   property var trackType: undefined
+   enum Channels {
+      Mono,
+      Stereo
+   }
+
+   property var channels: Stereo
 
    property list<MeterPanel> meterPanels: [
       MeterPanel {
@@ -32,29 +39,15 @@ Item {
    states: [
       State {
          name: "MONO"
-         when: trackType === TrackType.Mono
-         PropertyChanges { target: root; height: 124; visible: true }
+         when: channels === TrackVolumeMeter.Mono
          PropertyChanges { target: meterPanels[0]; x: 8; height: 8 }
          PropertyChanges { target: meterPanels[1]; visible: false }
       },
       State {
          name: "STEREO"
-         when: trackType === TrackType.Stereo
-         PropertyChanges { target: root; height: 124; visible: true }
+         when: channels === TrackVolumeMeter.Stereo
          PropertyChanges { target: meterPanels[0]; x: 4; height: 7 }
          PropertyChanges { target: meterPanels[1]; visible: true }
-      },
-      State {
-         name: "VIDEO"
-         when: trackType === TrackType.Video
-         PropertyChanges { target: root; height: 84; visible: true }
-         PropertyChanges { target: meterPanels[0]; x: 4; height:7 }
-         PropertyChanges { target: meterPanels[1]; visible: true }
-      },
-      State {
-         name: "LABEL"
-         when: trackType === TrackType.Label
-         PropertyChanges { target: root; height: 84; visible: false }
       }
    ]
 }

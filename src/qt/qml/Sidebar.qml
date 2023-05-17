@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt.labs.qmlmodels
 
 import Audacity
 import Audacity.UiComponents
@@ -24,24 +25,27 @@ Rectangle {
    function addTrackControlPanel(type) {
       var label
 
-      if (type === TrackType.Label) {
+      if (type === "label") {
          label = qsTr("Label track %1").arg(nextTrack.label)
+         trackControlPanelsModel.append({ "type": type, "label": label })
          nextTrack.label += 1
-      } else if (type === TrackType.Stereo) {
+      } else if (type === "stereo") {
          label = qsTr("Stereo track %1").arg(nextTrack.stereo)
+         trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
          nextTrack.stereo += 1
-      } else if (type == TrackType.Mono) {
+      } else if (type == "mono") {
          label = qsTr("Mono track %1").arg(nextTrack.mono)
+         trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
          nextTrack.mono += 1
-      } else if (type == TrackType.Video) {
+      } else if (type == "video") {
          label = qsTr("Video track %1").arg(nextTrack.video)
+         trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
          nextTrack.video += 1
       } else {
          console.log("Invalid Track Type:", type)
          return
       }
 
-      trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
       root.updateStatusBar("Added '%1'".arg(label))
    }
 
@@ -63,7 +67,9 @@ Rectangle {
       text: qsTr("+ Add new track")
 
       onClicked: {
-         var trackType = Math.floor(Math.random() * 4)
+         var index = Math.floor(Math.random() * trackControlPanelsChooser.choices.length)
+         var trackType = trackControlPanelsChooser.choices[index].roleValue
+
          addTrackControlPanel(trackType)
       }
 
@@ -81,38 +87,122 @@ Rectangle {
       id: trackControlPanelsModel
    }
 
-   Component {
-      id: trackControlPanelsDelegate
+   DelegateChooser {
+      id: trackControlPanelsChooser
+      role: "type"
 
-      TrackControlPanel {
-         width: root.width
-         trackType: type
-         name: label
-         muted: isMuted
-         soloed: isSoloed
+      DelegateChoice {
+         roleValue: "mono"
 
-         onOptionsClicked: {
-            var track = trackControlPanelsModel.get(index).label
-            trackControlPanelsModel.remove(index)
+         MonoTrackControlPanel {
+            name: label
+            muted: isMuted
+            soloed: isSoloed
 
-            root.updateStatusBar("Removed '%1'".arg(track))
+            onOptionsClicked: {
+               var track = trackControlPanelsModel.get(index).label
+               trackControlPanelsModel.remove(index)
+
+               root.updateStatusBar("Removed '%1'".arg(track))
+            }
+
+            onMuteClicked: {
+               var isMuted = trackControlPanelsModel.get(index).isMuted
+               trackControlPanelsModel.setProperty(index, "isMuted", !isMuted)
+
+               root.updateStatusBar("%1 mute button clicked".arg(name))
+            }
+
+            onSoloClicked: {
+               var isSoloed = trackControlPanelsModel.get(index).isSoloed
+               trackControlPanelsModel.setProperty(index, "isSoloed", !isSoloed)
+
+               root.updateStatusBar("%1 solo button clicked".arg(name))
+            }
+
+            onAddClicked: root.updateStatusBar("%1 add button clicked".arg(name))
          }
+      }
 
-         onMuteClicked: {
-            var isMuted = trackControlPanelsModel.get(index).isMuted
-            trackControlPanelsModel.setProperty(index, "isMuted", !isMuted)
+      DelegateChoice {
+         roleValue: "stereo"
 
-            root.updateStatusBar("%1 mute button clicked".arg(name))
+         StereoTrackControlPanel {
+            name: label
+            muted: isMuted
+            soloed: isSoloed
+
+            onOptionsClicked: {
+               var track = trackControlPanelsModel.get(index).label
+               trackControlPanelsModel.remove(index)
+
+               root.updateStatusBar("Removed '%1'".arg(track))
+            }
+
+            onMuteClicked: {
+               var isMuted = trackControlPanelsModel.get(index).isMuted
+               trackControlPanelsModel.setProperty(index, "isMuted", !isMuted)
+
+               root.updateStatusBar("%1 mute button clicked".arg(name))
+            }
+
+            onSoloClicked: {
+               var isSoloed = trackControlPanelsModel.get(index).isSoloed
+               trackControlPanelsModel.setProperty(index, "isSoloed", !isSoloed)
+
+               root.updateStatusBar("%1 solo button clicked".arg(name))
+            }
+
+            onAddClicked: root.updateStatusBar("%1 add button clicked".arg(name))
          }
+      }
 
-         onSoloClicked: {
-            var isSoloed = trackControlPanelsModel.get(index).isSoloed
-            trackControlPanelsModel.setProperty(index, "isSoloed", !isSoloed)
+      DelegateChoice {
+         roleValue: "video"
 
-            root.updateStatusBar("%1 solo button clicked".arg(name))
+         VideoTrackControlPanel {
+            name: label
+            muted: isMuted
+            soloed: isSoloed
+
+            onOptionsClicked: {
+               var track = trackControlPanelsModel.get(index).label
+               trackControlPanelsModel.remove(index)
+
+               root.updateStatusBar("Removed '%1'".arg(track))
+            }
+
+            onMuteClicked: {
+               var isMuted = trackControlPanelsModel.get(index).isMuted
+               trackControlPanelsModel.setProperty(index, "isMuted", !isMuted)
+
+               root.updateStatusBar("%1 mute button clicked".arg(name))
+            }
+
+            onSoloClicked: {
+               var isSoloed = trackControlPanelsModel.get(index).isSoloed
+               trackControlPanelsModel.setProperty(index, "isSoloed", !isSoloed)
+
+               root.updateStatusBar("%1 solo button clicked".arg(name))
+            }
          }
+      }
 
-         onAddClicked: root.updateStatusBar("%1 add button clicked".arg(name))
+      DelegateChoice {
+         roleValue: "label"
+
+         LabelTrackControlPanel {
+            name: label
+
+            onOptionsClicked: {
+               var track = trackControlPanelsModel.get(index).label
+               trackControlPanelsModel.remove(index)
+
+               root.updateStatusBar("Removed '%1'".arg(track))
+            }
+
+            onAddClicked: root.updateStatusBar("%1 add button clicked".arg(name))
+         }
       }
    }
 
@@ -123,13 +213,13 @@ Rectangle {
       height: root.height - button.height
       clip: true
       model: trackControlPanelsModel
-      delegate: trackControlPanelsDelegate
+      delegate: trackControlPanelsChooser
    }
 
    Component.onCompleted: {
-      addTrackControlPanel(TrackType.Label)
-      addTrackControlPanel(TrackType.Stereo)
-      addTrackControlPanel(TrackType.Mono)
-      addTrackControlPanel(TrackType.Video)
+      addTrackControlPanel("label")
+      addTrackControlPanel("stereo")
+      addTrackControlPanel("mono")
+      addTrackControlPanel("video")
    }
 }
