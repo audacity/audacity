@@ -336,7 +336,8 @@ void DoAlign
 static const ReservedCommandFlag&
    NoteTracksSelectedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return !TrackList::Get( project ).Selected<const NoteTrack>().empty();
+         return !TrackList::Get(project)
+            .SelectedLeaders<const NoteTrack>().empty();
       }
    }; return flag; }  //gsw
 #endif
@@ -842,7 +843,7 @@ void OnScoreAlign(const CommandContext &context)
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
-   tracks.Selected().Visit(
+   tracks.SelectedLeaders().Visit(
       [&](WaveTrack *wt) {
          numWaveTracksSelected++;
          endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();

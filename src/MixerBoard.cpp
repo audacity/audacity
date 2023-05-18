@@ -1505,10 +1505,10 @@ const ReservedCommandFlag&
          auto &tracks = TrackList::Get( project );
          return
 #ifdef EXPERIMENTAL_MIDI_OUT
-            !tracks.Any<const NoteTrack>().empty()
+            !tracks.Leaders<const NoteTrack>().empty()
          ||
 #endif
-            !tracks.Any<const WaveTrack>().empty()
+            !tracks.Leaders<const WaveTrack>().empty()
          ;
       }
    }; return flag; }

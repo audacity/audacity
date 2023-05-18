@@ -1583,7 +1583,7 @@ bool NyquistEffect::ProcessOne()
       mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
-      auto ltrack = * mOutputTracks->Any< LabelTrack >().begin();
+      auto ltrack = * mOutputTracks->Leaders<LabelTrack>().begin();
       if (!ltrack) {
          auto newTrack = std::make_shared<LabelTrack>();
          //new track name should be unique among the names in the list of input tracks, not output

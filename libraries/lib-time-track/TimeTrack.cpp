@@ -145,7 +145,7 @@ Track::Holder TimeTrack::PasteInto( AudacityProject &project ) const
 {
    // Maintain uniqueness of the time track!
    std::shared_ptr<TimeTrack> pNewTrack;
-   if( auto pTrack = *TrackList::Get( project ).Any<TimeTrack>().begin() )
+   if (auto pTrack = *TrackList::Get(project).Leaders<TimeTrack>().begin())
       pNewTrack = pTrack->SharedPointer<TimeTrack>();
    else
       pNewTrack = std::make_shared<TimeTrack>();
@@ -347,7 +347,7 @@ void TimeTrack::testMe()
 static Mixer::WarpOptions::DefaultWarp::Scope installer{
 [](const TrackList &list) -> const BoundedEnvelope*
 {
-   if (auto pTimeTrack = *list.Any<const TimeTrack>().begin())
+   if (auto pTimeTrack = *list.Leaders<const TimeTrack>().begin())
       return pTimeTrack->GetEnvelope();
    else
       return nullptr;

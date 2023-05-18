@@ -891,7 +891,7 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
 
    // Bypass this timetrack if the project already has one
    // (See HandleTimeEnvelope and HandleControlPoint also)
-   if (*tracks.Any<TimeTrack>().begin())
+   if (*tracks.Leaders<TimeTrack>().begin())
    {
       AudacityMessageBox(
          XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."),

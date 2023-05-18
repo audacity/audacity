@@ -29,7 +29,7 @@ void OnNewTimeTrack(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
    
 
-   if ( *tracks.Any<TimeTrack>().begin() ) {
+   if (*tracks.Leaders<TimeTrack>().begin()) {
       AudacityMessageBox(
          XO(
 "This version of Audacity only allows one time track for each project window.") );

@@ -506,7 +506,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
    // VariSpeed play reuses Scrubbing.
    bool bFixedSpeedPlay = !gPrefs->ReadBool(wxT("/AudioIO/VariSpeedPlay"), true);
    // Scrubbing doesn't support note tracks, but the fixed-speed method using time tracks does.
-   if ( TrackList::Get( *p ).Any< NoteTrack >() )
+   if (TrackList::Get(*p).Leaders<NoteTrack>())
       bFixedSpeedPlay = true;
 
    // If cutPreview, we have to fall back to fixed speed.
@@ -869,8 +869,8 @@ int DoAddLabel(
 
    // Look for a label track at or after the focused track
    auto iter = pFocusedTrack
-      ? tracks.Find(pFocusedTrack)
-      : tracks.Any().begin();
+      ? tracks.FindLeader(pFocusedTrack)
+      : tracks.Leaders().begin();
    auto lt = * iter.Filter< LabelTrack >();
 
    // If none found, start a NEW label track and use it

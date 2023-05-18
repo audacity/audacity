@@ -337,7 +337,7 @@ void OnCut(const CommandContext &context)
    // cutting the _text_ inside of labels, i.e. if you're
    // in the middle of editing the label text and select "Cut".
 
-   for (auto lt : tracks.Selected< LabelTrack >()) {
+   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
       auto &view = LabelTrackView::Get( *lt );
       if (view.CutSelectedText( context.project )) {
          trackPanel.Refresh(false);
@@ -456,7 +456,7 @@ void OnCopy(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
-   for (auto lt : tracks.Selected< LabelTrack >()) {
+   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
       auto &view = LabelTrackView::Get( *lt );
       if (view.CopySelectedText( context.project )) {
          //trackPanel.Refresh(false);
@@ -1189,7 +1189,7 @@ void OnPasteOver(const CommandContext &context)
 const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
    [](const AudacityProject &project){
-      auto range = TrackList::Get( project ).Any<const LabelTrack>()
+      auto range = TrackList::Get(project).Leaders<const LabelTrack>()
          + [&](const LabelTrack *pTrack){
             return LabelTrackView::Get( *pTrack ).IsTextSelected(
                // unhappy const_cast because track focus might be set
