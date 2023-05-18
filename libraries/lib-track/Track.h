@@ -1316,13 +1316,15 @@ class TRACK_API TrackList final
    // return the track itself; else return the first channel of its group --
    // in either case as an iterator that will only visit other leader tracks.
    // (Generalizing away from the assumption of at most stereo)
-   TrackIter<Track, OldTrackIterTag> FindLeader( Track *pTrack );
+   template<typename Tag = NewTrackIterTag>
+   TrackIter<Track, Tag> FindLeader(Track *pTrack);
 
-   TrackIter<const Track, OldTrackIterTag>
-      FindLeader( const Track *pTrack ) const
+   template<typename Tag = NewTrackIterTag>
+   TrackIter<const Track, Tag> FindLeader(const Track *pTrack) const
    {
       return const_cast<TrackList*>(this)->
-         FindLeader( const_cast<Track*>(pTrack) ).Filter< const Track >();
+         FindLeader<Tag>(const_cast<Track*>(pTrack))
+         .template Filter<const Track>();
    }
 
 
@@ -1434,7 +1436,8 @@ public:
       static auto Channels( TrackType *pTrack )
          -> TrackIterRange<TrackType, OldTrackIterTag>
    {
-      return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
+      return Channels_<TrackType>(pTrack->GetOwner()
+         ->template FindLeader<OldTrackIterTag>(pTrack));
    }
 
    //! Count channels of a track
@@ -1694,5 +1697,19 @@ private:
    //! This is in correspondence with mPendingUpdates
    std::vector< Updater > mUpdaters;
 };
+
+#ifndef _WIN32
+extern
+#else
+TRACK_API
+#endif
+template TrackIter<Track, OldTrackIterTag> TrackList::FindLeader(Track*);
+
+#ifndef _WIN32
+extern
+#else
+TRACK_API
+#endif
+template TrackIter<Track, NewTrackIterTag> TrackList::FindLeader(Track*);
 
 #endif

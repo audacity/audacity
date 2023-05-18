@@ -549,14 +549,17 @@ auto TrackList::EmptyRange() const
    };
 }
 
-auto TrackList::FindLeader( Track *pTrack )
-   -> TrackIter<Track, OldTrackIterTag>
+template<typename Tag>
+auto TrackList::FindLeader(Track *pTrack) -> TrackIter<Track, Tag>
 {
-   auto iter = Find(pTrack);
-   while( *iter && ! ( *iter )->IsLeader() )
+   auto iter = Find<Track, Tag>(pTrack);
+   while (*iter && !(*iter)->IsLeader())
       --iter;
    return iter.Filter( &Track::IsLeader );
 }
+
+template TrackIter<Track, OldTrackIterTag> TrackList::FindLeader(Track*);
+template TrackIter<Track, NewTrackIterTag> TrackList::FindLeader(Track*);
 
 bool TrackList::SwapChannels(Track &track)
 {
