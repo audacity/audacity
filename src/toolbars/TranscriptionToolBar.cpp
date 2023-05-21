@@ -885,10 +885,7 @@ int DoAddLabel(
 //   SelectNone();
    lt->SetSelected(true);
 
-   int index;
-   int focusTrackNumber = -1;
-   index =
-      LabelTrackView::Get( *lt ).AddLabel(region, title, focusTrackNumber);
+   auto index = LabelTrackView::Get(*lt).AddLabel(region, title);
 
    ProjectHistory::Get( project )
       .PushState(XO("Added label"), XO("Label"));

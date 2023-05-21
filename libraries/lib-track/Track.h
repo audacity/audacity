@@ -320,9 +320,6 @@ private:
  public:
    mutable std::pair<int, int> vrulerSize;
 
-   int GetIndex() const;
-   void SetIndex(int index);
-
 public:
    static void FinishCopy (const Track *n, Track *dest);
 
@@ -359,6 +356,9 @@ protected:
    void SetChannel(ChannelType c) noexcept;
 
 private:
+   int GetIndex() const;
+   void SetIndex(int index);
+
    ChannelGroupData &MakeGroupData();
    /*!
     @param completeList only influences debug build consistency checking
