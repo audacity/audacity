@@ -110,7 +110,7 @@ void DoMixAndRender
       if (insertionPoint)
       {
          std::vector<TrackNodePointer> arr;
-         arr.reserve( tracks.size() );
+         arr.reserve(tracks.NChannels());
          size_t begin = 0, ii = 0;
          for (auto iter = tracks.ListOfTracks::begin(),
               end = tracks.ListOfTracks::end(); iter != end; ++iter) {
@@ -519,7 +519,7 @@ void DoSortTracks( AudacityProject &project, int flags )
    // std::list iterators!  Avoid this elsewhere!
    std::vector<TrackNodePointer> arr;
    auto &tracks = TrackList::Get( project );
-   arr.reserve(tracks.size());
+   arr.reserve(tracks.NChannels());
 
    // First find the permutation.
    // This routine, very unusually, deals with the underlying stl list

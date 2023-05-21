@@ -1179,7 +1179,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
       }
    }
 
-   auto nTracksOriginally = tracks.size();
+   auto nTracksOriginally = tracks.Size();
    wxWindow *focus = wxWindow::FindFocus();
    wxWindow *parent = nullptr;
    if (focus != nullptr) {
@@ -1325,7 +1325,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    // New tracks added?  Scroll them into view so that user sees them.
    // Don't care what track type.  An analyser might just have added a
    // Label track and we want to see it.
-   if( tracks.size() > nTracksOriginally ){
+   if (tracks.Size() > nTracksOriginally) {
       // 0.0 is min scroll position, 1.0 is max scroll position.
       trackPanel.VerticalScroll( 1.0 );
    }

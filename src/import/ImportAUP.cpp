@@ -313,11 +313,11 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto &settings = ProjectSettings::Get(mProject);
    auto &selman = ProjectSelectionManager::Get(mProject);
 
-   auto oldNumTracks = tracks.size();
+   auto oldNumTracks = tracks.Size();
    auto cleanup = finally([this, &tracks, oldNumTracks]{
       if (mUpdateResult != ProgressResult::Success) {
          // Revoke additions of tracks
-         while (oldNumTracks < tracks.size()) {
+         while (oldNumTracks < tracks.Size()) {
             Track *lastTrack = *tracks.Any().rbegin();
             tracks.Remove(lastTrack);
          }
@@ -1356,7 +1356,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    }
 
    auto &tracks = TrackList::Get(mProject);
-   auto oldNumTracks = tracks.size();
+   auto oldNumTracks = tracks.Size();
    Track *pLast = nullptr;
    if (oldNumTracks > 0)
       pLast = *tracks.Any().rbegin();
@@ -1369,7 +1369,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
       [&] (AudacityException*) {}
    );
 
-   if (oldNumTracks == tracks.size())
+   if (oldNumTracks == tracks.Size())
       return false;
 
    // Handle other attributes, now that we have the tracks.
