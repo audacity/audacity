@@ -11,6 +11,9 @@ Paul Licameli split from WaveTrack.cpp
 #include "SampleTrackCache.h"
 #include "SampleTrack.h"
 
+#include <chrono>
+#include <fstream>
+
 SampleTrackCache::~SampleTrackCache()
 {
 }
@@ -34,7 +37,40 @@ void SampleTrackCache::SetTrack(const std::shared_ptr<const SampleTrack> &pTrack
    }
 }
 
-const float *SampleTrackCache::GetFloats(
+const float*
+SampleTrackCache::GetFloats(sampleCount start, size_t len, bool mayThrow)
+{
+   if (mBuffer.size() < len)
+   {
+      mBuffer.resize(len);
+   }
+   const auto before = std::chrono::steady_clock::now();
+   // const auto result = GetFloatsInternal(start, len, mayThrow);
+   const auto result = GetFloatsDirectly(start, len, mayThrow);
+   const auto after = std::chrono::steady_clock::now();
+   static std::ofstream log("timing_with_low_level_caching.txt");
+   log << std::chrono::duration_cast<std::chrono::microseconds>(after - before)
+             .count()
+       << std::endl;
+   return result;
+}
+
+const float* SampleTrackCache::GetFloatsDirectly(
+   sampleCount start, size_t len, bool mayThrow)
+{
+   if (mPTrack->Get(
+          reinterpret_cast<char*>(mBuffer.data()), sampleFormat::floatSample,
+          start, len, fillFormat::fillZero, mayThrow, nullptr))
+   {
+      return mBuffer.data();
+   }
+   else
+   {
+      return nullptr;
+   }
+}
+
+const float *SampleTrackCache::GetFloatsInternal(
    sampleCount start, size_t len, bool mayThrow)
 {
    constexpr auto format = floatSample;

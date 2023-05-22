@@ -113,6 +113,9 @@ private:
    size_t mSampleBytes;
    size_t mSampleCount;
    sampleFormat mSampleFormat;
+   std::vector<char> mSampleCache;
+   unsigned long long mSampleCacheOffset = 0u;
+   size_t mNumCachedBytes = 0u;
 
    ArrayOf<char> mSummary256;
    ArrayOf<char> mSummary64k;
@@ -377,6 +380,30 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
       auto size = SAMPLE_SIZE(destformat);
       memset(dest, 0, numsamples * size);
       return numsamples;
+   }
+
+   assert(mSampleFormat == destformat);
+   const auto numBytesToRead = numsamples * SAMPLE_SIZE(destformat);
+   const auto readBeginByte = sampleoffset * SAMPLE_SIZE(destformat);
+   const auto readEndByte = readBeginByte + numBytesToRead;
+   const auto cachedEndByte = mSampleCacheOffset + mNumCachedBytes;
+   if (readEndByte <= cachedEndByte)
+   {
+      std::copy(
+         mSampleCache.data() + readBeginByte, mSampleCache.data() + readEndByte,
+         dest);
+      return numsamples;
+   }
+   else
+   {
+      sqlite3_stmt* stmt = Conn()->Prepare(
+         DBConnection::GetSamples,
+         "SELECT samples FROM sampleblocks WHERE blockid = ?1;");
+      mNumCachedBytes = GetBlob(
+         mSampleCache.data(), mSampleFormat, stmt, mSampleFormat,
+         sampleoffset * SAMPLE_SIZE(mSampleFormat), mSampleCache.size());
+      mSampleCacheOffset = sampleoffset;
+      return DoGetSamples(dest, destformat, sampleoffset, numsamples);
    }
 
    // Prepare and cache statement...automatically finalized at DB close
@@ -665,6 +692,8 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mValid = false;
    mSampleCount = 0;
    mSampleBytes = 0;
+   mSampleCacheOffset = 0u;
+   mNumCachedBytes = 0u;
    mSumMin = FLT_MAX;
    mSumMax = -FLT_MAX;
    mSumMin = 0.0;
@@ -715,6 +744,9 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mSumRms = sqlite3_column_double(stmt, 3);
    mSampleBytes = sqlite3_column_int(stmt, 4);
    mSampleCount = mSampleBytes / SAMPLE_SIZE(mSampleFormat);
+   mSampleCache.resize(mSampleBytes);
+   mSampleCacheOffset = 0u;
+   mNumCachedBytes = 0u;
 
    // Clear statement bindings and rewind statement
    sqlite3_clear_bindings(stmt);
@@ -847,6 +879,9 @@ auto SqliteSampleBlock::SetSizes(
    mSampleFormat = srcformat;
    mSampleCount = numsamples;
    mSampleBytes = mSampleCount * SAMPLE_SIZE(mSampleFormat);
+   mSampleCache.resize(mSampleBytes);
+   mNumCachedBytes = 0u;
+   mSampleCacheOffset = 0u;
 
    int frames64k = (mSampleCount + 65535) / 65536;
    int frames256 = frames64k * 256;

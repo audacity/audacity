@@ -49,7 +49,11 @@ public:
    const float *GetFloats(sampleCount start, size_t len, bool mayThrow);
 
 private:
+   const float *GetFloatsInternal(sampleCount start, size_t len, bool mayThrow);
+   const float *GetFloatsDirectly(sampleCount start, size_t len, bool mayThrow);
    void Free();
+
+   std::vector<float> mBuffer;
 
    struct Buffer {
       Floats data;
