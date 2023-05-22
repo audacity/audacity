@@ -135,7 +135,7 @@ void ForEachCopiedWaveTrack(const TrackList& src,
       }
       while(dstTrack != dstTrackRange.end())
       {
-         if((*dstTrack)->GetSelected())
+         if((*dstTrack)->GetSelected() && *lastCopiedTrack)
             f(**lastCopiedTrack);
          ++dstTrack;
       }
