@@ -13,7 +13,7 @@
 
 class sampleCount;
 class SpectrogramSettings;
-class SampleTrackCache;
+class SampleTrack;
 
 #include <vector>
 #include "MemoryX.h"
@@ -45,7 +45,7 @@ public:
    // Calculate one column of the spectrum
    bool CalculateOneSpectrum
       (const SpectrogramSettings &settings,
-       SampleTrackCache &waveTrackCache,
+       const SampleTrack &waveTrack,
        const int xx, sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond,
        int lowerBoundX, int upperBoundX,
@@ -59,7 +59,7 @@ public:
 
    // Calculate the dirty columns at the begin and end of the cache
    void Populate
-      (const SpectrogramSettings &settings, SampleTrackCache &waveTrackCache,
+      (const SpectrogramSettings &settings, const SampleTrack &waveTrack,
        int copyBegin, int copyEnd, size_t numPixels,
        sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond);
@@ -119,7 +119,7 @@ struct WaveClipSpectrumCache final : WaveClipListener
    void Invalidate() override; // NOFAIL-GUARANTEE
 
    /** Getting high-level data for screen display */
-   bool GetSpectrogram(const WaveClip &clip, SampleTrackCache &cache,
+   bool GetSpectrogram(const WaveClip &clip, const SampleTrack &track,
                        const float *& spectrogram,
                        const sampleCount *& where,
                        size_t numPixels,

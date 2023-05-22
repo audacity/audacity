@@ -21,7 +21,6 @@
 #include "EffectStage.h"
 #include "Dither.h"
 #include "SampleTrack.h"
-#include "SampleTrackCache.h"
 #include "Resample.h"
 #include "float_cast.h"
 #include <numeric>

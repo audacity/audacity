@@ -12,7 +12,6 @@
 
 #include <cmath>
 #include "RealFFTf.h"
-#include "SampleTrackCache.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "Spectrum.h"
 #include "WaveClipUtilities.h"
@@ -96,7 +95,7 @@ bool SpecCache::Matches
 
 bool SpecCache::CalculateOneSpectrum
    (const SpectrogramSettings &settings,
-    SampleTrackCache &waveTrackCache,
+    const SampleTrack &waveTrack,
     const int xx, const sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond,
     int lowerBoundX, int upperBoundX,
@@ -141,10 +140,6 @@ bool SpecCache::CalculateOneSpectrum
    }
    else {
 
-
-      // We can avoid copying memory when ComputeSpectrum is used below
-      bool copy = !autocorrelation || (padding > 0) || reassignment;
-      float *useBuffer = 0;
       float *adj = scratch + padding;
 
       {
@@ -158,7 +153,6 @@ bool SpecCache::CalculateOneSpectrum
                *adj++ = 0;
             myLen += from.as_long_long(); // add a negative
             from = 0;
-            copy = true;
          }
 
          if (from + myLen >= numSamples) {
@@ -168,37 +162,25 @@ bool SpecCache::CalculateOneSpectrum
             for (decltype(myLen) ii = newlen; ii < myLen; ++ii)
                adj[ii] = 0;
             myLen = newlen;
-            copy = true;
          }
 
          if (myLen > 0) {
-            useBuffer = (float*)(waveTrackCache.GetFloats(
-               sampleCount(
-                  floor(0.5 + from.as_double() + offset * rate)
-               ),
-               myLen,
+            waveTrack.Get(
+               reinterpret_cast<samplePtr>(adj),
+               sampleFormat::floatSample,
+               sampleCount(floor(0.5 + from.as_double() + offset * rate)),
+               myLen, fillFormat::fillZero,
                // Don't throw in this drawing operation
-               false)
-            );
-
-            if (copy) {
-               if (useBuffer)
-                  memcpy(adj, useBuffer, myLen * sizeof(float));
-               else
-                  memset(adj, 0, myLen * sizeof(float));
+               false);
             }
          }
-      }
-
-      if (copy || !useBuffer)
-         useBuffer = scratch;
 
       if (autocorrelation) {
          // not reassignment, xx is surely within bounds.
          wxASSERT(xx >= 0);
          float *const results = &out[nBins * xx];
-         // This function does not mutate useBuffer
-         ComputeSpectrum(useBuffer, windowSizeSetting, windowSizeSetting,
+         // This function does not mutate adj
+         ComputeSpectrum(scratch, windowSizeSetting, windowSizeSetting,
             rate, results,
             autocorrelation, settings.windowType);
       }
@@ -299,14 +281,14 @@ bool SpecCache::CalculateOneSpectrum
          wxASSERT(xx >= 0);
          float *const results = &out[nBins * xx];
 
-         // Do the FFT.  Note that useBuffer is multiplied by the window,
+         // Do the FFT.  Note that scratch is multiplied by the window,
          // and the window is initialized with leading and trailing zeroes
          // when there is padding.  Therefore we did not need to reinitialize
-         // the part of useBuffer in the padding zones.
+         // the part of scratch in the padding zones.
 
-         // This function mutates useBuffer
+         // This function mutates scratch
          ComputeSpectrumUsingRealFFTf
-            (useBuffer, settings.hFFT.get(), settings.window.get(), fftLen, results);
+            (scratch, settings.hFFT.get(), settings.window.get(), fftLen, results);
          if (!gainFactors.empty()) {
             // Apply a frequency-dependent gain factor
             for (size_t ii = 0; ii < nBins; ++ii)
@@ -342,7 +324,7 @@ void SpecCache::Grow(size_t len_, SpectrogramSettings& settings,
 }
 
 void SpecCache::Populate
-   (const SpectrogramSettings &settings, SampleTrackCache &waveTrackCache,
+   (const SpectrogramSettings &settings, const SampleTrack &waveTrack,
     int copyBegin, int copyEnd, size_t numPixels,
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
@@ -374,7 +356,7 @@ void SpecCache::Populate
       const int lowerBoundX = jj == 0 ? 0 : copyEnd;
       const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
-#ifdef _OPENMP
+#ifdef _OPENMP // todo(mhodgkinson) what's this guy ? Leaving this scope untouched in case I'm lucky and it's obsolete.
       // Storage for mutable per-thread data.
       // private clause ensures one copy per thread
       struct ThreadLocalStorage {
@@ -400,11 +382,10 @@ void SpecCache::Populate
          SampleTrackCache& cache = *tls.cache;
          float* buffer = &tls.scratch[0];
 #else
-         SampleTrackCache& cache = waveTrackCache;
          float* buffer = &scratch[0];
 #endif
          CalculateOneSpectrum(
-            settings, cache, xx, numSamples,
+            settings, waveTrack, xx, numSamples,
             offset, rate, pixelsPerSecond,
             lowerBoundX, upperBoundX,
             gainFactors, buffer, &freq[0]);
@@ -421,7 +402,7 @@ void SpecCache::Populate
          {
             const bool result =
                CalculateOneSpectrum(
-                  settings, waveTrackCache, --xx, numSamples,
+                  settings, waveTrack, --xx, numSamples,
                   offset, rate, pixelsPerSecond,
                   lowerBoundX, upperBoundX,
                   gainFactors, &scratch[0], &freq[0]);
@@ -434,7 +415,7 @@ void SpecCache::Populate
          {
             const bool result =
                CalculateOneSpectrum(
-                  settings, waveTrackCache, xx++, numSamples,
+                  settings, waveTrack, xx++, numSamples,
                   offset, rate, pixelsPerSecond,
                   lowerBoundX, upperBoundX,
                   gainFactors, &scratch[0], &freq[0]);
@@ -467,7 +448,7 @@ void SpecCache::Populate
 }
 
 bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
-   SampleTrackCache &waveTrackCache,
+   const SampleTrack &waveTrack,
    const float *& spectrogram,
    const sampleCount *& where,
    size_t numPixels,
@@ -475,8 +456,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
 {
    t0 += clip.GetTrimLeft();
 
-   const auto track =
-      static_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
+   const auto track = static_cast<const WaveTrack*>(&waveTrack);
    auto &settings = SpectrogramSettings::Get(*track);
    const auto rate = clip.GetRate();
 
@@ -577,7 +557,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
       t0, rate, samplesPerPixel);
 
    mSpecCache->Populate
-      (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
+      (settings, waveTrack, copyBegin, copyEnd, numPixels,
        clip.GetSequenceSamplesCount(),
        clip.GetSequenceStartTime(), rate, pixelsPerSecond);
 

@@ -19,8 +19,6 @@ so the engine will not depend on a particular realization of sample storage.
 set( SOURCES
    SampleTrack.cpp
    SampleTrack.h
-   SampleTrackCache.cpp
-   SampleTrackCache.h
    SampleTrackSource.cpp
    SampleTrackSource.h
    Mix.cpp

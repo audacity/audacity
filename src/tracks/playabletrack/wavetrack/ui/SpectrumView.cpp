@@ -34,7 +34,6 @@ Paul Licameli split from WaveTrackView.cpp
 #include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../ProjectSettings.h"
-#include "SampleTrackCache.h"
 #include "WaveTrackLocation.h"
 
 #include <wx/dcmemory.h>
@@ -316,7 +315,7 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
 }
 
 void DrawClipSpectrum(TrackPanelDrawingContext &context,
-                                   SampleTrackCache &waveTrackCache,
+                                   const SampleTrack &waveTrack,
                                    const WaveClip *clip,
                                    const wxRect &rect,
                                    const std::shared_ptr<SpectralData> &mpSpectralData,
@@ -341,8 +340,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       return;
    }
 
-   const auto track =
-      dynamic_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
+   const auto track = dynamic_cast<const WaveTrack*>(&waveTrack);
    if (!track)
       // Leave a blank rectangle.
       // TODO: rewrite GetSpectrumBounds so it is
@@ -418,7 +416,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    {
       const double pps = averagePixelsPerSample * rate;
       updated = WaveClipSpectrumCache::Get( *clip ).GetSpectrogram( *clip,
-         waveTrackCache, freq, where,
+         waveTrack, freq, where,
          (size_t)hiddenMid.width,
          t0, pps);
    }
@@ -676,7 +674,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          specCache.where[ii - begin] = sampleCount(0.5 + rate * time);
       }
       specCache.Populate
-         (settings, waveTrackCache,
+         (settings, waveTrack,
           0, 0, numPixels,
           clip->GetPlaySamplesCount(),
           tOffset, rate,
@@ -863,9 +861,8 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
    TrackArt::DrawBackgroundWithSelection(
       context, rect, track, blankSelectedBrush, blankBrush );
 
-   SampleTrackCache cache(track->SharedPointer<const WaveTrack>());
    for (const auto &clip: track->GetClips()){
-      DrawClipSpectrum( context, cache, clip.get(), rect,
+      DrawClipSpectrum( context, *track, clip.get(), rect,
                         mpSpectralData, clip.get() == selectedClip);
    }
 
