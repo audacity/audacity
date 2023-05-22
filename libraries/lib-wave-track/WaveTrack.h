@@ -251,6 +251,12 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const override;
+
+   bool GetInternal(
+      samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
+      fillFormat fill = fillZero, bool mayThrow = true,
+      sampleCount* pNumWithinClips = nullptr) const;
+
    void Set(constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       sampleFormat effectiveFormat = widestSampleFormat /*!<
