@@ -22,6 +22,7 @@
 
 class SampleBlock;
 class SampleBlockFactory;
+class SequenceSampleCache;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 
 // This is an internal data structure!  For advanced use only.
@@ -240,9 +241,17 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    bool          mErrorOpening{ false };
 
+   std::unique_ptr<SequenceSampleCache> mPlaybackCache;
+
    //
    // Private methods
    //
+
+   bool DoGet(
+      samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
+      bool mayThrow) const;
+
+   void InitPlaybackCache();
 
    //! Does not do any dithering
    /*! @excsafety{Strong} */

@@ -42,10 +42,13 @@
 
 #include "BasicUI.h"
 #include "Dither.h"
-#include "SampleBlock.h"
 #include "InconsistencyException.h"
+#include "SampleBlock.h"
+#include "SequenceSampleCache.h"
 
 size_t Sequence::sMaxDiskBlockSize = 1048576;
+
+using namespace std::placeholders;
 
 // Sequence methods
 Sequence::Sequence(
@@ -922,6 +925,8 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
          }
       } // for
 
+      InitPlaybackCache();
+
       // Set at least the stored format as it was saved
       mSampleFormats =
          SampleFormats{ effective.value_or(stored), stored };
@@ -977,6 +982,7 @@ void Sequence::HandleXMLEndTag(const std::string_view& tag)
          Internat::ToString(mNumSamples.as_double(), 0),
          Internat::ToString(numSamples.as_double(), 0));
       mNumSamples = numSamples;
+      InitPlaybackCache();
       mErrorOpening = true;
    }
 }
@@ -1116,6 +1122,16 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
 
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, bool mayThrow) const
+{
+   if (!mPlaybackCache) {
+      THROW_INCONSISTENCY_EXCEPTION;
+   }
+   return mPlaybackCache->Get(buffer, format, start, len, mayThrow);
+}
+
+bool Sequence::DoGet(
+   samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
+   bool mayThrow) const
 {
    if (start == mNumSamples) {
       return len == 0;
@@ -1375,6 +1391,12 @@ bool Sequence::Append(
    }
 
    return result;
+}
+
+void Sequence::InitPlaybackCache() {
+   mPlaybackCache = std::make_unique<SequenceSampleCache>(
+      std::bind(&Sequence::DoGet, this, _1, _2, _3, _4, _5), mNumSamples,
+      mMaxSamples);
 }
 
 /*! @excsafety{Strong} */
@@ -1767,6 +1789,7 @@ void Sequence::CommitChangesIfConsistent
 
    mBlock.swap(newBlock);
    mNumSamples = numSamples;
+   InitPlaybackCache();
 }
 
 void Sequence::AppendBlocksIfConsistent
@@ -1809,6 +1832,7 @@ void Sequence::AppendBlocksIfConsistent
    // use No-fail-guarantee
 
    mNumSamples = numSamples;
+   InitPlaybackCache();
    consistent = true;
 }
 
