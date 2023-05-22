@@ -18,7 +18,6 @@
 #include "MixerOptions.h"
 
 class Resample;
-class SampleTrackCache;
 
 //! Fetches from tracks, applies envelopes; can resample, and warp time, even
 //! backwards, as for scrubbing.
@@ -103,8 +102,8 @@ private:
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
-   //! SampleTrackCaches are the source of data
-   std::vector<SampleTrackCache> mInputTrack;
+   //! SampleTracks are the source of data
+   std::vector<std::shared_ptr<const SampleTrack>> mInputTrack;
 
    //! Fetch position for source
    /*!
