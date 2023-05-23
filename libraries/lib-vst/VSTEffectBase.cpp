@@ -22,8 +22,6 @@
 #include "VSTEffectBase.h"
 #include "VSTInstance.h"
 
-#if USE_VST
-
 #include <wx/time.h>
 
 #include "Base64.h"
@@ -403,5 +401,3 @@ EffectSettings VSTEffectBase::MakeSettings() const
    FetchSettings(settings);
    return EffectSettings::Make<VSTSettings>(std::move(settings));
 }
-
-#endif // USE_VST

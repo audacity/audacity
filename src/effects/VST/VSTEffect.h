@@ -7,7 +7,6 @@
   Dominic Mazzoni
 
 **********************************************************************/
-#if USE_VST
 
 #ifndef __AUDACITY_VST_EFFECT__
 #define __AUDACITY_VST_EFFECT__
@@ -85,5 +84,3 @@ private:
 };
 
 #endif
-
-#endif // USE_VST

@@ -33,18 +33,6 @@
 
 #include "ProgressDialog.h"
 
-#if 0
-#if defined(BUILDING_AUDACITY)
-#include "../../PlatformCompatibility.h"
-
-// Make the main function private
-#else
-#define USE_VST 1
-#endif
-#endif
-
-#if USE_VST
-
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "AudacityMessageBox.h"
@@ -307,5 +295,3 @@ void VSTEffect::ShowOptions(const EffectPlugin &) const
 
 // Inject factory hook to make VSTEffect capable of UI
 static VSTEffectsModule::Factory::SubstituteInUnique<VSTEffect> scope;
-
-#endif // USE_VST

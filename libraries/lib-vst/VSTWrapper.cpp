@@ -16,8 +16,6 @@
 
 #include "VSTWrapper.h"
 
-#if USE_VST
-
 #include <wx/log.h>
 #include <wx/time.h>
 
@@ -1843,5 +1841,3 @@ VSTWrapper::MakeMessageFS(const VSTSettings &settings) const
 void VSTUIWrapper::Automate(int index, float value)
 {
 }
-
-#endif // USE_VST

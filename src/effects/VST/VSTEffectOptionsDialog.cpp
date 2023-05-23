@@ -13,8 +13,6 @@
 
 #include "VSTEffectOptionsDialog.h"
 
-#if USE_VST
-
 #include "ShuttleGui.h"
 #include "../../widgets/valnum.h"
 
@@ -136,5 +134,3 @@ void VSTEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
    EndModal(wxID_OK);
 }
-
-#endif // USE_VST
