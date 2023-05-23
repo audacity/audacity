@@ -60,9 +60,6 @@ from the project that will own the track.
 
 #include "ProjectFormatExtensionsRegistry.h"
 
-#include <chrono>
-#include <fstream>
-
 using std::max;
 
 namespace {
@@ -1887,21 +1884,6 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
 }
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
-                    sampleCount start, size_t len, fillFormat fill,
-                    bool mayThrow, sampleCount * pNumWithinClips) const
-{
-   const auto before = std::chrono::steady_clock::now();
-   const auto result =
-      GetInternal(buffer, format, start, len, fill, mayThrow, pNumWithinClips);
-   const auto after = std::chrono::steady_clock::now();
-   static std::ofstream log("timing.txt");
-   log << std::chrono::duration_cast<std::chrono::microseconds>(after - before)
-             .count()
-       << std::endl;
-   return result;
-}
-
-bool WaveTrack::GetInternal(samplePtr buffer, sampleFormat format,
                     sampleCount start, size_t len, fillFormat fill,
                     bool mayThrow, sampleCount * pNumWithinClips) const
 {
