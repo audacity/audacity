@@ -185,7 +185,7 @@ public:
 
    // Structure describing data common to channels of a group of tracks
    // Should be deep-copyable (think twice before adding shared pointers!)
-   struct ChannelGroupData : ChannelGroupAttachments {
+   struct TRACK_API ChannelGroupData : ChannelGroupAttachments {
       LinkType mLinkType{ LinkType::None };
    };
 
