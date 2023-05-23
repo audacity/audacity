@@ -25,13 +25,14 @@
 #include <functional>
 
 class BlockArray;
+class CachingSequence;
 class Envelope;
 class ProgressDialog;
 class sampleCount;
 class SampleBlock;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
-class Sequence;
+class SequenceInterface;
 class wxFileNameWrapper;
 namespace BasicUI { class ProgressDialog; }
 
@@ -214,14 +215,13 @@ public:
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
-   BlockArray* GetSequenceBlockArray();
    const BlockArray* GetSequenceBlockArray() const;
 
    // Get low-level access to the sequence. Whenever possible, don't use this,
    // but use more high-level functions inside WaveClip (or add them if you
    // think they are useful for general use)
-   Sequence* GetSequence() { return mSequence.get(); }
-   const Sequence* GetSequence() const { return mSequence.get(); }
+   SequenceInterface* GetSequence();
+   const SequenceInterface* GetSequence() const;
 
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
@@ -359,7 +359,7 @@ protected:
    int mRate;
    int mColourIndex;
 
-   std::unique_ptr<Sequence> mSequence;
+   std::unique_ptr<CachingSequence> mSequence;
    std::unique_ptr<Envelope> mEnvelope;
 
    // Cut Lines are nothing more than ordinary wave clips, with the

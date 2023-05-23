@@ -17,12 +17,15 @@ and WaveTrackSink make new WaveTrack objects.
 ]]
 
 set( SOURCES
+   CachingSequence.cpp
+   CachingSequence.h
    PasteOverPreservingClips.cpp
    PasteOverPreservingClips.h
    SampleBlock.cpp
    SampleBlock.h
    Sequence.cpp
    Sequence.h
+   SequenceInterface.h
    SequenceSampleCache.cpp
    SequenceSampleCache.h
    WaveClip.cpp

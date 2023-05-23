@@ -16,41 +16,15 @@
 #include <functional>
 
 #include "SampleFormat.h"
-#include "XMLTagHandler.h"
+#include "SequenceInterface.h"
 
 #include "SampleCount.h"
 
 class SampleBlock;
 class SampleBlockFactory;
-class SequenceSampleCache;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 
-// This is an internal data structure!  For advanced use only.
-class SeqBlock {
- public:
-   using SampleBlockPtr = std::shared_ptr<SampleBlock>;
-   SampleBlockPtr sb;
-   ///the sample in the global wavetrack that this block starts at.
-   sampleCount start;
-
-   SeqBlock()
-      : sb{}, start(0)
-   {}
-
-   SeqBlock(const SampleBlockPtr &sb_, sampleCount start_)
-      : sb(sb_), start(start_)
-   {}
-
-   // Construct a SeqBlock with changed start, same file
-   SeqBlock Plus(sampleCount delta) const
-   {
-      return SeqBlock(sb, start + delta);
-   }
-};
-class BlockArray : public std::vector<SeqBlock> {};
-using BlockPtrArray = std::vector<SeqBlock*>; // non-owning pointers
-
-class WAVE_TRACK_API Sequence final : public XMLTagHandler{
+class WAVE_TRACK_API Sequence final : public SequenceInterface {
  public:
 
    //
@@ -63,6 +37,8 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    //! true if nValue is one of the sampleFormat enum values
    static bool IsValidSampleFormat(const int nValue);
 
+private:
+   friend class CachingSequence;
    //
    // Constructor / Destructor / Duplicator
    //
@@ -74,16 +50,17 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    Sequence( const Sequence& ) = delete;
    Sequence& operator= (const Sequence&) PROHIBITED;
 
+public:
    ~Sequence();
 
    //
    // Editing
    //
 
-   sampleCount GetNumSamples() const { return mNumSamples; }
+   sampleCount GetNumSamples() const override { return mNumSamples; }
 
    bool Get(samplePtr buffer, sampleFormat format,
-            sampleCount start, size_t len, bool mayThrow) const;
+            sampleCount start, size_t len, bool mayThrow) const override;
 
    //! Pass nullptr to set silence
    /*! Note that len is not size_t, because nullptr may be passed for buffer, in
@@ -97,17 +74,18 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
          If the data are later narrowed from stored format, but not narrower
          than the effective, then no dithering will occur.
       */
-   );
+   ) override;
 
    // Return non-null, or else throw!
    // Must pass in the correct factory for the result.  If it's not the same
    // as in this, then block contents must be copied.
-   std::unique_ptr<Sequence> Copy( const SampleBlockFactoryPtr &pFactory,
-      sampleCount s0, sampleCount s1) const;
+   std::unique_ptr<SequenceInterface> Copy(
+      const SampleBlockFactoryPtr& pFactory, sampleCount s0,
+      sampleCount s1) const override;
    /*! @excsafety{Strong} */
-   void Paste(sampleCount s0, const Sequence *src);
+   void Paste(sampleCount s0, const SequenceInterface *src) override;
 
-   size_t GetIdealAppendLen() const;
+   size_t GetIdealAppendLen() const override;
 
    /*!
        Samples may be retained in a memory buffer, pending Flush()
@@ -125,32 +103,32 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
          If the data are later narrowed from stored format, but not narrower
          than the effective, then no dithering will occur.
       */
-   );
+   ) override;
 
    /*! @excsafety{Mixed} */
    /*! @excsafety{No-fail} -- The Sequence will be in a flushed state. */
    /*! @excsafety{Partial}
    -- Some initial portion (maybe none) of the append buffer of the
     Sequence gets appended; no previously flushed contents are lost. */
-   void Flush();
+   void Flush() override;
 
    //! Append data, not coalescing blocks, returning a pointer to the new block.
    //! No dithering applied.
    /*! @excsafety{Strong} */
    SeqBlock::SampleBlockPtr AppendNewBlock(
-      constSamplePtr buffer, sampleFormat format, size_t len);
+      constSamplePtr buffer, sampleFormat format, size_t len) override;
    //! Append a complete block, not coalescing
    /*! @excsafety{Strong} */
-   void AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock);
+   void AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock) override;
    /*! @excsafety{Strong} */
-   void Delete(sampleCount start, sampleCount len);
+   void Delete(sampleCount start, sampleCount len) override;
 
    /*! @excsafety{Strong} */
-   void SetSilence(sampleCount s0, sampleCount len);
+   void SetSilence(sampleCount s0, sampleCount len) override;
    /*! @excsafety{Strong} */
-   void InsertSilence(sampleCount s0, sampleCount len);
+   void InsertSilence(sampleCount s0, sampleCount len) override;
 
-   const SampleBlockFactoryPtr &GetFactory() { return mpFactory; }
+   const SampleBlockFactoryPtr &GetFactory() const override { return mpFactory; }
 
    //
    // XMLTagHandler callback methods for loading and saving
@@ -159,52 +137,51 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
    void HandleXMLEndTag(const std::string_view& tag) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
-   void WriteXML(XMLWriter &xmlFile) const /* not override */;
+   void WriteXML(XMLWriter &xmlFile) const override;
 
-   bool GetErrorOpening() { return mErrorOpening; }
+   bool GetErrorOpening() const { return mErrorOpening; }
 
    //
    // Lock all of this sequence's sample blocks, keeping them
    // from being destroyed when closing.
 
-   bool CloseLock();//should be called upon project close.
+   bool CloseLock() override;//should be called upon project close.
    // not balanced by unlocking calls.
 
    //
    // Manipulating Sample Format
    //
 
-   SampleFormats GetSampleFormats() const;
+   SampleFormats GetSampleFormats() const override;
 
    //! @return whether there was a change
    /*! @excsafety{Strong} */
    bool ConvertToSampleFormat(sampleFormat format,
-      const std::function<void(size_t)> & progressReport = {});
+      const std::function<void(size_t)> & progressReport = {}) override;
 
    //
    // Retrieving summary info
    //
 
    std::pair<float, float> GetMinMax(
-      sampleCount start, sampleCount len, bool mayThrow) const;
-   float GetRMS(sampleCount start, sampleCount len, bool mayThrow) const;
+      sampleCount start, sampleCount len, bool mayThrow) const override;
+   float GetRMS(sampleCount start, sampleCount len, bool mayThrow) const override;
 
    //
    // Getting block size and alignment information
    //
 
-   size_t GetMaxBlockSize() const;
+   size_t GetMaxBlockSize() const override;
 
    //
    // This should only be used if you really, really know what
    // you're doing!
    //
 
-   BlockArray &GetBlockArray() { return mBlock; }
-   const BlockArray &GetBlockArray() const { return mBlock; }
+   const BlockArray &GetBlockArray() const override { return mBlock; }
 
-   size_t GetAppendBufferLen() const { return mAppendBufferLen; }
-   constSamplePtr GetAppendBuffer() const { return mAppendBuffer.ptr(); }
+   size_t GetAppendBufferLen() const override { return mAppendBufferLen; }
+   constSamplePtr GetAppendBuffer() const override { return mAppendBuffer.ptr(); }
 
  private:
 
@@ -235,17 +212,11 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    bool          mErrorOpening{ false };
 
-   std::unique_ptr<SequenceSampleCache> mPlaybackCache;
-
    //
    // Private methods
    //
 
-   bool DoGet(
-      samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
-      bool mayThrow) const;
-
-   void InitPlaybackCache();
+   void Paste(sampleCount s0, const Sequence *src);
 
    //! Does not do any dithering
    /*! @excsafety{Strong} */
@@ -281,7 +252,7 @@ public:
    // Public methods
    //
 
-   int FindBlock(sampleCount pos) const;
+   int FindBlock(sampleCount pos) const override;
 
    static bool Read(samplePtr buffer, sampleFormat format,
              const SeqBlock &b,
@@ -289,7 +260,7 @@ public:
 
    // This function throws if the track is messed up
    // because of inconsistent block starts & lengths
-   void ConsistencyCheck (const wxChar *whereStr, bool mayThrow = true) const;
+   void ConsistencyCheck (const wxChar *whereStr, bool mayThrow = true) const override;
 
    // This function prints information to stdout about the blocks in the
    // tracks and indicates if there are inconsistencies.

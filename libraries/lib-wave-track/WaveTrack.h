@@ -28,7 +28,7 @@ using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 
 class TimeWarper;
 
-class Sequence;
+class SequenceInterface;
 class WaveClip;
 
 // Array of pointers that assume ownership
@@ -286,7 +286,7 @@ private:
    // function which give the sequence and envelope which contains the given
    // time.
    //
-   Sequence* GetSequenceAtTime(double time);
+   SequenceInterface* GetSequenceAtTime(double time);
    Envelope* GetEnvelopeAtTime(double time);
 
    WaveClip* GetClipAtTime(double time);

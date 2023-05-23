@@ -61,7 +61,7 @@ struct MinMaxSumsq
 
 }
 
-bool GetWaveDisplay(const Sequence &sequence,
+bool GetWaveDisplay(const SequenceInterface &sequence,
    float *min, float *max, float *rms, int* bl,
    size_t len, const sampleCount *where)
 {
@@ -171,7 +171,7 @@ bool GetWaveDisplay(const Sequence &sequence,
       case 1:
          // Read samples
          // no-throw for display operations!
-         sequence.Read(
+         Sequence::Read(
             (samplePtr)temp.get(), floatSample, seqBlock, startPosition, num, false);
          break;
       case 256:

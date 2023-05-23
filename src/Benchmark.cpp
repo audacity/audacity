@@ -500,7 +500,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    if (mBlockDetail) {
       auto seq = t->GetClipByIndex(0)->GetSequence();
-      seq->DebugPrintf(seq->GetBlockArray(), seq->GetNumSamples(), &tempStr);
+      Sequence::DebugPrintf(seq->GetBlockArray(), seq->GetNumSamples(), &tempStr);
       mToPrint += tempStr;
    }
    Printf( XO("Time to perform %d edits: %ld ms\n").Format( trials, elapsed ) );

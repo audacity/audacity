@@ -45,6 +45,7 @@ from the project that will own the track.
 #include "float_cast.h"
 
 #include "Envelope.h"
+#include "CachingSequence.h"
 #include "Sequence.h"
 
 #include "Project.h"
@@ -1590,7 +1591,7 @@ size_t WaveTrack::GetMaxBlockSize() const
       // We really need the maximum block size, so create a
       // temporary sequence to get it.
       maxblocksize =
-         Sequence{ mpFactory, SampleFormats{mFormat, mFormat} }
+         CachingSequence{ mpFactory, SampleFormats{mFormat, mFormat} }
             .GetMaxBlockSize();
    }
 
@@ -1714,7 +1715,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
    {
       // This is a legacy project, so set the cached offset
       NewestOrNewClip()->SetSequenceStartTime(mLegacyProjectFileOffset);
-      Sequence *pSeq = NewestOrNewClip()->GetSequence();
+      SequenceInterface *pSeq = NewestOrNewClip()->GetSequence();
       return pSeq;
    }
 
@@ -2138,7 +2139,7 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
       return NULL;
 }
 
-Sequence* WaveTrack::GetSequenceAtTime(double time)
+SequenceInterface* WaveTrack::GetSequenceAtTime(double time)
 {
    WaveClip* clip = GetClipAtTime(time);
    if (clip)

@@ -23,11 +23,12 @@
 #include <wx/log.h>
 
 #include "BasicUI.h"
-#include "Sequence.h"
-#include "Prefs.h"
 #include "Envelope.h"
-#include "Resample.h"
 #include "InconsistencyException.h"
+#include "Prefs.h"
+#include "Resample.h"
+#include "CachingSequence.h"
+#include "SequenceInterface.h"
 #include "UserException.h"
 
 #ifdef _OPENMP
@@ -43,7 +44,7 @@ WaveClip::WaveClip(const SampleBlockFactoryPtr &factory,
 {
    mRate = rate;
    mColourIndex = colourIndex;
-   mSequence = std::make_unique<Sequence>( factory,
+   mSequence = std::make_unique<CachingSequence>( factory,
       SampleFormats{narrowestSampleFormat, format});
 
    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
@@ -62,7 +63,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    mTrimRight = orig.mTrimRight;
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
-   mSequence = std::make_unique<Sequence>(*orig.mSequence, factory);
+   mSequence = std::make_unique<CachingSequence>(*orig.mSequence, factory);
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
@@ -107,7 +108,7 @@ WaveClip::WaveClip(const WaveClip& orig,
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 
-   mSequence = std::make_unique<Sequence>(*orig.mSequence, factory);
+   mSequence = std::make_unique<CachingSequence>(*orig.mSequence, factory);
    
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
@@ -139,14 +140,19 @@ void WaveClip::SetSamples(constSamplePtr buffer, sampleFormat format,
    MarkChanged();
 }
 
-BlockArray* WaveClip::GetSequenceBlockArray()
+const BlockArray* WaveClip::GetSequenceBlockArray() const
 {
    return &mSequence->GetBlockArray();
 }
 
-const BlockArray* WaveClip::GetSequenceBlockArray() const
+SequenceInterface* WaveClip::GetSequence()
 {
-   return &mSequence->GetBlockArray();
+   return mSequence.get();
+}
+
+const SequenceInterface* WaveClip::GetSequence() const
+{
+   return mSequence.get();
 }
 
 size_t WaveClip::GetAppendBufferLen() const
@@ -775,8 +781,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    auto numSamples = mSequence->GetNumSamples();
 
    // This sequence is appended to below
-   auto newSequence = std::make_unique<Sequence>(
-      mSequence->GetFactory(), mSequence->GetSampleFormats());
+   auto newSequence = std::make_unique<CachingSequence>(*mSequence);
 
    /**
     * We want to keep going as long as we have something to feed the resampler

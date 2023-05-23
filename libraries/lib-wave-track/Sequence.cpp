@@ -42,13 +42,10 @@
 
 #include "BasicUI.h"
 #include "Dither.h"
-#include "InconsistencyException.h"
 #include "SampleBlock.h"
-#include "SequenceSampleCache.h"
+#include "InconsistencyException.h"
 
 size_t Sequence::sMaxDiskBlockSize = 1048576;
-
-using namespace std::placeholders;
 
 // Sequence methods
 Sequence::Sequence(
@@ -384,11 +381,11 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
 
 // Must pass in the correct factory for the result.  If it's not the same
 // as in this, then block contents must be copied.
-std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
-   sampleCount s0, sampleCount s1) const
+std::unique_ptr<SequenceInterface> Sequence::Copy(
+   const SampleBlockFactoryPtr& pFactory, sampleCount s0, sampleCount s1) const
 {
    // Make a new Sequence object for the specified factory:
-   auto dest = std::make_unique<Sequence>(pFactory, mSampleFormats);
+   std::unique_ptr<Sequence> dest { new Sequence(pFactory, mSampleFormats) };
    if (s0 >= s1 || s0 >= mNumSamples || s1 < 0) {
       return dest;
    }
@@ -487,6 +484,18 @@ namespace {
          // Can just share
          ;
       return sb;
+   }
+}
+
+void Sequence::Paste(sampleCount s, const SequenceInterface* src)
+{
+   if (const Sequence* derived = dynamic_cast<const Sequence*>(src))
+   {
+      Paste(s, derived);
+   }
+   else
+   {
+      assert(false);
    }
 }
 
@@ -885,8 +894,6 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
          }
       } // for
 
-      InitPlaybackCache();
-
       // Set at least the stored format as it was saved
       mSampleFormats =
          SampleFormats{ effective.value_or(stored), stored };
@@ -942,7 +949,6 @@ void Sequence::HandleXMLEndTag(const std::string_view& tag)
          Internat::ToString(mNumSamples.as_double(), 0),
          Internat::ToString(numSamples.as_double(), 0));
       mNumSamples = numSamples;
-      InitPlaybackCache();
       mErrorOpening = true;
    }
 }
@@ -1082,16 +1088,6 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
 
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, bool mayThrow) const
-{
-   if (!mPlaybackCache) {
-      THROW_INCONSISTENCY_EXCEPTION;
-   }
-   return mPlaybackCache->Get(buffer, format, start, len, mayThrow);
-}
-
-bool Sequence::DoGet(
-   samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
-   bool mayThrow) const
 {
    if (start == mNumSamples) {
       return len == 0;
@@ -1351,12 +1347,6 @@ bool Sequence::Append(
    }
 
    return result;
-}
-
-void Sequence::InitPlaybackCache() {
-   mPlaybackCache = std::make_unique<SequenceSampleCache>(
-      std::bind(&Sequence::DoGet, this, _1, _2, _3, _4, _5), mNumSamples,
-      mMaxSamples);
 }
 
 /*! @excsafety{Strong} */
@@ -1749,7 +1739,6 @@ void Sequence::CommitChangesIfConsistent
 
    mBlock.swap(newBlock);
    mNumSamples = numSamples;
-   InitPlaybackCache();
 }
 
 void Sequence::AppendBlocksIfConsistent
@@ -1792,7 +1781,6 @@ void Sequence::AppendBlocksIfConsistent
    // use No-fail-guarantee
 
    mNumSamples = numSamples;
-   InitPlaybackCache();
    consistent = true;
 }
 
