@@ -554,7 +554,7 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
       //Get a blockSize of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       const auto blockSize = limitSampleBufferSize(
-         track->GetBestBlockSize(samplePos),
+         bufferSize,
          start + len - samplePos
       );
 

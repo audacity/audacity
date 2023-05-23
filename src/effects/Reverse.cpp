@@ -228,7 +228,7 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
 
    while (len > 1) {
       auto block =
-         limitSampleBufferSize( track->GetBestBlockSize(first), len / 2 );
+         limitSampleBufferSize( track->GetMaxBlockSize(), len / 2 );
       auto second = first + (len - block);
 
       track->GetFloats(buffer1.get(), first, block);

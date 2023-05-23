@@ -152,10 +152,6 @@ public:
    double GetSequenceStartTime() const noexcept;
    void SetSequenceStartTime(double startTime);
    double GetSequenceEndTime() const;
-   //! Returns the index of the first sample of the underlying sequence
-   sampleCount GetSequenceStartSample() const;
-   //! Returns the index of the sample next after the last sample of the underlying sequence
-   sampleCount GetSequenceEndSample() const;
    //! Returns the total number of samples in underlying sequence (not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
@@ -374,6 +370,9 @@ protected:
    bool mIsPlaceholder { false };
 
 private:
+   //! Returns the index of the first sample of the underlying sequence
+   sampleCount GetSequenceStartSample() const;
+
    wxString mName;
 };
 

@@ -193,13 +193,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    // Getting block size and alignment information
    //
 
-   //! @return possibly a large or negative value
-   sampleCount GetBlockStart(sampleCount position) const;
-
-   // These return a nonnegative number of samples meant to size a memory buffer
-   size_t GetBestBlockSize(sampleCount start) const;
    size_t GetMaxBlockSize() const;
-   size_t GetIdealBlockSize() const;
 
    //
    // This should only be used if you really, really know what

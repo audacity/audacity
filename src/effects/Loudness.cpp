@@ -405,7 +405,7 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
       // Get a block of samples (smaller than the size of the buffer)
       // Adjust the block size if it is the final block in the track
       auto blockLen = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
+         track->GetMaxBlockSize(),
          mTrackBufferCapacity);
 
       const size_t remainingLen = (end - s).as_size_t();

@@ -121,11 +121,11 @@ bool BlockGenerator::GenerateTrack(EffectSettings &settings,
    bool bGoodResult = true;
    numSamples = track.TimeToLongSamples(settings.extra.GetDuration());
    decltype(numSamples) i = 0;
+   const auto blockSize = tmp->GetMaxBlockSize();
    Floats data{ tmp->GetMaxBlockSize() };
 
    while ((i < numSamples) && bGoodResult) {
-      const auto block =
-         limitSampleBufferSize( tmp->GetBestBlockSize(i), numSamples - i );
+      const auto block = limitSampleBufferSize(blockSize, numSamples - i);
 
       GenerateBlock(data.get(), track, block);
 

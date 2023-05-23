@@ -82,11 +82,6 @@ size_t Sequence::GetMaxBlockSize() const
    return mMaxSamples;
 }
 
-size_t Sequence::GetIdealBlockSize() const
-{
-   return mMaxSamples;
-}
-
 bool Sequence::CloseLock()
 {
    for (unsigned int i = 0; i < mBlock.size(); i++)
@@ -725,7 +720,7 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    Sequence sTrack{ mpFactory, mSampleFormats };
 
-   auto idealSamples = GetIdealBlockSize();
+   auto idealSamples = GetMaxBlockSize();
 
    sampleCount pos = 0;
 
@@ -776,41 +771,6 @@ void Sequence::AppendBlock( SampleBlockFactory *pFactory, sampleFormat format,
 
    // Don't do a consistency check here because this
    // function gets called in an inner loop.
-}
-
-sampleCount Sequence::GetBlockStart(sampleCount position) const
-{
-   int b = FindBlock(position);
-   return mBlock[b].start;
-}
-
-size_t Sequence::GetBestBlockSize(sampleCount start) const
-{
-   // This method returns a nice number of samples you should try to grab in
-   // one big chunk in order to land on a block boundary, based on the starting
-   // sample.  The value returned will always be nonzero and will be no larger
-   // than the value of GetMaxBlockSize()
-
-   if (start < 0 || start >= mNumSamples)
-      return mMaxSamples;
-
-   int b = FindBlock(start);
-   int numBlocks = mBlock.size();
-
-   const SeqBlock &block = mBlock[b];
-   // start is in block:
-   auto result = (block.start + block.sb->GetSampleCount() - start).as_size_t();
-
-   decltype(result) length;
-   while(result < mMinSamples && b+1<numBlocks &&
-         ((length = mBlock[b+1].sb->GetSampleCount()) + result) <= mMaxSamples) {
-      b++;
-      result += length;
-   }
-
-   wxASSERT(result > 0 && result <= mMaxSamples);
-
-   return result;
 }
 
 bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
@@ -1459,7 +1419,7 @@ SeqBlock::SampleBlockPtr Sequence::DoAppend(
    }
    // Append the rest as NEW blocks
    while (len) {
-      const auto idealSamples = GetIdealBlockSize();
+      const auto idealSamples = GetMaxBlockSize();
       const auto addedLen = std::min(idealSamples, len);
       SampleBlockPtr pBlock;
       if (format == dstFormat) {

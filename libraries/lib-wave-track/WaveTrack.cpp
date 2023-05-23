@@ -1577,40 +1577,6 @@ bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
       ->Append(buffer, format, len, stride, effectiveFormat);
 }
 
-sampleCount WaveTrack::GetBlockStart(sampleCount s) const
-{
-   for (const auto &clip : mClips)
-   {
-      const auto startSample = clip->GetPlayStartSample();
-      const auto endSample = clip->GetPlayEndSample();
-      if (s >= startSample && s < endSample)
-      {
-          auto blockStartOffset = clip->GetSequence()->GetBlockStart(clip->ToSequenceSamples(s));
-          return std::max(startSample, clip->GetSequenceStartSample() + blockStartOffset);
-      }
-   }
-
-   return -1;
-}
-
-size_t WaveTrack::GetBestBlockSize(sampleCount s) const
-{
-   auto bestBlockSize = GetMaxBlockSize();
-
-   for (const auto &clip : mClips)
-   {
-      auto startSample = clip->GetPlayStartSample();
-      auto endSample = clip->GetPlayEndSample();
-      if (s >= startSample && s < endSample)
-      {
-         bestBlockSize = clip->GetSequence()->GetBestBlockSize(s - clip->GetSequenceStartSample());
-         break;
-      }
-   }
-
-   return bestBlockSize;
-}
-
 size_t WaveTrack::GetMaxBlockSize() const
 {
    decltype(GetMaxBlockSize()) maxblocksize = 0;
@@ -1633,9 +1599,9 @@ size_t WaveTrack::GetMaxBlockSize() const
    return maxblocksize;
 }
 
-size_t WaveTrack::GetIdealBlockSize()
+size_t WaveTrack::GetMaxBlockSize()
 {
-   return NewestOrNewClip()->GetSequence()->GetIdealBlockSize();
+   return NewestOrNewClip()->GetSequence()->GetMaxBlockSize();
 }
 
 /*! @excsafety{Mixed} */

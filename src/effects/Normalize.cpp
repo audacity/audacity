@@ -356,7 +356,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
+         track->GetMaxBlockSize(),
          end - s
       );
 
@@ -416,7 +416,7 @@ bool EffectNormalize::ProcessOne(
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
+         track->GetMaxBlockSize(),
          end - s
       );
 

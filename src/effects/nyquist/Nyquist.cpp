@@ -2517,11 +2517,7 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
 
    if (!mCurBuffer[ch]) {
       mCurBufferStart[ch] = (mCurStart[ch] + start);
-      mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
-
-      if (mCurBufferLen[ch] < (size_t) len) {
-         mCurBufferLen[ch] = mCurTrack[ch]->GetIdealBlockSize();
-      }
+      mCurBufferLen[ch] = mCurTrack[ch]->GetMaxBlockSize();
 
       mCurBufferLen[ch] =
          limitSampleBufferSize( mCurBufferLen[ch],

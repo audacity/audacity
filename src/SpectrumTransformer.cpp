@@ -357,16 +357,11 @@ bool TrackSpectrumTransformer::Process( const WindowProcessor &processor,
    bool bLoopSuccess = true;
    auto samplePos = start;
    while (bLoopSuccess && samplePos < start + len) {
-      //Get a blockSize of samples (smaller than the size of the buffer)
-      const auto blockSize = limitSampleBufferSize(
-         std::min(bufferSize, track->GetBestBlockSize(samplePos)),
-         start + len - samplePos);
-
       //Get the samples from the track and put them in the buffer
-      track->GetFloats(buffer.data(), samplePos, blockSize);
-      samplePos += blockSize;
+      track->GetFloats(buffer.data(), samplePos, bufferSize);
+      samplePos += bufferSize;
 
-      bLoopSuccess = ProcessSamples(processor, buffer.data(), blockSize);
+      bLoopSuccess = ProcessSamples(processor, buffer.data(), bufferSize);
    }
 
    if (!Finish(processor))

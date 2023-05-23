@@ -144,7 +144,7 @@ bool CompareAudioCommand::Apply(const CommandContext & context)
    {
       // Get a block of data into the buffers
       auto block = limitSampleBufferSize(
-         mTrack0->GetBestBlockSize(position), s1 - position
+         mTrack0->GetMaxBlockSize(), s1 - position
       );
       mTrack0->GetFloats(buff0.get(), position, block);
       mTrack1->GetFloats(buff1.get(), position, block);

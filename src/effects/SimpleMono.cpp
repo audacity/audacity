@@ -93,7 +93,7 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       const auto block =
-         limitSampleBufferSize( track->GetBestBlockSize(s), end - s );
+         limitSampleBufferSize(track->GetMaxBlockSize(), end - s);
 
       //Get the samples from the track and put them in the buffer
       track->GetFloats(buffer.get(), s, block);

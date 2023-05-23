@@ -91,7 +91,7 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
    ResampleBuf *r = (ResampleBuf*) cb_data;
 
    auto blockSize = limitSampleBufferSize(
-      r->leftTrack->GetBestBlockSize(r->offset),
+      r->leftTrack->GetMaxBlockSize(),
       r->end - r->offset
    );
 

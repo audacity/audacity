@@ -61,13 +61,7 @@ public:
    virtual float GetChannelGain(int channel) const = 0;
 
    //! This returns a nonnegative number of samples meant to size a memory buffer
-   virtual size_t GetBestBlockSize(sampleCount t) const = 0;
-
-   //! This returns a nonnegative number of samples meant to size a memory buffer
    virtual size_t GetMaxBlockSize() const = 0;
-
-   //! This returns a possibly large or negative value
-   virtual sampleCount GetBlockStart(sampleCount t) const = 0;
 
    //! Retrieve samples from a track in floating-point format, regardless of the storage format
    /*!

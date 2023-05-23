@@ -296,12 +296,9 @@ private:
    // and alignment for efficiency
    //
 
-   sampleCount GetBlockStart(sampleCount t) const override;
-
    // These return a nonnegative number of samples meant to size a memory buffer
-   size_t GetBestBlockSize(sampleCount t) const override;
    size_t GetMaxBlockSize() const override;
-   size_t GetIdealBlockSize();
+   size_t GetMaxBlockSize();
 
    //
    // XMLTagHandler callback methods for loading and saving

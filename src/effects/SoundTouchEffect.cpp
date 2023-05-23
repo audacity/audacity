@@ -211,8 +211,8 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
       auto s = start;
       while (s < end) {
          //Get a block of samples (smaller than the size of the buffer)
-         const auto block = wxMin(8192,
-            limitSampleBufferSize( track->GetBestBlockSize(s), end - s ));
+         const auto block = wxMin(
+            8192, limitSampleBufferSize(track->GetMaxBlockSize(), end - s));
 
          //Get the samples from the track and put them in the buffer
          track->GetFloats(buffer.get(), s, block);
@@ -291,7 +291,7 @@ bool EffectSoundTouch::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
       auto sourceSampleCount = start;
       while (sourceSampleCount < end) {
          auto blockSize = limitSampleBufferSize(
-            leftTrack->GetBestBlockSize(sourceSampleCount),
+            leftTrack->GetMaxBlockSize(),
             end - sourceSampleCount
          );
 

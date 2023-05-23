@@ -992,11 +992,6 @@ sampleCount WaveClip::GetSequenceStartSample() const
     return TimeToSamples(mSequenceOffset);
 }
 
-sampleCount WaveClip::GetSequenceEndSample() const
-{
-    return GetSequenceStartSample() + mSequence->GetNumSamples();
-}
-
 void WaveClip::Offset(double delta) noexcept
 {
     SetSequenceStartTime(GetSequenceStartTime() + delta);

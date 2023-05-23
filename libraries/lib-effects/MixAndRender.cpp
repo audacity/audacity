@@ -128,7 +128,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 
 
-   auto maxBlockLen = mixLeft->GetIdealBlockSize();
+   auto maxBlockLen = mixLeft->GetMaxBlockSize();
 
    // If the caller didn't specify a time range, use the whole range in which
    // any input track had clips in it.

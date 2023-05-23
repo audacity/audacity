@@ -127,7 +127,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track, WaveTrack * outTrack
    Floats buffer1{ maxblock };
    Floats buffer2{ maxblock };
    auto samples1 =  limitSampleBufferSize(
-      std::min( maxblock, track->GetBestBlockSize(start) ), end - start );
+      std::min( maxblock, track->GetMaxBlockSize() ), end - start );
 
    //Get the samples from the track and put them in the buffer
    track->GetFloats(buffer1.get(), start, samples1);
@@ -148,8 +148,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track, WaveTrack * outTrack
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       auto samples2 = limitSampleBufferSize(
-         std::min( track->GetBestBlockSize(s), maxblock ), end - s
-      );
+         std::min(track->GetMaxBlockSize(), maxblock), end - s);
 
       //Get the samples from the track and put them in the buffer
       track->GetFloats(buffer2.get(), s, samples2);
