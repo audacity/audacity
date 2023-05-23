@@ -611,8 +611,6 @@ void OnPaste(const CommandContext &context)
    }
 
    // Otherwise, paste into the selected tracks.
-   auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
 
    double t0, t1;
@@ -787,51 +785,6 @@ void OnPaste(const CommandContext &context)
          }
       }
       ++pN;
-   }
-
-   // This block handles the cases where our clipboard is smaller
-   // than the amount of selected destination tracks. We take the
-   // last wave track, and paste that one into the remaining
-   // selected tracks.
-   if ( *pN && ! *pC )
-   {
-      const auto wc =
-         *srcTracks->Any< const WaveTrack >().rbegin();
-
-      tracks.Any().StartingWith(*pN).Visit(
-         [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
-            if (!wt->GetSelected())
-               return fallthrough();
-
-            if (wc) {
-               pasteWaveTrack(wt, wc);
-            }
-            else {
-               auto tmp = wt->EmptyCopy( pSampleBlockFactory );
-               tmp->InsertSilence( 0.0,
-                  // MJS: Is this correct?
-                  clipboard.Duration() );
-               tmp->Flush();
-
-               pasteWaveTrack(wt, tmp.get());
-            }
-         },
-         [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
-            if (!SyncLock::IsSelectedOrSyncLockSelected(lt))
-               return fallthrough();
-
-            lt->Clear(t0, t1);
-
-            // As above, only shift labels if sync-lock is on.
-            if (isSyncLocked)
-               lt->ShiftLabelsOnInsert(
-                  clipboard.Duration(), t0);
-         },
-         [&](Track *n) {
-            if (SyncLock::IsSyncLockSelected(n))
-               n->SyncLockAdjust(t1, t0 + clipboard.Duration() );
-         }
-      );
    }
 
    // TODO: What if we clicked past the end of the track?
