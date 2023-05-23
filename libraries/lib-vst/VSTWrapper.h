@@ -9,8 +9,6 @@
   Paul Licameli split from VSTEffect.h
 
 **********************************************************************/
-#if USE_VST
-
 #ifndef __AUDACITY_VST_WRAPPER__
 #define __AUDACITY_VST_WRAPPER__
 
@@ -329,5 +327,3 @@ struct VSTMessage : EffectInstance::Message
 };
 
 #endif
-
-#endif // USE_VST

@@ -9,7 +9,6 @@
   Paul Licameli split from VSTEffect.h
 
 **********************************************************************/
-#if USE_VST
 
 #ifndef __AUDACITY_VST_EFFECT_BASE__
 #define __AUDACITY_VST_EFFECT_BASE__
@@ -56,7 +55,7 @@ class VST_API VSTEffectBase
 
    OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
-   
+
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
@@ -82,5 +81,3 @@ private:
 };
 
 #endif
-
-#endif // USE_VST

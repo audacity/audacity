@@ -12,8 +12,6 @@
 *//********************************************************************/
 #include "VSTInstance.h"
 
-#if USE_VST
-
 #include <wx/time.h>
 
 std::unique_ptr<EffectInstance::Message> VSTInstance::MakeMessage() const
@@ -499,5 +497,3 @@ void VSTInstance::SetOwningValidator(VSTUIWrapper* vi)
 {
    mpOwningValidator = vi;
 }
-
-#endif // USE_VST

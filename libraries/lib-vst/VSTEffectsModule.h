@@ -9,7 +9,6 @@
   Paul Licameli split from VSTEffect.h
 
 **********************************************************************/
-#if USE_VST
 
 #ifndef __AUDACITY_VST_EFFECTS_MODULE__
 #define __AUDACITY_VST_EFFECTS_MODULE__
@@ -53,7 +52,7 @@ public:
       const PluginPath & path, TranslatableString &errMsg,
       const RegistrationCallback &callback)
          override;
-   
+
    bool CheckPluginExist(const PluginPath& path) const override;
 
    std::unique_ptr<ComponentInterface>
@@ -61,5 +60,3 @@ public:
 };
 
 #endif
-
-#endif // USE_VST

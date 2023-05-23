@@ -17,8 +17,6 @@
 #include "VSTEditor.h"
 #include "VSTInstance.h"
 
-#if USE_VST
-
 #include <wx/app.h>
 #include <wx/dialog.h>
 #include <wx/file.h>
@@ -622,4 +620,3 @@ void VSTEditor::OnClose()
 
    ValidateUI();
 }
-#endif // USE_VST

@@ -9,7 +9,6 @@
   Paul Licameli split from VSTEffect.h
 
 **********************************************************************/
-#if USE_VST
 
 #ifndef __AUDACITY_VST_INSTANCE__
 #define __AUDACITY_VST_INSTANCE__
@@ -40,7 +39,7 @@ public:
 
    bool ProcessInitialize(EffectSettings& settings, double sampleRate,
                           ChannelNames chanMap) override;
-   
+
    bool ProcessFinalize() noexcept override;
 
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -135,5 +134,3 @@ private:
 };
 
 #endif
-
-#endif // USE_VST

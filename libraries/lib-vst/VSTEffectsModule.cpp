@@ -15,8 +15,6 @@
 #include "ModuleManager.h"
 #include "wxArrayStringEx.h"
 
-#if USE_VST
-
 #if defined(__WXMSW__)
 #include <Windows.h>
 #include <shlwapi.h>
@@ -46,7 +44,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 // ============================================================================
 //
 // Register this as a builtin module
-// 
+//
 // We also take advantage of the fact that wxModules are initialized before
 // the wxApp::OnInit() method is called.  We check to see if Audacity was
 // executed to scan a VST effect in a different process.
@@ -117,11 +115,7 @@ void VSTEffectsModule::Terminate()
 
 EffectFamilySymbol VSTEffectsModule::GetOptionalFamilySymbol()
 {
-#if USE_VST
    return VSTPLUGINTYPE;
-#else
-   return {};
-#endif
 }
 
 const FileExtensions &VSTEffectsModule::GetFileExtensions()
@@ -158,7 +152,7 @@ PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface & pm)
       }
    }
 
-#if defined(__WXMAC__)  
+#if defined(__WXMAC__)
 #define VSTPATH wxT("/Library/Audio/Plug-Ins/VST")
 
    // Look in ~/Library/Audio/Plug-Ins/VST and /Library/Audio/Plug-Ins/VST
@@ -302,5 +296,3 @@ bool VSTEffectsModule::CheckPluginExist(const PluginPath& path) const
    const auto modulePath = path.BeforeFirst(wxT(';'));
    return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
 }
-
-#endif // USE_VST
