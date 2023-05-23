@@ -42,7 +42,7 @@ void FinishCopy
       list.Add( dest );
 }
 
-// Handle text paste (into active label), if any. Return true if did paste.
+// Handle text paste. Return true if did paste.
 // (This was formerly the first part of overly-long OnPaste.)
 bool DoPasteText(AudacityProject &project)
 {
@@ -50,8 +50,8 @@ bool DoPasteText(AudacityProject &project)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
-   for (auto pLabelTrack : tracks.Any<LabelTrack>())
-   {
+   // Paste into the active label (if any)
+   for (auto pLabelTrack : tracks.Any<LabelTrack>()) {
       // Does this track have an active label?
       if (LabelTrackView::Get( *pLabelTrack ).GetTextEditIndex(project) != -1) {
 
@@ -73,6 +73,18 @@ bool DoPasteText(AudacityProject &project)
          }
       }
    }
+
+   //Presumably, there might be not more than one track
+   //that expects text input
+   for (auto wt : tracks.Any<WaveTrack>()) {
+      auto& view = WaveTrackView::Get(*wt);
+      if (view.PasteText(project)) {
+         auto &trackPanel = TrackPanel::Get(project);
+         trackPanel.Refresh(false);
+         return true;
+      }
+   }
+
    return false;
 }
 
@@ -256,10 +268,6 @@ bool HasHiddenData(const TrackList& trackList)
    }
    return false;
 }
-
-}
-
-namespace {
 
 // Menu handler functions
 
@@ -516,38 +524,14 @@ std::pair<double, double> FindSelection(const CommandContext &context)
    return { sel0, sel1 };
 }
 
-void OnPaste(const CommandContext &context)
+std::shared_ptr<const TrackList> FindSourceTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto& trackPanel = TrackPanel::Get(project);
-   auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto &window = ProjectWindow::Get( project );
-
-   auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
-
-   // Handle text paste (into active label) first.
-   if (DoPasteText(project))
-      return;
-
-   //Presumably, there might be not more than one track
-   //that expects text input
-   for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveTrackView::Get(*wt);
-      if (view.PasteText(context.project)) {
-         trackPanel.Refresh(false);
-         return;
-      }
-   }
-
+   auto &window = ProjectWindow::Get(project);
+   auto &tracks = TrackList::Get(project);
    const auto &clipboard = Clipboard::Get();
-   if (clipboard.GetTracks().empty())
-      return;
-   
    auto discardTrimmed = false;
-   if(&context.project != &*clipboard.Project().lock())
-   {
+   if (&context.project != &*clipboard.Project().lock()) {
       const auto waveClipCopyPolicy = TracksBehaviorsAudioTrackPastePolicy.Read();
       if(waveClipCopyPolicy == wxT("Ask") && HasHiddenData(clipboard.GetTracks())) {
          AudioPasteDialog audioPasteDialog(
@@ -556,7 +540,7 @@ void OnPaste(const CommandContext &context)
          );
          const auto result = audioPasteDialog.ShowModal();
          if(result == wxID_CANCEL)
-            return;
+            return {};
          discardTrimmed =
             result == AudioPasteDialog::DISCARD;
       }
@@ -569,9 +553,19 @@ void OnPaste(const CommandContext &context)
       srcTracks = DuplicateDiscardTrimmed(clipboard.GetTracks());
    else
       srcTracks = clipboard.GetTracks().shared_from_this();
-   
-   auto scopedSubscription = pSampleBlockFactory->Subscribe([
-      toCopy = EstimateCopiedBlocks(*srcTracks, tracks),
+
+   return srcTracks;
+}
+
+auto NotificationScope(
+   const CommandContext &context, const TrackList &srcTracks)
+{
+   auto &project = context.project;
+   auto &tracks = TrackList::Get(project);
+   auto &trackFactory = WaveTrackFactory::Get(project);
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+   return pSampleBlockFactory->Subscribe([
+      toCopy = EstimateCopiedBlocks(srcTracks, tracks),
       nCopied = 0,
       copyStartTime = std::chrono::system_clock::now(),
       progressDialog = std::shared_ptr<BasicUI::ProgressDialog>()]
@@ -587,24 +581,49 @@ void OnPaste(const CommandContext &context)
             progressDialog->Poll(nCopied, toCopy);
          }
    });
-   
-   // If nothing's selected, we just insert NEW tracks.
-   if(!tracks.Selected())
-   {
-      DoPasteNothingSelected(project, *srcTracks, clipboard.T0(), clipboard.T1());
+}
+
+void OnPaste(const CommandContext &context)
+{
+   auto &project = context.project;
+
+   // Handle text paste first.
+   if (DoPasteText(project))
+      return;
+
+   const auto &clipboard = Clipboard::Get();
+   if (clipboard.GetTracks().empty())
+      return;
+
+   const auto srcTracks = FindSourceTracks(context);
+   if (!srcTracks)
+      // user cancelled
+      return;
+
+   auto notificationScope = NotificationScope(context, *srcTracks);
+
+   auto &tracks = TrackList::Get(project);
+   // If nothing's selected, we just insert new tracks.
+   if (!tracks.Selected()) {
+      DoPasteNothingSelected(
+         project, *srcTracks, clipboard.T0(), clipboard.T1());
       return;
    }
-   
+
    // Otherwise, paste into the selected tracks.
+   auto &trackFactory = WaveTrackFactory::Get( project );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+   auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
+
    double t0, t1;
    std::tie(t0, t1) = FindSelection(context);
 
    auto pN = tracks.Any().begin();
 
-   Track *ff = NULL;
-   const Track *lastClipBeforeMismatch = NULL;
-   const Track *mismatchedClip = NULL;
-   const Track *prevClip = NULL;
+   Track *ff = nullptr;
+   const Track *lastClipBeforeMismatch = nullptr;
+   const Track *mismatchedClip = nullptr;
+   const Track *prevClip = nullptr;
 
    bool bAdvanceClipboard = true;
    bool bPastedSomething = false;
