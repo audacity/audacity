@@ -583,6 +583,50 @@ auto NotificationScope(
    });
 }
 
+//! Whether the source track may be pasted into the destination track
+bool FitsInto(const Track &src, const Track &dst)
+{
+   if (!src.SameKindAs(dst))
+      return false;
+   // Mono can "fit" into stereo, by duplication of the channel
+   // Otherwise non-wave tracks always have just one "channel"
+   // Future:  Fit stereo into mono too, using mix-down
+   return TrackList::NChannels(src) <= TrackList::NChannels(dst);
+}
+
+// First, destination track; second, source
+using Correspondence = std::vector<std::pair<Track*, const Track*>>;
+
+Correspondence FindCorrespondence(
+   TrackList &dstTracks, const TrackList &srcTracks)
+{
+   Correspondence result;
+   auto dstRange = dstTracks.SelectedLeaders();
+   if (dstRange.size() == 1)
+      // Special rule when only one track is selected interprets the user's
+      // intent as pasting into that track and following ones
+      dstRange = dstTracks.Leaders().StartingWith(*dstRange.begin());
+   auto srcRange = srcTracks.Leaders();
+   while (!(dstRange.empty() || srcRange.empty())) {
+      auto &dst = **dstRange.begin();
+      auto &src = **srcRange.begin();
+      if (!FitsInto(src, dst)) {
+         // Skip selected track of inappropriate type and try again
+         ++dstRange.first;
+         continue;
+      }
+      result.emplace_back(&dst, &src);
+      ++srcRange.first;
+      ++dstRange.first;
+   }
+
+   if (!srcRange.empty())
+      // Could not fit all source tracks into the selected tracks
+      return {};
+   else
+      return result;
+}
+
 void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
@@ -611,19 +655,12 @@ void OnPaste(const CommandContext &context)
    }
 
    // Otherwise, paste into the selected tracks.
-   auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
-
    double t0, t1;
    std::tie(t0, t1) = FindSelection(context);
-
-   auto pN = tracks.Any().begin();
+   auto newT1 = t0 + clipboard.Duration();
+   const auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
 
    Track *ff = nullptr;
-   const Track *lastClipBeforeMismatch = nullptr;
-   const Track *mismatchedClip = nullptr;
-   const Track *prevClip = nullptr;
-
-   bool bAdvanceClipboard = true;
    bool bPastedSomething = false;
 
    auto pasteWaveTrack = [&](WaveTrack *dst, const Track *src){
@@ -633,158 +670,90 @@ void OnPaste(const CommandContext &context)
       dst->ClearAndPaste(t0, t1, src, true, true, &warper);
    };
 
-   auto clipTrackRange = srcTracks->Any();
-   auto pC = clipTrackRange.begin();
-   size_t nnChannels=0, ncChannels=0;
-   while (*pN && *pC) {
-      auto n = *pN;
-      auto c = *pC;
-      if (n->GetSelected()) {
-         bAdvanceClipboard = true;
-         if (mismatchedClip)
-            c = mismatchedClip;
-         if (!c->SameKindAs(*n)) {
-            if (!mismatchedClip) {
-               lastClipBeforeMismatch = prevClip;
-               mismatchedClip = c;
-            }
-            bAdvanceClipboard = false;
-            c = lastClipBeforeMismatch;
+   // Find tracks to paste in
+   auto correspondence = FindCorrespondence(tracks, *srcTracks);
+   if (correspondence.empty()) {
+      if (tracks.SelectedLeaders().size() == 1)
+         AudacityMessageBox(XO(
+"The content you are trying to paste will span across more tracks than you "
+"currently have available. Add more tracks and try again.")
+      );
+      else
+         AudacityMessageBox(XO(
+"There are not enough tracks selected to accommodate your copied content. "
+"Select additional tracks and try again.")
+      );
+      return;
+   }
+   auto iPair = correspondence.begin();
+   const auto endPair = correspondence.cend();
 
+   // Outer loop by sync-lock groups
+   auto next = tracks.Leaders().begin();
+   for (auto range = tracks.Leaders(); !range.empty();
+      // Skip to next sync lock group
+     range.first = next
+   ) {
+      if (iPair == endPair)
+         // Nothing more to paste
+         break;
+      auto group = SyncLock::Group(*range.first);
+      next = tracks.FindLeader(*group.rbegin());
+      ++next;
 
-            // If the types still don't match...
-            while (c && !c->SameKindAs(*n)) {
-               prevClip = c;
-               c = * ++ pC;
-            }
-         }
+      if (!group.contains(iPair->first))
+         // Nothing to paste into this group
+         continue;
 
-         // Handle case where the first track in clipboard
-         // is of different type than the first selected track
-         if (!c) {
-            c = mismatchedClip;
-            while (n && (!c->SameKindAs(*n) || !n->GetSelected()))
-            {
-               // Must perform sync-lock adjustment before incrementing n
-               if (SyncLock::IsSyncLockSelected(n)) {
-                  auto newT1 = t0 + clipboard.Duration();
-                  if (t1 != newT1 && t1 <= n->GetEndTime()) {
-                     n->SyncLockAdjust(t1, newT1);
-                     bPastedSomething = true;
-                  }
-               }
-               n = * ++ pN;
-            }
-            if (!n)
-               c = NULL;
-         }
-
-         // The last possible case for cross-type pastes: triggered when we try
-         // to paste 1+ tracks from one type into 1+ tracks of another type. If
-         // there's a mix of types, this shouldn't run.
-         if (!c)
-            // Throw, so that any previous changes to the project in this loop
-            // are discarded.
-            throw SimpleMessageBoxException{
-               ExceptionType::BadUserAction,
-               XO("Pasting one type of track into another is not allowed."),
-               XO("Warning"), 
-               "Error:_Copying_or_Pasting"
-            };
-
-         // We should need this check only each time we visit the leading
-         // channel
-         if ( n->IsLeader() ) {
-            wxASSERT( c->IsLeader() ); // the iteration logic should ensure this
-
-            auto ncChannels = TrackList::NChannels(*c);
-            auto nnChannels = TrackList::NChannels(*n);
-
-            // When trying to copy from stereo to mono track, show error and
-            // exit
-            // TODO: Automatically offer user to mix down to mono (unfortunately
-            //       this is not easy to implement
-            if (ncChannels > nnChannels)
-            {
-               if (ncChannels > 2) {
-                  // TODO: more-than-two-channels-message
-                  // Re-word the error message
-               }
-               // else
-
-               // Throw, so that any previous changes to the project in this
-               // loop are discarded.
-               throw SimpleMessageBoxException{
-                  ExceptionType::BadUserAction,
-                  XO("Copying stereo audio into a mono track is not allowed."),
-                  XO("Warning"), 
-                  "Error:_Copying_or_Pasting"
-               };
-            }
-         }
-
-         if (!ff)
-            ff = n;
-
-         wxASSERT( n && c && n->SameKindAs(*c) );
-         n->TypeSwitch(
-            [&](WaveTrack *wn){
-               pasteWaveTrack(wn, static_cast<const WaveTrack *>(c));
-            },
-            [&](LabelTrack *ln){
-               // Per Bug 293, users expect labels to move on a paste into
-               // a label track.
-               ln->Clear(t0, t1);
-
-               ln->ShiftLabelsOnInsert( clipboard.Duration(), t0 );
-
-               bPastedSomething |= ln->PasteOver(t0, c);
-            },
-            [&](Track *){
-               bPastedSomething = true;
-               n->Clear(t0, t1);
-               n->Paste(t0, c);
-            }
-         );
-
-         --nnChannels;
-         --ncChannels;
-
-         // When copying from mono to stereo track, paste the wave form
-         // to both channels
-         // TODO: more-than-two-channels
-         // This will replicate the last pasted channel as many times as needed
-         while (nnChannels > 0 && ncChannels == 0)
-         {
-            n = * ++ pN;
-            --nnChannels;
-
-            n->TypeSwitch(
-               [&](WaveTrack *wn){
-                  pasteWaveTrack(wn, c);
-               },
-               [&](Track *){
-                  n->Clear(t0, t1);
+      // Inner loop over the group by tracks (not channels)
+      auto leaders = group;
+      leaders.first = leaders.first.Filter(&Track::IsLeader);
+      leaders.second = leaders.second.Filter(&Track::IsLeader);
+      for (auto leader : leaders) {
+         if (leader != iPair->first) {
+            if (isSyncLocked) {
+               // Track is not pasted into but must be adjusted
+               if (t1 != newT1 && t1 <= leader->GetEndTime()) {
+                  leader->SyncLockAdjust(t1, newT1);
                   bPastedSomething = true;
-                  n->Paste(t0, c);
+               }
+            }
+         }
+         else {
+            // Remember first pasted-into track, to focus it
+            if (!ff)
+               ff = leader;
+            // Do the pasting!
+            const auto src = (iPair++)->second;
+            leader->TypeSwitch(
+               [&](WaveTrack *wn){
+                  auto srcChannels = TrackList::Channels(src);
+                  for (auto dst : TrackList::Channels(wn)) {
+                     pasteWaveTrack(dst, *srcChannels.first);
+                     // When the source is mono, may paste its only channel
+                     // repeatedly into a stereo track; else paste only into
+                     // corresponding channels
+                     if (srcChannels.size() > 1)
+                        ++srcChannels.first;
+                  }
+               },
+               [&](LabelTrack *ln){
+                  // Per Bug 293, users expect labels to move on a paste into
+                  // a label track.
+                  ln->Clear(t0, t1);
+
+                  ln->ShiftLabelsOnInsert( clipboard.Duration(), t0 );
+
+                  bPastedSomething |= ln->PasteOver(t0, src);
+               },
+               [&](Track *t){
+                  bPastedSomething = true;
+                  t->Clear(t0, t1);
+                  t->Paste(t0, src);
                }
             );
          }
-
-         if (bAdvanceClipboard) {
-            prevClip = c;
-            c = * ++ pC;
-         }
-      } // if (n->GetSelected())
-      else if (SyncLock::IsSyncLockSelected(n))
-      {
-         auto newT1 = t0 + clipboard.Duration();
-         if (t1 != newT1 && t1 <= n->GetEndTime()) {
-            n->SyncLockAdjust(t1, newT1);
-            bPastedSomething = true;
-         }
       }
-      ++pN;
    }
 
    // TODO: What if we clicked past the end of the track?
