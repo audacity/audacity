@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-04-23 10:22+0300\n"
+"PO-Revision-Date: 2023-05-24 19:13+0300\n"
 "Last-Translator: gale <gale@audacityteam.org>\n"
 "Language-Team: Heb\n"
 "Language: he\n"
@@ -113,7 +113,7 @@ msgstr "לא נמצא התקן השמעה עבור '%s'.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr ""
+msgstr "לא ניתן לבדוק קצבי דגימה הדדיים ללא שני המכשירים.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -145,7 +145,7 @@ msgstr "עוצמות שמע זמינות:\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy
 msgid "Recording volume is emulated\n"
-msgstr "עוצמת השמע של הקלטה באמולציה\n"
+msgstr "עוצמת השמע של ההקלטה היא באמולציה\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Recording volume is native\n"
@@ -579,7 +579,7 @@ msgstr "מבנה לא ידוע"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
-msgstr ""
+msgstr "מודול לא מתאים"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, c-format
@@ -1039,12 +1039,12 @@ msgstr ""
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "centihertz"
-msgstr ""
+msgstr "מאיות הרץ"
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "kHz"
-msgstr ""
+msgstr "קילו-הרץ"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
@@ -1056,7 +1056,7 @@ msgstr ""
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hertz"
-msgstr ""
+msgstr "הרץ"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
@@ -1223,12 +1223,15 @@ msgid "Failed to restore connection"
 msgstr "שחזור החיבור נכשל"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to execute a project file command:\n"
 "\n"
 "%s"
-msgstr "'%s' לא ניתן למחוק את."
+msgstr ""
+"נכשל בביצוע פקודת קובץ פרוייקט:\n"
+"\n"
+"%s"
 
 #. i18n-hint: An error message.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -1236,6 +1239,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"הפרוייקט נמצא בספרייה לקריאה בלבד.\n"
+"(לא ניתן ליצור את הקבצים הזמניים הנדרשים)"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -1247,6 +1252,9 @@ msgid ""
 "\n"
 "You will need to upgrade to open it."
 msgstr ""
+"פרוייקט זה נוצר עם גרסה חדשה יותר של אודסיטי.\n"
+"\n"
+"יש צורך לשדרג כדי לפתוח אותו."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -1255,7 +1263,7 @@ msgstr "לא ניתן לאתחל את קובץ הפרוייקט"
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr ""
+msgstr "לא ניתן להוסיף פונקציה 'inset' (אי אפשר לאמת מזהים של בלוקים)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -1332,12 +1340,15 @@ msgid "Unable to switch to fast journaling mode"
 msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to prepare project file command:\n"
 "\n"
 "%s"
-msgstr "לא ניתן לפתוח או ליצור קובץ נסיון."
+msgstr ""
+"לא ניתן להכין פקודת קובץ פרוייקט:\n"
+"\n"
+"%s"
 
 #. i18n-hint: This title appears on a dialog that indicates the progress
 #. in doing something.
@@ -1424,7 +1435,7 @@ msgstr "לא יכול לפתוח קובץ פרוייקט"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
-msgstr ""
+msgstr "הסרת מידע השמירה האוטומטית מקובץ הפרוייקט נכשלה."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy
@@ -1661,7 +1672,7 @@ msgstr "עשיריות שניות"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Centiseconds"
-msgstr "מאיות שניה"
+msgstr "מאיות השניה"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Milliseconds"
@@ -1729,7 +1740,7 @@ msgstr "%s ג\"ב"
 #: libraries/lib-strings/Languages.cpp
 #, fuzzy
 msgid "Simplified"
-msgstr "מפושט"
+msgstr "מופשט"
 
 #: libraries/lib-strings/Languages.cpp
 msgid "System"
@@ -1947,7 +1958,7 @@ msgid "Adds the ability to use VST3 effects in Audacity."
 msgstr "מוסיף את היכולת להשתמש באפקטים של VST3 באודסיטי."
 
 #: libraries/lib-vst3/VST3EffectsModule.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "VST3 module error: %s"
 msgstr "שגיאת מודול VST3: %s"
 
@@ -1967,6 +1978,8 @@ msgid ""
 "Sequence has block file exceeding maximum %s samples per block.\n"
 "Truncating to this maximum length."
 msgstr ""
+"לרצף יש קובץ בלוק החורג מהמקסימום של %s דגימות לכל בלוק.\n"
+"קוטע לאורך המקסימלי הזה."
 
 #: libraries/lib-wave-track/Sequence.cpp
 msgid "Warning - Truncating Overlong Block File"
@@ -2059,27 +2072,23 @@ msgstr "משמיע אודיו"
 
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
-#, fuzzy
 msgid "Recording Audio"
-msgstr "מקליט שמע"
+msgstr "הקלטת שמע"
 
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
-#, fuzzy
 msgid "Recording - Choosing the Recording Device"
-msgstr "סוף ההקלטה"
+msgstr "הקלטה - בחירת התקן ההקלטה"
 
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
-#, fuzzy
 msgid "Recording - Choosing the Recording Source"
-msgstr "סוף ההקלטה"
+msgstr "הקלטה - בחירת מקור ההקלטה"
 
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
-#, fuzzy
 msgid "Recording - Setting the Recording Level"
-msgstr "סוף ההקלטה"
+msgstr "הקלטה - קביעת רמת ההקלטה"
 
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
@@ -2185,6 +2194,10 @@ msgid ""
 "audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
 "library]] to your computer."
 msgstr ""
+"אודסיטי יכול לייבא קבצים שאינם מוגנים בפורמטים רבים אחרים (כגון M4A ו-WMA, "
+"קבצי WAV דחוסים ממכשירי הקלטה ניידים ואודיו מקבצי וידאו) אם תוריד ותתקין את "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files."
+"html#foreign|FFmpeg ספריית]] למחשב שלך."
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid ""
@@ -2193,6 +2206,10 @@ msgid ""
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
+"כמו כן אפשר לקרוא הסבר על ייבוא של \n"
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
+"קבצי]] ושל ערוצים מ[[https://manual.audacityteam.org/man/"
+"faq_opening_and_saving_files.html#fromcd|תקליטורים]]."
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid ""
@@ -2346,7 +2363,7 @@ msgstr "ספריות"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "File Dialog"
-msgstr ""
+msgstr "דו-שיח של קובץ"
 
 #: libraries/lib-xml/XMLFileReader.cpp src/effects/BasicEffectUIServices.cpp
 #: src/effects/VST/VSTEffect.cpp
@@ -2378,23 +2395,23 @@ msgstr "פקודה ניסיונית שניה..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
-msgstr ""
+msgstr "&שולחן עבודה של Nyquist..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
-msgstr ""
+msgstr "&חזרה - קונטרול-ז"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
-msgstr ""
+msgstr "&בצע שוב - קונטרול-ט"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgstr "&גזור - קונטרול-ס"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&העתק - קונטרול-ב"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -2403,7 +2420,7 @@ msgstr "&הדבק"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cle&ar\tCtrl+L"
-msgstr ""
+msgstr "&נקה - קונטרול-ך"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -2412,11 +2429,11 @@ msgstr "בחר"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Find...\tCtrl+F"
-msgstr ""
+msgstr "&חפש...קונטרול-כ"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Matching Paren\tF8"
-msgstr ""
+msgstr "&סוגר מתאים - F8"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Top S-expr\tF9"
@@ -2472,7 +2489,7 @@ msgstr "סרגל כלים"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
-msgstr ""
+msgstr "&עבור אל - F5"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -2511,7 +2528,7 @@ msgstr "שמור סקריפט Nyquist"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find dialog"
-msgstr ""
+msgstr "דו שיח חיפוש"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Harvey Lubin (logo)"
@@ -2527,9 +2544,8 @@ msgid "Leland Lucius"
 msgstr "Leland Lucius ע\"י"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "(C) 2009 by Leland Lucius"
-msgstr "Leland Lucius ע\"י"
+msgstr "(C) מאת לילנד לוציוס 2009"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid ""
@@ -2947,7 +2963,7 @@ msgstr "מזהה ביצוע:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr ""
+msgstr "הפצה לאיתור באגים (רמה %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -2957,12 +2973,12 @@ msgstr "הפצה (רמת ניפוי שגיאות %d)"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 64 bits"
-msgstr ""
+msgstr "%s, 64 ביטים"
 
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 32 bits"
-msgstr ""
+msgstr "%s, 32 ביטים"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
@@ -3243,7 +3259,7 @@ msgid ""
 msgstr ""
 "?אתה רוצה לשחזר העדפות\n"
 "\n"
-"שאלה זו יופיע רק פעם אחת, לאחר התקנה עם אפשרות איפוס ההעדפות."
+"שאלה זו תופיע רק פעם אחת, לאחר התקנה עם אפשרות איפוס ההעדפות."
 
 #: src/AudacityApp.cpp
 msgid "Reset Audacity Preferences"
@@ -3266,7 +3282,7 @@ msgstr "אתחול ספריית SQLite נכשל.  אודסיטי מנוע מלה
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
-msgstr ""
+msgstr "על גודל הבלוק להיות בין 256 ל-100000000\n"
 
 #: src/AudacityApp.cpp
 msgid "Audacity is starting up..."
@@ -3390,6 +3406,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"לא ניתן להשיג סמפורים.\n"
+"\n"
+"הדבר כנראה נובע ממחסור במשאבים\n"
+"וייתכן שיידרש אתחול מחדש."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -3398,6 +3418,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"לא ניתן ליצור סמפורים.\n"
+"\n"
+"הדבר כנראה נובע ממחסור במשאבים\n"
+"וייתכן שיידרש אתחול מחדש."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -3406,6 +3430,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"לא ניתן להשיג סמפור נעילה.\n"
+"\n"
+"הדבר כנראה נובע ממחסור במשאבים\n"
+"וייתכן שיידרש אתחול מחדש."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -3414,6 +3442,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"לא ניתן להשיג סמפור שרת.\n"
+"\n"
+"הדבר כנראה נובע ממחסור במשאבים\n"
+"וייתכן שיידרש אתחול מחדש."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -3422,6 +3454,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"שרת ה-IPC של לאודסיטי לא מצליח לאתחל.\n"
+"\n"
+"הדבר כנראה נובע ממחסור במשאבים\n"
+"וייתכן שיידרש אתחול מחדש."
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
@@ -3529,6 +3565,9 @@ msgid ""
 "access\n"
 "trimmed audio data anytime."
 msgstr ""
+"קליפ חכם.\n"
+"קליפ המקור יודבק בשלמותו בפרוייקט שלך, ויאפשר לך גישה\n"
+"לנתוני אודיו שנחתכו בכל עת."
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
@@ -3678,7 +3717,7 @@ msgstr "&ערוך פרמטרים"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
-msgstr ""
+msgstr "פקודת תפריט (ללא פרמטרים)"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
@@ -3703,9 +3742,9 @@ msgstr "בצע מקרו"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Applied Macro '%s'"
-msgstr "%s :יושם אפקט"
+msgstr "המקרו שהופעל: '%s'"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -4366,7 +4405,7 @@ msgstr ""
 #: src/DropoutDetector.cpp
 #, fuzzy
 msgid "Turn off dropout detection"
-msgstr "השבת זיהוי אבוד רגעי"
+msgstr "השבת איתור נשירות"
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
@@ -4618,27 +4657,27 @@ msgstr "ש"
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %d dB"
-msgstr ""
+msgstr "%d הרץ (%s) = %d דציבל"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
-msgstr ""
+msgstr "%d הרץ (%s) = %.1f דציבל"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
-msgstr ""
+msgstr "%.4f שניות (%d הרץ) (%s) = %f"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %.3f"
-msgstr ""
+msgstr "%.4f שניות (%d הרץ) (%s) = %.3f"
 
 #: src/FreqWindow.cpp
 msgid "spectrum.txt"
@@ -4758,7 +4797,7 @@ msgid ""
 msgstr ""
 "אודסיטי מצא %d תוספים לא תואמים שלא ניתן היה לטעון אותם. השבתנו את התוספים "
 "הללו כדי למנוע תקלות או קריסות. אם אתה עדיין רוצה לנסות להשתמש בתוספים אלו, "
-"אפשר להפעיל אותם באמצעות \"נהל תוספים\". אחרת, בחר \"המשך\"."
+"אפשר להפעיל אותם באמצעות \"ניהול תוספים\". אחרת, בחר \"המשך\"."
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -4924,11 +4963,11 @@ msgstr "Midi שגיאה באתחול אודיו"
 #: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
-msgstr "&בטל ביצוע %s"
+msgstr "ב&טל ביצוע %s"
 
 #: src/Menus.cpp src/menus/EditMenus.cpp
 msgid "&Undo"
-msgstr "&בטל ביצוע"
+msgstr "ב&טל ביצוע"
 
 #: src/Menus.cpp
 #, c-format
@@ -4970,7 +5009,7 @@ msgstr "עוצמת כניסה"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 msgid "Velocity"
-msgstr ""
+msgstr "מהירות"
 
 #: src/MixerBoard.cpp
 msgid "Musical Instrument"
@@ -5360,6 +5399,7 @@ msgstr "הקלטה"
 #. The error message is confusing to users in English, and could just say
 #. "Found problems with <sequence> when checking project file."
 #: src/ProjectFSCK.cpp
+#, fuzzy
 msgid "Project check read faulty Sequence tags."
 msgstr "אבחון הפרוייקטים בודק תוויות מאזורים פגומים."
 
@@ -5430,7 +5470,7 @@ msgstr "החלף אודיו חסר בשקט (קבוע באופן מיידי)."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Aliased File(s)"
-msgstr ""
+msgstr "אזהרה - חסרים קבצים בקיצורי דרך"
 
 #: src/ProjectFSCK.cpp
 #, c-format
@@ -5446,9 +5486,8 @@ msgid "Regenerate alias summary files (safe and recommended)"
 msgstr ""
 
 #: src/ProjectFSCK.cpp
-#, fuzzy
 msgid "Fill in silence for missing display data (this session only)"
-msgstr "[מלא בשקט מקומות בהן חסר מידע להצגה [בפעילות זו בלבד"
+msgstr "מלא בשקט מקומות בהם חסר מידע להצגה (בהפעלה זו בלבד)"
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no further changes"
@@ -5481,7 +5520,7 @@ msgstr "החלף אודיו חסר בשתיקה (קבוע באופן מיידי)
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
-msgstr ""
+msgstr "אזהרה - קבצי נתוני אודיו חסרים"
 
 #: src/ProjectFSCK.cpp
 #, c-format
@@ -5494,11 +5533,11 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Continue without deleting; ignore the extra files this session"
-msgstr ""
+msgstr "המשך מבלי למחוק; התעלם מהקבצים הנוספים בהפעלה זו"
 
 #: src/ProjectFSCK.cpp
 msgid "Delete orphan files (permanent immediately)"
-msgstr ""
+msgstr "מחק קבצים יתומים (מיידית לצמיתות)"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Orphan Block File(s)"
@@ -5506,7 +5545,7 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Cleaning up unused directories in project data"
-msgstr ""
+msgstr "מנקה ספריות שאינן בשימוש בנתוני הפרוייקט"
 
 #: src/ProjectFSCK.cpp
 msgid ""
@@ -5550,7 +5589,7 @@ msgstr "הפרוייקט שוחזר"
 
 #: src/ProjectFileManager.cpp src/prefs/DirectoriesPrefs.cpp
 msgid "Projects cannot be saved to FAT drives."
-msgstr ""
+msgstr "לא ניתן לשמור פרוייקטים בכונני FAT."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -5585,12 +5624,16 @@ msgid ""
 "\n"
 "Please select a different disk with more free space."
 msgstr ""
+"גודל הפרוייקט חורג מהשטח הפנוי הזמין בדיסק היעד.\n"
+"\n"
+"אנא בחר דיסק אחר עם יותר מקום פנוי."
 
 #: src/ProjectFileManager.cpp
 msgid ""
 "The project exceeds the maximum size of 4GB when writing to a FAT32 "
 "formatted filesystem."
 msgstr ""
+"הפרוייקט חורג מהגודל המרבי של 4 ג\"ב בעת כתיבה למערכת קבצים במבנה FAT32."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -5603,6 +5646,8 @@ msgid ""
 "another project.\n"
 "Please try again and select an original name."
 msgstr ""
+"הפרוייקט לא נשמר מכיוון ששם הקובץ שסופק יחליף פרוייקט אחר.\n"
+"אנא נסה שוב ובחר שם מקורי."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -5647,6 +5692,8 @@ msgid ""
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
+"הפרוייקט לא נשמר מכיוון שהפרוייקט שנבחר פתוח בחלון אחר.\n"
+"אנא נסה שוב ובחר שם מקורי."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -5658,6 +5705,8 @@ msgid ""
 "Saving a copy must not overwrite an existing saved project.\n"
 "Please try again and select an original name."
 msgstr ""
+"שמירת עותק מנועה מלדרוס פרוייקט שמור קיים.\n"
+"אנא נסה שוב ובחר שם מקורי."
 
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
@@ -5674,7 +5723,7 @@ msgstr "%s כבר פתוח בחלון אחר."
 
 #: src/ProjectFileManager.cpp src/import/ImportAUP.cpp
 msgid "Error Opening Project"
-msgstr ""
+msgstr "שגיאה בפתיחת הפרוייקט"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -5683,6 +5732,10 @@ msgid ""
 "\n"
 "Please open the actual Audacity project file instead."
 msgstr ""
+"ניסיון לפתוח קובץ גיבוי שנוצר באופן אוטומטי.\n"
+"פעולה זו עלולה לגרום לאובדן נתונים חמור.\n"
+"\n"
+"פתח את קובץ פרוייקט האודסיטי האמיתי במקום זאת."
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Backup File Detected"
@@ -5707,13 +5760,15 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "Error Opening File or Project"
-msgstr ""
+msgstr "שגיאה בפתיחת קובץ או פרוייקט"
 
 #: src/ProjectFileManager.cpp
 msgid ""
 "Project resides on FAT formatted drive.\n"
 "Copy it to another drive to open it."
 msgstr ""
+"הפרוייקט שוכן בכונן בפורמט FAT.\n"
+"העתק אותו לכונן אחר כדי לפתוח אותו."
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
@@ -5749,7 +5804,7 @@ msgstr "שגיאה ביבוא"
 
 #: src/ProjectFileManager.cpp
 msgid "Cannot import AUP3 format.  Use File > Open instead"
-msgstr ""
+msgstr "לא ניתן לייבא פורמט AUP3.  במקום זאת השתמש בקובץ > פתח"
 
 #: src/ProjectFileManager.cpp
 #, fuzzy
@@ -5822,7 +5877,7 @@ msgstr "נפח דיסק שנותר להקלטה: %s"
 
 #: src/ProjectManager.cpp
 msgid "Less than 1 minute"
-msgstr ""
+msgstr "פחות מדקה אחת"
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -5964,6 +6019,8 @@ msgid ""
 "This plugin could not be loaded.\n"
 "It may have been deleted."
 msgstr ""
+"לא ניתן היה לטעון את התוסף הזה.\n"
+"ייתכן שהוא נמחק."
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Plugin Error"
@@ -6195,9 +6252,8 @@ msgid "Auto-select overtones (beta)"
 msgstr ""
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Enable smart selection"
-msgstr "מקטע נבחר"
+msgstr "אפשר בחירה חכמה"
 
 #: src/SpectralDataDialog.cpp
 msgid ""
@@ -6334,7 +6390,7 @@ msgstr "שמור מטא-נתונים בשם:"
 
 #: src/TagsEditor.cpp
 msgid "Error Saving Tags File"
-msgstr ""
+msgstr "שגיאה בשמירת קובץ תגיות"
 
 #: src/TagsEditor.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
 msgid "Edit Metadata Tags"
@@ -6346,7 +6402,7 @@ msgstr "ערוך תגי מטא-נתונים"
 
 #: src/TagsEditor.cpp
 msgid "&Metadata"
-msgstr "מ&טא-נתונים"
+msgstr "מט&א-נתונים"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6368,9 +6424,8 @@ msgid "Audacity Timer Record"
 msgstr "הקלטה מתוזמנת ע\"י אודסיטי"
 
 #: src/TimerRecordDialog.cpp
-#, fuzzy
 msgid "Save Timer Recording As"
-msgstr "מקליט"
+msgstr "שמור הקלטה מתוזמנת בשם"
 
 #: src/TimerRecordDialog.cpp
 msgid ""
@@ -6378,23 +6433,25 @@ msgid ""
 "for Timer Recording because it would overwrite another project.\n"
 "Please try again and select an original name."
 msgstr ""
+"לא ניתן היה להשתמש בשם הקובץ שנבחר\n"
+"עבור הקלטה מתוזמ נת כי זה יחליף פרוייקט אחר.\n"
+"אנא נסה שוב ובחר שם מקורי."
 
 #: src/TimerRecordDialog.cpp
-#, fuzzy
 msgid "Error Saving Timer Recording Project"
-msgstr "שגיאה בטעינת עקמומי האקולייזר"
+msgstr "שגיאה בשמירת פרוייקט בהקלטה מתוזמנת"
 
 #: src/TimerRecordDialog.cpp
 msgid "Duration is zero. Nothing will be recorded."
-msgstr ""
+msgstr "משך הזמן הוא אפס. שום דבר לא יוקלט."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error in Duration"
-msgstr ""
+msgstr "שגיאה במשך הזמן"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save path is invalid."
-msgstr ""
+msgstr "נתיב השמירה האוטומטי איננו חוקי."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error in Automatic Save"
@@ -6402,11 +6459,11 @@ msgstr "שגיאה בשמירה אוטומטית"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export path is invalid."
-msgstr ""
+msgstr "נתיב הייצוא האוטומטי איננו חוקי."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error in Automatic Export"
-msgstr ""
+msgstr "שגיאה בייצוא אוטומטי"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6419,6 +6476,13 @@ msgid ""
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
+"ייתכן שאין לך מספיק שטח דיסק פנוי להשלמת הקלטה מתוזמנת זו, בהתבסס על ההגדרות "
+"הנוכחיות שלך.\n"
+"\n"
+"האם אתה מעוניין להמשיך?\n"
+"\n"
+"משך ההקלטה המתוכנן:   %s\n"
+"זמן ההקלטה שנותר בדיסק:   %s"
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording Disk Space Warning"
@@ -6504,6 +6568,9 @@ msgid ""
 "\n"
 "'%s' has been canceled due to the error(s) noted above."
 msgstr ""
+"%s\n"
+"\n"
+"'%s' בוטל עקב השגיאות שצוינו לעיל."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6512,6 +6579,9 @@ msgid ""
 "\n"
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
+"%s\n"
+"\n"
+"'%s' בוטל היות וההקלטה הופסקה."
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording"
@@ -6547,7 +6617,7 @@ msgstr "תאריך וזמן &סיום"
 
 #: src/TimerRecordDialog.cpp
 msgid "End Date"
-msgstr ""
+msgstr "תאריך סיום"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save"
@@ -6650,6 +6720,9 @@ msgid ""
 "\n"
 "Please close any additional projects and try again."
 msgstr ""
+"לא ניתן להשתמש בהקלטת מתוזמנת עם יותר מפרוייקט אחד פתוח.\n"
+"\n"
+"אנא סגור את הפרוייקטים הנוספים ונסה שוב."
 
 #: src/TimerRecordDialog.cpp
 msgid ""
@@ -6667,12 +6740,12 @@ msgstr "הקלטה מתו&זמנת..."
 
 #: src/TrackInfo.cpp
 msgid "Stereo, 999999Hz"
-msgstr ""
+msgstr "סטריאו, 999999 הרץ"
 
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
-msgstr ""
+msgstr "(אסקייפ כדי לבטל)"
 
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
@@ -6867,7 +6940,7 @@ msgstr "אסימון"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 msgid "L&ink audio.com account..."
-msgstr "קשר לחשבון audio.com ..."
+msgstr "&קשר לחשבון audio.com ..."
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
@@ -6961,8 +7034,15 @@ msgstr "לחץ על \"המשך\" כדי להעלות אל audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
-msgstr "האודיו שלך יועלה לשירות השיתוף שלנו: %s,%% הדורש שימוש בחשבון חינמי."
+msgid ""
+"Your audio will be uploaded to our sharing service: %s,%%which requires a "
+"free account to use.\n"
+"\n"
+"If you have problems uploading, try the Link Account button."
+msgstr ""
+"האודיו שלך יועלה לשירות השיתוף שלנו: %s,%% הדורש שימוש בחשבון חינמי.\n"
+"\n"
+"אם ישנם בעיות בהעלאה, נסה את הלחצן \"קישור חשבון\"."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"
@@ -7140,7 +7220,7 @@ msgstr "העדפות"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
-msgstr "קטעים"
+msgstr "מקטעים"
 
 #: src/commands/GetInfoCommand.cpp
 msgid "Envelopes"
@@ -7963,7 +8043,7 @@ msgstr "%s: אינו קובץ קביעות תקין.\n"
 #: src/effects/BasicEffectUIServices.cpp
 #, c-format
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
-msgstr ""
+msgstr "%s: מיועד לאפקט, מחולל או מנתח אחר.\n"
 
 #: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
@@ -8295,7 +8375,7 @@ msgstr "סף"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Max &Spike Width (higher is more sensitive):"
-msgstr "&רוחב עליה פתאומית מירבית (ערך גבוה יורת להגברת הרגישות):"
+msgstr "&רוחב עליה פתאומית מירבית (ערך גבוה יותר להגברת הרגישות):"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width"
@@ -9025,9 +9105,9 @@ msgid "Applied effect: %s"
 msgstr "האפקט שייושם: %s"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Applied command: %s"
-msgstr "פקודה מופעלת: %s"
+msgstr "הפקודה שהופעלה: %s"
 
 #: src/effects/EffectManager.cpp
 msgid "Select Preset"
@@ -9246,12 +9326,10 @@ msgid "Treble Cut"
 msgstr "חיתוך של תדרים גבוהים"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid ""
 "To apply Equalization, all selected tracks must have the same sample rate."
 msgstr ""
-".בכדי לצייר את הספקטרום, כלל הרצועות הנבחרות חייבות להיות בעלות אותו קצב "
-"דגימה"
+"כדי להחיל אקולייזר, כל הרצועות שנבחרו חייבות להיות בעלי אותו קצב דגימה."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -9319,7 +9397,7 @@ msgstr "שגיאה בטעינת עקמומי האקולייזר"
 
 #: src/effects/EqualizationCurves.cpp
 msgid "Error Saving Equalization Curves"
-msgstr ""
+msgstr "שגיאה בשמירת עקומות אקולייזר"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -9343,7 +9421,7 @@ msgstr "&מחק..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "&Get More..."
-msgstr ""
+msgstr "הבא &עוד..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "De&faults"
@@ -9422,11 +9500,11 @@ msgstr ""
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Choose an EQ curve file"
-msgstr ""
+msgstr "בחר קובץ של עקומת אקולייזר"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Export EQ curves as..."
-msgstr ""
+msgstr "יצא עקומות אקולייזר בשם..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "You cannot export 'unnamed' curve, it is special."
@@ -9472,7 +9550,7 @@ msgstr ""
 
 #: src/effects/EqualizationUI.cpp
 msgid "Filter Curve EQ needs a different name"
-msgstr ""
+msgstr "מסנן עקומת אקולייזר דורש שם אחר"
 
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
@@ -9492,25 +9570,23 @@ msgstr "- דציבל"
 
 #: src/effects/EqualizationUI.cpp
 msgid "&EQ Type:"
-msgstr ""
+msgstr "&סוג אקולייזר:"
 
 #: src/effects/EqualizationUI.cpp
-#, fuzzy
 msgid "Draw Curves"
 msgstr "צייר עקומות"
 
 #: src/effects/EqualizationUI.cpp
 msgid "&Draw"
-msgstr ""
+msgstr "&צייר"
 
 #: src/effects/EqualizationUI.cpp
 msgid "&Graphic"
-msgstr ""
+msgstr "&גרפי"
 
 #: src/effects/EqualizationUI.cpp
-#, fuzzy
 msgid "Interpolation type"
-msgstr "אינטרפולציה"
+msgstr "סוג אינטרפולציה"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Linear Frequency Scale"
@@ -9573,9 +9649,8 @@ msgid "Fade Out"
 msgstr "יציאה בהדרגה"
 
 #: src/effects/Fade.cpp
-#, fuzzy
 msgid "Applies a linear fade-in to the selected audio"
-msgstr "בחר וגרור בכדי לבחור שמע"
+msgstr "מחיל כניסה ליניארית פנימה בהדרגה על האודיו שנבחר"
 
 #: src/effects/Fade.cpp
 msgid "Applies a linear fade-out to the selected audio"
@@ -9639,9 +9714,9 @@ msgid "Analyzing: %s"
 msgstr "מנתח: %s"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Processing: %s"
-msgstr "מעבד..."
+msgstr "מעבד: %s"
 
 #: src/effects/Loudness.cpp
 msgid "&Normalize"
@@ -9650,7 +9725,7 @@ msgstr "&נרמל"
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Loudness.cpp
 msgid "Loudness LUFS"
-msgstr ""
+msgstr "קולניות LUFS"
 
 #: src/effects/Loudness.cpp
 msgid "LUFS"
@@ -9736,7 +9811,7 @@ msgstr "צעדים לכל בלוק אינם יכולים לחרוג מגודל �
 
 #: src/effects/NoiseReduction.cpp
 msgid "Median method is not implemented for more than four steps per window."
-msgstr ""
+msgstr "השיטה הממוצעת איננה מיושמת ליותר מארבעה שלבים בכל חלון."
 
 #: src/effects/NoiseReduction.cpp
 msgid "You must specify the same window size for steps 1 and 2."
@@ -9798,8 +9873,9 @@ msgid "&Frequency smoothing (bands):"
 msgstr "ה&חלקת תדירויות (רצועות)"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#, fuzzy
 msgid "Frequency smoothing"
-msgstr ""
+msgstr "החלקת תדרים"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Sensiti&vity (dB):"
@@ -10063,7 +10139,7 @@ msgstr "&מקדם מתיחה:"
 
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
-msgstr "ה&פרדת זמן (שניות)"
+msgstr "&רזולוציית הזמן (שניות)"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
@@ -10074,6 +10150,10 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
+"בחירת אודיו קצרה מדי עבור תצוגה מקדימה.\n"
+"\n"
+"יש לנסות להגדיל את בחירת האודיו ל-%.1f שניות לפחות,\n"
+"או להפחית את 'רזולוציית הזמן' לפחות מ-%.1f שניות."
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
@@ -10084,6 +10164,10 @@ msgid ""
 "For the current audio selection, the maximum\n"
 "'Time Resolution' is %.1f seconds."
 msgstr ""
+"לא ניתן לצפות בתצוגה מקדימה.\n"
+"\n"
+"עבור בחירת האודיו הנוכחית,\n"
+"'רזולוציית הזמן' המרבית היא %.1f שניות."
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
@@ -10094,6 +10178,10 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
+"'רזולוציית הזמן' היא ארוכה מדי עבור הקטע הנבחר.\n"
+"\n"
+"יש לנסות להגדיל את בחירת האודיו ל-%.1f שניות לפחות,\n"
+"או להפחית את 'רזולוציית הזמן' לפחות מ-%.1f שניות."
 
 #: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
 msgid "Phaser"
@@ -10193,6 +10281,11 @@ msgid ""
 "\n"
 "The more surrounding audio, the better it performs."
 msgstr ""
+"התיקון עובד באמצעות נתוני אודיו מחוץ לאזור הבחירה.\n"
+"\n"
+"אנא בחר אזור שיש לו אודיו הנוגע לפחות בצד אחד שלו.\n"
+"\n"
+"ככל שיש יותר אודיו מסביב, כך הוא מתפקד טוב יותר."
 
 #: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
 msgid "Repeat"
@@ -10318,9 +10411,8 @@ msgid "Reverse"
 msgstr "היפוך מהתחלה"
 
 #: src/effects/Reverse.cpp
-#, fuzzy
 msgid "Reverses the selected audio"
-msgstr "מייצא את חלק השמע הנבחר בתור קובץ %s"
+msgstr "הופך את האודיו שנבחר"
 
 #: src/effects/SBSMSEffect.h
 msgid "SBSMS Time / Pitch Stretch"
@@ -10525,9 +10617,8 @@ msgid "Resampling right channel"
 msgstr "דוגם מחדש את הערוץ הימני"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Mixing down to mono"
-msgstr "מיישם &סטריאו למונו"
+msgstr "ממיר למונו"
 
 #: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
 msgid "Sliding Stretch"
@@ -10707,12 +10798,17 @@ msgstr "גודל המאגר"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2Preferences.cpp
+#, fuzzy
 msgid ""
 "The buffer size controls the number of samples sent to the effect on each "
 "iteration. Smaller values will cause slower processing and some effects "
 "require 8192 samples or less to work properly. However most effects can "
 "accept large buffers and using them will greatly reduce processing time."
 msgstr ""
+"גודל המאגר שולט במספר הדגימות שנשלחות לתוסף בכל איטרציה. ערכים קטנים יותר "
+"יגרמו לעיבוד איטי יותר ואפקטים מסוימים דורשים 8192 דגימות או פחות כדי לעבוד "
+"כראוי. עם זאת, רוב התוספים יכולים לקבל מאגרים גדולים והשימוש בהם יקטין מאוד "
+"את זמן העיבוד."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -10731,6 +10827,9 @@ msgid ""
 "silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all VST effects."
 msgstr ""
+"כחלק מהעיבוד שלהם, חלק מהתוספים של VST חייבים לעכב את החזרת השמע לאודסיטי. "
+"כאשר לא מפצים על העיכוב הזה, תבחין שקטעי שקט קטנים הוכנסו לאודיו. הפעלת "
+"אפשרות זו תספק את הפיצוי הזה, אך ייתכן שהיא לא תעבוד עבור כל תוספי VST."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -10749,6 +10848,8 @@ msgid ""
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
 msgstr ""
+"לרוב אפקטים של VST יש ממשק גרפי להגדרת ערכי הפרמטרים. שיטה בסיסית בטקסט בלבד "
+"גם כן זמינה.  פתח מחדש את האפקט כדי שזה ייכנס לתוקף."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2Preferences.cpp
@@ -10758,7 +10859,7 @@ msgstr "אפשר ממשק &גרפי"
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
 msgid "Audio In: %d, Audio Out: %d"
-msgstr ""
+msgstr "כניסת שמע: %d, יציאת שמע: %d"
 
 #: src/effects/VST/VSTEffect.cpp
 #, fuzzy
@@ -10853,6 +10954,10 @@ msgid ""
 "silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all VST3 effects."
 msgstr ""
+"כחלק מהעיבוד שלהם, חלק מהאפקטים של VST3 צריכים לעכב את החזרת האודיו "
+"לאודסיטי. כאשר לא מפצים על העיכוב הזה, תבחין שקטעי שקט קטנים הוכנסו לאודיו. "
+"הפעלת אפשרות זו תספק את הפיצוי הזה, אך ייתכן שהיא לא תעבוד עבור כל אפקטי "
+"VST3."
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid ""
@@ -10860,6 +10965,8 @@ msgid ""
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
 msgstr ""
+"לרוב אפקטים של VST3 יש ממשק גרפי להגדרת ערכי הפרמטרים. שיטה בסיסית בטקסט "
+"בלבד גם כן זמינה.  פתח מחדש את האפקט כדי שזה ייכנס לתוקף."
 
 #: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
@@ -10963,9 +11070,8 @@ msgstr "לא ניתן לפתוח או ליצור קובץ נסיון."
 
 #. i18n-hint: the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.h
-#, fuzzy
 msgid "Audio Unit"
-msgstr "יחידת שמע"
+msgstr "יחידת אודיו"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 #, fuzzy
@@ -10980,6 +11086,10 @@ msgid ""
 "will provide that compensation, but it may not work for all Audio Unit "
 "effects."
 msgstr ""
+"כחלק מהעיבוד שלהם, חלק מהאפקטים של יחידת השמע צריכים לעכב את החזרת האודיו "
+"לאודסיטי. כאשר לא מפצים על העיכוב הזה, תבחין שקטעי שקט קטנים הוכנסו לאודיו. "
+"הפעלת אפשרות זו תספק את הפיצוי הזה, אך ייתכן שהיא לא תעבוד עבור כל אפקטי "
+"יחידת השמע."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
@@ -11062,7 +11172,7 @@ msgstr "'%s' לא ניתן למחוק את."
 
 #: src/effects/audiounits/AudioUnitWrapper.cpp
 msgid "Failed to convert property list to XML data"
-msgstr ""
+msgstr "המרת רשימת הנכסים לנתוני XML נכשלה"
 
 #: src/effects/audiounits/AudioUnitWrapper.cpp
 msgid "XML data is empty after conversion"
@@ -11096,6 +11206,10 @@ msgid ""
 "small silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
+"כחלק מהעיבוד שלהם, חלק מהאפקטים של LADSPA צריכים לעכב את החזרת האודיו "
+"לאודסיטי. כאשר לא מפצים על העיכוב הזה, תבחין שקטעי שקט קטנים הוכנסו לאודיו. "
+"הפעלת אפשרות זו תספק את הפיצוי הזה, אך ייתכן שהיא לא תעבוד עבור כל אפקטי "
+"LADSPA."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
 #. appears in a following text box window; translate with appropriate punctuation
@@ -11148,6 +11262,9 @@ msgid ""
 "silences have been inserted into the audio. Enabling this setting will "
 "provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
+"כחלק מהעיבוד שלהם, חלק מהאפקטים של LV2 צריכים לעכב את החזרת האודיו לאודסיטי. "
+"כאשר לא מפצים על העיכוב הזה, תבחין שקטעי שקט קטנים הוכנסו לאודיו. הפעלת "
+"אפשרות זו תספק את הפיצוי הזה, אך ייתכן שהיא לא תעבוד עבור כל אפקטי LV2."
 
 #: src/effects/lv2/LV2Preferences.cpp
 msgid ""
@@ -11155,6 +11272,8 @@ msgid ""
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
 msgstr ""
+"לאפקטים של LV2 יכול להיות ממשק גרפי להגדרת ערכי הפרמטרים. שיטה בסיסית בטקסט "
+"בלבד גם כן זמינה.  פתח מחדש את האפקט כדי שזה ייכנס לתוקף."
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "LV2 Effects"
@@ -11230,6 +11349,9 @@ msgid ""
 "Maximum allowed selection is %ld samples\n"
 "(about %.1f hours at 44100 Hz sample rate)."
 msgstr ""
+"הבחירה ארוכה מדי עבור קוד Nyquist.\n"
+"הבחירה המרבית המותרת היא %ld דגימות\n"
+"(בערך %.1f שעות בקצב דגימה של 44100 הרץ)."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Debug Output: "
@@ -11243,18 +11365,18 @@ msgstr "מעבד..."
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr ""
+msgstr "אפקטי ';type tool' אינם יכולים להחזיר אודיו מ-Nyquist.\n"
 
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr ""
+msgstr "אפקטי ';type tool' אינם יכולים להחזיר תוויות מ-Nyquist.\n"
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "nyx_error returned from %s.\n"
-msgstr "MP3 חזרה ממקודד  %ld שגיאת"
+msgstr "nyx_error הוחזרה מ-%s.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "plug-in"
@@ -11293,7 +11415,7 @@ msgstr "Nyquist החזיר אודיו ריק.\n"
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr ""
+msgstr "[אזהרה: Nyquist החזיר מחרוזת UTF-8 לא חוקית, היא הומרה כאן כ- Latin-1]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -11407,13 +11529,12 @@ msgid "Provides Vamp Effects support to Audacity"
 msgstr "מספק תמיכה לאפקטים של Vamp עבור אודסיטי"
 
 #: src/effects/vamp/VampEffect.cpp
-#, fuzzy
 msgid ""
 "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
 "channels of the track do not match."
 msgstr ""
-".מוספים לא יכולים להתבצע עבור ערוצי סטריאו כאשר הערוצים של הרצועה אינם "
-"מתואמים Vamp מצטער, אפקטי"
+"מצטערים, לא ניתן להפעיל תוספי Vamp ברצועות סטריאו שבהן הערוצים הבודדים של "
+"הרצועה אינם תואמים."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -11439,7 +11560,7 @@ msgstr ""
 
 #: src/export/Export.cpp
 msgid "No format specific options"
-msgstr ""
+msgstr "אין אפשרויות ספציפיות לפורמט"
 
 #: src/export/Export.cpp
 msgid "Export Audio"
@@ -11490,19 +11611,17 @@ msgstr "קובץ בשם \"%s\" כבר קיים. האם להחליף אותו?"
 
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one mono file."
-msgstr "הרצועות יעורבבו וייוצאו כקובץ מונו בודד."
+msgstr "הרצועות שלך יסוכמו וייוצאו כקובץ מונו אחד."
 
 #: src/export/Export.cpp
-#, fuzzy
 msgid "Your tracks will be mixed down and exported as one stereo file."
-msgstr "הרצועות יעורבבו ויומרו לשני ערוצי סטריאו בקבצים שייוצאו."
+msgstr "הרצועות שלך יסוכמו וייוצאו כקובץ סטריאו אחד."
 
 #: src/export/Export.cpp
-#, fuzzy
 msgid ""
 "Your tracks will be mixed down to one exported file according to the encoder "
 "settings."
-msgstr "הרצועות יעורבבו ויומרו לשני ערוצי סטריאו בקבצים שייוצאו."
+msgstr "הרצועות שלך יסוכמו לקובץ אחד לפי הגדרות המקודד."
 
 #: src/export/Export.cpp
 msgid "Advanced Mixing Options"
@@ -11621,6 +11740,8 @@ msgid ""
 "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
 msgstr ""
+"כדי להמשיך נדרשת הגדרה כהלכה של FFmpeg.\n"
+"אפשר להגדיר אותו ב'העדפות' > 'ספריות'."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11633,7 +11754,7 @@ msgstr "שגיאת FFmpeg"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
-msgstr ""
+msgstr "FFmpeg: שגיאה - לא ניתן להקצות הקשר של פורמט הפלט."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11652,6 +11773,7 @@ msgstr ""
 msgid ""
 "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
 msgstr ""
+"FFmpeg: שגיאה - לא ניתן לכתוב כותרות לקובץ הפלט \"%s\". קוד השגיאה הוא %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -11660,6 +11782,8 @@ msgid ""
 "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
 msgstr ""
+"FFmpeg אינו יכול למצוא מקודד אודיו 0x%x.\n"
+"התמיכה בקידוד זה כנראה לא נכללה בתוכנה."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "The codec reported a generic error (EPERM)"
@@ -11707,11 +11831,11 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
-msgstr ""
+msgstr "FFmpeg: שגיאה - נותרו יותר מדי נתונים."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
-msgstr ""
+msgstr "FFmpeg: שגיאה - nAudioFrameSizeOut גדול מדי."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't encode audio frame."
@@ -11750,6 +11874,8 @@ msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
 msgstr ""
+"קצב הדגימה של הפרוייקט (%d) איננו נתמך על ידי\n"
+"מבנה קובץ הפלט הנוכחי. "
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11757,6 +11883,8 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
+"השילוב של קצב דגימת הפרוייקט (%d) וקצב הסיביות (%d אלפי סיביות לשנייה)\n"
+"איננו נתמך על ידי מבנה קובץ הפלט. "
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -11772,7 +11900,7 @@ msgstr "קצבי דגימה"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "%d kbps"
-msgstr "%d ק\"ב/שניה"
+msgstr "%d אלפי סיביות לשנייה"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 #: src/export/ExportWavPack.cpp
@@ -11781,13 +11909,13 @@ msgstr "קצב הביטים:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Quality (kbps):"
-msgstr "איכות (ק\"ב לשנייה):"
+msgstr "איכות (אלפי סיביות לשנייה):"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "%.2f kbps"
-msgstr "%.2f ק\"ב לשנייה"
+msgstr "%.2f אלפי סיביות לשנייה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "0"
@@ -11835,9 +11963,8 @@ msgid "On"
 msgstr "&...פתח"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Constrained"
-msgstr "קבוע"
+msgstr "מוגבל"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
@@ -11849,31 +11976,31 @@ msgstr "השהיה מועטת"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2.5 ms"
-msgstr ""
+msgstr "2.5 אלפיות השנייה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "5 ms"
-msgstr ""
+msgstr "5 אלפיות השנייה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "10 ms"
-msgstr ""
+msgstr "10 אלפיות השנייה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "20 ms"
-msgstr ""
+msgstr "20 אלפיות השנייה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "40 ms"
-msgstr ""
+msgstr "40 אלפיות השנייה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "60 ms"
-msgstr ""
+msgstr "60 אלפיות השנייה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Narrowband"
-msgstr ""
+msgstr "פס צר"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11882,11 +12009,11 @@ msgstr "בינוני"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Wideband"
-msgstr ""
+msgstr "פס רחב"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Super Wideband"
-msgstr ""
+msgstr "פס רחב במיוחד"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11894,9 +12021,8 @@ msgid "Fullband"
 msgstr "חלון"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Compression"
-msgstr "דוחס..."
+msgstr "דחיסה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11904,9 +12030,8 @@ msgid "Frame Duration:"
 msgstr "משך זמן"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Vbr Mode:"
-msgstr "מצבים"
+msgstr "מצב Vbr:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11922,14 +12047,12 @@ msgid "Open custom FFmpeg format options"
 msgstr "פתח אפשרויות מבנה FFmpeg בהתאמה אישית"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Format:"
-msgstr "יישם &בפרוייקט נוכחי"
+msgstr "פורמט נוכחי:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
 msgid "Current Codec:"
-msgstr "יישם &בפרוייקט נוכחי"
+msgstr "מקודד נוכחי:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11947,12 +12070,12 @@ msgstr "אשר ההחלפה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Please select format before saving a profile"
-msgstr ""
+msgstr "יש לבחור פורמט לפני שמירת פרופיל"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Please select codec before saving a profile"
-msgstr ""
+msgstr "יש לבחור מקודד לפני שמירת פרופיל"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
@@ -11986,7 +12109,7 @@ msgstr "(FFmpeg באמצעות) AC3 קבצי"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr ""
+msgstr "קבצי (פס צר) של AMR (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Opus (OggOpus) Files (FFmpeg)"
@@ -12002,19 +12125,19 @@ msgstr "בהתאמה אישית FFmpeg ייצוא ע\"י"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Estimate"
-msgstr ""
+msgstr "הערכה"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2-level"
-msgstr ""
+msgstr "2-רמות"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "4-level"
-msgstr ""
+msgstr "4-רמות"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "8-level"
-msgstr ""
+msgstr "8-רמות"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Full search"
@@ -12026,7 +12149,7 @@ msgstr "חיפוש ביומן"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Configure custom FFmpeg options"
-msgstr ""
+msgstr "הגדר אפשרויות FFmpeg מותאמות אישית"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Preset:"
@@ -12047,13 +12170,15 @@ msgstr ""
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Codec:"
-msgstr ""
+msgstr "מקודד:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "Not all formats and codecs are compatible. Nor are all option combinations "
 "compatible with all codecs."
 msgstr ""
+"לא כל הפורמטים והקידודים תואמים. גם כל שילובי האפשרויות אינם תואמים לכל "
+"הקידודים."
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Show All Formats"
@@ -12065,7 +12190,7 @@ msgstr "הצג את כל המקודדים"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "General Options"
-msgstr ""
+msgstr "אפשרויות כלליות"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -12073,6 +12198,9 @@ msgid ""
 "Optional\n"
 "empty - automatic"
 msgstr ""
+"קוד שפה בן 3 אותיות ISO 639\n"
+"ניתן לבחירה\n"
+"ריק - אוטומטי"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Language:"
@@ -12080,7 +12208,7 @@ msgstr "שפת ממשק:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Bit Reservoir"
-msgstr ""
+msgstr "מאגר סיביות"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VBL"
@@ -12105,6 +12233,10 @@ msgid ""
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
+"קצב סיביות (סיביות לשנייה) - משפיע על גודל הקובץ ואיכותו\n"
+"מקודדים מסוימים עשויים לקבל רק ערכים ספציפיים (128k, 192k, 256k וכו')\n"
+"0 - אוטומטי\n"
+"מומלץ - 192000"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -12113,6 +12245,10 @@ msgid ""
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
 msgstr ""
+"איכות כללית, בשימוש שונה על ידי מקודדים שונים\n"
+"נדרש עבור vorbis\n"
+"0 - אוטומטי\n"
+"1- - כבוי (השתמש במקום זאת בקצב סיביות)"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportOGG.cpp
 msgid "Quality:"
@@ -12136,6 +12272,9 @@ msgid ""
 "Optional\n"
 "0 - automatic"
 msgstr ""
+"רוחב פס חיתוך אודיו (הרץ)\n"
+"נתון לבחירה\n"
+"0 - אוטומטי"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -12150,7 +12289,7 @@ msgstr "פרופיל:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "FLAC options"
-msgstr ""
+msgstr "אפשריות FLAC"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -12160,10 +12299,15 @@ msgid ""
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
 msgstr ""
+"רמת דחיסה\n"
+"נדרשת עבור FLAC\n"
+"1- - אוטומטית\n"
+"מינימום - 0 (קידוד מהיר, קובץ פלט גדול)\n"
+"מקסימום - 10 (קידוד איטי, קובץ פלט קטן)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Compression:"
-msgstr ""
+msgstr "דחיסה:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
@@ -12173,6 +12317,11 @@ msgid ""
 "min - 16\n"
 "max - 65535"
 msgstr ""
+"גודל מסגרת\n"
+"ניתן לבחירה\n"
+"0 - ברירת מחדל\n"
+"לפחות 16\n"
+"הכי הרבה 65535"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Frame:"
@@ -12186,6 +12335,11 @@ msgid ""
 "min - 1\n"
 "max - 15"
 msgstr ""
+"דיוק מקדמים של LPC\n"
+"ניתן לבחירה\n"
+"0 - ברירת מחדל\n"
+"לפחות 1\n"
+"הכי הרבה 15"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "LPC"
@@ -12208,6 +12362,7 @@ msgid "PdO Method:"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
 msgid ""
 "Minimal prediction order\n"
 "Optional\n"
@@ -12215,12 +12370,18 @@ msgid ""
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
 msgstr ""
+"סדר חיזוי מינימלי\n"
+"ניתן לבחירה\n"
+"1- - ברירת מחדל\n"
+"לפחות 0\n"
+"הכי הרבה 32 (עם LPC) או 4 (ללא LPC)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Min. PdO"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
 msgid ""
 "Maximal prediction order\n"
 "Optional\n"
@@ -12228,12 +12389,18 @@ msgid ""
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
 msgstr ""
+"סדר חיזוי מירבי\n"
+"ניתן לבחירה\n"
+"1- - ברירת מחדל\n"
+"לפחות 0\n"
+"הכי הרבה 32 (עם LPC) או 4 (ללא LPC)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Max. PdO"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
 msgid ""
 "Minimal partition order\n"
 "Optional\n"
@@ -12241,12 +12408,18 @@ msgid ""
 "min - 0\n"
 "max - 8"
 msgstr ""
+"גודל חלוקה מינימלי\n"
+"ניתן לבחירה\n"
+"1- - ברירת מחדל\n"
+"לפחות 0\n"
+"הכי הרבה 8"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Min. PtO"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
 msgid ""
 "Maximal partition order\n"
 "Optional\n"
@@ -12254,6 +12427,11 @@ msgid ""
 "min - 0\n"
 "max - 8"
 msgstr ""
+"גודל חלוקה מירבי\n"
+"ניתן לבחירה\n"
+"1- - ברירת מחדל\n"
+"לפחות 0\n"
+"הכי הרבה 8"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Max. PtO"
@@ -12291,6 +12469,9 @@ msgid ""
 "Optional\n"
 "0 - default"
 msgstr ""
+"גודל חבילה\n"
+"ניתן לבחירה\n"
+"0 - ברירת מחדל"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
@@ -12328,21 +12509,21 @@ msgstr ""
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
-msgstr ""
+msgstr "הפורמט %s אינו תואם לקידוד %s."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Incompatible format and codec"
-msgstr ""
+msgstr "פורמט והקידוד אינם תואמים"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
-msgstr ""
+msgstr "לא מצליח לנחש את הפורמט"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to find the codec"
-msgstr ""
+msgstr "מציאת המקודד נכשלה"
 
 #: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "16 bit"
@@ -12375,7 +12556,7 @@ msgstr "FLAC קבצי"
 #: src/export/ExportFLAC.cpp
 #, c-format
 msgid "FLAC export couldn't open %s"
-msgstr ""
+msgstr "יצוא ל-FLAC לא מצליח לפתוח %s"
 
 #: src/export/ExportFLAC.cpp
 #, c-format
@@ -12383,6 +12564,8 @@ msgid ""
 "FLAC encoder failed to initialize\n"
 "Status: %d"
 msgstr ""
+"אתחול מקודד FLAC נכשל\n"
+"סטטוס: %d"
 
 #: src/export/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
@@ -12444,74 +12627,74 @@ msgstr "לא יכול לפתוח קובץ יעד לכתיבה"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "Exporting selected audio at %ld kbps"
-msgstr ""
+msgstr "מייצא אודיו נבחר ב-%ld אלפי סיביות לשנייה"
 
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "Exporting the audio at %ld kbps"
-msgstr "מייצא את האודיו בקצב של %ld kbps"
+msgstr "מייצא את האודיו בקצב של %ld אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "220-260 kbps (Best Quality)"
-msgstr "220-260 קילו-סיביות לשניה (איכות מיטבית)"
+msgstr "220-260 אלפי סיביות לשנייה (איכות מיטבית)"
 
 #: src/export/ExportMP3.cpp
 msgid "200-250 kbps"
-msgstr "200-250 קילו-סיביות לשניה"
+msgstr "200-250 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "170-210 kbps"
-msgstr "170-210 קילו-סיביות לשניה"
+msgstr "170-210 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "155-195 kbps"
-msgstr "155-195 קילו-סיביות לשניה"
+msgstr "155-195 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "145-185 kbps"
-msgstr "145-185 קילו-סיביות לשניה"
+msgstr "145-185 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "110-150 kbps"
-msgstr "110-150 קילו-סיביות לשניה"
+msgstr "110-150 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "95-135 kbps"
-msgstr "95-135 קילו-סיביות לשניה"
+msgstr "95-135 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "80-120 kbps"
-msgstr "80-120 קילו-סיביות לשניה"
+msgstr "80-120 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "65-105 kbps"
-msgstr "65-105 קילו-סיביות לשניה"
+msgstr "65-105 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "45-85 kbps (Smaller files)"
-msgstr "45-85 קילו-סיביות לשניה (קבצים קטנים)"
+msgstr "45-85 אלפי סיביות לשנייה (קבצים קטנים)"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
-msgstr ""
+msgstr "מטורף, 320 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
-msgstr ""
+msgstr "קיצוני, 220-260 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
-msgstr ""
+msgstr "סטנדרטי, 170-210 אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium, 145-185 kbps"
-msgstr ""
+msgstr "בינוני, 145-185 אלפי סיביות לשנייה"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane"
-msgstr ""
+msgstr "מטורף"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
@@ -12610,22 +12793,24 @@ msgid ""
 "Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
+"אתה מחובר אל lame_enc.dll v%d.%d. גרסה זו איננה תואמת לאודסיטי %d.%d.%d.\n"
+"יש להוריד את הגרסה האחרונה של 'LAME' עבור אודסיטי."
 
 #: src/export/ExportMP3.cpp
 msgid "Only lame_enc.dll"
-msgstr ""
+msgstr "רק lame_enc.dll"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame64bit.dylib"
-msgstr ""
+msgstr "רק libmp3lame64bit.dylib"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame.dylib"
-msgstr ""
+msgstr "רק libmp3lame.dylib"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame.so.0"
-msgstr ""
+msgstr "רק libmp3lame.so.0"
 
 #: src/export/ExportMP3.cpp
 msgid "Primary shared object files"
@@ -12668,7 +12853,7 @@ msgstr "%s מייצא את חלק השמע הנבחר עם ערך קבוע"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
-msgstr ""
+msgstr "מייצא אודיו נבחר באיכות VBR %s"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -12678,12 +12863,12 @@ msgstr "מייצא את השמע באיכות VBR של %s"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
-msgstr "מייצא קטע שמע נבחר בקצב של %d ק\"ב לשניה"
+msgstr "מייצא קטע שמע נבחר בקצב של %d אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio at %d Kbps"
-msgstr "%d Kbps מייצא האודיו בקצב של"
+msgstr "מייצא את האודיו בקצב של %d אלפי סיביות לשנייה"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -12696,6 +12881,8 @@ msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
 msgstr ""
+"קצב הדגימה של הפרוייקט (%d) איננו נתמך על ידי\n"
+"מבנה של קובץ MP3. "
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -12703,14 +12890,16 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
+"השילוב של קצב דגימת הפרוייקט (%d) וקצב הסיביות (%d אלפי סיביות לשנייה)\n"
+"איננו נתמך על ידי מבנה קובץ MP3. "
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
-msgstr ""
+msgstr "ספריית יצוא של MP3 לא נמצאה"
 
 #: src/export/ExportMP3.cpp
 msgid "(Built-in)"
-msgstr ""
+msgstr "(מובנה)"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -13002,7 +13191,7 @@ msgstr "32-bit float"
 #: src/export/ExportWavPack.cpp
 #, c-format
 msgid "%.1f bps"
-msgstr ""
+msgstr "%.1f סיביות לשנייה"
 
 #: src/export/ExportWavPack.cpp
 msgid "Bit Depth"
@@ -13168,7 +13357,7 @@ msgid ""
 "or AIFF."
 msgstr ""
 "\"%s\" הוא קובץ בקידוד אודיו מתקדם.\n"
-"ללא ספריית FFmpeg האופציונלית, אודסיטי לא יכול לפתוח קובץ מסוג זה.\n"
+"ללא ספריית FFmpeg הניתנת לבחירה, אודסיטי לא יכול לפתוח קובץ מסוג זה.\n"
 "אחרת, עליך להמיר אותו לפורמט שמע נתמך, כגון WAV או AIFF."
 
 #. i18n-hint: %s will be the filename
@@ -13208,6 +13397,10 @@ msgid ""
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
 msgstr ""
+"\"%s\" הוא קובץ מבוסס תוים, לא קובץ שמע.\n"
+"אודסיטי לא יכול לפתוח קובץ מסוג זה.\n"
+"נסה להמיר אותו לקובץ שמע כגון WAV או AIFF\n"
+"ואז לייבא אותו, או להקליט אותו לתוך אודסיטי."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -13416,7 +13609,7 @@ msgstr "קצב לא חוקי"
 
 #: src/import/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
-msgstr ""
+msgstr "אין אפשרות לנתח את המאפיין 'start' של waveblock"
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -13499,7 +13692,7 @@ msgstr ""
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
-msgstr "קבצי FLAC"
+msgstr "FLAC קבצי"
 
 #: src/import/ImportGStreamer.cpp
 msgid "GStreamer-compatible files"
@@ -13672,7 +13865,7 @@ msgstr ""
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportPCM.cpp
 msgid "FLAC (FLAC Lossless Audio Codec)"
-msgstr ""
+msgstr "FLAC (קידוד אודיו ללא אובדן)"
 
 #: src/import/ImportPCM.cpp
 msgid "HTK (HMM Tool Kit)"
@@ -13708,7 +13901,7 @@ msgstr ""
 
 #: src/import/ImportPCM.cpp
 msgid "RAW (header-less)"
-msgstr ""
+msgstr "גולמי (ללא כותרות)"
 
 #: src/import/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
@@ -14000,10 +14193,10 @@ msgstr "%s ימין"
 #, c-format
 msgid "%s %s, %d of %d clip %s"
 msgid_plural "%s %s, %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%s %s, %d מתוך %d מקטע %s"
+msgstr[1] "%s %s, %d מתוך %d מקטעים %s"
+msgstr[2] "%s %s, %d מתוך %d מקטעים %s"
+msgstr[3] "%s %s, %d מתוך %d מקטעים %s"
 
 #: src/menus/ClipMenus.cpp
 #, fuzzy
@@ -14011,7 +14204,6 @@ msgid "start"
 msgstr "התחלה"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "end"
 msgstr "סוף"
 
@@ -14029,10 +14221,10 @@ msgstr "סוף"
 #, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%s %s וגם %s %s, %d ו-%d מתוך %d מקטע %s"
+msgstr[1] "%s %s וגם %s %s, %d ו-%d מתוך %d מקטעים %s"
+msgstr[2] "%s %s וגם %s %s, %d ו-%d מתוך %d מקטעים %s"
+msgstr[3] "%s %s וגם %s %s, %d ו-%d מתוך %d מקטעים %s"
 
 #. i18n-hint:
 #. first string is the name of a clip,
@@ -14044,10 +14236,10 @@ msgstr[3] ""
 #, c-format
 msgid "%s, %d of %d clip %s"
 msgid_plural "%s, %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%s, %d מתוך %d מקטע %s"
+msgstr[1] "%s, %d מתוך %d מקטעים %s"
+msgstr[2] "%s, %d מתוך %d מקטעים %s"
+msgstr[3] "%s, %d מתוך %d מקטעים %s"
 
 #: src/menus/ClipMenus.cpp
 #, fuzzy
@@ -14098,11 +14290,11 @@ msgstr "בחר את המקטע הבא"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary"
-msgstr "לגבול ה&קודם של מקטע"
+msgstr "לגבול הקו&דם של מקטע"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Prev Clip Boundary"
-msgstr ""
+msgstr "העבר סמן לגבול המקטע הקודם"
 
 #: src/menus/ClipMenus.cpp
 msgid "Ne&xt Clip Boundary"
@@ -14110,7 +14302,7 @@ msgstr "לגבול ה&בא של מקטע"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Next Clip Boundary"
-msgstr "סמן אל גבול הקליפ הבא"
+msgstr "העבר סמן אל גבול המקטע הבא"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time Shift &Left"
@@ -14246,11 +14438,11 @@ msgstr "&עריכה"
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
 msgid "Cu&t"
-msgstr "גז&ור"
+msgstr "ג&זור"
 
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "&Delete"
-msgstr "&מחק"
+msgstr "מ&חק"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -14260,7 +14452,7 @@ msgstr "&העתק"
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "&Paste"
-msgstr "&הדבק"
+msgstr "ה&דבק"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -14465,7 +14657,7 @@ msgstr "אין דבר שצריך לעשות"
 
 #: src/menus/HelpMenus.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr ""
+msgstr "לא נמצאו בעיות שניתן לפותרן בקלות ובמהירות"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -14518,7 +14710,7 @@ msgstr "מידע על &התקן שמע..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
-msgstr "צור מידע תמיכה..."
+msgstr "צור מידע &תמיכה..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -14526,7 +14718,7 @@ msgstr "חפש &עדכונים..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&About Audacity"
-msgstr "&אודות אודסיטי"
+msgstr "או&דות אודסיטי"
 
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
@@ -14670,7 +14862,7 @@ msgstr "ה&קלד כדי ליצור תווית (כבוי/דלוק)"
 
 #: src/menus/LabelMenus.cpp
 msgid "La&beled Audio"
-msgstr "שמע עם תווית"
+msgstr "שמע ע&ם תווית"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -14719,9 +14911,8 @@ msgid "Co&py"
 msgstr "&העתק"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Copy"
-msgstr "תווית"
+msgstr "העתק תווית"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -14729,23 +14920,20 @@ msgid "Spli&t"
 msgstr "&פצל"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Split"
-msgstr "ערוך תווית"
+msgstr "פיצול תווית"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label Join"
-msgstr "ערוך תווית"
+msgstr "צרף תווית"
 
 #: src/menus/LabelMenus.cpp
 msgid "&Label Track"
 msgstr "תן &שם לרצועה"
 
 #: src/menus/MenuHelper.cpp
-#, fuzzy
 msgid "..."
-msgstr "חדש..."
+msgstr ""
 
 #: src/menus/MenuHelper.cpp
 msgid "Uncategorized"
@@ -14820,9 +15008,8 @@ msgid "Plugin Manager"
 msgstr "מנהל &תוספים"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Generator"
-msgstr "מייצר צלילים"
+msgstr "הפעל שוב על המחולל האחרון"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
@@ -14873,11 +15060,11 @@ msgstr ""
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Left Selection Boundary"
-msgstr ""
+msgstr "הגדר את גבול הבחירה השמאלי"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Right Selection Boundary"
-msgstr ""
+msgstr "הגדר את גבול הבחירה הימני"
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/SelectMenus.cpp
@@ -14886,12 +15073,11 @@ msgstr "&בחר"
 
 #: src/menus/SelectMenus.cpp
 msgid "&None"
-msgstr "&כלום"
+msgstr "לא &כלום"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Select None"
-msgstr "מקטע נבחר"
+msgstr "אל תבחר דבר"
 
 #: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
 msgid "&Tracks"
@@ -14899,11 +15085,11 @@ msgstr "&רצועות"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Tracks"
-msgstr "בכל הרצועות"
+msgstr "ב&כל הרצועות"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "בכל הרצועות שנעולות-סינכרון"
+msgstr "בכל הרצועות שנעולות-&סינכרון"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Sync-Locked"
@@ -14963,7 +15149,7 @@ msgstr "שח&זר בחירה"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Stored &Cursor Position"
-msgstr "מהסמן למקום הסמן השמור"
+msgstr "&מהסמן למקום הסמן השמור"
 
 #: src/menus/SelectMenus.cpp
 #, fuzzy
@@ -14972,7 +15158,7 @@ msgstr "בחירה מההתחלה"
 
 #: src/menus/SelectMenus.cpp
 msgid "Store Cursor Pos&ition"
-msgstr "שחזר מיקום סמן"
+msgstr "&שחזר מיקום סמן"
 
 #: src/menus/SelectMenus.cpp
 msgid "At &Zero Crossings"
@@ -15039,54 +15225,48 @@ msgid "Selection Star&t"
 msgstr "תחילת &קטע נבחר"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Selection Start"
-msgstr "לתחילת הקטע הנבחר"
+msgstr "סמן לתחילת הקטע הנבחר"
 
 #: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
 msgid "Selection En&d"
-msgstr "סוף ק&טע נבחר"
+msgstr "&סוף קטע נבחר"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Selection End"
-msgstr "לסוף הקטע הנבחר"
+msgstr "סמן לסוף הקטע הנבחר"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &Start"
 msgstr "תחילת ר&צועה"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Track Start"
-msgstr "רצועה מספר"
+msgstr "סמן לתחילת הרצועה"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &End"
 msgstr "סוף רצו&עה"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Track End"
-msgstr "רצועה מספר"
+msgstr "סמן לסוף הרצועה"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Project Start"
 msgstr "התחלת &פרוייקט"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Project Start"
-msgstr "(Hz) קצב פרוייקט:"
+msgstr "סמן לתחילת הפרוייקט"
 
 #: src/menus/SelectMenus.cpp
 msgid "Project E&nd"
 msgstr "סוף פ&רוייקט"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Cursor to Project End"
-msgstr "יישם &בפרוייקט נוכחי"
+msgstr "סמן לסוף הפרוייקט"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Cursor"
@@ -15364,15 +15544,15 @@ msgid "Please select at least one audio track and one MIDI track."
 msgstr "נא לבחור לפחות רצועת אודיו אחת ורצועת MIDI אחת."
 
 #: src/menus/TrackMenus.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
 "secs."
-msgstr ""
+msgstr "היישור הושלם: MIDI מ-%.2f ל-%.2f שניות, אודיו מ-%.2f ל-%.2f שניות."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
-msgstr ""
+msgstr "סנכרן MIDI עם אודיו"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -15980,11 +16160,11 @@ msgstr "&פיצוי על זמן השהיה:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "No audio interfaces"
-msgstr ""
+msgstr "אין ממשקי אודיו"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "No devices found"
-msgstr ""
+msgstr "לא נמצאו התקנים"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "1 (Mono)"
@@ -16206,7 +16386,7 @@ msgstr "סידור אפקטים של זמן אמת:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
-msgstr ""
+msgstr "סט הוראות"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
@@ -16282,6 +16462,9 @@ msgid ""
 "what you are doing, it is recommended to trim spaces. Do you want Audacity "
 "to trim spaces for you?"
 msgstr ""
+"יש תווי רווח (רווחים, שורות חדשות, טאבים או מעברי שורה) באחד מהפריטים. הם "
+"צפויים לשבור את התאמת התבנית. אלא אם כן אתה יודע מה אתה עושה, מומלץ לקצץ "
+"רווחים. האם אתה רוצה שאדוסיטי יקצץ עבורך רווחים?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -16389,7 +16572,7 @@ msgstr "השתמש בסידור ב&כיוון משמאל לימין-בשפות �
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "לעולם אין להשתמש בפסיק כנקודה עשרונית"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -16397,7 +16580,7 @@ msgstr "&הצג עצות על ציר הזמן"
 
 #: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
 msgid "Show Scrub Ruler"
-msgstr "הצג &סרגל מיקום"
+msgstr "הצג &סרגל גרירה"
 
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
@@ -16478,11 +16661,11 @@ msgstr "העדפות:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
-msgstr ""
+msgstr "העדפות המקלדת אינן זמינות כרגע."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
-msgstr ""
+msgstr "פתח פרוייקט חדש כדי לשנות את קיצורי המקשים."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Hotkey:"
@@ -16556,11 +16739,12 @@ msgid ""
 "\n"
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
 msgstr ""
+"\n"
+"   *   \"%s\"  (מכיוון שקיצור הדרך '%s' משמש את \"%s\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr "שמכיל את קיצורי המקשים עבור התוכנה XML בחר קובץ..."
+msgstr "בחר קובץ XML המכיל קיצורי מקשים של אודסיטי..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -16632,6 +16816,16 @@ msgid ""
 "\n"
 "instead. Otherwise, click Cancel."
 msgstr ""
+"קיצור המקשים '%s' כבר הוקצה ל:\n"
+"\n"
+"%s\n"
+"\n"
+"\n"
+"לחץ על אישור כדי להקצות את קיצור הדרך אליו\n"
+"\n"
+"%s\n"
+"\n"
+"במקום זאת. אחרת, לחץ על ביטול."
 
 #: src/prefs/KeyConfigPrefs.h
 #, fuzzy
@@ -16657,7 +16851,7 @@ msgstr "העדפות עבור MidiIO"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "No MIDI interfaces"
-msgstr ""
+msgstr "אין ממשקי MIDI"
 
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
@@ -16679,7 +16873,7 @@ msgstr "זמן ההשהיה של הסינתיסייזר של MIDI צריך לה�
 
 #: src/prefs/MidiIOPrefs.h
 msgid "Midi IO"
-msgstr ""
+msgstr "קלט/פלט MIDI"
 
 #. i18n-hint: Modules are optional extensions to Audacity that add NEW features.
 #: src/prefs/ModulePrefs.cpp
@@ -16705,17 +16899,17 @@ msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-"  'שאל' פירושו שאודסיטי ישאל אם אתה רוצה לטעון את המודולים הללו בזמן ההפעלה."
+"  שאל - פירושו שאודסיטי ישאל אם אתה רוצה לטעון את המודולים הללו בזמן ההפעלה."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr "  'נכשל' פירושו שאודסיטי חושב שהמודול אינו תקין ומסרב להריצו."
+msgstr "  נכשל - פירושו שאודסיטי חושב שהמודול אינו תקין ומסרב להריצו."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid "  'New' means no choice has been made yet."
-msgstr "  'חדש' פירושו שעדיין לא נעשתה בחירה."
+msgstr "  חדש - פירושו שעדיין לא נעשתה בחירה."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
@@ -16734,9 +16928,8 @@ msgid "No modules were found"
 msgstr "לא נמצאו מודולים"
 
 #: src/prefs/ModulePrefs.h
-#, fuzzy
 msgid "Module"
-msgstr "מודולים"
+msgstr "מודול"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
@@ -16807,7 +17000,7 @@ msgstr "גלילת-גלגל"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Change scrub speed"
-msgstr "שנה מהירות מיקום"
+msgstr "שנה מהירות גרירה"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Zoom in on Point"
@@ -16989,7 +17182,7 @@ msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr ""
+msgstr "תמיד הגרירה לא מוצמדת"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -17105,9 +17298,8 @@ msgid "Automated Recording Level Adjustment"
 msgstr "כוונון רמת הקלטה אוטומטית"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Enable Automated Recording Level Adjustment."
-msgstr "%f כוונון עוצמת כניסה אוטומטי הפחית לעוצמה ברמה."
+msgstr "אפשר התאמת רמת הקלטה אוטומטית."
 
 #. i18n-hint: Desired maximum (peak) volume for sound
 #: src/prefs/RecordingPrefs.cpp
@@ -17120,15 +17312,15 @@ msgstr "בתוך:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Analysis Time:"
-msgstr ""
+msgstr "זמן ניתוח:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "milliseconds (time of one analysis)"
-msgstr ""
+msgstr "אלפיות שניות (זמן של ניתוח אחד)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Number of consecutive analysis:"
-msgstr ""
+msgstr "מספר ניתוחים עוקבים:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "0 means endless"
@@ -17206,15 +17398,15 @@ msgstr "(EAC) גובה צליל"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
-msgstr ""
+msgstr "התדר המרבי חייב להיות 100 הרץ ומעלה"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Minimum frequency must be at least 0 Hz"
-msgstr "0Hz התדר חייב להיות לפחות"
+msgstr "התדירות המינימלית חייבת להיות לפחות 0 הרץ"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Minimum frequency must be less than maximum frequency"
-msgstr ""
+msgstr "התדירות המינימלית חייבת להיות נמוכה מהתדירות המירבית"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "The range must be at least 1 dB"
@@ -17324,7 +17516,7 @@ msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Minimum Amplitude (dB):"
-msgstr "(dB) עוצמה מירבית:"
+msgstr "עוצמה מינימלית (דציבל):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Max. Number of Notes (1..128):"
@@ -17368,7 +17560,7 @@ msgstr "התוספת לתדר חייבת להיות מספר שלם"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The minimum amplitude (dB) must be an integer"
-msgstr ""
+msgstr "המשרעת המינימלית (דציבל) חייבת להיות מספר שלם"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The maximum number of notes must be an integer"
@@ -17412,6 +17604,8 @@ msgid ""
 "image, but is\n"
 "otherwise the same idea."
 msgstr ""
+"שמירה וטעינה של קבצי ערכת נושא בודדים עושה שימוש בקובץ נפרד עבור כל תמונה,\n"
+"אך חוץ מזה זהו אותו הרעיון."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
 #. * so keep it as is
@@ -17461,6 +17655,8 @@ msgid ""
 "Ask me each time.\n"
 "Show dialog each time audio is pasted."
 msgstr ""
+"שאל אותי כל פעם.\n"
+"הצג דו-שיח בכל פעם שאודיו מודבק."
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Select all audio, if selection required"
@@ -17909,7 +18105,7 @@ msgstr " פעיל "
 #: src/toolbars/MeterToolBar.cpp
 #, c-format
 msgid " Peak %2.f dB"
-msgstr ""
+msgstr " השיא %2.f דציבל"
 
 #: src/toolbars/MeterToolBar.cpp
 #, c-format
@@ -17968,7 +18164,7 @@ msgstr "מד הקל&טה"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Playback Meter Toolbar"
-msgstr "מד &שמע"
+msgstr "&מד שמע"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Mi&xer"
@@ -18048,7 +18244,7 @@ msgstr "התחל דילוג"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Hide Scrub Ruler"
-msgstr ""
+msgstr "הסתר סרגל גרירה"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that enables Scrub or Seek playback and Scrub Ruler
@@ -18111,7 +18307,7 @@ msgstr ""
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
 msgid "&Snapping Toolbar"
-msgstr "סרגל כלי &הצמדה"
+msgstr "סרגל כלי ה&צמדה"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18184,9 +18380,8 @@ msgid "Time"
 msgstr "זמן סיום"
 
 #: src/toolbars/TimeToolBar.cpp
-#, fuzzy
 msgid "Audio Position"
-msgstr "מיקום השמע"
+msgstr "מיקום האודיו"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
@@ -18277,7 +18472,7 @@ msgstr "השמעה-במהירות פעם אחת"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Pla&y-at-Speed Toolbar"
-msgstr "סרגל כלי &השמעה-במהירות"
+msgstr "סרגל כלי ה&שמעה-במהירות"
 
 #. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/toolbars/TranscriptionToolBar.cpp
@@ -18306,7 +18501,7 @@ msgstr "הא&ט מהירות השמעה"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr ""
+msgstr "גרור תווית. החזק את השיפט וגרור כדי להזיז את כל התוויות באותה הרצועה."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -18398,11 +18593,11 @@ msgstr "מידע על התקן &MIDI..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-#, fuzzy
 msgid ""
 "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
 "region."
-msgstr "להקטנה, גרור לקביעת גודל ההגדלה Shift בחר להגדלה אנכית, הוסף ..."
+msgstr ""
+"לחץ כדי להגדיל אנכית. לחץ יחד עם שיפט כדי להקטין. גרור כדי לציין אזור זום."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -18448,11 +18643,11 @@ msgstr "מתיחה"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
-msgstr ""
+msgstr "לחיצה ימנית כדי להרחיב, לחיצה ימנית כדי להסיר"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to merge clips"
-msgstr ""
+msgstr "לחיצה ימנית כדי למזג מקטעים"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Merged Clips"
@@ -18530,7 +18725,7 @@ msgstr "ס&פקטראלי"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "To&ggle Spectral Selection"
-msgstr "שנה מצב בחירה ספקטאלית"
+msgstr "&שנה מצב בחירה ספקטאלית"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Higher Peak Frequency"
@@ -18538,16 +18733,16 @@ msgstr "תדר השיא ה&גבוה הבא"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Lower Peak Frequency"
-msgstr "תדר השיא ה&הנמוך הבא"
+msgstr "תדר השיא ה&נמוך הבא"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, c-format
+#, fuzzy, c-format
 msgid "Moved by %.02f"
-msgstr ""
+msgstr "הועבר ב-%.02f"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 #, fuzzy
@@ -18561,12 +18756,11 @@ msgstr "חיתוך"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Click and drag to move clip boundary in time"
-msgstr "לחץ וגרור בכדי להזיז בזמן את גבול הקטע"
+msgstr "לחץ וגרור בכדי להזיז בזמן את גבול המקטע"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Set Wave Clip Name"
-msgstr "רצועה מספר"
+msgstr "קבע שם למקטע"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Click and drag to select text"
@@ -18807,14 +19001,14 @@ msgstr "%+.1f דציבל"
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%.0f%% Left"
-msgstr ""
+msgstr "שמאל %.0f%%"
 
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%.0f%% Right"
-msgstr ""
+msgstr "ימין %.0f%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid ""
@@ -18822,13 +19016,12 @@ msgid ""
 msgstr "לחץ וגרור בכדי לכוון גודל יחסי של רצועות סטריאו"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Click and drag to rearrange sub-views"
-msgstr "בחר וגרור בכדי להזיז את הרצועה בזמן"
+msgstr "לחץ וגרור כדי לסדר מחדש תצוגות משנה"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Rearrange sub-views"
-msgstr ""
+msgstr "סדר מחדש של תצוגות משנה"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Close sub-view"
@@ -18850,10 +19043,10 @@ msgstr "השתק/בטל השתקה של רצועה"
 #, c-format
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%s, %d מתוך %d מקטע"
+msgstr[1] "%s, %d מתוך %d מקטעים"
+msgstr[2] "%s, %d מתוך %d מקטעים"
+msgstr[3] "%s, %d מתוך %d מקטעים"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -18881,9 +19074,8 @@ msgid "Instrument %i"
 msgstr "כלי %i"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
-#, fuzzy
 msgid "WaveColor Change"
-msgstr "שינוי קצב"
+msgstr "שינוי צבע גל"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change lower speed limit (%) to:"
@@ -18970,6 +19162,8 @@ msgid ""
 "Drag clips to reposition them. Hold Shift and drag to move all clips on the "
 "same track."
 msgstr ""
+"גרור מקטעים כדי לשנות את מיקומם. החזק את השיפט וגרור כדי להזיז את כל המקטעים "
+"באותה הרצועה."
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -18989,7 +19183,7 @@ msgstr "ייצא שמע..."
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Erased selected area"
-msgstr ""
+msgstr "אזור נבחר מחוק"
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Selected area using Brush Tool"
@@ -19065,7 +19259,7 @@ msgstr "דילוג"
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
-msgstr "סרגל &גרירה"
+msgstr "&סרגל גרירה"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Playing at Speed"
@@ -19100,29 +19294,24 @@ msgid "Click and drag to move right selection boundary."
 msgstr "לחץ וגרור בכדי להזיז את קצה קטע הבחירה הימני."
 
 #: src/tracks/ui/SelectHandle.cpp
-#, fuzzy
 msgid "Click and drag to move bottom selection frequency."
-msgstr "בחר וגרור בכדי להזיז את קצה קטע הבחירה השמאלי."
+msgstr "לחץ וגרור כדי להזיז את תדירות הבחירה התחתונה."
 
 #: src/tracks/ui/SelectHandle.cpp
-#, fuzzy
 msgid "Click and drag to move top selection frequency."
-msgstr "בחר וגרור בכדי להזיז את קצה קטע הבחירה השמאלי."
+msgstr "לחץ וגרור כדי להעביר את תדירות הבחירה העליונה."
 
 #: src/tracks/ui/SelectHandle.cpp
-#, fuzzy
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr "בחר וגרור בכדי להזיז את קצה קטע הבחירה השמאלי."
+msgstr "לחץ וגרור כדי להעביר את תדר בחירת המרכז לשיא ספקטרלי."
 
 #: src/tracks/ui/SelectHandle.cpp
-#, fuzzy
 msgid "Click and drag to move center selection frequency."
-msgstr "בחר וגרור בכדי להזיז את קצה קטע הבחירה השמאלי."
+msgstr "לחץ וגרור כדי להזיז את תדירות הבחירה במרכז."
 
 #: src/tracks/ui/SelectHandle.cpp
-#, fuzzy
 msgid "Click and drag to adjust frequency bandwidth."
-msgstr "בחר וגרור בכדי לבחור שמע"
+msgstr "לחץ וגרור כדי להתאים את רוחב הפס של התדר."
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
@@ -19131,14 +19320,13 @@ msgstr "עריכה, העדפות..."
 
 #. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac
 #: src/tracks/ui/SelectHandle.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-msgstr "Multi-Tool Mode: Cmd-, for Mouse and Keyboard Preferences"
+msgstr "מצב ריבוי כלים: %s עבור העדפות עכבר ומקלדת."
 
 #: src/tracks/ui/SelectHandle.cpp
-#, fuzzy
 msgid "Click and drag to set frequency bandwidth."
-msgstr "בחר וגרור בכדי לבחור שמע"
+msgstr "לחץ וגרור כדי להגדיר את רוחב הפס של התדר."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to select audio"
@@ -19295,7 +19483,7 @@ msgstr "שגיאה בהורדת עדכון"
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
+msgstr "אין אפשרות לפתוח את הקישור להורדת אודסיטי."
 
 #: src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19338,7 +19526,7 @@ msgstr "אפשר לכבות את האפשרות לחיפוש עדכונים בכ
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr ""
+msgstr "עדכונים"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -19353,7 +19541,7 @@ msgstr "&דלג"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr ""
+msgstr "&התקן עדכון"
 
 #. i18n-hint Substitution of version number for %s.
 #: src/update/UpdatePopupDialog.cpp
@@ -19370,7 +19558,7 @@ msgstr "יומן שינויים"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr ""
+msgstr "קרא עוד ב-GitHub"
 
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
@@ -19461,7 +19649,7 @@ msgstr "ריק"
 
 #: src/widgets/KeyView.cpp
 msgid "Menu"
-msgstr ""
+msgstr "תפריט"
 
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/widgets/MeterPanel.cpp
@@ -19574,7 +19762,7 @@ msgstr "לא ניתן לכתוב קבצים בתיקיה: %s."
 msgid ""
 "Please check that the directory exists, has the necessary permissions, and "
 "the drive isn't full."
-msgstr ""
+msgstr "יש לבדוק שהספרייה קיימת, בעלת ההרשאות הנדרשות ושהכונן אינו מלא."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -19597,7 +19785,7 @@ msgstr ""
 
 #: src/widgets/numformatter.cpp
 msgid "Infinity"
-msgstr ""
+msgstr "אינסוף"
 
 #: src/widgets/numformatter.cpp
 msgid "-Infinity"
@@ -19613,7 +19801,7 @@ msgstr "ערך ריק"
 
 #: src/widgets/valnum.cpp
 msgid "Malformed number"
-msgstr ""
+msgstr "מספר שגוי"
 
 #: src/widgets/valnum.cpp
 #, c-format
@@ -19621,8 +19809,9 @@ msgid "Not in range %d to %d"
 msgstr "ערך אינו בתחום של %d-%d"
 
 #: src/widgets/valnum.cpp
+#, fuzzy
 msgid "Value overflow"
-msgstr ""
+msgstr "גלישת ערך"
 
 #: src/widgets/valnum.cpp
 msgid "Too many decimal digits"
@@ -19713,6 +19902,9 @@ msgid ""
 "                       frequencies are both ~a Hz).~%~\n"
 "                       Please select a frequency range."
 msgstr ""
+"~aרוחב הפס הוא אפס (העליון והתחתון~%~\n"
+"                       שני התדרים הם ~a הרץ).~%~\n"
+"                       אנא בחר טווח תדרים."
 
 #: plug-ins/SpectralEditMulti.ny
 #, lisp-format
@@ -19721,6 +19913,9 @@ msgid ""
 "                      Try increasing the low frequency bound~%~\n"
 "                      or reduce the filter 'Width'."
 msgstr ""
+"~aלא ניתן להחיל פרמטרים של מסנן Notch.~%~\n"
+"                      יש לנסות להגדיל את גבולות התדר הנמוך~%~\n"
+"                      או להקטין את 'רוחב' המסנן."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
@@ -19759,6 +19954,9 @@ msgid ""
 "cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
+"~aבחירת התדר גבוהה מדי לקצב דגימת הרצועה.~%~\n"
+"                        עבור הרצועה הנוכחית, הגדרת התדר הגבוה לא יכולה~%~\n"
+"                        להיות גדולה יותר מ~a הרץ"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
 #, lisp-format
@@ -19767,6 +19965,9 @@ msgid ""
 "                         frequencies are both ~a Hz).~%~\n"
 "                         Please select a frequency range."
 msgstr ""
+"~aרוחב הפס הוא אפס (העליון והתחתון~%~\n"
+"                         שני התדרים הם ~a הרץ).~%~\n"
+"                         אנא בחר טווח תדרים."
 
 #: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Shelves"
@@ -19918,6 +20119,9 @@ msgid ""
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
 "                                 -6 dB halves the amplitude."
 msgstr ""
+"ערכי ~a דציבל אינם יכולים להיות יותר מ-100+ דציבל.~%~%~\n"
+"                                 רמז: 6 דציבל מכפיל את המשרעת~%~\n"
+"                                 -6 דציבל מפחית בחצי את המשרעת."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -19950,12 +20154,12 @@ msgstr "התפוגגות הדרגתית מוצלבת למקטעים"
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr ""
+msgstr "שגיאה.~%בחירה לא חוקית.~%נבחרו יותר מ-2 קטעי אודיו."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr ""
+msgstr "שגיאה.~%בחירה לא חוקית.~%קטע ריק בתחילת/סוף הבחירה."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -20048,10 +20252,8 @@ msgid "Low-quality Pitch Shift"
 msgstr "שנוי הצליל בקצב קבוע"
 
 #: plug-ins/delay.ny
-#, fuzzy
-#| msgid "Low-quality Pitch Shift"
 msgid "High-quality Pitch Shift"
-msgstr "שנוי הצליל בקצב קבוע"
+msgstr "שנוי הצליל באיכות גבוהה"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
@@ -20202,7 +20404,7 @@ msgstr "אזהרות בלבד"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Error: There is insufficient space to create labels.~%"
-msgstr ""
+msgstr "שגיאה: אין מספיק מקום ליצירת תוויות.~%"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
@@ -20273,6 +20475,9 @@ msgid ""
 "                   Track sample rate is ~a Hz~%~\n"
 "                   Frequency must be less than ~a Hz."
 msgstr ""
+"שגיאה:~%~%תדירות (~a הרץ) גבוהה מדי עבור קצב דגימת הרצועה.~%~%~\n"
+"                   קצב דגימת הרצועה הוא ~a הרץ~%~\n"
+"                   התדר חייב להיות קטן מ~a הרץ."
 
 #. i18n-hint: Name of effect that labels sounds
 #: plug-ins/label-sounds.ny
@@ -20481,6 +20686,10 @@ msgid ""
 "is too high for selected track.\n"
 "Set the control below ~a kHz."
 msgstr ""
+"שגיאה.\n"
+"\"תדרי שער מעל: ~s קילו הרץ\"\n"
+"גבוה מדי עבור הרצועה שנבחרה.\n"
+"הגדר את הבקר מתחת ל-~a קילוהרץ."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -20489,6 +20698,9 @@ msgid ""
 "Selection too long.\n"
 "Maximum length is ~a."
 msgstr ""
+"שגיאה.\n"
+"הבחירה ארוכה מדי.\n"
+"האורך המרבי הוא ~a."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -20497,6 +20709,9 @@ msgid ""
 "Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
+"שגיאה.\n"
+"לא נבחר מספיק אודיו.\n"
+"הפוך את הבחירה ליותר מ-~a מילישניות."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -20533,6 +20748,9 @@ msgid ""
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
+"שגיאה:~%~%תדירות (~a הרץ) גבוהה מדי עבור קצב דגימת הרצועה.~%~%~\n"
+"                 קצב דגימת הרצועה הוא ~a הרץ~%~\n"
+"                 התדר חייב להיות קטן מ~a הרץ."
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Nyquist Plugin Installer"
@@ -20582,14 +20800,14 @@ msgid "Success.~%Files written to:~%~s~%"
 msgstr "בוצע בהצלחה.~%הקבצים נכתבו אל:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "'%s' לא ניתן למחוק את."
+msgstr "אזהרה.~%העתקת חלק מהקבצים נכשלה:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr ""
+msgstr "תוספים מותקנים.~%(השתמש במנהל התוספים כדי להפעיל אפקטים):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20601,7 +20819,7 @@ msgstr "הקבצים הועתקו לתיקיית התוספים:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Not found or cannot be read:"
-msgstr ""
+msgstr "לא נמצא או לא ניתן לקריאה:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Unsupported file type:"
@@ -20618,7 +20836,7 @@ msgstr ""
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%No file selected."
-msgstr ""
+msgstr "שגיאה.~%לא נבחר קובץ."
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
@@ -20843,7 +21061,7 @@ msgstr "הכל"
 
 #: plug-ins/sample-data-export.ny
 msgid "Optional header text"
-msgstr "כותרת אופציונלית"
+msgstr "כותרת רשות"
 
 #: plug-ins/sample-data-export.ny
 msgid "Channel layout for stereo"
@@ -20947,7 +21165,7 @@ msgstr "~a שניות."
 
 #: plug-ins/sample-data-export.ny
 msgid "Audio data analysis:"
-msgstr ""
+msgstr "ניתוח מידע האודיו:"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20988,9 +21206,8 @@ msgid "sample data"
 msgstr "עריכת דגימה"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Sample #"
-msgstr "דגימות"
+msgstr "דגימה #"
 
 #: plug-ins/sample-data-export.ny
 msgid "Value (linear)"
@@ -21002,7 +21219,7 @@ msgstr "ערך (דציבל)"
 
 #: plug-ins/sample-data-export.ny
 msgid "audio sample value analysis"
-msgstr ""
+msgstr "ניתוח ערך דגימת אודיו"
 
 #: plug-ins/sample-data-export.ny
 msgid "Left (linear)"
@@ -21043,12 +21260,12 @@ msgstr "ערוץ 1 (מונו)"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "One column per channel.~%"
-msgstr ""
+msgstr "עמודה אחת לכל ערוץ.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "One row per channel.~%"
-msgstr ""
+msgstr "שורה אחת לכל ערוץ.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21101,6 +21318,9 @@ msgid ""
 "                        '~a' could not be opened.~%~\n"
 "                        Check that file exists."
 msgstr ""
+"שגיאה~%~\n"
+"                        לא ניתן היה לפתוח את '~a'.~%~\n"
+"                        יש לבדוק שהקובץ קיים."
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -21109,6 +21329,9 @@ msgid ""
 "              The file must contain only plain ASCII text.~%~\n"
 "              (Invalid byte '~a' at byte number: ~a)"
 msgstr ""
+"שגיאה:~%~\n"
+"              הקובץ חייב להכיל רק טקסט ASCII רגיל.~%~\n"
+"              (ביית לא חוקי '~a' ביית מספר: ~a)"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -21117,11 +21340,14 @@ msgid ""
 "              Data must be numbers in plain ASCII text.~%~\n"
 "              '~a' is not a numeric value."
 msgstr ""
+"שגיאה~%~\n"
+"              הנתונים חייבים להכיל מספרים בטקסט ASCII פשוט.~%~\n"
+"              '~a' אינו ערך מספרי."
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Unable to open file"
-msgstr "לא יכול לפתןח קובץ סגנון."
+msgstr "שגיאה.~%לא ניתן לפתוח את הקובץ"
 
 #: plug-ins/spectral-delete.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Delete"
@@ -21130,7 +21356,7 @@ msgstr "מחיקה ספקטראלית"
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr ""
+msgstr "שגיאה.~%קצב דגימה של רצועה הנמוך מ-100 הרץ אינו נתמך."
 
 #: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
