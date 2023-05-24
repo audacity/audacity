@@ -251,8 +251,7 @@ void WaveformVZoomHandle::DoZoom(
    }
 
    // Now actually apply the zoom.
-   for (auto channel : TrackList::Channels(pTrack))
-      WaveformScale::Get(*channel).SetDisplayBounds(min, max);
+   WaveformScale::Get(*pTrack).SetDisplayBounds(min, max);
 
    zoomEnd = zoomStart = 0;
    if( pProject )
@@ -332,9 +331,7 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
       )));
 
    if (WaveformSettings::Get(*wt).scaleType != newScaleType) {
-      for (auto channel : TrackList::Channels(wt)) {
-         WaveformSettings::Get(*channel).scaleType = newScaleType;
-      }
+      WaveformSettings::Get(*wt).scaleType = newScaleType;
 
       AudacityProject *const project = &mpData->project;
       ProjectHistory::Get( *project ).ModifyState(true);

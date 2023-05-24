@@ -58,7 +58,7 @@ const RealtimeEffectList &RealtimeEffectList::Get(const AudacityProject &project
 }
 
 static const Track::ChannelGroupAttachments::RegisteredFactory trackEffects
-{
+{ 
    [](Track::ChannelGroupData &)
    {
       return std::make_unique<RealtimeEffectList>();

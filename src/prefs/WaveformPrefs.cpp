@@ -166,13 +166,11 @@ bool WaveformPrefs::Commit()
    WaveformSettings::Globals::Get().SavePrefs();
 
    if (mWt) {
-      for (auto channel : TrackList::Channels(mWt)) {
-         if (mDefaulted)
-            WaveformSettings::Set(*channel, {});
-         else {
-            auto &settings = WaveformSettings::Get(*channel);
-            settings = mTempSettings;
-         }
+      if (mDefaulted)
+         WaveformSettings::Set(*mWt, {});
+      else {
+         auto &settings = WaveformSettings::Get(*mWt);
+         settings = mTempSettings;
       }
    }
 
@@ -186,9 +184,7 @@ bool WaveformPrefs::Commit()
    mTempSettings.ConvertToEnumeratedDBRange();
 
    if (mWt && isOpenPage) {
-      for (auto channel : TrackList::Channels(mWt))
-         WaveTrackView::Get( *channel )
-            .SetDisplay( WaveTrackViewConstants::Waveform );
+      WaveTrackView::Get(*mWt).SetDisplay(WaveTrackViewConstants::Waveform);
    }
 
    if (isOpenPage) {

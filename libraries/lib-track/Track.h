@@ -185,8 +185,10 @@ public:
 
    // Structure describing data common to channels of a group of tracks
    // Should be deep-copyable (think twice before adding shared pointers!)
-   struct ChannelGroupData : ChannelGroupAttachments {
+   struct TRACK_API ChannelGroupData : ChannelGroupAttachments {
+      wxString mName;
       LinkType mLinkType{ LinkType::None };
+      bool mSelected{ false };
    };
 
 private:
@@ -204,10 +206,6 @@ private:
    /*! mNode's pointer to std::list might not be this TrackList, if it's a pending update track */
    TrackNodePointer mNode{};
    int            mIndex; //!< 0-based position of this track in its TrackList
-   wxString       mName;
-
- private:
-   bool           mSelected;
 
  public:
 
@@ -396,15 +394,12 @@ private:
    // public nonvirtual duplication function that invokes Clone():
    virtual Holder Duplicate() const;
 
-   // Called when this track is merged to stereo with another, and should
-   // take on some parameters of its partner.
-   virtual void Merge(const Track &orig);
-
-   wxString GetName() const { return mName; }
+   //! Name is always the same for all channels of a group
+   const wxString &GetName() const;
    void SetName( const wxString &n );
 
-   bool GetSelected() const { return mSelected; }
-
+   //! Selectedness is always the same for all channels of a group
+   bool GetSelected() const;
    virtual void SetSelected(bool s);
 
    // The argument tells whether the last undo history state should be
@@ -418,9 +413,6 @@ public:
 
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
-
-   virtual void SetPan( float ){ ;}
-   virtual void SetPanFromChannelType(){ ;};
 
    // Create a NEW track and modify this track
    // Return non-NULL or else throw
@@ -811,7 +803,7 @@ public:
    // Send a notification to subscribers when state of the track changes
    // To do: define values for the argument to distinguish different parts
    // of the state
-   void Notify( int code = -1 );
+   void Notify(bool allChannels, int code = -1);
 
    // An always-true predicate useful for defining iterators
    bool Any() const;
@@ -833,66 +825,6 @@ public:
 };
 
 ENUMERATE_TRACK_TYPE(Track);
-
-//! Track subclass holding data representing sound (as notes, or samples, or ...)
-class TRACK_API AudioTrack /* not final */ : public Track
-{
-public:
-   AudioTrack();
-   AudioTrack(const Track &orig, ProtectedCreationArg &&a);
-
-   static const TypeInfo &ClassTypeInfo();
-
-   // Serialize, not with tags of its own, but as attributes within a tag.
-   void WriteXMLAttributes(XMLWriter &WXUNUSED(xmlFile)) const {}
-
-   // Return true iff the attribute is recognized.
-   bool HandleXMLAttribute(const std::string_view & /*attr*/, const XMLAttributeValueView &/*value*/)
-   { return false; }
-};
-
-ENUMERATE_TRACK_TYPE(AudioTrack);
-
-//! AudioTrack subclass that can also be audibly replayed by the program
-class TRACK_API PlayableTrack /* not final */ : public AudioTrack
-{
-public:
-   PlayableTrack();
-   PlayableTrack(const PlayableTrack &orig, ProtectedCreationArg&&);
-
-   static const TypeInfo &ClassTypeInfo();
-
-   bool GetMute    () const { return DoGetMute();     }
-   bool GetSolo    () const { return DoGetSolo();     }
-   bool GetNotMute () const { return !DoGetMute();     }
-   bool GetNotSolo () const { return !DoGetSolo();     }
-   void SetMute    (bool m);
-   void SetSolo    (bool s);
-
-   void Init( const PlayableTrack &init );
-   void Merge( const Track &init ) override;
-
-   // Serialize, not with tags of its own, but as attributes within a tag.
-   void WriteXMLAttributes(XMLWriter &xmlFile) const;
-
-   // Return true iff the attribute is recognized.
-   bool HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value);
-
-protected:
-   // These just abbreviate load and store with relaxed memory ordering
-   bool DoGetMute() const;
-   void DoSetMute(bool value);
-   bool DoGetSolo() const;
-   void DoSetSolo(bool value);
-
-   //! Atomic because it may be read by worker threads in playback
-   std::atomic<bool>  mMute { false };
-   //! Atomic because it may be read by worker threads in playback
-   std::atomic<bool>  mSolo { false };
-};
-
-ENUMERATE_TRACK_TYPE(PlayableTrack);
-
 
 //! Encapsulate the checked down-casting of track pointers
 /*! Eliminates possibility of error -- and not quietly casting away const
@@ -1488,6 +1420,12 @@ public:
       return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
    }
 
+   //! Count channels of a track
+   static size_t NChannels(const Track &track)
+   {
+      return Channels(&track).size();
+   }
+
    //! If the given track is one of a pair of channels, swap them
    /*! @return success */
    static bool SwapChannels(Track &track);
@@ -1650,9 +1588,10 @@ private:
 
    void RecalcPositions(TrackNodePointer node);
    void QueueEvent(TrackListEvent event);
-   void SelectionEvent( const std::shared_ptr<Track> &pTrack );
+   void SelectionEvent(Track &track);
    void PermutationEvent(TrackNodePointer node);
-   void DataEvent( const std::shared_ptr<Track> &pTrack, int code );
+   void DataEvent(
+      const std::shared_ptr<Track> &pTrack, bool allChannels, int code );
    void EnsureVisibleEvent(
       const std::shared_ptr<Track> &pTrack, bool modifyState );
    void DeletionEvent(std::weak_ptr<Track> node, bool duringReplace);

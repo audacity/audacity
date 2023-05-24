@@ -53,6 +53,55 @@ constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
+namespace {
+struct PlacementArray : ClientData::Cloneable<> {
+   static PlacementArray &Get(Track &track);
+   static const PlacementArray &Get(const Track &track);
+   ~PlacementArray() = default;
+   std::unique_ptr<Cloneable<>> Clone() const {
+      return std::make_unique<PlacementArray>(*this); }
+   WaveTrackSubViewPlacements mPlacements;
+   bool mMultiView{ false };
+};
+
+static const Track::ChannelGroupAttachments::RegisteredFactory
+key { [](auto &) { return std::make_unique<PlacementArray>(); } };
+
+// Access for per-track effect list
+PlacementArray &PlacementArray::Get(Track &track)
+{
+   return track.GetGroupData().Track::ChannelGroupAttachments
+      ::Get<PlacementArray>(key);
+}
+
+const PlacementArray &PlacementArray::Get(const Track &track)
+{
+   return Get(const_cast<Track &>(track));
+}
+}
+
+WaveTrackSubViewPlacements &WaveTrackView::DoGetPlacements()
+{
+   auto &waveTrack = *std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+   return PlacementArray::Get(waveTrack).mPlacements;
+}
+
+const WaveTrackSubViewPlacements &WaveTrackView::DoGetPlacements() const
+{
+   return const_cast<WaveTrackView&>(*this).DoGetPlacements();
+}
+
+bool &WaveTrackView::DoGetMultiView()
+{
+   auto &waveTrack = *std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+   return PlacementArray::Get(waveTrack).mMultiView;
+}
+
+bool WaveTrackView::DoGetMultiView() const
+{
+   return const_cast<WaveTrackView&>(*this).DoGetMultiView();
+}
+
 // Structure that collects and modifies information on sub-view positions
 // Written with great generality, allowing any number of sub-views
 struct SubViewAdjuster
@@ -201,9 +250,8 @@ struct SubViewAdjuster
       auto pView = mwView.lock();
       if ( pView ) {
          auto pTrack = static_cast< WaveTrack* >( pView->FindTrack().get() );
-         for ( auto pChannel : TrackList::Channels<WaveTrack>( pTrack ) )
-            WaveTrackView::Get( *pChannel ).RestorePlacements(
-               rollback ? mOrigPlacements : mNewPlacements );
+         WaveTrackView::Get(*pTrack).RestorePlacements(
+            rollback ? mOrigPlacements : mNewPlacements);
       }
    }
 
@@ -690,7 +738,6 @@ private:
    size_t mMySubView{};
 };
 
-
 std::pair<
    bool, // if true, hit-testing is finished
    std::vector<UIHandlePtr>
@@ -900,7 +947,7 @@ void WaveTrackView::CopyTo( Track &track ) const
    if ( const auto pOther = dynamic_cast< WaveTrackView* >( &other ) ) {
       // only these fields are important to preserve in undo/redo history
       pOther->RestorePlacements( SavePlacements() );
-      pOther->mMultiView = mMultiView;
+      pOther->DoGetMultiView() = DoGetMultiView();
 
       auto srcSubViewsPtrs  = const_cast<WaveTrackView*>( this )->GetAllSubViews();
       auto destSubViewsPtrs  = const_cast<WaveTrackView*>( pOther )->GetAllSubViews();
@@ -978,8 +1025,9 @@ auto WaveTrackView::GetDisplays() const
    using Pair = std::pair< int, WaveTrackSubView::Type >;
    std::vector< Pair > pairs;
    size_t ii = 0;
+   const auto &placements = DoGetPlacements();
    WaveTrackSubViews::ForEach( [&]( const WaveTrackSubView &subView ){
-      auto &placement = mPlacements[ii];
+      auto &placement = placements[ii];
       if ( placement.fraction > 0 )
          pairs.emplace_back( placement.index, subView.SubViewType() );
       ++ii;
@@ -1009,7 +1057,8 @@ bool WaveTrackView::ToggleSubView(Display display)
       ++ii;
       return false;
    } ) ) {
-      auto &foundPlacement = mPlacements[found];
+      auto &placements = DoGetPlacements();
+      auto &foundPlacement = placements[found];
       if ( foundPlacement.fraction > 0.0 ) {
          // Toggle off
 
@@ -1020,7 +1069,7 @@ bool WaveTrackView::ToggleSubView(Display display)
          auto index = foundPlacement.index;
          foundPlacement = { -1, 0.0 };
          if (index >= 0) {
-            for ( auto &placement : mPlacements ) {
+            for ( auto &placement : placements ) {
                if ( placement.index > index )
                   --placement.index;
             }
@@ -1033,7 +1082,7 @@ bool WaveTrackView::ToggleSubView(Display display)
          float total = 0;
          int greatest = -1;
          unsigned nn = 0;
-         for ( const auto &placement : mPlacements ) {
+         for ( const auto &placement : placements ) {
             if ( placement.fraction > 0.0 && placement.index >= 0 ) {
                total += placement.fraction;
                greatest = std::max( greatest, placement.index );
@@ -1068,8 +1117,9 @@ void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
    std::sort( pairs.begin(), pairs.end() );
 
    int jj = 1;
+   auto &placements = DoGetPlacements();
    for ( const auto &pair : pairs ) {
-      auto &placement = mPlacements[ pair.second ];
+      auto &placement = placements[ pair.second ];
       if (pair.first == display) {
          // 0 for first view
          placement = { 0, 1.0 };
@@ -1167,8 +1217,9 @@ auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
    std::vector< Item > items;
    size_t ii = 0;
    float total = 0;
+   const auto &placements = DoGetPlacements();
    WaveTrackSubViews::ForEach([&](WaveTrackSubView& subView) {
-      auto& placement = mPlacements[ii];
+      auto& placement = placements[ii];
       auto index = placement.index;
       auto fraction = placement.fraction;
       if (index >= 0 && fraction > 0.0)
@@ -1690,8 +1741,9 @@ void WaveTrackView::BuildSubViews() const
          subView.DoSetMinimized( minimized );
       } );
 
-      if ( pThis->mPlacements.empty() ) {
-         pThis->mPlacements.resize( WaveTrackSubViews::size() );
+      auto &placements = pThis->DoGetPlacements();
+      if (placements.empty()) {
+         placements.resize( WaveTrackSubViews::size() );
          
          auto pTrack = pThis->FindTrack();
          auto display = TracksPrefs::ViewModeChoice();

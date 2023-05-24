@@ -926,7 +926,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
 
    /* Remember which tracks were selected, and set them to deselected */
    SelectionStateChanger changer{ mSelectionState, *mTracks };
-   for (auto tr : mTracks->Selected<WaveTrack>())
+   for (auto tr : mTracks->SelectedLeaders<WaveTrack>())
       tr->SetSelected(false);
 
    bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
@@ -1033,9 +1033,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
 
       /* Select the track */
       SelectionStateChanger changer2{ mSelectionState, *mTracks };
-      const auto range = TrackList::Channels(tr);
-      for (auto channel : range)
-         channel->SetSelected(true);
+      tr->SetSelected(true);
 
       // Export the data. "channels" are per track.
       ok = DoExport(pDialog,

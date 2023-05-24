@@ -168,7 +168,7 @@ struct AudioIoCallback::TransportState {
                wxASSERT(false);
                continue;
             }
-            unsigned chanCnt = TrackList::Channels(vt).size();
+            unsigned chanCnt = TrackList::NChannels(*vt);
             i += chanCnt; // Visit leaders only
             mpRealtimeInitialization
                ->AddTrack(*vt, numPlaybackChannels, sampleRate);
@@ -1981,7 +1981,7 @@ bool AudioIO::ProcessPlaybackSlices(
                produced = mixer->Process( toProduce );
             //wxASSERT(produced <= toProduce);
             for(size_t j = 0, nChannels =
-               TrackList::Channels(mPlaybackTracks[i].get()).size();
+               TrackList::NChannels(*mPlaybackTracks[i]);
                j < nChannels; ++i, ++j
             ) {
                auto warpedSamples = mixer->GetBuffer(j);
@@ -2028,7 +2028,7 @@ void AudioIO::TransformPlayBuffers(
          continue;
       // vt is mono, or is the first of its group of channels
       const auto nChannels = std::min<size_t>(
-         mNumPlaybackChannels, TrackList::Channels(vt).size());
+         mNumPlaybackChannels, TrackList::NChannels(*vt));
 
       // Loop over the blocks of unflushed data, at most two
       for (unsigned iBlock : {0, 1}) {

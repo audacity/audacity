@@ -251,8 +251,7 @@ void SpectrumVZoomHandle::DoZoom(
    }
 
    // Now actually apply the zoom.
-   for (auto channel : TrackList::Channels(pTrack))
-      SpectrogramBounds::Get(*channel).SetBounds(min, max);
+   SpectrogramBounds::Get(*pTrack).SetBounds(min, max);
 
    zoomEnd = zoomStart = 0;
    if( pProject )
@@ -323,8 +322,7 @@ void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
                evt.GetId() - OnFirstSpectrumScaleID
       )));
    if (SpectrogramSettings::Get(*wt).scaleType != newScaleType) {
-      for (auto channel : TrackList::Channels(wt))
-         SpectrogramSettings::Own(*channel).scaleType = newScaleType;
+      SpectrogramSettings::Own(*wt).scaleType = newScaleType;
 
       ProjectHistory::Get( mpData->project ).ModifyState(true);
 

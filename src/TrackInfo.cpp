@@ -34,27 +34,23 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "AllThemeResources.h"
+#include "PlayableTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "SyncLock.h"
 #include "Theme.h"
-#include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
-#include "prefs/TracksBehaviorsPrefs.h"
 #include "tracks/ui/TrackView.h"
 
 // Subscribe to preference changes to update static variables
 struct Settings : PrefsListener {
-   wxString gSoloPref;
    wxFont gFont;
 
    bool mInitialized{ false };
 
    void UpdatePrefs() override
    {
-      gSoloPref = TracksBehaviorsSolo.Read();
-
       // Calculation of best font size depends on language, so it should be redone in case
       // the language preference changed.
 
@@ -94,7 +90,7 @@ static Settings &settings()
 
 bool TrackInfo::HasSoloButton()
 {
-   return settings().gSoloPref != wxT("None");
+   return TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone;
 }
 
 #define RANGE(array) (array), (array) + sizeof(array)/sizeof(*(array))

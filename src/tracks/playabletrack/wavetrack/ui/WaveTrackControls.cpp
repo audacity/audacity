@@ -547,7 +547,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    []( PopupMenuHandler &handler ) -> bool {
       auto &track =
          static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
-      return 1 == TrackList::Channels( &track ).size();
+      return 1 == TrackList::NChannels(track);
    };
 
    static const auto isUnsafe =
@@ -667,7 +667,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                auto next = * ++ tracks.Find(&track);
                canMakeStereo =
                   (next &&
-                   TrackList::Channels(next).size() == 1 &&
+                   TrackList::NChannels(*next) == 1 &&
                    track_cast<WaveTrack*>(next));
             }
             menu.Enable( id, canMakeStereo );
@@ -680,7 +680,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
             auto &track =
                static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
             bool isStereo =
-               2 == TrackList::Channels( &track ).size();
+               2 == TrackList::NChannels(track);
             menu.Enable( id, isStereo && !isUnsafe( handler ) );
          }
       );
@@ -713,20 +713,17 @@ END_POPUP_MENU()
 void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 {
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   const auto &view = WaveTrackView::Get( *pTrack );
+   auto &view = WaveTrackView::Get(*pTrack);
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
       ? WaveTrackViewConstants::Waveform : displays.begin()->id;
-   for (const auto channel : TrackList::Channels(pTrack)) {
-      auto &channelView = WaveTrackView::Get( *channel );
-      channelView.SetMultiView( multi );
+   view.SetMultiView(multi);
 
-      // Whichever sub-view was on top stays on top
-      // If going into Multi-view, it will be 1/nth the height.
-      // If exiting multi-view, it will be full height.
-      channelView.SetDisplay(display, !multi);
-   }
+   // Whichever sub-view was on top stays on top
+   // If going into Multi-view, it will be 1/nth the height.
+   // If exiting multi-view, it will be full height.
+   view.SetDisplay(display, !multi);
 }
 
 ///  Set the Display mode based on the menu choice in the Track Menu.
@@ -739,28 +736,23 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
 
    auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
-   auto &view = WaveTrackView::Get( *pTrack );
-   if ( view.GetMultiView() ) {
-      for (auto channel : TrackList::Channels(pTrack)) {
-         if ( !WaveTrackView::Get( *channel )
-               .ToggleSubView( WaveTrackView::Display{ id } ) ) {
-            // Trying to toggle off the last sub-view.  It was refused.
-            // Decide what to do here.  Turn off multi-view instead?
-            // PRL:  I don't agree that it makes sense
-         }
-         else
-            ProjectHistory::Get( mpData->project ).ModifyState(true);
+   auto &view = WaveTrackView::Get(*pTrack);
+   if (view.GetMultiView()) {
+      if (!WaveTrackView::Get(*pTrack)
+            .ToggleSubView(WaveTrackView::Display{ id } )) {
+         // Trying to toggle off the last sub-view.  It was refused.
+         // Decide what to do here.  Turn off multi-view instead?
+         // PRL:  I don't agree that it makes sense
       }
+      else
+         ProjectHistory::Get(mpData->project).ModifyState(true);
    }
    else {
       const auto displays = view.GetDisplays();
       const bool wrongType =
          !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
-         for (auto channel : TrackList::Channels(pTrack)) {
-            WaveTrackView::Get( *channel )
-               .SetDisplay( WaveTrackView::Display{ id } );
-         }
+         WaveTrackView::Get(*pTrack).SetDisplay(WaveTrackView::Display{ id });
 
          AudacityProject *const project = &mpData->project;
          ProjectHistory::Get( *project ).ModifyState(true);
@@ -828,7 +820,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partner->Merge(*pTrack);
 
    pTrack->SetPan( 0.0f );
-   partner->SetPan( 0.0f );
 
    // Set NEW track heights and minimized state
    auto
@@ -841,9 +832,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partnerView.SetExpandedHeight(AverageHeight);
    view.SetMinimized(bBothMinimizedp);
    partnerView.SetMinimized(bBothMinimizedp);
-
-   partnerView.RestorePlacements( view.SavePlacements() );
-   partnerView.SetMultiView( view.GetMultiView() );
 
    ProjectHistory::Get( *project ).PushState(
       /* i18n-hint: The string names a track */
@@ -862,11 +850,12 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    AudacityProject *const project = &mpData->project;
    auto channels = TrackList::Channels( pTrack );
 
+   // Unlink to make pan values independent, before changing them
+   TrackList::Get( *project ).UnlinkChannels( *pTrack );
+
    int totalHeight = 0;
    int nChannels = 0;
    for (auto channel : channels) {
-      // Keep original stereo track name.
-      channel->SetName(pTrack->GetName());
       auto &view = TrackView::Get( *channel );
       if (stereo)
          channel->SetPanFromChannelType();
@@ -878,7 +867,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       ++nChannels;
    }
 
-   TrackList::Get( *project ).UnlinkChannels( *pTrack );
    int averageHeight = totalHeight / nChannels;
 
    for (auto channel : channels)
@@ -1040,7 +1028,7 @@ void Status1DrawFunction
    /// stereo and what sample rate it's using.
    auto rate = wt ? wt->GetRate() : 44100.0;
    TranslatableString s;
-   if (!pTrack || TrackList::Channels(pTrack).size() > 1)
+   if (!pTrack || TrackList::NChannels(*pTrack) > 1)
       // TODO: more-than-two-channels-message
       // more appropriate strings
       s = XO("Stereo, %dHz");

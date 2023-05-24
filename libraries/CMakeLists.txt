@@ -51,6 +51,7 @@ set( LIBRARIES
    lib-lv2
    lib-ladspa
    lib-audio-unit
+   lib-playable-track
 )
 
 if ( ${_OPT}has_networking )

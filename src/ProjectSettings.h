@@ -85,9 +85,6 @@ public:
    void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
    bool IsOvertones() const { return mbOvertones; }
 
-   bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
-   bool IsSoloNone() const { return mSoloPref == wxT("None"); }
-
    bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
 
    bool GetShowSplashScreen() const { return mShowSplashScreen; }
@@ -96,8 +93,6 @@ private:
    void UpdatePrefs() override;
 
    AudacityProject &mProject;
-
-   wxString mSoloPref;
 
    int mCurrentTool;
    int mCurrentBrushRadius;

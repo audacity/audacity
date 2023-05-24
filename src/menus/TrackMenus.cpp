@@ -93,21 +93,15 @@ void DoMixAndRender
       }
 
       // If we're just rendering (not mixing), keep the track name the same
-      if (selectedCount==1) {
+      if (selectedCount == 1)
          pNewLeft->SetName(firstName);
-         if (pNewRight) {
-            pNewRight->SetName(firstName);
-         }
-      }
 
       // Bug 2218, remember more things...
-      if (selectedCount>=1) {
-         pNewLeft->SetWaveColorIndex(firstColour);
+      if (selectedCount >= 1) {
          pNewLeft->SetSelected(!toNewTrack);
-         if (pNewRight) {
+         pNewLeft->SetWaveColorIndex(firstColour);
+         if (pNewRight)
             pNewRight->SetWaveColorIndex(firstColour);
-            pNewRight->SetSelected(!toNewTrack);
-         }
       }
 
       // Permute the tracks as needed
@@ -126,7 +120,7 @@ void DoMixAndRender
             ++ii;
          }
          auto mid = arr.end();
-         std::advance( mid, -TrackList::Channels( pNewLeft ).size() );
+         std::advance( mid, -static_cast<int>(TrackList::NChannels(*pNewLeft)));
          std::rotate( arr.begin() + begin, mid, arr.end() );
          tracks.Permute( arr );
       }
@@ -159,7 +153,7 @@ void DoPanTracks(AudacityProject &project, float PanValue)
    auto &window = ProjectWindow::Get( project );
 
    // count selected wave tracks
-   const auto range = tracks.Any< WaveTrack >();
+   const auto range = tracks.Leaders< WaveTrack >();
    const auto selectedRange = range + &Track::IsSelected;
    auto count = selectedRange.size();
 
@@ -580,8 +574,7 @@ void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
    wxASSERT(wt);
    float newValue = slider->Get();
 
-   for (auto channel : TrackList::Channels(wt))
-      channel->SetGain(newValue);
+   wt->SetGain(newValue);
 
    ProjectHistory::Get( project )
       .PushState(XO("Adjusted gain"), XO("Gain"), UndoPush::CONSOLIDATE);
@@ -594,8 +587,7 @@ void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
    wxASSERT(wt);
    float newValue = slider->Get();
 
-   for (auto channel : TrackList::Channels(wt))
-      channel->SetPan(newValue);
+   wt->SetPan(newValue);
 
    ProjectHistory::Get( project )
       .PushState(XO("Adjusted Pan"), XO("Pan"), UndoPush::CONSOLIDATE);
@@ -748,12 +740,12 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto soloSimple = settings.IsSoloSimple();
-   auto soloNone = settings.IsSoloNone();
+   const auto solo = TracksBehaviorsSolo.ReadEnum();
+   const auto soloSimple = (solo == SoloBehaviorSimple);
+   const auto soloNone = (solo == SoloBehaviorNone);
 
-   auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Any<PlayableTrack>();
-   for (auto pt : iter)
-   {
+   auto iter = selected ? tracks.SelectedLeaders<PlayableTrack>() : tracks.Leaders<PlayableTrack>();
+   for (auto pt : iter) {
       pt->SetMute(mute);
       if (soloSimple || soloNone)
          pt->SetSolo(false);

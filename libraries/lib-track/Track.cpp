@@ -13,12 +13,6 @@
 Classes derived form it include the WaveTrack, NoteTrack, LabelTrack
 and TimeTrack.
 
-\class AudioTrack
-\brief A Track that can load/save audio data to/from XML.
-
-\class PlayableTrack
-\brief An AudioTrack that can be played and stopped.
-
 *//*******************************************************************/
 
 #include "Track.h"
@@ -45,8 +39,6 @@ and TimeTrack.
 Track::Track()
 :  vrulerSize(36,0)
 {
-   mSelected  = false;
-
    mIndex = 0;
 
    mOffset = 0.0;
@@ -66,10 +58,6 @@ void Track::Init(const Track &orig)
 {
    mId = orig.mId;
 
-   mName = orig.mName;
-
-   mSelected = orig.mSelected;
-
    // Deep copy of any group data
    mpGroupData = orig.mpGroupData ?
       std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
@@ -77,21 +65,33 @@ void Track::Init(const Track &orig)
    mChannel = orig.mChannel;
 }
 
+const wxString &Track::GetName() const
+{
+   return GetGroupData().mName;
+}
+
 void Track::SetName( const wxString &n )
 {
-   if ( mName != n ) {
-      mName = n;
-      Notify();
+   auto &name = GetGroupData().mName;
+   if (name != n) {
+      name = n;
+      Notify(true);
    }
+}
+
+bool Track::GetSelected() const
+{
+   return GetGroupData().mSelected;
 }
 
 void Track::SetSelected(bool s)
 {
-   if (mSelected != s) {
-      mSelected = s;
+   auto &selected = GetGroupData().mSelected;
+   if (selected != s) {
+      selected = s;
       auto pList = mList.lock();
       if (pList)
-         pList->SelectionEvent( SharedPointer() );
+         pList->SelectionEvent(*this);
    }
 }
 
@@ -100,11 +100,6 @@ void Track::EnsureVisible( bool modifyState )
    auto pList = mList.lock();
    if (pList)
       pList->EnsureVisibleEvent( SharedPointer(), modifyState );
-}
-
-void Track::Merge(const Track &orig)
-{
-   mSelected = orig.mSelected;
 }
 
 Track::Holder Track::Duplicate() const
@@ -276,11 +271,11 @@ bool Track::HasLinkedTrack() const noexcept
     return mpGroupData && mpGroupData->mLinkType != LinkType::None;
 }
 
-void Track::Notify( int code )
+void Track::Notify(bool allChannels, int code)
 {
    auto pList = mList.lock();
    if (pList)
-      pList->DataEvent( SharedPointer(), code );
+      pList->DataEvent(SharedPointer(), allChannels, code);
 }
 
 void Track::SyncLockAdjust(double oldT1, double newT1)
@@ -299,102 +294,6 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
       // Remove from the track
       Clear(newT1, oldT1);
    }
-}
-
-AudioTrack::AudioTrack() : Track{}
-{
-}
-
-AudioTrack::AudioTrack(const Track &orig, ProtectedCreationArg &&a)
-   : Track{ orig, std::move(a) }
-{
-}
-
-PlayableTrack::PlayableTrack() : AudioTrack{}
-{
-}
-
-PlayableTrack::PlayableTrack(
-   const PlayableTrack &orig, ProtectedCreationArg &&a
-)  : AudioTrack{ orig, std::move(a) }
-{
-}
-
-void PlayableTrack::Init( const PlayableTrack &orig )
-{
-   DoSetMute(orig.DoGetMute());
-   DoSetSolo(orig.DoGetSolo());
-   AudioTrack::Init( orig );
-}
-
-void PlayableTrack::Merge( const Track &orig )
-{
-   auto pOrig = dynamic_cast<const PlayableTrack *>(&orig);
-   wxASSERT( pOrig );
-   DoSetMute(pOrig->DoGetMute());
-   DoSetSolo(pOrig->DoGetSolo());
-   AudioTrack::Merge( *pOrig );
-}
-
-void PlayableTrack::SetMute( bool m )
-{
-   if ( DoGetMute() != m ) {
-      DoSetMute(m);
-      Notify();
-   }
-}
-
-void PlayableTrack::SetSolo( bool s  )
-{
-   if ( DoGetSolo() != s ) {
-      DoSetSolo(s);
-      Notify();
-   }
-}
-
-bool PlayableTrack::DoGetMute() const
-{
-   return mMute.load(std::memory_order_relaxed);
-}
-
-void PlayableTrack::DoSetMute(bool value)
-{
-   mMute.store(value, std::memory_order_relaxed);
-}
-
-bool PlayableTrack::DoGetSolo() const
-{
-   return mSolo.load(std::memory_order_relaxed);
-}
-
-void PlayableTrack::DoSetSolo(bool value)
-{
-   mSolo.store(value, std::memory_order_relaxed);
-}
-
-// Serialize, not with tags of its own, but as attributes within a tag.
-void PlayableTrack::WriteXMLAttributes(XMLWriter &xmlFile) const
-{
-   xmlFile.WriteAttr(wxT("mute"), DoGetMute());
-   xmlFile.WriteAttr(wxT("solo"), DoGetSolo());
-   AudioTrack::WriteXMLAttributes(xmlFile);
-}
-
-// Return true iff the attribute is recognized.
-bool PlayableTrack::HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value)
-{
-   long nValue;
-
-   if (attr == "mute" && value.TryGet(nValue)) {
-      DoSetMute(nValue != 0);
-      return true;
-   }
-   else if (attr == "solo" && value.TryGet(nValue)) {
-      DoSetSolo(nValue != 0);
-      return true;
-   }
-
-   return AudioTrack::HandleXMLAttribute(attr, value);
 }
 
 bool Track::Any() const
@@ -418,7 +317,6 @@ void Track::FinishCopy
       dest->SetChannel(n->GetChannel());
       dest->mpGroupData = n->mpGroupData ?
          std::make_unique<ChannelGroupData>(*n->mpGroupData) : nullptr;
-      dest->SetName(n->GetName());
    }
 }
 
@@ -593,15 +491,24 @@ void TrackList::QueueEvent(TrackListEvent event)
    } );
 }
 
-void TrackList::SelectionEvent( const std::shared_ptr<Track> &pTrack )
+void TrackList::SelectionEvent(Track &track)
 {
-   QueueEvent({ TrackListEvent::SELECTION_CHANGE, pTrack });
+   for (auto channel : Channels(&track))
+      QueueEvent({
+         TrackListEvent::SELECTION_CHANGE, channel->shared_from_this() });
 }
 
-void TrackList::DataEvent( const std::shared_ptr<Track> &pTrack, int code )
+void TrackList::DataEvent(
+   const std::shared_ptr<Track> &pTrack, bool allChannels, int code)
 {
-   QueueEvent({
-      TrackListEvent::TRACK_DATA_CHANGE, pTrack, code });
+   auto doQueueEvent = [this, code](const std::shared_ptr<Track> &theTrack){
+      QueueEvent({ TrackListEvent::TRACK_DATA_CHANGE, theTrack, code });
+   };
+   if (allChannels)
+      for (auto channel : Channels(pTrack.get()))
+         doQueueEvent(channel->shared_from_this());
+   else
+      doQueueEvent(pTrack);
 }
 
 void TrackList::EnsureVisibleEvent(
@@ -940,7 +847,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    Saved saved1, saved2;
 
    auto doSave = [&] ( Saved &saved, TrackNodePointer &s ) {
-      size_t nn = Channels( s.first->get() ).size();
+      size_t nn = NChannels(**s.first);
       saved.resize( nn );
       // Save them in backwards order
       while( nn-- )
@@ -1276,6 +1183,9 @@ void Track::WriteCommonXMLAttributes(
    XMLWriter &xmlFile, bool includeNameAndSelected) const
 {
    if (includeNameAndSelected) {
+      // May write name and selectedness redundantly for right channels,
+      // but continue doing that in case the file is opened in Audacity 3.1.x
+      // which does not have unique ChannelGroupData for the track
       xmlFile.WriteAttr(wxT("name"), GetName());
       xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    }
@@ -1296,6 +1206,9 @@ bool Track::HandleCommonXMLAttribute(
    });
    if (handled)
       ;
+   // Note that the per-group properties of name and selectedness may have
+   // been written redundantly for each channel, and values for the last
+   // channel will be the last ones assigned
    else if (attr == "name") {
       SetName(valueView.ToWString());
       return true;
@@ -1314,22 +1227,6 @@ void Track::AdjustPositions()
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
-}
-
-auto AudioTrack::ClassTypeInfo() -> const TypeInfo &
-{
-   static Track::TypeInfo info{
-      { "audio", "audio", XO("Audio Track") },
-      false, &Track::ClassTypeInfo() };
-   return info;
-}
-
-auto PlayableTrack::ClassTypeInfo() -> const TypeInfo &
-{
-   static Track::TypeInfo info{
-      { "playable", "playable", XO("Playable Track") },
-      false, &AudioTrack::ClassTypeInfo() };
-   return info;
 }
 
 TrackIntervalData::~TrackIntervalData() = default;

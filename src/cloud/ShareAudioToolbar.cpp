@@ -25,7 +25,7 @@
 #include "Prefs.h"
 #include "ProjectWindow.h"
 #include "Theme.h"
-#include "Track.h"
+#include "PlayableTrack.h"
 
 #include "audiocom/ShareAudioDialog.h"
 #include "toolbars/ToolManager.h"

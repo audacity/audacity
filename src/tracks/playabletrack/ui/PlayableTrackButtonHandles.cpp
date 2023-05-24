@@ -7,17 +7,13 @@ PlayableTrackButtonHandles.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
-
 #include "PlayableTrackButtonHandles.h"
-
+#include "PlayableTrack.h"
 #include "PlayableTrackControls.h"
 #include "../../../commands/CommandManager.h"
 #include "Project.h"
-#include "../../../ProjectSettings.h"
 #include "../../../RefreshCode.h"
 #include "../../../RealtimeEffectPanel.h"
-#include "Track.h"
 #include "../../../TrackPanelAx.h"
 #include "../../../TrackInfo.h"
 #include "../../../TrackPanelMouseEvent.h"
@@ -66,7 +62,7 @@ UIHandlePtr MuteButtonHandle::HitTest
    wxRect buttonRect;
    if ( pTrack )
       PlayableTrackControls::GetMuteSoloRect(rect, buttonRect, false,
-         !ProjectSettings::Get( *pProject ).IsSoloNone(), pTrack.get());
+         (TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone), pTrack.get());
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
@@ -122,7 +118,7 @@ UIHandlePtr SoloButtonHandle::HitTest
    wxRect buttonRect;
    if ( pTrack )
       PlayableTrackControls::GetMuteSoloRect(rect, buttonRect, true,
-         !ProjectSettings::Get( *pProject ).IsSoloNone(), pTrack.get());
+         (TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone), pTrack.get());
 
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
