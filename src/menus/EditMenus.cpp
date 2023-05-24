@@ -836,8 +836,7 @@ void OnPaste(const CommandContext &context)
 
    // TODO: What if we clicked past the end of the track?
 
-   if (bPastedSomething)
-   {
+   if (bPastedSomething) {
       ViewInfo::Get(project).selectedRegion
          .setTimes( t0, t0 + clipboard.Duration() );
 
@@ -847,7 +846,6 @@ void OnPaste(const CommandContext &context)
       if (ff) {
          TrackFocus::Get(project).Set(ff);
          ff->EnsureVisible();
-         ff->LinkConsistencyFix();
       }
    }
 }
