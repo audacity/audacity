@@ -201,6 +201,14 @@ auto ProjectFileManager::ReadProjectFile(
 
       auto &tracks = TrackList::Get(project);
       for (auto t : tracks.Any()) {
+         // Note, the next function may have an important upgrading side effect,
+         // and return no error; or it may find a real error and repair it, but
+         // that repaired track won't be used because opening will fail.
+         if (!t->LinkConsistencyFix()) {
+            otherError = XO("A channel of a stereo track was missing.");
+            err = true;
+         }
+
          if (const auto message = t->GetErrorOpening()) {
             wxLogWarning(
                wxT("Track %s had error reading clip values from project file."),
@@ -208,14 +216,6 @@ auto ProjectFileManager::ReadProjectFile(
             err = true;
             // Keep at most one of the error messages
             otherError = *message;
-         }
-
-         // Note, the next function may have an important upgrading side effect,
-         // and return no error; or it may find a real error and repair it, but
-         // that repaired track won't be used because opening will fail.
-         if (!t->LinkConsistencyFix()) {
-            otherError = XO("A channel of a stereo track was missing.");
-            err = true;
          }
 
          mLastSavedTracks->Add(t->Duplicate());

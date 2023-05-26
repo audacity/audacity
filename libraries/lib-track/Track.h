@@ -783,8 +783,11 @@ public:
    // XMLTagHandler callback methods -- NEW virtual for writing
    virtual void WriteXML(XMLWriter &xmlFile) const = 0;
 
-   // Returns a string if an error was encountered while trying to
-   // open the track from XML
+   //! Returns nonempty if an error was encountered while trying to
+   //! open the track from XML
+   /*!
+    May assume consistency of stereo channel grouping and examine other channels
+    */
    virtual std::optional<TranslatableString> GetErrorOpening() const;
 
    virtual double GetStartTime() const = 0;
