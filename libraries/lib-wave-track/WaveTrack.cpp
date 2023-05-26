@@ -77,11 +77,16 @@ struct WaveTrackData : ClientData::Cloneable<> {
    float GetPan() const;
    void SetPan(float value);
 
+   double GetRate() const;
+   void SetRate(double value);
+
 private:
    //! Atomic because it may be read by worker threads in playback
    std::atomic<float> mGain{ 1.0f };
    //! Atomic because it may be read by worker threads in playback
    std::atomic<float> mPan{ 0.0f };
+
+   int mRate{ 44100 };
 };
 
 static const Track::ChannelGroupAttachments::RegisteredFactory
@@ -92,6 +97,7 @@ waveTrackDataFactory{
 WaveTrackData::WaveTrackData(const WaveTrackData &other) {
    SetGain(other.GetGain());
    SetPan(other.GetPan());
+   mRate = other.mRate;
 }
 
 WaveTrackData::~WaveTrackData() = default;
@@ -128,6 +134,16 @@ float WaveTrackData::GetPan() const
 void WaveTrackData::SetPan(float value)
 {
    mPan.store(value, std::memory_order_relaxed);
+}
+
+double WaveTrackData::GetRate() const
+{
+   return mRate;
+}
+
+void WaveTrackData::SetRate(double value)
+{
+   mRate = value;
 }
 
 bool AreAligned(const WaveClipPointers& a, const WaveClipPointers& b)
@@ -207,7 +223,7 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    mLegacyProjectFileOffset = 0;
 
    mFormat = format;
-   mRate = (int) rate;
+   SetRate(static_cast<int>(rate));
    mWaveColorIndex = 0;
 }
 
@@ -229,7 +245,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    
    mFormat = orig.mFormat;
    mWaveColorIndex = orig.mWaveColorIndex;
-   mRate = orig.mRate;
 }
 
 void WaveTrack::Reinit(const WaveTrack &orig)
@@ -292,10 +307,10 @@ bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
             err = true;
          }
          else if (doFix) {
+            // non-error upgrades happen here
             auto newLinkType =
                AreAligned(SortedClipArray(), next->SortedClipArray())
                ? LinkType::Aligned : LinkType::Group;
-            //not an error
             if (newLinkType != linkType)
                SetLinkType(newLinkType);
             else
@@ -304,6 +319,12 @@ bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
                // before joining it
                next->DestroyGroupData();
          }
+      }
+      if (doFix) {
+         // More non-error upgrading
+         // Set the common channel group rate from the leader's rate
+         if (IsLeader())
+            SetRate(mLegacyRate);
       }
    }
    return !err;
@@ -400,19 +421,22 @@ wxString WaveTrack::MakeNewClipName() const
 
 double WaveTrack::GetRate() const
 {
-   return mRate;
+   return WaveTrackData::Get(*this).GetRate();
 }
 
 void WaveTrack::SetRate(double newRate)
 {
    wxASSERT( newRate > 0 );
    newRate = std::max( 1.0, newRate );
-   auto ratio = mRate / newRate;
-   mRate = (int) newRate;
-   for (const auto &clip : mClips) {
-      clip->SetRate((int)newRate);
-      clip->SetSequenceStartTime( clip->GetSequenceStartTime() * ratio );
-   }
+   auto &data = WaveTrackData::Get(*this);
+   data.SetRate(static_cast<int>(newRate));
+   SetClipRates(newRate);
+}
+
+void WaveTrack::SetClipRates(double newRate)
+{
+   for (const auto &clip : mClips)
+      clip->SetRate(static_cast<int>(newRate));
 }
 
 float WaveTrack::GetGain() const
@@ -615,7 +639,7 @@ void WaveTrack::Trim (double t0, double t1)
 WaveTrack::Holder WaveTrack::EmptyCopy(
    const SampleBlockFactoryPtr &pFactory, bool keepLink) const
 {
-   auto result = std::make_shared<WaveTrack>( pFactory, mFormat, mRate );
+   auto result = std::make_shared<WaveTrack>( pFactory, mFormat, GetRate() );
    result->Init(*this);
    result->mpFactory = pFactory ? pFactory : mpFactory;
    if (!keepLink)
@@ -1226,9 +1250,10 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          // Check if clips can move
          if (EditClipsCanMove.Read()) {
             const auto offset = newT1 - oldT1;
+            const auto rate = GetRate();
             for(const auto& clip : mClips)
             {
-               if (clip->GetPlayStartTime() > oldT1 - (1.0 / mRate))
+               if (clip->GetPlayStartTime() > oldT1 - (1.0 / rate))
                   clip->Offset(offset);
             }
          }
@@ -1282,7 +1307,8 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
         std::abs(other->GetStartTime()) < LongSamplesToTime(1) * 0.5;
 
     const double insertDuration = other->GetEndTime();
-    if (insertDuration != 0 && insertDuration < 1.0 / mRate)
+    const auto rate = GetRate();
+    if (insertDuration != 0 && insertDuration < 1.0 / rate)
         // PRL:  I added this check to avoid violations of preconditions in other WaveClip and Sequence
         // methods, but allow the value 0 so I don't subvert the purpose of commit
         // 739422ba70ceb4be0bb1829b6feb0c5401de641e which causes append-recording always to make
@@ -1305,7 +1331,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
         // ... move everything to the right
         for (const auto& clip : mClips)
         {
-            if (clip->GetPlayStartTime() > t0 - (1.0 / mRate))
+            if (clip->GetPlayStartTime() > t0 - (1.0 / rate))
                 clip->Offset(insertDuration);
         }
     }
@@ -1373,7 +1399,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
     // Insert NEW clips
     //wxPrintf("paste: multi clip mode!\n");
 
-    if (!editClipCanMove && !IsEmpty(t0, t0 + insertDuration - 1.0 / mRate))
+    if (!editClipCanMove && !IsEmpty(t0, t0 + insertDuration - 1.0 / rate))
         // Strong-guarantee in case of this path
         // not that it matters.
         throw SimpleMessageBoxException{
@@ -1390,7 +1416,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
         {
             auto newClip =
                 std::make_unique<WaveClip>(*clip, mpFactory, true);
-            newClip->Resample(mRate);
+            newClip->Resample(rate);
             newClip->Offset(t0);
             newClip->MarkChanged();
             if (pastingFromTempTrack)
@@ -1419,7 +1445,7 @@ bool WaveTrack::RateConsistencyCheck() const
          if (!pTrack)
             return false;
 
-         const auto rate = pTrack->GetRate();
+         const auto rate = pTrack->mLegacyRate;
          if (!oRate)
             oRate = rate;
          else if (*oRate != rate)
@@ -1478,7 +1504,8 @@ void WaveTrack::InsertSilence(double t, double len)
    if (mClips.empty())
    {
       // Special case if there is no clip yet
-      auto clip = std::make_unique<WaveClip>(mpFactory, mFormat, mRate, this->GetWaveColorIndex());
+      auto clip = std::make_unique<WaveClip>(
+         mpFactory, mFormat, GetRate(), this->GetWaveColorIndex());
       clip->InsertSilence(0, len);
       // use No-fail-guarantee
       mClips.push_back( std::move( clip ) );
@@ -1584,10 +1611,11 @@ void WaveTrack::Join(double t0, double t1)
    WaveClipPointers clipsToDelete;
    WaveClip* newClip{};
 
+   const auto rate = GetRate();
    for (const auto &clip: mClips)
    {
-      if (clip->GetPlayStartTime() < t1-(1.0/mRate) &&
-          clip->GetPlayEndTime()-(1.0/mRate) > t0) {
+      if (clip->GetPlayStartTime() < t1 - (1.0 / rate) &&
+          clip->GetPlayEndTime() - (1.0 / rate) > t0) {
 
          // Put in sorted order
          auto it = clipsToDelete.begin(), end = clipsToDelete.end();
@@ -1613,7 +1641,7 @@ void WaveTrack::Join(double t0, double t1)
       //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
       //       t, clip->GetOffset(), clip->GetStartTime(), clip->GetEndTime());
 
-      if (clip->GetPlayStartTime() - t > (1.0 / mRate)) {
+      if (clip->GetPlayStartTime() - t > (1.0 / rate)) {
          double addedSilence = (clip->GetPlayStartTime() - t);
          //wxPrintf("Adding %.6f seconds of silence\n");
          auto offset = clip->GetPlayStartTime();
@@ -1732,7 +1760,8 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
                   (dblValue < 1.0) || (dblValue > 1000000.0)) // allow a large range to be read
                return false;
 
-            mRate = lrint(dblValue);
+            // Defer the setting of rate until LinkConsistencyFix
+            mLegacyRate = lrint(dblValue);
          }
          else if (attr == "offset" && value.TryGet(dblValue))
          {
@@ -1775,6 +1804,10 @@ void WaveTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
    // File compatibility breaks have intervened long since, and the line above
    // would now have undesirable side effects
 #endif
+
+   // Make clips (which don't serialize the rate) consistent with channel rate,
+   // though the consistency check of channels with each other remains to do
+   SetClipRates(mLegacyRate);
 }
 
 XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
@@ -1824,7 +1857,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    this->Track::WriteCommonXMLAttributes( xmlFile );
    xmlFile.WriteAttr(wxT("linked"), static_cast<int>(GetLinkType()));
    this->WritableSampleTrack::WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(wxT("rate"), mRate);
+   xmlFile.WriteAttr(wxT("rate"), GetRate());
 
    // Some values don't vary independently in channels but have been written
    // redundantly for each channel.  Keep doing this in 3.4 and later in case
@@ -2144,7 +2177,8 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
    }
 
    double startTime = t0;
-   auto tstep = 1.0 / mRate;
+   const auto rate = GetRate();
+   auto tstep = 1.0 / rate;
    double endTime = t0 + tstep * bufferLen;
    for (const auto &clip: mClips)
    {
@@ -2161,7 +2195,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
          {
             // This is not more than the number of samples in
             // (endTime - startTime) which is bufferLen:
-            auto nDiff = (sampleCount)floor((dClipStartTime - rt0) * mRate + 0.5);
+            auto nDiff = (sampleCount)floor((dClipStartTime - rt0) * rate + 0.5);
             auto snDiff = nDiff.as_size_t();
             rbuf += snDiff;
             wxASSERT(snDiff <= rlen);
@@ -2234,7 +2268,8 @@ Sequence* WaveTrack::GetSequenceAtTime(double time)
 
 WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 {
-   auto clip = std::make_unique<WaveClip>(mpFactory, mFormat, mRate, GetWaveColorIndex());
+   auto clip = std::make_unique<WaveClip>(
+      mpFactory, mFormat, GetRate(), GetWaveColorIndex());
    clip->SetName(name);
    clip->SetSequenceStartTime(offset);
    mClips.push_back(std::move(clip));
@@ -2512,7 +2547,7 @@ void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
    for (const auto &clip : mClips)
       clip->Resample(rate, progress);
 
-   mRate = rate;
+   SetRate(rate);
 }
 
 namespace {

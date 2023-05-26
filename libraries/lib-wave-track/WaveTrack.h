@@ -514,10 +514,12 @@ private:
    WaveClipHolders mClips;
 
    sampleFormat  mFormat;
-   int           mRate;
+   int           mLegacyRate; //!< used only during deserialization
    int           mWaveColorIndex;
 
 private:
+   void SetClipRates(double newRate);
+
    void DoSetPan(float value);
    void DoSetGain(float value);
 
