@@ -523,6 +523,9 @@ private:
 
    void PasteWaveTrack(double t0, const WaveTrack* other);
 
+   //! Whether all clips have a common rate
+   bool RateConsistencyCheck() const;
+
    SampleBlockFactoryPtr mpFactory;
 
    wxCriticalSection mFlushCriticalSection;

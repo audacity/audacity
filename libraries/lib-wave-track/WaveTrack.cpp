@@ -303,7 +303,6 @@ bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
    return !err;
 }
 
-
 static const Track::TypeInfo &typeInfo()
 {
    static const Track::TypeInfo info{
@@ -1399,6 +1398,33 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
     }
 }
 
+bool WaveTrack::RateConsistencyCheck() const
+{
+   // Assuming a complete track list with consistent channel structure,
+   // check only at the leader tracks
+   if (!IsLeader())
+      return true;
+
+   // The channels and all clips in them should have the same sample rate.
+   std::optional<double> oRate;
+   auto channels = TrackList::Channels(this);
+   return std::all_of(channels.begin(), channels.end(),
+      [&](const WaveTrack *pTrack){
+         if (!pTrack)
+            return false;
+
+         const auto rate = pTrack->GetRate();
+         if (!oRate)
+            oRate = rate;
+         else if (*oRate != rate)
+            return false;
+
+         auto &clips = pTrack->mClips;
+         return std::all_of(clips.begin(), clips.end(),
+            [rate](auto &pClip){ return pClip->GetRate() == rate; });
+      });
+}
+
 /*! @excsafety{Weak} */
 void WaveTrack::Paste(double t0, const Track *src)
 {
@@ -1818,6 +1844,12 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
    for (const auto &clip : mClips)
       if (clip->GetSequence()->GetErrorOpening())
          return XO("A track has a corrupted sample sequence.");
+
+   if (!RateConsistencyCheck())
+      return XO(
+"This project cannot be opened because it contains a stereo track with "
+"different sample rates. This functionality is no longer supported since the "
+"release of Audacity version 3.4");
 
    return {};
 }
