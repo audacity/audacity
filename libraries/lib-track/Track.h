@@ -15,6 +15,7 @@
 #include <utility>
 #include <vector>
 #include <list>
+#include <optional>
 #include <functional>
 #include <wx/longlong.h>
 
@@ -782,9 +783,9 @@ public:
    // XMLTagHandler callback methods -- NEW virtual for writing
    virtual void WriteXML(XMLWriter &xmlFile) const = 0;
 
-   // Returns true if an error was encountered while trying to
+   // Returns a string if an error was encountered while trying to
    // open the track from XML
-   virtual bool GetErrorOpening() { return false; }
+   virtual std::optional<TranslatableString> GetErrorOpening() const;
 
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;

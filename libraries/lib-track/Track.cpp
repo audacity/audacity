@@ -262,6 +262,11 @@ bool Track::HasLinkedTrack() const noexcept
     return mpGroupData && mpGroupData->mLinkType != LinkType::None;
 }
 
+std::optional<TranslatableString> Track::GetErrorOpening() const
+{
+   return {};
+}
+
 void Track::Notify(bool allChannels, int code)
 {
    auto pList = mList.lock();

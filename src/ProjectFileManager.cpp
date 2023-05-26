@@ -163,6 +163,8 @@ auto ProjectFileManager::ReadProjectFile(
    
    bool err = false;
 
+   TranslatableString otherError;
+
    if (bParseSuccess)
    {
       if (discardAutosave)
@@ -197,28 +199,33 @@ auto ProjectFileManager::ReadProjectFile(
       // user selects Save().
       mLastSavedTracks = TrackList::Create( nullptr );
 
-      auto &tracks = TrackList::Get( project );
-      for (auto t : tracks.Any())
-      {
-         if (t->GetErrorOpening())
-         {
+      auto &tracks = TrackList::Get(project);
+      for (auto t : tracks.Any()) {
+         if (const auto message = t->GetErrorOpening()) {
             wxLogWarning(
                wxT("Track %s had error reading clip values from project file."),
                t->GetName());
             err = true;
+            // Keep at most one of the error messages
+            otherError = *message;
          }
 
-         err = ( !t->LinkConsistencyFix() ) || err;
+         // Note, the next function may have an important upgrading side effect,
+         // and return no error; or it may find a real error and repair it, but
+         // that repaired track won't be used because opening will fail.
+         if (!t->LinkConsistencyFix()) {
+            otherError = XO("A channel of a stereo track was missing.");
+            err = true;
+         }
 
          mLastSavedTracks->Add(t->Duplicate());
       }
    }
 
-   return
-   {
+   return {
       bParseSuccess,
       err,
-      projectFileIO.GetLastError(),
+      (bParseSuccess ? otherError : projectFileIO.GetLastError()),
       FindHelpUrl(projectFileIO.GetLibraryError())
    };
 }
@@ -1004,7 +1011,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const auto &errorStr = results.errorString;
    const bool err = results.trackError;
 
-   if (bParseSuccess) {
+   if (bParseSuccess && !err) {
       auto &formats = ProjectNumericFormats::Get( project );
       auto &settings = ProjectSettings::Get( project );
       window.mbInitializingScrollbar = true;
@@ -1033,7 +1040,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
          FileHistory::Global().Append(fileName);
    }
 
-   if (bParseSuccess) {
+   if (bParseSuccess && !err) {
       if (projectFileIO.IsRecovered())
       {
          // PushState calls AutoSave(), so no longer need to do so here.

@@ -1813,13 +1813,13 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("wavetrack"));
 }
 
-bool WaveTrack::GetErrorOpening()
+std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 {
    for (const auto &clip : mClips)
       if (clip->GetSequence()->GetErrorOpening())
-         return true;
+         return XO("A track has a corrupted sample sequence.");
 
-   return false;
+   return {};
 }
 
 bool WaveTrack::CloseLock()
