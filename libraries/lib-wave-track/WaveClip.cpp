@@ -36,12 +36,14 @@ WaveClipListener::~WaveClipListener()
 {
 }
 
-WaveClip::WaveClip(const SampleBlockFactoryPtr &factory,
-                   sampleFormat format, int rate, int colourIndex)
+WaveClip::WaveClip(size_t width,
+   const SampleBlockFactoryPtr &factory,
+   sampleFormat format, int rate, int colourIndex)
 {
+   assert(width > 0);
    mRate = rate;
    mColourIndex = colourIndex;
-   mSequences.resize(1);
+   mSequences.resize(width);
    for (auto &pSequence : mSequences)
       pSequence = std::make_unique<Sequence>(factory,
          SampleFormats{narrowestSampleFormat, format});
@@ -433,8 +435,12 @@ XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
       // The format is not stored in WaveClip itself but passed to
       // Sequence::Sequence; but then the Sequence will deserialize format
       // again
-      mCutLines.push_back(std::make_shared<WaveClip>(GetFactory(),
-         format, mRate, 0 /*colourindex*/));
+      mCutLines.push_back(
+         std::make_shared<WaveClip>(
+            // Make only one channel now, but recursive deserialization
+            // increases the width later
+            1, pFirst->GetFactory(),
+            format, mRate, 0 /*colourindex*/));
       return mCutLines.back().get();
    }
    else

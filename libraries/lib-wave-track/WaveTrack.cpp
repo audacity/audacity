@@ -699,7 +699,8 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    if (forClipboard &&
        newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0)
    {
-      auto placeholder = std::make_shared<WaveClip>(mpFactory,
+      // TODO wide wave tracks -- match clip width of newTrack
+      auto placeholder = std::make_shared<WaveClip>(1, mpFactory,
          newTrack->GetSampleFormat(),
          static_cast<int>(newTrack->GetRate()),
          0 /*colourindex*/);
@@ -1538,7 +1539,8 @@ void WaveTrack::InsertSilence(double t, double len)
    if (mClips.empty())
    {
       // Special case if there is no clip yet
-      auto clip = std::make_shared<WaveClip>(
+      // TODO wide wave tracks -- match clip width
+      auto clip = std::make_shared<WaveClip>(1,
          mpFactory, mFormat, GetRate(), this->GetWaveColorIndex());
       clip->InsertSilence(0, len);
       // use No-fail-guarantee
@@ -2323,7 +2325,8 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
 
 WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 {
-   auto clip = std::make_shared<WaveClip>(
+   // TODO wide wave tracks -- choose clip width correctly for the track
+   auto clip = std::make_shared<WaveClip>(1,
       mpFactory, mFormat, GetRate(), GetWaveColorIndex());
    clip->SetName(name);
    clip->SetSequenceStartTime(offset);

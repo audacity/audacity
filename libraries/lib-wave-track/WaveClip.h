@@ -105,8 +105,14 @@ private:
 public:
    using Caches = Site< WaveClip, WaveClipListener >;
 
-   // typical constructor
-   WaveClip(const SampleBlockFactoryPtr &factory, sampleFormat format,
+   //! typical constructor
+   /*!
+    @param width how many sequences
+    @pre `width > 0`
+    @post `GetWidth() == width`
+    */
+   WaveClip(size_t width,
+      const SampleBlockFactoryPtr &factory, sampleFormat format,
       int rate, int colourIndex);
 
    //! essentially a copy constructor - but you must pass in the

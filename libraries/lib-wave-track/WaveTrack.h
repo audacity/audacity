@@ -504,6 +504,7 @@ private:
    //! as this track, and `this->GetWidth() == clip->GetWidth()`; return success
    /*!
     @pre `clip != nullptr`
+    @pre `this->GetWidth() == clip->GetWidth()`
     */
    bool AddClip(const std::shared_ptr<WaveClip> &clip);
 
