@@ -330,8 +330,9 @@ private:
    // doing a copy and paste between projects.
    //
 
-   bool CloseLock(); //should be called when the project closes.
-   // not balanced by unlocking calls.
+   //! Should be called upon project close.  Not balanced by unlocking calls.
+   /*! @excsafety{No-fail} */
+   bool CloseLock() noexcept;
 
    //! Get access to the (visible) clips in the tracks, in unspecified order
    //! (not necessarily sequenced in time).

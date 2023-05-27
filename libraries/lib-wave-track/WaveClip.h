@@ -379,8 +379,9 @@ public:
    /// Offset cutlines right to time 't0' by time amount 'len'
    void OffsetCutLines(double t0, double len);
 
-   void CloseLock(); //should be called when the project closes.
-   // not balanced by unlocking calls.
+   //! Should be called upon project close.  Not balanced by unlocking calls.
+   /*! @excsafety{No-fail} */
+   void CloseLock() noexcept;
 
    //
    // XMLTagHandler callback methods for loading and saving

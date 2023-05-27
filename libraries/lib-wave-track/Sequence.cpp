@@ -84,7 +84,7 @@ size_t Sequence::GetIdealBlockSize() const
    return mMaxSamples;
 }
 
-bool Sequence::CloseLock()
+bool Sequence::CloseLock() noexcept
 {
    for (unsigned int i = 0; i < mBlock.size(); i++)
       mBlock[i].sb->CloseLock();

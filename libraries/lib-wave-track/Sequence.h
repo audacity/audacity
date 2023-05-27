@@ -166,8 +166,9 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    // Lock all of this sequence's sample blocks, keeping them
    // from being destroyed when closing.
 
-   bool CloseLock();//should be called upon project close.
-   // not balanced by unlocking calls.
+   //! Should be called upon project close.  Not balanced by unlocking calls.
+   /*! @excsafety{No-fail} */
+   bool CloseLock() noexcept;
 
    //
    // Manipulating Sample Format

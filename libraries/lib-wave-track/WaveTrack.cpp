@@ -1955,7 +1955,7 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
    return {};
 }
 
-bool WaveTrack::CloseLock()
+bool WaveTrack::CloseLock() noexcept
 {
    for (const auto &clip : mClips)
       clip->CloseLock();

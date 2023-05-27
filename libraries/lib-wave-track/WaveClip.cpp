@@ -838,7 +838,7 @@ void WaveClip::OffsetCutLines(double t0, double len)
    }
 }
 
-void WaveClip::CloseLock()
+void WaveClip::CloseLock() noexcept
 {
    for (auto &pSequence : mSequences)
       pSequence->CloseLock();
