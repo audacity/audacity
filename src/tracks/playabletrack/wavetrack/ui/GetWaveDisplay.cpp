@@ -62,7 +62,7 @@ struct MinMaxSumsq
 }
 
 bool GetWaveDisplay(const Sequence &sequence,
-   float *min, float *max, float *rms, int* bl,
+   float *min, float *max, float *rms,
    size_t len, const sampleCount *where)
 {
    wxASSERT(len > 0);
@@ -141,8 +141,6 @@ bool GetWaveDisplay(const Sequence &sequence,
          : (samplesPerPixel >= 256) ? 256
          : 1;
 
-      int blockStatus = b;
-
       // How many samples or triples are needed?
 
       const size_t startPosition =
@@ -159,7 +157,6 @@ bool GetWaveDisplay(const Sequence &sequence,
          // Do some defense against this case anyway
          while (pixel < nextPixel) {
             min[pixel] = max[pixel] = rms[pixel] = 0;
-            bl[pixel] = blockStatus;//MC
             ++pixel;
          }
          continue;
@@ -243,7 +240,6 @@ bool GetWaveDisplay(const Sequence &sequence,
          // Assign results
          std::fill(&min[pixel], &min[pixelX], values.min);
          std::fill(&max[pixel], &max[pixelX], values.max);
-         std::fill(&bl[pixel], &bl[pixelX], blockStatus);
          std::fill(&rms[pixel], &rms[pixelX], (float)sqrt(values.sumsq / rmsDenom));
 
          pixel = pixelX;
