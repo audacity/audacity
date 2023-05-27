@@ -63,9 +63,11 @@ public:
 //
 
 bool WaveClipWaveformCache::GetWaveDisplay(
-   const WaveClip &clip, WaveDisplay &display, double t0,
+   const WaveClip &clip, size_t channel, WaveDisplay &display, double t0,
    double pixelsPerSecond )
 {
+   auto &waveCache = mWaveCaches[channel];
+
    t0 += clip.GetTrimLeft();
 
    const bool allocated = (display.where != 0);
@@ -95,28 +97,28 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       // Make a tolerant comparison of the pps values in this wise:
       // accumulated difference of times over the number of pixels is less than
       // a sample period.
-      const bool ppsMatch = mWaveCache &&
-         (fabs(tstep - 1.0 / mWaveCache->pps) * numPixels < (1.0 / rate));
+      const bool ppsMatch = waveCache &&
+         (fabs(tstep - 1.0 / waveCache->pps) * numPixels < (1.0 / rate));
 
       const bool match =
-         mWaveCache &&
+         waveCache &&
          ppsMatch &&
-         mWaveCache->len > 0 &&
-         mWaveCache->dirty == mDirty;
+         waveCache->len > 0 &&
+         waveCache->dirty == mDirty;
 
       if (match &&
-         mWaveCache->start == t0 &&
-         mWaveCache->len >= numPixels) {
+         waveCache->start == t0 &&
+         waveCache->len >= numPixels) {
 
          // Satisfy the request completely from the cache
-         display.min = &mWaveCache->min[0];
-         display.max = &mWaveCache->max[0];
-         display.rms = &mWaveCache->rms[0];
-         display.where = &mWaveCache->where[0];
+         display.min = &waveCache->min[0];
+         display.max = &waveCache->max[0];
+         display.rms = &waveCache->rms[0];
+         display.where = &waveCache->where[0];
          return true;
       }
 
-      std::unique_ptr<WaveCache> oldCache(std::move(mWaveCache));
+      std::unique_ptr<WaveCache> oldCache(std::move(waveCache));
 
       int oldX0 = 0;
       double correction = 0.0;
@@ -136,11 +138,11 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       if (!(copyEnd > copyBegin))
          oldCache.reset(0);
 
-      mWaveCache = std::make_unique<WaveCache>(numPixels, pixelsPerSecond, rate, t0, mDirty);
-      min = &mWaveCache->min[0];
-      max = &mWaveCache->max[0];
-      rms = &mWaveCache->rms[0];
-      pWhere = &mWaveCache->where;
+      waveCache = std::make_unique<WaveCache>(numPixels, pixelsPerSecond, rate, t0, mDirty);
+      min = &waveCache->min[0];
+      max = &waveCache->max[0];
+      rms = &waveCache->rms[0];
+      pWhere = &waveCache->where;
 
       fillWhere(*pWhere, numPixels, 0.0, correction,
          t0, rate, samplesPerPixel);
@@ -171,7 +173,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 
       /* handle values in the append buffer */
 
-      const auto sequence = clip.GetSequence();
+      const auto sequence = clip.GetSequence(channel);
       auto numSamples = sequence->GetNumSamples();
       auto a = p0;
 
@@ -186,7 +188,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       //compute the values that are outside the overlap from scratch.
       if (a < p1) {
          const auto appendBufferLen = clip.GetAppendBufferLen();
-         const auto &appendBuffer = clip.GetAppendBuffer();
+         const auto &appendBuffer = clip.GetAppendBuffer(channel);
          sampleFormat seqFormat = sequence->GetSampleFormats().Stored();
          bool didUpdate = false;
          for(auto i = a; i < p1; i++) {
@@ -266,17 +268,19 @@ bool WaveClipWaveformCache::GetWaveDisplay(
    return true;
 }
 
-WaveClipWaveformCache::WaveClipWaveformCache()
-: mWaveCache{ std::make_unique<WaveCache>() }
+WaveClipWaveformCache::WaveClipWaveformCache(size_t nChannels)
+   : mWaveCaches(nChannels)
 {
+   for (auto &pCache : mWaveCaches)
+      pCache = std::make_unique<WaveCache>();
 }
 
 WaveClipWaveformCache::~WaveClipWaveformCache()
 {
 }
 
-static WaveClip::Caches::RegisteredFactory sKeyW{ []( WaveClip& ){
-   return std::make_unique< WaveClipWaveformCache >();
+static WaveClip::Caches::RegisteredFactory sKeyW{ [](WaveClip &clip) {
+   return std::make_unique<WaveClipWaveformCache>(clip.GetWidth());
 } };
 
 WaveClipWaveformCache &WaveClipWaveformCache::Get( const WaveClip &clip )
@@ -292,6 +296,7 @@ void WaveClipWaveformCache::MarkChanged()
 
 void WaveClipWaveformCache::Invalidate()
 {
-   // Invalidate wave display cache
-   mWaveCache = std::make_unique<WaveCache>();
+   // Invalidate wave display caches
+   for (auto &pCache : mWaveCaches)
+      pCache = std::make_unique<WaveCache>();
 }

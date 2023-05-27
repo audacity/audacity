@@ -143,6 +143,8 @@ private:
    void SetWaveColorIndex(int colorIndex);
 
    sampleCount GetPlaySamplesCount() const;
+   //! Returns the total number of samples in all underlying sequences
+   //! of all clips (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
    sampleFormat GetSampleFormat() const override { return mFormat; }
@@ -240,6 +242,10 @@ private:
    /// guaranteed that the same samples are affected.
    ///
 
+   /*!
+    Get from the unique channel
+    TODO wide wave tracks -- overloads to get from one or from all channels
+    */
    bool Get(samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       fillFormat fill = fillZero,
@@ -248,6 +254,10 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const override;
+   /*!
+    Set samples in the unique channel
+    TODO wide wave tracks -- overloads to set one or all channels
+    */
    void Set(constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       sampleFormat effectiveFormat = widestSampleFormat /*!<
@@ -265,10 +275,19 @@ private:
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const override;
 
-   // May assume precondition: t0 <= t1
+   // Get min and max from the unique channel
+   /*!
+    @pre `t0 <= t1`
+    TODO wide wave tracks -- require a channel number
+    */
    std::pair<float, float> GetMinMax(
       double t0, double t1, bool mayThrow = true) const;
-   // May assume precondition: t0 <= t1
+
+   // Get RMS from the unique channel
+   /*!
+    @pre `t0 <= t1`
+    TODO wide wave tracks -- require a channel number
+    */
    float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //

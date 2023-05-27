@@ -1090,7 +1090,7 @@ std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
 bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 {
    assert(clip);
-   if (clip->GetSequence()->GetFactory() != this->mpFactory)
+   if (clip->GetSequence(0)->GetFactory() != this->mpFactory)
       return false;
 
    // Uncomment the following line after we correct the problem of zero-length clips
@@ -1544,19 +1544,39 @@ void WaveTrack::Disjoin(double t0, double t1)
 {
    auto minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
    const size_t maxAtOnce = 1048576;
-   Floats buffer{ maxAtOnce };
+   std::vector<float> buffer;
+   std::vector<samplePtr> buffers;
    Regions regions;
 
-   for (const auto &clip : mClips)
-   {
+   // TODO wide wave tracks -- only need to change width
+   const size_t width = 1;
+   for (const auto &clip : mClips) {
       double startTime = clip->GetPlayStartTime();
       double endTime = clip->GetPlayEndTime();
 
       if( endTime < t0 || startTime > t1 )
          continue;
 
-      //simply look for a sequence of zeroes and if the sequence
-      //is greater than minimum number, split-DELETE the region
+      // Assume all clips will have the same width
+      if (buffer.empty()) {
+         buffer.resize(maxAtOnce * width);
+         buffers.resize(width);
+         auto pBuffer = buffer.data();
+         for (size_t ii = 0; ii < width; ++ii, pBuffer += maxAtOnce)
+            buffers[ii] = reinterpret_cast<samplePtr>(pBuffer);
+      }
+
+      const auto allZeroesAt = [&](size_t i) {
+         auto pData = buffer.data() + i;
+         for (size_t ii = 0; ii < width; ++ii, pData += maxAtOnce) {
+            if (*pData != 0.0)
+               return false;
+         }
+         return true;
+      };
+
+      // simply look for a sequence of zeroes (across all channels) and if the
+      // sequence is longer than the minimum number, split-delete the region
 
       sampleCount seqStart = -1;
       auto start = clip->TimeToSamples(std::max(.0, t0 - startTime));
@@ -1567,27 +1587,27 @@ void WaveTrack::Disjoin(double t0, double t1)
       {
          auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
 
-         clip->GetSamples( ( samplePtr )buffer.get(), floatSample, start + done,
-               numSamples );
+         clip
+            ->GetSamples(buffers.data(), floatSample, start + done, numSamples);
          for( decltype(numSamples) i = 0; i < numSamples; i++ )
          {
             auto curSamplePos = start + done + i;
 
             //start a NEW sequence
-            if( buffer[ i ] == 0.0 && seqStart == -1 )
+            if (seqStart == -1 && allZeroesAt(i))
                seqStart = curSamplePos;
-            else if( buffer[ i ] != 0.0 || curSamplePos == end - 1 )
+            else if (curSamplePos == end - 1 || !allZeroesAt(i))
             {
                if( seqStart != -1 )
                {
                   decltype(end) seqEnd;
 
                   //consider the end case, where selection ends in zeroes
-                  if( curSamplePos == end - 1 && buffer[ i ] == 0.0 )
+                  if (curSamplePos == end - 1 && allZeroesAt(i))
                      seqEnd = end;
                   else
                      seqEnd = curSamplePos;
-                  if( seqEnd - seqStart + 1 > minSamples )
+                  if (seqEnd - seqStart + 1 > minSamples)
                   {
                      regions.push_back(
                         Region(
@@ -1685,8 +1705,10 @@ sampleCount WaveTrack::GetBlockStart(sampleCount s) const
       const auto endSample = clip->GetPlayEndSample();
       if (s >= startSample && s < endSample)
       {
-          auto blockStartOffset = clip->GetSequence()->GetBlockStart(clip->ToSequenceSamples(s));
-          return std::max(startSample, clip->GetSequenceStartSample() + blockStartOffset);
+         // ignore extra channels (this function will soon be removed)
+         auto blockStartOffset = clip->GetSequence(0)
+            ->GetBlockStart(clip->ToSequenceSamples(s));
+         return std::max(startSample, clip->GetSequenceStartSample() + blockStartOffset);
       }
    }
 
@@ -1703,7 +1725,9 @@ size_t WaveTrack::GetBestBlockSize(sampleCount s) const
       auto endSample = clip->GetPlayEndSample();
       if (s >= startSample && s < endSample)
       {
-         bestBlockSize = clip->GetSequence()->GetBestBlockSize(s - clip->GetSequenceStartSample());
+         // ignore extra channels (this function will soon be removed)
+         bestBlockSize = clip->GetSequence(0)
+            ->GetBestBlockSize(s - clip->GetSequenceStartSample());
          break;
       }
    }
@@ -1715,9 +1739,9 @@ size_t WaveTrack::GetMaxBlockSize() const
 {
    decltype(GetMaxBlockSize()) maxblocksize = 0;
    for (const auto &clip : mClips)
-   {
-      maxblocksize = std::max(maxblocksize, clip->GetSequence()->GetMaxBlockSize());
-   }
+      for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
+         maxblocksize = std::max(maxblocksize,
+            clip->GetSequence(ii)->GetMaxBlockSize());
 
    if (maxblocksize == 0)
    {
@@ -1735,7 +1759,8 @@ size_t WaveTrack::GetMaxBlockSize() const
 
 size_t WaveTrack::GetIdealBlockSize()
 {
-   return NewestOrNewClip()->GetSequence()->GetIdealBlockSize();
+   // ignore extra channels (this function will soon be removed)
+   return NewestOrNewClip()->GetSequence(0)->GetIdealBlockSize();
 }
 
 /*! @excsafety{Mixed} */
@@ -1833,7 +1858,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
 
       // Legacy project file tracks are imported as one single wave clip
       if (tag == "sequence")
-         return NewestOrNewClip()->GetSequence();
+         return NewestOrNewClip()->GetSequence(0);
       else if (tag == "envelope")
          return NewestOrNewClip()->GetEnvelope();
    }
@@ -1844,7 +1869,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
    {
       // This is a legacy project, so set the cached offset
       NewestOrNewClip()->SetSequenceStartTime(mLegacyProjectFileOffset);
-      Sequence *pSeq = NewestOrNewClip()->GetSequence();
+      Sequence *pSeq = NewestOrNewClip()->GetSequence(0);
       return pSeq;
    }
 
@@ -1888,8 +1913,9 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 {
    for (const auto &clip : mClips)
-      if (clip->GetSequence()->GetErrorOpening())
-         return XO("A track has a corrupted sample sequence.");
+      for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
+         if (clip->GetSequence(ii)->GetErrorOpening())
+            return XO("A track has a corrupted sample sequence.");
 
    if (!RateConsistencyCheck())
       return XO(
@@ -1976,7 +2002,8 @@ std::pair<float, float> WaveTrack::GetMinMax(
       if (t1 >= clip->GetPlayStartTime() && t0 <= clip->GetPlayEndTime())
       {
          clipFound = true;
-         auto clipResults = clip->GetMinMax(t0, t1, mayThrow);
+         // TODO wide wave tracks -- choose correct channel
+         auto clipResults = clip->GetMinMax(0, t0, t1, mayThrow);
          if (clipResults.first < results.first)
             results.first = clipResults.first;
          if (clipResults.second > results.second)
@@ -2016,7 +2043,8 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
          auto clipStart = clip->TimeToSequenceSamples(std::max(t0, clip->GetPlayStartTime()));
          auto clipEnd = clip->TimeToSequenceSamples(std::min(t1, clip->GetPlayEndTime()));
 
-         float cliprms = clip->GetRMS(t0, t1, mayThrow);
+         // TODO wide wave tracks -- choose correct channel
+         float cliprms = clip->GetRMS(0, t0, t1, mayThrow);
 
          sumsq += cliprms * cliprms * (clipEnd - clipStart).as_float();
          length += (clipEnd - clipStart);
@@ -2092,7 +2120,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
             // samplesToCopy is positive and not more than len
          }
 
-         if (!clip->GetSamples(
+         if (!clip->GetSamples(0,
                (samplePtr)(((char*)buffer) +
                            startDelta.as_size_t() *
                            SAMPLE_SIZE(format)),
@@ -2140,7 +2168,7 @@ void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
             // samplesToCopy is positive and not more than len
          }
 
-         clip->SetSamples(
+         clip->SetSamples(0,
             buffer + startDelta.as_size_t() * SAMPLE_SIZE(format),
             format, inclipDelta, samplesToCopy.as_size_t(), effectiveFormat );
          clip->MarkChanged();
@@ -2150,12 +2178,12 @@ void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
 
 sampleFormat WaveTrack::WidestEffectiveFormat() const
 {
-   auto &clips = GetClips();
-   return std::accumulate(clips.begin(), clips.end(), narrowestSampleFormat,
-      [](sampleFormat format, const auto &pClip){
-         return std::max(format,
-            pClip->GetSequence()->GetSampleFormats().Effective());
-      });
+   auto result = narrowestSampleFormat;
+   for (auto &clip : GetClips())
+      for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
+         result = std::max(result,
+            clip->GetSequence(ii)->GetSampleFormats().Effective());
+   return result;
 }
 
 bool WaveTrack::HasTrivialEnvelope() const
@@ -2606,14 +2634,16 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
       // Scan all clips within current track
       for(const auto &clip : wt->GetAllClips()) {
          // Scan all sample blocks within current clip
-         auto blocks = clip->GetSequenceBlockArray();
-         for (const auto &block : *blocks) {
-            auto &pBlock = block.sb;
-            if ( pBlock ) {
-               if ( pIDs && !pIDs->insert(pBlock->GetBlockID()).second )
-                  continue;
-               if ( visitor )
-                  visitor( *pBlock );
+         for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
+            auto blocks = clip->GetSequenceBlockArray(ii);
+            for (const auto &block : *blocks) {
+               auto &pBlock = block.sb;
+               if ( pBlock ) {
+                  if ( pIDs && !pIDs->insert(pBlock->GetBlockID()).second )
+                     continue;
+                  if ( visitor )
+                     visitor( *pBlock );
+               }
             }
          }
       }

@@ -1131,7 +1131,8 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
          }
 
          mFormat = (sampleFormat) fValue;
-         waveclip->GetSequence()->ConvertToSampleFormat( mFormat );
+         // Assume old AUP format file never had wide clips
+         waveclip->GetSequence(0)->ConvertToSampleFormat(mFormat);
       }
       else if (attr == "numsamples")
       {

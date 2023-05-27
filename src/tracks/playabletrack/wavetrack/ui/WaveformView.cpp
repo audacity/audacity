@@ -443,13 +443,13 @@ void DrawMinMaxRMS(
    }
 }
 
-void DrawIndividualSamples(TrackPanelDrawingContext &context,
-                                        int leftOffset, const wxRect &rect,
-                                        float zoomMin, float zoomMax,
-                                        bool dB, float dBRange,
-                                        const WaveClip *clip,
-                                        bool showPoints, bool muted,
-                                        bool highlight)
+void DrawIndividualSamples(TrackPanelDrawingContext &context, size_t channel,
+   int leftOffset, const wxRect &rect,
+   float zoomMin, float zoomMax,
+   bool dB, float dBRange,
+   const WaveClip *clip,
+   bool showPoints, bool muted,
+   bool highlight)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -474,7 +474,7 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
       return;
 
    Floats buffer{ size_t(slen) };
-   clip->GetSamples((samplePtr)buffer.get(), floatSample, s0, slen,
+   clip->GetSamples(channel, (samplePtr)buffer.get(), floatSample, s0, slen,
                     // Suppress exceptions in this drawing operation:
                     false);
 
@@ -638,13 +638,13 @@ void DrawEnvelope(TrackPanelDrawingContext &context,
 // Headers needed only for experimental drawing below
 //#include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
 //#include "tracks/ui/EnvelopeHandle.h"
-void DrawClipWaveform(TrackPanelDrawingContext &context,
-                                   const WaveTrack *track,
-                                   const WaveClip *clip,
-                                   const wxRect & rect,
-                                   bool dB,
-                                   bool muted,
-                                   bool selected)
+void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
+   const WaveTrack *track,
+   const WaveClip *clip,
+   const wxRect & rect,
+   bool dB,
+   bool muted,
+   bool selected)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -769,7 +769,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
          // fisheye moves over the background, there is then less to do when
          // redrawing.
 
-         if (!clipCache.GetWaveDisplay( *clip, display,
+         if (!clipCache.GetWaveDisplay(*clip, channel, display,
             t0, pps))
             return;
       }
@@ -819,7 +819,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             fisheyeDisplay.width -= skipped;
             // Get a wave display for the fisheye, uncached.
             if (rectPortion.width > 0)
-               if (!clipCache.GetWaveDisplay( *clip,
+               if (!clipCache.GetWaveDisplay(*clip, channel,
                      fisheyeDisplay, t0, -1.0)) // ignored
                   continue; // serious error.  just don't draw??
             useMin = fisheyeDisplay.min;
@@ -861,7 +861,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             highlight = target && target->GetTrack().get() == track;
 #endif
             DrawIndividualSamples(
-               context, leftOffset, rectPortion, zoomMin, zoomMax,
+               context, channel, leftOffset, rectPortion, zoomMin, zoomMax,
                dB, dBRange,
                clip,
                showPoints, muted, highlight );
@@ -952,11 +952,11 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
 
 // Header needed only for experimental drawing below
 //#include "tracks/ui/TimeShiftHandle.h"
-void WaveformView::DoDraw(TrackPanelDrawingContext &context,
-                               const WaveTrack *track,
-                               const WaveClip* selectedClip,
-                               const wxRect& rect,
-                               bool muted)
+void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
+   const WaveTrack *track,
+   const WaveClip* selectedClip,
+   const wxRect& rect,
+   bool muted)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -978,7 +978,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
 
    for (const auto& clip : track->GetClips())
    {
-      DrawClipWaveform(context, track, clip.get(), rect,
+      DrawClipWaveform(context, channel, track, clip.get(), rect,
          dB, muted, clip.get() == selectedClip);
    }
    DrawBoldBoundaries( context, track, rect );
@@ -1023,7 +1023,7 @@ void WaveformView::Draw(
       wxASSERT(waveTrackView.use_count());
 
       auto selectedClip = waveTrackView->GetSelectedClip().lock();
-      DoDraw(context, wt.get(), selectedClip.get(), rect, muted);
+      DoDraw(context, mChannel, wt.get(), selectedClip.get(), rect, muted);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);

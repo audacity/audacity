@@ -919,13 +919,16 @@ const WaveTrackView *WaveTrackView::Find( const WaveTrack *pTrack )
    return Find( const_cast<WaveTrack*>( pTrack ) );
 }
 
-WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
-   : CommonTrackView{ pTrack }
+WaveTrackView::WaveTrackView(
+   const std::shared_ptr<Track> &pTrack, size_t channel
+)  : CommonTrackView{ pTrack }
+   , mChannel{ channel }
 {
 }
 
-WaveTrackSubView::WaveTrackSubView( WaveTrackView &waveTrackView )
-   : CommonTrackView( waveTrackView.FindTrack() )
+WaveTrackSubView::WaveTrackSubView(WaveTrackView &waveTrackView)
+   : CommonTrackView(waveTrackView.FindTrack())
+   , mChannel(waveTrackView.GetChannel())
 {
    mwWaveTrackView = std::static_pointer_cast<WaveTrackView>(
       waveTrackView.shared_from_this() );
@@ -1504,7 +1507,8 @@ std::shared_ptr<CommonTrackCell> WaveTrackView::DoGetAffordance(const std::share
 using DoGetWaveTrackView = DoGetView::Override< WaveTrack >;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveTrackView) {
    return [](WaveTrack &track) {
-      return std::make_shared<WaveTrackView>( track.SharedPointer() );
+      // TODO wide wave tracks
+      return std::make_shared<WaveTrackView>(track.SharedPointer(), 0);
    };
 }
 

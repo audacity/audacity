@@ -124,6 +124,9 @@ public:
 
    virtual ~WaveClip();
 
+   //! How many Sequences the clip contains; for now always returns 1
+   size_t GetWidth() const;
+
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 
@@ -151,7 +154,8 @@ public:
    sampleCount GetSequenceStartSample() const;
    //! Returns the index of the sample next after the last sample of the underlying sequence
    sampleCount GetSequenceEndSample() const;
-   //! Returns the total number of samples in underlying sequence (not counting the cutlines)
+   //! Returns the total number of samples in all underlying sequences
+   //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
    double GetPlayStartTime() const noexcept;
@@ -199,9 +203,26 @@ public:
    //! @returns Number of samples within t0 and t1 if t1 > t0, 0 otherwise
    sampleCount CountSamples(double t0, double t1) const;
 
-   bool GetSamples(samplePtr buffer, sampleFormat format,
+   //! Get samples from one channel
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   bool GetSamples(size_t ii, samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
-   void SetSamples(constSamplePtr buffer, sampleFormat format,
+
+   //! Get (non-interleaved) samples from all channels
+   /*!
+    assume as many buffers available as GetWidth()
+    */
+   bool GetSamples(samplePtr buffers[], sampleFormat format,
+                   sampleCount start, size_t len, bool mayThrow = true) const;
+
+   //! @param ii identifies the channel
+   /*!
+    @pre `ii < GetWidth()`
+    */
+   void SetSamples(size_t ii, constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       sampleFormat effectiveFormat /*!<
          Make the effective format of the data at least the minumum of this
@@ -213,14 +234,28 @@ public:
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
-   BlockArray* GetSequenceBlockArray();
-   const BlockArray* GetSequenceBlockArray() const;
 
-   // Get low-level access to the sequence. Whenever possible, don't use this,
-   // but use more high-level functions inside WaveClip (or add them if you
-   // think they are useful for general use)
-   Sequence* GetSequence() { return mSequence.get(); }
-   const Sequence* GetSequence() const { return mSequence.get(); }
+   //! @param ii identifies the channel
+   /*!
+    @pre `ii < GetWidth()`
+    */
+   BlockArray* GetSequenceBlockArray(size_t ii);
+   /*!
+    @copydoc GetSequenceBlockArray
+    */
+   const BlockArray* GetSequenceBlockArray(size_t ii) const;
+
+   //! Get low-level access to a sequence. Whenever possible, don't use this,
+   //! but use more high-level functions inside WaveClip (or add them if you
+   //! think they are useful for general use)
+   /*!
+    @pre `ii < GetWidth()`
+    */
+   Sequence* GetSequence(size_t ii) { return mSequence.get(); }
+   /*!
+    @copydoc GetSequence
+    */
+   const Sequence* GetSequence(size_t ii) const { return mSequence.get(); }
 
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
@@ -228,11 +263,18 @@ public:
    /*! @excsafety{No-fail} */
    void MarkChanged();
 
-   /** Getting high-level data for screen display and clipping
+   /** Getting high-level data for one channel for screen display and clipping
     * calculations and Contrast */
-   std::pair<float, float> GetMinMax(
-      double t0, double t1, bool mayThrow = true) const;
-   float GetRMS(double t0, double t1, bool mayThrow = true) const;
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   std::pair<float, float> GetMinMax(size_t ii,
+      double t0, double t1, bool mayThrow) const;
+   /*!
+    @copydoc GetMinMax
+    */
+   float GetRMS(size_t ii, double t0, double t1, bool mayThrow) const;
 
    /** Whenever you do an operation to the sequence that will change the number
     * of samples (that is, the length of the clip), you will want to call this
@@ -341,7 +383,12 @@ public:
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
    void SetSilence(sampleCount offset, sampleCount length);
 
-   constSamplePtr GetAppendBuffer() const;
+   //! Get one channel of the append buffer
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   constSamplePtr GetAppendBuffer(size_t ii) const;
    size_t GetAppendBufferLen() const;
 
 protected:

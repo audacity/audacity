@@ -121,16 +121,35 @@ WaveClip::~WaveClip()
 {
 }
 
-bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len, bool mayThrow) const
+size_t WaveClip::GetWidth() const
 {
-   return mSequence->Get(buffer, format, start + TimeToSamples(mTrimLeft), len, mayThrow);
+   return 1;
+}
+
+bool WaveClip::GetSamples(size_t ii,
+   samplePtr buffer, sampleFormat format,
+   sampleCount start, size_t len, bool mayThrow) const
+{
+   assert(ii < GetWidth());
+   return mSequence
+      ->Get(buffer, format, start + TimeToSamples(mTrimLeft), len, mayThrow);
+}
+
+bool WaveClip::GetSamples(samplePtr buffers[], sampleFormat format,
+   sampleCount start, size_t len, bool mayThrow) const
+{
+   bool result = true;
+   for (size_t ii = 0, width = GetWidth(); result && ii < width; ++ii)
+      result = GetSamples(ii, buffers[ii], format, start, len, mayThrow);
+   return result;
 }
 
 /*! @excsafety{Strong} */
-void WaveClip::SetSamples(constSamplePtr buffer, sampleFormat format,
+void WaveClip::SetSamples(size_t ii,
+   constSamplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
+   assert(ii < GetWidth());
    // use Strong-guarantee
    mSequence->SetSamples(buffer, format,
       start + TimeToSamples(mTrimLeft), len, effectiveFormat);
@@ -139,24 +158,27 @@ void WaveClip::SetSamples(constSamplePtr buffer, sampleFormat format,
    MarkChanged();
 }
 
-BlockArray* WaveClip::GetSequenceBlockArray()
+BlockArray* WaveClip::GetSequenceBlockArray(size_t ii)
 {
+   assert(ii < GetWidth());
    return &mSequence->GetBlockArray();
 }
 
-const BlockArray* WaveClip::GetSequenceBlockArray() const
+const BlockArray* WaveClip::GetSequenceBlockArray(size_t ii) const
 {
+   assert(ii < GetWidth());
    return &mSequence->GetBlockArray();
 }
 
 size_t WaveClip::GetAppendBufferLen() const
 {
-   return GetSequence()->GetAppendBufferLen();
+   return GetSequence(0)->GetAppendBufferLen();
 }
 
-constSamplePtr WaveClip::GetAppendBuffer() const
+constSamplePtr WaveClip::GetAppendBuffer(size_t ii) const
 {
-   return GetSequence()->GetAppendBuffer();
+   assert(ii < GetWidth());
+   return GetSequence(0)->GetAppendBuffer();
 }
 
 void WaveClip::MarkChanged() // NOFAIL-GUARANTEE
@@ -164,9 +186,10 @@ void WaveClip::MarkChanged() // NOFAIL-GUARANTEE
    Caches::ForEach( std::mem_fn( &WaveClipListener::MarkChanged ) );
 }
 
-std::pair<float, float> WaveClip::GetMinMax(
+std::pair<float, float> WaveClip::GetMinMax(size_t ii,
    double t0, double t1, bool mayThrow) const
 {
+   assert(ii < GetWidth());
    t0 = std::max(t0, GetPlayStartTime());
    t1 = std::min(t1, GetPlayEndTime());
    if (t0 > t1) {
@@ -187,8 +210,9 @@ std::pair<float, float> WaveClip::GetMinMax(
    return mSequence->GetMinMax(s0, s1-s0, mayThrow);
 }
 
-float WaveClip::GetRMS(double t0, double t1, bool mayThrow) const
+float WaveClip::GetRMS(size_t ii, double t0, double t1, bool mayThrow) const
 {
+   assert(ii < GetWidth());
    if (t0 > t1) {
       if (mayThrow)
          THROW_INCONSISTENCY_EXCEPTION;
@@ -468,7 +492,7 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
    auto slen = (sampleCount)floor(len * mRate + 0.5);
 
    // use Strong-guarantee
-   GetSequence()->InsertSilence(s0, slen);
+   GetSequence(0)->InsertSilence(s0, slen);
 
    // use No-fail-guarantee
    OffsetCutLines(t, len);
@@ -554,7 +578,7 @@ void WaveClip::ClearSequence(double t0, double t1)
     if (s0 != s1)
     {
         // use Strong-guarantee
-        GetSequence()->Delete(s0, s1 - s0);
+        GetSequence(0)->Delete(s0, s1 - s0);
 
         // use No-fail-guarantee in the remaining
 
@@ -650,7 +674,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    auto s1 = TimeToSequenceSamples(t1);
 
    // use Weak-guarantee
-   GetSequence()->Delete(s0, s1-s0);
+   GetSequence(0)->Delete(s0, s1-s0);
 
    // Collapse envelope
    auto sampleTime = 1.0 / GetRate();
@@ -742,7 +766,7 @@ void WaveClip::OffsetCutLines(double t0, double len)
 
 void WaveClip::CloseLock()
 {
-   GetSequence()->CloseLock();
+   GetSequence(0)->CloseLock();
    for (const auto &cutline: mCutLines)
       cutline->CloseLock();
 }
@@ -884,7 +908,7 @@ double WaveClip::SamplesToTime(sampleCount s) const noexcept
 
 void WaveClip::SetSilence(sampleCount offset, sampleCount length)
 {
-    GetSequence()->SetSilence(TimeToSamples(GetTrimLeft()) + offset, length);
+    GetSequence(0)->SetSilence(TimeToSamples(GetTrimLeft()) + offset, length);
     MarkChanged();
 }
 
