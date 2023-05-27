@@ -31,9 +31,9 @@ class TimeWarper;
 class Sequence;
 class WaveClip;
 
-// Array of pointers that assume ownership
-using WaveClipHolder = std::shared_ptr< WaveClip >;
-using WaveClipHolders = std::vector < WaveClipHolder >;
+//! Clips are held by shared_ptr, not for sharing, but to allow weak_ptr
+using WaveClipHolder = std::shared_ptr<WaveClip>;
+using WaveClipHolders = std::vector <WaveClipHolder>;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
 // Temporary arrays of mere pointers
@@ -312,9 +312,15 @@ private:
    bool CloseLock(); //should be called when the project closes.
    // not balanced by unlocking calls.
 
-   // Get access to the (visible) clips in the tracks, in unspecified order
-   // (not necessarily sequenced in time).
+   //! Get access to the (visible) clips in the tracks, in unspecified order
+   //! (not necessarily sequenced in time).
+   /*!
+    @post all pointers are non-null
+    */
    WaveClipHolders &GetClips() { return mClips; }
+   /*!
+    @copydoc GetClips
+    */
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
@@ -463,6 +469,9 @@ private:
    std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
    //! Append a clip to the track; which must have the same block factory as this track; return success
+   /*!
+    @pre `clip != nullptr`
+    */
    bool AddClip(const std::shared_ptr<WaveClip> &clip);
 
    // Merge two clips, that is append data from clip2 to clip1,
@@ -488,13 +497,16 @@ private:
 
    class IntervalData final : public Track::IntervalData {
    public:
+      /*!
+       @pre `pClip != nullptr`
+       */
       explicit IntervalData( const std::shared_ptr<WaveClip> &pClip )
-      : pClip{ pClip }
+         : pClip{ pClip }
       {}
       std::shared_ptr<const WaveClip> GetClip() const { return pClip; }
-      std::shared_ptr<WaveClip> &GetClip() { return pClip; }
+      const std::shared_ptr<WaveClip> &GetClip() { return pClip; }
    private:
-      std::shared_ptr<WaveClip> pClip;
+      const std::shared_ptr<WaveClip> pClip;
    };
 
    Track::Holder PasteInto( AudacityProject & ) const override;
@@ -509,6 +521,9 @@ private:
    // Protected variables
    //
 
+   /*!
+    @invariant all are non-null
+    */
    WaveClipHolders mClips;
 
    sampleFormat  mFormat;

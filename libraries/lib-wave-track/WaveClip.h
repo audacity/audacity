@@ -361,8 +361,11 @@ protected:
    std::unique_ptr<Sequence> mSequence;
    std::unique_ptr<Envelope> mEnvelope;
 
-   // Cut Lines are nothing more than ordinary wave clips, with the
-   // offset relative to the start of the clip.
+   //! Cut Lines are nothing more than ordinary wave clips, with the
+   //! offset relative to the start of the clip.
+   /*!
+    @invariant all are non-null
+    */
    WaveClipHolders mCutLines {};
 
    // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting
