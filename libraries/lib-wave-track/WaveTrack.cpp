@@ -2257,15 +2257,6 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
       return NULL;
 }
 
-Sequence* WaveTrack::GetSequenceAtTime(double time)
-{
-   WaveClip* clip = GetClipAtTime(time);
-   if (clip)
-      return clip->GetSequence();
-   else
-      return NULL;
-}
-
 WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 {
    auto clip = std::make_unique<WaveClip>(

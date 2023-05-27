@@ -273,11 +273,9 @@ private:
 
    //
    // MM: We now have more than one sequence and envelope per track, so
-   // instead of GetSequence() and GetEnvelope() we have the following
-   // function which give the sequence and envelope which contains the given
-   // time.
+   // instead of GetEnvelope() we have the following function which gives the
+   // envelope that contains the given time.
    //
-   Sequence* GetSequenceAtTime(double time);
    Envelope* GetEnvelopeAtTime(double time);
 
    WaveClip* GetClipAtTime(double time);
