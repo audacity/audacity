@@ -1721,8 +1721,9 @@ and no content already flushed to disk is lost. */
 bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
    size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
+   constSamplePtr buffers[]{ buffer };
    return RightmostOrNewClip()
-      ->Append(buffer, format, len, stride, effectiveFormat);
+      ->Append(buffers, format, len, stride, effectiveFormat);
 }
 
 sampleCount WaveTrack::GetBlockStart(sampleCount s) const

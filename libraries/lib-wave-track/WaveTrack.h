@@ -222,11 +222,10 @@ private:
     */
    bool IsEmpty(double t0, double t1) const;
 
-   /*
-    * If there is an existing WaveClip in the WaveTrack then the data is
-    * appended to that clip. If there are no WaveClips in the track, then a NEW
-    * one is created.
-    *
+   /*!
+    If there is an existing WaveClip in the WaveTrack then the data are
+    appended to that clip. If there are no WaveClips in the track, then a new
+    one is created.
     */
    bool Append(constSamplePtr buffer, sampleFormat format,
       size_t len, unsigned int stride = 1,

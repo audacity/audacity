@@ -300,12 +300,14 @@ public:
    //! @pre `GetWidth() == 1`
    void AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
 
+   //! Append (non-interleaved) samples to all channels
    //! You must call Flush after the last Append
    /*!
     @return true if at least one complete block was created
     @pre `GetWidth() == 1`
+    assume as many buffers available as GetWidth()
     */
-   bool Append(constSamplePtr buffer, sampleFormat format,
+   bool Append(constSamplePtr buffers[], sampleFormat format,
       size_t len, unsigned int stride,
       sampleFormat effectiveFormat /*!<
          Make the effective format of the data at least the minumum of this

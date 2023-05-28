@@ -307,11 +307,15 @@ void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
 /*! @excsafety{Partial}
  -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
-bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
+bool WaveClip::Append(constSamplePtr buffers[], sampleFormat format,
    size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
    // TODO relax assertion
    assert(GetWidth() == 1);
+
+   // This assertion still depends on the precondition
+   Finally Do{ [this]{ assert(CheckInvariants()); } };
+
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
    auto cleanup = finally( [&] {
       // use No-fail-guarantee
@@ -319,7 +323,14 @@ bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
       MarkChanged();
    } );
 
-   return mSequences[0]->Append(buffer, format, len, stride, effectiveFormat);
+   size_t ii = 0;
+   bool success = true;
+   for (auto &pSequence : mSequences)
+      success =
+         pSequence->Append(buffers[ii++], format, len, stride, effectiveFormat)
+      && success;
+
+   return success;
 }
 
 /*! @excsafety{Mixed} */
