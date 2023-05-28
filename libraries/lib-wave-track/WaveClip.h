@@ -321,7 +321,7 @@ public:
    void ClearAndAddCutLine(double t0, double t1);
 
    /// Paste data from other clip, resampling it if not equal rate
-   void Paste(double t0, const WaveClip* other);
+   void Paste(double t0, const WaveClip &other);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */

@@ -932,29 +932,29 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       // Restore cut/split lines
       if (preserve) {
 
-         auto attachLeft = [](WaveClip* target, WaveClip* src) 
+         auto attachLeft = [](WaveClip &target, WaveClip &src)
          {
-            wxASSERT(target->GetTrimLeft() == 0);
-            if (target->GetTrimLeft() != 0)
+            assert(target.GetTrimLeft() == 0);
+            if (target.GetTrimLeft() != 0)
                return;
 
-            auto trim = src->GetPlayEndTime() - src->GetPlayStartTime();
-            target->Paste(target->GetPlayStartTime(), src);
-            target->SetTrimLeft(trim);
+            auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
+            target.Paste(target.GetPlayStartTime(), src);
+            target.SetTrimLeft(trim);
             //Play start time needs to be adjusted after 
             //prepending data to the sequence
-            target->Offset(-trim);
+            target.Offset(-trim);
          };
 
-         auto attachRight = [](WaveClip* target, WaveClip* src)
+         auto attachRight = [](WaveClip &target, WaveClip &src)
          {
-            wxASSERT(target->GetTrimRight() == 0);
-            if (target->GetTrimRight() != 0)
+            assert(target.GetTrimRight() == 0);
+            if (target.GetTrimRight() != 0)
                return;
             
-            auto trim = src->GetPlayEndTime() - src->GetPlayStartTime();
-            target->Paste(target->GetPlayEndTime(), src);
-            target->SetTrimRight(trim);
+            auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
+            target.Paste(target.GetPlayEndTime(), src);
+            target.SetTrimRight(trim);
          };
 
          // Restore the split lines and trims, transforming the position appropriately
@@ -970,20 +970,24 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                   clip->ClearRight(at);
                   newClip->ClearLeft(at);
                   if (split.left)
-                     attachRight(clip.get(), split.left.get());
+                     // clip was cleared right
+                     attachRight(*clip, *split.left);
                   if (split.right)
-                     attachLeft(newClip.get(), split.right.get());
+                     // new clip was cleared left
+                     attachLeft(*newClip, *split.right);
                   AddClip(std::move(newClip));
                   break;
                }
                else if (clip->GetPlayStartSample() == TimeToLongSamples(at) && split.right)
                {
-                  attachLeft(clip.get(), split.right.get());
+                  // precondition satisfied because... ??
+                  attachLeft(*clip, *split.right);
                   break;
                }
                else if (clip->GetPlayEndSample() == TimeToLongSamples(at) && split.left)
                {
-                  attachRight(clip.get(), split.left.get());
+                  // precondition satisfied because... ??
+                  attachRight(*clip, *split.left);
                   break;
                }
             }
@@ -1397,7 +1401,8 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
                     };
                 }
             }
-            insideClip->Paste(t0, other->GetClipByIndex(0));
+            if (auto *pClip = other->GetClipByIndex(0))
+               insideClip->Paste(t0, *pClip);
             return;
         }
         // Just fall through and exhibit NEW behaviour
@@ -1678,7 +1683,7 @@ void WaveTrack::Join(double t0, double t1)
       }
 
       //wxPrintf("Pasting at %.6f\n", t);
-      newClip->Paste(t, clip);
+      newClip->Paste(t, *clip);
 
       t = newClip->GetPlayEndTime();
 
@@ -2558,7 +2563,7 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 
    // Append data from second clip to first clip
    // use Strong-guarantee
-   clip1->Paste(clip1->GetPlayEndTime(), clip2);
+   clip1->Paste(clip1->GetPlayEndTime(), *clip2);
    
    // use No-fail-guarantee for the rest
    // Delete second clip

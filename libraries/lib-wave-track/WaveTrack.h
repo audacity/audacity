@@ -453,10 +453,15 @@ private:
    // Get the linear index of a given clip (-1 if the clip is not found)
    int GetClipIndex(const WaveClip* clip) const;
 
-   // Get the nth clip in this WaveTrack (will return NULL if not found).
-   // Use this only in special cases (like getting the linked clip), because
-   // it is much slower than GetClipIterator().
+   //! Get the nth clip in this WaveTrack (will return nullptr if not found).
+   /*!
+    Use this only in special cases (like getting the linked clip), because
+    it is much slower than GetClipIterator().
+    */
    WaveClip *GetClipByIndex(int index);
+   /*!
+    @copydoc GetClipByIndex
+    */
    const WaveClip* GetClipByIndex(int index) const;
 
    // Get number of clips in this WaveTrack

@@ -395,11 +395,11 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
 }
 
 /*! @excsafety{Strong} */
-void WaveClip::Paste(double t0, const WaveClip* other)
+void WaveClip::Paste(double t0, const WaveClip &other)
 {
-   const bool clipNeedsResampling = other->mRate != mRate;
+   const bool clipNeedsResampling = other.mRate != mRate;
    const bool clipNeedsNewFormat =
-      other->mSequence->GetSampleFormats().Stored()
+      other.mSequence->GetSampleFormats().Stored()
          != mSequence->GetSampleFormats().Stored();
    std::shared_ptr<WaveClip> newClip;
 
@@ -409,27 +409,27 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    if (t0 == GetPlayStartTime())
    {
        ClearSequence(GetSequenceStartTime(), t0);
-       SetTrimLeft(other->GetTrimLeft());
+       SetTrimLeft(other.GetTrimLeft());
 
        auto copy =
-         std::make_shared<WaveClip>(*other, mSequence->GetFactory(), true);
+         std::make_shared<WaveClip>(other, mSequence->GetFactory(), true);
        copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime());
        newClip = std::move(copy);
    }
    else if (t0 == GetPlayEndTime())
    {
        ClearSequence(GetPlayEndTime(), GetSequenceEndTime());
-       SetTrimRight(other->GetTrimRight());
+       SetTrimRight(other.GetTrimRight());
 
        auto copy =
-         std::make_shared<WaveClip>(*other, mSequence->GetFactory(), true);
+         std::make_shared<WaveClip>(other, mSequence->GetFactory(), true);
        copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime());
        newClip = std::move(copy);
    }
    else
    {
       newClip =
-         std::make_shared<WaveClip>(*other, mSequence->GetFactory(), true);
+         std::make_shared<WaveClip>(other, mSequence->GetFactory(), true);
       newClip->ClearSequence(newClip->GetPlayEndTime(), newClip->GetSequenceEndTime());
       newClip->ClearSequence(newClip->GetSequenceStartTime(), newClip->GetPlayStartTime());
       newClip->SetTrimLeft(0);
@@ -722,7 +722,8 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
       // Do this to get the right result:
       cutline->mEnvelope->SetOffset(0);
 
-      Paste(GetSequenceStartTime()+cutline->GetSequenceStartTime(), cutline);
+      Paste(GetSequenceStartTime() + cutline->GetSequenceStartTime(),
+         *cutline);
       // Now erase the cutline,
       // but be careful to find it again, because Paste above may
       // have modified the array of cutlines (if our cutline contained
