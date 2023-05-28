@@ -158,6 +158,7 @@ public:
       for (auto &interval : intervals) {
          auto pData = static_cast<WaveTrack::IntervalData*>( interval.Extra() );
          auto pClip = pData->GetClip();
+         // TODO wide wave tracks -- guarantee matching clip width
          if ( !mpTrack->AddClip( pClip ) )
             return false;
          mMigrated.insert( pClip.get() );

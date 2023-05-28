@@ -82,6 +82,9 @@ public:
    //! Copied only in WaveTrack::Clone() !
    WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&);
 
+   //! The width of every WaveClip in this track; for now always 1
+   size_t GetWidth() const;
+
    // overwrite data excluding the sample sequence but including display
    // settings
    void Reinit(const WaveTrack &orig);
@@ -431,9 +434,13 @@ private:
       return { AllClipsConstIterator{ *this }, AllClipsConstIterator{ } };
    }
    
-   // Create NEW clip and add it to this track. Returns a pointer
-   // to the newly created clip. Optionally initial offset and
-   // clip name may be provided
+   //! Create new clip and add it to this track.
+   /*!
+    Returns a pointer to the newly created clip. Optionally initial offset and
+    clip name may be provided
+
+    @post result: `result->GetWidth() == GetWidth()`
+    */
    WaveClip* CreateClip(double offset = .0, const wxString& name = wxEmptyString);
 
    /** @brief Get access to the most recently added clip, or create a clip,
@@ -492,7 +499,8 @@ private:
    // You assume responsibility for its memory!
    std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
-   //! Append a clip to the track; which must have the same block factory as this track; return success
+   //! Append a clip to the track; to succeed, must have the same block factory
+   //! as this track and the correct width; return success
    /*!
     @pre `clip != nullptr`
     */
@@ -546,7 +554,7 @@ private:
    //
 
    /*!
-    @invariant all are non-null
+    @invariant all are non-null and match `this->GetWidth()`
     */
    WaveClipHolders mClips;
 

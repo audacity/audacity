@@ -108,15 +108,21 @@ public:
    WaveClip(const SampleBlockFactoryPtr &factory, sampleFormat format,
       int rate, int colourIndex);
 
-   // essentially a copy constructor - but you must pass in the
-   // current sample block factory, because we might be copying
-   // from one project to another
+   //! essentially a copy constructor - but you must pass in the
+   //! current sample block factory, because we might be copying
+   //! from one project to another
+   /*!
+    @post `GetWidth() == orig.GetWidth()`
+    */
    WaveClip(const WaveClip& orig,
             const SampleBlockFactoryPtr &factory,
             bool copyCutlines);
 
    //! @brief Copy only a range from the given WaveClip
-   //! @pre CountSamples(t1, t0) > 0
+   /*!
+    @pre CountSamples(t1, t0) > 0
+    @post `GetWidth() == orig.GetWidth()`
+    */
    WaveClip(const WaveClip& orig,
             const SampleBlockFactoryPtr &factory,
             bool copyCutlines,
@@ -320,8 +326,11 @@ public:
    /// if there is at least one clip sample between t0 and t1, noop otherwise.
    void ClearAndAddCutLine(double t0, double t1);
 
-   /// Paste data from other clip, resampling it if not equal rate
-   void Paste(double t0, const WaveClip &other);
+   //! Paste data from other clip, resampling it if not equal rate
+   /*!
+    @return true and succeed if and only if `this->GetWidth() == other.GetWidth()`
+    */
+   bool Paste(double t0, const WaveClip &other);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */

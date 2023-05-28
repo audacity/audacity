@@ -236,6 +236,11 @@ WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
       mClips.push_back(std::make_shared<WaveClip>(*clip, mpFactory, true));
 }
 
+size_t WaveTrack::GetWidth() const
+{
+   return 1;
+}
+
 // Copy the track metadata but not the contents.
 void WaveTrack::Init(const WaveTrack &orig)
 {
@@ -934,12 +939,14 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 
          auto attachLeft = [](WaveClip &target, WaveClip &src)
          {
+            assert(target.GetWidth() == src.GetWidth());
             assert(target.GetTrimLeft() == 0);
             if (target.GetTrimLeft() != 0)
                return;
 
             auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
-            target.Paste(target.GetPlayStartTime(), src);
+            auto success = target.Paste(target.GetPlayStartTime(), src);
+            assert(success); // because of precondition above
             target.SetTrimLeft(trim);
             //Play start time needs to be adjusted after 
             //prepending data to the sequence
@@ -948,12 +955,14 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 
          auto attachRight = [](WaveClip &target, WaveClip &src)
          {
+            assert(target.GetWidth() == src.GetWidth());
             assert(target.GetTrimRight() == 0);
             if (target.GetTrimRight() != 0)
                return;
             
             auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
-            target.Paste(target.GetPlayEndTime(), src);
+            auto success = target.Paste(target.GetPlayEndTime(), src);
+            assert(success); // because of precondition above
             target.SetTrimRight(trim);
          };
 
@@ -962,6 +971,9 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
             auto at = LongSamplesToTime(TimeToLongSamples(warper->Warp(split.time)));
             for (const auto& clip : GetClips())
             {
+               // Clips in split began as copies of a clip in the track,
+               // therefore have the same width, satisfying preconditions to
+               // attach
                if (clip->WithinPlayRegion(at))//strictly inside
                {
                   auto newClip =
@@ -975,7 +987,8 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                   if (split.right)
                      // new clip was cleared left
                      attachLeft(*newClip, *split.right);
-                  AddClip(std::move(newClip));
+                  bool success = AddClip(std::move(newClip));
+                  assert(success); // copied clip has same width and factory
                   break;
                }
                else if (clip->GetPlayStartSample() == TimeToLongSamples(at) && split.right)
@@ -1095,6 +1108,9 @@ bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 {
    assert(clip);
    if (clip->GetSequence(0)->GetFactory() != this->mpFactory)
+      return false;
+
+   if (clip->GetWidth() != GetWidth())
       return false;
 
    // Uncomment the following line after we correct the problem of zero-length clips
@@ -1401,8 +1417,14 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
                     };
                 }
             }
-            if (auto *pClip = other->GetClipByIndex(0))
-               insideClip->Paste(t0, *pClip);
+            if (auto *pClip = other->GetClipByIndex(0)) {
+               bool success = insideClip->Paste(t0, *pClip);
+               // TODO wide wave tracks -- prove success, or propagate failure,
+               // or we might throw a MessageBoxException
+               // (which would require a change in base class Track)
+               // for now it would be quiet failure if clip widths mismatched
+               // Can't yet assert(success);
+            }
             return;
         }
         // Just fall through and exhibit NEW behaviour
@@ -1683,7 +1705,8 @@ void WaveTrack::Join(double t0, double t1)
       }
 
       //wxPrintf("Pasting at %.6f\n", t);
-      newClip->Paste(t, *clip);
+      bool success = newClip->Paste(t, *clip);
+      assert(success); // promise of CreateClip
 
       t = newClip->GetPlayEndTime();
 
@@ -2305,7 +2328,11 @@ WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
    clip->SetSequenceStartTime(offset);
    mClips.push_back(std::move(clip));
 
-   return mClips.back().get();
+   auto result = mClips.back().get();
+   // TODO wide wave tracks -- for now assertion is correct because widths are
+   // always 1
+   assert(result->GetWidth() == GetWidth());
+   return result;
 }
 
 WaveClip* WaveTrack::NewestOrNewClip()
@@ -2563,7 +2590,8 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 
    // Append data from second clip to first clip
    // use Strong-guarantee
-   clip1->Paste(clip1->GetPlayEndTime(), *clip2);
+   bool success = clip1->Paste(clip1->GetPlayEndTime(), *clip2);
+   assert(success);  // assuming clips of the same track must have same width
    
    // use No-fail-guarantee for the rest
    // Delete second clip

@@ -73,6 +73,8 @@ WaveClip::WaveClip(const WaveClip& orig,
          mCutLines.push_back(std::make_shared<WaveClip>(*clip, factory, true));
 
    mIsPlaceholder = orig.GetIsPlaceholder();
+
+   assert(GetWidth() == orig.GetWidth());
 }
 
 WaveClip::WaveClip(const WaveClip& orig,
@@ -114,6 +116,8 @@ WaveClip::WaveClip(const WaveClip& orig,
       for (const auto &cutline : orig.mCutLines)
          mCutLines.push_back(
             std::make_shared<WaveClip>(*cutline, factory, true));
+
+   assert(GetWidth() == orig.GetWidth());
 }
 
 
@@ -395,8 +399,11 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
 }
 
 /*! @excsafety{Strong} */
-void WaveClip::Paste(double t0, const WaveClip &other)
+bool WaveClip::Paste(double t0, const WaveClip &other)
 {
+   if (GetWidth() != other.GetWidth())
+      return false;
+
    const bool clipNeedsResampling = other.mRate != mRate;
    const bool clipNeedsNewFormat =
       other.mSequence->GetSampleFormats().Stored()
@@ -476,6 +483,8 @@ void WaveClip::Paste(double t0, const WaveClip &other)
 
    for (auto &holder : newCutlines)
       mCutLines.push_back(std::move(holder));
+
+   return true;
 }
 
 /*! @excsafety{Strong} */
@@ -722,8 +731,11 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
       // Do this to get the right result:
       cutline->mEnvelope->SetOffset(0);
 
-      Paste(GetSequenceStartTime() + cutline->GetSequenceStartTime(),
-         *cutline);
+      auto success =
+         Paste(GetSequenceStartTime() + cutline->GetSequenceStartTime(),
+            *cutline);
+      // TODO justify assert(success);
+
       // Now erase the cutline,
       // but be careful to find it again, because Paste above may
       // have modified the array of cutlines (if our cutline contained
