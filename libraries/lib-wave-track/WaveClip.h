@@ -21,6 +21,7 @@
 
 #include <wx/longlong.h>
 
+#include <cassert>
 #include <vector>
 #include <functional>
 
@@ -257,11 +258,14 @@ public:
    /*!
     @pre `ii < GetWidth()`
     */
-   Sequence* GetSequence(size_t ii) { return mSequence.get(); }
+   Sequence* GetSequence(size_t ii) {
+      assert(ii < GetWidth());
+      return mSequences[ii].get();
+   }
    /*!
     @copydoc GetSequence
     */
-   const Sequence* GetSequence(size_t ii) const { return mSequence.get(); }
+   const Sequence* GetSequence(size_t ii) const { return mSequences[ii].get(); }
 
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
@@ -288,14 +292,19 @@ public:
    void UpdateEnvelopeTrackLen();
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
+   //! @pre `GetWidth() == 1`
    std::shared_ptr<SampleBlock> AppendNewBlock(
       samplePtr buffer, sampleFormat format, size_t len);
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   //! @pre `GetWidth() == 1`
    void AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
 
-   /// You must call Flush after the last Append
-   /// @return true if at least one complete block was created
+   //! You must call Flush after the last Append
+   /*!
+    @return true if at least one complete block was created
+    @pre `GetWidth() == 1`
+    */
    bool Append(constSamplePtr buffer, sampleFormat format,
       size_t len, unsigned int stride,
       sampleFormat effectiveFormat /*!<
@@ -305,7 +314,11 @@ public:
          than the effective, then no dithering will occur.
       */
    );
-   /// Flush must be called after last Append
+
+   //! Flush must be called after last Append
+   /*!
+    @pre `GetWidth() == 1`
+    */
    void Flush();
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
@@ -400,11 +413,16 @@ public:
    constSamplePtr GetAppendBuffer(size_t ii) const;
    size_t GetAppendBufferLen() const;
 
-protected:
+private:
+   sampleCount GetNumSamples() const;
+   SampleFormats GetSampleFormats() const;
+   const SampleBlockFactoryPtr &GetFactory();
+
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
    void ClearSequence(double t0, double t1);
 
+   bool CheckInvariants() const;
    
 
    double mSequenceOffset { 0 };
@@ -414,7 +432,15 @@ protected:
    int mRate;
    int mColourIndex;
 
-   std::unique_ptr<Sequence> mSequence;
+   /*!
+    @invariant `mSequences.size() > 0`
+    @invariant all are non-null
+    @invariant all sequences have the same lengths, append buffer lengths,
+      sample formats, and sample block factory
+    @invariant all cutlines have the same width
+    */
+   std::vector<std::unique_ptr<Sequence>> mSequences;
+   //! Envelope is unique, not per-sequence
    std::unique_ptr<Envelope> mEnvelope;
 
    //! Cut Lines are nothing more than ordinary wave clips, with the

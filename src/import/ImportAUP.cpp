@@ -385,8 +385,9 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
       }
       else
       {
-         AddSamples(fi.blockFile, fi.audioFile,
-                    fi.len, fi.format, fi.origin, fi.channel);
+         if (!AddSamples(fi.blockFile, fi.audioFile,
+                    fi.len, fi.format, fi.origin, fi.channel))
+            return ProgressResult::Failed;
       }
 
       processed += fi.len;
@@ -1458,6 +1459,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    auto &pBlock = mFileMap[wxFileNameFromPath(blockFilename)].second;
    if (pBlock) {
       // Replicate the sharing of blocks
+      if (pClip->GetWidth() != 1)
+         return false;
       pClip->AppendSharedBlock( pBlock );
       return true;
    }
@@ -1649,6 +1652,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    // Add the samples to the clip/track
    if (pClip)
    {
+      if (pClip->GetWidth() != 1)
+         return false;
       pBlock = pClip->AppendNewBlock(bufptr, format, cnt);
    }
 

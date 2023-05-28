@@ -175,7 +175,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    SampleFormats GetSampleFormats() const;
 
-   //! @return whether there was a change
+   //! @return whether there was a change of format
    /*! @excsafety{Strong} */
    bool ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});

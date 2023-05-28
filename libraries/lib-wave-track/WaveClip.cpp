@@ -13,12 +13,10 @@
 \brief This allows multiple clips to be a part of one WaveTrack.
 
 *//*******************************************************************/
-
 #include "WaveClip.h"
 
-
-
 #include <math.h>
+#include <optional>
 #include <vector>
 #include <wx/log.h>
 
@@ -43,10 +41,13 @@ WaveClip::WaveClip(const SampleBlockFactoryPtr &factory,
 {
    mRate = rate;
    mColourIndex = colourIndex;
-   mSequence = std::make_unique<Sequence>( factory,
-      SampleFormats{narrowestSampleFormat, format});
+   mSequences.resize(1);
+   for (auto &pSequence : mSequences)
+      pSequence = std::make_unique<Sequence>(factory,
+         SampleFormats{narrowestSampleFormat, format});
 
    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
+   assert(CheckInvariants());
 }
 
 WaveClip::WaveClip(const WaveClip& orig,
@@ -62,7 +63,10 @@ WaveClip::WaveClip(const WaveClip& orig,
    mTrimRight = orig.mTrimRight;
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
-   mSequence = std::make_unique<Sequence>(*orig.mSequence, factory);
+   mSequences.reserve(orig.GetWidth());
+   for (auto &pSequence : orig.mSequences)
+      mSequences.push_back(
+         std::make_unique<Sequence>(*pSequence, factory));
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
@@ -75,6 +79,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    mIsPlaceholder = orig.GetIsPlaceholder();
 
    assert(GetWidth() == orig.GetWidth());
+   assert(CheckInvariants());
 }
 
 WaveClip::WaveClip(const WaveClip& orig,
@@ -108,7 +113,10 @@ WaveClip::WaveClip(const WaveClip& orig,
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 
-   mSequence = std::make_unique<Sequence>(*orig.mSequence, factory);
+   mSequences.reserve(orig.GetWidth());
+   for (auto &pSequence : orig.mSequences)
+      mSequences.push_back(
+         std::make_unique<Sequence>(*pSequence, factory));
    
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
@@ -118,6 +126,7 @@ WaveClip::WaveClip(const WaveClip& orig,
             std::make_shared<WaveClip>(*cutline, factory, true));
 
    assert(GetWidth() == orig.GetWidth());
+   assert(CheckInvariants());
 }
 
 
@@ -127,7 +136,7 @@ WaveClip::~WaveClip()
 
 size_t WaveClip::GetWidth() const
 {
-   return 1;
+   return mSequences.size();
 }
 
 bool WaveClip::GetSamples(size_t ii,
@@ -135,7 +144,7 @@ bool WaveClip::GetSamples(size_t ii,
    sampleCount start, size_t len, bool mayThrow) const
 {
    assert(ii < GetWidth());
-   return mSequence
+   return mSequences[ii]
       ->Get(buffer, format, start + TimeToSamples(mTrimLeft), len, mayThrow);
 }
 
@@ -155,7 +164,7 @@ void WaveClip::SetSamples(size_t ii,
 {
    assert(ii < GetWidth());
    // use Strong-guarantee
-   mSequence->SetSamples(buffer, format,
+   mSequences[ii]->SetSamples(buffer, format,
       start + TimeToSamples(mTrimLeft), len, effectiveFormat);
 
    // use No-fail-guarantee
@@ -165,24 +174,43 @@ void WaveClip::SetSamples(size_t ii,
 BlockArray* WaveClip::GetSequenceBlockArray(size_t ii)
 {
    assert(ii < GetWidth());
-   return &mSequence->GetBlockArray();
+   return &mSequences[ii]->GetBlockArray();
 }
 
 const BlockArray* WaveClip::GetSequenceBlockArray(size_t ii) const
 {
    assert(ii < GetWidth());
-   return &mSequence->GetBlockArray();
+   return &mSequences[ii]->GetBlockArray();
 }
 
 size_t WaveClip::GetAppendBufferLen() const
 {
-   return GetSequence(0)->GetAppendBufferLen();
+   // All append buffers have equal lengths by class invariant
+   return mSequences[0]->GetAppendBufferLen();
+}
+
+sampleCount WaveClip::GetNumSamples() const
+{
+   // All sequences have equal lengths by class invariant
+   return mSequences[0]->GetNumSamples();
+}
+
+SampleFormats WaveClip::GetSampleFormats() const
+{
+   // All sequences have the same formats by class invariant
+   return mSequences[0]->GetSampleFormats();
+}
+
+const SampleBlockFactoryPtr &WaveClip::GetFactory()
+{
+   // All sequences have the same factory by class invariant
+   return mSequences[0]->GetFactory();
 }
 
 constSamplePtr WaveClip::GetAppendBuffer(size_t ii) const
 {
    assert(ii < GetWidth());
-   return GetSequence(0)->GetAppendBuffer();
+   return mSequences[ii]->GetAppendBuffer();
 }
 
 void WaveClip::MarkChanged() // NOFAIL-GUARANTEE
@@ -211,7 +239,7 @@ std::pair<float, float> WaveClip::GetMinMax(size_t ii,
    auto s0 = TimeToSequenceSamples(t0);
    auto s1 = TimeToSequenceSamples(t1);
 
-   return mSequence->GetMinMax(s0, s1-s0, mayThrow);
+   return mSequences[ii]->GetMinMax(s0, s1 - s0, mayThrow);
 }
 
 float WaveClip::GetRMS(size_t ii, double t0, double t1, bool mayThrow) const
@@ -229,7 +257,7 @@ float WaveClip::GetRMS(size_t ii, double t0, double t1, bool mayThrow) const
    auto s0 = TimeToSequenceSamples(t0);
    auto s1 = TimeToSequenceSamples(t1);
 
-   return mSequence->GetRMS(s0, s1-s0, mayThrow);
+   return mSequences[ii]->GetRMS(s0, s1-s0, mayThrow);
 }
 
 void WaveClip::ConvertToSampleFormat(sampleFormat format,
@@ -238,7 +266,13 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format,
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get converted as needed when they are expanded.
 
-   auto bChanged = mSequence->ConvertToSampleFormat(format, progressReport);
+   auto bChanged = mSequences[0]->ConvertToSampleFormat(format, progressReport);
+   for (size_t ii = 1, width = GetWidth(); ii < width; ++ii) {
+      bool alsoChanged =
+         mSequences[ii]->ConvertToSampleFormat(format, progressReport);
+      // Class invariant implies:
+      assert(bChanged == alsoChanged);
+   }
    if (bChanged)
       MarkChanged();
 }
@@ -246,7 +280,7 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format,
 /*! @excsafety{No-fail} */
 void WaveClip::UpdateEnvelopeTrackLen()
 {
-   auto len = (mSequence->GetNumSamples().as_double()) / mRate;
+   auto len = (GetNumSamples().as_double()) / mRate;
    if (len != mEnvelope->GetTrackLen())
       mEnvelope->SetTrackLen(len, 1.0 / GetRate());
 }
@@ -255,13 +289,19 @@ void WaveClip::UpdateEnvelopeTrackLen()
 std::shared_ptr<SampleBlock> WaveClip::AppendNewBlock(
    samplePtr buffer, sampleFormat format, size_t len)
 {
-   return mSequence->AppendNewBlock( buffer, format, len );
+   // This is a special use function for legacy files only and this assertion
+   // does not need to be relaxed
+   assert(GetWidth() == 1);
+   return mSequences[0]->AppendNewBlock( buffer, format, len );
 }
 
 /*! @excsafety{Strong} */
 void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
 {
-   mSequence->AppendSharedBlock( pBlock );
+   // This is a special use function for legacy files only and this assertion
+   // does not need to be relaxed
+   assert(GetWidth() == 1);
+   mSequences[0]->AppendSharedBlock( pBlock );
 }
 
 /*! @excsafety{Partial}
@@ -270,6 +310,8 @@ and no content already flushed to disk is lost. */
 bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
    size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
+   // TODO relax assertion
+   assert(GetWidth() == 1);
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
    auto cleanup = finally( [&] {
       // use No-fail-guarantee
@@ -277,7 +319,7 @@ bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
       MarkChanged();
    } );
 
-   return mSequence->Append(buffer, format, len, stride, effectiveFormat);
+   return mSequences[0]->Append(buffer, format, len, stride, effectiveFormat);
 }
 
 /*! @excsafety{Mixed} */
@@ -287,6 +329,8 @@ bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
 clip gets appended; no previously flushed contents are lost. */
 void WaveClip::Flush()
 {
+   // TODO relax assertion
+   assert(GetWidth() == 1);
    //wxLogDebug(wxT("WaveClip::Flush"));
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
    //wxLogDebug(wxT("   previous sample count %lli"), (long long) mSequence->GetNumSamples());
@@ -298,7 +342,7 @@ void WaveClip::Flush()
          MarkChanged();
       } );
 
-      mSequence->Flush();
+      mSequences[0]->Flush();
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
@@ -360,19 +404,18 @@ void WaveClip::HandleXMLEndTag(const std::string_view& tag)
 XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "sequence")
-      return mSequence.get();
+      return mSequences[0].get();
    else if (tag == "envelope")
       return mEnvelope.get();
    else if (tag == "waveclip")
    {
       // Nested wave clips are cut lines
-      auto format = mSequence->GetSampleFormats().Stored();
+      auto format = GetSampleFormats().Stored();
       // The format is not stored in WaveClip itself but passed to
       // Sequence::Sequence; but then the Sequence will deserialize format
       // again
-      mCutLines.push_back(
-         std::make_shared<WaveClip>(mSequence->GetFactory(),
-            format, mRate, 0 /*colourindex*/));
+      mCutLines.push_back(std::make_shared<WaveClip>(GetFactory(),
+         format, mRate, 0 /*colourindex*/));
       return mCutLines.back().get();
    }
    else
@@ -389,7 +432,7 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("name"), mName);
    xmlFile.WriteAttr(wxT("colorindex"), mColourIndex );
 
-   mSequence->WriteXML(xmlFile);
+   mSequences[0]->WriteXML(xmlFile);
    mEnvelope->WriteXML(xmlFile);
 
    for (const auto &clip: mCutLines)
@@ -404,22 +447,23 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
    if (GetWidth() != other.GetWidth())
       return false;
 
+   Finally Do{ [this]{ assert(CheckInvariants()); } };
+
    const bool clipNeedsResampling = other.mRate != mRate;
    const bool clipNeedsNewFormat =
-      other.mSequence->GetSampleFormats().Stored()
-         != mSequence->GetSampleFormats().Stored();
+      other.GetSampleFormats().Stored() != GetSampleFormats().Stored();
    std::shared_ptr<WaveClip> newClip;
 
    t0 = std::clamp(t0, GetPlayStartTime(), GetPlayEndTime());
 
    //seems like edge cases cannot happen, see WaveTrack::PasteWaveTrack
+   auto &factory = GetFactory();
    if (t0 == GetPlayStartTime())
    {
        ClearSequence(GetSequenceStartTime(), t0);
        SetTrimLeft(other.GetTrimLeft());
 
-       auto copy =
-         std::make_shared<WaveClip>(other, mSequence->GetFactory(), true);
+       auto copy = std::make_shared<WaveClip>(other, factory, true);
        copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime());
        newClip = std::move(copy);
    }
@@ -428,15 +472,13 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
        ClearSequence(GetPlayEndTime(), GetSequenceEndTime());
        SetTrimRight(other.GetTrimRight());
 
-       auto copy =
-         std::make_shared<WaveClip>(other, mSequence->GetFactory(), true);
+       auto copy = std::make_shared<WaveClip>(other, factory, true);
        copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime());
        newClip = std::move(copy);
    }
    else
    {
-      newClip =
-         std::make_shared<WaveClip>(other, mSequence->GetFactory(), true);
+      newClip = std::make_shared<WaveClip>(other, factory, true);
       newClip->ClearSequence(newClip->GetPlayEndTime(), newClip->GetSequenceEndTime());
       newClip->ClearSequence(newClip->GetSequenceStartTime(), newClip->GetPlayStartTime());
       newClip->SetTrimLeft(0);
@@ -445,14 +487,13 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
 
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
-      auto copy = std::make_shared<WaveClip>(
-         *newClip.get(), mSequence->GetFactory(), true);
+      auto copy = std::make_shared<WaveClip>(*newClip.get(), factory, true);
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
           copy->Resample(mRate);
       if (clipNeedsNewFormat)
          // Force sample formats to match.
-          copy->ConvertToSampleFormat(mSequence->GetSampleFormats().Stored());
+         copy->ConvertToSampleFormat(GetSampleFormats().Stored());
       newClip = std::move(copy);
    }
 
@@ -460,19 +501,22 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
    WaveClipHolders newCutlines;
    for (const auto &cutline: newClip->mCutLines)
    {
-      auto cutlineCopy =
-         std::make_shared<WaveClip>(*cutline, mSequence->GetFactory(),
-            // Recursively copy cutlines of cutlines.  They don't need
-            // their offsets adjusted.
-            true);
+      auto cutlineCopy = std::make_shared<WaveClip>(*cutline, factory,
+         // Recursively copy cutlines of cutlines.  They don't need
+         // their offsets adjusted.
+         true);
       cutlineCopy->Offset(t0 - GetSequenceStartTime());
       newCutlines.push_back(std::move(cutlineCopy));
    }
 
    sampleCount s0 = TimeToSequenceSamples(t0);
 
+   // Because newClip was made above as a copy of (a copy of) other
+   assert(other.GetWidth() == newClip->GetWidth());
+   // And other has the same width as this, so this loop is safe
    // Assume Strong-guarantee from Sequence::Paste
-   mSequence->Paste(s0, newClip->mSequence.get());
+   for (size_t ii = 0, width = GetWidth(); ii < width; ++ii)
+      mSequences[ii]->Paste(s0, newClip->mSequences[ii].get());
 
    // Assume No-fail-guarantee in the remaining
    MarkChanged();
@@ -501,7 +545,8 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
    auto slen = (sampleCount)floor(len * mRate + 0.5);
 
    // use Strong-guarantee
-   GetSequence(0)->InsertSilence(s0, slen);
+   for (auto &pSequence : mSequences)
+      pSequence->InsertSilence(s0, slen);
 
    // use No-fail-guarantee
    OffsetCutLines(t, len);
@@ -587,7 +632,8 @@ void WaveClip::ClearSequence(double t0, double t1)
     if (s0 != s1)
     {
         // use Strong-guarantee
-        GetSequence(0)->Delete(s0, s1 - s0);
+        for (auto &pSequence : mSequences)
+           pSequence->Delete(s0, s1 - s0);
 
         // use No-fail-guarantee in the remaining
 
@@ -645,7 +691,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    const double clip_t1 = std::min( t1, GetPlayEndTime() );
 
    auto newClip = std::make_shared<WaveClip>(
-      *this, mSequence->GetFactory(), true, clip_t0, clip_t1);
+      *this, GetFactory(), true, clip_t0, clip_t1);
    if(t1 < GetPlayEndTime())
    {
       newClip->ClearSequence(t1, newClip->GetSequenceEndTime());
@@ -683,7 +729,8 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    auto s1 = TimeToSequenceSamples(t1);
 
    // use Weak-guarantee
-   GetSequence(0)->Delete(s0, s1-s0);
+   for (auto &pSequence : mSequences)
+      pSequence->Delete(s0, s1-s0);
 
    // Collapse envelope
    auto sampleTime = 1.0 / GetRate();
@@ -692,6 +739,9 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    MarkChanged();
 
    mCutLines.push_back(std::move(newClip));
+
+   // New cutline was copied from this so will have correct width
+   assert(CheckInvariants());
 }
 
 bool WaveClip::FindCutLine(double cutLinePosition,
@@ -724,17 +774,17 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
       } );
 
    if ( it != end ) {
-      auto cutline = it->get();
+      auto *cutline = it->get();
       // assume Strong-guarantee from Paste
 
       // Envelope::Paste takes offset into account, WaveClip::Paste doesn't!
       // Do this to get the right result:
       cutline->mEnvelope->SetOffset(0);
 
-      auto success =
+      bool success =
          Paste(GetSequenceStartTime() + cutline->GetSequenceStartTime(),
             *cutline);
-      // TODO justify assert(success);
+      assert(success); // class invariant promises cutlines have correct width
 
       // Now erase the cutline,
       // but be careful to find it again, because Paste above may
@@ -779,7 +829,8 @@ void WaveClip::OffsetCutLines(double t0, double len)
 
 void WaveClip::CloseLock()
 {
-   GetSequence(0)->CloseLock();
+   for (auto &pSequence : mSequences)
+      pSequence->CloseLock();
    for (const auto &cutline: mCutLines)
       cutline->CloseLock();
 }
@@ -792,7 +843,7 @@ void WaveClip::SetRate(int rate)
    mRate = rate;
    mTrimLeft = SamplesToTime(trimLeftSampleNum);
    mTrimRight = SamplesToTime(trimRightSampleNum);
-   auto newLength = mSequence->GetNumSamples().as_double() / mRate;
+   auto newLength = GetNumSamples().as_double() / mRate;
    mEnvelope->RescaleTimes( newLength );
    MarkChanged();
    SetSequenceStartTime(GetSequenceStartTime() * ratio);
@@ -816,45 +867,58 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    sampleCount pos = 0;
    bool error = false;
    int outGenerated = 0;
-   auto numSamples = mSequence->GetNumSamples();
+   const auto numSamples = GetNumSamples();
 
-   // This sequence is appended to below
-   auto newSequence = std::make_unique<Sequence>(
-      mSequence->GetFactory(), mSequence->GetSampleFormats());
+   // These sequences are appended to below
+   decltype(mSequences) newSequences;
+   newSequences.reserve(mSequences.size());
+   for (auto &pSequence : mSequences)
+      newSequences.push_back(std::make_unique<Sequence>(
+         pSequence->GetFactory(), pSequence->GetSampleFormats()));
 
    /**
     * We want to keep going as long as we have something to feed the resampler
     * with OR as long as the resampler spews out samples (which could continue
     * for a few iterations after we stop feeding it)
     */
-   while (pos < numSamples || outGenerated > 0)
-   {
+   while (pos < numSamples || outGenerated > 0) {
       const auto inLen = limitSampleBufferSize( bufsize, numSamples - pos );
 
       bool isLast = ((pos + inLen) == numSamples);
 
-      if (!mSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen, true))
-      {
-         error = true;
-         break;
+      auto ppNewSequence = newSequences.begin();
+      std::optional<std::pair<size_t, size_t>> results{};
+      for (auto &pSequence : mSequences) {
+         auto &pNewSequence = *ppNewSequence++;
+         if (!pSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen, true))
+         {
+            error = true;
+            break;
+         }
+
+         // Expect the same results for all channels, or else fail
+         auto newResults = resample.Process(factor, inBuffer.get(), inLen,
+            isLast, outBuffer.get(), bufsize);
+         if (!results)
+            results.emplace(newResults);
+         else if (*results != newResults) {
+            error = true;
+            break;
+         }
+
+         outGenerated = results->second;
+         if (outGenerated < 0) {
+            error = true;
+            break;
+         }
+
+         pNewSequence->Append((samplePtr)outBuffer.get(), floatSample,
+            outGenerated, 1,
+            widestSampleFormat /* computed samples need dither */
+         );
       }
-
-      const auto results = resample.Process(factor, inBuffer.get(), inLen, isLast,
-                                            outBuffer.get(), bufsize);
-      outGenerated = results.second;
-
-      pos += results.first;
-
-      if (outGenerated < 0)
-      {
-         error = true;
-         break;
-      }
-
-      newSequence->Append((samplePtr)outBuffer.get(), floatSample,
-         outGenerated, 1,
-         widestSampleFormat /* computed samples need dither */
-      );
+      if (results)
+         pos += results->first;
 
       if (progress)
       {
@@ -878,7 +942,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    else
    {
       // Use No-fail-guarantee in these steps
-      mSequence = std::move(newSequence);
+      mSequences = move(newSequences);
       mRate = rate;
       Flush();
       Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
@@ -921,13 +985,15 @@ double WaveClip::SamplesToTime(sampleCount s) const noexcept
 
 void WaveClip::SetSilence(sampleCount offset, sampleCount length)
 {
-    GetSequence(0)->SetSilence(TimeToSamples(GetTrimLeft()) + offset, length);
-    MarkChanged();
+   const auto start = TimeToSamples(GetTrimLeft()) + offset;
+   for (auto &pSequence : mSequences)
+      pSequence->SetSilence(start, length);
+   MarkChanged();
 }
 
 sampleCount WaveClip::GetSequenceSamplesCount() const
 {
-    return mSequence->GetNumSamples();
+    return GetNumSamples() * GetWidth();
 }
 
 double WaveClip::GetPlayStartTime() const noexcept
@@ -942,7 +1008,7 @@ void WaveClip::SetPlayStartTime(double time)
 
 double WaveClip::GetPlayEndTime() const
 {
-    auto numSamples = mSequence->GetNumSamples();
+    const auto numSamples = GetNumSamples();
 
     double maxLen = GetSequenceStartTime() + ((numSamples + GetAppendBufferLen()).as_double()) / mRate
        - SamplesToTime(TimeToSamples(mTrimRight));
@@ -964,7 +1030,7 @@ sampleCount WaveClip::GetPlayEndSample() const
 
 sampleCount WaveClip::GetPlaySamplesCount() const
 {
-    return mSequence->GetNumSamples()
+    return GetNumSamples()
        - TimeToSamples(mTrimRight) - TimeToSamples(mTrimLeft);
 }
 
@@ -1022,7 +1088,7 @@ void WaveClip::SetSequenceStartTime(double startTime)
 
 double WaveClip::GetSequenceEndTime() const
 {
-    auto numSamples = mSequence->GetNumSamples();
+    const auto numSamples = GetNumSamples();
 
     double maxLen = GetSequenceStartTime() + (numSamples + GetAppendBufferLen()).as_double() / mRate;
     // JS: calculated value is not the length;
@@ -1038,7 +1104,7 @@ sampleCount WaveClip::GetSequenceStartSample() const
 
 sampleCount WaveClip::GetSequenceEndSample() const
 {
-    return GetSequenceStartSample() + mSequence->GetNumSamples();
+    return GetSequenceStartSample() + GetNumSamples();
 }
 
 void WaveClip::Offset(double delta) noexcept
@@ -1087,11 +1153,43 @@ sampleCount WaveClip::TimeToSequenceSamples(double t) const
     if (t < GetSequenceStartTime())
         return 0;
     else if (t > GetSequenceEndTime())
-        return mSequence->GetNumSamples();
+        return GetNumSamples();
     return TimeToSamples(t - GetSequenceStartTime());
 }
 
 sampleCount WaveClip::ToSequenceSamples(sampleCount s) const
 {
     return s - GetSequenceStartSample();
+}
+
+bool WaveClip::CheckInvariants() const
+{
+   const auto width = GetWidth();
+   auto iter = mSequences.begin(),
+      end = mSequences.end();
+   // There must be at least one pointer
+   if (iter != end) {
+      // All pointers mut be non-null
+      auto &pFirst = *iter++;
+      if (pFirst) {
+         // All sequences must have the same lengths, append buffer lengths,
+         // sample formats, and sample block factory
+         return
+         std::all_of(iter, end, [&](decltype(pFirst) pSequence) {
+            return pSequence &&
+               pSequence->GetNumSamples() == pFirst->GetNumSamples() &&
+               pSequence->GetAppendBufferLen() == pFirst->GetAppendBufferLen()
+                  &&
+               pSequence->GetSampleFormats() == pFirst->GetSampleFormats() &&
+               pSequence->GetFactory() == pFirst->GetFactory();
+         }) &&
+         // All cut lines are non-null, satisfy the invariants, and match width
+         std::all_of(mCutLines.begin(), mCutLines.end(),
+         [width](const WaveClipHolder &pCutLine) {
+            return pCutLine && pCutLine->GetWidth() == width &&
+               pCutLine->CheckInvariants();
+         });
+      }
+   }
+   return false;
 }
