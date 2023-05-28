@@ -131,7 +131,8 @@ public:
 
    virtual ~WaveClip();
 
-   //! How many Sequences the clip contains; for now always returns 1
+   //! How many Sequences the clip contains.
+   //! Set at construction time; changes only if increased by deserialization
    size_t GetWidth() const;
 
    void ConvertToSampleFormat(sampleFormat format,

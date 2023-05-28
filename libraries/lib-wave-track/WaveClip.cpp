@@ -404,20 +404,32 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
 
 void WaveClip::HandleXMLEndTag(const std::string_view& tag)
 {
+   // All blocks were deserialized into new sequences; remove the one made
+   // by the constructor which remains empty.
+   mSequences.erase(mSequences.begin());
+   mSequences.shrink_to_fit();
    if (tag == "waveclip")
       UpdateEnvelopeTrackLen();
+   // A proof of this assertion assumes that nothing has happened since
+   // construction of this, besides calls to the other deserialization
+   // functions
+   assert(CheckInvariants());
 }
 
 XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
 {
-   if (tag == "sequence")
-      return mSequences[0].get();
+   auto &pFirst = mSequences[0];
+   if (tag == "sequence") {
+      mSequences.push_back(std::make_unique<Sequence>(
+         pFirst->GetFactory(), pFirst->GetSampleFormats()));
+      return mSequences.back().get();
+   }
    else if (tag == "envelope")
       return mEnvelope.get();
    else if (tag == "waveclip")
    {
       // Nested wave clips are cut lines
-      auto format = GetSampleFormats().Stored();
+      auto format = pFirst->GetSampleFormats().Stored();
       // The format is not stored in WaveClip itself but passed to
       // Sequence::Sequence; but then the Sequence will deserialize format
       // again
@@ -439,7 +451,8 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("name"), mName);
    xmlFile.WriteAttr(wxT("colorindex"), mColourIndex );
 
-   mSequences[0]->WriteXML(xmlFile);
+   for (auto &pSequence : mSequences)
+      pSequence->WriteXML(xmlFile);
    mEnvelope->WriteXML(xmlFile);
 
    for (const auto &clip: mCutLines)
