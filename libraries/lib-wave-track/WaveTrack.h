@@ -226,6 +226,7 @@ private:
     If there is an existing WaveClip in the WaveTrack then the data are
     appended to that clip. If there are no WaveClips in the track, then a new
     one is created.
+    @return true if at least one complete block was created
     */
    bool Append(constSamplePtr buffer, sampleFormat format,
       size_t len, unsigned int stride = 1,

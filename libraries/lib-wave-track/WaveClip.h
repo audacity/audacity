@@ -304,8 +304,9 @@ public:
    //! You must call Flush after the last Append
    /*!
     @return true if at least one complete block was created
-    @pre `GetWidth() == 1`
     assume as many buffers available as GetWidth()
+    In case of failure or exceptions, the clip contents are unchanged but
+    un-flushed data are lost
     */
    bool Append(constSamplePtr buffers[], sampleFormat format,
       size_t len, unsigned int stride,
@@ -319,7 +320,8 @@ public:
 
    //! Flush must be called after last Append
    /*!
-    @pre `GetWidth() == 1`
+    In case of exceptions, the clip contents are unchanged but
+    un-flushed data are lost
     */
    void Flush();
 
@@ -426,7 +428,17 @@ private:
    void ClearSequence(double t0, double t1);
 
    bool CheckInvariants() const;
-   
+
+   //! Restores state when an update loop over mSequences fails midway
+   struct Transaction {
+      explicit Transaction(WaveClip &clip);
+      ~Transaction();
+      void Commit() { committed = true; }
+
+      WaveClip &clip;
+      std::vector<std::unique_ptr<Sequence>> sequences;
+      bool committed{ false };
+   };
 
    double mSequenceOffset { 0 };
    double mTrimLeft{ 0 };

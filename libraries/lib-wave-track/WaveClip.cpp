@@ -266,6 +266,8 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format,
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get converted as needed when they are expanded.
 
+   Transaction transaction{ *this };
+
    auto bChanged = mSequences[0]->ConvertToSampleFormat(format, progressReport);
    for (size_t ii = 1, width = GetWidth(); ii < width; ++ii) {
       bool alsoChanged =
@@ -275,6 +277,8 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format,
    }
    if (bChanged)
       MarkChanged();
+
+   transaction.Commit();
 }
 
 /*! @excsafety{No-fail} */
@@ -304,56 +308,48 @@ void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
    mSequences[0]->AppendSharedBlock( pBlock );
 }
 
-/*! @excsafety{Partial}
- -- Some prefix (maybe none) of the buffer is appended,
-and no content already flushed to disk is lost. */
 bool WaveClip::Append(constSamplePtr buffers[], sampleFormat format,
    size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
-   // TODO relax assertion
-   assert(GetWidth() == 1);
-
-   // This assertion still depends on the precondition
    Finally Do{ [this]{ assert(CheckInvariants()); } };
 
+   Transaction transaction{ *this };
+
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
-   auto cleanup = finally( [&] {
-      // use No-fail-guarantee
-      UpdateEnvelopeTrackLen();
-      MarkChanged();
-   } );
 
    size_t ii = 0;
-   bool success = true;
+   bool appended = false;
    for (auto &pSequence : mSequences)
-      success =
+      appended =
          pSequence->Append(buffers[ii++], format, len, stride, effectiveFormat)
-      && success;
+         || appended;
 
-   return success;
+   transaction.Commit();
+   // use No-fail-guarantee
+   UpdateEnvelopeTrackLen();
+   MarkChanged();
+
+   return appended;
 }
 
-/*! @excsafety{Mixed} */
-/*! @excsafety{No-fail} -- The clip will be in a flushed state. */
-/*! @excsafety{Partial}
--- Some initial portion (maybe none) of the append buffer of the
-clip gets appended; no previously flushed contents are lost. */
 void WaveClip::Flush()
 {
-   // TODO relax assertion
-   assert(GetWidth() == 1);
    //wxLogDebug(wxT("WaveClip::Flush"));
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
    //wxLogDebug(wxT("   previous sample count %lli"), (long long) mSequence->GetNumSamples());
 
    if (GetAppendBufferLen() > 0) {
 
-      auto cleanup = finally( [&] {
-         UpdateEnvelopeTrackLen();
-         MarkChanged();
-      } );
+      Transaction transaction{ *this };
 
-      mSequences[0]->Flush();
+      for (auto &pSequence : mSequences)
+         pSequence->Flush();
+
+      transaction.Commit();
+
+      // No-fail operations
+      UpdateEnvelopeTrackLen();
+      MarkChanged();
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
@@ -460,6 +456,8 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
 
    Finally Do{ [this]{ assert(CheckInvariants()); } };
 
+   Transaction transaction{ *this };
+
    const bool clipNeedsResampling = other.mRate != mRate;
    const bool clipNeedsNewFormat =
       other.GetSampleFormats().Stored() != GetSampleFormats().Stored();
@@ -529,6 +527,8 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
    for (size_t ii = 0, width = GetWidth(); ii < width; ++ii)
       mSequences[ii]->Paste(s0, newClip->mSequences[ii].get());
 
+   transaction.Commit();
+
    // Assume No-fail-guarantee in the remaining
    MarkChanged();
    auto sampleTime = 1.0 / GetRate();
@@ -545,6 +545,8 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
 /*! @excsafety{Strong} */
 void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 {
+   Transaction transaction{ *this };
+
    if (t == GetPlayStartTime() && t > GetSequenceStartTime())
       ClearSequence(GetSequenceStartTime(), t);
    else if (t == GetPlayEndTime() && t < GetSequenceEndTime()) {
@@ -558,6 +560,8 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
    // use Strong-guarantee
    for (auto &pSequence : mSequences)
       pSequence->InsertSilence(s0, slen);
+
+   transaction.Commit();
 
    // use No-fail-guarantee
    OffsetCutLines(t, len);
@@ -634,6 +638,8 @@ void WaveClip::ClearRight(double t)
 
 void WaveClip::ClearSequence(double t0, double t1)
 {
+   Transaction transaction{ *this };
+
     auto clip_t0 = std::max(t0, GetSequenceStartTime());
     auto clip_t1 = std::min(t1, GetSequenceEndTime());
 
@@ -686,7 +692,7 @@ void WaveClip::ClearSequence(double t0, double t1)
         GetEnvelope()->CollapseRegion(t0, t1, sampleTime);
     }
 
-
+    transaction.Commit();
     MarkChanged();
 }
 
@@ -697,6 +703,8 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
 {
    if (t0 > GetPlayEndTime() || t1 < GetPlayStartTime() || CountSamples(t0, t1) == 0)
       return; // no samples to remove
+
+   Transaction transaction{ *this };
 
    const double clip_t0 = std::max( t0, GetPlayStartTime() );
    const double clip_t1 = std::min( t1, GetPlayEndTime() );
@@ -747,6 +755,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    auto sampleTime = 1.0 / GetRate();
    GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
    
+   transaction.Commit();
    MarkChanged();
 
    mCutLines.push_back(std::move(newClip));
@@ -840,6 +849,7 @@ void WaveClip::OffsetCutLines(double t0, double len)
 
 void WaveClip::CloseLock() noexcept
 {
+   // Don't need a Transaction for noexcept operations
    for (auto &pSequence : mSequences)
       pSequence->CloseLock();
    for (const auto &cutline: mCutLines)
@@ -868,6 +878,8 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 
    if (rate == mRate)
       return; // Nothing to do
+
+   // This function does its own RAII without a Transaction
 
    double factor = (double)rate / (double)mRate;
    ::Resample resample(true, factor, factor); // constant rate resampling
@@ -997,8 +1009,10 @@ double WaveClip::SamplesToTime(sampleCount s) const noexcept
 void WaveClip::SetSilence(sampleCount offset, sampleCount length)
 {
    const auto start = TimeToSamples(GetTrimLeft()) + offset;
+   Transaction transaction{ *this };
    for (auto &pSequence : mSequences)
       pSequence->SetSilence(start, length);
+   transaction.Commit();
    MarkChanged();
 }
 
@@ -1203,4 +1217,22 @@ bool WaveClip::CheckInvariants() const
       }
    }
    return false;
+}
+
+WaveClip::Transaction::Transaction(WaveClip &clip)
+   : clip{ clip }
+{
+   sequences.reserve(clip.mSequences.size());
+   auto &factory = clip.GetFactory();
+   for (auto &pSequence : clip.mSequences)
+      sequences.push_back(
+         //! Does not copy un-flushed append buffer data
+         std::make_unique<Sequence>(*pSequence, factory));
+}
+
+WaveClip::Transaction::~Transaction()
+{
+   if (!committed) {
+      clip.mSequences.swap(sequences);
+   }
 }

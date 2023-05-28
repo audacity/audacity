@@ -68,6 +68,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    Sequence(const SampleBlockFactoryPtr &pFactory, SampleFormats formats);
 
+   //! Does not copy un-flushed append buffer data
    Sequence(const Sequence &orig, const SampleBlockFactoryPtr &pFactory);
 
    Sequence( const Sequence& ) = delete;
