@@ -72,8 +72,8 @@ size_t MixerSource::MixVariableRates(
    auto &cache = mInputSequence[iChannel];
    auto pos = mSamplePos[iChannel];
    const auto queue = mSampleQueue[iChannel].data();
-   const auto queueStart = &mQueueStart[iChannel];
-   const auto queueLen = &mQueueLen[iChannel];
+   auto queueStart = mQueueStart[iChannel];
+   auto queueLen = mQueueLen[iChannel];
    const auto pResample = mResample[iChannel].get();
 
    const auto pFloat = &floatBuffer;
@@ -107,16 +107,16 @@ size_t MixerSource::MixVariableRates(
    const auto endPos = sequence->TimeToLongSamples(tEnd);
    // Find the time corresponding to the start of the queue, for use with time track
    double t = ((pos).as_long_long() +
-               (backwards ? *queueLen : - *queueLen)) / sequenceRate;
+               (backwards ? queueLen : - queueLen)) / sequenceRate;
 
    while (out < maxOut) {
-      if (*queueLen < (int)sProcessLen) {
+      if (queueLen < (int)sProcessLen) {
          // Shift pending portion to start of the buffer
-         memmove(queue, &queue[*queueStart], (*queueLen) * sampleSize);
-         *queueStart = 0;
+         memmove(queue, &queue[queueStart], (queueLen) * sampleSize);
+         queueStart = 0;
 
          auto getLen = limitSampleBufferSize(
-            sQueueMaxLen - *queueLen,
+            sQueueMaxLen - queueLen,
             backwards ? pos - endPos : endPos - pos
          );
 
@@ -126,9 +126,9 @@ size_t MixerSource::MixVariableRates(
                auto results =
                   cache.GetFloats(pos - (getLen - 1), getLen, mMayThrow);
                if (results)
-                  memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
+                  memcpy(&queue[queueLen], results, sizeof(float) * getLen);
                else
-                  memset(&queue[*queueLen], 0, sizeof(float) * getLen);
+                  memset(&queue[queueLen], 0, sizeof(float) * getLen);
 
                sequence->GetEnvelopeValues(mEnvValues.data(),
                   getLen, (pos - (getLen - 1)).as_double() / sequenceRate);
@@ -137,9 +137,9 @@ size_t MixerSource::MixVariableRates(
             else {
                auto results = cache.GetFloats(pos, getLen, mMayThrow);
                if (results)
-                  memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
+                  memcpy(&queue[queueLen], results, sizeof(float) * getLen);
                else
-                  memset(&queue[*queueLen], 0, sizeof(float) * getLen);
+                  memset(&queue[queueLen], 0, sizeof(float) * getLen);
 
                sequence->GetEnvelopeValues(mEnvValues.data(),
                   getLen, (pos).as_double() / sequenceRate);
@@ -148,21 +148,21 @@ size_t MixerSource::MixVariableRates(
             }
 
             for (decltype(getLen) i = 0; i < getLen; i++) {
-               queue[(*queueLen) + i] *= mEnvValues[i];
+               queue[(queueLen) + i] *= mEnvValues[i];
             }
 
             if (backwards)
                ReverseSamples((samplePtr)&queue[0], floatSample,
-                              *queueLen, getLen);
+                              queueLen, getLen);
 
-            *queueLen += getLen;
+            queueLen += getLen;
          }
       }
 
       auto thisProcessLen = sProcessLen;
-      bool last = (*queueLen < (int)sProcessLen);
+      bool last = (queueLen < (int)sProcessLen);
       if (last) {
-         thisProcessLen = *queueLen;
+         thisProcessLen = queueLen;
       }
 
       double factor = initialWarp;
@@ -182,7 +182,7 @@ size_t MixerSource::MixVariableRates(
       }
 
       auto results = pResample->Process(factor,
-         &queue[*queueStart],
+         &queue[queueStart],
          thisProcessLen,
          last,
          // PRL:  Bug2536: crash in soxr happened on Mac, sometimes, when
@@ -196,8 +196,8 @@ size_t MixerSource::MixVariableRates(
          maxOut - out);
 
       const auto input_used = results.first;
-      *queueStart += input_used;
-      *queueLen -= input_used;
+      queueStart += input_used;
+      queueLen -= input_used;
       out += results.second;
       t += (input_used / sequenceRate) * (backwards ? -1 : 1);
 
@@ -208,6 +208,8 @@ size_t MixerSource::MixVariableRates(
 
    assert(out <= maxOut);
    mSamplePos[iChannel] = pos;
+   mQueueStart[iChannel] = queueStart;
+   mQueueLen[iChannel] = queueLen;
    return out;
 }
 
