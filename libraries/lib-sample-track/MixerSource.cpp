@@ -141,10 +141,6 @@ for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
                   memcpy(&queue[queueLen], results, sizeof(float) * getLen);
                else
                   memset(&queue[queueLen], 0, sizeof(float) * getLen);
-
-               sequence->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (pos - (getLen - 1)).as_double() / sequenceRate);
-               pos -= getLen;
             }
             else {
                auto results = cache.GetFloats(pos, getLen, mMayThrow);
@@ -152,7 +148,14 @@ for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
                   memcpy(&queue[queueLen], results, sizeof(float) * getLen);
                else
                   memset(&queue[queueLen], 0, sizeof(float) * getLen);
+            }
 
+            if (backwards) {
+               sequence->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (pos - (getLen - 1)).as_double() / sequenceRate);
+               pos -= getLen;
+            }
+            else {
                sequence->GetEnvelopeValues(mEnvValues.data(),
                   getLen, (pos).as_double() / sequenceRate);
 
@@ -280,6 +283,16 @@ for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
          memcpy(pFloat, results, sizeof(float) * slen);
       else
          memset(pFloat, 0, sizeof(float) * slen);
+   }
+   else {
+      auto results = cache.GetFloats(pos, slen, mMayThrow);
+      if (results)
+         memcpy(pFloat, results, sizeof(float) * slen);
+      else
+         memset(pFloat, 0, sizeof(float) * slen);
+   }
+
+   if (backwards) {
       sequence->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
       for (size_t i = 0; i < slen; i++)
          pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
@@ -288,11 +301,6 @@ for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
       pos -= slen;
    }
    else {
-      auto results = cache.GetFloats(pos, slen, mMayThrow);
-      if (results)
-         memcpy(pFloat, results, sizeof(float) * slen);
-      else
-         memset(pFloat, 0, sizeof(float) * slen);
       sequence->GetEnvelopeValues(mEnvValues.data(), slen, t);
       for (size_t i = 0; i < slen; i++)
          pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
