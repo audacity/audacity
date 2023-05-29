@@ -16,6 +16,7 @@
 
 #include "AudioGraphSource.h"
 #include "MixerOptions.h"
+#include "SampleCount.h"
 
 class Resample;
 class SampleTrackCache;
@@ -76,15 +77,17 @@ private:
    static constexpr size_t sQueueMaxLen = 65536;
 
    /*!
+    Assume floatBuffers has extent nChannels
     @post result: `result <= maxOut`
     */
-   size_t MixSameRate(unsigned iChannel, size_t maxOut, float &floatBuffer);
+   size_t MixSameRate(unsigned nChannels, size_t maxOut, float *floatBuffers[]);
 
    /*!
+    Assume floatBuffers has extent nChannels
     @post result: `result <= maxOut`
     */
    size_t MixVariableRates(
-      unsigned iChannel, size_t maxOut, float &floatBuffer);
+      unsigned nChannels, size_t maxOut, float *floatBuffers[]);
 
    /*!
     @pre `produced <= max`
@@ -108,18 +111,18 @@ private:
 
    //! Fetch position for source
    /*!
-    mSamplePos holds for each track the next sample position not yet processed.
+    mSamplePos holds the next sample position not yet processed
     */
-   std::vector<sampleCount> mSamplePos;
+   sampleCount mSamplePos;
 
    //! First intermediate buffer when resampling is needed
    std::vector<std::vector<float>> mSampleQueue;
 
-   //! Position in each queue of the start of the next block to resample
-   std::vector<int>     mQueueStart;
+   //! Position of the start of the next block to resample
+   int mQueueStart;
 
-   //! For each queue, the number of available samples after the queue start
-   std::vector<int>     mQueueLen;
+   //! The number of available samples after the queue start
+   int mQueueLen;
 
    const ResampleParameters mResampleParameters;
    std::vector<std::unique_ptr<Resample>> mResample;
