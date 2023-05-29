@@ -388,28 +388,6 @@ double Mixer::MixGetCurrentTime()
    return mTimesAndSpeed->mTime;
 }
 
-#if 0
-// Was used before 3.1.0 whenever looping play restarted
-// No longer used
-void Mixer::Restart()
-{
-   mTime = mT0;
-
-   for(size_t i=0; i<mNumInputTracks; i++)
-      mSamplePos[i] = mInputTrack[i].GetTrack()->TimeToLongSamples(mT0);
-
-   for(size_t i=0; i<mNumInputTracks; i++) {
-      mQueueStart[i] = 0;
-      mQueueLen[i] = 0;
-   }
-
-   // Bug 1887:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
-   // constant rate resampling if you try to reuse the resampler after it has
-   // flushed.  Should that be considered a bug in sox?  This works around it:
-   MakeResamplers();
-}
-#endif
-
 void Mixer::Reposition(double t, bool bSkipping)
 {
    auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
