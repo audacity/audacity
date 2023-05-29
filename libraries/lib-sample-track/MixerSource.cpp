@@ -70,7 +70,7 @@ size_t MixerSource::MixVariableRates(
    unsigned iChannel, const size_t maxOut, float &floatBuffer)
 {
    auto &cache = mInputSequence[iChannel];
-   const auto pos = &mSamplePos[iChannel];
+   auto pos = mSamplePos[iChannel];
    const auto queue = mSampleQueue[iChannel].data();
    const auto queueStart = &mQueueStart[iChannel];
    const auto queueLen = &mQueueLen[iChannel];
@@ -106,7 +106,7 @@ size_t MixerSource::MixVariableRates(
       : std::min(endTime, mT1);
    const auto endPos = sequence->TimeToLongSamples(tEnd);
    // Find the time corresponding to the start of the queue, for use with time track
-   double t = ((*pos).as_long_long() +
+   double t = ((pos).as_long_long() +
                (backwards ? *queueLen : - *queueLen)) / sequenceRate;
 
    while (out < maxOut) {
@@ -117,34 +117,34 @@ size_t MixerSource::MixVariableRates(
 
          auto getLen = limitSampleBufferSize(
             sQueueMaxLen - *queueLen,
-            backwards ? *pos - endPos : endPos - *pos
+            backwards ? pos - endPos : endPos - pos
          );
 
          // Nothing to do if past end of play interval
          if (getLen > 0) {
             if (backwards) {
                auto results =
-                  cache.GetFloats(*pos - (getLen - 1), getLen, mMayThrow);
+                  cache.GetFloats(pos - (getLen - 1), getLen, mMayThrow);
                if (results)
                   memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
                else
                   memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
                sequence->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (*pos - (getLen - 1)).as_double() / sequenceRate);
-               *pos -= getLen;
+                  getLen, (pos - (getLen - 1)).as_double() / sequenceRate);
+               pos -= getLen;
             }
             else {
-               auto results = cache.GetFloats(*pos, getLen, mMayThrow);
+               auto results = cache.GetFloats(pos, getLen, mMayThrow);
                if (results)
                   memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
                else
                   memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
                sequence->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (*pos).as_double() / sequenceRate);
+                  getLen, (pos).as_double() / sequenceRate);
 
-               *pos += getLen;
+               pos += getLen;
             }
 
             for (decltype(getLen) i = 0; i < getLen; i++) {
@@ -207,6 +207,7 @@ size_t MixerSource::MixVariableRates(
    }
 
    assert(out <= maxOut);
+   mSamplePos[iChannel] = pos;
    return out;
 }
 
@@ -217,11 +218,11 @@ size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
    // formats, as floats; it may also apply envelope values.
 
    auto &cache = mInputSequence[iChannel];
-   const auto pos = &mSamplePos[iChannel];
+   auto pos = mSamplePos[iChannel];
 
    const auto pFloat = &floatBuffer;
    const auto sequence = cache.GetSequence().get();
-   const double t = ( *pos ).as_double() / sequence->GetRate();
+   const double t = (pos).as_double() / sequence->GetRate();
    const double sequenceEndTime = sequence->GetEndTime();
    const double sequenceStartTime = sequence->GetStartTime();
    const auto &[mT0, mT1, _, __] = *mTimesAndSpeed;
@@ -243,7 +244,7 @@ size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
    );
 
    if (backwards) {
-      auto results = cache.GetFloats(*pos - (slen - 1), slen, mMayThrow);
+      auto results = cache.GetFloats(pos - (slen - 1), slen, mMayThrow);
       if (results)
          memcpy(pFloat, results, sizeof(float) * slen);
       else
@@ -253,10 +254,10 @@ size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
          pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
       ReverseSamples((samplePtr)pFloat, floatSample, 0, slen);
 
-      *pos -= slen;
+      pos -= slen;
    }
    else {
-      auto results = cache.GetFloats(*pos, slen, mMayThrow);
+      auto results = cache.GetFloats(pos, slen, mMayThrow);
       if (results)
          memcpy(pFloat, results, sizeof(float) * slen);
       else
@@ -265,10 +266,11 @@ size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
       for (size_t i = 0; i < slen; i++)
          pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
 
-      *pos += slen;
+      pos += slen;
    }
 
    assert(slen <= maxOut);
+   mSamplePos[iChannel] = pos;
    return slen;
 }
 
