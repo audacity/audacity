@@ -3,7 +3,7 @@
 Audacity: A Digital Audio Editor
 
 SampleTrackCache.h
-@brief Buffer results to avoid repeated calls to SampleTrack::Get()
+@brief Buffer results to avoid repeated calls to WideSampleSequence::Get()
 
 Paul Licameli split from WaveTrack.h
 
@@ -16,7 +16,7 @@ Paul Licameli split from WaveTrack.h
 #include "SampleFormat.h"
 #include <memory>
 
-class SampleTrack;
+class WideSampleSequence;
 
 //! A short-lived object, during whose lifetime, the contents of the WaveTrack are assumed not to change.
 /*! It can replace repeated calls to WaveTrack::Get() (each of which opens and closes at least one block).
@@ -30,17 +30,21 @@ public:
    {
    }
 
-   explicit SampleTrackCache(const std::shared_ptr<const SampleTrack> &pTrack)
-      : mBufferSize(0)
+   explicit SampleTrackCache(
+      const std::shared_ptr<const WideSampleSequence> &pSequence
+   )  : mBufferSize(0)
       , mOverlapBuffer()
       , mNValidBuffers(0)
    {
-      SetTrack(pTrack);
+      SetSequence(pSequence);
    }
    ~SampleTrackCache();
 
-   const std::shared_ptr<const SampleTrack>& GetTrack() const { return mPTrack; }
-   void SetTrack(const std::shared_ptr<const SampleTrack> &pTrack);
+   const std::shared_ptr<const WideSampleSequence>& GetSequence() const {
+      return mpSequence;
+   }
+   void SetSequence(
+      const std::shared_ptr<const WideSampleSequence> &pSequence);
 
    //! Retrieve samples as floats from the track or from the memory cache
    /*! Uses fillZero always
@@ -68,7 +72,7 @@ private:
       }
    };
 
-   std::shared_ptr<const SampleTrack> mPTrack;
+   std::shared_ptr<const WideSampleSequence> mpSequence;
    size_t mBufferSize;
    Buffer mBuffers[2];
    GrowableSampleBuffer mOverlapBuffer;

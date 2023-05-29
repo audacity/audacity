@@ -69,7 +69,7 @@ double ComputeWarpFactor(const Envelope &env, double t0, double t1)
 size_t MixerSource::MixVariableRates(
    unsigned iChannel, const size_t maxOut, float &floatBuffer)
 {
-   auto &cache = mInputTrack[iChannel];
+   auto &cache = mInputSequence[iChannel];
    const auto pos = &mSamplePos[iChannel];
    const auto queue = mSampleQueue[iChannel].data();
    const auto queueStart = &mQueueStart[iChannel];
@@ -77,11 +77,11 @@ size_t MixerSource::MixVariableRates(
    const auto pResample = mResample[iChannel].get();
 
    const auto pFloat = &floatBuffer;
-   const auto track = cache.GetTrack().get();
-   const double trackRate = track->GetRate();
+   const auto sequence = cache.GetSequence().get();
+   const double sequenceRate = sequence->GetRate();
    const auto &[mT0, mT1, mSpeed, _] = *mTimesAndSpeed;
-   const double initialWarp = mRate / mSpeed / trackRate;
-   const double tstep = 1.0 / trackRate;
+   const double initialWarp = mRate / mSpeed / sequenceRate;
+   const double tstep = 1.0 / sequenceRate;
    auto sampleSize = SAMPLE_SIZE(floatSample);
 
    size_t out = 0;
@@ -98,16 +98,16 @@ size_t MixerSource::MixVariableRates(
     */
 
    // Find the last sample
-   double endTime = track->GetEndTime();
-   double startTime = track->GetStartTime();
+   double endTime = sequence->GetEndTime();
+   double startTime = sequence->GetStartTime();
    const bool backwards = (mT1 < mT0);
    const double tEnd = backwards
       ? std::max(startTime, mT1)
       : std::min(endTime, mT1);
-   const auto endPos = track->TimeToLongSamples(tEnd);
+   const auto endPos = sequence->TimeToLongSamples(tEnd);
    // Find the time corresponding to the start of the queue, for use with time track
    double t = ((*pos).as_long_long() +
-               (backwards ? *queueLen : - *queueLen)) / trackRate;
+               (backwards ? *queueLen : - *queueLen)) / sequenceRate;
 
    while (out < maxOut) {
       if (*queueLen < (int)sProcessLen) {
@@ -130,8 +130,8 @@ size_t MixerSource::MixVariableRates(
                else
                   memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
-               track->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (*pos - (getLen - 1)).as_double() / trackRate);
+               sequence->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (*pos - (getLen - 1)).as_double() / sequenceRate);
                *pos -= getLen;
             }
             else {
@@ -141,8 +141,8 @@ size_t MixerSource::MixVariableRates(
                else
                   memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
-               track->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (*pos).as_double() / trackRate);
+               sequence->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (*pos).as_double() / sequenceRate);
 
                *pos += getLen;
             }
@@ -175,10 +175,10 @@ size_t MixerSource::MixVariableRates(
          //         is unpredictable. Maybe it can be compensated later though.
          if (backwards)
             factor *= ComputeWarpFactor( *mEnvelope,
-               t - (double)thisProcessLen / trackRate + tstep, t + tstep);
+               t - (double)thisProcessLen / sequenceRate + tstep, t + tstep);
          else
             factor *= ComputeWarpFactor( *mEnvelope,
-               t, t + (double)thisProcessLen / trackRate);
+               t, t + (double)thisProcessLen / sequenceRate);
       }
 
       auto results = pResample->Process(factor,
@@ -199,7 +199,7 @@ size_t MixerSource::MixVariableRates(
       *queueStart += input_used;
       *queueLen -= input_used;
       out += results.second;
-      t += (input_used / trackRate) * (backwards ? -1 : 1);
+      t += (input_used / sequenceRate) * (backwards ? -1 : 1);
 
       if (last) {
          break;
@@ -213,33 +213,33 @@ size_t MixerSource::MixVariableRates(
 size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
    float &floatBuffer)
 {
-   // This function fetches samples from the input tracks, whatever their
+   // This function fetches samples from the input sequences, whatever their
    // formats, as floats; it may also apply envelope values.
 
-   auto &cache = mInputTrack[iChannel];
+   auto &cache = mInputSequence[iChannel];
    const auto pos = &mSamplePos[iChannel];
 
    const auto pFloat = &floatBuffer;
-   const auto track = cache.GetTrack().get();
-   const double t = ( *pos ).as_double() / track->GetRate();
-   const double trackEndTime = track->GetEndTime();
-   const double trackStartTime = track->GetStartTime();
+   const auto sequence = cache.GetSequence().get();
+   const double t = ( *pos ).as_double() / sequence->GetRate();
+   const double sequenceEndTime = sequence->GetEndTime();
+   const double sequenceStartTime = sequence->GetStartTime();
    const auto &[mT0, mT1, _, __] = *mTimesAndSpeed;
    const bool backwards = (mT1 < mT0);
    const double tEnd = backwards
-      ? std::max(trackStartTime, mT1)
-      : std::min(trackEndTime, mT1);
+      ? std::max(sequenceStartTime, mT1)
+      : std::min(sequenceEndTime, mT1);
 
-   //don't process if we're at the end of the selection or track.
+   //don't process if we're at the end of the selection or sequence.
    if ((backwards ? t <= tEnd : t >= tEnd))
       return 0;
-   //if we're about to approach the end of the track or selection, figure out how much we need to grab
+   //if we're about to approach the end of the sequence or selection, figure out how much we need to grab
    const auto slen = limitSampleBufferSize(
       maxOut,
       // PRL: maybe t and tEnd should be given as sampleCount instead to
       // avoid trouble subtracting one large value from another for a small
       // difference
-      sampleCount{ (backwards ? t - tEnd : tEnd - t) * track->GetRate() + 0.5 }
+      sampleCount{ (backwards ? t - tEnd : tEnd - t) * sequence->GetRate() + 0.5 }
    );
 
    if (backwards) {
@@ -248,7 +248,7 @@ size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
          memcpy(pFloat, results, sizeof(float) * slen);
       else
          memset(pFloat, 0, sizeof(float) * slen);
-      track->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
+      sequence->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
       for (size_t i = 0; i < slen; i++)
          pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
       ReverseSamples((samplePtr)pFloat, floatSample, 0, slen);
@@ -261,7 +261,7 @@ size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
          memcpy(pFloat, results, sizeof(float) * slen);
       else
          memset(pFloat, 0, sizeof(float) * slen);
-      track->GetEnvelopeValues(mEnvValues.data(), slen, t);
+      sequence->GetEnvelopeValues(mEnvValues.data(), slen, t);
       for (size_t i = 0; i < slen; i++)
          pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
 
@@ -290,7 +290,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
    , mEnvelope{ options.envelope }
    , mMayThrow{ mayThrow }
    , mTimesAndSpeed{ move(pTimesAndSpeed) }
-   , mInputTrack( mnChannels )
+   , mInputSequence( mnChannels )
    , mSamplePos( mnChannels )
    , mSampleQueue{ initVector<float>(mnChannels, sQueueMaxLen) }
    , mQueueStart( mnChannels, 0 )
@@ -302,7 +302,8 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
 {
    size_t j = 0;
    for (auto channel : TrackList::Channels(&leader))
-      mInputTrack[j++].SetTrack(channel->SharedPointer<const SampleTrack>());
+      mInputSequence[j++]
+         .SetSequence(channel->SharedPointer<const SampleTrack>());
 
    assert(mTimesAndSpeed);
    auto t0 = mTimesAndSpeed->mT0;

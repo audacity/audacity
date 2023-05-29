@@ -7,21 +7,23 @@ SampleTrackCache.cpp
 Paul Licameli split from WaveTrack.cpp
 
 **********************************************************************/
-
 #include "SampleTrackCache.h"
-#include "SampleTrack.h"
+#include "WideSampleSequence.h"
+#include <cassert>
+#include <cstring>
 
 SampleTrackCache::~SampleTrackCache()
 {
 }
 
-void SampleTrackCache::SetTrack(const std::shared_ptr<const SampleTrack> &pTrack)
+void SampleTrackCache::SetSequence(
+   const std::shared_ptr<const WideSampleSequence> &pSequence)
 {
-   if (mPTrack != pTrack) {
-      if (pTrack) {
-         mBufferSize = pTrack->GetMaxBlockSize();
-         if (!mPTrack ||
-             mPTrack->GetMaxBlockSize() != mBufferSize) {
+   if (mpSequence != pSequence) {
+      if (pSequence) {
+         mBufferSize = pSequence->GetMaxBlockSize();
+         if (!mpSequence ||
+             mpSequence->GetMaxBlockSize() != mBufferSize) {
             Free();
             mBuffers[0].data = Floats{ mBufferSize };
             mBuffers[1].data = Floats{ mBufferSize };
@@ -29,7 +31,7 @@ void SampleTrackCache::SetTrack(const std::shared_ptr<const SampleTrack> &pTrack
       }
       else
          Free();
-      mPTrack = pTrack;
+      mpSequence = pSequence;
       mNValidBuffers = 0;
    }
 }
@@ -64,7 +66,7 @@ const float *SampleTrackCache::GetFloats(
       }
       else if (mNValidBuffers > 0 &&
          start < mBuffers[0].start &&
-         0 <= mPTrack->GetBlockStart(start)) {
+         0 <= mpSequence->GetBlockStart(start)) {
          // Request is not a total miss but starts before the cache,
          // and there is a clip to fetch from.
          // Not the access pattern for drawing spectrogram or playback,
@@ -72,7 +74,7 @@ const float *SampleTrackCache::GetFloats(
          // Move the first buffer into second place, and later
          // refill the first.
          // (This case might be useful when marching backwards through
-         // the track, as with scrubbing.)
+         // the sequence, as with scrubbing.)
          mBuffers[0] .swap ( mBuffers[1] );
          fillFirst = true;
          fillSecond = false;
@@ -82,11 +84,11 @@ const float *SampleTrackCache::GetFloats(
 
       // Refill buffers as needed
       if (fillFirst) {
-         const auto start0 = mPTrack->GetBlockStart(start);
+         const auto start0 = mpSequence->GetBlockStart(start);
          if (start0 >= 0) {
-            const auto len0 = mPTrack->GetBestBlockSize(start0);
-            wxASSERT(len0 <= mBufferSize);
-            if (!mPTrack->GetFloats(
+            const auto len0 = mpSequence->GetBestBlockSize(start0);
+            assert(len0 <= mBufferSize);
+            if (!mpSequence->GetFloats(
                   mBuffers[0].data.get(), start0, len0,
                   fillZero, mayThrow))
                return nullptr;
@@ -99,22 +101,22 @@ const float *SampleTrackCache::GetFloats(
             mNValidBuffers = fillSecond ? 1 : 2;
          }
          else {
-            // Request may fall between the clips of a track.
+            // Request may fall between the clips of a sequence.
             // Invalidate all.  WaveTrack::Get() will return zeroes.
             mNValidBuffers = 0;
             fillSecond = false;
          }
       }
-      wxASSERT(!fillSecond || mNValidBuffers > 0);
+      assert(!fillSecond || mNValidBuffers > 0);
       if (fillSecond) {
          mNValidBuffers = 1;
          const auto end0 = mBuffers[0].end();
          if (end > end0) {
-            const auto start1 = mPTrack->GetBlockStart(end0);
+            const auto start1 = mpSequence->GetBlockStart(end0);
             if (start1 == end0) {
-               const auto len1 = mPTrack->GetBestBlockSize(start1);
-               wxASSERT(len1 <= mBufferSize);
-               if (!mPTrack->GetFloats(mBuffers[1].data.get(), start1, len1, fillZero, mayThrow))
+               const auto len1 = mpSequence->GetBestBlockSize(start1);
+               assert(len1 <= mBufferSize);
+               if (!mpSequence->GetFloats(mBuffers[1].data.get(), start1, len1, fillZero, mayThrow))
                   return nullptr;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
@@ -122,7 +124,7 @@ const float *SampleTrackCache::GetFloats(
             }
          }
       }
-      wxASSERT(mNValidBuffers < 2 || mBuffers[0].end() == mBuffers[1].start);
+      assert(mNValidBuffers < 2 || mBuffers[0].end() == mBuffers[1].start);
 
       samplePtr buffer = nullptr; // will point into mOverlapBuffer
       auto remaining = len;
@@ -139,12 +141,12 @@ const float *SampleTrackCache::GetFloats(
          mOverlapBuffer.Resize(len, format);
          // initLen is not more than len:
          auto sinitLen = initLen.as_size_t();
-         if (!mPTrack->GetFloats(
+         if (!mpSequence->GetFloats(
             // See comment below about casting
             reinterpret_cast<float *>(mOverlapBuffer.ptr()),
             start, sinitLen, fillZero, mayThrow))
             return nullptr;
-         wxASSERT( sinitLen <= remaining );
+         assert(sinitLen <= remaining);
          remaining -= sinitLen;
          start += initLen;
          buffer = mOverlapBuffer.ptr() + sinitLen * SAMPLE_SIZE(format);
@@ -155,7 +157,7 @@ const float *SampleTrackCache::GetFloats(
          const auto starti = start - mBuffers[ii].start;
          // Treatment of initLen above establishes this loop invariant,
          // and statements below preserve it:
-         wxASSERT(starti >= 0);
+         assert(starti >= 0);
 
          // This may be negative
          const auto leni =
@@ -177,7 +179,7 @@ const float *SampleTrackCache::GetFloats(
             const size_t size = sizeof(float) * leni.as_size_t();
             // starti is less than mBuffers[ii].len and nonnegative
             memcpy(buffer, mBuffers[ii].data.get() + starti.as_size_t(), size);
-            wxASSERT( leni <= remaining );
+            assert(leni <= remaining);
             remaining -= leni.as_size_t();
             start += leni;
             buffer += size;
@@ -192,7 +194,7 @@ const float *SampleTrackCache::GetFloats(
             buffer = mOverlapBuffer.ptr();
          }
          // See comment below about casting
-         if (!mPTrack->GetFloats( reinterpret_cast<float*>(buffer),
+         if (!mpSequence->GetFloats( reinterpret_cast<float*>(buffer),
             start, remaining, fillZero, mayThrow))
             return 0;
       }
@@ -205,7 +207,7 @@ const float *SampleTrackCache::GetFloats(
 #if 0
       // Cache works only for float format.
       mOverlapBuffer.Resize(len, format);
-      if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
+      if (mpSequence->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
          return mOverlapBuffer.ptr();
 #else
       // No longer handling other than float format.  Therefore len is 0.

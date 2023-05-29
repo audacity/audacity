@@ -104,7 +104,7 @@ private:
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
    //! SampleTrackCaches are the source of data
-   std::vector<SampleTrackCache> mInputTrack;
+   std::vector<SampleTrackCache> mInputSequence;
 
    //! Fetch position for source
    /*!

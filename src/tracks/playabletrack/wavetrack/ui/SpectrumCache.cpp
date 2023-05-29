@@ -476,7 +476,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
    t0 += clip.GetTrimLeft();
 
    const auto track =
-      static_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
+      static_cast<const WaveTrack*>(waveTrackCache.GetSequence().get());
    auto &settings = SpectrogramSettings::Get(*track);
    const auto rate = clip.GetRate();
 
