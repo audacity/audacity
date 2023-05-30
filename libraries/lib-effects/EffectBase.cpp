@@ -323,7 +323,7 @@ std::any EffectBase::BeginPreview(const EffectSettings &)
    return {};
 }
 
-void EffectBase::Preview(EffectBase &effect,
+void EffectPreview(EffectBase &effect,
    EffectSettingsAccess &access, std::function<void()> updateUI, bool dryOnly)
 {
    auto cleanup0 = effect.BeginPreview(access.Get());
@@ -340,8 +340,8 @@ void EffectBase::Preview(EffectBase &effect,
    auto &mIsPreview = effect.mIsPreview;
 
    // Get certain immutable properties of the effect
-   const auto &previewFullSelection = effect.mPreviewFullSelection;
-   const auto &isLinearEffect = effect.mIsLinearEffect;
+   const auto previewFullSelection = effect.PreviewsFullSelection();
+   const auto isLinearEffect = effect.IsLinearEffect();
 
    if (numTracks == 0) { // nothing to preview
       return;

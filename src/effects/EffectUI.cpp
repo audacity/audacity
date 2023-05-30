@@ -753,7 +753,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
       return;
    
    auto updater = [this]{ TransferDataToWindow(); };
-   EffectBase::Preview(mEffectUIHost, *mpAccess, updater, false);
+   EffectPreview(mEffectUIHost, *mpAccess, updater, false);
    // After restoration of settings and effect state:
    // In case any dialog control depends on mT1 or mDuration:
    updater();
@@ -1219,7 +1219,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          {
             // Prompting will be bypassed when applying an effect that has
             // already been configured, e.g. repeating the last effect on a
-            // different selection.  Prompting may call EffectBase::Preview
+            // different selection.  Prompting may call EffectPreview
             std::shared_ptr<EffectInstance> pInstance;
             std::shared_ptr<EffectInstanceEx> pInstanceEx;
             if ((flags & EffectManager::kConfigured) == 0 && pAccess) {

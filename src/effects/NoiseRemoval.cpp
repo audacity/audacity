@@ -704,7 +704,7 @@ void NoiseRemovalDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
       m_pEffect->mDoProfile = oldDoProfile;
    } );
 
-   EffectBase::Preview(*m_pEffect, mAccess, false);
+   EffectPreview(*m_pEffect, mAccess, false);
 }
 
 void NoiseRemovalDialog::OnRemoveNoise( wxCommandEvent & WXUNUSED(event))
