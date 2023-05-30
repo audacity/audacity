@@ -1481,7 +1481,7 @@ void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    *m_pSettings = mTempSettings;
    m_pSettings->mDoProfile = false;
 
-   m_pEffect->Preview(mAccess,
+   EffectBase::Preview(*m_pEffect, mAccess,
       // Don't need any UI updates for preview
       {},
       false);

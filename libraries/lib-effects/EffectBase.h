@@ -45,7 +45,7 @@ public:
    /*!
     @param updateUI called after adjusting temporary settings and before play
     */
-   void Preview(
+   static void Preview(EffectBase &effect,
       EffectSettingsAccess &access, std::function<void()> updateUI,
       bool dryOnly);
 

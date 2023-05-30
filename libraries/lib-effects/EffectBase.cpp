@@ -323,12 +323,27 @@ std::any EffectBase::BeginPreview(const EffectSettings &)
    return {};
 }
 
-void EffectBase::Preview(
+void EffectBase::Preview(EffectBase &effect,
    EffectSettingsAccess &access, std::function<void()> updateUI, bool dryOnly)
 {
-   auto cleanup0 = BeginPreview(access.Get());
+   auto cleanup0 = effect.BeginPreview(access.Get());
 
-   if (mNumTracks == 0) { // nothing to preview
+   // These are temporary state in the Effect object that are meant be moved to
+   // a new class EffectContext
+   const auto numTracks = effect.mNumTracks;
+   const auto rate = effect.mProjectRate;
+   const auto &factory = effect.mFactory;
+   auto &mT0 = effect.mT0;
+   auto &mT1 = effect.mT1;
+   auto &mTracks = effect.mTracks;
+   auto &mProgress = effect.mProgress;
+   auto &mIsPreview = effect.mIsPreview;
+
+   // Get certain immutable properties of the effect
+   const auto &previewFullSelection = effect.mPreviewFullSelection;
+   const auto &isLinearEffect = effect.mIsLinearEffect;
+
+   if (numTracks == 0) { // nothing to preview
       return;
    }
 
@@ -341,21 +356,19 @@ void EffectBase::Preview(
    assert(FocusDialog); // postcondition
 
    double previewDuration;
-   bool isNyquist = GetFamily() == NYQUISTEFFECTS_FAMILY;
-   bool isGenerator = GetType() == EffectTypeGenerate;
+   bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
+   bool isGenerator = effect.GetType() == EffectTypeGenerate;
 
    // Mix a few seconds of audio from all of the tracks
    double previewLen;
    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen, 6.0);
 
-   const double rate = mProjectRate;
-
    const auto &settings = access.Get();
    if (isNyquist && isGenerator)
-      previewDuration = CalcPreviewInputLength(settings, previewLen);
+      previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
    else
       previewDuration = std::min(settings.extra.GetDuration(),
-         CalcPreviewInputLength(settings, previewLen));
+         effect.CalcPreviewInputLength(settings, previewLen));
 
    double t1 = mT0 + previewDuration;
 
@@ -377,7 +390,7 @@ void EffectBase::Preview(
          // TODO remove this reinitialization of state within the Effect object
          // It is done indirectly via Effect::Instance
          if (auto pInstance =
-            std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance())
+            std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance())
          )
             pInstance->Init();
    } );
@@ -385,7 +398,7 @@ void EffectBase::Preview(
    auto vr0 = valueRestorer( mT0 );
    auto vr1 = valueRestorer( mT1 );
    // Most effects should stop at t1.
-   if (!mPreviewFullSelection)
+   if (!previewFullSelection)
       mT1 = t1;
 
    // In case any dialog control depends on mT1 or mDuration:
@@ -401,7 +414,7 @@ void EffectBase::Preview(
          BasicUI::SetFocus(*FocusDialog);
 
       // In case of failed effect, be sure to free memory.
-      ReplaceProcessedTracks( false );
+      effect.ReplaceProcessedTracks( false );
    } );
 
    // Build NEW tracklist from rendering tracks
@@ -412,12 +425,12 @@ void EffectBase::Preview(
 
    // Linear Effect preview optimised by pre-mixing to one track.
    // Generators need to generate per track.
-   if (mIsLinearEffect && !isGenerator) {
+   if (isLinearEffect && !isGenerator) {
       WaveTrack::Holder mixLeft, mixRight;
       MixAndRender(saveTracks->Selected<const WaveTrack>(),
          Mixer::WarpOptions{ *saveTracks },
          wxString{}, // Don't care about the name of the temporary tracks
-         mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
+         factory, rate, floatSample, mT0, t1, mixLeft, mixRight);
       if (!mixLeft)
          return;
 
@@ -448,13 +461,13 @@ void EffectBase::Preview(
    mT0 = 0.0;
 
    // Update track/group counts
-   CountWaveTracks();
+   effect.CountWaveTracks();
 
    // Apply effect
    if (!dryOnly) {
       using namespace BasicUI;
       auto progress = MakeProgress(
-         GetName(),
+         effect.GetName(),
          XO("Preparing preview"),
          ProgressShowStop
       ); // Have only "Stop" button.
@@ -465,7 +478,7 @@ void EffectBase::Preview(
       access.ModifySettings([&](EffectSettings &settings){
          // Preview of non-realtime effect
          auto pInstance =
-            std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance());
+            std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance());
          success = pInstance && pInstance->Process(settings);
          return nullptr;
       });
@@ -490,8 +503,8 @@ void EffectBase::Preview(
          // to allow events to flow to the app during StopStream processing.
          // The progress dialog blocks these events.
          {
-            auto progress =
-               MakeProgress(GetName(), XO("Previewing"), ProgressShowStop);
+            auto progress = MakeProgress(effect.GetName(),
+               XO("Previewing"), ProgressShowStop);
 
             while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
                using namespace std::chrono;
