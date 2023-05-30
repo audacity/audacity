@@ -224,11 +224,6 @@ void EffectBase::SetPreviewFullSelectionFlag(bool previewDurationFlag)
 }
 
 
-void EffectBase::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
-{
-   mPreviewWithNotSelected = includeNotSelected;
-}
-
 // If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
 // Else clear and DELETE mOutputTracks copies.
 void EffectBase::ReplaceProcessedTracks(const bool bGoodResult)
@@ -438,7 +433,7 @@ void EffectBase::Preview(
    }
    else {
       for (auto src : saveTracks->Any< const WaveTrack >()) {
-         if (src->GetSelected() || mPreviewWithNotSelected) {
+         if (src->GetSelected()) {
             auto dest = src->Copy(mT0, t1);
             mTracks->Add( dest );
             dest->SetSelected(src->GetSelected());

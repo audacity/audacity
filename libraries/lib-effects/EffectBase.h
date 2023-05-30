@@ -93,11 +93,6 @@ protected:
    // Use this if the effect needs to know if it is previewing
    bool IsPreviewing() const { return mIsPreview; }
 
-   // Most effects only require selected tracks to be copied for Preview.
-   // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
-   // preview copies of all wave tracks.
-   void IncludeNotSelectedPreviewTracks(bool includeNotSelected);
-
    // A global counter of all the successful Effect invocations.
    static int nEffectsDone;
 
@@ -136,7 +131,6 @@ public:
 
 private:
    bool mIsLinearEffect{ false };
-   bool mPreviewWithNotSelected{ false };
    bool mPreviewFullSelection{ false };
 
    bool mIsPreview{ false };
