@@ -223,7 +223,7 @@ bool EffectSettingsAccessTee::IsSameAs(
 }
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
-   AudacityProject &project, EffectPlugin &effect,
+   AudacityProject &project, EffectBase &effect,
    EffectUIServices &client, std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access,
    const std::shared_ptr<RealtimeEffectState> &pPriorState)
@@ -1102,7 +1102,7 @@ void EffectUIHost::CleanupRealtime()
 }
 
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
-   EffectPlugin &host, EffectUIServices &client,
+   EffectBase &host, EffectUIServices &client,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will

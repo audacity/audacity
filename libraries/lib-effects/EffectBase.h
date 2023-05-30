@@ -40,13 +40,15 @@ protected:
     */
    virtual std::any BeginPreview(const EffectSettings &settings);
 
-   // The EffectBase class fully implements the Preview method for you.
-   // Only override it if you need to do preprocessing or cleanup.
+public:
+   //! Calculate temporary tracks of limited length with effect applied and play
+   /*!
+    @param updateUI called after adjusting temporary settings and before play
+    */
    void Preview(
       EffectSettingsAccess &access, std::function<void()> updateUI,
-      bool dryOnly) final;
+      bool dryOnly);
 
- public:
    bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
       const InstanceFinder &finder,
       double projectRate, TrackList *list,

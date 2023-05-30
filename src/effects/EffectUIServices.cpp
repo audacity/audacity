@@ -8,12 +8,12 @@
 
 **********************************************************************/
 #include "EffectUIServices.h"
-#include "EffectPlugin.h"
+#include "EffectBase.h"
 #include "AudacityMessageBox.h"
 
 EffectUIServices::~EffectUIServices() = default;
 
-int EffectUIServices::ShowHostInterface(EffectPlugin &plugin,
+int EffectUIServices::ShowHostInterface(EffectBase &plugin,
    wxWindow &parent,
    const EffectDialogFactory &factory,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,

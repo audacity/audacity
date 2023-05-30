@@ -54,13 +54,6 @@ public:
 
    virtual const EffectSettingsManager& GetDefinition() const = 0;
 
-   //! Calculate temporary tracks of limited length with effect applied and play
-   /*!
-    @param updateUI called after adjusting temporary settings and before play
-    */
-   virtual void Preview(
-      EffectSettingsAccess &access, std::function<void()> updateUI,
-      bool dryOnly) = 0;
    virtual bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const = 0;
    // @return nullptr for failure

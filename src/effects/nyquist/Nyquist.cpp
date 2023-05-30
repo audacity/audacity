@@ -1041,7 +1041,7 @@ finish:
    return success;
 }
 
-int NyquistEffect::ShowHostInterface(EffectPlugin &plugin,
+int NyquistEffect::ShowHostInterface(EffectBase &plugin,
    wxWindow &parent, const EffectDialogFactory &factory,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
