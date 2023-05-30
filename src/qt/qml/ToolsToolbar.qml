@@ -7,7 +7,6 @@ import Audacity.UiComponents
 
 Rectangle {
    id: root
-   height: 48
    width: parent.width
    color: appConfig.backgroundColor1
 
@@ -40,7 +39,6 @@ Rectangle {
 
       TransportToolbar {
          id: transportToolbar
-         height: root.height
          gripVisible: Positioner.isFirstItem
          separatorVisible: !Positioner.isLastItem
 
@@ -69,7 +67,6 @@ Rectangle {
 
       EditToolbar {
          id: editToolbar
-         height: root.height
          gripVisible:  Positioner.isFirstItem
          separatorVisible: !Positioner.isLastItem
 
@@ -80,7 +77,6 @@ Rectangle {
 
       TimeToolbar {
          id: timeToolbar
-         height: root.height
          gripVisible:  Positioner.isFirstItem
          separatorVisible: !Positioner.isLastItem
 
@@ -89,27 +85,38 @@ Rectangle {
          }
       }
 
-      RowLayout {
-         spacing: 8
-         height: parent.height
+      MasterVolumeToolbar {
+         id: masterVolumeToolbar
+         gripVisible:  Positioner.isFirstItem
+         separatorVisible: !Positioner.isLastItem
 
-         MasterVolumeToolbar {
-            id: masterVolumeToolbar
-            height: root.height
-            width: 200
-            gripVisible:  Positioner.isFirstItem
-            separatorVisible: !Positioner.isLastItem
+         onUpdateStatusBar: function(status) {
+            root.updateStatusBar(status)
+         }
+      }
 
-            onUpdateStatusBar: function(status) {
-               root.updateStatusBar(status)
-            }
+      FlatButton {
+         id: setup
+         x: root.width - setup.width - 12
+         icon: IconCode.SETUP
+         onClicked: toolbarHandler.Setup()
+
+         // The following is a hack to vertical center this button within
+         // current row of the flow control
+         QtObject {
+            id: prv
+            property bool stopYUpdateCascade: false
          }
 
-         FlatButton {
-            id: setup
-            x: root.width - implicitWidth - 12
-            icon: IconCode.SETUP
-            onClicked: toolbarHandler.Setup()
+         onYChanged: {
+            if (!prv.stopYUpdateCascade) {
+               prv.stopYUpdateCascade = true
+               root.height =  setup.y + 48
+               setup.x += 8
+               setup.y += 8
+            } else {
+               prv.stopYUpdateCascade = false
+            }
          }
       }
    }

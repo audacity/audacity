@@ -7,8 +7,8 @@ import Audacity.UiComponents
 
 Item {
    id: root
-   height: parent.height
-   implicitHeight: height
+   height: implicitHeight
+   implicitHeight: 48
    implicitWidth: contents.width
 
    objectName: "EditToolbar"
@@ -31,7 +31,7 @@ Item {
    RowLayout {
       id: contents
       anchors.verticalCenter: parent.verticalCenter
-      spacing: 8 
+      spacing: 8
 
       ToolbarGrip {
          id: grip
@@ -43,7 +43,7 @@ Item {
 
          Rectangle {
             height: root.height
-            width: root.gripVisible ? 2 : 6 
+            width: root.gripVisible ? 2 : 6
             color: appConfig.backgroundColor1
          }
 
