@@ -10,15 +10,27 @@ Paul Licameli split from SampleFrame.h
 #ifndef __AUDACITY_WIDE_SAMPLE_SEQUENCE_
 #define __AUDACITY_WIDE_SAMPLE_SEQUENCE_
 
+#include "AudioGraphChannel.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
 
 //! An interface for random-access fetches from a collection of streams of
 //! samples, associated with the same time; also defines an envelope that
 //! applies to all the streams.
-class SAMPLE_TRACK_API WideSampleSequence {
+class SAMPLE_TRACK_API WideSampleSequence
+   : public AudioGraph::Channel
+{
 public:
    virtual ~WideSampleSequence();
+
+   //! A constant property
+   /*!
+    @post result: `result > 0`
+    */
+   virtual size_t NChannels() const = 0;
+
+   //! Extra gain factor to apply to a channel when mixing
+   virtual float GetChannelGain(int channel) const = 0;
 
    /*!
     @return a nonnegative number of samples meant to size a memory buffer
@@ -58,7 +70,8 @@ public:
          floatSample, start, len, fill, mayThrow, pNumWithinClips);
    }
 
-   //! Retrieve samples from a sequence in a specified format
+   //! Retrieve samples of one of the channels from a sequence in a specified
+   //! format
    /*!
     @copydetails SampleTrack::GetFloats()
     @param format sample format of the destination buffer

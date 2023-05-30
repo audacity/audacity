@@ -20,6 +20,7 @@
 
 class Resample;
 class SampleTrackCache;
+class WideSampleSequence;
 
 //! Fetches from tracks, applies envelopes; can resample, and warp time, even
 //! backwards, as for scrubbing.
@@ -47,7 +48,7 @@ public:
    ~MixerSource();
 
    unsigned Channels() const { return mnChannels; }
-   const SampleTrack *GetChannel(unsigned iChannel) const;
+   const WideSampleSequence *GetChannel(unsigned iChannel) const;
    const bool *MixerSpec(unsigned iChannel) const;
 
    bool AcceptsBuffers(const Buffers &buffers) const override;

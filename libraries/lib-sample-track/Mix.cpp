@@ -286,17 +286,17 @@ size_t Mixer::Process(const size_t maxToProcess)
 
    // Decides which output buffers an input channel accumulates into
    auto findChannelFlags = [&channelFlags, numChannels = mNumChannels]
-   (const bool *map, const SampleTrack &track){
+   (const bool *map, const WideSampleSequence &sequence){
       const auto end = channelFlags + numChannels;
       std::fill(channelFlags, end, 0);
       if (map)
          // ignore left and right when downmixing is customized
          std::copy(map, map + numChannels, channelFlags);
-      else if (IsMono(track))
+      else if (IsMono(sequence))
          std::fill(channelFlags, end, 1);
-      else if (PlaysLeft(track))
+      else if (PlaysLeft(sequence))
          channelFlags[0] = 1;
-      else if (PlaysRight(track)) {
+      else if (PlaysRight(sequence)) {
          if (numChannels >= 2)
             channelFlags[1] = 1;
          else

@@ -317,7 +317,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
    bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
    const ArrayOf<bool> *pMap
 )  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
-   , mnChannels{ TrackList::NChannels(leader) }
+   , mnChannels{ leader.NChannels() }
    , mRate{ rate }
    , mEnvelope{ options.envelope }
    , mMayThrow{ mayThrow }
@@ -344,7 +344,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
 
 MixerSource::~MixerSource() = default;
 
-const SampleTrack *MixerSource::GetChannel(unsigned iChannel) const
+const WideSampleSequence *MixerSource::GetChannel(unsigned iChannel) const
 {
    auto range = TrackList::Channels(mpLeader.get());
    auto iter = range.begin();

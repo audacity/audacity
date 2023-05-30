@@ -241,6 +241,17 @@ size_t WaveTrack::GetWidth() const
    return 1;
 }
 
+size_t WaveTrack::NChannels() const
+{
+   if (IsLeader()) {
+      auto result = TrackList::NChannels(*this);
+      assert(result > 0);
+      return result;
+   }
+   else
+      return 1;
+}
+
 // Copy the track metadata but not the contents.
 void WaveTrack::Init(const WaveTrack &orig)
 {

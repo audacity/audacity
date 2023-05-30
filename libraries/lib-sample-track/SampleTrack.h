@@ -12,7 +12,6 @@ Paul Licameli split from WaveTrack.h
 #ifndef __AUDACITY_SAMPLE_TRACK__
 #define __AUDACITY_SAMPLE_TRACK__
 
-#include "AudioGraphChannel.h"
 #include "PlayableTrack.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
@@ -31,7 +30,6 @@ using SampleTrackAttachments = ClientData::Site<
 class SAMPLE_TRACK_API SampleTrack /* not final */
    : public PlayableTrack
    , public SampleTrackAttachments
-   , public AudioGraph::Channel
    , public WideSampleSequence
 {
 public:
@@ -57,9 +55,6 @@ public:
 
    //! @return whether envelope values are all unit
    virtual bool HasTrivialEnvelope() const = 0;
-
-   //! Takes gain and pan into account
-   virtual float GetChannelGain(int channel) const = 0;
 };
 
 ENUMERATE_TRACK_TYPE(SampleTrack)

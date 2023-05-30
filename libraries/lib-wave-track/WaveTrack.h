@@ -85,6 +85,9 @@ public:
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
 
+   //! May report more than one only when this is a leader track
+   size_t NChannels() const override;
+
    // overwrite data excluding the sample sequence but including display
    // settings
    void Reinit(const WaveTrack &orig);
@@ -140,6 +143,7 @@ private:
    float GetPan() const;
    void SetPan(float newPan);
 
+   //! Takes gain and pan into account
    float GetChannelGain(int channel) const override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
