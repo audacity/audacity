@@ -28,6 +28,7 @@
 #include "../widgets/valnum.h"
 #include "AudacityMessageBox.h"
 #include "Prefs.h"
+#include "SyncLock.h"
 
 #include "WaveTrack.h"
 
@@ -144,23 +145,34 @@ double EffectPaulstretch::CalcPreviewInputLength(
 
 bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 {
-   CopyInputTracks();
-   m_t1=mT1;
-   int count=0;
-   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
+   // Pass true because sync lock adjustment is needed
+   CopyInputTracks(true);
+   m_t1 = mT1;
+   int count = 0;
+   // Process selected wave tracks first, to find the new t1 value
+   for (auto track : mOutputTracks->Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
-      double t0 = mT0 < trackStart? trackStart: mT0;
-      double t1 = mT1 > trackEnd? trackEnd: mT1;
-
-      if (t1 > t0) {
-         if (!ProcessOne(track, t0,t1,count))
+      double t0 = mT0 < trackStart ? trackStart : mT0;
+      double t1 = mT1 > trackEnd ? trackEnd : mT1;
+      if (t1 > t0)
+         if (!ProcessOne(track, t0, t1, count))
             return false;
-      }
-
       count++;
    }
-   mT1=m_t1;
+
+   // Sync lock adjustment of other tracks
+   mOutputTracks->Any().Visit(
+      [&](WaveTrack *track, const Track::Fallthrough &fallthrough) {
+         if (!track->IsSelected())
+            fallthrough();
+      },
+      [&](Track *track) {
+         if (SyncLock::IsSyncLockSelected(track))
+            track->SyncLockAdjust(mT1, m_t1);
+      }
+   );
+   mT1 = m_t1;
 
    ReplaceProcessedTracks(true);
 

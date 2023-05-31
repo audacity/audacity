@@ -221,16 +221,13 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 
    double maxDuration = 0.0;
 
-   // Must sync if selection length will change
-   bool mustSync = (rateStart != rateEnd);
    Slide rateSlide(rateSlideType,rateStart,rateEnd);
    Slide pitchSlide(pitchSlideType,pitchStart,pitchEnd);
    mTotalStretch = rateSlide.getTotalStretch();
 
    mOutputTracks->Leaders().VisitWhile( bGoodResult,
       [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
-         if (!(lt->GetSelected() ||
-               (mustSync && SyncLock::IsSyncLockSelected(lt))))
+         if (!(lt->GetSelected() || SyncLock::IsSyncLockSelected(lt)))
             return fallthrough();
          if (!ProcessLabelTrack(lt))
             bGoodResult = false;
@@ -415,10 +412,12 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
          mCurTrackNum++;
       },
       [&](Track *t) {
-         if (mustSync && SyncLock::IsSyncLockSelected(t))
-         {
-            t->SyncLockAdjust(mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
-         }
+         // Outer loop is over leaders, so fall-through must check for
+         // multiple channels
+         for (auto *channel : TrackList::Channels(t))
+            if (SyncLock::IsSyncLockSelected(channel))
+               channel->SyncLockAdjust(
+                  mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
       }
    );
 
