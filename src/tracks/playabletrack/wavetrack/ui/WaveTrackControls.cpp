@@ -973,14 +973,8 @@ void Status1DrawFunction
       // TODO: more-than-two-channels-message
       // more appropriate strings
       s = XO("Stereo, %dHz");
-   else {
-      if (wt->GetChannel() == Track::MonoChannel)
-         s = XO("Mono, %dHz");
-      else if (wt->GetChannel() == Track::LeftChannel)
-         s = XO("Left, %dHz");
-      else if (wt->GetChannel() == Track::RightChannel)
-         s = XO("Right, %dHz");
-   }
+   else
+      s = XO("Mono, %dHz");
    s.Format( (int) (rate + 0.5) );
 
    StatusDrawFunction( s, dc, rect );

@@ -11,8 +11,6 @@
   Paul Licameli split from PerTrackEffect.cpp
 
 **********************************************************************/
-
-
 #include "EffectStage.h"
 #include "AudacityException.h"
 #include "AudioGraphBuffers.h"

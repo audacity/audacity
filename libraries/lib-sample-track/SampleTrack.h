@@ -46,9 +46,6 @@ public:
 
    virtual sampleFormat GetSampleFormat() const = 0;
 
-   /*! May be called from a worker thread */
-   virtual ChannelType GetChannelIgnoringPan() const = 0;
-
    virtual double GetRate() const = 0;
 
    //! @return widest effective SampleFormat in any part of the track
