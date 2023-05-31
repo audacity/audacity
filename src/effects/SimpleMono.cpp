@@ -53,7 +53,6 @@ bool EffectSimpleMono::Process(EffectInstance &, EffectSettings &)
 
          //Get the track rate and samples
          mCurRate = pOutWaveTrack->GetRate();
-         mCurChannel = pOutWaveTrack->GetChannel();
 
          //NewTrackSimpleMono() will returns true by default
          //ProcessOne() processes a single track

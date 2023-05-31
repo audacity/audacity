@@ -42,7 +42,6 @@ protected:
    double mCurRate;
    double mCurT0;
    double mCurT1;
-   int    mCurChannel;
 
 private:
    bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end);

@@ -508,7 +508,6 @@ struct WaveTrackMenuTable
    void OnMultiView(wxCommandEvent & event);
    void OnSetDisplay(wxCommandEvent & event);
 
-   void OnChannelChange(wxCommandEvent & event);
    void OnMergeStereo(wxCommandEvent & event);
 
    // TODO: more-than-two-channels
@@ -631,29 +630,6 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    EndSection();
 
    BeginSection( "Channels" );
-   // If these are enabled again, choose a hot key for Mono that does not conflict
-   // with Multi View
-   //   AppendRadioItem(OnChannelMonoID, XXO("&Mono"),
-   //      POPUP_MENU_FN( OnChannelChange ),
-   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-   //         menu.Enable( id, isMono( handler ) );
-   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::MonoChannel );
-   //      }
-   //   );
-   //   AppendRadioItem(OnChannelLeftID, XXO("&Left Channel"),
-   //      POPUP_MENU_FN( OnChannelChange ),
-   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-   //         menu.Enable( id, isMono( handler ) );
-   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::LeftChannel );
-   //      }
-   //   );
-   //   AppendRadioItem(OnChannelRightID, XXO("R&ight Channel"),
-   //      POPUP_MENU_FN( OnChannelChange ),
-   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-   //         menu.Enable( id, isMono( handler ) );
-   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::RightChannel );
-   //      }
-   //   );
       AppendItem( "MakeStereo", OnMergeStereoID, XXO("Ma&ke Stereo Track"),
          POPUP_MENU_FN( OnMergeStereo ),
          []( PopupMenuHandler &handler, wxMenu &menu, int id ){
@@ -762,41 +738,6 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       }
    }
 }
-
-#if 0
-void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
-{
-   int id = event.GetId();
-   wxASSERT(id >= OnChannelLeftID && id <= OnChannelMonoID);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack);
-   Track::ChannelType channel;
-   TranslatableString channelmsg;
-   switch (id) {
-   default:
-   case OnChannelMonoID:
-      channel = Track::MonoChannel;
-      channelmsg = XO("Mono");
-      break;
-   case OnChannelLeftID:
-      channel = Track::LeftChannel;
-      channelmsg = XO("Left Channel");
-      break;
-   case OnChannelRightID:
-      channel = Track::RightChannel;
-      channelmsg = XO("Right Channel");
-      break;
-   }
-   pTrack->SetChannel(channel);
-   AudacityProject *const project = &mpData->project;
-   ProjectHistory::Get( *project )
-      .PushState(
-/* i18n-hint: The strings name a track and a channel choice (mono, left, or right) */
-         XO("Changed '%s' to %s").Format( pTrack->GetName(), channelmsg ),
-         XO("Channel"));
-   mpData->result = RefreshCode::RefreshAll;
-}
-#endif
 
 /// Merge two tracks into one stereo track ??
 void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)

@@ -494,9 +494,6 @@ bool Exporter::ExamineTracks()
 {
    // Init
    mNumSelected = 0;
-   mNumLeft = 0;
-   mNumRight = 0;
-   mNumMono = 0;
 
    // First analyze the selected audio, perform sanity checks, and provide
    // information as appropriate.
@@ -509,7 +506,8 @@ bool Exporter::ExamineTracks()
 
    auto &tracks = TrackList::Get( *mProject );
 
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
 
    for (auto tr :
          tracks.Any< const WaveTrack >()
@@ -517,29 +515,6 @@ bool Exporter::ExamineTracks()
             - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)
    ) {
       mNumSelected++;
-
-      if (tr->GetChannel() == Track::LeftChannel) {
-         mNumLeft++;
-      }
-      else if (tr->GetChannel() == Track::RightChannel) {
-         mNumRight++;
-      }
-      else if (tr->GetChannel() == Track::MonoChannel) {
-         // It's a mono channel, but it may be panned
-         float pan = tr->GetPan();
-
-         if (pan == -1.0)
-            mNumLeft++;
-         else if (pan == 1.0)
-            mNumRight++;
-         else if (pan == 0)
-            mNumMono++;
-         else {
-            // Panned partially off-center. Mix as stereo.
-            mNumLeft++;
-            mNumRight++;
-         }
-      }
 
       if (tr->GetOffset() < earliestBegin) {
          earliestBegin = tr->GetOffset();

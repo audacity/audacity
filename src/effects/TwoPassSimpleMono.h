@@ -72,7 +72,6 @@ protected:
    double mCurRate;
    double mCurT0;
    double mCurT1;
-   int    mCurChannel;
    int    mPass;
    bool   mSecondPassDisabled;
 
