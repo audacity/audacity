@@ -18,6 +18,7 @@
 #include "BasicUI.h"
 #include "MixAndRender.h"
 #include "ProjectAudioIO.h"
+#include "TransportUtilities.h"
 #include "WaveTrack.h"
 
 void EffectPreview(EffectBase &effect,
@@ -183,7 +184,7 @@ void EffectPreview(EffectBase &effect,
 
    if (success)
    {
-      auto tracks = TransportTracks{ *mTracks, true };
+      auto tracks = MakeTransportTracks(*mTracks, true);
 
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.
