@@ -19,9 +19,9 @@ set( SOURCES
    StatefulEffectBase.h
 )
 set( LIBRARIES
-   lib-audio-io-interface
    lib-command-parameters-interface
    lib-numeric-formats-interface
+   lib-realtime-effects
    lib-wave-track-interface
 )
 audacity_library( lib-effects "${SOURCES}" "${LIBRARIES}"

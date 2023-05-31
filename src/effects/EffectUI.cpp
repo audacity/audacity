@@ -14,6 +14,7 @@
 #include "Effect.h"
 #include "StatefulEffectUIServices.h"
 #include "EffectEditor.h"
+#include "EffectPreview.h"
 
 #include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"

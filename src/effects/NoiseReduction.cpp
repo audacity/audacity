@@ -41,6 +41,7 @@
 
 #include "LoadEffects.h"
 #include "EffectManager.h"
+#include "EffectPreview.h"
 #include "EffectUI.h"
 
 #include "ShuttleGui.h"

@@ -43,6 +43,7 @@
 
 #if !defined(EXPERIMENTAL_NOISE_REDUCTION)
 
+#include "EffectPreview.h"
 #include "LoadEffects.h"
 
 #include "WaveTrack.h"
