@@ -1735,9 +1735,14 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
 
 void WaveTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
 {
+#if 0
    // In case we opened a pre-multiclip project, we need to
    // simulate closing the waveclip tag.
    NewestOrNewClip()->HandleXMLEndTag("waveclip");
+#else
+   // File compatibility breaks have intervened long since, and the line above
+   // would now have undesirable side effects
+#endif
 }
 
 XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
