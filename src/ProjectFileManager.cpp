@@ -159,7 +159,8 @@ auto ProjectFileManager::ReadProjectFile(
    ///
    /// Parse project file
    ///
-   bool bParseSuccess = projectFileIO.LoadProject(fileName, discardAutosave);
+   auto parseResult = projectFileIO.LoadProject(fileName, discardAutosave);
+   const bool bParseSuccess = parseResult.has_value();
    
    bool err = false;
 
@@ -188,6 +189,7 @@ auto ProjectFileManager::ReadProjectFile(
       }
 
       if (!err) {
+         parseResult->Commit();
          if (discardAutosave)
             // REVIEW: Failure OK?
             projectFileIO.AutoSaveDelete();
