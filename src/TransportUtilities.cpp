@@ -17,6 +17,7 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
+#include "SampleTrack.h"
 #include "ViewInfo.h"
 #include "toolbars/ControlToolBar.h"
 #include "ProgressDialog.h"
@@ -199,4 +200,27 @@ void TransportUtilities::DoStartPlaying(
       // Will automatically set mLastPlayMode
       PlayCurrentRegionAndWait(context, newDefault);
    }
+}
+
+TransportTracks MakeTransportTracks(
+   TrackList &trackList, bool selectedOnly, bool nonWaveToo)
+{
+   TransportTracks result;
+   {
+      const auto range = trackList.Any<SampleTrack>()
+         + (selectedOnly ? &Track::IsSelected : &Track::Any);
+      for (auto pTrack : range)
+         result.playbackTracks.push_back(pTrack->SharedPointer<SampleTrack>());
+   }
+#ifdef EXPERIMENTAL_MIDI_OUT
+   if (nonWaveToo) {
+      const auto range = trackList.Any<const PlayableTrack>() +
+         (selectedOnly ? &Track::IsSelected : &Track::Any);
+      for (auto pTrack : range)
+         if (!track_cast<const SampleTrack *>(pTrack))
+            result.otherPlayableTracks.push_back(
+               pTrack->SharedPointer<const PlayableTrack>() );
+   }
+#endif
+   return result;
 }

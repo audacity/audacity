@@ -14,6 +14,7 @@
 #include "Effect.h"
 #include "StatefulEffectUIServices.h"
 #include "EffectEditor.h"
+#include "EffectPreview.h"
 
 #include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"
@@ -223,7 +224,7 @@ bool EffectSettingsAccessTee::IsSameAs(
 }
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
-   AudacityProject &project, EffectPlugin &effect,
+   AudacityProject &project, EffectBase &effect,
    EffectUIServices &client, std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access,
    const std::shared_ptr<RealtimeEffectState> &pPriorState)
@@ -753,7 +754,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
       return;
    
    auto updater = [this]{ TransferDataToWindow(); };
-   mEffectUIHost.Preview(*mpAccess, updater, false);
+   EffectPreview(mEffectUIHost, *mpAccess, updater, false);
    // After restoration of settings and effect state:
    // In case any dialog control depends on mT1 or mDuration:
    updater();
@@ -1102,7 +1103,7 @@ void EffectUIHost::CleanupRealtime()
 }
 
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
-   EffectPlugin &host, EffectUIServices &client,
+   EffectBase &host, EffectUIServices &client,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
@@ -1219,7 +1220,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          {
             // Prompting will be bypassed when applying an effect that has
             // already been configured, e.g. repeating the last effect on a
-            // different selection.  Prompting may call EffectBase::Preview
+            // different selection.  Prompting may call EffectPreview
             std::shared_ptr<EffectInstance> pInstance;
             std::shared_ptr<EffectInstanceEx> pInstanceEx;
             if ((flags & EffectManager::kConfigured) == 0 && pAccess) {

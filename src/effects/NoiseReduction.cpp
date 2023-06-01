@@ -41,6 +41,7 @@
 
 #include "LoadEffects.h"
 #include "EffectManager.h"
+#include "EffectPreview.h"
 #include "EffectUI.h"
 
 #include "ShuttleGui.h"
@@ -440,7 +441,7 @@ EffectType EffectNoiseReduction::GetType() const
  its unusual two-pass nature.  First choose and analyze an example of noise,
  then apply noise reduction to another selection.  That is difficult to fit into
  the framework for managing settings of other effects. */
-int EffectNoiseReduction::ShowHostInterface(EffectPlugin &,
+int EffectNoiseReduction::ShowHostInterface(EffectBase &,
    wxWindow &parent, const EffectDialogFactory &,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
@@ -1481,7 +1482,7 @@ void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    *m_pSettings = mTempSettings;
    m_pSettings->mDoProfile = false;
 
-   m_pEffect->Preview(mAccess,
+   EffectPreview(*m_pEffect, mAccess,
       // Don't need any UI updates for preview
       {},
       false);

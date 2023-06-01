@@ -352,6 +352,8 @@ list( APPEND SOURCES
       effects/EffectEditor.h
       effects/EffectManager.cpp
       effects/EffectManager.h
+      effects/EffectPreview.cpp
+      effects/EffectPreview.h
       effects/EffectUI.cpp
       $<$<BOOL:${wxIS_MAC}>:effects/EffectUI.mm>
       effects/EffectUI.h
@@ -1422,6 +1424,7 @@ set( AUDACITY_LIBRARIES
    lib-wx-init-interface
    lib-time-track-interface
    lib-snapping-interface
+   lib-audio-io-interface
 )
 
 if (USE_VST)

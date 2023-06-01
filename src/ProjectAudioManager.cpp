@@ -33,6 +33,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectWindows.h"
 #include "ScrubState.h"
 #include "TrackPanelAx.h"
+#include "TransportUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
@@ -421,7 +422,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             };
          token = gAudioIO->StartStream(
-            TransportTracks{ TrackList::Get(*p), false, nonWaveToo },
+            MakeTransportTracks(TrackList::Get(*p), false, nonWaveToo),
             tcp0, tcp1, tcp1, myOptions);
       }
       else {
@@ -432,7 +433,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                t1 = latestEnd;
          }
          token = gAudioIO->StartStream(
-            TransportTracks{ tracks, false, nonWaveToo },
+            MakeTransportTracks(tracks, false, nonWaveToo),
             t0, t1, mixerLimit, options);
       }
       if (token != 0) {
@@ -727,7 +728,8 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          // playback.
          /* TODO: set up stereo tracks if that is how the user has set up
           * their preferences, and choose sample format based on prefs */
-         transportTracks = TransportTracks{ TrackList::Get( *p ), false, true };
+         transportTracks =
+            MakeTransportTracks(TrackList::Get( *p ), false, true);
          for (const auto &wt : existingTracks) {
             auto end = transportTracks.playbackTracks.end();
             auto it = std::find(transportTracks.playbackTracks.begin(), end, wt);

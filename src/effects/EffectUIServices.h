@@ -14,6 +14,7 @@
 #include <memory>
 #include <optional>
 
+class EffectBase;
 class EffectEditor;
 class EffectInstance;
 class EffectPlugin;
@@ -37,7 +38,7 @@ struct DialogFactoryResults {
 //! Type of function that creates a dialog for an effect
 /*! The dialog may be modal or non-modal */
 using EffectDialogFactory = std::function< DialogFactoryResults(
-   wxWindow &parent, EffectPlugin &, EffectUIServices &,
+   wxWindow &parent, EffectBase &, EffectUIServices &,
    EffectSettingsAccess &) >;
 
 //! Abstract base class to populate a UI and validate UI values.
@@ -71,7 +72,7 @@ public:
     @return 0 if destructive effect processing should not proceed (and there
     may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
-   virtual int ShowHostInterface(EffectPlugin &plugin,
+   virtual int ShowHostInterface(EffectBase &plugin,
       wxWindow &parent, const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false);
