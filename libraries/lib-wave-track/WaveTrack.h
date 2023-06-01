@@ -15,6 +15,7 @@
 #include "SampleCount.h"
 #include "SampleFormat.h"
 #include "SampleTrack.h"
+#include "WaveClipList.h"
 
 #include <vector>
 #include <functional>
@@ -91,6 +92,7 @@ private:
    Track::Holder Clone() const override;
 
    friend class WaveTrackFactory;
+   friend class StretchingSampleTrack;
 
    wxString MakeClipCopyName(const wxString& originalName) const;
    wxString MakeNewClipName() const;
@@ -105,6 +107,7 @@ private:
    ChannelType GetChannelIgnoringPan() const override;
    ChannelType GetChannel() const override;
    void SetPanFromChannelType();
+   void OnProjectTempoChange(double oldTempo, double newTempo);
 
    bool LinkConsistencyFix(bool doFix, bool completeList) override;
 
@@ -307,7 +310,7 @@ private:
    void WriteXML(XMLWriter &xmlFile) const override;
 
    // Returns true if an error occurred while reading from XML
-   bool GetErrorOpening() override;
+   bool GetErrorOpening() const override;
 
    //
    // Lock and unlock the track: you must lock the track before
@@ -319,9 +322,10 @@ private:
 
    // Get access to the (visible) clips in the tracks, in unspecified order
    // (not necessarily sequenced in time).
-   WaveClipHolders &GetClips() { return mClips; }
-   const WaveClipConstHolders &GetClips() const
-      { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
+   const WaveClipHolders& GetClips() const
+   {
+      return mClipList.Get();
+   }
 
    // Get mutative access to all clips (in some unspecified sequence),
    // including those hidden in cutlines.
@@ -335,7 +339,7 @@ private:
       // Construct a "begin" iterator
       explicit AllClipsIterator( WaveTrack &track )
       {
-         push( track.mClips );
+         push( track.mClipList.Get() );
       }
 
       WaveClip *operator * () const
@@ -359,9 +363,9 @@ private:
 
    private:
 
-      void push( WaveClipHolders &clips );
+      void push(const WaveClipHolders &clips );
 
-      using Iterator = WaveClipHolders::iterator;
+      using Iterator = WaveClipHolders::const_iterator;
       using Pair = std::pair< Iterator, Iterator >;
       using Stack = std::vector< Pair >;
 
@@ -405,12 +409,12 @@ private:
    {
       return { AllClipsIterator{ *this }, AllClipsIterator{ } };
    }
-   
+
    IteratorRange< AllClipsConstIterator > GetAllClips() const
    {
       return { AllClipsConstIterator{ *this }, AllClipsConstIterator{ } };
    }
-   
+
    // Create NEW clip and add it to this track. Returns a pointer
    // to the newly created clip. Optionally initial offset and
    // clip name may be provided
@@ -513,8 +517,7 @@ private:
    //
    // Protected variables
    //
-
-   WaveClipHolders mClips;
+    WaveClipList mClipList;
 
    sampleFormat  mFormat;
    int           mRate;

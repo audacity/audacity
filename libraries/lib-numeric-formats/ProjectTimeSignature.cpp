@@ -49,12 +49,13 @@ void ProjectTimeSignature::SetTempo(double tempo)
 {
    if (mTempo != tempo)
    {
+      const auto oldTempo = mTempo;
       mTempo = tempo;
 
       BeatsPerMinute.Write(tempo);
       gPrefs->Flush();
 
-      PublishSignatureChange();
+      PublishSignatureChange(oldTempo);
    }
 }
 
@@ -72,7 +73,7 @@ void ProjectTimeSignature::SetUpperTimeSignature(int upperTimeSignature)
       UpperTimeSignature.Write(upperTimeSignature);
       gPrefs->Flush();
 
-      PublishSignatureChange();
+      PublishSignatureChange(mTempo);
    }
 }
 
@@ -90,13 +91,13 @@ void ProjectTimeSignature::SetLowerTimeSignature(int lowerTimeSignature)
       LowerTimeSignature.Write(lowerTimeSignature);
       gPrefs->Flush();
 
-      PublishSignatureChange();
+      PublishSignatureChange(mTempo);
    }
 }
 
-void ProjectTimeSignature::PublishSignatureChange()
+void ProjectTimeSignature::PublishSignatureChange(double oldTempo)
 {
-   Publish(TimeSignatureChangedMessage { mTempo, mUpperTimeSignature,
+   Publish(TimeSignatureChangedMessage { oldTempo, mTempo, mUpperTimeSignature,
                                          mLowerTimeSignature });
 }
 

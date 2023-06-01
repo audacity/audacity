@@ -44,8 +44,10 @@ using PlayableTrackConstArray =
 
 class Track;
 class SampleTrack;
-using SampleTrackArray = std::vector < std::shared_ptr < SampleTrack > >;
-using SampleTrackConstArray = std::vector < std::shared_ptr < const SampleTrack > >;
+using SampleTrackHolder = std::shared_ptr<SampleTrack>;
+using ConstSampleTrackHolder = std::shared_ptr<const SampleTrack>;
+using SampleTrackArray = std::vector<SampleTrackHolder>;
+using SampleTrackConstArray = std::vector<ConstSampleTrackHolder>;
 
 class WritableSampleTrack;
 using WritableSampleTrackArray =
@@ -80,7 +82,10 @@ struct AudioIOEvent {
 struct AUDIO_IO_API TransportTracks final {
    TransportTracks() = default;
    TransportTracks(
-      TrackList &trackList, bool selectedOnly,
+      TrackList& trackList,
+      const std::function<ConstSampleTrackHolder(SampleTrackHolder)>&
+         playbackTrackFactory,
+      bool selectedOnly,
       bool nonWaveToo = false //!< if true, collect all PlayableTracks
    );
 

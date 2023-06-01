@@ -1,0 +1,12 @@
+add_unit_test(
+   NAME
+      lib-wave-track
+   SOURCES
+      WaveClipTest.cpp
+   MOCK_PREFS
+   MOCK_AUDIO
+   LIBRARIES
+      lib-wave-track-interface
+      lib-audio-io-interface
+      lib-project-file-io-interface
+)

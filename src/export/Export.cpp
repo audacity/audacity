@@ -64,6 +64,7 @@
 #include "../TagsEditor.h"
 #include "Theme.h"
 #include "WaveTrack.h"
+#include "StretchingSampleTrack.h"
 #include "AudacityMessageBox.h"
 #include "../widgets/Warning.h"
 #include "HelpSystem.h"
@@ -235,7 +236,9 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
       - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
       inputs.emplace_back(
-         pTrack->SharedPointer<const SampleTrack>(), GetEffectStages(*pTrack));
+         std::make_shared<StretchingSampleTrack>(
+            pTrack->SharedPointer<const WaveTrack>(), startTime),
+         GetEffectStages(*pTrack));
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(move(inputs),
                   // Throw, to stop exporting, if read fails:
@@ -486,7 +489,7 @@ bool Exporter::Process(
          }
       }
    }
-   
+
    return false;
 }
 
@@ -562,13 +565,13 @@ bool Exporter::ExamineTracks()
       return false;
    }
 
-   // The skipping of silent space could be cleverer and take 
+   // The skipping of silent space could be cleverer and take
    // into account clips.
-   // As implemented now, it can only skip initial silent space that 
-   // has no clip before it, and terminal silent space that has no clip 
+   // As implemented now, it can only skip initial silent space that
+   // has no clip before it, and terminal silent space that has no clip
    // after it.
    if (mT0 < earliestBegin){
-      // Bug 1904 
+      // Bug 1904
       // Previously we always skipped initial silent space.
       // Now skipping it is an opt-in option.
       bool skipSilenceAtBeginning;
@@ -1495,7 +1498,7 @@ TranslatableString AudacityExportMessageStr()
 
 // This creates a generic export error dialog
 // Untranslated ErrorCodes like "MP3:1882" are used since we don't yet have
-// a good user facing error message.  They allow us to 
+// a good user facing error message.  They allow us to
 // distinguish where the error occurred, and we can update the landing
 // page as we learn more about when (if ever) these errors actually happen.
 // The number happens to at one time have been a line number, but all

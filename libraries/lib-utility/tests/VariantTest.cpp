@@ -8,7 +8,7 @@
   Paul Licameli
 
 **********************************************************************/
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 #include "Callable.h"
 #include "Variant.h"

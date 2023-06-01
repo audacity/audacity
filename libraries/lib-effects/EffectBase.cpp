@@ -31,6 +31,7 @@
 #include "TransactionScope.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
+#include "StretchingPlaybackTrackFactory.h"
 #include "NumericConverterFormats.h"
 
 // Effect application counter
@@ -478,7 +479,11 @@ void EffectBase::Preview(
 
    if (success)
    {
-      auto tracks = TransportTracks{ *mTracks, true };
+      auto tracks = TransportTracks {
+         *mTracks,
+         StretchingPlaybackTrackFactory::GetStretchingSampleTrackFactory(mT0),
+         true
+      };
 
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.

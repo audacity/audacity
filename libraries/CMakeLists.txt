@@ -53,6 +53,7 @@ set( LIBRARIES
    lib-audio-unit
    lib-playable-track
    lib-time-and-pitch
+   lib-stretching-sample-track
 )
 
 if ( ${_OPT}has_networking )

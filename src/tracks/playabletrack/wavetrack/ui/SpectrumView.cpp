@@ -311,7 +311,7 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
       return AColor::ColorGradientEdge;
    if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0))
       return  AColor::ColorGradientTimeAndFrequencySelected;
-   
+
    return  AColor::ColorGradientTimeSelected;
 }
 
@@ -369,7 +369,9 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    const auto &ssel0 = params.ssel0;
    const auto &ssel1 = params.ssel1;
    const double &averagePixelsPerSample = params.averagePixelsPerSample;
-   const double &rate = params.rate;
+   const double &sampleRate = params.sampleRate;
+   const double &stretchRatio = params.stretchRatio;
+   const auto displaySamplesPerSecond = sampleRate / stretchRatio;
    const double &hiddenLeftOffset = params.hiddenLeftOffset;
    const double &leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
@@ -411,12 +413,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    unsigned char *data = image.GetData();
 
    const auto half = settings.GetFFTLength() / 2;
-   const double binUnit = rate / (2 * half);
+   const double binUnit = sampleRate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;
    bool updated;
    {
-      const double pps = averagePixelsPerSample * rate;
+      const double pps = averagePixelsPerSample * sampleRate;
       updated = WaveClipSpectrumCache::Get( *clip ).GetSpectrogram( *clip,
          waveTrackCache, freq, where,
          (size_t)hiddenMid.width,
@@ -673,15 +675,13 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    if (numPixels > 0) {
       for (int ii = begin; ii < end; ++ii) {
          const double time = zoomInfo.PositionToTime(ii, -leftOffset) - tOffset;
-         specCache.where[ii - begin] = sampleCount(0.5 + rate * time);
+         specCache.where[ii - begin] = sampleCount(0.5 + displaySamplesPerSecond * time);
       }
-      specCache.Populate
-         (settings, waveTrackCache,
-          0, 0, numPixels,
-          clip->GetPlaySamplesCount(),
-          tOffset, rate,
-          0 // FIXME: PRL -- make reassignment work with fisheye
-       );
+      specCache.Populate(
+         settings, waveTrackCache, 0, 0, numPixels, clip->GetPlaySamplesCount(),
+         tOffset, displaySamplesPerSecond,
+         0 // FIXME: PRL -- make reassignment work with fisheye
+      );
    }
 
    // build color gradient tables (not thread safe)
@@ -746,10 +746,10 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
       // zoomInfo must be queried for each column since with fisheye enabled
       // time between columns is variable
-      auto w0 = sampleCount(0.5 + rate *
+      auto w0 = sampleCount(0.5 + displaySamplesPerSecond *
                    (zoomInfo.PositionToTime(xx, -leftOffset) - tOffset));
 
-      auto w1 = sampleCount(0.5 + rate *
+      auto w1 = sampleCount(0.5 + displaySamplesPerSecond *
                     (zoomInfo.PositionToTime(xx+1, -leftOffset) - tOffset));
 
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
@@ -774,7 +774,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             advanceFreqBinIter(yyToFreqBin(0));
          }
       }
-   
+
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          if(onBrushTool)
             maybeSelected = false;
@@ -892,7 +892,7 @@ void SpectrumView::Draw(
          FindTrack()->SubstitutePendingChangedTrack());
 
       const auto artist = TrackArtist::Get( context );
-      
+
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
@@ -900,10 +900,10 @@ void SpectrumView::Draw(
 
       auto waveTrackView = GetWaveTrackView().lock();
       wxASSERT(waveTrackView.use_count());
-      
+
       auto seletedClip = waveTrackView->GetSelectedClip().lock();
       DoDraw( context, wt.get(), seletedClip.get(), rect );
-      
+
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif

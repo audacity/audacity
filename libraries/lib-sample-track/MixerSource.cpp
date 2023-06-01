@@ -135,10 +135,8 @@ size_t MixerSource::MixVariableRates(
                *pos -= getLen;
             }
             else {
-               auto results = cache.GetFloats(*pos, getLen, mMayThrow);
-               if (results)
-                  memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
-               else
+               auto results = cache.GetFloats(*pos, &queue[*queueLen], getLen);
+               if (!results)
                   memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
                track->GetEnvelopeValues(mEnvValues.data(),
@@ -256,10 +254,8 @@ size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
       *pos -= slen;
    }
    else {
-      auto results = cache.GetFloats(*pos, slen, mMayThrow);
-      if (results)
-         memcpy(pFloat, results, sizeof(float) * slen);
-      else
+      auto results = cache.GetFloats(*pos, pFloat, slen);
+      if (!results)
          memset(pFloat, 0, sizeof(float) * slen);
       track->GetEnvelopeValues(mEnvValues.data(), slen, t);
       for (size_t i = 0; i < slen; i++)
@@ -285,7 +281,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
    bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
    const ArrayOf<bool> *pMap
 )  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
-   , mnChannels{ TrackList::NChannels(leader) }
+   , mnChannels{ 1u }
    , mRate{ rate }
    , mEnvelope{ options.envelope }
    , mMayThrow{ mayThrow }
@@ -301,8 +297,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
    , mpMap{ pMap }
 {
    size_t j = 0;
-   for (auto channel : TrackList::Channels(&leader))
-      mInputTrack[j++].SetTrack(channel->SharedPointer<const SampleTrack>());
+   mInputTrack[j++].SetTrack(leader.SharedPointer<const SampleTrack>());
 
    assert(mTimesAndSpeed);
    auto t0 = mTimesAndSpeed->mT0;
@@ -316,10 +311,7 @@ MixerSource::~MixerSource() = default;
 
 const SampleTrack *MixerSource::GetChannel(unsigned iChannel) const
 {
-   auto range = TrackList::Channels(mpLeader.get());
-   auto iter = range.begin();
-   std::advance(iter, iChannel);
-   return *iter;
+   return mpLeader.get();
 }
 
 const bool *MixerSource::MixerSpec(unsigned iChannel) const

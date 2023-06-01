@@ -124,13 +124,17 @@ using std::max;
 using std::min;
 
 TransportTracks::TransportTracks(
-   TrackList &trackList, bool selectedOnly, bool nonWaveToo)
+   TrackList& trackList,
+   const std::function<ConstSampleTrackHolder(SampleTrackHolder)>&
+      playbackTrackFactory,
+   bool selectedOnly, bool nonWaveToo)
 {
    {
       const auto range = trackList.Any<SampleTrack>()
          + (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
-         playbackTracks.push_back(pTrack->SharedPointer<SampleTrack>());
+         playbackTracks.push_back(
+            playbackTrackFactory(pTrack->SharedPointer<SampleTrack>()));
    }
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (nonWaveToo) {
@@ -168,7 +172,7 @@ struct AudioIoCallback::TransportState {
                wxASSERT(false);
                continue;
             }
-            unsigned chanCnt = TrackList::NChannels(*vt);
+            unsigned chanCnt = 1u;
             i += chanCnt; // Visit leaders only
             mpRealtimeInitialization
                ->AddTrack(*vt, numPlaybackChannels, sampleRate);
@@ -671,7 +675,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
                (latencyDuration / 1000.0) :
                // Otherwise, use the (likely incorrect) latency reported by PA
                stream->outputLatency;
-         
+
          mHardwarePlaybackLatencyFrames = lrint(outputLatency * mRate);
 #ifdef __WXGTK__
          // DV: When using ALSA PortAudio does not report the buffer size.
@@ -1251,17 +1255,13 @@ bool AudioIO::AllocateBuffers(
                      // record
                      endTime = t1;
 
-                  Mixer::Inputs mixTracks;
-                  const auto range =
-                     TrackList::Channels<const SampleTrack>(pTrack.get());
-                  for (auto channel : range)
-                     mixTracks.push_back(
-                        channel->SharedPointer<const SampleTrack>());
+                  Mixer::Inputs mixTracks { pTrack };
+                  constexpr size_t numChannels = 1u;
                   mPlaybackMixers.emplace_back(std::make_unique<Mixer>(
                      move(mixTracks),
                      // Don't throw for read errors, just play silence:
                      false,
-                     warpOptions, startTime, endTime, range.size(),
+                     warpOptions, startTime, endTime, numChannels,
                      std::max( mPlaybackSamplesToCopy, mPlaybackQueueMinimum ),
                      false, // not interleaved
                      mRate, floatSample,
@@ -1981,7 +1981,7 @@ bool AudioIO::ProcessPlaybackSlices(
                produced = mixer->Process( toProduce );
             //wxASSERT(produced <= toProduce);
             for(size_t j = 0, nChannels =
-               TrackList::NChannels(*mPlaybackTracks[i]);
+               1u;
                j < nChannels; ++i, ++j
             ) {
                auto warpedSamples = mixer->GetBuffer(j);
@@ -2028,7 +2028,7 @@ void AudioIO::TransformPlayBuffers(
          continue;
       // vt is mono, or is the first of its group of channels
       const auto nChannels = std::min<size_t>(
-         mNumPlaybackChannels, TrackList::NChannels(*vt));
+         mNumPlaybackChannels, 1u);
 
       // Loop over the blocks of unflushed data, at most two
       for (unsigned iBlock : {0, 1}) {

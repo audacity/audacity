@@ -53,7 +53,7 @@ size_t FindBufferSize(const Mixer::Inputs &inputs, size_t bufferSize)
    for (size_t i = 0; i < nTracks;) {
       const auto &input = inputs[i];
       const auto leader = input.pTrack.get();
-      const auto nInChannels = TrackList::NChannels(*leader);
+      const auto nInChannels = 1u;
       if (!leader || i + nInChannels > nTracks) {
          assert(false);
          break;
@@ -137,7 +137,7 @@ Mixer::Mixer(Inputs inputs,
    for (size_t i = 0; i < nTracks;) {
       const auto &input = mInputs[i];
       const auto leader = input.pTrack.get();
-      const auto nInChannels = TrackList::NChannels(*leader);
+      const auto nInChannels = 1u;
       if (!leader || i + nInChannels > nTracks) {
          assert(false);
          break;

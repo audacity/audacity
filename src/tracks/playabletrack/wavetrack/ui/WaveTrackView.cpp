@@ -47,6 +47,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackAffordanceHandle.h"
+#include "WaveClipStretchHandle.h"
 #include "WaveClipTrimHandle.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
@@ -333,7 +334,7 @@ public:
       mOrigHeight = height;
 
       mOrigHeights = mAdjuster.ComputeHeights( mViewHeight );
-      
+
       // Find the total height of the sub-views that may resize
       mTotalHeight = 0;
       auto index = ( mTop ? mAdjuster.mFirstSubView : mMySubView );
@@ -530,7 +531,7 @@ public:
       , mViewHeight{ viewHeight }
    {
    }
-   
+
    Result Click(
       const TrackPanelMouseEvent &event, AudacityProject *pProject ) override
    {
@@ -577,13 +578,13 @@ public:
          if ( yy < coord - mHeights[ ii ] + mHeights[ mMySubView ] )
             return Upward;
       }
-   
+
       if ( ii > mMySubView ) {
          if( mMySubView < mHeights.size() - 1 &&
             yy >= coord - mHeights[ mMySubView ] )
          return Downward;
       }
-   
+
       return Neutral;
    }
 
@@ -684,7 +685,7 @@ public:
       SubViewAdjuster adjuster{ view };
       if ( adjuster.NVisible() < 2 )
          return {};
-   
+
       const auto rect = GetButtonRect( state.rect );
       if ( !rect.Contains( state.state.GetPosition() ) )
          return {};
@@ -763,14 +764,14 @@ std::pair<
          // Only one cell is tested and we need to know
          // which one and it's relative location to the border.
          auto subviews = pWaveTrackView->GetSubViews();
-         auto currentSubview = std::find_if(subviews.begin(), subviews.end(), 
+         auto currentSubview = std::find_if(subviews.begin(), subviews.end(),
             [self = shared_from_this()](const auto& p){
                return self == p.second;
          });
          if (currentSubview != subviews.end())
          {
             auto currentSubviewIndex = std::distance(subviews.begin(), currentSubview);
-            
+
             const auto py = state.state.GetY();
             const auto topBorderHit = std::abs(py - state.rect.GetTop())
                <= WaveTrackView::kChannelSeparatorThickness / 2;
@@ -810,6 +811,10 @@ std::pair<
           mClipTrimHandle,
           *pWaveTrackView, pProject, state))
           results.second.push_back(pHandle);
+      if (
+         auto pHandle = WaveClipStretchHandle::HitTest(
+            mClipStretchHandle, *pWaveTrackView, pProject, state))
+         results.second.push_back(pHandle);
    }
    if (auto result = CutlineHandle::HitTest(
       mCutlineHandle, state.state, state.rect,
@@ -1065,7 +1070,7 @@ bool WaveTrackView::ToggleSubView(Display display)
          if (GetDisplays().size() < 2)
             // refuse to do it
             return false;
-         
+
          auto index = foundPlacement.index;
          foundPlacement = { -1, 0.0 };
          if (index >= 0) {
@@ -1380,7 +1385,7 @@ bool WaveTrackView::CutSelectedText(AudacityProject& project)
    for (auto channel : TrackList::Channels(FindTrack().get()))
    {
       auto& view = TrackView::Get(*channel);
-      if (auto affordance 
+      if (auto affordance
          = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
       {
          if (affordance->OnTextCut(project))
@@ -1518,13 +1523,14 @@ std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
 
 namespace
 {
-   // Returns an offset in seconds to be applied to the right clip 
+   // Returns an offset in seconds to be applied to the right clip
    // boundary so that it does not overlap the last sample
    double CalculateAdjustmentForZoomLevel(
-      const wxRect& viewRect, 
-      const ZoomInfo& zoomInfo, 
-      int rate, 
-      double& outAveragePPS,
+      const wxRect& viewRect,
+      const ZoomInfo& zoomInfo,
+      int sampleRate,
+      double stretchRatio,
+      double& outAvgPixPerSample,
       //Is zoom level sufficient to show individual samples?
       bool& outShowSamples)
    {
@@ -1535,13 +1541,15 @@ namespace
 
       // Determine whether we should show individual samples
       // or draw circular points as well
-      outAveragePPS = viewRect.width / (rate * (h1 - h));// pixels per sample
-      outShowSamples = outAveragePPS > 0.5;
+      outAvgPixPerSample = viewRect.width * stretchRatio / (sampleRate * (h1 - h));// pixels per sample
+      outShowSamples = outAvgPixPerSample > 0.5;
 
       if(outShowSamples)
          // adjustment so that the last circular point doesn't appear
          // to be hanging off the end
-         return  pixelsOffset / (outAveragePPS * rate); // pixels / ( pixels / second ) = seconds
+         return pixelsOffset * stretchRatio /
+                (outAvgPixPerSample *
+                 sampleRate); // pixels / ( pixels / second ) = seconds
       return .0;
    }
 }
@@ -1551,7 +1559,8 @@ ClipParameters::ClipParameters
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
    tOffset = clip->GetPlayStartTime();
-   rate = clip->GetRate();
+   sampleRate = clip->GetRate();
+   stretchRatio = clip->GetPlayoutStretchRatio();
 
    h = zoomInfo.PositionToTime(0, 0
       , true
@@ -1577,13 +1586,15 @@ ClipParameters::ClipParameters
    tpost = h1 - tOffset;               // offset corrected time of
    //  right edge of display
 
-   const double sps = 1. / rate;            //seconds-per-sample
+   const double sps = stretchRatio / sampleRate;            //seconds-per-sample
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
    t0 = std::max(tpre, .0);
-   t1 = std::min(tpost, trackLen - sps * .99) 
-      + CalculateAdjustmentForZoomLevel(rect, zoomInfo, rate, averagePixelsPerSample, showIndividualSamples);
+   t1 = std::min(tpost, trackLen - sps * .99) +
+        CalculateAdjustmentForZoomLevel(
+           rect, zoomInfo, sampleRate, stretchRatio, averagePixelsPerSample,
+           showIndividualSamples);
 
    // Make sure t1 (the right bound) is greater than 0
    if (t1 < 0.0) {
@@ -1596,18 +1607,27 @@ ClipParameters::ClipParameters
    }
 
    // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
-   ssel0 = std::max(sampleCount(0), spectrum
-      ? sampleCount((sel0 - tOffset) * rate + .99) // PRL: why?
-      : track->TimeToLongSamples(sel0 - tOffset)
-   );
-   ssel1 = std::max(sampleCount(0), spectrum
-      ? sampleCount((sel1 - tOffset) * rate + .99) // PRL: why?
-      : track->TimeToLongSamples(sel1 - tOffset)
-   );
+   ssel0 = std::max(
+      sampleCount(0),
+      spectrum ?
+         sampleCount(
+            (sel0 - tOffset) * sampleRate / stretchRatio + .99) // PRL: why?
+         :
+         track->TimeToLongSamples(sel0 - tOffset));
+   ssel1 = std::max(
+      sampleCount(0),
+      spectrum ?
+         sampleCount(
+            (sel1 - tOffset) * sampleRate / stretchRatio + .99) // PRL: why?
+         :
+         track->TimeToLongSamples(sel1 - tOffset));
 
    //trim selection so that it only contains the actual samples
-   if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
-      ssel1 = sampleCount( 0.5 + trackLen * rate );
+   if (
+      ssel0 != ssel1 &&
+      ssel1 > (sampleCount)(0.5 + trackLen * sampleRate / stretchRatio))
+   {
+      ssel1 = sampleCount(0.5 + trackLen * sampleRate / stretchRatio);
    }
 
    // The variable "hiddenMid" will be the rectangle containing the
@@ -1680,8 +1700,9 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
     auto srs = 1. / static_cast<double>(clip.GetRate());
     double averagePixelsPerSample{};
     bool showIndividualSamples{};
-    auto clipEndingAdjustemt 
-       = CalculateAdjustmentForZoomLevel(viewRect, zoomInfo, clip.GetRate(), averagePixelsPerSample, showIndividualSamples);
+    auto clipEndingAdjustemt = CalculateAdjustmentForZoomLevel(
+       viewRect, zoomInfo, clip.GetRate(), clip.GetPlayoutStretchRatio(),
+       averagePixelsPerSample, showIndividualSamples);
     if (outShowSamples != nullptr)
        *outShowSamples = showIndividualSamples;
     constexpr auto edgeLeft = static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
@@ -1698,12 +1719,12 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
     );
     if (right >= left)
     {
-        //after clamping we can expect that left and right 
+        //after clamping we can expect that left and right
         //are small enough to be put into int
         return wxRect(
-           static_cast<int>(left), 
-           viewRect.y, 
-           std::max(1, static_cast<int>(right - left)), 
+           static_cast<int>(left),
+           viewRect.y,
+           std::max(1, static_cast<int>(right - left)),
            viewRect.height
         );
     }
@@ -1744,7 +1765,7 @@ void WaveTrackView::BuildSubViews() const
       auto &placements = pThis->DoGetPlacements();
       if (placements.empty()) {
          placements.resize( WaveTrackSubViews::size() );
-         
+
          auto pTrack = pThis->FindTrack();
          auto display = TracksPrefs::ViewModeChoice();
          bool multi = (display == WaveTrackViewConstants::MultiView);

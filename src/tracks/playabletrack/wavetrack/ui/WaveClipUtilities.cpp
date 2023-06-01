@@ -14,9 +14,10 @@
 #include <wx/debug.h>
 #include "SampleCount.h"
 
-void findCorrection(const std::vector<sampleCount> &oldWhere, size_t oldLen,
-   size_t newLen, double t0, double rate, double samplesPerPixel,
-   int &oldX0, double &correction)
+void findCorrection(
+   const std::vector<sampleCount>& oldWhere, size_t oldLen, size_t newLen,
+   double t0, double sampleRate, double stretchRatio, double samplesPerPixel,
+   int& oldX0, double& correction)
 {
    // Mitigate the accumulation of location errors
    // in copies of copies of ... of caches.
@@ -29,7 +30,7 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, size_t oldLen,
    const double denom = oldWhereLast - oldWhere0;
 
    // What sample would go in where[0] with no correction?
-   const double guessWhere0 = t0 * rate;
+   const double guessWhere0 = t0 * sampleRate / stretchRatio;
 
    if ( // Skip if old and NEW are disjoint:
       oldWhereLast <= guessWhere0 ||
@@ -57,12 +58,12 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, size_t oldLen,
 }
 
 void fillWhere(
-   std::vector<sampleCount> &where, size_t len, double bias, double correction,
-   double t0, double rate, double samplesPerPixel)
+   std::vector<sampleCount>& where, size_t len, double bias, double correction,
+   double t0, double sampleRate, double stretchRatio, double samplesPerPixel)
 {
    // Be careful to make the first value non-negative
-   const double w0 = 0.5 + correction + bias + t0 * rate;
+   const double w0 = 0.5 + correction + bias + t0 * sampleRate / stretchRatio;
    where[0] = sampleCount( std::max(0.0, floor(w0)) );
    for (decltype(len) x = 1; x < len + 1; x++)
-      where[x] = sampleCount( floor(w0 + double(x) * samplesPerPixel) );
+      where[x] = sampleCount( floor(w0 + double(x) * samplesPerPixel * stretchRatio) );
 }

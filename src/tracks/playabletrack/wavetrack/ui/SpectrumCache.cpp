@@ -478,7 +478,8 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
    const auto track =
       static_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
    auto &settings = SpectrogramSettings::Get(*track);
-   const auto rate = clip.GetRate();
+   const auto sampleRate = clip.GetRate();
+   const auto stretchRatio = clip.GetPlayoutStretchRatio();
 
    //Trim offset comparison failure forces spectrogram cache rebuild
    //and skip copying "unchanged" data after clip border was trimmed.
@@ -488,7 +489,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
       mSpecCache->rightTrim == clip.GetTrimRight() &&
       mSpecCache->len > 0 &&
       mSpecCache->Matches
-      (mDirty, pixelsPerSecond, settings, rate);
+      (mDirty, pixelsPerSecond, settings, sampleRate);
 
    if (match &&
        mSpecCache->start == t0 &&
@@ -517,16 +518,17 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
    }
 
    const double tstep = 1.0 / pixelsPerSecond;
-   const double samplesPerPixel = rate * tstep;
+   const double samplesPerPixel =
+      sampleRate / clip.GetPlayoutStretchRatio() * tstep;
 
    int oldX0 = 0;
    double correction = 0.0;
 
    int copyBegin = 0, copyEnd = 0;
    if (match) {
-      findCorrection(mSpecCache->where, mSpecCache->len, numPixels,
-         t0, rate, samplesPerPixel,
-         oldX0, correction);
+      findCorrection(
+         mSpecCache->where, mSpecCache->len, numPixels, t0, sampleRate,
+         stretchRatio, samplesPerPixel, oldX0, correction);
       // Remember our first pixel maps to oldX0 in the old cache,
       // possibly out of bounds.
       // For what range of pixels can data be copied?
@@ -573,13 +575,14 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
 
    // purposely offset the display 1/2 sample to the left (as compared
    // to waveform display) to properly center response of the FFT
-   fillWhere(mSpecCache->where, numPixels, 0.5, correction,
-      t0, rate, samplesPerPixel);
+   fillWhere(
+      mSpecCache->where, numPixels, 0.5, correction, t0, sampleRate,
+      stretchRatio, samplesPerPixel);
 
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
        clip.GetSequenceSamplesCount(),
-       clip.GetSequenceStartTime(), rate, pixelsPerSecond);
+       clip.GetSequenceStartTime(), sampleRate, pixelsPerSecond);
 
    mSpecCache->dirty = mDirty;
    spectrogram = &mSpecCache->freq[0];

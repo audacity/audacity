@@ -82,7 +82,7 @@ template<typename T>
     been added to a TrackList, or (directly or transitively) copied from such.
     (A track added by TrackList::RegisterPendingNewTrack() that is not yet applied is not
     considered added.)
- 
+
     TrackIds are assigned uniquely across projects. */
 class TrackId
 {
@@ -218,7 +218,7 @@ private:
       RightChannel = 1,
       MonoChannel = 2
    };
-   
+
    TrackId GetId() const { return mId; }
  private:
    void SetId( TrackId id ) { mId = id; }
@@ -351,7 +351,7 @@ public:
    const ChannelGroupData &GetGroupData() const;
 
 protected:
-   
+
    /*!
     @param completeList only influences debug build consistency checking
     */
@@ -368,7 +368,7 @@ private:
    Track* GetLinkedTrack() const;
    //! Returns true for leaders of multichannel groups
    bool HasLinkedTrack() const noexcept;
-   
+
    //! Retrieve mNode with debug checks
    TrackNodePointer GetNode() const;
    //! Update mNode when Track is added to TrackList, or removed from it
@@ -468,7 +468,7 @@ public:
    using Continuation = std::function< R() >;
    //! Type of arguments passed as optional second parameter to TypeSwitch<void>() cases
    using Fallthrough = Continuation<>;
-   
+
 private:
    //! Variadic template implements metafunction with specializations, to dispatch Track::TypeSwitch
    template< typename ...Params >
@@ -485,7 +485,7 @@ private:
          using QualifiedTrackType =
             std::conditional_t< std::is_const_v<ArgumentType>,
                const Track, Track >;
-   
+
          //! The template specialization to recur with
          using Tail = Executor< Tag, R, ArgumentType, Functions... >;
          //! Constant used in a compile-time check
@@ -509,7 +509,7 @@ private:
          using QualifiedBaseClass =
             std::conditional_t< std::is_const_v<ArgumentType>,
                const BaseClass, BaseClass >;
-   
+
          //! Constant used in a compile-time check
          enum : unsigned { SetUsed = 1u };
 
@@ -531,7 +531,7 @@ private:
          using QualifiedBaseClass =
             std::conditional_t< std::is_const_v<ArgumentType>,
                const BaseClass, BaseClass >;
-   
+
          //! The template specialization to recur with
          using Tail = Executor< Tag, R, ArgumentType, Functions... >;
          //! Constant used in a compile-time check
@@ -745,13 +745,13 @@ public:
    A variadic function taking any number of function objects, each taking
    a pointer to Track or a subclass, maybe const-qualified, and maybe a
    second argument which is a fall-through continuation.
-   
+
    Each of the function objects (and supplied continuations) returns R (or a type convertible to R).
    Calls the first in the sequence that accepts the actual type of the track.
-   
+
    If no function accepts the track, do nothing and return R{}
    if R is not void.
-   
+
    If one of the functions invokes the fall-through, then the next following
    applicable function is called.
 
@@ -795,7 +795,7 @@ public:
 
    // Returns true if an error was encountered while trying to
    // open the track from XML
-   virtual bool GetErrorOpening() { return false; }
+   virtual bool GetErrorOpening() const { return false; }
 
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;
@@ -828,7 +828,7 @@ ENUMERATE_TRACK_TYPE(Track);
 
 //! Encapsulate the checked down-casting of track pointers
 /*! Eliminates possibility of error -- and not quietly casting away const
- 
+
 Typical usage:
 ```
 if (auto wt = track_cast<const WaveTrack*>(track)) { ... }
@@ -868,9 +868,9 @@ template < typename TrackType > struct TrackIterRange;
 //! Iterator over only members of a TrackList of the specified subtype, optionally filtered by a predicate; past-end value dereferenceable, to nullptr
 /*! Does not suffer invalidation when an underlying std::list iterator is deleted, provided that is not
     equal to its current position or to the beginning or end iterator.
- 
+
     The filtering predicate is tested only when the iterator is constructed or advanced.
- 
+
     @tparam TrackType Track or a subclass, maybe const-qualified
 */
 template <
@@ -1445,10 +1445,10 @@ public:
    template<typename TrackKind>
       TrackKind *Add( const std::shared_ptr< TrackKind > &t )
          { return static_cast< TrackKind* >( DoAdd( t ) ); }
-   
+
    //! Removes linkage if track belongs to a group
    void UnlinkChannels(Track& track);
-   /** \brief Converts channels to a multichannel track. 
+   /** \brief Converts channels to a multichannel track.
    * @param first and the following must be in this list. Tracks should
    * not be a part of another group (not linked)
    * @param nChannels number of channels, for now only 2 channels supported
@@ -1534,7 +1534,7 @@ private:
 
    Track *GetPrev(Track * t, bool linked = false) const;
    Track *GetNext(Track * t, bool linked = false) const;
-   
+
    template < typename TrackType >
       TrackIter< TrackType >
          MakeTrackIterator( TrackNodePointer iter ) const
@@ -1651,7 +1651,7 @@ public:
    bool HasPendingTracks() const;
 
 private:
-   AudacityProject *mOwner;
+   AudacityProject* const mOwner;
 
    //! Shadow tracks holding append-recording in progress; need to put them into a list so that GetLink() works
    /*! Beware, they are in a disjoint iteration sequence from ordinary tracks */

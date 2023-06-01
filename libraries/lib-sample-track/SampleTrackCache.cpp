@@ -34,6 +34,12 @@ void SampleTrackCache::SetTrack(const std::shared_ptr<const SampleTrack> &pTrack
    }
 }
 
+bool SampleTrackCache::GetFloats(sampleCount start, float* buffer, size_t len)
+{
+   return mPTrack->Get(
+      reinterpret_cast<samplePtr>(buffer), floatSample, start, len);
+}
+
 const float *SampleTrackCache::GetFloats(
    sampleCount start, size_t len, bool mayThrow)
 {

@@ -23,6 +23,7 @@ set( LIBRARIES
    lib-command-parameters-interface
    lib-numeric-formats-interface
    lib-wave-track-interface
+   lib-stretching-sample-track-interface
 )
 audacity_library( lib-effects "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -31,6 +31,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindows.h"
+#include "StretchingPlaybackTrackFactory.h"
 #include "ScrubState.h"
 #include "TrackPanelAx.h"
 #include "UndoManager.h"
@@ -421,7 +422,11 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             };
          token = gAudioIO->StartStream(
-            TransportTracks{ TrackList::Get(*p), false, nonWaveToo },
+            TransportTracks {
+               TrackList::Get(*p),
+               StretchingPlaybackTrackFactory::GetStretchingSampleTrackFactory(
+                  pStartTime.value_or(0.0)),
+               false, nonWaveToo },
             tcp0, tcp1, tcp1, myOptions);
       }
       else {
@@ -432,7 +437,11 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                t1 = latestEnd;
          }
          token = gAudioIO->StartStream(
-            TransportTracks{ tracks, false, nonWaveToo },
+            TransportTracks {
+               tracks,
+               StretchingPlaybackTrackFactory::GetStretchingSampleTrackFactory(
+                  pStartTime.value_or(0.0)),
+               false, nonWaveToo },
             t0, t1, mixerLimit, options);
       }
       if (token != 0) {
@@ -727,7 +736,11 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          // playback.
          /* TODO: set up stereo tracks if that is how the user has set up
           * their preferences, and choose sample format based on prefs */
-         transportTracks = TransportTracks{ TrackList::Get( *p ), false, true };
+         transportTracks = TransportTracks {
+            TrackList::Get(*p),
+            StretchingPlaybackTrackFactory::GetStretchingSampleTrackFactory(t0),
+            false, true
+         };
          for (const auto &wt : existingTracks) {
             auto end = transportTracks.playbackTracks.end();
             auto it = std::find(transportTracks.playbackTracks.begin(), end, wt);

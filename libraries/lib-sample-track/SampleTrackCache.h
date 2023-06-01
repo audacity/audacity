@@ -48,6 +48,8 @@ public:
    */
    const float *GetFloats(sampleCount start, size_t len, bool mayThrow);
 
+   bool GetFloats(sampleCount start, float* buffer, size_t len);
+
 private:
    void Free();
 

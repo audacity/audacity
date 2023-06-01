@@ -13,6 +13,7 @@ Paul Licameli split from Mix.cpp
 #include "BasicUI.h"
 #include "Mix.h"
 #include "RealtimeEffectList.h"
+#include "StretchingSampleTrack.h"
 #include "WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -68,7 +69,9 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    for(auto wt : trackRange) {
       waveArray.emplace_back(
-         wt->SharedPointer<const SampleTrack>(), GetEffectStages(*wt));
+         std::make_shared<StretchingSampleTrack>(
+            wt->SharedPointer<const WaveTrack>(), wt->GetStartTime()),
+         GetEffectStages(*wt));
       tstart = wt->GetStartTime();
       tend = wt->GetEndTime();
       if (tend > mixEndTime)
@@ -224,7 +227,7 @@ GetEffectStages(const WaveTrack &track)
  WaveTrack, like AudacityProject, has a registry for attachment of serializable
  data.  RealtimeEffectList exposes an interface for serialization.  This is
  where we connect them.
- 
+
  There is also registration for serialization of the project-wide master effect
  stack (whether or not UI makes it available).
  */

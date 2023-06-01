@@ -6,4 +6,15 @@
 // SPDX-License-Identifier: BSL-1.0
 
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <catch2/catch_session.hpp>
+
+int main(int argc, char* argv[])
+{
+   // your setup ...
+
+   int result = Catch::Session().run(argc, argv);
+
+   // your clean-up...
+
+   return result;
+}

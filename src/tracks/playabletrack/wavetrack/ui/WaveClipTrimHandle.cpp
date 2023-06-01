@@ -13,6 +13,7 @@
 #include "RefreshCode.h"
 
 #include <wx/event.h>
+#include <wx/utils.h>
 
 #include "../../../../TrackArtist.h"
 #include "../../../../Snap.h"
@@ -387,6 +388,8 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(
    const AudacityProject* pProject, 
    const TrackPanelMouseState& state)
 {
+    if (wxGetKeyState(WXK_CONTROL))
+      return {};
     const auto rect = state.rect;
 
     auto px = state.state.m_x;
@@ -450,6 +453,8 @@ UIHandlePtr WaveClipTrimHandle::HitTest(std::weak_ptr<WaveClipTrimHandle>& holde
     WaveTrackView& view, const AudacityProject* pProject,
     const TrackPanelMouseState& state)
 {
+   if (wxGetKeyState(WXK_CONTROL))
+      return {};
     auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack());
     //For multichannel tracks, show trim handle only for the leader track
     if (!waveTrack->IsLeader() && waveTrack->IsAlignedWithLeader())

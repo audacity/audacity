@@ -74,15 +74,12 @@ void RealtimeEffectManager::AddTrack(
    RealtimeEffects::InitializationScope &scope,
    const Track &track, unsigned chans, float rate)
 {
-   auto leader = *track.GetOwner()->FindLeader(&track);
-   // This should never return a null
-   wxASSERT(leader);
-   mGroupLeaders.push_back(leader);
-   mRates.insert({leader, rate});
+   mGroupLeaders.push_back(&track);
+   mRates.insert({&track, rate});
 
-   VisitGroup(*leader,
+   VisitGroup(track,
       [&](RealtimeEffectState & state, bool) {
-         scope.mInstances.push_back(state.AddTrack(*leader, chans, rate));
+         scope.mInstances.push_back(state.AddTrack(track, chans, rate));
       }
    );
 }

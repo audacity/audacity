@@ -9,7 +9,7 @@
   Paul Licameli
 
 **********************************************************************/
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include "TypeEnumerator.h"
 
 using namespace TypeEnumerator;

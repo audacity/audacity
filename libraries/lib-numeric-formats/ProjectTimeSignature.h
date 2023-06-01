@@ -17,6 +17,7 @@ class AudacityProject;
 
 struct TimeSignatureChangedMessage final
 {
+   double oldTempo {};
    double newTempo {};
    int newUpperTimeSignature {};
    int newLowerTimeSignature {};
@@ -43,7 +44,7 @@ public:
    void SetLowerTimeSignature(int lowerTimeSignature);
 
 private:
-   void PublishSignatureChange();
+   void PublishSignatureChange(double oldTempo);
    
    double mTempo;
    int mUpperTimeSignature;

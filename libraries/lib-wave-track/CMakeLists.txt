@@ -25,6 +25,8 @@ set( SOURCES
    Sequence.h
    WaveClip.cpp
    WaveClip.h
+   WaveClipList.cpp
+   WaveClipList.h
    WaveTrack.cpp
    WaveTrack.h
    WaveTrackSink.cpp

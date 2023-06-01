@@ -39,12 +39,9 @@ MixerOptions::ResampleParameters::ResampleParameters(bool highQuality,
    const SampleTrack &leader, double rate, const Warp &options
 )  : mHighQuality{ highQuality }
 {
-   auto range = TrackList::Channels<const SampleTrack>(&leader);
-   auto size = range.size();
-   mMinFactor.reserve(size);
-   mMaxFactor.reserve(size);
-   for (auto pTrack : range) {
-      double factor = (rate / pTrack->GetRate());
+   mMinFactor.reserve(1u);
+   mMaxFactor.reserve(1u);
+      double factor = (rate / leader.GetRate());
       if (const auto envelope = options.envelope) {
          // variable rate resampling
          mVariableRates = true;
@@ -63,7 +60,6 @@ MixerOptions::ResampleParameters::ResampleParameters(bool highQuality,
          mMinFactor.push_back(factor);
          mMaxFactor.push_back(factor);
       }
-   }
 }
 
 MixerOptions::Downmix::Downmix(unsigned numTracks, unsigned maxNumChannels)

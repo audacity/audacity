@@ -23,6 +23,7 @@ class SampleTrack;
 class WaveTrack;
 class WaveTrackView;
 class WaveClip;
+class WaveClipStretchHandle;
 class WaveClipTrimHandle;
 class ZoomInfo;
 
@@ -45,7 +46,7 @@ public:
 
    explicit
    WaveTrackSubView( WaveTrackView &waveTrackView );
-   
+
    virtual const Type &SubViewType() const = 0;
 
    // For undo and redo purpose
@@ -59,7 +60,7 @@ public:
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
       const std::shared_ptr<WaveTrack> &wt );
-   
+
 protected:
    static void DrawBoldBoundaries(
       TrackPanelDrawingContext &context, const WaveTrack *track,
@@ -76,6 +77,7 @@ private:
    std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
    std::weak_ptr<SubViewAdjustHandle> mAdjustHandle;
    std::weak_ptr<SubViewRearrangeHandle> mRearrangeHandle;
+   std::weak_ptr<WaveClipStretchHandle> mClipStretchHandle;
    std::weak_ptr<WaveClipTrimHandle> mClipTrimHandle;
    std::weak_ptr<CutlineHandle> mCutlineHandle;
    std::weak_ptr<WaveTrackView> mwWaveTrackView;
@@ -155,9 +157,9 @@ public:
 
    std::weak_ptr<WaveClip> GetSelectedClip();
 
-   // Returns a visible subset of subviews, sorted in the same 
+   // Returns a visible subset of subviews, sorted in the same
    // order as they are supposed to be displayed
-   
+
 
    // Get the visible sub-views,
    // if rect is provided then result will contain
@@ -247,7 +249,8 @@ struct AUDACITY_DLL_API ClipParameters
       const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
 
    double tOffset;
-   double rate;
+   double sampleRate;
+   double stretchRatio;
    double h; // absolute time of left edge of display
    double tpre; // offset corrected time of left edge of display
    double h1;
@@ -270,7 +273,7 @@ struct AUDACITY_DLL_API ClipParameters
    wxRect mid;
    int leftOffset;
 
-   // returns a clip rectangle restricted by viewRect, 
+   // returns a clip rectangle restricted by viewRect,
    // and with clipOffsetX - clip horizontal origin offset within view rect
    static wxRect GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples = nullptr);
 };

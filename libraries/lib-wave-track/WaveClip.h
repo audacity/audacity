@@ -21,8 +21,9 @@
 
 #include <wx/longlong.h>
 
-#include <vector>
 #include <functional>
+#include <optional>
+#include <vector>
 
 class BlockArray;
 class Envelope;
@@ -148,7 +149,7 @@ public:
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
-   
+
    double GetSequenceStartTime() const noexcept;
    void SetSequenceStartTime(double startTime);
    double GetSequenceEndTime() const;
@@ -163,10 +164,12 @@ public:
    void SetPlayStartTime(double time);
 
    double GetPlayEndTime() const;
+   double GetPlayDuration() const;
 
    sampleCount GetPlayStartSample() const;
    sampleCount GetPlayEndSample() const;
    sampleCount GetPlaySamplesCount() const;
+   sampleCount GetClosestSampleIndex(double offsetFromPlayStartTime) const;
 
    //! Sets the play start offset in seconds from the beginning of the underlying sequence
    void SetTrimLeft(double trim);
@@ -183,13 +186,18 @@ public:
    //! Moves play end position by deltaTime
    void TrimRight(double deltaTime);
 
-   //! Sets the the left trimming to the absolute time (if that is in bounds)
+   //! Sets the left trimming to the absolute time (if that is in bounds)
    void TrimLeftTo(double to);
-   //! Sets the the right trimming to the absolute time (if that is in bounds)
+   //! Sets the right trimming to the absolute time (if that is in bounds)
    void TrimRightTo(double to);
 
    /*! @excsafety{No-fail} */
    void Offset(double delta) noexcept;
+
+   //! Stretches from left to the absolute time (if in expected range)
+   void StretchLeftTo(double to);
+   //! Sets from the right to the absolute time (if in expected range)
+   void StretchRightTo(double to);
 
    // One and only one of the following is true for a given t (unless the clip
    // has zero length -- then BeforePlayStartTime() and AfterPlayEndTime() can both be true).
@@ -338,7 +346,7 @@ public:
    bool SharesBoundaryWithNextClip(const WaveClip* next) const;
 
    void SetName(const wxString& name);
-   const wxString& GetName() const;
+   wxString GetName() const;
 
    sampleCount TimeToSamples(double time) const noexcept;
    double SamplesToTime(sampleCount s) const noexcept;
@@ -349,12 +357,13 @@ public:
    constSamplePtr GetAppendBuffer() const;
    size_t GetAppendBufferLen() const;
 
+   double GetPlayoutStretchRatio() const;
+   void OnProjectTempoChange(double oldTempo, double newTempo);
+
 protected:
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
    void ClearSequence(double t0, double t1);
-
-   
 
    double mSequenceOffset { 0 };
    double mTrimLeft{ 0 };
@@ -375,6 +384,10 @@ protected:
 
 private:
    wxString mName;
+   double mUiStretchRatio = 1.0;
+   bool mLockToProjectTempo = true;
+   std::optional<double> mSourceTempo;
+   std::optional<double> mDestinationTempo;
 };
 
 #endif
