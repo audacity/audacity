@@ -20,9 +20,9 @@
 #include <cmath>
 #include "EffectStage.h"
 #include "Dither.h"
+#include "Resample.h"
 #include "SampleTrack.h"
 #include "SampleTrackCache.h"
-#include "Resample.h"
 #include "float_cast.h"
 #include <numeric>
 
@@ -286,26 +286,21 @@ size_t Mixer::Process(const size_t maxToProcess)
 
    // Decides which output buffers an input channel accumulates into
    auto findChannelFlags = [&channelFlags, numChannels = mNumChannels]
-   (const bool *map, Track::ChannelType channel){
+   (const bool *map, const SampleTrack &track){
       const auto end = channelFlags + numChannels;
       std::fill(channelFlags, end, 0);
       if (map)
          // ignore left and right when downmixing is customized
          std::copy(map, map + numChannels, channelFlags);
-      else switch(channel) {
-      case Track::MonoChannel:
-      default:
+      else if (IsMono(track))
          std::fill(channelFlags, end, 1);
-         break;
-      case Track::LeftChannel:
+      else if (PlaysLeft(track))
          channelFlags[0] = 1;
-         break;
-      case Track::RightChannel:
+      else if (PlaysRight(track)) {
          if (numChannels >= 2)
             channelFlags[1] = 1;
          else
             channelFlags[0] = 1;
-         break;
       }
       return channelFlags;
    };
@@ -339,7 +334,7 @@ size_t Mixer::Process(const size_t maxToProcess)
             for (size_t c = 0; c < mNumChannels; ++c)
                gains[c] = track->GetChannelGain(c);
          const auto flags =
-            findChannelFlags(upstream.MixerSpec(j), track->GetChannel());
+            findChannelFlags(upstream.MixerSpec(j), *track);
          MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, result);
       }
 
