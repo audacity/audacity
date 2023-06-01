@@ -73,7 +73,7 @@ private:
    /*!
     (Should we use SampleTrack::GetBestBlockSize instead?)
     */
-   static constexpr size_t sQueueMaxLen = 4096;
+   static constexpr size_t sQueueMaxLen = 2048;
 
    /*!
     @post result: `result <= maxOut`
