@@ -12,6 +12,7 @@
 
 #include <complex>
 #include <cstdint>
+#include <cstring>
 
 namespace staffpad {
 namespace vo {

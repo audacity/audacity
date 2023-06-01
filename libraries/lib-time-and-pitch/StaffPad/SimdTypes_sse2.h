@@ -39,12 +39,6 @@ struct float_x4
   {
   }
 
-  /// enables assignments like: float_x4 a = {1.f, 2.f, 3.f, 4.f};
-  __finl float_x4(float v0, float v1, float v2, float v3)
-  {
-    s = {v0, v1, v2, v3};
-  }
-
 #if __clang__
 private:
   // this helper class allows writing to the single registers for clang
