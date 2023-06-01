@@ -791,15 +791,22 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    AudacityProject *const project = &mpData->project;
    auto channels = TrackList::Channels( pTrack );
 
-   // Unlink to make pan values independent, before changing them
-   TrackList::Get( *project ).UnlinkChannels( *pTrack );
-
    int totalHeight = 0;
    int nChannels = 0;
-   for (auto channel : channels) {
-      auto &view = TrackView::Get( *channel );
-      if (stereo)
-         channel->SetPanFromChannelType();
+
+   std::vector<WaveTrack *> tracks;
+   for (auto channel : channels)
+      tracks.push_back(channel);
+
+   TrackList::Get(*project).UnlinkChannels(*pTrack);
+
+   float pan = -1.0f;
+   for (auto track : tracks) {
+      auto &view = TrackView::Get(*track);
+      if (stereo) {
+         track->SetPan(pan);
+         pan += 2.0f;
+      }
 
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())

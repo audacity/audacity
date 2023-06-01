@@ -283,14 +283,6 @@ auto WaveTrack::GetChannel() const -> ChannelType
    return mChannel;
 }
 
-void WaveTrack::SetPanFromChannelType()
-{ 
-   if( mChannel == Track::LeftChannel )
-      SetPan( -1.0f );
-   else if( mChannel == Track::RightChannel )
-      SetPan( 1.0f );
-}
-
 bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
 {
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix, completeList);
