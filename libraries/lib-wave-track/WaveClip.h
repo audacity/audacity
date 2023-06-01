@@ -204,7 +204,8 @@ public:
    // WithinPlayRegion() is true if the time is substantially within the clip
    bool WithinPlayRegion(double t) const;
    bool BeforePlayStartTime(double t) const;
-   bool AfterPlayEndTime(double t) const;
+   bool AfterOrAtPlayEndTime(double t) const;
+   bool BeforeOrAtPlayStartTime(double t) const;
 
    //! Counts number of samples within t0 and t1 region. t0 and t1 are
    //! rounded to the nearest clip sample boundary, i.e. relative to clips

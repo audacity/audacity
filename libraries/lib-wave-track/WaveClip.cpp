@@ -90,8 +90,8 @@ WaveClip::WaveClip(
    mSequenceOffset = orig.mSequenceOffset;
 
    //Adjust trim values to sample-boundary
-   mTrimLeft = orig.mTrimLeft + std::min(0., t0 - orig.GetPlayStartTime());
-   mTrimRight = orig.mTrimRight + std::min(0., orig.GetPlayEndTime() - t1);
+   mTrimLeft = orig.mTrimLeft + std::max(0., t0 - orig.GetPlayStartTime());
+   mTrimRight = orig.mTrimRight + std::max(0., orig.GetPlayEndTime() - t1);
 
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
@@ -1125,7 +1125,7 @@ void WaveClip::Offset(double delta) noexcept
 // with this definition.
 bool WaveClip::WithinPlayRegion(double t) const
 {
-   return !BeforePlayStartTime(t) && !AfterPlayEndTime(t);
+   return !BeforePlayStartTime(t) && !AfterOrAtPlayEndTime(t);
 }
 
 bool WaveClip::BeforePlayStartTime(double t) const
@@ -1133,7 +1133,12 @@ bool WaveClip::BeforePlayStartTime(double t) const
    return t < GetPlayStartTime();
 }
 
-bool WaveClip::AfterPlayEndTime(double t) const
+bool WaveClip::BeforeOrAtPlayStartTime(double t) const
+{
+   return t <= GetPlayStartTime();
+}
+
+bool WaveClip::AfterOrAtPlayEndTime(double t) const
 {
    return GetPlayEndTime() <= t;
 }
@@ -1157,7 +1162,7 @@ sampleCount WaveClip::TimeToSequenceSamples(double t) const
         return 0;
     else if (t > GetSequenceEndTime())
         return mSequence->GetNumSamples();
-    return TimeToSamples(t - GetSequenceStartTime());
+    return TimeToSamples((t - GetSequenceStartTime()) / mUiStretchRatio);
 }
 
 sampleCount WaveClip::ToSequenceSamples(sampleCount s) const
