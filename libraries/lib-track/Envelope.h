@@ -124,6 +124,7 @@ public:
 
    // Control
    void SetOffset(double newOffset);
+   void StretchBy(double value);
    void SetTrackLen( double trackLen, double sampleDur = 0.0 );
    void RescaleValues(double minValue, double maxValue);
    void RescaleTimes( double newLength );

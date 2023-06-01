@@ -1097,6 +1097,8 @@ void WaveClip::StretchLeftTo(double to)
    mTrimLeft *= ratioChange;
    mTrimRight *= ratioChange;
    mUiStretchRatio *= ratioChange;
+   mEnvelope->SetOffset(mSequenceOffset);
+   mEnvelope->StretchBy(ratioChange);
 }
 
 void WaveClip::StretchRightTo(double to)
@@ -1111,6 +1113,8 @@ void WaveClip::StretchRightTo(double to)
    mTrimLeft *= ratioChange;
    mTrimRight *= ratioChange;
    mUiStretchRatio *= ratioChange;
+   mEnvelope->SetOffset(mSequenceOffset);
+   mEnvelope->StretchBy(ratioChange);
 }
 
 void WaveClip::Offset(double delta) noexcept
