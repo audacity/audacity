@@ -155,6 +155,26 @@ double StretchingSampleTrack::GetEndTime() const
    return mWaveTrack->GetEndTime();
 }
 
+bool StretchingSampleTrack::GetMute() const
+{
+   return mWaveTrack->GetMute();
+}
+
+bool StretchingSampleTrack::GetSolo() const
+{
+   return mWaveTrack->GetSolo();
+}
+
+bool StretchingSampleTrack::GetNotMute() const
+{
+   return mWaveTrack->GetNotMute();
+}
+
+bool StretchingSampleTrack::GetNotSolo() const
+{
+   return mWaveTrack->GetNotSolo();
+}
+
 sampleFormat StretchingSampleTrack::GetSampleFormat() const
 {
    return mWaveTrack->GetSampleFormat();

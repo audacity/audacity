@@ -22,6 +22,12 @@ public:
    double GetStartTime() const override;
    double GetEndTime() const override;
 
+   // PlayableTrack
+   bool GetMute() const override;
+   bool GetSolo() const override;
+   bool GetNotMute() const override;
+   bool GetNotSolo() const override;
+
    // SampleTrack
    sampleFormat GetSampleFormat() const override;
    ChannelType GetChannelIgnoringPan() const override;

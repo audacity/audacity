@@ -41,13 +41,16 @@ class PLAYABLE_TRACK_API PlayableTrack /* not final */ : public AudioTrack
 public:
    PlayableTrack();
    PlayableTrack(const PlayableTrack &orig, ProtectedCreationArg&&);
+   virtual ~PlayableTrack();
 
    static const TypeInfo &ClassTypeInfo();
 
-   bool GetMute    () const { return DoGetMute();     }
-   bool GetSolo    () const { return DoGetSolo();     }
-   bool GetNotMute () const { return !DoGetMute();     }
-   bool GetNotSolo () const { return !DoGetSolo();     }
+   // Those below are virtual so that StretchingSampleTrack refers to the
+   // MuteAndSolo attachment of the decorated WaveTrack, not to its own.
+   virtual bool GetMute    () const { return DoGetMute();     }
+   virtual bool GetSolo    () const { return DoGetSolo();     }
+   virtual bool GetNotMute () const { return !DoGetMute();     }
+   virtual bool GetNotSolo () const { return !DoGetSolo();     }
    void SetMute    (bool m);
    void SetSolo    (bool s);
 

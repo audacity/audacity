@@ -108,6 +108,8 @@ PlayableTrack::PlayableTrack(
 {
 }
 
+PlayableTrack::~PlayableTrack() = default;
+
 void PlayableTrack::SetMute(bool m)
 {
    if (DoGetMute() != m) {
