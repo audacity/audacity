@@ -905,11 +905,8 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
       setting.t1 = channels.max( &Track::GetEndTime );
 
       // number of export channels?
-      setting.channels = channels.size();
-      if (setting.channels == 1 &&
-          !(tr->GetChannel() == WaveTrack::MonoChannel &&
-                  tr->GetPan() == 0.0))
-         setting.channels = 2;
+      // It's 1 only for a center-panned mono track
+      setting.channels = (IsMono(*tr) && tr->GetPan() == 0.0) ? 1 : 2;
 
       // Get name and title
       title = tr->GetName();
