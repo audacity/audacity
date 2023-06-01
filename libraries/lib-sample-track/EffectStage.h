@@ -20,7 +20,7 @@
 #include "SampleCount.h"
 #include <functional>
 
-class Track;
+class SampleTrack;
 
 //! Decorates a source with a non-timewarping effect, which may have latency
 class SAMPLE_TRACK_API EffectStage final : public AudioGraph::Source {
@@ -41,14 +41,14 @@ public:
    EffectStage(CreateToken, bool multi, Source &upstream, Buffers &inBuffers,
       const Factory &factory, EffectSettings &settings,
       double sampleRate,
-      std::optional<sampleCount> genLength, const Track &track);
+      std::optional<sampleCount> genLength, const SampleTrack &track);
 
    //! Satisfies postcondition of constructor or returns null
    static std::unique_ptr<EffectStage> Create(bool multi,
       Source &upstream, Buffers &inBuffers,
       const Factory &factory, EffectSettings &settings,
       double sampleRate,
-      std::optional<sampleCount> genLength, const Track &track);
+      std::optional<sampleCount> genLength, const SampleTrack &track);
 
    EffectStage(const EffectStage&) = delete;
    EffectStage &operator =(const EffectStage &) = delete;
@@ -104,7 +104,7 @@ private:
  @param[out] map terminated with ChannelNameEOL
  */
 SAMPLE_TRACK_API
-unsigned MakeChannelMap(const Track &track, bool multichannel,
+unsigned MakeChannelMap(const SampleTrack &track, bool multichannel,
    // TODO: more-than-two-channels
    ChannelName map[3]);
 

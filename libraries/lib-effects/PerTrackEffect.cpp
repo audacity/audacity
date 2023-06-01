@@ -294,7 +294,7 @@ bool PerTrackEffect::ProcessTrack(bool multi, const Factory &factory,
    EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
-   const double sampleRate, const Track &track,
+   const double sampleRate, const SampleTrack &track,
    Buffers &inBuffers, Buffers &outBuffers)
 {
    assert(upstream.AcceptsBuffers(inBuffers));

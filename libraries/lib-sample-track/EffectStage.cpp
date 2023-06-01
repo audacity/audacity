@@ -14,13 +14,13 @@
 #include "EffectStage.h"
 #include "AudacityException.h"
 #include "AudioGraphBuffers.h"
-#include "Track.h"
+#include "SampleTrack.h"
 #include <cassert>
 
 namespace {
 std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
    const EffectStage::Factory &factory,
-   EffectSettings &settings, double sampleRate, const Track &track
+   EffectSettings &settings, double sampleRate, const SampleTrack &track
    , std::optional<sampleCount> genLength, bool multi)
 {
    std::vector<std::shared_ptr<EffectInstance>> instances;
@@ -67,7 +67,8 @@ std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
 EffectStage::EffectStage(CreateToken, bool multi,
    Source &upstream, Buffers &inBuffers,
    const Factory &factory, EffectSettings &settings,
-   double sampleRate, std::optional<sampleCount> genLength, const Track &track
+   double sampleRate, std::optional<sampleCount> genLength,
+   const SampleTrack &track
 )  : mUpstream{ upstream }, mInBuffers{ inBuffers }
    , mInstances{ MakeInstances(factory, settings, sampleRate, track,
       genLength, multi) }
@@ -85,7 +86,8 @@ EffectStage::EffectStage(CreateToken, bool multi,
 auto EffectStage::Create(bool multi,
    Source &upstream, Buffers &inBuffers,
    const Factory &factory, EffectSettings &settings,
-   double sampleRate, std::optional<sampleCount> genLength, const Track &track
+   double sampleRate, std::optional<sampleCount> genLength,
+   const SampleTrack &track
 ) -> std::unique_ptr<EffectStage>
 {
    try {
@@ -374,19 +376,21 @@ bool EffectStage::Release()
 }
 
 unsigned MakeChannelMap(
-   const Track &track, bool multichannel, ChannelName map[3])
+   const SampleTrack &track, bool multichannel, ChannelName map[3])
 {
    // Iterate either over one track which could be any channel,
    // or if multichannel, then over all channels of track,
    // which is a leader.
    unsigned numChannels = 0;
    for (auto channel : TrackList::Channels(&track).StartingWith(&track)) {
-      if (channel->GetChannel() == Track::LeftChannel)
+      if (IsMono(*channel))
+         map[numChannels] = ChannelNameMono;
+      else if (PlaysLeft(*channel))
          map[numChannels] = ChannelNameFrontLeft;
-      else if (channel->GetChannel() == Track::RightChannel)
+      else if (PlaysRight(*channel))
          map[numChannels] = ChannelNameFrontRight;
       else
-         map[numChannels] = ChannelNameMono;
+         ;
       ++ numChannels;
       map[numChannels] = ChannelNameEOL;
       if (! multichannel)
