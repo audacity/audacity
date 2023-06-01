@@ -271,18 +271,6 @@ void WaveTrack::SetOffset(double o)
    mOffset = o;
 }
 
-auto WaveTrack::GetChannel() const -> ChannelType
-{
-   if( mChannel != Track::MonoChannel )
-      return mChannel; 
-   auto pan = GetPan();
-   if( pan < -0.99 )
-      return Track::LeftChannel;
-   if( pan >  0.99 )
-      return Track::RightChannel;
-   return mChannel;
-}
-
 bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
 {
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix, completeList);
@@ -299,7 +287,6 @@ bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
                   "\n Removing link from left wave track %s.",
                   next->GetName(), GetName());
                SetLinkType(LinkType::None);
-               SetChannel(MonoChannel);
             }
             err = true;
          }
@@ -1695,13 +1682,6 @@ void WaveTrack::Flush()
    RightmostOrNewClip()->Flush();
 }
 
-namespace {
-bool IsValidChannel(const int nValue)
-{
-   return (nValue >= Track::LeftChannel) && (nValue <= Track::MonoChannel);
-}
-}
-
 bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "wavetrack") {
@@ -1738,13 +1718,6 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          else if (attr == "pan" && value.TryGet(dblValue) &&
                   (dblValue >= -1.0) && (dblValue <= 1.0))
             DoSetPan(dblValue);
-         else if (attr == "channel")
-         {
-            if (!value.TryGet(nValue) ||
-                  !IsValidChannel(nValue))
-               return false;
-            mChannel = static_cast<Track::ChannelType>( nValue );
-         }
          else if (attr == "linked" && value.TryGet(nValue))
             SetLinkType(ToLinkType(nValue), false);
          else if (attr == "colorindex" && value.TryGet(nValue))
@@ -1812,7 +1785,6 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 {
    xmlFile.StartTag(wxT("wavetrack"));
    this->Track::WriteCommonXMLAttributes( xmlFile );
-   xmlFile.WriteAttr(wxT("channel"), mChannel);
    xmlFile.WriteAttr(wxT("linked"), static_cast<int>(GetLinkType()));
    this->WritableSampleTrack::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("rate"), mRate);

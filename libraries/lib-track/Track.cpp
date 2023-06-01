@@ -42,8 +42,6 @@ Track::Track()
    mIndex = 0;
 
    mOffset = 0.0;
-
-   mChannel = MonoChannel;
 }
 
 Track::Track(const Track &orig, ProtectedCreationArg&&)
@@ -61,8 +59,6 @@ void Track::Init(const Track &orig)
    // Deep copy of any group data
    mpGroupData = orig.mpGroupData ?
       std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
-
-   mChannel = orig.mChannel;
 }
 
 const wxString &Track::GetName() const
@@ -235,11 +231,6 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
    assert(LinkConsistencyCheck(completeList));
 }
 
-void Track::SetChannel(ChannelType c) noexcept
-{
-    mChannel = c;
-}
-
 Track *Track::GetLinkedTrack() const
 {
    auto pList = mList.lock();
@@ -314,7 +305,6 @@ void Track::FinishCopy
 (const Track *n, Track *dest)
 {
    if (dest) {
-      dest->SetChannel(n->GetChannel());
       dest->mpGroupData = n->mpGroupData ?
          std::make_unique<ChannelGroupData>(*n->mpGroupData) : nullptr;
    }
@@ -337,21 +327,6 @@ bool Track::LinkConsistencyFix(bool doFix, bool completeList)
                    "track link.\n   Removing extra link from right track.",
                   GetName(), link->GetName());
                link->SetLinkType(LinkType::None);
-            }
-         }
-
-         // Channels should be left and right
-         if ( !(  (GetChannel() == Track::LeftChannel &&
-                     link->GetChannel() == Track::RightChannel) ||
-                  (GetChannel() == Track::RightChannel &&
-                     link->GetChannel() == Track::LeftChannel) ) ) {
-            err = true;
-            if (doFix) {
-               wxLogWarning(
-                  L"Track %s and %s had left/right track links out of order. "
-                   "Setting tracks to not be linked.",
-                  GetName(), link->GetName());
-               SetLinkType(LinkType::None);
             }
          }
       }
@@ -574,8 +549,6 @@ bool TrackList::SwapChannels(Track &track)
    assert(pData);
    pOwner->MoveUp(pPartner);
    pPartner->mpGroupData = move(pData);
-   pPartner->SetChannel(Track::LeftChannel);
-   track.SetChannel(Track::RightChannel);
    return true;
 }
 
@@ -658,10 +631,7 @@ void TrackList::UnlinkChannels(Track& track)
    {
       auto channels = TrackList::Channels(&track);
       for (auto c : channels)
-      {
           c->SetLinkType(Track::LinkType::None);
-          c->SetChannel(Track::ChannelType::MonoChannel);
-      }
    }
    else
       THROW_INCONSISTENCY_EXCEPTION;
@@ -693,9 +663,6 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
       if (!canLink)
          return false;
 
-      (*first)->SetChannel(Track::LeftChannel);
-      auto second = std::next(first);
-      (*second)->SetChannel(Track::RightChannel);
       (*first)->SetLinkType(aligned ? Track::LinkType::Aligned : Track::LinkType::Group);
    }
    else
