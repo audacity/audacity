@@ -299,8 +299,11 @@ size_t Mixer::Process(const size_t maxToProcess)
       else if (PlaysRight(track)) {
          if (numChannels >= 2)
             channelFlags[1] = 1;
-         else
+         else {
+            // !IsMono() and IsRight() implies there are multiple channels
+            assert(false);
             channelFlags[0] = 1;
+         }
       }
       return channelFlags;
    };
