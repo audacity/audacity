@@ -205,19 +205,8 @@ public:
          mSnap = mSnapManager->Snap(mTrack.get(), t, !mAdjustingLeftBorder);
       if (mSnap.Snapped())
       {
-         if (mSnap.outTime >= mRange.first && mSnap.outTime <= mRange.second)
-         {
-            // Make sure that outTime belongs to the adjustment range after
-            // snapping
-            StretchTo(mSnap.outTime);
-            return RefreshCode::RefreshAll;
-         }
-         else
-         {
-            // Otherwise snapping cannot be performed
-            mSnap = {};
-            StretchTo(t);
-         }
+         StretchTo(mSnap.outTime);
+         return RefreshCode::RefreshAll;
       }
       else
          StretchTo(t);
