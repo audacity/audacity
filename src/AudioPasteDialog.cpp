@@ -103,7 +103,8 @@ void AudioPasteDialog::PopulateOrExchange(ShuttleGui &S)
    
    S.SetBorder(20);
    S.AddFixedText(
-      XO("Audio data is %s. Larger sizes will take longer to paste.")
+      /* i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data. */
+      XO("The full smart clip is %s. Larger sizes will take longer to paste.")
          .Format(wxFileName::GetHumanReadableSize(mCopiedBytesNum))
    );
    
