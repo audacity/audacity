@@ -24,7 +24,7 @@ if( ${_OPT}has_tests )
    function( add_unit_test )
       cmake_parse_arguments(
          ADD_UNIT_TEST # Prefix
-         "MOCK_PREFS;MOCK_AUDIO" # Options
+         "MOCK_PREFS;MOCK_AUDIO;WAV_FILE_IO" # Options
          "NAME" # One value keywords
          "SOURCES;LIBRARIES"
          ${ARGN}
@@ -53,6 +53,12 @@ if( ${_OPT}has_tests )
          target_sources( ${test_executable_name} PRIVATE "${CMAKE_SOURCE_DIR}/tests/MockedAudio.cpp" "${CMAKE_SOURCE_DIR}/tests/MockedAudio.h" )
       endif()
 
+      if (ADD_UNIT_TEST_WAV_FILE_IO)
+         target_sources( ${test_executable_name} PRIVATE "${CMAKE_SOURCE_DIR}/tests/WavFileIO.cpp" "${CMAKE_SOURCE_DIR}/tests/WavFileIO.h" )
+         target_include_directories( ${test_executable_name} PRIVATE "${CMAKE_SOURCE_DIR}/tests" )
+         target_link_libraries( ${test_executable_name} PRIVATE SndFile::sndfile )
+      endif()
+
       set( OPTIONS )
       audacity_append_common_compiler_options( OPTIONS NO )
       target_compile_options( ${test_executable_name} ${OPTIONS} )
@@ -74,6 +80,8 @@ if( ${_OPT}has_tests )
             ${ADD_UNIT_TEST_NAME}
          COMMAND
             ${test_executable_name}
+         WORKING_DIRECTORY
+            ${CMAKE_SOURCE_DIR}
       )
 
       set_tests_properties(
