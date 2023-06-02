@@ -7,8 +7,8 @@ import Audacity.UiComponents
 
 Item {
    id: root
-   height: parent.height
-   implicitHeight: height
+   height: implicitHeight
+   implicitHeight:48
    implicitWidth: contents.width
 
    objectName: "TimeToolbar"
