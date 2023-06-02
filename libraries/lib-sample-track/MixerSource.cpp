@@ -43,7 +43,7 @@ void MixerSource::MakeResamplers()
    for (size_t j = 0; j < mnChannels; ++j)
       mResample[j] = std::make_unique<Resample>(
          mResampleParameters.mHighQuality,
-         mResampleParameters.mMinFactor[j], mResampleParameters.mMaxFactor[j]);
+         mResampleParameters.mMinFactor, mResampleParameters.mMaxFactor);
 }
 
 namespace {
@@ -326,7 +326,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
    , mSampleQueue{ initVector<float>(mnChannels, sQueueMaxLen) }
    , mQueueStart{ 0 }
    , mQueueLen{ 0 }
-   , mResampleParameters{ highQuality, leader, rate, options }
+   , mResampleParameters{ highQuality, leader.GetRate(), rate, options }
    , mResample( mnChannels )
    , mEnvValues( std::max(sQueueMaxLen, bufferSize) )
    , mpMap{ pMap }

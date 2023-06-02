@@ -19,6 +19,7 @@
 #include "SampleCount.h"
 
 class Resample;
+class SampleTrack;
 class SampleTrackCache;
 class WideSampleSequence;
 

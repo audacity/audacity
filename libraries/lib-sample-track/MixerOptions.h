@@ -23,7 +23,7 @@
 
 class BoundedEnvelope;
 class EffectInstanceEx;
-class SampleTrack;
+class WideSampleSequence;
 class TrackList;
 
 namespace MixerOptions {
@@ -79,10 +79,10 @@ struct SAMPLE_TRACK_API Warp final {
 // Information derived from Warp and other data
 struct ResampleParameters final {
    ResampleParameters(bool highQuality,
-      const SampleTrack &leader, double rate, const Warp &options);
+      double inRate, double outRate, const Warp &options);
    bool             mHighQuality{};
    bool             mVariableRates{ false };
-   std::vector<double> mMinFactor, mMaxFactor;
+   double           mMinFactor, mMaxFactor;
 };
 
 //! Reassignable bounds and speed for a Mixer's fetch from tracks, and a

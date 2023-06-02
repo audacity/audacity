@@ -14,7 +14,6 @@
 #include "MixerOptions.h"
 
 #include "Envelope.h"
-#include "SampleTrack.h"
 
 MixerOptions::Warp::Warp(const TrackList &list)
 : envelope(DefaultWarp::Call(list)), minSpeed(0.0), maxSpeed(0.0)
@@ -36,33 +35,27 @@ MixerOptions::Warp::Warp(double min, double max, double initial)
 }
 
 MixerOptions::ResampleParameters::ResampleParameters(bool highQuality,
-   const SampleTrack &leader, double rate, const Warp &options
+   double inRate, double outRate, const Warp &options
 )  : mHighQuality{ highQuality }
 {
-   auto range = TrackList::Channels<const SampleTrack>(&leader);
-   auto size = range.size();
-   mMinFactor.reserve(size);
-   mMaxFactor.reserve(size);
-   for (auto pTrack : range) {
-      double factor = (rate / pTrack->GetRate());
-      if (const auto envelope = options.envelope) {
-         // variable rate resampling
-         mVariableRates = true;
-         mMinFactor.push_back(factor / envelope->GetRangeUpper());
-         mMaxFactor.push_back(factor / envelope->GetRangeLower());
-      }
-      else if (options.minSpeed > 0.0 && options.maxSpeed > 0.0) {
-         // variable rate resampling
-         mVariableRates = true;
-         mMinFactor.push_back(factor / options.maxSpeed);
-         mMaxFactor.push_back(factor / options.minSpeed);
-      }
-      else {
-         // constant rate resampling
-         mVariableRates = false;
-         mMinFactor.push_back(factor);
-         mMaxFactor.push_back(factor);
-      }
+   double factor = (outRate / inRate);
+   if (const auto envelope = options.envelope) {
+      // variable rate resampling
+      mVariableRates = true;
+      mMinFactor = factor / envelope->GetRangeUpper();
+      mMaxFactor = factor / envelope->GetRangeLower();
+   }
+   else if (options.minSpeed > 0.0 && options.maxSpeed > 0.0) {
+      // variable rate resampling
+      mVariableRates = true;
+      mMinFactor = factor / options.maxSpeed;
+      mMaxFactor = factor / options.minSpeed;
+   }
+   else {
+      // constant rate resampling
+      mVariableRates = false;
+      mMinFactor = factor;
+      mMaxFactor = factor;
    }
 }
 
