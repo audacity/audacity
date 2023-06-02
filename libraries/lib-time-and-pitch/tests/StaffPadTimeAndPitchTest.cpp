@@ -14,31 +14,13 @@
 #include "TimeAndPitchRealSource.h"
 #include "WavFileIO.h"
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 using namespace std::literals::string_literals;
 using namespace std::literals::chrono_literals;
 
 TEST_CASE("StaffPadTimeAndPitch")
 {
-   SECTION("CanReturnMoreSamples")
-   {
-      SECTION("returns false if given an empty source")
-      {
-         TimeAndPitchFakeSource src;
-         src.empty = true;
-         StaffPadTimeAndPitch sut(1u, src, {});
-         REQUIRE_FALSE(sut.CanReturnMoreSamples());
-      }
-
-      SECTION("returns true in pass-through mode")
-      {
-         TimeAndPitchFakeSource src;
-         StaffPadTimeAndPitch sut(1u, src, {});
-         REQUIRE(sut.CanReturnMoreSamples());
-      }
-   }
-
    SECTION("Smoke test")
    {
       using TestParameter =
@@ -82,7 +64,7 @@ TEST_CASE("StaffPadTimeAndPitch")
             StaffPadTimeAndPitch sut(info.numChannels, src, std::move(params));
             constexpr size_t blockSize = 1234u;
             auto offset = 0u;
-            while (sut.CanReturnMoreSamples())
+            while (offset < numOutputFrames)
             {
                std::vector<float*> offsetBuffers(info.numChannels);
                for (auto i = 0u; i < info.numChannels; ++i)
@@ -122,7 +104,7 @@ TEST_CASE("StaffPadTimeAndPitch")
       AudioContainer container(info.numFrames, info.numChannels);
       TimeAndPitchInterface::Parameters params;
       TimeAndPitchRealSource src(input);
-      StaffPadTimeAndPitch sut(info.numChannels, src, std::move(params));
+      StaffPadTimeAndPitch sut(info.numChannels, src, params);
       sut.GetSamples(container.Get(), info.numFrames);
       // Calling REQUIRE(container.channelVectors == input) directly for large
       // vectors might be rough on stdout in case of an error printout ...

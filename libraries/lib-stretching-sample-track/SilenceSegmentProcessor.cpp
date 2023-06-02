@@ -25,12 +25,17 @@ SilenceSegmentProcessor::SilenceSegmentProcessor(const SilenceSegment& segment)
 size_t SilenceSegmentProcessor::Process(
    float* const* buffer, size_t numChannels, size_t samplesPerChannel)
 {
+   const auto numSamplesToReturn =
+      std::min(
+         mSilenceSegment.GetNumSamples() - mReadPos,
+         sampleCount { samplesPerChannel })
+         .as_size_t();
    for (auto i = 0u; i < numChannels; ++i)
    {
-      std::fill(buffer[i], buffer[i] + samplesPerChannel, 0.f);
+      std::fill(buffer[i], buffer[i] + numSamplesToReturn, 0.f);
    }
-   mReadPos += sampleCount { samplesPerChannel };
-   return samplesPerChannel;
+   mReadPos += numSamplesToReturn;
+   return numSamplesToReturn;
 }
 
 bool SilenceSegmentProcessor::SamplesRemaining() const

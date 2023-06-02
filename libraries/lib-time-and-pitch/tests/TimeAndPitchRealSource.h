@@ -22,7 +22,7 @@ public:
    {
    }
 
-   size_t Pull(
+   void Pull(
       float* const* buffer, size_t numChannels,
       size_t samplesPerChannel) override
    {
@@ -43,12 +43,6 @@ public:
             0.f);
       }
       mNumPulledFrames += framesToRead;
-      return samplesPerChannel - numZerosToPad;
-   }
-
-   bool Empty() const override
-   {
-      return mNumPulledFrames >= mInput[0].size();
    }
 
 private:

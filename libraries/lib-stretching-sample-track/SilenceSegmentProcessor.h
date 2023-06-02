@@ -10,10 +10,6 @@ class SilenceSegmentProcessor : public AudioSegmentProcessor
 public:
    SilenceSegmentProcessor(const SilenceSegment& segment);
 
-   void SetOffsetFromPlayStartTime(double t) override
-   {
-   }
-
    size_t Process(
       float* const* buffer, size_t numChannels,
       size_t samplesPerChannel) override;

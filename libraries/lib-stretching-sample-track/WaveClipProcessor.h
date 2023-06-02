@@ -10,25 +10,25 @@ class WaveClipProcessor :
     public TimeAndPitchSource
 {
 public:
-   WaveClipProcessor(const WaveClip& clip);
+   WaveClipProcessor(const WaveClip& clip, double offsetFromPlayStartTime);
    static WaveClipProcessor& Get(const WaveClip& clip);
 
    // AudioSegmentProcessor
-   void SetOffsetFromPlayStartTime(double) override;
    size_t Process(
       float* const* buffer, size_t numChannels,
       size_t samplesPerChannel) override;
    bool SamplesRemaining() const override;
 
    // TimeAndPitchSource
-   size_t
+   void
    Pull(float* const*, size_t numChannels, size_t samplesPerChannel) override;
-   bool Empty() const override;
 
 private:
    void StretcherSampleGetterCb(float* const*, size_t samplesPerChannel);
    sampleCount GetRemainingSamplesInClip() const;
    const WaveClip& mClip;
+   const sampleCount mTotalNumSamplesToProduce;
+   sampleCount mTotalNumSamplesProduced = 0;
    sampleCount mReadPos = 0;
-   std::unique_ptr<TimeAndPitchInterface> mStretcher;
+   const std::unique_ptr<TimeAndPitchInterface> mStretcher;
 };

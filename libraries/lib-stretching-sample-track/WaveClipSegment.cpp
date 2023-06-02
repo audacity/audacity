@@ -1,9 +1,10 @@
 #include "WaveClipSegment.h"
 #include "WaveClipProcessor.h"
 
-WaveClipSegment::WaveClipSegment(WaveClipHolder waveClip)
+WaveClipSegment::WaveClipSegment(
+   WaveClipHolder waveClip, double offsetFromPlayStartTime)
     : mWaveClip(waveClip)
-    , mWaveClipProcessor(*mWaveClip)
+    , mWaveClipProcessor(*mWaveClip, offsetFromPlayStartTime)
 {
 }
 

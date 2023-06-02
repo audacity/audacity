@@ -5,7 +5,7 @@
 class WaveClipSegment : public AudioSegment
 {
 public:
-   WaveClipSegment(WaveClipHolder waveClip);
+   WaveClipSegment(WaveClipHolder waveClip, double offsetFromPlayStartTime);
 
    AudioSegmentProcessor& GetProcessor() const override;
    sampleCount GetNumSamples() const override;

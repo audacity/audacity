@@ -9,7 +9,6 @@ class AudioSegmentProcessor
 {
 public:
    virtual ~AudioSegmentProcessor() = default;
-   virtual void SetOffsetFromPlayStartTime(double) = 0;
    virtual size_t Process(
       float* const* buffers, size_t numChannels, size_t samplesPerChannel) = 0;
    virtual bool SamplesRemaining() const = 0;

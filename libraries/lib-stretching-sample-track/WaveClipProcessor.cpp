@@ -6,39 +6,47 @@
 
 using namespace std::placeholders;
 
-WaveClipProcessor::WaveClipProcessor(const WaveClip& clip)
-    : mClip(clip)
+namespace
 {
-}
-
-void WaveClipProcessor::SetOffsetFromPlayStartTime(double pstOffset)
+std::unique_ptr<StaffPadTimeAndPitch>
+CreateStretcher(double timeRatio, TimeAndPitchSource& src)
 {
-   mReadPos = mClip.GetClosestSampleIndex(pstOffset);
    TimeAndPitchInterface::Parameters params;
-   params.timeRatio = mClip.GetPlayoutStretchRatio();
+   params.timeRatio = timeRatio;
    constexpr auto numChannels = 1u; // for now assuming mono
-   mStretcher =
-      std::make_unique<StaffPadTimeAndPitch>(numChannels, *this, params);
+   return std::make_unique<StaffPadTimeAndPitch>(numChannels, src, params);
+}
+} // namespace
+
+WaveClipProcessor::WaveClipProcessor(
+   const WaveClip& clip, double offsetFromPlayStartTime)
+    : mClip(clip)
+    , mReadPos(mClip.GetClosestSampleIndex(offsetFromPlayStartTime))
+    , mStretcher(CreateStretcher(mClip.GetPlayoutStretchRatio(), *this))
+    , mTotalNumSamplesToProduce(
+         (mClip.GetPlayDuration() - offsetFromPlayStartTime) * mClip.GetRate())
+{
 }
 
 size_t WaveClipProcessor::Process(
    float* const* buffer, size_t numChannels, size_t samplesPerChannel)
 {
-   assert(mStretcher);
-   if (!mStretcher)
-   {
-      return 0u;
-   }
-   mStretcher->GetSamples(buffer, samplesPerChannel);
-   return samplesPerChannel;
+   const auto numSamplesToProduce =
+      std::min(
+         sampleCount { samplesPerChannel },
+         mTotalNumSamplesToProduce - mTotalNumSamplesProduced)
+         .as_size_t();
+   mStretcher->GetSamples(buffer, numSamplesToProduce);
+   mTotalNumSamplesProduced += numSamplesToProduce;
+   return numSamplesToProduce;
 }
 
 bool WaveClipProcessor::SamplesRemaining() const
 {
-   return mStretcher->CanReturnMoreSamples();
+   return mTotalNumSamplesProduced < mTotalNumSamplesToProduce;
 }
 
-size_t WaveClipProcessor::Pull(
+void WaveClipProcessor::Pull(
    float* const* buffers, size_t numChannels, size_t samplesPerChannel)
 {
    // For now assuming mono.
@@ -64,15 +72,9 @@ size_t WaveClipProcessor::Pull(
       else
          break;
    }
-   const auto readSoFar = (mReadPos - initialReadPos).as_size_t();
-   // For convenience to the client, still fill the rest with zeros.
-   std::fill(buffers[0u] + readSoFar, buffers[0u] + samplesPerChannel, 0.f);
-   return readSoFar;
-}
-
-bool WaveClipProcessor::Empty() const
-{
-   return GetRemainingSamplesInClip() <= 0;
+   const auto numRead = (mReadPos - initialReadPos).as_size_t();
+   for (auto i = 0u; i < numChannels; ++i)
+      std::fill(buffers[i] + numRead, buffers[i] + samplesPerChannel, 0.f);
 }
 
 sampleCount WaveClipProcessor::GetRemainingSamplesInClip() const
