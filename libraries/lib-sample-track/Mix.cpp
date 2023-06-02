@@ -286,7 +286,7 @@ size_t Mixer::Process(const size_t maxToProcess)
 
    // Decides which output buffers an input channel accumulates into
    auto findChannelFlags = [&channelFlags, numChannels = mNumChannels]
-   (const bool *map, const WideSampleSequence &sequence){
+   (const bool *map, const WideSampleSequence &sequence, size_t iChannel){
       const auto end = channelFlags + numChannels;
       std::fill(channelFlags, end, 0);
       if (map)
@@ -294,9 +294,9 @@ size_t Mixer::Process(const size_t maxToProcess)
          std::copy(map, map + numChannels, channelFlags);
       else if (IsMono(sequence))
          std::fill(channelFlags, end, 1);
-      else if (PlaysLeft(sequence))
+      else if (iChannel == 0)
          channelFlags[0] = 1;
-      else if (PlaysRight(sequence)) {
+      else if (iChannel == 1) {
          if (numChannels >= 2)
             channelFlags[1] = 1;
          else
@@ -329,12 +329,12 @@ size_t Mixer::Process(const size_t maxToProcess)
       const auto limit = std::min<size_t>(upstream.Channels(), maxChannels);
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
-         const auto track = upstream.GetChannel(j);
+         auto &sequence = upstream.GetSequence();
          if (mApplyTrackGains)
             for (size_t c = 0; c < mNumChannels; ++c)
-               gains[c] = track->GetChannelGain(c);
+               gains[c] = sequence.GetChannelGain(c);
          const auto flags =
-            findChannelFlags(upstream.MixerSpec(j), *track);
+            findChannelFlags(upstream.MixerSpec(j), sequence, j);
          MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, result);
       }
 

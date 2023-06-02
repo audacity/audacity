@@ -48,7 +48,7 @@ public:
    ~MixerSource();
 
    unsigned Channels() const { return mnChannels; }
-   const WideSampleSequence *GetChannel(unsigned iChannel) const;
+   const WideSampleSequence &GetSequence() const;
    const bool *MixerSpec(unsigned iChannel) const;
 
    bool AcceptsBuffers(const Buffers &buffers) const override;

@@ -338,18 +338,15 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
 
    assert(mTimesAndSpeed);
    auto t0 = mTimesAndSpeed->mT0;
-   mSamplePos = GetChannel(0)->TimeToLongSamples(t0);
+   mSamplePos = GetSequence().TimeToLongSamples(t0);
    MakeResamplers();
 }
 
 MixerSource::~MixerSource() = default;
 
-const WideSampleSequence *MixerSource::GetChannel(unsigned iChannel) const
+const WideSampleSequence &MixerSource::GetSequence() const
 {
-   auto range = TrackList::Channels(mpLeader.get());
-   auto iter = range.begin();
-   std::advance(iter, iChannel);
-   return *iter;
+   return *mpLeader;
 }
 
 const bool *MixerSource::MixerSpec(unsigned iChannel) const
@@ -386,7 +383,7 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
    const auto pFloats = stackAllocate(float *, limit);
    for (size_t j = 0; j < limit; ++j)
       pFloats[j] = &data.GetWritePosition(j);
-   const auto rate = GetChannel(0)->GetRate();
+   const auto rate = GetSequence().GetRate();
    auto result = (mResampleParameters.mVariableRates || rate != mRate)
       ? MixVariableRates(limit, bound, pFloats)
       : MixSameRate(limit, bound, pFloats);
@@ -441,7 +438,7 @@ bool MixerSource::Terminates() const
 
 void MixerSource::Reposition(double time, bool skipping)
 {
-   mSamplePos = GetChannel(0)->TimeToLongSamples(time);
+   mSamplePos = GetSequence().TimeToLongSamples(time);
 
    // Bug 2025:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
    // constant rate resampling if you try to reuse the resampler after it has
