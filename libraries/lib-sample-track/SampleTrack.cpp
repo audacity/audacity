@@ -22,6 +22,17 @@ SampleTrack::SampleTrack(const SampleTrack &other, ProtectedCreationArg &&a)
 
 SampleTrack::~SampleTrack() = default;
 
+AudioGraph::ChannelType SampleTrack::GetChannelType() const
+{
+   if (TrackList::NChannels(*this) == 1)
+      return AudioGraph::MonoChannel;
+   else if (IsLeader())
+      return AudioGraph::LeftChannel;
+   else
+      // TODO more-than-two-channels
+      return AudioGraph::RightChannel;
+}
+
 static const Track::TypeInfo &typeInfo()
 {
    static const Track::TypeInfo info{

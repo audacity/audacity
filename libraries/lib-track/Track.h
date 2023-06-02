@@ -8,7 +8,6 @@
   Dominic Mazzoni
 
 **********************************************************************/
-
 #ifndef __AUDACITY_TRACK__
 #define __AUDACITY_TRACK__
 

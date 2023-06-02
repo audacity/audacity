@@ -12,6 +12,7 @@ Paul Licameli split from WaveTrack.h
 #ifndef __AUDACITY_SAMPLE_TRACK__
 #define __AUDACITY_SAMPLE_TRACK__
 
+#include "AudioGraphChannel.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
 #include "PlayableTrack.h"
@@ -29,6 +30,7 @@ using SampleTrackAttachments = ClientData::Site<
 class SAMPLE_TRACK_API SampleTrack /* not final */
    : public PlayableTrack
    , public SampleTrackAttachments
+   , public AudioGraph::Channel
 {
 public:
    using Attachments = SampleTrackAttachments;
@@ -36,6 +38,8 @@ public:
    SampleTrack();
    SampleTrack(const SampleTrack &other, ProtectedCreationArg&&);
    ~SampleTrack() override;
+
+   AudioGraph::ChannelType GetChannelType() const final;
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();

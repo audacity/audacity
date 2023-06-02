@@ -5,6 +5,8 @@ Utilities for construction of effect processing pipelines
 set( SOURCES
    AudioGraphBuffers.cpp
    AudioGraphBuffers.h
+   AudioGraphChannel.cpp
+   AudioGraphChannel.h
    AudioGraphSink.cpp
    AudioGraphSink.h
    AudioGraphSource.cpp
