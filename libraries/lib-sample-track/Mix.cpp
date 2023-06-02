@@ -136,7 +136,7 @@ Mixer::Mixer(Inputs inputs,
 
    for (size_t i = 0; i < nTracks;) {
       const auto &input = mInputs[i];
-      const auto leader = input.pTrack.get();
+      const auto &leader = input.pTrack;
       const auto nInChannels = TrackList::NChannels(*leader);
       if (!leader || i + nInChannels > nTracks) {
          assert(false);
@@ -144,7 +144,7 @@ Mixer::Mixer(Inputs inputs,
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      auto &source = mSources.emplace_back( *leader, BufferSize(), outRate,
+      auto &source = mSources.emplace_back(leader, BufferSize(), outRate,
          warpOptions, highQuality, mayThrow, mTimesAndSpeed,
          (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
       AudioGraph::Source *pDownstream = &source;
