@@ -25,8 +25,12 @@ void SampleTrackCache::SetSequence(
          if (!mpSequence ||
              mpSequence->GetMaxBlockSize() != mBufferSize) {
             Free();
-            mBuffers[0].data = Floats{ mBufferSize };
-            mBuffers[1].data = Floats{ mBufferSize };
+            const auto nChannels = pSequence->NChannels();
+            for (size_t ii : {0, 1}) {
+               mBuffers[ii].areas.reinit(nChannels, true);
+               for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
+                  mBuffers[ii].areas[iChannel] = Floats{ mBufferSize };
+            }
          }
       }
       else
@@ -36,9 +40,14 @@ void SampleTrackCache::SetSequence(
    }
 }
 
-const float *SampleTrackCache::GetFloats(
-   sampleCount start, size_t len, bool mayThrow)
+std::pair<const float *, const float *>
+SampleTrackCache::GetFloatsWide(size_t nChannels,
+   sampleCount start, const size_t len, bool mayThrow)
 {
+   float *overlaps[2]{};
+   assert(nChannels <= GetSequence()->NChannels());
+   assert(nChannels <= 2);
+
    constexpr auto format = floatSample;
    if (format == floatSample && len > 0) {
       const auto end = start + len;
@@ -88,10 +97,10 @@ const float *SampleTrackCache::GetFloats(
          if (start0 >= 0) {
             const auto len0 = mpSequence->GetBestBlockSize(start0);
             assert(len0 <= mBufferSize);
-            if (!mpSequence->GetFloats(
-                  mBuffers[0].data.get(), start0, len0,
+            if (!mpSequence->GetFloats(0, nChannels,
+                  mBuffers[0].GetBuffers(), start0, len0,
                   fillZero, mayThrow))
-               return nullptr;
+               return { nullptr, nullptr };
             mBuffers[0].start = start0;
             mBuffers[0].len = len0;
             if (!fillSecond &&
@@ -116,8 +125,9 @@ const float *SampleTrackCache::GetFloats(
             if (start1 == end0) {
                const auto len1 = mpSequence->GetBestBlockSize(start1);
                assert(len1 <= mBufferSize);
-               if (!mpSequence->GetFloats(mBuffers[1].data.get(), start1, len1, fillZero, mayThrow))
-                  return nullptr;
+               if (!mpSequence->GetFloats(0, nChannels,
+                  mBuffers[1].GetBuffers(), start1, len1, fillZero, mayThrow))
+                  return { nullptr, nullptr };
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
                mNValidBuffers = 2;
@@ -126,8 +136,23 @@ const float *SampleTrackCache::GetFloats(
       }
       assert(mNValidBuffers < 2 || mBuffers[0].end() == mBuffers[1].start);
 
-      samplePtr buffer = nullptr; // will point into mOverlapBuffer
+      samplePtr buffers[2]{}; // will point into mOverlapBuffers
       auto remaining = len;
+      const auto resizeOverlapBuffers = [&]{
+         for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+            auto &overlapBuffer = mOverlapBuffers[iChannel];
+            overlapBuffer.Resize(len, format);
+            // See comment below about casting
+            overlaps[iChannel] = reinterpret_cast<float*>(overlapBuffer.ptr());
+         }
+      };
+      const auto assignBuffers = [&]{
+         size_t iChannel = 0;
+         for (; iChannel < nChannels; ++iChannel)
+            buffers[iChannel] = reinterpret_cast<samplePtr>(overlaps[iChannel]);
+         for (; iChannel < 2; ++iChannel)
+            buffers[iChannel] = nullptr;
+      };
 
       // Possibly get an initial portion that is uncached
 
@@ -138,18 +163,18 @@ const float *SampleTrackCache::GetFloats(
 
       if (initLen > 0) {
          // This might be fetching zeroes between clips
-         mOverlapBuffer.Resize(len, format);
+         resizeOverlapBuffers();
          // initLen is not more than len:
          auto sinitLen = initLen.as_size_t();
-         if (!mpSequence->GetFloats(
-            // See comment below about casting
-            reinterpret_cast<float *>(mOverlapBuffer.ptr()),
+         if (!mpSequence->GetFloats(0, nChannels, overlaps,
             start, sinitLen, fillZero, mayThrow))
-            return nullptr;
+            return { nullptr, nullptr };
          assert(sinitLen <= remaining);
          remaining -= sinitLen;
          start += initLen;
-         buffer = mOverlapBuffer.ptr() + sinitLen * SAMPLE_SIZE(format);
+         for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
+            buffers[iChannel] =
+               reinterpret_cast<samplePtr>(overlaps[iChannel] + sinitLen);
       }
 
       // Now satisfy the request from the buffers
@@ -166,53 +191,47 @@ const float *SampleTrackCache::GetFloats(
             // All is contiguous already.  We can completely avoid copying
             // leni is nonnegative, therefore start falls within mBuffers[ii],
             // so starti is bounded between 0 and buffer length
-            return mBuffers[ii].data.get() + starti.as_size_t() ;
+            return mBuffers[ii].GetResults(nChannels, starti.as_size_t());
          }
          else if (leni > 0) {
             // leni is nonnegative, therefore start falls within mBuffers[ii]
             // But we can't satisfy all from one buffer, so copy
-            if (!buffer) {
-               mOverlapBuffer.Resize(len, format);
-               buffer = mOverlapBuffer.ptr();
+            if (!buffers[0]) {
+               resizeOverlapBuffers();
+               assignBuffers();
             }
             // leni is positive and not more than remaining
             const size_t size = sizeof(float) * leni.as_size_t();
             // starti is less than mBuffers[ii].len and nonnegative
-            memcpy(buffer, mBuffers[ii].data.get() + starti.as_size_t(), size);
+            for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
+               memcpy(buffers[iChannel],
+                  mBuffers[ii].areas[iChannel].get() + starti.as_size_t(),
+                  size);
             assert(leni <= remaining);
             remaining -= leni.as_size_t();
             start += leni;
-            buffer += size;
+            for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
+               buffers[iChannel] += size;
          }
       }
 
       if (remaining > 0) {
          // Very big request!
          // Fall back to direct fetch
-         if (!buffer) {
-            mOverlapBuffer.Resize(len, format);
-            buffer = mOverlapBuffer.ptr();
-         }
+         if (!buffers[0])
+            resizeOverlapBuffers();
          // See comment below about casting
-         if (!mpSequence->GetFloats( reinterpret_cast<float*>(buffer),
+         if (!mpSequence->GetFloats(0, nChannels,
+            reinterpret_cast<float**>(buffers),
             start, remaining, fillZero, mayThrow))
-            return 0;
+            return { nullptr, nullptr };
       }
 
-      // Overlap buffer was meant for the more general support of sample formats
-      // besides float, which explains the cast
-      return reinterpret_cast<const float*>(mOverlapBuffer.ptr());
+      return { overlaps[0], overlaps[1] };
    }
    else {
-#if 0
-      // Cache works only for float format.
-      mOverlapBuffer.Resize(len, format);
-      if (mpSequence->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
-         return mOverlapBuffer.ptr();
-#else
       // No longer handling other than float format.  Therefore len is 0.
-#endif
-      return nullptr;
+      return { nullptr, nullptr };
    }
 }
 
@@ -220,6 +239,7 @@ void SampleTrackCache::Free()
 {
    mBuffers[0].Free();
    mBuffers[1].Free();
-   mOverlapBuffer.Free();
+   mOverlapBuffers[0].Free();
+   mOverlapBuffers[1].Free();
    mNValidBuffers = 0;
 }

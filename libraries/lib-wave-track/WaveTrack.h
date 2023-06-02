@@ -249,14 +249,9 @@ private:
    /// guaranteed that the same samples are affected.
    ///
 
-   /*!
-    Get from the unique channel
-    TODO wide wave tracks -- overloads to get from one or from all channels
-    */
-   bool Get(samplePtr buffer, sampleFormat format,
-      sampleCount start, size_t len,
-      fillFormat fill = fillZero,
-      bool mayThrow = true,
+   bool Get(size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      sampleFormat format, sampleCount start, size_t len,
+      fillFormat fill = fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
@@ -570,6 +565,10 @@ private:
 
 private:
    void SetClipRates(double newRate);
+
+   bool GetOne(samplePtr buffer, sampleFormat format,
+      sampleCount start, size_t len, fillFormat fill,
+      bool mayThrow, sampleCount * pNumWithinClips) const;
 
    void DoSetPan(float value);
    void DoSetGain(float value);

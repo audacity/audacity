@@ -2095,9 +2095,35 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
    return length > 0 ? sqrt(sumsq / length.as_double()) : 0.0;
 }
 
-bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
-                    sampleCount start, size_t len, fillFormat fill,
-                    bool mayThrow, sampleCount * pNumWithinClips) const
+bool WaveTrack::Get(size_t iChannel, size_t nBuffers, samplePtr buffers[],
+   sampleFormat format, sampleCount start, size_t len, fillFormat fill,
+   bool mayThrow, sampleCount * pNumWithinClips) const
+{
+   const auto nChannels = NChannels();
+   assert(nBuffers - iChannel <= nChannels); // precondition
+   const auto pOwner = GetOwner();
+   if (!pOwner) {
+      //! an un-owned track should have reported one channel only
+      assert(nChannels == 1);
+      nBuffers = std::min<size_t>(nBuffers, 1);
+   }
+   std::optional<TrackIter<const WaveTrack>> iter;
+   if (pOwner)
+      iter.emplace(pOwner->Find<const WaveTrack>(this));
+   auto pTrack = this;
+   return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer){
+      const auto result = pTrack->GetOne(
+         buffer, format, start, len, fill, mayThrow, pNumWithinClips);
+      if (iter)
+         pTrack = *(++ *iter);
+      return result;
+   });
+}
+
+bool WaveTrack::GetOne(samplePtr buffer,
+   sampleFormat format,
+   sampleCount start, size_t len, fillFormat fill,
+   bool mayThrow, sampleCount * pNumWithinClips) const
 {
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
