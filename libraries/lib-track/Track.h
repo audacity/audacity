@@ -320,9 +320,6 @@ private:
  public:
    mutable std::pair<int, int> vrulerSize;
 
-   int GetIndex() const;
-   void SetIndex(int index);
-
 public:
    static void FinishCopy (const Track *n, Track *dest);
 
@@ -359,6 +356,9 @@ protected:
    void SetChannel(ChannelType c) noexcept;
 
 private:
+   int GetIndex() const;
+   void SetIndex(int index);
+
    ChannelGroupData &MakeGroupData();
    /*!
     @param completeList only influences debug build consistency checking
@@ -1494,7 +1494,8 @@ public:
    }
 
    bool empty() const;
-   size_t size() const;
+   size_t NChannels() const;
+   size_t Size() const { return Leaders().size(); }
 
    double GetStartTime() const;
    double GetEndTime() const;
@@ -1502,6 +1503,7 @@ public:
    double GetMinOffset() const;
 
 private:
+   using ListOfTracks::size;
 
    // Visit all tracks satisfying a predicate, mutative access
    template <

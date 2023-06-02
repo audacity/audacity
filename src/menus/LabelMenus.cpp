@@ -71,10 +71,11 @@ int DoAddLabel(
    const auto pFocusedTrack = trackFocus.Get();
 
    // Look for a label track at or after the focused track
+   auto begin = tracks.Leaders().begin();
    auto iter = pFocusedTrack
-      ? tracks.Find(pFocusedTrack)
-      : tracks.Any().begin();
-   auto lt = * iter.Filter< LabelTrack >();
+      ? tracks.FindLeader(pFocusedTrack)
+      : begin;
+   auto lt = * iter.Filter<LabelTrack>();
 
    // If none found, start a NEW label track and use it
    if (!lt)
@@ -98,7 +99,7 @@ int DoAddLabel(
          // Must remember the track to re-focus after finishing a label edit.
          // do NOT identify it by a pointer, which might dangle!  Identify
          // by position.
-         focusTrackNumber = pFocusedTrack->GetIndex();
+         focusTrackNumber = std::distance(begin, iter);
       }
       index =
          LabelTrackView::Get( *lt ).AddLabel(region, title, focusTrackNumber);

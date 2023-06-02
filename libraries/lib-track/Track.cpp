@@ -919,7 +919,7 @@ bool TrackList::empty() const
    return begin() == end();
 }
 
-size_t TrackList::size() const
+size_t TrackList::NChannels() const
 {
    int cnt = 0;
 
