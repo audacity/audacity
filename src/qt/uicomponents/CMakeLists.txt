@@ -13,17 +13,25 @@ set(MODULE_SOURCES
    MeterPanelHandler.cpp
    MeterPanelHandler.h
    IconCode.h
+   TrackType.h
 )
 
 set(MODULE_QML_SOURCES
    qml/FlatButton.qml
+   qml/LabelTrackControlPanel.qml
    qml/MeterPanel.qml
+   qml/MonoTrackControlPanel.qml
+   qml/StereoTrackControlPanel.qml
+   qml/StyledDial.qml
    qml/StyledIconLabel.qml
+   qml/StyledSlider.qml
    qml/StyledTextLabel.qml
    qml/ToolbarGrip.qml
    qml/TimeControl.qml
    qml/TimeControlTester.qml
+   qml/TrackVolumeMeter.qml
    qml/ToolbarSeparator.qml
+   qml/VideoTrackControlPanel.qml
    qml/VolumeControl.qml
    qml/VolumeControlTester.qml
 )

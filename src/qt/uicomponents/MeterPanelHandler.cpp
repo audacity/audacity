@@ -1,3 +1,4 @@
+#include <cassert>
 #include <QDebug>
 #include "MeterPanelHandler.h"
 
@@ -13,6 +14,8 @@ qreal MeterPanelHandler::Value() const
 
 void MeterPanelHandler::SetValue(qreal value)
 {
+   assert(value >= 0.0 && value <= 1.0);
+
    if (value < 0.0) {
       qDebug() << "MeterPanelHandler value cannot be less than 0";
       return;

@@ -1,5 +1,4 @@
-#ifndef EDIT_TOOLBAR_HANDLER_H
-#define EDIT_TOOLBAR_HANDELR_H
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtQml/qqmlregistration.h>
@@ -26,5 +25,3 @@ public slots:
    void Trim();
    void Silence();
 };
-
-#endif

@@ -103,10 +103,38 @@ ApplicationWindow {
       id: toolsToolbar
       onUpdateStatusBar: function(status) {
          statusBar.text = status
+         timer.restart()
       }
    }
 
+   Rectangle {
+      id: trackCanvas
+      x: sidebar.width
+      width: root.width - sidebar.width
+      color: appConfig.backgroundColor3
+      anchors.top: toolsToolbar.bottom
+      anchors.bottom: footerId.top
+   }
+
+   Sidebar {
+      id: sidebar
+      anchors.top: toolsToolbar.bottom
+      anchors.bottom: footerId.top
+      onUpdateStatusBar: function(status) {
+         statusBar.text = status
+         timer.restart()
+      }
+   }
+
+   Timer {
+      id: timer
+      interval: 1000
+      repeat: false
+      onTriggered: statusBar.text = ""
+   }
+
    footer: Rectangle {
+      id: footerId
       width: parent.width
       height: 30
       color: appConfig.backgroundColor1

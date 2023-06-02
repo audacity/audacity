@@ -3,6 +3,7 @@
         <file>qml/main.qml</file>
         <file>qml/EditToolbar.qml</file>
         <file>qml/MasterVolumeToolbar.qml</file>
+        <file>qml/Sidebar.qml</file>
         <file>qml/TimeToolbar.qml</file>
         <file>qml/ToolsToolbar.qml</file>
         <file>qml/TransportToolbar.qml</file>

@@ -43,6 +43,7 @@ FocusScope {
    property color accentColor: appConfig.accentColor
 
    property color iconColor: "black"
+   property real radius: 3
 
    property bool isNarrow: buttonType === FlatButton.Horizontal
    property real margins: isNarrow ? 12 : 16
@@ -104,7 +105,7 @@ FocusScope {
          color: root.normalColor
          opacity: appConfig.buttonOpacityNormal
 
-         radius: 3
+         radius: root.radius
          border.width: appConfig.borderWidth
          border.color: appConfig.strokeColor1
 
