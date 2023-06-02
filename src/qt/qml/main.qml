@@ -24,8 +24,8 @@ ApplicationWindow {
       property bool volumeVisible: false
    }
 
-   ApplicationHandler {
-      id: applicationHandler
+   TranslationManager {
+      id: translationManager
    }
 
    menuBar: MenuBar {
@@ -89,7 +89,7 @@ ApplicationWindow {
             checked: language === "en"
             onTriggered:{
                language = "en"
-               applicationHandler.ChangeToEnglish()
+               translationManager.ChangeLanguage(language)
             }
          }
 
@@ -100,7 +100,7 @@ ApplicationWindow {
             checked: language === "de"
             onTriggered: {
                language = "de"
-               applicationHandler.ChangeToGerman()
+               translationManager.ChangeLanguage(language)
             }
          }
       }

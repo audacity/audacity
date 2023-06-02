@@ -5,12 +5,12 @@ set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml)
 
 set(SOURCES
    main.cpp
-   ApplicationHandler.cpp
-   ApplicationHandler.h
    EditToolbarHandler.cpp
    EditToolbarHandler.h
    ToolsToolbarHandler.cpp
    ToolsToolbarHandler.h
+   TranslationManager.cpp
+   TranslationManager.h
    TransportToolbarHandler.cpp
    TransportToolbarHandler.h
 )
