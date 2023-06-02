@@ -13,8 +13,10 @@ Rectangle {
 
    property var workspaceMode: Workspace.Mode.Classic
    property alias enableVolumeTester: masterVolumeToolbar.testerVisible
-   property alias enableTimeTester: timeToolbar.testerVisible
 
+   signal playbackStarted()
+   signal playbackStopped()
+   signal playbackPaused()
    signal updateStatusBar(status: string)
 
    onWorkspaceModeChanged: {
@@ -41,6 +43,24 @@ Rectangle {
          height: root.height
          gripVisible: Positioner.isFirstItem
          separatorVisible: !Positioner.isLastItem
+
+         onPlaybackStarted: {
+            timeToolbar.start()
+            root.playbackStarted()
+            masterVolumeToolbar.startDemo()
+         }
+
+         onPlaybackStopped: {
+            timeToolbar.stop()
+            root.playbackStopped()
+            masterVolumeToolbar.stopDemo()
+         }
+
+         onPlaybackPaused:  {
+            timeToolbar.pause()
+            root.playbackPaused()
+            masterVolumeToolbar.pauseDemo()
+         }
 
          onUpdateStatusBar: function(status) {
             root.updateStatusBar(status)

@@ -70,6 +70,8 @@ public:
       SILENCE = 0xF43A,
       TRIM = 0xF43B,
 
+      MAGNET = 0xF43E,
+
       SOLID_PLAY = 0xF446,
       SOLID_STOP = 0xF447,
       SOLID_REWIND = 0xF448,

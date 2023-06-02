@@ -20,6 +20,18 @@ Item {
 
    signal updateStatusBar(status: string)
 
+   function startDemo() {
+      volumeControlTester.startDemo()
+   }
+
+   function stopDemo() {
+      volumeControlTester.stopDemo()
+   }
+
+   function pauseDemo() {
+      volumeControlTester.pauseDemo()
+   }
+
    RowLayout {
       id: contents
       anchors.verticalCenter: parent.verticalCenter

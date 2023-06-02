@@ -19,6 +19,9 @@ Item {
 
    property var workspaceMode: Workspace.Mode.Classic
 
+   signal playbackStarted()
+   signal playbackStopped()
+   signal playbackPaused()
    signal updateStatusBar(status: string)
 
    TransportToolbarHandler {
@@ -29,7 +32,16 @@ Item {
       }
 
       onPlayStateChanged: function(isPlaying) {
+         if (isPlaying) {
+            root.playbackStarted()
+         } else {
+            root.playbackPaused()
+         }
          root.isPlaying = isPlaying
+      }
+
+      onPlaybackStopped: {
+         root.playbackStopped()
       }
    }
 

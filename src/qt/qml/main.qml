@@ -17,7 +17,6 @@ ApplicationWindow {
    required property ApplicationConfiguration appConfig
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
-   property alias enableTimeTester: toolsToolbar.enableTimeTester
 
    QtObject {
       id: testers
@@ -87,20 +86,16 @@ ApplicationWindow {
                enableVolumeTester = !enableVolumeTester
             }
          }
-
-         MenuItem {
-            text: qsTr("TimeControl")
-            checkable: true
-            checked: enableTimeTester
-            onTriggered: {
-               enableTimeTester = !enableTimeTester
-            }
-         }
       }
    }
 
    header: ToolsToolbar {
       id: toolsToolbar
+
+      onPlaybackStarted: timelineRuler.start()
+      onPlaybackStopped: timelineRuler.stop()
+      onPlaybackPaused: timelineRuler.pause()
+
       onUpdateStatusBar: function(status) {
          statusBar.text = status
          timer.restart()
@@ -131,6 +126,14 @@ ApplicationWindow {
       interval: 1000
       repeat: false
       onTriggered: statusBar.text = ""
+   }
+
+   TimelineRuler {
+      id: timelineRuler
+      x: sidebar.width + 1
+      width: root.width - sidebar.width - 1
+      height: 28
+      playheadCursorHeight: height / 2 + trackCanvas.height
    }
 
    footer: Rectangle {

@@ -21,15 +21,16 @@ set(MODULE_QML_SOURCES
    qml/LabelTrackControlPanel.qml
    qml/MeterPanel.qml
    qml/MonoTrackControlPanel.qml
+   qml/PlayheadCursor.qml
+   qml/PlayheadCursorHead.qml
    qml/StereoTrackControlPanel.qml
    qml/StyledDial.qml
    qml/StyledIconLabel.qml
    qml/StyledSlider.qml
    qml/StyledTextLabel.qml
-   qml/ToolbarGrip.qml
    qml/TimeControl.qml
-   qml/TimeControlTester.qml
    qml/TrackVolumeMeter.qml
+   qml/ToolbarGrip.qml
    qml/ToolbarSeparator.qml
    qml/VideoTrackControlPanel.qml
    qml/VolumeControl.qml
