@@ -22,10 +22,8 @@
 
 class Track;
 
-namespace AudioGraph {
-
 //! Decorates a source with a non-timewarping effect, which may have latency
-class AUDIO_GRAPH_API EffectStage final : public Source {
+class SAMPLE_TRACK_API EffectStage final : public AudioGraph::Source {
    // To force usage of Create() instead
    struct CreateToken {};
 public:
@@ -105,9 +103,9 @@ private:
     of track independently
  @param[out] map terminated with ChannelNameEOL
  */
-AUDIO_GRAPH_API
+SAMPLE_TRACK_API
 unsigned MakeChannelMap(const Track &track, bool multichannel,
    // TODO: more-than-two-channels
    ChannelName map[3]);
-}
+
 #endif

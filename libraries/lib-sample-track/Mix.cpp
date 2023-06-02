@@ -163,7 +163,7 @@ Mixer::Mixer(Inputs inputs,
                : stage.factory();
          };
          auto &pNewDownstream =
-         mStages.emplace_back(AudioGraph::EffectStage::Create(true,
+         mStages.emplace_back(EffectStage::Create(true,
             *pDownstream, stageInput,
             factory, settings, outRate, std::nullopt, *leader
          ));

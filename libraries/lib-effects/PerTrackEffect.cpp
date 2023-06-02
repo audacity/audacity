@@ -122,8 +122,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          sampleCount start = 0;
          WaveTrack *pRight{};
 
-         const auto numChannels =
-            AudioGraph::MakeChannelMap(left, multichannel, map);
+         const auto numChannels = MakeChannelMap(left, multichannel, map);
          if (multichannel) {
             assert(numAudioIn > 1);
             if (numChannels == 2) {
@@ -305,7 +304,7 @@ bool PerTrackEffect::ProcessTrack(bool multi, const Factory &factory,
    assert(upstream.AcceptsBlockSize(blockSize));
    assert(blockSize == outBuffers.BlockSize());
 
-   auto pSource = AudioGraph::EffectStage::Create( multi, upstream, inBuffers,
+   auto pSource = EffectStage::Create( multi, upstream, inBuffers,
       factory, settings, sampleRate, genLength, track );
    if (!pSource)
       return false;

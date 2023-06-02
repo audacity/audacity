@@ -21,7 +21,7 @@
 
 namespace {
 std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
-   const AudioGraph::EffectStage::Factory &factory,
+   const EffectStage::Factory &factory,
    EffectSettings &settings, double sampleRate, const Track &track
    , std::optional<sampleCount> genLength, bool multi)
 {
@@ -41,7 +41,7 @@ std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
          throw std::exception{};
       auto count = pInstance->GetAudioInCount();
       ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
-      AudioGraph::MakeChannelMap(*channel, count > 1, map);
+      MakeChannelMap(*channel, count > 1, map);
       // Give the plugin a chance to initialize
       if (!pInstance->ProcessInitialize(settings, sampleRate, map))
          throw std::exception{};
@@ -66,7 +66,7 @@ std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
 }
 }
 
-AudioGraph::EffectStage::EffectStage(CreateToken, bool multi,
+EffectStage::EffectStage(CreateToken, bool multi,
    Source &upstream, Buffers &inBuffers,
    const Factory &factory, EffectSettings &settings,
    double sampleRate, std::optional<sampleCount> genLength, const Track &track
@@ -84,7 +84,7 @@ AudioGraph::EffectStage::EffectStage(CreateToken, bool multi,
    mInBuffers.Rewind();
 }
 
-auto AudioGraph::EffectStage::Create(bool multi,
+auto EffectStage::Create(bool multi,
    Source &upstream, Buffers &inBuffers,
    const Factory &factory, EffectSettings &settings,
    double sampleRate, std::optional<sampleCount> genLength, const Track &track
@@ -99,7 +99,7 @@ auto AudioGraph::EffectStage::Create(bool multi,
    }
 }
 
-AudioGraph::EffectStage::~EffectStage()
+EffectStage::~EffectStage()
 {
    // Allow the instances to cleanup
    for (auto &pInstance : mInstances)
@@ -107,19 +107,18 @@ AudioGraph::EffectStage::~EffectStage()
          pInstance->ProcessFinalize();
 }
 
-bool AudioGraph::EffectStage::AcceptsBuffers(const Buffers &buffers) const
+bool EffectStage::AcceptsBuffers(const Buffers &buffers) const
 {
    return true;
 }
 
-bool AudioGraph::EffectStage::AcceptsBlockSize(size_t size) const
+bool EffectStage::AcceptsBlockSize(size_t size) const
 {
    // Test the equality of input and output block sizes
    return mInBuffers.BlockSize() == size;
 }
 
-std::optional<size_t>
-AudioGraph::EffectStage::Acquire(Buffers &data, size_t bound)
+std::optional<size_t> EffectStage::Acquire(Buffers &data, size_t bound)
 {
    assert(AcceptsBuffers(data));
    assert(AcceptsBlockSize(data.BlockSize()));
@@ -231,7 +230,7 @@ AudioGraph::EffectStage::Acquire(Buffers &data, size_t bound)
    return { result };
 }
 
-std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
+std::optional<size_t> EffectStage::FetchProcessAndAdvance(
    Buffers &data, size_t bound, bool doZeroes, size_t outBufferOffset)
 {
    std::optional<size_t> oCurBlockSize;
@@ -301,7 +300,7 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
    return oCurBlockSize;
 }
 
-bool AudioGraph::EffectStage::Process(EffectInstance &instance,
+bool EffectStage::Process(EffectInstance &instance,
    size_t channel, const Buffers &data, size_t curBlockSize,
    size_t outBufferOffset) const
 {
@@ -353,7 +352,7 @@ bool AudioGraph::EffectStage::Process(EffectInstance &instance,
    return (processed == curBlockSize);
 }
 
-sampleCount AudioGraph::EffectStage::Remaining() const
+sampleCount EffectStage::Remaining() const
 {
    // Not correct until at least one call to Acquire() so that mDelayRemaining
    // is assigned.
@@ -365,7 +364,7 @@ sampleCount AudioGraph::EffectStage::Remaining() const
       + DelayRemaining();
 }
 
-bool AudioGraph::EffectStage::Release()
+bool EffectStage::Release()
 {
    // Progress toward termination (Remaining() == 0),
    // if mLastProduced + mLastZeroes > 0,
@@ -376,7 +375,7 @@ bool AudioGraph::EffectStage::Release()
    return true;
 }
 
-unsigned AudioGraph::MakeChannelMap(
+unsigned MakeChannelMap(
    const Track &track, bool multichannel, ChannelName map[3])
 {
    // Iterate either over one track which could be any channel,
