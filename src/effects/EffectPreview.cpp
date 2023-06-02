@@ -126,7 +126,7 @@ void EffectPreview(EffectBase &effect,
    if (isLinearEffect && !isGenerator) {
       WaveTrack::Holder mixLeft, mixRight;
       MixAndRender(saveTracks->Selected<const WaveTrack>(),
-         Mixer::WarpOptions{ *saveTracks },
+         Mixer::WarpOptions{ saveTracks->GetOwner() },
          wxString{}, // Don't care about the name of the temporary tracks
          factory, rate, floatSample, mT0, t1, mixLeft, mixRight);
       if (!mixLeft)

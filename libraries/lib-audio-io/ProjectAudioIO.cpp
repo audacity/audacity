@@ -14,7 +14,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Mix.h"
 #include "Project.h"
 #include "ProjectRate.h"
-#include "Track.h"
 
 AudioIOStartStreamOptions
 ProjectAudioIO::DefaultOptionsFactory(AudacityProject &project, bool)
@@ -26,7 +25,7 @@ ProjectAudioIO::DefaultOptionsFactory(AudacityProject &project, bool)
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    options.envelope =
-      Mixer::WarpOptions::DefaultWarp::Call(TrackList::Get(project));
+      Mixer::WarpOptions::DefaultWarp::Call(&project);
    // options.listener remains null
    // boolean argument is ignored
    return options;

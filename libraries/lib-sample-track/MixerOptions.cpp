@@ -15,8 +15,8 @@
 
 #include "Envelope.h"
 
-MixerOptions::Warp::Warp(const TrackList &list)
-: envelope(DefaultWarp::Call(list)), minSpeed(0.0), maxSpeed(0.0)
+MixerOptions::Warp::Warp(const AudacityProject *pProject)
+: envelope(DefaultWarp::Call(pProject)), minSpeed(0.0), maxSpeed(0.0)
 {
 }
 

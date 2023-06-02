@@ -21,10 +21,10 @@
 #include <functional>
 #include <vector>
 
+class AudacityProject;
 class BoundedEnvelope;
 class EffectInstanceEx;
 class WideSampleSequence;
-class TrackList;
 
 namespace MixerOptions {
 
@@ -54,11 +54,11 @@ public:
 struct SAMPLE_TRACK_API Warp final {
    //! Hook function for default time warp
    struct SAMPLE_TRACK_API DefaultWarp : GlobalHook<DefaultWarp,
-    const BoundedEnvelope*(const TrackList&)
+      const BoundedEnvelope*(const AudacityProject*)
    >{};
 
    //! Construct using the default warp function
-   explicit Warp(const TrackList &list);
+   explicit Warp(const AudacityProject *pProject);
 
    //! Construct with an explicit warp
    explicit Warp(const BoundedEnvelope *e);

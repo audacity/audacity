@@ -240,7 +240,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
    return std::make_unique<Mixer>(move(inputs),
                   // Throw, to stop exporting, if read fails:
                   true,
-                  Mixer::WarpOptions{tracks},
+                  Mixer::WarpOptions{ tracks.GetOwner() },
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,

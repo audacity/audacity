@@ -179,7 +179,7 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
 
    Mixer mixer(move(tracks),
                true,                // Throw to abort mix-and-render if read fails:
-               Mixer::WarpOptions{*inputTracks()},
+               Mixer::WarpOptions{ inputTracks()->GetOwner() },
                start,
                end,
                1,
