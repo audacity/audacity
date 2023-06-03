@@ -252,6 +252,17 @@ size_t WaveTrack::NChannels() const
       return 1;
 }
 
+AudioGraph::ChannelType WaveTrack::GetChannelType() const
+{
+   if (TrackList::NChannels(*this) == 1)
+      return AudioGraph::MonoChannel;
+   else if (IsLeader())
+      return AudioGraph::LeftChannel;
+   else
+      // TODO more-than-two-channels
+      return AudioGraph::RightChannel;
+}
+
 // Copy the track metadata but not the contents.
 void WaveTrack::Init(const WaveTrack &orig)
 {

@@ -88,6 +88,8 @@ public:
    //! May report more than one only when this is a leader track
    size_t NChannels() const override;
 
+   AudioGraph::ChannelType GetChannelType() const override;
+
    // overwrite data excluding the sample sequence but including display
    // settings
    void Reinit(const WaveTrack &orig);

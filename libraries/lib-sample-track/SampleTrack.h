@@ -43,8 +43,6 @@ public:
    using Track::GetStartTime;
    using Track::GetEndTime;
 
-   AudioGraph::ChannelType GetChannelType() const final;
-
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
