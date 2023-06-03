@@ -129,6 +129,12 @@ public:
     */
    double LongSamplesToTime(sampleCount pos) const;
 
+   //! @return widest effective SampleFormat in any part of the track
+   virtual sampleFormat WidestEffectiveFormat() const = 0;
+
+   //! @return whether envelope values are all unit
+   virtual bool HasTrivialEnvelope() const = 0;
+
    //! Fetch envelope values corresponding to uniformly separated sample times
    //! starting at the given time
    virtual void GetEnvelopeValues(double *buffer, size_t bufferLen,

@@ -4,8 +4,8 @@ stored samples.
 
 WritableSampleTrack extends SampleTrack to support appending.
 
-Mix combines multiple SampleTracks into one output stream of samples, also
-handling resampling to different rates.
+Mix combines multiple WideSampleSequences into one output stream of samples,
+also handling resampling to different rates.
 
 These interfaces are sufficient for the audio engine to play and record tracks,
 so the engine will not depend on a particular realization of sample storage.

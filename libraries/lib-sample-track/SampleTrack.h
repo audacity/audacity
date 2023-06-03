@@ -47,12 +47,6 @@ public:
    static const TypeInfo &ClassTypeInfo();
 
    virtual sampleFormat GetSampleFormat() const = 0;
-
-   //! @return widest effective SampleFormat in any part of the track
-   virtual sampleFormat WidestEffectiveFormat() const = 0;
-
-   //! @return whether envelope values are all unit
-   virtual bool HasTrivialEnvelope() const = 0;
 };
 
 ENUMERATE_TRACK_TYPE(SampleTrack)

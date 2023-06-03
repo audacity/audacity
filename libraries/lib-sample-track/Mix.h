@@ -22,7 +22,7 @@ class EffectStage;
 namespace AudioGraph{ class Source; }
 class MixerSource;
 class TrackList;
-class SampleTrack;
+class WideSampleSequence;
 
 class SAMPLE_TRACK_API Mixer {
  public:
@@ -34,11 +34,12 @@ class SAMPLE_TRACK_API Mixer {
 
    struct Input {
       Input(
-         std::shared_ptr<const SampleTrack> pTrack = {}, Stages stages = {}
-      )  : pTrack{ move(pTrack) }, stages{ move(stages) }
+         std::shared_ptr<const WideSampleSequence> pSequence = {},
+         Stages stages = {}
+      )  : pSequence{ move(pSequence) }, stages{ move(stages) }
       {}
 
-      std::shared_ptr<const SampleTrack> pTrack;
+      std::shared_ptr<const WideSampleSequence> pSequence;
       Stages stages;
    };
    using Inputs = std::vector<Input>;

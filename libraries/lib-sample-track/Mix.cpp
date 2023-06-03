@@ -21,8 +21,8 @@
 #include "EffectStage.h"
 #include "Dither.h"
 #include "Resample.h"
-#include "SampleTrack.h"
 #include "SampleTrackCache.h"
+#include "WideSampleSequence.h"
 #include "float_cast.h"
 #include <numeric>
 
@@ -52,9 +52,9 @@ size_t FindBufferSize(const Mixer::Inputs &inputs, size_t bufferSize)
    const auto nTracks = inputs.size();
    for (size_t i = 0; i < nTracks;) {
       const auto &input = inputs[i];
-      const auto leader = input.pTrack.get();
-      const auto nInChannels = TrackList::NChannels(*leader);
-      if (!leader || i + nInChannels > nTracks) {
+      const auto sequence = input.pSequence.get();
+      const auto nInChannels = sequence->NChannels();
+      if (!sequence || i + nInChannels > nTracks) {
          assert(false);
          break;
       }
@@ -136,15 +136,15 @@ Mixer::Mixer(Inputs inputs,
 
    for (size_t i = 0; i < nTracks;) {
       const auto &input = mInputs[i];
-      const auto &leader = input.pTrack;
-      const auto nInChannels = TrackList::NChannels(*leader);
-      if (!leader || i + nInChannels > nTracks) {
+      const auto &sequence = input.pSequence;
+      const auto nInChannels = sequence->NChannels();
+      if (!sequence || i + nInChannels > nTracks) {
          assert(false);
          break;
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      auto &source = mSources.emplace_back(leader, BufferSize(), outRate,
+      auto &source = mSources.emplace_back(sequence, BufferSize(), outRate,
          warpOptions, highQuality, mayThrow, mTimesAndSpeed,
          (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
       AudioGraph::Source *pDownstream = &source;
@@ -165,7 +165,7 @@ Mixer::Mixer(Inputs inputs,
          auto &pNewDownstream =
          mStages.emplace_back(EffectStage::Create(-1,
             *pDownstream, stageInput,
-            factory, settings, outRate, std::nullopt, *leader
+            factory, settings, outRate, std::nullopt, *sequence
          ));
          if (pNewDownstream)
             pDownstream = pNewDownstream.get();
@@ -203,17 +203,17 @@ Mixer::NeedsDither(bool needsDither, double rate) const
       needsDither = true;
 
    for (const auto &input : mInputs) {
-      auto &pTrack = input.pTrack;
-      if (!pTrack)
+      auto &pSequence = input.pSequence;
+      if (!pSequence)
          continue;
-      auto &track = *pTrack;
-      if (track.GetRate() != rate)
+      auto &sequence = *pSequence;
+      if (sequence.GetRate() != rate)
          // Also leads to MixVariableRates(), needs nontrivial resampling
          needsDither = true;
       if (mApplyTrackGains) {
          /// TODO: more-than-two-channels
          for (auto c : {0, 1}) {
-            const auto gain = track.GetChannelGain(c);
+            const auto gain = sequence.GetChannelGain(c);
             if (!(gain == 0.0 || gain == 1.0))
                // Fractional gain may be applied even in MixSameRate
                needsDither = true;
@@ -224,10 +224,10 @@ Mixer::NeedsDither(bool needsDither, double rate) const
       // If it did not, we might avoid dither in more cases.  But if we fix
       // that, remember that some mixers change their time bounds after
       // construction, as when scrubbing.)
-      if (!track.HasTrivialEnvelope())
+      if (!sequence.HasTrivialEnvelope())
          // Varying or non-unit gain may be applied even in MixSameRate
          needsDither = true;
-      auto effectiveFormat = track.WidestEffectiveFormat();
+      auto effectiveFormat = sequence.WidestEffectiveFormat();
       if (effectiveFormat > mFormat)
          // Real, not just nominal, precision loss would happen in at
          // least one clip
