@@ -29,7 +29,7 @@ class WideSampleSequence;
 namespace MixerOptions {
 
 //! A matrix of booleans, one row per input channel, column per output
-class SAMPLE_TRACK_API Downmix final {
+class MIXER_API Downmix final {
    unsigned mNumTracks, mNumChannels, mMaxNumChannels;
 
    void Alloc();
@@ -51,9 +51,9 @@ public:
 };
 
 //! Immutable structure is an argument to Mixer's constructor
-struct SAMPLE_TRACK_API Warp final {
+struct MIXER_API Warp final {
    //! Hook function for default time warp
-   struct SAMPLE_TRACK_API DefaultWarp : GlobalHook<DefaultWarp,
+   struct MIXER_API DefaultWarp : GlobalHook<DefaultWarp,
       const BoundedEnvelope*(const AudacityProject*)
    >{};
 

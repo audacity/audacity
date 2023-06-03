@@ -17,7 +17,7 @@ Paul Licameli split from SampleFrame.h
 //! An interface for random-access fetches from a collection of streams of
 //! samples, associated with the same time; also defines an envelope that
 //! applies to all the streams.
-class SAMPLE_TRACK_API WideSampleSequence
+class MIXER_API WideSampleSequence
    : public AudioGraph::Channel
 {
 public:

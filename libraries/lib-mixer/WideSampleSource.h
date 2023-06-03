@@ -21,7 +21,7 @@
 class WideSampleSequence;
 
 //! Adapts WideSampleSequence to the interface AudioGraph::Source
-class SAMPLE_TRACK_API WideSampleSource final : public AudioGraph::Source {
+class MIXER_API WideSampleSource final : public AudioGraph::Source {
 public:
    //! Type of function returning false if user cancels progress
    using Poller = std::function<bool(sampleCount blockSize)>;

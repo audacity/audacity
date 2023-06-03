@@ -23,7 +23,7 @@
 class WideSampleSequence;
 
 //! Decorates a source with a non-timewarping effect, which may have latency
-class SAMPLE_TRACK_API EffectStage final : public AudioGraph::Source {
+class MIXER_API EffectStage final : public AudioGraph::Source {
    // To force usage of Create() instead
    struct CreateToken {};
 public:
@@ -108,7 +108,7 @@ private:
 
  @pre `channel < sequence.NChannels()`
  */
-SAMPLE_TRACK_API
+MIXER_API
 unsigned MakeChannelMap(const WideSampleSequence &sequence, int channel,
    // TODO: more-than-two-channels
    ChannelName map[3]);

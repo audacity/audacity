@@ -24,7 +24,7 @@ class MixerSource;
 class TrackList;
 class WideSampleSequence;
 
-class SAMPLE_TRACK_API Mixer {
+class MIXER_API Mixer {
  public:
    using WarpOptions = MixerOptions::Warp;
    using MixerSpec = MixerOptions::Downmix;
