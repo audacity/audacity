@@ -5,6 +5,7 @@ add_unit_test(
       lib-utility
    SOURCES
       CallableTest.cpp
+      CompositeTest.cpp
       TupleTest.cpp
       TypeEnumeratorTest.cpp
       VariantTest.cpp
