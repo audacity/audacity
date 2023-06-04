@@ -2,8 +2,8 @@
 
   Audacity: A Digital Audio Editor
 
-  @file SampleTrackSource.h
-  @brief Adapter of SampleTrack to the interface AudioGraph::Source
+  @file WideSampleSource.h
+  @brief Adapter of WideSampleSequence to the interface AudioGraph::Source
 
   Dominic Mazzoni
   Vaughan Johnson
@@ -11,28 +11,28 @@
   Paul Licameli split from PerTrackEffect.h
 
 **********************************************************************/
-
-#ifndef __AUDACITY_SAMPLE_TRACK_SOURCE__
-#define __AUDACITY_SAMPLE_TRACK_SOURCE__
+#ifndef __AUDACITY_WIDE_SAMPLE_SOURCE__
+#define __AUDACITY_WIDE_SAMPLE_SOURCE__
 
 #include "AudioGraphSource.h" // to inherit
 #include "SampleCount.h"
 #include <functional>
 
-class SampleTrack;
+class WideSampleSequence;
 
-//! Adapts SampleTrack to the interface AudioGraph::Source
-class SAMPLE_TRACK_API SampleTrackSource final : public AudioGraph::Source {
+//! Adapts WideSampleSequence to the interface AudioGraph::Source
+class SAMPLE_TRACK_API WideSampleSource final : public AudioGraph::Source {
 public:
    //! Type of function returning false if user cancels progress
    using Poller = std::function<bool(sampleCount blockSize)>;
 
    /*!
+    @pre `nChannels <= sequence.NChannels()`
     @post `Remaining()` == len
     */
-   SampleTrackSource(const SampleTrack &left, const SampleTrack *pRight,
+   WideSampleSource(const WideSampleSequence &sequence, size_t nChannels,
       sampleCount start, sampleCount len, Poller pollUser);
-   ~SampleTrackSource() override;
+   ~WideSampleSource() override;
 
    //! If constructed with positive length, then accepts buffers only when
    //! number of channels is positive
@@ -46,8 +46,8 @@ public:
    //! Can test for user cancellation
    bool Release() override;
 private:
-   const SampleTrack &mLeft;
-   const SampleTrack *const mpRight;
+   const WideSampleSequence &mSequence;
+   const size_t mnChannels;
    const Poller mPollUser;
 
    sampleCount mPos{};

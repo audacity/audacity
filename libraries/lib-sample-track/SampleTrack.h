@@ -47,6 +47,17 @@ public:
    static const TypeInfo &ClassTypeInfo();
 
    virtual sampleFormat GetSampleFormat() const = 0;
+
+   using WideSampleSequence::GetFloats;
+
+   //! "narrow" overload fetches first channel only
+   bool GetFloats(float *buffer, sampleCount start, size_t len,
+      fillFormat fill = fillZero, bool mayThrow = true,
+      sampleCount * pNumWithinClips = nullptr) const
+   {
+      return GetFloats(
+         0, 1, &buffer, start, len, fill, mayThrow, pNumWithinClips);
+   }
 };
 
 ENUMERATE_TRACK_TYPE(SampleTrack)

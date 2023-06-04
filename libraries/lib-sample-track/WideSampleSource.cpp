@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  @file SampleTrackSource.cpp
+  @file WideSampleSource.cpp
 
   Dominic Mazzoni
   Vaughan Johnson
@@ -16,40 +16,40 @@
 \brief Base class for many of the effects in Audacity.
 
 *//*******************************************************************/
-
-
-#include "SampleTrackSource.h"
+#include "WideSampleSource.h"
 
 #include "AudioGraphBuffers.h"
-#include "SampleTrack.h"
+#include "WideSampleSequence.h"
 #include <cassert>
 
-SampleTrackSource::SampleTrackSource(
-   const SampleTrack &left, const SampleTrack *pRight,
-   sampleCount start, sampleCount len, Poller pollUser
-)  : mLeft{ left }, mpRight{ pRight }, mPollUser{ move(pollUser) }
+WideSampleSource::WideSampleSource(const WideSampleSequence &sequence,
+   size_t nChannels, sampleCount start, sampleCount len, Poller pollUser
+)  : mSequence{ sequence }, mnChannels{ nChannels }, mPollUser{ move(pollUser) }
    , mPos{ start }, mOutputRemaining{ len  }
 {
+   assert(nChannels <= sequence.NChannels());
 }
 
-SampleTrackSource::~SampleTrackSource() = default;
+WideSampleSource::~WideSampleSource() = default;
 
-bool SampleTrackSource::AcceptsBuffers(const Buffers &buffers) const
+bool WideSampleSource::AcceptsBuffers(const Buffers &buffers) const
 {
    return mOutputRemaining == 0 || buffers.Channels() > 0;
 }
 
-bool SampleTrackSource::AcceptsBlockSize(size_t) const
+bool WideSampleSource::AcceptsBlockSize(size_t) const
 {
    return true;
 }
 
-sampleCount SampleTrackSource::Remaining() const
+sampleCount WideSampleSource::Remaining() const
 {
    return std::max<sampleCount>(0, mOutputRemaining);
 }
 
-std::optional<size_t> SampleTrackSource::Acquire(Buffers &data, size_t bound)
+#define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
+
+std::optional<size_t> WideSampleSource::Acquire(Buffers &data, size_t bound)
 {
    assert(bound <= data.BlockSize());
    assert(data.BlockSize() <= data.Remaining());
@@ -64,9 +64,12 @@ std::optional<size_t> SampleTrackSource::Acquire(Buffers &data, size_t bound)
       // guarantees write won't overflow
       assert(mFetched + fetch <= data.Remaining());
       // Fill the buffers
-      mLeft.GetFloats(&data.GetWritePosition(0) + mFetched, mPos, fetch);
-      if (mpRight && data.Channels() > 1)
-         mpRight->GetFloats(&data.GetWritePosition(1) + mFetched, mPos, fetch);
+      auto buffers = stackAllocate(float *, mnChannels);
+      if (mnChannels > 0)
+         buffers[0] = &data.GetWritePosition(0) + mFetched;
+      if (mnChannels > 1)
+         buffers[1] = &data.GetWritePosition(1) + mFetched;
+      mSequence.GetFloats(0, mnChannels, buffers, mPos, fetch);
       mPos += fetch;
       mFetched += fetch;
       mInitialized = true;
@@ -83,7 +86,7 @@ std::optional<size_t> SampleTrackSource::Acquire(Buffers &data, size_t bound)
    return { result };
 }
 
-bool SampleTrackSource::Release()
+bool WideSampleSource::Release()
 {
    mOutputRemaining -= mLastProduced;
    mFetched -= mLastProduced;

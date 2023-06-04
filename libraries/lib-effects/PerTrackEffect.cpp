@@ -24,11 +24,11 @@
 #include "AudioGraphTask.h"
 #include "EffectStage.h"
 #include "MixAndRender.h"
-#include "SampleTrackSource.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveTrackSink.h"
+#include "WideSampleSource.h"
 
 AudioGraph::Sink::~Sink() = default;
 
@@ -258,7 +258,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          // progress dialog correct
          if (len == 0 && genLength)
             len = *genLength;
-         SampleTrackSource source{ left, pRight, start, len, pollUser };
+         WideSampleSource source{
+            left, size_t(pRight ? 2 : 1), start, len, pollUser };
          // Assert source is safe to Acquire inBuffers
          assert(source.AcceptsBuffers(inBuffers));
          assert(source.AcceptsBlockSize(inBuffers.BlockSize()));

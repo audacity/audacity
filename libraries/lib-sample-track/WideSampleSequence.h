@@ -77,14 +77,6 @@ public:
          floatSample, start, len, fill, mayThrow, pNumWithinClips);
    }
 
-   //! "narrow" overload fetches first channel only
-   bool GetFloats(float *buffer, sampleCount start, size_t len,
-      fillFormat fill = fillZero, bool mayThrow = true,
-      sampleCount * pNumWithinClips = nullptr) const
-   {
-      return GetFloats(0, 1, &buffer, start, len, fill, mayThrow, pNumWithinClips);
-   }
-
    //! Retrieve samples of one of the channels from a sequence in a specified
    //! format
    /*!

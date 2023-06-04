@@ -27,10 +27,10 @@ set( SOURCES
    SampleTrack.h
    SampleTrackCache.cpp
    SampleTrackCache.h
-   SampleTrackSource.cpp
-   SampleTrackSource.h
    WideSampleSequence.cpp
    WideSampleSequence.h
+   WideSampleSource.cpp
+   WideSampleSource.h
 )
 set( LIBRARIES
    lib-audio-graph-interface
