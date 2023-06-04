@@ -108,6 +108,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    };
 
    const bool multichannel = numAudioIn > 1;
+   int iChannel = 0;
    auto range = multichannel
       ? mOutputTracks->Leaders()
       : mOutputTracks->Any();
@@ -118,11 +119,19 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          if (!left.GetSelected())
             return fallthrough();
 
+         auto leader = pLeft;
+         if (left.IsLeader())
+            iChannel = 0;
+         else
+            leader =
+               static_cast<WaveTrack *>(*mOutputTracks->FindLeader(pLeft));
+
          sampleCount len = 0;
          sampleCount start = 0;
          WaveTrack *pRight{};
 
-         const auto numChannels = MakeChannelMap(left, multichannel, map);
+         const int channel = (multichannel ? -1 : iChannel++);
+         const auto numChannels = MakeChannelMap(*leader, channel, map);
          if (multichannel) {
             assert(numAudioIn > 1);
             if (numChannels == 2) {
@@ -268,8 +277,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             else
                return recycledInstances.emplace_back(MakeInstance());
          };
-         bGoodResult = ProcessTrack(multichannel, factory, settings, source, sink,
-            genLength, sampleRate, left,
+         bGoodResult = ProcessTrack(channel, factory, settings, source, sink,
+            genLength, sampleRate, left, *leader,
             inBuffers, outBuffers);
          if (bGoodResult)
             sink.Flush(outBuffers,
@@ -290,11 +299,11 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessTrack(bool multi, const Factory &factory,
+bool PerTrackEffect::ProcessTrack(int channel, const Factory &factory,
    EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
-   const double sampleRate, const SampleTrack &track,
+   const double sampleRate, const SampleTrack &track, const SampleTrack &leader,
    Buffers &inBuffers, Buffers &outBuffers)
 {
    assert(upstream.AcceptsBuffers(inBuffers));
@@ -304,8 +313,8 @@ bool PerTrackEffect::ProcessTrack(bool multi, const Factory &factory,
    assert(upstream.AcceptsBlockSize(blockSize));
    assert(blockSize == outBuffers.BlockSize());
 
-   auto pSource = EffectStage::Create( multi, upstream, inBuffers,
-      factory, settings, sampleRate, genLength, track );
+   auto pSource = EffectStage::Create(channel, upstream, inBuffers,
+      factory, settings, sampleRate, genLength, leader);
    if (!pSource)
       return false;
    assert(pSource->AcceptsBlockSize(blockSize)); // post of ctor
