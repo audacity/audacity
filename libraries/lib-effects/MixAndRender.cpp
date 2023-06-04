@@ -37,6 +37,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    auto first = *trackRange.begin();
    assert(first); // because the range is known to be nonempty
+   assert(first->IsLeader()); // precondition on trackRange
 
    // this only iterates tracks which are relevant to this function, i.e.
    // selected WaveTracks. The tracklist is (confusingly) the list of all
@@ -44,8 +45,8 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    int numWaves = 0; /* number of wave tracks in the selection */
    int numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
-   for(auto wt : trackRange) {
-      numWaves++;
+   for (auto wt : trackRange) {
+      numWaves += wt->NChannels();
       if (IsMono(*wt) && wt->GetPan() == 0)
          numMono++;
    }
@@ -66,7 +67,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    Mixer::Inputs waveArray;
 
-   for(auto wt : trackRange) {
+   for (auto wt : trackRange) {
       waveArray.emplace_back(
          wt->SharedPointer<const SampleTrack>(), GetEffectStages(*wt));
       tstart = wt->GetStartTime();

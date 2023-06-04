@@ -49,16 +49,13 @@ namespace {
 size_t FindBufferSize(const Mixer::Inputs &inputs, size_t bufferSize)
 {
    size_t blockSize = bufferSize;
-   const auto nTracks = inputs.size();
-   for (size_t i = 0; i < nTracks;) {
-      const auto &input = inputs[i];
+   for (const auto &input : inputs) {
       const auto sequence = input.pSequence.get();
       const auto nInChannels = sequence->NChannels();
-      if (!sequence || i + nInChannels > nTracks) {
+      if (!sequence) {
          assert(false);
          break;
       }
-      auto increment = finally([&]{ i += nInChannels; });
       for (const auto &stage : input.stages) {
          // Need an instance to query acceptable block size
          const auto pInstance = stage.factory();
@@ -111,7 +108,10 @@ Mixer::Mixer(Inputs inputs,
    , mEffectiveFormat{ floatSample }
 {
    assert(BufferSize() <= outBufferSize);
-   const auto nTracks =  mInputs.size();
+   const auto nChannelsIn =
+   std::accumulate(mInputs.begin(), mInputs.end(), size_t{},
+      [](auto sum, const auto &input){
+         return sum + input.pSequence->NChannels(); });
 
    // Examine the temporary instances that were made in FindBufferSize
    // This finds a sufficient, but not necessary, condition to do dithering
@@ -124,25 +124,25 @@ Mixer::Mixer(Inputs inputs,
 
    auto pMixerSpec = ( mixerSpec &&
       mixerSpec->GetNumChannels() == mNumChannels &&
-      mixerSpec->GetNumTracks() == nTracks
+      mixerSpec->GetNumTracks() == nChannelsIn
    ) ? mixerSpec : nullptr;
 
    // Reserve vectors first so we can take safe references to pushed elements
-   mSources.reserve(nTracks);
-   auto nStages = std::accumulate(mInputs.begin(), mInputs.end(), 0,
-      [](auto sum, auto &input){ return sum + input.stages.size(); });
+   mSources.reserve(nChannelsIn);
+   const auto nStages = std::accumulate(mInputs.begin(), mInputs.end(), 0,
+      [](auto sum, const auto &input){
+         return sum + input.stages.size() * input.pSequence->NChannels(); });
    mSettings.reserve(nStages);
    mStageBuffers.reserve(nStages);
 
-   for (size_t i = 0; i < nTracks;) {
-      const auto &input = mInputs[i];
+   size_t i = 0;
+   for (auto &input : mInputs) {
       const auto &sequence = input.pSequence;
-      const auto nInChannels = sequence->NChannels();
-      if (!sequence || i + nInChannels > nTracks) {
+      if (!sequence) {
          assert(false);
          break;
       }
-      auto increment = finally([&]{ i += nInChannels; });
+      auto increment = finally([&]{ i += sequence->NChannels(); });
 
       auto &source = mSources.emplace_back(sequence, BufferSize(), outRate,
          warpOptions, highQuality, mayThrow, mTimesAndSpeed,
@@ -390,7 +390,8 @@ double Mixer::MixGetCurrentTime()
 
 void Mixer::Reposition(double t, bool bSkipping)
 {
-   auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
+   const auto &[mT0, mT1, _, __] = *mTimesAndSpeed;
+   auto &mTime = mTimesAndSpeed->mTime;
    mTime = t;
    const bool backwards = (mT1 < mT0);
    if (backwards)

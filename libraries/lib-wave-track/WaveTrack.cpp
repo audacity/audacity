@@ -2258,10 +2258,18 @@ void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
 sampleFormat WaveTrack::WidestEffectiveFormat() const
 {
    auto result = narrowestSampleFormat;
-   for (auto &clip : GetClips())
-      for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
-         result = std::max(result,
-            clip->GetSequence(ii)->GetSampleFormats().Effective());
+   const auto accumulate = [&](const WaveTrack &track) {
+      for (const auto &pClip : track.GetClips())
+         for (size_t ii = 0, width = pClip->GetWidth(); ii < width; ++ii)
+            result = std::max(result,
+               pClip->GetSequence(ii)->GetSampleFormats().Effective());
+   };
+   if (auto pOwner = GetOwner()) {
+      for (auto channel : TrackList::Channels(this))
+         accumulate(*channel);
+   }
+   else
+      accumulate(*this);
    return result;
 }
 

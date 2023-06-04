@@ -55,7 +55,7 @@ void DoMixAndRender
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto trackRange = tracks.Selected< WaveTrack >();
+   auto trackRange = tracks.SelectedLeaders<WaveTrack>();
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(trackRange.Filter<const WaveTrack>(),
       Mixer::WarpOptions{ tracks.GetOwner() },
@@ -67,9 +67,9 @@ void DoMixAndRender
 
       // But before removing, determine the first track after the removal
       auto last = *trackRange.rbegin();
-      auto insertionPoint = * ++ tracks.Find( last );
+      auto insertionPoint = * ++ tracks.FindLeader( last );
       
-      auto selectedCount = (trackRange + &Track::IsLeader).size();
+      auto selectedCount = trackRange.size();
       wxString firstName;
       int firstColour = -1;
       if (selectedCount > 0) {
@@ -78,8 +78,12 @@ void DoMixAndRender
       }
       if (!toNewTrack)  {
          // Beware iterator invalidation!
-         for (auto &it = trackRange.first, &end = trackRange.second; it != end;)
-            tracks.Remove( *it++ );
+         while (!trackRange.empty()) {
+            const auto leader = *trackRange.first++;
+            auto channels = TrackList::Channels(leader);
+            for (auto &it = channels.first, &end = channels.second; it != end;)
+               tracks.Remove(*it++);
+         }
       }
 
       // Add NEW tracks
