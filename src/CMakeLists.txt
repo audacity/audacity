@@ -1098,7 +1098,11 @@ audacity_append_common_compiler_options( OPTIONS "${${_OPT}use_pch}" )
 list( APPEND LDFLAGS
    PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/MANIFEST:NO>
-      $<$<CXX_COMPILER_ID:GNU>:-Wl,--disable-new-dtags>
+      $<$<CXX_COMPILER_ID:GNU>:
+         $<$<PLATFORM_ID:Darwin,Linux,FreeBSD,OpenBSD,NetBSD>:
+            -Wl,--disable-new-dtags
+         >
+      >
 )
 
 find_package( Threads QUIET )
