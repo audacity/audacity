@@ -500,7 +500,7 @@ private:
    std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
    //! Append a clip to the track; to succeed, must have the same block factory
-   //! as this track and the correct width; return success
+   //! as this track, and `this->GetWidth() == clip->GetWidth()`; return success
    /*!
     @pre `clip != nullptr`
     */
