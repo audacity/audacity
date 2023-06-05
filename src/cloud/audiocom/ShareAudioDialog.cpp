@@ -240,13 +240,26 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
             mContinueButton = s.AddButton(XXO("C&ontinue"));
             mContinueButton->Bind(wxEVT_BUTTON, [this](auto) { OnContinue(); });
-            mContinueButton->Enable(mIsAuthorised);
          }
          s.EndHorizontalLay();
       }
       s.EndInvisiblePanel();
    }
    s.EndHorizontalLay();
+
+   const auto title = mProject.GetProjectName();
+
+   if (!title.empty())
+      mInitialStatePanel.trackTitle->SetValue(title);
+
+   mContinueButton->Enable(mIsAuthorised && mInitialStatePanel.HasValidTitle());
+
+   mInitialStatePanel.trackTitle->Bind(
+      wxEVT_TEXT,
+      [this](auto&) {
+         mContinueButton->Enable(
+            mIsAuthorised && mInitialStatePanel.HasValidTitle());
+      });
 }
 
 void ShareAudioDialog::OnCancel()
@@ -389,7 +402,7 @@ void ShareAudioDialog::StartUploadProcess()
 
    mServices->uploadPromise = mServices->uploadService.Upload(
       mFilePath,
-      mProject.GetProjectName(),
+      mInitialStatePanel.GetTrackTitle(),
       false,
       [this](const auto& result)
       {
@@ -603,35 +616,41 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
       s.SetBorder(0);
 
       s.AddWindow(safenew wxStaticLine { s.GetParent() }, wxEXPAND);
-
-      s.AddSpace(16);
-      s.StartInvisiblePanel();
-      {
-         anonInfoPanel = s.StartInvisiblePanel();
-         {
-            s.SetBorder(30);
             
-            AccessibleLinksFormatter privacyPolicy(XO(
-               "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."));
-
-            privacyPolicy.FormatLink(
-               L"%s", XO("audio.com"), "https://audio.com");
-
-            privacyPolicy.FormatLink(
-               L"%%", TranslatableString {},
-               AccessibleLinksFormatter::LinkClickedHandler {});
-
-            privacyPolicy.Populate(s);
-         }
-         s.EndInvisiblePanel();
-
-         authorizedInfoPanel = s.StartInvisiblePanel();
-         s.StartHorizontalLay(wxEXPAND, 1);
+      s.StartInvisiblePanel(16);
+      {
+         s.StartInvisiblePanel();
          {
-            s.AddSpace(30);
-            s.AddFixedText(XO("Press \"Continue\" to upload to audio.com"));
+            s.AddFixedText(XO("Track Title"));
+            s.AddSpace(8);
+            trackTitle = s.AddTextBox({}, {}, 60);
+            trackTitle->SetName(XO("Track Title").Translation());
+            s.AddSpace(16);
+
+            anonInfoPanel = s.StartInvisiblePanel();
+            {
+               AccessibleLinksFormatter privacyPolicy(XO(
+                  "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."));
+
+               privacyPolicy.FormatLink(
+                  L"%s", XO("audio.com"), "https://audio.com");
+
+               privacyPolicy.FormatLink(
+                  L"%%", TranslatableString {},
+                  AccessibleLinksFormatter::LinkClickedHandler {});
+
+               privacyPolicy.Populate(s);
+            }
+            s.EndInvisiblePanel();
+
+            authorizedInfoPanel = s.StartInvisiblePanel();
+            s.StartHorizontalLay(wxEXPAND, 1);
+            {
+               s.AddFixedText(XO("Press \"Continue\" to upload to audio.com"));
+            }
+            s.EndHorizontalLay();
+            s.EndInvisiblePanel();
          }
-         s.EndHorizontalLay();
          s.EndInvisiblePanel();
       }
       s.EndInvisiblePanel();
@@ -655,6 +674,8 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
          rootParent->Layout();
 
          rootParent->Thaw();
+
+         rootParent->Refresh();
       });
 
    auto& oauthService = GetOAuthService();
@@ -694,9 +715,9 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
 
    anonInfoPanel->Hide();
    authorizedInfoPanel->Show();
-  
+
    if (parent.mContinueButton != nullptr)
-      parent.mContinueButton->Enable();
+   parent.mContinueButton->Enable(!trackTitle->GetValue().empty());
 }
 
 void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
@@ -733,6 +754,18 @@ void ShareAudioDialog::InitialStatePanel::SetAnonymousState()
 
    if (parent.mContinueButton != nullptr)
       parent.mContinueButton->Enable(false);
+}
+
+wxString ShareAudioDialog::InitialStatePanel::GetTrackTitle() const
+{
+   wxString ret { trackTitle->GetValue() };
+   ret.Trim(true).Trim(false);
+   return ret;
+}
+
+bool ShareAudioDialog::InitialStatePanel::HasValidTitle() const
+{
+   return !GetTrackTitle().empty();
 }
 
 void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)

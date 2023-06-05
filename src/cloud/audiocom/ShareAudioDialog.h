@@ -79,6 +79,7 @@ private:
       wxButton* oauthButton { nullptr };
       wxPanel* anonInfoPanel { nullptr };
       wxPanel* authorizedInfoPanel { nullptr };
+      wxTextCtrl* trackTitle { nullptr };
 
       Observer::Subscription mUserDataChangedSubscription;
 
@@ -89,6 +90,8 @@ private:
 
       void SetAnonymousState();
 
+      wxString GetTrackTitle() const;
+      bool HasValidTitle() const;
    } mInitialStatePanel;
 
    struct ProgressPanel final
