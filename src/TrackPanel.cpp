@@ -329,9 +329,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mRealtimeEffectManagerSubscription = RealtimeEffectManager::Get(*theProject)
       .Subscribe([this](const RealtimeEffectManagerMessage& msg)
       {
-         if(msg.track)
+         if (auto pTrack = dynamic_cast<Track *>(msg.sequence))
             //update "effects" button 
-            RefreshTrack(msg.track);
+            RefreshTrack(pTrack);
       });
 
    UpdatePrefs();

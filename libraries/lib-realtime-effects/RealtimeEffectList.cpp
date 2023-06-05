@@ -10,7 +10,7 @@
 #include "RealtimeEffectState.h"
 
 #include "Project.h"
-#include "Track.h"
+#include "WideSampleSequence.h"
 
 RealtimeEffectList::RealtimeEffectList()
 {
@@ -52,29 +52,30 @@ RealtimeEffectList &RealtimeEffectList::Set(
    return result;
 }
 
-const RealtimeEffectList &RealtimeEffectList::Get(const AudacityProject &project)
+const RealtimeEffectList &
+RealtimeEffectList::Get(const AudacityProject &project)
 {
    return Get(const_cast<AudacityProject &>(project));
 }
 
-static const Track::ChannelGroupAttachments::RegisteredFactory trackEffects
+static const SequenceAttachments::RegisteredFactory sequenceEffects
 { 
-   [](Track::ChannelGroupData &)
+   [](WideSampleSequence &)
    {
       return std::make_unique<RealtimeEffectList>();
    }
 };
 
-// Access for per-track effect list
-RealtimeEffectList &RealtimeEffectList::Get(Track &track)
+// Access for per-sequence effect list
+RealtimeEffectList &RealtimeEffectList::Get(WideSampleSequence &sequence)
 {
-   return track.GetGroupData()
-      .Track::ChannelGroupAttachments::Get<RealtimeEffectList>(trackEffects);
+   return sequence.Attachments::Get<RealtimeEffectList>(sequenceEffects);
 }
 
-const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
+const RealtimeEffectList &RealtimeEffectList::Get(
+   const WideSampleSequence &sequence)
 {
-   return Get(const_cast<Track &>(track));
+   return Get(const_cast<WideSampleSequence &>(sequence));
 }
 
 bool
@@ -218,7 +219,8 @@ void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)
    }
    else
    {
-      const auto first = shallowCopy.rbegin() + (shallowCopy.size() - (fromIndex + 1));
+      const auto first =
+         shallowCopy.rbegin() + (shallowCopy.size() - (fromIndex + 1));
       const auto last = shallowCopy.rbegin() + (shallowCopy.size() - toIndex);
       std::rotate(first, first + 1, last);
    }

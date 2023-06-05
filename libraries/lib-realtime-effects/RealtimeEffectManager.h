@@ -25,13 +25,14 @@
 #include "RealtimeEffectList.h"
 
 class EffectInstance;
+class WideSampleSequence;
 
 namespace RealtimeEffects {
    class InitializationScope;
    class ProcessingScope;
 }
 
-///Posted when effect is being added or removed to/from track or project
+///Posted when effect is being added or removed to/from sequence or project
 struct RealtimeEffectManagerMessage
 {
    enum class Type
@@ -41,7 +42,7 @@ struct RealtimeEffectManagerMessage
       EffectRemoved
    };
    Type type{};
-   Track *track{}; ///< null, if changes happened in the project scope
+   WideSampleSequence *sequence{}; ///< null, if changes happened in the project scope
 };
 
 class REALTIME_EFFECTS_API RealtimeEffectManager final :
@@ -63,23 +64,24 @@ public:
    bool IsActive() const noexcept;
 //   Latency GetLatency() const;
 
-   //! Main thread appends a global or per-track effect
+   //! Main thread appends a global or per-sequence effect
    /*!
     @param pScope if realtime is active but scope is absent, there is no effect
-    @param pTrack if null, then state is added to the global list
+    @param pSequence if null, then state is added to the global list
     @param id identifies the effect
     @return if null, the given id was not found
 
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState> AddState(
-      RealtimeEffects::InitializationScope *pScope, Track *pTrack,
+      RealtimeEffects::InitializationScope *pScope,
+      WideSampleSequence *pSequence,
       const PluginID & id);
 
-   //! Main thread replaces a global or per-track effect
+   //! Main thread replaces a global or per-sequence effect
    /*!
     @param pScope if realtime is active but scope is absent, there is no effect
-    @param pTrack if null, then state is added to the global list
+    @param pSequence if null, then state is added to the global list
     @param index position in the list to replace; no effect if out of range
     @param id identifies the effect
     @return if null, the given id was not found and the old state remains
@@ -87,22 +89,25 @@ public:
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState> ReplaceState(
-      RealtimeEffects::InitializationScope *pScope, Track *pTrack,
+      RealtimeEffects::InitializationScope *pScope,
+      WideSampleSequence *pSequence,
       size_t index, const PluginID & id);
 
-   //! Main thread removes a global or per-track effect
+   //! Main thread removes a global or per-sequence effect
    /*!
     @param pScope if realtime is active but scope is absent, there is no effect
-    @param pTrack if null, then state is added to the global list
+    @param pSequence if null, then state is added to the global list
     @param state the state to be removed
     */
    /*! No effect if realtime is active but scope is not supplied */
    void RemoveState(RealtimeEffects::InitializationScope *pScope,
-      Track *pTrack, std::shared_ptr<RealtimeEffectState> pState);
+      WideSampleSequence *pSequence,
+      std::shared_ptr<RealtimeEffectState> pState);
 
-   //! Report the position of a state in the global or a per-track list
+   //! Report the position of a state in the global or a per-sequence list
    std::optional<size_t> FindState(
-      Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState) const;
+      WideSampleSequence *pSequence,
+      const std::shared_ptr<RealtimeEffectState> &pState) const;
 
    bool GetSuspended() const
       { return mSuspended.load(std::memory_order_relaxed); }
@@ -122,15 +127,16 @@ private:
 
    std::shared_ptr<RealtimeEffectState>
    MakeNewState(RealtimeEffects::InitializationScope *pScope,
-      Track *pLeader, const PluginID &id);
+      WideSampleSequence *pSequence,
+      const PluginID &id);
 
-   //! Main thread begins to define a set of tracks for playback
+   //! Main thread begins to define a set of sequences for playback
    void Initialize(RealtimeEffects::InitializationScope &scope,
       double sampleRate);
-   //! Main thread adds one track (passing the first of one or more
+   //! Main thread adds one sequence (passing the first of one or more
    //! channels), still before playback
-   void AddTrack(RealtimeEffects::InitializationScope &scope,
-      const Track &track, unsigned chans, float rate);
+   void AddSequence(RealtimeEffects::InitializationScope &scope,
+      const WideSampleSequence &sequence, unsigned chans, float rate);
    //! Main thread cleans up after playback
    void Finalize() noexcept;
 
@@ -146,7 +152,8 @@ private:
 
    void ProcessStart(bool suspended);
    /*! @copydoc ProcessScope::Process */
-   size_t Process(bool suspended, const Track &track,
+   size_t Process(bool suspended,
+      const WideSampleSequence &sequence,
       float *const *buffers, float *const *scratch, float *dummy,
       unsigned nBuffers, size_t numSamples);
    void ProcessEnd(bool suspended) noexcept;
@@ -161,36 +168,37 @@ private:
 
    //! Visit the per-project states first, then states for leader if not null
    template<typename StateVisitor>
-   void VisitGroup(Track &leader, const StateVisitor &func)
+   void VisitGroup(WideSampleSequence &sequence, const StateVisitor &func)
    {
       // Call the function for each effect on the master list
       RealtimeEffectList::Get(mProject).Visit(func);
 
-      // Call the function for each effect on the track list
-      RealtimeEffectList::Get(leader).Visit(func);
+      // Call the function for each effect on the sequence list
+      RealtimeEffectList::Get(sequence).Visit(func);
    }
 
    template<typename StateVisitor>
-   void VisitGroup(const Track &leader, const StateVisitor &func)
+   void VisitGroup(
+      const WideSampleSequence &sequence, const StateVisitor &func)
    {
       // Call the function for each effect on the master list
       RealtimeEffectList::Get(mProject).Visit(func);
 
-      // Call the function for each effect on the track list
-      RealtimeEffectList::Get(leader).Visit(func);
+      // Call the function for each effect on the sequence list
+      RealtimeEffectList::Get(sequence).Visit(func);
    }
 
-   //! Visit the per-project states first, then all tracks from AddTrack
-   /*! Tracks are visited in unspecified order */
+   //! Visit the per-project states first, then all sequences from AddSequence
+   /*! Sequences are visited in unspecified order */
    template<typename StateVisitor>
    void VisitAll(const StateVisitor &func)
    {
       // Call the function for each effect on the master list
       RealtimeEffectList::Get(mProject).Visit(func);
 
-      // And all track lists
-      for (auto leader : mGroupLeaders)
-         RealtimeEffectList::Get(*leader).Visit(func);
+      // And all sequence lists
+      for (auto sequence : mSequences)
+         RealtimeEffectList::Get(*sequence).Visit(func);
    }
 
    AudacityProject &mProject;
@@ -200,11 +208,11 @@ private:
 
    bool mActive{ false };
 
-   // This member is mutated only by Initialize(), AddTrack(), Finalize()
+   // This member is mutated only by Initialize(), AddSequence(), Finalize()
    // which are to be called only while there is no playback
-   std::vector<const Track *> mGroupLeaders; //!< all are non-null
+   std::vector<const WideSampleSequence *> mSequences; //!< all are non-null
 
-   std::unordered_map<const Track *, double> mRates;
+   std::unordered_map<const WideSampleSequence *, double> mRates;
 };
 
 namespace RealtimeEffects {
@@ -230,11 +238,12 @@ public:
          RealtimeEffectManager::Get(*pProject).Finalize();
    }
 
-   void AddTrack(const Track &track, unsigned chans, float rate)
+   void AddSequence(const WideSampleSequence &sequence,
+      unsigned chans, float rate)
    {
       if (auto pProject = mwProject.lock())
          RealtimeEffectManager::Get(*pProject)
-            .AddTrack(*this, track, chans, rate);
+            .AddSequence(*this, sequence, chans, rate);
    }
 
    std::vector<std::shared_ptr<EffectInstance>> mInstances;
@@ -273,7 +282,7 @@ public:
    }
 
    //! @return how many samples to discard for latency
-   size_t Process(const Track &track,
+   size_t Process(const WideSampleSequence &sequence,
       float *const *buffers,
       float *const *scratch,
       float *dummy,
@@ -283,7 +292,7 @@ public:
    {
       if (auto pProject = mwProject.lock())
          return RealtimeEffectManager::Get(*pProject)
-            .Process(mSuspended, track, buffers, scratch, dummy,
+            .Process(mSuspended, sequence, buffers, scratch, dummy,
                nBuffers, numSamples);
       else
          return 0; // consider them trivially processed

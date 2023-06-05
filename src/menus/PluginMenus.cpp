@@ -1,5 +1,3 @@
-
-
 #include "AudioIO.h"
 #include "../Benchmark.h"
 #include "../commands/CommandDispatch.h"
@@ -17,6 +15,7 @@
 #include "../ProjectWindows.h"
 #include "../ProjectSelectionManager.h"
 #include "RealtimeEffectPanel.h"
+#include "SampleTrack.h"
 #include "SyncLock.h"
 #include "../toolbars/ToolManager.h"
 #include "../toolbars/SelectionBar.h"
@@ -58,8 +57,8 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
    auto &panel = RealtimeEffectPanel::Get(project);
    if (panel.IsShown())
       panel.HidePanel();
-   else
-      panel.ShowPanel(trackFocus.Get(), true);
+   else if (auto pTrack = dynamic_cast<SampleTrack *>(trackFocus.Get()))
+      panel.ShowPanel(pTrack, true);
 }
 
 

@@ -452,10 +452,10 @@ void AllocateChannelsToProcessors(
 }
 
 //! Set up processors to be visited repeatedly in Process.
-/*! The iteration over channels in AddTrack and Process must be the same */
+/*! The iteration over channels in AddSequence and Process must be the same */
 std::shared_ptr<EffectInstance>
-RealtimeEffectState::AddTrack(
-   const Track &track, unsigned chans, float sampleRate)
+RealtimeEffectState::AddSequence(
+   const WideSampleSequence &sequence, unsigned chans, float sampleRate)
 {
    auto pInstance = EnsureInstance(sampleRate);
    if (!pInstance)
@@ -478,8 +478,9 @@ RealtimeEffectState::AddTrack(
          return false;
    });
    if (mCurrentProcessor > first) {
-      // Remember the sampleRate of the track, so latency can be computed later
-      mGroups[&track] = { first, sampleRate };
+      // Remember the sampleRate of the sequence, so latency can be computed
+      // later
+      mGroups[&sequence] = { first, sampleRate };
       return pInstance;
    }
    return {};
@@ -528,9 +529,10 @@ bool RealtimeEffectState::ProcessStart(bool running)
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
 
-//! Visit the effect processors that were added in AddTrack
-/*! The iteration over channels in AddTrack and Process must be the same */
-size_t RealtimeEffectState::Process(const Track &track, unsigned chans,
+//! Visit the effect processors that were added in AddSequence
+/*! The iteration over channels in AddSequence and Process must be the same */
+size_t RealtimeEffectState::Process(
+   const WideSampleSequence &sequence, unsigned chans,
    const float *const *inbuf, float *const *outbuf, float *const dummybuf,
    size_t numSamples)
 {
@@ -546,7 +548,7 @@ size_t RealtimeEffectState::Process(const Track &track, unsigned chans,
    const auto clientIn = stackAllocate(const float *, numAudioIn);
    const auto clientOut = stackAllocate(float *, numAudioOut);
    size_t len = 0;
-   const auto &pair = mGroups[&track];
+   const auto &pair = mGroups[&sequence];
    auto processor = pair.first;
    // Outer loop over processors
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,

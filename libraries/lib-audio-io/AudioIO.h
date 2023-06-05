@@ -438,7 +438,8 @@ public:
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState>
-   AddState(AudacityProject &project, Track *pTrack, const PluginID & id);
+   AddState(AudacityProject &project,
+      WideSampleSequence *pSequence, const PluginID & id);
 
    //! Forwards to RealtimeEffectManager::ReplaceState with proper init scope
    /*!
@@ -446,11 +447,12 @@ public:
     */
    std::shared_ptr<RealtimeEffectState>
    ReplaceState(AudacityProject &project,
-      Track *pTrack, size_t index, const PluginID & id);
+      WideSampleSequence *pSequence, size_t index, const PluginID & id);
 
    //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
    void RemoveState(AudacityProject &project,
-      Track *pTrack, std::shared_ptr<RealtimeEffectState> pState);
+      WideSampleSequence *pSequence,
+      std::shared_ptr<RealtimeEffectState> pState);
 
    /** \brief Start up Portaudio for capture and recording as needed for
     * input monitoring and software playthrough only
