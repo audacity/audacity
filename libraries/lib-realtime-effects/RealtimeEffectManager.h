@@ -40,8 +40,8 @@ struct RealtimeEffectManagerMessage
       EffectReplaced,
       EffectRemoved
    };
-   Type type;
-   std::shared_ptr<Track> track; ///< null, if changes happened in the project scope
+   Type type{};
+   Track *track{}; ///< null, if changes happened in the project scope
 };
 
 class REALTIME_EFFECTS_API RealtimeEffectManager final :

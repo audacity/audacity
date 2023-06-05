@@ -289,7 +289,7 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
       return nullptr;
    Publish({
       RealtimeEffectManagerMessage::Type::EffectAdded,
-      pLeader ? pLeader->shared_from_this() : nullptr
+      pLeader ? pLeader : nullptr
    });
    return pState;
 }
@@ -312,8 +312,7 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
    if (mActive)
       pOldState->Finalize();
    Publish({
-      RealtimeEffectManagerMessage::Type::EffectReplaced,
-      pLeader ? pLeader->shared_from_this() : nullptr
+      RealtimeEffectManagerMessage::Type::EffectReplaced, pLeader
    });
    return pNewState;
 }
@@ -330,7 +329,7 @@ void RealtimeEffectManager::RemoveState(
       pState->Finalize();
    Publish({
       RealtimeEffectManagerMessage::Type::EffectRemoved,
-      pLeader ? pLeader->shared_from_this() : nullptr
+      pLeader ? pLeader : nullptr
    });
 }
 

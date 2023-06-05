@@ -331,7 +331,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       {
          if(msg.track)
             //update "effects" button 
-            RefreshTrack(msg.track.get());
+            RefreshTrack(msg.track);
       });
 
    UpdatePrefs();
