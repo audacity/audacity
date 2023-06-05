@@ -1221,6 +1221,8 @@ bool WaveClip::CheckInvariants() const
 
 WaveClip::Transaction::Transaction(WaveClip &clip)
    : clip{ clip }
+   , mTrimLeft{ clip.mTrimLeft }
+   , mTrimRight{ clip.mTrimRight }
 {
    sequences.reserve(clip.mSequences.size());
    auto &factory = clip.GetFactory();
@@ -1234,5 +1236,7 @@ WaveClip::Transaction::~Transaction()
 {
    if (!committed) {
       clip.mSequences.swap(sequences);
+      clip.mTrimLeft = mTrimLeft;
+      clip.mTrimRight = mTrimRight;
    }
 }

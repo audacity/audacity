@@ -437,6 +437,8 @@ private:
 
       WaveClip &clip;
       std::vector<std::unique_ptr<Sequence>> sequences;
+      const double mTrimLeft,
+         mTrimRight;
       bool committed{ false };
    };
 
