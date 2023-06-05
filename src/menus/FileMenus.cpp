@@ -75,7 +75,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
 
       // Append the "macro-output" directory to the path
       const wxString macroDir( "macro-output" );
-      if (fileName.GetDirs().back() != macroDir) {
+      if (fileName.GetDirs().empty() || fileName.GetDirs().back() != macroDir) {
          fileName.AppendDir(macroDir);
       }
 
