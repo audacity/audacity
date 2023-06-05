@@ -436,28 +436,8 @@ void ShareAudioDialog::StartUploadProcess()
 void ShareAudioDialog::HandleUploadSucceeded(
    const UploadSuccessfulPayload& payload)
 {
-   mProgressPanel.timePanel->Hide();
-   mProgressPanel.title->SetLabel(XO("Upload complete!").Translation());
-   mProgressPanel.info->Show();
-
-   mProgressPanel.info->SetLabel(
-      "By pressing continue, you will be taken to audio.com and given a shareable link.");
-   mProgressPanel.info->Wrap(mProgressPanel.root->GetSize().GetWidth());
-
-   mContinueAction = [this, slug = std::string(payload.audioSlug)]()
-   {
-      EndModal(wxID_CLOSE);
-      auto url = wxString::Format(
-         "https://audio.com/%s/%s/edit", GetUserService().GetUserSlug(),
-         audacity::ToWXString(slug));
-      
-      OpenInDefaultBrowser(url);
-   };
-
-   mContinueButton->Show();
-
-   Layout();
-   Fit();
+   EndModal(wxID_CLOSE);
+   OpenInDefaultBrowser(wxString { payload.audioUrl });
 }
 
 void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
@@ -466,12 +446,7 @@ void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
 
    TranslatableString message;
 
-   if (payload.status == 401)
-   {
-      message = XO(
-         "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.");
-   }
-   else
+   if (!payload.message.empty())
    {
       auto details = payload.message;
 
@@ -479,6 +454,11 @@ void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
          details += " " + err.second;
       
       message = XO("Error: %s").Format(details);
+   }
+   else
+   {
+      message = XO(
+         "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.");
    }
 
    BasicUI::ShowErrorDialog(

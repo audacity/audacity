@@ -35,6 +35,8 @@ public:
    std::string GetAPIUrl(std::string_view apiURI) const;
    //! Helper to construct the page URL for the anonymous upload last stage
    std::string GetFinishUploadPage(std::string_view audioID, std::string_view token) const;
+   //! Helper to construct the page URL for the authorised upload
+   std::string GetAudioURL(std::string_view userSlug, std::string_view audioSlug) const;
    //! Timeout between progress callbacks
    std::chrono::milliseconds GetProgressCallbackTimeout() const;
    //! Preferred audio format
