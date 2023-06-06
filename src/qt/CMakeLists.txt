@@ -9,6 +9,8 @@ set(SOURCES
    EditToolbarHandler.h
    ToolsToolbarHandler.cpp
    ToolsToolbarHandler.h
+   TranslationManager.cpp
+   TranslationManager.h
    TransportToolbarHandler.cpp
    TransportToolbarHandler.h
 )
@@ -24,7 +26,17 @@ qt_add_resources(QT_RESOURCES
 
 add_subdirectory(uicomponents)
 
+set(QT_TRANSLATION_SOURCES
+   translations/de.ts
+)
+
 qt_add_executable(${QAUDACITY} ${SOURCES} ${QT_RESOURCES} MANUAL_FINALIZATION)
+
+qt_add_translations(
+   ${QAUDACITY}
+   RESOURCE_PREFIX "/translations"
+   TS_FILES ${QT_TRANSLATION_SOURCES}
+)
 
 set(QML_SOURCES
    qml/main.qml

@@ -17,10 +17,15 @@ ApplicationWindow {
    required property ApplicationConfiguration appConfig
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
+   property string language: "en"
 
    QtObject {
       id: testers
       property bool volumeVisible: false
+   }
+
+   TranslationManager {
+      id: translationManager
    }
 
    menuBar: MenuBar {
@@ -76,8 +81,32 @@ ApplicationWindow {
       }
 
       Menu {
-         title: qsTr("Testers")
+         title: qsTr("Language")
+         MenuItem {
+            text: "English"
+            autoExclusive: true
+            checkable: true
+            checked: language === "en"
+            onTriggered:{
+               language = "en"
+               translationManager.ChangeLanguage(language)
+            }
+         }
 
+         MenuItem {
+            text: "Deutsch"
+            autoExclusive: true
+            checkable: true
+            checked: language === "de"
+            onTriggered: {
+               language = "de"
+               translationManager.ChangeLanguage(language)
+            }
+         }
+      }
+
+      Menu {
+         title: qsTr("Testers")
          MenuItem {
             text: qsTr("VolumeControl")
             checkable: true
