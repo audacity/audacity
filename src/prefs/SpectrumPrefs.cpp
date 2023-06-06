@@ -395,19 +395,14 @@ bool SpectrumPrefs::Validate()
 void SpectrumPrefs::Rollback()
 {
    if (mWt) {
-      auto channels = TrackList::Channels(mWt);
-
-      for (auto channel : channels) {
-         if (mOrigDefaulted) {
-            SpectrogramSettings::Reset(*channel);
-            SpectrogramBounds::Get(*channel).SetBounds(-1, -1);
-         }
-         else {
-            auto &settings = SpectrogramSettings::Own(*channel);
-            SpectrogramBounds::Get(*channel)
-               .SetBounds(mOrigMin, mOrigMax);
-            settings = mOrigSettings;
-         }
+      if (mOrigDefaulted) {
+         SpectrogramSettings::Reset(*mWt);
+         SpectrogramBounds::Get(*mWt).SetBounds(-1, -1);
+      }
+      else {
+         auto &settings = SpectrogramSettings::Own(*mWt);
+         SpectrogramBounds::Get(*mWt).SetBounds(mOrigMin, mOrigMax);
+         settings = mOrigSettings;
       }
    }
 
@@ -418,9 +413,7 @@ void SpectrumPrefs::Rollback()
 
    const bool isOpenPage = this->IsShown();
    if (mWt && isOpenPage) {
-      auto channels = TrackList::Channels(mWt);
-      for (auto channel : channels)
-         WaveTrackView::Get( *channel ).RestorePlacements( mOrigPlacements );
+      WaveTrackView::Get(*mWt).RestorePlacements(mOrigPlacements);
    }
 
    if (isOpenPage) {
@@ -446,19 +439,16 @@ void SpectrumPrefs::Preview()
    mTempSettings.ConvertToActualWindowSizes();
 
    if (mWt) {
-      for (auto channel : TrackList::Channels(mWt)) {
-         if (mDefaulted) {
-            SpectrogramSettings::Reset(*channel);
-            // ... and so that the vertical scale also defaults:
-            SpectrogramBounds::Get(*channel)
-               .SetBounds(-1, -1);
-         }
-         else {
-            SpectrogramSettings &settings = SpectrogramSettings::Own(*channel);
-            SpectrogramBounds::Get(*channel)
-               .SetBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
-            settings = mTempSettings;
-         }
+      if (mDefaulted) {
+         SpectrogramSettings::Reset(*mWt);
+         // ... and so that the vertical scale also defaults:
+         SpectrogramBounds::Get(*mWt).SetBounds(-1, -1);
+      }
+      else {
+         SpectrogramSettings &settings = SpectrogramSettings::Own(*mWt);
+         SpectrogramBounds::Get(*mWt)
+            .SetBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
+         settings = mTempSettings;
       }
    }
 

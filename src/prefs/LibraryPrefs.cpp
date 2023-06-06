@@ -27,9 +27,9 @@ MP3 and FFmpeg encoding libraries.
 ////////////////////////////////////////////////////////////////////////////////
 static const auto PathStart = wxT("LibraryPreferences");
 
-Registry::GroupItem &LibraryPrefs::PopulatorItem::Registry()
+Registry::GroupItemBase &LibraryPrefs::PopulatorItem::Registry()
 {
-   static Registry::TransparentGroupItem<> registry{ PathStart };
+   static Registry::GroupItem<> registry{ PathStart };
    return registry;
 }
 
@@ -54,7 +54,7 @@ bool LibraryPrefs::RegisteredControls::Any()
 }
 
 LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
-/* i18-hint: refers to optional plug-in software libraries */
+/* i18n-hint: refers to optional plug-in software libraries */
 :   PrefsPanel(parent, winid, XO("Libraries"))
 {
    Populate();
@@ -112,7 +112,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          // visit the registry to collect the plug-ins properly
          // sorted
-         TransparentGroupItem<> top{ PathStart };
+         GroupItem<> top{ PathStart };
          Registry::Visit( *this, &top, &PopulatorItem::Registry() );
       }
 

@@ -49,9 +49,9 @@ void DoSelectTimeAndAudioTracks
 
    if( bAllTracks ) {
       // Unselect all tracks before selecting audio.
-      for (auto t : tracks.Any())
+      for (auto t : tracks.Leaders())
          t->SetSelected(false);
-      for (auto t : tracks.Any<WaveTrack>())
+      for (auto t : tracks.Leaders<WaveTrack>())
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
@@ -72,7 +72,7 @@ void DoSelectTimeAndTracks
          tracks.GetMinOffset(), tracks.GetEndTime());
 
    if( bAllTracks ) {
-      for (auto t : tracks.Any())
+      for (auto t : tracks.Leaders())
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
@@ -82,7 +82,7 @@ void DoSelectTimeAndTracks
 void SelectNone( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
-   for (auto t : tracks.Any())
+   for (auto t : tracks.Leaders())
       t->SetSelected(false);
 
    auto &trackPanel = TrackPanel::Get( project );
@@ -276,10 +276,9 @@ void OnSetRegion(AudacityProject &project,
    else
    {
       auto fmt = formats.GetSelectionFormat();
-      auto rate = ProjectRate::Get(project).GetRate();
 
       TimeDialog dlg(&window, dialogTitle,
-         fmt, rate, getValue(), XO("Position"));
+         fmt, project, getValue(), XO("Position"));
 
       if (wxID_OK == dlg.ShowModal())
       {

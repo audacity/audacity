@@ -54,31 +54,30 @@ void RegenerateLinearDBValues(int dBRange, float min, float max, int height)
 
    double centerSpacingMark = 0;
 
-   for (double major = 0.1; major < 2; major += .1) {
+   for (double major = 0.1; major < .95; major += .1) {
       double val = std::round(major * 10) / 10;
       double mappedVal = std::trunc(-dBRange * val);
-      double pixVal = mappedVal < -dBRange ? - 2 * dBRange - mappedVal : mappedVal;
-      double pixDist = fabs(CENTER - ((1 - DB_TO_LINEAR(pixVal)) * CENTER)) / SIZE_SCALE;
+      double pixDist = CENTER - ((1 - DB_TO_LINEAR(mappedVal)) * CENTER) / SIZE_SCALE;
       if (pixDist > CENTER_SPACING) {
-         if (major - EPSILON <= 1)
-            centerSpacingMark = major;
-         if (fabs(major - 1) > EPSILON)
-            majorValues.push_back(mappedVal);
+         centerSpacingMark = major;
+         majorValues.push_back(mappedVal);
+         majorValues.push_back(-2 * dBRange - mappedVal);
       }
    }
-   for (double minor = 0.05; minor <= 1.95 + EPSILON; minor += .1) {
+   for (double minor = 0.05; minor < 1 ; minor += .1) {
       double val = std::round(minor * 100) / 100;
       double mappedVal = std::trunc(-dBRange * val);
-      double spacing = fabs(fabs(1 - minor) - 1);
-      if (spacing < centerSpacingMark) {
+      if (minor < centerSpacingMark) {
          minorValues.push_back(mappedVal);
+         minorValues.push_back(-2 * dBRange - mappedVal);
       }
    }
-   for (int minorMinor = 1; minorMinor < 2 * dBRange; minorMinor++) {
+   for (int minorMinor = 1; minorMinor < dBRange - EPSILON; minorMinor++) {
       double absDist = fabs(fabs(dBRange - minorMinor) - dBRange) / dBRange;
       if (absDist < centerSpacingMark) {
          if ((minorMinor % (int)std::round(dBRange / 20)) != 0) {
             minorMinorValues.push_back(-minorMinor);
+            minorMinorValues.push_back(-2 * dBRange + minorMinor);
          }
       }
    }
@@ -160,14 +159,12 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          return RefreshNone;
 
       float olddBRange = settings.dBRange;
-      for (auto channel : TrackList::Channels(wt)) {
-         auto &channelSettings = WaveformSettings::Get(*channel);
-         if (steps < 0)
-            // Zoom out
-            channelSettings.NextLowerDBRange();
-         else
-            channelSettings.NextHigherDBRange();
-      }
+      auto &settings = WaveformSettings::Get(*wt);
+      if (steps < 0)
+         // Zoom out
+         settings.NextLowerDBRange();
+      else
+         settings.NextHigherDBRange();
 
       float newdBRange = settings.dBRange;
 
@@ -185,11 +182,9 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
          max = std::min(extreme, max * olddBRange / newdBRange);
          min = std::max(-extreme, min * olddBRange / newdBRange);
-         for (auto channel : TrackList::Channels(wt)) {
-            auto &cache = WaveformScale::Get(*channel);
-            SetLastdBRange(cache, *channel);
-            cache.SetDisplayBounds(min, max);
-         }
+         auto &cache = WaveformScale::Get(*wt);
+         SetLastdBRange(cache, *wt);
+         cache.SetDisplayBounds(min, max);
       }
    }
    else if (event.CmdDown() && !event.ShiftDown()) {
@@ -220,9 +215,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          float newTop = std::min(topLimit, top + delta);
          const float newBottom = std::max(bottomLimit, newTop - range);
          newTop = std::min(topLimit, newBottom + range);
-         for (auto channel : TrackList::Channels(wt))
-            WaveformScale::Get(*channel)
-               .SetDisplayBounds(newBottom, newTop);
+         WaveformScale::Get(*wt).SetDisplayBounds(newBottom, newTop);
       }
    }
    else
@@ -353,7 +346,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       }
    }
    else {
-      vruler->SetUnits({});
+      vruler->SetUnits(XO("dB"));
       
       auto &cache = WaveformScale::Get(*wt);
       

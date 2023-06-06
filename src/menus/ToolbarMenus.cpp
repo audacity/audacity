@@ -31,6 +31,6 @@ BaseItemSharedPtr ToolbarsMenu()
 
 AttachedItem sAttachment1{
    Placement{ wxT("View/Other"), { OrderingHint::Begin } },
-   Shared( ToolbarsMenu() )
+   Indirect(ToolbarsMenu())
 };
 }

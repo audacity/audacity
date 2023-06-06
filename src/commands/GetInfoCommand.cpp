@@ -41,7 +41,7 @@ This class now lists
 #include "prefs/WaveformSettings.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
-#include "../TimeTrack.h"
+#include "TimeTrack.h"
 #include "Envelope.h"
 
 #include "SelectCommand.h"
@@ -491,7 +491,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddItem( t->GetEndTime(), "end" );
          context.AddItem( t->GetPan() , "pan");
          context.AddItem( t->GetGain() , "gain");
-         context.AddItem( TrackList::Channels(t).size(), "channels");
+         context.AddItem( TrackList::NChannels(*t), "channels");
          context.AddBool( t->GetSolo(), "solo" );
          context.AddBool( t->GetMute(), "mute");
          context.AddItem( vzmin, "VZoomMin");

@@ -749,7 +749,8 @@ void AudioSetupToolBar::CommonMenuItemSteps(bool audioSettingsChosen)
          PrefsPanel::Factories factories;
          factories.push_back(PrefsPanel::PrefsNode(DevicePrefsFactory));
 
-         ViewDeviceSettingsDialog dialog(&GetProjectFrame(mProject), mProject, XO("Audio Settings:"), factories, 0);
+         ViewDeviceSettingsDialog dialog(
+            &GetProjectFrame(mProject), mProject, {}, factories, 0);
          dialog.SetSize(600, 420);
          dialog.Center();
 

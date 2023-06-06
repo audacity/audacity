@@ -1007,21 +1007,17 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    if (bParseSuccess) {
       auto &formats = ProjectNumericFormats::Get( project );
       auto &settings = ProjectSettings::Get( project );
-      window.mbInitializingScrollbar = true; // this must precede AS_SetSnapTo
-         // to make persistence of the vertical scrollbar position work
+      window.mbInitializingScrollbar = true;
 
       auto &selectionManager = ProjectSelectionManager::Get( project );
-      selectionManager.AS_SetSnapTo(settings.GetSnapTo());
+
       selectionManager.AS_SetSelectionFormat(formats.GetSelectionFormat());
       selectionManager.TT_SetAudioTimeFormat(formats.GetAudioTimeFormat());
       selectionManager.SSBL_SetFrequencySelectionFormatName(
       formats.GetFrequencySelectionFormatName());
       selectionManager.SSBL_SetBandwidthSelectionFormatName(
-      formats.GetBandwidthSelectionFormatName());
-
-      SelectionBar::Get( project )
-         .SetRate( ProjectRate::Get(project).GetRate() );
-
+         formats.GetBandwidthSelectionFormatName());
+      
       ProjectHistory::Get( project ).InitialState();
       TrackFocus::Get( project ).Set( *tracks.Any().begin() );
       window.HandleResize();
@@ -1099,9 +1095,11 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo)
    {
-      for (auto& track : newTracks)
-         for (auto& channel : track)
-            channel->SetMute(true);
+      // Iterate vector of vectors of pointers to tracks that are not yet
+      // in the track list
+      for (auto& group : newTracks)
+         if (!group.empty())
+            (*group.begin())->SetMute(true);
    }
 
    // Must add all tracks first (before using Track::IsLeader)
@@ -1130,18 +1128,16 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
             { return pTrack->IsLeader(); } );
 
    for (const auto &newTrack : results) {
-      if ( newTrack->IsLeader() )
+      if ( newTrack->IsLeader() ) {
          // Count groups only
          ++i;
-
-      newTrack->SetSelected(true);
-
-      
-      if (useSuffix)
-          //i18n-hint Name default name assigned to a clip on track import
-          newTrack->SetName(XC("%s %d", "clip name template").Format(trackNameBase, i + 1).Translation());
-      else
-          newTrack->SetName(trackNameBase);
+         newTrack->SetSelected(true);
+         if (useSuffix)
+             //i18n-hint Name default name assigned to a clip on track import
+             newTrack->SetName(XC("%s %d", "clip name template").Format(trackNameBase, i + 1).Translation());
+         else
+             newTrack->SetName(trackNameBase);
+      }
 
       newTrack->TypeSwitch([&](WaveTrack *wt) {
          if (newRate == 0)
@@ -1156,7 +1152,6 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // if this is the first file that is imported
    if (initiallyEmpty && newRate > 0) {
       ProjectRate::Get(project).SetRate( newRate );
-      SelectionBar::Get( project ).SetRate( newRate );
    }
 
    history.PushState(XO("Imported '%s'").Format( fileName ),

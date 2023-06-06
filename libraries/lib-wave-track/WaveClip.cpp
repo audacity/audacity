@@ -608,6 +608,16 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
 
    auto newClip = std::make_unique< WaveClip >
       (*this, mSequence->GetFactory(), true, clip_t0, clip_t1);
+   if(t1 < GetPlayEndTime())
+   {
+      newClip->ClearSequence(t1, newClip->GetSequenceEndTime());
+      newClip->SetTrimRight(.0);
+   }
+   if(t0 > GetPlayStartTime())
+   {
+      newClip->ClearSequence(newClip->GetSequenceStartTime(), t0);
+      newClip->SetTrimLeft(.0);
+   }
 
    newClip->SetSequenceStartTime( clip_t0 - GetSequenceStartTime() );
 
@@ -826,6 +836,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       // Use No-fail-guarantee in these steps
       mSequence = std::move(newSequence);
       mRate = rate;
+      Flush();
       Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
    }
 }

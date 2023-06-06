@@ -21,6 +21,7 @@
 #include "GUIPrefs.h"
 
 #include <wx/defs.h>
+#include <mutex> // once_flag
 
 #include "FileNames.h"
 #include "Languages.h"
@@ -29,6 +30,7 @@
 #include "ShuttleGui.h"
 
 #include "Decibels.h"
+#include "Beats.h"
 
 #include "ThemePrefs.h"
 #include "AColor.h"
@@ -150,7 +152,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
          S.TieChoice( XXO("Meter dB &range:"), DBSetting);
       }
       S.EndMultiColumn();
-
    }
    S.EndStatic();
 
@@ -231,6 +232,7 @@ bool GUIPrefs::Commit()
 
    GUIBlendThemes.Invalidate();
    DecibelScaleCutoff.Invalidate();
+
    return true;
 }
 

@@ -557,7 +557,7 @@ BaseItemSharedPtr FileMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( FileMenu() )
+   Indirect(FileMenu())
 };
 
 BaseItemSharedPtr HiddenFileMenu()
@@ -583,7 +583,7 @@ BaseItemSharedPtr HiddenFileMenu()
 
 AttachedItem sAttachment2{
    wxT(""),
-   Shared( HiddenFileMenu() )
+   Indirect(HiddenFileMenu())
 };
 
 }

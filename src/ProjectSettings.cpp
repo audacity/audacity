@@ -16,9 +16,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Project.h"
 #include "QualitySettings.h"
 #include "widgets/NumericTextCtrl.h"
-#include "prefs/TracksBehaviorsPrefs.h"
-#include "XMLWriter.h"
-#include "XMLTagHandler.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
@@ -55,7 +52,6 @@ const ProjectSettings &ProjectSettings::Get( const AudacityProject &project )
 
 ProjectSettings::ProjectSettings(AudacityProject &project)
    : mProject{ project }
-   , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
    , mCurrentBrushRadius ( 5 )
 {
    bool multiToolActive = false;
@@ -74,10 +70,6 @@ void ProjectSettings::UpdatePrefs()
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true);
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
-   mSoloPref = TracksBehaviorsSolo.Read();
-   // Update the old default to the NEW default.
-   if (mSoloPref == wxT("Standard"))
-      mSoloPref = wxT("Simple");
    gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"),
       &mTracksFitVerticallyZoomed, false);
    //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"),
@@ -98,16 +90,6 @@ void ProjectSettings::UpdatePrefs()
 #endif
 }
 
-void ProjectSettings::SetSnapTo(int snap)
-{
-   mSnapTo = snap;
-}
-   
-int ProjectSettings::GetSnapTo() const
-{
-   return mSnapTo;
-}
-
 void ProjectSettings::SetTool(int tool) {
    if (auto oldValue = mCurrentTool; oldValue != tool) {
       mCurrentTool = tool;
@@ -115,21 +97,3 @@ void ProjectSettings::SetTool(int tool) {
    }
 }
 
-static ProjectFileIORegistry::AttributeWriterEntry entry {
-[](const AudacityProject &project, XMLWriter &xmlFile){
-   auto &settings = ProjectSettings::Get(project);
-   xmlFile.WriteAttr(wxT("snapto"),
-                     settings.GetSnapTo() ? wxT("on") : wxT("off"));
-}
-};
-
-static ProjectFileIORegistry::AttributeReaderEntries entries {
-// Just a pointer to function, but needing overload resolution as non-const:
-(ProjectSettings& (*)(AudacityProject &)) &ProjectSettings::Get, {
-   // PRL:  The following has persisted as a per-project setting for long.
-   // Maybe that should be abandoned.  Enough to save changes in the user
-   // preference file.
-   { "snapto", [](auto &settings, auto value){
-      settings.SetSnapTo(value.ToWString() == wxT("on") ? true : false);
-   } },
-} };

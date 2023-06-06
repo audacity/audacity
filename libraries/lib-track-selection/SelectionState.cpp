@@ -54,8 +54,7 @@ void SelectionState::SelectTrack(
 {
    //bool wasCorrect = (selected == track.GetSelected());
 
-   for (auto channel : TrackList::Channels(&track))
-      channel->SetSelected(selected);
+   track.SetSelected(selected);
 
    if (updateLastPicked)
       mLastPickedTrack = track.SharedPointer();
@@ -77,12 +76,17 @@ void SelectionState::SelectTrack(
 */
 }
 
-void SelectionState::SelectRangeOfTracks
-( TrackList &tracks, Track &rsTrack, Track &reTrack )
+void SelectionState::SelectRangeOfTracks(
+   TrackList &tracks, Track &rsTrack, Track &reTrack )
 {
    Track *sTrack = &rsTrack, *eTrack = &reTrack;
    // Swap the track pointers if needed
-   if (eTrack->GetIndex() < sTrack->GetIndex())
+   auto begin = tracks.Leaders().begin(),
+      iterS = tracks.FindLeader(sTrack),
+      iterE = tracks.FindLeader(eTrack);
+   auto indS = std::distance(begin, iterS),
+      indE = std::distance(begin, iterE);
+   if (indE < indS)
       std::swap(sTrack, eTrack);
 
    for (auto track :
@@ -96,22 +100,29 @@ void SelectionState::SelectNone( TrackList &tracks )
       SelectTrack( *t, false, false );
 }
 
-void SelectionState::ChangeSelectionOnShiftClick
-( TrackList &tracks, Track &track )
+void SelectionState::ChangeSelectionOnShiftClick(
+   TrackList &tracks, Track &track)
 {
    // We will either extend from the first or from the last.
    auto pExtendFrom = tracks.Lock(mLastPickedTrack);
 
-   if( !pExtendFrom ) {
+   if (!pExtendFrom) {
       auto trackRange = tracks.Selected();
       auto pFirst = *trackRange.begin();
 
       // If our track is at or after the first, extend from the first.
-      if( pFirst && track.GetIndex() >= pFirst->GetIndex() )
-         pExtendFrom = pFirst->SharedPointer();
+      if (pFirst) {
+         auto begin = tracks.Leaders().begin(),
+            iterT = tracks.FindLeader(&track),
+            iterF = tracks.FindLeader(pFirst);
+         auto indT = std::distance(begin, iterT),
+            indF = std::distance(begin, iterF);
+         if (indT >= indF)
+            pExtendFrom = pFirst->SharedPointer();
+      }
 
       // Our track was earlier than the first.  Extend from the last.
-      if( !pExtendFrom )
+      if (!pExtendFrom)
          pExtendFrom = Track::SharedPointer( *trackRange.rbegin() );
    }
 
@@ -149,8 +160,10 @@ SelectionStateChanger::SelectionStateChanger
    , mInitialLastPickedTrack{ state.mLastPickedTrack }
 {
    // Save initial state of track selections
+   const auto range = tracks.Leaders();
    mInitialTrackSelection.clear();
-   for (const auto track : tracks.Any()) {
+   mInitialTrackSelection.reserve(range.size());
+   for (const auto track : range) {
       const bool isSelected = track->GetSelected();
       mInitialTrackSelection.push_back(isSelected);
    }
@@ -165,7 +178,7 @@ SelectionStateChanger::~SelectionStateChanger()
          it = mInitialTrackSelection.begin(),
          end = mInitialTrackSelection.end();
 
-      for (auto track : mTracks.Any()) {
+      for (auto track : mTracks.Leaders()) {
          if (it == end)
             break;
          track->SetSelected( *it++ );

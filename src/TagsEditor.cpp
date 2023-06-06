@@ -296,7 +296,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
 
       if (mGrid == NULL) {
-         mGrid = safenew Grid(S.GetParent(),
+         mGrid = safenew Grid(FormatterContext::EmptyContext(), S.GetParent(),
                           wxID_ANY,
                           wxDefaultPosition,
                           wxDefaultSize,

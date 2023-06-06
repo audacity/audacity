@@ -78,12 +78,6 @@ struct AudioIOEvent {
 };
 
 struct AUDIO_IO_API TransportTracks final {
-   TransportTracks() = default;
-   TransportTracks(
-      TrackList &trackList, bool selectedOnly,
-      bool nonWaveToo = false //!< if true, collect all PlayableTracks
-   );
-
    SampleTrackConstArray playbackTracks;
    WritableSampleTrackArray captureTracks;
    PlayableTrackConstArray otherPlayableTracks;
@@ -364,6 +358,7 @@ protected:
    std::weak_ptr< AudioIOListener > mListener;
 
    bool mUsingAlsa { false };
+   bool mUsingJack { false };
 
    // For cacheing supported sample rates
    static double mCachedBestRateOut;

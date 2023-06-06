@@ -375,11 +375,11 @@ std::unique_ptr<EffectEditor> EffectToneGen::PopulateOrExchange(
       S.AddPrompt(XXO("&Duration:"));
       auto &extra = access.Get().extra;
       mToneDurationT = safenew
-         NumericTextCtrl(S.GetParent(), wxID_ANY,
-                         NumericConverter::TIME,
+         NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                         S.GetParent(), wxID_ANY,
+                         NumericConverterType_TIME(),
                          extra.GetDurationFormat(),
                          extra.GetDuration(),
-                         mProjectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
       S.Name(XO("Duration"))

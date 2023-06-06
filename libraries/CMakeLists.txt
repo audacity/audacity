@@ -40,7 +40,17 @@ set( LIBRARIES
    lib-numeric-formats
    lib-effects
    lib-time-frequency-selection
-)
+   lib-time-track
+   lib-vst3
+   lib-snapping
+   lib-vst
+   lib-lv2
+   lib-ladspa
+   lib-audio-unit
+   lib-playable-track
+   lib-time-and-pitch
+   )
+endif()
 
 if( NOT ${_OPT}enable_experimental_qt_support )
    list( APPEND LIBRARIES
@@ -52,7 +62,6 @@ if( NOT ${_OPT}enable_experimental_qt_support )
       lib-shuttlegui
    )
 endif()
-
 
 if ( ${_OPT}has_networking )
    list( APPEND LIBRARIES lib-network-manager)

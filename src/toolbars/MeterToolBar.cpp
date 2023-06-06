@@ -614,7 +614,7 @@ BaseItemSharedPtr ExtraMixerMenu()
 
 AttachedItem sAttachment4{
    wxT("Optional/Extra/Part1"),
-   Shared( ExtraMixerMenu() )
+   Indirect(ExtraMixerMenu())
 };
 
 }

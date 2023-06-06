@@ -19,8 +19,6 @@
 class EffectDefinitionInterface;
 class ShuttleGui;
 
-constexpr auto OptionsKey = L"Options";
-constexpr auto UseLatencyKey = L"UseLatency";
 constexpr auto UITypeKey = L"UIType";
 
 ///////////////////////////////////////////////////////////////////////////////

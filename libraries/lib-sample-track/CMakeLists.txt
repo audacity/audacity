@@ -32,6 +32,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-audio-graph-interface
+   lib-playable-track-interface
 )
 audacity_library( lib-sample-track "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -92,6 +92,7 @@ EnumSetting< bool > ImportExportPrefs::AllegroStyleSetting{
    wxT("/FileFormats/AllegroStyleChoice"),
    {
       EnumValueSymbol{ wxT("Seconds"), XXO("&Seconds") },
+      /* i18n-hint: The music theory "beat" */
       EnumValueSymbol{ wxT("Beats"), XXO("&Beats") },
    },
    0, // true

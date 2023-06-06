@@ -57,7 +57,7 @@ class LibraryPrefs final : public PrefsPanel
 
  private:
    struct AUDACITY_DLL_API PopulatorItem final : Registry::SingleItem {
-      static Registry::GroupItem &Registry();
+      static Registry::GroupItemBase &Registry();
    
       PopulatorItem(const Identifier &id, Populator populator);
 

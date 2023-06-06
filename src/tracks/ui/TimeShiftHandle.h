@@ -135,7 +135,7 @@ public:
        In case of failure, track states are unspecified
     
        Default implementation does nothing and returns true */
-   virtual bool Attach( Intervals intervals );
+   virtual bool Attach( Intervals intervals, double offset );
 
    //! When dragging is done, do (once) the final steps of migration (which may be expensive)
    /*! @return success
@@ -272,14 +272,6 @@ public:
 
    bool IsGripHit() const { return mGripHit; }
 
-   // Try to move clips from one track to another, before also moving
-   // by some horizontal amount, which may be slightly adjusted to fit the
-   // destination tracks.
-   static bool DoSlideVertical(
-      ViewInfo &viewInfo, wxCoord xx,
-      ClipMoveState &state, TrackList &trackList,
-      Track &dstTrack, double &desiredSlideAmount );
-
    static UIHandlePtr HitAnywhere
       (std::weak_ptr<TimeShiftHandle> &holder,
        const std::shared_ptr<Track> &pTrack, bool gripHit);
@@ -317,6 +309,14 @@ protected:
    //There were attempt to move clip/track horizontally, or to move it vertically
    bool WasMoved() const;
 private:
+
+   // Try to move clips from one track to another with offset, allowing 1px tolerance,
+   // that will move intervals and reset the origin
+   void DoSlideVertical(
+      ViewInfo &viewInfo, wxCoord xx,
+      TrackList &trackList,
+      const std::shared_ptr<Track>& dstTrack, double& desiredSlideAmount );
+
    // TrackPanelDrawable implementation
    void Draw(
       TrackPanelDrawingContext &context,

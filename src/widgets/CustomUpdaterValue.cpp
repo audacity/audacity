@@ -34,7 +34,7 @@ bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    const int mOrientation = context.mOrientation;
 
    const RulerStruct::Fonts& mFonts = *context.mpFonts;
-   const int mSpacing = context.mSpacing;
+   constexpr int spacing = 2;
    const bool mFlip = context.mFlip;
    const TranslatableString mUnits = context.mUnits;
    const bool mLabelEdges = context.mLabelEdges;
@@ -84,7 +84,7 @@ bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
       lab,
       dc, font,
       outputs.bits,
-      mLeft, mTop, mSpacing, mFonts.lead,
+      mLeft, mTop, spacing, mFonts.lead,
       mFlip,
       mOrientation);
 

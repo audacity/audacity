@@ -14,6 +14,7 @@
 
 #include "Identifier.h"
 
+#include "Callable.h"
 #include "ClientData.h"
 #include "CommandFunctors.h"
 #include "CommandFlag.h"
@@ -276,8 +277,7 @@ class AUDACITY_DLL_API CommandManager final
    ///
    /// Formatting summaries that include shortcut keys
    ///
-   TranslatableString DescribeCommandsAndShortcuts
-   (
+   TranslatableString DescribeCommandsAndShortcuts(
        // If a shortcut key is defined for the command, then it is appended,
        // parenthesized, after the translated name.
        const ComponentInterfaceSymbol commands[], size_t nCommands) const;
@@ -391,13 +391,15 @@ private:
 struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
 {
    // final overrides
-   void BeginGroup( Registry::GroupItem &item, const Path &path ) final;
-   void EndGroup( Registry::GroupItem &item, const Path& ) final;
+   void BeginGroup( Registry::GroupItemBase &item, const Path &path ) final;
+   void EndGroup( Registry::GroupItemBase &item, const Path& ) final;
    void Visit( Registry::SingleItem &item, const Path &path ) final;
 
    // added virtuals
-   virtual void DoBeginGroup( Registry::GroupItem &item, const Path &path );
-   virtual void DoEndGroup( Registry::GroupItem &item, const Path &path );
+   //! Groups of type MenuItems are excluded from this callback
+   virtual void DoBeginGroup( Registry::GroupItemBase &item, const Path &path );
+   //! Groups of type MenuItems are excluded from this callback
+   virtual void DoEndGroup( Registry::GroupItemBase &item, const Path &path );
    virtual void DoVisit( Registry::SingleItem &item, const Path &path );
    virtual void DoSeparator();
 
@@ -430,19 +432,18 @@ namespace MenuTable {
 
    // Describes a main menu in the toolbar, or a sub-menu
    struct AUDACITY_DLL_API MenuItem final
-      : ConcreteGroupItem< false, ToolbarMenuVisitor >
+      : GroupItem<ToolbarMenuVisitor>
       , WholeMenu {
       // Construction from an internal name and a previously built-up
       // vector of pointers
-      MenuItem( const Identifier &internalName,
-         const TranslatableString &title_, BaseItemPtrs &&items_ );
+      MenuItem(const Identifier &internalName,
+         const TranslatableString &title, BaseItemPtrs &&items);
       // In-line, variadic constructor that doesn't require building a vector
-      template< typename... Args >
-         MenuItem( const Identifier &internalName,
-            const TranslatableString &title_, Args&&... args )
-            : ConcreteGroupItem< false, ToolbarMenuVisitor >{
-               internalName, std::forward<Args>(args)... }
-            , title{ title_ }
+      template<typename... Args>
+         MenuItem(const Identifier &internalName,
+            const TranslatableString &title, Args&&... args
+         )  : GroupItem{ internalName, std::forward<Args>(args)... }
+            , title{ title }
          {}
       ~MenuItem() override;
 
@@ -451,21 +452,19 @@ namespace MenuTable {
 
    // Collects other items that are conditionally shown or hidden, but are
    // always available to macro programming
-   struct ConditionalGroupItem final
-      : ConcreteGroupItem< false, ToolbarMenuVisitor > {
-      using Condition = std::function< bool() >;
+   struct ConditionalGroupItem final : GroupItem<ToolbarMenuVisitor> {
+      using Condition = std::function<bool()>;
 
       // Construction from an internal name and a previously built-up
       // vector of pointers
-      ConditionalGroupItem( const Identifier &internalName,
-         Condition condition_, BaseItemPtrs &&items_ );
+      ConditionalGroupItem(const Identifier &internalName,
+         Condition condition, BaseItemPtrs &&items);
       // In-line, variadic constructor that doesn't require building a vector
-      template< typename... Args >
-         ConditionalGroupItem( const Identifier &internalName,
-            Condition condition_, Args&&... args )
-            : ConcreteGroupItem< false, ToolbarMenuVisitor >{
-               internalName, std::forward<Args>(args)... }
-            , condition{ condition_ }
+      template<typename... Args>
+         ConditionalGroupItem(const Identifier &internalName,
+            Condition condition, Args&&... args
+         )  : GroupItem{ internalName, std::forward<Args>(args)... }
+            , condition{ condition }
          {}
       ~ConditionalGroupItem() override;
 
@@ -513,28 +512,28 @@ namespace MenuTable {
        @pre `finder != nullptr`
        */
       template< typename Handler >
-      CommandItem(const CommandID &name_,
-               const TranslatableString &label_in_,
+      CommandItem(const CommandID &name,
+               const TranslatableString &label_in,
                void (Handler::*pmf)(const CommandContext&),
-               CommandFlag flags_,
-               const CommandManager::Options &options_,
+               CommandFlag flags,
+               const CommandManager::Options &options = {},
                CommandHandlerFinder finder = FinderScope::DefaultFinder())
-         : CommandItem(name_, label_in_,
+         : CommandItem(name, label_in,
             CommandFunctorPointer{
                static_cast<CommandFunctorPointer::MemberFn>(pmf) },
-            flags_, options_, finder)
+            flags, options, finder)
       { assert(finder); }
 
       // Takes a pointer to nonmember function and delegates to the first
       // constructor
-      CommandItem(const CommandID &name_,
-               const TranslatableString &label_in_,
-               CommandFunctorPointer::NonMemberFn callback_,
-               CommandFlag flags_,
-               const CommandManager::Options &options_)
-         : CommandItem(name_, label_in_,
-            CommandFunctorPointer{ callback_ },
-            flags_, options_, nullptr)
+      CommandItem(const CommandID &name,
+               const TranslatableString &label_in,
+               CommandFunctorPointer::NonMemberFn callback,
+               CommandFlag flags,
+               const CommandManager::Options &options = {})
+         : CommandItem(name, label_in,
+            CommandFunctorPointer{ callback },
+            flags, options, nullptr)
       {}
    
       ~CommandItem() override;
@@ -551,7 +550,7 @@ namespace MenuTable {
    // in the CommandContext identifying the command
    struct AUDACITY_DLL_API CommandGroupItem final : SingleItem {
       CommandGroupItem(const Identifier &name_,
-               std::vector< ComponentInterfaceSymbol > items_,
+               std::vector<ComponentInterfaceSymbol> items_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
                bool isEffect_,
@@ -564,7 +563,7 @@ namespace MenuTable {
        */
       template< typename Handler >
       CommandGroupItem(const Identifier &name_,
-               std::vector< ComponentInterfaceSymbol > items_,
+               std::vector<ComponentInterfaceSymbol> items_,
                void (Handler::*pmf)(const CommandContext&),
                CommandFlag flags_,
                bool isEffect_,
@@ -577,14 +576,14 @@ namespace MenuTable {
 
       // Takes a pointer to nonmember function and delegates to the first
       // constructor
-      CommandGroupItem(const CommandID &name_,
-               std::vector< ComponentInterfaceSymbol > items_,
-               CommandFunctorPointer::NonMemberFn fn_,
-               CommandFlag flags_,
-               bool isEffect_)
-         : CommandGroupItem(name_, move(items_),
-            CommandFunctorPointer{ fn_ },
-            flags_, isEffect_, nullptr)
+      CommandGroupItem(const CommandID &name,
+               std::vector< ComponentInterfaceSymbol > items,
+               CommandFunctorPointer::NonMemberFn fn,
+               CommandFlag flags,
+               bool isEffect = false)
+         : CommandGroupItem(name, move(items),
+            CommandFunctorPointer{ fn },
+            flags, isEffect, nullptr)
       {}
 
       ~CommandGroupItem() override;
@@ -611,18 +610,27 @@ namespace MenuTable {
       Appender fn;
    };
 
-   struct MenuPart : ConcreteGroupItem< false, ToolbarMenuVisitor >, MenuSection
+   struct MenuPart : GroupItem<ToolbarMenuVisitor>, MenuSection
    {
       template< typename... Args >
       explicit
-      MenuPart( const Identifier &internalName, Args&&... args )
-         : ConcreteGroupItem< false, ToolbarMenuVisitor >{
-            internalName, std::forward< Args >( args )... }
+      MenuPart(const Identifier &internalName, Args&&... args )
+         : GroupItem{ internalName, std::forward<Args>(args)... }
       {}
+      ~MenuPart() override;
    };
-   using MenuItems = ConcreteGroupItem< true, ToolbarMenuVisitor >;
 
-   // The following, and Shared(), are the functions to use directly
+   //! Groups of this type are inlined in the menu tree organization.  They
+   //! (but not their contained items) are excluded from visitations using
+   //! MenuVisitor
+   struct MenuItems : GroupItem<ToolbarMenuVisitor> {
+      using GroupItem::GroupItem;
+      ~MenuItems() override;
+      //! Anonymous if its name is empty, else weakly ordered
+      Ordering GetOrdering() const override;
+   };
+
+   // The following, and Registry::Indirect(), are the functions to use directly
    // in writing table definitions.
 
    // Group items can be constructed two ways.
@@ -632,22 +640,14 @@ namespace MenuTable {
    // The name is untranslated and may be empty, to make the group transparent
    // in identification of items by path.  Otherwise try to keep the name
    // stable across Audacity versions.
-   template< typename... Args >
-   inline std::unique_ptr< MenuItems > Items(
-      const Identifier &internalName, Args&&... args )
-         { return std::make_unique< MenuItems >(
-            internalName, std::forward<Args>(args)... ); }
+   constexpr auto Items = Callable::UniqueMaker<MenuItems>();
 
    // Like Items, but insert a menu separator between the menu section and
    // any other items or sections before or after it in the same (innermost,
    // enclosing) menu.
    // It's not necessary that the sisters of sections be other sections, but it
    // might clarify the logical groupings.
-   template< typename... Args >
-   inline std::unique_ptr< MenuPart > Section(
-      const Identifier &internalName, Args&&... args )
-         { return std::make_unique< MenuPart >(
-            internalName, std::forward<Args>(args)... ); }
+   constexpr auto Section = Callable::UniqueMaker<MenuPart>();
    
    // Menu items can be constructed two ways, as for group items
    // Items will appear in a main toolbar menu or in a sub-menu.
@@ -655,15 +655,7 @@ namespace MenuTable {
    // versions.
    // If the name of a menu is empty, then subordinate items cannot be located
    // by path.
-   template< typename... Args >
-   inline std::unique_ptr<MenuItem> Menu(
-      const Identifier &internalName, const TranslatableString &title, Args&&... args )
-         { return std::make_unique<MenuItem>(
-            internalName, title, std::forward<Args>(args)... ); }
-   inline std::unique_ptr<MenuItem> Menu(
-      const Identifier &internalName, const TranslatableString &title, BaseItemPtrs &&items )
-         { return std::make_unique<MenuItem>(
-            internalName, title, std::move( items ) ); }
+   constexpr auto Menu = Callable::UniqueMaker<MenuItem>();
 
    // Conditional group items can be constructed two ways, as for group items
    // These items register in the CommandManager but are not shown in menus
@@ -671,104 +663,17 @@ namespace MenuTable {
    // The name is untranslated.  Try to keep the name stable across Audacity
    // versions.
    // Name for conditional group must be non-empty.
-   template< typename... Args >
-   inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
-      const Identifier &internalName,
-      ConditionalGroupItem::Condition condition, Args&&... args )
-         { return std::make_unique<ConditionalGroupItem>(
-            internalName, condition, std::forward<Args>(args)... ); }
-   inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
-      const Identifier &internalName, ConditionalGroupItem::Condition condition,
-      BaseItemPtrs &&items )
-         { return std::make_unique<ConditionalGroupItem>(
-            internalName, condition, std::move( items ) ); }
+   constexpr auto ConditionalItems = Callable::UniqueMaker<ConditionalGroupItem>();
 
-   // Make either a menu item or just a group, depending on the nonemptiness
-   // of the title.
-   // The name is untranslated and may be empty, to make the group transparent
-   // in identification of items by path.  Otherwise try to keep the name
-   // stable across Audacity versions.
-   // If the name of a menu is empty, then subordinate items cannot be located
-   // by path.
-   template< typename... Args >
-   inline BaseItemPtr MenuOrItems(
-      const Identifier &internalName, const TranslatableString &title, Args&&... args )
-         {  if ( title.empty() )
-               return Items( internalName, std::forward<Args>(args)... );
-            else
-               return std::make_unique<MenuItem>(
-                  internalName, title, std::forward<Args>(args)... ); }
-   inline BaseItemPtr MenuOrItems(
-      const Identifier &internalName,
-      const TranslatableString &title, BaseItemPtrs &&items )
-         {  if ( title.empty() )
-               return Items( internalName, std::move( items ) );
-            else
-               return std::make_unique<MenuItem>(
-                  internalName, title, std::move( items ) ); }
+   constexpr auto Command = Callable::UniqueMaker<CommandItem>();
 
-   /*!
-    @pre `finder != nullptr`
-    */
-   template< typename Handler >
-   inline std::unique_ptr<CommandItem> Command(
-      const CommandID &name,
-      const TranslatableString &label_in,
-      void (Handler::*pmf)(const CommandContext&),
-      CommandFlag flags, const CommandManager::Options &options = {},
-      CommandHandlerFinder finder = FinderScope::DefaultFinder())
-   {
-      assert(finder);
-      return std::make_unique<CommandItem>(
-         name, label_in, pmf, flags, options, finder
-      );
-   }
+   constexpr auto CommandGroup = Callable::UniqueMaker<CommandGroupItem,
+      const Identifier &, std::vector<ComponentInterfaceSymbol>>();
 
-   inline std::unique_ptr<CommandItem> Command(
-      const CommandID &name,
-      const TranslatableString &label_in,
-      void (*fn)(const CommandContext&),
-      CommandFlag flags, const CommandManager::Options &options = {})
-   {
-      return std::make_unique<CommandItem>(
-         name, label_in, fn, flags, options
-      );
-   }
-
-   /*!
-    @pre `finder != nullptr`
-    */
-   template< typename Handler >
-   inline std::unique_ptr<CommandGroupItem> CommandGroup(
-      const Identifier &name,
-      std::vector< ComponentInterfaceSymbol > items,
-      void (Handler::*pmf)(const CommandContext&),
-      CommandFlag flags, bool isEffect = false,
-      CommandHandlerFinder finder = FinderScope::DefaultFinder())
-   {
-      assert(finder);
-      return std::make_unique<CommandGroupItem>(
-         name, move(items), pmf, flags, isEffect, finder
-      );
-   }
-
-   inline std::unique_ptr<CommandGroupItem> CommandGroup(
-      const Identifier &name,
-      std::vector< ComponentInterfaceSymbol > items,
-      void (*fn)(const CommandContext&),
-      CommandFlag flags, bool isEffect = false)
-   {
-      return std::make_unique<CommandGroupItem>(
-         name, move(items), fn, flags, isEffect
-      );
-   }
-
-   inline std::unique_ptr<SpecialItem> Special(
-      const Identifier &name, const SpecialItem::Appender &fn )
-         { return std::make_unique<SpecialItem>( name, fn ); }
+   constexpr auto Special = Callable::UniqueMaker<SpecialItem>();
 
    struct ItemRegistry {
-      static GroupItem &Registry();
+      static GroupItemBase &Registry();
    };
 
    // Typically you make a static object of this type in the .cpp file that

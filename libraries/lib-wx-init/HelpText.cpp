@@ -60,16 +60,6 @@ static wxString InnerLink( const wxString &Key, const wxString& Text )
       wxT("</a>");
 }
 
-static wxString WikiLink( const wxString &Key, const wxString& Text )
-{
-   return wxString(wxT("")) +
-      wxT("<a href='https://www.audacityteam.org/wiki/index.php?title=") +
-      Key +
-      wxT("'>") +
-      Text +
-      wxT("</a>");
-}
-
 static wxString FileLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
@@ -111,11 +101,7 @@ static wxString LinkExpand( const wxString & Text )
 
       LinkText=wxString("<font color=") + HtmlColourOfIndex(clrSample) + wxT(">") +LinkText+"</font>";
       wxString Replacement;
-      if( Key.StartsWith( wxT("wiki:") ))
-      {
-         Replacement = WikiLink( Key.Mid( 5 ), LinkText );
-      }
-      else if( Key.StartsWith( wxT("file:") ))
+      if( Key.StartsWith( wxT("file:") ))
       {
          Replacement = FileLink( Key.Mid( 5 ), LinkText );
       }

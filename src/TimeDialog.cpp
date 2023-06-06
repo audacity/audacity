@@ -20,6 +20,7 @@
 
 #include "ShuttleGui.h"
 #include "widgets/NumericTextCtrl.h"
+#include "Project.h"
 
 BEGIN_EVENT_TABLE(TimeDialog, wxDialogWrapper)
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, TimeDialog::OnUpdate)
@@ -28,13 +29,13 @@ END_EVENT_TABLE()
 TimeDialog::TimeDialog(wxWindow *parent,
                        const TranslatableString &title,
                        const NumericFormatSymbol &format,
-                       double rate,
+                       const AudacityProject &project,
                        double time,
                        const TranslatableString &prompt)
 :  wxDialogWrapper(parent, wxID_ANY, title),
    mPrompt(prompt),
    mFormat(format),
-   mRate(rate),
+   mProject(project),
    mTime(time),
    mTimeCtrl(NULL)
 {
@@ -52,11 +53,11 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
       {
          mTimeCtrl = safenew
             NumericTextCtrl(
-               S.GetParent(), wxID_ANY,
-                         NumericConverter::TIME,
+                         FormatterContext::ProjectContext(mProject),
+                         S.GetParent(), wxID_ANY,
+                         NumericConverterType_TIME(),
                          mFormat,
                          mTime,
-                         mRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
          S.AddWindow(mTimeCtrl);
@@ -76,8 +77,7 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
 
 bool TimeDialog::TransferDataToWindow()
 {
-   mTimeCtrl->SetFormatString(mTimeCtrl->GetBuiltinFormat(mFormat));
-   mTimeCtrl->SetSampleRate(mRate);
+   mTimeCtrl->SetFormatName(mFormat);
    mTimeCtrl->SetValue(mTime);
    mTimeCtrl->SetFocus();
 
@@ -102,11 +102,6 @@ void TimeDialog::SetFormatString(const NumericFormatSymbol &formatString)
    TransferDataToWindow();
 }
 
-void TimeDialog::SetSampleRate(double sampleRate)
-{
-   mRate = sampleRate;
-   TransferDataToWindow();
-}
 
 void TimeDialog::SetTimeValue(double newTime)
 {

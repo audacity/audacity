@@ -103,46 +103,50 @@ void MenuManager::UpdatePrefs()
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
 }
 
-void MenuVisitor::BeginGroup( Registry::GroupItem &item, const Path &path )
+void MenuVisitor::BeginGroup( Registry::GroupItemBase &item, const Path &path )
 {
    bool isMenu = false;
    bool isExtension = false;
    auto pItem = &item;
-   if ( pItem->Transparent() ) {
+   const bool inlined = dynamic_cast<MenuTable::MenuItems*>(pItem);
+   if (inlined) {
    }
-   else if ( dynamic_cast<MenuTable::MenuSection*>( pItem ) ) {
+   else if (dynamic_cast<MenuTable::MenuSection*>(pItem)) {
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
    }
-   else if ( auto pWhole = dynamic_cast<MenuTable::WholeMenu*>( pItem ) ) {
+   else if (auto pWhole = dynamic_cast<MenuTable::WholeMenu*>(pItem)) {
       isMenu = true;
       isExtension = pWhole->extension;
       MaybeDoSeparator();
    }
 
-   DoBeginGroup( item, path );
+   if (!inlined)
+      DoBeginGroup(item, path);
 
-   if ( isMenu ) {
-      needSeparator.push_back( false );
-      firstItem.push_back( !isExtension );
+   if (isMenu) {
+      needSeparator.push_back(false);
+      firstItem.push_back(!isExtension);
    }
 }
 
-void MenuVisitor::EndGroup( Registry::GroupItem &item, const Path &path )
+void MenuVisitor::EndGroup( Registry::GroupItemBase &item, const Path &path )
 {
    auto pItem = &item;
-   if ( pItem->Transparent() ) {
+   const bool inlined = dynamic_cast<MenuTable::MenuItems*>(pItem);
+   if (inlined) {
    }
-   else if ( dynamic_cast<MenuTable::MenuSection*>( pItem ) ) {
+   else if (dynamic_cast<MenuTable::MenuSection*>(pItem)) {
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
    }
-   else if ( dynamic_cast<MenuTable::WholeMenu*>( pItem ) ) {
+   else if ( dynamic_cast<MenuTable::WholeMenu*>(pItem)) {
       firstItem.pop_back();
       needSeparator.pop_back();
    }
 
-   DoEndGroup( item, path );
+   if (!inlined)
+      DoEndGroup(item, path);
 }
 
 void MenuVisitor::Visit( Registry::SingleItem &item, const Path &path )
@@ -164,11 +168,11 @@ void MenuVisitor::MaybeDoSeparator()
       DoSeparator();
 }
 
-void MenuVisitor::DoBeginGroup( Registry::GroupItem &, const Path & )
+void MenuVisitor::DoBeginGroup( Registry::GroupItemBase &, const Path & )
 {
 }
 
-void MenuVisitor::DoEndGroup( Registry::GroupItem &, const Path & )
+void MenuVisitor::DoEndGroup( Registry::GroupItemBase &, const Path & )
 {
 }
 
@@ -182,19 +186,19 @@ void MenuVisitor::DoSeparator()
 
 namespace MenuTable {
 
-MenuItem::MenuItem( const Identifier &internalName,
-   const TranslatableString &title_, BaseItemPtrs &&items_ )
-: ConcreteGroupItem< false, ToolbarMenuVisitor >{
-   internalName, std::move( items_ ) }, title{ title_ }
+MenuItem::MenuItem(const Identifier &internalName,
+   const TranslatableString &title, BaseItemPtrs &&items
+)  : GroupItem{ internalName, move(items) }
+   , title{ title }
 {
    wxASSERT( !title.empty() );
 }
 MenuItem::~MenuItem() {}
 
 ConditionalGroupItem::ConditionalGroupItem(
-   const Identifier &internalName, Condition condition_, BaseItemPtrs &&items_ )
-: ConcreteGroupItem< false, ToolbarMenuVisitor >{
-   internalName, std::move( items_ ) }, condition{ condition_ }
+   const Identifier &internalName, Condition condition, BaseItemPtrs &&items
+)  : GroupItem{ internalName, move(items) }
+   , condition{ condition }
 {
 }
 ConditionalGroupItem::~ConditionalGroupItem() {}
@@ -224,6 +228,12 @@ CommandGroupItem::CommandGroupItem(const Identifier &name_,
 CommandGroupItem::~CommandGroupItem() {}
 
 SpecialItem::~SpecialItem() {}
+MenuPart::~MenuPart() {}
+
+MenuItems::~MenuItems() {}
+auto MenuItems::GetOrdering() const -> Ordering {
+   return name.empty() ? Anonymous : Weak;
+}
 
 MenuSection::~MenuSection() {}
 WholeMenu::~WholeMenu() {}
@@ -251,9 +261,9 @@ const auto MenuPathStart = wxT("MenuBar");
 
 }
 
-Registry::GroupItem &MenuTable::ItemRegistry::Registry()
+Registry::GroupItemBase &MenuTable::ItemRegistry::Registry()
 {
-   static TransparentGroupItem<> registry{ MenuPathStart };
+   static GroupItem<> registry{ MenuPathStart };
    return registry;
 }
 
@@ -277,7 +287,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
       : ToolbarMenuVisitor(proj), manager( man ) {}
 
-   void DoBeginGroup( GroupItem &item, const Path& ) override
+   void DoBeginGroup( GroupItemBase &item, const Path& ) override
    {
       auto pItem = &item;
       if (const auto pMenu =
@@ -294,16 +304,13 @@ struct MenuItemVisitor : ToolbarMenuVisitor
          flags.push_back(flag);
       }
       else
-      if ( pItem->Transparent() ) {
-      }
-      else
       if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
       }
       else
          wxASSERT( false );
    }
 
-   void DoEndGroup( GroupItem &item, const Path& ) override
+   void DoEndGroup( GroupItemBase &item, const Path& ) override
    {
       auto pItem = &item;
       if (const auto pMenu =
@@ -317,9 +324,6 @@ struct MenuItemVisitor : ToolbarMenuVisitor
          if (!flag)
             manager.EndOccultCommands();
          flags.pop_back();
-      }
-      else
-      if ( pItem->Transparent() ) {
       }
       else
       if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {

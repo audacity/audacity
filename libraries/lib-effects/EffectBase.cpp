@@ -16,22 +16,17 @@
 \brief Base class for many of the effects in Audacity.
 
 *//*******************************************************************/
-
-
 #include "EffectBase.h"
 
 #include <thread>
-#include "AudioIO.h"
 #include "BasicUI.h"
 #include "ConfigInterface.h"
-#include "MixAndRender.h"
 #include "PluginManager.h"
-#include "ProjectAudioIO.h"
 #include "QualitySettings.h"
 #include "TransactionScope.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "NumericConverter.h"
+#include "NumericConverterFormats.h"
 
 // Effect application counter
 int EffectBase::nEffectsDone = 0;
@@ -136,8 +131,8 @@ bool EffectBase::DoEffect(EffectSettings &settings,
 
    // This is happening inside EffectSettingsAccess::ModifySettings
    auto newFormat = isSelection
-      ? NumericConverter::TimeAndSampleFormat()
-      : NumericConverter::DefaultSelectionFormat();
+      ? NumericConverterFormats::TimeAndSampleFormat()
+      : NumericConverterFormats::DefaultSelectionFormat();
    auto updater = [&](EffectSettings &settings) {
       settings.extra.SetDuration(duration);
       settings.extra.SetDurationFormat( newFormat );
@@ -164,7 +159,9 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    std::shared_ptr<EffectInstance> pInstance;
 
    if (IsInteractive()) {
-      if (auto result = finder(settings))
+      if (!finder)
+         return false;
+      else if (auto result = finder(settings))
          pInstance = *result;
       else
          return false;
@@ -221,11 +218,6 @@ void EffectBase::SetPreviewFullSelectionFlag(bool previewDurationFlag)
    mPreviewFullSelection = previewDurationFlag;
 }
 
-
-void EffectBase::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
-{
-   mPreviewWithNotSelected = includeNotSelected;
-}
 
 // If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
 // Else clear and DELETE mOutputTracks copies.
@@ -326,199 +318,17 @@ std::any EffectBase::BeginPreview(const EffectSettings &)
    return {};
 }
 
-void EffectBase::Preview(
-   EffectSettingsAccess &access, std::function<void()> updateUI, bool dryOnly)
+auto EffectBase::FindInstance(EffectPlugin &plugin)
+   -> std::optional<InstancePointer>
 {
-   auto cleanup0 = BeginPreview(access.Get());
+   auto result = plugin.MakeInstance();
+   if (auto pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(result)
+      ; pInstanceEx && pInstanceEx->Init())
+      return { pInstanceEx };
+   return {};
+}
 
-   if (mNumTracks == 0) { // nothing to preview
-      return;
-   }
-
-   auto gAudioIO = AudioIO::Get();
-   if (gAudioIO->IsBusy()) {
-      return;
-   }
-
-   const auto FocusDialog = BasicUI::FindFocus();
-   assert(FocusDialog); // postcondition
-
-   double previewDuration;
-   bool isNyquist = GetFamily() == NYQUISTEFFECTS_FAMILY;
-   bool isGenerator = GetType() == EffectTypeGenerate;
-
-   // Mix a few seconds of audio from all of the tracks
-   double previewLen;
-   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen, 6.0);
-
-   const double rate = mProjectRate;
-
-   const auto &settings = access.Get();
-   if (isNyquist && isGenerator)
-      previewDuration = CalcPreviewInputLength(settings, previewLen);
-   else
-      previewDuration = std::min(settings.extra.GetDuration(),
-         CalcPreviewInputLength(settings, previewLen));
-
-   double t1 = mT0 + previewDuration;
-
-   if ((t1 > mT1) && !isGenerator) {
-      t1 = mT1;
-   }
-
-   if (t1 <= mT0)
-      return;
-
-   bool success = true;
-
-   auto cleanup = finally( [&] {
-
-      // Effect is already inited; we will call Process and then Init
-      // again, so the state is exactly the way it was before Preview
-      // was called.
-      if (!dryOnly)
-         // TODO remove this reinitialization of state within the Effect object
-         // It is done indirectly via Effect::Instance
-         if (auto pInstance =
-            std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance())
-         )
-            pInstance->Init();
-   } );
-
-   auto vr0 = valueRestorer( mT0 );
-   auto vr1 = valueRestorer( mT1 );
-   // Most effects should stop at t1.
-   if (!mPreviewFullSelection)
-      mT1 = t1;
-
-   // In case any dialog control depends on mT1 or mDuration:
-   if (updateUI)
-      updateUI();
-
-   // Save the original track list
-   TrackList *saveTracks = mTracks;
-
-   auto cleanup2 = finally( [&] {
-      mTracks = saveTracks;
-      if (*FocusDialog)
-         BasicUI::SetFocus(*FocusDialog);
-
-      // In case of failed effect, be sure to free memory.
-      ReplaceProcessedTracks( false );
-   } );
-
-   // Build NEW tracklist from rendering tracks
-   // Set the same owning project, so FindProject() can see it within Process()
-   const auto pProject = saveTracks->GetOwner();
-   auto uTracks = TrackList::Create( pProject );
-   mTracks = uTracks.get();
-
-   // Linear Effect preview optimised by pre-mixing to one track.
-   // Generators need to generate per track.
-   if (mIsLinearEffect && !isGenerator) {
-      WaveTrack::Holder mixLeft, mixRight;
-      MixAndRender(saveTracks->Selected<const WaveTrack>(),
-         Mixer::WarpOptions{ *saveTracks },
-         wxString{}, // Don't care about the name of the temporary tracks
-         mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
-      if (!mixLeft)
-         return;
-
-      mixLeft->Offset(-mixLeft->GetStartTime());
-      mixLeft->SetSelected(true);
-      auto pLeft = mTracks->Add( mixLeft );
-      Track *pRight{};
-      if (mixRight) {
-         mixRight->Offset(-mixRight->GetStartTime());
-         mixRight->SetSelected(true);
-         pRight = mTracks->Add( mixRight );
-         mTracks->MakeMultiChannelTrack(*pLeft, 2, true);
-      }
-   }
-   else {
-      for (auto src : saveTracks->Any< const WaveTrack >()) {
-         if (src->GetSelected() || mPreviewWithNotSelected) {
-            auto dest = src->Copy(mT0, t1);
-            dest->SetSelected(src->GetSelected());
-            mTracks->Add( dest );
-         }
-      }
-   }
-
-   // NEW tracks start at time zero.
-   // Adjust mT0 and mT1 to be the times to process, and to
-   // play back in these tracks
-   mT1 -= mT0;
-   mT0 = 0.0;
-
-   // Update track/group counts
-   CountWaveTracks();
-
-   // Apply effect
-   if (!dryOnly) {
-      using namespace BasicUI;
-      auto progress = MakeProgress(
-         GetName(),
-         XO("Preparing preview"),
-         ProgressShowStop
-      ); // Have only "Stop" button.
-      auto vr = valueRestorer( mProgress, progress.get() );
-
-      auto vr2 = valueRestorer( mIsPreview, true );
-
-      access.ModifySettings([&](EffectSettings &settings){
-         // Preview of non-realtime effect
-         auto pInstance =
-            std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance());
-         success = pInstance && pInstance->Process(settings);
-         return nullptr;
-      });
-   }
-
-   if (success)
-   {
-      auto tracks = TransportTracks{ *mTracks, true };
-
-      // Some effects (Paulstretch) may need to generate more
-      // than previewLen, so take the min.
-      t1 = std::min(mT0 + previewLen, mT1);
-
-      // Start audio playing
-      auto options = ProjectAudioIO::GetDefaultOptions(*pProject);
-      int token = gAudioIO->StartStream(tracks, mT0, t1, t1, options);
-
-      if (token) {
-         using namespace BasicUI;
-         auto previewing = ProgressResult::Success;
-         // The progress dialog must be deleted before stopping the stream
-         // to allow events to flow to the app during StopStream processing.
-         // The progress dialog blocks these events.
-         {
-            auto progress =
-               MakeProgress(GetName(), XO("Previewing"), ProgressShowStop);
-
-            while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
-               using namespace std::chrono;
-               std::this_thread::sleep_for(100ms);
-               previewing = progress->Poll(
-                  gAudioIO->GetStreamTime() - mT0, t1 - mT0);
-            }
-         }
-
-         gAudioIO->StopStream();
-
-         while (gAudioIO->IsBusy()) {
-            using namespace std::chrono;
-            std::this_thread::sleep_for(100ms);
-         }
-      }
-      else {
-         using namespace BasicUI;
-         ShowErrorDialog(
-            *FocusDialog, XO("Error"),
-            XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-            wxT("Error_opening_sound_device"),
-            ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
-      }
-   }
+auto EffectBase::DefaultInstanceFinder(EffectPlugin &plugin) -> InstanceFinder
+{
+   return [&plugin](auto&) { return FindInstance(plugin); };
 }

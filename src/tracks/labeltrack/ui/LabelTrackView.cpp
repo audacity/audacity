@@ -1684,7 +1684,7 @@ bool LabelTrackView::DoKeyDown(
       case WXK_NUMPAD_ENTER:
       case WXK_TAB:
          if (mRestoreFocus >= 0) {
-            auto track = *TrackList::Get( project ).Any()
+            auto track = *TrackList::Get(project).Leaders()
                .begin().advance(mRestoreFocus);
             if (track)
                TrackFocus::Get( project ).Set(track);
@@ -2077,7 +2077,8 @@ int LabelTrackView::GetLabelIndex(double t, double t1)
 
 // restoreFocus of -1 is the default, and sets the focus to this label.
 // restoreFocus of -2 or other value leaves the focus unchanged.
-// restoreFocus >= 0 will later cause focus to move to that track.
+// restoreFocus >= 0 will later cause focus to move to that track (counting
+// tracks, not channels)
 int LabelTrackView::AddLabel(const SelectedRegion &selectedRegion,
                          const wxString &title, int restoreFocus)
 {
@@ -2275,13 +2276,12 @@ void LabelTrackView::DoEditLabels
    auto format = formats.GetSelectionFormat(),
       freqFormat = formats.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
-   auto rate = ProjectRate::Get( project ).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    LabelDialog dlg(&window, project, &tracks,
                    lt, index,
-                   viewInfo, rate,
+                   viewInfo,
                    format, freqFormat);
 #ifdef __WXGTK__
    dlg.Raise();

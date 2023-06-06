@@ -13,14 +13,7 @@
 
 #include <wx/control.h> // to inherit
 
-#include "aeffectx.h"
-
-class VSTEffectLink /* not final */
-{
-public:
-   virtual ~VSTEffectLink() {};
-   virtual intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt) = 0;
-};
+#include "VSTWrapper.h" // for VSTLink
 
 class VSTControlBase /* not final */ : public wxControl
 {
@@ -35,7 +28,7 @@ public:
    {
    }
 
-   virtual bool Create(wxWindow *parent, VSTEffectLink *link)
+   virtual bool Create(wxWindow *parent, VSTLink *link)
    {
       mParent = parent;
       mLink = link;
@@ -50,7 +43,7 @@ public:
    
 protected:
    wxWindow *mParent;
-   VSTEffectLink *mLink;
+   VSTLink *mLink;
 };
 
 #endif

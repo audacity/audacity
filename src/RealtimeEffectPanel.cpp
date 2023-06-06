@@ -70,12 +70,12 @@ namespace
       RealtimeEffectsMenuVisitor(wxMenu& menu)
          : mMenu(menu), mMenuPtr(&mMenu) { }
       
-      void DoBeginGroup( MenuTable::GroupItem &item, const Path& ) override
+      void DoBeginGroup( MenuTable::GroupItemBase &item, const Path& ) override
       {
          if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
          {
             //Don't create a group item for root
-            if(mMenuLevelCounter != 0 && !menuItem->Transparent())
+            if (mMenuLevelCounter != 0)
             {
                auto submenu = std::make_unique<wxMenu>();
                mMenuPtr->AppendSubMenu(submenu.get(), menuItem->title.Translation());
@@ -85,12 +85,12 @@ namespace
          }
       }
 
-      void DoEndGroup( MenuTable::GroupItem &item, const Path& ) override
+      void DoEndGroup( MenuTable::GroupItemBase &item, const Path& ) override
       {
          if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
          {
             --mMenuLevelCounter;
-            if(mMenuLevelCounter != 0 && !menuItem->Transparent())
+            if (mMenuLevelCounter != 0)
             {
                assert(mMenuPtr->GetParent() != nullptr);
                mMenuPtr = mMenuPtr->GetParent();

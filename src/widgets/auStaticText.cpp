@@ -18,6 +18,10 @@ can't be.
 #include "AllThemeResources.h"
 #include "Theme.h"
 
+#include "AColor.h"
+
+#include <cassert>
+
 #include <wx/dcclient.h>
 
 BEGIN_EVENT_TABLE(auStaticText, wxWindow)
@@ -52,4 +56,48 @@ void auStaticText::OnPaint(wxPaintEvent & WXUNUSED(evt))
    //dc.SetTextForeground( theTheme.Colour( clrTrackPanelText));
    dc.Clear();
    dc.DrawText( GetLabel(), 0,0);
+
+   if (mIsSelected)
+   {
+      auto rect = wxRect { GetSize() };
+      AColor::DrawFocus(dc, rect);
+   }
+}
+
+void auStaticText::ScaleFont(double scale)
+{
+   if (scale < 0.0)
+   {
+      assert(scale >= 0.0);
+      return;
+   }
+
+   int textWidth, textHeight;
+
+   auto font = GetFont();
+
+   const auto oldFontSize = font.GetPointSize();
+   const auto newFontSize = static_cast<int>(oldFontSize * scale);
+
+   if (newFontSize != oldFontSize)
+   {
+      font.SetPointSize(newFontSize);
+      GetTextExtent(GetLabel(), &textWidth, &textHeight, NULL, NULL, &font);
+      SetFont(font);
+      SetMinSize(wxSize(textWidth, textHeight));
+   }
+}
+
+void auStaticText::SetSelected(bool selected)
+{
+   if (selected == mIsSelected)
+      return;
+
+   mIsSelected = selected;
+   Refresh();
+}
+
+bool auStaticText::GetSelected() const noexcept
+{
+   return mIsSelected;
 }

@@ -827,7 +827,7 @@ BaseItemSharedPtr ExtraDeviceMenu()
 
 AttachedItem sAttachment2{
    Placement{ wxT("Optional/Extra/Part1"), { OrderingHint::End } },
-   Shared( ExtraDeviceMenu() )
+   Indirect(ExtraDeviceMenu())
 };
 
 }

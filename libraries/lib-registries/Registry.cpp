@@ -21,13 +21,28 @@ namespace {
 struct ItemOrdering;
 
 using namespace Registry;
+
+//! Used only internally
+struct PlaceHolder : GroupItem<> {
+   PlaceHolder(const Identifier &identifier, Ordering ordering)
+      : GroupItem{ identifier }
+      , ordering{ ordering == Strong ? Weak : ordering }
+   {}
+   ~PlaceHolder() = default;
+   Ordering GetOrdering() const override
+   {
+      return ordering;
+   }
+   Ordering ordering;
+};
+
 struct CollectedItems
 {
    struct Item{
       // Predefined, or merged from registry already:
       BaseItem *visitNow;
       // Corresponding item from the registry, its sub-items to be merged:
-      GroupItem *mergeLater;
+      GroupItemBase *mergeLater;
       // Ordering hint for the merged item:
       OrderingHint hint;
    };
@@ -54,11 +69,12 @@ struct CollectedItems
       bool force )
          -> bool;
 
-   auto MergeLater( Item &found, const Identifier &name ) -> GroupItem *;
+   auto MergeLater(Item &found, const Identifier &name,
+      GroupItemBase::Ordering ordering) -> GroupItemBase *;
 
-   auto SubordinateSingleItem( Item &found, BaseItem *pItem ) -> void;
+   void SubordinateSingleItem(Item &found, BaseItem *pItem);
 
-   auto SubordinateMultipleItems( Item &found, GroupItem *pItems ) -> void;
+   void SubordinateMultipleItems(Item &found, GroupItemBase *pItems);
 
    auto MergeWithExistingItem(
       Visitor &visitor, ItemOrdering &itemOrdering, BaseItem *pItem ) -> bool;
@@ -87,7 +103,7 @@ struct CollectedItems
       const BaseItemPtrs &toMerge, const OrderingHint &hint ) -> void;
 };
 
-// When a computed or shared item, or nameless grouping, specifies a hint and
+// When a computed or indirect item, or nameless grouping, specifies a hint and
 // the subordinate does not, propagate the hint.
 const OrderingHint &ChooseHint(BaseItem *delegate, const OrderingHint &hint)
 {
@@ -97,7 +113,7 @@ const OrderingHint &ChooseHint(BaseItem *delegate, const OrderingHint &hint)
 }
 
 // "Collection" of items is the first pass of visitation, and resolves
-// delegation and delayed computation and splices transparent group nodes.
+// delegation and delayed computation and splices anonymous group nodes.
 // This first pass is done at each group, starting with a top-level group.
 // This pass does not descend to the leaves.  Rather, the visitation passes
 // alternate as the entire tree is recursively visited.
@@ -120,13 +136,13 @@ void CollectItem( Registry::Visitor &visitor,
       return;
 
    using namespace Registry;
-   if (const auto pShared =
-       dynamic_cast<SharedItem*>( pItem )) {
-      auto delegate = pShared->ptr.get();
-      if ( delegate )
+   if (const auto pIndirect =
+       dynamic_cast<IndirectItem*>(pItem)) {
+      auto delegate = pIndirect->ptr.get();
+      if (delegate)
          // recursion
-         CollectItem( visitor, collection, delegate,
-            ChooseHint( delegate, pShared->orderingHint ) );
+         CollectItem(visitor, collection, delegate,
+            ChooseHint(delegate, pIndirect->orderingHint));
    }
    else
    if (const auto pComputed =
@@ -141,9 +157,9 @@ void CollectItem( Registry::Visitor &visitor,
       }
    }
    else
-   if (auto pGroup = dynamic_cast<GroupItem*>(pItem)) {
-      if (pGroup->Transparent() && pItem->name.empty())
-         // nameless grouping item is transparent to path calculations
+   if (auto pGroup = dynamic_cast<GroupItemBase*>(pItem)) {
+      if (pGroup->GetOrdering() == GroupItemBase::Anonymous)
+         // anonymous grouping item is transparent to path calculations
          // collect group members now
          // recursion
          CollectItems(
@@ -329,35 +345,34 @@ auto CollectedItems::InsertNewItemUsingHint(
    return true;
 }
 
-auto CollectedItems::MergeLater( Item &found, const Identifier &name )
-   -> GroupItem *
+auto CollectedItems::MergeLater(Item &found, const Identifier &name,
+   GroupItemBase::Ordering ordering) -> GroupItemBase *
 {
    auto subGroup = found.mergeLater;
-   if ( !subGroup ) {
-      auto newGroup = std::make_shared<TransparentGroupItem<>>( name );
-      computedItems.push_back( newGroup );
+   if (!subGroup) {
+      auto newGroup = std::make_shared<PlaceHolder>(name, ordering);
+      computedItems.push_back(newGroup);
       subGroup = found.mergeLater = newGroup.get();
    }
    return subGroup;
 }
 
-auto CollectedItems::SubordinateSingleItem( Item &found, BaseItem *pItem )
-   -> void
+void CollectedItems::SubordinateSingleItem(Item &found, BaseItem *pItem)
 {
-   MergeLater( found, pItem->name )->items.push_back(
-      std::make_unique<SharedItem>(
+   MergeLater(found, pItem->name, GroupItemBase::Weak)->items.push_back(
+      std::make_unique<IndirectItem>(
          // shared pointer with vacuous deleter
-         std::shared_ptr<BaseItem>( pItem, [](void*){} ) ) );
+         std::shared_ptr<BaseItem>(pItem, [](void*){})));
 }
 
-auto CollectedItems::SubordinateMultipleItems( Item &found, GroupItem *pItems )
-   -> void
+void CollectedItems::SubordinateMultipleItems(
+   Item &found, GroupItemBase *pItems)
 {
-   auto subGroup = MergeLater( found, pItems->name );
-   for ( const auto &pItem : pItems->items )
-      subGroup->items.push_back( std::make_unique<SharedItem>(
+   auto subGroup = MergeLater(found, pItems->name, pItems->GetOrdering());
+   for (const auto &pItem : pItems->items)
+      subGroup->items.push_back( std::make_unique<IndirectItem>(
          // shared pointer with vacuous deleter
-         std::shared_ptr<BaseItem>( pItem.get(), [](void*){} ) ) );
+         std::shared_ptr<BaseItem>(pItem.get(), [](void*){})));
 }
 
 auto CollectedItems::MergeWithExistingItem(
@@ -370,35 +385,37 @@ auto CollectedItems::MergeWithExistingItem(
       // Collision of names between collection and registry!
       // There are 2 * 2 = 4 cases, as each of the two are group items or
       // not.
-      auto pCollectionGroup = dynamic_cast< GroupItem * >( found->visitNow );
-      auto pRegistryGroup = dynamic_cast< GroupItem * >( pItem );
+      auto pCollectionGroup = dynamic_cast< GroupItemBase * >( found->visitNow );
+      auto pRegistryGroup = dynamic_cast< GroupItemBase * >( pItem );
       if (pCollectionGroup) {
          if (pRegistryGroup) {
             // This is the expected case of collision.
             // Subordinate items from one of the groups will be merged in
             // another call to MergeItems at a lower level of path.
-            // Note, however, that at most one of the two should be other
-            // than a plain grouping item; if not, we must lose the extra
+            // Note, however, that at most one of the two should be a
+            // strongly ordered item; if not, we must lose the extra
             // information carried by one of them.
-            bool pCollectionGrouping = pCollectionGroup->Transparent();
-            auto pRegistryGrouping = pRegistryGroup->Transparent();
+            bool pCollectionGrouping =
+               (pCollectionGroup->GetOrdering() != GroupItemBase::Strong);
+            auto pRegistryGrouping =
+               (pRegistryGroup->GetOrdering() != GroupItemBase::Strong);
             if ( !(pCollectionGrouping || pRegistryGrouping) )
                ReportGroupGroupCollision( itemOrdering.key, name );
 
             if ( pCollectionGrouping && !pRegistryGrouping ) {
                // Swap their roles
                found->visitNow = pRegistryGroup;
-               SubordinateMultipleItems( *found, pCollectionGroup );
+               SubordinateMultipleItems(*found, pCollectionGroup);
             }
             else
-               SubordinateMultipleItems( *found, pRegistryGroup );
+               SubordinateMultipleItems(*found, pRegistryGroup);
          }
          else {
             // Registered non-group item collides with a previously defined
             // group.
             // Resolve this by subordinating the non-group item below
             // that group.
-            SubordinateSingleItem( *found, pItem );
+            SubordinateSingleItem(*found, pItem);
          }
       }
       else {
@@ -409,7 +426,7 @@ auto CollectedItems::MergeWithExistingItem(
             // the final merge is the same, no matter which is treated first.
             auto demoted = found->visitNow;
             found->visitNow = pRegistryGroup;
-            SubordinateSingleItem( *found, demoted );
+            SubordinateSingleItem(*found, demoted);
          }
          else
             // Collision of non-group items is the worst case!
@@ -544,17 +561,20 @@ auto CollectedItems::MergeItems(
   Visitor &visitor, ItemOrdering &itemOrdering,
   const BaseItemPtrs &toMerge, const OrderingHint &hint ) -> void
 {
-   // First do expansion of nameless groupings, and caching of computed
-   // items, just as for the previously collected items.
-   CollectedItems newCollection{ {}, computedItems };
-   CollectItems( visitor, newCollection, toMerge, hint );
-
-   // Try to merge each, resolving name collisions with items already in the
-   // tree, and collecting those with names that don't collide.
    NewItems newItems;
-   for ( const auto &item : newCollection.items )
-      if ( !MergeWithExistingItem( visitor, itemOrdering, item.visitNow ) )
-          newItems.push_back( { item.visitNow, item.hint } );
+
+   {
+      // First do expansion of nameless groupings, and caching of computed
+      // items, just as for the previously collected items.
+      CollectedItems newCollection{ {}, computedItems };
+      CollectItems(visitor, newCollection, toMerge, hint);
+
+      // Try to merge each, resolving name collisions with items already in the
+      // tree, and collecting those with names that don't collide.
+      for (const auto &item : newCollection.items)
+         if (!MergeWithExistingItem(visitor, itemOrdering, item.visitNow))
+             newItems.push_back({ item.visitNow, item.hint });
+   }
 
    // Choose placements for items with NEW names.
 
@@ -603,9 +623,12 @@ auto CollectedItems::MergeItems(
                force = true;
          }
       }
-      else if ( iPass == OrderingHint::End && endItemsCount == 0 )
+      else if (iPass == OrderingHint::End && endItemsCount == 0)
+      {
+         assert(newSize >= prevSize || newSize == 0);
          // Remember the size before we put the ending items in place
          endItemsCount = newSize - prevSize;
+      }
 
       prevSize = newSize;
    }
@@ -615,12 +638,12 @@ auto CollectedItems::MergeItems(
 void VisitItem(
    Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, BaseItem *pItem,
-   const GroupItem *pToMerge, const OrderingHint &hint,
+   const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush );
 void VisitItems(
    Registry::Visitor &visitor, CollectedItems &collection,
-   Path &path, GroupItem *pGroup,
-   const GroupItem *pToMerge, const OrderingHint &hint,
+   Path &path, GroupItemBase *pGroup,
+   const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush )
 {
    // Make a NEW collection for this subtree, sharing the memo cache
@@ -667,7 +690,7 @@ void VisitItems(
 void VisitItem(
    Registry::Visitor &visitor, CollectedItems &collection,
    Path &path, BaseItem *pItem,
-   const GroupItem *pToMerge, const OrderingHint &hint,
+   const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush )
 {
    if (!pItem)
@@ -680,7 +703,7 @@ void VisitItem(
    }
    else
    if (const auto pGroup =
-       dynamic_cast<GroupItem*>( pItem )) {
+       dynamic_cast<GroupItemBase*>( pItem )) {
       visitor.BeginGroup( *pGroup, path );
       // recursion
       VisitItems(
@@ -697,20 +720,21 @@ namespace Registry {
 
 BaseItem::~BaseItem() {}
 
-SharedItem::~SharedItem() {}
+IndirectItem::~IndirectItem() {}
 
 ComputedItem::~ComputedItem() {}
 
 SingleItem::~SingleItem() {}
 
-GroupItem::~GroupItem() {}
+GroupItemBase::~GroupItemBase() {}
+auto GroupItemBase::GetOrdering() const -> Ordering { return Strong; }
 
 Visitor::~Visitor(){}
-void Visitor::BeginGroup(GroupItem &, const Path &) {}
-void Visitor::EndGroup(GroupItem &, const Path &) {}
+void Visitor::BeginGroup(GroupItemBase &, const Path &) {}
+void Visitor::EndGroup(GroupItemBase &, const Path &) {}
 void Visitor::Visit(SingleItem &, const Path &) {}
 
-void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItem *pRegistry )
+void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItemBase *pRegistry )
 {
    std::vector< BaseItemSharedPtr > computedItems;
    bool doFlush = false;
@@ -747,7 +771,7 @@ void OrderingPreferenceInitializer::operator () ()
       gPrefs->Flush();
 }
 
-void RegisterItem( GroupItem &registry, const Placement &placement,
+void RegisterItem( GroupItemBase &registry, const Placement &placement,
    BaseItemPtr pItem )
 {
    // Since registration determines only an unordered tree of menu items,
@@ -781,11 +805,11 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
       const auto range = find( pathComponent );
       const auto iter2 = std::find_if( range.first, range.second,
          [](const BaseItemPtr &pItem){
-            return dynamic_cast< GroupItem* >( pItem.get() ); } );
+            return dynamic_cast< GroupItemBase* >( pItem.get() ); } );
 
       if ( iter2 != range.second ) {
          // A matching group in the registry, so descend
-         pNode = static_cast< GroupItem* >( iter2->get() );
+         pNode = static_cast< GroupItemBase* >( iter2->get() );
          pItems = &pNode->items;
          debugPath += '/' + pathComponent;
          ++pComponent;
@@ -800,7 +824,8 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
 
    // Create path group items for remaining components
    while ( pComponent != end ) {
-      auto newNode = std::make_unique<TransparentGroupItem<>>( *pComponent );
+      auto newNode =
+         std::make_unique<PlaceHolder>(*pComponent, GroupItemBase::Weak);
       pNode = newNode.get();
       pItems->insert( find( pNode->name ).second, std::move( newNode ) );
       pItems = &pNode->items;
@@ -814,4 +839,5 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
    pItems->insert( find( pItem->name ).second, std::move( pItem ) );
 }
 
+template struct GroupItem<>;
 }

@@ -10,6 +10,8 @@
 #include "../PluginRegistrationDialog.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectRate.h"
+#include "ProjectSnap.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
@@ -17,6 +19,7 @@
 #include "RealtimeEffectPanel.h"
 #include "SyncLock.h"
 #include "../toolbars/ToolManager.h"
+#include "../toolbars/SelectionBar.h"
 #include "../TrackPanelAx.h"
 #include "TempDirectory.h"
 #include "UndoManager.h"
@@ -93,7 +96,7 @@ void OnResetConfig(const CommandContext &context)
    // - Set Zoom sensibly.
    SyncLockTracks.Reset();
    SoundActivatedRecord.Reset();
-   gPrefs->Write("/SelectionToolbarMode", 0);
+   SelectionToolbarMode.Reset();
    gPrefs->Flush();
    DoReloadPreferences(project);
 
@@ -112,10 +115,11 @@ void OnResetConfig(const CommandContext &context)
 
    gPrefs->Flush();
 
-   ProjectSelectionManager::Get( project )
-      .AS_SetSnapTo(gPrefs->ReadLong("/SnapTo", SNAP_OFF));
-   ProjectSelectionManager::Get( project )
-      .AS_SetRate(gPrefs->ReadDouble("/DefaultProjectSampleRate", 44100.0));
+   ProjectSnap::Get(project).SetSnapTo(SnapToSetting.Read());
+   ProjectSnap::Get(project).SetSnapMode(SnapModeSetting.ReadEnum());
+   
+   ProjectRate::Get( project )
+      .SetRate(gPrefs->ReadDouble("/DefaultProjectSampleRate", 44100.0));
 }
 
 void OnManageGenerators(const CommandContext &context)
@@ -323,7 +327,7 @@ static const ReservedCommandFlag
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( GenerateMenu() )
+   Indirect(GenerateMenu())
 };
 
 const ReservedCommandFlag&
@@ -397,7 +401,7 @@ BaseItemSharedPtr EffectMenu()
 
 AttachedItem sAttachment2{
    wxT(""),
-   Shared( EffectMenu() )
+   Indirect(EffectMenu())
 };
 
 const ReservedCommandFlag&
@@ -461,7 +465,7 @@ BaseItemSharedPtr AnalyzeMenu()
 
 AttachedItem sAttachment3{
    wxT(""),
-   Shared( AnalyzeMenu() )
+   Indirect(AnalyzeMenu())
 };
 
 BaseItemSharedPtr ToolsMenu()
@@ -544,7 +548,7 @@ BaseItemSharedPtr ToolsMenu()
 
 AttachedItem sAttachment4{
    wxT(""),
-   Shared( ToolsMenu() )
+   Indirect(ToolsMenu())
 };
 
 }

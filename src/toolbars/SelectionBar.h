@@ -5,6 +5,7 @@
   SelectionBar.h
 
   Dominic Mazzoni
+  Dmitry Vedenko
 
 **********************************************************************/
 
@@ -13,23 +14,12 @@
 
 #include <wx/defs.h>
 
+#include <array>
+
 #include "ToolBar.h"
 #include "widgets/auStaticText.h"
 
-// Column for 
-//   Project rate
-//   Snap To
-//   Option Button
-//   Vertical Line
-//   Selection fields
-//   Vertical Line
-//   Cursor position
-
-#ifdef TIME_IN_SELECT_TOOLBAR
-#define SIZER_COLS 7
-#else
-#define SIZER_COLS 5
-#endif
+#include "Observer.h"
 
 
 class wxChoice;
@@ -43,9 +33,19 @@ class AudacityProject;
 class SelectionBarListener;
 class NumericTextCtrl;
 
+extern IntSetting SelectionToolbarMode;
+
 class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
  public:
+   enum class SelectionMode
+   {
+      StartEnd,
+      StartLength,
+      LengthEnd,
+      LengthCenter 
+   };
+   
    static Identifier ID();
 
    SelectionBar( AudacityProject &project );
@@ -64,63 +64,46 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void EnableDisableButtons() override {};
    void UpdatePrefs() override;
 
-   void SetTimes(double start, double end, double audio);
-   void SetSnapTo(int);
+   void SetTimes(double start, double end);
+
    void SetSelectionFormat(const NumericFormatSymbol & format);
-   void SetRate(double rate);
    void SetListener(SelectionBarListener *l);
    void RegenerateTooltips() override;
 
  private:
-   auStaticText * AddTitle( const TranslatableString & Title,
+   AButton* MakeSetupButton();
+   
+   void AddTitle( const TranslatableString & Title,
       wxSizer * pSizer );
-   NumericTextCtrl * AddTime( const TranslatableString &Name, int id, wxSizer * pSizer );
-   void AddVLine(  wxSizer * pSizer );
+   void AddTime( int id, wxSizer * pSizer );
+   void AddSelectionSetupButton(wxSizer* pSizer);
 
-   void SetSelectionMode(int mode);
-   void ShowHideControls(int mode);
-   void SetDrivers( int driver1, int driver2 );
+   void SetSelectionMode(SelectionMode mode);
    void ValuesToControls();
    void OnUpdate(wxCommandEvent &evt);
-   void OnChangedTime(wxCommandEvent &evt);
 
-   void OnRate(wxCommandEvent & event);
-   void OnSnapTo(wxCommandEvent & event);
-   void OnChoice(wxCommandEvent & event);
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
    void OnSize(wxSizeEvent &evt);
    void OnIdle( wxIdleEvent &evt );
 
-   void ModifySelection(int newDriver, bool done = false);
-   void UpdateRates();
+   void ModifySelection(int driver, bool done = false);
    void SelectionModeUpdated();
+
+   void UpdateTimeControlsFormat(const NumericFormatSymbol& format);
 
    SelectionBarListener * mListener;
    double mRate;
-   double mStart, mEnd, mLength, mCenter,  mAudio;
+   double mStart, mEnd, mLength, mCenter;
 
-   // These two numbers say which two controls 
-   // drive the other two.
-   int mDrive1;
-   int mDrive2;
+   SelectionMode mSelectionMode {};
+   SelectionMode mLastSelectionMode {};
 
-   int mSelectionMode{ 0 };
-   int mLastSelectionMode{ 0 };
-
-   NumericTextCtrl   *mStartTime;
-   NumericTextCtrl   *mCenterTime;
-   NumericTextCtrl   *mLengthTime;
-   NumericTextCtrl   *mEndTime;
-   NumericTextCtrl   *mAudioTime;
-   wxChoice          *mChoice;
-   wxStaticText      *mProxy;
-   wxComboBox        *mRateBox;
-   wxChoice          *mSnapTo;
-   wxWindow          *mRateText;
+   std::array<NumericTextCtrl*, 2> mTimeControls {};
+   AButton* mSetupButton{};
 
    wxString mLastValidText;
-
+   
  public:
 
    DECLARE_CLASS(SelectionBar)

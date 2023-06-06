@@ -3,7 +3,6 @@ $version 4
 $type process spectral
 $preview linear
 $name (_ "Spectral Edit Parametric EQ")
-$manpage "Spectral_edit_parametric_EQ"
 $debugbutton false
 $author (_ "Paul Licameli")
 $release 2.3.0-1

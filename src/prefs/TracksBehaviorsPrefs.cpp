@@ -62,16 +62,6 @@ void TracksBehaviorsPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
-ChoiceSetting TracksBehaviorsSolo{
-   wxT("/GUI/Solo"),
-   {
-      ByColumns,
-      { XO("Simple"),  XO("Multi-track"), XO("None") },
-      { wxT("Simple"), wxT("Multi"),      wxT("None") }
-   },
-   0, // "Simple"
-};
-
 namespace
 {
    const TranslatableString audioPasteModeText[] = {

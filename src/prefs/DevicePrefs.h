@@ -17,6 +17,7 @@
 #include "PrefsPanel.h"
 
 class wxChoice;
+class wxTextCtrl;
 class ShuttleGui;
 
 #define DEVICE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Device") }
@@ -24,7 +25,7 @@ class ShuttleGui;
 class DevicePrefs final : public PrefsPanel
 {
  public:
-   DevicePrefs(wxWindow * parent, wxWindowID winid);
+   DevicePrefs(wxWindow * parent, wxWindowID winid, AudacityProject* project);
    virtual ~DevicePrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
@@ -36,9 +37,14 @@ class DevicePrefs final : public PrefsPanel
  private:
    void Populate();
    void GetNamesAndLabels();
+    
 
    void OnHost(wxCommandEvent & e);
    void OnDevice(wxCommandEvent & e);
+   void OnDefaultSampleRateChoice(wxCommandEvent& e);
+   void OnProjectSampleRateChoice(wxCommandEvent& e);
+
+   AudacityProject* mProject;
 
    TranslatableStrings mHostNames;
    wxArrayStringEx mHostLabels;
@@ -52,6 +58,19 @@ class DevicePrefs final : public PrefsPanel
    wxChoice *mPlay;
    wxChoice *mRecord;
    wxChoice *mChannels;
+
+   wxChoice* mProjectSampleRates { nullptr };
+   wxTextCtrl* mOtherProjectSampleRate { nullptr };
+   
+   int mProjectSampleRateIndex;
+   int mOtherProjectSampleRateValue;
+
+   wxChoice *mDefaultSampleRates;
+   wxTextCtrl *mOtherDefaultSampleRate;
+   int mOtherDefaultSampleRateValue;
+
+   TranslatableStrings mSampleRateNames;
+   std::vector<int> mSampleRateValues;
 
    DECLARE_EVENT_TABLE()
 };

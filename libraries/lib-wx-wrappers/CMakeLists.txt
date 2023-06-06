@@ -9,6 +9,8 @@ Very much not toolkit-neutral!
 set( SOURCES
    AudacityTextEntryDialog.cpp
    AudacityTextEntryDialog.h
+   SpinControl.cpp
+   SpinControl.h
    FileDialog/FileDialog.cpp
    FileDialog/FileDialog.h
    $<$<PLATFORM_ID:Windows>:

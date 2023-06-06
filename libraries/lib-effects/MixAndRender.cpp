@@ -46,8 +46,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    int numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
    for(auto wt : trackRange) {
       numWaves++;
-      float pan = wt->GetPan();
-      if (wt->GetChannel() == Track::MonoChannel && pan == 0)
+      if (wt->GetChannel() == Track::MonoChannel && wt->GetPan() == 0)
          numMono++;
    }
 
@@ -91,7 +90,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 
    /* create the destination track (NEW track) */
-   if (numWaves == (int)TrackList::Channels(first).size())
+   if (numWaves == (int)TrackList::NChannels(*first))
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
@@ -113,17 +112,8 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    // TODO: more-than-two-channels
    decltype(mixLeft) mixRight{};
-   if ( !mono ) {
+   if (!mono) {
       mixRight = trackFactory->Create(format, rate);
-      if (oneinput) {
-         auto channels = TrackList::Channels(first);
-         if (channels.size() > 1)
-            mixRight->SetName((*channels.begin().advance(1))->GetName()); /* set name to match input track's right channel!*/
-         else
-            mixRight->SetName(first->GetName());   /* set name to that of sole input channel */
-      }
-      else
-         mixRight->SetName(newTrackName);
       mixRight->SetOffset(mixStartTime);
    }
 

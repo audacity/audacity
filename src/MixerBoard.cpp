@@ -41,7 +41,6 @@
 #include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectFileIO.h"
-#include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "SelectUtilities.h"
@@ -294,7 +293,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   *(mMixerBoard->mImageSoloDisabled),
                   true); // toggle button
    mToggleButton_Solo->SetName(_("Solo"));
-   bool bSoloNone = ProjectSettings::Get( *mProject ).IsSoloNone();
+   bool bSoloNone = (TracksBehaviorsSolo.ReadEnum() == SoloBehaviorNone);
    mToggleButton_Solo->Show(!bSoloNone);
 
 
@@ -393,7 +392,7 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
    mSlider_Velocity->SetSize(-1, nGainSliderHeight);
 #endif
 
-   bool bSoloNone = ProjectSettings::Get( *mProject ).IsSoloNone();
+   bool bSoloNone = TracksBehaviorsSolo.ReadEnum() == SoloBehaviorNone;
 
    mToggleButton_Solo->Show(!bSoloNone);
 
@@ -415,8 +414,6 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    float fValue = mSlider_Gain->Get();
    if (GetWave())
       GetWave()->SetGain(fValue);
-   if (GetRight())
-      GetRight()->SetGain(fValue);
 
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
@@ -446,8 +443,6 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
    float fValue = mSlider_Pan->Get();
    if (GetWave()) // test in case track is a NoteTrack
       GetWave()->SetPan(fValue);
-   if (GetRight())
-      GetRight()->SetPan(fValue);
 
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
@@ -648,10 +643,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
       float gain = pTrack->GetChannelGain(0);
       for (unsigned int index = 0; index < nFrames; index++)
          meterFloatsArray[2 * index] *= gain;
-      if (GetRight())
-         gain = GetRight()->GetChannelGain(1);
-      else
-         gain = pTrack->GetChannelGain(1);
+      gain = pTrack->GetChannelGain(1);
       for (unsigned int index = 0; index < nFrames; index++)
          meterFloatsArray[(2 * index) + 1] *= gain;
       // Clip to [-1.0, 1.0] range.
@@ -764,7 +756,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
-   if (ProjectSettings::Get(*mProject).IsSoloSimple())
+   if (TracksBehaviorsSolo.ReadEnum() == SoloBehaviorSimple)
       ProjectWindow::Get( *mProject ).RedrawProject();
    else
       // Update only the changed track.
@@ -1079,7 +1071,8 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 
    // random choice:    return mMusicalInstruments[(int)pTrack % mMusicalInstruments.size()].mBitmap;
 
-   const wxString strTrackName(pTrack->GetName().MakeLower());
+   const wxString strTrackName(
+      wxString{ pTrack->GetName() }.MakeLower());
    size_t nBestItemIndex = 0;
    unsigned int nBestScore = 0;
    unsigned int nInstrIndex = 0;

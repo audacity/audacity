@@ -27,7 +27,7 @@ VSTControl::~VSTControl()
    }
 }
 
-bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
+bool VSTControl::Create(wxWindow *parent, VSTLink *link)
 {
    if (!VSTControlBase::Create(parent, link))
    {

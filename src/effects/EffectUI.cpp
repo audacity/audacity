@@ -14,6 +14,7 @@
 #include "Effect.h"
 #include "StatefulEffectUIServices.h"
 #include "EffectEditor.h"
+#include "EffectPreview.h"
 
 #include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"
@@ -115,10 +116,6 @@ private:
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
-
-#if defined(__WXMAC__)
-#include <Cocoa/Cocoa.h>
-#endif
 
 static const int kDummyID = 20000;
 static const int kSaveAsID = 20001;
@@ -227,7 +224,7 @@ bool EffectSettingsAccessTee::IsSameAs(
 }
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
-   AudacityProject &project, EffectPlugin &effect,
+   AudacityProject &project, EffectBase &effect,
    EffectUIServices &client, std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access,
    const std::shared_ptr<RealtimeEffectState> &pPriorState)
@@ -251,8 +248,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    // Assign the out parameter
    pInstance = mpInstance;
 #if defined(__WXMAC__)
-   // Make sure the effect window actually floats above the main window
-   [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
+   MacMakeWindowFloating(GetHandle());
 #endif
    
    SetName( effect.GetDefinition().GetName() );
@@ -385,17 +381,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 
          if (!mIsBatch)
          {
-            if (mSupportsRealtime)
-            {
-               if (mpTempProjectState)
-               {
-                  mPlayToggleBtn = S.Id(kPlayID)
-                     .ToolTip(XO("Start and stop preview"))
-                     .AddButton( { },
-                                 wxALIGN_CENTER | wxTOP | wxBOTTOM );
-               }
-            }
-            else if (
+            if (!IsOpenedFromEffectPanel() &&
                (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
                (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
             {
@@ -537,9 +523,6 @@ void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 {
-   if (mPlaying)
-      StopPlayback();
-
    DoCancel();
    CleanupRealtime();
 
@@ -568,9 +551,6 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
 
-   if (mPlaying)
-      StopPlayback();
-   
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch &&
        mEffectUIHost.GetDefinition().GetType() != EffectTypeGenerate &&
@@ -770,84 +750,25 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!mSupportsRealtime)
-   {
-      if (!TransferDataFromWindow())
-         return;
-      
-      auto updater = [this]{ TransferDataToWindow(); };
-      mEffectUIHost.Preview(*mpAccess, updater, false);
-      // After restoration of settings and effect state:
-      // In case any dialog control depends on mT1 or mDuration:
-      updater();
-
+   if (!TransferDataFromWindow())
       return;
-   }
    
-   if (mPlaying)
-   {
-      StopPlayback();
-   }
-   else
-   {
-      auto &viewInfo = ViewInfo::Get( mProject );
-      const auto &selectedRegion = viewInfo.selectedRegion;
-      const auto &playRegion = viewInfo.playRegion;
-      if ( playRegion.Active() )
-      {
-         mRegion.setTimes(playRegion.GetStart(), playRegion.GetEnd());
-         mPlayPos = mRegion.t0();
-      }
-      else if (selectedRegion.t0() != mRegion.t0() ||
-               selectedRegion.t1() != mRegion.t1())
-      {
-         mRegion = selectedRegion;
-         mPlayPos = mRegion.t0();
-      }
-      
-      if (mPlayPos > mRegion.t1())
-      {
-         mPlayPos = mRegion.t1();
-      }
-      
-      auto &projectAudioManager = ProjectAudioManager::Get( mProject );
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion{ mPlayPos, mRegion.t1() },
-         ProjectAudioIO::GetDefaultOptions(mProject),
-         PlayMode::normalPlay);
-   }
-}
+   auto updater = [this]{ TransferDataToWindow(); };
+   EffectPreview(mEffectUIHost, *mpAccess, updater, false);
+   // After restoration of settings and effect state:
+   // In case any dialog control depends on mT1 or mDuration:
+   updater();
 
-void EffectUIHost::OnPlayback(AudioIOEvent evt)
-{
-   if (evt.on) {
-      if (evt.pProject != &mProject)
-         mDisableTransport = true;
-      else
-         mPlaying = true;
-   }
-   else {
-      mDisableTransport = false;
-      mPlaying = false;
-   }
-   
-   if (mPlaying) {
-      mRegion = ViewInfo::Get( mProject ).selectedRegion;
-      mPlayPos = mRegion.t0();
-   }
-   UpdateControls();
+   return;
 }
 
 void EffectUIHost::OnCapture(AudioIOEvent evt)
 {
    if (evt.on) {
-      if (evt.pProject != &mProject)
-         mDisableTransport = true;
-      else
+      if (evt.pProject == &mProject)
          mCapturing = true;
    }
    else {
-      mDisableTransport = false;
       mCapturing = false;
    }
    UpdateControls();
@@ -1093,26 +1014,6 @@ void EffectUIHost::UpdateControls()
    }
 
    mApplyBtn->Enable(!mCapturing);
-
-   if (mSupportsRealtime)
-   {
-      mPlayToggleBtn->Enable(!(mCapturing || mDisableTransport));
-
-      if (mPlaying)
-      {
-         /* i18n-hint: The access key "&P" should be the same in
-          "Stop &Preview" and "Start &Preview" */
-         mPlayToggleBtn->SetLabel(_("Stop &Preview"));
-         mPlayToggleBtn->Refresh();
-      }
-      else
-      {
-         /* i18n-hint: The access key "&P" should be the same in
-          "Stop &Preview" and "Start &Preview" */
-         mPlayToggleBtn->SetLabel(_("&Preview"));
-         mPlayToggleBtn->Refresh();
-      }
-   }
 }
 
 void EffectUIHost::LoadUserPresets()
@@ -1137,8 +1038,6 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
    bool priorState = (mpState != nullptr);
    if (!priorState) {
       auto gAudioIO = AudioIO::Get();
-      mDisableTransport = !gAudioIO->IsAvailable(mProject);
-      mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
       mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
 
@@ -1166,8 +1065,6 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
       if (!priorState) {
          mAudioIOSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
             switch (event.type) {
-            case AudioIOEvent::PLAYBACK:
-               OnPlayback(event); break;
             case AudioIOEvent::CAPTURE:
                OnCapture(event); break;
             default:
@@ -1178,13 +1075,8 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
       
       mInitialized = true;
    }
-   else {
-      result = mEffectUIHost.MakeInstance();
-      if (auto pInstanceEx =
-         std::dynamic_pointer_cast<EffectInstanceEx>(result)
-         ; pInstanceEx && !pInstanceEx->Init())
-         result.reset();
-   }
+   else
+      result = EffectBase::FindInstance(mEffectUIHost).value_or(nullptr);
 
    return result;
 }
@@ -1210,19 +1102,8 @@ void EffectUIHost::CleanupRealtime()
    }
 }
 
-void EffectUIHost::StopPlayback()
-{
-   if (!mPlaying)
-      return;
-   
-   auto gAudioIO = AudioIO::Get();
-   mPlayPos = gAudioIO->GetStreamTime();
-   auto& projectAudioManager = ProjectAudioManager::Get(mProject);
-   projectAudioManager.Stop();
-}
-
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
-   EffectPlugin &host, EffectUIServices &client,
+   EffectBase &host, EffectUIServices &client,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
@@ -1298,7 +1179,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
       }
    }
 
-   auto nTracksOriginally = tracks.size();
+   auto nTracksOriginally = tracks.Size();
    wxWindow *focus = wxWindow::FindFocus();
    wxWindow *parent = nullptr;
    if (focus != nullptr) {
@@ -1339,7 +1220,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          {
             // Prompting will be bypassed when applying an effect that has
             // already been configured, e.g. repeating the last effect on a
-            // different selection.  Prompting may call EffectBase::Preview
+            // different selection.  Prompting may call EffectPreview
             std::shared_ptr<EffectInstance> pInstance;
             std::shared_ptr<EffectInstanceEx> pInstanceEx;
             if ((flags & EffectManager::kConfigured) == 0 && pAccess) {
@@ -1444,7 +1325,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    // New tracks added?  Scroll them into view so that user sees them.
    // Don't care what track type.  An analyser might just have added a
    // Label track and we want to see it.
-   if( tracks.size() > nTracksOriginally ){
+   if (tracks.Size() > nTracksOriginally) {
       // 0.0 is min scroll position, 1.0 is max scroll position.
       trackPanel.VerticalScroll( 1.0 );
    }

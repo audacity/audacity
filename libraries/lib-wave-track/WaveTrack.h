@@ -99,12 +99,12 @@ private:
    using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
-   
+
    double GetOffset() const override;
    void SetOffset(double o) override;
    ChannelType GetChannelIgnoringPan() const override;
    ChannelType GetChannel() const override;
-   virtual void SetPanFromChannelType() override;
+   void SetPanFromChannelType();
 
    bool LinkConsistencyFix(bool doFix, bool completeList) override;
 
@@ -138,7 +138,7 @@ private:
 
    // -1.0 (left) -> 1.0 (right)
    float GetPan() const;
-   void SetPan(float newPan) override;
+   void SetPan(float newPan);
 
    float GetChannelGain(int channel) const override;
 
@@ -483,7 +483,7 @@ private:
 
    // This track has been merged into a stereo track.  Copy shared parameters
    // from the NEW partner.
-   void Merge(const Track &orig) override;
+   void Merge(const Track &orig);
 
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
@@ -518,10 +518,6 @@ private:
 
    sampleFormat  mFormat;
    int           mRate;
-   //! Atomic because it may be read by worker threads in playback
-   std::atomic<float> mGain{ 1.0f };
-   //! Atomic because it may be read by worker threads in playback
-   std::atomic<float> mPan{ 0.0f };
    int           mWaveColorIndex;
 
 private:

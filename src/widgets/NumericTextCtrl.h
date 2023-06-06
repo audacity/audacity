@@ -45,7 +45,8 @@ class AUDACITY_DLL_API NumericTextCtrl final
       bool menuEnabled { true };
       bool hasInvalidValue { false };
       double invalidValue { -1.0 };
-      FormatStrings format {};
+      NumericFormatSymbol formatSymbol {};
+      TranslatableString customFormat {};
       bool hasValue { false };
       double value{ -1.0 };
 
@@ -57,17 +58,19 @@ class AUDACITY_DLL_API NumericTextCtrl final
       Options &InvalidValue (bool has, double v = -1.0)
          { hasInvalidValue = has, invalidValue = v; return *this; }
       // use a custom format not in the tables:
-      Options &Format (const FormatStrings &f)
-         { format = f; return *this; }
+      Options& FormatSymbol(const NumericFormatSymbol& f)
+         { formatSymbol = f; return *this; }
+      Options& CustomFormat(const TranslatableString& f)
+         { customFormat = f; return *this; }
       Options &Value (bool has, double v)
          { hasValue = has, value = v; return *this; }
    };
 
-   NumericTextCtrl(wxWindow *parent, wxWindowID winid,
-                   NumericConverter::Type type,
+   NumericTextCtrl(
+      const FormatterContext& context, wxWindow* parent, wxWindowID winid,
+                   NumericConverterType type,
                    const NumericFormatSymbol &formatName = {},
                    double value = 0.0,
-                   double sampleRate = 44100,
                    const Options &options = {},
                    const wxPoint &pos = wxDefaultPosition,
                    const wxSize &size = wxDefaultSize);
@@ -78,17 +81,18 @@ class AUDACITY_DLL_API NumericTextCtrl final
    void SetName( const TranslatableString &name );
 
    wxSize ComputeSizing(bool update = true, wxCoord digitW = 0, wxCoord digitH = 0);
+
    bool Layout() override;
    void Fit() override;
 
-   void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
 
-   // returns true iff the format string really changed:
-   bool SetFormatString(const FormatStrings & formatString);
-
+   // returns true if the format type really changed:
+   bool SetTypeAndFormatName(
+      const NumericConverterType& type, const NumericFormatSymbol& formatName);
    // returns true iff the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
+   bool SetCustomFormat(const TranslatableString& customFormat);
 
    void SetFieldFocus(int /* digit */);
 
@@ -108,6 +112,8 @@ class AUDACITY_DLL_API NumericTextCtrl final
    int GetFocusedDigit() { return mFocusedDigit; }
 
 private:
+   void OnFormatUpdated() override;
+   void HandleFormatterChanged();
 
    void OnCaptureKey(wxCommandEvent &event);
    void OnKeyDown(wxKeyEvent &event);
@@ -130,8 +136,16 @@ private:
    void Updated(bool keyup = false);
 
 private:
+   struct FieldPosition final
+   {
+         int fieldX; // x-position of the field on-screen
+         int fieldW; // width of the field on-screen
+         int labelX; // x-position of the label on-screen
+   };
 
    std::vector<wxRect> mBoxes;
+   std::vector<FieldPosition> mFieldPositions;
+   
    wxRect GetBox(size_t ii) const;
 
    bool           mMenuEnabled;
@@ -154,13 +168,15 @@ private:
 
    int            mLastField;
 
+   int            mFocusedDigit { 0 };
+
    // If true, the focus will be set to the first non-zero digit
    bool           mAutoPos;
 
    // Keeps track of extra fractional scrollwheel steps
    double         mScrollRemainder;
 
-   NumericConverter::Type mType;
+   NumericConverterType mType;
 
    bool           mAllowInvalidValue;
 

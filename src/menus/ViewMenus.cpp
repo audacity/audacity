@@ -1,11 +1,11 @@
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
+#include "PlayableTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
-#include "Track.h"
 #include "../TrackInfo.h"
 #include "../TrackPanel.h"
 #include "UndoManager.h"
@@ -462,7 +462,7 @@ BaseItemSharedPtr ViewMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( ViewMenu() )
+   Indirect(ViewMenu())
 };
 }
 

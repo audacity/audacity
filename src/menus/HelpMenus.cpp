@@ -16,6 +16,7 @@
 #include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectSnap.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectWindows.h"
 #include "SelectFile.h"
@@ -87,10 +88,8 @@ QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
             wxDEFAULT_DIALOG_STYLE )
       , mProject{ project }
 {
-   const long SNAP_OFF = 0;
-
    mbSyncLocked = SyncLockTracks.Read();
-   mbInSnapTo = gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) !=0;
+   mbInSnapTo = ProjectSnap(project).GetSnapMode() != SnapMode::SNAP_OFF; gPrefs->Read(wxT("/SnapTo"));
    mbSoundActivated = SoundActivatedRecord.Read();
 
    ShuttleGui S(this, eIsCreating);
@@ -180,12 +179,10 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
             XO("Clocks on the Tracks"), "Quick_Fix#sync_lock" );
          AddStuck( S, mbInSnapTo,
             [pProject] {
-               gPrefs->Write( "/SnapTo", 0 );
-               gPrefs->Flush();
                // Sadly SnapTo has to be handled specially,
                // as it is not part of the standard
                // preference dialogs.
-               ProjectSelectionManager::Get( *pProject ).AS_SetSnapTo( 0 );
+               ProjectSnap::Get( *pProject ).SetSnapMode( SnapMode::SNAP_OFF );
             },
             XO("Can't select precisely"), "Quick_Fix#snap_to" );
          AddStuck( S, mbSoundActivated,
@@ -333,7 +330,7 @@ void OnMenuTree(const CommandContext &context)
       using ToolbarMenuVisitor::ToolbarMenuVisitor;
 
       enum : unsigned { TAB = 3 };
-      void DoBeginGroup( GroupItem &item, const Path& ) override
+      void DoBeginGroup( GroupItemBase &item, const Path& ) override
       {
          if ( dynamic_cast<MenuItem*>( &item ) ) {
             Indent();
@@ -344,7 +341,7 @@ void OnMenuTree(const CommandContext &context)
          }
       }
 
-      void DoEndGroup( GroupItem &item, const Path& ) override
+      void DoEndGroup( GroupItemBase &item, const Path& ) override
       {
          if ( dynamic_cast<MenuItem*>( &item ) )
             indentation = wxString{ ' ', TAB * --level };
@@ -516,7 +513,7 @@ BaseItemSharedPtr HelpMenu()
 
 AttachedItem sAttachment1{
    wxT(""),
-   Shared( HelpMenu() )
+   Indirect(HelpMenu())
 };
 
 }

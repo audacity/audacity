@@ -1165,7 +1165,7 @@ BaseItemSharedPtr ToolbarMenu()
 
 AttachedItem sAttachment{
    wxT("Transport/Basic"),
-   Shared( ToolbarMenu() )
+   Indirect(ToolbarMenu())
 };
 
 BaseItemSharedPtr KeyboardScrubbingItems()
@@ -1189,7 +1189,7 @@ BaseItemSharedPtr KeyboardScrubbingItems()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1/Transport"),
-   Shared( KeyboardScrubbingItems() )
+   Indirect(KeyboardScrubbingItems())
 };
 
 }

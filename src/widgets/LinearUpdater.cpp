@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include "LinearUpdater.h"
+#include "BeatsFormat.h"
 
 const LinearUpdater &LinearUpdater::Instance()
 {
@@ -53,9 +54,9 @@ void LinearUpdater::Update(
          mMin, mMax, mLength, mRight, mBottom, &context]
    (double value) -> int {
       // Make a tick only if the value is strictly between the bounds
-      if (value <= std::min(mMin, mMax))
+      if (value < std::min(mMin, mMax))
          return -1;
-      if (value >= std::max(mMin, mMax))
+      if (value > std::max(mMin, mMax))
          return -1;
 
       int mid;
@@ -166,8 +167,12 @@ void LinearUpdater::Update(
    // If we've dropped minor labels through overcrowding, then don't show
    // any of them.  We're allowed though to drop ones which correspond to the
    // major numbers.
+   // TODO: Doesn't play nicely with BeatsFormat, possibly because of dropping values less than 0?
+   // Investigate and come up with a better solution than specifically ignoring BeatsFormat
+
    if (nDroppedMinorLabels >
-      (allOutputs.majorLabels.size() + (mLabelEdges ? 2 : 0))) {
+      (allOutputs.majorLabels.size() + (mLabelEdges ? 2 : 0))
+      && !dynamic_cast<const BeatsFormat*>(context.mpRulerFormat)) {
       // Old code dropped the labels AND their ticks, like so:
       //    mMinorLabels.clear();
       // Nowadays we just drop the labels.

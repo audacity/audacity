@@ -2,7 +2,6 @@ $nyquist plug-in
 $version 4
 $type tool
 $name (_ "EQ XML to TXT Converter")
-$manpage "EQ_XML_to_TXT_Converter"
 $debugbutton false
 $preview disabled
 $author (_ "Steve Daulton")

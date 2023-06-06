@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-12-20 09:37-0500\n"
+"POT-Creation-Date: 2023-04-05 16:57+0300\n"
 "PO-Revision-Date: 2007-08-30 07:25-0400\n"
 "Last-Translator: Victor Ibragimov <youth_opportunities@tajikngo.org>\n"
 "Language-Team: Tajik Language\n"
@@ -20,74 +20,6 @@ msgstr ""
 "X-Poedit-Country: TAJIKISTAN\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: KBabel 1.11.4\n"
-
-#. i18n-hint C++ programming assertion
-#: crashreports/crashreporter/CrashReportApp.cpp
-#, c-format
-msgid "Exception code 0x%x"
-msgstr ""
-
-#. i18n-hint C++ programming assertion
-#: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
-msgid "Unknown exception"
-msgstr "Қисмати номаълуми сатри фармоишӣ: %s\n"
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-msgid "Unknown error"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
-msgid "Problem Report for Audacity"
-msgstr "Қисматҳо..."
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgid "Problem details"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
-msgid "Comments"
-msgstr "Шарҳ"
-
-#. i18n-hint: %s will be replaced with "our Privacy Policy"
-#: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
-msgid "See %s for more info."
-msgstr "Интихоби як ё якчанд файлҳои аудиои..."
-
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an
-#. object of "See".
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
-#: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgid "our Privacy Policy"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgctxt "crash reporter button"
-msgid "&Don't send"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgctxt "crash reporter button"
-msgid "&Send"
-msgstr ""
-
-#: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
-msgid "Failed to send crash report"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
@@ -226,9 +158,92 @@ msgstr "Сабтшавӣ"
 msgid "Recording volume is native\n"
 msgstr "Сабтшавӣ"
 
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Could not find any audio devices.\n"
+msgstr "Дастгоҳҳои садогӣ ёфт нашуданд.\n"
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid ""
+"You will not be able to play or record audio.\n"
+"\n"
+msgstr ""
+"Шумо садоро наметавонед сабт кунед ё ин ки боз хонед.\n"
+"\n"
+
+#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
+#, fuzzy, c-format
+msgid "Error: %s"
+msgstr "Хато: "
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Error Initializing Audio"
+msgstr "Хато дар вақти омодасозии овоз "
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, fuzzy
+msgid "Audacity Audio"
+msgstr "Таблои %s Audacity"
+
+#: libraries/lib-audio-io/AudioIO.cpp src/ProjectAudioManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Error opening recording device.\n"
+"Error code: %s"
+msgstr "Хато ҳангоми кушодани афзори садо. "
+
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-effects/EffectBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny
+msgid "Error"
+msgstr "Хато"
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Out of memory!"
+msgstr ""
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr ""
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, c-format
+msgid "Automated Recording Level Adjustment decreased the volume to %f."
+msgstr ""
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr ""
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, c-format
+msgid "Automated Recording Level Adjustment increased the volume to %.2f."
+msgstr ""
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
+msgstr ""
+
+#: libraries/lib-audio-io/AudioIO.cpp
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
+msgstr ""
+
+#: libraries/lib-audio-io/AudioIO.cpp
+#, c-format
+msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr ""
+
 #: libraries/lib-basic-ui/BasicUI.cpp
-#: libraries/lib-exceptions/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.h
+#: libraries/lib-exceptions/AudacityException.h
+#: libraries/lib-wx-init/AudacityMessageBox.h src/commands/MessageCommand.cpp
 msgid "Message"
 msgstr ""
 
@@ -236,6 +251,83 @@ msgstr ""
 #, fuzzy
 msgid "Cannot proceed to upload."
 msgstr "Нишона барои содирот ҷой надорад."
+
+#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#, fuzzy
+msgid "Audacity"
+msgstr "Таблои %s Audacity"
+
+#: libraries/lib-effects/Effect.cpp
+msgid "Built-in"
+msgstr ""
+
+#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
+#, c-format
+msgid ""
+"%s: Could not load settings below. Default settings will be used.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: libraries/lib-effects/EffectBase.cpp src/commands/AudacityCommand.cpp
+#, fuzzy, c-format
+msgid "Applying %s..."
+msgstr "Истифодабарӣ..."
+
+#: libraries/lib-effects/EffectBase.cpp
+msgid "Preparing preview"
+msgstr "Омодасозии пешнамоиш"
+
+#: libraries/lib-effects/EffectBase.cpp
+msgid "Previewing"
+msgstr "Пешнамоиш"
+
+#: libraries/lib-effects/EffectBase.cpp src/ProjectAudioManager.cpp
+#, fuzzy
+msgid ""
+"Error opening sound device.\n"
+"Try changing the audio host, playback device and the project sample rate."
+msgstr "Хато ҳангоми кушодани афзори савтӣ. Лутфан, насби берунаи афзор ва суръати намунаи лоиҳаро санҷед."
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: libraries/lib-effects/EffectBase.h
+msgid "Nyquist"
+msgstr "Оҳанг"
+
+#: libraries/lib-effects/LoadEffects.cpp
+msgid "Builtin Effects"
+msgstr ""
+
+#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
+#: src/effects/VST/VSTEffect.cpp
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#, fuzzy
+msgid "The Audacity Team"
+msgstr "Гурӯҳи ташаббускори Audacity %s"
+
+#: libraries/lib-effects/LoadEffects.cpp
+msgid "Provides builtin effects to Audacity"
+msgstr ""
+
+#: libraries/lib-effects/LoadEffects.cpp
+msgid "Unknown built-in effect name"
+msgstr ""
+
+#: libraries/lib-effects/MixAndRender.cpp src/menus/TrackMenus.cpp
+#, fuzzy
+msgid "Mix and Render"
+msgstr "&Омезиш ва Пешниҳодкунӣ"
+
+#: libraries/lib-effects/MixAndRender.cpp
+msgid "Mixing and rendering tracks"
+msgstr "Омехтакунӣ ва муттаҳидсозии роҳчаҳо"
 
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
@@ -334,7 +426,7 @@ msgid "%s files"
 msgstr "Номи файлҳо:"
 
 #: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
-#: src/effects/lv2/LV2Validator.cpp
+#: src/effects/lv2/LV2Editor.cpp
 #, c-format
 msgid "(%s)"
 msgstr ""
@@ -345,21 +437,6 @@ msgid ""
 "\n"
 "%s does not have write permissions."
 msgstr "Рӯйхати %s мавҷуд нест. Сохта шавад?"
-
-#: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectBase.cpp
-#: src/effects/Generator.cpp src/effects/VST3/VST3Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-#: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Error"
-msgstr "Хато"
 
 #: libraries/lib-files/TempDirectory.cpp
 #, fuzzy
@@ -609,6 +686,784 @@ msgstr ""
 msgid "Failed to open the file for upload: %s"
 msgstr "'%s' тоза намешавад"
 
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and samples (at the current project sample rate)
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+msgid "hh:mm:ss + samples"
+msgstr "сс:дд:сс + мисолҳо"
+
+#. i18n-hint: Name of time display format that shows time in seconds
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
+msgid "seconds"
+msgstr "сонияҳо"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes
+#. * and seconds
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+msgid "hh:mm:ss"
+msgstr "сс:дд:сс"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and milliseconds (1/1000 second)
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+msgid "hh:mm:ss + milliseconds"
+msgstr "сс:дд:сс + миллисония"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and hundredths of a second (1/100 second)
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+msgid "hh:mm:ss + hundredths"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows frequency in hertz
+#. i18n-hint: This is the abbreviation for "Hertz", or
+#. cycles per second.
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp src/FreqWindow.cpp
+#: src/effects/ChangePitch.cpp src/effects/EqualizationUI.cpp
+#: src/effects/ScienFilter.cpp src/import/ImportRaw.cpp
+msgid "Hz"
+msgstr "Ҳертз"
+
+#. i18n-hint: Name of display format that shows log of frequency
+#. * in octaves
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+#, fuzzy
+msgid "octaves"
+msgstr "Актаваи Поён"
+
+#. i18n-hint: The music theory "bar"
+#: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
+#, fuzzy
+msgid "bar"
+msgstr "Афзор"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
+msgid "beat"
+msgstr ""
+
+#. i18n-hint: "bar" and "beat" are musical notation elements.
+#: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
+msgid "bar:beat"
+msgstr ""
+
+#. i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.
+#: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
+msgid "bar:beat:tick"
+msgstr ""
+
+#. i18n-hint: Format string for displaying time in seconds. Change the comma
+#. * in the middle to the 1000s separator for your locale, and the 'seconds'
+#. * on the end to the word for seconds. Don't change the numbers.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 seconds"
+msgstr "01000,01000 сония"
+
+#. i18n-hint: Name of time display format that shows time in seconds
+#. * and milliseconds (1/1000 second)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "seconds + milliseconds"
+msgstr "сс:дд:сс + миллисония"
+
+#. i18n-hint: Format string for displaying time in seconds and milliseconds
+#. * as fractional seconds. Change the comma in the middle to the 1000s separator
+#. * for your locale, and the 'seconds' on the end to the word for seconds.
+#. * Don't change the numbers. The decimal separator is specified using '<' if
+#. * your languages uses a ',' or to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "01000,01000>01000 seconds"
+msgstr "01000,01000 сония"
+
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+msgid "milliseconds"
+msgstr "миллисония"
+
+#. i18n-hint: Format string for displaying time in hours, minutes and
+#. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
+#. * change the numbers unless there aren't 60 seconds in a minute in your
+#. * locale
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s"
+msgstr "0100 с 060 д 060 с"
+
+#. i18n-hint: Name of time display format that shows time in days, hours,
+#. * minutes and seconds
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "dd:hh:mm:ss"
+msgstr "рр:сс:дд:сс"
+
+#. i18n-hint: Format string for displaying time in days, hours, minutes and
+#. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes and 's' to the
+#. * abbreviation for seconds. Don't change the numbers unless there aren't
+#. * 24 hours in a day in your locale
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 days 024 h 060 m 060 s"
+msgstr "0100 рӯз 024 с 060 д 060 с"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
+#. * (the hundredths are shown as decimal seconds). Don't change the numbers
+#. * unless there aren't 60 minutes in an hour in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060>0100 s"
+msgstr ""
+
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "centiseconds"
+msgstr ""
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * abbreviation for minutes and 's' to the abbreviation for seconds (the
+#. * milliseconds are shown as decimal seconds) . Don't change the numbers
+#. * unless there aren't 60 minutes in an hour in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060>01000 s"
+msgstr "0100 с 060 д 060>01000 с"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * abbreviation for minutes, 's' to the abbreviation for seconds and
+#. * translate samples . Don't change the numbers
+#. * unless there aren't 60 seconds in a minute in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+># samples"
+msgstr "0100 с 060 д 060 с+># мисолҳо"
+
+#. i18n-hint: Name of time display format that shows time in samples (at the
+#. * current project sample rate).  For example the number of a sample at 1
+#. * second into a recording at 44.1KHz would be 44,100.
+#.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#: plug-ins/sample-data-export.ny
+msgid "samples"
+msgstr "намунаҳо"
+
+#. i18n-hint: Format string for displaying time in samples (lots of samples).
+#. * Change the ',' to the 1000s separator for your locale, and translate
+#. * samples. If 1000s aren't a base multiple for your number system, then you
+#. * can change the numbers to an appropriate one, and put a 0 on the front
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000,01000 samples|#"
+msgstr "01000,01000,01000 мислоҳо|#"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at 24 frames per second (commonly used for films)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + film frames (24 fps)"
+msgstr "hh:mm:ss + кадрҳои филм (24 fps)"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames at 24 frames per second. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames' . Don't change the numbers
+#. * unless there aren't 60 seconds in a minute in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>24 frames"
+msgstr "0100 h 060 m 060 s+>24 кадрҳо"
+
+#. i18n-hint: Name of time display format that shows time in frames (lots of
+#. * frames) at 24 frames per second (commonly used for films)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "film frames (24 fps)"
+msgstr "кадрҳои филм (24 fps)"
+
+#. i18n-hint: Format string for displaying time in frames at 24 frames per
+#. * second. Change the comma
+#. * in the middle to the 1000s separator for your locale,
+#. * translate 'frames' and leave the rest alone
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 frames|24"
+msgstr "01000,01000 кадрҳо|24"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at NTSC TV drop-frame rate (used for American /
+#. * Japanese TV, and very odd)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + NTSC drop frames"
+msgstr "hh:mm:ss + NTSC партофтани кадрҳо"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames'. Leave the |N alone, it's important!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>30 frames|N"
+msgstr "0100 h 060 m 060 s+>30 кадрҳо|N"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
+#. * Japanese TV, and doesn't quite match wall time
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + NTSC non-drop frames"
+msgstr "hh:mm:ss + NTSC ягон кадр партофта нашуд"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames'. Leave the | .999000999 alone,
+#. * the whole things really is slightly off-speed!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>030 frames| .999000999"
+msgstr "0100 h 060 m 060 s+>030 кадрҳо| .999000999"
+
+#. i18n-hint: Name of time display format that shows time in frames at NTSC
+#. * TV frame rate (used for American / Japanese TV
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "NTSC frames"
+msgstr "Кадрҳои NTSC"
+
+#. i18n-hint: Format string for displaying time in frames with NTSC frames.
+#. * Change the comma
+#. * in the middle to the 1000s separator for your locale,
+#. * translate 'frames' and leave the rest alone. That really is the frame
+#. * rate!
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 frames|29.97002997"
+msgstr "01000,01000 кадрҳои|29.97002997"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at PAL TV frame rate (used for European TV)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + PAL frames (25 fps)"
+msgstr "hh:mm:ss + PAL кадрҳо (25 fps)"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames with PAL TV frames. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames'. Nice simple time code!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>25 frames"
+msgstr "0100 h 060 m 060 s+>25 кадрҳо"
+
+#. i18n-hint: Name of time display format that shows time in frames at PAL
+#. * TV frame rate (used for European TV)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "PAL frames (25 fps)"
+msgstr "Кадрҳои PAL (25 fps)"
+
+#. i18n-hint: Format string for displaying time in frames with NTSC frames.
+#. * Change the comma
+#. * in the middle to the 1000s separator for your locale,
+#. * translate 'frames' and leave the rest alone.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 frames|25"
+msgstr "01000,01000 кадр|25"
+
+#. i18n-hint: Name of time display format that shows time in hours, minutes,
+#. * seconds and frames at CD Audio frame rate (75 frames per second)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hh:mm:ss + CDDA frames (75 fps)"
+msgstr "hh:mm:ss + CDDA кадрҳо (75 fps)"
+
+#. i18n-hint: Format string for displaying time in hours, minutes, seconds
+#. * and frames with CD Audio frames. Change the 'h' to the abbreviation
+#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+#. * for seconds and translate 'frames'.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "0100 h 060 m 060 s+>75 frames"
+msgstr "0100 h 060 m 060 s+>75 кадрҳо"
+
+#. i18n-hint: Name of time display format that shows time in frames at CD
+#. * Audio frame rate (75 frames per second)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "CDDA frames (75 fps)"
+msgstr "Кадри CDDA (75 fps)"
+
+#. i18n-hint: Format string for displaying time in frames with CD Audio
+#. * frames. Change the comma
+#. * in the middle to the 1000s separator for your locale,
+#. * translate 'frames' and leave the rest alone
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "01000,01000 frames|75"
+msgstr "01000,01000 кадр|75"
+
+#. i18n-hint: Format string for displaying frequency in hertz. Change
+#. * the decimal point for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "010,01000>0100 Hz"
+msgstr "0100 с 060 д 060>01000 с"
+
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "centihertz"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows frequency in kilohertz
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "kHz"
+msgstr "kҲертз"
+
+#. i18n-hint: Format string for displaying frequency in kilohertz. Change
+#. * the decimal point for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "01000>01000 kHz|0.001"
+msgstr "0100 с 060 д 060>01000 с"
+
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hertz"
+msgstr ""
+
+#. i18n-hint: Format string for displaying log of frequency in octaves.
+#. * Change the decimal points for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "100>01000 octaves|1.442695041"
+msgstr "01000,01000 кадрҳо|24"
+
+#. i18n-hint: an octave is a doubling of frequency
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "thousandths of octaves"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows log of frequency
+#. * in semitones and cents
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "semitones + cents"
+msgstr ""
+
+#. i18n-hint: Format string for displaying log of frequency in semitones
+#. * and cents.
+#. * Change the decimal points for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "1000 semitones >0100 cents|17.312340491"
+msgstr ""
+
+#. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "hundredths of cents"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows log of frequency
+#. * in decades
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "decades"
+msgstr ""
+
+#. i18n-hint: Format string for displaying log of frequency in decades.
+#. * Change the decimal points for your locale. Don't change the numbers.
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+#, fuzzy
+msgid "10>01000 decades|0.434294482"
+msgstr "01000,01000 кадрҳо|24"
+
+#. i18n-hint: a decade is a tenfold increase of frequency
+#: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
+msgid "thousandths of decades"
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set page size for database %s"
+msgstr "'%s' тоза намешавад"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Интихобкунӣ"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "'%s' тоза намешавад"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy
+msgid "Checkpointing project"
+msgstr "Истифодаи ин &Лоиҳа"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, c-format
+msgid "Checkpointing %s"
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#: libraries/lib-project-file-io/ProjectFileIO.cpp src/CrashReport.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Could not write to %s.\n"
+msgstr "Дар файл сабт намешавад: "
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, c-format
+msgid ""
+"Disk is full.\n"
+"%s\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#: libraries/lib-project-file-io/SqliteSampleBlock.cpp
+#: libraries/lib-transactions/TransactionScope.cpp
+#: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
+#: libraries/lib-wx-init/LogWindow.cpp modules/mod-nyq-bench/NyqBench.cpp
+#: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportMultiple.cpp
+#: src/import/RawAudioGuess.cpp src/menus/EditMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
+msgid "Warning"
+msgstr "Огоҳӣ"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to create savepoint:\n"
+"\n"
+"%s"
+msgstr "'%s' тоза намешавад"
+
+#: libraries/lib-project-file-io/DBConnection.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to release savepoint:\n"
+"\n"
+"%s"
+msgstr "'%s' тоза намешавад"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"There is very little free disk space left on %s\n"
+"Please select a bigger temporary directory location in\n"
+"Directories Preferences."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to open the project's database"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "'%s' тоза намешавад"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to discard connection"
+msgstr "Интихобкунӣ"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to restore connection"
+msgstr "'%s' тоза намешавад"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to execute a project file command:\n"
+"\n"
+"%s"
+msgstr "'%s' тоза намешавад"
+
+#. i18n-hint: An error message.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "This is not an Audacity project file"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"This project was created with a newer version of Audacity.\n"
+"\n"
+"You will need to upgrade to open it."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to initialize the project file"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#. i18n-hint: An error message.  Don't translate inset or blockids.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "Total orphan blocks deleted %d"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Failed to rollback transaction during import"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to attach destination database"
+msgstr "Тағйири номи '%s' ба '%s' номумкин аст"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Unable to switch to fast journaling mode"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to prepare project file command:\n"
+"\n"
+"%s"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#: libraries/lib-project-file-io/SqliteSampleBlock.cpp src/ProjectFSCK.cpp
+#: src/TransportUtilities.cpp
+msgid "Progress"
+msgstr "Раванди иҷроиш"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to bind SQL parameter"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to update the project file.\n"
+"The following command failed:\n"
+"\n"
+"%s"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Destination project could not be detached"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Copying Project"
+msgstr "Лоиҳаи Нав"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Error Writing to File"
+msgstr "Дар файл сабт намешавад: "
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Audacity failed to write file %s.\n"
+"Perhaps disk is full or not writable.\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+"Audacity натавонист файлро сабт кунад:\n"
+"  %s."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Compacting project"
+msgstr "Лоиҳаи нав эҷод карда шуд"
+
+#. i18n-hint: The %02i is the project number, the %s is the project name.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "[Project %02i] Audacity \"%s\""
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp src/ProjectFileManager.cpp
+msgid "<untitled>"
+msgstr ""
+
+#. i18n-hint: E.g this is recovered audio that had been lost.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "(Recovered)"
+msgstr "(Барқароршуда)"
+
+#. i18n-hint: %s will be replaced by the version number.
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"This file was saved using Audacity %s.\n"
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Can't open project file"
+msgstr "Лоиҳаи файлро кушода наметавонад"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Failed to remove the autosave information from the project file."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to parse project information."
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Saving project"
+msgstr "&Сабти Лоиҳа"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp src/ProjectFileManager.cpp
+msgid "Error Saving Project"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Syncing"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"The project failed to open, possibly due to limited space\n"
+"on the storage device.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Unable to remove autosave information, possibly due to limited space\n"
+"on the storage device.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Backing up project"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Automatic database backup failed."
+msgstr "Ба таври автоматӣ барқарорсозӣ баъди садама"
+
+#: libraries/lib-project-file-io/ProjectSerializer.cpp
+msgid ""
+"This recovery file was saved by Audacity 2.3.0 or before.\n"
+"You need to run that version of Audacity to recover the project."
+msgstr ""
+
+#: libraries/lib-project-file-io/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Лоиҳаи файлро кушода наметавонад"
+
+#: libraries/lib-project-file-io/SqliteSampleBlock.cpp
+msgid "Discarding undo/redo history"
+msgstr ""
+
 #: libraries/lib-project-history/ProjectHistory.cpp
 msgid "Created new project"
 msgstr "Лоиҳаи нав эҷод карда шуд"
@@ -648,15 +1503,175 @@ msgstr "Бознамунагирии Роҳча"
 msgid "Writable Sample Track"
 msgstr "Бознамунагирии Роҳча"
 
-#: libraries/lib-screen-geometry/ViewInfo.cpp
-msgid "&Loop On/Off"
+#: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
+msgid "&Close"
+msgstr "&Пӯшидан"
+
+#: libraries/lib-shuttlegui/ShuttleGui.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp src/AudacityFileConfig.cpp
+#: src/commands/HelpCommand.cpp src/effects/EqualizationCurvesDialog.cpp
+#: src/export/Export.cpp src/menus/HelpMenus.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Help"
 msgstr ""
 
-#: libraries/lib-strings/FutureStrings.h
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
+#: libraries/lib-shuttlegui/ShuttleGui.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "&Preview"
+msgstr "Пеш&намоиш"
+
+#: libraries/lib-shuttlegui/ShuttleGui.cpp
+#, fuzzy
+msgid "Dry Previe&w"
+msgstr "Буриши пешнамоиш"
+
+#: libraries/lib-shuttlegui/ShuttleGui.cpp
+#, fuzzy
+msgid "&Settings"
+msgstr "&Қисматҳо..."
+
+#: libraries/lib-shuttlegui/ShuttleGui.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "Debu&g"
+msgstr "&Ислоҳи хато"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Beats"
+msgstr "Такрор"
+
+#. i18n-hint: The music theory "bar"
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "Bar"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/2"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/4"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/8"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/16"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/32"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/64"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/128"
+msgstr ""
+
+#. i18n-hint: The music theory "triplet"
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "Triplets"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/2 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/4 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/8 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/16 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/32 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/64 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+msgid "1/128 (triplets)"
+msgstr ""
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Seconds && samples"
+msgstr "сонияҳо"
+
+#: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Seconds"
+msgstr "сонияҳо"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Deciseconds"
+msgstr "сонияҳо"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Centiseconds"
+msgstr "сонияҳо"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Milliseconds"
+msgstr "миллисония"
+
+#: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Samples"
+msgstr "намунаҳо"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Video frames"
+msgstr "Кадрҳои NTSC"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "Film frames (24 fps)"
+msgstr "кадрҳои филм (24 fps)"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "NTSC frames (29.97 fps)"
+msgstr "Кадри CDDA (75 fps)"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "NTSC frames (30 fps)"
+msgstr "Кадри CDDA (75 fps)"
+
+#: libraries/lib-snapping/SnapUtils.cpp
+#, fuzzy
+msgid "CD frames"
+msgstr "Кадрҳои NTSC"
+
+#: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
 msgstr ""
 
-#: libraries/lib-strings/FutureStrings.h
+#: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
@@ -859,6 +1874,16 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
+#: libraries/lib-time-frequency-selection/ViewInfo.cpp
+msgid "&Loop On/Off"
+msgstr ""
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Time track.
+#: libraries/lib-time-track/TimeTrack.cpp src/TrackPanelAx.cpp
+msgid "Time Track"
+msgstr ""
+
 #: libraries/lib-track/Track.cpp
 #, fuzzy
 msgid "Generic Track"
@@ -877,17 +1902,400 @@ msgstr "Бозигар"
 msgid "Database error.  Sorry, but we don't have more details."
 msgstr ""
 
-#: libraries/lib-transactions/TransactionScope.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
-#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
-#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
-#: src/menus/EditMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
-msgid "Warning"
-msgstr "Огоҳӣ"
+#: libraries/lib-vst3/VST3EffectBase.cpp
+msgid "VST3"
+msgstr ""
 
-#: libraries/lib-xml/XMLFileReader.cpp src/effects/Effect.cpp
+#. i18n-hint VST3 effect description string
+#: libraries/lib-vst3/VST3EffectBase.cpp
+#, c-format
+msgid "SubCategories: %s"
+msgstr ""
+
+#: libraries/lib-vst3/VST3EffectsModule.cpp
+#, fuzzy
+msgid "VST3 Effects"
+msgstr "Нати&ҷа"
+
+#: libraries/lib-vst3/VST3EffectsModule.cpp
+msgid "Adds the ability to use VST3 effects in Audacity."
+msgstr ""
+
+#: libraries/lib-vst3/VST3EffectsModule.cpp
+#, c-format
+msgid "VST3 module error: %s"
+msgstr ""
+
+#: libraries/lib-vst3/VST3Wrapper.cpp
+#, fuzzy, c-format
+msgid "Unable to apply VST3 preset file %s"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-vst3/VST3Wrapper.cpp
+#, fuzzy
+msgid "Failed to save VST3 preset to file"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-wave-track/Sequence.cpp
+#, c-format
+msgid ""
+"Sequence has block file exceeding maximum %s samples per block.\n"
+"Truncating to this maximum length."
+msgstr ""
+
+#: libraries/lib-wave-track/Sequence.cpp
+msgid "Warning - Truncating Overlong Block File"
+msgstr ""
+
+#: libraries/lib-wave-track/WaveClip.cpp
+#, fuzzy
+msgid "Resampling failed."
+msgstr "Намунагирӣ бекор шуда."
+
+#: libraries/lib-wave-track/WaveTrack.cpp src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
+msgid "Audio"
+msgstr "&Аудио..."
+
+#: libraries/lib-wave-track/WaveTrack.cpp
+#, fuzzy
+msgid "Wave Track"
+msgstr "Ҷойивазшавии Роҳча"
+
+#. i18n-hint Template for clip name generation on copy-paste
+#: libraries/lib-wave-track/WaveTrack.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s.%i"
+msgstr ""
+
+#. i18n-hint Template for clip name generation on inserting new empty clip
+#: libraries/lib-wave-track/WaveTrack.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s %i"
+msgstr ""
+
+#: libraries/lib-wave-track/WaveTrack.cpp
+msgid "There is not enough room available to paste the selection"
+msgstr "Барои гузоштани интихоб пораи ҳофиза кам аст"
+
+#: libraries/lib-wave-track/WaveTrack.cpp
+msgid "There is not enough room available to expand the cut line"
+msgstr "Барои густурдани хати буриш пораи ҳофиза кам аст"
+
+#: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
+msgid "Show &Log..."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "Backwards"
+msgstr ""
+
+#. i18n-hint arrowhead meaning backward movement
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "<"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "Forwards"
+msgstr ""
+
+#. i18n-hint arrowhead meaning forward movement
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid ">"
+msgstr ""
+
+#. i18n-hint verb
+#: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
+#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+msgid "Close"
+msgstr "Пӯшидан(бастан)"
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "Help on the Internet"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "Local"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpSystem.cpp
+msgid "From Internet"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Welcome!"
+msgstr ""
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Playing Audio"
+msgstr ""
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Recording Audio"
+msgstr ""
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid "Recording - Choosing the Recording Device"
+msgstr "Сабтшавӣ"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid "Recording - Choosing the Recording Source"
+msgstr "Сабтшавӣ"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+#, fuzzy
+msgid "Recording - Setting the Recording Level"
+msgstr "Сабтшавӣ"
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Editing and greyed out Menus"
+msgstr ""
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Exporting an Audio File"
+msgstr ""
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Saving an Audacity Project"
+msgstr ""
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Support for Other Formats"
+msgstr ""
+
+#. i18n-hint: Title for a topic.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Burn to CD"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "No Local Help"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Get the Official Released Version of Audacity"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgstr ""
+
+#. i18n-hint: %s is replaced with Audacity version
+#: libraries/lib-wx-init/HelpText.cpp
+#, c-format
+msgid "What's new in Audacity %s"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "How to get help"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "These are our support methods:"
+msgstr ""
+
+#. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "[[help:Quick_Help|Quick Help]]"
+msgstr ""
+
+#. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
+#: libraries/lib-wx-init/HelpText.cpp
+msgid " [[help:Main_Page|Manual]]"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid "Check Online"
+msgstr ""
+
+#: libraries/lib-wx-init/LogWindow.cpp
+#, fuzzy
+msgid "Audacity Log"
+msgstr "Таблои %s Audacity"
+
+#: libraries/lib-wx-init/LogWindow.cpp src/TagsEditor.cpp
+msgid "&Save..."
+msgstr "&Захира кардан..."
+
+#. i18n-hint: (verb)
+#: libraries/lib-wx-init/LogWindow.cpp src/TagsEditor.cpp
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Cl&ear"
+msgstr ""
+
+#: libraries/lib-wx-init/LogWindow.cpp
+msgid "log.txt"
+msgstr ""
+
+#: libraries/lib-wx-init/LogWindow.cpp
+msgid "Save log to:"
+msgstr ""
+
+#: libraries/lib-wx-init/LogWindow.cpp
+#, fuzzy, c-format
+msgid "Couldn't save log to file: %s"
+msgstr "Дар файл сабт намешавад: "
+
+#: libraries/lib-wx-init/MultiDialog.cpp
+msgid "Show Log for Details"
+msgstr ""
+
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
+#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+msgid "OK"
+msgstr "ОК"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Elapsed Time:"
+msgstr ""
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Remaining Time:"
+msgstr ""
+
+#: libraries/lib-wx-init/ProgressDialog.cpp modules/mod-nyq-bench/NyqBench.cpp
+#: src/toolbars/ControlToolBar.cpp
+msgid "Stop"
+msgstr "Боздорӣ"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+msgid "Cancel"
+msgstr ""
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Are you sure you wish to cancel?"
+msgstr "Шумо бовари доред, ки %s нест карда шавад?"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Confirm Cancel"
+msgstr "Тасдиқоти несткунӣ"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Are you sure you wish to stop?"
+msgstr "Шумо бовари доред, ки %s нест карда шавад?"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Confirm Stop"
+msgstr "Тасдиқ шудан"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Are you sure you wish to close?"
+msgstr "Шумо бовари доред, ки %s нест карда шавад?"
+
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#, fuzzy
+msgid "Confirm Close"
+msgstr "Тасдиқ шудан"
+
+#: libraries/lib-wx-init/SelectFile.cpp
+msgid "The specified filename could not be converted due to Unicode character use."
+msgstr ""
+
+#: libraries/lib-wx-init/SelectFile.cpp
+msgid "Specify New Filename:"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
+#, c-format
+msgid "File '%s' already exists, do you really want to overwrite it?"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
+msgid "Confirm"
+msgstr "Тасдиқ шудан"
+
+#: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
+#, fuzzy
+msgid "Please choose an existing file."
+msgstr " Лутфан, амалиётро интихоб намоед "
+
+#: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
+#, fuzzy
+msgid "File type:"
+msgstr "Навъи хаш:"
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Panel"
+msgstr "Лавҳаи Роҳча"
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+msgid "Dialog"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a directory"
+msgstr "Лоиҳаи нав эҷод карда шуд"
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+#, fuzzy
+msgid "Directory Dialog"
+msgstr "Рӯйхатҳо"
+
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+msgid "File Dialog"
+msgstr ""
+
+#: libraries/lib-xml/XMLFileReader.cpp src/effects/BasicEffectUIServices.cpp
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
 msgid "Could not open file: \"%s\""
@@ -1147,6 +2555,7 @@ msgid "Save script as..."
 msgstr "Сабти Лоиҳа &Ҳамчун..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Copy"
 msgstr "Нусха"
@@ -1157,6 +2566,7 @@ msgid "Copy to clipboard"
 msgstr "Буриш барои буфер"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Cut"
 msgstr "Буридан"
@@ -1167,6 +2577,7 @@ msgid "Cut to clipboard"
 msgstr "Буриш барои буфер"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Paste"
 msgstr "Гузоштан"
@@ -1278,11 +2689,6 @@ msgstr "Ибтидо"
 #, fuzzy
 msgid "Start script"
 msgstr "Дархости Nyquist..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
-#: src/widgets/ProgressDialog.cpp
-msgid "Stop"
-msgstr "Боздорӣ"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -1400,12 +2806,6 @@ msgstr ""
 msgid "About %s"
 msgstr ""
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
-msgid "OK"
-msgstr "ОК"
-
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
 #. *  your own name(s) to the credits.
@@ -1435,11 +2835,6 @@ msgstr "Ташаккур ба"
 msgid "%s Team Members"
 msgstr "Собиқ аъзоҳои гурӯҳи дигар"
 
-#. i18n-hint: Musers are people working at Muse Group
-#: src/AboutDialog.cpp
-msgid "Former Musers"
-msgstr ""
-
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
 msgstr ""
@@ -1464,6 +2859,7 @@ msgstr ""
 msgid "Translators"
 msgstr "Роҷер Ковакс, Виктор Ибрагимов, Акмал Саломов, Акбар Ватаншоев, Зарина Муродова, Сӯҳроб Рашидов, Абдураҳмон Холов. Почтаи электронӣ: youth_opportunities@tajikngo.org"
 
+#. i18n-hint: refers to optional plug-in software libraries
 #: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
 msgid "Libraries"
 msgstr ""
@@ -1488,7 +2884,7 @@ msgstr "Аввал Audacity Бакордарорӣ"
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2021 %s Team."
+msgid "%s software is copyright %s 1999-2023 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -1677,6 +3073,29 @@ msgstr ""
 msgid "App update checking and error reporting require network access. These features are optional."
 msgstr ""
 
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "See %s for more info."
+msgstr "Интихоби як ё якчанд файлҳои аудиои..."
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp src/widgets/ErrorReportDialog.cpp
+msgid "our Privacy Policy"
+msgstr ""
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Minutes and Seconds"
+msgstr "сонияҳо"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Beats and Measures"
+msgstr "Такрор"
+
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
 msgid "Click and drag to define a looping region."
@@ -1794,6 +3213,10 @@ msgstr "&Тағири тасвир барои интихоб"
 #, fuzzy
 msgid "Pinned Play Head"
 msgstr "Сабтшавӣ"
+
+#: src/AdornedRulerPanel.cpp
+msgid "Pinned Play/Record &Head (on/off)"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy, c-format
@@ -2059,12 +3482,6 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
-#: src/widgets/ErrorReportDialog.cpp src/widgets/MultiDialog.cpp
-msgid "Help"
-msgstr ""
-
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid "&Quit Audacity"
@@ -2074,73 +3491,41 @@ msgstr "Баромад аз Audacity"
 msgid "&Retry"
 msgstr ""
 
-#: src/AudioIO.cpp
-msgid "Could not find any audio devices.\n"
-msgstr "Дастгоҳҳои садогӣ ёфт нашуданд.\n"
-
-#: src/AudioIO.cpp
+#: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
-"You will not be able to play or record audio.\n"
-"\n"
+"Smart clip.\n"
+"The entire source clip will be pasted into your project, allowing you to access\n"
+"trimmed audio data anytime."
 msgstr ""
-"Шумо садоро наметавонед сабт кунед ё ин ки боз хонед.\n"
-"\n"
 
-#: src/AudioIO.cpp src/MIDIPlay.cpp
-#, fuzzy, c-format
-msgid "Error: %s"
-msgstr "Хато: "
+#: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
+msgid ""
+"Selected audio only.\n"
+"Only the selected portion of the source clip will be pasted."
+msgstr ""
 
-#: src/AudioIO.cpp
-msgid "Error Initializing Audio"
-msgstr "Хато дар вақти омодасозии овоз "
-
-#: src/AudioIO.cpp
+#: src/AudioPasteDialog.cpp
 #, fuzzy
-msgid "Audacity Audio"
-msgstr "Таблои %s Audacity"
+msgid "Paste audio"
+msgstr "Нусхабардории Нишонаҳо"
 
-#: src/AudioIO.cpp src/ProjectAudioManager.cpp
-#, fuzzy, c-format
-msgid ""
-"Error opening recording device.\n"
-"Error code: %s"
-msgstr "Хато ҳангоми кушодани афзори садо. "
-
-#: src/AudioIO.cpp
-msgid "Out of memory!"
+#: src/AudioPasteDialog.cpp
+msgid "How would you like to paste your audio?"
 msgstr ""
 
-#: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
-msgstr ""
-
-#: src/AudioIO.cpp
+#: src/AudioPasteDialog.cpp
 #, c-format
-msgid "Automated Recording Level Adjustment decreased the volume to %f."
+msgid "Audio data is %s. Larger sizes will take longer to paste."
 msgstr ""
 
-#: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+#: src/AudioPasteDialog.cpp
+msgid "Remember my choice and don't ask again"
 msgstr ""
 
-#: src/AudioIO.cpp
-#, c-format
-msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr ""
-
-#: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
-
-#: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
-
-#: src/AudioIO.cpp
-#, c-format
-msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
-msgstr ""
+#: src/AudioPasteDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Ширкаткунандаҳои дигари лоиҳа"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
@@ -2410,7 +3795,7 @@ msgstr "&Бекор кардан"
 msgid "Remo&ve"
 msgstr "&Дигар кардан"
 
-#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+#: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "&Rename..."
 msgstr ""
 
@@ -2418,12 +3803,13 @@ msgstr ""
 msgid "Re&store"
 msgstr ""
 
-#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
+#: src/effects/EqualizationCurvesDialog.cpp
 msgid "I&mport..."
 msgstr ""
 
 #: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
-#: src/effects/Equalization.cpp
+#: src/effects/EqualizationCurvesDialog.cpp
 msgid "E&xport..."
 msgstr ""
 
@@ -2459,11 +3845,11 @@ msgstr "&Таҳрир"
 msgid "De&lete"
 msgstr "То&за кардан"
 
-#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+#: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "Move &Up"
 msgstr "Ҳаракат &ба боло"
 
-#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+#: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "Move &Down"
 msgstr "Ҳаракат &ба поён"
 
@@ -2518,6 +3904,49 @@ msgstr "Номҳо набояд '%c' ва '%c' дошта бошанд"
 msgid "Are you sure you want to delete %s?"
 msgstr "Шумо бовари доред, ки %s нест карда шавад?"
 
+#: src/BatchProcessDialog.cpp
+#, fuzzy, c-format
+msgid "&Repeat %s"
+msgstr "Такрор %s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Такрор %s"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Repeat Last Tool"
+msgstr "Такрор %s"
+
+#: src/BatchProcessDialog.cpp
+msgid "&Macro Manager"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "Истифодаи %s"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Palette..."
+msgstr "&Захира кардан..."
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Script&ables I"
+msgstr "Тағирёбанда"
+
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+#: src/BatchProcessDialog.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
 #, fuzzy
@@ -2554,12 +3983,6 @@ msgstr ""
 #: src/Benchmark.cpp
 msgid "Run"
 msgstr ""
-
-#. i18n-hint verb
-#: src/Benchmark.cpp src/RealtimeEffectPanel.cpp
-#: src/tracks/ui/TrackButtonHandles.cpp src/widgets/HelpSystem.cpp
-msgid "Close"
-msgstr "Пӯшидан(бастан)"
 
 #. i18n-hint: Benchmark means a software speed test;
 #. leave untranslated file extension .txt
@@ -2759,72 +4182,9 @@ msgstr ""
 msgid "Audacity Support Data"
 msgstr "Гурӯҳи ташаббускори Audacity %s"
 
-#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
-
 #: src/CrashReport.cpp
 msgid "Report generated to:"
 msgstr ""
-
-#: src/DBConnection.cpp
-#, c-format
-msgid "(%d): %s"
-msgstr ""
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Failed to set page size for database %s"
-msgstr "'%s' тоза намешавад"
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Интихобкунӣ"
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "'%s' тоза намешавад"
-
-#: src/DBConnection.cpp
-#, fuzzy
-msgid "Checkpointing project"
-msgstr "Истифодаи ин &Лоиҳа"
-
-#: src/DBConnection.cpp
-#, c-format
-msgid "Checkpointing %s"
-msgstr ""
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid "Could not write to %s.\n"
-msgstr "Дар файл сабт намешавад: "
-
-#: src/DBConnection.cpp
-#, c-format
-msgid ""
-"Disk is full.\n"
-"%s\n"
-"For tips on freeing up space, click the help button."
-msgstr ""
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to create savepoint:\n"
-"\n"
-"%s"
-msgstr "'%s' тоза намешавад"
-
-#: src/DBConnection.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to release savepoint:\n"
-"\n"
-"%s"
-msgstr "'%s' тоза намешавад"
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -3128,13 +4488,12 @@ msgstr "Басомади хаттӣ"
 msgid "Log frequency"
 msgstr "Басомади сабти воқеъӣ"
 
-#. i18n-hint: abbreviates decibels
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/commands/SetTrackInfoCommand.cpp
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/Equalization.cpp src/effects/Loudness.cpp
+#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
+#: src/effects/EqualizationUI.cpp src/effects/Loudness.cpp
 #: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
-#: src/effects/TruncSilence.cpp src/prefs/WaveformSettings.cpp
+#: src/effects/TruncSilence.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "дБ"
@@ -3146,15 +4505,6 @@ msgstr ""
 #: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
 msgid "Zoom"
 msgstr "Калонкунӣ"
-
-#. i18n-hint: This is the abbreviation for "Hertz", or
-#. cycles per second.
-#. i18n-hint: Name of display format that shows frequency in hertz
-#: src/FreqWindow.cpp src/effects/ChangePitch.cpp src/effects/Equalization.cpp
-#: src/effects/ScienFilter.cpp src/import/ImportRaw.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "Hz"
-msgstr "Ҳертз"
 
 #: src/FreqWindow.cpp
 #, fuzzy
@@ -3262,139 +4612,6 @@ msgstr "Таъхири (сонияҳо)\tБасомад (Ҳертз)\tСатҳ"
 msgid "Plot Spectrum..."
 msgstr "&Кашидани тасвири Спектрум..."
 
-#: src/HelpText.cpp
-msgid "Welcome!"
-msgstr ""
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Playing Audio"
-msgstr ""
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Recording Audio"
-msgstr ""
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-#, fuzzy
-msgid "Recording - Choosing the Recording Device"
-msgstr "Сабтшавӣ"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-#, fuzzy
-msgid "Recording - Choosing the Recording Source"
-msgstr "Сабтшавӣ"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-#, fuzzy
-msgid "Recording - Setting the Recording Level"
-msgstr "Сабтшавӣ"
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Editing and greyed out Menus"
-msgstr ""
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Exporting an Audio File"
-msgstr ""
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Saving an Audacity Project"
-msgstr ""
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Support for Other Formats"
-msgstr ""
-
-#. i18n-hint: Title for a topic.
-#: src/HelpText.cpp
-msgid "Burn to CD"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "No Local Help"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "Get the Official Released Version of Audacity"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
-msgstr ""
-
-#. i18n-hint: %s is replaced with Audacity version
-#: src/HelpText.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "How to get help"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "These are our support methods:"
-msgstr ""
-
-#. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
-#: src/HelpText.cpp
-msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
-msgstr ""
-
-#. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
-#: src/HelpText.cpp
-msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
-msgstr ""
-
-#: src/HelpText.cpp
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-
-#: src/HelpText.cpp
-msgid "Check Online"
-msgstr ""
-
 #: src/HelpUtilities.cpp
 #, fuzzy, c-format
 msgid "Save %s"
@@ -3478,19 +4695,29 @@ msgstr "Масрафсанҷи ғайрифаъол"
 msgid "Incompatible plugin(s) found"
 msgstr ""
 
-#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "Manage Plugins"
-msgstr "Масрафсанҷи ғайрифаъол"
-
 #: src/IncompatiblePluginsDialog.cpp
 #, fuzzy
-msgid "Continue"
-msgstr "Ширкаткунандаҳои дигари лоиҳа"
+msgid "&Manage Plugins"
+msgstr "Масрафсанҷи ғайрифаъол"
+
+#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: src/IncompatiblePluginsDialog.cpp src/export/ExportCL.cpp
+#: src/update/UpdateNoticeDialog.cpp
+msgid "&OK"
+msgstr "&ОК"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
+
+#: src/IncompatiblePluginsDialog.cpp
+#, c-format
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
 msgstr ""
 
 #: src/JournalEvents.cpp
@@ -3605,11 +4832,6 @@ msgstr "Барои истифодабарии Audacity Забонро интих
 msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
 msgstr ""
 
-#: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-msgid "Confirm"
-msgstr "Тасдиқ шудан"
-
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
 msgstr ""
@@ -3626,38 +4848,6 @@ msgstr ""
 #: src/Legacy.cpp
 msgid "Opening Audacity Project"
 msgstr "Кушодани Лоиҳаи Audacity"
-
-#: src/LogWindow.cpp
-#, fuzzy
-msgid "Audacity Log"
-msgstr "Таблои %s Audacity"
-
-#: src/LogWindow.cpp src/TagsEditor.cpp
-msgid "&Save..."
-msgstr "&Захира кардан..."
-
-#. i18n-hint: (verb)
-#: src/LogWindow.cpp src/TagsEditor.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Cl&ear"
-msgstr ""
-
-#: src/LogWindow.cpp src/ShuttleGui.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
-msgid "&Close"
-msgstr "&Пӯшидан"
-
-#: src/LogWindow.cpp
-msgid "log.txt"
-msgstr ""
-
-#: src/LogWindow.cpp
-msgid "Save log to:"
-msgstr ""
-
-#: src/LogWindow.cpp
-#, fuzzy, c-format
-msgid "Couldn't save log to file: %s"
-msgstr "Дар файл сабт намешавад: "
 
 #: src/LyricsWindow.cpp
 #, c-format
@@ -3709,15 +4899,6 @@ msgstr ""
 #: src/Menus.cpp
 msgid "Disallowed"
 msgstr ""
-
-#: src/MixAndRender.cpp src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "Mix and Render"
-msgstr "&Омезиш ва Пешниҳодкунӣ"
-
-#: src/MixAndRender.cpp
-msgid "Mixing and rendering tracks"
-msgstr "Омехтакунӣ ва муттаҳидсозии роҳчаҳо"
 
 #: src/MixerBoard.cpp
 #, fuzzy, c-format
@@ -3945,6 +5126,11 @@ msgid "A♯/B♭"
 msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Manage Plugins"
+msgstr "Масрафсанҷи ғайрифаъол"
+
+#: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
 
@@ -4052,11 +5238,6 @@ msgid ""
 "%s"
 msgstr "'%s' тоза намешавад"
 
-#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-#: src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr ""
-
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr ""
@@ -4069,35 +5250,39 @@ msgstr "Ҳангоми чоп хато ба амал омад."
 msgid "Print"
 msgstr "Чоп кардан"
 
+#: src/Printing.cpp
+msgid "Pa&ge Setup..."
+msgstr "Та&ъини Саҳифа..."
+
+#. i18n-hint: (verb) It's item on a menu.
+#: src/Printing.cpp
+msgid "&Print..."
+msgstr "&Чоп кардан..."
+
 #: src/ProjectAudioManager.cpp
 #, fuzzy, c-format
 msgid "Actual Rate: %d"
 msgstr "Зудии Ҷойдошта %d"
 
-#: src/ProjectAudioManager.cpp src/effects/EffectBase.cpp
-#, fuzzy
-msgid ""
-"Error opening sound device.\n"
-"Try changing the audio host, playback device and the project sample rate."
-msgstr "Хато ҳангоми кушодани афзори савтӣ. Лутфан, насби берунаи афзор ва суръати намунаи лоиҳаро санҷед."
-
-#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "The tracks selected for recording must all have the same sampling rate"
 msgstr "Барои сохтани спектрум, ҳамаи роҳчаҳои интихобшуда бояд навъи якхела дошта бошанд."
 
-#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
 msgstr ""
 
-#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 msgid ""
 "Too few tracks are selected for recording at this sample rate.\n"
 "(Audacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
 
-#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 msgid "Too Few Compatible Tracks Selected"
 msgstr ""
 
@@ -4245,13 +5430,6 @@ msgstr ""
 msgid "Warning - Orphan Block File(s)"
 msgstr ""
 
-#. i18n-hint: This title appears on a dialog that indicates the progress
-#. in doing something.
-#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
-#: src/TransportUtilities.cpp
-msgid "Progress"
-msgstr "Раванди иҷроиш"
-
 #: src/ProjectFSCK.cpp
 msgid "Cleaning up unused directories in project data"
 msgstr ""
@@ -4266,288 +5444,6 @@ msgstr ""
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
 msgstr ""
-
-#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
-msgid "<untitled>"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid "[Project %02i] "
-msgstr "Пурракунии лоиҳа"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"There is very little free disk space left on %s\n"
-"Please select a bigger temporary directory location in\n"
-"Directories Preferences."
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to open the project's database"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to open database file:\n"
-"\n"
-"%s"
-msgstr "'%s' тоза намешавад"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to discard connection"
-msgstr "Интихобкунӣ"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to restore connection"
-msgstr "'%s' тоза намешавад"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to execute a project file command:\n"
-"\n"
-"%s"
-msgstr "'%s' тоза намешавад"
-
-#. i18n-hint: An error message.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is in a read only directory\n"
-"(Unable to create the required temporary files)"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "This is not an Audacity project file"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#: src/ProjectFileIO.cpp
-msgid ""
-"This project was created with a newer version of Audacity.\n"
-"\n"
-"You will need to upgrade to open it."
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to initialize the project file"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#. i18n-hint: An error message.  Don't translate inset or blockids.
-#: src/ProjectFileIO.cpp
-msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is read only\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is locked\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is busy\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Project is corrupt\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Some permissions issue\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"A disk I/O error\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-msgid ""
-"Not authorized\n"
-"(Unable to work with the blockfiles)"
-msgstr ""
-
-#. i18n-hint: An error message.  Don't translate blockfiles.
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to work with the blockfiles"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid "Total orphan blocks deleted %d"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to rollback transaction during import"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to attach destination database"
-msgstr "Тағйири номи '%s' ба '%s' номумкин аст"
-
-#: src/ProjectFileIO.cpp
-msgid "Unable to switch to fast journaling mode"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Unable to prepare project file command:\n"
-"\n"
-"%s"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to bind SQL parameter"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Failed to update the project file.\n"
-"The following command failed:\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-msgid "Destination project could not be detached"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Copying Project"
-msgstr "Лоиҳаи Нав"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Error Writing to File"
-msgstr "Дар файл сабт намешавад: "
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Audacity failed to write file %s.\n"
-"Perhaps disk is full or not writable.\n"
-"For tips on freeing up space, click the help button."
-msgstr ""
-"Audacity натавонист файлро сабт кунад:\n"
-"  %s."
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Compacting project"
-msgstr "Лоиҳаи нав эҷод карда шуд"
-
-#. i18n-hint: The %02i is the project number, the %s is the project name.
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid "[Project %02i] Audacity \"%s\""
-msgstr ""
-
-#. i18n-hint: E.g this is recovered audio that had been lost.
-#: src/ProjectFileIO.cpp
-msgid "(Recovered)"
-msgstr "(Барқароршуда)"
-
-#. i18n-hint: %s will be replaced by the version number.
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-msgid "Can't open project file"
-msgstr "Лоиҳаи файлро кушода наметавонад"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to remove the autosave information from the project file."
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to bind to blob"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Unable to parse project information."
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#: src/ProjectFileIO.cpp
-msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Saving project"
-msgstr "&Сабти Лоиҳа"
-
-#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
-msgid "Error Saving Project"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-msgid "Syncing"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"The project failed to open, possibly due to limited space\n"
-"on the storage device.\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Unable to remove autosave information, possibly due to limited space\n"
-"on the storage device.\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-msgid "Backing up project"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Automatic database backup failed."
-msgstr "Ба таври автоматӣ барқарорсозӣ баъди садама"
 
 #: src/ProjectFileManager.cpp
 #, fuzzy
@@ -4789,6 +5685,11 @@ msgstr "Лоиҳаи файлро кушода наметавонад"
 msgid "Compact"
 msgstr ""
 
+#: src/ProjectFileManager.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "Пурракунии лоиҳа"
+
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
@@ -4844,17 +5745,6 @@ msgstr[1] ""
 msgid "%s and %s."
 msgstr ""
 
-#: src/ProjectSerializer.cpp
-msgid ""
-"This recovery file was saved by Audacity 2.3.0 or before.\n"
-"You need to run that version of Audacity to recover the project."
-msgstr ""
-
-#: src/ProjectWindow.cpp
-#, fuzzy
-msgid "Realtime effects"
-msgstr "Пеш&намоиш"
-
 #: src/ProjectWindow.cpp
 #, fuzzy
 msgid "Horizontal Scrollbar"
@@ -4871,7 +5761,7 @@ msgstr "Стереои амудӣ"
 msgid "Effect %d"
 msgstr "Нати&ҷа"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
 msgstr ""
 
@@ -4916,19 +5806,10 @@ msgstr "Ивази Номи '%s' ба '%s'"
 msgid "Replace %s"
 msgstr "Ивази Номи '%s' ба '%s'"
 
-#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+#: src/RealtimeEffectPanel.cpp src/menus/MenuHelper.cpp
+#: src/toolbars/SnappingToolBar.cpp
 msgid "Unknown"
 msgstr ""
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "No Effect"
-msgstr "Нати&ҷа"
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "Get more effects..."
-msgstr "Қисматҳо..."
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
@@ -4964,8 +5845,34 @@ msgid "Change effect order"
 msgstr "Ивазшавии суръат"
 
 #: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "Нати&ҷа"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "Қисматҳо..."
+
+#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Analyze"
+msgstr "&Таҳлил"
+
+#: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
 msgstr ""
+
+#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "Plugin Error"
+msgstr "Хатои LOF"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -4981,6 +5888,11 @@ msgstr "'%s' ба %s тағйир дода шуд"
 #, fuzzy, c-format
 msgid "Add %s"
 msgstr "Ҷобаҷогузошта"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime effects"
+msgstr "Пеш&намоиш"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
@@ -5076,67 +5988,6 @@ msgstr "Ҳамаи файлҳо (*)|*"
 msgid "All Preferences"
 msgstr "Қисматҳо..."
 
-#: src/Screenshot.cpp
-msgid "SelectionBar"
-msgstr ""
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
-msgid "Spectral Selection"
-msgstr "Интихобкунӣ"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Timer"
-msgstr "Вақти охир"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/ToolsToolBar.cpp
-msgid "Tools"
-msgstr "Абзорҳо"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/ControlToolBar.cpp
-msgid "Transport"
-msgstr ""
-
-#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/widgets/MeterPanel.cpp
-msgid "Meter"
-msgstr "масрафсанҷ"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Play Meter"
-msgstr "Иҷрои масрафсанҷ"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
-msgid "Record Meter"
-msgstr "Масрафсанҷи сабт"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/EditToolBar.cpp
-msgid "Edit"
-msgstr ""
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
-msgid "Device"
-msgstr "Афзор"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
-#, fuzzy
-msgid "Play-at-Speed"
-msgstr "Иҷро дар суръат"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr ""
-
 #: src/Screenshot.cpp src/TrackPanel.cpp
 msgid "Track Panel"
 msgstr "Лавҳаи Роҳча"
@@ -5211,61 +6062,13 @@ msgstr ""
 msgid "Long Message"
 msgstr ""
 
-#: src/SelectFile.cpp
-msgid "The specified filename could not be converted due to Unicode character use."
-msgstr ""
-
-#: src/SelectFile.cpp
-msgid "Specify New Filename:"
-msgstr ""
+#: src/Screenshot.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Чоп кардан..."
 
 #: src/SelectUtilities.cpp
 msgid "Position"
-msgstr ""
-
-#: src/Sequence.cpp
-#, c-format
-msgid ""
-"Sequence has block file exceeding maximum %s samples per block.\n"
-"Truncating to this maximum length."
-msgstr ""
-
-#: src/Sequence.cpp
-msgid "Warning - Truncating Overlong Block File"
-msgstr ""
-
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Preview" and "Start &Preview"
-#: src/ShuttleGui.cpp src/effects/EffectUI.cpp
-#, fuzzy
-msgid "&Preview"
-msgstr "Пеш&намоиш"
-
-#: src/ShuttleGui.cpp
-#, fuzzy
-msgid "Dry Previe&w"
-msgstr "Буриши пешнамоиш"
-
-#: src/ShuttleGui.cpp
-#, fuzzy
-msgid "&Settings"
-msgstr "&Қисматҳо..."
-
-#: src/ShuttleGui.cpp src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Debu&g"
-msgstr "&Ислоҳи хато"
-
-#: src/Snap.cpp src/export/ExportFFmpegDialogs.cpp
-msgid "Off"
-msgstr ""
-
-#: src/Snap.cpp
-msgid "Nearest"
-msgstr ""
-
-#: src/Snap.cpp
-msgid "Prior"
 msgstr ""
 
 #: src/SoundActivatedRecord.cpp
@@ -5332,15 +6135,6 @@ msgstr ""
 msgid "Don't show this again at start up"
 msgstr ""
 
-#: src/SqliteSampleBlock.cpp
-#, fuzzy
-msgid "Connection to project file is null"
-msgstr "Лоиҳаи файлро кушода наметавонад"
-
-#: src/SqliteSampleBlock.cpp
-msgid "Discarding undo/redo history"
-msgstr ""
-
 #: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr ""
@@ -5364,6 +6158,11 @@ msgstr "Сол"
 #: src/TagsEditor.cpp
 msgid "Genre"
 msgstr "Услуб"
+
+#: src/TagsEditor.cpp src/prefs/MousePrefs.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "Шарҳ"
 
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -5450,6 +6249,19 @@ msgstr ""
 msgid "Error Saving Tags File"
 msgstr ""
 
+#: src/TagsEditor.cpp src/export/Export.cpp src/export/ExportMultiple.cpp
+msgid "Edit Metadata Tags"
+msgstr ""
+
+#: src/TagsEditor.cpp
+msgid "Metadata Tags"
+msgstr ""
+
+#: src/TagsEditor.cpp
+#, fuzzy
+msgid "&Metadata"
+msgstr "Таҳрири З&анҷираҳо..."
+
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -5460,16 +6272,10 @@ msgstr ""
 #.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3UIValidator.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Validator.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3Editor.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Editor.cpp
 msgid "Duration"
 msgstr "Давомнокӣ"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Time track.
-#: src/TimeTrack.cpp src/TrackPanelAx.cpp
-msgid "Time Track"
-msgstr ""
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
@@ -5541,7 +6347,7 @@ msgid "Recording start:"
 msgstr "Масрафсанҷи сабт"
 
 #: src/TimerRecordDialog.cpp src/effects/VST/VSTEffect.cpp
-#: src/effects/VST3/VST3UIValidator.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/VST3/VST3Editor.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr ""
 
@@ -5627,7 +6433,7 @@ msgid ""
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
 
-#: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
+#: src/TimerRecordDialog.cpp
 #, fuzzy
 msgid "Timer Recording"
 msgstr "Сабтшавӣ"
@@ -5680,7 +6486,7 @@ msgstr ""
 msgid "Save Project As:"
 msgstr "Сабти Лоиҳа &Ҳамчун..."
 
-#: src/TimerRecordDialog.cpp src/menus/PluginMenus.cpp
+#: src/TimerRecordDialog.cpp src/commands/SelectCommand.cpp
 #, fuzzy
 msgid "Select..."
 msgstr "Ҷудокунӣ"
@@ -5775,6 +6581,24 @@ msgstr "Масрафсанҷи сабт"
 #, fuzzy
 msgid "Audacity Timer Record - Waiting"
 msgstr "Сабти Замонсанҷи Audacity"
+
+#: src/TimerRecordDialog.cpp
+msgid ""
+"Timer Recording cannot be used with more than one open project.\n"
+"\n"
+"Please close any additional projects and try again."
+msgstr ""
+
+#: src/TimerRecordDialog.cpp
+msgid ""
+"Timer Recording cannot be used while you have unsaved changes.\n"
+"\n"
+"Please save or close this project and try again."
+msgstr ""
+
+#: src/TimerRecordDialog.cpp
+msgid "&Timer Record..."
+msgstr ""
 
 #: src/TrackInfo.cpp
 msgid "Stereo, 999999Hz"
@@ -5956,43 +6780,6 @@ msgstr "Ивази Самт  -- маънои: %1.4f  sd: (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr "Натиҷаи андозагароӣ\n"
 
-#: src/WaveClip.cpp
-#, fuzzy
-msgid "Resampling failed."
-msgstr "Намунагирӣ бекор шуда."
-
-#: src/WaveTrack.cpp src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
-msgid "Audio"
-msgstr "&Аудио..."
-
-#: src/WaveTrack.cpp
-#, fuzzy
-msgid "Wave Track"
-msgstr "Ҷойивазшавии Роҳча"
-
-#. i18n-hint Template for clip name generation on copy-paste
-#: src/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: src/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr ""
-
-#: src/WaveTrack.cpp
-msgid "There is not enough room available to paste the selection"
-msgstr "Барои гузоштани интихоб пораи ҳофиза кам аст"
-
-#: src/WaveTrack.cpp
-msgid "There is not enough room available to expand the cut line"
-msgstr "Барои густурдани хати буриш пораи ҳофиза кам аст"
-
 #. i18n-hint: Share audio button text, keep as short as possible
 #: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
@@ -6021,8 +6808,7 @@ msgid "Token"
 msgstr ""
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
+msgid "L&ink audio.com account..."
 msgstr ""
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
@@ -6121,10 +6907,7 @@ msgstr ""
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
-"\n"
-"If you have problems uploading, try the Link Account button."
+msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
 msgstr ""
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
@@ -6140,37 +6923,14 @@ msgstr ""
 msgid "Preparing audio..."
 msgstr "Кэширонидани додаҳои садоӣ"
 
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Remaining Time:"
-msgstr ""
-
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
-#, fuzzy
-msgid "Audacity"
-msgstr "Таблои %s Audacity"
-
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#, c-format
-msgid ""
-"%s: Could not load settings below. Default settings will be used.\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/commands/AudacityCommand.cpp src/effects/EffectBase.cpp
-#, fuzzy, c-format
-msgid "Applying %s..."
-msgstr "Истифодабарӣ..."
-
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/vamp/VampEffect.cpp src/import/ImportRaw.cpp
-#: src/menus/PluginMenus.cpp
+#: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
+#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -6202,14 +6962,6 @@ msgstr ""
 msgid "Command"
 msgstr ""
 
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/commands/CommandManager.cpp src/effects/EffectUI.cpp
-#: src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Такрор %s"
-
 #: src/commands/CommandManager.cpp
 #, c-format
 msgid ""
@@ -6233,6 +6985,11 @@ msgstr "Нусхабардории Нишонаҳо"
 #: src/commands/CompareAudioCommand.cpp
 msgid "Threshold:"
 msgstr "Остона:"
+
+#: src/commands/CompareAudioCommand.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "Фишордиҳандаи..."
 
 #: src/commands/CompareAudioCommand.h
 msgid "Compares a range on two tracks."
@@ -6258,11 +7015,6 @@ msgstr ""
 #, fuzzy
 msgid "Drag"
 msgstr "Тугмаи чап -кашидашавӣ "
-
-#: src/commands/DragCommand.cpp src/widgets/wxPanelWrapper.h
-#, fuzzy
-msgid "Panel"
-msgstr "Лавҳаи Роҳча"
 
 #: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
@@ -6309,6 +7061,11 @@ msgstr ""
 #: src/commands/DragCommand.cpp src/commands/SelectCommand.cpp
 msgid "Relative To:"
 msgstr ""
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "Интихоби..."
 
 #: src/commands/DragCommand.h
 msgid "Drags mouse from one place to another."
@@ -6370,6 +7127,10 @@ msgstr ""
 msgid "Format:"
 msgstr "Қолаб:"
 
+#: src/commands/GetInfoCommand.cpp
+msgid "Get Info..."
+msgstr ""
+
 #: src/commands/GetInfoCommand.h
 msgid "Gets information in JSON format."
 msgstr ""
@@ -6400,6 +7161,11 @@ msgstr "Фармон:"
 msgid "_"
 msgstr ""
 
+#: src/commands/HelpCommand.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "&Мадад"
+
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
 msgstr ""
@@ -6428,6 +7194,16 @@ msgstr "Содирот"
 msgid "Number of Channels:"
 msgstr "Миқдори вақтҳои такроршаванда: "
 
+#: src/commands/ImportExportCommands.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "Import..."
+msgstr "&Воридот..."
+
+#: src/commands/ImportExportCommands.cpp src/effects/EffectUI.cpp
+#, fuzzy
+msgid "Export..."
+msgstr "&Содирот..."
+
 #: src/commands/ImportExportCommands.h
 msgid "Imports from a file."
 msgstr ""
@@ -6442,15 +7218,6 @@ msgstr "Вуруди бисёркарата"
 msgid "Builtin Commands"
 msgstr "Интихоби фармон"
 
-#: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3EffectsModule.cpp
-#: src/effects/audiounits/AudioUnitEffectsModule.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
-#, fuzzy
-msgid "The Audacity Team"
-msgstr "Гурӯҳи ташаббускори Audacity %s"
-
 #: src/commands/LoadCommands.cpp
 msgid "Provides builtin commands to Audacity"
 msgstr ""
@@ -6462,6 +7229,11 @@ msgstr ""
 #: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
 msgid "Text:"
 msgstr ""
+
+#: src/commands/MessageCommand.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "&Бознамунагузорӣ..."
 
 #: src/commands/MessageCommand.h
 msgid "Echos a message."
@@ -6496,6 +7268,16 @@ msgstr "Сабт ҳамчун..."
 #, fuzzy
 msgid "Clear Log"
 msgstr "&Тоза кардан"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "Сабти Лоиҳа &Ҳамчун..."
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Сабти Лоиҳа &Ҳамчун..."
 
 #: src/commands/OpenSaveCommands.h
 #, fuzzy
@@ -6547,6 +7329,16 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
+#: src/commands/PreferenceCommands.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "Қисматҳо..."
+
+#: src/commands/PreferenceCommands.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "Қисматҳо..."
+
 #: src/commands/PreferenceCommands.h
 msgid "Gets the value of a single preference."
 msgstr ""
@@ -6594,11 +7386,6 @@ msgstr ""
 #, fuzzy
 msgid "Scriptables"
 msgstr "Тағирёбанда"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Selectionbar"
-msgstr "Интихобкунӣ"
 
 #: src/commands/ScreenshotCommand.cpp
 #, fuzzy
@@ -6671,6 +7458,11 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Error trying to save file: %s"
 msgstr "Дар файл сабт намешавад: "
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/commands/ScreenshotCommand.cpp
+msgid "Screenshot (short format)..."
+msgstr ""
 
 #: src/commands/ScreenshotCommand.h
 msgid "Takes screenshots."
@@ -6769,6 +7561,21 @@ msgstr "Миқдори Duck:"
 msgid "Mode:"
 msgstr "Муназзам"
 
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Ҷудокунӣ"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Басомад (Ҳз)"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Ҷудокунӣ"
+
 #: src/commands/SelectCommand.h
 #, fuzzy
 msgid "Selects a time range."
@@ -6822,6 +7629,11 @@ msgstr ""
 msgid "Start:"
 msgstr "Ибтидо"
 
+#: src/commands/SetClipCommand.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "Афзори Навбатӣ"
+
 #: src/commands/SetClipCommand.h
 msgid "Sets various values for a clip."
 msgstr ""
@@ -6837,6 +7649,7 @@ msgid "Time:"
 msgstr "Вақти охир"
 
 #: src/commands/SetEnvelopeCommand.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Delete"
 msgstr "Нобудсозӣ"
 
@@ -6849,6 +7662,11 @@ msgstr "Лифофа"
 #: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
+msgstr "Лифофа"
+
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Set Envelope..."
 msgstr "Лифофа"
 
 #: src/commands/SetEnvelopeCommand.h
@@ -6878,6 +7696,11 @@ msgstr "Ҷудокунӣ"
 #, fuzzy
 msgid "Edited Label"
 msgstr "Нишонаҳои таҳриршуда"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "&Тағйири нишона"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -6914,6 +7737,11 @@ msgstr ""
 #, fuzzy
 msgid "Height:"
 msgstr "Равшан"
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Сабти Лоиҳа &Ҳамчун..."
 
 #: src/commands/SetProjectCommand.h
 msgid "Sets various values for a project."
@@ -6962,11 +7790,25 @@ msgstr ""
 msgid "Set Track Visuals"
 msgstr "&Роҳчаҳо"
 
-#: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
-#: src/prefs/SpectrogramSettings.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp src/widgets/MeterPanel.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Linear"
+#. i18n-hint: abbreviates amplitude
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformSettings.cpp
+#, fuzzy
+msgid "Linear (amp)"
+msgstr "Хатӣ"
+
+#. i18n-hint: abbreviates decibels
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformSettings.cpp
+#, fuzzy
+msgid "Logarithmic (dB)"
+msgstr "Зудии Синхронӣ бо Иловашавӣ"
+
+#. i18n-hint: abbreviates decibels
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformSettings.cpp
+#, fuzzy
+msgid "Linear (dB)"
 msgstr "Хатӣ"
 
 #: src/commands/SetTrackInfoCommand.cpp
@@ -7026,6 +7868,24 @@ msgstr ""
 #, fuzzy
 msgid "Set Track"
 msgstr "Роҳчаи Нав"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "Номи Роҳча"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "&Роҳчаҳо"
 
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
@@ -7089,13 +7949,6 @@ msgstr ""
 msgid "Duck &amount:"
 msgstr "Миқдори Duck:"
 
-#. i18n-hint: Name of time display format that shows time in seconds
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
-#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "seconds"
-msgstr "сонияҳо"
-
 #: src/effects/AutoDuck.cpp
 #, fuzzy
 msgid "Ma&ximum pause:"
@@ -7130,6 +7983,43 @@ msgstr "Остона:"
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
 msgstr "Пештасвир дастрас нест"
+
+#: src/effects/BasicEffectUIServices.cpp
+#, fuzzy
+msgid "Presets"
+msgstr "Бознасбшуда"
+
+#: src/effects/BasicEffectUIServices.cpp
+#, fuzzy
+msgid "Export Effect Parameters"
+msgstr "&Таҳрири параметрҳо"
+
+#: src/effects/BasicEffectUIServices.cpp src/effects/VST/VSTEffect.cpp
+#, fuzzy
+msgid "Error Saving Effect Presets"
+msgstr "Натиҷаи корбурдашуда: %s"
+
+#: src/effects/BasicEffectUIServices.cpp src/effects/VST/VSTEffect.cpp
+#, fuzzy, c-format
+msgid "Error writing to file: \"%s\""
+msgstr "Дар файл сабт намешавад: "
+
+#: src/effects/BasicEffectUIServices.cpp
+#, fuzzy
+msgid "Import Effect Parameters"
+msgstr "&Таҳрири параметрҳо"
+
+#. i18n-hint %s will be replaced by a file name
+#: src/effects/BasicEffectUIServices.cpp
+#, fuzzy, c-format
+msgid "%s: is not a valid presets file.\n"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#. i18n-hint %s will be replaced by a file name
+#: src/effects/BasicEffectUIServices.cpp
+#, c-format
+msgid "%s: is for a different Effect, Generator or Analyzer.\n"
+msgstr ""
 
 #: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
@@ -8173,7 +9063,7 @@ msgstr "Доманаи (0-1)"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/lv2/LV2Validator.cpp
+#: src/effects/lv2/LV2Editor.cpp
 #, fuzzy
 msgid "&Duration:"
 msgstr "Давомнокӣ"
@@ -8235,63 +9125,6 @@ msgstr "Таваққуфи вақт (сонияҳо):"
 #, fuzzy
 msgid "D&ecay factor:"
 msgstr "Харобии омил:"
-
-#: src/effects/Effect.cpp
-msgid "Built-in"
-msgstr ""
-
-#: src/effects/Effect.cpp
-#, fuzzy
-msgid "Presets"
-msgstr "Бознасбшуда"
-
-#: src/effects/Effect.cpp
-#, fuzzy
-msgid "Export Effect Parameters"
-msgstr "&Таҳрири параметрҳо"
-
-#: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
-#, fuzzy
-msgid "Error Saving Effect Presets"
-msgstr "Натиҷаи корбурдашуда: %s"
-
-#: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
-#, fuzzy, c-format
-msgid "Error writing to file: \"%s\""
-msgstr "Дар файл сабт намешавад: "
-
-#: src/effects/Effect.cpp
-#, fuzzy
-msgid "Import Effect Parameters"
-msgstr "&Таҳрири параметрҳо"
-
-#. i18n-hint %s will be replaced by a file name
-#: src/effects/Effect.cpp
-#, fuzzy, c-format
-msgid "%s: is not a valid presets file.\n"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#. i18n-hint %s will be replaced by a file name
-#: src/effects/Effect.cpp
-#, c-format
-msgid "%s: is for a different Effect, Generator or Analyzer.\n"
-msgstr ""
-
-#: src/effects/EffectBase.cpp
-msgid "Preparing preview"
-msgstr "Омодасозии пешнамоиш"
-
-#: src/effects/EffectBase.cpp
-msgid "Previewing"
-msgstr "Пешнамоиш"
-
-#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-#. In the translations of this and other strings, you may transliterate the
-#. name into another alphabet.
-#: src/effects/EffectBase.h
-msgid "Nyquist"
-msgstr "Оҳанг"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -8365,11 +9198,6 @@ msgid "&Generate"
 msgstr "&Тавлид кардан"
 
 #: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Enable"
-msgstr "Фаъол шуд"
-
-#: src/effects/EffectUI.cpp
 msgid "Manage presets and options"
 msgstr ""
 
@@ -8412,16 +9240,6 @@ msgstr ""
 #, fuzzy
 msgid "Defaults"
 msgstr "&Аз рӯи хомӯшӣ"
-
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Import..."
-msgstr "&Воридот..."
-
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Export..."
-msgstr "&Содирот..."
 
 #: src/effects/EffectUI.cpp src/widgets/MeterPanel.cpp
 msgid "Options..."
@@ -8483,19 +9301,6 @@ msgid ""
 "Replace?"
 msgstr "Файл бо номи \"%s\" аллакай мавҷуд аст.  Ҷойгузорӣ шавад?"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/Equalization.cpp
-msgid "B-spline"
-msgstr "Б-сплайн"
-
-#: src/effects/Equalization.cpp
-msgid "Cosine"
-msgstr "Косинус"
-
-#: src/effects/Equalization.cpp
-msgid "Cubic"
-msgstr "Куб"
-
 #: src/effects/Equalization.cpp
 msgid "Equalization"
 msgstr "Баробарсозӣ"
@@ -8506,8 +9311,8 @@ msgstr "Баробарсозӣ"
 msgid "Filter Curve EQ"
 msgstr "Бознасбшуда"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Графики EQ"
 
@@ -8554,16 +9359,6 @@ msgid "Treble Cut"
 msgstr "Таҳрири Нишона"
 
 #: src/effects/Equalization.cpp
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Filter Curve EQ needs a different name"
-msgstr ""
-
-#: src/effects/Equalization.cpp
 #, fuzzy
 msgid "To apply Equalization, all selected tracks must have the same sample rate."
 msgstr "Барои сохтани спектрум, ҳамаи роҳчаҳои интихобшуда бояд навъи якхела дошта бошанд."
@@ -8578,301 +9373,6 @@ msgstr "Барои ҷудокунӣ роҳчаҳо хеле дарозанд."
 msgid "Effect Unavailable"
 msgstr "Пештасвир дастрас нест"
 
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-msgid "+ dB"
-msgstr ""
-
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-msgid "Max dB"
-msgstr "Макс dB"
-
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-#, c-format
-msgid "%d dB"
-msgstr ""
-
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-msgid "Min dB"
-msgstr "Миним dB"
-
-#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-msgid "- dB"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, c-format
-msgid "%d Hz"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, c-format
-msgid "%g kHz"
-msgstr ""
-
-#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
-#: src/effects/Equalization.cpp
-#, c-format
-msgid "%gk"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "&EQ Type:"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Draw Curves"
-msgstr "Кашидани тавсирҳо"
-
-#: src/effects/Equalization.cpp
-msgid "&Draw"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "&Graphic"
-msgstr "Графики EQ"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Interpolation type"
-msgstr "Зудии Синхронӣ бо Иловашавӣ"
-
-#: src/effects/Equalization.cpp
-msgid "Linear Frequency Scale"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Li&near Frequency Scale"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Length of &Filter:"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Length of Filter"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "&Select Curve:"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Select Curve"
-msgstr "Бознасбшуда"
-
-#: src/effects/Equalization.cpp
-msgid "S&ave/Manage Curves..."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Fla&tten"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "&Invert"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Show grid lines"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Show g&rid lines"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "&Processing: "
-msgstr "Пардозиши Auto Duck..."
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "D&efault"
-msgstr "&Аз рӯи хомӯшӣ"
-
-#: src/effects/Equalization.cpp
-msgid "&SSE"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "SSE &Threaded"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "A&VX"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "AV&X Threaded"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "&Bench"
-msgstr ""
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/Equalization.cpp
-msgid "unnamed"
-msgstr ""
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/Equalization.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Error Loading EQ Curves"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Error Saving Equalization Curves"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Curve not found"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Manage Curves List"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Manage Curves"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "&Curves"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Curve Name"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "D&elete..."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "&Get More..."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "De&faults"
-msgstr "Но&баён"
-
-#: src/effects/Equalization.cpp
-msgid ""
-"Rename 'unnamed' to save a new entry.\n"
-"'OK' saves all changes, 'Cancel' doesn't."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "'unnamed' always stays at the bottom of the list"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "'unnamed' is special"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Rename '%s' to..."
-msgstr "Ивази Номи '%s' ба '%s'"
-
-#: src/effects/Equalization.cpp
-msgid "Rename..."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Rename '%s'"
-msgstr "Ивази Номи '%s' ба '%s'"
-
-#: src/effects/Equalization.cpp
-msgid "Name is the same as the original one"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Same name"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Overwrite existing curve '%s'?"
-msgstr "Бознависии файлҳои мавҷуда"
-
-#: src/effects/Equalization.cpp
-msgid "Curve exists"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "You cannot delete the 'unnamed' curve."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Can't delete 'unnamed'"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Delete '%s'?"
-msgstr "Нобудсозӣ"
-
-#: src/effects/Equalization.cpp src/export/ExportFFmpegDialogs.cpp
-msgid "Confirm Deletion"
-msgstr "Тасдиқоти несткунӣ"
-
-#: src/effects/Equalization.cpp
-#, fuzzy, c-format
-msgid "Delete %d items?"
-msgstr "Тозакунии Нишонаҳо"
-
-#: src/effects/Equalization.cpp
-msgid "You cannot delete the 'unnamed' curve, it is special."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Choose an EQ curve file"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Export EQ curves as..."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "You cannot export 'unnamed' curve, it is special."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Cannot Export 'unnamed'"
-msgstr "Аудиоро дар %s ворид карда наметавонад"
-
-#: src/effects/Equalization.cpp
-#, c-format
-msgid "%d curves exported to %s"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Curves exported"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "No curves exported"
-msgstr ""
-
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -8882,6 +9382,295 @@ msgid ""
 "Default Threaded: %s\n"
 "SSE: %s\n"
 "SSE Threaded: %s\n"
+msgstr ""
+
+#: src/effects/EqualizationBandSliders.cpp
+#, c-format
+msgid "%d Hz"
+msgstr ""
+
+#: src/effects/EqualizationBandSliders.cpp
+#, c-format
+msgid "%g kHz"
+msgstr ""
+
+#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
+#: src/effects/EqualizationBandSliders.cpp
+#, c-format
+msgid "%gk"
+msgstr ""
+
+#: src/effects/EqualizationBandSliders.cpp src/effects/EqualizationUI.cpp
+#: src/effects/ScienFilter.cpp
+#, c-format
+msgid "%d dB"
+msgstr ""
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: src/effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr ""
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: src/effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+
+#: src/effects/EqualizationCurves.cpp
+msgid "Error Loading EQ Curves"
+msgstr ""
+
+#: src/effects/EqualizationCurves.cpp
+msgid "Error Saving Equalization Curves"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Manage Curves List"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Manage Curves"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "&Curves"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Curve Name"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "D&elete..."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "&Get More..."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "De&faults"
+msgstr "Но&баён"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid ""
+"Rename 'unnamed' to save a new entry.\n"
+"'OK' saves all changes, 'Cancel' doesn't."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "'unnamed' always stays at the bottom of the list"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "'unnamed' is special"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Rename '%s' to..."
+msgstr "Ивази Номи '%s' ба '%s'"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Rename..."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Rename '%s'"
+msgstr "Ивази Номи '%s' ба '%s'"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Name is the same as the original one"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Same name"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Overwrite existing curve '%s'?"
+msgstr "Бознависии файлҳои мавҷуда"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Curve exists"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "You cannot delete the 'unnamed' curve."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Can't delete 'unnamed'"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Delete '%s'?"
+msgstr "Нобудсозӣ"
+
+#: src/effects/EqualizationCurvesDialog.cpp src/export/ExportFFmpegDialogs.cpp
+msgid "Confirm Deletion"
+msgstr "Тасдиқоти несткунӣ"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy, c-format
+msgid "Delete %d items?"
+msgstr "Тозакунии Нишонаҳо"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "You cannot delete the 'unnamed' curve, it is special."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Choose an EQ curve file"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Export EQ curves as..."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "You cannot export 'unnamed' curve, it is special."
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, fuzzy
+msgid "Cannot Export 'unnamed'"
+msgstr "Аудиоро дар %s ворид карда наметавонад"
+
+#: src/effects/EqualizationCurvesDialog.cpp
+#, c-format
+msgid "%d curves exported to %s"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "Curves exported"
+msgstr ""
+
+#: src/effects/EqualizationCurvesDialog.cpp
+msgid "No curves exported"
+msgstr ""
+
+#. i18n-hint: Technical term for a kind of curve.
+#: src/effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "Б-сплайн"
+
+#: src/effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "Косинус"
+
+#: src/effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "Куб"
+
+#: src/effects/EqualizationUI.cpp
+msgid ""
+"To use this filter curve in a macro, please choose a new name for it.\n"
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Filter Curve EQ needs a different name"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+msgid "+ dB"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+msgid "Max dB"
+msgstr "Макс dB"
+
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+msgid "Min dB"
+msgstr "Миним dB"
+
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+msgid "- dB"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "&EQ Type:"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Draw Curves"
+msgstr "Кашидани тавсирҳо"
+
+#: src/effects/EqualizationUI.cpp
+msgid "&Draw"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "&Graphic"
+msgstr "Графики EQ"
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Interpolation type"
+msgstr "Зудии Синхронӣ бо Иловашавӣ"
+
+#: src/effects/EqualizationUI.cpp
+msgid "Linear Frequency Scale"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Li&near Frequency Scale"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Length of &Filter:"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Length of Filter"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "&Select Curve:"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+#, fuzzy
+msgid "Select Curve"
+msgstr "Бознасбшуда"
+
+#: src/effects/EqualizationUI.cpp
+msgid "S&ave/Manage Curves..."
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Fla&tten"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "&Invert"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Show grid lines"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Show g&rid lines"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr ""
+
+#: src/effects/EqualizationUI.cpp
+msgid "Curve not found"
 msgstr ""
 
 #: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
@@ -8931,18 +9720,6 @@ msgstr "Табдилдиҳӣ"
 
 #: src/effects/Invert.cpp
 msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr ""
-
-#: src/effects/LoadEffects.cpp
-msgid "Builtin Effects"
-msgstr ""
-
-#: src/effects/LoadEffects.cpp
-msgid "Provides builtin effects to Audacity"
-msgstr ""
-
-#: src/effects/LoadEffects.cpp
-msgid "Unknown built-in effect name"
 msgstr ""
 
 #: src/effects/Loudness.cpp
@@ -9057,7 +9834,7 @@ msgstr "сонияҳо"
 msgid "Old"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
 #: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Noise Reduction"
@@ -9718,7 +10495,7 @@ msgstr ""
 msgid "Highpass"
 msgstr ""
 
-#: src/effects/ScienFilter.cpp
+#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
 msgid "Classic Filters"
 msgstr ""
 
@@ -9945,6 +10722,11 @@ msgstr ""
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
 msgstr ""
+
+#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "Хатӣ"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 msgid "Logarithmic"
@@ -10202,16 +10984,6 @@ msgid "VST"
 msgstr ""
 
 #: src/effects/VST3/VST3Effect.cpp
-msgid "VST3"
-msgstr ""
-
-#. i18n-hint VST3 effect description string
-#: src/effects/VST3/VST3Effect.cpp
-#, c-format
-msgid "SubCategories: %s"
-msgstr ""
-
-#: src/effects/VST3/VST3Effect.cpp
 #, fuzzy
 msgid "Save VST3 Preset As:"
 msgstr "Сабти Нутқ Ҳамчун:"
@@ -10221,45 +10993,10 @@ msgstr "Сабти Нутқ Ҳамчун:"
 msgid "VST3 preset file"
 msgstr "Интихоби MIDI файл..."
 
-#. i18n-hint: VST3 preset export error
-#: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
-msgid "Cannot open file"
-msgstr "Файлро кушода натавонист: "
-
-#: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
-msgid "Failed to save VST3 preset to file"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
 #: src/effects/VST3/VST3Effect.cpp
 #, fuzzy
 msgid "Load VST3 preset:"
 msgstr "Бор кардани файлҳо"
-
-#: src/effects/VST3/VST3Effect.cpp
-#, fuzzy, c-format
-msgid "Cannot open VST3 preset file %s"
-msgstr "Лоиҳаи файлро кушода наметавонад"
-
-#: src/effects/VST3/VST3Effect.cpp
-#, fuzzy, c-format
-msgid "Unable to apply VST3 preset file %s"
-msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
-
-#: src/effects/VST3/VST3EffectsModule.cpp
-#, fuzzy
-msgid "VST3 Effects"
-msgstr "Нати&ҷа"
-
-#: src/effects/VST3/VST3EffectsModule.cpp
-msgid "Adds the ability to use VST3 effects in Audacity."
-msgstr ""
-
-#: src/effects/VST3/VST3EffectsModule.cpp
-#, c-format
-msgid "VST3 module error: %s"
-msgstr ""
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
@@ -10370,8 +11107,7 @@ msgid "Unable to read the preset from \"%s\""
 msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
 
 #. i18n-hint: the name of an Apple audio software protocol
-#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
-#: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
+#: src/effects/audiounits/AudioUnitEffect.h
 msgid "Audio Unit"
 msgstr ""
 
@@ -10516,6 +11252,10 @@ msgstr "Танзимоти натиҷаҳо"
 msgid "LADSPA"
 msgstr "Нати&ҷа"
 
+#: src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr ""
+
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
@@ -10542,10 +11282,6 @@ msgstr ""
 
 #: src/effects/lv2/LV2Preferences.cpp
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr ""
-
-#: src/effects/lv2/LV2Validator.cpp
-msgid "Generator"
 msgstr ""
 
 #: src/effects/lv2/LoadLV2.cpp
@@ -10839,10 +11575,6 @@ msgstr ""
 msgid "Export Audio"
 msgstr "Берунсозии файл"
 
-#: src/export/Export.cpp src/export/ExportMultiple.cpp src/menus/EditMenus.cpp
-msgid "Edit Metadata Tags"
-msgstr ""
-
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Exported Tags"
@@ -10991,10 +11723,6 @@ msgstr "Вориди аудиоҳои интихобшуда бо истифод
 #: src/export/ExportCL.cpp
 msgid "Command Output"
 msgstr "Бурунсозии фармонҳо"
-
-#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
-msgid "&OK"
-msgstr "&ОК"
 
 #: src/export/ExportCL.cpp
 msgid "You've specified a file name without an extension. Are you sure?"
@@ -11216,6 +11944,10 @@ msgstr ""
 #, fuzzy
 msgid "10"
 msgstr "1"
+
+#: src/export/ExportFFmpegDialogs.cpp
+msgid "Off"
+msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11773,6 +12505,45 @@ msgstr "Вуруди аудиоҳои интихобшуда ба монанди
 msgid "Exporting the audio as FLAC"
 msgstr "Вуруди аудиоҳои интихобшуда ба монанди FLAC"
 
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "Созиши роҳчаи нави аудиоии нав"
+
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "Созиши роҳчаи нави аудиоии нав"
+
+#: src/export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr ""
+
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "MIDI file"
+msgstr "Интихоби MIDI файл..."
+
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "Allegro file"
+msgstr "Ҳамаи файлҳо (*)|*"
+
+#: src/export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: src/export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr ""
+
+#: src/export/ExportMIDI.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "&Содирот..."
+
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
 msgstr "Файлҳои MP2"
@@ -11901,7 +12672,8 @@ msgstr "Ҳолати гузориш бо Bit:"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
 #: src/export/ExportMP3.cpp src/export/ExportWavPack.cpp
-#: src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
+#: src/prefs/DevicePrefs.cpp src/prefs/QualityPrefs.cpp
+#: src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Сифат"
 
@@ -12377,6 +13149,52 @@ msgstr "Вуруди аудиоҳои интихобшуда ба монанди
 msgid "Exporting the audio as WavPack"
 msgstr "Вуруди аудиоҳои интихобшуда ба монанди FLAC"
 
+#: src/export/FFmpegPrefs.cpp
+msgid "FFmpeg Import/Export Library"
+msgstr ""
+
+#: src/export/FFmpegPrefs.cpp
+msgid "No compatible FFmpeg library was found"
+msgstr ""
+
+#: src/export/FFmpegPrefs.cpp
+msgid "FFmpeg support is not compiled in"
+msgstr ""
+
+#: src/export/FFmpegPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr ""
+
+#: src/export/FFmpegPrefs.cpp
+msgid "FFmpeg Library:"
+msgstr ""
+
+#: src/export/FFmpegPrefs.cpp
+msgid "Loca&te..."
+msgstr ""
+
+#: src/export/FFmpegPrefs.cpp
+msgid "Dow&nload"
+msgstr ""
+
+#: src/export/FFmpegPrefs.cpp
+msgid ""
+"Audacity has automatically detected valid FFmpeg libraries.\n"
+"Do you still want to locate them manually?"
+msgstr ""
+
+#: src/export/FFmpegPrefs.cpp
+msgid "Success"
+msgstr ""
+
+#: src/export/MP3Prefs.cpp
+msgid "LAME MP3 Export Library"
+msgstr ""
+
+#: src/export/MP3Prefs.cpp
+msgid "MP3 Library Version:"
+msgstr "Тариқаи феҳристи MP3:"
+
 #: src/import/Import.cpp
 #, fuzzy
 msgid "All supported files"
@@ -12534,12 +13352,6 @@ msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
-msgstr ""
-
-#: src/import/Import.cpp
-msgid ""
-"Try installing FFmpeg.\n"
-"\n"
 msgstr ""
 
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
@@ -12710,6 +13522,10 @@ msgstr "Кушодан/сохтани файлҳои санҷишӣ номумк
 msgid "FFmpeg-compatible files"
 msgstr ""
 
+#: src/import/ImportFFmpeg.cpp
+msgid "Try installing FFmpeg.\n"
+msgstr ""
+
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
 #, c-format
@@ -12808,6 +13624,29 @@ msgstr "Файлро кушода натавонист: "
 #, fuzzy, c-format
 msgid "Could not open file %s."
 msgstr "Файлро \"%s\"-ро кушода натавонист"
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "Интихоби MIDI файл..."
+
+#: src/import/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr ""
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy
+msgid "MIDI files"
+msgstr "Интихоби MIDI файл..."
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy
+msgid "Allegro files"
+msgstr "Ҳамаи файлҳо (*)|*"
+
+#: src/import/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
 
 #: src/import/ImportMP3_MAD.cpp src/import/ImportMP3_MPG123.cpp
 msgid "MP3 files"
@@ -13345,6 +14184,15 @@ msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Тозашавӣ %.2f аз сонияи t=%.2f"
 
 #: src/menus/EditMenus.cpp
+#, fuzzy
+msgid "Paste clip"
+msgstr "Гузориш аз буфери табадулот"
+
+#: src/menus/EditMenus.cpp
+msgid "Pasting clip contents, please wait"
+msgstr ""
+
+#: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
 msgstr ""
 
@@ -13430,10 +14278,6 @@ msgid "Detach"
 msgstr ""
 
 #: src/menus/EditMenus.cpp
-msgid "Metadata Tags"
-msgstr ""
-
-#: src/menus/EditMenus.cpp
 msgid "&Edit"
 msgstr "&Таҳрир"
 
@@ -13506,11 +14350,6 @@ msgstr ""
 
 #: src/menus/EditMenus.cpp
 #, fuzzy
-msgid "&Metadata"
-msgstr "Таҳрири З&анҷираҳо..."
-
-#: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Pre&ferences"
 msgstr "Қисматҳо..."
 
@@ -13527,66 +14366,6 @@ msgstr "Калиди Поккунандаи2"
 #: src/menus/ExtraMenus.cpp
 msgid "Ext&ra"
 msgstr ""
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Mi&xer"
-msgstr "Лавҳаи омезишӣ"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Ad&just Playback Volume..."
-msgstr "Бозигар"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "&Increase Playback Volume"
-msgstr "Бозигар"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "&Decrease Playback Volume"
-msgstr "Бозигар"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Adj&ust Recording Volume..."
-msgstr "Сабтшавӣ"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "I&ncrease Recording Volume"
-msgstr "Сабтшавӣ"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "D&ecrease Recording Volume"
-msgstr "Сабтшавӣ"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "De&vice"
-msgstr "Афзор"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Change &Recording Device..."
-msgstr "Ивази сабти овоз"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Change &Playback Device..."
-msgstr "Ивази сабти овоз"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Change Audio &Host..."
-msgstr "Кэширонидани додаҳои садоӣ"
-
-#: src/menus/ExtraMenus.cpp
-#, fuzzy
-msgid "Change Recording Cha&nnels..."
-msgstr "Ивази сабти овоз"
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Full Screen (on/off)"
@@ -13619,40 +14398,6 @@ msgid "There are no label tracks to export."
 msgstr "Нишонагузории роҳчаҳо иҷро намешаванд."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "Созиши роҳчаи нави аудиоии нав"
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "Созиши роҳчаи нави аудиоии нав"
-
-#: src/menus/FileMenus.cpp
-msgid "Export MIDI As:"
-msgstr ""
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "MIDI file"
-msgstr "Интихоби MIDI файл..."
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Allegro file"
-msgstr "Ҳамаи файлҳо (*)|*"
-
-#: src/menus/FileMenus.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-
-#: src/menus/FileMenus.cpp
-msgid "Export MIDI"
-msgstr ""
-
-#: src/menus/FileMenus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "Воридоти нишонаҳо аз '%s'"
@@ -13660,25 +14405,6 @@ msgstr "Воридоти нишонаҳо аз '%s'"
 #: src/menus/FileMenus.cpp
 msgid "Import Labels"
 msgstr "Воридоти Нишонаҳо"
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "Интихоби MIDI файл..."
-
-#: src/menus/FileMenus.cpp
-msgid "MIDI and Allegro files"
-msgstr ""
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "MIDI files"
-msgstr "Интихоби MIDI файл..."
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Allegro files"
-msgstr "Ҳамаи файлҳо (*)|*"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
@@ -13747,11 +14473,6 @@ msgid "Export &Multiple..."
 msgstr "Содирот &Бисёркарата..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "&Содирот..."
-
-#: src/menus/FileMenus.cpp
 msgid "&Audio..."
 msgstr "&Аудио..."
 
@@ -13760,21 +14481,8 @@ msgid "&Labels..."
 msgstr "&Нишонаҳо..."
 
 #: src/menus/FileMenus.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
 msgstr "&Маълумоти коркардношудаи..."
-
-#: src/menus/FileMenus.cpp
-msgid "Pa&ge Setup..."
-msgstr "Та&ъини Саҳифа..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/menus/FileMenus.cpp
-msgid "&Print..."
-msgstr "&Чоп кардан..."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
@@ -13868,16 +14576,8 @@ msgstr ""
 msgid "Au&dio Device Info..."
 msgstr ""
 
-#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
-msgid "Show &Log..."
-msgstr ""
-
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
-msgstr ""
-
-#: src/menus/HelpMenus.cpp
-msgid "L&ink audio.com account..."
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
@@ -14129,6 +14829,15 @@ msgstr "Таҳрири Нишона"
 msgid "&Label Track"
 msgstr "&Нишонаи Роҳча"
 
+#: src/menus/MenuHelper.cpp
+#, fuzzy
+msgid "..."
+msgstr "Нав..."
+
+#: src/menus/MenuHelper.cpp
+msgid "Uncategorized"
+msgstr ""
+
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
 msgstr ""
@@ -14190,15 +14899,6 @@ msgstr "Банизомдарории Роҳчаи Дупоя"
 msgid "Toggle Focuse&d Track"
 msgstr "Банизомдарории Роҳчаи Дупоя"
 
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "..."
-msgstr "Нав..."
-
-#: src/menus/PluginMenus.cpp
-msgid "Uncategorized"
-msgstr ""
-
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
@@ -14210,16 +14910,6 @@ msgstr ""
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
 msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy, c-format
-msgid "&Repeat %s"
-msgstr "Такрор %s"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy, c-format
-msgid "Plugin %d to %d"
-msgstr "Дастаҳои иттисоли %i ба %i"
 
 #: src/menus/PluginMenus.cpp
 msgid "Plugin Manager"
@@ -14258,32 +14948,8 @@ msgstr "Абзорҳо"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
-msgid "Repeat Last Tool"
-msgstr "Такрор %s"
-
-#: src/menus/PluginMenus.cpp
-msgid "&Macro Manager"
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "&Apply Macro"
-msgstr "Истифодаи %s"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Palette..."
-msgstr "&Захира кардан..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Reset &Configuration"
 msgstr "Давомнокии оҳанг:"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&Чоп кардан..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Run Benchmark..."
@@ -14302,119 +14968,6 @@ msgstr ""
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "Write Journal"
-msgstr ""
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Script&ables I"
-msgstr "Тағирёбанда"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Select Time..."
-msgstr "Ҷудокунӣ"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Select Frequencies..."
-msgstr "Басомад (Ҳз)"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Select Tracks..."
-msgstr "Ҷудокунӣ"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Track Status..."
-msgstr "Номи Роҳча"
-
-#: src/menus/PluginMenus.cpp
-msgid "Set Track Audio..."
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-msgid "Set Track Visuals..."
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Get Preference..."
-msgstr "Қисматҳо..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Preference..."
-msgstr "Қисматҳо..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Clip..."
-msgstr "Афзори Навбатӣ"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Envelope..."
-msgstr "Лифофа"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Label..."
-msgstr "&Тағйири нишона"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Project..."
-msgstr "Сабти Лоиҳа &Ҳамчун..."
-
-#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-#: src/menus/PluginMenus.cpp
-msgid "Scripta&bles II"
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Set Track..."
-msgstr "&Роҳчаҳо"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get Info..."
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Message..."
-msgstr "&Бознамунагузорӣ..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Help..."
-msgstr "&Мадад"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Open Project..."
-msgstr "Сабти Лоиҳа &Ҳамчун..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Save Project..."
-msgstr "Сабти Лоиҳа &Ҳамчун..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Move Mouse..."
-msgstr "Интихоби..."
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Compare Audio..."
-msgstr "Фишордиҳандаи..."
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/menus/PluginMenus.cpp
-msgid "Screenshot (short format)..."
 msgstr ""
 
 #: src/menus/SelectMenus.cpp
@@ -14517,26 +15070,6 @@ msgstr "Интихобкунӣ"
 #, fuzzy
 msgid "Retrieve Selectio&n"
 msgstr "Интихобкунӣ"
-
-#: src/menus/SelectMenus.cpp
-#, fuzzy
-msgid "S&pectral"
-msgstr "Спектрум"
-
-#: src/menus/SelectMenus.cpp
-#, fuzzy
-msgid "To&ggle Spectral Selection"
-msgstr "Интихобкунӣ"
-
-#: src/menus/SelectMenus.cpp
-#, fuzzy
-msgid "Next &Higher Peak Frequency"
-msgstr "Басомад (Ҳз)"
-
-#: src/menus/SelectMenus.cpp
-#, fuzzy
-msgid "Next &Lower Peak Frequency"
-msgstr "Басомади хаттӣ"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Stored &Cursor Position"
@@ -15259,20 +15792,6 @@ msgid "Set Loop &Out"
 msgstr "Тағирдиҳии андозаи тасвир &ба қафо"
 
 #: src/menus/TransportMenus.cpp
-msgid ""
-"Timer Recording cannot be used with more than one open project.\n"
-"\n"
-"Please close any additional projects and try again."
-msgstr ""
-
-#: src/menus/TransportMenus.cpp
-msgid ""
-"Timer Recording cannot be used while you have unsaved changes.\n"
-"\n"
-"Please save or close this project and try again."
-msgstr ""
-
-#: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "Please select in a mono track."
 msgstr "Созиши роҳчаи нави аудиоии нав"
@@ -15343,10 +15862,6 @@ msgid "Record &New Track"
 msgstr "Ҷойивазку&нии Роҳчаҳо"
 
 #: src/menus/TransportMenus.cpp
-msgid "&Timer Record..."
-msgstr ""
-
-#: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
 msgstr ""
 
@@ -15379,10 +15894,6 @@ msgstr ""
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound A&ctivated Recording (on/off)"
-msgstr ""
-
-#: src/menus/TransportMenus.cpp
-msgid "Pinned Play/Record &Head (on/off)"
 msgstr ""
 
 #: src/menus/TransportMenus.cpp
@@ -15457,37 +15968,6 @@ msgstr "Интиҳо ба интихоб"
 msgid "Play C&ut Preview"
 msgstr "Хониши Ташхиси натиҷавии Буриш"
 
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "&Play-at-Speed"
-msgstr "Иҷро дар суръат"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "Play-at-Speed &Once"
-msgstr "Иҷро дар суръат"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "Play C&ut Preview-at-Speed"
-msgstr "Хониши Ташхиси натиҷавии Буриш"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "Ad&just Playback Speed..."
-msgstr "Бозигар"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "&Increase Playback Speed"
-msgstr "Бозигар"
-
-#: src/menus/TransportMenus.cpp
-#, fuzzy
-msgid "&Decrease Playback Speed"
-msgstr "Бозигар"
-
 #: src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "Move to Pre&vious Label"
@@ -15502,9 +15982,7 @@ msgstr "Ҷойгузории Ботартиб ба Роҳчаи Навбатӣ"
 msgid "&View"
 msgstr "&Намуд"
 
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) full sized
-#: src/menus/ViewMenus.cpp src/menus/WindowMenus.cpp
+#: src/menus/ViewMenus.cpp
 #, fuzzy
 msgid "&Zoom"
 msgstr "Калонкунӣ"
@@ -15591,29 +16069,6 @@ msgstr ""
 msgid "&Show Clipping (on/off)"
 msgstr "Иҷозати буриш"
 
-#: src/menus/WindowMenus.cpp
-#, fuzzy
-msgid "&Window"
-msgstr " равзана"
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make (the current
-#. * window) shrink to an icon on the dock
-#: src/menus/WindowMenus.cpp
-msgid "&Minimize"
-msgstr ""
-
-#. i18n-hint: Standard Macintosh Window menu item:  Make all project
-#. * windows un-hidden
-#: src/menus/WindowMenus.cpp
-msgid "&Bring All to Front"
-msgstr ""
-
-#. i18n-hint: Shrink all project windows to icons on the Macintosh
-#. tooldock
-#: src/menus/WindowMenus.cpp
-msgid "Minimize All Projects"
-msgstr ""
-
 #: src/prefs/ApplicationPrefs.cpp
 #, fuzzy
 msgid "Preferences for Application"
@@ -15653,13 +16108,18 @@ msgid "&Don't apply effects in batch mode"
 msgstr ""
 
 #: src/prefs/DevicePrefs.cpp
-msgid "Devices"
+#, fuzzy
+msgid "Audio Settings"
+msgstr "Қисматҳои омехтаи пешрафта"
+
+#: src/prefs/DevicePrefs.cpp
+#, c-format
+msgid "%i Hz"
 msgstr ""
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
-msgid "Preferences for Device"
-msgstr "Қисматҳо..."
+msgid "Other..."
+msgstr "Дигар..."
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
@@ -15706,13 +16166,27 @@ msgid "Cha&nnels:"
 msgstr "Маҷро(Канал)"
 
 #: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "&Project Sample Rate:"
+msgstr "Басомади намуна аз рӯи пешфарз:"
+
+#: src/prefs/DevicePrefs.cpp
+msgid "Project Sample Rate used when recording new tracks and for playback, mixdowns and exports in this project"
+msgstr ""
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "D&efault Sample Rate:"
+msgstr "Басомади намуна аз рӯи пешфарз:"
+
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgid "Default Sample &Format:"
+msgstr "Қолаби намуна аз рӯи хомушӣ:"
+
+#: src/prefs/DevicePrefs.cpp
 msgid "Latency"
 msgstr "Таваққуф"
-
-#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "milliseconds"
-msgstr "миллисония"
 
 #: src/prefs/DevicePrefs.cpp
 #, fuzzy
@@ -15739,6 +16213,10 @@ msgstr "1 (Моно)"
 #: src/prefs/DevicePrefs.cpp
 msgid "2 (Stereo)"
 msgstr "2 (Стерео)"
+
+#: src/prefs/DevicePrefs.h src/toolbars/DeviceToolBar.cpp
+msgid "Device"
+msgstr "Афзор"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
@@ -15923,67 +16401,33 @@ msgstr "Қисматҳо..."
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
-msgid "Sorted by Effect Name"
+msgid "Sort by effect name"
 msgstr "Ҷудокунӣ Аз рӯи Ном"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Sorted by Publisher and Effect Name"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Sorted by Type and Effect Name"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Grouped by Publisher"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Grouped by Type"
-msgstr ""
+#, fuzzy
+msgid "Sort by publisher and effect name"
+msgstr "Ҷудокунӣ Аз рӯи Ном"
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
-msgid "Default"
-msgstr "&Аз рӯи хомӯшӣ"
+msgid "Sort by type and effect name"
+msgstr "Ҷудокунӣ Аз рӯи Ном"
 
-#. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-#. (Application programming interface)
-#.
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
-msgid "&LADSPA"
-msgstr "Нати&ҷа"
-
-#. i18n-hint: abbreviates
-#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
-#: src/prefs/EffectsPrefs.cpp
-msgid "LV&2"
-msgstr ""
-
-#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-#. In the translations of this and other strings, you may transliterate the
-#. name into another alphabet.
-#: src/prefs/EffectsPrefs.cpp
-#, fuzzy
-msgid "N&yquist"
-msgstr "Оҳанг"
-
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
-#. It is not an abbreviation for anything.  See http://vamp-plugins.org
-#: src/prefs/EffectsPrefs.cpp
-msgid "&Vamp"
-msgstr ""
-
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-#. developed by Steinberg GmbH
-#: src/prefs/EffectsPrefs.cpp
-msgid "V&ST"
+msgid "Group by publisher"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Enable Effects"
+msgid "Group by type"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "Group by category"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "Group by type and publisher"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
@@ -15992,12 +16436,13 @@ msgid "Effect Options"
 msgstr "Танзимоти натиҷаҳо"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "S&ort or Group:"
+msgid "Effect menu &organization:"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "&Maximum effects per group (0 to disable):"
-msgstr ""
+#, fuzzy
+msgid "Realtime effect o&rganization:"
+msgstr "Натиҷаи корбурдашуда: %s"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -16005,6 +16450,10 @@ msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "Open Plugin Manager"
 msgstr ""
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
@@ -16133,14 +16582,6 @@ msgstr "-120 dB (ҳудуди шунавоӣ)"
 msgid "-145 dB (PCM range of 24 bit samples)"
 msgstr "-145 dB (соҳаи PCM намунаҳои 24 бита)"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Local"
-msgstr ""
-
-#: src/prefs/GUIPrefs.cpp
-msgid "From Internet"
-msgstr ""
-
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "Намуд"
@@ -16239,6 +16680,7 @@ msgstr ""
 msgid "&Seconds"
 msgstr "сонияҳо"
 
+#. i18n-hint: The music theory "beat"
 #: src/prefs/ImportExportPrefs.cpp
 #, fuzzy
 msgid "&Beats"
@@ -16445,52 +16887,6 @@ msgstr "Таркиббандии калид"
 #, fuzzy
 msgid "Preferences for Library"
 msgstr "Қисматҳо..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Export Library"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "MP3 Library Version:"
-msgstr "Тариқаи феҳристи MP3:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Import/Export Library"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "No compatible FFmpeg library was found"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg support is not compiled in"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library:"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Loca&te..."
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Dow&nload"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
-"Do you still want to locate them manually?"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Success"
-msgstr ""
 
 #: src/prefs/LibraryPrefs.h
 msgid "Library"
@@ -16845,10 +17241,6 @@ msgid "Lo&ng period:"
 msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
-msgid "&Vari-Speed Play"
-msgstr ""
-
-#: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
 msgstr ""
 
@@ -16873,29 +17265,6 @@ msgstr "Қисматҳо..."
 #, fuzzy
 msgid "Preferences for Quality"
 msgstr "Қисматҳо..."
-
-#: src/prefs/QualityPrefs.cpp
-#, c-format
-msgid "%i Hz"
-msgstr ""
-
-#: src/prefs/QualityPrefs.cpp
-msgid "Other..."
-msgstr "Дигар..."
-
-#: src/prefs/QualityPrefs.cpp
-msgid "Sampling"
-msgstr "Намунагирӣ"
-
-#: src/prefs/QualityPrefs.cpp
-#, fuzzy
-msgid "Default Sample &Rate:"
-msgstr "Басомади намуна аз рӯи пешфарз:"
-
-#: src/prefs/QualityPrefs.cpp
-#, fuzzy
-msgid "Default Sample &Format:"
-msgstr "Қолаби намуна аз рӯи хомушӣ:"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Real-time Conversion"
@@ -17387,6 +17756,12 @@ msgid "Multi-track"
 msgstr "Бисёр"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+msgid ""
+"Ask me each time.\n"
+"Show dialog each time audio is pasted."
+msgstr ""
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
 #, fuzzy
 msgid "&Select all audio, if selection required"
 msgstr "Ҷобаҷогузори бо интихоби интиҳо"
@@ -17431,10 +17806,15 @@ msgstr "Қисматҳои омехтаи пешрафта"
 msgid "Solo &Button:"
 msgstr ""
 
-#: src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp
 #, fuzzy
-msgid "Logarithmic (dB)"
-msgstr "Зудии Синхронӣ бо Иловашавӣ"
+msgid "Pasted audio"
+msgstr "Аудиои Сабтшуда"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+msgid "Paste audio from other Audacity project as"
+msgstr "Гузориш аз буфери табадулот"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -17472,11 +17852,6 @@ msgstr "&Аз рӯи хомӯшӣ"
 msgid "Minutes"
 msgstr ""
 
-#: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
-#, fuzzy
-msgid "Seconds"
-msgstr "сонияҳо"
-
 #: src/prefs/TracksPrefs.cpp
 #, fuzzy
 msgid "5ths of Seconds"
@@ -17509,11 +17884,6 @@ msgstr ""
 #, fuzzy
 msgid "MilliSeconds"
 msgstr "миллисония"
-
-#: src/prefs/TracksPrefs.cpp
-#, fuzzy
-msgid "Samples"
-msgstr "намунаҳо"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "4 Pixels per Sample"
@@ -17652,19 +18022,16 @@ msgstr "Файли аудиоӣ"
 msgid "&Host"
 msgstr ""
 
-#. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
 #, fuzzy
 msgid "&Playback Device"
 msgstr "Суръати иҷро"
 
-#. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
 #, fuzzy
 msgid "&Recording Device"
 msgstr "Масрафсанҷи сабт"
 
-#. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
 #, fuzzy
 msgid "Recording &Channels"
@@ -17685,11 +18052,6 @@ msgstr "Шабакаи чап рост"
 msgid "2 (Stereo) Recording Channels"
 msgstr "Шабакаи чап рост"
 
-#: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
-msgid "Audio Settings:"
-msgstr "Қисматҳои омехтаи пешрафта"
-
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
@@ -17704,6 +18066,10 @@ msgstr "Лавҳаи таҳрирӣ"
 #, fuzzy
 msgid "Stopped"
 msgstr "Боздорӣ"
+
+#: src/toolbars/ControlToolBar.cpp
+msgid "Transport"
+msgstr ""
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
@@ -17815,6 +18181,31 @@ msgstr ""
 msgid "&Device Toolbar"
 msgstr "Лавҳаи таҷҳизот"
 
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "De&vice"
+msgstr "Афзор"
+
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "Change &Recording Device..."
+msgstr "Ивази сабти овоз"
+
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "Change &Playback Device..."
+msgstr "Ивази сабти овоз"
+
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "Change Audio &Host..."
+msgstr "Кэширонидани додаҳои садоӣ"
+
+#: src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
+msgstr "Ивази сабти овоз"
+
 #: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
@@ -17831,6 +18222,16 @@ msgstr "Хурдкунӣ"
 
 #: src/toolbars/EditToolBar.cpp
 #, fuzzy
+msgid "Fit selection to width"
+msgstr "Пурракунии интихоб дар равзана"
+
+#: src/toolbars/EditToolBar.cpp
+#, fuzzy
+msgid "Fit project to width"
+msgstr "Пурракунии лоиҳа дар равзана"
+
+#: src/toolbars/EditToolBar.cpp
+#, fuzzy
 msgid "Trim audio outside selection"
 msgstr "Буриши ҳамаи ғайриҷудошудаҳо"
 
@@ -17844,14 +18245,8 @@ msgid "Sync-Lock Tracks"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Fit selection to width"
-msgstr "Пурракунии интихоб дар равзана"
-
-#: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Fit project to width"
-msgstr "Пурракунии лоиҳа дар равзана"
+msgid "Edit"
+msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
@@ -17883,19 +18278,8 @@ msgid " Clipped "
 msgstr ""
 
 #: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Combined Meter"
+msgid "Record Meter"
 msgstr "Масрафсанҷи сабт"
-
-#: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Meter"
-msgstr "Масрафсанҷи сабт"
-
-#: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Playback Meter"
-msgstr "Иҷрои масрафсанҷ"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/toolbars/MeterToolBar.cpp
@@ -17910,6 +18294,11 @@ msgstr "Масрафсанҷи сабт"
 msgid "Meter-Record"
 msgstr "Масрафсанҷи сабт"
 
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Playback Meter"
+msgstr "Иҷрои масрафсанҷ"
+
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
@@ -17923,19 +18312,64 @@ msgstr "Суръати иҷро"
 msgid "Meter-Play"
 msgstr "Масрфсанҷи иҷро"
 
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. with the recording level meters
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Meter"
+msgstr "Масрафсанҷи сабт"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Combined Meter"
+msgstr "Масрафсанҷи сабт"
+
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "&Recording Meter Toolbar"
 msgstr "Лавҳаи чароғакҳо"
 
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. with the playback level meter
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "&Playback Meter Toolbar"
 msgstr "Иҷрои масрафсанҷ"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Mi&xer"
+msgstr "Лавҳаи омезишӣ"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Ad&just Playback Volume..."
+msgstr "Бозигар"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "&Increase Playback Volume"
+msgstr "Бозигар"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "&Decrease Playback Volume"
+msgstr "Бозигар"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
+msgstr "Сабтшавӣ"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "I&ncrease Recording Volume"
+msgstr "Сабтшавӣ"
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "D&ecrease Recording Volume"
+msgstr "Сабтшавӣ"
+
+#: src/toolbars/ScrubbingToolBar.cpp
+msgid "Scrub"
+msgstr ""
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
@@ -17995,19 +18429,22 @@ msgstr ""
 msgid "Scru&b Toolbar"
 msgstr "Лавҳаи таҳрирӣ"
 
+#. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Project Rate (Hz)"
-msgstr "Суръати лоиҳа (Hz):"
+msgid "Length"
+msgstr "Дарозӣ"
+
+#. i18n-hint noun
+#: src/toolbars/SelectionBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
+#: src/widgets/ASlider.cpp
+msgid "Center"
+msgstr "Марказ"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Snap-To"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp src/toolbars/TimeToolBar.cpp
 #, fuzzy
-msgid "Audio Position"
-msgstr "Мавқеи аудио:"
+msgid "Selection Toolbar Setup"
+msgstr "Лавҳаи интихобӣ"
 
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
@@ -18029,50 +18466,37 @@ msgstr "Интиҳо ба интихоб"
 msgid "Length and Center of Selection"
 msgstr "Ҷудошудаҳои файл барои интихоб"
 
-#: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
-msgid "Show"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Snap To"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length"
-msgstr "Дарозӣ"
-
-#: src/toolbars/SelectionBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#: src/widgets/ASlider.cpp
-msgid "Center"
-msgstr "Марказ"
-
-#: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "Snap Clicks/Selections to %s"
-msgstr ""
-
-#. i18n-hint: %s is replaced e.g by one of 'Length', 'Center',
-#. 'Start', or 'End' (translated), to indicate that it will be
-#. calculated from other parameters.
-#: src/toolbars/SelectionBar.cpp
-#, c-format
-msgid "%s - driven"
-msgstr ""
-
-#. i18n-hint: each string is replaced by one of 'Length', 'Center',
-#. 'Start', or 'End' (translated)
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy, c-format
-msgid "Selection %s. %s won't change."
-msgstr "Интихоби MIDI файл..."
-
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
 msgid "&Selection Toolbar"
 msgstr "Лавҳаи интихобӣ"
+
+#: src/toolbars/SnappingToolBar.cpp
+msgid "Snapping"
+msgstr ""
+
+#: src/toolbars/SnappingToolBar.cpp
+msgid "Snap"
+msgstr ""
+
+#. i18n-hint: combo box is the type of the control/widget
+#: src/toolbars/SnappingToolBar.cpp
+msgid "Snap to combo box"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/toolbars/SnappingToolBar.cpp
+#, fuzzy
+msgid "&Snapping Toolbar"
+msgstr "Лавҳаи интихобӣ"
+
+#: src/toolbars/SpectralSelectionBar.cpp
+#, fuzzy
+msgid "Spectral Selection"
+msgstr "Интихобкунӣ"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -18083,6 +18507,10 @@ msgstr "Басомади хаттӣ"
 #, fuzzy
 msgid "Low and High Frequencies"
 msgstr "Баландкунии Басомади  "
+
+#: src/toolbars/SpectralSelectionBar.cpp
+msgid "Show"
+msgstr ""
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -18100,10 +18528,52 @@ msgstr ""
 msgid "Spe&ctral Selection Toolbar"
 msgstr "Лавҳаи интихобӣ"
 
+#: src/toolbars/TimeSignatureToolBar.cpp
+#, fuzzy
+msgid "Time Signature"
+msgstr "Вақти Интихоби Афзор"
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+#, fuzzy
+msgid "Tempo"
+msgstr "Баландии садо (EAC)"
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Upper Time Signature"
+msgstr ""
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Lower Time Signature"
+msgstr ""
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+#, fuzzy
+msgid "Tempo Changed"
+msgstr "Ивази Басомад"
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Upper Time Signature Changed"
+msgstr ""
+
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Lower Time Signature Changed"
+msgstr ""
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. for selecting a time range of audio
+#: src/toolbars/TimeSignatureToolBar.cpp
+msgid "Time Signature Toolbar (Beta)"
+msgstr ""
+
 #: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "Time"
 msgstr "Вақти охир"
+
+#: src/toolbars/TimeToolBar.cpp
+#, fuzzy
+msgid "Audio Position"
+msgstr "Мавқеи аудио:"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
@@ -18126,6 +18596,10 @@ msgstr "Пахш ва кашидан барои тағирдиҳии андоз�
 #: src/toolbars/ToolDock.cpp
 msgid "ToolDock"
 msgstr "Афзор"
+
+#: src/toolbars/ToolsToolBar.cpp
+msgid "Tools"
+msgstr "Абзорҳо"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Selection Tool"
@@ -18183,6 +18657,11 @@ msgid "&Next Tool"
 msgstr "Афзори Навбатӣ"
 
 #: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "Play-at-Speed"
+msgstr "Иҷро дар суръат"
+
+#: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play at selected speed"
 msgstr "Суръати интихобшударо интихоб кунед"
 
@@ -18195,12 +18674,41 @@ msgstr "Суръати иҷро"
 msgid "Play-at-Speed Once"
 msgstr "Иҷро дар суръат"
 
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. for transcription (currently just vary play speed)
 #: src/toolbars/TranscriptionToolBar.cpp
 #, fuzzy
 msgid "Pla&y-at-Speed Toolbar"
 msgstr "Иҷро дар суръат"
+
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Иҷро дар суръат"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "Play-at-Speed &Once"
+msgstr "Иҷро дар суръат"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "Play C&ut Preview-at-Speed"
+msgstr "Хониши Ташхиси натиҷавии Буриш"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "Ad&just Playback Speed..."
+msgstr "Бозигар"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "&Increase Playback Speed"
+msgstr "Бозигар"
+
+#: src/toolbars/TranscriptionToolBar.cpp
+#, fuzzy
+msgid "&Decrease Playback Speed"
+msgstr "Бозигар"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
@@ -18437,6 +18945,26 @@ msgstr ""
 msgid "S&pectrogram Settings..."
 msgstr "Спектограммаҳо"
 
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+#, fuzzy
+msgid "S&pectral"
+msgstr "Спектрум"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+#, fuzzy
+msgid "To&ggle Spectral Selection"
+msgstr "Интихобкунӣ"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+#, fuzzy
+msgid "Next &Higher Peak Frequency"
+msgstr "Басомад (Ҳз)"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
+#, fuzzy
+msgid "Next &Lower Peak Frequency"
+msgstr "Басомади хаттӣ"
+
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
 msgstr ""
@@ -18482,6 +19010,7 @@ msgid "Clip Name Edit"
 msgstr "Намунаи Таҳрир"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 #, fuzzy
 msgid "Rename Clip..."
 msgstr "Афзори Навбатӣ"
@@ -18756,11 +19285,6 @@ msgstr "Афзори Навбатӣ"
 #, fuzzy
 msgid "Mute/Unmute Track"
 msgstr "Хомӯшкунӣ/Баргардонидани роҳчаи садогӣ "
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
-msgid "Rename clip..."
-msgstr "Ивази Номи '%s' ба '%s'"
 
 #. i18n-hint:
 #. string is the name of a clip
@@ -19254,14 +19778,17 @@ msgstr ""
 msgid "App update checking"
 msgstr ""
 
+#. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
 msgstr ""
 
+#. i18n-hint: The second paragraph of app update notice dialog
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
 msgstr ""
 
+#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
@@ -19366,20 +19893,19 @@ msgstr ""
 msgid "All reports are anonymous. See %s for more info."
 msgstr "Интихоби як ё якчанд файлҳои аудиои..."
 
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-#, c-format
-msgid "File '%s' already exists, do you really want to overwrite it?"
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
 msgstr ""
 
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-#, fuzzy
-msgid "Please choose an existing file."
-msgstr " Лутфан, амалиётро интихоб намоед "
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
 
-#: src/widgets/FileDialog/mac/FileDialogPrivate.mm
-#, fuzzy
-msgid "File type:"
-msgstr "Навъи хаш:"
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -19397,31 +19923,14 @@ msgstr "Контакткунанда"
 msgid "Empty"
 msgstr "Холӣ"
 
-#: src/widgets/HelpSystem.cpp
-msgid "Backwards"
-msgstr ""
-
-#. i18n-hint arrowhead meaning backward movement
-#: src/widgets/HelpSystem.cpp
-msgid "<"
-msgstr ""
-
-#: src/widgets/HelpSystem.cpp
-msgid "Forwards"
-msgstr ""
-
-#. i18n-hint arrowhead meaning forward movement
-#: src/widgets/HelpSystem.cpp
-msgid ">"
-msgstr ""
-
-#: src/widgets/HelpSystem.cpp
-msgid "Help on the Internet"
-msgstr ""
-
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
+
+#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
+#: src/widgets/MeterPanel.cpp
+msgid "Meter"
+msgstr "масрафсанҷ"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Stop Monitoring"
@@ -19495,343 +20004,23 @@ msgstr "Стереои уфуқӣ"
 msgid "Vertical"
 msgstr "Идоракунандаи амудӣ"
 
-#: src/widgets/MultiDialog.cpp
-msgid "Show Log for Details"
-msgstr ""
-
-#. i18n-hint: Format string for displaying time in seconds. Change the comma
-#. * in the middle to the 1000s separator for your locale, and the 'seconds'
-#. * on the end to the word for seconds. Don't change the numbers.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 seconds"
-msgstr "01000,01000 сония"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes
-#. * and seconds
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss"
-msgstr "сс:дд:сс"
-
-#. i18n-hint: Format string for displaying time in hours, minutes and
-#. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
-#. * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
-#. * change the numbers unless there aren't 60 seconds in a minute in your
-#. * locale
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s"
-msgstr "0100 с 060 д 060 с"
-
-#. i18n-hint: Name of time display format that shows time in days, hours,
-#. * minutes and seconds
-#: src/widgets/NumericTextCtrl.cpp
-msgid "dd:hh:mm:ss"
-msgstr "рр:сс:дд:сс"
-
-#. i18n-hint: Format string for displaying time in days, hours, minutes and
-#. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes and 's' to the
-#. * abbreviation for seconds. Don't change the numbers unless there aren't
-#. * 24 hours in a day in your locale
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 days 024 h 060 m 060 s"
-msgstr "0100 рӯз 024 с 060 д 060 с"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundredths of a second (1/100 second)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + hundredths"
-msgstr ""
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
-#. * (the hundredths are shown as decimal seconds). Don't change the numbers
-#. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060>0100 s"
-msgstr ""
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and milliseconds (1/1000 second)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + milliseconds"
-msgstr "сс:дд:сс + миллисония"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
-#. * abbreviation for minutes and 's' to the abbreviation for seconds (the
-#. * milliseconds are shown as decimal seconds) . Don't change the numbers
-#. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060>01000 s"
-msgstr "0100 с 060 д 060>01000 с"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and samples (at the current project sample rate)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + samples"
-msgstr "сс:дд:сс + мисолҳо"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
-#. * abbreviation for minutes, 's' to the abbreviation for seconds and
-#. * translate samples . Don't change the numbers
-#. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+># samples"
-msgstr "0100 с 060 д 060 с+># мисолҳо"
-
-#. i18n-hint: Name of time display format that shows time in samples (at the
-#. * current project sample rate).  For example the number of a sample at 1
-#. * second into a recording at 44.1KHz would be 44,100.
-#.
-#: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
-msgid "samples"
-msgstr "намунаҳо"
-
-#. i18n-hint: Format string for displaying time in samples (lots of samples).
-#. * Change the ',' to the 1000s separator for your locale, and translate
-#. * samples. If 1000s aren't a base multiple for your number system, then you
-#. * can change the numbers to an appropriate one, and put a 0 on the front
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000,01000 samples|#"
-msgstr "01000,01000,01000 мислоҳо|#"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at 24 frames per second (commonly used for films)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + film frames (24 fps)"
-msgstr "hh:mm:ss + кадрҳои филм (24 fps)"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames at 24 frames per second. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames' . Don't change the numbers
-#. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>24 frames"
-msgstr "0100 h 060 m 060 s+>24 кадрҳо"
-
-#. i18n-hint: Name of time display format that shows time in frames (lots of
-#. * frames) at 24 frames per second (commonly used for films)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "film frames (24 fps)"
-msgstr "кадрҳои филм (24 fps)"
-
-#. i18n-hint: Format string for displaying time in frames at 24 frames per
-#. * second. Change the comma
-#. * in the middle to the 1000s separator for your locale,
-#. * translate 'frames' and leave the rest alone
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 frames|24"
-msgstr "01000,01000 кадрҳо|24"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at NTSC TV drop-frame rate (used for American /
-#. * Japanese TV, and very odd)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + NTSC drop frames"
-msgstr "hh:mm:ss + NTSC партофтани кадрҳо"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Leave the |N alone, it's important!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>30 frames|N"
-msgstr "0100 h 060 m 060 s+>30 кадрҳо|N"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
-#. * Japanese TV, and doesn't quite match wall time
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + NTSC non-drop frames"
-msgstr "hh:mm:ss + NTSC ягон кадр партофта нашуд"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Leave the | .999000999 alone,
-#. * the whole things really is slightly off-speed!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>030 frames| .999000999"
-msgstr "0100 h 060 m 060 s+>030 кадрҳо| .999000999"
-
-#. i18n-hint: Name of time display format that shows time in frames at NTSC
-#. * TV frame rate (used for American / Japanese TV
-#: src/widgets/NumericTextCtrl.cpp
-msgid "NTSC frames"
-msgstr "Кадрҳои NTSC"
-
-#. i18n-hint: Format string for displaying time in frames with NTSC frames.
-#. * Change the comma
-#. * in the middle to the 1000s separator for your locale,
-#. * translate 'frames' and leave the rest alone. That really is the frame
-#. * rate!
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 frames|29.97002997"
-msgstr "01000,01000 кадрҳои|29.97002997"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at PAL TV frame rate (used for European TV)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + PAL frames (25 fps)"
-msgstr "hh:mm:ss + PAL кадрҳо (25 fps)"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with PAL TV frames. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Nice simple time code!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>25 frames"
-msgstr "0100 h 060 m 060 s+>25 кадрҳо"
-
-#. i18n-hint: Name of time display format that shows time in frames at PAL
-#. * TV frame rate (used for European TV)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "PAL frames (25 fps)"
-msgstr "Кадрҳои PAL (25 fps)"
-
-#. i18n-hint: Format string for displaying time in frames with NTSC frames.
-#. * Change the comma
-#. * in the middle to the 1000s separator for your locale,
-#. * translate 'frames' and leave the rest alone.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 frames|25"
-msgstr "01000,01000 кадр|25"
-
-#. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at CD Audio frame rate (75 frames per second)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + CDDA frames (75 fps)"
-msgstr "hh:mm:ss + CDDA кадрҳо (75 fps)"
-
-#. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with CD Audio frames. Change the 'h' to the abbreviation
-#. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+>75 frames"
-msgstr "0100 h 060 m 060 s+>75 кадрҳо"
-
-#. i18n-hint: Name of time display format that shows time in frames at CD
-#. * Audio frame rate (75 frames per second)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "CDDA frames (75 fps)"
-msgstr "Кадри CDDA (75 fps)"
-
-#. i18n-hint: Format string for displaying time in frames with CD Audio
-#. * frames. Change the comma
-#. * in the middle to the 1000s separator for your locale,
-#. * translate 'frames' and leave the rest alone
-#: src/widgets/NumericTextCtrl.cpp
-msgid "01000,01000 frames|75"
-msgstr "01000,01000 кадр|75"
-
-#. i18n-hint: Format string for displaying frequency in hertz. Change
-#. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
+#: src/widgets/MissingPluginsErrorDialog.cpp
 #, fuzzy
-msgid "010,01000>0100 Hz"
-msgstr "0100 с 060 д 060>01000 с"
+msgid "Missing Plugins"
+msgstr "Масрафсанҷи ғайрифаъол"
 
-#: src/widgets/NumericTextCtrl.cpp
-msgid "centihertz"
+#: src/widgets/MissingPluginsErrorDialog.cpp
+msgid "This project contains some realtime effect plugins that cannot be found on this system."
 msgstr ""
 
-#. i18n-hint: Name of display format that shows frequency in kilohertz
-#: src/widgets/NumericTextCtrl.cpp
-msgid "kHz"
-msgstr "kҲертз"
-
-#. i18n-hint: Format string for displaying frequency in kilohertz. Change
-#. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "01000>01000 kHz|0.001"
-msgstr "0100 с 060 д 060>01000 с"
-
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hertz"
+#. i18n-hint: %s will be replaced with "Learn more"
+#: src/widgets/MissingPluginsErrorDialog.cpp
+#, c-format
+msgid "The project may sound different than intended. %s"
 msgstr ""
 
-#. i18n-hint: Name of display format that shows log of frequency
-#. * in octaves
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "octaves"
-msgstr "Актаваи Поён"
-
-#. i18n-hint: Format string for displaying log of frequency in octaves.
-#. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "100>01000 octaves|1.442695041"
-msgstr "01000,01000 кадрҳо|24"
-
-#. i18n-hint: an octave is a doubling of frequency
-#: src/widgets/NumericTextCtrl.cpp
-msgid "thousandths of octaves"
-msgstr ""
-
-#. i18n-hint: Name of display format that shows log of frequency
-#. * in semitones and cents
-#: src/widgets/NumericTextCtrl.cpp
-msgid "semitones + cents"
-msgstr ""
-
-#. i18n-hint: Format string for displaying log of frequency in semitones
-#. * and cents.
-#. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
-#. * to '>' if your language uses a '.'.
-#: src/widgets/NumericTextCtrl.cpp
-msgid "1000 semitones >0100 cents|17.312340491"
-msgstr ""
-
-#. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hundredths of cents"
-msgstr ""
-
-#. i18n-hint: Name of display format that shows log of frequency
-#. * in decades
-#: src/widgets/NumericTextCtrl.cpp
-msgid "decades"
-msgstr ""
-
-#. i18n-hint: Format string for displaying log of frequency in decades.
-#. * Change the decimal points for your locale. Don't change the numbers.
-#: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
-msgid "10>01000 decades|0.434294482"
-msgstr "01000,01000 кадрҳо|24"
-
-#. i18n-hint: a decade is a tenfold increase of frequency
-#: src/widgets/NumericTextCtrl.cpp
-msgid "thousandths of decades"
+#: src/widgets/MissingPluginsErrorDialog.cpp
+msgid "Learn more"
 msgstr ""
 
 #: src/widgets/NumericTextCtrl.cpp
@@ -19839,48 +20028,10 @@ msgstr ""
 msgid "(Use context menu to change format.)"
 msgstr "Барои иваз намудани қолаб тугмаи рости мушро ё калиди матниро истифода баред"
 
-#: src/widgets/NumericTextCtrl.cpp
-msgid "centiseconds"
-msgstr ""
-
 #: src/widgets/PopupMenuTable.h
 #, c-format
 msgid "%s (%s)"
 msgstr ""
-
-#: src/widgets/ProgressDialog.cpp
-msgid "Cancel"
-msgstr ""
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Are you sure you wish to cancel?"
-msgstr "Шумо бовари доред, ки %s нест карда шавад?"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Confirm Cancel"
-msgstr "Тасдиқоти несткунӣ"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Are you sure you wish to stop?"
-msgstr "Шумо бовари доред, ки %s нест карда шавад?"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Confirm Stop"
-msgstr "Тасдиқ шудан"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Are you sure you wish to close?"
-msgstr "Шумо бовари доред, ки %s нест карда шавад?"
-
-#: src/widgets/ProgressDialog.cpp
-#, fuzzy
-msgid "Confirm Close"
-msgstr "Тасдиқ шудан"
 
 #. i18n-hint: %s is replaced with a directory path.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -19964,22 +20115,54 @@ msgstr "Ном набояд ҷои холӣ дошта бошад"
 msgid "Value must not be greater than %s"
 msgstr "Ном набояд ҷои холӣ дошта бошад"
 
-#: src/widgets/wxPanelWrapper.h
-msgid "Dialog"
+#: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Shelf Filter"
+msgstr "Ба кор бурдани дараҷакунанда..."
+
+#: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
+msgid "Steve Daulton"
 msgstr ""
 
-#: src/widgets/wxPanelWrapper.h
-#, fuzzy
-msgid "Select a directory"
-msgstr "Лоиҳаи нав эҷод карда шуд"
+#: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
+#: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
+msgid "GNU General Public License v2.0"
+msgstr ""
 
-#: src/widgets/wxPanelWrapper.h
+#: plug-ins/ShelfFilter.ny
 #, fuzzy
-msgid "Directory Dialog"
-msgstr "Рӯйхатҳо"
+msgid "Filter type"
+msgstr "масрафсанҷ"
 
-#: src/widgets/wxPanelWrapper.h
-msgid "File Dialog"
+#: plug-ins/ShelfFilter.ny
+msgid "Low-shelf"
+msgstr ""
+
+#: plug-ins/ShelfFilter.ny
+msgid "High-shelf"
+msgstr ""
+
+#: plug-ins/ShelfFilter.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+msgid "Frequency (Hz)"
+msgstr "Басомад (Ҳз)"
+
+#: plug-ins/ShelfFilter.ny
+#, fuzzy
+msgid "Amount (dB)"
+msgstr "Сатҳ:"
+
+#: plug-ins/ShelfFilter.ny
+#, lisp-format
+msgid "Error.~%Frequency set too high for selected track."
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
@@ -19990,13 +20173,6 @@ msgstr "Интихобкунӣ"
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
 msgid "Paul Licameli"
-msgstr ""
-
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/beat.ny plug-ins/clipfix.ny plug-ins/delay.ny plug-ins/highpass.ny
-#: plug-ins/lowpass.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
-#: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
-msgid "GNU General Public License v2.0"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -20088,15 +20264,6 @@ msgstr ""
 #, fuzzy
 msgid "Studio Fade Out"
 msgstr "Харобшавии мӯътадил"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
-msgid "Steve Daulton"
-msgstr ""
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
@@ -20398,6 +20565,11 @@ msgstr ""
 
 #: plug-ins/delay.ny
 #, fuzzy
+msgid "High-quality Pitch Shift"
+msgstr "Интерполятсияи баландсифати синхронӣ"
+
+#: plug-ins/delay.ny
+#, fuzzy
 msgid "Pitch change per echo (semitones)"
 msgstr "Пеш&намоиш"
 
@@ -20600,11 +20772,6 @@ msgstr "Бор кардани файлҳо"
 msgid "Dominic Mazzoni"
 msgstr "Ҷудосозии Хаш бо ёрии Доминик Мазони"
 
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
-#: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
-msgid "Frequency (Hz)"
-msgstr "Басомад (Ҳз)"
-
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Roll-off (dB per octave)"
 msgstr ""
@@ -20737,7 +20904,7 @@ msgstr "Ном набояд ҷои холӣ дошта бошад"
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound duration'."
+msgid "No sounds found.~%Try lowering 'Threshold level (dB)'."
 msgstr ""
 
 #: plug-ins/label-sounds.ny
@@ -21633,11 +21800,6 @@ msgstr "Марказ"
 
 #: plug-ins/vocalrediso.ny
 #, fuzzy
-msgid "Analyze"
-msgstr "&Таҳлил"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Strength"
 msgstr "Дарозӣ"
 
@@ -21824,6 +21986,88 @@ msgstr "Ҷойгузории Роҳча"
 #, fuzzy
 msgid "Spectral Tools"
 msgstr "Спектрум"
+
+#, fuzzy
+#~ msgid "Unknown exception"
+#~ msgstr "Қисмати номаълуми сатри фармоишӣ: %s\n"
+
+#, fuzzy
+#~ msgid "Problem Report for Audacity"
+#~ msgstr "Қисматҳо..."
+
+#, fuzzy
+#~ msgid "Failed to send crash report"
+#~ msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#, fuzzy
+#~ msgid "Timer"
+#~ msgstr "Вақти охир"
+
+#~ msgid "Play Meter"
+#~ msgstr "Иҷрои масрафсанҷ"
+
+#, fuzzy
+#~ msgid "Selectionbar"
+#~ msgstr "Интихобкунӣ"
+
+#, fuzzy
+#~ msgid "Enable"
+#~ msgstr "Фаъол шуд"
+
+#, fuzzy
+#~ msgid "&Processing: "
+#~ msgstr "Пардозиши Auto Duck..."
+
+#, fuzzy
+#~ msgid "D&efault"
+#~ msgstr "&Аз рӯи хомӯшӣ"
+
+#, fuzzy
+#~ msgid "Cannot open file"
+#~ msgstr "Файлро кушода натавонист: "
+
+#, fuzzy, c-format
+#~ msgid "Cannot open VST3 preset file %s"
+#~ msgstr "Лоиҳаи файлро кушода наметавонад"
+
+#, fuzzy, c-format
+#~ msgid "Plugin %d to %d"
+#~ msgstr "Дастаҳои иттисоли %i ба %i"
+
+#, fuzzy
+#~ msgid "&Window"
+#~ msgstr " равзана"
+
+#, fuzzy
+#~ msgid "Preferences for Device"
+#~ msgstr "Қисматҳо..."
+
+#, fuzzy
+#~ msgid "Default"
+#~ msgstr "&Аз рӯи хомӯшӣ"
+
+#, fuzzy
+#~ msgid "&LADSPA"
+#~ msgstr "Нати&ҷа"
+
+#, fuzzy
+#~ msgid "N&yquist"
+#~ msgstr "Оҳанг"
+
+#~ msgid "Sampling"
+#~ msgstr "Намунагирӣ"
+
+#, fuzzy
+#~ msgid "Project Rate (Hz)"
+#~ msgstr "Суръати лоиҳа (Hz):"
+
+#, fuzzy, c-format
+#~ msgid "Selection %s. %s won't change."
+#~ msgstr "Интихоби MIDI файл..."
+
+#, fuzzy
+#~ msgid "Rename clip..."
+#~ msgstr "Ивази Номи '%s' ба '%s'"
 
 #~ msgid "Mixer"
 #~ msgstr "Омезишкунанда"
@@ -22792,10 +23036,6 @@ msgstr "Спектрум"
 #~ msgstr "Стерео"
 
 #, fuzzy
-#~ msgid "FilterType"
-#~ msgstr "масрафсанҷ"
-
-#, fuzzy
 #~ msgid "RatePercentChangeStart"
 #~ msgstr "Ивази Фоиз:"
 
@@ -23072,9 +23312,6 @@ msgstr "Спектрум"
 
 #~ msgid "&Audio Track"
 #~ msgstr "&Роҳчаи Аудиои"
-
-#~ msgid "High-quality Sinc Interpolation"
-#~ msgstr "Интерполятсияи баландсифати синхронӣ"
 
 #~ msgid "Fast Sinc Interpolation"
 #~ msgstr "Зудии Синхронӣ бо Иловашавӣ"

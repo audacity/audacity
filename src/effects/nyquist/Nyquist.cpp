@@ -57,7 +57,7 @@ effects from this one class.
 #include "../../LabelTrack.h"
 #include "Languages.h"
 #include "../../NoteTrack.h"
-#include "../../TimeTrack.h"
+#include "TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "PluginManager.h"
 #include "Project.h"
@@ -110,7 +110,7 @@ enum
 };
 
 // Protect Nyquist from selections greater than 2^31 samples (bug 439)
-#define NYQ_MAX_LEN (std::numeric_limits<long>::max())
+#define NYQ_MAX_LEN (std::numeric_limits<int64_t>::max())
 
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
@@ -195,7 +195,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    ParseFile();
 
    if (!mOK && mInitError.empty())
-      mInitError = XO("Ill-formed Nyquist plug-in header");   
+      mInitError = XO("Ill-formed Nyquist plug-in header");
 }
 
 NyquistEffect::~NyquistEffect()
@@ -590,8 +590,8 @@ bool NyquistEffect::Init()
       if (const auto project = FindProject()) {
          bool bAllowSpectralEditing = false;
          bool hasSpectral = false;
-         for ( auto t :
-                  TrackList::Get( *project ).Selected< const WaveTrack >() ) {
+         for (auto t :
+            TrackList::Get( *project ).SelectedLeaders<const WaveTrack>()) {
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
             auto pView = WaveTrackView::Find( t );
@@ -866,7 +866,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    std::optional<TrackIterRange<WaveTrack>> pRange;
    if (!bOnePassTool)
-      pRange.emplace(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
+      pRange.emplace(mOutputTracks->SelectedLeaders<WaveTrack>());
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
@@ -916,20 +916,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             auto end = mCurTrack[0]->TimeToLongSamples(mT1);
             mCurLen = end - mCurStart[0];
 
-            if (mCurLen > NYQ_MAX_LEN) {
-               float hours = (float)NYQ_MAX_LEN / (44100 * 60 * 60);
-               const auto message =
-                  XO(
-"Selection too long for Nyquist code.\nMaximum allowed selection is %ld samples\n(about %.1f hours at 44100 Hz sample rate).")
-                     .Format((long)NYQ_MAX_LEN, hours);
-               EffectUIServices::DoMessageBox(*this,
-                  message,
-                  wxOK | wxCENTRE,
-                  XO("Nyquist Error") );
-               if (!mProjectChanged)
-                  em.SetSkipStateFlag(true);
-               return false;
-            }
+            wxASSERT(mCurLen <= NYQ_MAX_LEN);
 
             mCurLen = std::min(mCurLen, mMaxLen);
          }
@@ -1021,7 +1008,7 @@ finish:
    mDebug = (mTrace && !mDebugOutput.Translation().empty())? true : mDebug;
 
    if (mDebug && !mRedirectOutput) {
-      NyquistOutputDialog dlog(mUIParent, -1,
+      NyquistOutputDialog dlog(nullptr, -1,
                                mName,
                                XO("Debug Output: "),
                                mDebugOutput);
@@ -1054,7 +1041,7 @@ finish:
    return success;
 }
 
-int NyquistEffect::ShowHostInterface(EffectPlugin &plugin,
+int NyquistEffect::ShowHostInterface(EffectBase &plugin,
    wxWindow &parent, const EffectDialogFactory &factory,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
@@ -2962,11 +2949,11 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                                           .ReadOnly(false);
 
                   NumericTextCtrl *time = safenew
-                     NumericTextCtrl(S.GetParent(), (ID_Time + i),
-                                     NumericConverter::TIME,
+                     NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                                     S.GetParent(), (ID_Time + i),
+                                     NumericConverterType_TIME(),
                                      GetSelectionFormat(),
                                      ctrl.val,
-                                     mProjectRate,
                                      options);
                   S
                      .Name( prompt )

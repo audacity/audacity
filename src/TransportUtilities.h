@@ -15,6 +15,8 @@
 struct AudioIOStartStreamOptions;
 class CommandContext;
 class SelectedRegion;
+class TrackList;
+class TransportTracks;
 enum class PlayMode : int;
 
 struct AUDACITY_DLL_API TransportUtilities
@@ -36,5 +38,11 @@ struct AUDACITY_DLL_API TransportUtilities
    static bool DoStopPlaying(const CommandContext &context);
 
 };
+
+/*!
+ @param nonWaveToo if true, collect all PlayableTracks
+ */
+TransportTracks MakeTransportTracks(
+   TrackList &trackList, bool selectedOnly, bool nonWaveToo = false);
 
 #endif

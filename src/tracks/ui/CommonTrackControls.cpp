@@ -233,8 +233,7 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
       if (bResult) 
       {
          wxString newName = Command.mName;
-         for (auto channel : TrackList::Channels(pTrack))
-            channel->SetName(newName);
+         pTrack->SetName(newName);
 
          ProjectHistory::Get( *proj )
             .PushState(

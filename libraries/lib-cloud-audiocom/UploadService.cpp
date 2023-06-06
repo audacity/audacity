@@ -11,6 +11,7 @@
 
 #include "UploadService.h"
 
+#include <cassert>
 #include <mutex>
 
 #include <wx/filefn.h>
@@ -115,6 +116,56 @@ std::string GetProgressPayload(uint64_t current, uint64_t total)
    return std::string(buffer.GetString());
 }
 
+UploadFailedPayload ParseUploadFailedMessage(const std::string& payloadText)
+{
+   rapidjson::StringStream stream(payloadText.c_str());
+   rapidjson::Document document;
+
+   document.ParseStream(stream);
+
+   if (!document.IsObject())
+   {
+      // This is unexpected, just return an empty object
+      assert(document.IsObject());
+      return {};
+   }
+
+   UploadFailedPayload payload;
+
+   auto readInt = [&document](const char* name) {
+      return document.HasMember(name) && document[name].IsInt() ?
+                document[name].GetInt() :
+                0;
+   };
+
+   auto readString = [&document](const char* name) -> const char*
+   {
+      return document.HasMember(name) && document[name].IsString() ?
+                document[name].GetString() :
+                "";
+   };
+
+   payload.code = readInt("code");
+   payload.status = readInt("status");
+
+   payload.name = readString("name");
+   payload.message = readString("message");
+
+   if (document.HasMember("errors") && document["errors"].IsObject())
+   {
+      for (auto& err : document["errors"].GetObject ())
+      {
+         if (!err.value.IsString())
+            continue;
+         
+         payload.additionalErrors.emplace_back(
+            err.name.GetString(), err.value.GetString());
+      }
+   }
+
+   return payload;
+}
+
 
 // This class will capture itself inside the request handlers
 // by a strong reference. This way we ensure that it outlives all
@@ -169,11 +220,18 @@ struct AudiocomUploadOperation final :
    bool mCompleted {};
    bool mAborted {};
 
-   void SetAuthHeader(audacity::network_manager::Request& request) const
+   void SetRequiredHeaders(audacity::network_manager::Request& request) const
    {
       if (!mAuthToken.empty())
          request.setHeader(
             audacity::network_manager::common_headers::Authorization, std::string(mAuthToken));
+
+      const auto language = mServiceConfig.GetAcceptLanguageValue();
+
+      if (!language.empty())
+         request.setHeader(
+            audacity::network_manager::common_headers::AcceptLanguage,
+            language);
    }
 
    void FailPromise(UploadOperationCompleted::Result result, std::string errorMessage)
@@ -188,7 +246,7 @@ struct AudiocomUploadOperation final :
       if (mCompletedCallback)
       {
          mCompletedCallback(
-            UploadOperationCompleted { result, std::move(errorMessage) });
+            UploadOperationCompleted { result, ParseUploadFailedMessage(errorMessage) });
       }
 
       mProgressCallback = {};
@@ -209,9 +267,7 @@ struct AudiocomUploadOperation final :
 
          mCompletedCallback(
             { UploadOperationCompleted::Result::Success,
-              {},
-              mServiceConfig.GetFinishUploadPage(mAudioID, mUploadToken),
-              mAudioSlug });
+              UploadSuccessfulPayload { mAudioID, mAudioSlug } });
       }
       
       mProgressCallback = {};
@@ -231,7 +287,7 @@ struct AudiocomUploadOperation final :
          common_headers::Accept, common_content_types::ApplicationJson);
 
       mAuthToken = std::string(authToken);
-      SetAuthHeader(request);
+      SetRequiredHeaders(request);
 
       const auto payload = GetUploadRequestPayload(mFileName, mProjectName, mIsPublic);
 
@@ -421,7 +477,7 @@ struct AudiocomUploadOperation final :
          responseCode == 200 || responseCode == 201 || responseCode == 204;
       
       Request request(success ? mSuccessUrl : mFailureUrl);
-      SetAuthHeader(request);
+      SetRequiredHeaders(request);
 
       std::lock_guard<std::mutex> lock(mStatusMutex);
 

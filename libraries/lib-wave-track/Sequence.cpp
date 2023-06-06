@@ -431,6 +431,7 @@ std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
 
       dest->Append(
          buffer.ptr(), format, blocklen, 1, mSampleFormats.Effective());
+      dest->Flush();
    }
    else
       --b0;
@@ -454,6 +455,7 @@ std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
          Get(b1, buffer.ptr(), format, block.start, blocklen, true);
          dest->Append(
             buffer.ptr(), format, blocklen, 1, mSampleFormats.Effective());
+         dest->Flush();
       }
       else
          // Special case of a whole block
@@ -854,7 +856,8 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
    /* handle sequence tag and its attributes */
    if (tag == "sequence")
    {
-      sampleFormat effective = floatSample, stored = floatSample;
+      std::optional<sampleFormat> effective;
+      sampleFormat stored = floatSample;
       for (auto pair : attrs)
       {
          auto attr = pair.first;
@@ -905,7 +908,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
                mErrorOpening = true;
                return false;
             }
-            effective = static_cast<sampleFormat>( fValue );
+            effective.emplace(static_cast<sampleFormat>(fValue));
          }
          else if (attr == "numsamples")
          {
@@ -920,10 +923,12 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
       } // for
 
       // Set at least the stored format as it was saved
-      mSampleFormats = SampleFormats{ effective, stored };
+      mSampleFormats =
+         SampleFormats{ effective.value_or(stored), stored };
 
       // Check whether the invariant of SampleFormats changed the value
-      if (mSampleFormats.Effective() != effective) {
+      // effective has no value if opening a project from before 3.3
+      if (effective && mSampleFormats.Effective() != *effective) {
          mErrorOpening = true;
          return false;
       }

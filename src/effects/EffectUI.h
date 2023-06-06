@@ -33,6 +33,7 @@ struct AudioIOEvent;
 
 class AudacityCommand;
 class AudacityProject;
+class EffectBase;
 class RealtimeEffectState;
 
 class wxCheckBox;
@@ -50,7 +51,7 @@ public:
     (and then must call Init() with success), or leave null for failure
     */
    EffectUIHost(wxWindow *parent, AudacityProject &project,
-      EffectPlugin &effect, EffectUIServices &client,
+      EffectBase &effect, EffectUIServices &client,
       std::shared_ptr<EffectInstance> &pInstance,
       EffectSettingsAccess &access,
       const std::shared_ptr<RealtimeEffectState> &pPriorState = {});
@@ -110,14 +111,12 @@ private:
 
    void CleanupRealtime();
 
-   void StopPlayback();
-
 private:
    Observer::Subscription mAudioIOSubscription, mEffectStateSubscription;
 
    AudacityProject &mProject;
    wxWindow *const mParent;
-   EffectPlugin &mEffectUIHost;
+   EffectBase &mEffectUIHost;
    EffectUIServices &mClient;
    //! @invariant not null
    const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
@@ -141,8 +140,6 @@ private:
 
    bool mEnabled{ true };
 
-   bool mDisableTransport{ true };
-   bool mPlaying{};
    bool mCapturing{};
 
    SelectedRegion mRegion;
@@ -169,7 +166,7 @@ class CommandContext;
 namespace  EffectUI {
 
    AUDACITY_DLL_API
-   DialogFactoryResults DialogFactory(wxWindow &parent, EffectPlugin &host,
+   DialogFactoryResults DialogFactory(wxWindow &parent, EffectBase &host,
       EffectUIServices &client, EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */
@@ -212,5 +209,9 @@ private:
    DECLARE_EVENT_TABLE()
    wxDECLARE_NO_COPY_CLASS(EffectDialog);
 };
+
+#if defined(__WXMAC__)
+void MacMakeWindowFloating(NSView *handle);
+#endif
 
 #endif // __AUDACITY_EFFECTUI_H__

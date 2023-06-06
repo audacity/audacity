@@ -884,6 +884,14 @@ wxString CommandManager::FormatLabelWithDisabledAccel(const CommandListEntry *en
          if( key.StartsWith("NUMPAD_ENTER" )) break;
          if( key.StartsWith("Backspace" )) break;
          if( key.StartsWith("Delete" )) break;
+
+         // https://github.com/audacity/audacity/issues/4457
+         // This code was proposed by David Bailes to fix
+         // the decimal separator input in wxTextCtrls that
+         // are children of the main window. 
+         if( key.StartsWith(",") ) break;
+         if( key.StartsWith(".") ) break;
+
 #endif
          //wxLogDebug("Added Accel:[%s][%s]", entry->label, entry->key );
          // Normal accelerator.
@@ -1175,6 +1183,10 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
          case '8':
          case '9':
             return false;
+         case ',':
+         case '.':
+            if (!evt.HasAnyModifiers())
+               return false;
          }
       }
    }

@@ -3,7 +3,6 @@ $version 4
 $type process spectral
 $preview linear
 $name (_ "Spectral Edit Shelves")
-$manpage "Spectral_edit_shelves"
 $debugbutton false
 $author (_ "Paul Licameli")
 $release 2.3.0-1

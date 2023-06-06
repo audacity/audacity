@@ -37,6 +37,7 @@
 #include "AudacityTextEntryDialog.h"
 #include "widgets/Grid.h"
 #include "HelpSystem.h"
+#include "NumericConverterFormats.h"
 
 #include "FileNames.h"
 #include <limits>
@@ -96,7 +97,6 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          LabelTrack *selectedTrack,
                          int index,
                          ViewInfo &viewinfo,
-                         double rate,
                          const NumericFormatSymbol & format,
                          const NumericFormatSymbol &freqFormat)
 : wxDialogWrapper(parent,
@@ -109,9 +109,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
   , mTracks(tracks)
   , mSelectedTrack(selectedTrack)
   , mIndex(index)
-  , mViewInfo(&viewinfo),
-  mRate(rate),
-  mFormat(format)
+  , mViewInfo(&viewinfo)
+  , mFormat(format)
   , mFreqFormat(freqFormat)
 {
    SetName();
@@ -178,7 +177,7 @@ void LabelDialog::PopulateLabels()
    attr->SetAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
 
    mGrid->SetColAttr(Col_Hfreq, attr->Clone());
-   
+
    // Seems there's a bug in wxGrid.  Adding only 1 row does not
    // allow SetCellSize() to work properly and you will not get
    // the expected 1 row by 4 column cell.
@@ -256,8 +255,10 @@ void LabelDialog::PopulateOrExchange( ShuttleGui & S )
    {
       S.StartVerticalLay(wxEXPAND,1);
       {
-         mGrid = safenew Grid(S.GetParent(), wxID_ANY);
-         S.Prop(1).AddWindow( mGrid );
+         mGrid = safenew Grid(
+            FormatterContext::ProjectContext(mProject), S.GetParent(),
+            wxID_ANY);
+         S.Prop(1).AddWindow(mGrid);
       }
       S.EndVerticalLay();
       S.StartVerticalLay(0);
@@ -293,13 +294,10 @@ bool LabelDialog::TransferDataToWindow()
    int i;
 
    // Set the editor parameters.  Do this each time since they may change
-   // due to NEW tracks and change in NumericTextCtrl format.  Rate won't
-   // change but might as well leave it here.
+   // due to NEW tracks and change in NumericTextCtrl format.
    mChoiceEditor->SetChoices(mTrackNames);
    mTimeEditor->SetFormat(mFormat);
-   mTimeEditor->SetRate(mRate);
    mFrequencyEditor->SetFormat(mFreqFormat);
-   mFrequencyEditor->SetRate(mRate);
 
    // Disable redrawing until we're done
    mGrid->BeginBatch();
@@ -529,8 +527,9 @@ void LabelDialog::FindInitialRow()
 void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
-   mFormat = NumericConverter::LookupFormat(
-      NumericConverter::TIME, event.GetString() );
+   mFormat = NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(mProject),
+      NumericConverterType_TIME(), event.GetString() );
    TransferDataToWindow();
 
    event.Skip(false);
@@ -539,8 +538,9 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
 void LabelDialog::OnFreqUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
-   mFreqFormat = NumericConverter::LookupFormat(
-      NumericConverter::FREQUENCY, event.GetString() );
+   mFreqFormat = NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(mProject),
+      NumericConverterType_FREQUENCY(), event.GetString() );
    TransferDataToWindow();
 
    event.Skip(false);
@@ -741,7 +741,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
 void LabelDialog::OnSelectCell(wxGridEvent &event)
 {
-   for (auto t: mTracks->Any())
+   for (auto t: mTracks->Leaders())
       t->SetSelected( true );
 
    if (!mData.empty())
@@ -892,7 +892,7 @@ void LabelDialog::OnChangeHfreq(wxGridEvent & WXUNUSED(event), int row, RowData 
    rd->selectedRegion.setF1(f, false);
    mGrid->SetCellValue(row, Col_Lfreq, wxString::Format(wxT("%g"),
                                                         rd->selectedRegion.f0()));
-   
+
    return;
 }
 
@@ -901,7 +901,7 @@ void LabelDialog::ReadSize(){
    int prefWidth, prefHeight;
    gPrefs->Read(wxT("/LabelEditor/Width"), &prefWidth, sz.x);
    gPrefs->Read(wxT("/LabelEditor/Height"), &prefHeight, sz.y);
-   
+
    wxRect screenRect(wxGetClientDisplayRect());
    wxSize prefSize = wxSize(prefWidth, prefHeight);
    prefSize.DecTo(screenRect.GetSize());

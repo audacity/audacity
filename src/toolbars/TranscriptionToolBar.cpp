@@ -885,10 +885,7 @@ int DoAddLabel(
 //   SelectNone();
    lt->SetSelected(true);
 
-   int index;
-   int focusTrackNumber = -1;
-   index =
-      LabelTrackView::Get( *lt ).AddLabel(region, title, focusTrackNumber);
+   auto index = LabelTrackView::Get(*lt).AddLabel(region, title);
 
    ProjectHistory::Get( project )
       .PushState(XO("Added label"), XO("Label"));
@@ -1160,7 +1157,7 @@ BaseItemSharedPtr ExtraPlayAtSpeedMenu()
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),
-   Shared( ExtraPlayAtSpeedMenu() )
+   Indirect(ExtraPlayAtSpeedMenu())
 };
 
 BaseItemSharedPtr ExtraPlayAtSpeedItems()
@@ -1187,7 +1184,7 @@ BaseItemSharedPtr ExtraPlayAtSpeedItems()
 AttachedItem sAttachment3{
    Placement{ wxT("Optional/Extra/Part1/PlayAtSpeed"),
      OrderingHint::Begin },
-   Shared( ExtraPlayAtSpeedItems() )
+   Indirect(ExtraPlayAtSpeedItems())
 };
 
 }

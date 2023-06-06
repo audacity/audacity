@@ -1199,7 +1199,7 @@ BaseItemSharedPtr SpectralSelectionMenu()
 
 AttachedItem sAttachment2{
    Placement{ wxT("Select/Basic"), { OrderingHint::After, wxT("Region") } },
-   Shared( SpectralSelectionMenu() )
+   Indirect(SpectralSelectionMenu())
 };
 
 }

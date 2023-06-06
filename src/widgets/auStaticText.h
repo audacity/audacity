@@ -25,6 +25,15 @@ public:
    void OnErase(wxEraseEvent& event) {
       static_cast<void>(event);
    };
+
+   //! @pre scale > 0. Function is a no-op if scale is not positive.
+   void ScaleFont(double scale);
+
+   void SetSelected(bool selected);
+   bool GetSelected() const noexcept;
+
+private:
+   bool mIsSelected { false };
    DECLARE_EVENT_TABLE();
 };
 

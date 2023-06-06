@@ -228,7 +228,7 @@ BaseItemSharedPtr PrintingItems()
 }
 
 AttachedItem sAttachment{ { "File", { OrderingHint::Before, "Exit" } },
-   Shared( PrintingItems() )
+   Indirect(PrintingItems())
 };
 
 }

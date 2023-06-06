@@ -17,7 +17,7 @@
 #include "ShuttleGui.h"
 #include "CodeConversions.h"
 #include "prefs/PrefsDialog.h"
-#include "ui/AccessibleLinksFormatter.h"
+#include "AccessibleLinksFormatter.h"
 
 
 static const auto title =
@@ -25,15 +25,15 @@ static const auto title =
    XO("App update checking");
 
 static const auto firstParagraph =
-   /* i18-hint: The first paragraph of app update notice dialog. */
+   /* i18n-hint: The first paragraph of app update notice dialog. */
    XO("To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download.");
 
 static const auto secondParagraph =
-   /* i18-hint: The second paragraph of app update notice dialog */
+   /* i18n-hint: The second paragraph of app update notice dialog */
    XO("In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access.");
 
 static const auto thirdParagraph =
-   /* i18-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link*/
+   /* i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link*/
    XO("You can turn off app update checking at any time in %s.");
 
 

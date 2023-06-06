@@ -12,6 +12,7 @@
 
 #include "ClientData.h"
 #include "ComponentInterfaceSymbol.h"
+#include "NumericConverterType.h"
 
 class AudacityProject;
 
@@ -21,7 +22,7 @@ public:
    static ProjectNumericFormats &Get(AudacityProject &project);
    static const ProjectNumericFormats &Get(const AudacityProject &project);
 
-   ProjectNumericFormats();
+   explicit ProjectNumericFormats(const AudacityProject& project);
    ~ProjectNumericFormats() override;
 
    // Selection Format
@@ -39,7 +40,11 @@ public:
    void SetBandwidthSelectionFormatName(const NumericFormatSymbol & format);
    const NumericFormatSymbol & GetBandwidthSelectionFormatName() const;
 
+   NumericFormatSymbol LookupFormat(const NumericConverterType& type, const wxString& identifier);
+
 private:
+   const AudacityProject& mProject;
+   
    NumericFormatSymbol mSelectionFormat;
    NumericFormatSymbol mFrequencySelectionFormatName;
    NumericFormatSymbol mBandwidthSelectionFormatName;

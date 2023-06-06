@@ -180,7 +180,7 @@ public:
 
 private:
    struct AUDACITY_DLL_API ImporterItem final : Registry::SingleItem {
-      static Registry::GroupItem &Registry();
+      static Registry::GroupItemBase &Registry();
 
       ImporterItem( const Identifier &id, std::unique_ptr<ImportPlugin> pPlugin );
       ~ImporterItem();

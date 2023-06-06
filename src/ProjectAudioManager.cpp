@@ -33,6 +33,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectWindows.h"
 #include "ScrubState.h"
 #include "TrackPanelAx.h"
+#include "TransportUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
@@ -421,7 +422,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             };
          token = gAudioIO->StartStream(
-            TransportTracks{ TrackList::Get(*p), false, nonWaveToo },
+            MakeTransportTracks(TrackList::Get(*p), false, nonWaveToo),
             tcp0, tcp1, tcp1, myOptions);
       }
       else {
@@ -432,7 +433,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                t1 = latestEnd;
          }
          token = gAudioIO->StartStream(
-            TransportTracks{ tracks, false, nonWaveToo },
+            MakeTransportTracks(tracks, false, nonWaveToo),
             t0, t1, mixerLimit, options);
       }
       if (token != 0) {
@@ -727,7 +728,8 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          // playback.
          /* TODO: set up stereo tracks if that is how the user has set up
           * their preferences, and choose sample format based on prefs */
-         transportTracks = TransportTracks{ TrackList::Get( *p ), false, true };
+         transportTracks =
+            MakeTransportTracks(TrackList::Get( *p ), false, true);
          for (const auto &wt : existingTracks) {
             auto end = transportTracks.playbackTracks.end();
             auto it = std::find(transportTracks.playbackTracks.begin(), end, wt);
@@ -903,14 +905,13 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // ISO standard would be nice, but ":" is unsafe for file name.
             nameSuffix.Replace(wxT(":"), wxT("-"));
 
-            if (baseTrackName.empty()) {
-               newTrack->SetName(nameSuffix);
-            }
-            else if (nameSuffix.empty()) {
-               newTrack->SetName(baseTrackName);
-            }
-            else {
-               newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
+            if (newTrack.get() == first) {
+               if (baseTrackName.empty())
+                  newTrack->SetName(nameSuffix);
+               else if (nameSuffix.empty())
+                  newTrack->SetName(baseTrackName);
+               else
+                  newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
             //create a new clip with a proper name before recording is started
             newTrack->CreateClip(t0, makeNewClipName(newTrack.get()));
@@ -1159,7 +1160,7 @@ const ReservedCommandFlag&
 static ProjectAudioIO::DefaultOptions::Scope sScope {
 [](AudacityProject &project, bool newDefault) -> AudioIOStartStreamOptions {
    //! Invoke the library default implemantation directly bypassing the hook
-   auto options = ProjectAudioIO::DefaultOptionsFactory()(project, newDefault);
+   auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
 
    //! Decorate with more info
    options.listener = ProjectAudioManager::Get(project).shared_from_this();

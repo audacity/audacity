@@ -17,6 +17,7 @@
 #include "EffectUIServices.h"
 #include "RealtimeEffectState.h"
 
+#include "EffectBase.h"
 #include "EffectManager.h"
 #include "UndoManager.h"
 #include "ProjectHistory.h"
@@ -60,7 +61,8 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
    }
 
    const auto ID = mRealtimeEffectState.GetID();
-   const auto effectPlugin = EffectManager::Get().GetEffect(ID);
+   const auto effectPlugin =
+      dynamic_cast<EffectBase*>(EffectManager::Get().GetEffect(ID));
 
    if (effectPlugin == nullptr)
       return;

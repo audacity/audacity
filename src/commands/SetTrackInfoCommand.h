@@ -25,21 +25,8 @@ class Track;
 class SetTrackBase : public AudacityCommand
 {
 public:
-   SetTrackBase();
-   bool Apply(const CommandContext & context) override;
-   virtual bool ApplyInner( const CommandContext &context, Track *t  );
-   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
-   bool VisitSettings( SettingsVisitor & S ) override;
-   bool VisitSettings( ConstSettingsVisitor & S ) override;
-   virtual void PopulateOrExchange(ShuttleGui & S) override;
-
-   int mTrackIndex;
-   int mChannelIndex;
-   bool bHasTrackIndex;
-   bool bHasChannelIndex;
-
-   bool bIsSecondChannel;
-   bool mbPromptForTracks;
+   bool Apply(const CommandContext & context) final;
+   virtual bool ApplyInner(const CommandContext &context, Track *t) = 0;
 };
 
 
@@ -153,7 +140,6 @@ class SetTrackCommand : public SetTrackBase
 public:
    static const ComponentInterfaceSymbol Symbol;
 
-   SetTrackCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
@@ -164,26 +150,21 @@ public:
 
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S ) {
       return 
-         SetTrackBase::VisitSettings(S) &&
-         mSetStatus.VisitSettings(S) &&  
+         mSetStatus.VisitSettings(S) &&
          mSetAudio.VisitSettings(S) &&
          mSetVisuals.VisitSettings(S);
    };
    bool VisitSettings( SettingsVisitor & S ) override;
    bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override {
-      SetTrackBase::PopulateOrExchange( S );
       mSetStatus.PopulateOrExchange(S);
       mSetAudio.PopulateOrExchange(S);
       mSetVisuals.PopulateOrExchange(S);
    };
    bool ApplyInner(const CommandContext & context, Track * t ) override {
-      mSetStatus.bIsSecondChannel = bIsSecondChannel;
-      mSetAudio.bIsSecondChannel = bIsSecondChannel;
-      mSetVisuals.bIsSecondChannel = bIsSecondChannel;
       return 
          mSetStatus.ApplyInner( context, t ) &&  
-         mSetAudio.ApplyInner( context, t )&&
+         mSetAudio.ApplyInner( context, t ) &&
          mSetVisuals.ApplyInner( context, t );
    }
 
