@@ -49,8 +49,7 @@ set( LIBRARIES
    lib-audio-unit
    lib-playable-track
    lib-time-and-pitch
-   )
-endif()
+)
 
 if( NOT ${_OPT}enable_experimental_qt_support )
    list( APPEND LIBRARIES
