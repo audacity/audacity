@@ -250,7 +250,10 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
    const auto title = mProject.GetProjectName();
 
    if (!title.empty())
+   {
       mInitialStatePanel.trackTitle->SetValue(title);
+      mInitialStatePanel.trackTitle->SetInsertionPoint(title.length());
+   }
 
    mContinueButton->Enable(mIsAuthorised && mInitialStatePanel.HasValidTitle());
 
@@ -625,6 +628,8 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
             s.AddSpace(8);
             trackTitle = s.AddTextBox({}, {}, 60);
             trackTitle->SetName(XO("Track Title").Translation());
+            trackTitle->SetFocus();
+            trackTitle->SetMaxLength(100);
             s.AddSpace(16);
 
             anonInfoPanel = s.StartInvisiblePanel();
@@ -717,7 +722,7 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
    authorizedInfoPanel->Show();
 
    if (parent.mContinueButton != nullptr)
-   parent.mContinueButton->Enable(!trackTitle->GetValue().empty());
+      parent.mContinueButton->Enable(!trackTitle->GetValue().empty());
 }
 
 void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
