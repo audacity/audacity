@@ -150,7 +150,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
             : topMsg +
                // TODO: more-than-two-channels-message
                XO("Analyzing first track of stereo pair: %s").Format( trackName );
-         
+
          // Analysis loop over channels collects offsets and extent
          for (auto channel : range) {
             float offset = 0;
@@ -242,7 +242,7 @@ std::unique_ptr<EffectEditor> EffectNormalize::PopulateOrExchange(
                      PeakLevel.min,
                      PeakLevel.max )
                   .AddTextBox( {}, L"", 10);
-               mLeveldB = S.AddVariableText(XO("dB"), false,
+               mLeveldB = S.AddVariableText(XO("dB(Max 0dB)"), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -470,7 +470,7 @@ void EffectNormalize::UpdateUI()
 
    if (!mUIParent->TransferDataFromWindow())
    {
-      mWarning->SetLabel(_("(Maximum 0dB)"));
+      mWarning->SetLabel(_(" "));
       EffectEditor::EnableApply(mUIParent, false);
       return;
    }
