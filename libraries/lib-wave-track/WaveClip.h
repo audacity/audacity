@@ -137,6 +137,9 @@ public:
 
    virtual ~WaveClip();
 
+   //! Check invariant conditions on mSequences and mCutlines
+   bool CheckInvariants() const;
+
    //! How many Sequences the clip contains.
    //! Set at construction time; changes only if increased by deserialization
    size_t GetWidth() const;
@@ -433,8 +436,6 @@ private:
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
    void ClearSequence(double t0, double t1);
-
-   bool CheckInvariants() const;
 
    //! Restores state when an update loop over mSequences fails midway
    struct Transaction {
