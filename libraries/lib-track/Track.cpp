@@ -591,6 +591,18 @@ Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
 
 Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
 {
+   if (!ListOfTracks::empty()) {
+      auto &pLast = *ListOfTracks::rbegin();
+      if (auto &pGroupData = pLast->mpGroupData
+         ; pGroupData && pGroupData->mLinkType != Track::LinkType::None
+      ) {
+         // Assume the newly added track is intended to pair with the last
+         // Avoid upsetting assumptions in case this track had its own group
+         // data initialized during Duplicate()
+         t->mpGroupData.reset();
+      }
+   }
+
    push_back(t);
 
    auto n = getPrev( getEnd() );
