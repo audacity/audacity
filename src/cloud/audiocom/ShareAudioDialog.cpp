@@ -288,24 +288,10 @@ namespace
 {
 int CalculateChannels(const TrackList& trackList)
 {
-   for (auto track : trackList.Any<const WaveTrack>())
-   {
-      const auto channel = track->GetChannel();
-
-      // Looks like we have a stereo track
-      if (channel == Track::LeftChannel || channel == Track::RightChannel)
-         return 2;
-
-      const auto pan = track->GetPan();
-
-      // We found a mono track with non zero pan
-      // We treat equality in the same way Export
-      if (pan != 0.0)
-         return 2;
-   }
-
-   // All the wave tracks were mono with zero pan
-   return 1;
+   auto range = trackList.Any<const WaveTrack>();
+   return std::all_of(range.begin(), range.end(), [](const WaveTrack *track){
+      return IsMono(*track) && track->GetPan() == 0;
+   }) ? 1 : 2;
 }
 }
 

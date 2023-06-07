@@ -102,9 +102,6 @@ private:
 
    double GetOffset() const override;
    void SetOffset(double o) override;
-   ChannelType GetChannelIgnoringPan() const override;
-   ChannelType GetChannel() const override;
-   void SetPanFromChannelType();
 
    bool LinkConsistencyFix(bool doFix, bool completeList) override;
 

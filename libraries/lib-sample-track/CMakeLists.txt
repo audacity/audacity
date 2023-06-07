@@ -14,21 +14,26 @@ handling resampling to different rates.
 
 These interfaces are sufficient for the audio engine to play and record tracks,
 so the engine will not depend on a particular realization of sample storage.
+
+There is also EffectStage which is used to construct effect processing
+pipelines.
 ]]
 
 set( SOURCES
-   SampleTrack.cpp
-   SampleTrack.h
-   SampleTrackCache.cpp
-   SampleTrackCache.h
-   SampleTrackSource.cpp
-   SampleTrackSource.h
+   EffectStage.cpp
+   EffectStage.h
    Mix.cpp
    Mix.h
    MixerOptions.cpp
    MixerOptions.h
    MixerSource.cpp
    MixerSource.h
+   SampleTrack.cpp
+   SampleTrack.h
+   SampleTrackCache.cpp
+   SampleTrackCache.h
+   SampleTrackSource.cpp
+   SampleTrackSource.h
 )
 set( LIBRARIES
    lib-audio-graph-interface

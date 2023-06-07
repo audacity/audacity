@@ -8,7 +8,6 @@
   Dominic Mazzoni
 
 **********************************************************************/
-
 #ifndef __AUDACITY_TRACK__
 #define __AUDACITY_TRACK__
 
@@ -212,13 +211,6 @@ private:
    //! Alias for my base type
    using AttachedObjects = ::AttachedTrackObjects;
 
-   enum ChannelType
-   {
-      LeftChannel = 0,
-      RightChannel = 1,
-      MonoChannel = 2
-   };
-   
    TrackId GetId() const { return mId; }
  private:
    void SetId( TrackId id ) { mId = id; }
@@ -353,7 +345,6 @@ protected:
     @param completeList only influences debug build consistency checking
     */
    void SetLinkType(LinkType linkType, bool completeList = true);
-   void SetChannel(ChannelType c) noexcept;
 
 private:
    int GetIndex() const;
@@ -378,7 +369,6 @@ private:
  // Keep in Track
 
  protected:
-   ChannelType         mChannel;
    double              mOffset;
 
  public:
@@ -408,7 +398,6 @@ private:
 
 public:
 
-   virtual ChannelType GetChannel() const { return mChannel;}
    virtual double GetOffset() const = 0;
 
    void Offset(double t) { SetOffset(GetOffset() + t); }

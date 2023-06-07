@@ -58,10 +58,7 @@ callbacks for these events.
 time warp info and AudioIOListener and whether the playback is looped.
 
 *//*******************************************************************/
-
 #include "AudioIO.h"
-
-
 
 #include "AudioIOExt.h"
 #include "AudioIOListener.h"
@@ -2710,13 +2707,11 @@ bool AudioIoCallback::FillOutputBuffers(
       {
          vt = chans[c];
 
-         if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
-               vt->GetChannelIgnoringPan() == Track::MonoChannel )
+         if (PlaysLeft(*vt))
             AddToOutputChannel( 0, outputMeterFloats, outputFloats,
                tempBufs[c], drop, len, vt, *oldgains[c % 2]);
 
-         if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
-               vt->GetChannelIgnoringPan() == Track::MonoChannel  )
+         if (PlaysRight(*vt))
             AddToOutputChannel( 1, outputMeterFloats, outputFloats,
                tempBufs[c], drop, len, vt, *oldgains[c % 2]);
       }
@@ -3037,12 +3032,9 @@ bool AudioIoCallback::TrackShouldBeSilent( const SampleTrack &wt )
 bool AudioIoCallback::TrackHasBeenFadedOut(
    const SampleTrack &wt, const OldChannelGains &gains)
 {
-   const auto channel = wt.GetChannelIgnoringPan();
-   if ((channel == Track::LeftChannel  || channel == Track::MonoChannel) &&
-      gains[0] != 0.0)
+   if (PlaysLeft(wt) && gains[0] != 0.0)
       return false;
-   if ((channel == Track::RightChannel || channel == Track::MonoChannel) &&
-      gains[1] != 0.0)
+   if (PlaysRight(wt) && gains[1] != 0.0)
       return false;
    return true;
 }

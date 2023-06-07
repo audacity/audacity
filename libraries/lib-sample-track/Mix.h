@@ -18,7 +18,8 @@
 
 class sampleCount;
 class BoundedEnvelope;
-namespace AudioGraph{ class EffectStage; class Source; }
+class EffectStage;
+namespace AudioGraph{ class Source; }
 class MixerSource;
 class TrackList;
 class SampleTrack;
@@ -158,7 +159,7 @@ class SAMPLE_TRACK_API Mixer {
    std::vector<MixerSource> mSources;
    std::vector<EffectSettings> mSettings;
    std::vector<AudioGraph::Buffers> mStageBuffers;
-   std::vector<std::unique_ptr<AudioGraph::EffectStage>> mStages;
+   std::vector<std::unique_ptr<EffectStage>> mStages;
 
    struct Source { MixerSource &upstream; AudioGraph::Source &downstream; };
    std::vector<Source> mDecoratedSources;

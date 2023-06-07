@@ -46,7 +46,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    int numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
    for(auto wt : trackRange) {
       numWaves++;
-      if (wt->GetChannel() == Track::MonoChannel && wt->GetPan() == 0)
+      if (IsMono(*wt) && wt->GetPan() == 0)
          numMono++;
    }
 

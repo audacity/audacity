@@ -21,6 +21,8 @@
 #include "SampleCount.h"
 #include <functional>
 
+class SampleTrack;
+
 //! Base class for Effects that treat each (mono or stereo) track independently
 //! of other tracks.
 /*!
@@ -81,7 +83,7 @@ private:
       const Factory &factory, EffectSettings &settings,
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
-      double sampleRate, const Track &track,
+      double sampleRate, const SampleTrack &track,
       Buffers &inBuffers, Buffers &outBuffers);
 };
 #endif

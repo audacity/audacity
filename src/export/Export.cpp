@@ -494,9 +494,6 @@ bool Exporter::ExamineTracks()
 {
    // Init
    mNumSelected = 0;
-   mNumLeft = 0;
-   mNumRight = 0;
-   mNumMono = 0;
 
    // First analyze the selected audio, perform sanity checks, and provide
    // information as appropriate.
@@ -509,7 +506,8 @@ bool Exporter::ExamineTracks()
 
    auto &tracks = TrackList::Get( *mProject );
 
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
 
    for (auto tr :
          tracks.Any< const WaveTrack >()
@@ -517,29 +515,6 @@ bool Exporter::ExamineTracks()
             - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)
    ) {
       mNumSelected++;
-
-      if (tr->GetChannel() == Track::LeftChannel) {
-         mNumLeft++;
-      }
-      else if (tr->GetChannel() == Track::RightChannel) {
-         mNumRight++;
-      }
-      else if (tr->GetChannel() == Track::MonoChannel) {
-         // It's a mono channel, but it may be panned
-         float pan = tr->GetPan();
-
-         if (pan == -1.0)
-            mNumLeft++;
-         else if (pan == 1.0)
-            mNumRight++;
-         else if (pan == 0)
-            mNumMono++;
-         else {
-            // Panned partially off-center. Mix as stereo.
-            mNumLeft++;
-            mNumRight++;
-         }
-      }
 
       if (tr->GetOffset() < earliestBegin) {
          earliestBegin = tr->GetOffset();
@@ -1373,14 +1348,15 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
    ) {
       numTracks++;
       const wxString sTrackName = (t->GetName()).Left(20);
-      if( t->GetChannel() == Track::LeftChannel )
+      if (IsMono(*t))
+         // No matter whether it's panned hard left or right
+         mTrackNames.push_back(sTrackName);
+      else if (PlaysLeft(*t))
       /* i18n-hint: track name and L abbreviating Left channel */
          mTrackNames.push_back( wxString::Format( _( "%s - L" ), sTrackName ) );
-      else if( t->GetChannel() == Track::RightChannel )
+      else if (PlaysRight(*t))
       /* i18n-hint: track name and R abbreviating Right channel */
          mTrackNames.push_back( wxString::Format( _( "%s - R" ), sTrackName ) );
-      else
-         mTrackNames.push_back(sTrackName);
    }
 
    // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is
