@@ -160,6 +160,11 @@ void Track::SetLinkType(LinkType linkType, bool completeList)
    }
 }
 
+void Track::DestroyGroupData()
+{
+   mpGroupData.reset();
+}
+
 Track::ChannelGroupData &Track::MakeGroupData()
 {
    if (!mpGroupData)

@@ -347,6 +347,9 @@ protected:
     */
    void SetLinkType(LinkType linkType, bool completeList = true);
 
+   // Use this only to fix temporary inconsistency during deserialization!
+   void DestroyGroupData();
+
 private:
    int GetIndex() const;
    void SetIndex(int index);

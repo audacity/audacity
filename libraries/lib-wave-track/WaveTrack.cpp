@@ -298,6 +298,11 @@ bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
             //not an error
             if (newLinkType != linkType)
                SetLinkType(newLinkType);
+            else
+               // Be sure to lose any right channel group data that might
+               // have been made during during deserialization of the channel
+               // before joining it
+               next->DestroyGroupData();
          }
       }
    }
