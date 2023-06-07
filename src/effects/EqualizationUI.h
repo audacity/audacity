@@ -26,16 +26,19 @@ class wxStaticText;
 class EffectEditor;
 class EqualizationPanel;
 class RulerPanel;
+class EffectUIServices;
 
 #include <wx/weakref.h>
 
 class EqualizationUI : public wxEvtHandler {
 public:
    EqualizationUI(EffectSettingsManager &manager,
+      EffectUIServices& uiServices,
       const wxWeakRef<wxWindow> &uiParent,
       const TranslatableString &name, EqualizationCurvesList &curvesList,
       int options
    )  : mManager{ manager }
+      , mUIServices{ uiServices }
       , mUIParent{ uiParent }
       , mName{ name }
       , mCurvesList{ curvesList }
@@ -83,6 +86,7 @@ private:
    void setCurve();
 
    EffectSettingsManager &mManager;
+   EffectUIServices& mUIServices;
    const wxWeakRef<wxWindow> &mUIParent;
    EqualizationCurvesList &mCurvesList;
    TranslatableString mName;
