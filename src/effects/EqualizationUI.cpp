@@ -38,6 +38,58 @@ BEGIN_EVENT_TABLE(EqualizationUI, wxEvtHandler)
 
 END_EVENT_TABLE()
 
+namespace
+{
+class EqualizationUIEditor : public EffectEditor, protected wxEvtHandler
+{
+public:
+   /*!
+    @param pParent if not null, caller will push an event handler onto this
+    window; then this object is responsible to pop it
+    */
+   EqualizationUIEditor(
+      EqualizationUI& ui, EffectUIServices& services,
+      EffectSettingsAccess& access, wxWindow* pParent = nullptr)
+       : EffectEditor { services, access }
+       , mEqualizationUI { ui }
+       , mpParent { pParent }
+   {
+      if (mpParent)
+         mpParent->PushEventHandler(&ui);
+   }
+   //! Calls Disconnect
+   ~EqualizationUIEditor() override
+   {
+      Disconnect();
+   }
+   //! Calls mServices.ValidateUI()
+   bool ValidateUI() override
+   {
+      bool result {};
+      mAccess.ModifySettings(
+         [&](EffectSettings& settings)
+         {
+            result = mEqualizationUI.ValidateUI(settings);
+            return nullptr;
+         });
+      return result;
+   }
+
+   void Disconnect() override
+   {
+      if (mpParent)
+      {
+         mpParent->PopEventHandler();
+         mpParent = nullptr;
+      }
+   }
+
+protected:
+   EqualizationUI& mEqualizationUI;
+   wxWindow* mpParent {};
+};
+} // namespace
+
 bool EqualizationUI::ValidateUI(EffectSettings &)
 {
    const auto &parameters = mCurvesList.mParameters;
@@ -428,7 +480,7 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
    }
    mCurvesList.ForceRecalc();
 
-   return nullptr;
+   return std::make_unique<EqualizationUIEditor>(*this, mUIServices, access, mUIParent);
 }
 
 bool EqualizationUI::TransferDataToWindow(const EffectSettings &settings)
