@@ -15,6 +15,8 @@ Rectangle {
 
    property alias name: label.text
 
+   signal optionsClicked()
+
    states: [
       State {
          name: "LEFT_RESIZE"
@@ -48,7 +50,6 @@ Rectangle {
       y: 3
       height: 12
       color: appConfig.fontColor1
-      text: "Audio 1"
       fontSizeMode: Text.Fit
       font.family: appConfig.bodyFont.family
       font.pixelSize: 10

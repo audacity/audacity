@@ -144,6 +144,12 @@ ApplicationWindow {
          x: 13
          y: 0
          height: 84
+         name: "Audio 1"
+
+         onOptionsClicked: {
+            statusBar.text = waveform.name + " options clicked"
+            timer.restart()
+         }
       }
    }
 
