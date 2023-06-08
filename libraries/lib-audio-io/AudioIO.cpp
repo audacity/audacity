@@ -1984,6 +1984,7 @@ bool AudioIO::ProcessPlaybackSlices(
    return progress;
 }
 
+#define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
 
 void AudioIO::TransformPlayBuffers(
    std::optional<RealtimeEffects::ProcessingScope> &pScope)
@@ -1991,8 +1992,7 @@ void AudioIO::TransformPlayBuffers(
    // Transform written but un-flushed samples in the RingBuffers in-place.
 
    // Avoiding std::vector
-   auto pointers =
-      static_cast<float**>(alloca(mNumPlaybackChannels * sizeof(float*)));
+   const auto pointers = stackAllocate(float*, mNumPlaybackChannels);
 
    const auto numPlaybackTracks = mPlaybackTracks.size();
    for (unsigned t = 0; t < numPlaybackTracks; ++t) {
@@ -2423,8 +2423,6 @@ void AudioIO::AILAProcess(double maxPeak) {
 }
 #endif
 
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-
 static void DoSoftwarePlaythrough(constSamplePtr inputBuffer,
                                   sampleFormat inputFormat,
                                   unsigned inputChannels,
@@ -2578,15 +2576,13 @@ bool AudioIoCallback::FillOutputBuffers(
 
    // ------ MEMORY ALLOCATION ----------------------
    // These are small structures.
-   const auto chans = (const SampleTrack **) alloca(
-      numPlaybackChannels * sizeof(const SampleTrack *));
-   const auto oldgains = (OldChannelGains **) alloca(
-      numPlaybackChannels * sizeof(OldChannelGains *));
-   float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
+   const auto chans = stackAllocate(const SampleTrack *, numPlaybackChannels);
+   const auto oldgains = stackAllocate(OldChannelGains*, numPlaybackChannels);
+   const auto tempBufs = stackAllocate(float *, numPlaybackChannels);
 
    // And these are larger structures....
    for (unsigned int c = 0; c < numPlaybackChannels; c++)
-      tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
+      tempBufs[c] = stackAllocate(float, framesPerBuffer);
    // ------ End of MEMORY ALLOCATION ---------------
 
    int chanCnt = 0;
@@ -3093,17 +3089,17 @@ int AudioIoCallback::AudioCallback(
    // audio data.  One temporary use is for the InputMeter data.
    const auto numPlaybackChannels = mNumPlaybackChannels;
    const auto numCaptureChannels = mNumCaptureChannels;
-   float *tempFloats = (float *)alloca(framesPerBuffer*sizeof(float)*
-                             MAX(numCaptureChannels,numPlaybackChannels));
+   const auto tempFloats = stackAllocate(float,
+      framesPerBuffer * std::max(numCaptureChannels, numPlaybackChannels));
 
    bool bVolEmulationActive =
       (outputBuffer && GetMixerOutputVol() != 1.0);
    // outputMeterFloats is the scratch pad for the output meter.
    // we can often reuse the existing outputBuffer and save on allocating
    // something new.
-   float *outputMeterFloats = bVolEmulationActive ?
-         (float *)alloca(framesPerBuffer*numPlaybackChannels * sizeof(float)) :
-         outputBuffer;
+   const auto outputMeterFloats = bVolEmulationActive
+      ? stackAllocate(float, framesPerBuffer * numPlaybackChannels)
+      : outputBuffer;
    // ----- END of MEMORY ALLOCATIONS ------------------------------------------
 
    if (inputBuffer && numCaptureChannels) {
