@@ -12,6 +12,7 @@ set( SOURCES
    AudioIO.h
    AudioIOExt.cpp
    AudioIOExt.h
+   AudioIOListener.cpp
    AudioIOListener.h
    PlaybackSchedule.cpp
    PlaybackSchedule.h

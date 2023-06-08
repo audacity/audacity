@@ -9,18 +9,20 @@
   Use the PortAudio library to play and record sound
 
 **********************************************************************/
-
 #ifndef __AUDACITY_AUDIO_IO_LISTENER__
 #define __AUDACITY_AUDIO_IO_LISTENER__
 
+#include <memory>
+#include <vector>
+
 class WritableSampleTrack;
 using WritableSampleTrackArray =
-   std::vector < std::shared_ptr < WritableSampleTrack > >;
+   std::vector<std::shared_ptr<WritableSampleTrack>>;
 
 class AUDIO_IO_API AudioIOListener /* not final */ {
 public:
    AudioIOListener() {}
-   virtual ~AudioIOListener() {}
+   virtual ~AudioIOListener();
 
    // Pass 0 when audio stops, positive when it starts:
    virtual void OnAudioIORate(int rate) = 0;
