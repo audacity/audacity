@@ -24,7 +24,6 @@ set( SOURCES
 set( LIBRARIES
    lib-project-rate-interface
    lib-realtime-effects
-   lib-sample-track-interface
 )
 audacity_library( lib-audio-io "${SOURCES}" "${LIBRARIES}"
    "" ""

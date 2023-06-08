@@ -14,6 +14,7 @@
 #define __AUDACITY_AUDIO_IO__
 
 #include "AudioIOBase.h" // to inherit
+#include "AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
 
 #include <functional>
@@ -38,15 +39,6 @@ class RealtimeEffectState;
 class Resample;
 
 class AudacityProject;
-
-class Track;
-class SampleTrack;
-using SampleTrackArray = std::vector < std::shared_ptr < SampleTrack > >;
-using SampleTrackConstArray = std::vector < std::shared_ptr < const SampleTrack > >;
-
-class WritableSampleTrack;
-using WritableSampleTrackArray =
-   std::vector < std::shared_ptr < WritableSampleTrack > >;
 
 struct PaStreamCallbackTimeInfo;
 typedef unsigned long PaStreamCallbackFlags;
@@ -74,14 +66,14 @@ struct AudioIOEvent {
    bool on;
 };
 
-struct AUDIO_IO_API TransportTracks final {
-   SampleTrackConstArray playbackTracks;
-   WritableSampleTrackArray captureTracks;
+struct AUDIO_IO_API TransportSequences final {
+   ConstPlayableSequences playbackTracks;
+   RecordableSequences captureTracks;
    std::vector<std::shared_ptr<const OtherPlayableSequence>>
       otherPlayableSequences;
 
    // This is a subset of playbackTracks
-   SampleTrackConstArray prerollTracks;
+   ConstPlayableSequences prerollTracks;
 };
 
 /** brief The function which is called from PortAudio's callback thread
@@ -191,9 +183,9 @@ public:
    unsigned  CountSoloingTracks();
 
    using OldChannelGains = std::array<float, 2>;
-   bool TrackShouldBeSilent( const SampleTrack &wt );
+   bool TrackShouldBeSilent(const PlayableSequence &ps);
    bool TrackHasBeenFadedOut(
-      const SampleTrack &wt, const OldChannelGains &gains);
+      const PlayableSequence &ps, const OldChannelGains &gains);
    bool AllTracksAlreadySilent();
 
    void CheckSoundActivatedRecordingLevel(
@@ -207,7 +199,7 @@ public:
       const float * tempBuf,
       bool drop,
       unsigned long len,
-      const SampleTrack *vt,
+      const PlayableSequence &ps,
       OldChannelGains &gains
    );
    bool FillOutputBuffers(
@@ -273,10 +265,10 @@ public:
 
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
-   WritableSampleTrackArray      mCaptureTracks;
+   RecordableSequences mCaptureTracks;
    /*! Read by worker threads but unchanging during playback */
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
-   SampleTrackConstArray      mPlaybackTracks;
+   ConstPlayableSequences      mPlaybackTracks;
    // Old gain is used in playback in linearly interpolating
    // the gain.
    std::vector<OldChannelGains> mOldChannelGains;
@@ -468,7 +460,7 @@ public:
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive() */
 
-   int StartStream(const TransportTracks &tracks,
+   int StartStream(const TransportSequences &tracks,
       double t0, double t1,
       double mixerLimit, //!< Time at which mixer stops producing, maybe > t1
       const AudioIOStartStreamOptions &options);
@@ -645,7 +637,7 @@ private:
      */
    bool AllocateBuffers(
       const AudioIOStartStreamOptions &options,
-      const TransportTracks &tracks, double t0, double t1, double sampleRate );
+      const TransportSequences &tracks, double t0, double t1, double sampleRate );
 
    /** \brief Clean up after StartStream if it fails.
      *

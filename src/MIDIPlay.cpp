@@ -551,7 +551,7 @@ MIDIPlay::~MIDIPlay()
    Pm_Terminate();
 }
 
-bool MIDIPlay::StartOtherStream(const TransportTracks &tracks,
+bool MIDIPlay::StartOtherStream(const TransportSequences &tracks,
    const PaStreamInfo* info, double, double rate)
 {
    mMidiPlaybackTracks.clear();

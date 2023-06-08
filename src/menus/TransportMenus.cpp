@@ -322,7 +322,7 @@ void OnPunchAndRoll(const CommandContext &context)
    }
 
    // Choose the tracks for playback.
-   TransportTracks transportTracks;
+   TransportSequences transportTracks;
    const auto duplex = ProjectAudioManager::UseDuplex();
    if (duplex)
       // play all
@@ -335,7 +335,8 @@ void OnPunchAndRoll(const CommandContext &context)
       
    // Unlike with the usual recording, a track may be chosen both for playback
    // and recording.
-   transportTracks.captureTracks = std::move(tracks);
+   std::copy(tracks.begin(), tracks.end(),
+      back_inserter(transportTracks.captureTracks));
 
    // Try to start recording
    auto options = ProjectAudioIO::GetDefaultOptions(project);

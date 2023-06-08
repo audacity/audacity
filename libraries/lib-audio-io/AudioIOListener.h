@@ -15,9 +15,8 @@
 #include <memory>
 #include <vector>
 
-class WritableSampleTrack;
-using WritableSampleTrackArray =
-   std::vector<std::shared_ptr<WritableSampleTrack>>;
+class RecordableSequence;
+using RecordableSequences = std::vector<std::shared_ptr<RecordableSequence>>;
 
 class AUDIO_IO_API AudioIOListener /* not final */ {
 public:
@@ -29,7 +28,7 @@ public:
 
    virtual void OnAudioIOStartRecording() = 0;
    virtual void OnAudioIOStopRecording() = 0;
-   virtual void OnAudioIONewBlocks(const WritableSampleTrackArray *tracks) = 0;
+   virtual void OnAudioIONewBlocks(const RecordableSequences &sequences) = 0;
 
    // Commit the addition of temporary recording tracks into the project
    virtual void OnCommitRecording() = 0;

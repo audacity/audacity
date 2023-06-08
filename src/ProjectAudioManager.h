@@ -38,7 +38,7 @@ enum class PlayMode : int {
    cutPreviewPlay
 };
 
-struct TransportTracks;
+struct TransportSequences;
 
 enum StatusBarField : int;
 enum class ProjectFileIOMessage : int;
@@ -105,7 +105,7 @@ public:
    void OnRecord(bool altAppearance);
 
    bool DoRecord(AudacityProject &project,
-      const TransportTracks &transportTracks, // If captureTracks is empty, then tracks are created
+      const TransportSequences &transportTracks, // If captureTracks is empty, then tracks are created
       double t0, double t1,
       bool altAppearance,
       const AudioIOStartStreamOptions &options);
@@ -151,7 +151,7 @@ private:
    void OnAudioIORate(int rate) override;
    void OnAudioIOStartRecording() override;
    void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlocks(const WritableSampleTrackArray *tracks) override;
+   void OnAudioIONewBlocks(const RecordableSequences &sequences) override;
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 

@@ -203,10 +203,10 @@ void TransportUtilities::DoStartPlaying(
    }
 }
 
-TransportTracks MakeTransportTracks(
+TransportSequences MakeTransportTracks(
    TrackList &trackList, bool selectedOnly, bool nonWaveToo)
 {
-   TransportTracks result;
+   TransportSequences result;
    {
       const auto range = trackList.Any<SampleTrack>()
          + (selectedOnly ? &Track::IsSelected : &Track::Any);

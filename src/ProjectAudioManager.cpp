@@ -722,7 +722,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          }
       }
 
-      TransportTracks transportTracks;
+      TransportSequences transportTracks;
       if (UseDuplex()) {
          // Remove recording tracks from the list of tracks for duplex ("overdub")
          // playback.
@@ -738,7 +738,8 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          }
       }
 
-      transportTracks.captureTracks = existingTracks;
+      std::copy(existingTracks.begin(), existingTracks.end(),
+         back_inserter(transportTracks.captureTracks));
 
       if (rateOfSelected != RATE_NOT_SELECTED)
          options.rate = rateOfSelected;
@@ -761,7 +762,7 @@ bool ProjectAudioManager::UseDuplex()
 }
 
 bool ProjectAudioManager::DoRecord(AudacityProject &project,
-   const TransportTracks &tracks,
+   const TransportSequences &tracks,
    double t0, double t1,
    bool altAppearance,
    const AudioIOStartStreamOptions &options)
@@ -810,16 +811,24 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
       if (appendRecord) {
          // Append recording:
          // Pad selected/all wave tracks to make them all the same length
-         for (const auto &wt : tracks.captureTracks)
+         for (const auto &sequence : tracks.captureTracks)
          {
+            WaveTrack *wt{};
+            if (!(wt = dynamic_cast<WaveTrack *>(sequence.get()))) {
+               assert(false);
+               continue;
+            }
             auto endTime = wt->GetEndTime();
 
             // If the track was chosen for recording and playback both,
             // remember the original in preroll tracks, before making the
             // pending replacement.
-            bool prerollTrack = make_iterator_range(transportTracks.playbackTracks).contains(wt);
+            const auto shared = wt->SharedPointer<WaveTrack>();
+            bool prerollTrack =
+               make_iterator_range(transportTracks.playbackTracks)
+                  .contains(shared);
             if (prerollTrack)
-                  transportTracks.prerollTracks.push_back(wt);
+               transportTracks.prerollTracks.push_back(shared);
 
             // A function that copies all the non-sample data between
             // wave tracks; in case the track recorded to changes scale
@@ -833,8 +842,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // Get a copy of the track to be appended, to be pushed into
             // undo history only later.
             auto pending = std::static_pointer_cast<WaveTrack>(
-               TrackList::Get( *p ).RegisterPendingChangedTrack(
-                  updater, wt.get() ) );
+               TrackList::Get(*p).RegisterPendingChangedTrack(
+                  updater, wt));
 
             // End of current track is before or at recording start time.
             // Less than or equal, not just less than, to ensure a clip boundary.
@@ -1078,8 +1087,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    }
 }
 
-void ProjectAudioManager::OnAudioIONewBlocks(
-   const WritableSampleTrackArray *tracks)
+void ProjectAudioManager::OnAudioIONewBlocks(const RecordableSequences &)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );

@@ -169,7 +169,7 @@ struct MIDIPlay : AudioIOExt
    void SignalOtherCompletion() override;
    unsigned CountOtherSoloTracks() const override;
 
-   bool StartOtherStream(const TransportTracks &tracks,
+   bool StartOtherStream(const TransportSequences &tracks,
       const PaStreamInfo* info, double startTime, double rate) override;
    void AbortOtherStream() override;
    void FillOtherBuffers(double rate, unsigned long pauseFrames,

@@ -1827,6 +1827,21 @@ void WaveTrack::Flush()
    RightmostOrNewClip()->Flush();
 }
 
+bool WaveTrack::IsLeader() const
+{
+   return Track::IsLeader();
+}
+
+bool WaveTrack::GetMute() const
+{
+   return PlayableTrack::GetMute();
+}
+
+bool WaveTrack::GetSolo() const
+{
+   return PlayableTrack::GetSolo();
+}
+
 bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "wavetrack") {

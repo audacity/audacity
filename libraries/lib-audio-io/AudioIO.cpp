@@ -107,7 +107,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "RealtimeEffectManager.h"
 #include "QualitySettings.h"
-#include "SampleTrack.h"
 #include "BasicUI.h"
 
 #include "Gain.h"
@@ -127,7 +126,7 @@ AudioIO *AudioIO::Get()
 
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
-      const SampleTrackConstArray &playbackTracks,
+      const ConstPlayableSequences &playbackTracks,
       unsigned numPlaybackChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
@@ -144,7 +143,7 @@ struct AudioIoCallback::TransportState {
                wxASSERT(false);
                continue;
             }
-            unsigned chanCnt = TrackList::NChannels(*vt);
+            unsigned chanCnt = vt->NChannels();
             i += chanCnt; // Visit leaders only
             mpRealtimeInitialization
                ->AddSequence(*vt, numPlaybackChannels, sampleRate);
@@ -776,7 +775,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    }
 }
 
-int AudioIO::StartStream(const TransportTracks &tracks,
+int AudioIO::StartStream(const TransportSequences &tracks,
    double t0, double t1, double mixerLimit,
    const AudioIOStartStreamOptions &options)
 {
@@ -1105,7 +1104,7 @@ void AudioIO::CallAfterRecording(PostRecordingAction action)
 
 bool AudioIO::AllocateBuffers(
    const AudioIOStartStreamOptions &options,
-   const TransportTracks &tracks, double t0, double t1, double sampleRate )
+   const TransportSequences &tracks, double t0, double t1, double sampleRate )
 {
    bool success = false;
    auto cleanup = finally([&]{
@@ -1954,7 +1953,7 @@ bool AudioIO::ProcessPlaybackSlices(
                produced = mixer->Process( toProduce );
             //wxASSERT(produced <= toProduce);
             for(size_t j = 0, nChannels =
-               TrackList::NChannels(*mPlaybackTracks[i]);
+               mPlaybackTracks[i]->NChannels();
                j < nChannels; ++i, ++j
             ) {
                auto warpedSamples = mixer->GetBuffer(j);
@@ -2001,7 +2000,7 @@ void AudioIO::TransformPlayBuffers(
          continue;
       // vt is mono, or is the first of its group of channels
       const auto nChannels = std::min<size_t>(
-         mNumPlaybackChannels, TrackList::NChannels(*vt));
+         mNumPlaybackChannels, vt->NChannels());
 
       // Loop over the blocks of unflushed data, at most two
       for (unsigned iBlock : {0, 1}) {
@@ -2224,7 +2223,7 @@ void AudioIO::DrainRecordBuffers()
 
          auto pListener = GetListener();
          if (pListener && newBlocks)
-            pListener->OnAudioIONewBlocks(&mCaptureTracks);
+            pListener->OnAudioIONewBlocks(mCaptureTracks);
 
       }
       // end of record buffering
@@ -2489,19 +2488,18 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
 
 // A function to apply the requested gain, fading up or down from the
 // most recently applied gain.
-void AudioIoCallback::AddToOutputChannel( unsigned int chan,
+void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    float * outputMeterFloats,
    float * outputFloats,
    const float * tempBuf,
    bool drop,
    unsigned long len,
-   const SampleTrack *vt,
-   OldChannelGains &gains
-   )
+   const PlayableSequence &ps,
+   OldChannelGains &gains)
 {
    const auto numPlaybackChannels = mNumPlaybackChannels;
 
-   float gain = vt->GetChannelGain(chan);
+   float gain = ps.GetChannelGain(chan);
    if (drop || mForceFadeOut.load(std::memory_order_relaxed) || IsPaused())
       gain = 0.0;
 
@@ -2576,7 +2574,8 @@ bool AudioIoCallback::FillOutputBuffers(
 
    // ------ MEMORY ALLOCATION ----------------------
    // These are small structures.
-   const auto chans = stackAllocate(const SampleTrack *, numPlaybackChannels);
+   const auto chans =
+      stackAllocate(const PlayableSequence *, numPlaybackChannels);
    const auto oldgains = stackAllocate(OldChannelGains*, numPlaybackChannels);
    const auto tempBufs = stackAllocate(float *, numPlaybackChannels);
 
@@ -2630,13 +2629,13 @@ bool AudioIoCallback::FillOutputBuffers(
             // TODO: more-than-two-channels
             memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
          }
-         drop = TrackShouldBeSilent( *vt );
+         drop = TrackShouldBeSilent(*vt);
          dropQuickly = drop;
       }
 
       if( mbMicroFades )
          dropQuickly = dropQuickly &&
-            TrackHasBeenFadedOut( *vt, mOldChannelGains[t] );
+            TrackHasBeenFadedOut(*vt, mOldChannelGains[t]);
 
       decltype(framesPerBuffer) len = 0;
 
@@ -2701,12 +2700,12 @@ bool AudioIoCallback::FillOutputBuffers(
          vt = chans[c];
 
          if (PlaysLeft(*vt))
-            AddToOutputChannel( 0, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, vt, *oldgains[c % 2]);
+            AddToOutputChannel(0, outputMeterFloats, outputFloats,
+               tempBufs[c], drop, len, *vt, *oldgains[c % 2]);
 
          if (PlaysRight(*vt))
-            AddToOutputChannel( 1, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, vt, *oldgains[c % 2]);
+            AddToOutputChannel(1, outputMeterFloats, outputFloats,
+               tempBufs[c], drop, len, *vt, *oldgains[c % 2]);
       }
 
       CallbackCheckCompletion(mCallbackReturn, len);
@@ -3011,23 +3010,23 @@ unsigned AudioIoCallback::CountSoloingTracks(){
 // true IFF the track should be silent.
 // The track may not yet be silent, since it may still be
 // fading out.
-bool AudioIoCallback::TrackShouldBeSilent( const SampleTrack &wt )
+bool AudioIoCallback::TrackShouldBeSilent(const PlayableSequence &ps)
 {
-   return IsPaused() || (!wt.GetSolo() && (
+   return IsPaused() || (!ps.GetSolo() && (
       // Cut if somebody else is soloing
       mbHasSoloTracks ||
       // Cut if we're muted (and not soloing)
-      wt.GetMute()
+      ps.GetMute()
    ));
 }
 
 // This is about micro-fades.
 bool AudioIoCallback::TrackHasBeenFadedOut(
-   const SampleTrack &wt, const OldChannelGains &gains)
+   const PlayableSequence &ps, const OldChannelGains &gains)
 {
-   if (PlaysLeft(wt) && gains[0] != 0.0)
+   if (PlaysLeft(ps) && gains[0] != 0.0)
       return false;
-   if (PlaysRight(wt) && gains[1] != 0.0)
+   if (PlaysRight(ps) && gains[1] != 0.0)
       return false;
    return true;
 }
