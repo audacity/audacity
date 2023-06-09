@@ -72,6 +72,9 @@ public:
       const WritableSampleTrack &other, ProtectedCreationArg&&);
    ~WritableSampleTrack() override;
 
+   // Resolve lookup ambiguity
+   using Track::IsLeader;
+
    // Needed to resolve ambiguity with WideSampleSequence::GetRate, when this
    // abstract interface is used directly.
    // Expect the concrete subclass to define a common override for them.

@@ -330,8 +330,9 @@ void OnPunchAndRoll(const CommandContext &context)
          TrackList::Get( project ), false, true);
    else
       // play recording tracks only
-      std::copy(tracks.begin(), tracks.end(),
-         std::back_inserter(transportTracks.playbackSequences));
+      for (auto &pTrack : tracks)
+         if (pTrack->IsLeader())
+            transportTracks.playbackSequences.push_back(pTrack);
       
    // Unlike with the usual recording, a track may be chosen both for playback
    // and recording.

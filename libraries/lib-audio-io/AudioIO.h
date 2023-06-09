@@ -465,7 +465,11 @@ public:
     * Allocates buffers for recording and playback, gets the Audio thread to
     * fill them, and sets the stream rolling.
     * If successful, returns a token identifying this particular stream
-    * instance.  For use with IsStreamActive() */
+    * instance.  For use with IsStreamActive()
+    *
+    * @pre `p && p->IsLeader()` for all pointers `p` in
+    * `sequences.playbackSequences`
+    */
 
    int StartStream(const TransportSequences &sequences,
       double t0, double t1,

@@ -67,7 +67,8 @@ public:
    static ProjectAudioManager &Get( AudacityProject &project );
    static const ProjectAudioManager &Get( const AudacityProject &project );
 
-   // Find suitable tracks to record into, or return an empty array.
+   //! Find suitable tracks to record into, or return an empty array.
+   //! Not always leader tracks
    static WritableSampleTrackArray ChooseExistingRecordingTracks(
       AudacityProject &proj, bool selectedOnly,
       double targetRate = RATE_NOT_SELECTED);
