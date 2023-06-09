@@ -159,66 +159,79 @@ auto ProjectFileManager::ReadProjectFile(
    ///
    /// Parse project file
    ///
-   bool bParseSuccess = projectFileIO.LoadProject(fileName, discardAutosave);
+   auto parseResult = projectFileIO.LoadProject(fileName, discardAutosave);
+   const bool bParseSuccess = parseResult.has_value();
    
    bool err = false;
 
+   TranslatableString otherError;
+
    if (bParseSuccess)
    {
-      if (discardAutosave)
-         // REVIEW: Failure OK?
-         projectFileIO.AutoSaveDelete();
-      else if (projectFileIO.IsRecovered()) {
-         bool resaved = false;
-
-         if (!projectFileIO.IsTemporary())
-         {
-            // Re-save non-temporary project to its own path.  This
-            // might fail to update the document blob in the database.
-            resaved = projectFileIO.SaveProject(fileName, nullptr);
+      auto &tracks = TrackList::Get(project);
+      for (auto t : tracks.Any()) {
+         // Note, the next function may have an important upgrading side effect,
+         // and return no error; or it may find a real error and repair it, but
+         // that repaired track won't be used because opening will fail.
+         if (!t->LinkConsistencyFix()) {
+            otherError = XO("A channel of a stereo track was missing.");
+            err = true;
          }
 
-         AudacityMessageBox(
-            resaved
-               ? XO("This project was not saved properly the last time Audacity ran.\n\n"
-                    "It has been recovered to the last snapshot.")
-               : XO("This project was not saved properly the last time Audacity ran.\n\n"
-                    "It has been recovered to the last snapshot, but you must save it\n"
-                    "to preserve its contents."),
-            XO("Project Recovered"),
-            wxICON_WARNING,
-            &window);
-      }
-
-      // By making a duplicate set of pointers to the existing blocks
-      // on disk, we add one to their reference count, guaranteeing
-      // that their reference counts will never reach zero and thus
-      // the version saved on disk will be preserved until the
-      // user selects Save().
-      mLastSavedTracks = TrackList::Create( nullptr );
-
-      auto &tracks = TrackList::Get( project );
-      for (auto t : tracks.Any())
-      {
-         if (t->GetErrorOpening())
-         {
+         if (const auto message = t->GetErrorOpening()) {
             wxLogWarning(
                wxT("Track %s had error reading clip values from project file."),
                t->GetName());
             err = true;
+            // Keep at most one of the error messages
+            otherError = *message;
+         }
+      }
+
+      if (!err) {
+         parseResult->Commit();
+         if (discardAutosave)
+            // REVIEW: Failure OK?
+            projectFileIO.AutoSaveDelete();
+         else if (projectFileIO.IsRecovered()) {
+            bool resaved = false;
+
+            if (!projectFileIO.IsTemporary())
+            {
+               // Re-save non-temporary project to its own path.  This
+               // might fail to update the document blob in the database.
+               resaved = projectFileIO.SaveProject(fileName, nullptr);
+            }
+
+            AudacityMessageBox(
+               resaved
+                  ? XO(
+"This project was not saved properly the last time Audacity ran.\n\n"
+"It has been recovered to the last snapshot.")
+                  : XO(
+"This project was not saved properly the last time Audacity ran.\n\n"
+"It has been recovered to the last snapshot, but you must save it\n"
+"to preserve its contents."),
+               XO("Project Recovered"),
+               wxICON_WARNING,
+               &window);
          }
 
-         err = ( !t->LinkConsistencyFix() ) || err;
-
-         mLastSavedTracks->Add(t->Duplicate());
+         // By making a duplicate set of pointers to the existing blocks
+         // on disk, we add one to their reference count, guaranteeing
+         // that their reference counts will never reach zero and thus
+         // the version saved on disk will be preserved until the
+         // user selects Save().
+         mLastSavedTracks = TrackList::Create( nullptr );
+         for (auto t : tracks.Any())
+            mLastSavedTracks->Add(t->Duplicate());
       }
    }
 
-   return
-   {
+   return {
       bParseSuccess,
       err,
-      projectFileIO.GetLastError(),
+      (bParseSuccess ? otherError : projectFileIO.GetLastError()),
       FindHelpUrl(projectFileIO.GetLibraryError())
    };
 }
@@ -1004,7 +1017,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const auto &errorStr = results.errorString;
    const bool err = results.trackError;
 
-   if (bParseSuccess) {
+   if (bParseSuccess && !err) {
       auto &formats = ProjectNumericFormats::Get( project );
       auto &settings = ProjectSettings::Get( project );
       window.mbInitializingScrollbar = true;
@@ -1033,7 +1046,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
          FileHistory::Global().Append(fileName);
    }
 
-   if (bParseSuccess) {
+   if (bParseSuccess && !err) {
       if (projectFileIO.IsRecovered())
       {
          // PushState calls AutoSave(), so no longer need to do so here.

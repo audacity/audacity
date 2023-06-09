@@ -304,7 +304,7 @@ private:
    void WriteXML(XMLWriter &xmlFile) const override;
 
    // Returns true if an error occurred while reading from XML
-   bool GetErrorOpening() override;
+   std::optional<TranslatableString> GetErrorOpening() const override;
 
    //
    // Lock and unlock the track: you must lock the track before
@@ -514,14 +514,19 @@ private:
    WaveClipHolders mClips;
 
    sampleFormat  mFormat;
-   int           mRate;
+   int           mLegacyRate; //!< used only during deserialization
    int           mWaveColorIndex;
 
 private:
+   void SetClipRates(double newRate);
+
    void DoSetPan(float value);
    void DoSetGain(float value);
 
    void PasteWaveTrack(double t0, const WaveTrack* other);
+
+   //! Whether all clips have a common rate
+   bool RateConsistencyCheck() const;
 
    SampleBlockFactoryPtr mpFactory;
 

@@ -751,6 +751,17 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    auto partner = static_cast< WaveTrack * >
       ( *tracks.Find( pTrack ).advance( 1 ) );
 
+   if (pTrack->GetRate() != partner->GetRate()) {
+      using namespace BasicUI;
+      ShowMessageBox(XO(
+"Mono tracks must have the same sample rate in order to be combined into a "
+"stereo track"),
+         MessageBoxOptions{}
+           .Caption(XO("Error"))
+           .IconStyle(Icon::Error));
+      return;
+   }
+
    bool bBothMinimizedp =
       ((TrackView::Get( *pTrack ).GetMinimized()) &&
        (TrackView::Get( *partner ).GetMinimized()));

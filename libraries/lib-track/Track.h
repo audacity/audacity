@@ -15,6 +15,7 @@
 #include <utility>
 #include <vector>
 #include <list>
+#include <optional>
 #include <functional>
 #include <wx/longlong.h>
 
@@ -345,6 +346,9 @@ protected:
     @param completeList only influences debug build consistency checking
     */
    void SetLinkType(LinkType linkType, bool completeList = true);
+
+   // Use this only to fix temporary inconsistency during deserialization!
+   void DestroyGroupData();
 
 private:
    int GetIndex() const;
@@ -782,9 +786,12 @@ public:
    // XMLTagHandler callback methods -- NEW virtual for writing
    virtual void WriteXML(XMLWriter &xmlFile) const = 0;
 
-   // Returns true if an error was encountered while trying to
-   // open the track from XML
-   virtual bool GetErrorOpening() { return false; }
+   //! Returns nonempty if an error was encountered while trying to
+   //! open the track from XML
+   /*!
+    May assume consistency of stereo channel grouping and examine other channels
+    */
+   virtual std::optional<TranslatableString> GetErrorOpening() const;
 
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;
