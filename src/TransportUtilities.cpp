@@ -211,7 +211,7 @@ TransportSequences MakeTransportTracks(
       const auto range = trackList.Any<SampleTrack>()
          + (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
-         result.playbackTracks.push_back(pTrack->SharedPointer<SampleTrack>());
+         result.playbackSequences.push_back(pTrack->SharedPointer<SampleTrack>());
    }
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (nonWaveToo) {

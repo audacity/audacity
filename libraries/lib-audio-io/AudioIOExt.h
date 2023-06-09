@@ -46,7 +46,7 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer) = 0;
    virtual void SignalOtherCompletion() = 0;
-   virtual unsigned CountOtherSoloTracks() const = 0;
+   virtual unsigned CountOtherSolo() const = 0;
 
    // Formerly in AudioIO
    virtual bool StartOtherStream(const TransportSequences &tracks,

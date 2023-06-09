@@ -67,13 +67,13 @@ struct AudioIOEvent {
 };
 
 struct AUDIO_IO_API TransportSequences final {
-   ConstPlayableSequences playbackTracks;
-   RecordableSequences captureTracks;
+   ConstPlayableSequences playbackSequences;
+   RecordableSequences captureSequences;
    std::vector<std::shared_ptr<const OtherPlayableSequence>>
       otherPlayableSequences;
 
-   // This is a subset of playbackTracks
-   ConstPlayableSequences prerollTracks;
+   // This is a subset of playbackSequences
+   ConstPlayableSequences prerollSequences;
 };
 
 /** brief The function which is called from PortAudio's callback thread
@@ -177,16 +177,16 @@ public:
    void CallbackCheckCompletion(
       int &callbackReturn, unsigned long len);
 
-   int mbHasSoloTracks;
+   int mbHasSoloSequences;
    int mCallbackReturn;
-   // Helpers to determine if tracks have already been faded out.
-   unsigned  CountSoloingTracks();
+   // Helpers to determine if sequences have already been faded out.
+   unsigned  CountSoloingSequences();
 
    using OldChannelGains = std::array<float, 2>;
-   bool TrackShouldBeSilent(const PlayableSequence &ps);
-   bool TrackHasBeenFadedOut(
+   bool SequenceShouldBeSilent(const PlayableSequence &ps);
+   bool SequenceHasBeenFadedOut(
       const PlayableSequence &ps, const OldChannelGains &gains);
-   bool AllTracksAlreadySilent();
+   bool AllSequencesAlreadySilent();
 
    void CheckSoundActivatedRecordingLevel(
       float *inputSamples,
@@ -265,10 +265,10 @@ public:
 
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
-   RecordableSequences mCaptureTracks;
+   RecordableSequences mCaptureSequences;
    /*! Read by worker threads but unchanging during playback */
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
-   ConstPlayableSequences      mPlaybackTracks;
+   ConstPlayableSequences      mPlaybackSequences;
    // Old gain is used in playback in linearly interpolating
    // the gain.
    std::vector<OldChannelGains> mOldChannelGains;
@@ -309,9 +309,9 @@ public:
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
    unsigned long long  mLostSamples{ 0 };
-   std::atomic<bool>   mAudioThreadShouldCallTrackBufferExchangeOnce;
-   std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopRunning;
-   std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopActive;
+   std::atomic<bool>   mAudioThreadShouldCallSequenceBufferExchangeOnce;
+   std::atomic<bool>   mAudioThreadSequenceBufferExchangeLoopRunning;
+   std::atomic<bool>   mAudioThreadSequenceBufferExchangeLoopActive;
       
    std::atomic<Acknowledge>  mAudioThreadAcknowledge;
 
@@ -460,7 +460,7 @@ public:
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive() */
 
-   int StartStream(const TransportSequences &tracks,
+   int StartStream(const TransportSequences &sequences,
       double t0, double t1,
       double mixerLimit, //!< Time at which mixer stops producing, maybe > t1
       const AudioIOStartStreamOptions &options);
@@ -468,8 +468,8 @@ public:
    /** \brief Stop recording, playback or input monitoring.
     *
     * Does quite a bit of housekeeping, including switching off monitoring,
-    * flushing recording buffers out to wave tracks, and applies latency
-    * correction to recorded tracks if necessary */
+    * flushing recording buffers out to RecordableSequences, and applies latency
+    * correction to recorded sequences if necessary */
    void StopStream() override;
    /** \brief Move the playback / recording position of the current stream
     * by the specified amount from where it is now */
@@ -553,7 +553,7 @@ public:
    * and playing is true if one or more channels are being played. */
    double GetBestRate(bool capturing, bool playing, double sampleRate);
 
-   /** \brief During playback, the track time most recently played
+   /** \brief During playback, the sequence time most recently played
     *
     * When playing looped, this will start from t0 again,
     * too. So the returned time should be always between
@@ -602,9 +602,9 @@ private:
     include memory allocations and database operations.  RingBuffer objects mediate the transfer
     between threads, to overcome the mismatch of their batch sizes.
     */
-   void TrackBufferExchange();
+   void SequenceBufferExchange();
 
-   //! First part of TrackBufferExchange
+   //! First part of SequenceBufferExchange
    void FillPlayBuffers();
    void TransformPlayBuffers(
       std::optional<RealtimeEffects::ProcessingScope> &scope);
@@ -612,7 +612,7 @@ private:
       std::optional<RealtimeEffects::ProcessingScope> &pScope,
       size_t available);
 
-   //! Second part of TrackBufferExchange
+   //! Second part of SequenceBufferExchange
    void DrainRecordBuffers();
 
    /** \brief Get the number of audio samples free in all of the playback
@@ -637,7 +637,8 @@ private:
      */
    bool AllocateBuffers(
       const AudioIOStartStreamOptions &options,
-      const TransportSequences &tracks, double t0, double t1, double sampleRate );
+      const TransportSequences &sequences,
+      double t0, double t1, double sampleRate);
 
    /** \brief Clean up after StartStream if it fails.
      *

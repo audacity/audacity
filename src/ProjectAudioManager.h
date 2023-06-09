@@ -105,7 +105,8 @@ public:
    void OnRecord(bool altAppearance);
 
    bool DoRecord(AudacityProject &project,
-      const TransportSequences &transportTracks, // If captureTracks is empty, then tracks are created
+      //! If captureSequences is empty, then tracks are created
+      const TransportSequences &transportSequences,
       double t0, double t1,
       bool altAppearance,
       const AudioIOStartStreamOptions &options);

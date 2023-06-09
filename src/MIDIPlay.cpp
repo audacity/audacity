@@ -1190,7 +1190,7 @@ void MIDIPlay::ComputeOtherTimings(double rate, bool paused,
       mMidiPaused = false;
 }
 
-unsigned MIDIPlay::CountOtherSoloTracks() const
+unsigned MIDIPlay::CountOtherSolo() const
 {
    return std::count_if(
       mMidiPlaybackTracks.begin(), mMidiPlaybackTracks.end(),

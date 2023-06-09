@@ -331,12 +331,12 @@ void OnPunchAndRoll(const CommandContext &context)
    else
       // play recording tracks only
       std::copy(tracks.begin(), tracks.end(),
-         std::back_inserter(transportTracks.playbackTracks));
+         std::back_inserter(transportTracks.playbackSequences));
       
    // Unlike with the usual recording, a track may be chosen both for playback
    // and recording.
    std::copy(tracks.begin(), tracks.end(),
-      back_inserter(transportTracks.captureTracks));
+      back_inserter(transportTracks.captureSequences));
 
    // Try to start recording
    auto options = ProjectAudioIO::GetDefaultOptions(project);

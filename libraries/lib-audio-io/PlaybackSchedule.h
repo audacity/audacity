@@ -33,7 +33,7 @@ struct RecordingSchedule {
    PRCrossfadeData mCrossfadeData;
 
    // These are initialized by the main thread, then updated
-   // only by the thread calling TrackBufferExchange:
+   // only by the thread calling SequenceBufferExchange:
    double mPosition{};
    bool mLatencyCorrected{};
 
@@ -99,20 +99,20 @@ public:
    //! Whether repositioning commands are allowed during playback
    virtual bool AllowSeek( PlaybackSchedule &schedule );
 
-   //! Returns true if schedule.GetTrackTime() has reached the end of playback
+   //! Returns true if schedule.GetSequenceTime() has reached the end of playback
    virtual bool Done( PlaybackSchedule &schedule,
       unsigned long outputFrames //!< how many playback frames were taken from RingBuffers
    );
 
    //! Called when the play head needs to jump a certain distance
-   /*! @param offset signed amount requested to be added to schedule::GetTrackTime()
+   /*! @param offset signed amount requested to be added to schedule::GetSequenceTime()
       @return the new value that will be set as the schedule's track time
     */
-   virtual double OffsetTrackTime( PlaybackSchedule &schedule, double offset );
+   virtual double OffsetSequenceTime( PlaybackSchedule &schedule, double offset );
 
-   //! @section Called by the AudioIO::TrackBufferExchange thread
+   //! @section Called by the AudioIO::SequenceBufferExchange thread
 
-   //! How long to wait between calls to AudioIO::TrackBufferExchange
+   //! How long to wait between calls to AudioIO::SequenceBufferExchange
    virtual std::chrono::milliseconds
       SleepInterval( PlaybackSchedule &schedule );
 
@@ -214,7 +214,7 @@ struct AUDIO_IO_API PlaybackSchedule {
       void Clear();
       void Resize(size_t size);
 
-      //! @section Called by the AudioIO::TrackBufferExchange thread
+      //! @section Called by the AudioIO::SequenceBufferExchange thread
 
       //! Enqueue track time value advanced by the slice according to `schedule`'s PlaybackPolicy
       void Producer( PlaybackSchedule &schedule, PlaybackSlice slice );
@@ -289,12 +289,12 @@ struct AUDIO_IO_API PlaybackSchedule {
     *
     * Returns a time in seconds.
     */
-   double GetTrackTime() const
+   double GetSequenceTime() const
    { return mTime.load(std::memory_order_relaxed); }
 
    /** \brief Set current track time value, unadjusted
     */
-   void SetTrackTime( double time )
+   void SetSequenceTime( double time )
    { mTime.store(time, std::memory_order_relaxed); }
 
    void ResetMode() {

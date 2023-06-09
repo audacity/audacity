@@ -70,7 +70,7 @@ bool DefaultPlaybackPolicy::Done(
    PlaybackSchedule &schedule, unsigned long outputFrames )
 {
    if (RevertToOldDefault(schedule)) {
-      auto diff = schedule.GetTrackTime() - schedule.mT1;
+      auto diff = schedule.GetSequenceTime() - schedule.mT1;
       if (schedule.ReversedTime())
          diff *= -1;
       return sampleCount(floor(diff * mRate + 0.5)) >= 0;
@@ -151,7 +151,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
    PlaybackSchedule &schedule, const Mixers &playbackMixers,
    size_t frames, size_t available )
 {
-   // This executes in the TrackBufferExchange thread
+   // This executes in the SequenceBufferExchange thread
    auto data = mMessageChannel.Read();
 
    bool speedChange = false;
