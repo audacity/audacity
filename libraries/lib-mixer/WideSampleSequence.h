@@ -40,7 +40,8 @@ public:
     */
    virtual size_t NChannels() const = 0;
 
-   //! Extra gain factor to apply to a channel when mixing
+   //! Extra gain factor to apply to a channel when mixing,
+   //! may change asynchronously
    virtual float GetChannelGain(int channel) const = 0;
 
    /*!
