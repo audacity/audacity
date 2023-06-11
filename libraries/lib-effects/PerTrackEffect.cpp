@@ -23,7 +23,6 @@
 #include "AudioGraphBuffers.h"
 #include "AudioGraphTask.h"
 #include "EffectStage.h"
-#include "MixAndRender.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
