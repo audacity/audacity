@@ -147,16 +147,15 @@ size_t MixerSource::MixVariableRates(
                }
             }
 
+            if (backwards)
+               seq->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (pos - (getLen - 1)).as_double() / sequenceRate);
+            else
+               seq->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (pos).as_double() / sequenceRate);
+
             for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
-               auto &cache = mInputSequence[iChannel];
                const auto queue = mSampleQueue[iChannel].data();
-               const auto sequence = cache.GetSequence().get();
-               if (backwards)
-                  sequence->GetEnvelopeValues(mEnvValues.data(),
-                     getLen, (pos - (getLen - 1)).as_double() / sequenceRate);
-               else
-                  sequence->GetEnvelopeValues(mEnvValues.data(),
-                     getLen, (pos).as_double() / sequenceRate);
                for (decltype(getLen) i = 0; i < getLen; i++)
                   queue[(queueLen) + i] *= mEnvValues[i];
 
@@ -290,21 +289,17 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
       }
    }
 
+   if (backwards)
+      seq->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
+   else
+      seq->GetEnvelopeValues(mEnvValues.data(), slen, t);
+
    for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
-      auto &cache = mInputSequence[iChannel];
       const auto pFloat = floatBuffers[iChannel];
-      const auto sequence = cache.GetSequence().get();
-      if (backwards) {
-         sequence->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
-         for (size_t i = 0; i < slen; i++)
-            pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
+      for (size_t i = 0; i < slen; i++)
+         pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
+      if (backwards)
          ReverseSamples((samplePtr)pFloat, floatSample, 0, slen);
-      }
-      else {
-         sequence->GetEnvelopeValues(mEnvValues.data(), slen, t);
-         for (size_t i = 0; i < slen; i++)
-            pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
-      }
    }
 
    if (backwards)
