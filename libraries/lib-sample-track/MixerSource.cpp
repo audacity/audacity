@@ -273,20 +273,12 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
    for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
       auto &cache = mInputSequence[iChannel];
       const auto pFloat = floatBuffers[iChannel];
-      if (backwards) {
-         auto results = cache.GetFloats(pos - (slen - 1), slen, mMayThrow);
-         if (results)
-            memcpy(pFloat, results, sizeof(float) * slen);
-         else
-            memset(pFloat, 0, sizeof(float) * slen);
-      }
-      else {
-         auto results = cache.GetFloats(pos, slen, mMayThrow);
-         if (results)
-            memcpy(pFloat, results, sizeof(float) * slen);
-         else
-            memset(pFloat, 0, sizeof(float) * slen);
-      }
+      const auto results =
+         cache.GetFloats((backwards ? pos - (slen - 1) : pos), slen, mMayThrow);
+      if (results)
+         memcpy(pFloat, results, sizeof(float) * slen);
+      else
+         memset(pFloat, 0, sizeof(float) * slen);
    }
 
    if (backwards)
