@@ -33,14 +33,11 @@ class AudioIOBase;
 class AudioIO;
 class RingBuffer;
 class Mixer;
+class OtherPlayableSequence;
 class RealtimeEffectState;
 class Resample;
 
 class AudacityProject;
-
-class PlayableTrack;
-using PlayableTrackConstArray =
-   std::vector < std::shared_ptr < const PlayableTrack > >;
 
 class Track;
 class SampleTrack;
@@ -80,7 +77,8 @@ struct AudioIOEvent {
 struct AUDIO_IO_API TransportTracks final {
    SampleTrackConstArray playbackTracks;
    WritableSampleTrackArray captureTracks;
-   PlayableTrackConstArray otherPlayableTracks;
+   std::vector<std::shared_ptr<const OtherPlayableSequence>>
+      otherPlayableSequences;
 
    // This is a subset of playbackTracks
    SampleTrackConstArray prerollTracks;

@@ -555,12 +555,12 @@ bool MIDIPlay::StartOtherStream(const TransportTracks &tracks,
    const PaStreamInfo* info, double, double rate)
 {
    mMidiPlaybackTracks.clear();
-   for (const auto &pTrack : tracks.otherPlayableTracks) {
-      pTrack->TypeSwitch( [&](const NoteTrack *pNoteTrack){
+   for (const auto &pSequence : tracks.otherPlayableSequences)
+      if (const auto pNoteTrack =
+         dynamic_cast<const NoteTrack *>(pSequence.get())
+      )
          mMidiPlaybackTracks.push_back(
             pNoteTrack->SharedPointer<const NoteTrack>());
-      } );
-   }
 
    streamStartTime = 0;
    streamStartTime = SystemTime(mUsingAlsa);

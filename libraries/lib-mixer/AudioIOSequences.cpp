@@ -12,3 +12,5 @@
 PlayableSequence::~PlayableSequence() = default;
 
 RecordableSequence::~RecordableSequence() = default;
+
+OtherPlayableSequence::~OtherPlayableSequence() = default;

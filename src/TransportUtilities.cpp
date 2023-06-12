@@ -13,6 +13,7 @@
 
 #include <thread>
 #include "AudioIO.h"
+#include "AudioIOSequences.h"
 #include "commands/CommandContext.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -218,8 +219,11 @@ TransportTracks MakeTransportTracks(
          (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
          if (!track_cast<const SampleTrack *>(pTrack))
-            result.otherPlayableTracks.push_back(
-               pTrack->SharedPointer<const PlayableTrack>() );
+            if (auto pSequence =
+               std::dynamic_pointer_cast<const OtherPlayableSequence>(
+                  pTrack->shared_from_this())
+            )
+               result.otherPlayableSequences.push_back(pSequence);
    }
 #endif
    return result;

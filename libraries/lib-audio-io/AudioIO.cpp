@@ -886,7 +886,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    auto pListener = GetListener();
 
    if (tracks.playbackTracks.size() > 0
-      || tracks.otherPlayableTracks.size() > 0)
+      || tracks.otherPlayableSequences.size() > 0)
       playbackChannels = 2;
 
    if (mSoftwarePlaythrough)

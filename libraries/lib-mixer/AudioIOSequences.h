@@ -71,4 +71,11 @@ struct MIXER_API RecordableSequence {
 
 using RecordableSequences = std::vector<std::shared_ptr<RecordableSequence>>;
 
+//! This is defined just to enable `dynamic_cast` on it
+class MIXER_API OtherPlayableSequence
+{
+public:
+   virtual ~OtherPlayableSequence();
+};
+
 #endif
