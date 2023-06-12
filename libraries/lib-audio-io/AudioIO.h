@@ -263,11 +263,13 @@ public:
    std::thread mAudioThread;
    std::atomic<bool> mFinishAudioThread{ false };
 
-   ArrayOf<std::unique_ptr<Resample>> mResample;
-   ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
+   std::vector<std::unique_ptr<Resample>> mResample;
+
+   using RingBuffers = std::vector<std::unique_ptr<RingBuffer>>;
+   RingBuffers mCaptureBuffers;
    RecordableSequences mCaptureSequences;
    /*! Read by worker threads but unchanging during playback */
-   ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
+   RingBuffers mPlaybackBuffers;
    ConstPlayableSequences      mPlaybackSequences;
    // Old gain is used in playback in linearly interpolating
    // the gain.
@@ -336,6 +338,8 @@ public:
    PaError             mLastPaError;
 
 protected:
+   static size_t MinValue(
+      const RingBuffers &buffers, size_t (RingBuffer::*pmf)() const);
 
    float GetMixerOutputVol() {
       return mMixerOutputVol.load(std::memory_order_relaxed); }

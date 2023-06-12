@@ -867,12 +867,12 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       }
    });
 
-   mPlaybackBuffers.reset();
+   mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mPlaybackMixers.clear();
-   mCaptureBuffers.reset();
-   mResample.reset();
+   mCaptureBuffers.clear();
+   mResample.clear();
    mPlaybackSchedule.mTimeQueue.Clear();
 
    mPlaybackSchedule.Init(
@@ -1165,7 +1165,8 @@ bool AudioIO::AllocateBuffers(
             mPlaybackRingBufferSecs = PlaybackPolicy::Duration { playbackBufferSize / mRate };
 
             // Always make at least one playback buffer
-            mPlaybackBuffers.reinit(
+            mPlaybackBuffers.resize(0);
+            mPlaybackBuffers.resize(
                std::max<size_t>(1, mPlaybackSequences.size()));
             // Number of scratch buffers depends on device playback channels
             if (mNumPlaybackChannels > 0) {
@@ -1266,8 +1267,10 @@ bool AudioIO::AllocateBuffers(
                return false;
             }
 
-            mCaptureBuffers.reinit(mCaptureSequences.size());
-            mResample.reinit(mCaptureSequences.size());
+            mCaptureBuffers.resize(0);
+            mCaptureBuffers.resize(mCaptureSequences.size());
+            mResample.resize(0);
+            mResample.resize(mCaptureSequences.size());
             mFactor = sampleRate / mRate;
 
             for( unsigned int i = 0; i < mCaptureSequences.size(); i++ )
@@ -1311,12 +1314,12 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 {
    mpTransportState.reset();
 
-   mPlaybackBuffers.reset();
+   mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mPlaybackMixers.clear();
-   mCaptureBuffers.reset();
-   mResample.reset();
+   mCaptureBuffers.clear();
+   mResample.clear();
    mPlaybackSchedule.mTimeQueue.Clear();
 
    if(!bOnlyBuffers)
@@ -1476,7 +1479,7 @@ void AudioIO::StopStream()
    //
    if (mPlaybackSequences.size() > 0)
    {
-      mPlaybackBuffers.reset();
+      mPlaybackBuffers.clear();
       mScratchBuffers.clear();
       mScratchPointers.clear();
       mPlaybackMixers.clear();
@@ -1490,8 +1493,8 @@ void AudioIO::StopStream()
       //
       if (mCaptureSequences.size() > 0)
       {
-         mCaptureBuffers.reset();
-         mResample.reset();
+         mCaptureBuffers.clear();
+         mResample.clear();
 
          //
          // We only apply latency correction when we actually played back
@@ -1790,13 +1793,18 @@ void AudioIO::AudioThread(std::atomic<bool> &finish)
    }
 }
 
+size_t AudioIoCallback::MinValue(
+   const RingBuffers &buffers, size_t (RingBuffer::*pmf)() const)
+{
+   return std::accumulate(buffers.begin(), buffers.end(),
+      std::numeric_limits<size_t>::max(),
+      [pmf](auto value, auto &pBuffer){
+         return std::min(value, (pBuffer.get()->*pmf)()); });
+}
 
 size_t AudioIO::GetCommonlyFreePlayback()
 {
-   auto commonlyAvail = mPlaybackBuffers[0]->AvailForPut();
-   for (unsigned i = 1; i < mPlaybackSequences.size(); ++i)
-      commonlyAvail = std::min(commonlyAvail,
-         mPlaybackBuffers[i]->AvailForPut());
+   auto commonlyAvail = MinValue(mPlaybackBuffers, &RingBuffer::AvailForPut);
    // MB: subtract a few samples because the code in SequenceBufferExchange has rounding
    // errors
    return commonlyAvail - std::min(size_t(10), commonlyAvail);
@@ -1804,29 +1812,17 @@ size_t AudioIO::GetCommonlyFreePlayback()
 
 size_t AudioIoCallback::GetCommonlyReadyPlayback()
 {
-   auto commonlyAvail = mPlaybackBuffers[0]->AvailForGet();
-   for (unsigned i = 1; i < mPlaybackSequences.size(); ++i)
-      commonlyAvail = std::min(commonlyAvail,
-         mPlaybackBuffers[i]->AvailForGet());
-   return commonlyAvail;
+   return MinValue(mPlaybackBuffers, &RingBuffer::AvailForGet);
 }
 
 size_t AudioIoCallback::GetCommonlyWrittenForPlayback()
 {
-   auto commonlyAvail = mPlaybackBuffers[0]->WrittenForGet();
-   for (unsigned i = 1; i < mPlaybackSequences.size(); ++i)
-      commonlyAvail = std::min(commonlyAvail,
-         mPlaybackBuffers[i]->WrittenForGet());
-   return commonlyAvail;
+   return MinValue(mPlaybackBuffers, &RingBuffer::WrittenForGet);
 }
 
 size_t AudioIO::GetCommonlyAvailCapture()
 {
-   auto commonlyAvail = mCaptureBuffers[0]->AvailForGet();
-   for (unsigned i = 1; i < mCaptureSequences.size(); ++i)
-      commonlyAvail = std::min(commonlyAvail,
-         mCaptureBuffers[i]->AvailForGet());
-   return commonlyAvail;
+   return MinValue(mCaptureBuffers, &RingBuffer::AvailForGet);
 }
 
 // This method is the data gateway between the audio thread (which
@@ -1888,8 +1884,8 @@ void AudioIO::FillPlayBuffers()
       indicates the readiness of sample data to the consumer.  That atomic
       also synchronizes the use of the TimeQueue.
       */
-      for (size_t i = 0; i < std::max(size_t{1}, mPlaybackSequences.size()); ++i)
-         mPlaybackBuffers[i]->Flush();
+      for (const auto &pBuffer : mPlaybackBuffers)
+         pBuffer->Flush();
    };
 
    while (true) {
@@ -3181,8 +3177,6 @@ int AudioIoCallback::CallbackDoSeek()
       // This stream got destroyed while we waited for it
       return paAbort;
 
-   const auto numPlaybackSequences = mPlaybackSequences.size();
-
    // Pause audio thread and wait for it to finish
    //
    // [PM] the following 8 lines of code could be probably replaced by
@@ -3215,12 +3209,9 @@ int AudioIoCallback::CallbackDoSeek()
    // Reset mixer positions and flush buffers for all sequences
    for (auto &mixer : mPlaybackMixers)
       mixer->Reposition( time, true );
-   for (size_t i = 0; i < numPlaybackSequences; i++)
-   {
-      const auto toDiscard =
-         mPlaybackBuffers[i]->AvailForGet();
-      const auto discarded =
-         mPlaybackBuffers[i]->Discard( toDiscard );
+   for (auto &buffer : mPlaybackBuffers) {
+      const auto toDiscard = buffer->AvailForGet();
+      const auto discarded = buffer->Discard( toDiscard );
       // wxASSERT( discarded == toDiscard );
       // but we can't assert in this thread
       wxUnusedVar(discarded);
