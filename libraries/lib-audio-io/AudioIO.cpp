@@ -1523,8 +1523,7 @@ void AudioIO::StopStream()
          }
 
 
-         if (!mLostCaptureIntervals.empty())
-         {
+         if (!mLostCaptureIntervals.empty()) {
             // This scope may combine many splittings of wave tracks
             // into one transaction, lessening the number of checkpoints
             std::optional<TransactionScope> pScope;
@@ -1535,7 +1534,7 @@ void AudioIO::StopStream()
                auto duration = interval.second;
                for (auto &track : mCaptureTracks) {
                   GuardedCall([&] {
-                     track->SyncLockAdjust(start, start + duration);
+                     track->InsertSilence(start, duration);
                   });
                }
             }
