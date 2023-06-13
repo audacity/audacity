@@ -504,16 +504,20 @@ bool Exporter::ExamineTracks()
    double earliestBegin = mT1;
    double latestEnd = mT0;
 
-   auto &tracks = TrackList::Get( *mProject );
+   auto &tracks = TrackList::Get(*mProject);
 
    bool anySolo =
       !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
 
-   for (auto tr :
-         tracks.Any< const WaveTrack >()
-            + ( mSelectedOnly ? &Track::IsSelected : &Track::Any )
-            - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)
-   ) {
+   const auto range = tracks.Leaders<const WaveTrack>()
+      + (mSelectedOnly ? &Track::IsSelected : &Track::Any)
+      - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
+
+   mMono = std::all_of(range.begin(), range.end(), [](const WaveTrack *pTrack){
+      return IsMono(*pTrack) && pTrack->GetPan() == 0.0;
+   });
+
+   for (auto tr : range) {
       mNumSelected++;
 
       if (tr->GetOffset() < earliestBegin) {
@@ -799,19 +803,12 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    int exportedChannels = mPlugins[mFormat]->SetNumExportChannels();
 
    if (downMix) {
-      if (mNumRight > 0 || mNumLeft > 0) {
-         mChannels = 2;
-      }
-      else {
-         mChannels = 1;
-      }
-      mChannels = std::min(mChannels,
-                           mPlugins[mFormat]->GetMaxChannels(mSubFormat));
+      unsigned channels = mMono ? 1 : 2;
+      mChannels =
+         std::min(channels, mPlugins[mFormat]->GetMaxChannels(mSubFormat));
 
-      auto numLeft =  mNumLeft + mNumMono;
-      auto numRight = mNumRight + mNumMono;
-
-      if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
+      if (mNumSelected > 1 || channels > mChannels) {
+         // May give a message about mixing-down
          wxString exportFormat = mPlugins[mFormat]->GetFormat(mSubFormat);
          if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
             exportedChannels = mChannels;
