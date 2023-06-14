@@ -92,7 +92,7 @@ static const auto PathStart = L"Importers";
 
 Registry::GroupItemBase &Importer::ImporterItem::Registry()
 {
-   static Registry::GroupItem<> registry{ PathStart };
+   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
    return registry;
 }
 
@@ -148,7 +148,7 @@ bool Importer::Initialize()
       {
          // Once only, visit the registry to collect the plug-ins properly
          // sorted
-         GroupItem<> top{ PathStart };
+         GroupItem<Registry::DefaultTraits> top{ PathStart };
          Registry::Visit( *this, &top, &ImporterItem::Registry() );
       }
 

@@ -1014,8 +1014,9 @@ PopupMenuTable::AttachedItem sAttachment{
    { "SubViews/Extra" },
    std::make_unique<PopupMenuSection>( "SpectrogramSettings",
       // Conditionally add menu item for settings, if showing spectrum
-      PopupMenuTable::Computed< WaveTrackPopupMenuTable >(
-         []( WaveTrackPopupMenuTable &table ) -> Registry::BaseItemPtr {
+      PopupMenuTable::Adapt< WaveTrackPopupMenuTable >(
+         [](WaveTrackPopupMenuTable &table)
+         {
             using Entry = PopupMenuTable::Entry;
             static const int OnSpectrogramSettingsID =
             GetWaveTrackMenuTable().ReserveId();
@@ -1027,13 +1028,13 @@ PopupMenuTable::AttachedItem sAttachment{
                displays.begin(), displays.end(),
                WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
             ) );
-            if( hasSpectrum )
+            return hasSpectrum
                // In future, we might move this to the context menu of the
                // Spectrum vertical ruler.
                // (But the latter won't be satisfactory without a means to
                // open that other context menu with keystrokes only, and that
                // would require some notion of a focused sub-view.)
-               return std::make_unique<Entry>( "SpectrogramSettings",
+               ? std::make_unique<Entry>("SpectrogramSettings",
                   Entry::Item,
                   OnSpectrogramSettingsID,
                   XXO("S&pectrogram Settings..."),
@@ -1045,9 +1046,8 @@ PopupMenuTable::AttachedItem sAttachment{
                      // We can't change them on the fly yet anyway.
                      auto gAudioIO = AudioIOBase::Get();
                      menu.Enable(id, !gAudioIO->IsBusy());
-                  } );
-            else
-               return nullptr;
+                  } )
+               : nullptr;
          } ) )
 };
 }

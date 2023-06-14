@@ -68,7 +68,7 @@ public:
    unsigned mRepeatToolFlags;
 };
 
-struct ToolbarMenuVisitor;
+struct ProjectMenuVisitor;
 
 //! Sent when menus update (such as for changing enablement of items)
 struct MenuUpdateMessage {};
@@ -90,7 +90,7 @@ public:
    MenuManager &operator=( const MenuManager & ) PROHIBITED;
    ~MenuManager();
 
-   static void Visit( ToolbarMenuVisitor &visitor );
+   static void Visit(ProjectMenuVisitor &visitor);
 
    static void ModifyUndoMenuItems(AudacityProject &project);
 

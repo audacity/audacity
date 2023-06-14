@@ -1154,8 +1154,8 @@ PopupMenuTable::AttachedItem sAttachment{
    { "SubViews/Extra" },
    std::make_unique<PopupMenuSection>( "WaveColor",
       // Conditionally add sub-menu for wave color, if showing waveform
-      PopupMenuTable::Computed< WaveTrackPopupMenuTable >(
-         []( WaveTrackPopupMenuTable &table ) -> Registry::BaseItemPtr {
+      PopupMenuTable::Adapt<WaveTrackPopupMenuTable>(
+         [](WaveTrackPopupMenuTable &table) {
             const auto pTrack = &table.FindWaveTrack();
             const auto &view = WaveTrackView::Get( *pTrack );
             const auto displays = view.GetDisplays();
@@ -1163,11 +1163,10 @@ PopupMenuTable::AttachedItem sAttachment{
                displays.begin(), displays.end(),
                WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
             ) );
-            if( hasWaveform )
-               return Registry::Indirect(WaveColorMenuTable::Instance()
-                  .Get(table.mpData));
-            else
-               return nullptr;
+            return hasWaveform
+               ? Registry::Indirect(WaveColorMenuTable::Instance()
+                  .Get(table.mpData))
+               : nullptr;
          } ) )
 };
 }

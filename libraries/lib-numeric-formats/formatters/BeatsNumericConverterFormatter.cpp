@@ -355,12 +355,12 @@ Registry::BaseItemPtr BuildBeatsGroup(bool timeFormat)
 }
 
 NumericConverterItemRegistrator beatsTime {
-   Registry::Placement { {}, { Registry::OrderingHint::After, L"parsedTime" } },
+   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedTime" } },
    BuildBeatsGroup(true)
 };
 
 NumericConverterItemRegistrator beatsDuration {
-   Registry::Placement { {}, { Registry::OrderingHint::After, L"parsedDuration" } },
+   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedDuration" } },
    BuildBeatsGroup(false)
 };
 } // namespace
