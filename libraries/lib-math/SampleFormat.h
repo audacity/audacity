@@ -104,6 +104,17 @@ private:
    sampleFormat m_Stored;
 };
 
+inline bool operator == (SampleFormats a, SampleFormats b)
+{
+   return a.Effective() == b.Effective() &&
+      a.Stored() == b.Stored();
+}
+
+inline bool operator != (SampleFormats a, SampleFormats b)
+{
+   return !(a == b);
+}
+
 //
 // Allocating/Freeing Samples
 //

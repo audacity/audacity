@@ -21,6 +21,7 @@
 
 #include <wx/longlong.h>
 
+#include <cassert>
 #include <vector>
 #include <functional>
 
@@ -50,15 +51,13 @@ public:
    int width;
    sampleCount *where;
    float *min, *max, *rms;
-   int* bl;
 
    std::vector<sampleCount> ownWhere;
    std::vector<float> ownMin, ownMax, ownRms;
-   std::vector<int> ownBl;
 
 public:
    WaveDisplay(int w)
-      : width(w), where(0), min(0), max(0), rms(0), bl(0)
+      : width(w), where(0), min(0), max(0), rms(0)
    {
    }
 
@@ -69,18 +68,15 @@ public:
       ownMin.resize(width);
       ownMax.resize(width);
       ownRms.resize(width);
-      ownBl.resize(width);
 
       where = &ownWhere[0];
       if (width > 0) {
          min = &ownMin[0];
          max = &ownMax[0];
          rms = &ownRms[0];
-         bl = &ownBl[0];
       }
       else {
          min = max = rms = 0;
-         bl = 0;
       }
    }
 
@@ -109,25 +105,44 @@ private:
 public:
    using Caches = Site< WaveClip, WaveClipListener >;
 
-   // typical constructor
-   WaveClip(const SampleBlockFactoryPtr &factory, sampleFormat format,
+   //! typical constructor
+   /*!
+    @param width how many sequences
+    @pre `width > 0`
+    @post `GetWidth() == width`
+    */
+   WaveClip(size_t width,
+      const SampleBlockFactoryPtr &factory, sampleFormat format,
       int rate, int colourIndex);
 
-   // essentially a copy constructor - but you must pass in the
-   // current sample block factory, because we might be copying
-   // from one project to another
+   //! essentially a copy constructor - but you must pass in the
+   //! current sample block factory, because we might be copying
+   //! from one project to another
+   /*!
+    @post `GetWidth() == orig.GetWidth()`
+    */
    WaveClip(const WaveClip& orig,
             const SampleBlockFactoryPtr &factory,
             bool copyCutlines);
 
    //! @brief Copy only a range from the given WaveClip
-   //! @pre CountSamples(t1, t0) > 0
+   /*!
+    @pre CountSamples(t1, t0) > 0
+    @post `GetWidth() == orig.GetWidth()`
+    */
    WaveClip(const WaveClip& orig,
             const SampleBlockFactoryPtr &factory,
             bool copyCutlines,
             double t0, double t1);
 
    virtual ~WaveClip();
+
+   //! Check invariant conditions on mSequences and mCutlines
+   bool CheckInvariants() const;
+
+   //! How many Sequences the clip contains.
+   //! Set at construction time; changes only if increased by deserialization
+   size_t GetWidth() const;
 
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
@@ -156,7 +171,8 @@ public:
    sampleCount GetSequenceStartSample() const;
    //! Returns the index of the sample next after the last sample of the underlying sequence
    sampleCount GetSequenceEndSample() const;
-   //! Returns the total number of samples in underlying sequence (not counting the cutlines)
+   //! Returns the total number of samples in all underlying sequences
+   //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
    double GetPlayStartTime() const noexcept;
@@ -204,9 +220,26 @@ public:
    //! @returns Number of samples within t0 and t1 if t1 > t0, 0 otherwise
    sampleCount CountSamples(double t0, double t1) const;
 
-   bool GetSamples(samplePtr buffer, sampleFormat format,
+   //! Get samples from one channel
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   bool GetSamples(size_t ii, samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
-   void SetSamples(constSamplePtr buffer, sampleFormat format,
+
+   //! Get (non-interleaved) samples from all channels
+   /*!
+    assume as many buffers available as GetWidth()
+    */
+   bool GetSamples(samplePtr buffers[], sampleFormat format,
+                   sampleCount start, size_t len, bool mayThrow = true) const;
+
+   //! @param ii identifies the channel
+   /*!
+    @pre `ii < GetWidth()`
+    */
+   void SetSamples(size_t ii, constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       sampleFormat effectiveFormat /*!<
          Make the effective format of the data at least the minumum of this
@@ -218,14 +251,31 @@ public:
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
-   BlockArray* GetSequenceBlockArray();
-   const BlockArray* GetSequenceBlockArray() const;
 
-   // Get low-level access to the sequence. Whenever possible, don't use this,
-   // but use more high-level functions inside WaveClip (or add them if you
-   // think they are useful for general use)
-   Sequence* GetSequence() { return mSequence.get(); }
-   const Sequence* GetSequence() const { return mSequence.get(); }
+   //! @param ii identifies the channel
+   /*!
+    @pre `ii < GetWidth()`
+    */
+   BlockArray* GetSequenceBlockArray(size_t ii);
+   /*!
+    @copydoc GetSequenceBlockArray
+    */
+   const BlockArray* GetSequenceBlockArray(size_t ii) const;
+
+   //! Get low-level access to a sequence. Whenever possible, don't use this,
+   //! but use more high-level functions inside WaveClip (or add them if you
+   //! think they are useful for general use)
+   /*!
+    @pre `ii < GetWidth()`
+    */
+   Sequence* GetSequence(size_t ii) {
+      assert(ii < GetWidth());
+      return mSequences[ii].get();
+   }
+   /*!
+    @copydoc GetSequence
+    */
+   const Sequence* GetSequence(size_t ii) const { return mSequences[ii].get(); }
 
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
@@ -233,11 +283,18 @@ public:
    /*! @excsafety{No-fail} */
    void MarkChanged();
 
-   /** Getting high-level data for screen display and clipping
+   /** Getting high-level data for one channel for screen display and clipping
     * calculations and Contrast */
-   std::pair<float, float> GetMinMax(
-      double t0, double t1, bool mayThrow = true) const;
-   float GetRMS(double t0, double t1, bool mayThrow = true) const;
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   std::pair<float, float> GetMinMax(size_t ii,
+      double t0, double t1, bool mayThrow) const;
+   /*!
+    @copydoc GetMinMax
+    */
+   float GetRMS(size_t ii, double t0, double t1, bool mayThrow) const;
 
    /** Whenever you do an operation to the sequence that will change the number
     * of samples (that is, the length of the clip), you will want to call this
@@ -245,15 +302,23 @@ public:
    void UpdateEnvelopeTrackLen();
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
+   //! @pre `GetWidth() == 1`
    std::shared_ptr<SampleBlock> AppendNewBlock(
       samplePtr buffer, sampleFormat format, size_t len);
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   //! @pre `GetWidth() == 1`
    void AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
 
-   /// You must call Flush after the last Append
-   /// @return true if at least one complete block was created
-   bool Append(constSamplePtr buffer, sampleFormat format,
+   //! Append (non-interleaved) samples to all channels
+   //! You must call Flush after the last Append
+   /*!
+    @return true if at least one complete block was created
+    assume as many buffers available as GetWidth()
+    In case of failure or exceptions, the clip contents are unchanged but
+    un-flushed data are lost
+    */
+   bool Append(constSamplePtr buffers[], sampleFormat format,
       size_t len, unsigned int stride,
       sampleFormat effectiveFormat /*!<
          Make the effective format of the data at least the minumum of this
@@ -262,7 +327,12 @@ public:
          than the effective, then no dithering will occur.
       */
    );
-   /// Flush must be called after last Append
+
+   //! Flush must be called after last Append
+   /*!
+    In case of exceptions, the clip contents are unchanged but
+    un-flushed data are lost
+    */
    void Flush();
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
@@ -283,8 +353,11 @@ public:
    /// if there is at least one clip sample between t0 and t1, noop otherwise.
    void ClearAndAddCutLine(double t0, double t1);
 
-   /// Paste data from other clip, resampling it if not equal rate
-   void Paste(double t0, const WaveClip* other);
+   //! Paste data from other clip, resampling it if not equal rate
+   /*!
+    @return true and succeed if and only if `this->GetWidth() == other.GetWidth()`
+    */
+   bool Paste(double t0, const WaveClip &other);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */
@@ -318,8 +391,9 @@ public:
    /// Offset cutlines right to time 't0' by time amount 'len'
    void OffsetCutLines(double t0, double len);
 
-   void CloseLock(); //should be called when the project closes.
-   // not balanced by unlocking calls.
+   //! Should be called upon project close.  Not balanced by unlocking calls.
+   /*! @excsafety{No-fail} */
+   void CloseLock() noexcept;
 
    //
    // XMLTagHandler callback methods for loading and saving
@@ -346,15 +420,35 @@ public:
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
    void SetSilence(sampleCount offset, sampleCount length);
 
-   constSamplePtr GetAppendBuffer() const;
+   //! Get one channel of the append buffer
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   constSamplePtr GetAppendBuffer(size_t ii) const;
    size_t GetAppendBufferLen() const;
 
-protected:
+private:
+   sampleCount GetNumSamples() const;
+   SampleFormats GetSampleFormats() const;
+   const SampleBlockFactoryPtr &GetFactory();
+
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
    void ClearSequence(double t0, double t1);
 
-   
+   //! Restores state when an update loop over mSequences fails midway
+   struct Transaction {
+      explicit Transaction(WaveClip &clip);
+      ~Transaction();
+      void Commit() { committed = true; }
+
+      WaveClip &clip;
+      std::vector<std::unique_ptr<Sequence>> sequences;
+      const double mTrimLeft,
+         mTrimRight;
+      bool committed{ false };
+   };
 
    double mSequenceOffset { 0 };
    double mTrimLeft{ 0 };
@@ -363,11 +457,22 @@ protected:
    int mRate;
    int mColourIndex;
 
-   std::unique_ptr<Sequence> mSequence;
+   /*!
+    @invariant `mSequences.size() > 0`
+    @invariant all are non-null
+    @invariant all sequences have the same lengths, append buffer lengths,
+      sample formats, and sample block factory
+    @invariant all cutlines have the same width
+    */
+   std::vector<std::unique_ptr<Sequence>> mSequences;
+   //! Envelope is unique, not per-sequence
    std::unique_ptr<Envelope> mEnvelope;
 
-   // Cut Lines are nothing more than ordinary wave clips, with the
-   // offset relative to the start of the clip.
+   //! Cut Lines are nothing more than ordinary wave clips, with the
+   //! offset relative to the start of the clip.
+   /*!
+    @invariant all are non-null
+    */
    WaveClipHolders mCutLines {};
 
    // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting

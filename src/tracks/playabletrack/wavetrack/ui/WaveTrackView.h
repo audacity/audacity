@@ -44,7 +44,7 @@ public:
    using Type = WaveTrackSubViewType;
 
    explicit
-   WaveTrackSubView( WaveTrackView &waveTrackView );
+   WaveTrackSubView(WaveTrackView &waveTrackView);
    
    virtual const Type &SubViewType() const = 0;
 
@@ -70,6 +70,9 @@ protected:
    std::vector<MenuItem> GetMenuItems(
       const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
    override;
+
+   // Which channel of a WaveTrack (it may contain wide clips)
+   const size_t mChannel;
 
 private:
    std::weak_ptr<SubViewCloseHandle> mCloseHandle;
@@ -109,9 +112,14 @@ public:
    static WaveTrackView *Find( WaveTrack *pTrack );
    static const WaveTrackView *Find( const WaveTrack *pTrack );
 
-   explicit
-   WaveTrackView( const std::shared_ptr<Track> &pTrack );
+   //! Construct a view of one channel
+   /*!
+    @param channel which channel of a possibly wide wave track
+    */
+   WaveTrackView(const std::shared_ptr<Track> &pTrack, size_t channel);
    ~WaveTrackView() override;
+
+   size_t GetChannel() const { return mChannel; }
 
    // Preserve some view state too for undo/redo purposes
    void CopyTo( Track &track ) const override;
@@ -231,6 +239,8 @@ private:
    std::weak_ptr<TrackPanelCell> mKeyEventDelegate;
 
    std::weak_ptr<WaveTrackAffordanceHandle> mAffordanceHandle;
+
+   const size_t mChannel;
 };
 
 // Helper for drawing routines

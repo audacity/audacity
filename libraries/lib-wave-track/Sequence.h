@@ -68,6 +68,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    Sequence(const SampleBlockFactoryPtr &pFactory, SampleFormats formats);
 
+   //! Does not copy un-flushed append buffer data
    Sequence(const Sequence &orig, const SampleBlockFactoryPtr &pFactory);
 
    Sequence( const Sequence& ) = delete;
@@ -166,8 +167,9 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    // Lock all of this sequence's sample blocks, keeping them
    // from being destroyed when closing.
 
-   bool CloseLock();//should be called upon project close.
-   // not balanced by unlocking calls.
+   //! Should be called upon project close.  Not balanced by unlocking calls.
+   /*! @excsafety{No-fail} */
+   bool CloseLock() noexcept;
 
    //
    // Manipulating Sample Format
@@ -175,7 +177,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    SampleFormats GetSampleFormats() const;
 
-   //! @return whether there was a change
+   //! @return whether there was a change of format
    /*! @excsafety{Strong} */
    bool ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});

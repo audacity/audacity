@@ -35,7 +35,7 @@ public:
       const std::shared_ptr<SqliteSampleBlockFactory> &pFactory);
    ~SqliteSampleBlock() override;
 
-   void CloseLock() override;
+   void CloseLock() noexcept override;
 
    void SetSamples(
       constSamplePtr src, size_t numsamples, sampleFormat srcformat);
@@ -348,7 +348,7 @@ DBConnection *SqliteSampleBlock::Conn() const
    return pConnection.get();
 }
 
-void SqliteSampleBlock::CloseLock()
+void SqliteSampleBlock::CloseLock() noexcept
 {
    mLocked = true;
 }

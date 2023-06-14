@@ -31,9 +31,9 @@ class TimeWarper;
 class Sequence;
 class WaveClip;
 
-// Array of pointers that assume ownership
-using WaveClipHolder = std::shared_ptr< WaveClip >;
-using WaveClipHolders = std::vector < WaveClipHolder >;
+//! Clips are held by shared_ptr, not for sharing, but to allow weak_ptr
+using WaveClipHolder = std::shared_ptr<WaveClip>;
+using WaveClipHolders = std::vector <WaveClipHolder>;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
 // Temporary arrays of mere pointers
@@ -81,6 +81,9 @@ public:
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
    //! Copied only in WaveTrack::Clone() !
    WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&);
+
+   //! The width of every WaveClip in this track; for now always 1
+   size_t GetWidth() const;
 
    // overwrite data excluding the sample sequence but including display
    // settings
@@ -143,6 +146,8 @@ private:
    void SetWaveColorIndex(int colorIndex);
 
    sampleCount GetPlaySamplesCount() const;
+   //! Returns the total number of samples in all underlying sequences
+   //! of all clips (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
    sampleFormat GetSampleFormat() const override { return mFormat; }
@@ -217,11 +222,11 @@ private:
     */
    bool IsEmpty(double t0, double t1) const;
 
-   /*
-    * If there is an existing WaveClip in the WaveTrack then the data is
-    * appended to that clip. If there are no WaveClips in the track, then a NEW
-    * one is created.
-    *
+   /*!
+    If there is an existing WaveClip in the WaveTrack then the data are
+    appended to that clip. If there are no WaveClips in the track, then a new
+    one is created.
+    @return true if at least one complete block was created
     */
    bool Append(constSamplePtr buffer, sampleFormat format,
       size_t len, unsigned int stride = 1,
@@ -240,6 +245,10 @@ private:
    /// guaranteed that the same samples are affected.
    ///
 
+   /*!
+    Get from the unique channel
+    TODO wide wave tracks -- overloads to get from one or from all channels
+    */
    bool Get(samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       fillFormat fill = fillZero,
@@ -248,6 +257,10 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const override;
+   /*!
+    Set samples in the unique channel
+    TODO wide wave tracks -- overloads to set one or all channels
+    */
    void Set(constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       sampleFormat effectiveFormat = widestSampleFormat /*!<
@@ -265,19 +278,26 @@ private:
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const override;
 
-   // May assume precondition: t0 <= t1
+   // Get min and max from the unique channel
+   /*!
+    @pre `t0 <= t1`
+    TODO wide wave tracks -- require a channel number
+    */
    std::pair<float, float> GetMinMax(
       double t0, double t1, bool mayThrow = true) const;
-   // May assume precondition: t0 <= t1
+
+   // Get RMS from the unique channel
+   /*!
+    @pre `t0 <= t1`
+    TODO wide wave tracks -- require a channel number
+    */
    float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //
    // MM: We now have more than one sequence and envelope per track, so
-   // instead of GetSequence() and GetEnvelope() we have the following
-   // function which give the sequence and envelope which contains the given
-   // time.
+   // instead of GetEnvelope() we have the following function which gives the
+   // envelope that contains the given time.
    //
-   Sequence* GetSequenceAtTime(double time);
    Envelope* GetEnvelopeAtTime(double time);
 
    WaveClip* GetClipAtTime(double time);
@@ -311,12 +331,19 @@ private:
    // doing a copy and paste between projects.
    //
 
-   bool CloseLock(); //should be called when the project closes.
-   // not balanced by unlocking calls.
+   //! Should be called upon project close.  Not balanced by unlocking calls.
+   /*! @excsafety{No-fail} */
+   bool CloseLock() noexcept;
 
-   // Get access to the (visible) clips in the tracks, in unspecified order
-   // (not necessarily sequenced in time).
+   //! Get access to the (visible) clips in the tracks, in unspecified order
+   //! (not necessarily sequenced in time).
+   /*!
+    @post all pointers are non-null
+    */
    WaveClipHolders &GetClips() { return mClips; }
+   /*!
+    @copydoc GetClips
+    */
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
@@ -408,9 +435,13 @@ private:
       return { AllClipsConstIterator{ *this }, AllClipsConstIterator{ } };
    }
    
-   // Create NEW clip and add it to this track. Returns a pointer
-   // to the newly created clip. Optionally initial offset and
-   // clip name may be provided
+   //! Create new clip and add it to this track.
+   /*!
+    Returns a pointer to the newly created clip. Optionally initial offset and
+    clip name may be provided
+
+    @post result: `result->GetWidth() == GetWidth()`
+    */
    WaveClip* CreateClip(double offset = .0, const wxString& name = wxEmptyString);
 
    /** @brief Get access to the most recently added clip, or create a clip,
@@ -430,10 +461,15 @@ private:
    // Get the linear index of a given clip (-1 if the clip is not found)
    int GetClipIndex(const WaveClip* clip) const;
 
-   // Get the nth clip in this WaveTrack (will return NULL if not found).
-   // Use this only in special cases (like getting the linked clip), because
-   // it is much slower than GetClipIterator().
+   //! Get the nth clip in this WaveTrack (will return nullptr if not found).
+   /*!
+    Use this only in special cases (like getting the linked clip), because
+    it is much slower than GetClipIterator().
+    */
    WaveClip *GetClipByIndex(int index);
+   /*!
+    @copydoc GetClipByIndex
+    */
    const WaveClip* GetClipByIndex(int index) const;
 
    // Get number of clips in this WaveTrack
@@ -464,7 +500,12 @@ private:
    // You assume responsibility for its memory!
    std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
-   //! Append a clip to the track; which must have the same block factory as this track; return success
+   //! Append a clip to the track; to succeed, must have the same block factory
+   //! as this track, and `this->GetWidth() == clip->GetWidth()`; return success
+   /*!
+    @pre `clip != nullptr`
+    @pre `this->GetWidth() == clip->GetWidth()`
+    */
    bool AddClip(const std::shared_ptr<WaveClip> &clip);
 
    // Merge two clips, that is append data from clip2 to clip1,
@@ -490,13 +531,16 @@ private:
 
    class IntervalData final : public Track::IntervalData {
    public:
+      /*!
+       @pre `pClip != nullptr`
+       */
       explicit IntervalData( const std::shared_ptr<WaveClip> &pClip )
-      : pClip{ pClip }
+         : pClip{ pClip }
       {}
       std::shared_ptr<const WaveClip> GetClip() const { return pClip; }
-      std::shared_ptr<WaveClip> &GetClip() { return pClip; }
+      const std::shared_ptr<WaveClip> &GetClip() { return pClip; }
    private:
-      std::shared_ptr<WaveClip> pClip;
+      const std::shared_ptr<WaveClip> pClip;
    };
 
    Track::Holder PasteInto( AudacityProject & ) const override;
@@ -511,6 +555,9 @@ private:
    // Protected variables
    //
 
+   /*!
+    @invariant all are non-null and match `this->GetWidth()`
+    */
    WaveClipHolders mClips;
 
    sampleFormat  mFormat;

@@ -159,7 +159,7 @@ wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
    wxULongLong result{};
    ForEachCopiedWaveTrack(src, dst, [&](const WaveTrack& waveTrack) {
       sampleCount samplesCount = 0;
-      for(auto& clip : waveTrack.GetClips())
+      for (auto& clip : waveTrack.GetClips())
          samplesCount += clip->GetSequenceSamplesCount();
       result += samplesCount.as_long_long() * SAMPLE_SIZE(waveTrack.GetSampleFormat());
    });
@@ -171,7 +171,8 @@ BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList
    BlockArray::size_type result{};
    ForEachCopiedWaveTrack(src, dst, [&](const WaveTrack& waveTrack) {
       for(auto& clip : waveTrack.GetClips())
-         result += clip->GetSequenceBlockArray()->size();
+         result +=
+            clip->GetWidth() * clip->GetSequenceBlockArray(0)->size();
    });
    return result;
 }

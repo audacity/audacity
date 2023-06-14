@@ -578,7 +578,8 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
 
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
-       clip.GetSequenceSamplesCount(),
+       // We want the length of only one channel of samples:
+       clip.GetSequenceSamplesCount() / clip.GetWidth(),
        clip.GetSequenceStartTime(), rate, pixelsPerSecond);
 
    mSpecCache->dirty = mDirty;

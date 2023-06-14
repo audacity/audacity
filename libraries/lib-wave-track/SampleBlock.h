@@ -51,7 +51,7 @@ public:
 
    virtual ~SampleBlock();
 
-   virtual void CloseLock() = 0;
+   virtual void CloseLock() noexcept = 0;
    
    virtual SampleBlockID GetBlockID() const = 0;
 

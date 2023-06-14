@@ -259,9 +259,11 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
                             XO("Processing...   0%%"),
                             pdlgHideStopButton };
 
+   // Simply finding a denominator for the progress dialog
    sampleCount totalSamples{ 0 };
    for (const auto& channel : TrackList::Channels(pTrack))
       // Hidden samples are processed too, they should be counted as well
+      // (Correctly counting all samples of all channels)
       totalSamples += channel->GetSequenceSamplesCount();
    sampleCount processedSamples{ 0 };
 

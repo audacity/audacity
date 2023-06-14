@@ -17,11 +17,11 @@ class WaveCache;
 
 struct WaveClipWaveformCache final : WaveClipListener
 {
-   WaveClipWaveformCache();
+   explicit WaveClipWaveformCache(size_t nChannels);
    ~WaveClipWaveformCache() override;
 
    // Cache of values for drawing the waveform
-   std::unique_ptr<WaveCache> mWaveCache;
+   std::vector<std::unique_ptr<WaveCache>> mWaveCaches;
    int mDirty { 0 };
 
    static WaveClipWaveformCache &Get( const WaveClip &clip );
@@ -33,8 +33,8 @@ struct WaveClipWaveformCache final : WaveClipListener
    void Clear();
 
    /** Getting high-level data for screen display */
-   bool GetWaveDisplay(const WaveClip &clip, WaveDisplay &display,
-                       double t0, double pixelsPerSecond);
+   bool GetWaveDisplay(const WaveClip &clip, size_t channel,
+      WaveDisplay &display, double t0, double pixelsPerSecond);
 };
 
 #endif
