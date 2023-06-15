@@ -1477,14 +1477,11 @@ void AudioIO::StopStream()
    // Everything is taken care of.  Now, just free all the resources
    // we allocated in StartStream()
    //
-   if (mPlaybackSequences.size() > 0)
-   {
-      mPlaybackBuffers.clear();
-      mScratchBuffers.clear();
-      mScratchPointers.clear();
-      mPlaybackMixers.clear();
-      mPlaybackSchedule.mTimeQueue.Clear();
-   }
+   mPlaybackBuffers.clear();
+   mScratchBuffers.clear();
+   mScratchPointers.clear();
+   mPlaybackMixers.clear();
+   mPlaybackSchedule.mTimeQueue.Clear();
 
    if (mStreamToken > 0)
    {
