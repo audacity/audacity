@@ -193,6 +193,9 @@ public:
       unsigned long framesPerBuffer
    );
 
+   /*!
+    @param[in,out] channelGain
+    */
    void AddToOutputChannel( unsigned int chan, // index into gains
       float * outputMeterFloats,
       float * outputFloats,
@@ -200,7 +203,7 @@ public:
       bool drop,
       unsigned long len,
       const PlayableSequence &ps,
-      OldChannelGains &gains
+      float &channelGain
    );
    bool FillOutputBuffers(
       float *outputBuffer,

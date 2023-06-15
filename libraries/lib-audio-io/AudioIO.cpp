@@ -2492,7 +2492,7 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    bool drop,
    unsigned long len,
    const PlayableSequence &ps,
-   OldChannelGains &gains)
+   float &channelGain)
 {
    const auto numPlaybackChannels = mNumPlaybackChannels;
 
@@ -2511,12 +2511,11 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    // Let's keep the old behavior for panning.
    gain *= ExpGain(GetMixerOutputVol());
 
-   float oldGain = gains[chan];
-   if( gain != oldGain )
-      gains[chan] = gain;
+   float oldGain = channelGain;
+   channelGain = gain;
    // if no microfades, jump in volume.
-   if( !mbMicroFades )
-      oldGain =gain;
+   if (!mbMicroFades)
+      oldGain = gain;
    wxASSERT(len > 0);
 
    // Linear interpolate.
@@ -2700,11 +2699,11 @@ bool AudioIoCallback::FillOutputBuffers(
 
          if (PlaysLeft(*vt))
             AddToOutputChannel(0, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, *vt, *oldgains[c % 2]);
+               tempBufs[c], drop, len, *vt, (*oldgains[c % 2])[0]);
 
          if (PlaysRight(*vt))
             AddToOutputChannel(1, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, *vt, *oldgains[c % 2]);
+               tempBufs[c], drop, len, *vt, (*oldgains[c % 2])[1]);
       }
 
       CallbackCheckCompletion(mCallbackReturn, len);
