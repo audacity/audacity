@@ -76,16 +76,16 @@ LabelTrack* LabelTrack::Create(TrackList& trackList)
    return Create(trackList, trackList.MakeUniqueTrackName(GetDefaultName()));
 }
 
-LabelTrack::LabelTrack():
-   Track(),
-   mClipLen(0.0),
-   miLastLabel(-1)
+LabelTrack::LabelTrack()
+   : UniqueChannelTrack{}
+   , mClipLen{ 0.0 }
+   , miLastLabel{ -1 }
 {
 }
 
 LabelTrack::LabelTrack(const LabelTrack &orig, ProtectedCreationArg &&a)
-   : Track(orig, std::move(a))
-   , mClipLen(0.0)
+   : UniqueChannelTrack{ orig, std::move(a) }
+   , mClipLen{ 0.0 }
 {
    for (auto &original: orig.mLabels) {
       LabelStruct l { original.selectedRegion, original.title };

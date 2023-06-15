@@ -18,6 +18,7 @@ and TimeTrack.
 #include "Track.h"
 
 #include <algorithm>
+#include <cassert>
 #include <numeric>
 
 #include <float.h>
@@ -35,6 +36,8 @@ and TimeTrack.
 //Disable truncation warnings
 #pragma warning( disable : 4786 )
 #endif
+
+Channel::~Channel() = default;
 
 Track::Track()
 :  vrulerSize(36,0)
@@ -1250,6 +1253,7 @@ TrackAttachment &ChannelAttachmentsBase::Get(
    const AttachedTrackObjects::RegisteredFactory &key,
    Track &track, size_t iChannel)
 {
+   assert(iChannel < track.NChannels());
    auto &attachments = track.AttachedObjects::Get<ChannelAttachmentsBase>(key);
    auto &objects = attachments.mAttachments;
    if (iChannel >= objects.size())
@@ -1267,6 +1271,7 @@ TrackAttachment *ChannelAttachmentsBase::Find(
    const AttachedTrackObjects::RegisteredFactory &key,
    Track *pTrack, size_t iChannel)
 {
+   assert(!pTrack || iChannel < pTrack->NChannels());
    if (!pTrack)
       return nullptr;
    const auto pAttachments =

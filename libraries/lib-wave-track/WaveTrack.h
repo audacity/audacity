@@ -50,7 +50,9 @@ using ChannelSampleView = std::vector<AudioSegmentSampleView>;
 
 class Envelope;
 
-class WAVE_TRACK_API WaveTrack final : public WritableSampleTrack
+class WAVE_TRACK_API WaveTrack final
+   : public WritableSampleTrack
+   , public Channel
 {
 public:
    /// \brief Structure to hold region of a wavetrack and a comparison function
@@ -567,6 +569,9 @@ private:
    //! Returns nullptr if clip with such name was not found
    const WaveClip* FindClipByName(const wxString& name) const;
  protected:
+
+   std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
+
    //
    // Protected variables
    //

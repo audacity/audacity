@@ -156,6 +156,12 @@ using AttachedTrackObjects = ClientData::Site<
    Track, TrackAttachment, ClientData::ShallowCopying, std::shared_ptr
 >;
 
+class TRACK_API Channel
+{
+public:
+   virtual ~Channel();
+};
+
 //! Abstract base class for an object holding data associated with points on a time axis
 class TRACK_API Track /* not final */
    : public XMLTagHandler
@@ -218,6 +224,38 @@ private:
  private:
    void SetId( TrackId id ) { mId = id; }
  public:
+
+   //! Report the number of channels a track has
+   /*!
+    @post result: `result >= 1`
+    */
+   virtual size_t NChannels() const = 0;
+
+   //! Retrieve a channel, cast to the given type
+   /*!
+    Postconditions imply that `GetChannel(0)` is always non-null
+
+    @post result: `!(iChannel < NChannels()) || result`
+    */
+   template<typename ChannelType = Channel>
+   std::shared_ptr<ChannelType> GetChannel(size_t iChannel)
+   {
+      return
+         std::dynamic_pointer_cast<ChannelType>(DoGetChannel(iChannel));
+   }
+
+   //! Non-virtual const overload
+   /*!
+    @copydetails GetChannel(size_t)
+    */
+   template<typename ChannelType = const Channel>
+   auto GetChannel(size_t iChannel) const
+      -> std::enable_if_t<std::is_const_v<ChannelType>,
+         std::shared_ptr<ChannelType>>
+   {
+      return std::dynamic_pointer_cast<ChannelType>(
+         const_cast<Track*>(this)->DoGetChannel(iChannel));
+   }
 
    // Given a bare pointer, find a shared_ptr.  Undefined results if the track
    // is not yet managed by a shared_ptr.  Undefined results if the track is
@@ -343,7 +381,12 @@ public:
    const ChannelGroupData &GetGroupData() const;
 
 protected:
-   
+   //! Retrieve a channel
+   /*!
+    @post result: `!(iChannel < NChannels()) || result`
+    */
+   virtual std::shared_ptr<Channel> DoGetChannel(size_t iChannel) = 0;
+
    /*!
     @param completeList only influences debug build consistency checking
     */
@@ -523,6 +566,26 @@ public:
 
 ENUMERATE_TRACK_TYPE(Track);
 
+//! Generates overrides of channel-related functions
+template<typename Base = Track>
+class UniqueChannelTrack
+   : public Base
+   , public Channel
+{
+public:
+   using Base::Base;
+   size_t NChannels() const override { return 1; }
+   std::shared_ptr<Channel> DoGetChannel(size_t iChannel) override
+   {
+      if (iChannel == 0) {
+         // Use aliasing constructor of std::shared_ptr
+         Channel *alias = this;
+         return { this->shared_from_this(), alias };
+      }
+      return {};
+   }
+};
+
 //! Holds multiple objects as a single attachment to Track
 class TRACK_API ChannelAttachmentsBase : public TrackAttachment
 {
@@ -543,9 +606,15 @@ public:
    override;
 
 protected:
+   /*!
+    @pre `iChannel < track.NChannels()`
+    */
    static TrackAttachment &Get(
       const AttachedTrackObjects::RegisteredFactory &key,
       Track &track, size_t iChannel);
+   /*!
+    @pre `!pTrack || iChannel < pTrack->NChannels()`
+    */
    static TrackAttachment *Find(
       const AttachedTrackObjects::RegisteredFactory &key,
       Track *pTrack, size_t iChannel);
@@ -563,6 +632,9 @@ class ChannelAttachments : public ChannelAttachmentsBase
 public:
    ~ChannelAttachments() override = default;
 
+   /*!
+    @pre `iChannel < track.NChannels()`
+    */
    static Attachment &Get(
       const AttachedTrackObjects::RegisteredFactory &key,
       Track &track, size_t iChannel)
@@ -570,6 +642,9 @@ public:
       return static_cast<Attachment&>(
          ChannelAttachmentsBase::Get(key, track, iChannel));
    }
+   /*!
+    @pre `!pTrack || iChannel < pTrack->NChannels()`
+    */
    static Attachment *Find(
       const AttachedTrackObjects::RegisteredFactory &key,
       Track *pTrack, size_t iChannel)

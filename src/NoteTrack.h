@@ -60,7 +60,7 @@ class StretchHandle;
 class TimeWarper;
 
 class AUDACITY_DLL_API NoteTrack final
-   : public NoteTrackBase
+   : public UniqueChannelTrack<NoteTrackBase>
    , public OtherPlayableSequence
 {
 public:

@@ -414,6 +414,20 @@ const WaveClip* WaveTrack::FindClipByName(const wxString& name) const
    return nullptr;
 }
 
+std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
+{
+   auto nChannels = NChannels();
+   if (iChannel >= nChannels)
+      return {};
+   auto pTrack = (iChannel == 0)
+      ? this
+      // TODO: more-than-two-channels
+      : *TrackList::Channels(this).rbegin();
+   // Use aliasing constructor of std::shared_ptr
+   ::Channel *alias = pTrack;
+   return { pTrack->shared_from_this(), alias };
+}
+
 Track::Holder WaveTrack::Clone() const
 {
    auto result = std::make_shared<WaveTrack>(*this, ProtectedCreationArg{});

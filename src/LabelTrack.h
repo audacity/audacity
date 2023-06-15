@@ -82,7 +82,7 @@ public:
 using LabelArray = std::vector<LabelStruct>;
 
 class AUDACITY_DLL_API LabelTrack final
-   : public Track
+   : public UniqueChannelTrack<>
    , public Observer::Publisher<struct LabelTrackEvent>
 {
  public:

@@ -68,7 +68,7 @@ void TimeTrack::CleanState()
 
 TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
    double *pT0, double *pT1
-)  : Track(orig, std::move(a))
+)  : UniqueChannelTrack{ orig, std::move(a) }
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
