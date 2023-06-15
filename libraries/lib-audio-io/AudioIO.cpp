@@ -1935,22 +1935,24 @@ bool AudioIO::ProcessPlaybackSlices(
       // atomic variables, the time queue doesn't.
       mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, slice);
 
-      size_t i = 0;
+      // mPlaybackMixers correspond one-to-one with leader sequences
+      size_t iSequence = 0;
+      size_t iBuffer = 0;
       for (auto &mixer : mPlaybackMixers) {
          // The mixer here isn't actually mixing: it's just doing
          // resampling, format conversion, and possibly time track
          // warping
          if (frames > 0) {
             size_t produced = 0;
-            if ( toProduce )
-               produced = mixer->Process( toProduce );
+            if (toProduce)
+               produced = mixer->Process(toProduce);
             //wxASSERT(produced <= toProduce);
-            for(size_t j = 0, nChannels =
-               mPlaybackSequences[i]->NChannels();
-               j < nChannels; ++i, ++j
-            ) {
+            // Copy (non-interleaved) mixer outputs to one or more ring buffers
+            const auto nChannels = mPlaybackSequences[iSequence]->NChannels();
+            iSequence += nChannels;
+            for (size_t j = 0; j < nChannels; ++j) {
                auto warpedSamples = mixer->GetBuffer(j);
-               const auto put = mPlaybackBuffers[i]->Put(
+               const auto put = mPlaybackBuffers[iBuffer++]->Put(
                   warpedSamples, floatSample, produced, frames - produced);
                // wxASSERT(put == frames);
                // but we can't assert in this thread
@@ -1987,8 +1989,8 @@ void AudioIO::TransformPlayBuffers(
    const auto pointers = stackAllocate(float*, mNumPlaybackChannels);
 
    const auto numPlaybackSequences = mPlaybackSequences.size();
-   for (unsigned t = 0; t < numPlaybackSequences; ++t) {
-      const auto vt = mPlaybackSequences[t].get();
+   size_t iBuffer = 0;
+   for (const auto vt : mPlaybackSequences) {
       if (!(vt && vt->IsLeader()))
          continue;
       // vt is mono, or is the first of its group of channels
@@ -2000,9 +2002,8 @@ void AudioIO::TransformPlayBuffers(
          size_t len = 0;
          size_t iChannel = 0;
          for (; iChannel < nChannels; ++iChannel) {
-            auto &ringBuffer = *mPlaybackBuffers[t + iChannel];
-            const auto pair =
-               ringBuffer.GetUnflushed(iBlock);
+            auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
+            const auto pair = ringBuffer.GetUnflushed(iBlock);
             // Playback RingBuffers have float format: see AllocateBuffers
             pointers[iChannel] = reinterpret_cast<float*>(pair.first);
             // The lengths of corresponding unflushed blocks should be
@@ -2030,12 +2031,13 @@ void AudioIO::TransformPlayBuffers(
                mNumPlaybackChannels, len);
             iChannel = 0;
             for (; iChannel < nChannels; ++iChannel) {
-               auto &ringBuffer = *mPlaybackBuffers[t + iChannel];
+               auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
                auto discarded = ringBuffer.Unput(discardable);
                // assert(discarded == discardable);
             }
          }
       }
+      iBuffer += vt->NChannels();
    }
 }
 
@@ -2600,9 +2602,11 @@ bool AudioIoCallback::FillOutputBuffers(
 
    bool drop = false;        // Sequence should become silent.
    bool dropQuickly = false; // Sequence has already been faded to silence.
+   size_t iBuffer = 0;
    for (unsigned t = 0; t < numPlaybackSequences; t++)
    {
       auto vt = mPlaybackSequences[t].get();
+      const auto width = vt->NChannels();
       chans[chanCnt] = vt;
       oldgains[chanCnt] = &mOldChannelGains[t];
 
@@ -2634,28 +2638,27 @@ bool AudioIoCallback::FillOutputBuffers(
 
       decltype(framesPerBuffer) len = 0;
 
-      if (dropQuickly)
-      {
-         len = mPlaybackBuffers[t]->Discard(toGet);
-         // keep going here.
-         // we may still need to issue a paComplete.
-      }
-      else
-      {
-         len = mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
-                                                   floatSample,
-                                                   toGet);
-         // wxASSERT( len == toGet );
-         if (len < framesPerBuffer)
-            // This used to happen normally at the end of non-looping
-            // plays, but it can also be an anomalous case where the
-            // supply from SequenceBufferExchange fails to keep up with the
-            // real-time demand in this thread (see bug 1932).  We
-            // must supply something to the sound card, so pad it with
-            // zeroes and not random garbage.
-            memset((void*)&tempBufs[chanCnt][len], 0,
-               (framesPerBuffer - len) * sizeof(float));
-         chanCnt++;
+      if (firstChannel) for (size_t c = 0; c < width; ++c) {
+         if (dropQuickly) {
+            len = mPlaybackBuffers[iBuffer]->Discard(toGet);
+            // keep going here.
+            // we may still need to issue a paComplete.
+         }
+         else {
+            len = mPlaybackBuffers[iBuffer]
+               ->Get((samplePtr)tempBufs[c], floatSample, toGet);
+            // wxASSERT( len == toGet );
+            if (len < framesPerBuffer)
+               // This used to happen normally at the end of non-looping
+               // plays, but it can also be an anomalous case where the
+               // supply from SequenceBufferExchange fails to keep up with the
+               // real-time demand in this thread (see bug 1932).  We
+               // must supply something to the sound card, so pad it with
+               // zeroes and not random garbage.
+               memset((void*)&tempBufs[c][len], 0,
+                  (framesPerBuffer - len) * sizeof(float));
+         }
+         ++iBuffer;
       }
 
       // PRL:  Bug1104:
