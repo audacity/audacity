@@ -2490,7 +2490,7 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    float * outputFloats,
    const float * tempBuf,
    bool drop,
-   unsigned long len,
+   const unsigned long len,
    const PlayableSequence &ps,
    float &channelGain)
 {
@@ -2519,6 +2519,9 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    wxASSERT(len > 0);
 
    // Linear interpolate.
+   // PRL todo:  choose denominator differently, so it doesn't depend on
+   // framesPerBuffer, which is influenced by the portAudio implementation in
+   // opaque ways
    float deltaGain = (gain - oldGain) / len;
    for (unsigned i = 0; i < len; i++)
       outputFloats[numPlaybackChannels*i+chan] += (oldGain + deltaGain * i) *tempBuf[i];
@@ -2600,7 +2603,7 @@ bool AudioIoCallback::FillOutputBuffers(
    // is very cheap to process.
 
    bool drop = false;        // Sequence should become silent.
-   bool dropQuickly = false; // Sequence has already been faded to silence.
+   bool discardable = false; // Sequence has already been faded to silence.
    size_t iBuffer = 0;
    for (unsigned t = 0; t < numPlaybackSequences; t++)
    {
@@ -2627,18 +2630,19 @@ bool AudioIoCallback::FillOutputBuffers(
             // TODO: more-than-two-channels
             memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
          }
-         drop = SequenceShouldBeSilent(*vt);
-         dropQuickly = drop;
+         // Check for asynchronous user changes in mute, solo, pause status
+         discardable = drop = SequenceShouldBeSilent(*vt);
       }
 
-      if( mbMicroFades )
-         dropQuickly = dropQuickly &&
-            SequenceHasBeenFadedOut(*vt, mOldChannelGains[t]);
+      if (mbMicroFades)
+         // If micro fading, don't silence tracks instantaneously
+         discardable = discardable &&
+            SequenceHasBeenFadedOut(mOldChannelGains[t]);
 
       decltype(framesPerBuffer) len = 0;
 
       if (firstChannel) for (size_t c = 0; c < width; ++c) {
-         if (dropQuickly) {
+         if (discardable) {
             len = mPlaybackBuffers[iBuffer]->Discard(toGet);
             // keep going here.
             // we may still need to issue a paComplete.
@@ -2707,7 +2711,7 @@ bool AudioIoCallback::FillOutputBuffers(
       }
 
       CallbackCheckCompletion(mCallbackReturn, len);
-      if (dropQuickly) // no samples to process, they've been discarded
+      if (discardable) // no samples to process, they've been discarded
          continue;
 
       chanCnt = 0;
@@ -3018,14 +3022,9 @@ bool AudioIoCallback::SequenceShouldBeSilent(const PlayableSequence &ps)
 }
 
 // This is about micro-fades.
-bool AudioIoCallback::SequenceHasBeenFadedOut(
-   const PlayableSequence &ps, const OldChannelGains &gains)
+bool AudioIoCallback::SequenceHasBeenFadedOut(const OldChannelGains &gains)
 {
-   if (PlaysLeft(ps) && gains[0] != 0.0)
-      return false;
-   if (PlaysRight(ps) && gains[1] != 0.0)
-      return false;
-   return true;
+   return gains[0] == 0.0 && gains[1] == 0.0;
 }
 
 bool AudioIoCallback::AllSequencesAlreadySilent()
@@ -3033,7 +3032,7 @@ bool AudioIoCallback::AllSequencesAlreadySilent()
    for (size_t ii = 0, nn = mPlaybackSequences.size(); ii < nn; ++ii) {
       auto vt = mPlaybackSequences[ii];
       const auto &oldGains = mOldChannelGains[ii];
-      if (!(SequenceShouldBeSilent(*vt) && SequenceHasBeenFadedOut(*vt, oldGains)))
+      if (!(SequenceShouldBeSilent(*vt) && SequenceHasBeenFadedOut(oldGains)))
          return false;
    }
    return true;

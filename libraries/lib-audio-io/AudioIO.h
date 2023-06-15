@@ -184,8 +184,8 @@ public:
 
    using OldChannelGains = std::array<float, 2>;
    bool SequenceShouldBeSilent(const PlayableSequence &ps);
-   bool SequenceHasBeenFadedOut(
-      const PlayableSequence &ps, const OldChannelGains &gains);
+   //! Returns true when playback buffer data from both channels is discardable
+   bool SequenceHasBeenFadedOut(const OldChannelGains &gains);
    bool AllSequencesAlreadySilent();
 
    void CheckSoundActivatedRecordingLevel(
