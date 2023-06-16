@@ -280,6 +280,72 @@ private:
          const_cast<Track*>(this)->DoGetChannel(iChannel));
    }
 
+   //! Iterator for channels; destroying the related track invalidates it
+   template<typename ChannelType>
+   class ChannelIterator
+      : public ValueIterator<
+         std::shared_ptr<ChannelType>, std::bidirectional_iterator_tag
+      >
+   {
+      using TrackType = std::conditional_t<std::is_const_v<ChannelType>,
+         const Track, Track>;
+   public:
+      ChannelIterator() = default;
+      ChannelIterator(TrackType *pTrack, size_t index)
+         : mpTrack{ pTrack }, mIndex{ index }
+      {}
+
+      std::shared_ptr<ChannelType> operator *() const
+      {
+         using namespace std;
+         if (!mpTrack || mIndex >= mpTrack->NChannels())
+            return {};
+         return mpTrack->template GetChannel<ChannelType>(mIndex);
+      }
+
+      ChannelIterator &operator ++() { ++mIndex; return *this; }
+      ChannelIterator operator ++(int)
+         { auto copy{ *this }; operator ++(); return copy; }
+
+      ChannelIterator &operator --() { --mIndex; return *this; }
+      ChannelIterator operator --(int)
+         { auto copy{ *this }; operator --(); return copy; }
+
+      friend inline bool operator ==(ChannelIterator a, ChannelIterator b)
+         { return a.mpTrack == b.mpTrack && a.mIndex == b.mIndex; }
+      friend inline bool operator !=(ChannelIterator a, ChannelIterator b)
+         { return !(a == b); }
+
+   private:
+      TrackType *const mpTrack{};
+      size_t mIndex{};
+   };
+
+   //! Get range of channels with mutative access
+   /*!
+    @pre `IsLeader()`
+    */
+   template<typename ChannelType = Channel>
+   IteratorRange<ChannelIterator<ChannelType>> Channels()
+   {
+      assert(IsLeader());
+      return { { this, 0 }, { this, NChannels() } };
+   }
+
+   //! Get range of channels with read-only access
+   /*!
+    @pre `IsLeader()`
+    */
+   template<typename ChannelType = const Channel>
+   auto Channels() const
+      -> std::enable_if_t<std::is_const_v<ChannelType>,
+         IteratorRange<ChannelIterator<ChannelType>>
+      >
+   {
+      assert(IsLeader());
+      return { { this, 0 }, { this, NChannels() } };
+   }
+
    // Given a bare pointer, find a shared_ptr.  Undefined results if the track
    // is not yet managed by a shared_ptr.  Undefined results if the track is
    // not really of the subclass.  (That is, trusts the caller and uses static
