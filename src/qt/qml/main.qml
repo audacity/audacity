@@ -17,6 +17,7 @@ ApplicationWindow {
    required property ApplicationConfiguration appConfig
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
+   property string theme: "light"
    property string language: "en"
 
    QtObject {
@@ -106,6 +107,31 @@ ApplicationWindow {
       }
 
       Menu {
+         title: qsTr("Theme")
+         MenuItem {
+            text: "Light"
+            autoExclusive: true
+            checkable: true
+            checked: theme === "light"
+            onTriggered:{
+               theme = "light"
+               appConfig.currentTheme = theme
+            }
+         }
+
+         MenuItem {
+            text: "Dark"
+            autoExclusive: true
+            checkable: true
+            checked: theme === "dark"
+            onTriggered: {
+               theme = "dark"
+               appConfig.currentTheme = theme
+            }
+         }
+      }
+
+      Menu {
          title: qsTr("Testers")
          MenuItem {
             text: qsTr("VolumeControl")
@@ -186,6 +212,7 @@ ApplicationWindow {
 
       Text {
          id: statusBar
+         color: appConfig.fontColor1
          anchors.centerIn: parent
       }
 
@@ -193,7 +220,7 @@ ApplicationWindow {
          anchors.bottom: parent.top
          height: 1
          width: parent.width
-         color: appConfig.strokeColor1
+         color: appConfig.strokeColor
       }
    }
 }

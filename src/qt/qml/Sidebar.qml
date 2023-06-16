@@ -54,7 +54,7 @@ Rectangle {
       x: parent.width
       width: 1
       height: parent.height
-      color: appConfig.strokeColor1
+      color: appConfig.strokeColor
    }
 
    FlatButton {
@@ -78,7 +78,7 @@ Rectangle {
          y: parent.height - 1
          width: parent.width
          height: 1
-         color: appConfig.strokeColor1
+         color: appConfig.strokeColor
       }
    }
 

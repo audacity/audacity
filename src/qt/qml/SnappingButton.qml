@@ -14,7 +14,7 @@ Rectangle {
 
    property color backgroundColor: appConfig.backgroundColor2
    property color buttonColor: appConfig.buttonColor
-   property color strokeColor: appConfig.strokeColor1
+   property color strokeColor: appConfig.strokeColor
    property color accentColor: appConfig.accentColor
    property bool snapped: false
 

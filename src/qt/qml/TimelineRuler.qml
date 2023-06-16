@@ -38,12 +38,12 @@ Rectangle {
       x: 12
       width: 1
       height: parent.height
-      color: appConfig.strokeColor1
+      color: appConfig.strokeColor
    }
 
    Rectangle {
       height: 1
-      color: appConfig.strokeColor1
+      color: appConfig.strokeColor
       anchors.verticalCenter: parent.verticalCenter
       anchors.left: playheadRecessSeparator.right
       anchors.right: snappingButton.left
@@ -54,7 +54,7 @@ Rectangle {
       y: parent.height - 1
       width: parent.width
       height: 1
-      color: appConfig.strokeColor1
+      color: appConfig.strokeColor
    }
 
    PlayheadCursor {

@@ -52,6 +52,11 @@ Dial {
       function colorWithAlpha(color, alpha) {
          return Qt.rgba(color.r, color.g, color.b, alpha)
       }
+
+      onValueArcColorChanged: canvas.requestPaint()
+      onOuterArcColorChanged: canvas.requestPaint()
+      onInnerArcColorChanged: canvas.requestPaint()
+      onDialNeedleColorChanged: canvas.requestPaint()
    }
 
    onAngleChanged: canvas.requestPaint()

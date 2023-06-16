@@ -26,7 +26,7 @@ Text {
 
    readonly property bool isEmpty: text.length === 0
 
-   color: "black"
+   color: appConfig.fontColor1
    linkColor: "gray"
    opacity: root.enabled ? 1.0 : 0.5
 

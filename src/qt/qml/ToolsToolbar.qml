@@ -125,7 +125,7 @@ Rectangle {
       anchors.top: root.bottom
       height: 1
       width: parent.width
-      color: appConfig.strokeColor1
+      color: appConfig.strokeColor
    }
 }
 

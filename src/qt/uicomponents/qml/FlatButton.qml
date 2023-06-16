@@ -42,7 +42,8 @@ FocusScope {
    property color hoverHitColor: accentButton ? accentColor : appConfig.buttonColor
    property color accentColor: appConfig.accentColor
 
-   property color iconColor: "black"
+   property color iconColor: appConfig.fontColor1
+
    property real radius: 3
 
    property bool isNarrow: buttonType === FlatButton.Horizontal
@@ -107,7 +108,7 @@ FocusScope {
 
          radius: root.radius
          border.width: appConfig.borderWidth
-         border.color: appConfig.strokeColor1
+         border.color: appConfig.strokeColor
 
          states: [
             State {

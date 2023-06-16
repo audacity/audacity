@@ -131,7 +131,7 @@ Item {
             x: 255
             width: 1
             height: root.height
-            color: appConfig.strokeColor1
+            color: appConfig.strokeColor
          }
 
          TrackVolumeMeter {
@@ -148,6 +148,6 @@ Item {
       y: root.height - horizontalSeparator.height
       height: 2
       width: root.width
-      color: appConfig.strokeColor1
+      color: appConfig.strokeColor
    }
 }

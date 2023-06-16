@@ -57,7 +57,7 @@ Item {
       id: gripEdge
       width: 1
       height: parent.height
-      color: appConfig.strokeColor1
+      color: appConfig.strokeColor
    }
 
    MouseArea {

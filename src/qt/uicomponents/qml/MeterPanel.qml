@@ -13,6 +13,10 @@ Rectangle {
    property alias value: meterPanelHandler.value
    property alias maximumRecentPeaksCount: recentPeaks.maximumCount
 
+   function isBeingClipped() {
+      return peaks.clippedCount >= 4
+   }
+
    // value: [0..1]
    function calculatePeak(value) {
       return root.width * value
@@ -22,17 +26,12 @@ Rectangle {
       var peak = calculatePeak(value)
       if (peak > clippingZone.xOffset) {
          peaks.clippedCount += 1
-         if (peaks.clippedCount >= 4) {
-            clippingZoneArea.opacity = 1.0
-            clippingZoneArea.color = appConfig.recordColor
-            currentPeakIndicator.color = appConfig.recordColor
-         } else {
-            currentPeakIndicator.color = appConfig.accentColor
+         if (isBeingClipped()) {
+            peaks.hasBeenClipped = true
          }
          peaks.current = clippingZone.xOffset
       } else {
          peaks.clippedCount = 0
-         currentPeakIndicator.color = appConfig.accentColor
          peaks.current = peak
       }
 
@@ -65,6 +64,7 @@ Rectangle {
       readonly property int recent: -1
       readonly property int maximum: -1
       readonly property int clippedCount: 0
+      readonly property bool hasBeenClipped: false
    }
 
    QtObject {
@@ -73,6 +73,7 @@ Rectangle {
       property int recent: defaultPeaks.recent
       property int maximum: defaultPeaks.maximum
       property int clippedCount: defaultPeaks.clippedCount
+      property bool hasBeenClipped: defaultPeaks.hasBeenClipped
    }
 
    QtObject {
@@ -93,9 +94,7 @@ Rectangle {
          peaks.recent = defaultPeaks.recent
          peaks.maximum = defaultPeaks.maximum
          peaks.clippedCount = defaultPeaks.clippedCount
-
-         clippingZoneArea.opacity = 0.1
-         clippingZoneArea.color = appConfig.backgroundColor3
+         peaks.hasBeenClipped = defaultPeaks.hasBeenClipped
       }
    }
 
@@ -103,7 +102,7 @@ Rectangle {
       id: currentPeakIndicator
       height: parent.height
       width: peaks.current
-      color: appConfig.accentColor
+      color: isBeingClipped() ? appConfig.recordColor : appConfig.accentColor
    }
 
    Rectangle {
@@ -129,8 +128,8 @@ Rectangle {
       x: parent.width - clippingZone.width
       height: parent.height
       width: clippingZone.width
-      opacity: 0.1
-      color: appConfig.backgroundColor3
+      opacity: peaks.hasBeenClipped ? 1.0 : 0.1
+      color: peaks.hasBeenClipped ? appConfig.recordColor : appConfig.backgroundColor3
    }
 
    Component.onCompleted: {

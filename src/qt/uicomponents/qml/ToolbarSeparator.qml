@@ -12,6 +12,6 @@ Item {
       width: 1
       height: 28
       anchors.centerIn: parent
-      color: appConfig.strokeColor1
+      color: appConfig.strokeColor
    }
 }

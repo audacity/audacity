@@ -67,7 +67,7 @@ Item {
          FlatButton {
             id: play
             icon: isPlaying ? IconCode.SOLID_PAUSE : IconCode.SOLID_PLAY
-            iconColor: isPlaying ? "black" : appConfig.playColor
+            iconColor: isPlaying ? appConfig.fontColor1 : appConfig.playColor
             onClicked: toolbarHandler.Play()
          }
 

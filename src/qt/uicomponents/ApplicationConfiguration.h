@@ -11,6 +11,8 @@ class ApplicationConfiguration : public QObject
    Q_OBJECT
    QML_ELEMENT
 
+   Q_PROPERTY(QString currentTheme READ CurrentTheme WRITE SetCurrentTheme NOTIFY themeChanged FINAL)
+
    Q_PROPERTY(QFont iconFont READ IconFont NOTIFY themeChanged FINAL)
    Q_PROPERTY(QFont bodyFont READ BodyFont NOTIFY themeChanged FINAL)
    Q_PROPERTY(QFont timecodeFont READ TimecodeFont NOTIFY themeChanged FINAL)
@@ -26,12 +28,12 @@ class ApplicationConfiguration : public QObject
    Q_PROPERTY(QColor timecodeColor READ TimecodeColor NOTIFY themeChanged FINAL)
    Q_PROPERTY(QColor playColor READ PlayColor NOTIFY themeChanged FINAL)
    Q_PROPERTY(QColor recordColor READ RecordColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor strokeColor1 READ StrokeColor1 NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor strokeColor READ StrokeColor NOTIFY themeChanged FINAL)
    Q_PROPERTY(QColor waveformRMSColor READ WaveformRMSColor NOTIFY themeChanged FINAL)
    Q_PROPERTY(QColor waveformHighlightColor READ WaveformHighlightColor NOTIFY themeChanged FINAL)
    Q_PROPERTY(QColor waveformPeakColor READ WaveformPeakColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor clipRegionColor READ ClipRegionColor NOTIFY themeChanged FINAL)
    Q_PROPERTY(QColor clipStrokeColor READ ClipStrokeColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor clipHeaderColor READ ClipHeaderColor NOTIFY themeChanged FINAL)
 
    Q_PROPERTY(qreal itemOpacityDisabled READ ItemOpacityDisabled NOTIFY themeChanged FINAL)
    Q_PROPERTY(qreal buttonOpacityNormal READ ButtonOpacityNormal NOTIFY themeChanged FINAL)
@@ -46,6 +48,9 @@ signals:
 
 public:
    ApplicationConfiguration();
+
+   QString CurrentTheme() const;
+   void SetCurrentTheme(const QString& newTheme);
 
    QFont IconFont() const;
    QFont BodyFont() const;
@@ -62,12 +67,12 @@ public:
    QColor TimecodeColor() const;
    QColor PlayColor() const;
    QColor RecordColor() const;
-   QColor StrokeColor1() const;
+   QColor StrokeColor() const;
    QColor WaveformRMSColor() const;
    QColor WaveformHighlightColor() const;
    QColor WaveformPeakColor() const;
-   QColor ClipRegionColor() const;
    QColor ClipStrokeColor() const;
+   QColor ClipHeaderColor() const;
 
    qreal ItemOpacityDisabled() const;
    qreal ButtonOpacityNormal() const;
@@ -78,26 +83,27 @@ public:
    int DefaultButtonSize() const;
 
 private:
+   QString m_currentTheme;
    QFont m_iconFont;
    QFont m_bodyFont;
    QFont m_timecodeFont;
-   QColor m_backgroundColor1{ "#F5F5F6" };
-   QColor m_backgroundColor2{ "#E6E9ED" };
-   QColor m_backgroundColor3{ "#333640" };
-   QColor m_fontColor1{ "#111132" };
-   QColor m_fontColor2{ "#FFFFFF" };
-   QColor m_buttonColor{ "#CFD5DD" };
-   QColor m_accentColor{ "#9F9FFF" };
-   QColor m_textFieldColor{ "#FFFFFF" };
-   QColor m_timecodeColor{ "#1E2026" };
-   QColor m_playColor{ "#0F7745" };
-   QColor m_recordColor{ "#C54444" };
-   QColor m_strokeColor1{ "#CED1D4" };
-   QColor m_waveformRMSColor{ "#9090F5" };
-   QColor m_waveformHighlightColor{ "#ECF1FD" };
-   QColor m_waveformPeakColor{ "#3232C8" };
-   QColor m_clipRegionColor{ "#C8C8D0" };
-   QColor m_clipStrokeColor{ "#252527" };
+   QColor m_backgroundColor1;
+   QColor m_backgroundColor2;
+   QColor m_backgroundColor3;
+   QColor m_fontColor1;
+   QColor m_fontColor2;
+   QColor m_buttonColor;
+   QColor m_accentColor;
+   QColor m_textFieldColor;
+   QColor m_timecodeColor;
+   QColor m_playColor;
+   QColor m_recordColor;
+   QColor m_strokeColor;
+   QColor m_waveformRMSColor;
+   QColor m_waveformHighlightColor;
+   QColor m_waveformPeakColor;
+   QColor m_clipStrokeColor;
+   QColor m_clipHeaderColor;
    qreal m_itemOpacityDisabled{ 0.3 };
    qreal m_buttonOpacityNormal{ 0.7 };
    qreal m_buttonOpacityHit{ 1.0 };

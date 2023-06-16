@@ -29,7 +29,7 @@ Slider {
       implicitHeight: 16
       radius: 8
       color: appConfig.textFieldColor
-      border.color: "black"
+      border.color: appConfig.fontColor1
       antialiasing: true
    }
 }
