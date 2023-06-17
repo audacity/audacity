@@ -62,34 +62,36 @@ void TrackView::CopyTo( Track &track ) const
    other.mHeight = mHeight;
 }
 
-static const AttachedTrackObjects::RegisteredFactory key{
-   []( Track &track ){
-      return DoGetView::Call( track );
+using TrackViewAttachments = ChannelAttachments<TrackView>;
+
+static const AttachedTrackObjects::RegisteredFactory keyC{
+   [](Track &){
+      return std::make_shared<TrackViewAttachments>(
+         [](Track &track) { return DoGetView::Call(track); }
+      );
    }
 };
 
-TrackView &TrackView::Get( Track &track )
+TrackView &TrackView::Get(Track &track)
 {
-   return track.AttachedObjects::Get< TrackView >( key );
+   constexpr size_t iChannel = 0;
+   return TrackViewAttachments::Get(keyC, track, iChannel);
 }
 
-const TrackView &TrackView::Get( const Track &track )
+const TrackView &TrackView::Get(const Track &track)
 {
-   return Get( const_cast< Track & >( track ) );
+   return Get(const_cast<Track &>(track));
 }
 
-TrackView *TrackView::Find( Track *pTrack )
+TrackView *TrackView::Find(Track *pTrack)
 {
-   if (!pTrack)
-      return nullptr;
-   auto &track = *pTrack;
-   // do not create on demand if it is null
-   return track.AttachedObjects::Find< TrackView >( key );
+   constexpr size_t iChannel = 0;
+   return TrackViewAttachments::Find(keyC, pTrack, iChannel);
 }
 
-const TrackView *TrackView::Find( const Track *pTrack )
+const TrackView *TrackView::Find(const Track *pTrack)
 {
-   return Find( const_cast< Track* >( pTrack ) );
+   return Find(const_cast<Track*>(pTrack));
 }
 
 void TrackView::SetMinimized(bool isMinimized)

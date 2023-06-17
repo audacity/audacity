@@ -523,6 +523,77 @@ public:
 
 ENUMERATE_TRACK_TYPE(Track);
 
+//! Holds multiple objects as a single attachment to Track
+class TRACK_API ChannelAttachmentsBase : public TrackAttachment
+{
+public:
+   using Factory = std::function<std::shared_ptr<TrackAttachment>(Track &)>;
+
+   explicit ChannelAttachmentsBase(Factory factory)
+      : mFactory{ move(factory) }
+   {}
+   ~ChannelAttachmentsBase() override;
+
+   // Override all the TrackAttachment virtuals and pass through to each
+   void CopyTo(Track &track) const override;
+   void Reparent(const std::shared_ptr<Track> &parent) override;
+   void WriteXMLAttributes(XMLWriter &writer) const override;
+   bool HandleXMLAttribute(
+      const std::string_view& attr, const XMLAttributeValueView& valueView)
+   override;
+
+protected:
+   static TrackAttachment &Get(
+      const AttachedTrackObjects::RegisteredFactory &key,
+      Track &track, size_t iChannel);
+   static TrackAttachment *Find(
+      const AttachedTrackObjects::RegisteredFactory &key,
+      Track *pTrack, size_t iChannel);
+
+private:
+   const Factory mFactory;
+   std::vector<std::shared_ptr<TrackAttachment>> mAttachments;
+};
+
+//! Holds multiple objects of the parameter type as a single attachment to Track
+template<typename Attachment>
+class ChannelAttachments : public ChannelAttachmentsBase
+{
+   static_assert(std::is_base_of_v<TrackAttachment, Attachment>);
+public:
+   ~ChannelAttachments() override = default;
+
+   static Attachment &Get(
+      const AttachedTrackObjects::RegisteredFactory &key,
+      Track &track, size_t iChannel)
+   {
+      return static_cast<Attachment&>(
+         ChannelAttachmentsBase::Get(key, track, iChannel));
+   }
+   static Attachment *Find(
+      const AttachedTrackObjects::RegisteredFactory &key,
+      Track *pTrack, size_t iChannel)
+   {
+      return static_cast<Attachment*>(
+         ChannelAttachmentsBase::Find(key, pTrack, iChannel));
+   }
+
+   //! Type-erasing constructor
+   /*!
+    @tparam F returns a shared pointer to Attachment (or some subtype of it)
+
+    @pre `f` never returns null
+    */
+   template<typename F,
+      typename sfinae = std::enable_if_t<std::is_convertible_v<
+         std::invoke_result_t<F, Track&>, std::shared_ptr<Attachment>
+      >>
+   >
+   explicit ChannelAttachments(F &&f)
+      : ChannelAttachmentsBase{ std::forward<F>(f) }
+   {}
+};
+
 //! Encapsulate the checked down-casting of track pointers
 /*! Eliminates possibility of error -- and not quietly casting away const
  
