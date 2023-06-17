@@ -14,7 +14,6 @@ Classes derived form it include the WaveTrack, NoteTrack, LabelTrack
 and TimeTrack.
 
 *//*******************************************************************/
-
 #include "Track.h"
 
 #include <algorithm>
@@ -38,6 +37,41 @@ and TimeTrack.
 #endif
 
 Channel::~Channel() = default;
+
+int Channel::FindChannelIndex() const
+{
+   auto &track = DoGetTrack();
+   int index = -1;
+   for (size_t ii = 0, nn = track.NChannels(); ii < nn; ++ii)
+      if (track.GetChannel(ii).get() == this) {
+         index = ii;
+         break;
+      }
+   // post of DoGetTrack
+   assert(index >= 0);
+
+   // TODO wide wave tracks -- remove this stronger assertion
+   assert(index == 0);
+
+   return index;
+}
+
+const Track &Channel::GetTrack() const
+{
+   assert(FindChannelIndex() >= 0);
+   return DoGetTrack();
+}
+
+Track &Channel::GetTrack()
+{
+   assert(FindChannelIndex() >= 0);
+   return DoGetTrack();
+}
+
+size_t Channel::GetChannelIndex() const
+{
+   return FindChannelIndex();
+}
 
 Track::Track()
 :  vrulerSize(36,0)

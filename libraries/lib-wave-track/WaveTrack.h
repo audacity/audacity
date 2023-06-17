@@ -572,6 +572,8 @@ private:
 
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 
+   Track &DoGetTrack() const override;
+
    //
    // Protected variables
    //

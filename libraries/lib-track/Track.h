@@ -160,6 +160,29 @@ class TRACK_API Channel
 {
 public:
    virtual ~Channel();
+
+   //! Channel object's lifetime is assumed to be nested in its Track's
+   Track &GetTrack();
+   /*!
+    @copydoc GetTrack()
+    */
+   const Track &GetTrack() const;
+
+   /*!
+    @return `ii` such that `this == GetTrack().GetChannel(ii).get()`
+    */
+   size_t GetChannelIndex() const;
+
+protected:
+   //! Subclass must override
+   /*!
+    @post result: for some `ii` less than `result.NChannels()`,
+       `this == result.GetChannel(ii).get()`
+    */
+   virtual Track &DoGetTrack() const = 0;
+
+private:
+   int FindChannelIndex() const;
 };
 
 //! Abstract base class for an object holding data associated with points on a time axis
@@ -583,6 +606,11 @@ public:
          return { this->shared_from_this(), alias };
       }
       return {};
+   }
+protected:
+   Track &DoGetTrack() const override {
+      const Track &track = *this;
+      return const_cast<Track&>(track);
    }
 };
 
