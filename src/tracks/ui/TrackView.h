@@ -44,10 +44,22 @@ public:
    // Copy view state, for undo/redo purposes
    void CopyTo(Track &track) const override;
 
-   static TrackView &Get( Track & );
-   static const TrackView &Get( const Track & );
-   static TrackView *Find( Track * );
-   static const TrackView *Find( const Track * );
+   /*!
+    @pre `iChannel < track.NChannels()`
+    */
+   static TrackView &Get(Track &track, size_t iChannel = 0);
+   /*!
+    @copydoc Get(Track &, size_t)
+    */
+   static const TrackView &Get(const Track &track, size_t iChannel = 0);
+   /*!
+    @pre `!pTrack || iChannel < pTrack->NChannels()`
+    */
+   static TrackView *Find(Track *pTrack, size_t iChannel = 0);
+   /*!
+    @copydoc Find(Track *, size_t)
+    */
+   static const TrackView *Find(const Track *pTrack, size_t iChannel = 0);
 
    bool GetMinimized() const { return mMinimized; }
    void SetMinimized( bool minimized );

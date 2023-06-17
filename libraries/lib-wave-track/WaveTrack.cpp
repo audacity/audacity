@@ -260,7 +260,7 @@ AudioGraph::ChannelType WaveTrack::GetChannelType() const
    else if (IsLeader())
       return AudioGraph::LeftChannel;
    else
-      // TODO more-than-two-channels
+      // TODO: more-than-two-channels
       return AudioGraph::RightChannel;
 }
 

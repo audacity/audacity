@@ -75,26 +75,24 @@ static const AttachedTrackObjects::RegisteredFactory keyC{
    }
 };
 
-TrackView &TrackView::Get(Track &track)
+TrackView &TrackView::Get(Track &track, size_t iChannel)
 {
-   constexpr size_t iChannel = 0;
    return TrackViewAttachments::Get(keyC, track, iChannel);
 }
 
-const TrackView &TrackView::Get(const Track &track)
+const TrackView &TrackView::Get(const Track &track, size_t iChannel)
 {
-   return Get(const_cast<Track &>(track));
+   return Get(const_cast<Track &>(track), iChannel);
 }
 
-TrackView *TrackView::Find(Track *pTrack)
+TrackView *TrackView::Find(Track *pTrack, size_t iChannel)
 {
-   constexpr size_t iChannel = 0;
    return TrackViewAttachments::Find(keyC, pTrack, iChannel);
 }
 
-const TrackView *TrackView::Find(const Track *pTrack)
+const TrackView *TrackView::Find(const Track *pTrack, size_t iChannel)
 {
-   return Find(const_cast<Track*>(pTrack));
+   return Find(const_cast<Track*>(pTrack), iChannel);
 }
 
 void TrackView::SetMinimized(bool isMinimized)
