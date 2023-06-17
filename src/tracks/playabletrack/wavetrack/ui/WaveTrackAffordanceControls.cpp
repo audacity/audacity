@@ -135,7 +135,8 @@ public:
 };
 
 WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack)
-    : CommonTrackCell(pTrack), mClipNameFont(wxFont(wxFontInfo()))
+    : CommonTrackCell{ pTrack, 0 }
+    , mClipNameFont{ wxFontInfo{} }
 {
     if (auto trackList = pTrack->GetOwner())
     {

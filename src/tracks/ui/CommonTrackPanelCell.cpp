@@ -113,9 +113,14 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
    return hook ? hook( evt, pProject ) : RefreshCode::Cancelled;
 }
 
-CommonTrackCell::CommonTrackCell( const std::shared_ptr< Track > &parent )
-   : mwTrack { parent }
-{}
+CommonTrackCell::CommonTrackCell(
+   const std::shared_ptr< Track > &parent, size_t iChannel
+)  : mwTrack{ parent }
+   , miChannel{ iChannel }
+{
+   // TODO wide wave tracks -- remove assertion
+   assert(iChannel == 0);
+}
 
 CommonTrackCell::~CommonTrackCell() = default;
 

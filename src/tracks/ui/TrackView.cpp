@@ -16,8 +16,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "XMLTagHandler.h"
 #include "XMLWriter.h"
 
-TrackView::TrackView( const std::shared_ptr<Track> &pTrack )
-   : CommonTrackCell{ pTrack }
+TrackView::TrackView(const std::shared_ptr<Track> &pTrack, size_t iChannel)
+   : CommonTrackCell{ pTrack, iChannel }
 {
    DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );
 }

@@ -35,7 +35,7 @@ Paul Licameli split from TrackPanel.cpp
 using Doubles = ArrayOf<double>;
 
 TimeTrackView::TimeTrackView(const std::shared_ptr<Track> &pTrack)
-   : CommonTrackView{ pTrack }
+   : CommonTrackView{ pTrack, 0 }
 {
 }
 

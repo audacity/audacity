@@ -921,14 +921,13 @@ const WaveTrackView *WaveTrackView::Find( const WaveTrack *pTrack )
 
 WaveTrackView::WaveTrackView(
    const std::shared_ptr<Track> &pTrack, size_t channel
-)  : CommonTrackView{ pTrack }
-   , mChannel{ channel }
+)  : CommonTrackView{ pTrack, channel }
 {
 }
 
 WaveTrackSubView::WaveTrackSubView(WaveTrackView &waveTrackView)
-   : CommonTrackView(waveTrackView.FindTrack())
-   , mChannel(waveTrackView.GetChannel())
+   : CommonTrackView{
+      waveTrackView.FindTrack(), waveTrackView.GetChannelIndex() }
 {
    mwWaveTrackView = std::static_pointer_cast<WaveTrackView>(
       waveTrackView.shared_from_this() );

@@ -33,7 +33,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dc.h>
 
 NoteTrackView::NoteTrackView( const std::shared_ptr<Track> &pTrack )
-   : CommonTrackView{ pTrack }
+   : CommonTrackView{ pTrack, 0 }
 {
 }
 

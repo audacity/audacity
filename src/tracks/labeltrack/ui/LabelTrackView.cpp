@@ -97,7 +97,7 @@ void LabelTrackView::Index::SetModified(bool modified)
 }
 
 LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
-   : CommonTrackView{ pTrack }
+   : CommonTrackView{ pTrack, 0 }
 {
    ResetFont();
    CreateCustomGlyphs();

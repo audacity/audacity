@@ -1023,7 +1023,8 @@ void WaveformView::Draw(
       wxASSERT(waveTrackView.use_count());
 
       auto selectedClip = waveTrackView->GetSelectedClip().lock();
-      DoDraw(context, mChannel, wt.get(), selectedClip.get(), rect, muted);
+      DoDraw(context, GetChannelIndex(),
+         wt.get(), selectedClip.get(), rect, muted);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);

@@ -29,8 +29,8 @@ class AUDACITY_DLL_API TrackView /* not final */ : public CommonTrackCell
 public:
    enum : unsigned { DefaultHeight = 150 };
 
-   explicit
-   TrackView( const std::shared_ptr<Track> &pTrack );
+   //! Construct from a track and a channel index
+   TrackView(const std::shared_ptr<Track> &pTrack, size_t iChannel);
    virtual ~TrackView() = 0;
 
    // some static conveniences, useful for summation over track iterator
