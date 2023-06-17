@@ -1503,11 +1503,11 @@ std::shared_ptr<CommonTrackCell> WaveTrackView::DoGetAffordance(const std::share
     return mpAffordanceCellControl;
 }
 
-using DoGetWaveTrackView = DoGetView::Override< WaveTrack >;
+using DoGetWaveTrackView = DoGetView::Override<WaveTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveTrackView) {
-   return [](WaveTrack &track) {
-      // TODO wide wave tracks
-      return std::make_shared<WaveTrackView>(track.SharedPointer(), 0);
+   return [](WaveTrack &track, size_t iChannel) {
+      assert(iChannel < track.NChannels());
+      return std::make_shared<WaveTrackView>(track.SharedPointer(), iChannel);
    };
 }
 

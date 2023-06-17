@@ -56,9 +56,9 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
    return results;
 }
 
-using DoGetTimeTrackView = DoGetView::Override< TimeTrack >;
+using DoGetTimeTrackView = DoGetView::Override<TimeTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackView) {
-   return [](TimeTrack &track) {
+   return [](TimeTrack &track, size_t) {
       return std::make_shared<TimeTrackView>(track.SharedPointer());
    };
 }

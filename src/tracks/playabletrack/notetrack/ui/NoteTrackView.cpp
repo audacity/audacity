@@ -7,8 +7,6 @@ NoteTrackView.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
-
 #include "NoteTrackView.h"
 
 #ifdef USE_MIDI
@@ -60,9 +58,9 @@ std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest
    return results;
 }
 
-using DoGetNoteTrackView = DoGetView::Override< NoteTrack >;
+using DoGetNoteTrackView = DoGetView::Override<NoteTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetNoteTrackView) {
-   return [](NoteTrack &track) {
+   return [](NoteTrack &track, size_t) {
       return std::make_shared<NoteTrackView>( track.SharedPointer() );
    };
 }

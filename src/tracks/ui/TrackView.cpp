@@ -67,7 +67,10 @@ using TrackViewAttachments = ChannelAttachments<TrackView>;
 static const AttachedTrackObjects::RegisteredFactory keyC{
    [](Track &){
       return std::make_shared<TrackViewAttachments>(
-         [](Track &track) { return DoGetView::Call(track); }
+         [](Track &track, size_t iChannel) {
+            assert(iChannel < track.NChannels());
+            return DoGetView::Call(track, iChannel);
+         }
       );
    }
 };

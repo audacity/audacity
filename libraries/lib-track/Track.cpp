@@ -1253,6 +1253,7 @@ TrackAttachment &ChannelAttachmentsBase::Get(
    const AttachedTrackObjects::RegisteredFactory &key,
    Track &track, size_t iChannel)
 {
+   // Precondition of this function; satisfies precondition of factory below
    assert(iChannel < track.NChannels());
    auto &attachments = track.AttachedObjects::Get<ChannelAttachmentsBase>(key);
    auto &objects = attachments.mAttachments;
@@ -1261,7 +1262,7 @@ TrackAttachment &ChannelAttachmentsBase::Get(
    auto &pObject = objects[iChannel];
    if (!pObject) {
       // Create on demand
-      pObject = attachments.mFactory(track);
+      pObject = attachments.mFactory(track, iChannel);
       assert(pObject); // Precondition of constructor
    }
    return *pObject;

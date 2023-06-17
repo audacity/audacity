@@ -590,7 +590,8 @@ public:
 class TRACK_API ChannelAttachmentsBase : public TrackAttachment
 {
 public:
-   using Factory = std::function<std::shared_ptr<TrackAttachment>(Track &)>;
+   using Factory =
+      std::function<std::shared_ptr<TrackAttachment>(Track &, size_t)>;
 
    explicit ChannelAttachmentsBase(Factory factory)
       : mFactory{ move(factory) }
@@ -658,10 +659,13 @@ public:
     @tparam F returns a shared pointer to Attachment (or some subtype of it)
 
     @pre `f` never returns null
+   
+    `f` may assume the precondition that the given channel index is less than
+    the given track's number of channels
     */
    template<typename F,
       typename sfinae = std::enable_if_t<std::is_convertible_v<
-         std::invoke_result_t<F, Track&>, std::shared_ptr<Attachment>
+         std::invoke_result_t<F, Track&, size_t>, std::shared_ptr<Attachment>
       >>
    >
    explicit ChannelAttachments(F &&f)

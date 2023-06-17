@@ -134,11 +134,16 @@ private:
 
 struct DoGetViewTag;
 
+//! Declare an open method to get the view object associated with a track
+/*!
+ @pre The channel index argument is less than the track's `NChannels()`
+ */
 using DoGetView =
 AttachedVirtualFunction<
    DoGetViewTag,
    std::shared_ptr< TrackView >,
-   Track
+   Track,
+   size_t// channel index
 >;
 DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, DoGetView);
 

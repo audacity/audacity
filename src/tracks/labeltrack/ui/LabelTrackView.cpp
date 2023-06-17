@@ -2341,9 +2341,9 @@ int LabelTrackView::DialogForLabelName(
    return status;
 }
 
-using DoGetLabelTrackView = DoGetView::Override< LabelTrack >;
+using DoGetLabelTrackView = DoGetView::Override<LabelTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetLabelTrackView) {
-   return [](LabelTrack &track) {
+   return [](LabelTrack &track, size_t) {
       return std::make_shared<LabelTrackView>( track.SharedPointer() );
    };
 }

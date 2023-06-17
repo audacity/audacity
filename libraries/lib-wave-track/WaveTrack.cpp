@@ -244,7 +244,7 @@ size_t WaveTrack::GetWidth() const
 
 size_t WaveTrack::NChannels() const
 {
-   if (IsLeader()) {
+   if (IsLeader() && GetOwner()) {
       auto result = TrackList::NChannels(*this);
       assert(result > 0);
       return result;
