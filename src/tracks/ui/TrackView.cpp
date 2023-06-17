@@ -16,6 +16,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "XMLTagHandler.h"
 #include "XMLWriter.h"
 
+#include <sstream>
+
 TrackView::TrackView(const std::shared_ptr<Track> &pTrack, size_t iChannel)
    : CommonTrackCell{ pTrack, iChannel }
 {
@@ -101,10 +103,28 @@ void TrackView::SetMinimized(bool isMinimized)
       leader->AdjustPositions();
 }
 
+namespace {
+// Append a channel number to a base attribute name unless it is 0
+std::string AttributeName(const TrackView &view, std::string name) {
+   const auto index = view.GetChannelIndex();
+   if (index == 0)
+      return move(name);
+   std::stringstream stream{ name };
+   stream << index;
+   return stream.str();
+}
+std::string HeightAttributeName(const TrackView &view) {
+   return AttributeName(view, "height");
+}
+std::string MinimizedAttributeName(const TrackView &view) {
+   return AttributeName(view, "minimized");
+}
+}
+
 void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
 {
-   xmlFile.WriteAttr(wxT("height"), GetExpandedHeight());
-   xmlFile.WriteAttr(wxT("minimized"), GetMinimized());
+   xmlFile.WriteAttr(HeightAttributeName(*this), GetExpandedHeight());
+   xmlFile.WriteAttr(MinimizedAttributeName(*this), GetMinimized());
 }
 
 bool TrackView::HandleXMLAttribute(
@@ -112,7 +132,7 @@ bool TrackView::HandleXMLAttribute(
 {
    long nValue;
 
-   if (attr == "height" && valueView.TryGet(nValue)) {
+   if (attr == HeightAttributeName(*this) && valueView.TryGet(nValue)) {
       // Bug 2803: Extreme values for track height (caused by integer overflow)
       // will stall Audacity as it tries to create an enormous vertical ruler.
       // So clamp to reasonable values.
@@ -120,7 +140,7 @@ bool TrackView::HandleXMLAttribute(
       SetExpandedHeight(nValue);
       return true;
    }
-   else if ( attr == "minimized" && valueView.TryGet(nValue)) {
+   else if (attr == MinimizedAttributeName(*this) && valueView.TryGet(nValue)) {
       SetMinimized(nValue != 0);
       return true;
    }
