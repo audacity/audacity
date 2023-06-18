@@ -1376,34 +1376,36 @@ unsigned WaveTrackView::LoseFocus(AudacityProject *project)
    return result;
 }
 
+namespace {
+using PMF = bool (WaveTrackAffordanceControls::*)(AudacityProject &);
+bool AnyAffordance(AudacityProject& project, WaveTrackView &view, PMF pmf)
+{
+   const auto pLeader = *TrackList::Channels(view.FindTrack().get()).begin();
+   const auto channels = pLeader->Channels();
+   return std::any_of(channels.begin(), channels.end(),
+      [&](const std::shared_ptr<Channel> &pChannel) {
+         auto& channelView = ChannelView::Get(*pChannel);
+         if (const auto affordance =
+            std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
+               channelView.GetAffordanceControls()).get()
+            ; affordance && (affordance->*pmf)(project)
+         )
+            return true;
+         return false;
+      });
+}
+}
+
 bool WaveTrackView::CutSelectedText(AudacityProject& project)
 {
-   for (auto channel : TrackList::Channels(FindTrack().get()))
-   {
-      auto& view = TrackView::Get(*channel);
-      if (auto affordance 
-         = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
-      {
-         if (affordance->OnTextCut(project))
-            return true;
-      }
-   }
-   return false;
+   return
+      AnyAffordance(project, *this, &WaveTrackAffordanceControls::OnTextCut);
 }
 
 bool WaveTrackView::CopySelectedText(AudacityProject& project)
 {
-   for (auto channel : TrackList::Channels(FindTrack().get()))
-   {
-      auto& view = TrackView::Get(*channel);
-      if (auto affordance
-         = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
-      {
-         if (affordance->OnTextCopy(project))
-            return true;
-      }
-   }
-   return false;
+   return
+      AnyAffordance(project, *this, &WaveTrackAffordanceControls::OnTextCopy);
 }
 
 bool WaveTrackView::ClipDetailsVisible(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
@@ -1433,32 +1435,14 @@ bool WaveTrackView::HitTest(const WaveClip& clip, const ZoomInfo& viewInfo, cons
 
 bool WaveTrackView::PasteText(AudacityProject& project)
 {
-   for (auto channel : TrackList::Channels(FindTrack().get()))
-   {
-      auto& view = TrackView::Get(*channel);
-      if (auto affordance
-         = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
-      {
-         if (affordance->OnTextPaste(project))
-            return true;
-      }
-   }
-   return false;
+   return
+      AnyAffordance(project, *this, &WaveTrackAffordanceControls::OnTextPaste);
 }
 
 bool WaveTrackView::SelectAllText(AudacityProject& project)
 {
-   for (auto channel : TrackList::Channels(FindTrack().get()))
-   {
-      auto& view = TrackView::Get(*channel);
-      if (auto affordance
-         = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
-      {
-         if (affordance->OnTextSelect(project))
-            return true;
-      }
-   }
-   return false;
+   return
+      AnyAffordance(project, *this, &WaveTrackAffordanceControls::OnTextSelect);
 }
 
 std::vector< std::shared_ptr< WaveTrackSubView > >
