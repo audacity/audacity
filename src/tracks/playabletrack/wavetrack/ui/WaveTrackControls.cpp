@@ -799,22 +799,26 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
    AudacityProject *const project = &mpData->project;
-   auto channels = TrackList::Channels( pTrack );
+
+   // We can assume all channels of a WaveTrack are also WaveTrack
+   auto channelRange = pTrack->Channels<WaveTrack>();
 
    int totalHeight = 0;
    int nChannels = 0;
 
-   std::vector<WaveTrack *> tracks;
-   for (auto channel : channels)
-      tracks.push_back(channel);
+   std::vector<WaveTrack *> channels;
+   for (auto pChannel : channelRange)
+      channels.push_back(pChannel.get());
 
    TrackList::Get(*project).UnlinkChannels(*pTrack);
 
    float pan = -1.0f;
-   for (auto track : tracks) {
-      auto &view = TrackView::Get(*track);
+   for (const auto pChannel : channels) {
+      // See comment on channelRange
+      assert(pChannel);
+      auto &view = ChannelView::Get(*pChannel);
       if (stereo) {
-         track->SetPan(pan);
+         pChannel->SetPan(pan);
          pan += 2.0f;
       }
 
@@ -827,9 +831,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    int averageHeight = totalHeight / nChannels;
 
-   for (auto channel : channels)
+   for (const auto pChannel : channels)
       // Make tracks the same height
-      TrackView::Get( *channel ).SetExpandedHeight( averageHeight );
+      ChannelView::Get(*pChannel).SetExpandedHeight(averageHeight);
 }
 
 /// Swap the left and right channels of a stero track...
