@@ -35,7 +35,6 @@ public:
 
    // some static conveniences, useful for summation over track iterator
    // ranges
-   static int GetTrackHeight( const Track *pTrack );
    static int GetChannelGroupHeight( const Track *pTrack );
    // Total height of the given track and all previous ones (constant time!)
    static int GetCumulativeHeight( const Track *pTrack );

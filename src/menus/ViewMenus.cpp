@@ -124,9 +124,10 @@ void DoZoomFitV(AudacityProject &project)
    auto &tracks = TrackList::Get( project );
 
    // Only nonminimized audio tracks will be resized
-   auto range = tracks.Any<AudioTrack>()
+   // Assume all channels of the track have the same minimization state
+   auto range = tracks.Leaders<AudioTrack>()
       - [](const Track *pTrack){
-         return TrackView::Get( *pTrack ).GetMinimized(); };
+         return TrackView::Get(*pTrack).GetMinimized(); };
    auto count = range.size();
    if (count == 0)
       return;
@@ -137,8 +138,8 @@ void DoZoomFitV(AudacityProject &project)
    
    // The height of minimized and non-audio tracks cannot be apportioned
    height -=
-      tracks.Any().sum( TrackView::GetTrackHeight )
-         - range.sum( TrackView::GetTrackHeight );
+      tracks.Leaders().sum(TrackView::GetChannelGroupHeight)
+         - range.sum(TrackView::GetChannelGroupHeight);
    
    // Give each resized track the average of the remaining height
    // Bug 2803: Cast count to int, because otherwise the result of 
@@ -150,7 +151,8 @@ void DoZoomFitV(AudacityProject &project)
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)
-      TrackView::Get( *t ).SetExpandedHeight(height);
+      for (auto pChannel : TrackList::Channels(t))
+         TrackView::Get(*pChannel).SetExpandedHeight(height);
 }
 }
 

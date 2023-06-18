@@ -749,8 +749,7 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
    // the sum of channel heights, not the height of any channel alone!
    trk = *GetTracks()->FindLeader(trk);
    auto &view = TrackView::Get( *trk );
-   auto height =
-      TrackList::Channels(trk).sum( TrackView::GetTrackHeight );
+   auto height = TrackView::GetChannelGroupHeight(trk);
 
    // Set rectangle top according to the scrolling position, `vpos`
    // Subtract the inset (above) and shadow (below) from the height of the
@@ -1009,12 +1008,11 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
 
    for (auto it : GetTracks()->Leaders()) {
       trackTop += trackHeight;
+      trackHeight = TrackView::GetChannelGroupHeight(it);
 
       auto channels = TrackList::Channels(it);
-      trackHeight = channels.sum( TrackView::GetTrackHeight );
-
-      //We have found the track we want to ensure is visible.
       if (channels.contains(t)) {
+         //We have found the track we want to ensure is visible.
 
          //Get the size of the trackpanel.
          int width, height;

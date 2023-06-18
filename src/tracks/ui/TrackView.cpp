@@ -28,14 +28,12 @@ TrackView::~TrackView()
 {
 }
 
-int TrackView::GetTrackHeight( const Track *pTrack )
+int TrackView::GetChannelGroupHeight(const Track *pTrack)
 {
-   return pTrack ? Get( *pTrack ).GetHeight() : 0;
-}
-
-int TrackView::GetChannelGroupHeight( const Track *pTrack )
-{
-   return pTrack ? TrackList::Channels( pTrack ).sum( GetTrackHeight ) : 0;
+   const auto GetTrackHeight = [](const Track *pTrack) -> int {
+      return pTrack ? Get(*pTrack).GetHeight() : 0;
+   };
+   return pTrack ? TrackList::Channels(pTrack).sum(GetTrackHeight) : 0;
 }
 
 int TrackView::GetCumulativeHeight( const Track *pTrack )
