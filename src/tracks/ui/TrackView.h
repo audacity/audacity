@@ -15,6 +15,7 @@ Paul Licameli split from class Track
 #include "CommonTrackPanelCell.h" // to inherit
 #include "XMLAttributeValueView.h"
 
+class Channel;
 class Track;
 class TrackList;
 class TrackVRulerControls;
@@ -139,6 +140,15 @@ private:
    bool           mMinimized{ false };
    int            mY{ 0 };
    int            mHeight{ DefaultHeight };
+};
+
+//! For now, a class with static functions only
+class AUDACITY_DLL_API ChannelView {
+public:
+   static TrackView &Get(Channel &channel);
+   static const TrackView &Get(const Channel &channel);
+   static TrackView *Find(Channel *pChannel);
+   static const TrackView *Find(const Channel *pChannel);
 };
 
 #include "AttachedVirtualFunction.h"

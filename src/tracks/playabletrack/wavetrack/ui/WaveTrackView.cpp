@@ -899,24 +899,24 @@ auto WaveTrackSubView::GetMenuItems(
       };
 }
 
-WaveTrackView &WaveTrackView::Get( WaveTrack &track )
+WaveTrackView &WaveTrackView::Get(WaveTrack &track)
 {
-   return static_cast< WaveTrackView& >( TrackView::Get( track ) );
+   return static_cast<WaveTrackView&>(ChannelView::Get(track));
 }
 
-const WaveTrackView &WaveTrackView::Get( const WaveTrack &track )
+const WaveTrackView &WaveTrackView::Get(const WaveTrack &track)
 {
-   return Get( const_cast<WaveTrack&>( track ) );
+   return Get(const_cast<WaveTrack&>(track));
 }
 
-WaveTrackView *WaveTrackView::Find( WaveTrack *pTrack )
+WaveTrackView *WaveTrackView::Find(WaveTrack *pTrack)
 {
-   return static_cast< WaveTrackView* >( TrackView::Find( pTrack ) );
+   return static_cast<WaveTrackView*>(ChannelView::Find(pTrack));
 }
 
-const WaveTrackView *WaveTrackView::Find( const WaveTrack *pTrack )
+const WaveTrackView *WaveTrackView::Find(const WaveTrack *pTrack)
 {
-   return Find( const_cast<WaveTrack*>( pTrack ) );
+   return Find(const_cast<WaveTrack*>(pTrack));
 }
 
 WaveTrackView::WaveTrackView(
@@ -943,10 +943,9 @@ WaveTrackView::~WaveTrackView()
 
 void WaveTrackView::CopyTo( Track &track ) const
 {
-   TrackView::CopyTo( track );
-   auto &other = TrackView::Get( track );
-
-   if ( const auto pOther = dynamic_cast< WaveTrackView* >( &other ) ) {
+   TrackView::CopyTo(track);
+   auto &other = ChannelView::Get(*track.GetChannel(0));
+   if (const auto pOther = dynamic_cast<WaveTrackView*>(&other)) {
       // only these fields are important to preserve in undo/redo history
       pOther->RestorePlacements( SavePlacements() );
       pOther->DoGetMultiView() = DoGetMultiView();

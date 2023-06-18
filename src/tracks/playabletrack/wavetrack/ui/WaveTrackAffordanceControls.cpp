@@ -229,7 +229,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         results.push_back(
             SelectHandle::HitTest(
                 mSelectHandle, state, pProject,
-                TrackView::Get(*track).shared_from_this()
+                ChannelView::Get(*track).shared_from_this()
             )
         );
     }
@@ -342,7 +342,7 @@ namespace {
 
 auto FindAffordance(WaveTrack &track)
 {
-   auto &view = TrackView::Get( track );
+   auto &view = ChannelView::Get(track);
    auto pAffordance = view.GetAffordanceControls();
    return std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
       pAffordance );

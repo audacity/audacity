@@ -375,7 +375,7 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    bool selected = pTrack ? pTrack->GetSelected() : true;
    bool syncLockSelected = pTrack ? SyncLock::IsSyncLockSelected(pTrack) : true;
    bool minimized =
-      pTrack ? TrackView::Get( *pTrack ).GetMinimized() : false;
+      pTrack ? ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized() : false;
    {
       wxRect bev = rect;
       GetMinimizeHorizontalBounds(rect, bev);

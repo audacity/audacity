@@ -140,12 +140,11 @@ void LabelTrackView::BindTo( LabelTrack *pParent )
    });
 }
 
-void LabelTrackView::CopyTo( Track &track ) const
+void LabelTrackView::CopyTo(Track &track) const
 {
-   TrackView::CopyTo( track );
-   auto &other = TrackView::Get( track );
-
-   if ( const auto pOther = dynamic_cast< const LabelTrackView* >( &other ) ) {
+   TrackView::CopyTo(track);
+   auto &other = ChannelView::Get(*track.GetChannel(0));
+   if (const auto pOther = dynamic_cast<const LabelTrackView*>(&other)) {
       pOther->mNavigationIndex = mNavigationIndex;
       pOther->mInitialCursorPos = mInitialCursorPos;
       pOther->mCurrentCursorPos = mCurrentCursorPos;
@@ -154,14 +153,14 @@ void LabelTrackView::CopyTo( Track &track ) const
    }
 }
 
-LabelTrackView &LabelTrackView::Get( LabelTrack &track )
+LabelTrackView &LabelTrackView::Get(LabelTrack &track)
 {
-   return static_cast< LabelTrackView& >( TrackView::Get( track ) );
+   return static_cast<LabelTrackView&>(ChannelView::Get(track));
 }
 
-const LabelTrackView &LabelTrackView::Get( const LabelTrack &track )
+const LabelTrackView &LabelTrackView::Get(const LabelTrack &track)
 {
-   return static_cast< const LabelTrackView& >( TrackView::Get( track ) );
+   return static_cast<const LabelTrackView&>(ChannelView::Get(track));
 }
 
 std::shared_ptr<LabelTrack> LabelTrackView::FindLabelTrack()

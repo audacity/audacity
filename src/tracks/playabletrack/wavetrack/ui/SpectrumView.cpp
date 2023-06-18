@@ -152,12 +152,14 @@ void SpectrumView::ForAll( AudacityProject &project,
 {
    if (!fn)
       return;
-   for ( const auto wt : TrackList::Get(project).Any< WaveTrack >() ) {
-      if (auto pWaveTrackView =
-          dynamic_cast<WaveTrackView*>( &TrackView::Get(*wt)) ) {
-         for (const auto &pSubView : pWaveTrackView->GetAllSubViews()) {
-            if (const auto sView = dynamic_cast<SpectrumView*>(pSubView.get()))
-               fn( *sView );
+   for (const auto wt : TrackList::Get(project).Leaders<WaveTrack>()) {
+      for (auto pChannel : wt->Channels()) {
+         if (auto pWaveTrackView =
+             dynamic_cast<WaveTrackView*>(&ChannelView::Get(*pChannel))) {
+            for (const auto &pSubView : pWaveTrackView->GetAllSubViews()) {
+               if (const auto sView = dynamic_cast<SpectrumView*>(pSubView.get()))
+                  fn( *sView );
+            }
          }
       }
    }

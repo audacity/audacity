@@ -748,13 +748,13 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
    // Always move to the first channel of the group, and use only
    // the sum of channel heights, not the height of any channel alone!
    trk = *GetTracks()->FindLeader(trk);
-   auto &view = TrackView::Get( *trk );
    auto height = TrackView::GetChannelGroupHeight(trk);
 
    // Set rectangle top according to the scrolling position, `vpos`
    // Subtract the inset (above) and shadow (below) from the height of the
    // rectangle, but not the border
    // This matters because some separators do paint over the border
+   auto &view = ChannelView::Get(*trk->GetChannel(0));
    const auto top =
       -mViewInfo->vpos + view.GetCumulativeHeightBefore() + kTopInset;
    height -= (kTopInset + kShadowThickness);
@@ -873,18 +873,18 @@ namespace {
 std::vector<int> FindAdjustedChannelHeights(Track &t)
 {
    assert(t.IsLeader());
-   auto channels = TrackList::Channels(&t);
+   auto channels = t.Channels();
    assert(!channels.empty());
 
    // Collect heights, and count affordances
    int nAffordances = 0;
    int totalHeight = 0;
    std::vector<int> oldHeights;
-   for (auto channel : channels) {
-      auto &view = TrackView::Get( *channel );
+   for (auto pChannel : channels) {
+      auto &view = ChannelView::Get(*pChannel);
       const auto height = view.GetHeight();
       totalHeight += height;
-      oldHeights.push_back( height );
+      oldHeights.push_back(height);
       if (view.GetAffordanceControls())
          ++nAffordances;
    }
@@ -944,8 +944,8 @@ void TrackPanel::UpdateTrackVRuler(Track &t)
             0);
 
    auto pHeight = heights.begin();
-   for (auto pChannel : TrackList::Channels(&t)) {
-      auto &view = TrackView::Get(*pChannel);
+   for (auto pChannel : t.Channels()) {
+      auto &view = ChannelView::Get(*pChannel);
       const auto height = *pHeight++;
       rect.SetHeight(height);
       const auto subViews = view.GetSubViews(rect);
@@ -955,7 +955,7 @@ void TrackPanel::UpdateTrackVRuler(Track &t)
       auto iter = subViews.begin(), end = subViews.end(), next = iter;
       auto yy = iter->first;
       wxSize vRulerSize{ 0, 0 };
-      auto &size = pChannel->vrulerSize;
+      auto &size = pChannel->GetTrack().vrulerSize;
       for (; iter != end; iter = next) {
          ++next;
          auto nextY = (next == end)
@@ -992,7 +992,8 @@ void TrackPanel::UpdateVRulerSize()
 
 void TrackPanel::OnTrackMenu(Track *t)
 {
-   CellularPanel::DoContextMenu( t ? &TrackView::Get( *t ) : nullptr );
+   CellularPanel::DoContextMenu(
+      t ? &ChannelView::Get(*t->GetChannel(0)) : nullptr);
 }
 
 // Tracks have been removed from the list.
@@ -1126,7 +1127,7 @@ void DrawTrackName(
 
    // PRL:  to do:  reexamine this strange use of TrackView::GetHeight,
    // ultimately to compute an opacity
-   int h = TrackView::Get( *t ).GetHeight();
+   int h = ChannelView::Get(*t->GetChannel(0)).GetHeight();
 
    // f codes the opacity as a number between 0.0 and 1.0
    float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
@@ -1444,20 +1445,17 @@ struct ChannelGroup final : TrackPanelGroup {
    {
       TrackPanelGroup::Draw(context, rect, iPass);
       if (iPass == TrackArtist::PassFocus && mpTrack->IsSelected()) {
-         const auto channels = TrackList::Channels(mpTrack.get());
+         const auto channels = mpTrack->Channels();
          const auto pLast = *channels.rbegin();
          wxCoord yy = rect.GetTop();
          assert(mpTrack->IsLeader()); // by construction
          auto heights = FindAdjustedChannelHeights(*mpTrack);
          auto pHeight = heights.begin();
-         for (auto channel : channels)
-         {
-            auto& view = TrackView::Get(*channel);
+         for (auto pChannel : channels) {
+            auto& view = ChannelView::Get(*pChannel);
             auto height = *pHeight++;
             if (auto affordance = view.GetAffordanceControls())
-            {
                height += kAffordancesAreaHeight;
-            }
             auto trackRect = wxRect(
                mLeftOffset,
                yy,
@@ -1612,8 +1610,8 @@ struct Subgroup final : TrackPanelGroup {
 
       for (const auto leader : tracks.Leaders()) {
          wxCoord height = 0;
-         for ( auto channel : TrackList::Channels( leader ) ) {
-            auto &view = TrackView::Get( *channel );
+         for (auto pChannel : leader->Channels()) {
+            auto &view = ChannelView::Get(*pChannel);
             height += view.GetHeight();
          }
          refinement.emplace_back( yy,
@@ -1712,8 +1710,11 @@ std::vector<wxRect> TrackPanel::FindRulerRects( const Track *target )
 
 TrackPanelCell *TrackPanel::GetFocusedCell()
 {
-   auto pTrack = TrackFocus::Get( *GetProject() ).Get();
-   return pTrack ? &TrackView::Get( *pTrack ) : GetBackgroundCell().get();
+   // Note that focus track is always a leader
+   auto pTrack = TrackFocus::Get(*GetProject()).Get();
+   return pTrack
+      ? &ChannelView::Get(*pTrack->GetChannel(0))
+      : GetBackgroundCell().get();
 }
 
 void TrackPanel::SetFocusedCell()

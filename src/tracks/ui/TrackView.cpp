@@ -206,6 +206,28 @@ std::shared_ptr<CommonTrackCell> TrackView::GetAffordanceControls()
    return {};
 }
 
+TrackView &ChannelView::Get(Channel &channel)
+{
+   return TrackView::Get(channel.GetTrack(), channel.GetChannelIndex());
+}
+
+const TrackView &ChannelView::Get(const Channel &channel)
+{
+   return Get(const_cast<Channel&>(channel));
+}
+
+TrackView *ChannelView::Find(Channel *pChannel)
+{
+   if (!pChannel)
+      return nullptr;
+   return TrackView::Find(&pChannel->GetTrack(), pChannel->GetChannelIndex());
+}
+
+const TrackView *ChannelView::Find(const Channel *pChannel)
+{
+   return Find(const_cast<Channel*>(pChannel));
+}
+
 namespace {
 
 /*!

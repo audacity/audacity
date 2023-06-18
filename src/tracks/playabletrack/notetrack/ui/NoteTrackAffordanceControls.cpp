@@ -67,7 +67,7 @@ std::vector<UIHandlePtr> NoteTrackAffordanceControls::HitTest(const TrackPanelMo
 {
     std::vector<UIHandlePtr> results;
 
-    auto track = FindTrack();
+    auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
     const auto nt = std::static_pointer_cast<const NoteTrack>(track->SubstitutePendingChangedTrack());
 
     const auto rect = state.rect;
@@ -93,7 +93,7 @@ std::vector<UIHandlePtr> NoteTrackAffordanceControls::HitTest(const TrackPanelMo
         results.push_back(
             SelectHandle::HitTest(
                 mSelectHandle, state, pProject,
-                TrackView::Get(*track).shared_from_this()
+                ChannelView::Get(*track).shared_from_this()
             )
         );
     }

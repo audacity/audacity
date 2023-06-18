@@ -1138,7 +1138,7 @@ void SelectHandle::TimerHandler::OnTimer(Observer::Message)
       mParent->Drag(
          TrackPanelMouseEvent{
             evt, mParent->mRect, size,
-            TrackView::Get( *pTrack ).shared_from_this() },
+            ChannelView::Get(*pTrack->GetChannel(0)).shared_from_this() },
          project
       );
       mParent->mAutoScrolling = false;

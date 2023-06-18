@@ -937,7 +937,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
             if ((recordingChannels > 2) &&
                 !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
-               TrackView::Get( *newTrack ).SetMinimized(true);
+               ChannelView::Get(*newTrack->GetChannel(0)).SetMinimized(true);
             }
 
             transportSequences.captureSequences.push_back(newTrack);

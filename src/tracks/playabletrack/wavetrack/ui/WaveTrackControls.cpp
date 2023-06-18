@@ -762,8 +762,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    }
 
    bool bBothMinimizedp =
-      ((TrackView::Get( *pTrack ).GetMinimized()) &&
-       (TrackView::Get( *partner ).GetMinimized()));
+      ((ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized()) &&
+       (ChannelView::Get(*partner->GetChannel(0)).GetMinimized()));
 
    tracks.MakeMultiChannelTrack( *pTrack, 2, false );
 

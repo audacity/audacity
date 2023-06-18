@@ -20,6 +20,8 @@
 #include <wx/app.h>
 #include <wx/scrolbar.h>
 
+#include <numeric>
+
 // private helper classes and functions
 namespace {
 
@@ -127,8 +129,8 @@ void DoZoomFitV(AudacityProject &project)
    // Assume all channels of the track have the same minimization state
    auto range = tracks.Leaders<AudioTrack>()
       - [](const Track *pTrack){
-         return TrackView::Get(*pTrack).GetMinimized(); };
-   auto count = range.size();
+         return ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized(); };
+   auto count = range.sum(&Track::NChannels);
    if (count == 0)
       return;
 
@@ -151,8 +153,8 @@ void DoZoomFitV(AudacityProject &project)
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)
-      for (auto pChannel : TrackList::Channels(t))
-         TrackView::Get(*pChannel).SetExpandedHeight(height);
+      for (auto pChannel : t->Channels())
+         ChannelView::Get(*pChannel).SetExpandedHeight(height);
 }
 }
 
@@ -261,8 +263,9 @@ void OnCollapseAllTracks(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   for (auto t : tracks.Any())
-      TrackView::Get( *t ).SetMinimized(true);
+   for (auto t : tracks.Leaders())
+      for (auto pChannel : t->Channels())
+         ChannelView::Get(*pChannel).SetMinimized(true);
 
    ProjectHistory::Get( project ).ModifyState(true);
 }
@@ -273,8 +276,9 @@ void OnExpandAllTracks(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   for (auto t : tracks.Any())
-      TrackView::Get( *t ).SetMinimized(false);
+   for (auto t : tracks.Leaders())
+      for (auto pChannel : t->Channels())
+         ChannelView::Get(*pChannel).SetMinimized(false);
 
    ProjectHistory::Get( project ).ModifyState(true);
 }
