@@ -64,9 +64,9 @@ is time to refresh some aspect of the screen.
 #include "Theme.h"
 #include "TrackArt.h"
 #include "TrackPanelMouseEvent.h"
-#include "TrackPanelResizeHandle.h"
 
 #include "UndoManager.h"
+#include "UIHandle.h"
 
 #include "AColor.h"
 #include "AllThemeResources.h"

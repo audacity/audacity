@@ -186,7 +186,8 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         results.push_back(
             AssignUIHandlePtr(
                 mResizeHandle, 
-                std::make_shared<TrackPanelResizeHandle>((*prev)->shared_from_this(), py)
+                std::make_shared<TrackPanelResizeHandle>(
+                  (*prev)->GetChannel(0), py)
             )
         );
     }

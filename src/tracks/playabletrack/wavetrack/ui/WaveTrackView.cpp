@@ -791,7 +791,8 @@ std::pair<
                //depending on which border hit test succeeded on we
                //need to choose a proper target for resizing
                auto it = bottomBorderHit ? currentChannel : currentChannel.advance(-1);
-               auto result = std::make_shared<TrackPanelResizeHandle>((*it)->shared_from_this(), py);
+               auto result = std::make_shared<TrackPanelResizeHandle>(
+                  (*it)->GetChannel(0), py);
                result = AssignUIHandlePtr(mResizeHandle, result);
                results.second.push_back(result);
             }

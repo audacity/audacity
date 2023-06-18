@@ -37,7 +37,7 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
    auto pTrack = FindTrack();
    if (pTrack) {
       auto result = std::make_shared<TrackPanelResizeHandle>(
-         pTrack, st.state.m_y );
+         pTrack->GetChannel(0), st.state.m_y );
       result = AssignUIHandlePtr(mResizeHandle, result);
       results.push_back(result);
    }
