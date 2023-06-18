@@ -11,24 +11,24 @@
 
 \file SetTrackCommand.cpp
 \brief Definitions for SetTrackCommand built up from 
-SetTrackBase, SetTrackStatusCommand, SetTrackAudioCommand and
+SetChannelsBase, SetTrackStatusCommand, SetTrackAudioCommand and
 SetTrackVisualsCommand
 
-\class SetTrackBase
+\class SetChannelsBase
 \brief Base class for the various track modifying command classes, that
 loops over channels. Subclasses override ApplyInner() to change one channel.
 
 \class SetTrackStatusCommand
-\brief A SetTrackBase that sets name, selected and focus.
+\brief A SetChannelsBase that sets name, selected and focus.
 
 \class SetTrackAudioCommand
-\brief A SetTrackBase that sets pan, gain, mute and solo.
+\brief A SetChannelsBase that sets pan, gain, mute and solo.
 
 \class SetTrackVisualsCommand
-\brief A SetTrackBase that sets appearance of a track.
+\brief A SetChannelsBase that sets appearance of a track.
 
 \class SetTrackCommand
-\brief A SetTrackBase that combines SetTrackStatusCommand,
+\brief A SetChannelsBase that combines SetTrackStatusCommand,
 SetTrackAudioCommand and SetTrackVisualsCommand.
 
 *//*******************************************************************/
@@ -52,7 +52,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "CommandContext.h"
 
-bool SetTrackBase::Apply(const CommandContext & context  )
+bool SetChannelsBase::Apply(const CommandContext & context)
 {
    auto &tracks = TrackList::Get( context.project );
    for (auto t : tracks.Leaders()) {

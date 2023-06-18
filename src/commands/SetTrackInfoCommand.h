@@ -22,7 +22,7 @@
 
 class Track;
 
-class SetTrackBase : public AudacityCommand
+class SetChannelsBase : public AudacityCommand
 {
 public:
    bool Apply(const CommandContext & context) final;
@@ -30,7 +30,7 @@ public:
 };
 
 
-class SetTrackStatusCommand : public SetTrackBase
+class SetTrackStatusCommand : public SetChannelsBase
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -59,7 +59,7 @@ public:
    bool bHasFocused;
 };
 
-class SetTrackAudioCommand : public SetTrackBase
+class SetTrackAudioCommand : public SetChannelsBase
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -90,7 +90,7 @@ public:
    bool bHasMute;
 };
 
-class SetTrackVisualsCommand : public SetTrackBase
+class SetTrackVisualsCommand : public SetChannelsBase
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -135,7 +135,7 @@ public:
    bool bHasSpecColorScheme;
 };
 
-class SetTrackCommand : public SetTrackBase
+class SetTrackCommand : public SetChannelsBase
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
