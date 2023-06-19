@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 WaveformVRulerControls.h
 
-Paul Licameli split from WaveTrackVRulerControls.h
+Paul Licameli split from WaveChannelVRulerControls.h
 
 **********************************************************************/
 

@@ -4,14 +4,14 @@ Audacity: A Digital Audio Editor
 
 WaveformVRulerControls.cpp
 
-Paul Licameli split from WaveTrackVRulerControls.cpp
+Paul Licameli split from WaveChannelVRulerControls.cpp
 
 **********************************************************************/
 
 #include "WaveformVRulerControls.h"
 
 #include "WaveformVZoomHandle.h"
-#include "WaveTrackVRulerControls.h"
+#include "WaveChannelVRulerControls.h"
 
 #include "../../../ui/ChannelView.h"
 #include "NumberScale.h"
@@ -232,7 +232,7 @@ void WaveformVRulerControls::Draw(
    const wxRect &rect_, unsigned iPass )
 {
    ChannelVRulerControls::Draw(context, rect_, iPass);
-   WaveTrackVRulerControls::DoDraw(*this, context, rect_, iPass);
+   WaveChannelVRulerControls::DoDraw(*this, context, rect_, iPass);
 }
 
 void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
@@ -248,7 +248,7 @@ static CustomUpdaterValue updater;
 void WaveformVRulerControls::DoUpdateVRuler(
    const wxRect &rect, const WaveTrack *wt)
 {
-   auto vruler = &WaveTrackVRulerControls::ScratchRuler();
+   auto vruler = &WaveChannelVRulerControls::ScratchRuler();
 
    // All waves have a ruler in the info panel
    // The ruler needs a bevelled surround.

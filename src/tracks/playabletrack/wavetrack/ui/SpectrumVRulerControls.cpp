@@ -4,14 +4,14 @@ Audacity: A Digital Audio Editor
 
 SpectrumVRulerControls.cpp
 
-Paul Licameli split from WaveTrackVRulerControls.cpp
+Paul Licameli split from WaveChannelVRulerControls.cpp
 
 **********************************************************************/
 
 #include "SpectrumVRulerControls.h"
 
 #include "SpectrumVZoomHandle.h"
-#include "WaveTrackVRulerControls.h"
+#include "WaveChannelVRulerControls.h"
 
 #include "../../../ui/ChannelView.h"
 #include "NumberScale.h"
@@ -124,7 +124,7 @@ void SpectrumVRulerControls::Draw(
    const wxRect &rect_, unsigned iPass )
 {
    ChannelVRulerControls::Draw(context, rect_, iPass);
-   WaveTrackVRulerControls::DoDraw(*this, context, rect_, iPass);
+   WaveChannelVRulerControls::DoDraw(*this, context, rect_, iPass);
 }
 
 void SpectrumVRulerControls::UpdateRuler( const wxRect &rect )
@@ -138,7 +138,7 @@ void SpectrumVRulerControls::UpdateRuler( const wxRect &rect )
 void SpectrumVRulerControls::DoUpdateVRuler(
    const wxRect &rect, const WaveTrack *wt )
 {
-   auto vruler = &WaveTrackVRulerControls::ScratchRuler();
+   auto vruler = &WaveChannelVRulerControls::ScratchRuler();
    const auto &settings = SpectrogramSettings::Get(*wt);
    float minFreq, maxFreq;
    SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
