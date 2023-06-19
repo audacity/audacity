@@ -11,7 +11,7 @@ Paul Licameli split from class LabelTrack
 #ifndef __AUDACITY_LABEL_TRACK_VIEW__
 #define __AUDACITY_LABEL_TRACK_VIEW__
 
-#include "../../ui/CommonTrackView.h"
+#include "../../ui/CommonChannelView.h"
 #include "Observer.h"
 
 class LabelGlyphHandle;
@@ -37,7 +37,7 @@ constexpr int MAX_NUM_ROWS =80;
 
 class wxKeyEvent;
 
-class AUDACITY_DLL_API LabelTrackView final : public CommonTrackView
+class AUDACITY_DLL_API LabelTrackView final : public CommonChannelView
 {
    LabelTrackView( const LabelTrackView& ) = delete;
    LabelTrackView &operator=( const LabelTrackView& ) = delete;

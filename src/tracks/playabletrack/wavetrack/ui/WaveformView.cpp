@@ -703,14 +703,14 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   CommonTrackView::GetEnvelopeValues( *clip->GetEnvelope(),
+   CommonChannelView::GetEnvelopeValues(*clip->GetEnvelope(),
        tOffset,
 
         // PRL: change back to make envelope evaluate only at sample times
         // and then interpolate the display
         0, // 1.0 / rate,
 
-        env, mid.width, leftOffset, zoomInfo );
+        env, mid.width, leftOffset, zoomInfo);
 
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
@@ -840,14 +840,14 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rectPortion.width);
             double *const env2 = &vEnv2[0];
-            CommonTrackView::GetEnvelopeValues( *clip->GetEnvelope(),
+            CommonChannelView::GetEnvelopeValues(*clip->GetEnvelope(),
                 tOffset,
 
                  // PRL: change back to make envelope evaluate only at sample times
                  // and then interpolate the display
                  0, // 1.0 / rate,
 
-                 env2, rectPortion.width, leftOffset, zoomInfo );
+                 env2, rectPortion.width, leftOffset, zoomInfo);
 
             DrawMinMaxRMS(context, rectPortion, env2,
                zoomMin, zoomMax,

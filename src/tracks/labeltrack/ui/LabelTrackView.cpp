@@ -97,7 +97,7 @@ void LabelTrackView::Index::SetModified(bool modified)
 }
 
 LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
-   : CommonTrackView{ pTrack, 0 }
+   : CommonChannelView{ pTrack, 0 }
 {
    ResetFont();
    CreateCustomGlyphs();
@@ -118,7 +118,7 @@ void LabelTrackView::Reparent( const std::shared_ptr<Track> &parent )
    auto newParent = track_cast<LabelTrack*>(parent.get());
    if (oldParent.get() != newParent)
       BindTo( newParent );
-   CommonTrackView::Reparent( parent );
+   CommonChannelView::Reparent(parent);
 }
 
 void LabelTrackView::BindTo( LabelTrack *pParent )
@@ -925,7 +925,7 @@ void LabelTrackView::Draw(
 {
    if ( iPass == TrackArtist::PassTracks )
       Draw( context, rect );
-   CommonTrackView::Draw( context, rect, iPass );
+   CommonChannelView::Draw(context, rect, iPass);
 }
 
 /// uses GetTextExtent to find the character position

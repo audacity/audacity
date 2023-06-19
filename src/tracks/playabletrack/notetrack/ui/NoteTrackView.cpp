@@ -31,7 +31,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dc.h>
 
 NoteTrackView::NoteTrackView( const std::shared_ptr<Track> &pTrack )
-   : CommonTrackView{ pTrack, 0 }
+   : CommonChannelView{ pTrack, 0 }
 {
 }
 
@@ -747,7 +747,7 @@ void NoteTrackView::Draw(
 
       DrawNoteTrack(context, nt.get(), rect, muted, selected);
    }
-   CommonTrackView::Draw( context, rect, iPass );
+   CommonChannelView::Draw(context, rect, iPass);
 }
 
 #include "SyncLock.h"

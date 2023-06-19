@@ -35,7 +35,7 @@ Paul Licameli split from TrackPanel.cpp
 using Doubles = ArrayOf<double>;
 
 TimeTrackView::TimeTrackView(const std::shared_ptr<Track> &pTrack)
-   : CommonTrackView{ pTrack, 0 }
+   : CommonChannelView{ pTrack, 0 }
 {
 }
 
@@ -107,8 +107,8 @@ void DrawHorzRulerAndCurve
    ruler.Draw(dc, track.GetEnvelope());
    
    Doubles envValues{ size_t(mid.width) };
-   CommonTrackView::GetEnvelopeValues( *track.GetEnvelope(),
-    0, 0, envValues.get(), mid.width, 0, zoomInfo );
+   CommonChannelView::GetEnvelopeValues(*track.GetEnvelope(),
+      0, 0, envValues.get(), mid.width, 0, zoomInfo);
    
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
    dc.SetPen( pen );
@@ -186,5 +186,5 @@ void TimeTrackView::Draw(
          pTrack->SubstitutePendingChangedTrack());
       DrawTimeTrack(context, *tt, ruler, rect);
    }
-   CommonTrackView::Draw( context, rect, iPass );
+   CommonChannelView::Draw(context, rect, iPass);
 }

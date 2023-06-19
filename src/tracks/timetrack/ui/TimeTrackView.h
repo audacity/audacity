@@ -11,11 +11,11 @@ Paul Licameli split from class TimeTrack
 #ifndef __AUDACITY_TIME_TRACK_VIEW__
 #define __AUDACITY_TIME_TRACK_VIEW__
 
-#include "../../ui/CommonTrackView.h"
+#include "../../ui/CommonChannelView.h"
 
 class EnvelopeHandle;
 
-class TimeTrackView final : public CommonTrackView
+class TimeTrackView final : public CommonChannelView
 {
    TimeTrackView( const TimeTrackView& ) = delete;
    TimeTrackView &operator=( const TimeTrackView& ) = delete;

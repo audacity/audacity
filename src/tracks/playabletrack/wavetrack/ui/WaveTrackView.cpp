@@ -922,12 +922,12 @@ const WaveTrackView *WaveTrackView::Find(const WaveTrack *pTrack)
 
 WaveTrackView::WaveTrackView(
    const std::shared_ptr<Track> &pTrack, size_t channel
-)  : CommonTrackView{ pTrack, channel }
+)  : CommonChannelView{ pTrack, channel }
 {
 }
 
 WaveTrackSubView::WaveTrackSubView(WaveTrackView &waveTrackView)
-   : CommonTrackView{
+   : CommonChannelView{
       waveTrackView.FindTrack(), waveTrackView.GetChannelIndex() }
 {
    mwWaveTrackView = std::static_pointer_cast<WaveTrackView>(
@@ -971,11 +971,11 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
 }
 
 std::pair< bool, std::vector<UIHandlePtr> >
-WaveTrackView::DoDetailedHitTest
-(const TrackPanelMouseState &st,
- const AudacityProject *pProject, int currentTool, bool bMultiTool,
- const std::shared_ptr<WaveTrack> &pTrack,
- CommonTrackView &view)
+WaveTrackView::DoDetailedHitTest(
+   const TrackPanelMouseState &st,
+   const AudacityProject *pProject, int currentTool, bool bMultiTool,
+   const std::shared_ptr<WaveTrack> &pTrack,
+   CommonChannelView &view)
 {
    // common hit-testing for different sub-view types, to help implement their
    // DetailedHitTest()
@@ -1313,7 +1313,7 @@ unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWind
    case WXK_TAB:
       break;
    default:
-      result |= CommonTrackView::CaptureKey(
+      result |= CommonChannelView::CaptureKey(
          event, viewInfo, pParent, project);
       break;
    };
@@ -1336,7 +1336,7 @@ unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*
             result |= RefreshCode::RefreshCell;
          }
          else
-            result |= pWaveTrackView->CommonTrackView::KeyDown(
+            result |= pWaveTrackView->CommonChannelView::KeyDown(
                event, viewInfo, pParent, project);
       }
       else
@@ -1353,7 +1353,7 @@ unsigned WaveTrackView::Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pP
    unsigned result{ RefreshCode::RefreshNone };
    if (auto delegate = mKeyEventDelegate.lock()) {
       if (auto pWaveTrackView = dynamic_cast<WaveTrackView*>(delegate.get()))
-         result |= pWaveTrackView->CommonTrackView::Char(
+         result |= pWaveTrackView->CommonChannelView::Char(
             event, viewInfo, pParent, project);
       else
          result |= delegate->Char(event, viewInfo, pParent, project);
@@ -1369,7 +1369,7 @@ unsigned WaveTrackView::LoseFocus(AudacityProject *project)
    unsigned result = RefreshCode::RefreshNone;
    if (auto delegate = mKeyEventDelegate.lock()) {
       if (auto waveTrackView = dynamic_cast<WaveTrackView*>(delegate.get()))
-         result = waveTrackView->CommonTrackView::LoseFocus(project);
+         result = waveTrackView->CommonChannelView::LoseFocus(project);
       else
          result = delegate->LoseFocus(project);
       mKeyEventDelegate.reset();
@@ -1700,7 +1700,7 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
 void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
 {
    // BuildSubViews(); // not really needed
-   CommonTrackView::Reparent( parent );
+   CommonChannelView::Reparent(parent);
    WaveTrackSubViews::ForEach( [&parent](WaveTrackSubView &subView){
       subView.Reparent( parent );
    } );
@@ -1752,7 +1752,7 @@ void WaveTrackView::Draw(
    // Should not come here, drawing is now delegated to sub-views
    wxASSERT( false );
 
-   CommonTrackView::Draw( context, rect, iPass );
+   CommonChannelView::Draw(context, rect, iPass);
 }
 
 using GetWaveTrackSyncLockPolicy =

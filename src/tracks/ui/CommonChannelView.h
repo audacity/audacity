@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-CommonTrackView.h
+CommonChannelView.h
 
 Paul Licameli split from class TrackView (now called ChannelView)
 
@@ -18,7 +18,8 @@ class SelectHandle;
 class TimeShiftHandle;
 class ZoomInfo;
 
-class AUDACITY_DLL_API CommonTrackView /* not final */ : public ChannelView
+//! Implements some hit-testing shared by many ChannelView subtypes
+class AUDACITY_DLL_API CommonChannelView /* not final */ : public ChannelView
 {
 public:
    using ChannelView::ChannelView;

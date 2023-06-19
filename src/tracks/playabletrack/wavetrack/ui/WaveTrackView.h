@@ -11,7 +11,7 @@ Paul Licameli split from class WaveTrack
 #ifndef __AUDACITY_WAVE_TRACK_VIEW__
 #define __AUDACITY_WAVE_TRACK_VIEW__
 
-#include "../../../ui/CommonTrackView.h"
+#include "../../../ui/CommonChannelView.h"
 #include "ClientData.h"
 #include "SampleCount.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
@@ -36,7 +36,7 @@ class SubViewRearrangeHandle;
 
 class wxDC;
 
-class AUDACITY_DLL_API WaveTrackSubView : public CommonTrackView
+class AUDACITY_DLL_API WaveTrackSubView : public CommonChannelView
 {
 public:
 
@@ -93,7 +93,7 @@ using WaveTrackSubViews = ClientData::Site<
 >;
 
 class AUDACITY_DLL_API WaveTrackView final
-   : public CommonTrackView
+   : public CommonChannelView
    , public WaveTrackSubViews
 {
    WaveTrackView( const WaveTrackView& ) = delete;
@@ -121,7 +121,7 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
-   // CommonTrackView implementation
+   // CommonChannelView implementation
    void Reparent( const std::shared_ptr<Track> &parent ) override;
 
    static std::pair<
@@ -131,7 +131,7 @@ public:
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
       const std::shared_ptr<WaveTrack> &wt,
-      CommonTrackView &view);
+      CommonChannelView &view);
 
    std::vector< WaveTrackSubView::Type > GetDisplays() const;
    void SetDisplay(Display display, bool exclusive = true);

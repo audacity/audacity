@@ -11,9 +11,9 @@ Paul Licameli split from class NoteTrack
 #ifndef __AUDACITY_NOTE_TRACK_VIEW__
 #define __AUDACITY_NOTE_TRACK_VIEW__
 
-#include "../../../ui/CommonTrackView.h"
+#include "../../../ui/CommonChannelView.h"
 
-class NoteTrackView final : public CommonTrackView
+class NoteTrackView final : public CommonChannelView
 {
    NoteTrackView( const NoteTrackView& ) = delete;
    NoteTrackView &operator=( const NoteTrackView& ) = delete;
