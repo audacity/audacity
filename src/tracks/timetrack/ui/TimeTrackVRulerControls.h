@@ -24,8 +24,8 @@ class TimeTrackVRulerControls final : public TrackVRulerControls
 
 public:
    explicit
-   TimeTrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
-      : TrackVRulerControls( pTrackView ) {}
+   TimeTrackVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
+      : TrackVRulerControls{ pChannelView } {}
    ~TimeTrackVRulerControls();
 
    std::vector<UIHandlePtr> HitTest(

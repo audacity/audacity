@@ -14,7 +14,7 @@
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
-#include "../tracks/ui/TrackView.h"
+#include "../tracks/ui/ChannelView.h"
 
 
 #include <wx/app.h>
@@ -140,8 +140,8 @@ void DoZoomFitV(AudacityProject &project)
    
    // The height of minimized and non-audio tracks cannot be apportioned
    height -=
-      tracks.Leaders().sum(TrackView::GetChannelGroupHeight)
-         - range.sum(TrackView::GetChannelGroupHeight);
+      tracks.Leaders().sum(ChannelView::GetChannelGroupHeight)
+         - range.sum(ChannelView::GetChannelGroupHeight);
    
    // Give each resized track the average of the remaining height
    // Bug 2803: Cast count to int, because otherwise the result of 

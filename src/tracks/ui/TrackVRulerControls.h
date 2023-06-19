@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "CommonTrackPanelCell.h"
 
 class Track;
-class TrackView;
+class ChannelView;
 class wxDC;
 
 const int kGuard = 5; // 5 pixels to reduce risk of VZooming accidentally
@@ -25,12 +25,12 @@ class AUDACITY_DLL_API TrackVRulerControls /* not final */
 {
 public:
    explicit
-   TrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView );
+   TrackVRulerControls(const std::shared_ptr<ChannelView> &pChannelView);
 
    virtual ~TrackVRulerControls() = 0;
 
-   static TrackVRulerControls &Get( TrackView& );
-   static const TrackVRulerControls &Get( const TrackView& );
+   static TrackVRulerControls &Get(ChannelView&);
+   static const TrackVRulerControls &Get(const ChannelView&);
 
    // Define a default hit test method, just for message and cursor
    std::vector<UIHandlePtr> HitTest
@@ -61,7 +61,7 @@ protected:
 
    Track *GetTrack() const;
 
-   std::weak_ptr<TrackView> mwTrackView;
+   std::weak_ptr<ChannelView> mwChannelView;
 };
 
 #endif

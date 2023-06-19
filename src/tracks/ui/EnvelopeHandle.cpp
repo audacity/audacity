@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "EnvelopeHandle.h"
 
-#include "TrackView.h"
+#include "ChannelView.h"
 
 #include "Envelope.h"
 #include "Decibels.h"
@@ -179,7 +179,7 @@ UIHandle::Result EnvelopeHandle::Click
 
    const wxMouseEvent &event = evt.event;
    const auto &viewInfo = ViewInfo::Get( *pProject );
-   const auto pView = std::static_pointer_cast<TrackView>(evt.pCell);
+   const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
    const auto pTrack = pView ? pView->FindTrack().get() : nullptr;
 
    mEnvelopeEditors.clear();

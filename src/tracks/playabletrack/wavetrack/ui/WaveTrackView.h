@@ -209,7 +209,7 @@ private:
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
-   // TrackView implementation
+   // ChannelView implementation
    Refinement GetSubViews(const wxRect& rect) override;
 
 private:

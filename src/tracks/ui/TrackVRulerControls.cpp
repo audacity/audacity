@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackVRulerControls.h"
 
-#include "TrackView.h"
+#include "ChannelView.h"
 
 #include "AColor.h"
 #include "Track.h"
@@ -24,8 +24,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/translation.h>
 
 TrackVRulerControls::TrackVRulerControls(
-   const std::shared_ptr<TrackView> &pTrackView )
-  : mwTrackView{ pTrackView }
+   const std::shared_ptr<ChannelView> &pChannelView )
+  : mwChannelView{ pChannelView }
 {
 }
 
@@ -33,19 +33,20 @@ TrackVRulerControls::~TrackVRulerControls()
 {
 }
 
-TrackVRulerControls &TrackVRulerControls::Get( TrackView &trackView )
+TrackVRulerControls &TrackVRulerControls::Get(ChannelView &trackView)
 {
    return *trackView.GetVRulerControls();
 }
 
-const TrackVRulerControls &TrackVRulerControls::Get( const TrackView &trackView )
+const TrackVRulerControls &TrackVRulerControls::Get(
+   const ChannelView &trackView)
 {
    return *trackView.GetVRulerControls();
 }
 
 std::shared_ptr<Track> TrackVRulerControls::DoFindTrack()
 {
-   const auto pView = mwTrackView.lock();
+   const auto pView = mwChannelView.lock();
    if ( pView )
       return pView->FindTrack();
    return {};

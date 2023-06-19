@@ -20,7 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "RefreshCode.h"
 #include "Track.h"
 #include "TrackPanelMouseEvent.h"
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 
 HitTestPreview TrackPanelResizeHandle::HitPreview(bool bLinked)
 {

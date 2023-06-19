@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 CommonTrackView.cpp
 
-Paul Licameli split from class TrackView
+Paul Licameli split from class TrackView (now called ChannelView)
 
 **********************************************************************/
 

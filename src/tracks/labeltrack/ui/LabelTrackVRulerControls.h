@@ -23,8 +23,8 @@ class LabelTrackVRulerControls final : public TrackVRulerControls
 
 public:
    explicit
-   LabelTrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
-      : TrackVRulerControls( pTrackView ) {}
+   LabelTrackVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
+      : TrackVRulerControls{ pChannelView } {}
    ~LabelTrackVRulerControls();
 
 private:

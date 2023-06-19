@@ -171,7 +171,7 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackControls) {
    };
 }
 
-#include "../../ui/TrackView.h"
+#include "../../ui/ChannelView.h"
 
 using GetDefaultTimeTrackHeight = GetDefaultTrackHeight::Override< TimeTrack >;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultTimeTrackHeight) {

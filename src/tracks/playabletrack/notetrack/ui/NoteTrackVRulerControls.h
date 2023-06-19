@@ -22,8 +22,8 @@ class NoteTrackVRulerControls final : public TrackVRulerControls
 
 public:
    explicit
-   NoteTrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
-      : TrackVRulerControls( pTrackView ) {}
+   NoteTrackVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
+      : TrackVRulerControls{ pChannelView } {}
    ~NoteTrackVRulerControls();
 
    std::vector<UIHandlePtr> HitTest

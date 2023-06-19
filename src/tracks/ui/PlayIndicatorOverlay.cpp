@@ -25,7 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanel.h"
 #include "ViewInfo.h"
 #include "Scrubbing.h"
-#include "TrackView.h"
+#include "ChannelView.h"
 
 #include <wx/dc.h>
 

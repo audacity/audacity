@@ -23,8 +23,8 @@ class SpectrumVRulerControls final : public TrackVRulerControls
 
 public:
    explicit
-   SpectrumVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
-      : TrackVRulerControls( pTrackView ) {}
+   SpectrumVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
+      : TrackVRulerControls{ pChannelView } {}
    ~SpectrumVRulerControls() override;
 
    std::vector<UIHandlePtr> HitTest(

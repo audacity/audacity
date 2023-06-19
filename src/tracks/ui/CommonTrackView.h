@@ -4,24 +4,24 @@ Audacity: A Digital Audio Editor
 
 CommonTrackView.h
 
-Paul Licameli split from class TrackView
+Paul Licameli split from class TrackView (now called ChannelView)
 
 **********************************************************************/
 
 #ifndef __AUDACITY_COMMON_TRACK_VIEW__
 #define __AUDACITY_COMMON_TRACK_VIEW__
 
-#include "TrackView.h" // to inherit
+#include "ChannelView.h" // to inherit
 
 class Envelope;
 class SelectHandle;
 class TimeShiftHandle;
 class ZoomInfo;
 
-class AUDACITY_DLL_API CommonTrackView /* not final */ : public TrackView
+class AUDACITY_DLL_API CommonTrackView /* not final */ : public ChannelView
 {
 public:
-   using TrackView::TrackView;
+   using ChannelView::ChannelView;
    
    // Delegates the handling to the related TCP cell
    std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override;
@@ -31,7 +31,7 @@ public:
    // Do not further override this...
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *pProject)
-      final override;
+   final;
 
    void TimeShiftHitTest();
 
@@ -40,7 +40,7 @@ public:
    /** \brief Get many envelope points for pixel columns at once,
     * but don't assume uniform time per pixel.
    */
-   static void GetEnvelopeValues( const Envelope &env,
+   static void GetEnvelopeValues(const Envelope &env,
       double aligned_time, double sampleDur,
       double *buffer, int bufferLen, int leftOffset,
       const ZoomInfo &zoomInfo);

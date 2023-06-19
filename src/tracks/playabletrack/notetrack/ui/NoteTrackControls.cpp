@@ -323,7 +323,7 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetNoteTrackControls) {
    };
 }
 
-#include "../../../ui/TrackView.h"
+#include "../../../ui/ChannelView.h"
 
 using GetDefaultNoteTrackHeight = GetDefaultTrackHeight::Override< NoteTrack >;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultNoteTrackHeight) {

@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-TrackView.h
+ChannelView.h
 
 Paul Licameli split from class Track
 
@@ -21,22 +21,33 @@ class TrackList;
 class TrackVRulerControls;
 class TrackPanelResizerCell;
 
-class AUDACITY_DLL_API TrackView /* not final */ : public CommonTrackCell
-   , public std::enable_shared_from_this<TrackView>
+class AUDACITY_DLL_API ChannelView /* not final */ : public CommonTrackCell
+   , public std::enable_shared_from_this<ChannelView>
 {
-   TrackView( const TrackView& ) = delete;
-   TrackView &operator=( const TrackView& ) = delete;
+   ChannelView(const ChannelView&) = delete;
+   ChannelView &operator=(const ChannelView&) = delete;
 
 public:
    enum : unsigned { DefaultHeight = 150 };
 
+   static ChannelView &Get(Channel &channel);
+   /*!
+    @copydoc Get(Channel &)
+    */
+   static const ChannelView &Get(const Channel &channel);
+   static ChannelView *Find(Channel *pChannel);
+   /*!
+    @copydoc Find(Track *)
+    */
+   static const ChannelView *Find(const Channel *pChannel);
+
    //! Construct from a track and a channel index
-   TrackView(const std::shared_ptr<Track> &pTrack, size_t iChannel);
-   virtual ~TrackView() = 0;
+   ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel);
+   virtual ~ChannelView() = 0;
 
    // some static conveniences, useful for summation over track iterator
    // ranges
-   static int GetChannelGroupHeight( const Track *pTrack );
+   static int GetChannelGroupHeight(const Track *pTrack);
    // Total height of the given channel and all previous ones (constant time!)
    static int GetCumulativeHeight(const Channel *pChannel);
    // Total height of all Channels of the the given track and all previous ones
@@ -46,23 +57,6 @@ public:
 
    // Copy view state, for undo/redo purposes
    void CopyTo(Track &track) const override;
-
-   /*!
-    @pre `iChannel < track.NChannels()`
-    */
-   static TrackView &Get(Track &track, size_t iChannel = 0);
-   /*!
-    @copydoc Get(Track &, size_t)
-    */
-   static const TrackView &Get(const Track &track, size_t iChannel = 0);
-   /*!
-    @pre `!pTrack || iChannel < pTrack->NChannels()`
-    */
-   static TrackView *Find(Track *pTrack, size_t iChannel = 0);
-   /*!
-    @copydoc Find(Track *, size_t)
-    */
-   static const TrackView *Find(const Track *pTrack, size_t iChannel = 0);
 
    bool GetMinimized() const { return mMinimized; }
    void SetMinimized( bool minimized );
@@ -114,9 +108,9 @@ public:
 
    // New virtual function.  The default just returns a one-element array
    // containing this.  Overrides might refine the Y axis.
-   using Refinement = std::vector< std::pair<
-      wxCoord, std::shared_ptr< TrackView >
-   > >;
+   using Refinement = std::vector<
+      std::pair<wxCoord, std::shared_ptr<ChannelView>>
+   >;
    virtual Refinement GetSubViews( const wxRect &rect );
 
    // default is false
@@ -133,25 +127,29 @@ private:
 
 protected:
 
-   // Private factory to make appropriate object; class TrackView handles
+   // Private factory to make appropriate object; class ChannelView handles
    // memory management thereafter
    virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
 
    std::shared_ptr<TrackVRulerControls> mpVRulerControls;
 
 private:
+   /*!
+    @pre `iChannel < track.NChannels()`
+    */
+   static ChannelView &GetFromTrack(Track &track, size_t iChannel = 0);
+   /*!
+    @copydoc Get(Track&, size_t)
+    */
+   static const ChannelView &GetFromTrack(const Track &track, size_t iChannel = 0);
+   /*!
+    @pre `!pTrack || iChannel < pTrack->NChannels()`
+    */
+   static ChannelView *FindFromTrack(Track *pTrack, size_t iChannel = 0);
+
    bool           mMinimized{ false };
    int            mY{ 0 };
    int            mHeight{ DefaultHeight };
-};
-
-//! For now, a class with static functions only
-class AUDACITY_DLL_API ChannelView {
-public:
-   static TrackView &Get(Channel &channel);
-   static const TrackView &Get(const Channel &channel);
-   static TrackView *Find(Channel *pChannel);
-   static const TrackView *Find(const Channel *pChannel);
 };
 
 #include "AttachedVirtualFunction.h"
@@ -165,7 +163,7 @@ struct DoGetViewTag;
 using DoGetView =
 AttachedVirtualFunction<
    DoGetViewTag,
-   std::shared_ptr< TrackView >,
+   std::shared_ptr<ChannelView>,
    Track,
    size_t// channel index
 >;

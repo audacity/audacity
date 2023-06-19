@@ -32,7 +32,7 @@
 
 #include "TrackPanelDrawingContext.h"
 
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
@@ -80,7 +80,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
 
    int rulerScreenHeight = 40;
    int screenTotalHeight =
-      TrackView::GetTotalHeight( *mTracks ) + rulerScreenHeight;
+      ChannelView::GetTotalHeight(*mTracks) + rulerScreenHeight;
 
    double scale = height / (double)screenTotalHeight;
 

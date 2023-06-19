@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TimeShiftHandle.h"
 
-#include "TrackView.h"
+#include "ChannelView.h"
 #include "AColor.h"
 #include "../../HitTestResult.h"
 #include "ProjectAudioIO.h"
@@ -504,7 +504,7 @@ UIHandle::Result TimeShiftHandle::Click
    const wxRect &rect = evt.rect;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   const auto pView = std::static_pointer_cast<TrackView>(evt.pCell);
+   const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
    const auto pTrack = pView ? pView->FindTrack().get() : nullptr;
    if (!pTrack)
       return RefreshCode::Cancelled;
@@ -857,7 +857,7 @@ UIHandle::Result TimeShiftHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   TrackView *trackView = dynamic_cast<TrackView*>(evt.pCell.get());
+   ChannelView *trackView = dynamic_cast<ChannelView*>(evt.pCell.get());
    Track *track = trackView ? trackView->FindTrack().get() : nullptr;
 
    // Uncommenting this permits drag to continue to work even over the controls area

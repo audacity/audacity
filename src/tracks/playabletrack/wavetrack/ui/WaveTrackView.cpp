@@ -944,7 +944,7 @@ WaveTrackView::~WaveTrackView()
 
 void WaveTrackView::CopyTo( Track &track ) const
 {
-   TrackView::CopyTo(track);
+   ChannelView::CopyTo(track);
    auto &other = ChannelView::Get(*track.GetChannel(0));
    if (const auto pOther = dynamic_cast<WaveTrackView*>(&other)) {
       // only these fields are important to preserve in undo/redo history
@@ -1214,7 +1214,7 @@ auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
 
    // Collect the visible views in the right sequence
    struct Item {
-      int index; float fraction; std::shared_ptr< TrackView > pView;
+      int index; float fraction; std::shared_ptr<ChannelView> pView;
    };
    std::vector< Item > items;
    size_t ii = 0;
@@ -1474,7 +1474,7 @@ void WaveTrackView::DoSetMinimized( bool minimized )
    BuildSubViews();
 
    // May come here.  Invoke also on sub-views.
-   TrackView::DoSetMinimized( minimized );
+   ChannelView::DoSetMinimized( minimized );
    WaveTrackSubViews::ForEach( [minimized](WaveTrackSubView &subView){
       subView.DoSetMinimized( minimized );
    } );

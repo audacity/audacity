@@ -2,13 +2,13 @@
 
 Audacity: A Digital Audio Editor
 
-TrackView.cpp
+ChannelView.cpp
 
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "TrackView.h"
+#include "ChannelView.h"
 #include "Track.h"
 
 #include "ClientData.h"
@@ -18,25 +18,25 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <sstream>
 
-TrackView::TrackView(const std::shared_ptr<Track> &pTrack, size_t iChannel)
+ChannelView::ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel)
    : CommonTrackCell{ pTrack, iChannel }
 {
    DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );
 }
 
-TrackView::~TrackView()
+ChannelView::~ChannelView()
 {
 }
 
-int TrackView::GetChannelGroupHeight(const Track *pTrack)
+int ChannelView::GetChannelGroupHeight(const Track *pTrack)
 {
    const auto GetTrackHeight = [](const Track *pTrack) -> int {
-      return pTrack ? Get(*pTrack).GetHeight() : 0;
+      return pTrack ? GetFromTrack(*pTrack).GetHeight() : 0;
    };
    return pTrack ? TrackList::Channels(pTrack).sum(GetTrackHeight) : 0;
 }
 
-int TrackView::GetCumulativeHeight(const Channel *pChannel)
+int ChannelView::GetCumulativeHeight(const Channel *pChannel)
 {
    if (!pChannel)
       return 0;
@@ -44,21 +44,21 @@ int TrackView::GetCumulativeHeight(const Channel *pChannel)
    return view.GetCumulativeHeightBefore() + view.GetHeight();
 }
 
-int TrackView::GetCumulativeHeight(const Track *pTrack)
+int ChannelView::GetCumulativeHeight(const Track *pTrack)
 {
    if (!pTrack)
       return 0;
    return GetCumulativeHeight((*pTrack->Channels().rbegin()).get());
 }
 
-int TrackView::GetTotalHeight(const TrackList &list)
+int ChannelView::GetTotalHeight(const TrackList &list)
 {
    return GetCumulativeHeight(*list.Leaders().rbegin());
 }
 
-void TrackView::CopyTo( Track &track ) const
+void ChannelView::CopyTo(Track &track) const
 {
-   auto &other = Get( track );
+   auto &other = GetFromTrack(track);
 
    other.mMinimized = mMinimized;
 
@@ -67,11 +67,11 @@ void TrackView::CopyTo( Track &track ) const
    other.mHeight = mHeight;
 }
 
-using TrackViewAttachments = ChannelAttachments<TrackView>;
+using ChannelViewAttachments = ChannelAttachments<ChannelView>;
 
 static const AttachedTrackObjects::RegisteredFactory keyC{
    [](Track &){
-      return std::make_shared<TrackViewAttachments>(
+      return std::make_shared<ChannelViewAttachments>(
          [](Track &track, size_t iChannel) {
             assert(iChannel < track.NChannels());
             return DoGetView::Call(track, iChannel);
@@ -80,27 +80,22 @@ static const AttachedTrackObjects::RegisteredFactory keyC{
    }
 };
 
-TrackView &TrackView::Get(Track &track, size_t iChannel)
+ChannelView &ChannelView::GetFromTrack(Track &track, size_t iChannel)
 {
-   return TrackViewAttachments::Get(keyC, track, iChannel);
+   return ChannelViewAttachments::Get(keyC, track, iChannel);
 }
 
-const TrackView &TrackView::Get(const Track &track, size_t iChannel)
+const ChannelView &ChannelView::GetFromTrack(const Track &track, size_t iChannel)
 {
-   return Get(const_cast<Track &>(track), iChannel);
+   return GetFromTrack(const_cast<Track &>(track), iChannel);
 }
 
-TrackView *TrackView::Find(Track *pTrack, size_t iChannel)
+ChannelView *ChannelView::FindFromTrack(Track *pTrack, size_t iChannel)
 {
-   return TrackViewAttachments::Find(keyC, pTrack, iChannel);
+   return ChannelViewAttachments::Find(keyC, pTrack, iChannel);
 }
 
-const TrackView *TrackView::Find(const Track *pTrack, size_t iChannel)
-{
-   return Find(const_cast<Track*>(pTrack), iChannel);
-}
-
-void TrackView::SetMinimized(bool isMinimized)
+void ChannelView::SetMinimized(bool isMinimized)
 {
    // Do special changes appropriate to subclass
    DoSetMinimized(isMinimized);
@@ -113,7 +108,7 @@ void TrackView::SetMinimized(bool isMinimized)
 
 namespace {
 // Append a channel number to a base attribute name unless it is 0
-std::string AttributeName(const TrackView &view, std::string name) {
+std::string AttributeName(const ChannelView &view, std::string name) {
    const auto index = view.GetChannelIndex();
    if (index == 0)
       return move(name);
@@ -121,21 +116,21 @@ std::string AttributeName(const TrackView &view, std::string name) {
    stream << index;
    return stream.str();
 }
-std::string HeightAttributeName(const TrackView &view) {
+std::string HeightAttributeName(const ChannelView &view) {
    return AttributeName(view, "height");
 }
-std::string MinimizedAttributeName(const TrackView &view) {
+std::string MinimizedAttributeName(const ChannelView &view) {
    return AttributeName(view, "minimized");
 }
 }
 
-void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
+void ChannelView::WriteXMLAttributes(XMLWriter &xmlFile) const
 {
    xmlFile.WriteAttr(HeightAttributeName(*this), GetExpandedHeight());
    xmlFile.WriteAttr(MinimizedAttributeName(*this), GetMinimized());
 }
 
-bool TrackView::HandleXMLAttribute(
+bool ChannelView::HandleXMLAttribute(
    const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
    long nValue;
@@ -156,22 +151,22 @@ bool TrackView::HandleXMLAttribute(
       return false;
 }
 
-auto TrackView::GetSubViews( const wxRect &rect ) -> Refinement
+auto ChannelView::GetSubViews(const wxRect &rect) -> Refinement
 {
    return { { rect.GetTop(), shared_from_this() } };
 }
 
-bool TrackView::IsSpectral() const
+bool ChannelView::IsSpectral() const
 {
    return false;
 }
 
-void TrackView::DoSetMinimized(bool isMinimized)
+void ChannelView::DoSetMinimized(bool isMinimized)
 {
    mMinimized = isMinimized;
 }
 
-std::shared_ptr<TrackVRulerControls> TrackView::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> ChannelView::GetVRulerControls()
 {
    if (!mpVRulerControls)
       // create on demand
@@ -179,17 +174,17 @@ std::shared_ptr<TrackVRulerControls> TrackView::GetVRulerControls()
    return mpVRulerControls;
 }
 
-std::shared_ptr<const TrackVRulerControls> TrackView::GetVRulerControls() const
+std::shared_ptr<const TrackVRulerControls> ChannelView::GetVRulerControls() const
 {
-   return const_cast< TrackView* >( this )->GetVRulerControls();
+   return const_cast<ChannelView*>( this )->GetVRulerControls();
 }
 
-void TrackView::DoSetY(int y)
+void ChannelView::DoSetY(int y)
 {
    mY = y;
 }
 
-int TrackView::GetHeight() const
+int ChannelView::GetHeight() const
 {
    if ( GetMinimized() )
       return GetMinimizedHeight();
@@ -197,40 +192,40 @@ int TrackView::GetHeight() const
    return mHeight;
 }
 
-void TrackView::SetExpandedHeight(int h)
+void ChannelView::SetExpandedHeight(int h)
 {
    DoSetHeight(h);
    FindTrack()->AdjustPositions();
 }
 
-void TrackView::DoSetHeight(int h)
+void ChannelView::DoSetHeight(int h)
 {
    mHeight = h;
 }
 
-std::shared_ptr<CommonTrackCell> TrackView::GetAffordanceControls()
+std::shared_ptr<CommonTrackCell> ChannelView::GetAffordanceControls()
 {
    return {};
 }
 
-TrackView &ChannelView::Get(Channel &channel)
+ChannelView &ChannelView::Get(Channel &channel)
 {
-   return TrackView::Get(channel.GetTrack(), channel.GetChannelIndex());
+   return GetFromTrack(channel.GetTrack(), channel.GetChannelIndex());
 }
 
-const TrackView &ChannelView::Get(const Channel &channel)
+const ChannelView &ChannelView::Get(const Channel &channel)
 {
    return Get(const_cast<Channel&>(channel));
 }
 
-TrackView *ChannelView::Find(Channel *pChannel)
+ChannelView *ChannelView::Find(Channel *pChannel)
 {
    if (!pChannel)
       return nullptr;
-   return TrackView::Find(&pChannel->GetTrack(), pChannel->GetChannelIndex());
+   return FindFromTrack(&pChannel->GetTrack(), pChannel->GetChannelIndex());
 }
 
-const TrackView *ChannelView::Find(const Channel *pChannel)
+const ChannelView *ChannelView::Find(const Channel *pChannel)
 {
    return Find(const_cast<Channel*>(pChannel));
 }
@@ -271,7 +266,7 @@ struct TrackPositioner final : ClientData::Base
          return;
 
       auto prev = iter;
-      auto yy = TrackView::GetCumulativeHeight(*--prev);
+      auto yy = ChannelView::GetCumulativeHeight(*--prev);
 
       while (auto pTrack = *iter) {
          for (auto pChannel : (*iter)->Channels()) {

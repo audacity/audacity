@@ -53,7 +53,7 @@
 #include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 #include "widgets/AButton.h"
 #include "AudacityMessageBox.h"
 #include "widgets/Grabber.h"
@@ -662,8 +662,8 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
       }
       pCellularPanel
          ->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-            const auto pTrackView = dynamic_cast<TrackView*>(&cell);
-            if (!pTrackView)
+            const auto pChannelView = dynamic_cast<ChannelView*>(&cell);
+            if (!pChannelView)
                return;
 
             // Draw the NEW indicator in its NEW location

@@ -23,8 +23,8 @@ class WaveformVRulerControls final : public TrackVRulerControls
 
 public:
    explicit
-   WaveformVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
-      : TrackVRulerControls( pTrackView ) {}
+   WaveformVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
+      : TrackVRulerControls{ pChannelView } {}
    ~WaveformVRulerControls() override;
 
    std::vector<UIHandlePtr> HitTest(

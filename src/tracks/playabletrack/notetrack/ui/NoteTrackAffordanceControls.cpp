@@ -14,7 +14,7 @@
 
 #include "../../../ui/AffordanceHandle.h"
 #include "../../../ui/SelectHandle.h"
-#include "../../../ui/TrackView.h"
+#include "../../../ui/ChannelView.h"
 #include "AllThemeResources.h"
 #include "AColor.h"
 #include "../../../../NoteTrack.h"

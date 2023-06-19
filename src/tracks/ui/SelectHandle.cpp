@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "SelectHandle.h"
 
 #include "Scrubbing.h"
-#include "TrackView.h"
+#include "ChannelView.h"
 
 #include "AColor.h"
 #include "../../SpectrumAnalyst.h"
@@ -111,12 +111,12 @@ namespace
    }
 
    // This returns true if we're a spectral editing track.
-   inline bool isSpectralSelectionView(const TrackView *pTrackView) {
+   inline bool isSpectralSelectionView(const ChannelView *pChannelView) {
       return
-        pTrackView &&
-        pTrackView->IsSpectral() &&
-        pTrackView->FindTrack() &&
-        pTrackView->FindTrack()->TypeSwitch< bool >(
+        pChannelView &&
+        pChannelView->IsSpectral() &&
+        pChannelView->FindTrack() &&
+        pChannelView->FindTrack()->TypeSwitch<bool>(
            [&](const WaveTrack &wt) {
               const auto &settings = SpectrogramSettings::Get(wt);
               return settings.SpectralSelectionEnabled();
@@ -171,11 +171,12 @@ namespace
       }
    }
 
-   SelectionBoundary ChooseBoundary
-      (const ViewInfo &viewInfo,
-       wxCoord xx, wxCoord yy, const TrackView *pTrackView, const wxRect &rect,
-       bool mayDragWidth, bool onlyWithinSnapDistance,
-       double *pPinValue = NULL)
+   SelectionBoundary ChooseBoundary(
+      const ViewInfo &viewInfo,
+      wxCoord xx, wxCoord yy, const ChannelView *pChannelView,
+      const wxRect &rect,
+      bool mayDragWidth, bool onlyWithinSnapDistance,
+      double *pPinValue = NULL)
    {
       // Choose one of four boundaries to adjust, or the center frequency.
       // May choose frequencies only if in a spectrogram view and
@@ -206,9 +207,9 @@ namespace
       // within the time boundaries
       if (!viewInfo.selectedRegion.isPoint() &&
          t0 <= selend && selend < t1 &&
-         isSpectralSelectionView(pTrackView)) {
+         isSpectralSelectionView(pChannelView)) {
          // Spectral selection track is always wave
-         auto pTrack = pTrackView->FindTrack();
+         auto pTrack = pChannelView->FindTrack();
          const WaveTrack *const wt =
            static_cast<const WaveTrack*>(pTrack.get());
          const wxInt64 bottomSel = (f0 >= 0)
@@ -362,7 +363,7 @@ namespace
 UIHandlePtr SelectHandle::HitTest
 (std::weak_ptr<SelectHandle> &holder,
  const TrackPanelMouseState &st, const AudacityProject *pProject,
- const std::shared_ptr<TrackView> &pTrackView)
+ const std::shared_ptr<ChannelView> &pChannelView)
 {
    // This handle is a little special because there may be some state to
    // preserve during movement before the click.
@@ -381,14 +382,14 @@ UIHandlePtr SelectHandle::HitTest
 
    const auto &viewInfo = ViewInfo::Get( *pProject );
    auto result = std::make_shared<SelectHandle>(
-      pTrackView, oldUseSnap, TrackList::Get( *pProject ), st, viewInfo );
+      pChannelView, oldUseSnap, TrackList::Get(*pProject), st, viewInfo);
 
    result = AssignUIHandlePtr(holder, result);
 
    //Make sure we are within the selected track
    // Adjusting the selection edges can be turned off in
    // the preferences...
-   auto pTrack = pTrackView->FindTrack();
+   auto pTrack = pChannelView->FindTrack();
    if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
    {
       return result;
@@ -426,11 +427,11 @@ UIHandle::Result SelectHandle::NeedChangeHighlight
    return RefreshCode::RefreshAll;
 }
 
-SelectHandle::SelectHandle
-( const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
-  const TrackList &trackList,
-  const TrackPanelMouseState &st, const ViewInfo &viewInfo )
-   : mpView{ pTrackView }
+SelectHandle::SelectHandle(
+   const std::shared_ptr<ChannelView> &pChannelView, bool useSnap,
+   const TrackList &trackList,
+   const TrackPanelMouseState &st, const ViewInfo &viewInfo
+)  : mpView{ pChannelView }
    // Selection dragging can snap to play region boundaries
    , mSnapManager{ std::make_shared<SnapManager>(
       *trackList.GetOwner(), trackList, viewInfo, SnapPointArray{
@@ -442,7 +443,7 @@ SelectHandle::SelectHandle
    mRect = st.rect;
 
    auto time = std::max(0.0, viewInfo.PositionToTime(state.m_x, mRect.x));
-   auto pTrack = pTrackView->FindTrack();
+   auto pTrack = pChannelView->FindTrack();
    mSnapStart = mSnapManager->Snap(pTrack.get(), time, false);
    if (mSnapStart.snappedPoint)
          mSnapStart.outCoord += mRect.x;
@@ -1222,15 +1223,15 @@ void SelectHandle::AssignSelection
 
 void SelectHandle::StartFreqSelection(ViewInfo &viewInfo,
    int mouseYCoordinate, int trackTopEdge,
-   int trackHeight, TrackView *pTrackView)
+   int trackHeight, ChannelView *pChannelView)
 {
    mFreqSelTrack.reset();
    mFreqSelMode = FREQ_SEL_INVALID;
    mFreqSelPin = SelectedRegion::UndefinedFrequency;
 
-   if (isSpectralSelectionView(pTrackView)) {
+   if (isSpectralSelectionView(pChannelView)) {
       // Spectral selection track is always wave
-      auto shTrack = pTrackView->FindTrack()->SharedPointer<const WaveTrack>();
+      auto shTrack = pChannelView->FindTrack()->SharedPointer<const WaveTrack>();
       mFreqSelTrack = shTrack;
       mFreqSelMode = FREQ_SEL_FREE;
       mFreqSelPin =
@@ -1389,15 +1390,15 @@ void SelectHandle::StartSnappingFreqSelection
    // We can now throw away the sample data but we keep the spectrum.
 }
 
-void SelectHandle::MoveSnappingFreqSelection
-   (AudacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
-    int trackTopEdge,
-    int trackHeight, TrackView *pTrackView)
+void SelectHandle::MoveSnappingFreqSelection(
+   AudacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
+   int trackTopEdge,
+   int trackHeight, ChannelView *pChannelView)
 {
-   auto pTrack = pTrackView->FindTrack().get();
+   auto pTrack = pChannelView->FindTrack().get();
    if (pTrack &&
       pTrack->GetSelected() &&
-      isSpectralSelectionView(pTrackView)) {
+      isSpectralSelectionView(pChannelView)) {
       // Spectral selection track is always wave
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       // PRL:

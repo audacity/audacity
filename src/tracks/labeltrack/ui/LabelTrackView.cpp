@@ -142,7 +142,7 @@ void LabelTrackView::BindTo( LabelTrack *pParent )
 
 void LabelTrackView::CopyTo(Track &track) const
 {
-   TrackView::CopyTo(track);
+   ChannelView::CopyTo(track);
    auto &other = ChannelView::Get(*track.GetChannel(0));
    if (const auto pOther = dynamic_cast<const LabelTrackView*>(&other)) {
       pOther->mNavigationIndex = mNavigationIndex;

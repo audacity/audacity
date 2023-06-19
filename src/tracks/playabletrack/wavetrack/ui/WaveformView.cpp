@@ -131,7 +131,7 @@ void WaveformView::DoSetMinimized( bool minimized )
    }
 #endif
 
-   TrackView::DoSetMinimized( minimized );
+   ChannelView::DoSetMinimized(minimized);
 }
 
 auto WaveformView::SubViewType() const -> const Type &

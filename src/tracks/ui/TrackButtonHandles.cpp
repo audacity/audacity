@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanel.h"
 #include "../../TrackUtilities.h"
 #include "../../commands/CommandManager.h"
-#include "../../tracks/ui/TrackView.h"
+#include "../../tracks/ui/ChannelView.h"
 
 MinimizeButtonHandle::MinimizeButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )

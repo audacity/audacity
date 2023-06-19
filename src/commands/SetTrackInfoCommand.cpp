@@ -339,7 +339,7 @@ bool SetTrackVisualsCommand::ApplyInner(
    const CommandContext & context, Track &t)
 {
    static_cast<void>(context);
-   auto wt = dynamic_cast<WaveTrack *>(&t);
+   const auto wt = dynamic_cast<WaveTrack *>(&t);
    if (!wt)
       return true;
    //auto pt = dynamic_cast<PlayableTrack *>(t);

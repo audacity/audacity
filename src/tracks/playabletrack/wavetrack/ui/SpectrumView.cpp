@@ -123,14 +123,14 @@ private:
 static UIHandlePtr BrushHandleHitTest(
    std::weak_ptr<BrushHandle> &holder,
    const TrackPanelMouseState &st, const AudacityProject *pProject,
-   const std::shared_ptr<SpectrumView> &pTrackView,
+   const std::shared_ptr<SpectrumView> &pChannelView,
    const std::shared_ptr<SpectralData> &mpData)
 {
    const auto &viewInfo = ViewInfo::Get( *pProject );
    auto &projectSettings = ProjectSettings::Get( *pProject );
    auto result = std::make_shared<BrushHandle>(
-      std::make_shared<SpectrumView::SpectralDataSaver>(*pTrackView),
-      pTrackView, TrackList::Get( *pProject ),
+      std::make_shared<SpectrumView::SpectralDataSaver>(*pChannelView),
+      pChannelView, TrackList::Get(*pProject),
       st, viewInfo, mpData, projectSettings);
 
    result = AssignUIHandlePtr(holder, result);
@@ -138,7 +138,7 @@ static UIHandlePtr BrushHandleHitTest(
    //Make sure we are within the selected track
    // Adjusting the selection edges can be turned off in
    // the preferences...
-   auto pTrack = pTrackView->FindTrack();
+   auto pTrack = pChannelView->FindTrack();
    if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
    {
       return result;
@@ -212,7 +212,7 @@ void SpectrumView::DoSetMinimized( bool minimized )
    }
 #endif
 
-   TrackView::DoSetMinimized( minimized );
+   ChannelView::DoSetMinimized(minimized);
 }
 
 auto SpectrumView::SubViewType() const -> const Type &

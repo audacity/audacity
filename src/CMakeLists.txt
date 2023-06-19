@@ -868,6 +868,8 @@ list( APPEND SOURCES
       tracks/ui/BrushHandle.h
       tracks/ui/ButtonHandle.cpp
       tracks/ui/ButtonHandle.h
+      tracks/ui/ChannelView.cpp
+      tracks/ui/ChannelView.h
       tracks/ui/CommonTrackControls.cpp
       tracks/ui/CommonTrackControls.h
       tracks/ui/CommonTrackPanelCell.cpp
@@ -900,8 +902,6 @@ list( APPEND SOURCES
       tracks/ui/TrackSelectHandle.h
       tracks/ui/TrackVRulerControls.cpp
       tracks/ui/TrackVRulerControls.h
-      tracks/ui/TrackView.cpp
-      tracks/ui/TrackView.h
       tracks/ui/ZoomHandle.cpp
       tracks/ui/ZoomHandle.h
 
