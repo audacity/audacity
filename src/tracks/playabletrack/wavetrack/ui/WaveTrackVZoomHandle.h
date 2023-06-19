@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseState;
 class PopupMenuTable;
 class WaveTrack;
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelViewConstants.h"
 #include "../../../../UIHandle.h"
 #include "Prefs.h"
 
@@ -29,9 +29,9 @@ namespace WaveTrackVZoomHandle
    AUDACITY_DLL_API
    bool IsDragZooming(int zoomStart, int zoomEnd);
 
-   using DoZoomFunction = void (*)( AudacityProject *pProject,
+   using DoZoomFunction = void (*)(AudacityProject *pProject,
        WaveTrack *pTrack,
-       WaveTrackViewConstants::ZoomActions ZoomKind,
+       WaveChannelViewConstants::ZoomActions ZoomKind,
        const wxRect &rect, int zoomStart, int zoomEnd,
        bool fixedMousePoint);
 
@@ -85,21 +85,21 @@ protected:
 protected:
    InitMenuData *mpData {};
 
-   void OnZoom( WaveTrackViewConstants::ZoomActions iZoomCode );
+   void OnZoom(WaveChannelViewConstants::ZoomActions iZoomCode);
    void OnZoomFitVertical(wxCommandEvent&)
-      { OnZoom( WaveTrackViewConstants::kZoom1to1 );};
+      { OnZoom(WaveChannelViewConstants::kZoom1to1); }
    void OnZoomReset(wxCommandEvent&)
-      { OnZoom( WaveTrackViewConstants::kZoomReset );};
+      { OnZoom(WaveChannelViewConstants::kZoomReset); }
    void OnZoomDiv2Vertical(wxCommandEvent&)
-      { OnZoom( WaveTrackViewConstants::kZoomDiv2 );};
+      { OnZoom(WaveChannelViewConstants::kZoomDiv2); }
    void OnZoomTimes2Vertical(wxCommandEvent&)
-      { OnZoom( WaveTrackViewConstants::kZoomTimes2 );};
+      { OnZoom(WaveChannelViewConstants::kZoomTimes2); }
    void OnZoomHalfWave(wxCommandEvent&)
-      { OnZoom( WaveTrackViewConstants::kZoomHalfWave );};
+      { OnZoom(WaveChannelViewConstants::kZoomHalfWave); }
    void OnZoomInVertical(wxCommandEvent&)
-      { OnZoom( WaveTrackViewConstants::kZoomIn );};
+      { OnZoom(WaveChannelViewConstants::kZoomIn); }
    void OnZoomOutVertical(wxCommandEvent&)
-      { OnZoom( WaveTrackViewConstants::kZoomOut );};
+      { OnZoom(WaveChannelViewConstants::kZoomOut); }
 
    void UpdatePrefs() override;
 };

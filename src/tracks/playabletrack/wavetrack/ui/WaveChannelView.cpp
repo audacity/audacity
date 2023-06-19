@@ -1114,7 +1114,7 @@ void WaveChannelView::DoSetDisplay(Display display, bool exclusive)
    // The order of sub-views in the array is not specified, so make it definite
    // by sorting by the view type constants.
    size_t ii = 0;
-   std::vector< std::pair< WaveTrackViewConstants::Display, size_t > > pairs;
+   std::vector<std::pair<WaveChannelViewConstants::Display, size_t>> pairs;
    WaveChannelSubViews::ForEach([&pairs, &ii](WaveChannelSubView &subView){
       pairs.push_back({ subView.SubViewType().id, ii++ });
    });
@@ -1750,7 +1750,7 @@ void WaveChannelView::BuildSubViews() const
          
          auto pTrack = pThis->FindTrack();
          auto display = TracksPrefs::ViewModeChoice();
-         bool multi = (display == WaveTrackViewConstants::MultiView);
+         bool multi = (display == WaveChannelViewConstants::MultiView);
          if (multi) {
             pThis->SetMultiView( true );
             display = WaveChannelSubViewType::Default();

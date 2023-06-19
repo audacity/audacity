@@ -147,7 +147,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
 
    auto steps = evt.steps;
 
-   using namespace WaveTrackViewConstants;
+   using namespace WaveChannelViewConstants;
    auto &settings = WaveformSettings::Get(*wt);
    auto &cache = WaveformScale::Get(*wt);
    const bool isDB = !settings.isLinear();

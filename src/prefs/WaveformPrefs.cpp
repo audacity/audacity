@@ -28,7 +28,7 @@ Paul Licameli
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid,
    AudacityProject *pProject, WaveTrack *wt)
@@ -184,7 +184,7 @@ bool WaveformPrefs::Commit()
    mTempSettings.ConvertToEnumeratedDBRange();
 
    if (mWt && isOpenPage) {
-      WaveChannelView::Get(*mWt).SetDisplay(WaveTrackViewConstants::Waveform);
+      WaveChannelView::Get(*mWt).SetDisplay(WaveChannelViewConstants::Waveform);
    }
 
    if (isOpenPage) {

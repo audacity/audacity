@@ -465,7 +465,7 @@ void SpectrumPrefs::Preview()
    if (mWt && isOpenPage) {
       for (auto channel : TrackList::Channels(mWt))
          WaveChannelView::Get(*channel)
-            .SetDisplay( WaveTrackViewConstants::Spectrum );
+            .SetDisplay(WaveChannelViewConstants::Spectrum);
    }
    */
 

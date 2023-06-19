@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-WaveTrackViewConstants.h
+WaveChannelViewConstants.h
 
 Paul Licameli split from class WaveTrack
 
@@ -13,7 +13,7 @@ Paul Licameli split from class WaveTrack
 
 #include "ComponentInterfaceSymbol.h" // for EnumValueSymbol
 
-namespace WaveTrackViewConstants
+namespace WaveChannelViewConstants
 {
    enum Display : int {
 
@@ -87,7 +87,7 @@ namespace WaveTrackViewConstants
 #include <vector>
 
 struct AUDACITY_DLL_API WaveChannelSubViewType {
-   using Display = WaveTrackViewConstants::Display;
+   using Display = WaveChannelViewConstants::Display;
 
    // Identifies the type session-wide, and determines relative position in
    // menus listing all types

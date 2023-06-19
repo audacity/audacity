@@ -88,9 +88,9 @@ namespace {
 };
 
 class TracksViewModeEnumSetting
-   : public EnumSetting< WaveTrackViewConstants::Display > {
+   : public EnumSetting<WaveChannelViewConstants::Display> {
 public:
-   using EnumSetting< WaveTrackViewConstants::Display >::EnumSetting;
+   using EnumSetting<WaveChannelViewConstants::Display>::EnumSetting;
 
    void Migrate( wxString &value ) override
    {
@@ -104,32 +104,32 @@ public:
       static const EnumValueSymbol waveformSymbol{ XO("Waveform") };
       static const EnumValueSymbol spectrumSymbol{ XO("Spectrogram") };
 
-      WaveTrackViewConstants::Display viewMode;
+      WaveChannelViewConstants::Display viewMode;
       int oldMode;
       wxString newValue;
       auto stringValue =
-         []( WaveTrackViewConstants::Display display ){
-         switch ( display ) {
-            case WaveTrackViewConstants::Spectrum:
+         [](WaveChannelViewConstants::Display display) {
+         switch (display) {
+            case WaveChannelViewConstants::Spectrum:
                return spectrumSymbol.Internal();
-            case WaveTrackViewConstants::obsoleteWaveformDBDisplay:
+            case WaveChannelViewConstants::obsoleteWaveformDBDisplay:
                return obsoleteValue;
             default:
                return waveformSymbol.Internal();
          }
       };
 
-      if ( gPrefs->Read(key0, // The very old key
+      if (gPrefs->Read(key0, // The very old key
          &oldMode,
-         (int)(WaveTrackViewConstants::Waveform) ) ) {
-         viewMode = WaveTrackViewConstants::ConvertLegacyDisplayValue(oldMode);
-         newValue = stringValue( viewMode );
+         (int)(WaveChannelViewConstants::Waveform))) {
+         viewMode = WaveChannelViewConstants::ConvertLegacyDisplayValue(oldMode);
+         newValue = stringValue(viewMode);
       }
       else if ( gPrefs->Read(key1,
          &oldMode,
-         (int)(WaveTrackViewConstants::Waveform) ) ) {
-         viewMode = static_cast<WaveTrackViewConstants::Display>( oldMode );
-         newValue = stringValue( viewMode );
+         (int)(WaveChannelViewConstants::Waveform))) {
+         viewMode = static_cast<WaveChannelViewConstants::Display>(oldMode);
+         newValue = stringValue(viewMode);
       }
       else
          gPrefs->Read( key2, &newValue );
@@ -158,8 +158,8 @@ static TracksViewModeEnumSetting ViewModeSetting()
       types, std::mem_fn(&WaveChannelSubViewType::id));
 
    // Special entry for multi
-   symbols.push_back( WaveTrackViewConstants::MultiViewSymbol );
-   ids.push_back( WaveTrackViewConstants::MultiView );
+   symbols.push_back(WaveChannelViewConstants::MultiViewSymbol);
+   ids.push_back(WaveChannelViewConstants::MultiView);
 
    return {
       key3,
@@ -169,7 +169,7 @@ static TracksViewModeEnumSetting ViewModeSetting()
    };
 }
 
-WaveTrackViewConstants::Display TracksPrefs::ViewModeChoice()
+WaveChannelViewConstants::Display TracksPrefs::ViewModeChoice()
 {
    return ViewModeSetting().ReadEnum();
 }
@@ -180,7 +180,7 @@ WaveformSettings::ScaleTypeValues TracksPrefs::WaveformScaleChoice()
 }
 
 //////////
-static EnumSetting< WaveTrackViewConstants::SampleDisplay >
+static EnumSetting<WaveChannelViewConstants::SampleDisplay>
 sampleDisplaySetting{
    wxT("/GUI/SampleViewChoice"),
    {
@@ -191,13 +191,13 @@ sampleDisplaySetting{
 
    // for migrating old preferences:
    {
-      WaveTrackViewConstants::LinearInterpolate,
-      WaveTrackViewConstants::StemPlot
+      WaveChannelViewConstants::LinearInterpolate,
+      WaveChannelViewConstants::StemPlot
    },
    wxT("/GUI/SampleView")
 };
 
-WaveTrackViewConstants::SampleDisplay TracksPrefs::SampleViewChoice()
+WaveChannelViewConstants::SampleDisplay TracksPrefs::SampleViewChoice()
 {
    return sampleDisplaySetting.ReadEnum();
 }
@@ -221,24 +221,24 @@ static const std::initializer_list<EnumValueSymbol> choicesZoom{
    { wxT("MaxZoom"), XO("Max Zoom") },
 };
 static auto enumChoicesZoom = {
-   WaveTrackViewConstants::kZoomToFit,
-   WaveTrackViewConstants::kZoomToSelection,
-   WaveTrackViewConstants::kZoomDefault,
-   WaveTrackViewConstants::kZoomMinutes,
-   WaveTrackViewConstants::kZoomSeconds,
-   WaveTrackViewConstants::kZoom5ths,
-   WaveTrackViewConstants::kZoom10ths,
-   WaveTrackViewConstants::kZoom20ths,
-   WaveTrackViewConstants::kZoom50ths,
-   WaveTrackViewConstants::kZoom100ths,
-   WaveTrackViewConstants::kZoom500ths,
-   WaveTrackViewConstants::kZoomMilliSeconds,
-   WaveTrackViewConstants::kZoomSamples,
-   WaveTrackViewConstants::kZoom4To1,
-   WaveTrackViewConstants::kMaxZoom,
+   WaveChannelViewConstants::kZoomToFit,
+   WaveChannelViewConstants::kZoomToSelection,
+   WaveChannelViewConstants::kZoomDefault,
+   WaveChannelViewConstants::kZoomMinutes,
+   WaveChannelViewConstants::kZoomSeconds,
+   WaveChannelViewConstants::kZoom5ths,
+   WaveChannelViewConstants::kZoom10ths,
+   WaveChannelViewConstants::kZoom20ths,
+   WaveChannelViewConstants::kZoom50ths,
+   WaveChannelViewConstants::kZoom100ths,
+   WaveChannelViewConstants::kZoom500ths,
+   WaveChannelViewConstants::kZoomMilliSeconds,
+   WaveChannelViewConstants::kZoomSamples,
+   WaveChannelViewConstants::kZoom4To1,
+   WaveChannelViewConstants::kMaxZoom,
 };
 
-static EnumSetting< WaveTrackViewConstants::ZoomPresets > zoom1Setting{
+static EnumSetting<WaveChannelViewConstants::ZoomPresets> zoom1Setting{
    wxT("/GUI/ZoomPreset1Choice"),
    choicesZoom,
    2, // kZoomDefault
@@ -248,7 +248,7 @@ static EnumSetting< WaveTrackViewConstants::ZoomPresets > zoom1Setting{
    wxT("/GUI/ZoomPreset1")
 };
 
-static EnumSetting< WaveTrackViewConstants::ZoomPresets > zoom2Setting{
+static EnumSetting<WaveChannelViewConstants::ZoomPresets> zoom2Setting{
    wxT("/GUI/ZoomPreset2Choice"),
    choicesZoom,
    13, // kZoom4To1
@@ -258,12 +258,12 @@ static EnumSetting< WaveTrackViewConstants::ZoomPresets > zoom2Setting{
    wxT("/GUI/ZoomPreset2")
 };
 
-WaveTrackViewConstants::ZoomPresets TracksPrefs::Zoom1Choice()
+WaveChannelViewConstants::ZoomPresets TracksPrefs::Zoom1Choice()
 {
    return zoom1Setting.ReadEnum();
 }
 
-WaveTrackViewConstants::ZoomPresets TracksPrefs::Zoom2Choice()
+WaveChannelViewConstants::ZoomPresets TracksPrefs::Zoom2Choice()
 {
    return zoom2Setting.ReadEnum();
 }

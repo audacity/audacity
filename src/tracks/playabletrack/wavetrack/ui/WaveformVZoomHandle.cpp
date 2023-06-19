@@ -105,11 +105,11 @@ wxRect WaveformVZoomHandle::DrawingArea(
 void WaveformVZoomHandle::DoZoom(
    AudacityProject *pProject,
    WaveTrack *pTrack,
-   WaveTrackViewConstants::ZoomActions ZoomKind,
+   WaveChannelViewConstants::ZoomActions ZoomKind,
    const wxRect &rect, int zoomStart, int zoomEnd,
    bool fixedMousePoint)
 {
-   using namespace WaveTrackViewConstants;
+   using namespace WaveChannelViewConstants;
    static const float ZOOMLIMIT = 0.001f;
 
    int height = rect.height;

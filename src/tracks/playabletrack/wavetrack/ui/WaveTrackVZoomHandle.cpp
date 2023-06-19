@@ -39,7 +39,7 @@ void WaveTrackVRulerMenuTable::InitUserData(void *pUserData)
 
 
 void WaveTrackVRulerMenuTable::OnZoom(
-   WaveTrackViewConstants::ZoomActions iZoomCode )
+   WaveChannelViewConstants::ZoomActions iZoomCode)
 {
    mpData->doZoom(
       &mpData->project, mpData->pTrack,
@@ -110,7 +110,7 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
 
 
    // Popup menu...
-   using namespace WaveTrackViewConstants;
+   using namespace WaveChannelViewConstants;
    if (
        rightUp &&
        !(event.ShiftDown() || event.CmdDown()))
@@ -124,7 +124,7 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
 
       return data.result;
    }
-   else{
+   else {
       bool bVZoom;
       gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
       // Ignore Capture Lost event 

@@ -12,7 +12,7 @@ Paul Licameli split from WaveTrackVZoomHandle.h
 #define __AUDACITY_WAVEFORM_VZOOM_HANDLE__
 
 #include "../../../../UIHandle.h" // to inherit
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelViewConstants.h"
 
 class WaveTrack;
 
@@ -28,7 +28,7 @@ public:
 
    static void DoZoom(
       AudacityProject *pProject, WaveTrack *pTrack,
-      WaveTrackViewConstants::ZoomActions ZoomKind,
+      WaveChannelViewConstants::ZoomActions ZoomKind,
       const wxRect &rect, int zoomStart, int zoomEnd,
       bool fixedMousePoint);
 

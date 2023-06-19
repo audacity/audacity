@@ -55,7 +55,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
 #include "CommandContext.h"
 
 bool SetTrackBase::Apply(const CommandContext & context)
@@ -259,7 +259,7 @@ static EnumValueSymbols DiscoverSubViewTypes()
    const auto &types = WaveChannelSubViewType::All();
    auto result = transform_container< EnumValueSymbols >(
       types, std::mem_fn(&WaveChannelSubView::Type::name) );
-   result.push_back( WaveTrackViewConstants::MultiViewSymbol );
+   result.push_back(WaveChannelViewConstants::MultiViewSymbol);
    return result;
 }
 

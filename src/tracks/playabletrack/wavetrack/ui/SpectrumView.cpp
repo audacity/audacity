@@ -19,7 +19,7 @@ Paul Licameli split from WaveChannelView.cpp
 
 #include "SpectrumVRulerControls.h"
 #include "WaveChannelView.h"
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelViewConstants.h"
 
 #include "../../../ui/BrushHandle.h"
 
@@ -46,7 +46,7 @@ class BrushHandle;
 class SpectralData;
 
 static WaveChannelSubView::Type sType{
-   WaveTrackViewConstants::Spectrum,
+   WaveChannelViewConstants::Spectrum,
    { wxT("Spectrogram"), XXO("&Spectrogram") }
 };
 
@@ -995,7 +995,7 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
    // factories.push_back(WaveformPrefsFactory( pTrack ));
    factories.push_back(SpectrumPrefsFactory( pTrack ));
    const int page =
-      // (pTrack->GetDisplay() == WaveTrackViewConstants::Spectrum) ? 1 :
+      // (pTrack->GetDisplay() == WaveChannelViewConstants::Spectrum) ? 1 :
       0;
 
    auto title = XO("%s:").Format( pTrack->GetName() );
@@ -1032,7 +1032,7 @@ PopupMenuTable::AttachedItem sAttachment{
             bool hasSpectrum = (displays.end() != std::find(
                displays.begin(), displays.end(),
                WaveChannelSubView::Type{
-                  WaveTrackViewConstants::Spectrum, {} }
+                  WaveChannelViewConstants::Spectrum, {} }
             ) );
             return hasSpectrum
                // In future, we might move this to the context menu of the
@@ -1114,7 +1114,7 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
       bool hasSpectrum = (displays.end() != std::find(
          displays.begin(), displays.end(),
          WaveChannelSubView::Type{
-            WaveTrackViewConstants::Spectrum, {} }
+            WaveChannelViewConstants::Spectrum, {} }
       ) );
       if ( hasSpectrum ) {
          pTrack = wt;

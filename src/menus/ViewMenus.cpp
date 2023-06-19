@@ -63,8 +63,8 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
    double result = 1.0;
    auto &window = ProjectWindow::Get( project );
    double zoomToFit = window.GetZoomOfToFit();
-   using namespace WaveTrackViewConstants;
-   switch( preset ){
+   using namespace WaveChannelViewConstants;
+   switch(preset) {
       default:
       case kZoomDefault:
          result = ZoomInfo::GetDefaultZoom();

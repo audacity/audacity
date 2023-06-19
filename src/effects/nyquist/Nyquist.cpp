@@ -76,7 +76,7 @@ effects from this one class.
 #include "wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "../../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "ProgressDialog.h"
 
@@ -600,7 +600,7 @@ bool NyquistEffect::Init()
                if (displays.end() != std::find(
                   displays.begin(), displays.end(),
                   WaveChannelSubView::Type{
-                     WaveTrackViewConstants::Spectrum, {} }))
+                     WaveChannelViewConstants::Spectrum, {} }))
                   hasSpectral = true;
             }
             if ( hasSpectral &&

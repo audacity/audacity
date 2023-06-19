@@ -14,7 +14,7 @@ Paul Licameli split from WaveChannelView.cpp
 #include "WaveformCache.h"
 #include "WaveformVRulerControls.h"
 #include "WaveChannelView.h"
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelViewConstants.h"
 
 #include "SampleHandle.h"
 #include "../../../ui/EnvelopeHandle.h"
@@ -41,7 +41,7 @@ Paul Licameli split from WaveChannelView.cpp
 #include <wx/dc.h>
 
 static WaveChannelSubView::Type sType{
-   WaveTrackViewConstants::Waveform,
+   WaveChannelViewConstants::Waveform,
    { wxT("Waveform"), XXO("Wa&veform") }
 };
 
@@ -538,7 +538,9 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context, size_t channel,
    }
 
    const auto sampleDisplay = artist->mSampleDisplay;
-   if (showPoints && (sampleDisplay == (int) WaveTrackViewConstants::StemPlot)) {
+   if (showPoints &&
+       (sampleDisplay == (int) WaveChannelViewConstants::StemPlot)
+   ){
       // Draw vertical lines
       int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height, dB, true, dBRange, false);
       yZero = rect.y + std::max(-1, std::min(rect.height, yZero));
@@ -1163,7 +1165,7 @@ PopupMenuTable::AttachedItem sAttachment{
             bool hasWaveform = (displays.end() != std::find(
                displays.begin(), displays.end(),
                WaveChannelSubView::Type{
-                  WaveTrackViewConstants::Waveform, {} }
+                  WaveChannelViewConstants::Waveform, {} }
             ) );
             return hasWaveform
                ? Registry::Indirect(WaveColorMenuTable::Instance()

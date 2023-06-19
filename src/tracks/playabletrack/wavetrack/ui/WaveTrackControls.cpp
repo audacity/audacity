@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackSliderHandles.h"
 
 #include "WaveChannelView.h"
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelViewConstants.h"
 #include "AudioIOBase.h"
 #include "../../../../CellularPanel.h"
 #include "Project.h"
@@ -692,7 +692,7 @@ void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
-      ? WaveTrackViewConstants::Waveform : displays.begin()->id;
+      ? WaveChannelViewConstants::Waveform : displays.begin()->id;
    view.SetMultiView(multi);
 
    // Whichever sub-view was on top stays on top

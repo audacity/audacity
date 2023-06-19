@@ -14,7 +14,7 @@ Paul Licameli split from class WaveTrack
 #include "../../../ui/CommonChannelView.h"
 #include "ClientData.h"
 #include "SampleCount.h"
-namespace WaveTrackViewConstants{ enum Display : int; }
+namespace WaveChannelViewConstants{ enum Display : int; }
 struct WaveChannelSubViewType;
 
 class CutlineHandle;
@@ -40,7 +40,7 @@ class AUDACITY_DLL_API WaveChannelSubView : public CommonChannelView
 {
 public:
 
-   using Display = WaveTrackViewConstants::Display;
+   using Display = WaveChannelViewConstants::Display;
    using Type = WaveChannelSubViewType;
 
    explicit
@@ -102,7 +102,7 @@ class AUDACITY_DLL_API WaveChannelView final
 public:
    static constexpr int kChannelSeparatorThickness{ 8 };
 
-   using Display = WaveTrackViewConstants::Display;
+   using Display = WaveChannelViewConstants::Display;
 
    static WaveChannelView &Get(WaveTrack &track);
    static const WaveChannelView &Get(const WaveTrack &track);

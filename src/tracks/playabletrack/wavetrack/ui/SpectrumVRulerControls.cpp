@@ -76,7 +76,7 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
    
    auto steps = evt.steps;
    
-   using namespace WaveTrackViewConstants;
+   using namespace WaveChannelViewConstants;
    if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
       SpectrumVZoomHandle::DoZoom(
