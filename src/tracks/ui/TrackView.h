@@ -37,9 +37,12 @@ public:
    // some static conveniences, useful for summation over track iterator
    // ranges
    static int GetChannelGroupHeight( const Track *pTrack );
-   // Total height of the given track and all previous ones (constant time!)
-   static int GetCumulativeHeight( const Track *pTrack );
-   static int GetTotalHeight( const TrackList &list );
+   // Total height of the given channel and all previous ones (constant time!)
+   static int GetCumulativeHeight(const Channel *pChannel);
+   // Total height of all Channels of the the given track and all previous ones
+   // (constant time!)
+   static int GetCumulativeHeight(const Track *pTrack);
+   static int GetTotalHeight(const TrackList &list);
 
    // Copy view state, for undo/redo purposes
    void CopyTo(Track &track) const override;

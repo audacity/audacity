@@ -36,17 +36,24 @@ int TrackView::GetChannelGroupHeight(const Track *pTrack)
    return pTrack ? TrackList::Channels(pTrack).sum(GetTrackHeight) : 0;
 }
 
-int TrackView::GetCumulativeHeight( const Track *pTrack )
+int TrackView::GetCumulativeHeight(const Channel *pChannel)
 {
-   if ( !pTrack )
+   if (!pChannel)
       return 0;
-   auto &view = Get( *pTrack );
+   auto &view = ChannelView::Get(*pChannel);
    return view.GetCumulativeHeightBefore() + view.GetHeight();
 }
 
-int TrackView::GetTotalHeight( const TrackList &list )
+int TrackView::GetCumulativeHeight(const Track *pTrack)
 {
-   return GetCumulativeHeight( *list.Any().rbegin() );
+   if (!pTrack)
+      return 0;
+   return GetCumulativeHeight((*pTrack->Channels().rbegin()).get());
+}
+
+int TrackView::GetTotalHeight(const TrackList &list)
+{
+   return GetCumulativeHeight(*list.Leaders().rbegin());
 }
 
 void TrackView::CopyTo( Track &track ) const
@@ -259,17 +266,19 @@ struct TrackPositioner final : ClientData::Base
          return;
       }
       auto iter =
-         TrackList::Get( mProject ).Find( e.mpTrack.lock().get() );
-      if ( !*iter )
+         TrackList::Get(mProject).FindLeader(e.mpTrack.lock().get());
+      if (!*iter)
          return;
 
       auto prev = iter;
-      auto yy = TrackView::GetCumulativeHeight( *--prev );
+      auto yy = TrackView::GetCumulativeHeight(*--prev);
 
-      while( auto pTrack = *iter ) {
-         auto &view = TrackView::Get( *pTrack );
-         view.SetCumulativeHeightBefore( yy );
-         yy += view.GetHeight();
+      while (auto pTrack = *iter) {
+         for (auto pChannel : (*iter)->Channels()) {
+            auto &view = ChannelView::Get(*pChannel);
+            view.SetCumulativeHeightBefore(yy);
+            yy += view.GetHeight();
+         }
          ++iter;
       }
    }
