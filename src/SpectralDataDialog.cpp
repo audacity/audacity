@@ -411,8 +411,8 @@ void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
 static bool HasVisibleSpectralView(WaveTrack *wt)
 {
    auto &view = ChannelView::Get(*wt->GetChannel(0));
-   if (auto waveTrackViewPtr = dynamic_cast<WaveTrackView*>(&view)) {
-      const auto range = waveTrackViewPtr->GetSubViews();
+   if (auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)) {
+      const auto range = waveChannelViewPtr->GetSubViews();
       return std::any_of( range.begin(), range.end(),
          [](const auto &pair){
             return dynamic_cast<SpectrumView*>(pair.second.get()); } );

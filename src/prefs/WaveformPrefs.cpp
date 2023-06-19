@@ -27,7 +27,7 @@ Paul Licameli
 #include "../TrackPanel.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid,
@@ -184,7 +184,7 @@ bool WaveformPrefs::Commit()
    mTempSettings.ConvertToEnumeratedDBRange();
 
    if (mWt && isOpenPage) {
-      WaveTrackView::Get(*mWt).SetDisplay(WaveTrackViewConstants::Waveform);
+      WaveChannelView::Get(*mWt).SetDisplay(WaveTrackViewConstants::Waveform);
    }
 
    if (isOpenPage) {

@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 WaveformView.cpp
 
-Paul Licameli split from WaveTrackView.cpp
+Paul Licameli split from WaveChannelView.cpp
 
 **********************************************************************/
 
@@ -13,7 +13,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "WaveformCache.h"
 #include "WaveformVRulerControls.h"
-#include "WaveTrackView.h"
+#include "WaveChannelView.h"
 #include "WaveTrackViewConstants.h"
 
 #include "SampleHandle.h"
@@ -661,7 +661,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
 
    //If clip is "too small" draw a placeholder instead of
    //attempting to fit the contents into a few pixels
-   if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+   if (!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
    {
       auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
       TrackArt::DrawClipFolded(dc, clipRect);
@@ -1019,10 +1019,10 @@ void WaveformView::Draw(
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 #endif
       
-      auto waveTrackView = GetWaveTrackView().lock();
-      wxASSERT(waveTrackView.use_count());
+      auto waveChannelView = GetWaveChannelView().lock();
+      wxASSERT(waveChannelView.use_count());
 
-      auto selectedClip = waveTrackView->GetSelectedClip().lock();
+      auto selectedClip = waveChannelView->GetSelectedClip().lock();
       DoDraw(context, GetChannelIndex(),
          wt.get(), selectedClip.get(), rect, muted);
 
@@ -1034,7 +1034,7 @@ void WaveformView::Draw(
 }
 
 static const WaveTrackSubViews::RegisteredFactory key{
-   []( WaveTrackView &view ){
+   [](WaveChannelView &view) {
       return std::make_shared< WaveformView >( view );
    }
 };
@@ -1158,7 +1158,7 @@ PopupMenuTable::AttachedItem sAttachment{
       PopupMenuTable::Adapt<WaveTrackPopupMenuTable>(
          [](WaveTrackPopupMenuTable &table) {
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto &view = WaveChannelView::Get(*pTrack);
             const auto displays = view.GetDisplays();
             bool hasWaveform = (displays.end() != std::find(
                displays.begin(), displays.end(),

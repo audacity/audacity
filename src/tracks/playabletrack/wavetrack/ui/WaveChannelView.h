@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-WaveTrackView.h
+WaveChannelView.h
 
 Paul Licameli split from class WaveTrack
 
@@ -21,7 +21,7 @@ class CutlineHandle;
 class TranslatableString;
 class SampleTrack;
 class WaveTrack;
-class WaveTrackView;
+class WaveChannelView;
 class WaveClip;
 class WaveClipTrimHandle;
 class ZoomInfo;
@@ -44,7 +44,7 @@ public:
    using Type = WaveTrackSubViewType;
 
    explicit
-   WaveTrackSubView(WaveTrackView &waveTrackView);
+   WaveTrackSubView(WaveChannelView &waveChannelView);
    
    virtual const Type &SubViewType() const = 0;
 
@@ -65,7 +65,7 @@ protected:
       TrackPanelDrawingContext &context, const WaveTrack *track,
       const wxRect &rect );
 
-   std::weak_ptr<WaveTrackView> GetWaveTrackView() const;
+   std::weak_ptr<WaveChannelView> GetWaveChannelView() const;
 
    std::vector<MenuItem> GetMenuItems(
       const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
@@ -78,7 +78,7 @@ private:
    std::weak_ptr<SubViewRearrangeHandle> mRearrangeHandle;
    std::weak_ptr<WaveClipTrimHandle> mClipTrimHandle;
    std::weak_ptr<CutlineHandle> mCutlineHandle;
-   std::weak_ptr<WaveTrackView> mwWaveTrackView;
+   std::weak_ptr<WaveChannelView> mwWaveChannelView;
 };
 
 struct WaveTrackSubViewPlacement {
@@ -87,34 +87,34 @@ struct WaveTrackSubViewPlacement {
 };
 using WaveTrackSubViewPlacements = std::vector< WaveTrackSubViewPlacement >;
 
-class WaveTrackView;
+class WaveChannelView;
 using WaveTrackSubViews = ClientData::Site<
-   WaveTrackView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
+   WaveChannelView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
 >;
 
-class AUDACITY_DLL_API WaveTrackView final
+class AUDACITY_DLL_API WaveChannelView final
    : public CommonChannelView
    , public WaveTrackSubViews
 {
-   WaveTrackView( const WaveTrackView& ) = delete;
-   WaveTrackView &operator=( const WaveTrackView& ) = delete;
+   WaveChannelView(const WaveChannelView&) = delete;
+   WaveChannelView &operator=(const WaveChannelView&) = delete;
 
 public:
    static constexpr int kChannelSeparatorThickness{ 8 };
 
    using Display = WaveTrackViewConstants::Display;
 
-   static WaveTrackView &Get( WaveTrack &track );
-   static const WaveTrackView &Get( const WaveTrack &track );
-   static WaveTrackView *Find( WaveTrack *pTrack );
-   static const WaveTrackView *Find( const WaveTrack *pTrack );
+   static WaveChannelView &Get(WaveTrack &track);
+   static const WaveChannelView &Get(const WaveTrack &track);
+   static WaveChannelView *Find(WaveTrack *pTrack);
+   static const WaveChannelView *Find(const WaveTrack *pTrack);
 
    //! Construct a view of one channel
    /*!
     @param channel which channel of a possibly wide wave track
     */
-   WaveTrackView(const std::shared_ptr<Track> &pTrack, size_t channel);
-   ~WaveTrackView() override;
+   WaveChannelView(const std::shared_ptr<Track> &pTrack, size_t channel);
+   ~WaveChannelView() override;
 
    // Preserve some view state too for undo/redo purposes
    void CopyTo( Track &track ) const override;

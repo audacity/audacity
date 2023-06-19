@@ -4,14 +4,14 @@ Audacity: A Digital Audio Editor
 
 WaveformView.h
 
-Paul Licameli split from WaveTrackView.h
+Paul Licameli split from WaveChannelView.h
 
 **********************************************************************/
 
 #ifndef __AUDACITY_WAVEFORM_VIEW__
 #define __AUDACITY_WAVEFORM_VIEW__
 
-#include "WaveTrackView.h" // to inherit
+#include "WaveChannelView.h" // to inherit
 
 class WaveTrack;
 class SampleHandle;

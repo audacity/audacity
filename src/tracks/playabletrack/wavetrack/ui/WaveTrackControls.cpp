@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
-#include "WaveTrackView.h"
+#include "WaveChannelView.h"
 #include "WaveTrackViewConstants.h"
 #include "AudioIOBase.h"
 #include "../../../../CellularPanel.h"
@@ -570,7 +570,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                []( PopupMenuHandler &handler, wxMenu &menu, int id ){
                   auto &table = static_cast< WaveTrackMenuTable& >( handler );
                   auto &track = table.FindWaveTrack();
-                  const auto &view = WaveTrackView::Get( track );
+                  const auto &view = WaveChannelView::Get(track);
                   menu.Check( id, view.GetMultiView() );
                } )
             : nullptr;
@@ -596,7 +596,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                auto &table = static_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
 
-               const auto &view = WaveTrackView::Get( track );
+               const auto &view = WaveChannelView::Get(track);
 
                const auto displays = view.GetDisplays();
                const auto end = displays.end();
@@ -614,7 +614,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          };
          Append(Adapt<My>([type, id](My &table) {
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto &view = WaveChannelView::Get(*pTrack);
             const auto itemType =
                view.GetMultiView() ? Entry::CheckItem : Entry::RadioItem;
             return std::make_unique<Entry>( type.name.Internal(), itemType,
@@ -688,7 +688,7 @@ END_POPUP_MENU()
 void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 {
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   auto &view = WaveTrackView::Get(*pTrack);
+   auto &view = WaveChannelView::Get(*pTrack);
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
@@ -711,10 +711,10 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
 
    auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
-   auto &view = WaveTrackView::Get(*pTrack);
+   auto &view = WaveChannelView::Get(*pTrack);
    if (view.GetMultiView()) {
-      if (!WaveTrackView::Get(*pTrack)
-            .ToggleSubView(WaveTrackView::Display{ id } )) {
+      if (!WaveChannelView::Get(*pTrack)
+            .ToggleSubView(WaveChannelView::Display{ id } )) {
          // Trying to toggle off the last sub-view.  It was refused.
          // Decide what to do here.  Turn off multi-view instead?
          // PRL:  I don't agree that it makes sense
@@ -727,7 +727,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       const bool wrongType =
          !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
-         WaveTrackView::Get(*pTrack).SetDisplay(WaveTrackView::Display{ id });
+         WaveChannelView::Get(*pTrack).SetDisplay(WaveChannelView::Display{ id });
 
          AudacityProject *const project = &mpData->project;
          ProjectHistory::Get( *project ).ModifyState(true);
@@ -774,8 +774,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 
    // Set NEW track heights and minimized state
    auto
-      &view = WaveTrackView::Get( *pTrack ),
-      &partnerView = WaveTrackView::Get( *partner );
+      &view = WaveChannelView::Get(*pTrack),
+      &partnerView = WaveChannelView::Get(*partner);
    view.SetMinimized(false);
    partnerView.SetMinimized(false);
    int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;

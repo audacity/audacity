@@ -33,7 +33,7 @@
 
 #include "../../../ui/TextEditHelper.h"
 #include "../../../ui/SelectHandle.h"
-#include "WaveTrackView.h"//need only ClipParameters
+#include "WaveChannelView.h"//need only ClipParameters
 #include "WaveTrackAffordanceHandle.h"
 
 #include "ProjectHistory.h"
@@ -176,7 +176,8 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     }
 
     auto trackList = track->GetOwner();
-    if ((std::abs(rect.GetTop() - py) <= WaveTrackView::kChannelSeparatorThickness / 2) 
+    if ((std::abs(rect.GetTop() - py) <=
+          WaveChannelView::kChannelSeparatorThickness / 2) 
         && trackList
         && !track->IsLeader())
     {
@@ -210,7 +211,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         if (clip == editClipLock)
             continue;
 
-        if (WaveTrackView::HitTest(*clip, zoomInfo, state.rect, {px, py}))
+        if (WaveChannelView::HitTest(*clip, zoomInfo, state.rect, {px, py}))
         {
             results.push_back(
                 AssignUIHandlePtr(
@@ -265,7 +266,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 auto affordanceRect
                    = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
 
-                if(!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+                if(!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
                 {
                    TrackArt::DrawClipFolded(context.dc, affordanceRect);
                    continue;

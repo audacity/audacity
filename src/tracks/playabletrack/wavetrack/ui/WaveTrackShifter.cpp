@@ -7,7 +7,7 @@
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "WaveTrackView.h"
+#include "WaveChannelView.h"
 
 class WaveTrackShifter final : public TrackShifter {
 public:
@@ -27,7 +27,7 @@ public:
          {
             if (params != nullptr)
             {
-               if (WaveTrackView::HitTest(
+               if (WaveChannelView::HitTest(
                       *clip, viewInfo, params->rect,
                       { params->xx, params->yy }))
                   return clip;

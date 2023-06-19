@@ -54,7 +54,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "../prefs/SpectrogramSettings.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "CommandContext.h"
 
@@ -354,7 +354,7 @@ bool SetTrackVisualsCommand::ApplyInner(
    }
 
    if (bHasDisplayType) {
-      auto &view = WaveTrackView::Get(*wt);
+      auto &view = WaveChannelView::Get(*wt);
       auto &all = WaveTrackSubViewType::All();
       if (mDisplayType < all.size())
          view.SetDisplay( all[ mDisplayType ].id );

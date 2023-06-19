@@ -42,8 +42,8 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
       for (auto pChannel : wt->Channels()) {
          auto &view = ChannelView::Get(*pChannel);
 
-         if(auto waveTrackViewPtr = dynamic_cast<WaveTrackView*>(&view)){
-            for(const auto &subViewPtr : waveTrackViewPtr->GetAllSubViews()){
+         if(auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)){
+            for(const auto &subViewPtr : waveChannelViewPtr->GetAllSubViews()){
                if(!subViewPtr->IsSpectral())
                   continue;
                auto sView = std::static_pointer_cast<SpectrumView>(subViewPtr).get();

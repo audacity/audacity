@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 SpectrumView.h
 
-Paul Licameli split from WaveTrackView.h
+Paul Licameli split from WaveChannelView.h
 
 **********************************************************************/
 
@@ -14,7 +14,7 @@ Paul Licameli split from WaveTrackView.h
 #include <functional>
 #include <map>
 #include <set>
-#include "WaveTrackView.h" // to inherit
+#include "WaveChannelView.h" // to inherit
 
 
 class WaveTrack;
@@ -114,8 +114,9 @@ class SpectrumView final : public WaveTrackSubView
 {
    SpectrumView &operator=( const SpectrumView& ) = delete;
 public:
-   SpectrumView(WaveTrackView &waveTrackView, const SpectrumView &src) = delete;
-   explicit SpectrumView(WaveTrackView &waveTrackView);
+   SpectrumView(WaveChannelView &waveChannelView, const SpectrumView &src)
+      = delete;
+   explicit SpectrumView(WaveChannelView &waveChannelView);
    ~SpectrumView() override;
 
    const Type &SubViewType() const override;
