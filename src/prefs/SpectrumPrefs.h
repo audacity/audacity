@@ -34,7 +34,7 @@ struct FFTParam;
 class ShuttleGui;
 class SpectrogramSettings;
 class WaveTrack;
-struct WaveTrackSubViewPlacement;
+struct WaveChannelSubViewPlacement;
 
 #define SPECTRUM_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Spectrum") }
 
@@ -99,7 +99,7 @@ class SpectrumPrefs final : public PrefsPanel
 
    SpectrogramSettings mTempSettings, mOrigSettings;
 
-   std::vector<WaveTrackSubViewPlacement> mOrigPlacements;
+   std::vector<WaveChannelSubViewPlacement> mOrigPlacements;
    float mOrigMin, mOrigMax;
 
    bool mPopulating;

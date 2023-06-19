@@ -110,7 +110,7 @@ public:
    }
 };
 
-class SpectrumView final : public WaveTrackSubView
+class SpectrumView final : public WaveChannelSubView
 {
    SpectrumView &operator=( const SpectrumView& ) = delete;
 public:
@@ -129,7 +129,7 @@ public:
 
    static int mBrushRadius;
 
-   void CopyToSubView( WaveTrackSubView *destSubView ) const override;
+   void CopyToSubView(WaveChannelSubView *destSubView) const override;
 
    class SpectralDataSaver;
 

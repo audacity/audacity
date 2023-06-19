@@ -45,15 +45,15 @@ Paul Licameli split from WaveChannelView.cpp
 class BrushHandle;
 class SpectralData;
 
-static WaveTrackSubView::Type sType{
+static WaveChannelSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
    { wxT("Spectrogram"), XXO("&Spectrogram") }
 };
 
-static WaveTrackSubViewType::RegisteredType reg{ sType };
+static WaveChannelSubViewType::RegisteredType reg{ sType };
 
 SpectrumView::SpectrumView(WaveChannelView &waveChannelView)
-   : WaveTrackSubView(waveChannelView)
+   : WaveChannelSubView(waveChannelView)
 {
    auto wt = static_cast<WaveTrack*>( FindTrack().get() );
    mpSpectralData = std::make_shared<SpectralData>(wt->GetRate());
@@ -186,7 +186,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    }
 #endif
 
-   return WaveTrackSubView::DoDetailedHitTest(
+   return WaveChannelSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt
    ).second;
 }
@@ -231,9 +231,11 @@ std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){
    return mpSpectralData;
 }
 
-void SpectrumView::CopyToSubView(WaveTrackSubView *destSubView) const{
-   if ( const auto pDest = dynamic_cast< SpectrumView* >( destSubView ) ) {
-      pDest->mpSpectralData =  std::make_shared<SpectralData>(mpSpectralData->GetSR());
+void SpectrumView::CopyToSubView(WaveChannelSubView *destSubView) const
+{
+   if (const auto pDest = dynamic_cast< SpectrumView* >(destSubView)) {
+      pDest->mpSpectralData =
+         std::make_shared<SpectralData>(mpSpectralData->GetSR());
       pDest->mpSpectralData->CopyFrom(*mpSpectralData);
    }
 }
@@ -911,10 +913,10 @@ void SpectrumView::Draw(
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
    }
-   WaveTrackSubView::Draw( context, rect, iPass );
+   WaveChannelSubView::Draw(context, rect, iPass);
 }
 
-static const WaveTrackSubViews::RegisteredFactory key{
+static const WaveChannelSubViews::RegisteredFactory key{
    [](WaveChannelView &view){
       return std::make_shared<SpectrumView>(view);
    }
@@ -1029,7 +1031,8 @@ PopupMenuTable::AttachedItem sAttachment{
             const auto displays = view.GetDisplays();
             bool hasSpectrum = (displays.end() != std::find(
                displays.begin(), displays.end(),
-               WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+               WaveChannelSubView::Type{
+                  WaveTrackViewConstants::Spectrum, {} }
             ) );
             return hasSpectrum
                // In future, we might move this to the context menu of the
@@ -1110,7 +1113,8 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
       const auto displays = WaveChannelView::Get(*wt).GetDisplays();
       bool hasSpectrum = (displays.end() != std::find(
          displays.begin(), displays.end(),
-         WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+         WaveChannelSubView::Type{
+            WaveTrackViewConstants::Spectrum, {} }
       ) );
       if ( hasSpectrum ) {
          pTrack = wt;

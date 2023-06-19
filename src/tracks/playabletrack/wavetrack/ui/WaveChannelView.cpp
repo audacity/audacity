@@ -51,7 +51,7 @@ Paul Licameli split from TrackPanel.cpp
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
-using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
+using WaveChannelSubViewPtrs = std::vector<std::shared_ptr<WaveChannelSubView>>;
 
 namespace {
 struct PlacementArray : ClientData::Cloneable<> {
@@ -60,7 +60,7 @@ struct PlacementArray : ClientData::Cloneable<> {
    ~PlacementArray() = default;
    std::unique_ptr<Cloneable<>> Clone() const {
       return std::make_unique<PlacementArray>(*this); }
-   WaveTrackSubViewPlacements mPlacements;
+   WaveChannelSubViewPlacements mPlacements;
    bool mMultiView{ false };
 };
 
@@ -80,13 +80,13 @@ const PlacementArray &PlacementArray::Get(const Track &track)
 }
 }
 
-WaveTrackSubViewPlacements &WaveChannelView::DoGetPlacements()
+WaveChannelSubViewPlacements &WaveChannelView::DoGetPlacements()
 {
    auto &waveTrack = *std::dynamic_pointer_cast<WaveTrack>(FindTrack());
    return PlacementArray::Get(waveTrack).mPlacements;
 }
 
-const WaveTrackSubViewPlacements &WaveChannelView::DoGetPlacements() const
+const WaveChannelSubViewPlacements &WaveChannelView::DoGetPlacements() const
 {
    return const_cast<WaveChannelView&>(*this).DoGetPlacements();
 }
@@ -125,7 +125,7 @@ struct SubViewAdjuster
       mPermutation.resize( size );
       const auto begin = mPermutation.begin(), end = mPermutation.end();
       std::iota( begin, end, 0 );
-      static auto invisible = []( const WaveTrackSubViewPlacement &placement ){
+      static auto invisible = [](const WaveChannelSubViewPlacement &placement) {
          return placement.index < 0 || placement.fraction <= 0;
       };
       const auto comp = [this]( size_t ii, size_t jj ){
@@ -193,7 +193,7 @@ struct SubViewAdjuster
       return rotated;
    }
 
-   size_t FindIndex( WaveTrackSubView &subView ) const
+   size_t FindIndex(WaveChannelSubView &subView) const
    {
       const auto begin = mPermutation.begin(), end = mPermutation.end();
       auto iter = std::find_if( begin, end, [&](size_t ii){
@@ -203,8 +203,8 @@ struct SubViewAdjuster
    }
 
    std::pair< size_t, bool >
-   HitTest( WaveTrackSubView &subView,
-      wxCoord yy, wxCoord top, wxCoord height )
+   HitTest(WaveChannelSubView &subView,
+      wxCoord yy, wxCoord top, wxCoord height)
    {
       const auto index = FindIndex( subView );
       auto size = mPermutation.size();
@@ -256,8 +256,8 @@ struct SubViewAdjuster
    }
 
    std::weak_ptr<WaveChannelView> mwView;
-   WaveTrackSubViewPtrs mSubViews;
-   WaveTrackSubViewPlacements mOrigPlacements, mNewPlacements;
+   WaveChannelSubViewPtrs mSubViews;
+   WaveChannelSubViewPlacements mOrigPlacements, mNewPlacements;
    // Array mapping ordinal into the placement and subview arrays
    std::vector< size_t > mPermutation;
    // index into mPermutation
@@ -269,10 +269,10 @@ class SubViewAdjustHandle : public UIHandle
 public:
    enum { MinHeight = SubViewAdjuster::HotZoneSize };
 
-   static UIHandlePtr HitTest( std::weak_ptr<SubViewAdjustHandle> &holder,
+   static UIHandlePtr HitTest(std::weak_ptr<SubViewAdjustHandle> &holder,
       WaveChannelView &view,
-      WaveTrackSubView &subView,
-      const TrackPanelMouseState &state )
+      WaveChannelSubView &subView,
+      const TrackPanelMouseState &state)
    {
       if ( !view.GetMultiView() )
          return {};
@@ -482,7 +482,7 @@ public:
    enum { HotZoneWidth = 3 * kTrackInfoBtnSize / 2 };
 
    static UIHandlePtr HitTest(std::weak_ptr<SubViewRearrangeHandle> &holder,
-      WaveChannelView &view, WaveTrackSubView &subView,
+      WaveChannelView &view, WaveChannelSubView &subView,
       const TrackPanelMouseState &state)
    {
       if ( !view.GetMultiView() )
@@ -678,7 +678,7 @@ class SubViewCloseHandle : public ButtonHandle
 
 public:
    static UIHandlePtr HitTest(std::weak_ptr<SubViewCloseHandle> &holder,
-      WaveChannelView &view, WaveTrackSubView &subView,
+      WaveChannelView &view, WaveChannelSubView &subView,
       const TrackPanelMouseState &state)
    {
       SubViewAdjuster adjuster{ view };
@@ -741,7 +741,7 @@ private:
 std::pair<
    bool, // if true, hit-testing is finished
    std::vector<UIHandlePtr>
-> WaveTrackSubView::DoDetailedHitTest(
+> WaveChannelSubView::DoDetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool,
    const std::shared_ptr<WaveTrack> &wt)
@@ -822,9 +822,9 @@ std::pair<
 }
 
 
-void WaveTrackSubView::DrawBoldBoundaries(
+void WaveChannelSubView::DrawBoldBoundaries(
    TrackPanelDrawingContext &context, const WaveTrack *track,
-   const wxRect &rect )
+   const wxRect &rect)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -863,13 +863,13 @@ void WaveTrackSubView::DrawBoldBoundaries(
    }
 }
 
-std::weak_ptr<WaveChannelView> WaveTrackSubView::GetWaveChannelView() const
+std::weak_ptr<WaveChannelView> WaveChannelSubView::GetWaveChannelView() const
 {
    return mwWaveChannelView;
 }
 
-auto WaveTrackSubView::GetMenuItems(
-   const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+auto WaveChannelSubView::GetMenuItems(
+   const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject)
       -> std::vector<MenuItem>
 {
    const WaveClip *pClip = nullptr;
@@ -926,7 +926,7 @@ WaveChannelView::WaveChannelView(
 {
 }
 
-WaveTrackSubView::WaveTrackSubView(WaveChannelView &waveChannelView)
+WaveChannelSubView::WaveChannelSubView(WaveChannelView &waveChannelView)
    : CommonChannelView{
       waveChannelView.FindTrack(), waveChannelView.GetChannelIndex() }
 {
@@ -934,7 +934,7 @@ WaveTrackSubView::WaveTrackSubView(WaveChannelView &waveChannelView)
       waveChannelView.shared_from_this() );
 }
 
-void WaveTrackSubView::CopyToSubView(WaveTrackSubView *destSubView) const {
+void WaveChannelSubView::CopyToSubView(WaveChannelSubView *destSubView) const {
 
 }
 
@@ -1021,25 +1021,25 @@ WaveChannelView::DoDetailedHitTest(
 }
 
 auto WaveChannelView::GetDisplays() const
-   -> std::vector< WaveTrackSubView::Type >
+   -> std::vector<WaveChannelSubView::Type>
 {
    BuildSubViews();
 
    // Collect the display types of visible views and sort them by position
-   using Pair = std::pair< int, WaveTrackSubView::Type >;
+   using Pair = std::pair<int, WaveChannelSubView::Type>;
    std::vector< Pair > pairs;
    size_t ii = 0;
    const auto &placements = DoGetPlacements();
-   WaveTrackSubViews::ForEach( [&]( const WaveTrackSubView &subView ){
+   WaveChannelSubViews::ForEach([&](const WaveChannelSubView &subView) {
       auto &placement = placements[ii];
-      if ( placement.fraction > 0 )
-         pairs.emplace_back( placement.index, subView.SubViewType() );
+      if (placement.fraction > 0)
+         pairs.emplace_back(placement.index, subView.SubViewType());
       ++ii;
    } );
    std::sort( pairs.begin(), pairs.end() );
-   std::vector< WaveTrackSubView::Type > results;
-   for ( const auto &pair : pairs )
-      results.push_back( pair.second );
+   std::vector<WaveChannelSubView::Type> results;
+   for (const auto &pair : pairs)
+      results.push_back(pair.second);
    return results;
 }
 
@@ -1053,14 +1053,14 @@ bool WaveChannelView::ToggleSubView(Display display)
 {
    size_t ii = 0;
    size_t found = 0;
-   if ( WaveTrackSubViews::FindIf( [&]( const WaveTrackSubView &subView ) {
-      if ( subView.SubViewType().id == display ) {
+   if (WaveChannelSubViews::FindIf([&](const WaveChannelSubView &subView) {
+      if (subView.SubViewType().id == display) {
          found = ii;
          return true;
       }
       ++ii;
       return false;
-   } ) ) {
+   })) {
       auto &placements = DoGetPlacements();
       auto &foundPlacement = placements[found];
       if ( foundPlacement.fraction > 0.0 ) {
@@ -1115,9 +1115,9 @@ void WaveChannelView::DoSetDisplay(Display display, bool exclusive)
    // by sorting by the view type constants.
    size_t ii = 0;
    std::vector< std::pair< WaveTrackViewConstants::Display, size_t > > pairs;
-   WaveTrackSubViews::ForEach( [&pairs, &ii]( WaveTrackSubView &subView ){
-      pairs.push_back( { subView.SubViewType().id, ii++ } );
-   } );
+   WaveChannelSubViews::ForEach([&pairs, &ii](WaveChannelSubView &subView){
+      pairs.push_back({ subView.SubViewType().id, ii++ });
+   });
    std::sort( pairs.begin(), pairs.end() );
 
    int jj = 1;
@@ -1223,7 +1223,7 @@ auto WaveChannelView::GetSubViews(const wxRect* rect) -> Refinement
    size_t ii = 0;
    float total = 0;
    const auto &placements = DoGetPlacements();
-   WaveTrackSubViews::ForEach([&](WaveTrackSubView& subView) {
+   WaveChannelSubViews::ForEach([&](WaveChannelSubView& subView) {
       auto& placement = placements[ii];
       auto index = placement.index;
       auto fraction = placement.fraction;
@@ -1461,16 +1461,16 @@ bool WaveChannelView::SelectAllText(AudacityProject& project)
       AnyAffordance(project, *this, &WaveTrackAffordanceControls::OnTextSelect);
 }
 
-std::vector<std::shared_ptr<WaveTrackSubView>>
+std::vector<std::shared_ptr<WaveChannelSubView>>
 WaveChannelView::GetAllSubViews()
 {
    BuildSubViews();
 
-   std::vector< std::shared_ptr< WaveTrackSubView > > results;
-   WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
-      results.push_back( std::static_pointer_cast<WaveTrackSubView>(
-         subView.shared_from_this() ) );
-   } );
+   std::vector<std::shared_ptr<WaveChannelSubView>> results;
+   WaveChannelSubViews::ForEach([&](WaveChannelSubView &subView) {
+      results.push_back(std::static_pointer_cast<WaveChannelSubView>(
+         subView.shared_from_this()));
+   });
    return results;
 }
 
@@ -1489,10 +1489,10 @@ void WaveChannelView::DoSetMinimized(bool minimized)
    BuildSubViews();
 
    // May come here.  Invoke also on sub-views.
-   ChannelView::DoSetMinimized( minimized );
-   WaveTrackSubViews::ForEach( [minimized](WaveTrackSubView &subView){
-      subView.DoSetMinimized( minimized );
-   } );
+   ChannelView::DoSetMinimized(minimized);
+   WaveChannelSubViews::ForEach([minimized](WaveChannelSubView &subView) {
+      subView.DoSetMinimized(minimized);
+   });
 }
 
 std::shared_ptr<CommonTrackCell>
@@ -1717,9 +1717,9 @@ void WaveChannelView::Reparent(const std::shared_ptr<Track> &parent)
 {
    // BuildSubViews(); // not really needed
    CommonChannelView::Reparent(parent);
-   WaveTrackSubViews::ForEach( [&parent](WaveTrackSubView &subView){
-      subView.Reparent( parent );
-   } );
+   WaveChannelSubViews::ForEach([&parent](WaveChannelSubView &subView){
+      subView.Reparent(parent);
+   });
    if (mpAffordanceCellControl)
       mpAffordanceCellControl->Reparent(parent);
 }
@@ -1735,25 +1735,25 @@ std::weak_ptr<WaveClip> WaveChannelView::GetSelectedClip()
 
 void WaveChannelView::BuildSubViews() const
 {
-   if ( WaveTrackSubViews::size() == 0) {
+   if (WaveChannelSubViews::size() == 0) {
       // On-demand steps that can't happen in the constructor
       auto pThis = const_cast<WaveChannelView*>(this);
       pThis->BuildAll();
       bool minimized = GetMinimized();
-      pThis->WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
-         subView.DoSetMinimized( minimized );
-      } );
+      pThis->WaveChannelSubViews::ForEach([&](WaveChannelSubView &subView){
+         subView.DoSetMinimized(minimized);
+      });
 
       auto &placements = pThis->DoGetPlacements();
       if (placements.empty()) {
-         placements.resize( WaveTrackSubViews::size() );
+         placements.resize(WaveChannelSubViews::size());
          
          auto pTrack = pThis->FindTrack();
          auto display = TracksPrefs::ViewModeChoice();
          bool multi = (display == WaveTrackViewConstants::MultiView);
-         if ( multi ) {
+         if (multi) {
             pThis->SetMultiView( true );
-            display = WaveTrackSubViewType::Default();
+            display = WaveChannelSubViewType::Default();
          }
 
          pThis->DoSetDisplay( display, !multi );

@@ -48,7 +48,7 @@ WaveTrackViewConstants::ConvertLegacyDisplayValue(int oldValue)
 namespace {
    class Registry {
    public:
-      using Type = WaveTrackSubViewType;
+      using Type = WaveChannelSubViewType;
       using Types = std::vector< Type >;
 
       void Append( Type type )
@@ -81,20 +81,20 @@ namespace {
    }
 }
 
-WaveTrackSubViewType::RegisteredType::RegisteredType( WaveTrackSubViewType type )
+WaveChannelSubViewType::RegisteredType::RegisteredType(WaveChannelSubViewType type)
 {
    GetRegistry().Append( std::move( type ) );
 }
 
 // static
-auto WaveTrackSubViewType::All()
-   -> const std::vector<WaveTrackSubViewType> &
+auto WaveChannelSubViewType::All()
+   -> const std::vector<WaveChannelSubViewType> &
 {
    return GetRegistry().Get();
 }
 
 // static
-auto WaveTrackSubViewType::Default() -> Display
+auto WaveChannelSubViewType::Default() -> Display
 {
    auto &all = All();
    if (all.empty())

@@ -530,12 +530,12 @@ void WaveTrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-static std::vector<WaveTrackSubViewType> AllTypes()
+static std::vector<WaveChannelSubViewType> AllTypes()
 {
-   auto result = WaveTrackSubViewType::All();
-   if ( result.size() > reserveDisplays ) {
+   auto result = WaveChannelSubViewType::All();
+   if (result.size() > reserveDisplays) {
       wxASSERT( false );
-      result.resize( reserveDisplays );
+      result.resize(reserveDisplays);
    }
    return result;
 }
@@ -562,17 +562,17 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       // Multi-view check mark item, if more than one track sub-view type is
       // known
       Append(Adapt<My>([](My &table) {
-         return (WaveTrackSubViews::slots() > 1)
+         return (WaveChannelSubViews::slots() > 1)
             ? std::make_unique<Entry>(
                "MultiView", Entry::CheckItem, OnMultiViewID, XXO("&Multi-view"),
                POPUP_MENU_FN( OnMultiView ),
                table,
-               []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-                  auto &table = static_cast< WaveTrackMenuTable& >( handler );
+               [](PopupMenuHandler &handler, wxMenu &menu, int id){
+                  auto &table = static_cast<WaveTrackMenuTable&>(handler);
                   auto &track = table.FindWaveTrack();
                   const auto &view = WaveChannelView::Get(track);
-                  menu.Check( id, view.GetMultiView() );
-               } )
+                  menu.Check(id, view.GetMultiView());
+               })
             : nullptr;
       }));
 
@@ -587,10 +587,10 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
                // How to convert a type to a menu item id
                const auto IdForType =
-               [&allTypes]( const WaveTrackSubViewType &type ) -> int {
+               [&allTypes](const WaveChannelSubViewType &type) -> int {
                   const auto begin = allTypes.begin();
                   return OnSetDisplayId +
-                     (std::find( begin, allTypes.end(), type ) - begin);
+                     (std::find(begin, allTypes.end(), type) - begin);
                };
 
                auto &table = static_cast< WaveTrackMenuTable& >( handler );
@@ -601,9 +601,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                const auto displays = view.GetDisplays();
                const auto end = displays.end();
                bool check = (end !=
-                  std::find_if( displays.begin(), end,
-                     [&]( const WaveTrackSubViewType &type ){
-                        return id == IdForType( type ); } ) );
+                  std::find_if(displays.begin(), end,
+                     [&](const WaveChannelSubViewType &type){
+                        return id == IdForType(type); }));
                menu.Check( id, check );
 
                // Bug2275 residual

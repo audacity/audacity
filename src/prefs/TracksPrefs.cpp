@@ -151,11 +151,11 @@ static TracksViewModeEnumSetting ViewModeSetting()
 {
    // Do a delayed computation, so that registration of sub-view types completes
    // first
-   const auto &types = WaveTrackSubViewType::All();
+   const auto &types = WaveChannelSubViewType::All();
    auto symbols = transform_container< EnumValueSymbols >(
-      types, std::mem_fn( &WaveTrackSubViewType::name ) );
-   auto ids = transform_container< std::vector< WaveTrackSubViewType::Display > >(
-      types, std::mem_fn( &WaveTrackSubViewType::id ) );
+      types, std::mem_fn(&WaveChannelSubViewType::name));
+   auto ids = transform_container<std::vector<WaveChannelSubViewType::Display>>(
+      types, std::mem_fn(&WaveChannelSubViewType::id));
 
    // Special entry for multi
    symbols.push_back( WaveTrackViewConstants::MultiViewSymbol );

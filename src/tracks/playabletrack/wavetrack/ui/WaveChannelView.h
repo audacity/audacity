@@ -15,7 +15,7 @@ Paul Licameli split from class WaveTrack
 #include "ClientData.h"
 #include "SampleCount.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
-struct WaveTrackSubViewType;
+struct WaveChannelSubViewType;
 
 class CutlineHandle;
 class TranslatableString;
@@ -36,21 +36,21 @@ class SubViewRearrangeHandle;
 
 class wxDC;
 
-class AUDACITY_DLL_API WaveTrackSubView : public CommonChannelView
+class AUDACITY_DLL_API WaveChannelSubView : public CommonChannelView
 {
 public:
 
    using Display = WaveTrackViewConstants::Display;
-   using Type = WaveTrackSubViewType;
+   using Type = WaveChannelSubViewType;
 
    explicit
-   WaveTrackSubView(WaveChannelView &waveChannelView);
+   WaveChannelSubView(WaveChannelView &waveChannelView);
    
    virtual const Type &SubViewType() const = 0;
 
    // For undo and redo purpose
    // Empty abstract method to be inherited, for copying the spectral data in SpectrumSubView
-   virtual void CopyToSubView(WaveTrackSubView *destSubView) const;
+   virtual void CopyToSubView(WaveChannelSubView *destSubView) const;
 
    std::pair<
       bool, // if true, hit-testing is finished
@@ -81,20 +81,20 @@ private:
    std::weak_ptr<WaveChannelView> mwWaveChannelView;
 };
 
-struct WaveTrackSubViewPlacement {
+struct WaveChannelSubViewPlacement {
    int index;
    float fraction;
 };
-using WaveTrackSubViewPlacements = std::vector< WaveTrackSubViewPlacement >;
+using WaveChannelSubViewPlacements = std::vector<WaveChannelSubViewPlacement>;
 
 class WaveChannelView;
-using WaveTrackSubViews = ClientData::Site<
-   WaveChannelView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
+using WaveChannelSubViews = ClientData::Site<
+   WaveChannelView, WaveChannelSubView, ClientData::SkipCopying, std::shared_ptr
 >;
 
 class AUDACITY_DLL_API WaveChannelView final
    : public CommonChannelView
-   , public WaveTrackSubViews
+   , public WaveChannelSubViews
 {
    WaveChannelView(const WaveChannelView&) = delete;
    WaveChannelView &operator=(const WaveChannelView&) = delete;
@@ -133,12 +133,12 @@ public:
       const std::shared_ptr<WaveTrack> &wt,
       CommonChannelView &view);
 
-   std::vector< WaveTrackSubView::Type > GetDisplays() const;
+   std::vector<WaveChannelSubView::Type> GetDisplays() const;
    void SetDisplay(Display display, bool exclusive = true);
 
-   const WaveTrackSubViewPlacements &SavePlacements() const
+   const WaveChannelSubViewPlacements &SavePlacements() const
       { return DoGetPlacements(); }
-   void RestorePlacements( const WaveTrackSubViewPlacements &placements )
+   void RestorePlacements(const WaveChannelSubViewPlacements &placements)
       { DoGetPlacements() = placements; }
 
    // Return true if successful.  Fails if you try to toggle off the only
@@ -147,7 +147,7 @@ public:
 
    // Get all the sub-views, in a sequence that is unspecified but in
    // correspondence with the result of SavePlacements
-   std::vector< std::shared_ptr< WaveTrackSubView > > GetAllSubViews();
+   std::vector<std::shared_ptr<WaveChannelSubView>> GetAllSubViews();
 
    // Return cached height of rect in last call of GetSubViews
    wxCoord GetLastHeight() const { return mLastHeight; }
@@ -218,10 +218,10 @@ private:
    void DoSetMinimized( bool minimized ) override;
 
    // Placements are in correspondence with the array of sub-views
-   // in the WaveTrackSubViews base class, though their sequence is
+   // in the WaveChannelSubViews base class, though their sequence is
    // unspecified and maybe different in different platforms.
-   WaveTrackSubViewPlacements &DoGetPlacements();
-   const WaveTrackSubViewPlacements &DoGetPlacements() const;
+   WaveChannelSubViewPlacements &DoGetPlacements();
+   const WaveChannelSubViewPlacements &DoGetPlacements() const;
    mutable wxCoord mLastHeight{};
 
    bool &DoGetMultiView();

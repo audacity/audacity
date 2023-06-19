@@ -17,13 +17,13 @@ class WaveTrack;
 class SampleHandle;
 class EnvelopeHandle;
 
-class WaveformView final : public WaveTrackSubView
+class WaveformView final : public WaveChannelSubView
 {
    WaveformView(const WaveformView&) = delete;
    WaveformView &operator=(const WaveformView&) = delete;
 
 public:
-   using WaveTrackSubView::WaveTrackSubView;
+   using WaveChannelSubView::WaveChannelSubView;
    ~WaveformView() override;
 
    const Type &SubViewType() const override;

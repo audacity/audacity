@@ -40,12 +40,12 @@ Paul Licameli split from WaveChannelView.cpp
 #include <wx/graphics.h>
 #include <wx/dc.h>
 
-static WaveTrackSubView::Type sType{
+static WaveChannelSubView::Type sType{
    WaveTrackViewConstants::Waveform,
    { wxT("Waveform"), XXO("Wa&veform") }
 };
 
-static WaveTrackSubViewType::RegisteredType reg{ sType };
+static WaveChannelSubViewType::RegisteredType reg{ sType };
 
 WaveformView::~WaveformView() = default;
 
@@ -57,7 +57,7 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
    const auto pTrack =
       std::static_pointer_cast< WaveTrack >( view.FindTrack() );
 
-   auto pair = WaveTrackSubView::DoDetailedHitTest(
+   auto pair = WaveChannelSubView::DoDetailedHitTest(
       st, pProject, currentTool, bMultiTool, pTrack);
    auto &results = pair.second;
 
@@ -1030,12 +1030,12 @@ void WaveformView::Draw(
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
    }
-   WaveTrackSubView::Draw( context, rect, iPass );
+   WaveChannelSubView::Draw(context, rect, iPass);
 }
 
-static const WaveTrackSubViews::RegisteredFactory key{
+static const WaveChannelSubViews::RegisteredFactory key{
    [](WaveChannelView &view) {
-      return std::make_shared< WaveformView >( view );
+      return std::make_shared<WaveformView>( view );
    }
 };
 
@@ -1162,7 +1162,8 @@ PopupMenuTable::AttachedItem sAttachment{
             const auto displays = view.GetDisplays();
             bool hasWaveform = (displays.end() != std::find(
                displays.begin(), displays.end(),
-               WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
+               WaveChannelSubView::Type{
+                  WaveTrackViewConstants::Waveform, {} }
             ) );
             return hasWaveform
                ? Registry::Indirect(WaveColorMenuTable::Instance()

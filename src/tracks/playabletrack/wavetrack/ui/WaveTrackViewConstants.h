@@ -86,7 +86,7 @@ namespace WaveTrackViewConstants
 
 #include <vector>
 
-struct AUDACITY_DLL_API WaveTrackSubViewType {
+struct AUDACITY_DLL_API WaveChannelSubViewType {
    using Display = WaveTrackViewConstants::Display;
 
    // Identifies the type session-wide, and determines relative position in
@@ -96,19 +96,19 @@ struct AUDACITY_DLL_API WaveTrackSubViewType {
    // and it may contain a menu accelerator
    EnumValueSymbol name;
 
-   bool operator < ( const WaveTrackSubViewType &other ) const
+   bool operator < (const WaveChannelSubViewType &other) const
    { return id < other.id; }
 
-   bool operator == ( const WaveTrackSubViewType &other ) const
+   bool operator == (const WaveChannelSubViewType &other) const
    { return id == other.id; }
 
    // Typically a file scope statically constructed object
    struct AUDACITY_DLL_API RegisteredType {
-      RegisteredType( WaveTrackSubViewType type );
+      RegisteredType(WaveChannelSubViewType type);
    };
 
    //! Discover all registered types
-   static const std::vector<WaveTrackSubViewType> &All();
+   static const std::vector<WaveChannelSubViewType> &All();
 
    //! Return a preferred type
    static Display Default();

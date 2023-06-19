@@ -256,9 +256,9 @@ static const EnumValueSymbol kZoomTypeStrings[nZoomTypes] =
 
 static EnumValueSymbols DiscoverSubViewTypes()
 {
-   const auto &types = WaveTrackSubViewType::All();
+   const auto &types = WaveChannelSubViewType::All();
    auto result = transform_container< EnumValueSymbols >(
-      types, std::mem_fn( &WaveTrackSubView::Type::name ) );
+      types, std::mem_fn(&WaveChannelSubView::Type::name) );
    result.push_back( WaveTrackViewConstants::MultiViewSymbol );
    return result;
 }
@@ -355,12 +355,12 @@ bool SetTrackVisualsCommand::ApplyInner(
 
    if (bHasDisplayType) {
       auto &view = WaveChannelView::Get(*wt);
-      auto &all = WaveTrackSubViewType::All();
+      auto &all = WaveChannelSubViewType::All();
       if (mDisplayType < all.size())
          view.SetDisplay( all[ mDisplayType ].id );
       else {
          view.SetMultiView( true );
-         view.SetDisplay( WaveTrackSubViewType::Default(), false );
+         view.SetDisplay(WaveChannelSubViewType::Default(), false);
       }
    }
    if (bHasScaleType) {
