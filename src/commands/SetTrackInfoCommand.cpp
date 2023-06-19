@@ -11,12 +11,18 @@
 
 \file SetTrackCommand.cpp
 \brief Definitions for SetTrackCommand built up from 
-SetChannelsBase, SetTrackStatusCommand, SetTrackAudioCommand and
+SetChannelsBase, SetTrackBase, SetTrackStatusCommand, SetTrackAudioCommand and
 SetTrackVisualsCommand
+
+\class SetTrackBase
+\brief Base class for the various track modifying command classes, that
+loops over selected tracks. Subclasses override ApplyInner() to change
+one track.
 
 \class SetChannelsBase
 \brief Base class for the various track modifying command classes, that
-loops over channels. Subclasses override ApplyInner() to change one channel.
+loops over channels of selected tracks. Subclasses override ApplyInner() to
+change one channel.
 
 \class SetTrackStatusCommand
 \brief A SetChannelsBase that sets name, selected and focus.
@@ -52,9 +58,19 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "CommandContext.h"
 
+bool SetTrackBase::Apply(const CommandContext & context)
+{
+   auto &tracks = TrackList::Get(context.project);
+   for (auto t : tracks.Leaders()) {
+      if (t->GetSelected())
+         ApplyInner(context, *t);
+   }
+   return true;
+}
+
 bool SetChannelsBase::Apply(const CommandContext & context)
 {
-   auto &tracks = TrackList::Get( context.project );
+   auto &tracks = TrackList::Get(context.project);
    for (auto t : tracks.Leaders()) {
       if (t->GetSelected())
          for (Track *channel : TrackList::Channels(t))
@@ -100,24 +116,23 @@ void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t )
+bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track &t)
 {
    //auto wt = dynamic_cast<WaveTrack *>(t);
    //auto pt = dynamic_cast<PlayableTrack *>(t);
 
    if (bHasTrackName)
-      t->SetName(mTrackName);
+      t.SetName(mTrackName);
 
    if (bHasSelected)
-      t->SetSelected(bSelected);
+      t.SetSelected(bSelected);
 
-   if( bHasFocused )
-   {
-      auto &trackFocus = TrackFocus::Get( context.project );
-      if( bFocused)
-         trackFocus.Set( t );
-      else if( t == trackFocus.Get() )
-         trackFocus.Set( nullptr );
+   if (bHasFocused) {
+      auto &trackFocus = TrackFocus::Get(context.project);
+      if (bFocused)
+         trackFocus.Set(&t);
+      else if (&t == trackFocus.Get())
+         trackFocus.Set(nullptr);
    }
    return true;
 }
@@ -163,11 +178,11 @@ void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track * t )
+bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track &t)
 {
    static_cast<void>(context);
-   auto wt = dynamic_cast<WaveTrack *>(t);
-   auto pt = dynamic_cast<PlayableTrack *>(t);
+   auto wt = dynamic_cast<WaveTrack *>(&t);
+   auto pt = dynamic_cast<PlayableTrack *>(&t);
 
    if (wt && bHasGain)
       wt->SetGain(DB_TO_LINEAR(mGain));
@@ -320,23 +335,26 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * t )
+bool SetTrackVisualsCommand::ApplyInner(
+   const CommandContext & context, Track &t)
 {
    static_cast<void>(context);
-   auto wt = dynamic_cast<WaveTrack *>(t);
+   auto wt = dynamic_cast<WaveTrack *>(&t);
+   if (!wt)
+      return true;
    //auto pt = dynamic_cast<PlayableTrack *>(t);
    static const double ZOOMLIMIT = 0.001f;
 
-   // You can get some intriguing effects by setting R and L channels to 
-   // different values.
-   if( wt && bHasColour )
-      wt->SetWaveColorIndex( mColour );
+   for (auto pChannel : t.Channels<WaveTrack>()) {
+      if (bHasColour)
+         pChannel->SetWaveColorIndex(mColour);
 
-   if( t && bHasHeight )
-      TrackView::Get( *t ).SetExpandedHeight( mHeight );
+      if (bHasHeight)
+         ChannelView::Get(*pChannel).SetExpandedHeight(mHeight);
+   }
 
-   if( wt && bHasDisplayType  ) {
-      auto &view = WaveTrackView::Get( *wt );
+   if (bHasDisplayType) {
+      auto &view = WaveTrackView::Get(*wt);
       auto &all = WaveTrackSubViewType::All();
       if (mDisplayType < all.size())
          view.SetDisplay( all[ mDisplayType ].id );
@@ -345,7 +363,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          view.SetDisplay( WaveTrackSubViewType::Default(), false );
       }
    }
-   if (wt && bHasScaleType) {
+   if (bHasScaleType) {
       auto &scaleType = WaveformSettings::Get(*wt).scaleType;
       switch (mScaleType) {
       default:
@@ -355,7 +373,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
       }
    }
 
-   if( wt && bHasVZoom ){
+   if (bHasVZoom) {
       auto &cache = WaveformScale::Get(*wt);
       switch( mVZoom ){
          default:
@@ -365,7 +383,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
       }
    }
 
-   if ( wt && (bHasVZoomTop || bHasVZoomBottom) && !bHasVZoom){
+   if ((bHasVZoomTop || bHasVZoomBottom) && !bHasVZoom) {
       float vzmin, vzmax;
       auto &cache = WaveformScale::Get(*wt);
       cache.GetDisplayBounds(vzmin, vzmax);
@@ -377,9 +395,8 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          mVZoomBottom = vzmin;
       }
 
-      // Can't use std::clamp until C++17
-      mVZoomTop = std::max(-2.0, std::min(mVZoomTop, 2.0));
-      mVZoomBottom = std::max(-2.0, std::min(mVZoomBottom, 2.0));
+      mVZoomTop = std::clamp(mVZoomTop, -2.0, 2.0);
+      mVZoomBottom = std::clamp(mVZoomBottom, -2.0, 2.0);
 
       if (mVZoomBottom > mVZoomTop){
          std::swap(mVZoomTop, mVZoomBottom);
@@ -394,14 +411,12 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
       tp.UpdateVRulers();
    }
 
-   if( wt && bHasUseSpecPrefs   ){
-      if( bUseSpecPrefs ){
+   if (bHasUseSpecPrefs) {
+      if (bUseSpecPrefs)
          // reset it, and next we will be getting the defaults.
          SpectrogramSettings::Reset(*wt);
-      }
-      else {
+      else
          SpectrogramSettings::Own(*wt);
-      }
    }
    auto &settings = SpectrogramSettings::Get(*wt);
    if (wt && bHasSpectralSelect)
