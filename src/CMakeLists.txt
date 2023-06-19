@@ -818,6 +818,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/SpectrumView.h
       tracks/playabletrack/wavetrack/ui/WaveChannelVRulerControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveChannelVRulerControls.h
+      tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+      tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
       tracks/playabletrack/wavetrack/ui/WaveChannelView.h
       tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
@@ -836,8 +838,6 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveTrackShifter.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h
-      tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-      tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp

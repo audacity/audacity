@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-WaveTrackVZoomHandle.h
+WaveChannelVZoomHandle.h
 
 Paul Licameli split from TrackPanel.cpp
 
@@ -18,7 +18,7 @@ class WaveTrack;
 #include "../../../../UIHandle.h"
 #include "Prefs.h"
 
-namespace WaveTrackVZoomHandle
+namespace WaveChannelVZoomHandle
 {
    // See RefreshCode.h for bit flags:
    using Result = unsigned;
@@ -72,7 +72,7 @@ public:
       wxRect rect;
       unsigned result;
       int yy;
-      WaveTrackVZoomHandle::DoZoomFunction doZoom;
+      WaveChannelVZoomHandle::DoZoomFunction doZoom;
    };
 
 protected:

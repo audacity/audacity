@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 WaveformVZoomHandle.h
 
-Paul Licameli split from WaveTrackVZoomHandle.h
+Paul Licameli split from WaveChannelVZoomHandle.h
 
 **********************************************************************/
 
@@ -73,7 +73,7 @@ private:
    wxRect mRect{};
 };
 
-#include "WaveTrackVZoomHandle.h" // to inherit
+#include "WaveChannelVZoomHandle.h" // to inherit
 
 class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
 {
