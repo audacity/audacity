@@ -63,10 +63,10 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackView) {
    };
 }
 
-std::shared_ptr<TrackVRulerControls> TimeTrackView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> TimeTrackView::DoGetVRulerControls()
 {
    return
-      std::make_shared<TimeTrackVRulerControls>( shared_from_this() );
+      std::make_shared<TimeTrackVRulerControls>(shared_from_this());
 }
 
 namespace {

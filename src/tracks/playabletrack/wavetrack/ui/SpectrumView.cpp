@@ -222,9 +222,9 @@ auto SpectrumView::SubViewType() const -> const Type &
    return sType;
 }
 
-std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> SpectrumView::DoGetVRulerControls()
 {
-   return std::make_shared<SpectrumVRulerControls>( shared_from_this() );
+   return std::make_shared<SpectrumVRulerControls>(shared_from_this());
 }
 
 std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){

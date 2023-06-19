@@ -168,7 +168,7 @@ void ChannelView::DoSetMinimized(bool isMinimized)
    mMinimized = isMinimized;
 }
 
-std::shared_ptr<TrackVRulerControls> ChannelView::GetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> ChannelView::GetVRulerControls()
 {
    if (!mpVRulerControls)
       // create on demand
@@ -176,9 +176,10 @@ std::shared_ptr<TrackVRulerControls> ChannelView::GetVRulerControls()
    return mpVRulerControls;
 }
 
-std::shared_ptr<const TrackVRulerControls> ChannelView::GetVRulerControls() const
+std::shared_ptr<const ChannelVRulerControls>
+ChannelView::GetVRulerControls() const
 {
-   return const_cast<ChannelView*>( this )->GetVRulerControls();
+   return const_cast<ChannelView*>(this)->GetVRulerControls();
 }
 
 void ChannelView::DoSetY(int y)

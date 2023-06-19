@@ -88,7 +88,7 @@ private:
       (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
       AudacityProject *project) override;
 
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+   std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
    // Preserve some view state too for undo/redo purposes
    void CopyTo( Track &track ) const override;

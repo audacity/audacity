@@ -119,7 +119,7 @@ public:
    // Preserve some view state too for undo/redo purposes
    void CopyTo( Track &track ) const override;
 
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+   std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
    // CommonChannelView implementation
    void Reparent( const std::shared_ptr<Track> &parent ) override;

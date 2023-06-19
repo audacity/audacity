@@ -32,9 +32,9 @@ Ruler &WaveTrackVRulerControls::ScratchRuler()
    return theRuler;
 }
 
-void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
+void WaveTrackVRulerControls::DoDraw(ChannelVRulerControls &controls,
    TrackPanelDrawingContext &context,
-   const wxRect &rect_, unsigned iPass )
+   const wxRect &rect_, unsigned iPass)
 {
    Ruler &vruler = ScratchRuler();
 

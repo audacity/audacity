@@ -84,7 +84,7 @@ is time to refresh some aspect of the screen.
 
 #include "tracks/ui/TrackControls.h"
 #include "tracks/ui/ChannelView.h"
-#include "tracks/ui/TrackVRulerControls.h"
+#include "tracks/ui/ChannelVRulerControls.h"
 
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
@@ -963,7 +963,7 @@ void TrackPanel::UpdateTrackVRuler(Track &t)
             : next->first;
          rect.SetHeight(nextY - yy);
          // This causes ruler size in the track to be reassigned:
-         TrackVRulerControls::Get( *iter->second ).UpdateRuler( rect );
+         ChannelVRulerControls::Get(*iter->second).UpdateRuler(rect);
          // But we want to know the maximum width and height over all sub-views:
          vRulerSize.IncTo({ size.first, size.second });
          yy = nextY;
@@ -1253,7 +1253,7 @@ struct VRulerAndChannel final : TrackPanelGroup {
    {
       return { Axis::X, Refinement{
          { rect.GetLeft(),
-           TrackVRulerControls::Get( *mpView ).shared_from_this() },
+           ChannelVRulerControls::Get(*mpView).shared_from_this() },
          { mLeftOffset, mpView }
       } };
    }
@@ -1700,7 +1700,7 @@ std::vector<wxRect> TrackPanel::FindRulerRects( const Track *target )
    std::vector<wxRect> results;
    if (target)
       VisitCells( [&]( const wxRect &rect, TrackPanelCell &visited ) {
-         if (auto pRuler = dynamic_cast<const TrackVRulerControls*>(&visited);
+         if (auto pRuler = dynamic_cast<const ChannelVRulerControls*>(&visited);
              pRuler && pRuler->FindTrack().get() == target)
             results.push_back(rect);
       } );

@@ -44,7 +44,7 @@ std::vector<UIHandlePtr> SpectrumVRulerControls::HitTest(
       }
    }
 
-   auto more = TrackVRulerControls::HitTest(st, pProject);
+   auto more = ChannelVRulerControls::HitTest(st, pProject);
    std::copy(more.begin(), more.end(), std::back_inserter(results));
 
    return results;
@@ -123,8 +123,8 @@ void SpectrumVRulerControls::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect_, unsigned iPass )
 {
-   TrackVRulerControls::Draw( context, rect_, iPass );
-   WaveTrackVRulerControls::DoDraw( *this, context, rect_, iPass );
+   ChannelVRulerControls::Draw(context, rect_, iPass);
+   WaveTrackVRulerControls::DoDraw(*this, context, rect_, iPass);
 }
 
 void SpectrumVRulerControls::UpdateRuler( const wxRect &rect )

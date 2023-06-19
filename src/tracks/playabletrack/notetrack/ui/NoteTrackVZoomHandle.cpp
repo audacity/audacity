@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "NoteTrackVZoomHandle.h"
 
-#include "../../../ui/TrackVRulerControls.h"
+#include "../../../ui/ChannelVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
 #include "../../../../NoteTrack.h"
@@ -368,8 +368,8 @@ void NoteTrackVZoomHandle::Draw(
          return;
       
       if ( IsDragZooming( mZoomStart, mZoomEnd ) )
-         TrackVRulerControls::DrawZooming
-            ( context, rect, mZoomStart, mZoomEnd );
+         ChannelVRulerControls::DrawZooming(
+            context, rect, mZoomStart, mZoomEnd);
    }
 }
 
@@ -378,7 +378,7 @@ wxRect NoteTrackVZoomHandle::DrawingArea(
    const wxRect &rect, const wxRect &panelRect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassZooming )
-      return TrackVRulerControls::ZoomingArea( rect, panelRect );
+      return ChannelVRulerControls::ZoomingArea(rect, panelRect);
    else
       return rect;
 }

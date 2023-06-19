@@ -11,12 +11,12 @@ Paul Licameli split from WaveTrackVRulerControls.h
 #ifndef __AUDACITY_WAVEFORM_VRULER_CONTROLS__
 #define __AUDACITY_WAVEFORM_VRULER_CONTROLS__
 
-#include "../../../ui/TrackVRulerControls.h" // to inherit
+#include "../../../ui/ChannelVRulerControls.h" // to inherit
 
 class WaveTrack;
 class WaveformVZoomHandle;
 
-class WaveformVRulerControls final : public TrackVRulerControls
+class WaveformVRulerControls final : public ChannelVRulerControls
 {
    WaveformVRulerControls(const WaveformVRulerControls&) = delete;
    WaveformVRulerControls &operator=(const WaveformVRulerControls&) = delete;
@@ -24,7 +24,7 @@ class WaveformVRulerControls final : public TrackVRulerControls
 public:
    explicit
    WaveformVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
-      : TrackVRulerControls{ pChannelView } {}
+      : ChannelVRulerControls{ pChannelView } {}
    ~WaveformVRulerControls() override;
 
    std::vector<UIHandlePtr> HitTest(
@@ -44,7 +44,7 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   // TrackVRulerControls implementation
+   // ChannelVRulerControls implementation
    void UpdateRuler( const wxRect &rect ) override;
 
    static void DoUpdateVRuler(const wxRect &rect, const WaveTrack *wt);

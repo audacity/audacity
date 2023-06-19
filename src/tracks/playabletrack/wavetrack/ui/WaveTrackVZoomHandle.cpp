@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackVZoomHandle.h"
 
-#include "../../../ui/TrackVRulerControls.h"
+#include "../../../ui/ChannelVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
 #include "Project.h"
@@ -151,18 +151,17 @@ void WaveTrackVZoomHandle::DoDraw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass, const int zoomStart, const int zoomEnd )
 {
-   if ( iPass == TrackArtist::PassZooming ) {
-      if ( IsDragZooming( zoomStart, zoomEnd ) )
-         TrackVRulerControls::DrawZooming
-            ( context, rect, zoomStart, zoomEnd );
+   if (iPass == TrackArtist::PassZooming) {
+      if (IsDragZooming(zoomStart, zoomEnd))
+         ChannelVRulerControls::DrawZooming(context, rect, zoomStart, zoomEnd);
    }
 }
 
 wxRect WaveTrackVZoomHandle::DoDrawingArea(
    const wxRect &rect, const wxRect &panelRect, unsigned iPass )
 {
-   if ( iPass == TrackArtist::PassZooming )
-      return TrackVRulerControls::ZoomingArea( rect, panelRect );
+   if (iPass == TrackArtist::PassZooming)
+      return ChannelVRulerControls::ZoomingArea(rect, panelRect);
    else
       return rect;
 }

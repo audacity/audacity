@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-TrackVRulerControls.h
+ChannelVRulerControls.h
 
 Paul Licameli split from TrackPanel.cpp
 
@@ -19,18 +19,18 @@ class wxDC;
 
 const int kGuard = 5; // 5 pixels to reduce risk of VZooming accidentally
 
-class AUDACITY_DLL_API TrackVRulerControls /* not final */
+class AUDACITY_DLL_API ChannelVRulerControls /* not final */
    : public CommonTrackPanelCell
-   , public std::enable_shared_from_this< TrackVRulerControls >
+   , public std::enable_shared_from_this<ChannelVRulerControls>
 {
 public:
    explicit
-   TrackVRulerControls(const std::shared_ptr<ChannelView> &pChannelView);
+   ChannelVRulerControls(const std::shared_ptr<ChannelView> &pChannelView);
 
-   virtual ~TrackVRulerControls() = 0;
+   virtual ~ChannelVRulerControls() = 0;
 
-   static TrackVRulerControls &Get(ChannelView&);
-   static const TrackVRulerControls &Get(const ChannelView&);
+   static ChannelVRulerControls &Get(ChannelView&);
+   static const ChannelVRulerControls &Get(const ChannelView&);
 
    // Define a default hit test method, just for message and cursor
    std::vector<UIHandlePtr> HitTest

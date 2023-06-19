@@ -24,7 +24,7 @@ public:
    explicit TimeTrackView(const std::shared_ptr<Track> &pTrack);
    ~TimeTrackView() override;
 
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+   std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
 private:
 

@@ -52,7 +52,7 @@ std::vector<UIHandlePtr> NoteTrackVRulerControls::HitTest
          results.push_back(result);
    }
 
-   auto more = TrackVRulerControls::HitTest(st, pProject);
+   auto more = ChannelVRulerControls::HitTest(st, pProject);
    std::copy(more.begin(), more.end(), std::back_inserter(results));
 
    return results;
@@ -100,7 +100,7 @@ void NoteTrackVRulerControls::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect_, unsigned iPass )
 {
-   TrackVRulerControls::Draw( context, rect_, iPass );
+   ChannelVRulerControls::Draw(context, rect_, iPass);
 
    // Draw on a later pass like other vertical rulers,
    // although the bevel is done a little differently

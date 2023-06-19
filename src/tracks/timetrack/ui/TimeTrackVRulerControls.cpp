@@ -60,7 +60,7 @@ std::vector<UIHandlePtr> TimeTrackVRulerControls::HitTest(
       }
    }
 
-   auto more = TrackVRulerControls::HitTest(st, pProject);
+   auto more = ChannelVRulerControls::HitTest(st, pProject);
    std::copy(more.begin(), more.end(), std::back_inserter(results));
 
    return results;
@@ -70,7 +70,7 @@ void TimeTrackVRulerControls::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect_, unsigned iPass)
 {
-   TrackVRulerControls::Draw( context, rect_, iPass );
+   ChannelVRulerControls::Draw(context, rect_, iPass);
 
    // Draw on a later pass because the bevel overpaints one pixel
    // out of bounds on the bottom

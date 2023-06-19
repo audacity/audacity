@@ -1511,7 +1511,7 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveChannelView) {
    };
 }
 
-std::shared_ptr<TrackVRulerControls> WaveChannelView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> WaveChannelView::DoGetVRulerControls()
 {
    // This should never be called because of delegation to the spectrum or
    // waveform sub-view

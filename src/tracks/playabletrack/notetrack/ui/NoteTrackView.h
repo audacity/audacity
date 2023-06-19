@@ -24,7 +24,7 @@ public:
    ~NoteTrackView() override;
 
 private:
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+   std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
    std::shared_ptr<CommonTrackCell> GetAffordanceControls() override;
 
    std::vector<UIHandlePtr> DetailedHitTest

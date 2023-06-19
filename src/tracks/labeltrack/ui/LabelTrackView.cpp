@@ -2347,7 +2347,7 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetLabelTrackView) {
    };
 }
 
-std::shared_ptr<TrackVRulerControls> LabelTrackView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> LabelTrackView::DoGetVRulerControls()
 {
    return
       std::make_shared<LabelTrackVRulerControls>( shared_from_this() );

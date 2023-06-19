@@ -25,7 +25,7 @@ void LabelTrackVRulerControls::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect_, unsigned iPass )
 {
-   TrackVRulerControls::Draw( context, rect_, iPass );
+   ChannelVRulerControls::Draw(context, rect_, iPass);
 
    // Draw on a later pass because the bevel overpaints one pixel
    // out of bounds on the bottom

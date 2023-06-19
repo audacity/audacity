@@ -18,7 +18,7 @@ Paul Licameli split from class Track
 class Channel;
 class Track;
 class TrackList;
-class TrackVRulerControls;
+class ChannelVRulerControls;
 class TrackPanelResizerCell;
 
 class AUDACITY_DLL_API ChannelView /* not final */ : public CommonTrackCell
@@ -94,8 +94,8 @@ public:
 
    // Return another, associated TrackPanelCell object that implements the
    // mouse actions for the vertical ruler
-   std::shared_ptr<TrackVRulerControls> GetVRulerControls();
-   std::shared_ptr<const TrackVRulerControls> GetVRulerControls() const;
+   std::shared_ptr<ChannelVRulerControls> GetVRulerControls();
+   std::shared_ptr<const ChannelVRulerControls> GetVRulerControls() const;
 
    // Returns cell that would be used at affordance area, by default returns nullptr,
    // meaning that track has no such area.
@@ -131,9 +131,9 @@ protected:
 
    // Private factory to make appropriate object; class ChannelView handles
    // memory management thereafter
-   virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
+   virtual std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() = 0;
 
-   std::shared_ptr<TrackVRulerControls> mpVRulerControls;
+   std::shared_ptr<ChannelVRulerControls> mpVRulerControls;
 
 private:
    /*!

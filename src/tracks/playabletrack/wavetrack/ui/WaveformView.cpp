@@ -139,9 +139,9 @@ auto WaveformView::SubViewType() const -> const Type &
    return sType;
 }
 
-std::shared_ptr<TrackVRulerControls> WaveformView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> WaveformView::DoGetVRulerControls()
 {
-   return std::make_shared<WaveformVRulerControls>( shared_from_this() );
+   return std::make_shared<WaveformVRulerControls>(shared_from_this());
 }
 
 namespace

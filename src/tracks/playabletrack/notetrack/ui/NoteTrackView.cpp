@@ -65,7 +65,7 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetNoteTrackView) {
    };
 }
 
-std::shared_ptr<TrackVRulerControls> NoteTrackView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> NoteTrackView::DoGetVRulerControls()
 {
    return
       std::make_shared<NoteTrackVRulerControls>( shared_from_this() );
