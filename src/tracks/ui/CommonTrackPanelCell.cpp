@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
+#include "Track.h"
 #include "ViewInfo.h"
 #include "wxWidgetsWindowPlacement.h"
 
@@ -132,4 +133,11 @@ void CommonTrackCell::Reparent( const std::shared_ptr<Track> &parent )
 std::shared_ptr<Track> CommonTrackCell::DoFindTrack()
 {
    return mwTrack.lock();
+}
+
+std::shared_ptr<Channel> CommonTrackCell::FindChannel()
+{
+   if (const auto pTrack = FindTrack())
+      return pTrack->GetChannel(miChannel);
+   return {};
 }

@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "XMLTagHandler.h"
 
+class Channel;
 class CommandContext;
 class Track;
 class XMLWriter;
@@ -109,6 +110,9 @@ public:
    void Reparent( const std::shared_ptr<Track> &parent ) override;
 
    size_t GetChannelIndex() const { return miChannel; }
+
+   //! May return null
+   std::shared_ptr<Channel> FindChannel();
 
 private:
    std::weak_ptr< Track > mwTrack;
