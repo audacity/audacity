@@ -53,10 +53,20 @@ using ChannelSampleView = std::vector<AudioSegmentSampleView>;
 #define WAVETRACK_MERGE_POINT_TOLERANCE 0.01
 
 class Envelope;
+class WaveTrack;
+
+class WAVE_TRACK_API WaveChannel : public Channel
+{
+public:
+   ~WaveChannel() override;
+
+   inline WaveTrack &GetTrack();
+   inline const WaveTrack &GetTrack() const;
+};
 
 class WAVE_TRACK_API WaveTrack final
    : public WritableSampleTrack
-   , public Channel
+   , public WaveChannel
 {
 public:
    /// \brief Structure to hold region of a wavetrack and a comparison function
@@ -96,6 +106,11 @@ public:
 
    //! May report more than one only when this is a leader track
    size_t NChannels() const override;
+
+   auto Channels() {
+      return this->ChannelGroup::Channels<WaveChannel>(); }
+   auto Channels() const {
+      return this->ChannelGroup::Channels<const WaveChannel>(); }
 
    AudioGraph::ChannelType GetChannelType() const override;
 
@@ -792,6 +807,20 @@ private:
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
+
+WaveTrack &WaveChannel::GetTrack() {
+   auto &result = static_cast<WaveTrack&>(DoGetChannelGroup());
+   // TODO wide wave tracks -- remove assertion
+   assert(&result == this);
+   return result;
+}
+
+const WaveTrack &WaveChannel::GetTrack() const {
+   auto &result = static_cast<const WaveTrack&>(DoGetChannelGroup());
+   // TODO wide wave tracks -- remove assertion
+   assert(&result == this);
+   return result;
+}
 
 #include <unordered_set>
 class SampleBlock;

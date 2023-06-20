@@ -903,24 +903,24 @@ auto WaveChannelSubView::GetMenuItems(
       };
 }
 
-WaveChannelView &WaveChannelView::Get(WaveTrack &track)
+WaveChannelView &WaveChannelView::Get(WaveChannel &channel)
 {
-   return static_cast<WaveChannelView&>(ChannelView::Get(track));
+   return static_cast<WaveChannelView&>(ChannelView::Get(channel));
 }
 
-const WaveChannelView &WaveChannelView::Get(const WaveTrack &track)
+const WaveChannelView &WaveChannelView::Get(const WaveChannel &channel)
 {
-   return Get(const_cast<WaveTrack&>(track));
+   return Get(const_cast<WaveChannel&>(channel));
 }
 
-WaveChannelView *WaveChannelView::Find(WaveTrack *pTrack)
+WaveChannelView *WaveChannelView::Find(WaveChannel *pChannel)
 {
-   return static_cast<WaveChannelView*>(ChannelView::Find(pTrack));
+   return static_cast<WaveChannelView*>(ChannelView::Find(pChannel));
 }
 
-const WaveChannelView *WaveChannelView::Find(const WaveTrack *pTrack)
+const WaveChannelView *WaveChannelView::Find(const WaveChannel *pChannel)
 {
-   return Find(const_cast<WaveTrack*>(pTrack));
+   return Find(const_cast<WaveChannel*>(pChannel));
 }
 
 WaveChannelView::WaveChannelView(

@@ -802,13 +802,12 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    wxASSERT(pTrack);
    AudacityProject *const project = &mpData->project;
 
-   // We can assume all channels of a WaveTrack are also WaveTrack
-   auto channelRange = pTrack->Channels<WaveTrack>();
+   auto channelRange = pTrack->Channels();
 
    int totalHeight = 0;
    int nChannels = 0;
 
-   std::vector<WaveTrack *> channels;
+   std::vector<WaveChannel *> channels;
    for (auto pChannel : channelRange)
       channels.push_back(pChannel.get());
 
@@ -820,7 +819,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       assert(pChannel);
       auto &view = ChannelView::Get(*pChannel);
       if (stereo) {
-         pChannel->SetPan(pan);
+         pChannel->GetTrack().SetPan(pan);
          pan += 2.0f;
       }
 

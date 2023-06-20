@@ -198,6 +198,8 @@ Track::LinkType ToLinkType(int value)
 
 static auto DefaultName = XO("Audio");
 
+WaveChannel::~WaveChannel() = default;
+
 wxString WaveTrack::GetDefaultAudioTrackNamePreference()
 {
    const auto name = AudioTrackNameSetting.ReadWithDefault(L"");
