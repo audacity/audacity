@@ -1004,19 +1004,16 @@ void TrackPanel::OnTrackMenu(Track *t)
 void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
 {
    bool modifyState = e.mExtra;
-
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();
-
    int trackTop = 0;
    int trackHeight =0;
-
    for (auto it : GetTracks()->Leaders()) {
       trackTop += trackHeight;
       trackHeight = ChannelView::GetChannelGroupHeight(it);
 
-      auto channels = TrackList::Channels(it);
-      if (channels.contains(t)) {
+      // TODO wide wave tracks -- will need just one equality test
+      if (TrackList::Channels(it).contains(t)) {
          //We have found the track we want to ensure is visible.
 
          //Get the size of the trackpanel.
