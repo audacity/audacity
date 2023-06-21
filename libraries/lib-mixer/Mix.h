@@ -22,9 +22,9 @@ class EffectStage;
 namespace AudioGraph{ class Source; }
 class MixerSource;
 class TrackList;
-class SampleTrack;
+class WideSampleSequence;
 
-class SAMPLE_TRACK_API Mixer {
+class MIXER_API Mixer {
  public:
    using WarpOptions = MixerOptions::Warp;
    using MixerSpec = MixerOptions::Downmix;
@@ -34,11 +34,12 @@ class SAMPLE_TRACK_API Mixer {
 
    struct Input {
       Input(
-         std::shared_ptr<const SampleTrack> pTrack = {}, Stages stages = {}
-      )  : pTrack{ move(pTrack) }, stages{ move(stages) }
+         std::shared_ptr<const WideSampleSequence> pSequence = {},
+         Stages stages = {}
+      )  : pSequence{ move(pSequence) }, stages{ move(stages) }
       {}
 
-      std::shared_ptr<const SampleTrack> pTrack;
+      std::shared_ptr<const WideSampleSequence> pSequence;
       Stages stages;
    };
    using Inputs = std::vector<Input>;
@@ -88,9 +89,6 @@ class SAMPLE_TRACK_API Mixer {
     @post result: `result <= BufferSize()`
     */
    size_t Process() { return Process(BufferSize()); }
-
-   //! Restart processing at beginning of buffer next time Process() is called.
-   void Restart();
 
    //! Reposition processing to absolute time next time Process() is called.
    void Reposition(double t, bool bSkipping = false);

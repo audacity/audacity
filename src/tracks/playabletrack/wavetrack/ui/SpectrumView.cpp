@@ -342,7 +342,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    }
 
    const auto track =
-      dynamic_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
+      dynamic_cast<const WaveTrack*>(waveTrackCache.GetSequence().get());
    if (!track)
       // Leave a blank rectangle.
       // TODO: rewrite GetSpectrumBounds so it is

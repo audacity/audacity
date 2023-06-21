@@ -345,10 +345,12 @@ void TimeTrack::testMe()
 
 //! Installer of the time warper
 static Mixer::WarpOptions::DefaultWarp::Scope installer{
-[](const TrackList &list) -> const BoundedEnvelope*
+[](const AudacityProject *pProject) -> const BoundedEnvelope*
 {
-   if (auto pTimeTrack = *list.Any<const TimeTrack>().begin())
-      return pTimeTrack->GetEnvelope();
-   else
-      return nullptr;
+   if (pProject) {
+      auto &list = TrackList::Get(*pProject);
+      if (auto pTimeTrack = *list.Any<const TimeTrack>().begin())
+         return pTimeTrack->GetEnvelope();
+   }
+   return nullptr;
 } };

@@ -14,32 +14,28 @@
 #include "EffectStage.h"
 #include "AudacityException.h"
 #include "AudioGraphBuffers.h"
-#include "SampleTrack.h"
+#include "WideSampleSequence.h"
 #include <cassert>
 
 namespace {
 std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
    const EffectStage::Factory &factory,
-   EffectSettings &settings, double sampleRate, const SampleTrack &track
-   , std::optional<sampleCount> genLength, bool multi)
+   EffectSettings &settings, double sampleRate,
+   const WideSampleSequence &sequence,
+   std::optional<sampleCount> genLength, int channel)
 {
    std::vector<std::shared_ptr<EffectInstance>> instances;
    // Make as many instances as needed for the channels of the track, which
    // depends on how the instances report how many channels they accept
-   const auto range = multi
-      ? TrackList::Channels(&track)
-      : TrackList::Channels(&track).StartingWith(&track).EndingAfter(&track);
-   const auto nChannels = range.size();
-   size_t ii = 0;
-   for (auto iter = range.begin(); iter != range.end();) {
-      auto channel = *iter;
+   const auto nChannels = (channel < 0) ? sequence.NChannels() : 1;
+   for (size_t ii = 0; ii < nChannels;) {
       auto pInstance = factory();
       if (!pInstance)
          // A constructor that can't satisfy its post should throw instead
          throw std::exception{};
       auto count = pInstance->GetAudioInCount();
       ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
-      MakeChannelMap(*channel, count > 1, map);
+      MakeChannelMap(sequence, channel, map);
       // Give the plugin a chance to initialize
       if (!pInstance->ProcessInitialize(settings, sampleRate, map))
          throw std::exception{};
@@ -51,27 +47,24 @@ std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
    
       instances.push_back(move(pInstance));
 
-      // Advance ii and iter
+      // Advance ii
       if (count == 0)
          // What? Can't make progress
          throw std::exception();
       ii += count;
-      if (ii >= nChannels)
-         break;
-      std::advance(iter, count);
    }
    return instances;
 }
 }
 
-EffectStage::EffectStage(CreateToken, bool multi,
+EffectStage::EffectStage(CreateToken, int channel,
    Source &upstream, Buffers &inBuffers,
    const Factory &factory, EffectSettings &settings,
    double sampleRate, std::optional<sampleCount> genLength,
-   const SampleTrack &track
+   const WideSampleSequence &sequence
 )  : mUpstream{ upstream }, mInBuffers{ inBuffers }
-   , mInstances{ MakeInstances(factory, settings, sampleRate, track,
-      genLength, multi) }
+   , mInstances{ MakeInstances(factory, settings, sampleRate, sequence,
+      genLength, channel) }
    , mSettings{ settings }, mSampleRate{ sampleRate }
    , mIsProcessor{ !genLength.has_value() }
    , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
@@ -83,16 +76,17 @@ EffectStage::EffectStage(CreateToken, bool multi,
    mInBuffers.Rewind();
 }
 
-auto EffectStage::Create(bool multi,
+auto EffectStage::Create(int channel,
    Source &upstream, Buffers &inBuffers,
    const Factory &factory, EffectSettings &settings,
    double sampleRate, std::optional<sampleCount> genLength,
-   const SampleTrack &track
+   const WideSampleSequence &sequence
 ) -> std::unique_ptr<EffectStage>
 {
    try {
-      return std::make_unique<EffectStage>(CreateToken{}, multi,
-         upstream, inBuffers, factory, settings, sampleRate, genLength, track);
+      return std::make_unique<EffectStage>(CreateToken{}, channel,
+         upstream, inBuffers, factory, settings, sampleRate, genLength,
+         sequence);
    }
    catch (const std::exception &) {
       return nullptr;
@@ -376,30 +370,21 @@ bool EffectStage::Release()
 }
 
 unsigned MakeChannelMap(
-   const SampleTrack &track, bool multichannel, ChannelName map[3])
+   const WideSampleSequence &sequence, int channel, ChannelName map[3])
 {
-   // Iterate either over one track which could be any channel,
-   // or if multichannel, then over all channels of track,
-   // which is a leader.
-   unsigned numChannels = 0;
-   for (auto channel : TrackList::Channels(&track).StartingWith(&track)) {
-      if (IsMono(*channel))
-         map[numChannels] = ChannelNameMono;
-      else if (PlaysLeft(*channel))
-         map[numChannels] = ChannelNameFrontLeft;
-      else if (PlaysRight(*channel))
-         map[numChannels] = ChannelNameFrontRight;
-      else
-         ;
-      ++ numChannels;
-      map[numChannels] = ChannelNameEOL;
-      if (! multichannel)
-         break;
-      if (numChannels == 2) {
-         // TODO: more-than-two-channels
-         // Ignore other channels
-         break;
-      }
+   const auto nChannels = sequence.NChannels();
+   assert(channel < static_cast<int>(nChannels)); // precondition
+
+   size_t index = 0;
+   if (nChannels == 1)
+      map[index++] = ChannelNameMono;
+   else {
+      // TODO: more-than-two-channels
+      if (channel < 1)
+         map[index++] = ChannelNameFrontLeft;
+      if (channel != 0)
+         map[index++] = ChannelNameFrontRight;
    }
-   return numChannels;
+   map[index] = ChannelNameEOL;
+   return index;
 }

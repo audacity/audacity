@@ -15,9 +15,9 @@
 
 #include "AudioGraphBuffers.h"
 #include "Envelope.h"
-#include "SampleTrack.h"
 #include "SampleTrackCache.h"
 #include "Resample.h"
+#include "WideSampleSequence.h"
 #include "float_cast.h"
 
 namespace {
@@ -43,7 +43,7 @@ void MixerSource::MakeResamplers()
    for (size_t j = 0; j < mnChannels; ++j)
       mResample[j] = std::make_unique<Resample>(
          mResampleParameters.mHighQuality,
-         mResampleParameters.mMinFactor[j], mResampleParameters.mMaxFactor[j]);
+         mResampleParameters.mMinFactor, mResampleParameters.mMaxFactor);
 }
 
 namespace {
@@ -67,22 +67,29 @@ double ComputeWarpFactor(const Envelope &env, double t0, double t1)
 }
 
 size_t MixerSource::MixVariableRates(
-   unsigned iChannel, const size_t maxOut, float &floatBuffer)
+   unsigned nChannels, const size_t maxOut, float *floatBuffers[])
 {
-   auto &cache = mInputTrack[iChannel];
-   const auto pos = &mSamplePos[iChannel];
-   const auto queue = mSampleQueue[iChannel].data();
-   const auto queueStart = &mQueueStart[iChannel];
-   const auto queueLen = &mQueueLen[iChannel];
-   const auto pResample = mResample[iChannel].get();
-
-   const auto pFloat = &floatBuffer;
-   const auto track = cache.GetTrack().get();
-   const double trackRate = track->GetRate();
    const auto &[mT0, mT1, mSpeed, _] = *mTimesAndSpeed;
-   const double initialWarp = mRate / mSpeed / trackRate;
-   const double tstep = 1.0 / trackRate;
-   auto sampleSize = SAMPLE_SIZE(floatSample);
+   const bool backwards = (mT1 < mT0);
+
+   const auto seq = mInputSequence->GetSequence().get();
+   const double sequenceRate = seq->GetRate();
+   const double initialWarp = mRate / mSpeed / sequenceRate;
+   const double tstep = 1.0 / sequenceRate;
+   const auto sampleSize = SAMPLE_SIZE(floatSample);
+   // Find the last sample
+   const auto endPos = [&seq, mT1 = mT1, backwards]{
+      double endTime = seq->GetEndTime();
+      double startTime = seq->GetStartTime();
+      const double tEnd = backwards
+         ? std::max(startTime, mT1)
+         : std::min(endTime, mT1);
+      return seq->TimeToLongSamples(tEnd);
+   }();
+
+   auto pos = mSamplePos;
+   auto queueStart = mQueueStart;
+   auto queueLen = mQueueLen;
 
    size_t out = 0;
 
@@ -97,72 +104,75 @@ size_t MixerSource::MixVariableRates(
     *       to calculate the position.
     */
 
-   // Find the last sample
-   double endTime = track->GetEndTime();
-   double startTime = track->GetStartTime();
-   const bool backwards = (mT1 < mT0);
-   const double tEnd = backwards
-      ? std::max(startTime, mT1)
-      : std::min(endTime, mT1);
-   const auto endPos = track->TimeToLongSamples(tEnd);
    // Find the time corresponding to the start of the queue, for use with time track
-   double t = ((*pos).as_long_long() +
-               (backwards ? *queueLen : - *queueLen)) / trackRate;
+   double t = ((pos).as_long_long() +
+               (backwards ? queueLen : - queueLen)) / sequenceRate;
 
    while (out < maxOut) {
-      if (*queueLen < (int)sProcessLen) {
+      if (queueLen < (int)sProcessLen) {
          // Shift pending portion to start of the buffer
-         memmove(queue, &queue[*queueStart], (*queueLen) * sampleSize);
-         *queueStart = 0;
+         for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+            const auto queue = mSampleQueue[iChannel].data();
+            memmove(queue, &queue[queueStart], (queueLen) * sampleSize);
+         }
+         queueStart = 0;
 
+         // How far to advance depends on endPos,
+         // which is independent of channel
          auto getLen = limitSampleBufferSize(
-            sQueueMaxLen - *queueLen,
-            backwards ? *pos - endPos : endPos - *pos
+            sQueueMaxLen - queueLen,
+            backwards ? pos - endPos : endPos - pos
          );
 
          // Nothing to do if past end of play interval
          if (getLen > 0) {
-            if (backwards) {
-               auto results =
-                  cache.GetFloats(*pos - (getLen - 1), getLen, mMayThrow);
-               if (results)
-                  memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
+            auto &cache = *mInputSequence;
+            std::pair<const float*, const float *> results;
+            if (backwards)
+               results = cache.GetFloatsWide(
+                  nChannels, pos - (getLen - 1), getLen, mMayThrow);
+            else
+               results = cache.GetFloatsWide(nChannels, pos, getLen, mMayThrow);
+            for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+               const auto result =
+                  (iChannel == 0) ? results.first : results.second;
+               const auto queue = mSampleQueue[iChannel].data();
+               const auto pFloat = floatBuffers[iChannel];
+               if (result)
+                  memcpy(&queue[queueLen], result, sizeof(float) * getLen);
                else
-                  memset(&queue[*queueLen], 0, sizeof(float) * getLen);
-
-               track->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (*pos - (getLen - 1)).as_double() / trackRate);
-               *pos -= getLen;
-            }
-            else {
-               auto results = cache.GetFloats(*pos, getLen, mMayThrow);
-               if (results)
-                  memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
-               else
-                  memset(&queue[*queueLen], 0, sizeof(float) * getLen);
-
-               track->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (*pos).as_double() / trackRate);
-
-               *pos += getLen;
-            }
-
-            for (decltype(getLen) i = 0; i < getLen; i++) {
-               queue[(*queueLen) + i] *= mEnvValues[i];
+                  memset(&queue[queueLen], 0, sizeof(float) * getLen);
             }
 
             if (backwards)
-               ReverseSamples((samplePtr)&queue[0], floatSample,
-                              *queueLen, getLen);
+               seq->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (pos - (getLen - 1)).as_double() / sequenceRate);
+            else
+               seq->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (pos).as_double() / sequenceRate);
 
-            *queueLen += getLen;
+            for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+               const auto queue = mSampleQueue[iChannel].data();
+               for (decltype(getLen) i = 0; i < getLen; i++)
+                  queue[(queueLen) + i] *= mEnvValues[i];
+
+               if (backwards)
+                  ReverseSamples((samplePtr)&queue[0], floatSample,
+                                 queueLen, getLen);
+            }
+
+            if (backwards)
+               pos -= getLen;
+            else
+               pos += getLen;
+            queueLen += getLen;
          }
       }
 
       auto thisProcessLen = sProcessLen;
-      bool last = (*queueLen < (int)sProcessLen);
+      bool last = (queueLen < (int)sProcessLen);
       if (last) {
-         thisProcessLen = *queueLen;
+         thisProcessLen = queueLen;
       }
 
       double factor = initialWarp;
@@ -175,31 +185,40 @@ size_t MixerSource::MixVariableRates(
          //         is unpredictable. Maybe it can be compensated later though.
          if (backwards)
             factor *= ComputeWarpFactor( *mEnvelope,
-               t - (double)thisProcessLen / trackRate + tstep, t + tstep);
+               t - (double)thisProcessLen / sequenceRate + tstep, t + tstep);
          else
             factor *= ComputeWarpFactor( *mEnvelope,
-               t, t + (double)thisProcessLen / trackRate);
+               t, t + (double)thisProcessLen / sequenceRate);
       }
 
-      auto results = pResample->Process(factor,
-         &queue[*queueStart],
-         thisProcessLen,
-         last,
-         // PRL:  Bug2536: crash in soxr happened on Mac, sometimes, when
-         // maxOut - out == 1 and &pFloat[out + 1] was an unmapped
-         // address, because soxr, strangely, fetched an 8-byte (misaligned!)
-         // value from &pFloat[out], but did nothing with it anyway,
-         // in soxr_output_no_callback.
-         // Now we make the bug go away by allocating a little more space in
-         // the buffer than we need.
-         &pFloat[out],
-         maxOut - out);
+      std::pair<size_t, size_t> results;
+      for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+         const auto queue = mSampleQueue[iChannel].data();
+         const auto pResample = mResample[iChannel].get();
+         const auto pFloat = floatBuffers[iChannel];
+         // Assuming that progress of the Resampler depends only
+         // on the size of its inputs, this assignment has the same effect on
+         // each pass.
+         results = pResample->Process(factor,
+            &queue[queueStart],
+            thisProcessLen,
+            last,
+            // PRL:  Bug2536: crash in soxr happened on Mac, sometimes, when
+            // maxOut - out == 1 and &pFloat[out + 1] was an unmapped
+            // address, because soxr, strangely, fetched an 8-byte (misaligned!)
+            // value from &pFloat[out], but did nothing with it anyway,
+            // in soxr_output_no_callback.
+            // Now we make the bug go away by allocating a little more space in
+            // the buffer than we need.
+            &pFloat[out],
+            maxOut - out);
+      }
 
       const auto input_used = results.first;
-      *queueStart += input_used;
-      *queueLen -= input_used;
+      queueStart += input_used;
+      queueLen -= input_used;
       out += results.second;
-      t += (input_used / trackRate) * (backwards ? -1 : 1);
+      t += (input_used / sequenceRate) * (backwards ? -1 : 1);
 
       if (last) {
          break;
@@ -207,68 +226,84 @@ size_t MixerSource::MixVariableRates(
    }
 
    assert(out <= maxOut);
+
+   mSamplePos = pos;
+   mQueueStart = queueStart;
+   mQueueLen = queueLen;
    return out;
 }
 
-size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
-   float &floatBuffer)
+size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
+   float *floatBuffers[])
 {
-   // This function fetches samples from the input tracks, whatever their
-   // formats, as floats; it may also apply envelope values.
-
-   auto &cache = mInputTrack[iChannel];
-   const auto pos = &mSamplePos[iChannel];
-
-   const auto pFloat = &floatBuffer;
-   const auto track = cache.GetTrack().get();
-   const double t = ( *pos ).as_double() / track->GetRate();
-   const double trackEndTime = track->GetEndTime();
-   const double trackStartTime = track->GetStartTime();
    const auto &[mT0, mT1, _, __] = *mTimesAndSpeed;
    const bool backwards = (mT1 < mT0);
-   const double tEnd = backwards
-      ? std::max(trackStartTime, mT1)
-      : std::min(trackEndTime, mT1);
+   const auto seq = mInputSequence->GetSequence().get();
+   const auto sequenceRate = seq->GetRate();
+   const double tEnd = [seq, mT1 = mT1, backwards]{
+      const double sequenceEndTime = seq->GetEndTime();
+      const double sequenceStartTime = seq->GetStartTime();
+      return backwards
+         ? std::max(sequenceStartTime, mT1)
+         : std::min(sequenceEndTime, mT1);
+   }();
 
-   //don't process if we're at the end of the selection or track.
+   // This function fetches samples from the input sequences, whatever their
+   // formats, as floats; it may also apply envelope values.
+
+   auto pos = mSamplePos;
+
+   const double t = (pos).as_double() / sequenceRate;
+
+   //don't process if we're at the end of the selection or sequence.
    if ((backwards ? t <= tEnd : t >= tEnd))
       return 0;
-   //if we're about to approach the end of the track or selection, figure out how much we need to grab
+   //if we're about to approach the end of the sequence or selection, figure out how much we need to grab
    const auto slen = limitSampleBufferSize(
       maxOut,
       // PRL: maybe t and tEnd should be given as sampleCount instead to
       // avoid trouble subtracting one large value from another for a small
       // difference
-      sampleCount{ (backwards ? t - tEnd : tEnd - t) * track->GetRate() + 0.5 }
+      sampleCount{ (backwards ? t - tEnd : tEnd - t) * sequenceRate + 0.5 }
    );
 
-   if (backwards) {
-      auto results = cache.GetFloats(*pos - (slen - 1), slen, mMayThrow);
-      if (results)
-         memcpy(pFloat, results, sizeof(float) * slen);
+   auto &cache = *mInputSequence;
+   std::pair<const float*, const float *> results;
+   if (backwards)
+      results = cache.GetFloatsWide(
+         nChannels, pos - (slen - 1), slen, mMayThrow);
+   else
+      results = cache.GetFloatsWide(nChannels, pos, slen, mMayThrow);
+   for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+      const auto result =
+         (iChannel == 0) ? results.first : results.second;
+      const auto pFloat = floatBuffers[iChannel];
+      if (result)
+         memcpy(pFloat, result, sizeof(float) * slen);
       else
          memset(pFloat, 0, sizeof(float) * slen);
-      track->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
+   }
+
+   if (backwards)
+      seq->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
+   else
+      seq->GetEnvelopeValues(mEnvValues.data(), slen, t);
+
+   for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+      const auto pFloat = floatBuffers[iChannel];
       for (size_t i = 0; i < slen; i++)
          pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
-      ReverseSamples((samplePtr)pFloat, floatSample, 0, slen);
-
-      *pos -= slen;
+      if (backwards)
+         ReverseSamples((samplePtr)pFloat, floatSample, 0, slen);
    }
-   else {
-      auto results = cache.GetFloats(*pos, slen, mMayThrow);
-      if (results)
-         memcpy(pFloat, results, sizeof(float) * slen);
-      else
-         memset(pFloat, 0, sizeof(float) * slen);
-      track->GetEnvelopeValues(mEnvValues.data(), slen, t);
-      for (size_t i = 0; i < slen; i++)
-         pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
 
-      *pos += slen;
-   }
+   if (backwards)
+      pos -= slen;
+   else
+      pos += slen;
 
    assert(slen <= maxOut);
+   mSamplePos = pos;
    return slen;
 }
 
@@ -280,46 +315,39 @@ void MixerSource::ZeroFill(
    std::fill(pFloat + produced, pFloat + max, 0);
 }
 
-MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
+MixerSource::MixerSource(
+   const std::shared_ptr<const WideSampleSequence> &leader, size_t bufferSize,
    double rate, const MixerOptions::Warp &options, bool highQuality,
    bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
    const ArrayOf<bool> *pMap
-)  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
-   , mnChannels{ TrackList::NChannels(leader) }
+)  : mpLeader{ leader }
+   , mnChannels{ mpLeader->NChannels() }
    , mRate{ rate }
    , mEnvelope{ options.envelope }
    , mMayThrow{ mayThrow }
    , mTimesAndSpeed{ move(pTimesAndSpeed) }
-   , mInputTrack( mnChannels )
-   , mSamplePos( mnChannels )
+   , mInputSequence{ std::make_unique<SampleTrackCache>() }
    , mSampleQueue{ initVector<float>(mnChannels, sQueueMaxLen) }
-   , mQueueStart( mnChannels, 0 )
-   , mQueueLen( mnChannels, 0 )
-   , mResampleParameters{ highQuality, leader, rate, options }
+   , mQueueStart{ 0 }
+   , mQueueLen{ 0 }
+   , mResampleParameters{ highQuality, mpLeader->GetRate(), rate, options }
    , mResample( mnChannels )
    , mEnvValues( std::max(sQueueMaxLen, bufferSize) )
    , mpMap{ pMap }
 {
-   size_t j = 0;
-   for (auto channel : TrackList::Channels(&leader))
-      mInputTrack[j++].SetTrack(channel->SharedPointer<const SampleTrack>());
+   mInputSequence->SetSequence(mpLeader);
 
    assert(mTimesAndSpeed);
    auto t0 = mTimesAndSpeed->mT0;
-   for (j = 0; j < mnChannels; ++j) {
-      mSamplePos[j] = GetChannel(j)->TimeToLongSamples(t0);
-   }
+   mSamplePos = GetSequence().TimeToLongSamples(t0);
    MakeResamplers();
 }
 
 MixerSource::~MixerSource() = default;
 
-const SampleTrack *MixerSource::GetChannel(unsigned iChannel) const
+const WideSampleSequence &MixerSource::GetSequence() const
 {
-   auto range = TrackList::Channels(mpLeader.get());
-   auto iter = range.begin();
-   std::advance(iter, iChannel);
-   return *iter;
+   return *mpLeader;
 }
 
 const bool *MixerSource::MixerSpec(unsigned iChannel) const
@@ -353,20 +381,21 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
    const auto limit = std::min<size_t>(mnChannels, maxChannels);
    size_t maxTrack = 0;
    const auto mixed = stackAllocate(size_t, maxChannels);
+   const auto pFloats = stackAllocate(float *, limit);
+   for (size_t j = 0; j < limit; ++j)
+      pFloats[j] = &data.GetWritePosition(j);
+   const auto rate = GetSequence().GetRate();
+   auto result = (mResampleParameters.mVariableRates || rate != mRate)
+      ? MixVariableRates(limit, bound, pFloats)
+      : MixSameRate(limit, bound, pFloats);
+   maxTrack = std::max(maxTrack, result);
+   auto newT = mSamplePos.as_double() / rate;
+   if (backwards)
+      mTime = std::min(mTime, newT);
+   else
+      mTime = std::max(mTime, newT);
    for (size_t j = 0; j < limit; ++j) {
-      const auto pFloat = &data.GetWritePosition(j);
-      auto &result = mixed[j];
-      const auto track = GetChannel(j);
-      result =
-      (mResampleParameters.mVariableRates || track->GetRate() != mRate)
-         ? MixVariableRates(j, bound, *pFloat)
-         : MixSameRate(j, bound, *pFloat);
-      maxTrack = std::max(maxTrack, result);
-      auto newT = mSamplePos[j].as_double() / track->GetRate();
-      if (backwards)
-         mTime = std::min(mTime, newT);
-      else
-         mTime = std::max(mTime, newT);
+      mixed[j] = result;
    }
    // Another pass in case channels of a track did not produce equal numbers
    for (size_t j = 0; j < limit; ++j) {
@@ -410,11 +439,7 @@ bool MixerSource::Terminates() const
 
 void MixerSource::Reposition(double time, bool skipping)
 {
-   for (size_t j = 0; j < mnChannels; ++j) {
-      mSamplePos[j] = GetChannel(j)->TimeToLongSamples(time);
-      mQueueStart[j] = 0;
-      mQueueLen[j] = 0;
-   }
+   mSamplePos = GetSequence().TimeToLongSamples(time);
 
    // Bug 2025:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
    // constant rate resampling if you try to reuse the resampler after it has

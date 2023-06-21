@@ -21,8 +21,8 @@
 #include "EffectStage.h"
 #include "Dither.h"
 #include "Resample.h"
-#include "SampleTrack.h"
 #include "SampleTrackCache.h"
+#include "WideSampleSequence.h"
 #include "float_cast.h"
 #include <numeric>
 
@@ -49,16 +49,13 @@ namespace {
 size_t FindBufferSize(const Mixer::Inputs &inputs, size_t bufferSize)
 {
    size_t blockSize = bufferSize;
-   const auto nTracks = inputs.size();
-   for (size_t i = 0; i < nTracks;) {
-      const auto &input = inputs[i];
-      const auto leader = input.pTrack.get();
-      const auto nInChannels = TrackList::NChannels(*leader);
-      if (!leader || i + nInChannels > nTracks) {
+   for (const auto &input : inputs) {
+      const auto sequence = input.pSequence.get();
+      const auto nInChannels = sequence->NChannels();
+      if (!sequence) {
          assert(false);
          break;
       }
-      auto increment = finally([&]{ i += nInChannels; });
       for (const auto &stage : input.stages) {
          // Need an instance to query acceptable block size
          const auto pInstance = stage.factory();
@@ -111,7 +108,10 @@ Mixer::Mixer(Inputs inputs,
    , mEffectiveFormat{ floatSample }
 {
    assert(BufferSize() <= outBufferSize);
-   const auto nTracks =  mInputs.size();
+   const auto nChannelsIn =
+   std::accumulate(mInputs.begin(), mInputs.end(), size_t{},
+      [](auto sum, const auto &input){
+         return sum + input.pSequence->NChannels(); });
 
    // Examine the temporary instances that were made in FindBufferSize
    // This finds a sufficient, but not necessary, condition to do dithering
@@ -124,27 +124,27 @@ Mixer::Mixer(Inputs inputs,
 
    auto pMixerSpec = ( mixerSpec &&
       mixerSpec->GetNumChannels() == mNumChannels &&
-      mixerSpec->GetNumTracks() == nTracks
+      mixerSpec->GetNumTracks() == nChannelsIn
    ) ? mixerSpec : nullptr;
 
    // Reserve vectors first so we can take safe references to pushed elements
-   mSources.reserve(nTracks);
-   auto nStages = std::accumulate(mInputs.begin(), mInputs.end(), 0,
-      [](auto sum, auto &input){ return sum + input.stages.size(); });
+   mSources.reserve(nChannelsIn);
+   const auto nStages = std::accumulate(mInputs.begin(), mInputs.end(), 0,
+      [](auto sum, const auto &input){
+         return sum + input.stages.size() * input.pSequence->NChannels(); });
    mSettings.reserve(nStages);
    mStageBuffers.reserve(nStages);
 
-   for (size_t i = 0; i < nTracks;) {
-      const auto &input = mInputs[i];
-      const auto leader = input.pTrack.get();
-      const auto nInChannels = TrackList::NChannels(*leader);
-      if (!leader || i + nInChannels > nTracks) {
+   size_t i = 0;
+   for (auto &input : mInputs) {
+      const auto &sequence = input.pSequence;
+      if (!sequence) {
          assert(false);
          break;
       }
-      auto increment = finally([&]{ i += nInChannels; });
+      auto increment = finally([&]{ i += sequence->NChannels(); });
 
-      auto &source = mSources.emplace_back( *leader, BufferSize(), outRate,
+      auto &source = mSources.emplace_back(sequence, BufferSize(), outRate,
          warpOptions, highQuality, mayThrow, mTimesAndSpeed,
          (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
       AudioGraph::Source *pDownstream = &source;
@@ -163,9 +163,9 @@ Mixer::Mixer(Inputs inputs,
                : stage.factory();
          };
          auto &pNewDownstream =
-         mStages.emplace_back(EffectStage::Create(true,
+         mStages.emplace_back(EffectStage::Create(-1,
             *pDownstream, stageInput,
-            factory, settings, outRate, std::nullopt, *leader
+            factory, settings, outRate, std::nullopt, *sequence
          ));
          if (pNewDownstream)
             pDownstream = pNewDownstream.get();
@@ -203,17 +203,17 @@ Mixer::NeedsDither(bool needsDither, double rate) const
       needsDither = true;
 
    for (const auto &input : mInputs) {
-      auto &pTrack = input.pTrack;
-      if (!pTrack)
+      auto &pSequence = input.pSequence;
+      if (!pSequence)
          continue;
-      auto &track = *pTrack;
-      if (track.GetRate() != rate)
+      auto &sequence = *pSequence;
+      if (sequence.GetRate() != rate)
          // Also leads to MixVariableRates(), needs nontrivial resampling
          needsDither = true;
       if (mApplyTrackGains) {
          /// TODO: more-than-two-channels
          for (auto c : {0, 1}) {
-            const auto gain = track.GetChannelGain(c);
+            const auto gain = sequence.GetChannelGain(c);
             if (!(gain == 0.0 || gain == 1.0))
                // Fractional gain may be applied even in MixSameRate
                needsDither = true;
@@ -224,10 +224,10 @@ Mixer::NeedsDither(bool needsDither, double rate) const
       // If it did not, we might avoid dither in more cases.  But if we fix
       // that, remember that some mixers change their time bounds after
       // construction, as when scrubbing.)
-      if (!track.HasTrivialEnvelope())
+      if (!sequence.HasTrivialEnvelope())
          // Varying or non-unit gain may be applied even in MixSameRate
          needsDither = true;
-      auto effectiveFormat = track.WidestEffectiveFormat();
+      auto effectiveFormat = sequence.WidestEffectiveFormat();
       if (effectiveFormat > mFormat)
          // Real, not just nominal, precision loss would happen in at
          // least one clip
@@ -286,24 +286,21 @@ size_t Mixer::Process(const size_t maxToProcess)
 
    // Decides which output buffers an input channel accumulates into
    auto findChannelFlags = [&channelFlags, numChannels = mNumChannels]
-   (const bool *map, const SampleTrack &track){
+   (const bool *map, const WideSampleSequence &sequence, size_t iChannel){
       const auto end = channelFlags + numChannels;
       std::fill(channelFlags, end, 0);
       if (map)
          // ignore left and right when downmixing is customized
          std::copy(map, map + numChannels, channelFlags);
-      else if (IsMono(track))
+      else if (IsMono(sequence))
          std::fill(channelFlags, end, 1);
-      else if (PlaysLeft(track))
+      else if (iChannel == 0)
          channelFlags[0] = 1;
-      else if (PlaysRight(track)) {
+      else if (iChannel == 1) {
          if (numChannels >= 2)
             channelFlags[1] = 1;
-         else {
-            // !IsMono() and IsRight() implies there are multiple channels
-            assert(false);
+         else
             channelFlags[0] = 1;
-         }
       }
       return channelFlags;
    };
@@ -332,12 +329,12 @@ size_t Mixer::Process(const size_t maxToProcess)
       const auto limit = std::min<size_t>(upstream.Channels(), maxChannels);
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
-         const auto track = upstream.GetChannel(j);
+         auto &sequence = upstream.GetSequence();
          if (mApplyTrackGains)
             for (size_t c = 0; c < mNumChannels; ++c)
-               gains[c] = track->GetChannelGain(c);
+               gains[c] = sequence.GetChannelGain(c);
          const auto flags =
-            findChannelFlags(upstream.MixerSpec(j), *track);
+            findChannelFlags(upstream.MixerSpec(j), sequence, j);
          MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, result);
       }
 
@@ -391,31 +388,10 @@ double Mixer::MixGetCurrentTime()
    return mTimesAndSpeed->mTime;
 }
 
-#if 0
-// Was used before 3.1.0 whenever looping play restarted
-// No longer used
-void Mixer::Restart()
-{
-   mTime = mT0;
-
-   for(size_t i=0; i<mNumInputTracks; i++)
-      mSamplePos[i] = mInputTrack[i].GetTrack()->TimeToLongSamples(mT0);
-
-   for(size_t i=0; i<mNumInputTracks; i++) {
-      mQueueStart[i] = 0;
-      mQueueLen[i] = 0;
-   }
-
-   // Bug 1887:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
-   // constant rate resampling if you try to reuse the resampler after it has
-   // flushed.  Should that be considered a bug in sox?  This works around it:
-   MakeResamplers();
-}
-#endif
-
 void Mixer::Reposition(double t, bool bSkipping)
 {
-   auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
+   const auto &[mT0, mT1, _, __] = *mTimesAndSpeed;
+   auto &mTime = mTimesAndSpeed->mTime;
    mTime = t;
    const bool backwards = (mT1 < mT0);
    if (backwards)

@@ -21,15 +21,15 @@
 #include <functional>
 #include <vector>
 
+class AudacityProject;
 class BoundedEnvelope;
 class EffectInstanceEx;
-class SampleTrack;
-class TrackList;
+class WideSampleSequence;
 
 namespace MixerOptions {
 
 //! A matrix of booleans, one row per input channel, column per output
-class SAMPLE_TRACK_API Downmix final {
+class MIXER_API Downmix final {
    unsigned mNumTracks, mNumChannels, mMaxNumChannels;
 
    void Alloc();
@@ -51,14 +51,14 @@ public:
 };
 
 //! Immutable structure is an argument to Mixer's constructor
-struct SAMPLE_TRACK_API Warp final {
+struct MIXER_API Warp final {
    //! Hook function for default time warp
-   struct SAMPLE_TRACK_API DefaultWarp : GlobalHook<DefaultWarp,
-    const BoundedEnvelope*(const TrackList&)
+   struct MIXER_API DefaultWarp : GlobalHook<DefaultWarp,
+      const BoundedEnvelope*(const AudacityProject*)
    >{};
 
    //! Construct using the default warp function
-   explicit Warp(const TrackList &list);
+   explicit Warp(const AudacityProject *pProject);
 
    //! Construct with an explicit warp
    explicit Warp(const BoundedEnvelope *e);
@@ -79,10 +79,10 @@ struct SAMPLE_TRACK_API Warp final {
 // Information derived from Warp and other data
 struct ResampleParameters final {
    ResampleParameters(bool highQuality,
-      const SampleTrack &leader, double rate, const Warp &options);
+      double inRate, double outRate, const Warp &options);
    bool             mHighQuality{};
    bool             mVariableRates{ false };
-   std::vector<double> mMinFactor, mMaxFactor;
+   double           mMinFactor, mMaxFactor;
 };
 
 //! Reassignable bounds and speed for a Mixer's fetch from tracks, and a

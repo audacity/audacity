@@ -230,9 +230,9 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
 
    bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
 
-   auto range = tracks.Any< const WaveTrack >()
-      + (selectionOnly ? &Track::IsSelected : &Track::Any )
-      - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
+   const auto range = tracks.Leaders<const WaveTrack>()
+      + (selectionOnly ? &Track::IsSelected : &Track::Any)
+      - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
       inputs.emplace_back(
          pTrack->SharedPointer<const SampleTrack>(), GetEffectStages(*pTrack));
@@ -240,7 +240,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
    return std::make_unique<Mixer>(move(inputs),
                   // Throw, to stop exporting, if read fails:
                   true,
-                  Mixer::WarpOptions{tracks},
+                  Mixer::WarpOptions{ tracks.GetOwner() },
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,

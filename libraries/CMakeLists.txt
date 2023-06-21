@@ -53,6 +53,7 @@ set( LIBRARIES
    lib-audio-unit
    lib-playable-track
    lib-time-and-pitch
+   lib-mixer
 )
 
 if ( ${_OPT}has_networking )

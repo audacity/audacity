@@ -16,9 +16,13 @@
 
 #include "AudioGraphSource.h"
 #include "MixerOptions.h"
+#include "SampleCount.h"
+#include <memory>
 
 class Resample;
+class SampleTrack;
 class SampleTrackCache;
+class WideSampleSequence;
 
 //! Fetches from tracks, applies envelopes; can resample, and warp time, even
 //! backwards, as for scrubbing.
@@ -35,7 +39,8 @@ public:
    /*!
     @pre `pTimesAndSpeed != nullptr`
     */
-   MixerSource(const SampleTrack &leader, size_t bufferSize,
+   MixerSource(const std::shared_ptr<const WideSampleSequence> &leader,
+      size_t bufferSize,
       double rate, const MixerOptions::Warp &options, bool highQuality,
       bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
       //! Null or else must have a lifetime enclosing this objects's
@@ -46,7 +51,7 @@ public:
    ~MixerSource();
 
    unsigned Channels() const { return mnChannels; }
-   const SampleTrack *GetChannel(unsigned iChannel) const;
+   const WideSampleSequence &GetSequence() const;
    const bool *MixerSpec(unsigned iChannel) const;
 
    bool AcceptsBuffers(const Buffers &buffers) const override;
@@ -76,22 +81,24 @@ private:
    static constexpr size_t sQueueMaxLen = 65536;
 
    /*!
+    Assume floatBuffers has extent nChannels
     @post result: `result <= maxOut`
     */
-   size_t MixSameRate(unsigned iChannel, size_t maxOut, float &floatBuffer);
+   size_t MixSameRate(unsigned nChannels, size_t maxOut, float *floatBuffers[]);
 
    /*!
+    Assume floatBuffers has extent nChannels
     @post result: `result <= maxOut`
     */
    size_t MixVariableRates(
-      unsigned iChannel, size_t maxOut, float &floatBuffer);
+      unsigned nChannels, size_t maxOut, float *floatBuffers[]);
 
    /*!
     @pre `produced <= max`
     */
    void ZeroFill(size_t produced, size_t max, float &floatBuffer);
 
-   const std::shared_ptr<const SampleTrack> mpLeader;
+   const std::shared_ptr<const WideSampleSequence> mpLeader;
    size_t i;
 
    const size_t mnChannels;
@@ -103,23 +110,23 @@ private:
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
-   //! SampleTrackCaches are the source of data
-   std::vector<SampleTrackCache> mInputTrack;
+   //! SampleTrackCache is the source of data
+   std::unique_ptr<SampleTrackCache> mInputSequence;
 
    //! Fetch position for source
    /*!
-    mSamplePos holds for each track the next sample position not yet processed.
+    mSamplePos holds the next sample position not yet processed
     */
-   std::vector<sampleCount> mSamplePos;
+   sampleCount mSamplePos;
 
    //! First intermediate buffer when resampling is needed
    std::vector<std::vector<float>> mSampleQueue;
 
-   //! Position in each queue of the start of the next block to resample
-   std::vector<int>     mQueueStart;
+   //! Position of the start of the next block to resample
+   int mQueueStart;
 
-   //! For each queue, the number of available samples after the queue start
-   std::vector<int>     mQueueLen;
+   //! The number of available samples after the queue start
+   int mQueueLen;
 
    const ResampleParameters mResampleParameters;
    std::vector<std::unique_ptr<Resample>> mResample;
