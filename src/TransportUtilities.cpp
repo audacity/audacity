@@ -14,6 +14,7 @@
 #include <thread>
 #include "AudioIO.h"
 #include "AudioIOSequences.h"
+#include "CachingPlayableSequence.h"
 #include "commands/CommandContext.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -22,6 +23,7 @@
 #include "ViewInfo.h"
 #include "toolbars/ControlToolBar.h"
 #include "ProgressDialog.h"
+#include "WaveTrack.h"
 
 void TransportUtilities::PlayCurrentRegionAndWait(
    const CommandContext &context,
@@ -208,11 +210,11 @@ TransportSequences MakeTransportTracks(
 {
    TransportSequences result;
    {
-      const auto range = trackList.Leaders<SampleTrack>()
+      const auto range = trackList.Leaders<WaveTrack>()
          + (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
-         result.playbackSequences
-            .push_back(pTrack->SharedPointer<SampleTrack>());
+         result.playbackSequences.push_back(
+            std::make_shared<CachingPlayableSequence>(*pTrack));
    }
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (nonWaveToo) {

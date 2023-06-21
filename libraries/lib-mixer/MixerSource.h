@@ -21,7 +21,6 @@
 
 class Resample;
 class SampleTrack;
-class SampleTrackCache;
 class WideSampleSequence;
 
 //! Fetches from tracks, applies envelopes; can resample, and warp time, even
@@ -109,9 +108,6 @@ private:
    const bool mMayThrow;
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
-
-   //! SampleTrackCache is the source of data
-   std::unique_ptr<SampleTrackCache> mInputSequence;
 
    //! Fetch position for source
    /*!
