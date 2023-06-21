@@ -349,8 +349,10 @@ bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
       if (doFix) {
          // More non-error upgrading
          // Set the common channel group rate from the leader's rate
-         if (IsLeader())
+         if (IsLeader() && mLegacyRate > 0) {
             SetRate(mLegacyRate);
+            mLegacyRate = 0;
+         }
       }
    }
    return !err;
@@ -1907,7 +1909,8 @@ void WaveTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
 
    // Make clips (which don't serialize the rate) consistent with channel rate,
    // though the consistency check of channels with each other remains to do
-   SetClipRates(mLegacyRate);
+   if (mLegacyRate > 0)
+      SetClipRates(mLegacyRate);
 }
 
 XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
