@@ -90,18 +90,18 @@ WaveClip::WaveClip(const WaveClip& orig,
                    double t0, double t1)
 {
    assert(orig.CountSamples(t0, t1) > 0);
-   
+
    mSequenceOffset = orig.mSequenceOffset;
-   
+
    //Adjust trim values to sample-boundary
    if(t0 > orig.GetPlayStartTime()) {
       const auto s0 = orig.TimeToSamples(t0 - orig.GetSequenceStartTime());
       mTrimLeft = orig.SamplesToTime(s0);
-      
+
    }
    else
       mTrimLeft = orig.mTrimLeft;
-   
+
    if(t1 < orig.GetPlayEndTime())
    {
       const auto s1 = orig.TimeToSamples(orig.GetSequenceEndTime() - t1);
@@ -109,7 +109,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    }
    else
       mTrimRight = orig.mTrimRight;
-   
+
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
 
@@ -119,7 +119,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    for (auto &pSequence : orig.mSequences)
       mSequences.push_back(
          std::make_unique<Sequence>(*pSequence, factory));
-   
+
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
    if (copyCutlines)
@@ -134,6 +134,14 @@ WaveClip::WaveClip(const WaveClip& orig,
 
 WaveClip::~WaveClip()
 {
+}
+
+AudioSegmentSampleView
+WaveClip::GetSampleView(size_t ii, sampleCount start, size_t length) const
+{
+   assert(ii < GetWidth());
+   return mSequences[ii]->GetFloatSampleView(
+      start + TimeToSamples(mTrimLeft), length);
 }
 
 size_t WaveClip::GetWidth() const
@@ -633,7 +641,7 @@ void WaveClip::Clear(double t0, double t1)
     ClearSequence(st0, st1);
 
     if (offset != .0)
-        Offset(offset);        
+        Offset(offset);
 }
 
 void WaveClip::ClearLeft(double t)
@@ -773,7 +781,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    // Collapse envelope
    auto sampleTime = 1.0 / GetRate();
    GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
-   
+
    transaction.Commit();
    MarkChanged();
 
@@ -845,7 +853,7 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
    for (auto it = mCutLines.begin(); it != mCutLines.end(); ++it)
    {
       const auto &cutline = *it;
-      //std::numeric_limits<double>::epsilon() or (1.0 / static_cast<double>(mRate))? 
+      //std::numeric_limits<double>::epsilon() or (1.0 / static_cast<double>(mRate))?
       if (fabs(GetSequenceStartTime() + cutline->GetSequenceStartTime() - cutLinePosition) < 0.0001)
       {
          mCutLines.erase(it); // deletes cutline!
@@ -1159,7 +1167,7 @@ void WaveClip::Offset(double delta) noexcept
 // Bug 2288 allowed overlapping clips.
 // This was a classic fencepost error.
 // We are within the clip if start < t <= end.
-// Note that BeforeClip and AfterClip must be consistent 
+// Note that BeforeClip and AfterClip must be consistent
 // with this definition.
 bool WaveClip::WithinPlayRegion(double t) const
 {

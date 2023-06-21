@@ -18,6 +18,7 @@
 #include "SampleFormat.h"
 #include "XMLTagHandler.h"
 #include "SampleCount.h"
+#include "AudioSegmentSampleView.h"
 
 #include <wx/longlong.h>
 
@@ -163,7 +164,7 @@ public:
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
-   
+
    double GetSequenceStartTime() const noexcept;
    void SetSequenceStartTime(double startTime);
    double GetSequenceEndTime() const;
@@ -219,6 +220,18 @@ public:
    //! start time offset.
    //! @returns Number of samples within t0 and t1 if t1 > t0, 0 otherwise
    sampleCount CountSamples(double t0, double t1) const;
+
+   /*!
+    * @brief Request up to `length` samples. The actual number of samples
+    * available from the returned view is queried through
+    * `AudioSegmentSampleView::GetSampleCount()`.
+    *
+    * @param ii identifies the channel
+    * @param start index of first clip sample from play start
+    * @pre `ii < GetWidth()`
+    */
+   AudioSegmentSampleView
+   GetSampleView(size_t ii, sampleCount start, size_t length) const;
 
    //! Get samples from one channel
    /*!
