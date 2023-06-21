@@ -19,6 +19,7 @@
 #include "XMLTagHandler.h"
 
 #include "SampleCount.h"
+#include "AudioSegmentSampleView.h"
 
 class SampleBlock;
 class SampleBlockFactory;
@@ -85,6 +86,9 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    bool Get(samplePtr buffer, sampleFormat format,
             sampleCount start, size_t len, bool mayThrow) const;
 
+   AudioSegmentSampleView
+   GetFloatSampleView(sampleCount start, size_t len) const;
+
    //! Pass nullptr to set silence
    /*! Note that len is not size_t, because nullptr may be passed for buffer, in
       which case, silence is inserted, possibly a large amount. */
@@ -113,7 +117,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
        Samples may be retained in a memory buffer, pending Flush()
        If there are exceptions, an unspecified prefix of buffer may be
        appended
-   
+
        @return true if at least one sample block was added
        @excsafety{Weak}
     */
