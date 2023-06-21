@@ -17,6 +17,8 @@ and WaveTrackSink make new WaveTrack objects.
 ]]
 
 set( SOURCES
+   AudioSegmentSampleView.cpp
+   AudioSegmentSampleView.h
    PasteOverPreservingClips.cpp
    PasteOverPreservingClips.h
    SampleBlock.cpp
