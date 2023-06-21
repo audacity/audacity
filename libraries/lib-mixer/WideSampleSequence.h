@@ -74,7 +74,7 @@ public:
        clips, rather than filled according to fillFormat; but these were not
        necessarily one contiguous range.
 
-    @pre `nBuffers - iChannel <= NChannels()`
+    @pre `iChannel + nBuffers <= NChannels()`
     @return false when `mayThrow` is false and not all samples could be
        retrieved
     */

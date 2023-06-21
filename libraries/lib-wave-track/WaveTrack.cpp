@@ -2295,9 +2295,9 @@ WaveTrack::GetOneSampleView(sampleCount start, size_t length) const
       //    t0 - clipT0 <= 0,
       // then `length >= len`. `as_size_t` won't narrow.
       const auto len = TimeToLongSamples(t1 - clipT0).as_size_t();
-      auto newBlock = clip->GetSampleView(0u, clipS0, len);
-      t0 += newBlock.GetSampleCount().as_double() / GetRate();
-      segments.push_back(newBlock);
+      auto newSegment = clip->GetSampleView(0u, clipS0, len);
+      t0 += newSegment.GetSampleCount().as_double() / GetRate();
+      segments.push_back(std::move(newSegment));
    }
    return segments;
 }
