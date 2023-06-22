@@ -255,7 +255,7 @@ public:
     Usually agrees with the size() of each site unless some registrations happened later
     than some Site's construction.
     */
-   static size_t slots() { return GetFactories().mObject.size(); }
+   static size_t numFactories() { return GetFactories().mObject.size(); }
 
    //! Client code makes static instance from a factory of attachments; passes it to @ref Get or @ref Find as a retrieval key
    /*!

@@ -564,7 +564,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       // Multi-view check mark item, if more than one track sub-view type is
       // known
       Append(Adapt<My>([](My &table) {
-         return (WaveChannelSubViews::slots() > 1)
+         return (WaveChannelSubViews::numFactories() > 1)
             ? std::make_unique<Entry>(
                "MultiView", Entry::CheckItem, OnMultiViewID, XXO("&Multi-view"),
                POPUP_MENU_FN( OnMultiView ),
