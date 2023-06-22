@@ -25,7 +25,7 @@
 #include "XMLTagHandler.h"
 
 class EffectSettingsAccess;
-class Track;
+class WideSampleSequence;
 
 enum class RealtimeEffectStateChange { EffectOff, EffectOn };
 
@@ -70,7 +70,8 @@ public:
    std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
    std::shared_ptr<EffectInstance>
-   AddTrack(const Track &track, unsigned chans, float sampleRate);
+   AddSequence(
+      const WideSampleSequence &sequence, unsigned chans, float sampleRate);
    //! Worker thread begins a batch of samples
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);
@@ -78,7 +79,7 @@ public:
    /*!
     @return how many leading samples are discardable for latency
     */
-   size_t Process(const Track &track,
+   size_t Process(const WideSampleSequence &sequence,
       unsigned chans, // How many channels the playback device needs
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers
@@ -184,7 +185,8 @@ private:
     @{
     */
     
-   std::unordered_map<const Track *, std::pair<size_t, double>> mGroups;
+   std::unordered_map<const WideSampleSequence *, std::pair<size_t, double>>
+      mGroups;
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.

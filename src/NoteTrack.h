@@ -12,6 +12,7 @@
 #define __AUDACITY_NOTETRACK__
 
 #include <utility>
+#include "AudioIOSequences.h"
 #include "Prefs.h"
 #include "PlayableTrack.h"
 
@@ -60,6 +61,7 @@ class TimeWarper;
 
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
+   , public OtherPlayableSequence
 {
 public:
    // Construct and also build all attachments

@@ -240,6 +240,13 @@ private:
 
    void Flush() override;
 
+   //! @name PlayableSequence implementation
+   //! @{
+   bool IsLeader() const override;
+   bool GetMute() const override;
+   bool GetSolo() const override;
+   //! @}
+
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
    /// have a continuous space of samples anymore, but we simulate it,

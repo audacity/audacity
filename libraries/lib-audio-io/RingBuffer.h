@@ -23,9 +23,9 @@ class RingBuffer final : public NonInterferingBase {
    // For the writer only:
    //
 
-   size_t AvailForPut();
+   size_t AvailForPut() const;
    //! Reader may concurrently cause a decrease of what this returns
-   size_t WrittenForGet();
+   size_t WrittenForGet() const;
    //! Does not apply dithering
    size_t Put(constSamplePtr buffer, sampleFormat format, size_t samples,
               // optional number of trailing zeroes
@@ -46,14 +46,14 @@ class RingBuffer final : public NonInterferingBase {
    // For the reader only:
    //
 
-   size_t AvailForGet();
+   size_t AvailForGet() const;
    //! Does not apply dithering
    size_t Get(samplePtr buffer, sampleFormat format, size_t samples);
    size_t Discard(size_t samples);
 
  private:
-   size_t Filled( size_t start, size_t end );
-   size_t Free( size_t start, size_t end );
+   size_t Filled(size_t start, size_t end) const;
+   size_t Free(size_t start, size_t end) const;
 
    size_t mWritten{0};
    size_t mLastPadding{0};

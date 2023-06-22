@@ -42,7 +42,7 @@ struct ScrubQueue : NonInterferingBase
    void Get(sampleCount &startSample, sampleCount &endSample,
          sampleCount inDuration, sampleCount &duration)
    {
-      // Called by the thread that calls AudioIO::TrackBufferExchange
+      // Called by the thread that calls AudioIO::SequenceBufferExchange
       startSample = endSample = duration = -1LL;
       sampleCount s0Init;
 

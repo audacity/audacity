@@ -1,4 +1,8 @@
 #[[
+AudioIOSequences defines interfaces to random-access readable, and sequentially
+writable, sequences of samples, that are sufficient for the needs of the audio
+engine.
+
 SampleTrackCache holds a buffer in memory fetched from a SampleTrack, so
 repeated fetches of small but nearby sub-ranges can be satisfied with fewer
 but larger fetches from SampleTrack, aligned to underlying database block
@@ -16,6 +20,8 @@ class Curve should be extracted from it and lowered into lib-math.
 ]]
 
 set( SOURCES
+   AudioIOSequences.cpp
+   AudioIOSequences.h
    EffectStage.cpp
    EffectStage.h
    Envelope.cpp
@@ -35,6 +41,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-audio-graph-interface
+   lib-registries-interface
    lib-xml-interface
 )
 audacity_library( lib-mixer "${SOURCES}" "${LIBRARIES}"

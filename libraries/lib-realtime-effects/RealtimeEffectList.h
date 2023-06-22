@@ -23,7 +23,7 @@ class AudacityProject;
 
 class RealtimeEffectState;
 
-class Track;
+class WideSampleSequence;
 
 struct RealtimeEffectListMessage final
 {
@@ -43,7 +43,7 @@ struct RealtimeEffectListMessage final
 
 class REALTIME_EFFECTS_API RealtimeEffectList final
    // Inheritance from std::enable_shared_from_this must be public
-   // but the per-track lists are managed by unique not shared pointers
+   // but the per-sequence lists are managed by unique not shared pointers
    : public std::enable_shared_from_this<RealtimeEffectList>
    , public ClientData::Base
    , public ClientData::Cloneable<>
@@ -73,8 +73,8 @@ public:
       AudacityProject &project,
       const std::shared_ptr<RealtimeEffectList> &list);
 
-   static RealtimeEffectList &Get(Track &track);
-   static const RealtimeEffectList &Get(const Track &track);
+   static RealtimeEffectList &Get(WideSampleSequence &sequence);
+   static const RealtimeEffectList &Get(const WideSampleSequence &sequence);
 
    // Type that state visitor functions would have for out-of-line definition
    // of Visit

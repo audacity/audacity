@@ -12,9 +12,9 @@ set( SOURCES
    RealtimeEffectState.h
 )
 set( LIBRARIES
-   lib-math-interface
+   lib-mixer-interface
    lib-module-manager-interface
-   lib-track-interface
+   lib-project-history-interface
 )
 audacity_library( lib-realtime-effects "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -11,16 +11,27 @@ Paul Licameli split from SampleFrame.h
 #define __AUDACITY_WIDE_SAMPLE_SEQUENCE_
 
 #include "AudioGraphChannel.h"
+#include "ClientData.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
+
+struct WideSampleSequence;
+
+//! Hosting of objects attached by higher level code
+using SequenceAttachments = ClientData::Site<
+   WideSampleSequence, ClientData::Cloneable<>, ClientData::DeepCopying
+>;
 
 //! An interface for random-access fetches from a collection of streams of
 //! samples, associated with the same time; also defines an envelope that
 //! applies to all the streams.
 class MIXER_API WideSampleSequence
    : public AudioGraph::Channel
+   , public SequenceAttachments
 {
 public:
+   using Attachments = SequenceAttachments;
+
    virtual ~WideSampleSequence();
 
    //! A constant property
@@ -29,7 +40,8 @@ public:
     */
    virtual size_t NChannels() const = 0;
 
-   //! Extra gain factor to apply to a channel when mixing
+   //! Extra gain factor to apply to a channel when mixing,
+   //! may change asynchronously
    virtual float GetChannelGain(int channel) const = 0;
 
    /*!

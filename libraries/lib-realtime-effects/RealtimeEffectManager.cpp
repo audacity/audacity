@@ -7,13 +7,12 @@
  Paul Licameli split from EffectManager.cpp
  
  **********************************************************************/
-
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
+#include "WideSampleSequence.h"
 
 #include <memory>
 #include "Project.h"
-#include "Track.h"
 
 #include <atomic>
 #include <wx/time.h>
@@ -31,7 +30,8 @@ RealtimeEffectManager &RealtimeEffectManager::Get(AudacityProject &project)
    return project.AttachedObjects::Get<RealtimeEffectManager&>(manager);
 }
 
-const RealtimeEffectManager &RealtimeEffectManager::Get(const AudacityProject &project)
+const RealtimeEffectManager &
+RealtimeEffectManager::Get(const AudacityProject &project)
 {
    return Get(const_cast<AudacityProject &>(project));
 }
@@ -55,7 +55,7 @@ void RealtimeEffectManager::Initialize(
 {
    // (Re)Set processor parameters
    mRates.clear();
-   mGroupLeaders.clear();
+   mSequences.clear();
 
    // RealtimeAdd/RemoveEffect() needs to know when we're active so it can
    // initialize newly added effects
@@ -70,19 +70,16 @@ void RealtimeEffectManager::Initialize(
    SetSuspended(false);
 }
 
-void RealtimeEffectManager::AddTrack(
+void RealtimeEffectManager::AddSequence(
    RealtimeEffects::InitializationScope &scope,
-   const Track &track, unsigned chans, float rate)
+   const WideSampleSequence &sequence, unsigned chans, float rate)
 {
-   auto leader = *track.GetOwner()->FindLeader(&track);
-   // This should never return a null
-   wxASSERT(leader);
-   mGroupLeaders.push_back(leader);
-   mRates.insert({leader, rate});
+   mSequences.push_back(&sequence);
+   mRates.insert({&sequence, rate});
 
-   VisitGroup(*leader,
+   VisitGroup(sequence,
       [&](RealtimeEffectState & state, bool) {
-         scope.mInstances.push_back(state.AddTrack(*leader, chans, rate));
+         scope.mInstances.push_back(state.AddSequence(sequence, chans, rate));
       }
    );
 }
@@ -98,7 +95,7 @@ void RealtimeEffectManager::Finalize() noexcept
    VisitAll([](RealtimeEffectState &state, bool){ state.Finalize(); });
 
    // Reset processor parameters
-   mGroupLeaders.clear();
+   mSequences.clear();
    mRates.clear();
 
    // No longer active
@@ -110,8 +107,8 @@ void RealtimeEffectManager::Finalize() noexcept
 //
 void RealtimeEffectManager::ProcessStart(bool suspended)
 {
-   // Can be suspended because of the audio stream being paused or because effects
-   // have been suspended.
+   // Can be suspended because of the audio stream being paused or because
+   // effects have been suspended.
    VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
       state.ProcessStart(!suspended && listIsActive);
    });
@@ -121,12 +118,13 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
 
 // This will be called in a thread other than the main GUI thread.
 //
-size_t RealtimeEffectManager::Process(bool suspended, const Track &track,
+size_t RealtimeEffectManager::Process(bool suspended,
+   const WideSampleSequence &sequence,
    float *const *buffers, float *const *scratch, float *const dummy,
    unsigned nBuffers, size_t numSamples)
 {
-   // Can be suspended because of the audio stream being paused or because effects
-   // have been suspended, so allow the samples to pass as-is.
+   // Can be suspended because of the audio stream being paused or because
+   // effects have been suspended, so allow the samples to pass as-is.
    if (suspended)
       return 0;
 
@@ -147,16 +145,16 @@ size_t RealtimeEffectManager::Process(bool suspended, const Track &track,
       obuf[i] = scratch[i];
    }
 
-   // Now call each effect in the chain while swapping buffer pointers to feed the
-   // output of one effect as the input to the next effect
+   // Now call each effect in the chain while swapping buffer pointers to feed
+   // the output of one effect as the input to the next effect
    // Tracks how many processors were called
    size_t called = 0;
    size_t discardable = 0;
-   VisitGroup(track,
+   VisitGroup(sequence,
       [&](RealtimeEffectState &state, bool)
       {
          discardable +=
-            state.Process(track, nBuffers, ibuf, obuf, dummy, numSamples);
+            state.Process(sequence, nBuffers, ibuf, obuf, dummy, numSamples);
          for (auto i = 0; i < nBuffers; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
@@ -186,8 +184,8 @@ size_t RealtimeEffectManager::Process(bool suspended, const Track &track,
 //
 void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
 {
-   // Can be suspended because of the audio stream being paused or because effects
-   // have been suspended.
+   // Can be suspended because of the audio stream being paused or because
+   // effects have been suspended.
    VisitAll([suspended](RealtimeEffectState &state, bool){
       state.ProcessEnd();
    });
@@ -200,9 +198,9 @@ AllListsLock::AllListsLock(RealtimeEffectManager *pManager)
    if (mpManager) {
       // Paralleling VisitAll
       RealtimeEffectList::Get(mpManager->mProject).GetLock().lock();
-      // And all track lists
-      for (auto leader : mpManager->mGroupLeaders)
-         RealtimeEffectList::Get(*leader).GetLock().lock();
+      // And all sequence lists
+      for (auto sequence : mpManager->mSequences)
+         RealtimeEffectList::Get(*sequence).GetLock().lock();
    }
 }
 
@@ -228,9 +226,9 @@ void RealtimeEffectManager::AllListsLock::Reset()
    if (mpManager) {
       // Paralleling VisitAll
       RealtimeEffectList::Get(mpManager->mProject).GetLock().unlock();
-      // And all track lists
-      for (auto leader : mpManager->mGroupLeaders)
-         RealtimeEffectList::Get(*leader).GetLock().unlock();
+      // And all sequence lists
+      for (auto sequence : mpManager->mSequences)
+         RealtimeEffectList::Get(*sequence).GetLock().unlock();
       mpManager = nullptr;
    }
 }
@@ -238,7 +236,7 @@ void RealtimeEffectManager::AllListsLock::Reset()
 std::shared_ptr<RealtimeEffectState>
 RealtimeEffectManager::MakeNewState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pLeader, const PluginID &id)
+   WideSampleSequence *pSequence, const PluginID &id)
 {
    if (!pScope && mActive)
       return nullptr;
@@ -248,14 +246,14 @@ RealtimeEffectManager::MakeNewState(
       // Adding a state while playback is in-flight
       auto pInstance = state.Initialize(pScope->mSampleRate);
       pScope->mInstances.push_back(pInstance);
-      for (auto &leader : mGroupLeaders) {
-         // Add all tracks to a per-project state, but add only the same track
-         // to a state in the per-track list
-         if (pLeader && pLeader != leader)
+      for (auto &sequence : mSequences) {
+         // Add all sequences to a per-project state, but add only the same
+         // sequence to a state in the per-sequence list
+         if (pSequence && pSequence != sequence)
             continue;
-         auto rate = mRates[leader];
+         auto rate = mRates[sequence];
          auto pInstance2 =
-            state.AddTrack(*leader, pScope->mNumPlaybackChannels, rate);
+            state.AddSequence(*sequence, pScope->mNumPlaybackChannels, rate);
          if (pInstance2 != pInstance)
             pScope->mInstances.push_back(pInstance2);
       }
@@ -264,23 +262,20 @@ RealtimeEffectManager::MakeNewState(
 }
 
 namespace {
-std::pair<Track *, RealtimeEffectList &>
-FindStates(AudacityProject &project, Track *pTrack) {
-   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
-   return { pLeader,
-      pLeader
-         ? RealtimeEffectList::Get(*pLeader)
-         : RealtimeEffectList::Get(project)
-   };
+RealtimeEffectList &
+FindStates(AudacityProject &project, WideSampleSequence *pSequence) {
+   return pSequence
+      ? RealtimeEffectList::Get(*pSequence)
+      : RealtimeEffectList::Get(project);
 }
 }
 
 std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pTrack, const PluginID & id)
+   WideSampleSequence *pSequence, const PluginID & id)
 {
-   auto [pLeader, states] = FindStates(mProject, pTrack);
-   auto pState = MakeNewState(pScope, pTrack, id);
+   auto &states = FindStates(mProject, pSequence);
+   auto pState = MakeNewState(pScope, pSequence, id);
    if (!pState)
       return nullptr;
 
@@ -289,20 +284,20 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
       return nullptr;
    Publish({
       RealtimeEffectManagerMessage::Type::EffectAdded,
-      pLeader ? pLeader->shared_from_this() : nullptr
+      pSequence ? pSequence : nullptr
    });
    return pState;
 }
 
 std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pTrack, size_t index, const PluginID & id)
+   WideSampleSequence *pSequence, size_t index, const PluginID & id)
 {
-   auto [pLeader, states] = FindStates(mProject, pTrack);
+   auto &states = FindStates(mProject, pSequence);
    auto pOldState = states.GetStateAt(index);
    if (!pOldState)
       return nullptr;
-   auto pNewState = MakeNewState(pScope, pTrack, id);
+   auto pNewState = MakeNewState(pScope, pSequence, id);
    if (!pNewState)
       return nullptr;
 
@@ -312,17 +307,17 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
    if (mActive)
       pOldState->Finalize();
    Publish({
-      RealtimeEffectManagerMessage::Type::EffectReplaced,
-      pLeader ? pLeader->shared_from_this() : nullptr
+      RealtimeEffectManagerMessage::Type::EffectReplaced, pSequence
    });
    return pNewState;
 }
 
 void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pTrack, const std::shared_ptr<RealtimeEffectState> pState)
+   WideSampleSequence *pSequence,
+   const std::shared_ptr<RealtimeEffectState> pState)
 {
-   auto [pLeader, states] = FindStates(mProject, pTrack);
+   auto &states = FindStates(mProject, pSequence);
 
    // Remove the state from processing (under the lock guard) before finalizing
    states.RemoveState(pState);
@@ -330,14 +325,15 @@ void RealtimeEffectManager::RemoveState(
       pState->Finalize();
    Publish({
       RealtimeEffectManagerMessage::Type::EffectRemoved,
-      pLeader ? pLeader->shared_from_this() : nullptr
+      pSequence ? pSequence : nullptr
    });
 }
 
 std::optional<size_t> RealtimeEffectManager::FindState(
-   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState) const
+   WideSampleSequence *pSequence,
+   const std::shared_ptr<RealtimeEffectState> &pState) const
 {
-   auto [_, states] = FindStates(mProject, pTrack);
+   auto &states = FindStates(mProject, pSequence);
    return states.FindState(pState);
 }
 

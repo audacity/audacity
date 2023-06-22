@@ -23,7 +23,7 @@
 struct PaStreamCallbackTimeInfo;
 struct PaStreamInfo;
 struct PlaybackSchedule;
-struct TransportTracks;
+struct TransportSequences;
 
 class AUDIO_IO_API AudioIOExt : public AudioIOExtBase
 {
@@ -46,10 +46,10 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer) = 0;
    virtual void SignalOtherCompletion() = 0;
-   virtual unsigned CountOtherSoloTracks() const = 0;
+   virtual unsigned CountOtherSolo() const = 0;
 
    // Formerly in AudioIO
-   virtual bool StartOtherStream(const TransportTracks &tracks,
+   virtual bool StartOtherStream(const TransportSequences &tracks,
       const PaStreamInfo* info, double startTime, double rate) = 0;
    virtual void AbortOtherStream() = 0;
    virtual void FillOtherBuffers(
