@@ -14,6 +14,8 @@
 #include <string_view>
 #include <wx/string.h>
 
+#include <qstring.h>
+
 namespace audacity
 {
 
@@ -31,5 +33,19 @@ STRING_UTILS_API wxString ToWXString (const std::string& str);
 STRING_UTILS_API wxString ToWXString (std::string_view str);
 STRING_UTILS_API wxString ToWXString (const char* str);
 STRING_UTILS_API wxString ToWXString (const std::wstring& str);
+
+#if QT_CORE_LIB
+
+STRING_UTILS_API std::string ToUTF8 (const QString& str);
+STRING_UTILS_API std::wstring ToWString (const QString& str);
+STRING_UTILS_API wxString ToWXString (const QString& str);
+
+STRING_UTILS_API QString ToQString (const char* str);
+STRING_UTILS_API QString ToQString (const std::string& str);
+STRING_UTILS_API QString ToQString (std::string_view str);
+STRING_UTILS_API QString ToQString (const std::wstring& str);
+STRING_UTILS_API QString ToQString (const wxString& str);
+
+#endif
 
 }

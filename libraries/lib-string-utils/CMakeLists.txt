@@ -29,4 +29,8 @@ set( LIBRARIES
    wxBase
 )
 
+if(${_OPT}enable_experimental_qt_support)
+   list(APPEND LIBRARIES Qt6::Core)
+endif()
+
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )
