@@ -50,11 +50,6 @@ size_t CachingPlayableSequence::GetMaxBlockSize() const
    return mWaveTrack.GetMaxBlockSize();
 }
 
-sampleCount CachingPlayableSequence::GetBlockStart(sampleCount t) const
-{
-   return mWaveTrack.GetBlockStart(t);
-}
-
 size_t CachingPlayableSequence::GetBestBlockSize(sampleCount t) const
 {
    return mWaveTrack.GetBestBlockSize(t);

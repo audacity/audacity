@@ -50,11 +50,6 @@ public:
    virtual size_t GetMaxBlockSize() const = 0;
 
    /*!
-    @return a possibly large or negative value
-    */
-   virtual sampleCount GetBlockStart(sampleCount t) const = 0;
-
-   /*!
     @return a nonnegative number of samples meant to size a memory buffer
     */
    virtual size_t GetBestBlockSize(sampleCount t) const = 0;

@@ -1751,24 +1751,6 @@ bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
       ->Append(buffers, format, len, stride, effectiveFormat);
 }
 
-sampleCount WaveTrack::GetBlockStart(sampleCount s) const
-{
-   for (const auto &clip : mClips)
-   {
-      const auto startSample = clip->GetPlayStartSample();
-      const auto endSample = clip->GetPlayEndSample();
-      if (s >= startSample && s < endSample)
-      {
-         // ignore extra channels (this function will soon be removed)
-         auto blockStartOffset = clip->GetSequence(0)
-            ->GetBlockStart(clip->ToSequenceSamples(s));
-         return std::max(startSample, clip->GetSequenceStartSample() + blockStartOffset);
-      }
-   }
-
-   return -1;
-}
-
 size_t WaveTrack::GetBestBlockSize(sampleCount s) const
 {
    auto bestBlockSize = GetMaxBlockSize();

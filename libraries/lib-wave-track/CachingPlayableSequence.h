@@ -34,7 +34,6 @@ public:
    size_t NChannels() const override;
    float GetChannelGain(int channel) const override;
    size_t GetMaxBlockSize() const override;
-   sampleCount GetBlockStart(sampleCount t) const override;
    size_t GetBestBlockSize(sampleCount t) const override;
    bool Get(
       size_t iChannel, size_t nBuffers, samplePtr buffers[],
