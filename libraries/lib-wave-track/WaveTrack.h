@@ -326,8 +326,8 @@ private:
    //
 
    // These return a nonnegative number of samples meant to size a memory buffer
-   size_t GetBestBlockSize(sampleCount t) const override;
-   size_t GetMaxBlockSize() const override;
+   size_t GetBestBlockSize(sampleCount t) const;
+   size_t GetMaxBlockSize() const;
    size_t GetIdealBlockSize();
 
    //

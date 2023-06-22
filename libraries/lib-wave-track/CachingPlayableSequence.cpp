@@ -45,16 +45,6 @@ float CachingPlayableSequence::GetChannelGain(int channel) const
    return mWaveTrack.GetChannelGain(channel);
 }
 
-size_t CachingPlayableSequence::GetMaxBlockSize() const
-{
-   return mWaveTrack.GetMaxBlockSize();
-}
-
-size_t CachingPlayableSequence::GetBestBlockSize(sampleCount t) const
-{
-   return mWaveTrack.GetBestBlockSize(t);
-}
-
 bool CachingPlayableSequence::Get(
    size_t iChannel, size_t nBuffers, samplePtr buffers[], sampleFormat format,
    sampleCount start, size_t len, fillFormat fill, bool mayThrow,
