@@ -1434,7 +1434,7 @@ struct ChannelGroup final : TrackPanelGroup {
             yy += height;
             refinement.emplace_back(
                yy - kChannelSeparatorThickness,
-               TrackPanelResizerCell::Get(pChannel->GetTrack())
+               TrackPanelResizerCell::Get(*pChannel)
                   .shared_from_this());
          }
       }
@@ -1589,7 +1589,7 @@ struct ResizingChannelGroup final : TrackPanelGroup {
          std::make_shared<LabeledChannelGroup>(mpTrack, mLeftOffset) },
       { rect.GetTop() + rect.GetHeight() - kTrackSeparatorThickness,
          TrackPanelResizerCell::Get(
-            **TrackList::Channels( mpTrack.get() ).rbegin() ).shared_from_this()
+            **mpTrack->Channels().rbegin()).shared_from_this()
       }
    } }; }
    const std::shared_ptr<Track> mpTrack;

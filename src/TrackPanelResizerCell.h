@@ -14,7 +14,7 @@
 #include "ClientData.h" // to inherit
 #include "tracks/ui/CommonTrackPanelCell.h" // to inherit
 
-class Track;
+class Channel;
 class TrackPanelResizeHandle;
 
 class TrackPanelResizerCell
@@ -25,11 +25,10 @@ class TrackPanelResizerCell
    TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
 public:
 
-   static TrackPanelResizerCell &Get( Track &track );
-   static const TrackPanelResizerCell &Get( const Track &track );
+   static TrackPanelResizerCell &Get(Channel &channel);
+   static const TrackPanelResizerCell &Get(const Channel &channel);
 
-   explicit
-   TrackPanelResizerCell( const std::shared_ptr<Track> &pTrack );
+   explicit TrackPanelResizerCell(Channel &channel);
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *) override;
