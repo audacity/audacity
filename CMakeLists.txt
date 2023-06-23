@@ -198,6 +198,12 @@ cmd_option( ${_OPT}conan_force_build_dependencies
             Off
 )
 
+set( ${_OPT}conan_host_profile ""
+            CACHE PATH "Use conan host profile located at the specified path, instead of the detected one")
+
+set( ${_OPT}conan_build_profile ""
+            CACHE PATH "Use conan build profile located at the specified path, instead of the detected one")
+
 set( ${_OPT}conan_download_cache ""
             CACHE PATH "Use conan download cache located at the specified path")
 
