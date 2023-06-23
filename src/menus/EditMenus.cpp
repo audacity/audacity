@@ -88,92 +88,27 @@ bool DoPasteText(AudacityProject &project)
    return false;
 }
 
-/*
-Track copy helper function. 
-When copying tracks we consider two cases when pasting:
-1. There is no selection
-2. Not empty region is selected
-In the first case we copy all tracks from src (used in simplified paste method
-DoPasteNothingSelected). When selection isn't empty `N = min(src.size(), dst.size())`
-tracks are copied from src, plus the last track from src could be duplicated
-`M = dst.size() - N` times more, if `M > 0` (corresponds to a paste logic after
-`!tracks.Selected()` condition in `OnPaste`). In both cases `ForEachCopiedWaveTrack`
-visits tracks that are to be copied according to behaviour described above.
- */
-void ForEachCopiedWaveTrack(const TrackList& src,
-                            const TrackList& dst,
-                            const std::function<void(const WaveTrack& waveTrack)>& f)
-{
-   if(dst.Selected().empty())
-   {
-      for(auto waveTrack : src.Any<const WaveTrack>())
-         f(*waveTrack);
-   }
-   else
-   {
-      const auto srcTrackRange = src.Any<const WaveTrack>();
-      const auto dstTrackRange = dst.Any<const WaveTrack>();
-      auto srcTrack = srcTrackRange.begin();
-      auto dstTrack = dstTrackRange.begin();
-      auto lastCopiedTrack = srcTrack;
-      while(dstTrack != dstTrackRange.end() && srcTrack != srcTrackRange.end())
-      {
-         if(!(*dstTrack)->GetSelected())
-         {
-            ++dstTrack;
-            continue;
-         }
-         
-         auto srcChannelCount = TrackList::NChannels(**srcTrack);
-         auto dstChannelCount = TrackList::NChannels(**dstTrack);
-                  
-         while(srcChannelCount > 0 && dstChannelCount > 0)
-         {
-            f(**srcTrack);
-            
-            lastCopiedTrack = srcTrack;
-            ++srcTrack;
-            ++dstTrack;
-            --srcChannelCount;
-            --dstChannelCount;
-         }
-         
-         while(dstChannelCount > 0)
-         {
-            f(**lastCopiedTrack);
-            ++dstTrack;
-            --dstChannelCount;
-         }
-      }
-      while(dstTrack != dstTrackRange.end())
-      {
-         if((*dstTrack)->GetSelected() && *lastCopiedTrack)
-            f(**lastCopiedTrack);
-         ++dstTrack;
-      }
-   }
-}
-
 wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
 {
    wxULongLong result{};
-   ForEachCopiedWaveTrack(src, dst, [&](const WaveTrack& waveTrack) {
+   for (auto waveTrack : src.Any<const WaveTrack>()) {
       sampleCount samplesCount = 0;
-      for (auto& clip : waveTrack.GetClips())
+      for (auto& clip : waveTrack->GetClips())
          samplesCount += clip->GetSequenceSamplesCount();
-      result += samplesCount.as_long_long() * SAMPLE_SIZE(waveTrack.GetSampleFormat());
-   });
+      result += samplesCount.as_long_long() *
+         SAMPLE_SIZE(waveTrack->GetSampleFormat());
+   }
    return result;
 }
 
 BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList& dst)
 {
    BlockArray::size_type result{};
-   ForEachCopiedWaveTrack(src, dst, [&](const WaveTrack& waveTrack) {
-      for(auto& clip : waveTrack.GetClips())
+   for (auto waveTrack : src.Any<const WaveTrack>()) {
+      for (auto& clip : waveTrack->GetClips())
          result +=
             clip->GetWidth() * clip->GetSequenceBlockArray(0)->size();
-   });
+   }
    return result;
 }
 
@@ -711,6 +646,9 @@ void OnPaste(const CommandContext &context)
       leaders.first = leaders.first.Filter(&Track::IsLeader);
       leaders.second = leaders.second.Filter(&Track::IsLeader);
       for (auto leader : leaders) {
+         if (iPair == endPair)
+            // Nothing more to paste
+            break;
          if (leader != iPair->first) {
             if (isSyncLocked) {
                // Track is not pasted into but must be adjusted
