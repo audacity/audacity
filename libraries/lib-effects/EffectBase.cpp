@@ -90,7 +90,8 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    auto cleanup = finally( [&] {
       if (!success) {
          if (newTrack) {
-            mTracks->Remove(newTrack);
+            assert(newTrack->IsLeader());
+            mTracks->Remove(*newTrack);
          }
          // On failure, restore the old duration setting
          settings.extra.SetDuration(oldDuration);
@@ -107,6 +108,8 @@ bool EffectBase::DoEffect(EffectSettings &settings,
       auto track = mFactory->Create();
       track->SetName(mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
       newTrack = mTracks->Add(track);
+      // Expect that newly added tracks are always leaders
+      assert(newTrack->IsLeader());
       newTrack->SetSelected(true);
    }
 

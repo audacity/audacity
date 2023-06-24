@@ -1401,8 +1401,11 @@ public:
    ListOfTracks::value_type Replace(
       Track * t, const ListOfTracks::value_type &with);
 
-   //! Remove the Track and return an iterator to what followed it.
-   TrackNodePointer Remove(Track *t);
+   //! Remove a channel group, given the leader
+   /*!
+    @pre `track.IsLeader()`
+    */
+   void Remove(Track &track);
 
    /// Make the list empty
    void Clear(bool sendEvent = true);

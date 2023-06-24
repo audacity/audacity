@@ -222,7 +222,9 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    left->Clear(left->GetStartTime(), left->GetEndTime());
    left->Paste(minStart, outTrack.get());
    outputs.UnlinkChannels(*left);
-   outputs.Remove(right);
+   // Should be a consequence of unlinking:
+   assert(right->IsLeader());
+   outputs.Remove(*right);
    RealtimeEffectList::Get(*left).Clear();
 
    return bResult;

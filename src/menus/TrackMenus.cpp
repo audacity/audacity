@@ -78,12 +78,9 @@ void DoMixAndRender
       }
       if (!toNewTrack)  {
          // Beware iterator invalidation!
-         while (!trackRange.empty()) {
-            const auto leader = *trackRange.first++;
-            auto channels = TrackList::Channels(leader);
-            for (auto &it = channels.first, &end = channels.second; it != end;)
-               tracks.Remove(*it++);
-         }
+         while (!trackRange.empty())
+            // Range iterates over leaders only
+            tracks.Remove(**trackRange.first++);
       }
 
       // Add NEW tracks

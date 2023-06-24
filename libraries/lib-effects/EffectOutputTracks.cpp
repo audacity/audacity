@@ -76,9 +76,10 @@ void EffectOutputTracks::Commit()
       // tracks in the map that must be removed from mTracks.
       while (i < cnt && mOMap[i] != o.get()) {
          const auto t = mIMap[i];
-         if (t)
-            mTracks.Remove(t);
-         ++i;
+         // Class invariant justifies the assertion
+         assert(t && t->IsLeader());
+         i += t->NChannels();
+         mTracks.Remove(*t);
       }
 
       // The output track, still in the list, must also have been placed in
@@ -103,9 +104,10 @@ void EffectOutputTracks::Commit()
    // left at the end of the map that must be removed from mTracks.
    while (i < cnt) {
       const auto t = mIMap[i];
-      if (t)
-         mTracks.Remove(t);
-      ++i;
+      // Class invariant justifies the assertion
+      assert(t && t->IsLeader());
+      i += t->NChannels();
+      mTracks.Remove(*t);
    }
 
    // Reset map
