@@ -597,8 +597,12 @@ bool TrackList::SwapChannels(Track &track)
    return true;
 }
 
-void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
+void TrackList::Permute(const std::vector<Track *> &tracks)
 {
+   std::vector<TrackNodePointer> permutation;
+   for (const auto pTrack : tracks)
+      for (const auto pChannel : Channels(pTrack))
+         permutation.push_back(pChannel->GetNode());
    for (const auto iter : permutation) {
       ListOfTracks::value_type track = *iter.first;
       erase(iter.first);

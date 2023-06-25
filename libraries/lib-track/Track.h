@@ -1370,8 +1370,11 @@ public:
 
    friend class Track;
 
-   //! For use in sorting:  assume each iterator points into this list, no duplications
-   void Permute(const std::vector<TrackNodePointer> &permutation);
+   /*!
+    @pre `tracks` contains pointers only to leader tracks of this, and each of
+    them exactly once
+    */
+   void Permute(const std::vector<Track *> &tracks);
 
    Track *FindById( TrackId id );
 
