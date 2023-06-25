@@ -24,7 +24,7 @@ EffectOutputTracks::EffectOutputTracks(
 
    mOutputTracks = TrackList::Create(mTracks.GetOwner());
 
-   auto trackRange = mTracks.Any() +
+   auto trackRange = mTracks.Leaders() +
       [&] (const Track *pTrack) {
          return allSyncLockSelected
          ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)
@@ -32,9 +32,11 @@ EffectOutputTracks::EffectOutputTracks(
       };
 
    for (auto aTrack : trackRange) {
-      Track *o = mOutputTracks->Add(aTrack->Duplicate());
-      mIMap.push_back(aTrack);
-      mOMap.push_back(o);
+      for (auto pChannel : TrackList::Channels(aTrack)) {
+         Track *o = mOutputTracks->Add(pChannel->Duplicate());
+         mIMap.push_back(pChannel);
+         mOMap.push_back(o);
+      }
    }
    // Invariant is established
    assert(mIMap.size() == mOMap.size());
@@ -44,6 +46,7 @@ EffectOutputTracks::~EffectOutputTracks() = default;
 
 Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
 {
+   assert(t && t->IsLeader());
    mIMap.push_back(nullptr);
    mOMap.push_back(t.get());
    assert(mIMap.size() == mOMap.size());
