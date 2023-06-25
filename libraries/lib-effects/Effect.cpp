@@ -389,42 +389,6 @@ void Effect::GetBounds(
    }
 }
 
-EffectOutputTracks::EffectOutputTracks(
-   TrackList &tracks, bool allSyncLockSelected
-)  : mTracks{ tracks }
-{
-   // Reset map
-   mIMap.clear();
-   mOMap.clear();
-
-   mOutputTracks = TrackList::Create(mTracks.GetOwner());
-
-   auto trackRange = mTracks.Any() +
-      [&] (const Track *pTrack) {
-         return allSyncLockSelected
-         ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)
-         : dynamic_cast<const WaveTrack*>(pTrack) && pTrack->GetSelected();
-      };
-
-   for (auto aTrack : trackRange) {
-      Track *o = mOutputTracks->Add(aTrack->Duplicate());
-      mIMap.push_back(aTrack);
-      mOMap.push_back(o);
-   }
-   // Invariant is established
-   assert(mIMap.size() == mOMap.size());
-}
-
-EffectOutputTracks::~EffectOutputTracks() = default;
-
-Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
-{
-   mIMap.push_back(nullptr);
-   mOMap.push_back(t.get());
-   assert(mIMap.size() == mOMap.size());
-   return mOutputTracks->Add(t);
-}
-
 bool Effect::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return false;
