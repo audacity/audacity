@@ -52,9 +52,6 @@ public:
    // the argument when that is null
    std::shared_ptr<Track> SetFocus( std::shared_ptr<Track> track = {} );
 
-   // Returns TRUE if passed track has the focus
-   bool IsFocused( const Track *track );
-
    // Called to signal changes to a track
    void Updated();
 
@@ -176,11 +173,6 @@ public:
 
    // Set the track focus to a given track or to null
    void Set( Track *pTrack );
-
-   // Not equivalent to pTrack == this->Get(): may return true also for
-   // other channels than the leader
-   // As with Get(), this is not const
-   bool IsFocused( const Track *pTrack );
 
    void SetAccessible( wxWindow &owner,
       std::unique_ptr< TrackPanelAx > pAccessible );
