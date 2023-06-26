@@ -14,12 +14,12 @@
 #include <thread>
 #include "AudioIO.h"
 #include "AudioIOSequences.h"
-#include "CachingPlayableSequence.h"
 #include "commands/CommandContext.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
 #include "SampleTrack.h"
+#include "StretchingSequence.h"
 #include "ViewInfo.h"
 #include "toolbars/ControlToolBar.h"
 #include "ProgressDialog.h"
@@ -214,7 +214,7 @@ TransportSequences MakeTransportTracks(
          + (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
          result.playbackSequences.push_back(
-            std::make_shared<CachingPlayableSequence>(*pTrack));
+            StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
    }
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (nonWaveToo) {
