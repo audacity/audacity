@@ -25,6 +25,7 @@
 #include "../widgets/FileHistory.h"
 #include "../widgets/MissingPluginsErrorDialog.h"
 #include "wxPanelWrapper.h"
+#include "../prefs/ImportExportPrefs.h"
 
 #include "export/ExportFileDialog.h"
 
@@ -33,6 +34,33 @@
 
 // private helper classes and functions
 namespace {
+
+bool ExportWithPrompt(AudacityProject &project,
+                      Exporter &exporter,
+                      const FileExtension& format,
+                      double t0, double t1, bool selectedOnly)
+{
+   bool skipSilenceAtBeginning = ExportSkipSilenceAtBeginning.Read();
+   
+   if(!exporter.SetExportRange(t0, t1, selectedOnly, skipSilenceAtBeginning))
+   {
+      ShowExportErrorDialog(":576",
+                            selectedOnly ? XO("All selected audio is muted.") : XO("All audio is muted."),
+                            XO("Warning"),
+                            false);
+      return false;
+   }
+   
+   const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&project),
+                                           exporter,
+                                           project.GetProjectName(),
+                                           format,
+                                           selectedOnly ? XO("Export Selected Audio") : XO("Export Audio"));
+   if(ret == wxID_OK)
+      return exporter.Process();
+   
+   return false;
+}
 
 void DoExport(AudacityProject &project, const FileExtension &format)
 {
@@ -51,11 +79,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
 
    bool success = false;
    if (bPromptingRequired) {
-      // Do export with prompting.
-      const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&project), e,
-                                                  projectName, format);
-      if(ret == wxID_OK)
-         success = e.Process(false, t0, t1);
+      success = ExportWithPrompt(project, e, format, t0, t1, false);
    }
    else {
       // We either use a configured output path,
@@ -278,12 +302,8 @@ void OnExportSelection(const CommandContext &context)
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    Exporter e{ project };
-
-   const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&project), e,
-                                               project.GetProjectName(),
-                                               {}, XO("Export Selected Audio"));
-   if(ret == wxID_OK)
-      e.Process(true, selectedRegion.t0(), selectedRegion.t1());
+   
+   ExportWithPrompt(project, e, {}, selectedRegion.t0(), selectedRegion.t1(), true);
 }
 
 void OnExportLabels(const CommandContext &context)

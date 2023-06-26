@@ -58,6 +58,8 @@
 
 #include "export/ExportFileDialog.h"
 
+#include "prefs/ImportExportPrefs.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 #endif
@@ -591,9 +593,19 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
    // Do Automatic Export?
    if (m_bAutoExportEnabled) {
+      const auto& tracks = TrackList::Get(mProject);
       Exporter e{ mProject };
+      
+      bool skipSilenceAtBeginning = ExportSkipSilenceAtBeginning.Read();
+      
+      if(!e.SetExportRange(0, tracks.GetEndTime(), false, skipSilenceAtBeginning))
+      {
+         //But there should be at least one recorded track...
+         ShowExportErrorDialog(
+            ":576", XO("All audio is muted."), XO("Warning"), false);
+      }
+      
       bExportOK = e.ProcessFromTimerRecording(
-         0.0, TrackList::Get( mProject ).GetEndTime(),
             m_fnAutoExportFile, m_iAutoExportFormat,
             m_iAutoExportSubFormat);
    }
