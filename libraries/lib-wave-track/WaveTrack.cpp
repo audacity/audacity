@@ -28,8 +28,7 @@ from the project that will own the track.
 
 #include "WaveTrack.h"
 
-
-
+#include "WideClip.h"
 #include "WaveClip.h"
 
 #include <wx/defs.h>
@@ -1987,6 +1986,25 @@ bool WaveTrack::CloseLock() noexcept
    return true;
 }
 
+ClipConstHolders WaveTrack::GetClipInterfaces() const
+{
+  // We're constructing possibly wide clips here, and for this we need to have
+  // access to the other channel-tracks.
+  assert(IsLeader());
+  const auto pOwner = GetOwner();
+  ClipConstHolders wideClips;
+  wideClips.reserve(mClips.size());
+  for (auto clipIndex = 0u; clipIndex < mClips.size(); ++clipIndex) {
+    const auto leftClip = mClips[clipIndex];
+    const auto rightClip =
+        NChannels() == 2u && pOwner
+            ? (*++pOwner->Find<const WaveTrack>(this))->mClips[clipIndex]
+            : nullptr;
+    wideClips.emplace_back(std::make_shared<WideClip>(leftClip, rightClip));
+   }
+   return wideClips;
+}
+
 double WaveTrack::GetStartTime() const
 {
    bool found = false;
@@ -2288,7 +2306,7 @@ ChannelSampleView WaveTrack::GetOneSampleView(
       //    t0 - clipT0 <= 0,
       // then `length >= len`. `as_size_t` won't narrow.
       const auto len = TimeToLongSamples(t1 - clipT0).as_size_t();
-      auto newSegment = clip->GetSampleView(clipS0, len)[0u];
+      auto newSegment = clip->GetSampleView(0u, clipS0, len);
       t0 += newSegment.GetSampleCount().as_double() / GetRate();
       segments.push_back(std::move(newSegment));
    }
