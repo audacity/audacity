@@ -50,11 +50,9 @@ StaffPadTimeAndPitch::StaffPadTimeAndPitch(
 void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
 {
    if (!mTimeAndPitch)
-   {
       // Pass-through
-      mAudioSource.Pull(output, mNumChannels, outputLen);
-      return;
-   }
+      return mAudioSource.Pull(output, outputLen);
+
    auto numOutputSamples = 0u;
    while (numOutputSamples < outputLen)
    {
@@ -75,7 +73,7 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
          while (numRequired > 0)
          {
             const auto numSamplesToFeed = std::min(numRequired, maxBlockSize);
-            PullFromSource(mReadBuffer.Get(), numSamplesToFeed);
+            mAudioSource.Pull(mReadBuffer.Get(), numSamplesToFeed);
             mTimeAndPitch->feedAudio(mReadBuffer.Get(), numSamplesToFeed);
             numRequired -= numSamplesToFeed;
          }
@@ -101,33 +99,6 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
    }
 }
 
-bool StaffPadTimeAndPitch::CanReturnMoreSamples() const
-{
-   // If our audio source isn't empty, we'll have samples to feed
-   // `mTimeAndPitch` with, who in turn will yield some audio.
-
-   // It can also be that our source is empty, but `mTimeAndPitch` still has
-   // samples in its ISTFT buffer. We don't want to miss those ...
-
-   // As for `mNumTrailingZeros`, those are zero-pad samples we had to feed
-   // `mTimeAndPitch´ with such that it can make an STFT window out of it. Those
-   // zeros will be seen by `mTimeAndPitch` as normal input, but for us it will
-   // just be a tail of decaying near-zero values, a resonance of sort. We might
-   // use it for cross-fading later, but for now just do as though it were exact
-   // zeros and avoid delaying whatever `WaveClip` comes after.
-   return !mAudioSource.Empty() ||
-          (mTimeAndPitch &&
-           mTimeAndPitch->getNumAvailableOutputSamples() > mNumTrailingZeros);
-}
-
-void StaffPadTimeAndPitch::PullFromSource(
-   float* const* dst, size_t numSamplesToPull)
-{
-   const auto numSamplesPulled =
-      mAudioSource.Pull(dst, mNumChannels, numSamplesToPull);
-   mNumTrailingZeros += (numSamplesToPull - numSamplesPulled) * mTimeRatio;
-}
-
 void StaffPadTimeAndPitch::BootStretcher()
 {
    if (!mTimeAndPitch)
@@ -145,7 +116,7 @@ void StaffPadTimeAndPitch::BootStretcher()
       while (numRequired > 0)
       {
          const auto numSamplesToFeed = std::min(maxBlockSize, numRequired);
-         PullFromSource(container.Get(), numSamplesToFeed);
+         mAudioSource.Pull(container.Get(), numSamplesToFeed);
          mTimeAndPitch->feedAudio(container.Get(), numSamplesToFeed);
          numRequired -= numSamplesToFeed;
       }

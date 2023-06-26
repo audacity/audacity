@@ -22,11 +22,8 @@ public:
    {
    }
 
-   size_t Pull(
-      float* const* buffer, size_t numChannels,
-      size_t samplesPerChannel) override
+   void Pull(float* const* buffer, size_t samplesPerChannel) override
    {
-      assert(numChannels == mInput.size());
       const auto numFrames = mInput[0].size();
       const auto remainingSamples =
          numFrames > mNumPulledFrames ? numFrames - mNumPulledFrames : 0u;
@@ -34,7 +31,7 @@ public:
          remainingSamples,
          static_cast<decltype(remainingSamples)>(samplesPerChannel));
       const auto numZerosToPad = samplesPerChannel - framesToRead;
-      for (auto i = 0u; i < numChannels; ++i)
+      for (auto i = 0u; i < mInput.size(); ++i)
       {
          const auto in = mInput[i].data() + mNumPulledFrames;
          std::copy(in, in + framesToRead, buffer[i]);
@@ -43,12 +40,6 @@ public:
             0.f);
       }
       mNumPulledFrames += framesToRead;
-      return samplesPerChannel - numZerosToPad;
-   }
-
-   bool Empty() const override
-   {
-      return mNumPulledFrames >= mInput[0].size();
    }
 
 private:
