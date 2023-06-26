@@ -44,6 +44,9 @@ TEST_CASE("Compilation")
          visitor2{ visitor },
          // and move constructor
          visitor3{ OverloadSet{ TestVisitor{}, &X::member } };
+
+      // OverloadSet can be default-constructed, when all the callables can be
+      constexpr auto visitor4 = OverloadSet<TestVisitor>{};
    }
    
    {

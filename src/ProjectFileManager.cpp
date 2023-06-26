@@ -1152,11 +1152,11 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
              newTrack->SetName(trackNameBase);
       }
 
-      newTrack->TypeSwitch([&](WaveTrack *wt) {
+      newTrack->TypeSwitch([&](WaveTrack &wt) {
          if (newRate == 0)
-            newRate = wt->GetRate();
-         auto trackName = wt->GetName();
-         for (auto& clip : wt->GetClips())
+            newRate = wt.GetRate();
+         auto trackName = wt.GetName();
+         for (auto& clip : wt.GetClips())
             clip->SetName(trackName);
       });
    }

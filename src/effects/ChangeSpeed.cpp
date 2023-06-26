@@ -193,20 +193,20 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
    mFactor = 100.0 / (100.0 + m_PercentChange);
 
    mOutputTracks->Any().VisitWhile( bGoodResult,
-      [&](LabelTrack *lt) {
-         if (SyncLock::IsSelectedOrSyncLockSelected(lt))
+      [&](LabelTrack &lt) {
+         if (SyncLock::IsSelectedOrSyncLockSelected(&lt))
          {
-            if (!ProcessLabelTrack(lt))
+            if (!ProcessLabelTrack(&lt))
                bGoodResult = false;
          }
       },
-      [&](WaveTrack *pOutWaveTrack, const Track::Fallthrough &fallthrough) {
-         if (!pOutWaveTrack->GetSelected())
+      [&](auto &&fallthrough){ return [&](WaveTrack &outWaveTrack) {
+         if (!outWaveTrack.GetSelected())
             return fallthrough();
 
          //Get start and end times from track
-         mCurT0 = pOutWaveTrack->GetStartTime();
-         mCurT1 = pOutWaveTrack->GetEndTime();
+         mCurT0 = outWaveTrack.GetStartTime();
+         mCurT1 = outWaveTrack.GetEndTime();
 
          //Set the current bounds to whichever left marker is
          //greater and whichever right marker is less:
@@ -216,18 +216,18 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
             //Transform the marker timepoints to samples
-            auto start = pOutWaveTrack->TimeToLongSamples(mCurT0);
-            auto end = pOutWaveTrack->TimeToLongSamples(mCurT1);
+            auto start = outWaveTrack.TimeToLongSamples(mCurT0);
+            auto end = outWaveTrack.TimeToLongSamples(mCurT1);
 
             //ProcessOne() (implemented below) processes a single track
-            if (!ProcessOne(pOutWaveTrack, start, end))
+            if (!ProcessOne(&outWaveTrack, start, end))
                bGoodResult = false;
          }
          mCurTrackNum++;
-      },
-      [&](Track *t) {
-         if (SyncLock::IsSyncLockSelected(t))
-            t->SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
+      }; },
+      [&](Track &t) {
+         if (SyncLock::IsSyncLockSelected(&t))
+            t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }
    );
 

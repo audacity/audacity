@@ -226,14 +226,14 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
    mTotalStretch = rateSlide.getTotalStretch();
 
    mOutputTracks->Leaders().VisitWhile( bGoodResult,
-      [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
-         if (!(lt->GetSelected() || SyncLock::IsSyncLockSelected(lt)))
+      [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
+         if (!(lt.GetSelected() || SyncLock::IsSyncLockSelected(&lt)))
             return fallthrough();
-         if (!ProcessLabelTrack(lt))
+         if (!ProcessLabelTrack(&lt))
             bGoodResult = false;
-      },
-      [&](WaveTrack *leftTrack, const Track::Fallthrough &fallthrough) {
-         if (!leftTrack->GetSelected())
+      }; },
+      [&](auto &&fallthrough){ return [&](WaveTrack &leftTrack) {
+         if (!leftTrack.GetSelected())
             return fallthrough();
 
          //Get start and end times from selection
@@ -247,11 +247,11 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
-            auto start = leftTrack->TimeToLongSamples(mCurT0);
-            auto end = leftTrack->TimeToLongSamples(mCurT1);
+            auto start = leftTrack.TimeToLongSamples(mCurT0);
+            auto end = leftTrack.TimeToLongSamples(mCurT1);
 
             // TODO: more-than-two-channels
-            auto channels = TrackList::Channels(leftTrack);
+            auto channels = TrackList::Channels(&leftTrack);
             WaveTrack *rightTrack = (channels.size() > 1)
                ? * ++ channels.first
                : nullptr;
@@ -267,23 +267,23 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
                mCurT1 = wxMax(mCurT1, t);
 
                //Transform the marker timepoints to samples
-               start = leftTrack->TimeToLongSamples(mCurT0);
-               end = leftTrack->TimeToLongSamples(mCurT1);
+               start = leftTrack.TimeToLongSamples(mCurT0);
+               end = leftTrack.TimeToLongSamples(mCurT1);
 
                mCurTrackNum++; // Increment for rightTrack, too.
             }
 
             // SBSMS has a fixed sample rate - we just convert to its sample rate and then convert back
-            float srTrack = leftTrack->GetRate();
+            float srTrack = leftTrack.GetRate();
             float srProcess = bLinkRatePitch ? srTrack : 44100.0;
 
             // the resampler needs a callback to supply its samples
             ResampleBuf rb;
-            auto maxBlockSize = leftTrack->GetMaxBlockSize();
+            auto maxBlockSize = leftTrack.GetMaxBlockSize();
             rb.blockSize = maxBlockSize;
             rb.buf.reinit(rb.blockSize, true);
-            rb.leftTrack = leftTrack;
-            rb.rightTrack = rightTrack?rightTrack:leftTrack;
+            rb.leftTrack = &leftTrack;
+            rb.rightTrack = rightTrack ? rightTrack : &leftTrack;
             rb.leftBuffer.reinit(maxBlockSize, true);
             rb.rightBuffer.reinit(maxBlockSize, true);
 
@@ -353,7 +353,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 
             auto warper = createTimeWarper(mCurT0,mCurT1,maxDuration,rateStart,rateEnd,rateSlideType);
 
-            rb.outputLeftTrack = leftTrack->EmptyCopy();
+            rb.outputLeftTrack = leftTrack.EmptyCopy();
             if(rightTrack)
                rb.outputRightTrack = rightTrack->EmptyCopy();
    
@@ -405,16 +405,16 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             if(rightTrack)
                rb.outputRightTrack->Flush();
 
-            Finalize(leftTrack, rb.outputLeftTrack.get(), warper.get());
+            Finalize(&leftTrack, rb.outputLeftTrack.get(), warper.get());
             if(rightTrack)
                Finalize(rightTrack, rb.outputRightTrack.get(), warper.get());
          }
          mCurTrackNum++;
-      },
-      [&](Track *t) {
+      }; },
+      [&](Track &t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels
-         for (auto *channel : TrackList::Channels(t))
+         for (auto *channel : TrackList::Channels(&t))
             if (SyncLock::IsSyncLockSelected(channel))
                channel->SyncLockAdjust(
                   mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);

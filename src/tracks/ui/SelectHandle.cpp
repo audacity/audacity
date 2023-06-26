@@ -117,8 +117,8 @@ namespace
         pTrackView->IsSpectral() &&
         pTrackView->FindTrack() &&
         pTrackView->FindTrack()->TypeSwitch< bool >(
-           [&](const WaveTrack *wt) {
-              const auto &settings = SpectrogramSettings::Get(*wt);
+           [&](const WaveTrack &wt) {
+              const auto &settings = SpectrogramSettings::Get(wt);
               return settings.SpectralSelectionEnabled();
            });
    }
@@ -542,7 +542,7 @@ UIHandle::Result SelectHandle::Click
    bool selectChange = (
       event.LeftDown() &&
       event.ControlDown() &&
-      pTrack->TypeSwitch<bool>( [&](LabelTrack *){
+      pTrack->TypeSwitch<bool>( [&](LabelTrack &){
          // We should reach this, only in default of other hits on glyphs or
          // text boxes.
          bool bShift = event.ShiftDown();
@@ -571,9 +571,9 @@ UIHandle::Result SelectHandle::Click
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip
-      pTrack->TypeSwitch( [&] ( WaveTrack *wt ) {
+      pTrack->TypeSwitch( [&] ( WaveTrack &wt ) {
          auto time = viewInfo.PositionToTime(event.m_x, mRect.x);
-         WaveClip *const selectedClip = wt->GetClipAtTime(time);
+         WaveClip *const selectedClip = wt.GetClipAtTime(time);
          if (selectedClip) {
             viewInfo.selectedRegion.setTimes(
                selectedClip->GetPlayStartTime(), selectedClip->GetPlayEndTime());

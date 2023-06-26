@@ -94,23 +94,23 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
    m_maxNewLength = 0.0;
 
    mOutputTracks->Leaders().VisitWhile( bGoodResult,
-      [&]( LabelTrack *lt, const Track::Fallthrough &fallthrough ) {
-         if ( !(lt->GetSelected() ||
-                (mustSync && SyncLock::IsSyncLockSelected(lt))) )
+      [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
+         if ( !(lt.GetSelected() ||
+                (mustSync && SyncLock::IsSyncLockSelected(&lt))) )
             return fallthrough();
-         if (!ProcessLabelTrack(lt, warper))
+         if (!ProcessLabelTrack(&lt, warper))
             bGoodResult = false;
-      },
+      }; },
 #ifdef USE_MIDI
-      [&]( NoteTrack *nt, const Track::Fallthrough &fallthrough ) {
-         if ( !(nt->GetSelected() || (mustSync && SyncLock::IsSyncLockSelected(nt))) )
+      [&](auto &&fallthrough){ return [&](NoteTrack &nt) {
+         if ( !(nt.GetSelected() || (mustSync && SyncLock::IsSyncLockSelected(&nt))) )
             return fallthrough();
-         if (!ProcessNoteTrack(nt, warper))
+         if (!ProcessNoteTrack(&nt, warper))
             bGoodResult = false;
-      },
+      }; },
 #endif
-      [&]( WaveTrack *leftTrack, const Track::Fallthrough &fallthrough ) {
-         if (!leftTrack->GetSelected())
+      [&](auto &&fallthrough){ return [&](WaveTrack &leftTrack) {
+         if (!leftTrack.GetSelected())
             return fallthrough();
 
          //Get start and end times from selection
@@ -128,7 +128,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
             initer(pSoundTouch.get());
 
             // TODO: more-than-two-channels
-            auto channels = TrackList::Channels(leftTrack);
+            auto channels = TrackList::Channels(&leftTrack);
             auto rightTrack = (channels.size() > 1)
                ? * ++ channels.first
                : nullptr;
@@ -144,37 +144,37 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
                mCurT1 = wxMax(mCurT1, t);
 
                //Transform the marker timepoints to samples
-               auto start = leftTrack->TimeToLongSamples(mCurT0);
-               auto end = leftTrack->TimeToLongSamples(mCurT1);
+               auto start = leftTrack.TimeToLongSamples(mCurT0);
+               auto end = leftTrack.TimeToLongSamples(mCurT1);
 
                //Inform soundtouch there's 2 channels
                pSoundTouch->setChannels(2);
 
                //ProcessStereo() (implemented below) processes a stereo track
                if (!ProcessStereo(pSoundTouch.get(),
-                  leftTrack, rightTrack, start, end, warper))
+                  &leftTrack, rightTrack, start, end, warper))
                   bGoodResult = false;
                mCurTrackNum++; // Increment for rightTrack, too.
             } else {
                //Transform the marker timepoints to samples
-               auto start = leftTrack->TimeToLongSamples(mCurT0);
-               auto end = leftTrack->TimeToLongSamples(mCurT1);
+               auto start = leftTrack.TimeToLongSamples(mCurT0);
+               auto end = leftTrack.TimeToLongSamples(mCurT1);
 
                //Inform soundtouch there's a single channel
                pSoundTouch->setChannels(1);
 
                //ProcessOne() (implemented below) processes a single track
-               if (!ProcessOne(pSoundTouch.get(), leftTrack, start, end, warper))
+               if (!ProcessOne(pSoundTouch.get(), &leftTrack, start, end, warper))
                   bGoodResult = false;
             }
             // pSoundTouch is destroyed here
          }
          mCurTrackNum++;
-      },
-      [&]( Track *t ) {
+      }; },
+      [&](Track &t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels
-         for (auto *channel : TrackList::Channels(t))
+         for (auto *channel : TrackList::Channels(&t))
             if (mustSync && SyncLock::IsSyncLockSelected(channel))
                channel->SyncLockAdjust(mT1, warper.Warp(mT1));
       }

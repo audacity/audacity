@@ -99,28 +99,27 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
    double maxDestLen = 0.0; // used to change selection to generated bit
 
    mOutputTracks->Any().VisitWhile( bGoodResult,
-      [&](LabelTrack *track)
+      [&](LabelTrack &track)
       {
-         if (SyncLock::IsSelectedOrSyncLockSelected(track))
+         if (SyncLock::IsSelectedOrSyncLockSelected(&track))
          {
-            if (!track->Repeat(mT0, mT1, repeatCount))
+            if (!track.Repeat(mT0, mT1, repeatCount))
                bGoodResult = false;
          }
       },
-      [&](WaveTrack *track, const Track::Fallthrough &fallthrough)
-      {
-         if (!track->GetSelected())
+      [&](auto &&fallthrough){ return [&](WaveTrack &track) {
+         if (!track.GetSelected())
             return fallthrough(); // Fall through to next lambda
-         auto start = track->TimeToLongSamples(mT0);
-         auto end = track->TimeToLongSamples(mT1);
+         auto start = track.TimeToLongSamples(mT0);
+         auto end = track.TimeToLongSamples(mT1);
          auto len = end - start;
-         const double tLen = track->LongSamplesToTime(len);
+         const double tLen = track.LongSamplesToTime(len);
          const double tc = mT0 + tLen;
 
          if (len <= 0)
             return;
 
-         auto dest = std::dynamic_pointer_cast<WaveTrack>(track->Copy(mT0, mT1));
+         auto dest = std::dynamic_pointer_cast<WaveTrack>(track.Copy(mT0, mT1));
          std::vector<wxString> clipNames;
          for(auto clip : dest->SortedClipArray())
          {
@@ -135,16 +134,16 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
                return;
             }
-            track->Paste(t0, dest.get());
+            track.Paste(t0, dest.get());
             t0 += tLen;
          }
          if (t0 > maxDestLen)
             maxDestLen = t0;
 
-         auto clips = track->SortedClipArray();
+         auto clips = track.SortedClipArray();
          for(size_t i = 0; i < clips.size(); ++i)
          {
-            const auto eps = 0.5 / track->GetRate();
+            const auto eps = 0.5 / track.GetRate();
             //Find first pasted clip
             if(std::abs(clips[i]->GetPlayStartTime() - tc) > eps)
                continue;
@@ -160,11 +159,11 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          }
 
          nTrack++;
-      },
-      [&](Track *t)
+      }; },
+      [&](Track &t)
       {
-         if( SyncLock::IsSyncLockSelected(t) )
-            t->SyncLockAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
+         if( SyncLock::IsSyncLockSelected(&t) )
+            t.SyncLockAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
       }
    );
 
