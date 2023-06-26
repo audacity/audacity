@@ -653,7 +653,8 @@ void OnPaste(const CommandContext &context)
             if (isSyncLocked) {
                // Track is not pasted into but must be adjusted
                if (t1 != newT1 && t1 <= leader->GetEndTime()) {
-                  leader->SyncLockAdjust(t1, newT1);
+                  for (auto pChannel : TrackList::Channels(leader))
+                     pChannel->SyncLockAdjust(t1, newT1);
                   bPastedSomething = true;
                }
             }
