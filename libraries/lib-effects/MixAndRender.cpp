@@ -13,6 +13,7 @@ Paul Licameli split from Mix.cpp
 #include "BasicUI.h"
 #include "Mix.h"
 #include "RealtimeEffectList.h"
+#include "StretchingSequence.h"
 #include "WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -68,8 +69,9 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    Mixer::Inputs waveArray;
 
    for (auto wt : trackRange) {
-      waveArray.emplace_back(
-         wt->SharedPointer<const SampleTrack>(), GetEffectStages(*wt));
+      const auto stretchingSequence =
+         StretchingSequence::Create(*wt, wt->GetClipInterfaces());
+      waveArray.emplace_back(stretchingSequence, GetEffectStages(*wt));
       tstart = wt->GetStartTime();
       tend = wt->GetEndTime();
       if (tend > mixEndTime)
