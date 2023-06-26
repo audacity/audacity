@@ -52,16 +52,20 @@ float CachingPlayableSequence::GetChannelGain(int channel) const
 
 bool CachingPlayableSequence::Get(
    size_t iChannel, size_t nBuffers, samplePtr buffers[], sampleFormat format,
-   sampleCount start, size_t len, fillFormat fill, bool mayThrow,
-   sampleCount* pNumWithinClips) const
+   sampleCount start, size_t len, bool backwards, fillFormat fill,
+   bool mayThrow, sampleCount* pNumWithinClips) const
 {
-   assert(iChannel + nBuffers <= mWaveTrack.NChannels());
-   mCacheHolders = mWaveTrack.GetSampleView(iChannel, nBuffers, start, len);
-   assert(mCacheHolders.size() == nBuffers);
-   for (auto i = 0u; i < mCacheHolders.size(); ++i)
-      FillBufferFromTrackBlockSequence(
-         mCacheHolders[i], reinterpret_cast<float*>(buffers[i]), len);
-   return !mCacheHolders.empty();
+  // CachingPlayableSequence is only used for spectral display, which doesn't
+  // need backward access. Leaving it unimplemented at least for now.
+  assert(!backwards);
+  assert(iChannel + nBuffers <= mWaveTrack.NChannels());
+  mCacheHolders =
+      mWaveTrack.GetSampleView(iChannel, nBuffers, start, len, backwards);
+  assert(mCacheHolders.size() == nBuffers);
+  for (auto i = 0u; i < mCacheHolders.size(); ++i)
+    FillBufferFromTrackBlockSequence(
+        mCacheHolders[i], reinterpret_cast<float *>(buffers[i]), len);
+  return !mCacheHolders.empty();
 }
 
 double CachingPlayableSequence::GetStartTime() const
@@ -90,9 +94,9 @@ bool CachingPlayableSequence::HasTrivialEnvelope() const
 }
 
 void CachingPlayableSequence::GetEnvelopeValues(
-   double* buffer, size_t bufferLen, double t0) const
+   double* buffer, size_t bufferLen, double t0, bool backwards) const
 {
-   mWaveTrack.GetEnvelopeValues(buffer, bufferLen, t0);
+   mWaveTrack.GetEnvelopeValues(buffer, bufferLen, t0, backwards);
 }
 
 AudioGraph::ChannelType CachingPlayableSequence::GetChannelType() const

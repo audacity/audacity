@@ -55,8 +55,9 @@ public:
       fillFormat fill = fillZero, bool mayThrow = true,
       sampleCount * pNumWithinClips = nullptr) const
    {
+      constexpr auto backwards = false;
       return GetFloats(
-         0, 1, &buffer, start, len, fill, mayThrow, pNumWithinClips);
+         0, 1, &buffer, start, len, backwards, fill, mayThrow, pNumWithinClips);
    }
 };
 
