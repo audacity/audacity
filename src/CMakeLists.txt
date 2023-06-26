@@ -1425,6 +1425,7 @@ set( AUDACITY_LIBRARIES
    lib-time-track-interface
    lib-snapping-interface
    lib-audio-io-interface
+   lib-stretching-sequence-interface
 )
 
 if (USE_VST)
