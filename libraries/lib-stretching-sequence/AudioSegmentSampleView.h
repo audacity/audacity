@@ -22,7 +22,7 @@ ranges.
 
 using BlockSampleView = std::shared_ptr<std::vector<float>>;
 
-class WAVE_TRACK_API AudioSegmentSampleView final
+class STRETCHING_SEQUENCE_API AudioSegmentSampleView final
 {
 public:
    /**
