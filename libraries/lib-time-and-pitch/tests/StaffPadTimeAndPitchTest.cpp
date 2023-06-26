@@ -21,24 +21,6 @@ using namespace std::literals::chrono_literals;
 
 TEST_CASE("StaffPadTimeAndPitch")
 {
-   SECTION("CanReturnMoreSamples")
-   {
-      SECTION("returns false if given an empty source")
-      {
-         TimeAndPitchFakeSource src;
-         src.empty = true;
-         StaffPadTimeAndPitch sut(1u, src, {});
-         REQUIRE_FALSE(sut.CanReturnMoreSamples());
-      }
-
-      SECTION("returns true in pass-through mode")
-      {
-         TimeAndPitchFakeSource src;
-         StaffPadTimeAndPitch sut(1u, src, {});
-         REQUIRE(sut.CanReturnMoreSamples());
-      }
-   }
-
    SECTION("Smoke test")
    {
       using TestParameter =
@@ -82,7 +64,7 @@ TEST_CASE("StaffPadTimeAndPitch")
             StaffPadTimeAndPitch sut(info.numChannels, src, std::move(params));
             constexpr size_t blockSize = 1234u;
             auto offset = 0u;
-            while (sut.CanReturnMoreSamples())
+            while (offset < numOutputFrames)
             {
                std::vector<float*> offsetBuffers(info.numChannels);
                for (auto i = 0u; i < info.numChannels; ++i)
