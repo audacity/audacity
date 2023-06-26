@@ -63,15 +63,16 @@ public:
     @return false when `mayThrow` is false and not all samples could be
        retrieved
     */
-   bool GetFloats(size_t iChannel, size_t nBuffers, float *buffers[],
-      sampleCount start, size_t len,
-      fillFormat fill = fillZero, bool mayThrow = true,
-      sampleCount * pNumWithinClips = nullptr) const
+   bool GetFloats(
+      size_t iChannel, size_t nBuffers, float* buffers[], sampleCount start,
+      size_t len, bool backwards = false, fillFormat fill = fillZero,
+      bool mayThrow = true, sampleCount* pNumWithinClips = nullptr) const
    {
       // Cast the pointers to pass them to Get() which handles multiple
       // destination formats
-      return Get(iChannel, nBuffers, reinterpret_cast<samplePtr*>(buffers),
-         floatSample, start, len, fill, mayThrow, pNumWithinClips);
+      return Get(
+         iChannel, nBuffers, reinterpret_cast<samplePtr*>(buffers), floatSample,
+         start, len, backwards, fill, mayThrow, pNumWithinClips);
    }
 
    //! Retrieve samples of one of the channels from a sequence in a specified
@@ -79,14 +80,17 @@ public:
    /*!
     @copydetails SampleTrack::GetFloats()
     @param format sample format of the destination buffer
+    @param backward retrieves samples from `start` to `start + len` if false,
+       else from `start` to `start - len` in reverse order.
     */
-   virtual bool Get(size_t iChannel, size_t nBuffers, samplePtr buffers[],
-      sampleFormat format, sampleCount start, size_t len,
+   virtual bool Get(
+      size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      sampleFormat format, sampleCount start, size_t len, bool backward,
       fillFormat fill = fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
-      sampleCount * pNumWithinClips = nullptr) const = 0;
+      sampleCount* pNumWithinClips = nullptr) const = 0;
 
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;
@@ -126,8 +130,12 @@ public:
 
    //! Fetch envelope values corresponding to uniformly separated sample times
    //! starting at the given time
-   virtual void GetEnvelopeValues(double *buffer, size_t bufferLen,
-                         double t0) const = 0;
+   /*!
+    @param backwards if true, fetch values in reverse order, from `t0` to
+       `t0 - bufferLen / rate`
+    */
+   virtual void GetEnvelopeValues(
+      double* buffer, size_t bufferLen, double t0, bool backwards) const = 0;
 };
 
 #endif
