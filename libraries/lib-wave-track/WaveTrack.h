@@ -257,7 +257,8 @@ private:
     * @return nBuffers `ChannelSampleView`s, one per channel.
     */
    std::vector<ChannelSampleView> GetSampleView(
-      size_t iChannel, size_t nBuffers, sampleCount start, size_t len) const;
+      size_t iChannel, size_t nBuffers, sampleCount start, size_t len,
+      bool backwards) const;
 
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
@@ -270,13 +271,14 @@ private:
    /// guaranteed that the same samples are affected.
    ///
 
-   bool Get(size_t iChannel, size_t nBuffers, samplePtr buffers[],
-      sampleFormat format, sampleCount start, size_t len,
+   bool Get(
+      size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      sampleFormat format, sampleCount start, size_t len, bool backwards,
       fillFormat fill = fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
-      sampleCount * pNumWithinClips = nullptr) const override;
+      sampleCount* pNumWithinClips = nullptr) const override;
    /*!
     Set samples in the unique channel
     TODO wide wave tracks -- overloads to set one or all channels
@@ -295,8 +297,9 @@ private:
 
    bool HasTrivialEnvelope() const override;
 
-   void GetEnvelopeValues(double *buffer, size_t bufferLen,
-                         double t0) const override;
+   void GetEnvelopeValues(
+      double* buffer, size_t bufferLen, double t0,
+      bool backwards) const override;
 
    // Get min and max from the unique channel
    /*!
@@ -590,10 +593,12 @@ private:
 private:
    void SetClipRates(double newRate);
 
-   bool GetOne(samplePtr buffer, sampleFormat format,
-      sampleCount start, size_t len, fillFormat fill,
-      bool mayThrow, sampleCount * pNumWithinClips) const;
-   ChannelSampleView GetOneSampleView(sampleCount start, size_t len) const;
+   bool GetOne(
+      samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
+      bool backwards, fillFormat fill, bool mayThrow,
+      sampleCount* pNumWithinClips) const;
+   ChannelSampleView
+   GetOneSampleView(sampleCount start, size_t len, bool backwards) const;
 
    void DoSetPan(float value);
    void DoSetGain(float value);

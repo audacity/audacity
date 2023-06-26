@@ -2125,9 +2125,10 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
    return length > 0 ? sqrt(sumsq / length.as_double()) : 0.0;
 }
 
-bool WaveTrack::Get(size_t iChannel, size_t nBuffers, samplePtr buffers[],
-   sampleFormat format, sampleCount start, size_t len, fillFormat fill,
-   bool mayThrow, sampleCount * pNumWithinClips) const
+bool WaveTrack::Get(
+   size_t iChannel, size_t nBuffers, samplePtr buffers[], sampleFormat format,
+   sampleCount start, size_t len, bool backwards, fillFormat fill,
+   bool mayThrow, sampleCount* pNumWithinClips) const
 {
    const auto nChannels = NChannels();
    assert(iChannel + nBuffers <= nChannels); // precondition
@@ -2143,20 +2144,23 @@ bool WaveTrack::Get(size_t iChannel, size_t nBuffers, samplePtr buffers[],
       iter.emplace(pOwner->Find<const WaveTrack>(this).advance(iChannel));
       pTrack = **iter;
    }
-   return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer){
+   return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer) {
       const auto result = pTrack->GetOne(
-         buffer, format, start, len, fill, mayThrow, pNumWithinClips);
+         buffer, format, start, len, backwards, fill, mayThrow,
+         pNumWithinClips);
       if (iter)
          pTrack = *(++ *iter);
       return result;
    });
 }
 
-bool WaveTrack::GetOne(samplePtr buffer,
-   sampleFormat format,
-   sampleCount start, size_t len, fillFormat fill,
-   bool mayThrow, sampleCount * pNumWithinClips) const
+bool WaveTrack::GetOne(
+   samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
+   bool backwards, fillFormat fill, bool mayThrow,
+   sampleCount* pNumWithinClips) const
 {
+   if (backwards)
+      start -= len;
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
    // everything to be on the safe side.
@@ -2232,11 +2236,14 @@ bool WaveTrack::GetOne(samplePtr buffer,
    }
    if( pNumWithinClips )
       *pNumWithinClips = samplesCopied;
+   if (result == true && backwards)
+      ReverseSamples(buffer, format, 0, len);
    return result;
 }
 
 std::vector<ChannelSampleView> WaveTrack::GetSampleView(
-   size_t iChannel, size_t nBuffers, sampleCount start, size_t length) const
+   size_t iChannel, size_t nBuffers, sampleCount start, size_t length,
+   bool backwards) const
 {
    const auto nChannels = NChannels();
    assert(iChannel + nBuffers <= nChannels); // precondition
@@ -2256,16 +2263,18 @@ std::vector<ChannelSampleView> WaveTrack::GetSampleView(
    }
    for (auto i = 0u; i < nBuffers; ++i)
    {
-      result.push_back(pTrack->GetOneSampleView(start, length));
+      result.push_back(pTrack->GetOneSampleView(start, length, backwards));
       if (iter)
          pTrack = *(++*iter);
    }
    return result;
 }
 
-ChannelSampleView
-WaveTrack::GetOneSampleView(sampleCount start, size_t length) const
+ChannelSampleView WaveTrack::GetOneSampleView(
+   sampleCount start, size_t length, bool backwards) const
 {
+   if (backwards)
+      start -= length;
    WaveClipConstHolders intersectingClips;
    auto t0 = LongSamplesToTime(start);
    const auto t1 = t0 + static_cast<double>(length) / GetRate();
@@ -2371,9 +2380,11 @@ bool WaveTrack::HasTrivialEnvelope() const
       [](const auto &pClip){ return pClip->GetEnvelope()->IsTrivial(); });
 }
 
-void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
-                                  double t0) const
+void WaveTrack::GetEnvelopeValues(
+   double* buffer, size_t bufferLen, double t0, bool backwards) const
 {
+   if (backwards)
+      t0 -= bufferLen / GetRate();
    // The output buffer corresponds to an unbroken span of time which the callers expect
    // to be fully valid.  As clips are processed below, the output buffer is updated with
    // envelope values from any portion of a clip, start, end, middle, or none at all.
@@ -2436,6 +2447,8 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
    }
+   if (backwards)
+      std::reverse(buffer, buffer + bufferLen);
 }
 
 // When the time is both the end of a clip and the start of the next clip, the

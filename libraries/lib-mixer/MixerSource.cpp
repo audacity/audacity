@@ -128,28 +128,18 @@ size_t MixerSource::MixVariableRates(
             for (auto& queue : mSampleQueue)
                dst.push_back(queue.data() + queueLen);
             constexpr auto iChannel = 0u;
-            const auto start = backwards ? pos - (getLen - 1) : pos;
             if (!mpLeader->GetFloats(
-                   iChannel, nChannels, dst.data(), start, getLen, fillZero,
-                   mMayThrow))
+                   iChannel, nChannels, dst.data(), pos, getLen, backwards,
+                   fillZero, mMayThrow))
                for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
                   memset(dst[i], 0, sizeof(float) * getLen);
-
-            if (backwards)
-               mpLeader->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (pos - (getLen - 1)).as_double() / sequenceRate);
-            else
-               mpLeader->GetEnvelopeValues(mEnvValues.data(),
-                  getLen, (pos).as_double() / sequenceRate);
-
+            mpLeader->GetEnvelopeValues(
+               mEnvValues.data(), getLen, (pos).as_double() / sequenceRate,
+               backwards);
             for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
                const auto queue = mSampleQueue[iChannel].data();
                for (decltype(getLen) i = 0; i < getLen; i++)
                   queue[(queueLen) + i] *= mEnvValues[i];
-
-               if (backwards)
-                  ReverseSamples((samplePtr)&queue[0], floatSample,
-                                 queueLen, getLen);
             }
 
             if (backwards)
@@ -257,24 +247,19 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
       sampleCount{ (backwards ? t - tEnd : tEnd - t) * sequenceRate + 0.5 }
    );
 
-   const auto start = backwards ? pos - (slen - 1) : pos;
    constexpr auto iChannel = 0u;
    if (!mpLeader->GetFloats(
-          iChannel, nChannels, floatBuffers, start, slen, fillZero, mMayThrow))
+          iChannel, nChannels, floatBuffers, pos, slen, backwards, fillZero,
+          mMayThrow))
       for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
          memset(floatBuffers[iChannel], 0, sizeof(float) * slen);
 
-   if (backwards)
-      mpLeader->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
-   else
-      mpLeader->GetEnvelopeValues(mEnvValues.data(), slen, t);
+   mpLeader->GetEnvelopeValues(mEnvValues.data(), slen, t, backwards);
 
    for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
       const auto pFloat = floatBuffers[iChannel];
       for (size_t i = 0; i < slen; i++)
          pFloat[i] *= mEnvValues[i]; // Track gain control will go here?
-      if (backwards)
-         ReverseSamples((samplePtr)pFloat, floatSample, 0, slen);
    }
 
    if (backwards)
