@@ -28,6 +28,7 @@ using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 
 class TimeWarper;
 
+class ClipInterface;
 class Sequence;
 class WaveClip;
 class AudioSegmentSampleView;
@@ -36,6 +37,8 @@ class AudioSegmentSampleView;
 using WaveClipHolder = std::shared_ptr<WaveClip>;
 using WaveClipHolders = std::vector <WaveClipHolder>;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+
+using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
 
 // Temporary arrays of mere pointers
 using WaveClipPointers = std::vector < WaveClip* >;
@@ -365,6 +368,12 @@ private:
     */
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
+
+   /**
+    * @brief Get access to the (visible) clips in the tracks, in unspecified
+    * order.
+    */
+   ClipConstHolders GetClipInterfaces() const;
 
    // Get mutative access to all clips (in some unspecified sequence),
    // including those hidden in cutlines.
