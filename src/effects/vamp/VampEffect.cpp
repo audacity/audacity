@@ -294,33 +294,13 @@ bool VampEffect::Init()
 {
    mRate = 0.0;
 
-   // PRL: this loop checked that channels of a track have the same rate,
-   // but there was no check that all tracks have one rate, and only the first
+   // PRL: There is no check that all tracks have one rate, and only the first
    // is remembered in mRate.  Is that correct?
 
-   for (auto leader : inputTracks()->Leaders<const WaveTrack>()) {
-      auto channelGroup = TrackList::Channels( leader );
-      auto rate = (*channelGroup.first++) -> GetRate();
-      for(auto channel : channelGroup) {
-         if (rate != channel->GetRate())
-         // PRL:  Track rate might not match individual clip rates.
-         // So is this check not adequate?
-          {
-             // TODO: more-than-two-channels-message
-             EffectUIServices::DoMessageBox(*this,
-                XO(
-"Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match.") );
-             return false;
-         }
-      }
-      if (mRate == 0.0)
-         mRate = rate;
-   }
-
-   if (mRate <= 0.0)
-   {
+   if (inputTracks()->empty())
       mRate = mProjectRate;
-   }
+   else
+      mRate = (*inputTracks()->Leaders<const WaveTrack>().begin())->GetRate();
 
    // The plugin must be reloaded to allow changing parameters
 

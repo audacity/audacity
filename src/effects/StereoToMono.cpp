@@ -93,32 +93,12 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
       if (channels.size() > 1)
       {
          auto right = *channels.rbegin();
-         auto leftRate = left->GetRate();
-         auto rightRate = right->GetRate();
+         auto start = wxMin(left->TimeToLongSamples(left->GetStartTime()),
+                            right->TimeToLongSamples(right->GetStartTime()));
+         auto end = wxMax(left->TimeToLongSamples(left->GetEndTime()),
+                            right->TimeToLongSamples(right->GetEndTime()));
 
-         if (leftRate != rightRate)
-         {
-            if (leftRate != mProjectRate)
-            {
-               mProgress->SetMessage(XO("Resampling left channel"));
-               left->Resample(mProjectRate, mProgress);
-               leftRate = mProjectRate;
-            }
-            if (rightRate != mProjectRate)
-            {
-               mProgress->SetMessage(XO("Resampling right channel"));
-               right->Resample(mProjectRate, mProgress);
-               rightRate = mProjectRate;
-            }
-         }
-         {
-            auto start = wxMin(left->TimeToLongSamples(left->GetStartTime()),
-                               right->TimeToLongSamples(right->GetStartTime()));
-            auto end = wxMax(left->TimeToLongSamples(left->GetEndTime()),
-                               right->TimeToLongSamples(right->GetEndTime()));
-
-            totalTime += (end - start);
-         }
+         totalTime += (end - start);
       }
 
       ++trackRange.first;
