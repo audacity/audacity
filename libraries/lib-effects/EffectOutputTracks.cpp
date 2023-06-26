@@ -64,17 +64,24 @@ void EffectOutputTracks::Commit()
       return;
    }
 
-   auto iterOut = mOutputTracks->ListOfTracks::begin(),
-      iterEnd = mOutputTracks->ListOfTracks::end();
+   auto range = mOutputTracks->Any();
+   std::vector<std::shared_ptr<Track>> channels;
 
    size_t cnt = mOMap.size();
    size_t i = 0;
 
-   for (; iterOut != iterEnd; ++i) {
-      ListOfTracks::value_type o = *iterOut;
+   while (!range.empty()) {
+      auto *const pOutputTrack = *range.first;
+      const auto nChannels = pOutputTrack->NChannels();
+
+      // Get shared pointers to keep the tracks alive after removal from list
+      channels.clear();
+      for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
+         channels.emplace_back((*range.first++)->shared_from_this());
+
       // If tracks were removed from mOutputTracks, then there will be
       // tracks in the map that must be removed from mTracks.
-      while (i < cnt && mOMap[i] != o.get()) {
+      while (i < cnt && mOMap[i] != pOutputTrack) {
          const auto t = mIMap[i];
          // Class invariant justifies the assertion
          assert(t && t->IsLeader());
@@ -87,17 +94,17 @@ void EffectOutputTracks::Commit()
       assert(i < cnt);
 
       // Remove the track from the output list...don't delete it
-      // `o` saves the track itself from deletion
-      iterOut = mOutputTracks->erase(iterOut);
+      mOutputTracks->Remove(*pOutputTrack);
 
       // Find the input track it corresponds to
-      const auto t = mIMap[i];
-      if (!t)
-         // This track was an addition to output tracks; add it to mTracks
-         mTracks.Add(o);
+      if (!mIMap[i])
+         for (auto &o : channels)
+            // This track was an addition to output tracks; add it to mTracks
+            ++i, mTracks.Add(o);
       else
-         // Replace mTracks entry with the new track
-         mTracks.Replace(t, o);
+         for (auto &o : channels)
+            // Replace mTracks entry with the new track
+            mTracks.Replace(mIMap[i++], o);
    }
 
    // If tracks were removed from mOutputTracks, then there may be tracks
