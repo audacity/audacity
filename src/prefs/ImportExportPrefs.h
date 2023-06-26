@@ -43,4 +43,6 @@ class AUDACITY_DLL_API ImportExportPrefs final : public PrefsPanel
    void Populate();
 };
 
+extern AUDACITY_DLL_API BoolSetting ExportSkipSilenceAtBeginning;
+
 #endif

@@ -126,18 +126,62 @@ void Exporter::Configure(const wxFileName &filename, int pluginIndex, int format
    mSubFormat = formatIndex;
 }
 
-bool Exporter::Process(bool selectedOnly, double t0, double t1)
+bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skipSilenceAtBeginning)
 {
-   // Save parms
-   mSelectedOnly = selectedOnly;
-   mT0 = t0;
-   mT1 = t1;
+   double earliestBegin = t0;
+   double latestEnd = t1;
+   int numSelected = 0;
 
-   // Gather track information
-   if (!ExamineTracks()) {
+   auto &tracks = TrackList::Get(*mProject);
+
+   const auto range = ExportUtils::FindExportWaveTracks(tracks, selectedOnly);
+
+   for (auto tr : range) {
+      numSelected++;
+
+      if (tr->GetOffset() < earliestBegin) {
+         earliestBegin = tr->GetOffset();
+      }
+
+      if (tr->GetEndTime() > latestEnd) {
+         latestEnd = tr->GetEndTime();
+      }
+   }
+
+   if (numSelected == 0) {
       return false;
    }
 
+   mT0 = t0;
+   mT1 = t1;
+   mSelectedOnly = selectedOnly;
+   mNumSelected = numSelected;
+   mMono = std::all_of(range.begin(), range.end(), [](const WaveTrack *pTrack){
+      return IsMono(*pTrack) && pTrack->GetPan() == 0.0;
+   });
+
+   // The skipping of silent space could be cleverer and take 
+   // into account clips.
+   // As implemented now, it can only skip initial silent space that 
+   // has no clip before it, and terminal silent space that has no clip 
+   // after it.
+   if (t0 < earliestBegin){
+      // Bug 1904 
+      // Previously we always skipped initial silent space.
+      // Now skipping it is an opt-in option.
+      if (skipSilenceAtBeginning)
+         mT0 = earliestBegin;
+   }
+
+   // We still skip silent space at the end
+   if (mT1 > latestEnd)
+      mT1 = latestEnd;
+
+   return true;
+}
+
+bool Exporter::Process()
+{
    // Check for down mixing
    if (!CheckMix()) {
       return false;
@@ -207,74 +251,6 @@ bool Exporter::Process(
    }
    
    return false;
-}
-
-bool Exporter::ExamineTracks()
-{
-   // Init
-
-   // First analyze the selected audio, perform sanity checks, and provide
-   // information as appropriate.
-
-   // Tally how many are right, left, mono, and make sure at
-   // least one track is selected (if selectedOnly==true)
-
-   double earliestBegin = mT1;
-   double latestEnd = mT0;
-
-   auto &tracks = TrackList::Get(*mProject);
-   
-
-   const auto range = ExportUtils::FindExportWaveTracks(tracks, mSelectedOnly);
-   mMono = std::all_of(range.begin(), range.end(), [](const WaveTrack *pTrack){
-      return IsMono(*pTrack) && pTrack->GetPan() == 0.0;
-   });
-
-   for (auto tr : range) {
-      mNumSelected++;
-
-      if (tr->GetOffset() < earliestBegin) {
-         earliestBegin = tr->GetOffset();
-      }
-
-      if (tr->GetEndTime() > latestEnd) {
-         latestEnd = tr->GetEndTime();
-      }
-   }
-
-   if (mNumSelected == 0) {
-      TranslatableString message;
-      if(mSelectedOnly)
-         message = XO("All selected audio is muted.");
-      else
-         message = XO("All audio is muted.");
-      ShowExportErrorDialog(
-         ":576",
-         message, AudacityExportCaptionStr(), false);
-      return false;
-   }
-
-   // The skipping of silent space could be cleverer and take 
-   // into account clips.
-   // As implemented now, it can only skip initial silent space that 
-   // has no clip before it, and terminal silent space that has no clip 
-   // after it.
-   if (mT0 < earliestBegin){
-      // Bug 1904 
-      // Previously we always skipped initial silent space.
-      // Now skipping it is an opt-in option.
-      bool skipSilenceAtBeginning;
-      gPrefs->Read(wxT("/AudioFiles/SkipSilenceAtBeginning"),
-                                      &skipSilenceAtBeginning, false);
-      if (skipSilenceAtBeginning)
-         mT0 = earliestBegin;
-   }
-
-   // We still skip silent space at the end
-   if (mT1 > latestEnd)
-      mT1 = latestEnd;
-
-   return true;
 }
 
 //
@@ -429,26 +405,14 @@ bool Exporter::ExportTracks(
    return success;
 }
 
-bool Exporter::ProcessFromTimerRecording(double t0,
-                                         double t1,
-                                         wxFileName fnFile,
+bool Exporter::ProcessFromTimerRecording(wxFileName fnFile,
                                          int iFormat,
                                          int iSubFormat)
 {
-   // Save parms
-   mSelectedOnly = false;
-   mT0 = t0;
-   mT1 = t1;
-
    // Auto Export Parameters
    mFilename = fnFile;
    mFormat = iFormat;
    mSubFormat = iSubFormat;
-
-   // Gather track information
-   if (!ExamineTracks()) {
-      return false;
-   }
 
    // Check for down mixing
    if (!CheckMix(false)) {
