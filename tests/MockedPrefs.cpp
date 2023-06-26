@@ -65,7 +65,7 @@ public:
 
    bool HasEntry(const wxString& strName) const override
    {
-      return true;
+      return false;
    }
 
    bool Flush(bool bCurrentOnly = false) override
