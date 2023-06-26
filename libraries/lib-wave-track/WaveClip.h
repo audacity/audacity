@@ -16,6 +16,7 @@
 
 #include "ClientData.h"
 #include "SampleFormat.h"
+#include "ClipInterface.h"
 #include "XMLTagHandler.h"
 #include "SampleCount.h"
 #include "AudioSegmentSampleView.h"
@@ -93,8 +94,10 @@ struct WAVE_TRACK_API WaveClipListener
    virtual void Invalidate() = 0;
 };
 
-class WAVE_TRACK_API WaveClip final : public XMLTagHandler
-   , public ClientData::Site< WaveClip, WaveClipListener >
+class WAVE_TRACK_API WaveClip final :
+    public ClipInterface,
+    public XMLTagHandler,
+    public ClientData::Site<WaveClip, WaveClipListener>
 {
 private:
    // It is an error to copy a WaveClip without specifying the
@@ -143,7 +146,7 @@ public:
 
    //! How many Sequences the clip contains.
    //! Set at construction time; changes only if increased by deserialization
-   size_t GetWidth() const;
+   size_t GetWidth() const override;
 
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
@@ -157,6 +160,8 @@ public:
 
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
+
+   double GetStretchRatio() const override { return 1.0; }
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
@@ -176,14 +181,14 @@ public:
    //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
-   double GetPlayStartTime() const noexcept;
+   double GetPlayStartTime() const noexcept override;
    void SetPlayStartTime(double time);
 
-   double GetPlayEndTime() const;
+   double GetPlayEndTime() const override;
 
    sampleCount GetPlayStartSample() const;
    sampleCount GetPlayEndSample() const;
-   sampleCount GetPlaySamplesCount() const;
+   sampleCount GetPlaySamplesCount() const override;
 
    //! Sets the play start offset in seconds from the beginning of the underlying sequence
    void SetTrimLeft(double trim);
@@ -226,12 +231,11 @@ public:
     * available from the returned view is queried through
     * `AudioSegmentSampleView::GetSampleCount()`.
     *
-    * @param ii identifies the channel
     * @param start index of first clip sample from play start
-    * @pre `ii < GetWidth()`
+    * @pre `iChannel < GetWidth()`
     */
-   AudioSegmentSampleView
-   GetSampleView(size_t ii, sampleCount start, size_t length) const;
+   AudioSegmentSampleView GetSampleView(
+      size_t iChannel, sampleCount start, size_t length) const override;
 
    //! Get samples from one channel
    /*!
