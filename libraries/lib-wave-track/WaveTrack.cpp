@@ -310,7 +310,7 @@ void WaveTrack::Reinit(const WaveTrack &orig)
       pChannel->Init(**iter);
 
       // Copy attached data from orig.  Nullify data in this where orig had null.
-      Attachments &attachments = *pChannel;
+      SampleTrack::Attachments &attachments = *pChannel;
       attachments = **iter;
       ++iter;
    }
@@ -320,7 +320,7 @@ void WaveTrack::Merge(const Track &orig)
 {
    orig.TypeSwitch( [&](const WaveTrack &wt) {
       // Copy attached data from orig.  Nullify data in this where orig had null.
-      Attachments &attachments = *this;
+      SampleTrack::Attachments &attachments = *this;
       attachments = wt;
    });
 }

@@ -18,7 +18,10 @@
  Extends the interface for random access into a sample stream with tests for
  muting and solo
  */
-struct MIXER_API PlayableSequence : WideSampleSequence {
+struct MIXER_API PlayableSequence
+   // TODO wide wave tracks -- remove virtual
+   : virtual WideSampleSequence
+{
    ~PlayableSequence() override;
 
    virtual bool IsLeader() const = 0; //!< To be removed

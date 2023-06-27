@@ -16,6 +16,7 @@
 #include "SampleCount.h"
 #include "SampleFormat.h"
 #include "SampleTrack.h"
+#include "WideSampleSequence.h"
 
 #include <vector>
 #include <functional>
@@ -55,7 +56,10 @@ using ChannelSampleView = std::vector<AudioSegmentSampleView>;
 class Envelope;
 class WaveTrack;
 
-class WAVE_TRACK_API WaveChannel : public Channel
+class WAVE_TRACK_API WaveChannel
+   : public Channel
+   // TODO wide wave tracks -- remove "virtual"
+   , public virtual WideSampleSequence
 {
 public:
    ~WaveChannel() override;
@@ -66,6 +70,7 @@ public:
 
 class WAVE_TRACK_API WaveTrack final
    : public WritableSampleTrack
+   // TODO wide wave tracks -- remove this base class
    , public WaveChannel
 {
 public:
