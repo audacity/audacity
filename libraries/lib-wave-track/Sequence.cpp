@@ -1114,6 +1114,26 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
    return true;
 }
 
+AudioSegmentSampleView
+Sequence::GetFloatSampleView(sampleCount start, size_t length) const
+{
+   assert(start < mNumSamples);
+   length = limitSampleBufferSize(length, mNumSamples - start);
+   std::vector<BlockSampleView> blockViews;
+   // `sequenceOffset` cannot be larger than `GetMaxBlockSize()`, a `size_t` =>
+   // no narrowing possible.
+   const auto sequenceOffset = (start - GetBlockStart(start)).as_size_t();
+   auto cursor = start;
+   while (cursor < start + length)
+   {
+      const auto b = FindBlock(cursor);
+      const SeqBlock& block = mBlock[b];
+      blockViews.push_back(block.sb->GetFloatSampleView());
+      cursor = block.start + block.sb->GetSampleCount();
+   }
+   return { std::move(blockViews), sequenceOffset, length };
+}
+
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, bool mayThrow) const
 {
@@ -1268,7 +1288,7 @@ void Sequence::SetSamples(constSamplePtr buffer, sampleFormat format,
    std::copy( mBlock.begin() + b, mBlock.end(), std::back_inserter(newBlock) );
 
    CommitChangesIfConsistent( newBlock, mNumSamples, wxT("SetSamples") );
-   
+
    mSampleFormats.UpdateEffective(effectiveFormat);
 }
 

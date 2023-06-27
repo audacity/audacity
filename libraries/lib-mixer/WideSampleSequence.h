@@ -44,21 +44,6 @@ public:
    //! may change asynchronously
    virtual float GetChannelGain(int channel) const = 0;
 
-   /*!
-    @return a nonnegative number of samples meant to size a memory buffer
-    */
-   virtual size_t GetMaxBlockSize() const = 0;
-
-   /*!
-    @return a possibly large or negative value
-    */
-   virtual sampleCount GetBlockStart(sampleCount t) const = 0;
-
-   /*!
-    @return a nonnegative number of samples meant to size a memory buffer
-    */
-   virtual size_t GetBestBlockSize(sampleCount t) const = 0;
-
    //! Retrieve samples from a sequence in floating-point format, regardless of
    //! the storage format
    /*!
@@ -74,7 +59,7 @@ public:
        clips, rather than filled according to fillFormat; but these were not
        necessarily one contiguous range.
 
-    @pre `nBuffers - iChannel <= NChannels()`
+    @pre `iChannel + nBuffers <= NChannels()`
     @return false when `mayThrow` is false and not all samples could be
        retrieved
     */

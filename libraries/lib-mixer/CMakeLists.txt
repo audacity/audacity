@@ -32,8 +32,6 @@ set( SOURCES
    MixerOptions.h
    MixerSource.cpp
    MixerSource.h
-   SampleTrackCache.cpp
-   SampleTrackCache.h
    WideSampleSequence.cpp
    WideSampleSequence.h
    WideSampleSource.cpp

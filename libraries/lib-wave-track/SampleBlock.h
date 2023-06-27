@@ -11,6 +11,7 @@ SampleBlock.h
 
 #include "GlobalVariable.h"
 #include "SampleFormat.h"
+#include "AudioSegmentSampleView.h"
 
 #include <functional>
 #include <memory>
@@ -52,7 +53,7 @@ public:
    virtual ~SampleBlock();
 
    virtual void CloseLock() noexcept = 0;
-   
+
    virtual SampleBlockID GetBlockID() const = 0;
 
    // If !mayThrow and there is an error, ignores it and returns zero.
@@ -61,6 +62,8 @@ public:
                      sampleFormat destformat,
                      size_t sampleoffset,
                      size_t numsamples, bool mayThrow = true);
+
+   virtual BlockSampleView GetFloatSampleView() = 0;
 
    virtual size_t GetSampleCount() const = 0;
 

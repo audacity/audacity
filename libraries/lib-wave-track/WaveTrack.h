@@ -30,6 +30,7 @@ class TimeWarper;
 
 class Sequence;
 class WaveClip;
+class AudioSegmentSampleView;
 
 //! Clips are held by shared_ptr, not for sharing, but to allow weak_ptr
 using WaveClipHolder = std::shared_ptr<WaveClip>;
@@ -39,6 +40,8 @@ using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 // Temporary arrays of mere pointers
 using WaveClipPointers = std::vector < WaveClip* >;
 using WaveClipConstPointers = std::vector < const WaveClip* >;
+
+using ChannelSampleView = std::vector<AudioSegmentSampleView>;
 
 //
 // Tolerance for merging wave tracks (in seconds)
@@ -247,6 +250,13 @@ private:
    bool GetSolo() const override;
    //! @}
 
+   /*!
+    * @pre `iChannel + nBuffers <= NChannels()`
+    * @return nBuffers `ChannelSampleView`s, one per channel.
+    */
+   std::vector<ChannelSampleView> GetSampleView(
+      size_t iChannel, size_t nBuffers, sampleCount start, size_t len) const;
+
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
    /// have a continuous space of samples anymore, but we simulate it,
@@ -315,11 +325,9 @@ private:
    // and alignment for efficiency
    //
 
-   sampleCount GetBlockStart(sampleCount t) const override;
-
    // These return a nonnegative number of samples meant to size a memory buffer
-   size_t GetBestBlockSize(sampleCount t) const override;
-   size_t GetMaxBlockSize() const override;
+   size_t GetBestBlockSize(sampleCount t) const;
+   size_t GetMaxBlockSize() const;
    size_t GetIdealBlockSize();
 
    //
@@ -437,12 +445,12 @@ private:
    {
       return { AllClipsIterator{ *this }, AllClipsIterator{ } };
    }
-   
+
    IteratorRange< AllClipsConstIterator > GetAllClips() const
    {
       return { AllClipsConstIterator{ *this }, AllClipsConstIterator{ } };
    }
-   
+
    //! Create new clip and add it to this track.
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
@@ -578,6 +586,7 @@ private:
    bool GetOne(samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len, fillFormat fill,
       bool mayThrow, sampleCount * pNumWithinClips) const;
+   ChannelSampleView GetOneSampleView(sampleCount start, size_t len) const;
 
    void DoSetPan(float value);
    void DoSetGain(float value);

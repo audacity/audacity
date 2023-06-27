@@ -44,6 +44,7 @@ from the project that will own the track.
 
 #include "float_cast.h"
 
+#include "AudioSegmentSampleView.h"
 #include "Envelope.h"
 #include "Sequence.h"
 
@@ -152,8 +153,8 @@ bool AreAligned(const WaveClipPointers& a, const WaveClipPointers& b)
       return false;
 
    const auto compare = [](const WaveClip* a, const WaveClip* b) {
-      // clips are aligned if both sequence start/end 
-      // points and play start/end points of the first clip match 
+      // clips are aligned if both sequence start/end
+      // points and play start/end points of the first clip match
       // the corresponding points of the other clip
       return a->GetPlayStartTime() == b->GetPlayStartTime() &&
          a->GetSequenceStartTime() == b->GetSequenceStartTime() &&
@@ -268,7 +269,7 @@ void WaveTrack::Init(const WaveTrack &orig)
 {
    WritableSampleTrack::Init(orig);
    mpFactory = orig.mpFactory;
-   
+
    mFormat = orig.mFormat;
    mWaveColorIndex = orig.mWaveColorIndex;
 }
@@ -754,9 +755,9 @@ void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 }
 
 namespace {
-   
+
    //Internal structure, which is supposed to contain
-   //data related to clip boundaries, and used during 
+   //data related to clip boundaries, and used during
    //ClearAndPaste to restore old splits after new
    //data is pasted
    struct SplitInfo
@@ -790,7 +791,7 @@ namespace {
 // cleared range, but, in most cases, effects want to preserve
 // the existing cut/split lines, trimmed data and clip names,
 // so they are saved before the HandleClear()/Paste() and restored after.
-// When pasted track has split lines with hidden data at same places 
+// When pasted track has split lines with hidden data at same places
 // as the target one, then only targets hidden data is preserved, and
 // hidden data from pasted track is discarded.
 //
@@ -972,7 +973,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
             auto success = target.Paste(target.GetPlayStartTime(), src);
             assert(success); // because of precondition above
             target.SetTrimLeft(trim);
-            //Play start time needs to be adjusted after 
+            //Play start time needs to be adjusted after
             //prepending data to the sequence
             target.Offset(-trim);
          };
@@ -983,7 +984,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
             assert(target.GetTrimRight() == 0);
             if (target.GetTrimRight() != 0)
                return;
-            
+
             auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
             auto success = target.Paste(target.GetPlayEndTime(), src);
             assert(success); // because of precondition above
@@ -1378,7 +1379,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
             SplitAt(t0);
         }
         //else if there is a clip at t0 insert new clip inside it and ...
-       
+
         // ... move everything to the right
         for (const auto& clip : mClips)
         {
@@ -1478,7 +1479,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
             newClip->Offset(t0);
             newClip->MarkChanged();
             if (pastingFromTempTrack)
-                //Clips from the tracks which aren't bound to any TrackList are 
+                //Clips from the tracks which aren't bound to any TrackList are
                 //considered to be new entities, thus named using "new" name template
                 newClip->SetName(MakeNewClipName());
             else
@@ -1522,7 +1523,7 @@ void WaveTrack::Paste(double t0, const Track *src)
       PasteWaveTrack(t0, other);
    else
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      (void)0;// Empty if intentional.   
+      (void)0;// Empty if intentional.
 }
 
 void WaveTrack::Silence(double t0, double t1)
@@ -1714,7 +1715,7 @@ void WaveTrack::Join(double t0, double t1)
    //preserve left trim data if any
    newClip = CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
       clipsToDelete[0]->GetName());
-   
+
    for (const auto &clip : clipsToDelete)
    {
       //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
@@ -1749,24 +1750,6 @@ bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
    constSamplePtr buffers[]{ buffer };
    return RightmostOrNewClip()
       ->Append(buffers, format, len, stride, effectiveFormat);
-}
-
-sampleCount WaveTrack::GetBlockStart(sampleCount s) const
-{
-   for (const auto &clip : mClips)
-   {
-      const auto startSample = clip->GetPlayStartSample();
-      const auto endSample = clip->GetPlayEndSample();
-      if (s >= startSample && s < endSample)
-      {
-         // ignore extra channels (this function will soon be removed)
-         auto blockStartOffset = clip->GetSequence(0)
-            ->GetBlockStart(clip->ToSequenceSamples(s));
-         return std::max(startSample, clip->GetSequenceStartSample() + blockStartOffset);
-      }
-   }
-
-   return -1;
 }
 
 size_t WaveTrack::GetBestBlockSize(sampleCount s) const
@@ -2128,7 +2111,7 @@ bool WaveTrack::Get(size_t iChannel, size_t nBuffers, samplePtr buffers[],
    bool mayThrow, sampleCount * pNumWithinClips) const
 {
    const auto nChannels = NChannels();
-   assert(nBuffers - iChannel <= nChannels); // precondition
+   assert(iChannel + nBuffers <= nChannels); // precondition
    const auto pOwner = GetOwner();
    if (!pOwner) {
       //! an un-owned track should have reported one channel only
@@ -2136,9 +2119,11 @@ bool WaveTrack::Get(size_t iChannel, size_t nBuffers, samplePtr buffers[],
       nBuffers = std::min<size_t>(nBuffers, 1);
    }
    std::optional<TrackIter<const WaveTrack>> iter;
-   if (pOwner)
-      iter.emplace(pOwner->Find<const WaveTrack>(this));
    auto pTrack = this;
+   if (pOwner) {
+      iter.emplace(pOwner->Find<const WaveTrack>(this).advance(iChannel));
+      pTrack = **iter;
+   }
    return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer){
       const auto result = pTrack->GetOne(
          buffer, format, start, len, fill, mayThrow, pNumWithinClips);
@@ -2229,6 +2214,76 @@ bool WaveTrack::GetOne(samplePtr buffer,
    if( pNumWithinClips )
       *pNumWithinClips = samplesCopied;
    return result;
+}
+
+std::vector<ChannelSampleView> WaveTrack::GetSampleView(
+   size_t iChannel, size_t nBuffers, sampleCount start, size_t length) const
+{
+   const auto nChannels = NChannels();
+   assert(iChannel + nBuffers <= nChannels); // precondition
+   const auto pOwner = GetOwner();
+   if (!pOwner)
+   {
+      //! an un-owned track should have reported one channel only
+      assert(nChannels == 1);
+      nBuffers = std::min<size_t>(nBuffers, 1);
+   }
+   std::vector<ChannelSampleView> result;
+   std::optional<TrackIter<const WaveTrack>> iter;
+   auto pTrack = this;
+   if (pOwner) {
+      iter.emplace(pOwner->Find<const WaveTrack>(this).advance(iChannel));
+      pTrack = **iter;
+   }
+   for (auto i = 0u; i < nBuffers; ++i)
+   {
+      result.push_back(pTrack->GetOneSampleView(start, length));
+      if (iter)
+         pTrack = *(++*iter);
+   }
+   return result;
+}
+
+ChannelSampleView
+WaveTrack::GetOneSampleView(sampleCount start, size_t length) const
+{
+   WaveClipConstHolders intersectingClips;
+   auto t0 = LongSamplesToTime(start);
+   const auto t1 = t0 + static_cast<double>(length) / GetRate();
+   for (const auto& clip : mClips)
+      if (t0 < clip->GetPlayEndTime() && clip->GetPlayStartTime() < t1)
+         intersectingClips.push_back(clip);
+   if (intersectingClips.empty())
+      return { AudioSegmentSampleView(length) };
+   std::sort(
+      intersectingClips.begin(), intersectingClips.end(),
+      [](const auto& a, const auto& b) {
+         return a->GetPlayStartTime() < b->GetPlayStartTime();
+      });
+   std::vector<AudioSegmentSampleView> segments;
+   segments.reserve(intersectingClips.size());
+   for (auto i = 0u; i < intersectingClips.size();++i)
+   {
+      const auto& clip = intersectingClips[i];
+      const auto clipStartTime = clip->GetPlayStartTime();
+      if (t0 < clipStartTime) {
+         const auto numSamples = TimeToLongSamples(clipStartTime - t0);
+         segments.push_back(AudioSegmentSampleView(numSamples));
+         t0 = clipStartTime;
+      }
+      const auto clipT0 = t0 - clipStartTime;
+      const auto clipS0 = TimeToLongSamples(clipT0);
+      // By substitution,
+      //    (len - length) / rate = t0 - clipT0,
+      // and since
+      //    t0 - clipT0 <= 0,
+      // then `length >= len`. `as_size_t` won't narrow.
+      const auto len = TimeToLongSamples(t1 - clipT0).as_size_t();
+      auto newSegment = clip->GetSampleView(0u, clipS0, len);
+      t0 += newSegment.GetSampleCount().as_double() / GetRate();
+      segments.push_back(std::move(newSegment));
+   }
+   return segments;
 }
 
 /*! @excsafety{Weak} */
@@ -2368,7 +2423,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
 // latter clip is returned.
 WaveClip* WaveTrack::GetClipAtTime(double time)
 {
-   
+
    const auto clips = SortedClipArray();
    auto p = std::find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
       return time >= clip->GetPlayStartTime() && time <= clip->GetPlayEndTime(); });
@@ -2539,8 +2594,8 @@ bool WaveTrack::CanInsertClip(
          // clips overlap.
          // Try to rescue it.
          // The rescue logic is not perfect, and will typically
-         // move the clip at most once.  
-         // We divide by 1000 rather than set to 0, to allow for 
+         // move the clip at most once.
+         // We divide by 1000 rather than set to 0, to allow for
          // a second 'micro move' that is really about rounding error.
 
          // VS: clip could be moved more than once, moving it in opposite
@@ -2583,7 +2638,7 @@ void WaveTrack::SplitAt(double t)
          auto newClip = std::make_shared<WaveClip>(*c, mpFactory, true);
          c->TrimRightTo(t);// put t on a sample
          newClip->TrimLeftTo(t);
-         
+
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
          mClips.push_back(std::move(newClip)); // transfer ownership
@@ -2669,7 +2724,7 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
    // use Strong-guarantee
    bool success = clip1->Paste(clip1->GetPlayEndTime(), *clip2);
    assert(success);  // assuming clips of the same track must have same width
-   
+
    // use No-fail-guarantee for the rest
    // Delete second clip
    auto it = FindClip(mClips, clip2);

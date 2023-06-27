@@ -32,9 +32,9 @@ Paul Licameli split from WaveTrackView.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "CachingPlayableSequence.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../ProjectSettings.h"
-#include "SampleTrackCache.h"
 #include "WaveTrackLocation.h"
 
 #include <wx/dcmemory.h>
@@ -311,12 +311,13 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
       return AColor::ColorGradientEdge;
    if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0))
       return  AColor::ColorGradientTimeAndFrequencySelected;
-   
+
    return  AColor::ColorGradientTimeSelected;
 }
 
 void DrawClipSpectrum(TrackPanelDrawingContext &context,
-                                   SampleTrackCache &waveTrackCache,
+                                   const WideSampleSequence &sequence,
+                                   const WaveTrack* track,
                                    const WaveClip *clip,
                                    const wxRect &rect,
                                    const std::shared_ptr<SpectralData> &mpSpectralData,
@@ -341,8 +342,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       return;
    }
 
-   const auto track =
-      dynamic_cast<const WaveTrack*>(waveTrackCache.GetSequence().get());
    if (!track)
       // Leave a blank rectangle.
       // TODO: rewrite GetSpectrumBounds so it is
@@ -417,10 +416,9 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    bool updated;
    {
       const double pps = averagePixelsPerSample * rate;
-      updated = WaveClipSpectrumCache::Get( *clip ).GetSpectrogram( *clip,
-         waveTrackCache, freq, where,
-         (size_t)hiddenMid.width,
-         t0, pps);
+      updated = WaveClipSpectrumCache::Get(*clip).GetSpectrogram(
+         *clip, sequence, freq, settings, where, (size_t)hiddenMid.width, t0,
+         pps);
    }
    auto nBins = settings.NBins();
 
@@ -676,7 +674,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          specCache.where[ii - begin] = sampleCount(0.5 + rate * time);
       }
       specCache.Populate
-         (settings, waveTrackCache,
+         (settings, sequence,
           0, 0, numPixels,
           clip->GetPlaySamplesCount(),
           tOffset, rate,
@@ -774,7 +772,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             advanceFreqBinIter(yyToFreqBin(0));
          }
       }
-   
+
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          if(onBrushTool)
             maybeSelected = false;
@@ -863,10 +861,11 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
    TrackArt::DrawBackgroundWithSelection(
       context, rect, track, blankSelectedBrush, blankBrush );
 
-   SampleTrackCache cache(track->SharedPointer<const WaveTrack>());
+   const CachingPlayableSequence cachingSequence { *track };
    for (const auto &clip: track->GetClips()){
-      DrawClipSpectrum( context, cache, clip.get(), rect,
-                        mpSpectralData, clip.get() == selectedClip);
+      DrawClipSpectrum(
+         context, cachingSequence, track, clip.get(), rect, mpSpectralData,
+         clip.get() == selectedClip);
    }
 
    DrawBoldBoundaries( context, track, rect );
@@ -892,7 +891,7 @@ void SpectrumView::Draw(
          FindTrack()->SubstitutePendingChangedTrack());
 
       const auto artist = TrackArtist::Get( context );
-      
+
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
@@ -900,10 +899,10 @@ void SpectrumView::Draw(
 
       auto waveTrackView = GetWaveTrackView().lock();
       wxASSERT(waveTrackView.use_count());
-      
+
       auto seletedClip = waveTrackView->GetSelectedClip().lock();
       DoDraw( context, wt.get(), seletedClip.get(), rect );
-      
+
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
