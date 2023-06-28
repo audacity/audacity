@@ -15,6 +15,7 @@
 #include "SampleCount.h"
 #include "SampleFormat.h"
 #include "SampleTrack.h"
+#include "WaveClipList.h"
 
 #include <vector>
 #include <functional>
@@ -362,12 +363,12 @@ private:
    /*!
     @post all pointers are non-null
     */
-   WaveClipHolders &GetClips() { return mClips; }
+   WaveClipHolders &GetClips() { return mClipList.Get(); }
    /*!
     @copydoc GetClips
     */
    const WaveClipConstHolders &GetClips() const
-      { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
+      { return reinterpret_cast< const WaveClipConstHolders& >( mClipList.Get() ); }
 
    /**
     * @brief Get access to the (visible) clips in the tracks, in unspecified
@@ -387,7 +388,7 @@ private:
       // Construct a "begin" iterator
       explicit AllClipsIterator( WaveTrack &track )
       {
-         push( track.mClips );
+         push( track.mClipList.Get() );
       }
 
       WaveClip *operator * () const
@@ -411,9 +412,9 @@ private:
 
    private:
 
-      void push( WaveClipHolders &clips );
+      void push(const WaveClipHolders &clips );
 
-      using Iterator = WaveClipHolders::iterator;
+      using Iterator = WaveClipHolders::const_iterator;
       using Pair = std::pair< Iterator, Iterator >;
       using Stack = std::vector< Pair >;
 
@@ -582,11 +583,10 @@ private:
    //
    // Protected variables
    //
-
-   /*!
+    /*!
     @invariant all are non-null and match `this->GetWidth()`
     */
-   WaveClipHolders mClips;
+   WaveClipList mClipList;
 
    sampleFormat  mFormat;
    int           mLegacyRate{ 0 }; //!< used only during deserialization

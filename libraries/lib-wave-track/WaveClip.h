@@ -445,6 +445,11 @@ public:
    constSamplePtr GetAppendBuffer(size_t ii) const;
    size_t GetAppendBufferLen() const;
 
+   void SetProjectTempo(double newTempo)
+   {
+      // Planned for use in https://github.com/audacity/audacity/issues/4850
+   }
+
 private:
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
