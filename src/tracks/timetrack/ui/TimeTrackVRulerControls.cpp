@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "AllThemeResources.h"
+#include "../../ui/ChannelView.h"
 #include "ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "Theme.h"
@@ -67,16 +68,16 @@ std::vector<UIHandlePtr> TimeTrackVRulerControls::HitTest(
 
 void TimeTrackVRulerControls::Draw(
    TrackPanelDrawingContext &context,
-   const wxRect &rect_, unsigned iPass )
+   const wxRect &rect_, unsigned iPass)
 {
    TrackVRulerControls::Draw( context, rect_, iPass );
 
    // Draw on a later pass because the bevel overpaints one pixel
    // out of bounds on the bottom
 
-   if ( iPass == TrackArtist::PassControls ) {
+   if (iPass == TrackArtist::PassControls) {
       auto t = FindTrack();
-      if ( !t )
+      if (!t)
          return;
 
       auto rect = rect_;
@@ -92,8 +93,10 @@ void TimeTrackVRulerControls::Draw(
       // Right align the ruler
       wxRect rr = rect;
       rr.width--;
-      if (t && t->vrulerSize.first < rect.GetWidth()) {
-         int adj = rr.GetWidth() - t->vrulerSize.first;
+      auto &size =
+         ChannelView::Get(*static_cast<TimeTrack*>(t.get())).vrulerSize;
+      if (size.first < rect.GetWidth()) {
+         int adj = rr.GetWidth() - size.first;
          rr.x += adj;
          rr.width -= adj;
       }
@@ -102,14 +105,14 @@ void TimeTrackVRulerControls::Draw(
 
       auto vruler = &ruler();
 
-      vruler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
+      vruler->SetTickColour(theTheme.Colour(clrTrackPanelText));
       vruler->Draw(*dc);
    }
 }
 
-void TimeTrackVRulerControls::UpdateRuler( const wxRect &rect )
+void TimeTrackVRulerControls::UpdateRuler(const wxRect &rect)
 {
-   const auto tt = std::static_pointer_cast< TimeTrack >( FindTrack() );
+   const auto tt = std::static_pointer_cast<TimeTrack>(FindTrack());
    if (!tt)
       return;
    auto vruler = &ruler();
@@ -119,7 +122,8 @@ void TimeTrackVRulerControls::UpdateRuler( const wxRect &rect )
    max = tt->GetRangeUpper() * 100.0;
 
    vruler->SetDbMirrorValue( 0.0 );
-   vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height-1);
+   vruler->SetBounds(
+      rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
    vruler->SetOrientation(wxVERTICAL);
    vruler->SetRange(max, min);
    vruler->SetFormat(tt->GetDisplayLog()
@@ -132,5 +136,6 @@ void TimeTrackVRulerControls::UpdateRuler( const wxRect &rect )
    else
       vruler->SetUpdater(&LinearUpdater::Instance());
 
-   vruler->GetMaxSize( &tt->vrulerSize.first, &tt->vrulerSize.second );
+   auto &size = ChannelView::Get(*tt).vrulerSize;
+   vruler->GetMaxSize(&size.first, &size.second);
 }

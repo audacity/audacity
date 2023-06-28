@@ -955,7 +955,7 @@ void TrackPanel::UpdateTrackVRuler(Track &t)
       auto iter = subViews.begin(), end = subViews.end(), next = iter;
       auto yy = iter->first;
       wxSize vRulerSize{ 0, 0 };
-      auto &size = pChannel->GetTrack().vrulerSize;
+      auto &size = view.vrulerSize;
       for (; iter != end; iter = next) {
          ++next;
          auto nextY = (next == end)
@@ -974,14 +974,18 @@ void TrackPanel::UpdateTrackVRuler(Track &t)
 
 void TrackPanel::UpdateVRulerSize()
 {
-   auto trackRange = GetTracks()->Any();
+   auto trackRange = GetTracks()->Leaders();
    if (trackRange) {
-      wxSize s { 0, 0 };
+      wxSize s{ 0, 0 };
+      // Find maximum width over all channels
       for (auto t : trackRange)
-         s.IncTo({t->vrulerSize.first, t->vrulerSize.second});
+         for (auto pChannel : t->Channels()) {
+            auto &size = ChannelView::Get(*pChannel).vrulerSize;
+            s.IncTo({ size.first, size.second });
+         }
 
       if (mViewInfo->GetVRulerWidth() != s.GetWidth()) {
-         mViewInfo->SetVRulerWidth( s.GetWidth() );
+         mViewInfo->SetVRulerWidth(s.GetWidth());
          mRuler->SetLeftOffset(
             mViewInfo->GetLeftOffset());  // bevel on AdornedRuler
          mRuler->Refresh();

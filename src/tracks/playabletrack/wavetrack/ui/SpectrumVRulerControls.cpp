@@ -13,6 +13,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "SpectrumVZoomHandle.h"
 #include "WaveTrackVRulerControls.h"
 
+#include "../../../ui/ChannelView.h"
 #include "NumberScale.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
@@ -141,7 +142,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
    const auto &settings = SpectrogramSettings::Get(*wt);
    float minFreq, maxFreq;
    SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
-   vruler->SetDbMirrorValue( 0.0 );
+   vruler->SetDbMirrorValue(0.0);
    
    switch (settings.scaleType) {
       default:
@@ -155,7 +156,8 @@ void SpectrumVRulerControls::DoUpdateVRuler(
           we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
           and append to the numbers a "k"
           */
-         vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
+         vruler->SetBounds(
+            rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
          vruler->SetOrientation(wxVERTICAL);
          vruler->SetFormat(&RealFormat::LinearInstance());
          vruler->SetLabelEdges(true);
@@ -186,7 +188,8 @@ void SpectrumVRulerControls::DoUpdateVRuler(
           we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
           and append to the numbers a "k"
           */
-         vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
+         vruler->SetBounds(
+            rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
          vruler->SetOrientation(wxVERTICAL);
          vruler->SetFormat(&IntFormat::Instance());
          vruler->SetLabelEdges(true);
@@ -198,5 +201,6 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       }
          break;
    }
-   vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
+   auto &size = ChannelView::Get(*wt).vrulerSize;
+   vruler->GetMaxSize(&size.first, &size.second);
 }

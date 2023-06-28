@@ -13,6 +13,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "WaveformVZoomHandle.h"
 #include "WaveTrackVRulerControls.h"
 
+#include "../../../ui/ChannelView.h"
 #include "NumberScale.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
@@ -245,7 +246,7 @@ void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
 static CustomUpdaterValue updater;
 
 void WaveformVRulerControls::DoUpdateVRuler(
-   const wxRect &rect, const WaveTrack *wt )
+   const wxRect &rect, const WaveTrack *wt)
 {
    auto vruler = &WaveTrackVRulerControls::ScratchRuler();
 
@@ -291,8 +292,9 @@ void WaveformVRulerControls::DoUpdateVRuler(
          cache.SetDisplayBounds(min, max);
       }
       
-      vruler->SetDbMirrorValue( 0.0 );
-      vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
+      vruler->SetDbMirrorValue(0.0);
+      vruler->SetBounds(
+         rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat(&RealFormat::LinearInstance());
@@ -307,7 +309,8 @@ void WaveformVRulerControls::DoUpdateVRuler(
          vruler->SetUnits(XO("dB"));
          vruler->SetUpdater(&updater);
          RulerUpdater::Labels major, minor, minorMinor;
-         std::vector<LinearDBValues> values = { majorValues, minorValues, minorMinorValues };
+         std::vector<LinearDBValues> values =
+            { majorValues, minorValues, minorMinorValues };
          for (int ii = 0; ii < 3; ii++) {
             RulerUpdater::Labels labs;
             int size = (ii == 0) ? majorValues.size() :
@@ -390,7 +393,8 @@ void WaveformVRulerControls::DoUpdateVRuler(
             
             const float extreme = LINEAR_TO_DB(2);
             // recover dB value of max
-            const float dB = std::min(extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
+            const float dB = std::min(
+               extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
             // find NEW scale position, but old max may get trimmed if the db limit rises
             // Don't trim it to zero though, but leave max and limit distinct
             newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
@@ -449,5 +453,6 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetLabelEdges(true);
       vruler->SetUpdater(&LinearUpdater::Instance());
    }
-   vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
+   auto &size = ChannelView::Get(*wt).vrulerSize;
+   vruler->GetMaxSize(&size.first, &size.second);
 }

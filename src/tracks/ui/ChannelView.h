@@ -118,6 +118,8 @@ public:
 
    virtual void DoSetMinimized( bool isMinimized );
 
+   mutable std::pair<int, int> vrulerSize;
+
 private:
 
    // No need yet to make this virtual

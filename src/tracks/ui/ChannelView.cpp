@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 
 ChannelView::ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel)
    : CommonTrackCell{ pTrack, iChannel }
+   , vrulerSize{ 36, 0 }
 {
    DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );
 }
@@ -61,6 +62,7 @@ void ChannelView::CopyTo(Track &track) const
    auto &other = GetFromTrack(track);
 
    other.mMinimized = mMinimized;
+   other.vrulerSize = vrulerSize;
 
    // Let mY remain 0 -- TrackPositioner corrects it later
    other.mY = 0;

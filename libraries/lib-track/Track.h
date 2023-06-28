@@ -439,9 +439,6 @@ private:
     */
    virtual Intervals GetIntervals();
 
- public:
-   mutable std::pair<int, int> vrulerSize;
-
 public:
    static void FinishCopy (const Track *n, Track *dest);
 

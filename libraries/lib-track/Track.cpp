@@ -74,7 +74,6 @@ size_t Channel::GetChannelIndex() const
 }
 
 Track::Track()
-:  vrulerSize(36,0)
 {
    mIndex = 0;
 
@@ -82,7 +81,6 @@ Track::Track()
 }
 
 Track::Track(const Track &orig, ProtectedCreationArg&&)
-: vrulerSize( orig.vrulerSize )
 {
    mIndex = 0;
    mOffset = orig.mOffset;
