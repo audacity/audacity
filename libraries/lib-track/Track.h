@@ -156,20 +156,22 @@ using AttachedTrackObjects = ClientData::Site<
    Track, TrackAttachment, ClientData::ShallowCopying, std::shared_ptr
 >;
 
+class ChannelGroup;
+
 class TRACK_API Channel
 {
 public:
    virtual ~Channel();
 
    //! Channel object's lifetime is assumed to be nested in its Track's
-   Track &GetTrack();
+   ChannelGroup &GetChannelGroup();
    /*!
-    @copydoc GetTrack()
+    @copydoc GetChannelGroup()
     */
-   const Track &GetTrack() const;
+   const ChannelGroup &GetChannelGroup() const;
 
    /*!
-    @return `ii` such that `this == GetTrack().GetChannel(ii).get()`
+    @return `ii` such that `this == GetChannelGroup().GetChannel(ii).get()`
     */
    size_t GetChannelIndex() const;
 
@@ -179,10 +181,55 @@ protected:
     @post result: for some `ii` less than `result.NChannels()`,
        `this == result.GetChannel(ii).get()`
     */
-   virtual Track &DoGetTrack() const = 0;
+   virtual ChannelGroup &DoGetChannelGroup() const = 0;
 
 private:
    int FindChannelIndex() const;
+};
+
+class TRACK_API ChannelGroup
+{
+public:
+   virtual ~ChannelGroup();
+
+   //! Report the number of channels
+   /*!
+    @post result: `result >= 1`
+    */
+   virtual size_t NChannels() const = 0;
+
+   //! Retrieve a channel, cast to the given type
+   /*!
+    Postconditions imply that `GetChannel(0)` is always non-null
+
+    @post if ChannelType is default, then:
+       result: `!(iChannel < NChannels()) || result`
+    */
+   template<typename ChannelType = Channel>
+   std::shared_ptr<ChannelType> GetChannel(size_t iChannel)
+   {
+      return
+         std::dynamic_pointer_cast<ChannelType>(DoGetChannel(iChannel));
+   }
+
+   /*!
+    @copydetails GetChannel(size_t)
+    */
+   template<typename ChannelType = const Channel>
+   auto GetChannel(size_t iChannel) const
+      -> std::enable_if_t<std::is_const_v<ChannelType>,
+         std::shared_ptr<ChannelType>>
+   {
+      return std::dynamic_pointer_cast<ChannelType>(
+         const_cast<ChannelGroup*>(this)->DoGetChannel(iChannel));
+   }
+
+protected:
+   //! Retrieve a channel
+   /*!
+    @post result: `!(iChannel < NChannels()) || result`
+    */
+   virtual std::shared_ptr<Channel> DoGetChannel(size_t iChannel) = 0;
 };
 
 //! Abstract base class for an object holding data associated with points on a time axis
@@ -190,6 +237,7 @@ class TRACK_API Track /* not final */
    : public XMLTagHandler
    , public AttachedTrackObjects
    , public std::enable_shared_from_this<Track> // see SharedPointer()
+   , public ChannelGroup
 {
 protected:
    //! Empty argument passed to some public constructors
@@ -247,38 +295,6 @@ private:
  private:
    void SetId( TrackId id ) { mId = id; }
  public:
-
-   //! Report the number of channels a track has
-   /*!
-    @post result: `result >= 1`
-    */
-   virtual size_t NChannels() const = 0;
-
-   //! Retrieve a channel, cast to the given type
-   /*!
-    Postconditions imply that `GetChannel(0)` is always non-null
-
-    @post result: `!(iChannel < NChannels()) || result`
-    */
-   template<typename ChannelType = Channel>
-   std::shared_ptr<ChannelType> GetChannel(size_t iChannel)
-   {
-      return
-         std::dynamic_pointer_cast<ChannelType>(DoGetChannel(iChannel));
-   }
-
-   //! Non-virtual const overload
-   /*!
-    @copydetails GetChannel(size_t)
-    */
-   template<typename ChannelType = const Channel>
-   auto GetChannel(size_t iChannel) const
-      -> std::enable_if_t<std::is_const_v<ChannelType>,
-         std::shared_ptr<ChannelType>>
-   {
-      return std::dynamic_pointer_cast<ChannelType>(
-         const_cast<Track*>(this)->DoGetChannel(iChannel));
-   }
 
    //! Iterator for channels; destroying the related track invalidates it
    template<typename ChannelType>
@@ -467,11 +483,6 @@ public:
    const ChannelGroupData &GetGroupData() const;
 
 protected:
-   //! Retrieve a channel
-   /*!
-    @post result: `!(iChannel < NChannels()) || result`
-    */
-   virtual std::shared_ptr<Channel> DoGetChannel(size_t iChannel) = 0;
 
    /*!
     @param completeList only influences debug build consistency checking
@@ -687,7 +698,7 @@ public:
       return {};
    }
 protected:
-   Track &DoGetTrack() const override {
+   ChannelGroup &DoGetChannelGroup() const override {
       const Track &track = *this;
       return const_cast<Track&>(track);
    }

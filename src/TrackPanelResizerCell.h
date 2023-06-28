@@ -28,6 +28,9 @@ public:
    static TrackPanelResizerCell &Get(Channel &channel);
    static const TrackPanelResizerCell &Get(const Channel &channel);
 
+   /*!
+    @pre `dynamic_cast<Track*>(&channel.GetChannelGroup()) != nullptr`
+    */
    explicit TrackPanelResizerCell(Channel &channel);
 
    std::vector<UIHandlePtr> HitTest

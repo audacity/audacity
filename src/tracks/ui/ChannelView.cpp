@@ -32,7 +32,7 @@ ChannelView::~ChannelView()
 int ChannelView::GetChannelGroupHeight(const Track *pTrack)
 {
    const auto GetTrackHeight = [](const Track *pTrack) -> int {
-      return pTrack ? GetFromTrack(*pTrack).GetHeight() : 0;
+      return pTrack ? GetFromChannelGroup(*pTrack).GetHeight() : 0;
    };
    return pTrack ? TrackList::Channels(pTrack).sum(GetTrackHeight) : 0;
 }
@@ -59,7 +59,7 @@ int ChannelView::GetTotalHeight(const TrackList &list)
 
 void ChannelView::CopyTo(Track &track) const
 {
-   auto &other = GetFromTrack(track);
+   auto &other = GetFromChannelGroup(track);
 
    other.mMinimized = mMinimized;
    other.vrulerSize = vrulerSize;
@@ -82,19 +82,24 @@ static const AttachedTrackObjects::RegisteredFactory keyC{
    }
 };
 
-ChannelView &ChannelView::GetFromTrack(Track &track, size_t iChannel)
+ChannelView &ChannelView::GetFromChannelGroup(
+   ChannelGroup &group, size_t iChannel)
 {
+   auto &track = static_cast<Track&>(group);
    return ChannelViewAttachments::Get(keyC, track, iChannel);
 }
 
-const ChannelView &ChannelView::GetFromTrack(const Track &track, size_t iChannel)
+const ChannelView &ChannelView::GetFromChannelGroup(
+   const ChannelGroup &group, size_t iChannel)
 {
-   return GetFromTrack(const_cast<Track &>(track), iChannel);
+   return GetFromChannelGroup(const_cast<ChannelGroup &>(group), iChannel);
 }
 
-ChannelView *ChannelView::FindFromTrack(Track *pTrack, size_t iChannel)
+ChannelView *ChannelView::FindFromChannelGroup(
+   ChannelGroup *pGroup, size_t iChannel)
 {
-   return ChannelViewAttachments::Find(keyC, pTrack, iChannel);
+   return ChannelViewAttachments::Find(
+      keyC, static_cast<Track*>(pGroup), iChannel);
 }
 
 void ChannelView::SetMinimized(bool isMinimized)
@@ -213,7 +218,8 @@ std::shared_ptr<CommonTrackCell> ChannelView::GetAffordanceControls()
 
 ChannelView &ChannelView::Get(Channel &channel)
 {
-   return GetFromTrack(channel.GetTrack(), channel.GetChannelIndex());
+   return GetFromChannelGroup(channel.GetChannelGroup(),
+      channel.GetChannelIndex());
 }
 
 const ChannelView &ChannelView::Get(const Channel &channel)
@@ -225,7 +231,8 @@ ChannelView *ChannelView::Find(Channel *pChannel)
 {
    if (!pChannel)
       return nullptr;
-   return FindFromTrack(&pChannel->GetTrack(), pChannel->GetChannelIndex());
+   return FindFromChannelGroup(
+      &pChannel->GetChannelGroup(), pChannel->GetChannelIndex());
 }
 
 const ChannelView *ChannelView::Find(const Channel *pChannel)

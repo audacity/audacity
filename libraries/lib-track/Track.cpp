@@ -40,14 +40,14 @@ Channel::~Channel() = default;
 
 int Channel::FindChannelIndex() const
 {
-   auto &track = DoGetTrack();
+   auto &group = DoGetChannelGroup();
    int index = -1;
-   for (size_t ii = 0, nn = track.NChannels(); ii < nn; ++ii)
-      if (track.GetChannel(ii).get() == this) {
+   for (size_t ii = 0, nn = group.NChannels(); ii < nn; ++ii)
+      if (group.GetChannel(ii).get() == this) {
          index = ii;
          break;
       }
-   // post of DoGetTrack
+   // post of DoGetChannelGroup
    assert(index >= 0);
 
    // TODO wide wave tracks -- remove this stronger assertion
@@ -56,22 +56,24 @@ int Channel::FindChannelIndex() const
    return index;
 }
 
-const Track &Channel::GetTrack() const
+const ChannelGroup &Channel::GetChannelGroup() const
 {
    assert(FindChannelIndex() >= 0);
-   return DoGetTrack();
+   return DoGetChannelGroup();
 }
 
-Track &Channel::GetTrack()
+ChannelGroup &Channel::GetChannelGroup()
 {
    assert(FindChannelIndex() >= 0);
-   return DoGetTrack();
+   return DoGetChannelGroup();
 }
 
 size_t Channel::GetChannelIndex() const
 {
    return FindChannelIndex();
 }
+
+ChannelGroup::~ChannelGroup() = default;
 
 Track::Track()
 {
