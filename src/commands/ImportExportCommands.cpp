@@ -130,7 +130,7 @@ bool ExportCommand::Apply(const CommandContext & context)
       for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
       {
          auto formatInfo = plugin->GetFormatInfo(formatIndex);
-         if(!formatInfo.mFormat.IsSameAs(extension, false))
+         if(!formatInfo.format.IsSameAs(extension, false))
             continue;
          auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
          editor->Load(*gPrefs);

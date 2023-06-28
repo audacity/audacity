@@ -185,7 +185,7 @@ ExportTask Exporter::CreateExportTask(const ExportProcessor::Parameters& paramet
       for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
          auto formatInfo = pPlugin->GetFormatInfo(j);
-         if (formatInfo.mFormat.IsSameAs(type, false))
+         if (formatInfo.format.IsSameAs(type, false))
          {
             mChannels = numChannels;
             mSelectedOnly = selectedOnly;
@@ -291,7 +291,7 @@ MixerOptions::Downmix* Exporter::CreateMixerSpec()
       // The downside is that if someone is exporting to a mono device, the dialog
       // will allow them to output to two channels. Hmm.  We may need to revisit this.
       // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
-      std::clamp(mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels,
+      std::clamp(mPlugins[mFormat]->GetFormatInfo(mSubFormat).maxChannels,
          1u,
          MaxExportChannels));
    return mMixerSpec.get();
@@ -304,9 +304,9 @@ Exporter::DownMixMode Exporter::SetUseStereoOrMonoOutput()
    
    const unsigned channels = mMono ? 1 : 2;
    mChannels =
-      std::min(channels, mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels);
+      std::min(channels, mPlugins[mFormat]->GetFormatInfo(mSubFormat).maxChannels);
    
-   wxString exportFormat = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat;
+   wxString exportFormat = mPlugins[mFormat]->GetFormatInfo(mSubFormat).format;
    
    if(mNumSelected > 1 || channels > mChannels)
    {
@@ -321,7 +321,7 @@ Exporter::DownMixMode Exporter::SetUseStereoOrMonoOutput()
 
 bool Exporter::CanMetaData() const
 {
-   return mPlugins[mFormat]->GetFormatInfo(mSubFormat).mCanMetaData;
+   return mPlugins[mFormat]->GetFormatInfo(mSubFormat).canMetaData;
 }
 
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)

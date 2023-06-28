@@ -118,7 +118,7 @@ private:
    int mNumWaveTracks;
 
    int mFilterIndex;          /**< The index in the drop-down list of export
-                                formats (mFormat) of the selected export format.
+                                formats (format) of the selected export format.
                                 This list includes all possible
                                 plug-in - subformat combinations. */
    int mPluginIndex;          /**< The index in mPlugins of the selected export

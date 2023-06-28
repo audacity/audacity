@@ -30,13 +30,13 @@ class Tags;
 namespace MixerOptions{ class Downmix; }
 
 
-struct IMPORT_EXPORT_API FormatInfo
+struct IMPORT_EXPORT_API FormatInfo final
 {
-   wxString mFormat;
-   TranslatableString mDescription;
-   FileExtensions mExtensions;
-   unsigned mMaxChannels;
-   bool mCanMetaData;
+   wxString format;
+   TranslatableString description;
+   FileExtensions extensions;
+   unsigned maxChannels;
+   bool canMetaData;
 };
 
 

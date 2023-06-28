@@ -181,7 +181,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
          for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
          {
             auto formatInfo = plugin->GetFormatInfo(formatIndex);
-            if(!formatInfo.mFormat.IsSameAs(format, false))
+            if(!formatInfo.format.IsSameAs(format, false))
                continue;
 
             auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);

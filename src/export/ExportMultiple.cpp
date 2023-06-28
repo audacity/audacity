@@ -263,12 +263,12 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
             auto formatInfo = pPlugin->GetFormatInfo(j);
-            visibleFormats.push_back( formatInfo.mDescription );
+            visibleFormats.push_back( formatInfo.description );
             // use MSGID of description as a value too, written into config file
             // This is questionable.  A change in the msgid can make the
             // preference stored in old config files inapplicable
-            formats.push_back( formatInfo.mDescription.MSGID().GET() );
-            if (formatInfo.mFormat == defaultFormat) {
+            formats.push_back( formatInfo.description.MSGID().GET() );
+            if (formatInfo.format == defaultFormat) {
                mPluginIndex = i;
                mSubFormatIndex = j;
             }
@@ -749,7 +749,7 @@ ExportResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
    // don't duplicate them
    ExportKit setting;   // the current batch of settings
    setting.destfile.SetPath(mDir->GetValue());
-   setting.destfile.SetExt(formatInfo.mExtensions[0]);
+   setting.destfile.SetExt(formatInfo.extensions[0]);
    wxLogDebug(wxT("Plug-in index = %d, Sub-format = %d"), mPluginIndex, mSubFormatIndex);
    wxLogDebug(wxT("File extension is %s"), setting.destfile.GetExt());
    wxString name;    // used to hold file name whilst we mess with it
@@ -827,7 +827,7 @@ ExportResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
          auto &settings = ProjectSettings::Get( *mProject );
          bool bShowTagsDialog = settings.GetShowId3Dialog();
 
-         bShowTagsDialog = bShowTagsDialog && formatInfo.mCanMetaData;
+         bShowTagsDialog = bShowTagsDialog && formatInfo.canMetaData;
 
          if( bShowTagsDialog ){
             bool bCancelled = !TagsEditorDialog::ShowEditDialog(setting.filetags,
@@ -893,7 +893,7 @@ ExportResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    exportSettings.reserve(mNumWaveTracks);   // Allocate some guessed space to use.
    ExportKit setting;   // the current batch of settings
    setting.destfile.SetPath(mDir->GetValue());
-   setting.destfile.SetExt(formatInfo.mExtensions[0]);
+   setting.destfile.SetExt(formatInfo.extensions[0]);
 
    wxString name;    // used to hold file name whilst we mess with it
    wxString title;   // un-messed-with title of file for tagging with
@@ -968,7 +968,7 @@ ExportResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
          auto &settings = ProjectSettings::Get( *mProject );
          bool bShowTagsDialog = settings.GetShowId3Dialog();
 
-         bShowTagsDialog = bShowTagsDialog && formatInfo.mCanMetaData;
+         bShowTagsDialog = bShowTagsDialog && formatInfo.canMetaData;
 
          if( bShowTagsDialog ){
             bool bCancelled = !TagsEditorDialog::ShowEditDialog(setting.filetags,

@@ -686,28 +686,28 @@ ExportFFmpeg::ExportFFmpeg()
          }
       }
       FormatInfo formatInfo {};
-      formatInfo.mFormat = ExportFFmpegOptions::fmts[newfmt].name;
-      formatInfo.mExtensions.push_back(ExportFFmpegOptions::fmts[newfmt].extension);
+      formatInfo.format = ExportFFmpegOptions::fmts[newfmt].name;
+      formatInfo.extensions.push_back(ExportFFmpegOptions::fmts[newfmt].extension);
       // For some types add other extensions
       switch(newfmt)
       {
       case FMT_M4A:
-         formatInfo.mExtensions.push_back(wxT("3gp"));
-         formatInfo.mExtensions.push_back(wxT("m4r"));
-         formatInfo.mExtensions.push_back(wxT("mp4"));
+         formatInfo.extensions.push_back(wxT("3gp"));
+         formatInfo.extensions.push_back(wxT("m4r"));
+         formatInfo.extensions.push_back(wxT("mp4"));
          break;
       case FMT_WMA2:
-         formatInfo.mExtensions.push_back(wxT("asf"));
-         formatInfo.mExtensions.push_back(wxT("wmv"));
+         formatInfo.extensions.push_back(wxT("asf"));
+         formatInfo.extensions.push_back(wxT("wmv"));
          break;
       default:
          break;
       }
-      formatInfo.mMaxChannels = ExportFFmpegOptions::fmts[newfmt].maxchannels;
-      formatInfo.mDescription = ExportFFmpegOptions::fmts[newfmt].description;
+      formatInfo.maxChannels = ExportFFmpegOptions::fmts[newfmt].maxchannels;
+      formatInfo.description = ExportFFmpegOptions::fmts[newfmt].description;
 
       const int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
-      formatInfo.mCanMetaData = canmeta && (canmeta == AV_CANMETA || canmeta <= avfver);
+      formatInfo.canMetaData = canmeta && (canmeta == AV_CANMETA || canmeta <= avfver);
       
       mFormatInfos.push_back(std::move(formatInfo));
    }

@@ -40,7 +40,7 @@ bool IsExtension(const ExportPlugin& plugin, int formatIndex, const FileExtensio
    if(formatIndex >= 0 && formatIndex < plugin.GetFormatCount())
    {
       auto formatInfo = plugin.GetFormatInfo(formatIndex);
-      if(formatInfo.mExtensions[0].empty() || formatInfo.mExtensions.Index(ext, false) != wxNOT_FOUND)
+      if(formatInfo.extensions[0].empty() || formatInfo.extensions.Index(ext, false) != wxNOT_FOUND)
          return true;
    }
    return false;
@@ -74,10 +74,10 @@ ExportFileDialog::ExportFileDialog(wxWindow *parent,
          for (int j = 0; j < plugin->GetFormatCount(); j++)
          {
             auto formatInfo = plugin->GetFormatInfo(j);
-            fileTypes.insert(fileTypes.end(), { formatInfo.mDescription, formatInfo.mExtensions });
+            fileTypes.insert(fileTypes.end(), { formatInfo.description, formatInfo.extensions });
             if(!formatFound)
             {
-               if (formatInfo.mFormat == defaultFormatName) {
+               if (formatInfo.format == defaultFormatName) {
                   pluginIndex = i;
                   formatIndex = j;
                   formatFound = true;
@@ -100,7 +100,7 @@ ExportFileDialog::ExportFileDialog(wxWindow *parent,
    
    if (!filename.HasExt())
    {
-      auto defext = plugins[pluginIndex]->GetFormatInfo(formatIndex).mExtensions[0].Lower();
+      auto defext = plugins[pluginIndex]->GetFormatInfo(formatIndex).extensions[0].Lower();
       filename.SetExt(defext);
    }
    
@@ -171,7 +171,7 @@ int ExportFileDialog::RunModal(wxWindow* parent,
                {
                   pluginIndex = i;
                   formatIndex = j;
-                  formatName = plugin->GetFormatInfo(j).mFormat;
+                  formatName = plugin->GetFormatInfo(j).format;
                   formatFound = true;
                   break;
                }
@@ -191,7 +191,7 @@ int ExportFileDialog::RunModal(wxWindow* parent,
       
       filename = dialog.GetPath();
       const auto ext = filename.GetExt();
-      const auto defext = plugins[pluginIndex]->GetFormatInfo(formatIndex).mExtensions[0].Lower();
+      const auto defext = plugins[pluginIndex]->GetFormatInfo(formatIndex).extensions[0].Lower();
 
       //
       // Check the extension - add the default if it's not there,
@@ -225,7 +225,7 @@ int ExportFileDialog::RunModal(wxWindow* parent,
       }
       else if (!ext.empty() && IsExtension(*plugins[pluginIndex], formatIndex, ext) && ext.CmpNoCase(defext)) {
          auto prompt = XO("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?")
-               .Format(plugins[pluginIndex]->GetFormatInfo(formatIndex).mFormat,
+               .Format(plugins[pluginIndex]->GetFormatInfo(formatIndex).format,
                        filename.GetFullName(),
                        defext);
 
@@ -266,7 +266,7 @@ int ExportFileDialog::RunModal(wxWindow* parent,
                          dialog.mOptionsHandlers[dialog.GetFilterIndex()]->GetParameters());
       
       if(defaultFormatName.empty())
-         DefaultExportFormat.Write(plugins[pluginIndex]->GetFormatInfo(formatIndex).mFormat);
+         DefaultExportFormat.Write(plugins[pluginIndex]->GetFormatInfo(formatIndex).format);
       
       FileNames::UpdateDefaultPath(FileNames::Operation::Export, filename.GetPath());
 
@@ -308,8 +308,8 @@ void ExportFileDialog::OnFilterChanged(wxFileCtrlEvent & evt)
             if(counter == index)
             {
                const auto formatInfo = plugin->GetFormatInfo(j);
-               if(!formatInfo.mExtensions.empty())
-                  SetFileExtension(formatInfo.mExtensions[0]);
+               if(!formatInfo.extensions.empty())
+                  SetFileExtension(formatInfo.extensions[0]);
             }
             ++counter;
          }

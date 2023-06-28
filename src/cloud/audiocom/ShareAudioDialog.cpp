@@ -341,7 +341,7 @@ wxString ShareAudioDialog::ExportProject()
             }
 
             const auto formatInfo = plugin->GetFormatInfo(i);
-            const auto path = GenerateTempPath(formatInfo.mExtensions[0]);
+            const auto path = GenerateTempPath(formatInfo.extensions[0]);
 
             if(path.empty())
                continue;
@@ -353,7 +353,7 @@ wxString ShareAudioDialog::ExportProject()
             {
                auto exportTask = e.CreateExportTask(parameters,
                   nChannels,
-                  formatInfo.mFormat,
+                  formatInfo.format,
                   path,
                   false, t0, t1);
 
