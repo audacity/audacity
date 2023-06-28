@@ -11,7 +11,7 @@ Canvas {
    height: implicitHeight
    smooth: true
    antialiasing: true
-   objectName: "WaveClipView"
+   objectName: "WaveClipBody"
 
    property int radius: 3
    property color color: appConfig.backgroundColor1
