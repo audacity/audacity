@@ -417,6 +417,8 @@ bool MixerSource::Terminates() const
 void MixerSource::Reposition(double time, bool skipping)
 {
    mSamplePos = GetSequence().TimeToLongSamples(time);
+   mQueueStart = 0;
+   mQueueLen = 0;
 
    // Bug 2025:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
    // constant rate resampling if you try to reuse the resampler after it has
