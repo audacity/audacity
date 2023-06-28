@@ -946,27 +946,28 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
    for (auto channel : TrackList::Channels(t)) {
       auto &view = TrackView::Get( *channel );
       const auto height = *pHeight++;
-      rect.SetHeight( height );
-      const auto subViews = view.GetSubViews( rect );
+      rect.SetHeight(height);
+      const auto subViews = view.GetSubViews(rect);
       if (subViews.empty())
          continue;
 
       auto iter = subViews.begin(), end = subViews.end(), next = iter;
       auto yy = iter->first;
       wxSize vRulerSize{ 0, 0 };
-      for ( ; iter != end; iter = next ) {
+      auto &size = channel->vrulerSize;
+      for (; iter != end; iter = next) {
          ++next;
-         auto nextY = ( next == end )
+         auto nextY = (next == end)
             ? height
             : next->first;
-         rect.SetHeight( nextY - yy );
+         rect.SetHeight(nextY - yy);
          // This causes ruler size in the track to be reassigned:
          TrackVRulerControls::Get( *iter->second ).UpdateRuler( rect );
          // But we want to know the maximum width and height over all sub-views:
-         vRulerSize.IncTo( {t->vrulerSize.first, t->vrulerSize.second} );
+         vRulerSize.IncTo({ size.first, size.second });
          yy = nextY;
       }
-      t->vrulerSize = {vRulerSize.x, vRulerSize.y};
+      size = { vRulerSize.x, vRulerSize.y };
    }
 }
 
