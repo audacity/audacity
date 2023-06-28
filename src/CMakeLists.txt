@@ -165,6 +165,8 @@ list( APPEND SOURCES
       ProjectSelectionManager.h
       ProjectSettings.cpp
       ProjectSettings.h
+      ProjectTempoListener.cpp
+      ProjectTempoListener.h
       ProjectWindow.cpp
       ProjectWindow.h
       ProjectWindowBase.cpp

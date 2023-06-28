@@ -312,6 +312,11 @@ void WaveTrack::SetOffset(double o)
    mOffset = o;
 }
 
+void WaveTrack::SetProjectTempo(double newTempo)
+{
+   mClipList.SetProjectTempo(newTempo);
+}
+
 bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
 {
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix, completeList);

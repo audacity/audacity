@@ -24,6 +24,10 @@ set( SOURCES
    NumericConverterType.h
    ProjectNumericFormats.cpp
    ProjectNumericFormats.h
+   ProjectTempoListenerInterface.cpp
+   ProjectTempoListenerInterface.h
+   ProjectTempoPublisher.cpp
+   ProjectTempoPublisher.h
    ProjectTimeSignature.cpp
    ProjectTimeSignature.h
 

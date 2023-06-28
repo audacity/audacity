@@ -17,6 +17,8 @@ Paul Licameli split from AudacityProject.h
 #include "ClientData.h" // to inherit
 #include "Identifier.h"
 #include "Observer.h"
+#include "ProjectTempoListener.h"
+#include "ProjectTempoPublisher.h"
 
 class wxTimer;
 class wxTimerEvent;
@@ -125,6 +127,8 @@ private:
 
    // non-static data members
    AudacityProject &mProject;
+   ProjectTempoListener mTempoListener;
+   ProjectTempoPublisher mTempoPublisher;
 
    std::unique_ptr<wxTimer> mTimer;
 

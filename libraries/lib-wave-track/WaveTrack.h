@@ -117,6 +117,7 @@ private:
 
    double GetOffset() const override;
    void SetOffset(double o) override;
+   void SetProjectTempo(double newTempo);
 
    bool LinkConsistencyFix(bool doFix, bool completeList) override;
 
