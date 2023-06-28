@@ -349,10 +349,8 @@ bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
       if (doFix) {
          // More non-error upgrading
          // Set the common channel group rate from the leader's rate
-         if (IsLeader() && mLegacyRate > 0) {
+         if (IsLeader() && mLegacyRate > 0)
             SetRate(mLegacyRate);
-            mLegacyRate = 0;
-         }
       }
    }
    return !err;
@@ -1509,6 +1507,7 @@ bool WaveTrack::RateConsistencyCheck() const
             oRate = rate;
          else if (*oRate != rate)
             return false;
+         pTrack->mLegacyRate = 0;
 
          auto &clips = pTrack->mClips;
          return std::all_of(clips.begin(), clips.end(),

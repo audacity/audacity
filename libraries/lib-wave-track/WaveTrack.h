@@ -577,7 +577,7 @@ private:
    WaveClipHolders mClips;
 
    sampleFormat  mFormat;
-   int           mLegacyRate{ 0 }; //!< used only during deserialization
+   mutable int   mLegacyRate{ 0 }; //!< used only during deserialization
    int           mWaveColorIndex;
 
 private:
