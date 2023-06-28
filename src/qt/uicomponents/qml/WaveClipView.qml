@@ -11,7 +11,7 @@ Rectangle {
    height: implicitHeight
    color: appConfig.textFieldColor
    radius: 4
-   objectName: "Waveform"
+   objectName: "WaveClipView"
 
    property alias name: label.text
 

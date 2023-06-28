@@ -139,15 +139,15 @@ ApplicationWindow {
       anchors.top: timelineRuler.bottom
       anchors.bottom: footerId.top
 
-      Waveform {
-         id: waveform
+      WaveClipView {
+         id: waveClipView
          x: 13
          y: 0
          height: 84
          name: "Audio 1"
 
          onOptionsClicked: {
-            statusBar.text = waveform.name + " options clicked"
+            statusBar.text = waveClipView.name + " options clicked"
             timer.restart()
          }
       }
