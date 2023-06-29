@@ -100,7 +100,12 @@ class TIME_TRACK_API TimeTrack final
 
    void testMe();
 
- private:
+   size_t NIntervals() const override;
+
+private:
+   std::shared_ptr<ChannelGroupInterval> DoGetInterval(size_t iInterval)
+      override;
+
    void CleanState();
 
    void DoOnProjectTempoChange(

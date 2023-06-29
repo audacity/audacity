@@ -319,6 +319,16 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("timetrack"));
 }
 
+size_t TimeTrack::NIntervals() const
+{
+   return 0;
+}
+
+std::shared_ptr<ChannelGroupInterval> TimeTrack::DoGetInterval(size_t iInterval)
+{
+   return {};
+}
+
 void TimeTrack::testMe()
 {
    GetEnvelope()->Flatten(0.0);

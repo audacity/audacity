@@ -107,48 +107,27 @@ private:
    long mValue;
 };
 
-//! Optional extra information about an interval, appropriate to a subtype of Track
-struct TRACK_API TrackIntervalData {
-   virtual ~TrackIntervalData();
-};
-
-//! A start and an end time, and non-mutative access to optional extra information
-/*! @invariant `Start() <= End()` */
-class ConstTrackInterval {
+//! A start and an end time, and whatever else subclasses associate with them
+/*!
+ Start and end are immutable, but subclasses may add other mutable data
+ @invariant `Start() <= End()`
+ */
+class TRACK_API ChannelGroupInterval {
 public:
-
    /*! @pre `start <= end` */
-   ConstTrackInterval( double start, double end,
-      std::unique_ptr<TrackIntervalData> pExtra = {} )
-   : start{ start }, end{ end }, pExtra{ std::move( pExtra ) }
+   ChannelGroupInterval(double start, double end)
+      : mStart{ start }, mEnd{ end }
    {
-      wxASSERT( start <= end );
+      assert(start <= end);
    }
 
-   ConstTrackInterval( ConstTrackInterval&& ) = default;
-   ConstTrackInterval &operator=( ConstTrackInterval&& ) = default;
+   virtual ~ChannelGroupInterval();
 
-   double Start() const { return start; }
-   double End() const { return end; }
-   const TrackIntervalData *Extra() const { return pExtra.get(); }
+   double Start() const { return mStart; }
+   double End() const { return mEnd; }
 
 private:
-   double start, end;
-protected:
-   // TODO C++17: use std::any instead
-   std::unique_ptr< TrackIntervalData > pExtra;
-};
-
-//! A start and an end time, and mutative access to optional extra information
-/*! @invariant `Start() <= End()` */
-class TrackInterval : public ConstTrackInterval {
-public:
-   using ConstTrackInterval::ConstTrackInterval;
-
-   TrackInterval(TrackInterval&&) = default;
-   TrackInterval &operator= (TrackInterval&&) = default;
-
-   TrackIntervalData *Extra() const { return pExtra.get(); }
+   const double mStart, mEnd;
 };
 
 //! Template generated base class for Track lets it host opaque UI related objects
@@ -191,6 +170,11 @@ class TRACK_API ChannelGroup
 {
 public:
    virtual ~ChannelGroup();
+
+   /*!
+      @name Acesss to channels
+      @{
+   */
 
    //! Report the number of channels
    /*!
@@ -261,7 +245,7 @@ public:
          { return !(a == b); }
 
    private:
-      GroupType *const mpGroup{};
+      GroupType *mpGroup{};
       size_t mIndex{};
    };
 
@@ -290,6 +274,107 @@ public:
       return { { this, 0 }, { this, NChannels() } };
    }
 
+   /*!
+      @}
+      @name Acesss to intervals
+      @{
+   */
+
+   using Interval = ChannelGroupInterval;
+
+   //! Report the number of intervals
+   virtual size_t NIntervals() const = 0;
+
+   //! Retrieve an interval, cast to the given type
+   /*!
+    @post if IntervalType is default, then:
+       result: `!(iInterval < NIntervals()) || result`
+    */
+   template<typename IntervalType = Interval>
+   std::shared_ptr<IntervalType> GetInterval(size_t iInterval)
+   {
+      return
+         std::dynamic_pointer_cast<IntervalType>(DoGetInterval(iInterval));
+   }
+
+   /*!
+    @copydetails GetInterval(size_t)
+    */
+   template<typename IntervalType = const Interval>
+   auto GetInterval(size_t iInterval) const
+      -> std::enable_if_t<std::is_const_v<IntervalType>,
+         std::shared_ptr<IntervalType>>
+   {
+      return std::dynamic_pointer_cast<IntervalType>(
+         const_cast<ChannelGroup*>(this)->DoGetInterval(iInterval));
+   }
+
+   //! Iterator for intervals; destroying the related ChannelGroup invalidates
+   //! it
+   /*!
+    Some intervals may have zero duration, and no ordering of the intervals is
+    assumed.
+   */
+   template<typename IntervalType>
+   class IntervalIterator
+      : public ValueIterator<
+         std::shared_ptr<IntervalType>, std::bidirectional_iterator_tag
+      >
+   {
+      using GroupType = std::conditional_t<std::is_const_v<IntervalType>,
+         const ChannelGroup, ChannelGroup>;
+   public:
+      IntervalIterator() = default;
+      IntervalIterator(GroupType *pGroup, size_t index)
+         : mpGroup{ pGroup }, mIndex{ index }
+      {}
+
+      std::shared_ptr<IntervalType> operator *() const
+      {
+         if (!mpGroup || mIndex >= mpGroup->NIntervals())
+            return {};
+         return mpGroup->template GetInterval<IntervalType>(mIndex);
+      }
+
+      IntervalIterator &operator ++() { ++mIndex; return *this; }
+      IntervalIterator operator ++(int)
+         { auto copy{ *this }; operator ++(); return copy; }
+
+      IntervalIterator &operator --() { --mIndex; return *this; }
+      IntervalIterator operator --(int)
+         { auto copy{ *this }; operator --(); return copy; }
+
+      friend inline bool operator ==(IntervalIterator a, IntervalIterator b)
+         { return a.mpGroup == b.mpGroup && a.mIndex == b.mIndex; }
+      friend inline bool operator !=(IntervalIterator a, IntervalIterator b)
+         { return !(a == b); }
+
+   private:
+      GroupType *mpGroup{};
+      size_t mIndex{};
+   };
+
+   //! Get range of intervals with mutative access
+   template<typename IntervalType = Interval>
+   IteratorRange<IntervalIterator<IntervalType>> Intervals()
+   {
+      return { { this, 0 }, { this, NIntervals() } };
+   }
+
+   //! Get range of intervals with read-only access
+   template<typename IntervalType = const Interval>
+   auto Intervals() const
+      -> std::enable_if_t<std::is_const_v<IntervalType>,
+         IteratorRange<IntervalIterator<IntervalType>>
+      >
+   {
+      return { { this, 0 }, { this, NIntervals() } };
+   }
+
+   /*!
+      @}
+   */
+
    // TODO remove this which is only used in assertions
    virtual bool IsLeader() const = 0;
 
@@ -299,6 +384,12 @@ protected:
     @post result: `!(iChannel < NChannels()) || result`
     */
    virtual std::shared_ptr<Channel> DoGetChannel(size_t iChannel) = 0;
+
+   //! Retrieve an interval
+   /*!
+    @post result: `!(iInterval < NIntervals()) || result`
+    */
+   virtual std::shared_ptr<Interval> DoGetInterval(size_t iInterval) = 0;
 };
 
 //! Abstract base class for an object holding data associated with points on a time axis
@@ -406,12 +497,6 @@ private:
    // original; else return this track
    std::shared_ptr<const Track> SubstituteOriginalTrack() const;
 
-   using IntervalData = TrackIntervalData;
-   using Interval = TrackInterval;
-   using Intervals = std::vector< Interval >;
-   using ConstInterval = ConstTrackInterval;
-   using ConstIntervals = std::vector< ConstInterval >;
-
    //! Names of a track type for various purposes.
    /*! Some of the distinctions exist only for historical reasons. */
    struct TypeNames {
@@ -446,17 +531,6 @@ private:
    //! Find or create the destination track for a paste, maybe in a different project
    /*! @return A smart pointer to the track; its `use_count()` can tell whether it is new */
    virtual Holder PasteInto( AudacityProject & ) const = 0;
-
-   //! Report times on the track where important intervals begin and end, for UI to snap to
-   /*!
-   Some intervals may be empty, and no ordering of the intervals is assumed.
-   */
-   virtual ConstIntervals GetIntervals() const;
-
-   /*! @copydoc GetIntervals()
-   This overload exposes the extra data of the intervals as non-const
-    */
-   virtual Intervals GetIntervals();
 
 public:
    static void FinishCopy (const Track *n, Track *dest);

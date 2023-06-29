@@ -35,7 +35,7 @@ class AudioSegmentSampleView;
 
 //! Clips are held by shared_ptr, not for sharing, but to allow weak_ptr
 using WaveClipHolder = std::shared_ptr<WaveClip>;
-using WaveClipHolders = std::vector <WaveClipHolder>;
+using WaveClipHolders = std::vector<WaveClipHolder>;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
@@ -563,29 +563,31 @@ private:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   class IntervalData final : public Track::IntervalData {
+   class Interval final : public ChannelGroupInterval {
    public:
       /*!
        @pre `pClip != nullptr`
        */
-      explicit IntervalData( const std::shared_ptr<WaveClip> &pClip )
-         : pClip{ pClip }
-      {}
-      std::shared_ptr<const WaveClip> GetClip() const { return pClip; }
-      const std::shared_ptr<WaveClip> &GetClip() { return pClip; }
+      explicit Interval(const std::shared_ptr<WaveClip> &pClip);
+
+      ~Interval() override;
+
+      std::shared_ptr<const WaveClip> GetClip() const { return mpClip; }
+      const std::shared_ptr<WaveClip> &GetClip() { return mpClip; }
    private:
-      const std::shared_ptr<WaveClip> pClip;
+      const std::shared_ptr<WaveClip> mpClip;
    };
 
    Track::Holder PasteInto( AudacityProject & ) const override;
 
-   ConstIntervals GetIntervals() const override;
-   Intervals GetIntervals() override;
-
    //! Returns nullptr if clip with such name was not found
    const WaveClip* FindClipByName(const wxString& name) const;
- protected:
 
+   size_t NIntervals() const override;
+
+protected:
+   std::shared_ptr<ChannelGroupInterval> DoGetInterval(size_t iInterval)
+      override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 
    ChannelGroup &DoGetChannelGroup() const override;

@@ -57,23 +57,21 @@ public:
       }
 
       // Select just one interval
-      UnfixIntervals( [&](const auto &interval){
-         return
-            static_cast<WaveTrack::IntervalData*>(interval.Extra())
-               ->GetClip() == pClip;
-      } );
+      UnfixIntervals([&](const auto &interval){
+         return static_cast<const WaveTrack::Interval&>(interval).GetClip()
+           == pClip;
+      });
       
       return HitTestResult::Intervals;
    }
 
-   void SelectInterval( const TrackInterval &interval ) override
+   void SelectInterval(const ChannelGroupInterval &interval) override
    {
-      UnfixIntervals( [&](auto &myInterval){
+      UnfixIntervals([&](auto &myInterval){
          // Use a slightly different test from CommonSelectInterval, rounding times
          // to exact samples according to the clip's rate
-         auto data =
-            static_cast<WaveTrack::IntervalData*>( myInterval.Extra() );
-         auto clip = data->GetClip().get();
+         auto &data = static_cast<const WaveTrack::Interval&>(myInterval);
+         auto clip = data.GetClip().get();
          const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
          const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
          return 
@@ -112,11 +110,10 @@ public:
 
    double AdjustOffsetSmaller(double desiredOffset) override
    {
-      std::vector< WaveClip * > movingClips;
-      for ( auto &interval : MovingIntervals() ) {
-         auto data =
-            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
-         movingClips.push_back(data->GetClip().get());
+      std::vector<WaveClip *> movingClips;
+      for (auto &interval : MovingIntervals()) {
+         auto &data = static_cast<WaveTrack::Interval&>(*interval);
+         movingClips.push_back(data.GetClip().get());
       }
       double newAmount = 0;
       (void) mpTrack->CanOffsetClips(movingClips, desiredOffset, &newAmount);
@@ -125,14 +122,14 @@ public:
 
    Intervals Detach() override
    {
-      for ( auto &interval: mMoving ) {
-         auto pData = static_cast<WaveTrack::IntervalData*>( interval.Extra() );
-         auto pClip = pData->GetClip().get();
+      for (auto &interval: mMoving) {
+         auto &data = static_cast<WaveTrack::Interval&>(*interval);
+         auto pClip = data.GetClip().get();
          // interval will still hold the clip, so ignore the return:
          (void) mpTrack->RemoveAndReturnClip(pClip);
          mMigrated.erase(pClip);
       }
-      return std::move( mMoving );
+      return std::move(mMoving);
    }
 
    bool AdjustFit(
@@ -142,9 +139,8 @@ public:
       bool ok = true;
       auto pOtherWaveTrack = static_cast<const WaveTrack*>(&otherTrack);
       for ( auto &interval: intervals ) {
-         auto pData =
-            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
-         auto pClip = pData->GetClip().get();
+         auto &data = static_cast<WaveTrack::Interval&>(*interval);
+         auto pClip = data.GetClip().get();
          ok = pOtherWaveTrack->CanInsertClip(
             pClip, desiredOffset, tolerance );
          if( !ok  )
@@ -153,24 +149,20 @@ public:
       return ok;
    }
 
-   bool Attach( Intervals intervals, double offset ) override
+   bool Attach(Intervals intervals, double offset) override
    {
       for (auto &interval : intervals) {
-         auto pData = static_cast<WaveTrack::IntervalData*>( interval.Extra() );
-         auto pClip = pData->GetClip();
+         auto &data = static_cast<WaveTrack::Interval&>(*interval);
+         auto &pClip = data.GetClip();
          // TODO wide wave tracks -- guarantee matching clip width
-         if ( !mpTrack->AddClip( pClip ) )
+         if (!mpTrack->AddClip(pClip))
             return false;
-         mMigrated.insert( pClip.get() );
+         mMigrated.insert(pClip.get());
          if(offset == .0)
-            mMoving.emplace_back( std::move( interval ) );
-         else
-         {
+            mMoving.emplace_back(std::move(interval));
+         else {
             pClip->Offset(offset);
-            mMoving.emplace_back(
-               pClip->GetPlayStartTime(),
-               pClip->GetPlayEndTime(),
-               std::make_unique<WaveTrack::IntervalData>(pClip));
+            mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(pClip));
          }
       }
       return true;
@@ -190,23 +182,23 @@ public:
 
    void DoHorizontalOffset( double offset ) override
    {
-      for ( auto &interval : MovingIntervals() ) {
-         auto data =
-            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
-         data->GetClip()->Offset( offset );
+      for (auto &interval : MovingIntervals()) {
+         auto &data = static_cast<WaveTrack::Interval&>(*interval);
+         data.GetClip()->Offset(offset);
       }
    }
 
 
    // Ensure that t0 is still within the clip which it was in before the move.
    // This corrects for any rounding errors.
-   double AdjustT0( double t0 ) const override
+   double AdjustT0(double t0) const override
    {
       if (MovingIntervals().empty())
          return t0;
       else {
-         auto data = static_cast<WaveTrack::IntervalData*>(MovingIntervals()[0].Extra());
-         auto& clip = data->GetClip();
+         auto &data =
+            static_cast<WaveTrack::Interval&>(*MovingIntervals()[0]);
+         auto& clip = data.GetClip();
          if (t0 < clip->GetPlayStartTime())
             t0 = clip->GetPlayStartTime();
          if (t0 > clip->GetPlayEndTime())

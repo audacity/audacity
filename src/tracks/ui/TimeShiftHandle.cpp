@@ -132,12 +132,12 @@ TrackShifter::TrackShifter() = default;
 TrackShifter::~TrackShifter() = default;
 
 void TrackShifter::UnfixIntervals(
-   std::function< bool( const TrackInterval& ) > pred )
+   std::function<bool(const ChannelGroupInterval&)> pred)
 {
-   for ( auto iter = mFixed.begin(); iter != mFixed.end(); ) {
-      if ( pred( *iter) ) {
-         mMoving.push_back( std::move( *iter ) );
-         iter = mFixed.erase( iter );
+   for (auto iter = mFixed.begin(); iter != mFixed.end();) {
+      if (pred(**iter)) {
+         mMoving.push_back(std::move(*iter));
+         iter = mFixed.erase(iter);
          mAllFixed = false;
       }
       else
@@ -147,17 +147,17 @@ void TrackShifter::UnfixIntervals(
 
 void TrackShifter::UnfixAll()
 {
-   std::move( mFixed.begin(), mFixed.end(), std::back_inserter(mMoving) );
+   std::move(mFixed.begin(), mFixed.end(), std::back_inserter(mMoving));
    mFixed = Intervals{};
    mAllFixed = false;
 }
 
-void TrackShifter::SelectInterval( const TrackInterval & )
+void TrackShifter::SelectInterval(const ChannelGroupInterval &)
 {
    UnfixAll();
 }
 
-void TrackShifter::CommonSelectInterval(const TrackInterval &interval)
+void TrackShifter::CommonSelectInterval(const ChannelGroupInterval &interval)
 {
    UnfixIntervals( [&](auto &myInterval){
       return !(interval.End() < myInterval.Start() ||
@@ -251,10 +251,11 @@ double TrackShifter::AdjustT0(double t0) const
 void TrackShifter::InitIntervals()
 {
    mMoving.clear();
-   mFixed = GetTrack().GetIntervals();
+   auto range = GetTrack().Intervals();
+   std::copy(range.begin(), range.end(), back_inserter(mFixed));
 }
 
-CoarseTrackShifter::CoarseTrackShifter( Track &track )
+CoarseTrackShifter::CoarseTrackShifter(Track &track)
    : mpTrack{ track.SharedPointer() }
 {
    InitIntervals();
@@ -326,7 +327,7 @@ void ClipMoveState::Init(
 
    if ( state.movingSelection ) {
       // All selected tracks may move some intervals
-      const TrackInterval interval{
+      const ChannelGroupInterval interval{
          viewInfo.selectedRegion.t0(),
          viewInfo.selectedRegion.t1()
       };
@@ -347,12 +348,8 @@ void ClipMoveState::Init(
          for (auto channel : TrackList::Channels(&capturedTrack)) {
             auto& shifter = *state.shifters[channel];
             if (channel != &capturedTrack)
-            {
                for (auto& interval : intervals)
-               {
-                  shifter.SelectInterval(interval);
-               }
-            }
+                  shifter.SelectInterval(*interval);
          }
       };
       if (capturedTrack.GetLinkType() == Track::LinkType::Aligned || 
@@ -363,7 +360,8 @@ void ClipMoveState::Init(
       else
       {
          TrackShifter::Intervals intervals;
-         intervals.emplace_back(TrackInterval { clickTime, clickTime });
+         intervals.emplace_back(
+            std::make_shared<ChannelGroupInterval>(clickTime, clickTime));
          //for not align, match clips from other channels that are 
          //exactly at clicked time point
          selectIntervals(intervals);
@@ -398,7 +396,7 @@ void ClipMoveState::Init(
                   
                   auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();
-                  shifter2.SelectInterval( interval );
+                  shifter2.SelectInterval(*interval);
                   change = change ||
                      (shifter2.SyncLocks() &&
                       size != shifter2.MovingIntervals().size());
@@ -413,17 +411,17 @@ void ClipMoveState::Init(
    }
 }
 
-const TrackInterval *ClipMoveState::CapturedInterval() const
+const ChannelGroupInterval *ClipMoveState::CapturedInterval() const
 {
    auto pTrack = mCapturedTrack.get();
-   if ( pTrack ) {
-      auto iter = shifters.find( pTrack );
-      if ( iter != shifters.end() ) {
+   if (pTrack) {
+      auto iter = shifters.find(pTrack);
+      if (iter != shifters.end()) {
          auto &pShifter = iter->second;
-         if ( pShifter ) {
+         if (pShifter) {
             auto &intervals = pShifter->MovingIntervals();
-            if ( !intervals.empty() )
-               return &intervals[0];
+            if (!intervals.empty())
+               return intervals[0].get();
          }
       }
    }
@@ -473,19 +471,19 @@ double ClipMoveState::DoSlideHorizontal( double desiredSlideAmount )
 
 namespace {
 SnapPointArray FindCandidates(
-   const TrackList &tracks, const ClipMoveState::ShifterMap &shifters )
+   const TrackList &tracks, const ClipMoveState::ShifterMap &shifters)
 {
    // Compare with the other function FindCandidates in Snap
    // Make the snap manager more selective than it would be if just constructed
    // from the track list
    SnapPointArray candidates;
-   for ( const auto &pair : shifters ) {
+   for (const auto &pair : shifters) {
       auto &shifter = pair.second;
       auto &track = shifter->GetTrack();
-      for (const auto &interval : shifter->FixedIntervals() ) {
-         candidates.emplace_back( interval.Start(), &track );
-         if ( interval.Start() != interval.End() )
-            candidates.emplace_back( interval.End(), &track );
+      for (const auto &interval : shifter->FixedIntervals()) {
+         candidates.emplace_back(interval->Start(), &track);
+         if (interval->Start() != interval->End())
+            candidates.emplace_back(interval->End(), &track);
       }
    }
    return candidates;

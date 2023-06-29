@@ -724,18 +724,18 @@ Track::Holder NoteTrack::PasteInto( AudacityProject & ) const
    return pNewTrack;
 }
 
-auto NoteTrack::GetIntervals() const -> ConstIntervals
+size_t NoteTrack::NIntervals() const
 {
-   ConstIntervals results;
-   results.emplace_back( GetStartTime(), GetEndTime() );
-   return results;
+   return 1;
 }
 
-auto NoteTrack::GetIntervals() -> Intervals
+std::shared_ptr<ChannelGroupInterval> NoteTrack::DoGetInterval(size_t iInterval)
 {
-   Intervals results;
-   results.emplace_back( GetStartTime(), GetEndTime() );
-   return results;
+   if (iInterval == 0)
+      // Just one, and no extra info in it!
+      return
+         std::make_shared<ChannelGroupInterval>(GetStartTime(), GetEndTime());
+   return {};
 }
 
 void NoteTrack::AddToDuration( double delta )

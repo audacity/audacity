@@ -36,6 +36,8 @@ and TimeTrack.
 #pragma warning( disable : 4786 )
 #endif
 
+ChannelGroupInterval::~ChannelGroupInterval() = default;
+
 Channel::~Channel() = default;
 
 int Channel::FindChannelIndex() const
@@ -1208,16 +1210,6 @@ bool Track::SupportsBasicEditing() const
    return true;
 }
 
-auto Track::GetIntervals() const -> ConstIntervals
-{
-   return {};
-}
-
-auto Track::GetIntervals() -> Intervals
-{
-   return {};
-}
-
 // Serialize, not with tags of its own, but as attributes within a tag.
 void Track::WriteCommonXMLAttributes(
    XMLWriter &xmlFile, bool includeNameAndSelected) const
@@ -1268,8 +1260,6 @@ void Track::AdjustPositions()
       pList->ResizingEvent(mNode);
    }
 }
-
-TrackIntervalData::~TrackIntervalData() = default;
 
 bool TrackList::HasPendingTracks() const
 {

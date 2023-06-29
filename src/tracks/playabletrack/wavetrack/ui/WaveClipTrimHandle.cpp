@@ -95,23 +95,25 @@ class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTr
 
       if(const auto trackList = currentTrack->GetOwner())
       {
-         for(const auto track : trackList->Any())
+         for(const auto track : as_const(*trackList).Any())
          {
             const auto isSameTrack = (track == currentTrack) ||
                (track->GetLinkType() == Track::LinkType::Aligned && *trackList->FindLeader(currentTrack) == track) ||
                (currentTrack->GetLinkType() == Track::LinkType::Aligned && *trackList->FindLeader(track) == currentTrack);
-            for(const auto& interval : track->GetIntervals())
+            for(const auto& interval : track->Intervals())
             {
                if(isSameTrack)
                {
-                  auto waveTrackIntervalData = dynamic_cast<WaveTrack::IntervalData*>(interval.Extra());
+                  auto waveTrackIntervalData =
+                     std::dynamic_pointer_cast<const WaveTrack::Interval>(
+                        interval);
                   if(waveTrackIntervalData->GetClip().get() == adjustedClip)
                   //exclude boundaries of the adjusted clip
                      continue;
                }
-               addSnapPoint(interval.Start(), track);
-               if(interval.Start() != interval.End())
-                  addSnapPoint(interval.End(), track);
+               addSnapPoint(interval->Start(), track);
+               if(interval->Start() != interval->End())
+                  addSnapPoint(interval->End(), track);
             }
          }
       }

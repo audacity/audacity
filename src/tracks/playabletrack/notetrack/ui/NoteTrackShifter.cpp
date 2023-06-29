@@ -29,9 +29,9 @@ public:
          return HitTestResult::Intervals;
    }
 
-   void SelectInterval( const TrackInterval &interval ) override
+   void SelectInterval(const ChannelGroupInterval &interval) override
    {
-      CommonSelectInterval( interval );
+      CommonSelectInterval(interval);
    }
 
    bool SyncLocks() override { return true; }

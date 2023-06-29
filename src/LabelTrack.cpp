@@ -45,6 +45,8 @@ for drawing different aspects of the label and its text box.
 #include "TimeWarper.h"
 #include "AudacityMessageBox.h"
 
+LabelTrack::Interval::~Interval() = default;
+
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "labeltrack",
    LabelTrack::New
@@ -118,41 +120,23 @@ Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
    return pNewTrack;
 }
 
-template<typename IntervalType>
-static IntervalType DoMakeInterval(const LabelStruct &label, size_t index)
+size_t LabelTrack::NIntervals() const
 {
-   return {
-      label.getT0(), label.getT1(),
-      std::make_unique<LabelTrack::IntervalData>( index ) };
+   return mLabels.size();
 }
 
-auto LabelTrack::MakeInterval( size_t index ) const -> ConstInterval
+auto LabelTrack::MakeInterval(size_t index) -> std::shared_ptr<Interval>
 {
-   return DoMakeInterval<ConstInterval>(mLabels[index], index);
+   if (index >= mLabels.size())
+      return {};
+   auto &label = mLabels[index];
+   return std::make_shared<Interval>(label.getT0(), label.getT1(), index);
 }
 
-auto LabelTrack::MakeInterval( size_t index ) -> Interval
+std::shared_ptr<ChannelGroupInterval>
+LabelTrack::DoGetInterval(size_t iInterval)
 {
-   return DoMakeInterval<Interval>(mLabels[index], index);
-}
-
-template< typename Container, typename LabelTrack >
-static Container DoMakeIntervals(LabelTrack &track)
-{
-   Container result;
-   for (size_t ii = 0, nn = track.GetNumLabels(); ii < nn; ++ii)
-      result.emplace_back( track.MakeInterval( ii ) );
-   return result;
-}
-
-auto LabelTrack::GetIntervals() const -> ConstIntervals
-{
-   return DoMakeIntervals<ConstIntervals>(*this);
-}
-
-auto LabelTrack::GetIntervals() -> Intervals
-{
-   return DoMakeIntervals<Intervals>(*this);
+   return MakeInterval(iInterval);
 }
 
 void LabelTrack::SetLabel( size_t iLabel, const LabelStruct &newLabel )

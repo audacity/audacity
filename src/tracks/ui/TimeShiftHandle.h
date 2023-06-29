@@ -18,13 +18,13 @@ Paul Licameli
 #include "AttachedVirtualFunction.h"
 #include "../../UIHandle.h"
 
+class ChannelGroupInterval;
 class SnapManager;
 class Track;
 using TrackArray = std::vector<Track*>;
 class TrackList;
 
 class Track;
-class TrackInterval;
 
 class ViewInfo;
 class wxMouseState;
@@ -66,7 +66,7 @@ public:
       HitTestParams *pParams = nullptr //!< Optional extra information
    ) = 0;
 
-   using Intervals = std::vector<TrackInterval>;
+   using Intervals = std::vector<std::shared_ptr<ChannelGroupInterval>>;
 
    //! Return special intervals of the track that will not move
    const Intervals &FixedIntervals() const { return mFixed; }
@@ -75,15 +75,14 @@ public:
    const Intervals &MovingIntervals() const { return mMoving; }
    
    //! Change intervals satisfying a predicate from fixed to moving
-   void UnfixIntervals(
-      std::function< bool( const TrackInterval& ) > pred );
+   void UnfixIntervals(std::function<bool(const ChannelGroupInterval&)> pred);
 
    //! Change all intervals from fixed to moving
    void UnfixAll();
 
    //! Notifies the shifter that a region is selected, so it may update its fixed and moving intervals
    /*! Default behavior:  if any part of the track is selected, unfix all parts of it. */
-   virtual void SelectInterval( const TrackInterval &interval );
+   virtual void SelectInterval(const ChannelGroupInterval &interval);
 
    //! Whether unfixing of an interval should propagate to all overlapping intervals in the sync lock group
    virtual bool SyncLocks() = 0;
@@ -116,7 +115,9 @@ public:
    virtual bool MayMigrateTo( Track &otherTrack );
 
    //! Remove all moving intervals from the track, if possible
-   /*! Default implementation does nothing */
+   /*!
+    Default implementation does nothing
+    */
    virtual Intervals Detach();
 
    //! Test whether intervals can fit into another track, maybe adjusting the offset slightly
@@ -130,12 +131,15 @@ public:
    );
 
    //! Put moving intervals into the track, which may have migrated from another
-   /*! @return success
-   
-       In case of failure, track states are unspecified
-    
-       Default implementation does nothing and returns true */
-   virtual bool Attach( Intervals intervals, double offset );
+   /*!
+    The ChannelGroupInterval objects pointed to by `intervals` will not be used
+    again.  The shifter should repopupate mMoving with new ChannelGroupInterval
+    objects to reflect the new state of the track.
+    In case of failure, track states are unspecified
+    @return success
+    Default implementation does nothing and returns true
+    */
+   virtual bool Attach(Intervals intervals, double offset);
 
    //! When dragging is done, do (once) the final steps of migration (which may be expensive)
    /*! @return success
@@ -156,7 +160,7 @@ public:
 
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
-   void CommonSelectInterval( const TrackInterval &interval );
+   void CommonSelectInterval(const ChannelGroupInterval &interval);
 
    /*! May be useful to override `MayMigrateTo()`, if certain other needed overrides are given.
        Returns true, iff: tracks have same type, and corresponding positions in their channel groups,
@@ -226,7 +230,7 @@ struct AUDACITY_DLL_API ClipMoveState {
 
    //! Return pointer to the first fixed interval of the captured track, if there is one
    /*! Pointer may be invalidated by operations on the associated TrackShifter */
-   const TrackInterval *CapturedInterval() const;
+   const ChannelGroupInterval *CapturedInterval() const;
 
    //! Do sliding of tracks and intervals, maybe adjusting the offset
    /*! @return actual slide amount, maybe adjusted toward zero from desired */

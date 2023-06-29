@@ -178,19 +178,26 @@ public:
 
    Track::Holder PasteInto( AudacityProject & ) const override;
 
-   struct IntervalData final : Track::IntervalData {
-      size_t index;
-      explicit IntervalData(size_t index) : index{index} {};
-   };
-   ConstInterval MakeInterval ( size_t index ) const;
-   Interval MakeInterval ( size_t index );
-   ConstIntervals GetIntervals() const override;
-   Intervals GetIntervals() override;
+   struct Interval final : ChannelGroupInterval {
+      Interval(double start, double end, size_t index)
+         : ChannelGroupInterval{ start, end }, index{ index }
+      {}
 
- public:
+      ~Interval() override;
+
+      size_t index;
+   };
+   std::shared_ptr<Interval> MakeInterval(size_t index);
+
+public:
    void SortLabels();
 
- private:
+   size_t NIntervals() const override;
+
+private:
+   std::shared_ptr<ChannelGroupInterval> DoGetInterval(size_t iInterval)
+      override;
+
    LabelArray mLabels;
 
    // Set in copied label tracks

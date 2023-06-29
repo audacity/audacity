@@ -205,10 +205,12 @@ public:
 
    Track::Holder PasteInto( AudacityProject & ) const override;
 
-   ConstIntervals GetIntervals() const override;
-   Intervals GetIntervals() override;
+   size_t NIntervals() const override;
 
- private:
+private:
+   std::shared_ptr<ChannelGroupInterval> DoGetInterval(size_t iInterval)
+      override;
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    void DoSetVelocity(float velocity);
 #endif
