@@ -1,9 +1,9 @@
 /**********************************************************************
- 
+
   Audacity: A Digital Audio Editor
- 
+
   RealtimeEffectList.cpp
- 
+
  *********************************************************************/
 
 #include "RealtimeEffectList.h"
@@ -59,7 +59,7 @@ RealtimeEffectList::Get(const AudacityProject &project)
 }
 
 static const SequenceAttachments::RegisteredFactory sequenceEffects
-{ 
+{
    [](WideSampleSequence &)
    {
       return std::make_unique<RealtimeEffectList>();
@@ -69,7 +69,8 @@ static const SequenceAttachments::RegisteredFactory sequenceEffects
 // Access for per-sequence effect list
 RealtimeEffectList &RealtimeEffectList::Get(WideSampleSequence &sequence)
 {
-   return sequence.Attachments::Get<RealtimeEffectList>(sequenceEffects);
+   return const_cast<WideSampleSequence&>(sequence.GetDecorated())
+      .Attachments::Get<RealtimeEffectList>(sequenceEffects);
 }
 
 const RealtimeEffectList &RealtimeEffectList::Get(
@@ -109,7 +110,7 @@ RealtimeEffectList::ReplaceState(size_t index,
    if (index >= mStates.size())
       return false;
    const auto &id = pState->GetID();
-   if (pState->GetEffect() != nullptr) {     
+   if (pState->GetEffect() != nullptr) {
       auto shallowCopy = mStates;
 
       Publisher<RealtimeEffectListMessage>::Publish({
@@ -144,7 +145,7 @@ void RealtimeEffectList::RemoveState(
    auto end = shallowCopy.end(),
       found = std::find(shallowCopy.begin(), end, pState);
    if (found != end)
-   {      
+   {
       const auto index = std::distance(shallowCopy.begin(), found);
       shallowCopy.erase(found);
 
@@ -163,7 +164,7 @@ void RealtimeEffectList::RemoveState(
 void RealtimeEffectList::Clear()
 {
    decltype(mStates) temp;
-   
+
    // Swap an empty list in as a whole, not removing one at a time
    // Lock for only a short time
    (LockGuard{ mLock }, swap(temp, mStates));

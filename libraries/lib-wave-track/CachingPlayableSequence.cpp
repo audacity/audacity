@@ -35,6 +35,11 @@ CachingPlayableSequence::CachingPlayableSequence(const WaveTrack& waveTrack)
 {
 }
 
+const WideSampleSequence* CachingPlayableSequence::DoGetDecorated() const
+{
+   return &mWaveTrack;
+}
+
 size_t CachingPlayableSequence::NChannels() const
 {
    return mWaveTrack.NChannels();

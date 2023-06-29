@@ -15,7 +15,7 @@ Paul Licameli split from SampleFrame.h
 #include "SampleCount.h"
 #include "SampleFormat.h"
 
-struct WideSampleSequence;
+class WideSampleSequence;
 
 //! Hosting of objects attached by higher level code
 using SequenceAttachments = ClientData::Site<
@@ -33,6 +33,8 @@ public:
    using Attachments = SequenceAttachments;
 
    virtual ~WideSampleSequence();
+
+   const WideSampleSequence& GetDecorated() const;
 
    //! A constant property
    /*!
@@ -128,6 +130,9 @@ public:
    //! starting at the given time
    virtual void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const = 0;
+
+private:
+   virtual const WideSampleSequence* DoGetDecorated() const;
 };
 
 #endif
