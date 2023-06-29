@@ -31,6 +31,7 @@ public:
    CachingPlayableSequence(const WaveTrack&);
 
    // WideSampleSequence
+   const WideSampleSequence* DoGetDecorated() const override;
    size_t NChannels() const override;
    float GetChannelGain(int channel) const override;
    bool Get(

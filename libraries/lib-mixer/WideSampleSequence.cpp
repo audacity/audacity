@@ -21,3 +21,16 @@ double WideSampleSequence::LongSamplesToTime(sampleCount pos) const
 {
    return pos.as_double() / GetRate();
 }
+
+const WideSampleSequence& WideSampleSequence::GetDecorated() const
+{
+   const WideSampleSequence* innermost = this;
+   while (const auto newP = innermost->DoGetDecorated())
+      innermost = newP;
+   return *innermost;
+}
+
+const WideSampleSequence* WideSampleSequence::DoGetDecorated() const
+{
+   return nullptr;
+}
