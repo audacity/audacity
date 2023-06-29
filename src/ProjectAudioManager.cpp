@@ -712,7 +712,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             // If suitable tracks still not found, will record into NEW ones,
             // starting with t0
          }
-         
+
          // Whether we decided on NEW tracks or not:
          if (t1 <= selectedRegion.t0() && selectedRegion.t1() > selectedRegion.t0()) {
             t1 = selectedRegion.t1();   // record within the selection
@@ -732,7 +732,12 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             MakeTransportTracks(TrackList::Get( *p ), false, true);
          for (const auto &wt : existingTracks) {
             auto end = transportTracks.playbackSequences.end();
-            auto it = std::find(transportTracks.playbackSequences.begin(), end, wt);
+            auto it = std::find_if(
+               transportTracks.playbackSequences.begin(), end,
+               [&wt](const auto& playbackSequence) {
+                  return &playbackSequence->GetDecorated() ==
+                         &wt->GetDecorated();
+               });
             if (it != end)
                transportTracks.playbackSequences.erase(it);
          }
@@ -1176,7 +1181,7 @@ static ProjectAudioIO::DefaultOptions::Scope sScope {
 
    //! Decorate with more info
    options.listener = ProjectAudioManager::Get(project).shared_from_this();
-   
+
    bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
    options.loopEnabled = loopEnabled;
 
@@ -1300,7 +1305,7 @@ static RegisteredMenuItemEnabler stopIfPaused{{
    }
 }};
 
-// GetSelectedProperties collects information about 
+// GetSelectedProperties collects information about
 // currently selected audio tracks
 PropertiesOfSelected
 GetPropertiesOfSelected(const AudacityProject &proj)
@@ -1310,10 +1315,10 @@ GetPropertiesOfSelected(const AudacityProject &proj)
    PropertiesOfSelected result;
    result.allSameRate = true;
 
-   const auto selectedTracks{ 
+   const auto selectedTracks{
       TrackList::Get(proj).Selected< const WaveTrack >() };
 
-   for (const auto & track : selectedTracks) 
+   for (const auto & track : selectedTracks)
    {
       if (rateOfSelection != RATE_NOT_SELECTED &&
          track->GetRate() != rateOfSelection)
