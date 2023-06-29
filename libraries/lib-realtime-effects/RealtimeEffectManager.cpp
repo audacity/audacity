@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  RealtimeEffectManager.cpp
- 
+
  Paul Licameli split from EffectManager.cpp
- 
+
  **********************************************************************/
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
@@ -249,7 +249,8 @@ RealtimeEffectManager::MakeNewState(
       for (auto &sequence : mSequences) {
          // Add all sequences to a per-project state, but add only the same
          // sequence to a state in the per-sequence list
-         if (pSequence && pSequence != sequence)
+         if (
+            pSequence && &pSequence->GetDecorated() != &sequence->GetDecorated())
             continue;
          auto rate = mRates[sequence];
          auto pInstance2 =
