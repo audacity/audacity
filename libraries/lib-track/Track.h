@@ -224,6 +224,75 @@ public:
          const_cast<ChannelGroup*>(this)->DoGetChannel(iChannel));
    }
 
+   //! Iterator for channels; destroying the related ChannelGroup invalidates
+   //! it
+   template<typename ChannelType>
+   class ChannelIterator
+      : public ValueIterator<
+         std::shared_ptr<ChannelType>, std::bidirectional_iterator_tag
+      >
+   {
+      using GroupType = std::conditional_t<std::is_const_v<ChannelType>,
+         const ChannelGroup, ChannelGroup>;
+   public:
+      ChannelIterator() = default;
+      ChannelIterator(GroupType *pGroup, size_t index)
+         : mpGroup{ pGroup }, mIndex{ index }
+      {}
+
+      std::shared_ptr<ChannelType> operator *() const
+      {
+         if (!mpGroup || mIndex >= mpGroup->NChannels())
+            return {};
+         return mpGroup->template GetChannel<ChannelType>(mIndex);
+      }
+
+      ChannelIterator &operator ++() { ++mIndex; return *this; }
+      ChannelIterator operator ++(int)
+         { auto copy{ *this }; operator ++(); return copy; }
+
+      ChannelIterator &operator --() { --mIndex; return *this; }
+      ChannelIterator operator --(int)
+         { auto copy{ *this }; operator --(); return copy; }
+
+      friend inline bool operator ==(ChannelIterator a, ChannelIterator b)
+         { return a.mpGroup == b.mpGroup && a.mIndex == b.mIndex; }
+      friend inline bool operator !=(ChannelIterator a, ChannelIterator b)
+         { return !(a == b); }
+
+   private:
+      GroupType *const mpGroup{};
+      size_t mIndex{};
+   };
+
+   //! Get range of channels with mutative access
+   /*!
+    @pre `IsLeader()`
+    */
+   template<typename ChannelType = Channel>
+   IteratorRange<ChannelIterator<ChannelType>> Channels()
+   {
+      assert(IsLeader());
+      return { { this, 0 }, { this, NChannels() } };
+   }
+
+   //! Get range of channels with read-only access
+   /*!
+    @pre `IsLeader()`
+    */
+   template<typename ChannelType = const Channel>
+   auto Channels() const
+      -> std::enable_if_t<std::is_const_v<ChannelType>,
+         IteratorRange<ChannelIterator<ChannelType>>
+      >
+   {
+      assert(IsLeader());
+      return { { this, 0 }, { this, NChannels() } };
+   }
+
+   // TODO remove this which is only used in assertions
+   virtual bool IsLeader() const = 0;
+
 protected:
    //! Retrieve a channel
    /*!
@@ -295,72 +364,6 @@ private:
  private:
    void SetId( TrackId id ) { mId = id; }
  public:
-
-   //! Iterator for channels; destroying the related track invalidates it
-   template<typename ChannelType>
-   class ChannelIterator
-      : public ValueIterator<
-         std::shared_ptr<ChannelType>, std::bidirectional_iterator_tag
-      >
-   {
-      using TrackType = std::conditional_t<std::is_const_v<ChannelType>,
-         const Track, Track>;
-   public:
-      ChannelIterator() = default;
-      ChannelIterator(TrackType *pTrack, size_t index)
-         : mpTrack{ pTrack }, mIndex{ index }
-      {}
-
-      std::shared_ptr<ChannelType> operator *() const
-      {
-         using namespace std;
-         if (!mpTrack || mIndex >= mpTrack->NChannels())
-            return {};
-         return mpTrack->template GetChannel<ChannelType>(mIndex);
-      }
-
-      ChannelIterator &operator ++() { ++mIndex; return *this; }
-      ChannelIterator operator ++(int)
-         { auto copy{ *this }; operator ++(); return copy; }
-
-      ChannelIterator &operator --() { --mIndex; return *this; }
-      ChannelIterator operator --(int)
-         { auto copy{ *this }; operator --(); return copy; }
-
-      friend inline bool operator ==(ChannelIterator a, ChannelIterator b)
-         { return a.mpTrack == b.mpTrack && a.mIndex == b.mIndex; }
-      friend inline bool operator !=(ChannelIterator a, ChannelIterator b)
-         { return !(a == b); }
-
-   private:
-      TrackType *const mpTrack{};
-      size_t mIndex{};
-   };
-
-   //! Get range of channels with mutative access
-   /*!
-    @pre `IsLeader()`
-    */
-   template<typename ChannelType = Channel>
-   IteratorRange<ChannelIterator<ChannelType>> Channels()
-   {
-      assert(IsLeader());
-      return { { this, 0 }, { this, NChannels() } };
-   }
-
-   //! Get range of channels with read-only access
-   /*!
-    @pre `IsLeader()`
-    */
-   template<typename ChannelType = const Channel>
-   auto Channels() const
-      -> std::enable_if_t<std::is_const_v<ChannelType>,
-         IteratorRange<ChannelIterator<ChannelType>>
-      >
-   {
-      assert(IsLeader());
-      return { { this, 0 }, { this, NChannels() } };
-   }
 
    // Given a bare pointer, find a shared_ptr.  Undefined results if the track
    // is not yet managed by a shared_ptr.  Undefined results if the track is
@@ -654,7 +657,7 @@ public:
 
    // Frequently useful operands for + and -
    bool IsSelected() const;
-   bool IsLeader() const;
+   bool IsLeader() const override;
    bool IsSelectedLeader() const;
 
    // Cause this track and following ones in its TrackList to adjust
