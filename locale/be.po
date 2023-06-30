@@ -2320,7 +2320,7 @@ msgstr "Не атрымалася адкрыць файл: \"%s\""
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "Памылка: %hs у радку %lu"
+msgstr "Памылка: %s у радку %lu"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format
@@ -4469,7 +4469,7 @@ msgstr "Больш не паказваць гэта папярэджанне"
 #: src/FileFormats.cpp
 #, c-format
 msgid "Error (file may not have been written): %s"
-msgstr "Памылка (магчыма, файл не запісаны): %hs"
+msgstr "Памылка (магчыма, файл не запісаны): %s"
 
 #: src/FileFormats.cpp
 #, fuzzy
@@ -20925,7 +20925,7 @@ msgstr ""
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, fuzzy, lisp-format
 msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Памылка (магчыма, файл не запісаны): %hs"
+msgstr "Памылка (магчыма, файл не запісаны): %s"
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"

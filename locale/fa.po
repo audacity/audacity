@@ -4413,7 +4413,7 @@ msgstr ""
 #: src/FileFormats.cpp
 #, c-format
 msgid "Error (file may not have been written): %s"
-msgstr "خطا (ممکن است در پرونده نوشته شده باشد) : %hs"
+msgstr "خطا (ممکن است در پرونده نوشته شده باشد) : %s"
 
 #: src/FileFormats.cpp
 msgid "&Copy uncompressed files into the project (safer)"
@@ -20567,7 +20567,7 @@ msgstr ""
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, fuzzy, lisp-format
 msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "خطا (ممکن است در پرونده نوشته شده باشد) : %hs"
+msgstr "خطا (ممکن است در پرونده نوشته شده باشد) : %s"
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"

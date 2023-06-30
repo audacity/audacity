@@ -2325,7 +2325,7 @@ msgstr "Non foi posíbel abrir o ficheiro: «%s»"
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "Erro: %hs na liña %lu"
+msgstr "Erro: %s na liña %lu"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format

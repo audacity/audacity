@@ -2328,7 +2328,7 @@ msgstr "Не бе възможно да се отвори файл: „%s“"
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "Грешка: %hs на ред %lu"
+msgstr "Грешка: %s на ред %lu"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format
