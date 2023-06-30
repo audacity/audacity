@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 import Audacity
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Item {
    id: root
@@ -61,13 +62,13 @@ Item {
          Rectangle {
             height: root.height
             width: root.gripVisible ? 2 : 6
-            color: appConfig.backgroundColor1
+            color: UiTheme.backgroundColor1
          }
 
          FlatButton {
             id: play
             icon: isPlaying ? IconCode.SOLID_PAUSE : IconCode.SOLID_PLAY
-            iconColor: isPlaying ? appConfig.fontColor1 : appConfig.playColor
+            iconColor: isPlaying ? UiTheme.fontColor1 : UiTheme.playColor
             onClicked: toolbarHandler.Play()
          }
 
@@ -80,7 +81,7 @@ Item {
          FlatButton {
             id: record
             icon: IconCode.SOLID_RECORD
-            iconColor: appConfig.recordColor
+            iconColor: UiTheme.recordColor
             visible: root.workspaceMode === Workspace.Mode.Classic
             onClicked: toolbarHandler.Record()
          }
@@ -102,7 +103,7 @@ Item {
          FlatButton {
             id: record2
             icon: IconCode.SOLID_RECORD
-            iconColor: appConfig.recordColor
+            iconColor: UiTheme.recordColor
             visible: root.workspaceMode !== Workspace.Mode.Classic
             onClicked: toolbarHandler.Record()
          }

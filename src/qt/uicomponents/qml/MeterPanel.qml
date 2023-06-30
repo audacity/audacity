@@ -2,12 +2,13 @@ import QtQuick
 import QtQuick.Controls
 
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Rectangle {
    id: root
    height: 6
    width: 100
-   color: appConfig.buttonColor
+   color: UiTheme.buttonColor
    objectName: "MeterPanel"
 
    property alias value: meterPanelHandler.value
@@ -102,7 +103,7 @@ Rectangle {
       id: currentPeakIndicator
       height: parent.height
       width: peaks.current
-      color: isBeingClipped() ? appConfig.recordColor : appConfig.accentColor
+      color: isBeingClipped() ? UiTheme.recordColor : UiTheme.accentColor
    }
 
    Rectangle {
@@ -110,7 +111,7 @@ Rectangle {
       x: peaks.recent
       height: parent.height
       width: 1
-      color: appConfig.accentColor
+      color: UiTheme.accentColor
       visible: peaks.recent !== -1
    }
 
@@ -119,7 +120,7 @@ Rectangle {
       x: peaks.maximum
       height: parent.height
       width: 1
-      color: appConfig.fontColor1
+      color: UiTheme.fontColor1
       visible: peaks.maximum !== -1
    }
 
@@ -129,7 +130,7 @@ Rectangle {
       height: parent.height
       width: clippingZone.width
       opacity: peaks.hasBeenClipped ? 1.0 : 0.1
-      color: peaks.hasBeenClipped ? appConfig.recordColor : appConfig.backgroundColor3
+      color: peaks.hasBeenClipped ? UiTheme.recordColor : UiTheme.backgroundColor3
    }
 
    Component.onCompleted: {

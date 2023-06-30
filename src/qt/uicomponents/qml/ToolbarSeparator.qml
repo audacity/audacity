@@ -1,5 +1,7 @@
 import QtQuick
 
+import Audacity.UiThemes
+
 Item {
    id: root
    width: 15
@@ -12,6 +14,6 @@ Item {
       width: 1
       height: 28
       anchors.centerIn: parent
-      color: appConfig.strokeColor
+      color: UiTheme.strokeColor
    }
 }

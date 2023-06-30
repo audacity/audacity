@@ -22,6 +22,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import Audacity.UiThemes
+
 Dial {
    id: root
    implicitWidth: 30
@@ -40,10 +42,10 @@ Dial {
       readonly property real outerArcLineWidth: 3
       readonly property real innerArcLineWidth: 2
 
-      readonly property color valueArcColor: appConfig.accentColor
-      readonly property color outerArcColor: appConfig.buttonColor
-      readonly property color innerArcColor: colorWithAlpha(appConfig.fontColor1, 0.5)
-      readonly property color dialNeedleColor: appConfig.fontColor1
+      readonly property color valueArcColor: UiTheme.accentColor
+      readonly property color outerArcColor: UiTheme.buttonColor
+      readonly property color innerArcColor: colorWithAlpha(UiTheme.fontColor1, 0.5)
+      readonly property color dialNeedleColor: UiTheme.fontColor1
 
       property int initialValue: 0
       property real dragStartX: 0
@@ -78,7 +80,7 @@ Dial {
 
          // Gauge background
          ctx.lineWidth = prv.outerArcLineWidth
-         ctx.strokeStyle = prv.outerArcColor 
+         ctx.strokeStyle = prv.outerArcColor
          ctx.beginPath()
          ctx.arc(width/2, height/2, root.width/2 - prv.outerArcLineWidth/2, -140 * (Math.PI/180) - Math.PI/2, 140 * (Math.PI/180) - Math.PI/2, false)
          ctx.stroke()

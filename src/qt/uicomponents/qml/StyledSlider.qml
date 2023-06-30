@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import Audacity.UiThemes
+
 Slider {
    id: root
    value: 0.5
@@ -11,12 +13,12 @@ Slider {
       width: root.availableWidth - handleId.width
       height: 4
       radius: 2
-      color: appConfig.buttonColor
+      color: UiTheme.buttonColor
 
       Rectangle {
          width: root.visualPosition * parent.width
          height: parent.height
-         color: appConfig.accentColor
+         color: UiTheme.accentColor
          radius: 2
       }
    }
@@ -28,8 +30,8 @@ Slider {
       implicitWidth: 16
       implicitHeight: 16
       radius: 8
-      color: appConfig.textFieldColor
-      border.color: appConfig.fontColor1
+      color: UiTheme.textFieldColor
+      border.color: UiTheme.fontColor1
       antialiasing: true
    }
 }

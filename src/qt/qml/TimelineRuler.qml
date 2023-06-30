@@ -3,12 +3,13 @@ import QtQuick.Controls
 
 import Audacity
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Rectangle {
    id: root
    implicitHeight: 28
    height: implicitHeight
-   color: appConfig.backgroundColor2
+   color: UiTheme.backgroundColor2
    objectName: "TimelineRuler"
 
    property alias playheadCursorHeight: playheadCursor.height
@@ -38,12 +39,12 @@ Rectangle {
       x: 12
       width: 1
       height: parent.height
-      color: appConfig.strokeColor
+      color: UiTheme.strokeColor
    }
 
    Rectangle {
       height: 1
-      color: appConfig.strokeColor
+      color: UiTheme.strokeColor
       anchors.verticalCenter: parent.verticalCenter
       anchors.left: playheadRecessSeparator.right
       anchors.right: snappingButton.left
@@ -54,7 +55,7 @@ Rectangle {
       y: parent.height - 1
       width: parent.width
       height: 1
-      color: appConfig.strokeColor
+      color: UiTheme.strokeColor
    }
 
    PlayheadCursor {

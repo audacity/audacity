@@ -4,11 +4,12 @@ import QtQuick.Layouts
 
 import Audacity
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Rectangle {
    id: root
    width: parent.width
-   color: appConfig.backgroundColor1
+   color: UiTheme.backgroundColor1
 
    property var workspaceMode: Workspace.Mode.Classic
    property alias enableVolumeTester: masterVolumeToolbar.testerVisible
@@ -125,7 +126,7 @@ Rectangle {
       anchors.top: root.bottom
       height: 1
       width: parent.width
-      color: appConfig.strokeColor
+      color: UiTheme.strokeColor
    }
 }
 

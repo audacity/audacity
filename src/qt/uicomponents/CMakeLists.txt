@@ -44,6 +44,7 @@ qt_add_qml_module(${MODULE_NAME}
    RESOURCE_PREFIX /${MODULE_NAME}
    DEPENDENCIES
       QtQuick
+      Audacity.UiThemes
    QML_FILES
       ${MODULE_QML_SOURCES}
    SOURCES

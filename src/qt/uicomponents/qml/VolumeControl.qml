@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Item {
    id: root
@@ -53,7 +54,7 @@ Item {
       width: 16
       height: 16
       anchors.verticalCenter: parent.verticalCenter
-      color: appConfig.fontColor1
+      color: UiTheme.fontColor1
 
       text: {
          if (handle.x === 0) {
@@ -102,7 +103,7 @@ Item {
          anchors.verticalCenter: parent.verticalCenter
 
          border {
-             color: appConfig.fontColor1
+             color: UiTheme.fontColor1
              width: 1
          }
 

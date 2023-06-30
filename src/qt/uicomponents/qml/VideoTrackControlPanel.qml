@@ -3,6 +3,7 @@ import QtQuick.Layouts
 
 import Audacity
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Item {
    id: root
@@ -23,7 +24,7 @@ Item {
    Rectangle {
       id: background
       anchors.fill: parent
-      color: appConfig.backgroundColor2
+      color: UiTheme.backgroundColor2
       opacity: 1.0
 
       states: [
@@ -33,8 +34,8 @@ Item {
 
             PropertyChanges {
                target: background
-               color: appConfig.backgroundColor1
-               opacity: appConfig.buttonOpacityHover
+               color: UiTheme.backgroundColor1
+               opacity: UiTheme.buttonOpacityHover
             }
          }
       ]
@@ -52,7 +53,7 @@ Item {
             y: 14
             width: 16
             height: 16
-            color: appConfig.fontColor1
+            color: UiTheme.fontColor1
             text: String.fromCharCode(IconCode.TV)
 
             font {
@@ -66,7 +67,7 @@ Item {
             y: 14
             height: 16
             horizontalAlignment: Text.AlignLeft
-            color: appConfig.fontColor1
+            color: UiTheme.fontColor1
             text: name
 
             font {
@@ -131,7 +132,7 @@ Item {
             x: 255
             width: 1
             height: root.height
-            color: appConfig.strokeColor
+            color: UiTheme.strokeColor
          }
 
          TrackVolumeMeter {
@@ -148,6 +149,6 @@ Item {
       y: root.height - horizontalSeparator.height
       height: 2
       width: root.width
-      color: appConfig.strokeColor
+      color: UiTheme.strokeColor
    }
 }

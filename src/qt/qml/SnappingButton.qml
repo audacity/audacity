@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Rectangle {
    id: root
@@ -12,10 +13,10 @@ Rectangle {
    color: backgroundColor
    objectName: "SnappingButton"
 
-   property color backgroundColor: appConfig.backgroundColor2
-   property color buttonColor: appConfig.buttonColor
-   property color strokeColor: appConfig.strokeColor
-   property color accentColor: appConfig.accentColor
+   property color backgroundColor: UiTheme.backgroundColor2
+   property color buttonColor: UiTheme.buttonColor
+   property color strokeColor: UiTheme.strokeColor
+   property color accentColor: UiTheme.accentColor
    property bool snapped: false
 
    signal clicked()
@@ -79,7 +80,7 @@ Rectangle {
       horizontalAlignment: Text.AlignHCenter
       verticalAlignment: Text.AlignVCenter
       text: String.fromCharCode(IconCode.MAGNET)
-      color: appConfig.fontColor1
+      color: UiTheme.fontColor1
       font.family: appConfig.iconFont.family
       font.pixelSize: 14
    }
