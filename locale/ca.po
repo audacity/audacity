@@ -2299,7 +2299,7 @@ msgstr "No s'ha pogut obrir el fitxer: «%s»"
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "Error: %hs a la línia %lu"
+msgstr "Error: %s a la línia %lu"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format
