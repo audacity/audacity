@@ -73,6 +73,14 @@ WaveTrack::Interval::Interval(const ChannelGroup &group,
 
 WaveTrack::Interval::~Interval() = default;
 
+std::shared_ptr<ChannelInterval>
+WaveTrack::Interval::DoGetChannel(size_t iChannel)
+{
+   if (iChannel < NChannels())
+      return std::make_shared<ChannelInterval>();
+   return {};
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;

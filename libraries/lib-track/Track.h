@@ -130,6 +130,12 @@ private:
    const double mStart, mEnd;
 };
 
+//! The intersection of a Channel and a WideChannelGroupInterval
+class TRACK_API ChannelInterval {
+public:
+   virtual ~ChannelInterval();
+};
+
 class ChannelGroup;
 
 //! Start and end time, and channel width, and whatever else subclasses
@@ -157,6 +163,97 @@ public:
     @post result: `result >= 1`
     */
    size_t NChannels() const { return mNChannels; }
+
+   //! Retrieve a channel, cast to the given type
+   /*!
+    Postconditions imply that `GetChannel(0)` is always non-null
+
+    @post if IntervalType is default, then:
+       result: `!(iChannel < NChannels()) || result`
+    */
+   template<typename IntervalType = ChannelInterval>
+   std::shared_ptr<IntervalType> GetChannel(size_t iChannel)
+   {
+      return
+         std::dynamic_pointer_cast<IntervalType>(DoGetChannel(iChannel));
+   }
+
+   /*!
+    @copydetails GetChannel(size_t)
+    */
+   template<typename IntervalType = const ChannelInterval>
+   auto GetChannel(size_t iChannel) const
+      -> std::enable_if_t<std::is_const_v<IntervalType>,
+         std::shared_ptr<IntervalType>>
+   {
+      return std::dynamic_pointer_cast<IntervalType>(
+         const_cast<WideChannelGroupInterval*>(this)->DoGetChannel(iChannel));
+   }
+
+   //! Iterator for channels; destroying the related ChannelGroup or
+   //! WideChannelGroupInterval invalidates it
+   template<typename IntervalType>
+   class ChannelIterator
+      : public ValueIterator<
+         std::shared_ptr<IntervalType>, std::bidirectional_iterator_tag
+      >
+   {
+      using GroupType = std::conditional_t<std::is_const_v<IntervalType>,
+         const WideChannelGroupInterval, WideChannelGroupInterval>;
+   public:
+      ChannelIterator() = default;
+      ChannelIterator(GroupType *pGroup, size_t index)
+         : mpGroup{ pGroup }, mIndex{ index }
+      {}
+
+      std::shared_ptr<IntervalType> operator *() const
+      {
+         if (!mpGroup || mIndex >= mpGroup->NChannels())
+            return {};
+         return mpGroup->template GetChannel<IntervalType>(mIndex);
+      }
+
+      ChannelIterator &operator ++() { ++mIndex; return *this; }
+      ChannelIterator operator ++(int)
+         { auto copy{ *this }; operator ++(); return copy; }
+
+      ChannelIterator &operator --() { --mIndex; return *this; }
+      ChannelIterator operator --(int)
+         { auto copy{ *this }; operator --(); return copy; }
+
+      friend inline bool operator ==(ChannelIterator a, ChannelIterator b)
+         { return a.mpGroup == b.mpGroup && a.mIndex == b.mIndex; }
+      friend inline bool operator !=(ChannelIterator a, ChannelIterator b)
+         { return !(a == b); }
+
+   private:
+      GroupType *mpGroup{};
+      size_t mIndex{};
+   };
+
+   //! Get range of ChannelInterval objects with mutative access
+   template<typename IntervalType = ChannelInterval>
+   IteratorRange<ChannelIterator<IntervalType>> Channels()
+   {
+      return { { this, 0 }, { this, NChannels() } };
+   }
+
+   //! Get range of channels with read-only access
+   template<typename IntervalType = const ChannelInterval>
+   auto Channels() const
+      -> std::enable_if_t<std::is_const_v<IntervalType>,
+         IteratorRange<ChannelIterator<IntervalType>>
+      >
+   {
+      return { { this, 0 }, { this, NChannels() } };
+   }
+
+protected:
+   //! Retrieve a channel
+   /*!
+    @post result: `!(iChannel < NChannels()) || result`
+    */
+   virtual std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) = 0;
 
 private:
    const size_t mNChannels;

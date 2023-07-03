@@ -579,6 +579,7 @@ private:
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
       { return iChannel == 0 ? mpClip : mpClip1; }
    private:
+      std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
       const std::shared_ptr<WaveClip> mpClip;
       //! TODO wide wave tracks: eliminate this
       const std::shared_ptr<WaveClip> mpClip1;

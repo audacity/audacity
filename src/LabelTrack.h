@@ -186,6 +186,7 @@ public:
       {}
 
       ~Interval() override;
+      std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
 
       size_t index;
    };

@@ -104,7 +104,15 @@ SONFNS(AutoSave)
 
 #endif
 
+NoteTrack::Interval::~Interval() = default;
 
+std::shared_ptr<ChannelInterval>
+NoteTrack::Interval::DoGetChannel(size_t iChannel)
+{
+   if (iChannel == 0)
+      return std::make_shared<ChannelInterval>();
+   return {};
+}
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "notetrack",
@@ -734,8 +742,7 @@ NoteTrack::DoGetInterval(size_t iInterval)
 {
    if (iInterval == 0)
       // Just one, and no extra info in it!
-      return std::make_shared<WideChannelGroupInterval>(
-         *this, GetStartTime(), GetEndTime());
+      return std::make_shared<Interval>(*this, GetStartTime(), GetEndTime());
    return {};
 }
 

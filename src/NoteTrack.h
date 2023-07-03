@@ -207,6 +207,12 @@ public:
 
    size_t NIntervals() const override;
 
+   struct Interval : WideChannelGroupInterval {
+      using WideChannelGroupInterval::WideChannelGroupInterval;
+      ~Interval() override;
+      std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
+   };
+
 private:
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;

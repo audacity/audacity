@@ -47,6 +47,14 @@ for drawing different aspects of the label and its text box.
 
 LabelTrack::Interval::~Interval() = default;
 
+std::shared_ptr<ChannelInterval>
+LabelTrack::Interval::DoGetChannel(size_t iChannel)
+{
+   if (iChannel == 0)
+      return std::make_shared<ChannelInterval>();
+   return {};
+}
+
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "labeltrack",
    LabelTrack::New

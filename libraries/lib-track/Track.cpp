@@ -38,6 +38,8 @@ and TimeTrack.
 
 ChannelGroupInterval::~ChannelGroupInterval() = default;
 
+ChannelInterval::~ChannelInterval() = default;
+
 WideChannelGroupInterval::WideChannelGroupInterval(
    const ChannelGroup &group, double start, double end
 )  : ChannelGroupInterval{ start, end }
