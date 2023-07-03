@@ -563,12 +563,13 @@ private:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   class Interval final : public ChannelGroupInterval {
+   class WAVE_TRACK_API Interval final : public WideChannelGroupInterval {
    public:
       /*!
        @pre `pClip != nullptr`
        */
-      Interval(const std::shared_ptr<WaveClip> &pClip,
+      Interval(const ChannelGroup &group,
+         const std::shared_ptr<WaveClip> &pClip,
          const std::shared_ptr<WaveClip> &pClip1);
 
       ~Interval() override;
@@ -591,7 +592,7 @@ private:
    size_t NIntervals() const override;
 
 protected:
-   std::shared_ptr<ChannelGroupInterval> DoGetInterval(size_t iInterval)
+   std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 

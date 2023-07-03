@@ -176,7 +176,7 @@ public:
                if (pClip)
                   pClip->Offset(offset);
             mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(
-               clips[0], clips[1]));
+               GetTrack(), clips[0], clips[1]));
          }
       }
       return true;

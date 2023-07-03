@@ -38,6 +38,17 @@ and TimeTrack.
 
 ChannelGroupInterval::~ChannelGroupInterval() = default;
 
+WideChannelGroupInterval::WideChannelGroupInterval(
+   const ChannelGroup &group, double start, double end
+)  : ChannelGroupInterval{ start, end }
+   , mNChannels{ group.NChannels() }
+{
+   assert(group.IsLeader());
+   assert(mNChannels >= 1); // Post of ChannelGroup::NChannels
+}
+
+WideChannelGroupInterval::~WideChannelGroupInterval() = default;
+
 Channel::~Channel() = default;
 
 int Channel::FindChannelIndex() const

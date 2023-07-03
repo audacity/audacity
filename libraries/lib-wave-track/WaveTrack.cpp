@@ -61,9 +61,11 @@ from the project that will own the track.
 
 using std::max;
 
-WaveTrack::Interval::Interval(const std::shared_ptr<WaveClip> &pClip,
-   const std::shared_ptr<WaveClip> &pClip1)
-   : ChannelGroupInterval{ pClip->GetPlayStartTime(), pClip->GetPlayEndTime() }
+WaveTrack::Interval::Interval(const ChannelGroup &group,
+   const std::shared_ptr<WaveClip> &pClip,
+   const std::shared_ptr<WaveClip> &pClip1
+)  : WideChannelGroupInterval{ group,
+      pClip->GetPlayStartTime(), pClip->GetPlayEndTime() }
    , mpClip{ pClip }
    , mpClip1{ pClip1 }
 {
@@ -404,7 +406,8 @@ size_t WaveTrack::NIntervals() const
    return mClips.size();
 }
 
-std::shared_ptr<ChannelGroupInterval> WaveTrack::DoGetInterval(size_t iInterval)
+std::shared_ptr<WideChannelGroupInterval>
+WaveTrack::DoGetInterval(size_t iInterval)
 {
    if (iInterval < NIntervals()) {
       WaveClipHolder pClip = mClips[iInterval],
@@ -415,7 +418,7 @@ std::shared_ptr<ChannelGroupInterval> WaveTrack::DoGetInterval(size_t iInterval)
          ; right && iInterval < right->mClips.size()
       )
          pClip1 = right->mClips[iInterval];
-      return std::make_shared<Interval>(pClip, pClip1);
+      return std::make_shared<Interval>(*this, pClip, pClip1);
    }
    return {};
 }

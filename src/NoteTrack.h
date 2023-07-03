@@ -208,7 +208,7 @@ public:
    size_t NIntervals() const override;
 
 private:
-   std::shared_ptr<ChannelGroupInterval> DoGetInterval(size_t iInterval)
+   std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
 
 #ifdef EXPERIMENTAL_MIDI_OUT

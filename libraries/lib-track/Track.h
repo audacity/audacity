@@ -130,12 +130,42 @@ private:
    const double mStart, mEnd;
 };
 
+class ChannelGroup;
+
+//! Start and end time, and channel width, and whatever else subclasses
+//! associate with them
+/*!
+ Start and end and number of channels are immutable, but subclasses may add
+ other mutable data
+ @invariant `Start() <= End()`
+ */
+class TRACK_API WideChannelGroupInterval : public ChannelGroupInterval {
+public:
+   //! Initialize immutable properties, constraining number of channels to
+   //! equal that of the containing group
+   /*!
+    @pre `group.IsLeader()`
+    @pre `start <= end`
+    @post `NChannels() == group.NChannels()`
+    */
+   WideChannelGroupInterval(
+      const ChannelGroup &group, double start, double end);
+   ~WideChannelGroupInterval() override;
+
+   //! Report the number of channels
+   /*!
+    @post result: `result >= 1`
+    */
+   size_t NChannels() const { return mNChannels; }
+
+private:
+   const size_t mNChannels;
+};
+
 //! Template generated base class for Track lets it host opaque UI related objects
 using AttachedTrackObjects = ClientData::Site<
    Track, TrackAttachment, ClientData::ShallowCopying, std::shared_ptr
 >;
-
-class ChannelGroup;
 
 class TRACK_API Channel
 {
@@ -280,7 +310,7 @@ public:
       @{
    */
 
-   using Interval = ChannelGroupInterval;
+   using Interval = WideChannelGroupInterval;
 
    //! Report the number of intervals
    virtual size_t NIntervals() const = 0;

@@ -103,7 +103,7 @@ class TIME_TRACK_API TimeTrack final
    size_t NIntervals() const override;
 
 private:
-   std::shared_ptr<ChannelGroupInterval> DoGetInterval(size_t iInterval)
+   std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
 
    void CleanState();

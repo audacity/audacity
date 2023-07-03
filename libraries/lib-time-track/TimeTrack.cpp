@@ -324,7 +324,8 @@ size_t TimeTrack::NIntervals() const
    return 0;
 }
 
-std::shared_ptr<ChannelGroupInterval> TimeTrack::DoGetInterval(size_t iInterval)
+std::shared_ptr<WideChannelGroupInterval>
+TimeTrack::DoGetInterval(size_t iInterval)
 {
    return {};
 }

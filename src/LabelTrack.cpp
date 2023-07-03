@@ -130,10 +130,11 @@ auto LabelTrack::MakeInterval(size_t index) -> std::shared_ptr<Interval>
    if (index >= mLabels.size())
       return {};
    auto &label = mLabels[index];
-   return std::make_shared<Interval>(label.getT0(), label.getT1(), index);
+   return std::make_shared<Interval>(
+      *this, label.getT0(), label.getT1(), index);
 }
 
-std::shared_ptr<ChannelGroupInterval>
+std::shared_ptr<WideChannelGroupInterval>
 LabelTrack::DoGetInterval(size_t iInterval)
 {
    return MakeInterval(iInterval);

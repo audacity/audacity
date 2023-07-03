@@ -178,9 +178,11 @@ public:
 
    Track::Holder PasteInto( AudacityProject & ) const override;
 
-   struct Interval final : ChannelGroupInterval {
-      Interval(double start, double end, size_t index)
-         : ChannelGroupInterval{ start, end }, index{ index }
+   struct Interval final : WideChannelGroupInterval {
+      Interval(const ChannelGroup &group,
+         double start, double end, size_t index
+      )  : WideChannelGroupInterval{ group, start, end }
+         , index{ index }
       {}
 
       ~Interval() override;
@@ -195,7 +197,7 @@ public:
    size_t NIntervals() const override;
 
 private:
-   std::shared_ptr<ChannelGroupInterval> DoGetInterval(size_t iInterval)
+   std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
 
    LabelArray mLabels;

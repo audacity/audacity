@@ -729,12 +729,13 @@ size_t NoteTrack::NIntervals() const
    return 1;
 }
 
-std::shared_ptr<ChannelGroupInterval> NoteTrack::DoGetInterval(size_t iInterval)
+std::shared_ptr<WideChannelGroupInterval>
+NoteTrack::DoGetInterval(size_t iInterval)
 {
    if (iInterval == 0)
       // Just one, and no extra info in it!
-      return
-         std::make_shared<ChannelGroupInterval>(GetStartTime(), GetEndTime());
+      return std::make_shared<WideChannelGroupInterval>(
+         *this, GetStartTime(), GetEndTime());
    return {};
 }
 
