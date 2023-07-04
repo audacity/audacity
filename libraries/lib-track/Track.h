@@ -605,6 +605,28 @@ public:
    // TODO remove this which is only used in assertions
    virtual bool IsLeader() const = 0;
 
+   //! Hosting of objects attached by higher level code
+   struct ChannelGroupData;
+   using ChannelGroupAttachments = ClientData::Site<
+      ChannelGroupData, ClientData::Cloneable<>, ClientData::DeepCopying
+   >;
+
+   // TODO wide wave tracks -- remove this
+   //! For two tracks describes the type of the linkage
+   enum class LinkType : int {
+       None = 0, //< No linkage
+       Group = 2, //< Tracks are grouped together
+       Aligned, //< Tracks are grouped and changes should be synchronized
+   };
+
+   // Structure describing data common to channels of a group of tracks
+   // Should be deep-copyable (think twice before adding shared pointers!)
+   struct TRACK_API ChannelGroupData : ChannelGroupAttachments {
+      wxString mName;
+      LinkType mLinkType{ LinkType::None };
+      bool mSelected{ false };
+   };
+
 protected:
    //! Retrieve a channel
    /*!
@@ -617,6 +639,9 @@ protected:
     @post result: `!(iInterval < NIntervals()) || result`
     */
    virtual std::shared_ptr<Interval> DoGetInterval(size_t iInterval) = 0;
+
+   // TODO wide wave tracks -- Make ChannelGroup itself the Site
+   std::unique_ptr<ChannelGroupData> mpGroupData;
 };
 
 inline size_t Channel::NIntervals() const
@@ -654,29 +679,6 @@ protected:
     friends; but construction of the argument is controlled by the class
     */
    struct ProtectedCreationArg{};
-public:
-
-   //! For two tracks describes the type of the linkage
-   enum class LinkType : int {
-       None = 0, //< No linkage
-       Group = 2, //< Tracks are grouped together
-       Aligned, //< Tracks are grouped and changes should be synchronized
-   };
-
-   struct ChannelGroupData;
-
-   //! Hosting of objects attached by higher level code
-   using ChannelGroupAttachments = ClientData::Site<
-      ChannelGroupData, ClientData::Cloneable<>, ClientData::DeepCopying
-   >;
-
-   // Structure describing data common to channels of a group of tracks
-   // Should be deep-copyable (think twice before adding shared pointers!)
-   struct TRACK_API ChannelGroupData : ChannelGroupAttachments {
-      wxString mName;
-      LinkType mLinkType{ LinkType::None };
-      bool mSelected{ false };
-   };
 
 private:
 
@@ -684,8 +686,6 @@ private:
 
  private:
    TrackId mId; //!< Identifies the track only in-session, not persistently
-
-   std::unique_ptr<ChannelGroupData> mpGroupData;
 
  protected:
    std::weak_ptr<TrackList> mList; //!< Back pointer to owning TrackList
