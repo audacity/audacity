@@ -281,6 +281,98 @@ public:
     */
    size_t GetChannelIndex() const;
 
+   /*!
+      @name Acesss to intervals
+      @{
+   */
+
+   using Interval = ChannelInterval;
+
+   //! Report the number of intervals
+   size_t NIntervals() const;
+
+   //! Retrieve an interval, cast to the given type
+   /*!
+    @post if IntervalType is default, then:
+       result: `!(iInterval < NIntervals()) || result`
+    */
+   template<typename IntervalType = Interval>
+   std::shared_ptr<IntervalType> GetInterval(size_t iInterval);
+
+   /*!
+    @copydetails GetInterval(size_t)
+    */
+   template<typename IntervalType = const Interval>
+   auto GetInterval(size_t iInterval) const
+      -> std::enable_if_t<std::is_const_v<IntervalType>,
+         std::shared_ptr<IntervalType>>;
+
+   //! Iterator for intervals; destroying the related ChannelGroup or
+   //! WideChannelGroupInterval invalidates it
+   /*!
+    Some intervals may have zero duration, and no ordering of the intervals is
+    assumed.
+   */
+   template<typename IntervalType>
+   class IntervalIterator
+      : public ValueIterator<
+         std::shared_ptr<IntervalType>, std::bidirectional_iterator_tag
+      >
+   {
+      using ChannelType = std::conditional_t<std::is_const_v<IntervalType>,
+         const Channel, Channel>;
+   public:
+      IntervalIterator() = default;
+      IntervalIterator(ChannelType *pChannel, size_t index)
+         : mpChannel{ pChannel }, mIndex{ index }
+      {}
+
+      std::shared_ptr<IntervalType> operator *() const
+      {
+         if (!mpChannel || mIndex >= mpChannel->NIntervals())
+            return {};
+         return mpChannel->template GetInterval<IntervalType>(mIndex);
+      }
+
+      IntervalIterator &operator ++() { ++mIndex; return *this; }
+      IntervalIterator operator ++(int)
+         { auto copy{ *this }; operator ++(); return copy; }
+
+      IntervalIterator &operator --() { --mIndex; return *this; }
+      IntervalIterator operator --(int)
+         { auto copy{ *this }; operator --(); return copy; }
+
+      friend inline bool operator ==(IntervalIterator a, IntervalIterator b)
+         { return a.mpChannel == b.mpChannel && a.mIndex == b.mIndex; }
+      friend inline bool operator !=(IntervalIterator a, IntervalIterator b)
+         { return !(a == b); }
+
+   private:
+      ChannelType *mpChannel{};
+      size_t mIndex{};
+   };
+
+   //! Get range of intervals with mutative access
+   template<typename IntervalType = Interval>
+   IteratorRange<IntervalIterator<IntervalType>> Intervals()
+   {
+      return { { this, 0 }, { this, NIntervals() } };
+   }
+
+   //! Get range of intervals with read-only access
+   template<typename IntervalType = const Interval>
+   auto Intervals() const
+      -> std::enable_if_t<std::is_const_v<IntervalType>,
+         IteratorRange<IntervalIterator<IntervalType>>
+      >
+   {
+      return { { this, 0 }, { this, NIntervals() } };
+   }
+
+   /*!
+      @}
+   */
+
 protected:
    //! Subclass must override
    /*!
@@ -526,6 +618,27 @@ protected:
     */
    virtual std::shared_ptr<Interval> DoGetInterval(size_t iInterval) = 0;
 };
+
+inline size_t Channel::NIntervals() const
+{
+   return GetChannelGroup().NIntervals();
+}
+
+template<typename IntervalType>
+std::shared_ptr<IntervalType> Channel::GetInterval(size_t iInterval)
+{
+   return GetChannelGroup().GetInterval(iInterval)
+      ->template GetChannel<IntervalType>(GetChannelIndex());
+}
+
+template<typename IntervalType>
+auto Channel::GetInterval(size_t iInterval) const
+   -> std::enable_if_t<std::is_const_v<IntervalType>,
+      std::shared_ptr<IntervalType>>
+{
+   return GetChannelGroup().GetInterval(iInterval)
+      ->template GetChannel<IntervalType>(GetChannelIndex());
+}
 
 //! Abstract base class for an object holding data associated with points on a time axis
 class TRACK_API Track /* not final */
