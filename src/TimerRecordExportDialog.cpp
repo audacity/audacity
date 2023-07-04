@@ -71,10 +71,9 @@ void TimerRecordExportDialog::OnOK(wxCommandEvent& event)
 
 void TimerRecordExportDialog::OnEditMetadata(wxCommandEvent&)
 {
-   TagsEditorDialog::DoEditMetadata( mProject,
+   TagsEditorDialog::EditProjectMetadata( mProject,
       XO("Edit Metadata Tags"),
-      XO("Exported Tags"),
-      true);
+      XO("Exported Tags"));
 }
 
 void TimerRecordExportDialog::OnFormatChanged(wxCommandEvent&)

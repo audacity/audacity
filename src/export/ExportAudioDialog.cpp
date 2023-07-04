@@ -39,7 +39,6 @@
 #include "Theme.h"
 #include "HelpSystem.h"
 #include "TagsEditor.h"
-#include "AudacityTextEntryDialog.h"
 #include "ExportFilePanel.h"
 #include "ExportProgressUI.h"
 
@@ -122,6 +121,11 @@ BEGIN_EVENT_TABLE(ExportAudioDialog, wxDialogWrapper)
    EVT_RADIOBUTTON(ExportSplitNamePolicyTrackNameID, ExportAudioDialog::OnSplitNamePolicyChange)
    EVT_RADIOBUTTON(ExportSplitNamePolicyNumberingBeforeNameID, ExportAudioDialog::OnSplitNamePolicyChange)
    EVT_RADIOBUTTON(ExportSplitNamePolicyNumberingAfterPrefixID, ExportAudioDialog::OnSplitNamePolicyChange)
+
+   EVT_CHECKBOX(TrimBlankSpaceBeforeFirstClipID, ExportAudioDialog::OnTrimBlankSpaceBeforeFirstClip)
+   EVT_CHECKBOX(IncludeAudioBeforeFirstLabelID, ExportAudioDialog::OnIncludeAudioBeforeFirstLabelChange)
+
+   EVT_TEXT(FileNamePrefixID, ExportAudioDialog::OnFileNamePrefixChange)
 
    EVT_BUTTON(EditMetadataID, ExportAudioDialog::OnEditMetadata)
    EVT_BUTTON(wxID_HELP, ExportAudioDialog::OnHelp)
@@ -321,6 +325,7 @@ void ExportAudioDialog::OnExportRangeChange(wxCommandEvent& event)
    const auto enableSplits = event.GetId() == ExportRangeSplitID;
    if(mSplitsPanel->IsShown() != enableSplits)
    {
+      mExportSettingsDirty = true;
       mSplitsPanel->Show(enableSplits);
       
       Layout();
@@ -330,18 +335,53 @@ void ExportAudioDialog::OnExportRangeChange(wxCommandEvent& event)
 void ExportAudioDialog::OnSplitModeChange(wxCommandEvent& event)
 {
    mIncludeAudioBeforeFirstLabel->Enable(event.GetId() == ExportModeLabelsID);
+   mExportSettingsDirty = true;
 }
 
 void ExportAudioDialog::OnSplitNamePolicyChange(wxCommandEvent& event)
 {
    mSplitFileNamePrefix->Enable(event.GetId() == ExportSplitNamePolicyNumberingAfterPrefixID);
+   mExportSettingsDirty = true;
+}
+
+void ExportAudioDialog::OnTrimBlankSpaceBeforeFirstClip(wxCommandEvent&)
+{
+   mExportSettingsDirty = true;
+}
+
+void ExportAudioDialog::OnIncludeAudioBeforeFirstLabelChange(wxCommandEvent& event)
+{
+   mExportSettingsDirty = true;
+}
+
+void ExportAudioDialog::OnFileNamePrefixChange(wxCommandEvent&)
+{
+   mExportSettingsDirty = true;
 }
 
 void ExportAudioDialog::OnEditMetadata(wxCommandEvent &event)
 {
-   TagsEditorDialog::DoEditMetadata(mProject,
-      XO("Edit Metadata Tags"), XO("Exported Tags"),
-      true);
+   if(mRangeSplit->GetValue())
+   {
+      UpdateExportSettings();
+
+      std::vector<Tags*> tags;
+      std::vector<wxString> names;
+      tags.reserve(mExportSettings.size());
+      names.reserve(mExportSettings.size());
+      for(auto& spec : mExportSettings)
+      {
+         tags.push_back(&spec.tags);
+         names.push_back(spec.filename.GetFullName());
+      }
+      TagsEditorDialog dialog(this, XO("Edit Metadata Tags"), tags, names, true, true);
+      dialog.ShowModal();
+   }
+   else
+   {
+      TagsEditorDialog::EditProjectMetadata(mProject,
+         XO("Edit Metadata Tags"), XO("Exported Tags"));
+   }
 }
 
 void ExportAudioDialog::OnHelp(wxCommandEvent &event)
@@ -375,16 +415,14 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
    
    if(mRangeSplit->GetValue())
    {
-      const auto byName = mSplitUseName->GetValue() || mSplitUseNumAndName->GetValue();
-      const auto addNumber = mSplitUseNumAndName->GetValue();
-      const auto prefix = mSplitFileNamePrefix->GetValue();
-      
       FilePaths exportedFiles;
-      
+
+      UpdateExportSettings();
+
       if(mSplitByLabels->GetValue())
-         result = DoExportSplitByLabels(*selectedPlugin, selectedFormat, parameters, byName, addNumber, prefix, exportedFiles);
+         result = DoExportSplitByLabels(*selectedPlugin, selectedFormat, parameters, exportedFiles);
       else if(mSplitByTracks->GetValue())
-         result = DoExportSplitByTracks(*selectedPlugin, selectedFormat, parameters, byName, addNumber, prefix, exportedFiles);
+         result = DoExportSplitByTracks(*selectedPlugin, selectedFormat, parameters, exportedFiles);
       
       auto msg = (result == ExportResult::Success
          ? XO("Successfully exported the following %lld file(s).")
@@ -507,72 +545,36 @@ void ExportAudioDialog::OnFormatChange(wxCommandEvent& event)
    if(auto plugin = mExportOptionsPanel->GetPlugin())
       enableMeta = plugin->GetFormatInfo(mExportOptionsPanel->GetFormat()).canMetaData;
    mEditMetadata->Enable(enableMeta);
+   mExportSettingsDirty = true;
+}
+
+void ExportAudioDialog::UpdateExportSettings()
+{
+   if(!mExportSettingsDirty)
+      return;
+
+   const auto selectedPlugin = mExportOptionsPanel->GetPlugin();
+   if(selectedPlugin == nullptr)
+      return;
+
+   const auto selectedFormat = mExportOptionsPanel->GetFormat();
+
+   if(mRangeSplit->GetValue())
+   {
+      const auto byName = mSplitUseName->GetValue() || mSplitUseNumAndName->GetValue();
+      const auto addNumber = mSplitUseNumAndName->GetValue();
+      const auto prefix = mSplitFileNamePrefix->GetValue();
+
+      if(mSplitByLabels->GetValue())
+         UpdateLabelExportSettings(*selectedPlugin, selectedFormat, byName, addNumber, prefix);
+      else if(mSplitByTracks->GetValue())
+         UpdateTrackExportSettings(*selectedPlugin, selectedFormat, byName, addNumber, prefix);
+
+      mExportSettingsDirty = false;
+   }
 }
 
 namespace {
-/** \brief A private class used to store the information needed to do an
-    * export.
-    *
-    * We create a set of these during the interactive phase of the export
-    * cycle, then use them when the actual exports are done. */
-   class ExportKit
-   {
-   public:
-      Tags filetags; /**< The set of metadata to use for the export */
-      wxFileNameWrapper destfile; /**< The file to export to */
-      double t0;           /**< Start time for the export */
-      double t1;           /**< End time for the export */
-      unsigned channels;   /**< Number of channels for ExportMultipleByTrack */
-   };  // end of ExportKit declaration
-   /* we are going to want an set of these kits, and don't know how many until
-    * runtime. I would dearly like to use a std::vector, but it seems that
-    * this isn't done anywhere else in Audacity, presumably for a reason?, so
-    * I'm stuck with wxArrays, which are much harder, as well as non-standard.
-    */
-
-wxString MakeFileName(wxWindow* parent, const wxString &input)
-{
-   wxString newname = input; // name we are generating
-
-   // strip out anything that isn't allowed in file names on this platform
-   auto changed = Internat::SanitiseFilename(newname, wxT("_"));
-
-   if(changed)
-   {  // need to get user to fix file name
-      // build the dialog
-      TranslatableString msg;
-      wxString excluded = ::wxJoin( Internat::GetExcludedCharacters(), wxT(' '), wxT('\0') );
-      // TODO: For Russian language we should have separate cases for 2 and more than 2 letters.
-      if( excluded.length() > 1 ){
-         msg = XO(
-// i18n-hint: The second %s gives some letters that can't be used.
-"Label or track \"%s\" is not a legal file name.\nYou cannot use any of these characters:\n\n%s\n\nSuggested replacement:")
-            .Format( input, excluded );
-      } else {
-         msg = XO(
-// i18n-hint: The second %s gives a letter that can't be used.
-"Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n\nSuggested replacement:")
-            .Format( input, excluded );
-      }
-
-      AudacityTextEntryDialog dlg( parent, msg, XO("Save As..."), newname );
-
-
-      // And tell the validator about excluded chars
-      dlg.SetTextValidator( wxFILTER_EXCLUDE_CHAR_LIST );
-      wxTextValidator *tv = dlg.GetTextValidator();
-      tv->SetExcludes(Internat::GetExcludedCharacters());
-
-      // Show the dialog and bail if the user cancels
-      if( dlg.ShowModal() == wxID_CANCEL )
-      {
-          return wxEmptyString;
-      }
-      // Extract the name from the dialog
-      newname = dlg.GetValue();
-   }  // phew - end of file name sanitisation procedure
-   return newname;
-}
 
 unsigned GetNumExportChannels( const TrackList &tracks )
 {
@@ -591,13 +593,8 @@ unsigned GetNumExportChannels( const TrackList &tracks )
 
 }
 
-ExportResult ExportAudioDialog::DoExportSplitByLabels(const ExportPlugin& plugin,
-                                                      int formatIndex,
-                                                      const ExportProcessor::Parameters& parameters,
-                                                      bool byName,
-                                                      bool addNumber,
-                                                      const wxString& prefix,
-                                                      FilePaths& exporterFiles)
+
+void ExportAudioDialog::UpdateLabelExportSettings(const ExportPlugin& plugin, int formatIndex, bool byName, bool addNumber, const wxString& prefix)
 {
    const auto& tracks = TrackList::Get(mProject);
    const auto& labels = (*tracks.Leaders<const LabelTrack>().begin());
@@ -605,7 +602,7 @@ ExportResult ExportAudioDialog::DoExportSplitByLabels(const ExportPlugin& plugin
    
    auto numFiles = numLabels;
    auto fileIndex = 0;        // counter for files done
-   std::vector<ExportKit> exportSettings; // dynamic array for settings.
+   std::vector<ExportSetting> exportSettings; // dynamic array for settings.
    exportSettings.reserve(numFiles); // Allocate some guessed space to use.
 
    // Account for exporting before first label
@@ -613,16 +610,15 @@ ExportResult ExportAudioDialog::DoExportSplitByLabels(const ExportPlugin& plugin
       fileIndex = -1;
       numFiles++;
    }
-
-   // Figure out how many channels we should export.
-   auto channels = GetNumExportChannels( tracks );
+   
    const auto formatInfo = plugin.GetFormatInfo(formatIndex);
    
    FilePaths otherNames;  // keep track of file names we will use, so we
    // don't duplicate them
-   ExportKit setting;   // the current batch of settings
-   setting.destfile.SetPath(mExportOptionsPanel->GetPath());
-   setting.destfile.SetFullName(mExportOptionsPanel->GetFullName());
+   ExportSetting setting;   // the current batch of settings
+   setting.filename.SetPath(mExportOptionsPanel->GetPath());
+   setting.channels = GetNumExportChannels(tracks);
+   setting.filename.SetFullName(mExportOptionsPanel->GetFullName());
    
    wxString name;    // used to hold file name whilst we mess with it
    wxString title;   // un-messed-with title of file for tagging with
@@ -635,7 +631,7 @@ ExportResult ExportAudioDialog::DoExportSplitByLabels(const ExportPlugin& plugin
       // Get file name and starting time
       if( fileIndex < 0 ) {
          // create wxFileName for output file
-         name = setting.destfile.GetName();
+         name = setting.filename.GetName();
          setting.t0 = 0.0;
       } else {
          info = labels->GetLabel(fileIndex);
@@ -668,48 +664,29 @@ ExportResult ExportAudioDialog::DoExportSplitByLabels(const ExportPlugin& plugin
          // for easy file-name sorting (on Windows)
          name.Prepend(wxString::Format(wxT("%02d-"), fileIndex + 1));
       }
+      Internat::SanitiseFilename(name, wxT("_"));
 
-      // store sanitised and user checked name in object
-      setting.destfile.SetName(MakeFileName(this, name));
-      if( setting.destfile.GetName().empty() )
-      {  // user cancelled dialogue, or deleted everything in field.
-         // or maybe the label was empty??
-         // So we ignore this one and keep going.
-      }
-      else
+      setting.filename.SetName(name);
       {
          // FIXME: TRAP_ERR User could have given an illegal filename prefix.
          // in that case we should tell them, not fail silently.
-         wxASSERT(setting.destfile.IsOk());     // burp if file name is broke
+         wxASSERT(setting.filename.IsOk());     // burp if file name is broke
 
          // Make sure the (final) file name is unique within the set of exports
-         FileNames::MakeNameUnique(otherNames, setting.destfile);
+         FileNames::MakeNameUnique(otherNames, setting.filename);
 
          /* do the metadata for this file */
          // copy project metadata to start with
-         setting.filetags = Tags::Get( mProject );
-         setting.filetags.LoadDefaults();
-         if (exportSettings.size()) {
-            setting.filetags = exportSettings.back().filetags;
+         if (exportSettings.empty())
+         {
+            setting.tags = Tags::Get( mProject );
+            setting.tags.LoadDefaults();
          }
+         else
+            setting.tags = exportSettings.back().tags;
          // over-ride with values
-         setting.filetags.SetTag(TAG_TITLE, title);
-         setting.filetags.SetTag(TAG_TRACK, fileIndex+1);
-         // let the user have a crack at editing it, exit if cancelled
-         auto &settings = ProjectSettings::Get( mProject );
-         bool bShowTagsDialog = settings.GetShowId3Dialog();
-
-         bShowTagsDialog = bShowTagsDialog && formatInfo.canMetaData;
-
-         if( bShowTagsDialog ){
-            bool bCancelled = !TagsEditorDialog::ShowEditDialog(setting.filetags,
-               ProjectWindow::Find( &mProject ),
-               XO("Edit Metadata Tags"), bShowTagsDialog);
-            gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowTagsDialog, true);
-            settings.SetShowId3Dialog( bShowTagsDialog );
-            if( bCancelled )
-               return ExportResult::Cancelled;
-         }
+         setting.tags.SetTag(TAG_TITLE, title);
+         setting.tags.SetTag(TAG_TRACK, fileIndex+1);
       }
 
       /* add the settings to the array of settings to be used for export */
@@ -717,49 +694,11 @@ ExportResult ExportAudioDialog::DoExportSplitByLabels(const ExportPlugin& plugin
 
       fileIndex++;  // next label, count up one
    }
-
-   auto ok = ExportResult::Success;   // did it work?
-   int count = 0; // count the number of successful runs
-   ExportKit activeSetting;  // pointer to the settings in use for this export
-   /* Go round again and do the exporting (so this run is slow but
-    * non-interactive) */
-   for (count = 0; count < numFiles; count++) {
-      /* get the settings to use for the export from the array */
-      activeSetting = exportSettings[count];
-      // Bug 1440 fix.
-      if( activeSetting.destfile.GetName().empty() )
-         continue;
-
-      // Export it
-      ok = DoExport(plugin, formatIndex, parameters, activeSetting.destfile, channels,
-         activeSetting.t0, activeSetting.t1, false, activeSetting.filetags, exporterFiles);
-      
-      if (ok == ExportResult::Stopped) {
-         AudacityMessageDialog dlgMessage(
-            nullptr,
-            XO("Continue to export remaining files?"),
-            XO("Export"),
-            wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
-         if (dlgMessage.ShowModal() != wxID_YES ) {
-            // User decided not to continue - bail out!
-            break;
-         }
-      }
-      else if (ok != ExportResult::Success) {
-         break;
-      }
-   }
-
-   return ok;
+   std::swap(mExportSettings, exportSettings);
 }
 
-ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin,
-                                                      int formatIndex,
-                                                      const ExportProcessor::Parameters& parameters,
-                                                      bool byName,
-                                                      bool addNumber,
-                                                      const wxString& prefix,
-                                                      FilePaths& exporterFiles)
+void ExportAudioDialog::UpdateTrackExportSettings(const ExportPlugin& plugin, int formatIndex, bool byName, bool addNumber,
+   const wxString& prefix)
 {
    auto& tracks = TrackList::Get(mProject);
    
@@ -771,25 +710,17 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
    const auto numWaveTracks = waveTracks.size();
    
    auto fileIndex = 0;     // track counter
-   auto ok = ExportResult::Success;
    FilePaths otherNames;
    auto formatInfo = plugin.GetFormatInfo(formatIndex);
-   std::vector<ExportKit> exportSettings; // dynamic array we will use to store the
+   std::vector<ExportSetting> exportSettings; // dynamic array we will use to store the
                                   // settings needed to do the exports with in
    exportSettings.reserve(numWaveTracks);   // Allocate some guessed space to use.
-   ExportKit setting;   // the current batch of settings
-   setting.destfile.SetPath(mExportOptionsPanel->GetPath());
-   setting.destfile.SetExt(wxFileName{mExportOptionsPanel->GetFullName()}.GetExt());
+   ExportSetting setting;   // the current batch of settings
+   setting.filename.SetPath(mExportOptionsPanel->GetPath());
+   setting.filename.SetExt(wxFileName{mExportOptionsPanel->GetFullName()}.GetExt());
 
    wxString name;    // used to hold file name whilst we mess with it
    wxString title;   // un-messed-with title of file for tagging with
-
-   auto& selectionState = SelectionState::Get( mProject );
-   
-   /* Remember which tracks were selected, and set them to deselected */
-   SelectionStateChanger changer{ selectionState, tracks };
-   for (auto tr : tracks.Selected<WaveTrack>())
-      tr->SetSelected(false);
 
    const auto skipSilenceAtBeginning = mSkipSilenceAtBeginning->GetValue();
 
@@ -820,65 +751,105 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
          name = (wxString::Format(wxT("%s-%02d"), prefix, fileIndex+1));
       }
 
+      Internat::SanitiseFilename(name, wxT("_"));
       // store sanitised and user checked name in object
-      setting.destfile.SetName(MakeFileName(this, name));
+      setting.filename.SetName(name);
+      
+      // FIXME: TRAP_ERR User could have given an illegal track name.
+      // in that case we should tell them, not fail silently.
+      wxASSERT(setting.filename.IsOk());     // burp if file name is broke
 
-      if (setting.destfile.GetName().empty())
-      {  // user cancelled dialogue, or deleted everything in field.
-         // So we ignore this one and keep going.
+      // Make sure the (final) file name is unique within the set of exports
+      FileNames::MakeNameUnique(otherNames, setting.filename);
+
+      /* do the metadata for this file */
+      // copy project metadata to start with
+
+      if(exportSettings.empty())
+      {
+         setting.tags = Tags::Get( mProject );
+         setting.tags.LoadDefaults();
       }
       else
-      {
+         setting.tags = exportSettings.back().tags;
+      
+      // over-ride with values
+      setting.tags.SetTag(TAG_TITLE, title);
+      setting.tags.SetTag(TAG_TRACK, fileIndex + 1);
 
-         // FIXME: TRAP_ERR User could have given an illegal track name.
-         // in that case we should tell them, not fail silently.
-         wxASSERT(setting.destfile.IsOk());     // burp if file name is broke
-
-         // Make sure the (final) file name is unique within the set of exports
-         FileNames::MakeNameUnique(otherNames, setting.destfile);
-
-         /* do the metadata for this file */
-         // copy project metadata to start with
-         setting.filetags = Tags::Get( mProject );
-         setting.filetags.LoadDefaults();
-         if (exportSettings.size()) {
-            setting.filetags = exportSettings.back().filetags;
-         }
-         // over-ride with values
-         setting.filetags.SetTag(TAG_TITLE, title);
-         setting.filetags.SetTag(TAG_TRACK, fileIndex + 1);
-         // let the user have a crack at editing it, exit if cancelled
-         auto &settings = ProjectSettings::Get( mProject );
-         bool bShowTagsDialog = settings.GetShowId3Dialog();
-
-         bShowTagsDialog = bShowTagsDialog && formatInfo.canMetaData;
-
-         if( bShowTagsDialog ){
-            bool bCancelled = !TagsEditorDialog::ShowEditDialog(setting.filetags,
-               ProjectWindow::Find( &mProject ),
-               XO("Edit Metadata Tags"), bShowTagsDialog);
-            gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowTagsDialog, true);
-            settings.SetShowId3Dialog( bShowTagsDialog );
-            if( bCancelled )
-               return ExportResult::Cancelled;
-         }
-      }
-      /* add the settings to the array of settings to be used for export */
       exportSettings.push_back(setting);
 
       fileIndex++;  // next track, count up one
    }
-   // end of user-interactive data gathering loop, start of export processing
-   // loop
-   int count = 0; // count the number of successful runs
-   ExportKit activeSetting;  // pointer to the settings in use for this export
+   std::swap(mExportSettings, exportSettings);
+}
 
+ExportResult ExportAudioDialog::DoExportSplitByLabels(const ExportPlugin& plugin,
+                                                      int formatIndex,
+                                                      const ExportProcessor::Parameters& parameters,
+                                                      FilePaths& exporterFiles)
+{
+   auto ok = ExportResult::Success;   // did it work?
+   /* Go round again and do the exporting (so this run is slow but
+    * non-interactive) */
+   for(auto& activeSetting : mExportSettings)
+   {
+      /* get the settings to use for the export from the array */
+      // Bug 1440 fix.
+      if( activeSetting.filename.GetName().empty() )
+         continue;
+
+      // Export it
+      ok = DoExport(plugin, formatIndex, parameters, activeSetting.filename, activeSetting.channels,
+         activeSetting.t0, activeSetting.t1, false, activeSetting.tags, exporterFiles);
+      
+      if (ok == ExportResult::Stopped) {
+         AudacityMessageDialog dlgMessage(
+            nullptr,
+            XO("Continue to export remaining files?"),
+            XO("Export"),
+            wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
+         if (dlgMessage.ShowModal() != wxID_YES ) {
+            // User decided not to continue - bail out!
+            break;
+         }
+      }
+      else if (ok != ExportResult::Success) {
+         break;
+      }
+   }
+
+   return ok;
+}
+
+ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin,
+                                                      int formatIndex,
+                                                      const ExportProcessor::Parameters& parameters,
+                                                      FilePaths& exporterFiles)
+{
+   auto& tracks = TrackList::Get(mProject);
+   
+   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   
+   auto waveTracks = tracks.Leaders<WaveTrack>() -
+      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
+
+   auto& selectionState = SelectionState::Get( mProject );
+   
+   /* Remember which tracks were selected, and set them to deselected */
+   SelectionStateChanger changer{ selectionState, tracks };
+   for (auto tr : tracks.Selected<WaveTrack>())
+      tr->SetSelected(false);
+
+   auto ok = ExportResult::Success;
+
+   int count = 0;
    for (auto tr : waveTracks) {
 
       wxLogDebug( "Get setting %i", count );
       /* get the settings to use for the export from the array */
-      activeSetting = exportSettings[count];
-      if( activeSetting.destfile.GetName().empty() ){
+      auto& activeSetting = mExportSettings[count];
+      if( activeSetting.filename.GetName().empty() ){
          count++;
          continue;
       }
@@ -890,8 +861,8 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
          channel->SetSelected(true);
 
       // Export the data. "channels" are per track.
-      ok = DoExport(plugin, formatIndex, parameters, activeSetting.destfile, activeSetting.channels,
-         activeSetting.t0, activeSetting.t1, true, activeSetting.filetags, exporterFiles);
+      ok = DoExport(plugin, formatIndex, parameters, activeSetting.filename, activeSetting.channels,
+         activeSetting.t0, activeSetting.t1, true, activeSetting.tags, exporterFiles);
       
       if (ok == ExportResult::Stopped) {
          AudacityMessageDialog dlgMessage(
