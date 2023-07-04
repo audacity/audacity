@@ -112,22 +112,21 @@ void DoExport(AudacityProject &project, const FileExtension &format)
 
             auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
             editor->Load(*gPrefs);
-
-            double t0 = 0.0;
-            double t1 = tracks.GetEndTime();
+            
+            auto builder = ExportTaskBuilder {}
+               .SetParameters(ExportUtils::ParametersFromEditor(*editor))
+               .SetSampleRate(ProjectRate::Get(project).GetRate())
+               .SetPlugin(plugin.get())
+               .SetFileName(fullPath)
+               .SetNumChannels(nChannels)
+               .SetRange(0.0, tracks.GetEndTime(), false);
             
             bool success = false;
             ExportProgressUI::ExceptionWrappedCall([&]
             {
                // We're in batch mode, the file does not exist already.
                // We really can proceed without prompting.
-               const auto result = ExportProgressUI::Show(e.CreateExportTask(
-                            ExportUtils::ParametersFromEditor(*editor),
-                            nChannels,  // numChannels,
-                            ProjectRate::Get(project).GetRate(),
-                            format,     // type,
-                            fullPath,   // full path,
-                            false, t0, t1));
+               const auto result = ExportProgressUI::Show(builder.Build(project));
                success = result == ExportResult::Success || result == ExportResult::Stopped;
             });
             

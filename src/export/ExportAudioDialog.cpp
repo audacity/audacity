@@ -162,7 +162,7 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    if(format.empty())
       ExportAudioDefaultFormat.Read(&format);
 
-   mExportOptionsPanel->Init(filename, sampleRate, {}, format);
+   mExportOptionsPanel->Init(filename, format, sampleRate, 2);
 
    if(ExportUtils::FindExportWaveTracks(TrackList::Get(mProject), true).empty())
    {

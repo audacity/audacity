@@ -135,16 +135,19 @@ bool ExportCommand::Apply(const CommandContext & context)
             continue;
          auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
          editor->Load(*gPrefs);
-         
+
+         auto builder = ExportTaskBuilder{}
+            .SetParameters(ExportUtils::ParametersFromEditor(*editor))
+            .SetNumChannels(std::max(0, mnChannels))
+            .SetSampleRate(ProjectRate::Get(context.project).GetRate())
+            .SetPlugin(plugin.get())
+            .SetFileName(mFileName)
+            .SetRange(t0, t1, true);
+
          auto result = ExportResult::Error;
          ExportProgressUI::ExceptionWrappedCall([&]
          {
-            result = ExportProgressUI::Show(exporter.CreateExportTask(
-                  ExportUtils::ParametersFromEditor(*editor),
-                  std::max(0, mnChannels),
-                  ProjectRate::Get(context.project).GetRate(),
-                  extension, mFileName,
-                  true, t0, t1));
+            result = ExportProgressUI::Show(builder.Build(context.project));
          });
          if (result == ExportResult::Success || result == ExportResult::Stopped)
          {

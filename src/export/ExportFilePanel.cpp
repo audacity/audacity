@@ -214,9 +214,11 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
 }
 
 void ExportFilePanel::Init(const wxFileName& filename,
-                              int sampleRate,
-                              const ExportProcessor::Parameters& parameters,
-                              const wxString& defaultFormat)
+                           const wxString& format,
+                           int sampleRate,
+                           int channels,
+                           const ExportProcessor::Parameters& parameters,
+                           const MixerOptions::Downmix* mixerSpec)
 {
    mFolder->SetValue(filename.GetPath());
    mFullName->SetValue(filename.GetFullName());
@@ -225,16 +227,15 @@ void ExportFilePanel::Init(const wxFileName& filename,
       : sampleRate;
 
    auto selectedFormatIndex = 0;
-   if(!defaultFormat.empty())
+   if(!format.empty())
    {
       auto counter = 0;
       auto formatFound = false;
-      for(auto& plugin : mExporter->GetPlugins())
+      for(auto& p : mExporter->GetPlugins())
       {
-         for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
+         for(unsigned i = 0; i < p->GetFormatCount(); ++i)
          {
-            const auto formatInfo = plugin->GetFormatInfo(formatIndex);
-            if(formatInfo.format == defaultFormat)
+            if(format == p->GetFormatInfo(i).format)
             {
                selectedFormatIndex = counter;
                formatFound = true;
@@ -247,10 +248,24 @@ void ExportFilePanel::Init(const wxFileName& filename,
       }
    }
 
+   if(mixerSpec != nullptr)
+      *mMixerSpec = *mixerSpec;
+
    mFormat->SetSelection(selectedFormatIndex);
    ChangeFormat(selectedFormatIndex);
    if(!parameters.empty())
       mOptionsHandler->SetParameters(parameters);
+
+   switch(channels)
+   {
+   case 0 : {
+      if(!mMonoStereoMode)
+         mCustomMapping->SetValue(true);
+   } break;
+   case 1 : mMono->SetValue(true); break;
+   case 2 : mStereo->SetValue(true); break;
+   default: break;
+   }
 }
 
 wxString ExportFilePanel::GetPath() const

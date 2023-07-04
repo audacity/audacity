@@ -38,9 +38,11 @@ public:
    void PopulateOrExchange(ShuttleGui& S);
 
    void Init(const wxFileName& filename,
-             int sampleRate = 0,
+             const wxString& format = wxEmptyString,
+             int sampleRate = 44100,
+             int channels = 1,
              const ExportProcessor::Parameters& parameters = {},
-             const wxString& defaultFormat = wxEmptyString);
+             const MixerOptions::Downmix* mixerSpec = nullptr);
    
    wxString GetPath() const;
    wxString GetFullName() const;

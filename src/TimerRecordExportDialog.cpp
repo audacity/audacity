@@ -14,25 +14,28 @@ BEGIN_EVENT_TABLE(TimerRecordExportDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 TimerRecordExportDialog::TimerRecordExportDialog(AudacityProject& project,
-                                     Exporter& exporter,
                                      wxWindow* parent,
                                      wxWindowID winid)
    : wxDialogWrapper(parent, winid, XO("Export Audio"))
    , mProject(project)
-   , mExporter(exporter)
 {
    SetMinSize({450, -1});
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
+}
 
-   mExportFilePanel->Init(
-      exporter.GetAutoExportFileName(),
-      exporter.GetAutoExportSampleRate(),
-      exporter.GetAutoExportParameters(),
-      exporter.GetPlugins()[exporter.GetAutoExportFormat()]->GetFormatInfo(exporter.GetAutoExportSubFormat()).format);
-
-   Layout();
-   Fit();
+void TimerRecordExportDialog::Bind(wxFileName& filename,
+                                   wxString& format,
+                                   int& sampleRate,
+                                   int& channels,
+                                   ExportProcessor::Parameters& parameters)
+{
+   mFileName = &filename;
+   mFormat = &format;
+   mSampleRate = &sampleRate;
+   mChannels = &channels;
+   mParameters = &parameters;
+   mExportFilePanel->Init(filename, format, sampleRate, channels, parameters);
 }
 
 void TimerRecordExportDialog::PopulateOrExchange(ShuttleGui& S)
@@ -60,12 +63,12 @@ void TimerRecordExportDialog::PopulateOrExchange(ShuttleGui& S)
 
 void TimerRecordExportDialog::OnOK(wxCommandEvent& event)
 {
-   mExporter.Configure(
-      wxFileName(mExportFilePanel->GetPath(), mExportFilePanel->GetFullName()),
-      mExportFilePanel->GetPluginIndex(),
-      mExportFilePanel->GetFormat(),
-      mExportFilePanel->GetSampleRate(),
-      mExportFilePanel->GetParameters());
+   *mFileName = wxFileName(mExportFilePanel->GetPath(), mExportFilePanel->GetFullName());
+   *mFormat = mExportFilePanel->GetPlugin()->GetFormatInfo(mExportFilePanel->GetFormat()).format;
+   *mSampleRate = mExportFilePanel->GetSampleRate();
+   *mChannels = mExportFilePanel->GetChannels();
+   *mParameters = mExportFilePanel->GetParameters();
+
    event.Skip();
 }
 

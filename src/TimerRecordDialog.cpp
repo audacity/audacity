@@ -55,6 +55,7 @@
 #include "widgets/NumericTextCtrl.h"
 #include "HelpSystem.h"
 #include "AudacityMessageBox.h"
+#include "ExportUtils.h"
 #include "ProgressDialog.h"
 #include "wxTextCtrlWrapper.h"
 
@@ -355,26 +356,21 @@ void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(ev
    int sampleRate = m_iAutoExportSampleRate;
    if(sampleRate == 0)
       sampleRate = ProjectRate::Get(mProject).GetRate();
-   
-   Exporter eExporter{ mProject };
-   eExporter.Configure(
-      m_fnAutoExportFile,
-      m_iAutoExportFormat,
-      m_iAutoExportSubFormat,
-      sampleRate,
-      m_AutoExportParameters);
 
    // Set the options required
-   TimerRecordExportDialog exportDialog(mProject, eExporter, this);
+   TimerRecordExportDialog exportDialog(mProject, this);
+   exportDialog.Bind(
+      m_fnAutoExportFile,
+      m_sAutoExportFormat,
+      sampleRate,
+      m_iAutoExportChannels,
+      m_AutoExportParameters);
+
    if(exportDialog.ShowModal() != wxID_OK)
       return;
-   
-   // Populate the options so that we can destroy this instance of the Exporter
-   m_fnAutoExportFile = eExporter.GetAutoExportFileName();
-   m_iAutoExportFormat = eExporter.GetAutoExportFormat();
-   m_iAutoExportSampleRate = eExporter.GetAutoExportSampleRate();
-   m_iAutoExportSubFormat = eExporter.GetAutoExportSubFormat();
-   m_AutoExportParameters = eExporter.GetAutoExportParameters();
+
+   m_iAutoExportSampleRate = sampleRate;
+   m_pTimerExportPathTextCtrl->SetValue(m_fnAutoExportFile.GetFullPath());
 
    // Update the text controls
    this->UpdateTextBoxControls();
@@ -613,32 +609,54 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    // Do Automatic Export?
    if (m_bAutoExportEnabled) {
       const auto& tracks = TrackList::Get(mProject);
-      Exporter e{ mProject };
-      
-      bool skipSilenceAtBeginning = ExportSkipSilenceAtBeginning.Read();
-      
-      if(!e.SetExportRange(0, tracks.GetEndTime(), false, skipSilenceAtBeginning))
+      if(ExportUtils::FindExportWaveTracks(tracks, false).empty())
       {
-         //But there should be at least one recorded track...
          ShowExportErrorDialog(XO("All audio is muted."), XO("Warning"), false);
+         bExportOK = true;
       }
-      e.Configure(m_fnAutoExportFile,
-         m_iAutoExportFormat,
-         m_iAutoExportSubFormat,
-         m_iAutoExportSampleRate,
-         m_AutoExportParameters);
-      
-      if(ImportExportPrefs::ExportDownMixSetting.ReadEnum())
-         e.SetUseStereoOrMonoOutput();
       else
-         e.CreateMixerSpec();
-
-      ExportProgressUI::ExceptionWrappedCall([&]
       {
-         const auto result = ExportProgressUI::Show(e.CreateExportTask());
-         bExportOK = result == ExportResult::Success ||
-            result == ExportResult::Stopped;
-      });
+         auto t0 = .0;
+         bool skipSilenceAtBeginning = ExportSkipSilenceAtBeginning.Read();
+         if(skipSilenceAtBeginning)
+            t0 = std::max(t0, tracks.GetStartTime());
+
+         ExportPlugin* exportPlugin{};
+         int formatIndex = 0;
+         Exporter e{mProject};
+         for(auto& plugin : e.GetPlugins())
+         {
+            for(int i = 0; i < plugin->GetFormatCount(); ++i)
+            {
+               if(plugin->GetFormatInfo(i).format == m_sAutoExportFormat)
+               {
+                  exportPlugin = plugin.get();
+                  formatIndex = i;
+                  break;
+               }
+            }
+            if(exportPlugin != nullptr)
+               break;
+         }
+
+         if(exportPlugin != nullptr)
+         {
+            auto builder = ExportTaskBuilder {}
+               .SetFileName(m_fnAutoExportFile)
+               .SetParameters(m_AutoExportParameters)
+               .SetRange(t0, tracks.GetEndTime(), false)
+               .SetSampleRate(m_iAutoExportSampleRate)
+               .SetNumChannels(m_iAutoExportChannels)
+               .SetPlugin(exportPlugin, formatIndex);
+            
+            ExportProgressUI::ExceptionWrappedCall([&]
+            {
+               const auto result = ExportProgressUI::Show(builder.Build(mProject));
+               bExportOK = result == ExportResult::Success ||
+                  result == ExportResult::Stopped;
+            });
+         }
+      }
    }
 
    // Check if we need to override the post recording action

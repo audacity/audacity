@@ -1,9 +1,9 @@
 #pragma once
 
 #include "wxPanelWrapper.h"
+#include "ExportPlugin.h"
 
 class AudacityProject;
-class Exporter;
 class ShuttleGui;
 class ExportFilePanel;
 
@@ -16,9 +16,14 @@ class TimerRecordExportDialog final : public wxDialogWrapper
    };
 public:
    TimerRecordExportDialog(AudacityProject& project,
-                     Exporter& exporter,
                      wxWindow* parent = nullptr,
                      wxWindowID = wxID_ANY);
+   
+   void Bind(wxFileName& filename,
+             wxString& format,
+             int& sampleRate,
+             int& channels,
+             ExportProcessor::Parameters& paramters);
 
 private:
    void PopulateOrExchange(ShuttleGui& S);
@@ -28,10 +33,15 @@ private:
    void OnFormatChanged(wxCommandEvent&);
 
    AudacityProject& mProject;
-   Exporter& mExporter;
 
    wxButton* mEditMetadata{};
    ExportFilePanel* mExportFilePanel{nullptr};
+
+   wxFileName* mFileName{};
+   wxString* mFormat{};
+   int* mSampleRate{};
+   int* mChannels{};
+   ExportProcessor::Parameters* mParameters{};
 
    DECLARE_EVENT_TABLE()
 };

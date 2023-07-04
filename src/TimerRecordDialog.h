@@ -143,9 +143,9 @@ private:
    wxFileName m_fnAutoSaveFile;
    bool m_bAutoExportEnabled;
    wxFileName m_fnAutoExportFile;
-   int m_iAutoExportFormat{0};
+   wxString m_sAutoExportFormat{"WAV"};
    int m_iAutoExportSampleRate{44100};
-   int m_iAutoExportSubFormat{0};
+   int m_iAutoExportChannels{2};
    ExportProcessor::Parameters m_AutoExportParameters;
    bool m_bProjectAlreadySaved;
 

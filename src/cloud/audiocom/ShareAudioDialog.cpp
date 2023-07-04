@@ -349,15 +349,18 @@ wxString ShareAudioDialog::ExportProject()
 
             mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this);
 
+            auto builder = ExportTaskBuilder{}
+               .SetParameters(parameters)
+               .SetNumChannels(nChannels)
+               .SetSampleRate(ProjectRate::Get(mProject).GetRate())
+               .SetPlugin(plugin.get())
+               .SetFileName(path)
+               .SetRange(t0, t1, false);
+
             auto result = ExportResult::Error;
             ExportProgressUI::ExceptionWrappedCall([&]
             {
-               auto exportTask = e.CreateExportTask(parameters,
-                  nChannels,
-                  ProjectRate::Get(mProject).GetRate(),
-                  formatInfo.format,
-                  path,
-                  false, t0, t1);
+               auto exportTask = builder.Build(mProject);
 
                auto f = exportTask.get_future();
                std::thread(std::move(exportTask), std::ref(*mExportProgressUpdater)).detach();
