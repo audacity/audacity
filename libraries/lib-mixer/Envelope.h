@@ -127,6 +127,7 @@ public:
    void SetTrackLen( double trackLen, double sampleDur = 0.0 );
    void RescaleValues(double minValue, double maxValue);
    void RescaleTimes( double newLength );
+   void RescaleTimesBy(double ratio);
 
    // Accessors
    /** \brief Get envelope value at time t */

@@ -66,6 +66,15 @@ void TimeTrack::CleanState()
    SetName(GetDefaultName());
 }
 
+void TimeTrack::DoOnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   if (!oldTempo.has_value())
+      return;
+   const auto ratio = *oldTempo / newTempo;
+   mEnvelope->RescaleTimesBy(ratio);
+}
+
 TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
    double *pT0, double *pT1
 )  : UniqueChannelTrack{ orig, std::move(a) }

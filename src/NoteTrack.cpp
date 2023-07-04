@@ -213,6 +213,21 @@ double NoteTrack::GetEndTime() const
    return GetStartTime() + GetSeq().get_real_dur();
 }
 
+void NoteTrack::DoOnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   if (!oldTempo.has_value())
+      return;
+   const auto ratio = *oldTempo / newTempo;
+   auto& seq = GetSeq();
+   seq.convert_to_beats();
+   const auto b1 = seq.get_dur();
+   seq.convert_to_seconds();
+   const auto newDuration = seq.get_dur() * ratio;
+   seq.stretch_region(0, b1, newDuration);
+   seq.set_real_dur(newDuration);
+}
+
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
                                       const TimeWarper &warper,
                                       double semitones)

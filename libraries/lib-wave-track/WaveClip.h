@@ -24,8 +24,9 @@
 #include <wx/longlong.h>
 
 #include <cassert>
-#include <vector>
 #include <functional>
+#include <optional>
+#include <vector>
 
 class BlockArray;
 class Envelope;
@@ -444,6 +445,12 @@ public:
     */
    constSamplePtr GetAppendBuffer(size_t ii) const;
    size_t GetAppendBufferLen() const;
+
+   void
+   OnProjectTempoChange(const std::optional<double>& oldTempo, double newTempo)
+   {
+      // Planned for use in https://github.com/audacity/audacity/issues/4850
+   }
 
 private:
    sampleCount GetNumSamples() const;

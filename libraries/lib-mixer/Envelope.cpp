@@ -29,6 +29,7 @@ a draggable point type.
 
 #include "Envelope.h"
 
+#include <float.h>
 #include <math.h>
 
 #include <wx/wxcrtvararg.h>
@@ -481,7 +482,7 @@ void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
       return;
    }
 
-   // Make t0 relative to the offset of the envelope we are pasting into, 
+   // Make t0 relative to the offset of the envelope we are pasting into,
    // and trim it to the domain of this
    t0 = std::min( mTrackLen, std::max( 0.0, t0 - mOffset ) );
 
@@ -637,7 +638,7 @@ std::pair< int, int > Envelope::ExpandRegion
    }
 
    mTrackLen += tlen;
-   
+
    // Preserve the right-side limit.
    if ( index < range.second )
       // There was a control point already.
@@ -822,6 +823,14 @@ void Envelope::RescaleTimes( double newLength )
          point.SetT( point.GetT() * ratio );
    }
    mTrackLen = newLength;
+}
+
+void Envelope::RescaleTimesBy(double ratio)
+{
+   for (auto& point : mEnv)
+      point.SetT(point.GetT() * ratio);
+   if (mTrackLen != DBL_MAX)
+      mTrackLen *= ratio;
 }
 
 // Accessors

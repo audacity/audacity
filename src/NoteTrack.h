@@ -73,7 +73,7 @@ public:
    virtual ~NoteTrack();
 
    using Holder = std::shared_ptr<NoteTrack>;
-   
+
 private:
    Track::Holder Clone() const override;
 
@@ -81,7 +81,6 @@ public:
    double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
-
    Alg_seq &GetSeq() const;
 
    void WarpAndTransposeNotes(double t0, double t1,
@@ -215,6 +214,8 @@ public:
 #endif
 
    void AddToDuration( double delta );
+   void DoOnProjectTempoChange(
+      const std::optional<double>& oldTempo, double newTempo) override;
 
    // These are mutable to allow NoteTrack to switch details of representation
    // in logically const methods
