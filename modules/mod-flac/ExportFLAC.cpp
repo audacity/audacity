@@ -33,6 +33,7 @@ Joshua Haberman
 #include "wxFileNameWrapper.h"
 
 #include "ExportPluginHelpers.h"
+#include "ExportPluginRegistry.h"
 #include "PlainExportOptionsEditor.h"
 
 //----------------------------------------------------------------------------
@@ -524,6 +525,6 @@ FLAC__StreamMetadataHandle FLACExportProcessor::MakeMetadata(AudacityProject *pr
    return metadata;
 }
 
-static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FLAC",
+static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "FLAC",
    []{ return std::make_unique< ExportFLAC >(); }
 };

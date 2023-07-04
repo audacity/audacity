@@ -16,6 +16,7 @@
 
 #include "ShuttleGui.h"
 #include "ExportOptionsHandler.h"
+#include "ExportPluginRegistry.h"
 
 wxDEFINE_EVENT(AUDACITY_EXPORT_FORMAT_CHANGE_EVENT, wxCommandEvent);
 
@@ -128,7 +129,6 @@ ExportFilePanel::ExportFilePanel(AudacityProject& project,
    : wxPanelWrapper(parent, winid)
    , mMonoStereoMode(monoStereoMode)
    , mProject(project)
-   , mExporter(std::make_unique<Exporter>(project))
 {
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -141,13 +141,10 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
    TranslatableStrings formats;
    if(S.GetMode() == eIsCreating)
    {
-      for(auto& plugin : mExporter->GetPlugins())
+      for(auto [plugin, formatIndex] : ExportPluginRegistry::Get())
       {
-         for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
-         {
-            auto formatInfo = plugin->GetFormatInfo(formatIndex);
-            formats.push_back(formatInfo.description);
-         }
+         auto formatInfo = plugin->GetFormatInfo(formatIndex);
+         formats.push_back(formatInfo.description);
       }
    }
 
@@ -230,21 +227,14 @@ void ExportFilePanel::Init(const wxFileName& filename,
    if(!format.empty())
    {
       auto counter = 0;
-      auto formatFound = false;
-      for(auto& p : mExporter->GetPlugins())
+      for(auto [plugin, formatIndex] : ExportPluginRegistry::Get())
       {
-         for(unsigned i = 0; i < p->GetFormatCount(); ++i)
+         if(plugin->GetFormatInfo(formatIndex).format.IsSameAs(format))
          {
-            if(format == p->GetFormatInfo(i).format)
-            {
-               selectedFormatIndex = counter;
-               formatFound = true;
-               break;
-            }
-            ++counter;
-         }
-         if(formatFound)
+            selectedFormatIndex = counter;
             break;
+         }
+         ++counter;
       }
    }
 
@@ -283,16 +273,10 @@ const ExportPlugin* ExportFilePanel::GetPlugin() const
    return mSelectedPlugin;
 }
 
-int ExportFilePanel::GetPluginIndex() const
-{
-   return mSelectedPluginIndex;
-}
-
 int ExportFilePanel::GetFormat() const
 {
    return mSelectedFormatIndex;
 }
-
 
 int ExportFilePanel::GetSampleRate() const
 {
@@ -400,50 +384,51 @@ void ExportFilePanel::ChangeFormat(int index)
 
    wxWindowUpdateLocker wndupdlck(mAudioOptionsPanel);
 
-   auto pluginCounter = 0;
    auto formatCounter = 0;
-   for(const auto& plugin : mExporter->GetPlugins())
-   {
-      for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
-      {
-         if(formatCounter == index)
-         {
-            mOptionsChangeSubscription.Reset();
 
-            mSelectedPlugin = plugin.get();
-            mSelectedPluginIndex = pluginCounter;
-            mSelectedFormatIndex = formatIndex;
-            
-            auto formatInfo = plugin->GetFormatInfo(formatIndex);
-            if(!formatInfo.extensions[0].empty())
-            {
-               wxFileName filename;
-               filename.SetFullName(mFullName->GetValue());
-               filename.SetExt(formatInfo.extensions[0]);
-               mFullName->SetValue(filename.GetFullName());
-            }
-            mAudioOptionsPanel->SetSizer(nullptr);
-            mAudioOptionsPanel->DestroyChildren();
-            
-            ShuttleGui S(mAudioOptionsPanel, eIsCreating, true, {1, 1});
-            mOptionsHandler = std::make_unique<ExportOptionsHandler>(S, *plugin, formatIndex);
-            mOptionsChangeSubscription = mOptionsHandler->Subscribe(*this, &ExportFilePanel::OnOptionsHandlerEvent);
-            
-            if(formatInfo.maxChannels < 2 && mStereo->GetValue())
-               mMono->SetValue(true);
-            mStereo->Enable(formatInfo.maxChannels > 1);
-            
-            const auto mixerMaxChannels = std::clamp(formatInfo.maxChannels,
-                                                    // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is
-                                                    // sometimes not slidable.  My suspicion is that a mixer may incorrectly
-                                                    // state the number of channels - so we assume there are always at least two.
-                                                    // The downside is that if someone is exporting to a mono device, the dialog
-                                                    // will allow them to output to two channels. Hmm.  We may need to revisit this.
-                                                    // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
-                                                    1u,
-                                                    MaxExportChannels);
-            if(!mMixerSpec || mMixerSpec->GetMaxNumChannels() != mixerMaxChannels)
-            {
+   for(auto [plugin, formatIndex] : ExportPluginRegistry::Get())
+   {
+      if(formatCounter != index)
+      {
+         ++formatCounter;
+         continue;
+      }
+
+      mOptionsChangeSubscription.Reset();
+
+      mSelectedPlugin = plugin;
+      mSelectedFormatIndex = formatIndex;
+      
+      auto formatInfo = plugin->GetFormatInfo(formatIndex);
+      if(!formatInfo.extensions[0].empty())
+      {
+         wxFileName filename;
+         filename.SetFullName(mFullName->GetValue());
+         filename.SetExt(formatInfo.extensions[0]);
+         mFullName->SetValue(filename.GetFullName());
+      }
+      mAudioOptionsPanel->SetSizer(nullptr);
+      mAudioOptionsPanel->DestroyChildren();
+      
+      ShuttleGui S(mAudioOptionsPanel, eIsCreating, true, {1, 1});
+      mOptionsHandler = std::make_unique<ExportOptionsHandler>(S, *plugin, formatIndex);
+      mOptionsChangeSubscription = mOptionsHandler->Subscribe(*this, &ExportFilePanel::OnOptionsHandlerEvent);
+      
+      if(formatInfo.maxChannels < 2 && mStereo->GetValue())
+         mMono->SetValue(true);
+      mStereo->Enable(formatInfo.maxChannels > 1);
+      
+      const auto mixerMaxChannels = std::clamp(formatInfo.maxChannels,
+                                              // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is
+                                              // sometimes not slidable.  My suspicion is that a mixer may incorrectly
+                                              // state the number of channels - so we assume there are always at least two.
+                                              // The downside is that if someone is exporting to a mono device, the dialog
+                                              // will allow them to output to two channels. Hmm.  We may need to revisit this.
+                                              // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
+                                              1u,
+                                              MaxExportChannels);
+      if(!mMixerSpec || mMixerSpec->GetMaxNumChannels() != mixerMaxChannels)
+      {
                auto waveTracks = TrackList::Get(mProject).Leaders<const WaveTrack>();
                mMixerSpec = std::make_unique<MixerOptions::Downmix>(
                   std::accumulate(
@@ -451,18 +436,15 @@ void ExportFilePanel::ChangeFormat(int index)
                      waveTracks.end(),
                      0, [](int sum, const auto& track) { return sum + track->NChannels(); }),
                   mixerMaxChannels);
-            }
-            
-            UpdateSampleRateList();
-            
-            mAudioOptionsPanel->Layout();
-            
-            wxPostEvent(GetParent(), wxCommandEvent { AUDACITY_EXPORT_FORMAT_CHANGE_EVENT, GetId() });
-            
-            return;
-         }
-         ++formatCounter;
       }
+      
+      UpdateSampleRateList();
+      
+      mAudioOptionsPanel->Layout();
+      
+      wxPostEvent(GetParent(), wxCommandEvent { AUDACITY_EXPORT_FORMAT_CHANGE_EVENT, GetId() });
+      
+      return;
    }
 }
 

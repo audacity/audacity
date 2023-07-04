@@ -116,8 +116,7 @@ private:
    wxArrayString mParamsMacro;
    bool mAbort;
    wxString mMessage;
-
-   Exporter mExporter;
+   
    wxString mFileName;
 };
 

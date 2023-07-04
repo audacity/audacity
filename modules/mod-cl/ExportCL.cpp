@@ -46,6 +46,7 @@
 #include "ExportOptionsEditor.h"
 #include "ExportOptionsUIServices.h"
 #include "ExportPluginHelpers.h"
+#include "ExportPluginRegistry.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -867,6 +868,6 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format)) const
    return true;
 }
 
-static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "CommandLine",
+static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "CommandLine",
    []{ return std::make_unique< ExportCL >(); }
 };

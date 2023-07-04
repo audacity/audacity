@@ -46,6 +46,7 @@
 #include "export/ExportProgressUI.h"
 #include "ExportUtils.h"
 #include "AccessibleLinksFormatter.h"
+#include "ExportPluginRegistry.h"
 
 #include "WindowAccessible.h"
 #include "HelpSystem.h"
@@ -312,8 +313,6 @@ int CalculateChannels(const TrackList& trackList)
 
 wxString ShareAudioDialog::ExportProject()
 {
-   Exporter e { const_cast<AudacityProject&>(mProject) };
-
    auto& tracks = TrackList::Get(mProject);
 
    const double t0 = 0.0;
@@ -325,62 +324,64 @@ wxString ShareAudioDialog::ExportProject()
    {
       return std::find(mimeTypes.begin(), mimeTypes.end(), mimeType) != mimeTypes.end();
    };
-   
+
+   const auto& registry = ExportPluginRegistry::Get();
+
    for(const auto& preferredMimeType : GetServiceConfig().GetPreferredAudioFormats())
    {
       auto config = GetServiceConfig().GetExportConfig(preferredMimeType);
-
-      for(auto& plugin : e.GetPlugins())
+      ExportProcessor::Parameters parameters;
+      auto pluginIt = std::find_if(registry.begin(), registry.end(), [&](auto t)
       {
-         for(int i = 0, formatCount = plugin->GetFormatCount(); i < formatCount; ++i)
+         auto [plugin, formatIndex] = t;
+         parameters.clear();
+         return hasMimeType(plugin->GetMimeTypes(formatIndex), preferredMimeType) &&
+            plugin->ParseConfig(formatIndex, config, parameters);
+      });
+
+      if(pluginIt == registry.end())
+         continue;
+
+      const auto [plugin, formatIndex] = *pluginIt;
+
+      const auto formatInfo = plugin->GetFormatInfo(formatIndex);
+      const auto path = GenerateTempPath(formatInfo.extensions[0]);
+
+      if(path.empty())
+         continue;
+
+      mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this);
+
+      auto builder = ExportTaskBuilder{}
+         .SetParameters(parameters)
+         .SetNumChannels(nChannels)
+         .SetSampleRate(ProjectRate::Get(mProject).GetRate())
+         .SetPlugin(plugin)
+         .SetFileName(path)
+         .SetRange(t0, t1, false);
+
+      auto result = ExportResult::Error;
+      ExportProgressUI::ExceptionWrappedCall([&]
+      {
+         auto exportTask = builder.Build(mProject);
+
+         auto f = exportTask.get_future();
+         std::thread(std::move(exportTask), std::ref(*mExportProgressUpdater)).detach();
+
+         ExportProgressUI::ExceptionWrappedCall([&]
          {
-            ExportProcessor::Parameters parameters;
-            if(!hasMimeType(plugin->GetMimeTypes(i), preferredMimeType) ||
-               !plugin->ParseConfig(i, config, parameters))
-            {
-               continue;
-            }
-
-            const auto formatInfo = plugin->GetFormatInfo(i);
-            const auto path = GenerateTempPath(formatInfo.extensions[0]);
-
-            if(path.empty())
-               continue;
-
-            mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this);
-
-            auto builder = ExportTaskBuilder{}
-               .SetParameters(parameters)
-               .SetNumChannels(nChannels)
-               .SetSampleRate(ProjectRate::Get(mProject).GetRate())
-               .SetPlugin(plugin.get())
-               .SetFileName(path)
-               .SetRange(t0, t1, false);
-
-            auto result = ExportResult::Error;
-            ExportProgressUI::ExceptionWrappedCall([&]
-            {
-               auto exportTask = builder.Build(mProject);
-
-               auto f = exportTask.get_future();
-               std::thread(std::move(exportTask), std::ref(*mExportProgressUpdater)).detach();
-
-               ExportProgressUI::ExceptionWrappedCall([&]
-               {
-                  if(f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready)
-                     mExportProgressUpdater->UpdateUI();
-                  result = f.get();
-               });
-            });
-            
-            mExportProgressUpdater->SetResult(result);
-            const auto success = result == ExportResult::Success;
-            if(!success && wxFileExists(path))
-               wxRemoveFile(path);
-            if(success)
-               return path;
-         }
-      }
+            if(f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready)
+               mExportProgressUpdater->UpdateUI();
+            result = f.get();
+         });
+      });
+      
+      mExportProgressUpdater->SetResult(result);
+      const auto success = result == ExportResult::Success;
+      if(!success && wxFileExists(path))
+         wxRemoveFile(path);
+      if(success)
+         return path;
    }
    return {};
 }

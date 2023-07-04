@@ -29,6 +29,7 @@
 #include "ExportOptionsEditor.h"
 
 #include "ExportPluginHelpers.h"
+#include "ExportPluginRegistry.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -1086,6 +1087,6 @@ bool PCMExportProcessor::AddID3Chunk(
    return true;
 }
 
-static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "PCM",
+static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "PCM",
    []{ return std::make_unique< ExportPCM >(); }
 };

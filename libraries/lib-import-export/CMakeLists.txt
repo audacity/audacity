@@ -16,6 +16,8 @@ set( SOURCES
    ExportPlugin.h
    ExportPluginHelpers.cpp
    ExportPluginHelpers.h
+   ExportPluginRegistry.cpp
+   ExportPluginRegistry.h
    ExportTypes.h
    ExportUtils.cpp
    ExportUtils.h

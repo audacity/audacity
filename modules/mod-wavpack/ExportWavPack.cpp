@@ -27,6 +27,7 @@
 
 #include "ExportPluginHelpers.h"
 #include "ExportOptionsEditor.h"
+#include "ExportPluginRegistry.h"
 
 namespace
 {
@@ -602,6 +603,6 @@ int WavPackExportProcessor::WriteBlock(void *id, void *data, int32_t length)
     return true;
 }
 
-static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "WavPack",
+static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "WavPack",
    []{ return std::make_unique< ExportWavPack >(); }
 };

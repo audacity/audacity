@@ -167,6 +167,8 @@ It handles initialization and termination by subclassing wxApp.
 
 #include <thread>
 
+#include "ExportPluginRegistry.h"
+
 #ifdef HAS_CUSTOM_URL_HANDLING
 #include "URLSchemesRegistry.h"
 
@@ -1608,6 +1610,7 @@ bool AudacityApp::InitPart2()
 #endif
 
    Importer::Get().Initialize();
+   ExportPluginRegistry::Get().Initialize();
 
    // Bug1561: delay the recovery dialog, to avoid crashes.
    CallAfter( [=] () mutable {

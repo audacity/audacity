@@ -32,6 +32,7 @@
 #include "CommandContext.h"
 #include "ExportUtils.h"
 #include "ProjectRate.h"
+#include "ExportPluginRegistry.h"
 #include "export/ExportProgressUI.h"
 
 
@@ -125,36 +126,31 @@ bool ExportCommand::Apply(const CommandContext & context)
    }
    wxString extension = mFileName.Mid(splitAt+1).MakeUpper();
 
-   Exporter exporter{ context.project };
-   for(auto& plugin : exporter.GetPlugins())
+   auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(extension);
+
+   if(plugin != nullptr)
    {
-      for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
+      auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+      editor->Load(*gPrefs);
+
+      auto builder = ExportTaskBuilder{}
+         .SetParameters(ExportUtils::ParametersFromEditor(*editor))
+         .SetNumChannels(std::max(0, mnChannels))
+         .SetSampleRate(ProjectRate::Get(context.project).GetRate())
+         .SetPlugin(plugin)
+         .SetFileName(mFileName)
+         .SetRange(t0, t1, true);
+
+      auto result = ExportResult::Error;
+      ExportProgressUI::ExceptionWrappedCall([&]
       {
-         auto formatInfo = plugin->GetFormatInfo(formatIndex);
-         if(!formatInfo.format.IsSameAs(extension, false))
-            continue;
-         auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
-         editor->Load(*gPrefs);
-
-         auto builder = ExportTaskBuilder{}
-            .SetParameters(ExportUtils::ParametersFromEditor(*editor))
-            .SetNumChannels(std::max(0, mnChannels))
-            .SetSampleRate(ProjectRate::Get(context.project).GetRate())
-            .SetPlugin(plugin.get())
-            .SetFileName(mFileName)
-            .SetRange(t0, t1, true);
-
-         auto result = ExportResult::Error;
-         ExportProgressUI::ExceptionWrappedCall([&]
-         {
-            result = ExportProgressUI::Show(builder.Build(context.project));
-         });
-         if (result == ExportResult::Success || result == ExportResult::Stopped)
-         {
-            context.Status(wxString::Format(wxT("Exported to %s format: %s"),
-                                            extension, mFileName));
-            return true;
-         }
+         result = ExportProgressUI::Show(builder.Build(context.project));
+      });
+      if (result == ExportResult::Success || result == ExportResult::Stopped)
+      {
+         context.Status(wxString::Format(wxT("Exported to %s format: %s"),
+                                         extension, mFileName));
+         return true;
       }
    }
 

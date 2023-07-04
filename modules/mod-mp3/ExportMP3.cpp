@@ -94,6 +94,7 @@
 
 #include "ExportOptionsEditor.h"
 #include "ExportPluginHelpers.h"
+#include "ExportPluginRegistry.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "ProjectWindow.h"
@@ -2231,7 +2232,7 @@ void MP3ExportProcessor::AddFrame(struct id3_tag *tp, const wxString & n, const 
 }
 #endif
 
-static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "MP3",
+static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "MP3",
    []{ return std::make_unique< ExportMP3 >(); }
 };
 

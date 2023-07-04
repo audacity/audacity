@@ -48,7 +48,6 @@ public:
    wxString GetFullName() const;
 
    const ExportPlugin* GetPlugin() const;
-   int GetPluginIndex() const;
    int GetFormat() const;
    int GetSampleRate() const;
    ExportProcessor::Parameters GetParameters() const;
@@ -90,10 +89,8 @@ private:
 
    int mSampleRate{};
    const ExportPlugin* mSelectedPlugin{};
-   int mSelectedPluginIndex{};
    int mSelectedFormatIndex{};
-
-   std::unique_ptr<Exporter> mExporter;
+   
    std::unique_ptr<ExportOptionsHandler> mOptionsHandler;
    std::unique_ptr<MixerOptions::Downmix> mMixerSpec;
 

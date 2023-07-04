@@ -20,6 +20,7 @@
 
 #include "wxFileNameWrapper.h"
 #include "ExportPluginHelpers.h"
+#include "ExportPluginRegistry.h"
 #include "FileIO.h"
 #include "Mix.h"
 
@@ -398,6 +399,6 @@ void OGGExportProcessor::FillComment(AudacityProject *project, vorbis_comment *c
    }
 }
 
-static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "OGG",
+static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "OGG",
    []{ return std::make_unique< ExportOGG >(); }
 };

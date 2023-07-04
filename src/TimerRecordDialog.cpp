@@ -55,6 +55,7 @@
 #include "widgets/NumericTextCtrl.h"
 #include "HelpSystem.h"
 #include "AudacityMessageBox.h"
+#include "ExportPluginRegistry.h"
 #include "ExportUtils.h"
 #include "ProgressDialog.h"
 #include "wxTextCtrlWrapper.h"
@@ -621,23 +622,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          if(skipSilenceAtBeginning)
             t0 = std::max(t0, tracks.GetStartTime());
 
-         ExportPlugin* exportPlugin{};
-         int formatIndex = 0;
-         Exporter e{mProject};
-         for(auto& plugin : e.GetPlugins())
-         {
-            for(int i = 0; i < plugin->GetFormatCount(); ++i)
-            {
-               if(plugin->GetFormatInfo(i).format == m_sAutoExportFormat)
-               {
-                  exportPlugin = plugin.get();
-                  formatIndex = i;
-                  break;
-               }
-            }
-            if(exportPlugin != nullptr)
-               break;
-         }
+         auto [exportPlugin, formatIndex] =
+            ExportPluginRegistry::Get().FindFormat(m_sAutoExportFormat);
 
          if(exportPlugin != nullptr)
          {

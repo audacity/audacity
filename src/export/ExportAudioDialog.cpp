@@ -82,7 +82,7 @@ BoolSetting ExportAudioSkipSilenceAtBeginning { L"/ExportAudioDialog/SkipSilence
 StringSetting ExportAudioDefaultFormat{ L"/ExportAudioDialog/Format", L"WAV" };
 
 enum {
-   ExportFilePanelID = 10000,
+   ExportFilePanelID = 10000,//to avoid IDs collision with ExportFilePanel items
 
    ExportRangeProjectID,
    ExportRangeSelectionID,

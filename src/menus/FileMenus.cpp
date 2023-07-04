@@ -26,8 +26,6 @@
 #include "../widgets/FileHistory.h"
 #include "../widgets/MissingPluginsErrorDialog.h"
 #include "wxPanelWrapper.h"
-#include "../widgets/Warning.h"
-#include "../prefs/ImportExportPrefs.h"
 
 #include "ExportUtils.h"
 #include "export/ExportProgressUI.h"
@@ -36,6 +34,7 @@
 #include <wx/app.h>
 #include <wx/menu.h>
 
+#include "ExportPluginRegistry.h"
 #include "ProjectRate.h"
 
 // private helper classes and functions
@@ -99,44 +98,33 @@ void DoExport(AudacityProject &project, const FileExtension &format)
       fileName.Mkdir(0777, wxPATH_MKDIR_FULL); // make sure it exists
 
       int nChannels = tracks.Leaders().max(&Track::NChannels);
-
-      Exporter e{ project };
-      
-      for(auto& plugin : e.GetPlugins())
+      auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(format);
+      if(plugin != nullptr)
       {
-         for(int formatIndex = 0; formatIndex < plugin->GetFormatCount(); ++formatIndex)
+         auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+         editor->Load(*gPrefs);
+         
+         auto builder = ExportTaskBuilder {}
+            .SetParameters(ExportUtils::ParametersFromEditor(*editor))
+            .SetSampleRate(ProjectRate::Get(project).GetRate())
+            .SetPlugin(plugin)
+            .SetFileName(fullPath)
+            .SetNumChannels(nChannels)
+            .SetRange(0.0, tracks.GetEndTime(), false);
+         
+         bool success = false;
+         ExportProgressUI::ExceptionWrappedCall([&]
          {
-            auto formatInfo = plugin->GetFormatInfo(formatIndex);
-            if(!formatInfo.format.IsSameAs(format, false))
-               continue;
-
-            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
-            editor->Load(*gPrefs);
-            
-            auto builder = ExportTaskBuilder {}
-               .SetParameters(ExportUtils::ParametersFromEditor(*editor))
-               .SetSampleRate(ProjectRate::Get(project).GetRate())
-               .SetPlugin(plugin.get())
-               .SetFileName(fullPath)
-               .SetNumChannels(nChannels)
-               .SetRange(0.0, tracks.GetEndTime(), false);
-            
-            bool success = false;
-            ExportProgressUI::ExceptionWrappedCall([&]
-            {
-               // We're in batch mode, the file does not exist already.
-               // We really can proceed without prompting.
-               const auto result = ExportProgressUI::Show(builder.Build(project));
-               success = result == ExportResult::Success || result == ExportResult::Stopped;
-            });
-            
-            if (success && !project.mBatchMode) {
-               FileHistory::Global().Append(e.GetAutoExportFileName().GetFullPath());
-            }
-            break;
+            // We're in batch mode, the file does not exist already.
+            // We really can proceed without prompting.
+            const auto result = ExportProgressUI::Show(builder.Build(project));
+            success = result == ExportResult::Success || result == ExportResult::Stopped;
+         });
+         
+         if (success && !project.mBatchMode) {
+            FileHistory::Global().Append(fullPath);
          }
       }
-      
    }
 }
 

@@ -44,6 +44,7 @@ function.
 #include "PlainExportOptionsEditor.h"
 #include "FFmpegDefines.h"
 #include "ExportOptionsUIServices.h"
+#include "ExportPluginRegistry.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
@@ -1813,7 +1814,7 @@ int FFmpegExporter::AskResample(int bitrate, int rate, int lowrate, int highrate
 #endif
 }
 
-static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FFmpeg",
+static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "FFmpeg",
    []{ return std::make_unique< ExportFFmpeg >(); }
 };
 

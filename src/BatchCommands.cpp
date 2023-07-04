@@ -53,7 +53,6 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 MacroCommands::MacroCommands( AudacityProject &project )
 : mProject{ project }
-, mExporter{ project }
 {
    ResetMacro();
 

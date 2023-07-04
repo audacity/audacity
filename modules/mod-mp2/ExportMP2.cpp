@@ -48,6 +48,7 @@
 #include "PlainExportOptionsEditor.h"
 
 #define LIBTWOLAME_STATIC
+#include "ExportPluginRegistry.h"
 #include "twolame.h"
 
 #ifdef USE_LIBID3TAG
@@ -460,6 +461,6 @@ void MP2ExportProcessor::AddFrame(struct id3_tag *tp, const wxString & n, const 
 }
 #endif
 
-static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "MP2",
+static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "MP2",
    []{ return std::make_unique< ExportMP2 >(); }
 };
