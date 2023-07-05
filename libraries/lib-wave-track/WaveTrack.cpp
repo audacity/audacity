@@ -1994,14 +1994,26 @@ ClipConstHolders WaveTrack::GetClipInterfaces() const
   const auto pOwner = GetOwner();
   ClipConstHolders wideClips;
   wideClips.reserve(mClips.size());
-  for (auto clipIndex = 0u; clipIndex < mClips.size(); ++clipIndex) {
-    const auto leftClip = mClips[clipIndex];
-    const auto rightClip =
-        NChannels() == 2u && pOwner
-            ? (*++pOwner->Find<const WaveTrack>(this))->mClips[clipIndex]
-            : nullptr;
-    wideClips.emplace_back(std::make_shared<WideClip>(leftClip, rightClip));
-   }
+  for (auto clipIndex = 0u; clipIndex < mClips.size(); ++clipIndex)
+  {
+     const auto leftClip = mClips[clipIndex];
+     WaveClipHolder rightClip;
+     if (NChannels() == 2u && pOwner)
+     {
+        const auto& rightClips =
+           (*++pOwner->Find<const WaveTrack>(this))->mClips;
+        // This is known to have potential for failure for stereo tracks with
+        // misaligned left/right clips - see
+        // https://github.com/audacity/audacity/issues/4791.
+        // If what you are trying to do is something else and this fails,
+        // please report.
+        assert(clipIndex < rightClips.size());
+        if (clipIndex < rightClips.size())
+           rightClip = rightClips[clipIndex];
+     }
+     wideClips.emplace_back(
+        std::make_shared<WideClip>(leftClip, std::move(rightClip)));
+  }
    return wideClips;
 }
 
