@@ -52,6 +52,14 @@ void DoExport(AudacityProject &project, const FileExtension &format)
                              format.empty();
 
    if (bPromptingRequired) {
+      if(ExportUtils::FindExportWaveTracks(tracks, false).empty())
+      {
+         ShowExportErrorDialog(
+            XO("All audio is muted."), //":576"
+            XO("Warning"),
+            false);
+         return;
+      }
       ExportAudioDialog dialog(&ProjectWindow::Get(project),
                                project,
                                project.GetProjectName(),

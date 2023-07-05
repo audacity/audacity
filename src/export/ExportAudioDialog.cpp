@@ -140,6 +140,8 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    : wxDialogWrapper(parent, wxID_ANY, XO("Export Audio"))
    , mProject(project)
 {
+   assert(!ExportUtils::FindExportWaveTracks(TrackList::Get(project), false).empty());
+
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
    
@@ -164,14 +166,19 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
 
    mExportOptionsPanel->Init(filename, format, sampleRate, 2);
 
+   const auto labelTracks = TrackList::Get(mProject).Leaders<LabelTrack>();
+   const auto hasLabels = !labelTracks.empty() &&
+      (*labelTracks.begin())->GetNumLabels() > 0;
+
    if(ExportUtils::FindExportWaveTracks(TrackList::Get(mProject), true).empty())
    {
+      //All selected audio is muted
       mRangeSelection->Disable();
       if(ExportAudioExportRange.Read() == "selection")
          mRangeProject->SetValue(true);
    }
    
-   if(TrackList::Get(mProject).Leaders<LabelTrack>().empty())
+   if(!hasLabels)
    {
       mSplitByLabels->Disable();
       mSplitByTracks->SetValue(true);
