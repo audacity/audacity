@@ -581,7 +581,8 @@ public:
 
    FFmpegExporter(std::shared_ptr<FFmpegFunctions> ffmpeg,
       const wxFileNameWrapper& filename,
-      int numChannels);
+      int numChannels,
+      int subformat);
 
    /// Format initialization
    bool Init(const char *shortname,
@@ -652,6 +653,7 @@ class FFmpegExportProcessor final : public ExportProcessor
    std::shared_ptr<FFmpegFunctions> mFFmpeg;
    struct
    {
+      //same index as in GetFormatInfo, use AdjustFormatIndex to convert it to FFmpegExposedFormat
       int subformat;
       TranslatableString status;
       double t0;
@@ -701,10 +703,12 @@ private:
 
 FFmpegExporter::FFmpegExporter(std::shared_ptr<FFmpegFunctions> ffmpeg,
    const wxFileNameWrapper& filename,
-   int numChannels)
+   int numChannels,
+   int subFormat)
    : mFFmpeg(std::move(ffmpeg))
    , mName(filename)
    , mChannels(numChannels)
+   , mSubFormat(subFormat)
 {
 }
 
@@ -1612,7 +1616,7 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
    if (adjustedFormatIndex == FMT_OTHER)
       shortname = ExportPluginHelpers::GetParameterValue<std::string>(parameters, FEFormatID, "matroska");
 
-   context.exporter = std::make_unique<FFmpegExporter>(mFFmpeg, fName, channels);
+   context.exporter = std::make_unique<FFmpegExporter>(mFFmpeg, fName, channels, adjustedFormatIndex);
 
    ret = context.exporter->Init(shortname.mb_str(), &project, (int)sampleRate, metadata, parameters);
    
