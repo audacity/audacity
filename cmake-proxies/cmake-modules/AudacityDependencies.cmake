@@ -141,19 +141,22 @@ include (DependenciesList)
 if( ${_OPT}conan_enabled )
    # Deduce the build type
    get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
    if( is_multi_config )
       set(_build_types ${CMAKE_CONFIGURATION_TYPES})
    else()
       set(_build_types ${CMAKE_BUILD_TYPE})
    endif()
 
+   set(_conan_args)
+
    # Force the packages rebuld, if needed
    if( ${_OPT}conan_force_build_dependencies )
-      set( _force_build "--force-build")
+      list(APPEND _conan_args "--force-build")
    endif()
 
    if( NOT ${_OPT}conan_allow_prebuilt_binaries )
-      set( _disallow_prebuilt "--disallow-prebuilt")
+      list(APPEND _conan_args "--disallow-prebuilt")
    endif()
 
    # Deduce the target architecture
@@ -167,16 +170,24 @@ if( ${_OPT}conan_enabled )
 
    # Enable Conan download cache, if needed
    if( ${_OPT}conan_download_cache )
-      set( _download_cache "--download-cache" ${${_OPT}conan_download_cache} )
+      list(APPEND _conan_args "--download-cache" ${${_OPT}conan_download_cache} )
+   endif()
+
+   if( ${_OPT}conan_build_profile)
+      list(APPEND _conan_args "--build-profile" ${${_OPT}conan_build_profile} )
+   endif()
+
+   if( ${_OPT}conan_host_profile)
+      list(APPEND _conan_args "--host-profile" ${${_OPT}conan_host_profile} )
    endif()
 
    # Set the libraries installation directory (Linux only, ignored on other platforms)
    if( _PKGLIB )
-      set( _libdir "--lib-dir" ${_PKGLIB} )
+      list(APPEND _conan_args "--lib-dir" ${_PKGLIB} )
    endif()
 
    if( MIN_MACOS_VERSION )
-      set( _min_macos_version "--min-os-version" ${MIN_MACOS_VERSION} )
+      list(APPEND _conan_args "--min-os-version" ${MIN_MACOS_VERSION} )
    endif()
 
    execute_process(
@@ -187,11 +198,7 @@ if( ${_OPT}conan_enabled )
          --build-types ${_build_types}
          --target-arch ${_target_arch}
          --build-arch ${CMAKE_HOST_SYSTEM_PROCESSOR}
-         ${_libdir}
-         ${_force_build}
-         ${_disallow_prebuilt}
-         ${_download_cache}
-         ${_min_macos_version}
+         ${_conan_args}
          -o ${conan_package_options}
 
       RESULT_VARIABLE conan_result

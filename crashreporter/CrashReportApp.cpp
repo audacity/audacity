@@ -188,7 +188,7 @@ namespace
         }
         else
         {
-            google_breakpad::PrintProcessState(processState, true, &resolver);
+            google_breakpad::PrintProcessState(processState, true, false, &resolver);
         }
     }
 

@@ -21,11 +21,8 @@ fi
 
 echo "Audacity build level: ${buildLevel}"
 
-deps=$(ls audacity-dependencies-*)
-
 sed -i -e "s|TMPL_AUDACITY_VERSION|${version}|g" PKGBUILD
 sed -i -e "s|TMPL_AUDACITY_SOURCES|${sources}|g" PKGBUILD
-sed -i -e "s|TMPL_AUDACITY_DEPENDENCIES|${deps}|g" PKGBUILD
 
 cat PKGBUILD
 

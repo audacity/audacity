@@ -17,7 +17,8 @@ def macos_collect_rpaths(file):
                 rpath_match = re.match(r'path\s+(.*)\s+\(', lines[line_index + 2])
                 if rpath_match:
                     rpath = rpath_match.group(1)
-                    result.append(rpath)
+                    if rpath not in result:
+                        result.append(rpath)
 
             line_index = line_index + 1
 

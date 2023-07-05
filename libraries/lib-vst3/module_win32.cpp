@@ -74,6 +74,14 @@ using InitModuleFunc = bool (PLUGIN_API*) ();
 using ExitModuleFunc = bool (PLUGIN_API*) ();
 }
 
+template <typename T>
+std::string ConvertToUTF8(const T* str)
+{
+   static_assert(sizeof(T) == sizeof(Steinberg::Vst::TChar));
+   return VST3::StringConvert::convert(
+      static_cast<const Steinberg::Vst::TChar*>(static_cast<const void*>(str)));
+}
+
 //------------------------------------------------------------------------
 namespace VST3 {
 namespace Hosting {
@@ -234,7 +242,7 @@ Optional<std::string> getKnownFolder (REFKNOWNFOLDERID folderID)
 	PWSTR wideStr {};
 	if (FAILED (SHGetKnownFolderPath (folderID, 0, nullptr, &wideStr)))
 		return {};
-	return StringConvert::convert (wideStr);
+   return ConvertToUTF8(wideStr);
 }
 
 //------------------------------------------------------------------------
@@ -438,7 +446,7 @@ Module::PathList Module::getModulePaths ()
 	// find plug-ins located in VST3 (application folder)
 	WCHAR modulePath[MAX_PATH + 1];
 	GetModuleFileNameW (nullptr, modulePath, MAX_PATH);
-	auto appPath = StringConvert::convert (modulePath);
+   auto appPath = ConvertToUTF8 (modulePath);
 	filesystem::path path (appPath);
 	path = path.parent_path ();
 	path = path.append ("VST3");
