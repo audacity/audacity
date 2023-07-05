@@ -480,6 +480,21 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
       auto t1 = selectedOnly
          ? std::min(TrackList::Get(mProject).GetEndTime(), viewInfo.selectedRegion.t1())
          : TrackList::Get(mProject).GetEndTime();
+
+      auto tracks = ExportUtils::FindExportWaveTracks(TrackList::Get(mProject), selectedOnly);
+      if(tracks.empty())
+      {
+         ShowExportErrorDialog(
+            selectedOnly ? XO("All selected audio is muted.") : XO("All audio is muted."), //":576"
+            XO("Warning"),
+            false);
+         return;
+      }
+
+      if(mSkipSilenceAtBeginning->GetValue())
+         t0 = std::max(t0, tracks.min(&Track::GetStartTime));
+
+      builder.SetRange(t0, t1, selectedOnly);
       
       std::unique_ptr<MixerOptions::Downmix> tempMixerSpec;
       const auto channels = mExportOptionsPanel->GetChannels();
@@ -511,12 +526,6 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
       }
       else
          builder.SetNumChannels(channels);
-
-      auto tracks = ExportUtils::FindExportWaveTracks(TrackList::Get(mProject), selectedOnly);
-      
-      if(mSkipSilenceAtBeginning->GetValue())
-         t0 = std::max(t0, tracks.min(&Track::GetStartTime));
-      builder.SetRange(t0, t1, selectedOnly);
       
       ExportProgressUI::ExceptionWrappedCall([&]
       {
