@@ -64,9 +64,6 @@ class TIME_TRACK_API TimeTrack final
 
    void MoveTo(double /* t */) override {}
 
-   double GetStartTime() const override { return 0.0; }
-   double GetEndTime() const override { return 0.0; }
-
    // XMLTagHandler callback methods for loading and saving
 
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;

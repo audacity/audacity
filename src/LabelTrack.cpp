@@ -342,30 +342,6 @@ void LabelTrack::SetSelected( bool s )
          this->SharedPointer<LabelTrack>(), {}, -1, -1 });
 }
 
-double LabelTrack::GetStartTime() const
-{
-   if (mLabels.empty())
-      return 0.0;
-   else
-      return mLabels[0].getT0();
-}
-
-double LabelTrack::GetEndTime() const
-{
-   //we need to scan through all the labels, because the last
-   //label might not have the right-most end (if there is overlap).
-   if (mLabels.empty())
-      return 0.0;
-
-   double end = 0.0;
-   for (auto &labelStruct: mLabels) {
-      const double t1 = labelStruct.getT1();
-      if(t1 > end)
-         end = t1;
-   }
-   return end;
-}
-
 TrackListHolder LabelTrack::Clone() const
 {
    assert(IsLeader());

@@ -2139,42 +2139,12 @@ ClipConstHolders WaveTrack::GetClipInterfaces() const
 
 double WaveTrack::GetStartTime() const
 {
-   bool found = false;
-   double best = 0.0;
-
-   if (mClips.empty())
-      return 0;
-
-   for (const auto &clip : mClips)
-      if (!found)
-      {
-         found = true;
-         best = clip->GetPlayStartTime();
-      }
-      else if (clip->GetPlayStartTime() < best)
-         best = clip->GetPlayStartTime();
-
-   return best;
+   return ChannelGroup::GetStartTime();
 }
 
 double WaveTrack::GetEndTime() const
 {
-   bool found = false;
-   double best = 0.0;
-
-   if (mClips.empty())
-      return 0;
-
-   for (const auto &clip : mClips)
-      if (!found)
-      {
-         found = true;
-         best = clip->GetPlayEndTime();
-      }
-      else if (clip->GetPlayEndTime() > best)
-         best = clip->GetPlayEndTime();
-
-   return best;
+   return ChannelGroup::GetEndTime();
 }
 
 //

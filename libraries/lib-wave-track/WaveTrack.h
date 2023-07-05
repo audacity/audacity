@@ -125,17 +125,9 @@ private:
 
    bool LinkConsistencyFix(bool doFix, bool completeList) override;
 
-   /** @brief Get the time at which the first clip in the track starts
-    *
-    * @return time in seconds, or zero if there are no clips in the track
-    */
+   //! Implement WideSampleSequence
    double GetStartTime() const override;
-
-   /** @brief Get the time at which the last clip in the track ends, plus
-    * recorded stuff
-    *
-    * @return time in seconds, or zero if there are no clips in the track.
-    */
+   //! Implement WideSampleSequence
    double GetEndTime() const override;
 
    //

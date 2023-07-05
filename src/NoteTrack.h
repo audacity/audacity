@@ -78,8 +78,6 @@ private:
    TrackListHolder Clone() const override;
 
 public:
-   double GetStartTime() const override;
-   double GetEndTime() const override;
    void MoveTo(double origin) override { mOrigin = origin; }
 
    Alg_seq &GetSeq() const;

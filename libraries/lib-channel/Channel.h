@@ -299,8 +299,10 @@ class CHANNEL_API ChannelGroup
 public:
    virtual ~ChannelGroup();
 
-   virtual double GetStartTime() const = 0;
-   virtual double GetEndTime() const = 0;
+   //! Get the minimum of Start() values of intervals, or 0 when none
+   double GetStartTime() const;
+   //! Get the maximum of End() values of intervals, or 0 when none
+   double GetEndTime() const;
 
    //! Change start time by given duration
    /*

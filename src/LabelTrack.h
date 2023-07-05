@@ -114,9 +114,6 @@ class AUDACITY_DLL_API LabelTrack final
 
    void SetSelected(bool s) override;
 
-   double GetStartTime() const override;
-   double GetEndTime() const override;
-
    using Holder = std::shared_ptr<LabelTrack>;
 
 private:

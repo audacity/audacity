@@ -206,16 +206,6 @@ TrackListHolder NoteTrack::Clone() const
 }
 
 
-double NoteTrack::GetStartTime() const
-{
-   return mOrigin;
-}
-
-double NoteTrack::GetEndTime() const
-{
-   return GetStartTime() + GetSeq().get_real_dur();
-}
-
 void NoteTrack::DoOnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
@@ -741,9 +731,12 @@ size_t NoteTrack::NIntervals() const
 std::shared_ptr<WideChannelGroupInterval>
 NoteTrack::DoGetInterval(size_t iInterval)
 {
-   if (iInterval == 0)
+   if (iInterval == 0) {
       // Just one, and no extra info in it!
-      return std::make_shared<Interval>(*this, GetStartTime(), GetEndTime());
+      const auto start = mOrigin;
+      const auto end = start + GetSeq().get_real_dur();
+      return std::make_shared<Interval>(*this, start, end);
+   }
    return {};
 }
 
