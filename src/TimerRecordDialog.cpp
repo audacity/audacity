@@ -617,10 +617,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       }
       else
       {
-         auto t0 = .0;
-         bool skipSilenceAtBeginning = ExportSkipSilenceAtBeginning.Read();
-         if(skipSilenceAtBeginning)
-            t0 = std::max(t0, tracks.GetStartTime());
+         const auto t0 = std::max(.0, tracks.GetStartTime());
 
          auto [exportPlugin, formatIndex] =
             ExportPluginRegistry::Get().FindFormat(m_sAutoExportFormat);

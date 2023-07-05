@@ -23,11 +23,6 @@
 #include "Prefs.h"
 #include "ShuttleGui.h"
 
-BoolSetting ExportSkipSilenceAtBeginning {
-   L"/AudioFiles/SkipSilenceAtBeginning",
-   false
-};
-
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
 :   PrefsPanel(parent, winid, XO("Import / Export"))
 {
@@ -65,21 +60,6 @@ void ImportExportPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
-EnumSetting< bool > ImportExportPrefs::ExportDownMixSetting{
-   wxT("/FileFormats/ExportDownMixChoice"),
-   {
-      EnumValueSymbol{ wxT("MixDown"), XXO("&Mix down to Stereo or Mono") },
-      EnumValueSymbol{ wxT("Custom"), XXO("&Use Advanced Mixing Options") },
-   },
-   0, // true
-
-   // for migrating old preferences:
-   {
-      true, false,
-   },
-   wxT("/FileFormats/ExportDownMix"),
-};
-
 EnumSetting< bool > ImportExportPrefs::LabelStyleSetting{
    wxT("/FileFormats/LabelStyleChoice"),
    {
@@ -113,30 +93,6 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
    S.StartScroller();
-
-   S.StartStatic(XO("When exporting tracks to an audio file"));
-   {
-      // Bug 2692: Place button group in panel so tabbing will work and,
-      // on the Mac, VoiceOver will announce as radio buttons.
-      S.StartPanel();
-      {
-         S.StartRadioButtonGroup(ImportExportPrefs::ExportDownMixSetting);
-         {
-            S.TieRadioButton();
-            S.TieRadioButton();
-         }
-         S.EndRadioButtonGroup();
-      }
-      S.EndPanel();
-
-      S.TieCheckBox(XXO("S&how Metadata Tags editor before export"),
-                    {wxT("/AudioFiles/ShowId3Dialog"),
-                     true});
-      /* i18n-hint 'blank space' is space on the tracks with no audio in it*/
-      S.TieCheckBox(XXO("&Ignore blank space at the beginning"),
-                    ExportSkipSilenceAtBeginning);
-   }
-   S.EndStatic();
 
    S.StartStatic(XO("Exported Label Style:"));
    {
@@ -180,8 +136,6 @@ bool ImportExportPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
-
-   ExportSkipSilenceAtBeginning.Invalidate();
    
    return true;
 }

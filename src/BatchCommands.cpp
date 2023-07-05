@@ -589,11 +589,9 @@ bool MacroCommands::ApplyCommandInBatchMode(
    // Recalc flags and enable items that may have become enabled.
    MenuManager::Get(*project).UpdateMenus(false);
    // enter batch mode...
-   bool prevShowMode = settings.GetShowId3Dialog();
    project->mBatchMode++;
    auto cleanup = finally( [&] {
       // exit batch mode...
-      settings.SetShowId3Dialog(prevShowMode);
       project->mBatchMode--;
    } );
 

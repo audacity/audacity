@@ -26,7 +26,6 @@ template< typename Enum > class EnumSetting;
 class AUDACITY_DLL_API ImportExportPrefs final : public PrefsPanel
 {
  public:
-   static EnumSetting< bool > ExportDownMixSetting;
    static EnumSetting< bool > LabelStyleSetting;
    static EnumSetting< bool > AllegroStyleSetting;
 
@@ -42,7 +41,5 @@ class AUDACITY_DLL_API ImportExportPrefs final : public PrefsPanel
  private:
    void Populate();
 };
-
-extern AUDACITY_DLL_API BoolSetting ExportSkipSilenceAtBeginning;
 
 #endif
