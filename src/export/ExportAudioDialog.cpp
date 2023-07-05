@@ -81,6 +81,8 @@ BoolSetting ExportAudioSkipSilenceAtBeginning { L"/ExportAudioDialog/SkipSilence
 
 StringSetting ExportAudioDefaultFormat{ L"/ExportAudioDialog/Format", L"WAV" };
 
+StringSetting ExportAudioDefaultPath{ L"ExportAudioDialog/DefaultPath", L"" };
+
 enum {
    ExportFilePanelID = 10000,//to avoid IDs collision with ExportFilePanel items
 
@@ -148,7 +150,10 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    SetMinSize({GetBestSize().GetWidth(), -1});
    
    wxFileName filename;
-   filename.SetPath(FileNames::FindDefaultPath(FileNames::Operation::Export));
+   auto exportPath = ExportAudioDefaultPath.Read();
+   if(exportPath.empty())
+      exportPath = FileNames::FindDefaultPath(FileNames::Operation::Export);
+   filename.SetPath(exportPath);
 
    //extension will be set in `ChangeFormat`
    filename.SetEmptyExt();
@@ -545,7 +550,8 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
       ExportAudioSampleRate.Write(mExportOptionsPanel->GetSampleRate());
       ExportAudioDefaultFormat.Write(selectedPlugin->GetFormatInfo(selectedFormat).format);
       ExportAudioSampleRate.Write(mExportOptionsPanel->GetSampleRate());
-      
+      ExportAudioDefaultPath.Write(mExportOptionsPanel->GetPath());
+
       ShuttleGui S(this, eIsSavingToPrefs);
       PopulateOrExchange(S);
       event.Skip();
