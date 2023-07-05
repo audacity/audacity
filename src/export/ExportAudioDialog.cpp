@@ -187,16 +187,20 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    {
       mSplitByLabels->Disable();
       mSplitByTracks->SetValue(true);
+      if(ExportAudioExportRange.Read() != "split")
+         mSplitsPanel->Hide();
    }
-   
+   else
+   {
+      mRangeSplit->SetValue(true);
+      mSplitByLabels->SetValue(true);
+   }
+
    mIncludeAudioBeforeFirstLabel->Enable(mSplitByLabels->GetValue());
    
    if(ExportAudioSplitNamePolicy.Read() != "num_and_prefix")
       mSplitFileNamePrefix->Disable();
-   
-   if(ExportAudioExportRange.Read() != "split")
-      mSplitsPanel->Hide();
-   
+
    Layout();
    Fit();
 }
