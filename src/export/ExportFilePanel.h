@@ -86,6 +86,7 @@ private:
    wxRadioButton* mMono{};
    wxRadioButton* mStereo{};
    wxRadioButton* mCustomMapping{};
+   wxButton* mCustomizeChannels{};
 
    int mSampleRate{};
    const ExportPlugin* mSelectedPlugin{};

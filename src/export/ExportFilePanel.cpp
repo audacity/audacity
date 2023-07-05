@@ -183,7 +183,7 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
             if(!mMonoStereoMode)
             {
                mCustomMapping = S.Id(AudioMixModeCustomID).AddRadioButtonToGroup(XO("Custom mapping"), 0, true);
-               S.Id(AudioChannelsConfigureID).AddButton(XO("Configure"));
+               mCustomizeChannels = S.Id(AudioChannelsConfigureID).AddButton(XO("Configure"));
             }
          }
          S.EndHorizontalLay();
@@ -256,6 +256,8 @@ void ExportFilePanel::Init(const wxFileName& filename,
    case 2 : mStereo->SetValue(true); break;
    default: break;
    }
+   if(!mMonoStereoMode)
+      mCustomizeChannels->Enable(mCustomMapping->GetValue());
 }
 
 wxString ExportFilePanel::GetPath() const
@@ -335,6 +337,8 @@ void ExportFilePanel::OnFolderBrowse(wxCommandEvent &event)
 
 void ExportFilePanel::OnChannelsChange(wxCommandEvent& event)
 {
+   if(mCustomizeChannels != nullptr)
+      mCustomizeChannels->Enable(event.GetId() == AudioMixModeCustomID);
    if(event.GetId() == AudioMixModeCustomID)
    {
       if(!mMixerSpec)
