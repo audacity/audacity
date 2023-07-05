@@ -191,6 +191,8 @@ TimerRecordDialog::TimerRecordDialog(
    if(m_fnAutoExportFile.GetName().IsEmpty())
       m_fnAutoExportFile.SetName(_("untitled"));
 
+   m_iAutoExportSampleRate = ProjectRate::Get(mProject).GetRate();
+
    ShuttleGui S(this, eIsCreating);
    this->PopulateOrExchange(S);
 
@@ -354,23 +356,18 @@ would overwrite another project.\nPlease try again and select an original name."
 
 void TimerRecordDialog::OnAutoExportPathButton_Click(wxCommandEvent& WXUNUSED(event))
 {
-   int sampleRate = m_iAutoExportSampleRate;
-   if(sampleRate == 0)
-      sampleRate = ProjectRate::Get(mProject).GetRate();
-
    // Set the options required
    TimerRecordExportDialog exportDialog(mProject, this);
    exportDialog.Bind(
       m_fnAutoExportFile,
       m_sAutoExportFormat,
-      sampleRate,
+      m_iAutoExportSampleRate,
       m_iAutoExportChannels,
       m_AutoExportParameters);
 
    if(exportDialog.ShowModal() != wxID_OK)
       return;
-
-   m_iAutoExportSampleRate = sampleRate;
+   
    m_pTimerExportPathTextCtrl->SetValue(m_fnAutoExportFile.GetFullPath());
 
    // Update the text controls
