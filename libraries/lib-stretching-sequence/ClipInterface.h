@@ -22,7 +22,10 @@ public:
    virtual AudioSegmentSampleView
    GetSampleView(size_t iChannel, sampleCount start, size_t length) const = 0;
 
-   virtual sampleCount GetPlaySamplesCount() const = 0;
+   /*!
+    * The number of raw audio samples not hidden by trimming.
+    */
+   virtual sampleCount GetVisibleSampleCount() const = 0;
 
    virtual size_t GetWidth() const = 0;
 

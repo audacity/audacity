@@ -63,7 +63,7 @@ TEST_CASE("ClipSegment")
    {
       const auto clip = std::make_shared<FloatVectorClip>(
          sampleRate, FloatVectorVector { { 1.f, 2.f, 3.f, 4.f, 5.f } });
-      const auto numSamples = clip->GetPlaySamplesCount().as_size_t(); // 5
+      const auto numSamples = clip->GetVisibleSampleCount().as_size_t(); // 5
       // Offset of two samples, in seconds.
       constexpr auto playbackOffset = 2 / static_cast<double>(sampleRate);
       ClipSegment sut { *clip, playbackOffset, direction };

@@ -158,7 +158,7 @@ private:
     */
    void SetWaveColorIndex(int colorIndex);
 
-   sampleCount GetPlaySamplesCount() const;
+   sampleCount GetVisibleSampleCount() const;
 
    /*!
     @return the total number of samples in all underlying sequences
