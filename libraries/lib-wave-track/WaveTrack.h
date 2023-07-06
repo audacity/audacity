@@ -232,7 +232,12 @@ private:
    // May assume precondition: t0 <= t1
    void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
-   Track::Holder SplitCut(double t0, double t1) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    @post result: `result->Size() == NChannels()`
+    */
+   TrackListHolder SplitCut(double t0, double t1) /* not override */;
+
    // May assume precondition: t0 <= t1
    void SplitDelete(double t0, double t1) /* not override */;
    void Join(double t0, double t1) /* not override */;

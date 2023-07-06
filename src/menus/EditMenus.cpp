@@ -725,22 +725,17 @@ void OnSplitCut(const CommandContext &context)
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
 
-   auto pNewClipboard = TrackList::Create( nullptr );
+   auto pNewClipboard = TrackList::Create(nullptr);
    auto &newClipboard = *pNewClipboard;
 
-   Track::Holder dest;
-
-   tracks.Selected().Visit(
+   tracks.SelectedLeaders().Visit(
       [&](WaveTrack &n) {
-         dest = n.SplitCut(
-            selectedRegion.t0(),
-            selectedRegion.t1());
-         if (dest)
-            newClipboard.Add(dest);
+         auto tracks = n.SplitCut(selectedRegion.t0(), selectedRegion.t1());
+         newClipboard.Append(std::move(*tracks));
       },
       [&](Track &n) {
          if (n.SupportsBasicEditing()) {
-            dest = n.Copy(selectedRegion.t0(),
+            auto dest = n.Copy(selectedRegion.t0(),
                     selectedRegion.t1());
             n.Silence(selectedRegion.t0(),
                        selectedRegion.t1());
@@ -751,10 +746,10 @@ void OnSplitCut(const CommandContext &context)
    );
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
-   clipboard.Assign( std::move( newClipboard ),
-      selectedRegion.t0(), selectedRegion.t1(), project.shared_from_this() );
+   clipboard.Assign(std::move(newClipboard),
+      selectedRegion.t0(), selectedRegion.t1(), project.shared_from_this());
 
-   ProjectHistory::Get( project )
+   ProjectHistory::Get(project)
       .PushState(XO("Split-cut to the clipboard"), XO("Split Cut"));
 }
 
