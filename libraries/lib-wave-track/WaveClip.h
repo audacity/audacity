@@ -274,7 +274,8 @@ public:
     * @pre `iChannel < GetWidth()`
     */
    AudioSegmentSampleView GetSampleView(
-      size_t iChannel, sampleCount start, size_t length) const override;
+      size_t iChannel, sampleCount start, size_t length,
+      bool mayThrow = true) const override;
 
    //! Get samples from one channel
    /*!

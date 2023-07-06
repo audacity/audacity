@@ -87,7 +87,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
             sampleCount start, size_t len, bool mayThrow) const;
 
    AudioSegmentSampleView
-   GetFloatSampleView(sampleCount start, size_t len) const;
+   GetFloatSampleView(sampleCount start, size_t len, bool mayThrow) const;
 
    //! Pass nullptr to set silence
    /*! Note that len is not size_t, because nullptr may be passed for buffer, in

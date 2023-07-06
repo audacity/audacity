@@ -19,8 +19,9 @@ class STRETCHING_SEQUENCE_API ClipInterface
 public:
    virtual ~ClipInterface();
 
-   virtual AudioSegmentSampleView
-   GetSampleView(size_t iChannel, sampleCount start, size_t length) const = 0;
+   virtual AudioSegmentSampleView GetSampleView(
+      size_t iChannel, sampleCount start, size_t length,
+      bool mayThrow = true) const = 0;
 
    /*!
     * The number of raw audio samples not hidden by trimming.

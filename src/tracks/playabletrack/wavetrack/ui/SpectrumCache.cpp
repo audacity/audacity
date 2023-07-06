@@ -71,19 +71,17 @@ void ComputeSpectrogramGainFactors
 
 }
 
-bool SpecCache::Matches
-   (int dirty_, double pixelsPerSecond,
-    const SpectrogramSettings &settings, double rate) const
+bool SpecCache::Matches(
+   int dirty_, double samplesPerPixel,
+   const SpectrogramSettings& settings) const
 {
-   // Make a tolerant comparison of the pps values in this wise:
+   // Make a tolerant comparison of the spp values in this wise:
    // accumulated difference of times over the number of pixels is less than
    // a sample period.
-   const double tstep = 1.0 / pixelsPerSecond;
-   const bool ppsMatch =
-      (fabs(tstep - 1.0 / pps) * len < (1.0 / rate));
+   const bool sppMatch = (fabs(samplesPerPixel - spp) * len < 1.0);
 
    return
-      ppsMatch &&
+      sppMatch &&
       dirty == dirty_ &&
       windowType == settings.windowType &&
       windowSize == settings.WindowSize() &&
@@ -92,14 +90,11 @@ bool SpecCache::Matches
       algorithm == settings.algorithm;
 }
 
-bool SpecCache::CalculateOneSpectrum
-   (const SpectrogramSettings &settings,
-    const WideSampleSequence &sequence,
-    const int xx, const sampleCount numSamples,
-    double offset, double rate, double pixelsPerSecond,
-    int lowerBoundX, int upperBoundX,
-    const std::vector<float> &gainFactors,
-    float* __restrict scratch, float* __restrict out) const
+bool SpecCache::CalculateOneSpectrum(
+   const SpectrogramSettings& settings, const WaveClip& clip, const int xx,
+   double pixelsPerSecond, int lowerBoundX, int upperBoundX,
+   const std::vector<float>& gainFactors, float* __restrict scratch,
+   float* __restrict out) const
 {
    bool result = false;
    const bool reassignment =
@@ -108,18 +103,18 @@ bool SpecCache::CalculateOneSpectrum
 
    sampleCount from;
 
+   const auto numSamples = clip.GetSequenceSamplesCount() / clip.GetWidth();
+   const auto sampleRate = clip.GetRate();
+   const auto stretchRatio = clip.GetStretchRatio();
+   const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
    // xx may be for a column that is out of the visible bounds, but only
    // when we are calculating reassignment contributions that may cross into
    // the visible area.
 
    if (xx < 0)
-      from = sampleCount(
-         where[0].as_double() + xx * (rate / pixelsPerSecond)
-      );
+      from = sampleCount(where[0].as_double() + xx * samplesPerPixel);
    else if (xx > (int)len)
-      from = sampleCount(
-         where[len].as_double() + (xx - len) * (rate / pixelsPerSecond)
-      );
+      from = sampleCount(where[len].as_double() + (xx - len) * samplesPerPixel);
    else
       from = where[xx];
 
@@ -171,17 +166,13 @@ bool SpecCache::CalculateOneSpectrum
          }
 
          if (myLen > 0) {
+            constexpr auto iChannel = 0u;
+            constexpr auto mayThrow = false; // Don't throw just for display
+            mSampleCacheHolder.emplace(
+               clip.GetSampleView(iChannel, from, myLen, mayThrow));
             floats.resize(myLen);
-            auto data = floats.data();
-            constexpr auto backwards = false;
-            if (sequence.GetFloats(
-                   0u, 1u, &data,
-                   sampleCount(floor(0.5 + from.as_double() + offset * rate)),
-                   myLen, backwards, FillFormat::fillZero,
-                   // Don't throw in this drawing operation
-                   false))
-               useBuffer = floats.data();
-
+            mSampleCacheHolder->Copy(floats.data(), myLen);
+            useBuffer = floats.data();
             if (copy) {
                if (useBuffer)
                   memcpy(adj, useBuffer, myLen * sizeof(float));
@@ -277,7 +268,11 @@ bool SpecCache::CalculateOneSpectrum
                      (numRe * denomRe + numIm * denomIm) / power;
                }
 
-               int correctedX = (floor(0.5 + xx + timeCorrection * pixelsPerSecond / rate));
+               // PRL: timeCorrection is scaled to the clip's raw sample rate,
+               // without the stretching ratio correction for real time. We want
+               // to find the correct X coordinate for that.
+               int correctedX = (floor(
+                  0.5 + xx + timeCorrection * pixelsPerSecond / sampleRate));
                if (correctedX >= lowerBoundX && correctedX < upperBoundX)
                {
                   result = true;
@@ -319,8 +314,9 @@ bool SpecCache::CalculateOneSpectrum
    return result;
 }
 
-void SpecCache::Grow(size_t len_, SpectrogramSettings& settings,
-                       double pixelsPerSecond, double start_)
+void SpecCache::Grow(
+   size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
+   double start_)
 {
    settings.CacheWindows();
 
@@ -334,7 +330,7 @@ void SpecCache::Grow(size_t len_, SpectrogramSettings& settings,
 
    len = len_;
    algorithm = settings.algorithm;
-   pps = pixelsPerSecond;
+   spp = samplesPerPixel;
    start = start_;
    windowType = settings.windowType;
    windowSize = settings.WindowSize();
@@ -343,10 +339,10 @@ void SpecCache::Grow(size_t len_, SpectrogramSettings& settings,
 }
 
 void SpecCache::Populate(
-   const SpectrogramSettings& settings, const WideSampleSequence& sequence,
-   int copyBegin, int copyEnd, size_t numPixels, sampleCount numSamples,
-   double offset, double rate, double pixelsPerSecond)
+   const SpectrogramSettings& settings, const WaveClip& clip, int copyBegin,
+   int copyEnd, size_t numPixels, double pixelsPerSecond)
 {
+   const auto sampleRate = clip.GetRate();
    const int &frequencyGainSetting = settings.frequencyGain;
    const size_t windowSizeSetting = settings.WindowSize();
    const bool autocorrelation =
@@ -366,7 +362,8 @@ void SpecCache::Populate(
 
    std::vector<float> gainFactors;
    if (!autocorrelation)
-      ComputeSpectrogramGainFactors(fftLen, rate, frequencyGainSetting, gainFactors);
+      ComputeSpectrogramGainFactors(
+         fftLen, sampleRate, frequencyGainSetting, gainFactors);
 
    // Loop over the ranges before and after the copied portion and compute anew.
    // One of the ranges may be empty.
@@ -405,9 +402,7 @@ void SpecCache::Populate(
          float* buffer = &scratch[0];
 #endif
          CalculateOneSpectrum(
-            settings, sequence, xx, numSamples,
-            offset, rate, pixelsPerSecond,
-            lowerBoundX, upperBoundX,
+            settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
             gainFactors, buffer, &freq[0]);
       }
 
@@ -416,16 +411,14 @@ void SpecCache::Populate(
          // time reassignments.
          // I'm not sure what's a good stopping criterion?
          auto xx = lowerBoundX;
-         const double pixelsPerSample = pixelsPerSecond / rate;
+         const double pixelsPerSample =
+            pixelsPerSecond * clip.GetStretchRatio() / sampleRate;
          const int limit = std::min((int)(0.5 + fftLen * pixelsPerSample), 100);
          for (int ii = 0; ii < limit; ++ii)
          {
-            const bool result =
-               CalculateOneSpectrum(
-                  settings, sequence, --xx, numSamples,
-                  offset, rate, pixelsPerSecond,
-                  lowerBoundX, upperBoundX,
-                  gainFactors, &scratch[0], &freq[0]);
+            const bool result = CalculateOneSpectrum(
+               settings, clip, --xx, pixelsPerSecond, lowerBoundX, upperBoundX,
+               gainFactors, &scratch[0], &freq[0]);
             if (!result)
                break;
          }
@@ -433,12 +426,9 @@ void SpecCache::Populate(
          xx = upperBoundX;
          for (int ii = 0; ii < limit; ++ii)
          {
-            const bool result =
-               CalculateOneSpectrum(
-                  settings, sequence, xx++, numSamples,
-                  offset, rate, pixelsPerSecond,
-                  lowerBoundX, upperBoundX,
-                  gainFactors, &scratch[0], &freq[0]);
+            const bool result = CalculateOneSpectrum(
+               settings, clip, xx++, pixelsPerSecond, lowerBoundX, upperBoundX,
+               gainFactors, &scratch[0], &freq[0]);
             if (!result)
                break;
          }
@@ -467,31 +457,26 @@ void SpecCache::Populate(
    }
 }
 
-bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
-   const WideSampleSequence &sequence,
-   const float *& spectrogram,
-   SpectrogramSettings& settings,
-   const sampleCount *& where,
-   size_t numPixels,
-   double t0, double pixelsPerSecond)
-{
-   t0 += clip.GetTrimLeft();
+bool WaveClipSpectrumCache::GetSpectrogram(
+   const WaveClip& clip,
+   const float*& spectrogram, SpectrogramSettings& settings,
+   const sampleCount*& where, size_t numPixels, double t0,
+   double pixelsPerSecond)
 
-   const auto rate = clip.GetRate();
+{
+   const auto sampleRate = clip.GetRate();
+   const auto stretchRatio = clip.GetStretchRatio();
+   const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
 
    //Trim offset comparison failure forces spectrogram cache rebuild
    //and skip copying "unchanged" data after clip border was trimmed.
-   bool match =
-      mSpecCache &&
-      mSpecCache->leftTrim == clip.GetTrimLeft() &&
-      mSpecCache->rightTrim == clip.GetTrimRight() &&
-      mSpecCache->len > 0 &&
-      mSpecCache->Matches
-      (mDirty, pixelsPerSecond, settings, rate);
+   bool match = mSpecCache && mSpecCache->leftTrim == clip.GetTrimLeft() &&
+                mSpecCache->rightTrim == clip.GetTrimRight() &&
+                mSpecCache->len > 0 &&
+                mSpecCache->Matches(mDirty, samplesPerPixel, settings);
 
-   if (match &&
-       mSpecCache->start == t0 &&
-       mSpecCache->len >= numPixels) {
+   if (match && mSpecCache->start == t0 && mSpecCache->len >= numPixels)
+   {
       spectrogram = &mSpecCache->freq[0];
       where = &mSpecCache->where[0];
 
@@ -515,17 +500,14 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
       mSpecCache = std::make_unique<SpecCache>();
    }
 
-   const double tstep = 1.0 / pixelsPerSecond;
-   const double samplesPerPixel = rate * tstep;
-
    int oldX0 = 0;
    double correction = 0.0;
 
    int copyBegin = 0, copyEnd = 0;
    if (match) {
-      findCorrection(mSpecCache->where, mSpecCache->len, numPixels,
-         t0, rate, samplesPerPixel,
-         oldX0, correction);
+      findCorrection(
+         mSpecCache->where, mSpecCache->len, numPixels, t0, sampleRate,
+         stretchRatio, samplesPerPixel, oldX0, correction);
       // Remember our first pixel maps to oldX0 in the old cache,
       // possibly out of bounds.
       // For what range of pixels can data be copied?
@@ -536,7 +518,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
    }
 
    // Resize the cache, keep the contents unchanged.
-   mSpecCache->Grow(numPixels, settings, pixelsPerSecond, t0);
+   mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
    mSpecCache->leftTrim = clip.GetTrimLeft();
    mSpecCache->rightTrim = clip.GetTrimRight();
    auto nBins = settings.NBins();
@@ -572,14 +554,13 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
 
    // purposely offset the display 1/2 sample to the left (as compared
    // to waveform display) to properly center response of the FFT
-   fillWhere(mSpecCache->where, numPixels, 0.5, correction,
-      t0, rate, samplesPerPixel);
+   constexpr auto addBias = true;
+   fillWhere(
+      mSpecCache->where, numPixels, addBias, correction, t0, sampleRate,
+      stretchRatio, samplesPerPixel);
 
-   mSpecCache->Populate
-      (settings, sequence, copyBegin, copyEnd, numPixels,
-       // We want the length of only one channel of samples:
-       clip.GetSequenceSamplesCount() / clip.GetWidth(),
-       clip.GetSequenceStartTime(), rate, pixelsPerSecond);
+   mSpecCache->Populate(
+      settings, clip, copyBegin, copyEnd, numPixels, pixelsPerSecond);
 
    mSpecCache->dirty = mDirty;
    spectrogram = &mSpecCache->freq[0];

@@ -63,7 +63,7 @@ public:
                      size_t sampleoffset,
                      size_t numsamples, bool mayThrow = true);
 
-   virtual BlockSampleView GetFloatSampleView() = 0;
+   virtual BlockSampleView GetFloatSampleView(bool mayThrow) = 0;
 
    virtual size_t GetSampleCount() const = 0;
 
