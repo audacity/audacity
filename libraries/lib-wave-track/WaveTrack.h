@@ -528,6 +528,56 @@ public:
       sampleCount* pNumWithinClips = nullptr) const override;
 
    /*!
+    * @brief Gets as many samples as it can, but no more than `2 *
+    * numSideSamples + 1`, centered around `t`. Reads nothing if
+    * `GetClipAtTime(t) == nullptr`. Useful to access samples across clip
+    * boundaries, as it spreads the read to adjacent clips, i.e., not separated
+    * by silence from clip at `t`.
+    *
+    * @return The begin and end indices of the samples in the buffer where
+    * samples could actually be copied.
+    */
+   std::pair<size_t, size_t> GetFloatsCenteredAroundTime(
+      double t, size_t iChannel, float* buffer, size_t numSideSamples,
+      bool mayThrow) const;
+
+   /*!
+    * @return true if `GetClipAtTime(t) != nullptr`, false otherwise.
+    */
+   bool
+   GetFloatAtTime(double t, size_t iChannel, float& value, bool mayThrow) const;
+
+   /*!
+    * @brief Similar to GetFloatsCenteredAroundTime, but for writing. Sets as
+    * many samples as it can according to the same rules as
+    * GetFloatsCenteredAroundTime. Leaves the other samples untouched. @see
+    * GetFloatsCenteredAroundTime
+    */
+   void SetFloatsCenteredAroundTime(
+      double t, size_t iChannel, const float* buffer, size_t numSideSamples,
+      sampleFormat effectiveFormat);
+
+   /*!
+    * @brief Sets sample nearest to `t` to `value`. Silently fails if
+    * `GetClipAtTime(t) == nullptr`.
+    */
+   void SetFloatAtTime(
+      double t, size_t iChannel, float value, sampleFormat effectiveFormat);
+
+   /*!
+    * @brief Provides a means of setting clip values as a function of time.
+    * Included are closest sample to t0 up to closest sample to t1, inclusively.
+    * Given that `t0 <= t1`, always at least one sample is included.
+    * @param producer a function taking sample (absolute, not clip-relative)
+    * time and returning the desired value for the sample at that time.
+    * @pre t0 <= t1
+    */
+   void SetFloatsWithinTimeRange(
+      double t0, double t1, size_t iChannel,
+      const std::function<float(double sampleTime)>& producer,
+      sampleFormat effectiveFormat);
+
+   /*!
     * @brief Request samples within [t0, t1), not knowing in advance how
     * many this will be.
     *
@@ -981,6 +1031,26 @@ private:
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
       bool backwards, fillFormat fill, bool mayThrow,
       sampleCount* pNumWithinClips) const;
+
+   /*!
+    * @brief Helper for GetFloatsCenteredAroundTime. If `direction ==
+    * PlaybackDirection::Backward`, fetches samples to the left of `t`,
+    * excluding `t`, without reversing. @see GetFloatsCenteredAroundTime
+    *
+    * @return The number of samples actually copied.
+    */
+   size_t GetFloatsFromTime(
+      double t, size_t iChannel, float* buffer, size_t numSamples,
+      bool mayThrow, PlaybackDirection direction) const;
+
+   /*!
+    * @brief Similar to GetFloatsFromTime, but for writing. Sets as many samples
+    * as it can according to the same rules as GetFloatsFromTime. Leaves the
+    * other samples untouched. @see GetFloatsFromTime
+    */
+   void SetFloatsFromTime(
+      double t, size_t iChannel, const float* buffer, size_t numSamples,
+      sampleFormat effectiveFormat, PlaybackDirection direction);
 
    void DoSetPan(float value);
    void DoSetGain(float value);

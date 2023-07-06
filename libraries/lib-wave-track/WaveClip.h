@@ -215,7 +215,9 @@ public:
    //! Real end time of the clip, quantized to raw sample rate (track's rate)
    sampleCount GetPlayEndSample() const;
 
-   // todo comment
+   /*!
+    * Returns a number of raw samples, not accounting for stretching.
+    */
    sampleCount GetVisibleSampleCount() const override;
 
    //! Sets the play start offset in seconds from the beginning of the underlying sequence
@@ -322,6 +324,7 @@ public:
    //! Get samples from one channel
    /*!
     @param ii identifies the channel
+    @param start relative to clip play start sample
     @pre `ii < GetWidth()`
     */
    bool GetSamples(size_t ii, samplePtr buffer, sampleFormat format,
@@ -330,6 +333,7 @@ public:
    //! Get (non-interleaved) samples from all channels
    /*!
     assume as many buffers available as GetWidth()
+    @param start relative to clip play start sample
     */
    bool GetSamples(samplePtr buffers[], sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
@@ -337,6 +341,7 @@ public:
    //! @param ii identifies the channel
    /*!
     @pre `ii < GetWidth()`
+    @param start relative to clip play start sample
     */
    void SetSamples(size_t ii, constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
@@ -347,6 +352,43 @@ public:
          than the effective, then no dithering will occur.
       */
    );
+
+   /*!
+    * @param t relative to clip start sample
+    */
+   bool
+   GetFloatAtTime(double t, size_t iChannel, float& value, bool mayThrow) const;
+
+   //! Succeed with out-of-bounds requests, only changing what is in bounds.
+   //! @{
+   // clang-format off
+   /*!
+    * @brief Considers `buffer` as audio starting at `TimeToSamples(t)`
+    * (relative to clip play start time) and with equal stretch ratio. Samples
+    * at intersecting indices are then copied, leaving non-intersecting clip
+    * samples untouched. E.g.,
+    *     buffer:      [a b c d e]
+    *     clip  :            [x y z]
+    *     result:            [d e z]
+    */
+   // clang-format on
+   void SetFloatsFromTime(
+      double t, size_t iChannel, const float* buffer, size_t numSamples,
+      sampleFormat effectiveFormat);
+
+   /*!
+    * @brief Same as `SetFloatsFromTime`, but with `buffer` starting at
+    * `TimeToSamples(t0 -  SamplesToTime(numSideSamples))`.
+    * `[buffer, buffer + 2 * numSizeSamples + 1)` is assumed to be a valid span
+    * of addresses.
+    */
+   void SetFloatsCenteredAroundTime(
+      double t, size_t iChannel, const float* buffer, size_t numSideSamples,
+      sampleFormat effectiveFormat);
+
+   void SetFloatAtTime(
+      double t, size_t iChannel, float value, sampleFormat effectiveFormat);
+   //! @}
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }

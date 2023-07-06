@@ -71,8 +71,8 @@ private:
    std::shared_ptr<WaveTrack> mClickedTrack;
    wxRect mRect{};
 
-   sampleCount mClickedStartSample{};
-   sampleCount mLastDragSample{};
+   int mClickedStartPixel {};
+   int mLastDragPixel {};
    float mLastDragSampleValue{};
    bool mAltKey{};
 };
