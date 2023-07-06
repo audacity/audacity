@@ -854,21 +854,39 @@ namespace {
 /*! @excsafety{Weak} -- This WaveTrack remains destructible in case of AudacityException.
 But some of its cutline clips may have been destroyed. */
 void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
-                              double t1, // End of time to clear
-                              const Track *src, // What to paste
-                              bool preserve, // Whether to reinsert splits/cuts
-                              bool merge, // Whether to remove 'extra' splits
-                              const TimeWarper *effectWarper // How does time change
-                              )
+   double t1, // End of time to clear
+   const WaveTrack &src, // What to paste
+   bool preserve, // Whether to reinsert splits/cuts
+   bool merge, // Whether to remove 'extra' splits
+   const TimeWarper *effectWarper // How does time change
+)
 {
-   double dur = std::min(t1 - t0, src->GetEndTime());
+   assert(IsLeader());
+   assert(src.IsLeader());
+   assert(src.NChannels() == NChannels());
+   const auto endTime = src.GetEndTime();
+   double dur = std::min(t1 - t0, endTime);
+   const auto myChannels = TrackList::Channels(this);
+   auto iter = TrackList::Channels(&src).begin();
 
    // If duration is 0, then it's just a plain paste
    if (dur == 0.0) {
       // use Weak-guarantee
-      Paste(t0, src);
+      for (const auto pChannel : myChannels)
+         pChannel->Paste(t0, *iter++);
       return;
    }
+
+   for (const auto pChannel : myChannels)
+      ClearAndPasteOne(*pChannel, t0, t1, endTime,
+         **iter++, preserve, merge, effectWarper);
+}
+
+void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
+   double endTime, const WaveTrack &src, bool preserve, bool merge,
+   const TimeWarper *effectWarper)
+{
+   const auto pFactory = track.mpFactory;
 
    std::vector<SplitInfo> splits;
    WaveClipHolders cuts;
@@ -876,9 +894,8 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    //helper routine, that finds SplitInfo by time value,
    //or creates a new one if no one exists yet
    auto get_split = [&](double time) {
-      auto it = std::find_if(splits.begin(), splits.end(), [time](const SplitInfo& split) {
-         return split.time == time;
-      });
+      auto it = std::find_if(splits.begin(), splits.end(),
+         [time](const SplitInfo& split) { return split.time == time; });
       if(it == splits.end())
          it = splits.insert(
             splits.end(),
@@ -891,39 +908,41 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    IdentityTimeWarper localWarper;
    const TimeWarper *warper = (effectWarper ? effectWarper : &localWarper);
 
+   const auto roundTime = [&track](double t){
+      return track.LongSamplesToTime(track.TimeToLongSamples(t));
+   };
+
    // Align to a sample
-   t0 = LongSamplesToTime(TimeToLongSamples(t0));
-   t1 = LongSamplesToTime(TimeToLongSamples(t1));
+   t0 = roundTime(t0);
+   t1 = roundTime(t1);
 
    // Save the cut/split lines whether preserving or not since merging
    // needs to know if a clip boundary is being crossed since Paste()
    // will add split lines around the pasted clip if so.
-   for (const auto &clip : mClips) {
+   for (const auto &clip : track.mClips) {
       double st;
 
       // Remember clip boundaries as locations to split
       // we need to copy clips, trims and names, because the original ones
       // could be changed later during Clear/Paste routines
-      st = LongSamplesToTime(TimeToLongSamples(clip->GetPlayStartTime()));
+      st = roundTime(clip->GetPlayStartTime());
       if (st >= t0 && st <= t1) {
          auto it = get_split(st);
-         if (clip->GetTrimLeft() != 0)
-         {
+         if (clip->GetTrimLeft() != 0) {
             //keep only hidden left part
-            it->right = std::make_shared<WaveClip>(*clip, mpFactory, false);
+            it->right = std::make_shared<WaveClip>(*clip, pFactory, false);
             it->right->SetTrimLeft(.0);
             it->right->ClearRight(clip->GetPlayStartTime());
          }
          it->rightClipName = clip->GetName();
       }
 
-      st = LongSamplesToTime(TimeToLongSamples(clip->GetPlayEndTime()));
+      st = roundTime(clip->GetPlayEndTime());
       if (st >= t0 && st <= t1) {
          auto it = get_split(st);
-         if (clip->GetTrimRight() != 0)
-         {
+         if (clip->GetTrimRight() != 0) {
             //keep only hidden right part
-            it->left = std::make_shared<WaveClip>(*clip, mpFactory, false);
+            it->left = std::make_shared<WaveClip>(*clip, pFactory, false);
             it->left->SetTrimRight(.0);
             it->left->ClearLeft(clip->GetPlayEndTime());
          }
@@ -935,12 +954,11 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       // May erase from cutlines, so don't use range-for
       for (auto it = cutlines.begin(); it != cutlines.end(); ) {
          WaveClip *cut = it->get();
-         double cs = LongSamplesToTime(TimeToLongSamples(clip->GetSequenceStartTime() +
-                                                         cut->GetSequenceStartTime()));
+         const double cs = roundTime(
+            clip->GetSequenceStartTime() + cut->GetSequenceStartTime());
 
          // Remember cut point
          if (cs >= t0 && cs <= t1) {
-
             // Remember the absolute offset and add to our cuts array.
             cut->SetSequenceStartTime(cs);
             cuts.push_back(std::move(*it)); // transfer ownership!
@@ -951,175 +969,170 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       }
    }
 
-   const auto tolerance = 2.0 / GetRate();
+   const auto tolerance = 2.0 / track.GetRate();
 
    // Now, clear the selection
-   HandleClear(t0, t1, false, false);
-   {
+   track.HandleClear(t0, t1, false, false);
 
-      // And paste in the NEW data
-      Paste(t0, src);
+   // And paste in the new data
+   track.Paste(t0, &src);
+
+   // First, merge the new clip(s) in with the existing clips
+   if (merge && splits.size() > 0) {
+      // Now t1 represents the absolute end of the pasted data.
+      t1 = t0 + endTime;
+
+      // Get a sorted array of the clips
+      auto clips = track.SortedClipArray();
+
+      // Scan the sorted clips for the first clip whose start time
+      // exceeds the pasted regions end time.
       {
-         // First, merge the NEW clip(s) in with the existing clips
-         if (merge && splits.size() > 0)
-         {
-            // Now t1 represents the absolute end of the pasted data.
-            t1 = t0 + src->GetEndTime();
-
-            // Get a sorted array of the clips
-            auto clips = SortedClipArray();
-
-            // Scan the sorted clips for the first clip whose start time
-            // exceeds the pasted regions end time.
-            {
-               WaveClip *prev = nullptr;
-               for (const auto clip : clips) {
-                  // Merge this clip and the previous clip if the end time
-                  // falls within it and this isn't the first clip in the track.
-                  if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
-                     if (prev)
-                        MergeClips(GetClipIndex(prev), GetClipIndex(clip));
-                     break;
-                  }
-                  prev = clip;
-               }
+         WaveClip *prev = nullptr;
+         for (const auto clip : clips) {
+            // Merge this clip and the previous clip if the end time
+            // falls within it and this isn't the first clip in the track.
+            if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
+               if (prev)
+                  track.MergeClips(track.GetClipIndex(prev),
+                     track.GetClipIndex(clip));
+               break;
             }
+            prev = clip;
          }
+      }
+   }
 
-         // Refill the array since clips have changed.
-         auto clips = SortedClipArray();
+   {
+      // Refill the array since clips have changed.
+      auto clips = track.SortedClipArray();
 
-         {
-            // Scan the sorted clips to look for the start of the pasted
-            // region.
-            WaveClip *prev = nullptr;
-            for (const auto clip : clips) {
-               if (prev) {
-                  // It must be that clip is what was pasted and it begins where
-                  // prev ends.
-                  // use Weak-guarantee
-                  MergeClips(GetClipIndex(prev), GetClipIndex(clip));
-                  break;
-               }
-               if (fabs(t0 - clip->GetPlayEndTime()) < tolerance)
-                  // Merge this clip and the next clip if the start time
-                  // falls within it and this isn't the last clip in the track.
-                  prev = clip;
-               else
-                  prev = nullptr;
+      // Scan the sorted clips to look for the start of the pasted
+      // region.
+      WaveClip *prev = nullptr;
+      for (const auto clip : clips) {
+         if (prev) {
+            // It must be that clip is what was pasted and it begins where
+            // prev ends.
+            // use Weak-guarantee
+            track.MergeClips(track.GetClipIndex(prev),
+               track.GetClipIndex(clip));
+            break;
+         }
+         if (fabs(t0 - clip->GetPlayEndTime()) < tolerance)
+            // Merge this clip and the next clip if the start time
+            // falls within it and this isn't the last clip in the track.
+            prev = clip;
+         else
+            prev = nullptr;
+      }
+   }
+
+   // Restore cut/split lines
+   if (preserve) {
+      auto attachLeft = [](WaveClip &target, WaveClip &src)
+      {
+         assert(target.GetWidth() == src.GetWidth());
+         assert(target.GetTrimLeft() == 0);
+         if (target.GetTrimLeft() != 0)
+            return;
+
+         auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
+         auto success = target.Paste(target.GetPlayStartTime(), src);
+         assert(success); // because of precondition above
+         target.SetTrimLeft(trim);
+         //Play start time needs to be adjusted after
+         //prepending data to the sequence
+         target.Offset(-trim);
+      };
+
+      auto attachRight = [](WaveClip &target, WaveClip &src)
+      {
+         assert(target.GetWidth() == src.GetWidth());
+         assert(target.GetTrimRight() == 0);
+         if (target.GetTrimRight() != 0)
+            return;
+
+         auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
+         auto success = target.Paste(target.GetPlayEndTime(), src);
+         assert(success); // because of precondition above
+         target.SetTrimRight(trim);
+      };
+
+      // Restore the split lines and trims, transforming the position appropriately
+      for (const auto& split: splits) {
+         auto at = roundTime(warper->Warp(split.time));
+         for (const auto& clip : track.GetClips()) {
+            // Clips in split began as copies of a clip in the track,
+            // therefore have the same width, satisfying preconditions to
+            // attach
+            if (clip->WithinPlayRegion(at))//strictly inside
+            {
+               auto newClip =
+                  std::make_shared<WaveClip>(*clip, pFactory, true);
+
+               clip->ClearRight(at);
+               newClip->ClearLeft(at);
+               if (split.left)
+                  // clip was cleared right
+                  attachRight(*clip, *split.left);
+               if (split.right)
+                  // new clip was cleared left
+                  attachLeft(*newClip, *split.right);
+               bool success = track.AddClip(std::move(newClip));
+               assert(success); // copied clip has same width and factory
+               break;
+            }
+            else if (clip->GetPlayStartSample() ==
+               track.TimeToLongSamples(at) && split.right) {
+               // precondition satisfied because... ??
+               attachLeft(*clip, *split.right);
+               break;
+            }
+            else if (clip->GetPlayEndSample() ==
+               track.TimeToLongSamples(at) && split.left) {
+               // precondition satisfied because... ??
+               attachRight(*clip, *split.left);
+               break;
             }
          }
       }
 
-      // Restore cut/split lines
-      if (preserve) {
-
-         auto attachLeft = [](WaveClip &target, WaveClip &src)
-         {
-            assert(target.GetWidth() == src.GetWidth());
-            assert(target.GetTrimLeft() == 0);
-            if (target.GetTrimLeft() != 0)
-               return;
-
-            auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
-            auto success = target.Paste(target.GetPlayStartTime(), src);
-            assert(success); // because of precondition above
-            target.SetTrimLeft(trim);
-            //Play start time needs to be adjusted after
-            //prepending data to the sequence
-            target.Offset(-trim);
-         };
-
-         auto attachRight = [](WaveClip &target, WaveClip &src)
-         {
-            assert(target.GetWidth() == src.GetWidth());
-            assert(target.GetTrimRight() == 0);
-            if (target.GetTrimRight() != 0)
-               return;
-
-            auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
-            auto success = target.Paste(target.GetPlayEndTime(), src);
-            assert(success); // because of precondition above
-            target.SetTrimRight(trim);
-         };
-
-         // Restore the split lines and trims, transforming the position appropriately
-         for (const auto& split: splits) {
-            auto at = LongSamplesToTime(TimeToLongSamples(warper->Warp(split.time)));
-            for (const auto& clip : GetClips())
-            {
-               // Clips in split began as copies of a clip in the track,
-               // therefore have the same width, satisfying preconditions to
-               // attach
-               if (clip->WithinPlayRegion(at))//strictly inside
-               {
-                  auto newClip =
-                     std::make_shared<WaveClip>(*clip, mpFactory, true);
-
-                  clip->ClearRight(at);
-                  newClip->ClearLeft(at);
-                  if (split.left)
-                     // clip was cleared right
-                     attachRight(*clip, *split.left);
-                  if (split.right)
-                     // new clip was cleared left
-                     attachLeft(*newClip, *split.right);
-                  bool success = AddClip(std::move(newClip));
-                  assert(success); // copied clip has same width and factory
-                  break;
-               }
-               else if (clip->GetPlayStartSample() == TimeToLongSamples(at) && split.right)
-               {
-                  // precondition satisfied because... ??
-                  attachLeft(*clip, *split.right);
-                  break;
-               }
-               else if (clip->GetPlayEndSample() == TimeToLongSamples(at) && split.left)
-               {
-                  // precondition satisfied because... ??
-                  attachRight(*clip, *split.left);
-                  break;
-               }
-            }
+      //Restore clip names
+      for (const auto& split : splits)
+      {
+         auto s = track.TimeToLongSamples(warper->Warp(split.time));
+         for (auto& clip : track.GetClips()) {
+            if (split.rightClipName.has_value() && clip->GetPlayStartSample() == s)
+               clip->SetName(*split.rightClipName);
+            else if (split.leftClipName.has_value() && clip->GetPlayEndSample() == s)
+               clip->SetName(*split.leftClipName);
          }
+      }
 
-         //Restore clip names
-         for (const auto& split : splits)
-         {
-            auto s = TimeToLongSamples(warper->Warp(split.time));
-            for (auto& clip : GetClips())
-            {
-               if (split.rightClipName.has_value() && clip->GetPlayStartSample() == s)
-                  clip->SetName(*split.rightClipName);
-               else if (split.leftClipName.has_value() && clip->GetPlayEndSample() == s)
-                  clip->SetName(*split.leftClipName);
+      // Restore the saved cut lines, also transforming if time altered
+      for (const auto &clip : track.mClips) {
+         double st;
+         double et;
+
+         st = clip->GetPlayStartTime();
+         et = clip->GetPlayEndTime();
+
+         // Scan the cuts for any that live within this clip
+         for (auto it = cuts.begin(); it != cuts.end();) {
+            WaveClip *cut = it->get();
+            //cutlines in this array were orphaned previously
+            double cs = cut->GetSequenceStartTime();
+
+            // Offset the cut from the start of the clip and add it to
+            // this clips cutlines.
+            if (cs >= st && cs <= et) {
+               cut->SetSequenceStartTime(warper->Warp(cs) - st);
+               clip->GetCutLines().push_back( std::move(*it) ); // transfer ownership!
+               it = cuts.erase(it);
             }
-         }
-
-         // Restore the saved cut lines, also transforming if time altered
-         for (const auto &clip : mClips) {
-            double st;
-            double et;
-
-            st = clip->GetPlayStartTime();
-            et = clip->GetPlayEndTime();
-
-            // Scan the cuts for any that live within this clip
-            for (auto it = cuts.begin(); it != cuts.end();) {
-               WaveClip *cut = it->get();
-               //cutlines in this array were orphaned previously
-               double cs = cut->GetSequenceStartTime();
-
-               // Offset the cut from the start of the clip and add it to
-               // this clips cutlines.
-               if (cs >= st && cs <= et) {
-                  cut->SetSequenceStartTime(warper->Warp(cs) - st);
-                  clip->GetCutLines().push_back( std::move(*it) ); // transfer ownership!
-                  it = cuts.erase(it);
-               }
-               else
-                  ++it;
-            }
+            else
+               ++it;
          }
       }
    }

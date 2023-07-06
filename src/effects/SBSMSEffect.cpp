@@ -424,7 +424,6 @@ void EffectSBSMS::Finalize(
    assert(out.IsLeader());
    assert(orig.NChannels() == out.NChannels());
    auto origRange = TrackList::Channels(&orig);
-   auto outRange = TrackList::Channels(&out);
    // Silenced samples will be inserted in gaps between clips, so capture where these
    // gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
@@ -452,8 +451,7 @@ void EffectSBSMS::Finalize(
    }
 
    // Take the output track and insert it in place of the original sample data
-   for (const auto pChannel : origRange)
-      pChannel->ClearAndPaste(mT0, mT1, *outRange.first++, true, true, &warper);
+   orig.ClearAndPaste(mT0, mT1, out, true, true, &warper);
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {

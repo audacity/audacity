@@ -422,9 +422,7 @@ void EffectSoundTouch::Finalize(
    }
 
    // Take the output track and insert it in place of the original sample data
-   for (auto pChannel : origChannels)
-      pChannel->ClearAndPaste(
-         mT0, mT1, *outChannels.first++, true, true, &warper);
+   orig.ClearAndPaste(mT0, mT1, out, true, true, &warper);
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {

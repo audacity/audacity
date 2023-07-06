@@ -309,11 +309,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             const auto t1 = ViewInfo::Get(*FindProject()).selectedRegion.t1();
             PasteTimeWarper warper{ t1,
                mT0 + (*channels.begin())->GetEndTime() };
-            auto iter = TrackList::Channels(
-               *results->Leaders<const WaveTrack>().begin()
-            ).begin();
-            for (const auto pChannel : channels)
-               pChannel->ClearAndPaste(mT0, t1, *iter++, true, true, &warper);
+            wt.ClearAndPaste(mT0, t1, *results, true, true, &warper);
             results.reset();
          }
       }; },

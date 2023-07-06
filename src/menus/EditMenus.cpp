@@ -599,13 +599,6 @@ void OnPaste(const CommandContext &context)
    Track *ff = nullptr;
    bool bPastedSomething = false;
 
-   auto pasteWaveTrack = [&](WaveTrack *dst, const Track *src){
-      bPastedSomething = true;
-      // For correct remapping of preserved split lines:
-      PasteTimeWarper warper{ t1, t0 + src->GetEndTime() };
-      dst->ClearAndPaste(t0, t1, src, true, true, &warper);
-   };
-
    // Find tracks to paste in
    auto correspondence = FindCorrespondence(tracks, *srcTracks);
    if (correspondence.empty()) {
@@ -663,15 +656,11 @@ void OnPaste(const CommandContext &context)
             const auto src = (iPair++)->second;
             leader->TypeSwitch(
                [&](WaveTrack &wn){
-                  auto srcChannels = TrackList::Channels(src);
-                  for (auto dst : TrackList::Channels(&wn)) {
-                     pasteWaveTrack(dst, *srcChannels.first);
-                     // When the source is mono, may paste its only channel
-                     // repeatedly into a stereo track; else paste only into
-                     // corresponding channels
-                     if (srcChannels.size() > 1)
-                        ++srcChannels.first;
-                  }
+                  bPastedSomething = true;
+                  // For correct remapping of preserved split lines:
+                  PasteTimeWarper warper{ t1, t0 + src->GetEndTime() };
+                  wn.ClearAndPaste(t0, t1,
+                     *static_cast<const WaveTrack*>(src), true, true, &warper);
                },
                [&](LabelTrack &ln){
                   // Per Bug 293, users expect labels to move on a paste into

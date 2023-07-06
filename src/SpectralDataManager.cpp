@@ -103,13 +103,11 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
             }
          }
       }
-      auto iter = TrackList::Channels(*tempList->Leaders().begin()).begin();
-      for (auto pChannel : TrackList::Channels(wt))
-         // Take the output track and insert it in place of the original
-         // sample data
-         // TODO make this correct in case start or end of spectral data in
-         // the channels differs
-         pChannel->ClearAndPaste(t0, t0 + tLen, *iter++, true, false);
+      // Take the output track and insert it in place of the original
+      // sample data
+      // TODO make this correct in case start or end of spectral data in
+      // the channels differs
+      wt->ClearAndPaste(t0, t0 + tLen, *tempList, true, false);
    }
 
    if (applyCount) {

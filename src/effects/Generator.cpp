@@ -80,12 +80,9 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
                auto pProject = FindProject();
                const auto &selectedRegion =
                   ViewInfo::Get(*pProject).selectedRegion;
-               auto iter =
-                  TrackList::Channels(*list->Leaders().begin()).begin();
-               for (const auto pChannel : TrackList::Channels(&track))
-                  pChannel->ClearAndPaste(
-                     selectedRegion.t0(), selectedRegion.t1(),
-                     *iter++, true, false, &warper);
+               track.ClearAndPaste(
+                  selectedRegion.t0(), selectedRegion.t1(),
+                  *list, true, false, &warper);
             }
             else
                return;

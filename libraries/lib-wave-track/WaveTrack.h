@@ -198,12 +198,31 @@ private:
 
    void Clear(double t0, double t1) override;
    void Paste(double t0, const Track *src) override;
-   // May assume precondition: t0 <= t1
+   /*!
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    @pre `src.IsLeader()`
+    @pre `src.NChannels() == NChannels()`
+    */
    void ClearAndPaste(double t0, double t1,
-                              const Track *src,
-                              bool preserve = true,
-                              bool merge = true,
-                              const TimeWarper *effectWarper = NULL) /* not override */;
+      const WaveTrack &src,
+      bool preserve = true,
+      bool merge = true,
+      const TimeWarper *effectWarper = nullptr) /* not override */;
+   /*!
+    Overload that takes a TrackList and passes its first wave track
+    @pre `**src.Leaders<const WaveTrack>().begin()` satisfies preconditions
+    of the other overload for `src`
+    */
+   void ClearAndPaste(double t0, double t1,
+      const TrackList &src,
+      bool preserve = true,
+      bool merge = true,
+      const TimeWarper *effectWarper = nullptr)
+   {
+      ClearAndPaste(t0, t1, **src.Leaders<const WaveTrack>().begin(),
+         preserve, merge, effectWarper);
+   }
 
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
@@ -593,6 +612,10 @@ private:
    size_t NIntervals() const override;
 
 protected:
+   static void ClearAndPasteOne(WaveTrack &track,
+      double t0, double t1, double endTime, const WaveTrack &src,
+      bool preserve, bool merge, const TimeWarper *effectWarper);
+
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
