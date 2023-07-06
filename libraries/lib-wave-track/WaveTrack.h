@@ -194,7 +194,6 @@ private:
    // will contain a "placeholder" clip whose only purpose is to make
    // GetEndTime() correct.  This clip is not re-copied when pasting.
    Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
-   Track::Holder CopyNonconst(double t0, double t1) /* not override */;
 
    void Clear(double t0, double t1) override;
    void Paste(double t0, const Track *src) override;

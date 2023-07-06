@@ -798,11 +798,6 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    return result;
 }
 
-Track::Holder WaveTrack::CopyNonconst(double t0, double t1)
-{
-   return Copy(t0, t1);
-}
-
 /*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1)
 {

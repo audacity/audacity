@@ -18,6 +18,8 @@
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "toolbars/ToolManager.h"
 
+#include <cassert>
+
 using Region = WaveTrack::Region;
 using Regions = WaveTrack::Regions;
 
@@ -195,7 +197,10 @@ void EditByLabel(AudacityProject &project,
    }
 }
 
-using EditDestFunction = std::function<Track::Holder (Track *, double, double)>;
+//! The argument is always a leader track and the return has an equal number
+//! of channels, or is null
+using EditDestFunction =
+   std::function<std::shared_ptr<TrackList>(Track &, double, double)>;
 
 //Executes the edit function on all selected wave tracks with
 //regions specified by selected labels
@@ -203,14 +208,14 @@ using EditDestFunction = std::function<Track::Holder (Track *, double, double)>;
 //Functions copy the edited regions to clipboard, possibly in multiple tracks
 //This probably should not be called if *action() changes the timeline, because
 // the copy needs to happen by track, and the timeline change by group.
-void EditClipboardByLabel( AudacityProject &project,
+void EditClipboardByLabel(AudacityProject &project,
    TrackList &tracks, const SelectedRegion &selectedRegion,
-   EditDestFunction action )
+   EditDestFunction action)
 {
    Regions regions;
 
-   GetRegionsByLabel( tracks, selectedRegion, regions );
-   if( regions.size() == 0 )
+   GetRegionsByLabel(tracks, selectedRegion, regions);
+   if (regions.empty())
       return;
 
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
@@ -219,54 +224,50 @@ void EditClipboardByLabel( AudacityProject &project,
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
 
-   auto pNewClipboard = TrackList::Create( nullptr );
+   auto pNewClipboard = TrackList::Create(nullptr);
    auto &newClipboard = *pNewClipboard;
 
    //Apply action on wavetracks starting from
    //labeled regions in the end. This is to correctly perform
    //actions like 'Cut' which collapse the track area.
 
-   for( auto t : tracks.Any())
-   {
+   for (auto t : tracks.Leaders()) {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
-
-      if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable))
-      {
-         // This track accumulates the needed clips, right to left:
-         Track::Holder merged;
-         for( int i = (int)regions.size() - 1; i >= 0; i-- )
-         {
+      if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable)) {
+         // These tracks accumulate the needed clips, right to left:
+         std::shared_ptr<TrackList> merged;
+         for (size_t i = regions.size(); i--;) {
             const Region &region = regions.at(i);
-            auto dest = action(t, region.start, region.end );
-            if (dest) {
-               if( !merged )
+            if (auto dest = action(*t, region.start, region.end)) {
+               if (!merged)
                   merged = dest;
-               else
-               {
-                  // Paste to the beginning; unless this is the first region,
-                  // offset the track to account for time between the regions
-                  if (i < (int)regions.size() - 1)
-                     merged->Offset(
-                        regions.at(i + 1).start - region.end);
+               else {
+                  auto range = dest->Any();
+                  for (const auto pMerged : merged->Any()) {
+                     // Paste to the beginning; unless this is the first region,
+                     // offset the track to account for time between the regions
+                     if (i + 1 < regions.size())
+                        pMerged->Offset(
+                           regions.at(i + 1).start - region.end);
 
-                  // dest may have a placeholder clip at the end that is
-                  // removed when pasting, which is okay because we proceed
-                  // right to left.  Any placeholder already in merged is kept.
-                  // Only the rightmost placeholder is important in the final
-                  // result.
-                  merged->Paste( 0.0 , dest.get() );
+                     // dest may have a placeholder clip at the end that is
+                     // removed when pasting, which is okay because we proceed
+                     // right to left.  Any placeholder already in merged is kept.
+                     // Only the rightmost placeholder is important in the final
+                     // result.
+                     pMerged->Paste(0.0, *range.first++);
+                  }
                }
             }
             else
                // nothing copied but there is a 'region', so the 'region' must
                // be a 'point label' so offset
-               if (i < (int)regions.size() - 1)
-                  if (merged)
-                     merged->Offset(
-                        regions.at(i + 1).start - region.end);
+               if (i + 1 < regions.size() && merged != nullptr)
+                  for (const auto pChannel : *merged)
+                     pChannel->Offset(regions.at(i + 1).start - region.end);
          }
-         if( merged )
-            newClipboard.Add( merged );
+         if (merged)
+            newClipboard.Append(std::move(*merged));
       }
    }
 
@@ -385,26 +386,29 @@ void OnToggleTypeToCreateLabel(const CommandContext &WXUNUSED(context) )
 void OnCutLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
-   if( selectedRegion.isPoint() )
+   if (selectedRegion.isPoint())
      return;
 
    // Because of grouping the copy may need to operate on different tracks than
    // the clear, so we do these actions separately.
-   auto copyfunc = [&](Track *track, double t0, double t1)
-   {
-      Track::Holder dest = nullptr;
-      track->TypeSwitch(
-         [&](WaveTrack &t)
-         {
-            dest = t.CopyNonconst(t0, t1);
+   auto copyfunc = [&](Track &track, double t0, double t1) {
+      assert(track.IsLeader());
+      std::shared_ptr<TrackList> result;
+      track.TypeSwitch( [&](WaveTrack &wt) {
+         result = TrackList::Create(nullptr);
+         for (const auto pChannel : TrackList::Channels(&wt)) {
+            const auto pNewTrack = pChannel->Copy(t0, t1);
+            result->Add(pNewTrack);
+            //! See how Track::Init() copies mpGroupData
+            assert(pNewTrack->IsLeader() == pChannel->IsLeader());
          }
-      );
-      return dest;
+      } );
+      return result;
    };
-   EditClipboardByLabel( project, tracks, selectedRegion, copyfunc );
+   EditClipboardByLabel(project, tracks, selectedRegion, copyfunc);
 
    bool enableCutlines = gPrefs->ReadBool(wxT( "/GUI/EnableCutLines"), false);
    auto editfunc = [&](Track *track, double t0, double t1)
@@ -431,12 +435,12 @@ void OnCutLabels(const CommandContext &context)
 
    selectedRegion.collapseToT0();
 
-   ProjectHistory::Get( project ).PushState(
+   ProjectHistory::Get(project).PushState(
    /* i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
       regions.*/
-      XO( "Cut labeled audio regions to clipboard" ),
+      XO("Cut labeled audio regions to clipboard"),
    /* i18n-hint: (verb)*/
-      XO( "Cut Labeled Audio" ) );
+      XO("Cut Labeled Audio"));
 }
 
 void OnDeleteLabels(const CommandContext &context)
@@ -466,36 +470,39 @@ void OnDeleteLabels(const CommandContext &context)
 void OnSplitCutLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
-   if( selectedRegion.isPoint() )
+   if (selectedRegion.isPoint())
       return;
 
-   auto copyfunc = [&](Track *track, double t0, double t1)
-   {
-      Track::Holder dest = nullptr;
-      track->TypeSwitch(
-         [&](WaveTrack &t)
-         {
-            dest = t.SplitCut(t0, t1);
+   auto copyfunc = [&](Track &track, double t0, double t1) {
+      assert(track.IsLeader());
+      const auto result = TrackList::Create(nullptr);
+      track.TypeSwitch(
+         [&](WaveTrack &wt) {
+            for (const auto pChannel : TrackList::Channels(&wt)) {
+               const auto pNewTrack = pChannel->SplitCut(t0, t1);
+               result->Add(pNewTrack);
+               //! See how Track::Init() copies mpGroupData
+               assert(pNewTrack->IsLeader() == pChannel->IsLeader());
+            }
          },
-         [&](Track &t)
-         {
-            dest = t.Copy(t0, t1);
+         [&](Track &t) {
+            result->Add(t.Copy(t0, t1));
             t.Silence(t0, t1);
          }
       );
-      return dest;
+      return result;
    };
-   EditClipboardByLabel( project, tracks, selectedRegion, copyfunc );
+   EditClipboardByLabel(project, tracks, selectedRegion, copyfunc);
 
-   ProjectHistory::Get( project ).PushState(
+   ProjectHistory::Get(project).PushState(
       /* i18n-hint: (verb) Audacity has just split cut the labeled audio
          regions*/
-      XO( "Split Cut labeled audio regions to clipboard" ),
+      XO("Split Cut labeled audio regions to clipboard"),
       /* i18n-hint: (verb) Do a special kind of cut on the labels*/
-      XO( "Split Cut Labeled Audio" ) );
+      XO("Split Cut Labeled Audio"));
 }
 
 void OnSplitDeleteLabels(const CommandContext &context)
@@ -561,27 +568,31 @@ void OnSilenceLabels(const CommandContext &context)
 void OnCopyLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
-   if( selectedRegion.isPoint() )
+   if (selectedRegion.isPoint())
       return;
 
-   auto copyfunc = [&](Track *track, double t0, double t1)
-   {
-      Track::Holder dest = nullptr;
-      track->TypeSwitch(
-         [&](WaveTrack &t)
-         {
-            dest = t.CopyNonconst(t0, t1);
-         });
-      return dest;
+   auto copyfunc = [&](Track &track, double t0, double t1) {
+      std::shared_ptr<TrackList> result;
+      track.TypeSwitch( [&](WaveTrack &wt) {
+         result = TrackList::Create(nullptr);
+         for (const auto pChannel : TrackList::Channels(&wt)) {
+            const auto pNewTrack = pChannel->Copy(t0, t1);
+            result->Add(pNewTrack);
+            //! See how Track::Init() copies mpGroupData
+            assert(pNewTrack->IsLeader() == pChannel->IsLeader());
+         }
+      } );
+      return result;
    };
-   EditClipboardByLabel( project, tracks, selectedRegion, copyfunc );
+   EditClipboardByLabel(project, tracks, selectedRegion, copyfunc);
 
-   ProjectHistory::Get( project ).PushState( XO( "Copied labeled audio regions to clipboard" ),
-   /* i18n-hint: (verb)*/
-      XO( "Copy Labeled Audio" ) );
+   ProjectHistory::Get(project)
+      .PushState(XO("Copied labeled audio regions to clipboard"),
+         /* i18n-hint: (verb)*/
+         XO("Copy Labeled Audio"));
 }
 
 void OnSplitLabels(const CommandContext &context)
