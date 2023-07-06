@@ -95,7 +95,7 @@ namespace {
       const auto xx = std::max<ZoomInfo::int64>(0, viewInfo.TimeToPosition(time));
       ZoomInfo::Intervals intervals;
       const double rate = wt->GetRate();
-      viewInfo.FindIntervals(rate, intervals, width);
+      viewInfo.FindIntervals(intervals, width);
       ZoomInfo::Intervals::const_iterator it = intervals.begin(),
          end = intervals.end(), prev;
       wxASSERT(it != end && it->position == 0);
@@ -148,7 +148,7 @@ UIHandlePtr SampleHandle::HitTest
    const bool dB = !settings.isLinear();
    int yValue = GetWaveYPos(oneSample * envValue,
       zoomMin, zoomMax,
-      rect.height, dB, true, 
+      rect.height, dB, true,
       settings.dBRange, false) + rect.y;
 
    // Get y position of mouse (in pixels)
@@ -458,7 +458,7 @@ float SampleHandle::FindSampleEditingLevel
    auto &settings = WaveformSettings::Get(*mClickedTrack);
    const bool dB = !settings.isLinear();
    float newLevel =
-      ::ValueOfPixel(yy, height, false, dB, 
+      ::ValueOfPixel(yy, height, false, dB,
          settings.dBRange, zoomMin, zoomMax);
 
    //Take the envelope into account

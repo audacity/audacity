@@ -199,8 +199,8 @@ bool SpecCache::CalculateOneSpectrum
          wxASSERT(xx >= 0);
          float *const results = &out[nBins * xx];
          // This function does not mutate useBuffer
-         ComputeSpectrum(useBuffer, windowSizeSetting, windowSizeSetting,
-            rate, results,
+         ComputeSpectrum(
+            useBuffer, windowSizeSetting, windowSizeSetting, results,
             autocorrelation, settings.windowType);
       }
       else if (reassignment) {
