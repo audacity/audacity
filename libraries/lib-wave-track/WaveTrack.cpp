@@ -1681,19 +1681,20 @@ void WaveTrack::InsertSilence(double t, double len)
 /*! @excsafety{Weak} */
 void WaveTrack::Disjoin(double t0, double t1)
 {
-   auto minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
+   assert(IsLeader());
+   auto minSamples = TimeToLongSamples(WAVETRACK_MERGE_POINT_TOLERANCE);
    const size_t maxAtOnce = 1048576;
    std::vector<float> buffer;
    std::vector<samplePtr> buffers;
    Regions regions;
 
-   // TODO wide wave tracks -- only need to change width
+   // TODO wide wave tracks -- use width of the clip
    const size_t width = 1;
    for (const auto &clip : mClips) {
       double startTime = clip->GetPlayStartTime();
       double endTime = clip->GetPlayEndTime();
 
-      if( endTime < t0 || startTime > t1 )
+      if (endTime < t0 || startTime > t1)
          continue;
 
       // Assume all clips will have the same width
@@ -1721,24 +1722,20 @@ void WaveTrack::Disjoin(double t0, double t1)
       auto start = clip->TimeToSamples(std::max(.0, t0 - startTime));
       auto end = clip->TimeToSamples(std::min(endTime, t1) - startTime);
 
-      auto len = ( end - start );
-      for( decltype(len) done = 0; done < len; done += maxAtOnce )
-      {
-         auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
+      auto len = (end - start);
+      for (decltype(len) done = 0; done < len; done += maxAtOnce) {
+         auto numSamples = limitSampleBufferSize(maxAtOnce, len - done);
 
          clip
             ->GetSamples(buffers.data(), floatSample, start + done, numSamples);
-         for( decltype(numSamples) i = 0; i < numSamples; i++ )
-         {
+         for (decltype(numSamples) i = 0; i < numSamples; ++i) {
             auto curSamplePos = start + done + i;
 
             //start a NEW sequence
             if (seqStart == -1 && allZeroesAt(i))
                seqStart = curSamplePos;
-            else if (curSamplePos == end - 1 || !allZeroesAt(i))
-            {
-               if( seqStart != -1 )
-               {
+            else if (curSamplePos == end - 1 || !allZeroesAt(i)) {
+               if (seqStart != -1) {
                   decltype(end) seqEnd;
 
                   //consider the end case, where selection ends in zeroes
@@ -1746,8 +1743,7 @@ void WaveTrack::Disjoin(double t0, double t1)
                      seqEnd = end;
                   else
                      seqEnd = curSamplePos;
-                  if (seqEnd - seqStart + 1 > minSamples)
-                  {
+                  if (seqEnd - seqStart + 1 > minSamples) {
                      regions.push_back(
                         Region(
                            startTime + clip->SamplesToTime(seqStart),
@@ -1758,15 +1754,13 @@ void WaveTrack::Disjoin(double t0, double t1)
                   seqStart = -1;
                }
             }
-         }
-      }
-   }
+         } // samples
+      } // blocks
+   } // finding regions
 
-   for( unsigned int i = 0; i < regions.size(); i++ )
-   {
-      const Region &region = regions.at(i);
-      SplitDelete(region.start, region.end );
-   }
+   for (const auto &region : regions)
+      for (const auto pChannel : TrackList::Channels(this))
+         pChannel->SplitDelete(region.start, region.end );
 }
 
 /*! @excsafety{Weak} */

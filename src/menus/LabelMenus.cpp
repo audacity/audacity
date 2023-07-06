@@ -651,8 +651,7 @@ void OnDisjoinLabels(const CommandContext &context)
       assert(track.IsLeader());
       track.TypeSwitch( [&](WaveTrack &t) {
          wxBusyCursor busy;
-         for (const auto pChannel : TrackList::Channels(&t))
-            pChannel->Disjoin(t0, t1);
+         t.Disjoin(t0, t1);
       } );
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);

@@ -242,6 +242,9 @@ private:
    void SplitDelete(double t0, double t1) /* not override */;
    void Join(double t0, double t1) /* not override */;
    // May assume precondition: t0 <= t1
+   /*!
+    @pre `IsLeader()`
+    */
    void Disjoin(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
