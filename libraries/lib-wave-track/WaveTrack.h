@@ -130,6 +130,8 @@ private:
    //! Implement WideSampleSequence
    double GetEndTime() const override;
 
+   double SnapToSample(double t) const;
+
    //
    // Identifying the type of track
    //

@@ -665,7 +665,7 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
    //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
    for (const auto &clip : mClips)
    {
-      if (!clip->BeforePlayStartTime(t1) && !clip->AfterPlayEndTime(t0)) {
+      if (clip->OverlapsPlayRegion(t0, t1)) {
          //wxPrintf("Overlapping clip: %.6f...%.6f\n",
          //       clip->GetStartTime(),
          //       clip->GetEndTime());
@@ -1288,8 +1288,7 @@ void WaveTrack::HandleClear(double t0, double t1,
    {
       for (const auto &clip : mClips)
       {
-         if (!clip->BeforePlayStartTime(t1) && !clip->AfterPlayEndTime(t0) &&
-               (clip->BeforePlayStartTime(t0) || clip->AfterPlayEndTime(t1)))
+         if (clip->PartlyWithinPlayRegion(t0, t1))
          {
             addCutLines = false;
             break;
@@ -1299,12 +1298,12 @@ void WaveTrack::HandleClear(double t0, double t1,
 
    for (const auto &clip : mClips)
    {
-      if (clip->BeforePlayStartTime(t0) && clip->AfterPlayEndTime(t1))
+      if (clip->ExtendsPlayRegion(t0, t1))
       {
          // Whole clip must be deleted - remember this
          clipsToDelete.push_back(clip.get());
       }
-      else if (!clip->BeforePlayStartTime(t1) && !clip->AfterPlayEndTime(t0))
+      else if (clip->OverlapsPlayRegion(t0, t1))
       {
          // Clip data is affected by command
          if (addCutLines)
@@ -1322,7 +1321,7 @@ void WaveTrack::HandleClear(double t0, double t1,
             if (split) {
                // Three cases:
 
-               if (clip->BeforePlayStartTime(t0)) {
+               if (clip->BeforePlayRegion(t0)) {
                   // Delete from the left edge
 
                   // Don't modify this clip in place, because we want a strong
@@ -1333,7 +1332,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                   newClip->TrimLeft(t1 - clip->GetPlayStartTime());
                   clipsToAdd.push_back( std::move( newClip ) );
                }
-               else if (clip->AfterPlayEndTime(t1)) {
+               else if (clip->AfterPlayRegion(t1)) {
                   // Delete to right edge
 
                   // Don't modify this clip in place, because we want a strong
@@ -1389,7 +1388,7 @@ void WaveTrack::HandleClear(double t0, double t1,
       // or we're using the "don't move other clips" mode
       for (const auto& clip : mClips)
       {
-         if (clip->BeforePlayStartTime(t1))
+         if (clip->BeforePlayRegion(t1))
             clip->ShiftBy(-(t1 - t0));
       }
    }
@@ -1708,7 +1707,8 @@ void WaveTrack::InsertSilence(double t, double len)
          // use No-fail-guarantee
          pChannel->InsertClip(move(clip));
       }
-      else {
+      else
+      {
          // Assume at most one clip contains t
          const auto end = clips.end();
          const auto it = std::find_if(clips.begin(), end,
@@ -1719,10 +1719,9 @@ void WaveTrack::InsertSilence(double t, double len)
             it->get()->InsertSilence(t, len);
 
          // use No-fail-guarantee
-         for (const auto &clip : clips) {
-            if (clip->BeforePlayStartTime(t))
+         for (const auto &clip : mClips)
+            if (clip->BeforePlayRegion(t))
                clip->ShiftBy(len);
-         }
       }
    }
 }
@@ -2185,6 +2184,12 @@ double WaveTrack::GetStartTime() const
 double WaveTrack::GetEndTime() const
 {
    return ChannelGroup::GetEndTime();
+}
+
+double WaveTrack::SnapToSample(double t) const
+{
+   const auto sampleRate = GetRate();
+   return std::round(t * sampleRate) / sampleRate;
 }
 
 //

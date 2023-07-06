@@ -156,12 +156,15 @@ public:
    // even if t0 really falls outside that range
    sampleCount TimeToSequenceSamples(double t) const;
 
-   int GetRate() const { return mRate; }
+   int GetRate() const override
+   {
+      return mRate;
+   }
 
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
 
-   double GetStretchRatio() const override { return 1.0; }
+   double GetStretchRatio() const override;
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
@@ -184,6 +187,15 @@ public:
 
    double GetPlayEndTime() const override;
 
+   /*!
+    * `GetPlayEndTime()` is the right edge of a left-closed and right-open
+    * interval. There is a little space (one track's sample period) left at the
+    * end of the clips, though. To get the exact location of the right border of
+    * this clip, use this method.
+    */
+   double GetBorderEndTime() const;
+
+   // todo comment
    sampleCount GetPlayStartSample() const;
    sampleCount GetPlayEndSample() const;
    sampleCount GetVisibleSampleCount() const override;
@@ -212,11 +224,16 @@ public:
    void ShiftBy(double delta) noexcept;
 
    // One and only one of the following is true for a given t (unless the clip
-   // has zero length -- then BeforePlayStartTime() and AfterPlayEndTime() can both be true).
+   // has zero length -- then BeforePlayRegion() and AfterPlayRegion() can both be true).
    // WithinPlayRegion() is true if the time is substantially within the clip
    bool WithinPlayRegion(double t) const;
-   bool BeforePlayStartTime(double t) const;
-   bool AfterPlayEndTime(double t) const;
+   bool BeforePlayRegion(double t) const;
+   bool AfterPlayRegion(double t) const;
+   bool EntirelyWithinPlayRegion(double t0, double t1) const;
+   bool PartlyWithinPlayRegion(double t0, double t1) const;
+   bool OverlapsPlayRegion(double t0, double t1) const;
+   bool ExtendsPlayRegion(double t0, double t1) const;
+   bool ExtendsPlayRegionOnBothSides(double t0, double t1) const;
 
    //! Counts number of samples within t0 and t1 region. t0 and t1 are
    //! rounded to the nearest clip sample boundary, i.e. relative to clips
@@ -429,8 +446,20 @@ public:
    void SetName(const wxString& name);
    const wxString& GetName() const;
 
+   // TimeToSamples and SamplesToTime take clip stretch ratio into account.
+   // Use them to convert time / sample offsets.
    sampleCount TimeToSamples(double time) const noexcept;
    double SamplesToTime(sampleCount s) const noexcept;
+   /*!
+    * Given the possibility of some clips of a track being time-stretched, and
+    * our approach to render to the track's sample rate only upon playback, the
+    * samples of clips may lie anywhere on the time track, not just at multiples
+    * of the track's sample period.
+    * Nevertheless, we maintain play start and end times, which define the
+    * visible boundaries of clips, on this sample rate grid. This is sufficient
+    * precision and preserves a little spacing between clips.
+    */
+   double SnapToTrackSample(double time) const noexcept;
 
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
    void SetSilence(sampleCount offset, sampleCount length);
@@ -444,10 +473,7 @@ public:
    size_t GetAppendBufferLen() const;
 
    void
-   OnProjectTempoChange(const std::optional<double>& oldTempo, double newTempo)
-   {
-      // Planned for use in https://github.com/audacity/audacity/issues/4850
-   }
+   OnProjectTempoChange(const std::optional<double>& oldTempo, double newTempo);
 
 private:
    sampleCount GetNumSamples() const;
@@ -459,6 +485,7 @@ private:
    void ClearSequence(double t0, double t1);
 
    //! Restores state when an update loop over mSequences fails midway
+   // todo(mhodgkinson) I don't find any use. Throw away?
    struct Transaction {
       explicit Transaction(WaveClip &clip);
       ~Transaction();
@@ -474,6 +501,9 @@ private:
    double mSequenceOffset { 0 };
    double mTrimLeft{ 0 };
    double mTrimRight{ 0 };
+   double mClipStretchRatio = 1.;
+   std::optional<double> mRawAudioTempo;
+   std::optional<double> mProjectTempo;
 
    int mRate;
    int mColourIndex;
