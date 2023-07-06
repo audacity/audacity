@@ -17,8 +17,6 @@ and WaveTrackSink make new WaveTrack objects.
 ]]
 
 set( SOURCES
-   CachingPlayableSequence.cpp
-   CachingPlayableSequence.h
    PasteOverPreservingClips.cpp
    PasteOverPreservingClips.h
    SampleBlock.cpp

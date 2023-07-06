@@ -37,7 +37,7 @@ FloatVectorClip::FloatVectorClip(
 }
 
 AudioSegmentSampleView FloatVectorClip::GetSampleView(
-   size_t iChannel, sampleCount start, size_t len) const
+   size_t iChannel, sampleCount start, size_t len, bool mayThrow) const
 {
    std::vector<BlockSampleView> blockViews {
       std::make_shared<std::vector<float>>(mAudio[iChannel])

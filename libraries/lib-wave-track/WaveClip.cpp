@@ -142,12 +142,12 @@ WaveClip::~WaveClip()
 {
 }
 
-AudioSegmentSampleView
-WaveClip::GetSampleView(size_t ii, sampleCount start, size_t length) const
+AudioSegmentSampleView WaveClip::GetSampleView(
+   size_t ii, sampleCount start, size_t length, bool mayThrow) const
 {
    assert(ii < GetWidth());
    return mSequences[ii]->GetFloatSampleView(
-      start + TimeToSamples(mTrimLeft), length);
+      start + TimeToSamples(mTrimLeft), length, mayThrow);
 }
 
 size_t WaveClip::GetWidth() const
