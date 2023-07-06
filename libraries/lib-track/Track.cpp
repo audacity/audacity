@@ -1390,7 +1390,11 @@ void Track::OnProjectTempoChange(double newTempo)
 
 const std::optional<double>& Track::GetProjectTempo() const
 {
-   return mProjectTempo;
+   auto pTrack = this;
+   if (const auto pOwner = GetOwner())
+      // Substitute the leader track
+      pTrack = *pOwner->Find(this);
+   return pTrack->mProjectTempo;
 }
 
 // Undo/redo handling of selection changes
