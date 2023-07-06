@@ -1154,11 +1154,6 @@ sampleCount WaveClip::GetSequenceStartSample() const
     return TimeToSamples(mSequenceOffset);
 }
 
-sampleCount WaveClip::GetSequenceEndSample() const
-{
-    return GetSequenceStartSample() + GetNumSamples();
-}
-
 void WaveClip::ShiftBy(double delta) noexcept
 {
     SetSequenceStartTime(GetSequenceStartTime() + delta);
@@ -1207,11 +1202,6 @@ sampleCount WaveClip::TimeToSequenceSamples(double t) const
     else if (t > GetSequenceEndTime())
         return GetNumSamples();
     return TimeToSamples(t - GetSequenceStartTime());
-}
-
-sampleCount WaveClip::ToSequenceSamples(sampleCount s) const
-{
-    return s - GetSequenceStartSample();
 }
 
 bool WaveClip::CheckInvariants() const
