@@ -175,9 +175,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
       [&](Track &t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels
-         for (auto *channel : TrackList::Channels(&t))
-            if (mustSync && SyncLock::IsSyncLockSelected(channel))
-               channel->SyncLockAdjust(mT1, warper.Warp(mT1));
+         if (mustSync && SyncLock::IsSyncLockSelected(&t))
+            t.SyncLockAdjust(mT1, warper.Warp(mT1));
       }
    );
 

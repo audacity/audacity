@@ -415,10 +415,9 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
       [&](Track &t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels
-         for (auto *channel : TrackList::Channels(&t))
-            if (SyncLock::IsSyncLockSelected(channel))
-               channel->SyncLockAdjust(
-                  mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
+         if (SyncLock::IsSyncLockSelected(&t))
+            t.SyncLockAdjust(
+               mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
       }
    );
 

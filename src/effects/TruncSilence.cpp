@@ -494,7 +494,8 @@ bool EffectTruncSilence::DoRemoval(TrackList &outputs,
          },
          [&](Track &t) {
             // Non-wave tracks: just do a sync-lock adjust
-            t.SyncLockAdjust(cutEnd, cutStart);
+            if (t.IsLeader())
+               t.SyncLockAdjust(cutEnd, cutStart);
          }
       );
       ++whichReg;

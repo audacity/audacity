@@ -231,23 +231,24 @@ UIHandle::Result StretchHandle::Release
    bool left = mStretchState.mMode == stretchLeft;
    bool right = mStretchState.mMode == stretchRight;
    auto &viewInfo = ViewInfo::Get( *pProject );
-   if ( SyncLockState::Get(*pProject).IsSyncLocked() && ( left || right ) ) {
-      for ( auto track :
-           SyncLock::Group( mpTrack.get() ) ) {
-         if ( track != mpTrack.get() ) {
-            if ( left ) {
+   if (SyncLockState::Get(*pProject).IsSyncLocked() && (left || right)) {
+      for (auto track : SyncLock::Group(mpTrack.get())) {
+         if (track != mpTrack.get()) {
+            if (left) {
                auto origT0 = mStretchState.mOrigSel0Quantized;
                auto diff = viewInfo.selectedRegion.t0() - origT0;
-               if ( diff > 0)
-                  track->SyncLockAdjust( origT0 + diff, origT0 );
-               else
-                  track->SyncLockAdjust( origT0, origT0 - diff );
-               track->Offset( diff );
+               if (track->IsLeader()) {
+                  if (diff > 0)
+                     track->SyncLockAdjust(origT0 + diff, origT0);
+                  else
+                     track->SyncLockAdjust(origT0, origT0 - diff);
+               }
+               track->Offset(diff);
             }
-            else {
+            else if (track->IsLeader()) {
                auto origT1 = mStretchState.mOrigSel1Quantized;
                auto diff = viewInfo.selectedRegion.t1() - origT1;
-               track->SyncLockAdjust( origT1, origT1 + diff );
+               track->SyncLockAdjust(origT1, origT1 + diff);
             }
          }
       }

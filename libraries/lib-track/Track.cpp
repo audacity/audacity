@@ -280,19 +280,21 @@ void Track::Notify(bool allChannels, int code)
 
 void Track::SyncLockAdjust(double oldT1, double newT1)
 {
-   if (newT1 > oldT1) {
-      // Insert space within the track
-
-      if (oldT1 > GetEndTime())
+   assert(IsLeader());
+   const auto endTime = GetEndTime();
+   if (newT1 > oldT1 && oldT1 > endTime)
          return;
-
-      auto tmp = Cut(oldT1, GetEndTime());
-
-      Paste(newT1, tmp.get());
-   }
-   else if (newT1 < oldT1) {
-      // Remove from the track
-      Clear(newT1, oldT1);
+   const auto channels = TrackList::Channels(this);
+   for (const auto pChannel : channels) {
+      if (newT1 > oldT1) {
+         // Insert space within the track
+            auto tmp = pChannel->Cut(oldT1, endTime);
+            pChannel->Paste(newT1, tmp.get());
+      }
+      else if (newT1 < oldT1) {
+         // Remove from the track
+         pChannel->Clear(newT1, oldT1);
+      }
    }
 }
 

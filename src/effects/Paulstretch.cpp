@@ -163,7 +163,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
    }
 
    // Sync lock adjustment of other tracks
-   outputs.Get().Any().Visit(
+   outputs.Get().Leaders().Visit(
       [&](auto &&fallthrough){ return [&](WaveTrack &track) {
          if (!track.IsSelected())
             fallthrough();

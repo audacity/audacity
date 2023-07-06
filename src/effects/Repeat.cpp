@@ -162,7 +162,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
       }; },
       [&](Track &t)
       {
-         if( SyncLock::IsSyncLockSelected(&t) )
+         if (t.IsLeader() && SyncLock::IsSyncLockSelected(&t))
             t.SyncLockAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
       }
    );

@@ -1705,14 +1705,12 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       }
 
       // If we were first in the group adjust non-selected group tracks
-      if (mFirstInGroup) {
+      if (mFirstInGroup)
          for (auto t : SyncLock::Group(mCurTrack[i]))
-         {
-            if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t)) {
+            if (t->IsLeader() &&
+               !t->GetSelected() && SyncLock::IsSyncLockSelected(t)
+            )
                t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
-            }
-         }
-      }
 
       // Only the first channel can be first in its group
       mFirstInGroup = false;
