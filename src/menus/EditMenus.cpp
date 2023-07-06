@@ -111,7 +111,7 @@ std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
       auto copies =
          track->Copy(track->GetStartTime(), track->GetEndTime(), false);
       for (const auto pChannel : copies->Any()) {
-         pChannel->SetOffset(track->GetStartTime());
+         pChannel->MoveTo(track->GetStartTime());
          if (auto waveTrack = dynamic_cast<WaveTrack*>(pChannel)) {
             for (auto clip : waveTrack->GetClips()) {
                if (clip->GetTrimLeft() != 0) {
@@ -691,7 +691,7 @@ void OnDuplicate(const CommandContext &context)
       auto range = dest->Any();
       for (const auto pChannel : TrackList::Channels(n))
          (*range.first++)
-            ->SetOffset(std::max(selectedRegion.t0(), pChannel->GetOffset()));
+            ->MoveTo(std::max(selectedRegion.t0(), pChannel->GetOffset()));
       tracks.Append(std::move(*dest));
 
       // This break is really needed, else we loop infinitely
@@ -836,13 +836,13 @@ void OnSplit(const CommandContext &context)
 
          dest = n->Copy(sel0, sel1);
          dest->Init(*n);
-         dest->SetOffset(wxMax(sel0, n->GetOffset()));
+         dest->MoveTo(wxMax(sel0, n->GetOffset()));
 
          if (sel1 >= n->GetEndTime())
             n->Clear(sel0, sel1);
          else if (sel0 <= n->GetOffset()) {
             n->Clear(sel0, sel1);
-            n->SetOffset(sel1);
+            n->MoveTo(sel1);
          } else
             n->Silence(sel0, sel1);
 
@@ -889,7 +889,7 @@ void OnSplitNew(const CommandContext &context)
                // The copy function normally puts the clip at time 0
                // This offset lines it up with the original track's timing
                for (const auto pChannel : dest->Any())
-                  pChannel->Offset(newt0);
+                  pChannel->ShiftBy(newt0);
                tracks.Append(std::move(*dest));
             }
             wt.SplitDelete(newt0, newt1);
@@ -902,7 +902,7 @@ void OnSplitNew(const CommandContext &context)
             dest = n.Cut(viewInfo.selectedRegion.t0(),
                    viewInfo.selectedRegion.t1());
             if (dest) {
-               dest->SetOffset(wxMax(0, n.GetOffset()));
+               dest->MoveTo(std::max(0, n.GetOffset()));
                tracks.Add(dest);
             }
          }

@@ -902,7 +902,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                   t1 = newTrack->LongSamplesToTime(newTrack->TimeToLongSamples(t1));
             }
 
-            newTrack->SetOffset(t0);
+            newTrack->MoveTo(t0);
             wxString nameSuffix = wxString(wxT(""));
 
             if (useTrackNumber) {

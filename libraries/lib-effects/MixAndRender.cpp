@@ -106,7 +106,7 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    decltype(mixLeft) mixRight{};
    if (!mono) {
       mixRight = trackFactory->Create(format, rate);
-      mixRight->SetOffset(mixStartTime);
+      mixRight->MoveTo(mixStartTime);
    }
 
    auto result = TrackList::Temporary(nullptr, mixLeft, mixRight);
@@ -120,7 +120,7 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    else
       /* i18n-hint: noun, means a track, made by mixing other tracks */
       mixLeft->SetName(newTrackName);
-   mixLeft->SetOffset(mixStartTime);
+   mixLeft->MoveTo(mixStartTime);
 
    auto maxBlockLen = mixLeft->GetIdealBlockSize();
 

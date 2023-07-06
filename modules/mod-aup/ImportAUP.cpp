@@ -1383,7 +1383,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
          auto value = pair.second;
 
          if (attr == "offset" && value.TryGet(dblValue))
-            pTrack->SetOffset(dblValue);
+            pTrack->MoveTo(dblValue);
       }
    }
    return bSuccess;

@@ -212,7 +212,7 @@ public:
    void TrimRightTo(double to);
 
    /*! @excsafety{No-fail} */
-   void Offset(double delta) noexcept;
+   void ShiftBy(double delta) noexcept;
 
    // One and only one of the following is true for a given t (unless the clip
    // has zero length -- then BeforePlayStartTime() and AfterPlayEndTime() can both be true).

@@ -245,7 +245,7 @@ void EditClipboardByLabel(AudacityProject &project,
                      // Paste to the beginning; unless this is the first region,
                      // offset the track to account for time between the regions
                      if (i + 1 < regions.size())
-                        pMerged->Offset(
+                        pMerged->ShiftBy(
                            regions.at(i + 1).start - region.end);
                   }
 
@@ -262,7 +262,7 @@ void EditClipboardByLabel(AudacityProject &project,
                // be a 'point label' so offset
                if (i + 1 < regions.size() && merged != nullptr)
                   for (const auto pChannel : *merged)
-                     pChannel->Offset(regions.at(i + 1).start - region.end);
+                     pChannel->ShiftBy(regions.at(i + 1).start - region.end);
          }
          if (merged)
             newClipboard.Append(std::move(*merged));

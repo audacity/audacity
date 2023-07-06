@@ -163,7 +163,7 @@ LabelTrack::~LabelTrack()
 {
 }
 
-void LabelTrack::SetOffset(double dOffset)
+void LabelTrack::MoveTo(double dOffset)
 {
    for (auto &labelStruct: mLabels)
       labelStruct.selectedRegion.move(dOffset);

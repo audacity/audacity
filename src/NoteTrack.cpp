@@ -198,7 +198,7 @@ TrackListHolder NoteTrack::Clone() const
    duplicate->SetBottomNote(mBottomNote);
    duplicate->SetTopNote(mTopNote);
    duplicate->SetVisibleChannels(GetVisibleChannels());
-   duplicate->SetOffset(GetOffset());
+   duplicate->MoveTo(GetOffset());
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
 #endif
@@ -482,7 +482,7 @@ TrackListHolder NoteTrack::Cut(double t0, double t1)
    auto &seq = GetSeq();
    seq.convert_to_seconds();
    newTrack->mSeq.reset(seq.cut(t0 - GetOffset(), len, false));
-   newTrack->SetOffset(0);
+   newTrack->MoveTo(0);
 
    // Not needed
    // Alg_seq::cut seems to handle this
@@ -509,7 +509,7 @@ TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
    auto &seq = GetSeq();
    seq.convert_to_seconds();
    newTrack->mSeq.reset(seq.copy(t0 - GetOffset(), len, false));
-   newTrack->SetOffset(0);
+   newTrack->MoveTo(0);
 
    // What should be done with the rest of newTrack's members?
    // (mBottomNote, mSerializationBuffer,
@@ -533,7 +533,7 @@ bool NoteTrack::Trim(double t0, double t1)
    // Now that stuff beyond selection is cleared, clear before selection:
    seq.clear(0.0, t0 - GetOffset(), false);
    // want starting time to be t0
-   SetOffset(t0);
+   MoveTo(t0);
 
    // Not needed
    // Alg_seq::clear seems to handle this
@@ -559,10 +559,10 @@ void NoteTrack::Clear(double t0, double t1)
       // start is negative.  That's not what we want to happen.
       if (len > -start) {
          seq.clear(0, len + start, false);
-         SetOffset(t0);
+         MoveTo(t0);
       }
       else
-         SetOffset(offset - len);
+         MoveTo(offset - len);
    }
    else {
       //auto delta = -(
@@ -593,7 +593,7 @@ void NoteTrack::Paste(double t, const Track &src)
       if (t < myOffset) {
          // workaround strange behavior described at
          // http://bugzilla.audacityteam.org/show_bug.cgi?id=1735#c3
-         SetOffset(t);
+         MoveTo(t);
          InsertSilence(t, myOffset - t);
       }
 
@@ -953,7 +953,7 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
          {}
          else if (attr == "offset" && value.TryGet(dblValue))
-            SetOffset(dblValue);
+            MoveTo(dblValue);
          else if (attr == "visiblechannels") {
              if (!value.TryGet(nValue) ||
                  !IsValidVisibleChannels(nValue))

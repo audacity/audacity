@@ -131,7 +131,7 @@ void EffectPreview(EffectBase &effect,
 
       auto newTrack = *mTracks->Leaders<WaveTrack>().rbegin();
       for (const auto pChannel : TrackList::Channels(newTrack))
-         pChannel->Offset(-pChannel->GetStartTime());
+         pChannel->MoveTo(0);
       newTrack->SetSelected(true);
    }
    else {

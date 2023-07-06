@@ -296,7 +296,7 @@ void DoAlign
 
          for (auto channel : channels)
             // Move the track
-            channel->SetOffset(newPos + channel->GetStartTime() - trackStart);
+            channel->MoveTo(newPos + channel->GetStartTime() - trackStart);
 
          if (index == kAlignEndToEnd)
             newPos += (trackEnd - trackStart);
@@ -309,7 +309,7 @@ void DoAlign
       // For a fixed-distance shift move sync-lock selected tracks also.
       for (auto t : tracks.Any()
            + &SyncLock::IsSelectedOrSyncLockSelected )
-         t->SetOffset(t->GetOffset() + delta);
+         t->MoveTo(t->GetOffset() + delta);
    }
 
    if (moveSel)
@@ -854,7 +854,7 @@ void OnScoreAlign(const CommandContext &context)
    } else if (alignedNoteTrack->GetOffset() > 0) {
       alignedNoteTrack->Shift(alignedNoteTrack->GetOffset());
    }
-   alignedNoteTrack->SetOffset(0);
+   alignedNoteTrack->MoveTo(0);
 
    WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(true /* selectionOnly */);

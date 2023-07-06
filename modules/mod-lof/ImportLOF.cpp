@@ -523,7 +523,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 #endif
                {
                   for (auto channel : TrackList::Channels(t))
-                     channel->SetOffset(offset);
+                     channel->MoveTo(offset);
                }
 
                // Amend the undo transaction made by import

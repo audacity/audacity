@@ -118,15 +118,15 @@ TimeShiftHandle::~TimeShiftHandle()
 {
 }
 
-void ClipMoveState::DoHorizontalOffset( double offset )
+void ClipMoveState::DoHorizontalOffset(double offset)
 {
-   if ( !shifters.empty() ) {
-      for ( auto &pair : shifters )
-         pair.second->DoHorizontalOffset( offset );
+   if (!shifters.empty()) {
+      for (auto &pair : shifters)
+         pair.second->DoHorizontalOffset(offset);
    }
    else {
-      for (auto channel : TrackList::Channels( mCapturedTrack.get() ))
-         channel->Offset( offset );
+      for (auto channel : TrackList::Channels(mCapturedTrack.get()))
+         channel->ShiftBy(offset);
    }
 }
 
@@ -228,10 +228,10 @@ bool TrackShifter::FinishMigration()
    return true;
 }
 
-void TrackShifter::DoHorizontalOffset( double offset )
+void TrackShifter::DoHorizontalOffset(double offset)
 {
    if (!AllFixed())
-      GetTrack().Offset( offset );
+      GetTrack().ShiftBy(offset);
 }
 
 double TrackShifter::AdjustT0(double t0) const

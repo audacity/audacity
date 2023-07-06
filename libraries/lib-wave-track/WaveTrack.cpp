@@ -329,13 +329,13 @@ double WaveTrack::GetOffset() const
 }
 
 /*! @excsafety{No-fail} */
-void WaveTrack::SetOffset(double o)
+void WaveTrack::MoveTo(double o)
 {
    double delta = o - GetOffset();
 
    for (const auto &clip : mClips)
       // assume No-fail-guarantee
-      clip->Offset(delta);
+      clip->ShiftBy(delta);
 
    mOffset = o;
 }
@@ -781,7 +781,7 @@ auto WaveTrack::CopyOne(
          newTrack->InsertClip(
             std::make_shared<WaveClip>(*clip, pFactory, !forClipboard));
          WaveClip *const newClip = newTrack->mClips.back().get();
-         newClip->Offset(-t0);
+         newClip->ShiftBy(-t0);
       }
       else if (clip->CountSamples(t0, t1) >= 1) {
          // Clip is affected by command
@@ -791,7 +791,7 @@ auto WaveTrack::CopyOne(
             *clip, pFactory, !forClipboard, t0, t1);
          newClip->SetName(clip->GetName());
 
-         newClip->Offset(-t0);
+         newClip->ShiftBy(-t0);
          if (newClip->GetPlayStartTime() < 0)
             newClip->SetPlayStartTime(0);
 
@@ -812,7 +812,7 @@ auto WaveTrack::CopyOne(
          0 /*colourindex*/);
       placeholder->SetIsPlaceholder(true);
       placeholder->InsertSilence(0, (t1 - t0) - newTrack->GetEndTime());
-      placeholder->Offset(newTrack->GetEndTime());
+      placeholder->ShiftBy(newTrack->GetEndTime());
       newTrack->InsertClip(std::move(placeholder)); // transfer ownership
    }
    return newTrack->SharedPointer<WaveTrack>();
@@ -1074,7 +1074,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
          target.SetTrimLeft(trim);
          //Play start time needs to be adjusted after
          //prepending data to the sequence
-         target.Offset(-trim);
+         target.ShiftBy(-trim);
       };
 
       auto attachRight = [](WaveClip &target, WaveClip &src)
@@ -1366,7 +1366,7 @@ void WaveTrack::HandleClear(double t0, double t1,
       for (const auto& clip : mClips)
       {
          if (clip->BeforePlayStartTime(t1))
-            clip->Offset(-(t1 - t0));
+            clip->ShiftBy(-(t1 - t0));
       }
    }
 
@@ -1406,7 +1406,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
             for (const auto pChannel : channels)
                for (const auto& clip : pChannel->mClips)
                   if (clip->GetPlayStartTime() > oldT1 - (1.0 / rate))
-                     clip->Offset(offset);
+                     clip->ShiftBy(offset);
          }
          return;
       }
@@ -1497,7 +1497,7 @@ void WaveTrack::PasteOne(
         // ... move everything to the right
         for (const auto& clip : track.mClips)
             if (clip->GetPlayStartTime() > t0 - (1.0 / rate))
-                clip->Offset(insertDuration);
+                clip->ShiftBy(insertDuration);
     }
 
     if (singleClipMode) {
@@ -1579,7 +1579,7 @@ void WaveTrack::PasteOne(
             auto newClip =
                 std::make_shared<WaveClip>(*clip, track.mpFactory, true);
             newClip->Resample(rate);
-            newClip->Offset(t0);
+            newClip->ShiftBy(t0);
             newClip->MarkChanged();
             if (pastingFromTempTrack)
                 //Clips from the tracks which aren't bound to any TrackList are
@@ -1698,7 +1698,7 @@ void WaveTrack::InsertSilence(double t, double len)
       for (const auto &clip : mClips)
       {
          if (clip->BeforePlayStartTime(t))
-            clip->Offset(len);
+            clip->ShiftBy(len);
       }
    }
 }
@@ -2862,7 +2862,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
          for (const auto &clip2 : mClips)
          {
             if (clip2->GetPlayStartTime() > clip->GetPlayStartTime())
-               clip2->Offset(end - start);
+               clip2->ShiftBy(end - start);
          }
       }
    }

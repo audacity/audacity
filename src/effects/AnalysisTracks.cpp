@@ -70,7 +70,7 @@ ModifiedAnalysisTrack::ModifiedAnalysisTrack
    mpTrack = static_cast<LabelTrack*>(newTrack.get());
 
    // Why doesn't LabelTrack::Copy complete the job? :
-   mpTrack->SetOffset(pOrigTrack->GetStartTime());
+   mpTrack->MoveTo(pOrigTrack->GetStartTime());
    if (!name.empty())
       mpTrack->SetName(name);
 

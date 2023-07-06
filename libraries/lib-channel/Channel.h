@@ -303,8 +303,11 @@ public:
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;
 
-   void Offset(double t) { SetOffset(GetOffset() + t); }
-   virtual void SetOffset (double o) { mOffset = o; }
+   //! Change start time by given duration
+   void ShiftBy(double t) { MoveTo(GetOffset() + t); }
+
+   //! Change start time to given time point
+   virtual void MoveTo(double o) { mOffset = o; }
 
    /*!
       @name Acesss to channels
