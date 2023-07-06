@@ -352,7 +352,10 @@ public:
    virtual void SyncLockAdjust(double oldT1, double newT1);
 
    // May assume precondition: t0 <= t1
-   virtual void Silence(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   /*!
+    @pre `IsLeader()`
+    */
+   virtual void Silence(double t0, double t1) = 0;
 
    // May assume precondition: t0 <= t1
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;

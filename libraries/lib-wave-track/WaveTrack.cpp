@@ -1615,24 +1615,23 @@ void WaveTrack::Paste(double t0, const Track *src)
 
 void WaveTrack::Silence(double t0, double t1)
 {
+   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
    auto start = TimeToLongSamples(t0);
    auto end = TimeToLongSamples(t1);
 
-   for (const auto &clip : mClips)
-   {
-      auto clipStart = clip->GetPlayStartSample();
-      auto clipEnd = clip->GetPlayEndSample();
-
-      if (clipEnd > start && clipStart < end)
-      {
-         auto offset = std::max(start - clipStart, sampleCount(0));
-         // Clip sample region and Get/Put sample region overlap
-         auto length = std::min(end, clipEnd) - (clipStart + offset);
-
-         clip->SetSilence(offset, length);
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (const auto &clip : pChannel->mClips) {
+         auto clipStart = clip->GetPlayStartSample();
+         auto clipEnd = clip->GetPlayEndSample();
+         if (clipEnd > start && clipStart < end) {
+            auto offset = std::max(start - clipStart, sampleCount(0));
+            // Clip sample region and Get/Put sample region overlap
+            auto length = std::min(end, clipEnd) - (clipStart + offset);
+            clip->SetSilence(offset, length);
+         }
       }
    }
 }

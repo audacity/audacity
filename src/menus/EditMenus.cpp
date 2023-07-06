@@ -737,8 +737,7 @@ void OnSplitCut(const CommandContext &context)
          if (n.SupportsBasicEditing()) {
             auto dest = n.Copy(selectedRegion.t0(),
                     selectedRegion.t1());
-            n.Silence(selectedRegion.t0(),
-                       selectedRegion.t1());
+            n.Silence(selectedRegion.t0(), selectedRegion.t1());
             if (dest)
                newClipboard.Add(dest);
          }
@@ -779,15 +778,15 @@ void OnSplitDelete(const CommandContext &context)
 void OnSilence(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
-   for ( auto n : tracks.Selected< WaveTrack >() )
+   for (auto n : tracks.SelectedLeaders<WaveTrack>())
       n->Silence(selectedRegion.t0(), selectedRegion.t1());
 
-   ProjectHistory::Get( project ).PushState(
+   ProjectHistory::Get(project).PushState(
       XO("Silenced selected tracks for %.2f seconds at %.2f")
-         .Format( selectedRegion.duration(), selectedRegion.t0() ),
+         .Format(selectedRegion.duration(), selectedRegion.t0()),
       /* i18n-hint: verb */
       XC("Silence", "command"));
 }

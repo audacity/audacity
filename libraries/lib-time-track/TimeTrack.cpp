@@ -216,6 +216,7 @@ void TimeTrack::Paste(double t, const Track * src)
 
 void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))
 {
+   assert(IsLeader());
 }
 
 void TimeTrack::InsertSilence(double t, double len)

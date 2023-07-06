@@ -625,6 +625,7 @@ void NoteTrack::Paste(double t, const Track *src)
 
 void NoteTrack::Silence(double t0, double t1)
 {
+   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
