@@ -2300,6 +2300,202 @@ bool WaveTrack::Get(size_t iChannel, size_t nBuffers,
    });
 }
 
+namespace {
+void RoundToNearestClipSample(const WaveTrack& track, double& t)
+{
+   const auto clip = track.GetClipAtTime(t);
+   if (!clip)
+      return;
+   t = clip->SamplesToTime(clip->TimeToSamples(t - clip->GetPlayStartTime())) +
+       clip->GetPlayStartTime();
+}
+}
+
+std::pair<size_t, size_t> WaveTrack::GetFloatsCenteredAroundTime(
+   double t, size_t iChannel, float* buffer, size_t numSideSamples,
+   bool mayThrow) const
+{
+   const auto numSamplesReadLeft = GetFloatsFromTime(
+      t, iChannel, buffer, numSideSamples, mayThrow, PlaybackDirection::backward);
+   const auto numSamplesReadRight = GetFloatsFromTime(
+      t, iChannel, buffer + numSideSamples, numSideSamples + 1, mayThrow,
+      PlaybackDirection::forward);
+   return { numSideSamples - numSamplesReadLeft,
+            numSideSamples + numSamplesReadRight };
+}
+
+namespace
+{
+template<typename BufferType>
+struct BufferCharType;
+
+template<>
+struct BufferCharType<float*>
+{
+   using type = samplePtr;
+};
+
+template<>
+struct BufferCharType<const float*>
+{
+   using type = constSamplePtr;
+};
+
+template <typename BufferType> struct SampleAccessArgs
+{
+   const typename BufferCharType<BufferType>::type offsetBuffer;
+   const sampleCount start;
+   const size_t len;
+};
+
+template <typename BufferType>
+SampleAccessArgs<BufferType> GetSampleAccessArgs(
+   const WaveClip& clip, double startOrEndTime /*absolute*/, BufferType buffer,
+   size_t totalToRead, size_t alreadyRead, bool forward)
+{
+   const auto remainingToRead = totalToRead - alreadyRead;
+   const auto sampsInClip = clip.GetVisibleSampleCount();
+   const auto sampsPerSec = clip.GetRate() / clip.GetStretchRatio();
+   if (forward)
+   {
+      const auto startTime =
+         std::max(startOrEndTime - clip.GetPlayStartTime(), 0.);
+      const sampleCount startSamp { std::ceil(
+         std::round(startTime * sampsPerSec * 1e6) / 1e6) };
+      if (startSamp >= sampsInClip)
+         return { nullptr, sampleCount { 0u }, 0u };
+      const auto len =
+         limitSampleBufferSize(remainingToRead, sampsInClip - startSamp);
+      return { reinterpret_cast<typename BufferCharType<BufferType>::type>(
+                  buffer + alreadyRead),
+               startSamp, len };
+   }
+   else
+   {
+      const auto endTime = std::min(
+         startOrEndTime - clip.GetPlayStartTime(), clip.GetPlayDuration());
+      const sampleCount endSamp { std::ceil(
+         std::round(endTime * sampsPerSec * 1e6) / 1e6) };
+      const auto startSamp =
+         std::max(endSamp - remainingToRead, sampleCount { 0 });
+      const auto len = (endSamp - startSamp).as_size_t();
+      if (len == 0 || startSamp >= sampsInClip)
+         return { nullptr, sampleCount { 0u }, 0u };
+      const auto bufferEnd = buffer + remainingToRead;
+      return { reinterpret_cast<typename BufferCharType<BufferType>::type>(
+                  bufferEnd - len),
+               startSamp, len };
+   }
+}
+} // namespace
+
+size_t WaveTrack::GetFloatsFromTime(
+   double t, size_t iChannel, float* buffer, size_t numSamples, bool mayThrow,
+   PlaybackDirection direction) const
+{
+   RoundToNearestClipSample(*this, t);
+   auto clip = GetClipAtTime(t);
+   auto numSamplesRead = 0u;
+   const auto forward = direction == PlaybackDirection::forward;
+   while (clip)
+   {
+      const auto args = GetSampleAccessArgs<float*>(
+         *clip, t, buffer, numSamples, numSamplesRead, forward);
+      if (!clip->GetSamples(
+             iChannel, args.offsetBuffer, floatSample, args.start, args.len,
+             mayThrow))
+         return 0u;
+      numSamplesRead += args.len;
+      if (numSamplesRead == numSamples)
+         break;
+      clip = GetAdjacentClip(*clip, direction);
+   }
+   return numSamplesRead;
+}
+
+bool WaveTrack::GetFloatAtTime(
+   double t, size_t iChannel, float& value, bool mayThrow) const
+{
+   const auto clip = GetClipAtTime(t);
+   if (!clip)
+      return false;
+   clip->GetFloatAtTime(
+      t - clip->GetPlayStartTime(), iChannel, value, mayThrow);
+   return true;
+}
+
+void WaveTrack::SetFloatsCenteredAroundTime(
+   double t, size_t iChannel, const float* buffer, size_t numSideSamples,
+   sampleFormat effectiveFormat)
+{
+   SetFloatsFromTime(
+      t, iChannel, buffer, numSideSamples, effectiveFormat,
+      PlaybackDirection::backward);
+   SetFloatsFromTime(
+      t, iChannel, buffer + numSideSamples, numSideSamples + 1, effectiveFormat,
+      PlaybackDirection::forward);
+}
+
+void WaveTrack::SetFloatsFromTime(
+   double t, size_t iChannel, const float* buffer, size_t numSamples,
+   sampleFormat effectiveFormat, PlaybackDirection direction)
+{
+   RoundToNearestClipSample(*this, t);
+   auto clip = GetClipAtTime(t);
+   auto numSamplesWritten = 0u;
+   const auto forward = direction == PlaybackDirection::forward;
+   while (clip)
+   {
+      const auto args = GetSampleAccessArgs<const float*>(
+         *clip, t, buffer, numSamples, numSamplesWritten, forward);
+      if (args.len > 0u)
+      {
+         clip->SetSamples(
+            iChannel, args.offsetBuffer, floatSample, args.start, args.len,
+            effectiveFormat);
+         numSamplesWritten += args.len;
+         if (numSamplesWritten == numSamples)
+            break;
+      }
+      clip = GetAdjacentClip(*clip, direction);
+   }
+}
+
+void WaveTrack::SetFloatAtTime(
+   double t, size_t iChannel, float value, sampleFormat effectiveFormat)
+{
+   SetFloatsCenteredAroundTime(t, iChannel, &value, 0u, effectiveFormat);
+}
+
+void WaveTrack::SetFloatsWithinTimeRange(
+   double t0, double t1, size_t iChannel,
+   const std::function<float(double sampleTime)>& producer,
+   sampleFormat effectiveFormat)
+{
+   t0 = std::max(t0, GetStartTime());
+   t1 = std::min(t1, GetEndTime());
+   auto clip = GetClipAtTime(t0);
+   while (clip) {
+      const auto clipStartTime = clip->GetPlayStartTime();
+      if (clipStartTime >= t1)
+         break;
+      const auto clipEndTime = clip->GetPlayEndTime();
+      const auto sampsPerSec = clip->GetRate() / clip->GetStretchRatio();
+      const auto roundedT0 = std::ceil(t0 * sampsPerSec) / sampsPerSec;
+      const auto roundedT1 = std::ceil(t1 * sampsPerSec) / sampsPerSec;
+      const auto tt0 = std::max(clipStartTime, roundedT0);
+      const auto tt1 = std::min(clipEndTime, roundedT1);
+      const size_t numSamples = (tt1 - tt0) * sampsPerSec + .5;
+      std::vector<float> values(numSamples);
+      for (auto i = 0u; i < numSamples; ++i)
+         values[i] = producer(tt0 + clip->SamplesToTime(i));
+      clip->SetFloatsFromTime(
+         tt0 - clipStartTime, iChannel, values.data(), numSamples,
+         effectiveFormat);
+      clip = GetNeighbourClip(*clip, PlaybackDirection::forward);
+   }
+}
+
 bool WaveTrack::GetOne(
    samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
    bool backwards, fillFormat fill, bool mayThrow,
@@ -2601,10 +2797,63 @@ void WaveTrack::GetEnvelopeValues(
 // latter clip is returned.
 WaveClip* WaveTrack::GetClipAtTime(double time)
 {
+   return const_cast<WaveClip*>(
+      const_cast<const WaveTrack&>(*this).GetClipAtTime(time));
+}
 
+const WaveClip* WaveTrack::GetNeighbourClip(
+   const WaveClip& clip, PlaybackDirection direction) const
+{
    const auto clips = SortedClipArray();
-   auto p = std::find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
-      return time >= clip->GetPlayStartTime() && time <= clip->GetPlayEndTime(); });
+   const auto p = std::find(clips.begin(), clips.end(), &clip);
+   if (p == clips.end())
+      return nullptr;
+   else if (direction == PlaybackDirection::forward)
+      return p == clips.end() - 1 ? nullptr : *(p + 1);
+   else
+      return p == clips.begin() ? nullptr : *(p - 1);
+}
+
+WaveClip*
+WaveTrack::GetNeighbourClip(const WaveClip& clip, PlaybackDirection direction)
+{
+   return const_cast<WaveClip*>(
+      const_cast<const WaveTrack&>(*this).GetNeighbourClip(clip, direction));
+}
+
+const WaveClip* WaveTrack::GetAdjacentClip(
+   const WaveClip& clip, PlaybackDirection direction) const
+{
+   const auto neighbour = GetNeighbourClip(clip, direction);
+   if (!neighbour)
+      return nullptr;
+   else if (direction == PlaybackDirection::forward)
+      return std::abs(clip.GetPlayEndTime() - neighbour->GetPlayStartTime()) <
+                   1e-9 ?
+                neighbour :
+                nullptr;
+   else
+      return std::abs(clip.GetPlayStartTime() - neighbour->GetPlayEndTime()) <
+                   1e-9 ?
+                neighbour :
+                nullptr;
+}
+
+WaveClip*
+WaveTrack::GetAdjacentClip(const WaveClip& clip, PlaybackDirection direction)
+{
+   return const_cast<WaveClip*>(
+      const_cast<const WaveTrack&>(*this).GetAdjacentClip(clip, direction));
+}
+
+const WaveClip* WaveTrack::GetClipAtTime(double time) const
+{
+   const auto clips = SortedClipArray();
+   auto p = std::find_if(
+      clips.rbegin(), clips.rend(), [&](const WaveClip* const& clip) {
+         return time >= clip->GetPlayStartTime() &&
+                time <= clip->GetPlayEndTime();
+      });
 
    // When two clips are immediately next to each other, the GetPlayEndTime() of the first clip
    // and the GetPlayStartTime() of the second clip may not be exactly equal due to rounding errors.
@@ -2618,6 +2867,34 @@ WaveClip* WaveTrack::GetClipAtTime(double time)
    }
 
    return p != clips.rend() ? *p : nullptr;
+}
+
+WaveClipConstHolders WaveTrack::GetOverlappingClips(double t0, double t1) const
+{
+   WaveClipConstHolders overlappingClips;
+   for (const auto& clip : mClips)
+      if (clip->GetPlayEndTime() > t0 && clip->GetPlayStartTime() < t1)
+         overlappingClips.push_back(clip);
+   std::sort(
+      overlappingClips.begin(), overlappingClips.end(),
+      [](const auto& lhs, const auto& rhs) {
+         return lhs->GetPlayStartTime() < rhs->GetPlayStartTime();
+      });
+   return overlappingClips;
+}
+
+WaveClipHolders WaveTrack::GetOverlappingClips(double t0, double t1)
+{
+   const auto constClips =
+      const_cast<const WaveTrack*>(this)->GetOverlappingClips(t0, t1);
+   WaveClipHolders clips;
+   clips.reserve(constClips.size());
+   std::transform(
+      constClips.begin(), constClips.end(), std::back_inserter(clips),
+      [](const std::shared_ptr<const WaveClip>& clip) {
+         return std::const_pointer_cast<WaveClip>(clip);
+      });
+   return clips;
 }
 
 Envelope* WaveTrack::GetEnvelopeAtTime(double time)

@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
+#include "PlaybackDirection.h"
 #include "Prefs.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
@@ -356,6 +357,7 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount* pNumWithinClips = nullptr) const override;
+
    /*!
     Set samples in the unique channel
     TODO wide wave tracks -- overloads to set one or all channels
@@ -369,6 +371,74 @@ private:
          than the effective, then no dithering will occur.
       */
    );
+
+   /*!
+    * @brief Gets as many samples as it can, but no more than `2 *
+    * numSideSamples + 1`, centered around `t`. Reads nothing if
+    * `GetClipAtTime(t) == nullptr`. Useful to acess samples across clip
+    * boundaries, as it spreads the read to adjacent clips, i.e., not separated
+    * by silence from clip at `t`.
+    *
+    * @return The begin and end indices of the samples in the buffer where
+    * samples could actually be copied.
+    */
+   std::pair<size_t, size_t> GetFloatsCenteredAroundTime(
+      double t, size_t iChannel, float* buffer, size_t numSideSamples,
+      bool mayThrow) const;
+
+   /*!
+    * @brief Similar to GetFloatsCenteredAroundTime, but reads only in one
+    * direction. @see GetFloatsCenteredAroundTime
+    *
+    * @return The number of samples actually copied.
+    */
+   size_t GetFloatsFromTime(
+      double t, size_t iChannel, float* buffer, size_t numSamples,
+      bool mayThrow,
+      PlaybackDirection direction = PlaybackDirection::backward) const;
+
+   /*!
+    * @return true if `GetClipAtTime(t) != nullptr`, false otherwise.
+    */
+   bool
+   GetFloatAtTime(double t, size_t iChannel, float& value, bool mayThrow) const;
+
+   /*!
+    * @brief Similar to GetFloatsCenteredAroundTime, but for writing. Sets as
+    * many samples as it can according to the same rules as
+    * GetFloatsCenteredAroundTime. Leaves the other samples untouched. @see
+    * GetFloatsCenteredAroundTime
+    */
+   void SetFloatsCenteredAroundTime(
+      double t, size_t iChannel, const float* buffer, size_t numSideSamples,
+      sampleFormat effectiveFormat);
+
+   /*!
+    * @brief Similar to GetFloatsFromTime, but for writing. Sets as many samples
+    * as it can according to the same ruls as GetFloatsFromTime. Leaves the
+    * other samples untouched. @see GetFloatsFromTime
+    */
+   void SetFloatsFromTime(
+      double t, size_t iChannel, const float* buffer, size_t numSamples,
+      sampleFormat effectiveFormat,
+      PlaybackDirection direction = PlaybackDirection::backward);
+
+   /*!
+    * @brief Sets sample nearest to `t` to `value`. Silently fails if
+    * `GetClipAtTime(t) == nullptr`.
+    */
+   void SetFloatAtTime(
+      double t, size_t iChannel, float value, sampleFormat effectiveFormat);
+
+   /*!
+    * @brief Provides a means of setting clip values as a function of time.
+    * @param producer a function taking sample (absolute, not clip-relative)
+    * time and returning the desired value for the sample at that time.
+    */
+   void SetFloatsWithinTimeRange(
+      double t0, double t1, size_t iChannel,
+      const std::function<float(double sampleTime)>& producer,
+      sampleFormat efffectiveFormat);
 
    sampleFormat WidestEffectiveFormat() const override;
 
@@ -400,7 +470,35 @@ private:
    //
    Envelope* GetEnvelopeAtTime(double time);
 
+   const WaveClip* GetClipAtTime(double time) const;
    WaveClip* GetClipAtTime(double time);
+
+   /*!
+    * @brief Returns clips next to `clip` in the given direction, or `nullptr`
+    * if there is none.
+    */
+   const WaveClip* GetNeighbourClip(
+      const WaveClip& clip, PlaybackDirection searchDirection) const;
+   /*!
+    * @copydoc GetNeighbourClip(const WaveClip&, PlaybackDirection) const
+    */
+   WaveClip*
+   GetNeighbourClip(const WaveClip& clip, PlaybackDirection searchDirection);
+
+   /*!
+    * @brief Similar to GetNeighbourClip, but returns `nullptr` if the neighbour
+    * clip is not adjacent.
+    */
+   const WaveClip* GetAdjacentClip(
+      const WaveClip& clip, PlaybackDirection searchDirection) const;
+   /*!
+    * @copydoc GetAdjacentClip(const WaveClip&, PlaybackDirection) const
+    */
+   WaveClip*
+   GetAdjacentClip(const WaveClip& clip, PlaybackDirection searchDirection);
+
+   WaveClipConstHolders GetOverlappingClips(double t0, double t1) const;
+   WaveClipHolders GetOverlappingClips(double t0, double t1);
 
    //
    // Getting information about the track's internal block sizes

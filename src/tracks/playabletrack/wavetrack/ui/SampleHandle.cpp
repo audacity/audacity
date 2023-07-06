@@ -25,6 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../../../../../images/Cursors.h"
 #include "AudacityMessageBox.h"
@@ -83,7 +84,12 @@ namespace {
    inline double adjustTime(const WaveTrack *wt, double time)
    {
       // Round to an exact sample time
-      return wt->LongSamplesToTime(wt->TimeToLongSamples(time));
+      const auto clip = wt->GetClipAtTime(time);
+      if (!clip)
+         return wt->LongSamplesToTime(wt->TimeToLongSamples(time));
+      const auto sampleOffset =
+         clip->TimeToSamples(time - clip->GetPlayStartTime());
+      return clip->SamplesToTime(sampleOffset) + clip->GetPlayStartTime();
    }
 
    // Is the sample horizontally nearest to the cursor sufficiently separated
@@ -93,8 +99,12 @@ namespace {
    {
       // Require more than 3 pixels per sample
       const auto xx = std::max<ZoomInfo::int64>(0, viewInfo.TimeToPosition(time));
+      const auto clip = wt->GetClipAtTime(time);
+      if (!clip)
+         // Don't bother the user about that with a pop-up.
+         return true;
       ZoomInfo::Intervals intervals;
-      const double rate = wt->GetRate();
+      const double rate = clip->GetRate() / clip->GetStretchRatio();
       viewInfo.FindIntervals(intervals, width);
       ZoomInfo::Intervals::const_iterator it = intervals.begin(),
          end = intervals.end(), prev;
@@ -126,11 +136,9 @@ UIHandlePtr SampleHandle::HitTest
 
    // Just get one sample.
    float oneSample;
-   const double rate = wavetrack->GetRate();
-   const auto s0 = (sampleCount)(tt * rate + 0.5);
-   if (! wavetrack->GetFloats(&oneSample, s0, 1, FillFormat::fillZero,
-         // Do not propagate exception but return a failure value
-         false) )
+   constexpr auto iChannel = 0u;
+   constexpr auto mayThrow = false;
+   if (!wavetrack->GetFloatAtTime(tt, iChannel, oneSample, mayThrow))
       return {};
 
    // Get y distance of envelope point from center line (in pixels).
@@ -142,7 +150,7 @@ UIHandlePtr SampleHandle::HitTest
    Envelope* env = wavetrack->GetEnvelopeAtTime(time);
    if (env)
       // Calculate sample as it would be rendered, so quantize time
-      envValue = env->GetValue( tt, 1.0 / wavetrack->GetRate() );
+      envValue = env->GetValue(tt);
 
    auto &settings = WaveformSettings::Get(*wavetrack);
    const bool dB = !settings.isLinear();
@@ -199,6 +207,8 @@ UIHandle::Result SampleHandle::Click
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    const auto &viewInfo = ViewInfo::Get( *pProject );
+
+   const double t0 = viewInfo.PositionToTime(event.m_x, rect.x);
    const auto pTrack = mClickedTrack.get();
 
    /// Someone has just clicked the mouse.  What do we do?
@@ -209,13 +219,8 @@ UIHandle::Result SampleHandle::Click
    /// We're in a track view and zoomed enough to see the samples.
    mRect = rect;
 
-   //If we are still around, we are drawing in earnest.  Set some member data structures up:
-   //First, calculate the starting sample.  To get this, we need the time
-   const double t0 =
-      adjustTime(mClickedTrack.get(), viewInfo.PositionToTime(event.m_x, rect.x));
-
    //convert t0 to samples
-   mClickedStartSample = mClickedTrack->TimeToLongSamples(t0);
+   mClickedStartPixel = viewInfo.TimeToPosition(t0);
 
    //Determine how drawing should occur.  If alt is down,
    //do a smoothing, instead of redrawing.
@@ -239,17 +244,24 @@ UIHandle::Result SampleHandle::Click
       Floats sampleRegion{ sampleRegionSize };
       Floats newSampleRegion{ 1 + 2 * (size_t)SMOOTHING_BRUSH_RADIUS };
 
-      //Get a sample  from the track to do some tricks on.
-      mClickedTrack->GetFloats(sampleRegion.get(),
-         mClickedStartSample - SMOOTHING_KERNEL_RADIUS - SMOOTHING_BRUSH_RADIUS,
-         sampleRegionSize);
+      //Get a sample from the clip to do some tricks on.
+      constexpr auto iChannel = 0u;
+      constexpr auto mayThrow = false;
+      const auto sampleRegionRange = mClickedTrack->GetFloatsCenteredAroundTime(
+         t0, iChannel, sampleRegion.get(),
+         SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS, mayThrow);
 
       //Go through each point of the smoothing brush and apply a smoothing operation.
       for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
          float sumOfSamples = 0;
          for (auto ii = -SMOOTHING_KERNEL_RADIUS; ii <= SMOOTHING_KERNEL_RADIUS; ++ii) {
             //Go through each point of the smoothing kernel and find the average
-
+            const auto sampleRegionIndex =
+               ii + jj + SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS;
+            const auto inRange = sampleRegionRange.first <= sampleRegionIndex &&
+                                 sampleRegionIndex < sampleRegionRange.second;
+            if (!inRange)
+               continue;
             //The average is a weighted average, scaled by a weighting kernel that is simply triangular
             // A triangular kernel across N items, with a radius of R ( 2 R + 1 points), if the farthest:
             // points have a probability of a, the entire triangle has total probability of (R + 1)^2.
@@ -258,10 +270,8 @@ UIHandle::Result SampleHandle::Click
             //
             //
             //                weighting factor                       value
-            sumOfSamples +=
-               (SMOOTHING_KERNEL_RADIUS + 1 - abs(ii)) *
-               sampleRegion[ii + jj + SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS];
-
+            sumOfSamples += (SMOOTHING_KERNEL_RADIUS + 1 - abs(ii)) *
+                            sampleRegion[sampleRegionIndex];
          }
          newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS] =
             sumOfSamples /
@@ -290,9 +300,8 @@ UIHandle::Result SampleHandle::Click
       }
       //Set the sample to the point of the mouse event
       // Don't require dithering later
-      mClickedTrack->Set((samplePtr)newSampleRegion.get(), floatSample,
-         mClickedStartSample - SMOOTHING_BRUSH_RADIUS,
-         1 + 2 * SMOOTHING_BRUSH_RADIUS,
+      mClickedTrack->SetFloatsCenteredAroundTime(
+         t0, iChannel, newSampleRegion.get(), SMOOTHING_BRUSH_RADIUS,
          narrowestSampleFormat);
 
       // mLastDragSampleValue will not be used
@@ -309,15 +318,16 @@ UIHandle::Result SampleHandle::Click
 
       //Set the sample to the point of the mouse event
       // Don't require dithering later
-      mClickedTrack->Set(
-         (samplePtr)&newLevel, floatSample, mClickedStartSample, 1,
-         narrowestSampleFormat);
+
+      constexpr auto iChannel = 0u;
+      mClickedTrack->SetFloatAtTime(
+         t0, iChannel, newLevel, narrowestSampleFormat);
 
       mLastDragSampleValue = newLevel;
    }
 
    //Set the member data structures for drawing
-   mLastDragSample = mClickedStartSample;
+   mLastDragPixel = mClickedStartPixel;
 
    // Sample data changed on either branch, so refresh the track display.
    return RefreshCell;
@@ -331,7 +341,13 @@ UIHandle::Result SampleHandle::Drag
    const auto &viewInfo = ViewInfo::Get( *pProject );
 
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-   if (unsafe) {
+
+   /// Someone has just clicked the mouse.  What do we do?
+   const auto samplesVisible = IsSampleEditingPossible(
+      event, evt.rect, viewInfo, mClickedTrack.get(), evt.rect.width);
+
+   if (unsafe || !samplesVisible)
+   {
       this->Cancel(pProject);
       return RefreshCell | Cancelled;
    }
@@ -345,66 +361,25 @@ UIHandle::Result SampleHandle::Drag
    if (mAltKey)
       return RefreshNone;
 
-   sampleCount s0;     //declare this for use below.  It designates which sample number to draw.
-
-   // Figure out what time the click was at
-   //Find the point that we want to redraw at. If the control button is down,
-   //adjust only the originally clicked-on sample
-
-   if (event.m_controlDown) {
-      //*************************************************
-      //***   CTRL-DOWN (Hold Initial Sample Constant ***
-      //*************************************************
-
-      s0 = mClickedStartSample;
-   }
-   else {
-      //*************************************************
-      //***    Normal CLICK-drag  (Normal drawing)    ***
-      //*************************************************
-
-      //Otherwise, adjust the sample you are dragging over right now.
-      //convert this to samples
-      const double tt = viewInfo.PositionToTime(event.m_x, mRect.x);
-      s0 = mClickedTrack->TimeToLongSamples(tt);
-   }
-
-   const double t0 = mClickedTrack->LongSamplesToTime(s0);
-
-   // Do redrawing, based on the mouse position.
-   // Calculate where the mouse is located vertically (between +/- 1)
-
+   const double t0 = viewInfo.PositionToTime(mLastDragPixel);
+   const double t1 = viewInfo.PositionToTime(event.m_x, mRect.x);
+   const int x1 =
+      event.m_controlDown ? mClickedStartPixel : viewInfo.TimeToPosition(t1);
    const float newLevel = FindSampleEditingLevel(event, viewInfo, t0);
+   const auto start = std::min(t0, t1);
+   const auto end = std::max(t0, t1);
+   // For fast pencil movements covering more than one sample between two
+   // updates, we draw a line going from v0 at t0 to v1 at t1.
+   const auto interpolator = [t0, t1, v0 = mLastDragSampleValue,
+                              v1 = newLevel](double t) {
+      const auto gradient = (v1 - v0) / (t1 - t0);
+      return static_cast<float>(gradient * (t - t0) + v0);
+   };
+   constexpr auto iChannel = 0u;
+   mClickedTrack->SetFloatsWithinTimeRange(
+      start, end, iChannel, interpolator, narrowestSampleFormat);
 
-   //Now, redraw all samples between current and last redrawn sample, inclusive
-   //Go from the smaller to larger sample.
-   const auto start = std::min(s0, mLastDragSample);
-   const auto end = std::max(s0, mLastDragSample);
-   // Few enough samples to be drawn individually on screen will not
-   // overflow size_t:
-   const auto size = ( end - start + 1 ).as_size_t();
-   if (size == 1) {
-      // Don't require dithering later
-      mClickedTrack->Set(
-         (samplePtr)&newLevel, floatSample, start, size, narrowestSampleFormat);
-   }
-   else {
-      std::vector<float> values(size);
-      for (auto ii = start; ii <= end; ++ii) {
-         //This interpolates each sample linearly:
-         // i - start will not overflow size_t either:
-         values[( ii - start ).as_size_t()] =
-            mLastDragSampleValue + (newLevel - mLastDragSampleValue)  *
-            (ii - mLastDragSample).as_float() /
-             (s0 - mLastDragSample).as_float();
-      }
-      // Don't require dithering later
-      mClickedTrack->Set(
-         (samplePtr)&values[0], floatSample, start, size, narrowestSampleFormat);
-   }
-
-   //Update the member data structures.
-   mLastDragSample = s0;
+   mLastDragPixel = x1;
    mLastDragSampleValue = newLevel;
 
    return RefreshCell;
@@ -467,7 +442,7 @@ float SampleHandle::FindSampleEditingLevel
    if (env)
    {
       // Calculate sample as it would be rendered, so quantize time
-      double envValue = env->GetValue( t0, 1.0 / mClickedTrack->GetRate());
+      double envValue = env->GetValue(t0);
       if (envValue > 0)
          newLevel /= envValue;
       else
