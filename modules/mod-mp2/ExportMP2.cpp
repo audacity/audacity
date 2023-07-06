@@ -72,11 +72,9 @@ namespace {
 // i18n-hint kbps abbreviates "thousands of bits per second"
 inline TranslatableString n_kbps( int n ) { return XO("%d kbps").Format( n ); }
 
-const TranslatableStrings BitRateNames {
-   n_kbps(16),
-   n_kbps(24),
+      
+const TranslatableStrings BitRateMPEG1Names {
    n_kbps(32),
-   n_kbps(40),
    n_kbps(48),
    n_kbps(56),
    n_kbps(64),
@@ -85,48 +83,162 @@ const TranslatableStrings BitRateNames {
    n_kbps(112),
    n_kbps(128),
    n_kbps(160),
-   n_kbps(192),
+   n_kbps(192),//default
    n_kbps(224),
    n_kbps(256),
    n_kbps(320),
    n_kbps(384),
 };
 
-enum : int {
-   MP2OptionIDBitRate = 0
+const TranslatableStrings BitRateMPEG2Names {
+   n_kbps(8),
+   n_kbps(16),
+   n_kbps(24),
+   n_kbps(32),
+   n_kbps(40),
+   n_kbps(48),
+   n_kbps(56),
+   n_kbps(64),
+   n_kbps(80),
+   n_kbps(96),//default
+   n_kbps(112),
+   n_kbps(128),
+   n_kbps(144),
+   n_kbps(160)
 };
 
-const std::initializer_list<PlainExportOptionsEditor::OptionDesc> MP2Options {
+enum : int {
+   MP2OptionIDVersion = 0,
+   MP2OptionIDBitRateMPEG1 = 1,
+   MP2OptionIDBitRateMPEG2 = 2,
+};
+
+const std::initializer_list<ExportOption> MP2Options {
    {
-      {
-         MP2OptionIDBitRate, XO("Bit Rate"),
-         160,
-         ExportOption::TypeEnum,
-         {
-            16,
-            24,
-            32,
-            40,
-            48,
-            56,
-            64,
-            80,
-            96,
-            112,
-            128,
-            160,
-            192,
-            224,
-            256,
-            320,
-            384,
-         }, BitRateNames
-      },
-      wxT("/FileFormats/MP2Bitrate")
+      MP2OptionIDVersion, XO("Version"),
+      1,
+      ExportOption::TypeEnum,
+      { 0, 1 },
+      { XO("MPEG2"), XO("MPEG1") },
+      
+   },
+   {
+      MP2OptionIDBitRateMPEG1, XO("Bit Rate"),
+      192,
+      ExportOption::TypeEnum,
+      {32, 48, 56, 64, 80, 96,112,128,160, 192, 224, 256 },
+      BitRateMPEG1Names
+   },
+   {
+      MP2OptionIDBitRateMPEG2, XO("Bit Rate"),
+      96,
+      ExportOption::TypeEnum | ExportOption::Hidden,
+      { 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160 },
+      BitRateMPEG2Names,
    }
 };
 
 }
+
+class MP2ExportOptionsEditor final : public ExportOptionsEditor
+{
+   std::vector<ExportOption> mOptions {MP2Options };
+   std::unordered_map<ExportOptionID, ExportValue> mValues;
+   Listener* mListener{};
+public:
+   MP2ExportOptionsEditor(Listener* listener)
+      : mListener(listener)
+   {
+      for(auto& option : mOptions)
+         mValues[option.id] = option.defaultValue;
+   }
+
+   int GetOptionsCount() const override
+   {
+      return static_cast<int>(mOptions.size());
+   }
+   bool GetOption(int index, ExportOption& option) const override
+   {
+      if(index >= 0 && index < mOptions.size())
+      {
+         option = mOptions[index];
+         return true;
+      }
+      return false;
+   }
+   bool GetValue(ExportOptionID id, ExportValue& value) const override
+   {
+      const auto it = mValues.find(id);
+      if(it != mValues.end())
+      {
+         value = it->second;
+         return true;
+      }
+      return false;
+   }
+   bool SetValue(ExportOptionID id, const ExportValue& value) override
+   {
+      auto it = mValues.find(id);
+      if(it == mValues.end() || it->second.index() != value.index())
+         return false;
+
+      it->second = value;
+
+      if(id == MP2OptionIDVersion)
+      {
+         OnVersionChanged();
+         
+         if(mListener != nullptr)
+         {
+            mListener->OnExportOptionChangeBegin();
+            mListener->OnExportOptionChange(mOptions[MP2OptionIDBitRateMPEG1]);
+            mListener->OnExportOptionChange(mOptions[MP2OptionIDBitRateMPEG2]);
+            mListener->OnExportOptionChangeEnd();
+            
+            mListener->OnSampleRateListChange();
+         }
+      }
+      return true;
+   }
+   SampleRateList GetSampleRateList() const override
+   {
+      auto it = mValues.find(MP2OptionIDVersion);
+      if(*std::get_if<int>(&it->second) == TWOLAME_MPEG1)
+         return { 32000, 44100, 48000 };
+      return {16000, 22050, 24000 };
+   }
+   void Store(wxConfigBase& config) const override
+   {
+      auto it = mValues.find(MP2OptionIDVersion);
+      config.Write(wxT("/FileFormats/MP2Version"), *std::get_if<int>(&it->second));
+      it = mValues.find(MP2OptionIDBitRateMPEG1);
+      config.Write(wxT("/FileFormats/MP2BitrateMPEG1"), *std::get_if<int>(&it->second));
+      it = mValues.find(MP2OptionIDBitRateMPEG2);
+      config.Write(wxT("/FileFormats/MP2BitrateMPEG2"), *std::get_if<int>(&it->second));
+   }
+
+   void Load(const wxConfigBase& config) override
+   {
+      config.Read(wxT("/FileFormats/MP2Version"), std::get_if<int>(&mValues[MP2OptionIDVersion]));
+      config.Read(wxT("/FileFormats/MP2BitrateMPEG1"), std::get_if<int>(&mValues[MP2OptionIDBitRateMPEG1]));
+      config.Read(wxT("/FileFormats/MP2BitrateMPEG2"), std::get_if<int>(&mValues[MP2OptionIDBitRateMPEG2]));
+      OnVersionChanged();
+   }
+
+   void OnVersionChanged()
+   {
+      if(*std::get_if<int>(&mValues[MP2OptionIDVersion]) == TWOLAME_MPEG1)
+      {
+         mOptions[MP2OptionIDBitRateMPEG2].flags |= ExportOption::Hidden;
+         mOptions[MP2OptionIDBitRateMPEG1].flags &= ~ExportOption::Hidden;
+      }
+      else
+      {
+         mOptions[MP2OptionIDBitRateMPEG2].flags &= ~ExportOption::Hidden;
+         mOptions[MP2OptionIDBitRateMPEG1].flags |= ExportOption::Hidden;
+      }
+   }
+};
 
 class MP2ExportProcessor final : public ExportProcessor
 {
@@ -203,7 +315,7 @@ FormatInfo ExportMP2::GetFormatInfo(int) const
 std::unique_ptr<ExportOptionsEditor>
 ExportMP2::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const
 {
-   return std::make_unique<PlainExportOptionsEditor>(MP2Options, listener);
+   return std::make_unique<MP2ExportOptionsEditor>(listener);
 }
 
 std::unique_ptr<ExportProcessor> ExportMP2::CreateProcessor(int) const
@@ -231,7 +343,17 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
    context.fName = fName;
 
    bool stereo = (channels == 2);
-   long bitrate = ExportPluginHelpers::GetParameterValue(parameters, MP2OptionIDBitRate, 160);
+   const auto version = static_cast<TWOLAME_MPEG_version>(
+      ExportPluginHelpers::GetParameterValue(parameters,
+         MP2OptionIDVersion, 1));
+
+   const auto bitrate = version == TWOLAME_MPEG1 
+      ? ExportPluginHelpers::GetParameterValue(
+         parameters,
+         MP2OptionIDBitRateMPEG1, 192)
+      : ExportPluginHelpers::GetParameterValue(
+         parameters,
+         MP2OptionIDBitRateMPEG2, 96);
    const auto &tracks = TrackList::Get( project );
 
    wxLogNull logNo;             /* temporarily disable wxWidgets error messages */
@@ -239,8 +361,9 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
    twolame_options *&encodeOptions = context.encodeOptions;
    encodeOptions = twolame_init();
 
-   twolame_set_in_samplerate(encodeOptions, (int)(sampleRate + 0.5));
-   twolame_set_out_samplerate(encodeOptions, (int)(sampleRate + 0.5));
+   twolame_set_version(encodeOptions, version);
+   twolame_set_in_samplerate(encodeOptions, static_cast<int>(sampleRate));
+   twolame_set_out_samplerate(encodeOptions, static_cast<int>(sampleRate));
    twolame_set_bitrate(encodeOptions, bitrate);
    twolame_set_num_channels(encodeOptions, stereo ? 2 : 1);
 
