@@ -39,6 +39,7 @@ class AudacityProject;
 using TrackArray = std::vector< Track* >;
 
 class TrackList;
+using TrackListHolder = std::shared_ptr<TrackList>;
 struct UndoStackElem;
 
 using ListOfTracks = std::list< std::shared_ptr< Track > >;
@@ -975,7 +976,7 @@ class TRACK_API TrackList final
    explicit TrackList( AudacityProject *pOwner );
 
    // Create an empty TrackList
-   static std::shared_ptr<TrackList> Create( AudacityProject *pOwner );
+   static TrackListHolder Create(AudacityProject *pOwner);
 
    // Move is defined in terms of Swap
    void Swap(TrackList &that);
@@ -1255,6 +1256,20 @@ public:
    double GetEndTime() const;
 
    double GetMinOffset() const;
+
+   //! Construct a temporary list owned by `pProject` (if that is not null)
+   //! so that `TrackList::Channels(left.get())` will enumerate the given
+   //! tracks
+   /*!
+    @pre `left != nullptr`
+    @pre `left->GetOwner() == nullptr`
+    @pre `right == nullptr || right->GetOwner() == nullptr`
+    */
+   static TrackListHolder Temporary(AudacityProject *pProject,
+      const Track::Holder &left, const Track::Holder &right);
+
+   //! Remove all tracks from `list` and put them at the end of `this`
+   void Append(TrackList &&list);
 
 private:
    using ListOfTracks::size;
