@@ -34,7 +34,7 @@ sampleCount GetLastReadSample(
          clip.GetRate() * durationToDiscard / clip.GetStretchRatio() + .5
       };
    else
-      return clip.GetPlaySamplesCount() - sampleCount {
+      return clip.GetVisibleSampleCount() - sampleCount {
          clip.GetRate() * durationToDiscard / clip.GetStretchRatio() + .5
       };
 }
@@ -42,7 +42,7 @@ sampleCount GetLastReadSample(
 sampleCount
 GetTotalNumSamplesToProduce(const ClipInterface& clip, double durationToDiscard)
 {
-   return sampleCount { (clip.GetPlaySamplesCount().as_double() -
+   return sampleCount { (clip.GetVisibleSampleCount().as_double() -
                          durationToDiscard * clip.GetRate()) *
                            clip.GetStretchRatio() +
                         .5 };
@@ -86,7 +86,8 @@ void ClipSegment::Pull(float* const* buffers, size_t samplesPerChannel)
 {
    const auto forward = mPlaybackDirection == PlaybackDirection::forward;
    const auto remainingSamplesInClip =
-      forward ? mClip.GetPlaySamplesCount() - mLastReadSample : mLastReadSample;
+      forward ? mClip.GetVisibleSampleCount() - mLastReadSample :
+                mLastReadSample;
    const auto numSamplesToRead =
       limitSampleBufferSize(samplesPerChannel, remainingSamplesInClip);
    if (numSamplesToRead > 0u)

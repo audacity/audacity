@@ -803,7 +803,7 @@ bool WaveClip::FindCutLine(double cutLinePosition,
          if (cutlineStart)
             *cutlineStart = startTime;
          if (cutlineEnd)
-            *cutlineEnd = startTime + cutline->SamplesToTime(cutline->GetPlaySamplesCount());
+            *cutlineEnd = startTime + cutline->SamplesToTime(cutline->GetVisibleSampleCount());
          return true;
       }
    }
@@ -1005,7 +1005,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 // be exactly equal due to rounding errors.
 bool WaveClip::SharesBoundaryWithNextClip(const WaveClip* next) const
 {
-   double endThis = GetRate() * GetPlayStartTime() + GetPlaySamplesCount().as_double();
+   double endThis = GetRate() * GetPlayStartTime() + GetVisibleSampleCount().as_double();
    double startNext = next->GetRate() * next->GetPlayStartTime();
 
    // given that a double has about 15 significant digits, using a criterion
@@ -1077,10 +1077,10 @@ sampleCount WaveClip::GetPlayStartSample() const
 
 sampleCount WaveClip::GetPlayEndSample() const
 {
-    return GetPlayStartSample() + GetPlaySamplesCount();
+   return GetPlayStartSample() + GetVisibleSampleCount();
 }
 
-sampleCount WaveClip::GetPlaySamplesCount() const
+sampleCount WaveClip::GetVisibleSampleCount() const
 {
     return GetNumSamples()
        - TimeToSamples(mTrimRight) - TimeToSamples(mTrimLeft);
