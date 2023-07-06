@@ -133,6 +133,13 @@ public:
    virtual ~ExportPlugin();
 
    virtual int GetFormatCount() const = 0;
+   /**
+    * \brief Returns FormatInfo structure for given index if it's valid,
+    * or a default one.
+    * FormatInfo::format isn't guaranteed to be unique.
+    * \param index Should not exceed the number of formats
+    * provided by GetFormatCount()
+    */
    virtual FormatInfo GetFormatInfo(int index) const = 0;
    
    /**

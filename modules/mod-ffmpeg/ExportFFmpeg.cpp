@@ -812,7 +812,9 @@ int ExportFFmpeg::GetFormatCount() const
 
 FormatInfo ExportFFmpeg::GetFormatInfo(int index) const
 {
-   return mFormatInfos[index];
+   if(index >= 0 && index < mFormatInfos.size())
+      return mFormatInfos[index];
+   return mFormatInfos[FMT_OTHER];
 }
 
 bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format)) const
@@ -1618,7 +1620,7 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
 
    context.exporter = std::make_unique<FFmpegExporter>(mFFmpeg, fName, channels, adjustedFormatIndex);
 
-   ret = context.exporter->Init(shortname.mb_str(), &project, (int)sampleRate, metadata, parameters);
+   ret = context.exporter->Init(shortname.mb_str(), &project, static_cast<int>(sampleRate), metadata, parameters);
    
    if (!ret) {
       // TODO: more precise message

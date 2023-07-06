@@ -486,6 +486,10 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
          true
       };
    }
+
+   if(!(index >= 0 && index < FMT_OTHER))
+      index = 0;
+
    return {
       kFormats[index].name,
       kFormats[index].desc,

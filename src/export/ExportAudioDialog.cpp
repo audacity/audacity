@@ -158,6 +158,7 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    //extension will be set in `ChangeFormat`
    filename.SetEmptyExt();
    if(defaultName.empty())
+      //i18n-hint: default exported file name when exporting from unsaved project
       filename.SetName(_("untitled"));
    else
       filename.SetName(defaultName);
