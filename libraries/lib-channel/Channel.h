@@ -299,6 +299,13 @@ class CHANNEL_API ChannelGroup
 public:
    virtual ~ChannelGroup();
 
+   virtual double GetOffset() const = 0;
+   virtual double GetStartTime() const = 0;
+   virtual double GetEndTime() const = 0;
+
+   void Offset(double t) { SetOffset(GetOffset() + t); }
+   virtual void SetOffset (double o) { mOffset = o; }
+
    /*!
       @name Acesss to channels
       @{
@@ -551,6 +558,8 @@ protected:
 
    // TODO wide wave tracks -- Make ChannelGroup itself the Site
    std::unique_ptr<ChannelGroupData> mpGroupData;
+
+   double mOffset;
 };
 
 inline size_t Channel::NIntervals() const
