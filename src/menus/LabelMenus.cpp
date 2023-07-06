@@ -616,10 +616,7 @@ void OnJoinLabels(const CommandContext &context)
 
    auto editfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
-      track.TypeSwitch( [&](WaveTrack &t) {
-         for (const auto pChannel : TrackList::Channels(&t))
-            pChannel->Join(t0, t1);
-      } );
+      track.TypeSwitch( [&](WaveTrack &t) { t.Join(t0, t1); } );
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
 

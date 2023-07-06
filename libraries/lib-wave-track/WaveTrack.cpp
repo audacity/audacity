@@ -1765,17 +1765,23 @@ void WaveTrack::Disjoin(double t0, double t1)
 /*! @excsafety{Weak} */
 void WaveTrack::Join(double t0, double t1)
 {
+   assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
 
+   for (const auto pChannel : TrackList::Channels(this))
+      JoinOne(*pChannel, t0, t1);
+}
+
+void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
+{
    WaveClipPointers clipsToDelete;
    WaveClip* newClip{};
 
-   const auto rate = GetRate();
-   for (const auto &clip: mClips)
-   {
+   const auto rate = track.GetRate();
+   auto &clips = track.mClips;
+   for (const auto &clip: clips) {
       if (clip->GetPlayStartTime() < t1 - (1.0 / rate) &&
-          clip->GetPlayEndTime() - (1.0 / rate) > t0) {
-
+         clip->GetPlayEndTime() - (1.0 / rate) > t0) {
          // Put in sorted order
          auto it = clipsToDelete.begin(), end = clipsToDelete.end();
          for (; it != end; ++it)
@@ -1787,16 +1793,15 @@ void WaveTrack::Join(double t0, double t1)
    }
 
    //if there are no clips to DELETE, nothing to do
-   if( clipsToDelete.size() == 0 )
+   if (clipsToDelete.empty())
       return;
 
    auto t = clipsToDelete[0]->GetPlayStartTime();
    //preserve left trim data if any
-   newClip = CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
+   newClip = track.CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
       clipsToDelete[0]->GetName());
 
-   for (const auto &clip : clipsToDelete)
-   {
+   for (const auto &clip : clipsToDelete) {
       //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
       //       t, clip->GetOffset(), clip->GetStartTime(), clip->GetEndTime());
 
@@ -1804,8 +1809,8 @@ void WaveTrack::Join(double t0, double t1)
          double addedSilence = (clip->GetPlayStartTime() - t);
          //wxPrintf("Adding %.6f seconds of silence\n");
          auto offset = clip->GetPlayStartTime();
-         auto value = clip->GetEnvelope()->GetValue( offset );
-         newClip->AppendSilence( addedSilence, value );
+         auto value = clip->GetEnvelope()->GetValue(offset);
+         newClip->AppendSilence(addedSilence, value);
          t += addedSilence;
       }
 
@@ -1815,8 +1820,8 @@ void WaveTrack::Join(double t0, double t1)
 
       t = newClip->GetPlayEndTime();
 
-      auto it = FindClip(mClips, clip);
-      mClips.erase(it); // deletes the clip
+      auto it = FindClip(clips, clip);
+      clips.erase(it); // deletes the clip
    }
 }
 

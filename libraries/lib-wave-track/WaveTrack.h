@@ -246,6 +246,9 @@ private:
     @pre `IsLeader()`
     */
    void SplitDelete(double t0, double t1) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    */
    void Join(double t0, double t1) /* not override */;
    // May assume precondition: t0 <= t1
    /*!
@@ -631,6 +634,7 @@ protected:
    static void ClearAndPasteOne(WaveTrack &track,
       double t0, double t1, double endTime, const WaveTrack &src,
       bool preserve, bool merge, const TimeWarper *effectWarper);
+   static void JoinOne(WaveTrack &track, double t0, double t1);
 
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;

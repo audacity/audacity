@@ -98,7 +98,6 @@ void PasteOverPreservingClips(const ClipData &data,
       auto [realStart, realEnd] = clipRealStartEndTimes[i];
       if ((realStart  != start || realEnd != end) &&
          !(realStart <= startT && realEnd >= startT + lenT))
-         for (const auto pChannel : oldRange)
-            pChannel->Join(realStart, realEnd);
+         oldTrack.Join(realStart, realEnd);
    }
 }

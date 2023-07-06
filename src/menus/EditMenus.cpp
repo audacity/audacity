@@ -933,17 +933,16 @@ void OnSplitNew(const CommandContext &context)
 void OnJoin(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
-   for (auto wt : tracks.Selected< WaveTrack >())
-      wt->Join(selectedRegion.t0(),
-               selectedRegion.t1());
+   for (auto wt : tracks.SelectedLeaders<WaveTrack>())
+      wt->Join(selectedRegion.t0(), selectedRegion.t1());
 
-   ProjectHistory::Get( project ).PushState(
+   ProjectHistory::Get(project).PushState(
       XO("Joined %.2f seconds at t=%.2f")
-         .Format( selectedRegion.duration(), selectedRegion.t0() ),
+         .Format(selectedRegion.duration(), selectedRegion.t0()),
       XO("Join"));
 }
 
