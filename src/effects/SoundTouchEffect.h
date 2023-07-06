@@ -51,9 +51,6 @@ protected:
                               const TimeWarper &warper,
                               bool preserveLength);
 
-   double mCurT0;
-   double mCurT1;
-
 private:
    bool ProcessLabelTrack(LabelTrack *track, const TimeWarper &warper);
 #ifdef USE_MIDI
