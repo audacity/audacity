@@ -458,8 +458,7 @@ void EffectSBSMS::Finalize(
       auto st = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.first));
       auto et = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.second));
       if (st >= mT0 && et <= mT1 && st != et)
-         for (const auto pChannel : origRange)
-            pChannel->SplitDelete(warper.Warp(st), warper.Warp(et));
+         orig.SplitDelete(warper.Warp(st), warper.Warp(et));
    }
 }
 

@@ -280,11 +280,9 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
                *newTracks, true, true, &warper);
 
                // Finally, recreate the gaps
-            for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
-               for (const auto [st, et] : gaps)
-                  if (st >= mCurT0 && et <= mCurT1 && st != et)
-                     pChannel->SplitDelete(warper.Warp(st), warper.Warp(et));
-            }
+            for (const auto [st, et] : gaps)
+               if (st >= mCurT0 && et <= mCurT1 && st != et)
+                  outWaveTrack.SplitDelete(warper.Warp(st), warper.Warp(et));
          }
          else
             mCurTrackNum += outWaveTrack.NChannels();

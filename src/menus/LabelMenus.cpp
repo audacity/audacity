@@ -512,8 +512,7 @@ void OnSplitDeleteLabels(const CommandContext &context)
       assert(track.IsLeader());
       track.TypeSwitch(
          [&](WaveTrack &t) {
-            for (const auto pChannel : TrackList::Channels(&t))
-               pChannel->SplitDelete(t0, t1);
+            t.SplitDelete(t0, t1);
          },
          [&](Track &t) {
             t.Silence(t0, t1);

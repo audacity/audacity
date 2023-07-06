@@ -654,11 +654,11 @@ TrackListHolder WaveTrack::SplitCut(double t0, double t1)
    for (const auto pChannel : TrackList::Channels(this)) {
       // SplitCut is the same as 'Copy', then 'SplitDelete'
       auto tmp = pChannel->Copy(t0, t1);
-      pChannel->SplitDelete(t0, t1);
       result->Add(tmp);
       //! See how Track::Init() copies mpGroupData
       assert(tmp->IsLeader() == pChannel->IsLeader());
    }
+   SplitDelete(t0, t1);
    return result;
 }
 
@@ -716,8 +716,7 @@ void WaveTrack::Trim (double t0, double t1)
    if (const auto startTime = GetStartTime()
       ; !inside0 && t0 > startTime
    )
-      for (auto pChannel : range)
-         pChannel->SplitDelete(startTime, t0);
+      SplitDelete(startTime, t0);
 }
 
 
@@ -1150,9 +1149,11 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
 /*! @excsafety{Strong} */
 void WaveTrack::SplitDelete(double t0, double t1)
 {
+   assert(IsLeader());
    bool addCutLines = false;
    bool split = true;
-   HandleClear(t0, t1, addCutLines, split);
+   for (const auto pChannel : TrackList::Channels(this))
+      pChannel->HandleClear(t0, t1, addCutLines, split);
 }
 
 namespace
@@ -1759,8 +1760,7 @@ void WaveTrack::Disjoin(double t0, double t1)
    } // finding regions
 
    for (const auto &region : regions)
-      for (const auto pChannel : TrackList::Channels(this))
-         pChannel->SplitDelete(region.start, region.end );
+      SplitDelete(region.start, region.end);
 }
 
 /*! @excsafety{Weak} */

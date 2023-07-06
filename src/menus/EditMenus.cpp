@@ -756,25 +756,23 @@ void OnSplitCut(const CommandContext &context)
 void OnSplitDelete(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
-   tracks.Selected().Visit(
+   tracks.SelectedLeaders().Visit(
       [&](WaveTrack &wt) {
-         wt.SplitDelete(selectedRegion.t0(),
-                         selectedRegion.t1());
+         wt.SplitDelete(selectedRegion.t0(), selectedRegion.t1());
       },
       [&](Track &n) {
          if (n.SupportsBasicEditing())
-            n.Silence(selectedRegion.t0(),
-                       selectedRegion.t1());
+            n.Silence(selectedRegion.t0(), selectedRegion.t1());
       }
    );
 
-   ProjectHistory::Get( project ).PushState(
+   ProjectHistory::Get(project).PushState(
       XO("Split-deleted %.2f seconds at t=%.2f")
-         .Format( selectedRegion.duration(), selectedRegion.t0() ),
+         .Format(selectedRegion.duration(), selectedRegion.t0()),
       XO("Split Delete"));
 }
 
@@ -887,14 +885,12 @@ void OnSplit(const CommandContext &context)
 void OnSplitNew(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
-
-   Track::Holder dest;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
    // This iteration is unusual because we add to the list inside the loop
-   auto range = tracks.Selected();
+   auto range = tracks.SelectedLeaders();
    auto last = *range.rbegin();
    for (auto track : range) {
       track->TypeSwitch(
@@ -905,16 +901,17 @@ void OnSplitNew(const CommandContext &context)
                selectedRegion.t0()));
             double newt1 = wt.LongSamplesToTime(wt.TimeToLongSamples(
                selectedRegion.t1()));
-            // Fix issue 2846 by calling copy with forClipboard = false.
-            // This avoids creating the blank placeholder clips
-            dest = wt.Copy(newt0, newt1, false);
-            wt.SplitDelete(newt0, newt1);
-            if (dest) {
-               // The copy function normally puts the clip at time 0
-               // This offset lines it up with the original track's timing
-               dest->Offset(newt0);
-               tracks.Add(dest);
+            for (const auto pChannel : TrackList::Channels(&wt)) {
+               // Fix issue 2846 by calling copy with forClipboard = false.
+               // This avoids creating the blank placeholder clips
+               if (const auto dest = pChannel->Copy(newt0, newt1, false)) {
+                  // The copy function normally puts the clip at time 0
+                  // This offset lines it up with the original track's timing
+                  dest->Offset(newt0);
+                  tracks.Add(dest);
+               }
             }
+            wt.SplitDelete(newt0, newt1);
          }
 #if 0
          ,
@@ -934,7 +931,7 @@ void OnSplitNew(const CommandContext &context)
          break;
    }
 
-   ProjectHistory::Get( project )
+   ProjectHistory::Get(project)
       .PushState(XO("Split to new track"), XO("Split New"));
 }
 
