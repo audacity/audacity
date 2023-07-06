@@ -67,7 +67,12 @@ private:
       const size_t outputCount,
       WaveTrack* outputLeftTrack,
       WaveTrack* outputRightTrack);
-   void Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper &warper);
+   /*!
+    @pre `orig.IsLeader()`
+    @pre `out.IsLeader()`
+    @pre `out.NChannels() == orig.NChannels()`
+    */
+   void Finalize(WaveTrack &orig, WaveTrack &out, const TimeWarper &warper);
 
    bool   mPreserveLength;
 
