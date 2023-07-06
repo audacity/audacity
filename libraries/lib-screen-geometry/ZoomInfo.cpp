@@ -100,8 +100,8 @@ void ZoomInfo::ZoomBy(double multiplier)
    SetZoom(zoom * multiplier);
 }
 
-void ZoomInfo::FindIntervals
-   (double /*rate*/, Intervals &results, int64 width, int64 origin) const
+void ZoomInfo::FindIntervals(
+   Intervals& results, int64 width, int64 origin) const
 {
    results.clear();
    results.reserve(2);
