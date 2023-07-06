@@ -644,12 +644,12 @@ void OnPaste(const CommandContext &context)
 
                   ln.ShiftLabelsOnInsert( clipboard.Duration(), t0 );
 
-                  bPastedSomething |= ln.PasteOver(t0, src);
+                  bPastedSomething |= ln.PasteOver(t0, *src);
                },
                [&](Track &t){
                   bPastedSomething = true;
                   t.Clear(t0, t1);
-                  t.Paste(t0, src);
+                  t.Paste(t0, *src);
                }
             );
          }

@@ -575,7 +575,7 @@ void NoteTrack::Clear(double t0, double t1)
    }
 }
 
-void NoteTrack::Paste(double t, const Track *src)
+void NoteTrack::Paste(double t, const Track &src)
 {
    // Paste inserts src at time t. If src has a positive offset,
    // the offset is treated as silence which is also inserted. If
@@ -586,7 +586,7 @@ void NoteTrack::Paste(double t, const Track *src)
    // the destination track).
 
    //Check that src is a non-NULL NoteTrack
-   bool bOk = src && src->TypeSwitch<bool>( [&](const NoteTrack &other) {
+   bool bOk = src.TypeSwitch<bool>( [&](const NoteTrack &other) {
 
       auto myOffset = this->GetOffset();
       if (t < myOffset) {
@@ -599,28 +599,28 @@ void NoteTrack::Paste(double t, const Track *src)
       double delta = 0.0;
       auto &seq = GetSeq();
       auto offset = other.GetOffset();
-      if ( offset > 0 ) {
+      if (offset > 0) {
          seq.convert_to_seconds();
-         seq.insert_silence( t - GetOffset(), offset );
+         seq.insert_silence(t - GetOffset(), offset);
          t += offset;
          // Is this needed or does Alg_seq::insert_silence take care of it?
          //delta += offset;
       }
 
       // This seems to be needed:
-      delta += std::max( 0.0, t - GetEndTime() );
+      delta += std::max(0.0, t - GetEndTime());
 
       // This, not:
       //delta += other.GetSeq().get_real_dur();
 
       seq.paste(t - GetOffset(), &other.GetSeq());
 
-      AddToDuration( delta );
+      AddToDuration(delta);
 
       return true;
    });
 
-   if ( !bOk )
+   if (!bOk)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       (void)0;// intentionally do nothing
 }
@@ -732,7 +732,7 @@ Track::Holder NoteTrack::PasteInto(AudacityProject &, TrackList &list) const
    assert(IsLeader());
    auto pNewTrack = std::make_shared<NoteTrack>();
    pNewTrack->Init(*this);
-   pNewTrack->Paste(0.0, this);
+   pNewTrack->Paste(0.0, *this);
    list.Add(pNewTrack);
    return pNewTrack;
 }

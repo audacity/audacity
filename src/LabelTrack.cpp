@@ -125,7 +125,7 @@ Track::Holder LabelTrack::PasteInto(AudacityProject &, TrackList &list) const
    assert(IsLeader());
    auto pNewTrack = std::make_shared<LabelTrack>();
    pNewTrack->Init(*this);
-   pNewTrack->Paste(0.0, this);
+   pNewTrack->Paste(0.0, *this);
    list.Add(pNewTrack);
    return pNewTrack;
 }
@@ -761,9 +761,9 @@ TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
 }
 
 
-bool LabelTrack::PasteOver(double t, const Track * src)
+bool LabelTrack::PasteOver(double t, const Track &src)
 {
-   auto result = src->TypeSwitch< bool >( [&](const LabelTrack &sl) {
+   auto result = src.TypeSwitch<bool>([&](const LabelTrack &sl) {
       int len = mLabels.size();
       int pos = 0;
 
@@ -781,27 +781,27 @@ bool LabelTrack::PasteOver(double t, const Track * src)
       }
 
       return true;
-   } );
+   });
 
-   if (! result )
+   if (!result)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       (void)0;// intentionally do nothing
 
    return result;
 }
 
-void LabelTrack::Paste(double t, const Track *src)
+void LabelTrack::Paste(double t, const Track &src)
 {
-   bool bOk = src->TypeSwitch< bool >( [&](const LabelTrack &lt) {
+   bool bOk = src.TypeSwitch<bool>([&](const LabelTrack &lt) {
       double shiftAmt = lt.mClipLen > 0.0 ? lt.mClipLen : lt.GetEndTime();
 
       ShiftLabelsOnInsert(shiftAmt, t);
       PasteOver(t, src);
 
       return true;
-   } );
+   });
 
-   if ( !bOk )
+   if (!bOk)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       (void)0;// intentionally do nothing
 }

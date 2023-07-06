@@ -135,9 +135,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
                return;
             }
-            auto iter = TrackList::Channels(firstTemp).begin();
-            for (const auto pChannel : TrackList::Channels(&track))
-               pChannel->Paste(t0, *iter++);
+            track.Paste(t0, *firstTemp);
             t0 += tLen;
          }
          if (t0 > maxDestLen)

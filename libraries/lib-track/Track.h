@@ -360,7 +360,21 @@ public:
     */
    virtual void Clear(double t0, double t1) = 0;
 
-   virtual void Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) = 0;
+   //! Weak precondition allows overrides to replicate one channel into many
+   /*!
+    @pre `IsLeader()`
+    @pre `SameKindAs(src)`
+    @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
+    */
+   virtual void Paste(double t, const Track &src) = 0;
+
+   /*!
+    Non-virtual overload that passes the first track of a given list
+    @pre `IsLeader()`
+    @pre `SameKindAs(**src.Leaders().begin()).NChannels()`
+    @pre `NChannels == (**src.Leaders().begin()).NChannels()`
+    */
+   void Paste(double t, const TrackList &src);
 
    //! This can be used to adjust a sync-lock selected track when the selection
    //! is replaced by one of a different length.

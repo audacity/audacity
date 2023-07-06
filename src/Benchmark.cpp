@@ -448,11 +448,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Cut: %lld - %lld \n")
             .Format( x0 * chunkSize, (x0 + xlen) * chunkSize) );
 
-      Track::Holder tmp;
+      TrackListHolder tmp;
       try {
          tmp =
-            (*t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize))
-               ->Leaders().begin())->SharedPointer();
+            t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
       }
       catch (const AudacityException&) {
          Printf( XO("Trial %d\n").Format( z ) );
@@ -474,7 +473,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Paste: %lld\n").Format( y0 * chunkSize ) );
 
       try {
-         t->Paste((double)(y0 * chunkSize), tmp.get());
+         t->Paste((double)(y0 * chunkSize), *tmp);
       }
       catch (const AudacityException&) {
          Printf( XO("Trial %d\nFailed on Paste.\n").Format( z ) );

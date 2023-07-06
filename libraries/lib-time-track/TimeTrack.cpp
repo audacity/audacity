@@ -169,7 +169,7 @@ Track::Holder TimeTrack::PasteInto(AudacityProject &project, TrackList &list)
    // And for import we agree to replace the track contents completely
    pNewTrack->CleanState();
    pNewTrack->Init(*this);
-   pNewTrack->Paste(0.0, this);
+   pNewTrack->Paste(0.0, *this);
    pNewTrack->SetRangeLower(this->GetRangeLower());
    pNewTrack->SetRangeUpper(this->GetRangeUpper());
    return pNewTrack;
@@ -208,16 +208,15 @@ void TimeTrack::Clear(double t0, double t1)
    mEnvelope->CollapseRegion( t0, t1, sampleTime );
 }
 
-void TimeTrack::Paste(double t, const Track * src)
+void TimeTrack::Paste(double t, const Track &src)
 {
-   bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack &tt) {
+   bool bOk = src.TypeSwitch<bool>([&](const TimeTrack &tt) {
       auto sampleTime = 1.0 / GetRate(*this);
-      mEnvelope->PasteEnvelope
-         (t, tt.mEnvelope.get(), sampleTime);
+      mEnvelope->PasteEnvelope(t, tt.mEnvelope.get(), sampleTime);
       return true;
-   } );
+   });
 
-   if (! bOk )
+   if (!bOk)
       // THROW_INCONSISTENCY_EXCEPTION // ?
       (void)0;// intentionally do nothing.
 }

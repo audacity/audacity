@@ -164,17 +164,10 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
                return false;
             outputTrack->Flush();
             tempList->Add(outputTrack);
+            newT1 = std::max(newT1, mT0 + outputTrack->GetEndTime());
          }
          track->Clear(t0, t1);
-         auto iter =
-            TrackList::Channels(*tempList->Leaders<const WaveTrack>().begin())
-               .begin();
-         for (const auto pChannel : TrackList::Channels(track)) {
-            auto outputTrack = *iter;
-            pChannel->Paste(t0, outputTrack);
-            newT1 = std::max(newT1, mT0 + outputTrack->GetEndTime());
-            ++iter;
-         }
+         track->Paste(t0, *tempList);
       }
       else
          count += track->NChannels();

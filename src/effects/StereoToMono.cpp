@@ -203,7 +203,7 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    outputs.Remove(*right);
 
    left->Clear(left->GetStartTime(), left->GetEndTime());
-   left->Paste(minStart, outTrack.get());
+   left->Paste(minStart, *outTrack);
    RealtimeEffectList::Get(*left).Clear();
 
    return bResult;

@@ -278,21 +278,21 @@ void Track::Notify(bool allChannels, int code)
       pList->DataEvent(SharedPointer(), allChannels, code);
 }
 
+void Track::Paste(double t, const TrackList &src)
+{
+   Paste(t, **src.Leaders().begin());
+}
+
 void Track::SyncLockAdjust(double oldT1, double newT1)
 {
    assert(IsLeader());
    const auto endTime = GetEndTime();
    if (newT1 > oldT1 && oldT1 > endTime)
          return;
-   const auto channels = TrackList::Channels(this);
    if (newT1 > oldT1) {
       auto cutChannels = Cut(oldT1, endTime);
-      assert(channels.size() == cutChannels->Size());
-      auto iter = cutChannels->ListOfTracks::begin();
-      for (const auto pChannel : channels) {
-         // Insert space within the track
-         pChannel->Paste(newT1, (*iter++).get());
-      }
+      assert(NChannels() == cutChannels->Size());
+      Paste(newT1, *cutChannels);
    }
    else if (newT1 < oldT1)
       // Remove from the track

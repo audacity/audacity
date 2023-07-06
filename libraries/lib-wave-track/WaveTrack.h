@@ -197,12 +197,15 @@ private:
       const override;
 
    void Clear(double t0, double t1) override;
-   void Paste(double t0, const Track *src) override;
+   void Paste(double t0, const Track &src) override;
+   using Track::Paste; // Get the non-virtual overload too
+
    /*!
     May assume precondition: t0 <= t1
+    If the source has one channel and this has more, then replicate source
     @pre `IsLeader()`
     @pre `src.IsLeader()`
-    @pre `src.NChannels() == NChannels()`
+    @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
     */
    void ClearAndPaste(double t0, double t1,
       const WaveTrack &src,
@@ -677,7 +680,12 @@ private:
    void DoSetPan(float value);
    void DoSetGain(float value);
 
-   void PasteWaveTrack(double t0, const WaveTrack* other);
+   /*
+   @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
+    */
+   void PasteWaveTrack(double t0, const WaveTrack &other);
+   static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
+      const double insertDuration);
 
    //! Whether all clips have a common rate
    bool RateConsistencyCheck() const;
