@@ -227,6 +227,9 @@ private:
    void InsertSilence(double t, double len) override;
 
    void SplitAt(double t) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    */
    void Split(double t0, double t1) /* not override */;
    // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
    // May assume precondition: t0 <= t1

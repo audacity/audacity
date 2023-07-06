@@ -815,22 +815,18 @@ void OnTrim(const CommandContext &context)
 void OnSplit(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-
+   auto &tracks = TrackList::Get(project);
    auto [sel0, sel1] = FindSelection(context);
-   
-   if (auto *pTrack = context.temporarySelection.pTrack) {
+   if (auto *pTrack = *tracks.FindLeader(context.temporarySelection.pTrack)) {
       if (auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack))
-         for (auto pChannel : TrackList::Channels(pWaveTrack))
-            pChannel->Split( sel0, sel1 );
+         pWaveTrack->Split(sel0, sel1);
       else
          // Did nothing, don't push history
          return;
    }
-   else {
-      for (auto wt : tracks.Selected< WaveTrack >())
-         wt->Split( sel0, sel1 );
-   }
+   else
+      for (auto wt : tracks.SelectedLeaders<WaveTrack>())
+         wt->Split(sel0, sel1);
 
    ProjectHistory::Get( project ).PushState(XO("Split"), XO("Split"));
 #if 0

@@ -2745,11 +2745,14 @@ bool WaveTrack::CanInsertClip(
 }
 
 /*! @excsafety{Weak} */
-void WaveTrack::Split( double t0, double t1 )
+void WaveTrack::Split(double t0, double t1)
 {
-   SplitAt( t0 );
-   if( t0 != t1 )
-      SplitAt( t1 );
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this)) {
+      pChannel->SplitAt(t0);
+      if (t0 != t1)
+         pChannel->SplitAt(t1);
+   }
 }
 
 /*! @excsafety{Weak} */

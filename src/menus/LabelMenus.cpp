@@ -593,10 +593,7 @@ void OnSplitLabels(const CommandContext &context)
 
    auto editfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
-      track.TypeSwitch( [&](WaveTrack &t) {
-         for (auto pChannel : TrackList::Channels(&t))
-            pChannel->Split(t0, t1);
-      } );
+      track.TypeSwitch( [&](WaveTrack &t) { t.Split(t0, t1); } );
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
 
