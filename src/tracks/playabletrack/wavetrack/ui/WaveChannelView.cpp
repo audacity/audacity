@@ -333,7 +333,7 @@ public:
       mOrigHeight = height;
 
       mOrigHeights = mAdjuster.ComputeHeights( mViewHeight );
-      
+
       // Find the total height of the sub-views that may resize
       mTotalHeight = 0;
       auto index = ( mTop ? mAdjuster.mFirstSubView : mMySubView );
@@ -530,7 +530,7 @@ public:
       , mViewHeight{ viewHeight }
    {
    }
-   
+
    Result Click(
       const TrackPanelMouseEvent &event, AudacityProject *pProject ) override
    {
@@ -577,13 +577,13 @@ public:
          if ( yy < coord - mHeights[ ii ] + mHeights[ mMySubView ] )
             return Upward;
       }
-   
+
       if ( ii > mMySubView ) {
          if( mMySubView < mHeights.size() - 1 &&
             yy >= coord - mHeights[ mMySubView ] )
          return Downward;
       }
-   
+
       return Neutral;
    }
 
@@ -684,7 +684,7 @@ public:
       SubViewAdjuster adjuster{ view };
       if ( adjuster.NVisible() < 2 )
          return {};
-   
+
       const auto rect = GetButtonRect( state.rect );
       if ( !rect.Contains( state.state.GetPosition() ) )
          return {};
@@ -763,14 +763,14 @@ std::pair<
          // Only one cell is tested and we need to know
          // which one and it's relative location to the border.
          auto subviews = pWaveChannelView->GetSubViews();
-         auto currentSubview = std::find_if(subviews.begin(), subviews.end(), 
+         auto currentSubview = std::find_if(subviews.begin(), subviews.end(),
             [self = shared_from_this()](const auto& p){
                return self == p.second;
          });
          if (currentSubview != subviews.end())
          {
             auto currentSubviewIndex = std::distance(subviews.begin(), currentSubview);
-            
+
             const auto py = state.state.GetY();
             const auto topBorderHit = std::abs(py - state.rect.GetTop())
                <= WaveChannelView::kChannelSeparatorThickness / 2;
@@ -1072,7 +1072,7 @@ bool WaveChannelView::ToggleSubView(Display display)
          if (GetDisplays().size() < 2)
             // refuse to do it
             return false;
-         
+
          auto index = foundPlacement.index;
          foundPlacement = { -1, 0.0 };
          if (index >= 0) {
@@ -1524,12 +1524,12 @@ std::shared_ptr<ChannelVRulerControls> WaveChannelView::DoGetVRulerControls()
 
 namespace
 {
-   // Returns an offset in seconds to be applied to the right clip 
+   // Returns an offset in seconds to be applied to the right clip
    // boundary so that it does not overlap the last sample
    double CalculateAdjustmentForZoomLevel(
-      const wxRect& viewRect, 
-      const ZoomInfo& zoomInfo, 
-      int rate, 
+      const wxRect& viewRect,
+      const ZoomInfo& zoomInfo,
+      int rate,
       double& outAveragePPS,
       //Is zoom level sufficient to show individual samples?
       bool& outShowSamples)
@@ -1588,7 +1588,7 @@ ClipParameters::ClipParameters
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
    t0 = std::max(tpre, .0);
-   t1 = std::min(tpost, trackLen - sps * .99) 
+   t1 = std::min(tpost, trackLen - sps * .99)
       + CalculateAdjustmentForZoomLevel(rect, zoomInfo, rate, averagePixelsPerSample, showIndividualSamples);
 
    // Make sure t1 (the right bound) is greater than 0
@@ -1686,7 +1686,7 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
     auto srs = 1. / static_cast<double>(clip.GetRate());
     double averagePixelsPerSample{};
     bool showIndividualSamples{};
-    auto clipEndingAdjustemt 
+    auto clipEndingAdjustemt
        = CalculateAdjustmentForZoomLevel(viewRect, zoomInfo, clip.GetRate(), averagePixelsPerSample, showIndividualSamples);
     if (outShowSamples != nullptr)
        *outShowSamples = showIndividualSamples;
@@ -1704,12 +1704,12 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
     );
     if (right >= left)
     {
-        //after clamping we can expect that left and right 
+        //after clamping we can expect that left and right
         //are small enough to be put into int
         return wxRect(
-           static_cast<int>(left), 
-           viewRect.y, 
-           std::max(1, static_cast<int>(right - left)), 
+           static_cast<int>(left),
+           viewRect.y,
+           std::max(1, static_cast<int>(right - left)),
            viewRect.height
         );
     }
@@ -1750,7 +1750,7 @@ void WaveChannelView::BuildSubViews() const
       auto &placements = pThis->DoGetPlacements();
       if (placements.empty()) {
          placements.resize(WaveChannelSubViews::size());
-         
+
          auto pTrack = pThis->FindTrack();
          auto display = TracksPrefs::ViewModeChoice();
          bool multi = (display == WaveChannelViewConstants::MultiView);

@@ -524,7 +524,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
    int copyBegin = 0, copyEnd = 0;
    if (match) {
       findCorrection(mSpecCache->where, mSpecCache->len, numPixels,
-         t0, rate, samplesPerPixel,
+         t0, rate, 1.0, samplesPerPixel,
          oldX0, correction);
       // Remember our first pixel maps to oldX0 in the old cache,
       // possibly out of bounds.
@@ -573,7 +573,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
    // purposely offset the display 1/2 sample to the left (as compared
    // to waveform display) to properly center response of the FFT
    fillWhere(mSpecCache->where, numPixels, 0.5, correction,
-      t0, rate, samplesPerPixel);
+      t0, rate, 1.0, samplesPerPixel);
 
    mSpecCache->Populate
       (settings, sequence, copyBegin, copyEnd, numPixels,

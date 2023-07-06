@@ -456,7 +456,7 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context, size_t channel,
    const auto &zoomInfo = *artist->pZoomInfo;
 
    const double toffset = clip->GetPlayStartTime();
-   double rate = clip->GetRate();
+   const double rate = clip->GetRate() / clip->GetStretchRatio();
    const double t0 = std::max(0.0, zoomInfo.PositionToTime(0, -leftOffset) - toffset);
    const auto s0 = sampleCount(floor(t0 * rate));
    const auto snSamples = clip->GetVisibleSampleCount();
@@ -687,6 +687,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
    const double &t1 = params.t1;
    const double &averagePixelsPerSample = params.averagePixelsPerSample;
    const double &rate = params.rate;
+   const double &stretchRatio = 1.0;
    double leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
 
@@ -736,8 +737,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
 
    WaveDisplay display(hiddenMid.width);
 
-   const double pps =
-      averagePixelsPerSample * rate;
+   const double pps = averagePixelsPerSample * rate / stretchRatio;
 
    // For each portion separately, we will decide to draw
    // it as min/max/rms or as individual samples.
@@ -746,9 +746,9 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
    const unsigned nPortions = portions.size();
 
    // Require at least 1/2 pixel per sample for drawing individual samples.
-   const double threshold1 = 0.5 * rate;
+   const double threshold1 = 0.5 * rate / stretchRatio;
    // Require at least 3 pixels per sample for drawing the draggable points.
-   const double threshold2 = 3 * rate;
+   const double threshold2 = 3 * rate / stretchRatio;
 
    auto &clipCache = WaveClipWaveformCache::Get(*clip);
 
@@ -799,7 +799,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
             for (; jj < rectPortion.width; ++jj) {
                const double time =
                   zoomInfo.PositionToTime(jj, -leftOffset) - tOffset;
-               const auto sample = (sampleCount)floor(time * rate + 0.5);
+               const auto sample = clip->TimeToSamples(time);
                if (sample < 0) {
                   ++rectPortion.x;
                   ++skippedLeft;
