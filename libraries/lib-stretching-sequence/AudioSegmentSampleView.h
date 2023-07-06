@@ -65,3 +65,8 @@ private:
    const sampleCount mLength;
    const bool mIsSilent;
 };
+
+using ChannelSampleView = std::vector<AudioSegmentSampleView>;
+
+void STRETCHING_SEQUENCE_API FillBufferFromTrackBlockSequence(
+   const ChannelSampleView& track, float* buffer, size_t bufferSize);

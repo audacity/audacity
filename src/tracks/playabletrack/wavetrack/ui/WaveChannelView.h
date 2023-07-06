@@ -249,8 +249,9 @@ struct AUDACITY_DLL_API ClipParameters
       const WaveClip *clip, const wxRect &rect,
       const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
 
-   double tOffset;
-   double rate;
+   const double tOffset;
+   const double sampleRate;
+   const double stretchRatio;
    double h; // absolute time of left edge of display
    double tpre; // offset corrected time of left edge of display
    double h1;
@@ -261,7 +262,7 @@ struct AUDACITY_DLL_API ClipParameters
    double t0;
    double t1;
 
-   double averagePixelsPerSample;
+   double averagePixelsPerSecond;
    bool showIndividualSamples;
 
    sampleCount ssel0;

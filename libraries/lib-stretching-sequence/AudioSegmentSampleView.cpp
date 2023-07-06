@@ -56,3 +56,16 @@ size_t AudioSegmentSampleView::DoCopy(float* buffer, size_t bufferSize) const
    }
    return written;
 }
+
+void FillBufferFromTrackBlockSequence(
+   const ChannelSampleView& track, float* buffer, size_t bufferSize)
+{
+   size_t written = 0;
+   for (const auto& segment : track)
+   {
+      size_t toWrite =
+         limitSampleBufferSize(bufferSize - written, segment.GetSampleCount());
+      written += segment.Copy(buffer + written, toWrite);
+   }
+   std::fill(buffer + written, buffer + bufferSize, 0.f);
+}

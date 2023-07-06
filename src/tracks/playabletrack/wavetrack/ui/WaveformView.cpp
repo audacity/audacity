@@ -685,9 +685,9 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
    const double &tpre = params.tpre;
    const double &tpost = params.tpost;
    const double &t1 = params.t1;
-   const double &averagePixelsPerSample = params.averagePixelsPerSample;
-   const double &rate = params.rate;
-   const double &stretchRatio = 1.0;
+   const double &averagePixelsPerSecond = params.averagePixelsPerSecond;
+   const double &sampleRate = params.sampleRate;
+   const double &stretchRatio = params.stretchRatio;
    double leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
 
@@ -737,8 +737,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
 
    WaveDisplay display(hiddenMid.width);
 
-   const double pps = averagePixelsPerSample * rate / stretchRatio;
-
    // For each portion separately, we will decide to draw
    // it as min/max/rms or as individual samples.
    std::vector<WavePortion> portions;
@@ -746,9 +744,9 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
    const unsigned nPortions = portions.size();
 
    // Require at least 1/2 pixel per sample for drawing individual samples.
-   const double threshold1 = 0.5 * rate / stretchRatio;
+   const double threshold1 = 0.5 * sampleRate / stretchRatio;
    // Require at least 3 pixels per sample for drawing the draggable points.
-   const double threshold2 = 3 * rate / stretchRatio;
+   const double threshold2 = 3 * sampleRate / stretchRatio;
 
    auto &clipCache = WaveClipWaveformCache::Get(*clip);
 
@@ -771,8 +769,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
          // fisheye moves over the background, there is then less to do when
          // redrawing.
 
-         if (!clipCache.GetWaveDisplay(*clip, channel, display,
-            t0, pps))
+         if (!clipCache.GetWaveDisplay(
+                *clip, channel, display, t0, averagePixelsPerSecond))
             return;
       }
    }

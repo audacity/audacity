@@ -1529,8 +1529,9 @@ namespace
    double CalculateAdjustmentForZoomLevel(
       const wxRect& viewRect,
       const ZoomInfo& zoomInfo,
-      int rate,
-      double& outAveragePPS,
+      int sampleRate,
+      double stretchRatio,
+      double& outAvgPixPerSecond,
       //Is zoom level sufficient to show individual samples?
       bool& outShowSamples)
    {
@@ -1541,24 +1542,27 @@ namespace
 
       // Determine whether we should show individual samples
       // or draw circular points as well
-      outAveragePPS = viewRect.width / (rate * (h1 - h));// pixels per sample
-      outShowSamples = outAveragePPS > 0.5;
+      outAvgPixPerSecond = viewRect.width / (h1 - h);
+      const auto pixelsPerSample = outAvgPixPerSecond / sampleRate;
+      outShowSamples = pixelsPerSample > 0.5;
 
       if(outShowSamples)
          // adjustment so that the last circular point doesn't appear
          // to be hanging off the end
-         return  pixelsOffset / (outAveragePPS * rate); // pixels / ( pixels / second ) = seconds
+         return pixelsOffset * stretchRatio /
+                outAvgPixPerSecond; // pixels / ( pixels / second ) = seconds
       return .0;
    }
 }
 
-ClipParameters::ClipParameters
-   (bool spectrum, const SampleTrack *track, const WaveClip *clip, const wxRect &rect,
-   const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
+ClipParameters::ClipParameters(
+   bool spectrum, const SampleTrack* track, const WaveClip* clip,
+   const wxRect& rect, const SelectedRegion& selectedRegion,
+   const ZoomInfo& zoomInfo)
+    : tOffset { clip->GetPlayStartTime() }
+    , sampleRate { static_cast<double>(clip->GetRate()) }
+    , stretchRatio { clip->GetStretchRatio() }
 {
-   tOffset = clip->GetPlayStartTime();
-   rate = clip->GetRate();
-
    h = zoomInfo.PositionToTime(0, 0
       , true
    );
@@ -1583,13 +1587,15 @@ ClipParameters::ClipParameters
    tpost = h1 - tOffset;               // offset corrected time of
    //  right edge of display
 
-   const double sps = 1. / rate;            //seconds-per-sample
+   const double sps = 1. / sampleRate;            //seconds-per-sample
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
    t0 = std::max(tpre, .0);
-   t1 = std::min(tpost, trackLen - sps * .99)
-      + CalculateAdjustmentForZoomLevel(rect, zoomInfo, rate, averagePixelsPerSample, showIndividualSamples);
+   t1 = std::min(tpost, trackLen - sps * .99) +
+        CalculateAdjustmentForZoomLevel(
+           rect, zoomInfo, sampleRate, stretchRatio, averagePixelsPerSecond,
+           showIndividualSamples);
 
    // Make sure t1 (the right bound) is greater than 0
    if (t1 < 0.0) {
@@ -1603,17 +1609,17 @@ ClipParameters::ClipParameters
 
    // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
    ssel0 = std::max(sampleCount(0), spectrum
-      ? sampleCount((sel0 - tOffset) * rate + .99) // PRL: why?
+      ? sampleCount((sel0 - tOffset) * sampleRate + .99) // PRL: why?
       : track->TimeToLongSamples(sel0 - tOffset)
    );
    ssel1 = std::max(sampleCount(0), spectrum
-      ? sampleCount((sel1 - tOffset) * rate + .99) // PRL: why?
+      ? sampleCount((sel1 - tOffset) * sampleRate + .99) // PRL: why?
       : track->TimeToLongSamples(sel1 - tOffset)
    );
 
    //trim selection so that it only contains the actual samples
-   if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
-      ssel1 = sampleCount( 0.5 + trackLen * rate );
+   if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * sampleRate)) {
+      ssel1 = sampleCount( 0.5 + trackLen * sampleRate );
    }
 
    // The variable "hiddenMid" will be the rectangle containing the
@@ -1686,8 +1692,9 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
     auto srs = 1. / static_cast<double>(clip.GetRate());
     double averagePixelsPerSample{};
     bool showIndividualSamples{};
-    auto clipEndingAdjustemt
-       = CalculateAdjustmentForZoomLevel(viewRect, zoomInfo, clip.GetRate(), averagePixelsPerSample, showIndividualSamples);
+    const auto clipEndingAdjustemt = CalculateAdjustmentForZoomLevel(
+        viewRect, zoomInfo, clip.GetRate(), clip.GetStretchRatio(),
+        averagePixelsPerSample, showIndividualSamples);
     if (outShowSamples != nullptr)
        *outShowSamples = showIndividualSamples;
     constexpr auto edgeLeft = static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
