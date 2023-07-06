@@ -165,8 +165,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
             outputTrack->Flush();
             tempList->Add(outputTrack);
          }
-         for (const auto pChannel : TrackList::Channels(track))
-            pChannel->Clear(t0,t1);
+         track->Clear(t0, t1);
          auto iter =
             TrackList::Channels(*tempList->Leaders<const WaveTrack>().begin())
                .begin();

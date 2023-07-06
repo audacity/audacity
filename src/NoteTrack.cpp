@@ -543,6 +543,7 @@ bool NoteTrack::Trim(double t0, double t1)
 
 void NoteTrack::Clear(double t0, double t1)
 {
+   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 

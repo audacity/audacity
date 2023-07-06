@@ -347,8 +347,11 @@ public:
    virtual TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
       const = 0;
 
-   // May assume precondition: t0 <= t1
-   virtual void Clear(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   /*!
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    */
+   virtual void Clear(double t0, double t1) = 0;
 
    virtual void Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) = 0;
 

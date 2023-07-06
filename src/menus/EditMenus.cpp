@@ -356,7 +356,7 @@ void OnDelete(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
-   for (auto n : tracks.Any()) {
+   for (auto n : tracks.Leaders()) {
       if (!n->SupportsBasicEditing())
          continue;
       if (SyncLock::IsSelectedOrSyncLockSelected(n)) {

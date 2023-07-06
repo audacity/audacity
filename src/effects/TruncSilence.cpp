@@ -480,9 +480,8 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
                ++iChannel;
             }
 
-            for (const auto pChannel : TrackList::Channels(&wt))
-               // Perform the cut
-               pChannel->Clear(cutStart, cutEnd);
+            assert(wt.IsLeader()); // given range visits leaders only
+            wt.Clear(cutStart, cutEnd);
 
             iChannel = 0;
             for (const auto pChannel : TrackList::Channels(&wt)) {

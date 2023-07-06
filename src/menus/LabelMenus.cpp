@@ -409,8 +409,7 @@ void OnCutLabels(const CommandContext &context)
             if (enableCutlines)
                t.ClearAndAddCutLine(t0, t1);
             else
-               for (const auto pChannel : TrackList::Channels(&t))
-                  pChannel->Clear(t0, t1);
+               t.Clear(t0, t1);
          },
          [&](Track &t) {
             t.Clear(t0, t1);
@@ -440,10 +439,7 @@ void OnDeleteLabels(const CommandContext &context)
 
    auto editfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
-      track.TypeSwitch( [&](Track &t) {
-         for (const auto pChannel : TrackList::Channels(&t))
-            pChannel->Clear(t0, t1);
-      } );
+      track.TypeSwitch( [&](Track &t) { t.Clear(t0, t1); } );
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
 

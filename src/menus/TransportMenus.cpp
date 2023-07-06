@@ -324,9 +324,9 @@ void OnPunchAndRoll(const CommandContext &context)
    }
 
    // Change tracks only after passing the error checks above
-   for (const auto &wt : tracks) {
-      wt->Clear(t1, wt->GetEndTime());
-   }
+   for (const auto &wt : tracks)
+      if (wt->IsLeader())
+         wt->Clear(t1, wt->GetEndTime());
 
    // Choose the tracks for playback.
    TransportSequences transportTracks;

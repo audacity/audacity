@@ -638,8 +638,7 @@ TrackListHolder WaveTrack::Cut(double t0, double t1)
       THROW_INCONSISTENCY_EXCEPTION;
 
    auto result = Copy(t0, t1);
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->Clear(t0, t1);
+   Clear(t0, t1);
    return result;
 }
 
@@ -687,8 +686,7 @@ void WaveTrack::Trim (double t0, double t1)
    if (const auto endTime = GetEndTime()
       ; !inside1 && t1 < endTime
    )
-      for (auto pChannel : range)
-         pChannel->Clear(t1, endTime);
+      Clear(t1, endTime);
 
    if (const auto startTime = GetStartTime()
       ; !inside0 && t0 > startTime
@@ -784,7 +782,9 @@ auto WaveTrack::CopyOne(
 /*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1)
 {
-   HandleClear(t0, t1, false, false);
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      pChannel->HandleClear(t0, t1, false, false);
 }
 
 /*! @excsafety{Strong} */
@@ -1380,10 +1380,8 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          }
       }
    }
-   else if (newT1 < oldT1) {
-      for (const auto pChannel : channels)
-         pChannel->Clear(newT1, oldT1);
-   }
+   else if (newT1 < oldT1)
+      Clear(newT1, oldT1);
 }
 
 void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)

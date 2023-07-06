@@ -294,11 +294,9 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
          pChannel->Paste(newT1, (*iter++).get());
       }
    }
-   else if (newT1 < oldT1) {
+   else if (newT1 < oldT1)
       // Remove from the track
-      for (const auto pChannel : channels)
-         pChannel->Clear(newT1, oldT1);
-   }
+      Clear(newT1, oldT1);
 }
 
 bool Track::Any() const

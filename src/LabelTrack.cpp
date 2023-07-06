@@ -180,6 +180,7 @@ void LabelTrack::DoOnProjectTempoChange(
 
 void LabelTrack::Clear(double b, double e)
 {
+   assert(IsLeader());
    // May DELETE labels, so use subscripts to iterate
    for (size_t i = 0; i < mLabels.size(); ++i) {
       auto &labelStruct = mLabels[i];

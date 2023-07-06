@@ -90,8 +90,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
          else
             // If the duration is zero, there's no need to actually
             // generate anything
-            for (const auto pChannel : TrackList::Channels(&track))
-               pChannel->Clear(mT0, mT1);
+            track.Clear(mT0, mT1);
 
          ntrack++;
       }; },

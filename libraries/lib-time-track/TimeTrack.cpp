@@ -198,6 +198,7 @@ double GetRate(const Track &track) {
 
 void TimeTrack::Clear(double t0, double t1)
 {
+   assert(IsLeader());
    auto sampleTime = 1.0 / GetRate(*this);
    mEnvelope->CollapseRegion( t0, t1, sampleTime );
 }

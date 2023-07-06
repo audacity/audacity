@@ -76,8 +76,7 @@ void PasteOverPreservingClips(const ClipData &data,
    for (unsigned int i = 0; i < clipStartEndTimes.size(); ++i) {
       //remove the old audio and get the NEW
       auto [start, end] = clipStartEndTimes[i];
-      for (const auto pChannel : oldRange)
-         pChannel->Clear(start, end);
+      oldTrack.Clear(start, end);
    
       auto toClipOutput = newContents.Copy(start - startT, end - startT);
       auto iter = toClipOutput->Any().begin();
