@@ -390,8 +390,7 @@ void EffectSoundTouch::Finalize(
       // Trim output track to original length since SoundTouch may add extra samples
       else if (newLen > oldLen) {
          const auto t1 = out.LongSamplesToTime(oldLen);
-         for (auto pChannel : outChannels)
-            pChannel->Trim(0, t1);
+         out.Trim(0, t1);
       }
    }
 

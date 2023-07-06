@@ -679,31 +679,40 @@ Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
 /*! @excsafety{Weak} */
 void WaveTrack::Trim (double t0, double t1)
 {
+   assert(IsLeader());
    bool inside0 = false;
    bool inside1 = false;
 
-   for (const auto &clip : mClips)
-   {
-      if(t1 > clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime())
-      {
-         clip->SetTrimRight(clip->GetTrimRight() + clip->GetPlayEndTime() - t1);
-         inside1 = true;
-      }
+   const auto range = TrackList::Channels(this);
+   for (auto pChannel : range) {
+      for (const auto &clip : pChannel->mClips) {
+         if (t1 > clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
+            clip->SetTrimRight(
+               clip->GetTrimRight() + clip->GetPlayEndTime() - t1);
+            inside1 = true;
+         }
 
-      if(t0 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime())
-      {
-         clip->SetTrimLeft(clip->GetTrimLeft() + t0 - clip->GetPlayStartTime());
-         inside0 = true;
+         if (t0 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime()) {
+            clip->SetTrimLeft(
+               clip->GetTrimLeft() + t0 - clip->GetPlayStartTime());
+            inside0 = true;
+         }
       }
    }
 
    //if inside0 is false, then the left selector was between
    //clips, so DELETE everything to its left.
-   if(!inside1 && t1 < GetEndTime())
-      Clear(t1,GetEndTime());
+   if (const auto endTime = GetEndTime()
+      ; !inside1 && t1 < endTime
+   )
+      for (auto pChannel : range)
+         pChannel->Clear(t1, endTime);
 
-   if(!inside0 && t0 > GetStartTime())
-      SplitDelete(GetStartTime(), t0);
+   if (const auto startTime = GetStartTime()
+      ; !inside0 && t0 > startTime
+   )
+      for (auto pChannel : range)
+         pChannel->SplitDelete(startTime, t0);
 }
 
 

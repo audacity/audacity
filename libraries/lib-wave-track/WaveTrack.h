@@ -241,6 +241,9 @@ private:
    void Disjoin(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
+   /*!
+    @pre `IsLeader()`
+    */
    void Trim(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1

@@ -821,13 +821,10 @@ void OnTrim(const CommandContext &context)
    if (selectedRegion.isPoint())
       return;
 
-   tracks.Selected().Visit(
-      [&](WaveTrack &wt) {
-         //Hide the section before the left selector
-         wt.Trim(selectedRegion.t0(),
-            selectedRegion.t1());
-      }
-   );
+   tracks.SelectedLeaders().Visit( [&](WaveTrack &wt) {
+      //Hide the section before the left selector
+      wt.Trim(selectedRegion.t0(), selectedRegion.t1());
+   } );
 
    ProjectHistory::Get( project ).PushState(
       XO("Trim selected audio tracks from %.2f seconds to %.2f seconds")
