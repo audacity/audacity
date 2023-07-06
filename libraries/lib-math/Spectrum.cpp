@@ -19,10 +19,9 @@
 
 #include "SampleFormat.h"
 
-bool ComputeSpectrum(const float * data, size_t width,
-                     size_t windowSize,
-                     double WXUNUSED(rate), float *output,
-                     bool autocorrelation, int windowFunc)
+bool ComputeSpectrum(
+   const float* data, size_t width, size_t windowSize, float* output,
+   bool autocorrelation, int windowFunc)
 {
    if (width < windowSize)
       return false;

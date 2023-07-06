@@ -308,7 +308,7 @@ void FindWavePortions
    // the fisheye.
 
    ZoomInfo::Intervals intervals;
-   zoomInfo.FindIntervals(params.rate, intervals, rect.width, rect.x);
+   zoomInfo.FindIntervals(intervals, rect.width, rect.x);
    ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
    wxASSERT(it != end && it->position == rect.x);
    const int rightmost = rect.x + rect.width;
@@ -1015,12 +1015,12 @@ void WaveformView::Draw(
       const auto hasSolo = artist->hasSolo;
       bool muted = (hasSolo || wt->GetMute()) &&
       !wt->GetSolo();
-      
+
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 #endif
-      
+
       auto waveChannelView = GetWaveChannelView().lock();
       wxASSERT(waveChannelView.use_count());
 
@@ -1098,7 +1098,7 @@ BEGIN_POPUP_MENU(WaveColorMenuTable)
       const auto &track = *static_cast<WaveTrack*>(pData->pTrack);
       auto &project = pData->project;
       bool unsafe = ProjectAudioIO::Get( project ).IsAudioActive();
-      
+
       menu.Check( id, id == me.IdOfWaveColor( track.GetWaveColorIndex() ) );
       menu.Enable( id, !unsafe );
    };
