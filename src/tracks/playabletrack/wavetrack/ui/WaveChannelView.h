@@ -46,7 +46,7 @@ public:
 
    explicit
    WaveChannelSubView(WaveChannelView &waveChannelView);
-   
+
    virtual const Type &SubViewType() const = 0;
 
    // For undo and redo purpose
@@ -60,7 +60,7 @@ public:
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
       const std::shared_ptr<WaveTrack> &wt );
-   
+
 protected:
    static void DrawBoldBoundaries(
       TrackPanelDrawingContext &context, const WaveTrack *track,
@@ -159,9 +159,9 @@ public:
 
    std::weak_ptr<WaveClip> GetSelectedClip();
 
-   // Returns a visible subset of subviews, sorted in the same 
+   // Returns a visible subset of subviews, sorted in the same
    // order as they are supposed to be displayed
-   
+
 
    // Get the visible sub-views,
    // if rect is provided then result will contain
@@ -246,27 +246,17 @@ struct AUDACITY_DLL_API ClipParameters
 {
    // Do a bunch of calculations common to waveform and spectrum drawing.
    ClipParameters(
-      bool spectrum, const SampleTrack *track,
-      const WaveClip *clip, const wxRect &rect,
-      const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
+      const WaveClip* clip, const wxRect& rect, const ZoomInfo& zoomInfo);
 
-   double tOffset;
-   double rate;
-   double h; // absolute time of left edge of display
-   double tpre; // offset corrected time of left edge of display
-   double h1;
-   double tpost; // offset corrected time of right edge of display
+   const double trackRectT0; // absolute time of left edge of track
 
-   // Calculate actual selection bounds so that t0 > 0 and t1 < the
-   // end of the track
+   // Lower and upper visible time boundaries (relative to clip). If completely
+   // off-screen, `t0 == t1`.
    double t0;
    double t1;
 
-   double averagePixelsPerSample;
-   bool showIndividualSamples;
-
-   sampleCount ssel0;
-   sampleCount ssel1;
+   const double averagePixelsPerSecond;
+   const bool showIndividualSamples;
 
    wxRect hiddenMid;
    int hiddenLeftOffset;
@@ -274,7 +264,7 @@ struct AUDACITY_DLL_API ClipParameters
    wxRect mid;
    int leftOffset;
 
-   // returns a clip rectangle restricted by viewRect, 
+   // returns a clip rectangle restricted by viewRect,
    // and with clipOffsetX - clip horizontal origin offset within view rect
    static wxRect GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples = nullptr);
 };

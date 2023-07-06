@@ -60,6 +60,8 @@ void ClipTimeAndPitchSource::Pull(
       for (auto i = 0u; i < nChannels; ++i)
       {
          auto channelView = mClip.GetSampleView(i, start, numSamplesToRead);
+         // Query `samplesPerChannel` samples ; `AudioSegmentSampleView::Copy`
+         // will zero from `numSamplesToRead` to `samplesPerChannel` if needed.
          channelView.Copy(buffers[i], samplesPerChannel);
          newViews.push_back(std::move(channelView));
          if (!forward)
@@ -78,10 +80,6 @@ void ClipTimeAndPitchSource::Pull(
             // become a reasonably small value again :)
             -sampleCount { numSamplesToRead };
    }
-   if (numSamplesToRead < samplesPerChannel)
-      for (auto i = 0u; i < mClip.GetWidth(); ++i)
-         std::fill(
-            buffers[i] + numSamplesToRead, buffers[i] + samplesPerChannel, 0.f);
 }
 
 size_t ClipTimeAndPitchSource::GetWidth() const

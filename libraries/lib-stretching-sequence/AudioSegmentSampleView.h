@@ -32,7 +32,7 @@ public:
     * @param length The number of samples from `start` to look at.
     * @pre `!blockViews.empty()`
     * @pre `start < blockViews[0].size()`
-    * @pre length < sum(sizes(blockViews)) - start
+    * @pre length <= sum(sizes(blockViews)) - start
     */
    AudioSegmentSampleView(
       std::vector<BlockSampleView> blockViews, size_t start,
@@ -46,11 +46,9 @@ public:
 
    /**
     * @brief Copies up to `GetSampleCount()` or `bufferSize` samples, whichever
-    * is less, into `buffer`.
-    * @return The number of samples copied. Samples in `buffer` beyond that are
-    * not zeroed.
+    * is less, into `buffer`. Samples after that are zeroed.
     */
-   size_t Copy(float* buffer, size_t bufferSize) const;
+   void Copy(float* buffer, size_t bufferSize) const;
 
    /**
     * @brief The number of samples in this view.
@@ -58,10 +56,12 @@ public:
    sampleCount GetSampleCount() const;
 
 private:
-   size_t DoCopy(float* buffer, size_t bufferSize) const;
+   void DoCopy(float* buffer, size_t bufferSize) const;
 
    const std::vector<BlockSampleView> mBlockViews;
    const size_t mStart = 0;
    const sampleCount mLength;
    const bool mIsSilent;
 };
+
+using ChannelSampleView = std::vector<AudioSegmentSampleView>;

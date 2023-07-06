@@ -27,7 +27,7 @@ public:
    // Make invalid cache
    SpecCache()
       : algorithm(-1)
-      , pps(-1.0)
+      , spp(-1.0)
       , start(-1.0)
       , windowType(-1)
       , frequencyGain(-1)
@@ -39,36 +39,26 @@ public:
    {
    }
 
-   bool Matches(int dirty_, double pixelsPerSecond,
-      const SpectrogramSettings &settings, double rate) const;
-
-   // Calculate one column of the spectrum
-   bool CalculateOneSpectrum
-      (const SpectrogramSettings &settings,
-       const WideSampleSequence &sequence,
-       const int xx, sampleCount numSamples,
-       double offset, double rate, double pixelsPerSecond,
-       int lowerBoundX, int upperBoundX,
-       const std::vector<float> &gainFactors,
-       float* __restrict scratch,
-       float* __restrict out) const;
+   bool Matches(
+      int dirty_, double samplesPerPixel,
+      const SpectrogramSettings& settings) const;
 
    // Grow the cache while preserving the (possibly now invalid!) contents
-   void Grow(size_t len_, SpectrogramSettings& settings,
-      double pixelsPerSecond, double start_);
+   void Grow(
+      size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
+      double start /*relative to clip play start time*/);
 
    // Calculate the dirty columns at the begin and end of the cache
    void Populate(
-      const SpectrogramSettings& settings, const WideSampleSequence& sequence,
-      int copyBegin, int copyEnd, size_t numPixels, sampleCount numSamples,
-      double offset, double rate, double pixelsPerSecond);
+      const SpectrogramSettings& settings, const WaveClip& clip, int copyBegin,
+      int copyEnd, size_t numPixels, double pixelsPerSecond);
 
    size_t       len { 0 }; // counts pixels, not samples
    int          algorithm;
-   double       pps;
+   double       spp; // samples per pixel
    double       leftTrim{ .0 };
    double       rightTrim{ .0 };
-   double       start;
+   double       start; // relative to clip start
    int          windowType;
    size_t       windowSize { 0 };
    unsigned     zeroPaddingFactor { 0 };
@@ -77,6 +67,16 @@ public:
    std::vector<sampleCount> where;
 
    int          dirty;
+
+private:
+   // Calculate one column of the spectrum
+   bool CalculateOneSpectrum(
+      const SpectrogramSettings& settings, const WaveClip& clip, const int xx,
+      double pixelsPerSecond, int lowerBoundX, int upperBoundX,
+      const std::vector<float>& gainFactors, float* __restrict scratch,
+      float* __restrict out) const;
+
+   mutable std::optional<AudioSegmentSampleView> mSampleCacheHolder;
 };
 
 class SpecPxCache {
@@ -122,11 +122,10 @@ struct WaveClipSpectrumCache final : WaveClipListener
    // > only the 0th channel of sequence is really used
    // > In the interim, this still works correctly for WideSampleSequence backed
    // > by a right channel track, which always ignores its partner.
-   bool GetSpectrogram(
-      const WaveClip& clip, const WideSampleSequence& sequence,
-      const float*& spectrogram, SpectrogramSettings& spectrogramSettings,
-      const sampleCount*& where, size_t numPixels, double t0,
-      double pixelsPerSecond);
+   bool GetSpectrogram(const WaveClip &clip, const float *&spectrogram,
+                       SpectrogramSettings &spectrogramSettings,
+                       const sampleCount *&where, size_t numPixels,
+                       double t0 /*absolute time*/, double pixelsPerSecond);
 };
 
 #endif
