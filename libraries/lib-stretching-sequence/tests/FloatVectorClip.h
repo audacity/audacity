@@ -25,7 +25,7 @@ public:
    AudioSegmentSampleView
    GetSampleView(size_t iChannel, sampleCount start, size_t len) const override;
 
-   sampleCount GetPlaySamplesCount() const override;
+   sampleCount GetVisibleSampleCount() const override;
 
    size_t GetWidth() const override;
 

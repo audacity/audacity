@@ -459,7 +459,7 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context, size_t channel,
    double rate = clip->GetRate();
    const double t0 = std::max(0.0, zoomInfo.PositionToTime(0, -leftOffset) - toffset);
    const auto s0 = sampleCount(floor(t0 * rate));
-   const auto snSamples = clip->GetPlaySamplesCount();
+   const auto snSamples = clip->GetVisibleSampleCount();
    if (s0 > snSamples)
       return;
 
@@ -793,7 +793,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
       if (portion.inFisheye) {
          if (!showIndividualSamples) {
             fisheyeDisplay.Allocate();
-            const auto numSamples = clip->GetPlaySamplesCount();
+            const auto numSamples = clip->GetVisibleSampleCount();
             // Get wave display data for different magnification
             int jj = 0;
             for (; jj < rectPortion.width; ++jj) {

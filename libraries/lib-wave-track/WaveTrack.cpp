@@ -614,12 +614,12 @@ void WaveTrack::SetWaveColorIndex(int colorIndex)
    }
 }
 
-sampleCount WaveTrack::GetPlaySamplesCount() const
+sampleCount WaveTrack::GetVisibleSampleCount() const
 {
     sampleCount result{ 0 };
 
     for (const auto& clip : mClips)
-        result += clip->GetPlaySamplesCount();
+        result += clip->GetVisibleSampleCount();
 
     return result;
 }
@@ -2348,7 +2348,7 @@ bool WaveTrack::GetOne(
       {
          // Clip sample region and Get/Put sample region overlap
          auto samplesToCopy =
-            std::min( start+len - clipStart, clip->GetPlaySamplesCount() );
+            std::min( start+len - clipStart, clip->GetVisibleSampleCount() );
          auto startDelta = clipStart - start;
          decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)
@@ -2447,7 +2447,7 @@ ChannelSampleView WaveTrack::GetOneSampleView(
       const auto clipT0 = t0 - clipStartTime;
       const auto clipS0 = TimeToLongSamples(clipT0);
       const auto len =
-         limitSampleBufferSize(length, clip->GetPlaySamplesCount() - clipS0);
+         limitSampleBufferSize(length, clip->GetVisibleSampleCount() - clipS0);
       auto newSegment = clip->GetSampleView(0u, clipS0, len);
       t0 += newSegment.GetSampleCount().as_double() / GetRate();
       segments.push_back(std::move(newSegment));
@@ -2471,7 +2471,7 @@ void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
       {
          // Clip sample region and Get/Put sample region overlap
          auto samplesToCopy =
-            std::min( start+len - clipStart, clip->GetPlaySamplesCount() );
+            std::min( start+len - clipStart, clip->GetVisibleSampleCount() );
          auto startDelta = clipStart - start;
          decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)

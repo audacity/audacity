@@ -189,7 +189,7 @@ public:
 
    sampleCount GetPlayStartSample() const;
    sampleCount GetPlayEndSample() const;
-   sampleCount GetPlaySamplesCount() const override;
+   sampleCount GetVisibleSampleCount() const override;
 
    //! Sets the play start offset in seconds from the beginning of the underlying sequence
    void SetTrimLeft(double trim);
