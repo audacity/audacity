@@ -172,11 +172,13 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
 
    mExportOptionsPanel->Init(filename, format, sampleRate, 2);
 
-   const auto labelTracks = TrackList::Get(mProject).Leaders<LabelTrack>();
+   auto& tracks = TrackList::Get(mProject);
+   const auto labelTracks = tracks.Leaders<LabelTrack>();
    const auto hasLabels = !labelTracks.empty() &&
       (*labelTracks.begin())->GetNumLabels() > 0;
 
-   if(ExportUtils::FindExportWaveTracks(TrackList::Get(mProject), true).empty())
+   if(ExportUtils::FindExportWaveTracks(tracks, true).empty() ||
+      ViewInfo::Get(mProject).selectedRegion.isPoint())
    {
       //All selected audio is muted
       mRangeSelection->Disable();
