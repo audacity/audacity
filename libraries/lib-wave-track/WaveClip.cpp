@@ -403,7 +403,6 @@ void WaveClip::Flush()
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
-   // todo(mhodgkinson)
    if (tag == "waveclip")
    {
       double dblValue;
@@ -430,6 +429,21 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             if (!value.TryGet(dblValue))
                return false;
             SetTrimRight(dblValue);
+         }
+         else if (attr == "rawAudioTempo")
+         {
+            if (!value.TryGet(dblValue))
+               return false;
+            if (dblValue == 0)
+               mRawAudioTempo.reset();
+            else
+               mRawAudioTempo = dblValue;
+         }
+         else if (attr == "clipStretchRatio")
+         {
+            if (!value.TryGet(dblValue))
+               return false;
+            mClipStretchRatio = dblValue;
          }
          else if (attr == "name")
          {
@@ -499,6 +513,8 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("offset"), mSequenceOffset, 8);
    xmlFile.WriteAttr(wxT("trimLeft"), mTrimLeft, 8);
    xmlFile.WriteAttr(wxT("trimRight"), mTrimRight, 8);
+   xmlFile.WriteAttr(wxT("rawAudioTempo"), mRawAudioTempo.value_or(0.), 8);
+   xmlFile.WriteAttr(wxT("clipStretchRatio"), mClipStretchRatio, 8);
    xmlFile.WriteAttr(wxT("name"), mName);
    xmlFile.WriteAttr(wxT("colorindex"), mColourIndex );
 
