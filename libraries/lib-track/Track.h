@@ -227,8 +227,6 @@ private:
    virtual Holder PasteInto( AudacityProject & ) const = 0;
 
 public:
-   static void FinishCopy (const Track *n, Track *dest);
-
    //! Check consistency of channel groups, and maybe fix it
    /*!
     @param doFix whether to make any changes to correct inconsistencies

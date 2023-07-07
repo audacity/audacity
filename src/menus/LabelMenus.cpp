@@ -238,9 +238,7 @@ void EditClipboardByLabel( AudacityProject &project,
          {
             const Region &region = regions.at(i);
             auto dest = action(t, region.start, region.end );
-            if( dest )
-            {
-               Track::FinishCopy( t, dest.get() );
+            if (dest) {
                if( !merged )
                   merged = dest;
                else

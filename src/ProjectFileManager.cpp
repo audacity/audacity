@@ -1202,7 +1202,6 @@ bool ImportProject(AudacityProject &dest, const FilePath &fileName)
    auto &destTracks = TrackList::Get(dest);
    for (const Track *pTrack : srcTracks.Any()) {
       auto destTrack = pTrack->PasteInto(dest);
-      Track::FinishCopy(pTrack, destTrack.get());
       if (destTrack.use_count() == 1)
          destTracks.Add(destTrack);
    }

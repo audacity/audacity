@@ -34,13 +34,6 @@
 
 // private helper classes and functions
 namespace {
-void FinishCopy
-   (const Track *n, const Track::Holder &dest, TrackList &list)
-{
-   Track::FinishCopy( n, dest.get() );
-   if (dest)
-      list.Add( dest );
-}
 
 // Handle text paste. Return true if did paste.
 // (This was formerly the first part of overly-long OnPaste.)
@@ -117,7 +110,6 @@ std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
    for(auto track : src)
    {
       auto trackCopy = track->Copy(track->GetStartTime(), track->GetEndTime(), false);
-      trackCopy->Init(*track);
       trackCopy->SetOffset(track->GetStartTime());
       
       if(auto waveTrack = dynamic_cast<WaveTrack*>(trackCopy.get()))
@@ -167,9 +159,7 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
 
       pNewTrack->SetSelected(true);
       if (newTrack)
-         FinishCopy(pClip, pNewTrack, tracks);
-      else
-         Track::FinishCopy(pClip, pNewTrack.get());
+         tracks.Add(pNewTrack);
    }
 
    // Select some pasted samples, which is probably impossible to get right
@@ -311,14 +301,14 @@ void OnCut(const CommandContext &context)
          // Since portsmf has a built-in cut operator, we use that instead
          auto dest = n.Cut(selectedRegion.t0(),
                 selectedRegion.t1());
-         FinishCopy(&n, dest, newClipboard);
+         newClipboard.Add(dest);
       },
 #endif
       [&](Track &n) {
          if (n.SupportsBasicEditing()) {
             auto dest = n.Copy(selectedRegion.t0(),
                     selectedRegion.t1());
-            FinishCopy(&n, dest, newClipboard);
+            newClipboard.Add(dest);
          }
       }
    );
@@ -426,7 +416,7 @@ void OnCopy(const CommandContext &context)
       if (n->SupportsBasicEditing()) {
          auto dest = n->Copy(selectedRegion.t0(),
                  selectedRegion.t1());
-         FinishCopy(n, dest, newClipboard);
+         newClipboard.Add(dest);
       }
    }
 
@@ -712,9 +702,7 @@ void OnDuplicate(const CommandContext &context)
          continue;
 
       // Make copies not for clipboard but for direct addition to the project
-      auto dest = n->Copy(selectedRegion.t0(),
-              selectedRegion.t1(), false);
-      dest->Init(*n);
+      auto dest = n->Copy(selectedRegion.t0(), selectedRegion.t1(), false);
       dest->SetOffset(wxMax(selectedRegion.t0(), n->GetOffset()));
       tracks.Add( dest );
 
@@ -748,7 +736,7 @@ void OnSplitCut(const CommandContext &context)
             selectedRegion.t0(),
             selectedRegion.t1());
          if (dest)
-            FinishCopy(&n, dest, newClipboard);
+            newClipboard.Add(dest);
       },
       [&](Track &n) {
          if (n.SupportsBasicEditing()) {
@@ -757,7 +745,7 @@ void OnSplitCut(const CommandContext &context)
             n.Silence(selectedRegion.t0(),
                        selectedRegion.t1());
             if (dest)
-               FinishCopy(&n, dest, newClipboard);
+               newClipboard.Add(dest);
          }
       }
    );
@@ -930,7 +918,7 @@ void OnSplitNew(const CommandContext &context)
                // The copy function normally puts the clip at time 0
                // This offset lines it up with the original track's timing
                dest->Offset(newt0);
-               FinishCopy(&wt, dest, tracks);
+               tracks.Add(dest);
             }
          }
 #if 0
@@ -942,7 +930,7 @@ void OnSplitNew(const CommandContext &context)
                    viewInfo.selectedRegion.t1());
             if (dest) {
                dest->SetOffset(wxMax(0, n.GetOffset()));
-               FinishCopy(&n, dest, *tracks);
+               tracks.Add(dest);
             }
          }
 #endif

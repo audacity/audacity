@@ -312,15 +312,6 @@ bool Track::IsLeader() const
 bool Track::IsSelectedLeader() const
    { return IsSelected() && IsLeader(); }
 
-void Track::FinishCopy
-(const Track *n, Track *dest)
-{
-   if (dest) {
-      dest->mpGroupData = n->mpGroupData ?
-         std::make_unique<ChannelGroupData>(*n->mpGroupData) : nullptr;
-   }
-}
-
 bool Track::LinkConsistencyFix(bool doFix, bool completeList)
 {
    // Sanity checks for linked tracks; unsetting the linked property
