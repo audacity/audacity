@@ -160,6 +160,11 @@ public:
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
 
+   //! Stretches from left to the absolute time (if in expected range)
+   void StretchLeftTo(double to);
+   //! Sets from the right to the absolute time (if in expected range)
+   void StretchRightTo(double to);
+
    double GetStretchRatio() const override;
 
    // Resample clip. This also will set the rate, but without changing
@@ -492,6 +497,7 @@ private:
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();
+   void StretchCutLines(double ratioChange);
    double SnapToTrackSample(double time) const noexcept;
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
