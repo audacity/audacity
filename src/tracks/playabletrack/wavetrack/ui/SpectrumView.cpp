@@ -32,7 +32,6 @@ Paul Licameli split from WaveChannelView.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "CachingPlayableSequence.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../ProjectSettings.h"
 #include "WaveTrackLocation.h"
@@ -321,19 +320,15 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
    return  AColor::ColorGradientTimeSelected;
 }
 
-void DrawClipSpectrum(TrackPanelDrawingContext &context,
-                                   const WideSampleSequence &sequence,
-                                   const WaveTrack* track,
-                                   const WaveClip *clip,
-                                   const wxRect &rect,
-                                   const std::shared_ptr<SpectralData> &mpSpectralData,
-                                   bool selected)
-{
-   auto &dc = context.dc;
-   const auto artist = TrackArtist::Get( context );
-   bool onBrushTool = artist->onBrushTool;
-   const auto &selectedRegion = *artist->pSelectedRegion;
-   const auto &zoomInfo = *artist->pZoomInfo;
+void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
+                      const WaveClip *clip, const wxRect &rect,
+                      const std::shared_ptr<SpectralData> &mpSpectralData,
+                      bool selected) {
+  auto &dc = context.dc;
+  const auto artist = TrackArtist::Get(context);
+  bool onBrushTool = artist->onBrushTool;
+  const auto &selectedRegion = *artist->pSelectedRegion;
+  const auto &zoomInfo = *artist->pZoomInfo;
 
 #ifdef PROFILE_WAVEFORM
    Profiler profiler;
@@ -422,8 +417,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    const sampleCount *where = 0;
    bool updated;
    {
-      updated = WaveClipSpectrumCache::Get(*clip).GetSpectrogram(
-         *clip, sequence, freq, settings, where, (size_t)hiddenMid.width, t0,
+     updated = WaveClipSpectrumCache::Get(*clip).GetSpectrogram(
+         *clip, freq, settings, where, (size_t)hiddenMid.width, t0,
          averagePixelsPerSecond);
    }
    auto nBins = settings.NBins();
@@ -850,7 +845,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       TrackArt::DrawClipEdges(dc, clipRect, selected);
    }
 }
-
 }
 
 void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
@@ -864,11 +858,9 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
    TrackArt::DrawBackgroundWithSelection(
       context, rect, track, blankSelectedBrush, blankBrush );
 
-   const CachingPlayableSequence cachingSequence { *track };
    for (const auto &clip: track->GetClips()){
-      DrawClipSpectrum(
-         context, cachingSequence, track, clip.get(), rect, mpSpectralData,
-         clip.get() == selectedClip);
+     DrawClipSpectrum(context, track, clip.get(), rect, mpSpectralData,
+                      clip.get() == selectedClip);
    }
 
    DrawBoldBoundaries( context, track, rect );

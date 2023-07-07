@@ -124,11 +124,10 @@ struct WaveClipSpectrumCache final : WaveClipListener
    // > only the 0th channel of sequence is really used
    // > In the interim, this still works correctly for WideSampleSequence backed
    // > by a right channel track, which always ignores its partner.
-   bool GetSpectrogram(
-      const WaveClip& clip, const WideSampleSequence& sequence,
-      const float*& spectrogram, SpectrogramSettings& spectrogramSettings,
-      const sampleCount*& where, size_t numPixels, double t0 /*absolute time*/,
-      double pixelsPerSecond);
+   bool GetSpectrogram(const WaveClip &clip, const float *&spectrogram,
+                       SpectrogramSettings &spectrogramSettings,
+                       const sampleCount *&where, size_t numPixels,
+                       double t0 /*absolute time*/, double pixelsPerSecond);
 };
 
 #endif

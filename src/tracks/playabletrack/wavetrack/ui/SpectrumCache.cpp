@@ -457,10 +457,11 @@ void SpecCache::Populate(
 }
 
 bool WaveClipSpectrumCache::GetSpectrogram(
-   const WaveClip& clip, const WideSampleSequence& sequence,
+   const WaveClip& clip,
    const float*& spectrogram, SpectrogramSettings& settings,
    const sampleCount*& where, size_t numPixels, double t0,
    double pixelsPerSecond)
+
 {
    const auto sampleRate = clip.GetRate();
    const auto stretchRatio = clip.GetStretchRatio();
