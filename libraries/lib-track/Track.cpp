@@ -285,16 +285,19 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
    if (newT1 > oldT1 && oldT1 > endTime)
          return;
    const auto channels = TrackList::Channels(this);
-   for (const auto pChannel : channels) {
-      if (newT1 > oldT1) {
+   if (newT1 > oldT1) {
+      auto cutChannels = Cut(oldT1, endTime);
+      assert(channels.size() == cutChannels->Size());
+      auto iter = cutChannels->ListOfTracks::begin();
+      for (const auto pChannel : channels) {
          // Insert space within the track
-            auto tmp = pChannel->Cut(oldT1, endTime);
-            pChannel->Paste(newT1, tmp.get());
+         pChannel->Paste(newT1, (*iter++).get());
       }
-      else if (newT1 < oldT1) {
-         // Remove from the track
+   }
+   else if (newT1 < oldT1) {
+      // Remove from the track
+      for (const auto pChannel : channels)
          pChannel->Clear(newT1, oldT1);
-      }
    }
 }
 

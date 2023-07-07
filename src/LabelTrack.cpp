@@ -684,13 +684,12 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("labeltrack"));
 }
 
-Track::Holder LabelTrack::Cut(double t0, double t1)
+TrackListHolder LabelTrack::Cut(double t0, double t1)
 {
+   assert(IsLeader());
    auto tmp = Copy(t0, t1);
-
    Clear(t0, t1);
-
-   return tmp;
+   return TrackList::Temporary(nullptr, tmp, nullptr);
 }
 
 #if 0

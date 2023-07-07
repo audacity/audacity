@@ -450,7 +450,9 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
       Track::Holder tmp;
       try {
-         tmp = t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
+         tmp =
+            (*t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize))
+               ->Leaders().begin())->SharedPointer();
       }
       catch (const AudacityException&) {
          Printf( XO("Trial %d\n").Format( z ) );

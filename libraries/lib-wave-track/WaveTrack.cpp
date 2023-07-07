@@ -631,16 +631,20 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
    return true;
 }
 
-Track::Holder WaveTrack::Cut(double t0, double t1)
+TrackListHolder WaveTrack::Cut(double t0, double t1)
 {
+   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   auto tmp = Copy(t0, t1);
-
-   Clear(t0, t1);
-
-   return tmp;
+   auto result = TrackList::Create(nullptr);
+   for (const auto pChannel : TrackList::Channels(this)) {
+      auto tmp = pChannel->Copy(t0, t1);
+      pChannel->Clear(t0, t1);
+      result->Add(tmp);
+      assert(pChannel->IsLeader() == tmp->IsLeader());
+   }
+   return result;
 }
 
 /*! @excsafety{Strong} */

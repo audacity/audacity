@@ -463,8 +463,9 @@ void NoteTrack::PrintSequence()
    fclose(debugOutput);
 }
 
-Track::Holder NoteTrack::Cut(double t0, double t1)
+TrackListHolder NoteTrack::Cut(double t0, double t1)
 {
+   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -490,7 +491,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    //(mBottomNote,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   return newTrack;
+   return TrackList::Temporary(nullptr, newTrack, nullptr);
 }
 
 Track::Holder NoteTrack::Copy(double t0, double t1, bool) const

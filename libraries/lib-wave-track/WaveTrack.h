@@ -173,7 +173,7 @@ private:
    // High-level editing
    //
 
-   Track::Holder Cut(double t0, double t1) override;
+   TrackListHolder Cut(double t0, double t1) override;
 
    //! Make another track copying format, rate, color, etc. but containing no
    //! clips

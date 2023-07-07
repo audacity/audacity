@@ -299,9 +299,8 @@ void OnCut(const CommandContext &context)
 #if defined(USE_MIDI)
       [&](NoteTrack &n) {
          // Since portsmf has a built-in cut operator, we use that instead
-         auto dest = n.Cut(selectedRegion.t0(),
-                selectedRegion.t1());
-         newClipboard.Add(dest);
+         auto dest = n.Cut(selectedRegion.t0(), selectedRegion.t1());
+         newClipboard.Append(std::move(*dest));
       },
 #endif
       [&](Track &n) {

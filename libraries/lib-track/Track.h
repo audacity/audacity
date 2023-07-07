@@ -325,10 +325,14 @@ public:
    // method to set project tempo on track
    void OnProjectTempoChange(double newTempo);
 
-   // Create a NEW track and modify this track
-   // Return non-NULL or else throw
-   // May assume precondition: t0 <= t1
-   virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   //! Create tracks and modify this track
+   /*!
+    @return non-NULL or else throw
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    @post result: `result->Size() == NChannels()`
+    */
+   virtual TrackListHolder Cut(double t0, double t1) = 0;
 
    // Create a NEW track and don't modify this track
    // Return non-NULL or else throw

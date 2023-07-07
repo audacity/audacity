@@ -170,11 +170,12 @@ Track::Holder TimeTrack::PasteInto(AudacityProject &project) const
    return pNewTrack;
 }
 
-Track::Holder TimeTrack::Cut( double t0, double t1 )
+TrackListHolder TimeTrack::Cut(double t0, double t1)
 {
-   auto result = Copy( t0, t1, false );
-   Clear( t0, t1 );
-   return result;
+   assert(IsLeader());
+   auto track = Copy(t0, t1, false);
+   Clear(t0, t1);
+   return TrackList::Temporary(nullptr, track, nullptr);
 }
 
 Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
