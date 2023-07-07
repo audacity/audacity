@@ -66,8 +66,8 @@ private:
    Gaps FindGaps(
       const WaveTrack &track, const double curT0, const double curT1);
 
-   bool ProcessOne(
-      WaveTrack *t, const Gaps &gaps, sampleCount start, sampleCount end);
+   std::shared_ptr<WaveTrack> ProcessOne(
+      const WaveTrack &t, sampleCount start, sampleCount end);
    bool ProcessLabelTrack(LabelTrack *t);
 
    // handlers

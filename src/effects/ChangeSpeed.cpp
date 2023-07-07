@@ -249,9 +249,24 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
             auto start = outWaveTrack.TimeToLongSamples(mCurT0);
             auto end = outWaveTrack.TimeToLongSamples(mCurT1);
 
-            //ProcessOne() (implemented below) processes a single track
             const auto gaps = FindGaps(outWaveTrack, mCurT0, mCurT1);
-            if (!ProcessOne(&outWaveTrack, gaps, start, end))
+
+            //ProcessOne() (implemented below) processes a single track
+            if (const auto outputTrack = ProcessOne(outWaveTrack, start, end)) {
+               const double newLength = outputTrack->GetEndTime();
+               LinearTimeWarper warper{
+                  mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
+
+               // Take the output track and insert it in place of the original sample data
+               outWaveTrack.ClearAndPaste(
+                  mCurT0, mCurT1, outputTrack.get(), true, true, &warper);
+
+               // Finally, recreate the gaps
+               for (const auto [st, et] : gaps)
+                  if (st >= mCurT0 && et <= mCurT1 && st != et)
+                     outWaveTrack.SplitDelete(warper.Warp(st), warper.Warp(et));
+            }
+            else
                bGoodResult = false;
          }
          mCurTrackNum++;
@@ -469,17 +484,13 @@ bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
-bool EffectChangeSpeed::ProcessOne(
-   WaveTrack * track, const Gaps &gaps, sampleCount start, sampleCount end)
+std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
+   const WaveTrack &track, sampleCount start, sampleCount end)
 {
-   if (!track)
-      return false;
-
    // initialization, per examples of Mixer::Mixer and
    // EffectSoundTouch::ProcessOne
 
-
-   auto outputTrack = track->EmptyCopy();
+   auto outputTrack = track.EmptyCopy();
 
    //Get the length of the selection (as double). len is
    //used simple to calculate a progress meter, so it is easier
@@ -488,7 +499,7 @@ bool EffectChangeSpeed::ProcessOne(
 
    // Initiate processing buffers, most likely shorter than
    // the length of the selection being processed.
-   auto inBufferSize = track->GetMaxBlockSize();
+   auto inBufferSize = track.GetMaxBlockSize();
 
    Floats inBuffer{ inBufferSize };
 
@@ -506,12 +517,12 @@ bool EffectChangeSpeed::ProcessOne(
    while (samplePos < end) {
       //Get a blockSize of samples (smaller than the size of the buffer)
       auto blockSize = limitSampleBufferSize(
-         track->GetBestBlockSize(samplePos),
+         track.GetBestBlockSize(samplePos),
          end - samplePos
       );
 
       //Get the samples from the track and put them in the buffer
-      track->GetFloats(inBuffer.get(), samplePos, blockSize);
+      track.GetFloats(inBuffer.get(), samplePos, blockSize);
 
       const auto results = resample.Process(mFactor,
                                     inBuffer.get(),
@@ -535,25 +546,12 @@ bool EffectChangeSpeed::ProcessOne(
       }
    }
 
-   // Flush the output WaveTrack (since it's buffered, too)
-   outputTrack->Flush();
-
-   // Take the output track and insert it in place of the original
-   // sample data
-   const double newLength = outputTrack->GetEndTime();
    if (bResult) {
-      LinearTimeWarper warper { mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
-
-      // Take the output track and insert it in place of the original sample data
-      track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, true, &warper);
-
-      // Finally, recreate the gaps
-      for (const auto [st, et] : gaps)
-         if (st >= mCurT0 && et <= mCurT1 && st != et)
-            track->SplitDelete(warper.Warp(st), warper.Warp(et));
+      // Flush the output WaveTrack (since it's buffered, too)
+      outputTrack->Flush();
+      return outputTrack;
    }
-
-   return bResult;
+   return {};
 }
 
 // handler implementations for EffectChangeSpeed
