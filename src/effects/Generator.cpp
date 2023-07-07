@@ -15,6 +15,7 @@
 **********************************************************************/
 
 #include "Generator.h"
+#include "EffectOutputTracks.h"
 
 #include "Project.h"
 #include "Prefs.h"
@@ -32,13 +33,13 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
 
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
-   this->CopyInputTracks(true);
+   EffectOutputTracks outputs{ *mTracks, true };
 
    // Iterate over the tracks
    bool bGoodResult = true;
    int ntrack = 0;
 
-   mOutputTracks->Any().VisitWhile( bGoodResult,
+   outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](WaveTrack &track) {
          if (!track.GetSelected())
             return fallthrough();
@@ -106,7 +107,8 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
    if (bGoodResult) {
       Success();
 
-      this->ReplaceProcessedTracks(bGoodResult);
+      if (bGoodResult)
+         outputs.Commit();
 
       mT1 = mT0 + duration; // Update selection.
    }

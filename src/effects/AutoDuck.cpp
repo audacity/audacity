@@ -17,6 +17,7 @@
 *******************************************************************/
 #include "AutoDuck.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -299,19 +300,15 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
       }
    }
 
-   if (!cancel)
-   {
-      CopyInputTracks(); // Set up mOutputTracks.
+   if (!cancel) {
+      EffectOutputTracks outputs{ *mTracks };
 
       int trackNum = 0;
 
-      for( auto iterTrack : mOutputTracks->Selected< WaveTrack >() )
-      {
-         for (size_t i = 0; i < regions.size(); i++)
-         {
+      for (auto iterTrack : outputs.Get().Selected<WaveTrack>()) {
+         for (size_t i = 0; i < regions.size(); ++i) {
             const AutoDuckRegion& region = regions[i];
-            if (ApplyDuckFade(trackNum, iterTrack, region.t0, region.t1))
-            {
+            if (ApplyDuckFade(trackNum, iterTrack, region.t0, region.t1)) {
                cancel = true;
                break;
             }
@@ -322,9 +319,11 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
 
          trackNum++;
       }
+
+      if (!cancel)
+         outputs.Commit();
    }
 
-   ReplaceProcessedTracks(!cancel);
    return !cancel;
 }
 

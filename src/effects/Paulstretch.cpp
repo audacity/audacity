@@ -15,6 +15,7 @@
 *//*******************************************************************/
 #include "Paulstretch.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <algorithm>
@@ -146,11 +147,11 @@ double EffectPaulstretch::CalcPreviewInputLength(
 bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 {
    // Pass true because sync lock adjustment is needed
-   CopyInputTracks(true);
+   EffectOutputTracks outputs{ *mTracks, true };
    m_t1 = mT1;
    int count = 0;
    // Process selected wave tracks first, to find the new t1 value
-   for (auto track : mOutputTracks->Selected<WaveTrack>()) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart ? trackStart : mT0;
@@ -162,7 +163,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
    }
 
    // Sync lock adjustment of other tracks
-   mOutputTracks->Any().Visit(
+   outputs.Get().Any().Visit(
       [&](auto &&fallthrough){ return [&](WaveTrack &track) {
          if (!track.IsSelected())
             fallthrough();
@@ -174,7 +175,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
    );
    mT1 = m_t1;
 
-   ReplaceProcessedTracks(true);
+   outputs.Commit();
 
    return true;
 }

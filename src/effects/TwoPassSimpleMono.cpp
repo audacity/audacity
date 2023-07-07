@@ -21,6 +21,7 @@ doing the second pass over all selected tracks.
 
 #include "TwoPassSimpleMono.h"
 
+#include "EffectOutputTracks.h"
 #include "WaveTrack.h"
 
 bool EffectTwoPassSimpleMono::Process(EffectInstance &, EffectSettings &settings)
@@ -29,18 +30,18 @@ bool EffectTwoPassSimpleMono::Process(EffectInstance &, EffectSettings &settings
    mSecondPassDisabled = false;
 
    InitPass1();
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
 
    mWorkTracks = TrackList::Create(
       const_cast<AudacityProject*>( FindProject() ) );
-   for (auto track : mOutputTracks->Selected< WaveTrack >()) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       mWorkTracks->Add(track->EmptyCopy())->ConvertToSampleFormat(floatSample);
-      if( mT0 > 0 )
-         mWorkTracks->back()->InsertSilence(0, mT0);
+      if (mT0 > 0)
+         (*mWorkTracks->rbegin())->InsertSilence(0, mT0);
    }
 
-   mTrackLists[0] = &mOutputTracks;
-   mTrackLists[1] = mSecondPassDisabled ? &mOutputTracks : &mWorkTracks;
+   mTrackLists[0] = &outputs.Get();
+   mTrackLists[1] = mSecondPassDisabled ? mTrackLists[0] : &*mWorkTracks;
 
    bool bGoodResult = ProcessPass(settings);
 
@@ -54,7 +55,9 @@ bool EffectTwoPassSimpleMono::Process(EffectInstance &, EffectSettings &settings
    mWorkTracks->Clear();
    mWorkTracks.reset();
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 
@@ -63,8 +66,8 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
    //Iterate over each track
    mCurTrackNum = 0;
 
-   auto outTracks = (*mTrackLists[1 - mPass])->Selected< WaveTrack >().begin();
-   for( auto track : (*mTrackLists[mPass])->Selected< WaveTrack >() ) {
+   auto outTracks = (*mTrackLists[1 - mPass]).Selected<WaveTrack>().begin();
+   for (auto track : (*mTrackLists[mPass]).Selected<WaveTrack>()) {
       auto outTrack = *outTracks;
 
       //Get start and end times from track

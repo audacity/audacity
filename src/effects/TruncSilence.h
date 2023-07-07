@@ -91,9 +91,9 @@ private:
    bool FindSilences
       (RegionList &silences, const TrackList *list,
        const Track *firstTrack, const Track *lastTrack);
-   bool DoRemoval
-      (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
-       double &totalCutLen);
+   bool DoRemoval(TrackList &outputs,
+      const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
+      double &totalCutLen);
 
    wxWeakRef<wxWindow> mUIParent{};
 

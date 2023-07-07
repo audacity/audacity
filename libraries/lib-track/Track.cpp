@@ -597,8 +597,12 @@ bool TrackList::SwapChannels(Track &track)
    return true;
 }
 
-void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
+void TrackList::Permute(const std::vector<Track *> &tracks)
 {
+   std::vector<TrackNodePointer> permutation;
+   for (const auto pTrack : tracks)
+      for (const auto pChannel : Channels(pTrack))
+         permutation.push_back(pChannel->GetNode());
    for (const auto iter : permutation) {
       ListOfTracks::value_type track = *iter.first;
       erase(iter.first);
@@ -727,25 +731,31 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
    return true;
 }
 
-TrackNodePointer TrackList::Remove(Track *t)
+void TrackList::Remove(Track &track)
 {
-   auto result = getEnd();
-   if (t) {
+   assert(track.IsLeader());
+   auto *t = &track;
+   const size_t nChannels = NChannels(*t);
+   Track *nextT{};
+   for (size_t ii = 0; t != nullptr && ii < nChannels; ++ii, t = nextT) {
+      nextT = nullptr;
+      auto iter = getEnd();
       auto node = t->GetNode();
       t->SetOwner({}, {});
 
-      if ( !isNull( node ) ) {
+      if (!isNull(node)) {
          ListOfTracks::value_type holder = *node.first;
 
-         result = getNext( node );
+         iter = getNext(node);
          erase(node.first);
-         if ( !isNull( result ) )
-            RecalcPositions(result);
+         if (!isNull(iter)) {
+            RecalcPositions(iter);
+            nextT = iter.first->get();
+         }
 
          DeletionEvent(t->shared_from_this(), false);
       }
    }
-   return result;
 }
 
 void TrackList::Clear(bool sendEvent)

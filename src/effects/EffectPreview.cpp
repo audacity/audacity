@@ -110,9 +110,6 @@ void EffectPreview(EffectBase &effect,
       mTracks = saveTracks;
       if (*FocusDialog)
          BasicUI::SetFocus(*FocusDialog);
-
-      // In case of failed effect, be sure to free memory.
-      effect.ReplaceProcessedTracks( false );
    } );
 
    // Build NEW tracklist from rendering tracks

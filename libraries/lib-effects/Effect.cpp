@@ -15,6 +15,7 @@
 
 *//*******************************************************************/
 #include "Effect.h"
+#include "EffectOutputTracks.h"
 
 #include <algorithm>
 
@@ -29,8 +30,6 @@
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "NumericConverterFormats.h"
-
-#include <unordered_map>
 
 Effect::Effect()
 {
@@ -388,45 +387,6 @@ void Effect::GetBounds(
       *start = 0;
       *len = 0;
    }
-}
-
-//
-// private methods
-//
-// Use this method to copy the input tracks to mOutputTracks, if
-// doing the processing on them, and replacing the originals only on success (and not cancel).
-// Copy the group tracks that have tracks selected
-// If not all sync-locked selected, then only selected wave tracks.
-void Effect::CopyInputTracks(bool allSyncLockSelected)
-{
-   // Reset map
-   mIMap.clear();
-   mOMap.clear();
-
-   mOutputTracks = TrackList::Create(
-      const_cast<AudacityProject*>( FindProject() ) // how to remove this const_cast?
-  );
-
-   auto trackRange = mTracks->Any() +
-      [&] (const Track *pTrack) {
-         return allSyncLockSelected
-         ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)
-         : track_cast<const WaveTrack*>( pTrack ) && pTrack->GetSelected();
-      };
-
-   for (auto aTrack : trackRange)
-   {
-      Track *o = mOutputTracks->Add(aTrack->Duplicate());
-      mIMap.push_back(aTrack);
-      mOMap.push_back(o);
-   }
-}
-
-Track *Effect::AddToOutputTracks(const std::shared_ptr<Track> &t)
-{
-   mIMap.push_back(NULL);
-   mOMap.push_back(t.get());
-   return mOutputTracks->Add(t);
 }
 
 bool Effect::CheckWhetherSkipEffect(const EffectSettings &) const

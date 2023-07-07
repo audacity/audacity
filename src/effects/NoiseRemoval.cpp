@@ -222,11 +222,11 @@ bool EffectNoiseRemoval::Process(EffectInstance &, EffectSettings &)
 
    // This same code will both remove noise and profile it,
    // depending on 'mDoProfile'
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
    bool bGoodResult = true;
 
    int count = 0;
-   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -250,7 +250,9 @@ bool EffectNoiseRemoval::Process(EffectInstance &, EffectSettings &)
       mDoProfile = false;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 

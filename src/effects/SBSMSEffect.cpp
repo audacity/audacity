@@ -15,6 +15,7 @@ effect that uses SBSMS to do its processing (TimeScale)
 
 #if USE_SBSMS
 #include "SBSMSEffect.h"
+#include "EffectOutputTracks.h"
 
 #include <math.h>
 
@@ -216,7 +217,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 
    //Iterate over each track
    //all needed because this effect needs to introduce silence in the group tracks to keep sync
-   this->CopyInputTracks(true); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks, true };
    mCurTrackNum = 0;
 
    double maxDuration = 0.0;
@@ -225,7 +226,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
    Slide pitchSlide(pitchSlideType,pitchStart,pitchEnd);
    mTotalStretch = rateSlide.getTotalStretch();
 
-   mOutputTracks->Leaders().VisitWhile( bGoodResult,
+   outputs.Get().Leaders().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
          if (!(lt.GetSelected() || SyncLock::IsSyncLockSelected(&lt)))
             return fallthrough();
@@ -421,9 +422,8 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
       }
    );
 
-   if (bGoodResult) {
-      ReplaceProcessedTracks(bGoodResult);
-   }
+   if (bGoodResult)
+      outputs.Commit();
 
    return bGoodResult;
 }

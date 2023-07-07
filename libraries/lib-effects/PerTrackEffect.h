@@ -69,7 +69,8 @@ protected:
 private:
    using Buffers = AudioGraph::Buffers;
 
-   bool ProcessPass(Instance &instance, EffectSettings &settings);
+   bool ProcessPass(TrackList &outputs,
+      Instance &instance, EffectSettings &settings);
    using Factory = std::function<std::shared_ptr<EffectInstance>()>;
    /*!
     Previous contents of inBuffers and outBuffers are ignored

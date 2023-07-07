@@ -21,15 +21,13 @@
 #include <thread>
 #include "BasicUI.h"
 #include "ConfigInterface.h"
+#include "EffectOutputTracks.h"
 #include "PluginManager.h"
 #include "QualitySettings.h"
 #include "TransactionScope.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "NumericConverterFormats.h"
-
-// Effect application counter
-int EffectBase::nEffectsDone = 0;
 
 EffectBase::EffectBase()
 {
@@ -63,8 +61,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    auto cleanup0 = valueRestorer(mUIFlags, flags);
    wxASSERT(selectedRegion.duration() >= 0.0);
 
-   mOutputTracks.reset();
-
    mFactory = factory;
    mProjectRate = projectRate;
 
@@ -94,7 +90,8 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    auto cleanup = finally( [&] {
       if (!success) {
          if (newTrack) {
-            mTracks->Remove(newTrack);
+            assert(newTrack->IsLeader());
+            mTracks->Remove(*newTrack);
          }
          // On failure, restore the old duration setting
          settings.extra.SetDuration(oldDuration);
@@ -102,7 +99,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
       else
          trans.Commit();
 
-      ReplaceProcessedTracks( false );
       mPresetNames.clear();
    } );
 
@@ -112,6 +108,8 @@ bool EffectBase::DoEffect(EffectSettings &settings,
       auto track = mFactory->Create();
       track->SetName(mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
       newTrack = mTracks->Add(track);
+      // Expect that newly added tracks are always leaders
+      assert(newTrack->IsLeader());
       newTrack->SetSelected(true);
    }
 
@@ -216,88 +214,6 @@ void EffectBase::SetLinearEffectFlag(bool linearEffectFlag)
 void EffectBase::SetPreviewFullSelectionFlag(bool previewDurationFlag)
 {
    mPreviewFullSelection = previewDurationFlag;
-}
-
-
-// If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
-// Else clear and DELETE mOutputTracks copies.
-void EffectBase::ReplaceProcessedTracks(const bool bGoodResult)
-{
-   if (!bGoodResult) {
-      // Free resources, unless already freed.
-
-      // Processing failed or was cancelled so throw away the processed tracks.
-      if ( mOutputTracks )
-         mOutputTracks->Clear();
-
-      // Reset map
-      mIMap.clear();
-      mOMap.clear();
-
-      //TODO:undo the non-gui ODTask transfer
-      return;
-   }
-
-   // Assume resources need to be freed.
-   wxASSERT(mOutputTracks); // Make sure we at least did the CopyInputTracks().
-
-   auto iterOut = mOutputTracks->ListOfTracks::begin(),
-      iterEnd = mOutputTracks->ListOfTracks::end();
-
-   size_t cnt = mOMap.size();
-   size_t i = 0;
-
-   for (; iterOut != iterEnd; ++i) {
-      ListOfTracks::value_type o = *iterOut;
-      // If tracks were removed from mOutputTracks, then there will be
-      // tracks in the map that must be removed from mTracks.
-      while (i < cnt && mOMap[i] != o.get()) {
-         const auto t = mIMap[i];
-         if (t) {
-            mTracks->Remove(t);
-         }
-         i++;
-      }
-
-      // This should never happen
-      wxASSERT(i < cnt);
-
-      // Remove the track from the output list...don't DELETE it
-      iterOut = mOutputTracks->erase(iterOut);
-
-      const auto  t = mIMap[i];
-      if (t == NULL)
-      {
-         // This track is a NEW addition to output tracks; add it to mTracks
-         mTracks->Add( o );
-      }
-      else
-      {
-         // Replace mTracks entry with the NEW track
-         mTracks->Replace(t, o);
-      }
-   }
-
-   // If tracks were removed from mOutputTracks, then there may be tracks
-   // left at the end of the map that must be removed from mTracks.
-   while (i < cnt) {
-      const auto t = mIMap[i];
-      if (t) {
-         mTracks->Remove(t);
-      }
-      i++;
-   }
-
-   // Reset map
-   mIMap.clear();
-   mOMap.clear();
-
-   // Make sure we processed everything
-   wxASSERT(mOutputTracks->empty());
-
-   // The output list is no longer needed
-   mOutputTracks.reset();
-   nEffectsDone++;
 }
 
 const AudacityProject *EffectBase::FindProject() const

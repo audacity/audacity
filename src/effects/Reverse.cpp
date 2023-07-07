@@ -16,6 +16,7 @@
 
 
 #include "Reverse.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -71,13 +72,13 @@ bool EffectReverse::IsInteractive() const
 bool EffectReverse::Process(EffectInstance &, EffectSettings &)
 {
    //all needed because Reverse should move the labels too
-   this->CopyInputTracks(true); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks, true };
    bool bGoodResult = true;
    int count = 0;
 
    auto trackRange =
-      mOutputTracks->Any() + &SyncLock::IsSelectedOrSyncLockSelected;
-   trackRange.VisitWhile( bGoodResult,
+      outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelected;
+   trackRange.VisitWhile(bGoodResult,
       [&](WaveTrack &track) {
          if (mT1 > mT0) {
             auto start = track.TimeToLongSamples(mT0);
@@ -95,7 +96,9 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
       }
    );
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 

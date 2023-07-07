@@ -16,6 +16,7 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 #if USE_SOUNDTOUCH
 #include "SoundTouchEffect.h"
+#include "EffectOutputTracks.h"
 
 #include <math.h>
 
@@ -86,14 +87,14 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
 
    //Iterate over each track
    // Needs all for sync-lock grouping.
-   this->CopyInputTracks(true);
+   EffectOutputTracks outputs{ *mTracks, true };
    bool bGoodResult = true;
 
    mPreserveLength = preserveLength;
    mCurTrackNum = 0;
    m_maxNewLength = 0.0;
 
-   mOutputTracks->Leaders().VisitWhile( bGoodResult,
+   outputs.Get().Leaders().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
          if ( !(lt.GetSelected() ||
                 (mustSync && SyncLock::IsSyncLockSelected(&lt))) )
@@ -180,9 +181,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
       }
    );
 
-   if (bGoodResult) {
-      ReplaceProcessedTracks(bGoodResult);
-   }
+   if (bGoodResult)
+      outputs.Commit();
 
    return bGoodResult;
 }

@@ -151,24 +151,6 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
    return track;
 }
 
-// Returns TRUE if passed track has the focus
-bool TrackPanelAx::IsFocused( const Track *track )
-{
-   auto focusedTrack = mFocusedTrack.lock();
-   if( !focusedTrack )
-      focusedTrack = SetFocus();
-
-   // Remap track pointer if there are outstanding pending updates
-   auto origTrack =
-      GetTracks().FindById( track->GetId() );
-   if (origTrack)
-      track = origTrack;
-
-   return focusedTrack
-      ? TrackList::Channels(focusedTrack.get()).contains(track)
-      : !track;
-}
-
 int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )
 {
    // Find 1-based position of the target in the visible tracks, or 0 if not
@@ -760,13 +742,6 @@ void TrackFocus::Set( Track *pTrack )
       pTrack = *TrackList::Get( mProject ).FindLeader( pTrack );
       mAx->SetFocus( Track::SharedPointer( pTrack ) );
    }
-}
-
-bool TrackFocus::IsFocused( const Track *pTrack )
-{
-   if (mAx)
-      return mAx->IsFocused( pTrack );
-   return false;
 }
 
 void TrackFocus::SetAccessible(

@@ -317,10 +317,8 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto cleanup = finally([this, &tracks, oldNumTracks]{
       if (mUpdateResult != ProgressResult::Success) {
          // Revoke additions of tracks
-         while (oldNumTracks < tracks.Size()) {
-            Track *lastTrack = *tracks.Any().rbegin();
-            tracks.Remove(lastTrack);
-         }
+         while (oldNumTracks < tracks.Size())
+            tracks.Remove(**tracks.Leaders().end().advance(-1));
       }
    });
 

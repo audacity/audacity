@@ -21,6 +21,7 @@
 
 
 #include "SimpleMono.h"
+#include "EffectOutputTracks.h"
 
 #include "WaveTrack.h"
 
@@ -29,11 +30,11 @@
 bool EffectSimpleMono::Process(EffectInstance &, EffectSettings &)
 {
    //Iterate over each track
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
    bool bGoodResult = true;
 
    mCurTrackNum = 0;
-   for( auto pOutWaveTrack : mOutputTracks->Selected< WaveTrack >() )
+   for (auto pOutWaveTrack : outputs.Get().Selected<WaveTrack>())
    {
       //Get start and end times from track
       double trackStart = pOutWaveTrack->GetStartTime();
@@ -66,7 +67,8 @@ bool EffectSimpleMono::Process(EffectInstance &, EffectSettings &)
       mCurTrackNum++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
    return bGoodResult;
 }
 

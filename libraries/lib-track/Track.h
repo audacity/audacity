@@ -1144,7 +1144,7 @@ struct TrackListEvent
  */
 class TRACK_API TrackList final
    : public Observer::Publisher<TrackListEvent>
-   , public ListOfTracks
+   , private ListOfTracks
    , public std::enable_shared_from_this<TrackList>
    , public ClientData::Base
 {
@@ -1207,6 +1207,16 @@ class TRACK_API TrackList final
    const_iterator end() const { return Any().end(); }
    const_iterator cbegin() const { return begin(); }
    const_iterator cend() const { return end(); }
+
+   // Reverse iteration
+   using reverse_iterator = std::reverse_iterator<iterator>;
+   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+   reverse_iterator rbegin() { return Any().rbegin(); }
+   reverse_iterator rend() { return Any().rend(); }
+   const_reverse_iterator rbegin() const { return Any().rbegin(); }
+   const_reverse_iterator rend() const { return Any().rend(); }
+   const_reverse_iterator crbegin() const { return rbegin(); }
+   const_reverse_iterator crend() const { return rend(); }
 
    //! Turn a pointer into a TrackIter (constant time); get end iterator if this does not own the track
    template < typename TrackType = Track >
@@ -1370,8 +1380,11 @@ public:
 
    friend class Track;
 
-   //! For use in sorting:  assume each iterator points into this list, no duplications
-   void Permute(const std::vector<TrackNodePointer> &permutation);
+   /*!
+    @pre `tracks` contains pointers only to leader tracks of this, and each of
+    them exactly once
+    */
+   void Permute(const std::vector<Track *> &tracks);
 
    Track *FindById( TrackId id );
 
@@ -1401,8 +1414,11 @@ public:
    ListOfTracks::value_type Replace(
       Track * t, const ListOfTracks::value_type &with);
 
-   //! Remove the Track and return an iterator to what followed it.
-   TrackNodePointer Remove(Track *t);
+   //! Remove a channel group, given the leader
+   /*!
+    @pre `track.IsLeader()`
+    */
+   void Remove(Track &track);
 
    /// Make the list empty
    void Clear(bool sendEvent = true);
