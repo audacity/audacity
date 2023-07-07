@@ -2287,21 +2287,21 @@ WaveTrack::GetOneSampleView(sampleCount start, size_t length) const
       const auto clipStartTime = clip->GetPlayStartTime();
       if (t0 < clipStartTime) {
          const auto numSamples = TimeToLongSamples(clipStartTime - t0);
-         segments.push_back(AudioSegmentSampleView(numSamples));
+         segments.push_back(AudioSegmentSampleView{numSamples});
          t0 = clipStartTime;
+         length -= numSamples.as_size_t();
       }
       const auto clipT0 = t0 - clipStartTime;
       const auto clipS0 = TimeToLongSamples(clipT0);
-      // By substitution,
-      //    (len - length) / rate = t0 - clipT0,
-      // and since
-      //    t0 - clipT0 <= 0,
-      // then `length >= len`. `as_size_t` won't narrow.
-      const auto len = TimeToLongSamples(t1 - clipT0).as_size_t();
+      const auto len =
+         limitSampleBufferSize(length, clip->GetPlaySamplesCount() - clipS0);
       auto newSegment = clip->GetSampleView(0u, clipS0, len);
       t0 += newSegment.GetSampleCount().as_double() / GetRate();
       segments.push_back(std::move(newSegment));
+      length -= len;
    }
+   if (length > 0u)
+      segments.push_back(AudioSegmentSampleView{length});
    return segments;
 }
 
