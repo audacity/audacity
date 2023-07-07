@@ -61,7 +61,13 @@ public:
 private:
    // EffectChangeSpeed implementation
 
-   bool ProcessOne(WaveTrack *t, sampleCount start, sampleCount end);
+   using Gap = std::pair<double, double>;
+   using Gaps = std::vector<Gap>;
+   Gaps FindGaps(
+      const WaveTrack &track, const double curT0, const double curT1);
+
+   bool ProcessOne(
+      WaveTrack *t, const Gaps &gaps, sampleCount start, sampleCount end);
    bool ProcessLabelTrack(LabelTrack *t);
 
    // handlers

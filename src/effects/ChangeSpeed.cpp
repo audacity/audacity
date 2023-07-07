@@ -178,6 +178,37 @@ bool EffectChangeSpeed::Init()
    return true;
 }
 
+auto EffectChangeSpeed::FindGaps(
+   const WaveTrack &track, const double curT0, const double curT1) -> Gaps
+{
+   // Silenced samples will be inserted in gaps between clips, so capture where
+   // these gaps are for later deletion
+   Gaps gaps;
+   const auto newGap = [&](double st, double et){
+      gaps.emplace_back(
+         track.LongSamplesToTime(track.TimeToLongSamples(st)),
+         track.LongSamplesToTime(track.TimeToLongSamples(et)));
+   };
+   double last = curT0;
+   auto clips = track.SortedClipArray();
+   auto front = clips.front();
+   auto back = clips.back();
+   for (auto &clip : clips) {
+      auto st = clip->GetPlayStartTime();
+      auto et = clip->GetPlayEndTime();
+      if (st >= curT0 || et < curT1) {
+         if (curT0 < st && clip == front)
+            newGap(curT0, st);
+         else if (last < st && curT0 <= last)
+            newGap(last, st);
+         if (et < curT1 && clip == back)
+            newGap(et, curT1);
+      }
+      last = et;
+   }
+   return gaps;
+}
+
 bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 {
    // Similar to EffectSoundTouch::Process()
@@ -220,7 +251,8 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
             auto end = outWaveTrack.TimeToLongSamples(mCurT1);
 
             //ProcessOne() (implemented below) processes a single track
-            if (!ProcessOne(&outWaveTrack, start, end))
+            const auto gaps = FindGaps(outWaveTrack, mCurT0, mCurT1);
+            if (!ProcessOne(&outWaveTrack, gaps, start, end))
                bGoodResult = false;
          }
          mCurTrackNum++;
@@ -438,10 +470,10 @@ bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
-bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
-                           sampleCount start, sampleCount end)
+bool EffectChangeSpeed::ProcessOne(
+   WaveTrack * track, const Gaps &gaps, sampleCount start, sampleCount end)
 {
-   if (track == NULL)
+   if (!track)
       return false;
 
    // initialization, per examples of Mixer::Mixer and
@@ -509,49 +541,17 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
    // Take the output track and insert it in place of the original
    // sample data
-   double newLength = outputTrack->GetEndTime();
-   if (bResult)
-   {
-      // Silenced samples will be inserted in gaps between clips, so capture where these
-      // gaps are for later deletion
-      std::vector<std::pair<double, double>> gaps;
-      double last = mCurT0;
-      auto clips = track->SortedClipArray();
-      auto front = clips.front();
-      auto back = clips.back();
-      for (auto &clip : clips) {
-         auto st = clip->GetPlayStartTime();
-         auto et = clip->GetPlayEndTime();
-
-         if (st >= mCurT0 || et < mCurT1) {
-            if (mCurT0 < st && clip == front) {
-               gaps.push_back(std::make_pair(mCurT0, st));
-            }
-            else if (last < st && mCurT0 <= last ) {
-               gaps.push_back(std::make_pair(last, st));
-            }
-
-            if (et < mCurT1 && clip == back) {
-               gaps.push_back(std::make_pair(et, mCurT1));
-            }
-         }
-         last = et;
-      }
-
+   const double newLength = outputTrack->GetEndTime();
+   if (bResult) {
       LinearTimeWarper warper { mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
 
       // Take the output track and insert it in place of the original sample data
       track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, true, &warper);
 
       // Finally, recreate the gaps
-      for (auto gap : gaps) {
-         auto st = track->LongSamplesToTime(track->TimeToLongSamples(gap.first));
-         auto et = track->LongSamplesToTime(track->TimeToLongSamples(gap.second));
+      for (const auto [st, et] : gaps)
          if (st >= mCurT0 && et <= mCurT1 && st != et)
-         {
             track->SplitDelete(warper.Warp(st), warper.Warp(et));
-         }
-      }
    }
 
    if (newLength > mMaxNewLength)
