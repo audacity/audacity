@@ -22,6 +22,10 @@
 #include <wx/stattext.h>
 #include <wx/wupdlock.h>
 
+#ifdef wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+#endif
+
 wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
 ExportOptionsHandler::~ExportOptionsHandler() = default;
@@ -139,7 +143,11 @@ void ExportOptionsHandler::PopulateOptions(ShuttleGui& S)
             }
             else if(auto selected = std::get_if<bool>(&value))
             {
-               control = S.AddCheckBox({}, *selected);
+               control = S.Name(option.title).
+                  AddCheckBox({}, *selected);
+#if wxUSE_ACCESSIBILITY
+               safenew WindowAccessible(control);
+#endif
                control->Bind(wxEVT_CHECKBOX, [this, id = option.id](const wxCommandEvent& evt)
                {
                   const auto checked = evt.GetInt() != 0;
@@ -154,7 +162,8 @@ void ExportOptionsHandler::PopulateOptions(ShuttleGui& S)
                   const int max = *std::get_if<int>(&option.values[1]);
                   if(max - min < 20)
                   {
-                     control = S.AddSlider({}, *num, max, min);
+                     control = S.Name(option.title)
+                        .AddSlider({}, *num, max, min);
                      control->Bind(wxEVT_SLIDER, [this, id = option.id](const wxCommandEvent& evt)
                      {
                         mEditor->SetValue(id, evt.GetInt());

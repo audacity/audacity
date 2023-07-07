@@ -17,6 +17,11 @@
 #include "ShuttleGui.h"
 #include "ExportOptionsHandler.h"
 #include "ExportPluginRegistry.h"
+#include "WindowAccessible.h"
+
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+#endif
 
 wxDEFINE_EVENT(AUDACITY_EXPORT_FORMAT_CHANGE_EVENT, wxCommandEvent);
 
@@ -153,13 +158,13 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
    {
       S.SetStretchyCol(1);
       
-      mFullName = S.AddTextBox(XO("File Name:"), {}, 0);
+      mFullName = S.AddTextBox(XO("File &Name:"), {}, 0);
       S.AddSpace(1);
       
-      mFolder = S.AddTextBox(XO("Folder:"), {}, 0);
-      S.Id(FolderBrowseID).AddButton(XO("Browse..."));
+      mFolder = S.AddTextBox(XO("Fo&lder:"), {}, 0);
+      S.Id(FolderBrowseID).AddButton(XO("&Browse..."));
       
-      mFormat = S.Id(FormatID).AddChoice(XO("Format:"), formats);
+      mFormat = S.Id(FormatID).AddChoice(XO("&Format:"), formats);
       S.AddSpace(1);
    }
    S.EndMultiColumn();
@@ -178,19 +183,26 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
 
             const int channels = 2;
 
-            mMono = S.Id(AudioMixModeMonoID).AddRadioButton(XO("Mono"), 1, channels);
-            mStereo = S.Id(AudioMixModeStereoID).AddRadioButtonToGroup(XO("Stereo"), 2, channels);
+            mMono = S.Id(AudioMixModeMonoID).AddRadioButton(XO("M&ono"), 1, channels);
+            mStereo = S.Id(AudioMixModeStereoID).AddRadioButtonToGroup(XO("&Stereo"), 2, channels);
             if(!mMonoStereoMode)
             {
-               mCustomMapping = S.Id(AudioMixModeCustomID).AddRadioButtonToGroup(XO("Custom mapping"), 0, true);
-               mCustomizeChannels = S.Id(AudioChannelsConfigureID).AddButton(XO("Configure"));
+               //i18n-hint refers to custom channel mapping configuration
+               mCustomMapping = S.Id(AudioMixModeCustomID).AddRadioButtonToGroup(XO("Custom mappin&g"), 0, true);
+               mCustomizeChannels = S.Id(AudioChannelsConfigureID)
+                  //i18n-hint accessibility hint, refers to export channel configuration
+                  .Name(XO("Configure custom mapping"))
+                  .AddButton(XO("Configure"));
+#if wxUSE_ACCESSIBILITY
+                  safenew WindowAccessible(mCustomizeChannels);
+#endif
             }
          }
          S.EndHorizontalLay();
 
          S.SetBorder(5);
 
-         if(auto prompt = S.AddPrompt(XO("Sample Rate")))
+         if(auto prompt = S.AddPrompt(XO("Sample &Rate")))
             prompt->SetMinSize({140, -1});
 
          S.StartHorizontalLay(wxALIGN_LEFT);

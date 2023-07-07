@@ -54,7 +54,7 @@ void TimerRecordExportDialog::PopulateOrExchange(ShuttleGui& S)
          mEditMetadata = S.Id(EditMetadataID).AddButton(XO("Edit &Metadata..."), wxLEFT | wxBOTTOM);
          S.AddSpace(1, 1, wxEXPAND);
          S.Id(wxID_CANCEL).AddButton(XO("&Cancel"), wxBOTTOM);
-         S.Id(wxID_OK).AddButton(XO("&OK"), wxRIGHT | wxBOTTOM, true);
+         S.Id(wxID_OK).AddButton(XO("O&K"), wxRIGHT | wxBOTTOM, true);
       }
       S.EndHorizontalLay();
    }

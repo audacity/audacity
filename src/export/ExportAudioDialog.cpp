@@ -41,15 +41,21 @@
 #include "TagsEditor.h"
 #include "ExportFilePanel.h"
 #include "ExportProgressUI.h"
+#include "WindowAccessible.h"
+
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+#endif
 
 namespace
 {
 
 ChoiceSetting ExportAudioExportRange { L"/ExportAudioDialog/ExportRange",
    {
-      { "project", XO("Entire Project") },
-      { "selection", XO("Current selection") },
-      { "split", XO("Split in parts") }
+      { "project", XO("Entire &Project") },
+      { "split", XO("M&ultiple Files") },
+      { "selection", XO("Curren&t selection") }
+      
    },
    0, //project
 };
@@ -237,9 +243,20 @@ void ExportAudioDialog::PopulateOrExchange(ShuttleGui& S)
             {
                S.StartRadioButtonGroup(ExportAudioExportRange);
                {
-                  mRangeProject = S.Id(ExportRangeProjectID).TieRadioButton();
-                  mRangeSelection = S.Id(ExportRangeSelectionID).TieRadioButton();
-                  mRangeSplit = S.Id(ExportRangeSplitID).TieRadioButton();
+                  mRangeProject = S.Id(ExportRangeProjectID)
+                     .Name(XO("Export entire project"))
+                     .TieRadioButton();
+                  mRangeSplit = S.Id(ExportRangeSplitID)
+                     .Name(XO("Export multiple files"))
+                     .TieRadioButton();
+                  mRangeSelection = S.Id(ExportRangeSelectionID)
+                     .Name(XO("Export current selection"))
+                     .TieRadioButton();
+#if wxUSE_ACCESSIBILITY
+                  safenew WindowAccessible(mRangeProject);
+                  safenew WindowAccessible(mRangeSelection);
+                  safenew WindowAccessible(mRangeSplit);
+#endif
                }
                S.EndRadioButtonGroup();
             }
