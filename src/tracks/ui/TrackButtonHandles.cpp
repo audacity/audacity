@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanel.h"
 #include "../../TrackUtilities.h"
 #include "../../commands/CommandManager.h"
-#include "../../tracks/ui/TrackView.h"
+#include "../../tracks/ui/ChannelView.h"
 
 MinimizeButtonHandle::MinimizeButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
@@ -39,14 +39,12 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
 {
    using namespace RefreshCode;
 
-   auto pTrack = mpTrack.lock();
-   if (pTrack)
-   {
-      auto channels = TrackList::Channels(pTrack.get());
-      bool wasMinimized = TrackView::Get( **channels.begin() ).GetMinimized();
-      for (auto channel : channels)
-         TrackView::Get( *channel ).SetMinimized( !wasMinimized );
-      ProjectHistory::Get( *pProject ).ModifyState(true);
+   if (auto pTrack = mpTrack.lock()) {
+      auto channels = pTrack->Channels();
+      bool wasMinimized = ChannelView::Get(**channels.begin()).GetMinimized();
+      for (auto pChannel : channels)
+         ChannelView::Get(*pChannel).SetMinimized( !wasMinimized );
+      ProjectHistory::Get(*pProject).ModifyState(true);
 
       // Redraw all tracks when any one of them expands or contracts
       // (Could we invent a return code that draws only those at or below
@@ -61,7 +59,7 @@ TranslatableString MinimizeButtonHandle::Tip(
    const wxMouseState &, AudacityProject &) const
 {
    auto pTrack = GetTrack();
-   return TrackView::Get( *pTrack ).GetMinimized()
+   return ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized()
       ? XO("Expand") : XO("Collapse");
 }
 

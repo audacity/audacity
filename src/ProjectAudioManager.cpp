@@ -39,7 +39,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "WaveTrack.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 #include "widgets/MeterPanelBase.h"
 #include "AudacityMessageBox.h"
 
@@ -937,7 +937,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
             if ((recordingChannels > 2) &&
                 !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
-               TrackView::Get( *newTrack ).SetMinimized(true);
+               ChannelView::Get(*newTrack->GetChannel(0)).SetMinimized(true);
             }
 
             transportSequences.captureSequences.push_back(newTrack);

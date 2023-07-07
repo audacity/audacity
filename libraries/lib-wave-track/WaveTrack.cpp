@@ -244,7 +244,7 @@ size_t WaveTrack::GetWidth() const
 
 size_t WaveTrack::NChannels() const
 {
-   if (IsLeader()) {
+   if (IsLeader() && GetOwner()) {
       auto result = TrackList::NChannels(*this);
       assert(result > 0);
       return result;
@@ -260,7 +260,7 @@ AudioGraph::ChannelType WaveTrack::GetChannelType() const
    else if (IsLeader())
       return AudioGraph::LeftChannel;
    else
-      // TODO more-than-two-channels
+      // TODO: more-than-two-channels
       return AudioGraph::RightChannel;
 }
 
@@ -412,6 +412,26 @@ const WaveClip* WaveTrack::FindClipByName(const wxString& name) const
          return clip.get();
    }
    return nullptr;
+}
+
+std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
+{
+   auto nChannels = NChannels();
+   if (iChannel >= nChannels)
+      return {};
+   auto pTrack = (iChannel == 0)
+      ? this
+      // TODO: more-than-two-channels
+      : *TrackList::Channels(this).rbegin();
+   // Use aliasing constructor of std::shared_ptr
+   ::Channel *alias = pTrack;
+   return { pTrack->shared_from_this(), alias };
+}
+
+Track &WaveTrack::DoGetTrack() const
+{
+   const Track &track = *this;
+   return const_cast<Track&>(track);
 }
 
 Track::Holder WaveTrack::Clone() const

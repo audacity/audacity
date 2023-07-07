@@ -13,7 +13,7 @@
 #include "UIHandle.h"
 #include "WaveClip.h"
 
-class WaveTrackView;
+class WaveChannelView;
 class WaveTrack;
 
 class WaveClipTrimHandle : public UIHandle
@@ -58,7 +58,7 @@ public:
         const TrackPanelMouseState& state);
 
     static UIHandlePtr HitTest(std::weak_ptr<WaveClipTrimHandle>& holder,
-        WaveTrackView& view, const AudacityProject* pProject,
+        WaveChannelView& view, const AudacityProject* pProject,
         const TrackPanelMouseState& state);
 
     HitTestPreview Preview(const TrackPanelMouseState& mouseState, AudacityProject* pProject) override;

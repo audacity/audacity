@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 WaveformView.cpp
 
-Paul Licameli split from WaveTrackView.cpp
+Paul Licameli split from WaveChannelView.cpp
 
 **********************************************************************/
 
@@ -13,8 +13,8 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "WaveformCache.h"
 #include "WaveformVRulerControls.h"
-#include "WaveTrackView.h"
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelView.h"
+#include "WaveChannelViewConstants.h"
 
 #include "SampleHandle.h"
 #include "../../../ui/EnvelopeHandle.h"
@@ -40,12 +40,12 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/graphics.h>
 #include <wx/dc.h>
 
-static WaveTrackSubView::Type sType{
-   WaveTrackViewConstants::Waveform,
+static WaveChannelSubView::Type sType{
+   WaveChannelViewConstants::Waveform,
    { wxT("Waveform"), XXO("Wa&veform") }
 };
 
-static WaveTrackSubViewType::RegisteredType reg{ sType };
+static WaveChannelSubViewType::RegisteredType reg{ sType };
 
 WaveformView::~WaveformView() = default;
 
@@ -57,7 +57,7 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
    const auto pTrack =
       std::static_pointer_cast< WaveTrack >( view.FindTrack() );
 
-   auto pair = WaveTrackSubView::DoDetailedHitTest(
+   auto pair = WaveChannelSubView::DoDetailedHitTest(
       st, pProject, currentTool, bMultiTool, pTrack);
    auto &results = pair.second;
 
@@ -131,7 +131,7 @@ void WaveformView::DoSetMinimized( bool minimized )
    }
 #endif
 
-   TrackView::DoSetMinimized( minimized );
+   ChannelView::DoSetMinimized(minimized);
 }
 
 auto WaveformView::SubViewType() const -> const Type &
@@ -139,9 +139,9 @@ auto WaveformView::SubViewType() const -> const Type &
    return sType;
 }
 
-std::shared_ptr<TrackVRulerControls> WaveformView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> WaveformView::DoGetVRulerControls()
 {
-   return std::make_shared<WaveformVRulerControls>( shared_from_this() );
+   return std::make_shared<WaveformVRulerControls>(shared_from_this());
 }
 
 namespace
@@ -538,7 +538,9 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context, size_t channel,
    }
 
    const auto sampleDisplay = artist->mSampleDisplay;
-   if (showPoints && (sampleDisplay == (int) WaveTrackViewConstants::StemPlot)) {
+   if (showPoints &&
+       (sampleDisplay == (int) WaveChannelViewConstants::StemPlot)
+   ){
       // Draw vertical lines
       int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height, dB, true, dBRange, false);
       yZero = rect.y + std::max(-1, std::min(rect.height, yZero));
@@ -661,7 +663,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
 
    //If clip is "too small" draw a placeholder instead of
    //attempting to fit the contents into a few pixels
-   if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+   if (!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
    {
       auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
       TrackArt::DrawClipFolded(dc, clipRect);
@@ -703,14 +705,14 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   CommonTrackView::GetEnvelopeValues( *clip->GetEnvelope(),
+   CommonChannelView::GetEnvelopeValues(*clip->GetEnvelope(),
        tOffset,
 
         // PRL: change back to make envelope evaluate only at sample times
         // and then interpolate the display
         0, // 1.0 / rate,
 
-        env, mid.width, leftOffset, zoomInfo );
+        env, mid.width, leftOffset, zoomInfo);
 
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
@@ -840,14 +842,14 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rectPortion.width);
             double *const env2 = &vEnv2[0];
-            CommonTrackView::GetEnvelopeValues( *clip->GetEnvelope(),
+            CommonChannelView::GetEnvelopeValues(*clip->GetEnvelope(),
                 tOffset,
 
                  // PRL: change back to make envelope evaluate only at sample times
                  // and then interpolate the display
                  0, // 1.0 / rate,
 
-                 env2, rectPortion.width, leftOffset, zoomInfo );
+                 env2, rectPortion.width, leftOffset, zoomInfo);
 
             DrawMinMaxRMS(context, rectPortion, env2,
                zoomMin, zoomMax,
@@ -1019,22 +1021,23 @@ void WaveformView::Draw(
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 #endif
       
-      auto waveTrackView = GetWaveTrackView().lock();
-      wxASSERT(waveTrackView.use_count());
+      auto waveChannelView = GetWaveChannelView().lock();
+      wxASSERT(waveChannelView.use_count());
 
-      auto selectedClip = waveTrackView->GetSelectedClip().lock();
-      DoDraw(context, mChannel, wt.get(), selectedClip.get(), rect, muted);
+      auto selectedClip = waveChannelView->GetSelectedClip().lock();
+      DoDraw(context, GetChannelIndex(),
+         wt.get(), selectedClip.get(), rect, muted);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
    }
-   WaveTrackSubView::Draw( context, rect, iPass );
+   WaveChannelSubView::Draw(context, rect, iPass);
 }
 
-static const WaveTrackSubViews::RegisteredFactory key{
-   []( WaveTrackView &view ){
-      return std::make_shared< WaveformView >( view );
+static const WaveChannelSubViews::RegisteredFactory key{
+   [](WaveChannelView &view) {
+      return std::make_shared<WaveformView>( view );
    }
 };
 
@@ -1157,11 +1160,12 @@ PopupMenuTable::AttachedItem sAttachment{
       PopupMenuTable::Adapt<WaveTrackPopupMenuTable>(
          [](WaveTrackPopupMenuTable &table) {
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto &view = WaveChannelView::Get(*pTrack);
             const auto displays = view.GetDisplays();
             bool hasWaveform = (displays.end() != std::find(
                displays.begin(), displays.end(),
-               WaveTrackSubView::Type{ WaveTrackViewConstants::Waveform, {} }
+               WaveChannelSubView::Type{
+                  WaveChannelViewConstants::Waveform, {} }
             ) );
             return hasWaveform
                ? Registry::Indirect(WaveColorMenuTable::Instance()

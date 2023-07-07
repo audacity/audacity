@@ -2,18 +2,18 @@
 
 Audacity: A Digital Audio Editor
 
-WaveTrackViewConstants.cpp
+WaveChannelViewConstants.cpp
 
 Paul Licameli split from class WaveTrack
 
 **********************************************************************/
 
 #include "Internat.h"
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelViewConstants.h"
 
 // static
-WaveTrackViewConstants::Display
-WaveTrackViewConstants::ConvertLegacyDisplayValue(int oldValue)
+WaveChannelViewConstants::Display
+WaveChannelViewConstants::ConvertLegacyDisplayValue(int oldValue)
 {
    // Remap old values.
    enum class OldValues {
@@ -48,7 +48,7 @@ WaveTrackViewConstants::ConvertLegacyDisplayValue(int oldValue)
 namespace {
    class Registry {
    public:
-      using Type = WaveTrackSubViewType;
+      using Type = WaveChannelSubViewType;
       using Types = std::vector< Type >;
 
       void Append( Type type )
@@ -81,27 +81,27 @@ namespace {
    }
 }
 
-WaveTrackSubViewType::RegisteredType::RegisteredType( WaveTrackSubViewType type )
+WaveChannelSubViewType::RegisteredType::RegisteredType(WaveChannelSubViewType type)
 {
    GetRegistry().Append( std::move( type ) );
 }
 
 // static
-auto WaveTrackSubViewType::All()
-   -> const std::vector<WaveTrackSubViewType> &
+auto WaveChannelSubViewType::All()
+   -> const std::vector<WaveChannelSubViewType> &
 {
    return GetRegistry().Get();
 }
 
 // static
-auto WaveTrackSubViewType::Default() -> Display
+auto WaveChannelSubViewType::Default() -> Display
 {
    auto &all = All();
    if (all.empty())
-      return WaveTrackViewConstants::Waveform;
+      return WaveChannelViewConstants::Waveform;
    return all[0].id;
 }
 
-const EnumValueSymbol WaveTrackViewConstants::MultiViewSymbol{
+const EnumValueSymbol WaveChannelViewConstants::MultiViewSymbol{
    wxT("Multiview"), XXO("&Multi-view")
 };

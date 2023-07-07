@@ -41,7 +41,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Theme.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 
 // Subscribe to preference changes to update static variables
 struct Settings : PrefsListener {
@@ -375,7 +375,7 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    bool selected = pTrack ? pTrack->GetSelected() : true;
    bool syncLockSelected = pTrack ? SyncLock::IsSyncLockSelected(pTrack) : true;
    bool minimized =
-      pTrack ? TrackView::Get( *pTrack ).GetMinimized() : false;
+      pTrack ? ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized() : false;
    {
       wxRect bev = rect;
       GetMinimizeHorizontalBounds(rect, bev);
@@ -565,5 +565,5 @@ unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
       kVerticalPadding +
       totalTCPLines( topLines, true ) +
       totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
-   return (unsigned) std::max( needed, (int) TrackView::DefaultHeight );
+   return (unsigned) std::max(needed, (int) ChannelView::DefaultHeight);
 }

@@ -70,7 +70,7 @@ UIHandle::Result LabelDefaultClickHandle::Click
 
       const auto pLT = evt.pCell.get();
       for (auto lt : TrackList::Get( *pProject ).Any<LabelTrack>()) {
-         if (pLT != &TrackView::Get( *lt )) {
+         if (pLT != &ChannelView::Get(*lt)) {
             auto &view = LabelTrackView::Get( *lt );
             view.ResetFlags();
          }

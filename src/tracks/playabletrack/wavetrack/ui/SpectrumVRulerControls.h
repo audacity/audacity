@@ -4,27 +4,27 @@ Audacity: A Digital Audio Editor
 
 SpectrumVRulerControls.h
 
-Paul Licameli split from WaveTrackVRulerControls.h
+Paul Licameli split from WaveChannelVRulerControls.h
 
 **********************************************************************/
 
 #ifndef __AUDACITY_SPECTRUM_VRULER_CONTROLS__
 #define __AUDACITY_SPECTRUM_VRULER_CONTROLS__
 
-#include "../../../ui/TrackVRulerControls.h" // to inherit
+#include "../../../ui/ChannelVRulerControls.h" // to inherit
 
 class WaveTrack;
 class SpectrumVZoomHandle;
 
-class SpectrumVRulerControls final : public TrackVRulerControls
+class SpectrumVRulerControls final : public ChannelVRulerControls
 {
    SpectrumVRulerControls(const SpectrumVRulerControls&) = delete;
    SpectrumVRulerControls &operator=(const SpectrumVRulerControls&) = delete;
 
 public:
    explicit
-   SpectrumVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
-      : TrackVRulerControls( pTrackView ) {}
+   SpectrumVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
+      : ChannelVRulerControls{ pChannelView } {}
    ~SpectrumVRulerControls() override;
 
    std::vector<UIHandlePtr> HitTest(
@@ -44,10 +44,10 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   // TrackVRulerControls implementation
+   // ChannelVRulerControls implementation
    void UpdateRuler( const wxRect &rect ) override;
 
-   static void DoUpdateVRuler( const wxRect &rect, const WaveTrack *wt );
+   static void DoUpdateVRuler(const wxRect &rect, const WaveTrack *wt);
 
    std::weak_ptr<SpectrumVZoomHandle> mVZoomHandle;
 };

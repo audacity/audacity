@@ -34,7 +34,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 #include "wxPanelWrapper.h"
 #include "WindowAccessible.h"
 
@@ -1093,7 +1093,7 @@ void ProjectWindow::FixScrollbars()
    bool refresh = false;
    bool rescroll = false;
 
-   int totalHeight = TrackView::GetTotalHeight( tracks ) + 32;
+   int totalHeight = ChannelView::GetTotalHeight(tracks) + 32;
 
    auto panelWidth = viewInfo.GetTracksUsableWidth();
    auto panelHeight = viewInfo.GetHeight();

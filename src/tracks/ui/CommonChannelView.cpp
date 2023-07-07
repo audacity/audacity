@@ -2,13 +2,13 @@
 
 Audacity: A Digital Audio Editor
 
-CommonTrackView.cpp
+CommonChannelView.cpp
 
-Paul Licameli split from class TrackView
+Paul Licameli split from class TrackView (now called ChannelView)
 
 **********************************************************************/
 
-#include "CommonTrackView.h"
+#include "CommonChannelView.h"
 
 #include "BackgroundCell.h"
 #include "TimeShiftHandle.h"
@@ -26,7 +26,7 @@ Paul Licameli split from class TrackView
 #include <wx/dc.h>
 #include <wx/graphics.h>
 
-std::vector<UIHandlePtr> CommonTrackView::HitTest
+std::vector<UIHandlePtr> CommonChannelView::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
@@ -73,12 +73,12 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
    return results;
 }
 
-std::shared_ptr<TrackPanelCell> CommonTrackView::ContextMenuDelegate()
+std::shared_ptr<TrackPanelCell> CommonChannelView::ContextMenuDelegate()
 {
    return TrackControls::Get( *FindTrack() ).shared_from_this();
 }
 
-int CommonTrackView::GetMinimizedHeight() const
+int CommonChannelView::GetMinimizedHeight() const
 {
    auto height = TrackInfo::MinimumTrackHeight();
    const auto pTrack = FindTrack();
@@ -92,7 +92,7 @@ int CommonTrackView::GetMinimizedHeight() const
 
 #include "Envelope.h"
 #include "ZoomInfo.h"
-void CommonTrackView::GetEnvelopeValues( const Envelope &env,
+void CommonChannelView::GetEnvelopeValues( const Envelope &env,
    double alignedTime, double sampleDur,
    double *buffer, int bufferLen, int leftOffset,
    const ZoomInfo &zoomInfo )

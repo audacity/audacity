@@ -120,7 +120,7 @@ NoteTrack *NoteTrack::New( AudacityProject &project )
 }
 
 NoteTrack::NoteTrack()
-   : NoteTrackBase()
+   : UniqueChannelTrack{}
 {
    SetName(_("Note Track"));
 

@@ -2,16 +2,16 @@
 
 Audacity: A Digital Audio Editor
 
-TrackVRulerControls.cpp
+ChannelVRulerControls.cpp
 
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
 
-#include "TrackVRulerControls.h"
+#include "ChannelVRulerControls.h"
 
-#include "TrackView.h"
+#include "ChannelView.h"
 
 #include "AColor.h"
 #include "Track.h"
@@ -23,43 +23,44 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dc.h>
 #include <wx/translation.h>
 
-TrackVRulerControls::TrackVRulerControls(
-   const std::shared_ptr<TrackView> &pTrackView )
-  : mwTrackView{ pTrackView }
+ChannelVRulerControls::ChannelVRulerControls(
+   const std::shared_ptr<ChannelView> &pChannelView)
+  : mwChannelView{ pChannelView }
 {
 }
 
-TrackVRulerControls::~TrackVRulerControls()
+ChannelVRulerControls::~ChannelVRulerControls()
 {
 }
 
-TrackVRulerControls &TrackVRulerControls::Get( TrackView &trackView )
+ChannelVRulerControls &ChannelVRulerControls::Get(ChannelView &trackView)
 {
    return *trackView.GetVRulerControls();
 }
 
-const TrackVRulerControls &TrackVRulerControls::Get( const TrackView &trackView )
+const ChannelVRulerControls &ChannelVRulerControls::Get(
+   const ChannelView &trackView)
 {
    return *trackView.GetVRulerControls();
 }
 
-std::shared_ptr<Track> TrackVRulerControls::DoFindTrack()
+std::shared_ptr<Track> ChannelVRulerControls::DoFindTrack()
 {
-   const auto pView = mwTrackView.lock();
-   if ( pView )
+   const auto pView = mwChannelView.lock();
+   if (pView)
       return pView->FindTrack();
    return {};
 }
 
-std::vector<UIHandlePtr> TrackVRulerControls::HitTest
-(const TrackPanelMouseState &, const AudacityProject *)
+std::vector<UIHandlePtr> ChannelVRulerControls::HitTest(
+   const TrackPanelMouseState &, const AudacityProject *)
 {
    return std::vector<UIHandlePtr>{};
 }
 
-void TrackVRulerControls::DrawZooming
-   ( TrackPanelDrawingContext &context, const wxRect &rect_,
-     int zoomStart, int zoomEnd )
+void ChannelVRulerControls::DrawZooming(
+   TrackPanelDrawingContext &context, const wxRect &rect_,
+   int zoomStart, int zoomEnd)
 {
    // Draw a dashed rectangle, its right side disappearing in the black right
    // border of the track area, which is not part of this cell but right of it.
@@ -78,8 +79,8 @@ void TrackVRulerControls::DrawZooming
    dc.DrawRectangle(rect);
 }
 
-wxRect TrackVRulerControls::ZoomingArea(
-   const wxRect &rect, const wxRect &panelRect )
+wxRect ChannelVRulerControls::ZoomingArea(
+   const wxRect &rect, const wxRect &panelRect)
 {
    // TODO: Don't use the constant kRightMargin, but somehow discover the
    // neighboring track rectangle
@@ -94,9 +95,9 @@ wxRect TrackVRulerControls::ZoomingArea(
    };
 }
 
-void TrackVRulerControls::Draw(
+void ChannelVRulerControls::Draw(
    TrackPanelDrawingContext &context,
-   const wxRect &rect_, unsigned iPass )
+   const wxRect &rect_, unsigned iPass)
 {
    // Common initial part of drawing for all subtypes
    if ( iPass == TrackArtist::PassMargins ) {
@@ -120,13 +121,13 @@ void TrackVRulerControls::Draw(
    }
 }
 
-wxRect TrackVRulerControls::DrawingArea(
+wxRect ChannelVRulerControls::DrawingArea(
    TrackPanelDrawingContext &,
-   const wxRect &rect, const wxRect &, unsigned iPass )
+   const wxRect &rect, const wxRect &, unsigned iPass)
 {
    // Common area change for all subclasses when drawing the controls
    // A bevel extends below one pixel outside of the hit-test area
-   if ( iPass == TrackArtist::PassControls )
+   if (iPass == TrackArtist::PassControls)
       return { rect.x, rect.y, rect.width, rect.height + 1 };
    else
       return rect;

@@ -156,6 +156,35 @@ using AttachedTrackObjects = ClientData::Site<
    Track, TrackAttachment, ClientData::ShallowCopying, std::shared_ptr
 >;
 
+class TRACK_API Channel
+{
+public:
+   virtual ~Channel();
+
+   //! Channel object's lifetime is assumed to be nested in its Track's
+   Track &GetTrack();
+   /*!
+    @copydoc GetTrack()
+    */
+   const Track &GetTrack() const;
+
+   /*!
+    @return `ii` such that `this == GetTrack().GetChannel(ii).get()`
+    */
+   size_t GetChannelIndex() const;
+
+protected:
+   //! Subclass must override
+   /*!
+    @post result: for some `ii` less than `result.NChannels()`,
+       `this == result.GetChannel(ii).get()`
+    */
+   virtual Track &DoGetTrack() const = 0;
+
+private:
+   int FindChannelIndex() const;
+};
+
 //! Abstract base class for an object holding data associated with points on a time axis
 class TRACK_API Track /* not final */
    : public XMLTagHandler
@@ -218,6 +247,104 @@ private:
  private:
    void SetId( TrackId id ) { mId = id; }
  public:
+
+   //! Report the number of channels a track has
+   /*!
+    @post result: `result >= 1`
+    */
+   virtual size_t NChannels() const = 0;
+
+   //! Retrieve a channel, cast to the given type
+   /*!
+    Postconditions imply that `GetChannel(0)` is always non-null
+
+    @post result: `!(iChannel < NChannels()) || result`
+    */
+   template<typename ChannelType = Channel>
+   std::shared_ptr<ChannelType> GetChannel(size_t iChannel)
+   {
+      return
+         std::dynamic_pointer_cast<ChannelType>(DoGetChannel(iChannel));
+   }
+
+   //! Non-virtual const overload
+   /*!
+    @copydetails GetChannel(size_t)
+    */
+   template<typename ChannelType = const Channel>
+   auto GetChannel(size_t iChannel) const
+      -> std::enable_if_t<std::is_const_v<ChannelType>,
+         std::shared_ptr<ChannelType>>
+   {
+      return std::dynamic_pointer_cast<ChannelType>(
+         const_cast<Track*>(this)->DoGetChannel(iChannel));
+   }
+
+   //! Iterator for channels; destroying the related track invalidates it
+   template<typename ChannelType>
+   class ChannelIterator
+      : public ValueIterator<
+         std::shared_ptr<ChannelType>, std::bidirectional_iterator_tag
+      >
+   {
+      using TrackType = std::conditional_t<std::is_const_v<ChannelType>,
+         const Track, Track>;
+   public:
+      ChannelIterator() = default;
+      ChannelIterator(TrackType *pTrack, size_t index)
+         : mpTrack{ pTrack }, mIndex{ index }
+      {}
+
+      std::shared_ptr<ChannelType> operator *() const
+      {
+         using namespace std;
+         if (!mpTrack || mIndex >= mpTrack->NChannels())
+            return {};
+         return mpTrack->template GetChannel<ChannelType>(mIndex);
+      }
+
+      ChannelIterator &operator ++() { ++mIndex; return *this; }
+      ChannelIterator operator ++(int)
+         { auto copy{ *this }; operator ++(); return copy; }
+
+      ChannelIterator &operator --() { --mIndex; return *this; }
+      ChannelIterator operator --(int)
+         { auto copy{ *this }; operator --(); return copy; }
+
+      friend inline bool operator ==(ChannelIterator a, ChannelIterator b)
+         { return a.mpTrack == b.mpTrack && a.mIndex == b.mIndex; }
+      friend inline bool operator !=(ChannelIterator a, ChannelIterator b)
+         { return !(a == b); }
+
+   private:
+      TrackType *const mpTrack{};
+      size_t mIndex{};
+   };
+
+   //! Get range of channels with mutative access
+   /*!
+    @pre `IsLeader()`
+    */
+   template<typename ChannelType = Channel>
+   IteratorRange<ChannelIterator<ChannelType>> Channels()
+   {
+      assert(IsLeader());
+      return { { this, 0 }, { this, NChannels() } };
+   }
+
+   //! Get range of channels with read-only access
+   /*!
+    @pre `IsLeader()`
+    */
+   template<typename ChannelType = const Channel>
+   auto Channels() const
+      -> std::enable_if_t<std::is_const_v<ChannelType>,
+         IteratorRange<ChannelIterator<ChannelType>>
+      >
+   {
+      assert(IsLeader());
+      return { { this, 0 }, { this, NChannels() } };
+   }
 
    // Given a bare pointer, find a shared_ptr.  Undefined results if the track
    // is not yet managed by a shared_ptr.  Undefined results if the track is
@@ -312,9 +439,6 @@ private:
     */
    virtual Intervals GetIntervals();
 
- public:
-   mutable std::pair<int, int> vrulerSize;
-
 public:
    static void FinishCopy (const Track *n, Track *dest);
 
@@ -343,7 +467,12 @@ public:
    const ChannelGroupData &GetGroupData() const;
 
 protected:
-   
+   //! Retrieve a channel
+   /*!
+    @post result: `!(iChannel < NChannels()) || result`
+    */
+   virtual std::shared_ptr<Channel> DoGetChannel(size_t iChannel) = 0;
+
    /*!
     @param completeList only influences debug build consistency checking
     */
@@ -522,6 +651,118 @@ public:
 };
 
 ENUMERATE_TRACK_TYPE(Track);
+
+//! Generates overrides of channel-related functions
+template<typename Base = Track>
+class UniqueChannelTrack
+   : public Base
+   , public Channel
+{
+public:
+   using Base::Base;
+   size_t NChannels() const override { return 1; }
+   std::shared_ptr<Channel> DoGetChannel(size_t iChannel) override
+   {
+      if (iChannel == 0) {
+         // Use aliasing constructor of std::shared_ptr
+         Channel *alias = this;
+         return { this->shared_from_this(), alias };
+      }
+      return {};
+   }
+protected:
+   Track &DoGetTrack() const override {
+      const Track &track = *this;
+      return const_cast<Track&>(track);
+   }
+};
+
+//! Holds multiple objects as a single attachment to Track
+class TRACK_API ChannelAttachmentsBase : public TrackAttachment
+{
+public:
+   using Factory =
+      std::function<std::shared_ptr<TrackAttachment>(Track &, size_t)>;
+
+   explicit ChannelAttachmentsBase(Factory factory)
+      : mFactory{ move(factory) }
+   {}
+   ~ChannelAttachmentsBase() override;
+
+   // Override all the TrackAttachment virtuals and pass through to each
+   void CopyTo(Track &track) const override;
+   void Reparent(const std::shared_ptr<Track> &parent) override;
+   void WriteXMLAttributes(XMLWriter &writer) const override;
+   bool HandleXMLAttribute(
+      const std::string_view& attr, const XMLAttributeValueView& valueView)
+   override;
+
+protected:
+   /*!
+    @pre `iChannel < track.NChannels()`
+    */
+   static TrackAttachment &Get(
+      const AttachedTrackObjects::RegisteredFactory &key,
+      Track &track, size_t iChannel);
+   /*!
+    @pre `!pTrack || iChannel < pTrack->NChannels()`
+    */
+   static TrackAttachment *Find(
+      const AttachedTrackObjects::RegisteredFactory &key,
+      Track *pTrack, size_t iChannel);
+
+private:
+   const Factory mFactory;
+   std::vector<std::shared_ptr<TrackAttachment>> mAttachments;
+};
+
+//! Holds multiple objects of the parameter type as a single attachment to Track
+template<typename Attachment>
+class ChannelAttachments : public ChannelAttachmentsBase
+{
+   static_assert(std::is_base_of_v<TrackAttachment, Attachment>);
+public:
+   ~ChannelAttachments() override = default;
+
+   /*!
+    @pre `iChannel < track.NChannels()`
+    */
+   static Attachment &Get(
+      const AttachedTrackObjects::RegisteredFactory &key,
+      Track &track, size_t iChannel)
+   {
+      return static_cast<Attachment&>(
+         ChannelAttachmentsBase::Get(key, track, iChannel));
+   }
+   /*!
+    @pre `!pTrack || iChannel < pTrack->NChannels()`
+    */
+   static Attachment *Find(
+      const AttachedTrackObjects::RegisteredFactory &key,
+      Track *pTrack, size_t iChannel)
+   {
+      return static_cast<Attachment*>(
+         ChannelAttachmentsBase::Find(key, pTrack, iChannel));
+   }
+
+   //! Type-erasing constructor
+   /*!
+    @tparam F returns a shared pointer to Attachment (or some subtype of it)
+
+    @pre `f` never returns null
+   
+    `f` may assume the precondition that the given channel index is less than
+    the given track's number of channels
+    */
+   template<typename F,
+      typename sfinae = std::enable_if_t<std::is_convertible_v<
+         std::invoke_result_t<F, Track&, size_t>, std::shared_ptr<Attachment>
+      >>
+   >
+   explicit ChannelAttachments(F &&f)
+      : ChannelAttachmentsBase{ std::forward<F>(f) }
+   {}
+};
 
 //! Encapsulate the checked down-casting of track pointers
 /*! Eliminates possibility of error -- and not quietly casting away const

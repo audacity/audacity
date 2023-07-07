@@ -4,31 +4,31 @@ Audacity: A Digital Audio Editor
 
 WaveformView.h
 
-Paul Licameli split from WaveTrackView.h
+Paul Licameli split from WaveChannelView.h
 
 **********************************************************************/
 
 #ifndef __AUDACITY_WAVEFORM_VIEW__
 #define __AUDACITY_WAVEFORM_VIEW__
 
-#include "WaveTrackView.h" // to inherit
+#include "WaveChannelView.h" // to inherit
 
 class WaveTrack;
 class SampleHandle;
 class EnvelopeHandle;
 
-class WaveformView final : public WaveTrackSubView
+class WaveformView final : public WaveChannelSubView
 {
    WaveformView(const WaveformView&) = delete;
    WaveformView &operator=(const WaveformView&) = delete;
 
 public:
-   using WaveTrackSubView::WaveTrackSubView;
+   using WaveChannelSubView::WaveChannelSubView;
    ~WaveformView() override;
 
    const Type &SubViewType() const override;
 
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+   std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
 
 private:

@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-WaveTrackVRulerControls.h
+WaveChannelVRulerControls.h
 
 Paul Licameli split from TrackPanel.cpp
 
@@ -11,18 +11,18 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_WAVE_TRACK_VRULER_CONTROLS__
 #define __AUDACITY_WAVE_TRACK_VRULER_CONTROLS__
 
-#include "../../../ui/TrackVRulerControls.h"
+#include "../../../ui/ChannelVRulerControls.h"
 
 class Ruler;
 class WaveTrack;
 
-namespace WaveTrackVRulerControls
+namespace WaveChannelVRulerControls
 {
    AUDACITY_DLL_API Ruler &ScratchRuler();
 
-   AUDACITY_DLL_API void DoDraw( TrackVRulerControls &controls,
+   AUDACITY_DLL_API void DoDraw(ChannelVRulerControls &controls,
       TrackPanelDrawingContext &context,
-      const wxRect &rect, unsigned iPass );
+      const wxRect &rect, unsigned iPass);
 };
 
 #endif

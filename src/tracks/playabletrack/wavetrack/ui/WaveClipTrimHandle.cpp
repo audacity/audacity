@@ -20,7 +20,7 @@
 #include "../../../../../images/Cursors.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "WaveTrackView.h"
+#include "WaveChannelView.h"
 #include "HitTestResult.h"
 #include "TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
@@ -401,7 +401,7 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(
     //and input for the policy
     for (auto& clip : waveTrack->GetClips())
     {
-        if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+        if (!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
            continue;
 
         auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
@@ -447,7 +447,7 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(
 }
 
 UIHandlePtr WaveClipTrimHandle::HitTest(std::weak_ptr<WaveClipTrimHandle>& holder,
-    WaveTrackView& view, const AudacityProject* pProject,
+    WaveChannelView& view, const AudacityProject* pProject,
     const TrackPanelMouseState& state)
 {
     auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack());

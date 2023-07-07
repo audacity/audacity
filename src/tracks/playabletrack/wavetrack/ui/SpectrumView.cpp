@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 SpectrumView.cpp
 
-Paul Licameli split from WaveTrackView.cpp
+Paul Licameli split from WaveChannelView.cpp
 
 **********************************************************************/
 
@@ -18,8 +18,8 @@ Paul Licameli split from WaveTrackView.cpp
 #include "Spectrum.h"
 
 #include "SpectrumVRulerControls.h"
-#include "WaveTrackView.h"
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelView.h"
+#include "WaveChannelViewConstants.h"
 
 #include "../../../ui/BrushHandle.h"
 
@@ -45,14 +45,16 @@ Paul Licameli split from WaveTrackView.cpp
 class BrushHandle;
 class SpectralData;
 
-static WaveTrackSubView::Type sType{
-   WaveTrackViewConstants::Spectrum,
+static WaveChannelSubView::Type sType{
+   WaveChannelViewConstants::Spectrum,
    { wxT("Spectrogram"), XXO("&Spectrogram") }
 };
 
-static WaveTrackSubViewType::RegisteredType reg{ sType };
+static WaveChannelSubViewType::RegisteredType reg{ sType };
 
-SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
+SpectrumView::SpectrumView(WaveChannelView &waveChannelView)
+   : WaveChannelSubView(waveChannelView)
+{
    auto wt = static_cast<WaveTrack*>( FindTrack().get() );
    mpSpectralData = std::make_shared<SpectralData>(wt->GetRate());
    mOnBrushTool = false;
@@ -123,14 +125,14 @@ private:
 static UIHandlePtr BrushHandleHitTest(
    std::weak_ptr<BrushHandle> &holder,
    const TrackPanelMouseState &st, const AudacityProject *pProject,
-   const std::shared_ptr<SpectrumView> &pTrackView,
+   const std::shared_ptr<SpectrumView> &pChannelView,
    const std::shared_ptr<SpectralData> &mpData)
 {
    const auto &viewInfo = ViewInfo::Get( *pProject );
    auto &projectSettings = ProjectSettings::Get( *pProject );
    auto result = std::make_shared<BrushHandle>(
-      std::make_shared<SpectrumView::SpectralDataSaver>(*pTrackView),
-      pTrackView, TrackList::Get( *pProject ),
+      std::make_shared<SpectrumView::SpectralDataSaver>(*pChannelView),
+      pChannelView, TrackList::Get(*pProject),
       st, viewInfo, mpData, projectSettings);
 
    result = AssignUIHandlePtr(holder, result);
@@ -138,7 +140,7 @@ static UIHandlePtr BrushHandleHitTest(
    //Make sure we are within the selected track
    // Adjusting the selection edges can be turned off in
    // the preferences...
-   auto pTrack = pTrackView->FindTrack();
+   auto pTrack = pChannelView->FindTrack();
    if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
    {
       return result;
@@ -152,12 +154,14 @@ void SpectrumView::ForAll( AudacityProject &project,
 {
    if (!fn)
       return;
-   for ( const auto wt : TrackList::Get(project).Any< WaveTrack >() ) {
-      if (auto pWaveTrackView =
-          dynamic_cast<WaveTrackView*>( &TrackView::Get(*wt)) ) {
-         for (const auto &pSubView : pWaveTrackView->GetAllSubViews()) {
-            if (const auto sView = dynamic_cast<SpectrumView*>(pSubView.get()))
-               fn( *sView );
+   for (const auto wt : TrackList::Get(project).Leaders<WaveTrack>()) {
+      for (auto pChannel : wt->Channels()) {
+         if (auto pWaveChannelView =
+             dynamic_cast<WaveChannelView*>(&ChannelView::Get(*pChannel))) {
+            for (const auto &pSubView : pWaveChannelView->GetAllSubViews()) {
+               if (const auto sView = dynamic_cast<SpectrumView*>(pSubView.get()))
+                  fn( *sView );
+            }
          }
       }
    }
@@ -182,7 +186,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    }
 #endif
 
-   return WaveTrackSubView::DoDetailedHitTest(
+   return WaveChannelSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt
    ).second;
 }
@@ -210,7 +214,7 @@ void SpectrumView::DoSetMinimized( bool minimized )
    }
 #endif
 
-   TrackView::DoSetMinimized( minimized );
+   ChannelView::DoSetMinimized(minimized);
 }
 
 auto SpectrumView::SubViewType() const -> const Type &
@@ -218,18 +222,20 @@ auto SpectrumView::SubViewType() const -> const Type &
    return sType;
 }
 
-std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> SpectrumView::DoGetVRulerControls()
 {
-   return std::make_shared<SpectrumVRulerControls>( shared_from_this() );
+   return std::make_shared<SpectrumVRulerControls>(shared_from_this());
 }
 
 std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){
    return mpSpectralData;
 }
 
-void SpectrumView::CopyToSubView(WaveTrackSubView *destSubView) const{
-   if ( const auto pDest = dynamic_cast< SpectrumView* >( destSubView ) ) {
-      pDest->mpSpectralData =  std::make_shared<SpectralData>(mpSpectralData->GetSR());
+void SpectrumView::CopyToSubView(WaveChannelSubView *destSubView) const
+{
+   if (const auto pDest = dynamic_cast< SpectrumView* >(destSubView)) {
+      pDest->mpSpectralData =
+         std::make_shared<SpectralData>(mpSpectralData->GetSR());
       pDest->mpSpectralData->CopyFrom(*mpSpectralData);
    }
 }
@@ -335,7 +341,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    //If clip is "too small" draw a placeholder instead of
    //attempting to fit the contents into a few pixels
-   if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+   if (!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
    {
       auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
       TrackArt::DrawClipFolded(dc, clipRect);
@@ -897,22 +903,22 @@ void SpectrumView::Draw(
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 #endif
 
-      auto waveTrackView = GetWaveTrackView().lock();
-      wxASSERT(waveTrackView.use_count());
+      auto waveChannelView = GetWaveChannelView().lock();
+      wxASSERT(waveChannelView.use_count());
 
-      auto seletedClip = waveTrackView->GetSelectedClip().lock();
+      auto seletedClip = waveChannelView->GetSelectedClip().lock();
       DoDraw( context, wt.get(), seletedClip.get(), rect );
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
    }
-   WaveTrackSubView::Draw( context, rect, iPass );
+   WaveChannelSubView::Draw(context, rect, iPass);
 }
 
-static const WaveTrackSubViews::RegisteredFactory key{
-   []( WaveTrackView &view ){
-      return std::make_shared< SpectrumView >( view );
+static const WaveChannelSubViews::RegisteredFactory key{
+   [](WaveChannelView &view){
+      return std::make_shared<SpectrumView>(view);
    }
 };
 
@@ -989,7 +995,7 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
    // factories.push_back(WaveformPrefsFactory( pTrack ));
    factories.push_back(SpectrumPrefsFactory( pTrack ));
    const int page =
-      // (pTrack->GetDisplay() == WaveTrackViewConstants::Spectrum) ? 1 :
+      // (pTrack->GetDisplay() == WaveChannelViewConstants::Spectrum) ? 1 :
       0;
 
    auto title = XO("%s:").Format( pTrack->GetName() );
@@ -1021,11 +1027,12 @@ PopupMenuTable::AttachedItem sAttachment{
             GetWaveTrackMenuTable().ReserveId();
 
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto &view = WaveChannelView::Get(*pTrack);
             const auto displays = view.GetDisplays();
             bool hasSpectrum = (displays.end() != std::find(
                displays.begin(), displays.end(),
-               WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+               WaveChannelSubView::Type{
+                  WaveChannelViewConstants::Spectrum, {} }
             ) );
             return hasSpectrum
                // In future, we might move this to the context menu of the
@@ -1103,10 +1110,11 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
    // Find the first selected wave track that is in a spectrogram view.
    const WaveTrack *pTrack {};
    for ( auto wt : tracks.Selected< const WaveTrack >() ) {
-      const auto displays = WaveTrackView::Get( *wt ).GetDisplays();
+      const auto displays = WaveChannelView::Get(*wt).GetDisplays();
       bool hasSpectrum = (displays.end() != std::find(
          displays.begin(), displays.end(),
-         WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+         WaveChannelSubView::Type{
+            WaveChannelViewConstants::Spectrum, {} }
       ) );
       if ( hasSpectrum ) {
          pTrack = wt;

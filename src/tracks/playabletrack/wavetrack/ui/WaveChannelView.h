@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-WaveTrackView.h
+WaveChannelView.h
 
 Paul Licameli split from class WaveTrack
 
@@ -11,17 +11,17 @@ Paul Licameli split from class WaveTrack
 #ifndef __AUDACITY_WAVE_TRACK_VIEW__
 #define __AUDACITY_WAVE_TRACK_VIEW__
 
-#include "../../../ui/CommonTrackView.h"
+#include "../../../ui/CommonChannelView.h"
 #include "ClientData.h"
 #include "SampleCount.h"
-namespace WaveTrackViewConstants{ enum Display : int; }
-struct WaveTrackSubViewType;
+namespace WaveChannelViewConstants{ enum Display : int; }
+struct WaveChannelSubViewType;
 
 class CutlineHandle;
 class TranslatableString;
 class SampleTrack;
 class WaveTrack;
-class WaveTrackView;
+class WaveChannelView;
 class WaveClip;
 class WaveClipTrimHandle;
 class ZoomInfo;
@@ -36,21 +36,21 @@ class SubViewRearrangeHandle;
 
 class wxDC;
 
-class AUDACITY_DLL_API WaveTrackSubView : public CommonTrackView
+class AUDACITY_DLL_API WaveChannelSubView : public CommonChannelView
 {
 public:
 
-   using Display = WaveTrackViewConstants::Display;
-   using Type = WaveTrackSubViewType;
+   using Display = WaveChannelViewConstants::Display;
+   using Type = WaveChannelSubViewType;
 
    explicit
-   WaveTrackSubView(WaveTrackView &waveTrackView);
+   WaveChannelSubView(WaveChannelView &waveChannelView);
    
    virtual const Type &SubViewType() const = 0;
 
    // For undo and redo purpose
    // Empty abstract method to be inherited, for copying the spectral data in SpectrumSubView
-   virtual void CopyToSubView(WaveTrackSubView *destSubView) const;
+   virtual void CopyToSubView(WaveChannelSubView *destSubView) const;
 
    std::pair<
       bool, // if true, hit-testing is finished
@@ -65,14 +65,11 @@ protected:
       TrackPanelDrawingContext &context, const WaveTrack *track,
       const wxRect &rect );
 
-   std::weak_ptr<WaveTrackView> GetWaveTrackView() const;
+   std::weak_ptr<WaveChannelView> GetWaveChannelView() const;
 
    std::vector<MenuItem> GetMenuItems(
       const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
    override;
-
-   // Which channel of a WaveTrack (it may contain wide clips)
-   const size_t mChannel;
 
 private:
    std::weak_ptr<SubViewCloseHandle> mCloseHandle;
@@ -81,52 +78,50 @@ private:
    std::weak_ptr<SubViewRearrangeHandle> mRearrangeHandle;
    std::weak_ptr<WaveClipTrimHandle> mClipTrimHandle;
    std::weak_ptr<CutlineHandle> mCutlineHandle;
-   std::weak_ptr<WaveTrackView> mwWaveTrackView;
+   std::weak_ptr<WaveChannelView> mwWaveChannelView;
 };
 
-struct WaveTrackSubViewPlacement {
+struct WaveChannelSubViewPlacement {
    int index;
    float fraction;
 };
-using WaveTrackSubViewPlacements = std::vector< WaveTrackSubViewPlacement >;
+using WaveChannelSubViewPlacements = std::vector<WaveChannelSubViewPlacement>;
 
-class WaveTrackView;
-using WaveTrackSubViews = ClientData::Site<
-   WaveTrackView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
+class WaveChannelView;
+using WaveChannelSubViews = ClientData::Site<
+   WaveChannelView, WaveChannelSubView, ClientData::SkipCopying, std::shared_ptr
 >;
 
-class AUDACITY_DLL_API WaveTrackView final
-   : public CommonTrackView
-   , public WaveTrackSubViews
+class AUDACITY_DLL_API WaveChannelView final
+   : public CommonChannelView
+   , public WaveChannelSubViews
 {
-   WaveTrackView( const WaveTrackView& ) = delete;
-   WaveTrackView &operator=( const WaveTrackView& ) = delete;
+   WaveChannelView(const WaveChannelView&) = delete;
+   WaveChannelView &operator=(const WaveChannelView&) = delete;
 
 public:
    static constexpr int kChannelSeparatorThickness{ 8 };
 
-   using Display = WaveTrackViewConstants::Display;
+   using Display = WaveChannelViewConstants::Display;
 
-   static WaveTrackView &Get( WaveTrack &track );
-   static const WaveTrackView &Get( const WaveTrack &track );
-   static WaveTrackView *Find( WaveTrack *pTrack );
-   static const WaveTrackView *Find( const WaveTrack *pTrack );
+   static WaveChannelView &Get(WaveTrack &track);
+   static const WaveChannelView &Get(const WaveTrack &track);
+   static WaveChannelView *Find(WaveTrack *pTrack);
+   static const WaveChannelView *Find(const WaveTrack *pTrack);
 
    //! Construct a view of one channel
    /*!
     @param channel which channel of a possibly wide wave track
     */
-   WaveTrackView(const std::shared_ptr<Track> &pTrack, size_t channel);
-   ~WaveTrackView() override;
-
-   size_t GetChannel() const { return mChannel; }
+   WaveChannelView(const std::shared_ptr<Track> &pTrack, size_t channel);
+   ~WaveChannelView() override;
 
    // Preserve some view state too for undo/redo purposes
    void CopyTo( Track &track ) const override;
 
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+   std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
-   // CommonTrackView implementation
+   // CommonChannelView implementation
    void Reparent( const std::shared_ptr<Track> &parent ) override;
 
    static std::pair<
@@ -136,14 +131,14 @@ public:
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
       const std::shared_ptr<WaveTrack> &wt,
-      CommonTrackView &view);
+      CommonChannelView &view);
 
-   std::vector< WaveTrackSubView::Type > GetDisplays() const;
+   std::vector<WaveChannelSubView::Type> GetDisplays() const;
    void SetDisplay(Display display, bool exclusive = true);
 
-   const WaveTrackSubViewPlacements &SavePlacements() const
+   const WaveChannelSubViewPlacements &SavePlacements() const
       { return DoGetPlacements(); }
-   void RestorePlacements( const WaveTrackSubViewPlacements &placements )
+   void RestorePlacements(const WaveChannelSubViewPlacements &placements)
       { DoGetPlacements() = placements; }
 
    // Return true if successful.  Fails if you try to toggle off the only
@@ -152,7 +147,7 @@ public:
 
    // Get all the sub-views, in a sequence that is unspecified but in
    // correspondence with the result of SavePlacements
-   std::vector< std::shared_ptr< WaveTrackSubView > > GetAllSubViews();
+   std::vector<std::shared_ptr<WaveChannelSubView>> GetAllSubViews();
 
    // Return cached height of rect in last call of GetSubViews
    wxCoord GetLastHeight() const { return mLastHeight; }
@@ -214,7 +209,7 @@ private:
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
-   // TrackView implementation
+   // ChannelView implementation
    Refinement GetSubViews(const wxRect& rect) override;
 
 private:
@@ -223,10 +218,10 @@ private:
    void DoSetMinimized( bool minimized ) override;
 
    // Placements are in correspondence with the array of sub-views
-   // in the WaveTrackSubViews base class, though their sequence is
+   // in the WaveChannelSubViews base class, though their sequence is
    // unspecified and maybe different in different platforms.
-   WaveTrackSubViewPlacements &DoGetPlacements();
-   const WaveTrackSubViewPlacements &DoGetPlacements() const;
+   WaveChannelSubViewPlacements &DoGetPlacements();
+   const WaveChannelSubViewPlacements &DoGetPlacements() const;
    mutable wxCoord mLastHeight{};
 
    bool &DoGetMultiView();
@@ -239,8 +234,6 @@ private:
    std::weak_ptr<TrackPanelCell> mKeyEventDelegate;
 
    std::weak_ptr<WaveTrackAffordanceHandle> mAffordanceHandle;
-
-   const size_t mChannel;
 };
 
 // Helper for drawing routines

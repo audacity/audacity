@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "XMLTagHandler.h"
 
+class Channel;
 class CommandContext;
 class Track;
 class XMLWriter;
@@ -99,7 +100,8 @@ class AUDACITY_DLL_API CommonTrackCell /* not final */
    : public CommonTrackPanelCell, public TrackAttachment
 {
 public:
-   explicit CommonTrackCell( const std::shared_ptr<Track> &pTrack );
+   //! Construct from a track and a channel index
+   CommonTrackCell(const std::shared_ptr<Track> &pTrack, size_t iChannel);
 
   ~CommonTrackCell();
 
@@ -107,8 +109,14 @@ public:
 
    void Reparent( const std::shared_ptr<Track> &parent ) override;
 
+   size_t GetChannelIndex() const { return miChannel; }
+
+   //! May return null
+   std::shared_ptr<Channel> FindChannel();
+
 private:
    std::weak_ptr< Track > mwTrack;
+   const size_t miChannel;
 };
 
 #endif

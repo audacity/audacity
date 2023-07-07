@@ -18,7 +18,7 @@
 
 #include "SetTrackInfoCommand.h"
 
-class SetClipCommand : public SetTrackBase
+class SetClipCommand : public SetChannelsBase
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

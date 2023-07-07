@@ -352,7 +352,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
    {
       if( childId == wxACC_SELF )
       {
-         *name = _( "TrackView" );
+         *name = _("ChannelView");
       }
       else
       {
@@ -555,7 +555,7 @@ wxAccStatus TrackPanelAx::GetValue( int WXUNUSED(childId), wxString* WXUNUSED(st
 #if defined(__WXMAC__)
    if( childId == wxACC_SELF )
    {
-      *strValue = _( "TrackView" );
+      *strValue = _("ChannelView");
    }
    else
    {

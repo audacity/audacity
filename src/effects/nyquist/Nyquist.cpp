@@ -75,8 +75,8 @@ effects from this one class.
 #include "Prefs.h"
 #include "wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "../../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
+#include "../../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "ProgressDialog.h"
 
@@ -594,12 +594,13 @@ bool NyquistEffect::Init()
             TrackList::Get( *project ).SelectedLeaders<const WaveTrack>()) {
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
-            auto pView = WaveTrackView::Find( t );
+            auto pView = WaveChannelView::Find(t);
             if ( pView ) {
                const auto displays = pView->GetDisplays();
                if (displays.end() != std::find(
                   displays.begin(), displays.end(),
-                  WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
+                  WaveChannelSubView::Type{
+                     WaveChannelViewConstants::Spectrum, {} }))
                   hasSpectral = true;
             }
             if ( hasSpectral &&
@@ -1218,7 +1219,7 @@ bool NyquistEffect::ProcessOne()
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
-            if ( const auto pView = WaveTrackView::Find(&wt) ) {
+            if (const auto pView = WaveChannelView::Find(&wt)) {
                auto displays = pView->GetDisplays();
                auto format = [&]( decltype(displays[0]) display ) {
                   // Get the English name of the view type, without menu codes,

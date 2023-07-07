@@ -26,6 +26,13 @@ class SetTrackBase : public AudacityCommand
 {
 public:
    bool Apply(const CommandContext & context) final;
+   virtual bool ApplyInner(const CommandContext &context, Track &t) = 0;
+};
+
+class SetChannelsBase : public AudacityCommand
+{
+public:
+   bool Apply(const CommandContext & context) final;
    virtual bool ApplyInner(const CommandContext &context, Track *t) = 0;
 };
 
@@ -46,7 +53,7 @@ public:
 
    // AudacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_track_status";}
-   bool ApplyInner( const CommandContext & context, Track * t ) override;
+   bool ApplyInner(const CommandContext & context, Track &t) override;
 
 public:
    wxString mTrackName;
@@ -75,7 +82,7 @@ public:
 
    // AudacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_track_audio";}
-   bool ApplyInner( const CommandContext & context, Track * t ) override;
+   bool ApplyInner(const CommandContext & context, Track &t) override;
 
 public:
    double mPan;
@@ -106,7 +113,7 @@ public:
 
    // AudacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_track_visuals";}
-   bool ApplyInner( const CommandContext & context, Track * t ) override;
+   bool ApplyInner(const CommandContext & context, Track &t) override;
 
 public:
    int mColour;
@@ -161,11 +168,11 @@ public:
       mSetAudio.PopulateOrExchange(S);
       mSetVisuals.PopulateOrExchange(S);
    };
-   bool ApplyInner(const CommandContext & context, Track * t ) override {
+   bool ApplyInner(const CommandContext & context, Track &t) override {
       return 
-         mSetStatus.ApplyInner( context, t ) &&  
-         mSetAudio.ApplyInner( context, t ) &&
-         mSetVisuals.ApplyInner( context, t );
+         mSetStatus.ApplyInner(context, t) &&
+         mSetAudio.ApplyInner(context, t) &&
+         mSetVisuals.ApplyInner(context, t);
    }
 
 private:

@@ -14,8 +14,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
-#include "WaveTrackView.h"
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelView.h"
+#include "WaveChannelViewConstants.h"
 #include "AudioIOBase.h"
 #include "../../../../CellularPanel.h"
 #include "Project.h"
@@ -530,12 +530,12 @@ void WaveTrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-static std::vector<WaveTrackSubViewType> AllTypes()
+static std::vector<WaveChannelSubViewType> AllTypes()
 {
-   auto result = WaveTrackSubViewType::All();
-   if ( result.size() > reserveDisplays ) {
+   auto result = WaveChannelSubViewType::All();
+   if (result.size() > reserveDisplays) {
       wxASSERT( false );
-      result.resize( reserveDisplays );
+      result.resize(reserveDisplays);
    }
    return result;
 }
@@ -562,17 +562,17 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       // Multi-view check mark item, if more than one track sub-view type is
       // known
       Append(Adapt<My>([](My &table) {
-         return (WaveTrackSubViews::slots() > 1)
+         return (WaveChannelSubViews::slots() > 1)
             ? std::make_unique<Entry>(
                "MultiView", Entry::CheckItem, OnMultiViewID, XXO("&Multi-view"),
                POPUP_MENU_FN( OnMultiView ),
                table,
-               []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-                  auto &table = static_cast< WaveTrackMenuTable& >( handler );
+               [](PopupMenuHandler &handler, wxMenu &menu, int id){
+                  auto &table = static_cast<WaveTrackMenuTable&>(handler);
                   auto &track = table.FindWaveTrack();
-                  const auto &view = WaveTrackView::Get( track );
-                  menu.Check( id, view.GetMultiView() );
-               } )
+                  const auto &view = WaveChannelView::Get(track);
+                  menu.Check(id, view.GetMultiView());
+               })
             : nullptr;
       }));
 
@@ -587,23 +587,23 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
                // How to convert a type to a menu item id
                const auto IdForType =
-               [&allTypes]( const WaveTrackSubViewType &type ) -> int {
+               [&allTypes](const WaveChannelSubViewType &type) -> int {
                   const auto begin = allTypes.begin();
                   return OnSetDisplayId +
-                     (std::find( begin, allTypes.end(), type ) - begin);
+                     (std::find(begin, allTypes.end(), type) - begin);
                };
 
                auto &table = static_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
 
-               const auto &view = WaveTrackView::Get( track );
+               const auto &view = WaveChannelView::Get(track);
 
                const auto displays = view.GetDisplays();
                const auto end = displays.end();
                bool check = (end !=
-                  std::find_if( displays.begin(), end,
-                     [&]( const WaveTrackSubViewType &type ){
-                        return id == IdForType( type ); } ) );
+                  std::find_if(displays.begin(), end,
+                     [&](const WaveChannelSubViewType &type){
+                        return id == IdForType(type); }));
                menu.Check( id, check );
 
                // Bug2275 residual
@@ -614,7 +614,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          };
          Append(Adapt<My>([type, id](My &table) {
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto &view = WaveChannelView::Get(*pTrack);
             const auto itemType =
                view.GetMultiView() ? Entry::CheckItem : Entry::RadioItem;
             return std::make_unique<Entry>( type.name.Internal(), itemType,
@@ -688,11 +688,11 @@ END_POPUP_MENU()
 void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 {
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   auto &view = WaveTrackView::Get(*pTrack);
+   auto &view = WaveChannelView::Get(*pTrack);
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
-      ? WaveTrackViewConstants::Waveform : displays.begin()->id;
+      ? WaveChannelViewConstants::Waveform : displays.begin()->id;
    view.SetMultiView(multi);
 
    // Whichever sub-view was on top stays on top
@@ -711,10 +711,10 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
 
    auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
-   auto &view = WaveTrackView::Get(*pTrack);
+   auto &view = WaveChannelView::Get(*pTrack);
    if (view.GetMultiView()) {
-      if (!WaveTrackView::Get(*pTrack)
-            .ToggleSubView(WaveTrackView::Display{ id } )) {
+      if (!WaveChannelView::Get(*pTrack)
+            .ToggleSubView(WaveChannelView::Display{ id } )) {
          // Trying to toggle off the last sub-view.  It was refused.
          // Decide what to do here.  Turn off multi-view instead?
          // PRL:  I don't agree that it makes sense
@@ -727,7 +727,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       const bool wrongType =
          !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
-         WaveTrackView::Get(*pTrack).SetDisplay(WaveTrackView::Display{ id });
+         WaveChannelView::Get(*pTrack).SetDisplay(WaveChannelView::Display{ id });
 
          AudacityProject *const project = &mpData->project;
          ProjectHistory::Get( *project ).ModifyState(true);
@@ -762,8 +762,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    }
 
    bool bBothMinimizedp =
-      ((TrackView::Get( *pTrack ).GetMinimized()) &&
-       (TrackView::Get( *partner ).GetMinimized()));
+      ((ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized()) &&
+       (ChannelView::Get(*partner->GetChannel(0)).GetMinimized()));
 
    tracks.MakeMultiChannelTrack( *pTrack, 2, false );
 
@@ -774,8 +774,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 
    // Set NEW track heights and minimized state
    auto
-      &view = WaveTrackView::Get( *pTrack ),
-      &partnerView = WaveTrackView::Get( *partner );
+      &view = WaveChannelView::Get(*pTrack),
+      &partnerView = WaveChannelView::Get(*partner);
    view.SetMinimized(false);
    partnerView.SetMinimized(false);
    int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
@@ -799,22 +799,26 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
    AudacityProject *const project = &mpData->project;
-   auto channels = TrackList::Channels( pTrack );
+
+   // We can assume all channels of a WaveTrack are also WaveTrack
+   auto channelRange = pTrack->Channels<WaveTrack>();
 
    int totalHeight = 0;
    int nChannels = 0;
 
-   std::vector<WaveTrack *> tracks;
-   for (auto channel : channels)
-      tracks.push_back(channel);
+   std::vector<WaveTrack *> channels;
+   for (auto pChannel : channelRange)
+      channels.push_back(pChannel.get());
 
    TrackList::Get(*project).UnlinkChannels(*pTrack);
 
    float pan = -1.0f;
-   for (auto track : tracks) {
-      auto &view = TrackView::Get(*track);
+   for (const auto pChannel : channels) {
+      // See comment on channelRange
+      assert(pChannel);
+      auto &view = ChannelView::Get(*pChannel);
       if (stereo) {
-         track->SetPan(pan);
+         pChannel->SetPan(pan);
          pan += 2.0f;
       }
 
@@ -827,9 +831,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    int averageHeight = totalHeight / nChannels;
 
-   for (auto channel : channels)
+   for (const auto pChannel : channels)
       // Make tracks the same height
-      TrackView::Get( *channel ).SetExpandedHeight( averageHeight );
+      ChannelView::Get(*pChannel).SetExpandedHeight(averageHeight);
 }
 
 /// Swap the left and right channels of a stero track...

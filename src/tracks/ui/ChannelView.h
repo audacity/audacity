@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-TrackView.h
+ChannelView.h
 
 Paul Licameli split from class Track
 
@@ -15,39 +15,48 @@ Paul Licameli split from class Track
 #include "CommonTrackPanelCell.h" // to inherit
 #include "XMLAttributeValueView.h"
 
+class Channel;
 class Track;
 class TrackList;
-class TrackVRulerControls;
+class ChannelVRulerControls;
 class TrackPanelResizerCell;
 
-class AUDACITY_DLL_API TrackView /* not final */ : public CommonTrackCell
-   , public std::enable_shared_from_this<TrackView>
+class AUDACITY_DLL_API ChannelView /* not final */ : public CommonTrackCell
+   , public std::enable_shared_from_this<ChannelView>
 {
-   TrackView( const TrackView& ) = delete;
-   TrackView &operator=( const TrackView& ) = delete;
+   ChannelView(const ChannelView&) = delete;
+   ChannelView &operator=(const ChannelView&) = delete;
 
 public:
    enum : unsigned { DefaultHeight = 150 };
 
-   explicit
-   TrackView( const std::shared_ptr<Track> &pTrack );
-   virtual ~TrackView() = 0;
+   static ChannelView &Get(Channel &channel);
+   /*!
+    @copydoc Get(Channel &)
+    */
+   static const ChannelView &Get(const Channel &channel);
+   static ChannelView *Find(Channel *pChannel);
+   /*!
+    @copydoc Find(Track *)
+    */
+   static const ChannelView *Find(const Channel *pChannel);
+
+   //! Construct from a track and a channel index
+   ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel);
+   virtual ~ChannelView() = 0;
 
    // some static conveniences, useful for summation over track iterator
    // ranges
-   static int GetTrackHeight( const Track *pTrack );
-   static int GetChannelGroupHeight( const Track *pTrack );
-   // Total height of the given track and all previous ones (constant time!)
-   static int GetCumulativeHeight( const Track *pTrack );
-   static int GetTotalHeight( const TrackList &list );
+   static int GetChannelGroupHeight(const Track *pTrack);
+   // Total height of the given channel and all previous ones (constant time!)
+   static int GetCumulativeHeight(const Channel *pChannel);
+   // Total height of all Channels of the the given track and all previous ones
+   // (constant time!)
+   static int GetCumulativeHeight(const Track *pTrack);
+   static int GetTotalHeight(const TrackList &list);
 
    // Copy view state, for undo/redo purposes
-   void CopyTo( Track &track ) const override;
-
-   static TrackView &Get( Track & );
-   static const TrackView &Get( const Track & );
-   static TrackView *Find( Track * );
-   static const TrackView *Find( const Track * );
+   void CopyTo(Track &track) const override;
 
    bool GetMinimized() const { return mMinimized; }
    void SetMinimized( bool minimized );
@@ -85,8 +94,8 @@ public:
 
    // Return another, associated TrackPanelCell object that implements the
    // mouse actions for the vertical ruler
-   std::shared_ptr<TrackVRulerControls> GetVRulerControls();
-   std::shared_ptr<const TrackVRulerControls> GetVRulerControls() const;
+   std::shared_ptr<ChannelVRulerControls> GetVRulerControls();
+   std::shared_ptr<const ChannelVRulerControls> GetVRulerControls() const;
 
    // Returns cell that would be used at affordance area, by default returns nullptr,
    // meaning that track has no such area.
@@ -99,15 +108,17 @@ public:
 
    // New virtual function.  The default just returns a one-element array
    // containing this.  Overrides might refine the Y axis.
-   using Refinement = std::vector< std::pair<
-      wxCoord, std::shared_ptr< TrackView >
-   > >;
+   using Refinement = std::vector<
+      std::pair<wxCoord, std::shared_ptr<ChannelView>>
+   >;
    virtual Refinement GetSubViews( const wxRect &rect );
 
    // default is false
    virtual bool IsSpectral() const;
 
    virtual void DoSetMinimized( bool isMinimized );
+
+   mutable std::pair<int, int> vrulerSize;
 
 private:
 
@@ -118,13 +129,26 @@ private:
 
 protected:
 
-   // Private factory to make appropriate object; class TrackView handles
+   // Private factory to make appropriate object; class ChannelView handles
    // memory management thereafter
-   virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
+   virtual std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() = 0;
 
-   std::shared_ptr<TrackVRulerControls> mpVRulerControls;
+   std::shared_ptr<ChannelVRulerControls> mpVRulerControls;
 
 private:
+   /*!
+    @pre `iChannel < track.NChannels()`
+    */
+   static ChannelView &GetFromTrack(Track &track, size_t iChannel = 0);
+   /*!
+    @copydoc Get(Track&, size_t)
+    */
+   static const ChannelView &GetFromTrack(const Track &track, size_t iChannel = 0);
+   /*!
+    @pre `!pTrack || iChannel < pTrack->NChannels()`
+    */
+   static ChannelView *FindFromTrack(Track *pTrack, size_t iChannel = 0);
+
    bool           mMinimized{ false };
    int            mY{ 0 };
    int            mHeight{ DefaultHeight };
@@ -134,11 +158,16 @@ private:
 
 struct DoGetViewTag;
 
+//! Declare an open method to get the view object associated with a track
+/*!
+ @pre The channel index argument is less than the track's `NChannels()`
+ */
 using DoGetView =
 AttachedVirtualFunction<
    DoGetViewTag,
-   std::shared_ptr< TrackView >,
-   Track
+   std::shared_ptr<ChannelView>,
+   Track,
+   size_t// channel index
 >;
 DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, DoGetView);
 

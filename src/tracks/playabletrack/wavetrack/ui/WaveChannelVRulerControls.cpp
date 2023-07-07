@@ -2,14 +2,14 @@
 
 Audacity: A Digital Audio Editor
 
-WaveTrackVRulerControls.cpp
+WaveChannelVRulerControls.cpp
 
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
 
-#include "WaveTrackVRulerControls.h"
+#include "WaveChannelVRulerControls.h"
 
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -25,16 +25,16 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../widgets/Ruler.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-Ruler &WaveTrackVRulerControls::ScratchRuler()
+Ruler &WaveChannelVRulerControls::ScratchRuler()
 {
    static Ruler theRuler{
       LinearUpdater::Instance(), RealFormat::LinearInstance() };
    return theRuler;
 }
 
-void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
+void WaveChannelVRulerControls::DoDraw(ChannelVRulerControls &controls,
    TrackPanelDrawingContext &context,
-   const wxRect &rect_, unsigned iPass )
+   const wxRect &rect_, unsigned iPass)
 {
    Ruler &vruler = ScratchRuler();
 

@@ -51,7 +51,7 @@ This class now lists
 #include "../prefs/PrefsDialog.h"
 #include "SettingsVisitor.h"
 #include "PluginManager.h"
-#include "../tracks/ui/TrackView.h"
+#include "../tracks/ui/ChannelView.h"
 #include "ShuttleGui.h"
 
 #include <wx/frame.h>
@@ -482,8 +482,8 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.AddBool( (trk == fTrack), "focused");
       context.AddBool( trk->GetSelected(), "selected" );
       //JKC: Possibly add later...
-      //context.AddItem( TrackView::Get( *trk ).GetHeight(), "height" );
-      trk->TypeSwitch( [&] (const WaveTrack& t ) {
+      //context.AddItem(ChannelView::GetChannelGroupHeight(*trk), "height");
+      trk->TypeSwitch( [&] (const WaveTrack &t) {
          float vzmin, vzmax;
          WaveformScale::Get(t).GetDisplayBounds(vzmin, vzmax);
          context.AddItem( "wave", "kind" );

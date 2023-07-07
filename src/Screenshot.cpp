@@ -42,7 +42,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "ProjectWindows.h"
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 #include "HelpSystem.h"
 
 #include "ViewInfo.h"
@@ -769,20 +769,22 @@ void ScreenshotBigDialog::SizeTracks(int h)
 
    auto &tracks = TrackList::Get( mContext.project );
    for (auto t : tracks.Leaders<WaveTrack>()) {
-      auto channels = TrackList::Channels(t);
+      auto channels = t->Channels();
       auto nChannels = channels.size();
       auto height = nChannels == 1 ? 2 * h : h;
-      for (auto channel : channels)
-         TrackView::Get( *channel ).SetExpandedHeight(height);
+      for (auto pChannel : channels)
+         ChannelView::Get(*pChannel).SetExpandedHeight(height);
    }
    ProjectWindow::Get( mContext.project ).RedrawProject();
 }
 
 void ScreenshotBigDialog::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   for (auto t : TrackList::Get( mContext.project ).Any<WaveTrack>()) {
-      auto &view = TrackView::Get( *t );
-      view.SetExpandedHeight( view.GetMinimizedHeight() );
+   for (auto t : TrackList::Get(mContext.project).Leaders<WaveTrack>()) {
+      for (auto pChannel : t->Channels()) {
+         auto &view = ChannelView::Get(*pChannel);
+         view.SetExpandedHeight(view.GetMinimizedHeight());
+      }
    }
 
    ProjectWindow::Get( mContext.project ).RedrawProject();

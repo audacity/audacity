@@ -14,11 +14,13 @@
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
-#include "../tracks/ui/TrackView.h"
+#include "../tracks/ui/ChannelView.h"
 
 
 #include <wx/app.h>
 #include <wx/scrolbar.h>
+
+#include <numeric>
 
 // private helper classes and functions
 namespace {
@@ -61,8 +63,8 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
    double result = 1.0;
    auto &window = ProjectWindow::Get( project );
    double zoomToFit = window.GetZoomOfToFit();
-   using namespace WaveTrackViewConstants;
-   switch( preset ){
+   using namespace WaveChannelViewConstants;
+   switch(preset) {
       default:
       case kZoomDefault:
          result = ZoomInfo::GetDefaultZoom();
@@ -124,10 +126,11 @@ void DoZoomFitV(AudacityProject &project)
    auto &tracks = TrackList::Get( project );
 
    // Only nonminimized audio tracks will be resized
-   auto range = tracks.Any<AudioTrack>()
+   // Assume all channels of the track have the same minimization state
+   auto range = tracks.Leaders<AudioTrack>()
       - [](const Track *pTrack){
-         return TrackView::Get( *pTrack ).GetMinimized(); };
-   auto count = range.size();
+         return ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized(); };
+   auto count = range.sum(&Track::NChannels);
    if (count == 0)
       return;
 
@@ -137,8 +140,8 @@ void DoZoomFitV(AudacityProject &project)
    
    // The height of minimized and non-audio tracks cannot be apportioned
    height -=
-      tracks.Any().sum( TrackView::GetTrackHeight )
-         - range.sum( TrackView::GetTrackHeight );
+      tracks.Leaders().sum(ChannelView::GetChannelGroupHeight)
+         - range.sum(ChannelView::GetChannelGroupHeight);
    
    // Give each resized track the average of the remaining height
    // Bug 2803: Cast count to int, because otherwise the result of 
@@ -150,7 +153,8 @@ void DoZoomFitV(AudacityProject &project)
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)
-      TrackView::Get( *t ).SetExpandedHeight(height);
+      for (auto pChannel : t->Channels())
+         ChannelView::Get(*pChannel).SetExpandedHeight(height);
 }
 }
 
@@ -259,8 +263,9 @@ void OnCollapseAllTracks(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   for (auto t : tracks.Any())
-      TrackView::Get( *t ).SetMinimized(true);
+   for (auto t : tracks.Leaders())
+      for (auto pChannel : t->Channels())
+         ChannelView::Get(*pChannel).SetMinimized(true);
 
    ProjectHistory::Get( project ).ModifyState(true);
 }
@@ -271,8 +276,9 @@ void OnExpandAllTracks(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   for (auto t : tracks.Any())
-      TrackView::Get( *t ).SetMinimized(false);
+   for (auto t : tracks.Leaders())
+      for (auto pChannel : t->Channels())
+         ChannelView::Get(*pChannel).SetMinimized(false);
 
    ProjectHistory::Get( project ).ModifyState(true);
 }

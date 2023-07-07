@@ -2,16 +2,16 @@
 
 Audacity: A Digital Audio Editor
 
-WaveTrackVZoomHandle.cpp
+WaveChannelVZoomHandle.cpp
 
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
 
-#include "WaveTrackVZoomHandle.h"
+#include "WaveChannelVZoomHandle.h"
 
-#include "../../../ui/TrackVRulerControls.h"
+#include "../../../ui/ChannelVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
 #include "Project.h"
@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrack.h"
 #include "../../../../../images/Cursors.h"
 
-bool WaveTrackVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd)
+bool WaveChannelVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd)
 {
    const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
    bool bVZoom;
@@ -39,7 +39,7 @@ void WaveTrackVRulerMenuTable::InitUserData(void *pUserData)
 
 
 void WaveTrackVRulerMenuTable::OnZoom(
-   WaveTrackViewConstants::ZoomActions iZoomCode )
+   WaveChannelViewConstants::ZoomActions iZoomCode)
 {
    mpData->doZoom(
       &mpData->project, mpData->pTrack,
@@ -58,7 +58,7 @@ void WaveTrackVRulerMenuTable::UpdatePrefs()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
+HitTestPreview WaveChannelVZoomHandle::HitPreview(const wxMouseState &state)
 {
    static auto zoomInCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
@@ -79,7 +79,7 @@ HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
    };
 }
 
-UIHandle::Result WaveTrackVZoomHandle::DoDrag(
+UIHandle::Result WaveChannelVZoomHandle::DoDrag(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject,
    const int zoomStart, int &zoomEnd)
 {
@@ -94,11 +94,11 @@ UIHandle::Result WaveTrackVZoomHandle::DoDrag(
    return RefreshNone;
 }
 
-UIHandle::Result WaveTrackVZoomHandle::DoRelease(
+UIHandle::Result WaveChannelVZoomHandle::DoRelease(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject,
    wxWindow *pParent, WaveTrack *pTrack, const wxRect &rect,
    DoZoomFunction doZoom, PopupMenuTable &table,
-   int zoomStart, int zoomEnd )
+   int zoomStart, int zoomEnd)
 {
    using namespace RefreshCode;
    if (!pTrack)
@@ -110,7 +110,7 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
 
 
    // Popup menu...
-   using namespace WaveTrackViewConstants;
+   using namespace WaveChannelViewConstants;
    if (
        rightUp &&
        !(event.ShiftDown() || event.CmdDown()))
@@ -124,7 +124,7 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
 
       return data.result;
    }
-   else{
+   else {
       bool bVZoom;
       gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
       // Ignore Capture Lost event 
@@ -147,22 +147,21 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
    return UpdateVRuler | RefreshAll;
 }
 
-void WaveTrackVZoomHandle::DoDraw(
+void WaveChannelVZoomHandle::DoDraw(
    TrackPanelDrawingContext &context,
-   const wxRect &rect, unsigned iPass, const int zoomStart, const int zoomEnd )
+   const wxRect &rect, unsigned iPass, const int zoomStart, const int zoomEnd)
 {
-   if ( iPass == TrackArtist::PassZooming ) {
-      if ( IsDragZooming( zoomStart, zoomEnd ) )
-         TrackVRulerControls::DrawZooming
-            ( context, rect, zoomStart, zoomEnd );
+   if (iPass == TrackArtist::PassZooming) {
+      if (IsDragZooming(zoomStart, zoomEnd))
+         ChannelVRulerControls::DrawZooming(context, rect, zoomStart, zoomEnd);
    }
 }
 
-wxRect WaveTrackVZoomHandle::DoDrawingArea(
-   const wxRect &rect, const wxRect &panelRect, unsigned iPass )
+wxRect WaveChannelVZoomHandle::DoDrawingArea(
+   const wxRect &rect, const wxRect &panelRect, unsigned iPass)
 {
-   if ( iPass == TrackArtist::PassZooming )
-      return TrackVRulerControls::ZoomingArea( rect, panelRect );
+   if (iPass == TrackArtist::PassZooming)
+      return ChannelVRulerControls::ZoomingArea(rect, panelRect);
    else
       return rect;
 }
