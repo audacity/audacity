@@ -54,12 +54,12 @@ namespace {
 
    void StretchLeftTo(WaveClip& clip, double t)
    {
-      //clip.StretchLeftTo(t);
+      clip.StretchLeftTo(t);
    }
 
    void StretchRightTo(WaveClip& clip, double t)
    {
-      //clip.StretchRightTo(t);
+      clip.StretchRightTo(t);
    }
 }
 
@@ -170,7 +170,8 @@ public:
    AdjustClipBorder(AdjustHandler adjustHandler,
                     const std::shared_ptr<WaveTrack>& track,
                     const std::shared_ptr<WaveClip>& clip,
-                    bool adjustLeftBorder,bool isStretchMode,
+                    bool adjustLeftBorder,
+                    bool isStretchMode,
                     const ZoomInfo& zoomInfo)
       : mTrack(track)
       , mAdjustingLeftBorder(adjustLeftBorder)

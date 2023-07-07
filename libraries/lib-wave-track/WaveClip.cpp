@@ -274,6 +274,52 @@ void WaveClip::OnProjectTempoChange(
    mProjectTempo = newTempo;
 }
 
+void WaveClip::StretchLeftTo(double to)
+{
+   const auto pet = GetPlayEndTime();
+   if (to >= pet)
+      return;
+   const auto oldPlayDuration = pet - GetPlayStartTime();
+   const auto newPlayDuration = pet - to;
+   const auto ratioChange = newPlayDuration / oldPlayDuration;
+   mSequenceOffset = pet - (pet - mSequenceOffset) * ratioChange;
+   mTrimLeft *= ratioChange;
+   mTrimRight *= ratioChange;
+   mClipStretchRatio *= ratioChange;
+   mEnvelope->SetOffset(mSequenceOffset);
+   mEnvelope->RescaleTimesBy(ratioChange);
+   StretchCutLines(ratioChange);
+}
+
+void WaveClip::StretchRightTo(double to)
+{
+   const auto pst = GetPlayStartTime();
+   if (to <= pst)
+      return;
+   const auto oldPlayDuration = GetPlayEndTime() - pst;
+   const auto newPlayDuration = to - pst;
+   const auto ratioChange = newPlayDuration / oldPlayDuration;
+   mSequenceOffset = pst - mTrimLeft * ratioChange;
+   mTrimLeft *= ratioChange;
+   mTrimRight *= ratioChange;
+   mClipStretchRatio *= ratioChange;
+   mEnvelope->SetOffset(mSequenceOffset);
+   mEnvelope->RescaleTimesBy(ratioChange);
+   StretchCutLines(ratioChange);
+}
+
+void WaveClip::StretchCutLines(double ratioChange)
+{
+   for (const auto& cutline : mCutLines)
+   {
+      const auto startTime = cutline->GetPlayStartTime();
+      const auto newPlayStartTime = cutline->GetPlayStartTime() * ratioChange;
+      const auto newDuration = cutline->GetPlayDuration() * ratioChange;
+      cutline->ShiftBy(newPlayStartTime - startTime);
+      cutline->StretchRightTo(newPlayStartTime + newDuration);
+   }
+}
+
 double WaveClip::GetStretchRatio() const
 {
    const auto dstSrcRatio =

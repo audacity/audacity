@@ -164,6 +164,11 @@ public:
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
 
+   //! Stretches from left to the absolute time (if in expected range)
+   void StretchLeftTo(double to);
+   //! Sets from the right to the absolute time (if in expected range)
+   void StretchRightTo(double to);
+
    double GetStretchRatio() const override;
 
    // Resample clip. This also will set the rate, but without changing
@@ -505,13 +510,13 @@ private:
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();
+   void StretchCutLines(double ratioChange);
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
    void ClearSequence(double t0, double t1);
 
    //! Restores state when an update loop over mSequences fails midway
-   // todo(mhodgkinson) I don't find any use. Throw away?
    struct Transaction {
       explicit Transaction(WaveClip &clip);
       ~Transaction();
