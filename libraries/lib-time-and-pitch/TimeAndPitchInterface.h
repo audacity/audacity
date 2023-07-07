@@ -19,9 +19,7 @@ class TIME_AND_PITCH_API TimeAndPitchSource
 {
 public:
    virtual ~TimeAndPitchSource() = default;
-   virtual size_t
-   Pull(float* const*, size_t numChannels, size_t samplesPerChannel) = 0;
-   virtual bool Empty() const = 0;
+   virtual void Pull(float* const*, size_t samplesPerChannel) = 0;
 };
 
 class TIME_AND_PITCH_API TimeAndPitchInterface
@@ -34,8 +32,6 @@ public:
    };
 
    virtual void GetSamples(float* const*, size_t) = 0;
-
-   virtual bool CanReturnMoreSamples() const = 0;
 
    virtual ~TimeAndPitchInterface() = default;
 };

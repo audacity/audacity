@@ -72,6 +72,7 @@
 #include "HelpSystem.h"
 #include "ProgressDialog.h"
 #include "wxFileNameWrapper.h"
+#include "StretchingSequence.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
@@ -235,7 +236,8 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
       - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
       inputs.emplace_back(
-         pTrack->SharedPointer<const SampleTrack>(), GetEffectStages(*pTrack));
+         StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()),
+         GetEffectStages(*pTrack));
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(move(inputs),
                   // Throw, to stop exporting, if read fails:

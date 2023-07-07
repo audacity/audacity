@@ -36,7 +36,7 @@ public:
    float GetChannelGain(int channel) const override;
    bool Get(
       size_t iChannel, size_t nBuffers, samplePtr buffers[],
-      sampleFormat format, sampleCount start, size_t len,
+      sampleFormat format, sampleCount start, size_t len, bool backwards,
       fillFormat fill = fillZero, bool mayThrow = true,
       sampleCount* pNumWithinClips = nullptr) const override;
    double GetStartTime() const override;
@@ -45,7 +45,8 @@ public:
    sampleFormat WidestEffectiveFormat() const override;
    bool HasTrivialEnvelope() const override;
    void GetEnvelopeValues(
-      double* buffer, size_t bufferLen, double t0) const override;
+      double* buffer, size_t bufferLen, double t0,
+      bool backwards) const override;
 
    AudioGraph::ChannelType GetChannelType() const override;
 

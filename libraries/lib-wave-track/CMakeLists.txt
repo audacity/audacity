@@ -17,8 +17,6 @@ and WaveTrackSink make new WaveTrack objects.
 ]]
 
 set( SOURCES
-   AudioSegmentSampleView.cpp
-   AudioSegmentSampleView.h
    CachingPlayableSequence.cpp
    CachingPlayableSequence.h
    PasteOverPreservingClips.cpp
@@ -33,10 +31,13 @@ set( SOURCES
    WaveTrack.h
    WaveTrackSink.cpp
    WaveTrackSink.h
+   WideClip.cpp
+   WideClip.h
 )
 set( LIBRARIES
    lib-project-rate-interface
    lib-sample-track-interface
+   lib-stretching-sequence-interface
    lib-track-selection-interface
 )
 audacity_library( lib-wave-track "${SOURCES}" "${LIBRARIES}"

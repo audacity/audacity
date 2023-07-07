@@ -173,11 +173,12 @@ bool SpecCache::CalculateOneSpectrum
          if (myLen > 0) {
             floats.resize(myLen);
             auto data = floats.data();
+            constexpr auto backwards = false;
             if (sequence.GetFloats(
                    0u, 1u, &data,
                    sampleCount(floor(0.5 + from.as_double() + offset * rate)),
-                   myLen, fillZero,
-               // Don't throw in this drawing operation
+                   myLen, backwards, fillZero,
+                   // Don't throw in this drawing operation
                    false))
                useBuffer = floats.data();
 
