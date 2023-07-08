@@ -223,7 +223,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
    mFactor = 100.0 / (100.0 + m_PercentChange);
 
-   outputs.Get().Any().VisitWhile(bGoodResult,
+   outputs.Get().Leaders().VisitWhile(bGoodResult,
       [&](LabelTrack &lt) {
          if (SyncLock::IsSelectedOrSyncLockSelected(&lt)) {
             if (!ProcessLabelTrack(&lt))
@@ -240,8 +240,8 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
          //Set the current bounds to whichever left marker is
          //greater and whichever right marker is less:
-         mCurT0 = wxMax(mT0, mCurT0);
-         mCurT1 = wxMin(mT1, mCurT1);
+         mCurT0 = std::max(mT0, mCurT0);
+         mCurT1 = std::min(mT1, mCurT1);
 
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
@@ -251,28 +251,51 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
             const auto gaps = FindGaps(outWaveTrack, mCurT0, mCurT1);
 
-            //ProcessOne() (implemented below) processes a single track
-            if (const auto outputTrack = ProcessOne(outWaveTrack, start, end)) {
-               const double newLength = outputTrack->GetEndTime();
-               LinearTimeWarper warper{
-                  mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
+            auto newTracks = TrackList::Create(nullptr);
+            for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
+               // ProcessOne() (implemented below) processes a single channel
+               if (const auto outputTrack =
+                  ProcessOne(outWaveTrack, start, end)
+               ){
+                  newTracks->Add(outputTrack);
+                  assert(outputTrack->IsLeader() == outWaveTrack.IsLeader());
+                  ++mCurTrackNum;
+               }
+               else {
+                  newTracks.reset();
+                  break;
+               }
+            }
+            if (!newTracks) {
+               bGoodResult = false;
+               return;
+            }
 
-               // Take the output track and insert it in place of the original sample data
-               outWaveTrack.ClearAndPaste(
-                  mCurT0, mCurT1, outputTrack.get(), true, true, &warper);
+            auto iter =
+               TrackList::Channels(*newTracks->Leaders().begin()).begin();
+            const double newLength = (*iter)->GetEndTime();
+            const LinearTimeWarper warper{
+               mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
+
+            for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
+               // Take the output track and insert it in place of the
+               // original sample data
+               pChannel->ClearAndPaste(
+                  mCurT0, mCurT1, *iter++, true, true, &warper);
+            }
 
                // Finally, recreate the gaps
+            for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
                for (const auto [st, et] : gaps)
                   if (st >= mCurT0 && et <= mCurT1 && st != et)
-                     outWaveTrack.SplitDelete(warper.Warp(st), warper.Warp(et));
+                     pChannel->SplitDelete(warper.Warp(st), warper.Warp(et));
             }
-            else
-               bGoodResult = false;
          }
-         mCurTrackNum++;
+         else
+            mCurTrackNum += outWaveTrack.NChannels();
       }; },
       [&](Track &t) {
-         if (t.IsLeader() && SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(&t))
             t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }
    );
