@@ -426,7 +426,7 @@ void OnSelectAll(const CommandContext &context)
    auto& trackPanel = TrackPanel::Get(context.project);
    auto& tracks = TrackList::Get(context.project);
 
-   for (auto lt : tracks.Selected< LabelTrack >()) {
+   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
       auto& view = LabelTrackView::Get(*lt);
       if (view.SelectAllText(context.project)) {
          trackPanel.Refresh(false);

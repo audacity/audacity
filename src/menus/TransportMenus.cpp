@@ -78,7 +78,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto &projectAudioManager = ProjectAudioManager::Get(project);
 
    // Find the number of label tracks, and ptr to last track found
-   auto trackRange = tracks.Any<LabelTrack>();
+   auto trackRange = tracks.Leaders<LabelTrack>();
    auto lt = *trackRange.rbegin();
    auto nLabelTrack = trackRange.size();
 

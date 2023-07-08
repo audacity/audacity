@@ -172,7 +172,7 @@ void ExportMultipleDialog::CountTracksAndLabels()
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)).size();
 
    // only the first label track
-   mLabels = *mTracks->Any< const LabelTrack >().begin();
+   mLabels = *mTracks->Leaders<const LabelTrack>().begin();
    mNumLabels = mLabels ? mLabels->GetNumLabels() : 0;
 }
 
