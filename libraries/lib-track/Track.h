@@ -525,17 +525,12 @@ public:
    using Factory =
       std::function<std::shared_ptr<TrackAttachment>(Track &, size_t)>;
 
-   explicit ChannelAttachmentsBase(Factory factory)
-      : mFactory{ move(factory) }
-   {}
+   ChannelAttachmentsBase(Track &track, Factory factory);
    ~ChannelAttachmentsBase() override;
 
    // Override all the TrackAttachment virtuals and pass through to each
    void CopyTo(Track &track) const override;
    void Reparent(const std::shared_ptr<Track> &parent) override;
-   /*!
-    @pre `IsLeader()`
-    */
    void WriteXMLAttributes(XMLWriter &writer) const override;
    bool HandleXMLAttribute(
       const std::string_view& attr, const XMLAttributeValueView& valueView)
@@ -603,8 +598,8 @@ public:
          std::invoke_result_t<F, Track&, size_t>, std::shared_ptr<Attachment>
       >>
    >
-   explicit ChannelAttachments(F &&f)
-      : ChannelAttachmentsBase{ std::forward<F>(f) }
+   explicit ChannelAttachments(Track &track, F &&f)
+      : ChannelAttachmentsBase{ track, std::forward<F>(f) }
    {}
 };
 
