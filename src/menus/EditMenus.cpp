@@ -229,9 +229,9 @@ void OnUndo(const CommandContext &context)
       [&]( const UndoStackElem &elem ){
          ProjectHistory::Get( project ).PopState( elem.state ); } );
 
-   auto t = *tracks.Selected().begin();
+   auto t = *tracks.SelectedLeaders().begin();
    if (!t)
-      t = *tracks.Any().begin();
+      t = *tracks.Leaders().begin();
    TrackFocus::Get(project).Set(t);
    if (t) {
       t->EnsureVisible();
@@ -259,9 +259,9 @@ void OnRedo(const CommandContext &context)
       [&]( const UndoStackElem &elem ){
          ProjectHistory::Get( project ).PopState( elem.state ); } );
 
-   auto t = *tracks.Selected().begin();
+   auto t = *tracks.SelectedLeaders().begin();
    if (!t)
-      t = *tracks.Any().begin();
+      t = *tracks.Leaders().begin();
    TrackFocus::Get(project).Set(t);
    if (t) {
       t->EnsureVisible();

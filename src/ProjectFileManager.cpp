@@ -1032,7 +1032,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
          formats.GetBandwidthSelectionFormatName());
       
       ProjectHistory::Get( project ).InitialState();
-      TrackFocus::Get( project ).Set( *tracks.Any().begin() );
+      TrackFocus::Get(project).Set(*tracks.Leaders().begin());
       window.HandleResize();
       trackPanel.Refresh(false);
 

@@ -328,8 +328,8 @@ void OnPasteNewLabel(const CommandContext &context)
       {
          // If there are no selected label tracks, try to choose the first label
          // track after some other selected track
-         Track *t = *tracks.Selected().begin()
-            .Filter( &Track::Any )
+         Track *t = *tracks.SelectedLeaders().begin()
+            .Filter(&Track::Any)
             .Filter<LabelTrack>();
 
          // If no match found, add one

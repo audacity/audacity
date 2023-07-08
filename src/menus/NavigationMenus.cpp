@@ -457,7 +457,7 @@ void OnFirstTrack(const CommandContext &context)
    if (!t)
       return;
 
-   auto f = *tracks.Any().begin();
+   auto f = *tracks.Leaders().begin();
    if (t != f)
       trackFocus.Set(f);
    if (f)
