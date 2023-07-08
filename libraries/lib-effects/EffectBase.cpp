@@ -225,8 +225,9 @@ const AudacityProject *EffectBase::FindProject() const
 
 void EffectBase::CountWaveTracks()
 {
-   mNumTracks = mTracks->Selected< const WaveTrack >().size();
-   mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
+   const auto range = mTracks->SelectedLeaders<const WaveTrack>();
+   mNumTracks = range.sum(&WaveTrack::NChannels);
+   mNumGroups = range.size();
 }
 
 std::any EffectBase::BeginPreview(const EffectSettings &)
