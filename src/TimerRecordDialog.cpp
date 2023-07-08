@@ -1145,7 +1145,7 @@ void OnTimerRecord(const CommandContext &context)
    // but we want to warn the user about potential problems from the very start.
    const auto selectedTracks{ GetPropertiesOfSelected(project) };
    const int rateOfSelected{ selectedTracks.rateOfSelected };
-   const int numberOfSelected{ selectedTracks.numberOfSelected };
+   const bool anySelected{ selectedTracks.anySelected };
    const bool allSameRate{ selectedTracks.allSameRate };
 
    if (!allSameRate) {
@@ -1159,7 +1159,7 @@ void OnTimerRecord(const CommandContext &context)
 
    const auto existingTracks{ ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected) };
    if (existingTracks.empty()) {
-      if (numberOfSelected > 0 && rateOfSelected !=
+      if (anySelected && rateOfSelected !=
           ProjectRate::Get(project).GetRate()) {
          AudacityMessageBox(XO(
             "Too few tracks are selected for recording at this sample rate.\n"

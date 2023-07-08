@@ -188,7 +188,7 @@ struct PropertiesOfSelected
 {
    bool allSameRate{ false };
    int rateOfSelected{ RATE_NOT_SELECTED };
-   int numberOfSelected{ 0 };
+   bool anySelected{ false };
 };
 
 AUDACITY_DLL_API

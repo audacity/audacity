@@ -660,7 +660,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
       // making sure they all have the same rate
       const auto selectedTracks{ GetPropertiesOfSelected(*p) };
       const int rateOfSelected{ selectedTracks.rateOfSelected };
-      const int numberOfSelected{ selectedTracks.numberOfSelected };
+      const bool anySelected{ selectedTracks.anySelected };
       const bool allSameRate{ selectedTracks.allSameRate };
 
       if (!allSameRate) {
@@ -683,7 +683,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
                (trackRange + &Track::IsSelected).max(&Track::GetEndTime));
          }
          else {
-            if (numberOfSelected > 0 && rateOfSelected != options.rate) {
+            if (anySelected && rateOfSelected != options.rate) {
                AudacityMessageBox(XO(
                   "Too few tracks are selected for recording at this sample rate.\n"
                   "(Audacity requires two channels at the same sample rate for\n"
@@ -1314,10 +1314,9 @@ GetPropertiesOfSelected(const AudacityProject &proj)
    result.allSameRate = true;
 
    const auto selectedTracks{
-      TrackList::Get(proj).Selected< const WaveTrack >() };
+      TrackList::Get(proj).SelectedLeaders<const WaveTrack>() };
 
-   for (const auto & track : selectedTracks)
-   {
+   for (const auto & track : selectedTracks) {
       if (rateOfSelection != RATE_NOT_SELECTED &&
          track->GetRate() != rateOfSelection)
          result.allSameRate = false;
@@ -1325,7 +1324,7 @@ GetPropertiesOfSelected(const AudacityProject &proj)
          rateOfSelection = track->GetRate();
    }
 
-   result.numberOfSelected = selectedTracks.size();
+   result.anySelected = !selectedTracks.empty();
    result.rateOfSelected = rateOfSelection;
 
    return  result;
