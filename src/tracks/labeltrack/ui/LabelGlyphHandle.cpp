@@ -319,13 +319,13 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
               auto& selectionState = SelectionState::Get(project);
               auto& tracks = TrackList::Get(project);
 
-              bool done = tracks.Selected().any_of(
+              bool done = tracks.SelectedLeaders().any_of(
                   [&](const Track* track) { return track != static_cast<Track*>(pTrack.get()); }
               );
 
               if (!done) {
                   //otherwise, select all tracks
-                  for (auto t : tracks.Any())
+                  for (auto t : tracks.Leaders())
                       selectionState.SelectTrack(*t, true, true);
               }
 

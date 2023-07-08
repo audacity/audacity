@@ -350,7 +350,7 @@ bool EffectCompressor::InitPass1()
       DisableSecondPass();
 
    // Find the maximum block length required for any track
-   size_t maxlen = inputTracks()->Selected< const WaveTrack >().max(
+   size_t maxlen = inputTracks()->SelectedLeaders<const WaveTrack>().max(
       &WaveTrack::GetMaxBlockSize
    );
    mFollow1.reset();

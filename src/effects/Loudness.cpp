@@ -346,7 +346,7 @@ void EffectLoudness::AllocBuffers(TrackList &outputs)
    double maxSampleRate = 0;
    mProcStereo = false;
 
-   for (auto track : outputs.Selected<WaveTrack>() + &Track::Any) {
+   for (auto track : outputs.SelectedLeaders<WaveTrack>() + &Track::Any) {
       mTrackBufferCapacity = std::max(mTrackBufferCapacity, track->GetMaxBlockSize());
       maxSampleRate = std::max(maxSampleRate, track->GetRate());
 
