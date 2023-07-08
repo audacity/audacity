@@ -123,6 +123,8 @@ namespace
    template <typename Visitor>
    void VisitRealtimeEffectStateUIs(SampleTrack& track, Visitor&& visitor)
    {
+      if (!track.IsLeader())
+         return;
       auto& effects = RealtimeEffectList::Get(track);
       effects.Visit(
          [visitor](auto& effectState, bool)
@@ -1042,7 +1044,7 @@ struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
    void UpdatePrefs() override
    {
       auto& trackList = TrackList::Get(mProject);
-      for (auto waveTrack : trackList.Any<WaveTrack>())
+      for (auto waveTrack : trackList.Leaders<WaveTrack>())
          ReopenRealtimeEffectUIData(mProject, *waveTrack);
    }
 };
@@ -1190,7 +1192,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          auto& trackList = TrackList::Get(mProject);
 
          // Realtime effect UI is only updated on Undo or Redo
-         auto waveTracks = trackList.Any<WaveTrack>();
+         auto waveTracks = trackList.Leaders<WaveTrack>();
          
          if (
             message.type == UndoRedoMessage::Type::UndoOrRedo ||

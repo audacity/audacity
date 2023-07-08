@@ -42,6 +42,7 @@ public:
    // Fix the otherwise ambiguous lookup of these virtual function names
    using Track::GetStartTime;
    using Track::GetEndTime;
+   using Track::IsLeader;
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
