@@ -471,14 +471,15 @@ void OnLastTrack(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    Track *t = trackFocus.Get();
+   assert(t->IsLeader());
    if (!t)
       return;
 
-   auto l = *tracks.Any().rbegin();
+   auto l = *tracks.Leaders().rbegin();
    if (t != l)
       trackFocus.Set(l);
    if (l)
-      l->EnsureVisible( t != l );
+      l->EnsureVisible(t != l);
 }
 
 void OnShiftUp(const CommandContext &context)
