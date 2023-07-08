@@ -91,7 +91,6 @@ private:
 
    // track related
    int    mCurTrackNum;
-   double mMaxNewLength;
    double mCurT0;
    double mCurT1;
 

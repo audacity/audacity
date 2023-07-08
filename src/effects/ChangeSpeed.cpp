@@ -220,7 +220,6 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
    bool bGoodResult = true;
 
    mCurTrackNum = 0;
-   mMaxNewLength = 0.0;
 
    mFactor = 100.0 / (100.0 + m_PercentChange);
 
@@ -553,9 +552,6 @@ bool EffectChangeSpeed::ProcessOne(
          if (st >= mCurT0 && et <= mCurT1 && st != et)
             track->SplitDelete(warper.Warp(st), warper.Warp(et));
    }
-
-   if (newLength > mMaxNewLength)
-      mMaxNewLength = newLength;
 
    return bResult;
 }
