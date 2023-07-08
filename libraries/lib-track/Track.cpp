@@ -1340,6 +1340,15 @@ TrackAttachment *ChannelAttachmentsBase::Find(
    return pAttachments->mAttachments[iChannel].get();
 }
 
+ChannelAttachmentsBase::ChannelAttachmentsBase(Track &track, Factory factory)
+   : mFactory{ move(factory) }
+{
+   // Always construct one channel view
+   // TODO wide wave tracks -- number of channels will be known earlier, and
+   // they will all be constructed
+   mAttachments.push_back(mFactory(track, 0));
+}
+
 ChannelAttachmentsBase::~ChannelAttachmentsBase() = default;
 
 void ChannelAttachmentsBase::CopyTo(Track &track) const

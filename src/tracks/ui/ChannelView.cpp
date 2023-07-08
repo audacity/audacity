@@ -72,8 +72,8 @@ void ChannelView::CopyTo(Track &track) const
 using ChannelViewAttachments = ChannelAttachments<ChannelView>;
 
 static const AttachedTrackObjects::RegisteredFactory keyC{
-   [](Track &){
-      return std::make_shared<ChannelViewAttachments>(
+   [](Track &track){
+      return std::make_shared<ChannelViewAttachments>(track,
          [](Track &track, size_t iChannel) {
             assert(iChannel < track.NChannels());
             return DoGetView::Call(track, iChannel);
