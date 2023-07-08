@@ -1111,7 +1111,8 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 
 bool MixerBoard::HasSolo()
 {
-   return !(( mTracks->Any<PlayableTrack>() + &PlayableTrack::GetSolo ).empty());
+   return
+      !(mTracks->Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
 }
 
 void MixerBoard::RefreshTrackClusters(bool bEraseBackground /*= true*/)
@@ -1508,7 +1509,7 @@ const ReservedCommandFlag&
             !tracks.Leaders<const NoteTrack>().empty()
          ||
 #endif
-            !tracks.Any<const WaveTrack>().empty()
+            !tracks.Leaders<const WaveTrack>().empty()
          ;
       }
    }; return flag; }

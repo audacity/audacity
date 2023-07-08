@@ -175,7 +175,7 @@ void EditByLabel(AudacityProject &project,
       return;
 
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
-                           (tracks.Selected<PlayableTrack>()).empty());
+                           (tracks.SelectedLeaders<PlayableTrack>()).empty());
 
    //Apply action on tracks starting from
    //labeled regions in the end. This is to correctly perform
@@ -214,7 +214,7 @@ void EditClipboardByLabel( AudacityProject &project,
       return;
 
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
-                           (tracks.Selected<PlayableTrack>()).empty());
+                           (tracks.SelectedLeaders<PlayableTrack>()).empty());
 
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();

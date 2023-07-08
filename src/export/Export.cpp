@@ -229,7 +229,8 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
 {
    Mixer::Inputs inputs;
 
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    const auto range = tracks.Leaders<const WaveTrack>()
       + (selectionOnly ? &Track::IsSelected : &Track::Any)
@@ -509,7 +510,7 @@ bool Exporter::ExamineTracks()
    auto &tracks = TrackList::Get(*mProject);
 
    bool anySolo =
-      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
+      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    const auto range = tracks.Leaders<const WaveTrack>()
       + (mSelectedOnly ? &Track::IsSelected : &Track::Any)
@@ -1338,7 +1339,8 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    unsigned numTracks = 0;
 
-   bool anySolo = !(( tracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(tracks->Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    for (auto t :
          tracks->Any< const WaveTrack >()

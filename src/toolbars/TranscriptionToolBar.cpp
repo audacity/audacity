@@ -323,8 +323,8 @@ void TranscriptionToolBar::EnableDisableButtons()
    bool recording = gAudioIO->GetNumCaptureChannels() > 0;
 
    // Only interested in audio type tracks
-   bool tracks = p && TrackList::Get( *p ).Any<AudioTrack>(); // PRL:  PlayableTrack ?
-   SetEnabled( canStopAudioStream && tracks && !recording );
+   bool tracks = p && TrackList::Get(*p).Leaders<AudioTrack>(); // PRL:  PlayableTrack ?
+   SetEnabled(canStopAudioStream && tracks && !recording);
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    if (!p)

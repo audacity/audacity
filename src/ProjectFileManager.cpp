@@ -298,7 +298,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       }
 
       auto &tracks = TrackList::Get( proj );
-      if (!tracks.Any())
+      if (tracks.empty())
       {
          if (UndoManager::Get( proj ).UnsavedChanges() &&
                settings.EmptyCanBeDirty())
@@ -1105,7 +1105,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // In case the project had soloed tracks before importing,
    // all newly imported tracks are muted.
    const bool projectHasSolo =
-      !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+      !(tracks.Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo)
    {
       // Iterate vector of vectors of pointers to tracks that are not yet

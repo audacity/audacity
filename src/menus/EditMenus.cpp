@@ -154,7 +154,7 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
    
-   assert(!tracks.Selected());
+   assert(tracks.SelectedLeaders().empty());
 
    Track* pFirstNewTrack = NULL;
    for (auto pClip : src) {

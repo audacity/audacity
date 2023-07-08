@@ -380,7 +380,7 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
    auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
-   if( TrackList::Get( *p ).Selected< const WaveTrack >() ) {
+   if (TrackList::Get(*p).SelectedLeaders<const WaveTrack>()) {
       mForegroundStartT->SetValue(selectedRegion.t0());
       mForegroundEndT->SetValue(selectedRegion.t1());
    }
@@ -396,7 +396,7 @@ void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
    auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
-   if( TrackList::Get( *p ).Selected< const WaveTrack >() ) {
+   if (TrackList::Get(*p).SelectedLeaders<const WaveTrack>()) {
       mBackgroundStartT->SetValue(selectedRegion.t0());
       mBackgroundEndT->SetValue(selectedRegion.t1());
    }

@@ -165,7 +165,8 @@ ExportMultipleDialog::~ExportMultipleDialog()
 
 void ExportMultipleDialog::CountTracksAndLabels()
 {
-   bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(mTracks->Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    mNumWaveTracks =
       (mTracks->Leaders< const WaveTrack >() - 
@@ -700,7 +701,7 @@ bool ExportMultipleDialog::DirOk()
 static unsigned GetNumExportChannels( const TrackList &tracks )
 {
    bool anySolo =
-      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
+      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    // Want only unmuted wave tracks.
    const auto range = tracks.Any<const WaveTrack>() -
@@ -890,7 +891,8 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    for (auto tr : mTracks->SelectedLeaders<WaveTrack>())
       tr->SetSelected(false);
 
-   bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(mTracks->Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    bool skipSilenceAtBeginning;
    gPrefs->Read(wxT("/AudioFiles/SkipSilenceAtBeginning"), &skipSilenceAtBeginning, false);

@@ -160,10 +160,10 @@ void DoSelectSomething(AudacityProject &project)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    bool bTime = selectedRegion.isPoint();
-   bool bTracks = tracks.Selected().empty();
+   bool bTracks = tracks.SelectedLeaders().empty();
 
-   if( bTime || bTracks )
-      DoSelectTimeAndTracks( project, bTime, bTracks );
+   if (bTime || bTracks)
+      DoSelectTimeAndTracks(project, bTime, bTracks);
 }
 
 void ActivatePlayRegion(AudacityProject &project)

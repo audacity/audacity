@@ -335,9 +335,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    bool hasaudio;
    if (nonWaveToo)
-      hasaudio = ! tracks.Any<PlayableTrack>().empty();
+      hasaudio = ! tracks.Leaders<PlayableTrack>().empty();
    else
-      hasaudio = ! tracks.Any<WaveTrack>().empty();
+      hasaudio = ! tracks.Leaders<WaveTrack>().empty();
 
    double latestEnd = tracks.GetEndTime();
 

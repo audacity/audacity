@@ -839,10 +839,10 @@ void TrackPanel::DrawTracks(wxDC * dc)
    brushFlag   = (ToolCodes::brushTool == settings.GetTool());
 #endif
 
-   const bool hasSolo = GetTracks()->Any< PlayableTrack >()
-      .any_of( []( const PlayableTrack *pt ) {
-         pt = static_cast< const PlayableTrack * >(
-            pt->SubstitutePendingChangedTrack().get() );
+   const bool hasSolo = GetTracks()->Leaders<PlayableTrack>()
+      .any_of( [](const PlayableTrack *pt) {
+         pt = static_cast<const PlayableTrack *>(
+            pt->SubstitutePendingChangedTrack().get());
          return (pt && pt->GetSolo());
       } );
 
@@ -1603,7 +1603,7 @@ struct Subgroup final : TrackPanelGroup {
       Refinement refinement;
 
       auto &tracks = *mPanel.GetTracks();
-      if (tracks.Any())
+      if (!tracks.empty())
          refinement.emplace_back( yy, EmptyCell::Instance() ),
          yy += kTopMargin;
 
