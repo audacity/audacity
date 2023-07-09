@@ -131,7 +131,7 @@ void Track::EnsureVisible( bool modifyState )
 {
    auto pList = mList.lock();
    if (pList)
-      pList->EnsureVisibleEvent( SharedPointer(), modifyState );
+      pList->EnsureVisibleEvent(SharedPointer(), modifyState);
 }
 
 Track::Holder Track::Duplicate() const
@@ -535,8 +535,11 @@ void TrackList::DataEvent(
 void TrackList::EnsureVisibleEvent(
    const std::shared_ptr<Track> &pTrack, bool modifyState )
 {
+   // Substitute leader track
+   const auto pLeader = *FindLeader(pTrack.get());
    QueueEvent({ TrackListEvent::TRACK_REQUEST_VISIBLE,
-      pTrack, static_cast<int>(modifyState) });
+      pLeader ? pLeader->SharedPointer() : nullptr,
+      static_cast<int>(modifyState) });
 }
 
 void TrackList::PermutationEvent(TrackNodePointer node)

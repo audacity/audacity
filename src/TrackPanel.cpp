@@ -1006,14 +1006,15 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
    bool modifyState = e.mExtra;
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();
+   // Promised by TrackListEvent for this event type:
+   assert(!t || t->IsLeader());
    int trackTop = 0;
    int trackHeight =0;
    for (auto it : GetTracks()->Leaders()) {
       trackTop += trackHeight;
       trackHeight = ChannelView::GetChannelGroupHeight(it);
 
-      // TODO wide wave tracks -- will need just one equality test
-      if (TrackList::Channels(it).contains(t)) {
+      if (it == t) {
          //We have found the track we want to ensure is visible.
 
          //Get the size of the trackpanel.
@@ -1036,8 +1037,8 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
    }
    Refresh(false);
 
-   if ( modifyState )
-      ProjectHistory::Get( *GetProject() ).ModifyState( false );
+   if (modifyState)
+      ProjectHistory::Get(*GetProject()).ModifyState(false);
 }
 
 // 0.0 scrolls to top
