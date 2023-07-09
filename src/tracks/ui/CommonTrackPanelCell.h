@@ -114,6 +114,9 @@ public:
    //! May return null
    std::shared_ptr<Channel> FindChannel();
 
+   //! May return null
+   std::shared_ptr<const Channel> FindChannel() const;
+
 private:
    std::weak_ptr< Track > mwTrack;
    const size_t miChannel;

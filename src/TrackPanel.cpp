@@ -1696,15 +1696,15 @@ wxRect TrackPanel::FindFocusedTrackRect( const Track * target )
    return rect;
 }
 
-std::vector<wxRect> TrackPanel::FindRulerRects( const Track *target )
+std::vector<wxRect> TrackPanel::FindRulerRects(const Channel &target)
 {
    std::vector<wxRect> results;
-   if (target)
-      VisitCells( [&]( const wxRect &rect, TrackPanelCell &visited ) {
-         if (auto pRuler = dynamic_cast<const ChannelVRulerControls*>(&visited);
-             pRuler && pRuler->FindTrack().get() == target)
-            results.push_back(rect);
-      } );
+   VisitCells( [&](const wxRect &rect, TrackPanelCell &visited) {
+      if (auto pRuler = dynamic_cast<const ChannelVRulerControls*>(&visited))
+         if (auto pView = pRuler->GetChannelView())
+            if (pView->FindChannel().get() == &target)
+               results.push_back(rect);
+   } );
    return results;
 }
 

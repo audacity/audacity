@@ -141,3 +141,8 @@ std::shared_ptr<Channel> CommonTrackCell::FindChannel()
       return pTrack->GetChannel(miChannel);
    return {};
 }
+
+std::shared_ptr<const Channel> CommonTrackCell::FindChannel() const
+{
+   return const_cast<CommonTrackCell*>(this)->FindChannel();
+}
