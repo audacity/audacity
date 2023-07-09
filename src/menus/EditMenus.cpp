@@ -584,7 +584,7 @@ void OnPaste(const CommandContext &context)
 
    auto &tracks = TrackList::Get(project);
    // If nothing's selected, we just insert new tracks.
-   if (!tracks.Selected()) {
+   if (!tracks.SelectedLeaders()) {
       DoPasteNothingSelected(
          project, *srcTracks, clipboard.T0(), clipboard.T1());
       return;
