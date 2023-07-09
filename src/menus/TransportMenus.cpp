@@ -88,7 +88,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    else if (nLabelTrack > 1) {
       // find first label track, if any, starting at the focused track
       lt =
-         *tracks.Find(trackFocus.Get()).Filter<LabelTrack>();
+         *tracks.FindLeader(trackFocus.Get()).Filter<LabelTrack>();
       if (!lt)
          trackFocus.MessageForScreenReader(
             XO("no label track at or below focused track"));
