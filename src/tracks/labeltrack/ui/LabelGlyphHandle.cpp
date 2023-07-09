@@ -28,6 +28,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/event.h>
 #include <wx/translation.h>
 
+#include <cassert>
+
 LabelTrackHit::LabelTrackHit( const std::shared_ptr<LabelTrack> &pLT )
    : mpLT{ pLT }
 {
@@ -331,7 +333,8 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
 
               // Do this after, for its effect on TrackPanel's memory of last selected
               // track (which affects shift-click actions)
-              selectionState.SelectTrack(*pTrack.get(), true, true);
+              assert(pTrack->IsLeader()); // It's a label track
+              selectionState.SelectTrack(*pTrack, true, true);
 
               // PRL: bug1659 -- make selection change undo correctly
               updated = !ProjectAudioIO::Get(project).IsAudioActive();

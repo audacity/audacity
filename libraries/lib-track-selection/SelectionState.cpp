@@ -13,6 +13,8 @@
 #include "Track.h"
 #include "Project.h"
 
+#include <cassert>
+
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
   [](AudacityProject &){ return std::make_shared< SelectionState >(); }
 };
@@ -50,8 +52,9 @@ void SelectionState::SelectTrackLength
 }
 
 void SelectionState::SelectTrack(
-   Track &track, bool selected, bool updateLastPicked )
+   Track &track, bool selected, bool updateLastPicked)
 {
+   assert(track.IsLeader());
    //bool wasCorrect = (selected == track.GetSelected());
 
    track.SetSelected(selected);
@@ -77,27 +80,30 @@ void SelectionState::SelectTrack(
 }
 
 void SelectionState::SelectRangeOfTracks(
-   TrackList &tracks, Track &rsTrack, Track &reTrack )
+   TrackList &tracks, Track &rsTrack, Track &reTrack)
 {
    Track *sTrack = &rsTrack, *eTrack = &reTrack;
    // Swap the track pointers if needed
    auto begin = tracks.Leaders().begin(),
       iterS = tracks.FindLeader(sTrack),
       iterE = tracks.FindLeader(eTrack);
+   // Be sure to substitute the leaders for given tracks
+   sTrack = *iterS;
+   eTrack = *iterE;
    auto indS = std::distance(begin, iterS),
       indE = std::distance(begin, iterE);
    if (indE < indS)
       std::swap(sTrack, eTrack);
 
    for (auto track :
-        tracks.Any().StartingWith(sTrack).EndingAfter(eTrack))
+        tracks.Leaders().StartingWith(sTrack).EndingAfter(eTrack))
       SelectTrack(*track, true, false);
 }
 
-void SelectionState::SelectNone( TrackList &tracks )
+void SelectionState::SelectNone(TrackList &tracks)
 {
-   for (auto t : tracks.Any())
-      SelectTrack( *t, false, false );
+   for (auto t : tracks.Leaders())
+      SelectTrack(*t, false, false);
 }
 
 void SelectionState::ChangeSelectionOnShiftClick(
@@ -107,7 +113,7 @@ void SelectionState::ChangeSelectionOnShiftClick(
    auto pExtendFrom = tracks.Lock(mLastPickedTrack);
 
    if (!pExtendFrom) {
-      auto trackRange = tracks.Selected();
+      auto trackRange = tracks.SelectedLeaders();
       auto pFirst = *trackRange.begin();
 
       // If our track is at or after the first, extend from the first.
@@ -123,32 +129,35 @@ void SelectionState::ChangeSelectionOnShiftClick(
 
       // Our track was earlier than the first.  Extend from the last.
       if (!pExtendFrom)
-         pExtendFrom = Track::SharedPointer( *trackRange.rbegin() );
+         pExtendFrom = Track::SharedPointer(*trackRange.rbegin());
    }
+   // Either it's null, or mLastPickedTrack, or the first or last of
+   // SelectedLeaders()
+   assert(!pExtendFrom || pExtendFrom->IsLeader());
 
-   SelectNone( tracks );
-   if( pExtendFrom )
-      SelectRangeOfTracks( tracks, track, *pExtendFrom );
+   SelectNone(tracks);
+   if (pExtendFrom)
+      SelectRangeOfTracks(tracks, track, *pExtendFrom);
    else
-      SelectTrack( track, true, true );
+      SelectTrack(track, true, true);
    mLastPickedTrack = pExtendFrom;
 }
 
-void SelectionState::HandleListSelection
-( TrackList &tracks, ViewInfo &viewInfo,
-  Track &track, bool shift, bool ctrl, bool syncLocked )
+void SelectionState::HandleListSelection(TrackList &tracks, ViewInfo &viewInfo,
+  Track &track, bool shift, bool ctrl, bool syncLocked)
 {
+   assert(track.IsLeader());
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
    if (ctrl)
-      SelectTrack( track, !track.GetSelected(), true );
+      SelectTrack(track, !track.GetSelected(), true);
    else {
       if (shift && mLastPickedTrack.lock())
-         ChangeSelectionOnShiftClick( tracks, track );
+         ChangeSelectionOnShiftClick(tracks, track);
       else {
-         SelectNone( tracks );
-         SelectTrack( track, true, true );
-         SelectTrackLength( viewInfo, track, syncLocked );
+         SelectNone(tracks);
+         SelectTrack(track, true, true);
+         SelectTrackLength(viewInfo, track, syncLocked);
       }
    }
 }

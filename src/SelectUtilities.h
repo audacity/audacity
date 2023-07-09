@@ -23,9 +23,8 @@ AUDACITY_DLL_API void DoSelectTimeAndTracks(
 AUDACITY_DLL_API void SelectAllIfNone( AudacityProject &project );
 AUDACITY_DLL_API bool SelectAllIfNoneAndAllowed( AudacityProject &project );
 AUDACITY_DLL_API void SelectNone( AudacityProject &project );
-AUDACITY_DLL_API void DoListSelection(
-   AudacityProject &project, Track *t,
-   bool shift, bool ctrl, bool modifyState );
+AUDACITY_DLL_API void DoListSelection(AudacityProject &project, Track &t,
+   bool shift, bool ctrl, bool modifyState);
 AUDACITY_DLL_API void DoSelectAll( AudacityProject &project );
 AUDACITY_DLL_API void DoSelectAllAudio( AudacityProject &project );
 AUDACITY_DLL_API void DoSelectSomething( AudacityProject &project );

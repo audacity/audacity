@@ -519,8 +519,8 @@ bool SelectHandle::Escape(AudacityProject *project)
    return false;
 }
 
-UIHandle::Result SelectHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+UIHandle::Result SelectHandle::Click(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    /// This method gets called when we're handling selection
    /// and the mouse was just clicked.
@@ -532,10 +532,12 @@ UIHandle::Result SelectHandle::Click
       return Cancelled;
 
    wxMouseEvent &event = evt.event;
-   const auto sTrack = TrackList::Get( *pProject ).Lock( FindTrack() );
+   auto &trackList = TrackList::Get(*pProject);
+   const auto sTrack = trackList.Lock(FindTrack());
    const auto pTrack = sTrack.get();
-   auto &trackPanel = TrackPanel::Get( *pProject );
-   auto &viewInfo = ViewInfo::Get( *pProject );
+   const auto pLeader = *trackList.FindLeader(pTrack);
+   auto &trackPanel = TrackPanel::Get(*pProject);
+   auto &viewInfo = ViewInfo::Get(*pProject);
 
    mMostRecentX = event.m_x;
    mMostRecentY = event.m_y;
@@ -549,7 +551,7 @@ UIHandle::Result SelectHandle::Click
          bool bShift = event.ShiftDown();
          bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
          SelectUtilities::DoListSelection(
-            *pProject, pTrack, bShift, true, !unsafe);
+            *pProject, *pTrack, bShift, true, !unsafe);
          return true;
        } )
    );
@@ -559,16 +561,15 @@ UIHandle::Result SelectHandle::Click
    
    auto &selectionState = SelectionState::Get( *pProject );
    if (event.LeftDClick() && !event.ShiftDown()) {
-      auto &trackList = TrackList::Get( *pProject );
-
       // Deselect all other tracks and select this one.
-      selectionState.SelectNone( trackList );
+      selectionState.SelectNone(trackList);
 
-      selectionState.SelectTrack( *pTrack, true, true );
+      if (pLeader)
+         selectionState.SelectTrack(*pLeader, true, true);
 
       // Default behavior: select whole track
-      SelectionState::SelectTrackLength
-         ( viewInfo, *pTrack, SyncLockState::Get(*pProject).IsSyncLocked() );
+      SelectionState::SelectTrackLength(
+         viewInfo, *pTrack, SyncLockState::Get(*pProject).IsSyncLocked());
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip
@@ -591,9 +592,8 @@ UIHandle::Result SelectHandle::Click
 
    mInitialSelection = viewInfo.selectedRegion;
 
-   auto &trackList = TrackList::Get( *pProject );
    mSelectionStateChanger =
-      std::make_shared< SelectionStateChanger >( selectionState, trackList );
+      std::make_shared<SelectionStateChanger>(selectionState, trackList);
 
    mSelectionBoundary = 0;
 
@@ -606,15 +606,16 @@ UIHandle::Result SelectHandle::Click
    // I. Shift-click adjusts an existing selection
    if (bShiftDown || bCtrlDown) {
       if (bShiftDown)
-         selectionState.ChangeSelectionOnShiftClick( trackList, *pTrack );
+         selectionState.ChangeSelectionOnShiftClick(trackList, *pTrack);
       if( bCtrlDown ){
          //Commented out bIsSelected toggles, as in Track Control Panel.
          //bool bIsSelected = pTrack->GetSelected();
          //Actual bIsSelected will always add.
          bool bIsSelected = false;
          // Don't toggle away the last selected track.
-         if( !bIsSelected || trackPanel.GetSelectedTrackCount() > 1 )
-            selectionState.SelectTrack( *pTrack, !bIsSelected, true );
+         if (!bIsSelected || trackPanel.GetSelectedTrackCount() > 1)
+            if (pLeader)
+               selectionState.SelectTrack(*pLeader, !bIsSelected, true);
       }
 
       double value;
@@ -766,14 +767,15 @@ UIHandle::Result SelectHandle::Click
 
    if (startNewSelection) {
       // If we didn't move a selection boundary, start a NEW selection
-      selectionState.SelectNone( trackList );
+      selectionState.SelectNone(trackList);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       StartFreqSelection (viewInfo, event.m_y, mRect.y, mRect.height,
          pView.get());
 #endif
       StartSelection(pProject);
-      selectionState.SelectTrack( *pTrack, true, true );
-      TrackFocus::Get( *pProject ).Set(pTrack);
+      if (pLeader)
+         selectionState.SelectTrack(*pLeader, true, true);
+      TrackFocus::Get(*pProject).Set(pTrack);
 
       Connect(pProject);
       return RefreshAll;

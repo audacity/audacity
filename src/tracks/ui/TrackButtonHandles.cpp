@@ -100,7 +100,7 @@ UIHandle::Result SelectButtonHandle::CommitChanges
    {
       const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
       SelectUtilities::DoListSelection(*pProject,
-         pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
+         *pTrack, event.ShiftDown(), event.ControlDown(), !unsafe);
 //    return RefreshAll ;
    }
 
