@@ -704,7 +704,7 @@ static unsigned GetNumExportChannels( const TrackList &tracks )
       !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    // Want only unmuted wave tracks.
-   const auto range = tracks.Any<const WaveTrack>() -
+   const auto range = tracks.Leaders<const WaveTrack>() -
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    return std::all_of(range.begin(), range.end(),
       [](auto *pTrack){ return IsMono(*pTrack); }
