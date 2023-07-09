@@ -733,7 +733,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    mNumSelectedChannels = bOnePassTool
       ? 0
-      : oOutputs->Get().Selected<const WaveTrack>().size();
+      : oOutputs->Get().SelectedLeaders<const WaveTrack>()
+         .sum(&WaveTrack::NChannels);
 
    mDebugOutput = {};
    if (!mHelpFile.empty() && !mHelpFileExists) {
