@@ -2014,8 +2014,10 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 
 bool WaveTrack::CloseLock() noexcept
 {
-   for (const auto &clip : mClips)
-      clip->CloseLock();
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto &clip : pChannel->mClips)
+         clip->CloseLock();
 
    return true;
 }

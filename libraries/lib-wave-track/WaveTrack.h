@@ -356,7 +356,10 @@ private:
    //
 
    //! Should be called upon project close.  Not balanced by unlocking calls.
-   /*! @excsafety{No-fail} */
+   /*!
+    @pre `IsLeader()`
+    @excsafety{No-fail}
+    */
    bool CloseLock() noexcept;
 
    //! Get access to the (visible) clips in the tracks, in unspecified order

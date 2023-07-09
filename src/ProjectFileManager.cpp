@@ -84,7 +84,7 @@ void ProjectFileManager::DiscardAutosave(const FilePath &filename)
    projectFileManager.ReadProjectFile(filename, true);
 
    if (projectFileManager.mLastSavedTracks) {
-      for (auto wt : projectFileManager.mLastSavedTracks->Any<WaveTrack>())
+      for (auto wt : projectFileManager.mLastSavedTracks->Leaders<WaveTrack>())
          wt->CloseLock();
       projectFileManager.mLastSavedTracks.reset();
    }
@@ -755,10 +755,8 @@ void ProjectFileManager::CompactProjectOnClose()
    // sample block objects in memory.
    if (mLastSavedTracks)
    {
-      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
-      {
+      for (auto wt : mLastSavedTracks->Leaders<WaveTrack>())
          wt->CloseLock();
-      }
 
       // Attempt to compact the project
       projectFileIO.Compact( { mLastSavedTracks.get() } );
@@ -1065,7 +1063,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
       // may have spared the files at the expense of leaked memory).  But
       // here is a better way to accomplish the intent, doing like what happens
       // when the project closes:
-      for ( auto pTrack : tracks.Any< WaveTrack >() )
+      for (auto pTrack : tracks.Leaders<WaveTrack>())
          pTrack->CloseLock();
 
       tracks.Clear(); //tracks.Clear(true);
