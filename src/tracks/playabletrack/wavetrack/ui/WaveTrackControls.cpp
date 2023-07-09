@@ -639,7 +639,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                auto &tracks = TrackList::Get( project );
                auto &table = static_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
-               auto next = * ++ tracks.Find(&track);
+               auto next = * ++ tracks.FindLeader(&track);
                canMakeStereo =
                   (next &&
                    TrackList::NChannels(*next) == 1 &&
@@ -747,8 +747,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
 
-   auto partner = static_cast< WaveTrack * >
-      ( *tracks.Find( pTrack ).advance( 1 ) );
+   auto partner =
+      static_cast<WaveTrack*>(*tracks.FindLeader(pTrack).advance(1));
 
    if (pTrack->GetRate() != partner->GetRate()) {
       using namespace BasicUI;
