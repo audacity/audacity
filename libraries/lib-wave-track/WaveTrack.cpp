@@ -2814,10 +2814,11 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 */
 void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
-   for (const auto &clip : mClips)
-      clip->Resample(rate, progress);
-
-   SetRate(rate);
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (const auto &clip : pChannel->mClips)
+         clip->Resample(rate, progress);
+      pChannel->SetRate(rate);
+   }
 }
 
 namespace {
