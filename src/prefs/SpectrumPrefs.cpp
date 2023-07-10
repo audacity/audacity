@@ -249,7 +249,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                XO("128"),
                XO("256"),
                XO("512"),
-               XO("1024 - default"),
+               XO("1024"),
                XO("2048"),
                XO("4096"),
                XO("8192"),
