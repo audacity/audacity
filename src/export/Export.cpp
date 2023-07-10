@@ -605,6 +605,17 @@ bool Exporter::GetFilename()
    //Bug 1304: Set a default path if none was given.  For Export.
    mFilename.SetPath(FileNames::FindDefaultPath(FileNames::Operation::Export));
    mFilename.SetName(mProject->GetProjectName());
+
+   // Exporting a single track selection
+   if (mSelectedOnly && mNumSelected == 1)
+   {
+      auto trackRange = TrackList::Get(*mProject).Selected<const Track>();
+      auto track = *trackRange.first;
+
+      if (track)
+         mFilename.SetName(track->GetName());
+   }
+
    if (mFilename.GetName().empty())
       mFilename.SetName(_("untitled"));
    while (true) {
