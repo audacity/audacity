@@ -568,14 +568,19 @@ private:
       /*!
        @pre `pClip != nullptr`
        */
-      explicit Interval(const std::shared_ptr<WaveClip> &pClip);
+      Interval(const std::shared_ptr<WaveClip> &pClip,
+         const std::shared_ptr<WaveClip> &pClip1);
 
       ~Interval() override;
 
-      std::shared_ptr<const WaveClip> GetClip() const { return mpClip; }
-      const std::shared_ptr<WaveClip> &GetClip() { return mpClip; }
+      std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
+      { return iChannel == 0 ? mpClip : mpClip1; }
+      const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
+      { return iChannel == 0 ? mpClip : mpClip1; }
    private:
       const std::shared_ptr<WaveClip> mpClip;
+      //! TODO wide wave tracks: eliminate this
+      const std::shared_ptr<WaveClip> mpClip1;
    };
 
    Track::Holder PasteInto( AudacityProject & ) const override;

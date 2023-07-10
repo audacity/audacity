@@ -73,7 +73,7 @@ class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTr
    }
 
    //Search for a good snap points among all tracks, including
-   //the one to which adjusted clip belongs to, but not counting
+   //the one to which the adjusted clip belongs, but not counting
    //the borders of adjusted clip
    static SnapPointArray FindSnapPoints(
       const WaveTrack* currentTrack, 
@@ -107,7 +107,7 @@ class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTr
                   auto waveTrackIntervalData =
                      std::dynamic_pointer_cast<const WaveTrack::Interval>(
                         interval);
-                  if(waveTrackIntervalData->GetClip().get() == adjustedClip)
+                  if(waveTrackIntervalData->GetClip(0).get() == adjustedClip)
                   //exclude boundaries of the adjusted clip
                      continue;
                }

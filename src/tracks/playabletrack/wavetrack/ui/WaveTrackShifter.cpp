@@ -50,15 +50,15 @@ public:
 
       auto t0 = viewInfo.selectedRegion.t0();
       auto t1 = viewInfo.selectedRegion.t1();
-      if ( mpTrack->IsSelected() && time >= t0 && time < t1 ) {
+      if (mpTrack->IsSelected() && time >= t0 && time < t1) {
          // Unfix maybe many intervals (at least one because of test above)
-         SelectInterval({t0, t1});
+         SelectInterval({ t0, t1 });
          return HitTestResult::Selection;
       }
 
       // Select just one interval
       UnfixIntervals([&](const auto &interval){
-         return static_cast<const WaveTrack::Interval&>(interval).GetClip()
+         return static_cast<const WaveTrack::Interval&>(interval).GetClip(0)
            == pClip;
       });
       
@@ -71,7 +71,7 @@ public:
          // Use a slightly different test from CommonSelectInterval, rounding times
          // to exact samples according to the clip's rate
          auto &data = static_cast<const WaveTrack::Interval&>(myInterval);
-         auto clip = data.GetClip().get();
+         auto clip = data.GetClip(0).get();
          const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
          const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
          return 
@@ -113,7 +113,7 @@ public:
       std::vector<WaveClip *> movingClips;
       for (auto &interval : MovingIntervals()) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         movingClips.push_back(data.GetClip().get());
+         movingClips.push_back(data.GetClip(0).get());
       }
       double newAmount = 0;
       (void) mpTrack->CanOffsetClips(movingClips, desiredOffset, &newAmount);
@@ -124,7 +124,7 @@ public:
    {
       for (auto &interval: mMoving) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         auto pClip = data.GetClip().get();
+         auto pClip = data.GetClip(0).get();
          // interval will still hold the clip, so ignore the return:
          (void) mpTrack->RemoveAndReturnClip(pClip);
          mMigrated.erase(pClip);
@@ -138,12 +138,11 @@ public:
    {
       bool ok = true;
       auto pOtherWaveTrack = static_cast<const WaveTrack*>(&otherTrack);
-      for ( auto &interval: intervals ) {
+      for (auto &interval: intervals) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         auto pClip = data.GetClip().get();
-         ok = pOtherWaveTrack->CanInsertClip(
-            pClip, desiredOffset, tolerance );
-         if( !ok  )
+         auto pClip = data.GetClip(0).get();
+         ok = pOtherWaveTrack->CanInsertClip(pClip, desiredOffset, tolerance);
+         if (!ok)
             break;
       }
       return ok;
@@ -153,7 +152,7 @@ public:
    {
       for (auto &interval : intervals) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         auto &pClip = data.GetClip();
+         auto &pClip = data.GetClip(0);
          // TODO wide wave tracks -- guarantee matching clip width
          if (!mpTrack->AddClip(pClip))
             return false;
@@ -162,7 +161,8 @@ public:
             mMoving.emplace_back(std::move(interval));
          else {
             pClip->Offset(offset);
-            mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(pClip));
+            mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(
+               pClip, nullptr));
          }
       }
       return true;
@@ -184,7 +184,7 @@ public:
    {
       for (auto &interval : MovingIntervals()) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         data.GetClip()->Offset(offset);
+         data.GetClip(0)->Offset(offset);
       }
    }
 
@@ -198,11 +198,8 @@ public:
       else {
          auto &data =
             static_cast<WaveTrack::Interval&>(*MovingIntervals()[0]);
-         auto& clip = data.GetClip();
-         if (t0 < clip->GetPlayStartTime())
-            t0 = clip->GetPlayStartTime();
-         if (t0 > clip->GetPlayEndTime())
-            t0 = clip->GetPlayEndTime();
+         auto& clip = data.GetClip(0);
+         t0 = std::clamp(t0, clip->GetPlayStartTime(), clip->GetPlayEndTime());
       }
       return t0;
    }
