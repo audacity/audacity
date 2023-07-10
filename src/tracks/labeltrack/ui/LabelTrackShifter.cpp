@@ -31,6 +31,7 @@ public:
    ~LabelTrackShifter() override
    {
    }
+   //! Label track is always leader; satisfying the post
    Track &GetTrack() const override { return *mpTrack; }
    
    static inline size_t& GetIndex(ChannelGroupInterval &interval)
@@ -85,7 +86,7 @@ public:
 
    bool SyncLocks() override { return false; }
 
-   bool MayMigrateTo( Track &otherTrack ) override
+   bool MayMigrateTo(Track &otherTrack) override
    {
       return CommonMayMigrateTo(otherTrack);
    }
@@ -238,7 +239,7 @@ private:
    }
 
    Observer::Subscription mSubscription;
-   std::shared_ptr<LabelTrack> mpTrack;
+   const std::shared_ptr<LabelTrack> mpTrack;
    AudacityProject &mProject;
 };
 

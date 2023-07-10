@@ -264,10 +264,16 @@ void OnPunchAndRoll(const CommandContext &context)
    bool error = (t1 == 0.0);
 
    double newt1 = t1;
+   IteratorRange<ChannelGroup::IntervalIterator<const ChannelGroupInterval>>
+      intervals{ {}, {} };
    for (const auto &wt : tracks) {
       auto rate = wt->GetRate();
       sampleCount testSample(floor(t1 * rate));
-      auto intervals = as_const(*wt).Intervals();
+      if (wt->IsLeader())
+         intervals = as_const(*wt).Intervals();
+      else
+         // non-leader channel is assumed to have the same intervals
+         ;
       auto pred = [rate](sampleCount testSample){ return
          [rate, testSample](const auto &pInterval){
             auto start = floor(pInterval->Start() * rate + 0.5);

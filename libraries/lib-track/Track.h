@@ -355,19 +355,27 @@ public:
    };
 
    //! Get range of intervals with mutative access
+   /*
+      @pre `IsLeader()`
+    */
    template<typename IntervalType = Interval>
    IteratorRange<IntervalIterator<IntervalType>> Intervals()
    {
+      assert(IsLeader());
       return { { this, 0 }, { this, NIntervals() } };
    }
 
    //! Get range of intervals with read-only access
+   /*
+      @pre `IsLeader()`
+    */
    template<typename IntervalType = const Interval>
    auto Intervals() const
       -> std::enable_if_t<std::is_const_v<IntervalType>,
          IteratorRange<IntervalIterator<IntervalType>>
       >
    {
+      assert(IsLeader());
       return { { this, 0 }, { this, NIntervals() } };
    }
 
