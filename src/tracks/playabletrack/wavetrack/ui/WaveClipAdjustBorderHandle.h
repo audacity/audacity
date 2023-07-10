@@ -24,12 +24,19 @@ private:
 
     static constexpr int BoundaryThreshold = 5;
 
-    static HitTestPreview HitPreview(const AudacityProject*, bool unsafe);
+    static HitTestPreview HitPreviewTrim(const AudacityProject*, bool unsafe, bool isLeftBorder);
+    static HitTestPreview HitPreviewStretch(const AudacityProject*, bool unsafe, bool isLeftBorder);
 
     std::unique_ptr<AdjustPolicy> mAdjustPolicy{};
-
+    bool mIsStretchMode;
+    bool mIsLeftBorder;
+    
 public:
-    WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPolicy>& adjustPolicy);
+    WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPolicy>& adjustPolicy, bool stretchMode, bool leftBorder);
+    ~WaveClipAdjustBorderHandle() override;
+
+    WaveClipAdjustBorderHandle(WaveClipAdjustBorderHandle&&) noexcept;
+    WaveClipAdjustBorderHandle& operator = (WaveClipAdjustBorderHandle&&) noexcept;
 
     static UIHandlePtr HitAnywhere(std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
         const std::shared_ptr<WaveTrack>& waveTrack,
