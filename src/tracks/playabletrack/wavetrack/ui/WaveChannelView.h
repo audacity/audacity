@@ -23,7 +23,7 @@ class SampleTrack;
 class WaveTrack;
 class WaveChannelView;
 class WaveClip;
-class WaveClipTrimHandle;
+class WaveClipAdjustBorderHandle;
 class ZoomInfo;
 
 
@@ -76,7 +76,7 @@ private:
    std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
    std::weak_ptr<SubViewAdjustHandle> mAdjustHandle;
    std::weak_ptr<SubViewRearrangeHandle> mRearrangeHandle;
-   std::weak_ptr<WaveClipTrimHandle> mClipTrimHandle;
+   std::weak_ptr<WaveClipAdjustBorderHandle> mClipBorderAdjustHandle;
    std::weak_ptr<CutlineHandle> mCutlineHandle;
    std::weak_ptr<WaveChannelView> mwWaveChannelView;
 };

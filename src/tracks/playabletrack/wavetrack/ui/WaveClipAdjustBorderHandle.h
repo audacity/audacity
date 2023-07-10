@@ -2,7 +2,7 @@
 *
  Audacity: A Digital Audio Editor
 
- WaveClipTrimHandle.h
+ WaveClipAdjustBorderHandle.h
 
  Vitaly Sverchinsky
 
@@ -16,7 +16,7 @@
 class WaveChannelView;
 class WaveTrack;
 
-class WaveClipTrimHandle : public UIHandle
+class WaveClipAdjustBorderHandle final : public UIHandle
 {
     static constexpr int BoundaryThreshold = 5;
 
@@ -50,14 +50,14 @@ class WaveClipTrimHandle : public UIHandle
     std::unique_ptr<ClipTrimPolicy> mClipTrimPolicy{};
 
 public:
-    WaveClipTrimHandle(std::unique_ptr<ClipTrimPolicy>& clipTrimPolicy);
+    WaveClipAdjustBorderHandle(std::unique_ptr<ClipTrimPolicy>& clipTrimPolicy);
 
-    static UIHandlePtr HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& holder,
+    static UIHandlePtr HitAnywhere(std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
         const std::shared_ptr<WaveTrack>& waveTrack,
         const AudacityProject* pProject,
         const TrackPanelMouseState& state);
 
-    static UIHandlePtr HitTest(std::weak_ptr<WaveClipTrimHandle>& holder,
+    static UIHandlePtr HitTest(std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
         WaveChannelView& view, const AudacityProject* pProject,
         const TrackPanelMouseState& state);
 
