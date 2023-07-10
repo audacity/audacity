@@ -807,6 +807,9 @@ std::pair<
          mRearrangeHandle,
          *pWaveChannelView, *this, state ) )
          results.second.push_back( pHandle );
+   }
+   if( pWaveChannelView )
+   {
       if (auto pHandle = WaveClipAdjustBorderHandle::HitTest(
           mClipBorderAdjustHandle,
           *pWaveChannelView, pProject, state))
