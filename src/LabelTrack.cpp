@@ -174,6 +174,17 @@ void LabelTrack::SetOffset(double dOffset)
       labelStruct.selectedRegion.move(dOffset);
 }
 
+void LabelTrack::DoOnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   if (!oldTempo.has_value())
+      return;
+   const auto ratio = *oldTempo / newTempo;
+   for (auto& label : mLabels)
+      label.selectedRegion.setTimes(
+         label.getT0() * ratio, label.getT1() * ratio);
+}
+
 void LabelTrack::Clear(double b, double e)
 {
    // May DELETE labels, so use subscripts to iterate
@@ -424,7 +435,7 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
          token = toker.GetNextToken();
 
       sr.setTimes( t0, t1 );
-      
+
       title = token;
    }
 

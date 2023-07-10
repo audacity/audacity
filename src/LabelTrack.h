@@ -122,6 +122,8 @@ class AUDACITY_DLL_API LabelTrack final
 
 private:
    Track::Holder Clone() const override;
+   void DoOnProjectTempoChange(
+      const std::optional<double>& oldTempo, double newTempo) override;
 
 public:
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;

@@ -80,7 +80,8 @@ Track::Track()
    mOffset = 0.0;
 }
 
-Track::Track(const Track &orig, ProtectedCreationArg&&)
+Track::Track(const Track& orig, ProtectedCreationArg&&)
+    : mProjectTempo { orig.mProjectTempo }
 {
    mIndex = 0;
    mOffset = orig.mOffset;
@@ -233,12 +234,12 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
 
    if (oldType == LinkType::None) {
       // Becoming linked
-   
+
       // First ensure there is no partner
       if (auto partner = GetLinkedTrack())
          partner->mpGroupData.reset();
       assert(!GetLinkedTrack());
-   
+
       // Change the link type
       MakeGroupData().mLinkType = linkType;
 
@@ -766,11 +767,11 @@ void TrackList::Clear(bool sendEvent)
    for ( auto pTrack: *this )
    {
       pTrack->SetOwner({}, {});
-      
+
       if (sendEvent)
          DeletionEvent(pTrack->shared_from_this(), false);
    }
-   
+
    for ( auto pTrack: mPendingUpdates )
    {
       pTrack->SetOwner({}, {});
@@ -1355,6 +1356,12 @@ bool ChannelAttachmentsBase::HandleXMLAttribute(
    [&](auto &pAttachment) {
       return pAttachment && pAttachment->HandleXMLAttribute(attr, valueView);
    });
+}
+
+void Track::OnProjectTempoChange(double newTempo)
+{
+   DoOnProjectTempoChange(mProjectTempo, newTempo);
+   mProjectTempo = newTempo;
 }
 
 // Undo/redo handling of selection changes

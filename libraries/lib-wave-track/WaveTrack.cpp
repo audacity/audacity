@@ -312,6 +312,13 @@ void WaveTrack::SetOffset(double o)
    mOffset = o;
 }
 
+void WaveTrack::DoOnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   for (const auto& clip : mClips)
+      clip->OnProjectTempoChange(oldTempo, newTempo);
+}
+
 bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
 {
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix, completeList);
