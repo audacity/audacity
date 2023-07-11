@@ -48,11 +48,18 @@ public:
       ZOOM_IN = 0xEF18,
 
       LOOP = 0xEF1F,
+      METRONOME = 0xEF20,
 
       SPEAKER_ON = 0xEF4E,
       SPEAKER_OFF = 0xEF52,
-
+      VISIBILITY_ON = 0xEF53,
+      VISIBILITY_OFF = 0xEF54,
       SETUP = 0xEF55,
+
+      TIME_SIGNATURE = 0xEF64,
+
+      // TODO: Replace temporary TIMECODE value
+      TIMECODE = SETUP,
 
       TOOLBAR_GRIP = 0xF3A2,
 
@@ -72,6 +79,10 @@ public:
 
       MAGNET = 0xF43E,
 
+      SPECTRAL_EDITING = 0xF442,
+      SPECTRAL_BOX_SELECT = 0xF443,
+      SPECTRAL_BRUSH = 0xF444,
+      SPECTRAL_LASSO = 0xF445,
       SOLID_PLAY = 0xF446,
       SOLID_STOP = 0xF447,
       SOLID_REWIND = 0xF448,

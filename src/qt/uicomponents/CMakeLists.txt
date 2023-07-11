@@ -1,12 +1,16 @@
 set(MODULE_NAME uicomponents)
 
 set(MODULE_SOURCES
-   VolumeControlHandler.cpp
-   VolumeControlHandler.h
+   IconCode.h
    MeterPanelHandler.cpp
    MeterPanelHandler.h
-   IconCode.h
+   ToolbarHandler.cpp
+   ToolbarHandler.h
+   ToolbarManager.cpp
+   ToolbarManager.h
    TrackType.h
+   VolumeControlHandler.cpp
+   VolumeControlHandler.h
 )
 
 set(MODULE_QML_SOURCES

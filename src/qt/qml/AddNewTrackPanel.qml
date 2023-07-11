@@ -107,7 +107,7 @@ Popup {
       height: 16
       text: prv.numberOfTracksPrompt
       color: UiTheme.fontColor1
-      font.family: appConfig.bodyFont.family
+      font.family: UiTheme.bodyFont.family
       font.pixelSize: 12
       anchors.left: mono.left
       anchors.right: label.right
@@ -158,7 +158,7 @@ Popup {
          id: input
          anchors.fill: parent
          anchors.margins: 2
-         font.family: appConfig.bodyFont.family
+         font.family: UiTheme.bodyFont.family
          font.pixelSize: 12
          color: UiTheme.fontColor1
          selectedTextColor: UiTheme.fontColor1

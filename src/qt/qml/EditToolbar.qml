@@ -11,6 +11,7 @@ Item {
    height: implicitHeight
    implicitHeight: 48
    implicitWidth: contents.width
+   visible: toolbarHandler.toolbarVisible
 
    objectName: "EditToolbar"
 
@@ -20,6 +21,10 @@ Item {
    property var workspaceMode: Workspace.Mode.Classic
 
    signal updateStatusBar(status: string)
+
+   function registerToolbarConfiguration() {
+      toolbarHandler.RegisterToolbarConfiguration()
+   }
 
    EditToolbarHandler {
       id: toolbarHandler
@@ -46,69 +51,80 @@ Item {
             height: root.height
             width: root.gripVisible ? 2 : 6
             color: UiTheme.backgroundColor1
+            visible: toolbarHandler.automationVisible
          }
 
          FlatButton {
             id: automation
             icon: IconCode.AUTOMATION
-            visible: root.workspaceMode === Workspace.Mode.Classic ||
-                     root.workspaceMode === Workspace.Mode.AudioEditing
+            visible: toolbarHandler.automationVisible &&
+                     (root.workspaceMode === Workspace.Mode.Classic ||
+                     root.workspaceMode === Workspace.Mode.AudioEditing)
             onClicked: toolbarHandler.Automation()
          }
       }
 
       RowLayout {
          spacing: 1
+
          FlatButton {
             id: zoomIn
             icon: IconCode.ZOOM_IN
+            visible: toolbarHandler.zoomInVisible
             onClicked: toolbarHandler.ZoomIn()
          }
 
          FlatButton {
             id: zoomOut
             icon: IconCode.ZOOM_OUT
+            visible: toolbarHandler.zoomOutVisible
             onClicked: toolbarHandler.ZoomOut()
          }
 
          FlatButton {
             id: fitSelection
             icon: IconCode.ZOOM_FIT_SELECTION
-            visible: root.workspaceMode === Workspace.Mode.Classic ||
-                  root.workspaceMode === Workspace.Mode.SpectralEditing
+            visible: toolbarHandler.fitSelectionVisible &&
+                     (root.workspaceMode === Workspace.Mode.Classic ||
+                     root.workspaceMode === Workspace.Mode.SpectralEditing)
             onClicked: toolbarHandler.FitSelection()
          }
 
          FlatButton {
             id: fitProject
             icon: IconCode.ZOOM_FIT_PROJECT
-            visible: root.workspaceMode === Workspace.Mode.Classic ||
-                     root.workspaceMode === Workspace.Mode.SpectralEditing
+            visible: toolbarHandler.fitProjectVisible &&
+                     (root.workspaceMode === Workspace.Mode.Classic ||
+                     root.workspaceMode === Workspace.Mode.SpectralEditing)
             onClicked: toolbarHandler.FitProject()
          }
 
          FlatButton {
             id: zoomToggle
             icon: IconCode.ZOOM_TOGGLE
-            visible: root.workspaceMode === Workspace.Mode.Classic ||
-                     root.workspaceMode === Workspace.Mode.SpectralEditing
+            visible: toolbarHandler.zoomToggleVisible &&
+                     (root.workspaceMode === Workspace.Mode.Classic ||
+                     root.workspaceMode === Workspace.Mode.SpectralEditing)
             onClicked: toolbarHandler.ZoomToggle()
          }
       }
 
       RowLayout {
          spacing: 1
-         visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
+         visible: (toolbarHandler.trimVisible || toolbarHandler.silenceVisible) &&
+                  (root.workspaceMode !== Workspace.Mode.SimpleRecording)
 
         FlatButton {
             id: trim
             icon: IconCode.TRIM
+            visible: toolbarHandler.trimVisible
             onClicked: toolbarHandler.Trim()
          }
 
          FlatButton {
             id: silence
             icon: IconCode.SILENCE
+            visible: toolbarHandler.silenceVisible
             onClicked: toolbarHandler.Silence()
          }
       }
@@ -116,5 +132,9 @@ Item {
       ToolbarSeparator {
          visible: separatorVisible
       }
+   }
+
+   Component.onCompleted: {
+      toolbarHandler.StoreToolbarManager(ToolbarManager)
    }
 }

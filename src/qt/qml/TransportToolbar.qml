@@ -11,6 +11,7 @@ Item {
    height: implicitHeight
    implicitHeight: 48
    implicitWidth: contents.width
+   visible: toolbarHandler.toolbarVisible
 
    objectName: "TransportToolbar"
 
@@ -24,6 +25,10 @@ Item {
    signal playbackStopped()
    signal playbackPaused()
    signal updateStatusBar(status: string)
+
+   function registerToolbarConfiguration() {
+      toolbarHandler.RegisterToolbarConfiguration()
+   }
 
    TransportToolbarHandler {
       id: toolbarHandler
@@ -70,6 +75,7 @@ Item {
             icon: isPlaying ? IconCode.SOLID_PAUSE : IconCode.SOLID_PLAY
             iconColor: isPlaying ? UiTheme.fontColor1 : UiTheme.playColor
             iconSize: 14
+            visible: toolbarHandler.playVisible
             onClicked: toolbarHandler.Play()
          }
 
@@ -77,6 +83,7 @@ Item {
             id: stop
             icon: IconCode.SOLID_STOP
             iconSize: 14
+            visible: toolbarHandler.stopVisible
             onClicked: toolbarHandler.Stop()
          }
 
@@ -85,7 +92,7 @@ Item {
             icon: IconCode.SOLID_RECORD
             iconColor: UiTheme.recordColor
             iconSize: 14
-            visible: root.workspaceMode === Workspace.Mode.Classic
+            visible: toolbarHandler.recordVisible && root.workspaceMode === Workspace.Mode.Classic
             onClicked: toolbarHandler.Record()
          }
 
@@ -93,7 +100,7 @@ Item {
             id: rewind
             icon: IconCode.SOLID_REWIND
             iconSize: 14
-            visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
+            visible: toolbarHandler.rewindVisible && root.workspaceMode !== Workspace.Mode.SimpleRecording
             onClicked: toolbarHandler.Rewind()
          }
 
@@ -101,7 +108,7 @@ Item {
             id: fastForward
             icon: IconCode.SOLID_FAST_FORWARD
             iconSize: 14
-            visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
+            visible: toolbarHandler.fastForwardVisible && root.workspaceMode !== Workspace.Mode.SimpleRecording
             onClicked: toolbarHandler.FastForward()
          }
 
@@ -110,7 +117,7 @@ Item {
             icon: IconCode.SOLID_RECORD
             iconColor: UiTheme.recordColor
             iconSize: 14
-            visible: root.workspaceMode !== Workspace.Mode.Classic
+            visible: toolbarHandler.recordVisible && root.workspaceMode !== Workspace.Mode.Classic
             onClicked: toolbarHandler.Record()
          }
 
@@ -118,7 +125,7 @@ Item {
             id: loop
             icon: IconCode.LOOP
             iconSize: 14
-            visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
+            visible: toolbarHandler.loopVisible && root.workspaceMode !== Workspace.Mode.SimpleRecording
             onClicked: toolbarHandler.Loop()
          }
       }
@@ -126,5 +133,9 @@ Item {
       ToolbarSeparator {
          visible: separatorVisible
       }
+   }
+
+   Component.onCompleted: {
+      toolbarHandler.StoreToolbarManager(ToolbarManager)
    }
 }

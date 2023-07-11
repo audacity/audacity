@@ -14,22 +14,23 @@ Rectangle {
    property var workspaceMode: Workspace.Mode.Classic
    property alias enableVolumeTester: masterVolumeToolbar.testerVisible
 
+   signal setupClicked()
    signal playbackStarted()
    signal playbackStopped()
    signal playbackPaused()
    signal updateStatusBar(status: string)
 
+   function refreshSetup() {
+      ToolbarManager.Reset()
+      transportToolbar.registerToolbarConfiguration()
+      editToolbar.registerToolbarConfiguration()
+      timeToolbar.registerToolbarConfiguration()
+      masterVolumeToolbar.registerToolbarConfiguration()
+   }
+
    onWorkspaceModeChanged: {
       transportToolbar.workspaceMode = workspaceMode
       editToolbar.workspaceMode = workspaceMode
-   }
-
-   ToolsToolbarHandler {
-      id: toolbarHandler
-
-      onUpdateStatusBar: function(status) {
-         root.updateStatusBar(status)
-      }
    }
 
    Flow {
@@ -100,7 +101,10 @@ Rectangle {
          id: setup
          x: root.width - setup.width - 12
          icon: IconCode.SETUP
-         onClicked: toolbarHandler.Setup()
+         onClicked: {
+            root.refreshSetup()
+            root.setupClicked()
+         }
 
          // The following is a hack to vertical center this button within
          // current row of the flow control

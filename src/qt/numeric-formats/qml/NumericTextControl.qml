@@ -14,6 +14,8 @@ Item {
    property int formatIndex
    property NumericConverterFormatterAdapter formatter : formatterFactory.create(type, formatIndex)
    property real value : 0
+   property color iconColor: UiTheme.fontColor1
+   property int icon: IconCode.TIMECODE
 
    implicitWidth : mainLayout.Layout.minimumWidth
 
@@ -140,7 +142,7 @@ Item {
             },
             State {
                name: "selected"
-               when: activeFocus 
+               when: activeFocus
 
                PropertyChanges {
                   target : highlight
@@ -163,7 +165,7 @@ Item {
          Layout.fillHeight : true
 
          implicitWidth : timeLayout.Layout.minimumWidth + timeLayout.anchors.leftMargin + timeLayout.anchors.rightMargin
-         
+
          radius : 3
          color : UiTheme.timecodeColor
 
@@ -190,7 +192,7 @@ Item {
          Text
          {
             anchors.fill : parent
-            
+
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color: UiTheme.fontColor2
