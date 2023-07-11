@@ -10,9 +10,6 @@ This class contains all of the common code for an
 effect that uses SBSMS to do its processing (TimeScale)
 
 **********************************************************************/
-
-
-
 #if USE_SBSMS
 #include "SBSMSEffect.h"
 #include "EffectOutputTracks.h"
@@ -24,6 +21,8 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "TimeWarper.h"
+
+#include <cassert>
 
 enum {
   SBSMSOutBlockSize = 512
@@ -343,9 +342,14 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             auto warper = createTimeWarper(
                mT0, mT1, maxDuration, rateStart, rateEnd, rateSlideType);
 
+            std::shared_ptr<TrackList> tempList;
             rb.outputLeftTrack = leftTrack.EmptyCopy();
-            if(rightTrack)
+            if (rightTrack) {
                rb.outputRightTrack = rightTrack->EmptyCopy();
+               // To satisfy preconditions of Finalize()
+               tempList = TrackList::Temporary(
+                  nullptr, rb.outputLeftTrack, rb.outputRightTrack);
+            }
    
             long pos = 0;
             long outputCount = -1;
@@ -395,9 +399,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             if(rightTrack)
                rb.outputRightTrack->Flush();
 
-            Finalize(&leftTrack, rb.outputLeftTrack.get(), *warper);
-            if(rightTrack)
-               Finalize(rightTrack, rb.outputRightTrack.get(), *warper);
+            Finalize(leftTrack, *rb.outputLeftTrack, *warper);
          }
          mCurTrackNum++;
       }; },
@@ -416,13 +418,18 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 }
 
 void EffectSBSMS::Finalize(
-   WaveTrack* orig, WaveTrack* out, const TimeWarper &warper)
+   WaveTrack &orig, const WaveTrack &out, const TimeWarper &warper)
 {
+   assert(orig.IsLeader());
+   assert(out.IsLeader());
+   assert(orig.NChannels() == out.NChannels());
+   auto origRange = TrackList::Channels(&orig);
+   auto outRange = TrackList::Channels(&out);
    // Silenced samples will be inserted in gaps between clips, so capture where these
    // gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
    double last = mT0;
-   auto clips = orig->SortedClipArray();
+   auto clips = orig.SortedClipArray();
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {
@@ -445,14 +452,16 @@ void EffectSBSMS::Finalize(
    }
 
    // Take the output track and insert it in place of the original sample data
-   orig->ClearAndPaste(mT0, mT1, out, true, true, &warper);
+   for (const auto pChannel : origRange)
+      pChannel->ClearAndPaste(mT0, mT1, *outRange.first++, true, true, &warper);
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {
-      auto st = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.first));
-      auto et = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.second));
+      auto st = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.first));
+      auto et = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.second));
       if (st >= mT0 && et <= mT1 && st != et)
-         orig->SplitDelete(warper.Warp(st), warper.Warp(et));
+         for (const auto pChannel : origRange)
+            pChannel->SplitDelete(warper.Warp(st), warper.Warp(et));
    }
 }
 
