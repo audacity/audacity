@@ -1364,6 +1364,11 @@ void Track::OnProjectTempoChange(double newTempo)
    mProjectTempo = newTempo;
 }
 
+const std::optional<double>& Track::GetProjectTempo() const
+{
+   return mProjectTempo;
+}
+
 // Undo/redo handling of selection changes
 namespace {
 struct TrackListRestorer final : UndoStateExtension {
