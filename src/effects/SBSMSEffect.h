@@ -53,8 +53,6 @@ private:
    SlideType rateSlideType;
    SlideType pitchSlideType;
    int mCurTrackNum;
-   double mCurT0;
-   double mCurT1;
    float mTotalStretch;
 
    friend class EffectChangeTempo;
