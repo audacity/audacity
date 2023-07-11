@@ -170,23 +170,29 @@ void EffectSBSMS::setParameters(double tempoRatio, double pitchRatio)
 std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double duration,
                              double rateStart, double rateEnd, SlideType rateSlideType)
 {
-   std::unique_ptr<TimeWarper> warper;
-   if (rateStart == rateEnd || rateSlideType == SlideConstant) {
-      warper = std::make_unique<LinearTimeWarper>(t0, t0, t1, t0+duration);
-   } else if(rateSlideType == SlideLinearInputRate) {
-      warper = std::make_unique<LinearInputRateTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearOutputRate) {
-      warper = std::make_unique<LinearOutputRateTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearInputStretch) {
-      warper = std::make_unique<LinearInputStretchTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearOutputStretch) {
-      warper = std::make_unique<LinearOutputStretchTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideGeometricInput) {
-      warper = std::make_unique<GeometricInputTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideGeometricOutput) {
-      warper = std::make_unique<GeometricOutputTimeWarper>(t0, t1, rateStart, rateEnd);
-   }
-   return warper;
+   if (rateStart == rateEnd || rateSlideType == SlideConstant)
+      return std::make_unique<LinearTimeWarper>(
+         t0, t0, t1, t0 + duration);
+   else if(rateSlideType == SlideLinearInputRate)
+      return std::make_unique<LinearInputRateTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideLinearOutputRate)
+      return std::make_unique<LinearOutputRateTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideLinearInputStretch)
+      return std::make_unique<LinearInputStretchTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideLinearOutputStretch)
+      return std::make_unique<LinearOutputStretchTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideGeometricInput)
+      return std::make_unique<GeometricInputTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideGeometricOutput)
+      return std::make_unique<GeometricOutputTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else
+      return std::make_unique<IdentityTimeWarper>();
 }
 
 // Labels inside the affected region are moved to match the audio; labels after
@@ -389,9 +395,9 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             if(rightTrack)
                rb.outputRightTrack->Flush();
 
-            Finalize(&leftTrack, rb.outputLeftTrack.get(), warper.get());
+            Finalize(&leftTrack, rb.outputLeftTrack.get(), *warper);
             if(rightTrack)
-               Finalize(rightTrack, rb.outputRightTrack.get(), warper.get());
+               Finalize(rightTrack, rb.outputRightTrack.get(), *warper);
          }
          mCurTrackNum++;
       }; },
@@ -409,7 +415,8 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-void EffectSBSMS::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *warper)
+void EffectSBSMS::Finalize(
+   WaveTrack* orig, WaveTrack* out, const TimeWarper &warper)
 {
    // Silenced samples will be inserted in gaps between clips, so capture where these
    // gaps are for later deletion
@@ -438,16 +445,14 @@ void EffectSBSMS::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *wa
    }
 
    // Take the output track and insert it in place of the original sample data
-   orig->ClearAndPaste(mT0, mT1, out, true, true, warper);
+   orig->ClearAndPaste(mT0, mT1, out, true, true, &warper);
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {
       auto st = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.first));
       auto et = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.second));
       if (st >= mT0 && et <= mT1 && st != et)
-      {
-         orig->SplitDelete(warper->Warp(st), warper->Warp(et));
-      }
+         orig->SplitDelete(warper.Warp(st), warper.Warp(et));
    }
 }
 
