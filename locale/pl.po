@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-04-14 21:00+0000\n"
+"PO-Revision-Date: 2023-06-22 10:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -3652,7 +3652,7 @@ msgstr ""
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
-msgstr "Zapamiętaj mój wybór i nie pytaj więcej"
+msgstr "Zapamiętaj mój wybór i nie pytaj ponownie"
 
 #: src/AudioPasteDialog.cpp
 msgid "Continue"
@@ -4565,7 +4565,7 @@ msgstr ""
 
 #: src/FFmpeg.cpp
 msgid "Do not show this warning again"
-msgstr "Nie pokazuj więcej tego ostrzeżenia"
+msgstr "Nie pokazuj ponownie tego ostrzeżenia"
 
 #. i18n-hint: %s will be the error message from the libsndfile software
 #. library
@@ -6373,7 +6373,7 @@ msgstr "Witamy w Audacity!"
 
 #: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
-msgstr "Nie pokazuj tego więcej przy starcie"
+msgstr "Nie pokazuj ponownie tego przy starcie"
 
 #: src/TagsEditor.cpp
 msgid "Artist Name"
