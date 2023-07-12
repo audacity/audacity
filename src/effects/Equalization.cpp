@@ -477,7 +477,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    auto originalLen = len;
 
    auto &output = task.output;
-   t->ConvertToSampleFormat( floatSample );
+   output->ConvertToSampleFormat(floatSample);
 
    TrackProgress(count, 0.);
    bool bLoopSuccess = true;
