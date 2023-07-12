@@ -54,6 +54,11 @@ void PasteOverPreservingClips(const ClipData &data,
    WaveTrack &oldTrack, sampleCount start, sampleCount len,
    const WaveTrack &newContents)
 {
+   assert(oldTrack.IsLeader());
+   assert(newContents.IsLeader());
+   assert(oldTrack.NChannels() == newContents.NChannels());
+   auto oldRange = TrackList::Channels(&oldTrack);
+   auto newRange = TrackList::Channels(&newContents);
    const auto &[clipStartEndTimes, clipRealStartEndTimes, clipNames] = data;
 
    //newContents has one waveclip for the total length, even though
@@ -72,10 +77,15 @@ void PasteOverPreservingClips(const ClipData &data,
    for (unsigned int i = 0; i < clipStartEndTimes.size(); ++i) {
       //remove the old audio and get the NEW
       auto [start, end] = clipStartEndTimes[i];
-      oldTrack.Clear(start, end);
-      auto toClipOutput = newContents.Copy(start - startT, end - startT);
-      //put the processed audio in
-      oldTrack.Paste(start, toClipOutput.get());
+      for (const auto pChannel : oldRange)
+         pChannel->Clear(start, end);
+   
+      for (const auto pChannel : oldRange) {
+         auto toClipOutput =
+            (*newRange.first++)->Copy(start - startT, end - startT);
+         //put the processed audio in
+         pChannel->Paste(start, toClipOutput.get());
+      }
 
       //Restore original clip's name
       auto newClip = oldTrack.GetClipAtTime(start + 0.5 / oldTrack.GetRate());
@@ -88,6 +98,7 @@ void PasteOverPreservingClips(const ClipData &data,
       auto [realStart, realEnd] = clipRealStartEndTimes[i];
       if ((realStart  != start || realEnd != end) &&
          !(realStart <= startT && realEnd >= startT + lenT))
-         oldTrack.Join(realStart, realEnd);
+         for (const auto pChannel : oldRange)
+            pChannel->Join(realStart, realEnd);
    }
 }

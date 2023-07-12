@@ -46,6 +46,9 @@ WAVE_TRACK_API ClipData CollectClipData(
  @param start beginning position to paste over in oldTrack
  @param len length to paste over in oldTrack
  @param newContents begins at offset 0
+ @pre `oldTrack.IsLeader()`
+ @pre `newContents.IsLeader()`
+ @pre `oldTrack.NChannels() == newContents.NChannels()`
  */
 WAVE_TRACK_API void PasteOverPreservingClips(const ClipData &data,
    WaveTrack &oldTrack, sampleCount start, sampleCount len,

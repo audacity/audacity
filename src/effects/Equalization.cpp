@@ -382,15 +382,19 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
          const auto data = CollectClipData(*track, start, len);
+         auto temp = TrackList::Create(nullptr);
          for (const auto pChannel : TrackList::Channels(track)) {
-            if (auto pOutput = ProcessOne(count, *pChannel, start, len))
-               PasteOverPreservingClips(
-                  data, *pChannel, start, len, *pOutput);
+            if (auto pOutput = ProcessOne(count, *pChannel, start, len)) {
+               temp->Add(pOutput);
+               assert(pOutput->IsLeader() == pChannel->IsLeader());
+            }
             else
                bGoodResult = false;
          }
          if (!bGoodResult)
             break;
+         PasteOverPreservingClips(data, *track, start, len,
+            **temp->Leaders<WaveTrack>().begin());
       }
 
       count++;
