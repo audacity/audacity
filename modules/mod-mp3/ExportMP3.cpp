@@ -103,12 +103,6 @@
 // ExportMP3Options
 //----------------------------------------------------------------------------
 
-enum MP3ChannelMode : unsigned {
-   CHANNEL_JOINT = 0,
-   CHANNEL_STEREO = 1,
-   CHANNEL_MONO = 2,
-};
-
 enum : int {
    QUALITY_2 = 2,
 
@@ -217,9 +211,7 @@ enum MP3OptionID : int {
    MP3OptionIDQualitySET,
    MP3OptionIDQualityVBR,
    MP3OptionIDQualityABR,
-   MP3OptionIDQualityCBR,
-   MP3OptionIDChannels,
-   MP3OptionIDForceMono
+   MP3OptionIDQualityCBR
 };
 
 //Option order should exactly match to the id values
@@ -270,22 +262,6 @@ const std::initializer_list<ExportOption> MP3Options {
       ExportOption::TypeEnum | ExportOption::Hidden,
       fixRateValues,
       fixRateNames
-   },
-   {
-      MP3OptionIDChannels, XO("Channel Mode"),
-      std::string("JOINT"),
-      ExportOption::TypeEnum,
-      {
-         // for migrating old preferences the
-         // order should be preserved
-         std::string("JOINT"),
-         std::string("STEREO")
-      },
-      { XO("Joint Stereo"), XO("Stereo") }
-   },
-   {
-      MP3OptionIDForceMono, XO("Force export to mono"),
-      false
    }
 };
 
@@ -355,17 +331,6 @@ public:
          {
             if(mListener)
                mListener->OnSampleRateListChange();
-         } break;
-      case MP3OptionIDForceMono:
-         {
-            const auto forceMono = *std::get_if<bool>(&value);
-            OnForceMonoChange(forceMono);
-            if(mListener)
-            {
-               mListener->OnExportOptionChangeBegin();
-               mListener->OnExportOptionChange(mOptions[MP3OptionIDChannels]);
-               mListener->OnExportOptionChangeEnd();
-            }
          } break;
       default: break;
       }
@@ -437,33 +402,8 @@ public:
       config.Read(wxT("/FileFormats/MP3AbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityABR]));
       config.Read(wxT("/FileFormats/MP3CbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityCBR]));
       config.Read(wxT("/FileFormats/MP3VbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityVBR]));
-
-      wxString channels;
-      if(config.Read(wxT("/FileFormats/MP3ChannelModeChoice"), &channels))
-      {
-         mValues[MP3OptionIDChannels] = channels.ToStdString();
-         config.Read(wxT("/FileFormats/MP3ForceMono"), std::get_if<bool>(&mValues[MP3OptionIDForceMono]));
-      }
-      else
-      {
-         int index;
-         //attempt to recover from old-style preference
-         if(config.Read(wxT("/FileFormats/MP3ChannelMode"), &index))
-         {
-            switch(index)
-            {
-            case CHANNEL_STEREO:
-            case CHANNEL_JOINT:
-               mValues[MP3OptionIDChannels] = mOptions[MP3OptionIDChannels].values[index];
-               mValues[MP3OptionIDForceMono] = false;
-               break;
-            case CHANNEL_MONO:
-               mValues[MP3OptionIDForceMono] = true;
-            }
-         }
-      }
+      
       OnModeChange(*std::get_if<std::string>(&mValues[MP3OptionIDMode]));
-      OnForceMonoChange(*std::get_if<bool>(&mValues[MP3OptionIDForceMono]));
    }
 
    void Store(wxConfigBase& config) const override
@@ -479,11 +419,6 @@ public:
       config.Write(wxT("/FileFormats/MP3CbrRate"), *std::get_if<int>(&it->second));
       it = mValues.find(MP3OptionIDQualityVBR);
       config.Write(wxT("/FileFormats/MP3VbrRate"), *std::get_if<int>(&it->second));
-
-      it = mValues.find(MP3OptionIDChannels);
-      config.Write(wxT("/FileFormats/MP3ChannelModeChoice"), wxString(*std::get_if<std::string>(&it->second)));
-      it = mValues.find(MP3OptionIDForceMono);
-      config.Write(wxT("/FileFormats/MP3ForceMono"), *std::get_if<bool>(&it->second));
    }
    
 private:
@@ -504,15 +439,6 @@ private:
       else if(mode == "VBR")
          mOptions[MP3OptionIDQualityVBR].flags &= ~ExportOption::Hidden;
    }
-   
-   void OnForceMonoChange(bool forceMono)
-   {
-      if(forceMono)
-         mOptions[MP3OptionIDChannels].flags |= ExportOption::ReadOnly;
-      else
-         mOptions[MP3OptionIDChannels].flags &= ~ExportOption::ReadOnly;
-   }
-   
 };
 
 namespace {
@@ -784,7 +710,6 @@ public:
    void SetMode(int mode);
    void SetBitrate(int rate);
    void SetQuality(int q/*, int r*/);
-   void SetChannel(int mode);
 
    /* Virtual methods that must be supplied by library interfaces */
 
@@ -838,8 +763,7 @@ private:
    int mBitrate;
    int mQuality;
    //int mRoutine;
-   int mChannel;
-
+   
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    /* function pointers to the symbols we get from the library */
    lame_init_t* lame_init;
@@ -911,7 +835,6 @@ MP3Exporter::MP3Exporter()
 
    mBitrate = 128;
    mQuality = QUALITY_2;
-   mChannel = CHANNEL_STEREO;
    mMode = MODE_CBR;
    //mRoutine = ROUTINE_FAST;
 }
@@ -1041,12 +964,6 @@ void MP3Exporter::SetBitrate(int rate)
 void MP3Exporter::SetQuality(int q/*, int r*/)
 {
    mQuality = q;
-   //mRoutine = r;
-}
-
-void MP3Exporter::SetChannel(int mode)
-{
-   mChannel = mode;
 }
 
 bool MP3Exporter::InitLibrary(wxString libpath)
@@ -1324,15 +1241,11 @@ int MP3Exporter::InitializeStream(unsigned channels, int sampleRate)
    // Set the channel mode
    MPEG_mode mode;
 
-   if (channels == 1 || mChannel == CHANNEL_MONO) {
+   if (channels == 1)
       mode = MONO;
-   }
-   else if (mChannel == CHANNEL_JOINT) {
+   else
       mode = JOINT_STEREO;
-   }
-   else {
-      mode = STEREO;
-   }
+   
    lame_set_mode(mGF, mode);
 
    int rc = lame_init_params(mGF);
@@ -1797,21 +1710,11 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
    int lowrate = 8000;
    int bitrate = 0;
    int quality;
-   //int vmode;
-   bool forceMono = ExportPluginHelpers::GetParameterValue(
-      parameters,
-      MP3OptionIDForceMono,
-      false);
    
    auto rmode = ExportPluginHelpers::GetParameterValue(
       parameters,
       MP3OptionIDMode,
       std::string("CBR"));
-   auto cmode = ExportPluginHelpers::GetParameterValue(
-      parameters,
-      MP3OptionIDChannels,
-      std::string("STEREO")
-   );
    // Set the bitrate/quality and mode
    if (rmode == "SET") {
       quality = ExportPluginHelpers::GetParameterValue<int>(
@@ -1886,17 +1789,6 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
 			}
 		}
 	}
-
-   // Set the channel mode
-   if (forceMono) {
-      exporter.SetChannel(CHANNEL_MONO);
-   }
-   else if (cmode == "JOINT") {
-      exporter.SetChannel(CHANNEL_JOINT);
-   }
-   else {
-      exporter.SetChannel(CHANNEL_STEREO);
-   }
 
    context.inSamples = exporter.InitializeStream(channels, rate);
    if (context.inSamples < 0) {
