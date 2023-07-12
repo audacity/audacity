@@ -102,6 +102,10 @@ static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
    return (dateTime.GetHour() * 3600.0) + (dateTime.GetMinute() * 60.0) + dateTime.GetSecond();
 };
 
+namespace {
+   StringSetting DefaultExportAudioFormat{ L"/TimerRecordDialog/ExportFormat", L"WAV" };
+   StringSetting DefaultExportAudioPath{ L"/TimerRecordDialog/ExportPath", L"" };
+}
 
 // The purpose of the DatePickerCtrlAx class is to make to wxDatePickerCtrl more accessible for
 // the NVDA screen reader.
@@ -186,10 +190,28 @@ TimerRecordDialog::TimerRecordDialog(
    // Do we allow the user to change the Automatic Save file?
    m_bProjectAlreadySaved = bAlreadySaved;
 
-   m_fnAutoExportFile.SetPath(FileNames::FindDefaultPath(FileNames::Operation::Export));
+   wxString exportPath;
+   DefaultExportAudioPath.Read(&exportPath);
+   if(exportPath.empty())
+      exportPath = FileNames::FindDefaultPath(FileNames::Operation::Export);
+   m_fnAutoExportFile.SetPath(exportPath);
+
    m_fnAutoExportFile.SetName(mProject.GetProjectName());
    if(m_fnAutoExportFile.GetName().IsEmpty())
       m_fnAutoExportFile.SetName(_("untitled"));
+   
+   DefaultExportAudioFormat.Read(&m_sAutoExportFormat);
+   if(!m_sAutoExportFormat.empty())
+   {
+      auto [plugin, formatIndex]
+         = ExportPluginRegistry::Get().FindFormat(m_sAutoExportFormat);
+
+      if(plugin != nullptr)
+      {
+         const auto formatInfo = plugin->GetFormatInfo(formatIndex);
+         m_fnAutoExportFile.SetExt(formatInfo.extensions[0]);
+      }
+   }
 
    m_iAutoExportSampleRate = ProjectRate::Get(mProject).GetRate();
 
@@ -205,9 +227,7 @@ TimerRecordDialog::TimerRecordDialog(
    m_timer.Start(kSlowTimerInterval);
 }
 
-TimerRecordDialog::~TimerRecordDialog()
-{
-}
+TimerRecordDialog::~TimerRecordDialog() = default;
 
 void TimerRecordDialog::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
@@ -635,6 +655,12 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
                bExportOK = result == ExportResult::Success ||
                   result == ExportResult::Stopped;
             });
+
+            if(bExportOK)
+            {
+               DefaultExportAudioPath.Write(m_fnAutoExportFile.GetPath());
+               DefaultExportAudioFormat.Write(m_sAutoExportFormat);
+            }
          }
       }
    }
