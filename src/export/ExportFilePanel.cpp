@@ -340,11 +340,32 @@ void ExportFilePanel::OnSampleRateChange(wxCommandEvent &event)
 
 void ExportFilePanel::OnFolderBrowse(wxCommandEvent &event)
 {
-   wxDirDialogWrapper dirDialog(this,
-                                XO("Choose a location to save the exported files"),
-                                mFolder->GetValue());
-   if(dirDialog.ShowModal() == wxID_OK)
-      mFolder->SetValue(dirDialog.GetPath());
+   FileNames::FileTypes fileTypes;
+   
+   for(auto [plugin, formatIndex] : ExportPluginRegistry::Get())
+   {
+      const auto formatInfo = plugin->GetFormatInfo(formatIndex);
+      fileTypes.emplace_back(formatInfo.description, formatInfo.extensions);
+   }
+   wxFileDialog fd(this, _("Choose a location to save the exported files"),
+      mFolder->GetValue(),
+      mFullName->GetValue(),
+      FileNames::FormatWildcard(fileTypes),
+      wxFD_SAVE);
+   fd.SetFilterIndex(mFormat->GetSelection());
+
+   if(fd.ShowModal() == wxID_OK)
+   {
+      wxFileName filepath (fd.GetPath());
+      mFolder->SetValue(filepath.GetPath());
+      mFullName->SetValue(filepath.GetFullName());
+      const auto selectedFormat = fd.GetFilterIndex();
+      if(selectedFormat != mFormat->GetSelection())
+      {
+         mFormat->SetSelection(selectedFormat);
+         ChangeFormat(selectedFormat);
+      }
+   }
 }
 
 void ExportFilePanel::OnChannelsChange(wxCommandEvent& event)
