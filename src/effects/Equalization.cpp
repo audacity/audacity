@@ -382,8 +382,11 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
 
-         if (!ProcessOne(count, track, start, len))
-         {
+         const auto data = CollectClipData(*track, start, len);
+         if (auto pOutput = ProcessOne(count, *track, start, len))
+            PasteOverPreservingClips(
+               data, *track, start, len, *pOutput);
+         else {
             bGoodResult = false;
             break;
          }
@@ -416,7 +419,7 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 
 namespace {
 struct EqualizationTask {
-   EqualizationTask( size_t M, size_t idealBlockLen, WaveTrack &t )
+   EqualizationTask(size_t M, size_t idealBlockLen, const WaveTrack &t)
       : buffer{ idealBlockLen }
       , output{ t.EmptyCopy() }
       , leftTailRemaining{ (M - 1) / 2 }
@@ -453,8 +456,8 @@ struct EqualizationTask {
 
 // EffectEqualization implementation
 
-bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
-                                    sampleCount start, sampleCount len)
+std::shared_ptr<WaveTrack> EffectEqualization::ProcessOne(
+   int count, const WaveTrack &t, sampleCount start, sampleCount len)
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
 
@@ -463,11 +466,11 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    wxASSERT(M - 1 < windowSize);
    size_t L = windowSize - (M - 1);   //Process L samples at a go
    auto s = start;
-   auto idealBlockLen = t->GetMaxBlockSize() * 4;
+   auto idealBlockLen = t.GetMaxBlockSize() * 4;
    if (idealBlockLen % L != 0)
       idealBlockLen += (L - (idealBlockLen % L));
 
-   EqualizationTask task{ M, idealBlockLen, *t };
+   EqualizationTask task{ M, idealBlockLen, t };
    auto &buffer = task.buffer;
    auto &window1 = task.window1;
    auto &window2 = task.window2;
@@ -487,7 +490,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    {
       auto block = limitSampleBufferSize( idealBlockLen, len );
 
-      t->GetFloats(buffer.get(), s, block);
+      t.GetFloats(buffer.get(), s, block);
 
       for(size_t i = 0; i < block; i += L)   //go through block in lumps of length L
       {
@@ -540,9 +543,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       task.AccumulateSamples((samplePtr)buffer.get(), M - 1);
       output->Flush();
    }
-
    if (bLoopSuccess)
-      PasteOverPreservingClips(*t, start, originalLen, *output);
-
-   return bLoopSuccess;
+      return output;
+   return {};
 }
