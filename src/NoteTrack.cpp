@@ -494,7 +494,7 @@ TrackListHolder NoteTrack::Cut(double t0, double t1)
    return TrackList::Temporary(nullptr, newTrack, nullptr);
 }
 
-Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
+TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -514,7 +514,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
    // (mBottomNote, mSerializationBuffer,
    // mSerializationLength, mVisibleChannels)
 
-   return newTrack;
+   return TrackList::Temporary(nullptr, newTrack, nullptr);
 }
 
 bool NoteTrack::Trim(double t0, double t1)

@@ -637,13 +637,9 @@ TrackListHolder WaveTrack::Cut(double t0, double t1)
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   auto result = TrackList::Create(nullptr);
-   for (const auto pChannel : TrackList::Channels(this)) {
-      auto tmp = pChannel->Copy(t0, t1);
+   auto result = Copy(t0, t1);
+   for (const auto pChannel : TrackList::Channels(this))
       pChannel->Clear(t0, t1);
-      result->Add(tmp);
-      assert(pChannel->IsLeader() == tmp->IsLeader());
-   }
    return result;
 }
 
@@ -654,14 +650,8 @@ TrackListHolder WaveTrack::SplitCut(double t0, double t1)
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   auto result = TrackList::Create(nullptr);
-   for (const auto pChannel : TrackList::Channels(this)) {
-      // SplitCut is the same as 'Copy', then 'SplitDelete'
-      auto tmp = pChannel->Copy(t0, t1);
-      result->Add(tmp);
-      //! See how Track::Init() copies mpGroupData
-      assert(tmp->IsLeader() == pChannel->IsLeader());
-   }
+   // SplitCut is the same as 'Copy', then 'SplitDelete'
+   auto result = Copy(t0, t1);
    SplitDelete(t0, t1);
    return result;
 }
@@ -706,9 +696,6 @@ void WaveTrack::Trim (double t0, double t1)
       SplitDelete(startTime, t0);
 }
 
-
-
-
 WaveTrack::Holder WaveTrack::EmptyCopy(
    const SampleBlockFactoryPtr &pFactory, bool keepLink) const
 {
@@ -727,37 +714,44 @@ WaveTrack::Holder WaveTrack::EmptyCopy(
    return result;
 }
 
-Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
+TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   auto result = EmptyCopy();
+   auto list = TrackList::Create(nullptr);
+   for (const auto pChannel : TrackList::Channels(this))
+      list->Add(CopyOne(*pChannel, t0, t1, forClipboard));
+   return list;
+}
+
+auto WaveTrack::CopyOne(
+   const WaveTrack &track, double t0, double t1, bool forClipboard) -> Holder
+{
+   const auto &pFactory = track.mpFactory;
+   auto result = track.EmptyCopy();
    WaveTrack *newTrack = result.get();
 
-   // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know, but
-   // that was the old behavior.  But this function is also used by the
+   // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
+   // but that was the old behavior.  But this function is also used by the
    // Duplicate command and I changed its behavior in that case.
 
-   for (const auto &clip : mClips)
-   {
-      if (t0 <= clip->GetPlayStartTime() && t1 >= clip->GetPlayEndTime())
-      {
+   for (const auto &clip : track.mClips) {
+      if (t0 <= clip->GetPlayStartTime() && t1 >= clip->GetPlayEndTime()) {
          // Whole clip is in copy region
          //wxPrintf("copy: clip %i is in copy region\n", (int)clip);
 
          newTrack->InsertClip(
-            std::make_shared<WaveClip>(*clip, mpFactory, !forClipboard));
+            std::make_shared<WaveClip>(*clip, pFactory, !forClipboard));
          WaveClip *const newClip = newTrack->mClips.back().get();
          newClip->Offset(-t0);
       }
-      else if (clip->CountSamples(t0, t1) >= 1)
-      {
+      else if (clip->CountSamples(t0, t1) >= 1) {
          // Clip is affected by command
          //wxPrintf("copy: clip %i is affected by command\n", (int)clip);
 
-         auto newClip =
-            std::make_shared<WaveClip>(*clip, mpFactory, !forClipboard, t0, t1);
+         auto newClip = std::make_shared<WaveClip>(
+            *clip, pFactory, !forClipboard, t0, t1);
          newClip->SetName(clip->GetName());
 
          newClip->Offset(-t0);
@@ -768,15 +762,14 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       }
    }
 
-   // AWD, Oct 2009: If the selection ends in whitespace, create a placeholder
-   // clip representing that whitespace
-   // PRL:  Only if we want the track for pasting into other tracks.  Not if it
-   // goes directly into a project as in the Duplicate command.
+   // AWD, Oct 2009: If the selection ends in whitespace, create a
+   // placeholder clip representing that whitespace
+   // PRL:  Only if we want the track for pasting into other tracks.  Not if
+   // it goes directly into a project as in the Duplicate command.
    if (forClipboard &&
-       newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0)
-   {
+       newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0) {
       // TODO wide wave tracks -- match clip width of newTrack
-      auto placeholder = std::make_shared<WaveClip>(1, mpFactory,
+      auto placeholder = std::make_shared<WaveClip>(1, pFactory,
          newTrack->GetSampleFormat(),
          static_cast<int>(newTrack->GetRate()),
          0 /*colourindex*/);
@@ -785,8 +778,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       placeholder->Offset(newTrack->GetEndTime());
       newTrack->InsertClip(std::move(placeholder)); // transfer ownership
    }
-
-   return result;
+   return newTrack->SharedPointer<WaveTrack>();
 }
 
 /*! @excsafety{Strong} */

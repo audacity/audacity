@@ -193,7 +193,8 @@ private:
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make
    // GetEndTime() correct.  This clip is not re-copied when pasting.
-   Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
+   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const override;
 
    void Clear(double t0, double t1) override;
    void Paste(double t0, const Track *src) override;
@@ -637,6 +638,8 @@ protected:
       double t0, double t1, double endTime, const WaveTrack &src,
       bool preserve, bool merge, const TimeWarper *effectWarper);
    static void JoinOne(WaveTrack &track, double t0, double t1);
+   static Holder CopyOne(const WaveTrack &track,
+      double t0, double t1, bool forClipboard);
 
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;

@@ -107,30 +107,27 @@ BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList
 
 std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
    auto result = TrackList::Create(nullptr);
-   for(auto track : src)
-   {
-      auto trackCopy = track->Copy(track->GetStartTime(), track->GetEndTime(), false);
-      trackCopy->SetOffset(track->GetStartTime());
-      
-      if(auto waveTrack = dynamic_cast<WaveTrack*>(trackCopy.get()))
-      {
-         for(auto clip : waveTrack->GetClips())
-         {
-            if(clip->GetTrimLeft() != 0)
-            {
-               auto t0 = clip->GetPlayStartTime();
-               clip->SetTrimLeft(0);
-               clip->ClearLeft(t0);
-            }
-            if(clip->GetTrimRight() != 0)
-            {
-               auto t1 = clip->GetPlayEndTime();
-               clip->SetTrimRight(0);
-               clip->ClearRight(t1);
+   for (auto track : src.Leaders()) {
+      auto copies =
+         track->Copy(track->GetStartTime(), track->GetEndTime(), false);
+      for (const auto pChannel : copies->Any()) {
+         pChannel->SetOffset(track->GetStartTime());
+         if (auto waveTrack = dynamic_cast<WaveTrack*>(pChannel)) {
+            for (auto clip : waveTrack->GetClips()) {
+               if (clip->GetTrimLeft() != 0) {
+                  auto t0 = clip->GetPlayStartTime();
+                  clip->SetTrimLeft(0);
+                  clip->ClearLeft(t0);
+               }
+               if (clip->GetTrimRight() != 0) {
+                  auto t1 = clip->GetPlayEndTime();
+                  clip->SetTrimRight(0);
+                  clip->ClearRight(t1);
+               }
             }
          }
       }
-      result->Add(trackCopy);
+      result->Append(std::move(*copies));
    }
    return result;
 }
@@ -295,7 +292,7 @@ void OnCut(const CommandContext &context)
    auto pNewClipboard = TrackList::Create( nullptr );
    auto &newClipboard = *pNewClipboard;
 
-   tracks.Selected().Visit(
+   tracks.SelectedLeaders().Visit(
 #if defined(USE_MIDI)
       [&](NoteTrack &n) {
          // Since portsmf has a built-in cut operator, we use that instead
@@ -305,9 +302,8 @@ void OnCut(const CommandContext &context)
 #endif
       [&](Track &n) {
          if (n.SupportsBasicEditing()) {
-            auto dest = n.Copy(selectedRegion.t0(),
-                    selectedRegion.t1());
-            newClipboard.Add(dest);
+            auto dest = n.Copy(selectedRegion.t0(), selectedRegion.t1());
+            newClipboard.Append(std::move(*dest));
          }
       }
    );
@@ -408,11 +404,10 @@ void OnCopy(const CommandContext &context)
    auto pNewClipboard = TrackList::Create( nullptr );
    auto &newClipboard = *pNewClipboard;
 
-   for (auto n : tracks.Selected()) {
+   for (auto n : tracks.SelectedLeaders()) {
       if (n->SupportsBasicEditing()) {
-         auto dest = n->Copy(selectedRegion.t0(),
-                 selectedRegion.t1());
-         newClipboard.Add(dest);
+         auto dest = n->Copy(selectedRegion.t0(), selectedRegion.t1());
+         newClipboard.Append(std::move(*dest));
       }
    }
 
@@ -686,12 +681,12 @@ void OnPaste(const CommandContext &context)
 void OnDuplicate(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
    // This iteration is unusual because we add to the list inside the loop
-   auto range = tracks.Selected();
+   auto range = tracks.SelectedLeaders();
    auto last = *range.rbegin();
    for (auto n : range) {
       if (!n->SupportsBasicEditing())
@@ -699,8 +694,11 @@ void OnDuplicate(const CommandContext &context)
 
       // Make copies not for clipboard but for direct addition to the project
       auto dest = n->Copy(selectedRegion.t0(), selectedRegion.t1(), false);
-      dest->SetOffset(wxMax(selectedRegion.t0(), n->GetOffset()));
-      tracks.Add( dest );
+      auto range = dest->Any();
+      for (const auto pChannel : TrackList::Channels(n))
+         (*range.first++)
+            ->SetOffset(std::max(selectedRegion.t0(), pChannel->GetOffset()));
+      tracks.Append(std::move(*dest));
 
       // This break is really needed, else we loop infinitely
       if (n == last)
@@ -714,9 +712,9 @@ void OnDuplicate(const CommandContext &context)
 void OnSplitCut(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
@@ -731,11 +729,9 @@ void OnSplitCut(const CommandContext &context)
       },
       [&](Track &n) {
          if (n.SupportsBasicEditing()) {
-            auto dest = n.Copy(selectedRegion.t0(),
-                    selectedRegion.t1());
+            auto dest = n.Copy(selectedRegion.t0(), selectedRegion.t1());
             n.Silence(selectedRegion.t0(), selectedRegion.t1());
-            if (dest)
-               newClipboard.Add(dest);
+            newClipboard.Append(std::move(*dest));
          }
       }
    );
@@ -892,15 +888,15 @@ void OnSplitNew(const CommandContext &context)
                selectedRegion.t0()));
             double newt1 = wt.LongSamplesToTime(wt.TimeToLongSamples(
                selectedRegion.t1()));
-            for (const auto pChannel : TrackList::Channels(&wt)) {
-               // Fix issue 2846 by calling copy with forClipboard = false.
-               // This avoids creating the blank placeholder clips
-               if (const auto dest = pChannel->Copy(newt0, newt1, false)) {
-                  // The copy function normally puts the clip at time 0
-                  // This offset lines it up with the original track's timing
-                  dest->Offset(newt0);
-                  tracks.Add(dest);
-               }
+            // Fix issue 2846 by calling copy with forClipboard = false.
+            // This avoids creating the blank placeholder clips
+            const auto dest = wt.Copy(newt0, newt1, false);
+            if (dest) {
+               // The copy function normally puts the clip at time 0
+               // This offset lines it up with the original track's timing
+               for (const auto pChannel : dest->Any())
+                  pChannel->Offset(newt0);
+               tracks.Append(std::move(*dest));
             }
             wt.SplitDelete(newt0, newt1);
          }

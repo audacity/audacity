@@ -140,12 +140,10 @@ void EffectPreview(EffectBase &effect,
       mixLeft->SetSelected(true);
    }
    else {
-      for (auto src : saveTracks->Any< const WaveTrack >()) {
-         if (src->GetSelected()) {
-            auto dest = src->Copy(mT0, t1);
-            mTracks->Add( dest );
-            dest->SetSelected(src->GetSelected());
-         }
+      for (auto src : saveTracks->SelectedLeaders<const WaveTrack>()) {
+         auto dest = src->Copy(mT0, t1);
+         (*dest->Leaders().begin())->SetSelected(true);
+         mTracks->Append(std::move(*dest));
       }
    }
 

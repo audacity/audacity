@@ -58,7 +58,6 @@ void PasteOverPreservingClips(const ClipData &data,
    assert(newContents.IsLeader());
    assert(oldTrack.NChannels() == newContents.NChannels());
    auto oldRange = TrackList::Channels(&oldTrack);
-   auto newRange = TrackList::Channels(&newContents);
    const auto &[clipStartEndTimes, clipRealStartEndTimes, clipNames] = data;
 
    //newContents has one waveclip for the total length, even though
@@ -80,12 +79,11 @@ void PasteOverPreservingClips(const ClipData &data,
       for (const auto pChannel : oldRange)
          pChannel->Clear(start, end);
    
-      for (const auto pChannel : oldRange) {
-         auto toClipOutput =
-            (*newRange.first++)->Copy(start - startT, end - startT);
+      auto toClipOutput = newContents.Copy(start - startT, end - startT);
+      auto iter = toClipOutput->Any().begin();
+      for (const auto pChannel : oldRange)
          //put the processed audio in
-         pChannel->Paste(start, toClipOutput.get());
-      }
+         pChannel->Paste(start, *iter++);
 
       //Restore original clip's name
       auto newClip = oldTrack.GetClipAtTime(start + 0.5 / oldTrack.GetRate());

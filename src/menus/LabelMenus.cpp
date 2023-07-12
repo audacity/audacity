@@ -396,15 +396,7 @@ void OnCutLabels(const CommandContext &context)
    auto copyfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
       std::shared_ptr<TrackList> result;
-      track.TypeSwitch( [&](WaveTrack &wt) {
-         result = TrackList::Create(nullptr);
-         for (const auto pChannel : TrackList::Channels(&wt)) {
-            const auto pNewTrack = pChannel->Copy(t0, t1);
-            result->Add(pNewTrack);
-            //! See how Track::Init() copies mpGroupData
-            assert(pNewTrack->IsLeader() == pChannel->IsLeader());
-         }
-      } );
+      track.TypeSwitch( [&](WaveTrack &wt) { result = wt.Copy(t0, t1); } );
       return result;
    };
    EditClipboardByLabel(project, tracks, selectedRegion, copyfunc);
@@ -481,8 +473,7 @@ void OnSplitCutLabels(const CommandContext &context)
             result = wt.SplitCut(t0, t1);
          },
          [&](Track &t) {
-            result = TrackList::Create(nullptr);
-            result->Add(t.Copy(t0, t1));
+            result = t.Copy(t0, t1);
             t.Silence(t0, t1);
          }
       );
@@ -561,16 +552,9 @@ void OnCopyLabels(const CommandContext &context)
       return;
 
    auto copyfunc = [&](Track &track, double t0, double t1) {
+      assert(track.IsLeader());
       std::shared_ptr<TrackList> result;
-      track.TypeSwitch( [&](WaveTrack &wt) {
-         result = TrackList::Create(nullptr);
-         for (const auto pChannel : TrackList::Channels(&wt)) {
-            const auto pNewTrack = pChannel->Copy(t0, t1);
-            result->Add(pNewTrack);
-            //! See how Track::Init() copies mpGroupData
-            assert(pNewTrack->IsLeader() == pChannel->IsLeader());
-         }
-      } );
+      track.TypeSwitch( [&](WaveTrack &wt) { result = wt.Copy(t0, t1); } );
       return result;
    };
    EditClipboardByLabel(project, tracks, selectedRegion, copyfunc);

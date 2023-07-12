@@ -173,16 +173,17 @@ Track::Holder TimeTrack::PasteInto(AudacityProject &project) const
 TrackListHolder TimeTrack::Cut(double t0, double t1)
 {
    assert(IsLeader());
-   auto track = Copy(t0, t1, false);
+   auto result = Copy(t0, t1, false);
    Clear(t0, t1);
-   return TrackList::Temporary(nullptr, track, nullptr);
+   return result;
 }
 
-Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
+TrackListHolder TimeTrack::Copy(double t0, double t1, bool) const
 {
-   auto result = std::make_shared<TimeTrack>(*this, ProtectedCreationArg{}, &t0, &t1);
-   result->Init(*this);
-   return result;
+   auto track =
+      std::make_shared<TimeTrack>(*this, ProtectedCreationArg{}, &t0, &t1);
+   track->Init(*this);
+   return TrackList::Temporary(nullptr, track, nullptr);
 }
 
 namespace {

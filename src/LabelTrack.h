@@ -131,7 +131,8 @@ public:
    void WriteXML(XMLWriter &xmlFile) const override;
 
    TrackListHolder Cut(double t0, double t1) override;
-   Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
+   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const override;
    void Clear(double t0, double t1) override;
    void Paste(double t, const Track * src) override;
    bool Repeat(double t0, double t1, int n);

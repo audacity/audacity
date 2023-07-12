@@ -689,7 +689,7 @@ TrackListHolder LabelTrack::Cut(double t0, double t1)
    assert(IsLeader());
    auto tmp = Copy(t0, t1);
    Clear(t0, t1);
-   return TrackList::Temporary(nullptr, tmp, nullptr);
+   return tmp;
 }
 
 #if 0
@@ -706,7 +706,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 }
 #endif
 
-Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
+TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
 {
    auto tmp = std::make_shared<LabelTrack>();
    tmp->Init(*this);
@@ -754,7 +754,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
    }
    lt->mClipLen = (t1 - t0);
 
-   return tmp;
+   return TrackList::Temporary(nullptr, tmp, nullptr);
 }
 
 

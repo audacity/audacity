@@ -101,7 +101,8 @@ public:
 
    // High-level editing
    TrackListHolder Cut(double t0, double t1) override;
-   Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
+   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const override;
    bool Trim (double t0, double t1) /* not override */;
    void Clear(double t0, double t1) override;
    void Paste(double t, const Track *src) override;

@@ -334,14 +334,18 @@ public:
     */
    virtual TrackListHolder Cut(double t0, double t1) = 0;
 
-   // Create a NEW track and don't modify this track
-   // Return non-NULL or else throw
-   // Note that subclasses may want to distinguish tracks stored in a clipboard
-   // from those stored in a project
-   // May assume precondition: t0 <= t1
-   // Should invoke Track::Init
-   virtual Holder Copy
-      (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const = 0;
+   //! Create new tracks and don't modify this track
+   /*!
+    @return non-NULL or else throw
+    Note that subclasses may want to distinguish tracks stored in a clipboard
+    from those stored in a project
+    May assume precondition: t0 <= t1
+    Should invoke Track::Init
+    @pre `IsLeader`
+    @post result: `result->Size() == NChannels()`
+   */
+   virtual TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const = 0;
 
    // May assume precondition: t0 <= t1
    virtual void Clear(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
