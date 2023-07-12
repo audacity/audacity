@@ -36,6 +36,7 @@ struct ClipData {
 /*!
  @param start beginning position to paste over in oldTrack
  @param len length to paste over in oldTrack
+ @pre `oldTrack.IsLeader()`
  */
 WAVE_TRACK_API ClipData CollectClipData(
    const WaveTrack &oldTrack, sampleCount start, sampleCount len);

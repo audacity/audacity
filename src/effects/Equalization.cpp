@@ -371,7 +371,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
    bool bGoodResult = true;
 
    int count = 0;
-   for (auto track : outputs.Get().Selected<WaveTrack>()) {
+   for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -381,15 +381,16 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto start = track->TimeToLongSamples(t0);
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
-
          const auto data = CollectClipData(*track, start, len);
-         if (auto pOutput = ProcessOne(count, *track, start, len))
-            PasteOverPreservingClips(
-               data, *track, start, len, *pOutput);
-         else {
-            bGoodResult = false;
-            break;
+         for (const auto pChannel : TrackList::Channels(track)) {
+            if (auto pOutput = ProcessOne(count, *pChannel, start, len))
+               PasteOverPreservingClips(
+                  data, *pChannel, start, len, *pOutput);
+            else
+               bGoodResult = false;
          }
+         if (!bGoodResult)
+            break;
       }
 
       count++;

@@ -18,6 +18,7 @@
 ClipData CollectClipData(
    const WaveTrack &oldTrack, sampleCount start, sampleCount len)
 {
+   assert(oldTrack.IsLeader());
    ClipData results;
    auto &[clipStartEndTimes, clipRealStartEndTimes, clipNames] = results;
 
