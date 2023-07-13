@@ -415,8 +415,7 @@ void OnCutLabels(const CommandContext &context)
       track.TypeSwitch(
          [&](WaveTrack &t) {
             if (enableCutlines)
-               for (const auto pChannel : TrackList::Channels(&t))
-                  pChannel->ClearAndAddCutLine(t0, t1);
+               t.ClearAndAddCutLine(t0, t1);
             else
                for (const auto pChannel : TrackList::Channels(&t))
                   pChannel->Clear(t0, t1);

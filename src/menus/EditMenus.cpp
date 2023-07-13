@@ -323,7 +323,7 @@ void OnCut(const CommandContext &context)
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
 
-   (tracks.Any() + &SyncLock::IsSelectedOrSyncLockSelected).Visit(
+   (tracks.Leaders() + &SyncLock::IsSelectedOrSyncLockSelected).Visit(
 #if defined(USE_MIDI)
       [](NoteTrack&) {
          //if NoteTrack, it was cut, so do not clear anything
@@ -332,11 +332,8 @@ void OnCut(const CommandContext &context)
       },
 #endif
       [&](auto &&fallthrough){ return [&](WaveTrack &wt) {
-         if (gPrefs->Read(wxT("/GUI/EnableCutLines"), (long)0)) {
-            wt.ClearAndAddCutLine(
-               selectedRegion.t0(),
-               selectedRegion.t1());
-         }
+         if (gPrefs->Read(wxT("/GUI/EnableCutLines"), (long)0))
+            wt.ClearAndAddCutLine(selectedRegion.t0(), selectedRegion.t1());
          else
             fallthrough();
       }; },

@@ -666,23 +666,6 @@ TrackListHolder WaveTrack::SplitCut(double t0, double t1)
    return result;
 }
 
-#if 0
-Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
-{
-   if (t1 < t0)
-      THROW_INCONSISTENCY_EXCEPTION;
-
-   // Cut is the same as 'Copy', then 'Delete'
-   auto tmp = Copy(t0, t1);
-
-   ClearAndAddCutLine(t0, t1);
-
-   return tmp;
-}
-#endif
-
-
-
 //Trim trims within a clip, rather than trimming everything.
 //If a bound is outside a clip, it trims everything.
 /*! @excsafety{Weak} */
@@ -815,7 +798,9 @@ void WaveTrack::Clear(double t0, double t1)
 /*! @excsafety{Strong} */
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
-   HandleClear(t0, t1, true, false);
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      pChannel->HandleClear(t0, t1, true, false);
 }
 
 namespace {

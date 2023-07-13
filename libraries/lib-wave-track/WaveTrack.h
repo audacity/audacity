@@ -231,8 +231,10 @@ private:
     @pre `IsLeader()`
     */
    void Split(double t0, double t1) /* not override */;
-   // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
-   // May assume precondition: t0 <= t1
+   /*!
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    */
    void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
    /*!
