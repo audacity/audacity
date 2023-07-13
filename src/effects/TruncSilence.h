@@ -19,6 +19,7 @@
 
 #include "StatefulEffect.h"
 #include "ShuttleAutomation.h"
+#include "Track.h"
 #include <wx/weakref.h>
 
 class ShuttleGui;
@@ -88,11 +89,11 @@ private:
 
    bool ProcessIndependently();
    bool ProcessAll();
-   bool FindSilences
-      (RegionList &silences, const TrackList *list,
-       const Track *firstTrack, const Track *lastTrack);
-   bool DoRemoval(TrackList &outputs,
-      const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
+   bool FindSilences(RegionList &silences,
+      const TrackIterRange<const WaveTrack> &range);
+   bool DoRemoval(const RegionList &silences,
+      const TrackIterRange<Track> &range,
+      unsigned iGroup, unsigned nGroups,
       double &totalCutLen);
 
    wxWeakRef<wxWindow> mUIParent{};

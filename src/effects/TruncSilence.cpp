@@ -279,26 +279,17 @@ bool EffectTruncSilence::ProcessIndependently()
    {
       unsigned iGroup = 0;
       for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
-         Track *const last = *TrackList::Channels(track).rbegin();
-
          RegionList silences;
-
-         if (!FindSilences(silences, &outputs.Get(), track, last))
+         if (!FindSilences(silences,
+            TrackList::Channels<const WaveTrack>(track)))
             return false;
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
-         if (syncLock) {
-            auto trackRange = SyncLock::Group(track);
-            groupFirst = *trackRange.begin();
-            groupLast = *trackRange.rbegin();
-         }
-         else {
-            groupFirst = track;
-            groupLast = last;
-         }
+         auto range = syncLock
+            ? SyncLock::Group(track)
+            : TrackList::Channels<Track>(track);
          double totalCutLen = 0.0;
-         if (!DoRemoval(outputs.Get(), silences, iGroup, nGroups,
-            groupFirst, groupLast, totalCutLen))
+         if (!DoRemoval(silences, range, iGroup, nGroups, totalCutLen))
             return false;
          newT1 = std::max(newT1, mT1 - totalCutLen);
 
@@ -322,13 +313,10 @@ bool EffectTruncSilence::ProcessAll()
    // This list should always be kept in order.
    RegionList silences;
 
-   auto trackRange0 = inputTracks()->Selected< const WaveTrack >();
-   if (FindSilences(
-         silences, inputTracks(), *trackRange0.begin(), *trackRange0.rbegin())) {
+   if (FindSilences(silences, inputTracks()->Selected<const WaveTrack>())) {
       auto trackRange = outputs.Get().Any();
       double totalCutLen = 0.0;
-      if (DoRemoval(outputs.Get(), silences, 0, 1,
-         *trackRange.begin(), *trackRange.rbegin(), totalCutLen)) {
+      if (DoRemoval(silences, trackRange, 0, 1, totalCutLen)) {
          mT1 -= totalCutLen;
          outputs.Commit();
          return true;
@@ -338,19 +326,15 @@ bool EffectTruncSilence::ProcessAll()
    return false;
 }
 
-bool EffectTruncSilence::FindSilences
-   (RegionList &silences, const TrackList *list,
-    const Track *firstTrack, const Track *lastTrack)
+bool EffectTruncSilence::FindSilences(RegionList &silences,
+   const TrackIterRange<const WaveTrack> &range)
 {
    // Start with the whole selection silent
    silences.push_back(Region(mT0, mT1));
 
    // Remove non-silent regions in each track
    int whichTrack = 0;
-   for (auto wt :
-           list->Selected< const WaveTrack >()
-               .StartingWith( firstTrack ).EndingAfter( lastTrack ) )
-   {
+   for (auto wt : range) {
       // Smallest silent region to detect in frames
       auto minSilenceFrames =
          sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
@@ -387,9 +371,9 @@ bool EffectTruncSilence::FindSilences
    return true;
 }
 
-bool EffectTruncSilence::DoRemoval(TrackList &outputs,
-   const RegionList &silences, unsigned iGroup, unsigned nGroups,
-   Track *firstTrack, Track *lastTrack,
+bool EffectTruncSilence::DoRemoval(const RegionList &silences,
+   const TrackIterRange<Track> &range,
+   unsigned iGroup, unsigned nGroups,
    double &totalCutLen)
 {
    //
@@ -444,8 +428,7 @@ bool EffectTruncSilence::DoRemoval(TrackList &outputs,
 
       double cutStart = (r->start + r->end - cutLen) / 2;
       double cutEnd = cutStart + cutLen;
-      (outputs.Any()
-         .StartingWith(firstTrack).EndingAfter(lastTrack)
+      (range
          + &SyncLock::IsSelectedOrSyncLockSelected
          - [&](const Track *pTrack) { return
            // Don't waste time past the end of a track
