@@ -286,8 +286,8 @@ bool EffectTruncSilence::ProcessIndependently()
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
          auto range = syncLock
-            ? SyncLock::Group(track)
-            : TrackList::Channels<Track>(track);
+            ? SyncLock::Group(track) + &Track::IsLeader
+            : TrackList::SingletonRange<Track>(track);
          double totalCutLen = 0.0;
          if (!DoRemoval(silences, range, iGroup, nGroups, totalCutLen))
             return false;
@@ -314,7 +314,7 @@ bool EffectTruncSilence::ProcessAll()
    RegionList silences;
 
    if (FindSilences(silences, inputTracks()->Selected<const WaveTrack>())) {
-      auto trackRange = outputs.Get().Any();
+      auto trackRange = outputs.Get().Leaders();
       double totalCutLen = 0.0;
       if (DoRemoval(silences, trackRange, 0, 1, totalCutLen)) {
          mT1 -= totalCutLen;
@@ -436,6 +436,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
          }
       ).Visit(
          [&](WaveTrack &wt) {
+            assert(wt.IsLeader());
             // In WaveTracks, clear with a cross-fade
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
@@ -443,8 +444,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             cutEnd = wt.LongSamplesToTime(wt.TimeToLongSamples(cutEnd));
 
             // Make sure the cross-fade does not affect non-silent frames
-            if (wt.LongSamplesToTime(blendFrames) > inLength)
-            {
+            if (wt.LongSamplesToTime(blendFrames) > inLength) {
                // Result is not more than blendFrames:
                blendFrames = wt.TimeToLongSamples(inLength).as_size_t();
             }
@@ -455,30 +455,32 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             auto t1 = wt.TimeToLongSamples(cutStart) - blendFrames / 2;
             auto t2 = wt.TimeToLongSamples(cutEnd) - blendFrames / 2;
 
-            wt.GetFloats(buf1.get(), t1, blendFrames);
-            wt.GetFloats(buf2.get(), t2, blendFrames);
+            for (const auto pChannel : TrackList::Channels(&wt)) {
+               pChannel->GetFloats(buf1.get(), t1, blendFrames);
+               pChannel->GetFloats(buf2.get(), t2, blendFrames);
 
-            for (decltype(blendFrames) i = 0; i < blendFrames; ++i)
-            {
-               buf1[i] = ((blendFrames-i) * buf1[i] + i * buf2[i]) /
-                         (double)blendFrames;
+               for (decltype(blendFrames) i = 0; i < blendFrames; ++i) {
+                  buf1[i] = ((blendFrames - i) * buf1[i] + i * buf2[i]) /
+                            (double)blendFrames;
+               }
+
+               // Perform the cut
+               pChannel->Clear(cutStart, cutEnd);
+
+               // Write cross-faded data
+               pChannel->Set((samplePtr)buf1.get(), floatSample, t1,
+                  blendFrames,
+                  // This effect mostly shifts samples to remove silences, and
+                  // does only a little bit of floating point calculations to
+                  // cross-fade the splices, over a 100 sample interval by default.
+                  // Don't dither.
+                  narrowestSampleFormat);
             }
-
-            // Perform the cut
-            wt.Clear(cutStart, cutEnd);
-
-            // Write cross-faded data
-            wt.Set((samplePtr)buf1.get(), floatSample, t1, blendFrames,
-               // This effect mostly shifts samples to remove silences, and
-               // does only a little bit of floating point calculations to
-               // cross-fade the splices, over a 100 sample interval by default.
-               // Don't dither.
-               narrowestSampleFormat);
          },
          [&](Track &t) {
+            assert(t.IsLeader());
             // Non-wave tracks: just do a sync-lock adjust
-            if (t.IsLeader())
-               t.SyncLockAdjust(cutEnd, cutStart);
+            t.SyncLockAdjust(cutEnd, cutStart);
          }
       );
       ++whichReg;
