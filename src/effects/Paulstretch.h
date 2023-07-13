@@ -54,13 +54,13 @@ private:
    void OnText(wxCommandEvent & evt);
    size_t GetBufferSize(double rate) const;
 
-   bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
+   std::shared_ptr<WaveTrack>
+   ProcessOne(const WaveTrack &track, double t0, double t1, int count);
 
    wxWeakRef<wxWindow> mUIParent;
 
    float mAmount;
    float mTime_resolution;  //seconds
-   double m_t1;
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
