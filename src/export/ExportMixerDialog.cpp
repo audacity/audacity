@@ -80,15 +80,18 @@ ExportMixerDialog::ExportMixerDialog(TrackIterRange<const WaveTrack> tracks, Mix
             label,
             false, wxALIGN_LEFT | wxALL );
 
-         S
-            .Id(ID_SLIDER_CHANNEL)
-            .Name(label)
-            .Size({300, -1})
-            .Style(wxSL_HORIZONTAL)
-            .Position(wxEXPAND | wxALL)
-            .AddSlider( {},
-               mMixerSpec->GetNumChannels(),
-               mMixerSpec->GetMaxNumChannels(), 1 );
+         if(mMixerSpec->GetMaxNumChannels() > 1)
+         {
+            S
+               .Id(ID_SLIDER_CHANNEL)
+               .Name(label)
+               .Size({300, -1})
+               .Style(wxSL_HORIZONTAL)
+               .Position(wxEXPAND | wxALL)
+               .AddSlider( {},
+                  mMixerSpec->GetNumChannels(),
+                  mMixerSpec->GetMaxNumChannels(), 1 );
+         }
       }
       S.EndHorizontalLay();
 
