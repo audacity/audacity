@@ -623,7 +623,7 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
 
    EffectOutputTracks outputs{ *mTracks };
 
-   auto track = *(outputs.Get().Selected<const WaveTrack>()).begin();
+   auto track = *(outputs.Get().SelectedLeaders<const WaveTrack>()).begin();
    if (!track)
       return false;
 

@@ -51,7 +51,7 @@ bool DoPasteText(AudacityProject &project)
    auto &window = ProjectWindow::Get( project );
 
    // Paste into the active label (if any)
-   for (auto pLabelTrack : tracks.Any<LabelTrack>()) {
+   for (auto pLabelTrack : tracks.Leaders<LabelTrack>()) {
       // Does this track have an active label?
       if (LabelTrackView::Get( *pLabelTrack ).GetTextEditIndex(project) != -1) {
 
@@ -154,7 +154,7 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
    
-   assert(!tracks.Selected());
+   assert(tracks.SelectedLeaders().empty());
 
    Track* pFirstNewTrack = NULL;
    for (auto pClip : src) {
@@ -229,9 +229,9 @@ void OnUndo(const CommandContext &context)
       [&]( const UndoStackElem &elem ){
          ProjectHistory::Get( project ).PopState( elem.state ); } );
 
-   auto t = *tracks.Selected().begin();
+   auto t = *tracks.SelectedLeaders().begin();
    if (!t)
-      t = *tracks.Any().begin();
+      t = *tracks.Leaders().begin();
    TrackFocus::Get(project).Set(t);
    if (t) {
       t->EnsureVisible();
@@ -259,9 +259,9 @@ void OnRedo(const CommandContext &context)
       [&]( const UndoStackElem &elem ){
          ProjectHistory::Get( project ).PopState( elem.state ); } );
 
-   auto t = *tracks.Selected().begin();
+   auto t = *tracks.SelectedLeaders().begin();
    if (!t)
-      t = *tracks.Any().begin();
+      t = *tracks.Leaders().begin();
    TrackFocus::Get(project).Set(t);
    if (t) {
       t->EnsureVisible();
@@ -281,7 +281,7 @@ void OnCut(const CommandContext &context)
    // cutting the _text_ inside of labels, i.e. if you're
    // in the middle of editing the label text and select "Cut".
 
-   for (auto lt : tracks.Selected< LabelTrack >()) {
+   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
       auto &view = LabelTrackView::Get( *lt );
       if (view.CutSelectedText( context.project )) {
          trackPanel.Refresh(false);
@@ -400,7 +400,7 @@ void OnCopy(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
-   for (auto lt : tracks.Selected< LabelTrack >()) {
+   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
       auto &view = LabelTrackView::Get( *lt );
       if (view.CopySelectedText( context.project )) {
          //trackPanel.Refresh(false);
@@ -584,7 +584,7 @@ void OnPaste(const CommandContext &context)
 
    auto &tracks = TrackList::Get(project);
    // If nothing's selected, we just insert new tracks.
-   if (!tracks.Selected()) {
+   if (!tracks.SelectedLeaders()) {
       DoPasteNothingSelected(
          project, *srcTracks, clipboard.T0(), clipboard.T1());
       return;
@@ -1068,7 +1068,7 @@ void OnPasteOver(const CommandContext &context)
 const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
    [](const AudacityProject &project){
-      auto range = TrackList::Get( project ).Any<const LabelTrack>()
+      auto range = TrackList::Get(project).Leaders<const LabelTrack>()
          + [&](const LabelTrack *pTrack){
             return LabelTrackView::Get( *pTrack ).IsTextSelected(
                // unhappy const_cast because track focus might be set

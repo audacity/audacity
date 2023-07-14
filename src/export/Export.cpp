@@ -229,7 +229,8 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
 {
    Mixer::Inputs inputs;
 
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    const auto range = tracks.Leaders<const WaveTrack>()
       + (selectionOnly ? &Track::IsSelected : &Track::Any)
@@ -509,7 +510,7 @@ bool Exporter::ExamineTracks()
    auto &tracks = TrackList::Get(*mProject);
 
    bool anySolo =
-      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
+      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    const auto range = tracks.Leaders<const WaveTrack>()
       + (mSelectedOnly ? &Track::IsSelected : &Track::Any)
@@ -1338,24 +1339,25 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    unsigned numTracks = 0;
 
-   bool anySolo = !(( tracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(tracks->Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    for (auto t :
-         tracks->Any< const WaveTrack >()
-            + ( selectedOnly ? &Track::IsSelected : &Track::Any  )
-            - ( anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute)
+      tracks->Leaders<const WaveTrack>()
+         + (selectedOnly ? &Track::IsSelected : &Track::Any)
+         - (anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute)
    ) {
-      numTracks++;
+      numTracks += t->NChannels();
       const wxString sTrackName = (t->GetName()).Left(20);
       if (IsMono(*t))
          // No matter whether it's panned hard left or right
          mTrackNames.push_back(sTrackName);
-      else if (PlaysLeft(*t))
-      /* i18n-hint: track name and L abbreviating Left channel */
-         mTrackNames.push_back( wxString::Format( _( "%s - L" ), sTrackName ) );
-      else if (PlaysRight(*t))
-      /* i18n-hint: track name and R abbreviating Right channel */
-         mTrackNames.push_back( wxString::Format( _( "%s - R" ), sTrackName ) );
+      else {
+         /* i18n-hint: track name and L abbreviating Left channel */
+         mTrackNames.push_back(XO("%s - L").Format(sTrackName).Translation());
+         /* i18n-hint: track name and R abbreviating Right channel */
+         mTrackNames.push_back(XO("%s - R").Format(sTrackName).Translation());
+      }
    }
 
    // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is

@@ -100,7 +100,7 @@ UIHandle::Result TrackSelectHandle::Click
    }
 
    SelectUtilities::DoListSelection(*pProject,
-      pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
+      *pTrack, event.ShiftDown(), event.ControlDown(), !unsafe);
 
    mClicked = true;
    return result;

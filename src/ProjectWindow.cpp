@@ -1698,9 +1698,9 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
 
    trackPanel.SetFocus();
    if (!pTrack)
-      pTrack = *tracks.Selected().begin();
+      pTrack = *tracks.SelectedLeaders().begin();
    if (!pTrack)
-      pTrack = *tracks.Any().begin();
+      pTrack = *tracks.Leaders().begin();
    if (pTrack) {
       TrackFocus::Get(project).Set(pTrack);
       pTrack->EnsureVisible();

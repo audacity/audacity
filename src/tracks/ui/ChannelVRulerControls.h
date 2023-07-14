@@ -47,6 +47,11 @@ public:
    // cached in the associated track
    virtual void UpdateRuler( const wxRect &rect ) = 0;
 
+   std::shared_ptr<const ChannelView> GetChannelView() const
+   {
+      return mwChannelView.lock();
+   }
+
 protected:
    std::shared_ptr<Track> DoFindTrack() override;
 

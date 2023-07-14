@@ -839,10 +839,10 @@ void TrackPanel::DrawTracks(wxDC * dc)
    brushFlag   = (ToolCodes::brushTool == settings.GetTool());
 #endif
 
-   const bool hasSolo = GetTracks()->Any< PlayableTrack >()
-      .any_of( []( const PlayableTrack *pt ) {
-         pt = static_cast< const PlayableTrack * >(
-            pt->SubstitutePendingChangedTrack().get() );
+   const bool hasSolo = GetTracks()->Leaders<PlayableTrack>()
+      .any_of( [](const PlayableTrack *pt) {
+         pt = static_cast<const PlayableTrack *>(
+            pt->SubstitutePendingChangedTrack().get());
          return (pt && pt->GetSolo());
       } );
 
@@ -1006,14 +1006,15 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
    bool modifyState = e.mExtra;
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();
+   // Promised by TrackListEvent for this event type:
+   assert(!t || t->IsLeader());
    int trackTop = 0;
    int trackHeight =0;
    for (auto it : GetTracks()->Leaders()) {
       trackTop += trackHeight;
       trackHeight = ChannelView::GetChannelGroupHeight(it);
 
-      // TODO wide wave tracks -- will need just one equality test
-      if (TrackList::Channels(it).contains(t)) {
+      if (it == t) {
          //We have found the track we want to ensure is visible.
 
          //Get the size of the trackpanel.
@@ -1036,8 +1037,8 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
    }
    Refresh(false);
 
-   if ( modifyState )
-      ProjectHistory::Get( *GetProject() ).ModifyState( false );
+   if (modifyState)
+      ProjectHistory::Get(*GetProject()).ModifyState(false);
 }
 
 // 0.0 scrolls to top
@@ -1603,7 +1604,7 @@ struct Subgroup final : TrackPanelGroup {
       Refinement refinement;
 
       auto &tracks = *mPanel.GetTracks();
-      if (tracks.Any())
+      if (!tracks.empty())
          refinement.emplace_back( yy, EmptyCell::Instance() ),
          yy += kTopMargin;
 
@@ -1695,15 +1696,15 @@ wxRect TrackPanel::FindFocusedTrackRect( const Track * target )
    return rect;
 }
 
-std::vector<wxRect> TrackPanel::FindRulerRects( const Track *target )
+std::vector<wxRect> TrackPanel::FindRulerRects(const Channel &target)
 {
    std::vector<wxRect> results;
-   if (target)
-      VisitCells( [&]( const wxRect &rect, TrackPanelCell &visited ) {
-         if (auto pRuler = dynamic_cast<const ChannelVRulerControls*>(&visited);
-             pRuler && pRuler->FindTrack().get() == target)
-            results.push_back(rect);
-      } );
+   VisitCells( [&](const wxRect &rect, TrackPanelCell &visited) {
+      if (auto pRuler = dynamic_cast<const ChannelVRulerControls*>(&visited))
+         if (auto pView = pRuler->GetChannelView())
+            if (pView->FindChannel().get() == &target)
+               results.push_back(rect);
+   } );
    return results;
 }
 

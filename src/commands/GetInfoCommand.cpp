@@ -709,24 +709,26 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
    wxRect panelRect{ {}, tp.GetSize() };
-   for ( auto t : TrackList::Get( *pProj ).Any() ) {
-      auto rulers = tp.FindRulerRects(t);
-      for (auto &R : rulers) {
-         if (!R.Intersects(panelRect))
-            continue;
-         R.SetPosition( R.GetPosition() + P );
-         context.StartStruct();
-         context.AddItem( depth, "depth" );
-         context.AddItem( "VRuler", "label" );
-         context.StartField("box");
-         context.StartArray();
-         context.AddItem( R.GetLeft() );
-         context.AddItem( R.GetTop() );
-         context.AddItem( R.GetRight() );
-         context.AddItem( R.GetBottom() );
-         context.EndArray();
-         context.EndField();
-         context.EndStruct();
+   for (auto leader : TrackList::Get(*pProj).Leaders()) {
+      for (auto t : leader->Channels()) {
+         auto rulers = tp.FindRulerRects(*t);
+         for (auto &R : rulers) {
+            if (!R.Intersects(panelRect))
+               continue;
+            R.SetPosition( R.GetPosition() + P );
+            context.StartStruct();
+            context.AddItem( depth, "depth" );
+            context.AddItem( "VRuler", "label" );
+            context.StartField("box");
+            context.StartArray();
+            context.AddItem( R.GetLeft() );
+            context.AddItem( R.GetTop() );
+            context.AddItem( R.GetRight() );
+            context.AddItem( R.GetBottom() );
+            context.EndArray();
+            context.EndField();
+            context.EndStruct();
+         }
       }
    }
 }

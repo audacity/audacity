@@ -2014,8 +2014,10 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 
 bool WaveTrack::CloseLock() noexcept
 {
-   for (const auto &clip : mClips)
-      clip->CloseLock();
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto &clip : pChannel->mClips)
+         clip->CloseLock();
 
    return true;
 }
@@ -2812,10 +2814,11 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 */
 void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
-   for (const auto &clip : mClips)
-      clip->Resample(rate, progress);
-
-   SetRate(rate);
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (const auto &clip : pChannel->mClips)
+         clip->Resample(rate, progress);
+      pChannel->SetRate(rate);
+   }
 }
 
 namespace {

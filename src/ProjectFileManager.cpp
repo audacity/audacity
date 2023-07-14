@@ -84,7 +84,7 @@ void ProjectFileManager::DiscardAutosave(const FilePath &filename)
    projectFileManager.ReadProjectFile(filename, true);
 
    if (projectFileManager.mLastSavedTracks) {
-      for (auto wt : projectFileManager.mLastSavedTracks->Any<WaveTrack>())
+      for (auto wt : projectFileManager.mLastSavedTracks->Leaders<WaveTrack>())
          wt->CloseLock();
       projectFileManager.mLastSavedTracks.reset();
    }
@@ -298,7 +298,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       }
 
       auto &tracks = TrackList::Get( proj );
-      if (!tracks.Any())
+      if (tracks.empty())
       {
          if (UndoManager::Get( proj ).UnsavedChanges() &&
                settings.EmptyCanBeDirty())
@@ -755,10 +755,8 @@ void ProjectFileManager::CompactProjectOnClose()
    // sample block objects in memory.
    if (mLastSavedTracks)
    {
-      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
-      {
+      for (auto wt : mLastSavedTracks->Leaders<WaveTrack>())
          wt->CloseLock();
-      }
 
       // Attempt to compact the project
       projectFileIO.Compact( { mLastSavedTracks.get() } );
@@ -1032,7 +1030,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
          formats.GetBandwidthSelectionFormatName());
       
       ProjectHistory::Get( project ).InitialState();
-      TrackFocus::Get( project ).Set( *tracks.Any().begin() );
+      TrackFocus::Get(project).Set(*tracks.Leaders().begin());
       window.HandleResize();
       trackPanel.Refresh(false);
 
@@ -1065,7 +1063,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
       // may have spared the files at the expense of leaked memory).  But
       // here is a better way to accomplish the intent, doing like what happens
       // when the project closes:
-      for ( auto pTrack : tracks.Any< WaveTrack >() )
+      for (auto pTrack : tracks.Leaders<WaveTrack>())
          pTrack->CloseLock();
 
       tracks.Clear(); //tracks.Clear(true);
@@ -1105,7 +1103,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // In case the project had soloed tracks before importing,
    // all newly imported tracks are muted.
    const bool projectHasSolo =
-      !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+      !(tracks.Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo)
    {
       // Iterate vector of vectors of pointers to tracks that are not yet

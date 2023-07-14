@@ -22,7 +22,6 @@
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../TrackPanelResizeHandle.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
@@ -173,24 +172,6 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 
         if (handle)
             results.push_back(handle);
-    }
-
-    auto trackList = track->GetOwner();
-    if ((std::abs(rect.GetTop() - py) <=
-          WaveChannelView::kChannelSeparatorThickness / 2) 
-        && trackList
-        && !track->IsLeader())
-    {
-        //given that track is not a leader there always should be
-        //another track before this one
-        auto prev = std::prev(trackList->Find(track.get()));
-        results.push_back(
-            AssignUIHandlePtr(
-                mResizeHandle, 
-                std::make_shared<TrackPanelResizeHandle>(
-                  (*prev)->GetChannel(0), py)
-            )
-        );
     }
 
     if (mTextEditHelper && mTextEditHelper->GetBBox().Contains(px, py))

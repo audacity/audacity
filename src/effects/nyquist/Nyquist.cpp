@@ -733,7 +733,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    mNumSelectedChannels = bOnePassTool
       ? 0
-      : oOutputs->Get().Selected<const WaveTrack>().size();
+      : oOutputs->Get().SelectedLeaders<const WaveTrack>()
+         .sum(&WaveTrack::NChannels);
 
    mDebugOutput = {};
    if (!mHelpFile.empty() && !mHelpFileExists) {
@@ -1593,7 +1594,7 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
-      auto ltrack = *pOutputs->Get().Any<LabelTrack>().begin();
+      auto ltrack = *pOutputs->Get().Leaders<LabelTrack>().begin();
       if (!ltrack) {
          auto newTrack = std::make_shared<LabelTrack>();
          //new track name should be unique among the names in the list of input tracks, not output

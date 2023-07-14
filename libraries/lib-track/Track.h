@@ -527,9 +527,13 @@ private:
    bool GetSelected() const;
    virtual void SetSelected(bool s);
 
-   // The argument tells whether the last undo history state should be
-   // updated for the appearance change
-   void EnsureVisible( bool modifyState = false );
+   /*!
+    The owning TrackList emits a TRACK_REQUEST_VISIBLE event with the leader of
+    this track
+    The argument tells whether the last undo history state should be
+    updated for the appearance change
+    */
+   void EnsureVisible(bool modifyState = false);
 
 public:
 
@@ -1117,7 +1121,7 @@ struct TrackListEvent
       //! Posted when certain fields of a track change.
       TRACK_DATA_CHANGE,
 
-      //! Posted when a track needs to be scrolled into view.
+      //! Posted when a track needs to be scrolled into view; leader track only
       TRACK_REQUEST_VISIBLE,
 
       //! Posted when tracks are reordered but otherwise unchanged.

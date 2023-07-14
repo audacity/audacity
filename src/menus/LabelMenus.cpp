@@ -42,7 +42,7 @@ const ReservedCommandFlag
             }
          );
       };
-      auto range = TrackList::Get( project ).Selected<const LabelTrack>()
+      auto range = TrackList::Get(project).SelectedLeaders<const LabelTrack>()
          + test;
       return !range.empty();
    }
@@ -124,7 +124,7 @@ void GetRegionsByLabel(
    Regions &regions )
 {
    //determine labeled regions
-   for (auto lt : tracks.Selected< const LabelTrack >()) {
+   for (auto lt : tracks.SelectedLeaders< const LabelTrack >()) {
       for (int i = 0; i < lt->GetNumLabels(); i++)
       {
          const LabelStruct *ls = lt->GetLabel(i);
@@ -175,7 +175,7 @@ void EditByLabel(AudacityProject &project,
       return;
 
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
-                           (tracks.Selected<PlayableTrack>()).empty());
+                           (tracks.SelectedLeaders<PlayableTrack>()).empty());
 
    //Apply action on tracks starting from
    //labeled regions in the end. This is to correctly perform
@@ -184,7 +184,7 @@ void EditByLabel(AudacityProject &project,
    {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
 
-      if (SyncLock::IsSyncLockSelected(t) || notLocked && playable)
+      if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable))
       {
          for (int i = (int)regions.size() - 1; i >= 0; i--)
          {
@@ -214,7 +214,7 @@ void EditClipboardByLabel( AudacityProject &project,
       return;
 
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
-                           (tracks.Selected<PlayableTrack>()).empty());
+                           (tracks.SelectedLeaders<PlayableTrack>()).empty());
 
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
@@ -230,7 +230,7 @@ void EditClipboardByLabel( AudacityProject &project,
    {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
 
-      if (SyncLock::IsSyncLockSelected(t) || notLocked && playable)
+      if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable))
       {
          // This track accumulates the needed clips, right to left:
          Track::Holder merged;
@@ -323,13 +323,13 @@ void OnPasteNewLabel(const CommandContext &context)
    bool bPastedSomething = false;
 
    {
-      auto trackRange = tracks.Selected< const LabelTrack >();
+      auto trackRange = tracks.SelectedLeaders<const LabelTrack>();
       if (trackRange.empty())
       {
          // If there are no selected label tracks, try to choose the first label
          // track after some other selected track
-         Track *t = *tracks.Selected().begin()
-            .Filter( &Track::Any )
+         Track *t = *tracks.SelectedLeaders().begin()
+            .Filter(&Track::Any)
             .Filter<LabelTrack>();
 
          // If no match found, add one
@@ -342,7 +342,7 @@ void OnPasteNewLabel(const CommandContext &context)
    }
 
    LabelTrack *plt = NULL; // the previous track
-   for ( auto lt : tracks.Selected< LabelTrack >() )
+   for ( auto lt : tracks.SelectedLeaders<LabelTrack>() )
    {
       // Unselect the last label, so we'll have just one active label when
       // we're done

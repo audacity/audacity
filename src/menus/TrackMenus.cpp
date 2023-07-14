@@ -604,14 +604,13 @@ void OnResample(const CommandContext &context)
 {
    auto &project = context.project;
    auto projectRate = ProjectRate::Get(project).GetRate();
-   auto &tracks = TrackList::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &undoManager = UndoManager::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
    int newRate;
 
-   while (true)
-   {
+   while (true) {
       wxDialogWrapper dlg(&window, wxID_ANY, XO("Resample"));
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
@@ -658,13 +657,10 @@ void OnResample(const CommandContext &context)
       dlg.Center();
 
       if (dlg.ShowModal() != wxID_OK)
-      {
          return;  // user cancelled dialog
-      }
 
       long lrate;
-      if (cb->GetValue().ToLong(&lrate) && lrate >= 1 && lrate <= 1000000)
-      {
+      if (cb->GetValue().ToLong(&lrate) && lrate >= 1 && lrate <= 1000000) {
          newRate = (int)lrate;
          break;
       }
@@ -678,9 +674,8 @@ void OnResample(const CommandContext &context)
 
    int ndx = 0;
    auto flags = UndoPush::NONE;
-   for (auto wt : tracks.Selected< WaveTrack >())
-   {
-      auto msg = XO("Resampling track %d").Format( ++ndx );
+   for (auto wt : tracks.SelectedLeaders<WaveTrack>()) {
+      auto msg = XO("Resampling track %d").Format(++ndx);
 
       using namespace BasicUI;
       auto progress = MakeProgress(XO("Resample"), msg);
@@ -696,7 +691,7 @@ void OnResample(const CommandContext &context)
       // commit that to the undo stack.  The second and later times,
       // consolidate.
 
-      ProjectHistory::Get( project ).PushState(
+      ProjectHistory::Get(project).PushState(
          XO("Resampled audio track(s)"), XO("Resample Track"), flags);
       flags = flags | UndoPush::CONSOLIDATE;
    }

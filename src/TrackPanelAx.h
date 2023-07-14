@@ -165,10 +165,13 @@ public:
    TrackFocus( const TrackFocus & ) PROHIBITED;
    TrackFocus& operator=( const TrackFocus & ) PROHIBITED;
 
-   // Report the currently focused track, which may be null, otherwise is
-   // a leader track
-   // This function is not const, because it may have a side effect of setting
-   // a focus if none was already set
+   /*!
+    @return the currently focused track, which may be null, otherwise is
+    a leader track
+   
+    This function is not const, because it may have a side effect of setting
+    a focus if none was already set
+    */
    Track *Get();
 
    // Set the track focus to a given track or to null

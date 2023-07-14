@@ -73,107 +73,93 @@ void NextOrPrevFrame(AudacityProject &project, bool forward)
 
 /// \todo Merge related methods, OnPrevTrack and OnNextTrack.
 void DoPrevTrack(
-   AudacityProject &project, bool shift, bool circularTrackNavigation )
+   AudacityProject &project, bool shift, bool circularTrackNavigation)
 {
-   auto &projectHistory = ProjectHistory::Get( project );
-   auto &trackFocus = TrackFocus::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &selectionState = SelectionState::Get( project );
+   auto &projectHistory = ProjectHistory::Get(project);
+   auto &trackFocus = TrackFocus::Get(project);
+   auto &tracks = TrackList::Get(project);
+   auto &selectionState = SelectionState::Get(project);
 
-   auto t = trackFocus.Get();
-   if( t == NULL )   // if there isn't one, focus on last
-   {
-      t = *tracks.Any().rbegin();
-      trackFocus.Set( t );
-      if (t)
-         t->EnsureVisible( true );
+   const auto t = trackFocus.Get();
+   if (!t) {
+      // if there isn't one, focus on last
+      const auto last = *tracks.Leaders().rbegin();
+      trackFocus.Set(last);
+      if (last)
+         last->EnsureVisible(true);
       return;
    }
+   assert(t->IsLeader());
 
-   Track* p = NULL;
-   bool tSelected = false;
-   bool pSelected = false;
-   if( shift )
-   {
-      p = * -- tracks.FindLeader( t ); // Get previous track
-      if( p == NULL )   // On first track
-      {
+   if (shift) {
+      auto p = * -- tracks.FindLeader(t); // Get previous track
+      if (!p) {
+         // On first track
          // JKC: wxBell() is probably for accessibility, so a blind
          // user knows they were at the top track.
          wxBell();
-         if( circularTrackNavigation )
-            p = *tracks.Any().rbegin();
-         else
-         {
+         if (circularTrackNavigation)
+            p = *tracks.Leaders().rbegin();
+         else {
             t->EnsureVisible();
             return;
          }
       }
-      tSelected = t->GetSelected();
-      if (p)
-         pSelected = p->GetSelected();
-      if( tSelected && pSelected )
-      {
-         selectionState.SelectTrack
-            ( *t, false, false );
-         trackFocus.Set( p );   // move focus to next track up
+      // If here, then there is a nonempty list and a previous track
+      // (maybe circularly)
+      assert(p && p->IsLeader());
+      auto tSelected = t->GetSelected();
+      auto pSelected = p->GetSelected();
+      if (tSelected && pSelected) {
+         selectionState.SelectTrack(*t, false, false);
+         trackFocus.Set(p);   // move focus to next track up
          if (p)
-            p->EnsureVisible( true );
+            p->EnsureVisible(true);
          return;
       }
-      if( tSelected && !pSelected )
-      {
-         selectionState.SelectTrack
-            ( *p, true, false );
-         trackFocus.Set( p );   // move focus to next track up
+      if (tSelected && !pSelected) {
+         selectionState.SelectTrack(*p, true, false);
+         trackFocus.Set(p);   // move focus to next track up
          if (p)
-            p->EnsureVisible( true );
+            p->EnsureVisible(true);
          return;
       }
-      if( !tSelected && pSelected )
-      {
-         selectionState.SelectTrack
-            ( *p, false, false );
-         trackFocus.Set( p );   // move focus to next track up
+      if (!tSelected && pSelected) {
+         selectionState.SelectTrack(*p, false, false);
+         trackFocus.Set(p);   // move focus to next track up
          if (p)
-            p->EnsureVisible( true );
+            p->EnsureVisible(true);
          return;
       }
-      if( !tSelected && !pSelected )
-      {
-         selectionState.SelectTrack
-            ( *t, true, false );
-         trackFocus.Set( p );   // move focus to next track up
+      if (!tSelected && !pSelected) {
+         selectionState.SelectTrack(*t, true, false);
+         trackFocus.Set(p);   // move focus to next track up
          if (p)
-            p->EnsureVisible( true );
+            p->EnsureVisible(true);
          return;
       }
    }
-   else
-   {
-      p = * -- tracks.FindLeader( t ); // Get previous track
-      if( p == NULL )   // On first track so stay there?
-      {
+   else {
+      auto p = * -- tracks.FindLeader(t); // Get previous track
+      if (!p) {
+         // On first track so stay there?
          wxBell();
-         if( circularTrackNavigation )
-         {
+         if (circularTrackNavigation) {
             auto range = tracks.Leaders();
             p = * range.rbegin(); // null if range is empty
-            trackFocus.Set( p );   // Wrap to the last track
+            trackFocus.Set(p);   // Wrap to the last track
             if (p)
-               p->EnsureVisible( true );
+               p->EnsureVisible(true);
             return;
          }
-         else
-         {
+         else {
             t->EnsureVisible();
             return;
          }
       }
-      else
-      {
-         trackFocus.Set( p );   // move focus to next track up
-         p->EnsureVisible( true );
+      else {
+         trackFocus.Set(p);   // move focus to next track up
+         p->EnsureVisible(true);
          return;
       }
    }
@@ -185,98 +171,88 @@ void DoPrevTrack(
 void DoNextTrack(
    AudacityProject &project, bool shift, bool circularTrackNavigation )
 {
-   auto &projectHistory = ProjectHistory::Get( project );
-   auto &trackFocus = TrackFocus::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &selectionState = SelectionState::Get( project );
+   auto &projectHistory = ProjectHistory::Get(project);
+   auto &trackFocus = TrackFocus::Get(project);
+   auto &tracks = TrackList::Get(project);
+   auto &selectionState = SelectionState::Get(project);
 
-   auto t = trackFocus.Get();   // Get currently focused track
-   if( t == NULL )   // if there isn't one, focus on first
-   {
-      t = *tracks.Any().begin();
-      trackFocus.Set( t );
-      if (t)
-         t->EnsureVisible( true );
+   const auto t = trackFocus.Get();
+   if  (!t) {
+      // if there isn't one, focus on first
+      const auto first = *tracks.Leaders().begin();
+      trackFocus.Set(first);
+      if (first)
+         first->EnsureVisible(true);
       return;
    }
+   assert(t->IsLeader());
 
-   if( shift )
-   {
-      auto n = * ++ tracks.FindLeader( t ); // Get next track
-      if( n == NULL )   // On last track so stay there
-      {
+   if (shift) {
+      auto n = * ++ tracks.FindLeader(t); // Get next track
+      if (!n) {
+         // On last track so stay there
          wxBell();
-         if( circularTrackNavigation )
-            n = *tracks.Any().begin();
-         else
-         {
+         if (circularTrackNavigation)
+            n = *tracks.Leaders().begin();
+         else {
             t->EnsureVisible();
             return;
          }
       }
+      // If here, then there is a nonempty list and a next track
+      // (maybe circularly)
+      assert(n && n->IsLeader());
       auto tSelected = t->GetSelected();
       auto nSelected = n->GetSelected();
-      if( tSelected && nSelected )
-      {
-         selectionState.SelectTrack
-            ( *t, false, false );
-         trackFocus.Set( n );   // move focus to next track down
+      if (tSelected && nSelected) {
+         selectionState.SelectTrack(*t, false, false);
+         trackFocus.Set(n);   // move focus to next track down
          if (n)
-            n->EnsureVisible( true );
+            n->EnsureVisible(true);
          return;
       }
-      if( tSelected && !nSelected )
-      {
-         selectionState.SelectTrack
-            ( *n, true, false );
-         trackFocus.Set( n );   // move focus to next track down
+      if (tSelected && !nSelected) {
+         selectionState.SelectTrack(*n, true, false);
+         trackFocus.Set(n);   // move focus to next track down
          if (n)
-            n->EnsureVisible( true );
+            n->EnsureVisible(true);
          return;
       }
-      if( !tSelected && nSelected )
-      {
-         selectionState.SelectTrack
-            ( *n, false, false );
-         trackFocus.Set( n );   // move focus to next track down
+      if (!tSelected && nSelected) {
+         selectionState.SelectTrack(*n, false, false);
+         trackFocus.Set(n);   // move focus to next track down
          if (n)
-            n->EnsureVisible( true );
+            n->EnsureVisible(true);
          return;
       }
-      if( !tSelected && !nSelected )
-      {
-         selectionState.SelectTrack
-            ( *t, true, false );
-         trackFocus.Set( n );   // move focus to next track down
+      if (!tSelected && !nSelected) {
+         selectionState.SelectTrack(*t, true, false);
+         trackFocus.Set(n);   // move focus to next track down
          if (n)
-            n->EnsureVisible( true );
+            n->EnsureVisible(true);
          return;
       }
    }
-   else
-   {
-      auto n = * ++ tracks.FindLeader( t ); // Get next track
-      if( n == NULL )   // On last track so stay there
-      {
+   else {
+      auto n = * ++ tracks.FindLeader(t); // Get next track
+      if (!n) {
+         // On last track so stay there
          wxBell();
-         if( circularTrackNavigation )
-         {
-            n = *tracks.Any().begin();
-            trackFocus.Set( n );   // Wrap to the first track
+         if (circularTrackNavigation) {
+            n = *tracks.Leaders().begin();
+            trackFocus.Set(n);   // Wrap to the first track
             if (n)
                n->EnsureVisible( true );
             return;
          }
-         else
-         {
+         else {
             t->EnsureVisible();
             return;
          }
       }
-      else
-      {
-         trackFocus.Set( n );   // move focus to next track down
-         n->EnsureVisible( true );
+      else {
+         trackFocus.Set(n);   // move focus to next track down
+         n->EnsureVisible(true);
          return;
       }
    }
@@ -457,7 +433,7 @@ void OnFirstTrack(const CommandContext &context)
    if (!t)
       return;
 
-   auto f = *tracks.Any().begin();
+   auto f = *tracks.Leaders().begin();
    if (t != f)
       trackFocus.Set(f);
    if (f)
@@ -471,14 +447,15 @@ void OnLastTrack(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    Track *t = trackFocus.Get();
+   assert(t->IsLeader());
    if (!t)
       return;
 
-   auto l = *tracks.Any().rbegin();
+   auto l = *tracks.Leaders().rbegin();
    if (t != l)
       trackFocus.Set(l);
    if (l)
-      l->EnsureVisible( t != l );
+      l->EnsureVisible(t != l);
 }
 
 void OnShiftUp(const CommandContext &context)
@@ -496,17 +473,16 @@ void OnShiftDown(const CommandContext &context)
 void OnToggle(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackFocus = TrackFocus::Get( project );
-   auto &selectionState = SelectionState::Get( project );
+   auto &trackFocus = TrackFocus::Get(project);
+   auto &selectionState = SelectionState::Get(project);
 
    Track *t;
 
    t = trackFocus.Get();   // Get currently focused track
    if (!t)
       return;
-
-   selectionState.SelectTrack
-      ( *t, !t->GetSelected(), true );
+   assert(t->IsLeader()); // TrackFocus promises this
+   selectionState.SelectTrack(*t, !t->GetSelected(), true);
    t->EnsureVisible( true );
 
    trackFocus.UpdateAccessibility();

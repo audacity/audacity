@@ -323,7 +323,8 @@ bool EffectEqualization::Init()
    double rate = 0.0;
 
    if (const auto project = FindProject()) {
-      auto trackRange = TrackList::Get(*project).Selected<const WaveTrack>();
+      auto trackRange =
+         TrackList::Get(*project).SelectedLeaders<const WaveTrack>();
       if (trackRange) {
          rate = (*(trackRange.first++)) -> GetRate();
          ++selcount;
