@@ -450,31 +450,46 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             }
 
             // Perform cross-fade in memory
-            Floats buf1{ blendFrames };
-            Floats buf2{ blendFrames };
+            struct Buffers {
+               Buffers(size_t size)
+                  : buf1{ size }, buf2 { size }
+               {}
+               Floats buf1, buf2;
+            };
+            Buffers buffers[2]{ blendFrames, blendFrames };
             auto t1 = wt.TimeToLongSamples(cutStart) - blendFrames / 2;
             auto t2 = wt.TimeToLongSamples(cutEnd) - blendFrames / 2;
 
+            size_t iChannel = 0;
             for (const auto pChannel : TrackList::Channels(&wt)) {
-               pChannel->GetFloats(buf1.get(), t1, blendFrames);
-               pChannel->GetFloats(buf2.get(), t2, blendFrames);
+               auto &buffer = buffers[iChannel];
+               pChannel->GetFloats(buffer.buf1.get(), t1, blendFrames);
+               pChannel->GetFloats(buffer.buf2.get(), t2, blendFrames);
 
                for (decltype(blendFrames) i = 0; i < blendFrames; ++i) {
-                  buf1[i] = ((blendFrames - i) * buf1[i] + i * buf2[i]) /
-                            (double)blendFrames;
+                  buffer.buf1[i] =
+                     ((blendFrames - i) * buffer.buf1[i] + i * buffer.buf2[i]) /
+                        (double)blendFrames;
                }
+               ++iChannel;
+            }
 
+            for (const auto pChannel : TrackList::Channels(&wt))
                // Perform the cut
                pChannel->Clear(cutStart, cutEnd);
 
+            iChannel = 0;
+            for (const auto pChannel : TrackList::Channels(&wt)) {
                // Write cross-faded data
-               pChannel->Set((samplePtr)buf1.get(), floatSample, t1,
+               auto &buffer = buffers[iChannel];
+               pChannel->Set((samplePtr)buffer.buf1.get(), floatSample, t1,
                   blendFrames,
                   // This effect mostly shifts samples to remove silences, and
                   // does only a little bit of floating point calculations to
                   // cross-fade the splices, over a 100 sample interval by default.
                   // Don't dither.
                   narrowestSampleFormat);
+               ++iChannel;
             }
          },
          [&](Track &t) {
