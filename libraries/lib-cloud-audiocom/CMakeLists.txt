@@ -26,7 +26,7 @@ set ( LIBRARIES
    lib-strings-interface # Languages
 
    PRIVATE
-      rapidjson::rapidjson # Protocol is JSON based
+      #rapidjson::rapidjson # Protocol is JSON based
       wxwidgets::base # Required to retrieve the OS information
 )
 
