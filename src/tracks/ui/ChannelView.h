@@ -16,7 +16,7 @@ Paul Licameli split from class Track
 #include "XMLAttributeValueView.h"
 
 class Channel;
-class Track;
+class ChannelGroup;
 class TrackList;
 class ChannelVRulerControls;
 class TrackPanelResizerCell;
@@ -30,11 +30,18 @@ class AUDACITY_DLL_API ChannelView /* not final */ : public CommonTrackCell
 public:
    enum : unsigned { DefaultHeight = 150 };
 
+   /*!
+    @pre `dynamic_cast<Track*>(&channel.GetChannelGroup()) != nullptr`
+    */
    static ChannelView &Get(Channel &channel);
    /*!
     @copydoc Get(Channel &)
     */
    static const ChannelView &Get(const Channel &channel);
+   /*!
+    @pre `!pChannel ||
+       dynamic_cast<Track*>(&pChannel->GetChannelGroup()) != nullptr`
+    */
    static ChannelView *Find(Channel *pChannel);
    /*!
     @copydoc Find(Track *)
@@ -137,17 +144,20 @@ protected:
 
 private:
    /*!
-    @pre `iChannel < track.NChannels()`
+    @pre `iChannel < group.NChannels()`
     */
-   static ChannelView &GetFromTrack(Track &track, size_t iChannel = 0);
+   static ChannelView &GetFromChannelGroup(
+      ChannelGroup &group, size_t iChannel = 0);
    /*!
-    @copydoc Get(Track&, size_t)
+    @copydoc Get(ChannelGroup&, size_t)
     */
-   static const ChannelView &GetFromTrack(const Track &track, size_t iChannel = 0);
+   static const ChannelView &GetFromChannelGroup(
+      const ChannelGroup &group, size_t iChannel = 0);
    /*!
-    @pre `!pTrack || iChannel < pTrack->NChannels()`
+    @pre `!pGroup || iChannel < pGroup->NChannels()`
     */
-   static ChannelView *FindFromTrack(Track *pTrack, size_t iChannel = 0);
+   static ChannelView *FindFromChannelGroup(
+      ChannelGroup *pGroup, size_t iChannel = 0);
 
    bool           mMinimized{ false };
    int            mY{ 0 };

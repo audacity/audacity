@@ -1084,12 +1084,26 @@ namespace {
       MarginsX = 2 * MarginX, MarginsY = 2 * MarginY,
    };
 
+Track &GetTrack(Channel &channel)
+{
+   // It is assumed that all channels we ever see are in groups that are
+   // also Tracks
+   return static_cast<Track &>(channel.GetChannelGroup());
+}
+
+const Track &GetTrack(const Channel &channel)
+{
+   // It is assumed that all channels we ever see are in groups that are
+   // also Tracks
+   return static_cast<const Track &>(channel.GetChannelGroup());
+}
+
 void GetTrackNameExtent(
    wxDC &dc, const Channel &channel, wxCoord *pW, wxCoord *pH)
 {
    wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    dc.SetFont(labelFont);
-   dc.GetTextExtent(channel.GetTrack().GetName(), pW, pH);
+   dc.GetTextExtent(GetTrack(channel).GetName(), pW, pH);
 }
 
 wxRect GetTrackNameRect(
@@ -1108,9 +1122,9 @@ wxRect GetTrackNameRect(
 void DrawTrackName(int leftOffset, TrackPanelDrawingContext &context,
    const Channel &channel, const wxRect & rect)
 {
-   if (!TrackArtist::Get( context )->mbShowTrackNameInTrack)
+   if (!TrackArtist::Get(context)->mbShowTrackNameInTrack)
       return;
-   auto &track = *channel.GetTrack().SubstitutePendingChangedTrack();
+   auto &track = *GetTrack(channel).SubstitutePendingChangedTrack();
    auto name = track.GetName();
    if (name.IsEmpty())
       return;
@@ -1336,6 +1350,9 @@ class EmptyPanelRect final : public CommonTrackPanelCell
    std::shared_ptr<Channel> mpChannel;
    int mFillBrushName;
 public:
+   /*!
+    @pre `pChannel != nullptr`
+    */
    explicit EmptyPanelRect(
       const std::shared_ptr<Channel>& pChannel, int fillBrushName
    )  : mpChannel{ pChannel }, mFillBrushName{ fillBrushName }
@@ -1359,7 +1376,7 @@ public:
 
    std::shared_ptr<Track> DoFindTrack() override
    {
-       return mpChannel->GetTrack().shared_from_this();
+      return GetTrack(*mpChannel).shared_from_this();
    }
 
    std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state,
@@ -1390,11 +1407,11 @@ struct HorizontalGroup final : TrackPanelGroup {
 // optional affordance areas, and n channels with vertical rulers,
 // alternating with n - 1 resizers;
 // each channel-ruler pair might be divided into multiple views
-struct ChannelGroup final : TrackPanelGroup {
+struct ChannelStack final : TrackPanelGroup {
    /*!
     @pre `pTrack->IsLeader()`
     */
-   ChannelGroup(const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
+   ChannelStack(const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
       : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
    Subdivision Children(const wxRect &rect_) override
    {
@@ -1410,7 +1427,7 @@ struct ChannelGroup final : TrackPanelGroup {
          auto &view = ChannelView::Get(*pChannel);
          if (auto affordance = view.GetAffordanceControls()) {
             auto panelRect = std::make_shared<EmptyPanelRect>(pChannel,
-               pChannel->GetTrack().GetSelected()
+               mpTrack->GetSelected()
                   ? clrTrackInfoSelected : clrTrackInfo);
             Refinement hgroup {
                std::make_pair(rect.GetLeft() + 1, panelRect),
@@ -1485,7 +1502,7 @@ struct LabeledChannelGroup final : TrackPanelGroup {
       { rect.GetLeft(),
          TrackControls::Get(*mpTrack).shared_from_this() },
       { rect.GetLeft() + kTrackInfoWidth,
-        std::make_shared<ChannelGroup>(mpTrack, mLeftOffset) }
+        std::make_shared<ChannelStack>(mpTrack, mLeftOffset) }
    } }; }
 
    // TrackPanelDrawable implementation

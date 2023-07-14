@@ -73,7 +73,7 @@ class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTr
    }
 
    //Search for a good snap points among all tracks, including
-   //the one to which adjusted clip belongs to, but not counting
+   //the one to which the adjusted clip belongs, but not counting
    //the borders of adjusted clip
    static SnapPointArray FindSnapPoints(
       const WaveTrack* currentTrack, 
@@ -95,23 +95,25 @@ class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTr
 
       if(const auto trackList = currentTrack->GetOwner())
       {
-         for(const auto track : trackList->Any())
+         for(const auto track : as_const(*trackList).Leaders())
          {
             const auto isSameTrack = (track == currentTrack) ||
                (track->GetLinkType() == Track::LinkType::Aligned && *trackList->FindLeader(currentTrack) == track) ||
                (currentTrack->GetLinkType() == Track::LinkType::Aligned && *trackList->FindLeader(track) == currentTrack);
-            for(const auto& interval : track->GetIntervals())
+            for(const auto& interval : track->Intervals())
             {
                if(isSameTrack)
                {
-                  auto waveTrackIntervalData = dynamic_cast<WaveTrack::IntervalData*>(interval.Extra());
-                  if(waveTrackIntervalData->GetClip().get() == adjustedClip)
+                  auto waveTrackIntervalData =
+                     std::dynamic_pointer_cast<const WaveTrack::Interval>(
+                        interval);
+                  if(waveTrackIntervalData->GetClip(0).get() == adjustedClip)
                   //exclude boundaries of the adjusted clip
                      continue;
                }
-               addSnapPoint(interval.Start(), track);
-               if(interval.Start() != interval.End())
-                  addSnapPoint(interval.End(), track);
+               addSnapPoint(interval->Start(), track);
+               if(interval->Start() != interval->End())
+                  addSnapPoint(interval->End(), track);
             }
          }
       }

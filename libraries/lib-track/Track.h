@@ -12,15 +12,13 @@
 #define __AUDACITY_TRACK__
 
 #include <atomic>
-#include <cassert>
 #include <utility>
-#include <vector>
 #include <list>
 #include <optional>
 #include <functional>
 #include <wx/longlong.h>
 
-#include "ClientData.h"
+#include "Channel.h"
 #include "Observer.h"
 // TrackAttachment needs to be a complete type for the Windows build, though
 // not the others, so there is a nested include here:
@@ -107,89 +105,17 @@ private:
    long mValue;
 };
 
-//! Optional extra information about an interval, appropriate to a subtype of Track
-struct TRACK_API TrackIntervalData {
-   virtual ~TrackIntervalData();
-};
-
-//! A start and an end time, and non-mutative access to optional extra information
-/*! @invariant `Start() <= End()` */
-class ConstTrackInterval {
-public:
-
-   /*! @pre `start <= end` */
-   ConstTrackInterval( double start, double end,
-      std::unique_ptr<TrackIntervalData> pExtra = {} )
-   : start{ start }, end{ end }, pExtra{ std::move( pExtra ) }
-   {
-      wxASSERT( start <= end );
-   }
-
-   ConstTrackInterval( ConstTrackInterval&& ) = default;
-   ConstTrackInterval &operator=( ConstTrackInterval&& ) = default;
-
-   double Start() const { return start; }
-   double End() const { return end; }
-   const TrackIntervalData *Extra() const { return pExtra.get(); }
-
-private:
-   double start, end;
-protected:
-   // TODO C++17: use std::any instead
-   std::unique_ptr< TrackIntervalData > pExtra;
-};
-
-//! A start and an end time, and mutative access to optional extra information
-/*! @invariant `Start() <= End()` */
-class TrackInterval : public ConstTrackInterval {
-public:
-   using ConstTrackInterval::ConstTrackInterval;
-
-   TrackInterval(TrackInterval&&) = default;
-   TrackInterval &operator= (TrackInterval&&) = default;
-
-   TrackIntervalData *Extra() const { return pExtra.get(); }
-};
-
 //! Template generated base class for Track lets it host opaque UI related objects
 using AttachedTrackObjects = ClientData::Site<
    Track, TrackAttachment, ClientData::ShallowCopying, std::shared_ptr
 >;
-
-class TRACK_API Channel
-{
-public:
-   virtual ~Channel();
-
-   //! Channel object's lifetime is assumed to be nested in its Track's
-   Track &GetTrack();
-   /*!
-    @copydoc GetTrack()
-    */
-   const Track &GetTrack() const;
-
-   /*!
-    @return `ii` such that `this == GetTrack().GetChannel(ii).get()`
-    */
-   size_t GetChannelIndex() const;
-
-protected:
-   //! Subclass must override
-   /*!
-    @post result: for some `ii` less than `result.NChannels()`,
-       `this == result.GetChannel(ii).get()`
-    */
-   virtual Track &DoGetTrack() const = 0;
-
-private:
-   int FindChannelIndex() const;
-};
 
 //! Abstract base class for an object holding data associated with points on a time axis
 class TRACK_API Track /* not final */
    : public XMLTagHandler
    , public AttachedTrackObjects
    , public std::enable_shared_from_this<Track> // see SharedPointer()
+   , public ChannelGroup
 {
 protected:
    //! Empty argument passed to some public constructors
@@ -198,29 +124,6 @@ protected:
     friends; but construction of the argument is controlled by the class
     */
    struct ProtectedCreationArg{};
-public:
-
-   //! For two tracks describes the type of the linkage
-   enum class LinkType : int {
-       None = 0, //< No linkage
-       Group = 2, //< Tracks are grouped together
-       Aligned, //< Tracks are grouped and changes should be synchronized
-   };
-
-   struct ChannelGroupData;
-
-   //! Hosting of objects attached by higher level code
-   using ChannelGroupAttachments = ClientData::Site<
-      ChannelGroupData, ClientData::Cloneable<>, ClientData::DeepCopying
-   >;
-
-   // Structure describing data common to channels of a group of tracks
-   // Should be deep-copyable (think twice before adding shared pointers!)
-   struct TRACK_API ChannelGroupData : ChannelGroupAttachments {
-      wxString mName;
-      LinkType mLinkType{ LinkType::None };
-      bool mSelected{ false };
-   };
 
 private:
 
@@ -228,8 +131,6 @@ private:
 
  private:
    TrackId mId; //!< Identifies the track only in-session, not persistently
-
-   std::unique_ptr<ChannelGroupData> mpGroupData;
 
  protected:
    std::weak_ptr<TrackList> mList; //!< Back pointer to owning TrackList
@@ -247,104 +148,6 @@ private:
  private:
    void SetId( TrackId id ) { mId = id; }
  public:
-
-   //! Report the number of channels a track has
-   /*!
-    @post result: `result >= 1`
-    */
-   virtual size_t NChannels() const = 0;
-
-   //! Retrieve a channel, cast to the given type
-   /*!
-    Postconditions imply that `GetChannel(0)` is always non-null
-
-    @post result: `!(iChannel < NChannels()) || result`
-    */
-   template<typename ChannelType = Channel>
-   std::shared_ptr<ChannelType> GetChannel(size_t iChannel)
-   {
-      return
-         std::dynamic_pointer_cast<ChannelType>(DoGetChannel(iChannel));
-   }
-
-   //! Non-virtual const overload
-   /*!
-    @copydetails GetChannel(size_t)
-    */
-   template<typename ChannelType = const Channel>
-   auto GetChannel(size_t iChannel) const
-      -> std::enable_if_t<std::is_const_v<ChannelType>,
-         std::shared_ptr<ChannelType>>
-   {
-      return std::dynamic_pointer_cast<ChannelType>(
-         const_cast<Track*>(this)->DoGetChannel(iChannel));
-   }
-
-   //! Iterator for channels; destroying the related track invalidates it
-   template<typename ChannelType>
-   class ChannelIterator
-      : public ValueIterator<
-         std::shared_ptr<ChannelType>, std::bidirectional_iterator_tag
-      >
-   {
-      using TrackType = std::conditional_t<std::is_const_v<ChannelType>,
-         const Track, Track>;
-   public:
-      ChannelIterator() = default;
-      ChannelIterator(TrackType *pTrack, size_t index)
-         : mpTrack{ pTrack }, mIndex{ index }
-      {}
-
-      std::shared_ptr<ChannelType> operator *() const
-      {
-         using namespace std;
-         if (!mpTrack || mIndex >= mpTrack->NChannels())
-            return {};
-         return mpTrack->template GetChannel<ChannelType>(mIndex);
-      }
-
-      ChannelIterator &operator ++() { ++mIndex; return *this; }
-      ChannelIterator operator ++(int)
-         { auto copy{ *this }; operator ++(); return copy; }
-
-      ChannelIterator &operator --() { --mIndex; return *this; }
-      ChannelIterator operator --(int)
-         { auto copy{ *this }; operator --(); return copy; }
-
-      friend inline bool operator ==(ChannelIterator a, ChannelIterator b)
-         { return a.mpTrack == b.mpTrack && a.mIndex == b.mIndex; }
-      friend inline bool operator !=(ChannelIterator a, ChannelIterator b)
-         { return !(a == b); }
-
-   private:
-      TrackType *const mpTrack{};
-      size_t mIndex{};
-   };
-
-   //! Get range of channels with mutative access
-   /*!
-    @pre `IsLeader()`
-    */
-   template<typename ChannelType = Channel>
-   IteratorRange<ChannelIterator<ChannelType>> Channels()
-   {
-      assert(IsLeader());
-      return { { this, 0 }, { this, NChannels() } };
-   }
-
-   //! Get range of channels with read-only access
-   /*!
-    @pre `IsLeader()`
-    */
-   template<typename ChannelType = const Channel>
-   auto Channels() const
-      -> std::enable_if_t<std::is_const_v<ChannelType>,
-         IteratorRange<ChannelIterator<ChannelType>>
-      >
-   {
-      assert(IsLeader());
-      return { { this, 0 }, { this, NChannels() } };
-   }
 
    // Given a bare pointer, find a shared_ptr.  Undefined results if the track
    // is not yet managed by a shared_ptr.  Undefined results if the track is
@@ -387,12 +190,6 @@ private:
    // original; else return this track
    std::shared_ptr<const Track> SubstituteOriginalTrack() const;
 
-   using IntervalData = TrackIntervalData;
-   using Interval = TrackInterval;
-   using Intervals = std::vector< Interval >;
-   using ConstInterval = ConstTrackInterval;
-   using ConstIntervals = std::vector< ConstInterval >;
-
    //! Names of a track type for various purposes.
    /*! Some of the distinctions exist only for historical reasons. */
    struct TypeNames {
@@ -428,17 +225,6 @@ private:
    /*! @return A smart pointer to the track; its `use_count()` can tell whether it is new */
    virtual Holder PasteInto( AudacityProject & ) const = 0;
 
-   //! Report times on the track where important intervals begin and end, for UI to snap to
-   /*!
-   Some intervals may be empty, and no ordering of the intervals is assumed.
-   */
-   virtual ConstIntervals GetIntervals() const;
-
-   /*! @copydoc GetIntervals()
-   This overload exposes the extra data of the intervals as non-const
-    */
-   virtual Intervals GetIntervals();
-
 public:
    static void FinishCopy (const Track *n, Track *dest);
 
@@ -467,11 +253,6 @@ public:
    const ChannelGroupData &GetGroupData() const;
 
 protected:
-   //! Retrieve a channel
-   /*!
-    @post result: `!(iChannel < NChannels()) || result`
-    */
-   virtual std::shared_ptr<Channel> DoGetChannel(size_t iChannel) = 0;
 
    /*!
     @param completeList only influences debug build consistency checking
@@ -643,7 +424,7 @@ public:
 
    // Frequently useful operands for + and -
    bool IsSelected() const;
-   bool IsLeader() const;
+   bool IsLeader() const override;
    bool IsSelectedLeader() const;
 
    // Cause this track and following ones in its TrackList to adjust
@@ -687,7 +468,7 @@ public:
       return {};
    }
 protected:
-   Track &DoGetTrack() const override {
+   ChannelGroup &DoGetChannelGroup() const override {
       const Track &track = *this;
       return const_cast<Track&>(track);
    }

@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "XMLTagHandler.h"
 
 class Channel;
+class ChannelGroup;
 class CommandContext;
 class Track;
 class XMLWriter;
@@ -102,6 +103,12 @@ class AUDACITY_DLL_API CommonTrackCell /* not final */
 public:
    //! Construct from a track and a channel index
    CommonTrackCell(const std::shared_ptr<Track> &pTrack, size_t iChannel);
+
+   //! Construct from a channel group and a channel index
+   /*!
+    @pre `dynamic_cast<Track&>(&group) != nullptr`
+    */
+   CommonTrackCell(ChannelGroup &group, size_t iChannel);
 
   ~CommonTrackCell();
 

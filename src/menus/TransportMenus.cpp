@@ -264,14 +264,21 @@ void OnPunchAndRoll(const CommandContext &context)
    bool error = (t1 == 0.0);
 
    double newt1 = t1;
+   using Iterator =
+      ChannelGroup::IntervalIterator<const WideChannelGroupInterval>;
+   IteratorRange<Iterator> intervals{ {}, {} };
    for (const auto &wt : tracks) {
       auto rate = wt->GetRate();
       sampleCount testSample(floor(t1 * rate));
-      auto intervals = wt->GetIntervals();
+      if (wt->IsLeader())
+         intervals = as_const(*wt).Intervals();
+      else
+         // non-leader channel is assumed to have the same intervals
+         ;
       auto pred = [rate](sampleCount testSample){ return
-         [rate, testSample](const Track::Interval &interval){
-            auto start = floor(interval.Start() * rate + 0.5);
-            auto end = floor(interval.End() * rate + 0.5);
+         [rate, testSample](const auto &pInterval){
+            auto start = floor(pInterval->Start() * rate + 0.5);
+            auto end = floor(pInterval->End() * rate + 0.5);
             auto ts = testSample.as_double();
             return ts >= start && ts < end;
          };
@@ -290,7 +297,7 @@ void OnPunchAndRoll(const CommandContext &context)
          // May adjust t1 left
          // Let's ignore the possibility of a clip even shorter than the
          // crossfade duration!
-         newt1 = std::min(newt1, iter->End() - crossFadeDuration);
+         newt1 = std::min(newt1, (*iter).get()->End() - crossFadeDuration);
       }
    }
 

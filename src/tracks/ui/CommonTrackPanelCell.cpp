@@ -115,12 +115,17 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
 }
 
 CommonTrackCell::CommonTrackCell(
-   const std::shared_ptr< Track > &parent, size_t iChannel
+   const std::shared_ptr<Track> &parent, size_t iChannel
 )  : mwTrack{ parent }
    , miChannel{ iChannel }
 {
    // TODO wide wave tracks -- remove assertion
    assert(iChannel == 0);
+}
+
+CommonTrackCell::CommonTrackCell(ChannelGroup &group, size_t iChannel)
+   : CommonTrackCell{ static_cast<Track&>(group).shared_from_this(), iChannel }
+{
 }
 
 CommonTrackCell::~CommonTrackCell() = default;

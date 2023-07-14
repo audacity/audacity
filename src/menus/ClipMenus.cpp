@@ -11,6 +11,8 @@
 #include "../commands/CommandManager.h"
 #include "../tracks/ui/TimeShiftHandle.h"
 
+#include <cassert>
+
 // private helper classes and functions
 namespace {
 
@@ -648,40 +650,38 @@ void DoCursorClipBoundary
 }
 
 // This function returns the amount moved.  Possibly 0.0.
-double DoClipMove( AudacityProject &project, Track *track,
-     TrackList &trackList, bool syncLocked, bool right )
+double DoClipMove(AudacityProject &project, TrackList &trackList,
+   bool syncLocked, bool right)
 {
+   auto &trackFocus = TrackFocus::Get(project);
    auto &viewInfo = ViewInfo::Get(project);
    auto &selectedRegion = viewInfo.selectedRegion;
 
+   auto track = trackFocus.Get();
    if (track) {
+      // Focus is always a leader,
+      // satisfying the pre of MakeTrackShifter
+      assert(track->IsLeader());
       ClipMoveState state;
 
       auto t0 = selectedRegion.t0();
 
       std::unique_ptr<TrackShifter> uShifter;
 
-      // Find the first channel that has a clip at time t0
       auto hitTestResult = TrackShifter::HitTestResult::Track;
-      for (auto channel : TrackList::Channels(track) ) {
-         uShifter = MakeTrackShifter::Call( *channel, project );
-         if ( (hitTestResult = uShifter->HitTest( t0, viewInfo )) ==
-             TrackShifter::HitTestResult::Miss )
-            uShifter.reset();
-         else
-            break;
-      }
-
-      if (!uShifter)
+      uShifter = MakeTrackShifter::Call(*track, project);
+      if ((hitTestResult = uShifter->HitTest(t0, viewInfo)) ==
+          TrackShifter::HitTestResult::Miss)
          return 0.0;
+
       auto pShifter = uShifter.get();
-      auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
-      auto desiredSlideAmount = pShifter->HintOffsetLarger( desiredT0 - t0 );
+      auto desiredT0 = viewInfo.OffsetTimeByPixels(t0, (right ? 1 : -1));
+      auto desiredSlideAmount = pShifter->HintOffsetLarger(desiredT0 - t0);
 
-      state.Init( project, pShifter->GetTrack(), hitTestResult, std::move( uShifter ),
-         t0, viewInfo, trackList, syncLocked );
+      state.Init(project, pShifter->GetTrack(), hitTestResult, move(uShifter),
+         t0, viewInfo, trackList, syncLocked);
 
-      auto hSlideAmount = state.DoSlideHorizontal( desiredSlideAmount );
+      auto hSlideAmount = state.DoSlideHorizontal(desiredSlideAmount);
 
       double newT0 = t0 + hSlideAmount;
       if (hitTestResult != TrackShifter::HitTestResult::Track) {
@@ -717,8 +717,7 @@ void DoClipLeftOrRight
    auto &tracks = TrackList::Get( project );
    auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
 
-   auto amount = DoClipMove( project, trackFocus.Get(),
-        tracks, isSyncLocked, right );
+   auto amount = DoClipMove(project, tracks, isSyncLocked, right);
 
    window.ScrollIntoView(selectedRegion.t0());
 

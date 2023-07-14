@@ -61,6 +61,26 @@ from the project that will own the track.
 
 using std::max;
 
+WaveTrack::Interval::Interval(const ChannelGroup &group,
+   const std::shared_ptr<WaveClip> &pClip,
+   const std::shared_ptr<WaveClip> &pClip1
+)  : WideChannelGroupInterval{ group,
+      pClip->GetPlayStartTime(), pClip->GetPlayEndTime() }
+   , mpClip{ pClip }
+   , mpClip1{ pClip1 }
+{
+}
+
+WaveTrack::Interval::~Interval() = default;
+
+std::shared_ptr<ChannelInterval>
+WaveTrack::Interval::DoGetChannel(size_t iChannel)
+{
+   if (iChannel < NChannels())
+      return std::make_shared<ChannelInterval>();
+   return {};
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -380,17 +400,6 @@ auto WaveTrack::ClassTypeInfo() -> const TypeInfo &
    return typeInfo();
 }
 
-template< typename Container >
-static Container MakeIntervals(const std::vector<WaveClipHolder> &clips)
-{
-   Container result;
-   for (const auto &clip: clips) {
-      result.emplace_back( clip->GetPlayStartTime(), clip->GetPlayEndTime(),
-         std::make_unique<WaveTrack::IntervalData>( clip ) );
-   }
-   return result;
-}
-
 Track::Holder WaveTrack::PasteInto( AudacityProject &project ) const
 {
    auto &trackFactory = WaveTrackFactory::Get( project );
@@ -400,14 +409,26 @@ Track::Holder WaveTrack::PasteInto( AudacityProject &project ) const
    return pNewTrack;
 }
 
-auto WaveTrack::GetIntervals() const -> ConstIntervals
+size_t WaveTrack::NIntervals() const
 {
-   return MakeIntervals<ConstIntervals>( mClips );
+   return mClips.size();
 }
 
-auto WaveTrack::GetIntervals() -> Intervals
+std::shared_ptr<WideChannelGroupInterval>
+WaveTrack::DoGetInterval(size_t iInterval)
 {
-   return MakeIntervals<Intervals>( mClips );
+   if (iInterval < NIntervals()) {
+      WaveClipHolder pClip = mClips[iInterval],
+         pClip1;
+      // TODO wide wave tracks
+      // This assumed correspondence of clips may be wrong if they misalign
+      if (auto right = GetChannel<WaveTrack>(1)
+         ; right && iInterval < right->mClips.size()
+      )
+         pClip1 = right->mClips[iInterval];
+      return std::make_shared<Interval>(*this, pClip, pClip1);
+   }
+   return {};
 }
 
 const WaveClip* WaveTrack::FindClipByName(const wxString& name) const
@@ -434,10 +455,10 @@ std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
    return { pTrack->shared_from_this(), alias };
 }
 
-Track &WaveTrack::DoGetTrack() const
+ChannelGroup &WaveTrack::DoGetChannelGroup() const
 {
-   const Track &track = *this;
-   return const_cast<Track&>(track);
+   const ChannelGroup &group = *this;
+   return const_cast<ChannelGroup&>(group);
 }
 
 Track::Holder WaveTrack::Clone() const

@@ -328,5 +328,6 @@ Track &TrackPanelResizeHandle::GetTrack(Channel &channel)
    // But until then, Track::Channels() will not iterate all channels when
    // given a right hand track
    // So be sure to substitute the leader
-   return **TrackList::Channels(&channel.GetTrack()).begin();
+   const auto pTrack = static_cast<Track*>(&channel.GetChannelGroup());
+   return **TrackList::Channels(pTrack).begin();
 }

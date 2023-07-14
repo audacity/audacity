@@ -36,43 +36,6 @@ and TimeTrack.
 #pragma warning( disable : 4786 )
 #endif
 
-Channel::~Channel() = default;
-
-int Channel::FindChannelIndex() const
-{
-   auto &track = DoGetTrack();
-   int index = -1;
-   for (size_t ii = 0, nn = track.NChannels(); ii < nn; ++ii)
-      if (track.GetChannel(ii).get() == this) {
-         index = ii;
-         break;
-      }
-   // post of DoGetTrack
-   assert(index >= 0);
-
-   // TODO wide wave tracks -- remove this stronger assertion
-   assert(index == 0);
-
-   return index;
-}
-
-const Track &Channel::GetTrack() const
-{
-   assert(FindChannelIndex() >= 0);
-   return DoGetTrack();
-}
-
-Track &Channel::GetTrack()
-{
-   assert(FindChannelIndex() >= 0);
-   return DoGetTrack();
-}
-
-size_t Channel::GetChannelIndex() const
-{
-   return FindChannelIndex();
-}
-
 Track::Track()
 {
    mIndex = 0;
@@ -1206,16 +1169,6 @@ bool Track::SupportsBasicEditing() const
    return true;
 }
 
-auto Track::GetIntervals() const -> ConstIntervals
-{
-   return {};
-}
-
-auto Track::GetIntervals() -> Intervals
-{
-   return {};
-}
-
 // Serialize, not with tags of its own, but as attributes within a tag.
 void Track::WriteCommonXMLAttributes(
    XMLWriter &xmlFile, bool includeNameAndSelected) const
@@ -1266,8 +1219,6 @@ void Track::AdjustPositions()
       pList->ResizingEvent(mNode);
    }
 }
-
-TrackIntervalData::~TrackIntervalData() = default;
 
 bool TrackList::HasPendingTracks() const
 {

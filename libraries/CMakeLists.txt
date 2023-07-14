@@ -54,6 +54,7 @@ set( LIBRARIES
    lib-playable-track
    lib-time-and-pitch
    lib-mixer
+   lib-channel
    lib-stretching-sequence
 )
 

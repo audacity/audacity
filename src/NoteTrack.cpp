@@ -104,7 +104,15 @@ SONFNS(AutoSave)
 
 #endif
 
+NoteTrack::Interval::~Interval() = default;
 
+std::shared_ptr<ChannelInterval>
+NoteTrack::Interval::DoGetChannel(size_t iChannel)
+{
+   if (iChannel == 0)
+      return std::make_shared<ChannelInterval>();
+   return {};
+}
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "notetrack",
@@ -724,18 +732,18 @@ Track::Holder NoteTrack::PasteInto( AudacityProject & ) const
    return pNewTrack;
 }
 
-auto NoteTrack::GetIntervals() const -> ConstIntervals
+size_t NoteTrack::NIntervals() const
 {
-   ConstIntervals results;
-   results.emplace_back( GetStartTime(), GetEndTime() );
-   return results;
+   return 1;
 }
 
-auto NoteTrack::GetIntervals() -> Intervals
+std::shared_ptr<WideChannelGroupInterval>
+NoteTrack::DoGetInterval(size_t iInterval)
 {
-   Intervals results;
-   results.emplace_back( GetStartTime(), GetEndTime() );
-   return results;
+   if (iInterval == 0)
+      // Just one, and no extra info in it!
+      return std::make_shared<Interval>(*this, GetStartTime(), GetEndTime());
+   return {};
 }
 
 void NoteTrack::AddToDuration( double delta )

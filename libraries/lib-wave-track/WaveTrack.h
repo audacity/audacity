@@ -35,7 +35,7 @@ class AudioSegmentSampleView;
 
 //! Clips are held by shared_ptr, not for sharing, but to allow weak_ptr
 using WaveClipHolder = std::shared_ptr<WaveClip>;
-using WaveClipHolders = std::vector <WaveClipHolder>;
+using WaveClipHolders = std::vector<WaveClipHolder>;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
@@ -563,32 +563,41 @@ private:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   class IntervalData final : public Track::IntervalData {
+   class WAVE_TRACK_API Interval final : public WideChannelGroupInterval {
    public:
       /*!
        @pre `pClip != nullptr`
        */
-      explicit IntervalData( const std::shared_ptr<WaveClip> &pClip )
-         : pClip{ pClip }
-      {}
-      std::shared_ptr<const WaveClip> GetClip() const { return pClip; }
-      const std::shared_ptr<WaveClip> &GetClip() { return pClip; }
+      Interval(const ChannelGroup &group,
+         const std::shared_ptr<WaveClip> &pClip,
+         const std::shared_ptr<WaveClip> &pClip1);
+
+      ~Interval() override;
+
+      std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
+      { return iChannel == 0 ? mpClip : mpClip1; }
+      const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
+      { return iChannel == 0 ? mpClip : mpClip1; }
    private:
-      const std::shared_ptr<WaveClip> pClip;
+      std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
+      const std::shared_ptr<WaveClip> mpClip;
+      //! TODO wide wave tracks: eliminate this
+      const std::shared_ptr<WaveClip> mpClip1;
    };
 
    Track::Holder PasteInto( AudacityProject & ) const override;
 
-   ConstIntervals GetIntervals() const override;
-   Intervals GetIntervals() override;
-
    //! Returns nullptr if clip with such name was not found
    const WaveClip* FindClipByName(const wxString& name) const;
- protected:
 
+   size_t NIntervals() const override;
+
+protected:
+   std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
+      override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 
-   Track &DoGetTrack() const override;
+   ChannelGroup &DoGetChannelGroup() const override;
 
    //
    // Protected variables

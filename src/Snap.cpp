@@ -45,14 +45,12 @@ namespace {
 SnapPointArray FindCandidates(
    SnapPointArray candidates, const TrackList &tracks )
 {
-   for ( const auto track : tracks.Any() ) {
-      auto intervals = track->GetIntervals();
-      for (const auto &interval : intervals) {
-         candidates.emplace_back( interval.Start(), track );
-         if ( interval.Start() != interval.End() )
-            candidates.emplace_back( interval.End(), track );
+   for (const auto track : tracks.Leaders())
+      for (const auto &interval : track->Intervals()) {
+         candidates.emplace_back(interval->Start(), track);
+         if (interval->Start() != interval->End())
+            candidates.emplace_back(interval->End(), track);
       }
-   }
    return move(candidates);
 }
 }
