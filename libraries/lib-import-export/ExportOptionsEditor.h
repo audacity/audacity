@@ -35,7 +35,7 @@ public:
       ///\brief Called when option change
       virtual void OnExportOptionChange(const ExportOption& option) = 0;
       ///\brief Called when format extension change (usually in response parameter change)
-      virtual void OnExtensionChange(const wxString& extension) = 0;
+      virtual void OnFormatInfoChange() = 0;
 
       virtual void OnSampleRateListChange() = 0;
    };

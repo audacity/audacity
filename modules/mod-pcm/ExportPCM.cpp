@@ -313,12 +313,13 @@ public:
                   mListener->OnExportOptionChange(option);
             }
          }
+         mType = newType;
+         Store(*gPrefs);
          if(mListener)
          {
             mListener->OnExportOptionChangeEnd();
-            mListener->OnExtensionChange(sf_header_extension(newType));
+            mListener->OnFormatInfoChange();
          }
-         mType = newType;
          return true;
       }
 
@@ -326,6 +327,7 @@ public:
       if(it != mEncodings.end() && std::holds_alternative<int>(value))
       {
          it->second = *std::get_if<int>(&value);
+         Store(*gPrefs);
          return true;
       }
       return false;

@@ -30,10 +30,9 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 struct ExportOptionsHandlerEvent
 {
    enum {
-      FileSuffixChange,
+      FormatInfoChange,
       SampleRateListChange
    } type;
-   wxString tag;
 };
 
 class ExportOptionsHandler final
@@ -54,7 +53,7 @@ public:
    void OnExportOptionChangeBegin() override;
    void OnExportOptionChangeEnd() override;
    void OnExportOptionChange(const ExportOption& option) override;
-   void OnExtensionChange(const wxString& extension) override;
+   void OnFormatInfoChange() override;
    void OnSampleRateListChange() override;
    
 private:

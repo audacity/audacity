@@ -176,7 +176,7 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    if(format.empty())
       ExportAudioDefaultFormat.Read(&format);
 
-   mExportOptionsPanel->Init(filename, format, sampleRate, 2);
+   mExportOptionsPanel->Init(filename, format, sampleRate);
 
    auto& tracks = TrackList::Get(mProject);
    const auto labelTracks = tracks.Leaders<LabelTrack>();

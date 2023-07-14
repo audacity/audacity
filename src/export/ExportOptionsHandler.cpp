@@ -242,17 +242,9 @@ void ExportOptionsHandler::OnExportOptionChange(const ExportOption& option)
    control->Enable(enabled);
 }
 
-void ExportOptionsHandler::OnExtensionChange(const wxString& extension)
+void ExportOptionsHandler::OnFormatInfoChange()
 {
-   if(mParent != nullptr)
-   {
-      // Synchronously process a change in suffix.
-      wxCommandEvent evt(AUDACITY_FILE_SUFFIX_EVENT, mParent->GetId());
-      evt.SetEventObject(mParent);
-      evt.SetString(extension);
-      mParent->ProcessWindowEvent(evt);
-   }
-   Publish({ ExportOptionsHandlerEvent::FileSuffixChange, extension });
+   Publish({ ExportOptionsHandlerEvent::FormatInfoChange });
 }
 
 void ExportOptionsHandler::OnSampleRateListChange()
