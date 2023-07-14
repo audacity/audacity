@@ -62,10 +62,10 @@ static Importer::RegisteredUnusableImportPlugin registered
 #include <wx/file.h>
 
 #include "Prefs.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 // PRL:  include these last,
 // and correct some preprocessor namespace pollution from wxWidgets that
