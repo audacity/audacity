@@ -646,10 +646,7 @@ void OnPaste(const CommandContext &context)
       leaders.first = leaders.first.Filter(&Track::IsLeader);
       leaders.second = leaders.second.Filter(&Track::IsLeader);
       for (auto leader : leaders) {
-         if (iPair == endPair)
-            // Nothing more to paste
-            break;
-         if (leader != iPair->first) {
+         if (iPair == endPair || leader != iPair->first) {
             if (isSyncLocked) {
                // Track is not pasted into but must be adjusted
                if (t1 != newT1 && t1 <= leader->GetEndTime()) {
