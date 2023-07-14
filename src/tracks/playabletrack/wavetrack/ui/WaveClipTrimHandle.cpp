@@ -223,13 +223,13 @@ public:
          {
             auto dt = std::abs(mClips[0]->GetPlayStartTime() - mInitialBorderPosition);
             ProjectHistory::Get(project).PushState(XO("Clip-Trim-Left"),
-                XO("Moved by %.02f").Format(dt), UndoPush::CONSOLIDATE);
+                XO("Moved by %.02f").Format(dt));
          }
          else
          {
             auto dt = std::abs(mInitialBorderPosition - mClips[0]->GetPlayEndTime());
             ProjectHistory::Get(project).PushState(XO("Clip-Trim-Right"),
-                XO("Moved by %.02f").Format(dt), UndoPush::CONSOLIDATE);
+                XO("Moved by %.02f").Format(dt));
          }
       }
    }
@@ -340,7 +340,7 @@ public:
       {
          auto dt = std::abs(mRightClips[0]->GetPlayStartTime() - mInitialBorderPosition);
          ProjectHistory::Get(project).PushState(XO("Clip-Trim-Between"),
-               XO("Moved by %.02f").Format(dt), UndoPush::CONSOLIDATE);
+               XO("Moved by %.02f").Format(dt));
       }
    }
 
