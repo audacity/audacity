@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  Generator.h
+  Generator.cpp
 
   Two Abstract classes, Generator, and BlockGenerator, that effects which
   generate audio should derive from.
@@ -39,7 +39,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
    bool bGoodResult = true;
    int ntrack = 0;
 
-   outputs.Get().Any().VisitWhile(bGoodResult,
+   outputs.Get().Leaders().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](WaveTrack &track) {
          if (!track.GetSelected())
             return fallthrough();
@@ -56,60 +56,56 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
                XO("There is not enough room available to generate the audio"),
                wxICON_STOP,
                XO("Error") );
-            Failure();
             bGoodResult = false;
             return;
          }
 
-         if (duration > 0.0)
-         {
-            auto pProject = FindProject();
-            // Create a temporary track
-            auto tmp = track.EmptyCopy();
-            BeforeTrack(track);
-            BeforeGenerate();
-
-            // Fill it with data
-            if (!GenerateTrack(settings, &*tmp, track, ntrack))
-               bGoodResult = false;
-            else {
-               // Transfer the data from the temporary track to the actual one
-               tmp->Flush();
+         if (duration > 0.0) {
+            auto list = TrackList::Create(nullptr);
+            for (const auto pChannel : TrackList::Channels(&track)) {
+               // Create a temporary track
+               auto tmp = track.EmptyCopy();
+               // Fill with data
+               if (!GenerateTrack(settings, &*tmp, track, ntrack))
+                  bGoodResult = false;
+               else {
+                  // Transfer the data from the temporary track to the actual one
+                  tmp->Flush();
+                  list->Add(tmp);
+                  assert(tmp->IsLeader() == pChannel->IsLeader());
+               }
+            }
+            if (bGoodResult) {
                PasteTimeWarper warper{ mT1, mT0 + duration };
+               auto pProject = FindProject();
                const auto &selectedRegion =
-                  ViewInfo::Get( *pProject ).selectedRegion;
-               track.ClearAndPaste(
-                  selectedRegion.t0(), selectedRegion.t1(),
-                  &*tmp, true, false, &warper);
+                  ViewInfo::Get(*pProject).selectedRegion;
+               auto iter =
+                  TrackList::Channels(*list->Leaders().begin()).begin();
+               for (const auto pChannel : TrackList::Channels(&track))
+                  pChannel->ClearAndPaste(
+                     selectedRegion.t0(), selectedRegion.t1(),
+                     *iter++, true, false, &warper);
             }
-
-            if (!bGoodResult) {
-               Failure();
+            else
                return;
-            }
          }
          else
-         {
             // If the duration is zero, there's no need to actually
             // generate anything
-            track.Clear(mT0, mT1);
-         }
+            for (const auto pChannel : TrackList::Channels(&track))
+               pChannel->Clear(mT0, mT1);
 
          ntrack++;
       }; },
       [&](Track &t) {
-         if (t.IsLeader() && SyncLock::IsSyncLockSelected(&t)) {
+         if (SyncLock::IsSyncLockSelected(&t))
             t.SyncLockAdjust(mT1, mT0 + duration);
-         }
       }
    );
 
    if (bGoodResult) {
-      Success();
-
-      if (bGoodResult)
-         outputs.Commit();
-
+      outputs.Commit();
       mT1 = mT0 + duration; // Update selection.
    }
 
