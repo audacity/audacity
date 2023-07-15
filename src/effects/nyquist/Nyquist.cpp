@@ -900,14 +900,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
                mCurNumChannels = 2;
 
                mCurTrack[1] = * ++ channels.first;
-               if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
-                  EffectUIServices::DoMessageBox(*this,
-                     XO(
-"Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
-                     wxOK | wxCENTRE );
-                  success = false;
-                  goto finish;
-               }
                mCurStart[1] = mCurTrack[1]->TimeToLongSamples(mT0);
             }
 
