@@ -153,7 +153,8 @@ std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember)
       inLabels = IsSeparatorTrack(*last);
    }
 
-   return { first, *last };
+   auto lastTrack = *TrackList::Channels(*last).rbegin();
+   return { first, lastTrack };
 }
 
 }
