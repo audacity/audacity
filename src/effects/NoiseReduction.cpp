@@ -702,7 +702,7 @@ bool EffectNoiseReduction::Worker::Process(
    TrackList &tracks, double inT0, double inT1)
 {
    mProgressTrackCount = 0;
-   for ( auto track : tracks.Selected< WaveTrack >() ) {
+   for (auto track : tracks.SelectedLeaders<WaveTrack>()) {
       mProgressWindowCount = 0;
       if (track->GetRate() != mStatistics.mRate) {
          if (mDoProfile)
@@ -734,11 +734,13 @@ bool EffectNoiseReduction::Worker::Process(
          else
             mLen += extra;
 
-         if (!TrackSpectrumTransformer::Process(
-            Processor, track, mHistoryLen, start, len ))
-            return false;
+         for (const auto pChannel : TrackList::Channels(track)) {
+            if (!TrackSpectrumTransformer::Process(
+               Processor, pChannel, mHistoryLen, start, len))
+               return false;
+            ++mProgressTrackCount;
+         }
       }
-      ++mProgressTrackCount;
    }
 
    if (mDoProfile) {
