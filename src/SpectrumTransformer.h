@@ -186,7 +186,7 @@ public:
    ~TrackSpectrumTransformer() override;
 
    //! Invokes Start(), ProcessSamples(), and Finish()
-   bool Process( const WindowProcessor &processor, WaveTrack *track,
+   bool Process(const WindowProcessor &processor, const WaveTrack *track,
       size_t queueLength, sampleCount start, sampleCount len);
 
 protected:
@@ -194,10 +194,10 @@ protected:
    void DoOutput(const float *outBuffer, size_t mStepSize) override;
    bool DoFinish() override;
 
-private:
-   WaveTrack *mpTrack = nullptr;
    std::shared_ptr<WaveTrack> mOutputTrack;
-   sampleCount mStart = 0, mLen = 0;
+private:
+   sampleCount mLen = 0;
+   const WaveTrack *mpTrack = nullptr;
 };
 
 #endif

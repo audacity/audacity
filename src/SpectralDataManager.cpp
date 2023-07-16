@@ -128,8 +128,15 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
    // Correct the start of range so that the first full window is
    // centered at that position
    startSample = std::max(static_cast<long long>(0), startSample - 2 * hopSize);
-   if (!TrackSpectrumTransformer::Process( Processor, wt, 1, startSample, endSample - startSample))
+   const auto len = endSample - startSample;
+   auto t0 = wt->LongSamplesToTime(startSample);
+   auto tLen = wt->LongSamplesToTime(len);
+   if (!TrackSpectrumTransformer::Process(Processor, wt, 1, startSample, len))
       return false;
+   // Take the output track and insert it in place of the original
+   // sample data
+   wt->ClearAndPaste(t0, t0 + tLen, &*mOutputTrack, true, false);
+   mOutputTrack.reset();
 
    return true;
 }

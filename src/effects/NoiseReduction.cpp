@@ -734,10 +734,16 @@ bool EffectNoiseReduction::Worker::Process(
          else
             mLen += extra;
 
+         auto t0 = track->LongSamplesToTime(start);
+         auto tLen = track->LongSamplesToTime(len);
          for (const auto pChannel : TrackList::Channels(track)) {
             if (!TrackSpectrumTransformer::Process(
                Processor, pChannel, mHistoryLen, start, len))
                return false;
+            // Take the output track and insert it in place of the original
+            // sample data
+            pChannel->ClearAndPaste(t0, t0 + tLen, &*mOutputTrack, true, false);
+            mOutputTrack.reset();
             ++mProgressTrackCount;
          }
       }
