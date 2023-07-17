@@ -42,15 +42,16 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
       for (auto pChannel : wt->Channels()) {
          auto &view = ChannelView::Get(*pChannel);
 
-         if(auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)){
-            for(const auto &subViewPtr : waveChannelViewPtr->GetAllSubViews()){
-               if(!subViewPtr->IsSpectral())
+         if (auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)){
+            for (const auto &subViewPtr : waveChannelViewPtr->GetAllSubViews()){
+               if (!subViewPtr->IsSpectral())
                   continue;
                auto sView = std::static_pointer_cast<SpectrumView>(subViewPtr).get();
                auto pSpectralData = sView->GetSpectralData();
 
                if(!pSpectralData->dataHistory.empty()){
-                  worker.Process(wt, pSpectralData);
+                  worker.Process(
+                     static_cast<WaveTrack*>(pChannel.get()), pSpectralData);
                   applyCount += static_cast<int>(pSpectralData->dataHistory.size());
                   pSpectralData->clearAllData();
                }
