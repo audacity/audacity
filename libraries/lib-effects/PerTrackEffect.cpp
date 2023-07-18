@@ -111,10 +111,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
 
    const bool multichannel = numAudioIn > 1;
    int iChannel = 0;
-   auto range = multichannel
-      ? outputs.Leaders()
-      : outputs.Any();
-   range.VisitWhile( bGoodResult,
+   const auto waveTrackVisitor =
       [&](auto &&fallthrough){ return [&](WaveTrack &left) {
          // Track range visitor functions receive a pointer that is never null
          if (!left.GetSelected())
@@ -288,11 +285,19 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          if (!bGoodResult)
             return;
          ++count;
-      }; },
+      }; };
+   const auto defaultTrackVisitor =
       [&](Track &t) {
          if (t.IsLeader() && SyncLock::IsSyncLockSelected(&t))
             t.SyncLockAdjust(mT1, mT0 + duration);
-      }
+      };
+
+   auto range = multichannel
+      ? outputs.Leaders()
+      : outputs.Any();
+   range.VisitWhile(bGoodResult,
+      waveTrackVisitor,
+      defaultTrackVisitor
    );
 
    if (bGoodResult && GetType() == EffectTypeGenerate)
