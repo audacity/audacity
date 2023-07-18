@@ -43,6 +43,7 @@ class SpectralDataManager::Worker
 public:
    Worker(const Setting &setting);
    ~Worker();
+   using TrackSpectrumTransformer::mOutputTrack;
 
    struct MyWindow : public Window
    {
