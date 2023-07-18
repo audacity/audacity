@@ -25,6 +25,7 @@
 #include "AudioGraphTask.h"
 #include "EffectStage.h"
 #include "SyncLock.h"
+#include "TimeWarper.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveTrackSink.h"
@@ -111,6 +112,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
 
    const bool multichannel = numAudioIn > 1;
    int iChannel = 0;
+   TrackListHolder results;
    const auto waveTrackVisitor =
       [&](WaveTrack &left) {
          auto leader = &left;
@@ -275,27 +277,45 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          bGoodResult = ProcessTrack(channel, factory, settings, source, sink,
             genLength, sampleRate, left, *leader,
             inBuffers, outBuffers);
-         if (bGoodResult)
-            sink.Flush(outBuffers,
-               mT0, ViewInfo::Get(*FindProject()).selectedRegion.t1());
+         if (bGoodResult) {
+            if (auto tracks = sink.Flush(outBuffers)) {
+               if (!results)
+                  results = tracks;
+               else
+                  results->Append(std::move(*tracks));
+               }
+         }
          if (!bGoodResult)
             return;
          ++count;
       };
    const auto defaultTrackVisitor =
       [&](Track &t) {
-         if (t.IsLeader() && SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(&t))
             t.SyncLockAdjust(mT1, mT0 + duration);
       };
 
-   auto range = multichannel
-      ? outputs.Leaders()
-      : outputs.Any();
-   range.VisitWhile(bGoodResult,
-      [&](auto &&fallthrough){ return [&](WaveTrack &left) {
-         if (!left.GetSelected())
+   outputs.Leaders().VisitWhile(bGoodResult,
+      [&](auto &&fallthrough){ return [&](WaveTrack &wt) {
+         if (!wt.GetSelected())
             return fallthrough();
-         waveTrackVisitor(left);
+         const auto channels = TrackList::Channels(&wt);
+         if (multichannel)
+            waveTrackVisitor(wt);
+         else
+            for (const auto pChannel : channels)
+               waveTrackVisitor(*pChannel);
+         if (results) {
+            const auto t1 = ViewInfo::Get(*FindProject()).selectedRegion.t1();
+            PasteTimeWarper warper{ t1,
+               mT0 + (*channels.begin())->GetEndTime() };
+            auto iter = TrackList::Channels(
+               *results->Leaders<const WaveTrack>().begin()
+            ).begin();
+            for (const auto pChannel : channels)
+               pChannel->ClearAndPaste(mT0, t1, *iter++, true, true, &warper);
+            results.reset();
+         }
       }; },
       defaultTrackVisitor
    );
