@@ -23,6 +23,11 @@ qt_add_resources(QT_RESOURCES
    ${RESOURCES}
 )
 
+# Disable cache generation for QML files
+if(NOT ${_OPT}qt_enable_qml_cache_gen)
+   set(nocachegen NO_CACHEGEN)
+endif()
+
 add_subdirectory(uicomponents)
 
 set(QT_TRANSLATION_SOURCES
@@ -63,6 +68,7 @@ qt_add_qml_module(
    SOURCES
       ${APP_SOURCES}
    NO_LINT
+   ${nocachegen}
 )
 
 set_target_properties(

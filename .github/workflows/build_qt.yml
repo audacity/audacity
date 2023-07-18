@@ -122,6 +122,7 @@ env:
     -Daudacity_has_url_schemes_support=On
     -Daudacity_has_audiocom_upload=On
     -Daudacity_enable_experimental_qt_support=On
+    -Daudacity_qt_enable_qml_cache_gen=On
     ${{ (inputs && inputs.configure_cmake_options) || (github.event.inputs && github.event.inputs.configure_cmake_options) || '' }}
 
   BUILD_LEVEL: ${{ (inputs && inputs.build_level) || (github.event.inputs && github.event.inputs.build_level) || ((startsWith(github.ref, 'refs/heads/release-') && 'beta') || 'alpha') }}

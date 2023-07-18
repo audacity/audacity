@@ -2,7 +2,6 @@ set(MODULE_NAME uicomponents)
 
 qt_add_library(${MODULE_NAME} STATIC)
 
-set_target_properties(${MODULE_NAME} PROPERTIES AUTOMOC ON)
 target_link_libraries(${MODULE_NAME} PRIVATE Qt6::Quick)
 
 set(MODULE_SOURCES
@@ -50,5 +49,6 @@ qt_add_qml_module(${MODULE_NAME}
    SOURCES
       ${MODULE_SOURCES}
    NO_LINT
+   ${nocachegen}
 )
 

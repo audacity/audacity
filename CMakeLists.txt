@@ -266,6 +266,7 @@ option(${_OPT}has_vst3
 )
 
 cmd_option( ${_OPT}enable_experimental_qt_support "Enable experimental Qt support" Off)
+cmd_option( ${_OPT}qt_enable_qml_cache_gen "Generate run qmlcachegen on build" Off)
 
 # Python is used for the manual and (possibly) message catalogs
 find_package( Python3 )
