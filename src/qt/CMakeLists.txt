@@ -3,8 +3,7 @@ set(QAUDACITY ${CMAKE_PROJECT_NAME})
 
 set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml)
 
-set(SOURCES
-   main.cpp
+set(APP_SOURCES
    EditToolbarHandler.cpp
    EditToolbarHandler.h
    ToolsToolbarHandler.cpp
@@ -30,7 +29,8 @@ set(QT_TRANSLATION_SOURCES
    translations/de.ts
 )
 
-qt_add_executable(${QAUDACITY} ${SOURCES} ${QT_RESOURCES} MANUAL_FINALIZATION)
+qt_add_executable(${QAUDACITY} MANUAL_FINALIZATION)
+target_sources(${QAUDACITY} PRIVATE main.cpp ${QT_RESOURCES})
 
 qt_add_translations(
    ${QAUDACITY}
@@ -60,6 +60,8 @@ qt_add_qml_module(
       Audacity.UiComponents
 	QML_FILES
 		${QML_SOURCES}
+   SOURCES
+      ${APP_SOURCES}
    NO_LINT
 )
 
