@@ -109,8 +109,8 @@ if( APPLE )
    endif()
 
    if( ${_OPT}enable_experimental_qt_support )
-      set( MIN_MACOS_VERSION 10.15 )
-      set( TARGET_MACOS_VERSION 10.15 )
+      set( MIN_MACOS_VERSION 10.13 )
+      set( TARGET_MACOS_VERSION 10.13 )
    endif()
 
    # Generate schema files
@@ -299,7 +299,7 @@ cmake_dependent_option(
    ${_OPT}has_crashreports
    "Enables crash reporting for Audacity"
    On
-   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
+   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL;NOT ${_OPT}enable_experimental_qt_support"
    Off
 )
 

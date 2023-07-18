@@ -144,21 +144,13 @@ jobs:
           os: windows-2022
           arch: x64
           generator: Visual Studio 17 2022
-        - name: macOS (x86_64)
-          os: macos-11.0
-          arch: x64
-          generator: Xcode
-        - name: macOS (arm64)
-          os: macos-11.0
-          arch: arm64
-          generator: Xcode
     steps:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v1
+      uses: audacity/audacity-actions/dependencies@v2
     - name: Configure
-      uses: audacity/audacity-actions/configure@v1
+      uses: audacity/audacity-actions/configure@v2
       with:
         generator: ${{ matrix.config.generator }}
         arch: ${{ matrix.config.arch }}
@@ -170,6 +162,45 @@ jobs:
         windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
         windows_certificate_password: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
     - name: Build
-      uses: audacity/audacity-actions/build@v1
+      uses: audacity/audacity-actions/build@v2
     - name: Package
-      uses: audacity/audacity-actions/package@v1
+      uses: audacity/audacity-actions/package@v2
+  build-macos:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: macOS (x86_64)
+          os: macos-11
+          arch: x64
+          generator: Xcode
+        - name: macOS (arm64)
+          os: macos-11
+          arch: arm64
+          generator: Xcode
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+    - name: Setup Dependencies
+      uses: audacity/audacity-actions/dependencies@v2
+    - name: Configure
+      uses: audacity/audacity-actions/configure@v2
+      with:
+        generator: ${{ matrix.config.generator }}
+        arch: ${{ matrix.config.arch }}
+        build_type: ${{ env.BUILD_TYPE }}
+        configuration_types: ${{ env.CONFIGURATION_TYPES }}
+        build_level: ${{ env.BUILD_LEVEL }}
+        cmake_options: |
+          ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+        windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
+        windows_certificate_password: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+    - name: Build
+      uses: audacity/audacity-actions/build@v2
+    - name: Package
+      uses: audacity/audacity-actions/package@v2
