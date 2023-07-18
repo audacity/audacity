@@ -374,7 +374,7 @@ bool LabelDialog::TransferDataFromWindow()
    int tndx = 0;
 
    // Clear label tracks of labels
-   for (auto lt : mTracks->Any<LabelTrack>()) {
+   for (auto lt : mTracks->Leaders<LabelTrack>()) {
       ++tndx;
       if (!mSelectedTrack) {
          for (i = lt->GetNumLabels() - 1; i >= 0 ; i--) {
@@ -409,7 +409,7 @@ bool LabelDialog::TransferDataFromWindow()
       // Look for track with matching index
       tndx = 1;
       LabelTrack *lt{};
-      for (auto t : mTracks->Any<LabelTrack>()) {
+      for (auto t : mTracks->Leaders<LabelTrack>()) {
          lt = t;
          if (rd.index == tndx++) {
             break;
@@ -452,7 +452,7 @@ wxString LabelDialog::TrackName(int & index, const wxString &dflt)
 void LabelDialog::FindAllLabels()
 {
    // Add labels from all label tracks
-   for (auto lt : mTracks->Any<const LabelTrack>()) {
+   for (auto lt : mTracks->Leaders<const LabelTrack>()) {
       AddLabels(lt);
    }
 

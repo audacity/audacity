@@ -14,10 +14,10 @@ Classes derived form it include the WaveTrack, NoteTrack, LabelTrack
 and TimeTrack.
 
 *//*******************************************************************/
-
 #include "Track.h"
 
 #include <algorithm>
+#include <cassert>
 #include <numeric>
 
 #include <float.h>
@@ -37,17 +37,14 @@ and TimeTrack.
 #endif
 
 Track::Track()
-:  vrulerSize(36,0)
 {
    mIndex = 0;
 
    mOffset = 0.0;
-
-   mChannel = MonoChannel;
 }
 
-Track::Track(const Track &orig, ProtectedCreationArg&&)
-: vrulerSize( orig.vrulerSize )
+Track::Track(const Track& orig, ProtectedCreationArg&&)
+    : mProjectTempo { orig.mProjectTempo }
 {
    mIndex = 0;
    mOffset = orig.mOffset;
@@ -61,8 +58,6 @@ void Track::Init(const Track &orig)
    // Deep copy of any group data
    mpGroupData = orig.mpGroupData ?
       std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
-
-   mChannel = orig.mChannel;
 }
 
 const wxString &Track::GetName() const
@@ -99,7 +94,7 @@ void Track::EnsureVisible( bool modifyState )
 {
    auto pList = mList.lock();
    if (pList)
-      pList->EnsureVisibleEvent( SharedPointer(), modifyState );
+      pList->EnsureVisibleEvent(SharedPointer(), modifyState);
 }
 
 Track::Holder Track::Duplicate() const
@@ -164,6 +159,11 @@ void Track::SetLinkType(LinkType linkType, bool completeList)
    }
 }
 
+void Track::DestroyGroupData()
+{
+   mpGroupData.reset();
+}
+
 Track::ChannelGroupData &Track::MakeGroupData()
 {
    if (!mpGroupData)
@@ -197,12 +197,12 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
 
    if (oldType == LinkType::None) {
       // Becoming linked
-   
+
       // First ensure there is no partner
       if (auto partner = GetLinkedTrack())
          partner->mpGroupData.reset();
       assert(!GetLinkedTrack());
-   
+
       // Change the link type
       MakeGroupData().mLinkType = linkType;
 
@@ -235,11 +235,6 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
    assert(LinkConsistencyCheck(completeList));
 }
 
-void Track::SetChannel(ChannelType c) noexcept
-{
-    mChannel = c;
-}
-
 Track *Track::GetLinkedTrack() const
 {
    auto pList = mList.lock();
@@ -269,6 +264,11 @@ Track *Track::GetLinkedTrack() const
 bool Track::HasLinkedTrack() const noexcept
 {
     return mpGroupData && mpGroupData->mLinkType != LinkType::None;
+}
+
+std::optional<TranslatableString> Track::GetErrorOpening() const
+{
+   return {};
 }
 
 void Track::Notify(bool allChannels, int code)
@@ -314,7 +314,6 @@ void Track::FinishCopy
 (const Track *n, Track *dest)
 {
    if (dest) {
-      dest->SetChannel(n->GetChannel());
       dest->mpGroupData = n->mpGroupData ?
          std::make_unique<ChannelGroupData>(*n->mpGroupData) : nullptr;
    }
@@ -337,21 +336,6 @@ bool Track::LinkConsistencyFix(bool doFix, bool completeList)
                    "track link.\n   Removing extra link from right track.",
                   GetName(), link->GetName());
                link->SetLinkType(LinkType::None);
-            }
-         }
-
-         // Channels should be left and right
-         if ( !(  (GetChannel() == Track::LeftChannel &&
-                     link->GetChannel() == Track::RightChannel) ||
-                  (GetChannel() == Track::RightChannel &&
-                     link->GetChannel() == Track::LeftChannel) ) ) {
-            err = true;
-            if (doFix) {
-               wxLogWarning(
-                  L"Track %s and %s had left/right track links out of order. "
-                   "Setting tracks to not be linked.",
-                  GetName(), link->GetName());
-               SetLinkType(LinkType::None);
             }
          }
       }
@@ -514,8 +498,11 @@ void TrackList::DataEvent(
 void TrackList::EnsureVisibleEvent(
    const std::shared_ptr<Track> &pTrack, bool modifyState )
 {
+   // Substitute leader track
+   const auto pLeader = *FindLeader(pTrack.get());
    QueueEvent({ TrackListEvent::TRACK_REQUEST_VISIBLE,
-      pTrack, static_cast<int>(modifyState) });
+      pLeader ? pLeader->SharedPointer() : nullptr,
+      static_cast<int>(modifyState) });
 }
 
 void TrackList::PermutationEvent(TrackNodePointer node)
@@ -574,13 +561,15 @@ bool TrackList::SwapChannels(Track &track)
    assert(pData);
    pOwner->MoveUp(pPartner);
    pPartner->mpGroupData = move(pData);
-   pPartner->SetChannel(Track::LeftChannel);
-   track.SetChannel(Track::RightChannel);
    return true;
 }
 
-void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
+void TrackList::Permute(const std::vector<Track *> &tracks)
 {
+   std::vector<TrackNodePointer> permutation;
+   for (const auto pTrack : tracks)
+      for (const auto pChannel : Channels(pTrack))
+         permutation.push_back(pChannel->GetNode());
    for (const auto iter : permutation) {
       ListOfTracks::value_type track = *iter.first;
       erase(iter.first);
@@ -618,6 +607,18 @@ Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
 
 Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
 {
+   if (!ListOfTracks::empty()) {
+      auto &pLast = *ListOfTracks::rbegin();
+      if (auto &pGroupData = pLast->mpGroupData
+         ; pGroupData && pGroupData->mLinkType != Track::LinkType::None
+      ) {
+         // Assume the newly added track is intended to pair with the last
+         // Avoid upsetting assumptions in case this track had its own group
+         // data initialized during Duplicate()
+         t->mpGroupData.reset();
+      }
+   }
+
    push_back(t);
 
    auto n = getPrev( getEnd() );
@@ -658,10 +659,7 @@ void TrackList::UnlinkChannels(Track& track)
    {
       auto channels = TrackList::Channels(&track);
       for (auto c : channels)
-      {
           c->SetLinkType(Track::LinkType::None);
-          c->SetChannel(Track::ChannelType::MonoChannel);
-      }
    }
    else
       THROW_INCONSISTENCY_EXCEPTION;
@@ -693,9 +691,6 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
       if (!canLink)
          return false;
 
-      (*first)->SetChannel(Track::LeftChannel);
-      auto second = std::next(first);
-      (*second)->SetChannel(Track::RightChannel);
       (*first)->SetLinkType(aligned ? Track::LinkType::Aligned : Track::LinkType::Group);
    }
    else
@@ -703,25 +698,31 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
    return true;
 }
 
-TrackNodePointer TrackList::Remove(Track *t)
+void TrackList::Remove(Track &track)
 {
-   auto result = getEnd();
-   if (t) {
+   assert(track.IsLeader());
+   auto *t = &track;
+   const size_t nChannels = NChannels(*t);
+   Track *nextT{};
+   for (size_t ii = 0; t != nullptr && ii < nChannels; ++ii, t = nextT) {
+      nextT = nullptr;
+      auto iter = getEnd();
       auto node = t->GetNode();
       t->SetOwner({}, {});
 
-      if ( !isNull( node ) ) {
+      if (!isNull(node)) {
          ListOfTracks::value_type holder = *node.first;
 
-         result = getNext( node );
+         iter = getNext(node);
          erase(node.first);
-         if ( !isNull( result ) )
-            RecalcPositions(result);
+         if (!isNull(iter)) {
+            RecalcPositions(iter);
+            nextT = iter.first->get();
+         }
 
          DeletionEvent(t->shared_from_this(), false);
       }
    }
-   return result;
 }
 
 void TrackList::Clear(bool sendEvent)
@@ -732,11 +733,11 @@ void TrackList::Clear(bool sendEvent)
    for ( auto pTrack: *this )
    {
       pTrack->SetOwner({}, {});
-      
+
       if (sendEvent)
          DeletionEvent(pTrack->shared_from_this(), false);
    }
-   
+
    for ( auto pTrack: mPendingUpdates )
    {
       pTrack->SetOwner({}, {});
@@ -1168,16 +1169,6 @@ bool Track::SupportsBasicEditing() const
    return true;
 }
 
-auto Track::GetIntervals() const -> ConstIntervals
-{
-   return {};
-}
-
-auto Track::GetIntervals() -> Intervals
-{
-   return {};
-}
-
 // Serialize, not with tags of its own, but as attributes within a tag.
 void Track::WriteCommonXMLAttributes(
    XMLWriter &xmlFile, bool includeNameAndSelected) const
@@ -1229,8 +1220,6 @@ void Track::AdjustPositions()
    }
 }
 
-TrackIntervalData::~TrackIntervalData() = default;
-
 bool TrackList::HasPendingTracks() const
 {
    if ( !mPendingUpdates.empty() )
@@ -1255,6 +1244,83 @@ bool Track::IsAlignedWithLeader() const
       return leader != this && leader->GetLinkType() == Track::LinkType::Aligned;
    }
    return false;
+}
+
+TrackAttachment &ChannelAttachmentsBase::Get(
+   const AttachedTrackObjects::RegisteredFactory &key,
+   Track &track, size_t iChannel)
+{
+   // Precondition of this function; satisfies precondition of factory below
+   assert(iChannel < track.NChannels());
+   auto &attachments = track.AttachedObjects::Get<ChannelAttachmentsBase>(key);
+   auto &objects = attachments.mAttachments;
+   if (iChannel >= objects.size())
+      objects.resize(iChannel + 1);
+   auto &pObject = objects[iChannel];
+   if (!pObject) {
+      // Create on demand
+      pObject = attachments.mFactory(track, iChannel);
+      assert(pObject); // Precondition of constructor
+   }
+   return *pObject;
+}
+
+TrackAttachment *ChannelAttachmentsBase::Find(
+   const AttachedTrackObjects::RegisteredFactory &key,
+   Track *pTrack, size_t iChannel)
+{
+   assert(!pTrack || iChannel < pTrack->NChannels());
+   if (!pTrack)
+      return nullptr;
+   const auto pAttachments =
+      pTrack->AttachedObjects::Find<ChannelAttachmentsBase>(key);
+   // do not create on demand
+   if (!pAttachments || iChannel >= pAttachments->mAttachments.size())
+      return nullptr;
+   return pAttachments->mAttachments[iChannel].get();
+}
+
+ChannelAttachmentsBase::~ChannelAttachmentsBase() = default;
+
+void ChannelAttachmentsBase::CopyTo(Track &track) const
+{
+   for (auto &pAttachment : mAttachments)
+      if (pAttachment)
+         pAttachment->CopyTo(track);
+}
+
+void ChannelAttachmentsBase::Reparent(const std::shared_ptr<Track> &parent)
+{
+   for (auto &pAttachment : mAttachments)
+      if (pAttachment)
+         pAttachment->Reparent(parent);
+}
+
+void ChannelAttachmentsBase::WriteXMLAttributes(XMLWriter &writer) const
+{
+   for (auto &pAttachment : mAttachments)
+      if (pAttachment)
+         pAttachment->WriteXMLAttributes(writer);
+}
+
+bool ChannelAttachmentsBase::HandleXMLAttribute(
+   const std::string_view& attr, const XMLAttributeValueView& valueView)
+{
+   return std::any_of(mAttachments.begin(), mAttachments.end(),
+   [&](auto &pAttachment) {
+      return pAttachment && pAttachment->HandleXMLAttribute(attr, valueView);
+   });
+}
+
+void Track::OnProjectTempoChange(double newTempo)
+{
+   DoOnProjectTempoChange(mProjectTempo, newTempo);
+   mProjectTempo = newTempo;
+}
+
+const std::optional<double>& Track::GetProjectTempo() const
+{
+   return mProjectTempo;
 }
 
 // Undo/redo handling of selection changes

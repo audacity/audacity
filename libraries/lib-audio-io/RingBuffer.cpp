@@ -43,12 +43,12 @@ RingBuffer::~RingBuffer()
 // Calculations of free and filled space, given snapshots taken of the start
 // and end values
 
-size_t RingBuffer::Filled( size_t start, size_t end )
+size_t RingBuffer::Filled(size_t start, size_t end) const
 {
    return (end + mBufferSize - start) % mBufferSize;
 }
 
-size_t RingBuffer::Free( size_t start, size_t end )
+size_t RingBuffer::Free(size_t start, size_t end) const
 {
    return std::max<size_t>(mBufferSize - Filled( start, end ), 4) - 4;
 }
@@ -61,7 +61,7 @@ size_t RingBuffer::Free( size_t start, size_t end )
 // so that any reading done in Get() happens-before any reuse of the space.
 //
 
-size_t RingBuffer::AvailForPut()
+size_t RingBuffer::AvailForPut() const
 {
    auto start = mStart.load( std::memory_order_relaxed );
    return Free( start, mWritten );
@@ -70,7 +70,7 @@ size_t RingBuffer::AvailForPut()
    // never decrease it, so writer can safely assume this much at least
 }
 
-size_t RingBuffer::WrittenForGet()
+size_t RingBuffer::WrittenForGet() const
 {
    auto start = mStart.load( std::memory_order_relaxed );
    return Filled( start, mWritten );
@@ -223,7 +223,7 @@ void RingBuffer::Flush()
 // if we do more than merely query the size or throw samples away
 //
 
-size_t RingBuffer::AvailForGet()
+size_t RingBuffer::AvailForGet() const
 {
    auto end = mEnd.load( std::memory_order_relaxed ); // get away with it here
    auto start = mStart.load( std::memory_order_relaxed );

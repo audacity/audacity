@@ -2333,7 +2333,7 @@ msgstr "Pogrješka pri otvaranju datoteke: \"%s\""
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "Pogrješka: %hs u retku %lu"
+msgstr "Pogrješka: %s u retku %lu"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format

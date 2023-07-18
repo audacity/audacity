@@ -64,9 +64,9 @@ is time to refresh some aspect of the screen.
 #include "Theme.h"
 #include "TrackArt.h"
 #include "TrackPanelMouseEvent.h"
-#include "TrackPanelResizeHandle.h"
 
 #include "UndoManager.h"
+#include "UIHandle.h"
 
 #include "AColor.h"
 #include "AllThemeResources.h"
@@ -83,8 +83,8 @@ is time to refresh some aspect of the screen.
 #include "FrameStatistics.h"
 
 #include "tracks/ui/TrackControls.h"
-#include "tracks/ui/TrackView.h"
-#include "tracks/ui/TrackVRulerControls.h"
+#include "tracks/ui/ChannelView.h"
+#include "tracks/ui/ChannelVRulerControls.h"
 
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
@@ -105,7 +105,7 @@ static_assert( kTrackInfoBtnSize == kAffordancesAreaHeight, "Drag bar is misalig
 \class TrackPanel
 
 This is a diagram of TrackPanel's division of one (non-stereo) track rectangle.
-Total height equals TrackView::GetHeight()'s value.  Total width is the wxWindow's
+Total height equals ChannelView::GetHeight()'s value.  Total width is the wxWindow's
 width.  Each character that is not . represents one pixel.
 
 Inset space of this track, and top inset of the next track, are used to draw the
@@ -329,9 +329,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mRealtimeEffectManagerSubscription = RealtimeEffectManager::Get(*theProject)
       .Subscribe([this](const RealtimeEffectManagerMessage& msg)
       {
-         if(msg.track)
+         if (auto pTrack = dynamic_cast<Track *>(msg.sequence))
             //update "effects" button 
-            RefreshTrack(msg.track.get());
+            RefreshTrack(pTrack);
       });
 
    UpdatePrefs();
@@ -748,14 +748,13 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
    // Always move to the first channel of the group, and use only
    // the sum of channel heights, not the height of any channel alone!
    trk = *GetTracks()->FindLeader(trk);
-   auto &view = TrackView::Get( *trk );
-   auto height =
-      TrackList::Channels(trk).sum( TrackView::GetTrackHeight );
+   auto height = ChannelView::GetChannelGroupHeight(trk);
 
    // Set rectangle top according to the scrolling position, `vpos`
    // Subtract the inset (above) and shadow (below) from the height of the
    // rectangle, but not the border
    // This matters because some separators do paint over the border
+   auto &view = ChannelView::Get(*trk->GetChannel(0));
    const auto top =
       -mViewInfo->vpos + view.GetCumulativeHeightBefore() + kTopInset;
    height -= (kTopInset + kShadowThickness);
@@ -840,10 +839,10 @@ void TrackPanel::DrawTracks(wxDC * dc)
    brushFlag   = (ToolCodes::brushTool == settings.GetTool());
 #endif
 
-   const bool hasSolo = GetTracks()->Any< PlayableTrack >()
-      .any_of( []( const PlayableTrack *pt ) {
-         pt = static_cast< const PlayableTrack * >(
-            pt->SubstitutePendingChangedTrack().get() );
+   const bool hasSolo = GetTracks()->Leaders<PlayableTrack>()
+      .any_of( [](const PlayableTrack *pt) {
+         pt = static_cast<const PlayableTrack *>(
+            pt->SubstitutePendingChangedTrack().get());
          return (pt && pt->GetSolo());
       } );
 
@@ -868,20 +867,24 @@ std::shared_ptr< CommonTrackPanelCell > TrackPanel::GetBackgroundCell()
 }
 
 namespace {
-std::vector<int> FindAdjustedChannelHeights( Track &t )
+/*!
+ @pre `t.IsLeader()`
+ */
+std::vector<int> FindAdjustedChannelHeights(Track &t)
 {
-   auto channels = TrackList::Channels(&t);
-   wxASSERT(!channels.empty());
+   assert(t.IsLeader());
+   auto channels = t.Channels();
+   assert(!channels.empty());
 
    // Collect heights, and count affordances
    int nAffordances = 0;
    int totalHeight = 0;
    std::vector<int> oldHeights;
-   for (auto channel : channels) {
-      auto &view = TrackView::Get( *channel );
+   for (auto pChannel : channels) {
+      auto &view = ChannelView::Get(*pChannel);
       const auto height = view.GetHeight();
       totalHeight += height;
-      oldHeights.push_back( height );
+      oldHeights.push_back(height);
       if (view.GetAffordanceControls())
          ++nAffordances;
    }
@@ -915,8 +918,8 @@ std::vector<int> FindAdjustedChannelHeights( Track &t )
 
 void TrackPanel::UpdateVRulers()
 {
-   for (auto t : GetTracks()->Any< WaveTrack >())
-      UpdateTrackVRuler(t);
+   for (auto t : GetTracks()->Leaders<WaveTrack>())
+      UpdateTrackVRuler(*t);
 
    UpdateVRulerSize();
 }
@@ -924,18 +927,16 @@ void TrackPanel::UpdateVRulers()
 void TrackPanel::UpdateVRuler(Track *t)
 {
    if (t)
-      UpdateTrackVRuler(t);
+      UpdateTrackVRuler(**TrackList::Channels(t).begin());
 
    UpdateVRulerSize();
 }
 
-void TrackPanel::UpdateTrackVRuler(Track *t)
+void TrackPanel::UpdateTrackVRuler(Track &t)
 {
-   wxASSERT(t);
-   if (!t)
-      return;
+   assert(t.IsLeader());
 
-   auto heights = FindAdjustedChannelHeights(*t);
+   auto heights = FindAdjustedChannelHeights(t);
 
    wxRect rect(mViewInfo->GetVRulerOffset(),
             0,
@@ -943,43 +944,48 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
             0);
 
    auto pHeight = heights.begin();
-   for (auto channel : TrackList::Channels(t)) {
-      auto &view = TrackView::Get( *channel );
+   for (auto pChannel : t.Channels()) {
+      auto &view = ChannelView::Get(*pChannel);
       const auto height = *pHeight++;
-      rect.SetHeight( height );
-      const auto subViews = view.GetSubViews( rect );
+      rect.SetHeight(height);
+      const auto subViews = view.GetSubViews(rect);
       if (subViews.empty())
          continue;
 
       auto iter = subViews.begin(), end = subViews.end(), next = iter;
       auto yy = iter->first;
       wxSize vRulerSize{ 0, 0 };
-      for ( ; iter != end; iter = next ) {
+      auto &size = view.vrulerSize;
+      for (; iter != end; iter = next) {
          ++next;
-         auto nextY = ( next == end )
+         auto nextY = (next == end)
             ? height
             : next->first;
-         rect.SetHeight( nextY - yy );
+         rect.SetHeight(nextY - yy);
          // This causes ruler size in the track to be reassigned:
-         TrackVRulerControls::Get( *iter->second ).UpdateRuler( rect );
+         ChannelVRulerControls::Get(*iter->second).UpdateRuler(rect);
          // But we want to know the maximum width and height over all sub-views:
-         vRulerSize.IncTo( {t->vrulerSize.first, t->vrulerSize.second} );
+         vRulerSize.IncTo({ size.first, size.second });
          yy = nextY;
       }
-      t->vrulerSize = {vRulerSize.x, vRulerSize.y};
+      size = { vRulerSize.x, vRulerSize.y };
    }
 }
 
 void TrackPanel::UpdateVRulerSize()
 {
-   auto trackRange = GetTracks()->Any();
+   auto trackRange = GetTracks()->Leaders();
    if (trackRange) {
-      wxSize s { 0, 0 };
+      wxSize s{ 0, 0 };
+      // Find maximum width over all channels
       for (auto t : trackRange)
-         s.IncTo({t->vrulerSize.first, t->vrulerSize.second});
+         for (auto pChannel : t->Channels()) {
+            auto &size = ChannelView::Get(*pChannel).vrulerSize;
+            s.IncTo({ size.first, size.second });
+         }
 
       if (mViewInfo->GetVRulerWidth() != s.GetWidth()) {
-         mViewInfo->SetVRulerWidth( s.GetWidth() );
+         mViewInfo->SetVRulerWidth(s.GetWidth());
          mRuler->SetLeftOffset(
             mViewInfo->GetLeftOffset());  // bevel on AdornedRuler
          mRuler->Refresh();
@@ -990,28 +996,26 @@ void TrackPanel::UpdateVRulerSize()
 
 void TrackPanel::OnTrackMenu(Track *t)
 {
-   CellularPanel::DoContextMenu( t ? &TrackView::Get( *t ) : nullptr );
+   CellularPanel::DoContextMenu(
+      t ? &ChannelView::Get(*t->GetChannel(0)) : nullptr);
 }
 
 // Tracks have been removed from the list.
 void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
 {
    bool modifyState = e.mExtra;
-
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();
-
+   // Promised by TrackListEvent for this event type:
+   assert(!t || t->IsLeader());
    int trackTop = 0;
    int trackHeight =0;
-
    for (auto it : GetTracks()->Leaders()) {
       trackTop += trackHeight;
+      trackHeight = ChannelView::GetChannelGroupHeight(it);
 
-      auto channels = TrackList::Channels(it);
-      trackHeight = channels.sum( TrackView::GetTrackHeight );
-
-      //We have found the track we want to ensure is visible.
-      if (channels.contains(t)) {
+      if (it == t) {
+         //We have found the track we want to ensure is visible.
 
          //Get the size of the trackpanel.
          int width, height;
@@ -1033,8 +1037,8 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
    }
    Refresh(false);
 
-   if ( modifyState )
-      ProjectHistory::Get( *GetProject() ).ModifyState( false );
+   if (modifyState)
+      ProjectHistory::Get(*GetProject()).ModifyState(false);
 }
 
 // 0.0 scrolls to top
@@ -1048,10 +1052,10 @@ void TrackPanel::VerticalScroll( float fracPosition){
 
    auto range = tracks->Leaders();
    if (!range.empty()) {
-      trackHeight = TrackView::GetChannelGroupHeight( *range.rbegin() );
+      trackHeight = ChannelView::GetChannelGroupHeight(*range.rbegin());
       --range.second;
    }
-   trackTop = range.sum( TrackView::GetChannelGroupHeight );
+   trackTop = range.sum(ChannelView::GetChannelGroupHeight);
 
    int delta;
 
@@ -1080,12 +1084,26 @@ namespace {
       MarginsX = 2 * MarginX, MarginsY = 2 * MarginY,
    };
 
+Track &GetTrack(Channel &channel)
+{
+   // It is assumed that all channels we ever see are in groups that are
+   // also Tracks
+   return static_cast<Track &>(channel.GetChannelGroup());
+}
+
+const Track &GetTrack(const Channel &channel)
+{
+   // It is assumed that all channels we ever see are in groups that are
+   // also Tracks
+   return static_cast<const Track &>(channel.GetChannelGroup());
+}
+
 void GetTrackNameExtent(
-   wxDC &dc, const Track *t, wxCoord *pW, wxCoord *pH )
+   wxDC &dc, const Channel &channel, wxCoord *pW, wxCoord *pH)
 {
    wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    dc.SetFont(labelFont);
-   dc.GetTextExtent( t->GetName(), pW, pH );
+   dc.GetTextExtent(GetTrack(channel).GetName(), pW, pH);
 }
 
 wxRect GetTrackNameRect(
@@ -1101,21 +1119,21 @@ wxRect GetTrackNameRect(
 }
 
 // Draws the track name on the track, if it is needed.
-void DrawTrackName(
-   int leftOffset,
-   TrackPanelDrawingContext &context, const Track * t, const wxRect & rect )
+void DrawTrackName(int leftOffset, TrackPanelDrawingContext &context,
+   const Channel &channel, const wxRect & rect)
 {
-   if( !TrackArtist::Get( context )->mbShowTrackNameInTrack )
+   if (!TrackArtist::Get(context)->mbShowTrackNameInTrack)
       return;
-   auto name = t->GetName();
-   if( name.IsEmpty())
+   auto &track = *GetTrack(channel).SubstitutePendingChangedTrack();
+   auto name = track.GetName();
+   if (name.IsEmpty())
       return;
-   if( !t->IsLeader())
+   if (!track.IsLeader())
       return;
    auto &dc = context.dc;
    wxBrush Brush;
    wxCoord textWidth, textHeight;
-   GetTrackNameExtent( dc, t, &textWidth, &textHeight );
+   GetTrackNameExtent(dc, channel, &textWidth, &textHeight);
 
    // Logic for name background translucency (aka 'shields')
    // Tracks less than kOpaqueHeight high will have opaque shields.
@@ -1123,9 +1141,9 @@ void DrawTrackName(
    const int kOpaqueHeight = 44;
    const int kTranslucentHeight = 124;
 
-   // PRL:  to do:  reexamine this strange use of TrackView::GetHeight,
+   // PRL:  to do:  reexamine this strange use of ChannelView::GetHeight,
    // ultimately to compute an opacity
-   int h = TrackView::Get( *t ).GetHeight();
+   int h = ChannelView::Get(channel).GetHeight();
 
    // f codes the opacity as a number between 0.0 and 1.0
    float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
@@ -1174,7 +1192,7 @@ void DrawTrackName(
       nameRect.x - SecondMarginX, nameRect.y - SecondMarginY );
 #endif
    dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
-   dc.DrawText(t->GetName(),
+   dc.DrawText(track.GetName(),
       nameRect.x + MarginX,
       nameRect.y + MarginY);
 }
@@ -1244,17 +1262,17 @@ struct EmptyCell final : CommonTrackPanelCell {
 // A vertical ruler left of a channel
 struct VRulerAndChannel final : TrackPanelGroup {
    VRulerAndChannel(
-      const std::shared_ptr< TrackView > &pView, wxCoord leftOffset )
+      const std::shared_ptr<ChannelView> &pView, wxCoord leftOffset)
          : mpView{ pView }, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
    {
       return { Axis::X, Refinement{
          { rect.GetLeft(),
-           TrackVRulerControls::Get( *mpView ).shared_from_this() },
+           ChannelVRulerControls::Get(*mpView).shared_from_this() },
          { mLeftOffset, mpView }
       } };
    }
-   std::shared_ptr< TrackView > mpView;
+   std::shared_ptr<ChannelView> mpView;
    wxCoord mLeftOffset;
 };
 
@@ -1262,9 +1280,9 @@ struct VRulerAndChannel final : TrackPanelGroup {
 // a vertical ruler and a channel
 struct VRulersAndChannels final : TrackPanelGroup {
    VRulersAndChannels(
-      const std::shared_ptr<Track> &pTrack,
-      TrackView::Refinement refinement, wxCoord leftOffset )
-         : mpTrack{ pTrack }
+      const std::shared_ptr<Channel> &pChannel,
+      ChannelView::Refinement refinement, wxCoord leftOffset)
+         : mpChannel{ pChannel }
          , mRefinement{ std::move( refinement ) }
          , mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
@@ -1288,8 +1306,7 @@ struct VRulersAndChannels final : TrackPanelGroup {
       // This overpaints the track area, but sometimes too the stereo channel
       // separator, so draw at least later than that
       if ( iPass == TrackArtist::PassBorders ) {
-         DrawTrackName( mLeftOffset,
-            context, mpTrack->SubstitutePendingChangedTrack().get(), rect );
+         DrawTrackName(mLeftOffset, context, *mpChannel, rect);
       }
       if ( iPass == TrackArtist::PassControls ) {
          if (mRefinement.size() > 1) {
@@ -1313,8 +1330,7 @@ struct VRulersAndChannels final : TrackPanelGroup {
       if ( iPass == TrackArtist::PassBorders ) {
          if ( true ) {
             wxCoord textWidth, textHeight;
-            GetTrackNameExtent( context.dc, mpTrack.get(),
-               &textWidth, &textHeight );
+            GetTrackNameExtent(context.dc, *mpChannel, &textWidth, &textHeight);
             result =
                GetTrackNameRect( mLeftOffset, rect, textWidth, textHeight );
          }
@@ -1322,8 +1338,8 @@ struct VRulersAndChannels final : TrackPanelGroup {
       return result;
    }
 
-   std::shared_ptr< Track > mpTrack;
-   TrackView::Refinement mRefinement;
+   std::shared_ptr<Channel> mpChannel;
+   ChannelView::Refinement mRefinement;
    wxCoord mLeftOffset;
 };
 
@@ -1331,11 +1347,15 @@ struct VRulersAndChannels final : TrackPanelGroup {
 class EmptyPanelRect final : public CommonTrackPanelCell
 {
    //Required to keep selection behaviour similar to others
-   std::shared_ptr<Track> mTrack;
+   std::shared_ptr<Channel> mpChannel;
    int mFillBrushName;
 public:
-   explicit EmptyPanelRect(const std::shared_ptr<Track>& track, int fillBrushName)
-      : mTrack(track), mFillBrushName(fillBrushName)
+   /*!
+    @pre `pChannel != nullptr`
+    */
+   explicit EmptyPanelRect(
+      const std::shared_ptr<Channel>& pChannel, int fillBrushName
+   )  : mpChannel{ pChannel }, mFillBrushName{ fillBrushName }
    {
    }
 
@@ -1356,7 +1376,7 @@ public:
 
    std::shared_ptr<Track> DoFindTrack() override
    {
-       return mTrack;
+      return GetTrack(*mpChannel).shared_from_this();
    }
 
    std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state,
@@ -1387,72 +1407,72 @@ struct HorizontalGroup final : TrackPanelGroup {
 // optional affordance areas, and n channels with vertical rulers,
 // alternating with n - 1 resizers;
 // each channel-ruler pair might be divided into multiple views
-struct ChannelGroup final : TrackPanelGroup {
-   ChannelGroup( const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
+struct ChannelStack final : TrackPanelGroup {
+   /*!
+    @pre `pTrack->IsLeader()`
+    */
+   ChannelStack(const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
       : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
-   Subdivision Children( const wxRect &rect_ ) override
+   Subdivision Children(const wxRect &rect_) override
    {
       auto rect = rect_;
       Refinement refinement;
 
-      const auto channels = TrackList::Channels( mpTrack.get() );
+      const auto channels = mpTrack->Channels();
       const auto pLast = *channels.rbegin();
       wxCoord yy = rect.GetTop();
       auto heights = FindAdjustedChannelHeights(*mpTrack);
       auto pHeight = heights.begin();
-      for ( auto channel : channels )
-      {
-         auto &view = TrackView::Get( *channel );
-         if (auto affordance = view.GetAffordanceControls())
-         {
-            auto panelRect = std::make_shared<EmptyPanelRect>(
-               channel->shared_from_this(),
-               channel->GetSelected() ? clrTrackInfoSelected : clrTrackInfo);
+      for (auto pChannel : channels) {
+         auto &view = ChannelView::Get(*pChannel);
+         if (auto affordance = view.GetAffordanceControls()) {
+            auto panelRect = std::make_shared<EmptyPanelRect>(pChannel,
+               mpTrack->GetSelected()
+                  ? clrTrackInfoSelected : clrTrackInfo);
             Refinement hgroup {
                std::make_pair(rect.GetLeft() + 1, panelRect),
                std::make_pair(mLeftOffset, affordance)
             };
-            refinement.emplace_back(yy, std::make_shared<HorizontalGroup>(hgroup));
+            refinement
+               .emplace_back(yy, std::make_shared<HorizontalGroup>(hgroup));
             yy += kAffordancesAreaHeight;
          }
 
          auto height = *pHeight++;
-         rect.SetTop( yy );
-         rect.SetHeight( height - kChannelSeparatorThickness );
-         refinement.emplace_back( yy,
-            std::make_shared< VRulersAndChannels >(
-               channel->shared_from_this(),
-               TrackView::Get( *channel ).GetSubViews( rect ),
-               mLeftOffset ) );
-         if ( channel != pLast ) {
+         rect.SetTop(yy);
+         rect.SetHeight(height - kChannelSeparatorThickness);
+         refinement.emplace_back(yy,
+            std::make_shared<VRulersAndChannels>(pChannel,
+               ChannelView::Get(*pChannel).GetSubViews(rect),
+               mLeftOffset));
+         if (pChannel != pLast) {
             yy += height;
             refinement.emplace_back(
                yy - kChannelSeparatorThickness,
-               TrackPanelResizerCell::Get( *channel ).shared_from_this() );
+               TrackPanelResizerCell::Get(*pChannel)
+                  .shared_from_this());
          }
       }
 
-      return { Axis::Y, std::move( refinement ) };
+      return { Axis::Y, std::move(refinement) };
    }
 
-   void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override
+   void Draw(TrackPanelDrawingContext& context,
+      const wxRect& rect, unsigned iPass) override
    {
       TrackPanelGroup::Draw(context, rect, iPass);
-      if (iPass == TrackArtist::PassFocus && mpTrack->IsSelected())
-      {
-         const auto channels = TrackList::Channels(mpTrack.get());
+      if (iPass == TrackArtist::PassFocus && mpTrack->IsSelected()) {
+         const auto channels = mpTrack->Channels();
          const auto pLast = *channels.rbegin();
          wxCoord yy = rect.GetTop();
+         assert(mpTrack->IsLeader()); // by construction
          auto heights = FindAdjustedChannelHeights(*mpTrack);
          auto pHeight = heights.begin();
-         for (auto channel : channels)
-         {
-            auto& view = TrackView::Get(*channel);
+         for (auto pChannel : channels) {
+            auto& view = ChannelView::Get(*pChannel);
             auto height = *pHeight++;
             if (auto affordance = view.GetAffordanceControls())
-            {
                height += kAffordancesAreaHeight;
-            }
             auto trackRect = wxRect(
                mLeftOffset,
                yy,
@@ -1464,29 +1484,32 @@ struct ChannelGroup final : TrackPanelGroup {
       }
    }
 
-   std::shared_ptr< Track > mpTrack;
+   const std::shared_ptr<Track> mpTrack;
    wxCoord mLeftOffset;
 };
 
 // A track control panel, left of n vertical rulers and n channels
 // alternating with n - 1 resizers
 struct LabeledChannelGroup final : TrackPanelGroup {
+   /*!
+    @pre `pTrack->IsLeader()`
+    */
    LabeledChannelGroup(
-      const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
+      const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
          : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
-   Subdivision Children( const wxRect &rect ) override
+   Subdivision Children(const wxRect &rect) override
    { return { Axis::X, Refinement{
       { rect.GetLeft(),
-         TrackControls::Get( *mpTrack ).shared_from_this() },
+         TrackControls::Get(*mpTrack).shared_from_this() },
       { rect.GetLeft() + kTrackInfoWidth,
-        std::make_shared< ChannelGroup >( mpTrack, mLeftOffset ) }
+        std::make_shared<ChannelStack>(mpTrack, mLeftOffset) }
    } }; }
 
    // TrackPanelDrawable implementation
-   void Draw( TrackPanelDrawingContext &context,
-      const wxRect &rect, unsigned iPass ) override
+   void Draw(TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass) override
    {
-      if ( iPass == TrackArtist::PassBorders ) {
+      if (iPass == TrackArtist::PassBorders) {
          auto &dc = context.dc;
          dc.SetBrush(*wxTRANSPARENT_BRUSH);
          dc.SetPen(*wxBLACK_PEN);
@@ -1508,49 +1531,48 @@ struct LabeledChannelGroup final : TrackPanelGroup {
          // right
          AColor::Line(dc, right, rect.y + 2, right, bottom);
       }
-      if ( iPass == TrackArtist::PassFocus ) {
+      if (iPass == TrackArtist::PassFocus) {
          // Sometimes highlight is not drawn on backing bitmap. I thought
          // it was because FindFocus did not return the TrackPanel on Mac, but
          // when I removed that test, yielding this condition:
          //     if (GetFocusedTrack() != NULL) {
          // the highlight was reportedly drawn even when something else
          // was the focus and no highlight should be drawn. -RBD
-         const auto artist = TrackArtist::Get( context );
+         const auto artist = TrackArtist::Get(context);
          auto &trackPanel = *artist->parent;
          auto &trackFocus = TrackFocus::Get( *trackPanel.GetProject() );
          if (trackFocus.Get() == mpTrack.get() &&
-             wxWindow::FindFocus() == &trackPanel ) {
+             wxWindow::FindFocus() == &trackPanel) {
             /// Draw a three-level highlight gradient around the focused track.
             wxRect theRect = rect;
             auto &dc = context.dc;
             dc.SetBrush(*wxTRANSPARENT_BRUSH);
 
-            AColor::TrackFocusPen( &dc, 2 );
+            AColor::TrackFocusPen(&dc, 2);
             dc.DrawRectangle(theRect);
             theRect.Deflate(1);
 
-            AColor::TrackFocusPen( &dc, 1 );
+            AColor::TrackFocusPen(&dc, 1);
             dc.DrawRectangle(theRect);
             theRect.Deflate(1);
 
-            AColor::TrackFocusPen( &dc, 0 );
+            AColor::TrackFocusPen(&dc, 0);
             dc.DrawRectangle(theRect);
          }
       }
    }
 
-   wxRect DrawingArea(
-      TrackPanelDrawingContext &,
-      const wxRect &rect, const wxRect &, unsigned iPass ) override
+   wxRect DrawingArea(TrackPanelDrawingContext &,
+      const wxRect &rect, const wxRect &, unsigned iPass) override
    {
-      if ( iPass == TrackArtist::PassBorders )
+      if (iPass == TrackArtist::PassBorders)
          return {
             rect.x - kBorderThickness,
             rect.y - kBorderThickness,
             rect.width + 2 * kBorderThickness + kShadowThickness,
             rect.height + 2 * kBorderThickness + kShadowThickness
          };
-      else if ( iPass == TrackArtist::PassFocus ) {
+      else if (iPass == TrackArtist::PassFocus) {
          constexpr auto extra = kBorderThickness + 3;
          return {
             rect.x - extra,
@@ -1563,70 +1585,73 @@ struct LabeledChannelGroup final : TrackPanelGroup {
          return rect;
    }
 
-   std::shared_ptr< Track > mpTrack;
+   const std::shared_ptr<Track> mpTrack;
    wxCoord mLeftOffset;
 };
 
 // Stacks a label and a single or multi-channel track on a resizer below,
 // which is associated with the last channel
 struct ResizingChannelGroup final : TrackPanelGroup {
+   /*!
+    @pre `pTrack->IsLeader()`
+    */
    ResizingChannelGroup(
-      const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
+      const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
          : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
-   Subdivision Children( const wxRect &rect ) override
+   Subdivision Children(const wxRect &rect) override
    { return { Axis::Y, Refinement{
       { rect.GetTop(),
-         std::make_shared< LabeledChannelGroup >( mpTrack, mLeftOffset ) },
+         std::make_shared<LabeledChannelGroup>(mpTrack, mLeftOffset) },
       { rect.GetTop() + rect.GetHeight() - kTrackSeparatorThickness,
          TrackPanelResizerCell::Get(
-            **TrackList::Channels( mpTrack.get() ).rbegin() ).shared_from_this()
+            **mpTrack->Channels().rbegin()).shared_from_this()
       }
    } }; }
-   std::shared_ptr< Track > mpTrack;
+   const std::shared_ptr<Track> mpTrack;
    wxCoord mLeftOffset;
 };
 
 // Stacks a dead area at top, the tracks, and the click-to-deselect area below
 struct Subgroup final : TrackPanelGroup {
-   explicit Subgroup( TrackPanel &panel ) : mPanel{ panel } {}
-   Subdivision Children( const wxRect &rect ) override
+   explicit Subgroup(TrackPanel &panel) : mPanel{ panel } {}
+   Subdivision Children(const wxRect &rect) override
    {
       const auto &viewInfo = *mPanel.GetViewInfo();
       wxCoord yy = -viewInfo.vpos;
       Refinement refinement;
 
       auto &tracks = *mPanel.GetTracks();
-      if ( tracks.Any() )
+      if (!tracks.empty())
          refinement.emplace_back( yy, EmptyCell::Instance() ),
          yy += kTopMargin;
 
-      for ( const auto leader : tracks.Leaders() ) {
+      for (const auto leader : tracks.Leaders()) {
          wxCoord height = 0;
-         for ( auto channel : TrackList::Channels( leader ) ) {
-            auto &view = TrackView::Get( *channel );
+         for (auto pChannel : leader->Channels()) {
+            auto &view = ChannelView::Get(*pChannel);
             height += view.GetHeight();
          }
          refinement.emplace_back( yy,
-            std::make_shared< ResizingChannelGroup >(
-               leader->SharedPointer(), viewInfo.GetLeftOffset() )
+            std::make_shared<ResizingChannelGroup>(
+               leader->SharedPointer(), viewInfo.GetLeftOffset())
          );
          yy += height;
       }
 
-      refinement.emplace_back( std::max( 0, yy ), mPanel.GetBackgroundCell() );
+      refinement.emplace_back(std::max(0, yy), mPanel.GetBackgroundCell());
 
-      return { Axis::Y, std::move( refinement ) };
+      return { Axis::Y, std::move(refinement) };
    }
    TrackPanel &mPanel;
 };
 
 // Main group shaves off the left and right margins
 struct MainGroup final : TrackPanelGroup {
-   explicit MainGroup( TrackPanel &panel ) : mPanel{ panel } {}
-   Subdivision Children( const wxRect &rect ) override
+   explicit MainGroup(TrackPanel &panel) : mPanel{ panel } {}
+   Subdivision Children(const wxRect &rect) override
    { return { Axis::X, Refinement{
       { 0, EmptyCell::Instance() },
-      { kLeftMargin, std::make_shared< Subgroup >( mPanel ) },
+      { kLeftMargin, std::make_shared<Subgroup>(mPanel) },
       { rect.GetRight() + 1 - kRightMargin, EmptyCell::Instance() }
    } }; }
    TrackPanel &mPanel;
@@ -1675,8 +1700,8 @@ wxRect TrackPanel::FindFocusedTrackRect( const Track * target )
       // but not the top (should that be fixed?)
 
       // (Note that TrackPanel paints its focus over the "top margin" of the
-      // rectangle allotted to the track, according to TrackView::GetY() and
-      // TrackView::GetHeight(), but also over the margin of the next track.)
+      // rectangle allotted to the track, according to ChannelView::GetY() and
+      // ChannelView::GetHeight(), but also over the margin of the next track.)
 
       rect.height += kBottomMargin;
       int dy = kTopMargin - 1;
@@ -1688,22 +1713,25 @@ wxRect TrackPanel::FindFocusedTrackRect( const Track * target )
    return rect;
 }
 
-std::vector<wxRect> TrackPanel::FindRulerRects( const Track *target )
+std::vector<wxRect> TrackPanel::FindRulerRects(const Channel &target)
 {
    std::vector<wxRect> results;
-   if (target)
-      VisitCells( [&]( const wxRect &rect, TrackPanelCell &visited ) {
-         if (auto pRuler = dynamic_cast<const TrackVRulerControls*>(&visited);
-             pRuler && pRuler->FindTrack().get() == target)
-            results.push_back(rect);
-      } );
+   VisitCells( [&](const wxRect &rect, TrackPanelCell &visited) {
+      if (auto pRuler = dynamic_cast<const ChannelVRulerControls*>(&visited))
+         if (auto pView = pRuler->GetChannelView())
+            if (pView->FindChannel().get() == &target)
+               results.push_back(rect);
+   } );
    return results;
 }
 
 TrackPanelCell *TrackPanel::GetFocusedCell()
 {
-   auto pTrack = TrackFocus::Get( *GetProject() ).Get();
-   return pTrack ? &TrackView::Get( *pTrack ) : GetBackgroundCell().get();
+   // Note that focus track is always a leader
+   auto pTrack = TrackFocus::Get(*GetProject()).Get();
+   return pTrack
+      ? &ChannelView::Get(*pTrack->GetChannel(0))
+      : GetBackgroundCell().get();
 }
 
 void TrackPanel::SetFocusedCell()

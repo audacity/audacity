@@ -66,9 +66,18 @@ void TimeTrack::CleanState()
    SetName(GetDefaultName());
 }
 
+void TimeTrack::DoOnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   if (!oldTempo.has_value())
+      return;
+   const auto ratio = *oldTempo / newTempo;
+   mEnvelope->RescaleTimesBy(ratio);
+}
+
 TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
    double *pT0, double *pT1
-)  : Track(orig, std::move(a))
+)  : UniqueChannelTrack{ orig, std::move(a) }
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
@@ -141,11 +150,11 @@ bool TimeTrack::SupportsBasicEditing() const
    return false;
 }
 
-Track::Holder TimeTrack::PasteInto( AudacityProject &project ) const
+Track::Holder TimeTrack::PasteInto(AudacityProject &project) const
 {
    // Maintain uniqueness of the time track!
    std::shared_ptr<TimeTrack> pNewTrack;
-   if( auto pTrack = *TrackList::Get( project ).Any<TimeTrack>().begin() )
+   if (auto pTrack = *TrackList::Get(project).Leaders<TimeTrack>().begin())
       pNewTrack = pTrack->SharedPointer<TimeTrack>();
    else
       pNewTrack = std::make_shared<TimeTrack>();
@@ -193,10 +202,10 @@ void TimeTrack::Clear(double t0, double t1)
 
 void TimeTrack::Paste(double t, const Track * src)
 {
-   bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack *tt) {
+   bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack &tt) {
       auto sampleTime = 1.0 / GetRate(*this);
       mEnvelope->PasteEnvelope
-         (t, tt->mEnvelope.get(), sampleTime);
+         (t, tt.mEnvelope.get(), sampleTime);
       return true;
    } );
 
@@ -310,6 +319,17 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("timetrack"));
 }
 
+size_t TimeTrack::NIntervals() const
+{
+   return 0;
+}
+
+std::shared_ptr<WideChannelGroupInterval>
+TimeTrack::DoGetInterval(size_t iInterval)
+{
+   return {};
+}
+
 void TimeTrack::testMe()
 {
    GetEnvelope()->Flatten(0.0);
@@ -345,10 +365,12 @@ void TimeTrack::testMe()
 
 //! Installer of the time warper
 static Mixer::WarpOptions::DefaultWarp::Scope installer{
-[](const TrackList &list) -> const BoundedEnvelope*
+[](const AudacityProject *pProject) -> const BoundedEnvelope*
 {
-   if (auto pTimeTrack = *list.Any<const TimeTrack>().begin())
-      return pTimeTrack->GetEnvelope();
-   else
-      return nullptr;
+   if (pProject) {
+      auto &list = TrackList::Get(*pProject);
+      if (auto pTimeTrack = *list.Leaders<const TimeTrack>().begin())
+         return pTimeTrack->GetEnvelope();
+   }
+   return nullptr;
 } };

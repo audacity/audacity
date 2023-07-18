@@ -46,11 +46,6 @@ on:
         required: false
         default: RelWithDebInfo
         type: string
-      configuration_types:
-        description: 'Build type. Valid values are: Debug, Release, RelWithDebInfo, MinSizeRel or any combination separated with a semicolon'
-        required: false
-        default: RelWithDebInfo
-        type: string
       cmake_options:
         description: 'Additional CMake options for configuration'
         required: false
@@ -64,32 +59,6 @@ env:
   OWNER: ${{ github.repository_owner }}
 
 jobs:
-  generate_offline_dependencies:
-    name: "Generate Offline Dependencies"
-    runs-on: ubuntu-20.04
-    steps:
-    - name: Install required libraries
-      shell: bash
-      run: |
-          apt_packages=(
-              libasound2-dev
-              libgtk2.0-dev
-              libjack-jackd2-dev
-              gettext
-          )
-
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends "${apt_packages[@]}"
-          sudo apt-get remove -y ccache
-    - name: Checkout Audacity
-      uses: actions/checkout@v2
-    - name: "Generate Offline Dependencies"
-      uses: audacity/audacity-actions/generate_offline_dependencies@v1
-      with:
-        generator: Unix Makefiles
-        build_type: ${{ env.BUILD_TYPE }}
-        build_level: ${{ env.BUILD_LEVEL }}
-        cmake_options: ${{ env.CMAKE_OPTIONS }}
   generate_source_tarball:
     name: Source Tarball
     runs-on: ubuntu-20.04
@@ -97,15 +66,14 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v1
+      uses: audacity/audacity-actions/dependencies@v2
     - name: Configure
-      uses: audacity/audacity-actions/configure@v1
+      uses: audacity/audacity-actions/configure@v2
       with:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
-        configuration_types: ${{ env.CONFIGURATION_TYPES }}
         build_level: ${{ env.BUILD_LEVEL }}
-        cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+        cmake_options: ${{ env.CMAKE_OPTIONS }}
     - name: Package
       shell: bash
       run: |
@@ -130,7 +98,7 @@ jobs:
           dir: fedora34
         #- name: ubuntu-20.04
         #  dir: ubuntu-20.04
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
       packages: write
@@ -169,7 +137,7 @@ jobs:
         - name: arch-linux
         - name: fedora-34
         #- name: ubuntu-20.04
-    needs: [generate_offline_dependencies, generate_source_tarball, generate_docker_images]
+    needs: [generate_source_tarball, generate_docker_images]
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/download-artifact@v2
@@ -184,8 +152,12 @@ jobs:
         rm -Rfv audacity-sources
 
         deps=$(find -name "audacity-dependencies-*" -type d)
-        mv -v ${deps}/* .
-        rm -Rfv ${deps}
+
+        if [ ! -z "${deps}" ]
+        then
+          mv -v ${deps}/* .
+          rm -Rfv ${deps}
+        fi
 
         chmod -v ga+w .
 

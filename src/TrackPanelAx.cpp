@@ -73,7 +73,7 @@ std::shared_ptr<Track> TrackPanelAx::GetFocus()
       }
       if (!focusedTrack) {
          focusedTrack =
-            Track::SharedPointer( *GetTracks().Any().first );
+            Track::SharedPointer(*GetTracks().Leaders().first);
          // only call SetFocus if the focus has changed to avoid
          // unnecessary focus events
          if (focusedTrack) 
@@ -107,8 +107,8 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
    }
 #endif
 
-   if( !track )
-      track = Track::SharedPointer( *GetTracks().Any().begin() );
+   if (!track)
+      track = Track::SharedPointer(*GetTracks().Leaders().begin());
 
    if ( mFocusedTrack.lock() != track ) {
       mFocusedTrack = track;
@@ -149,24 +149,6 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
 #endif
 
    return track;
-}
-
-// Returns TRUE if passed track has the focus
-bool TrackPanelAx::IsFocused( const Track *track )
-{
-   auto focusedTrack = mFocusedTrack.lock();
-   if( !focusedTrack )
-      focusedTrack = SetFocus();
-
-   // Remap track pointer if there are outstanding pending updates
-   auto origTrack =
-      GetTracks().FindById( track->GetId() );
-   if (origTrack)
-      track = origTrack;
-
-   return focusedTrack
-      ? TrackList::Channels(focusedTrack.get()).contains(track)
-      : !track;
 }
 
 int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )
@@ -352,7 +334,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
    {
       if( childId == wxACC_SELF )
       {
-         *name = _( "TrackView" );
+         *name = _("ChannelView");
       }
       else
       {
@@ -555,7 +537,7 @@ wxAccStatus TrackPanelAx::GetValue( int WXUNUSED(childId), wxString* WXUNUSED(st
 #if defined(__WXMAC__)
    if( childId == wxACC_SELF )
    {
-      *strValue = _( "TrackView" );
+      *strValue = _("ChannelView");
    }
    else
    {
@@ -760,13 +742,6 @@ void TrackFocus::Set( Track *pTrack )
       pTrack = *TrackList::Get( mProject ).FindLeader( pTrack );
       mAx->SetFocus( Track::SharedPointer( pTrack ) );
    }
-}
-
-bool TrackFocus::IsFocused( const Track *pTrack )
-{
-   if (mAx)
-      return mAx->IsFocused( pTrack );
-   return false;
 }
 
 void TrackFocus::SetAccessible(

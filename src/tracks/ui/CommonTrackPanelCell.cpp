@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Menus.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
+#include "Track.h"
 #include "ViewInfo.h"
 #include "wxWidgetsWindowPlacement.h"
 
@@ -113,9 +114,19 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
    return hook ? hook( evt, pProject ) : RefreshCode::Cancelled;
 }
 
-CommonTrackCell::CommonTrackCell( const std::shared_ptr< Track > &parent )
-   : mwTrack { parent }
-{}
+CommonTrackCell::CommonTrackCell(
+   const std::shared_ptr<Track> &parent, size_t iChannel
+)  : mwTrack{ parent }
+   , miChannel{ iChannel }
+{
+   // TODO wide wave tracks -- remove assertion
+   assert(iChannel == 0);
+}
+
+CommonTrackCell::CommonTrackCell(ChannelGroup &group, size_t iChannel)
+   : CommonTrackCell{ static_cast<Track&>(group).shared_from_this(), iChannel }
+{
+}
 
 CommonTrackCell::~CommonTrackCell() = default;
 
@@ -127,4 +138,16 @@ void CommonTrackCell::Reparent( const std::shared_ptr<Track> &parent )
 std::shared_ptr<Track> CommonTrackCell::DoFindTrack()
 {
    return mwTrack.lock();
+}
+
+std::shared_ptr<Channel> CommonTrackCell::FindChannel()
+{
+   if (const auto pTrack = FindTrack())
+      return pTrack->GetChannel(miChannel);
+   return {};
+}
+
+std::shared_ptr<const Channel> CommonTrackCell::FindChannel() const
+{
+   return const_cast<CommonTrackCell*>(this)->FindChannel();
 }

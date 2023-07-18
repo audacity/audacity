@@ -4,15 +4,16 @@ Audacity: A Digital Audio Editor
 
 WaveformVRulerControls.cpp
 
-Paul Licameli split from WaveTrackVRulerControls.cpp
+Paul Licameli split from WaveChannelVRulerControls.cpp
 
 **********************************************************************/
 
 #include "WaveformVRulerControls.h"
 
 #include "WaveformVZoomHandle.h"
-#include "WaveTrackVRulerControls.h"
+#include "WaveChannelVRulerControls.h"
 
+#include "../../../ui/ChannelView.h"
 #include "NumberScale.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
@@ -100,7 +101,7 @@ std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
       }
    }
 
-   auto more = TrackVRulerControls::HitTest(st, pProject);
+   auto more = ChannelVRulerControls::HitTest(st, pProject);
    std::copy(more.begin(), more.end(), std::back_inserter(results));
 
    return results;
@@ -146,7 +147,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
 
    auto steps = evt.steps;
 
-   using namespace WaveTrackViewConstants;
+   using namespace WaveChannelViewConstants;
    auto &settings = WaveformSettings::Get(*wt);
    auto &cache = WaveformScale::Get(*wt);
    const bool isDB = !settings.isLinear();
@@ -230,8 +231,8 @@ void WaveformVRulerControls::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect_, unsigned iPass )
 {
-   TrackVRulerControls::Draw( context, rect_, iPass );
-   WaveTrackVRulerControls::DoDraw( *this, context, rect_, iPass );
+   ChannelVRulerControls::Draw(context, rect_, iPass);
+   WaveChannelVRulerControls::DoDraw(*this, context, rect_, iPass);
 }
 
 void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
@@ -245,9 +246,9 @@ void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
 static CustomUpdaterValue updater;
 
 void WaveformVRulerControls::DoUpdateVRuler(
-   const wxRect &rect, const WaveTrack *wt )
+   const wxRect &rect, const WaveTrack *wt)
 {
-   auto vruler = &WaveTrackVRulerControls::ScratchRuler();
+   auto vruler = &WaveChannelVRulerControls::ScratchRuler();
 
    // All waves have a ruler in the info panel
    // The ruler needs a bevelled surround.
@@ -291,8 +292,9 @@ void WaveformVRulerControls::DoUpdateVRuler(
          cache.SetDisplayBounds(min, max);
       }
       
-      vruler->SetDbMirrorValue( 0.0 );
-      vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
+      vruler->SetDbMirrorValue(0.0);
+      vruler->SetBounds(
+         rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat(&RealFormat::LinearInstance());
@@ -307,7 +309,8 @@ void WaveformVRulerControls::DoUpdateVRuler(
          vruler->SetUnits(XO("dB"));
          vruler->SetUpdater(&updater);
          RulerUpdater::Labels major, minor, minorMinor;
-         std::vector<LinearDBValues> values = { majorValues, minorValues, minorMinorValues };
+         std::vector<LinearDBValues> values =
+            { majorValues, minorValues, minorMinorValues };
          for (int ii = 0; ii < 3; ii++) {
             RulerUpdater::Labels labs;
             int size = (ii == 0) ? majorValues.size() :
@@ -390,7 +393,8 @@ void WaveformVRulerControls::DoUpdateVRuler(
             
             const float extreme = LINEAR_TO_DB(2);
             // recover dB value of max
-            const float dB = std::min(extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
+            const float dB = std::min(
+               extreme, (float(fabs(max)) * lastdBRange - lastdBRange));
             // find NEW scale position, but old max may get trimmed if the db limit rises
             // Don't trim it to zero though, but leave max and limit distinct
             newMax = sign * std::max(ZOOMLIMIT, (dBRange + dB) / dBRange);
@@ -449,5 +453,6 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetLabelEdges(true);
       vruler->SetUpdater(&LinearUpdater::Instance());
    }
-   vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
+   auto &size = ChannelView::Get(*wt).vrulerSize;
+   vruler->GetMaxSize(&size.first, &size.second);
 }

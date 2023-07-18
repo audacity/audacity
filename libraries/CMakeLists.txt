@@ -49,6 +49,9 @@ set( LIBRARIES
    lib-audio-unit
    lib-playable-track
    lib-time-and-pitch
+   lib-mixer
+   lib-channel
+   lib-stretching-sequence
 )
 
 if( NOT ${_OPT}enable_experimental_qt_support )

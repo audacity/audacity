@@ -16,6 +16,7 @@
 
 
 #include "Reverse.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -71,31 +72,33 @@ bool EffectReverse::IsInteractive() const
 bool EffectReverse::Process(EffectInstance &, EffectSettings &)
 {
    //all needed because Reverse should move the labels too
-   this->CopyInputTracks(true); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks, true };
    bool bGoodResult = true;
    int count = 0;
 
    auto trackRange =
-      mOutputTracks->Any() + &SyncLock::IsSelectedOrSyncLockSelected;
-   trackRange.VisitWhile( bGoodResult,
-      [&](WaveTrack * track) {
+      outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelected;
+   trackRange.VisitWhile(bGoodResult,
+      [&](WaveTrack &track) {
          if (mT1 > mT0) {
-            auto start = track->TimeToLongSamples(mT0);
-            auto end = track->TimeToLongSamples(mT1);
+            auto start = track.TimeToLongSamples(mT0);
+            auto end = track.TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!ProcessOneWave(count, track, start, len))
+            if (!ProcessOneWave(count, &track, start, len))
                bGoodResult = false;
          }
          count++;
       },
-      [&](LabelTrack * track) {
-         track->ChangeLabelsOnReverse(mT0, mT1);
+      [&](LabelTrack &track) {
+         track.ChangeLabelsOnReverse(mT0, mT1);
          count++;
       }
    );
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 

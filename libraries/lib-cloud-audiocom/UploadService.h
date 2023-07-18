@@ -43,6 +43,10 @@ struct CLOUD_AUDIOCOM_API UploadSuccessfulPayload final
    std::string audioId;
    //! "Slug" to be used for shareable URL construction
    std::string audioSlug;
+   //! Upload token, if any
+   std::string uploadToken;
+   //! URL to the uploaded audio
+   std::string audioUrl;
 };
 
 //! Message that is sent when upload is finished.

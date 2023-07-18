@@ -68,6 +68,7 @@ template<typename M, typename C> struct InvocableBase<M C::*> {
 template<typename... Invocables> struct OverloadSetBase
    : detail::InvocableBase_t<Invocables>...
 {
+   constexpr OverloadSetBase() = default;
    //! Variadic constructor allowing arguments with different value categories
    template<typename... Is>
    constexpr OverloadSetBase(Is&&... invocables)

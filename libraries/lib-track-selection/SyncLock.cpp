@@ -54,7 +54,7 @@ void SyncLockState::SetSyncLock(bool flag)
 }
 
 namespace {
-inline bool IsSyncLockableNonSeparatorTrack( const Track *pTrack )
+inline bool IsSyncLockableNonSeparatorTrack(const Track *pTrack)
 {
    return pTrack && GetSyncLockPolicy::Call(*pTrack) == SyncLockPolicy::Grouped;
 }
@@ -75,11 +75,11 @@ bool IsGoodNextSyncLockTrack(const Track *t, bool inSeparatorSection)
    else if (isSeparator)
       return true;
    else
-      return IsSyncLockableNonSeparatorTrack( t );
+      return IsSyncLockableNonSeparatorTrack(t);
 }
 }
 
-bool SyncLock::IsSyncLockSelected( const Track *pTrack )
+bool SyncLock::IsSyncLockSelected(const Track *pTrack)
 {
    if (!pTrack)
       return false;
@@ -115,7 +115,7 @@ bool SyncLock::IsSelectedOrSyncLockSelected( const Track *pTrack )
 }
 
 namespace {
-std::pair<Track *, Track *> FindSyncLockGroup(  Track *pMember)
+std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember)
 {
    if (!pMember)
       return { nullptr, nullptr };
@@ -126,8 +126,8 @@ std::pair<Track *, Track *> FindSyncLockGroup(  Track *pMember)
 
    // Step back through any label tracks.
    auto pList = pMember->GetOwner();
-   auto member = pList->Find(pMember);
-   while (*member && IsSeparatorTrack(*member) )
+   auto member = pList->FindLeader(pMember);
+   while (*member && IsSeparatorTrack(*member))
       --member;
 
    // Step back through the wave and note tracks before the label tracks.
@@ -142,18 +142,19 @@ std::pair<Track *, Track *> FindSyncLockGroup(  Track *pMember)
       // consider the track to be the sole member of a group.
       return { pMember, pMember };
 
-   auto last = pList->Find(first);
+   auto last = pList->FindLeader(first);
    auto next = last;
    bool inLabels = false;
 
    while (*++next) {
-      if ( ! IsGoodNextSyncLockTrack(*next, inLabels) )
+      if (!IsGoodNextSyncLockTrack(*next, inLabels))
          break;
       last = next;
       inLabels = IsSeparatorTrack(*last);
    }
 
-   return { first, *last };
+   auto lastTrack = *TrackList::Channels(*last).rbegin();
+   return { first, lastTrack };
 }
 
 }

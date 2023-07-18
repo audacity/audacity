@@ -14,8 +14,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
 
-#include "WaveTrackView.h"
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelView.h"
+#include "WaveChannelViewConstants.h"
 #include "AudioIOBase.h"
 #include "../../../../CellularPanel.h"
 #include "Project.h"
@@ -259,9 +259,11 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
                             XO("Processing...   0%%"),
                             pdlgHideStopButton };
 
+   // Simply finding a denominator for the progress dialog
    sampleCount totalSamples{ 0 };
    for (const auto& channel : TrackList::Channels(pTrack))
       // Hidden samples are processed too, they should be counted as well
+      // (Correctly counting all samples of all channels)
       totalSamples += channel->GetSequenceSamplesCount();
    sampleCount processedSamples{ 0 };
 
@@ -489,14 +491,12 @@ static const auto MenuPathStart = wxT("WaveTrackMenu");
 
 //=============================================================================
 // Class defining common command handlers for mono and stereo tracks
-struct WaveTrackMenuTable
-   : ComputedPopupMenuTable< WaveTrackMenuTable, WaveTrackPopupMenuTable >
+struct WaveTrackMenuTable : WaveTrackPopupMenuTable
 {
    static WaveTrackMenuTable &Instance();
 
    WaveTrackMenuTable()
-      : ComputedPopupMenuTable< WaveTrackMenuTable, WaveTrackPopupMenuTable >{
-         MenuPathStart }
+      : WaveTrackPopupMenuTable{ MenuPathStart }
    {
       mNextId = FirstAttachedItemId;
    }
@@ -508,7 +508,6 @@ struct WaveTrackMenuTable
    void OnMultiView(wxCommandEvent & event);
    void OnSetDisplay(wxCommandEvent & event);
 
-   void OnChannelChange(wxCommandEvent & event);
    void OnMergeStereo(wxCommandEvent & event);
 
    // TODO: more-than-two-channels
@@ -531,12 +530,12 @@ void WaveTrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
 }
 
-static std::vector<WaveTrackSubViewType> AllTypes()
+static std::vector<WaveChannelSubViewType> AllTypes()
 {
-   auto result = WaveTrackSubViewType::All();
-   if ( result.size() > reserveDisplays ) {
+   auto result = WaveChannelSubViewType::All();
+   if (result.size() > reserveDisplays) {
       wxASSERT( false );
-      result.resize( reserveDisplays );
+      result.resize(reserveDisplays);
    }
    return result;
 }
@@ -562,21 +561,20 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    BeginSection( "SubViews" );
       // Multi-view check mark item, if more than one track sub-view type is
       // known
-      Append( []( My &table ) -> Registry::BaseItemPtr {
-         if ( WaveTrackSubViews::slots() > 1 )
-            return std::make_unique<Entry>(
+      Append(Adapt<My>([](My &table) {
+         return (WaveChannelSubViews::slots() > 1)
+            ? std::make_unique<Entry>(
                "MultiView", Entry::CheckItem, OnMultiViewID, XXO("&Multi-view"),
                POPUP_MENU_FN( OnMultiView ),
                table,
-               []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-                  auto &table = static_cast< WaveTrackMenuTable& >( handler );
+               [](PopupMenuHandler &handler, wxMenu &menu, int id){
+                  auto &table = static_cast<WaveTrackMenuTable&>(handler);
                   auto &track = table.FindWaveTrack();
-                  const auto &view = WaveTrackView::Get( track );
-                  menu.Check( id, view.GetMultiView() );
-               } );
-            else
-               return nullptr;
-      } );
+                  const auto &view = WaveChannelView::Get(track);
+                  menu.Check(id, view.GetMultiView());
+               })
+            : nullptr;
+      }));
 
       // Append either a checkbox or radio item for each sub-view.
       // Radio buttons if in single-view mode, else checkboxes
@@ -589,23 +587,23 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
                // How to convert a type to a menu item id
                const auto IdForType =
-               [&allTypes]( const WaveTrackSubViewType &type ) -> int {
+               [&allTypes](const WaveChannelSubViewType &type) -> int {
                   const auto begin = allTypes.begin();
                   return OnSetDisplayId +
-                     (std::find( begin, allTypes.end(), type ) - begin);
+                     (std::find(begin, allTypes.end(), type) - begin);
                };
 
                auto &table = static_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
 
-               const auto &view = WaveTrackView::Get( track );
+               const auto &view = WaveChannelView::Get(track);
 
                const auto displays = view.GetDisplays();
                const auto end = displays.end();
                bool check = (end !=
-                  std::find_if( displays.begin(), end,
-                     [&]( const WaveTrackSubViewType &type ){
-                        return id == IdForType( type ); } ) );
+                  std::find_if(displays.begin(), end,
+                     [&](const WaveChannelSubViewType &type){
+                        return id == IdForType(type); }));
                menu.Check( id, check );
 
                // Bug2275 residual
@@ -614,16 +612,16 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                   menu.Enable( id, false );
             };
          };
-         Append( [type, id]( My &table ) -> Registry::BaseItemPtr {
+         Append(Adapt<My>([type, id](My &table) {
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto &view = WaveChannelView::Get(*pTrack);
             const auto itemType =
                view.GetMultiView() ? Entry::CheckItem : Entry::RadioItem;
             return std::make_unique<Entry>( type.name.Internal(), itemType,
                id, type.name.Msgid(),
                POPUP_MENU_FN( OnSetDisplay ), table,
                initFn( !view.GetMultiView() ) );
-         } );
+         }));
          ++id;
       }
       BeginSection( "Extra" );
@@ -631,29 +629,6 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    EndSection();
 
    BeginSection( "Channels" );
-   // If these are enabled again, choose a hot key for Mono that does not conflict
-   // with Multi View
-   //   AppendRadioItem(OnChannelMonoID, XXO("&Mono"),
-   //      POPUP_MENU_FN( OnChannelChange ),
-   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-   //         menu.Enable( id, isMono( handler ) );
-   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::MonoChannel );
-   //      }
-   //   );
-   //   AppendRadioItem(OnChannelLeftID, XXO("&Left Channel"),
-   //      POPUP_MENU_FN( OnChannelChange ),
-   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-   //         menu.Enable( id, isMono( handler ) );
-   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::LeftChannel );
-   //      }
-   //   );
-   //   AppendRadioItem(OnChannelRightID, XXO("R&ight Channel"),
-   //      POPUP_MENU_FN( OnChannelChange ),
-   //      []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-   //         menu.Enable( id, isMono( handler ) );
-   //         menu.Check( id, findTrack( handler ).GetChannel() == Track::RightChannel );
-   //      }
-   //   );
       AppendItem( "MakeStereo", OnMergeStereoID, XXO("Ma&ke Stereo Track"),
          POPUP_MENU_FN( OnMergeStereo ),
          []( PopupMenuHandler &handler, wxMenu &menu, int id ){
@@ -664,7 +639,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                auto &tracks = TrackList::Get( project );
                auto &table = static_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
-               auto next = * ++ tracks.Find(&track);
+               auto next = * ++ tracks.FindLeader(&track);
                canMakeStereo =
                   (next &&
                    TrackList::NChannels(*next) == 1 &&
@@ -713,11 +688,11 @@ END_POPUP_MENU()
 void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 {
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   auto &view = WaveTrackView::Get(*pTrack);
+   auto &view = WaveChannelView::Get(*pTrack);
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
-      ? WaveTrackViewConstants::Waveform : displays.begin()->id;
+      ? WaveChannelViewConstants::Waveform : displays.begin()->id;
    view.SetMultiView(multi);
 
    // Whichever sub-view was on top stays on top
@@ -736,10 +711,10 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
 
    auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
-   auto &view = WaveTrackView::Get(*pTrack);
+   auto &view = WaveChannelView::Get(*pTrack);
    if (view.GetMultiView()) {
-      if (!WaveTrackView::Get(*pTrack)
-            .ToggleSubView(WaveTrackView::Display{ id } )) {
+      if (!WaveChannelView::Get(*pTrack)
+            .ToggleSubView(WaveChannelView::Display{ id } )) {
          // Trying to toggle off the last sub-view.  It was refused.
          // Decide what to do here.  Turn off multi-view instead?
          // PRL:  I don't agree that it makes sense
@@ -752,7 +727,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       const bool wrongType =
          !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
-         WaveTrackView::Get(*pTrack).SetDisplay(WaveTrackView::Display{ id });
+         WaveChannelView::Get(*pTrack).SetDisplay(WaveChannelView::Display{ id });
 
          AudacityProject *const project = &mpData->project;
          ProjectHistory::Get( *project ).ModifyState(true);
@@ -763,41 +738,6 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    }
 }
 
-#if 0
-void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
-{
-   int id = event.GetId();
-   wxASSERT(id >= OnChannelLeftID && id <= OnChannelMonoID);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack);
-   Track::ChannelType channel;
-   TranslatableString channelmsg;
-   switch (id) {
-   default:
-   case OnChannelMonoID:
-      channel = Track::MonoChannel;
-      channelmsg = XO("Mono");
-      break;
-   case OnChannelLeftID:
-      channel = Track::LeftChannel;
-      channelmsg = XO("Left Channel");
-      break;
-   case OnChannelRightID:
-      channel = Track::RightChannel;
-      channelmsg = XO("Right Channel");
-      break;
-   }
-   pTrack->SetChannel(channel);
-   AudacityProject *const project = &mpData->project;
-   ProjectHistory::Get( *project )
-      .PushState(
-/* i18n-hint: The strings name a track and a channel choice (mono, left, or right) */
-         XO("Changed '%s' to %s").Format( pTrack->GetName(), channelmsg ),
-         XO("Channel"));
-   mpData->result = RefreshCode::RefreshAll;
-}
-#endif
-
 /// Merge two tracks into one stereo track ??
 void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 {
@@ -807,12 +747,23 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
 
-   auto partner = static_cast< WaveTrack * >
-      ( *tracks.Find( pTrack ).advance( 1 ) );
+   auto partner =
+      static_cast<WaveTrack*>(*tracks.FindLeader(pTrack).advance(1));
+
+   if (pTrack->GetRate() != partner->GetRate()) {
+      using namespace BasicUI;
+      ShowMessageBox(XO(
+"Mono tracks must have the same sample rate in order to be combined into a "
+"stereo track"),
+         MessageBoxOptions{}
+           .Caption(XO("Error"))
+           .IconStyle(Icon::Error));
+      return;
+   }
 
    bool bBothMinimizedp =
-      ((TrackView::Get( *pTrack ).GetMinimized()) &&
-       (TrackView::Get( *partner ).GetMinimized()));
+      ((ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized()) &&
+       (ChannelView::Get(*partner->GetChannel(0)).GetMinimized()));
 
    tracks.MakeMultiChannelTrack( *pTrack, 2, false );
 
@@ -823,8 +774,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 
    // Set NEW track heights and minimized state
    auto
-      &view = WaveTrackView::Get( *pTrack ),
-      &partnerView = WaveTrackView::Get( *partner );
+      &view = WaveChannelView::Get(*pTrack),
+      &partnerView = WaveChannelView::Get(*partner);
    view.SetMinimized(false);
    partnerView.SetMinimized(false);
    int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
@@ -848,17 +799,28 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
    AudacityProject *const project = &mpData->project;
-   auto channels = TrackList::Channels( pTrack );
 
-   // Unlink to make pan values independent, before changing them
-   TrackList::Get( *project ).UnlinkChannels( *pTrack );
+   // We can assume all channels of a WaveTrack are also WaveTrack
+   auto channelRange = pTrack->Channels<WaveTrack>();
 
    int totalHeight = 0;
    int nChannels = 0;
-   for (auto channel : channels) {
-      auto &view = TrackView::Get( *channel );
-      if (stereo)
-         channel->SetPanFromChannelType();
+
+   std::vector<WaveTrack *> channels;
+   for (auto pChannel : channelRange)
+      channels.push_back(pChannel.get());
+
+   TrackList::Get(*project).UnlinkChannels(*pTrack);
+
+   float pan = -1.0f;
+   for (const auto pChannel : channels) {
+      // See comment on channelRange
+      assert(pChannel);
+      auto &view = ChannelView::Get(*pChannel);
+      if (stereo) {
+         pChannel->SetPan(pan);
+         pan += 2.0f;
+      }
 
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())
@@ -869,9 +831,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    int averageHeight = totalHeight / nChannels;
 
-   for (auto channel : channels)
+   for (const auto pChannel : channels)
       // Make tracks the same height
-      TrackView::Get( *channel ).SetExpandedHeight( averageHeight );
+      ChannelView::Get(*pChannel).SetExpandedHeight(averageHeight);
 }
 
 /// Swap the left and right channels of a stero track...
@@ -1032,14 +994,8 @@ void Status1DrawFunction
       // TODO: more-than-two-channels-message
       // more appropriate strings
       s = XO("Stereo, %dHz");
-   else {
-      if (wt->GetChannel() == Track::MonoChannel)
-         s = XO("Mono, %dHz");
-      else if (wt->GetChannel() == Track::LeftChannel)
-         s = XO("Left, %dHz");
-      else if (wt->GetChannel() == Track::RightChannel)
-         s = XO("Right, %dHz");
-   }
+   else
+      s = XO("Mono, %dHz");
    s.Format( (int) (rate + 0.5) );
 
    StatusDrawFunction( s, dc, rect );

@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Project.h"
 #include "../../../RefreshCode.h"
 #include "../../../RealtimeEffectPanel.h"
+#include "SampleTrack.h"
 #include "../../../TrackPanelAx.h"
 #include "../../../TrackInfo.h"
 #include "../../../TrackPanelMouseEvent.h"
@@ -146,7 +147,8 @@ EffectsButtonHandle::~EffectsButtonHandle()
 UIHandle::Result EffectsButtonHandle::CommitChanges
 (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
 {
-   RealtimeEffectPanel::Get(*pProject).ShowPanel(mpTrack.lock().get(), true);
+   RealtimeEffectPanel::Get(*pProject).ShowPanel(
+      dynamic_cast<SampleTrack *>(mpTrack.lock().get()), true);
    return RefreshCode::RefreshNone;
 }
 

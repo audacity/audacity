@@ -499,7 +499,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    elapsed = timer.Time();
 
    if (mBlockDetail) {
-      auto seq = t->GetClipByIndex(0)->GetSequence();
+      auto seq = t->GetClipByIndex(0)->GetSequence(0);
       seq->DebugPrintf(seq->GetBlockArray(), seq->GetNumSamples(), &tempStr);
       mToPrint += tempStr;
    }
@@ -523,7 +523,9 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    timer.Start();
    for (uint64_t i = 0; i < nChunks; i++) {
       v = small1[i];
-      t->Get((samplePtr)block.get(), SampleFormat, i * chunkSize, chunkSize);
+      auto pBlock = reinterpret_cast<samplePtr>(block.get());
+      constexpr auto backwards = false;
+      t->Get(0, 1, &pBlock, SampleFormat, i * chunkSize, chunkSize, backwards);
       for (uint64_t b = 0; b < chunkSize; b++)
          if (block[b] != v) {
             bad++;
@@ -549,7 +551,9 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    for (uint64_t i = 0; i < nChunks; i++) {
       v = small1[i];
-      t->Get((samplePtr)block.get(), SampleFormat, i * chunkSize, chunkSize);
+      auto pBlock = reinterpret_cast<samplePtr>(block.get());
+      constexpr auto backwards = false;
+      t->Get(0, 1, &pBlock, SampleFormat, i * chunkSize, chunkSize, backwards);
       for (uint64_t b = 0; b < chunkSize; b++)
          if (block[b] != v)
             bad++;

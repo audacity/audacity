@@ -390,6 +390,8 @@ private:
 
 struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
 {
+   ~MenuVisitor() override;
+
    // final overrides
    void BeginGroup( Registry::GroupItemBase &item, const Path &path ) final;
    void EndGroup( Registry::GroupItemBase &item, const Path& ) final;
@@ -409,16 +411,21 @@ private:
    std::vector<bool> needSeparator;
 };
 
-struct ToolbarMenuVisitor : MenuVisitor
+struct ProjectMenuVisitor : MenuVisitor
 {
-   explicit ToolbarMenuVisitor( AudacityProject &p ) : project{ p } {}
-   operator AudacityProject & () const { return project; }
-   AudacityProject &project;
+   explicit ProjectMenuVisitor(AudacityProject &p) : mProject{ p } {}
+   ~ProjectMenuVisitor() override;
+   virtual void *GetComputedItemContext() override;
+   AudacityProject &mProject;
 };
 
 // Define items that populate tables that specifically describe menu trees
 namespace MenuTable {
    using namespace Registry;
+
+   struct Traits : Registry::DefaultTraits {
+      using ComputedItemContextType = AudacityProject;
+   };
 
    // These are found by dynamic_cast
    struct AUDACITY_DLL_API MenuSection {
@@ -430,45 +437,35 @@ namespace MenuTable {
       bool extension;
    };
 
+   struct MenuItemData {
+      MenuItemData(TranslatableString title) : mTitle{ std::move(title) } {}
+      const TranslatableString mTitle;
+   };
+
    // Describes a main menu in the toolbar, or a sub-menu
    struct AUDACITY_DLL_API MenuItem final
-      : GroupItem<ToolbarMenuVisitor>
-      , WholeMenu {
-      // Construction from an internal name and a previously built-up
-      // vector of pointers
-      MenuItem(const Identifier &internalName,
-         const TranslatableString &title, BaseItemPtrs &&items);
-      // In-line, variadic constructor that doesn't require building a vector
-      template<typename... Args>
-         MenuItem(const Identifier &internalName,
-            const TranslatableString &title, Args&&... args
-         )  : GroupItem{ internalName, std::forward<Args>(args)... }
-            , title{ title }
-         {}
+      : Composite::Extension<
+         GroupItem<Traits>, MenuItemData, const Identifier&
+      >
+      , WholeMenu
+   {
+      using Extension::Extension;
       ~MenuItem() override;
-
-      TranslatableString title;
+      const auto &GetTitle() const { return mTitle; }
    };
+
+   using Condition = std::function<bool()>;
 
    // Collects other items that are conditionally shown or hidden, but are
    // always available to macro programming
-   struct ConditionalGroupItem final : GroupItem<ToolbarMenuVisitor> {
-      using Condition = std::function<bool()>;
-
-      // Construction from an internal name and a previously built-up
-      // vector of pointers
-      ConditionalGroupItem(const Identifier &internalName,
-         Condition condition, BaseItemPtrs &&items);
-      // In-line, variadic constructor that doesn't require building a vector
-      template<typename... Args>
-         ConditionalGroupItem(const Identifier &internalName,
-            Condition condition, Args&&... args
-         )  : GroupItem{ internalName, std::forward<Args>(args)... }
-            , condition{ condition }
-         {}
+   struct ConditionalGroupItem final
+      : Composite::Extension<
+         GroupItem<Traits>, Condition, const Identifier &
+      >
+   {
+      using Extension::Extension;
       ~ConditionalGroupItem() override;
-
-      Condition condition;
+      using Condition::operator();
    };
 
    // usage:
@@ -610,59 +607,72 @@ namespace MenuTable {
       Appender fn;
    };
 
-   struct MenuPart : GroupItem<ToolbarMenuVisitor>, MenuSection
-   {
-      template< typename... Args >
-      explicit
-      MenuPart(const Identifier &internalName, Args&&... args )
-         : GroupItem{ internalName, std::forward<Args>(args)... }
-      {}
-      ~MenuPart() override;
-   };
-
    //! Groups of this type are inlined in the menu tree organization.  They
    //! (but not their contained items) are excluded from visitations using
    //! MenuVisitor
-   struct MenuItems : GroupItem<ToolbarMenuVisitor> {
-      using GroupItem::GroupItem;
+   struct MenuItems
+      : Composite::Extension<
+         GroupItem<Traits>, void, const Identifier &
+      >
+   {
+      using Extension::Extension;
       ~MenuItems() override;
       //! Anonymous if its name is empty, else weakly ordered
       Ordering GetOrdering() const override;
    };
 
-   // The following, and Registry::Indirect(), are the functions to use directly
-   // in writing table definitions.
+   struct MenuPart
+      : Composite::Extension<
+         GroupItem<Traits>, void, const Identifier &
+      >
+      , MenuSection
+   {
+      using Extension::Extension;
+      ~MenuPart() override;
+   };
 
-   // Group items can be constructed two ways.
-   // Pointers to subordinate items are moved into the result.
-   // Null pointers are permitted, and ignored when building the menu.
-   // Items are spliced into the enclosing menu.
-   // The name is untranslated and may be empty, to make the group transparent
-   // in identification of items by path.  Otherwise try to keep the name
-   // stable across Audacity versions.
+   /*! @name Factories
+      The following, and Registry::Indirect(), are the functions to use directly
+      to specify elements of menu groupings.
+    */
+   //! @{
+
+   //! Variadic constructor from pointers to subordinate items, which are moved
+   //! into the result.
+   /*!
+    Null pointers are permitted, and ignored when building the menu.
+    Items are spliced into the enclosing menu.
+    The name is untranslated and may be empty, to make the group transparent
+    in identification of items by path.  Otherwise try to keep the name
+    stable across Audacity versions.
+    */
    constexpr auto Items = Callable::UniqueMaker<MenuItems>();
 
-   // Like Items, but insert a menu separator between the menu section and
-   // any other items or sections before or after it in the same (innermost,
-   // enclosing) menu.
-   // It's not necessary that the sisters of sections be other sections, but it
-   // might clarify the logical groupings.
+   //! Like Items, but insert a menu separator between the menu section and
+   //! any other items or sections before or after it in the same (innermost,
+   //! enclosing) menu.
+   /*!
+    It's not necessary that the sisters of sections be other sections, but it
+    might clarify the logical groupings.
+    */
    constexpr auto Section = Callable::UniqueMaker<MenuPart>();
    
-   // Menu items can be constructed two ways, as for group items
-   // Items will appear in a main toolbar menu or in a sub-menu.
-   // The name is untranslated.  Try to keep the name stable across Audacity
-   // versions.
-   // If the name of a menu is empty, then subordinate items cannot be located
-   // by path.
+   //! Items will appear in a main toolbar menu or in a sub-menu.
+   /*!
+    The name is untranslated.  Try to keep the name stable across Audacity
+    versions.
+    If the name of a menu is empty, then subordinate items cannot be located
+    by path.
+    */
    constexpr auto Menu = Callable::UniqueMaker<MenuItem>();
 
-   // Conditional group items can be constructed two ways, as for group items
-   // These items register in the CommandManager but are not shown in menus
-   // if the condition evaluates false.
-   // The name is untranslated.  Try to keep the name stable across Audacity
-   // versions.
-   // Name for conditional group must be non-empty.
+   //! These items register in the CommandManager but are not shown in menus
+   //! if the condition evaluates false.
+   /*!
+    The name is untranslated.  Try to keep the name stable across Audacity
+    versions.
+    Name for conditional group must be non-empty.
+    */
    constexpr auto ConditionalItems = Callable::UniqueMaker<ConditionalGroupItem>();
 
    constexpr auto Command = Callable::UniqueMaker<CommandItem>();
@@ -671,6 +681,8 @@ namespace MenuTable {
       const Identifier &, std::vector<ComponentInterfaceSymbol>>();
 
    constexpr auto Special = Callable::UniqueMaker<SpecialItem>();
+
+   //! @}
 
    struct ItemRegistry {
       static GroupItemBase &Registry();
@@ -689,9 +701,6 @@ namespace MenuTable {
          : AttachedItem( Placement{ path }, std::move( pItem ) )
       {}
    };
-
-   void DestroyRegistry();
-
 }
 
 #endif

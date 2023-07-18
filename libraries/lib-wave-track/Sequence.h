@@ -19,6 +19,7 @@
 #include "XMLTagHandler.h"
 
 #include "SampleCount.h"
+#include "AudioSegmentSampleView.h"
 
 class SampleBlock;
 class SampleBlockFactory;
@@ -68,6 +69,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    Sequence(const SampleBlockFactoryPtr &pFactory, SampleFormats formats);
 
+   //! Does not copy un-flushed append buffer data
    Sequence(const Sequence &orig, const SampleBlockFactoryPtr &pFactory);
 
    Sequence( const Sequence& ) = delete;
@@ -83,6 +85,9 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    bool Get(samplePtr buffer, sampleFormat format,
             sampleCount start, size_t len, bool mayThrow) const;
+
+   AudioSegmentSampleView
+   GetFloatSampleView(sampleCount start, size_t len) const;
 
    //! Pass nullptr to set silence
    /*! Note that len is not size_t, because nullptr may be passed for buffer, in
@@ -112,7 +117,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
        Samples may be retained in a memory buffer, pending Flush()
        If there are exceptions, an unspecified prefix of buffer may be
        appended
-   
+
        @return true if at least one sample block was added
        @excsafety{Weak}
     */
@@ -166,8 +171,9 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    // Lock all of this sequence's sample blocks, keeping them
    // from being destroyed when closing.
 
-   bool CloseLock();//should be called upon project close.
-   // not balanced by unlocking calls.
+   //! Should be called upon project close.  Not balanced by unlocking calls.
+   /*! @excsafety{No-fail} */
+   bool CloseLock() noexcept;
 
    //
    // Manipulating Sample Format
@@ -175,7 +181,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    SampleFormats GetSampleFormats() const;
 
-   //! @return whether there was a change
+   //! @return whether there was a change of format
    /*! @excsafety{Strong} */
    bool ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
@@ -191,9 +197,6 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    //
    // Getting block size and alignment information
    //
-
-   //! @return possibly a large or negative value
-   sampleCount GetBlockStart(sampleCount position) const;
 
    // These return a nonnegative number of samples meant to size a memory buffer
    size_t GetBestBlockSize(sampleCount start) const;
@@ -243,6 +246,9 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    //
    // Private methods
    //
+
+   //! @return possibly a large or negative value
+   sampleCount GetBlockStart(sampleCount position) const;
 
    //! Does not do any dithering
    /*! @excsafety{Strong} */

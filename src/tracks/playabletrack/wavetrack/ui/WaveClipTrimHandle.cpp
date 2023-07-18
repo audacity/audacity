@@ -20,7 +20,7 @@
 #include "../../../../../images/Cursors.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "WaveTrackView.h"
+#include "WaveChannelView.h"
 #include "HitTestResult.h"
 #include "TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
@@ -73,7 +73,7 @@ class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTr
    }
 
    //Search for a good snap points among all tracks, including
-   //the one to which adjusted clip belongs to, but not counting
+   //the one to which the adjusted clip belongs, but not counting
    //the borders of adjusted clip
    static SnapPointArray FindSnapPoints(
       const WaveTrack* currentTrack, 
@@ -95,23 +95,25 @@ class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTr
 
       if(const auto trackList = currentTrack->GetOwner())
       {
-         for(const auto track : trackList->Any())
+         for(const auto track : as_const(*trackList).Leaders())
          {
             const auto isSameTrack = (track == currentTrack) ||
                (track->GetLinkType() == Track::LinkType::Aligned && *trackList->FindLeader(currentTrack) == track) ||
                (currentTrack->GetLinkType() == Track::LinkType::Aligned && *trackList->FindLeader(track) == currentTrack);
-            for(const auto& interval : track->GetIntervals())
+            for(const auto& interval : track->Intervals())
             {
                if(isSameTrack)
                {
-                  auto waveTrackIntervalData = dynamic_cast<WaveTrack::IntervalData*>(interval.Extra());
-                  if(waveTrackIntervalData->GetClip().get() == adjustedClip)
+                  auto waveTrackIntervalData =
+                     std::dynamic_pointer_cast<const WaveTrack::Interval>(
+                        interval);
+                  if(waveTrackIntervalData->GetClip(0).get() == adjustedClip)
                   //exclude boundaries of the adjusted clip
                      continue;
                }
-               addSnapPoint(interval.Start(), track);
-               if(interval.Start() != interval.End())
-                  addSnapPoint(interval.End(), track);
+               addSnapPoint(interval->Start(), track);
+               if(interval->Start() != interval->End())
+                  addSnapPoint(interval->End(), track);
             }
          }
       }
@@ -223,13 +225,13 @@ public:
          {
             auto dt = std::abs(mClips[0]->GetPlayStartTime() - mInitialBorderPosition);
             ProjectHistory::Get(project).PushState(XO("Clip-Trim-Left"),
-                XO("Moved by %.02f").Format(dt), UndoPush::CONSOLIDATE);
+                XO("Moved by %.02f").Format(dt));
          }
          else
          {
             auto dt = std::abs(mInitialBorderPosition - mClips[0]->GetPlayEndTime());
             ProjectHistory::Get(project).PushState(XO("Clip-Trim-Right"),
-                XO("Moved by %.02f").Format(dt), UndoPush::CONSOLIDATE);
+                XO("Moved by %.02f").Format(dt));
          }
       }
    }
@@ -340,7 +342,7 @@ public:
       {
          auto dt = std::abs(mRightClips[0]->GetPlayStartTime() - mInitialBorderPosition);
          ProjectHistory::Get(project).PushState(XO("Clip-Trim-Between"),
-               XO("Moved by %.02f").Format(dt), UndoPush::CONSOLIDATE);
+               XO("Moved by %.02f").Format(dt));
       }
    }
 
@@ -401,7 +403,7 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(
     //and input for the policy
     for (auto& clip : waveTrack->GetClips())
     {
-        if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+        if (!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
            continue;
 
         auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
@@ -447,7 +449,7 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(
 }
 
 UIHandlePtr WaveClipTrimHandle::HitTest(std::weak_ptr<WaveClipTrimHandle>& holder,
-    WaveTrackView& view, const AudacityProject* pProject,
+    WaveChannelView& view, const AudacityProject* pProject,
     const TrackPanelMouseState& state)
 {
     auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack());

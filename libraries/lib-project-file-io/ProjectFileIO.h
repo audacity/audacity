@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.h
 #define __AUDACITY_PROJECT_FILE_IO__
 
 #include <memory>
+#include <optional>
 #include <unordered_set>
 
 #include <wx/event.h>
@@ -63,6 +64,21 @@ class PROJECT_FILE_IO_API ProjectFileIO final
    , public Observer::Publisher<ProjectFileIOMessage>
 {
 public:
+   //! Represents a change in the association between in-memory project and
+   //! project file, which may be committed or abandoned
+   struct PROJECT_FILE_IO_API TentativeConnection {
+      TentativeConnection(ProjectFileIO &projectFileIO);
+      TentativeConnection(const TentativeConnection &other) = delete;
+      TentativeConnection(TentativeConnection &&other);
+      ~TentativeConnection();
+      void SetFileName(const FilePath &fileName);
+      void Commit();
+   private:
+      ProjectFileIO &mProjectFileIO;
+      FilePath mFileName;
+      bool mCommitted{ false };
+   };
+
    // Call this static function once before constructing any instances of this
    // class.  Reinvocations have no effect.  Return value is true for success.
    static bool InitializeSQL();
@@ -98,7 +114,11 @@ public:
    bool CloseProject();
    bool ReopenProject();
 
-   bool LoadProject(const FilePath &fileName, bool ignoreAutosave);
+   //! If successful, return non-empty; the caller must commit to keep the
+   //! association of the opened file with the project
+   std::optional<TentativeConnection>
+      LoadProject(const FilePath &fileName, bool ignoreAutosave);
+
    bool UpdateSaved(const TrackList *tracks = nullptr);
    bool SaveProject(const FilePath &fileName, const TrackList *lastSaved);
    bool SaveCopy(const FilePath& fileName);

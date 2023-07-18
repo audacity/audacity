@@ -14,7 +14,9 @@
 #define __AUDACITY_TYPELIST__
 
 #include <cstddef>
+#include <tuple>
 #include <type_traits>
+#include <utility>
 
 //! Utilities for compile-time type manipulation.  Some terminology as in Lisp
 namespace TypeList {
@@ -52,6 +54,9 @@ namespace TypeList {
  can make compound predicates out of simpler ones.
   */
 
+//! standard in C++20; add a level of indirection to a type
+template<typename T> struct type_identity { using type = T; };
+
 //! Primary template for a list of arbitrary types
 template<typename... Types> struct List;
 //! Empty specialization
@@ -75,7 +80,8 @@ template<typename... Types> struct Null<List<Types...>>
    : std::bool_constant<sizeof...(Types) == 0> {};
 
 template<typename TypeList> struct Length;
-template<typename TypeList> constexpr auto Length_v = Length<TypeList>::value;
+template<typename TypeList> using Length_t = typename Length<TypeList>::type;
+template<typename TypeList> constexpr auto Length_v = Length_t<TypeList>::value;
 template<typename... Types> struct Length<List<Types...>>
    : std::integral_constant<size_t, sizeof...(Types)>{};
 
@@ -151,6 +157,28 @@ template<typename TypeList, typename Type> using PushBack_t =
 template<typename Type, typename... Types> struct
 PushBack<List<Types...>, Type> { using type = List<Types..., Type>; };
 
+//! List of the tails of the given list (by decreasing length, excluding Nil,
+//! otherwise including itself)
+template<typename TypeList> struct NonEmptyTails {
+private:
+   struct Next { using type =
+      Cons_t<TypeList, typename NonEmptyTails<Tail_t<TypeList>>::type>;
+   };
+public:
+   using type = typename std::conditional_t<
+      Null_v<TypeList>, type_identity<Nil>, Next
+   >::type;
+};
+template<typename TypeList> using NonEmptyTails_t =
+   typename NonEmptyTails<TypeList>::type;
+
+//! List of the tails of the given list (by decreasing length, including itself
+//! and Nil)
+template<typename TypeList> struct Tails {
+   using type = PushBack_t<NonEmptyTails_t<TypeList>, Nil>;
+};
+template<typename TypeList> using Tails_t = typename Tails<TypeList>::type;
+
 template<typename TypeList> struct Last;
 template<typename TypeList> using Last_t = typename Last<TypeList>::type;
 template<typename Type> struct Last<List<Type>> { using type = Type; };
@@ -189,9 +217,6 @@ struct Compose<Metafunction, Metafunctions...> {
 
 using Identity = Compose<>;
 
-//! standard in C++20; add a level of indirection to a type
-template<typename T> struct type_identity { using type = T; };
-
 //! Given a binary template and a fixed argument, make a metafunction
 template<template<typename, typename> class BinaryTemplate, typename First>
 struct Bind1st {
@@ -211,6 +236,19 @@ using Apply_t = typename Apply<Template, TypeList>::type;
 template<template<typename...> class Template, typename... Types>
 struct Apply<Template, List<Types...>> { using type = Template<Types...>; };
 
+//! Destructure any tuple-like type into a TypeList
+template<typename TupleLike> struct Bind {
+private:
+   template<typename> struct Impl;
+   template<size_t... Is> struct Impl<std::index_sequence<Is...>> {
+      using type = List<std::tuple_element_t<Is, TupleLike>...>;
+   };
+   enum : size_t { size = std::tuple_size_v<TupleLike> };
+public:
+   using type = typename Impl<std::make_index_sequence<size>>::type;
+};
+template<typename TupleLike> using Bind_t = typename Bind<TupleLike>::type;
+
 //! Transform a list of types by the given metafunction
 template<typename Metafunction, typename TypeList> struct Map {
 private:
@@ -222,6 +260,14 @@ public:
 };
 template<typename Metafunction, typename TypeList> using Map_t =
    typename Map<Metafunction, TypeList>::type;
+
+//! Transform the list of nonempty tails of a list of types by the given
+//! metafunction
+template<typename Metafunction, typename TypeList> struct MapList {
+   using type = Map_t<Metafunction, NonEmptyTails_t<TypeList>>;
+};
+template<typename Metafunction, typename TypeList> using MapList_t
+   = typename MapList<Metafunction, TypeList>::type;
 
 template<typename... Lists> struct Append;
 template<typename... Lists> using Append_t = typename Append<Lists...>::type;
@@ -262,6 +308,26 @@ template<template<typename Type, typename Accumulator> class Op,
 >
 using LeftFold_t = typename LeftFold<Op, TypeList, Initial>::type;
 
+//! Like LeftFold, but passing nonempty prefixes, not elements, to Op
+template<template<typename Prefix, typename Accumulator> class Op,
+   typename TypeList, typename Initial
+>
+struct LeftFoldList {
+private:
+   template<typename T, typename Pair> struct Op1 {
+      using NewPrefix = PushBack_t<Second_t<Pair>, T>;
+      using type = List<Op<NewPrefix, First_t<Pair>>, NewPrefix>;
+   };
+   template<typename T, typename Pair> using Op1_t =
+      typename Op1<T, Pair>::type;
+public:
+   using type = First_t<LeftFold_t<Op1_t, TypeList, List<Initial, Nil>>>;
+};
+template<template<typename Prefix, typename Accumulator> class Op,
+   typename TypeList, typename Initial
+>
+using LeftFoldList_t = typename LeftFoldList<Op, TypeList, Initial>::type;
+
 //! Right fold reduction of a list of types by a binary template
 template<template<typename Type, typename Accumulator> class Op,
    typename TypeList, typename Initial
@@ -279,6 +345,24 @@ template<template<typename Type, typename Accumulator> class Op,
    typename TypeList, typename Initial
 >
 using RightFold_t = typename RightFold<Op, TypeList, Initial>::type;
+
+//! Like RightFold, but passing nonempty tails, not elements, to Op
+template<template<typename Tail, typename Accumulator> class Op,
+   typename TypeList, typename Initial
+>
+struct RightFoldList {
+private:
+   template<typename Acc, typename TL> struct Accumulate {
+      using type = Op<TL, typename Accumulate<Acc, Tail_t<TL>>::type>;
+   };
+   template<typename Acc> struct Accumulate<Acc, Nil> { using type = Acc; };
+public:
+   using type = typename Accumulate<Initial, TypeList>::type;
+};
+template<template<typename Tail, typename Accumulator> class Op,
+   typename TypeList, typename Initial
+>
+using RightFoldList_t = typename RightFoldList<Op, TypeList, Initial>::type;
 
 template<typename TypeList> struct Reverse : LeftFold<Cons_t, TypeList, Nil>{};
 template<typename TypeList> using Reverse_t = typename Reverse<TypeList>::type;

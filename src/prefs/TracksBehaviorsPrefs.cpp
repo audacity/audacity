@@ -156,11 +156,13 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
             }
             S.EndVerticalLay();
 
-            S.AddVariableText(audioPasteModeText[i])->Bind(
-               wxEVT_LEFT_UP, [=](auto)
-               {
-                  radioButton->SetValue(true);
-               });
+            if (auto pText = S.AddVariableText(audioPasteModeText[i])) {
+               pText->Bind(
+                  wxEVT_LEFT_UP, [=](auto)
+                  {
+                     radioButton->SetValue(true);
+                  });
+            }
    #if wxUSE_ACCESSIBILITY
             safenew WindowAccessible(radioButton);
    #endif

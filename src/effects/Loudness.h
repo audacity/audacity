@@ -66,7 +66,7 @@ public:
 private:
    // EffectLoudness implementation
 
-   void AllocBuffers();
+   void AllocBuffers(TrackList &outputs);
    void FreeBuffers();
    bool GetTrackRMS(WaveTrack* track, float& rms);
    bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);

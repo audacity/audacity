@@ -88,17 +88,14 @@ protected:
    // Use this if the effect needs to know if it is previewing
    bool IsPreviewing() const { return mIsPreview; }
 
-   // A global counter of all the successful Effect invocations.
-   static int nEffectsDone;
-
    const TrackList *inputTracks() const { return mTracks; }
    const AudacityProject *FindProject() const;
-   // used only if CopyInputTracks() is called.
-   std::shared_ptr<TrackList> mOutputTracks;
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    double         mF0{};
    double         mF1{};
 #endif
+
    wxArrayString  mPresetNames;
    unsigned       mUIFlags{ 0 };
 
@@ -121,19 +118,11 @@ public:
 
    // Some public members that only change "context" fields
 
-   // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
-   // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
-   // Else clear and DELETE mOutputTracks copies.
-   void ReplaceProcessedTracks(const bool bGoodResult);
-
    void CountWaveTracks();
 
 private:
    bool mIsLinearEffect{ false };
    bool mPreviewFullSelection{ false };
-
-   std::vector<Track*> mIMap;
-   std::vector<Track*> mOMap;
 
    int mNumGroups{};
 };

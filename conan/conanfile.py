@@ -8,92 +8,7 @@ import os
 import subprocess
 import textwrap
 
-# Why is it not Conan? Copied from cmake_layout().
-def is_multi_config(conanfile):
-    gen = conanfile.conf.get("tools.cmake.cmaketoolchain:generator", default=None)
-    if gen:
-        return "Visual" in gen or "Xcode" in gen or "Multi-Config" in gen
-    else:
-        compiler = conanfile.settings.get_safe("compiler")
-        return compiler in ("Visual Studio", "msvc")
-
-
-def is_linux_like(conanfile):
-    return conanfile.settings.os not in ["Windows", "Macos"]
-
-
-def run_patchelf(conanfile, args):
-    if not is_linux_like(conanfile):
-        raise ConanInvalidConfiguration("patchelf can only be run on Linux")
-
-    patchelf_path = os.path.join(conanfile.dependencies.build["patchelf"].cpp_info.bindirs[0], "patchelf")
-    return subprocess.check_output([patchelf_path] + args).decode("utf-8").strip()
-
-
-def set_rpath(conanfile, file, rpath):
-    return run_patchelf(conanfile, ["--set-rpath", rpath, file])
-
-
-def append_rpath(conanfile, file, rpath):
-    old_rpath = run_patchelf(conanfile, ["--print-rpath", file])
-    run_patchelf(conanfile, ["--set-rpath", f"{old_rpath}:{rpath}", file])
-
-
-def strip_debug_symbols(conanfile, file, keep_symbols):
-    if not is_linux_like(conanfile):
-        raise ConanInvalidConfiguration("patchelf can only be run on Linux")
-
-    if keep_symbols:
-        try:
-            if os.path.isfile(f"{file}.debug"):
-                os.remove(f"{file}.debug")
-            subprocess.check_call(["objcopy", "--only-keep-debug", file, f"{file}.debug"])
-        except subprocess.CalledProcessError:
-            print(f"Could not copy debug symbols from {file}", flush=True)
-
-    try:
-        subprocess.check_call(["objcopy", "--strip-debug", "--strip-unneeded", file])
-    except subprocess.CalledProcessError:
-        print(f"Could not strip debug symbols from {file}", flush=True)
-        return
-
-    if keep_symbols and os.path.isfile(f"{file}.debug"):
-        subprocess.check_call(["objcopy", "--add-gnu-debuglink", f"{file}.debug", file])
-
-
-def get_build_folder(conanfile):
-    build_folder = str(conanfile.build_folder)
-    if is_multi_config(conanfile):
-        return os.path.join(build_folder, str(conanfile.settings.build_type))
-    else:
-        return build_folder
-
-def get_generators_folder(conanfile):
-    build_folder = str(conanfile.build_folder)
-    if not is_multi_config(conanfile):
-        build_folder = os.path.join(build_folder, "..")
-    return os.path.join(build_folder, "generators")
-
-
-def get_macos_bundle_dir(conanfile, folder):
-    return os.path.join(get_build_folder(conanfile), "Audacity.app", "Contents", folder)
-
-
-def get_linux_libdir(conanfile, full_path=True):
-    lib_dir = str(conanfile.options.lib_dir) if conanfile.options.lib_dir else os.path.join("lib", "audacity")
-    if full_path:
-        return os.path.join(get_build_folder(conanfile), lib_dir)
-    else:
-        return lib_dir
-
-
-def safe_linux_copy(conanfile, source, destination, keep_debug_symbols=True):
-    copied_files = copy(conanfile, "*.so*", source, destination)
-    for file in copied_files:
-        if not os.path.islink(file):
-            set_rpath(conanfile, file, "$ORIGIN")
-            if "libicu" not in file:
-                strip_debug_symbols(conanfile, file, keep_debug_symbols)
+required_conan_version = ">=2.0.0"
 
 # A helper function that correctly copies the files from the Conan package to the
 # correct location in the build tree
@@ -113,6 +28,7 @@ def global_copy_files(conanfile, dependency_info):
         print(f"Copying files from {dependency_info.cpp_info.libdirs[0]} to {target_dir}", flush=True)
         safe_linux_copy(conanfile, dependency_info.cpp_info.libdirs[0], target_dir)
 
+        conanfile.output.info(f"Copying files from {dependency_info.cpp_info.libdirs[0]} to {conanfile.build_folder}/{lib_dir}")
 
 # Dataclass that holds the information about a dependency
 @dataclass
@@ -126,7 +42,7 @@ class AudacityDependency:
     def apply_options(self, conanfile, package):
         if self.package_options is not None:
             for key, value in self.package_options.items():
-                print(f"\t{self.name}:{key}={value}")
+                conanfile.output.info(f"\t{self.name}:{key}={value}")
                 setattr(package, key, value)
 
     def requires(self, conanfile):
@@ -136,7 +52,7 @@ class AudacityDependency:
         pass
 
     def reference(self, conanfile):
-        return f"{self.name}/{self.version}@{self.channel}" if self.channel else f"{self.name}/{self.version}"
+        return f"{self.name}/{self.version}@{self.channel}" if self.channel else f"{self.name}/{self.version}@audacity/stable"
 
     def copy_files(self, conanfile, dependency_info):
         global_copy_files(conanfile, dependency_info)
@@ -146,6 +62,9 @@ class AudacityDependency:
 class wxWidgetsAudacityDependency(AudacityDependency):
     def __init__(self, package_options: dict = None):
         super().__init__("wxwidgets", "3.1.3.4-audacity", package_options=package_options)
+
+    def reference(self, conanfile):
+        return f"{self.name}/3.1.3.4-audacity@audacity/stable"
 
     def apply_options(self, conanfile, package):
         opts = [
@@ -161,7 +80,7 @@ class wxWidgetsAudacityDependency(AudacityDependency):
         ]
 
         for key, value in opts:
-            print(f"\t{self.name}:{key}={value}")
+            conanfile.output.info(f"\t{self.name}:{key}={value}")
             setattr(package, key, value)
 
     def copy_files(self, conanfile, dependency_info):
@@ -212,7 +131,7 @@ class PortAudioDependency(AudacityDependency):
 @dataclass
 class CurlDependency(AudacityDependency):
     def __init__(self, package_options: dict = None):
-        super().__init__("libcurl", "7.75.0", package_options=package_options)
+        super().__init__("libcurl", "7.82.0", package_options=package_options)
 
     def apply_options(self, conanfile, package):
         super().apply_options(conanfile, package)
@@ -391,24 +310,23 @@ class AudacityConan(ConanFile):
 
     # List of Audacity dependencies
     _dependencies = [
-        AudacityDependency("zlib", "1.2.11"),
-        AudacityDependency("libpng", "1.6.37"),
-        AudacityDependency("expat", "2.2.9", "audacity/stable"),
-        AudacityDependency("libjpeg-turbo", "2.0.5", package_options={ "SIMD": False }),
+        AudacityDependency("zlib", "1.2.13"),
+        AudacityDependency("libpng", "1.6.39"),
+        AudacityDependency("expat", "2.5.0"),
+        AudacityDependency("libjpeg-turbo", "2.1.5"),
         wxWidgetsAudacityDependency(),
 
         AudacityDependency("libmp3lame", "3.100"),
-        AudacityDependency("mpg123", "1.29.3", "audacity/testing", package_options={ "network": False }),
-        AudacityDependency("libmad", "0.15.2b-1", package_options={ "shared": False }),
-        AudacityDependency("libid3tag", "0.15.2b", "audacity/stable", package_options={ "shared": False }),
-        AudacityDependency("wavpack", "5.4.0"),
-        AudacityDependency("ogg", "1.3.4"),
-        AudacityDependency("flac", "1.3.3"),
+        AudacityDependency("mpg123", "1.31.2", package_options={ "network": False }),
+        AudacityDependency("libid3tag", "0.15.2b", package_options={ "shared": False }),
+        AudacityDependency("wavpack", "5.6.0"),
+        AudacityDependency("ogg", "1.3.5"),
+        AudacityDependency("flac", "1.4.2"),
         AudacityDependency("opus", "1.3.1"),
         AudacityDependency("vorbis", "1.3.7"),
-        AudacityDependency("libsndfile", "1.0.31"),
+        AudacityDependency("libsndfile", "1.0.31", package_options={ "programs": False }),
 
-        AudacityDependency("vst3sdk", "3.7.3"),
+        AudacityDependency("vst3sdk", "3.7.7"),
 
         AudacityDependency("libuuid", "1.0.3"),
 
@@ -421,7 +339,7 @@ class AudacityConan(ConanFile):
 
         AudacityDependency("rapidjson", "1.1.0"),
 
-        AudacityDependency("breakpad", "0.1"),
+        AudacityDependency("breakpad", "2023.01.27"),
 
         CrashpadDependency("cci.20220219-audacity"),
 
@@ -445,7 +363,7 @@ class AudacityConan(ConanFile):
 
     def build_requirements(self):
         if self.settings.os not in ["Windows", "Macos"]:
-            self.build_requires("patchelf/0.13")
+            self.build_requires("patchelf/0.13@audacity/stable")
 
         for dependency in self._dependencies:
             if getattr(self.options, f"use_{dependency.name}"):
@@ -456,7 +374,7 @@ class AudacityConan(ConanFile):
 
         for dependency in self._dependencies:
             if getattr(self.options, f"use_{dependency.name}"):
-                print(f"Applying options for {dependency.name}...")
+                self.output.info(f"Applying options for {dependency.name}...")
                 dependency.apply_options(self, self.options[dependency.name])
 
     def layout(self):
@@ -485,7 +403,7 @@ class AudacityConan(ConanFile):
         deps_lookup = { dependency.name: dependency for dependency in self._dependencies }
 
         for dep in self.dependencies.host.values():
-            print(f"Copying files for {dep.ref.name}...")
+            self.output.info(f"Copying files for {dep.ref.name}...")
             if dep.ref.name in deps_lookup:
                 deps_lookup[dep.ref.name].copy_files(self, dep)
             else:

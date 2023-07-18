@@ -38,6 +38,7 @@
 
 
 #include "NoiseReduction.h"
+#include "EffectOutputTracks.h"
 
 #include "LoadEffects.h"
 #include "EffectManager.h"
@@ -620,9 +621,9 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
 {
    // This same code will either reduce noise or profile it
 
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
 
-   auto track = * (mOutputTracks->Selected< const WaveTrack >()).begin();
+   auto track = *(outputs.Get().SelectedLeaders<const WaveTrack>()).begin();
    if (!track)
       return false;
 
@@ -680,14 +681,16 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
       , mF0, mF1
 #endif
    };
-   bool bGoodResult = worker.Process(*mOutputTracks, mT0, mT1);
+   bool bGoodResult = worker.Process(outputs.Get(), mT0, mT1);
    if (mSettings->mDoProfile) {
       if (bGoodResult)
          mSettings->mDoProfile = false; // So that "repeat last effect" will reduce noise
       else
          mStatistics.reset(); // So that profiling must be done again before noise reduction
    }
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 

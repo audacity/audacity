@@ -2455,8 +2455,6 @@ int AudacityApp::OnExit()
 
    AudioIO::Deinit();
 
-   MenuTable::DestroyRegistry();
-
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
 

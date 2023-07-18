@@ -35,7 +35,7 @@ Paul Licameli split from TrackPanel.cpp
 using Doubles = ArrayOf<double>;
 
 TimeTrackView::TimeTrackView(const std::shared_ptr<Track> &pTrack)
-   : CommonTrackView{ pTrack }
+   : CommonChannelView{ pTrack, 0 }
 {
 }
 
@@ -56,17 +56,17 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
    return results;
 }
 
-using DoGetTimeTrackView = DoGetView::Override< TimeTrack >;
+using DoGetTimeTrackView = DoGetView::Override<TimeTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackView) {
-   return [](TimeTrack &track) {
+   return [](TimeTrack &track, size_t) {
       return std::make_shared<TimeTrackView>(track.SharedPointer());
    };
 }
 
-std::shared_ptr<TrackVRulerControls> TimeTrackView::DoGetVRulerControls()
+std::shared_ptr<ChannelVRulerControls> TimeTrackView::DoGetVRulerControls()
 {
    return
-      std::make_shared<TimeTrackVRulerControls>( shared_from_this() );
+      std::make_shared<TimeTrackVRulerControls>(shared_from_this());
 }
 
 namespace {
@@ -107,8 +107,8 @@ void DrawHorzRulerAndCurve
    ruler.Draw(dc, track.GetEnvelope());
    
    Doubles envValues{ size_t(mid.width) };
-   CommonTrackView::GetEnvelopeValues( *track.GetEnvelope(),
-    0, 0, envValues.get(), mid.width, 0, zoomInfo );
+   CommonChannelView::GetEnvelopeValues(*track.GetEnvelope(),
+      0, 0, envValues.get(), mid.width, 0, zoomInfo);
    
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
    dc.SetPen( pen );
@@ -186,5 +186,5 @@ void TimeTrackView::Draw(
          pTrack->SubstitutePendingChangedTrack());
       DrawTimeTrack(context, *tt, ruler, rect);
    }
-   CommonTrackView::Draw( context, rect, iPass );
+   CommonChannelView::Draw(context, rect, iPass);
 }

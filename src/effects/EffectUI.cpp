@@ -1330,9 +1330,9 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
       trackPanel.VerticalScroll( 1.0 );
    }
    else {
-      auto pTrack = *tracks.Selected().begin();
+      auto pTrack = *tracks.SelectedLeaders().begin();
       if (!pTrack)
-         pTrack = *tracks.Any().begin();
+         pTrack = *tracks.Leaders().begin();
       if (pTrack) {
          TrackFocus::Get(project).Set(pTrack);
          pTrack->EnsureVisible();

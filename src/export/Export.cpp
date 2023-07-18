@@ -72,6 +72,7 @@
 #include "HelpSystem.h"
 #include "ProgressDialog.h"
 #include "wxFileNameWrapper.h"
+#include "StretchingSequence.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
@@ -228,19 +229,21 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
 {
    Mixer::Inputs inputs;
 
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
-   auto range = tracks.Any< const WaveTrack >()
-      + (selectionOnly ? &Track::IsSelected : &Track::Any )
-      - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
+   const auto range = tracks.Leaders<const WaveTrack>()
+      + (selectionOnly ? &Track::IsSelected : &Track::Any)
+      - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
       inputs.emplace_back(
-         pTrack->SharedPointer<const SampleTrack>(), GetEffectStages(*pTrack));
+         StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()),
+         GetEffectStages(*pTrack));
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(move(inputs),
                   // Throw, to stop exporting, if read fails:
                   true,
-                  Mixer::WarpOptions{tracks},
+                  Mixer::WarpOptions{ tracks.GetOwner() },
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,
@@ -297,7 +300,7 @@ namespace {
 
 Registry::GroupItemBase &Exporter::ExporterItem::Registry()
 {
-   static Registry::GroupItem<> registry{ PathStart };
+   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
    return registry;
 }
 
@@ -339,7 +342,7 @@ Exporter::Exporter( AudacityProject &project )
       {
          // visit the registry to collect the plug-ins properly
          // sorted
-         GroupItem<> top{ PathStart };
+         GroupItem<Registry::DefaultTraits> top{ PathStart };
          Registry::Visit( *this, &top, &ExporterItem::Registry() );
       }
 
@@ -494,9 +497,6 @@ bool Exporter::ExamineTracks()
 {
    // Init
    mNumSelected = 0;
-   mNumLeft = 0;
-   mNumRight = 0;
-   mNumMono = 0;
 
    // First analyze the selected audio, perform sanity checks, and provide
    // information as appropriate.
@@ -507,39 +507,21 @@ bool Exporter::ExamineTracks()
    double earliestBegin = mT1;
    double latestEnd = mT0;
 
-   auto &tracks = TrackList::Get( *mProject );
+   auto &tracks = TrackList::Get(*mProject);
 
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
-   for (auto tr :
-         tracks.Any< const WaveTrack >()
-            + ( mSelectedOnly ? &Track::IsSelected : &Track::Any )
-            - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)
-   ) {
+   const auto range = tracks.Leaders<const WaveTrack>()
+      + (mSelectedOnly ? &Track::IsSelected : &Track::Any)
+      - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
+
+   mMono = std::all_of(range.begin(), range.end(), [](const WaveTrack *pTrack){
+      return IsMono(*pTrack) && pTrack->GetPan() == 0.0;
+   });
+
+   for (auto tr : range) {
       mNumSelected++;
-
-      if (tr->GetChannel() == Track::LeftChannel) {
-         mNumLeft++;
-      }
-      else if (tr->GetChannel() == Track::RightChannel) {
-         mNumRight++;
-      }
-      else if (tr->GetChannel() == Track::MonoChannel) {
-         // It's a mono channel, but it may be panned
-         float pan = tr->GetPan();
-
-         if (pan == -1.0)
-            mNumLeft++;
-         else if (pan == 1.0)
-            mNumRight++;
-         else if (pan == 0)
-            mNumMono++;
-         else {
-            // Panned partially off-center. Mix as stereo.
-            mNumLeft++;
-            mNumRight++;
-         }
-      }
 
       if (tr->GetOffset() < earliestBegin) {
          earliestBegin = tr->GetOffset();
@@ -824,19 +806,12 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    int exportedChannels = mPlugins[mFormat]->SetNumExportChannels();
 
    if (downMix) {
-      if (mNumRight > 0 || mNumLeft > 0) {
-         mChannels = 2;
-      }
-      else {
-         mChannels = 1;
-      }
-      mChannels = std::min(mChannels,
-                           mPlugins[mFormat]->GetMaxChannels(mSubFormat));
+      unsigned channels = mMono ? 1 : 2;
+      mChannels =
+         std::min(channels, mPlugins[mFormat]->GetMaxChannels(mSubFormat));
 
-      auto numLeft =  mNumLeft + mNumMono;
-      auto numRight = mNumRight + mNumMono;
-
-      if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
+      if (mNumSelected > 1 || channels > mChannels) {
+         // May give a message about mixing-down
          wxString exportFormat = mPlugins[mFormat]->GetFormat(mSubFormat);
          if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
             exportedChannels = mChannels;
@@ -1364,23 +1339,25 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    unsigned numTracks = 0;
 
-   bool anySolo = !(( tracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(tracks->Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    for (auto t :
-         tracks->Any< const WaveTrack >()
-            + ( selectedOnly ? &Track::IsSelected : &Track::Any  )
-            - ( anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute)
+      tracks->Leaders<const WaveTrack>()
+         + (selectedOnly ? &Track::IsSelected : &Track::Any)
+         - (anySolo ? &WaveTrack::GetNotSolo :  &WaveTrack::GetMute)
    ) {
-      numTracks++;
+      numTracks += t->NChannels();
       const wxString sTrackName = (t->GetName()).Left(20);
-      if( t->GetChannel() == Track::LeftChannel )
-      /* i18n-hint: track name and L abbreviating Left channel */
-         mTrackNames.push_back( wxString::Format( _( "%s - L" ), sTrackName ) );
-      else if( t->GetChannel() == Track::RightChannel )
-      /* i18n-hint: track name and R abbreviating Right channel */
-         mTrackNames.push_back( wxString::Format( _( "%s - R" ), sTrackName ) );
-      else
+      if (IsMono(*t))
+         // No matter whether it's panned hard left or right
          mTrackNames.push_back(sTrackName);
+      else {
+         /* i18n-hint: track name and L abbreviating Left channel */
+         mTrackNames.push_back(XO("%s - L").Format(sTrackName).Translation());
+         /* i18n-hint: track name and R abbreviating Right channel */
+         mTrackNames.push_back(XO("%s - R").Format(sTrackName).Translation());
+      }
    }
 
    // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is

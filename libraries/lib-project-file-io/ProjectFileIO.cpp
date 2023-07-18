@@ -1773,16 +1773,16 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
 
    ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
-   tracklist.Any().Visit([&](const Track *t)
+   tracklist.Any().Visit([&](const Track &t)
    {
-      auto useTrack = t;
+      auto useTrack = &t;
       if ( recording ) {
          // When append-recording, there is a temporary "shadow" track accumulating
          // changes and displayed on the screen but it is not yet part of the
          // regular track list.  That is the one that we want to back up.
          // SubstitutePendingChangedTrack() fetches the shadow, if the track has
          // one, else it gives the same track back.
-         useTrack = t->SubstitutePendingChangedTrack().get();
+         useTrack = t.SubstitutePendingChangedTrack().get();
       }
       else if ( useTrack->GetId() == TrackId{} ) {
          // This is a track added during a non-appending recording that is
@@ -2004,27 +2004,54 @@ bool ProjectFileIO::WriteDoc(const char *table,
    return transaction.Commit();
 }
 
-bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
+ProjectFileIO::
+TentativeConnection::TentativeConnection(ProjectFileIO &projectFileIO)
+   : mProjectFileIO{ projectFileIO }
+{
+   mProjectFileIO.SaveConnection();
+}
+
+ProjectFileIO::
+TentativeConnection::TentativeConnection(TentativeConnection &&other)
+   : mProjectFileIO{ other.mProjectFileIO }
+   , mFileName{ other.mFileName }
+   , mCommitted{ other.mCommitted }
+{
+   other.mCommitted = true;
+}
+
+ProjectFileIO::TentativeConnection::~TentativeConnection()
+{
+   if (!mCommitted)
+      mProjectFileIO.RestoreConnection();
+}
+
+void ProjectFileIO::TentativeConnection::SetFileName(const FilePath &fileName)
+{
+   mFileName = fileName;
+}
+
+void ProjectFileIO::TentativeConnection::Commit()
+{
+   if (!mCommitted && !mFileName.empty()) {
+      mProjectFileIO.SetFileName(mFileName);
+      mProjectFileIO.DiscardConnection();
+      mCommitted = true;
+   }
+}
+
+auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
+   -> std::optional<TentativeConnection>
 {
    auto now = std::chrono::high_resolution_clock::now();
 
+   std::optional<TentativeConnection> result{ *this };
+
    bool success = false;
-
-   auto cleanup = finally([&]
-   {
-      if (!success)
-      {
-         RestoreConnection();
-      }
-   });
-
-   SaveConnection();
 
    // Open the project file
    if (!OpenConnection(fileName))
-   {
-      return false;
-   }
+      return {};
 
    int64_t rowId = -1;
 
@@ -2044,13 +2071,11 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       mRecovered = true;
       mModified = true;
 
-      return true;
+      return result;
    }
 
    if (!useAutosave && !GetValue("SELECT ROWID FROM main.project WHERE id = 1;", rowId, false))
-   {
-      return false;
-   }
+      return {};
    else
    {
       // Load 'er up
@@ -2064,7 +2089,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
          SetError(
             XO("Unable to parse project information.")
          );
-         return false;
+         return {};
       }
 
       // Check for orphans blocks...sets mRecovered if any were deleted
@@ -2076,9 +2101,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       {
          success = DeleteBlocks(blockids, true);
          if (!success)
-         {
-            return false;
-         }
+            return {};
       }
    
       // Remember if we used autosave or not
@@ -2097,20 +2120,14 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    // A previously saved project will have a document in the project table, so
    // we use that knowledge to determine if this file is an unsaved/temporary
    // file or a permanent project file
-   wxString result;
-   success = GetValue("SELECT Count(*) FROM project;", result);
+   wxString queryResult;
+   success = GetValue("SELECT Count(*) FROM project;", queryResult);
    if (!success)
-   {
-      return false;
-   }
+      return {};
 
-   mTemporary = !result.IsSameAs(wxT("1"));
+   mTemporary = !queryResult.IsSameAs(wxT("1"));
 
-   SetFileName(fileName);
-
-   DiscardConnection();
-
-   success = true;
+   result->SetFileName(fileName);
 
    auto duration = std::chrono::high_resolution_clock::now() - now;
 
@@ -2118,7 +2135,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       "Project loaded in %lld ms",
       std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
 
-   return true;
+   return result;
 }
 
 bool ProjectFileIO::UpdateSaved(const TrackList *tracks)

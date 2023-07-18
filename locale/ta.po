@@ -2308,7 +2308,7 @@ msgstr "கோப்பை திறக்க முடியவில்லை:
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "பிழை: %hs வரிசை %lu"
+msgstr "பிழை: %s வரிசை %lu"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format

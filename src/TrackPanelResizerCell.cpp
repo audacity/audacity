@@ -24,9 +24,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dc.h>
 #include <wx/mousestate.h>
 
-TrackPanelResizerCell::TrackPanelResizerCell(
-   const std::shared_ptr<Track> &pTrack )
-   : CommonTrackCell{ pTrack }
+TrackPanelResizerCell::TrackPanelResizerCell(Channel &channel)
+   : CommonTrackCell{ channel.GetChannelGroup(), channel.GetChannelIndex() }
 {}
 
 std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
@@ -37,7 +36,7 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
    auto pTrack = FindTrack();
    if (pTrack) {
       auto result = std::make_shared<TrackPanelResizeHandle>(
-         pTrack, st.state.m_y );
+         pTrack->GetChannel(0), st.state.m_y );
       result = AssignUIHandlePtr(mResizeHandle, result);
       results.push_back(result);
    }
@@ -104,19 +103,29 @@ void TrackPanelResizerCell::Draw(
    }
 }
 
+using ResizerCellAttachments = ChannelAttachments<TrackPanelResizerCell>;
+
 static const AttachedTrackObjects::RegisteredFactory key{
-   []( Track &track ){
-      return std::make_shared<TrackPanelResizerCell>(
-         track.shared_from_this() );
+   [](Track &){
+      return std::make_shared<ResizerCellAttachments>(
+         [](Track &track, size_t iChannel) {
+            // ChannelAttachments promises this precondition
+            assert(iChannel <= track.NChannels());
+            return std::make_shared<TrackPanelResizerCell>(
+               *track.GetChannel(iChannel));
+         }
+      );
    }
 };
 
-TrackPanelResizerCell &TrackPanelResizerCell::Get( Track &track )
+TrackPanelResizerCell &TrackPanelResizerCell::Get(Channel &channel)
 {
-   return track.AttachedObjects::Get< TrackPanelResizerCell >( key );
+   return ResizerCellAttachments::Get(key,
+      static_cast<Track &>(channel.GetChannelGroup()),
+      channel.GetChannelIndex());
 }
 
-const TrackPanelResizerCell &TrackPanelResizerCell::Get( const Track &track )
+const TrackPanelResizerCell &TrackPanelResizerCell::Get(const Channel &channel)
 {
-   return Get( const_cast< Track & >( track ) );
+   return Get(const_cast<Channel &>(channel));
 }

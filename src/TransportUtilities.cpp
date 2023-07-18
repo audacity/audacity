@@ -13,14 +13,17 @@
 
 #include <thread>
 #include "AudioIO.h"
+#include "AudioIOSequences.h"
 #include "commands/CommandContext.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
 #include "SampleTrack.h"
+#include "StretchingSequence.h"
 #include "ViewInfo.h"
 #include "toolbars/ControlToolBar.h"
 #include "ProgressDialog.h"
+#include "WaveTrack.h"
 
 void TransportUtilities::PlayCurrentRegionAndWait(
    const CommandContext &context,
@@ -202,24 +205,28 @@ void TransportUtilities::DoStartPlaying(
    }
 }
 
-TransportTracks MakeTransportTracks(
+TransportSequences MakeTransportTracks(
    TrackList &trackList, bool selectedOnly, bool nonWaveToo)
 {
-   TransportTracks result;
+   TransportSequences result;
    {
-      const auto range = trackList.Any<SampleTrack>()
+      const auto range = trackList.Leaders<WaveTrack>()
          + (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
-         result.playbackTracks.push_back(pTrack->SharedPointer<SampleTrack>());
+         result.playbackSequences.push_back(
+            StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
    }
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (nonWaveToo) {
-      const auto range = trackList.Any<const PlayableTrack>() +
+      const auto range = trackList.Leaders<const PlayableTrack>() +
          (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
          if (!track_cast<const SampleTrack *>(pTrack))
-            result.otherPlayableTracks.push_back(
-               pTrack->SharedPointer<const PlayableTrack>() );
+            if (auto pSequence =
+               std::dynamic_pointer_cast<const OtherPlayableSequence>(
+                  pTrack->shared_from_this())
+            )
+               result.otherPlayableSequences.push_back(pSequence);
    }
 #endif
    return result;

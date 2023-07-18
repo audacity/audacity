@@ -225,7 +225,7 @@ bool EffectScienFilter::Init()
    int selcount = 0;
    double rate = 0.0;
 
-   auto trackRange = inputTracks()->Selected< const WaveTrack >();
+   auto trackRange = inputTracks()->SelectedLeaders<const WaveTrack>();
 
    {
       auto t = *trackRange.begin();
@@ -236,23 +236,18 @@ bool EffectScienFilter::Init()
          / 2.0;
    }
 
-   for (auto t : trackRange)
-   {
+   for (auto t : trackRange) {
       if (selcount == 0)
-      {
          rate = t->GetRate();
-      }
-      else
-      {
-         if (t->GetRate() != rate)
-         {
+      else {
+         if (t->GetRate() != rate) {
             EffectUIServices::DoMessageBox(*this,
                XO(
 "To apply a filter, all selected tracks must have the same sample rate.") );
             return false;
          }
       }
-      selcount++;
+      ++selcount;
    }
 
    return true;

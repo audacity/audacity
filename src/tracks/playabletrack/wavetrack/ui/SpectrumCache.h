@@ -13,7 +13,7 @@
 
 class sampleCount;
 class SpectrogramSettings;
-class SampleTrackCache;
+class WideSampleSequence;
 
 #include <vector>
 #include "MemoryX.h"
@@ -45,7 +45,7 @@ public:
    // Calculate one column of the spectrum
    bool CalculateOneSpectrum
       (const SpectrogramSettings &settings,
-       SampleTrackCache &waveTrackCache,
+       const WideSampleSequence &sequence,
        const int xx, sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond,
        int lowerBoundX, int upperBoundX,
@@ -58,11 +58,10 @@ public:
       double pixelsPerSecond, double start_);
 
    // Calculate the dirty columns at the begin and end of the cache
-   void Populate
-      (const SpectrogramSettings &settings, SampleTrackCache &waveTrackCache,
-       int copyBegin, int copyEnd, size_t numPixels,
-       sampleCount numSamples,
-       double offset, double rate, double pixelsPerSecond);
+   void Populate(
+      const SpectrogramSettings& settings, const WideSampleSequence& sequence,
+      int copyBegin, int copyEnd, size_t numPixels, sampleCount numSamples,
+      double offset, double rate, double pixelsPerSecond);
 
    size_t       len { 0 }; // counts pixels, not samples
    int          algorithm;
@@ -119,11 +118,15 @@ struct WaveClipSpectrumCache final : WaveClipListener
    void Invalidate() override; // NOFAIL-GUARANTEE
 
    /** Getting high-level data for screen display */
-   bool GetSpectrogram(const WaveClip &clip, SampleTrackCache &cache,
-                       const float *& spectrogram,
-                       const sampleCount *& where,
-                       size_t numPixels,
-                       double t0, double pixelsPerSecond);
+   // PRL:
+   // > only the 0th channel of sequence is really used
+   // > In the interim, this still works correctly for WideSampleSequence backed
+   // > by a right channel track, which always ignores its partner.
+   bool GetSpectrogram(
+      const WaveClip& clip, const WideSampleSequence& sequence,
+      const float*& spectrogram, SpectrogramSettings& spectrogramSettings,
+      const sampleCount*& where, size_t numPixels, double t0,
+      double pixelsPerSecond);
 };
 
 #endif

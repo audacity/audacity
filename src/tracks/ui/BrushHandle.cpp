@@ -11,7 +11,7 @@ Edward Hui
 
 #include "BrushHandle.h"
 #include "Scrubbing.h"
-#include "TrackView.h"
+#include "ChannelView.h"
 
 #include "AColor.h"
 #include "../../SpectrumAnalyst.h"
@@ -121,14 +121,14 @@ namespace
    }
 
    // This returns true if we're a spectral editing track.
-   inline bool isSpectralSelectionView(const TrackView *pTrackView) {
+   inline bool isSpectralSelectionView(const ChannelView *pChannelView) {
       return
-            pTrackView &&
-            pTrackView->IsSpectral() &&
-            pTrackView->FindTrack() &&
-            pTrackView->FindTrack()->TypeSwitch< bool >(
-                  [&](const WaveTrack *wt) {
-                     const auto &settings = SpectrogramSettings::Get(*wt);
+            pChannelView &&
+            pChannelView->IsSpectral() &&
+            pChannelView->FindTrack() &&
+            pChannelView->FindTrack()->TypeSwitch<bool>(
+                  [&](const WaveTrack &wt) {
+                     const auto &settings = SpectrogramSettings::Get(wt);
                      return settings.SpectralSelectionEnabled();
                   });
    }
@@ -140,19 +140,19 @@ namespace
    }
 }
 
-BrushHandle::BrushHandle
-      ( std::shared_ptr<StateSaver> pStateSaver,
-        const std::shared_ptr<TrackView> &pTrackView,
-        const TrackList &trackList,
-        const TrackPanelMouseState &st, const ViewInfo &viewInfo,
-        const std::shared_ptr<SpectralData> &pSpectralData,
-        const ProjectSettings &pSettings)
-      : mpStateSaver{ move(pStateSaver) }
-      , mpSpectralData(pSpectralData)
-      , mpView{ pTrackView }
+BrushHandle::BrushHandle(
+   std::shared_ptr<StateSaver> pStateSaver,
+   const std::shared_ptr<ChannelView> &pChannelView,
+   const TrackList &trackList,
+   const TrackPanelMouseState &st, const ViewInfo &viewInfo,
+   const std::shared_ptr<SpectralData> &pSpectralData,
+   const ProjectSettings &pSettings
+)  : mpStateSaver{ move(pStateSaver) }
+   , mpSpectralData(pSpectralData)
+   , mpView{ pChannelView }
 {
    const wxMouseState &state = st.state;
-   auto pTrack = pTrackView->FindTrack().get();
+   auto pTrack = pChannelView->FindTrack().get();
    auto wt = dynamic_cast<WaveTrack *>(pTrack);
    double rate = mpSpectralData->GetSR();
 

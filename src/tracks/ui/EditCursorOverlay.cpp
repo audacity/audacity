@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "EditCursorOverlay.h"
 
-#include "TrackView.h"
+#include "ChannelView.h"
 #include "AColor.h"
 #include "../../AdornedRulerPanel.h"
 #include "Project.h"
@@ -107,10 +107,10 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 
       // Draw cursor in all selected tracks
       tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-         const auto pTrackView = dynamic_cast<TrackView*>(&cell);
-         if (!pTrackView)
+         const auto pChannelView = dynamic_cast<ChannelView*>(&cell);
+         if (!pChannelView)
             return;
-         const auto pTrack = pTrackView->FindTrack();
+         const auto pTrack = pChannelView->FindTrack();
          if (pTrack->GetSelected() ||
              TrackFocus::Get( *mProject ).IsFocused( pTrack.get() ))
          {

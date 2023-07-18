@@ -53,7 +53,7 @@
 #include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 #include "widgets/AButton.h"
 #include "AudacityMessageBox.h"
 #include "widgets/Grabber.h"
@@ -227,12 +227,29 @@ class AdornedRulerPanel::PlayRegionAdjustingHandle : public CommonRulerHandle {
 public:
    PlayRegionAdjustingHandle(
       AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice,
+      wxCursor *cursor,
+      size_t numGuides = 1)
+   : CommonRulerHandle{ pParent, xx, menuChoice }
+   , mNumGuides{ numGuides }
+   {
+      if (cursor) {
+         mCursor = *cursor;
+      }
+   }
+
+   PlayRegionAdjustingHandle(
+      AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice,
       wxCursor cursor,
       size_t numGuides = 1)
    : CommonRulerHandle{ pParent, xx, menuChoice }
    , mCursor{ cursor }
    , mNumGuides{ numGuides }
    {}
+
+   void SetCursor(wxCursor cursor)
+   {
+      mCursor = cursor;
+   }
 
    HitTestPreview Preview(
       const TrackPanelMouseState &state, AudacityProject *pProject)
@@ -662,8 +679,8 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
       }
       pCellularPanel
          ->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-            const auto pTrackView = dynamic_cast<TrackView*>(&cell);
-            if (!pTrackView)
+            const auto pChannelView = dynamic_cast<ChannelView*>(&cell);
+            if (!pChannelView)
                return;
 
             // Draw the NEW indicator in its NEW location
@@ -790,14 +807,17 @@ private:
 };
 #endif
 
-static auto handOpenCursor =
-    MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+static std::unique_ptr<wxCursor> handOpenCursor = nullptr;
 
 class AdornedRulerPanel::MovePlayRegionHandle final : public PlayRegionAdjustingHandle {
 public:
    MovePlayRegionHandle( AdornedRulerPanel *pParent, wxCoord xx )
-   : PlayRegionAdjustingHandle( pParent, xx, MenuChoice::QuickPlay, *handOpenCursor, 2 )
+   : PlayRegionAdjustingHandle( pParent, xx, MenuChoice::QuickPlay, handOpenCursor.get(), 2 )
    {
+      if (!handOpenCursor) {
+         handOpenCursor = MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+         SetCursor(*handOpenCursor);
+      }
    }
 
    ~MovePlayRegionHandle()

@@ -165,14 +165,15 @@ ExportMultipleDialog::~ExportMultipleDialog()
 
 void ExportMultipleDialog::CountTracksAndLabels()
 {
-   bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(mTracks->Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    mNumWaveTracks =
       (mTracks->Leaders< const WaveTrack >() - 
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)).size();
 
    // only the first label track
-   mLabels = *mTracks->Any< const LabelTrack >().begin();
+   mLabels = *mTracks->Leaders<const LabelTrack>().begin();
    mNumLabels = mLabels ? mLabels->GetNumLabels() : 0;
 }
 
@@ -699,56 +700,17 @@ bool ExportMultipleDialog::DirOk()
 
 static unsigned GetNumExportChannels( const TrackList &tracks )
 {
-   /* counters for tracks panned different places */
-   int numLeft = 0;
-   int numRight = 0;
-   //int numMono = 0;
-   /* track iteration kit */
-
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    // Want only unmuted wave tracks.
-   for (auto tr :
-         tracks.Any< const WaveTrack >() - 
-      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)
-   ) {
-      // Found a left channel
-      if (tr->GetChannel() == Track::LeftChannel) {
-         numLeft++;
-      }
-
-      // Found a right channel
-      else if (tr->GetChannel() == Track::RightChannel) {
-         numRight++;
-      }
-
-      // Found a mono channel, but it may be panned
-      else if (tr->GetChannel() == Track::MonoChannel) {
-         float pan = tr->GetPan();
-
-         // Figure out what kind of channel it should be
-         if (pan == -1.0) {   // panned hard left
-            numLeft++;
-         }
-         else if (pan == 1.0) {  // panned hard right
-            numRight++;
-         }
-         else if (pan == 0) { // panned dead center
-            // numMono++;
-         }
-         else {   // panned somewhere else
-            numLeft++;
-            numRight++;
-         }
-      }
-   }
-
-   // if there is stereo content, report 2, else report 1
-   if (numRight > 0 || numLeft > 0) {
-      return 2;
-   }
-
-   return 1;
+   const auto range = tracks.Leaders<const WaveTrack>() -
+      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
+   return std::all_of(range.begin(), range.end(),
+      [](auto *pTrack){ return IsMono(*pTrack); }
+   )
+      ? 1
+      : 2;
 }
 
 // TODO: JKC July2016: Merge labels/tracks duplicated export code.
@@ -929,7 +891,8 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    for (auto tr : mTracks->SelectedLeaders<WaveTrack>())
       tr->SetSelected(false);
 
-   bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !(mTracks->Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
    bool skipSilenceAtBeginning;
    gPrefs->Read(wxT("/AudioFiles/SkipSilenceAtBeginning"), &skipSilenceAtBeginning, false);
@@ -944,11 +907,8 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
       setting.t1 = channels.max( &Track::GetEndTime );
 
       // number of export channels?
-      setting.channels = channels.size();
-      if (setting.channels == 1 &&
-          !(tr->GetChannel() == WaveTrack::MonoChannel &&
-                  tr->GetPan() == 0.0))
-         setting.channels = 2;
+      // It's 1 only for a center-panned mono track
+      setting.channels = (IsMono(*tr) && tr->GetPan() == 0.0) ? 1 : 2;
 
       // Get name and title
       title = tr->GetName();

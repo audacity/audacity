@@ -32,7 +32,6 @@
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
-#include "Track.h"
 #include "TrackPanelAx.h"
 #include "AColor.h"
 #include "WaveTrack.h"
@@ -78,7 +77,7 @@ namespace
             if (mMenuLevelCounter != 0)
             {
                auto submenu = std::make_unique<wxMenu>();
-               mMenuPtr->AppendSubMenu(submenu.get(), menuItem->title.Translation());
+               mMenuPtr->AppendSubMenu(submenu.get(), menuItem->GetTitle().Translation());
                mMenuPtr = submenu.release();
             }
             ++mMenuLevelCounter;
@@ -122,8 +121,10 @@ namespace
    };
 
    template <typename Visitor>
-   void VisitRealtimeEffectStateUIs(Track& track, Visitor&& visitor)
+   void VisitRealtimeEffectStateUIs(SampleTrack& track, Visitor&& visitor)
    {
+      if (!track.IsLeader())
+         return;
       auto& effects = RealtimeEffectList::Get(track);
       effects.Visit(
          [visitor](auto& effectState, bool)
@@ -133,13 +134,13 @@ namespace
          });
    }
 
-   void UpdateRealtimeEffectUIData(Track& track)
+   void UpdateRealtimeEffectUIData(SampleTrack& track)
    {
       VisitRealtimeEffectStateUIs(
          track, [&](auto& ui) { ui.UpdateTrackData(track); });
    }
 
-   void ReopenRealtimeEffectUIData(AudacityProject& project, Track& track)
+   void ReopenRealtimeEffectUIData(AudacityProject& project, SampleTrack& track)
    {
       VisitRealtimeEffectStateUIs(
          track,
@@ -304,7 +305,7 @@ namespace
    class RealtimeEffectControl : public ListNavigationEnabled<MovableControl>
    {
       wxWeakRef<AudacityProject> mProject;
-      std::shared_ptr<Track> mTrack;
+      std::shared_ptr<SampleTrack> mTrack;
       std::shared_ptr<RealtimeEffectState> mEffectState;
       std::shared_ptr<EffectSettingsAccess> mSettingsAccess;
       
@@ -415,7 +416,7 @@ namespace
       }
 
       void SetEffect(AudacityProject& project,
-         const std::shared_ptr<Track>& track,
+         const std::shared_ptr<SampleTrack>& track,
          const std::shared_ptr<RealtimeEffectState> &pState)
       {
          mProject = &project;
@@ -579,7 +580,7 @@ class RealtimeEffectListWindow
    , public PrefsListener
 {
    wxWeakRef<AudacityProject> mProject;
-   std::shared_ptr<Track> mTrack;
+   std::shared_ptr<SampleTrack> mTrack;
    AButton* mAddEffect{nullptr};
    wxStaticText* mAddEffectHint{nullptr};
    wxWindow* mAddEffectTutorialLink{nullptr};
@@ -785,7 +786,8 @@ public:
    
    void UpdateEffectMenuItems()
    {
-      auto root = std::make_unique<MenuTable::MenuItem>(Identifier {}, TranslatableString {});
+      using namespace MenuTable;
+      auto root = Menu("", TranslatableString{});
 
       static auto realtimeEffectPredicate = [](const PluginDescriptor& desc)
       {
@@ -794,32 +796,27 @@ public:
 
       const auto groupby = RealtimeEffectsGroupBy.Read();
 
-      auto analyzeItems = MenuHelper::PopulateEffectsMenu(
+      auto analyzeSection = Section("", Menu("", XO("Analyze")));
+      auto submenu =
+         static_cast<MenuItem*>(analyzeSection->begin()->get());
+      MenuHelper::PopulateEffectsMenu(
+         *submenu,
          EffectTypeAnalyze,
          {}, groupby, nullptr,
          realtimeEffectPredicate
       );
       
-      if(!analyzeItems.empty())
+      if(!submenu->empty())
       {
-         auto analyzeSection = MenuTable::Section(
-            wxEmptyString,
-            std::make_unique<MenuTable::MenuItem>(
-               wxEmptyString,
-               XO("Analyze"),
-               std::move(analyzeItems)
-            )
-         );
-         root->items.push_back(std::move(analyzeSection));
+         root->push_back(move(analyzeSection));
       }
    
-      auto processItems = MenuHelper::PopulateEffectsMenu(
+      MenuHelper::PopulateEffectsMenu(
+         *root,
          EffectTypeProcess,
          {}, groupby, nullptr,
          realtimeEffectPredicate
       );
-      
-      std::move(processItems.begin(), processItems.end(), std::back_inserter(root->items));
       
       mEffectMenuRoot.swap(root);
    }
@@ -920,7 +917,8 @@ public:
       ReloadEffectsList();
    }
 
-   void SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)
+   void SetTrack(AudacityProject& project,
+      const std::shared_ptr<SampleTrack>& track)
    {
       if (mTrack == track)
          return;
@@ -1046,7 +1044,7 @@ struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
    void UpdatePrefs() override
    {
       auto& trackList = TrackList::Get(mProject);
-      for (auto waveTrack : trackList.Any<WaveTrack>())
+      for (auto waveTrack : trackList.Leaders<WaveTrack>())
          ReopenRealtimeEffectUIData(mProject, *waveTrack);
    }
 };
@@ -1155,7 +1153,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
    Bind(wxEVT_CHAR_HOOK, &RealtimeEffectPanel::OnCharHook, this);
    mTrackListChanged = TrackList::Get(mProject).Subscribe([this](const TrackListEvent& evt) {
          auto track = evt.mpTrack.lock();
-         auto waveTrack = dynamic_cast<WaveTrack*>(track.get());
+         auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(track);
 
          if (waveTrack == nullptr)
             return;
@@ -1163,13 +1161,13 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          switch (evt.mType)
          {
          case TrackListEvent::TRACK_DATA_CHANGE:
-            if (mCurrentTrack.lock() == track)
+            if (mCurrentTrack.lock() == waveTrack)
                mTrackTitle->SetLabel(track->GetName());
             UpdateRealtimeEffectUIData(*waveTrack);
             break;
          case TrackListEvent::DELETION:
             if (evt.mExtra == 0)
-               mPotentiallyRemovedTracks.push_back(track);
+               mPotentiallyRemovedTracks.push_back(waveTrack);
             break;
          case TrackListEvent::ADDITION:
             // Addition can be fired as a part of "replace" event.
@@ -1194,7 +1192,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          auto& trackList = TrackList::Get(mProject);
 
          // Realtime effect UI is only updated on Undo or Redo
-         auto waveTracks = trackList.Any<WaveTrack>();
+         auto waveTracks = trackList.Leaders<WaveTrack>();
          
          if (
             message.type == UndoRedoMessage::Type::UndoOrRedo ||
@@ -1261,7 +1259,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          if (IsShown())
          {
             auto& trackFocus = TrackFocus::Get(mProject);
-            ShowPanel(trackFocus.Get(), false);
+            ShowPanel(dynamic_cast<SampleTrack *>(trackFocus.Get()), false);
          }
       });
 
@@ -1273,7 +1271,7 @@ RealtimeEffectPanel::~RealtimeEffectPanel()
 {
 }
 
-void RealtimeEffectPanel::ShowPanel(Track* track, bool focus)
+void RealtimeEffectPanel::ShowPanel(SampleTrack* track, bool focus)
 {
    if(track == nullptr)
    {
@@ -1283,7 +1281,7 @@ void RealtimeEffectPanel::ShowPanel(Track* track, bool focus)
 
    wxWindowUpdateLocker freeze(this);
 
-   SetTrack(track->shared_from_this());
+   SetTrack(track->SharedPointer<SampleTrack>());
 
    auto &projectWindow = ProjectWindow::Get(mProject);
    const auto pContainerWindow = projectWindow.GetContainerWindow();
@@ -1317,7 +1315,7 @@ void RealtimeEffectPanel::HidePanel()
    projectWindow.Layout();
 }
 
-void RealtimeEffectPanel::SetTrack(const std::shared_ptr<Track>& track)
+void RealtimeEffectPanel::SetTrack(const std::shared_ptr<SampleTrack>& track)
 {
    //Avoid creation-on-demand of a useless, empty list in case the track is of non-wave type.
    if(track && dynamic_cast<WaveTrack*>(&*track) != nullptr)

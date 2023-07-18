@@ -32,7 +32,7 @@
 
 #include "TrackPanelDrawingContext.h"
 
-#include "tracks/ui/TrackView.h"
+#include "tracks/ui/ChannelView.h"
 
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
@@ -80,7 +80,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
 
    int rulerScreenHeight = 40;
    int screenTotalHeight =
-      TrackView::GetTotalHeight( *mTracks ) + rulerScreenHeight;
+      ChannelView::GetTotalHeight(*mTracks) + rulerScreenHeight;
 
    double scale = height / (double)screenTotalHeight;
 
@@ -102,43 +102,45 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    artist.pZoomInfo = &zoomInfo;
    int y = rulerPageHeight;
 
-   for (auto n : mTracks->Any()) {
-      auto &view = TrackView::Get( *n );
-      wxRect r;
-      r.x = 0;
-      r.y = 0;
-      r.width = width;
-      // Note that the views as printed might not have the same proportional
-      // heights as displayed on the screen, because the fixed-sized separators
-      // are counted in those heights but not printed
-      auto trackHeight = (int)(view.GetHeight() * scale);
-      r.height = trackHeight;
+   for (auto l : mTracks->Leaders()) {
+      for (auto n : l->Channels()) {
+         auto &view = ChannelView::Get(*n);
+         wxRect r;
+         r.x = 0;
+         r.y = 0;
+         r.width = width;
+         // Note that the views as printed might not have the same proportional
+         // heights as displayed on the screen, because the fixed-sized separators
+         // are counted in those heights but not printed
+         auto trackHeight = (int)(view.GetHeight() * scale);
+         r.height = trackHeight;
 
-      const auto subViews = view.GetSubViews( r );
-      if (subViews.empty())
-         continue;
-   
-      auto iter = subViews.begin(), end = subViews.end(), next = iter;
-      auto yy = iter->first;
-      for ( ; iter != end; iter = next ) {
-         ++next;
-         auto nextY = ( next == end )
-            ? trackHeight
-            : next->first;
-         r.y = y + yy;
-         r.SetHeight( nextY - yy );
-         yy = nextY;
+         const auto subViews = view.GetSubViews( r );
+         if (subViews.empty())
+            continue;
+      
+         auto iter = subViews.begin(), end = subViews.end(), next = iter;
+         auto yy = iter->first;
+         for ( ; iter != end; iter = next ) {
+            ++next;
+            auto nextY = ( next == end )
+               ? trackHeight
+               : next->first;
+            r.y = y + yy;
+            r.SetHeight( nextY - yy );
+            yy = nextY;
 
-         TrackPanelDrawingContext context{
-            *dc, {}, {}, &artist
-         };
-         iter->second->Draw( context, r, TrackArtist::PassTracks );
+            TrackPanelDrawingContext context{
+               *dc, {}, {}, &artist
+            };
+            iter->second->Draw( context, r, TrackArtist::PassTracks );
+         }
+
+         dc->SetPen(*wxBLACK_PEN);
+         AColor::Line(*dc, 0, y, width, y);
+
+         y += trackHeight;
       }
-
-      dc->SetPen(*wxBLACK_PEN);
-      AColor::Line(*dc, 0, y, width, y);
-
-      y += trackHeight;
    };
 
    return true;

@@ -8,8 +8,9 @@ set( SOURCES
    TimeTrack.h
 )
 set( LIBRARIES
+   lib-mixer-interface # for Envelope
    lib-project-rate-interface
-   lib-sample-track-interface
+   lib-track-interface
 )
 audacity_library( lib-time-track "${SOURCES}" "${LIBRARIES}"
    "" ""

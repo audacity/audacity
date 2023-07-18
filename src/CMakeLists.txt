@@ -165,6 +165,7 @@ list( APPEND SOURCES
       ProjectSelectionManager.h
       ProjectSettings.cpp
       ProjectSettings.h
+      ProjectTempoListener.cpp
       ProjectWindow.cpp
       ProjectWindow.h
       ProjectWindowBase.cpp
@@ -816,6 +817,14 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
       tracks/playabletrack/wavetrack/ui/SpectrumView.h
+      tracks/playabletrack/wavetrack/ui/WaveChannelVRulerControls.cpp
+      tracks/playabletrack/wavetrack/ui/WaveChannelVRulerControls.h
+      tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+      tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.h
+      tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
+      tracks/playabletrack/wavetrack/ui/WaveChannelView.h
+      tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
+      tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h
       tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.h
       tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
@@ -830,14 +839,6 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveTrackShifter.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h
-      tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp
-      tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h
-      tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-      tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.h
-      tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-      tracks/playabletrack/wavetrack/ui/WaveTrackView.h
-      tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
-      tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
@@ -868,12 +869,16 @@ list( APPEND SOURCES
       tracks/ui/BrushHandle.h
       tracks/ui/ButtonHandle.cpp
       tracks/ui/ButtonHandle.h
+      tracks/ui/ChannelVRulerControls.cpp
+      tracks/ui/ChannelVRulerControls.h
+      tracks/ui/ChannelView.cpp
+      tracks/ui/ChannelView.h
+      tracks/ui/CommonChannelView.cpp
+      tracks/ui/CommonChannelView.h
       tracks/ui/CommonTrackControls.cpp
       tracks/ui/CommonTrackControls.h
       tracks/ui/CommonTrackPanelCell.cpp
       tracks/ui/CommonTrackPanelCell.h
-      tracks/ui/CommonTrackView.cpp
-      tracks/ui/CommonTrackView.h
       tracks/ui/EditCursorOverlay.cpp
       tracks/ui/EditCursorOverlay.h
       tracks/ui/EnvelopeHandle.cpp
@@ -898,10 +903,6 @@ list( APPEND SOURCES
       tracks/ui/TrackControls.h
       tracks/ui/TrackSelectHandle.cpp
       tracks/ui/TrackSelectHandle.h
-      tracks/ui/TrackVRulerControls.cpp
-      tracks/ui/TrackVRulerControls.h
-      tracks/ui/TrackView.cpp
-      tracks/ui/TrackView.h
       tracks/ui/ZoomHandle.cpp
       tracks/ui/ZoomHandle.h
 
@@ -1427,6 +1428,7 @@ set( AUDACITY_LIBRARIES
    lib-time-track-interface
    lib-snapping-interface
    lib-audio-io-interface
+   lib-stretching-sequence-interface
 )
 
 if (USE_VST)

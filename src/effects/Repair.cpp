@@ -23,6 +23,7 @@ the audio, rather than actually finding the clicks.
 
 
 #include "Repair.h"
+#include "EffectOutputTracks.h"
 
 #include <math.h>
 
@@ -73,13 +74,14 @@ bool EffectRepair::IsInteractive() const
 
 bool EffectRepair::Process(EffectInstance &, EffectSettings &)
 {
-   //v This may be too much copying for EffectRepair. To support Cancel, may be able to copy much less.
-   //  But for now, Cancel isn't supported without this.
-   this->CopyInputTracks(); // Set up mOutputTracks. //v This may be too much copying for EffectRepair.
+   // This may be too much copying for EffectRepair. To support Cancel, may be
+   // able to copy much less.
+   // But for now, Cancel isn't supported without this.
+   EffectOutputTracks outputs{ *mTracks };
    bool bGoodResult = true;
 
    int count = 0;
-   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       const
       double trackStart = track->GetStartTime();
       const double repair_t0 = std::max(mT0, trackStart);
@@ -134,7 +136,9 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
       count++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 

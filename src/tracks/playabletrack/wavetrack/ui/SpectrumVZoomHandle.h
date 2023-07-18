@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 SpectrumVZoomHandle.h
 
-Paul Licameli split from WaveTrackVZoomHandle.h
+Paul Licameli split from WaveChannelVZoomHandle.h
 
 **********************************************************************/
 
@@ -12,7 +12,7 @@ Paul Licameli split from WaveTrackVZoomHandle.h
 #define __AUDACITY_SPECTRUM_VZOOM_HANDLE__
 
 #include "../../../../UIHandle.h" // to inherit
-#include "WaveTrackViewConstants.h"
+#include "WaveChannelViewConstants.h"
 
 class WaveTrack;
 
@@ -28,7 +28,7 @@ public:
 
    static void DoZoom(
       AudacityProject *pProject, WaveTrack *pTrack,
-      WaveTrackViewConstants::ZoomActions ZoomKind,
+      WaveChannelViewConstants::ZoomActions ZoomKind,
       const wxRect &rect, int zoomStart, int zoomEnd,
       bool fixedMousePoint);
 
@@ -73,7 +73,7 @@ private:
    wxRect mRect{};
 };
 
-#include "WaveTrackVZoomHandle.h" // to inherit
+#include "WaveChannelVZoomHandle.h" // to inherit
 
 class SpectrumVRulerMenuTable : public WaveTrackVRulerMenuTable
 {

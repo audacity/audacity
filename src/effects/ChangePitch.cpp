@@ -421,7 +421,7 @@ void EffectChangePitch::DeduceFrequencies()
     auto FirstTrack = [&]()->const WaveTrack *{
       if( IsBatchProcessing() || !inputTracks() )
          return nullptr;
-      return *( inputTracks()->Selected< const WaveTrack >() ).first;
+      return *(inputTracks()->SelectedLeaders<const WaveTrack>()).first;
    };
 
    m_dStartFrequency = 261.265;// Middle C.

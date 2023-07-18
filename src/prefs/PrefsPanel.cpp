@@ -15,7 +15,7 @@ static const auto PathStart = L"Preferences";
 
 Registry::GroupItemBase &PrefsPanel::PrefsItem::Registry()
 {
-   static Registry::GroupItem<> registry{ PathStart };
+   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
    return registry;
 }
 
@@ -120,7 +120,7 @@ PrefsPanel::Factories
 
    std::call_once( flag, []{
       PrefsItem::Visitor visitor{ factories };
-      Registry::GroupItem<> top{ PathStart };
+      Registry::GroupItem<Registry::DefaultTraits> top{ PathStart };
       Registry::Visit( visitor, &top, &PrefsItem::Registry() );
    } );
    return factories;

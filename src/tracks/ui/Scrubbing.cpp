@@ -1136,30 +1136,23 @@ using namespace MenuTable;
 BaseItemSharedPtr ToolbarMenu()
 {
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu { (
-   FinderScope{ finder },
-   Menu( wxT("Scrubbing"),
-      XXO("Scru&bbing"),
-      []{
-         BaseItemPtrs ptrs;
-         for (const auto &item : menuItems()) {
-            ptrs.push_back( Command( item.name, item.label,
-               item.memFn,
-               item.flags,
-               item.StatusTest
-                  ? // a checkmark item
-                     Options{}.CheckTest( [&item](AudacityProject &project){
-                     return ( Scrubber::Get(project).*(item.StatusTest) )(); } )
-                  : // not a checkmark item
-                     Options{}
-            ) );
-         }
-         return ptrs;
-      }()
-   )
-   ) };
-   
+   static auto menu = []{
+      FinderScope scope{ finder };
+      auto menu = std::shared_ptr{ Menu("Scrubbing", XXO("Scru&bbing")) };
+      for (const auto &item : menuItems()) {
+         menu->push_back(Command(item.name, item.label,
+            item.memFn,
+            item.flags,
+            item.StatusTest
+               ? // a checkmark item
+                  Options{}.CheckTest([&item](AudacityProject &project){
+                  return (Scrubber::Get(project).*(item.StatusTest))(); } )
+               : // not a checkmark item
+                  Options{}
+         ));
+      }
+      return menu;
+   }();
    return menu;
 }
 

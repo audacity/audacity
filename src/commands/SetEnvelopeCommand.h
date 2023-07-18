@@ -18,7 +18,7 @@
 
 #include "SetTrackInfoCommand.h"
 
-class SetEnvelopeCommand : public SetTrackBase
+class SetEnvelopeCommand : public SetChannelsBase
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

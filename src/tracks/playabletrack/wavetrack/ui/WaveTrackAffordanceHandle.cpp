@@ -10,7 +10,7 @@
 
 #include "WaveTrackAffordanceHandle.h"
 #include "WaveTrackAffordanceControls.h"
-#include "WaveTrackView.h"
+#include "WaveChannelView.h"
 #include "ViewInfo.h"
 
 #include "WaveClip.h"
@@ -27,7 +27,7 @@ WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track
 UIHandle::Result WaveTrackAffordanceHandle::Click(const TrackPanelMouseEvent& event, AudacityProject* project)
 {
    Result result = RefreshCode::RefreshNone;
-   if (WaveTrackView::ClipDetailsVisible(*mTarget, ViewInfo::Get(*project), event.rect))
+   if (WaveChannelView::ClipDetailsVisible(*mTarget, ViewInfo::Get(*project), event.rect))
    {
       auto affordanceControl = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(event.pCell);
 
