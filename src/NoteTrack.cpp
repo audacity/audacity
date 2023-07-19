@@ -727,11 +727,13 @@ auto NoteTrack::ClassTypeInfo() -> const TypeInfo &
    return typeInfo();
 }
 
-Track::Holder NoteTrack::PasteInto( AudacityProject & ) const
+Track::Holder NoteTrack::PasteInto(AudacityProject &, TrackList &list) const
 {
+   assert(IsLeader());
    auto pNewTrack = std::make_shared<NoteTrack>();
    pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, this);
+   list.Add(pNewTrack);
    return pNewTrack;
 }
 

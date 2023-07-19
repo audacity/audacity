@@ -150,14 +150,19 @@ bool TimeTrack::SupportsBasicEditing() const
    return false;
 }
 
-Track::Holder TimeTrack::PasteInto(AudacityProject &project) const
+Track::Holder TimeTrack::PasteInto(AudacityProject &project, TrackList &list)
+   const
 {
+   assert(IsLeader());
    // Maintain uniqueness of the time track!
    std::shared_ptr<TimeTrack> pNewTrack;
    if (auto pTrack = *TrackList::Get(project).Leaders<TimeTrack>().begin())
+      // leave list unchanged
       pNewTrack = pTrack->SharedPointer<TimeTrack>();
-   else
+   else {
       pNewTrack = std::make_shared<TimeTrack>();
+      list.Add(pNewTrack);
+   }
 
    // Should come here only for .aup3 import, not for paste (because the
    // track is skipped in cut/copy commands)

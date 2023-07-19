@@ -400,13 +400,22 @@ auto WaveTrack::ClassTypeInfo() -> const TypeInfo &
    return typeInfo();
 }
 
-Track::Holder WaveTrack::PasteInto( AudacityProject &project ) const
+Track::Holder WaveTrack::PasteInto(
+   AudacityProject &project, TrackList &list) const
 {
-   auto &trackFactory = WaveTrackFactory::Get( project );
+   assert(IsLeader());
+   auto &trackFactory = WaveTrackFactory::Get(project);
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto pNewTrack = EmptyCopy( pSampleBlockFactory );
-   pNewTrack->Paste(0.0, this);
-   return pNewTrack;
+   Track::Holder pFirstTrack;
+   for (const auto pChannel : TrackList::Channels(this)) {
+      auto pNewTrack = pChannel->EmptyCopy(pSampleBlockFactory);
+      pNewTrack->Paste(0.0, pChannel);
+      list.Add(pNewTrack);
+      assert(pNewTrack->IsLeader() == pChannel->IsLeader());
+      if (!pFirstTrack)
+         pFirstTrack = pNewTrack;
+   }
+   return pFirstTrack;
 }
 
 size_t WaveTrack::NIntervals() const

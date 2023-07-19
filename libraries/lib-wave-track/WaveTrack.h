@@ -626,7 +626,8 @@ private:
       const std::shared_ptr<WaveClip> mpClip1;
    };
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto(AudacityProject &project, TrackList &list)
+      const override;
 
    //! Returns nullptr if clip with such name was not found
    const WaveClip* FindClipByName(const wxString& name) const;

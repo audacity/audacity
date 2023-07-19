@@ -120,11 +120,13 @@ auto LabelTrack::ClassTypeInfo() -> const TypeInfo &
    return typeInfo();
 }
 
-Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
+Track::Holder LabelTrack::PasteInto(AudacityProject &, TrackList &list) const
 {
+   assert(IsLeader());
    auto pNewTrack = std::make_shared<LabelTrack>();
    pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, this);
+   list.Add(pNewTrack);
    return pNewTrack;
 }
 

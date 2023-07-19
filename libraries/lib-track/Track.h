@@ -222,9 +222,16 @@ private:
 
    using Holder = std::shared_ptr<Track>;
 
-   //! Find or create the destination track for a paste, maybe in a different project
-   /*! @return A smart pointer to the track; its `use_count()` can tell whether it is new */
-   virtual Holder PasteInto( AudacityProject & ) const = 0;
+   //! Find or create the destination track for a paste, maybe in a different
+   //! project
+   /*!
+    @pre `IsLeader()`
+    @param list to which any newly created tracks are added; but left unchanged
+       if an existing track is found in the project instead
+    @return A smart pointer to a leader track
+    */
+   virtual Holder PasteInto(AudacityProject &project, TrackList &list)
+      const = 0;
 
 public:
    //! Check consistency of channel groups, and maybe fix it

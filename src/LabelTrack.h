@@ -177,7 +177,8 @@ public:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto(AudacityProject &project, TrackList &list)
+      const override;
 
    struct Interval final : WideChannelGroupInterval {
       Interval(const ChannelGroup &group,

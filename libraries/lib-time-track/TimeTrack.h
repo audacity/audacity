@@ -50,7 +50,8 @@ class TIME_TRACK_API TimeTrack final
 
    bool SupportsBasicEditing() const override;
 
-   Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto(AudacityProject &project, TrackList &list)
+      const override;
 
    TrackListHolder Cut(double t0, double t1) override;
    TrackListHolder Copy(double t0, double t1, bool forClipboard) const override;

@@ -146,17 +146,11 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    assert(tracks.SelectedLeaders().empty());
 
    Track* pFirstNewTrack = NULL;
-   for (auto pClip : src) {
-      auto pNewTrack = pClip->PasteInto( project );
-      bool newTrack = (pNewTrack.use_count() == 1);
-      wxASSERT(pClip);
-
+   for (auto pClip : src.Leaders()) {
+      auto pNewTrack = pClip->PasteInto(project, tracks);
       if (!pFirstNewTrack)
          pFirstNewTrack = pNewTrack.get();
-
       pNewTrack->SetSelected(true);
-      if (newTrack)
-         tracks.Add(pNewTrack);
    }
 
    // Select some pasted samples, which is probably impossible to get right
