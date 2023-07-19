@@ -2323,7 +2323,7 @@ msgstr "Չի ստացվում բացել ֆայլը՝ \"%s\""
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "Սխալ՝ %hs  %lu գծում"
+msgstr "Սխալ՝ %s  %lu գծում"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format

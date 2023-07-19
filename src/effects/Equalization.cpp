@@ -35,6 +35,7 @@
 #include "Equalization.h"
 #include "EqualizationUI.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 #include "PasteOverPreservingClips.h"
 #include "ShuttleGui.h"
@@ -322,7 +323,8 @@ bool EffectEqualization::Init()
    double rate = 0.0;
 
    if (const auto project = FindProject()) {
-      auto trackRange = TrackList::Get(*project).Selected<const WaveTrack>();
+      auto trackRange =
+         TrackList::Get(*project).SelectedLeaders<const WaveTrack>();
       if (trackRange) {
          rate = (*(trackRange.first++)) -> GetRate();
          ++selcount;
@@ -364,12 +366,12 @@ bool EffectEqualization::Init()
 
 bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 {
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
    mParameters.CalcFilter();
    bool bGoodResult = true;
 
    int count = 0;
-   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -390,7 +392,9 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
       count++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 
@@ -473,7 +477,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    auto originalLen = len;
 
    auto &output = task.output;
-   t->ConvertToSampleFormat( floatSample );
+   output->ConvertToSampleFormat(floatSample);
 
    TrackProgress(count, 0.);
    bool bLoopSuccess = true;

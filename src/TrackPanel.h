@@ -35,6 +35,7 @@ struct AudioIOEvent;
 // All cells of the TrackPanel are subclasses of this
 class CommonTrackPanelCell;
 
+class Channel;
 class SpectrumAnalyst;
 class Track;
 class TrackList;
@@ -121,7 +122,10 @@ class AUDACITY_DLL_API TrackPanel final
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
-   void UpdateTrackVRuler(Track *t);
+   /*!
+    @pre `t.IsLeader()`
+    */
+   void UpdateTrackVRuler(Track &t);
    void UpdateVRulerSize();
 
  protected:
@@ -155,7 +159,7 @@ public:
     (There may be multiple sub-views, each with a ruler.)
     If target is nullptr, returns an empty vector.
     */
-   std::vector<wxRect> FindRulerRects( const Track * target );
+   std::vector<wxRect> FindRulerRects(const Channel &target);
 
 protected:
    // Get the root object defining a recursive subdivision of the panel's

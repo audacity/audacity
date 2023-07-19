@@ -19,7 +19,9 @@ class wxRect;
 class BoundedEnvelope;
 struct TrackPanelDrawingContext;
 
-class TIME_TRACK_API TimeTrack final : public Track {
+class TIME_TRACK_API TimeTrack final
+   : public UniqueChannelTrack<>
+{
 
  public:
 
@@ -98,8 +100,16 @@ class TIME_TRACK_API TimeTrack final : public Track {
 
    void testMe();
 
- private:
+   size_t NIntervals() const override;
+
+private:
+   std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
+      override;
+
    void CleanState();
+
+   void DoOnProjectTempoChange(
+      const std::optional<double>& oldTempo, double newTempo) override;
 
    std::unique_ptr<BoundedEnvelope> mEnvelope;
    bool             mDisplayLog;

@@ -12,13 +12,11 @@ For Windows see below for important installer settings.
 Please note that Xcode 14 support on macOS requires CMake 3.24.0 or later.
 ### Conan
 
-Audacity uses [Conan](https://conan.io/) to manage dependencies. If `conan` is not already installed, Audacity will download and install it automatically.
+Audacity uses [Conan 2](https://conan.io/) to manage dependencies. If `conan` is not already installed, Audacity will download and install it automatically.
 
 However, if you want to install Conan manually, you can do so by following the instructions on the [Conan website](https://docs.conan.io/en/latest/installation.html).
 Manual installation can be useful if you want to use Conan to manage dependencies for other projects or if you plan to have multiple builds of Audacity on the 
 same machine.
-
-At this time, Audacity **does not support Conan 2.0**. If you have Conan 2.0 installed, you will need to downgrade to Conan 1.59.0.
 
 ### CMake
 
@@ -47,7 +45,7 @@ Here are the dependencies you need to install on various distribution families.
 ```
 $ sudo apt-get update
 $ sudo apt-get install -y build-essential cmake git python3-pip
-$ sudo pip3 install conan==1.59.0
+$ sudo pip3 install conan
 $ sudo apt-get install libgtk2.0-dev libasound2-dev libjack-jackd2-dev uuid-dev
 ```
 
@@ -57,7 +55,7 @@ $ sudo apt-get install libgtk2.0-dev libasound2-dev libjack-jackd2-dev uuid-dev
 $ sudo zypper refresh
 $ sudo zypper install patterns-devel-C-C++-devel_C_C++ cmake git python3-pip \
                       gtk2-devel libjack-devel uuid-devel libSM-devel
-$ sudo pip3 install conan==1.59.0
+$ sudo pip3 install conan
 ```
 
 #### Fedora Workstation
@@ -66,7 +64,7 @@ $ sudo pip3 install conan==1.59.0
 $ sudo dnf update
 $ sudo dnf install gcc-c++ cmake git python3-pip perl-core \
                    gtk2-devel gtk3-devel alsa-lib-devel jack-audio-connection-kit-devel uuid-devel libSM-devel
-$ sudo pip3 install conan==1.59.0
+$ sudo pip3 install conan
 ```
 
 ### Graphviz
@@ -230,6 +228,10 @@ It is possible to force Conan to build all the dependencies from the source code
 
 Additionally, passing `-Daudacity_conan_force_build_dependencies=On` will force Conan to rebuild all the packaged during *every* configuration. This can be usefull for the offline builds against the Conan download cache.
 
+### Custom Conan profiles
+
+Audacity will try to detect the host and build profiles automatically. However, `audacity_conan_host_profile` and `audacity_conan_build_profile` CMakes options can be used to specify custom Conan profiles.
+
 ### Troubleshooting Conan issues
 
 To fix errors, similar to the following:
@@ -265,14 +267,14 @@ For errors like:
 please run
 
 ```
-conan remove package_name/package_version -f
+conan remove package_name -c
 ```
 ### Reducing Conan cache size
 
 In order to reduce the space used by Conan cache, please run:
 
 ```
-$ conan remove "*" --src --builds --force
+$ conan cache clean "*"
 ```
 
 ### Selecting target architecture on macOS

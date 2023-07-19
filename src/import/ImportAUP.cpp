@@ -317,10 +317,8 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto cleanup = finally([this, &tracks, oldNumTracks]{
       if (mUpdateResult != ProgressResult::Success) {
          // Revoke additions of tracks
-         while (oldNumTracks < tracks.Size()) {
-            Track *lastTrack = *tracks.Any().rbegin();
-            tracks.Remove(lastTrack);
-         }
+         while (oldNumTracks < tracks.Size())
+            tracks.Remove(**tracks.Leaders().end().advance(-1));
       }
    });
 
@@ -385,8 +383,9 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
       }
       else
       {
-         AddSamples(fi.blockFile, fi.audioFile,
-                    fi.len, fi.format, fi.origin, fi.channel);
+         if (!AddSamples(fi.blockFile, fi.audioFile,
+                    fi.len, fi.format, fi.origin, fi.channel))
+            return ProgressResult::Failed;
       }
 
       processed += fi.len;
@@ -891,7 +890,7 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
 
    // Bypass this timetrack if the project already has one
    // (See HandleTimeEnvelope and HandleControlPoint also)
-   if (*tracks.Any<TimeTrack>().begin())
+   if (*tracks.Leaders<TimeTrack>().begin())
    {
       AudacityMessageBox(
          XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."),
@@ -1131,7 +1130,8 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
          }
 
          mFormat = (sampleFormat) fValue;
-         waveclip->GetSequence()->ConvertToSampleFormat( mFormat );
+         // Assume old AUP format file never had wide clips
+         waveclip->GetSequence(0)->ConvertToSampleFormat(mFormat);
       }
       else if (attr == "numsamples")
       {
@@ -1457,6 +1457,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    auto &pBlock = mFileMap[wxFileNameFromPath(blockFilename)].second;
    if (pBlock) {
       // Replicate the sharing of blocks
+      if (pClip->GetWidth() != 1)
+         return false;
       pClip->AppendSharedBlock( pBlock );
       return true;
    }
@@ -1648,6 +1650,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    // Add the samples to the clip/track
    if (pClip)
    {
+      if (pClip->GetWidth() != 1)
+         return false;
       pBlock = pClip->AppendNewBlock(bufptr, format, cnt);
    }
 

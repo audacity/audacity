@@ -3,8 +3,7 @@ set(QAUDACITY ${CMAKE_PROJECT_NAME})
 
 set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml)
 
-set(SOURCES
-   main.cpp
+set(APP_SOURCES
    EditToolbarHandler.cpp
    EditToolbarHandler.h
    ToolsToolbarHandler.cpp
@@ -24,13 +23,19 @@ qt_add_resources(QT_RESOURCES
    ${RESOURCES}
 )
 
+# Disable cache generation for QML files
+if(NOT ${_OPT}qt_enable_qml_cache_gen)
+   set(nocachegen NO_CACHEGEN)
+endif()
+
 add_subdirectory(uicomponents)
 
 set(QT_TRANSLATION_SOURCES
    translations/de.ts
 )
 
-qt_add_executable(${QAUDACITY} ${SOURCES} ${QT_RESOURCES} MANUAL_FINALIZATION)
+qt_add_executable(${QAUDACITY} MANUAL_FINALIZATION)
+target_sources(${QAUDACITY} PRIVATE main.cpp ${QT_RESOURCES})
 
 qt_add_translations(
    ${QAUDACITY}
@@ -60,7 +65,10 @@ qt_add_qml_module(
       Audacity.UiComponents
 	QML_FILES
 		${QML_SOURCES}
+   SOURCES
+      ${APP_SOURCES}
    NO_LINT
+   ${nocachegen}
 )
 
 set_target_properties(
@@ -93,7 +101,7 @@ endif()
 
 target_compile_definitions( ${QAUDACITY} PRIVATE $<$<CONFIG:Debug>:QT_QML_DEBUG> )
 target_link_libraries( ${QAUDACITY} PUBLIC ${AUDACITY_LIBRARIES} )
-target_link_libraries( ${QAUDACITY} PRIVATE Qt6::Core Qt6::Gui Qt6::Quick kddockwidgets::kddockwidgets uicomponentsplugin)
+target_link_libraries( ${QAUDACITY} PRIVATE Qt6::Core Qt6::Gui Qt6::Quick KDAB::kddockwidgets uicomponentsplugin)
 
 qt_finalize_target(${QAUDACITY})
 

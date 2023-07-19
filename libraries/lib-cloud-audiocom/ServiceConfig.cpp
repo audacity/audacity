@@ -46,9 +46,15 @@ std::string ServiceConfig::GetAPIUrl(std::string_view apiURI) const
 std::string ServiceConfig::GetFinishUploadPage(
    std::string_view audioID, std::string_view token) const
 {
-   return "http://audio.com/audacity/upload?audioId=" + std::string(audioID) +
+   return "https://audio.com/audacity/upload?audioId=" + std::string(audioID) +
           "&token=" + std::string(token) +
           "&clientId=" + std::string(GetOAuthClientID());
+}
+
+std::string ServiceConfig::GetAudioURL(
+   std::string_view userSlug, std::string_view audioSlug) const
+{
+   return "https://audio.com/" + std::string(userSlug) + "/audio/" + std::string(audioSlug) + "/edit";
 }
 
 std::chrono::milliseconds ServiceConfig::GetProgressCallbackTimeout() const

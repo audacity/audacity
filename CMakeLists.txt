@@ -109,8 +109,8 @@ if( APPLE )
    endif()
 
    if( ${_OPT}enable_experimental_qt_support )
-      set( MIN_MACOS_VERSION 10.15 )
-      set( TARGET_MACOS_VERSION 10.15 )
+      set( MIN_MACOS_VERSION 10.13 )
+      set( TARGET_MACOS_VERSION 10.13 )
    endif()
 
    # Generate schema files
@@ -204,6 +204,12 @@ cmd_option( ${_OPT}conan_force_build_dependencies
             Off
 )
 
+set( ${_OPT}conan_host_profile ""
+            CACHE PATH "Use conan host profile located at the specified path, instead of the detected one")
+
+set( ${_OPT}conan_build_profile ""
+            CACHE PATH "Use conan build profile located at the specified path, instead of the detected one")
+
 set( ${_OPT}conan_download_cache ""
             CACHE PATH "Use conan download cache located at the specified path")
 
@@ -260,6 +266,7 @@ option(${_OPT}has_vst3
 )
 
 cmd_option( ${_OPT}enable_experimental_qt_support "Enable experimental Qt support" Off)
+cmd_option( ${_OPT}qt_enable_qml_cache_gen "Generate run qmlcachegen on build" Off)
 
 # Python is used for the manual and (possibly) message catalogs
 find_package( Python3 )
@@ -293,7 +300,7 @@ cmake_dependent_option(
    ${_OPT}has_crashreports
    "Enables crash reporting for Audacity"
    On
-   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
+   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL;NOT ${_OPT}enable_experimental_qt_support"
    Off
 )
 

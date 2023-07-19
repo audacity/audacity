@@ -12,18 +12,12 @@ interface for iteration over tracks, possibly filtered by subtype.  It emits
 events when tracks are inserted, removed, or permuted, or when certain data
 in individual tracks changes.
 
-Class Envelope represents piecewise linear or exponential curves, and is
-sometimes used with an independent variable that is not time.  Perhaps a base
-class Curve should be extracted from it and lowered into lib-math.
-
 Class TimeWarper can describe various non-decreasing mappings of the timeline,
 which describe what certain effects do to one track, so the warp might be
 reapplied to another track that must stay synchronized.
 ]]
 
 set( SOURCES
-   Envelope.cpp
-   Envelope.h
    TimeWarper.cpp
    TimeWarper.h
    Track.cpp
@@ -32,6 +26,7 @@ set( SOURCES
    TrackAttachment.h
 )
 set( LIBRARIES
+   lib-channel-interface
    lib-project-history-interface
 )
 audacity_library( lib-track "${SOURCES}" "${LIBRARIES}"

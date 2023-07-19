@@ -240,13 +240,29 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
             mContinueButton = s.AddButton(XXO("C&ontinue"));
             mContinueButton->Bind(wxEVT_BUTTON, [this](auto) { OnContinue(); });
-            mContinueButton->Enable(mIsAuthorised);
          }
          s.EndHorizontalLay();
       }
       s.EndInvisiblePanel();
    }
    s.EndHorizontalLay();
+
+   const auto title = mProject.GetProjectName();
+
+   if (!title.empty())
+   {
+      mInitialStatePanel.trackTitle->SetValue(title);
+      mInitialStatePanel.trackTitle->SetInsertionPoint(title.length());
+   }
+
+   mContinueButton->Enable(mIsAuthorised && mInitialStatePanel.HasValidTitle());
+
+   mInitialStatePanel.trackTitle->Bind(
+      wxEVT_TEXT,
+      [this](auto&) {
+         mContinueButton->Enable(
+            mIsAuthorised && mInitialStatePanel.HasValidTitle());
+      });
 }
 
 void ShareAudioDialog::OnCancel()
@@ -288,24 +304,10 @@ namespace
 {
 int CalculateChannels(const TrackList& trackList)
 {
-   for (auto track : trackList.Any<const WaveTrack>())
-   {
-      const auto channel = track->GetChannel();
-
-      // Looks like we have a stereo track
-      if (channel == Track::LeftChannel || channel == Track::RightChannel)
-         return 2;
-
-      const auto pan = track->GetPan();
-
-      // We found a mono track with non zero pan
-      // We treat equality in the same way Export
-      if (pan != 0.0)
-         return 2;
-   }
-
-   // All the wave tracks were mono with zero pan
-   return 1;
+   auto range = trackList.Any<const WaveTrack>();
+   return std::all_of(range.begin(), range.end(), [](const WaveTrack *track){
+      return IsMono(*track) && track->GetPan() == 0;
+   }) ? 1 : 2;
 }
 }
 
@@ -389,7 +391,7 @@ void ShareAudioDialog::StartUploadProcess()
 
    mServices->uploadPromise = mServices->uploadService.Upload(
       mFilePath,
-      mProject.GetProjectName(),
+      mInitialStatePanel.GetTrackTitle(),
       false,
       [this](const auto& result)
       {
@@ -436,28 +438,8 @@ void ShareAudioDialog::StartUploadProcess()
 void ShareAudioDialog::HandleUploadSucceeded(
    const UploadSuccessfulPayload& payload)
 {
-   mProgressPanel.timePanel->Hide();
-   mProgressPanel.title->SetLabel(XO("Upload complete!").Translation());
-   mProgressPanel.info->Show();
-
-   mProgressPanel.info->SetLabel(
-      "By pressing continue, you will be taken to audio.com and given a shareable link.");
-   mProgressPanel.info->Wrap(mProgressPanel.root->GetSize().GetWidth());
-
-   mContinueAction = [this, slug = std::string(payload.audioSlug)]()
-   {
-      EndModal(wxID_CLOSE);
-      auto url = wxString::Format(
-         "https://audio.com/%s/%s/edit", GetUserService().GetUserSlug(),
-         audacity::ToWXString(slug));
-      
-      OpenInDefaultBrowser(url);
-   };
-
-   mContinueButton->Show();
-
-   Layout();
-   Fit();
+   EndModal(wxID_CLOSE);
+   OpenInDefaultBrowser(wxString { payload.audioUrl });
 }
 
 void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
@@ -466,12 +448,7 @@ void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
 
    TranslatableString message;
 
-   if (payload.status == 401)
-   {
-      message = XO(
-         "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.");
-   }
-   else
+   if (!payload.message.empty())
    {
       auto details = payload.message;
 
@@ -479,6 +456,11 @@ void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
          details += " " + err.second;
       
       message = XO("Error: %s").Format(details);
+   }
+   else
+   {
+      message = XO(
+         "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.");
    }
 
    BasicUI::ShowErrorDialog(
@@ -623,35 +605,43 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
       s.SetBorder(0);
 
       s.AddWindow(safenew wxStaticLine { s.GetParent() }, wxEXPAND);
-
-      s.AddSpace(16);
-      s.StartInvisiblePanel();
-      {
-         anonInfoPanel = s.StartInvisiblePanel();
-         {
-            s.SetBorder(30);
             
-            AccessibleLinksFormatter privacyPolicy(XO(
-               "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."));
-
-            privacyPolicy.FormatLink(
-               L"%s", XO("audio.com"), "https://audio.com");
-
-            privacyPolicy.FormatLink(
-               L"%%", TranslatableString {},
-               AccessibleLinksFormatter::LinkClickedHandler {});
-
-            privacyPolicy.Populate(s);
-         }
-         s.EndInvisiblePanel();
-
-         authorizedInfoPanel = s.StartInvisiblePanel();
-         s.StartHorizontalLay(wxEXPAND, 1);
+      s.StartInvisiblePanel(16);
+      {
+         s.StartInvisiblePanel();
          {
-            s.AddSpace(30);
-            s.AddFixedText(XO("Press \"Continue\" to upload to audio.com"));
+            s.AddFixedText(XO("Track Title"));
+            s.AddSpace(8);
+            trackTitle = s.AddTextBox({}, {}, 60);
+            trackTitle->SetName(XO("Track Title").Translation());
+            trackTitle->SetFocus();
+            trackTitle->SetMaxLength(100);
+            s.AddSpace(16);
+
+            anonInfoPanel = s.StartInvisiblePanel();
+            {
+               AccessibleLinksFormatter privacyPolicy(XO(
+                  "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."));
+
+               privacyPolicy.FormatLink(
+                  L"%s", XO("audio.com"), "https://audio.com");
+
+               privacyPolicy.FormatLink(
+                  L"%%", TranslatableString {},
+                  AccessibleLinksFormatter::LinkClickedHandler {});
+
+               privacyPolicy.Populate(s);
+            }
+            s.EndInvisiblePanel();
+
+            authorizedInfoPanel = s.StartInvisiblePanel();
+            s.StartHorizontalLay(wxEXPAND, 1);
+            {
+               s.AddFixedText(XO("Press \"Continue\" to upload to audio.com"));
+            }
+            s.EndHorizontalLay();
+            s.EndInvisiblePanel();
          }
-         s.EndHorizontalLay();
          s.EndInvisiblePanel();
       }
       s.EndInvisiblePanel();
@@ -675,6 +665,8 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
          rootParent->Layout();
 
          rootParent->Thaw();
+
+         rootParent->Refresh();
       });
 
    auto& oauthService = GetOAuthService();
@@ -714,9 +706,9 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
 
    anonInfoPanel->Hide();
    authorizedInfoPanel->Show();
-  
+
    if (parent.mContinueButton != nullptr)
-      parent.mContinueButton->Enable();
+      parent.mContinueButton->Enable(!trackTitle->GetValue().empty());
 }
 
 void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
@@ -753,6 +745,18 @@ void ShareAudioDialog::InitialStatePanel::SetAnonymousState()
 
    if (parent.mContinueButton != nullptr)
       parent.mContinueButton->Enable(false);
+}
+
+wxString ShareAudioDialog::InitialStatePanel::GetTrackTitle() const
+{
+   wxString ret { trackTitle->GetValue() };
+   ret.Trim(true).Trim(false);
+   return ret;
+}
+
+bool ShareAudioDialog::InitialStatePanel::HasValidTitle() const
+{
+   return !GetTrackTitle().empty();
 }
 
 void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)

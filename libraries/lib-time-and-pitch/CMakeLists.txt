@@ -1,3 +1,9 @@
+#[[
+Provides time-stretching and pitch-shifting functionality.
+
+Based on the more versatile time-stretching from StaffPad, but tailored for the needs of Audacity.
+]]
+
 set( SOURCES
    StaffPad/pffft/pffft.c
    StaffPad/pffft/pffft.h

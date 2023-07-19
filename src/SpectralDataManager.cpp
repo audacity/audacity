@@ -38,21 +38,22 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
    int applyCount = 0;
    Setting setting;
    Worker worker(setting);
+   for (auto wt : tracks.Leaders<WaveTrack>()) {
+      for (auto pChannel : wt->Channels()) {
+         auto &view = ChannelView::Get(*pChannel);
 
-   for ( auto wt : tracks.Any< WaveTrack >() ) {
-      auto &trackView = TrackView::Get(*wt);
+         if(auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)){
+            for(const auto &subViewPtr : waveChannelViewPtr->GetAllSubViews()){
+               if(!subViewPtr->IsSpectral())
+                  continue;
+               auto sView = std::static_pointer_cast<SpectrumView>(subViewPtr).get();
+               auto pSpectralData = sView->GetSpectralData();
 
-      if(auto waveTrackViewPtr = dynamic_cast<WaveTrackView*>(&trackView)){
-         for(const auto &subViewPtr : waveTrackViewPtr->GetAllSubViews()){
-            if(!subViewPtr->IsSpectral())
-               continue;
-            auto sView = std::static_pointer_cast<SpectrumView>(subViewPtr).get();
-            auto pSpectralData = sView->GetSpectralData();
-
-            if(!pSpectralData->dataHistory.empty()){
-               worker.Process(wt, pSpectralData);
-               applyCount += static_cast<int>(pSpectralData->dataHistory.size());
-               pSpectralData->clearAllData();
+               if(!pSpectralData->dataHistory.empty()){
+                  worker.Process(wt, pSpectralData);
+                  applyCount += static_cast<int>(pSpectralData->dataHistory.size());
+                  pSpectralData->clearAllData();
+               }
             }
          }
       }

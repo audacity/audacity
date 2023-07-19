@@ -30,7 +30,6 @@ protected:
 
    // Override these methods if you need to initialize something
    // before each pass. Return None if processing should stop.
-   // These should not depend on mOutputTracks having been set up via CopyInputTracks().
    virtual bool InitPass1();
    virtual bool InitPass2();
 
@@ -72,12 +71,11 @@ protected:
    double mCurRate;
    double mCurT0;
    double mCurT1;
-   int    mCurChannel;
    int    mPass;
    bool   mSecondPassDisabled;
 
    std::shared_ptr<TrackList> mWorkTracks;
-   std::shared_ptr<TrackList> *mTrackLists[2];
+   TrackList *mTrackLists[2];
 
 private:
    bool ProcessOne(WaveTrack * t, WaveTrack * outTrack,

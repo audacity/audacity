@@ -63,9 +63,10 @@ void AddControls( ShuttleGui &S )
 #endif
             .AddButton(XXO("Loca&te..."),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-         pFindButton->Bind(wxEVT_BUTTON, [pState](wxCommandEvent&){
-            OnFFmpegFindButton(*pState);
-         });
+         if (pFindButton)
+            pFindButton->Bind(wxEVT_BUTTON, [pState](wxCommandEvent&){
+               OnFFmpegFindButton(*pState);
+            });
 
          S.AddVariableText(XO("FFmpeg Library:"),
             true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
@@ -77,10 +78,11 @@ void AddControls( ShuttleGui &S )
 #endif
             .AddButton(XXO("Dow&nload"),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-         pDownButton->Bind(wxEVT_BUTTON, [pState](wxCommandEvent&){
-            HelpSystem::ShowHelp(pState->parent,
-               wxT("FAQ:Installing_the_FFmpeg_Import_Export_Library"), true);
-         });
+         if (pDownButton)
+            pDownButton->Bind(wxEVT_BUTTON, [pState](wxCommandEvent&){
+               HelpSystem::ShowHelp(pState->parent,
+                  wxT("FAQ:Installing_the_FFmpeg_Import_Export_Library"), true);
+            });
       }
       S.EndTwoColumn();
    }

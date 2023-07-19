@@ -56,11 +56,9 @@ conflicts=(audacity audacity-test)
 
 source=(
   "TMPL_AUDACITY_SOURCES"
-  "TMPL_AUDACITY_DEPENDENCIES"
 )
 
 md5sums=(
-  'SKIP'
   'SKIP'
 )
 

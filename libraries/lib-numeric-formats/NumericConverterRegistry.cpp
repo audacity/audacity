@@ -30,7 +30,7 @@ struct RegistryVisitor : public Registry::Visitor
       auto concreteGroup = dynamic_cast<NumericConverterRegistryGroup*>(&item);
 
       mInMatchingGroup =
-         concreteGroup != nullptr && concreteGroup->type == requestedType;
+         concreteGroup != nullptr && concreteGroup->GetType() == requestedType;
    }
 
    void EndGroup(Registry::GroupItemBase&, const Path&) override
@@ -94,7 +94,8 @@ struct RegistryVisitor : public Registry::Visitor
 
 Registry::GroupItemBase& NumericConverterRegistry::Registry()
 {
-   static Registry::GroupItem<> registry { PathStart };
+   static Registry::GroupItem<NumericConverterRegistryTraits>
+      registry { PathStart };
    return registry;
 }
 
@@ -109,7 +110,7 @@ void NumericConverterRegistry::Visit(
 
    RegistryVisitor registryVisitor { std::move(visitor), context, type };
 
-   Registry::GroupItem<> top { PathStart };
+   Registry::GroupItem<NumericConverterRegistryTraits> top { PathStart };
    Registry::Visit(registryVisitor, &top, &Registry());
 }
 

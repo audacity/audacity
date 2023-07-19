@@ -1,16 +1,16 @@
 /**********************************************************************
- 
+
   Audacity: A Digital Audio Editor
- 
+
   RealtimeEffectList.cpp
- 
+
  *********************************************************************/
 
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
 #include "Project.h"
-#include "Track.h"
+#include "WideSampleSequence.h"
 
 RealtimeEffectList::RealtimeEffectList()
 {
@@ -52,29 +52,31 @@ RealtimeEffectList &RealtimeEffectList::Set(
    return result;
 }
 
-const RealtimeEffectList &RealtimeEffectList::Get(const AudacityProject &project)
+const RealtimeEffectList &
+RealtimeEffectList::Get(const AudacityProject &project)
 {
    return Get(const_cast<AudacityProject &>(project));
 }
 
-static const Track::ChannelGroupAttachments::RegisteredFactory trackEffects
-{ 
-   [](Track::ChannelGroupData &)
+static const SequenceAttachments::RegisteredFactory sequenceEffects
+{
+   [](WideSampleSequence &)
    {
       return std::make_unique<RealtimeEffectList>();
    }
 };
 
-// Access for per-track effect list
-RealtimeEffectList &RealtimeEffectList::Get(Track &track)
+// Access for per-sequence effect list
+RealtimeEffectList &RealtimeEffectList::Get(WideSampleSequence &sequence)
 {
-   return track.GetGroupData()
-      .Track::ChannelGroupAttachments::Get<RealtimeEffectList>(trackEffects);
+   return const_cast<WideSampleSequence&>(sequence.GetDecorated())
+      .Attachments::Get<RealtimeEffectList>(sequenceEffects);
 }
 
-const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
+const RealtimeEffectList &RealtimeEffectList::Get(
+   const WideSampleSequence &sequence)
 {
-   return Get(const_cast<Track &>(track));
+   return Get(const_cast<WideSampleSequence &>(sequence));
 }
 
 bool
@@ -108,7 +110,7 @@ RealtimeEffectList::ReplaceState(size_t index,
    if (index >= mStates.size())
       return false;
    const auto &id = pState->GetID();
-   if (pState->GetEffect() != nullptr) {     
+   if (pState->GetEffect() != nullptr) {
       auto shallowCopy = mStates;
 
       Publisher<RealtimeEffectListMessage>::Publish({
@@ -143,7 +145,7 @@ void RealtimeEffectList::RemoveState(
    auto end = shallowCopy.end(),
       found = std::find(shallowCopy.begin(), end, pState);
    if (found != end)
-   {      
+   {
       const auto index = std::distance(shallowCopy.begin(), found);
       shallowCopy.erase(found);
 
@@ -162,7 +164,7 @@ void RealtimeEffectList::RemoveState(
 void RealtimeEffectList::Clear()
 {
    decltype(mStates) temp;
-   
+
    // Swap an empty list in as a whole, not removing one at a time
    // Lock for only a short time
    (LockGuard{ mLock }, swap(temp, mStates));
@@ -218,7 +220,8 @@ void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)
    }
    else
    {
-      const auto first = shallowCopy.rbegin() + (shallowCopy.size() - (fromIndex + 1));
+      const auto first =
+         shallowCopy.rbegin() + (shallowCopy.size() - (fromIndex + 1));
       const auto last = shallowCopy.rbegin() + (shallowCopy.size() - toIndex);
       std::rotate(first, first + 1, last);
    }

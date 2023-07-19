@@ -21,6 +21,8 @@
 #include "SampleCount.h"
 #include <functional>
 
+class SampleTrack;
+
 //! Base class for Effects that treat each (mono or stereo) track independently
 //! of other tracks.
 /*!
@@ -67,21 +69,25 @@ protected:
 private:
    using Buffers = AudioGraph::Buffers;
 
-   bool ProcessPass(Instance &instance, EffectSettings &settings);
+   bool ProcessPass(TrackList &outputs,
+      Instance &instance, EffectSettings &settings);
    using Factory = std::function<std::shared_ptr<EffectInstance>()>;
    /*!
     Previous contents of inBuffers and outBuffers are ignored
+    @param channel selects one channel if non-negative; else all channels
 
     @pre `source.AcceptsBuffers(inBuffers)`
     @pre `source.AcceptsBlockSize(inBuffers.BlockSize())`
     @pre `sink.AcceptsBuffers(outBuffers)`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
+
+    @pre `channel < track.NChannels()`
     */
-   static bool ProcessTrack(bool multi,
+   static bool ProcessTrack(int channel,
       const Factory &factory, EffectSettings &settings,
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
-      double sampleRate, const Track &track,
+      double sampleRate, const SampleTrack &track, const SampleTrack &leader,
       Buffers &inBuffers, Buffers &outBuffers);
 };
 #endif

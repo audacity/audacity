@@ -45,6 +45,8 @@ set( SOURCES
    TypeList.cpp
    TypeList.h
    TypeListVisitor.h
+   TypeSwitch.cpp
+   TypeSwitch.h
    TypedAny.h
    Variant.cpp
    Variant.h

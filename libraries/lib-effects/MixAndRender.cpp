@@ -13,6 +13,7 @@ Paul Licameli split from Mix.cpp
 #include "BasicUI.h"
 #include "Mix.h"
 #include "RealtimeEffectList.h"
+#include "StretchingSequence.h"
 #include "WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -37,6 +38,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    auto first = *trackRange.begin();
    assert(first); // because the range is known to be nonempty
+   assert(first->IsLeader()); // precondition on trackRange
 
    // this only iterates tracks which are relevant to this function, i.e.
    // selected WaveTracks. The tracklist is (confusingly) the list of all
@@ -44,9 +46,9 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    int numWaves = 0; /* number of wave tracks in the selection */
    int numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
-   for(auto wt : trackRange) {
-      numWaves++;
-      if (wt->GetChannel() == Track::MonoChannel && wt->GetPan() == 0)
+   for (auto wt : trackRange) {
+      numWaves += wt->NChannels();
+      if (IsMono(*wt) && wt->GetPan() == 0)
          numMono++;
    }
 
@@ -66,9 +68,10 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    Mixer::Inputs waveArray;
 
-   for(auto wt : trackRange) {
-      waveArray.emplace_back(
-         wt->SharedPointer<const SampleTrack>(), GetEffectStages(*wt));
+   for (auto wt : trackRange) {
+      const auto stretchingSequence =
+         StretchingSequence::Create(*wt, wt->GetClipInterfaces());
+      waveArray.emplace_back(stretchingSequence, GetEffectStages(*wt));
       tstart = wt->GetStartTime();
       tend = wt->GetEndTime();
       if (tend > mixEndTime)

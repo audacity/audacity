@@ -63,8 +63,8 @@ bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
 bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
    unsigned long outputFrames)
 {
-   // Called from portAudio thread, use GetTrackTime()
-   auto diff = schedule.GetTrackTime() - schedule.mT1;
+   // Called from portAudio thread, use GetSequenceTime()
+   auto diff = schedule.GetSequenceTime() - schedule.mT1;
    if (schedule.ReversedTime())
       diff *= -1;
    return sampleCount(floor(diff * mRate + 0.5)) >= 0 &&
@@ -72,10 +72,10 @@ bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
       outputFrames == 0;
 }
 
-double PlaybackPolicy::OffsetTrackTime(
+double PlaybackPolicy::OffsetSequenceTime(
    PlaybackSchedule &schedule, double offset )
 {
-   const auto time = schedule.GetTrackTime() + offset;
+   const auto time = schedule.GetSequenceTime() + offset;
    schedule.RealTimeInit( time );
    return time;
 }
@@ -192,7 +192,7 @@ void PlaybackSchedule::Init(
       mT1 -= pRecordingSchedule->mLatencyCorrection;
 
    // Main thread's initialization of mTime
-   SetTrackTime( mT0 );
+   SetSequenceTime( mT0 );
 
    if (options.policyFactory)
       mpPlaybackPolicy = options.policyFactory(options);

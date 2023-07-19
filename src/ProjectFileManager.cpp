@@ -84,7 +84,7 @@ void ProjectFileManager::DiscardAutosave(const FilePath &filename)
    projectFileManager.ReadProjectFile(filename, true);
 
    if (projectFileManager.mLastSavedTracks) {
-      for (auto wt : projectFileManager.mLastSavedTracks->Any<WaveTrack>())
+      for (auto wt : projectFileManager.mLastSavedTracks->Leaders<WaveTrack>())
          wt->CloseLock();
       projectFileManager.mLastSavedTracks.reset();
    }
@@ -159,66 +159,79 @@ auto ProjectFileManager::ReadProjectFile(
    ///
    /// Parse project file
    ///
-   bool bParseSuccess = projectFileIO.LoadProject(fileName, discardAutosave);
+   auto parseResult = projectFileIO.LoadProject(fileName, discardAutosave);
+   const bool bParseSuccess = parseResult.has_value();
    
    bool err = false;
 
+   TranslatableString otherError;
+
    if (bParseSuccess)
    {
-      if (discardAutosave)
-         // REVIEW: Failure OK?
-         projectFileIO.AutoSaveDelete();
-      else if (projectFileIO.IsRecovered()) {
-         bool resaved = false;
-
-         if (!projectFileIO.IsTemporary())
-         {
-            // Re-save non-temporary project to its own path.  This
-            // might fail to update the document blob in the database.
-            resaved = projectFileIO.SaveProject(fileName, nullptr);
+      auto &tracks = TrackList::Get(project);
+      for (auto t : tracks.Any()) {
+         // Note, the next function may have an important upgrading side effect,
+         // and return no error; or it may find a real error and repair it, but
+         // that repaired track won't be used because opening will fail.
+         if (!t->LinkConsistencyFix()) {
+            otherError = XO("A channel of a stereo track was missing.");
+            err = true;
          }
 
-         AudacityMessageBox(
-            resaved
-               ? XO("This project was not saved properly the last time Audacity ran.\n\n"
-                    "It has been recovered to the last snapshot.")
-               : XO("This project was not saved properly the last time Audacity ran.\n\n"
-                    "It has been recovered to the last snapshot, but you must save it\n"
-                    "to preserve its contents."),
-            XO("Project Recovered"),
-            wxICON_WARNING,
-            &window);
-      }
-
-      // By making a duplicate set of pointers to the existing blocks
-      // on disk, we add one to their reference count, guaranteeing
-      // that their reference counts will never reach zero and thus
-      // the version saved on disk will be preserved until the
-      // user selects Save().
-      mLastSavedTracks = TrackList::Create( nullptr );
-
-      auto &tracks = TrackList::Get( project );
-      for (auto t : tracks.Any())
-      {
-         if (t->GetErrorOpening())
-         {
+         if (const auto message = t->GetErrorOpening()) {
             wxLogWarning(
                wxT("Track %s had error reading clip values from project file."),
                t->GetName());
             err = true;
+            // Keep at most one of the error messages
+            otherError = *message;
+         }
+      }
+
+      if (!err) {
+         parseResult->Commit();
+         if (discardAutosave)
+            // REVIEW: Failure OK?
+            projectFileIO.AutoSaveDelete();
+         else if (projectFileIO.IsRecovered()) {
+            bool resaved = false;
+
+            if (!projectFileIO.IsTemporary())
+            {
+               // Re-save non-temporary project to its own path.  This
+               // might fail to update the document blob in the database.
+               resaved = projectFileIO.SaveProject(fileName, nullptr);
+            }
+
+            AudacityMessageBox(
+               resaved
+                  ? XO(
+"This project was not saved properly the last time Audacity ran.\n\n"
+"It has been recovered to the last snapshot.")
+                  : XO(
+"This project was not saved properly the last time Audacity ran.\n\n"
+"It has been recovered to the last snapshot, but you must save it\n"
+"to preserve its contents."),
+               XO("Project Recovered"),
+               wxICON_WARNING,
+               &window);
          }
 
-         err = ( !t->LinkConsistencyFix() ) || err;
-
-         mLastSavedTracks->Add(t->Duplicate());
+         // By making a duplicate set of pointers to the existing blocks
+         // on disk, we add one to their reference count, guaranteeing
+         // that their reference counts will never reach zero and thus
+         // the version saved on disk will be preserved until the
+         // user selects Save().
+         mLastSavedTracks = TrackList::Create( nullptr );
+         for (auto t : tracks.Any())
+            mLastSavedTracks->Add(t->Duplicate());
       }
    }
 
-   return
-   {
+   return {
       bParseSuccess,
       err,
-      projectFileIO.GetLastError(),
+      (bParseSuccess ? otherError : projectFileIO.GetLastError()),
       FindHelpUrl(projectFileIO.GetLibraryError())
    };
 }
@@ -285,7 +298,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       }
 
       auto &tracks = TrackList::Get( proj );
-      if (!tracks.Any())
+      if (tracks.empty())
       {
          if (UndoManager::Get( proj ).UnsavedChanges() &&
                settings.EmptyCanBeDirty())
@@ -742,10 +755,8 @@ void ProjectFileManager::CompactProjectOnClose()
    // sample block objects in memory.
    if (mLastSavedTracks)
    {
-      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
-      {
+      for (auto wt : mLastSavedTracks->Leaders<WaveTrack>())
          wt->CloseLock();
-      }
 
       // Attempt to compact the project
       projectFileIO.Compact( { mLastSavedTracks.get() } );
@@ -1004,7 +1015,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const auto &errorStr = results.errorString;
    const bool err = results.trackError;
 
-   if (bParseSuccess) {
+   if (bParseSuccess && !err) {
       auto &formats = ProjectNumericFormats::Get( project );
       auto &settings = ProjectSettings::Get( project );
       window.mbInitializingScrollbar = true;
@@ -1019,7 +1030,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
          formats.GetBandwidthSelectionFormatName());
       
       ProjectHistory::Get( project ).InitialState();
-      TrackFocus::Get( project ).Set( *tracks.Any().begin() );
+      TrackFocus::Get(project).Set(*tracks.Leaders().begin());
       window.HandleResize();
       trackPanel.Refresh(false);
 
@@ -1033,7 +1044,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
          FileHistory::Global().Append(fileName);
    }
 
-   if (bParseSuccess) {
+   if (bParseSuccess && !err) {
       if (projectFileIO.IsRecovered())
       {
          // PushState calls AutoSave(), so no longer need to do so here.
@@ -1052,7 +1063,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
       // may have spared the files at the expense of leaked memory).  But
       // here is a better way to accomplish the intent, doing like what happens
       // when the project closes:
-      for ( auto pTrack : tracks.Any< WaveTrack >() )
+      for (auto pTrack : tracks.Leaders<WaveTrack>())
          pTrack->CloseLock();
 
       tracks.Clear(); //tracks.Clear(true);
@@ -1092,7 +1103,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // In case the project had soloed tracks before importing,
    // all newly imported tracks are muted.
    const bool projectHasSolo =
-      !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+      !(tracks.Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo)
    {
       // Iterate vector of vectors of pointers to tracks that are not yet
@@ -1139,11 +1150,11 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
              newTrack->SetName(trackNameBase);
       }
 
-      newTrack->TypeSwitch([&](WaveTrack *wt) {
+      newTrack->TypeSwitch([&](WaveTrack &wt) {
          if (newRate == 0)
-            newRate = wt->GetRate();
-         auto trackName = wt->GetName();
-         for (auto& clip : wt->GetClips())
+            newRate = wt.GetRate();
+         auto trackName = wt.GetName();
+         for (auto& clip : wt.GetClips())
             clip->SetName(trackName);
       });
    }

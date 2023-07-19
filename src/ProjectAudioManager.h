@@ -38,7 +38,7 @@ enum class PlayMode : int {
    cutPreviewPlay
 };
 
-struct TransportTracks;
+struct TransportSequences;
 
 enum StatusBarField : int;
 enum class ProjectFileIOMessage : int;
@@ -67,7 +67,8 @@ public:
    static ProjectAudioManager &Get( AudacityProject &project );
    static const ProjectAudioManager &Get( const AudacityProject &project );
 
-   // Find suitable tracks to record into, or return an empty array.
+   //! Find suitable tracks to record into, or return an empty array.
+   //! Returns channels not tracks, but always complete channel groups
    static WritableSampleTrackArray ChooseExistingRecordingTracks(
       AudacityProject &proj, bool selectedOnly,
       double targetRate = RATE_NOT_SELECTED);
@@ -105,7 +106,8 @@ public:
    void OnRecord(bool altAppearance);
 
    bool DoRecord(AudacityProject &project,
-      const TransportTracks &transportTracks, // If captureTracks is empty, then tracks are created
+      //! If captureSequences is empty, then tracks are created
+      const TransportSequences &transportSequences,
       double t0, double t1,
       bool altAppearance,
       const AudioIOStartStreamOptions &options);
@@ -151,7 +153,7 @@ private:
    void OnAudioIORate(int rate) override;
    void OnAudioIOStartRecording() override;
    void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlocks(const WritableSampleTrackArray *tracks) override;
+   void OnAudioIONewBlocks(const RecordableSequences &sequences) override;
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
@@ -186,7 +188,7 @@ struct PropertiesOfSelected
 {
    bool allSameRate{ false };
    int rateOfSelected{ RATE_NOT_SELECTED };
-   int numberOfSelected{ 0 };
+   bool anySelected{ false };
 };
 
 AUDACITY_DLL_API

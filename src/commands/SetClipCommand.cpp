@@ -88,8 +88,8 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 bool SetClipCommand::ApplyInner( const CommandContext &, Track * t )
 {
    // if no 'At' is specified, then any clip in any selected track will be set.
-   t->TypeSwitch([&](WaveTrack *waveTrack) {
-      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+   t->TypeSwitch([&](WaveTrack &waveTrack) {
+      WaveClipPointers ptrs( waveTrack.SortedClipArray());
       for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
          WaveClip * pClip = *it;
          bool bFound =

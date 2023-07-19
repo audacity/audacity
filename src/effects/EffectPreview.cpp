@@ -110,9 +110,6 @@ void EffectPreview(EffectBase &effect,
       mTracks = saveTracks;
       if (*FocusDialog)
          BasicUI::SetFocus(*FocusDialog);
-
-      // In case of failed effect, be sure to free memory.
-      effect.ReplaceProcessedTracks( false );
    } );
 
    // Build NEW tracklist from rendering tracks
@@ -125,8 +122,8 @@ void EffectPreview(EffectBase &effect,
    // Generators need to generate per track.
    if (isLinearEffect && !isGenerator) {
       WaveTrack::Holder mixLeft, mixRight;
-      MixAndRender(saveTracks->Selected<const WaveTrack>(),
-         Mixer::WarpOptions{ *saveTracks },
+      MixAndRender(saveTracks->SelectedLeaders<const WaveTrack>(),
+         Mixer::WarpOptions{ saveTracks->GetOwner() },
          wxString{}, // Don't care about the name of the temporary tracks
          factory, rate, floatSample, mT0, t1, mixLeft, mixRight);
       if (!mixLeft)

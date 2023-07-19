@@ -31,17 +31,14 @@ using namespace MenuTable;
 
 BaseItemSharedPtr ExtraMenu()
 {
-   // Table of menu factories.
-   static BaseItemSharedPtr extraItems{ Items( wxEmptyString,
-      Section( "Part1" ),
-      Section( "Part2" )
-   ) };
-
    static const auto pred =
       []{ return gPrefs->ReadBool(wxT("/GUI/ShowExtraMenus"), false); };
-   static BaseItemSharedPtr menu{
-      ConditionalItems( wxT("Optional"),
-         pred, Menu( wxT("Extra"), XXO("Ext&ra"), extraItems ) )
+   static auto menu = std::shared_ptr{
+      ConditionalItems("Optional", pred,
+         Menu("Extra", XXO("Ext&ra"),
+            Section("Part1"),
+            Section("Part2"))
+      )
    };
    return menu;
 }

@@ -289,7 +289,7 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
    if (pTrack == NULL && mpTrack != NULL)
       pTrack = mpTrack.get();
 
-  if (pTrack) pTrack->TypeSwitch( [&](NoteTrack *pNt) {
+  if (pTrack) pTrack->TypeSwitch( [&](NoteTrack &nt) {
       double moveto =
         std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
 
@@ -308,9 +308,9 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
          dur = t1 - moveto;
          if (dur < mStretchState.mRightBeats * minPeriod)
             return;
-         pNt->StretchRegion
+         nt.StretchRegion
             ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
-         pNt->Offset( moveto - t0 );
+         nt.Offset( moveto - t0 );
          mStretchState.mBeat0.first = moveto;
          viewInfo.selectedRegion.setT0(moveto);
          break;
@@ -319,7 +319,7 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
          dur = moveto - t0;
          if (dur < mStretchState.mLeftBeats * minPeriod)
             return;
-         pNt->StretchRegion
+         nt.StretchRegion
             ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
          viewInfo.selectedRegion.setT1(moveto);
          mStretchState.mBeat1.first = moveto;
@@ -332,9 +332,9 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
          if ( left_dur < mStretchState.mLeftBeats * minPeriod ||
               right_dur < mStretchState.mRightBeats * minPeriod )
             return;
-         pNt->StretchRegion
+         nt.StretchRegion
             ( mStretchState.mBeatCenter, mStretchState.mBeat1, right_dur );
-         pNt->StretchRegion
+         nt.StretchRegion
             ( mStretchState.mBeat0, mStretchState.mBeatCenter, left_dur );
          mStretchState.mBeatCenter.first = moveto;
          break;

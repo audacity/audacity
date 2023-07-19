@@ -103,6 +103,8 @@ void MenuManager::UpdatePrefs()
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
 }
 
+MenuVisitor::~MenuVisitor() = default;
+
 void MenuVisitor::BeginGroup( Registry::GroupItemBase &item, const Path &path )
 {
    bool isMenu = false;
@@ -184,23 +186,17 @@ void MenuVisitor::DoSeparator()
 {
 }
 
+ProjectMenuVisitor::~ProjectMenuVisitor() = default;
+
+void *ProjectMenuVisitor::GetComputedItemContext()
+{
+   return &mProject;
+}
+
 namespace MenuTable {
 
-MenuItem::MenuItem(const Identifier &internalName,
-   const TranslatableString &title, BaseItemPtrs &&items
-)  : GroupItem{ internalName, move(items) }
-   , title{ title }
-{
-   wxASSERT( !title.empty() );
-}
 MenuItem::~MenuItem() {}
 
-ConditionalGroupItem::ConditionalGroupItem(
-   const Identifier &internalName, Condition condition, BaseItemPtrs &&items
-)  : GroupItem{ internalName, move(items) }
-   , condition{ condition }
-{
-}
 ConditionalGroupItem::~ConditionalGroupItem() {}
 
 CommandItem::CommandItem(const CommandID &name_,
@@ -263,7 +259,7 @@ const auto MenuPathStart = wxT("MenuBar");
 
 Registry::GroupItemBase &MenuTable::ItemRegistry::Registry()
 {
-   static GroupItem<> registry{ MenuPathStart };
+   static GroupItem<Traits> registry{ MenuPathStart };
    return registry;
 }
 
@@ -273,38 +269,31 @@ MenuTable::AttachedItem::AttachedItem(
 {
 }
 
-void MenuTable::DestroyRegistry()
-{
-   MenuTable::ItemRegistry::Registry().items.clear();
-}
-
 namespace {
 
 using namespace MenuTable;
 
-struct MenuItemVisitor : ToolbarMenuVisitor
+struct MenuItemVisitor : ProjectMenuVisitor
 {
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
-      : ToolbarMenuVisitor(proj), manager( man ) {}
+      : ProjectMenuVisitor{ proj }, manager{ man } {}
 
    void DoBeginGroup( GroupItemBase &item, const Path& ) override
    {
       auto pItem = &item;
-      if (const auto pMenu =
-          dynamic_cast<MenuItem*>( pItem )) {
-         manager.BeginMenu( pMenu->title );
+      if (const auto pMenu = dynamic_cast<const MenuItem*>(pItem)) {
+         manager.BeginMenu(pMenu->GetTitle());
       }
-      else
-      if (const auto pConditionalGroup =
-          dynamic_cast<ConditionalGroupItem*>( pItem )) {
-         const auto flag = pConditionalGroup->condition();
+      else if (const auto pConditionalGroup =
+          dynamic_cast<const ConditionalGroupItem*>(pItem)
+      ) {
+         const auto flag = (*pConditionalGroup)();
          if (!flag)
             manager.BeginOccultCommands();
          // to avoid repeated call of condition predicate in EndGroup():
          flags.push_back(flag);
       }
-      else
-      if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+      else if (const auto pGroup = dynamic_cast<const MenuSection*>(pItem)) {
       }
       else
          wxASSERT( false );
@@ -344,7 +333,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
       auto pItem = &item;
       if (const auto pCommand =
           dynamic_cast<CommandItem*>( pItem )) {
-         manager.AddItem( project,
+         manager.AddItem(mProject,
             pCommand->name, pCommand->label_in,
             pCommand->finder, pCommand->callback,
             pCommand->flags, pCommand->options
@@ -362,7 +351,7 @@ struct MenuItemVisitor : ToolbarMenuVisitor
       if (const auto pSpecial =
           dynamic_cast<SpecialItem*>( pItem )) {
          wxASSERT( pCurrentMenu );
-         pSpecial->fn( project, *pCurrentMenu );
+         pSpecial->fn(mProject, *pCurrentMenu);
       }
       else
          wxASSERT( false );
@@ -442,7 +431,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #endif
 }
 
-void MenuManager::Visit( ToolbarMenuVisitor &visitor )
+void MenuManager::Visit(ProjectMenuVisitor &visitor)
 {
    static const auto menuTree = MenuTable::Items( MenuPathStart );
 

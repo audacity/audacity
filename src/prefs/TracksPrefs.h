@@ -17,7 +17,7 @@
 
 #include <vector>
 #include "PrefsPanel.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
 #include "WaveformSettings.h" // for ScaleTypeValues
 
 class ShuttleGui;
@@ -41,11 +41,11 @@ class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
    static double GetPinnedHeadPositionPreference();
    static void SetPinnedHeadPositionPreference(double value, bool flush = false);
    
-   static WaveTrackViewConstants::Display ViewModeChoice();
+   static WaveChannelViewConstants::Display ViewModeChoice();
    static WaveformSettings::ScaleTypeValues WaveformScaleChoice();
-   static WaveTrackViewConstants::SampleDisplay SampleViewChoice();
-   static WaveTrackViewConstants::ZoomPresets Zoom1Choice();
-   static WaveTrackViewConstants::ZoomPresets Zoom2Choice();
+   static WaveChannelViewConstants::SampleDisplay SampleViewChoice();
+   static WaveChannelViewConstants::ZoomPresets Zoom1Choice();
+   static WaveChannelViewConstants::ZoomPresets Zoom2Choice();
 
  private:
    void Populate();

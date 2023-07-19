@@ -15,6 +15,7 @@ public:
       InitIntervals();
    }
    ~NoteTrackShifter() override {}
+   //! Note track is always leader; satisfying the post
    Track &GetTrack() const override { return *mpTrack; }
    
    HitTestResult HitTest(
@@ -29,9 +30,9 @@ public:
          return HitTestResult::Intervals;
    }
 
-   void SelectInterval( const TrackInterval &interval ) override
+   void SelectInterval(const ChannelGroupInterval &interval) override
    {
-      CommonSelectInterval( interval );
+      CommonSelectInterval(interval);
    }
 
    bool SyncLocks() override { return true; }
@@ -50,7 +51,7 @@ public:
    }
 
 private:
-   std::shared_ptr<NoteTrack> mpTrack;
+   const std::shared_ptr<NoteTrack> mpTrack;
 };
 
 using MakeNoteTrackShifter = MakeTrackShifter::Override<NoteTrack>;

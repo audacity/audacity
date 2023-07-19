@@ -29,7 +29,7 @@ static const auto PathStart = wxT("LibraryPreferences");
 
 Registry::GroupItemBase &LibraryPrefs::PopulatorItem::Registry()
 {
-   static Registry::GroupItem<> registry{ PathStart };
+   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
    return registry;
 }
 
@@ -50,7 +50,7 @@ LibraryPrefs::RegisteredControls::RegisteredControls(
 
 bool LibraryPrefs::RegisteredControls::Any()
 {
-   return !PopulatorItem::Registry().items.empty();
+   return !PopulatorItem::Registry().empty();
 }
 
 LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
@@ -112,7 +112,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          // visit the registry to collect the plug-ins properly
          // sorted
-         GroupItem<> top{ PathStart };
+         GroupItem<Registry::DefaultTraits> top{ PathStart };
          Registry::Visit( *this, &top, &PopulatorItem::Registry() );
       }
 

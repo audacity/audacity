@@ -16,6 +16,7 @@
 *//*******************************************************************/
 #include "TruncSilence.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <algorithm>
@@ -234,9 +235,6 @@ bool EffectTruncSilence::Process(EffectInstance &, EffectSettings &)
       ? ProcessIndependently()
       : ProcessAll();
 
-   if (success)
-      ReplaceProcessedTracks(true);
-
    return success;
 }
 
@@ -275,17 +273,17 @@ bool EffectTruncSilence::ProcessIndependently()
    // Now do the work
 
    // Copy tracks
-   CopyInputTracks(true);
+   EffectOutputTracks outputs{ *mTracks, true };
    double newT1 = 0.0;
 
    {
       unsigned iGroup = 0;
-      for (auto track : mOutputTracks->SelectedLeaders< WaveTrack >() ) {
+      for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
          Track *const last = *TrackList::Channels(track).rbegin();
 
          RegionList silences;
 
-         if (!FindSilences(silences, mOutputTracks.get(), track, last))
+         if (!FindSilences(silences, &outputs.Get(), track, last))
             return false;
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
@@ -299,7 +297,8 @@ bool EffectTruncSilence::ProcessIndependently()
             groupLast = last;
          }
          double totalCutLen = 0.0;
-         if (!DoRemoval(silences, iGroup, nGroups, groupFirst, groupLast, totalCutLen))
+         if (!DoRemoval(outputs.Get(), silences, iGroup, nGroups,
+            groupFirst, groupLast, totalCutLen))
             return false;
          newT1 = std::max(newT1, mT1 - totalCutLen);
 
@@ -309,13 +308,15 @@ bool EffectTruncSilence::ProcessIndependently()
 
    mT1 = newT1;
 
+   outputs.Commit();
+
    return true;
 }
 
 bool EffectTruncSilence::ProcessAll()
 {
    // Copy tracks
-   CopyInputTracks(true);
+   EffectOutputTracks outputs{ *mTracks, true };
 
    // Master list of silent regions.
    // This list should always be kept in order.
@@ -324,11 +325,12 @@ bool EffectTruncSilence::ProcessAll()
    auto trackRange0 = inputTracks()->Selected< const WaveTrack >();
    if (FindSilences(
          silences, inputTracks(), *trackRange0.begin(), *trackRange0.rbegin())) {
-      auto trackRange = mOutputTracks->Any();
+      auto trackRange = outputs.Get().Any();
       double totalCutLen = 0.0;
-      if (DoRemoval(silences, 0, 1,
+      if (DoRemoval(outputs.Get(), silences, 0, 1,
          *trackRange.begin(), *trackRange.rbegin(), totalCutLen)) {
          mT1 -= totalCutLen;
+         outputs.Commit();
          return true;
       }
    }
@@ -366,10 +368,7 @@ bool EffectTruncSilence::FindSilences
 
       // Buffer has been freed, so we're OK to return if cancelled
       if (cancelled)
-      {
-         ReplaceProcessedTracks(false);
          return false;
-      }
 
       if (silentFrame >= minSilenceFrames)
       {
@@ -388,9 +387,10 @@ bool EffectTruncSilence::FindSilences
    return true;
 }
 
-bool EffectTruncSilence::DoRemoval
-(const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
- double &totalCutLen)
+bool EffectTruncSilence::DoRemoval(TrackList &outputs,
+   const RegionList &silences, unsigned iGroup, unsigned nGroups,
+   Track *firstTrack, Track *lastTrack,
+   double &totalCutLen)
 {
    //
    // Now remove the silent regions from all selected / sync-lock selected tracks.
@@ -409,10 +409,7 @@ bool EffectTruncSilence::DoRemoval
       const double frac = detectFrac +
          (1 - detectFrac) * (iGroup + whichReg / double(silences.size())) / nGroups;
       if (TotalProgress(frac))
-      {
-         ReplaceProcessedTracks(false);
          return false;
-      }
 
       // Intersection may create regions smaller than allowed; ignore them.
       // Allow one nanosecond extra for consistent results with exact milliseconds of allowed silence.
@@ -447,7 +444,7 @@ bool EffectTruncSilence::DoRemoval
 
       double cutStart = (r->start + r->end - cutLen) / 2;
       double cutEnd = cutStart + cutLen;
-      (mOutputTracks->Any()
+      (outputs.Any()
          .StartingWith(firstTrack).EndingAfter(lastTrack)
          + &SyncLock::IsSelectedOrSyncLockSelected
          - [&](const Track *pTrack) { return
@@ -455,29 +452,28 @@ bool EffectTruncSilence::DoRemoval
            pTrack->GetEndTime() < r->start;
          }
       ).Visit(
-         [&](WaveTrack *wt) {
-
+         [&](WaveTrack &wt) {
             // In WaveTracks, clear with a cross-fade
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
-            cutStart = wt->LongSamplesToTime(wt->TimeToLongSamples(cutStart));
-            cutEnd = wt->LongSamplesToTime(wt->TimeToLongSamples(cutEnd));
+            cutStart = wt.LongSamplesToTime(wt.TimeToLongSamples(cutStart));
+            cutEnd = wt.LongSamplesToTime(wt.TimeToLongSamples(cutEnd));
 
             // Make sure the cross-fade does not affect non-silent frames
-            if (wt->LongSamplesToTime(blendFrames) > inLength)
+            if (wt.LongSamplesToTime(blendFrames) > inLength)
             {
                // Result is not more than blendFrames:
-               blendFrames = wt->TimeToLongSamples(inLength).as_size_t();
+               blendFrames = wt.TimeToLongSamples(inLength).as_size_t();
             }
 
             // Perform cross-fade in memory
             Floats buf1{ blendFrames };
             Floats buf2{ blendFrames };
-            auto t1 = wt->TimeToLongSamples(cutStart) - blendFrames / 2;
-            auto t2 = wt->TimeToLongSamples(cutEnd) - blendFrames / 2;
+            auto t1 = wt.TimeToLongSamples(cutStart) - blendFrames / 2;
+            auto t2 = wt.TimeToLongSamples(cutEnd) - blendFrames / 2;
 
-            wt->GetFloats(buf1.get(), t1, blendFrames);
-            wt->GetFloats(buf2.get(), t2, blendFrames);
+            wt.GetFloats(buf1.get(), t1, blendFrames);
+            wt.GetFloats(buf2.get(), t2, blendFrames);
 
             for (decltype(blendFrames) i = 0; i < blendFrames; ++i)
             {
@@ -486,19 +482,19 @@ bool EffectTruncSilence::DoRemoval
             }
 
             // Perform the cut
-            wt->Clear(cutStart, cutEnd);
+            wt.Clear(cutStart, cutEnd);
 
             // Write cross-faded data
-            wt->Set((samplePtr)buf1.get(), floatSample, t1, blendFrames,
+            wt.Set((samplePtr)buf1.get(), floatSample, t1, blendFrames,
                // This effect mostly shifts samples to remove silences, and
                // does only a little bit of floating point calculations to
                // cross-fade the splices, over a 100 sample interval by default.
                // Don't dither.
                narrowestSampleFormat);
          },
-         [&](Track *t) {
+         [&](Track &t) {
             // Non-wave tracks: just do a sync-lock adjust
-            t->SyncLockAdjust(cutEnd, cutStart);
+            t.SyncLockAdjust(cutEnd, cutStart);
          }
       );
       ++whichReg;

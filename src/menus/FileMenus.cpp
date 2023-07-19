@@ -75,7 +75,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
 
       // Append the "macro-output" directory to the path
       const wxString macroDir( "macro-output" );
-      if (fileName.GetDirs().back() != macroDir) {
+      if (fileName.GetDirs().empty() || fileName.GetDirs().back() != macroDir) {
          fileName.AppendDir(macroDir);
       }
 
@@ -288,7 +288,7 @@ void OnExportLabels(const CommandContext &context)
 
    /* i18n-hint: filename containing exported text from label tracks */
    wxString fName = _("labels.txt");
-   auto trackRange = tracks.Any<const LabelTrack>();
+   auto trackRange = tracks.Leaders<const LabelTrack>();
    auto numLabelTracks = trackRange.size();
 
    if (numLabelTracks == 0) {

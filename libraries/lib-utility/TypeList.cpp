@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "TypeList.h"
-#include <tuple>
+#include <array>
 
 // Enough examples to test compilation of all the templates
 namespace { using namespace TypeList; using namespace std;
@@ -41,6 +41,12 @@ static_assert(is_same_v<Example, Cons_t<int, Cons_t<double, Nil>>>);
 static_assert(is_same_v<Example, PushFront_t<PushFront_t<Nil, double>, int>>);
 static_assert(is_same_v<Example, PushBack_t<PushBack_t<Nil, int>, double>>);
 
+static_assert(is_same_v<Nil, NonEmptyTails_t<Nil>>);
+static_assert(is_same_v<List<Example, List<double>>, NonEmptyTails_t<Example>>);
+
+static_assert(is_same_v<List<Nil>, Tails_t<Nil>>);
+static_assert(is_same_v<List<Example, List<double>, Nil>, Tails_t<Example>>);
+
 static_assert(is_same_v<double, Last_t<Example>>);
 static_assert(is_same_v<List<int>, ButLast_t<Example>>);
 
@@ -60,14 +66,29 @@ static_assert(is_same_v<List<int *const &, double *const &>,
          Fn<add_const_t, add_pointer_t>>,
       Example>>);
 
+static_assert(is_same_v<Nil, MapList_t<Fn<Length_t>, Nil>>);
+static_assert(is_same_v<
+   List<integral_constant<size_t, 2>, integral_constant<size_t, 1>>,
+   MapList_t<Fn<Length_t>, Example>>);
+
 static_assert(is_same_v<tuple<int, double>, Apply_t<tuple, Example>>);
 static_assert(is_same_v<tuple<const int, const double>,
    Apply_t<tuple, Map_t<Fn<add_const_t>, Example>>>);
+
+static_assert(is_same_v<Example, Bind_t<tuple<int, double>>>);
+static_assert(is_same_v<Example, Bind_t<pair<int, double>>>);
+static_assert(is_same_v<List<int, int>, Bind_t<array<int, 2>>>);
 
 static_assert(is_same_v<Nil, Append_t<>>);
 static_assert(is_same_v<Example, Append_t<Example>>);
 static_assert(is_same_v<List<int, double, char>,
    Append_t<Example, List<char>>>);
+
+static_assert(is_same_v<List<Example, List<int>>,
+   LeftFoldList_t<Cons_t, Example, Nil>>);
+
+static_assert(is_same_v<List<Example, List<double>>,
+   RightFoldList_t<Cons_t, Example, Nil>>);
 
 static_assert(is_same_v<List<double, int>, Reverse_t<Example>>);
 

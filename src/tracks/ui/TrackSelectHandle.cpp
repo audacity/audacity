@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackSelectHandle.h"
 
-#include "TrackView.h"
+#include "ChannelView.h"
 #include "../../HitTestResult.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -100,7 +100,7 @@ UIHandle::Result TrackSelectHandle::Click
    }
 
    SelectUtilities::DoListSelection(*pProject,
-      pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
+      *pTrack, event.ShiftDown(), event.ControlDown(), !unsafe);
 
    mClicked = true;
    return result;
@@ -226,16 +226,16 @@ void TrackSelectHandle::CalculateRearrangingThresholds(
    if (tracks.CanMoveUp(mpTrack.get()))
       mMoveUpThreshold =
          event.m_y -
-            TrackView::GetChannelGroupHeight(
-               * -- tracks.FindLeader( mpTrack.get() ) );
+            ChannelView::GetChannelGroupHeight(
+               * -- tracks.FindLeader(mpTrack.get()));
    else
       mMoveUpThreshold = INT_MIN;
 
    if (tracks.CanMoveDown(mpTrack.get()))
       mMoveDownThreshold =
          event.m_y +
-            TrackView::GetChannelGroupHeight(
-               * ++ tracks.FindLeader( mpTrack.get() ) );
+            ChannelView::GetChannelGroupHeight(
+               * ++ tracks.FindLeader(mpTrack.get()));
    else
       mMoveDownThreshold = INT_MAX;
 }

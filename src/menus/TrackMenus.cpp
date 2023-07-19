@@ -45,20 +45,19 @@
 // private helper classes and functions
 namespace {
 
-void DoMixAndRender
-(AudacityProject &project, bool toNewTrack)
+void DoMixAndRender(AudacityProject &project, bool toNewTrack)
 {
-   auto &tracks = TrackList::Get( project );
-   auto &trackFactory = WaveTrackFactory::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &trackFactory = WaveTrackFactory::Get(project);
    auto rate = ProjectRate::Get(project).GetRate();
    auto defaultFormat = QualitySettings::SampleFormatChoice();
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &trackPanel = TrackPanel::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
-   auto trackRange = tracks.Selected< WaveTrack >();
+   auto trackRange = tracks.SelectedLeaders<WaveTrack>();
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(trackRange.Filter<const WaveTrack>(),
-      Mixer::WarpOptions{ tracks },
+      Mixer::WarpOptions{ tracks.GetOwner() },
       tracks.MakeUniqueTrackName(_("Mix")),
       &trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
 
@@ -67,9 +66,9 @@ void DoMixAndRender
 
       // But before removing, determine the first track after the removal
       auto last = *trackRange.rbegin();
-      auto insertionPoint = * ++ tracks.Find( last );
+      auto insertionPoint = * ++ tracks.FindLeader(last);
       
-      auto selectedCount = (trackRange + &Track::IsLeader).size();
+      auto selectedCount = trackRange.size();
       wxString firstName;
       int firstColour = -1;
       if (selectedCount > 0) {
@@ -78,16 +77,16 @@ void DoMixAndRender
       }
       if (!toNewTrack)  {
          // Beware iterator invalidation!
-         for (auto &it = trackRange.first, &end = trackRange.second; it != end;)
-            tracks.Remove( *it++ );
+         while (!trackRange.empty())
+            // Range iterates over leaders only
+            tracks.Remove(**trackRange.first++);
       }
 
       // Add NEW tracks
 
-      auto pNewLeft = tracks.Add( uNewLeft );
+      auto pNewLeft = tracks.Add(uNewLeft);
       decltype(pNewLeft) pNewRight{};
-      if (uNewRight)
-      {
+      if (uNewRight) {
          pNewRight = tracks.Add(uNewRight);
          tracks.MakeMultiChannelTrack(*pNewLeft, 2, true);
       }
@@ -107,22 +106,20 @@ void DoMixAndRender
       // Permute the tracks as needed
       // The new track appears after the old tracks (or where the old tracks
       // had been) so that they are in the same sync-lock group
-      if (insertionPoint)
-      {
-         std::vector<TrackNodePointer> arr;
-         arr.reserve(tracks.NChannels());
-         size_t begin = 0, ii = 0;
-         for (auto iter = tracks.ListOfTracks::begin(),
-              end = tracks.ListOfTracks::end(); iter != end; ++iter) {
-            arr.push_back( {iter, &tracks} );
-            if ( iter->get() == insertionPoint )
-               begin = ii;
+      if (insertionPoint) {
+         std::vector<Track *> arr;
+         arr.reserve(tracks.Size());
+         size_t iBegin = 0, ii = 0;
+         for (const auto pTrack : tracks.Leaders()) {
+            arr.push_back(pTrack);
+            if (pTrack == insertionPoint)
+               iBegin = ii;
             ++ii;
          }
-         auto mid = arr.end();
-         std::advance( mid, -static_cast<int>(TrackList::NChannels(*pNewLeft)));
-         std::rotate( arr.begin() + begin, mid, arr.end() );
-         tracks.Permute( arr );
+         const auto end = arr.end(),
+            mid = end - 1;
+         std::rotate(arr.begin() + iBegin, mid, end);
+         tracks.Permute(arr);
       }
 
       // Smart history/undo message
@@ -494,75 +491,57 @@ enum{
 
 void DoSortTracks( AudacityProject &project, int flags )
 {
-   auto GetTime = [](const Track *t) {
-      return t->TypeSwitch< double >(
-         [&](const WaveTrack* w) {
-            auto stime = w->GetEndTime();
+   auto GetTime = [](const Track &t) {
+      return t.TypeSwitch<double>(
+         [&](const WaveTrack &w) {
+            auto stime = w.GetEndTime();
 
             int ndx;
-            for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
-               const auto c = w->GetClipByIndex(ndx);
+            for (ndx = 0; ndx < w.GetNumClips(); ndx++) {
+               const auto c = w.GetClipByIndex(ndx);
                if (c->GetPlaySamplesCount() == 0)
                   continue;
                stime = std::min(stime, c->GetPlayStartTime());
             }
             return stime;
          },
-         [&](const LabelTrack* l) {
-            return l->GetStartTime();
+         [&](const LabelTrack& l) {
+            return l.GetStartTime();
          }
       );
    };
 
-   size_t ndx = 0;
-   // This one place outside of TrackList where we must use undisguised
-   // std::list iterators!  Avoid this elsewhere!
-   std::vector<TrackNodePointer> arr;
-   auto &tracks = TrackList::Get( project );
-   arr.reserve(tracks.NChannels());
+   std::vector<Track *> arr;
+   auto &tracks = TrackList::Get(project);
+   arr.reserve(tracks.Size());
 
    // First find the permutation.
-   // This routine, very unusually, deals with the underlying stl list
-   // iterators, not with TrackIter!  Dangerous!
-   for (auto iter = tracks.ListOfTracks::begin(),
-        end = tracks.ListOfTracks::end(); iter != end; ++iter) {
-      const auto &track = *iter;
-      if ( !track->IsLeader() )
-         // keep channels contiguous
-         ndx++;
-      else {
-         auto size = arr.size();
-         for (ndx = 0; ndx < size;) {
-            Track &arrTrack = **arr[ndx].first;
-            auto channels = TrackList::Channels(&arrTrack);
-            if(flags & kAudacitySortByName) {
-               //do case insensitive sort - cmpNoCase returns less than zero if
-               // the string is 'less than' its argument
-               //also if we have case insensitive equality, then we need to sort
-               // by case as well
-               //We sort 'b' before 'B' accordingly.  We uncharacteristically
-               // use greater than for the case sensitive
-               //compare because 'b' is greater than 'B' in ascii.
-               auto cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
-               if ( cmpValue < 0 ||
-                     ( 0 == cmpValue &&
-                        track->GetName().CompareTo(arrTrack.GetName()) > 0 ) )
-                  break;
-            }
-            //sort by time otherwise
-            else if(flags & kAudacitySortByTime) {
-               auto time1 = TrackList::Channels(track.get()).min( GetTime );
-
-               //get candidate's (from sorted array) time
-               auto time2 = channels.min( GetTime );
-
-               if (time1 < time2)
-                  break;
-            }
-            ndx += channels.size();
+   for (const auto pTrack : tracks.Leaders()) {
+      auto &track = *pTrack;
+      const auto size = arr.size();
+      size_t ndx = 0;
+      for (; ndx < size; ++ndx) {
+         Track &arrTrack = *arr[ndx];
+         if (flags & kAudacitySortByName) {
+            //do case insensitive sort - cmpNoCase returns less than zero if
+            // the string is 'less than' its argument
+            //also if we have case insensitive equality, then we need to sort
+            // by case as well
+            //We sort 'b' before 'B' accordingly.  We uncharacteristically
+            // use greater than for the case sensitive
+            //compare because 'b' is greater than 'B' in ascii.
+            auto cmpValue = track.GetName().CmpNoCase(arrTrack.GetName());
+            if (cmpValue < 0 ||
+                  (0 == cmpValue &&
+                     track.GetName().CompareTo(arrTrack.GetName()) > 0))
+               break;
          }
+         //sort by time otherwise
+         else if (flags & kAudacitySortByTime)
+            if (GetTime(track) < GetTime(arrTrack))
+               break;
       }
-      arr.insert(arr.begin() + ndx, TrackNodePointer{iter, &tracks});
+      arr.insert(arr.begin() + ndx, &track);
    }
 
    // Now apply the permutation
@@ -625,14 +604,13 @@ void OnResample(const CommandContext &context)
 {
    auto &project = context.project;
    auto projectRate = ProjectRate::Get(project).GetRate();
-   auto &tracks = TrackList::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &undoManager = UndoManager::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
    int newRate;
 
-   while (true)
-   {
+   while (true) {
       wxDialogWrapper dlg(&window, wxID_ANY, XO("Resample"));
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
@@ -679,13 +657,10 @@ void OnResample(const CommandContext &context)
       dlg.Center();
 
       if (dlg.ShowModal() != wxID_OK)
-      {
          return;  // user cancelled dialog
-      }
 
       long lrate;
-      if (cb->GetValue().ToLong(&lrate) && lrate >= 1 && lrate <= 1000000)
-      {
+      if (cb->GetValue().ToLong(&lrate) && lrate >= 1 && lrate <= 1000000) {
          newRate = (int)lrate;
          break;
       }
@@ -699,9 +674,8 @@ void OnResample(const CommandContext &context)
 
    int ndx = 0;
    auto flags = UndoPush::NONE;
-   for (auto wt : tracks.Selected< WaveTrack >())
-   {
-      auto msg = XO("Resampling track %d").Format( ++ndx );
+   for (auto wt : tracks.SelectedLeaders<WaveTrack>()) {
+      auto msg = XO("Resampling track %d").Format(++ndx);
 
       using namespace BasicUI;
       auto progress = MakeProgress(XO("Resample"), msg);
@@ -717,7 +691,7 @@ void OnResample(const CommandContext &context)
       // commit that to the undo stack.  The second and later times,
       // consolidate.
 
-      ProjectHistory::Get( project ).PushState(
+      ProjectHistory::Get(project).PushState(
          XO("Resampled audio track(s)"), XO("Resample Track"), flags);
       flags = flags | UndoPush::CONSOLIDATE;
    }
@@ -992,10 +966,10 @@ void OnTrackPan(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, wt );
       if (slider->ShowDialog())
-         SetTrackPan(project, wt, slider);
+         SetTrackPan(project, &wt, slider);
    });
 }
 
@@ -1005,10 +979,10 @@ void OnTrackPanLeft(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, wt );
       slider->Decrease(1);
-      SetTrackPan(project, wt, slider);
+      SetTrackPan(project, &wt, slider);
    });
 }
 
@@ -1018,10 +992,10 @@ void OnTrackPanRight(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::PanSlider( trackPanel, wt );
       slider->Increase(1);
-      SetTrackPan(project, wt, slider);
+      SetTrackPan(project, &wt, slider);
    });
 }
 
@@ -1032,10 +1006,10 @@ void OnTrackGain(const CommandContext &context)
 
    /// This will pop up the track gain dialog for specified track
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
       if (slider->ShowDialog())
-         SetTrackGain(project, wt, slider);
+         SetTrackGain(project, &wt, slider);
    });
 }
 
@@ -1045,10 +1019,10 @@ void OnTrackGainInc(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
       slider->Increase(1);
-      SetTrackGain(project, wt, slider);
+      SetTrackGain(project, &wt, slider);
    });
 }
 
@@ -1058,10 +1032,10 @@ void OnTrackGainDec(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, *wt );
+   if (track) track->TypeSwitch( [&](WaveTrack &wt) {
+      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
       slider->Decrease(1);
-      SetTrackGain(project, wt, slider);
+      SetTrackGain(project, &wt, slider);
    });
 }
 
@@ -1082,8 +1056,8 @@ void OnTrackMute(const CommandContext &context)
    if (!track)
       track = TrackFocus::Get( project ).Get();
 
-   if (track) track->TypeSwitch( [&](PlayableTrack *t) {
-      TrackUtilities::DoTrackMute(project, t, false);
+   if (track) track->TypeSwitch( [&](PlayableTrack &t) {
+      TrackUtilities::DoTrackMute(project, &t, false);
    });
 }
 
@@ -1092,8 +1066,8 @@ void OnTrackSolo(const CommandContext &context)
    auto &project = context.project;
 
    const auto track = TrackFocus::Get( project ).Get();
-   if (track) track->TypeSwitch( [&](PlayableTrack *t) {
-      TrackUtilities::DoTrackSolo(project, t, false);
+   if (track) track->TypeSwitch( [&](PlayableTrack &t) {
+      TrackUtilities::DoTrackSolo(project, &t, false);
    });
 }
 

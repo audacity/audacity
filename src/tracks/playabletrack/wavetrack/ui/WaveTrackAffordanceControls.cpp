@@ -22,7 +22,6 @@
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../TrackPanelResizeHandle.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
@@ -33,7 +32,7 @@
 
 #include "../../../ui/TextEditHelper.h"
 #include "../../../ui/SelectHandle.h"
-#include "WaveTrackView.h"//need only ClipParameters
+#include "WaveChannelView.h"//need only ClipParameters
 #include "WaveTrackAffordanceHandle.h"
 
 #include "ProjectHistory.h"
@@ -135,7 +134,8 @@ public:
 };
 
 WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack)
-    : CommonTrackCell(pTrack), mClipNameFont(wxFont(wxFontInfo()))
+    : CommonTrackCell{ pTrack, 0 }
+    , mClipNameFont{ wxFontInfo{} }
 {
     if (auto trackList = pTrack->GetOwner())
     {
@@ -174,22 +174,6 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
             results.push_back(handle);
     }
 
-    auto trackList = track->GetOwner();
-    if ((std::abs(rect.GetTop() - py) <= WaveTrackView::kChannelSeparatorThickness / 2) 
-        && trackList
-        && !track->IsLeader())
-    {
-        //given that track is not a leader there always should be
-        //another track before this one
-        auto prev = std::prev(trackList->Find(track.get()));
-        results.push_back(
-            AssignUIHandlePtr(
-                mResizeHandle, 
-                std::make_shared<TrackPanelResizeHandle>((*prev)->shared_from_this(), py)
-            )
-        );
-    }
-
     if (mTextEditHelper && mTextEditHelper->GetBBox().Contains(px, py))
     {
         results.push_back(
@@ -208,7 +192,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         if (clip == editClipLock)
             continue;
 
-        if (WaveTrackView::HitTest(*clip, zoomInfo, state.rect, {px, py}))
+        if (WaveChannelView::HitTest(*clip, zoomInfo, state.rect, {px, py}))
         {
             results.push_back(
                 AssignUIHandlePtr(
@@ -228,7 +212,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         results.push_back(
             SelectHandle::HitTest(
                 mSelectHandle, state, pProject,
-                TrackView::Get(*track).shared_from_this()
+                ChannelView::Get(*track).shared_from_this()
             )
         );
     }
@@ -263,7 +247,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 auto affordanceRect
                    = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
 
-                if(!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+                if(!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
                 {
                    TrackArt::DrawClipFolded(context.dc, affordanceRect);
                    continue;
@@ -341,7 +325,7 @@ namespace {
 
 auto FindAffordance(WaveTrack &track)
 {
-   auto &view = TrackView::Get( track );
+   auto &view = ChannelView::Get(track);
    auto pAffordance = view.GetAffordanceControls();
    return std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
       pAffordance );

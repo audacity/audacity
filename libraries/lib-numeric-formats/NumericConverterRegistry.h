@@ -35,24 +35,26 @@ public:
 using NumericConverterFormatterFactoryPtr =
    std::unique_ptr<NumericConverterFormatterFactory>;
 
-// NumericConverterRegistryGroupTag is a fake type needed to fix the link on Windows
-struct NumericConverterRegistryGroupTag {};
+struct NumericConverterRegistryTraits : Registry::DefaultTraits{};
 
-struct NUMERIC_FORMATS_API NumericConverterRegistryGroup :
-    public Registry::GroupItem<NumericConverterRegistryGroupTag>
+struct NumericConverterRegistryGroupData {
+   NumericConverterType type;
+   NumericConverterRegistryGroupData(NumericConverterType type)
+      : type{ std::move(type) }
+   {}
+};
+
+struct NUMERIC_FORMATS_API NumericConverterRegistryGroup final
+   : Composite::Extension<
+      Registry::GroupItem<NumericConverterRegistryTraits>,
+      NumericConverterRegistryGroupData,
+      const Identifier &
+   >
 {
-   template <typename... Args>
-   NumericConverterRegistryGroup(
-      const Identifier& internalName, NumericConverterType _type,
-      Args&&... args)
-       : GroupItem { internalName, std::forward<Args>(args)... }
-       , type { std::move(_type) }
-   {
-   }
-
+   using Extension::Extension;
    ~NumericConverterRegistryGroup() override;
 
-   NumericConverterType type;
+   const auto &GetType() const { return type; }
 };
 
 struct NUMERIC_FORMATS_API NumericConverterRegistryItem : public Registry::SingleItem
@@ -93,7 +95,8 @@ constexpr auto NumericConverterFormatterItem =
    Callable::UniqueMaker<NumericConverterRegistryItem>();
 
 constexpr auto NumericConverterFormatterGroup =
-   Callable::UniqueMaker<NumericConverterRegistryGroup>();
+   Callable::UniqueMaker<NumericConverterRegistryGroup,
+      const Identifier&, NumericConverterRegistryGroupData>();
 
 struct NUMERIC_FORMATS_API NumericConverterItemRegistrator final :
     public Registry::RegisteredItem<
@@ -110,3 +113,13 @@ struct NUMERIC_FORMATS_API NumericConverterItemRegistrator final :
    {
    }
 };
+
+struct NumericConverterRegistrySuperGroup : Composite::Extension<
+   Registry::GroupItem<NumericConverterRegistryTraits>,
+   void, const Identifier&
+> {
+   using Extension::Extension;
+};
+
+constexpr auto NumericConverterItems =
+   Callable::UniqueMaker<NumericConverterRegistrySuperGroup>();

@@ -2330,7 +2330,7 @@ msgstr "Ne mogu da otvorim datoteku: „%s“"
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "Greška: %hs u redu %lu"
+msgstr "Greška: %s u redu %lu"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format

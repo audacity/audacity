@@ -8,6 +8,8 @@ import os
 import subprocess
 import textwrap
 
+required_conan_version = ">=2.0.0"
+
 # Why is it not Conan? Copied from cmake_layout().
 def is_multi_config(conanfile):
     gen = conanfile.conf.get("tools.cmake.cmaketoolchain:generator", default=None)
@@ -27,6 +29,7 @@ def run_patchelf(conanfile, args):
         raise ConanInvalidConfiguration("patchelf can only be run on Linux")
 
     patchelf_path = os.path.join(conanfile.dependencies.build["patchelf"].cpp_info.bindirs[0], "patchelf")
+    conanfile.output.info(f"Running patchelf: {patchelf_path} {' '.join(args)}")
     return subprocess.check_output([patchelf_path] + args).decode("utf-8").strip()
 
 
@@ -49,12 +52,12 @@ def strip_debug_symbols(conanfile, file, keep_symbols):
                 os.remove(f"{file}.debug")
             subprocess.check_call(["objcopy", "--only-keep-debug", file, f"{file}.debug"])
         except subprocess.CalledProcessError:
-            print(f"Could not copy debug symbols from {file}", flush=True)
+            conanfile.output.info(f"Could not copy debug symbols from {file}")
 
     try:
         subprocess.check_call(["objcopy", "--strip-debug", "--strip-unneeded", file])
     except subprocess.CalledProcessError:
-        print(f"Could not strip debug symbols from {file}", flush=True)
+        conanfile.output.info(f"Could not strip debug symbols from {file}")
         return
 
     if keep_symbols and os.path.isfile(f"{file}.debug"):
@@ -110,7 +113,7 @@ def global_copy_files(conanfile, dependency_info):
         # On Linux we also set the correct rpath for the copied libraries
         target_dir = get_linux_libdir(conanfile)
 
-        print(f"Copying files from {dependency_info.cpp_info.libdirs[0]} to {target_dir}", flush=True)
+        conanfile.output.info(f"Copying files from {dependency_info.cpp_info.libdirs[0]} to {target_dir}")
         safe_linux_copy(conanfile, dependency_info.cpp_info.libdirs[0], target_dir)
 
 
@@ -126,7 +129,7 @@ class AudacityDependency:
     def apply_options(self, conanfile, package):
         if self.package_options is not None:
             for key, value in self.package_options.items():
-                print(f"\t{self.name}:{key}={value}")
+                conanfile.output.info(f"\t{self.name}:{key}={value}")
                 setattr(package, key, value)
 
     def requires(self, conanfile):
@@ -136,7 +139,7 @@ class AudacityDependency:
         pass
 
     def reference(self, conanfile):
-        return f"{self.name}/{self.version}@{self.channel}" if self.channel else f"{self.name}/{self.version}"
+        return f"{self.name}/{self.version}@{self.channel}" if self.channel else f"{self.name}/{self.version}@audacity/stable"
 
     def copy_files(self, conanfile, dependency_info):
         global_copy_files(conanfile, dependency_info)
@@ -146,6 +149,9 @@ class AudacityDependency:
 class wxWidgetsAudacityDependency(AudacityDependency):
     def __init__(self, package_options: dict = None):
         super().__init__("wxwidgets", "3.1.3.4-audacity", package_options=package_options)
+
+    def reference(self, conanfile):
+        return f"{self.name}/3.1.3.4-audacity@audacity/stable"
 
     def apply_options(self, conanfile, package):
         opts = [
@@ -161,7 +167,7 @@ class wxWidgetsAudacityDependency(AudacityDependency):
         ]
 
         for key, value in opts:
-            print(f"\t{self.name}:{key}={value}")
+            conanfile.output.info(f"\t{self.name}:{key}={value}")
             setattr(package, key, value)
 
     def copy_files(self, conanfile, dependency_info):
@@ -212,7 +218,7 @@ class PortAudioDependency(AudacityDependency):
 @dataclass
 class CurlDependency(AudacityDependency):
     def __init__(self, package_options: dict = None):
-        super().__init__("libcurl", "7.75.0", package_options=package_options)
+        super().__init__("libcurl", "7.82.0", package_options=package_options)
 
     def apply_options(self, conanfile, package):
         super().apply_options(conanfile, package)
@@ -249,17 +255,17 @@ class Qt6Dependency(AudacityDependency):
         super().__init__("qt", "6.3.1", package_options=package_options)
 
     def reference(self, conanfile):
-        return "qt/6.3.1@audacity/testing"
+        return "qt/6.3.1@audacity/stable"
 
     def apply_options(self, conanfile, package):
         super().apply_options(conanfile, package)
 
         for key, value in self._options.items():
-            print(f"\t{self.name}:{key}={value}")
+            conanfile.output.info(f"\t{self.name}:{key}={value}")
             setattr(package, key, value)
 
         for module in self._enabled_modules:
-            print(f"\tEnabling Qt module: {module}")
+            conanfile.output.info(f"\tEnabling Qt module: {module}")
             setattr(package, module, True)
 
         if conanfile.settings.os != "Linux":
@@ -267,28 +273,23 @@ class Qt6Dependency(AudacityDependency):
         else:
             package.qtwayland = False
 
+        if conanfile.settings.os == 'Macos':
+            conanfile.output.info("Disabling glib on macOS")
+            setattr(package, "disabled_features", 'glib')
+
     @staticmethod
     def _content_template(conanfile, qt6_dependency_info):
         package_folder = qt6_dependency_info.package_folder.replace("\\", "/")
         host_prefix = package_folder if not cross_building(conanfile, skip_x64_x86=True) else conanfile.dependencies.direct_build["qt-tools"].package_folder
 
-        if conanfile.settings.os in ["Windows", "Macos"]:
-            return textwrap.dedent(f"""\
-                [Paths]
-                Prefix = {package_folder}
-                Plugins = res/archdatadir/plugins
-                Qml2Imports = res/archdatadir/qml
-                Translations = res/datadir/translations
-                Documentation = res/datadir/doc
-                HostPrefix = {host_prefix}""")
-        else:
-            libdir = get_linux_libdir(conanfile, False)
-            return textwrap.dedent(f"""\
-                [Paths]
-                Prefix = .
-                Plugins = ../{libdir}/qt6/plugins
-                Qml2Imports = ../{libdir}/qt6/qml
-                HostPrefix = {host_prefix}""")
+        return textwrap.dedent(f"""\
+            [Paths]
+            Prefix = {package_folder}
+            Plugins = res/archdatadir/plugins
+            Qml2Imports = res/archdatadir/qml
+            Translations = res/datadir/translations
+            Documentation = res/datadir/doc
+            HostPrefix = {host_prefix}""")
 
     @staticmethod
     def _qtconf_dir(conanfile):
@@ -303,73 +304,14 @@ class Qt6Dependency(AudacityDependency):
     def _qtconf_path(conanfile):
         return os.path.join(Qt6Dependency._qtconf_dir(conanfile),  "qt.conf")
 
-    def __fix_windows_package(self, conanfile, dependency_info):
-        if conanfile.settings.os != "Windows":
-            return
-        # On Windows, *:shared generates unusable Qt tooling
-        # We need to copy few libraries into the package folder
-        def __copy_dep(name):
-            try:
-                print(f"Copying {name} into the Qt package folder ({dependency_info.cpp_info.bindirs[0]})")
-                copy(conanfile, "*.dll", conanfile.dependencies[name].cpp_info.bindirs[0], dependency_info.cpp_info.bindirs[0])
-            finally:
-                pass
-
-        print("Fixing Qt tooling on Windows...", flush=True)
-
-        for dep in ["pcre2", "zlib", "double-conversion"]:
-            __copy_dep(dep)
-
-    def __fix_macos_package(self, conanfile, dependency_info):
-        def __copy_dep(name):
-            try:
-                print(f"Copying {name} into the Qt package folder ({dependency_info.cpp_info.libdirs[0]})")
-                copy(conanfile, "*.dylib*", conanfile.dependencies[name].cpp_info.libdirs[0], dependency_info.cpp_info.libdirs[0])
-            finally:
-                pass
-
-        for dep in ["pcre2", "zlib", "double-conversion"]:
-            __copy_dep(dep)
-
-    def __fix_linux_package(self, conanfile, dependency_info):
-        if conanfile.settings.os in ["Windows", "Macos"]:
-            return
-
-        def __copy_dep(name):
-            try:
-                print(f"Copying {name} into the Qt package folder ({dependency_info.cpp_info.libdirs[0]})")
-                safe_linux_copy(conanfile, conanfile.dependencies[name].cpp_info.libdirs[0], dependency_info.cpp_info.libdirs[0], False)
-            finally:
-                pass
-
-        for dep in ["pcre2", "zlib", "double-conversion", "icu"]:
-            __copy_dep(dep)
-
-        libdir = get_linux_libdir(conanfile)
-        arch_plugins_source = os.path.join(dependency_info.package_folder, "res", "archdatadir")
-        arch_plugins_target = os.path.join(libdir, "qt6")
-        # Copy all the plugins to the libdir/qt6 folder
-        copy(conanfile, "*", arch_plugins_source, arch_plugins_target, keep_path=True)
-
-        for root, dirs, files in os.walk(arch_plugins_target):
-            for file in files:
-                if file.endswith(".so"):
-                    print(f"Setting RPATH of {file}")
-                    relative_path = os.path.join("$ORIGIN", os.path.relpath(libdir, root))
-                    set_rpath(conanfile, os.path.join(root, file), f"$ORIGIN:{relative_path}")
-                    strip_debug_symbols(conanfile, os.path.join(root, file), True)
-
     def __fix_crossbuild(self, conanfile):
         if not cross_building(conanfile, skip_x64_x86=True):
             return
         host_tools = conanfile.dependencies.direct_build["qt-tools"].package_folder
         conanfile.append_to_pre_file(f'set(QT_HOST_PATH "{host_tools}" CACHE STRING "Path to the Qt host tools" FORCE)')
-
+        conanfile.append_to_post_file(f'include("{host_tools}/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsMacros.cmake")')
 
     def copy_files(self, conanfile, dependency_info):
-        self.__fix_windows_package(conanfile, dependency_info)
-        self.__fix_macos_package(conanfile, dependency_info)
-        self.__fix_linux_package(conanfile, dependency_info)
         self.__fix_crossbuild(conanfile)
 
         global_copy_files(conanfile, dependency_info)
@@ -381,34 +323,32 @@ class Qt6Dependency(AudacityDependency):
 
     def tool_requires(self, conanfile):
         if cross_building(conanfile, skip_x64_x86=True):
-            conanfile.tool_requires("qt-tools/6.3.1@audacity/testing")
+            conanfile.tool_requires("qt-tools/6.3.1@audacity/stable")
 
 class AudacityConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeDeps"
     options = { "use_asio": [True, False], "use_jack": [True, False], "lib_dir": [None, "ANY"]}
     default_options = { "use_asio": False, "use_jack": False, "lib_dir": None }
 
     # List of Audacity dependencies
     _dependencies = [
-        AudacityDependency("zlib", "1.2.11"),
-        AudacityDependency("libpng", "1.6.37"),
-        AudacityDependency("expat", "2.2.9", "audacity/stable"),
-        AudacityDependency("libjpeg-turbo", "2.0.5", package_options={ "SIMD": False }),
+        AudacityDependency("zlib", "1.2.13"),
+        AudacityDependency("libpng", "1.6.39"),
+        AudacityDependency("expat", "2.5.0"),
+        AudacityDependency("libjpeg-turbo", "2.1.5"),
         wxWidgetsAudacityDependency(),
 
         AudacityDependency("libmp3lame", "3.100"),
-        AudacityDependency("mpg123", "1.29.3", "audacity/testing", package_options={ "network": False }),
-        AudacityDependency("libmad", "0.15.2b-1", package_options={ "shared": False }),
-        AudacityDependency("libid3tag", "0.15.2b", "audacity/stable", package_options={ "shared": False }),
-        AudacityDependency("wavpack", "5.4.0"),
-        AudacityDependency("ogg", "1.3.4"),
-        AudacityDependency("flac", "1.3.3"),
+        AudacityDependency("mpg123", "1.31.2", package_options={ "network": False }),
+        AudacityDependency("libid3tag", "0.15.2b", package_options={ "shared": False }),
+        AudacityDependency("wavpack", "5.6.0"),
+        AudacityDependency("ogg", "1.3.5"),
+        AudacityDependency("flac", "1.4.2"),
         AudacityDependency("opus", "1.3.1"),
         AudacityDependency("vorbis", "1.3.7"),
-        AudacityDependency("libsndfile", "1.0.31"),
+        AudacityDependency("libsndfile", "1.0.31", package_options={ "programs": False }),
 
-        AudacityDependency("vst3sdk", "3.7.3"),
+        AudacityDependency("vst3sdk", "3.7.7"),
 
         AudacityDependency("libuuid", "1.0.3"),
 
@@ -421,14 +361,19 @@ class AudacityConan(ConanFile):
 
         AudacityDependency("rapidjson", "1.1.0"),
 
-        AudacityDependency("breakpad", "0.1"),
+        AudacityDependency("breakpad", "2023.01.27"),
 
         CrashpadDependency("cci.20220219-audacity"),
 
         AudacityDependency("catch2", "2.13.8"),
 
+        AudacityDependency("libwebp", "1.3.0"),
+        AudacityDependency("libtiff", "4.5.0", package_options={
+            "lzma": False, "jpeg": "libjpeg-turbo", "jbig": False,
+            "libdeflate": False, "webp": False, }),
+
         Qt6Dependency(),
-        AudacityDependency("kddockwidgets", "1.6.0", "audacity/testing")
+        AudacityDependency("kddockwidgets", "2.0.0-20230407-b3b45c7")
     ]
 
     options.update({f"use_{dependency.name}": [True, False] for dependency in _dependencies})
@@ -445,7 +390,7 @@ class AudacityConan(ConanFile):
 
     def build_requirements(self):
         if self.settings.os not in ["Windows", "Macos"]:
-            self.build_requires("patchelf/0.13")
+            self.build_requires("patchelf/0.13@audacity/stable")
 
         for dependency in self._dependencies:
             if getattr(self.options, f"use_{dependency.name}"):
@@ -456,7 +401,7 @@ class AudacityConan(ConanFile):
 
         for dependency in self._dependencies:
             if getattr(self.options, f"use_{dependency.name}"):
-                print(f"Applying options for {dependency.name}...")
+                self.output.info(f"Applying options for {dependency.name}...")
                 dependency.apply_options(self, self.options[dependency.name])
 
     def layout(self):
@@ -485,23 +430,11 @@ class AudacityConan(ConanFile):
         deps_lookup = { dependency.name: dependency for dependency in self._dependencies }
 
         for dep in self.dependencies.host.values():
-            print(f"Copying files for {dep.ref.name}...")
+            self.output.info(f"Copying files for {dep.ref.name}...")
             if dep.ref.name in deps_lookup:
                 deps_lookup[dep.ref.name].copy_files(self, dep)
             else:
                 global_copy_files(self, dep)
-
-        # ICU is a special case, because it's not a dependency of Audacity, but it's a dependency of Qt6
-        # On Linux, ICU wont be able to locate ICU data library.
-        if self.settings.os not in ["Windows", "Macos"]:
-            icu_dep = self.__get_dependency("icu")
-            if icu_dep:
-                icu_libdir = icu_dep.cpp_info.libdirs[0]
-
-                for file in os.listdir(icu_libdir):
-                    icu_libpath = os.path.join(icu_libdir, file)
-                    if os.path.isfile(icu_libpath):
-                        append_rpath(self, icu_libpath, "$ORIGIN")
 
         deps = CMakeDeps(self)
         deps.generate()

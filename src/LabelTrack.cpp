@@ -45,6 +45,16 @@ for drawing different aspects of the label and its text box.
 #include "TimeWarper.h"
 #include "AudacityMessageBox.h"
 
+LabelTrack::Interval::~Interval() = default;
+
+std::shared_ptr<ChannelInterval>
+LabelTrack::Interval::DoGetChannel(size_t iChannel)
+{
+   if (iChannel == 0)
+      return std::make_shared<ChannelInterval>();
+   return {};
+}
+
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "labeltrack",
    LabelTrack::New
@@ -76,16 +86,16 @@ LabelTrack* LabelTrack::Create(TrackList& trackList)
    return Create(trackList, trackList.MakeUniqueTrackName(GetDefaultName()));
 }
 
-LabelTrack::LabelTrack():
-   Track(),
-   mClipLen(0.0),
-   miLastLabel(-1)
+LabelTrack::LabelTrack()
+   : UniqueChannelTrack{}
+   , mClipLen{ 0.0 }
+   , miLastLabel{ -1 }
 {
 }
 
 LabelTrack::LabelTrack(const LabelTrack &orig, ProtectedCreationArg &&a)
-   : Track(orig, std::move(a))
-   , mClipLen(0.0)
+   : UniqueChannelTrack{ orig, std::move(a) }
+   , mClipLen{ 0.0 }
 {
    for (auto &original: orig.mLabels) {
       LabelStruct l { original.selectedRegion, original.title };
@@ -118,41 +128,24 @@ Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
    return pNewTrack;
 }
 
-template<typename IntervalType>
-static IntervalType DoMakeInterval(const LabelStruct &label, size_t index)
+size_t LabelTrack::NIntervals() const
 {
-   return {
-      label.getT0(), label.getT1(),
-      std::make_unique<LabelTrack::IntervalData>( index ) };
+   return mLabels.size();
 }
 
-auto LabelTrack::MakeInterval( size_t index ) const -> ConstInterval
+auto LabelTrack::MakeInterval(size_t index) -> std::shared_ptr<Interval>
 {
-   return DoMakeInterval<ConstInterval>(mLabels[index], index);
+   if (index >= mLabels.size())
+      return {};
+   auto &label = mLabels[index];
+   return std::make_shared<Interval>(
+      *this, label.getT0(), label.getT1(), index);
 }
 
-auto LabelTrack::MakeInterval( size_t index ) -> Interval
+std::shared_ptr<WideChannelGroupInterval>
+LabelTrack::DoGetInterval(size_t iInterval)
 {
-   return DoMakeInterval<Interval>(mLabels[index], index);
-}
-
-template< typename Container, typename LabelTrack >
-static Container DoMakeIntervals(LabelTrack &track)
-{
-   Container result;
-   for (size_t ii = 0, nn = track.GetNumLabels(); ii < nn; ++ii)
-      result.emplace_back( track.MakeInterval( ii ) );
-   return result;
-}
-
-auto LabelTrack::GetIntervals() const -> ConstIntervals
-{
-   return DoMakeIntervals<ConstIntervals>(*this);
-}
-
-auto LabelTrack::GetIntervals() -> Intervals
-{
-   return DoMakeIntervals<Intervals>(*this);
+   return MakeInterval(iInterval);
 }
 
 void LabelTrack::SetLabel( size_t iLabel, const LabelStruct &newLabel )
@@ -172,6 +165,17 @@ void LabelTrack::SetOffset(double dOffset)
 {
    for (auto &labelStruct: mLabels)
       labelStruct.selectedRegion.move(dOffset);
+}
+
+void LabelTrack::DoOnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   if (!oldTempo.has_value())
+      return;
+   const auto ratio = *oldTempo / newTempo;
+   for (auto& label : mLabels)
+      label.selectedRegion.setTimes(
+         label.getT0() * ratio, label.getT1() * ratio);
 }
 
 void LabelTrack::Clear(double b, double e)
@@ -424,7 +428,7 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
          token = toker.GetNextToken();
 
       sr.setTimes( t0, t1 );
-      
+
       title = token;
    }
 
@@ -757,14 +761,14 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 
 bool LabelTrack::PasteOver(double t, const Track * src)
 {
-   auto result = src->TypeSwitch< bool >( [&](const LabelTrack *sl) {
+   auto result = src->TypeSwitch< bool >( [&](const LabelTrack &sl) {
       int len = mLabels.size();
       int pos = 0;
 
       while (pos < len && mLabels[pos].getT0() < t)
          pos++;
 
-      for (auto &labelStruct: sl->mLabels) {
+      for (auto &labelStruct: sl.mLabels) {
          LabelStruct l {
             labelStruct.selectedRegion,
             labelStruct.getT0() + t,
@@ -786,8 +790,8 @@ bool LabelTrack::PasteOver(double t, const Track * src)
 
 void LabelTrack::Paste(double t, const Track *src)
 {
-   bool bOk = src->TypeSwitch< bool >( [&](const LabelTrack *lt) {
-      double shiftAmt = lt->mClipLen > 0.0 ? lt->mClipLen : lt->GetEndTime();
+   bool bOk = src->TypeSwitch< bool >( [&](const LabelTrack &lt) {
+      double shiftAmt = lt.mClipLen > 0.0 ? lt.mClipLen : lt.GetEndTime();
 
       ShiftLabelsOnInsert(shiftAmt, t);
       PasteOver(t, src);

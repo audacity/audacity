@@ -12,6 +12,7 @@
 #define __AUDACITY_NOTETRACK__
 
 #include <utility>
+#include "AudioIOSequences.h"
 #include "Prefs.h"
 #include "PlayableTrack.h"
 
@@ -59,7 +60,8 @@ class StretchHandle;
 class TimeWarper;
 
 class AUDACITY_DLL_API NoteTrack final
-   : public NoteTrackBase
+   : public UniqueChannelTrack<NoteTrackBase>
+   , public OtherPlayableSequence
 {
 public:
    // Construct and also build all attachments
@@ -71,7 +73,7 @@ public:
    virtual ~NoteTrack();
 
    using Holder = std::shared_ptr<NoteTrack>;
-   
+
 private:
    Track::Holder Clone() const override;
 
@@ -79,7 +81,6 @@ public:
    double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
-
    Alg_seq &GetSeq() const;
 
    void WarpAndTransposeNotes(double t0, double t1,
@@ -204,15 +205,25 @@ public:
 
    Track::Holder PasteInto( AudacityProject & ) const override;
 
-   ConstIntervals GetIntervals() const override;
-   Intervals GetIntervals() override;
+   size_t NIntervals() const override;
 
- private:
+   struct Interval : WideChannelGroupInterval {
+      using WideChannelGroupInterval::WideChannelGroupInterval;
+      ~Interval() override;
+      std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
+   };
+
+private:
+   std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
+      override;
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    void DoSetVelocity(float velocity);
 #endif
 
    void AddToDuration( double delta );
+   void DoOnProjectTempoChange(
+      const std::optional<double>& oldTempo, double newTempo) override;
 
    // These are mutable to allow NoteTrack to switch details of representation
    // in logically const methods

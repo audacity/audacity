@@ -128,13 +128,14 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 #endif
 
-   S.AddButton(XO("Open Plugin Manager"), wxALIGN_LEFT)->Bind(wxEVT_BUTTON, [this](auto) {
-      //Adding dependency on PluginRegistrationDialog, not good. Alternatively
-      //that could be done with events, though event should be visible here too...
-      PluginRegistrationDialog dialog(wxGetTopLevelParent(this));
-      if(dialog.ShowModal() == wxID_OK)
-         MenuCreator::RebuildAllMenuBars();
-   });
+   if (auto pButton = S.AddButton(XO("Open Plugin Manager"), wxALIGN_LEFT))
+      pButton->Bind(wxEVT_BUTTON, [this](auto) {
+         //Adding dependency on PluginRegistrationDialog, not good. Alternatively
+         //that could be done with events, though event should be visible here too...
+         PluginRegistrationDialog dialog(wxGetTopLevelParent(this));
+         if(dialog.ShowModal() == wxID_OK)
+            MenuCreator::RebuildAllMenuBars();
+      });
 
    S.EndScroller();
 }

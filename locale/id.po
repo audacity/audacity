@@ -2326,7 +2326,7 @@ msgstr "Tidak bisa membuka file:\"%s\""
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
 msgid "Error: %s at line %lu"
-msgstr "Error: %hs pada garis %lu"
+msgstr "Error: %s pada garis %lu"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format

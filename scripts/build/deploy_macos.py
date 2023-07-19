@@ -153,7 +153,7 @@ if __name__ == '__main__':
         runtime_files.extend([os.path.join(destination.resources, prefix, os.path.basename(name)) for name, prefix in qml_plugins])
 
         with open(destination.qt_conf, 'w') as f:
-            f.write('\n'.join(['[Paths]', f'Plugins = PlugIns', f'Imports = Resources/qml' f'Qml2Imports = Resources/qml', '']))
+            f.write('\n'.join(['[Paths]', f'Plugins = PlugIns', f'Imports = Resources/qml', f'Qml2Imports = Resources/qml', '']))
 
     dependencies = otool.collect_dependencies(runtime_files, [ source.frameworks ])
 

@@ -673,7 +673,7 @@ wxColour MixerTrackCluster::GetTrackColor()
 void MixerTrackCluster::HandleSelect(bool bShiftDown, bool bControlDown)
 {
    SelectUtilities::DoListSelection(*mProject,
-      mTrack.get(), bShiftDown, bControlDown, true);
+      *mTrack, bShiftDown, bControlDown, true);
 }
 
 void MixerTrackCluster::OnMouseEvent(wxMouseEvent& event)
@@ -1111,7 +1111,8 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 
 bool MixerBoard::HasSolo()
 {
-   return !(( mTracks->Any<PlayableTrack>() + &PlayableTrack::GetSolo ).empty());
+   return
+      !(mTracks->Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
 }
 
 void MixerBoard::RefreshTrackClusters(bool bEraseBackground /*= true*/)
@@ -1505,10 +1506,10 @@ const ReservedCommandFlag&
          auto &tracks = TrackList::Get( project );
          return
 #ifdef EXPERIMENTAL_MIDI_OUT
-            !tracks.Any<const NoteTrack>().empty()
+            !tracks.Leaders<const NoteTrack>().empty()
          ||
 #endif
-            !tracks.Any<const WaveTrack>().empty()
+            !tracks.Leaders<const WaveTrack>().empty()
          ;
       }
    }; return flag; }

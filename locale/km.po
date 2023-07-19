@@ -4432,7 +4432,7 @@ msgstr ""
 #: src/FileFormats.cpp
 #, fuzzy, c-format
 msgid "Error (file may not have been written): %s"
-msgstr "កំហុស (ឯកសារ​អាច​មិន​ទាន់​ត្រូវ​បាន​សរសេរ) ៖ %hs"
+msgstr "កំហុស (ឯកសារ​អាច​មិន​ទាន់​ត្រូវ​បាន​សរសេរ) ៖ %s"
 
 #: src/FileFormats.cpp
 msgid "&Copy uncompressed files into the project (safer)"
@@ -20656,7 +20656,7 @@ msgstr ""
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, fuzzy, lisp-format
 msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "កំហុស (ឯកសារ​អាច​មិន​ទាន់​ត្រូវ​បាន​សរសេរ) ៖ %hs"
+msgstr "កំហុស (ឯកសារ​អាច​មិន​ទាន់​ត្រូវ​បាន​សរសេរ) ៖ %s"
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"

@@ -206,6 +206,7 @@ struct AudiocomUploadOperation final :
 
    std::string mAudioID;
    std::string mUploadToken;
+   std::string mUserName;
 
    std::string mAudioSlug;
 
@@ -264,10 +265,14 @@ struct AudiocomUploadOperation final :
 
       if (mCompletedCallback)
       {
+         const auto uploadURL =
+            mAuthToken.empty() ?
+               mServiceConfig.GetFinishUploadPage(mAudioID, mUploadToken) :
+               mServiceConfig.GetAudioURL(mUserName, mAudioSlug);
 
          mCompletedCallback(
             { UploadOperationCompleted::Result::Success,
-              UploadSuccessfulPayload { mAudioID, mAudioSlug } });
+              UploadSuccessfulPayload { mAudioID, mAudioSlug, mUploadToken, uploadURL } });
       }
       
       mProgressCallback = {};
@@ -395,6 +400,8 @@ struct AudiocomUploadOperation final :
 
          if (extra.HasMember("token"))
             mUploadToken = extra["token"].GetString();
+
+         mUserName = extra["audio"]["username"].GetString();
       }
 
       const auto encType = document.HasMember("enctype") ?
@@ -579,7 +586,7 @@ UploadOperationHandle UploadService::Upload(
       mServiceConfig, fileName, projectName, isPublic,
       std::move(completedCallback), std::move(progressCallback));
 
-   mOAuthService.ValidateAuth([operation](std::string_view authToken)
+   mOAuthService.ValidateAuth([operation, this](std::string_view authToken)
                               { operation->InitiateUpload(authToken); });
 
    return UploadOperationHandle { operation };

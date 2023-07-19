@@ -104,7 +104,15 @@ SONFNS(AutoSave)
 
 #endif
 
+NoteTrack::Interval::~Interval() = default;
 
+std::shared_ptr<ChannelInterval>
+NoteTrack::Interval::DoGetChannel(size_t iChannel)
+{
+   if (iChannel == 0)
+      return std::make_shared<ChannelInterval>();
+   return {};
+}
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "notetrack",
@@ -120,7 +128,7 @@ NoteTrack *NoteTrack::New( AudacityProject &project )
 }
 
 NoteTrack::NoteTrack()
-   : NoteTrackBase()
+   : UniqueChannelTrack{}
 {
    SetName(_("Note Track"));
 
@@ -211,6 +219,21 @@ double NoteTrack::GetStartTime() const
 double NoteTrack::GetEndTime() const
 {
    return GetStartTime() + GetSeq().get_real_dur();
+}
+
+void NoteTrack::DoOnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   if (!oldTempo.has_value())
+      return;
+   const auto ratio = *oldTempo / newTempo;
+   auto& seq = GetSeq();
+   seq.convert_to_beats();
+   const auto b1 = seq.get_dur();
+   seq.convert_to_seconds();
+   const auto newDuration = seq.get_dur() * ratio;
+   seq.stretch_region(0, b1, newDuration);
+   seq.set_real_dur(newDuration);
 }
 
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
@@ -561,7 +584,7 @@ void NoteTrack::Paste(double t, const Track *src)
    // the destination track).
 
    //Check that src is a non-NULL NoteTrack
-   bool bOk = src && src->TypeSwitch< bool >( [&](const NoteTrack *other) {
+   bool bOk = src && src->TypeSwitch<bool>( [&](const NoteTrack &other) {
 
       auto myOffset = this->GetOffset();
       if (t < myOffset) {
@@ -573,7 +596,7 @@ void NoteTrack::Paste(double t, const Track *src)
 
       double delta = 0.0;
       auto &seq = GetSeq();
-      auto offset = other->GetOffset();
+      auto offset = other.GetOffset();
       if ( offset > 0 ) {
          seq.convert_to_seconds();
          seq.insert_silence( t - GetOffset(), offset );
@@ -586,9 +609,9 @@ void NoteTrack::Paste(double t, const Track *src)
       delta += std::max( 0.0, t - GetEndTime() );
 
       // This, not:
-      //delta += other->GetSeq().get_real_dur();
+      //delta += other.GetSeq().get_real_dur();
 
-      seq.paste(t - GetOffset(), &other->GetSeq());
+      seq.paste(t - GetOffset(), &other.GetSeq());
 
       AddToDuration( delta );
 
@@ -709,18 +732,18 @@ Track::Holder NoteTrack::PasteInto( AudacityProject & ) const
    return pNewTrack;
 }
 
-auto NoteTrack::GetIntervals() const -> ConstIntervals
+size_t NoteTrack::NIntervals() const
 {
-   ConstIntervals results;
-   results.emplace_back( GetStartTime(), GetEndTime() );
-   return results;
+   return 1;
 }
 
-auto NoteTrack::GetIntervals() -> Intervals
+std::shared_ptr<WideChannelGroupInterval>
+NoteTrack::DoGetInterval(size_t iInterval)
 {
-   Intervals results;
-   results.emplace_back( GetStartTime(), GetEndTime() );
-   return results;
+   if (iInterval == 0)
+      // Just one, and no extra info in it!
+      return std::make_shared<Interval>(*this, GetStartTime(), GetEndTime());
+   return {};
 }
 
 void NoteTrack::AddToDuration( double delta )

@@ -263,9 +263,8 @@ private:
    int mFilterIndex;
    int mFormat;
    int mSubFormat;
-   int mNumSelected;
-   unsigned mNumLeft;
-   unsigned mNumRight;
+   int mNumSelected{};
+   bool mMono{};
    unsigned mNumMono;
    unsigned mChannels;
    bool mSelectedOnly;

@@ -210,7 +210,7 @@ public:
          std::call_once( flag, []{
             // Register in the table an adaptor thunk that downcasts the object
             auto implementation = Implementation();
-            Register< Subclass >( [=]( This &obj, Arguments &&...arguments ){
+            Register< Subclass >( [=]( This &obj, Arguments ...arguments ){
                return implementation(
                   static_cast< Subclass& >( obj ),
                   std::forward< Arguments >( arguments )... );
@@ -222,7 +222,7 @@ public:
    //! Invoke the method -- but only after static initialization time
    static Return Call(
       This &obj, //!< Object on which to type-switch at run-time
-      Arguments &&...arguments //!< other arguments
+      Arguments ...arguments //!< other arguments
    )
    {
       try {
