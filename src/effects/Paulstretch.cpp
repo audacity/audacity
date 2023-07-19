@@ -156,18 +156,29 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart ? trackStart : mT0;
       double t1 = mT1 > trackEnd ? trackEnd : mT1;
-      for (const auto pChannel : TrackList::Channels(track)) {
-         if (t1 > t0) {
-            const auto outputTrack = ProcessOne(*pChannel, t0, t1, count);
+      if (t1 > t0) {
+         auto tempList = TrackList::Create(nullptr);
+         for (const auto pChannel : TrackList::Channels(track)) {
+            const auto outputTrack = ProcessOne(*pChannel, t0, t1, count++);
             if (!outputTrack)
                return false;
             outputTrack->Flush();
-            pChannel->Clear(t0,t1);
-            pChannel->Paste(t0, outputTrack.get());
-            newT1 = std::max(newT1, mT0 + outputTrack->GetEndTime());
+            tempList->Add(outputTrack);
          }
-         count++;
+         for (const auto pChannel : TrackList::Channels(track))
+            pChannel->Clear(t0,t1);
+         auto iter =
+            TrackList::Channels(*tempList->Leaders<const WaveTrack>().begin())
+               .begin();
+         for (const auto pChannel : TrackList::Channels(track)) {
+            auto outputTrack = *iter;
+            pChannel->Paste(t0, outputTrack);
+            newT1 = std::max(newT1, mT0 + outputTrack->GetEndTime());
+            ++iter;
+         }
       }
+      else
+         count += track->NChannels();
    }
 
    // Sync lock adjustment of other tracks
