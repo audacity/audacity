@@ -3,7 +3,7 @@ import json
 
 from helpers.conan_environment import get_conan
 
-def list_remotes() -> list[str]:
+def list_remotes():
     remotes = subprocess.check_output([get_conan(), 'remote', 'list', '--format', 'json']).decode('utf-8')
     return json.loads(remotes)
 
