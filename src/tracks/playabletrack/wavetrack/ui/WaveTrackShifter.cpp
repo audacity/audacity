@@ -166,8 +166,8 @@ public:
                // TODO wide wave tracks -- guarantee matching clip width
                if (!pTrack->AddClip(pClip))
                   return false;
+               mMigrated.insert(pClip.get());
             }
-            mMigrated.insert(pClip.get());
          }
          if (offset == .0)
             mMoving.emplace_back(std::move(interval));
