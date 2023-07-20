@@ -207,7 +207,7 @@ const char *LV2FeaturesList::URID_Unmap(LV2_URID urid)
    if (urid > 0) {
       // Unmap lower indices to global URIs
       if (urid <= static_cast<LV2_URID>(gURIDMap.size()))
-         return mURIDMap[urid - 1].get();
+         return gURIDMap[urid - 1].get();
       // Unmap higher indices to local URIs
       urid -= gURIDMap.size();
       if (urid <= static_cast<LV2_URID>(mURIDMap.size()))
