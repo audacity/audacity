@@ -75,7 +75,7 @@ public:
    using Holder = std::shared_ptr<NoteTrack>;
 
 private:
-   Track::Holder Clone() const override;
+   TrackListHolder Clone() const override;
 
 public:
    double GetOffset() const override;

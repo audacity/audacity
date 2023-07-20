@@ -98,13 +98,18 @@ public:
 
    AudioGraph::ChannelType GetChannelType() const override;
 
-   // overwrite data excluding the sample sequence but including display
-   // settings
+   //! Overwrite data excluding the sample sequence but including display
+   //! settings
+   /*!
+    @pre `IsLeader()`
+    @pre `orig.IsLeader()`
+    @pre `NChannels() == orig.NChannels()`
+    */
    void Reinit(const WaveTrack &orig);
 private:
    void Init(const WaveTrack &orig);
 
-   Track::Holder Clone() const override;
+   TrackListHolder Clone() const override;
 
    friend class WaveTrackFactory;
 
@@ -243,7 +248,7 @@ private:
 
    /*!
     @pre `IsLeader()`
-    @post result: `result->Size() == NChannels()`
+    @post result: `result->NChannels() == NChannels()`
     */
    TrackListHolder SplitCut(double t0, double t1) /* not override */;
 

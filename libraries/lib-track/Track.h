@@ -250,6 +250,7 @@ public:
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
+   ListOfTracks* GetHolder() const { return mNode.second; }
 
    LinkType GetLinkType() const noexcept;
    //! Returns true if the leader track has link type LinkType::Aligned
@@ -303,8 +304,12 @@ private:
 
    void Init(const Track &orig);
 
-   // public nonvirtual duplication function that invokes Clone():
-   virtual Holder Duplicate() const;
+   //! public nonvirtual duplication function that invokes Clone()
+   /*!
+    @pre `IsLeader()`
+    @post result: `NChannels() == result->NChannels()`
+    */
+   virtual TrackListHolder Duplicate() const;
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;
@@ -337,7 +342,7 @@ public:
     @return non-NULL or else throw
     May assume precondition: t0 <= t1
     @pre `IsLeader()`
-    @post result: `result->Size() == NChannels()`
+    @post result: `result->NChannels() == NChannels()`
     */
    virtual TrackListHolder Cut(double t0, double t1) = 0;
 
@@ -349,7 +354,7 @@ public:
     May assume precondition: t0 <= t1
     Should invoke Track::Init
     @pre `IsLeader`
-    @post result: `result->Size() == NChannels()`
+    @post result: `result->NChannels() == NChannels()`
    */
    virtual TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
       const = 0;
@@ -393,9 +398,13 @@ public:
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
 private:
-   // Subclass responsibility implements only a part of Duplicate(), copying
-   // the track data proper (not associated data such as for groups and views):
-   virtual Holder Clone() const = 0;
+   //! Subclass responsibility implements only a part of Duplicate(), copying
+   //! the track data proper (not associated data such as for groups and views)
+   /*!
+    @pre `IsLeader()`
+    @post result: `NChannels() == result->NChannels()`
+    */
+   virtual TrackListHolder Clone() const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >
@@ -1199,7 +1208,8 @@ public:
       static auto Channels( TrackType *pTrack )
          -> TrackIterRange< TrackType >
    {
-      return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
+      return Channels_<TrackType>(
+         static_cast<TrackList*>(pTrack->GetHolder())->FindLeader(pTrack));
    }
 
    //! Count channels of a track
@@ -1294,12 +1304,11 @@ public:
    //! so that `TrackList::Channels(left.get())` will enumerate the given
    //! tracks
    /*!
-    @pre `left != nullptr`
-    @pre `left->GetOwner() == nullptr`
-    @pre `right == nullptr || right->GetOwner() == nullptr`
+    @pre `left == nullptr || left->GetOwner() == nullptr`
+    @pre `right == nullptr || (left && right->GetOwner() == nullptr)`
     */
    static TrackListHolder Temporary(AudacityProject *pProject,
-      const Track::Holder &left, const Track::Holder &right);
+      const Track::Holder &left = {}, const Track::Holder &right = {});
 
    //! Remove all tracks from `list` and put them at the end of `this`
    void Append(TrackList &&list);
@@ -1410,7 +1419,9 @@ private:
    static long sCounter;
 
 public:
-   using Updater = std::function< void(Track &dest, const Track &src) >;
+   //! The tracks supplied to this function will be leaders with the same number
+   //! of channels
+   using Updater = std::function<void(Track &dest, const Track &src)>;
    // Start a deferred update of the project.
    // The return value is a duplicate of the given track.
    // While ApplyPendingTracks or ClearPendingTracks is not yet called,
@@ -1425,7 +1436,11 @@ public:
    // Updater does not do it.
    // Pending track will have the same TrackId as the actual.
    // Pending changed tracks will not occur in iterations.
-   std::shared_ptr<Track> RegisterPendingChangedTrack(
+   /*!
+    @pre `src->IsLeader()`
+    @post result: `src->NChannels() == result.size()`
+    */
+   std::vector<Track*> RegisterPendingChangedTrack(
       Updater updater,
       Track *src
    );
@@ -1460,8 +1475,11 @@ private:
    //! Shadow tracks holding append-recording in progress; need to put them into a list so that GetLink() works
    /*! Beware, they are in a disjoint iteration sequence from ordinary tracks */
    ListOfTracks mPendingUpdates;
-   //! This is in correspondence with mPendingUpdates
+   //! This is in correspondence with leader tracks in mPendingUpdates
    std::vector< Updater > mUpdaters;
+   //! Whether the list assigns unique ids to added tracks;
+   //! false for temporaries
+   bool mAssignsIds{ true };
 };
 
 #endif

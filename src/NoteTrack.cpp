@@ -165,7 +165,7 @@ Alg_seq &NoteTrack::GetSeq() const
    return *mSeq;
 }
 
-Track::Holder NoteTrack::Clone() const
+TrackListHolder NoteTrack::Clone() const
 {
    auto duplicate = std::make_shared<NoteTrack>();
    duplicate->Init(*this);
@@ -202,7 +202,7 @@ Track::Holder NoteTrack::Clone() const
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
 #endif
-   return duplicate;
+   return TrackList::Temporary(nullptr, duplicate, nullptr);
 }
 
 
@@ -992,7 +992,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    if (!mSeq) {
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
-      holder = Clone();
+      holder = (*Clone()->Leaders().begin())->SharedPointer();
       saveme = static_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);

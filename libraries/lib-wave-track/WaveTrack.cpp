@@ -295,11 +295,19 @@ void WaveTrack::Init(const WaveTrack &orig)
 
 void WaveTrack::Reinit(const WaveTrack &orig)
 {
-   Init(orig);
+   //assert(IsLeader());
+   //assert(orig.IsLeader());
+   //assert(NChannels() == orig.NChannels());
+   const auto channels = TrackList::Channels(this);
+   auto iter = TrackList::Channels(&orig).begin();
+   for (const auto pChannel : channels) {
+      pChannel->Init(**iter);
 
-   // Copy attached data from orig.  Nullify data in this where orig had null.
-   Attachments &attachments = *this;
-   attachments = orig;
+      // Copy attached data from orig.  Nullify data in this where orig had null.
+      Attachments &attachments = *pChannel;
+      attachments = **iter;
+      ++iter;
+   }
 }
 
 void WaveTrack::Merge(const Track &orig)
@@ -473,10 +481,21 @@ ChannelGroup &WaveTrack::DoGetChannelGroup() const
    return const_cast<ChannelGroup&>(group);
 }
 
-Track::Holder WaveTrack::Clone() const
+TrackListHolder WaveTrack::Clone() const
 {
-   auto result = std::make_shared<WaveTrack>(*this, ProtectedCreationArg{});
-   result->Init(*this);
+   assert(IsLeader());
+   auto result = TrackList::Temporary(nullptr);
+   const auto cloneOne = [&](const WaveTrack *pChannel){
+      const auto pTrack =
+         std::make_shared<WaveTrack>(*pChannel, ProtectedCreationArg{});
+      pTrack->Init(*pChannel);
+      result->Add(pTrack);
+   };
+   if (GetOwner())
+      for (const auto pChannel : TrackList::Channels(this))
+         cloneOne(pChannel);
+   else
+      cloneOne(this);
    return result;
 }
 

@@ -32,11 +32,15 @@ EffectOutputTracks::EffectOutputTracks(
       };
 
    for (auto aTrack : trackRange) {
+      auto list = aTrack->Duplicate();
+      assert(aTrack->NChannels() == list->NChannels());
+      auto iter = TrackList::Channels(*list->Leaders().begin()).begin();
       for (auto pChannel : TrackList::Channels(aTrack)) {
-         Track *o = mOutputTracks->Add(pChannel->Duplicate());
+         Track *o = *iter++;
          mIMap.push_back(pChannel);
          mOMap.push_back(o);
       }
+      mOutputTracks->Append(std::move(*list));
    }
    // Invariant is established
    assert(mIMap.size() == mOMap.size());

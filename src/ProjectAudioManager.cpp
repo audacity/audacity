@@ -823,6 +823,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                assert(false);
                continue;
             }
+            if (!wt->IsLeader())
+               continue;
             auto endTime = wt->GetEndTime();
 
             // If the track was chosen for recording and playback both,
@@ -842,6 +844,9 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // wave tracks; in case the track recorded to changes scale
             // type (for instance), during the recording.
             auto updater = [](Track &d, const Track &s){
+               assert(d.IsLeader());
+               assert(s.IsLeader());
+               //assert(d.NChannels() == s.NChannels());
                auto &dst = static_cast<WaveTrack&>(d);
                auto &src = static_cast<const WaveTrack&>(s);
                dst.Reinit(src);
@@ -849,16 +854,17 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
             // Get a copy of the track to be appended, to be pushed into
             // undo history only later.
-            auto pending = std::static_pointer_cast<WaveTrack>(
-               trackList.RegisterPendingChangedTrack(updater, wt));
-
-            // End of current track is before or at recording start time.
-            // Less than or equal, not just less than, to ensure a clip boundary.
-            // when append recording.
-            if (endTime <= t0) {
-               pending->CreateClip(t0, makeNewClipName(pending.get()));
+            auto tracks = trackList.RegisterPendingChangedTrack(updater, wt);
+            for (auto newTrack : tracks) {
+               // End of current track is before or at recording start time.
+               // Less than or equal, not just less than, to ensure a clip boundary.
+               // when append recording.
+               const auto pending = static_cast<WaveTrack*>(newTrack);
+               if (endTime <= t0)
+                  pending->CreateClip(t0, makeNewClipName(pending));
+               transportSequences.captureSequences
+                  .push_back(pending->SharedPointer<WaveTrack>());
             }
-            transportSequences.captureSequences.push_back(pending);
          }
          trackList.UpdatePendingTracks();
       }

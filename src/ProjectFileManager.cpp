@@ -223,8 +223,8 @@ auto ProjectFileManager::ReadProjectFile(
          // the version saved on disk will be preserved until the
          // user selects Save().
          mLastSavedTracks = TrackList::Create( nullptr );
-         for (auto t : tracks.Any())
-            mLastSavedTracks->Add(t->Duplicate());
+         for (auto t : tracks.Leaders())
+            mLastSavedTracks->Append(std::move(*t->Duplicate()));
       }
    }
 
@@ -387,10 +387,8 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    mLastSavedTracks = TrackList::Create(nullptr);
 
    auto &tracks = TrackList::Get(proj);
-   for (auto t : tracks.Any())
-   {
-      mLastSavedTracks->Add(t->Duplicate());
-   }
+   for (auto t : tracks.Leaders())
+      mLastSavedTracks->Append(std::move(*t->Duplicate()));
 
    // If we get here, saving the project was successful, so we can DELETE
    // any backup project.

@@ -366,11 +366,12 @@ double LabelTrack::GetEndTime() const
    return end;
 }
 
-Track::Holder LabelTrack::Clone() const
+TrackListHolder LabelTrack::Clone() const
 {
+   assert(IsLeader());
    auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return result;
+   return TrackList::Temporary(nullptr, result, nullptr);
 }
 
 // Adjust label's left or right boundary, depending which is requested.

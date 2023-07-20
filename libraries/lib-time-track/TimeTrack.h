@@ -126,7 +126,7 @@ private:
    using Holder = std::unique_ptr<TimeTrack>;
 
 private:
-   Track::Holder Clone() const override;
+   TrackListHolder Clone() const override;
 };
 
 ENUMERATE_TRACK_TYPE(TimeTrack);
