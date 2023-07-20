@@ -177,7 +177,7 @@ bool SpecCache::CalculateOneSpectrum
             if (sequence.GetFloats(
                    0u, 1u, &data,
                    sampleCount(floor(0.5 + from.as_double() + offset * rate)),
-                   myLen, backwards, fillZero,
+                   myLen, backwards, FillFormat::fillZero,
                    // Don't throw in this drawing operation
                    false))
                useBuffer = floats.data();

@@ -606,7 +606,7 @@ void FrequencyPlotDialog::GetAudio()
          mData = Floats{ mDataLen };
          // Don't allow throw for bad reads
          track->GetFloats(mData.get(), start, mDataLen,
-                    fillZero, false);
+            FillFormat::fillZero, false);
       }
       else {
          if (track->GetRate() != mRate) {
@@ -621,7 +621,7 @@ void FrequencyPlotDialog::GetAudio()
          Floats buffer2{ mDataLen };
          // Again, stop exceptions
          track->GetFloats(buffer2.get(), start, mDataLen,
-                    fillZero, false);
+            FillFormat::fillZero, false);
          for (size_t i = 0; i < mDataLen; i++)
             mData[i] += buffer2[i];
       }

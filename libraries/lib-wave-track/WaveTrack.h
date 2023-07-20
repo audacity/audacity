@@ -326,7 +326,7 @@ private:
    bool Get(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
-      fillFormat fill = fillZero, bool mayThrow = true,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.

@@ -45,7 +45,7 @@ double NearestZeroCrossing
       // fillTwo to ensure that missing values are treated as 2, and hence do
       // not get used as zero crossings.
       one->GetFloats(oneDist.get(),
-               s - (int)oneWindowSize/2, oneWindowSize, fillTwo);
+         s - (int)oneWindowSize/2, oneWindowSize, FillFormat::fillTwo);
 
 
       // Looking for actual crossings.

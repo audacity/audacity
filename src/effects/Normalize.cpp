@@ -364,7 +364,8 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
       );
 
       //Get the samples from the track and put them in the buffer
-      track->GetFloats(buffer.get(), s, block, fillZero, true, &blockSamples);
+      track->GetFloats(
+         buffer.get(), s, block, FillFormat::fillZero, true, &blockSamples);
       totalSamples += blockSamples;
 
       //Process the buffer.

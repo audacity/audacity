@@ -2303,10 +2303,10 @@ bool WaveTrack::GetOne(
    if (doClear)
    {
       // Usually we fill in empty space with zero
-      if( fill == fillZero )
+      if (fill == FillFormat::fillZero)
          ClearSamples(buffer, format, 0, len);
       // but we don't have to.
-      else if( fill==fillTwo )
+      else if (fill == FillFormat::fillTwo)
       {
          wxASSERT( format==floatSample );
          float * pBuffer = (float*)buffer;
