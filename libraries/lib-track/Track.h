@@ -1291,8 +1291,6 @@ public:
    double GetStartTime() const;
    double GetEndTime() const;
 
-   double GetMinOffset() const;
-
    //! Construct a temporary list owned by `pProject` (if that is not null)
    //! so that `TrackList::Channels(left.get())` will enumerate the given
    //! tracks

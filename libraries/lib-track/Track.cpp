@@ -932,12 +932,10 @@ size_t TrackList::NChannels() const
 }
 
 namespace {
-   // Abstract the common pattern of the following three member functions
-   inline double Accumulate
-      (const TrackList &list,
-       double (Track::*memfn)() const,
-       double ident,
-       const double &(*combine)(const double&, const double&))
+   // Abstract the common pattern of the following two member functions
+   inline double Accumulate(const TrackList &list,
+      double (Track::*memfn)() const, double ident,
+      const double &(*combine)(const double&, const double&))
    {
       // Default the answer to zero for empty list
       if (list.empty()) {
@@ -947,11 +945,6 @@ namespace {
       // Otherwise accumulate minimum or maximum of track values
       return list.Any().accumulate(ident, combine, memfn);
    }
-}
-
-double TrackList::GetMinOffset() const
-{
-   return Accumulate(*this, &Track::GetOffset, DBL_MAX, std::min);
 }
 
 double TrackList::GetStartTime() const
