@@ -23,7 +23,7 @@ public:
 
    // WideSampleSequence
    bool Get(
-      size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
       fillFormat fill = fillZero, bool mayThrow = true,
       sampleCount* pNumWithinClips = nullptr) const override

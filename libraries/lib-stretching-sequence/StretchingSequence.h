@@ -48,7 +48,7 @@ public:
       double* buffer, size_t bufferLen, double t0,
       bool backwards) const override;
    bool Get(
-      size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
       fillFormat fill = fillZero, bool mayThrow = true,
       sampleCount* pNumWithinClips = nullptr) const override;
@@ -70,9 +70,9 @@ private:
 
    const WideSampleSequence* DoGetDecorated() const override;
    void ResetCursor(double t, PlaybackDirection);
-   bool GetNext(float* buffers[], size_t numChannels, size_t numSamples);
+   bool GetNext(float *const buffers[], size_t numChannels, size_t numSamples);
    bool MutableGet(
-      size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards);
 
    const PlayableSequence& mSequence;
