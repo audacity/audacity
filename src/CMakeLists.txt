@@ -421,8 +421,6 @@ list( APPEND SOURCES
       effects/ScoreAlignDialog.h
       effects/Silence.cpp
       effects/Silence.h
-      effects/SimpleMono.cpp
-      effects/SimpleMono.h
       effects/SoundTouchEffect.cpp
       effects/SoundTouchEffect.h
       effects/StatefulEffect.cpp

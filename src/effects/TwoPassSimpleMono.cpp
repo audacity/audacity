@@ -8,8 +8,7 @@
 
 *******************************************************************//**
 \class EffectTwoPassSimpleMono
-\brief An Effect base class that implements a two pass process by using
-EffectSimpleMono.
+\brief An Effect base class that implements a two pass process.
 
 Inherit from it if your effect needs to pass twice over the data.
 It does the first pass on all selected tracks before going back and
