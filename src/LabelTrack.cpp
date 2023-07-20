@@ -671,6 +671,7 @@ XMLTagHandler *LabelTrack::HandleXMLChild(const std::string_view& tag)
 void LabelTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
+   assert(IsLeader());
    int len = mLabels.size();
 
    xmlFile.StartTag(wxT("labeltrack"));

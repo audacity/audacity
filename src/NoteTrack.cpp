@@ -987,6 +987,7 @@ XMLTagHandler *NoteTrack::HandleXMLChild(const std::string_view&  WXUNUSED(tag))
 void NoteTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
+   assert(IsLeader());
    std::ostringstream data;
    Track::Holder holder;
    const NoteTrack *saveme = this;

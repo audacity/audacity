@@ -314,6 +314,7 @@ XMLTagHandler *TimeTrack::HandleXMLChild(const std::string_view& tag)
 void TimeTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
+   assert(IsLeader());
    xmlFile.StartTag(wxT("timetrack"));
    this->Track::WriteCommonXMLAttributes( xmlFile );
 

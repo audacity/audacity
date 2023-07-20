@@ -541,6 +541,9 @@ public:
    // Override all the TrackAttachment virtuals and pass through to each
    void CopyTo(Track &track) const override;
    void Reparent(const std::shared_ptr<Track> &parent) override;
+   /*!
+    @pre `IsLeader()`
+    */
    void WriteXMLAttributes(XMLWriter &writer) const override;
    bool HandleXMLAttribute(
       const std::string_view& attr, const XMLAttributeValueView& valueView)

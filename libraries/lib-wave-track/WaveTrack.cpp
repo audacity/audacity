@@ -2043,27 +2043,33 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
 void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      WriteOneXML(*pChannel, xmlFile);
+}
+
+void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile)
+// may throw
+{
    xmlFile.StartTag(wxT("wavetrack"));
-   this->Track::WriteCommonXMLAttributes( xmlFile );
-   xmlFile.WriteAttr(wxT("linked"), static_cast<int>(GetLinkType()));
-   this->WritableSampleTrack::WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(wxT("rate"), GetRate());
+   track.Track::WriteCommonXMLAttributes(xmlFile);
+   xmlFile.WriteAttr(wxT("linked"), static_cast<int>(track.GetLinkType()));
+   track.WritableSampleTrack::WriteXMLAttributes(xmlFile);
+   xmlFile.WriteAttr(wxT("rate"), track.GetRate());
 
    // Some values don't vary independently in channels but have been written
    // redundantly for each channel.  Keep doing this in 3.4 and later in case
    // a project is opened in an earlier version.
-   xmlFile.WriteAttr(wxT("gain"), static_cast<double>(GetGain()));
-   xmlFile.WriteAttr(wxT("pan"), static_cast<double>(GetPan()));
-   xmlFile.WriteAttr(wxT("colorindex"), mWaveColorIndex );
+   xmlFile.WriteAttr(wxT("gain"), static_cast<double>(track.GetGain()));
+   xmlFile.WriteAttr(wxT("pan"), static_cast<double>(track.GetPan()));
+   xmlFile.WriteAttr(wxT("colorindex"), track.mWaveColorIndex);
 
-   xmlFile.WriteAttr(wxT("sampleformat"), static_cast<long>(mFormat) );
+   xmlFile.WriteAttr(wxT("sampleformat"), static_cast<long>(track.mFormat));
 
-   WaveTrackIORegistry::Get().CallWriters(*this, xmlFile);
+   WaveTrackIORegistry::Get().CallWriters(track, xmlFile);
 
-   for (const auto &clip : mClips)
-   {
+   for (const auto &clip : track.mClips)
       clip->WriteXML(xmlFile);
-   }
 
    xmlFile.EndTag(wxT("wavetrack"));
 }

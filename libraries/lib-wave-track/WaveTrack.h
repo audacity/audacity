@@ -649,6 +649,7 @@ protected:
    static void JoinOne(WaveTrack &track, double t0, double t1);
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
+   static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile);
 
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
