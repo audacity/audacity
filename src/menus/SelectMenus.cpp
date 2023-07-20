@@ -27,8 +27,7 @@
 // private helper classes and functions
 namespace {
 
-double NearestZeroCrossing
-(AudacityProject &project, double t0)
+double NearestZeroCrossing(AudacityProject &project, double t0)
 {
    auto rate = ProjectRate::Get(project).GetRate();
    auto &tracks = TrackList::Get( project );
@@ -38,43 +37,50 @@ double NearestZeroCrossing
    Floats dist{ windowSize, true };
 
    int nTracks = 0;
-   for (auto one : tracks.Selected< const WaveTrack >()) {
+   for (auto one : tracks.SelectedLeaders<const WaveTrack>()) {
+      const auto nChannels = one->NChannels();
       auto oneWindowSize = size_t(std::max(1.0, one->GetRate() / 100));
-      Floats oneDist{ oneWindowSize };
+      Floats buffer1{ oneWindowSize };
+      Floats buffer2{ oneWindowSize };
+      float *const buffers[]{ buffer1.get(), buffer2.get() };
       auto s = one->TimeToLongSamples(t0);
+
       // fillTwo to ensure that missing values are treated as 2, and hence do
       // not get used as zero crossings.
-      one->GetFloats(oneDist.get(),
-         s - (int)oneWindowSize/2, oneWindowSize, FillFormat::fillTwo);
+      one->GetFloats(0, nChannels, buffers,
+         s - (int)oneWindowSize/2, oneWindowSize, false, FillFormat::fillTwo);
 
 
-      // Looking for actual crossings.
-      double prev = 2.0;
-      for(size_t i=0; i<oneWindowSize; i++){
-         float fDist = fabs( oneDist[i]); // score is absolute value
-         if( prev * oneDist[i] > 0 ) // both same sign?  No good.
-            fDist = fDist + 0.4; // No good if same sign.
-         else if( prev > 0.0 )
-            fDist = fDist + 0.1; // medium penalty for downward crossing.
-         prev = oneDist[i];
-         oneDist[i] = fDist;
-      }
+      // Looking for actual crossings.  Update dist
+      for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+         const auto oneDist = buffers[iChannel];
+         double prev = 2.0;
+         for (size_t i = 0; i < oneWindowSize; ++i) {
+            float fDist = fabs(oneDist[i]); // score is absolute value
+            if (prev * oneDist[i] > 0) // both same sign?  No good.
+               fDist = fDist + 0.4; // No good if same sign.
+            else if (prev > 0.0)
+               fDist = fDist + 0.1; // medium penalty for downward crossing.
+            prev = oneDist[i];
+            oneDist[i] = fDist;
+         }
 
-      // TODO: The mixed rate zero crossing code is broken,
-      // if oneWindowSize > windowSize we'll miss out some
-      // samples - so they will still be zero, so we'll use them.
-      for(size_t i = 0; i < windowSize; i++) {
-         size_t j;
-         if (windowSize != oneWindowSize)
-            j = i * (oneWindowSize-1) / (windowSize-1);
-         else
-            j = i;
+         // TODO: The mixed rate zero crossing code is broken,
+         // if oneWindowSize > windowSize we'll miss out some
+         // samples - so they will still be zero, so we'll use them.
+         for (size_t i = 0; i < windowSize; i++) {
+            size_t j;
+            if (windowSize != oneWindowSize)
+               j = i * (oneWindowSize - 1) / (windowSize - 1);
+            else
+               j = i;
 
-         dist[i] += oneDist[j];
-         // Apply a small penalty for distance from the original endpoint
-         // We'll always prefer an upward
-         dist[i] +=
-            0.1 * (abs(int(i) - int(windowSize/2))) / float(windowSize/2);
+            dist[i] += oneDist[j];
+            // Apply a small penalty for distance from the original endpoint
+            // We'll always prefer an upward
+            dist[i] +=
+               0.1 * (abs(int(i) - int(windowSize / 2))) / float(windowSize / 2);
+         }
       }
       nTracks++;
    }
@@ -82,7 +88,7 @@ double NearestZeroCrossing
    // Find minimum
    int argmin = 0;
    float min = 3.0;
-   for(size_t i=0; i<windowSize; i++) {
+   for (size_t i = 0; i < windowSize; ++i) {
       if (dist[i] < min) {
          argmin = i;
          min = dist[i];
@@ -90,13 +96,13 @@ double NearestZeroCrossing
    }
 
    // If we're worse than 0.2 on average, on one track, then no good.
-   if(( nTracks == 1 ) && ( min > (0.2*nTracks) ))
+   if ((nTracks == 1) && (min > (0.2 * nTracks)))
       return t0;
    // If we're worse than 0.6 on average, on multi-track, then no good.
-   if(( nTracks > 1 ) && ( min > (0.6*nTracks) ))
+   if ((nTracks > 1) && (min > (0.6 * nTracks)))
       return t0;
 
-   return t0 + (argmin - (int)windowSize/2) / rate;
+   return t0 + (argmin - (int)windowSize / 2) / rate;
 }
 
 // If this returns true, then there was a key up, and nothing more to do,
