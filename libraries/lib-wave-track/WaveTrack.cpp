@@ -254,6 +254,7 @@ WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
    mLegacyProjectFileOffset = 0;
    for (const auto &clip : orig.mClips)
       InsertClip(std::make_shared<WaveClip>(*clip, mpFactory, true));
+   mOffset = orig.mOffset;
 }
 
 size_t WaveTrack::GetWidth() const

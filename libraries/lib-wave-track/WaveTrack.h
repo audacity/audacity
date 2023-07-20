@@ -723,6 +723,7 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
+   double mOffset{ 0.0 };
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);

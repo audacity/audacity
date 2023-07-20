@@ -306,7 +306,7 @@ public:
    void ShiftBy(double t) { MoveTo(GetStartTime() + t); }
 
    //! Change start time to given time point
-   virtual void MoveTo(double o) { mOffset = o; }
+   virtual void MoveTo(double o) = 0;
 
    /*!
       @name Acesss to channels
@@ -560,8 +560,6 @@ protected:
 
    // TODO wide wave tracks -- Make ChannelGroup itself the Site
    std::unique_ptr<ChannelGroupData> mpGroupData;
-
-   double mOffset;
 };
 
 inline size_t Channel::NIntervals() const

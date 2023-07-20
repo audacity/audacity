@@ -80,6 +80,8 @@ private:
 public:
    double GetStartTime() const override;
    double GetEndTime() const override;
+   void MoveTo(double o) override { mOffset = o; }
+
    Alg_seq &GetSeq() const;
 
    void WarpAndTransposeNotes(double t0, double t1,
@@ -256,6 +258,7 @@ private:
    std::atomic<unsigned> mVisibleChannels{ ALL_CHANNELS };
 
    std::weak_ptr<StretchHandle> mStretchHandle;
+   double mOffset{ 0.0 };
 };
 
 /// Data used to display a note track

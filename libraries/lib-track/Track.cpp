@@ -39,15 +39,12 @@ and TimeTrack.
 Track::Track()
 {
    mIndex = 0;
-
-   mOffset = 0.0;
 }
 
 Track::Track(const Track& orig, ProtectedCreationArg&&)
     : mProjectTempo { orig.mProjectTempo }
 {
    mIndex = 0;
-   mOffset = orig.mOffset;
 }
 
 // Copy all the track properties except the actual contents
