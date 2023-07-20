@@ -334,7 +334,10 @@ public:
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
 
-   // method to set project tempo on track
+   //! method to set project tempo on track
+   /*!
+    @pre `IsLeader()`
+    */
    void OnProjectTempoChange(double newTempo);
 
    //! Create tracks and modify this track
@@ -486,10 +489,13 @@ public:
 protected:
    const std::optional<double>& GetProjectTempo() const;
 
-private:
+   /*!
+    @pre `IsLeader()`
+    */
    virtual void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) = 0;
 
+private:
    std::optional<double> mProjectTempo;
 };
 

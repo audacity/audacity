@@ -224,6 +224,7 @@ double NoteTrack::GetEndTime() const
 void NoteTrack::DoOnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
+   assert(IsLeader());
    if (!oldTempo.has_value())
       return;
    const auto ratio = *oldTempo / newTempo;

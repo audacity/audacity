@@ -1337,6 +1337,7 @@ bool ChannelAttachmentsBase::HandleXMLAttribute(
 
 void Track::OnProjectTempoChange(double newTempo)
 {
+   assert(IsLeader());
    DoOnProjectTempoChange(mProjectTempo, newTempo);
    mProjectTempo = newTempo;
 }

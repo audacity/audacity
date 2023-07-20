@@ -172,6 +172,7 @@ void LabelTrack::SetOffset(double dOffset)
 void LabelTrack::DoOnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
+   assert(IsLeader());
    if (!oldTempo.has_value())
       return;
    const auto ratio = *oldTempo / newTempo;
