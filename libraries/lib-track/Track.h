@@ -1280,9 +1280,6 @@ public:
    bool MoveDown(Track * t);
    bool Move(Track * t, bool up) { return up ? MoveUp(t) : MoveDown(t); }
 
-   //! Mainly a test function. Uses a linear search, so could be slow.
-   bool Contains(const Track * t) const;
-
    // Return non-null only if the weak pointer is not, and the track is
    // owned by this list; constant time.
    template <typename Subclass>

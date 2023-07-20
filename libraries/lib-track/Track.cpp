@@ -916,11 +916,6 @@ bool TrackList::MoveDown(Track * t)
    return false;
 }
 
-bool TrackList::Contains(const Track * t) const
-{
-   return make_iterator_range( *this ).contains( t );
-}
-
 bool TrackList::empty() const
 {
    return begin() == end();
