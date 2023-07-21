@@ -254,7 +254,7 @@ WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
    mLegacyProjectFileOffset = 0;
    for (const auto &clip : orig.mClips)
       InsertClip(std::make_shared<WaveClip>(*clip, mpFactory, true));
-   mOffset = orig.mOffset;
+   mOrigin = orig.mOrigin;
 }
 
 size_t WaveTrack::GetWidth() const
@@ -325,15 +325,15 @@ WaveTrack::~WaveTrack()
 }
 
 /*! @excsafety{No-fail} */
-void WaveTrack::MoveTo(double o)
+void WaveTrack::MoveTo(double origin)
 {
-   double delta = o - GetStartTime();
+   double delta = origin - GetStartTime();
 
    for (const auto &clip : mClips)
       // assume No-fail-guarantee
       clip->ShiftBy(delta);
 
-   mOffset = o;
+   mOrigin = origin;
 }
 
 void WaveTrack::DoOnProjectTempoChange(
@@ -2629,7 +2629,7 @@ WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 WaveClip* WaveTrack::NewestOrNewClip()
 {
    if (mClips.empty()) {
-      return CreateClip(mOffset, MakeNewClipName());
+      return CreateClip(mOrigin, MakeNewClipName());
    }
    else
       return mClips.back().get();
@@ -2639,7 +2639,7 @@ WaveClip* WaveTrack::NewestOrNewClip()
 WaveClip* WaveTrack::RightmostOrNewClip()
 {
    if (mClips.empty()) {
-      return CreateClip(mOffset, MakeNewClipName());
+      return CreateClip(mOrigin, MakeNewClipName());
    }
    else
    {

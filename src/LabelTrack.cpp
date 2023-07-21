@@ -163,10 +163,14 @@ LabelTrack::~LabelTrack()
 {
 }
 
-void LabelTrack::MoveTo(double dOffset)
+void LabelTrack::MoveTo(double origin)
 {
-   for (auto &labelStruct: mLabels)
-      labelStruct.selectedRegion.move(dOffset);
+   if (!mLabels.empty()) {
+      const auto offset = origin - mLabels[0].selectedRegion.t0();
+      for (auto &labelStruct: mLabels) {
+         labelStruct.selectedRegion.move(offset);
+      }
+   }
 }
 
 void LabelTrack::DoOnProjectTempoChange(

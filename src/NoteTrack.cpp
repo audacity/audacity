@@ -198,7 +198,7 @@ TrackListHolder NoteTrack::Clone() const
    duplicate->SetBottomNote(mBottomNote);
    duplicate->SetTopNote(mTopNote);
    duplicate->SetVisibleChannels(GetVisibleChannels());
-   duplicate->MoveTo(mOffset);
+   duplicate->MoveTo(mOrigin);
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
 #endif
@@ -208,7 +208,7 @@ TrackListHolder NoteTrack::Clone() const
 
 double NoteTrack::GetStartTime() const
 {
-   return mOffset;
+   return mOrigin;
 }
 
 double NoteTrack::GetEndTime() const
@@ -236,7 +236,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
                                       const TimeWarper &warper,
                                       double semitones)
 {
-   double offset = this->mOffset; // track is shifted this amount
+   double offset = this->mOrigin; // track is shifted this amount
    auto &seq = GetSeq();
    seq.convert_to_seconds(); // make sure time units are right
    t1 -= offset; // adjust time range to compensate for track offset
@@ -476,7 +476,7 @@ TrackListHolder NoteTrack::Cut(double t0, double t1)
 
    auto &seq = GetSeq();
    seq.convert_to_seconds();
-   newTrack->mSeq.reset(seq.cut(t0 - mOffset, len, false));
+   newTrack->mSeq.reset(seq.cut(t0 - mOrigin, len, false));
    newTrack->MoveTo(0);
 
    // Not needed
@@ -503,7 +503,7 @@ TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
 
    auto &seq = GetSeq();
    seq.convert_to_seconds();
-   newTrack->mSeq.reset(seq.copy(t0 - mOffset, len, false));
+   newTrack->mSeq.reset(seq.copy(t0 - mOrigin, len, false));
    newTrack->MoveTo(0);
 
    // What should be done with the rest of newTrack's members?
@@ -524,9 +524,9 @@ bool NoteTrack::Trim(double t0, double t1)
    //);
    seq.convert_to_seconds();
    // DELETE way beyond duration just in case something is out there:
-   seq.clear(t1 - mOffset, seq.get_dur() + 10000.0, false);
+   seq.clear(t1 - mOrigin, seq.get_dur() + 10000.0, false);
    // Now that stuff beyond selection is cleared, clear before selection:
-   seq.clear(0.0, t0 - mOffset, false);
+   seq.clear(0.0, t0 - mOrigin, false);
    // want starting time to be t0
    MoveTo(t0);
 
@@ -547,7 +547,7 @@ void NoteTrack::Clear(double t0, double t1)
 
    auto &seq = GetSeq();
 
-   auto offset = mOffset;
+   auto offset = mOrigin;
    auto start = t0 - offset;
    if (start < 0.0) {
       // AlgSeq::clear will shift the cleared interval, not changing len, if
@@ -584,7 +584,7 @@ void NoteTrack::Paste(double t, const Track &src)
    //Check that src is a non-NULL NoteTrack
    bool bOk = src.TypeSwitch<bool>( [&](const NoteTrack &other) {
 
-      auto myOffset = this->mOffset;
+      auto myOffset = this->mOrigin;
       if (t < myOffset) {
          // workaround strange behavior described at
          // http://bugzilla.audacityteam.org/show_bug.cgi?id=1735#c3
@@ -594,10 +594,10 @@ void NoteTrack::Paste(double t, const Track &src)
 
       double delta = 0.0;
       auto &seq = GetSeq();
-      auto offset = other.mOffset;
+      auto offset = other.mOrigin;
       if (offset > 0) {
          seq.convert_to_seconds();
-         seq.insert_silence(t - mOffset, offset);
+         seq.insert_silence(t - mOrigin, offset);
          t += offset;
          // Is this needed or does Alg_seq::insert_silence take care of it?
          //delta += offset;
@@ -609,7 +609,7 @@ void NoteTrack::Paste(double t, const Track &src)
       // This, not:
       //delta += other.GetSeq().get_real_dur();
 
-      seq.paste(t - mOffset, &other.GetSeq());
+      seq.paste(t - mOrigin, &other.GetSeq());
 
       AddToDuration(delta);
 
@@ -634,7 +634,7 @@ void NoteTrack::Silence(double t0, double t1)
    // XXX: do we want to set the all param?
    // If it's set, then it seems like notes are silenced if they start or end in the range,
    // otherwise only if they start in the range. --Poke
-   seq.silence(t0 - mOffset, len, false);
+   seq.silence(t0 - mOrigin, len, false);
 }
 
 void NoteTrack::InsertSilence(double t, double len)
@@ -644,7 +644,7 @@ void NoteTrack::InsertSilence(double t, double len)
 
    auto &seq = GetSeq();
    seq.convert_to_seconds();
-   seq.insert_silence(t - mOffset, len);
+   seq.insert_silence(t - mOrigin, len);
 
    // is this needed?
    // AddToDuration( len );
@@ -697,12 +697,12 @@ bool NoteTrack::Shift(double t) // t is always seconds
 QuantizedTimeAndBeat NoteTrack::NearestBeatTime( double time ) const
 {
    // Alg_seq knows nothing about offset, so remove offset time
-   double seq_time = time - mOffset;
+   double seq_time = time - mOrigin;
    double beat;
    auto &seq = GetSeq();
    seq_time = seq.nearest_beat_time(seq_time, &beat);
    // add the offset back in to get "actual" audacity track time
-   return { seq_time + mOffset, beat };
+   return { seq_time + mOrigin, beat };
 }
 
 static const Track::TypeInfo &typeInfo()
@@ -784,7 +784,7 @@ namespace
 Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const
 {
    cleanup.reset();
-   double offset = mOffset;
+   double offset = mOrigin;
    if (offset == 0)
       return &GetSeq();
    // make a copy, deleting events that are shifted before time 0
@@ -914,7 +914,7 @@ bool NoteTrack::ExportMIDI(const wxString &f) const
 
 bool NoteTrack::ExportAllegro(const wxString &f) const
 {
-   double offset = mOffset;
+   double offset = mOrigin;
    auto in_seconds = ImportExportPrefs::AllegroStyleSetting.ReadEnum();
    auto &seq = GetSeq();
    if (in_seconds) {
@@ -996,7 +996,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.StartTag(wxT("notetrack"));
    saveme->Track::WriteCommonXMLAttributes( xmlFile );
    this->NoteTrackBase::WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(wxT("offset"), saveme->mOffset);
+   xmlFile.WriteAttr(wxT("offset"), saveme->mOrigin);
    xmlFile.WriteAttr(wxT("visiblechannels"),
       static_cast<int>(saveme->GetVisibleChannels()));
 
