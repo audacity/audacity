@@ -49,8 +49,8 @@ class MIXER_API Mixer {
    //
 
    /*!
-    @pre all `inputTracks` are non-null
-    @pre any left channels in inputTracks are immediately followed by their
+    @pre all sequences in `inputs` are non-null
+    @pre any left channels in inputs are immediately followed by their
        partners
     @post `BufferSize() <= outBufferSize` (equality when no inputs have stages)
     */
