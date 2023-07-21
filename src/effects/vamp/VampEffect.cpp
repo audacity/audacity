@@ -354,7 +354,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
 
       sampleCount start = 0;
       sampleCount len = 0;
-      GetBounds(*left, right, &start, &len);
+      GetBounds(*leader, &start, &len);
 
       // TODO: more-than-two-channels
 

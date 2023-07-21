@@ -138,7 +138,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          }
 
          if (!isGenerator) {
-            GetBounds(left, pRight, &start, &len);
+            GetBounds(*leader, &start, &len);
             mSampleCnt = len;
             if (len > 0 && numAudioIn < 1) {
                bGoodResult = false;
