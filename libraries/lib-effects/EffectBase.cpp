@@ -40,6 +40,11 @@ EffectBase::EffectBase()
 
 EffectBase::~EffectBase() = default;
 
+void EffectBase::SetTracks(TrackList *pTracks)
+{
+   mTracks = pTracks ? pTracks->shared_from_this() : nullptr;
+}
+
 double EffectBase::GetDefaultDuration()
 {
    return 30.0;

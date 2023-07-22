@@ -104,7 +104,7 @@ void EffectPreview(EffectBase &effect,
       updateUI();
 
    // Save the original track list
-   TrackList *saveTracks = mTracks;
+   auto saveTracks = mTracks;
 
    auto cleanup2 = finally( [&] {
       mTracks = saveTracks;
@@ -115,8 +115,7 @@ void EffectPreview(EffectBase &effect,
    // Build NEW tracklist from rendering tracks
    // Set the same owning project, so FindProject() can see it within Process()
    const auto pProject = saveTracks->GetOwner();
-   auto uTracks = TrackList::Create( pProject );
-   mTracks = uTracks.get();
+   mTracks = TrackList::Create( pProject );
 
    // Linear Effect preview optimised by pre-mixing to one track.
    // Generators need to generate per track.

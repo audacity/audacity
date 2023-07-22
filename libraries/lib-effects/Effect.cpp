@@ -334,8 +334,8 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings,
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect(settings, finder, mProjectRate, mTracks, mFactory,
-      region, mUIFlags, nullptr);
+   return delegate.DoEffect(settings, finder, mProjectRate, mTracks.get(),
+      mFactory, region, mUIFlags, nullptr);
 }
 
 bool Effect::TotalProgress(double frac, const TranslatableString &msg) const
