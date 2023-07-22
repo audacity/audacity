@@ -140,6 +140,7 @@ bool EffectAutoDuck::Init()
          bool ok = t->TypeSwitch<bool>(
             [&](const WaveTrack &) {
                lastWasSelectedWaveTrack = true;
+               controlTrackCandidate = nullptr;
                return true;
             },
             [&](const Track &) {
