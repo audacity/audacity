@@ -162,6 +162,9 @@ private:
    float GetChannelGain(int channel) const override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
+   /*!
+    @pre `IsLeader()`
+    */
    void SetWaveColorIndex(int colorIndex);
 
    sampleCount GetPlaySamplesCount() const;
@@ -669,6 +672,8 @@ protected:
 
    sampleFormat  mFormat;
    mutable int   mLegacyRate{ 0 }; //!< used only during deserialization
+
+   // TODO move to a ClientData attachment on the channel group
    int           mWaveColorIndex;
 
 private:

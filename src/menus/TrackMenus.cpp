@@ -99,8 +99,6 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       if (selectedCount >= 1) {
          pNewLeft->SetSelected(!toNewTrack);
          pNewLeft->SetWaveColorIndex(firstColour);
-         if (pNewRight)
-            pNewRight->SetWaveColorIndex(firstColour);
       }
 
       // Permute the tracks as needed

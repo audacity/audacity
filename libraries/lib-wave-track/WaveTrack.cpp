@@ -607,9 +607,12 @@ float WaveTrack::GetChannelGain(int channel) const
 /*! @excsafety{Strong} */
 void WaveTrack::SetWaveColorIndex(int colorIndex)
 {
-   for (const auto &clip : mClips)
-      clip->SetColourIndex( colorIndex );
-   mWaveColorIndex = colorIndex;
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (const auto &clip : pChannel->mClips)
+         clip->SetColourIndex(colorIndex);
+      pChannel->mWaveColorIndex = colorIndex;
+   }
 }
 
 sampleCount WaveTrack::GetPlaySamplesCount() const
