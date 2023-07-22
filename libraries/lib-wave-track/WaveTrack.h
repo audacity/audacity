@@ -174,6 +174,9 @@ private:
 
    sampleFormat GetSampleFormat() const override { return mFormat; }
 
+   /*!
+    @pre `IsLeader()`
+    */
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 

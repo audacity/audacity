@@ -639,9 +639,12 @@ sampleCount WaveTrack::GetSequenceSamplesCount() const
 void WaveTrack::ConvertToSampleFormat(sampleFormat format,
    const std::function<void(size_t)> & progressReport)
 {
-   for (const auto& clip : mClips)
-      clip->ConvertToSampleFormat(format, progressReport);
-   mFormat = format;
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (const auto& clip : pChannel->mClips)
+         clip->ConvertToSampleFormat(format, progressReport);
+      pChannel->mFormat = format;
+   }
 }
 
 

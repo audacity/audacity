@@ -34,7 +34,10 @@ bool EffectTwoPassSimpleMono::Process(EffectInstance &, EffectSettings &settings
    mWorkTracks = TrackList::Create(
       const_cast<AudacityProject*>( FindProject() ) );
    for (auto track : outputs.Get().Selected<WaveTrack>()) {
-      mWorkTracks->Add(track->EmptyCopy())->ConvertToSampleFormat(floatSample);
+      auto pNewTrack = track->EmptyCopy();
+      mWorkTracks->Add(pNewTrack);
+      if (pNewTrack->IsLeader())
+         pNewTrack->ConvertToSampleFormat(floatSample);
       if (mT0 > 0)
          (*mWorkTracks->rbegin())->InsertSilence(0, mT0);
    }

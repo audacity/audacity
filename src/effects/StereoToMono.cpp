@@ -175,6 +175,7 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
       floatSample);
 
    auto outTrack = left->EmptyCopy();
+   assert(outTrack->IsLeader());
    outTrack->ConvertToSampleFormat(floatSample);
 
    while (auto blockLen = mixer.Process()) {

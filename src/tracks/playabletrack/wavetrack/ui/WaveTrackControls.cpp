@@ -285,9 +285,10 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
          throw UserException{};
    };
 
-   for (auto channel : TrackList::Channels(pTrack))
-      channel->ConvertToSampleFormat(
-         newFormat, progressUpdate);
+   // We get here from the context menu only in the TrackControlPanel cell
+   // which is always associated with a leader track
+   assert(pTrack->IsLeader());
+   pTrack->ConvertToSampleFormat(newFormat, progressUpdate);
          
    ProjectHistory::Get( *project )
    /* i18n-hint: The strings name a track and a format */

@@ -419,7 +419,17 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
          const auto data = CollectClipData(*track, start, len);
+
          auto temp = TrackList::Create(nullptr);
+         for (const auto pChannel : TrackList::Channels(track)) {
+            auto pNewChannel = pChannel->EmptyCopy();
+            temp->Add(pNewChannel);
+            assert(pNewChannel->IsLeader() == pChannel->IsLeader());
+         }
+         auto pTempTrack = *temp->Leaders<WaveTrack>().rbegin();
+         pTempTrack->ConvertToSampleFormat(floatSample);
+         auto iter0 = TrackList::Channels(pTempTrack).begin();
+   
          for (const auto pChannel : TrackList::Channels(track)) {
             constexpr auto windowSize = EqualizationFilter::windowSize;
             const auto &M = mParameters.mM;
@@ -430,24 +440,20 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
             auto idealBlockLen = pChannel->GetMaxBlockSize() * 4;
             if (idealBlockLen % L != 0)
                idealBlockLen += (L - (idealBlockLen % L));
-            auto pNewChannel = pChannel->EmptyCopy();
-            pNewChannel->ConvertToSampleFormat(floatSample);
+            auto pNewChannel = *iter0++;
             Task task{ M, idealBlockLen, *pNewChannel };
-            if (ProcessOne(task, count, *pChannel, start, len)) {
-               temp->Add(pNewChannel);
-               assert(pNewChannel->IsLeader() == pChannel->IsLeader());
-            }
-            else
-               bGoodResult = false;
+
+            bGoodResult = ProcessOne(task, count, *pChannel, start, len);
+            if (!bGoodResult)
+               goto done;
          }
-         if (!bGoodResult)
-            break;
          PasteOverPreservingClips(data, *track, start, len,
             **temp->Leaders<WaveTrack>().begin());
       }
 
       count++;
    }
+   done:
 
    if (bGoodResult)
       outputs.Commit();
