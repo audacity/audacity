@@ -195,7 +195,7 @@ void DoAlign
    auto trackRange = tracks.SelectedLeaders< AudioTrack >();
 
    auto FindOffset = []( const Track *pTrack ) {
-      return TrackList::Channels(pTrack).min( &Track::GetOffset ); };
+      return TrackList::Channels(pTrack).min( &Track::GetStartTime ); };
 
    auto firstTrackOffset = [&]{ return FindOffset( *trackRange.begin() ); };
    auto minOffset = [&]{ return trackRange.min( FindOffset ); };
@@ -309,7 +309,7 @@ void DoAlign
       // For a fixed-distance shift move sync-lock selected tracks also.
       for (auto t : tracks.Any()
            + &SyncLock::IsSelectedOrSyncLockSelected )
-         t->MoveTo(t->GetOffset() + delta);
+         t->MoveTo(t->GetStartTime() + delta);
    }
 
    if (moveSel)

@@ -752,7 +752,7 @@ void OnCursorTrackStart(const CommandContext &context)
       return;
 
    // Range is surely nonempty now
-   auto minOffset = std::max( 0.0, trackRange.min( &Track::GetOffset ) );
+   auto minOffset = std::max(0.0, trackRange.min(&Track::GetStartTime));
 
    if( minOffset >=
        (kWayOverToRight * (1 - std::numeric_limits<double>::epsilon()) ))

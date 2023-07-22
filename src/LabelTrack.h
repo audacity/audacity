@@ -114,7 +114,6 @@ class AUDACITY_DLL_API LabelTrack final
 
    void SetSelected(bool s) override;
 
-   double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
 

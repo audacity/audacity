@@ -323,15 +323,10 @@ WaveTrack::~WaveTrack()
 {
 }
 
-double WaveTrack::GetOffset() const
-{
-   return GetStartTime();
-}
-
 /*! @excsafety{No-fail} */
 void WaveTrack::MoveTo(double o)
 {
-   double delta = o - GetOffset();
+   double delta = o - mOffset;
 
    for (const auto &clip : mClips)
       // assume No-fail-guarantee

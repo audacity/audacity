@@ -43,8 +43,8 @@ void SelectionState::SelectTrackLength
    // Otherwise, check for a stereo pair
    : TrackList::Channels(&track);
 
-   auto minOffset = trackRange.min( &Track::GetOffset );
-   auto maxEnd = trackRange.max( &Track::GetEndTime );
+   auto minOffset = trackRange.min(&Track::GetStartTime);
+   auto maxEnd = trackRange.max(&Track::GetEndTime);
 
    // PRL: double click or click on track control.
    // should this select all frequencies too?  I think not.

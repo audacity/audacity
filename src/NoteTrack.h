@@ -78,7 +78,6 @@ private:
    TrackListHolder Clone() const override;
 
 public:
-   double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
    Alg_seq &GetSeq() const;

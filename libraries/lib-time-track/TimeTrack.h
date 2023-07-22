@@ -62,7 +62,6 @@ class TIME_TRACK_API TimeTrack final
 
    // TimeTrack parameters
 
-   double GetOffset() const override { return 0.0; }
    void MoveTo(double /* t */) override {}
 
    double GetStartTime() const override { return 0.0; }

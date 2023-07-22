@@ -464,10 +464,10 @@ void TranscriptionToolBar::GetSamples(
    double start = selectedRegion.t0();
    double end = selectedRegion.t1();
 
-   auto ss0 = sampleCount( (start - t->GetOffset()) * t->GetRate() );
-   auto ss1 = sampleCount( (end - t->GetOffset()) * t->GetRate() );
+   auto ss0 = sampleCount( (start - t->GetStartTime()) * t->GetRate() );
+   auto ss1 = sampleCount( (end - t->GetStartTime()) * t->GetRate() );
 
-   if (start < t->GetOffset()) {
+   if (start < t->GetStartTime()) {
       ss0 = 0;
    }
 

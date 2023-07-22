@@ -691,7 +691,7 @@ void OnDuplicate(const CommandContext &context)
       auto range = dest->Any();
       for (const auto pChannel : TrackList::Channels(n))
          (*range.first++)
-            ->MoveTo(std::max(selectedRegion.t0(), pChannel->GetOffset()));
+            ->MoveTo(std::max(selectedRegion.t0(), pChannel->GetStartTime()));
       tracks.Append(std::move(*dest));
 
       // This break is really needed, else we loop infinitely

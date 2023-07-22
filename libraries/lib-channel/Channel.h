@@ -299,12 +299,11 @@ class CHANNEL_API ChannelGroup
 public:
    virtual ~ChannelGroup();
 
-   virtual double GetOffset() const = 0;
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;
 
    //! Change start time by given duration
-   void ShiftBy(double t) { MoveTo(GetOffset() + t); }
+   void ShiftBy(double t) { MoveTo(GetStartTime() + t); }
 
    //! Change start time to given time point
    virtual void MoveTo(double o) { mOffset = o; }

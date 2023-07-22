@@ -121,7 +121,6 @@ private:
 
    virtual ~WaveTrack();
 
-   double GetOffset() const override;
    void MoveTo(double o) override;
 
    bool LinkConsistencyFix(bool doFix, bool completeList) override;

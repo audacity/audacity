@@ -338,11 +338,6 @@ void LabelTrack::SetSelected( bool s )
          this->SharedPointer<LabelTrack>(), {}, -1, -1 });
 }
 
-double LabelTrack::GetOffset() const
-{
-   return mOffset;
-}
-
 double LabelTrack::GetStartTime() const
 {
    if (mLabels.empty())
