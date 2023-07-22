@@ -365,10 +365,10 @@ bool EffectEqualization::Init()
 }
 
 struct EffectEqualization::Task {
-   Task(size_t M, size_t idealBlockLen, const WaveTrack &t)
+   Task(size_t M, size_t idealBlockLen, WaveTrack &track)
       : buffer{ idealBlockLen }
       , idealBlockLen{ idealBlockLen }
-      , output{ t.EmptyCopy() }
+      , output{ track }
       , leftTailRemaining{ (M - 1) / 2 }
    {
       memset(lastWindow, 0, windowSize * sizeof(float));
@@ -380,7 +380,7 @@ struct EffectEqualization::Task {
       leftTailRemaining -= leftTail;
       len -= leftTail;
       buffer += leftTail * sizeof(float);
-      output->Append(buffer, floatSample, len);
+      output.Append(buffer, floatSample, len);
    }
 
    static constexpr auto windowSize = EqualizationFilter::windowSize;
@@ -394,9 +394,9 @@ struct EffectEqualization::Task {
    float *thisWindow{ window1.get() };
    float *lastWindow{ window2.get() };
 
-   // create a NEW WaveTrack to hold all of the output,
+   // a new WaveTrack to hold all of the output,
    // including 'tails' each end
-   std::shared_ptr<WaveTrack> output;
+   WaveTrack &output;
 
    size_t leftTailRemaining;
 };
@@ -430,12 +430,12 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
             auto idealBlockLen = pChannel->GetMaxBlockSize() * 4;
             if (idealBlockLen % L != 0)
                idealBlockLen += (L - (idealBlockLen % L));
-            Task task{ M, idealBlockLen, *pChannel };
-
-            if (auto pOutput = ProcessOne(task,
-               count, *pChannel, start, len)) {
-               temp->Add(pOutput);
-               assert(pOutput->IsLeader() == pChannel->IsLeader());
+            auto pNewChannel = pChannel->EmptyCopy();
+            pNewChannel->ConvertToSampleFormat(floatSample);
+            Task task{ M, idealBlockLen, *pNewChannel };
+            if (ProcessOne(task, count, *pChannel, start, len)) {
+               temp->Add(pNewChannel);
+               assert(pNewChannel->IsLeader() == pChannel->IsLeader());
             }
             else
                bGoodResult = false;
@@ -473,7 +473,7 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 
 // EffectEqualization implementation
 
-std::shared_ptr<WaveTrack> EffectEqualization::ProcessOne(Task &task,
+bool EffectEqualization::ProcessOne(Task &task,
    int count, const WaveTrack &t, sampleCount start, sampleCount len)
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
@@ -493,7 +493,6 @@ std::shared_ptr<WaveTrack> EffectEqualization::ProcessOne(Task &task,
    auto originalLen = len;
 
    auto &output = task.output;
-   output->ConvertToSampleFormat(floatSample);
 
    TrackProgress(count, 0.);
    bool bLoopSuccess = true;
@@ -554,9 +553,7 @@ std::shared_ptr<WaveTrack> EffectEqualization::ProcessOne(Task &task,
             buffer[j] = lastWindow[wcopy + j];
       }
       task.AccumulateSamples((samplePtr)buffer.get(), M - 1);
-      output->Flush();
+      output.Flush();
    }
-   if (bLoopSuccess)
-      return output;
-   return {};
+   return bLoopSuccess;
 }
