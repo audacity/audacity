@@ -123,20 +123,19 @@ EffectType EffectAutoDuck::GetType() const
 
 bool EffectAutoDuck::Init()
 {
-   mControlTrack = NULL;
+   mControlTrack = nullptr;
 
+   // Find the control track, which is the non-selected wave track immediately
+   // after the last selected wave track.  Fail if there is no such track or if
+   // any selected track is not a wave track.
    bool lastWasSelectedWaveTrack = false;
-   const WaveTrack *controlTrackCandidate = NULL;
-
-   for (auto t : inputTracks()->Any())
-   {
-      if (lastWasSelectedWaveTrack && !t->GetSelected()) {
+   const WaveTrack *controlTrackCandidate = nullptr;
+   for (auto t : inputTracks()->Leaders()) {
+      if (lastWasSelectedWaveTrack && !t->GetSelected())
          // This could be the control track, so remember it
-         controlTrackCandidate = track_cast<const WaveTrack *>(t);
-      }
+         controlTrackCandidate = dynamic_cast<const WaveTrack *>(t);
 
       lastWasSelectedWaveTrack = false;
-
       if (t->GetSelected()) {
          bool ok = t->TypeSwitch<bool>(
             [&](const WaveTrack &) {
@@ -145,11 +144,12 @@ bool EffectAutoDuck::Init()
             },
             [&](const Track &) {
                EffectUIServices::DoMessageBox(*this,
-                  /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
-                   * of the audio automatically when there is sound on another track.  Not as
-                   * in 'Donald-Duck'!*/
-                  XO("You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
-                  wxICON_ERROR );
+                  /* i18n-hint: Auto duck is the name of an effect that 'ducks'
+                   (reduces the volume) of the audio automatically when there is
+                   sound on another track.  Not as in 'Donald-Duck'!*/
+                  XO("You selected a track which does not contain audio. "
+                     "AutoDuck can only process audio tracks."),
+                  wxICON_ERROR);
                return false;
             }
          );
@@ -158,19 +158,18 @@ bool EffectAutoDuck::Init()
       }
    }
 
-   if (!controlTrackCandidate)
-   {
+   if (!controlTrackCandidate) {
       EffectUIServices::DoMessageBox(*this,
-         /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
-          * of the audio automatically when there is sound on another track.  Not as
-          * in 'Donald-Duck'!*/
-         XO("Auto Duck needs a control track which must be placed below the selected track(s)."),
-         wxICON_ERROR );
+         /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+          the volume) of the audio automatically when there is sound on another
+          track.  Not as in 'Donald-Duck'!*/
+         XO("Auto Duck needs a control track which must be placed below the "
+            "selected track(s)."),
+         wxICON_ERROR);
       return false;
    }
 
    mControlTrack = controlTrackCandidate;
-
    return true;
 }
 
