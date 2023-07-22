@@ -183,8 +183,16 @@ bool EffectFindClipping::ProcessOne(LabelTrack &lt,
                lt.AddLabel(
                   SelectedRegion(startTime,
                      wt.LongSamplesToTime(start + s - mStop)),
-                  wxString::Format(wxT("%lld of %lld"),
-                     startrun.as_long_long(), (samps - mStop).as_long_long()));
+                  /*!
+                   i18n-hint: Two numbers are substituted; the second is the
+                   size of a set, the first is the size of a subset, and not
+                   understood as an ordinal (i.e., not meaning "first", or
+                   "second", etc.)
+                   */
+                  XC("%lld of %lld", "find clipping")
+                     .Format(startrun.as_long_long(),
+                        (samps - mStop).as_long_long())
+                     .Translation());
                startrun = 0;
                stoprun = 0;
                samps = 0;
