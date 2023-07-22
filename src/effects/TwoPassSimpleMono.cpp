@@ -65,8 +65,9 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
    // Iterate over each track
    mCurTrackNum = 0;
 
-   auto outTracks = (*mTrackLists[1 - mPass]).Selected<WaveTrack>().begin();
-   for (auto track : (*mTrackLists[mPass]).Selected<WaveTrack>()) {
+   auto outTracks =
+      (*mTrackLists[1 - mPass]).SelectedLeaders<WaveTrack>().begin();
+   for (auto track : (*mTrackLists[mPass]).SelectedLeaders<WaveTrack>()) {
       auto outTrack = *outTracks;
 
       // Get start and end times from track
@@ -97,8 +98,10 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
             return false;
 
          // ProcessOne() (implemented below) processes a single track
-         if (!ProcessOne(*track, *outTrack, start, end))
-            return false;
+         auto outIter = TrackList::Channels(outTrack).begin();
+         for (const auto pChannel : TrackList::Channels(track))
+            if (!ProcessOne(*pChannel, **outIter++, start, end))
+               return false;
       }
 
       ++mCurTrackNum;
