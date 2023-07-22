@@ -305,19 +305,19 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
 
       int trackNum = 0;
 
-      for (auto iterTrack : outputs.Get().Selected<WaveTrack>()) {
-         for (size_t i = 0; i < regions.size(); ++i) {
-            const AutoDuckRegion& region = regions[i];
-            if (ApplyDuckFade(trackNum, iterTrack, region.t0, region.t1)) {
-               cancel = true;
-               break;
+      for (auto iterTrack : outputs.Get().SelectedLeaders<WaveTrack>()) {
+         for (const auto pChannel : TrackList::Channels(iterTrack))
+            for (size_t i = 0; i < regions.size(); ++i) {
+               const AutoDuckRegion& region = regions[i];
+               if (ApplyDuckFade(trackNum++, *pChannel, region.t0, region.t1)) {
+                  cancel = true;
+                  goto done;
+               }
             }
-         }
 
+         done:
          if (cancel)
             break;
-
-         trackNum++;
       }
 
       if (!cancel)
@@ -434,23 +434,23 @@ bool EffectAutoDuck::TransferDataFromWindow(EffectSettings &)
 // EffectAutoDuck implementation
 
 // this currently does an exponential fade
-bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
-                                   double t0, double t1)
+bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack &track,
+   double t0, double t1)
 {
    bool cancel = false;
 
-   auto start = t->TimeToLongSamples(t0);
-   auto end = t->TimeToLongSamples(t1);
+   auto start = track.TimeToLongSamples(t0);
+   auto end = track.TimeToLongSamples(t1);
 
    Floats buf{ kBufSize };
    auto pos = start;
 
-   auto fadeDownSamples = t->TimeToLongSamples(
+   auto fadeDownSamples = track.TimeToLongSamples(
       mOuterFadeDownLen + mInnerFadeDownLen);
    if (fadeDownSamples < 1)
       fadeDownSamples = 1;
 
-   auto fadeUpSamples = t->TimeToLongSamples(
+   auto fadeUpSamples = track.TimeToLongSamples(
       mOuterFadeUpLen + mInnerFadeUpLen);
    if (fadeUpSamples < 1)
       fadeUpSamples = 1;
@@ -458,14 +458,10 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
    float fadeDownStep = mDuckAmountDb / fadeDownSamples.as_double();
    float fadeUpStep = mDuckAmountDb / fadeUpSamples.as_double();
 
-   while (pos < end)
-   {
-      const auto len = limitSampleBufferSize( kBufSize, end - pos );
-
-      t->GetFloats(buf.get(), pos, len);
-
-      for (auto i = pos; i < pos + len; i++)
-      {
+   while (pos < end) {
+      const auto len = limitSampleBufferSize(kBufSize, end - pos);
+      track.GetFloats(buf.get(), pos, len);
+      for (auto i = pos; i < pos + len; ++i) {
          float gainDown = fadeDownStep * (i - start).as_float();
          float gainUp = fadeUpStep * (end - i).as_float();
 
@@ -481,15 +477,15 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
          buf[ ( i - pos ).as_size_t() ] *= DB_TO_LINEAR(gain);
       }
 
-      t->Set((samplePtr)buf.get(), floatSample, pos, len);
+      track.Set((samplePtr)buf.get(), floatSample, pos, len);
 
       pos += len;
 
-      float curTime = t->LongSamplesToTime(pos);
+      float curTime = track.LongSamplesToTime(pos);
       float fractionFinished = (curTime - mT0) / (mT1 - mT0);
-      if (TotalProgress( (trackNum + 1 + fractionFinished) /
-                         (GetNumWaveTracks() + 1) ))
-      {
+      if (TotalProgress((trackNum + 1 + fractionFinished) /
+         (GetNumWaveTracks() + 1))
+      ) {
          cancel = true;
          break;
       }
