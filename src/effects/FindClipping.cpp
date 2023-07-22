@@ -87,7 +87,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
    const wxString name{ _("Clipping") };
 
    auto clt = *inputTracks()->Leaders<const LabelTrack>().find_if(
-      [&]( const Track *track ){ return track->GetName() == name; } );
+      [&](const Track *track){ return track->GetName() == name; });
 
    LabelTrack *lt{};
    if (!clt)
@@ -99,23 +99,20 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
    int count = 0;
 
    // JC: Only process selected tracks.
-   for (auto t : inputTracks()->Selected< const WaveTrack >()) {
+   for (auto t : inputTracks()->SelectedLeaders<const WaveTrack>()) {
       double trackStart = t->GetStartTime();
       double trackEnd = t->GetEndTime();
-      double t0 = mT0 < trackStart ? trackStart : mT0;
-      double t1 = mT1 > trackEnd ? trackEnd : mT1;
-
+      double t0 = std::max(trackStart, mT0);
+      double t1 = std::min(trackEnd, mT1);
       if (t1 > t0) {
          auto start = t->TimeToLongSamples(t0);
          auto end = t->TimeToLongSamples(t1);
          auto len = end - start;
 
-         if (!ProcessOne(lt, count, t, start, len)) {
-            return false;
-         }
+         for (const auto pChannel : TrackList::Channels(t))
+            if (!ProcessOne(*lt, count++, *pChannel, start, len))
+               return false;
       }
-
-      count++;
    }
 
    // No cancellation, so commit the addition of the track.
@@ -126,18 +123,14 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
    return true;
 }
 
-bool EffectFindClipping::ProcessOne(LabelTrack * lt,
-                                    int count,
-                                    const WaveTrack * wt,
-                                    sampleCount start,
-                                    sampleCount len)
+bool EffectFindClipping::ProcessOne(LabelTrack &lt,
+   int count, const WaveTrack &wt, sampleCount start, sampleCount len)
 {
    bool bGoodResult = true;
    size_t blockSize = (mStart * 1000);
 
-   if (len < mStart) {
+   if (len < mStart)
       return true;
-   }
 
    Floats buffer;
    try {
@@ -162,28 +155,23 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
 
    while (s < len) {
       if (block == 0) {
-         if (TrackProgress(count,
-                           s.as_double() /
-                           len.as_double() )) {
+         if (TrackProgress(count, s.as_double() / len.as_double() )) {
             bGoodResult = false;
             break;
          }
-
          block = limitSampleBufferSize( blockSize, len - s );
-
-         wt->GetFloats(buffer.get(), start + s, block);
+         wt.GetFloats(buffer.get(), start + s, block);
          ptr = buffer.get();
       }
 
       float v = fabs(*ptr++);
       if (v >= MAX_AUDIO) {
          if (startrun == 0) {
-            startTime = wt->LongSamplesToTime(start + s);
+            startTime = wt.LongSamplesToTime(start + s);
             samps = 0;
          }
-         else {
+         else
             stoprun = 0;
-         }
          startrun++;
          samps++;
       }
@@ -191,25 +179,23 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
          if (startrun >= mStart) {
             stoprun++;
             samps++;
-
             if (stoprun >= mStop) {
-               lt->AddLabel(SelectedRegion(startTime,
-                                          wt->LongSamplesToTime(start + s - mStop)),
-                           wxString::Format(wxT("%lld of %lld"), startrun.as_long_long(), (samps - mStop).as_long_long()));
+               lt.AddLabel(
+                  SelectedRegion(startTime,
+                     wt.LongSamplesToTime(start + s - mStop)),
+                  wxString::Format(wxT("%lld of %lld"),
+                     startrun.as_long_long(), (samps - mStop).as_long_long()));
                startrun = 0;
                stoprun = 0;
                samps = 0;
             }
          }
-         else {
+         else
             startrun = 0;
-         }
       }
-
       s++;
       block--;
    }
-
    return bGoodResult;
 }
 
