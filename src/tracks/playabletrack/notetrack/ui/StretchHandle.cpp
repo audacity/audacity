@@ -232,7 +232,7 @@ UIHandle::Result StretchHandle::Release
    bool right = mStretchState.mMode == stretchRight;
    auto &viewInfo = ViewInfo::Get( *pProject );
    if (SyncLockState::Get(*pProject).IsSyncLocked() && (left || right)) {
-      for (auto track : SyncLock::Group(mpTrack.get()) + &Track::IsLeader) {
+      for (auto track : SyncLock::Group(mpTrack.get())) {
          if (track != mpTrack.get()) {
             if (left) {
                auto origT0 = mStretchState.mOrigSel0Quantized;

@@ -610,10 +610,7 @@ void OnPaste(const CommandContext &context)
          continue;
 
       // Inner loop over the group by tracks (not channels)
-      auto leaders = group;
-      leaders.first = leaders.first.Filter(&Track::IsLeader);
-      leaders.second = leaders.second.Filter(&Track::IsLeader);
-      for (auto leader : leaders) {
+      for (auto leader : group) {
          if (iPair == endPair || leader != iPair->first) {
             if (isSyncLocked) {
                // Track is not pasted into but must be adjusted

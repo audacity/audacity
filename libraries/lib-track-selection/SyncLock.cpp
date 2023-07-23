@@ -153,17 +153,17 @@ std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember)
       inLabels = IsSeparatorTrack(*last);
    }
 
-   auto lastTrack = *TrackList::Channels(*last).rbegin();
-   return { first, lastTrack };
+   return { first, *last };
 }
 
 }
 
-TrackIterRange< Track > SyncLock::Group( Track *pTrack )
+TrackIterRange<Track> SyncLock::Group( Track *pTrack )
 {
    auto pList = pTrack->GetOwner();
    auto tracks = FindSyncLockGroup(const_cast<Track*>( pTrack ) );
-   return pList->Any().StartingWith(tracks.first).EndingAfter(tracks.second);
+   return pList->Leaders()
+      .StartingWith(tracks.first).EndingAfter(tracks.second);
 }
 
 DEFINE_ATTACHED_VIRTUAL(GetSyncLockPolicy) {
