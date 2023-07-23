@@ -124,10 +124,8 @@ void ClipMoveState::DoHorizontalOffset(double offset)
       for (auto &pair : shifters)
          pair.second->DoHorizontalOffset(offset);
    }
-   else {
-      for (auto channel : TrackList::Channels(mCapturedTrack.get()))
-         channel->ShiftBy(offset);
-   }
+   else if (mCapturedTrack)
+      mCapturedTrack->ShiftBy(offset);
 }
 
 TrackShifter::TrackShifter() = default;

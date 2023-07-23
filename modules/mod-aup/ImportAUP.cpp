@@ -1382,7 +1382,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
          auto attr = pair.first;
          auto value = pair.second;
 
-         if (attr == "offset" && value.TryGet(dblValue))
+         if (attr == "offset" && value.TryGet(dblValue) && pTrack->IsLeader())
             pTrack->MoveTo(dblValue);
       }
    }

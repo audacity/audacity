@@ -328,12 +328,13 @@ WaveTrack::~WaveTrack()
 void WaveTrack::MoveTo(double origin)
 {
    double delta = origin - GetStartTime();
-
-   for (const auto &clip : mClips)
-      // assume No-fail-guarantee
-      clip->ShiftBy(delta);
-
-   mOrigin = origin;
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (const auto &clip : pChannel->mClips)
+         // assume No-fail-guarantee
+         clip->ShiftBy(delta);
+      pChannel->mOrigin = origin;
+   }
 }
 
 void WaveTrack::DoOnProjectTempoChange(

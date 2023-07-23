@@ -104,10 +104,8 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    // TODO: more-than-two-channels
 
    decltype(mixLeft) mixRight{};
-   if (!mono) {
+   if (!mono)
       mixRight = trackFactory->Create(format, rate);
-      mixRight->MoveTo(mixStartTime);
-   }
 
    auto result = TrackList::Temporary(nullptr, mixLeft, mixRight);
 

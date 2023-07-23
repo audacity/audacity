@@ -521,10 +521,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                }
                else
 #endif
-               {
-                  for (auto channel : TrackList::Channels(t))
-                     channel->MoveTo(offset);
-               }
+               t->MoveTo(offset);
 
                // Amend the undo transaction made by import
                ProjectHistory::Get( *mProject ).ModifyState(false);

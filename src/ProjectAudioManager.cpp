@@ -902,6 +902,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                   t1 = newTrack->LongSamplesToTime(newTrack->TimeToLongSamples(t1));
             }
 
+            assert(newTrack->IsLeader()); // not yet made into a channel group
             newTrack->MoveTo(t0);
             wxString nameSuffix = wxString(wxT(""));
 

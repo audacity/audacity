@@ -180,8 +180,7 @@ static const std::vector< ComponentInterfaceSymbol >
 
 const size_t kAlignLabelsCount(){ return alignLabels().size(); }
 
-void DoAlign
-(AudacityProject &project, int index, bool moveSel)
+void DoAlign(AudacityProject &project, int index, bool moveSel)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -285,21 +284,13 @@ void DoAlign
 
    if ((unsigned)index >= kAlignLabelsCount()) {
       // This is an alignLabelsNoSync command.
-      for (auto t : tracks.SelectedLeaders< AudioTrack >()) {
+      for (auto t : tracks.SelectedLeaders<AudioTrack>()) {
          // This shifts different tracks in different ways, so no sync-lock
          // move.
          // Only align Wave and Note tracks end to end.
-         auto channels = TrackList::Channels(t);
-
-         auto trackStart = channels.min( &Track::GetStartTime );
-         auto trackEnd = channels.max( &Track::GetEndTime );
-
-         for (auto channel : channels)
-            // Move the track
-            channel->MoveTo(newPos + channel->GetStartTime() - trackStart);
-
+         t->MoveTo(newPos);
          if (index == kAlignEndToEnd)
-            newPos += (trackEnd - trackStart);
+            newPos += (t->GetEndTime() - t->GetStartTime());
       }
       if (index == kAlignEndToEnd)
          window.DoZoomFit();
@@ -307,7 +298,7 @@ void DoAlign
 
    if (delta != 0.0) {
       // For a fixed-distance shift move sync-lock selected tracks also.
-      for (auto t : tracks.Any()
+      for (auto t : tracks.Leaders()
            + &SyncLock::IsSelectedOrSyncLockSelected )
          t->MoveTo(t->GetStartTime() + delta);
    }

@@ -303,9 +303,15 @@ public:
    virtual double GetEndTime() const = 0;
 
    //! Change start time by given duration
+   /*
+    @pre `IsLeader()`
+    */
    void ShiftBy(double t) { MoveTo(GetStartTime() + t); }
 
    //! Change start time to given time point
+   /*
+    @pre `IsLeader()`
+    */
    virtual void MoveTo(double o) = 0;
 
    /*!

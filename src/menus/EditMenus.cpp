@@ -110,8 +110,8 @@ std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
    for (auto track : src.Leaders()) {
       auto copies =
          track->Copy(track->GetStartTime(), track->GetEndTime(), false);
+      (*copies->Leaders().begin())->MoveTo(track->GetStartTime());
       for (const auto pChannel : copies->Any()) {
-         pChannel->MoveTo(track->GetStartTime());
          if (auto waveTrack = dynamic_cast<WaveTrack*>(pChannel)) {
             for (auto clip : waveTrack->GetClips()) {
                if (clip->GetTrimLeft() != 0) {
@@ -688,10 +688,8 @@ void OnDuplicate(const CommandContext &context)
 
       // Make copies not for clipboard but for direct addition to the project
       auto dest = n->Copy(selectedRegion.t0(), selectedRegion.t1(), false);
-      auto range = dest->Any();
-      for (const auto pChannel : TrackList::Channels(n))
-         (*range.first++)
-            ->MoveTo(std::max(selectedRegion.t0(), pChannel->GetStartTime()));
+      (*dest->Leaders().begin())
+         ->MoveTo(std::max(selectedRegion.t0(), n->GetStartTime()));
       tracks.Append(std::move(*dest));
 
       // This break is really needed, else we loop infinitely
@@ -836,7 +834,7 @@ void OnSplit(const CommandContext &context)
 
          dest = n->Copy(sel0, sel1);
          dest->Init(*n);
-         dest->MoveTo(wxMax(sel0, n->GetOffset()));
+         dest->MoveTo(std::max(sel0, n->GetOffset()));
 
          if (sel1 >= n->GetEndTime())
             n->Clear(sel0, sel1);
@@ -888,8 +886,7 @@ void OnSplitNew(const CommandContext &context)
             if (dest) {
                // The copy function normally puts the clip at time 0
                // This offset lines it up with the original track's timing
-               for (const auto pChannel : dest->Any())
-                  pChannel->ShiftBy(newt0);
+               (*dest->Leaders().begin())->MoveTo(newt0);
                tracks.Append(std::move(*dest));
             }
             wt.SplitDelete(newt0, newt1);
