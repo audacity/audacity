@@ -44,10 +44,12 @@ private:
    //! Argument is in (0, 1)
    //! @return true if processing should continue
    using ProgressReport = std::function<bool(double)>;
-   bool ProcessOneClip(WaveTrack &track,
+   bool ReverseOneClip(WaveTrack &track,
       sampleCount start, sampleCount len, sampleCount originalStart,
       sampleCount originalEnd, const ProgressReport &report = {});
-   bool ProcessOneWave(WaveTrack &track,
+   bool Reverse(WaveTrack &track,
+      sampleCount start, sampleCount len, const ProgressReport &report = {});
+   bool ReverseOne(WaveTrack &track,
       sampleCount start, sampleCount len, const ProgressReport &report = {});
  };
 

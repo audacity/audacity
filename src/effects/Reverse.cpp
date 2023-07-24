@@ -78,7 +78,7 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
    int count = 0;
 
    auto trackRange =
-      outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelected;
+      outputs.Get().Leaders() + &SyncLock::IsSelectedOrSyncLockSelected;
    trackRange.VisitWhile(bGoodResult,
       [&](WaveTrack &track) {
          const auto progress =
@@ -88,10 +88,10 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
             auto end = track.TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!ProcessOneWave(track, start, len, progress))
+            if (!Reverse(track, start, len, progress))
                bGoodResult = false;
          }
-         count++;
+         count += track.NChannels();
       },
       [&](LabelTrack &track) {
          track.ChangeLabelsOnReverse(mT0, mT1);
@@ -105,7 +105,24 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-bool EffectReverse::ProcessOneWave(WaveTrack &track,
+bool EffectReverse::Reverse(WaveTrack &track,
+   sampleCount start, sampleCount len,
+   const ProgressReport &progress)
+{
+   size_t count = 0;
+   const auto range = TrackList::Channels(&track);
+   const auto myProgress = [&](double fraction){
+      return progress((count + fraction) / range.size());
+   };
+   for (const auto pChannel : range) {
+      if (!ReverseOne(*pChannel, start, len, myProgress))
+         return false;
+      ++count;
+   }
+   return true;
+}
+
+bool EffectReverse::ReverseOne(WaveTrack &track,
    sampleCount start, sampleCount len,
    const ProgressReport &progress)
 {
@@ -184,7 +201,8 @@ bool EffectReverse::ProcessOneWave(WaveTrack &track,
          auto revLen = revEnd - revStart;
          if (revEnd >= revStart) {
             // reverse the clip
-            if(!ProcessOneClip(track, revStart, revLen, start, end, progress)) {
+            if (!ReverseOneClip(track, revStart, revLen, start, end, progress))
+            {
                rValue = false;
                break;
             }
@@ -233,7 +251,7 @@ bool EffectReverse::ProcessOneWave(WaveTrack &track,
    return rValue;
 }
 
-bool EffectReverse::ProcessOneClip(WaveTrack &track,
+bool EffectReverse::ReverseOneClip(WaveTrack &track,
    sampleCount start, sampleCount len,
    sampleCount originalStart, sampleCount originalEnd,
    const ProgressReport &report)
