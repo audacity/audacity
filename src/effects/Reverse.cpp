@@ -81,12 +81,14 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
       outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelected;
    trackRange.VisitWhile(bGoodResult,
       [&](WaveTrack &track) {
+         const auto progress =
+            [&](double fraction){ return !TrackProgress(count, fraction); };
          if (mT1 > mT0) {
             auto start = track.TimeToLongSamples(mT0);
             auto end = track.TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!ProcessOneWave(count, track, start, len))
+            if (!ProcessOneWave(track, start, len, progress))
                bGoodResult = false;
          }
          count++;
@@ -103,8 +105,9 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-bool EffectReverse::ProcessOneWave(int count,
-   WaveTrack &track, sampleCount start, sampleCount len)
+bool EffectReverse::ProcessOneWave(WaveTrack &track,
+   sampleCount start, sampleCount len,
+   const ProgressReport &progress)
 {
    bool rValue = true; // return value
 
@@ -181,7 +184,7 @@ bool EffectReverse::ProcessOneWave(int count,
          auto revLen = revEnd - revStart;
          if (revEnd >= revStart) {
             // reverse the clip
-            if(!ProcessOneClip(count, track, revStart, revLen, start, end)) {
+            if(!ProcessOneClip(track, revStart, revLen, start, end, progress)) {
                rValue = false;
                break;
             }
@@ -230,9 +233,10 @@ bool EffectReverse::ProcessOneWave(int count,
    return rValue;
 }
 
-bool EffectReverse::ProcessOneClip(int count, WaveTrack &track,
+bool EffectReverse::ProcessOneClip(WaveTrack &track,
    sampleCount start, sampleCount len,
-   sampleCount originalStart, sampleCount originalEnd)
+   sampleCount originalStart, sampleCount originalEnd,
+   const ProgressReport &report)
 {
    bool rc = true;
    // keep track of two blocks whose data we will swap
@@ -264,8 +268,9 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack &track,
       len -= 2 * block;
       first += block;
 
-      if (TrackProgress(count, 2 * (first - originalStart).as_double() /
-                        originalLen.as_double())) {
+      if (!report(
+         2 * (first - originalStart).as_double() / originalLen.as_double()
+      )) {
          rc = false;
          break;
       }

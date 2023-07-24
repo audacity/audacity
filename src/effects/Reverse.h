@@ -14,6 +14,7 @@
 #define __AUDACITY_EFFECT_REVERSE__
 
 #include "StatefulEffect.h"
+#include <functional>
 
 class EffectReverse final : public StatefulEffect
 {
@@ -40,11 +41,14 @@ public:
 private:
    // EffectReverse implementation
 
-   bool ProcessOneClip(int count, WaveTrack &track,
+   //! Argument is in (0, 1)
+   //! @return true if processing should continue
+   using ProgressReport = std::function<bool(double)>;
+   bool ProcessOneClip(WaveTrack &track,
       sampleCount start, sampleCount len, sampleCount originalStart,
-      sampleCount originalEnd);
-   bool ProcessOneWave(int count, WaveTrack &track,
-      sampleCount start, sampleCount len);
+      sampleCount originalEnd, const ProgressReport &report = {});
+   bool ProcessOneWave(WaveTrack &track,
+      sampleCount start, sampleCount len, const ProgressReport &report = {});
  };
 
 #endif
