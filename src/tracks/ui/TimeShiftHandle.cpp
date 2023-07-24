@@ -363,7 +363,10 @@ void ClipMoveState::Init(
                for ( auto pTrack2 : group ) {
                   if (pTrack2 == &track)
                      continue;
-                  
+                  if (!pTrack2->IsLeader())
+                     continue;
+
+                  // shifters maps from leader tracks only
                   auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();
                   shifter2.SelectInterval(*interval);
@@ -832,8 +835,10 @@ UIHandle::Result TimeShiftHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
+   auto &trackList = TrackList::Get(*pProject);
    ChannelView *trackView = dynamic_cast<ChannelView*>(evt.pCell.get());
-   Track *track = trackView ? trackView->FindTrack().get() : nullptr;
+   Track *track =
+      *trackList.FindLeader(trackView ? trackView->FindTrack().get() : nullptr);
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
@@ -852,9 +857,6 @@ UIHandle::Result TimeShiftHandle::Drag
    auto pTrack = Track::SharedPointer( track );
    if (!pTrack)
       return RefreshCode::RefreshNone;
-
-
-   auto &trackList = TrackList::Get( *pProject );
 
    // GM: slide now implementing snap-to
    // samples functionality based on sample rate.
