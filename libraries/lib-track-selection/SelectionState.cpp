@@ -29,19 +29,17 @@ const SelectionState &SelectionState::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-// Set selection length to the length of a track -- but if sync-lock is turned
-// on, use the largest possible selection in the sync-lock group.
-// If it's a stereo track, do the same for the stereo channels.
-void SelectionState::SelectTrackLength
-( ViewInfo &viewInfo, Track &track, bool syncLocked )
+void SelectionState::SelectTrackLength(
+   ViewInfo &viewInfo, Track &track, bool syncLocked)
 {
+   assert(track.IsLeader());
    auto trackRange = syncLocked
    // If we have a sync-lock group and sync-lock linking is on,
    // check the sync-lock group tracks.
    ? SyncLock::Group(&track)
 
-   // Otherwise, check for a stereo pair
-   : TrackList::Channels(&track);
+   // Otherwise, check for one track
+   : TrackList::SingletonRange(&track);
 
    auto minOffset = trackRange.min(&Track::GetStartTime);
    auto maxEnd = trackRange.max(&Track::GetEndTime);
