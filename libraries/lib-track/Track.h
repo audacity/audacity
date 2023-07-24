@@ -1288,7 +1288,9 @@ public:
    size_t NChannels() const;
    size_t Size() const { return Leaders().size(); }
 
+   //! Return the least start time of the tracks, or 0 when no tracks
    double GetStartTime() const;
+   //! Return the greatest end time of the tracks, or 0 when no tracks
    double GetEndTime() const;
 
    //! Construct a temporary list owned by `pProject` (if that is not null)

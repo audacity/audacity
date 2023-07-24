@@ -742,7 +742,7 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
    mVk->AdjustThreshold(GetSensitivity());
 
 
-   TrackList *tl = &TrackList::Get( mProject );
+   TrackList *tl = &TrackList::Get(mProject);
    if(auto wt = *tl->Any<const WaveTrack>().begin()) {
       sampleCount start, len;
       GetSamples(wt, &start, &len);
@@ -772,7 +772,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
 
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
-   if (gAudioIO->IsBusy()){
+   if (gAudioIO->IsBusy()) {
       SetButton(false,mButtons[TTB_SelectSilence]);
       return;
    }
@@ -780,8 +780,8 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
    mVk->AdjustThreshold(GetSensitivity());
 
 
-   TrackList *tl = &TrackList::Get( mProject );
-   if(auto wt = *tl->Any<const WaveTrack>().begin()) {
+   TrackList *tl = &TrackList::Get(mProject);
+   if (auto wt = *tl->Any<const WaveTrack>().begin()) {
       sampleCount start, len;
       GetSamples(wt, &start, &len);
 

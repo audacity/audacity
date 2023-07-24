@@ -204,19 +204,18 @@ double OffsetTime
 void MoveWhenAudioInactive
 (AudacityProject &project, double seekStep, TimeUnit timeUnit)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &ruler = AdornedRulerPanel::Get( project );
-   const auto &settings = ProjectSnap::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &trackPanel = TrackPanel::Get(project);
+   auto &tracks = TrackList::Get(project);
+   auto &ruler = AdornedRulerPanel::Get(project);
+   const auto &settings = ProjectSnap::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
    auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    // Move the cursor
    // Already in cursor mode?
@@ -256,12 +255,12 @@ void SeekWhenAudioInactive
 (AudacityProject &project, double seekStep, TimeUnit timeUnit,
 SelectionOperation operation)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-   const auto &settings = ProjectSnap::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
+   const auto &settings = ProjectSnap::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
-   if( operation == CURSOR_MOVE )
+   if (operation == CURSOR_MOVE)
    {
       MoveWhenAudioInactive( project, seekStep, timeUnit);
       return;
@@ -271,8 +270,7 @@ SelectionOperation operation)
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    // Is it t0 or t1 moving?
    bool bMoveT0 = (operation == SELECTION_CONTRACT && seekStep > 0) ||
@@ -354,9 +352,9 @@ void DoCursorMove(
 
 void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
    // step is negative, then is moving left.  step positive, moving right.
    // Move the left/right selection boundary, to expand the selection
@@ -365,18 +363,15 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    // holding the key down and should move faster.
    wxLongLong curtime = ::wxGetUTCTimeMillis();
    int pixels = step;
-   if( curtime - info.mLastSelectionAdjustment < 50 )
-   {
+   if (curtime - info.mLastSelectionAdjustment < 50)
       pixels *= 4;
-   }
    info.mLastSelectionAdjustment = curtime;
 
    // we used to have a parameter boundaryContract to say if expanding or
    // contracting.  it is no longer needed.
    bool bMoveT0 = (step < 0 );// ^ boundaryContract ;
 
-   if( ProjectAudioIO::Get( project ).IsAudioActive() )
-   {
+   if (ProjectAudioIO::Get(project).IsAudioActive()) {
       auto gAudioIO = AudioIO::Get();
       double indicator = gAudioIO->GetStreamTime();
       if( bMoveT0 )
@@ -391,8 +386,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    double newT = viewInfo.OffsetTimeByPixels( bMoveT0 ? t0 : t1, pixels);
    // constrain to be in the track/screen limits.

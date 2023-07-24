@@ -557,7 +557,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
 
    if (callDurationFactor)
    {
-      double longestDuration = TrackList::Get( *mProject ).GetEndTime();
+      double longestDuration = TrackList::Get(*mProject).GetEndTime();
       ProjectWindow::Get( *mProject ).ZoomBy(longestDuration / durationFactor);
       callDurationFactor = false;
    }

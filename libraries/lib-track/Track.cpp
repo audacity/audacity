@@ -935,23 +935,24 @@ namespace {
       const double &(*combine)(const double&, const double&))
    {
       // Default the answer to zero for empty list
-      if (list.empty()) {
+      if (list.empty())
          return 0.0;
-      }
 
       // Otherwise accumulate minimum or maximum of track values
-      return list.Any().accumulate(ident, combine, memfn);
+      return list.Leaders().accumulate(ident, combine, memfn);
    }
 }
 
 double TrackList::GetStartTime() const
 {
-   return Accumulate(*this, &Track::GetStartTime, DBL_MAX, std::min);
+   return Accumulate(*this, &Track::GetStartTime,
+      std::numeric_limits<double>::max(), std::min);
 }
 
 double TrackList::GetEndTime() const
 {
-   return Accumulate(*this, &Track::GetEndTime, -DBL_MAX, std::max);
+   return Accumulate(*this, &Track::GetEndTime,
+      std::numeric_limits<double>::lowest(), std::max);
 }
 
 std::vector<Track*>

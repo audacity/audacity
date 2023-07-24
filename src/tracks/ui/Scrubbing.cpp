@@ -375,9 +375,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 
       wxCoord position = xx;
       if (abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
-         auto &viewInfo = ViewInfo::Get( *mProject );
-         auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
-         double maxTime = TrackList::Get( *mProject ).GetEndTime();
+         auto &viewInfo = ViewInfo::Get(*mProject);
+         auto &projectAudioManager = ProjectAudioManager::Get(*mProject);
+         double maxTime = TrackList::Get(*mProject).GetEndTime();
          const int leftOffset = viewInfo.GetLeftOffset();
          double time0 = std::min(maxTime,
             viewInfo.PositionToTime(mScrubStartPosition, leftOffset)
@@ -442,7 +442,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #endif
             mOptions.minTime = 0;
             mOptions.maxTime =
-               std::max(0.0, TrackList::Get( *mProject ).GetEndTime());
+               std::max(0.0, TrackList::Get(*mProject).GetEndTime());
             mOptions.minStutterTime =
 #ifdef DRAG_SCRUB
                mDragging ? PlaybackPolicy::Duration{} :

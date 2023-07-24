@@ -40,12 +40,11 @@ namespace {
 void DoSelectTimeAndAudioTracks(
    AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
    if (bAllTime)
-      selectedRegion.setTimes(
-         tracks.GetStartTime(), tracks.GetEndTime());
+      selectedRegion.setTimes(tracks.GetStartTime(), tracks.GetEndTime());
 
    if (bAllTracks) {
       // Unselect all tracks before selecting audio.
@@ -67,8 +66,7 @@ void DoSelectTimeAndTracks
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( bAllTime )
-      selectedRegion.setTimes(
-         tracks.GetStartTime(), tracks.GetEndTime());
+      selectedRegion.setTimes(tracks.GetStartTime(), tracks.GetEndTime());
 
    if( bAllTracks ) {
       for (auto t : tracks.Leaders())

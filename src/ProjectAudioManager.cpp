@@ -329,7 +329,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    AudacityProject *p = &mProject;
 
-   auto &tracks = TrackList::Get( *p );
+   auto &tracks = TrackList::Get(*p);
 
    mLastPlayMode = mode;
 

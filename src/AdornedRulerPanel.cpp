@@ -2040,7 +2040,7 @@ auto AdornedRulerPanel::QPHandle::Release(
 
 void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 {
-   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   auto &viewInfo = ViewInfo::Get(*GetProject());
    auto &playRegion = viewInfo.playRegion;
    playRegion.Order();
 
