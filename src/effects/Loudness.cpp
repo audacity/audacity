@@ -13,6 +13,7 @@
 
 *//*******************************************************************/
 #include "Loudness.h"
+#include "EBUR128.h"
 #include "EffectEditor.h"
 #include "EffectOutputTracks.h"
 
@@ -138,12 +139,10 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 
       mProcStereo = range.size() > 1;
 
-      if(mNormalizeTo == kLoudness)
-      {
-         mLoudnessProcessor.reset(safenew EBUR128(mCurRate, range.size()));
-         mLoudnessProcessor->Initialize();
-         if(!ProcessOne(range, true))
-         {
+      std::optional<EBUR128> loudnessProcessor;
+      if (mNormalizeTo == kLoudness) {
+         loudnessProcessor.emplace(mCurRate, range.size());
+         if (!ProcessOne(range, &*loudnessProcessor)) {
             // Processing failed -> abort
             bGoodResult = false;
             break;
@@ -166,26 +165,24 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 
       // Calculate normalization values the analysis results
       float extent;
-      if(mNormalizeTo == kLoudness)
-         extent = mLoudnessProcessor->IntegrativeLoudness();
+      if (mNormalizeTo == kLoudness)
+         extent = loudnessProcessor->IntegrativeLoudness();
       else // RMS
       {
          extent = mRMS[0];
          if(mProcStereo)
-            // RMS: use average RMS, average must be calculated in quadratic domain.
+            // RMS: use average RMS, average must be calculated in quadratic
+            // domain.
             extent = sqrt((mRMS[0] * mRMS[0] + mRMS[1] * mRMS[1]) / 2.0);
       }
 
-      if(extent == 0.0)
-      {
-         mLoudnessProcessor.reset();
+      if (extent == 0.0) {
          FreeBuffers();
          return false;
       }
       mMult = mRatio / extent;
 
-      if(mNormalizeTo == kLoudness)
-      {
+      if (mNormalizeTo == kLoudness) {
          // Target half the LUFS value if mono (or independent processed stereo)
          // shall be treated as dual mono.
          if (range.size() == 1 &&
@@ -197,8 +194,7 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
       }
 
       mProgressMsg = topMsg + XO("Processing: %s").Format( trackName );
-      if(!ProcessOne(range, false))
-      {
+      if (!ProcessOne(range, nullptr)) {
          // Processing failed -> abort
          bGoodResult = false;
          break;
@@ -208,7 +204,6 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
    if (bGoodResult)
       outputs.Commit();
 
-   mLoudnessProcessor.reset();
    FreeBuffers();
    return bGoodResult;
 }
@@ -383,7 +378,8 @@ bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
+bool EffectLoudness::ProcessOne(
+   TrackIterRange<WaveTrack> range, EBUR128 *pLoudnessProcessor)
 {
    WaveTrack* track = *range.begin();
 
@@ -403,8 +399,7 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
    // Go through the track one buffer at a time. s counts which
    // sample the current buffer starts at.
    auto s = start;
-   while(s < end)
-   {
+   while(s < end) {
       // Get a block of samples (smaller than the size of the buffer)
       // Adjust the block size if it is the final block in the track
       auto blockLen = limitSampleBufferSize(
@@ -416,14 +411,12 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
       LoadBufferBlock(range, s, blockLen);
 
       // Process the buffer.
-      if(analyse)
-      {
-         if(!AnalyseBufferBlock())
+      if (pLoudnessProcessor) {
+         if (!AnalyseBufferBlock(*pLoudnessProcessor))
             return false;
       }
-      else
-      {
-         if(!ProcessBufferBlock())
+      else {
+         if (!ProcessBufferBlock())
             return false;
          StoreBufferBlock(range, s, blockLen);
       }
@@ -451,17 +444,17 @@ void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
 
 /// Calculates sample sum (for DC) and EBU R128 weighted square sum
 /// (for loudness).
-bool EffectLoudness::AnalyseBufferBlock()
+bool EffectLoudness::AnalyseBufferBlock(EBUR128 &loudnessProcessor)
 {
    for(size_t i = 0; i < mTrackBufferLen; i++)
    {
-      mLoudnessProcessor->ProcessSampleFromChannel(mTrackBuffer[0][i], 0);
-      if(mProcStereo)
-         mLoudnessProcessor->ProcessSampleFromChannel(mTrackBuffer[1][i], 1);
-      mLoudnessProcessor->NextSample();
+      loudnessProcessor.ProcessSampleFromChannel(mTrackBuffer[0][i], 0);
+      if (mProcStereo)
+         loudnessProcessor.ProcessSampleFromChannel(mTrackBuffer[1][i], 1);
+      loudnessProcessor.NextSample();
    }
 
-   if(!UpdateProgress())
+   if (!UpdateProgress())
       return false;
    return true;
 }

@@ -19,13 +19,14 @@
 
 #include "StatefulEffect.h"
 #include "Biquad.h"
-#include "EBUR128.h"
 #include "ShuttleAutomation.h"
 #include "Track.h"
 
 class wxChoice;
 class wxSimplebook;
+class EBUR128;
 class ShuttleGui;
+using Floats = ArrayOf<float>;
 
 class EffectLoudness final : public StatefulEffect
 {
@@ -69,10 +70,11 @@ private:
    void AllocBuffers(TrackList &outputs);
    void FreeBuffers();
    bool GetTrackRMS(WaveTrack* track, float& rms);
-   bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
+   bool ProcessOne(
+      TrackIterRange<WaveTrack> range, EBUR128 *pLoudnessProcessor);
    void LoadBufferBlock(TrackIterRange<WaveTrack> range,
                         sampleCount pos, size_t len);
-   bool AnalyseBufferBlock();
+   bool AnalyseBufferBlock(EBUR128 &loudnessProcessor);
    bool ProcessBufferBlock();
    void StoreBufferBlock(TrackIterRange<WaveTrack> range,
                          sampleCount pos, size_t len);
@@ -102,7 +104,6 @@ private:
    float  mMult;
    float  mRatio;
    float  mRMS[2];
-   std::unique_ptr<EBUR128> mLoudnessProcessor;
 
    wxSimplebook *mBook;
    wxChoice *mChoice;
