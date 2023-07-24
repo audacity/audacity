@@ -151,15 +151,21 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
             : topMsg +
                // TODO: more-than-two-channels-message
                XO("Analyzing first track of stereo pair: %s").Format( trackName );
-         
+
+         const auto progressReport = [&](double fraction){
+            return !TotalProgress(
+               (progress + fraction / double(2 * GetNumWaveTracks())), msg);
+         };
+
          // Analysis loop over channels collects offsets and extent
          for (auto channel : range) {
             float offset = 0;
             float extent2 = 0;
             bGoodResult =
-               AnalyseTrack( channel, msg, progress, offset, extent2 );
-            if ( ! bGoodResult )
+               AnalyseTrack(*channel, progressReport, offset, extent2);
+            if (!bGoodResult)
                goto break2;
+            progress += 1.0 / double(2 * GetNumWaveTracks());
             extent = std::max( extent, extent2 );
             offsets.push_back(offset);
             // TODO: more-than-two-channels-message
@@ -290,8 +296,8 @@ bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
 
 // EffectNormalize implementation
 
-bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableString &msg,
-                                   double &progress, float &offset, float &extent)
+bool EffectNormalize::AnalyseTrack(const WaveTrack &track,
+   const ProgressReport &report, float &offset, float &extent)
 {
    bool result = true;
    float min, max;
@@ -299,12 +305,12 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
    if(mGain)
    {
       // set mMin, mMax.  No progress bar here as it's fast.
-      auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
+      auto pair = track.GetMinMax(mCurT0, mCurT1); // may throw
       min = pair.first, max = pair.second;
 
       if(mDC)
       {
-         result = AnalyseTrackData(track, msg, progress, offset);
+         result = AnalyseTrackData(track, report, offset);
          min += offset;
          max += offset;
       }
@@ -312,7 +318,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
    else if(mDC)
    {
       min = -1.0, max = 1.0;   // sensible defaults?
-      result = AnalyseTrackData(track, msg, progress, offset);
+      result = AnalyseTrackData(track, report, offset);
       min += offset;
       max += offset;
    }
@@ -329,14 +335,14 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
 
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg,
-                                double &progress, float &offset)
+bool EffectNormalize::AnalyseTrackData(const WaveTrack &track,
+   const ProgressReport &report, float &offset)
 {
    bool rc = true;
 
    //Transform the marker timepoints to samples
-   auto start = track->TimeToLongSamples(mCurT0);
-   auto end = track->TimeToLongSamples(mCurT1);
+   auto start = track.TimeToLongSamples(mCurT0);
+   auto end = track.TimeToLongSamples(mCurT1);
 
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
@@ -345,7 +351,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   Floats buffer{ track->GetMaxBlockSize() };
+   Floats buffer{ track.GetMaxBlockSize() };
 
    mSum   = 0.0; // dc offset inits
 
@@ -359,12 +365,12 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
+         track.GetBestBlockSize(s),
          end - s
       );
 
       //Get the samples from the track and put them in the buffer
-      track->GetFloats(
+      track.GetFloats(
          buffer.get(), s, block, FillFormat::fillZero, true, &blockSamples);
       totalSamples += blockSamples;
 
@@ -375,18 +381,16 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
       s += block;
 
       //Update the Progress meter
-      if (TotalProgress(progress +
-                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
+      if (!report((s - start).as_double() / len)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
    }
-   if( totalSamples > 0 )
+   if (totalSamples > 0)
       offset = -mSum / totalSamples.as_double();  // calculate actual offset (amount that needs to be added on)
    else
       offset = 0.0;
 
-   progress += 1.0/double(2*GetNumWaveTracks());
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;
 }

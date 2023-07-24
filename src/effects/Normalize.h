@@ -16,6 +16,7 @@
 #include "Biquad.h"
 #include "ShuttleAutomation.h"
 #include <wx/weakref.h>
+#include <functional>
 
 class wxCheckBox;
 class wxStaticText;
@@ -57,10 +58,11 @@ private:
 
    bool ProcessOne(
       WaveTrack * t, const TranslatableString &msg, double& progress, float offset);
-   bool AnalyseTrack(const WaveTrack * track, const TranslatableString &msg,
-                     double &progress, float &offset, float &extent);
-   bool AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg, double &progress,
-                     float &offset);
+   using ProgressReport = std::function<bool(double fraction)>;
+   bool AnalyseTrack(const WaveTrack &track, const ProgressReport &report,
+      float &offset, float &extent);
+   bool AnalyseTrackData(const WaveTrack &track, const ProgressReport &report,
+      float &offset);
    void AnalyseDataDC(float *buffer, size_t len);
    void ProcessData(float *buffer, size_t len, float offset);
 
