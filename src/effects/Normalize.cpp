@@ -119,38 +119,33 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    else if(!mDC && !mGain)
       topMsg = XO("Not doing anything...\n");   // shouldn't get here
 
-   for (auto track : outputs.Get().Selected<WaveTrack>()
-            + (mStereoInd ? &Track::Any : &Track::IsLeader )) {
-      //Get start and end times from track
-      // PRL:  No accounting for multiple channels?
+   for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
+      // Get start and end times from track
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
 
-      //Set the current bounds to whichever left marker is
-      //greater and whichever right marker is less:
-      mCurT0 = mT0 < trackStart? trackStart: mT0;
-      mCurT1 = mT1 > trackEnd? trackEnd: mT1;
-
-      auto range = mStereoInd
-         ? TrackList::SingletonRange(track)
-         : TrackList::Channels(track);
+      // Set the current bounds to whichever left marker is
+      // greater and whichever right marker is less:
+      mCurT0 = std::max(trackStart, mT0);
+      mCurT1 = std::min(trackEnd, mT1);
 
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
          wxString trackName = track->GetName();
 
-         float extent;
-         // Will compute a maximum
-         extent = std::numeric_limits<float>::lowest();
+         std::vector<float> extents;
+         float maxExtent{ std::numeric_limits<float>::lowest() };
          std::vector<float> offsets;
 
-         auto msg = (range.size() == 1)
-            // mono or 'stereo tracks independently'
+         const auto channels = TrackList::Channels(track);
+         // mono or 'stereo tracks independently'
+         const bool oneChannel = (channels.size() == 1 || mStereoInd);
+         auto msg = oneChannel
             ? topMsg +
-               XO("Analyzing: %s").Format( trackName )
+               XO("Analyzing: %s").Format(trackName)
             : topMsg +
                // TODO: more-than-two-channels-message
-               XO("Analyzing first track of stereo pair: %s").Format( trackName );
+               XO("Analyzing first track of stereo pair: %s").Format(trackName);
 
          const auto progressReport = [&](double fraction){
             return !TotalProgress(
@@ -158,53 +153,58 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
          };
 
          // Analysis loop over channels collects offsets and extent
-         for (auto channel : range) {
+         for (auto channel : channels) {
             float offset = 0;
-            float extent2 = 0;
+            float extent = 0;
             bGoodResult = AnalyseTrack(*channel, progressReport, mGain, mDC,
-               mCurT0, mCurT1, offset, extent2);
+               mCurT0, mCurT1, offset, extent);
             if (!bGoodResult)
                goto break2;
             progress += 1.0 / double(2 * GetNumWaveTracks());
-            extent = std::max( extent, extent2 );
+            extents.push_back(extent);
+            maxExtent = std::max(maxExtent, extent);
             offsets.push_back(offset);
             // TODO: more-than-two-channels-message
-            msg = topMsg +
-               XO("Analyzing second track of stereo pair: %s").Format( trackName );
+            if (!oneChannel)
+               msg = topMsg +
+                  XO("Analyzing second track of stereo pair: %s")
+                     .Format(trackName);
          }
 
-         // Compute the multiplier using extent
-         if( (extent > 0) && mGain ) {
-            mMult = ratio / extent;
-         }
-         else
-            mMult = 1.0;
-
-         if (range.size() == 1) {
+         if (oneChannel) {
             if (TrackList::NChannels(*track) == 1)
                // really mono
                msg = topMsg +
-                  XO("Processing: %s").Format( trackName );
+                  XO("Processing: %s").Format(trackName);
             else
                //'stereo tracks independently'
                // TODO: more-than-two-channels-message
                msg = topMsg +
-                  XO("Processing stereo channels independently: %s").Format( trackName );
+                  XO("Processing stereo channels independently: %s")
+                     .Format(trackName);
          }
          else
             msg = topMsg +
                // TODO: more-than-two-channels-message
-               XO("Processing first track of stereo pair: %s").Format( trackName );
+               XO("Processing first track of stereo pair: %s")
+                  .Format(trackName);
 
          // Use multiplier in the second, processing loop over channels
          auto pOffset = offsets.begin();
-         for (auto channel : range) {
+         auto pExtent = extents.begin();
+         for (const auto channel : channels) {
+            const auto extent = oneChannel ? *pExtent++: maxExtent;
+            if ((extent > 0) && mGain)
+               mMult = ratio / extent;
+            else
+               mMult = 1.0;
             if (false ==
-                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++)) )
+                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++)))
                goto break2;
             // TODO: more-than-two-channels-message
             msg = topMsg +
-               XO("Processing second track of stereo pair: %s").Format( trackName );
+               XO("Processing second track of stereo pair: %s")
+                  .Format(trackName);
          }
       }
    }
