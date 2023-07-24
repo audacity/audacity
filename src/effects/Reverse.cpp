@@ -88,7 +88,7 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
             auto end = track.TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!Reverse(track, start, len, progress))
+            if (!track.Reverse(start, len, progress))
                bGoodResult = false;
          }
          count += track.NChannels();
@@ -105,12 +105,11 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-bool EffectReverse::Reverse(WaveTrack &track,
-   sampleCount start, sampleCount len,
+bool WaveTrack::Reverse(sampleCount start, sampleCount len,
    const ProgressReport &progress)
 {
    size_t count = 0;
-   const auto range = TrackList::Channels(&track);
+   const auto range = TrackList::Channels(this);
    const auto myProgress = [&](double fraction){
       return progress((count + fraction) / range.size());
    };
@@ -122,7 +121,7 @@ bool EffectReverse::Reverse(WaveTrack &track,
    return true;
 }
 
-bool EffectReverse::ReverseOne(WaveTrack &track,
+bool WaveTrack::ReverseOne(WaveTrack &track,
    sampleCount start, sampleCount len,
    const ProgressReport &progress)
 {
@@ -251,7 +250,7 @@ bool EffectReverse::ReverseOne(WaveTrack &track,
    return rValue;
 }
 
-bool EffectReverse::ReverseOneClip(WaveTrack &track,
+bool WaveTrack::ReverseOneClip(WaveTrack &track,
    sampleCount start, sampleCount len,
    sampleCount originalStart, sampleCount originalEnd,
    const ProgressReport &report)
