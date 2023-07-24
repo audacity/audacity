@@ -112,11 +112,8 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
    AllocBuffers(outputs.Get());
    mProgressVal = 0;
 
-   for (auto pTrack : outputs.Get().Selected<WaveTrack>()
-       + (mStereoInd ? &Track::Any : &Track::IsLeader))
-   {
+   for (auto pTrack : outputs.Get().SelectedLeaders<WaveTrack>()) {
       // Get start and end times from track
-      // PRL: No accounting for multiple channels ?
       double trackStart = pTrack->GetStartTime();
       double trackEnd = pTrack->GetEndTime();
 
@@ -134,13 +131,10 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
       mSteps = (mNormalizeTo == kLoudness) ? 2 : 1;
 
       mProgressMsg =
-         topMsg + XO("Analyzing: %s").Format( trackName );
+         topMsg + XO("Analyzing: %s").Format(trackName);
 
-      auto range = mStereoInd
-         ? TrackList::SingletonRange(pTrack)
-         : TrackList::Channels(pTrack);
-
-      auto nChannels = range.size();
+      const auto channels = TrackList::Channels(pTrack);
+      auto nChannels = mStereoInd ? 1 : channels.size();
       mProcStereo = nChannels > 1;
 
       const auto processOne = [&](WaveTrack &track){
@@ -156,11 +150,17 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
          }
          else {
             // RMS
-            size_t idx = 0;
-            for (const auto pChannel : range) {
-               if (!GetTrackRMS(*pChannel, curT0, curT1, RMS[idx]))
+            if (mProcStereo) {
+               size_t idx = 0;
+               for (const auto pChannel : channels) {
+                  if (!GetTrackRMS(*pChannel, curT0, curT1, RMS[idx]))
+                     return false;
+                  ++idx;
+               }
+            }
+            else {
+               if (!GetTrackRMS(track, curT0, curT1, RMS[0]))
                   return false;
-               ++idx;
             }
          }
 
@@ -203,9 +203,17 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
          return true;
       };
 
-      if (!processOne(*pTrack))
-         break;
+      if (mStereoInd) {
+         for (const auto pChannel : channels)
+            if (!processOne(*pChannel))
+               goto done;
+      }
+      else {
+         if (!processOne(*pTrack))
+            break;
+      }
    }
+done:
 
    if (bGoodResult)
       outputs.Commit();
