@@ -19,6 +19,7 @@
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
+#include <algorithm>
 #include <math.h>
 
 #include "../LabelTrack.h"
@@ -223,35 +224,33 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
    auto first = start;
 
    auto blockSize = track->GetMaxBlockSize();
-   float tmp;
    Floats buffer1{ blockSize };
+   const auto pBuffer1 = buffer1.get();
    Floats buffer2{ blockSize };
+   const auto pBuffer2 = buffer2.get();
 
    auto originalLen = originalEnd - originalStart;
 
    while (len > 1) {
       auto block =
-         limitSampleBufferSize( track->GetBestBlockSize(first), len / 2 );
+         limitSampleBufferSize(track->GetBestBlockSize(first), len / 2);
       auto second = first + (len - block);
 
       track->GetFloats(buffer1.get(), first, block);
+      std::reverse(pBuffer1, pBuffer1 + block);
       track->GetFloats(buffer2.get(), second, block);
-      for (decltype(block) i = 0; i < block; i++) {
-         tmp = buffer1[i];
-         buffer1[i] = buffer2[block-i-1];
-         buffer2[block-i-1] = tmp;
-      }
+      std::reverse(pBuffer2, pBuffer2 + block);
       // Don't dither on later rendering if only reversing samples
-      track->Set((samplePtr)buffer1.get(), floatSample, first, block,
+      track->Set((samplePtr)buffer2.get(), floatSample, first, block,
          narrowestSampleFormat);
-      track->Set((samplePtr)buffer2.get(), floatSample, second, block,
+      track->Set((samplePtr)buffer1.get(), floatSample, second, block,
          narrowestSampleFormat);
 
       len -= 2 * block;
       first += block;
 
-      if( TrackProgress(count, 2 * ( first - originalStart ).as_double() /
-                        originalLen.as_double() ) ) {
+      if (TrackProgress(count, 2 * (first - originalStart).as_double() /
+                        originalLen.as_double())) {
          rc = false;
          break;
       }
