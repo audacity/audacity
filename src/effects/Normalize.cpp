@@ -161,8 +161,8 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
          for (auto channel : range) {
             float offset = 0;
             float extent2 = 0;
-            bGoodResult =
-               AnalyseTrack(*channel, progressReport, offset, extent2);
+            bGoodResult = AnalyseTrack(*channel, progressReport, mGain, mDC,
+               mCurT0, mCurT1, offset, extent2);
             if (!bGoodResult)
                goto break2;
             progress += 1.0 / double(2 * GetNumWaveTracks());
@@ -297,52 +297,49 @@ bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
 // EffectNormalize implementation
 
 bool EffectNormalize::AnalyseTrack(const WaveTrack &track,
-   const ProgressReport &report, float &offset, float &extent)
+   const ProgressReport &report,
+   const bool gain, const bool dc, const double curT0, const double curT1,
+   float &offset, float &extent)
 {
    bool result = true;
    float min, max;
-
-   if(mGain)
-   {
+   if (gain) {
       // set mMin, mMax.  No progress bar here as it's fast.
-      auto pair = track.GetMinMax(mCurT0, mCurT1); // may throw
+      auto pair = track.GetMinMax(curT0, curT1); // may throw
       min = pair.first, max = pair.second;
 
-      if(mDC)
-      {
-         result = AnalyseTrackData(track, report, offset);
+      if (dc) {
+         result = AnalyseTrackData(track, report, curT0, curT1, offset);
          min += offset;
          max += offset;
       }
    }
-   else if(mDC)
-   {
+   else if (dc) {
       min = -1.0, max = 1.0;   // sensible defaults?
-      result = AnalyseTrackData(track, report, offset);
+      result = AnalyseTrackData(track, report, curT0, curT1, offset);
       min += offset;
       max += offset;
    }
-   else
-   {
+   else {
       wxFAIL_MSG("Analysing Track when nothing to do!");
       min = -1.0, max = 1.0;   // sensible defaults?
       offset = 0.0;
    }
    extent = fmax(fabs(min), fabs(max));
-
    return result;
 }
 
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
 bool EffectNormalize::AnalyseTrackData(const WaveTrack &track,
-   const ProgressReport &report, float &offset)
+   const ProgressReport &report, const double curT0, const double curT1,
+   float &offset)
 {
    bool rc = true;
 
    //Transform the marker timepoints to samples
-   auto start = track.TimeToLongSamples(mCurT0);
-   auto end = track.TimeToLongSamples(mCurT1);
+   auto start = track.TimeToLongSamples(curT0);
+   auto end = track.TimeToLongSamples(curT1);
 
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
@@ -353,7 +350,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack &track,
    //be shorter than the length of the track being processed.
    Floats buffer{ track.GetMaxBlockSize() };
 
-   mSum   = 0.0; // dc offset inits
+   double sum = 0.0; // dc offset inits
 
    sampleCount blockSamples;
    sampleCount totalSamples = 0;
@@ -375,7 +372,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack &track,
       totalSamples += blockSamples;
 
       //Process the buffer.
-      AnalyseDataDC(buffer.get(), block);
+      sum = AnalyseDataDC(buffer.get(), block, sum);
 
       //Increment s one blockfull of samples
       s += block;
@@ -387,7 +384,8 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack &track,
       }
    }
    if (totalSamples > 0)
-      offset = -mSum / totalSamples.as_double();  // calculate actual offset (amount that needs to be added on)
+      // calculate actual offset (amount that needs to be added on)
+      offset = -sum / totalSamples.as_double();
    else
       offset = 0.0;
 
@@ -454,10 +452,11 @@ bool EffectNormalize::ProcessOne(
 }
 
 /// @see AnalyseDataLoudnessDC
-void EffectNormalize::AnalyseDataDC(float *buffer, size_t len)
+double EffectNormalize::AnalyseDataDC(float *buffer, size_t len, double sum)
 {
    for(decltype(len) i = 0; i < len; i++)
-      mSum += (double)buffer[i];
+      sum += (double)buffer[i];
+   return sum;
 }
 
 void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)
