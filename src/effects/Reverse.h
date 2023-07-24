@@ -40,9 +40,11 @@ public:
 private:
    // EffectReverse implementation
 
-   bool ProcessOneClip(int count, WaveTrack* track,
-                   sampleCount start, sampleCount len, sampleCount originalStart, sampleCount originalEnd);
-   bool ProcessOneWave(int count, WaveTrack* track, sampleCount start, sampleCount len);
+   bool ProcessOneClip(int count, WaveTrack &track,
+      sampleCount start, sampleCount len, sampleCount originalStart,
+      sampleCount originalEnd);
+   bool ProcessOneWave(int count, WaveTrack &track,
+      sampleCount start, sampleCount len);
  };
 
 #endif

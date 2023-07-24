@@ -86,7 +86,7 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
             auto end = track.TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!ProcessOneWave(count, &track, start, len))
+            if (!ProcessOneWave(count, track, start, len))
                bGoodResult = false;
          }
          count++;
@@ -103,34 +103,40 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount start, sampleCount len)
+bool EffectReverse::ProcessOneWave(int count,
+   WaveTrack &track, sampleCount start, sampleCount len)
 {
    bool rValue = true; // return value
 
-   auto end = start + len; // start, end, len refer to the selected reverse region
+   // start, end, len refer to the selected reverse region
+   auto end = start + len;
 
    // STEP 1:
    // If a reverse selection begins and/or ends at the inside of a clip
    // perform a split at the start and/or end of the reverse selection
-   const auto &clips = track->GetClips();
-   // Beware, the array grows as we loop over it.  Use integer subscripts, not iterators.
+   const auto &clips = track.GetClips();
+   // Beware, the array grows as we loop over it.  Use integer subscripts, not
+   // iterators.
    for (size_t ii = 0; ii < clips.size(); ++ii) {
       const auto &clip = clips[ii].get();
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
-      if (clipStart < start && clipEnd > start && clipEnd <= end) { // the reverse selection begins at the inside of a clip
-         double splitTime = track->LongSamplesToTime(start);
-         track->SplitAt(splitTime);
+      if (clipStart < start && clipEnd > start && clipEnd <= end) {
+         // the reverse selection begins at the inside of a clip
+         double splitTime = track.LongSamplesToTime(start);
+         track.SplitAt(splitTime);
       }
-      else if (clipStart >= start && clipStart < end && clipEnd > end) { // the reverse selection ends at the inside of a clip
-         double splitTime = track->LongSamplesToTime(end);
-         track->SplitAt(splitTime);
+      else if (clipStart >= start && clipStart < end && clipEnd > end) {
+         // the reverse selection ends at the inside of a clip
+         double splitTime = track.LongSamplesToTime(end);
+         track.SplitAt(splitTime);
       }
-      else if (clipStart < start && clipEnd > end) { // the selection begins AND ends at the inside of a clip
-         double splitTime = track->LongSamplesToTime(start);
-         track->SplitAt(splitTime);
-         splitTime = track->LongSamplesToTime(end);
-         track->SplitAt(splitTime);
+      else if (clipStart < start && clipEnd > end) {
+         // the selection begins AND ends at the inside of a clip
+         double splitTime = track.LongSamplesToTime(start);
+         track.SplitAt(splitTime);
+         splitTime = track.LongSamplesToTime(end);
+         track.SplitAt(splitTime);
       }
    }
 
@@ -141,89 +147,98 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    bool checkedFirstClip = false;
 
    // used in calculating the offset of clips to rearrange
-   // holds the NEW end position of the current clip
+   // holds the new end position of the current clip
    auto currentEnd = end;
 
-   WaveClipHolders revClips; // holds the reversed clips
-   WaveClipHolders otherClips; // holds the clips that appear after the reverse selection region
-   auto clipArray = track->SortedClipArray();
-   size_t i;
-   for (i=0; i < clipArray.size(); i++) {
-
+   // holds the reversed clips
+   WaveClipHolders revClips;
+   // holds the clips that appear after the reverse selection region
+   WaveClipHolders otherClips;
+   auto clipArray = track.SortedClipArray();
+   for (size_t i = 0; i < clipArray.size(); ++i) {
       WaveClip *clip = clipArray[i];
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
 
-      if (clipStart >= start && clipEnd <= end) { // if the clip is inside the selected region
-
-         // this is used to check if the selected region begins with a whitespace.
-         // if yes then clipStart (of the first clip) and start are not the same.
-         // adjust currentEnd accordingly and set endMerge to false
-         if(checkedFirstClip == false && clipStart > start) {
+      if (clipStart >= start && clipEnd <= end) {
+         // if the clip is inside the selected region
+         // this is used to check if the selected region begins with a
+         // whitespace.  If yes then clipStart (of the first clip) and start are
+         // not the same.  Adjust currentEnd accordingly and set endMerge to
+         // false
+         if (!checkedFirstClip && clipStart > start) {
             checkedFirstClip = true;
-            if(i > 0) {
-               if (clipArray[i-1]->GetPlayEndSample() <= start) {
+            if (i > 0) {
+               if (clipArray[i - 1]->GetPlayEndSample() <= start)
                   currentEnd -= (clipStart - start);
-               }
             }
-            else {
+            else
                currentEnd -= (clipStart - start);
-            }
          }
 
-         auto revStart = (clipStart >= start)? clipStart: start;
-         auto revEnd = (clipEnd >= end)? end: clipEnd;
+         auto revStart = std::max(clipStart, start);
+         auto revEnd = std::min(end, clipEnd);
          auto revLen = revEnd - revStart;
          if (revEnd >= revStart) {
-            if(!ProcessOneClip(count, track, revStart, revLen, start, end)) // reverse the clip
-            {
+            // reverse the clip
+            if(!ProcessOneClip(count, track, revStart, revLen, start, end)) {
                rValue = false;
                break;
             }
 
-            auto clipOffsetStart = currentEnd - (clipEnd - clipStart); // calculate the offset required
-            double offsetStartTime = track->LongSamplesToTime(clipOffsetStart);
-            if(i+1 < clipArray.size()) // update currentEnd if there is a clip to process next
-            {
-               auto nextClipStart = clipArray[i+1]->GetPlayStartSample();
-               currentEnd = currentEnd - (clipEnd - clipStart) - (nextClipStart - clipEnd);
+            // calculate the offset required
+            auto clipOffsetStart = currentEnd - (clipEnd - clipStart);
+            double offsetStartTime = track.LongSamplesToTime(clipOffsetStart);
+            if (i + 1 < clipArray.size()) {
+               // update currentEnd if there is a clip to process next
+               auto nextClipStart = clipArray[i + 1]->GetPlayStartSample();
+               currentEnd = currentEnd -
+                  (clipEnd - clipStart) - (nextClipStart - clipEnd);
             }
 
-            revClips.push_back(track->RemoveAndReturnClip(clip)); // detach the clip from track
-            revClips.back()->SetPlayStartTime(track->LongSamplesToTime(track->TimeToLongSamples(offsetStartTime))); // align time to a sample and set offset
+            // detach the clip from track
+            revClips.push_back(track.RemoveAndReturnClip(clip));
+            // align time to a sample and set offset
+            revClips.back()->SetPlayStartTime(
+               track.LongSamplesToTime(
+                  track.TimeToLongSamples(offsetStartTime)));
          }
       }
-      else if (clipStart >= end) { // clip is after the selection region
-         otherClips.push_back(track->RemoveAndReturnClip(clip)); // simply remove and append to otherClips
+      else if (clipStart >= end) {
+         // clip is after the selection region
+         // simply remove and append to otherClips
+         otherClips.push_back(track.RemoveAndReturnClip(clip));
       }
    }
 
    // STEP 3: Append the clips from
    // revClips and otherClips back to the track
    // the last clip of revClips is appended to the track first
-   // PRL:  I don't think that matters, the sequence of storage of clips in the track
-   // is not elsewhere assumed to be by time
-   {
-      for (auto it = revClips.rbegin(), revEnd = revClips.rend(); rValue && it != revEnd; ++it)
-         rValue = track->AddClip(*it);
-   }
+   // PRL:  I don't think that matters, the sequence of storage of clips in the
+   // track is not elsewhere assumed to be by time
+   for (auto it = revClips.rbegin(), revEnd = revClips.rend();
+        rValue && it != revEnd; ++it)
+      rValue = track.AddClip(*it);
+
+   if (!rValue)
+      return false;
 
    for (auto &clip : otherClips)
-      if (!(rValue = track->AddClip(clip)))
+      if (!(rValue = track.AddClip(clip)))
           break;
 
    return rValue;
 }
 
-bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
-                               sampleCount start, sampleCount len,
-                               sampleCount originalStart, sampleCount originalEnd)
+bool EffectReverse::ProcessOneClip(int count, WaveTrack &track,
+   sampleCount start, sampleCount len,
+   sampleCount originalStart, sampleCount originalEnd)
 {
    bool rc = true;
    // keep track of two blocks whose data we will swap
    auto first = start;
 
-   auto blockSize = track->GetMaxBlockSize();
+   auto blockSize = track.GetMaxBlockSize();
    Floats buffer1{ blockSize };
    const auto pBuffer1 = buffer1.get();
    Floats buffer2{ blockSize };
@@ -233,17 +248,17 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
 
    while (len > 1) {
       auto block =
-         limitSampleBufferSize(track->GetBestBlockSize(first), len / 2);
+         limitSampleBufferSize(track.GetBestBlockSize(first), len / 2);
       auto second = first + (len - block);
 
-      track->GetFloats(buffer1.get(), first, block);
+      track.GetFloats(buffer1.get(), first, block);
       std::reverse(pBuffer1, pBuffer1 + block);
-      track->GetFloats(buffer2.get(), second, block);
+      track.GetFloats(buffer2.get(), second, block);
       std::reverse(pBuffer2, pBuffer2 + block);
       // Don't dither on later rendering if only reversing samples
-      track->Set((samplePtr)buffer2.get(), floatSample, first, block,
+      track.Set((samplePtr)buffer2.get(), floatSample, first, block,
          narrowestSampleFormat);
-      track->Set((samplePtr)buffer1.get(), floatSample, second, block,
+      track.Set((samplePtr)buffer1.get(), floatSample, second, block,
          narrowestSampleFormat);
 
       len -= 2 * block;
