@@ -46,15 +46,19 @@ protected:
 
 private:
    bool ProcessLabelTrack(LabelTrack *track);
-   void Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *warper);
+   /*!
+    @pre `orig.IsLeader()`
+    @pre `out.IsLeader()`
+    @pre `orig.NChannels() == out.NChannels()`
+    */
+   void Finalize(
+      WaveTrack &orig, const WaveTrack &out, const TimeWarper &warper);
 
    double rateStart, rateEnd, pitchStart, pitchEnd;
    bool bLinkRatePitch, bRateReferenceInput, bPitchReferenceInput;
    SlideType rateSlideType;
    SlideType pitchSlideType;
    int mCurTrackNum;
-   double mCurT0;
-   double mCurT1;
    float mTotalStretch;
 
    friend class EffectChangeTempo;

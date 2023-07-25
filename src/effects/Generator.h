@@ -34,16 +34,6 @@ protected:
    virtual bool GenerateTrack(EffectSettings &settings,
       WaveTrack *tmp, const WaveTrack &track, int ntrack) = 0;
 
-   // Actions to perform at the respective points in the generation process
-   // NEW virtuals
-   virtual void BeforeGenerate() { };
-   virtual void BeforeTrack(const WaveTrack & WXUNUSED(track)) { };
-
-   // Actions to perform upon respective outcomes
-   // (For example, Success might save the parameters that were used.)
-   virtual void Success() { };
-   virtual void Failure() {};
-
    // Precondition:
    // mDuration is set to the amount of time to generate in seconds
    // Postcondition:

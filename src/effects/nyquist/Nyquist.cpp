@@ -900,14 +900,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
                mCurNumChannels = 2;
 
                mCurTrack[1] = * ++ channels.first;
-               if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
-                  EffectUIServices::DoMessageBox(*this,
-                     XO(
-"Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
-                     wxOK | wxCENTRE );
-                  success = false;
-                  goto finish;
-               }
                mCurStart[1] = mCurTrack[1]->TimeToLongSamples(mT0);
             }
 
@@ -1703,16 +1695,15 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       else {
          mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, mMergeClips != 0);
       }
+   }
 
-      // If we were first in the group adjust non-selected group tracks
-      if (mFirstInGroup) {
-         for (auto t : SyncLock::Group(mCurTrack[i]))
-         {
-            if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t)) {
-               t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
-            }
-         }
-      }
+   // If we were first in the group adjust non-selected group tracks
+   if (mFirstInGroup) {
+      for (auto t : SyncLock::Group(mCurTrack[0]))
+         if (t->IsLeader() &&
+            !t->GetSelected() && SyncLock::IsSyncLockSelected(t)
+         )
+            t->SyncLockAdjust(mT1, mT0 + outputTrack[0]->GetEndTime());
 
       // Only the first channel can be first in its group
       mFirstInGroup = false;

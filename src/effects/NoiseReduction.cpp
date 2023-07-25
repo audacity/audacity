@@ -702,7 +702,7 @@ bool EffectNoiseReduction::Worker::Process(
    TrackList &tracks, double inT0, double inT1)
 {
    mProgressTrackCount = 0;
-   for ( auto track : tracks.Selected< WaveTrack >() ) {
+   for (auto track : tracks.SelectedLeaders<WaveTrack>()) {
       mProgressWindowCount = 0;
       if (track->GetRate() != mStatistics.mRate) {
          if (mDoProfile)
@@ -734,11 +734,22 @@ bool EffectNoiseReduction::Worker::Process(
          else
             mLen += extra;
 
-         if (!TrackSpectrumTransformer::Process(
-            Processor, track, mHistoryLen, start, len ))
-            return false;
+         auto t0 = track->LongSamplesToTime(start);
+         auto tLen = track->LongSamplesToTime(len);
+         auto tempList = TrackList::Create(nullptr);
+         for (const auto pChannel : TrackList::Channels(track)) {
+            if (!TrackSpectrumTransformer::Process(
+               Processor, pChannel, mHistoryLen, start, len))
+               return false;
+            tempList->Add(mOutputTrack);
+            assert(mOutputTrack->IsLeader() == pChannel->IsLeader());
+            mOutputTrack.reset();
+            ++mProgressTrackCount;
+         }
+         auto iter = TrackList::Channels(*tempList->Leaders().begin()).begin();
+         for (const auto pChannel : TrackList::Channels(track))
+            pChannel->ClearAndPaste(t0, t0 + tLen, *iter++, true, false);
       }
-      ++mProgressTrackCount;
    }
 
    if (mDoProfile) {

@@ -55,9 +55,9 @@ EffectSoundTouch::~EffectSoundTouch()
 bool EffectSoundTouch::ProcessLabelTrack(
    LabelTrack *lt, const TimeWarper &warper)
 {
-//   SetTimeWarper(std::make_unique<RegionTimeWarper>(mCurT0, mCurT1,
- //           std::make_unique<LinearTimeWarper>(mCurT0, mCurT0,
-   //            mCurT1, mCurT0 + (mCurT1-mCurT0)*mFactor)));
+//   SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1,
+ //           std::make_unique<LinearTimeWarper>(mT0, mT0,
+   //            mT1, mT0 + (mT1 - mT0) * mFactor)));
    lt->WarpLabels(warper);
    return true;
 }
@@ -65,7 +65,7 @@ bool EffectSoundTouch::ProcessLabelTrack(
 #ifdef USE_MIDI
 bool EffectSoundTouch::ProcessNoteTrack(NoteTrack *nt, const TimeWarper &warper)
 {
-   nt->WarpAndTransposeNotes(mCurT0, mCurT1, warper, mSemitones);
+   nt->WarpAndTransposeNotes(mT0, mT1, warper, mSemitones);
    return true;
 }
 #endif
@@ -114,17 +114,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
          if (!leftTrack.GetSelected())
             return fallthrough();
 
-         //Get start and end times from selection
-         mCurT0 = mT0;
-         mCurT1 = mT1;
-
-         //Set the current bounds to whichever left marker is
-         //greater and whichever right marker is less
-         mCurT0 = wxMax(mT0, mCurT0);
-         mCurT1 = wxMin(mT1, mCurT1);
-
          // Process only if the right marker is to the right of the left marker
-         if (mCurT1 > mCurT0) {
+         if (mT1 > mT0) {
             const auto pSoundTouch = std::make_unique<soundtouch::SoundTouch>();
             initer(pSoundTouch.get());
 
@@ -133,20 +124,10 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
             auto rightTrack = (channels.size() > 1)
                ? * ++ channels.first
                : nullptr;
-            if ( rightTrack ) {
-               double t;
-
-               //Adjust bounds by the right tracks markers
-               t = rightTrack->GetStartTime();
-               t = wxMax(mT0, t);
-               mCurT0 = wxMin(mCurT0, t);
-               t = rightTrack->GetEndTime();
-               t = wxMin(mT1, t);
-               mCurT1 = wxMax(mCurT1, t);
-
+            if (rightTrack) {
                //Transform the marker timepoints to samples
-               auto start = leftTrack.TimeToLongSamples(mCurT0);
-               auto end = leftTrack.TimeToLongSamples(mCurT1);
+               auto start = leftTrack.TimeToLongSamples(mT0);
+               auto end = leftTrack.TimeToLongSamples(mT1);
 
                //Inform soundtouch there's 2 channels
                pSoundTouch->setChannels(2);
@@ -158,8 +139,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
                mCurTrackNum++; // Increment for rightTrack, too.
             } else {
                //Transform the marker timepoints to samples
-               auto start = leftTrack.TimeToLongSamples(mCurT0);
-               auto end = leftTrack.TimeToLongSamples(mCurT1);
+               auto start = leftTrack.TimeToLongSamples(mT0);
+               auto end = leftTrack.TimeToLongSamples(mT1);
 
                //Inform soundtouch there's a single channel
                pSoundTouch->setChannels(1);
@@ -175,9 +156,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
       [&](Track &t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels
-         for (auto *channel : TrackList::Channels(&t))
-            if (mustSync && SyncLock::IsSyncLockSelected(channel))
-               channel->SyncLockAdjust(mT1, warper.Warp(mT1));
+         if (mustSync && SyncLock::IsSyncLockSelected(&t))
+            t.SyncLockAdjust(mT1, warper.Warp(mT1));
       }
    );
 
@@ -213,8 +193,8 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
       auto s = start;
       while (s < end) {
          //Get a block of samples (smaller than the size of the buffer)
-         const auto block = wxMin(8192,
-            limitSampleBufferSize( track->GetBestBlockSize(s), end - s ));
+         const auto block = std::min<size_t>(8192,
+            limitSampleBufferSize(track->GetBestBlockSize(s), end - s));
 
          //Get the samples from the track and put them in the buffer
          track->GetFloats(buffer.get(), s, block);
@@ -253,10 +233,10 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
    }
 
    // Transfer output samples to the original
-   Finalize(track, outputTrack.get(), warper);
+   Finalize(*track, *outputTrack, warper);
 
    double newLength = outputTrack->GetEndTime();
-   m_maxNewLength = wxMax(m_maxNewLength, newLength);
+   m_maxNewLength = std::max(m_maxNewLength, newLength);
 
    //Return true because the effect processing succeeded.
    return true;
@@ -270,6 +250,8 @@ bool EffectSoundTouch::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
 
    auto outputLeftTrack = leftTrack->EmptyCopy();
    auto outputRightTrack = rightTrack->EmptyCopy();
+   auto tempList = TrackList::Temporary(
+      nullptr, outputLeftTrack, outputRightTrack);
 
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
@@ -349,15 +331,12 @@ bool EffectSoundTouch::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
    }
 
    // Transfer output samples to the original
-   Finalize(leftTrack, outputLeftTrack.get(), warper);
-   Finalize(rightTrack, outputRightTrack.get(), warper);
+   Finalize(*leftTrack, *outputLeftTrack, warper);
 
 
    // Track the longest result length
    double newLength = outputLeftTrack->GetEndTime();
-   m_maxNewLength = wxMax(m_maxNewLength, newLength);
-   newLength = outputRightTrack->GetEndTime();
-   m_maxNewLength = wxMax(m_maxNewLength, newLength);
+   m_maxNewLength = std::max(m_maxNewLength, newLength);
 
    //Return true because the effect processing succeeded.
    return true;
@@ -386,60 +365,71 @@ bool EffectSoundTouch::ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
    return true;
 }
 
-void EffectSoundTouch::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper &warper)
+void EffectSoundTouch::Finalize(
+   WaveTrack &orig, WaveTrack &out, const TimeWarper &warper)
 {
+   assert(orig.IsLeader());
+   assert(out.IsLeader());
+   assert(out.NChannels() == orig.NChannels());
+   auto outChannels = TrackList::Channels(&out);
+   auto origChannels = TrackList::Channels(&orig);
    if (mPreserveLength) {
-      auto newLen = out->GetPlaySamplesCount();
-      auto oldLen = out->TimeToLongSamples(mCurT1) - out->TimeToLongSamples(mCurT0);
+      auto newLen = out.GetPlaySamplesCount();
+      auto oldLen = out.TimeToLongSamples(mT1) - out.TimeToLongSamples(mT0);
 
       // Pad output track to original length since SoundTouch may remove samples
       if (newLen < oldLen) {
-         out->InsertSilence(out->LongSamplesToTime(newLen - 1),
-                                 out->LongSamplesToTime(oldLen - newLen));
+         const auto t = out.LongSamplesToTime(newLen - 1);
+         const auto len = out.LongSamplesToTime(oldLen - newLen);
+         for (auto pChannel : outChannels)
+            pChannel->InsertSilence(t, len);
       }
       // Trim output track to original length since SoundTouch may add extra samples
       else if (newLen > oldLen) {
-         out->Trim(0, out->LongSamplesToTime(oldLen));
+         const auto t1 = out.LongSamplesToTime(oldLen);
+         for (auto pChannel : outChannels)
+            pChannel->Trim(0, t1);
       }
    }
 
-   // Silenced samples will be inserted in gaps between clips, so capture where these
-   // gaps are for later deletion
+   // Silenced samples will be inserted in gaps between clips, so capture where
+   // these gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
-   double last = mCurT0;
-   auto clips = orig->SortedClipArray();
+   double last = mT0;
+   auto clips = orig.SortedClipArray();
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {
       auto st = clip->GetPlayStartTime();
       auto et = clip->GetPlayEndTime();
 
-      if (st >= mCurT0 || et < mCurT1) {
-         if (mCurT0 < st && clip == front) {
-            gaps.push_back(std::make_pair(mCurT0, st));
+      if (st >= mT0 || et < mT1) {
+         if (mT0 < st && clip == front) {
+            gaps.push_back(std::make_pair(mT0, st));
          }
-         else if (last < st && mCurT0 <= last ) {
+         else if (last < st && mT0 <= last ) {
             gaps.push_back(std::make_pair(last, st));
          }
 
-         if (et < mCurT1 && clip == back) {
-            gaps.push_back(std::make_pair(et, mCurT1));
+         if (et < mT1 && clip == back) {
+            gaps.push_back(std::make_pair(et, mT1));
          }
       }
       last = et;
    }
 
    // Take the output track and insert it in place of the original sample data
-   orig->ClearAndPaste(mCurT0, mCurT1, out, true, true, &warper);
+   for (auto pChannel : origChannels)
+      pChannel->ClearAndPaste(
+         mT0, mT1, *outChannels.first++, true, true, &warper);
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {
-      auto st = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.first));
-      auto et = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.second));
-      if (st >= mCurT0 && et <= mCurT1 && st != et)
-      {
-         orig->SplitDelete(warper.Warp(st), warper.Warp(et));
-      }
+      auto st = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.first));
+      auto et = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.second));
+      if (st >= mT0 && et <= mT1 && st != et)
+         for (auto pChannel : origChannels)
+            pChannel->SplitDelete(warper.Warp(st), warper.Warp(et));
    }
 }
 

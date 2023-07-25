@@ -280,19 +280,21 @@ void Track::Notify(bool allChannels, int code)
 
 void Track::SyncLockAdjust(double oldT1, double newT1)
 {
-   if (newT1 > oldT1) {
-      // Insert space within the track
-
-      if (oldT1 > GetEndTime())
+   assert(IsLeader());
+   const auto endTime = GetEndTime();
+   if (newT1 > oldT1 && oldT1 > endTime)
          return;
-
-      auto tmp = Cut(oldT1, GetEndTime());
-
-      Paste(newT1, tmp.get());
-   }
-   else if (newT1 < oldT1) {
-      // Remove from the track
-      Clear(newT1, oldT1);
+   const auto channels = TrackList::Channels(this);
+   for (const auto pChannel : channels) {
+      if (newT1 > oldT1) {
+         // Insert space within the track
+            auto tmp = pChannel->Cut(oldT1, endTime);
+            pChannel->Paste(newT1, tmp.get());
+      }
+      else if (newT1 < oldT1) {
+         // Remove from the track
+         pChannel->Clear(newT1, oldT1);
+      }
    }
 }
 
@@ -382,9 +384,9 @@ TrackList::TrackList( AudacityProject *pOwner )
 }
 
 // Factory function
-std::shared_ptr<TrackList> TrackList::Create( AudacityProject *pOwner )
+TrackListHolder TrackList::Create(AudacityProject *pOwner)
 {
-   return std::make_shared<TrackList>( pOwner );
+   return std::make_shared<TrackList>(pOwner);
 }
 
 #if 0
@@ -1365,4 +1367,31 @@ TrackList *TrackList::FindUndoTracks(const UndoStackElem &state)
    if (iter != end)
       return static_cast<TrackListRestorer*>(iter->get())->mpTracks.get();
    return nullptr;
+}
+
+TrackListHolder TrackList::Temporary(AudacityProject *pProject,
+   const Track::Holder &left, const Track::Holder &right)
+{
+    assert(left != nullptr);
+    assert(left->GetOwner() == nullptr);
+    assert(right == nullptr || right->GetOwner() == nullptr);
+   // Make a well formed channel group from these tracks
+   auto tempList = Create(pProject);
+   tempList->Add(left);
+   if (right) {
+      tempList->Add(right);
+      tempList->MakeMultiChannelTrack(*left, 2, true);
+   }
+   return tempList;
+}
+
+void TrackList::Append(TrackList &&list)
+{
+   auto iter = list.ListOfTracks::begin(),
+      end = list.ListOfTracks::end();
+   while (iter != end) {
+      auto pTrack = *iter;
+      iter = list.erase(iter);
+      this->Add(pTrack);
+   }
 }

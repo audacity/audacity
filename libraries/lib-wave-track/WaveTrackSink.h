@@ -21,6 +21,7 @@
 #include <memory>
 
 class WaveTrack;
+class TrackList;
 
 class WAVE_TRACK_API WaveTrackSink final : public AudioGraph::Sink {
 public:
@@ -38,8 +39,9 @@ public:
 
    /*!
     @copydoc DoConsume
+    @return accumulated data from all calls to Release
     */
-   void Flush(Buffers &data, double t0, double t1);
+   std::shared_ptr<TrackList> Flush(Buffers &data);
 
 private:
    /*!
@@ -51,6 +53,7 @@ private:
    WaveTrack &mLeft;
    WaveTrack *const mpRight;
    const std::shared_ptr<WaveTrack> mGenLeft, mGenRight;
+   const std::shared_ptr<TrackList> mList;
    const bool mIsProcessor;
    const sampleFormat mEffectiveFormat;
 

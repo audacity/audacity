@@ -859,6 +859,7 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
 
 void LabelTrack::SyncLockAdjust(double oldT1, double newT1)
 {
+   assert(IsLeader());
    if (newT1 > oldT1) {
       // Insert space within the track
 

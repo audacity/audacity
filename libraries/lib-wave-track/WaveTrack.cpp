@@ -1332,43 +1332,46 @@ void WaveTrack::HandleClear(double t0, double t1,
 
 void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 {
-   if (newT1 > oldT1) {
-      // Insert space within the track
-
+   assert(IsLeader());
+   const auto endTime = GetEndTime();
+   if (newT1 > oldT1 &&
       // JKC: This is a rare case where using >= rather than > on a float matters.
       // GetEndTime() looks through the clips and may give us EXACTLY the same
       // value as T1, when T1 was set to be at the end of one of those clips.
-      if (oldT1 >= GetEndTime())
+      oldT1 >= endTime)
          return;
+   const auto channels = TrackList::Channels(this);
+   if (newT1 > oldT1) {
+      // Insert space within the track
 
       // If track is empty at oldT1 insert whitespace; otherwise, silence
-      if (IsEmpty(oldT1, oldT1))
-      {
+      if (IsEmpty(oldT1, oldT1)) {
          // Check if clips can move
          if (EditClipsCanMove.Read()) {
             const auto offset = newT1 - oldT1;
             const auto rate = GetRate();
-            for(const auto& clip : mClips)
-            {
-               if (clip->GetPlayStartTime() > oldT1 - (1.0 / rate))
-                  clip->Offset(offset);
-            }
+            for (const auto pChannel : channels)
+               for (const auto& clip : pChannel->mClips)
+                  if (clip->GetPlayStartTime() > oldT1 - (1.0 / rate))
+                     clip->Offset(offset);
          }
          return;
       }
       else {
          // AWD: Could just use InsertSilence() on its own here, but it doesn't
          // follow EditClipCanMove rules (Paste() does it right)
-         auto tmp = std::make_shared<WaveTrack>(
-            mpFactory, GetSampleFormat(), GetRate() );
-
-         tmp->InsertSilence(0.0, newT1 - oldT1);
-         tmp->Flush();
-         Paste(oldT1, tmp.get());
+         for (const auto pChannel : channels) {
+            auto tmp = std::make_shared<WaveTrack>(
+               mpFactory, GetSampleFormat(), GetRate());
+            tmp->InsertSilence(0.0, newT1 - oldT1);
+            tmp->Flush();
+            pChannel->Paste(oldT1, tmp.get());
+         }
       }
    }
    else if (newT1 < oldT1) {
-      Clear(newT1, oldT1);
+      for (const auto pChannel : channels)
+         pChannel->Clear(newT1, oldT1);
    }
 }
 

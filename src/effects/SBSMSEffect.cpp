@@ -10,9 +10,6 @@ This class contains all of the common code for an
 effect that uses SBSMS to do its processing (TimeScale)
 
 **********************************************************************/
-
-
-
 #if USE_SBSMS
 #include "SBSMSEffect.h"
 #include "EffectOutputTracks.h"
@@ -24,6 +21,8 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "TimeWarper.h"
+
+#include <cassert>
 
 enum {
   SBSMSOutBlockSize = 512
@@ -170,30 +169,37 @@ void EffectSBSMS::setParameters(double tempoRatio, double pitchRatio)
 std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double duration,
                              double rateStart, double rateEnd, SlideType rateSlideType)
 {
-   std::unique_ptr<TimeWarper> warper;
-   if (rateStart == rateEnd || rateSlideType == SlideConstant) {
-      warper = std::make_unique<LinearTimeWarper>(t0, t0, t1, t0+duration);
-   } else if(rateSlideType == SlideLinearInputRate) {
-      warper = std::make_unique<LinearInputRateTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearOutputRate) {
-      warper = std::make_unique<LinearOutputRateTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearInputStretch) {
-      warper = std::make_unique<LinearInputStretchTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearOutputStretch) {
-      warper = std::make_unique<LinearOutputStretchTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideGeometricInput) {
-      warper = std::make_unique<GeometricInputTimeWarper>(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideGeometricOutput) {
-      warper = std::make_unique<GeometricOutputTimeWarper>(t0, t1, rateStart, rateEnd);
-   }
-   return warper;
+   if (rateStart == rateEnd || rateSlideType == SlideConstant)
+      return std::make_unique<LinearTimeWarper>(
+         t0, t0, t1, t0 + duration);
+   else if(rateSlideType == SlideLinearInputRate)
+      return std::make_unique<LinearInputRateTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideLinearOutputRate)
+      return std::make_unique<LinearOutputRateTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideLinearInputStretch)
+      return std::make_unique<LinearInputStretchTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideLinearOutputStretch)
+      return std::make_unique<LinearOutputStretchTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideGeometricInput)
+      return std::make_unique<GeometricInputTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else if(rateSlideType == SlideGeometricOutput)
+      return std::make_unique<GeometricOutputTimeWarper>(
+         t0, t1, rateStart, rateEnd);
+   else
+      return std::make_unique<IdentityTimeWarper>();
 }
 
 // Labels inside the affected region are moved to match the audio; labels after
 // it are shifted along appropriately.
 bool EffectSBSMS::ProcessLabelTrack(LabelTrack *lt)
 {
-   auto warper1 = createTimeWarper(mT0,mT1,(mT1-mT0)*mTotalStretch,rateStart,rateEnd,rateSlideType);
+   auto warper1 = createTimeWarper(
+      mT0, mT1, (mT1 - mT0) * mTotalStretch, rateStart, rateEnd, rateSlideType);
    RegionTimeWarper warper{ mT0, mT1, std::move(warper1) };
    lt->WarpLabels(warper);
    return true;
@@ -237,19 +243,10 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
          if (!leftTrack.GetSelected())
             return fallthrough();
 
-         //Get start and end times from selection
-         mCurT0 = mT0;
-         mCurT1 = mT1;
-
-         //Set the current bounds to whichever left marker is
-         //greater and whichever right marker is less
-         mCurT0 = wxMax(mT0, mCurT0);
-         mCurT1 = wxMin(mT1, mCurT1);
-
          // Process only if the right marker is to the right of the left marker
-         if (mCurT1 > mCurT0) {
-            auto start = leftTrack.TimeToLongSamples(mCurT0);
-            auto end = leftTrack.TimeToLongSamples(mCurT1);
+         if (mT1 > mT0) {
+            auto start = leftTrack.TimeToLongSamples(mT0);
+            auto end = leftTrack.TimeToLongSamples(mT1);
 
             // TODO: more-than-two-channels
             auto channels = TrackList::Channels(&leftTrack);
@@ -257,19 +254,9 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
                ? * ++ channels.first
                : nullptr;
             if (rightTrack) {
-               double t;
-
-               //Adjust bounds by the right tracks markers
-               t = rightTrack->GetStartTime();
-               t = wxMax(mT0, t);
-               mCurT0 = wxMin(mCurT0, t);
-               t = rightTrack->GetEndTime();
-               t = wxMin(mT1, t);
-               mCurT1 = wxMax(mCurT1, t);
-
                //Transform the marker timepoints to samples
-               start = leftTrack.TimeToLongSamples(mCurT0);
-               end = leftTrack.TimeToLongSamples(mCurT1);
+               start = leftTrack.TimeToLongSamples(mT0);
+               end = leftTrack.TimeToLongSamples(mT1);
 
                mCurTrackNum++; // Increment for rightTrack, too.
             }
@@ -347,16 +334,22 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             auto samplesOut = (sampleCount) (samplesToOutput.as_float() * (srTrack/srProcess));
 
             // Duration in track time
-            double duration =  (mCurT1-mCurT0) * mTotalStretch;
+            double duration = (mT1 - mT0) * mTotalStretch;
 
             if(duration > maxDuration)
                maxDuration = duration;
 
-            auto warper = createTimeWarper(mCurT0,mCurT1,maxDuration,rateStart,rateEnd,rateSlideType);
+            auto warper = createTimeWarper(
+               mT0, mT1, maxDuration, rateStart, rateEnd, rateSlideType);
 
+            std::shared_ptr<TrackList> tempList;
             rb.outputLeftTrack = leftTrack.EmptyCopy();
-            if(rightTrack)
+            if (rightTrack) {
                rb.outputRightTrack = rightTrack->EmptyCopy();
+               // To satisfy preconditions of Finalize()
+               tempList = TrackList::Temporary(
+                  nullptr, rb.outputLeftTrack, rb.outputRightTrack);
+            }
    
             long pos = 0;
             long outputCount = -1;
@@ -406,19 +399,15 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             if(rightTrack)
                rb.outputRightTrack->Flush();
 
-            Finalize(&leftTrack, rb.outputLeftTrack.get(), warper.get());
-            if(rightTrack)
-               Finalize(rightTrack, rb.outputRightTrack.get(), warper.get());
+            Finalize(leftTrack, *rb.outputLeftTrack, *warper);
          }
          mCurTrackNum++;
       }; },
       [&](Track &t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels
-         for (auto *channel : TrackList::Channels(&t))
-            if (SyncLock::IsSyncLockSelected(channel))
-               channel->SyncLockAdjust(
-                  mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
+         if (SyncLock::IsSyncLockSelected(&t))
+            t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mTotalStretch);
       }
    );
 
@@ -428,45 +417,51 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-void EffectSBSMS::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *warper)
+void EffectSBSMS::Finalize(
+   WaveTrack &orig, const WaveTrack &out, const TimeWarper &warper)
 {
+   assert(orig.IsLeader());
+   assert(out.IsLeader());
+   assert(orig.NChannels() == out.NChannels());
+   auto origRange = TrackList::Channels(&orig);
+   auto outRange = TrackList::Channels(&out);
    // Silenced samples will be inserted in gaps between clips, so capture where these
    // gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
-   double last = mCurT0;
-   auto clips = orig->SortedClipArray();
+   double last = mT0;
+   auto clips = orig.SortedClipArray();
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {
       auto st = clip->GetPlayStartTime();
       auto et = clip->GetPlayEndTime();
 
-      if (st >= mCurT0 || et < mCurT1) {
-         if (mCurT0 < st && clip == front) {
-            gaps.push_back(std::make_pair(mCurT0, st));
+      if (st >= mT0 || et < mT1) {
+         if (mT0 < st && clip == front) {
+            gaps.push_back(std::make_pair(mT0, st));
          }
-         else if (last < st && mCurT0 <= last ) {
+         else if (last < st && mT0 <= last ) {
             gaps.push_back(std::make_pair(last, st));
          }
 
-         if (et < mCurT1 && clip == back) {
-            gaps.push_back(std::make_pair(et, mCurT1));
+         if (et < mT1 && clip == back) {
+            gaps.push_back(std::make_pair(et, mT1));
          }
       }
       last = et;
    }
 
    // Take the output track and insert it in place of the original sample data
-   orig->ClearAndPaste(mCurT0, mCurT1, out, true, true, warper);
+   for (const auto pChannel : origRange)
+      pChannel->ClearAndPaste(mT0, mT1, *outRange.first++, true, true, &warper);
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {
-      auto st = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.first));
-      auto et = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.second));
-      if (st >= mCurT0 && et <= mCurT1 && st != et)
-      {
-         orig->SplitDelete(warper->Warp(st), warper->Warp(et));
-      }
+      auto st = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.first));
+      auto et = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.second));
+      if (st >= mT0 && et <= mT1 && st != et)
+         for (const auto pChannel : origRange)
+            pChannel->SplitDelete(warper.Warp(st), warper.Warp(et));
    }
 }
 

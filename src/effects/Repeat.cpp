@@ -99,7 +99,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
    bool bGoodResult = true;
    double maxDestLen = 0.0; // used to change selection to generated bit
 
-   outputs.Get().Any().VisitWhile(bGoodResult,
+   outputs.Get().Leaders().VisitWhile(bGoodResult,
       [&](LabelTrack &track) {
          if (SyncLock::IsSelectedOrSyncLockSelected(&track))
          {
@@ -119,50 +119,56 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          if (len <= 0)
             return;
 
-         auto dest = std::dynamic_pointer_cast<WaveTrack>(track.Copy(mT0, mT1));
+         TrackListHolder tempList;
+         for (const auto pChannel : TrackList::Channels(&track))
+            tempList->Add(pChannel->Copy(mT0, mT1));
+         const auto firstTemp = *tempList->Leaders<const WaveTrack>().begin();
+
          std::vector<wxString> clipNames;
-         for(auto clip : dest->SortedClipArray())
-         {
-            if(!clip->GetIsPlaceholder())
+         for (auto clip : firstTemp->SortedClipArray()){
+            if (!clip->GetIsPlaceholder())
                clipNames.push_back(clip->GetName());
          }
+
          auto t0 = tc;
-         for(int j=0; j<repeatCount; j++)
-         {
-            if (TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
-            {
+         for (size_t j = 0; j < repeatCount; ++j) {
+            if (TrackProgress(nTrack, j / repeatCount)) {
+               // TrackProgress returns true on Cancel.
                bGoodResult = false;
                return;
             }
-            track.Paste(t0, dest.get());
+            auto iter = TrackList::Channels(firstTemp).begin();
+            for (const auto pChannel : TrackList::Channels(&track))
+               pChannel->Paste(t0, *iter++);
             t0 += tLen;
          }
          if (t0 > maxDestLen)
             maxDestLen = t0;
 
-         auto clips = track.SortedClipArray();
-         for(size_t i = 0; i < clips.size(); ++i)
-         {
-            const auto eps = 0.5 / track.GetRate();
-            //Find first pasted clip
-            if(std::abs(clips[i]->GetPlayStartTime() - tc) > eps)
-               continue;
+         for (const auto pChannel : TrackList::Channels(&track)) {
+            auto clips = pChannel->SortedClipArray();
+            for (size_t i = 0; i < clips.size(); ++i) {
+               const auto eps = 0.5 / track.GetRate();
+               //Find first pasted clip
+               if (std::abs(clips[i]->GetPlayStartTime() - tc) > eps)
+                  continue;
 
-            //Fix pasted clips names
-            for(int j = 0; j < repeatCount; ++j)
-            {
-               for(size_t k = 0; k < clipNames.size(); ++k)
-                  clips[i + k]->SetName(clipNames[k]);
-               i += clipNames.size();
+               //Fix pasted clips names
+               for(size_t j = 0; j < repeatCount; ++j) {
+                  for (size_t k = 0; k < clipNames.size(); ++k)
+                     if (i + k < clips.size())
+                        clips[i + k]->SetName(clipNames[k]);
+                  i += clipNames.size();
+               }
+               break;
             }
-            break;
          }
 
          nTrack++;
       }; },
       [&](Track &t)
       {
-         if( SyncLock::IsSyncLockSelected(&t) )
+         if (SyncLock::IsSyncLockSelected(&t))
             t.SyncLockAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
       }
    );
