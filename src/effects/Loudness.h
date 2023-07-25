@@ -69,13 +69,14 @@ private:
 
    void AllocBuffers(TrackList &outputs);
    void FreeBuffers();
-   bool GetTrackRMS(WaveTrack* track, float& rms);
+   static bool GetTrackRMS(WaveTrack &track,
+      double curT0, double curT1, float &rms);
    bool ProcessOne(WaveTrack &track, size_t nChannels,
-      EBUR128 *pLoudnessProcessor);
+      double curT0, double curT1, float mult, EBUR128 *pLoudnessProcessor);
    void LoadBufferBlock(WaveTrack &track, size_t nChannels,
       sampleCount pos, size_t len);
    bool AnalyseBufferBlock(EBUR128 &loudnessProcessor);
-   bool ProcessBufferBlock();
+   bool ProcessBufferBlock(float mult);
    void StoreBufferBlock(WaveTrack &track, size_t nChannels,
       sampleCount pos, size_t len);
 
@@ -93,17 +94,11 @@ private:
    bool   mDualMono;
    int    mNormalizeTo;
 
-   double mCurT0;
-   double mCurT1;
    double mProgressVal;
    int    mSteps;
    TranslatableString mProgressMsg;
    double mTrackLen;
    double mCurRate;
-
-   float  mMult;
-   float  mRatio;
-   float  mRMS[2];
 
    wxSimplebook *mBook;
    wxChoice *mChoice;

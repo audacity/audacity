@@ -95,12 +95,14 @@ EffectType EffectLoudness::GetType() const
 
 bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 {
-   if(mNormalizeTo == kLoudness)
-      // LU use 10*log10(...) instead of 20*log10(...)
-      // so multiply level by 2 and use standard DB_TO_LINEAR macro.
-      mRatio = DB_TO_LINEAR(std::clamp<double>(mLUFSLevel*2, LUFSLevel.min, LUFSLevel.max));
-   else // RMS
-      mRatio = DB_TO_LINEAR(std::clamp<double>(mRMSLevel, RMSLevel.min, RMSLevel.max));
+   const float ratio = DB_TO_LINEAR(
+      (mNormalizeTo == kLoudness)
+         ?  // LU use 10*log10(...) instead of 20*log10(...)
+            // so multiply level by 2
+            std::clamp<double>(mLUFSLevel * 2, LUFSLevel.min, LUFSLevel.max)
+         :  // RMS
+            std::clamp<double>(mRMSLevel, RMSLevel.min, RMSLevel.max)
+   );
 
    // Iterate over each track
    EffectOutputTracks outputs{ *mTracks };
@@ -120,15 +122,16 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 
       // Set the current bounds to whichever left marker is
       // greater and whichever right marker is less:
-      mCurT0 = mT0 < trackStart? trackStart: mT0;
-      mCurT1 = mT1 > trackEnd? trackEnd: mT1;
+      const double curT0 = std::max(trackStart, mT0);
+      const double curT1 = std::min(trackEnd, mT1);
 
       // Get the track rate
       mCurRate = pTrack->GetRate();
 
       wxString msg;
       auto trackName = pTrack->GetName();
-      mSteps = 2;
+      // This affects only the progress indicator update during ProcessOne
+      mSteps = (mNormalizeTo == kLoudness) ? 2 : 1;
 
       mProgressMsg =
          topMsg + XO("Analyzing: %s").Format( trackName );
@@ -142,21 +145,23 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 
       const auto processOne = [&](WaveTrack &track){
          std::optional<EBUR128> loudnessProcessor;
+         float RMS[2];
+
          if (mNormalizeTo == kLoudness) {
             loudnessProcessor.emplace(mCurRate, nChannels);
-            if (!ProcessOne(track, nChannels, &*loudnessProcessor))
+            if (!ProcessOne(track, nChannels,
+               curT0, curT1, 0, &*loudnessProcessor))
                // Processing failed -> abort
                return false;
          }
          else {
             // RMS
             size_t idx = 0;
-            for(auto channel : range) {
-               if(!GetTrackRMS(channel, mRMS[idx]))
+            for (const auto pChannel : range) {
+               if (!GetTrackRMS(*pChannel, curT0, curT1, RMS[idx]))
                   return false;
                ++idx;
             }
-            mSteps = 1;
          }
 
          // Calculate normalization values the analysis results
@@ -165,33 +170,33 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
             extent = loudnessProcessor->IntegrativeLoudness();
          else {
             // RMS
-            extent = mRMS[0];
-            if(mProcStereo)
+            extent = RMS[0];
+            if (mProcStereo)
                // RMS: use average RMS, average must be calculated in quadratic
                // domain.
-               extent = sqrt((mRMS[0] * mRMS[0] + mRMS[1] * mRMS[1]) / 2.0);
+               extent = sqrt((RMS[0] * RMS[0] + RMS[1] * RMS[1]) / 2.0);
          }
 
          if (extent == 0.0) {
             FreeBuffers();
             return false;
          }
-         mMult = mRatio / extent;
+         float mult = ratio / extent;
 
          if (mNormalizeTo == kLoudness) {
             // Target half the LUFS value if mono (or independent processed
             // stereo) shall be treated as dual mono.
             if (nChannels == 1 &&
                (mDualMono || !IsMono(track)))
-               mMult /= 2.0;
+               mult /= 2.0;
 
             // LUFS are related to square values so the multiplier must be the
             // xroot.
-            mMult = sqrt(mMult);
+            mult = sqrt(mult);
          }
 
          mProgressMsg = topMsg + XO("Processing: %s").Format( trackName );
-         if (!ProcessOne(track, nChannels, nullptr)) {
+         if (!ProcessOne(track, nChannels, curT0, curT1, mult, nullptr)) {
             // Processing failed -> abort
             return false;
          }
@@ -365,10 +370,11 @@ void EffectLoudness::FreeBuffers()
    mTrackBuffer[1].reset();
 }
 
-bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
+bool EffectLoudness::GetTrackRMS(WaveTrack &track,
+   const double curT0, const double curT1, float &rms)
 {
    // set mRMS.  No progress bar here as it's fast.
-   float _rms = track->GetRMS(mCurT0, mCurT1); // may throw
+   float _rms = track.GetRMS(curT0, curT1); // may throw
    rms = _rms;
    return true;
 }
@@ -380,11 +386,12 @@ bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
 bool EffectLoudness::ProcessOne(WaveTrack &track, size_t nChannels,
+   const double curT0, const double curT1, const float mult,
    EBUR128 *pLoudnessProcessor)
 {
    // Transform the marker timepoints to samples
-   auto start = track.TimeToLongSamples(mCurT0);
-   auto end   = track.TimeToLongSamples(mCurT1);
+   auto start = track.TimeToLongSamples(curT0);
+   auto end   = track.TimeToLongSamples(curT1);
 
    // Get the length of the buffer (as double). len is
    // used simply to calculate a progress meter, so it is easier
@@ -392,13 +399,13 @@ bool EffectLoudness::ProcessOne(WaveTrack &track, size_t nChannels,
    mTrackLen = (end - start).as_double();
 
    // Abort if the right marker is not to the right of the left marker
-   if(mCurT1 <= mCurT0)
+   if (curT1 <= curT0)
       return false;
 
    // Go through the track one buffer at a time. s counts which
    // sample the current buffer starts at.
    auto s = start;
-   while(s < end) {
+   while (s < end) {
       // Get a block of samples (smaller than the size of the buffer)
       // Adjust the block size if it is the final block in the track
       auto blockLen = limitSampleBufferSize(
@@ -415,7 +422,7 @@ bool EffectLoudness::ProcessOne(WaveTrack &track, size_t nChannels,
             return false;
       }
       else {
-         if (!ProcessBufferBlock())
+         if (!ProcessBufferBlock(mult))
             return false;
          StoreBufferBlock(track, nChannels, s, blockLen);
       }
@@ -464,13 +471,13 @@ bool EffectLoudness::AnalyseBufferBlock(EBUR128 &loudnessProcessor)
    return true;
 }
 
-bool EffectLoudness::ProcessBufferBlock()
+bool EffectLoudness::ProcessBufferBlock(const float mult)
 {
    for(size_t i = 0; i < mTrackBufferLen; i++)
    {
-      mTrackBuffer[0][i] = mTrackBuffer[0][i] * mMult;
-      if(mProcStereo)
-         mTrackBuffer[1][i] = mTrackBuffer[1][i] * mMult;
+      mTrackBuffer[0][i] = mTrackBuffer[0][i] * mult;
+      if (mProcStereo)
+         mTrackBuffer[1][i] = mTrackBuffer[1][i] * mult;
    }
 
    if(!UpdateProgress())
@@ -497,7 +504,7 @@ void EffectLoudness::StoreBufferBlock(WaveTrack &track, size_t nChannels,
 
 bool EffectLoudness::UpdateProgress()
 {
-   mProgressVal += (double(1+mProcStereo) * double(mTrackBufferLen)
+   mProgressVal += (double(1 + mProcStereo) * double(mTrackBufferLen)
                  / (double(GetNumWaveTracks()) * double(mSteps) * mTrackLen));
    return !TotalProgress(mProgressVal, mProgressMsg);
 }
