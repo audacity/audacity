@@ -137,12 +137,13 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
          ? TrackList::SingletonRange(track)
          : TrackList::Channels(track);
 
-      mProcStereo = range.size() > 1;
+      auto nChannels = range.size();
+      mProcStereo = nChannels > 1;
 
       std::optional<EBUR128> loudnessProcessor;
       if (mNormalizeTo == kLoudness) {
-         loudnessProcessor.emplace(mCurRate, range.size());
-         if (!ProcessOne(range, &*loudnessProcessor)) {
+         loudnessProcessor.emplace(mCurRate, nChannels);
+         if (!ProcessOne(*track, nChannels, &*loudnessProcessor)) {
             // Processing failed -> abort
             bGoodResult = false;
             break;
@@ -185,7 +186,7 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
       if (mNormalizeTo == kLoudness) {
          // Target half the LUFS value if mono (or independent processed stereo)
          // shall be treated as dual mono.
-         if (range.size() == 1 &&
+         if (nChannels == 1 &&
             (mDualMono || !IsMono(*track)))
             mMult /= 2.0;
 
@@ -194,7 +195,7 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
       }
 
       mProgressMsg = topMsg + XO("Processing: %s").Format( trackName );
-      if (!ProcessOne(range, nullptr)) {
+      if (!ProcessOne(*track, nChannels, nullptr)) {
          // Processing failed -> abort
          bGoodResult = false;
          break;
@@ -378,14 +379,12 @@ bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool EffectLoudness::ProcessOne(
-   TrackIterRange<WaveTrack> range, EBUR128 *pLoudnessProcessor)
+bool EffectLoudness::ProcessOne(WaveTrack &track, size_t nChannels,
+   EBUR128 *pLoudnessProcessor)
 {
-   WaveTrack* track = *range.begin();
-
    // Transform the marker timepoints to samples
-   auto start = track->TimeToLongSamples(mCurT0);
-   auto end   = track->TimeToLongSamples(mCurT1);
+   auto start = track.TimeToLongSamples(mCurT0);
+   auto end   = track.TimeToLongSamples(mCurT1);
 
    // Get the length of the buffer (as double). len is
    // used simply to calculate a progress meter, so it is easier
@@ -403,12 +402,12 @@ bool EffectLoudness::ProcessOne(
       // Get a block of samples (smaller than the size of the buffer)
       // Adjust the block size if it is the final block in the track
       auto blockLen = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
+         track.GetBestBlockSize(s),
          mTrackBufferCapacity);
 
       const size_t remainingLen = (end - s).as_size_t();
       blockLen = blockLen > remainingLen ? remainingLen : blockLen;
-      LoadBufferBlock(range, s, blockLen);
+      LoadBufferBlock(track, nChannels, s, blockLen);
 
       // Process the buffer.
       if (pLoudnessProcessor) {
@@ -418,7 +417,7 @@ bool EffectLoudness::ProcessOne(
       else {
          if (!ProcessBufferBlock())
             return false;
-         StoreBufferBlock(range, s, blockLen);
+         StoreBufferBlock(track, nChannels, s, blockLen);
       }
 
       // Increment s one blockfull of samples
@@ -429,16 +428,22 @@ bool EffectLoudness::ProcessOne(
    return true;
 }
 
-void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
-                                     sampleCount pos, size_t len)
+void EffectLoudness::LoadBufferBlock(WaveTrack &track, size_t nChannels,
+   sampleCount pos, size_t len)
 {
-   // Get the samples from the track and put them in the buffer
-   int idx = 0;
-   for(auto channel : range)
-   {
-      channel->GetFloats(mTrackBuffer[idx].get(), pos, len );
-      ++idx;
-   }
+   size_t idx = 0;
+   const auto getOne = [&](WaveTrack &channel) {
+      // Get the samples from the track and put them in the buffer
+      channel.GetFloats(mTrackBuffer[idx].get(), pos, len);
+   };
+
+   if (nChannels == 1)
+      getOne(track);
+   else
+      for (const auto channel : TrackList::Channels(&track)) {
+         getOne(*channel);
+         ++idx;
+      }
    mTrackBufferLen = len;
 }
 
@@ -473,14 +478,19 @@ bool EffectLoudness::ProcessBufferBlock()
    return true;
 }
 
-void EffectLoudness::StoreBufferBlock(TrackIterRange<WaveTrack> range,
-                                      sampleCount pos, size_t len)
+void EffectLoudness::StoreBufferBlock(WaveTrack &track, size_t nChannels,
+   sampleCount pos, size_t len)
 {
-   int idx = 0;
-   for(auto channel : range)
-   {
+   size_t idx = 0;
+   const auto setOne = [&](WaveTrack &channel){
       // Copy the newly-changed samples back onto the track.
-      channel->Set((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+      channel.Set((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+   };
+
+   if (nChannels == 1)
+      setOne(track);
+   else for (auto channel : TrackList::Channels(&track)) {
+      setOne(*channel);
       ++idx;
    }
 }

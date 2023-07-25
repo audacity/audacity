@@ -70,14 +70,14 @@ private:
    void AllocBuffers(TrackList &outputs);
    void FreeBuffers();
    bool GetTrackRMS(WaveTrack* track, float& rms);
-   bool ProcessOne(
-      TrackIterRange<WaveTrack> range, EBUR128 *pLoudnessProcessor);
-   void LoadBufferBlock(TrackIterRange<WaveTrack> range,
-                        sampleCount pos, size_t len);
+   bool ProcessOne(WaveTrack &track, size_t nChannels,
+      EBUR128 *pLoudnessProcessor);
+   void LoadBufferBlock(WaveTrack &track, size_t nChannels,
+      sampleCount pos, size_t len);
    bool AnalyseBufferBlock(EBUR128 &loudnessProcessor);
    bool ProcessBufferBlock();
-   void StoreBufferBlock(TrackIterRange<WaveTrack> range,
-                         sampleCount pos, size_t len);
+   void StoreBufferBlock(WaveTrack &track, size_t nChannels,
+      sampleCount pos, size_t len);
 
    bool UpdateProgress();
    void OnChoice(wxCommandEvent & evt);
