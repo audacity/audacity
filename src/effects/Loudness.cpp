@@ -110,13 +110,13 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
    AllocBuffers(outputs.Get());
    mProgressVal = 0;
 
-   for (auto track : outputs.Get().Selected<WaveTrack>()
+   for (auto pTrack : outputs.Get().Selected<WaveTrack>()
        + (mStereoInd ? &Track::Any : &Track::IsLeader))
    {
       // Get start and end times from track
       // PRL: No accounting for multiple channels ?
-      double trackStart = track->GetStartTime();
-      double trackEnd = track->GetEndTime();
+      double trackStart = pTrack->GetStartTime();
+      double trackEnd = pTrack->GetEndTime();
 
       // Set the current bounds to whichever left marker is
       // greater and whichever right marker is less:
@@ -124,82 +124,82 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
       mCurT1 = mT1 > trackEnd? trackEnd: mT1;
 
       // Get the track rate
-      mCurRate = track->GetRate();
+      mCurRate = pTrack->GetRate();
 
       wxString msg;
-      auto trackName = track->GetName();
+      auto trackName = pTrack->GetName();
       mSteps = 2;
 
       mProgressMsg =
          topMsg + XO("Analyzing: %s").Format( trackName );
 
       auto range = mStereoInd
-         ? TrackList::SingletonRange(track)
-         : TrackList::Channels(track);
+         ? TrackList::SingletonRange(pTrack)
+         : TrackList::Channels(pTrack);
 
       auto nChannels = range.size();
       mProcStereo = nChannels > 1;
 
-      std::optional<EBUR128> loudnessProcessor;
-      if (mNormalizeTo == kLoudness) {
-         loudnessProcessor.emplace(mCurRate, nChannels);
-         if (!ProcessOne(*track, nChannels, &*loudnessProcessor)) {
-            // Processing failed -> abort
-            bGoodResult = false;
-            break;
-         }
-      }
-      else // RMS
-      {
-         size_t idx = 0;
-         for(auto channel : range)
-         {
-            if(!GetTrackRMS(channel, mRMS[idx]))
-            {
-               bGoodResult = false;
+      const auto processOne = [&](WaveTrack &track){
+         std::optional<EBUR128> loudnessProcessor;
+         if (mNormalizeTo == kLoudness) {
+            loudnessProcessor.emplace(mCurRate, nChannels);
+            if (!ProcessOne(track, nChannels, &*loudnessProcessor))
+               // Processing failed -> abort
                return false;
-            }
-            ++idx;
          }
-         mSteps = 1;
-      }
+         else {
+            // RMS
+            size_t idx = 0;
+            for(auto channel : range) {
+               if(!GetTrackRMS(channel, mRMS[idx]))
+                  return false;
+               ++idx;
+            }
+            mSteps = 1;
+         }
 
-      // Calculate normalization values the analysis results
-      float extent;
-      if (mNormalizeTo == kLoudness)
-         extent = loudnessProcessor->IntegrativeLoudness();
-      else // RMS
-      {
-         extent = mRMS[0];
-         if(mProcStereo)
-            // RMS: use average RMS, average must be calculated in quadratic
-            // domain.
-            extent = sqrt((mRMS[0] * mRMS[0] + mRMS[1] * mRMS[1]) / 2.0);
-      }
+         // Calculate normalization values the analysis results
+         float extent;
+         if (mNormalizeTo == kLoudness)
+            extent = loudnessProcessor->IntegrativeLoudness();
+         else {
+            // RMS
+            extent = mRMS[0];
+            if(mProcStereo)
+               // RMS: use average RMS, average must be calculated in quadratic
+               // domain.
+               extent = sqrt((mRMS[0] * mRMS[0] + mRMS[1] * mRMS[1]) / 2.0);
+         }
 
-      if (extent == 0.0) {
-         FreeBuffers();
-         return false;
-      }
-      mMult = mRatio / extent;
+         if (extent == 0.0) {
+            FreeBuffers();
+            return false;
+         }
+         mMult = mRatio / extent;
 
-      if (mNormalizeTo == kLoudness) {
-         // Target half the LUFS value if mono (or independent processed stereo)
-         // shall be treated as dual mono.
-         if (nChannels == 1 &&
-            (mDualMono || !IsMono(*track)))
-            mMult /= 2.0;
+         if (mNormalizeTo == kLoudness) {
+            // Target half the LUFS value if mono (or independent processed
+            // stereo) shall be treated as dual mono.
+            if (nChannels == 1 &&
+               (mDualMono || !IsMono(track)))
+               mMult /= 2.0;
 
-         // LUFS are related to square values so the multiplier must be the root.
-         mMult = sqrt(mMult);
-      }
+            // LUFS are related to square values so the multiplier must be the
+            // xroot.
+            mMult = sqrt(mMult);
+         }
 
-      mProgressMsg = topMsg + XO("Processing: %s").Format( trackName );
-      if (!ProcessOne(*track, nChannels, nullptr)) {
-         // Processing failed -> abort
-         bGoodResult = false;
+         mProgressMsg = topMsg + XO("Processing: %s").Format( trackName );
+         if (!ProcessOne(track, nChannels, nullptr)) {
+            // Processing failed -> abort
+            return false;
+         }
+         return true;
+      };
+
+      if (!processOne(*pTrack))
          break;
-      }
    }
 
    if (bGoodResult)
