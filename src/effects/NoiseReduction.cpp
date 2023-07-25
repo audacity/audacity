@@ -741,14 +741,18 @@ bool EffectNoiseReduction::Worker::Process(
             if (!TrackSpectrumTransformer::Process(
                Processor, pChannel, mHistoryLen, start, len))
                return false;
-            tempList->Add(mOutputTrack);
-            assert(mOutputTrack->IsLeader() == pChannel->IsLeader());
-            mOutputTrack.reset();
+            if (mOutputTrack) {
+               tempList->Add(mOutputTrack);
+               assert(mOutputTrack->IsLeader() == pChannel->IsLeader());
+               mOutputTrack.reset();
+            }
             ++mProgressTrackCount;
          }
-         auto iter = TrackList::Channels(*tempList->Leaders().begin()).begin();
-         for (const auto pChannel : TrackList::Channels(track))
-            pChannel->ClearAndPaste(t0, t0 + tLen, *iter++, true, false);
+         if (tempList->Size()) {
+            auto iter = TrackList::Channels(*tempList->Leaders().begin()).begin();
+            for (const auto pChannel : TrackList::Channels(track))
+               pChannel->ClearAndPaste(t0, t0 + tLen, *iter++, true, false);
+         }
       }
    }
 
