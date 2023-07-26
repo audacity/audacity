@@ -346,11 +346,11 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             rb.outputLeftTrack = leftTrack.EmptyCopy();
             if (rightTrack) {
                rb.outputRightTrack = rightTrack->EmptyCopy();
-               // To satisfy preconditions of Finalize()
-               tempList = TrackList::Temporary(
-                  nullptr, rb.outputLeftTrack, rb.outputRightTrack);
             }
-   
+            // To satisfy preconditions of Finalize()
+            tempList = TrackList::Temporary(
+               nullptr, rb.outputLeftTrack, rb.outputRightTrack);
+
             long pos = 0;
             long outputCount = -1;
 

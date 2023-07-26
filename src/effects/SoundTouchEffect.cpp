@@ -232,6 +232,9 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
       outputTrack->Flush();
    }
 
+   // Allow TrackList::Channels to work on outputTrack
+   auto tempList = TrackList::Temporary(
+      nullptr, outputTrack, nullptr);
    // Transfer output samples to the original
    Finalize(*track, *outputTrack, warper);
 
