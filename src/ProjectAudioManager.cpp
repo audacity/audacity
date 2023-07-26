@@ -15,6 +15,7 @@ Paul Licameli split from ProjectManager.cpp
 #include <wx/frame.h>
 #include <wx/statusbr.h>
 #include <algorithm>
+#include <numeric>
 
 #include "AudioIO.h"
 #include "BasicUI.h"
@@ -673,15 +674,13 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
       }
 
       if (appendRecord) {
-         const auto trackRange = TrackList::Get( *p ).Any< const WaveTrack >();
-
          // Try to find wave tracks to record into.  (If any are selected,
          // try to choose only from them; else if wave tracks exist, may record into any.)
          existingTracks = ChooseExistingRecordingTracks(*p, true, rateOfSelected);
-         if (!existingTracks.empty()) {
+         if (!existingTracks.empty())
             t0 = std::max(t0,
-               (trackRange + &Track::IsSelected).max(&Track::GetEndTime));
-         }
+               TrackList::Get(*p).SelectedLeaders<const WaveTrack>()
+                  .max(&Track::GetEndTime));
          else {
             if (anySelected && rateOfSelected != options.rate) {
                AudacityMessageBox(XO(
@@ -697,13 +696,16 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             existingTracks = ChooseExistingRecordingTracks(*p, false, options.rate);
             if (!existingTracks.empty())
             {
-               auto endTime = std::max_element(
+               const auto endTime = std::accumulate(
                   existingTracks.begin(),
                   existingTracks.end(),
-                  [](const auto& a, const auto& b) {
-                     return a->GetEndTime() < b->GetEndTime();
+                  std::numeric_limits<double>::lowest(),
+                  [](double acc, auto &pTrack) {
+                     return pTrack->IsLeader()
+                        ? std::max(acc, pTrack->GetEndTime())
+                        : acc;
                   }
-               )->get()->GetEndTime();
+               );
 
                //If there is a suitable track, then adjust t0 so
                //that recording not starts before the end of that track

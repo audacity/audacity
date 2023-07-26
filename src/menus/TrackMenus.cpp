@@ -190,11 +190,10 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
    double delta = 0.0;
    double newPos = -1.0;
 
-   auto channelRange = tracks.Selected< AudioTrack >();
-   auto trackRange = tracks.SelectedLeaders< AudioTrack >();
+   auto trackRange = tracks.SelectedLeaders<AudioTrack>();
 
-   auto FindOffset = []( const Track *pTrack ) {
-      return TrackList::Channels(pTrack).min( &Track::GetStartTime ); };
+   auto FindOffset =
+      [](const Track *pTrack) { return pTrack->GetStartTime(); };
 
    auto firstTrackOffset = [&]{ return FindOffset( *trackRange.begin() ); };
    auto minOffset = [&]{ return trackRange.min( FindOffset ); };
@@ -203,7 +202,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
                              std::max( size_t(1), trackRange.size() ); };
 
    auto maxEndOffset = [&]{
-      return std::max(0.0, channelRange.max( &Track::GetEndTime ) ); };
+      return std::max(0.0, trackRange.max(&Track::GetEndTime)); };
 
    switch(index) {
    case kAlignStartZero:
@@ -798,7 +797,7 @@ void OnScoreAlign(const CommandContext &context)
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
-   tracks.Selected().Visit(
+   tracks.SelectedLeaders().Visit(
       [&](WaveTrack *wt) {
          numWaveTracksSelected++;
          endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();

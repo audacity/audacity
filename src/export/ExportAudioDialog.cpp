@@ -783,9 +783,8 @@ void ExportAudioDialog::UpdateTrackExportSettings(const ExportPlugin& plugin, in
    for (auto tr : waveTracks) {
 
       // Get the times for the track
-      auto channels = TrackList::Channels(tr);
-      setting.t0 = skipSilenceAtBeginning ? channels.min(&Track::GetStartTime) : 0;
-      setting.t1 = channels.max( &Track::GetEndTime );
+      setting.t0 = skipSilenceAtBeginning ? tr->GetStartTime() : 0;
+      setting.t1 = tr->GetEndTime();
 
       // number of export channels?
       // It's 1 only for a center-panned mono track

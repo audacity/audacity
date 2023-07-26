@@ -1107,10 +1107,10 @@ void ProjectWindow::FixScrollbars()
    }
 
    auto LastTime = std::numeric_limits<double>::lowest();
-   for (const Track *track : tracks) {
+   for (const Track *track : tracks.Leaders()) {
       // Iterate over pending changed tracks if present.
       track = track->SubstitutePendingChangedTrack().get();
-      LastTime = std::max( LastTime, track->GetEndTime() );
+      LastTime = std::max(LastTime, track->GetEndTime());
    }
    LastTime =
       std::max(LastTime, viewInfo.selectedRegion.t1());

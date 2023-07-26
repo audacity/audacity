@@ -1262,9 +1262,8 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp);
 
-      auto channels = TrackList::Channels( mCurTrack[0] );
-      double startTime = channels.min( &Track::GetStartTime );
-      double endTime = channels.max( &Track::GetEndTime );
+      const double startTime = mCurTrack[0]->GetStartTime();
+      const double endTime = mCurTrack[0]->GetEndTime();
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
                               Internat::ToString(startTime));
@@ -1665,16 +1664,14 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
    if (!success)
       return false;
 
-   for (int i = 0; i < outChannels; i++) {
-      outputTrack[i]->Flush();
-      mOutputTime = outputTrack[i]->GetEndTime();
-
-      if (mOutputTime <= 0) {
-         EffectUIServices::DoMessageBox(
-            *this, XO("Nyquist returned nil audio.\n"));
-         return false;
-      }
+   mOutputTime = outputTrack[0]->GetEndTime();
+   if (mOutputTime <= 0) {
+      EffectUIServices::DoMessageBox(
+         *this, XO("Nyquist returned nil audio.\n"));
+      return false;
    }
+   for (int i = 0; i < outChannels; i++)
+      outputTrack[i]->Flush();
 
    {
       const auto &out = outputTrack[0];

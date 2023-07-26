@@ -83,6 +83,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
    bool bGoodResult = true;
 
    // Determine the total time (in samples) used by all of the target tracks
+   // only for progress dialog
    sampleCount totalTime = 0;
    
    auto trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
@@ -90,17 +91,11 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
    {
       auto left = *trackRange.first;
       auto channels = TrackList::Channels(left);
-      if (channels.size() > 1)
-      {
-         auto right = *channels.rbegin();
-         auto start = wxMin(left->TimeToLongSamples(left->GetStartTime()),
-                            right->TimeToLongSamples(right->GetStartTime()));
-         auto end = wxMax(left->TimeToLongSamples(left->GetEndTime()),
-                            right->TimeToLongSamples(right->GetEndTime()));
-
+      if (channels.size() > 1) {
+         auto start = left->TimeToLongSamples(left->GetStartTime());
+         auto end = left->TimeToLongSamples(left->GetEndTime());
          totalTime += (end - start);
       }
-
       ++trackRange.first;
    }
 
@@ -155,8 +150,8 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    bool bResult = true;
    sampleCount processed = 0;
 
-   auto start = std::min(left->GetStartTime(), right->GetStartTime());
-   auto end = std::max(left->GetEndTime(), right->GetEndTime());
+   const auto start = left->GetStartTime();
+   const auto end = left->GetEndTime();
 
    Mixer::Inputs tracks;
    tracks.emplace_back(
@@ -196,15 +191,13 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    }
    outTrack->Flush();
 
-   double minStart = std::min(left->GetStartTime(), right->GetStartTime());
-
    outputs.UnlinkChannels(*left);
    // Should be a consequence of unlinking:
    assert(right->IsLeader());
    outputs.Remove(*right);
 
-   left->Clear(left->GetStartTime(), left->GetEndTime());
-   left->Paste(minStart, *outTrack);
+   left->Clear(start, end);
+   left->Paste(start, *outTrack);
    RealtimeEffectList::Get(*left).Clear();
 
    return bResult;

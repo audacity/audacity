@@ -234,7 +234,7 @@ Scrubber::~Scrubber()
 
 static const auto HasWaveDataPred =
    [](const AudacityProject &project){
-      auto range = TrackList::Get( project ).Any<const WaveTrack>()
+      auto range = TrackList::Get(project).Leaders<const WaveTrack>()
          + [](const WaveTrack *pTrack){
             return pTrack->GetEndTime() > pTrack->GetStartTime();
          };
