@@ -890,6 +890,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    assert(IsLeader());
    assert(src.IsLeader());
    assert(srcNChannels == 1 || srcNChannels == NChannels());
+   const auto startTime = src.GetStartTime();
    const auto endTime = src.GetEndTime();
    double dur = std::min(t1 - t0, endTime);
 
@@ -903,7 +904,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    auto iter = TrackList::Channels(&src).begin();
    const auto myChannels = TrackList::Channels(this);
    for (const auto pChannel : myChannels) {
-      ClearAndPasteOne(*pChannel, t0, t1, endTime,
+      ClearAndPasteOne(*pChannel, t0, t1, startTime, endTime,
          **iter, preserve, merge, effectWarper);
       if (srcNChannels > 1)
          ++iter;
@@ -911,7 +912,8 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 }
 
 void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
-   double endTime, const WaveTrack &src, bool preserve, bool merge,
+   const double startTime, const double endTime,
+   const WaveTrack &src, bool preserve, bool merge,
    const TimeWarper *effectWarper)
 {
    const auto pFactory = track.mpFactory;
@@ -1003,7 +1005,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
    track.HandleClear(t0, t1, false, false);
 
    // And paste in the new data
-   PasteOne(track, t0, src, endTime);
+   PasteOne(track, t0, src, startTime, endTime);
 
    // First, merge the new clip(s) in with the existing clips
    if (merge && splits.size() > 0) {
@@ -1416,7 +1418,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
                mpFactory, GetSampleFormat(), GetRate());
             tmp->InsertSilence(0.0, duration);
             tmp->Flush();
-            PasteOne(*pChannel, oldT1, *tmp, duration);
+            PasteOne(*pChannel, oldT1, *tmp, 0.0, duration);
          }
       }
    }
@@ -1426,19 +1428,21 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 
 void WaveTrack::PasteWaveTrack(double t0, const WaveTrack &other)
 {
+   assert(IsLeader());
    const auto otherNChannels = other.NChannels();
    assert(otherNChannels == 1 || otherNChannels == NChannels());
+   const auto startTime = other.GetStartTime();
+   const auto endTime = other.GetEndTime();
    auto iter = TrackList::Channels(&other).begin();
-   const auto endTime = (*iter)->GetEndTime();
    for (const auto pChannel : TrackList::Channels(this)) {
-      PasteOne(*pChannel, t0, **iter, endTime);
+      PasteOne(*pChannel, t0, **iter, startTime, endTime);
       if (otherNChannels > 1)
          ++iter;
    }
 }
 
 void WaveTrack::PasteOne(
-   WaveTrack &track, double t0, const WaveTrack &other,
+   WaveTrack &track, double t0, const WaveTrack &other, const double startTime,
    const double insertDuration)
 {
     //
@@ -1468,7 +1472,7 @@ void WaveTrack::PasteOne(
     //wxPrintf("paste: we have at least one clip\n");
 
     bool singleClipMode = other.GetNumClips() == 1 &&
-        std::abs(other.GetStartTime()) < track.LongSamplesToTime(1) * 0.5;
+        std::abs(startTime) < track.LongSamplesToTime(1) * 0.5;
 
     const auto rate = track.GetRate();
     if (insertDuration != 0 && insertDuration < 1.0 / rate)
@@ -1628,8 +1632,7 @@ void WaveTrack::InsertClip(WaveClipHolder clip)
 /*! @excsafety{Weak} */
 void WaveTrack::Paste(double t0, const Track &src)
 {
-   const auto srcNChannels = src.NChannels();
-   assert(srcNChannels == 1 || srcNChannels == NChannels());
+   assert(IsLeader()); // pre of Track::Paste
    if (const auto other = dynamic_cast<const WaveTrack*>(&src))
       PasteWaveTrack(t0, *other);
    else

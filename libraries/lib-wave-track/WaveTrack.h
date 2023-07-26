@@ -654,7 +654,8 @@ private:
 
 protected:
    static void ClearAndPasteOne(WaveTrack &track,
-      double t0, double t1, double endTime, const WaveTrack &src,
+      double t0, double t1, double startTime, double endTime,
+      const WaveTrack &src,
       bool preserve, bool merge, const TimeWarper *effectWarper);
    static void JoinOne(WaveTrack &track, double t0, double t1);
    static Holder CopyOne(const WaveTrack &track,
@@ -705,11 +706,12 @@ private:
    void DoSetGain(float value);
 
    /*
-   @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
+    @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
+    @pre `IsLeader()`
     */
    void PasteWaveTrack(double t0, const WaveTrack &other);
    static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
-      const double insertDuration);
+      double startTime, double insertDuration);
 
    //! Whether all clips have a common rate
    bool RateConsistencyCheck() const;
