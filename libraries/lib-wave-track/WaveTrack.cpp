@@ -712,8 +712,15 @@ void WaveTrack::Trim (double t0, double t1)
 WaveTrack::Holder WaveTrack::EmptyCopy(
    const SampleBlockFactoryPtr &pFactory, bool keepLink) const
 {
-   auto result = std::make_shared<WaveTrack>( pFactory, mFormat, GetRate() );
+   const auto rate = GetRate();
+   auto result = std::make_shared<WaveTrack>(pFactory, mFormat, rate);
    result->Init(*this);
+   // The previous line might have destroyed the rate information stored in
+   // channel group data.  The copy is not yet in a TrackList.  Reassign rate
+   // in case the track needs to make WaveClips before it is properly joined
+   // with the opposite channel in a TrackList.
+   // TODO wide wave tracks -- all of the comment above will be irrelevant!
+   result->SetRate(rate);
    result->mpFactory = pFactory ? pFactory : mpFactory;
    if (!keepLink)
       result->SetLinkType(LinkType::None);
