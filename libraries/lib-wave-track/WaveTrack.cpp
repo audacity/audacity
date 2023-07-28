@@ -353,8 +353,8 @@ bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
       auto linkType = GetLinkType();
       if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
           linkType == LinkType::Aligned) {
-         auto next =
-            dynamic_cast<WaveTrack*>(*std::next(GetOwner()->Find(this)));
+         auto next = dynamic_cast<WaveTrack*>(
+            *TrackList::Channels(this).first.advance(1));
          if (next == nullptr) {
             //next track is absent or not a wave track, fix and report error
             if (doFix) {
@@ -2121,7 +2121,7 @@ ClipConstHolders WaveTrack::GetClipInterfaces() const
      if (NChannels() == 2u && pOwner)
      {
         const auto& rightClips =
-           (*++pOwner->Find<const WaveTrack>(this))->mClips;
+           (*TrackList::Channels(this).rbegin())->mClips;
         // This is known to have potential for failure for stereo tracks with
         // misaligned left/right clips - see
         // https://github.com/audacity/audacity/issues/4791.
@@ -2242,7 +2242,7 @@ bool WaveTrack::Get(size_t iChannel, size_t nBuffers,
    std::optional<TrackIter<const WaveTrack>> iter;
    auto pTrack = this;
    if (pOwner) {
-      iter.emplace(pOwner->Find<const WaveTrack>(this).advance(iChannel));
+      iter.emplace(TrackList::Channels(this).first.advance(iChannel));
       pTrack = **iter;
    }
    return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer) {
@@ -2359,7 +2359,7 @@ std::vector<ChannelSampleView> WaveTrack::GetSampleView(
    std::optional<TrackIter<const WaveTrack>> iter;
    auto pTrack = this;
    if (pOwner) {
-      iter.emplace(pOwner->Find<const WaveTrack>(this).advance(iChannel));
+      iter.emplace(TrackList::Channels(this).first.advance(iChannel));
       pTrack = **iter;
    }
    for (auto i = 0u; i < nBuffers; ++i)
@@ -3123,24 +3123,23 @@ void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
 void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs)
 {
-   for (auto wt : tracks.Any< const WaveTrack >()) {
-      // Scan all clips within current track
-      for(const auto &clip : wt->GetAllClips()) {
-         // Scan all sample blocks within current clip
-         for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
-            auto blocks = clip->GetSequenceBlockArray(ii);
-            for (const auto &block : *blocks) {
-               auto &pBlock = block.sb;
-               if ( pBlock ) {
-                  if ( pIDs && !pIDs->insert(pBlock->GetBlockID()).second )
-                     continue;
-                  if ( visitor )
-                     visitor( *pBlock );
+   for (auto wt : tracks.Leaders<const WaveTrack>())
+      for (const auto pChannel : TrackList::Channels(wt))
+         // Scan all clips within current track
+         for (const auto &clip : pChannel->GetAllClips())
+            // Scan all sample blocks within current clip
+            for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
+               auto blocks = clip->GetSequenceBlockArray(ii);
+               for (const auto &block : *blocks) {
+                  auto &pBlock = block.sb;
+                  if (pBlock) {
+                     if (pIDs && !pIDs->insert(pBlock->GetBlockID()).second)
+                        continue;
+                     if (visitor)
+                        visitor(*pBlock);
+                  }
                }
             }
-         }
-      }
-   }
 }
 
 void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
@@ -3185,19 +3184,13 @@ void WaveTrackFactory::Destroy( AudacityProject &project )
 }
 
 ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
-   [](const AudacityProject& project) -> ProjectFormatVersion
-   {
+   [](const AudacityProject& project) -> ProjectFormatVersion {
       const TrackList& trackList = TrackList::Get(project);
-
-      for (auto wt : trackList.Any<const WaveTrack>())
-      {
-         for (const auto& clip : wt->GetAllClips())
-         {
-            if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
-               return { 3, 1, 0, 0 };
-         }
-      }
-
+      for (auto wt : trackList.Leaders<const WaveTrack>())
+         for (const auto pChannel : TrackList::Channels(wt))
+            for (const auto& clip : pChannel->GetAllClips())
+               if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
+                  return { 3, 1, 0, 0 };
       return BaseProjectFormatVersion;
    }
 );
