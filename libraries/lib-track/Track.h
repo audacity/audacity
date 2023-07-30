@@ -1251,10 +1251,16 @@ public:
    */
    bool MakeMultiChannelTrack(Track& first, int nChannels, bool aligned);
 
-   /// Replace first track with second track, give back a holder
-   /// Give the replacement the same id as the replaced
-   ListOfTracks::value_type Replace(
-      Track * t, const ListOfTracks::value_type &with);
+   /*!
+    Replace channel group `t` with the first group in the given list, return a
+    temporary list of the removed tracks, modify given list by removing group
+    Give the replacements the same ids as the replaced
+
+    @pre `t.IsLeader()`
+    @pre `t.GetOwner().get() == this`
+    @pre `t.NChannels() == (*with.Leaders().begin())->NChannels()`
+    */
+   TrackListHolder ReplaceOne(Track &t, TrackList &&with);
 
    //! Remove a channel group, given the leader
    /*!
@@ -1307,6 +1313,10 @@ public:
 
    //! Remove all tracks from `list` and put them at the end of `this`
    void Append(TrackList &&list);
+
+   //! Remove first channel group (if any) from `list` and put it at the end of
+   //! `this`
+   void AppendOne(TrackList &&list);
 
 private:
    using ListOfTracks::size;

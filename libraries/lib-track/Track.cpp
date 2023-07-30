@@ -640,26 +640,41 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
    return back().get();
 }
 
-auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
-   ListOfTracks::value_type
+TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
 {
-   ListOfTracks::value_type holder;
-   if (t && with) {
-      auto node = t->GetNode();
-      t->SetOwner({}, {});
+   assert(t.IsLeader());
+   assert(t.GetOwner().get() == this);
+   auto nChannels = t.NChannels();
+   assert(nChannels == (*with.Leaders().begin())->NChannels());
+   TrackListHolder result = Temporary(nullptr);
 
-      holder = *node.first;
+   const auto channels = TrackList::Channels(&t);
+   auto iter = with.ListOfTracks::begin();
+   bool isLeader = true;
+   for (const auto pChannel : channels) {
+      auto spChannel = pChannel->shared_from_this();
 
-      Track *pTrack = with.get();
-      *node.first = with;
+      //! Move one channel to the temporary list
+      auto node = pChannel->GetNode();
+      pChannel->SetOwner({}, {});
+      result->Add(spChannel);
+
+      //! Be sure it preserves leader-ness
+      assert(isLeader == pChannel->IsLeader());
+      isLeader = false;
+
+      //! Redirect the list element of this
+      const auto pTrack = *iter;
+      *node.first = pTrack;
+      iter = with.erase(iter);
       pTrack->SetOwner(shared_from_this(), node);
-      pTrack->SetId( t->GetId() );
+      pTrack->SetId(pChannel->GetId());
       RecalcPositions(node);
 
-      DeletionEvent(t->shared_from_this(), true);
+      DeletionEvent(spChannel, true);
       AdditionEvent(node);
    }
-   return holder;
+   return result;
 }
 
 void TrackList::UnlinkChannels(Track& track)
@@ -1086,26 +1101,26 @@ bool TrackList::ApplyPendingTracks()
 
    std::vector< std::shared_ptr<Track> > reinstated;
 
-   while (updates && !updates->empty()) {
-      auto iter = updates->ListOfTracks::begin();
-      auto pendingTrack = *iter;
-      if (pendingTrack) {
+   if (updates)
+      for (auto pendingTrack : static_cast<ListOfTracks &>(*updates))
          pendingTrack->AttachedTrackObjects::ForEach([&](auto &attachment){
             attachment.Reparent( pendingTrack );
          });
-         auto src = FindById(pendingTrack->GetId());
-         if (src) {
-            this->Replace(src, pendingTrack);
-            result = true;
-         }
-         else {
-            // Perhaps a track marked for pending changes got deleted by
-            // some other action.  Recreate it so we don't lose the
-            // accumulated changes.
-            reinstated.push_back(pendingTrack);
-         }
+   while (updates && !updates->empty()) {
+      auto iter = updates->ListOfTracks::begin();
+      auto pendingTrack = *iter;
+      auto src = FindById(pendingTrack->GetId());
+      if (src) {
+         this->ReplaceOne(*src, std::move(*updates));
+         result = true;
       }
-      updates->ListOfTracks::erase(iter);
+      else {
+         // Perhaps a track marked for pending changes got deleted by
+         // some other action.  Recreate it so we don't lose the
+         // accumulated changes.
+         reinstated.push_back(pendingTrack);
+         updates->ListOfTracks::erase(iter);
+      }
    }
 
    // If there are tracks to reinstate, append them to the list.
@@ -1419,5 +1434,18 @@ void TrackList::Append(TrackList &&list)
       auto pTrack = *iter;
       iter = list.erase(iter);
       this->Add(pTrack);
+   }
+}
+
+void TrackList::AppendOne(TrackList &&list)
+{
+   auto iter = list.ListOfTracks::begin(),
+      end = list.ListOfTracks::end();
+   if (iter != end) {
+      for (size_t nn = TrackList::NChannels(**iter); nn--;) {
+         auto pTrack = *iter;
+         iter = list.erase(iter);
+         this->Add(pTrack);
+      }
    }
 }
