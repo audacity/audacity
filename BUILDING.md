@@ -5,6 +5,7 @@
 * **python3** >= 3.8
 * **cmake** >= 3.16
 * A working C++ 17 compiler
+* catch2 (If building with conan.)
 * Graphviz (optional)
 
 For Windows see below for important installer settings.
