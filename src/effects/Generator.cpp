@@ -61,18 +61,17 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
             auto list = TrackList::Create(nullptr);
             for (const auto pChannel : TrackList::Channels(&track)) {
                // Create a temporary track
-               auto tmp = track.EmptyCopy();
-               // Fill with data
-               if (!GenerateTrack(settings, &*tmp, track, ntrack))
-                  bGoodResult = false;
-               else {
-                  // Transfer the data from the temporary track to the actual one
-                  tmp->Flush();
-                  list->Add(tmp);
-                  assert(tmp->IsLeader() == pChannel->IsLeader());
-               }
+               auto tmp = pChannel->EmptyCopy();
+               list->Add(tmp);
+               assert(tmp->IsLeader() == pChannel->IsLeader());
             }
+            // Fill with data
+            if (!GenerateTrack(settings, *list))
+               bGoodResult = false;
             if (bGoodResult) {
+               for (const auto pChannel :
+                  TrackList::Channels(*list->Leaders<WaveTrack>().begin()))
+                  pChannel->Flush();
                PasteTimeWarper warper{ mT1, mT0 + duration };
                auto pProject = FindProject();
                const auto &selectedRegion =

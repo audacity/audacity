@@ -388,8 +388,11 @@ public:
     */
    virtual void Silence(double t0, double t1) = 0;
 
-   // May assume precondition: t0 <= t1
-   virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
+   /*!
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    */
+   virtual void InsertSilence(double t, double len) = 0;
 
 private:
    //! Subclass responsibility implements only a part of Duplicate(), copying

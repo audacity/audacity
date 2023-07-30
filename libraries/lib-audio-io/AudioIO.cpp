@@ -1551,9 +1551,10 @@ void AudioIO::StopStream()
                auto &start = interval.first;
                auto duration = interval.second;
                for (auto &sequence : mCaptureSequences) {
-                  GuardedCall([&] {
-                     sequence->InsertSilence(start, duration);
-                  });
+                  if (sequence->IsLeader())
+                     GuardedCall([&] {
+                        sequence->InsertSilence(start, duration);
+                     });
                }
             }
             if (pScope)

@@ -356,6 +356,9 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
    else if(!mErrorMsg.empty())//i.e. warning
       ImportUtils::ShowMessageBox(mErrorMsg);
    
+   // TODO wide wave tracks -- quit here if misaligned tracks are found.
+   // (If we keep this entire source file at all)
+
    sampleCount processed = 0;
    for (auto fi : mFiles)
    {
@@ -1421,7 +1424,10 @@ bool AUPImportFileHandle::AddSilence(sampleCount len)
    }
    else if (mWaveTrack)
    {
-      mWaveTrack->InsertSilence(mWaveTrack->GetEndTime(), mWaveTrack->LongSamplesToTime(len));
+      // Assume alignment of clips and insert silence into leader only
+      if (mWaveTrack->IsLeader())
+         mWaveTrack->InsertSilence(
+            mWaveTrack->GetEndTime(), mWaveTrack->LongSamplesToTime(len));
    }
 
    return true;

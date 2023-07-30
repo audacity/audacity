@@ -30,15 +30,15 @@ bool EffectTwoPassSimpleMono::Process(
    InitPass1();
    EffectOutputTracks outputs{ *mTracks };
 
-   mWorkTracks = TrackList::Create(
-      const_cast<AudacityProject*>(FindProject()));
+   mWorkTracks = TrackList::Create(const_cast<AudacityProject*>(FindProject()));
    for (auto track : outputs.Get().Selected<WaveTrack>()) {
       auto pNewTrack = track->EmptyCopy();
       mWorkTracks->Add(pNewTrack);
-      if (pNewTrack->IsLeader())
-         pNewTrack->ConvertToSampleFormat(floatSample);
+   }
+   for (const auto pNewTrack : mWorkTracks->Leaders<WaveTrack>()) {
+      pNewTrack->ConvertToSampleFormat(floatSample);
       if (mT0 > 0)
-         (*mWorkTracks->rbegin())->InsertSilence(0, mT0);
+         pNewTrack->InsertSilence(0, mT0);
    }
 
    mTrackLists[0] = &outputs.Get();

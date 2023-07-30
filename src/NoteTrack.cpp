@@ -629,6 +629,7 @@ void NoteTrack::Silence(double t0, double t1)
 
 void NoteTrack::InsertSilence(double t, double len)
 {
+   assert(IsLeader());
    if (len < 0)
       THROW_INCONSISTENCY_EXCEPTION;
 

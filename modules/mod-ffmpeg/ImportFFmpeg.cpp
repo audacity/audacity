@@ -503,15 +503,13 @@ void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
             s, (long long)streamStartTime, double(streamStartTime) / 1000);
       }
 
-      if (stream_delay > 0)
-      {
+      if (stream_delay > 0) {
          int c = -1;
-         for (auto &channel : stream)
-         {
+         for (auto &channel : stream) {
             ++c;
-
             WaveTrack *t = channel.get();
-            t->InsertSilence(0,double(stream_delay)/AUDACITY_AV_TIME_BASE);
+            assert(t->IsLeader()); // channels are not yet grouped
+            t->InsertSilence(0, double(stream_delay) / AUDACITY_AV_TIME_BASE);
          }
       }
    }
@@ -559,6 +557,7 @@ void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
          channel->Flush();
 
    for (auto &group : mChannels)
+      // Now channels get grouped
       outTracks.push_back(TrackList::Temporary(nullptr, group));
 
    // Save metadata

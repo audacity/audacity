@@ -905,6 +905,7 @@ void LabelTrack::Silence(double t0, double t1)
 
 void LabelTrack::InsertSilence(double t, double len)
 {
+   assert(IsLeader());
    for (auto &labelStruct: mLabels) {
       double t0 = labelStruct.getT0();
       double t1 = labelStruct.getT1();

@@ -18,6 +18,8 @@
 #include "StatefulEffect.h"
 #include "SampleCount.h"
 
+class TrackList;
+
 // Base class for Generators (effects which fill a given duration)
 class Generator /* not final */ : public StatefulEffect
 {
@@ -25,11 +27,14 @@ public:
    Generator() { }
 
 protected:
-   // [ GenerateTrack() must be overridden by the actual generator class ]
-   // Precondition:  mDuration > 0.0
-   // Postcondition: <tmp> is filled with the data intended for <track>
-   virtual bool GenerateTrack(EffectSettings &settings,
-      WaveTrack *tmp, const WaveTrack &track, int ntrack) = 0;
+   //! GenerateTrack() must be overridden by the actual generator class
+   /*!
+    @pre `mDuration > 0.0`
+    @pre `tmp` contains exactly one channel group
+    @post `tmp` is filled with data
+    */
+   virtual bool GenerateTrack(const EffectSettings &settings, TrackList &tmp)
+      = 0;
 
    // Precondition:
    // mDuration is set to the amount of time to generate in seconds

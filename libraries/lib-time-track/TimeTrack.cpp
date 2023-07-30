@@ -229,6 +229,7 @@ void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))
 
 void TimeTrack::InsertSilence(double t, double len)
 {
+   assert(IsLeader());
    mEnvelope->InsertSpace(t, len);
 }
 
