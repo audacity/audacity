@@ -86,23 +86,23 @@ bool CompareAudioCommand::GetSelection(const CommandContext &context, AudacityPr
 
    // Get the selected tracks and check that there are at least two to
    // compare
-   auto trackRange = TrackList::Get( proj ).Selected< const WaveTrack >();
+   auto trackRange = TrackList::Get(proj).SelectedLeaders<const WaveTrack>();
    mTrack0 = *trackRange.first;
-   if (mTrack0 == NULL)
-   {
+   if (!mTrack0) {
       context.Error(wxT("No tracks selected! Select two tracks to compare."));
       return false;
    }
    mTrack1 = * ++ trackRange.first;
-   if (mTrack1 == NULL)
-   {
+   if (!mTrack1) {
       context.Error(wxT("Only one track selected! Select two tracks to compare."));
       return false;
    }
-   if ( * ++ trackRange.first )
-   {
-      context.Status(wxT("More than two tracks selected - only the first two will be compared."));
+   if (TrackList::NChannels(*mTrack0) != TrackList::NChannels(*mTrack1)) {
+      context.Error(wxT("Selected tracks must have the same number of channels!"));
+      return false;
    }
+   if (* ++ trackRange.first)
+      context.Status(wxT("More than two tracks selected - only the first two will be compared."));
    return true;
 }
 
@@ -138,30 +138,34 @@ bool CompareAudioCommand::Apply(const CommandContext & context)
    // Compare tracks block by block
    auto s0 = mTrack0->TimeToLongSamples(mT0);
    auto s1 = mTrack0->TimeToLongSamples(mT1);
-   auto position = s0;
-   auto length = s1 - s0;
-   while (position < s1)
-   {
-      // Get a block of data into the buffers
-      auto block = limitSampleBufferSize(
-         mTrack0->GetBestBlockSize(position), s1 - position
-      );
-      mTrack0->GetFloats(buff0.get(), position, block);
-      mTrack1->GetFloats(buff1.get(), position, block);
+   const auto channels0 = TrackList::Channels(mTrack0);
+   auto iter = TrackList::Channels(mTrack1).begin();
+   for (const auto pChannel0 : channels0) {
+      const auto pChannel1 = *iter++;
+      auto position = s0;
+      auto length = s1 - s0;
+      while (position < s1) {
+         // Get a block of data into the buffers
+         auto block = limitSampleBufferSize(
+            pChannel0->GetBestBlockSize(position), s1 - position
+         );
+         pChannel0->GetFloats(buff0.get(), position, block);
+         pChannel1->GetFloats(buff1.get(), position, block);
 
-      for (decltype(block) buffPos = 0; buffPos < block; ++buffPos)
-      {
-         if (CompareSample(buff0[buffPos], buff1[buffPos]) > errorThreshold)
+         for (decltype(block) buffPos = 0; buffPos < block; ++buffPos)
          {
-            ++errorCount;
+            if (CompareSample(buff0[buffPos], buff1[buffPos]) > errorThreshold)
+            {
+               ++errorCount;
+            }
          }
-      }
 
-      position += block;
-      context.Progress(
-         (position - s0).as_double() /
-         length.as_double()
-      );
+         position += block;
+         context.Progress(
+            (position - s0).as_double() /
+            length.as_double()
+         );
+      }
    }
 
    // Output the results
