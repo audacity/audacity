@@ -731,7 +731,10 @@ private:
    static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
       double startTime, double insertDuration);
 
-   //! Whether all clips have a common rate
+   //! Whether all clips of a leader track have a common rate
+   /*!
+    @pre `IsLeader()`
+    */
    bool RateConsistencyCheck() const;
 
    //! Sets project tempo on clip upon push. Use this instead of

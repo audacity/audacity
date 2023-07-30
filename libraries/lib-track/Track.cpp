@@ -323,11 +323,12 @@ bool Track::IsSelectedLeader() const
 
 bool Track::LinkConsistencyFix(bool doFix)
 {
+   assert(!doFix || IsLeader());
    // Sanity checks for linked tracks; unsetting the linked property
    // doesn't fix the problem, but it likely leaves us with orphaned
    // sample blocks instead of much worse problems.
    bool err = false;
-   if (HasLinkedTrack()) {
+   if (HasLinkedTrack()) /* which implies IsLeader() */ {
       if (auto link = GetLinkedTrack()) {
          // A linked track's partner should never itself be linked
          if (link->HasLinkedTrack()) {

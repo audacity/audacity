@@ -238,6 +238,8 @@ public:
    //! Check consistency of channel groups, and maybe fix it
    /*!
     @param doFix whether to make any changes to correct inconsistencies
+
+    @pre `!doFix || IsLeader()`
     @return true if no inconsistencies were found
     */
    virtual bool LinkConsistencyFix(bool doFix = true);
@@ -449,6 +451,7 @@ public:
    //! open the track from XML
    /*!
     May assume consistency of stereo channel grouping and examine other channels
+    @pre `IsLeader()`
     */
    virtual std::optional<TranslatableString> GetErrorOpening() const;
 

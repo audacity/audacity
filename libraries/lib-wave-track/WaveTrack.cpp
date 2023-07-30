@@ -348,6 +348,7 @@ void WaveTrack::DoOnProjectTempoChange(
 
 bool WaveTrack::LinkConsistencyFix(bool doFix)
 {
+   assert(!doFix || IsLeader());
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix);
    auto linkType = GetLinkType();
    if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
@@ -381,7 +382,7 @@ bool WaveTrack::LinkConsistencyFix(bool doFix)
    if (doFix) {
       // More non-error upgrading
       // Set the common channel group rate from the leader's rate
-      if (IsLeader() && mLegacyRate > 0)
+      if (mLegacyRate > 0)
          SetRate(mLegacyRate);
    }
    return !err;
@@ -1607,10 +1608,7 @@ void WaveTrack::PasteOne(
 
 bool WaveTrack::RateConsistencyCheck() const
 {
-   // Assuming a complete track list with consistent channel structure,
-   // check only at the leader tracks
-   if (!IsLeader())
-      return true;
+   assert(IsLeader());
 
    // The channels and all clips in them should have the same sample rate.
    std::optional<double> oRate;
@@ -2095,10 +2093,12 @@ void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile)
 
 std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 {
-   for (const auto &clip : mClips)
-      for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
-         if (clip->GetSequence(ii)->GetErrorOpening())
-            return XO("A track has a corrupted sample sequence.");
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto &clip : pChannel->mClips)
+         for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
+            if (clip->GetSequence(ii)->GetErrorOpening())
+               return XO("A track has a corrupted sample sequence.");
 
    if (!RateConsistencyCheck())
       return XO(
