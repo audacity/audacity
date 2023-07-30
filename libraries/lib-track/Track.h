@@ -1066,7 +1066,7 @@ class TRACK_API TrackList final
       auto Find(Track *pTrack)
          -> TrackIter< TrackType >
    {
-      if (!pTrack || pTrack->GetOwner().get() != this)
+      if (!pTrack || pTrack->GetHolder() != this)
          return EndIterator<TrackType>();
       else
          return MakeTrackIterator<TrackType>( pTrack->GetNode() );

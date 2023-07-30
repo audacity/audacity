@@ -295,9 +295,9 @@ void WaveTrack::Init(const WaveTrack &orig)
 
 void WaveTrack::Reinit(const WaveTrack &orig)
 {
-   //assert(IsLeader());
-   //assert(orig.IsLeader());
-   //assert(NChannels() == orig.NChannels());
+   assert(IsLeader());
+   assert(orig.IsLeader());
+   assert(NChannels() == orig.NChannels());
    const auto channels = TrackList::Channels(this);
    auto iter = TrackList::Channels(&orig).begin();
    for (const auto pChannel : channels) {

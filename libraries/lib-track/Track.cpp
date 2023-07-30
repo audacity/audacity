@@ -248,7 +248,7 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
 
 Track *Track::GetLinkedTrack() const
 {
-   auto pList = mList.lock();
+   auto pList = static_cast<TrackList*>(mNode.second);
    if (!pList)
       return nullptr;
 

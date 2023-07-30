@@ -846,7 +846,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             auto updater = [](Track &d, const Track &s){
                assert(d.IsLeader());
                assert(s.IsLeader());
-               //assert(d.NChannels() == s.NChannels());
+               assert(d.NChannels() == s.NChannels());
                auto &dst = static_cast<WaveTrack&>(d);
                auto &src = static_cast<const WaveTrack&>(s);
                dst.Reinit(src);
