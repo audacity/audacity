@@ -345,7 +345,7 @@ void MP3ImportFileHandle::Import(ImportProgressListener &progressListener,
 
    // Copy the WaveTrack pointers into the Track pointer list that
    // we are expected to fill
-   outTracks.push_back(std::move(mChannels));
+   outTracks.push_back(TrackList::Temporary(nullptr, mChannels));
 
    ReadTags(tags);
    

@@ -292,12 +292,9 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
 
    NewChannelGroup channels(mInfo.channels);
 
-   {
-      // iter not used outside this scope.
-      auto iter = channels.begin();
-      for (int c = 0; c < mInfo.channels; ++iter, ++c)
-         *iter = ImportUtils::NewWaveTrack(*trackFactory, mFormat, mInfo.samplerate);
-   }
+   for (size_t c = 0; c < mInfo.channels; ++c)
+      channels[c] =
+         ImportUtils::NewWaveTrack(*trackFactory, mFormat, mInfo.samplerate);
 
    auto fileTotalFrames =
       (sampleCount)mInfo.frames; // convert from sf_count_t
@@ -391,7 +388,7 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
       channel->Flush();
 
    if (!channels.empty())
-      outTracks.push_back(std::move(channels));
+      outTracks.push_back(TrackList::Temporary(nullptr, channels));
 
    const char *str;
 

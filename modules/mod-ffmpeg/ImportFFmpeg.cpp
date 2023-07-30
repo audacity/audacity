@@ -273,10 +273,10 @@ private:
    bool                  mCancelled = false;     //!< True if importing was canceled by user
    bool                  mStopped = false;       //!< True if importing was stopped by user
    const FilePath        mName;
-   TrackHolders mChannels;               //!< 2-dimensional array of WaveTracks.
-                                         //!< First dimension - streams,
-                                         //!< After Import(), same size as mStreamContexts;
-                                         //!< second - channels of a stream.
+   std::vector<std::vector<WaveTrack::Holder>> mChannels; //!< 2-dimensional array of WaveTracks.
+      //!< First dimension - streams,
+      //!< After Import(), same size as mStreamContexts;
+      //!< second - channels of a stream.
 };
 
 
@@ -558,7 +558,8 @@ void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
       for(auto &channel : stream)
          channel->Flush();
 
-   outTracks.swap(mChannels);
+   for (auto &group : mChannels)
+      outTracks.push_back(TrackList::Temporary(nullptr, group));
 
    // Save metadata
    WriteMetadata(tags);

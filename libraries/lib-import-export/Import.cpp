@@ -49,8 +49,6 @@ ImportLOF.cpp, and ImportAUP.cpp.
 
 #include "ImportProgressListener.h"
 
-using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
-
 namespace {
 
 //Proxy class used by importer to capture import result
@@ -674,19 +672,17 @@ bool Importer::Import( AudacityProject &project,
             }
 
             auto end = tracks.end();
-            auto iter = std::remove_if( tracks.begin(), end,
-               std::mem_fn( &NewChannelGroup::empty ) );
-            if ( iter != end ) {
+            auto iter = std::remove_if(tracks.begin(), end,
+               [](auto &pList){ return pList->empty(); });
+            if (iter != end) {
                // importer shouldn't give us empty groups of channels!
-               wxASSERT(false);
+               assert(false);
                // But correct that and proceed anyway
-               tracks.erase( iter, end );
+               tracks.erase(iter, end);
             }
             if (tracks.size() > 0)
-            {
                // success!
                return true;
-            }
          }
 
          if (importResultProxy.GetResult() == ImportProgressListener::ImportResult::Cancelled)

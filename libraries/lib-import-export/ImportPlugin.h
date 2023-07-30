@@ -55,6 +55,7 @@ but little else.
 class AudacityProject;
 class WaveTrackFactory;
 class Track;
+class TrackList;
 class TranslatableString;
 class Tags;
 
@@ -104,7 +105,7 @@ protected:
 
 
 class WaveTrack;
-using TrackHolders = std::vector< std::vector< std::shared_ptr<WaveTrack> > >;
+using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
 
 class IMPORT_EXPORT_API ImportFileHandle /* not final */
 {

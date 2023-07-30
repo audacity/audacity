@@ -1082,14 +1082,14 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
 
 void
 ProjectFileManager::AddImportedTracks(const FilePath &fileName,
-                                      TrackHolders &&newTracks)
+   TrackHolders &&newTracks)
 {
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
 
-   std::vector< std::shared_ptr< Track > > results;
+   std::vector<Track*> results;
 
    SelectUtilities::SelectNone( project );
 
@@ -1105,28 +1105,21 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // all newly imported tracks are muted.
    const bool projectHasSolo =
       !(tracks.Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
-   if (projectHasSolo)
-   {
-      // Iterate vector of vectors of pointers to tracks that are not yet
-      // in the track list
-      for (auto& group : newTracks)
-         if (!group.empty())
-            (*group.begin())->SetMute(true);
+   if (projectHasSolo) {
+      for (auto &group : newTracks)
+         for (const auto pTrack : group->Leaders<WaveTrack>())
+            pTrack->SetMute(true);
    }
 
    // Must add all tracks first (before using Track::IsLeader)
    for (auto &group : newTracks) {
-      if (group.empty()) {
-         wxASSERT(false);
+      if (group->empty()) {
+         assert(false);
          continue;
       }
-      auto first = group.begin()->get();
-      auto nChannels = group.size();
-      for (auto &uNewTrack : group) {
-         auto newTrack = tracks.Add( uNewTrack );
-         results.push_back(newTrack->SharedPointer());
-      }
-      tracks.MakeMultiChannelTrack(*first, nChannels, true);
+      for (const auto pTrack : group->Leaders<WaveTrack>())
+         results.push_back(pTrack);
+      tracks.Append(std::move(*group));
    }
    newTracks.clear();
       
@@ -1134,29 +1127,25 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
 
    // Add numbers to track names only if there is more than one (mono or stereo)
    // track (not necessarily, more than one channel)
-   const bool useSuffix =
-      make_iterator_range( results.begin() + 1, results.end() )
-         .any_of( []( decltype(*results.begin()) &pTrack )
-            { return pTrack->IsLeader(); } );
+   const bool useSuffix = results.size() > 1;
 
    for (const auto &newTrack : results) {
-      if ( newTrack->IsLeader() ) {
-         // Count groups only
-         ++i;
-         newTrack->SetSelected(true);
-         if (useSuffix)
-             //i18n-hint Name default name assigned to a clip on track import
-             newTrack->SetName(XC("%s %d", "clip name template").Format(trackNameBase, i + 1).Translation());
-         else
-             newTrack->SetName(trackNameBase);
-      }
+      ++i;
+      newTrack->SetSelected(true);
+      if (useSuffix)
+         //i18n-hint Name default name assigned to a clip on track import
+         newTrack->SetName(XC("%s %d", "clip name template")
+            .Format(trackNameBase, i + 1).Translation());
+      else
+         newTrack->SetName(trackNameBase);
 
       newTrack->TypeSwitch([&](WaveTrack &wt) {
          if (newRate == 0)
             newRate = wt.GetRate();
          auto trackName = wt.GetName();
-         for (auto& clip : wt.GetClips())
-            clip->SetName(trackName);
+         for (const auto pChannel : TrackList::Channels(&wt))
+            for (auto& clip : pChannel->GetClips())
+               clip->SetName(trackName);
       });
    }
 
