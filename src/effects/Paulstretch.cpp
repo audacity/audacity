@@ -167,7 +167,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
             tempList->Add(outputTrack);
          }
          newT1 = std::max(newT1,
-            mT0 + (*tempList->Leaders().begin())->GetEndTime());
+            mT0 + (*tempList->begin())->GetEndTime());
          track->Clear(t0, t1);
          track->Paste(t0, *tempList);
       }

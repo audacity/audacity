@@ -328,7 +328,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
       if (mHasParseError || IsCancelled()) {
          // Revoke additions of tracks
          while (oldNumTracks < tracks.Size())
-            tracks.Remove(**tracks.Leaders().end().advance(-1));
+            tracks.Remove(**tracks.end().advance(-1));
       }
    });
 
@@ -1347,7 +1347,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    auto oldNumTracks = tracks.Size();
    Track *pLast = nullptr;
    if (oldNumTracks > 0)
-      pLast = *tracks.Leaders().rbegin();
+      pLast = *tracks.rbegin();
 
    // Guard this call so that C++ exceptions don't propagate through
    // the expat library

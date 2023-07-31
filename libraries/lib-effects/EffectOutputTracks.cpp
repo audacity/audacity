@@ -33,7 +33,7 @@ EffectOutputTracks::EffectOutputTracks(
    for (auto aTrack : trackRange) {
       auto list = aTrack->Duplicate();
       mIMap.push_back(aTrack);
-      mOMap.push_back(*list->Leaders().begin());
+      mOMap.push_back(*list->begin());
       mOutputTracks->Append(std::move(*list));
    }
    // Invariant is established
@@ -70,7 +70,7 @@ void EffectOutputTracks::Commit()
    size_t i = 0;
 
    while (!mOutputTracks->empty()) {
-      const auto pOutputTrack = *mOutputTracks->Leaders().begin();
+      const auto pOutputTrack = *mOutputTracks->begin();
 
       // If tracks were removed from mOutputTracks, then there will be
       // tracks in the map that must be removed from mTracks.

@@ -65,7 +65,7 @@ ModifiedAnalysisTrack::ModifiedAnalysisTrack(
    // copy LabelTrack here, so it can be undone on cancel
    const auto startTime = origTrack.GetStartTime();
    auto list = origTrack.Copy(startTime, origTrack.GetEndTime());
-   auto newTrack = (*list->Leaders().begin())->SharedPointer();
+   auto newTrack = (*list->begin())->SharedPointer();
 
    mpTrack = static_cast<LabelTrack*>(newTrack.get());
 

@@ -40,7 +40,7 @@ void DoRemoveTracks(AudacityProject &project)
 
    if (!(focus.has_value() && **focus))
       // try to use the last leader track
-      focus.emplace(tracks.Leaders().end().advance(-1));
+      focus.emplace(tracks.end().advance(-1));
    assert(focus);
    Track *f = **focus;
    // Try to use the first track after the removal

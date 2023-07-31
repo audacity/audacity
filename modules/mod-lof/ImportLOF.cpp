@@ -506,7 +506,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             else if (Internat::CompatibleToDouble(tokenholder, &offset))
             {
                auto &tracks = TrackList::Get( *mProject );
-               auto t = *tracks.Leaders().rbegin();
+               auto t = *tracks.rbegin();
 
                // t is now the last track in the project, unless the import of
                // all tracks failed, in which case it will be null. In that

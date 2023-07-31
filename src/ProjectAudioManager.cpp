@@ -953,7 +953,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(project).Set(first);
          if (!trackList.empty())
-            (*trackList.Leaders().rbegin())->EnsureVisible();
+            (*trackList.rbegin())->EnsureVisible();
       }
 
       //Automated Input Level Adjustment Initialization

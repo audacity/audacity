@@ -370,8 +370,8 @@ public:
    /*!
     Non-virtual overload that passes the first track of a given list
     @pre `IsLeader()`
-    @pre `SameKindAs(**src.Leaders().begin()).NChannels()`
-    @pre `NChannels == (**src.Leaders().begin()).NChannels()`
+    @pre `SameKindAs(**src.begin()).NChannels()`
+    @pre `NChannels == (**src.begin()).NChannels()`
     */
    void Paste(double t, const TrackList &src);
 
@@ -1043,34 +1043,32 @@ class TRACK_API TrackList final
 
    // Iteration
 
-private:
    // Hide the inherited begin() and end()
    using iterator = TrackIter<Track>;
    using const_iterator = TrackIter<const Track>;
 
    using value_type = Track *;
-   iterator begin() = delete; // { return Any().begin(); }
-   iterator end() = delete; // { return Any().end(); }
-   const_iterator begin() const = delete; // { return Any().begin(); }
-   const_iterator end() const = delete; // { return Any().end(); }
-   const_iterator cbegin() const = delete; // { return begin(); }
-   const_iterator cend() const = delete; // { return end(); }
+   iterator begin() { return Leaders().begin(); }
+   iterator end() { return Leaders().end(); }
+   const_iterator begin() const { return Leaders().begin(); }
+   const_iterator end() const { return Leaders().end(); }
+   const_iterator cbegin() const { return begin(); }
+   const_iterator cend() const { return end(); }
 
    // Reverse iteration
    using reverse_iterator = std::reverse_iterator<iterator>;
    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
-   reverse_iterator rbegin() = delete; // { return Any().rbegin(); }
-   reverse_iterator rend() = delete; // { return Any().rend(); }
-   const_reverse_iterator rbegin() const = delete; // { return Any().rbegin(); }
-   const_reverse_iterator rend() const = delete; // { return Any().rend(); }
-   const_reverse_iterator crbegin() const = delete; // { return rbegin(); }
-   const_reverse_iterator crend() const = delete; // { return rend(); }
+   reverse_iterator rbegin() { return Leaders().rbegin(); }
+   reverse_iterator rend() { return Leaders().rend(); }
+   const_reverse_iterator rbegin() const { return Leaders().rbegin(); }
+   const_reverse_iterator rend() const { return Leaders().rend(); }
+   const_reverse_iterator crbegin() const { return rbegin(); }
+   const_reverse_iterator crend() const { return rend(); }
 
    //! Turn a pointer into a TrackIter (constant time);
    //! get end iterator if this does not own the track
    TrackIter<Track> DoFind(Track *pTrack);
 
-public:
    // If the track is not an audio track, or not one of a group of channels,
    // return the track itself; else return the first channel of its group --
    // in either case as an iterator that will only visit other leader tracks.
@@ -1219,7 +1217,7 @@ public:
 
     @pre `t.IsLeader()`
     @pre `t.GetOwner().get() == this`
-    @pre `t.NChannels() == (*with.Leaders().begin())->NChannels()`
+    @pre `t.NChannels() == (*with.begin())->NChannels()`
     */
    TrackListHolder ReplaceOne(Track &t, TrackList &&with);
 

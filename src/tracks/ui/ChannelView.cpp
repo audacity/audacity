@@ -54,7 +54,7 @@ int ChannelView::GetCumulativeHeight(const Track *pTrack)
 
 int ChannelView::GetTotalHeight(const TrackList &list)
 {
-   return GetCumulativeHeight(*list.Leaders().rbegin());
+   return GetCumulativeHeight(*list.rbegin());
 }
 
 void ChannelView::CopyTo(Track &track) const

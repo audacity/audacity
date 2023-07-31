@@ -1677,7 +1677,7 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       const auto &out = outputTrack[0];
       if (outChannels < (int)mCurNumChannels)
          outputTrack[1] =
-            (*out->Duplicate()->Leaders().begin())->SharedPointer<WaveTrack>();
+            (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
       auto tempList =
          TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
       const bool bMergeClips = (mMergeClips < 0)

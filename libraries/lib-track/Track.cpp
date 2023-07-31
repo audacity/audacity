@@ -100,7 +100,7 @@ TrackListHolder Track::Duplicate() const
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone();
 
-   auto iter = TrackList::Channels(*result->Leaders().begin()).begin();
+   auto iter = TrackList::Channels(*result->begin()).begin();
    const auto copyOne = [&](const Track *pChannel){
       pChannel->AttachedTrackObjects::ForEach([&](auto &attachment){
          // Copy view state that might be important to undo/redo
@@ -288,7 +288,7 @@ void Track::Notify(bool allChannels, int code)
 
 void Track::Paste(double t, const TrackList &src)
 {
-   Paste(t, **src.Leaders().begin());
+   Paste(t, **src.begin());
 }
 
 void Track::SyncLockAdjust(double oldT1, double newT1)
@@ -650,7 +650,7 @@ TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
    assert(t.IsLeader());
    assert(t.GetOwner().get() == this);
    auto nChannels = t.NChannels();
-   assert(nChannels == (*with.Leaders().begin())->NChannels());
+   assert(nChannels == (*with.begin())->NChannels());
    TrackListHolder result = Temporary(nullptr);
 
    const auto channels = TrackList::Channels(&t);
@@ -995,7 +995,7 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
       // Share the satellites with the original, though they do not point back
       // to the pending track
       const auto channels = TrackList::Channels(src);
-      auto iter = TrackList::Channels(*tracks->Leaders().begin()).begin();
+      auto iter = TrackList::Channels(*tracks->begin()).begin();
       for (const auto pChannel : channels)
          ((AttachedTrackObjects&)**iter++) = *pChannel; // shallow copy
    }

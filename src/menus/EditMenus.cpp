@@ -105,7 +105,7 @@ std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
    for (auto track : src.Leaders()) {
       const auto copies =
          track->Copy(track->GetStartTime(), track->GetEndTime(), false);
-      const auto pTrack = *copies->Leaders().begin();
+      const auto pTrack = *copies->begin();
       pTrack->MoveTo(track->GetStartTime());
       if (const auto waveTrack = dynamic_cast<WaveTrack*>(pTrack))
          waveTrack->DiscardTrimmed();
@@ -188,7 +188,7 @@ void OnUndo(const CommandContext &context)
 
    auto t = *tracks.Selected().begin();
    if (!t)
-      t = *tracks.Leaders().begin();
+      t = *tracks.begin();
    TrackFocus::Get(project).Set(t);
    if (t) {
       t->EnsureVisible();
@@ -218,7 +218,7 @@ void OnRedo(const CommandContext &context)
 
    auto t = *tracks.Selected().begin();
    if (!t)
-      t = *tracks.Leaders().begin();
+      t = *tracks.begin();
    TrackFocus::Get(project).Set(t);
    if (t) {
       t->EnsureVisible();
@@ -569,7 +569,7 @@ void OnPaste(const CommandContext &context)
    const auto endPair = correspondence.cend();
 
    // Outer loop by sync-lock groups
-   auto next = tracks.Leaders().begin();
+   auto next = tracks.begin();
    for (auto range = tracks.Leaders(); !range.empty();
       // Skip to next sync lock group
      range.first = next
@@ -661,7 +661,7 @@ void OnDuplicate(const CommandContext &context)
 
       // Make copies not for clipboard but for direct addition to the project
       auto dest = n->Copy(selectedRegion.t0(), selectedRegion.t1(), false);
-      (*dest->Leaders().begin())
+      (*dest->begin())
          ->MoveTo(std::max(selectedRegion.t0(), n->GetStartTime()));
       tracks.Append(std::move(*dest));
 
@@ -859,7 +859,7 @@ void OnSplitNew(const CommandContext &context)
             if (dest) {
                // The copy function normally puts the clip at time 0
                // This offset lines it up with the original track's timing
-               (*dest->Leaders().begin())->MoveTo(newt0);
+               (*dest->begin())->MoveTo(newt0);
                tracks.Append(std::move(*dest));
             }
             wt.SplitDelete(newt0, newt1);

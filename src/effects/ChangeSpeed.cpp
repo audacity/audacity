@@ -270,7 +270,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
             }
 
             const double newLength =
-               (*newTracks->Leaders().begin())->GetEndTime();
+               (*newTracks->begin())->GetEndTime();
             const LinearTimeWarper warper{
                mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
 

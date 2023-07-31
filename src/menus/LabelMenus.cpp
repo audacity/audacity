@@ -73,7 +73,7 @@ int DoAddLabel(
    const auto pFocusedTrack = trackFocus.Get();
 
    // Look for a label track at or after the focused track
-   auto begin = tracks.Leaders().begin();
+   auto begin = tracks.begin();
    auto iter = pFocusedTrack
       ? tracks.Find(pFocusedTrack)
       : begin;
@@ -241,7 +241,7 @@ void EditClipboardByLabel(AudacityProject &project,
                if (!merged)
                   merged = dest;
                else {
-                  const auto pMerged = *merged->Leaders().begin();
+                  const auto pMerged = *merged->begin();
                   // Paste to the beginning; unless this is the first region,
                   // offset the track to account for time between the regions
                   if (i + 1 < regions.size())
@@ -260,7 +260,7 @@ void EditClipboardByLabel(AudacityProject &project,
                // nothing copied but there is a 'region', so the 'region' must
                // be a 'point label' so offset
                if (i + 1 < regions.size() && merged)
-                  (*merged->Leaders().begin())
+                  (*merged->begin())
                      ->ShiftBy(regions.at(i + 1).start - region.end);
          }
          if (merged)

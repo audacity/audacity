@@ -108,7 +108,7 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
 #endif
 
    if (!track)
-      track = Track::SharedPointer(*GetTracks().Leaders().begin());
+      track = Track::SharedPointer(*GetTracks().begin());
 
    if ( mFocusedTrack.lock() != track ) {
       mFocusedTrack = track;

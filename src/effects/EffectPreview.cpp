@@ -136,7 +136,7 @@ void EffectPreview(EffectBase &effect,
    else {
       for (auto src : saveTracks->Selected<const WaveTrack>()) {
          auto dest = src->Copy(mT0, t1);
-         (*dest->Leaders().begin())->SetSelected(true);
+         (*dest->begin())->SetSelected(true);
          mTracks->Append(std::move(*dest));
       }
    }

@@ -83,7 +83,7 @@ void DoPrevTrack(
    const auto t = trackFocus.Get();
    if (!t) {
       // if there isn't one, focus on last
-      const auto last = *tracks.Leaders().rbegin();
+      const auto last = *tracks.rbegin();
       trackFocus.Set(last);
       if (last)
          last->EnsureVisible(true);
@@ -99,7 +99,7 @@ void DoPrevTrack(
          // user knows they were at the top track.
          wxBell();
          if (circularTrackNavigation)
-            p = *tracks.Leaders().rbegin();
+            p = *tracks.rbegin();
          else {
             t->EnsureVisible();
             return;
@@ -179,7 +179,7 @@ void DoNextTrack(
    const auto t = trackFocus.Get();
    if  (!t) {
       // if there isn't one, focus on first
-      const auto first = *tracks.Leaders().begin();
+      const auto first = *tracks.begin();
       trackFocus.Set(first);
       if (first)
          first->EnsureVisible(true);
@@ -193,7 +193,7 @@ void DoNextTrack(
          // On last track so stay there
          wxBell();
          if (circularTrackNavigation)
-            n = *tracks.Leaders().begin();
+            n = *tracks.begin();
          else {
             t->EnsureVisible();
             return;
@@ -239,7 +239,7 @@ void DoNextTrack(
          // On last track so stay there
          wxBell();
          if (circularTrackNavigation) {
-            n = *tracks.Leaders().begin();
+            n = *tracks.begin();
             trackFocus.Set(n);   // Wrap to the first track
             if (n)
                n->EnsureVisible( true );
@@ -433,7 +433,7 @@ void OnFirstTrack(const CommandContext &context)
    if (!t)
       return;
 
-   auto f = *tracks.Leaders().begin();
+   auto f = *tracks.begin();
    if (t != f)
       trackFocus.Set(f);
    if (f)
@@ -451,7 +451,7 @@ void OnLastTrack(const CommandContext &context)
    if (!t)
       return;
 
-   auto l = *tracks.Leaders().rbegin();
+   auto l = *tracks.rbegin();
    if (t != l)
       trackFocus.Set(l);
    if (l)
