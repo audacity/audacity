@@ -271,25 +271,18 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
                return;
             }
 
-            auto iter =
-               TrackList::Channels(*newTracks->Leaders().begin()).begin();
-            const double newLength = (*iter)->GetEndTime();
+            const double newLength =
+               (*newTracks->Leaders().begin())->GetEndTime();
             const LinearTimeWarper warper{
                mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
 
-            for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
-               // Take the output track and insert it in place of the
-               // original sample data
-               pChannel->ClearAndPaste(
-                  mCurT0, mCurT1, *iter++, true, true, &warper);
-            }
+            outWaveTrack.ClearAndPaste(mCurT0, mCurT1,
+               *newTracks, true, true, &warper);
 
                // Finally, recreate the gaps
-            for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
-               for (const auto [st, et] : gaps)
-                  if (st >= mCurT0 && et <= mCurT1 && st != et)
-                     pChannel->SplitDelete(warper.Warp(st), warper.Warp(et));
-            }
+            for (const auto [st, et] : gaps)
+               if (st >= mCurT0 && et <= mCurT1 && st != et)
+                  outWaveTrack.SplitDelete(warper.Warp(st), warper.Warp(et));
          }
          else
             mCurTrackNum += outWaveTrack.NChannels();

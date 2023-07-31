@@ -63,7 +63,9 @@ ModifiedAnalysisTrack::ModifiedAnalysisTrack
    : mpEffect(pEffect)
 {
    // copy LabelTrack here, so it can be undone on cancel
-   auto newTrack = pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime());
+   auto list =
+      pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime());
+   auto newTrack = (*list->Leaders().begin())->SharedPointer();
 
    mpTrack = static_cast<LabelTrack*>(newTrack.get());
 
@@ -76,7 +78,7 @@ ModifiedAnalysisTrack::ModifiedAnalysisTrack
    // So it's okay that we cast it back to const
    mpOrigTrack =
       pEffect->mTracks->Replace(const_cast<LabelTrack*>(pOrigTrack),
-         newTrack );
+         newTrack);
 }
 
 ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)

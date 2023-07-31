@@ -45,7 +45,7 @@ void StretchingSequence::ResetCursor(double t, PlaybackDirection direction)
 }
 
 bool StretchingSequence::GetNext(
-   float* buffers[], size_t numChannels, size_t numSamples)
+   float *const buffers[], size_t numChannels, size_t numSamples)
 {
    if (!mExpectedStart.has_value())
       ResetCursor(0., PlaybackDirection::forward);
@@ -89,9 +89,9 @@ float StretchingSequence::GetChannelGain(int channel) const
    return mSequence.GetChannelGain(channel);
 }
 
-bool StretchingSequence::Get(
-   size_t iChannel, size_t nBuffers, samplePtr buffers[], sampleFormat format,
-   sampleCount start, size_t len, bool backwards, fillFormat fill,
+bool StretchingSequence::Get(size_t iChannel, size_t nBuffers,
+   const samplePtr buffers[], sampleFormat format, sampleCount start,
+   size_t len, bool backwards, fillFormat fill,
    bool mayThrow, sampleCount* pNumWithinClips) const
 {
    return const_cast<StretchingSequence&>(*this).MutableGet(
@@ -169,8 +169,8 @@ const WideSampleSequence* StretchingSequence::DoGetDecorated() const
 }
 
 bool StretchingSequence::MutableGet(
-   size_t iChannel, size_t nBuffers, samplePtr buffers[], sampleFormat format,
-   sampleCount start, size_t len, bool backwards)
+   size_t iChannel, size_t nBuffers, const samplePtr buffers[],
+   sampleFormat format, sampleCount start, size_t len, bool backwards)
 {
    // StretchingSequence is not expected to be used for any other case.
    assert(iChannel == 0u);
@@ -183,7 +183,7 @@ bool StretchingSequence::MutableGet(
          t,
          backwards ? PlaybackDirection::backward : PlaybackDirection::forward);
    }
-   return GetNext(reinterpret_cast<float**>(buffers), nBuffers, len);
+   return GetNext(reinterpret_cast<float *const *>(buffers), nBuffers, len);
 }
 
 std::shared_ptr<StretchingSequence> StretchingSequence::Create(

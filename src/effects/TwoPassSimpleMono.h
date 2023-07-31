@@ -12,8 +12,7 @@
 #ifndef __AUDACITY_EFFECT_TWOPASSSIMPLEMONO__
 #define __AUDACITY_EFFECT_TWOPASSSIMPLEMONO__
 
-#include "SimpleMono.h"
-
+#include "StatefulEffect.h"
 
 class WaveTrack;
 

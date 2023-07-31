@@ -1139,8 +1139,7 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 
    AudacityProject *const project = &mpData->project;
 
-   for (auto channel : TrackList::Channels(pTrack))
-      channel->SetWaveColorIndex(newWaveColor);
+   pTrack->SetWaveColorIndex(newWaveColor);
 
    ProjectHistory::Get( *project )
       .PushState(XO("Changed '%s' to %s")

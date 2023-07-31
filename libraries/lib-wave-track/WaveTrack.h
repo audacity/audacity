@@ -98,13 +98,18 @@ public:
 
    AudioGraph::ChannelType GetChannelType() const override;
 
-   // overwrite data excluding the sample sequence but including display
-   // settings
+   //! Overwrite data excluding the sample sequence but including display
+   //! settings
+   /*!
+    @pre `IsLeader()`
+    @pre `orig.IsLeader()`
+    @pre `NChannels() == orig.NChannels()`
+    */
    void Reinit(const WaveTrack &orig);
 private:
    void Init(const WaveTrack &orig);
 
-   Track::Holder Clone() const override;
+   TrackListHolder Clone() const override;
 
    friend class WaveTrackFactory;
 
@@ -157,6 +162,9 @@ private:
    float GetChannelGain(int channel) const override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
+   /*!
+    @pre `IsLeader()`
+    */
    void SetWaveColorIndex(int colorIndex);
 
    sampleCount GetPlaySamplesCount() const;
@@ -166,6 +174,9 @@ private:
 
    sampleFormat GetSampleFormat() const override { return mFormat; }
 
+   /*!
+    @pre `IsLeader()`
+    */
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 
@@ -173,7 +184,7 @@ private:
    // High-level editing
    //
 
-   Track::Holder Cut(double t0, double t1) override;
+   TrackListHolder Cut(double t0, double t1) override;
 
    //! Make another track copying format, rate, color, etc. but containing no
    //! clips
@@ -193,35 +204,79 @@ private:
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make
    // GetEndTime() correct.  This clip is not re-copied when pasting.
-   Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
-   Track::Holder CopyNonconst(double t0, double t1) /* not override */;
+   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const override;
 
    void Clear(double t0, double t1) override;
-   void Paste(double t0, const Track *src) override;
-   // May assume precondition: t0 <= t1
+   void Paste(double t0, const Track &src) override;
+   using Track::Paste; // Get the non-virtual overload too
+
+   /*!
+    May assume precondition: t0 <= t1
+    If the source has one channel and this has more, then replicate source
+    @pre `IsLeader()`
+    @pre `src.IsLeader()`
+    @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
+    */
    void ClearAndPaste(double t0, double t1,
-                              const Track *src,
-                              bool preserve = true,
-                              bool merge = true,
-                              const TimeWarper *effectWarper = NULL) /* not override */;
+      const WaveTrack &src,
+      bool preserve = true,
+      bool merge = true,
+      const TimeWarper *effectWarper = nullptr) /* not override */;
+   /*!
+    Overload that takes a TrackList and passes its first wave track
+    @pre `**src.Leaders<const WaveTrack>().begin()` satisfies preconditions
+    of the other overload for `src`
+    */
+   void ClearAndPaste(double t0, double t1,
+      const TrackList &src,
+      bool preserve = true,
+      bool merge = true,
+      const TimeWarper *effectWarper = nullptr)
+   {
+      ClearAndPaste(t0, t1, **src.Leaders<const WaveTrack>().begin(),
+         preserve, merge, effectWarper);
+   }
 
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
    void SplitAt(double t) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    */
    void Split(double t0, double t1) /* not override */;
-   // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
-   // May assume precondition: t0 <= t1
+   /*!
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    */
    void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
-   Track::Holder SplitCut(double t0, double t1) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    @post result: `result->NChannels() == NChannels()`
+    */
+   TrackListHolder SplitCut(double t0, double t1) /* not override */;
+
    // May assume precondition: t0 <= t1
+   /*!
+    @pre `IsLeader()`
+    */
    void SplitDelete(double t0, double t1) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    */
    void Join(double t0, double t1) /* not override */;
    // May assume precondition: t0 <= t1
+   /*!
+    @pre `IsLeader()`
+    */
    void Disjoin(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
+   /*!
+    @pre `IsLeader()`
+    */
    void Trim(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
@@ -275,9 +330,9 @@ private:
    ///
 
    bool Get(
-      size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
-      fillFormat fill = fillZero, bool mayThrow = true,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
@@ -585,7 +640,8 @@ private:
       const std::shared_ptr<WaveClip> mpClip1;
    };
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto(AudacityProject &project, TrackList &list)
+      const override;
 
    //! Returns nullptr if clip with such name was not found
    const WaveClip* FindClipByName(const wxString& name) const;
@@ -593,6 +649,14 @@ private:
    size_t NIntervals() const override;
 
 protected:
+   static void ClearAndPasteOne(WaveTrack &track,
+      double t0, double t1, double endTime, const WaveTrack &src,
+      bool preserve, bool merge, const TimeWarper *effectWarper);
+   static void JoinOne(WaveTrack &track, double t0, double t1);
+   static Holder CopyOne(const WaveTrack &track,
+      double t0, double t1, bool forClipboard);
+   static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile);
+
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
@@ -611,6 +675,8 @@ protected:
 
    sampleFormat  mFormat;
    mutable int   mLegacyRate{ 0 }; //!< used only during deserialization
+
+   // TODO move to a ClientData attachment on the channel group
    int           mWaveColorIndex;
 
 private:
@@ -628,7 +694,12 @@ private:
    void DoSetPan(float value);
    void DoSetGain(float value);
 
-   void PasteWaveTrack(double t0, const WaveTrack* other);
+   /*
+   @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
+    */
+   void PasteWaveTrack(double t0, const WaveTrack &other);
+   static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
+      const double insertDuration);
 
    //! Whether all clips have a common rate
    bool RateConsistencyCheck() const;

@@ -128,7 +128,7 @@ UIHandlePtr SampleHandle::HitTest
    float oneSample;
    const double rate = wavetrack->GetRate();
    const auto s0 = (sampleCount)(tt * rate + 0.5);
-   if (! wavetrack->GetFloats(&oneSample, s0, 1, fillZero,
+   if (! wavetrack->GetFloats(&oneSample, s0, 1, FillFormat::fillZero,
          // Do not propagate exception but return a failure value
          false) )
       return {};

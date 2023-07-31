@@ -222,13 +222,18 @@ private:
 
    using Holder = std::shared_ptr<Track>;
 
-   //! Find or create the destination track for a paste, maybe in a different project
-   /*! @return A smart pointer to the track; its `use_count()` can tell whether it is new */
-   virtual Holder PasteInto( AudacityProject & ) const = 0;
+   //! Find or create the destination track for a paste, maybe in a different
+   //! project
+   /*!
+    @pre `IsLeader()`
+    @param list to which any newly created tracks are added; but left unchanged
+       if an existing track is found in the project instead
+    @return A smart pointer to a leader track
+    */
+   virtual Holder PasteInto(AudacityProject &project, TrackList &list)
+      const = 0;
 
 public:
-   static void FinishCopy (const Track *n, Track *dest);
-
    //! Check consistency of channel groups, and maybe fix it
    /*!
     @param doFix whether to make any changes to correct inconsistencies
@@ -245,6 +250,7 @@ public:
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
+   ListOfTracks* GetHolder() const { return mNode.second; }
 
    LinkType GetLinkType() const noexcept;
    //! Returns true if the leader track has link type LinkType::Aligned
@@ -298,8 +304,12 @@ private:
 
    void Init(const Track &orig);
 
-   // public nonvirtual duplication function that invokes Clone():
-   virtual Holder Duplicate() const;
+   //! public nonvirtual duplication function that invokes Clone()
+   /*!
+    @pre `IsLeader()`
+    @post result: `NChannels() == result->NChannels()`
+    */
+   virtual TrackListHolder Duplicate() const;
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;
@@ -324,27 +334,55 @@ public:
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
 
-   // method to set project tempo on track
+   //! method to set project tempo on track
+   /*!
+    @pre `IsLeader()`
+    */
    void OnProjectTempoChange(double newTempo);
 
-   // Create a NEW track and modify this track
-   // Return non-NULL or else throw
-   // May assume precondition: t0 <= t1
-   virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   //! Create tracks and modify this track
+   /*!
+    @return non-NULL or else throw
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    @post result: `result->NChannels() == NChannels()`
+    */
+   virtual TrackListHolder Cut(double t0, double t1) = 0;
 
-   // Create a NEW track and don't modify this track
-   // Return non-NULL or else throw
-   // Note that subclasses may want to distinguish tracks stored in a clipboard
-   // from those stored in a project
-   // May assume precondition: t0 <= t1
-   // Should invoke Track::Init
-   virtual Holder Copy
-      (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const = 0;
+   //! Create new tracks and don't modify this track
+   /*!
+    @return non-NULL or else throw
+    Note that subclasses may want to distinguish tracks stored in a clipboard
+    from those stored in a project
+    May assume precondition: t0 <= t1
+    Should invoke Track::Init
+    @pre `IsLeader`
+    @post result: `result->NChannels() == NChannels()`
+   */
+   virtual TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const = 0;
 
-   // May assume precondition: t0 <= t1
-   virtual void Clear(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   /*!
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    */
+   virtual void Clear(double t0, double t1) = 0;
 
-   virtual void Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) = 0;
+   //! Weak precondition allows overrides to replicate one channel into many
+   /*!
+    @pre `IsLeader()`
+    @pre `SameKindAs(src)`
+    @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
+    */
+   virtual void Paste(double t, const Track &src) = 0;
+
+   /*!
+    Non-virtual overload that passes the first track of a given list
+    @pre `IsLeader()`
+    @pre `SameKindAs(**src.Leaders().begin()).NChannels()`
+    @pre `NChannels == (**src.Leaders().begin()).NChannels()`
+    */
+   void Paste(double t, const TrackList &src);
 
    //! This can be used to adjust a sync-lock selected track when the selection
    //! is replaced by one of a different length.
@@ -354,15 +392,22 @@ public:
    virtual void SyncLockAdjust(double oldT1, double newT1);
 
    // May assume precondition: t0 <= t1
-   virtual void Silence(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   /*!
+    @pre `IsLeader()`
+    */
+   virtual void Silence(double t0, double t1) = 0;
 
    // May assume precondition: t0 <= t1
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
 private:
-   // Subclass responsibility implements only a part of Duplicate(), copying
-   // the track data proper (not associated data such as for groups and views):
-   virtual Holder Clone() const = 0;
+   //! Subclass responsibility implements only a part of Duplicate(), copying
+   //! the track data proper (not associated data such as for groups and views)
+   /*!
+    @pre `IsLeader()`
+    @post result: `NChannels() == result->NChannels()`
+    */
+   virtual TrackListHolder Clone() const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >
@@ -444,10 +489,13 @@ public:
 protected:
    const std::optional<double>& GetProjectTempo() const;
 
-private:
+   /*!
+    @pre `IsLeader()`
+    */
    virtual void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) = 0;
 
+private:
    std::optional<double> mProjectTempo;
 };
 
@@ -493,6 +541,9 @@ public:
    // Override all the TrackAttachment virtuals and pass through to each
    void CopyTo(Track &track) const override;
    void Reparent(const std::shared_ptr<Track> &parent) override;
+   /*!
+    @pre `IsLeader()`
+    */
    void WriteXMLAttributes(XMLWriter &writer) const override;
    bool HandleXMLAttribute(
       const std::string_view& attr, const XMLAttributeValueView& valueView)
@@ -1024,7 +1075,7 @@ class TRACK_API TrackList final
       auto Find(Track *pTrack)
          -> TrackIter< TrackType >
    {
-      if (!pTrack || pTrack->GetOwner().get() != this)
+      if (!pTrack || pTrack->GetHolder() != this)
          return EndIterator<TrackType>();
       else
          return MakeTrackIterator<TrackType>( pTrack->GetNode() );
@@ -1166,7 +1217,8 @@ public:
       static auto Channels( TrackType *pTrack )
          -> TrackIterRange< TrackType >
    {
-      return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
+      return Channels_<TrackType>(
+         static_cast<TrackList*>(pTrack->GetHolder())->FindLeader(pTrack));
    }
 
    //! Count channels of a track
@@ -1231,9 +1283,6 @@ public:
    bool MoveDown(Track * t);
    bool Move(Track * t, bool up) { return up ? MoveUp(t) : MoveDown(t); }
 
-   //! Mainly a test function. Uses a linear search, so could be slow.
-   bool Contains(const Track * t) const;
-
    // Return non-null only if the weak pointer is not, and the track is
    // owned by this list; constant time.
    template <typename Subclass>
@@ -1261,12 +1310,11 @@ public:
    //! so that `TrackList::Channels(left.get())` will enumerate the given
    //! tracks
    /*!
-    @pre `left != nullptr`
-    @pre `left->GetOwner() == nullptr`
-    @pre `right == nullptr || right->GetOwner() == nullptr`
+    @pre `left == nullptr || left->GetOwner() == nullptr`
+    @pre `right == nullptr || (left && right->GetOwner() == nullptr)`
     */
    static TrackListHolder Temporary(AudacityProject *pProject,
-      const Track::Holder &left, const Track::Holder &right);
+      const Track::Holder &left = {}, const Track::Holder &right = {});
 
    //! Remove all tracks from `list` and put them at the end of `this`
    void Append(TrackList &&list);
@@ -1377,7 +1425,9 @@ private:
    static long sCounter;
 
 public:
-   using Updater = std::function< void(Track &dest, const Track &src) >;
+   //! The tracks supplied to this function will be leaders with the same number
+   //! of channels
+   using Updater = std::function<void(Track &dest, const Track &src)>;
    // Start a deferred update of the project.
    // The return value is a duplicate of the given track.
    // While ApplyPendingTracks or ClearPendingTracks is not yet called,
@@ -1392,7 +1442,11 @@ public:
    // Updater does not do it.
    // Pending track will have the same TrackId as the actual.
    // Pending changed tracks will not occur in iterations.
-   std::shared_ptr<Track> RegisterPendingChangedTrack(
+   /*!
+    @pre `src->IsLeader()`
+    @post result: `src->NChannels() == result.size()`
+    */
+   std::vector<Track*> RegisterPendingChangedTrack(
       Updater updater,
       Track *src
    );
@@ -1427,8 +1481,11 @@ private:
    //! Shadow tracks holding append-recording in progress; need to put them into a list so that GetLink() works
    /*! Beware, they are in a disjoint iteration sequence from ordinary tracks */
    ListOfTracks mPendingUpdates;
-   //! This is in correspondence with mPendingUpdates
+   //! This is in correspondence with leader tracks in mPendingUpdates
    std::vector< Updater > mUpdaters;
+   //! Whether the list assigns unique ids to added tracks;
+   //! false for temporaries
+   bool mAssignsIds{ true };
 };
 
 #endif

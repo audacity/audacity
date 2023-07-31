@@ -232,6 +232,9 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
       outputTrack->Flush();
    }
 
+   // Allow TrackList::Channels to work on outputTrack
+   auto tempList = TrackList::Temporary(
+      nullptr, outputTrack, nullptr);
    // Transfer output samples to the original
    Finalize(*track, *outputTrack, warper);
 
@@ -387,8 +390,7 @@ void EffectSoundTouch::Finalize(
       // Trim output track to original length since SoundTouch may add extra samples
       else if (newLen > oldLen) {
          const auto t1 = out.LongSamplesToTime(oldLen);
-         for (auto pChannel : outChannels)
-            pChannel->Trim(0, t1);
+         out.Trim(0, t1);
       }
    }
 
@@ -419,17 +421,14 @@ void EffectSoundTouch::Finalize(
    }
 
    // Take the output track and insert it in place of the original sample data
-   for (auto pChannel : origChannels)
-      pChannel->ClearAndPaste(
-         mT0, mT1, *outChannels.first++, true, true, &warper);
+   orig.ClearAndPaste(mT0, mT1, out, true, true, &warper);
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {
       auto st = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.first));
       auto et = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.second));
       if (st >= mT0 && et <= mT1 && st != et)
-         for (auto pChannel : origChannels)
-            pChannel->SplitDelete(warper.Warp(st), warper.Warp(et));
+         orig.SplitDelete(warper.Warp(st), warper.Warp(et));
    }
 }
 

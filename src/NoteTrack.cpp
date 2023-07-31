@@ -165,7 +165,7 @@ Alg_seq &NoteTrack::GetSeq() const
    return *mSeq;
 }
 
-Track::Holder NoteTrack::Clone() const
+TrackListHolder NoteTrack::Clone() const
 {
    auto duplicate = std::make_shared<NoteTrack>();
    duplicate->Init(*this);
@@ -202,7 +202,7 @@ Track::Holder NoteTrack::Clone() const
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
 #endif
-   return duplicate;
+   return TrackList::Temporary(nullptr, duplicate, nullptr);
 }
 
 
@@ -224,6 +224,7 @@ double NoteTrack::GetEndTime() const
 void NoteTrack::DoOnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
+   assert(IsLeader());
    if (!oldTempo.has_value())
       return;
    const auto ratio = *oldTempo / newTempo;
@@ -463,8 +464,9 @@ void NoteTrack::PrintSequence()
    fclose(debugOutput);
 }
 
-Track::Holder NoteTrack::Cut(double t0, double t1)
+TrackListHolder NoteTrack::Cut(double t0, double t1)
 {
+   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -490,10 +492,10 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    //(mBottomNote,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   return newTrack;
+   return TrackList::Temporary(nullptr, newTrack, nullptr);
 }
 
-Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
+TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -513,7 +515,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
    // (mBottomNote, mSerializationBuffer,
    // mSerializationLength, mVisibleChannels)
 
-   return newTrack;
+   return TrackList::Temporary(nullptr, newTrack, nullptr);
 }
 
 bool NoteTrack::Trim(double t0, double t1)
@@ -542,6 +544,7 @@ bool NoteTrack::Trim(double t0, double t1)
 
 void NoteTrack::Clear(double t0, double t1)
 {
+   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -573,7 +576,7 @@ void NoteTrack::Clear(double t0, double t1)
    }
 }
 
-void NoteTrack::Paste(double t, const Track *src)
+void NoteTrack::Paste(double t, const Track &src)
 {
    // Paste inserts src at time t. If src has a positive offset,
    // the offset is treated as silence which is also inserted. If
@@ -584,7 +587,7 @@ void NoteTrack::Paste(double t, const Track *src)
    // the destination track).
 
    //Check that src is a non-NULL NoteTrack
-   bool bOk = src && src->TypeSwitch<bool>( [&](const NoteTrack &other) {
+   bool bOk = src.TypeSwitch<bool>( [&](const NoteTrack &other) {
 
       auto myOffset = this->GetOffset();
       if (t < myOffset) {
@@ -597,34 +600,35 @@ void NoteTrack::Paste(double t, const Track *src)
       double delta = 0.0;
       auto &seq = GetSeq();
       auto offset = other.GetOffset();
-      if ( offset > 0 ) {
+      if (offset > 0) {
          seq.convert_to_seconds();
-         seq.insert_silence( t - GetOffset(), offset );
+         seq.insert_silence(t - GetOffset(), offset);
          t += offset;
          // Is this needed or does Alg_seq::insert_silence take care of it?
          //delta += offset;
       }
 
       // This seems to be needed:
-      delta += std::max( 0.0, t - GetEndTime() );
+      delta += std::max(0.0, t - GetEndTime());
 
       // This, not:
       //delta += other.GetSeq().get_real_dur();
 
       seq.paste(t - GetOffset(), &other.GetSeq());
 
-      AddToDuration( delta );
+      AddToDuration(delta);
 
       return true;
    });
 
-   if ( !bOk )
+   if (!bOk)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       (void)0;// intentionally do nothing
 }
 
 void NoteTrack::Silence(double t0, double t1)
 {
+   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -724,11 +728,13 @@ auto NoteTrack::ClassTypeInfo() -> const TypeInfo &
    return typeInfo();
 }
 
-Track::Holder NoteTrack::PasteInto( AudacityProject & ) const
+Track::Holder NoteTrack::PasteInto(AudacityProject &, TrackList &list) const
 {
+   assert(IsLeader());
    auto pNewTrack = std::make_shared<NoteTrack>();
    pNewTrack->Init(*this);
-   pNewTrack->Paste(0.0, this);
+   pNewTrack->Paste(0.0, *this);
+   list.Add(pNewTrack);
    return pNewTrack;
 }
 
@@ -981,13 +987,14 @@ XMLTagHandler *NoteTrack::HandleXMLChild(const std::string_view&  WXUNUSED(tag))
 void NoteTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
+   assert(IsLeader());
    std::ostringstream data;
    Track::Holder holder;
    const NoteTrack *saveme = this;
    if (!mSeq) {
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
-      holder = Clone();
+      holder = (*Clone()->Leaders().begin())->SharedPointer();
       saveme = static_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);

@@ -65,16 +65,16 @@ public:
     @return false when `mayThrow` is false and not all samples could be
        retrieved
     */
-   bool GetFloats(
-      size_t iChannel, size_t nBuffers, float* buffers[], sampleCount start,
-      size_t len, bool backwards = false, fillFormat fill = fillZero,
+   bool GetFloats(size_t iChannel, size_t nBuffers,
+      float *const buffers[], sampleCount start, size_t len,
+      bool backwards = false, fillFormat fill = FillFormat::fillZero,
       bool mayThrow = true, sampleCount* pNumWithinClips = nullptr) const
    {
       // Cast the pointers to pass them to Get() which handles multiple
       // destination formats
       return Get(
-         iChannel, nBuffers, reinterpret_cast<samplePtr*>(buffers), floatSample,
-         start, len, backwards, fill, mayThrow, pNumWithinClips);
+         iChannel, nBuffers, reinterpret_cast<const samplePtr*>(buffers),
+         floatSample, start, len, backwards, fill, mayThrow, pNumWithinClips);
    }
 
    //! Retrieve samples of one of the channels from a sequence in a specified
@@ -86,9 +86,9 @@ public:
     if false, else from `start` (exclusive) to `start - len` in reverse order.
     */
    virtual bool Get(
-      size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backward,
-      fillFormat fill = fillZero, bool mayThrow = true,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.

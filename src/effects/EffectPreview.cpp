@@ -104,7 +104,7 @@ void EffectPreview(EffectBase &effect,
       updateUI();
 
    // Save the original track list
-   TrackList *saveTracks = mTracks;
+   auto saveTracks = mTracks;
 
    auto cleanup2 = finally( [&] {
       mTracks = saveTracks;
@@ -115,37 +115,30 @@ void EffectPreview(EffectBase &effect,
    // Build NEW tracklist from rendering tracks
    // Set the same owning project, so FindProject() can see it within Process()
    const auto pProject = saveTracks->GetOwner();
-   auto uTracks = TrackList::Create( pProject );
-   mTracks = uTracks.get();
+   mTracks = TrackList::Create(pProject);
 
    // Linear Effect preview optimised by pre-mixing to one track.
    // Generators need to generate per track.
    if (isLinearEffect && !isGenerator) {
-      WaveTrack::Holder mixLeft, mixRight;
-      MixAndRender(saveTracks->SelectedLeaders<const WaveTrack>(),
+      auto newTracks = MixAndRender(
+         saveTracks->SelectedLeaders<const WaveTrack>(),
          Mixer::WarpOptions{ saveTracks->GetOwner() },
          wxString{}, // Don't care about the name of the temporary tracks
-         factory, rate, floatSample, mT0, t1, mixLeft, mixRight);
-      if (!mixLeft)
+         factory, rate, floatSample, mT0, t1);
+      if (!newTracks)
          return;
+      mTracks->Append(std::move(*newTracks));
 
-      mixLeft->Offset(-mixLeft->GetStartTime());
-      auto pLeft = mTracks->Add( mixLeft );
-      Track *pRight{};
-      if (mixRight) {
-         mixRight->Offset(-mixRight->GetStartTime());
-         pRight = mTracks->Add( mixRight );
-         mTracks->MakeMultiChannelTrack(*pLeft, 2, true);
-      }
-      mixLeft->SetSelected(true);
+      auto newTrack = *mTracks->Leaders<WaveTrack>().rbegin();
+      for (const auto pChannel : TrackList::Channels(newTrack))
+         pChannel->Offset(-pChannel->GetStartTime());
+      newTrack->SetSelected(true);
    }
    else {
-      for (auto src : saveTracks->Any< const WaveTrack >()) {
-         if (src->GetSelected()) {
-            auto dest = src->Copy(mT0, t1);
-            mTracks->Add( dest );
-            dest->SetSelected(src->GetSelected());
-         }
+      for (auto src : saveTracks->SelectedLeaders<const WaveTrack>()) {
+         auto dest = src->Copy(mT0, t1);
+         (*dest->Leaders().begin())->SetSelected(true);
+         mTracks->Append(std::move(*dest));
       }
    }
 

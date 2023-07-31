@@ -33,7 +33,7 @@ public:
    bool IsLinearEffect() const { return mIsLinearEffect; }
    bool PreviewsFullSelection() const { return mPreviewFullSelection; }
 
-   void SetTracks(TrackList *pTracks) { mTracks = pTracks; }
+   void SetTracks(TrackList *pTracks);
 
    //! Called when Preview() starts, to allow temporary effect state changes
    /*!
@@ -88,7 +88,7 @@ protected:
    // Use this if the effect needs to know if it is previewing
    bool IsPreviewing() const { return mIsPreview; }
 
-   const TrackList *inputTracks() const { return mTracks; }
+   const TrackList *inputTracks() const { return mTracks.get(); }
    const AudacityProject *FindProject() const;
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -106,7 +106,7 @@ private:
 
 public:
    // Public until we can move these fields out of here into EffectContext
-   TrackList *mTracks{}; // the complete list of all tracks
+   std::shared_ptr<TrackList> mTracks{}; // the complete list of all tracks
    int mNumTracks{}; // This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
    BasicUI::ProgressDialog *mProgress{}; // Temporary pointer, NOT deleted in destructor.
    double         mProjectRate{}; // Sample rate of the project - NEW tracks should

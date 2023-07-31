@@ -155,34 +155,34 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    bool bResult = true;
    sampleCount processed = 0;
 
-   auto start = wxMin(left->GetStartTime(), right->GetStartTime());
-   auto end = wxMax(left->GetEndTime(), right->GetEndTime());
+   auto start = std::min(left->GetStartTime(), right->GetStartTime());
+   auto end = std::max(left->GetEndTime(), right->GetEndTime());
 
    Mixer::Inputs tracks;
    tracks.emplace_back(
       left->SharedPointer<const SampleTrack>(), GetEffectStages(*left));
 
    Mixer mixer(move(tracks),
-               true,                // Throw to abort mix-and-render if read fails:
-               Mixer::WarpOptions{ inputTracks()->GetOwner() },
-               start,
-               end,
-               1,
-               idealBlockLen,
-               false,               // Not interleaved
-               left->GetRate(),     // Process() checks that left and right
-                                    // rates are the same
-               floatSample);
+      true,                // Throw to abort mix-and-render if read fails:
+      Mixer::WarpOptions{ inputTracks()->GetOwner() },
+      start,
+      end,
+      1,
+      idealBlockLen,
+      false,               // Not interleaved
+      left->GetRate(),     // Process() checks that left and right
+                           // rates are the same
+      floatSample);
 
    auto outTrack = left->EmptyCopy();
+   assert(outTrack->IsLeader());
    outTrack->ConvertToSampleFormat(floatSample);
 
    while (auto blockLen = mixer.Process()) {
       auto buffer = mixer.GetBuffer();
       for (auto i = 0; i < blockLen; i++)
-      {
          ((float *)buffer)[i] /= 2.0;
-      }
+
       // If mixing channels that both had only 16 bit effective format
       // (for example), and no gains or envelopes, still there should be
       // dithering because of the averaging above, which may introduce samples
@@ -192,19 +192,19 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
 
       curTime += blockLen;
       if (TotalProgress(curTime.as_double() / totalTime.as_double()))
-      {
          return false;
-      }
    }
    outTrack->Flush();
 
-   double minStart = wxMin(left->GetStartTime(), right->GetStartTime());
-   left->Clear(left->GetStartTime(), left->GetEndTime());
-   left->Paste(minStart, outTrack.get());
+   double minStart = std::min(left->GetStartTime(), right->GetStartTime());
+
    outputs.UnlinkChannels(*left);
    // Should be a consequence of unlinking:
    assert(right->IsLeader());
    outputs.Remove(*right);
+
+   left->Clear(left->GetStartTime(), left->GetEndTime());
+   left->Paste(minStart, *outTrack);
    RealtimeEffectList::Get(*left).Clear();
 
    return bResult;

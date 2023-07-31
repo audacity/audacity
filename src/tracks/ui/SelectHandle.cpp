@@ -1371,7 +1371,7 @@ void SelectHandle::StartSnappingFreqSelection
    frequencySnappingData.resize(effectiveLength, 0.0f);
    pTrack->GetFloats(
       &frequencySnappingData[0],
-      start, length, fillZero,
+      start, length, FillFormat::fillZero,
       // Don't try to cope with exceptions, just read zeroes instead.
       false);
 

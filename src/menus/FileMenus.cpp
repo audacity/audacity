@@ -92,7 +92,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
       }
       fileName.Mkdir(0777, wxPATH_MKDIR_FULL); // make sure it exists
 
-      int nChannels = (tracks.Any() - &Track::IsLeader ).empty() ? 1 : 2;
+      int nChannels = tracks.Leaders().max(&Track::NChannels);
 
       // We're in batch mode, the file does not exist already.
       // We really can proceed without prompting.

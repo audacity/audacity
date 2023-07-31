@@ -8,8 +8,7 @@
 
 *******************************************************************//**
 \class EffectTwoPassSimpleMono
-\brief An Effect base class that implements a two pass process by using
-EffectSimpleMono.
+\brief An Effect base class that implements a two pass process.
 
 Inherit from it if your effect needs to pass twice over the data.
 It does the first pass on all selected tracks before going back and
@@ -35,7 +34,10 @@ bool EffectTwoPassSimpleMono::Process(EffectInstance &, EffectSettings &settings
    mWorkTracks = TrackList::Create(
       const_cast<AudacityProject*>( FindProject() ) );
    for (auto track : outputs.Get().Selected<WaveTrack>()) {
-      mWorkTracks->Add(track->EmptyCopy())->ConvertToSampleFormat(floatSample);
+      auto pNewTrack = track->EmptyCopy();
+      mWorkTracks->Add(pNewTrack);
+      if (pNewTrack->IsLeader())
+         pNewTrack->ConvertToSampleFormat(floatSample);
       if (mT0 > 0)
          (*mWorkTracks->rbegin())->InsertSilence(0, mT0);
    }

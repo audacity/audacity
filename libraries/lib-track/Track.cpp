@@ -97,15 +97,26 @@ void Track::EnsureVisible( bool modifyState )
       pList->EnsureVisibleEvent(SharedPointer(), modifyState);
 }
 
-Track::Holder Track::Duplicate() const
+TrackListHolder Track::Duplicate() const
 {
+   assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone();
 
-   AttachedTrackObjects::ForEach([&](auto &attachment){
-      // Copy view state that might be important to undo/redo
-      attachment.CopyTo( *result );
-   });
+   auto iter = TrackList::Channels(*result->Leaders().begin()).begin();
+   const auto copyOne = [&](const Track *pChannel){
+      pChannel->AttachedTrackObjects::ForEach([&](auto &attachment){
+         // Copy view state that might be important to undo/redo
+         attachment.CopyTo(**iter);
+      });
+      ++iter;
+   };
+
+   if (GetOwner())
+      for (const auto pChannel : TrackList::Channels(this))
+         copyOne(pChannel);
+   else
+      copyOne(this);
 
    return result;
 }
@@ -237,7 +248,7 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
 
 Track *Track::GetLinkedTrack() const
 {
-   auto pList = mList.lock();
+   auto pList = static_cast<TrackList*>(mNode.second);
    if (!pList)
       return nullptr;
 
@@ -278,24 +289,25 @@ void Track::Notify(bool allChannels, int code)
       pList->DataEvent(SharedPointer(), allChannels, code);
 }
 
+void Track::Paste(double t, const TrackList &src)
+{
+   Paste(t, **src.Leaders().begin());
+}
+
 void Track::SyncLockAdjust(double oldT1, double newT1)
 {
    assert(IsLeader());
    const auto endTime = GetEndTime();
    if (newT1 > oldT1 && oldT1 > endTime)
          return;
-   const auto channels = TrackList::Channels(this);
-   for (const auto pChannel : channels) {
-      if (newT1 > oldT1) {
-         // Insert space within the track
-            auto tmp = pChannel->Cut(oldT1, endTime);
-            pChannel->Paste(newT1, tmp.get());
-      }
-      else if (newT1 < oldT1) {
-         // Remove from the track
-         pChannel->Clear(newT1, oldT1);
-      }
+   if (newT1 > oldT1) {
+      auto cutChannels = Cut(oldT1, endTime);
+      assert(NChannels() == cutChannels->NChannels());
+      Paste(newT1, *cutChannels);
    }
+   else if (newT1 < oldT1)
+      // Remove from the track
+      Clear(newT1, oldT1);
 }
 
 bool Track::Any() const
@@ -311,15 +323,6 @@ bool Track::IsLeader() const
 
 bool Track::IsSelectedLeader() const
    { return IsSelected() && IsLeader(); }
-
-void Track::FinishCopy
-(const Track *n, Track *dest)
-{
-   if (dest) {
-      dest->mpGroupData = n->mpGroupData ?
-         std::make_unique<ChannelGroupData>(*n->mpGroupData) : nullptr;
-   }
-}
 
 bool Track::LinkConsistencyFix(bool doFix, bool completeList)
 {
@@ -626,7 +629,8 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
    auto n = getPrev( getEnd() );
 
    t->SetOwner(shared_from_this(), n);
-   t->SetId( TrackId{ ++sCounter } );
+   if (mAssignsIds)
+      t->SetId(TrackId{ ++sCounter });
    RecalcPositions(n);
    AdditionEvent(n);
    return back().get();
@@ -912,11 +916,6 @@ bool TrackList::MoveDown(Track * t)
    return false;
 }
 
-bool TrackList::Contains(const Track * t) const
-{
-   return make_iterator_range( *this ).contains( t );
-}
-
 bool TrackList::empty() const
 {
    return begin() == end();
@@ -965,26 +964,41 @@ double TrackList::GetEndTime() const
    return Accumulate(*this, &Track::GetEndTime, -DBL_MAX, std::max);
 }
 
-std::shared_ptr<Track>
-TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
+std::vector<Track*>
+TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
-   std::shared_ptr<Track> pTrack;
+   assert(src->IsLeader());
+   TrackListHolder tracks;
+   std::vector<Track*> result;
    if (src) {
-      pTrack = src->Clone(); // not duplicate
+      tracks = src->Clone(); // not duplicate
+      assert(NChannels() == tracks->NChannels());
+   }
+   if (src) {
       // Share the satellites with the original, though they do not point back
       // to the pending track
-      ((AttachedTrackObjects&)*pTrack) = *src; // shallow copy
+      const auto channels = TrackList::Channels(src);
+      auto iter = TrackList::Channels(*tracks->Leaders().begin()).begin();
+      for (const auto pChannel : channels)
+         ((AttachedTrackObjects&)**iter++) = *pChannel; // shallow copy
    }
 
-   if (pTrack) {
-      mUpdaters.push_back( updater );
-      mPendingUpdates.push_back( pTrack );
-      auto n = mPendingUpdates.end();
-      --n;
-      pTrack->SetOwner(shared_from_this(), {n, &mPendingUpdates});
+   if (tracks) {
+      mUpdaters.push_back(updater);
+      auto iter = tracks->ListOfTracks::begin(),
+         end = tracks->ListOfTracks::end();
+      while (iter != end) {
+         auto pTrack = *iter;
+         iter = tracks->erase(iter);
+         mPendingUpdates.push_back(pTrack->SharedPointer());
+         auto n = mPendingUpdates.end();
+         --n;
+         pTrack->SetOwner(shared_from_this(), {n, &mPendingUpdates});
+         result.push_back(pTrack.get());
+      }
    }
 
-   return pTrack;
+   return result;
 }
 
 void TrackList::RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack )
@@ -997,16 +1011,18 @@ void TrackList::UpdatePendingTracks()
 {
    auto pUpdater = mUpdaters.begin();
    for (const auto &pendingTrack : mPendingUpdates) {
-      // Copy just a part of the track state, according to the update
-      // function
-      const auto &updater = *pUpdater;
-      auto src = FindById( pendingTrack->GetId() );
-      if (pendingTrack && src) {
-         if (updater)
-            updater( *pendingTrack, *src );
-         pendingTrack->DoSetLinkType(src->GetLinkType());
+      auto src = FindById(pendingTrack->GetId());
+      if (pendingTrack->IsLeader()) {
+         // Copy just a part of the track state, according to the update
+         // function
+         const auto &updater = *pUpdater;
+         if (pendingTrack && src) {
+            if (updater)
+               updater(*pendingTrack, *src);
+         }
+         ++pUpdater;
       }
-      ++pUpdater;
+      pendingTrack->DoSetLinkType(src->GetLinkType());
    }
 }
 
@@ -1316,6 +1332,7 @@ bool ChannelAttachmentsBase::HandleXMLAttribute(
 
 void Track::OnProjectTempoChange(double newTempo)
 {
+   assert(IsLeader());
    DoOnProjectTempoChange(mProjectTempo, newTempo);
    mProjectTempo = newTempo;
 }
@@ -1331,18 +1348,18 @@ struct TrackListRestorer final : UndoStateExtension {
    TrackListRestorer(AudacityProject &project)
       : mpTracks{ TrackList::Create(nullptr) }
    {
-      for (auto pTrack : TrackList::Get(project)) {
-         if ( pTrack->GetId() == TrackId{} )
+      for (auto pTrack : TrackList::Get(project).Leaders()) {
+         if (pTrack->GetId() == TrackId{})
             // Don't copy a pending added track
             continue;
-         mpTracks->Add(pTrack->Duplicate());
+         mpTracks->Append(std::move(*pTrack->Duplicate()));
       }
    }
    void RestoreUndoRedoState(AudacityProject &project) override {
       auto &dstTracks = TrackList::Get(project);
       dstTracks.Clear();
-      for (auto pTrack : mpTracks->Any())
-         dstTracks.Add(pTrack->Duplicate());
+      for (auto pTrack : mpTracks->Leaders())
+         dstTracks.Append(std::move(*pTrack->Duplicate()));
    }
    bool CanUndoOrRedo(const AudacityProject &project) override {
       return !TrackList::Get(project).HasPendingTracks();
@@ -1372,16 +1389,18 @@ TrackList *TrackList::FindUndoTracks(const UndoStackElem &state)
 TrackListHolder TrackList::Temporary(AudacityProject *pProject,
    const Track::Holder &left, const Track::Holder &right)
 {
-    assert(left != nullptr);
-    assert(left->GetOwner() == nullptr);
-    assert(right == nullptr || right->GetOwner() == nullptr);
+    assert(left == nullptr || left->GetOwner() == nullptr);
+    assert(right == nullptr || (left && right->GetOwner() == nullptr));
    // Make a well formed channel group from these tracks
    auto tempList = Create(pProject);
-   tempList->Add(left);
-   if (right) {
-      tempList->Add(right);
-      tempList->MakeMultiChannelTrack(*left, 2, true);
+   if (left) {
+      tempList->Add(left);
+      if (right) {
+         tempList->Add(right);
+         tempList->MakeMultiChannelTrack(*left, 2, true);
+      }
    }
+   tempList->mAssignsIds = false;
    return tempList;
 }
 

@@ -119,9 +119,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          if (len <= 0)
             return;
 
-         TrackListHolder tempList;
-         for (const auto pChannel : TrackList::Channels(&track))
-            tempList->Add(pChannel->Copy(mT0, mT1));
+         auto tempList = track.Copy(mT0, mT1);
          const auto firstTemp = *tempList->Leaders<const WaveTrack>().begin();
 
          std::vector<wxString> clipNames;
@@ -137,9 +135,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
                return;
             }
-            auto iter = TrackList::Channels(firstTemp).begin();
-            for (const auto pChannel : TrackList::Channels(&track))
-               pChannel->Paste(t0, *iter++);
+            track.Paste(t0, *firstTemp);
             t0 += tLen;
          }
          if (t0 > maxDestLen)

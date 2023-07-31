@@ -55,13 +55,12 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
    auto &window = ProjectWindow::Get(project);
 
    auto trackRange = tracks.SelectedLeaders<WaveTrack>();
-   WaveTrack::Holder uNewLeft, uNewRight;
-   ::MixAndRender(trackRange.Filter<const WaveTrack>(),
+   auto newTracks = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
       Mixer::WarpOptions{ tracks.GetOwner() },
       tracks.MakeUniqueTrackName(_("Mix")),
-      &trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
+      &trackFactory, rate, defaultFormat, 0.0, 0.0);
 
-   if (uNewLeft) {
+   if (newTracks) {
       // Remove originals, get stats on what tracks were mixed
 
       // But before removing, determine the first track after the removal
@@ -82,25 +81,19 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
             tracks.Remove(**trackRange.first++);
       }
 
-      // Add NEW tracks
-
-      auto pNewLeft = tracks.Add(uNewLeft);
-      decltype(pNewLeft) pNewRight{};
-      if (uNewRight) {
-         pNewRight = tracks.Add(uNewRight);
-         tracks.MakeMultiChannelTrack(*pNewLeft, 2, true);
-      }
+      // Add new tracks
+      const bool stereo = newTracks->NChannels() > 1;
+      tracks.Append(std::move(*newTracks));
+      const auto pNewTrack = *tracks.Leaders<WaveTrack>().rbegin();
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount == 1)
-         pNewLeft->SetName(firstName);
+         pNewTrack->SetName(firstName);
 
       // Bug 2218, remember more things...
       if (selectedCount >= 1) {
-         pNewLeft->SetSelected(!toNewTrack);
-         pNewLeft->SetWaveColorIndex(firstColour);
-         if (pNewRight)
-            pNewRight->SetWaveColorIndex(firstColour);
+         pNewTrack->SetSelected(!toNewTrack);
+         pNewTrack->SetWaveColorIndex(firstColour);
       }
 
       // Permute the tracks as needed
@@ -130,17 +123,17 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
          ProjectHistory::Get( project ).PushState(msg, XO("Render"));
       }
       else {
-         auto msg = (pNewRight
+         auto msg = (stereo
             ? XO("Mixed and rendered %d tracks into one new stereo track")
             : XO("Mixed and rendered %d tracks into one new mono track")
          )
-            .Format( (int)selectedCount );
-         ProjectHistory::Get( project ).PushState(msg, XO("Mix and Render"));
+            .Format((int)selectedCount);
+         ProjectHistory::Get(project).PushState(msg, XO("Mix and Render"));
       }
 
       trackPanel.SetFocus();
-      TrackFocus::Get( project ).Set( pNewLeft );
-      pNewLeft->EnsureVisible();
+      TrackFocus::Get(project).Set(pNewTrack);
+      pNewTrack->EnsureVisible();
    }
 }
 

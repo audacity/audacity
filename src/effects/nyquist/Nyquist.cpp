@@ -1676,25 +1676,21 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       }
    }
 
-   for (size_t i = 0; i < mCurNumChannels; i++) {
-      WaveTrack *out;
-
-      if (outChannels == (int)mCurNumChannels) {
-         out = outputTrack[i].get();
-      }
-      else {
-         out = outputTrack[0].get();
-      }
-
-      if (mMergeClips < 0) {
-         // Use sample counts to determine default behaviour - times will rarely be equal.
-         bool bMergeClips = (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime) ==
-                                                                     out->TimeToLongSamples(mT1));
-         mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, bMergeClips);
-      }
-      else {
-         mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, mMergeClips != 0);
-      }
+   {
+      const auto &out = outputTrack[0];
+      if (outChannels < (int)mCurNumChannels)
+         outputTrack[1] =
+            (*out->Duplicate()->Leaders().begin())->SharedPointer<WaveTrack>();
+      auto tempList =
+         TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
+      const bool bMergeClips = (mMergeClips < 0)
+         // Use sample counts to determine default behaviour - times will rarely
+         // be equal.
+         ? (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime)
+            == out->TimeToLongSamples(mT1))
+         : mMergeClips != 0;
+      mCurTrack[0]
+         ->ClearAndPaste(mT0, mT1, *tempList, mRestoreSplits, bMergeClips);
    }
 
    // If we were first in the group adjust non-selected group tracks

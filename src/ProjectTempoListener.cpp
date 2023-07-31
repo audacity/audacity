@@ -29,12 +29,15 @@ ProjectTempoListener::ProjectTempoListener(
    AudacityProject& project, TrackList& trackList)
     : mTrackList { trackList }
     , mTrackListSubstription { trackList.Subscribe(
-         [&project](const TrackListEvent& event) {
+         [this, &project](const TrackListEvent& event) {
             if (event.mType == TrackListEvent::ADDITION)
             {
                const auto tempo = ProjectTimeSignature::Get(project).GetTempo();
-               if (const auto track = event.mpTrack.lock())
-                  track->OnProjectTempoChange(tempo);
+               if (const auto track = event.mpTrack.lock()) {
+                  // TODO wide wave tracks: just call on the track itself
+                  if (auto pLeader = *mTrackList.FindLeader(track.get()))
+                     pLeader->OnProjectTempoChange(tempo);
+               }
             }
          }) }
 {
@@ -48,6 +51,6 @@ ProjectTempoListener::ProjectTempoListener(
 
 void ProjectTempoListener::OnProjectTempoChange(double newTempo)
 {
-   for (auto track : mTrackList)
+   for (auto track : mTrackList.Leaders())
       track->OnProjectTempoChange(newTempo);
 }

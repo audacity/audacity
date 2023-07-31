@@ -1773,10 +1773,9 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
 
    ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
-   tracklist.Any().Visit([&](const Track &t)
-   {
+   tracklist.Leaders().Visit([&](const Track &t) {
       auto useTrack = &t;
-      if ( recording ) {
+      if (recording) {
          // When append-recording, there is a temporary "shadow" track accumulating
          // changes and displayed on the screen but it is not yet part of the
          // regular track list.  That is the one that we want to back up.
@@ -1784,7 +1783,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
          // one, else it gives the same track back.
          useTrack = t.SubstitutePendingChangedTrack().get();
       }
-      else if ( useTrack->GetId() == TrackId{} ) {
+      else if (useTrack->GetId() == TrackId{}) {
          // This is a track added during a non-appending recording that is
          // not yet in the undo history.  The UndoManager skips backing it up
          // when pushing.  Don't auto-save it.

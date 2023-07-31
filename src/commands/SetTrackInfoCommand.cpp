@@ -345,13 +345,12 @@ bool SetTrackVisualsCommand::ApplyInner(
    //auto pt = dynamic_cast<PlayableTrack *>(t);
    static const double ZOOMLIMIT = 0.001f;
 
-   for (auto pChannel : t.Channels<WaveTrack>()) {
-      if (bHasColour)
-         pChannel->SetWaveColorIndex(mColour);
+   if (bHasColour)
+      wt->SetWaveColorIndex(mColour);
 
-      if (bHasHeight)
+   if (bHasHeight)
+      for (auto pChannel : t.Channels<WaveTrack>())
          ChannelView::Get(*pChannel).SetExpandedHeight(mHeight);
-   }
 
    if (bHasDisplayType) {
       auto &view = WaveChannelView::Get(*wt);
