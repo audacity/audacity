@@ -346,45 +346,43 @@ void WaveTrack::DoOnProjectTempoChange(
          clip->OnProjectTempoChange(oldTempo, newTempo);
 }
 
-bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
+bool WaveTrack::LinkConsistencyFix(bool doFix)
 {
-   auto err = !WritableSampleTrack::LinkConsistencyFix(doFix, completeList);
-   if (completeList) {
-      auto linkType = GetLinkType();
-      if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
-          linkType == LinkType::Aligned) {
-         auto next = dynamic_cast<WaveTrack*>(
-            *TrackList::Channels(this).first.advance(1));
-         if (next == nullptr) {
-            //next track is absent or not a wave track, fix and report error
-            if (doFix) {
-               wxLogWarning(L"Right track %s is expected to be a WaveTrack."
-                  "\n Removing link from left wave track %s.",
-                  next->GetName(), GetName());
-               SetLinkType(LinkType::None);
-            }
-            err = true;
+   auto err = !WritableSampleTrack::LinkConsistencyFix(doFix);
+   auto linkType = GetLinkType();
+   if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
+       linkType == LinkType::Aligned) {
+      auto next = dynamic_cast<WaveTrack*>(
+         *TrackList::Channels(this).first.advance(1));
+      if (next == nullptr) {
+         //next track is absent or not a wave track, fix and report error
+         if (doFix) {
+            wxLogWarning(L"Right track %s is expected to be a WaveTrack."
+               "\n Removing link from left wave track %s.",
+               next->GetName(), GetName());
+            SetLinkType(LinkType::None);
          }
-         else if (doFix) {
-            // non-error upgrades happen here
-            auto newLinkType =
-               AreAligned(SortedClipArray(), next->SortedClipArray())
-               ? LinkType::Aligned : LinkType::Group;
-            if (newLinkType != linkType)
-               SetLinkType(newLinkType);
-            else
-               // Be sure to lose any right channel group data that might
-               // have been made during during deserialization of the channel
-               // before joining it
-               next->DestroyGroupData();
-         }
+         err = true;
       }
-      if (doFix) {
-         // More non-error upgrading
-         // Set the common channel group rate from the leader's rate
-         if (IsLeader() && mLegacyRate > 0)
-            SetRate(mLegacyRate);
+      else if (doFix) {
+         // non-error upgrades happen here
+         auto newLinkType =
+            AreAligned(SortedClipArray(), next->SortedClipArray())
+            ? LinkType::Aligned : LinkType::Group;
+         if (newLinkType != linkType)
+            SetLinkType(newLinkType);
+         else
+            // Be sure to lose any right channel group data that might
+            // have been made during during deserialization of the channel
+            // before joining it
+            next->DestroyGroupData();
       }
+   }
+   if (doFix) {
+      // More non-error upgrading
+      // Set the common channel group rate from the leader's rate
+      if (IsLeader() && mLegacyRate > 0)
+         SetRate(mLegacyRate);
    }
    return !err;
 }

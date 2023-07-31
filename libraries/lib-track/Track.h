@@ -238,15 +238,13 @@ public:
    //! Check consistency of channel groups, and maybe fix it
    /*!
     @param doFix whether to make any changes to correct inconsistencies
-    @param completeList whether to assume that the TrackList containing this
-    is completely loaded; if false, skip some of the checks
     @return true if no inconsistencies were found
     */
-   virtual bool LinkConsistencyFix(bool doFix = true, bool completeList = true);
+   virtual bool LinkConsistencyFix(bool doFix = true);
 
    //! Do the non-mutating part of consistency fix only and return status
-   bool LinkConsistencyCheck(bool completeList)
-   { return const_cast<Track*>(this)->LinkConsistencyFix(false, completeList); }
+   bool LinkConsistencyCheck()
+   { return const_cast<Track*>(this)->LinkConsistencyFix(false); }
 
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 

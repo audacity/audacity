@@ -240,7 +240,7 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
    }
 
    // Assertion checks only in a debug build, does not have side effects!
-   assert(LinkConsistencyCheck(completeList));
+   assert(!completeList || LinkConsistencyCheck());
 }
 
 Track *Track::GetLinkedTrack() const
@@ -321,13 +321,13 @@ bool Track::IsLeader() const
 bool Track::IsSelectedLeader() const
    { return IsSelected() && IsLeader(); }
 
-bool Track::LinkConsistencyFix(bool doFix, bool completeList)
+bool Track::LinkConsistencyFix(bool doFix)
 {
    // Sanity checks for linked tracks; unsetting the linked property
    // doesn't fix the problem, but it likely leaves us with orphaned
    // sample blocks instead of much worse problems.
    bool err = false;
-   if (completeList && HasLinkedTrack()) {
+   if (HasLinkedTrack()) {
       if (auto link = GetLinkedTrack()) {
          // A linked track's partner should never itself be linked
          if (link->HasLinkedTrack()) {

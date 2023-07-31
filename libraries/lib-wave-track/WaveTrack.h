@@ -123,7 +123,7 @@ private:
 
    void MoveTo(double o) override;
 
-   bool LinkConsistencyFix(bool doFix, bool completeList) override;
+   bool LinkConsistencyFix(bool doFix) override;
 
    //! Implement WideSampleSequence
    double GetStartTime() const override;
