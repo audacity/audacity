@@ -760,6 +760,19 @@ WaveTrack::Holder WaveTrack::EmptyCopy(
    return result;
 }
 
+TrackListHolder WaveTrack::WideEmptyCopy(
+   const SampleBlockFactoryPtr &pFactory, bool keepLink) const
+{
+   assert(IsLeader());
+   auto result = TrackList::Temporary(nullptr);
+   for (const auto pChannel : TrackList::Channels(this)) {
+      const auto pNewTrack =
+         result->Add(pChannel->EmptyCopy(pFactory, keepLink));
+      assert(!keepLink || pNewTrack->IsLeader() == pChannel->IsLeader());
+   }
+   return result;
+}
+
 TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 < t0)
