@@ -4,10 +4,7 @@
 
   Generator.cpp
 
-  Two Abstract classes, Generator, and BlockGenerator, that effects which
-  generate audio should derive from.
-
-  Block Generator breaks the synthesis task up into smaller parts.
+  Effects that generate audio can derive from Generator.
 
   Dominic Mazzoni
   Vaughan Johnson
@@ -105,32 +102,5 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
       mT1 = mT0 + duration; // Update selection.
    }
 
-   return bGoodResult;
-}
-
-bool BlockGenerator::GenerateTrack(EffectSettings &settings,
-   WaveTrack *tmp, const WaveTrack &track, int ntrack)
-{
-   bool bGoodResult = true;
-   numSamples = track.TimeToLongSamples(settings.extra.GetDuration());
-   decltype(numSamples) i = 0;
-   Floats data{ tmp->GetMaxBlockSize() };
-
-   while ((i < numSamples) && bGoodResult) {
-      const auto block =
-         limitSampleBufferSize( tmp->GetBestBlockSize(i), numSamples - i );
-
-      GenerateBlock(data.get(), track, block);
-
-      // Add the generated data to the temporary track
-      tmp->Append((samplePtr)data.get(), floatSample, block);
-      i += block;
-
-      // Update the progress meter
-      if (TrackProgress(ntrack,
-                        i.as_double() /
-                        numSamples.as_double()))
-         bGoodResult = false;
-   }
    return bGoodResult;
 }
