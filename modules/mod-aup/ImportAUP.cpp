@@ -1345,7 +1345,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    auto oldNumTracks = tracks.Size();
    Track *pLast = nullptr;
    if (oldNumTracks > 0)
-      pLast = *tracks.Any().rbegin();
+      pLast = *tracks.Leaders().rbegin();
 
    // Guard this call so that C++ exceptions don't propagate through
    // the expat library
@@ -1362,7 +1362,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    // Apply them to all new wave tracks.
    bool bSuccess = true;
 
-   auto range = tracks.Any();
+   auto range = tracks.Leaders();
    if (pLast) {
       range = range.StartingWith(pLast);
       ++range.first;
@@ -1370,23 +1370,21 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
 
    mAttrs.erase(mAttrs.begin());
 
-   for (auto pTrack: range.Filter<WaveTrack>())
-   {
-      // Most of the "import" tag attributes are the same as for "wavetrack" tags,
-      // so apply them via WaveTrack::HandleXMLTag().
-      bSuccess = pTrack->HandleXMLTag("wavetrack", mAttrs);
+   for (auto pTrack: range.Filter<WaveTrack>()) {
+      for (const auto pChannel : TrackList::Channels(pTrack)) {
+         // Most of the "import" tag attributes are the same as for "wavetrack" tags,
+         // so apply them via WaveTrack::HandleXMLTag().
+         bSuccess = pChannel->HandleXMLTag("wavetrack", mAttrs);
 
-      // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
-      // so handle it here.
-      double dblValue;
-
-      for (auto pair : mAttrs)
-      {
-         auto attr = pair.first;
-         auto value = pair.second;
-
-         if (attr == "offset" && value.TryGet(dblValue) && pTrack->IsLeader())
-            pTrack->MoveTo(dblValue);
+         // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
+         // so handle it here.
+         double dblValue;
+         for (auto pair : mAttrs) {
+            auto attr = pair.first;
+            auto value = pair.second;
+            if (attr == "offset" && value.TryGet(dblValue) && pChannel->IsLeader())
+               pChannel->MoveTo(dblValue);
+         }
       }
    }
    return bSuccess;
