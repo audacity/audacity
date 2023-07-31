@@ -151,7 +151,7 @@ void Track::SetIndex(int index)
 void Track::SetLinkType(LinkType linkType, bool completeList)
 {
    auto pList = mList.lock();
-   if (pList && !pList->mPendingUpdates.empty()) {
+   if (pList && pList->mPendingUpdates && !pList->mPendingUpdates->empty()) {
       auto orig = pList->FindById( GetId() );
       if (orig && orig != this) {
          orig->SetLinkType(linkType);
@@ -381,6 +381,8 @@ const TrackList &TrackList::Get( const AudacityProject &project )
 TrackList::TrackList( AudacityProject *pOwner )
    : mOwner{ pOwner }
 {
+   if (mOwner)
+      mPendingUpdates = Temporary(nullptr);
 }
 
 // Factory function
@@ -416,7 +418,12 @@ void TrackList::Swap(TrackList &that)
    const auto self = shared_from_this();
    const auto otherSelf = that.shared_from_this();
    SwapLOTs( *this, self, that, otherSelf );
-   SwapLOTs( this->mPendingUpdates, self, that.mPendingUpdates, otherSelf );
+
+   assert(!GetOwner() && !that.GetOwner()); // precondition
+   // which implies (see constructor)
+   assert(!this->mPendingUpdates);
+   assert(!that.mPendingUpdates);
+
    mUpdaters.swap(that.mUpdaters);
 }
 
@@ -741,19 +748,18 @@ void TrackList::Clear(bool sendEvent)
          DeletionEvent(pTrack->shared_from_this(), false);
    }
 
-   for ( auto pTrack: mPendingUpdates )
-   {
-      pTrack->SetOwner({}, {});
-
-      if (sendEvent)
-         DeletionEvent(pTrack, false);
-   }
+   if (mPendingUpdates)
+      for (auto pTrack: static_cast<ListOfTracks&>(*mPendingUpdates)) {
+         pTrack->SetOwner({}, {});
+         if (sendEvent)
+            DeletionEvent(pTrack, false);
+      }
 
    ListOfTracks tempList;
    tempList.swap( *this );
 
-   ListOfTracks updating;
-   updating.swap( mPendingUpdates );
+   if (mPendingUpdates)
+      mPendingUpdates = Temporary(nullptr);
 
    mUpdaters.clear();
 }
@@ -958,6 +964,8 @@ double TrackList::GetEndTime() const
 std::vector<Track*>
 TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
+   // This is only done on the TrackList belonging to a project
+   assert(GetOwner()); // which implies mPendingUpdates is not null
    assert(src->IsLeader());
    TrackListHolder tracks;
    std::vector<Track*> result;
@@ -981,10 +989,10 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
       while (iter != end) {
          auto pTrack = *iter;
          iter = tracks->erase(iter);
-         mPendingUpdates.push_back(pTrack->SharedPointer());
-         auto n = mPendingUpdates.end();
+         mPendingUpdates->ListOfTracks::push_back(pTrack->SharedPointer());
+         auto n = mPendingUpdates->ListOfTracks::end();
          --n;
-         pTrack->SetOwner(shared_from_this(), {n, &mPendingUpdates});
+         pTrack->SetOwner(shared_from_this(), {n, &*mPendingUpdates});
          result.push_back(pTrack.get());
       }
    }
@@ -1000,19 +1008,19 @@ void TrackList::RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack )
 
 void TrackList::UpdatePendingTracks()
 {
+   if (!mPendingUpdates)
+      return;
    auto pUpdater = mUpdaters.begin();
-   for (const auto &pendingTrack : mPendingUpdates) {
+   for (const auto &pendingTrack : mPendingUpdates->Leaders()) {
       auto src = FindById(pendingTrack->GetId());
-      if (pendingTrack->IsLeader()) {
-         // Copy just a part of the track state, according to the update
-         // function
-         const auto &updater = *pUpdater;
-         if (pendingTrack && src) {
-            if (updater)
-               updater(*pendingTrack, *src);
-         }
-         ++pUpdater;
+      // Copy just a part of the track state, according to the update
+      // function
+      const auto &updater = *pUpdater;
+      if (pendingTrack && src) {
+         if (updater)
+            updater(*pendingTrack, *src);
       }
+      ++pUpdater;
       pendingTrack->DoSetLinkType(src->GetLinkType());
    }
 }
@@ -1020,9 +1028,10 @@ void TrackList::UpdatePendingTracks()
 /*! @excsafety{No-fail} */
 void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
 {
-   for (const auto &pTrack: mPendingUpdates)
+   assert(GetOwner()); // which implies mPendingUpdates is not null
+   for (const auto &pTrack: static_cast<ListOfTracks&>(*mPendingUpdates))
       pTrack->SetOwner( {}, {} );
-   mPendingUpdates.clear();
+   mPendingUpdates->ListOfTracks::clear();
    mUpdaters.clear();
 
    if (pAdded)
@@ -1064,12 +1073,12 @@ bool TrackList::ApplyPendingTracks()
    bool result = false;
 
    ListOfTracks additions;
-   ListOfTracks updates;
+   auto updates = Temporary(nullptr);
    {
       // Always clear, even if one of the update functions throws
       auto cleanup = finally( [&] { ClearPendingTracks( &additions ); } );
       UpdatePendingTracks();
-      updates.swap( mPendingUpdates );
+      updates.swap(mPendingUpdates);
    }
 
    // Remaining steps must be No-fail-guarantee so that this function
@@ -1077,20 +1086,26 @@ bool TrackList::ApplyPendingTracks()
 
    std::vector< std::shared_ptr<Track> > reinstated;
 
-   for (auto &pendingTrack : updates) {
+   while (updates && !updates->empty()) {
+      auto iter = updates->ListOfTracks::begin();
+      auto pendingTrack = *iter;
       if (pendingTrack) {
          pendingTrack->AttachedTrackObjects::ForEach([&](auto &attachment){
             attachment.Reparent( pendingTrack );
          });
-         auto src = FindById( pendingTrack->GetId() );
-         if (src)
-            this->Replace(src, pendingTrack), result = true;
-         else
+         auto src = FindById(pendingTrack->GetId());
+         if (src) {
+            this->Replace(src, pendingTrack);
+            result = true;
+         }
+         else {
             // Perhaps a track marked for pending changes got deleted by
             // some other action.  Recreate it so we don't lose the
             // accumulated changes.
             reinstated.push_back(pendingTrack);
+         }
       }
+      updates->ListOfTracks::erase(iter);
    }
 
    // If there are tracks to reinstate, append them to the list.
@@ -1129,11 +1144,11 @@ std::shared_ptr<Track> Track::SubstitutePendingChangedTrack()
 {
    // Linear search.  Tracks in a project are usually very few.
    auto pList = mList.lock();
-   if (pList) {
+   if (pList && pList->mPendingUpdates) {
       const auto id = GetId();
-      const auto end = pList->mPendingUpdates.end();
+      const auto end = pList->mPendingUpdates->ListOfTracks::end();
       auto it = std::find_if(
-         pList->mPendingUpdates.begin(), end,
+         pList->mPendingUpdates->ListOfTracks::begin(), end,
          [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
       if (it != end)
          return *it;
@@ -1149,12 +1164,13 @@ std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
 std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
 {
    auto pList = mList.lock();
-   if (pList) {
+   if (pList && pList->mPendingUpdates) {
       const auto id = GetId();
       const auto pred = [=]( const ListOfTracks::value_type &ptr ) {
          return ptr->GetId() == id; };
-      const auto end = pList->mPendingUpdates.end();
-      const auto it = std::find_if( pList->mPendingUpdates.begin(), end, pred );
+      const auto end = pList->mPendingUpdates->ListOfTracks::end();
+      const auto it =
+         std::find_if(pList->mPendingUpdates->ListOfTracks::begin(), end, pred);
       if (it != end) {
          const auto &list2 = (const ListOfTracks &) *pList;
          const auto end2 = list2.end();
@@ -1231,7 +1247,7 @@ void Track::AdjustPositions()
 
 bool TrackList::HasPendingTracks() const
 {
-   if ( !mPendingUpdates.empty() )
+   if (mPendingUpdates && !mPendingUpdates->empty())
       return true;
    if (end() != std::find_if(begin(), end(), [](const Track *t){
       return t->GetId() == TrackId{};

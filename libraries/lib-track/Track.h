@@ -1016,7 +1016,9 @@ class TRACK_API TrackList final
    // Create an empty TrackList
    static TrackListHolder Create(AudacityProject *pOwner);
 
-   // Move is defined in terms of Swap
+   /*!
+    @pre `!GetOwner() && !that.GetOwner()`
+    */
    void Swap(TrackList &that);
 
    // Destructor
@@ -1362,7 +1364,8 @@ private:
 
    bool isNull(TrackNodePointer p) const
    { return (p.second == this && p.first == ListOfTracks::end())
-      || (p.second == &mPendingUpdates && p.first == mPendingUpdates.end()); }
+      || (mPendingUpdates && p.second == &*mPendingUpdates &&
+          p.first == mPendingUpdates->ListOfTracks::end()); }
    TrackNodePointer getEnd() const
    { return { const_cast<TrackList*>(this)->ListOfTracks::end(),
               const_cast<TrackList*>(this)}; }
@@ -1430,6 +1433,7 @@ public:
    // Pending track will have the same TrackId as the actual.
    // Pending changed tracks will not occur in iterations.
    /*!
+    @pre `GetOwner()`
     @pre `src->IsLeader()`
     @post result: `src->NChannels() == result.size()`
     */
@@ -1450,9 +1454,12 @@ public:
    // updater functions.
    void UpdatePendingTracks();
 
-   // Forget pending track additions and changes;
-   // if requested, give back the pending added tracks.
-   void ClearPendingTracks( ListOfTracks *pAdded = nullptr );
+   /*
+    Forget pending track additions and changes;
+    if requested, give back the pending added tracks.
+    @pre `GetOwner()`
+    */
+   void ClearPendingTracks(ListOfTracks *pAdded = nullptr);
 
    // Change the state of the project.
    // Strong guarantee for project state in case of exceptions.
@@ -1465,9 +1472,10 @@ public:
 private:
    AudacityProject *mOwner;
 
-   //! Shadow tracks holding append-recording in progress; need to put them into a list so that GetLink() works
+   //! Shadow tracks holding append-recording in progress; need to put them into
+   //! a list so that channel grouping works
    /*! Beware, they are in a disjoint iteration sequence from ordinary tracks */
-   ListOfTracks mPendingUpdates;
+   std::shared_ptr<TrackList> mPendingUpdates;
    //! This is in correspondence with leader tracks in mPendingUpdates
    std::vector< Updater > mUpdaters;
    //! Whether the list assigns unique ids to added tracks;
