@@ -92,7 +92,7 @@ void DoPrevTrack(
    assert(t->IsLeader());
 
    if (shift) {
-      auto p = * -- tracks.FindLeader(t); // Get previous track
+      auto p = * -- tracks.Find(t); // Get previous track
       if (!p) {
          // On first track
          // JKC: wxBell() is probably for accessibility, so a blind
@@ -140,7 +140,7 @@ void DoPrevTrack(
       }
    }
    else {
-      auto p = * -- tracks.FindLeader(t); // Get previous track
+      auto p = * -- tracks.Find(t); // Get previous track
       if (!p) {
          // On first track so stay there?
          wxBell();
@@ -188,7 +188,7 @@ void DoNextTrack(
    assert(t->IsLeader());
 
    if (shift) {
-      auto n = * ++ tracks.FindLeader(t); // Get next track
+      auto n = * ++ tracks.Find(t); // Get next track
       if (!n) {
          // On last track so stay there
          wxBell();
@@ -234,7 +234,7 @@ void DoNextTrack(
       }
    }
    else {
-      auto n = * ++ tracks.FindLeader(t); // Get next track
+      auto n = * ++ tracks.Find(t); // Get next track
       if (!n) {
          // On last track so stay there
          wxBell();

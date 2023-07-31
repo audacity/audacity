@@ -76,7 +76,7 @@ UIHandle::Result AffordanceHandle::Release(const TrackPanelMouseEvent& event, Au
         {
             auto& selectionState = SelectionState::Get(*pProject);
             selectionState.SelectNone(trackList);
-            if (auto pTrack = *trackList.FindLeader(track.get()))
+            if (auto pTrack = *trackList.Find(track.get()))
                selectionState.SelectTrack(*pTrack, true, true);
 
             result |= SelectAt(event, pProject);

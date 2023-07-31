@@ -535,7 +535,7 @@ UIHandle::Result SelectHandle::Click(
    auto &trackList = TrackList::Get(*pProject);
    const auto sTrack = trackList.Lock(FindTrack());
    const auto pTrack = sTrack.get();
-   const auto pLeader = *trackList.FindLeader(pTrack);
+   const auto pLeader = *trackList.Find(pTrack);
    auto &trackPanel = TrackPanel::Get(*pProject);
    auto &viewInfo = ViewInfo::Get(*pProject);
 

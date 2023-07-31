@@ -35,7 +35,7 @@ ProjectTempoListener::ProjectTempoListener(
                const auto tempo = ProjectTimeSignature::Get(project).GetTempo();
                if (const auto track = event.mpTrack.lock()) {
                   // TODO wide wave tracks: just call on the track itself
-                  if (auto pLeader = *mTrackList.FindLeader(track.get()))
+                  if (auto pLeader = *mTrackList.Find(track.get()))
                      pLeader->OnProjectTempoChange(tempo);
                }
             }

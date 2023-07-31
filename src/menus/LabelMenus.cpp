@@ -75,7 +75,7 @@ int DoAddLabel(
    // Look for a label track at or after the focused track
    auto begin = tracks.Leaders().begin();
    auto iter = pFocusedTrack
-      ? tracks.FindLeader(pFocusedTrack)
+      ? tracks.Find(pFocusedTrack)
       : begin;
    auto lt = * iter.Filter<LabelTrack>();
 

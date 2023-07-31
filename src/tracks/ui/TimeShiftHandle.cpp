@@ -34,7 +34,7 @@ TimeShiftHandle::TimeShiftHandle(std::shared_ptr<Track> pTrack, bool gripHit)
    //! Substitute the leader track before assigning mCapturedTrack
    if (pTrack)
       if (const auto pOwner = pTrack->GetOwner())
-         pTrack = (*pOwner->FindLeader(pTrack.get()))->SharedPointer();
+         pTrack = (*pOwner->Find(pTrack.get()))->SharedPointer();
    mClipMoveState.mCapturedTrack = pTrack;
 }
 
@@ -477,7 +477,7 @@ UIHandle::Result TimeShiftHandle::Click(
    auto &trackList = TrackList::Get(*pProject);
    // Substitute the leader track before giving it to MakeTrackShifter
    // and ClipMoveState::Init
-   const auto pTrack = *trackList.FindLeader(clickedTrack);
+   const auto pTrack = *trackList.Find(clickedTrack);
 
    mClipMoveState.clear();
    mDidSlideVertically = false;
@@ -612,9 +612,9 @@ namespace {
 
       // Find how far this track would shift down among those (signed)
       const auto myPosition =
-         std::distance(range.first, trackList.FindLeader(&capturedTrack));
+         std::distance(range.first, trackList.Find(&capturedTrack));
       const auto otherPosition =
-         std::distance(range.first, trackList.FindLeader(&track));
+         std::distance(range.first, trackList.Find(&track));
       auto diff = otherPosition - myPosition;
 
       // Point to destination track for first of range, when diff >= 0
@@ -736,7 +736,7 @@ void TimeShiftHandle::DoSlideVertical(
    Correspondence correspondence;
 
    // Substitute leader track before reassigning mCapturedTrack
-   dstTrack = *trackList.FindLeader(dstTrack);
+   dstTrack = *trackList.Find(dstTrack);
 
    // See if captured track corresponds to another
    auto &capturedTrack = *mClipMoveState.mCapturedTrack;
@@ -748,8 +748,8 @@ void TimeShiftHandle::DoSlideVertical(
    auto tryExtend = [&](bool forward) {
       auto range = trackList.Leaders();
       auto begin = range.begin(), end = range.end();
-      auto pCaptured = trackList.FindLeader(&capturedTrack);
-      auto pDst = trackList.FindLeader(dstTrack);
+      auto pCaptured = trackList.Find(&capturedTrack);
+      auto pDst = trackList.Find(dstTrack);
       // Scan for more correspondences
       while (true) {
          // Remember that TrackIter wraps circularly to the end iterator when
@@ -833,7 +833,7 @@ UIHandle::Result TimeShiftHandle::Drag
    auto &trackList = TrackList::Get(*pProject);
    ChannelView *trackView = dynamic_cast<ChannelView*>(evt.pCell.get());
    Track *track =
-      *trackList.FindLeader(trackView ? trackView->FindTrack().get() : nullptr);
+      *trackList.Find(trackView ? trackView->FindTrack().get() : nullptr);
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*

@@ -184,7 +184,7 @@ Track::ChannelGroupData &Track::GetGroupData()
 {
    auto pTrack = this;
    if (auto pList = GetOwner())
-      if (auto pLeader = *pList->FindLeader(pTrack))
+      if (auto pLeader = *pList->Find(pTrack))
          pTrack = pLeader;
    // May make on demand
    return pTrack->MakeGroupData();
@@ -456,20 +456,20 @@ wxString TrackList::MakeUniqueTrackName(const wxString& baseTrackName) const
 
 void TrackList::RecalcPositions(TrackNodePointer node)
 {
-   if ( isNull( node ) )
+   if (isNull(node))
       return;
 
    Track *t;
    int i = 0;
 
-   auto prev = getPrev( node );
-   if ( !isNull( prev ) ) {
+   auto prev = getPrev(node);
+   if (!isNull(prev)) {
       t = prev.first->get();
       i = t->GetIndex() + 1;
    }
 
    const auto theEnd = end();
-   for (auto n = Find( node.first->get() ); n != theEnd; ++n) {
+   for (auto n = DoFind(node.first->get()); n != theEnd; ++n) {
       t = *n;
       t->SetIndex(i++);
    }
@@ -509,7 +509,7 @@ void TrackList::EnsureVisibleEvent(
    const std::shared_ptr<Track> &pTrack, bool modifyState )
 {
    // Substitute leader track
-   const auto pLeader = *FindLeader(pTrack.get());
+   const auto pLeader = *Find(pTrack.get());
    QueueEvent({ TrackListEvent::TRACK_REQUEST_VISIBLE,
       pLeader ? pLeader->SharedPointer() : nullptr,
       static_cast<int>(modifyState) });
@@ -546,10 +546,17 @@ auto TrackList::EmptyRange() const
    };
 }
 
-auto TrackList::FindLeader( Track *pTrack )
-   -> TrackIter< Track >
+auto TrackList::DoFind(Track *pTrack) -> TrackIter<Track>
 {
-   auto iter = Find(pTrack);
+   if (!pTrack || pTrack->GetHolder() != this)
+      return EndIterator<Track>();
+   else
+      return MakeTrackIterator<Track>(pTrack->GetNode());
+}
+
+auto TrackList::Find(Track *pTrack) -> TrackIter<Track>
+{
+   auto iter = DoFind(pTrack);
    while( *iter && ! ( *iter )->IsLeader() )
       --iter;
    return iter.Filter( &Track::IsLeader );
@@ -697,12 +704,11 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
       return false;
 
    auto list = track.mList.lock();
-   if (list.get() == this)
-   {
-      if (*list->FindLeader(&track) != &track)
+   if (list.get() == this) {
+      if (*list->Find(&track) != &track)
          return false;
 
-      auto first = list->Find(&track);
+      auto first = list->DoFind(&track);
       auto canLink = [&]() -> bool {
          int count = nChannels;
          for (auto it = first, end = TrackList::end(); it != end && count; ++it)
@@ -857,8 +863,8 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    wxASSERT(!isNull(s2));
 
    // Deal with first track in each team
-   s1 = ( * FindLeader( s1.first->get() ) )->GetNode();
-   s2 = ( * FindLeader( s2.first->get() ) )->GetNode();
+   s1 = ( * Find( s1.first->get() ) )->GetNode();
+   s2 = ( * Find( s2.first->get() ) )->GetNode();
 
    // Safety check...
    if (s1 == s2)
@@ -1281,7 +1287,7 @@ bool Track::IsAlignedWithLeader() const
 {
    if (auto owner = GetOwner())
    {
-      auto leader = *owner->FindLeader(this);
+      auto leader = *owner->Find(this);
       return leader != this && leader->GetLinkType() == Track::LinkType::Aligned;
    }
    return false;

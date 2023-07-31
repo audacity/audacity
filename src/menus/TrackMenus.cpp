@@ -65,7 +65,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
 
       // But before removing, determine the first track after the removal
       auto last = *trackRange.rbegin();
-      auto insertionPoint = * ++ tracks.FindLeader(last);
+      auto insertionPoint = * ++ tracks.Find(last);
       
       auto selectedCount = trackRange.size();
       wxString firstName;

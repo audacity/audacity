@@ -578,7 +578,7 @@ void OnPaste(const CommandContext &context)
          // Nothing more to paste
          break;
       auto group = SyncLock::Group(*range.first);
-      next = tracks.FindLeader(*group.rbegin());
+      next = tracks.Find(*group.rbegin());
       ++next;
 
       if (!group.contains(iPair->first))
@@ -774,7 +774,7 @@ void OnSplit(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto [sel0, sel1] = FindSelection(context);
-   if (auto *pTrack = *tracks.FindLeader(context.temporarySelection.pTrack)) {
+   if (auto *pTrack = *tracks.Find(context.temporarySelection.pTrack)) {
       if (auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack))
          pWaveTrack->Split(sel0, sel1);
       else

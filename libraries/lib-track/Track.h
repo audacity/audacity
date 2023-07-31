@@ -1065,43 +1065,21 @@ class TRACK_API TrackList final
    const_reverse_iterator crbegin() const { return rbegin(); }
    const_reverse_iterator crend() const { return rend(); }
 
-   //! Turn a pointer into a TrackIter (constant time); get end iterator if this does not own the track
-   template < typename TrackType = Track >
-      auto Find(Track *pTrack)
-         -> TrackIter< TrackType >
-   {
-      if (!pTrack || pTrack->GetHolder() != this)
-         return EndIterator<TrackType>();
-      else
-         return MakeTrackIterator<TrackType>( pTrack->GetNode() );
-   }
-
-   //! @copydoc Find
-   /*! const overload will only produce iterators over const TrackType */
-   template < typename TrackType = const Track >
-      auto Find(const Track *pTrack) const
-         -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIter< TrackType >
-         >
-   {
-      if (!pTrack || pTrack->GetOwner().get() != this)
-         return EndIterator<TrackType>();
-      else
-         return MakeTrackIterator<TrackType>( pTrack->GetNode() );
-   }
+   //! Turn a pointer into a TrackIter (constant time);
+   //! get end iterator if this does not own the track
+   TrackIter<Track> DoFind(Track *pTrack);
 
 public:
    // If the track is not an audio track, or not one of a group of channels,
    // return the track itself; else return the first channel of its group --
    // in either case as an iterator that will only visit other leader tracks.
    // (Generalizing away from the assumption of at most stereo)
-   TrackIter< Track > FindLeader( Track *pTrack );
+   TrackIter<Track> Find(Track *pTrack);
 
-   TrackIter< const Track >
-      FindLeader( const Track *pTrack ) const
+   TrackIter<const Track> Find(const Track *pTrack) const
    {
       return const_cast<TrackList*>(this)->
-         FindLeader( const_cast<Track*>(pTrack) ).Filter< const Track >();
+         Find(const_cast<Track*>(pTrack)).Filter<const Track>();
    }
 
 
@@ -1216,7 +1194,7 @@ public:
          -> TrackIterRange< TrackType >
    {
       return Channels_<TrackType>(
-         static_cast<TrackList*>(pTrack->GetHolder())->FindLeader(pTrack));
+         static_cast<TrackList*>(pTrack->GetHolder())->Find(pTrack));
    }
 
    //! Count channels of a track

@@ -747,7 +747,7 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 
    // Always move to the first channel of the group, and use only
    // the sum of channel heights, not the height of any channel alone!
-   trk = *GetTracks()->FindLeader(trk);
+   trk = *GetTracks()->Find(trk);
    auto height = ChannelView::GetChannelGroupHeight(trk);
 
    // Set rectangle top according to the scrolling position, `vpos`
@@ -1673,7 +1673,7 @@ std::shared_ptr<TrackPanelNode> TrackPanel::Root()
 // The given track is assumed to be the first channel
 wxRect TrackPanel::FindTrackRect( const Track * target )
 {
-   auto leader = *GetTracks()->FindLeader( target );
+   auto leader = *GetTracks()->Find( target );
    if (!leader) {
       return {};
    }

@@ -739,7 +739,7 @@ Track *TrackFocus::Get()
 void TrackFocus::Set( Track *pTrack )
 {
    if (mAx) {
-      pTrack = *TrackList::Get( mProject ).FindLeader( pTrack );
+      pTrack = *TrackList::Get( mProject ).Find( pTrack );
       mAx->SetFocus( Track::SharedPointer( pTrack ) );
    }
 }

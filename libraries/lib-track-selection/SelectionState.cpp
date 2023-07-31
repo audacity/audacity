@@ -83,8 +83,8 @@ void SelectionState::SelectRangeOfTracks(
    Track *sTrack = &rsTrack, *eTrack = &reTrack;
    // Swap the track pointers if needed
    auto begin = tracks.Leaders().begin(),
-      iterS = tracks.FindLeader(sTrack),
-      iterE = tracks.FindLeader(eTrack);
+      iterS = tracks.Find(sTrack),
+      iterE = tracks.Find(eTrack);
    // Be sure to substitute the leaders for given tracks
    sTrack = *iterS;
    eTrack = *iterE;
@@ -117,8 +117,8 @@ void SelectionState::ChangeSelectionOnShiftClick(
       // If our track is at or after the first, extend from the first.
       if (pFirst) {
          auto begin = tracks.Leaders().begin(),
-            iterT = tracks.FindLeader(&track),
-            iterF = tracks.FindLeader(pFirst);
+            iterT = tracks.Find(&track),
+            iterF = tracks.Find(pFirst);
          auto indT = std::distance(begin, iterT),
             indF = std::distance(begin, iterF);
          if (indT >= indF)

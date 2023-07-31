@@ -271,7 +271,7 @@ struct TrackPositioner final : ClientData::Base
          return;
       }
       auto iter =
-         TrackList::Get(mProject).FindLeader(e.mpTrack.lock().get());
+         TrackList::Get(mProject).Find(e.mpTrack.lock().get());
       if (!*iter)
          return;
 

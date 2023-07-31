@@ -125,7 +125,7 @@ void DoListSelection(
 
    auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
    // Substitute the leader to satisfy precondition
-   auto pT = *tracks.FindLeader(&t);
+   auto pT = *tracks.Find(&t);
    if (!pT)
       return;
 

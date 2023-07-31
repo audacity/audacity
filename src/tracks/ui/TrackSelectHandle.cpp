@@ -227,7 +227,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(
       mMoveUpThreshold =
          event.m_y -
             ChannelView::GetChannelGroupHeight(
-               * -- tracks.FindLeader(mpTrack.get()));
+               * -- tracks.Find(mpTrack.get()));
    else
       mMoveUpThreshold = INT_MIN;
 
@@ -235,7 +235,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(
       mMoveDownThreshold =
          event.m_y +
             ChannelView::GetChannelGroupHeight(
-               * ++ tracks.FindLeader(mpTrack.get()));
+               * ++ tracks.Find(mpTrack.get()));
    else
       mMoveDownThreshold = INT_MAX;
 }
