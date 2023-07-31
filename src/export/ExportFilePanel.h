@@ -53,7 +53,9 @@ public:
              int channels = 0,
              const ExportProcessor::Parameters& parameters = {},
              const MixerOptions::Downmix* mixerSpec = nullptr);
-   
+
+   void SetCustomMappingEnabled(bool enabled);
+
    wxString GetPath() const;
    wxString GetFullName() const;
 

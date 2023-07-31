@@ -94,7 +94,7 @@ MixerOptions::Downmix::Downmix(const Downmix &mixerSpec, const std::vector<bool>
    mNumTracks = static_cast<unsigned>(std::count(tracksMask.begin(), tracksMask.end(), true));
    Alloc();
    unsigned int dstTrackIndex = 0;
-   for( unsigned int srcTrackIndex = 0; srcTrackIndex < mNumTracks; srcTrackIndex++ )
+   for( unsigned int srcTrackIndex = 0; srcTrackIndex < tracksMask.size(); srcTrackIndex++ )
    {
       if(!tracksMask[srcTrackIndex])
          continue;

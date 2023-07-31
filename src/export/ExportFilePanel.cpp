@@ -293,6 +293,22 @@ void ExportFilePanel::Init(const wxFileName& filename,
       mCustomizeChannels->Enable(mCustomMapping->GetValue());
 }
 
+void ExportFilePanel::SetCustomMappingEnabled(bool enabled)
+{
+   if(mMonoStereoMode)
+      return;
+
+   if(!enabled && mCustomMapping->GetValue())
+   {
+      if(mStereo->IsEnabled())
+         mStereo->SetValue(true);
+      else
+         mMono->SetValue(true);
+   }
+   mCustomMapping->Enable(enabled);
+   mCustomizeChannels->Enable(enabled);
+}
+
 wxString ExportFilePanel::GetPath() const
 {
    return mFolder->GetValue();
@@ -505,10 +521,7 @@ void ExportFilePanel::UpdateMaxChannels(unsigned maxChannels)
       {
          auto waveTracks = TrackList::Get(mProject).Leaders<const WaveTrack>();
          mMixerSpec = std::make_unique<MixerOptions::Downmix>(
-            std::accumulate(
-               waveTracks.begin(),
-               waveTracks.end(),
-               0, [](int sum, const auto& track) { return sum + track->NChannels(); }),
+            waveTracks.sum([](const auto track) { return track->NChannels(); }),
             mixerMaxChannels);
       }
    }

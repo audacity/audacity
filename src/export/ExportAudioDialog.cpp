@@ -204,6 +204,8 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
       mRangeSplit->SetValue(true);
       mSplitByLabels->SetValue(true);
    }
+   
+   mExportOptionsPanel->SetCustomMappingEnabled(!mRangeSplit->GetValue());
 
    mIncludeAudioBeforeFirstLabel->Enable(mSplitByLabels->GetValue());
    
@@ -359,6 +361,7 @@ void ExportAudioDialog::PopulateOrExchange(ShuttleGui& S)
 void ExportAudioDialog::OnExportRangeChange(wxCommandEvent& event)
 {
    const auto enableSplits = event.GetId() == ExportRangeSplitID;
+   mExportOptionsPanel->SetCustomMappingEnabled(!enableSplits);
    if(mSplitsPanel->IsShown() != enableSplits)
    {
       mExportSettingsDirty = true;
@@ -517,8 +520,8 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
          ? std::min(TrackList::Get(mProject).GetEndTime(), viewInfo.selectedRegion.t1())
          : TrackList::Get(mProject).GetEndTime();
 
-      auto tracks = ExportUtils::FindExportWaveTracks(TrackList::Get(mProject), selectedOnly);
-      if(tracks.empty())
+      auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(mProject), selectedOnly);
+      if(exportedTracks.empty())
       {
          ShowExportErrorDialog(
             selectedOnly ? XO("All selected audio is muted.") : XO("All audio is muted."), //":576"
@@ -528,7 +531,7 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
       }
 
       if(mSkipSilenceAtBeginning->GetValue())
-         t0 = std::max(t0, tracks.min(&Track::GetStartTime));
+         t0 = std::max(t0, exportedTracks.min(&Track::GetStartTime));
 
       builder.SetRange(t0, t1, selectedOnly);
       
@@ -536,25 +539,31 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
       const auto channels = mExportOptionsPanel->GetChannels();
       if(channels == 0)
       {
-         auto tracks = TrackList::Get(mProject).Leaders<const WaveTrack>();
+         //Figure out the final channel mapping: mixer dialog shows
+         //all tracks regardless of their mute/solo state, but
+         //muted channels should not be present in exported file - 
+         //apply channel mask to exclude them
+         auto tracks = TrackList::Get(mProject).Leaders<WaveTrack>();
          std::vector<bool> channelMask(
-            std::accumulate(
-               tracks.begin(),
-               tracks.end(),
-               0, [](int sum, const auto& track) { return sum + track->NChannels(); }),
+            tracks.sum([](const auto track) { return track->NChannels(); }),
             false);
-         int trackIndex = 0;
-         for(auto track : tracks)
+         unsigned trackIndex = 0;
+         for(const auto track : tracks)
          {
             if(track->GetSolo())
             {
-               channelMask = std::vector<bool>(tracks.size(), false);
-               channelMask[trackIndex] = true;
+               channelMask.assign(channelMask.size(), false);
+               for(unsigned i = 0; i < track->NChannels(); ++i)
+                  channelMask[trackIndex++] = true;
                break;
             }
             if(!track->GetMute() && (!selectedOnly || track->GetSelected()))
-               channelMask[trackIndex] = true;
-            ++trackIndex;
+            {
+               for(unsigned i = 0; i < track->NChannels(); ++i)
+                  channelMask[trackIndex++] = true;
+            }
+            else
+               trackIndex += track->NChannels();
          }
          
          tempMixerSpec = std::make_unique<MixerOptions::Downmix>(*mExportOptionsPanel->GetMixerSpec(), channelMask);
