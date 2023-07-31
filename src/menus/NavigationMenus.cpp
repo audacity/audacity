@@ -145,7 +145,7 @@ void DoPrevTrack(
          // On first track so stay there?
          wxBell();
          if (circularTrackNavigation) {
-            auto range = tracks.Leaders();
+            auto range = tracks.Any();
             p = * range.rbegin(); // null if range is empty
             trackFocus.Set(p);   // Wrap to the last track
             if (p)

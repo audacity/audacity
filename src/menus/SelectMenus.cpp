@@ -436,7 +436,7 @@ void OnSelectAll(const CommandContext &context)
 
    //Presumably, there might be not more than one track
    //that expects text input
-   for (auto wt : tracks.Leaders<WaveTrack>()) {
+   for (auto wt : tracks.Any<WaveTrack>()) {
       auto& view = WaveChannelView::Get(*wt);
       if (view.SelectAllText(context.project)) {
          trackPanel.Refresh(false);
@@ -469,7 +469,7 @@ void OnSelectSyncLockSel(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    bool selected = false;
-   for (auto t : tracks.Leaders() + &Track::SupportsBasicEditing
+   for (auto t : tracks.Any() + &Track::SupportsBasicEditing
          + &SyncLock::IsSyncLockSelected - &Track::IsSelected) {
       t->SetSelected(true);
       selected = true;

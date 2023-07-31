@@ -162,7 +162,7 @@ TrackIterRange<Track> SyncLock::Group( Track *pTrack )
 {
    auto pList = pTrack->GetOwner();
    auto tracks = FindSyncLockGroup(const_cast<Track*>( pTrack ) );
-   return pList->Leaders()
+   return pList->Any()
       .StartingWith(tracks.first).EndingAfter(tracks.second);
 }
 

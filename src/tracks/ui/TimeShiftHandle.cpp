@@ -608,7 +608,7 @@ namespace {
          return false;
    
       // All tracks of the same kind as the captured track
-      auto range = trackList.Leaders() + sameType;
+      auto range = trackList.Any() + sameType;
 
       // Find how far this track would shift down among those (signed)
       const auto myPosition =
@@ -746,7 +746,7 @@ void TimeShiftHandle::DoSlideVertical(
 
    // Try to extend the correpondence
    auto tryExtend = [&](bool forward) {
-      auto range = trackList.Leaders();
+      auto range = trackList.Any();
       auto begin = range.begin(), end = range.end();
       auto pCaptured = trackList.Find(&capturedTrack);
       auto pDst = trackList.Find(dstTrack);

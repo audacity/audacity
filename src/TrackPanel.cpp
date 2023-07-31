@@ -839,7 +839,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    brushFlag   = (ToolCodes::brushTool == settings.GetTool());
 #endif
 
-   const bool hasSolo = GetTracks()->Leaders<PlayableTrack>()
+   const bool hasSolo = GetTracks()->Any<PlayableTrack>()
       .any_of( [](const PlayableTrack *pt) {
          pt = static_cast<const PlayableTrack *>(
             pt->SubstitutePendingChangedTrack().get());
@@ -918,7 +918,7 @@ std::vector<int> FindAdjustedChannelHeights(Track &t)
 
 void TrackPanel::UpdateVRulers()
 {
-   for (auto t : GetTracks()->Leaders<WaveTrack>())
+   for (auto t : GetTracks()->Any<WaveTrack>())
       UpdateTrackVRuler(*t);
 
    UpdateVRulerSize();
@@ -974,7 +974,7 @@ void TrackPanel::UpdateTrackVRuler(Track &t)
 
 void TrackPanel::UpdateVRulerSize()
 {
-   auto trackRange = GetTracks()->Leaders();
+   auto trackRange = GetTracks()->Any();
    if (trackRange) {
       wxSize s{ 0, 0 };
       // Find maximum width over all channels
@@ -1050,7 +1050,7 @@ void TrackPanel::VerticalScroll( float fracPosition){
 
    auto tracks = GetTracks();
 
-   auto range = tracks->Leaders();
+   auto range = tracks->Any();
    if (!range.empty()) {
       trackHeight = ChannelView::GetChannelGroupHeight(*range.rbegin());
       --range.second;

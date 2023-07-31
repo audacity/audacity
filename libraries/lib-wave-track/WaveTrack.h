@@ -246,7 +246,7 @@ private:
       const TimeWarper *effectWarper = nullptr) /* not override */;
    /*!
     Overload that takes a TrackList and passes its first wave track
-    @pre `**src.Leaders<const WaveTrack>().begin()` satisfies preconditions
+    @pre `**src.Any<const WaveTrack>().begin()` satisfies preconditions
     of the other overload for `src`
     */
    void ClearAndPaste(double t0, double t1,
@@ -255,7 +255,7 @@ private:
       bool merge = true,
       const TimeWarper *effectWarper = nullptr)
    {
-      ClearAndPaste(t0, t1, **src.Leaders<const WaveTrack>().begin(),
+      ClearAndPaste(t0, t1, **src.Any<const WaveTrack>().begin(),
          preserve, merge, effectWarper);
    }
 

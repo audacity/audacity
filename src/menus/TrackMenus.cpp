@@ -84,7 +84,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       // Add new tracks
       const bool stereo = newTracks->NChannels() > 1;
       tracks.Append(std::move(*newTracks));
-      const auto pNewTrack = *tracks.Leaders<WaveTrack>().rbegin();
+      const auto pNewTrack = *tracks.Any<WaveTrack>().rbegin();
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount == 1)
@@ -143,7 +143,7 @@ void DoPanTracks(AudacityProject &project, float PanValue)
    auto &window = ProjectWindow::Get( project );
 
    // count selected wave tracks
-   const auto range = tracks.Leaders< WaveTrack >();
+   const auto range = tracks.Any< WaveTrack >();
    const auto selectedRange = range + &Track::IsSelected;
    auto count = selectedRange.size();
 
@@ -297,7 +297,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
 
    if (delta != 0.0) {
       // For a fixed-distance shift move sync-lock selected tracks also.
-      for (auto t : tracks.Leaders()
+      for (auto t : tracks.Any()
            + &SyncLock::IsSelectedOrSyncLockSelected )
          t->MoveTo(t->GetStartTime() + delta);
    }
@@ -701,7 +701,7 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    const auto soloSimple = (solo == SoloBehaviorSimple);
    const auto soloNone = (solo == SoloBehaviorNone);
 
-   auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Leaders<PlayableTrack>();
+   auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Any<PlayableTrack>();
    for (auto pt : iter) {
       pt->SetMute(mute);
       if (soloSimple || soloNone)

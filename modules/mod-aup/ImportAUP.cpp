@@ -880,7 +880,7 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
 
    // Bypass this timetrack if the project already has one
    // (See HandleTimeEnvelope and HandleControlPoint also)
-   if (*tracks.Leaders<TimeTrack>().begin())
+   if (*tracks.Any<TimeTrack>().begin())
    {
       ImportUtils::ShowMessageBox(
          XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."));
@@ -1364,7 +1364,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    // Apply them to all new wave tracks.
    bool bSuccess = true;
 
-   auto range = tracks.Leaders();
+   auto range = tracks.Any();
    if (pLast) {
       range = range.StartingWith(pLast);
       ++range.first;

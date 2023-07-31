@@ -304,7 +304,7 @@ namespace
 {
 int CalculateChannels(const TrackList& trackList)
 {
-   auto range = trackList.Leaders<const WaveTrack>();
+   auto range = trackList.Any<const WaveTrack>();
    return std::all_of(range.begin(), range.end(), [](const WaveTrack *track){
       return IsMono(*track) && track->GetPan() == 0;
    }) ? 1 : 2;

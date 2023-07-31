@@ -87,7 +87,7 @@ void ProjectFileManager::DiscardAutosave(const FilePath &filename)
    projectFileManager.ReadProjectFile(filename, true);
 
    if (projectFileManager.mLastSavedTracks) {
-      for (auto wt : projectFileManager.mLastSavedTracks->Leaders<WaveTrack>())
+      for (auto wt : projectFileManager.mLastSavedTracks->Any<WaveTrack>())
          wt->CloseLock();
       projectFileManager.mLastSavedTracks.reset();
    }
@@ -756,7 +756,7 @@ void ProjectFileManager::CompactProjectOnClose()
    // sample block objects in memory.
    if (mLastSavedTracks)
    {
-      for (auto wt : mLastSavedTracks->Leaders<WaveTrack>())
+      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
          wt->CloseLock();
 
       // Attempt to compact the project
@@ -1064,7 +1064,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
       // may have spared the files at the expense of leaked memory).  But
       // here is a better way to accomplish the intent, doing like what happens
       // when the project closes:
-      for (auto pTrack : tracks.Leaders<WaveTrack>())
+      for (auto pTrack : tracks.Any<WaveTrack>())
          pTrack->CloseLock();
 
       tracks.Clear(); //tracks.Clear(true);
@@ -1104,10 +1104,10 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // In case the project had soloed tracks before importing,
    // all newly imported tracks are muted.
    const bool projectHasSolo =
-      !(tracks.Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+      !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo) {
       for (auto &group : newTracks)
-         for (const auto pTrack : group->Leaders<WaveTrack>())
+         for (const auto pTrack : group->Any<WaveTrack>())
             pTrack->SetMute(true);
    }
 
@@ -1117,7 +1117,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
          assert(false);
          continue;
       }
-      for (const auto pTrack : group->Leaders<WaveTrack>())
+      for (const auto pTrack : group->Any<WaveTrack>())
          results.push_back(pTrack);
       tracks.Append(std::move(*group));
    }

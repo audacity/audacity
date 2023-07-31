@@ -58,7 +58,7 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
    int applyCount = 0;
    Setting setting;
    Worker worker(setting);
-   for (auto wt : tracks.Leaders<WaveTrack>()) {
+   for (auto wt : tracks.Any<WaveTrack>()) {
       using Type = long long;
       Type startSample{ std::numeric_limits<Type>::max() };
       Type endSample{ std::numeric_limits<Type>::min() };

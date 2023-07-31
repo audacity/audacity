@@ -115,7 +115,7 @@ EffectEqualization::EffectEqualization(int Options)
 #if 0
    auto trackList = inputTracks();
    const auto t = trackList
-      ? *trackList->Leaders<const WaveTrack>().first
+      ? *trackList->Any<const WaveTrack>().first
       : nullptr
    ;
    hiFreq =
@@ -426,7 +426,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
             temp->Add(pNewChannel);
             assert(pNewChannel->IsLeader() == pChannel->IsLeader());
          }
-         auto pTempTrack = *temp->Leaders<WaveTrack>().rbegin();
+         auto pTempTrack = *temp->Any<WaveTrack>().rbegin();
          pTempTrack->ConvertToSampleFormat(floatSample);
          auto iter0 = TrackList::Channels(pTempTrack).begin();
    
@@ -448,7 +448,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
                goto done;
          }
          PasteOverPreservingClips(data, *track, start, len,
-            **temp->Leaders<WaveTrack>().begin());
+            **temp->Any<WaveTrack>().begin());
       }
 
       count++;

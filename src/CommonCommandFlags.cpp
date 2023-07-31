@@ -172,7 +172,7 @@ const ReservedCommandFlag&
 const ReservedCommandFlag&
    TracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return !TrackList::Get(project).Leaders().empty();
+         return !TrackList::Get(project).Any().empty();
       },
       CommandFlagOptions{}.DisableDefaultMessage()
    }; return flag; }
@@ -245,7 +245,7 @@ const ReservedCommandFlag&
          return
             ViewInfo::Get(project).ZoomInAvailable()
          &&
-            !TrackList::Get(project).Leaders().empty()
+            !TrackList::Get(project).Any().empty()
          ;
       }
    }; return flag; }
@@ -255,14 +255,14 @@ const ReservedCommandFlag&
          return
             ViewInfo::Get(project).ZoomOutAvailable()
          &&
-            !TrackList::Get(project).Leaders().empty()
+            !TrackList::Get(project).Any().empty()
          ;
       }
    }; return flag; }
 const ReservedCommandFlag&
    WaveTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return !TrackList::Get(project).Leaders<const WaveTrack>().empty();
+         return !TrackList::Get(project).Any<const WaveTrack>().empty();
       }
    }; return flag; }
 const ReservedCommandFlag&

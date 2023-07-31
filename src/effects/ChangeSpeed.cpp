@@ -223,7 +223,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
    mFactor = 100.0 / (100.0 + m_PercentChange);
 
-   outputs.Get().Leaders().VisitWhile(bGoodResult,
+   outputs.Get().Any().VisitWhile(bGoodResult,
       [&](LabelTrack &lt) {
          if (SyncLock::IsSelectedOrSyncLockSelected(&lt)) {
             if (!ProcessLabelTrack(&lt))

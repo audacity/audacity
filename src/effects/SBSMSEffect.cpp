@@ -232,7 +232,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
    Slide pitchSlide(pitchSlideType,pitchStart,pitchEnd);
    mTotalStretch = rateSlide.getTotalStretch();
 
-   outputs.Get().Leaders().VisitWhile(bGoodResult,
+   outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
          if (!(lt.GetSelected() || SyncLock::IsSyncLockSelected(&lt)))
             return fallthrough();

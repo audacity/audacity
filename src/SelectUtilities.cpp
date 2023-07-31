@@ -50,7 +50,7 @@ void DoSelectTimeAndAudioTracks(
       // Unselect all tracks before selecting audio.
       for (auto t : tracks)
          t->SetSelected(false);
-      for (auto t : tracks.Leaders<WaveTrack>())
+      for (auto t : tracks.Any<WaveTrack>())
          t->SetSelected(true);
       ProjectHistory::Get( project ).ModifyState(false);
    }

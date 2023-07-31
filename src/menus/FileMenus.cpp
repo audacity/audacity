@@ -105,7 +105,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
       }
       fileName.Mkdir(0777, wxPATH_MKDIR_FULL); // make sure it exists
 
-      int nChannels = tracks.Leaders().max(&Track::NChannels);
+      int nChannels = tracks.Any().max(&Track::NChannels);
       auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(format);
       if(plugin != nullptr)
       {
@@ -198,7 +198,7 @@ void OnOpen(const CommandContext &context )
    int unavailablePlugins = 0;
 
    auto &trackList = TrackList::Get(project);
-   for (auto track : trackList.Leaders<WaveTrack>())
+   for (auto track : trackList.Any<WaveTrack>())
    {
       auto& effects = RealtimeEffectList::Get(*track);
       effects.Visit([&unavailablePlugins](auto& state, bool)
@@ -302,7 +302,7 @@ void OnExportLabels(const CommandContext &context)
 
    /* i18n-hint: filename containing exported text from label tracks */
    wxString fName = _("labels.txt");
-   auto trackRange = tracks.Leaders<const LabelTrack>();
+   auto trackRange = tracks.Any<const LabelTrack>();
    auto numLabelTracks = trackRange.size();
 
    if (numLabelTracks == 0) {

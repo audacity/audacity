@@ -1044,7 +1044,7 @@ struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
    void UpdatePrefs() override
    {
       auto& trackList = TrackList::Get(mProject);
-      for (auto waveTrack : trackList.Leaders<WaveTrack>())
+      for (auto waveTrack : trackList.Any<WaveTrack>())
          ReopenRealtimeEffectUIData(mProject, *waveTrack);
    }
 };
@@ -1192,7 +1192,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          auto& trackList = TrackList::Get(mProject);
 
          // Realtime effect UI is only updated on Undo or Redo
-         auto waveTracks = trackList.Leaders<WaveTrack>();
+         auto waveTracks = trackList.Any<WaveTrack>();
          
          if (
             message.type == UndoRedoMessage::Type::UndoOrRedo ||

@@ -1048,20 +1048,20 @@ class TRACK_API TrackList final
    using const_iterator = TrackIter<const Track>;
 
    using value_type = Track *;
-   iterator begin() { return Leaders().begin(); }
-   iterator end() { return Leaders().end(); }
-   const_iterator begin() const { return Leaders().begin(); }
-   const_iterator end() const { return Leaders().end(); }
+   iterator begin() { return Any().begin(); }
+   iterator end() { return Any().end(); }
+   const_iterator begin() const { return Any().begin(); }
+   const_iterator end() const { return Any().end(); }
    const_iterator cbegin() const { return begin(); }
    const_iterator cend() const { return end(); }
 
    // Reverse iteration
    using reverse_iterator = std::reverse_iterator<iterator>;
    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
-   reverse_iterator rbegin() { return Leaders().rbegin(); }
-   reverse_iterator rend() { return Leaders().rend(); }
-   const_reverse_iterator rbegin() const { return Leaders().rbegin(); }
-   const_reverse_iterator rend() const { return Leaders().rend(); }
+   reverse_iterator rbegin() { return Any().rbegin(); }
+   reverse_iterator rend() { return Any().rend(); }
+   const_reverse_iterator rbegin() const { return Any().rbegin(); }
+   const_reverse_iterator rend() const { return Any().rend(); }
    const_reverse_iterator crbegin() const { return rbegin(); }
    const_reverse_iterator crend() const { return rend(); }
 
@@ -1095,14 +1095,14 @@ private:
 
 public:
    template < typename TrackType = Track >
-      auto Leaders()
+      auto Any()
          -> TrackIterRange< TrackType >
    {
       return Tracks< TrackType >( &Track::IsLeader );
    }
 
    template < typename TrackType = const Track >
-      auto Leaders() const
+      auto Any() const
          -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIterRange< TrackType >
          >
@@ -1253,7 +1253,7 @@ public:
 
    bool empty() const;
    size_t NChannels() const;
-   size_t Size() const { return Leaders().size(); }
+   size_t Size() const { return Any().size(); }
 
    //! Return the least start time of the tracks, or 0 when no tracks
    double GetStartTime() const;

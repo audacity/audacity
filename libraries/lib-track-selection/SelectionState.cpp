@@ -94,7 +94,7 @@ void SelectionState::SelectRangeOfTracks(
       std::swap(sTrack, eTrack);
 
    for (auto track :
-        tracks.Leaders().StartingWith(sTrack).EndingAfter(eTrack))
+        tracks.Any().StartingWith(sTrack).EndingAfter(eTrack))
       SelectTrack(*track, true, false);
 }
 
@@ -167,7 +167,7 @@ SelectionStateChanger::SelectionStateChanger
    , mInitialLastPickedTrack{ state.mLastPickedTrack }
 {
    // Save initial state of track selections
-   const auto range = tracks.Leaders();
+   const auto range = tracks.Any();
    mInitialTrackSelection.clear();
    mInitialTrackSelection.reserve(range.size());
    for (const auto track : range) {

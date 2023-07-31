@@ -336,9 +336,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    bool hasaudio;
    if (nonWaveToo)
-      hasaudio = ! tracks.Leaders<PlayableTrack>().empty();
+      hasaudio = ! tracks.Any<PlayableTrack>().empty();
    else
-      hasaudio = ! tracks.Leaders<WaveTrack>().empty();
+      hasaudio = ! tracks.Any<WaveTrack>().empty();
 
    double latestEnd = tracks.GetEndTime();
 
@@ -591,7 +591,7 @@ WritableSampleTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    auto &trackList = TrackList::Get( *p );
    std::vector<unsigned> channelCounts;
    WritableSampleTrackArray candidates;
-   const auto range = trackList.Leaders<WaveTrack>();
+   const auto range = trackList.Any<WaveTrack>();
    for ( auto candidate : selectedOnly ? range + &Track::IsSelected : range ) {
       if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate)
          continue;
@@ -877,7 +877,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          wxString defaultTrackName, defaultRecordingTrackName;
 
          // Count the tracks.
-         auto numTracks = trackList.Leaders<const WaveTrack>().size();
+         auto numTracks = trackList.Any<const WaveTrack>().size();
 
          auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
 

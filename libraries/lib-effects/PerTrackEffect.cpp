@@ -295,7 +295,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             t.SyncLockAdjust(mT1, mT0 + duration);
       };
 
-   outputs.Leaders().VisitWhile(bGoodResult,
+   outputs.Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](WaveTrack &wt) {
          if (!wt.GetSelected())
             return fallthrough();

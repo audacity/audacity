@@ -86,7 +86,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
    std::optional<ModifiedAnalysisTrack> modifiedTrack;
    const wxString name{ _("Clipping") };
 
-   auto clt = *inputTracks()->Leaders<const LabelTrack>().find_if(
+   auto clt = *inputTracks()->Any<const LabelTrack>().find_if(
       [&](const Track *track){ return track->GetName() == name; });
 
    LabelTrack *lt{};

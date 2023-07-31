@@ -3178,7 +3178,7 @@ void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
 void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs)
 {
-   for (auto wt : tracks.Leaders<const WaveTrack>())
+   for (auto wt : tracks.Any<const WaveTrack>())
       for (const auto pChannel : TrackList::Channels(wt))
          // Scan all clips within current track
          for (const auto &clip : pChannel->GetAllClips())
@@ -3241,7 +3241,7 @@ void WaveTrackFactory::Destroy( AudacityProject &project )
 ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
    [](const AudacityProject& project) -> ProjectFormatVersion {
       const TrackList& trackList = TrackList::Get(project);
-      for (auto wt : trackList.Leaders<const WaveTrack>())
+      for (auto wt : trackList.Any<const WaveTrack>())
          for (const auto pChannel : TrackList::Channels(wt))
             for (const auto& clip : pChannel->GetAllClips())
                if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)

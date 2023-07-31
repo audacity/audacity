@@ -94,7 +94,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
    mCurTrackNum = 0;
    m_maxNewLength = 0.0;
 
-   outputs.Get().Leaders().VisitWhile(bGoodResult,
+   outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
          if ( !(lt.GetSelected() ||
                 (mustSync && SyncLock::IsSyncLockSelected(&lt))) )

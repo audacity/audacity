@@ -44,7 +44,7 @@ bool DoPasteText(AudacityProject &project)
    auto &window = ProjectWindow::Get( project );
 
    // Paste into the active label (if any)
-   for (auto pLabelTrack : tracks.Leaders<LabelTrack>()) {
+   for (auto pLabelTrack : tracks.Any<LabelTrack>()) {
       // Does this track have an active label?
       if (LabelTrackView::Get( *pLabelTrack ).GetTextEditIndex(project) != -1) {
 
@@ -69,7 +69,7 @@ bool DoPasteText(AudacityProject &project)
 
    //Presumably, there might be not more than one track
    //that expects text input
-   for (auto wt : tracks.Leaders<WaveTrack>()) {
+   for (auto wt : tracks.Any<WaveTrack>()) {
       auto& view = WaveChannelView::Get(*wt);
       if (view.PasteText(project)) {
          auto &trackPanel = TrackPanel::Get(project);
@@ -84,7 +84,7 @@ bool DoPasteText(AudacityProject &project)
 wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
 {
    wxULongLong result{};
-   for (auto waveTrack : src.Leaders<const WaveTrack>()) {
+   for (auto waveTrack : src.Any<const WaveTrack>()) {
       const auto samplesCount = waveTrack->GetSequenceSamplesCount();
       result += samplesCount.as_long_long() *
          SAMPLE_SIZE(waveTrack->GetSampleFormat());
@@ -95,7 +95,7 @@ wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
 BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList& dst)
 {
    BlockArray::size_type result{};
-   for (const auto waveTrack : src.Leaders<const WaveTrack>())
+   for (const auto waveTrack : src.Any<const WaveTrack>())
       result += waveTrack->CountBlocks();
    return result;
 }
@@ -157,7 +157,7 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
 
 bool HasHiddenData(const TrackList& trackList)
 {
-   const auto range = trackList.Leaders<const WaveTrack>();
+   const auto range = trackList.Any<const WaveTrack>();
    return std::any_of(range.begin(), range.end(),
       [](const WaveTrack *pTrack){ return pTrack->HasHiddenData(); });
 }
@@ -248,7 +248,7 @@ void OnCut(const CommandContext &context)
 
    //Presumably, there might be not more than one track
    //that expects text input
-   for (auto wt : tracks.Leaders<WaveTrack>()) {
+   for (auto wt : tracks.Any<WaveTrack>()) {
       auto& view = WaveChannelView::Get(*wt);
       if (view.CutSelectedText(context.project)) {
          trackPanel.Refresh(false);
@@ -289,7 +289,7 @@ void OnCut(const CommandContext &context)
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
 
-   (tracks.Leaders() + &SyncLock::IsSelectedOrSyncLockSelected).Visit(
+   (tracks.Any() + &SyncLock::IsSelectedOrSyncLockSelected).Visit(
 #if defined(USE_MIDI)
       [](NoteTrack&) {
          //if NoteTrack, it was cut, so do not clear anything
@@ -361,7 +361,7 @@ void OnCopy(const CommandContext &context)
    }
    //Presumably, there might be not more than one track
    //that expects text input
-   for (auto wt : tracks.Leaders<WaveTrack>()) {
+   for (auto wt : tracks.Any<WaveTrack>()) {
       auto& view = WaveChannelView::Get(*wt);
       if (view.CopySelectedText(context.project)) {
          return;
@@ -492,8 +492,8 @@ Correspondence FindCorrespondence(
    if (dstRange.size() == 1)
       // Special rule when only one track is selected interprets the user's
       // intent as pasting into that track and following ones
-      dstRange = dstTracks.Leaders().StartingWith(*dstRange.begin());
-   auto srcRange = srcTracks.Leaders();
+      dstRange = dstTracks.Any().StartingWith(*dstRange.begin());
+   auto srcRange = srcTracks.Any();
    while (!(dstRange.empty() || srcRange.empty())) {
       auto &dst = **dstRange.begin();
       auto &src = **srcRange.begin();
@@ -570,7 +570,7 @@ void OnPaste(const CommandContext &context)
 
    // Outer loop by sync-lock groups
    auto next = tracks.begin();
-   for (auto range = tracks.Leaders(); !range.empty();
+   for (auto range = tracks.Any(); !range.empty();
       // Skip to next sync lock group
      range.first = next
    ) {
@@ -979,7 +979,7 @@ void OnPasteOver(const CommandContext &context)
 const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
    [](const AudacityProject &project){
-      auto range = TrackList::Get(project).Leaders<const LabelTrack>()
+      auto range = TrackList::Get(project).Any<const LabelTrack>()
          + [&](const LabelTrack *pTrack){
             return LabelTrackView::Get( *pTrack ).IsTextSelected(
                // unhappy const_cast because track focus might be set

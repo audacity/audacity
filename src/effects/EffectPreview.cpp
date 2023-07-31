@@ -129,7 +129,7 @@ void EffectPreview(EffectBase &effect,
          return;
       mTracks->Append(std::move(*newTracks));
 
-      auto newTrack = *mTracks->Leaders<WaveTrack>().rbegin();
+      auto newTrack = *mTracks->Any<WaveTrack>().rbegin();
       newTrack->MoveTo(0);
       newTrack->SetSelected(true);
    }

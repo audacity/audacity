@@ -449,7 +449,7 @@ void ControlToolBar::EnableDisableButtons()
    bool busy = gAudioIO->IsBusy();
 
    // Only interested in audio type tracks
-   bool tracks = p && TrackList::Get(*p).Leaders<AudioTrack>(); // PRL:  PlayableTrack ?
+   bool tracks = p && TrackList::Get(*p).Any<AudioTrack>(); // PRL:  PlayableTrack ?
 
    mPlay->SetEnabled( canStop && tracks && !recording );
    mRecord->SetEnabled(

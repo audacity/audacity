@@ -315,7 +315,7 @@ bool EffectTruncSilence::ProcessAll()
    if (FindSilences(silences,
       inputTracks()->Selected<const WaveTrack>())
    ) {
-      auto trackRange = outputs.Get().Leaders();
+      auto trackRange = outputs.Get().Any();
       double totalCutLen = 0.0;
       if (DoRemoval(silences, trackRange, 0, 1, totalCutLen)) {
          mT1 -= totalCutLen;

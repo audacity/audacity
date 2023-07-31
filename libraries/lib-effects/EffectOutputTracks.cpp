@@ -23,7 +23,7 @@ EffectOutputTracks::EffectOutputTracks(
    mOMap.clear();
    mOutputTracks = TrackList::Create(mTracks.GetOwner());
 
-   auto trackRange = mTracks.Leaders() +
+   auto trackRange = mTracks.Any() +
       [&] (const Track *pTrack) {
          return allSyncLockSelected
          ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)

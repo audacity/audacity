@@ -984,7 +984,7 @@ void MixerBoard::UpdateTrackClusters()
    unsigned int nClusterIndex = 0;
    MixerTrackCluster* pMixerTrackCluster = NULL;
 
-   for (auto pPlayableTrack: mTracks->Leaders<PlayableTrack>()) {
+   for (auto pPlayableTrack: mTracks->Any<PlayableTrack>()) {
       // TODO: more-than-two-channels
       auto spTrack = pPlayableTrack->SharedPointer<PlayableTrack>();
       if (nClusterIndex < nClusterCount)
@@ -1112,7 +1112,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 bool MixerBoard::HasSolo()
 {
    return
-      !(mTracks->Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+      !(mTracks->Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
 }
 
 void MixerBoard::RefreshTrackClusters(bool bEraseBackground /*= true*/)
@@ -1506,10 +1506,10 @@ const ReservedCommandFlag&
          auto &tracks = TrackList::Get( project );
          return
 #ifdef EXPERIMENTAL_MIDI_OUT
-            !tracks.Leaders<const NoteTrack>().empty()
+            !tracks.Any<const NoteTrack>().empty()
          ||
 #endif
-            !tracks.Leaders<const WaveTrack>().empty()
+            !tracks.Any<const WaveTrack>().empty()
          ;
       }
    }; return flag; }

@@ -69,7 +69,7 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
 
    // "exclusive" mute means mute the chosen track and unmute all others.
    if (exclusive) {
-      for (auto leader : tracks.Leaders<PlayableTrack>()) {
+      for (auto leader : tracks.Any<PlayableTrack>()) {
          bool chosen = (t == leader);
          leader->SetMute(chosen);
          leader->SetSolo(false);
@@ -91,7 +91,7 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
          // in a group of more than one playable tracks.
          // otherwise clear solo on everything.
 
-         auto range = tracks.Leaders<PlayableTrack>();
+         auto range = tracks.Any<PlayableTrack>();
          auto nPlayableTracks = range.size();
          auto nPlaying = (range - &PlayableTrack::GetMute).size();
          for (auto track : range)
@@ -129,7 +129,7 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
    else {
       // Normal click solo this track only, mute everything else.
       // OR unmute and unsolo everything.
-      for (auto leader : tracks.Leaders<PlayableTrack>()) {
+      for (auto leader : tracks.Any<PlayableTrack>()) {
          bool chosen = (t == leader);
          if (chosen) {
             leader->SetSolo(!bWasSolo);

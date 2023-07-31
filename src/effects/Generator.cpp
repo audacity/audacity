@@ -36,7 +36,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
    bool bGoodResult = true;
    int ntrack = 0;
 
-   outputs.Get().Leaders().VisitWhile(bGoodResult,
+   outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](WaveTrack &track) {
          if (!track.GetSelected())
             return fallthrough();
@@ -70,7 +70,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
                bGoodResult = false;
             if (bGoodResult) {
                for (const auto pChannel :
-                  TrackList::Channels(*list->Leaders<WaveTrack>().begin()))
+                  TrackList::Channels(*list->Any<WaveTrack>().begin()))
                   pChannel->Flush();
                PasteTimeWarper warper{ mT1, mT0 + duration };
                auto pProject = FindProject();

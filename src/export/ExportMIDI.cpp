@@ -33,7 +33,7 @@ namespace {
 const ReservedCommandFlag&
    NoteTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return !TrackList::Get(project).Leaders<const NoteTrack>().empty();
+         return !TrackList::Get(project).Any<const NoteTrack>().empty();
       }
    }; return flag; }  //gsw
 

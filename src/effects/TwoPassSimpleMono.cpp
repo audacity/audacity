@@ -35,7 +35,7 @@ bool EffectTwoPassSimpleMono::Process(
       auto pNewTracks = track->WideEmptyCopy();
       mWorkTracks->Append(std::move(*pNewTracks));
    }
-   for (const auto pNewTrack : mWorkTracks->Leaders<WaveTrack>()) {
+   for (const auto pNewTrack : mWorkTracks->Any<WaveTrack>()) {
       pNewTrack->ConvertToSampleFormat(floatSample);
       if (mT0 > 0)
          pNewTrack->InsertSilence(0, mT0);

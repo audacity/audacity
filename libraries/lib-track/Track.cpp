@@ -963,7 +963,7 @@ namespace {
          return 0.0;
 
       // Otherwise accumulate minimum or maximum of track values
-      return list.Leaders().accumulate(ident, combine, memfn);
+      return list.Any().accumulate(ident, combine, memfn);
    }
 }
 
