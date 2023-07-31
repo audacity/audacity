@@ -1084,8 +1084,10 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
       waveclip = mClip;
    }
 
-   for (auto pair : mAttrs)
-   {
+   auto pSequence =
+      static_cast<Sequence*>(waveclip->HandleXMLChild("sequence"));
+
+   for (auto pair : mAttrs) {
       auto attr = pair.first;
       auto value = pair.second;
 
@@ -1117,7 +1119,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
 
          mFormat = (sampleFormat) fValue;
          // Assume old AUP format file never had wide clips
-         waveclip->GetSequence(0)->ConvertToSampleFormat(mFormat);
+         pSequence->ConvertToSampleFormat(mFormat);
       }
       else if (attr == "numsamples")
       {
