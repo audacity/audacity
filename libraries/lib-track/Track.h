@@ -1043,6 +1043,7 @@ class TRACK_API TrackList final
 
    // Iteration
 
+   private:
    // Hide the inherited begin() and end()
    using iterator = TrackIter<Track>;
    using const_iterator = TrackIter<const Track>;
@@ -1089,6 +1090,7 @@ class TRACK_API TrackList final
          return MakeTrackIterator<TrackType>( pTrack->GetNode() );
    }
 
+public:
    // If the track is not an audio track, or not one of a group of channels,
    // return the track itself; else return the first channel of its group --
    // in either case as an iterator that will only visit other leader tracks.
@@ -1103,6 +1105,7 @@ class TRACK_API TrackList final
    }
 
 
+private:
    template < typename TrackType = Track >
       auto Any()
          -> TrackIterRange< TrackType >
@@ -1137,6 +1140,7 @@ class TRACK_API TrackList final
    }
 
 
+public:
    template < typename TrackType = Track >
       auto Leaders()
          -> TrackIterRange< TrackType >
