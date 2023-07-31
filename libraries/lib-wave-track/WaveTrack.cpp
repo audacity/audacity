@@ -624,11 +624,24 @@ sampleCount WaveTrack::GetPlaySamplesCount() const
 
 sampleCount WaveTrack::GetSequenceSamplesCount() const
 {
+   assert(IsLeader());
    sampleCount result{ 0 };
 
-   for (const auto& clip : mClips)
-      result += clip->GetSequenceSamplesCount();
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto& clip : pChannel->mClips)
+         result += clip->GetSequenceSamplesCount();
 
+   return result;
+}
+
+size_t WaveTrack::CountBlocks() const
+{
+   assert(IsLeader());
+   size_t result{};
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (auto& clip : pChannel->GetClips())
+         result += clip->GetWidth() * clip->GetSequenceBlockArray(0)->size();
+   }
    return result;
 }
 
@@ -3093,6 +3106,35 @@ WaveClipPointers WaveTrack::SortedClipArray()
 WaveClipConstPointers WaveTrack::SortedClipArray() const
 {
    return FillSortedClipArray<WaveClipConstPointers>(mClips);
+}
+
+bool WaveTrack::HasHiddenData() const
+{
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto& clip : pChannel->GetClips())
+         if (clip->GetTrimLeft() != 0 || clip->GetTrimRight() != 0)
+            return true;
+   return false;
+}
+
+void WaveTrack::DiscardTrimmed()
+{
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (auto clip : pChannel->GetClips()) {
+         if (clip->GetTrimLeft() != 0) {
+            auto t0 = clip->GetPlayStartTime();
+            clip->SetTrimLeft(0);
+            clip->ClearLeft(t0);
+         }
+         if (clip->GetTrimRight() != 0) {
+            auto t1 = clip->GetPlayEndTime();
+            clip->SetTrimRight(0);
+            clip->ClearRight(t1);
+         }
+      }
+   }
 }
 
 auto WaveTrack::AllClipsIterator::operator ++ () -> AllClipsIterator &

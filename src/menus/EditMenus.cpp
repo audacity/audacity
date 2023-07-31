@@ -84,10 +84,8 @@ bool DoPasteText(AudacityProject &project)
 wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
 {
    wxULongLong result{};
-   for (auto waveTrack : src.Any<const WaveTrack>()) {
-      sampleCount samplesCount = 0;
-      for (auto& clip : waveTrack->GetClips())
-         samplesCount += clip->GetSequenceSamplesCount();
+   for (auto waveTrack : src.Leaders<const WaveTrack>()) {
+      const auto samplesCount = waveTrack->GetSequenceSamplesCount();
       result += samplesCount.as_long_long() *
          SAMPLE_SIZE(waveTrack->GetSampleFormat());
    }
@@ -97,36 +95,20 @@ wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
 BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList& dst)
 {
    BlockArray::size_type result{};
-   for (auto waveTrack : src.Any<const WaveTrack>()) {
-      for (auto& clip : waveTrack->GetClips())
-         result +=
-            clip->GetWidth() * clip->GetSequenceBlockArray(0)->size();
-   }
+   for (const auto waveTrack : src.Leaders<const WaveTrack>())
+      result += waveTrack->CountBlocks();
    return result;
 }
 
 std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
    auto result = TrackList::Create(nullptr);
    for (auto track : src.Leaders()) {
-      auto copies =
+      const auto copies =
          track->Copy(track->GetStartTime(), track->GetEndTime(), false);
-      (*copies->Leaders().begin())->MoveTo(track->GetStartTime());
-      for (const auto pChannel : copies->Any()) {
-         if (auto waveTrack = dynamic_cast<WaveTrack*>(pChannel)) {
-            for (auto clip : waveTrack->GetClips()) {
-               if (clip->GetTrimLeft() != 0) {
-                  auto t0 = clip->GetPlayStartTime();
-                  clip->SetTrimLeft(0);
-                  clip->ClearLeft(t0);
-               }
-               if (clip->GetTrimRight() != 0) {
-                  auto t1 = clip->GetPlayEndTime();
-                  clip->SetTrimRight(0);
-                  clip->ClearRight(t1);
-               }
-            }
-         }
-      }
+      const auto pTrack = *copies->Leaders().begin();
+      pTrack->MoveTo(track->GetStartTime());
+      if (const auto waveTrack = dynamic_cast<WaveTrack*>(pTrack))
+         waveTrack->DiscardTrimmed();
       result->Append(std::move(*copies));
    }
    return result;
@@ -175,15 +157,9 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
 
 bool HasHiddenData(const TrackList& trackList)
 {
-   for(auto waveTrack : trackList.Any<const WaveTrack>())
-   {
-      for(auto& clip : waveTrack->GetClips())
-      {
-         if(clip->GetTrimLeft() != 0 || clip->GetTrimRight() != 0)
-            return true;
-      }
-   }
-   return false;
+   const auto range = trackList.Leaders<const WaveTrack>();
+   return std::any_of(range.begin(), range.end(),
+      [](const WaveTrack *pTrack){ return pTrack->HasHiddenData(); });
 }
 
 // Menu handler functions

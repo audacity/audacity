@@ -159,9 +159,23 @@ private:
    void SetWaveColorIndex(int colorIndex);
 
    sampleCount GetPlaySamplesCount() const;
-   //! Returns the total number of samples in all underlying sequences
-   //! of all clips (but not counting the cutlines)
+
+   /*!
+    @return the total number of samples in all underlying sequences
+   of all clips, across all channels (including hidden audio but not
+   counting the cutlines)
+
+    @pre `IsLeader()`
+    */
    sampleCount GetSequenceSamplesCount() const;
+
+   /*!
+    @return the total number of blocks in all underlying sequences of all clips,
+   across all channels (including hidden audio but not counting the cutlines)
+
+    @pre `IsLeader()`
+    */
+   size_t CountBlocks() const;
 
    sampleFormat GetSampleFormat() const override { return mFormat; }
 
@@ -558,6 +572,18 @@ private:
    // clip start time. The array is emptied prior to adding the clips.
    WaveClipPointers SortedClipArray();
    WaveClipConstPointers SortedClipArray() const;
+
+   //! Whether any clips have hidden audio
+   /*!
+    @pre `IsLeader()`
+    */
+   bool HasHiddenData() const;
+
+   //! Remove hidden audio from all clips
+   /*!
+    @pre `IsLeader()`
+    */
+   void DiscardTrimmed();
 
    //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
    /*!

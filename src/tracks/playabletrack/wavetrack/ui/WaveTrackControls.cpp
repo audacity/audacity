@@ -259,12 +259,13 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
                             XO("Processing...   0%%"),
                             pdlgHideStopButton };
 
+   // Safe assumption for tracks associated with the context menu
+   assert(pTrack->IsLeader());
+
    // Simply finding a denominator for the progress dialog
-   sampleCount totalSamples{ 0 };
-   for (const auto& channel : TrackList::Channels(pTrack))
-      // Hidden samples are processed too, they should be counted as well
-      // (Correctly counting all samples of all channels)
-      totalSamples += channel->GetSequenceSamplesCount();
+   // Hidden samples are processed too, they should be counted as well
+   // (Correctly counting all samples of all channels)
+   sampleCount totalSamples = pTrack->GetSequenceSamplesCount();
    sampleCount processedSamples{ 0 };
 
    // Below is the lambda function that is passed along the call chain to
