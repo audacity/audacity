@@ -182,7 +182,7 @@ OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings &settings)
 bool EffectAmplify::Init()
 {
    mPeak = 0.0;
-   for (auto t : inputTracks()->SelectedLeaders<const WaveTrack>()) {
+   for (auto t : inputTracks()->Selected<const WaveTrack>()) {
       for (const auto pChannel : TrackList::Channels(t)) {
          auto pair = pChannel->GetMinMax(mT0, mT1); // may throw
          const float min = pair.first, max = pair.second;

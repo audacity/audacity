@@ -111,7 +111,7 @@ void SelectionState::ChangeSelectionOnShiftClick(
    auto pExtendFrom = tracks.Lock(mLastPickedTrack);
 
    if (!pExtendFrom) {
-      auto trackRange = tracks.SelectedLeaders();
+      auto trackRange = tracks.Selected();
       auto pFirst = *trackRange.begin();
 
       // If our track is at or after the first, extend from the first.
@@ -130,7 +130,7 @@ void SelectionState::ChangeSelectionOnShiftClick(
          pExtendFrom = Track::SharedPointer(*trackRange.rbegin());
    }
    // Either it's null, or mLastPickedTrack, or the first or last of
-   // SelectedLeaders()
+   // Selected()
    assert(!pExtendFrom || pExtendFrom->IsLeader());
 
    SelectNone(tracks);

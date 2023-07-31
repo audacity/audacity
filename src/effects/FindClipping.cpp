@@ -99,7 +99,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
    int count = 0;
 
    // JC: Only process selected tracks.
-   for (auto t : inputTracks()->SelectedLeaders<const WaveTrack>()) {
+   for (auto t : inputTracks()->Selected<const WaveTrack>()) {
       double trackStart = t->GetStartTime();
       double trackEnd = t->GetEndTime();
       double t0 = std::max(trackStart, mT0);

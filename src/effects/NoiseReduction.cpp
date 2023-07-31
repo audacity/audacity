@@ -623,7 +623,7 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
 
    EffectOutputTracks outputs{ *mTracks };
 
-   auto track = *(outputs.Get().SelectedLeaders<const WaveTrack>()).begin();
+   auto track = *(outputs.Get().Selected<const WaveTrack>()).begin();
    if (!track)
       return false;
 
@@ -702,7 +702,7 @@ bool EffectNoiseReduction::Worker::Process(
    TrackList &tracks, double inT0, double inT1)
 {
    mProgressTrackCount = 0;
-   for (auto track : tracks.SelectedLeaders<WaveTrack>()) {
+   for (auto track : tracks.Selected<WaveTrack>()) {
       mProgressWindowCount = 0;
       if (track->GetRate() != mStatistics.mRate) {
          if (mDoProfile)

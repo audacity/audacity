@@ -630,7 +630,7 @@ void TrackPanel::UpdateSelectionDisplay()
 // Counts selected tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetSelectedTrackCount() const
 {
-   return GetTracks()->SelectedLeaders().size();
+   return GetTracks()->Selected().size();
 }
 
 void TrackPanel::UpdateViewIfNoTracks()

@@ -23,7 +23,7 @@ void DoRemoveTracks(AudacityProject &project)
    auto &tracks = TrackList::Get(project);
    auto &trackPanel = TrackPanel::Get(project);
 
-   auto range = tracks.SelectedLeaders();
+   auto range = tracks.Selected();
    using Iter = decltype(range.begin());
 
    // Capture the leader track preceding the first removed track

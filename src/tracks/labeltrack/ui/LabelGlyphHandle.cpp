@@ -320,7 +320,7 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
               auto& selectionState = SelectionState::Get(project);
               auto& tracks = TrackList::Get(project);
 
-              bool done = tracks.SelectedLeaders().any_of(
+              bool done = tracks.Selected().any_of(
                   [&](const Track* track) { return track != static_cast<Track*>(pTrack.get()); }
               );
 

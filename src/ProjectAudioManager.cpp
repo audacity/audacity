@@ -679,7 +679,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          existingTracks = ChooseExistingRecordingTracks(*p, true, rateOfSelected);
          if (!existingTracks.empty())
             t0 = std::max(t0,
-               TrackList::Get(*p).SelectedLeaders<const WaveTrack>()
+               TrackList::Get(*p).Selected<const WaveTrack>()
                   .max(&Track::GetEndTime));
          else {
             if (anySelected && rateOfSelected != options.rate) {
@@ -1323,7 +1323,7 @@ GetPropertiesOfSelected(const AudacityProject &proj)
    result.allSameRate = true;
 
    const auto selectedTracks{
-      TrackList::Get(proj).SelectedLeaders<const WaveTrack>() };
+      TrackList::Get(proj).Selected<const WaveTrack>() };
 
    for (const auto & track : selectedTracks) {
       if (rateOfSelection != RATE_NOT_SELECTED &&

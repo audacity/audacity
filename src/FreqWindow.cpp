@@ -587,7 +587,7 @@ void FrequencyPlotDialog::GetAudio()
    int selcount = 0;
    bool warning = false;
    for (auto track :
-      TrackList::Get(*mProject).SelectedLeaders<const WaveTrack>()
+      TrackList::Get(*mProject).Selected<const WaveTrack>()
    ) {
       auto &selectedRegion = ViewInfo::Get(*mProject).selectedRegion;
       auto start = track->TimeToLongSamples(selectedRegion.t0());

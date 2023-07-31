@@ -112,7 +112,7 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
    AllocBuffers(outputs.Get());
    mProgressVal = 0;
 
-   for (auto pTrack : outputs.Get().SelectedLeaders<WaveTrack>()) {
+   for (auto pTrack : outputs.Get().Selected<WaveTrack>()) {
       // Get start and end times from track
       double trackStart = pTrack->GetStartTime();
       double trackEnd = pTrack->GetEndTime();
@@ -355,7 +355,7 @@ void EffectLoudness::AllocBuffers(TrackList &outputs)
    double maxSampleRate = 0;
    mProcStereo = false;
 
-   for (auto track : outputs.SelectedLeaders<WaveTrack>() + &Track::Any) {
+   for (auto track : outputs.Selected<WaveTrack>() + &Track::Any) {
       mTrackBufferCapacity = std::max(mTrackBufferCapacity, track->GetMaxBlockSize());
       maxSampleRate = std::max(maxSampleRate, track->GetRate());
 

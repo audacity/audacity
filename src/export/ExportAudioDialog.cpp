@@ -906,7 +906,7 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
    
    /* Remember which tracks were selected, and set them to deselected */
    SelectionStateChanger changer{ selectionState, tracks };
-   for (auto tr : tracks.SelectedLeaders<WaveTrack>())
+   for (auto tr : tracks.Selected<WaveTrack>())
       tr->SetSelected(false);
 
    auto ok = ExportResult::Success;

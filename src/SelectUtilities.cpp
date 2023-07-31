@@ -161,7 +161,7 @@ void DoSelectSomething(AudacityProject &project)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    bool bTime = selectedRegion.isPoint();
-   bool bTracks = tracks.SelectedLeaders().empty();
+   bool bTracks = tracks.Selected().empty();
 
    if (bTime || bTracks)
       DoSelectTimeAndTracks(project, bTime, bTracks);

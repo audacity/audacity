@@ -151,7 +151,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
    auto newT1 = mT1;
    int count = 0;
    // Process selected wave tracks first, to find the new t1 value
-   for (const auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
+   for (const auto track : outputs.Get().Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart ? trackStart : mT0;

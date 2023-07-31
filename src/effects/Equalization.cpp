@@ -324,7 +324,7 @@ bool EffectEqualization::Init()
 
    if (const auto project = FindProject()) {
       auto trackRange =
-         TrackList::Get(*project).SelectedLeaders<const WaveTrack>();
+         TrackList::Get(*project).Selected<const WaveTrack>();
       if (trackRange) {
          rate = (*(trackRange.first++)) -> GetRate();
          ++selcount;
@@ -408,7 +408,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
    bool bGoodResult = true;
 
    int count = 0;
-   for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;

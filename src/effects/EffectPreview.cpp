@@ -121,7 +121,7 @@ void EffectPreview(EffectBase &effect,
    // Generators need to generate per track.
    if (isLinearEffect && !isGenerator) {
       auto newTracks = MixAndRender(
-         saveTracks->SelectedLeaders<const WaveTrack>(),
+         saveTracks->Selected<const WaveTrack>(),
          Mixer::WarpOptions{ saveTracks->GetOwner() },
          wxString{}, // Don't care about the name of the temporary tracks
          factory, rate, floatSample, mT0, t1);
@@ -134,7 +134,7 @@ void EffectPreview(EffectBase &effect,
       newTrack->SetSelected(true);
    }
    else {
-      for (auto src : saveTracks->SelectedLeaders<const WaveTrack>()) {
+      for (auto src : saveTracks->Selected<const WaveTrack>()) {
          auto dest = src->Copy(mT0, t1);
          (*dest->Leaders().begin())->SetSelected(true);
          mTracks->Append(std::move(*dest));

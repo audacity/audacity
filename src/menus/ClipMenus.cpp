@@ -216,7 +216,7 @@ int FindClipBoundaries
    auto &tracks = TrackList::Get( project );
    finalResults.clear();
 
-   bool anyWaveTracksSelected{ tracks.SelectedLeaders<const WaveTrack>() };
+   bool anyWaveTracksSelected{ tracks.Selected<const WaveTrack>() };
 
 
    // first search the tracks individually
@@ -445,7 +445,7 @@ int FindClips
    auto &tracks = TrackList::Get( project );
    finalResults.clear();
 
-   bool anyWaveTracksSelected{ tracks.SelectedLeaders<const WaveTrack>() };
+   bool anyWaveTracksSelected{ tracks.Selected<const WaveTrack>() };
 
    // first search the tracks individually
 

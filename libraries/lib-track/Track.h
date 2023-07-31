@@ -1100,24 +1100,6 @@ private:
       return Tracks< TrackType >();
    }
 
-   // Abbreviating some frequently used cases
-   template < typename TrackType = Track >
-      auto Selected()
-         -> TrackIterRange< TrackType >
-   {
-      return Tracks< TrackType >( &Track::IsSelected );
-   }
-
-   template < typename TrackType = const Track >
-      auto Selected() const
-         -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange< TrackType >
-         >
-   {
-      return Tracks< TrackType >( &Track::IsSelected );
-   }
-
-
 public:
    template < typename TrackType = Track >
       auto Leaders()
@@ -1136,20 +1118,17 @@ public:
    }
 
 
-   template < typename TrackType = Track >
-      auto SelectedLeaders()
-         -> TrackIterRange< TrackType >
+   template <typename TrackType = Track>
+   auto Selected() -> TrackIterRange<TrackType>
    {
-      return Tracks< TrackType >( &Track::IsSelectedLeader );
+      return Tracks<TrackType>(&Track::IsSelectedLeader);
    }
 
-   template < typename TrackType = const Track >
-      auto SelectedLeaders() const
-         -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange< TrackType >
-         >
+   template <typename TrackType = const Track>
+   auto Selected() const
+      -> std::enable_if_t<std::is_const_v<TrackType>, TrackIterRange<TrackType>>
    {
-      return Tracks< TrackType >( &Track::IsSelectedLeader );
+      return Tracks<TrackType>(&Track::IsSelectedLeader);
    }
 
 

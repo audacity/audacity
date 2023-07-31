@@ -86,7 +86,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
    // only for progress dialog
    sampleCount totalTime = 0;
    
-   auto trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
+   auto trackRange = outputs.Get().Selected<WaveTrack>();
    while (trackRange.first != trackRange.second)
    {
       auto left = *trackRange.first;
@@ -105,7 +105,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
    mProgress->SetMessage(XO("Mixing down to mono"));
 
-   trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
+   trackRange = outputs.Get().Selected<WaveTrack>();
    while (trackRange.first != trackRange.second)
    {
       auto left = *trackRange.first;
@@ -127,7 +127,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
       if (refreshIter)
       {
-         trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
+         trackRange = outputs.Get().Selected<WaveTrack>();
          refreshIter = false;
       }
       else

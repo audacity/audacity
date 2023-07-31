@@ -305,7 +305,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
 
       int trackNum = 0;
 
-      for (auto iterTrack : outputs.Get().SelectedLeaders<WaveTrack>()) {
+      for (auto iterTrack : outputs.Get().Selected<WaveTrack>()) {
          for (const auto pChannel : TrackList::Channels(iterTrack))
             for (size_t i = 0; i < regions.size(); ++i) {
                const AutoDuckRegion& region = regions[i];

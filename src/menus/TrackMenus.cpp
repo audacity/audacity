@@ -54,7 +54,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
    auto &trackPanel = TrackPanel::Get(project);
    auto &window = ProjectWindow::Get(project);
 
-   auto trackRange = tracks.SelectedLeaders<WaveTrack>();
+   auto trackRange = tracks.Selected<WaveTrack>();
    auto newTracks = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
       Mixer::WarpOptions{ tracks.GetOwner() },
       tracks.MakeUniqueTrackName(_("Mix")),
@@ -190,7 +190,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
    double delta = 0.0;
    double newPos = -1.0;
 
-   auto trackRange = tracks.SelectedLeaders<AudioTrack>();
+   auto trackRange = tracks.Selected<AudioTrack>();
 
    auto FindOffset =
       [](const Track *pTrack) { return pTrack->GetStartTime(); };
@@ -283,7 +283,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
 
    if ((unsigned)index >= kAlignLabelsCount()) {
       // This is an alignLabelsNoSync command.
-      for (auto t : tracks.SelectedLeaders<AudioTrack>()) {
+      for (auto t : tracks.Selected<AudioTrack>()) {
          // This shifts different tracks in different ways, so no sync-lock
          // move.
          // Only align Wave and Note tracks end to end.
@@ -657,7 +657,7 @@ void OnResample(const CommandContext &context)
 
    int ndx = 0;
    auto flags = UndoPush::NONE;
-   for (auto wt : tracks.SelectedLeaders<WaveTrack>()) {
+   for (auto wt : tracks.Selected<WaveTrack>()) {
       auto msg = XO("Resampling track %d").Format(++ndx);
 
       using namespace BasicUI;
@@ -701,7 +701,7 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    const auto soloSimple = (solo == SoloBehaviorSimple);
    const auto soloNone = (solo == SoloBehaviorNone);
 
-   auto iter = selected ? tracks.SelectedLeaders<PlayableTrack>() : tracks.Leaders<PlayableTrack>();
+   auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Leaders<PlayableTrack>();
    for (auto pt : iter) {
       pt->SetMute(mute);
       if (soloSimple || soloNone)
@@ -797,7 +797,7 @@ void OnScoreAlign(const CommandContext &context)
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
-   tracks.SelectedLeaders().Visit(
+   tracks.Selected().Visit(
       [&](WaveTrack *wt) {
          numWaveTracksSelected++;
          endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();

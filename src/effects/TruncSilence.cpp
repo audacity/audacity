@@ -214,7 +214,7 @@ double EffectTruncSilence::CalcPreviewInputLength(
 
    int whichTrack = 0;
 
-   for (auto wt : inputTracks()->SelectedLeaders<const WaveTrack>()) {
+   for (auto wt : inputTracks()->Selected<const WaveTrack>()) {
       RegionList trackSilences;
 
       auto index = wt->TimeToLongSamples(mT0);
@@ -247,7 +247,7 @@ bool EffectTruncSilence::ProcessIndependently()
 
    // Check if it's permissible
    {
-      for (auto track : inputTracks()->SelectedLeaders<const WaveTrack>()) {
+      for (auto track : inputTracks()->Selected<const WaveTrack>()) {
          if (syncLock) {
             auto otherTracks =
                SyncLock::Group(track).Filter<const WaveTrack>()
@@ -277,7 +277,7 @@ bool EffectTruncSilence::ProcessIndependently()
 
    {
       unsigned iGroup = 0;
-      for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
+      for (auto track : outputs.Get().Selected<WaveTrack>()) {
          RegionList silences;
          if (!FindSilences(silences,
             TrackList::SingletonRange(&as_const(*track))))
@@ -313,7 +313,7 @@ bool EffectTruncSilence::ProcessAll()
    RegionList silences;
 
    if (FindSilences(silences,
-      inputTracks()->SelectedLeaders<const WaveTrack>())
+      inputTracks()->Selected<const WaveTrack>())
    ) {
       auto trackRange = outputs.Get().Leaders();
       double totalCutLen = 0.0;

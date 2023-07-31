@@ -37,7 +37,7 @@ double NearestZeroCrossing(AudacityProject &project, double t0)
    Floats dist{ windowSize, true };
 
    int nTracks = 0;
-   for (auto one : tracks.SelectedLeaders<const WaveTrack>()) {
+   for (auto one : tracks.Selected<const WaveTrack>()) {
       const auto nChannels = one->NChannels();
       auto oneWindowSize = size_t(std::max(1.0, one->GetRate() / 100));
       Floats buffer1{ oneWindowSize };
@@ -426,7 +426,7 @@ void OnSelectAll(const CommandContext &context)
    auto& trackPanel = TrackPanel::Get(context.project);
    auto& tracks = TrackList::Get(context.project);
 
-   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
+   for (auto lt : tracks.Selected<LabelTrack>()) {
       auto& view = LabelTrackView::Get(*lt);
       if (view.SelectAllText(context.project)) {
          trackPanel.Refresh(false);
@@ -499,7 +499,7 @@ void OnSelectStartCursor(const CommandContext &context)
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
-   auto range = tracks.SelectedLeaders();
+   auto range = tracks.Selected();
    if (!range)
       return;
 
@@ -521,7 +521,7 @@ void OnSelectCursorEnd(const CommandContext &context)
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   auto range = tracks.SelectedLeaders();
+   auto range = tracks.Selected();
    if (!range)
       return;
 
@@ -541,7 +541,7 @@ void OnSelectTrackStartToEnd(const CommandContext &context)
    auto &viewInfo = ViewInfo::Get(project);
    auto &tracks = TrackList::Get(project);
 
-   auto range = tracks.SelectedLeaders();
+   auto range = tracks.Selected();
    double maxEndOffset = range.max(&Track::GetEndTime);
    double minOffset = range.min(&Track::GetStartTime);
 
@@ -738,7 +738,7 @@ void OnCursorTrackStart(const CommandContext &context)
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
-   auto trackRange = tracks.SelectedLeaders() + &Track::SupportsBasicEditing;
+   auto trackRange = tracks.Selected() + &Track::SupportsBasicEditing;
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
@@ -764,7 +764,7 @@ void OnCursorTrackEnd(const CommandContext &context)
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   auto trackRange = tracks.SelectedLeaders() + &Track::SupportsBasicEditing;
+   auto trackRange = tracks.Selected() + &Track::SupportsBasicEditing;
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
