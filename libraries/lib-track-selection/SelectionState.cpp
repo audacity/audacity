@@ -100,7 +100,7 @@ void SelectionState::SelectRangeOfTracks(
 
 void SelectionState::SelectNone(TrackList &tracks)
 {
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       SelectTrack(*t, false, false);
 }
 
@@ -185,7 +185,7 @@ SelectionStateChanger::~SelectionStateChanger()
          it = mInitialTrackSelection.begin(),
          end = mInitialTrackSelection.end();
 
-      for (auto track : mTracks.Leaders()) {
+      for (auto track : mTracks) {
          if (it == end)
             break;
          track->SetSelected( *it++ );

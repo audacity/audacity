@@ -472,7 +472,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
 {
    auto &tracks = TrackList::Get( context.project );
    context.StartArray();
-   for (auto trk : tracks.Leaders())
+   for (auto trk : tracks)
    {
       auto &trackFocus = TrackFocus::Get( context.project );
       Track * fTrack = trackFocus.Get();
@@ -520,7 +520,7 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
    auto &tracks = TrackList::Get( context.project );
    int i=0;
    context.StartArray();
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       t->TypeSwitch([&](WaveTrack &waveTrack) {
          WaveClipPointers ptrs(waveTrack.SortedClipArray());
          for (WaveClip * pClip : ptrs) {
@@ -546,7 +546,7 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
    int i=0;
    int j=0;
    context.StartArray();
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       t->TypeSwitch([&](WaveTrack &waveTrack) {
          WaveClipPointers ptrs(waveTrack.SortedClipArray());
          j = 0;
@@ -587,7 +587,7 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
    auto &tracks = TrackList::Get( context.project );
    int i=0;
    context.StartArray();
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       t->TypeSwitch( [&](LabelTrack &labelTrack) {
 #ifdef VERBOSE_LABELS_FORMATTING
          for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
@@ -709,7 +709,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
    wxRect panelRect{ {}, tp.GetSize() };
-   for (auto leader : TrackList::Get(*pProj).Leaders()) {
+   for (auto leader : TrackList::Get(*pProj)) {
       for (auto t : leader->Channels()) {
          auto rulers = tp.FindRulerRects(*t);
          for (auto &R : rulers) {

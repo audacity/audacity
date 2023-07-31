@@ -268,7 +268,7 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    double last = mFirstTrack + mNumTracks;
    double first = mFirstTrack;
 
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       const bool sel = first <= index && index < last;
       if (mMode == 0) // Set
          t->SetSelected(sel);

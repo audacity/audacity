@@ -61,7 +61,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 bool SetTrackBase::Apply(const CommandContext & context)
 {
    auto &tracks = TrackList::Get(context.project);
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       if (t->GetSelected())
          ApplyInner(context, *t);
    }
@@ -71,7 +71,7 @@ bool SetTrackBase::Apply(const CommandContext & context)
 bool SetChannelsBase::Apply(const CommandContext & context)
 {
    auto &tracks = TrackList::Get(context.project);
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       if (t->GetSelected())
          for (Track *channel : TrackList::Channels(t))
             ApplyInner(context, channel);

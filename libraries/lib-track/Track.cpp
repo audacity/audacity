@@ -1029,7 +1029,7 @@ void TrackList::UpdatePendingTracks()
    if (!mPendingUpdates)
       return;
    auto pUpdater = mUpdaters.begin();
-   for (const auto &pendingTrack : mPendingUpdates->Leaders()) {
+   for (const auto &pendingTrack : *mPendingUpdates) {
       auto src = FindById(pendingTrack->GetId());
       // Copy just a part of the track state, according to the update
       // function
@@ -1373,7 +1373,7 @@ struct TrackListRestorer final : UndoStateExtension {
    TrackListRestorer(AudacityProject &project)
       : mpTracks{ TrackList::Create(nullptr) }
    {
-      for (auto pTrack : TrackList::Get(project).Leaders()) {
+      for (auto pTrack : TrackList::Get(project)) {
          if (pTrack->GetId() == TrackId{})
             // Don't copy a pending added track
             continue;
@@ -1383,7 +1383,7 @@ struct TrackListRestorer final : UndoStateExtension {
    void RestoreUndoRedoState(AudacityProject &project) override {
       auto &dstTracks = TrackList::Get(project);
       dstTracks.Clear();
-      for (auto pTrack : mpTracks->Leaders())
+      for (auto pTrack : *mpTracks)
          dstTracks.Append(std::move(*pTrack->Duplicate()));
    }
    bool CanUndoOrRedo(const AudacityProject &project) override {

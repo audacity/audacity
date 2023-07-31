@@ -326,7 +326,7 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
 
               if (!done) {
                   //otherwise, select all tracks
-                  for (auto t : tracks.Leaders())
+                  for (auto t : tracks)
                       selectionState.SelectTrack(*t, true, true);
               }
 

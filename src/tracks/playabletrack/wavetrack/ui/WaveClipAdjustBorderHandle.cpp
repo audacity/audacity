@@ -135,7 +135,7 @@ private:
 
       if(const auto trackList = currentTrack->GetOwner())
       {
-         for(const auto track : as_const(*trackList).Leaders())
+         for(const auto track : as_const(*trackList))
          {
             const auto isSameTrack = (track == currentTrack) ||
                (track->GetLinkType() == Track::LinkType::Aligned && *trackList->Find(currentTrack) == track) ||

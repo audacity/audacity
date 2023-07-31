@@ -157,8 +157,7 @@ int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )
    // found
    int ndx = 0;
 
-   for ( auto t : GetTracks().Leaders() )
-   {
+   for (auto t : GetTracks()) {
       ndx++;
       if( t == target.get() )
       {
@@ -173,8 +172,7 @@ std::shared_ptr<Track> TrackPanelAx::FindTrack( int num )
 {
    int ndx = 0;
 
-   for ( auto t : GetTracks().Leaders() )
-   {
+   for (auto t : GetTracks()) {
       ndx++;
       if( ndx == num )
          return t->SharedPointer();

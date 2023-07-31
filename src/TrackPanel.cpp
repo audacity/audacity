@@ -1010,7 +1010,7 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
    assert(!t || t->IsLeader());
    int trackTop = 0;
    int trackHeight =0;
-   for (auto it : GetTracks()->Leaders()) {
+   for (auto it : *GetTracks()) {
       trackTop += trackHeight;
       trackHeight = ChannelView::GetChannelGroupHeight(it);
 
@@ -1625,7 +1625,7 @@ struct Subgroup final : TrackPanelGroup {
          refinement.emplace_back( yy, EmptyCell::Instance() ),
          yy += kTopMargin;
 
-      for (const auto leader : tracks.Leaders()) {
+      for (const auto leader : tracks) {
          wxCoord height = 0;
          for (auto pChannel : leader->Channels()) {
             auto &view = ChannelView::Get(*pChannel);

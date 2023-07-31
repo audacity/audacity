@@ -172,7 +172,7 @@ auto ProjectFileManager::ReadProjectFile(
    if (bParseSuccess)
    {
       auto &tracks = TrackList::Get(project);
-      for (auto t : tracks.Leaders()) {
+      for (auto t : tracks) {
          // Note, the next function may have an important upgrading side effect,
          // and return no error; or it may find a real error and repair it, but
          // that repaired track won't be used because opening will fail.
@@ -226,7 +226,7 @@ auto ProjectFileManager::ReadProjectFile(
          // the version saved on disk will be preserved until the
          // user selects Save().
          mLastSavedTracks = TrackList::Create( nullptr );
-         for (auto t : tracks.Leaders())
+         for (auto t : tracks)
             mLastSavedTracks->Append(std::move(*t->Duplicate()));
       }
    }
@@ -390,7 +390,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    mLastSavedTracks = TrackList::Create(nullptr);
 
    auto &tracks = TrackList::Get(proj);
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       mLastSavedTracks->Append(std::move(*t->Duplicate()));
 
    // If we get here, saving the project was successful, so we can DELETE
@@ -1190,7 +1190,7 @@ bool ImportProject(AudacityProject &dest, const FilePath &fileName)
       return false;
    auto &srcTracks = TrackList::Get(project);
    auto &destTracks = TrackList::Get(dest);
-   for (const Track *pTrack : srcTracks.Leaders())
+   for (const Track *pTrack : srcTracks)
       pTrack->PasteInto(dest, destTracks);
    Tags::Get(dest).Merge(Tags::Get(project));
 

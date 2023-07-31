@@ -102,7 +102,7 @@ BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList
 
 std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
    auto result = TrackList::Create(nullptr);
-   for (auto track : src.Leaders()) {
+   for (auto track : src) {
       const auto copies =
          track->Copy(track->GetStartTime(), track->GetEndTime(), false);
       const auto pTrack = *copies->begin();
@@ -128,7 +128,7 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    assert(tracks.Selected().empty());
 
    Track* pFirstNewTrack = NULL;
-   for (auto pClip : src.Leaders()) {
+   for (auto pClip : src) {
       auto pNewTrack = pClip->PasteInto(project, tracks);
       if (!pFirstNewTrack)
          pFirstNewTrack = pNewTrack.get();
@@ -326,7 +326,7 @@ void OnDelete(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
-   for (auto n : tracks.Leaders()) {
+   for (auto n : tracks) {
       if (!n->SupportsBasicEditing())
          continue;
       if (SyncLock::IsSelectedOrSyncLockSelected(n)) {

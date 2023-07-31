@@ -103,7 +103,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
          std::vector<Track *> arr;
          arr.reserve(tracks.Size());
          size_t iBegin = 0, ii = 0;
-         for (const auto pTrack : tracks.Leaders()) {
+         for (const auto pTrack : tracks) {
             arr.push_back(pTrack);
             if (pTrack == insertionPoint)
                iBegin = ii;
@@ -499,7 +499,7 @@ void DoSortTracks( AudacityProject &project, int flags )
    arr.reserve(tracks.Size());
 
    // First find the permutation.
-   for (const auto pTrack : tracks.Leaders()) {
+   for (const auto pTrack : tracks) {
       auto &track = *pTrack;
       const auto size = arr.size();
       size_t ndx = 0;

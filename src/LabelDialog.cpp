@@ -741,7 +741,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
 void LabelDialog::OnSelectCell(wxGridEvent &event)
 {
-   for (auto t: mTracks->Leaders())
+   for (auto t: *mTracks)
       t->SetSelected( true );
 
    if (!mData.empty())

@@ -313,7 +313,7 @@ void ClipMoveState::Init(
    state.shifters[&capturedTrack] = std::move( pHit );
 
    // Collect TrackShifters for the rest of the tracks
-   for (auto track : trackList.Leaders()) {
+   for (auto track : trackList) {
       auto &pShifter = state.shifters[track];
       if (!pShifter)
          pShifter = MakeTrackShifter::Call(*track, project);

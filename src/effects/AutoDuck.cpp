@@ -130,7 +130,7 @@ bool EffectAutoDuck::Init()
    // any selected track is not a wave track.
    bool lastWasSelectedWaveTrack = false;
    const WaveTrack *controlTrackCandidate = nullptr;
-   for (auto t : inputTracks()->Leaders()) {
+   for (auto t : *inputTracks()) {
       if (lastWasSelectedWaveTrack && !t->GetSelected())
          // This could be the control track, so remember it
          controlTrackCandidate = dynamic_cast<const WaveTrack *>(t);

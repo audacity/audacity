@@ -263,7 +263,7 @@ void OnCollapseAllTracks(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       for (auto pChannel : t->Channels())
          ChannelView::Get(*pChannel).SetMinimized(true);
 
@@ -276,7 +276,7 @@ void OnExpandAllTracks(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       for (auto pChannel : t->Channels())
          ChannelView::Get(*pChannel).SetMinimized(false);
 

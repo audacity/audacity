@@ -51,6 +51,6 @@ ProjectTempoListener::ProjectTempoListener(
 
 void ProjectTempoListener::OnProjectTempoChange(double newTempo)
 {
-   for (auto track : mTrackList.Leaders())
+   for (auto track : mTrackList)
       track->OnProjectTempoChange(newTempo);
 }

@@ -185,7 +185,7 @@ void EditByLabel(AudacityProject &project,
    //Apply action on tracks starting from
    //labeled regions in the end. This is to correctly perform
    //actions like 'Delete' which collapse the track area.
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
       if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable)) {
          for (size_t i = regions.size(); i--;) {
@@ -230,7 +230,7 @@ void EditClipboardByLabel(AudacityProject &project,
    //labeled regions in the end. This is to correctly perform
    //actions like 'Cut' which collapse the track area.
 
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
       if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable)) {
          // These tracks accumulate the needed clips, right to left:
