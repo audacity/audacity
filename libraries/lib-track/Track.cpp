@@ -436,15 +436,12 @@ TrackList::~TrackList()
 wxString TrackList::MakeUniqueTrackName(const wxString& baseTrackName) const
 {
    int n = 1;
-   while(true)
-   {
+   while(true) {
       auto name = wxString::Format("%s %d", baseTrackName, n++);
 
       bool found {false};
-      for(const auto track : Any())
-      {
-         if(track->GetName() == name)
-         {
+      for(const auto track : Tracks<const Track>()) {
+         if(track->GetName() == name) {
             found = true;
             break;
          }
@@ -468,7 +465,7 @@ void TrackList::RecalcPositions(TrackNodePointer node)
       i = t->GetIndex() + 1;
    }
 
-   const auto theEnd = end();
+   const auto theEnd = End();
    for (auto n = DoFind(node.first->get()); n != theEnd; ++n) {
       t = *n;
       t->SetIndex(i++);
@@ -711,7 +708,7 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
       auto first = list->DoFind(&track);
       auto canLink = [&]() -> bool {
          int count = nChannels;
-         for (auto it = first, end = TrackList::end(); it != end && count; ++it)
+         for (auto it = first, end = TrackList::End(); it != end && count; ++it)
          {
             if ((*it)->HasLinkedTrack())
                return false;
@@ -762,8 +759,7 @@ void TrackList::Clear(bool sendEvent)
    // Null out the back-pointers to this in tracks, in case there
    // are outstanding shared_ptrs to those tracks, making them outlive
    // the temporary ListOfTracks below.
-   for ( auto pTrack: *this )
-   {
+   for (auto pTrack: Tracks<Track>()) {
       pTrack->SetOwner({}, {});
 
       if (sendEvent)
@@ -943,7 +939,7 @@ bool TrackList::MoveDown(Track * t)
 
 bool TrackList::empty() const
 {
-   return begin() == end();
+   return Begin() == End();
 }
 
 size_t TrackList::NChannels() const
@@ -1271,7 +1267,7 @@ bool TrackList::HasPendingTracks() const
 {
    if (mPendingUpdates && !mPendingUpdates->empty())
       return true;
-   if (end() != std::find_if(begin(), end(), [](const Track *t){
+   if (End() != std::find_if(Begin(), End(), [](const Track *t){
       return t->GetId() == TrackId{};
    }))
       return true;

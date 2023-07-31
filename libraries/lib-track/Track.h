@@ -1043,27 +1043,28 @@ class TRACK_API TrackList final
 
    // Iteration
 
-   private:
+private:
    // Hide the inherited begin() and end()
    using iterator = TrackIter<Track>;
    using const_iterator = TrackIter<const Track>;
+
    using value_type = Track *;
-   iterator begin() { return Any().begin(); }
-   iterator end() { return Any().end(); }
-   const_iterator begin() const { return Any().begin(); }
-   const_iterator end() const { return Any().end(); }
-   const_iterator cbegin() const { return begin(); }
-   const_iterator cend() const { return end(); }
+   iterator begin() = delete; // { return Any().begin(); }
+   iterator end() = delete; // { return Any().end(); }
+   const_iterator begin() const = delete; // { return Any().begin(); }
+   const_iterator end() const = delete; // { return Any().end(); }
+   const_iterator cbegin() const = delete; // { return begin(); }
+   const_iterator cend() const = delete; // { return end(); }
 
    // Reverse iteration
    using reverse_iterator = std::reverse_iterator<iterator>;
    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
-   reverse_iterator rbegin() { return Any().rbegin(); }
-   reverse_iterator rend() { return Any().rend(); }
-   const_reverse_iterator rbegin() const { return Any().rbegin(); }
-   const_reverse_iterator rend() const { return Any().rend(); }
-   const_reverse_iterator crbegin() const { return rbegin(); }
-   const_reverse_iterator crend() const { return rend(); }
+   reverse_iterator rbegin() = delete; // { return Any().rbegin(); }
+   reverse_iterator rend() = delete; // { return Any().rend(); }
+   const_reverse_iterator rbegin() const = delete; // { return Any().rbegin(); }
+   const_reverse_iterator rend() const = delete; // { return Any().rend(); }
+   const_reverse_iterator crbegin() const = delete; // { return rbegin(); }
+   const_reverse_iterator crend() const = delete; // { return rend(); }
 
    //! Turn a pointer into a TrackIter (constant time);
    //! get end iterator if this does not own the track
@@ -1084,21 +1085,15 @@ public:
 
 
 private:
-   template < typename TrackType = Track >
-      auto Any()
-         -> TrackIterRange< TrackType >
-   {
-      return Tracks< TrackType >();
-   }
+   //! This private function still iterates channels not tracks
+   iterator Begin() { return Tracks<Track>().begin(); }
+   //! This private function still iterates channels not tracks
+   iterator End() { return Tracks<Track>().end(); }
 
-   template < typename TrackType = const Track >
-      auto Any() const
-         -> std::enable_if_t< std::is_const_v<TrackType>,
-            TrackIterRange< TrackType >
-         >
-   {
-      return Tracks< TrackType >();
-   }
+   //! This private function still iterates channels not tracks
+   const_iterator Begin() const { return Tracks<const Track>().begin(); }
+   //! This private function still iterates channels not tracks
+   const_iterator End() const { return Tracks<const Track>().end(); }
 
 public:
    template < typename TrackType = Track >
@@ -1136,7 +1131,7 @@ public:
       static auto SingletonRange( TrackType *pTrack )
          -> TrackIterRange< TrackType >
    {
-      return pTrack->GetOwner()->template Any<TrackType>()
+      return pTrack->GetOwner()->template Tracks<TrackType>()
          .StartingWith( pTrack ).EndingAfter( pTrack );
    }
 
