@@ -75,18 +75,58 @@ namespace {
     virtual void Cancel() = 0;
 
     virtual void Draw(
-        TrackPanelDrawingContext &context, 
-        const wxRect &rect, 
+        TrackPanelDrawingContext &context,
+        const wxRect &rect,
         unsigned iPass);
 
     virtual wxRect DrawingArea(
-        TrackPanelDrawingContext&, 
-        const wxRect &rect, 
-        const wxRect &panelRect, 
+        TrackPanelDrawingContext&,
+        const wxRect &rect,
+        const wxRect &panelRect,
         unsigned iPass);
  };
 
 WaveClipAdjustBorderHandle::AdjustPolicy::~AdjustPolicy() = default;
+
+namespace {
+double GetLeftAdjustLimit(
+   const WaveClip& clip, const WaveTrack& track, bool adjustingLeftBorder,
+   bool isStretchMode)
+{
+   if (!adjustingLeftBorder)
+      // A clip of one sample is invisible - who needs that ? Leave at least 2.
+      return clip.GetPlayStartTime() + 2.0 / clip.GetRate();
+
+   const auto prevClip = track.GetNextClip(clip, PlaybackDirection::backward);
+   if (isStretchMode)
+      return prevClip ? prevClip->GetPlayEndTime() :
+                        std::numeric_limits<double>::lowest();
+   else
+      return prevClip ?
+                std::max(
+                   clip.GetSequenceStartTime(), prevClip->GetPlayEndTime()) :
+                clip.GetSequenceStartTime();
+}
+
+double GetRightAdjustLimit(
+   const WaveClip& clip, const WaveTrack& track, bool adjustingLeftBorder,
+   bool isStretchMode)
+{
+   if (adjustingLeftBorder)
+      // A clip of one sample is invisible - who needs that ? Leave at least 2.
+      return clip.GetPlayEndTime() - 2.0 / clip.GetRate();
+
+   const auto nextClip = track.GetNextClip(clip, PlaybackDirection::forward);
+   if (isStretchMode)
+      return nextClip ? nextClip->GetPlayStartTime() :
+                        std::numeric_limits<double>::max();
+   else
+      return nextClip ?
+                std::min(
+                   clip.GetSequenceEndTime(), nextClip->GetPlayStartTime()) :
+                clip.GetSequenceEndTime();
+}
+} // namespace
 
 class AdjustClipBorder final : public WaveClipAdjustBorderHandle::AdjustPolicy
 {
@@ -96,10 +136,10 @@ public:
 private:
    std::shared_ptr<WaveTrack> mTrack;
    std::vector<std::shared_ptr<WaveClip>> mClips;
-   double mInitialBorderPosition{};
    int mDragStartX{ };
-   std::pair<double, double> mRange;
    const bool mAdjustingLeftBorder;
+   const double mInitialBorderPosition;
+   const std::pair<double, double> mRange;
    AdjustHandler mAdjustHandler;
 
    std::unique_ptr<SnapManager> mSnapManager;
@@ -116,7 +156,7 @@ private:
    //the one to which the adjusted clip belongs, but not counting
    //the borders of adjusted clip
    static SnapPointArray FindSnapPoints(
-      const WaveTrack* currentTrack, 
+      const WaveTrack* currentTrack,
       WaveClip* adjustedClip,
       const std::pair<double, double> range)
    {
@@ -161,17 +201,19 @@ private:
    }
 
 public:
-
-   
-
-   AdjustClipBorder(AdjustHandler adjustHandler,
-                    const std::shared_ptr<WaveTrack>& track, 
-                    const std::shared_ptr<WaveClip>& clip, 
-                    bool adjustLeftBorder, 
-                    const ZoomInfo& zoomInfo)
-      : mTrack(track)
-      , mAdjustingLeftBorder(adjustLeftBorder)
-      , mAdjustHandler(std::move(adjustHandler))
+   AdjustClipBorder(
+      AdjustHandler adjustHandler, const std::shared_ptr<WaveTrack>& track,
+      const std::shared_ptr<WaveClip>& clip, bool adjustLeftBorder,
+      bool isStretchMode, const ZoomInfo& zoomInfo)
+       : mTrack(track)
+       , mAdjustingLeftBorder(adjustLeftBorder)
+       , mInitialBorderPosition { adjustLeftBorder ? clip->GetPlayStartTime() :
+                                                     clip->GetPlayEndTime() }
+       , mRange { GetLeftAdjustLimit(
+                     *clip, *track, adjustLeftBorder, isStretchMode),
+                  GetRightAdjustLimit(
+                     *clip, *track, adjustLeftBorder, isStretchMode) }
+       , mAdjustHandler(std::move(adjustHandler))
    {
       auto clips = track->GetClips();
 
@@ -182,29 +224,6 @@ public:
          mClips = FindClipsInChannels(clip->GetPlayStartTime(), clip->GetPlayEndTime(), track.get());
       else
          mClips.push_back(clip);
-
-      if (mAdjustingLeftBorder)
-      {
-         auto left = clip->GetSequenceStartTime();
-         for (const auto& other : clips)
-            if (other->GetPlayStartTime() < clip->GetPlayStartTime() && other->GetPlayEndTime() > left)
-               left = other->GetPlayEndTime();
-         //not less than 1 sample length
-         mRange = std::make_pair(left, clip->GetPlayEndTime() - 1.0 / clip->GetRate());
-
-         mInitialBorderPosition = mClips[0]->GetPlayStartTime();
-      }
-      else
-      {
-         auto right = clip->GetSequenceEndTime();
-         for (const auto& other : clips)
-            if (other->GetPlayStartTime() > clip->GetPlayStartTime() && other->GetPlayStartTime() < right)
-               right = other->GetPlayStartTime();
-         //not less than 1 sample length
-         mRange = std::make_pair(clip->GetPlayStartTime() + 1.0 / clip->GetRate(), right);
-
-         mInitialBorderPosition = mClips[0]->GetPlayEndTime();
-      }
 
       if(const auto trackList = track->GetOwner())
       {
@@ -241,7 +260,7 @@ public:
          mSnap = mSnapManager->Snap(mTrack.get(), t, !mAdjustingLeftBorder);
       if(mSnap.Snapped())
       {
-         if(mSnap.outTime >= mRange.first && mSnap.outTime <= mRange.second)
+         if (mSnap.outTime >= mRange.first && mSnap.outTime <= mRange.second)
          {
             //Make sure that outTime belongs to the adjustment range after snapping
             TrimTo(mSnap.outTime);
@@ -322,8 +341,8 @@ class AdjustBetweenBorders final : public WaveClipAdjustBorderHandle::AdjustPoli
 
 public:
    AdjustBetweenBorders(
-      WaveTrack* track, 
-      std::shared_ptr<WaveClip>& leftClip, 
+      WaveTrack* track,
+      std::shared_ptr<WaveClip>& leftClip,
       std::shared_ptr<WaveClip>& rightClip)
    {
       auto clips = track->GetClips();
@@ -374,7 +393,7 @@ public:
             (eventT - mInitialBorderPosition) * mLeftClips[0]->GetRate()
          )
       ).as_double() / mLeftClips[0]->GetRate();
-      
+
       TrimTo(mInitialBorderPosition + offset);
 
       return RefreshCode::RefreshCell;
@@ -457,9 +476,9 @@ wxRect WaveClipAdjustBorderHandle::AdjustPolicy::DrawingArea(TrackPanelDrawingCo
 }
 
 UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
-   std::weak_ptr<WaveClipAdjustBorderHandle>& holder, 
-   const std::shared_ptr<WaveTrack>& waveTrack, 
-   const AudacityProject* pProject, 
+   std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
+   const std::shared_ptr<WaveTrack>& waveTrack,
+   const AudacityProject* pProject,
    const TrackPanelMouseState& state)
 {
     const auto rect = state.rect;
@@ -480,14 +499,14 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
            continue;
 
         auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
-        
+
         //double the hit testing area in case if clip are close to each other
         if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold * 2)
            rightClip = clip;
         else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold * 2)
            leftClip = clip;
     }
-    
+
     std::shared_ptr<WaveClip> adjustedClip;
     bool adjustLeftBorder {false};
     if (leftClip && rightClip)
@@ -531,11 +550,8 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
 
        std::unique_ptr<AdjustPolicy> policy =
           std::make_unique<AdjustClipBorder>(
-             adjustHandler,
-             waveTrack,
-             adjustedClip,
-             adjustLeftBorder,
-             zoomInfo);
+             adjustHandler, waveTrack, adjustedClip, adjustLeftBorder,
+             isStretchMode, zoomInfo);
 
        return AssignUIHandlePtr(
           holder,
@@ -561,7 +577,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
 
     auto py = state.state.m_y;
 
-    if (py >= rect.GetTop() && 
+    if (py >= rect.GetTop() &&
         py <= (rect.GetTop() + static_cast<int>(rect.GetHeight() * 0.3)))
     {
         return HitAnywhere(holder, waveTrack, pProject, state);
