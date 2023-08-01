@@ -896,7 +896,8 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
 {
    auto& tracks = TrackList::Get(mProject);
    
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !((tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty());
    
    auto waveTracks = tracks.Leaders<WaveTrack>() -
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
@@ -905,7 +906,7 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
    
    /* Remember which tracks were selected, and set them to deselected */
    SelectionStateChanger changer{ selectionState, tracks };
-   for (auto tr : tracks.Selected<WaveTrack>())
+   for (auto tr : tracks.SelectedLeaders<WaveTrack>())
       tr->SetSelected(false);
 
    auto ok = ExportResult::Success;
