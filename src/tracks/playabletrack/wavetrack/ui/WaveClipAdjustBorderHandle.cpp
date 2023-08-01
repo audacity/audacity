@@ -75,14 +75,14 @@ namespace {
     virtual void Cancel() = 0;
 
     virtual void Draw(
-        TrackPanelDrawingContext &context, 
-        const wxRect &rect, 
+        TrackPanelDrawingContext &context,
+        const wxRect &rect,
         unsigned iPass);
 
     virtual wxRect DrawingArea(
-        TrackPanelDrawingContext&, 
-        const wxRect &rect, 
-        const wxRect &panelRect, 
+        TrackPanelDrawingContext&,
+        const wxRect &rect,
+        const wxRect &panelRect,
         unsigned iPass);
  };
 
@@ -100,6 +100,7 @@ private:
    int mDragStartX{ };
    std::pair<double, double> mRange;
    const bool mAdjustingLeftBorder;
+   const bool mIsStretchMode;
    AdjustHandler mAdjustHandler;
 
    std::unique_ptr<SnapManager> mSnapManager;
@@ -107,7 +108,9 @@ private:
 
    void TrimTo(double t) const
    {
-      t = std::clamp(t, mRange.first, mRange.second);
+      if (!mIsStretchMode)
+         // Stretching is allowed outwards, not trimming.
+         t = std::clamp(t, mRange.first, mRange.second);
       for(auto& clip : mClips)
          mAdjustHandler(*clip, t);
    }
@@ -116,7 +119,7 @@ private:
    //the one to which the adjusted clip belongs, but not counting
    //the borders of adjusted clip
    static SnapPointArray FindSnapPoints(
-      const WaveTrack* currentTrack, 
+      const WaveTrack* currentTrack,
       WaveClip* adjustedClip,
       const std::pair<double, double> range)
    {
@@ -162,15 +165,16 @@ private:
 
 public:
 
-   
+
 
    AdjustClipBorder(AdjustHandler adjustHandler,
-                    const std::shared_ptr<WaveTrack>& track, 
-                    const std::shared_ptr<WaveClip>& clip, 
-                    bool adjustLeftBorder, 
+                    const std::shared_ptr<WaveTrack>& track,
+                    const std::shared_ptr<WaveClip>& clip,
+                    bool adjustLeftBorder,bool isStretchMode,
                     const ZoomInfo& zoomInfo)
       : mTrack(track)
       , mAdjustingLeftBorder(adjustLeftBorder)
+      , mIsStretchMode(isStretchMode)
       , mAdjustHandler(std::move(adjustHandler))
    {
       auto clips = track->GetClips();
@@ -235,13 +239,15 @@ public:
       const auto eventT = viewInfo.PositionToTime(viewInfo.TimeToPosition(mInitialBorderPosition, event.rect.x) + dx, event.rect.x);
 
       const auto offset = sampleCount(floor((eventT - mInitialBorderPosition) * mClips[0]->GetRate())).as_double() / mClips[0]->GetRate();
-      const auto t = std::clamp(mInitialBorderPosition + offset, mRange.first, mRange.second);
+      const auto t = mInitialBorderPosition + offset;
       const auto wasSnapped = mSnap.Snapped();
       if(mSnapManager)
          mSnap = mSnapManager->Snap(mTrack.get(), t, !mAdjustingLeftBorder);
       if(mSnap.Snapped())
       {
-         if(mSnap.outTime >= mRange.first && mSnap.outTime <= mRange.second)
+         if (
+            mIsStretchMode ||
+            (mSnap.outTime >= mRange.first && mSnap.outTime <= mRange.second))
          {
             //Make sure that outTime belongs to the adjustment range after snapping
             TrimTo(mSnap.outTime);
@@ -322,8 +328,8 @@ class AdjustBetweenBorders final : public WaveClipAdjustBorderHandle::AdjustPoli
 
 public:
    AdjustBetweenBorders(
-      WaveTrack* track, 
-      std::shared_ptr<WaveClip>& leftClip, 
+      WaveTrack* track,
+      std::shared_ptr<WaveClip>& leftClip,
       std::shared_ptr<WaveClip>& rightClip)
    {
       auto clips = track->GetClips();
@@ -374,7 +380,7 @@ public:
             (eventT - mInitialBorderPosition) * mLeftClips[0]->GetRate()
          )
       ).as_double() / mLeftClips[0]->GetRate();
-      
+
       TrimTo(mInitialBorderPosition + offset);
 
       return RefreshCode::RefreshCell;
@@ -457,9 +463,9 @@ wxRect WaveClipAdjustBorderHandle::AdjustPolicy::DrawingArea(TrackPanelDrawingCo
 }
 
 UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
-   std::weak_ptr<WaveClipAdjustBorderHandle>& holder, 
-   const std::shared_ptr<WaveTrack>& waveTrack, 
-   const AudacityProject* pProject, 
+   std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
+   const std::shared_ptr<WaveTrack>& waveTrack,
+   const AudacityProject* pProject,
    const TrackPanelMouseState& state)
 {
     const auto rect = state.rect;
@@ -480,14 +486,14 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
            continue;
 
         auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
-        
+
         //double the hit testing area in case if clip are close to each other
         if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold * 2)
            rightClip = clip;
         else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold * 2)
            leftClip = clip;
     }
-    
+
     std::shared_ptr<WaveClip> adjustedClip;
     bool adjustLeftBorder {false};
     if (leftClip && rightClip)
@@ -531,11 +537,8 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
 
        std::unique_ptr<AdjustPolicy> policy =
           std::make_unique<AdjustClipBorder>(
-             adjustHandler,
-             waveTrack,
-             adjustedClip,
-             adjustLeftBorder,
-             zoomInfo);
+             adjustHandler, waveTrack, adjustedClip, adjustLeftBorder,
+             isStretchMode, zoomInfo);
 
        return AssignUIHandlePtr(
           holder,
@@ -561,7 +564,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
 
     auto py = state.state.m_y;
 
-    if (py >= rect.GetTop() && 
+    if (py >= rect.GetTop() &&
         py <= (rect.GetTop() + static_cast<int>(rect.GetHeight() * 0.3)))
     {
         return HitAnywhere(holder, waveTrack, pProject, state);
