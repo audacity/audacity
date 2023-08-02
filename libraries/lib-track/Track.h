@@ -478,8 +478,10 @@ public:
    // Return true iff the attribute is recognized.
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
 
-protected:
    const std::optional<double>& GetProjectTempo() const;
+
+protected:
+   std::optional<double> mProjectTempo;
 
    /*!
     @pre `IsLeader()`
@@ -586,7 +588,7 @@ public:
     @tparam F returns a shared pointer to Attachment (or some subtype of it)
 
     @pre `f` never returns null
-   
+
     `f` may assume the precondition that the given channel index is less than
     the given track's number of channels
     */

@@ -175,7 +175,13 @@ public:
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
-   void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
+   void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
+
+   /*!
+    * @brief Renders the stretching of the clip (preserving duration).
+    * @post GetStretchRatio() == 1
+    */
+   void ApplyStretchRatio();
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
@@ -189,10 +195,17 @@ public:
    //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
+   //! Closed-begin of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayStartTime() const noexcept override;
    void SetPlayStartTime(double time);
 
+   //! Open-end of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayEndTime() const override;
+
+   //! Always a multiple of the track's sample period, whether the clip is
+   //! stretched or not.
    double GetPlayDuration() const;
 
    // todo comment
@@ -518,6 +531,7 @@ private:
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();
+   std::vector<std::unique_ptr<Sequence>> GetEmptySequenceCopies() const;
    void StretchCutLines(double ratioChange);
    double SnapToTrackSample(double time) const noexcept;
 

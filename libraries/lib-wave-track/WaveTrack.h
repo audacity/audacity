@@ -366,6 +366,7 @@ private:
    // GetEndTime() correct.  This clip is not re-copied when pasting.
    TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
       const override;
+   TrackListHolder Copy(bool forClipboard) const;
 
    void Clear(double t0, double t1) override;
    void Paste(double t0, const Track &src) override;
@@ -840,6 +841,7 @@ private:
       double t0, double t1, double startTime, double endTime,
       const WaveTrack &src,
       bool preserve, bool merge, const TimeWarper *effectWarper);
+
    static void JoinOne(WaveTrack &track, double t0, double t1);
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
@@ -849,7 +851,8 @@ private:
    static bool ReverseOneClip(WaveTrack &track,
       sampleCount start, sampleCount len, sampleCount originalStart,
       sampleCount originalEnd, const ProgressReport &report = {});
-   void SplitAt(double t) /* not override */;
+   //! Returns a WaveClip pointer if splitting resulted in adding a clip at t.
+   WaveClip* SplitAt(double t) /* not override */;
 
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
@@ -878,6 +881,14 @@ private:
    void SetClipRates(double newRate);
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;
+   // If `other` may come from another project with a different tempo, its tempo
+   // must be set to the current project's to get correct timing of audio clips.
+   // Careful: `other` must outlive the score where you store the returned
+   // `Finally`.
+   Finally<std::function<void()>>
+   ProvisionallySynchronizeProjectTempo(WaveTrack& other) const;
+
+   double GetDuration() const;
 
    bool GetOne(
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
@@ -892,8 +903,15 @@ private:
     @pre `IsLeader()`
     */
    void PasteWaveTrack(double t0, const WaveTrack &other);
-   static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
-      double startTime, double insertDuration);
+   static void PasteOne(
+      WaveTrack& track, double t0, const WaveTrack& other, double startTime,
+      double insertDuration, bool mergeIfPossible);
+
+   bool NewAudioCanBeFit(double t0, double insertDuration) const;
+   void BlindlyCopyTrackContents(double t0, const WaveTrack& other);
+   void BlindlyMergeClipFromOtherTrackInto(
+      double t0, WaveClip& myClip, const WaveClip& otherTrackClip);
+   void ShiftBackAllClips(double t0, double duration);
 
    //! Whether all clips of a leader track have a common rate
    /*!

@@ -50,7 +50,7 @@ Track::Track(const Track& orig, ProtectedCreationArg&&)
 void Track::Init(const Track &orig)
 {
    mId = orig.mId;
-
+   mProjectTempo = orig.mProjectTempo;
    // Deep copy of any group data
    mpGroupData = orig.mpGroupData ?
       std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
