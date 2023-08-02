@@ -13,11 +13,13 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include "SampleFormat.h"
 #include "Internat.h"
 
 class wxString;
 
+class TrackList;
 class WaveTrackFactory;
 class WaveTrack;
 
@@ -34,4 +36,9 @@ public:
    
    static void ShowMessageBox(const TranslatableString& message, const TranslatableString& caption = XO("Import Project"));
    
+   using NewChannelGroup = std::vector<std::shared_ptr<WaveTrack>>;
+
+   //! Flush the given channels and group them into tracks
+   static
+   std::shared_ptr<TrackList> MakeTracks(const NewChannelGroup &channels);
 };

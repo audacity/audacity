@@ -426,7 +426,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
             temp->Add(pNewChannel);
             assert(pNewChannel->IsLeader() == pChannel->IsLeader());
          }
-         auto pTempTrack = *temp->Any<WaveTrack>().rbegin();
+         auto pTempTrack = *temp->Any<WaveTrack>().begin();
          pTempTrack->ConvertToSampleFormat(floatSample);
          auto iter0 = TrackList::Channels(pTempTrack).begin();
    
@@ -447,6 +447,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
             if (!bGoodResult)
                goto done;
          }
+         pTempTrack->Flush();
          PasteOverPreservingClips(data, *track, start, len,
             **temp->Any<WaveTrack>().begin());
       }
@@ -541,8 +542,7 @@ bool EffectEqualization::ProcessOne(Task &task,
       }
    }
 
-   if(bLoopSuccess)
-   {
+   if (bLoopSuccess) {
       // M-1 samples of 'tail' left in lastWindow, get them now
       if(wcopy < (M - 1)) {
          // Still have some overlap left to process
@@ -559,7 +559,6 @@ bool EffectEqualization::ProcessOne(Task &task,
             buffer[j] = lastWindow[wcopy + j];
       }
       task.AccumulateSamples((samplePtr)buffer.get(), M - 1);
-      output.NarrowFlush();
    }
    return bLoopSuccess;
 }

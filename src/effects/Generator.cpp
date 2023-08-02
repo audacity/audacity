@@ -69,9 +69,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
             if (!GenerateTrack(settings, *list))
                bGoodResult = false;
             if (bGoodResult) {
-               for (const auto pChannel :
-                  TrackList::Channels(*list->Any<WaveTrack>().begin()))
-                  pChannel->NarrowFlush();
+               (*list->Any<WaveTrack>().begin())->Flush();
                PasteTimeWarper warper{ mT1, mT0 + duration };
                auto pProject = FindProject();
                const auto &selectedRegion =

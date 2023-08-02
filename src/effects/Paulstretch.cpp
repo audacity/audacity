@@ -163,11 +163,13 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
             const auto outputTrack = ProcessOne(*pChannel, t0, t1, count++);
             if (!outputTrack)
                return false;
-            outputTrack->NarrowFlush();
             tempList->Add(outputTrack);
+            // because it was made by EmptyCopy():
+            assert(outputTrack->IsLeader() == pChannel->IsLeader());
          }
-         newT1 = std::max(newT1,
-            mT0 + (*tempList->begin())->GetEndTime());
+         const auto pNewTrack = *tempList->Any<WaveTrack>().begin();
+         pNewTrack->Flush();
+         newT1 = std::max(newT1, mT0 + pNewTrack->GetEndTime());
          track->Clear(t0, t1);
          track->Paste(t0, *tempList);
       }

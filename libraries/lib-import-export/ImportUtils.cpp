@@ -44,3 +44,12 @@ void ImportUtils::ShowMessageBox(const TranslatableString &message, const Transl
    BasicUI::ShowMessageBox(message,
                            BasicUI::MessageBoxOptions().Caption(caption));
 }
+
+std::shared_ptr<TrackList>
+ImportUtils::MakeTracks(const NewChannelGroup &channels)
+{
+   auto result = TrackList::Temporary(nullptr, channels);
+   for (const auto pTrack : result->Any<WaveTrack>())
+      pTrack->Flush();
+   return result;
+}

@@ -228,8 +228,7 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
          outputTrack->Append((samplePtr)buffer2.get(), floatSample, outputCount);
       }
 
-      // Flush the output WaveTrack (since it's buffered, too)
-      outputTrack->NarrowFlush();
+      outputTrack->Flush();
    }
 
    // Allow TrackList::Channels to work on outputTrack
@@ -328,9 +327,7 @@ bool EffectSoundTouch::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
          this->ProcessStereoResults(pSoundTouch,
             outputCount, outputLeftTrack.get(), outputRightTrack.get());
 
-      // Flush the output WaveTracks (since they're buffered, too)
-      outputLeftTrack->NarrowFlush();
-      outputRightTrack->NarrowFlush();
+      outputLeftTrack->Flush();
    }
 
    // Transfer output samples to the original

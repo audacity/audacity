@@ -63,7 +63,6 @@ extern "C" {
 
 
 class FLACImportFileHandle;
-using NewChannelGroup = std::vector<std::shared_ptr<WaveTrack>>;
 
 class MyFLACFile final : public FLAC::Decoder::File
 {
@@ -150,7 +149,7 @@ private:
    FLAC__uint64          mNumSamples;
    FLAC__uint64          mSamplesDone;
    bool                  mStreamInfoDone;
-   NewChannelGroup       mChannels;
+   ImportUtils::NewChannelGroup mChannels;
 };
 
 
@@ -429,11 +428,8 @@ void FLACImportFileHandle::Import(ImportProgressListener& progressListener,
       return;
    }
 
-   for (const auto &channel : mChannels)
-      channel->NarrowFlush();
-
    if (!mChannels.empty())
-      outTracks.push_back(TrackList::Temporary(nullptr, mChannels));
+      outTracks.push_back(ImportUtils::MakeTracks(mChannels));
 
    wxString comment;
    wxString description;

@@ -268,9 +268,10 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
                return;
             }
+            const auto pNewTrack = *newTracks->Any<WaveTrack>().begin();
+            pNewTrack->Flush();
 
-            const double newLength =
-               (*newTracks->begin())->GetEndTime();
+            const double newLength = pNewTrack->GetEndTime();
             const LinearTimeWarper warper{
                mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
 
@@ -560,11 +561,8 @@ std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
       }
    }
 
-   if (bResult) {
-      // Flush the output WaveTrack (since it's buffered, too)
-      outputTrack->NarrowFlush();
+   if (bResult)
       return outputTrack;
-   }
    return {};
 }
 

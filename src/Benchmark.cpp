@@ -367,6 +367,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       WaveTrackFactory{ mRate,
                     SampleBlockFactory::New( mProject )  }
          .Create(SampleFormat, mRate.GetRate());
+   assert(t->IsLeader()); // because it's new and not grouped
 
    t->SetRate(1);
 
@@ -415,7 +416,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
       t->Append((samplePtr)block.get(), SampleFormat, chunkSize);
    }
-   t->NarrowFlush();
+   t->Flush();
 
    // This forces the WaveTrack to flush all of the appends (which is
    // only necessary if you want to access the Sequence class directly,

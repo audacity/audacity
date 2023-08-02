@@ -1525,19 +1525,19 @@ void AudioIO::StopStream()
             // many parts of Audacity that are not effects or editing
             // operations.  GuardedCall ensures that the user sees a warning.
 
-            // Also be sure to Flush each sequence, at the top of the guarded
-            // call, relying on the guarantee that the sequence will be left in
-            // a flushed state, though the append buffer may be lost.
+            // Also be sure to Flush each leader sequence, at the top of the
+            // guarded call, relying on the guarantee that the sequence will be
+            // left in a flushed state, though the append buffer may be lost.
 
-            GuardedCall( [&] {
-               auto sequence = mCaptureSequences[i].get();
-
-               // use No-fail-guarantee that sequence is flushed,
-               // Partial-guarantee that some initial length of the recording
-               // is saved.
-               // See comments in SequenceBufferExchange().
-               sequence->NarrowFlush();
-            } );
+            auto sequence = mCaptureSequences[i].get();
+            if (sequence->IsLeader())
+               GuardedCall( [&] {
+                  // use No-fail-guarantee that sequence is flushed,
+                  // Partial-guarantee that some initial length of the recording
+                  // is saved.
+                  // See comments in SequenceBufferExchange().
+                  sequence->Flush();
+               } );
          }
 
 

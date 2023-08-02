@@ -53,8 +53,6 @@ static const auto exts = {
 #include "ImportProgressListener.h"
 #include "ImportUtils.h"
 
-using NewChannelGroup = std::vector<std::shared_ptr<WaveTrack>>;
-
 class OggImportPlugin final : public ImportPlugin
 {
 public:
@@ -133,7 +131,7 @@ private:
 
    ArrayOf<int> mStreamUsage;
    TranslatableStrings mStreamInfo;
-   std::list<NewChannelGroup> mChannels;
+   std::list<ImportUtils::NewChannelGroup> mChannels;
 };
 
 
@@ -338,11 +336,8 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
    }
 
    for (auto &link : mChannels)
-   {
-      for (auto &channel : link)
-         channel->NarrowFlush();
-      outTracks.push_back(TrackList::Temporary(nullptr, link));
-   }
+      if (!link.empty())
+         outTracks.push_back(ImportUtils::MakeTracks(link));
 
    //\todo { Extract comments from each stream? }
    if (mVorbisFile->vc[0].comments > 0) {

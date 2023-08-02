@@ -120,8 +120,6 @@ public:
    std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename, AudacityProject*) override;
 }; // class MP3ImportPlugin
 
-using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
-
 class MP3ImportFileHandle final : public ImportFileHandleEx
 {
 public:
@@ -154,7 +152,7 @@ private:
    wxFileOffset mFileLen { 0 };
 
    WaveTrackFactory* mTrackFactory { nullptr };
-   NewChannelGroup mChannels;
+   ImportUtils::NewChannelGroup mChannels;
    unsigned mNumChannels { 0 };
 
    mpg123_handle* mHandle { nullptr };
@@ -339,13 +337,8 @@ void MP3ImportFileHandle::Import(ImportProgressListener &progressListener,
       return;
    }
 
-   // Flush and trim the channels
-   for (const auto &channel : mChannels)
-      channel->NarrowFlush();
-
-   // Copy the WaveTrack pointers into the Track pointer list that
-   // we are expected to fill
-   outTracks.push_back(TrackList::Temporary(nullptr, mChannels));
+   if (!mChannels.empty())
+      outTracks.push_back(ImportUtils::MakeTracks(mChannels));
 
    ReadTags(tags);
    

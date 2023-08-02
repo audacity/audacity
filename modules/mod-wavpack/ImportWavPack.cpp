@@ -247,11 +247,8 @@ void WavPackImportFileHandle::Import(ImportProgressListener &progressListener,
       return;
    }
 
-   for (const auto &channel : channels)
-      channel->NarrowFlush();
-
    if (!channels.empty())
-      outTracks.push_back(TrackList::Temporary(nullptr, channels));
+      outTracks.push_back(ImportUtils::MakeTracks(channels));
 
    if (wavpackMode & MODE_VALID_TAG) {
       bool apeTag = wavpackMode & MODE_APETAG;
