@@ -8,12 +8,13 @@ set( SOURCES
 )
 
 set( LIBRARIES
+   PRIVATE
       Audacity
       libmp3lame::libmp3lame
 )
 
 if ( USE_LIBID3TAG )
-      list ( APPEND LIBRARIES PUBLIC libid3tag::libid3tag)
+      list ( APPEND LIBRARIES PRIVATE libid3tag::libid3tag)
 endif()
 
 audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

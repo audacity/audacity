@@ -36,18 +36,11 @@ set( SOURCES
    PlainExportOptionsEditor.h
 )
 set( LIBRARIES
-   lib-math-interface
-   lib-strings-interface
-   lib-basic-ui-interface
-   lib-registries-interface
-   lib-project-interface
-   lib-sample-track-interface
+   rapidjson::rapidjson
+   lib-tags-interface
    lib-wave-track-interface
-   lib-effects-interface
-   lib-stretching-sequence-interface
-   PUBLIC
-      rapidjson::rapidjson
-      lib-tags-interface
+   PRIVATE
+      lib-effects-interface      
 )
 audacity_library( lib-import-export "${SOURCES}" "${LIBRARIES}"
    "" ""

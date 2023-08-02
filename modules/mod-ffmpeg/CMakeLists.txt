@@ -16,6 +16,7 @@ set( SOURCES
 )
 
 set( LIBRARIES
+   PRIVATE
       lib-ffmpeg-support
       Audacity
 )

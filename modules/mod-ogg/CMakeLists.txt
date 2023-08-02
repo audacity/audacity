@@ -7,7 +7,7 @@ set( SOURCES
 )
 
 set( LIBRARIES
-      lib-utility-interface
+   PRIVATE
       lib-import-export-interface
       Ogg::ogg
       Vorbis::vorbis

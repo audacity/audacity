@@ -7,12 +7,9 @@ set( SOURCES
    FileFormats.h
 )
 set( LIBRARIES
-   lib-utility-interface
-   lib-basic-ui-interface
-   lib-math-interface
-   lib-strings-interface
    PUBLIC
       SndFile::sndfile
+      lib-math-interface
 )
 audacity_library( lib-file-formats "${SOURCES}" "${LIBRARIES}"
    "" ""

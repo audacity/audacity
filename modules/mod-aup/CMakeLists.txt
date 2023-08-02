@@ -6,6 +6,7 @@ set( SOURCES
 )
 
 set( LIBRARIES
+   PRIVATE
       Audacity
 )
 

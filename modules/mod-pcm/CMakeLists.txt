@@ -7,14 +7,14 @@ set( SOURCES
 )
 
 set( LIBRARIES
-      lib-utility-interface
+   PRIVATE
       lib-import-export-interface
       lib-file-formats-interface
       lib-wx-init-interface
 )
 
 if ( USE_LIBID3TAG )
-      list ( APPEND LIBRARIES PUBLIC libid3tag::libid3tag)
+      list ( APPEND LIBRARIES PRIVATE libid3tag::libid3tag)
 endif()
 
 audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )
