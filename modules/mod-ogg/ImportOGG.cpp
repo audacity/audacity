@@ -340,7 +340,7 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
    for (auto &link : mChannels)
    {
       for (auto &channel : link)
-         channel->Flush();
+         channel->NarrowFlush();
       outTracks.push_back(TrackList::Temporary(nullptr, link));
    }
 

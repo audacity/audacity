@@ -341,7 +341,7 @@ void MP3ImportFileHandle::Import(ImportProgressListener &progressListener,
 
    // Flush and trim the channels
    for (const auto &channel : mChannels)
-      channel->Flush();
+      channel->NarrowFlush();
 
    // Copy the WaveTrack pointers into the Track pointer list that
    // we are expected to fill

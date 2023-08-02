@@ -415,7 +415,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
       t->Append((samplePtr)block.get(), SampleFormat, chunkSize);
    }
-   t->Flush();
+   t->NarrowFlush();
 
    // This forces the WaveTrack to flush all of the appends (which is
    // only necessary if you want to access the Sequence class directly,

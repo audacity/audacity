@@ -1671,7 +1671,7 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       return false;
    }
    for (int i = 0; i < outChannels; i++)
-      outputTrack[i]->Flush();
+      outputTrack[i]->NarrowFlush();
 
    {
       const auto &out = outputTrack[0];

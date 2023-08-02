@@ -1536,7 +1536,7 @@ void AudioIO::StopStream()
                // Partial-guarantee that some initial length of the recording
                // is saved.
                // See comments in SequenceBufferExchange().
-               sequence->Flush();
+               sequence->NarrowFlush();
             } );
          }
 

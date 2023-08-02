@@ -554,7 +554,7 @@ void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
    // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)
    for (auto &stream : mChannels)
       for(auto &channel : stream)
-         channel->Flush();
+         channel->NarrowFlush();
 
    for (auto &group : mChannels)
       // Now channels get grouped

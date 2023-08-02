@@ -189,7 +189,7 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
       if (TotalProgress(curTime.as_double() / totalTime.as_double()))
          return false;
    }
-   outTrack->Flush();
+   outTrack->NarrowFlush();
 
    outputs.UnlinkChannels(*left);
    // Should be a consequence of unlinking:

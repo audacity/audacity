@@ -260,7 +260,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
 
    if (!results.empty() && !results[0].empty()) {
       for (const auto &channel : results[0])
-         channel->Flush();
+         channel->NarrowFlush();
       for (auto &group : results)
          outTracks.push_back(TrackList::Temporary(nullptr, group));
    }

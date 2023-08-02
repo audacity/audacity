@@ -559,7 +559,7 @@ bool EffectEqualization::ProcessOne(Task &task,
             buffer[j] = lastWindow[wcopy + j];
       }
       task.AccumulateSamples((samplePtr)buffer.get(), M - 1);
-      output.Flush();
+      output.NarrowFlush();
    }
    return bLoopSuccess;
 }

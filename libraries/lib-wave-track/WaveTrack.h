@@ -321,7 +321,7 @@ private:
       size_t len, unsigned int stride = 1,
       sampleFormat effectiveFormat = widestSampleFormat) override;
 
-   void Flush() override;
+   void NarrowFlush() override;
 
    //! @name PlayableSequence implementation
    //! @{

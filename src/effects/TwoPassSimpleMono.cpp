@@ -214,7 +214,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack &track, WaveTrack &outTrack,
          samples1);
    else {
       outTrack.Append((samplePtr)buffer1.get(), floatSample, samples1);
-      outTrack.Flush();
+      outTrack.NarrowFlush();
    }
 
    // Return true because the effect processing succeeded.

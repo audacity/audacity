@@ -163,7 +163,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
             const auto outputTrack = ProcessOne(*pChannel, t0, t1, count++);
             if (!outputTrack)
                return false;
-            outputTrack->Flush();
+            outputTrack->NarrowFlush();
             tempList->Add(outputTrack);
          }
          newT1 = std::max(newT1,

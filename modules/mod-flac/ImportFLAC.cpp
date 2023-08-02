@@ -430,7 +430,7 @@ void FLACImportFileHandle::Import(ImportProgressListener& progressListener,
    }
 
    for (const auto &channel : mChannels)
-      channel->Flush();
+      channel->NarrowFlush();
 
    if (!mChannels.empty())
       outTracks.push_back(TrackList::Temporary(nullptr, mChannels));

@@ -395,9 +395,9 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
                   std::rethrow_exception(pException);
             }
 
-            rb.outputLeftTrack->Flush();
+            rb.outputLeftTrack->NarrowFlush();
             if(rightTrack)
-               rb.outputRightTrack->Flush();
+               rb.outputRightTrack->NarrowFlush();
 
             Finalize(leftTrack, *rb.outputLeftTrack, *warper);
          }

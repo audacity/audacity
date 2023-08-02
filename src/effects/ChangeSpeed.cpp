@@ -562,7 +562,7 @@ std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
 
    if (bResult) {
       // Flush the output WaveTrack (since it's buffered, too)
-      outputTrack->Flush();
+      outputTrack->NarrowFlush();
       return outputTrack;
    }
    return {};

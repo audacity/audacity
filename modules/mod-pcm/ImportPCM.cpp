@@ -385,7 +385,7 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
    }
 
    for(const auto &channel : channels)
-      channel->Flush();
+      channel->NarrowFlush();
 
    if (!channels.empty())
       outTracks.push_back(TrackList::Temporary(nullptr, channels));

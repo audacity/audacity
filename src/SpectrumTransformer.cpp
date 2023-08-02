@@ -378,7 +378,7 @@ bool TrackSpectrumTransformer::DoFinish()
 {
    if (mOutputTrack) {
       // Flush the output WaveTrack (since it's buffered)
-      mOutputTrack->Flush();
+      mOutputTrack->NarrowFlush();
       auto tLen = mOutputTrack->LongSamplesToTime(mLen);
       // Filtering effects always end up with more data than they started with.
       // Delete this 'tail'.
