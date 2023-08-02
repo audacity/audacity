@@ -47,7 +47,7 @@
 
 #include "../WaveTrackUtils.h"
 
-#include "WaveClipTrimHandle.h"
+#include "WaveClipAdjustBorderHandle.h"
 
 
 
@@ -164,8 +164,8 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     auto track = std::static_pointer_cast<WaveTrack>(FindTrack());
 
     {
-        auto handle = WaveClipTrimHandle::HitAnywhere(
-            mClipTrimHandle,
+        auto handle = WaveClipAdjustBorderHandle::HitAnywhere(
+            mClipBorderAdjustHandle,
             track,
             pProject,
             state);

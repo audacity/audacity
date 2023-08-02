@@ -761,8 +761,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveChannelView.h
       tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
       tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h
-      tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.h
-      tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+      tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.h
+      tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
       tracks/playabletrack/wavetrack/ui/WaveClipUtilities.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp

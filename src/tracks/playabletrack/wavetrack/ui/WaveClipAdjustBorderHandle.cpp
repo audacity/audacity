@@ -2,13 +2,13 @@
 *
  Audacity: A Digital Audio Editor
 
- WaveClipTrimHandle.cpp
+ WaveClipAdjustBorderHandle.cpp
 
  Vitaly Sverchinsky
 
  **********************************************************************/
 
-#include "WaveClipTrimHandle.h"
+#include "WaveClipAdjustBorderHandle.h"
 #include "ProjectAudioIO.h"
 #include "RefreshCode.h"
 
@@ -41,35 +41,75 @@ namespace {
         }
         return result;
     }
+
+   void TrimLeftTo(WaveClip& clip, double t)
+   {
+      clip.TrimLeftTo(t);
+   }
+
+   void TrimRightTo(WaveClip& clip, double t)
+   {
+      clip.TrimRightTo(t);
+   }
+
+   void StretchLeftTo(WaveClip& clip, double t)
+   {
+      //clip.StretchLeftTo(t);
+   }
+
+   void StretchRightTo(WaveClip& clip, double t)
+   {
+      //clip.StretchRightTo(t);
+   }
 }
 
-WaveClipTrimHandle::ClipTrimPolicy::~ClipTrimPolicy() = default;
+//Different policies implement different adjustment scenarios
+ class WaveClipAdjustBorderHandle::AdjustPolicy
+ {
+ public:
+    virtual ~AdjustPolicy();
 
-class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTrimPolicy
+    virtual bool Init(const TrackPanelMouseEvent& event) = 0;
+    virtual UIHandle::Result Drag(const TrackPanelMouseEvent& event, AudacityProject& project) = 0;
+    virtual void Finish(AudacityProject& project) = 0;
+    virtual void Cancel() = 0;
+
+    virtual void Draw(
+        TrackPanelDrawingContext &context, 
+        const wxRect &rect, 
+        unsigned iPass);
+
+    virtual wxRect DrawingArea(
+        TrackPanelDrawingContext&, 
+        const wxRect &rect, 
+        const wxRect &panelRect, 
+        unsigned iPass);
+ };
+
+WaveClipAdjustBorderHandle::AdjustPolicy::~AdjustPolicy() = default;
+
+class AdjustClipBorder final : public WaveClipAdjustBorderHandle::AdjustPolicy
 {
+public:
+   using AdjustHandler = std::function<void(WaveClip&, double)>;
+
+private:
    std::shared_ptr<WaveTrack> mTrack;
    std::vector<std::shared_ptr<WaveClip>> mClips;
    double mInitialBorderPosition{};
    int mDragStartX{ };
    std::pair<double, double> mRange;
-   bool mAdjustingLeftBorder;
+   const bool mAdjustingLeftBorder;
+   AdjustHandler mAdjustHandler;
 
    std::unique_ptr<SnapManager> mSnapManager;
    SnapResults mSnap;
 
-   void TrimTo(double t)
+   void TrimTo(double t) const
    {
       t = std::clamp(t, mRange.first, mRange.second);
-      if (mAdjustingLeftBorder)
-      {
-         for (auto& clip : mClips)
-            clip->TrimLeftTo(t);
-      }
-      else
-      {
-         for (auto& clip : mClips)
-            clip->TrimRightTo(t);
-      }
+      for(auto& clip : mClips)
+         mAdjustHandler(*clip, t);
    }
 
    //Search for a good snap points among all tracks, including
@@ -121,13 +161,17 @@ class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTr
    }
 
 public:
-   AdjustBorder(
-      const std::shared_ptr<WaveTrack>& track, 
-      const std::shared_ptr<WaveClip>& clip, 
-      bool leftBorder, 
-      const ZoomInfo& zoomInfo)
-      : mTrack(track),
-        mAdjustingLeftBorder(leftBorder)
+
+   
+
+   AdjustClipBorder(AdjustHandler adjustHandler,
+                    const std::shared_ptr<WaveTrack>& track, 
+                    const std::shared_ptr<WaveClip>& clip, 
+                    bool adjustLeftBorder, 
+                    const ZoomInfo& zoomInfo)
+      : mTrack(track)
+      , mAdjustingLeftBorder(adjustLeftBorder)
+      , mAdjustHandler(std::move(adjustHandler))
    {
       auto clips = track->GetClips();
 
@@ -181,7 +225,7 @@ public:
       return false;
    }
 
-   UIHandle::Result Trim(const TrackPanelMouseEvent& event, AudacityProject& project) override
+   UIHandle::Result Drag(const TrackPanelMouseEvent& event, AudacityProject& project) override
    {
       const auto eventX = event.event.GetX();
       const auto dx = eventX - mDragStartX;
@@ -253,12 +297,12 @@ public:
    wxRect DrawingArea(TrackPanelDrawingContext&, const wxRect& rect, const wxRect& panelRect, unsigned iPass) override
    {
       if(iPass == TrackArtist::PassSnapping)
-        return MaximizeHeight(rect, panelRect);
+        return TrackPanelDrawable::MaximizeHeight(rect, panelRect);
       return rect;
    }
 };
 
-class WaveClipTrimHandle::AdjustBetweenBorders final : public WaveClipTrimHandle::ClipTrimPolicy
+class AdjustBetweenBorders final : public WaveClipAdjustBorderHandle::AdjustPolicy
 {
    std::pair<double, double> mRange;
    std::vector<std::shared_ptr<WaveClip>> mLeftClips;
@@ -289,7 +333,7 @@ public:
 
       if (track->IsAlignedWithLeader() || track->GetLinkType() == Track::LinkType::Aligned)
       {
-         //find clips in other channels which are also should be trimmed
+         //find clips in other channels whose border should be also adjusted
          mLeftClips = FindClipsInChannels(leftClip->GetPlayStartTime(), leftClip->GetPlayEndTime(), track);
          mRightClips = FindClipsInChannels(rightClip->GetPlayStartTime(), rightClip->GetPlayEndTime(), track);
       }
@@ -317,7 +361,7 @@ public:
       return false;
    }
 
-   UIHandle::Result Trim(const TrackPanelMouseEvent& event, AudacityProject& project) override
+   UIHandle::Result Drag(const TrackPanelMouseEvent& event, AudacityProject& project) override
    {
       const auto newX = event.event.GetX();
       const auto dx = newX - mDragStartX;
@@ -353,38 +397,67 @@ public:
 };
 
 
-HitTestPreview WaveClipTrimHandle::HitPreview(const AudacityProject*, bool unsafe)
+HitTestPreview WaveClipAdjustBorderHandle::HitPreviewTrim(const AudacityProject*, bool unsafe, bool isLeftBorder)
 {
-    static auto disabledCursor =
-        ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
-    static auto slideCursor =
-        MakeCursor(wxCURSOR_SIZEWE, TimeCursorXpm, 16, 16);
-    auto message = XO("Click and drag to move clip boundary in time");
+   static auto disabledCursor =
+      MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
+   static auto trimCursorLeft =
+      MakeCursor(wxCURSOR_SIZEWE, ClipTrimLeftXpm , 16, 16);
+   static auto trimCursorRight =
+      MakeCursor(wxCURSOR_SIZEWE, ClipTrimRightXpm, 16, 16);
+   auto message = XO("Click and drag to move clip boundary in time");
 
-    return {
-       message,
-       (unsafe
-        ? &*disabledCursor
-        : &*slideCursor)
-    };
+   return {
+      message,
+      (unsafe
+         ? &*disabledCursor
+         : &*(isLeftBorder ? trimCursorLeft : trimCursorRight))
+   };
 }
 
+HitTestPreview WaveClipAdjustBorderHandle::HitPreviewStretch(const AudacityProject*, bool unsafe, bool isLeftBorder)
+{
+   static auto disabledCursor =
+      MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
+   static auto stretchCursorLeft =
+      MakeCursor(wxCURSOR_SIZEWE, ClipStretchLeftXpm, 16, 16);
+   static auto stretchCursorRight =
+      MakeCursor(wxCURSOR_SIZEWE, ClipStretchRightXpm, 16, 16);
+   auto message = XO("Click and drag to stretch clip");
 
-WaveClipTrimHandle::WaveClipTrimHandle(std::unique_ptr<ClipTrimPolicy>& clipTrimPolicy)
-   : mClipTrimPolicy{ std::move(clipTrimPolicy) }
+   return {
+      message,
+      (unsafe
+         ? &*disabledCursor
+         : &*(isLeftBorder ? stretchCursorLeft : stretchCursorRight))
+   };
+}
+
+WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPolicy>& adjustPolicy,
+                                                       bool stretchMode,
+                                                       bool leftBorder)
+   : mAdjustPolicy{ std::move(adjustPolicy) }
+   , mIsStretchMode{stretchMode}
+   , mIsLeftBorder{leftBorder}
 {
 
 }
 
-void WaveClipTrimHandle::ClipTrimPolicy::Draw(TrackPanelDrawingContext&, const wxRect&, unsigned) { }
+WaveClipAdjustBorderHandle::~WaveClipAdjustBorderHandle() = default;
 
-wxRect WaveClipTrimHandle::ClipTrimPolicy::DrawingArea(TrackPanelDrawingContext&, const wxRect& rect, const wxRect&, unsigned)
+WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(WaveClipAdjustBorderHandle&&) noexcept = default;
+
+WaveClipAdjustBorderHandle& WaveClipAdjustBorderHandle::operator=(WaveClipAdjustBorderHandle&&) noexcept = default;
+
+void WaveClipAdjustBorderHandle::AdjustPolicy::Draw(TrackPanelDrawingContext&, const wxRect&, unsigned) { }
+
+wxRect WaveClipAdjustBorderHandle::AdjustPolicy::DrawingArea(TrackPanelDrawingContext&, const wxRect& rect, const wxRect&, unsigned)
 {
    return rect;
 }
 
-UIHandlePtr WaveClipTrimHandle::HitAnywhere(
-   std::weak_ptr<WaveClipTrimHandle>& holder, 
+UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
+   std::weak_ptr<WaveClipAdjustBorderHandle>& holder, 
    const std::shared_ptr<WaveTrack>& waveTrack, 
    const AudacityProject* pProject, 
    const TrackPanelMouseState& state)
@@ -399,8 +472,8 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(
     std::shared_ptr<WaveClip> rightClip;
 
     //Test left and right boundaries of each clip
-    //to determine which type of trimming should be applied
-    //and input for the policy
+    //to determine which kind of adjustment is
+    //more appropriate
     for (auto& clip : waveTrack->GetClips())
     {
         if (!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
@@ -414,46 +487,71 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(
         else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold * 2)
            leftClip = clip;
     }
-
-    std::unique_ptr<ClipTrimPolicy> clipTrimPolicy;
+    
+    std::shared_ptr<WaveClip> adjustedClip;
+    bool adjustLeftBorder {false};
     if (leftClip && rightClip)
     {
        //between adjacent clips
        if(ClipParameters::GetClipRect(*leftClip, zoomInfo, rect).GetRight() > px)
-         clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, leftClip, false, zoomInfo);//right border
+       {
+          adjustedClip = leftClip;
+          adjustLeftBorder = false;
+       }
        else
-         clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, rightClip, true, zoomInfo);//left border
+       {
+          adjustedClip = rightClip;
+          adjustLeftBorder = true;
+       }
     }
     else
     {
-       auto clip = leftClip ? leftClip : rightClip;
-       if (clip)
+       adjustedClip = leftClip ? leftClip : rightClip;
+       if (adjustedClip)
        {
           //single clip case, determine the border,
           //hit testing area differs from one
           //used for general case
-          auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+          const auto clipRect = ClipParameters::GetClipRect(*adjustedClip, zoomInfo, rect);
           if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
-             clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, clip, true, zoomInfo);
+             adjustLeftBorder = true;
           else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold)
-             clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, clip, false, zoomInfo);
+             adjustLeftBorder = false;
+          else
+             adjustedClip.reset();
        }
     }
 
-    if(clipTrimPolicy)
-      return AssignUIHandlePtr(
-         holder,
-         std::make_shared<WaveClipTrimHandle>(clipTrimPolicy)
-      );
+    if(adjustedClip)
+    {
+       const auto isStretchMode = state.state.AltDown();
+       AdjustClipBorder::AdjustHandler adjustHandler = isStretchMode
+          ? (adjustLeftBorder ? StretchLeftTo : StretchRightTo)
+          : (adjustLeftBorder ? TrimLeftTo : TrimRightTo);
+
+       std::unique_ptr<AdjustPolicy> policy =
+          std::make_unique<AdjustClipBorder>(
+             adjustHandler,
+             waveTrack,
+             adjustedClip,
+             adjustLeftBorder,
+             zoomInfo);
+
+       return AssignUIHandlePtr(
+          holder,
+          std::make_shared<WaveClipAdjustBorderHandle>(policy,
+             isStretchMode,
+             adjustLeftBorder));
+    }
     return { };
 }
 
-UIHandlePtr WaveClipTrimHandle::HitTest(std::weak_ptr<WaveClipTrimHandle>& holder,
+UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
     WaveChannelView& view, const AudacityProject* pProject,
     const TrackPanelMouseState& state)
 {
     auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack());
-    //For multichannel tracks, show trim handle only for the leader track
+    //For multichannel tracks, show adjustment handle only for the leader track
     if (!waveTrack->IsLeader() && waveTrack->IsAlignedWithLeader())
         return {};
 
@@ -461,7 +559,6 @@ UIHandlePtr WaveClipTrimHandle::HitTest(std::weak_ptr<WaveClipTrimHandle>& holde
 
     const auto rect = state.rect;
 
-    auto px = state.state.m_x;
     auto py = state.state.m_y;
 
     if (py >= rect.GetTop() && 
@@ -474,50 +571,52 @@ UIHandlePtr WaveClipTrimHandle::HitTest(std::weak_ptr<WaveClipTrimHandle>& holde
 
 
 
-HitTestPreview WaveClipTrimHandle::Preview(const TrackPanelMouseState& mouseState, AudacityProject* pProject)
+HitTestPreview WaveClipAdjustBorderHandle::Preview(const TrackPanelMouseState& mouseState, AudacityProject* pProject)
 {
-    const bool unsafe = ProjectAudioIO::Get(*pProject).IsAudioActive();
-    return HitPreview(pProject, unsafe);
+   const bool unsafe = ProjectAudioIO::Get(*pProject).IsAudioActive();
+   return mIsStretchMode
+      ? HitPreviewStretch(pProject, unsafe, mIsLeftBorder)
+      : HitPreviewTrim(pProject, unsafe, mIsLeftBorder);
 }
 
-UIHandle::Result WaveClipTrimHandle::Click
+UIHandle::Result WaveClipAdjustBorderHandle::Click
 (const TrackPanelMouseEvent& event, AudacityProject* pProject)
 {
    if (!ProjectAudioIO::Get(*pProject).IsAudioActive())
    {
-      if (mClipTrimPolicy->Init(event))
+      if (mAdjustPolicy->Init(event))
          return RefreshCode::RefreshNone;
    }
    return RefreshCode::Cancelled;
 }
 
-UIHandle::Result WaveClipTrimHandle::Drag
+UIHandle::Result WaveClipAdjustBorderHandle::Drag
 (const TrackPanelMouseEvent& event, AudacityProject* project)
 {
-   return mClipTrimPolicy->Trim(event, *project);
+   return mAdjustPolicy->Drag(event, *project);
 }
 
-UIHandle::Result WaveClipTrimHandle::Release
+UIHandle::Result WaveClipAdjustBorderHandle::Release
 (const TrackPanelMouseEvent& event, AudacityProject* project,
     wxWindow* pParent)
 {
-   mClipTrimPolicy->Finish(*project);
+   mAdjustPolicy->Finish(*project);
    return RefreshCode::RefreshAll;
 }
 
-UIHandle::Result WaveClipTrimHandle::Cancel(AudacityProject* pProject)
+UIHandle::Result WaveClipAdjustBorderHandle::Cancel(AudacityProject* pProject)
 {
-   mClipTrimPolicy->Cancel();
+   mAdjustPolicy->Cancel();
    return RefreshCode::RefreshAll;
 }
 
-void WaveClipTrimHandle::Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass)
+void WaveClipAdjustBorderHandle::Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass)
 {
-   mClipTrimPolicy->Draw(context, rect, iPass);
+   mAdjustPolicy->Draw(context, rect, iPass);
 }
 
-wxRect WaveClipTrimHandle::DrawingArea(TrackPanelDrawingContext& context, const wxRect& rect,
+wxRect WaveClipAdjustBorderHandle::DrawingArea(TrackPanelDrawingContext& context, const wxRect& rect,
    const wxRect& panelRect, unsigned iPass)
 {
-   return mClipTrimPolicy->DrawingArea(context, rect, panelRect, iPass);
+   return mAdjustPolicy->DrawingArea(context, rect, panelRect, iPass);
 }

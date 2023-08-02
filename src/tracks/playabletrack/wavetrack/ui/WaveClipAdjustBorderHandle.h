@@ -2,7 +2,7 @@
 *
  Audacity: A Digital Audio Editor
 
- WaveClipTrimHandle.h
+ WaveClipAdjustBorderHandle.h
 
  Vitaly Sverchinsky
 
@@ -16,48 +16,34 @@
 class WaveChannelView;
 class WaveTrack;
 
-class WaveClipTrimHandle : public UIHandle
+class WaveClipAdjustBorderHandle final : public UIHandle
 {
+public:
+   class AdjustPolicy;
+private:
+
     static constexpr int BoundaryThreshold = 5;
 
-    static HitTestPreview HitPreview(const AudacityProject*, bool unsafe);
+    static HitTestPreview HitPreviewTrim(const AudacityProject*, bool unsafe, bool isLeftBorder);
+    static HitTestPreview HitPreviewStretch(const AudacityProject*, bool unsafe, bool isLeftBorder);
 
-    //Different policies implement different trimming scenarios
-    class ClipTrimPolicy
-    {
-    public:
-       virtual ~ClipTrimPolicy();
-
-       virtual bool Init(const TrackPanelMouseEvent& event) = 0;
-       virtual UIHandle::Result Trim(const TrackPanelMouseEvent& event, AudacityProject& project) = 0;
-       virtual void Finish(AudacityProject& project) = 0;
-       virtual void Cancel() = 0;
-
-       virtual void Draw(
-           TrackPanelDrawingContext &context, 
-           const wxRect &rect, 
-           unsigned iPass);
-
-       virtual wxRect DrawingArea(
-           TrackPanelDrawingContext&, 
-           const wxRect &rect, 
-           const wxRect &panelRect, 
-           unsigned iPass);
-    };
-    class AdjustBorder;
-    class AdjustBetweenBorders;
+    std::unique_ptr<AdjustPolicy> mAdjustPolicy{};
+    bool mIsStretchMode;
+    bool mIsLeftBorder;
     
-    std::unique_ptr<ClipTrimPolicy> mClipTrimPolicy{};
-
 public:
-    WaveClipTrimHandle(std::unique_ptr<ClipTrimPolicy>& clipTrimPolicy);
+    WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPolicy>& adjustPolicy, bool stretchMode, bool leftBorder);
+    ~WaveClipAdjustBorderHandle() override;
 
-    static UIHandlePtr HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& holder,
+    WaveClipAdjustBorderHandle(WaveClipAdjustBorderHandle&&) noexcept;
+    WaveClipAdjustBorderHandle& operator = (WaveClipAdjustBorderHandle&&) noexcept;
+
+    static UIHandlePtr HitAnywhere(std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
         const std::shared_ptr<WaveTrack>& waveTrack,
         const AudacityProject* pProject,
         const TrackPanelMouseState& state);
 
-    static UIHandlePtr HitTest(std::weak_ptr<WaveClipTrimHandle>& holder,
+    static UIHandlePtr HitTest(std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
         WaveChannelView& view, const AudacityProject* pProject,
         const TrackPanelMouseState& state);
 

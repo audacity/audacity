@@ -47,7 +47,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackAffordanceHandle.h"
-#include "WaveClipTrimHandle.h"
+#include "WaveClipAdjustBorderHandle.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
@@ -807,8 +807,11 @@ std::pair<
          mRearrangeHandle,
          *pWaveChannelView, *this, state ) )
          results.second.push_back( pHandle );
-      if (auto pHandle = WaveClipTrimHandle::HitTest(
-          mClipTrimHandle,
+   }
+   if( pWaveChannelView )
+   {
+      if (auto pHandle = WaveClipAdjustBorderHandle::HitTest(
+          mClipBorderAdjustHandle,
           *pWaveChannelView, pProject, state))
           results.second.push_back(pHandle);
    }
