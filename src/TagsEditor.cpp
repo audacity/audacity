@@ -20,16 +20,17 @@
 #include <wx/combobox.h>
 #include <wx/display.h>
 #include <wx/scrolbar.h>
+#include <wx/button.h>
+#include <wx/bmpbuttn.h>
+#include <wx/stattext.h>
 
-bool TagsEditorDialog::ShowEditDialog(Tags &tags, wxWindow *parent, const TranslatableString &title, bool force)
+#include "Theme.h"
+#include "AllThemeResources.h"
+
+bool TagsEditorDialog::ShowEditDialog(Tags &tags, wxWindow *parent, const TranslatableString &title)
 {
-   if (force) {
-      TagsEditorDialog dlg(parent, title, &tags, true, true);
-
-      return dlg.ShowModal() == wxID_OK;
-   }
-
-   return true;
+   TagsEditorDialog dlg(parent, title, { &tags }, {}, true, true);
+   return dlg.ShowModal() == wxID_OK;
 }
 
 //
@@ -179,18 +180,21 @@ labelmap[] =
 
 enum {
    ClearID = 10000,
+   PrevID,
+   NextID,
    EditID,
    ResetID,
    LoadID,
    SaveID,
    SaveDefaultsID,
    AddID,
-   RemoveID,
-   DontShowID
+   RemoveID
 };
 
 BEGIN_EVENT_TABLE(TagsEditorDialog, wxDialogWrapper)
    EVT_GRID_CELL_CHANGED(TagsEditorDialog::OnChange)
+   EVT_BUTTON(PrevID, TagsEditorDialog::OnPrev)
+   EVT_BUTTON(NextID, TagsEditorDialog::OnNext)
    EVT_BUTTON(EditID, TagsEditorDialog::OnEdit)
    EVT_BUTTON(ResetID, TagsEditorDialog::OnReset)
    EVT_BUTTON(ClearID, TagsEditorDialog::OnClear)
@@ -202,27 +206,32 @@ BEGIN_EVENT_TABLE(TagsEditorDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_HELP, TagsEditorDialog::OnHelp)
    EVT_BUTTON(wxID_CANCEL, TagsEditorDialog::OnCancel)
    EVT_BUTTON(wxID_OK, TagsEditorDialog::OnOk)
-   EVT_CHECKBOX( DontShowID, TagsEditorDialog::OnDontShow )
    EVT_KEY_DOWN(TagsEditorDialog::OnKeyDown)
 END_EVENT_TABLE()
 
 TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
                        const TranslatableString &title,
-                       Tags * tags,
+                       std::vector<Tags*> tags,
+                       std::vector<wxString> names,
                        bool editTitle,
                        bool editTrack)
 :  wxDialogWrapper(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-   mTags(tags),
+   mTags(std::move(tags)),
+   mNames(std::move(names)),
    mEditTitle(editTitle),
    mEditTrack(editTrack)
 {
+   assert(mTags.size() == 1 || (mTags.size() > 1 && mTags.size() == mNames.size()));
+
    SetName();
 
    mGrid = NULL;
 
    // Make a local copy of the passed in tags
-   mLocal = *mTags;
+   mEditTags.reserve(mTags.size());
+   for(auto ptr : mTags)
+      mEditTags.push_back(std::make_unique<Tags>(*ptr));
 
    // Build, size, and position the dialog
    ShuttleGui S(this, eIsCreating);
@@ -237,9 +246,11 @@ TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
    SetSizeHints(sz.x, std::min(sz.y, 600));
 
    // Restore the original tags because TransferDataToWindow() will be called again
-   mLocal.Clear();
-   mLocal = *mTags;
-
+   for(unsigned i = 0; i < mEditTags.size(); ++i)
+   {
+      mEditTags[i]->Clear();
+      *mEditTags[i] = *mTags[i];
+   }
    // Override size and position with last saved
    wxRect r = GetRect();
    gPrefs->Read(wxT("/TagsEditorDialog/x"), &r.x, r.x);
@@ -284,9 +295,6 @@ TagsEditorDialog::~TagsEditorDialog()
 
 void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   bool bShow;
-   gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShow, true );
-
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxALIGN_LEFT, 0);
@@ -294,6 +302,17 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
          S.AddUnits(XO("Use arrow keys (or ENTER key after editing) to navigate fields."));
       }
       S.EndHorizontalLay();
+
+      if(mTags.size() > 1)
+      {
+         S.StartHorizontalLay(wxEXPAND, 0);
+         {
+            mPrev = S.Id(PrevID).Style(wxBU_EXACTFIT).AddButton(TranslatableString("<", {}));
+            mName = S.Style(wxALIGN_CENTER).AddVariableText({}, true, wxEXPAND);
+            mNext = S.Id(NextID).Style(wxBU_EXACTFIT).AddButton(TranslatableString(">", {}));
+         }
+         S.EndHorizontalLay();
+      }
 
       if (mGrid == NULL) {
          mGrid = safenew Grid(FormatterContext::EmptyContext(), S.GetParent(),
@@ -362,22 +381,10 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
          S.EndStatic();
       }
       S.EndHorizontalLay();
-      S.StartHorizontalLay(wxALIGN_LEFT, 0);
-      {
-         S.Id( DontShowID ).AddCheckBox( XXO("Don't show this when exporting audio"), !bShow );
-      }
-      S.EndHorizontalLay();
    }
    S.EndVerticalLay();
 
    S.AddStandardButtons(eOkButton | eCancelButton | eHelpButton);
-}
-
-void TagsEditorDialog::OnDontShow( wxCommandEvent & Evt )
-{
-   bool bShow = !Evt.IsChecked();
-   gPrefs->Write(wxT("/AudioFiles/ShowId3Dialog"), bShow );
-   gPrefs->Flush();
 }
 
 void TagsEditorDialog::OnHelp(wxCommandEvent& WXUNUSED(event))
@@ -394,7 +401,9 @@ bool TagsEditorDialog::TransferDataFromWindow()
       mGrid->HideCellEditControl();
    }
 
-   mLocal.Clear();
+   auto& local = *mEditTags[mSelectedIndex];
+
+   local.Clear();
    for (i = 0; i < cnt; i++) {
       // Get tag name from the grid
 
@@ -433,7 +442,7 @@ bool TagsEditorDialog::TransferDataFromWindow()
          bSpecialTag = false;
       }
 
-      mLocal.SetTag(n, v, bSpecialTag);
+      local.SetTag(n, v, bSpecialTag);
    }
 
    return true;
@@ -443,6 +452,15 @@ bool TagsEditorDialog::TransferDataToWindow()
 {
    size_t i;
    TagMap popTagMap;
+
+   auto& local = *mEditTags[mSelectedIndex];
+
+   if(mName)
+   {
+      mPrev->Enable(mSelectedIndex > 0);
+      mName->SetLabel(mNames[mSelectedIndex]);
+      mNext->Enable(mSelectedIndex < mNames.size() - 1);
+   }
 
    // Disable redrawing until we're done
    mGrid->BeginBatch();
@@ -460,7 +478,7 @@ bool TagsEditorDialog::TransferDataToWindow()
       // The special tag name that's displayed and translated may not match
       // the key string used for internal lookup.
       mGrid->SetCellValue(i, 0, labelmap[i].label.Translation() );
-      mGrid->SetCellValue(i, 1, mLocal.GetTag(labelmap[i].name));
+      mGrid->SetCellValue(i, 1, local.GetTag(labelmap[i].name));
 
       if (!mEditTitle &&
           mGrid->GetCellValue(i, 0).CmpNoCase(LABEL_TITLE.Translation()) == 0) {
@@ -476,7 +494,7 @@ bool TagsEditorDialog::TransferDataToWindow()
    }
 
    // Populate the rest
-   for (const auto &pair : mLocal.GetRange()) {
+   for (const auto &pair : local.GetRange()) {
       const auto &n = pair.first;
       const auto &v = pair.second;
       if (popTagMap.find(n) == popTagMap.end()) {
@@ -561,10 +579,12 @@ void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
 
    S.AddStandardButtons();
 
+   auto& local = *mEditTags[mSelectedIndex];
+
    wxArrayString g;
-   int cnt = mLocal.GetNumUserGenres();
+   int cnt = local.GetNumUserGenres();
    for (int i = 0; i < cnt; i++) {
-      g.push_back(mLocal.GetUserGenre(i));
+      g.push_back(local.GetUserGenre(i));
    }
    std::sort( g.begin(), g.end() );
 
@@ -586,7 +606,7 @@ void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   mLocal.LoadGenres();
+   local.LoadGenres();
 
    PopulateGenres();
 }
@@ -601,7 +621,9 @@ void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
    if (id == wxNO) {
       return;
    }
-   mLocal.LoadDefaultGenres();
+   auto& local = *mEditTags[mSelectedIndex];
+
+   local.LoadDefaultGenres();
 
    wxFileName fn(FileNames::DataDir(), wxT("genres.txt"));
    wxTextFile tf(fn.GetFullPath());
@@ -613,32 +635,32 @@ void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
       AudacityMessageBox(
          XO("Unable to open genre file."),
          XO("Reset Genres") );
-      mLocal.LoadGenres();
+      local.LoadGenres();
       return;
    }
 
    tf.Clear();
-   int cnt = mLocal.GetNumUserGenres();
+   int cnt = local.GetNumUserGenres();
    for (int i = 0; i < cnt; i++) {
-      tf.AddLine(mLocal.GetUserGenre(i));
+      tf.AddLine(local.GetUserGenre(i));
    }
 
    if (!tf.Write()) {
       AudacityMessageBox(
          XO("Unable to save genre file."),
          XO("Reset Genres") );
-      mLocal.LoadGenres();
+      local.LoadGenres();
       return;
    }
 
-   mLocal.LoadGenres();
+   local.LoadGenres();
 
    PopulateGenres();
 }
 
 void TagsEditorDialog::OnClear(wxCommandEvent & WXUNUSED(event))
 {
-   mLocal.Clear();
+   mEditTags[mSelectedIndex]->Clear();
 
    TransferDataToWindow();
 }
@@ -646,6 +668,8 @@ void TagsEditorDialog::OnClear(wxCommandEvent & WXUNUSED(event))
 void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 {
    wxString fn;
+
+   auto& local = *mEditTags[mSelectedIndex];
 
    // Ask the user for the real name
    fn = SelectFile(FileNames::Operation::_None,
@@ -663,7 +687,7 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
    }
 
    // Load the metadata
-   decltype(mLocal) temp;
+   Tags temp;
    XMLFileReader reader;
    if (!reader.Parse(&temp, fn)) {
       // Inform user of load failure
@@ -676,20 +700,20 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
    }
 
    // Remember title and track in case they're read only
-   wxString title = mLocal.GetTag(TAG_TITLE);
-   wxString track = mLocal.GetTag(TAG_TRACK);
+   wxString title = local.GetTag(TAG_TITLE);
+   wxString track = local.GetTag(TAG_TRACK);
 
    // Replace existing tags with loaded ones
-   mLocal = temp;
+   local = temp;
 
    // Restore title
    if (!mEditTitle) {
-      mLocal.SetTag(TAG_TITLE, title);
+      local.SetTag(TAG_TITLE, title);
    }
 
    // Restore track
    if (!mEditTrack) {
-      mLocal.SetTag(TAG_TRACK, track);
+      local.SetTag(TAG_TRACK, track);
    }
 
    // Go fill up the window
@@ -701,6 +725,8 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 {
    wxString fn;
+
+   auto& local = *mEditTags[mSelectedIndex];
 
    // Refresh tags
    TransferDataFromWindow();
@@ -725,33 +751,33 @@ void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
       XMLFileWriter writer{ fn, XO("Error Saving Tags File") };
 
       // Remember title and track in case they're read only
-      wxString title = mLocal.GetTag(TAG_TITLE);
-      wxString track = mLocal.GetTag(TAG_TRACK);
+      wxString title = local.GetTag(TAG_TITLE);
+      wxString track = local.GetTag(TAG_TRACK);
 
       // Clear title
       if (!mEditTitle) {
-         mLocal.SetTag(TAG_TITLE, wxEmptyString);
+         local.SetTag(TAG_TITLE, wxEmptyString);
       }
 
       // Clear track
       if (!mEditTrack) {
-         mLocal.SetTag(TAG_TRACK, wxEmptyString);
+         local.SetTag(TAG_TRACK, wxEmptyString);
       }
 
       auto cleanup = finally( [&] {
          // Restore title
          if (!mEditTitle) {
-            mLocal.SetTag(TAG_TITLE, title);
+            local.SetTag(TAG_TITLE, title);
          }
 
          // Restore track
          if (!mEditTrack) {
-            mLocal.SetTag(TAG_TRACK, track);
+            local.SetTag(TAG_TRACK, track);
          }
       } );
 
       // Write the metadata
-      mLocal.WriteXML(writer);
+      local.WriteXML(writer);
 
       writer.Commit();
    } );
@@ -759,28 +785,29 @@ void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditorDialog::OnSaveDefaults(wxCommandEvent & WXUNUSED(event))
 {
+   auto& local = *mEditTags[mSelectedIndex];
    // Refresh tags
    TransferDataFromWindow();
 
    // Remember title and track in case they're read only
-   wxString title = mLocal.GetTag(TAG_TITLE);
-   wxString track = mLocal.GetTag(TAG_TRACK);
+   wxString title = local.GetTag(TAG_TITLE);
+   wxString track = local.GetTag(TAG_TRACK);
 
    // Clear title
    if (!mEditTitle) {
-      mLocal.SetTag(TAG_TITLE, wxEmptyString);
+      local.SetTag(TAG_TITLE, wxEmptyString);
    }
 
    // Clear track
    if (!mEditTrack) {
-      mLocal.SetTag(TAG_TRACK, wxEmptyString);
+      local.SetTag(TAG_TRACK, wxEmptyString);
    }
 
    // Remove any previous defaults
    gPrefs->DeleteGroup(wxT("/Tags"));
 
    // Write out each tag
-   for (const auto &pair : mLocal.GetRange()) {
+   for (const auto &pair : local.GetRange()) {
       const auto &n = pair.first;
       const auto &v = pair.second;
       gPrefs->Write(wxT("/Tags/") + n, v);
@@ -789,12 +816,12 @@ void TagsEditorDialog::OnSaveDefaults(wxCommandEvent & WXUNUSED(event))
 
    // Restore title
    if (!mEditTitle) {
-      mLocal.SetTag(TAG_TITLE, title);
+      local.SetTag(TAG_TITLE, title);
    }
 
    // Restore track
    if (!mEditTrack) {
-      mLocal.SetTag(TAG_TRACK, track);
+      local.SetTag(TAG_TRACK, track);
    }
 }
 
@@ -841,7 +868,8 @@ void TagsEditorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   *mTags = mLocal;
+   for(unsigned i = 0; i < mEditTags.size(); ++i)
+      *mTags[i] = *mEditTags[i];
 
    wxRect r = GetRect();
    gPrefs->Write(wxT("/TagsEditorDialog/x"), r.x);
@@ -903,15 +931,37 @@ void TagsEditorDialog::SetEditors()
    }
 }
 
+void TagsEditorDialog::OnNext(wxCommandEvent&)
+{
+   if(mSelectedIndex == static_cast<int>(mEditTags.size() - 1))
+      return;
+
+   TransferDataFromWindow();
+   ++mSelectedIndex;
+   TransferDataToWindow();
+}
+
+void TagsEditorDialog::OnPrev(wxCommandEvent&)
+{
+   if(mSelectedIndex == 0)
+      return;
+
+   TransferDataFromWindow();
+   --mSelectedIndex;
+   TransferDataToWindow();
+}
+
 void TagsEditorDialog::PopulateGenres()
 {
-   int cnt = mLocal.GetNumUserGenres();
+   auto local = *mEditTags[mSelectedIndex];
+
+   int cnt = local.GetNumUserGenres();
    int i;
    wxString parm;
    wxArrayString g;
 
    for (i = 0; i < cnt; i++) {
-      g.push_back(mLocal.GetUserGenre(i));
+      g.push_back(local.GetUserGenre(i));
    }
    std::sort( g.begin(), g.end() );
 
@@ -946,14 +996,12 @@ bool TagsEditorDialog::IsWindowRectValid(const wxRect *windowRect) const
 
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "ProjectSettings.h"
 #include <wx/frame.h>
 
-bool TagsEditorDialog::DoEditMetadata(AudacityProject &project,
+bool TagsEditorDialog::EditProjectMetadata(AudacityProject &project,
    const TranslatableString &title,
-   const TranslatableString &shortUndoDescription, bool force)
+   const TranslatableString &shortUndoDescription)
 {
-   auto &settings = ProjectSettings::Get( project );
    auto &tags = Tags::Get( project );
 
    // Back up my tags
@@ -963,16 +1011,12 @@ bool TagsEditorDialog::DoEditMetadata(AudacityProject &project,
    // BEFORE doing any editing of it!
    auto newTags = tags.Duplicate();
 
-   if (TagsEditorDialog::ShowEditDialog(
-      *newTags, &GetProjectFrame( project ), title, force)) {
+   if (ShowEditDialog(*newTags, &GetProjectFrame( project ), title)) {
       if (tags != *newTags) {
          // Commit the change to project state only now.
          Tags::Set( project, newTags );
          ProjectHistory::Get( project ).PushState( title, shortUndoDescription);
       }
-      bool bShowInFuture;
-      gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowInFuture, true);
-      settings.SetShowId3Dialog( bShowInFuture );
       return true;
    }
 
@@ -988,8 +1032,8 @@ namespace {
 void OnEditMetadata(const CommandContext &context)
 {
    auto &project = context.project;
-   (void)TagsEditorDialog::DoEditMetadata( project,
-      XO("Edit Metadata Tags"), XO("Metadata Tags"), true);
+   (void)TagsEditorDialog::EditProjectMetadata( project,
+      XO("Edit Metadata Tags"), XO("Metadata Tags"));
 }
 
 using namespace MenuTable;

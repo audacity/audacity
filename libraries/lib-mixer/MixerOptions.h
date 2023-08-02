@@ -39,13 +39,15 @@ public:
 
    Downmix(unsigned numTracks, unsigned maxNumChannels);
    Downmix(const Downmix &mixerSpec);
+   //!brief Copies channel map for mixerSpec for tracks specified in tracksMask
+   Downmix(const Downmix &mixerSpec, const std::vector<bool>& tracksMask);
    ~Downmix();
 
    bool SetNumChannels(unsigned numChannels);
-   unsigned GetNumChannels() { return mNumChannels; }
+   unsigned GetNumChannels() const { return mNumChannels; }
 
-   unsigned GetMaxNumChannels() { return mMaxNumChannels; }
-   unsigned GetNumTracks() { return mNumTracks; }
+   unsigned GetMaxNumChannels() const { return mMaxNumChannels; }
+   unsigned GetNumTracks() const { return mNumTracks; }
 
    Downmix& operator=(const Downmix &mixerSpec);
 };

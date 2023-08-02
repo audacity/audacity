@@ -10,9 +10,11 @@ set( LIBRARIES
    lib-components
    lib-basic-ui
    lib-exceptions
+   lib-export-ui
    lib-preferences
    lib-math
    lib-files
+   lib-import-export
    lib-ipc
    lib-registries
    lib-xml
@@ -20,7 +22,7 @@ set( LIBRARIES
    lib-project
    lib-screen-geometry
    lib-project-rate
-   lib-ffmpeg-support
+   lib-file-formats
    lib-theme
    image-compiler # not a library, but has a place in their dependency graph
    lib-theme-resources
@@ -68,7 +70,6 @@ endif()
 
 if ( ${_OPT}has_audiocom_upload)
    list( APPEND LIBRARIES
-      lib-cloud-upload
       lib-cloud-audiocom
    )
 endif()

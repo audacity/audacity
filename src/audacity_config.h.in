@@ -48,9 +48,6 @@
    */
 #cmakedefine USE_FFMPEG 1
 
-/* Define if GStreamer 1 is present */
-#cmakedefine USE_GSTREAMER 1
-
 /* Define if LADSPA plug-ins are enabled */
 #cmakedefine USE_LADSPA 1
 
@@ -59,9 +56,6 @@
 
 /* Define if libid3tag is present */
 #cmakedefine USE_LIBID3TAG 1
-
-/* Define if mp3 support is implemented with the libmad library */
-#cmakedefine USE_LIBMAD 1
 
 /* Define if mp3 support is implemented with the libmpg123 library */
 #cmakedefine USE_LIBMPG123 1

@@ -23,13 +23,18 @@
 #include "LoadCommands.h"
 #include "../ProjectFileManager.h"
 #include "ViewInfo.h"
-#include "../export/Export.h"
+#include "Export.h"
 #include "../SelectUtilities.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
 #include "CommandContext.h"
+#include "ExportUtils.h"
+#include "ProjectRate.h"
+#include "ExportPluginRegistry.h"
+#include "export/ExportProgressUI.h"
+
 
 const ComponentInterfaceSymbol ImportCommand::Symbol
 { XO("Import2") };
@@ -121,17 +126,32 @@ bool ExportCommand::Apply(const CommandContext & context)
    }
    wxString extension = mFileName.Mid(splitAt+1).MakeUpper();
 
-   Exporter exporter{ context.project };
+   auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(extension);
 
-   bool exportSuccess = exporter.Process(std::max(0, mnChannels),
-                                         extension, mFileName,
-                                         true, t0, t1);
-
-   if (exportSuccess)
+   if(plugin != nullptr)
    {
-      context.Status(wxString::Format(wxT("Exported to %s format: %s"),
-                              extension, mFileName));
-      return true;
+      auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+      editor->Load(*gPrefs);
+
+      auto builder = ExportTaskBuilder{}
+         .SetParameters(ExportUtils::ParametersFromEditor(*editor))
+         .SetNumChannels(std::max(0, mnChannels))
+         .SetSampleRate(ProjectRate::Get(context.project).GetRate())
+         .SetPlugin(plugin)
+         .SetFileName(mFileName)
+         .SetRange(t0, t1, true);
+
+      auto result = ExportResult::Error;
+      ExportProgressUI::ExceptionWrappedCall([&]
+      {
+         result = ExportProgressUI::Show(builder.Build(context.project));
+      });
+      if (result == ExportResult::Success || result == ExportResult::Stopped)
+      {
+         context.Status(wxString::Format(wxT("Exported to %s format: %s"),
+                                         extension, mFileName));
+         return true;
+      }
    }
 
    context.Error(wxString::Format(wxT("Could not export to %s format!"), extension));

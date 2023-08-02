@@ -14,11 +14,12 @@
 
 #include <wx/defs.h>
 
-#include "export/Export.h"
+#include "Export.h"
 #include "ComponentInterface.h" // for ComponentInterfaceSymbol
 #include "PluginProvider.h" // for PluginID
 
 class wxArrayString;
+class wxWindow;
 class Effect;
 class CommandContext;
 class CommandManager;
@@ -115,8 +116,7 @@ private:
    wxArrayString mParamsMacro;
    bool mAbort;
    wxString mMessage;
-
-   Exporter mExporter;
+   
    wxString mFileName;
 };
 

@@ -4,12 +4,14 @@
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectSettings.h"
 #include "../ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
 #include "SelectFile.h"
+#include "../TagsEditor.h"
 #include "../SelectUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -18,16 +20,22 @@
 #include "../commands/CommandManager.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
-#include "../export/ExportMultiple.h"
-#include "../import/Import.h"
+#include "Import.h"
 #include "../import/ImportRaw.h"
 #include "AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/MissingPluginsErrorDialog.h"
 #include "wxPanelWrapper.h"
 
+#include "ExportUtils.h"
+#include "export/ExportProgressUI.h"
+#include "export/ExportAudioDialog.h"
+
 #include <wx/app.h>
 #include <wx/menu.h>
+
+#include "ExportPluginRegistry.h"
+#include "ProjectRate.h"
 
 // private helper classes and functions
 namespace {
@@ -35,11 +43,7 @@ namespace {
 void DoExport(AudacityProject &project, const FileExtension &format)
 {
    auto &tracks = TrackList::Get( project );
-   
-   Exporter e{ project };
 
-   double t0 = 0.0;
-   double t1 = tracks.GetEndTime();
    wxString projectName = project.GetProjectName();
 
    // Prompt for file name and/or extension?
@@ -47,11 +51,20 @@ void DoExport(AudacityProject &project, const FileExtension &format)
                              projectName.empty() ||
                              format.empty();
 
-   bool success = false;
    if (bPromptingRequired) {
-      // Do export with prompting.
-      e.SetDefaultFormat(format);
-      success = e.Process(false, t0, t1);
+      if(ExportUtils::FindExportWaveTracks(tracks, false).empty())
+      {
+         ShowExportErrorDialog(
+            XO("All audio is muted."), //":576"
+            XO("Warning"),
+            false);
+         return;
+      }
+      ExportAudioDialog dialog(&ProjectWindow::Get(project),
+                               project,
+                               project.GetProjectName(),
+                               format);
+      dialog.ShowModal();
    }
    else {
       // We either use a configured output path,
@@ -93,21 +106,33 @@ void DoExport(AudacityProject &project, const FileExtension &format)
       fileName.Mkdir(0777, wxPATH_MKDIR_FULL); // make sure it exists
 
       int nChannels = tracks.Leaders().max(&Track::NChannels);
-
-      // We're in batch mode, the file does not exist already.
-      // We really can proceed without prompting.
-      success = e.Process(
-         nChannels,  // numChannels,
-         format,     // type, 
-         fullPath,   // full path,
-         false,      // selectedOnly, 
-         t0,         // t0
-         t1          // t1
-      );
-   }
-
-   if (success && !project.mBatchMode) {
-      FileHistory::Global().Append(e.GetAutoExportFileName().GetFullPath());
+      auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(format);
+      if(plugin != nullptr)
+      {
+         auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+         editor->Load(*gPrefs);
+         
+         auto builder = ExportTaskBuilder {}
+            .SetParameters(ExportUtils::ParametersFromEditor(*editor))
+            .SetSampleRate(ProjectRate::Get(project).GetRate())
+            .SetPlugin(plugin)
+            .SetFileName(fullPath)
+            .SetNumChannels(nChannels)
+            .SetRange(0.0, tracks.GetEndTime(), false);
+         
+         bool success = false;
+         ExportProgressUI::ExceptionWrappedCall([&]
+         {
+            // We're in batch mode, the file does not exist already.
+            // We really can proceed without prompting.
+            const auto result = ExportProgressUI::Show(builder.Build(project));
+            success = result == ExportResult::Success || result == ExportResult::Stopped;
+         });
+         
+         if (success && !project.mBatchMode) {
+            FileHistory::Global().Append(fullPath);
+         }
+      }
    }
 }
 
@@ -269,17 +294,6 @@ void OnExportAudio(const CommandContext &context)
    DoExport(project, "");
 }
 
-void OnExportSelection(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   Exporter e{ project };
-
-   e.SetFileDialogTitle( XO("Export Selected Audio") );
-   e.Process(true, selectedRegion.t0(),
-      selectedRegion.t1());
-}
-
 void OnExportLabels(const CommandContext &context)
 {
    auto &project = context.project;
@@ -340,14 +354,6 @@ void OnExportLabels(const CommandContext &context)
 
    f.Write();
    f.Close();
-}
-
-void OnExportMultiple(const CommandContext &context)
-{
-   auto &project = context.project;
-   ExportMultipleDialog em(&project);
-
-   em.ShowModal();
 }
 
 void OnImport(const CommandContext &context)
@@ -505,32 +511,13 @@ BaseItemSharedPtr FileMenu()
       ),
 
       Section( "Import-Export",
-         Menu( wxT("Export"), XXO("&Export"),
-            // Enable Export audio commands only when there are audio tracks.
-            Command( wxT("ExportMp3"), XXO("Export as MP&3"), OnExportMp3,
-               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
-
-            Command( wxT("ExportWav"), XXO("Export as &WAV"), OnExportWav,
-               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
-
-            Command( wxT("ExportOgg"), XXO("Export as &OGG"), OnExportOgg,
-               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
-
-            Command( wxT("Export"), XXO("&Export Audio..."), OnExportAudio,
-               AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+E") ),
-
-            // Enable Export Selection commands only when there's a selection.
-            Command( wxT("ExportSel"), XXO("Expo&rt Selected Audio..."),
-               OnExportSelection,
-               AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag() ),
-
+         Command( wxT("Export"), XXO("&Export Audio..."), OnExportAudio,
+            AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+E") ),
+              
+         Menu( wxT("ExportOther"), XXO("Export Other"),
             Command( wxT("ExportLabels"), XXO("Export &Labels..."),
                OnExportLabels,
-               AudioIONotBusyFlag() | LabelTracksExistFlag() ),
-            // Enable Export audio commands only when there are audio tracks.
-            Command( wxT("ExportMultiple"), XXO("Export &Multiple..."),
-               OnExportMultiple,
-               AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+L") )
+               AudioIONotBusyFlag() | LabelTracksExistFlag() )
          ),
 
          Menu( wxT("Import"), XXO("&Import"),
@@ -584,6 +571,30 @@ BaseItemSharedPtr HiddenFileMenu()
 AttachedItem sAttachment2{
    wxT(""),
    Indirect(HiddenFileMenu())
+};
+
+BaseItemSharedPtr ExtraExportMenu()
+{
+   static BaseItemSharedPtr menu{
+      Section( "Import-Export",
+         Menu( wxT("Export"), XXO("&Export"),
+            // Enable Export audio commands only when there are audio tracks.
+            Command( wxT("ExportMp3"), XXO("Export as MP&3"), OnExportMp3,
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+            Command( wxT("ExportWav"), XXO("Export as &WAV"), OnExportWav,
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+            Command( wxT("ExportOgg"), XXO("Export as &OGG"), OnExportOgg,
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+            Command( wxT("ExportFLAC"), XXO("Export as FLAC"),
+               OnExportFLAC,
+               AudioIONotBusyFlag() )
+        ))};
+   return menu;
+}
+
+AttachedItem sAttachment3{
+   wxT("Optional/Extra/Part1"),
+   Indirect( ExtraExportMenu() )
 };
 
 }

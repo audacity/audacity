@@ -79,7 +79,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
 #include "widgets/ASlider.h"
-#include "FFmpeg.h"
 #include "Journal.h"
 #include "Languages.h"
 #include "Menus.h"
@@ -137,7 +136,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "ModuleManager.h"
 #include "PluginHost.h"
 
-#include "import/Import.h"
+#include "Import.h"
 
 #if defined(USE_BREAKPAD)
 #include "BreakpadConfigurer.h"
@@ -167,6 +166,8 @@ It handles initialization and termination by subclassing wxApp.
 #endif
 
 #include <thread>
+
+#include "ExportPluginRegistry.h"
 
 #ifdef HAS_CUSTOM_URL_HANDLING
 #include "URLSchemesRegistry.h"
@@ -1608,11 +1609,8 @@ bool AudacityApp::InitPart2()
    UpdateManager::Start(playingJournal);
 #endif
 
-   #ifdef USE_FFMPEG
-   FFmpegStartup();
-   #endif
-
    Importer::Get().Initialize();
+   ExportPluginRegistry::Get().Initialize();
 
    // Bug1561: delay the recovery dialog, to avoid crashes.
    CallAfter( [=] () mutable {

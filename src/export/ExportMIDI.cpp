@@ -126,8 +126,8 @@ void OnExportMIDI(const CommandContext &context)
 }
 
 AttachedItem sAttachment{
-   { wxT("File/Import-Export/Export"),
-      { OrderingHint::After, {"ExportMultiple"} } },
+   { wxT("File/Import-Export/ExportOther"),
+      { OrderingHint::After, {"ExportLabels"} } },
    Command( wxT("ExportMIDI"), XXO("Export MI&DI..."), OnExportMIDI,
       AudioIONotBusyFlag() | NoteTracksExistFlag() )
 };
