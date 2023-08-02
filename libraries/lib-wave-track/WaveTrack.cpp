@@ -1935,6 +1935,8 @@ size_t WaveTrack::GetIdealBlockSize()
    return NewestOrNewClip()->GetSequence(0)->GetIdealBlockSize();
 }
 
+// TODO restore a proper exception safety guarantee; comment below is false
+// because failure might happen after only one channel is done
 /*! @excsafety{Mixed} */
 /*! @excsafety{No-fail} -- The rightmost clip will be in a flushed state. */
 /*! @excsafety{Partial}
