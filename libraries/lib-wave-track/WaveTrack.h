@@ -322,6 +322,7 @@ private:
       sampleFormat effectiveFormat = widestSampleFormat) override;
 
    void NarrowFlush() override;
+   void Flush() override;
 
    //! @name PlayableSequence implementation
    //! @{

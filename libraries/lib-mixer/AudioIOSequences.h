@@ -63,10 +63,16 @@ struct MIXER_API RecordableSequence {
       */
    ) = 0;
 
-   //! NarrowFlush must be called after last Append
+   virtual bool IsLeader() const = 0;
+
+   //! NarrowFlush or Flush of related leader must be called after last Append
    virtual void NarrowFlush() = 0;
 
-   virtual bool IsLeader() const = 0;
+   //! NarrowFlush or Flush of related leader must be called after last Append
+   /*!
+    @pre `IsLeader()`
+    */
+   virtual void Flush() = 0;
 
    /*!
     @pre `IsLeader()`

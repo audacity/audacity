@@ -1940,6 +1940,18 @@ size_t WaveTrack::GetIdealBlockSize()
 /*! @excsafety{Partial}
 -- Some initial portion (maybe none) of the append buffer of the rightmost
 clip gets appended; no previously saved contents are lost. */
+void WaveTrack::Flush()
+{
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      pChannel->NarrowFlush();
+}
+
+/*! @excsafety{Mixed} */
+/*! @excsafety{No-fail} -- The rightmost clip will be in a flushed state. */
+/*! @excsafety{Partial}
+-- Some initial portion (maybe none) of the append buffer of the rightmost
+clip gets appended; no previously saved contents are lost. */
 void WaveTrack::NarrowFlush()
 {
    // After appending, presumably.  Do this to the clip that gets appended.
