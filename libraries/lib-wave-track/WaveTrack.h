@@ -318,7 +318,6 @@ private:
       size_t len, unsigned int stride = 1,
       sampleFormat effectiveFormat = widestSampleFormat) override;
 
-   void NarrowFlush() override;
    void Flush() override;
 
    //! @name PlayableSequence implementation
@@ -685,6 +684,7 @@ private:
    size_t NIntervals() const override;
 
 private:
+   void FlushOne();
    // May assume precondition: t0 <= t1
    void HandleClear(double t0, double t1, bool addCutLines, bool split);
    static void ClearAndPasteOne(WaveTrack &track,

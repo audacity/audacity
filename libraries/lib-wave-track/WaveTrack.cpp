@@ -1443,7 +1443,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
                mpFactory, GetSampleFormat(), GetRate());
             assert(tmp->IsLeader()); // It is not yet owned by a TrackList
             tmp->InsertSilence(0.0, duration);
-            tmp->NarrowFlush();
+            tmp->FlushOne();
             PasteOne(*pChannel, oldT1, *tmp, 0.0, duration);
          }
       }
@@ -1944,7 +1944,7 @@ void WaveTrack::Flush()
 {
    assert(IsLeader());
    for (const auto pChannel : TrackList::Channels(this))
-      pChannel->NarrowFlush();
+      pChannel->FlushOne();
 }
 
 /*! @excsafety{Mixed} */
@@ -1952,7 +1952,7 @@ void WaveTrack::Flush()
 /*! @excsafety{Partial}
 -- Some initial portion (maybe none) of the append buffer of the rightmost
 clip gets appended; no previously saved contents are lost. */
-void WaveTrack::NarrowFlush()
+void WaveTrack::FlushOne()
 {
    // After appending, presumably.  Do this to the clip that gets appended.
    RightmostOrNewClip()->Flush();
