@@ -21,12 +21,15 @@
 #include <vector>
 #include <wx/log.h>
 
+#include "AudioContainer.h"
 #include "BasicUI.h"
-#include "Sequence.h"
-#include "Prefs.h"
+#include "ClipSegment.h"
 #include "Envelope.h"
-#include "Resample.h"
 #include "InconsistencyException.h"
+#include "Prefs.h"
+#include "Resample.h"
+#include "Sequence.h"
+#include "StaffPadTimeAndPitch.h"
 #include "UserException.h"
 
 #ifdef _OPENMP
@@ -56,8 +59,9 @@ WaveClip::WaveClip(size_t width,
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines)
-    : mClipStretchRatio(orig.mClipStretchRatio)
-    , mRawAudioTempo(orig.mRawAudioTempo)
+    : mClipStretchRatio { orig.mClipStretchRatio }
+    , mRawAudioTempo { orig.mRawAudioTempo }
+    , mProjectTempo { orig.mProjectTempo }
 // Project tempo is not copied on purpose, since `orig` might come from another
 // project.
 {
@@ -92,8 +96,9 @@ WaveClip::WaveClip(
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines, double t0, double t1)
-    : mClipStretchRatio(orig.mClipStretchRatio)
-    , mRawAudioTempo(orig.mRawAudioTempo)
+    : mClipStretchRatio { orig.mClipStretchRatio }
+    , mRawAudioTempo { orig.mRawAudioTempo }
+    , mProjectTempo { orig.mProjectTempo }
 // Project tempo is not copied on purpose, since `orig` might come from another
 // project.
 {
@@ -261,11 +266,11 @@ void WaveClip::OnProjectTempoChange(
       // read-up or signal analysis) we can use something smarter than that. In
       // the meantime, use the tempo of the project when the clip is created as
       // source tempo.
-      mRawAudioTempo = oldTempo;
+      mRawAudioTempo = oldTempo.value_or(newTempo);
 
    if (oldTempo.has_value())
    {
-      const auto ratioChange = *mProjectTempo / newTempo;
+      const auto ratioChange = *oldTempo / newTempo;
       mSequenceOffset *= ratioChange;
       mTrimLeft *= ratioChange;
       mTrimRight *= ratioChange;
@@ -345,6 +350,16 @@ const SampleBlockFactoryPtr &WaveClip::GetFactory()
 {
    // All sequences have the same factory by class invariant
    return mSequences[0]->GetFactory();
+}
+
+std::vector<std::unique_ptr<Sequence>> WaveClip::GetEmptySequenceCopies() const
+{
+   decltype(mSequences) newSequences;
+   newSequences.reserve(mSequences.size());
+   for (auto& pSequence : mSequences)
+      newSequences.push_back(std::make_unique<Sequence>(
+         pSequence->GetFactory(), pSequence->GetSampleFormats()));
+   return newSequences;
 }
 
 constSamplePtr WaveClip::GetAppendBuffer(size_t ii) const
@@ -648,6 +663,7 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
 
        auto copy = std::make_shared<WaveClip>(other, factory, true);
        copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime());
+       copy->SetTrimRight(0);
        newClip = std::move(copy);
    }
    else if (t0 == GetPlayEndTime())
@@ -657,6 +673,7 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
 
        auto copy = std::make_shared<WaveClip>(other, factory, true);
        copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime());
+       copy->SetTrimLeft(0);
        newClip = std::move(copy);
    }
    else
@@ -679,6 +696,7 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
          copy->ConvertToSampleFormat(GetSampleFormats().Stored());
       newClip = std::move(copy);
    }
+   newClip->ApplyStretchRatio();
 
    // Paste cut lines contained in pasted clip
    WaveClipHolders newCutlines;
@@ -1067,11 +1085,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    const auto numSamples = GetNumSamples();
 
    // These sequences are appended to below
-   decltype(mSequences) newSequences;
-   newSequences.reserve(mSequences.size());
-   for (auto &pSequence : mSequences)
-      newSequences.push_back(std::make_unique<Sequence>(
-         pSequence->GetFactory(), pSequence->GetSampleFormats()));
+   auto newSequences = GetEmptySequenceCopies();
 
    /**
     * We want to keep going as long as we have something to feed the resampler
@@ -1144,6 +1158,65 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       Flush();
       Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
    }
+}
+
+void WaveClip::ApplyStretchRatio()
+{
+   const auto stretchRatio = GetStretchRatio();
+   if (stretchRatio == 1.0)
+      return;
+
+   Finally Do { [this] {
+      this->mClipStretchRatio = 1.0;
+      this->mRawAudioTempo = this->mProjectTempo;
+   } };
+
+   constexpr auto durationToDiscard = 0.0;
+   constexpr auto blockSize = 1024;
+   const auto numChannels = GetWidth();
+
+   // Let's also pass the hidden part to the stretcher for better result in the
+   // visible part.
+   const auto trimLeftBeforeStretch = mTrimLeft;
+   const auto trimRightBeforeStretch = mTrimRight;
+   SetTrimLeft(0);
+   SetTrimRight(0);
+
+   ClipSegment stretcherSource { *this, durationToDiscard,
+                                 PlaybackDirection::forward };
+   TimeAndPitchInterface::Parameters params;
+   params.timeRatio = stretchRatio;
+   StaffPadTimeAndPitch stretcher { numChannels, stretcherSource,
+                                    std::move(params) };
+   const auto totalNumOutSamples =
+      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio + .5 };
+   sampleCount numProcessedSamples { 0 };
+
+   auto newSequences = GetEmptySequenceCopies();
+
+   sampleCount numOutSamples { 0 };
+   AudioContainer container(blockSize, numChannels);
+   while (numOutSamples < totalNumOutSamples)
+   {
+      const auto numSamplesToGet = limitSampleBufferSize(
+         blockSize, totalNumOutSamples - numProcessedSamples);
+      stretcher.GetSamples(container.Get(), numSamplesToGet);
+      auto channel = 0u;
+      for (auto& newSequence : newSequences)
+         newSequence->Append(
+            reinterpret_cast<samplePtr>(container.Get()[channel++]),
+            floatSample, numSamplesToGet, 1,
+            widestSampleFormat /* computed samples need dither */
+         );
+      numOutSamples += numSamplesToGet;
+   }
+
+   SetTrimLeft(trimLeftBeforeStretch * stretchRatio);
+   SetTrimRight(trimRightBeforeStretch * stretchRatio);
+
+   mSequences = move(newSequences);
+   Flush();
+   Caches::ForEach(std::mem_fn(&WaveClipListener::Invalidate));
 }
 
 // Used by commands which interact with clips using the keyboard.
@@ -1327,6 +1400,11 @@ void WaveClip::ShiftBy(double delta) noexcept
 // We are within the clip if start <= t < end.
 // Note that BeforeClip and AfterClip must be consistent
 // with this definition.
+bool WaveClip::SplitsPlayRegion(double t) const
+{
+   return GetPlayStartTime() < t && t < GetPlayEndTime();
+}
+
 bool WaveClip::WithinPlayRegion(double t) const
 {
    return GetPlayStartTime() <= t && t < GetPlayEndTime();
@@ -1335,32 +1413,29 @@ bool WaveClip::WithinPlayRegion(double t) const
 bool WaveClip::EntirelyWithinPlayRegion(double t0, double t1) const
 {
    assert(t0 <= t1);
-   return !BeforePlayRegion(t0) && !AfterPlayRegion(t1);
+   // t1 is the open end of the interval, hence it's ok if it's equal to the
+   // open end of the play region.
+   return !BeforePlayRegion(t0) && t1 <= GetPlayEndTime();
 }
 
 bool WaveClip::PartlyWithinPlayRegion(double t0, double t1) const
 {
    assert(t0 <= t1);
-   return OverlapsPlayRegion(t0, t1) && !EntirelyWithinPlayRegion(t0, t1);
+   return WithinPlayRegion(t0) != WithinPlayRegion(t1);
 }
 
 bool WaveClip::OverlapsPlayRegion(double t0, double t1) const
 {
    assert(t0 <= t1);
-   return !(BeforePlayRegion(t1) || AfterPlayRegion(t0));
+   // t1 is the open end of the interval, so it must be excluded from the closed
+   // begin of the play region.
+   return t0 < GetPlayEndTime() && GetPlayStartTime() < t1;
 }
 
-bool WaveClip::ExtendsPlayRegion(double t0, double t1) const
+bool WaveClip::CoversEntirePlayRegion(double t0, double t1) const
 {
    assert(t0 <= t1);
-   return (BeforePlayRegion(t0) && WithinPlayRegion(t1)) ||
-          (WithinPlayRegion(t0) && AfterPlayRegion(t1));
-}
-
-bool WaveClip::ExtendsPlayRegionOnBothSides(double t0, double t1) const
-{
-   assert(t0 <= t1);
-   return BeforePlayRegion(t0) && AfterPlayRegion(t1);
+   return t0 <= GetPlayStartTime() && GetPlayEndTime() <= t1;
 }
 
 bool WaveClip::BeforePlayRegion(double t) const

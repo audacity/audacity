@@ -173,7 +173,13 @@ public:
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
-   void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
+   void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
+
+   /*!
+    * @brief Renders the stretching of the clip (preserving duration).
+    * @post GetStretchRatio() == 1
+    */
+   void ApplyStretchRatio();
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
@@ -187,9 +193,11 @@ public:
    //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
+   //! Closed-begin of play region.
    double GetPlayStartTime() const noexcept override;
    void SetPlayStartTime(double time);
 
+   //! Open-end of play region.
    double GetPlayEndTime() const override;
    double GetPlayDuration() const;
 
@@ -238,17 +246,47 @@ public:
    /*! @excsafety{No-fail} */
    void ShiftBy(double delta) noexcept;
 
-   // One and only one of the following is true for a given t (unless the clip
-   // has zero length -- then BeforePlayRegion() and AfterPlayRegion() can both be true).
-   // WithinPlayRegion() is true if the time is substantially within the clip
+   //! The play region is an open-closed interval, [...), where "[ =
+   //! GetPlayStartTime()", and ") = GetPlayEndTime()."
+
+   /*!
+    * @brief [ < t and t < ), such that if the track were split at `t`, it would
+    * split this clip in two of lengths > 0.
+    */
+   bool SplitsPlayRegion(double t) const;
+   /*!
+    * @brief  t ∈ [...)
+    */
    bool WithinPlayRegion(double t) const;
+   /*!
+    * @brief  t < [
+    */
    bool BeforePlayRegion(double t) const;
+   /*!
+    * @brief  ) <= t
+    */
    bool AfterPlayRegion(double t) const;
+   /*!
+    * @brief t0 and t1 both ∈ [...)
+    * @pre t0 <= t1
+    */
    bool EntirelyWithinPlayRegion(double t0, double t1) const;
+   /*!
+    * @brief t0 xor t1 ∈ [...)
+    * @pre t0 <= t1
+    */
    bool PartlyWithinPlayRegion(double t0, double t1) const;
+   /*!
+    * @brief [t0, t1) ∩ [...) != ∅
+    * @pre t0 <= t1
+    */
    bool OverlapsPlayRegion(double t0, double t1) const;
-   bool ExtendsPlayRegion(double t0, double t1) const;
-   bool ExtendsPlayRegionOnBothSides(double t0, double t1) const;
+   /*!
+    * @brief t0 <= [ and ) <= t1, such that removing [t0, t1) from the track
+    * deletes this clip.
+    * @pre t0 <= t1
+    */
+   bool CoversEntirePlayRegion(double t0, double t1) const;
 
    //! Counts number of samples within t0 and t1 region. t0 and t1 are
    //! rounded to the nearest clip sample boundary, i.e. relative to clips
@@ -510,6 +548,7 @@ private:
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();
+   std::vector<std::unique_ptr<Sequence>> GetEmptySequenceCopies() const;
    void StretchCutLines(double ratioChange);
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
