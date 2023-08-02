@@ -350,7 +350,6 @@ bool TrackSpectrumTransformer::Process(const WindowProcessor &processor,
    if (!Start(queueLength))
       return false;
 
-   mLen = len;
    auto bufferSize = track->GetMaxBlockSize();
    FloatVector buffer(bufferSize);
 
@@ -376,14 +375,18 @@ bool TrackSpectrumTransformer::Process(const WindowProcessor &processor,
 
 bool TrackSpectrumTransformer::DoFinish()
 {
-   if (mOutputTrack) {
-      // Flush the output WaveTrack (since it's buffered)
-      mOutputTrack->NarrowFlush();
-      auto tLen = mOutputTrack->LongSamplesToTime(mLen);
-      // Filtering effects always end up with more data than they started with.
-      // Delete this 'tail'.
-      mOutputTrack->HandleClear(tLen, mOutputTrack->GetEndTime(), false, false);
-   }
+   return true;
+}
+
+bool TrackSpectrumTransformer::PostProcess(
+   WaveTrack &outputTrack, sampleCount len)
+{
+   assert(outputTrack.IsLeader());
+   outputTrack.Flush();
+   auto tLen = outputTrack.LongSamplesToTime(len);
+   // Filtering effects always end up with more data than they started with.
+   // Delete this 'tail'.
+   outputTrack.Clear(tLen, outputTrack.GetEndTime());
    return true;
 }
 

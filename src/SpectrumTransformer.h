@@ -75,7 +75,8 @@ public:
    bool ProcessSamples(const WindowProcessor &processor,
       const float *buffer, size_t len);
 
-   //! Call once after a sequence of calls to ProcessSamples; flushes the queue and Invokes DoFinish
+   //! Call once after a sequence of calls to ProcessSamples; flushes the queue
+   //! and Invokes DoFinish
    /*! @return success */
    bool Finish(const WindowProcessor &processor);
 
@@ -189,6 +190,12 @@ public:
    bool Process(const WindowProcessor &processor, const WaveTrack *track,
       size_t queueLength, sampleCount start, sampleCount len);
 
+   //! Final flush and trimming of tail samples
+   /*!
+    @pre `outputTrack.IsLeader()`
+    */
+   static bool PostProcess(WaveTrack &outputTrack, sampleCount len);
+
 protected:
    bool DoStart() override;
    void DoOutput(const float *outBuffer, size_t mStepSize) override;
@@ -196,7 +203,6 @@ protected:
 
    std::shared_ptr<WaveTrack> mOutputTrack;
 private:
-   sampleCount mLen = 0;
    const WaveTrack *mpTrack = nullptr;
 };
 

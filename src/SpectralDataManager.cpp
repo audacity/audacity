@@ -80,6 +80,7 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
       const auto len = endSample - startSample;
       const auto tLen = wt->LongSamplesToTime(len);
       auto tempList = TrackList::Create(nullptr);
+      long long processed{};
       for (auto pChannel : wt->Channels()) {
          auto &view = ChannelView::Get(*pChannel);
 
@@ -91,11 +92,15 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
                auto pSpectralData = sView->GetSpectralData();
 
                if (!pSpectralData->dataHistory.empty()) {
+                  // TODO make this correct in case start or end of spectral data in
+                  // the channels differs
+                  processed = std::max(processed, pSpectralData->GetLength());
                   worker.Process(
                      static_cast<WaveTrack*>(pChannel.get()), pSpectralData);
                   applyCount += static_cast<int>(pSpectralData->dataHistory.size());
                   pSpectralData->clearAllData();
                }
+               // TODO make sure tempList gets as many channels as wt, if any
                tempList->Add(worker.mOutputTrack);
                assert(worker.mOutputTrack->IsLeader() ==
                   static_cast<WaveTrack*>(pChannel.get())->IsLeader());
@@ -103,11 +108,15 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
             }
          }
       }
-      // Take the output track and insert it in place of the original
-      // sample data
-      // TODO make this correct in case start or end of spectral data in
-      // the channels differs
-      wt->ClearAndPaste(t0, t0 + tLen, *tempList, true, false);
+      if (!tempList->empty()) {
+         const auto pTrack = *tempList->Any<WaveTrack>().begin();
+         TrackSpectrumTransformer::PostProcess(*pTrack, processed);
+         // Take the output track and insert it in place of the original
+         // sample data
+         // TODO make this correct in case start or end of spectral data in
+         // the channels differs
+         wt->ClearAndPaste(t0, t0 + tLen, *tempList, true, false);
+      }
    }
 
    if (applyCount) {
@@ -164,23 +173,16 @@ bool SpectralDataManager::Worker::DoFinish() {
 }
 
 bool SpectralDataManager::Worker::Process(WaveTrack* wt,
-                                          const std::shared_ptr<SpectralData>& pSpectralData)
+   const std::shared_ptr<SpectralData> &pSpectralData)
 {
    mpSpectralData = pSpectralData;
-   const auto &hopSize = mpSpectralData->GetHopSize();
-   auto startSample = mpSpectralData->GetStartSample();
-   const auto &endSample = mpSpectralData->GetEndSample();
+   const auto hopSize = mpSpectralData->GetHopSize();
+   const auto startSample = mpSpectralData->GetStartSample();
    // Correct the first hop num, because SpectrumTransformer will send
    // a few initial windows that overlay the range only partially
    mStartHopNum = startSample / hopSize - (mStepsPerWindow - 1);
    mWindowCount = 0;
-
-   // Correct the start of range so that the first full window is
-   // centered at that position
-   startSample = std::max(static_cast<long long>(0), startSample - 2 * hopSize);
-   const auto len = endSample - startSample;
-   auto t0 = wt->LongSamplesToTime(startSample);
-   auto tLen = wt->LongSamplesToTime(len);
+   const auto len = mpSpectralData->GetLength();
    return TrackSpectrumTransformer::Process(Processor, wt, 1, startSample, len);
 }
 
