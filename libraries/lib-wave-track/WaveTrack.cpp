@@ -326,7 +326,7 @@ WaveTrack::~WaveTrack()
 /*! @excsafety{No-fail} */
 void WaveTrack::MoveTo(double o)
 {
-   double delta = o - mOffset;
+   double delta = o - GetStartTime();
 
    for (const auto &clip : mClips)
       // assume No-fail-guarantee
