@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-06-22 10:00+0000\n"
+"PO-Revision-Date: 2023-07-22 21:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -4593,7 +4593,7 @@ msgstr "&Nie kopiuj żadnego dźwięku"
 
 #: src/FileFormats.cpp
 msgid "As&k"
-msgstr "&Pytaj"
+msgstr "&Zapytaj"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
