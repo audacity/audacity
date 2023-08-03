@@ -115,7 +115,7 @@ EffectEqualization::EffectEqualization(int Options)
 #if 0
    auto trackList = inputTracks();
    const auto t = trackList
-      ? *trackList->Any< const WaveTrack >().first
+      ? *trackList->Leaders<const WaveTrack>().first
       : nullptr
    ;
    hiFreq =

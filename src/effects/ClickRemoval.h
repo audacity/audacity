@@ -56,8 +56,8 @@ public:
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
-   bool ProcessOne(int count, WaveTrack * track,
-                   sampleCount start, sampleCount len);
+   bool ProcessOne(int count, WaveTrack &track,
+      sampleCount start, sampleCount len);
 
    bool RemoveClicks(size_t len, float *buffer);
 

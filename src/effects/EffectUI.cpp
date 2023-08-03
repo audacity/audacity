@@ -1198,13 +1198,10 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 
    } );
 
-   int count = 0;
-   bool clean = true;
-   for (auto t : tracks.Selected< const WaveTrack >()) {
-      if (t->GetEndTime() != 0.0)
-         clean = false;
-      count++;
-   }
+   const auto range = tracks.SelectedLeaders<const WaveTrack>();
+   bool anyTracks = !range.empty();
+   bool clean = std::all_of(range.begin(), range.end(),
+      [](const WaveTrack *t){ return t->GetEndTime() == 0; });
 
    EffectManager & em = EffectManager::Get();
 
@@ -1309,7 +1306,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    //mchinen:12/14/08 reapplying for generate effects
    if (type == EffectTypeGenerate)
    {
-      if (count == 0 || (clean && selectedRegion.t0() == 0.0))
+      if (!anyTracks || (clean && selectedRegion.t0() == 0.0))
          window.DoZoomFit();
          //  trackPanel->Refresh(false);
    }

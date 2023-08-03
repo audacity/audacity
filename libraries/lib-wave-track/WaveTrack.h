@@ -241,7 +241,6 @@ private:
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
-   void SplitAt(double t) /* not override */;
    /*!
     @pre `IsLeader()`
     */
@@ -615,6 +614,12 @@ private:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
+   //! Argument is in (0, 1)
+   //! @return true if processing should continue
+   using ProgressReport = std::function<bool(double)>;
+   bool Reverse(sampleCount start, sampleCount len,
+      const ProgressReport &report = {});
+
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
@@ -656,6 +661,12 @@ protected:
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile);
+   static bool ReverseOne(WaveTrack &track,
+      sampleCount start, sampleCount len, const ProgressReport &report = {});
+   static bool ReverseOneClip(WaveTrack &track,
+      sampleCount start, sampleCount len, sampleCount originalStart,
+      sampleCount originalEnd, const ProgressReport &report = {});
+   void SplitAt(double t) /* not override */;
 
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
