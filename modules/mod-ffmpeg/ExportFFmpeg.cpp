@@ -422,9 +422,11 @@ public:
             S.StartMultiColumn(2, wxCENTER);
             {
                S.AddPrompt(XXO("Current Format:"));
-               mFormat = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
+               mFormat = S.Name(XXO("Current Format:"))
+                  .Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
                S.AddPrompt(XXO("Current Codec:"));
-               mCodec = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
+               mCodec = S.Name(XXO("Current Codec:"))
+                  .Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
             }
             S.EndMultiColumn();
          }
