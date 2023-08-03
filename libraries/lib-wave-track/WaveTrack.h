@@ -68,6 +68,18 @@ public:
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
 
+   using WideSampleSequence::GetFloats;
+
+   //! "narrow" overload fetches from the unique channel
+   bool GetFloats(float *buffer, sampleCount start, size_t len,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
+      sampleCount * pNumWithinClips = nullptr) const
+   {
+      constexpr auto backwards = false;
+      return GetFloats(
+         0, 1, &buffer, start, len, backwards, fill, mayThrow, pNumWithinClips);
+   }
+
    /*!
     If there is an existing WaveClip in the WaveTrack that owns the channel,
     then the data are appended to that clip. If there are no WaveClips in the
@@ -85,6 +97,9 @@ class WAVE_TRACK_API WaveTrack final
    , public WaveChannel
 {
 public:
+   // Resolve ambiguous lookup
+   using SampleTrack::GetFloats;
+
    /// \brief Structure to hold region of a wavetrack and a comparison function
    /// for sortability.
    struct Region
