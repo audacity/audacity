@@ -39,6 +39,7 @@ qt_add_translations(
 
 set(QML_SOURCES
    qml/main.qml
+   qml/AddNewTrackPanel.qml
    qml/EditToolbar.qml
    qml/MasterVolumeToolbar.qml
    qml/Sidebar.qml

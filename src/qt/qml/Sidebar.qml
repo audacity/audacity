@@ -23,25 +23,33 @@ Rectangle {
 
    signal updateStatusBar(status: string)
 
-   function addTrackControlPanel(type) {
+   function addTrackControlPanel(type, quantity) {
       var label
 
       if (type === "label") {
-         label = qsTr("Label track %1").arg(nextTrack.label)
-         trackControlPanelsModel.append({ "type": type, "label": label })
-         nextTrack.label += 1
+         for (var i = 0; i < quantity; i++) {
+            label = qsTr("Label track %1").arg(nextTrack.label)
+            trackControlPanelsModel.append({ "type": type, "label": label })
+            nextTrack.label += 1
+         }
       } else if (type === "stereo") {
-         label = qsTr("Stereo track %1").arg(nextTrack.stereo)
-         trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
-         nextTrack.stereo += 1
+         for (var i = 0; i < quantity; i++) {
+            label = qsTr("Stereo track %1").arg(nextTrack.stereo)
+            trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
+            nextTrack.stereo += 1
+         }
       } else if (type == "mono") {
-         label = qsTr("Mono track %1").arg(nextTrack.mono)
-         trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
-         nextTrack.mono += 1
+         for (var i = 0; i < quantity; i++) {
+            label = qsTr("Mono track %1").arg(nextTrack.mono)
+            trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
+            nextTrack.mono += 1
+         }
       } else if (type == "video") {
-         label = qsTr("Video track %1").arg(nextTrack.video)
-         trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
-         nextTrack.video += 1
+         for (var i = 0; i < quantity; i++) {
+            label = qsTr("Video track %1").arg(nextTrack.video)
+            trackControlPanelsModel.append({ "type": type, "label": label, "isMuted": false, "isSoloed": false })
+            nextTrack.video += 1
+         }
       } else {
          console.log("Invalid Track Type:", type)
          return
@@ -68,10 +76,11 @@ Rectangle {
       text: qsTr("+ Add new track")
 
       onClicked: {
-         var index = Math.floor(Math.random() * trackControlPanelsChooser.choices.length)
-         var trackType = trackControlPanelsChooser.choices[index].roleValue
-
-         addTrackControlPanel(trackType)
+         if (addNewTrack.opened) {
+            addNewTrack.close()
+         } else {
+            addNewTrack.open()
+         }
       }
 
       Rectangle {
@@ -81,8 +90,17 @@ Rectangle {
          height: 1
          color: UiTheme.strokeColor
       }
-   }
 
+      AddNewTrackPanel {
+         id: addNewTrack
+         y: parent.height
+
+         onCreateTracks: (type, quantity) => {
+            addTrackControlPanel(type, quantity)
+            addNewTrack.close()
+         }
+      }
+   }
 
    ListModel {
       id: trackControlPanelsModel
@@ -218,9 +236,9 @@ Rectangle {
    }
 
    Component.onCompleted: {
-      addTrackControlPanel("label")
-      addTrackControlPanel("stereo")
-      addTrackControlPanel("mono")
-      addTrackControlPanel("video")
+      addTrackControlPanel("label", 1)
+      addTrackControlPanel("stereo", 1)
+      addTrackControlPanel("mono", 1)
+      addTrackControlPanel("video", 1)
    }
 }
