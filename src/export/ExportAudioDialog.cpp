@@ -218,6 +218,19 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
 
 ExportAudioDialog::~ExportAudioDialog() = default;
 
+// Fix for issue #4960, which only affects Windows
+bool ExportAudioDialog::Show(bool show)
+{
+   bool ret = wxDialogWrapper::Show(show);
+
+#if defined(__WXMSW__) 
+   if (show)
+      mExportOptionsPanel->SetInitialFocus();
+#endif
+
+   return ret;
+}
+
 void ExportAudioDialog::PopulateOrExchange(ShuttleGui& S)
 {
    S.SetBorder(5);

@@ -53,6 +53,7 @@ public:
              int channels = 0,
              const ExportProcessor::Parameters& parameters = {},
              const MixerOptions::Downmix* mixerSpec = nullptr);
+   void SetInitialFocus();
 
    void SetCustomMappingEnabled(bool enabled);
 

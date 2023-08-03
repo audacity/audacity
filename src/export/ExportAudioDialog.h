@@ -57,6 +57,8 @@ public:
                      const wxString& defaultName,
                      const wxString& defaultFormat);
    ~ExportAudioDialog() override;
+
+   bool Show(bool show = true) override;
 private:
    
    void PopulateOrExchange(ShuttleGui& S);

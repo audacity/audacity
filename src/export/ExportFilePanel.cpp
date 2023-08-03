@@ -293,6 +293,13 @@ void ExportFilePanel::Init(const wxFileName& filename,
       mCustomizeChannels->Enable(mCustomMapping->GetValue());
 }
 
+// Used as part of fix for issue #4960
+void ExportFilePanel::SetInitialFocus()
+{
+   mFullName->SetFocus();
+   mFullName->SelectAll();
+}
+
 void ExportFilePanel::SetCustomMappingEnabled(bool enabled)
 {
    if(mMonoStereoMode)
