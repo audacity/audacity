@@ -109,7 +109,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
          auto end = t->TimeToLongSamples(t1);
          auto len = end - start;
 
-         for (const auto pChannel : TrackList::Channels(t))
+         for (const auto pChannel : t->Channels())
             if (!ProcessOne(*lt, count++, *pChannel, start, len))
                return false;
       }
@@ -124,7 +124,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
 }
 
 bool EffectFindClipping::ProcessOne(LabelTrack &lt,
-   int count, const WaveTrack &wt, sampleCount start, sampleCount len)
+   int count, const WaveChannel &wt, sampleCount start, sampleCount len)
 {
    bool bGoodResult = true;
    size_t blockSize = (mStart * 1000);

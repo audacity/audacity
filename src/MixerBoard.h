@@ -71,6 +71,7 @@ class NoteTrack;
 #endif
 class PlayableTrack;
 
+class WaveChannel;
 class WaveTrack;
 class auStaticText;
 
@@ -85,7 +86,7 @@ public:
    virtual ~MixerTrackCluster() {}
 
    WaveTrack *GetWave() const;
-   WaveTrack *GetRight() const;
+   WaveChannel *GetRight() const;
 #ifdef EXPERIMENTAL_MIDI_OUT
    NoteTrack *GetNote() const;
 #endif

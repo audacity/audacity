@@ -19,6 +19,7 @@
 class wxBitmap;
 class wxTextCtrl;
 class ShuttleGui;
+class WaveChannel;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 
@@ -56,7 +57,7 @@ public:
 private:
    // EffectAutoDuck implementation
 
-   bool ApplyDuckFade(int trackNum, WaveTrack &track, double t0, double t1);
+   bool ApplyDuckFade(int trackNum, WaveChannel &track, double t0, double t1);
 
    void OnValueChanged(wxCommandEvent & evt);
 

@@ -339,14 +339,14 @@ WaveTrack *MixerTrackCluster::GetWave() const
    return dynamic_cast< WaveTrack * >( mTrack.get() );
 }
 
-WaveTrack *MixerTrackCluster::GetRight() const
+WaveChannel *MixerTrackCluster::GetRight() const
 {
   // TODO: more-than-two-channels
    auto left = GetWave();
    if (left) {
-      auto channels = TrackList::Channels(left);
-      if ( channels.size() > 1 )
-         return * ++ channels.first;
+      auto channels = left->Channels();
+      if (channels.size() > 1)
+         return (* ++ channels.first).get();
    }
    return nullptr;
 }

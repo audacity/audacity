@@ -465,7 +465,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             auto t2 = wt.TimeToLongSamples(cutEnd) - blendFrames / 2;
 
             size_t iChannel = 0;
-            for (const auto pChannel : TrackList::Channels(&wt)) {
+            for (const auto pChannel : wt.Channels()) {
                auto &buffer = buffers[iChannel];
                pChannel->GetFloats(buffer.buf1.get(), t1, blendFrames);
                pChannel->GetFloats(buffer.buf2.get(), t2, blendFrames);
@@ -482,7 +482,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             wt.Clear(cutStart, cutEnd);
 
             iChannel = 0;
-            for (const auto pChannel : TrackList::Channels(&wt)) {
+            for (const auto pChannel : wt.Channels()) {
                // Write cross-faded data
                auto &buffer = buffers[iChannel];
                pChannel->Set((samplePtr)buffer.buf1.get(), floatSample, t1,
@@ -612,7 +612,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 
       // Fill buffers
       size_t iChannel = 0;
-      for (const auto pChannel : TrackList::Channels(&wt))
+      for (const auto pChannel : wt.Channels())
          pChannel->GetFloats(buffers[iChannel++].get(), *index, count);
 
       // Look for silenceList in current block

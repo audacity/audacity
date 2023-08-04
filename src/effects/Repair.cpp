@@ -119,7 +119,7 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
             break;
          }
 
-         for (const auto pChannel : TrackList::Channels(track))
+         for (const auto pChannel : track->Channels())
             if (!ProcessOne(count++, *pChannel, s0,
                // len is at most 5 * 128.
                len.as_size_t(),
@@ -140,7 +140,7 @@ done:
    return bGoodResult;
 }
 
-bool EffectRepair::ProcessOne(int count, WaveTrack &track,
+bool EffectRepair::ProcessOne(int count, WaveChannel &track,
    sampleCount start, size_t len, size_t repairStart, size_t repairLen)
 {
    Floats buffer{ len };

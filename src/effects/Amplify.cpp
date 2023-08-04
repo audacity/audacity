@@ -183,7 +183,7 @@ bool EffectAmplify::Init()
 {
    mPeak = 0.0;
    for (auto t : inputTracks()->Selected<const WaveTrack>()) {
-      for (const auto pChannel : TrackList::Channels(t)) {
+      for (const auto pChannel : t->Channels()) {
          auto pair = pChannel->GetMinMax(mT0, mT1); // may throw
          const float min = pair.first, max = pair.second;
          const float newpeak = std::max(fabs(min), fabs(max));

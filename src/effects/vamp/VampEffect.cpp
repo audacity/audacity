@@ -341,13 +341,13 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
 
    for (auto leader : inputTracks()->Any<const WaveTrack>())
    {
-      auto channelGroup = TrackList::Channels(leader);
+      auto channelGroup = leader->Channels();
       auto left = *channelGroup.first++;
 
       unsigned channels = 1;
 
       // channelGroup now contains all but the first channel
-      const WaveTrack *right =
+      const auto right =
          channelGroup.size() ? *channelGroup.first++ : nullptr;
       if (right)
          channels = 2;
@@ -411,7 +411,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
       const auto effectName = GetSymbol().Translation();
       addedTracks.push_back(AddAnalysisTrack(*this,
          multiple
-         ? wxString::Format( _("%s: %s"), left->GetName(), effectName )
+         ? wxString::Format( _("%s: %s"), leader->GetName(), effectName )
          : effectName
       ));
       LabelTrack *ltrack = addedTracks.back()->get();
@@ -427,14 +427,10 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
          const auto request = limitSampleBufferSize( block, len );
 
          if (left)
-         {
             left->GetFloats(data[0].get(), pos, request);
-         }
 
          if (right)
-         {
             right->GetFloats(data[1].get(), pos, request);
-         }
 
          if (request < block)
          {
