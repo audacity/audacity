@@ -199,6 +199,8 @@ list( APPEND SOURCES
       ThemedWrappers.h
       TimeDialog.cpp
       TimeDialog.h
+      TimeDisplayMode.cpp
+      TimeDisplayMode.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
       TimerRecordExportDialog.cpp

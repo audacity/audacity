@@ -17,30 +17,30 @@
 
 namespace
 {
-void SetRulerType(const CommandContext& context, AdornedRulerPanel::RulerTypeValues type)
+void SetTimeDisplayMode(const CommandContext& context, TimeDisplayMode type)
 {
    auto& project = context.project;
 
    auto& ruler = AdornedRulerPanel::Get(project);
-   ruler.SetRulerType(type);
+   ruler.SetTimeDisplayMode(type);
 
    CommandManager::Get(project).UpdateCheckmarks(project);
 }
 
 void OnSetMinutesSeconds(const CommandContext& context)
 {
-   SetRulerType(context, AdornedRulerPanel::stMinutesAndSeconds);
+   SetTimeDisplayMode(context, TimeDisplayMode::MinutesAndSeconds);
 }
 
 void OnSetBeatsAndMeasures(const CommandContext& context)
 {
-   SetRulerType(context, AdornedRulerPanel::stBeatsAndMeasures);
+   SetTimeDisplayMode(context, TimeDisplayMode::BeatsAndMeasures);
 }
 
-AdornedRulerPanel::RulerTypeValues GetRulerType(const AudacityProject& project)
+TimeDisplayMode GetTimeDisplayMode(const AudacityProject& project)
 {
    auto& panel = AdornedRulerPanel::Get(project);
-   return panel.GetRulerType();
+   return panel.GetTimeDisplayMode();
 }
 
 using namespace MenuTable;
@@ -55,16 +55,16 @@ BaseItemSharedPtr ExtraSelectionMenu()
          OnSetMinutesSeconds, AlwaysEnabledFlag,
          CommandManager::Options {}.CheckTest(
             [](const AudacityProject& project) {
-               return GetRulerType(project) ==
-                      AdornedRulerPanel::stMinutesAndSeconds;
+               return GetTimeDisplayMode(project) ==
+                      TimeDisplayMode::MinutesAndSeconds;
             })),
       Command(
          wxT("BeatsAndMeasures"), XXO("Beats and Measures"),
          OnSetBeatsAndMeasures, AlwaysEnabledFlag,
          CommandManager::Options {}.CheckTest(
             [](const AudacityProject& project) {
-               return GetRulerType(project) ==
-                      AdornedRulerPanel::stBeatsAndMeasures;
+               return GetTimeDisplayMode(project) ==
+                      TimeDisplayMode::BeatsAndMeasures;
             }))) };
    return menu;
 }

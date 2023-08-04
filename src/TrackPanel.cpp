@@ -334,6 +334,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
             RefreshTrack(pTrack);
       });
 
+   mTimeDisplayModeSubscription =
+      TimeDisplayModePreference.Subscribe([this](auto mode) { Refresh(); });
+
    UpdatePrefs();
 }
 

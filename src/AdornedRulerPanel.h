@@ -19,6 +19,7 @@
 #include "Observer.h"
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
+#include "TimeDisplayMode.h"
 
 class AudacityProject;
 struct AudioIOEvent;
@@ -267,22 +268,12 @@ private:
    double mLastDrawnZoom{};
 
 public:
-
-   enum RulerTypeValues : int {
-      stMinutesAndSeconds,
-      stBeatsAndMeasures,
-
-      stNumRulerTypes,
-   };
-
-   RulerTypeValues GetRulerType() const;
-   void SetRulerType(RulerTypeValues rulerType);
+   TimeDisplayMode GetTimeDisplayMode() const;
+   void SetTimeDisplayMode(TimeDisplayMode rulerType);
 
 private:
 
-   RulerTypeValues mRulerType;
+   TimeDisplayMode mTimeDisplayMode;
 };
-
-extern EnumSetting<AdornedRulerPanel::RulerTypeValues> RulerPanelViewPreference;
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__
