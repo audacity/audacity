@@ -80,6 +80,17 @@ public:
          0, 1, &buffer, start, len, backwards, fill, mayThrow, pNumWithinClips);
    }
 
+   //! Random-access assignment of a range of samples
+   void Set(constSamplePtr buffer, sampleFormat format,
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
+
    /*!
     If there is an existing WaveClip in the WaveTrack that owns the channel,
     then the data are appended to that clip. If there are no WaveClips in the
@@ -89,6 +100,27 @@ public:
    bool Append(constSamplePtr buffer, sampleFormat format,
       size_t len, unsigned int stride = 1,
       sampleFormat effectiveFormat = widestSampleFormat) override;
+
+   // Get signed min and max sample values
+   /*!
+    @pre `t0 <= t1`
+    */
+   std::pair<float, float> GetMinMax(
+      double t0, double t1, bool mayThrow = true) const;
+
+   //! Get root-mean-square
+   /*!
+    @pre `t0 <= t1`
+    */
+   float GetRMS(double t0, double t1, bool mayThrow = true) const;
+
+   //! A hint for sizing of well aligned fetches
+   inline size_t GetBestBlockSize(sampleCount t) const;
+   //! A hint for sizing of well aligned fetches
+   inline size_t GetIdealBlockSize();
+   //! A hint for maximum returned by either of GetBestBlockSize,
+   //! GetIdealBlockSize
+   inline size_t GetMaxBlockSize() const;
 };
 
 class WAVE_TRACK_API WaveTrack final
@@ -391,19 +423,6 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount* pNumWithinClips = nullptr) const override;
-   /*!
-    Set samples in the unique channel
-    TODO wide wave tracks -- overloads to set one or all channels
-    */
-   void Set(constSamplePtr buffer, sampleFormat format,
-      sampleCount start, size_t len,
-      sampleFormat effectiveFormat = widestSampleFormat /*!<
-         Make the effective format of the data at least the minumum of this
-         value and `format`.  (Maybe wider, if merging with preexistent data.)
-         If the data are later narrowed from stored format, but not narrower
-         than the effective, then no dithering will occur.
-      */
-   );
 
    sampleFormat WidestEffectiveFormat() const override;
 
@@ -412,21 +431,6 @@ private:
    void GetEnvelopeValues(
       double* buffer, size_t bufferLen, double t0,
       bool backwards) const override;
-
-   // Get min and max from the unique channel
-   /*!
-    @pre `t0 <= t1`
-    TODO wide wave tracks -- require a channel number
-    */
-   std::pair<float, float> GetMinMax(
-      double t0, double t1, bool mayThrow = true) const;
-
-   // Get RMS from the unique channel
-   /*!
-    @pre `t0 <= t1`
-    TODO wide wave tracks -- require a channel number
-    */
-   float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //
    // MM: We now have more than one sequence and envelope per track, so
@@ -825,6 +829,8 @@ private:
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
    double mOrigin{ 0.0 };
+
+   friend WaveChannel;
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
@@ -841,6 +847,18 @@ const WaveTrack &WaveChannel::GetTrack() const {
    // TODO wide wave tracks -- remove assertion
    assert(&result == this);
    return result;
+}
+
+size_t WaveChannel::GetBestBlockSize(sampleCount t) const {
+   return GetTrack().GetBestBlockSize(t);
+}
+
+size_t WaveChannel::GetIdealBlockSize() {
+   return GetTrack().GetIdealBlockSize();
+}
+
+size_t WaveChannel::GetMaxBlockSize() const {
+   return GetTrack().GetMaxBlockSize();
 }
 
 #include <unordered_set>
