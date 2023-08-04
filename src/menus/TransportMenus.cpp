@@ -309,8 +309,10 @@ void OnPunchAndRoll(const CommandContext &context)
    }
 
    t1 = newt1;
+   double endTime{};
    for (const auto &wt : tracks) {
-      const auto endTime = wt->GetEndTime();
+      if (wt->IsLeader())
+         endTime = wt->GetEndTime();
       const auto duration =
          std::max(0.0, std::min(crossFadeDuration, endTime - t1));
       const size_t getLen = floor(duration * wt->GetRate());

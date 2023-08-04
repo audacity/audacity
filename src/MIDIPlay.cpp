@@ -640,7 +640,7 @@ Iterator::Iterator(
       const void *cookie = t.get();
       it.begin_seq(seq,
          // casting away const, but allegro just uses the pointer opaquely
-         const_cast<void*>(cookie), t->GetOffset() + offset);
+         const_cast<void*>(cookie), t->GetStartTime() + offset);
    }
    Prime(send, startTime + offset);
 }

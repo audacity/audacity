@@ -116,7 +116,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
       mRelativeTo = 0;
 
    AudacityProject * p = &context.project;
-   double end = TrackList::Get( *p ).GetEndTime();
+   double end = TrackList::Get(*p).GetEndTime();
    double t0;
    double t1;
 

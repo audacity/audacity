@@ -151,21 +151,23 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
    auto newT1 = mT1;
    int count = 0;
    // Process selected wave tracks first, to find the new t1 value
-   for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
+   for (const auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart ? trackStart : mT0;
       double t1 = mT1 > trackEnd ? trackEnd : mT1;
       if (t1 > t0) {
          auto tempList = TrackList::Create(nullptr);
-         for (const auto pChannel : TrackList::Channels(track)) {
+         const auto channels = TrackList::Channels(track);
+         for (const auto pChannel : channels) {
             const auto outputTrack = ProcessOne(*pChannel, t0, t1, count++);
             if (!outputTrack)
                return false;
             outputTrack->Flush();
             tempList->Add(outputTrack);
-            newT1 = std::max(newT1, mT0 + outputTrack->GetEndTime());
          }
+         newT1 = std::max(newT1,
+            mT0 + (*tempList->Leaders().begin())->GetEndTime());
          track->Clear(t0, t1);
          track->Paste(t0, *tempList);
       }

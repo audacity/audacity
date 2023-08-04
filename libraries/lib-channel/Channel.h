@@ -299,6 +299,23 @@ class CHANNEL_API ChannelGroup
 public:
    virtual ~ChannelGroup();
 
+   //! Get the minimum of Start() values of intervals, or 0 when none
+   double GetStartTime() const;
+   //! Get the maximum of End() values of intervals, or 0 when none
+   double GetEndTime() const;
+
+   //! Change start time by given duration
+   /*
+    @pre `IsLeader()`
+    */
+   void ShiftBy(double t) { MoveTo(GetStartTime() + t); }
+
+   //! Change start time to given time point
+   /*
+    @pre `IsLeader()`
+    */
+   virtual void MoveTo(double o) = 0;
+
    /*!
       @name Acesss to channels
       @{

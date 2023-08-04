@@ -249,12 +249,10 @@ bool EffectTruncSilence::ProcessIndependently()
    {
       for (auto track : inputTracks()->SelectedLeaders<const WaveTrack>()) {
          if (syncLock) {
-            auto channels = TrackList::Channels(track);
             auto otherTracks =
                SyncLock::Group(track).Filter<const WaveTrack>()
                   + &Track::IsSelected
-                  - [&](const Track *pTrack){
-                        return channels.contains(pTrack); };
+                  - [&](const Track *pTrack){ return pTrack == track; };
             if (otherTracks) {
                EffectUIServices::DoMessageBox(*this,
                   XO(
@@ -287,7 +285,7 @@ bool EffectTruncSilence::ProcessIndependently()
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
          auto range = syncLock
-            ? SyncLock::Group(track) + &Track::IsLeader
+            ? SyncLock::Group(track)
             : TrackList::SingletonRange<Track>(track);
          double totalCutLen = 0.0;
          if (!DoRemoval(silences, range, iGroup, nGroups, totalCutLen))

@@ -39,15 +39,12 @@ and TimeTrack.
 Track::Track()
 {
    mIndex = 0;
-
-   mOffset = 0.0;
 }
 
 Track::Track(const Track& orig, ProtectedCreationArg&&)
     : mProjectTempo { orig.mProjectTempo }
 {
    mIndex = 0;
-   mOffset = orig.mOffset;
 }
 
 // Copy all the track properties except the actual contents
@@ -932,36 +929,30 @@ size_t TrackList::NChannels() const
 }
 
 namespace {
-   // Abstract the common pattern of the following three member functions
-   inline double Accumulate
-      (const TrackList &list,
-       double (Track::*memfn)() const,
-       double ident,
-       const double &(*combine)(const double&, const double&))
+   // Abstract the common pattern of the following two member functions
+   inline double Accumulate(const TrackList &list,
+      double (Track::*memfn)() const, double ident,
+      const double &(*combine)(const double&, const double&))
    {
       // Default the answer to zero for empty list
-      if (list.empty()) {
+      if (list.empty())
          return 0.0;
-      }
 
       // Otherwise accumulate minimum or maximum of track values
-      return list.Any().accumulate(ident, combine, memfn);
+      return list.Leaders().accumulate(ident, combine, memfn);
    }
-}
-
-double TrackList::GetMinOffset() const
-{
-   return Accumulate(*this, &Track::GetOffset, DBL_MAX, std::min);
 }
 
 double TrackList::GetStartTime() const
 {
-   return Accumulate(*this, &Track::GetStartTime, DBL_MAX, std::min);
+   return Accumulate(*this, &Track::GetStartTime,
+      std::numeric_limits<double>::max(), std::min);
 }
 
 double TrackList::GetEndTime() const
 {
-   return Accumulate(*this, &Track::GetEndTime, -DBL_MAX, std::max);
+   return Accumulate(*this, &Track::GetEndTime,
+      std::numeric_limits<double>::lowest(), std::max);
 }
 
 std::vector<Track*>

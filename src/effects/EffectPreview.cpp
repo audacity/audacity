@@ -130,8 +130,7 @@ void EffectPreview(EffectBase &effect,
       mTracks->Append(std::move(*newTracks));
 
       auto newTrack = *mTracks->Leaders<WaveTrack>().rbegin();
-      for (const auto pChannel : TrackList::Channels(newTrack))
-         pChannel->Offset(-pChannel->GetStartTime());
+      newTrack->MoveTo(0);
       newTrack->SetSelected(true);
    }
    else {

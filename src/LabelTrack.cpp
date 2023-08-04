@@ -163,10 +163,14 @@ LabelTrack::~LabelTrack()
 {
 }
 
-void LabelTrack::SetOffset(double dOffset)
+void LabelTrack::MoveTo(double origin)
 {
-   for (auto &labelStruct: mLabels)
-      labelStruct.selectedRegion.move(dOffset);
+   if (!mLabels.empty()) {
+      const auto offset = origin - mLabels[0].selectedRegion.t0();
+      for (auto &labelStruct: mLabels) {
+         labelStruct.selectedRegion.move(offset);
+      }
+   }
 }
 
 void LabelTrack::DoOnProjectTempoChange(
@@ -336,35 +340,6 @@ void LabelTrack::SetSelected( bool s )
    if ( selected != GetSelected() )
       Publish({ LabelTrackEvent::Selection,
          this->SharedPointer<LabelTrack>(), {}, -1, -1 });
-}
-
-double LabelTrack::GetOffset() const
-{
-   return mOffset;
-}
-
-double LabelTrack::GetStartTime() const
-{
-   if (mLabels.empty())
-      return 0.0;
-   else
-      return mLabels[0].getT0();
-}
-
-double LabelTrack::GetEndTime() const
-{
-   //we need to scan through all the labels, because the last
-   //label might not have the right-most end (if there is overlap).
-   if (mLabels.empty())
-      return 0.0;
-
-   double end = 0.0;
-   for (auto &labelStruct: mLabels) {
-      const double t1 = labelStruct.getT1();
-      if(t1 > end)
-         end = t1;
-   }
-   return end;
 }
 
 TrackListHolder LabelTrack::Clone() const

@@ -521,10 +521,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                }
                else
 #endif
-               {
-                  for (auto channel : TrackList::Channels(t))
-                     channel->SetOffset(offset);
-               }
+               t->MoveTo(offset);
 
                // Amend the undo transaction made by import
                ProjectHistory::Get( *mProject ).ModifyState(false);
@@ -560,7 +557,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
 
    if (callDurationFactor)
    {
-      double longestDuration = TrackList::Get( *mProject ).GetEndTime();
+      double longestDuration = TrackList::Get(*mProject).GetEndTime();
       ProjectWindow::Get( *mProject ).ZoomBy(longestDuration / durationFactor);
       callDurationFactor = false;
    }

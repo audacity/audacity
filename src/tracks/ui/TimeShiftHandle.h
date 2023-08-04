@@ -198,7 +198,7 @@ private:
 };
 
 //! Used in default of other reimplementations to shift any track as a whole,
-//! invoking Track::Offset()
+//! invoking Track::ShiftBy()
 class CoarseTrackShifter final : public TrackShifter {
 public:
    /*!

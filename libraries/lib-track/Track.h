@@ -289,11 +289,6 @@ private:
    void SetOwner
       (const std::weak_ptr<TrackList> &list, TrackNodePointer node);
 
- // Keep in Track
-
- protected:
-   double              mOffset;
-
  public:
 
    Track();
@@ -328,11 +323,6 @@ private:
    void EnsureVisible(bool modifyState = false);
 
 public:
-
-   virtual double GetOffset() const = 0;
-
-   void Offset(double t) { SetOffset(GetOffset() + t); }
-   virtual void SetOffset (double o) { mOffset = o; }
 
    //! method to set project tempo on track
    /*!
@@ -459,9 +449,6 @@ public:
     May assume consistency of stereo channel grouping and examine other channels
     */
    virtual std::optional<TranslatableString> GetErrorOpening() const;
-
-   virtual double GetStartTime() const = 0;
-   virtual double GetEndTime() const = 0;
 
    // Send a notification to subscribers when state of the track changes
    // To do: define values for the argument to distinguish different parts
@@ -1301,10 +1288,10 @@ public:
    size_t NChannels() const;
    size_t Size() const { return Leaders().size(); }
 
+   //! Return the least start time of the tracks, or 0 when no tracks
    double GetStartTime() const;
+   //! Return the greatest end time of the tracks, or 0 when no tracks
    double GetEndTime() const;
-
-   double GetMinOffset() const;
 
    //! Construct a temporary list owned by `pProject` (if that is not null)
    //! so that `TrackList::Channels(left.get())` will enumerate the given

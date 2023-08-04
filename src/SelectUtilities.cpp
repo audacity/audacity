@@ -37,23 +37,21 @@ namespace {
 
 // Temporal selection (not TimeTrack selection)
 // potentially for all wave tracks.
-void DoSelectTimeAndAudioTracks
-(AudacityProject &project, bool bAllTime, bool bAllTracks)
+void DoSelectTimeAndAudioTracks(
+   AudacityProject &project, bool bAllTime, bool bAllTracks)
 {
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
-   if( bAllTime )
-      selectedRegion.setTimes(
-         tracks.GetMinOffset(), tracks.GetEndTime());
+   if (bAllTime)
+      selectedRegion.setTimes(tracks.GetStartTime(), tracks.GetEndTime());
 
-   if( bAllTracks ) {
+   if (bAllTracks) {
       // Unselect all tracks before selecting audio.
       for (auto t : tracks.Leaders())
          t->SetSelected(false);
       for (auto t : tracks.Leaders<WaveTrack>())
          t->SetSelected(true);
-
       ProjectHistory::Get( project ).ModifyState(false);
    }
 }
@@ -68,8 +66,7 @@ void DoSelectTimeAndTracks
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    if( bAllTime )
-      selectedRegion.setTimes(
-         tracks.GetMinOffset(), tracks.GetEndTime());
+      selectedRegion.setTimes(tracks.GetStartTime(), tracks.GetEndTime());
 
    if( bAllTracks ) {
       for (auto t : tracks.Leaders())

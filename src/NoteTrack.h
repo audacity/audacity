@@ -78,9 +78,8 @@ private:
    TrackListHolder Clone() const override;
 
 public:
-   double GetOffset() const override;
-   double GetStartTime() const override;
-   double GetEndTime() const override;
+   void MoveTo(double origin) override { mOrigin = origin; }
+
    Alg_seq &GetSeq() const;
 
    void WarpAndTransposeNotes(double t0, double t1,
@@ -257,6 +256,7 @@ private:
    std::atomic<unsigned> mVisibleChannels{ ALL_CHANNELS };
 
    std::weak_ptr<StretchHandle> mStretchHandle;
+   double mOrigin{ 0.0 };
 };
 
 /// Data used to display a note track

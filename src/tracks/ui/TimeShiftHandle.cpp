@@ -118,16 +118,14 @@ TimeShiftHandle::~TimeShiftHandle()
 {
 }
 
-void ClipMoveState::DoHorizontalOffset( double offset )
+void ClipMoveState::DoHorizontalOffset(double offset)
 {
-   if ( !shifters.empty() ) {
-      for ( auto &pair : shifters )
-         pair.second->DoHorizontalOffset( offset );
+   if (!shifters.empty()) {
+      for (auto &pair : shifters)
+         pair.second->DoHorizontalOffset(offset);
    }
-   else {
-      for (auto channel : TrackList::Channels( mCapturedTrack.get() ))
-         channel->Offset( offset );
-   }
+   else if (mCapturedTrack)
+      mCapturedTrack->ShiftBy(offset);
 }
 
 TrackShifter::TrackShifter() = default;
@@ -228,10 +226,10 @@ bool TrackShifter::FinishMigration()
    return true;
 }
 
-void TrackShifter::DoHorizontalOffset( double offset )
+void TrackShifter::DoHorizontalOffset(double offset)
 {
    if (!AllFixed())
-      GetTrack().Offset( offset );
+      GetTrack().ShiftBy(offset);
 }
 
 double TrackShifter::AdjustT0(double t0) const
@@ -352,7 +350,7 @@ void ClipMoveState::Init(
                continue;
             auto &track = shifter.GetTrack();
             auto group = SyncLock::Group(&track);
-            if ( group.size() <= 1 )
+            if (group.size() <= 1)
                continue;
 
             auto &intervals = shifter.MovingIntervals();
@@ -360,12 +358,9 @@ void ClipMoveState::Init(
 
                // ...and tell all other tracks in the sync lock group
                // to select that interval...
-               for ( auto pTrack2 : group ) {
+               for (auto pTrack2 : group) {
                   if (pTrack2 == &track)
                      continue;
-                  if (!pTrack2->IsLeader())
-                     continue;
-
                   // shifters maps from leader tracks only
                   auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();

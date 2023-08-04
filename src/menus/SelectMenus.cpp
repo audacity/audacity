@@ -204,19 +204,18 @@ double OffsetTime
 void MoveWhenAudioInactive
 (AudacityProject &project, double seekStep, TimeUnit timeUnit)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &ruler = AdornedRulerPanel::Get( project );
-   const auto &settings = ProjectSnap::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &trackPanel = TrackPanel::Get(project);
+   auto &tracks = TrackList::Get(project);
+   auto &ruler = AdornedRulerPanel::Get(project);
+   const auto &settings = ProjectSnap::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
    auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    // Move the cursor
    // Already in cursor mode?
@@ -256,12 +255,12 @@ void SeekWhenAudioInactive
 (AudacityProject &project, double seekStep, TimeUnit timeUnit,
 SelectionOperation operation)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-   const auto &settings = ProjectSnap::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
+   const auto &settings = ProjectSnap::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
-   if( operation == CURSOR_MOVE )
+   if (operation == CURSOR_MOVE)
    {
       MoveWhenAudioInactive( project, seekStep, timeUnit);
       return;
@@ -271,8 +270,7 @@ SelectionOperation operation)
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    // Is it t0 or t1 moving?
    bool bMoveT0 = (operation == SELECTION_CONTRACT && seekStep > 0) ||
@@ -354,9 +352,9 @@ void DoCursorMove(
 
 void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
    // step is negative, then is moving left.  step positive, moving right.
    // Move the left/right selection boundary, to expand the selection
@@ -365,18 +363,15 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    // holding the key down and should move faster.
    wxLongLong curtime = ::wxGetUTCTimeMillis();
    int pixels = step;
-   if( curtime - info.mLastSelectionAdjustment < 50 )
-   {
+   if (curtime - info.mLastSelectionAdjustment < 50)
       pixels *= 4;
-   }
    info.mLastSelectionAdjustment = curtime;
 
    // we used to have a parameter boundaryContract to say if expanding or
    // contracting.  it is no longer needed.
    bool bMoveT0 = (step < 0 );// ^ boundaryContract ;
 
-   if( ProjectAudioIO::Get( project ).IsAudioActive() )
-   {
+   if (ProjectAudioIO::Get(project).IsAudioActive()) {
       auto gAudioIO = AudioIO::Get();
       double indicator = gAudioIO->GetStreamTime();
       if( bMoveT0 )
@@ -391,8 +386,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    double newT = viewInfo.OffsetTimeByPixels( bMoveT0 ? t0 : t1, pixels);
    // constrain to be in the track/screen limits.
@@ -500,64 +494,62 @@ void OnSetRightSelection(const CommandContext &context)
 void OnSelectStartCursor(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
-   auto range = tracks.Selected();
-   if ( ! range )
+   auto range = tracks.SelectedLeaders();
+   if (!range)
       return;
 
-   double minOffset = range.min( &Track::GetStartTime );
+   double minOffset = range.min(&Track::GetStartTime);
 
    if( minOffset >=
        (kWayOverToRight * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setT0(minOffset);
-
-   ProjectHistory::Get( project ).ModifyState(false);
+   ProjectHistory::Get(project).ModifyState(false);
 }
 
 void OnSelectCursorEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   auto range = tracks.Selected();
-   if ( ! range )
+   auto range = tracks.SelectedLeaders();
+   if (!range)
       return;
 
-   double maxEndOffset = range.max( &Track::GetEndTime );
+   double maxEndOffset = range.max(&Track::GetEndTime);
 
    if( maxEndOffset <=
        (kWayOverToLeft * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setT1(maxEndOffset);
-
-   ProjectHistory::Get( project ).ModifyState(false);
+   ProjectHistory::Get(project).ModifyState(false);
 }
 
 void OnSelectTrackStartToEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
 
-   auto range = tracks.Selected();
-   double maxEndOffset = range.max( &Track::GetEndTime );
-   double minOffset = range.min( &Track::GetStartTime );
+   auto range = tracks.SelectedLeaders();
+   double maxEndOffset = range.max(&Track::GetEndTime);
+   double minOffset = range.min(&Track::GetStartTime);
 
    if( maxEndOffset < minOffset)
       return;
 
-   viewInfo.selectedRegion.setTimes( minOffset, maxEndOffset );
-   ProjectHistory::Get( project ).ModifyState(false);
+   viewInfo.selectedRegion.setTimes(minOffset, maxEndOffset);
+   ProjectHistory::Get(project).ModifyState(false);
 }
 
 // Handler state:
@@ -740,52 +732,52 @@ void OnCursorSelEnd(const CommandContext &context)
 void OnCursorTrackStart(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
-   auto trackRange = tracks.Selected() + &Track::SupportsBasicEditing;
+   auto trackRange = tracks.SelectedLeaders() + &Track::SupportsBasicEditing;
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
 
    // Range is surely nonempty now
-   auto minOffset = std::max( 0.0, trackRange.min( &Track::GetOffset ) );
+   auto minOffset = std::max(0.0, trackRange.min(&Track::GetStartTime));
 
    if( minOffset >=
        (kWayOverToRight * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setTimes(minOffset, minOffset);
-   ProjectHistory::Get( project ).ModifyState(false);
+   ProjectHistory::Get(project).ModifyState(false);
    window.ScrollIntoView(selectedRegion.t0());
 }
 
 void OnCursorTrackEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   auto trackRange = tracks.Selected() + &Track::SupportsBasicEditing;
+   auto trackRange = tracks.SelectedLeaders() + &Track::SupportsBasicEditing;
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
 
    // Range is surely nonempty now
-   auto maxEndOffset = trackRange.max( &Track::GetEndTime );
+   auto maxEndOffset = trackRange.max(&Track::GetEndTime);
 
    if( maxEndOffset <
        (kWayOverToLeft * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setTimes(maxEndOffset, maxEndOffset);
-   ProjectHistory::Get( project ).ModifyState(false);
+   ProjectHistory::Get(project).ModifyState(false);
    window.ScrollIntoView(selectedRegion.t1());
 }
 

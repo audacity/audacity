@@ -237,15 +237,13 @@ UIHandle::Result StretchHandle::Release
             if (left) {
                auto origT0 = mStretchState.mOrigSel0Quantized;
                auto diff = viewInfo.selectedRegion.t0() - origT0;
-               if (track->IsLeader()) {
-                  if (diff > 0)
-                     track->SyncLockAdjust(origT0 + diff, origT0);
-                  else
-                     track->SyncLockAdjust(origT0, origT0 - diff);
-               }
-               track->Offset(diff);
+               if (diff > 0)
+                  track->SyncLockAdjust(origT0 + diff, origT0);
+               else
+                  track->SyncLockAdjust(origT0, origT0 - diff);
+               track->ShiftBy(diff);
             }
-            else if (track->IsLeader()) {
+            else {
                auto origT1 = mStretchState.mOrigSel1Quantized;
                auto diff = viewInfo.selectedRegion.t1() - origT1;
                track->SyncLockAdjust(origT1, origT1 + diff);
@@ -311,7 +309,7 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
             return;
          nt.StretchRegion
             ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
-         nt.Offset( moveto - t0 );
+         nt.ShiftBy(moveto - t0);
          mStretchState.mBeat0.first = moveto;
          viewInfo.selectedRegion.setT0(moveto);
          break;

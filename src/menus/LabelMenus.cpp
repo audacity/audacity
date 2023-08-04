@@ -241,28 +241,27 @@ void EditClipboardByLabel(AudacityProject &project,
                if (!merged)
                   merged = dest;
                else {
-                  for (const auto pMerged : merged->Any()) {
-                     // Paste to the beginning; unless this is the first region,
-                     // offset the track to account for time between the regions
-                     if (i + 1 < regions.size())
-                        pMerged->Offset(
-                           regions.at(i + 1).start - region.end);
-                  }
+                  const auto pMerged = *merged->Leaders().begin();
+                  // Paste to the beginning; unless this is the first region,
+                  // offset the track to account for time between the regions
+                  if (i + 1 < regions.size())
+                     pMerged->ShiftBy(
+                        regions.at(i + 1).start - region.end);
 
                   // dest may have a placeholder clip at the end that is
                   // removed when pasting, which is okay because we proceed
                   // right to left.  Any placeholder already in merged is kept.
                   // Only the rightmost placeholder is important in the final
                   // result.
-                  (*merged->Leaders().begin())->Paste(0.0, *dest);
+                  pMerged->Paste(0.0, *dest);
                }
             }
             else
                // nothing copied but there is a 'region', so the 'region' must
                // be a 'point label' so offset
-               if (i + 1 < regions.size() && merged != nullptr)
-                  for (const auto pChannel : *merged)
-                     pChannel->Offset(regions.at(i + 1).start - region.end);
+               if (i + 1 < regions.size() && merged)
+                  (*merged->Leaders().begin())
+                     ->ShiftBy(regions.at(i + 1).start - region.end);
          }
          if (merged)
             newClipboard.Append(std::move(*merged));

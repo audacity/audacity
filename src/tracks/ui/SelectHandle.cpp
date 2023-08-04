@@ -569,7 +569,7 @@ UIHandle::Result SelectHandle::Click(
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength(
-         viewInfo, *pTrack, SyncLockState::Get(*pProject).IsSyncLocked());
+         viewInfo, *pLeader, SyncLockState::Get(*pProject).IsSyncLocked());
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip

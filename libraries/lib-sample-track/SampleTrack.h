@@ -40,8 +40,8 @@ public:
    ~SampleTrack() override;
 
    // Fix the otherwise ambiguous lookup of these virtual function names
-   using Track::GetStartTime;
-   using Track::GetEndTime;
+   using ChannelGroup::GetStartTime;
+   using ChannelGroup::GetEndTime;
    using Track::IsLeader;
 
    const TypeInfo &GetTypeInfo() const override;

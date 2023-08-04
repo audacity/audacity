@@ -121,22 +121,13 @@ private:
 
    virtual ~WaveTrack();
 
-   double GetOffset() const override;
-   void SetOffset(double o) override;
+   void MoveTo(double o) override;
 
    bool LinkConsistencyFix(bool doFix, bool completeList) override;
 
-   /** @brief Get the time at which the first clip in the track starts
-    *
-    * @return time in seconds, or zero if there are no clips in the track
-    */
+   //! Implement WideSampleSequence
    double GetStartTime() const override;
-
-   /** @brief Get the time at which the last clip in the track ends, plus
-    * recorded stuff
-    *
-    * @return time in seconds, or zero if there are no clips in the track.
-    */
+   //! Implement WideSampleSequence
    double GetEndTime() const override;
 
    //
@@ -655,7 +646,8 @@ private:
 
 protected:
    static void ClearAndPasteOne(WaveTrack &track,
-      double t0, double t1, double endTime, const WaveTrack &src,
+      double t0, double t1, double startTime, double endTime,
+      const WaveTrack &src,
       bool preserve, bool merge, const TimeWarper *effectWarper);
    static void JoinOne(WaveTrack &track, double t0, double t1);
    static Holder CopyOne(const WaveTrack &track,
@@ -706,11 +698,12 @@ private:
    void DoSetGain(float value);
 
    /*
-   @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
+    @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
+    @pre `IsLeader()`
     */
    void PasteWaveTrack(double t0, const WaveTrack &other);
    static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
-      const double insertDuration);
+      double startTime, double insertDuration);
 
    //! Whether all clips have a common rate
    bool RateConsistencyCheck() const;
@@ -724,6 +717,7 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
+   double mOrigin{ 0.0 };
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);

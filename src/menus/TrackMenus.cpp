@@ -180,8 +180,7 @@ static const std::vector< ComponentInterfaceSymbol >
 
 const size_t kAlignLabelsCount(){ return alignLabels().size(); }
 
-void DoAlign
-(AudacityProject &project, int index, bool moveSel)
+void DoAlign(AudacityProject &project, int index, bool moveSel)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -191,11 +190,10 @@ void DoAlign
    double delta = 0.0;
    double newPos = -1.0;
 
-   auto channelRange = tracks.Selected< AudioTrack >();
-   auto trackRange = tracks.SelectedLeaders< AudioTrack >();
+   auto trackRange = tracks.SelectedLeaders<AudioTrack>();
 
-   auto FindOffset = []( const Track *pTrack ) {
-      return TrackList::Channels(pTrack).min( &Track::GetOffset ); };
+   auto FindOffset =
+      [](const Track *pTrack) { return pTrack->GetStartTime(); };
 
    auto firstTrackOffset = [&]{ return FindOffset( *trackRange.begin() ); };
    auto minOffset = [&]{ return trackRange.min( FindOffset ); };
@@ -204,7 +202,7 @@ void DoAlign
                              std::max( size_t(1), trackRange.size() ); };
 
    auto maxEndOffset = [&]{
-      return std::max(0.0, channelRange.max( &Track::GetEndTime ) ); };
+      return std::max(0.0, trackRange.max(&Track::GetEndTime)); };
 
    switch(index) {
    case kAlignStartZero:
@@ -285,21 +283,13 @@ void DoAlign
 
    if ((unsigned)index >= kAlignLabelsCount()) {
       // This is an alignLabelsNoSync command.
-      for (auto t : tracks.SelectedLeaders< AudioTrack >()) {
+      for (auto t : tracks.SelectedLeaders<AudioTrack>()) {
          // This shifts different tracks in different ways, so no sync-lock
          // move.
          // Only align Wave and Note tracks end to end.
-         auto channels = TrackList::Channels(t);
-
-         auto trackStart = channels.min( &Track::GetStartTime );
-         auto trackEnd = channels.max( &Track::GetEndTime );
-
-         for (auto channel : channels)
-            // Move the track
-            channel->SetOffset(newPos + channel->GetStartTime() - trackStart);
-
+         t->MoveTo(newPos);
          if (index == kAlignEndToEnd)
-            newPos += (trackEnd - trackStart);
+            newPos += (t->GetEndTime() - t->GetStartTime());
       }
       if (index == kAlignEndToEnd)
          window.DoZoomFit();
@@ -307,9 +297,9 @@ void DoAlign
 
    if (delta != 0.0) {
       // For a fixed-distance shift move sync-lock selected tracks also.
-      for (auto t : tracks.Any()
+      for (auto t : tracks.Leaders()
            + &SyncLock::IsSelectedOrSyncLockSelected )
-         t->SetOffset(t->GetOffset() + delta);
+         t->MoveTo(t->GetStartTime() + delta);
    }
 
    if (moveSel)
@@ -807,7 +797,7 @@ void OnScoreAlign(const CommandContext &context)
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
-   tracks.Selected().Visit(
+   tracks.SelectedLeaders().Visit(
       [&](WaveTrack *wt) {
          numWaveTracksSelected++;
          endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();
@@ -854,7 +844,7 @@ void OnScoreAlign(const CommandContext &context)
    } else if (alignedNoteTrack->GetOffset() > 0) {
       alignedNoteTrack->Shift(alignedNoteTrack->GetOffset());
    }
-   alignedNoteTrack->SetOffset(0);
+   alignedNoteTrack->MoveTo(0);
 
    WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(true /* selectionOnly */);

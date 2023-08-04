@@ -11,6 +11,9 @@
 *//*******************************************************************/
 #include "Channel.h"
 
+#include <algorithm>
+#include <numeric>
+
 ChannelGroupInterval::~ChannelGroupInterval() = default;
 
 ChannelInterval::~ChannelInterval() = default;
@@ -64,3 +67,25 @@ size_t Channel::GetChannelIndex() const
 }
 
 ChannelGroup::~ChannelGroup() = default;
+
+double ChannelGroup::GetStartTime() const
+{
+   auto range = Intervals();
+   if (range.empty())
+      return 0;
+   return std::accumulate(range.first, range.second,
+      std::numeric_limits<double>::max(),
+      [](double acc, const auto &pInterval){
+         return std::min(acc, pInterval->Start()); });
+}
+
+double ChannelGroup::GetEndTime() const
+{
+   auto range = Intervals();
+   if (range.empty())
+      return 0;
+   return std::accumulate(range.first, range.second,
+      std::numeric_limits<double>::lowest(),
+      [](double acc, const auto &pInterval){
+         return std::max(acc, pInterval->End()); });
+}

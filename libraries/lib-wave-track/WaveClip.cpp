@@ -541,7 +541,7 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
          // Recursively copy cutlines of cutlines.  They don't need
          // their offsets adjusted.
          true);
-      cutlineCopy->Offset(t0 - GetSequenceStartTime());
+      cutlineCopy->ShiftBy(t0 - GetSequenceStartTime());
       newCutlines.push_back(std::move(cutlineCopy));
    }
 
@@ -641,7 +641,7 @@ void WaveClip::Clear(double t0, double t1)
     ClearSequence(st0, st1);
 
     if (offset != .0)
-        Offset(offset);
+       ShiftBy(offset);
 }
 
 void WaveClip::ClearLeft(double t)
@@ -708,7 +708,7 @@ void WaveClip::ClearSequence(double t0, double t1)
             {
                 if (cutlinePosition >= t1)
                 {
-                    clip->Offset(clip_t0 - clip_t1);
+                    clip->ShiftBy(clip_t0 - clip_t1);
                 }
                 ++it;
             }
@@ -764,7 +764,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
       {
          if (cutlinePosition >= t1)
          {
-            clip->Offset(clip_t0 - clip_t1);
+            clip->ShiftBy(clip_t0 - clip_t1);
          }
          ++it;
       }
@@ -870,7 +870,7 @@ void WaveClip::OffsetCutLines(double t0, double len)
    for (const auto &cutLine : mCutLines)
    {
       if (GetSequenceStartTime() + cutLine->GetSequenceStartTime() >= t0)
-         cutLine->Offset(len);
+         cutLine->ShiftBy(len);
    }
 }
 
@@ -1159,7 +1159,7 @@ sampleCount WaveClip::GetSequenceEndSample() const
     return GetSequenceStartSample() + GetNumSamples();
 }
 
-void WaveClip::Offset(double delta) noexcept
+void WaveClip::ShiftBy(double delta) noexcept
 {
     SetSequenceStartTime(GetSequenceStartTime() + delta);
 }
