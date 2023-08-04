@@ -60,12 +60,23 @@ class WAVE_TRACK_API WaveChannel
    : public Channel
    // TODO wide wave tracks -- remove "virtual"
    , public virtual WideSampleSequence
+   , public virtual RecordableSequence
 {
 public:
    ~WaveChannel() override;
 
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
+
+   /*!
+    If there is an existing WaveClip in the WaveTrack that owns the channel,
+    then the data are appended to that clip. If there are no WaveClips in the
+    track, then a new one is created.
+    @return true if at least one complete block was created
+    */
+   bool Append(constSamplePtr buffer, sampleFormat format,
+      size_t len, unsigned int stride = 1,
+      sampleFormat effectiveFormat = widestSampleFormat) override;
 };
 
 class WAVE_TRACK_API WaveTrack final
@@ -328,16 +339,6 @@ private:
     * false otherwise.
     */
    bool IsEmpty(double t0, double t1) const;
-
-   /*!
-    If there is an existing WaveClip in the WaveTrack then the data are
-    appended to that clip. If there are no WaveClips in the track, then a new
-    one is created.
-    @return true if at least one complete block was created
-    */
-   bool Append(constSamplePtr buffer, sampleFormat format,
-      size_t len, unsigned int stride = 1,
-      sampleFormat effectiveFormat = widestSampleFormat) override;
 
    void Flush() override;
 
