@@ -254,11 +254,9 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
             auto newTracks = TrackList::Create(nullptr);
             for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
                // ProcessOne() (implemented below) processes a single channel
-               if (const auto outputTrack =
-                  ProcessOne(outWaveTrack, start, end)
-               ){
+               if (const auto outputTrack = ProcessOne(*pChannel, start, end)) {
                   newTracks->Add(outputTrack);
-                  assert(outputTrack->IsLeader() == outWaveTrack.IsLeader());
+                  assert(outputTrack->IsLeader() == pChannel->IsLeader());
                   ++mCurTrackNum;
                }
                else {
