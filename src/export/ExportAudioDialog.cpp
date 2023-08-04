@@ -924,9 +924,7 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
 
       /* Select the track */
       SelectionStateChanger changer2{ selectionState, tracks };
-      const auto range = TrackList::Channels(tr);
-      for (auto channel : range)
-         channel->SetSelected(true);
+      tr->SetSelected(true);
 
       // Export the data. "channels" are per track.
       ok = DoExport(plugin, formatIndex, parameters, activeSetting.filename, activeSetting.channels,
