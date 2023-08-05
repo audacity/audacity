@@ -683,7 +683,7 @@ struct NyquistEffect::NyxContext {
 
    WaveTrack *mCurChannelGroup{};
    WaveChannel       *mCurTrack[2]{};
-   sampleCount       mCurStart[2]{};
+   sampleCount       mCurStart{};
 
    unsigned          mCurNumChannels{}; //!< Not used in the callbacks
 
@@ -952,7 +952,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
                mCurNumChannels = 2;
 
                mCurTrack[1] = (* ++ channels.first).get();
-               mCurStart[1] = mCurTrack[1]->TimeToLongSamples(mT0);
             }
 
             // Check whether we're in the same group as the last selected track
@@ -960,9 +959,9 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mFirstInGroup = !gtLast || (gtLast != gt);
             gtLast = gt;
 
-            mCurStart[0] = mCurChannelGroup->TimeToLongSamples(mT0);
+            mCurStart = mCurChannelGroup->TimeToLongSamples(mT0);
             auto end = mCurChannelGroup->TimeToLongSamples(mT1);
-            mCurLen = end - mCurStart[0];
+            mCurLen = end - mCurStart;
 
             wxASSERT(mCurLen <= NYQ_MAX_LEN);
 
@@ -2530,22 +2529,22 @@ int NyquistEffect::NyxContext::GetCallback(float *buffer, int ch,
    int64_t start, int64_t len, int64_t)
 {
    if (mCurBuffer[ch]) {
-      if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
-          (mCurStart[ch] + start) + len >
+      if ((mCurStart + start) < mCurBufferStart[ch] ||
+          (mCurStart + start) + len >
           mCurBufferStart[ch] + mCurBufferLen[ch]) {
          mCurBuffer[ch].reset();
       }
    }
 
    if (!mCurBuffer[ch]) {
-      mCurBufferStart[ch] = (mCurStart[ch] + start);
+      mCurBufferStart[ch] = (mCurStart + start);
       mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
 
       if (mCurBufferLen[ch] < (size_t) len)
          mCurBufferLen[ch] = mCurTrack[ch]->GetIdealBlockSize();
 
       mCurBufferLen[ch] = limitSampleBufferSize(mCurBufferLen[ch],
-         mCurStart[ch] + mCurLen - mCurBufferStart[ch]);
+         mCurStart + mCurLen - mCurBufferStart[ch]);
 
       // C++20
       // mCurBuffer[ch] = std::make_unique_for_overwrite(mCurBufferLen[ch]);
@@ -2563,7 +2562,7 @@ int NyquistEffect::NyxContext::GetCallback(float *buffer, int ch,
 
    // We have guaranteed above that this is nonnegative and bounded by
    // mCurBufferLen[ch]:
-   auto offset = (mCurStart[ch] + start - mCurBufferStart[ch]).as_size_t();
+   auto offset = (mCurStart + start - mCurBufferStart[ch]).as_size_t();
    const void *src = &mCurBuffer[ch][offset];
    std::memcpy(buffer, src, len * sizeof(float));
 
