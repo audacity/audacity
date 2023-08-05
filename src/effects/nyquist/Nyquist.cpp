@@ -1342,23 +1342,16 @@ bool NyquistEffect::ProcessOne(
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat);
 
       float maxPeakLevel = 0.0;  // Deprecated as of 2.1.3
-      wxString clips, peakString, rmsString;
-      auto &mCurTrack = nyxContext.mCurTrack;
-      for (size_t i = 0; i < mCurNumChannels; i++) {
-         auto ca = mCurTrack[i]->SortedClipArray();
-         float maxPeak = 0.0;
-
-         // A list of clips for mono, or an array of lists for multi-channel.
-         if (mCurNumChannels > 1) {
-            clips += wxT("(list ");
-         }
+      const auto clipBoundaries = [&]() -> wxString {
+         wxString clips;
+         auto ca = mCurChannelGroup->SortedClipArray();
          // Each clip is a list (start-time, end-time)
          // Limit number of clips added to avoid argument stack overflow error (bug 2300).
-         for (size_t i=0; i<ca.size(); i++) {
+         for (size_t i = 0, n = ca.size(); i < n; ++i) {
             if (i < 1000) {
                clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                         Internat::ToString(ca[i]->GetPlayStartTime()),
-                                         Internat::ToString(ca[i]->GetPlayEndTime()));
+                  Internat::ToString(ca[i]->GetPlayStartTime()),
+                  Internat::ToString(ca[i]->GetPlayEndTime()));
             } else if (i == 1000) {
                // If final clip is NIL, plug-in developer knows there are more than 1000 clips in channel.
                clips += "NIL";
@@ -1366,7 +1359,18 @@ bool NyquistEffect::ProcessOne(
                break;
             }
          }
-         if (mCurNumChannels > 1) clips += wxT(" )");
+         return clips;
+      }();
+      wxString clips, peakString, rmsString;
+      auto &mCurTrack = nyxContext.mCurTrack;
+      for (size_t i = 0; i < mCurNumChannels; i++) {
+         float maxPeak = 0.0;
+
+         // A list of clips for mono, or an array of lists for multi-channel.
+         if (mCurNumChannels > 1)
+            clips = wxT("(list ") + clipBoundaries + wxT(" )");
+         else
+            clips = clipBoundaries;
 
          float min, max;
          auto pair = mCurTrack[i]->GetMinMax(mT0, mT1); // may throw
