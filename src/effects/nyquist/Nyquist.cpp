@@ -681,6 +681,7 @@ struct NyquistEffect::NyxContext {
    static int StaticPutCallback(float *buffer, int channel,
       int64_t start, int64_t len, int64_t totlen, void *userdata);
 
+   WaveTrack *mCurChannelGroup{};
    WaveTrack         *mCurTrack[2]{};
    sampleCount       mCurStart[2]{};
 
@@ -929,19 +930,22 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       // New context for each channel group of input
       NyxContext nyxContext{ [this](double frac){ return TotalProgress(frac); },
          scale, progressTot };
-      auto &mCurNumChannels = nyxContext.mCurNumChannels; 
+      auto &mCurNumChannels = nyxContext.mCurNumChannels;
+      auto &mCurChannelGroup = nyxContext.mCurChannelGroup;
       auto &mCurTrack = nyxContext.mCurTrack;
       auto &mCurStart = nyxContext.mCurStart;
       auto &mCurLen = nyxContext.mCurLen;
 
-      mCurTrack[0] = pRange ? *pRange->first : nullptr;
+      mCurChannelGroup = pRange ? *pRange->first : nullptr;
+      mCurTrack[0] = mCurChannelGroup;
       mCurNumChannels = 1;
       if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {
          }
          else {
-            auto channels = TrackList::Channels(mCurTrack[0]);
-            if (channels.size() > 1) {
+            if (auto channels = TrackList::Channels(mCurChannelGroup)
+               ; channels.size() > 1
+            ) {
                // TODO: more-than-two-channels
                // Pay attention to consistency of mNumSelectedChannels
                // with the running tally made by this loop!
@@ -952,12 +956,12 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             }
 
             // Check whether we're in the same group as the last selected track
-            Track *gt = *SyncLock::Group(mCurTrack[0]).first;
+            Track *gt = *SyncLock::Group(mCurChannelGroup).first;
             mFirstInGroup = !gtLast || (gtLast != gt);
             gtLast = gt;
 
-            mCurStart[0] = mCurTrack[0]->TimeToLongSamples(mT0);
-            auto end = mCurTrack[0]->TimeToLongSamples(mT1);
+            mCurStart[0] = mCurChannelGroup->TimeToLongSamples(mT0);
+            auto end = mCurChannelGroup->TimeToLongSamples(mT1);
             mCurLen = end - mCurStart[0];
 
             wxASSERT(mCurLen <= NYQ_MAX_LEN);
@@ -1246,7 +1250,7 @@ bool NyquistEffect::ProcessOne(
       cmd += mPerTrackProps;
    }
 
-   auto &mCurTrack = nyxContext.mCurTrack;
+   auto &mCurChannelGroup = nyxContext.mCurChannelGroup;
 
    if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
       // Set the track TYPE and VIEW properties
@@ -1255,10 +1259,10 @@ bool NyquistEffect::ProcessOne(
       wxString bitFormat;
       wxString spectralEditp;
 
-      mCurTrack[0]->TypeSwitch(
+      mCurChannelGroup->TypeSwitch(
          [&](const WaveTrack &wt) {
             type = wxT("wave");
-            spectralEditp = SpectrogramSettings::Get(*mCurTrack[0])
+            spectralEditp = SpectrogramSettings::Get(*mCurChannelGroup)
                .SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we are
@@ -1300,7 +1304,7 @@ bool NyquistEffect::ProcessOne(
       );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
-      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), EscapeString(mCurTrack[0]->GetName()));
+      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), EscapeString(mCurChannelGroup->GetName()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type);
       // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view);
@@ -1309,21 +1313,21 @@ bool NyquistEffect::ProcessOne(
       //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp);
 
-      const double startTime = mCurTrack[0]->GetStartTime();
-      const double endTime = mCurTrack[0]->GetEndTime();
+      const double startTime = mCurChannelGroup->GetStartTime();
+      const double endTime = mCurChannelGroup->GetEndTime();
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
                               Internat::ToString(startTime));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
                               Internat::ToString(endTime));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
-                              Internat::ToString(mCurTrack[0]->GetGain()));
+                              Internat::ToString(mCurChannelGroup->GetGain()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),
-                              Internat::ToString(mCurTrack[0]->GetPan()));
+                              Internat::ToString(mCurChannelGroup->GetPan()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'RATE)\n"),
-                              Internat::ToString(mCurTrack[0]->GetRate()));
+                              Internat::ToString(mCurChannelGroup->GetRate()));
 
-      switch (mCurTrack[0]->GetSampleFormat())
+      switch (mCurChannelGroup->GetSampleFormat())
       {
          case int16Sample:
             bitFormat = wxT("16");
@@ -1339,6 +1343,7 @@ bool NyquistEffect::ProcessOne(
 
       float maxPeakLevel = 0.0;  // Deprecated as of 2.1.3
       wxString clips, peakString, rmsString;
+      auto &mCurTrack = nyxContext.mCurTrack;
       for (size_t i = 0; i < mCurNumChannels; i++) {
          auto ca = mCurTrack[i]->SortedClipArray();
          float maxPeak = 0.0;
@@ -1403,19 +1408,15 @@ bool NyquistEffect::ProcessOne(
    }
 
    // If in tool mode, then we don't do anything with the track and selection.
-   if (GetType() == EffectTypeTool) {
+   if (GetType() == EffectTypeTool)
       nyx_set_audio_params(44100, 0);
-   }
-   else if (GetType() == EffectTypeGenerate) {
-      nyx_set_audio_params(mCurTrack[0]->GetRate(), 0);
-   }
+   else if (GetType() == EffectTypeGenerate)
+      nyx_set_audio_params(mCurChannelGroup->GetRate(), 0);
    else {
       auto curLen = nyxContext.mCurLen.as_long_long();
-      nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
-
+      nyx_set_audio_params(mCurChannelGroup->GetRate(), curLen);
       nyx_set_input_audio(NyxContext::StaticGetCallback, &nyxContext,
-                          (int)mCurNumChannels,
-                          curLen, mCurTrack[0]->GetRate());
+         (int)mCurNumChannels, curLen, mCurChannelGroup->GetRate());
    }
 
    // Restore the Nyquist sixteenth note symbol for Generate plug-ins.
@@ -1666,7 +1667,7 @@ bool NyquistEffect::ProcessOne(
       return false;
    }
 
-   nyxContext.mOutputTracks = mCurTrack[0]->WideEmptyCopy();
+   nyxContext.mOutputTracks = mCurChannelGroup->WideEmptyCopy();
    auto out = (*nyxContext.mOutputTracks->Any<WaveTrack>().begin())
       ->SharedPointer<WaveTrack>();
 
@@ -1710,13 +1711,13 @@ bool NyquistEffect::ProcessOne(
          ? (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime)
             == out->TimeToLongSamples(mT1))
          : mMergeClips != 0;
-      mCurTrack[0]
+      mCurChannelGroup
          ->ClearAndPaste(mT0, mT1, *tempList, mRestoreSplits, bMergeClips);
    }
 
    // If we were first in the group adjust non-selected group tracks
    if (mFirstInGroup) {
-      for (auto t : SyncLock::Group(mCurTrack[0]))
+      for (auto t : SyncLock::Group(mCurChannelGroup))
          if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t))
             t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
 
