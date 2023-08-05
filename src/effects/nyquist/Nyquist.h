@@ -146,7 +146,8 @@ private:
    static int mReentryCount;
    // NyquistEffect implementation
 
-   bool ProcessOne(EffectOutputTracks *pOutputs);
+   struct NyxContext;
+   bool ProcessOne(NyxContext &nyxContext, EffectOutputTracks *pOutputs);
 
    void BuildPromptWindow(ShuttleGui & S);
    void BuildEffectWindow(ShuttleGui & S);
@@ -170,19 +171,9 @@ private:
    FileNames::FileType ParseFileType(const wxString & text);
    FileNames::FileTypes ParseFileTypes(const wxString & text);
 
-   static int StaticGetCallback(float *buffer, int channel,
-                                int64_t start, int64_t len, int64_t totlen,
-                                void *userdata);
-   static int StaticPutCallback(float *buffer, int channel,
-                                int64_t start, int64_t len, int64_t totlen,
-                                void *userdata);
    static void StaticOutputCallback(int c, void *userdata);
    static void StaticOSCallback(void *userdata);
 
-   int GetCallback(float *buffer, int channel,
-                   int64_t start, int64_t len, int64_t totlen);
-   int PutCallback(float *buffer, int channel,
-                   int64_t start, int64_t len, int64_t totlen);
    void OutputCallback(int c);
    void OSCallback();
 
@@ -281,27 +272,12 @@ private:
    int               mVersion;   // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
    std::vector<NyqControl>   mControls;
 
-   unsigned          mCurNumChannels;
-   WaveTrack         *mCurTrack[2];
-   sampleCount       mCurStart[2];
-   sampleCount       mCurLen;
    sampleCount       mMaxLen;
    int               mTrackIndex;
    bool              mFirstInGroup;
    double            mOutputTime;
    unsigned          mCount;
    unsigned          mNumSelectedChannels;
-   double            mProgressIn;
-   double            mProgressOut;
-   double            mProgressTot;
-   double            mScale;
-
-   using Buffer = std::unique_ptr<float[]>;
-   Buffer            mCurBuffer[2];
-   sampleCount       mCurBufferStart[2];
-   size_t            mCurBufferLen[2];
-
-   WaveTrack        *mOutputTrack[2];
 
    wxArrayString     mCategories;
 
@@ -312,8 +288,6 @@ private:
    int               mMergeClips;
 
    wxTextCtrl *mCommandText;
-
-   std::exception_ptr mpException {};
 
    DECLARE_EVENT_TABLE()
 

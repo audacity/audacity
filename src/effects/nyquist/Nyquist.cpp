@@ -143,8 +143,6 @@ END_EVENT_TABLE()
 NyquistEffect::NyquistEffect(const wxString &fName)
    : mIsPrompt{ fName == NYQUIST_PROMPT_ID }
 {
-   mOutputTrack[0] = mOutputTrack[1] = nullptr;
-
    mAction = XO("Applying Nyquist Effect...");
    mExternal = false;
    mCompiler = false;
@@ -663,6 +661,49 @@ bool NyquistEffect::Init()
 
 static void RegisterFunctions();
 
+//! Reads and writes Audacity's track objects, interchanging with Nyquist
+//! sound objects (implemented in the library layer written in C)
+struct NyquistEffect::NyxContext {
+   using ProgressReport = std::function<bool(double)>;
+
+   NyxContext(ProgressReport progressReport, double scale, double progressTot)
+      : mProgressReport{ move(progressReport) }
+      , mScale{ scale }
+      , mProgressTot{ progressTot }
+   {}
+
+   int GetCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen);
+   int PutCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen);
+   static int StaticGetCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen, void *userdata);
+   static int StaticPutCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen, void *userdata);
+
+   WaveTrack         *mCurTrack[2]{};
+   sampleCount       mCurStart[2]{};
+
+   unsigned          mCurNumChannels{}; //!< Not used in the callbacks
+
+   using Buffer = std::unique_ptr<float[]>;
+   Buffer            mCurBuffer[2]; //!< used only in GetCallback
+   sampleCount       mCurBufferStart[2]{};
+   size_t            mCurBufferLen[2]{};
+   sampleCount       mCurLen{};
+
+   std::shared_ptr<WaveTrack> mOutputTrack[2];
+
+   double            mProgressIn{};
+   double            mProgressOut{};
+
+   const ProgressReport mProgressReport;
+   const double mScale;
+   const double mProgressTot;
+
+   std::exception_ptr mpException{};
+};
+
 bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
    if (mIsPrompt && mControls.size() > 0 && !IsBatchProcessing()) {
@@ -710,10 +751,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    mOutputTime = 0;
    mCount = 0;
-   mProgressIn = 0;
-   mProgressOut = 0;
-   mProgressTot = 0;
-   mScale = (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups();
+   const auto scale =
+      (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups();
 
    mStop = false;
    mBreak = false;
@@ -877,6 +916,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    // to handle sync-lock group behavior the "old" way).
    mFirstInGroup = true;
    Track *gtLast = NULL;
+   double progressTot{};
 
    for (;
         bOnePassTool || pRange->first != pRange->second;
@@ -885,6 +925,14 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       // Prepare to accumulate more debug output in OutputCallback
       mDebugOutputStr = mDebugOutput.Translation();
       mDebugOutput = Verbatim( "%s" ).Format( std::cref( mDebugOutputStr ) );
+
+      // New context for each channel group of input
+      NyxContext nyxContext{ [this](double frac){ return TotalProgress(frac); },
+         scale, progressTot };
+      auto &mCurNumChannels = nyxContext.mCurNumChannels; 
+      auto &mCurTrack = nyxContext.mCurTrack;
+      auto &mCurStart = nyxContext.mCurStart;
+      auto &mCurLen = nyxContext.mCurLen;
 
       mCurTrack[0] = pRange ? *pRange->first : nullptr;
       mCurNumChannels = 1;
@@ -916,9 +964,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
             mCurLen = std::min(mCurLen, mMaxLen);
          }
-
-         mProgressIn = 0.0;
-         mProgressOut = 0.0;
 
          // libnyquist breaks except in LC_NUMERIC=="C".
          //
@@ -980,7 +1025,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
          }
 
-         success = ProcessOne(oOutputs ? &*oOutputs : nullptr);
+         success = ProcessOne(nyxContext, oOutputs ? &*oOutputs : nullptr);
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -988,7 +1033,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          if (!success || bOnePassTool) {
             goto finish;
          }
-         mProgressTot += mProgressIn + mProgressOut;
+         progressTot += nyxContext.mProgressIn + nyxContext.mProgressOut;
       }
 
       mCount += mCurNumChannels;
@@ -1174,10 +1219,10 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
 
 // NyquistEffect implementation
 
-bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
+bool NyquistEffect::ProcessOne(
+   NyxContext &nyxContext, EffectOutputTracks *pOutputs)
 {
-   mpException = {};
-
+   const auto mCurNumChannels = nyxContext.mCurNumChannels;
    nyx_rval rval;
 
    wxString cmd;
@@ -1200,6 +1245,8 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       cmd += mProps;
       cmd += mPerTrackProps;
    }
+
+   auto &mCurTrack = nyxContext.mCurTrack;
 
    if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
       // Set the track TYPE and VIEW properties
@@ -1363,10 +1410,10 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       nyx_set_audio_params(mCurTrack[0]->GetRate(), 0);
    }
    else {
-      auto curLen = mCurLen.as_long_long();
+      auto curLen = nyxContext.mCurLen.as_long_long();
       nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
 
-      nyx_set_input_audio(StaticGetCallback, (void *)this,
+      nyx_set_input_audio(NyxContext::StaticGetCallback, &nyxContext,
                           (int)mCurNumChannels,
                           curLen, mCurTrack[0]->GetRate());
    }
@@ -1454,16 +1501,6 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
    else {
       cmd += mCmd;
    }
-
-   // Put the fetch buffers in a clean initial state
-   for (size_t i = 0; i < mCurNumChannels; i++)
-      mCurBuffer[i].reset();
-
-   // Guarantee release of memory when done
-   auto cleanup = finally( [&] {
-      for (size_t i = 0; i < mCurNumChannels; i++)
-         mCurBuffer[i].reset();
-   } );
 
    // Evaluate the expression, which may invoke the get callback, but often does
    // not, leaving that to delayed evaluation of the output sound
@@ -1629,7 +1666,7 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       return false;
    }
 
-   std::shared_ptr<WaveTrack> outputTrack[2];
+   auto &outputTrack = nyxContext.mOutputTrack;
 
    double rate = mCurTrack[0]->GetRate();
    for (int i = 0; i < outChannels; i++) {
@@ -1639,27 +1676,14 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
 
       outputTrack[i] = mCurTrack[i]->EmptyCopy();
       outputTrack[i]->SetRate( rate );
-
-      // Clean the initial buffer states again for the get callbacks
-      // -- is this really needed?
-      mCurBuffer[i].reset();
    }
 
    // Now fully evaluate the sound
-   int success;
-   {
-      auto vr0 = valueRestorer( mOutputTrack[0], outputTrack[0].get() );
-      auto vr1 = valueRestorer( mOutputTrack[1], outputTrack[1].get() );
-      success = nyx_get_audio(StaticPutCallback, (void *)this);
-   }
+   int success = nyx_get_audio(NyxContext::StaticPutCallback, &nyxContext);
 
    // See if GetCallback found read errors
-   {
-      auto pException = mpException;
-      mpException = {};
-      if (pException)
-         std::rethrow_exception( pException );
-   }
+   if (auto pException = nyxContext.mpException)
+      std::rethrow_exception(pException);
 
    if (!success)
       return false;
@@ -2495,21 +2519,20 @@ bool NyquistEffect::ParseCommand(const wxString & cmd)
    return ParseProgram(stream);
 }
 
-int NyquistEffect::StaticGetCallback(float *buffer, int channel,
-                                     int64_t start, int64_t len, int64_t totlen,
-                                     void *userdata)
+int NyquistEffect::NyxContext::StaticGetCallback(float *buffer, int channel,
+   int64_t start, int64_t len, int64_t totlen, void *userdata)
 {
-   NyquistEffect *This = (NyquistEffect *)userdata;
+   auto This = static_cast<NyxContext*>(userdata);
    return This->GetCallback(buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::GetCallback(float *buffer, int ch,
-                               int64_t start, int64_t len, int64_t WXUNUSED(totlen))
+int NyquistEffect::NyxContext::GetCallback(float *buffer, int ch,
+   int64_t start, int64_t len, int64_t)
 {
    if (mCurBuffer[ch]) {
       if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
-          (mCurStart[ch] + start)+len >
-          mCurBufferStart[ch]+mCurBufferLen[ch]) {
+          (mCurStart[ch] + start) + len >
+          mCurBufferStart[ch] + mCurBufferLen[ch]) {
          mCurBuffer[ch].reset();
       }
    }
@@ -2518,13 +2541,11 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
       mCurBufferStart[ch] = (mCurStart[ch] + start);
       mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
 
-      if (mCurBufferLen[ch] < (size_t) len) {
+      if (mCurBufferLen[ch] < (size_t) len)
          mCurBufferLen[ch] = mCurTrack[ch]->GetIdealBlockSize();
-      }
 
-      mCurBufferLen[ch] =
-         limitSampleBufferSize( mCurBufferLen[ch],
-                                mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
+      mCurBufferLen[ch] = limitSampleBufferSize(mCurBufferLen[ch],
+         mCurStart[ch] + mCurLen - mCurBufferStart[ch]);
 
       // C++20
       // mCurBuffer[ch] = std::make_unique_for_overwrite(mCurBufferLen[ch]);
@@ -2542,55 +2563,45 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
 
    // We have guaranteed above that this is nonnegative and bounded by
    // mCurBufferLen[ch]:
-   auto offset = ( mCurStart[ch] + start - mCurBufferStart[ch] ).as_size_t();
+   auto offset = (mCurStart[ch] + start - mCurBufferStart[ch]).as_size_t();
    const void *src = &mCurBuffer[ch][offset];
    std::memcpy(buffer, src, len * sizeof(float));
 
    if (ch == 0) {
-      double progress = mScale *
-         ( (start+len)/ mCurLen.as_double() );
-
-      if (progress > mProgressIn) {
+      double progress = mScale * ((start + len) / mCurLen.as_double());
+      if (progress > mProgressIn)
          mProgressIn = progress;
-      }
-
-      if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+      if (mProgressReport(mProgressIn + mProgressOut + mProgressTot))
          return -1;
-      }
    }
 
    return 0;
 }
 
-int NyquistEffect::StaticPutCallback(float *buffer, int channel,
-                                     int64_t start, int64_t len, int64_t totlen,
-                                     void *userdata)
+int NyquistEffect::NyxContext::StaticPutCallback(float *buffer, int channel,
+   int64_t start, int64_t len, int64_t totlen, void *userdata)
 {
-   NyquistEffect *This = (NyquistEffect *)userdata;
+   auto This = static_cast<NyxContext*>(userdata);
    return This->PutCallback(buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::PutCallback(float *buffer, int channel,
-                               int64_t start, int64_t len, int64_t totlen)
+int NyquistEffect::NyxContext::PutCallback(float *buffer, int channel,
+   int64_t start, int64_t len, int64_t totlen)
 {
    // Don't let C++ exceptions propagate through the Nyquist library
    return GuardedCall<int>( [&] {
       if (channel == 0) {
-         double progress = mScale*((float)(start+len)/totlen);
-
-         if (progress > mProgressOut) {
+         double progress = mScale * ((float)(start + len) / totlen);
+         if (progress > mProgressOut)
             mProgressOut = progress;
-         }
-
-         if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+         if (mProgressReport(mProgressIn + mProgressOut + mProgressTot))
             return -1;
-         }
       }
 
       mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len);
 
       return 0; // success
-   }, MakeSimpleGuard( -1 ) ); // translate all exceptions into failure
+   }, MakeSimpleGuard(-1)); // translate all exceptions into failure
 }
 
 void NyquistEffect::StaticOutputCallback(int c, void *This)
