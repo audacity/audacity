@@ -692,7 +692,7 @@ struct NyquistEffect::NyxContext {
    size_t            mCurBufferLen[2]{};
    sampleCount       mCurLen{};
 
-   std::shared_ptr<WaveTrack> mOutputTrack[2];
+   std::shared_ptr<TrackList> mOutputTracks;
 
    double            mProgressIn{};
    double            mProgressOut{};
@@ -1666,17 +1666,9 @@ bool NyquistEffect::ProcessOne(
       return false;
    }
 
-   auto &outputTrack = nyxContext.mOutputTrack;
-
-   double rate = mCurTrack[0]->GetRate();
-   for (int i = 0; i < outChannels; i++) {
-      if (outChannels == (int)mCurNumChannels) {
-         rate = mCurTrack[i]->GetRate();
-      }
-
-      outputTrack[i] = mCurTrack[i]->EmptyCopy();
-      outputTrack[i]->SetRate( rate );
-   }
+   nyxContext.mOutputTracks = mCurTrack[0]->WideEmptyCopy();
+   auto out = (*nyxContext.mOutputTracks->Any<WaveTrack>().begin())
+      ->SharedPointer<WaveTrack>();
 
    // Now fully evaluate the sound
    int success = nyx_get_audio(NyxContext::StaticPutCallback, &nyxContext);
@@ -1688,24 +1680,27 @@ bool NyquistEffect::ProcessOne(
    if (!success)
       return false;
 
-   mOutputTime = outputTrack[0]->GetEndTime();
+   mOutputTime = out->GetEndTime();
    if (mOutputTime <= 0) {
       EffectUIServices::DoMessageBox(
          *this, XO("Nyquist returned nil audio.\n"));
       return false;
    }
 
-   const auto &out = outputTrack[0];
    std::shared_ptr<TrackList> tempList;
    if (outChannels < static_cast<int>(mCurNumChannels)) {
       // Be careful to do this before duplication
-      outputTrack[0]->Flush();
-      outputTrack[1] = (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
-      tempList = TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
+      out->Flush();
+      auto dup = (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
+      // Must destroy one temporary list before repopulating another with
+      // correct channel grouping
+      nyxContext.mOutputTracks.reset();
+      tempList = TrackList::Temporary(nullptr, out, dup);
+      assert(!dup->IsLeader());
    }
    else {
-      tempList = TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
-      outputTrack[0]->Flush();
+      tempList = move(nyxContext.mOutputTracks);
+      out->Flush();
    }
 
    {
@@ -1723,7 +1718,7 @@ bool NyquistEffect::ProcessOne(
    if (mFirstInGroup) {
       for (auto t : SyncLock::Group(mCurTrack[0]))
          if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t))
-            t->SyncLockAdjust(mT1, mT0 + outputTrack[0]->GetEndTime());
+            t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
 
       // Only the first channel can be first in its group
       mFirstInGroup = false;
@@ -2598,7 +2593,11 @@ int NyquistEffect::NyxContext::PutCallback(float *buffer, int channel,
             return -1;
       }
 
-      mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len);
+      auto iChannel =
+         TrackList::Channels(*mOutputTracks->Any<WaveTrack>().begin()).begin();
+      std::advance(iChannel, channel);
+      const auto pChannel = *iChannel;
+      pChannel->Append((samplePtr)buffer, floatSample, len);
 
       return 0; // success
    }, MakeSimpleGuard(-1)); // translate all exceptions into failure
