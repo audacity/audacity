@@ -682,7 +682,7 @@ struct NyquistEffect::NyxContext {
       int64_t start, int64_t len, int64_t totlen, void *userdata);
 
    WaveTrack *mCurChannelGroup{};
-   WaveTrack         *mCurTrack[2]{};
+   WaveChannel       *mCurTrack[2]{};
    sampleCount       mCurStart[2]{};
 
    unsigned          mCurNumChannels{}; //!< Not used in the callbacks
@@ -943,7 +943,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          if (bOnePassTool) {
          }
          else {
-            if (auto channels = TrackList::Channels(mCurChannelGroup)
+            if (auto channels = mCurChannelGroup->Channels()
                ; channels.size() > 1
             ) {
                // TODO: more-than-two-channels
@@ -951,7 +951,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
                // with the running tally made by this loop!
                mCurNumChannels = 2;
 
-               mCurTrack[1] = * ++ channels.first;
+               mCurTrack[1] = (* ++ channels.first).get();
                mCurStart[1] = mCurTrack[1]->TimeToLongSamples(mT0);
             }
 
@@ -2599,7 +2599,7 @@ int NyquistEffect::NyxContext::PutCallback(float *buffer, int channel,
       }
 
       auto iChannel =
-         TrackList::Channels(*mOutputTracks->Any<WaveTrack>().begin()).begin();
+         (*mOutputTracks->Any<WaveTrack>().begin())->Channels().begin();
       std::advance(iChannel, channel);
       const auto pChannel = *iChannel;
       pChannel->Append((samplePtr)buffer, floatSample, len);
