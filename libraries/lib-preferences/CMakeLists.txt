@@ -15,6 +15,8 @@ alert the user of failure to initialize it (as when the file is read-only).
 ]]#
 
 set( SOURCES
+   BasicSettings.cpp
+   BasicSettings.h
    Prefs.cpp
    Prefs.h
 )

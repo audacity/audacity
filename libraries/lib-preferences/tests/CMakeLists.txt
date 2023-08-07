@@ -1,0 +1,9 @@
+add_unit_test(
+   NAME
+      lib-preferences
+   SOURCES
+      SettingsTestsCommon.cpp
+      SettingsTestsCommon.h
+   LIBRARIES
+      lib-preferences
+)
