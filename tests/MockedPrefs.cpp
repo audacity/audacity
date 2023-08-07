@@ -14,7 +14,7 @@
 
 #include <unordered_map>
 
-class MockedFileConfig final : public FileConfig
+class MockedFileConfig final : public wxConfigBase
 {
 public:
    void SetPath(const wxString& path) override
@@ -154,10 +154,6 @@ public:
    {
       mBinaryValues[key] = buf;
       return true;
-   }
-
-   void Warn() override
-   {
    }
 
 private:

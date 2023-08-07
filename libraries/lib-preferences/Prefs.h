@@ -42,13 +42,14 @@
 
 #include "ComponentInterfaceSymbol.h"
 #include "wxArrayStringEx.h"
-#include "FileConfig.h"
+
+#include <wx/confbase.h>
+#include <wx/filename.h>
+#include <wx/textfile.h>
 
 #include <memory>
 
-class wxFileName;
-
-PREFERENCES_API void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
+PREFERENCES_API void InitPreferences( std::unique_ptr<wxConfigBase> uPrefs );
 PREFERENCES_API void GetPreferencesVersion(int& vMajor, int& vMinor, int& vMicro);
 PREFERENCES_API void SetPreferencesVersion(int vMajor, int vMinor, int vMicor);
 //! Call this to reset preferences to an (almost)-"new" default state
@@ -59,7 +60,7 @@ PREFERENCES_API void SetPreferencesVersion(int vMajor, int vMinor, int vMicor);
 PREFERENCES_API void ResetPreferences();
 PREFERENCES_API void FinishPreferences();
 
-extern PREFERENCES_API FileConfig *gPrefs;
+extern PREFERENCES_API wxConfigBase *gPrefs;
 extern int gMenusDirty;
 
 

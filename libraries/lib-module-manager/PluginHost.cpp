@@ -79,10 +79,10 @@ PluginHost::PluginHost(int connectPort)
    FileNames::InitializePathList();
 
    wxFileName configFileName{ FileNames::Configuration() };
-   auto pConfig = std::make_unique<FileConfig>(
+   auto pConfig = std::make_unique<wxFileConfig>(
       AppName, wxEmptyString, configFileName.GetFullPath(),
       wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
-   pConfig->Init();
+   pConfig->DisableAutoSave();
    InitPreferences(std::move(pConfig));
 
    auto& moduleManager = ModuleManager::Get();

@@ -622,7 +622,7 @@ void PluginManager::Load()
    return;
 }
 
-void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
+void PluginManager::LoadGroup(wxConfigBase *pRegistry, PluginType type)
 {
 #ifdef __WXMAC__
    // Bug 1590: On Mac, we should purge the registry of Nyquist plug-ins
@@ -921,7 +921,7 @@ const PluginRegistryVersion &PluginManager::GetRegistryVersion() const
    return mRegver;
 }
 
-void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
+void PluginManager::SaveGroup(wxConfigBase *pRegistry, PluginType type)
 {
    wxString group = GetPluginTypeString(type);
    for (auto &pair : mRegisteredPlugins) {
@@ -1351,7 +1351,7 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
    return plug;
 }
 
-FileConfig *PluginManager::GetSettings()
+wxConfigBase *PluginManager::GetSettings()
 {
    if (!mSettings)
    {

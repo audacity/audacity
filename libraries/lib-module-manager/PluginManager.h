@@ -94,7 +94,7 @@ public:
    // Initialization must inject a factory to make a concrete subtype of
    // FileConfig
    using FileConfigFactory = std::function<
-      std::unique_ptr<FileConfig>(const FilePath &localFilename ) >;
+      std::unique_ptr<wxConfigBase>(const FilePath &localFilename ) >;
    /*! @pre `factory != nullptr` */
    void Initialize(FileConfigFactory factory);
    void Terminate();
@@ -193,12 +193,12 @@ private:
 
    void InitializePlugins();
 
-   void LoadGroup(FileConfig *pRegistry, PluginType type);
-   void SaveGroup(FileConfig *pRegistry, PluginType type);
+   void LoadGroup(wxConfigBase *pRegistry, PluginType type);
+   void SaveGroup(wxConfigBase *pRegistry, PluginType type);
 
    PluginDescriptor & CreatePlugin(const PluginID & id, ComponentInterface *ident, PluginType type);
 
-   FileConfig *GetSettings();
+   wxConfigBase *GetSettings();
 
    bool HasGroup(const RegistryPath & group);
    bool GetSubgroups(const RegistryPath & group, RegistryPaths & subgroups);
@@ -225,7 +225,7 @@ private:
 
    bool IsDirty();
    void SetDirty(bool dirty = true);
-   std::unique_ptr<FileConfig> mSettings;
+   std::unique_ptr<wxConfigBase> mSettings;
 
    bool mDirty;
    int mCurrentIndex;

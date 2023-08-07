@@ -63,9 +63,9 @@
 BoolSetting DefaultUpdatesCheckingFlag{
     L"/Update/DefaultUpdatesChecking", true };
 
-std::unique_ptr<FileConfig> ugPrefs {};
+std::unique_ptr<wxConfigBase> ugPrefs {};
 
-FileConfig *gPrefs = nullptr;
+wxConfigBase *gPrefs = nullptr;
 int gMenusDirty = 0;
 
 int gVersionMajorKeyInit{};
@@ -199,7 +199,7 @@ static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase 
 }
 #endif
 
-void InitPreferences( std::unique_ptr<FileConfig> uPrefs )
+void InitPreferences( std::unique_ptr<wxConfigBase> uPrefs )
 {
    gPrefs = uPrefs.get();
    ugPrefs = std::move(uPrefs);
