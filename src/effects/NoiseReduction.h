@@ -47,9 +47,9 @@ public:
    class Settings;
    class Statistics;
    class Dialog;
+   class Worker;
 
 private:
-   class Worker;
    friend class Dialog;
 
    std::unique_ptr<Settings> mSettings;

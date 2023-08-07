@@ -17,16 +17,15 @@
 #include "Effect.h"
 #include "tracks/playabletrack/wavetrack/ui/SpectrumView.h"
 
+class WaveChannel;
+
 class SpectralDataManager{
 public:
    SpectralDataManager();
    ~SpectralDataManager();
    static bool ProcessTracks(AudacityProject &project);
-   static int FindFrequencySnappingBin(WaveTrack *wt,
-                                  long long startSC,
-                                  int hopSize,
-                                  double threshold,
-                                  int targetFreqBin);
+   static int FindFrequencySnappingBin(const WaveChannel &channel,
+      long long startSC, int hopSize, double threshold, int targetFreqBin);
 
    static std::vector<int> FindHighestFrequencyBins(WaveTrack *wt,
                                           long long int startSC,
@@ -41,9 +40,8 @@ private:
 class SpectralDataManager::Worker
       : public TrackSpectrumTransformer{
 public:
-   Worker(const Setting &setting);
+   Worker(WaveChannel *pChannel, const Setting &setting);
    ~Worker();
-   using TrackSpectrumTransformer::mOutputTrack;
 
    struct MyWindow : public Window
    {
@@ -60,11 +58,14 @@ public:
       FloatVector mGains;
    };
 
-   bool Process(WaveTrack* wt, const std::shared_ptr<SpectralData> &sDataPtr);
-   int ProcessSnapping(WaveTrack *wt, long long int startSC, int hopSize, size_t winSize,
-                           double threshold, int targetFreqBin);
-   std::vector<int> ProcessOvertones(WaveTrack *wt, long long int startSC, int hopSize, size_t winSize,
-                       double threshold, int targetFreqBin);
+   bool Process(const WaveChannel &channel,
+      const std::shared_ptr<SpectralData> &sDataPtr);
+   int ProcessSnapping(const WaveChannel &channel,
+      long long int startSC, int hopSize, size_t winSize,
+      double threshold, int targetFreqBin);
+   std::vector<int> ProcessOvertones(const WaveChannel &channel,
+      long long int startSC, int hopSize, size_t winSize,
+      double threshold, int targetFreqBin);
 
 protected:
    MyWindow &NthWindow(int nn) {
