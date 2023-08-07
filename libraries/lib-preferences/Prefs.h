@@ -49,6 +49,8 @@
 class wxFileName;
 
 PREFERENCES_API void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
+PREFERENCES_API void GetPreferencesVersion(int& vMajor, int& vMinor, int& vMicro);
+PREFERENCES_API void SetPreferencesVersion(int vMajor, int vMinor, int vMicor);
 //! Call this to reset preferences to an (almost)-"new" default state
 /*!
  There is at least one exception to that: user preferences we want to make

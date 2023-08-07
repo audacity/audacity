@@ -297,8 +297,8 @@ void PopulatePreferences()
    int vMinor = gPrefs->Read(wxT("/Version/Minor"), (long) 0);
    int vMicro = gPrefs->Read(wxT("/Version/Micro"), (long) 0);
 
-   gPrefs->SetVersionKeysInit(vMajor, vMinor, vMicro);   // make a note of these initial values
-                                                            // for use by ToolManager::ReadConfig()
+   SetPreferencesVersion(vMajor, vMinor, vMicro);   // make a note of these initial values
+                                                          // for use by ToolManager::ReadConfig()
 
    // These integer version keys were introduced april 4 2011 for 1.3.13
    // The device toolbar needs to be enabled due to removal of source selection features in
@@ -1616,7 +1616,7 @@ bool AudacityApp::InitPart2()
    CallAfter( [=] () mutable {
       // Remove duplicate shortcuts when there's a change of version
       int vMajorInit, vMinorInit, vMicroInit;
-      gPrefs->GetVersionKeysInit(vMajorInit, vMinorInit, vMicroInit);
+      GetPreferencesVersion(vMajorInit, vMinorInit, vMicroInit);
       if (vMajorInit != AUDACITY_VERSION || vMinorInit != AUDACITY_RELEASE
          || vMicroInit != AUDACITY_REVISION) {
          CommandManager::Get(*project).RemoveDuplicateShortcuts();

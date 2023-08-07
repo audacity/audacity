@@ -45,21 +45,7 @@ public:
    virtual bool DeleteEntry(const wxString& key, bool bDeleteGroupIfEmpty = true) wxOVERRIDE;
    virtual bool DeleteGroup(const wxString& key) wxOVERRIDE;
    virtual bool DeleteAll() wxOVERRIDE;
-
-   // Set and Get values of the version major/minor/micro keys in audacity.cfg when Audacity first opens
-   void SetVersionKeysInit( int major, int minor, int micro)
-   {
-      mVersionMajorKeyInit = major;
-      mVersionMinorKeyInit = minor;
-      mVersionMicroKeyInit = micro;
-   }
-   void GetVersionKeysInit( int& major, int& minor, int& micro) const
-   {
-      major = mVersionMajorKeyInit;
-      minor = mVersionMinorKeyInit;
-      micro = mVersionMicroKeyInit;
-   }
-
+   
 protected:
    virtual bool DoReadString(const wxString& key, wxString *pStr) const wxOVERRIDE;
    virtual bool DoReadLong(const wxString& key, long *pl) const wxOVERRIDE;
@@ -89,12 +75,6 @@ private:
    std::unique_ptr<wxMBConv> mConv;
 
    std::unique_ptr<wxFileConfig> mConfig;
-
-   // values of the version major/minor/micro keys in audacity.cfg
-   // when Audacity first opens
-   int mVersionMajorKeyInit{};
-   int mVersionMinorKeyInit{};
-   int mVersionMicroKeyInit{};
 
    bool mDirty;
 };

@@ -68,6 +68,10 @@ std::unique_ptr<FileConfig> ugPrefs {};
 FileConfig *gPrefs = nullptr;
 int gMenusDirty = 0;
 
+int gVersionMajorKeyInit{};
+int gVersionMinorKeyInit{};
+int gVersionMicroKeyInit{};
+
 struct PrefsListener::Impl
 {
    Impl( PrefsListener &owner );
@@ -201,6 +205,20 @@ void InitPreferences( std::unique_ptr<FileConfig> uPrefs )
    ugPrefs = std::move(uPrefs);
    wxConfigBase::Set(gPrefs);
    PrefsListener::Broadcast();
+}
+
+void GetPreferencesVersion(int& vMajor, int& vMinor, int& vMicro)
+{
+   vMajor = gVersionMajorKeyInit;
+   vMinor = gVersionMinorKeyInit;
+   vMicro = gVersionMicroKeyInit;
+}
+
+void SetPreferencesVersion(int vMajor, int vMinor, int vMicro)
+{
+   gVersionMajorKeyInit = vMajor;
+   gVersionMinorKeyInit = vMinor;
+   gVersionMicroKeyInit = vMicro;
 }
 
 void ResetPreferences()
