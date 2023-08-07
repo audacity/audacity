@@ -74,7 +74,16 @@ bool ZoomInfo::ZoomOutAvailable() const
 }
 
 double ZoomInfo::GetZoom( ) const { return zoom;};
-double ZoomInfo::GetMaxZoom( ) { return gMaxZoom;};
+
+double ZoomInfo::GetAbsoluteOffset(double offset) const
+{
+   return std::floor(0.5 + h * zoom + offset);
+}
+
+double ZoomInfo::GetMaxZoom()
+{
+   return gMaxZoom;
+};
 double ZoomInfo::GetMinZoom( ) { return gMinZoom;};
 
 void ZoomInfo::SetZoom(double pixelsPerSecond)

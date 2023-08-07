@@ -121,6 +121,11 @@ public:
    // Use TimeToPosition and PositionToTime and OffsetTimeByPixels instead
    double GetZoom() const;
 
+   /*! Get the absolute pixel offset, that corresponds to an offset on time line.
+    *  This function effectively return std::floor(0.5 + h * zoom + offset)
+    */
+   double GetAbsoluteOffset(double offset) const;
+
    static double GetMaxZoom( );
    static double GetMinZoom( );
 
