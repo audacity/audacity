@@ -101,6 +101,13 @@ std::pair<const TranslatableString&, const TranslatableString&> ModeNames[] = {
    { LengthTimeText, CenterTimeText },
 };
 
+std::unordered_map<TranslatableString, wxWindowID> WindowIDs {
+   { StartTimeText, 2705 },
+   { LengthTimeText, 2706 },
+   { CenterTimeText, 2707 },
+   { EndTimeText, 2708 }
+};
+
 const NumericConverterType TimeConverterType[][2] {
    { NumericConverterType_TIME(), NumericConverterType_TIME() },
    { NumericConverterType_TIME(), NumericConverterType_DURATION() },
@@ -514,14 +521,18 @@ void SelectionBar::SetSelectionMode(SelectionMode mode)
 {
    mSelectionMode = mode;
 
-   // Update names for the screen readers
+   // Update names and WindowIds for the screen readers
    auto& modeName = ModeNames[static_cast<size_t>(mode)];
 
-   if (mTimeControls[0])
+   if (mTimeControls[0]) {
       mTimeControls[0]->SetName(modeName.first);
+      mTimeControls[0]->SetId(WindowIDs.at(modeName.first));
+   }
 
-   if (mTimeControls[1])
+   if (mTimeControls[1]) {
       mTimeControls[1]->SetName(modeName.second);
+      mTimeControls[1]->SetId(WindowIDs.at(modeName.second));
+   }
 
    UpdateTimeControlsFormat(mTimeControls[0]->GetFormatName());
 
