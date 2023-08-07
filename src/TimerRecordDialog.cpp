@@ -175,7 +175,7 @@ TimerRecordDialog::TimerRecordDialog(
 
    m_DateTime_Start = wxDateTime::UNow();
    long seconds; // default duration is 1 hour = 3600 seconds
-   gPrefs->Read(wxT("/TimerRecord/LastDuration"), &seconds, 3600);
+   gPrefs->Read(wxT("/TimerRecord/LastDuration"), &seconds, 3600L);
    m_TimeSpan_Duration = wxTimeSpan::Seconds(seconds);
    m_DateTime_End = m_DateTime_Start + m_TimeSpan_Duration;
 

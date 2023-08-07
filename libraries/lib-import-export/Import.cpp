@@ -467,7 +467,7 @@ void Importer::WriteImportItems()
      // Failure to DELETE probably means a read-only config file.
      // no point continuing.
      // TODO: Possibly report (once).
-     if( !gPrefs->DeleteEntry (name, false))
+     if( !gPrefs->DeleteEntry (name))
         break;
      i++;
    } while( true );

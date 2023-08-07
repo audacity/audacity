@@ -77,13 +77,7 @@ namespace
 PluginHost::PluginHost(int connectPort)
 {
    FileNames::InitializePathList();
-
-   wxFileName configFileName{ FileNames::Configuration() };
-   auto pConfig = std::make_unique<wxFileConfig>(
-      AppName, wxEmptyString, configFileName.GetFullPath(),
-      wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
-   pConfig->DisableAutoSave();
-   InitPreferences(std::move(pConfig));
+   InitPreferences(audacity::ApplicationSettings::Call());
 
    auto& moduleManager = ModuleManager::Get();
    moduleManager.Initialize();

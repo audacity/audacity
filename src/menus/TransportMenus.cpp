@@ -351,7 +351,7 @@ void OnPunchAndRoll(const CommandContext &context)
    // Try to start recording
    auto options = ProjectAudioIO::GetDefaultOptions(project);
    options.rate = rateOfSelected;
-   options.preRoll = std::max(0L,
+   options.preRoll = std::max(0.0,
       gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS));
    options.pCrossfadeData = &crossfadeData;
    bool success = ProjectAudioManager::Get( project ).DoRecord(project,

@@ -207,7 +207,7 @@ public:
          return { 32000, 44100, 48000 };
       return {16000, 22050, 24000 };
    }
-   void Store(wxConfigBase& config) const override
+   void Store(audacity::BasicSettings& config) const override
    {
       auto it = mValues.find(MP2OptionIDVersion);
       config.Write(wxT("/FileFormats/MP2Version"), *std::get_if<int>(&it->second));
@@ -217,7 +217,7 @@ public:
       config.Write(wxT("/FileFormats/MP2BitrateMPEG2"), *std::get_if<int>(&it->second));
    }
 
-   void Load(const wxConfigBase& config) override
+   void Load(const audacity::BasicSettings& config) override
    {
       config.Read(wxT("/FileFormats/MP2Version"), std::get_if<int>(&mValues[MP2OptionIDVersion]));
       config.Read(wxT("/FileFormats/MP2BitrateMPEG1"), std::get_if<int>(&mValues[MP2OptionIDBitRateMPEG1]));

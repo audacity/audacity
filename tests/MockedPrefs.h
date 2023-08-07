@@ -12,7 +12,7 @@
 
 #include <memory>
 
-class MockedFileConfig;
+class MockedSettings;
 
 struct MockedPrefs final
 {
@@ -23,7 +23,4 @@ struct MockedPrefs final
    MockedPrefs& operator=(const MockedPrefs&) = delete;
    MockedPrefs(MockedPrefs&&) = delete;
    MockedPrefs& operator=(MockedPrefs&&) = delete;
-
-private:
-   std::unique_ptr<MockedFileConfig> mConfig;
 };

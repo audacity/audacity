@@ -413,10 +413,10 @@ void MeterPanel::UpdatePrefs()
 
    mMeterRefreshRate =
       std::max(MIN_REFRESH_RATE, std::min(MAX_REFRESH_RATE,
-         gPrefs->Read(Key(wxT("RefreshRate")), 30)));
+         gPrefs->Read(Key(wxT("RefreshRate")), 30L)));
    mGradient = gPrefs->Read(Key(wxT("Bars")), wxT("Gradient")) == wxT("Gradient");
    mDB = gPrefs->Read(Key(wxT("Type")), wxT("dB")) == wxT("dB");
-   mMeterDisabled = gPrefs->Read(Key(wxT("Disabled")), (long)0);
+   mMeterDisabled = gPrefs->Read(Key(wxT("Disabled")), 0L);
 
    if (mDesiredStyle != MixerTrackCluster)
    {

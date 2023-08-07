@@ -13,166 +13,137 @@
 #include "Prefs.h"
 
 #include <unordered_map>
+#include <variant>
 
-class MockedFileConfig final : public wxConfigBase
+class MockedSettings final : public audacity::BasicSettings
 {
-public:
-   void SetPath(const wxString& path) override
-   {
-      // To make GetPath to work consistently
-      mPath = path;
-   }
+   std::vector<wxString> mGroupStack { "/" };
 
-   const wxString& GetPath() const override
-   {
-      return mPath;
-   }
+   using DataType = std::variant<
+      wxString,
+      bool,
+      int,
+      long,
+      long long,
+      double>;
 
-   bool GetFirstGroup(wxString& str, long& lIndex) const override
+   template<typename T>
+   bool DoRead(const wxString& key, T* value) const
    {
-      return false;
-   }
-
-   bool GetNextGroup(wxString& str, long& lIndex) const override
-   {
-      return false;
-   }
-
-   bool GetFirstEntry(wxString& str, long& lIndex) const override
-   {
-      return false;
-   }
-
-   bool GetNextEntry(wxString& str, long& lIndex) const override
-   {
-      return false;
-   }
-
-   size_t GetNumberOfEntries(bool bRecursive = false) const override
-   {
-      return 0;
-   }
-
-   size_t GetNumberOfGroups(bool bRecursive = false) const override
-   {
-      return 0;
-   }
-
-   bool HasGroup(const wxString& strName) const override
-   {
-      return true;
-   }
-
-   bool HasEntry(const wxString& strName) const override
-   {
-      return false;
-   }
-
-   bool Flush(bool bCurrentOnly = false) override
-   {
-      return false;
-   }
-
-   bool RenameEntry(const wxString& oldName, const wxString& newName)
-      override
-   {
-      return false;
-   }
-
-   bool RenameGroup(const wxString& oldName, const wxString& newName)
-      override
-   {
-      return false;
-   }
-
-   bool DeleteEntry(const wxString& key, bool bDeleteGroupIfEmpty = true)
-      override
-   {
-      return false;
-   }
-
-   bool DeleteGroup(const wxString& key) override
-   {
-      return false;
-   }
-
-   bool DeleteAll() override
-   {
-      return false;
-   }
-
-   bool
-   DoReadString(const wxString& key, wxString* pStr) const override
-   {
-      auto it = mStringValues.find(key);
-
-      if (it == mStringValues.end())
+      auto it = mStorage.find(MakePath(key));
+      if(it == mStorage.end())
          return false;
-
-      *pStr = it->second;
-      return true;
+      if(auto ptr = std::get_if<T>(&it->second))
+      {
+         *value = *ptr;
+         return true;
+      }
+      return false;
    }
-
-   bool DoReadLong(const wxString& key, long* pl) const override
+   
+   bool DoWrite(const wxString& key, DataType value)
    {
-      auto it = mLongValues.find(key);
-
-      if (it == mLongValues.end())
-         return false;
-
-      *pl = it->second;
+      mStorage[key] = std::move(value);
       return true;
    }
 
-   bool DoReadBinary(const wxString& key, wxMemoryBuffer* buf) const
-      override
+protected:
+
+   void DoBeginGroup(const wxString& prefix) override
    {
-      auto it = mBinaryValues.find(key);
-
-      if (it == mBinaryValues.end())
-         return false;
-
-      *buf = it->second;
-      return true;
+      mGroupStack.push_back(prefix);
    }
 
-   bool DoWriteString(const wxString& key, const wxString& szValue)
-      override
+   void DoEndGroup() noexcept override
    {
-      mStringValues[key] = szValue;
-      return true;
+      mGroupStack.pop_back();
    }
 
-   bool DoWriteLong(const wxString& key, long lValue) override
+   bool HasGroup(const wxString& key) const override
    {
-      mLongValues[key] = lValue;
       return true;
    }
 
-   bool DoWriteBinary(const wxString& key, const wxMemoryBuffer& buf)
-      override
+   bool HasEntry(const wxString& key) const override
    {
-      mBinaryValues[key] = buf;
-      return true;
+      return mStorage.find(MakePath(key)) != mStorage.end();
    }
 
+   bool Flush() noexcept override
+   {
+      return true;
+   }
+   
+   wxString GetGroup() const override
+   {
+      return mGroupStack.back();
+   }
+   wxArrayString GetChildGroups() const override
+   {
+      return { };
+   }
+   wxArrayString GetChildKeys() const override
+   {
+      return { };
+   }
+   bool Remove(const wxString& key) override
+   {
+      if(key.empty())
+      {
+         for(auto it = mStorage.begin(); it != mStorage.end(); ++it)
+         {
+            if(it->first.StartsWith(key))
+               it = mStorage.erase(it);
+         }
+      }
+      else
+      {
+         auto it = mStorage.find(MakePath(key));
+         if(it != mStorage.end())
+         {
+            mStorage.erase(it);
+            return true;
+         }
+      }
+      return false;
+   }
+
+   void Clear() override
+   {
+      mStorage.clear();   
+   }
+
+   bool Read(const wxString& key, bool* value) const override { return DoRead(key, value); }
+
+   bool Read(const wxString& key, int* value) const override { return DoRead(key, value); }
+   bool Read(const wxString& key, long* value) const override { return DoRead(key, value); }
+   bool Read(const wxString& key, long long* value) const override { return DoRead(key, value); }
+   bool Read(const wxString& key, double* value) const override { return DoRead(key, value); }
+   bool Read(const wxString& key, wxString* value) const override { return DoRead(key, value); }
+
+   bool Write(const wxString& key, bool value) override { return DoWrite(key, {value}); }
+   bool Write(const wxString& key, int value) override { return DoWrite(key, {value}); }
+   bool Write(const wxString& key, long value) override { return DoWrite(key, {value}); }
+   bool Write(const wxString& key, long long value) override { return DoWrite(key, {value}); }
+   bool Write(const wxString& key, double value) override { return DoWrite(key, {value}); }
+   bool Write(const wxString& key, const wxString& value) override { return DoWrite(key, {value}); }
+   
 private:
-   wxString mPath;
 
-   std::unordered_map<wxString, wxString> mStringValues;
-   std::unordered_map<wxString, long> mLongValues;
-   std::unordered_map<wxString, wxMemoryBuffer> mBinaryValues;
+   wxString MakePath(const wxString& key) const
+   {
+      return mGroupStack.back() + "/" + key;
+   }
 
+   std::unordered_map<wxString, DataType> mStorage;
 };
 
 MockedPrefs::MockedPrefs()
-    : mConfig { std::make_unique<MockedFileConfig>() }
 {
-   // MockedPrefs destructor will delete this object
-   gPrefs = mConfig.get();
+   InitPreferences(std::make_unique<MockedSettings>());
 }
 
 MockedPrefs::~MockedPrefs ()
 {
-   gPrefs = nullptr;
+   FinishPreferences();
 }

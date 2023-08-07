@@ -68,23 +68,23 @@ enum
    FMT_OTHER
 };
 
-int LoadOtherFormat(const wxConfigBase& config, int def)
+int LoadOtherFormat(const audacity::BasicSettings& config, int def)
 {
    return config.Read(wxString("/FileFormats/ExportFormat_SF1"), def);
 }
 
-void SaveOtherFormat(wxConfigBase& config, int val)
+void SaveOtherFormat(audacity::BasicSettings& config, int val)
 {
    config.Write(wxT("/FileFormats/ExportFormat_SF1"), val);
 }
 
-int LoadEncoding(const wxConfigBase& config, int type, int def)
+int LoadEncoding(const audacity::BasicSettings& config, int type, int def)
 {
    return config.Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
                                         sf_header_shortname(type), type), def);
 }
 
-void SaveEncoding(wxConfigBase& config, int type, int val)
+void SaveEncoding(audacity::BasicSettings& config, int type, int val)
 {
    config.Write(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
                                   sf_header_shortname(type), type), val);
@@ -172,12 +172,12 @@ public:
       return {};
    }
 
-   void Load(const wxConfigBase& config) override
+   void Load(const audacity::BasicSettings& config) override
    {
       mEncoding = LoadEncoding(config, mType, mEncoding);
    }
 
-   void Store(wxConfigBase& config) const override
+   void Store(audacity::BasicSettings& config) const override
    {
       SaveEncoding(config, mType, mEncoding);
    }
@@ -338,7 +338,7 @@ public:
       return {};
    }
 
-   void Load(const wxConfigBase& config) override
+   void Load(const audacity::BasicSettings& config) override
    {
       mType = LoadOtherFormat(config, mType);
       for(auto& p : mEncodings)
@@ -366,7 +366,7 @@ public:
       }
    }
 
-   void Store(wxConfigBase& config) const override
+   void Store(audacity::BasicSettings& config) const override
    {
       SaveOtherFormat(config, mType);
       for(auto& [type, encoding] : mEncodings)

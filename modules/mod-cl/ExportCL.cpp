@@ -354,13 +354,13 @@ public:
       return false;
    }
 
-   void Load(const wxConfigBase& config) override
+   void Load(const audacity::BasicSettings& config) override
    {
       (void)config.Read(wxT("/FileFormats/ExternalProgramExportCommand"), mCommand);
       (void)config.Read(wxT("/FileFormats/ExternalProgramShowOutput"), mShowOutput);
    }
 
-   void Store(wxConfigBase& config) const override
+   void Store(audacity::BasicSettings& config) const override
    {
       config.Write(wxT("/FileFormats/ExternalProgramExportCommand"), mCommand);
       config.Write(wxT("/FileFormats/ExternalProgramShowOutput"), mShowOutput);

@@ -754,17 +754,17 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       // and the normal reduced list.
       if( std::binary_search( mMaxListOnly.begin(), mMaxListOnly.end(),
                               entry->key ) )
+      {
          entry->key = {};
-
-      // Key from preferences overrides the default key given
-      gPrefs->SetPath(wxT("/NewKeys"));
+      }
+      auto newKeysGroup = gPrefs->BeginGroup("/NewKeys");
       // using GET to interpret CommandID as a config path component
       const auto &path = entry->name.GET();
       if (gPrefs->HasEntry(path)) {
+         // Key from preferences overrides the default key given
          entry->key =
-            NormalizedKeyString{ gPrefs->ReadObject(path, entry->key) };
+            NormalizedKeyString{ gPrefs->Read(path, entry->key) };
       }
-      gPrefs->SetPath(wxT("/"));
 
       mCommandList.push_back(std::move(entry));
       // Don't use the variable entry eny more!

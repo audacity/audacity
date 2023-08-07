@@ -75,13 +75,13 @@ void ModulePrefs::GetAllModuleStatuses(){
 
    // Iterate through all Modules listed in prefs.
    // Get their names and values.
-   gPrefs->SetPath( wxT("Module/") );
-   bool bCont = gPrefs->GetFirstEntry(str, dummy);
-   while ( bCont ) {
+   auto moduleGroup = gPrefs->BeginGroup("Module");
+   for(const auto& key : gPrefs->GetChildKeys())
+   {
       int iStatus;
-      gPrefs->Read( str, &iStatus, kModuleDisabled );
+      gPrefs->Read( str, &iStatus, static_cast<decltype(iStatus)>(kModuleDisabled) );
       wxString fname;
-      gPrefs->Read( wxString( wxT("/ModulePath/") ) + str, &fname, wxEmptyString );
+      gPrefs->Read(wxT("/ModulePath/") + str, &fname, {} );
       if( !fname.empty() && wxFileExists( fname ) ){
          if( iStatus > kModuleNew ){
             iStatus = kModuleNew;
@@ -92,9 +92,7 @@ void ModulePrefs::GetAllModuleStatuses(){
          mStatuses.push_back( iStatus );
          mPaths.push_back( fname );
       }
-      bCont = gPrefs->GetNextEntry(str, dummy);
    }
-   gPrefs->SetPath( wxT("") );
 }
 
 void ModulePrefs::Populate()

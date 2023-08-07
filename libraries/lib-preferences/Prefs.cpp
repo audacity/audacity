@@ -63,9 +63,9 @@
 BoolSetting DefaultUpdatesCheckingFlag{
     L"/Update/DefaultUpdatesChecking", true };
 
-std::unique_ptr<wxConfigBase> ugPrefs {};
+std::unique_ptr<audacity::BasicSettings> ugPrefs {};
 
-wxConfigBase *gPrefs = nullptr;
+audacity::BasicSettings *gPrefs = nullptr;
 int gMenusDirty = 0;
 
 int gVersionMajorKeyInit{};
@@ -199,11 +199,11 @@ static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase 
 }
 #endif
 
-void InitPreferences( std::unique_ptr<wxConfigBase> uPrefs )
+void InitPreferences( std::unique_ptr<audacity::BasicSettings> uPrefs )
 {
    gPrefs = uPrefs.get();
    ugPrefs = std::move(uPrefs);
-   wxConfigBase::Set(gPrefs);
+   //wxConfigBase::Set(gPrefs);
    PrefsListener::Broadcast();
 }
 
@@ -234,7 +234,7 @@ void ResetPreferences()
       pair.second = pair.first.Read();
 
    bool savedValue = DefaultUpdatesCheckingFlag.Read();
-   gPrefs->DeleteAll();
+   gPrefs->Clear();
 
    for (auto &pair : stickyBoolSettings)
       pair.first.Write(pair.second);
@@ -243,9 +243,8 @@ void ResetPreferences()
 void FinishPreferences()
 {
    if (gPrefs) {
-      wxConfigBase::Set(NULL);
       ugPrefs.reset();
-      gPrefs = NULL;
+      gPrefs = nullptr;
    }
 }
 
@@ -516,7 +515,7 @@ void PreferenceInitializer::ReinitializeAll()
       (*pInitializer)();
 }
 
-wxConfigBase *SettingBase::GetConfig() const
+audacity::BasicSettings *SettingBase::GetConfig() const
 {
    return gPrefs;
 }

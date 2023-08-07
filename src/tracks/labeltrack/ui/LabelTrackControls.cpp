@@ -104,7 +104,7 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
    facename = LabelTrackView::GetFont(facename).GetFaceName();
 
    long fontsize = gPrefs->Read(wxT("/GUI/LabelFontSize"),
-                                LabelTrackView::DefaultFontSize);
+                                static_cast<int>(LabelTrackView::DefaultFontSize));
 
    /* i18n-hint: (noun) This is the font for the label track.*/
    wxDialogWrapper dlg(mpData->pParent, wxID_ANY, XO("Label Track Font"));

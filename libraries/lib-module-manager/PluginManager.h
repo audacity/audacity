@@ -25,7 +25,11 @@
 #include "Observer.h"
 
 class wxArrayString;
-class FileConfig;
+
+namespace audacity
+{
+   class BasicSettings;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -92,11 +96,11 @@ public:
    // PluginManager implementation
 
    // Initialization must inject a factory to make a concrete subtype of
-   // FileConfig
-   using FileConfigFactory = std::function<
-      std::unique_ptr<wxConfigBase>(const FilePath &localFilename ) >;
+   // BasicSettings
+   using ConfigFactory = std::function<
+      std::unique_ptr<audacity::BasicSettings>(const FilePath &localFilename ) >;
    /*! @pre `factory != nullptr` */
-   void Initialize(FileConfigFactory factory);
+   void Initialize(ConfigFactory factory);
    void Terminate();
 
    bool DropFile(const wxString &fileName);
@@ -193,12 +197,12 @@ private:
 
    void InitializePlugins();
 
-   void LoadGroup(wxConfigBase *pRegistry, PluginType type);
-   void SaveGroup(wxConfigBase *pRegistry, PluginType type);
+   void LoadGroup(audacity::BasicSettings* pRegistry, PluginType type);
+   void SaveGroup(audacity::BasicSettings* pRegistry, PluginType type);
 
    PluginDescriptor & CreatePlugin(const PluginID & id, ComponentInterface *ident, PluginType type);
 
-   wxConfigBase *GetSettings();
+   audacity::BasicSettings *GetSettings();
 
    bool HasGroup(const RegistryPath & group);
    bool GetSubgroups(const RegistryPath & group, RegistryPaths & subgroups);
@@ -225,7 +229,7 @@ private:
 
    bool IsDirty();
    void SetDirty(bool dirty = true);
-   std::unique_ptr<wxConfigBase> mSettings;
+   std::unique_ptr<audacity::BasicSettings> mSettings;
 
    bool mDirty;
    int mCurrentIndex;
