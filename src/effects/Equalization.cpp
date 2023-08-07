@@ -365,10 +365,10 @@ bool EffectEqualization::Init()
 }
 
 struct EffectEqualization::Task {
-   Task(size_t M, size_t idealBlockLen, WaveTrack &track)
+   Task(size_t M, size_t idealBlockLen, WaveChannel &channel)
       : buffer{ idealBlockLen }
       , idealBlockLen{ idealBlockLen }
-      , output{ track }
+      , output{ channel }
       , leftTailRemaining{ (M - 1) / 2 }
    {
       memset(lastWindow, 0, windowSize * sizeof(float));
@@ -394,9 +394,9 @@ struct EffectEqualization::Task {
    float *thisWindow{ window1.get() };
    float *lastWindow{ window2.get() };
 
-   // a new WaveTrack to hold all of the output,
+   // a new WaveChannel to hold all of the output,
    // including 'tails' each end
-   WaveTrack &output;
+   WaveChannel &output;
 
    size_t leftTailRemaining;
 };
@@ -420,17 +420,12 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto len = end - start;
          const auto data = CollectClipData(*track, start, len);
 
-         auto temp = TrackList::Create(nullptr);
-         for (const auto pChannel : TrackList::Channels(track)) {
-            auto pNewChannel = pChannel->EmptyCopy();
-            temp->Add(pNewChannel);
-            assert(pNewChannel->IsLeader() == pChannel->IsLeader());
-         }
+         auto temp = track->WideEmptyCopy();
          auto pTempTrack = *temp->Any<WaveTrack>().begin();
          pTempTrack->ConvertToSampleFormat(floatSample);
-         auto iter0 = TrackList::Channels(pTempTrack).begin();
+         auto iter0 = pTempTrack->Channels().begin();
    
-         for (const auto pChannel : TrackList::Channels(track)) {
+         for (const auto pChannel : track->Channels()) {
             constexpr auto windowSize = EqualizationFilter::windowSize;
             const auto &M = mParameters.mM;
 
@@ -481,7 +476,7 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 // EffectEqualization implementation
 
 bool EffectEqualization::ProcessOne(Task &task,
-   int count, const WaveTrack &t, sampleCount start, sampleCount len)
+   int count, const WaveChannel &t, sampleCount start, sampleCount len)
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
 
