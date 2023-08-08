@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_ADORNED_RULER_PANEL__
 #define __AUDACITY_ADORNED_RULER_PANEL__
 
-#include "widgets/BeatsFormat.h"
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
 #include "widgets/LinearUpdater.h"
@@ -136,16 +135,11 @@ private:
    bool IsWithinMarker(int mousePosX, double markerTime);
 
 private:
+   AudacityProject* const mProject;
+   
+   LinearUpdater& mUpdater;
+   Ruler& mRuler;
 
-   // Stateless formatter object, but not used by default...
-   BeatsFormat mBeatsFormat;
-
-   LinearUpdater mUpdater;
-
-   // ... Time formatter used by default instead
-   Ruler mRuler{ mUpdater, TimeFormat::Instance() };
-
-   AudacityProject *const mProject;
    TrackList *mTracks;
 
    wxRect mOuter;
@@ -175,8 +169,6 @@ private:
    void ShowScrubMenu(const wxPoint & pos);
    static void DragSelection(AudacityProject &project);
    void HandleSnapping(size_t index);
-   void UpdateBeatsAndMeasuresFormat();
-   void RefreshTimelineFormat();
    void OnTimelineFormatChange(wxCommandEvent& evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
@@ -254,8 +246,7 @@ private:
 
    Observer::Subscription mAudioIOSubscription,
       mPlayRegionSubscription,
-      mThemeChangeSubscription,
-      mProjectTimeSignatureChangedSubscription;
+      mThemeChangeSubscription;
 
    // classes implementing subdivision for CellularPanel
    struct Subgroup;

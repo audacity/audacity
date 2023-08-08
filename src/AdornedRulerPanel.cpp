@@ -39,6 +39,7 @@
 #include "ProjectAudioManager.h"
 #include "ProjectWindows.h"
 #include "ProjectStatus.h"
+#include "ProjectTimeRuler.h"
 #include "ProjectTimeSignature.h"
 #include "ProjectWindow.h"
 #include "RefreshCode.h"
@@ -1286,7 +1287,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    const wxSize& size,
    ViewInfo *viewinfo
 )  : CellularPanel(parent, id, pos, size, viewinfo)
-   , mProject(project)
+   , mProject { project }
+   , mUpdater { ProjectTimeRuler::Get(*project).GetUpdater() }
+   , mRuler { ProjectTimeRuler::Get(*project).GetRuler() }   
 {
    SetLayoutDirection(wxLayout_LeftToRight);
 
@@ -1338,19 +1341,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    // Bind event that updates the play region
    mPlayRegionSubscription = mViewInfo->selectedRegion.Subscribe(
       *this, &AdornedRulerPanel::OnSelectionChange);
-
-   // Bind event that updates the time signature
-   mProjectTimeSignatureChangedSubscription =
-      ProjectTimeSignature::Get(*project).Subscribe(
-         [this](auto)
-         {
-            if (mTimeDisplayMode == TimeDisplayMode::BeatsAndMeasures)
-            {
-               UpdateBeatsAndMeasuresFormat();
-               Refresh();
-            }
-         });
-
+   
    // And call it once to initialize it
    DoSelectionChange( mViewInfo->selectedRegion );
 }
@@ -1390,7 +1381,7 @@ void AdornedRulerPanel::UpdatePrefs()
 #endif
 
    mTimeDisplayMode = TimeDisplayModePreference.ReadEnum();
-   RefreshTimelineFormat();
+   Refresh();
    // Update();
 }
 
@@ -2364,31 +2355,6 @@ void AdornedRulerPanel::HandleSnapping(size_t index)
    mIsSnapped[index] = results.Snapped();
 }
 
-void AdornedRulerPanel::UpdateBeatsAndMeasuresFormat()
-{
-   auto& timeSignature = ProjectTimeSignature::Get(*mProject);
-
-   mBeatsFormat.SetData(
-      timeSignature.GetTempo(), timeSignature.GetUpperTimeSignature(),
-      timeSignature.GetLowerTimeSignature());
-
-   mRuler.Invalidate();
-}
-
-void AdornedRulerPanel::RefreshTimelineFormat()
-{
-   if (mTimeDisplayMode == TimeDisplayMode::BeatsAndMeasures)
-   {
-      UpdateBeatsAndMeasuresFormat();
-      mRuler.SetFormat(&mBeatsFormat);
-   }
-   else if (mTimeDisplayMode == TimeDisplayMode::MinutesAndSeconds)
-   {
-      mRuler.SetFormat(&TimeFormat::Instance());
-   }
-   Refresh();
-}
-
 void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
 {
    int id = event.GetId();
@@ -2396,16 +2362,9 @@ void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
    wxASSERT(id == OnMinutesAndSecondsID || id == OnBeatsAndMeasuresID);
    mTimeDisplayMode = id == OnBeatsAndMeasuresID ? TimeDisplayMode::BeatsAndMeasures :
                                              TimeDisplayMode::MinutesAndSeconds;
+   
    TimeDisplayModePreference.WriteEnum(mTimeDisplayMode);
-   if (mTimeDisplayMode == TimeDisplayMode::BeatsAndMeasures)
-   {
-      UpdateBeatsAndMeasuresFormat();
-      mRuler.SetFormat(&mBeatsFormat);
-   }
-   else if (mTimeDisplayMode == TimeDisplayMode::MinutesAndSeconds)
-   {
-      mRuler.SetFormat(&TimeFormat::Instance());
-   }
+
    if (changeFlag != mTimeDisplayMode)
       Refresh();
 }
@@ -2938,7 +2897,7 @@ void AdornedRulerPanel::SetTimeDisplayMode(TimeDisplayMode type)
 
    mTimeDisplayMode = type;
    TimeDisplayModePreference.WriteEnum(mTimeDisplayMode);
-   RefreshTimelineFormat();
+   Refresh();
 }
 
 // Attach menu item
