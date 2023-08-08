@@ -182,8 +182,8 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
    // a few initial windows that overlay the range only partially
    mStartHopNum = startSample / hopSize - (mStepsPerWindow - 1);
    mWindowCount = 0;
-   const auto len = mpSpectralData->GetLength();
-   return TrackSpectrumTransformer::Process(Processor, wt, 1, startSample, len);
+   return TrackSpectrumTransformer::Process(Processor, wt, 1,
+      mpSpectralData->GetCorrectedStartSample(), mpSpectralData->GetLength());
 }
 
 int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,

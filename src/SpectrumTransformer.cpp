@@ -375,7 +375,7 @@ bool TrackSpectrumTransformer::Process(const WindowProcessor &processor,
 
 bool TrackSpectrumTransformer::DoFinish()
 {
-   return true;
+   return SpectrumTransformer::DoFinish();
 }
 
 bool TrackSpectrumTransformer::PostProcess(
