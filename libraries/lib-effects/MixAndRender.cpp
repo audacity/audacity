@@ -96,7 +96,9 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    // only one input track (either 1 mono or one linked stereo pair)
 
    // EmptyCopy carries over any interesting channel group information
-   // But make sure the left is unlinked before we re-link
+   // Maybe first is stereo, or it is mono, but some other input is stereo;
+   // therefore don't use WideEmptyCopy, but make and link a right channel as
+   // needed
    // And reset pan and gain
    auto mixLeft =
       first->EmptyCopy(trackFactory->GetSampleBlockFactory(), false);

@@ -271,7 +271,7 @@ private:
    TrackListHolder Cut(double t0, double t1) override;
 
    //! Make another track copying format, rate, color, etc. but containing no
-   //! clips
+   //! clips; and always with a unique channel
    /*!
     It is important to pass the correct factory (that for the project
     which will own the copy) in the unusual case that a track is copied from
@@ -285,7 +285,7 @@ private:
       bool keepLink = true) const;
 
    //! Make another channel group copying format, rate, color, etc. but
-   //! containing no clips
+   //! containing no clips; with as many channels as in `this`
    /*!
     It is important to pass the correct factory (that for the project
     which will own the copy) in the unusual case that a track is copied from

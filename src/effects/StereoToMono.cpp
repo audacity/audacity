@@ -169,6 +169,7 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
                            // rates are the same
       floatSample);
 
+   // Always make mono output; don't use WideEmptyCopy
    auto outTrack = left->EmptyCopy();
    auto tempList = TrackList::Temporary(nullptr, outTrack, nullptr);
    assert(outTrack->IsLeader());
