@@ -29,6 +29,7 @@ namespace soundtouch { class SoundTouch; }
 class TimeWarper;
 class LabelTrack;
 class NoteTrack;
+class WaveChannel;
 class WaveTrack;
 
 class EffectSoundTouch /* not final */ : public StatefulEffect
@@ -57,16 +58,16 @@ private:
    bool ProcessNoteTrack(NoteTrack *track, const TimeWarper &warper);
 #endif
    bool ProcessOne(soundtouch::SoundTouch *pSoundTouch,
-      WaveTrack * t, sampleCount start, sampleCount end,
+      WaveTrack &orig, WaveTrack &out, sampleCount start, sampleCount end,
       const TimeWarper &warper);
    bool ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
-      WaveTrack* leftTrack, WaveTrack* rightTrack,
+      WaveTrack &orig, WaveTrack &out,
       sampleCount start, sampleCount end,
       const TimeWarper &warper);
    bool ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
       const size_t outputCount,
-      WaveTrack* outputLeftTrack,
-      WaveTrack* outputRightTrack);
+      WaveChannel &outputLeftTrack,
+      WaveChannel &outputRightTrack);
    /*!
     @pre `orig.IsLeader()`
     @pre `out.IsLeader()`
