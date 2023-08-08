@@ -21,4 +21,6 @@ Theme {
    waveformPeakColor: "#3232C8"
    clipStrokeColor: "#252527"
    clipHeaderColor: "#F3F3F3"
+   textHighlightColor: "#BADEFE"
+   invalidInputColor: "#F19EB3"
 }
