@@ -16,6 +16,7 @@
 #include <wx/weakref.h>
 
 class ShuttleGui;
+class WaveChannel;
 
 class EffectPaulstretch final : public StatefulEffect
 {
@@ -54,8 +55,8 @@ private:
    void OnText(wxCommandEvent & evt);
    size_t GetBufferSize(double rate) const;
 
-   std::shared_ptr<WaveTrack>
-   ProcessOne(const WaveTrack &track, double t0, double t1, int count);
+   bool ProcessOne(const WaveChannel &track, WaveChannel &outputTrack,
+      double t0, double t1, int count);
 
    wxWeakRef<wxWindow> mUIParent;
 
