@@ -30,9 +30,7 @@ StyledTextLabel {
    height: isEmpty ? 0 : implicitHeight
    width: isEmpty ? 0 : implicitWidth
 
-   font {
-      pixelSize: 16
-   }
+   font.pixelSize: 16
 
    text: !isEmpty ? String.fromCharCode(iconCode) : ""
 }

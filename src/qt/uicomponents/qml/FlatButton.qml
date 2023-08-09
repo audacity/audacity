@@ -156,7 +156,7 @@ FocusScope {
          StyledIconLabel {
             Layout.alignment: Qt.AlignHCenter
             iconCode: root.icon
-            font: root.iconFont
+            font.family: root.iconFont.family
             color: root.iconColor
             visible: !isEmpty
          }
@@ -164,7 +164,7 @@ FocusScope {
          StyledTextLabel {
             Layout.alignment: Qt.AlignHCenter
             text: root.text
-            font: root.textFont
+            font.family: root.textFont.family
             textFormat: root.textFormat
             maximumLineCount: 1
             visible: !isEmpty
@@ -181,7 +181,7 @@ FocusScope {
          StyledIconLabel {
             Layout.alignment: Qt.AlignVCenter
             iconCode: root.icon
-            font: root.iconFont
+            font.family: root.iconFont.family
             color: root.iconColor
             visible: !isEmpty
          }
@@ -189,7 +189,7 @@ FocusScope {
          StyledTextLabel {
             Layout.alignment: Qt.AlignVCenter
             text: root.text
-            font: root.textFont
+            font.family: root.textFont.family
             textFormat: root.textFormat
             maximumLineCount: 1
             visible: !isEmpty

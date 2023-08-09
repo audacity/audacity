@@ -36,9 +36,7 @@ Text {
    verticalAlignment: Text.AlignVCenter
    horizontalAlignment: Text.AlignHCenter
 
-   font {
-      pixelSize: 12
-   }
+   font.pixelSize: 12
 
    onLinkActivated: function(link) {
       Qt.openUrlExternally(link)
