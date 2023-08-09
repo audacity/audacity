@@ -48,10 +48,6 @@ Popup {
       accentButton: true
 
       onClicked: {
-         if (!prv.validNumberOfTracks) {
-            input.text = numberOfTracksValidator.bottom
-         }
-
          input.focus = false
          stereo.accentButton = false
          label.accentButton = false
@@ -75,31 +71,11 @@ Popup {
       accentButton: false
 
       onClicked: {
-         if (!prv.validNumberOfTracks) {
-            input.text = numberOfTracksValidator.bottom
-         }
-
          input.focus = false
          mono.accentButton = false
          label.accentButton = false
          accentButton = true
          prv.type = "stereo"
-      }
-   }
-
-   FlatButton {
-      id: create
-      text: qsTr("Create")
-      x: (root.width - width) / 2
-      y: separator.y + (root.height - separator.y - height) / 2
-      width: 288
-      height: 28
-      accentButton: true
-      enabled: prv.validNumberOfTracks
-
-      onClicked: {
-         input.focus = false
-         root.createTracks(prv.type, Number(input.text))
       }
    }
 
@@ -114,10 +90,6 @@ Popup {
       accentButton: false
 
       onClicked: {
-         if (!prv.validNumberOfTracks) {
-            input.text = numberOfTracksValidator.bottom
-         }
-
          input.focus = false
          mono.accentButton = false
          stereo.accentButton = false
@@ -150,7 +122,6 @@ Popup {
 
       onClicked: {
          if (input.text === "") {
-            input.text = numberOfTracksValidator.bottom
             input.focus = false
             return
          }
@@ -213,11 +184,11 @@ Popup {
                return
             }
 
-            var number = Number(text)
-            if (number < numberOfTracksValidator.bottom) {
-               numberOfTracksLabel.text = qsTr("Value must be greater than %1").arg(numberOfTracksValidator.bottom - 1)
-            } else if (number > numberOfTracksValidator.top) {
-               numberOfTracksLabel.text = qsTr("Value must not exceed %1").arg(numberOfTracksValidator.top)
+            if (acceptableInput === false) {
+               numberOfTracksLabel.text =
+                  qsTr("Enter a value between %1-%2")
+                     .arg(numberOfTracksValidator.bottom)
+                     .arg(numberOfTracksValidator.top)
             }
          }
 
@@ -245,7 +216,6 @@ Popup {
 
       onClicked: {
          if (input.text === "") {
-            input.text = numberOfTracksValidator.bottom
             input.focus = false
             return
          }
@@ -258,6 +228,22 @@ Popup {
          }
 
          input.focus = false
+      }
+   }
+
+   FlatButton {
+      id: create
+      text: qsTr("Create")
+      x: (root.width - width) / 2
+      y: separator.y + (root.height - separator.y - height) / 2
+      width: 288
+      height: 28
+      accentButton: true
+      enabled: prv.validNumberOfTracks
+
+      onClicked: {
+         input.focus = false
+         root.createTracks(prv.type, Number(input.text))
       }
    }
 
