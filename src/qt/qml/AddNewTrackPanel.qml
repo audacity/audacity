@@ -12,7 +12,7 @@ Popup {
    padding: 0
    modal: true
    focus: true
-   closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside | Popup.CloseOnPressOutsideParent
+   closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
    objectName: "AddNewTrackPanel"
 
    signal createTracks(type: string, quantity: int)

@@ -74,14 +74,7 @@ Rectangle {
       transparent: true
       textFont.pixelSize: 12
       text: qsTr("+ Add new track")
-
-      onClicked: {
-         if (addNewTrack.opened) {
-            addNewTrack.close()
-         } else {
-            addNewTrack.open()
-         }
-      }
+      onClicked: addNewTrack.open()
 
       Rectangle {
          id: separator
