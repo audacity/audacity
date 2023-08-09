@@ -1289,7 +1289,7 @@ unsigned WaveChannelView::CaptureKey(
 {
    unsigned result{ RefreshCode::RefreshNone };
    auto pTrack = static_cast<WaveTrack*>(FindTrack().get());
-   for (auto pChannel : TrackList::Channels(pTrack)) {
+   for (auto pChannel : pTrack->Channels()) {
       event.Skip(false);
       auto &waveChannelView = WaveChannelView::Get(*pChannel);
       // Give sub-views first chance to handle the event
