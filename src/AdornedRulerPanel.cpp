@@ -1341,6 +1341,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    // Bind event that updates the play region
    mPlayRegionSubscription = mViewInfo->selectedRegion.Subscribe(
       *this, &AdornedRulerPanel::OnSelectionChange);
+
+   mRulerInvalidatedSubscription =
+      mRuler.Subscribe([this](auto) { Refresh(); });
    
    // And call it once to initialize it
    DoSelectionChange( mViewInfo->selectedRegion );

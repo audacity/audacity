@@ -59,6 +59,7 @@ is time to refresh some aspect of the screen.
 #include "ProjectWindows.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
+#include "ProjectTimeRuler.h"
 #include "ProjectWindow.h"
 #include "SyncLock.h"
 #include "Theme.h"
@@ -334,8 +335,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
             RefreshTrack(pTrack);
       });
 
-   mTimeDisplayModeSubscription =
-      TimeDisplayModePreference.Subscribe([this](auto mode) { Refresh(); });
+   mProjectRulerInvalidatedSubscription =
+      ProjectTimeRuler::Get(*theProject).GetRuler().Subscribe([this](auto mode) { Refresh(); });
 
    UpdatePrefs();
 }

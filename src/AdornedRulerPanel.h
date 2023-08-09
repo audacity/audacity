@@ -246,7 +246,8 @@ private:
 
    Observer::Subscription mAudioIOSubscription,
       mPlayRegionSubscription,
-      mThemeChangeSubscription;
+      mThemeChangeSubscription,
+      mRulerInvalidatedSubscription;
 
    // classes implementing subdivision for CellularPanel
    struct Subgroup;
