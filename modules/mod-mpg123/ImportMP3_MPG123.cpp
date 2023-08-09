@@ -216,7 +216,7 @@ MP3ImportFileHandle::MP3ImportFileHandle(const FilePath& filename)
    }
 
    // We force mpg123 to decode into floats
-   mpg123_param(mHandle, MPG123_FLAGS, MPG123_FORCE_FLOAT, 0.0);
+   mpg123_param(mHandle, MPG123_FLAGS, MPG123_GAPLESS | MPG123_FORCE_FLOAT, 0.0);
 
    if (errorCode != MPG123_OK)
    {
