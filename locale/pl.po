@@ -15520,7 +15520,7 @@ msgstr "Końca do ku&rsora/początku zaznaczenia"
 
 #: src/menus/TrackMenus.cpp
 msgid "End to Selection En&d"
-msgstr "Końca &do końca &zaznaczenia"
+msgstr "Końca &do końca zaznaczenia"
 
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
