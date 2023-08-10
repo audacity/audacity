@@ -42,10 +42,9 @@ sampleCount GetLastReadSample(
 sampleCount
 GetTotalNumSamplesToProduce(const ClipInterface& clip, double durationToDiscard)
 {
-   return sampleCount { (clip.GetVisibleSampleCount().as_double() -
-                         durationToDiscard * clip.GetRate()) *
-                           clip.GetStretchRatio() +
-                        .5 };
+   return sampleCount { clip.GetVisibleSampleCount().as_double() *
+                           clip.GetStretchRatio() -
+                        durationToDiscard * clip.GetRate() + .5 };
 }
 } // namespace
 
