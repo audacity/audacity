@@ -44,6 +44,7 @@ FocusScope {
    property color accentColor: UiTheme.accentColor
 
    property color iconColor: UiTheme.fontColor1
+   property int iconSize: 16
 
    property real radius: 3
 
@@ -157,6 +158,7 @@ FocusScope {
             Layout.alignment: Qt.AlignHCenter
             iconCode: root.icon
             font.family: root.iconFont.family
+            font.pixelSize: root.iconSize
             color: root.iconColor
             visible: !isEmpty
          }
@@ -182,6 +184,7 @@ FocusScope {
             Layout.alignment: Qt.AlignVCenter
             iconCode: root.icon
             font.family: root.iconFont.family
+            font.pixelSize: root.iconSize
             color: root.iconColor
             visible: !isEmpty
          }
