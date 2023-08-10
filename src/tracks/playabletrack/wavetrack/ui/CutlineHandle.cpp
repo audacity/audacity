@@ -67,7 +67,7 @@ namespace
       }
       return -1;
    }
-   
+
    bool IsOverCutline
       (const ViewInfo &viewInfo, WaveTrack * track,
        const wxRect &rect, const wxMouseState &state,
@@ -169,7 +169,16 @@ UIHandle::Result CutlineHandle::Click
 
          viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
       }
-      else if (mLocation.typ == WaveTrackLocation::locationMergePoint) {
+      // todo(mhodgkinson) Bluntly disabling this Join shortcut for now. There
+      // exists an issue that wants to do this properly:
+      // https://github.com/audacity/audacity/issues/5020
+      // With stretching, merging can lead to rendering the track, which can
+      // freeze the application for a noticeable time. At the time of writing
+      // there is no progress bar for that. Even if there were, in the case of
+      // an unintentional action that might be quite annoying.
+      else if (
+         false /* mLocation.typ == WaveTrackLocation::locationMergePoint */)
+      {
          const double pos = mLocation.pos;
          for (auto channel :
               TrackList::Channels(mpTrack.get())) {
