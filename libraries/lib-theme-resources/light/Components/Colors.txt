@@ -113,6 +113,6 @@
                BarSeparatorPen: #888888;
            BeatFillStrongBrush: #cccccc;
              BeatFillWeakBrush: #dcdcdc;
-        BeatFillStrongSelBrush: #e2e9ea;
-          BeatFillWeakSelBrush: #edf5ff;
+        BeatFillStrongSelBrush: #c5d7fc;
+          BeatFillWeakSelBrush: #d5e3ff;
 }

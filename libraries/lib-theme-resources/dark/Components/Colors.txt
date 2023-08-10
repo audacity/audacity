@@ -114,5 +114,5 @@
            BeatFillStrongBrush: #404040;
              BeatFillWeakBrush: #464646;
         BeatFillStrongSelBrush: #8b8571;
-          BeatFillWeakSelBrush: #8e8f76;
+          BeatFillWeakSelBrush: #7a7564;
 }
