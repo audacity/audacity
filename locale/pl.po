@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.3.0\n"
+"Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-06-22 10:00+0000\n"
+"PO-Revision-Date: 2023-08-10 01:20+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -1601,7 +1601,7 @@ msgstr "Przykładowa ścieżka do zapisu"
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
-msgstr "&Zamknij"
+msgstr "Zam&knij"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp
 #: libraries/lib-wx-init/MultiDialog.cpp src/AudacityFileConfig.cpp
@@ -1751,7 +1751,7 @@ msgstr "Wytnij/kopiuj/wklej"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr "Pasek narzędzi &wytnij/kopiuj/wklej"
+msgstr "Pase&k narzędzi wytnij/kopiuj/wklej"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -1960,7 +1960,7 @@ msgstr "Niestandardowy"
 
 #: libraries/lib-time-frequency-selection/ViewInfo.cpp
 msgid "&Loop On/Off"
-msgstr "&Pętla włącz/wyłącz"
+msgstr "Pęt&la włącz/wyłącz"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Time track.
@@ -2294,7 +2294,7 @@ msgstr "Dziennik Audacity"
 
 #: libraries/lib-wx-init/LogWindow.cpp src/TagsEditor.cpp
 msgid "&Save..."
-msgstr "&Zapisz..."
+msgstr "Zapi&sz..."
 
 #. i18n-hint: (verb)
 #: libraries/lib-wx-init/LogWindow.cpp src/TagsEditor.cpp
@@ -2452,7 +2452,7 @@ msgstr "Stół roboczy &Nyquista..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
-msgstr "&Cofnij\tCtrl+Z"
+msgstr "C&ofnij\tCtrl+Z"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
@@ -2468,7 +2468,7 @@ msgstr "&Kopiuj\tCtrl+C"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Paste\tCtrl+V"
-msgstr "&Wklej\tCtrl+V"
+msgstr "Wk&lej\tCtrl+V"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cle&ar\tCtrl+L"
@@ -2512,7 +2512,7 @@ msgstr "Wybierz &czcionkę..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Vertically"
-msgstr "Rozdziel p&ionowo"
+msgstr "Rozdziel piono&wo"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Horizontally"
@@ -2524,7 +2524,7 @@ msgstr "Pokaż s&krypt"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Show &Output"
-msgstr "Pokaż &wyjście"
+msgstr "P&okaż wyjście"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Large Icons"
@@ -3367,11 +3367,11 @@ msgstr "&Otwórz..."
 
 #: src/AudacityApp.cpp
 msgid "Open &Recent..."
-msgstr "O&twórz ostatnie..."
+msgstr "Otwó&rz ostatnie..."
 
 #: src/AudacityApp.cpp
 msgid "&About Audacity..."
-msgstr "&O Audacity..."
+msgstr "O &Audacity..."
 
 #: src/AudacityApp.cpp
 msgid "&Preferences..."
@@ -3616,7 +3616,7 @@ msgstr "&Opuść Audacity"
 
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
-msgstr "&Spróbuj ponownie"
+msgstr "Sp&róbuj ponownie"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
@@ -3719,7 +3719,7 @@ msgstr "Wybierz polecenie"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Command"
-msgstr "&Polecenie"
+msgstr "Pole&cenie"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Edit Parameters"
@@ -3868,7 +3868,7 @@ msgstr "&Pliki..."
 #. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
 msgid "&Expand"
-msgstr "&Rozszerz"
+msgstr "Rozsz&erz"
 
 #: src/BatchProcessDialog.cpp
 msgid "No macro selected"
@@ -3954,7 +3954,7 @@ msgstr "&Usuń"
 
 #: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "Move &Up"
-msgstr "Przesuń w &górę"
+msgstr "Przes&uń w górę"
 
 #: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "Move &Down"
@@ -3963,7 +3963,7 @@ msgstr "Przesuń w &dół"
 #: src/BatchProcessDialog.cpp src/HelpUtilities.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Save"
-msgstr "&Zapisz"
+msgstr "Zapi&sz"
 
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
@@ -4012,7 +4012,7 @@ msgstr "Na pewno chcesz usunąć %s?"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "&Repeat %s"
-msgstr "&Powtórz %s"
+msgstr "Powtó&rz %s"
 
 #. i18n-hint: %s will be the name of the effect which will be
 #. * repeated if this menu item is chosen
@@ -4041,7 +4041,7 @@ msgstr "Paleta..."
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/BatchProcessDialog.cpp
 msgid "Script&ables I"
-msgstr "&Biblioteki I"
+msgstr "Bibli&oteki I"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/BatchProcessDialog.cpp
@@ -4077,7 +4077,7 @@ msgstr "Pokaż szczegółowe informacje o każdym pliku bloku"
 
 #: src/Benchmark.cpp
 msgid "Show detailed info about each editing operation"
-msgstr "Pokaż szczegółowe informacje o każdej operacji edycji"
+msgstr "Pokaż szczegółowe informacje o każdej operacji edytowania"
 
 #: src/Benchmark.cpp
 msgid "Run"
@@ -4218,7 +4218,7 @@ msgstr "TEST ZAKOŃCZONY NIEPOWODZENIEM!!!\n"
 
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
-msgstr "Benchmark został pomyślnie ukończony.\n"
+msgstr "Benchmark został zakończony pomyślnie.\n"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
 #. Cut, Fade.
@@ -4403,7 +4403,7 @@ msgstr "BRAKUJĄCY %s"
 
 #: src/Dependencies.cpp
 msgid "&Copy Names to Clipboard"
-msgstr "&Kopiuj nazwy do schowka"
+msgstr "Kopiuj nazwy do s&chowka"
 
 #: src/Dependencies.cpp
 #, c-format
@@ -4593,7 +4593,7 @@ msgstr "&Nie kopiuj żadnego dźwięku"
 
 #: src/FileFormats.cpp
 msgid "As&k"
-msgstr "&Pytaj"
+msgstr "&Zapytaj"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -4674,7 +4674,7 @@ msgstr "&Algorytm:"
 
 #: src/FreqWindow.cpp
 msgid "&Size:"
-msgstr "&Rozmiar:"
+msgstr "Ro&zmiar:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "&Export..."
@@ -4690,7 +4690,7 @@ msgstr "&Oś:"
 
 #: src/FreqWindow.cpp
 msgid "&Replot..."
-msgstr "&Przerysuj..."
+msgstr "P&rzerysuj..."
 
 #: src/FreqWindow.cpp
 msgid ""
@@ -4795,11 +4795,11 @@ msgstr "Zajęte miejsce"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
-msgstr "&Całkowite zajęte miejsce"
+msgstr "Całkowi&te zajęte miejsce"
 
 #: src/HistoryWindow.cpp
 msgid "&Undo levels available"
-msgstr "&Dostępna liczba cofnięć"
+msgstr "D&ostępna liczba cofnięć"
 
 #: src/HistoryWindow.cpp
 msgid "&Levels to discard"
@@ -4843,7 +4843,7 @@ msgstr "Znaleziono niekompatybilną(e) wtyczkę(i)"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
-msgstr "&Zarządzaj wtyczkami"
+msgstr "Zarządzaj wtyczka&mi"
 
 #: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
@@ -5034,11 +5034,11 @@ msgstr "Błąd przy uruchamianiu MIDI"
 #: src/Menus.cpp
 #, c-format
 msgid "&Undo %s"
-msgstr "&Cofnij %s"
+msgstr "C&ofnij %s"
 
 #: src/Menus.cpp src/menus/EditMenus.cpp
 msgid "&Undo"
-msgstr "&Cofnij"
+msgstr "C&ofnij"
 
 #: src/Menus.cpp
 #, c-format
@@ -5312,7 +5312,7 @@ msgstr "Pokaż wszystkie"
 #. i18n-hint: Radio button to show all effects
 #: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
 msgid "&All"
-msgstr "&Wszystko"
+msgstr "Wszystk&o"
 
 #. i18n-hint: Radio button to show just the currently disabled effects
 #: src/PluginRegistrationDialog.cpp
@@ -5332,7 +5332,7 @@ msgstr "Pokaż włączone"
 #. i18n-hint: Radio button to show just the currently enabled effects
 #: src/PluginRegistrationDialog.cpp
 msgid "E&nabled"
-msgstr "W&łączony"
+msgstr "Włączo&ny"
 
 #. i18n-hint: Radio button to show just the newly discovered effects
 #: src/PluginRegistrationDialog.cpp
@@ -5366,11 +5366,11 @@ msgstr "Skanuj ponownie"
 
 #: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
 msgid "&Enable"
-msgstr "W&łącz"
+msgstr "Włą&cz"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "&Disable"
-msgstr "W&yłącz"
+msgstr "Wyłą&cz"
 
 #: src/PluginRegistrationDialog.cpp
 #, c-format
@@ -6361,7 +6361,7 @@ msgstr ""
 
 #: src/SpectralDataDialog.cpp
 msgid "Spectra&l Selection Panel"
-msgstr "Panel zaznaczenia widma"
+msgstr "Pane&l zaznaczenia widma"
 
 #: src/SpectralDataManager.cpp
 msgid "Applied effect to selection"
@@ -6407,7 +6407,7 @@ msgstr "Komentarze"
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
 msgstr ""
-"Użyj klawiszy strzałek (lub klawisza ENTER po edycji), aby nawigować polami."
+"Użyj klawiszy strzałek (lub klawisza ENTER po edytowaniu), aby nawigować polami."
 
 #: src/TagsEditor.cpp
 msgid "Tag"
@@ -6419,7 +6419,7 @@ msgstr "Wartość"
 
 #: src/TagsEditor.cpp
 msgid "&Add"
-msgstr "&Dodaj"
+msgstr "Dod&aj"
 
 #: src/TagsEditor.cpp
 msgid "&Remove"
@@ -6576,7 +6576,7 @@ msgid ""
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
-"Biorąc pod uwagę bieżące ustawienia, nie masz wystarczająco wolnego miejsca na dysku na ukończenie tego nagrywania.\n"
+"Biorąc pod uwagę bieżące ustawienia, nie masz wystarczająco wolnego miejsca na dysku na zakończenie tego nagrywania.\n"
 "\n"
 "Chcesz kontynuować?\n"
 "\n"
@@ -6626,7 +6626,7 @@ msgstr "Nagrywanie czasowe zatrzymane."
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording completed."
-msgstr "Nagrywanie czasowe ukończone."
+msgstr "Nagrywanie czasowe zakończone."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6768,7 +6768,7 @@ msgstr "Opcje"
 
 #: src/TimerRecordDialog.cpp
 msgid "After Recording completes:"
-msgstr "Po ukończeniu nagrywania:"
+msgstr "Po zakończeniu nagrywania:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Do nothing"
@@ -6850,7 +6850,7 @@ msgstr ""
 
 #: src/TimerRecordDialog.cpp
 msgid "&Timer Record..."
-msgstr "Nagrywaj &czasowo..."
+msgstr "Nagrywaj cza&sowo..."
 
 #: src/TrackInfo.cpp
 msgid "Stereo, 999999Hz"
@@ -7027,7 +7027,7 @@ msgstr "Zmiany kierunku -- znaczy: %1.4f sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 msgid "Calibration Complete"
-msgstr "Kalibracja ukończona"
+msgstr "Kalibracja zakończona"
 
 #. i18n-hint: Share audio button text, keep as short as possible
 #: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
@@ -7038,7 +7038,7 @@ msgstr "Udostępnij nagranie"
 #. that opens Share Audio dialog
 #: src/cloud/ShareAudioToolbar.cpp
 msgid "&Share Audio Toolbar"
-msgstr "Pasek narzędzi &udostępniania nagrania"
+msgstr "Pa&sek narzędzi udostępniania nagrania"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/LinkFailedDialog.cpp
@@ -7056,7 +7056,7 @@ msgstr "Token"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 msgid "L&ink audio.com account..."
-msgstr "P&ołącz konto Audio.com..."
+msgstr "Połącz konto Aud&io.com..."
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
@@ -7064,7 +7064,7 @@ msgstr "Nie można połączyć Twojego konta. Spróbuj ponownie."
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "&Try again"
-msgstr "Spróbuj ponownie"
+msgstr "&Spróbuj ponownie"
 
 #: src/cloud/audiocom/LinkSucceededDialog.cpp
 msgid "Account linked successfully!"
@@ -8040,7 +8040,7 @@ msgstr "Zwiększa lub zmniejsza głośność dźwięku, który został zaznaczon
 
 #: src/effects/Amplify.cpp
 msgid "&Amplification (dB):"
-msgstr "&Wzmocnienie (dB):"
+msgstr "Wzm&ocnienie (dB):"
 
 #: src/effects/Amplify.cpp
 msgid "Amplification dB"
@@ -8096,7 +8096,7 @@ msgstr "db"
 
 #: src/effects/AutoDuck.cpp
 msgid "Duck &amount:"
-msgstr "Wartość &duck:"
+msgstr "W&artość duck:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Ma&ximum pause:"
@@ -8104,19 +8104,19 @@ msgstr "Ma&ksymalna pauza:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade &down length:"
-msgstr "Długość zewnętrznego ści&szenia:"
+msgstr "&Długość zewnętrznego ściszenia:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade &up length:"
-msgstr "Długość zewnętrznego &zgłośnienia:"
+msgstr "Dł&ugość zewnętrznego zgłośnienia:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Inner fade d&own length:"
-msgstr "Długość wewnętrznego ści&szenia:"
+msgstr "Dług&ość wewnętrznego ściszenia:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Inner &fade up length:"
-msgstr "Długość wewnętrznego &zgłośnienia:"
+msgstr "Dłu&gość wewnętrznego zgłośnienia:"
 
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/TruncSilence.cpp
@@ -8186,7 +8186,7 @@ msgstr "Bas"
 
 #: src/effects/BassTreble.cpp
 msgid "&Treble (dB):"
-msgstr "So&pran (dB):"
+msgstr "&Sopran (dB):"
 
 #: src/effects/BassTreble.cpp
 msgid "Treble"
@@ -8377,7 +8377,7 @@ msgstr "Długość zaznaczenia"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "C&urrent Length:"
-msgstr "&Bieżąca długość:"
+msgstr "Bieżąca dł&ugość:"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Current length of selection."
@@ -8491,7 +8491,7 @@ msgstr "Próg"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Max &Spike Width (higher is more sensitive):"
-msgstr "Maksymalna szerokość &szczytu (wyższa zwiększa czułość):"
+msgstr "Mak&symalna szerokość szczytu (wyższa zwiększa czułość):"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width"
@@ -8547,7 +8547,7 @@ msgstr "Stosunek %.1f do 1"
 
 #: src/effects/Compressor.cpp
 msgid "&Noise Floor:"
-msgstr "Poziom &szumu:"
+msgstr "Pozio&m szumu:"
 
 #: src/effects/Compressor.cpp src/effects/Distortion.cpp
 msgid "Noise Floor"
@@ -8566,7 +8566,7 @@ msgstr "Stosunek"
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/Compressor.cpp
 msgid "&Attack Time:"
-msgstr "Czas &narastania:"
+msgstr "Cz&as narastania:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
@@ -8581,7 +8581,7 @@ msgstr "Czas narastania"
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "R&elease Time:"
-msgstr "Czas &zanikania:"
+msgstr "&Czas zanikania:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
@@ -8595,7 +8595,7 @@ msgstr "Czas zanikania"
 #. it.
 #: src/effects/Compressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "Uczyń ze &wzmocnienia 0 dB po skompresowaniu"
+msgstr "Uczyń ze wzmocnienia 0 dB po s&kompresowaniu"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
@@ -8680,7 +8680,7 @@ msgstr "Czas zakończenia pierwszego planu"
 
 #: src/effects/Contrast.cpp
 msgid "&Measure selection"
-msgstr "&Zmierz zaznaczenie"
+msgstr "Z&mierz zaznaczenie"
 
 #: src/effects/Contrast.cpp
 msgid "&Background:"
@@ -8696,7 +8696,7 @@ msgstr "Czas zakończenia tła"
 
 #: src/effects/Contrast.cpp
 msgid "Mea&sure selection"
-msgstr "Z&mierz zaznaczenie"
+msgstr "&Zmierz zaznaczenie"
 
 #: src/effects/Contrast.cpp
 msgid "Result"
@@ -8704,7 +8704,7 @@ msgstr "Wynik"
 
 #: src/effects/Contrast.cpp
 msgid "Co&ntrast Result:"
-msgstr "Wynik ko&ntrastu:"
+msgstr "Wy&nik kontrastu:"
 
 #: src/effects/Contrast.cpp
 msgid "R&eset"
@@ -8712,7 +8712,7 @@ msgstr "R&esetuj"
 
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
-msgstr "&Różnica:"
+msgstr "Różni&ca:"
 
 #: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUISettings.cpp
 msgid "&Help"
@@ -8863,11 +8863,11 @@ msgstr "Wyniki"
 
 #: src/effects/Contrast.cpp
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Pass"
-msgstr "Kryteria sukcesu 1.4.7 WCAG 2.0: Zdane"
+msgstr "Kryteria sukcesu 1.4.7 WCAG 2.0: Powodzenie"
 
 #: src/effects/Contrast.cpp
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Fail"
-msgstr "Kryteria sukcesu 1.4.7 WCAG 2.0: Niezdane"
+msgstr "Kryteria sukcesu 1.4.7 WCAG 2.0: Niepowodzenie"
 
 #: src/effects/Contrast.cpp
 msgid "Data gathered"
@@ -9167,7 +9167,7 @@ msgstr "&Długość:"
 
 #: src/effects/DtmfGen.cpp
 msgid "&Tone/silence ratio:"
-msgstr "&Współczynnik dźwięk/cisza:"
+msgstr "W&spółczynnik dźwięk/cisza:"
 
 #: src/effects/DtmfGen.cpp
 msgid "Duty cycle:"
@@ -9213,11 +9213,11 @@ msgstr "Żądana wartość przekracza pojemność pamięci."
 
 #: src/effects/Echo.cpp
 msgid "&Delay time (seconds):"
-msgstr "&Czas opóźnienia (sekundy):"
+msgstr "Czas opóźnienia (sekun&dy):"
 
 #: src/effects/Echo.cpp
 msgid "D&ecay factor:"
-msgstr "&Współczynnik zaniku:"
+msgstr "Współ&czynnik zaniku:"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -9319,7 +9319,7 @@ msgstr "Zatrzymaj &podgląd"
 
 #: src/effects/EffectUI.cpp
 msgid "&Apply"
-msgstr "&Zastosuj"
+msgstr "Z&astosuj"
 
 #: src/effects/EffectUI.cpp
 msgid "Save Preset..."
@@ -9547,7 +9547,7 @@ msgstr "Nazwa krzywej"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "D&elete..."
-msgstr "U&suń..."
+msgstr "&Usuń..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "&Get More..."
@@ -9738,7 +9738,7 @@ msgstr "Długość filtra"
 
 #: src/effects/EqualizationUI.cpp
 msgid "&Select Curve:"
-msgstr "&Wybierz krzywą:"
+msgstr "Wybier&z krzywą:"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Select Curve"
@@ -9762,7 +9762,7 @@ msgstr "Pokaż linie siatki"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Show g&rid lines"
-msgstr "Pokaż linie &siatki"
+msgstr "&Pokaż linie siatki"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Requested curve not found, using 'unnamed'"
@@ -9802,11 +9802,11 @@ msgstr "Obcinanie"
 
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
-msgstr "&Rozpocznij próg (sample):"
+msgstr "Rozpocznij próg (&sample):"
 
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
-msgstr "&Zatrzymaj próg (sample):"
+msgstr "Z&atrzymaj próg (sample):"
 
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -9908,7 +9908,7 @@ msgstr "Generuje jeden z trzech różnych typów szumu"
 
 #: src/effects/Noise.cpp
 msgid "&Noise type:"
-msgstr "Typ &szumu:"
+msgstr "Typ szu&mu:"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Median"
@@ -9973,7 +9973,7 @@ msgstr "Zaznaczony szum jest za krótki."
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Noise reduction (dB):"
-msgstr "Redukcja &szumu (dB):"
+msgstr "Redukcja szu&mu (dB):"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise reduction"
@@ -9981,7 +9981,7 @@ msgstr "Redukcja szumu"
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Sensitivity:"
-msgstr "&Czułość:"
+msgstr "C&zułość:"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Sensitivity"
@@ -9989,7 +9989,7 @@ msgstr "Czułość"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Attac&k time (secs):"
-msgstr "Czas &narastania (sekundy):"
+msgstr "Czas narastania (se&kundy):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Attack time"
@@ -9997,7 +9997,7 @@ msgstr "Czas narastania"
 
 #: src/effects/NoiseReduction.cpp
 msgid "R&elease time (secs):"
-msgstr "Czas &zanikania (sekundy):"
+msgstr "Czas zanikania (s&ekundy):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Release time"
@@ -10005,7 +10005,7 @@ msgstr "Czas zanikania"
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Frequency smoothing (bands):"
-msgstr "Wygładzanie &częstotliwości (zespoły):"
+msgstr "Wy&gładzanie częstotliwości (zespoły):"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Frequency smoothing"
@@ -10013,7 +10013,7 @@ msgstr "Wygładzanie częstotliwości"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Sensiti&vity (dB):"
-msgstr "&Czułość (dB):"
+msgstr "Cz&ułość (dB):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Old Sensitivity"
@@ -10064,7 +10064,7 @@ msgstr "&Izoluj"
 #. Translate differently from "Reduce" !
 #: src/effects/NoiseReduction.cpp
 msgid "Resid&ue"
-msgstr "Pozos&taw"
+msgstr "P&ozostaw"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Advanced Settings"
@@ -10166,15 +10166,15 @@ msgstr "Re&dukcja szumu (dB):"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "&Sensitivity (dB):"
-msgstr "&Czułość (dB):"
+msgstr "C&zułość (dB):"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Fr&equency smoothing (Hz):"
-msgstr "Wy&gładzanie częstotliwości (Hz):"
+msgstr "Wygładzani&e częstotliwości (Hz):"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Attac&k/decay time (secs):"
-msgstr "Czas na&rastania/zanikania (sekundy):"
+msgstr "Czas narastania/zani&kania (sekundy):"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Attack/decay time"
@@ -10235,7 +10235,7 @@ msgstr "Przetwarzanie drugiej ścieżki z pary stereo: %s"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
-msgstr "&Usuń offset DC (wyśrodkuj w pionie na 0,0)"
+msgstr "Usuń offset DC (wyś&rodkuj w pionie na 0,0)"
 
 #: src/effects/Normalize.cpp
 msgid "&Normalize peak amplitude to   "
@@ -10267,7 +10267,7 @@ msgstr "W&spółczynnik rozciągania:"
 
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
-msgstr "Rozdzielczość &czasu (sekundy):"
+msgstr "Rozdzielczość cza&su (sekundy):"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
 #. effect.
@@ -10324,7 +10324,7 @@ msgstr "Łączy sygnały przesunięte w fazie z sygnałem pierwotnym"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
-msgstr "&Etapy:"
+msgstr "E&tapy:"
 
 #: src/effects/Phaser.cpp
 msgid "Stages"
@@ -10332,7 +10332,7 @@ msgstr "Etapy"
 
 #: src/effects/Phaser.cpp
 msgid "&Dry/Wet:"
-msgstr "&Suchy/mokry:"
+msgstr "Su&chy/mokry:"
 
 #: src/effects/Phaser.cpp
 msgid "Dry Wet"
@@ -10340,7 +10340,7 @@ msgstr "Suchy Mokry"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "LFO Freq&uency (Hz):"
-msgstr "Często&tliwość LFO (Hz):"
+msgstr "Częst&otliwość LFO (Hz):"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "LFO frequency in hertz"
@@ -10356,7 +10356,7 @@ msgstr "Faza początkowa LFO w stopniach"
 
 #: src/effects/Phaser.cpp
 msgid "Dept&h:"
-msgstr "Głębo&kość:"
+msgstr "&Głębokość:"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "Depth in percent"
@@ -10372,7 +10372,7 @@ msgstr "Sprzężenie zwrotne w procentach"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "&Output gain (dB):"
-msgstr "&Wzmocnienie sygnału (dB):"
+msgstr "Wzm&ocnienie sygnału (dB):"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "Output gain (dB)"
@@ -10426,7 +10426,7 @@ msgstr "Powtarza zaznaczenie określoną liczbę razy"
 
 #: src/effects/Repeat.cpp
 msgid "&Number of repeats to add:"
-msgstr "&Liczba powtórek do dodania:"
+msgstr "Liczba powtórek do doda&nia:"
 
 #: src/effects/Repeat.cpp
 msgid "Current selection length: dd:hh:mm:ss"
@@ -10500,7 +10500,7 @@ msgstr "Wielkość &pokoju (%):"
 
 #: src/effects/Reverb.cpp
 msgid "&Pre-delay (ms):"
-msgstr "&Opóźnienie (ms):"
+msgstr "O&późnienie (ms):"
 
 #: src/effects/Reverb.cpp
 msgid "Rever&berance (%):"
@@ -10524,15 +10524,15 @@ msgstr "&Mokre wzmocnienie (dB):"
 
 #: src/effects/Reverb.cpp
 msgid "Dr&y Gain (dB):"
-msgstr "&Suche wzmocnienie (dB):"
+msgstr "S&uche wzmocnienie (dB):"
 
 #: src/effects/Reverb.cpp
 msgid "Stereo Wid&th (%):"
-msgstr "Szero&kość stereo (%):"
+msgstr "Szerokość s&tereo (%):"
 
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
-msgstr "&Tylko mokre"
+msgstr "Tylko &mokre"
 
 #: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverse"
@@ -10607,7 +10607,7 @@ msgstr "Pasmo przenoszenia (dB)"
 
 #: src/effects/ScienFilter.cpp
 msgid "&Subtype:"
-msgstr "Po&dtyp:"
+msgstr "Pod&typ:"
 
 #: src/effects/ScienFilter.cpp
 msgid "Cutoff (Hz)"
@@ -10615,15 +10615,15 @@ msgstr "Odcięcie (Hz)"
 
 #: src/effects/ScienFilter.cpp
 msgid "C&utoff:"
-msgstr "O&dcięcie:"
+msgstr "&Odcięcie:"
 
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation:"
-msgstr "Tłumione &minimalne pasmo zaporowe:"
+msgstr "&Tłumione minimalne pasmo zaporowe:"
 
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation (dB)"
-msgstr "Tłumione &minimalne pasmo zaporowe (dB)"
+msgstr "&Tłumione minimalne pasmo zaporowe (dB)"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Align MIDI to Audio"
@@ -10780,7 +10780,7 @@ msgstr "Początkowe przesunięcie wysokości"
 
 #: src/effects/TimeScale.cpp
 msgid "(&semitones) [-12 to 12]:"
-msgstr "(&półtony) [-12 do 12]:"
+msgstr "(pół&tony) [-12 do 12]:"
 
 #: src/effects/TimeScale.cpp
 msgid "(%) [-50 to 100]:"
@@ -10792,7 +10792,7 @@ msgstr "Końcowe przesunięcie wysokości"
 
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
-msgstr "(pół&tony) [-12 do 12]:"
+msgstr "(półt&ony) [-12 do 12]:"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
@@ -10902,7 +10902,7 @@ msgstr "Wykryj ciszę"
 
 #: src/effects/TruncSilence.cpp
 msgid "Tr&uncate to:"
-msgstr "Obe&tnij do:"
+msgstr "&Obetnij do:"
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
@@ -10914,7 +10914,7 @@ msgstr "K&ompresuj do:"
 
 #: src/effects/TruncSilence.cpp
 msgid "Trunc&ate tracks independently"
-msgstr "Obe&tnij ścieżki niezależnie"
+msgstr "Obetnij ścieżki niez&ależnie"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST Effects"
@@ -11118,7 +11118,7 @@ msgstr ""
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
-msgstr "Głę&bokość (%):"
+msgstr "&Głębokość (%):"
 
 #: src/effects/Wahwah.cpp
 msgid "Reso&nance:"
@@ -11130,7 +11130,7 @@ msgstr "Rezonans"
 
 #: src/effects/Wahwah.cpp
 msgid "Wah Frequency Offse&t (%):"
-msgstr "Przesunięcie częstotliwości &Wah (%):"
+msgstr "Przesunięcie częs&totliwości Wah (%):"
 
 #: src/effects/Wahwah.cpp
 msgid "Wah frequency offset in percent"
@@ -11244,7 +11244,7 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select &interface"
-msgstr "Wybierz &interfejs"
+msgstr "Wyb&ierz interfejs"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
 #: src/prefs/KeyConfigPrefs.cpp
@@ -11495,7 +11495,7 @@ msgstr "Wyjście diagnostyczne:"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Processing complete."
-msgstr "Przetwarzanie ukończone."
+msgstr "Przetwarzanie zakończone."
 
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
@@ -14413,15 +14413,15 @@ msgstr "Klipy dźwięk&owe"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "Po&przednia granica przycięcia do kursora"
+msgstr "Poprzednia granica przycięcia do k&ursora"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "Kursor do na&stępnej granicy przycięcia"
+msgstr "&Kursor do następnej granicy przycięcia"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
-msgstr "Poprze&dnie przycięcie"
+msgstr "P&oprzednie przycięcie"
 
 #: src/menus/ClipMenus.cpp
 msgid "Select Previous Clip"
@@ -14429,7 +14429,7 @@ msgstr "Zaznacz poprzedni klip"
 
 #: src/menus/ClipMenus.cpp
 msgid "N&ext Clip"
-msgstr "N&astępne przycięcie"
+msgstr "Następn&e przycięcie"
 
 #: src/menus/ClipMenus.cpp
 msgid "Select Next Clip"
@@ -14437,7 +14437,7 @@ msgstr "Zaznacz następny klip"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary"
-msgstr "Po&przednia granica przycięcia"
+msgstr "&Poprzednia granica przycięcia"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Prev Clip Boundary"
@@ -14457,7 +14457,7 @@ msgstr "Przesuwanie w czasie w &lewo"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time Shift &Right"
-msgstr "Przesuwanie w czasie w &prawo"
+msgstr "P&rzesuwanie w czasie w prawo"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasted text from the clipboard"
@@ -14597,12 +14597,12 @@ msgstr "&Kopiuj"
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "&Paste"
-msgstr "&Wklej"
+msgstr "Wk&lej"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
 msgid "Duplic&ate"
-msgstr "Po&wiel"
+msgstr "P&owiel"
 
 #: src/menus/EditMenus.cpp
 msgid "R&emove Special"
@@ -14611,27 +14611,27 @@ msgstr "&Usuń dźwięk"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "Spl&it Cut"
-msgstr "Rozdziel &wytnij"
+msgstr "Rozdz&iel wytnij"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "Split D&elete"
-msgstr "Rozdziel &usuń"
+msgstr "Rozdzi&el usuń"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
 msgid "Silence Audi&o"
-msgstr "Wy&cisz dźwięk"
+msgstr "W&ycisz dźwięk"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
 msgid "Tri&m Audio"
-msgstr "Przy&tnij dźwięk"
+msgstr "Przyt&nij dźwięk"
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/EditMenus.cpp
 msgid "Sp&lit"
-msgstr "&Rozdziel"
+msgstr "Rozdzie&l"
 
 #: src/menus/EditMenus.cpp
 msgid "Split Ne&w"
@@ -14652,11 +14652,11 @@ msgstr "Usta&wienia"
 
 #: src/menus/EditMenus.cpp
 msgid "&Delete Key"
-msgstr "K&lawisz kasowania­"
+msgstr "&Klawisz kasowania­"
 
 #: src/menus/EditMenus.cpp
 msgid "Delete Key&2"
-msgstr "K&lawisz kasowania­ 2"
+msgstr "Klawisz kasowania­&2"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Ext&ra"
@@ -14703,7 +14703,7 @@ msgstr "Importuj etykiety"
 
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
-msgstr "&Niebezpieczny reset..."
+msgstr "Nie&bezpieczny reset..."
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: src/menus/FileMenus.cpp
@@ -14717,11 +14717,11 @@ msgstr "Ostatnie &pliki"
 
 #: src/menus/FileMenus.cpp
 msgid "&Save Project"
-msgstr "&Zapisz projekt"
+msgstr "Zapi&sz projekt"
 
 #: src/menus/FileMenus.cpp
 msgid "Save Project &As..."
-msgstr "Zapisz projekt &jako..."
+msgstr "Z&apisz projekt jako..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Backup Project..."
@@ -14753,7 +14753,7 @@ msgstr "Ekspo&rtuj zaznaczony dźwięk..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
-msgstr "Eksportuj &etykiety..."
+msgstr "E&ksportuj etykiety..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Multiple..."
@@ -14769,12 +14769,12 @@ msgstr "&Etykiety..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
-msgstr "&Dane surowe..."
+msgstr "Dane su&rowe..."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
 msgid "E&xit"
-msgstr "&Zakończ"
+msgstr "Za&kończ"
 
 #: src/menus/FileMenus.cpp
 msgid "Hidden File Menu"
@@ -14834,7 +14834,7 @@ msgstr "&Pierwsze kroki"
 
 #: src/menus/HelpMenus.cpp
 msgid "Audacity &Manual"
-msgstr "&Podręcznik Audacity"
+msgstr "Podręcz&nik Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -14842,7 +14842,7 @@ msgstr "&Szybka pomoc..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual..."
-msgstr "&Podręcznik..."
+msgstr "Podręcz&nik..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -14850,7 +14850,7 @@ msgstr "&Diagnostyka"
 
 #: src/menus/HelpMenus.cpp
 msgid "Au&dio Device Info..."
-msgstr "Informacje o urządzeniu dź&więkowym..."
+msgstr "Informacje o urzą&dzeniu dźwiękowym..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
@@ -14858,7 +14858,7 @@ msgstr "&Generuj dane pomocy..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
-msgstr "&Sprawdź aktualizacje..."
+msgstr "Sprawdź aktualiza&cje..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&About Audacity"
@@ -14990,7 +14990,7 @@ msgstr "&Edytuj etykiety..."
 
 #: src/menus/LabelMenus.cpp
 msgid "Add Label at &Selection"
-msgstr "Dodaj etykietę w miejscu &zaznaczenia"
+msgstr "Dodaj etykietę w miej&scu zaznaczenia"
 
 #: src/menus/LabelMenus.cpp
 msgid "Add Label at &Playback Position"
@@ -15002,11 +15002,11 @@ msgstr "Wklej te&kst do nowej etykiety"
 
 #: src/menus/LabelMenus.cpp
 msgid "&Type to Create a Label (on/off)"
-msgstr "&Wpisz, aby utworzyć etykietę (włącz/wyłącz)"
+msgstr "Wpisz, aby u&tworzyć etykietę (włącz/wyłącz)"
 
 #: src/menus/LabelMenus.cpp
 msgid "La&beled Audio"
-msgstr "Ety&kieta dźwięku"
+msgstr "Etykieta &dźwięku"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -15024,7 +15024,7 @@ msgstr "Etykieta usuń"
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "&Split Cut"
-msgstr "&Rozdziel wytnij"
+msgstr "Ro&zdziel wytnij"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Split Cut"
@@ -15032,7 +15032,7 @@ msgstr "Etykieta rozdziel wytnij"
 
 #: src/menus/LabelMenus.cpp
 msgid "Sp&lit Delete"
-msgstr "Roz&dziel usuń"
+msgstr "Rozdzie&l usuń"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Split Delete"
@@ -15058,7 +15058,7 @@ msgstr "Etykieta kopiuj"
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Spli&t"
-msgstr "Roz&dziel"
+msgstr "Ro&zdziel"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Split"
@@ -15090,47 +15090,47 @@ msgstr "Przejdź do przodu przez aktywne okna"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Foc&us"
-msgstr "&Skup"
+msgstr "Sk&up"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move &Backward from Toolbars to Tracks"
-msgstr "Przejdź do &tyłu z pasków narzędzi do ścieżek"
+msgstr "Przej&dź do tyłu z pasków narzędzi do ścieżek"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Przejdź do &przodu z pasków narzędzi do ścieżek"
+msgstr "Przejdź d&o przodu z pasków narzędzi do ścieżek"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Previous Track"
-msgstr "Przenieś uaktywnienie do &poprzedniej ścieżki"
+msgstr "&Przenieś uaktywnienie do poprzedniej ścieżki"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Next Track"
-msgstr "Przenieś uaktywnienie do &następnej ścieżki"
+msgstr "Prze&nieś uaktywnienie do następnej ścieżki"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &First Track"
-msgstr "Przenieś uaktywnienie do &pierwszej ścieżki"
+msgstr "Przenieś uakty&wnienie do pierwszej ścieżki"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Last Track"
-msgstr "Przenieś uaktywnienie do &ostatniej ścieżki"
+msgstr "Przenieś uak&tywnienie do ostatniej ścieżki"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to P&revious and Select"
-msgstr "Przenieś uaktywnienie do p&oprzedniej i zaznacz"
+msgstr "P&rzenieś uaktywnienie do poprzedniej i zaznacz"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to N&ext and Select"
-msgstr "Przenieś uaktywnienie do n&astępnej i zaznacz"
+msgstr "Prz&enieś uaktywnienie do następnej i zaznacz"
 
 #: src/menus/NavigationMenus.cpp
 msgid "&Toggle Focused Track"
-msgstr "&Przemieszczaj się między ścieżkami"
+msgstr "Przemie&szczaj się między ścieżkami"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Toggle Focuse&d Track"
-msgstr "Przemieszczaj się &między ścieżkami"
+msgstr "Przemieszczaj się mię&dzy ścieżkami"
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
@@ -15222,15 +15222,15 @@ msgstr "Nic nie zaznaczaj"
 
 #: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
 msgid "&Tracks"
-msgstr "&Ścieżki"
+msgstr "Ścież&ki"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Tracks"
-msgstr "We wszystkich &ścieżkach"
+msgstr "We wszys&tkich ścieżkach"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "We wszystkich z&synchronizowanych-zablokowanych ścieżkach"
+msgstr "We w&szystkich zsynchronizowanych-zablokowanych ścieżkach"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Sync-Locked"
@@ -15238,7 +15238,7 @@ msgstr "Zaznacz zsynchronizowane-zablokowane"
 
 #: src/menus/SelectMenus.cpp
 msgid "R&egion"
-msgstr "R&egion"
+msgstr "Obsz&ar"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Left at Playback Position"
@@ -15250,7 +15250,7 @@ msgstr "Ustaw lewe zaznaczenie w miejscu odtwarzania"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Right at Playback Position"
-msgstr "Na &prawo od miejsca odtwarzania"
+msgstr "Na p&rawo od miejsca odtwarzania"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Selection Right at Play Position"
@@ -15258,7 +15258,7 @@ msgstr "Ustaw prawe zaznaczenie w miejscu odtwarzania"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &Start to Cursor"
-msgstr "Od &początku ścieżki do kursora"
+msgstr "Od początku ścieżki do kur&sora"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Track Start to Cursor"
@@ -15266,7 +15266,7 @@ msgstr "Zaznacz początek ścieżki do kursora"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Track &End"
-msgstr "Od kursora do &końca ścieżki"
+msgstr "Od kursora do końca ści&eżki"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Cursor to Track End"
@@ -15274,7 +15274,7 @@ msgstr "Zaznacz kursor do końca ścieżki"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track Start to En&d"
-msgstr "Od początku ścieżki do &końca"
+msgstr "O&d początku ścieżki do końca"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Track Start to End"
@@ -15282,15 +15282,15 @@ msgstr "Zaznacz początek ścieżki do końca"
 
 #: src/menus/SelectMenus.cpp
 msgid "S&tore Selection"
-msgstr "Wy&bierz zaznaczenie"
+msgstr "Wybier&z zaznaczenie"
 
 #: src/menus/SelectMenus.cpp
 msgid "Retrieve Selectio&n"
-msgstr "&Odzyskaj zaznaczenie"
+msgstr "Odzyskaj zaz&naczenie"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Stored &Cursor Position"
-msgstr "&Kursor do przechwyconej pozycji"
+msgstr "Kursor do prze&chwyconej pozycji"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Cursor to Stored"
@@ -15302,7 +15302,7 @@ msgstr "Uchwyć poz&ycję kursora"
 
 #: src/menus/SelectMenus.cpp
 msgid "At &Zero Crossings"
-msgstr "Na miejscach przejść przez &zero"
+msgstr "Na miejscach pr&zejść przez zero"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Zero Crossing"
@@ -15314,7 +15314,7 @@ msgstr "&Zaznaczenie"
 
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Off"
-msgstr "&Wyłącz"
+msgstr "W&yłącz"
 
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Nearest"
@@ -15322,15 +15322,15 @@ msgstr "Przyczep do &najbliższego"
 
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Prior"
-msgstr "Przyczep do &wcześniejszego"
+msgstr "&Przyczep do wcześniejszego"
 
 #: src/menus/SelectMenus.cpp
 msgid "Selection to &Start"
-msgstr "Zaznaczenie do &początku"
+msgstr "&Zaznaczenie do początku"
 
 #: src/menus/SelectMenus.cpp
 msgid "Selection to En&d"
-msgstr "Zaznaczenie do &końca"
+msgstr "Zaznaczenie &do końca"
 
 #: src/menus/SelectMenus.cpp
 msgid "Selection Extend &Left"
@@ -15338,11 +15338,11 @@ msgstr "Powiększ zaznaczenie z &lewej strony"
 
 #: src/menus/SelectMenus.cpp
 msgid "Selection Extend &Right"
-msgstr "Powiększ zaznaczenie z &prawej strony"
+msgstr "Powiększ zaznaczenie z p&rawej strony"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set (or Extend) Le&ft Selection"
-msgstr "Ustaw (lub rozszerz) le&we zaznaczenie"
+msgstr "Usta&w (lub rozszerz) lewe zaznaczenie"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set (or Extend) Rig&ht Selection"
@@ -15354,7 +15354,7 @@ msgstr "Pomniejsz zaznaczenie z l&ewej strony"
 
 #: src/menus/SelectMenus.cpp
 msgid "Selection Contract R&ight"
-msgstr "Pomniejsz zaznaczenie z p&rawej strony"
+msgstr "Pomn&iejsz zaznaczenie z prawej strony"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Cursor to"
@@ -15378,7 +15378,7 @@ msgstr "Kursor do końca zaznaczenia"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &Start"
-msgstr "&Początek ścieżki"
+msgstr "Poc&zątek ścieżki"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Track Start"
@@ -15386,7 +15386,7 @@ msgstr "Kursor do początku ścieżki"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &End"
-msgstr "&Koniec ścieżki"
+msgstr "Koni&ec ścieżki"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Track End"
@@ -15394,7 +15394,7 @@ msgstr "Kursor do końca ścieżki"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Project Start"
-msgstr "Początek &projektu"
+msgstr "&Początek projektu"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Project Start"
@@ -15414,27 +15414,27 @@ msgstr "&Kursor"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor &Left"
-msgstr "&Lewy kursor"
+msgstr "Kursor w &lewo"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor &Right"
-msgstr "&Prawy kursor"
+msgstr "Kursor w p&rawo"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor Sh&ort Jump Left"
-msgstr "Kursor &lekko w lewo"
+msgstr "Kursor lekk&o w lewo"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor Shor&t Jump Right"
-msgstr "Kursor le&kko w prawo"
+msgstr "Kur&sor lekko w prawo"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor Long J&ump Left"
-msgstr "Kursor &mocno w lewo"
+msgstr "K&ursor mocno w lewo"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor Long Ju&mp Right"
-msgstr "Kursor mo&cno w prawo"
+msgstr "Kursor &mocno w prawo"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -15449,7 +15449,7 @@ msgstr "Krótkie przesunięcie w &lewo podczas odtwarzania"
 
 #: src/menus/SelectMenus.cpp
 msgid "Short Seek &Right During Playback"
-msgstr "Krótkie przesunięcie w &prawo podczas odtwarzania"
+msgstr "Krótkie przesunięcie w p&rawo podczas odtwarzania"
 
 #: src/menus/SelectMenus.cpp
 msgid "Long Seek Le&ft During Playback"
@@ -15461,12 +15461,12 @@ msgstr "Długie przesunięcie w pr&awo podczas odtwarzania"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
-msgstr "Paski &narzędzi"
+msgstr "Pa&ski narzędzi"
 
 #. i18n-hint: (verb)
 #: src/menus/ToolbarMenus.cpp
 msgid "Reset Toolb&ars"
-msgstr "Zresetuj paski na&rzędzi"
+msgstr "Zresetuj p&aski narzędzi"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix"
@@ -15504,15 +15504,15 @@ msgstr "Panorama ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "Start to &Zero"
-msgstr "Rozpocznij od &zera"
+msgstr "Ro&zpocznij od zera"
 
 #: src/menus/TrackMenus.cpp
 msgid "Start to &Cursor/Selection Start"
-msgstr "Początku do &kursora/początku zaznaczenia"
+msgstr "Po&czątku do kursora/początku zaznaczenia"
 
 #: src/menus/TrackMenus.cpp
 msgid "Start to Selection &End"
-msgstr "Początku do &końca zaznaczenia"
+msgstr "Początku do końca zaznacz&enia"
 
 #: src/menus/TrackMenus.cpp
 msgid "End to Cu&rsor/Selection Start"
@@ -15520,7 +15520,7 @@ msgstr "Końca do ku&rsora/początku zaznaczenia"
 
 #: src/menus/TrackMenus.cpp
 msgid "End to Selection En&d"
-msgstr "Końca do końca &zaznaczenia"
+msgstr "Końca &do końca &zaznaczenia"
 
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
@@ -15666,7 +15666,7 @@ msgid ""
 "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
 "secs."
 msgstr ""
-"Wyrównanie ukończone: MIDI od %.2f do %.2f sek., dźwięk od %.2f do %.2f sek."
+"Wyrównanie zakończone: MIDI od %.2f do %.2f sek., dźwięk od %.2f do %.2f sek."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -15723,11 +15723,11 @@ msgstr "Mi&ksuj i renderuj"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix and Render to Ne&w Track"
-msgstr "Miksuj i przetwarzaj do no&wej ścieżki"
+msgstr "Miksuj i przet&warzaj do nowej ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Resample..."
-msgstr "&Zmień próbkowanie..."
+msgstr "Zmień p&róbkowanie..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Remo&ve Tracks"
@@ -15735,7 +15735,7 @@ msgstr "&Usuń ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute"
-msgstr "Wy&cisz/zgłośnij"
+msgstr "Wycisz/zgł&ośnij"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Mute All Tracks"
@@ -15743,15 +15743,15 @@ msgstr "&Wycisz wszystkie ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Unmute All Tracks"
-msgstr "&Zgłośnij wszystkie ścieżki"
+msgstr "Zgł&ośnij wszystkie ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mut&e Tracks"
-msgstr "&Wycisz ścieżki"
+msgstr "Wycisz ści&eżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "U&nmute Tracks"
-msgstr "&Zgłośnij ścieżki"
+msgstr "Zgłoś&nij ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Pan"
@@ -15767,7 +15767,7 @@ msgstr "Lewa panorama"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Right"
-msgstr "&Prawo"
+msgstr "P&rawo"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan Right"
@@ -15775,7 +15775,7 @@ msgstr "Prawa panorama"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Center"
-msgstr "&Środek"
+msgstr "Środe&k"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan Center"
@@ -15783,23 +15783,23 @@ msgstr "Środkowa panorama"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Align Tracks"
-msgstr "&Wyrównaj ścieżki"
+msgstr "Wyrówn&aj ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Align End to End"
-msgstr "&Wyrównaj koniec do końca"
+msgstr "Wyrówn&aj koniec do końca"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align &Together"
-msgstr "Wyrównaj &razem"
+msgstr "Wy&równaj razem"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Move Selection with Tracks (on/off)"
-msgstr "&Przesuń zaznaczenie ze ścieżkami (włącz/wyłącz)"
+msgstr "Przesuń zaznaczenie ze ścieżka&mi (włącz/wyłącz)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Sele&ction and Tracks"
-msgstr "&Przesuń zaznaczenie i ścieżki"
+msgstr "Przesuń zazna&czenie i ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "S&ort Tracks"
@@ -15807,7 +15807,7 @@ msgstr "S&ortuj ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Start Time"
-msgstr "Według czasu &początku"
+msgstr "Według cza&su początku"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Name"
@@ -15819,11 +15819,11 @@ msgstr "Synchronizuj-zab&lokuj ścieżki (włącz/wyłącz)"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Track"
-msgstr "&Ścieżka"
+msgstr "Ścież&ka"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change P&an on Focused Track..."
-msgstr "Zmień &przesunięcie na zaznaczonej ścieżce..."
+msgstr "Zmień przesunięcie n&a zaznaczonej ścieżce..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan &Left on Focused Track"
@@ -15831,7 +15831,7 @@ msgstr "Przesuń w &lewo na zaznaczonej ścieżce"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan &Right on Focused Track"
-msgstr "Przesuń w &prawo na zaznaczonej ścieżce"
+msgstr "P&rzesuń w prawo na zaznaczonej ścieżce"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change Gai&n on Focused Track..."
@@ -15839,43 +15839,43 @@ msgstr "Zmień moc syg&nału na zaznaczonej ścieżce..."
 
 #: src/menus/TrackMenus.cpp
 msgid "&Increase Gain on Focused Track"
-msgstr "Z&większ moc sygnału na zaznaczonej ścieżce"
+msgstr "Zw&iększ moc sygnału na zaznaczonej ścieżce"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Decrease Gain on Focused Track"
-msgstr "Z&mniejsz moc sygnału na zaznaczonej ścieżce"
+msgstr "Zmniejsz mo&c sygnału na zaznaczonej ścieżce"
 
 #: src/menus/TrackMenus.cpp
 msgid "Op&en Menu on Focused Track..."
-msgstr "Ot&wórz menu na zaznaczonej ścieżce..."
+msgstr "Otwórz m&enu na zaznaczonej ścieżce..."
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute Focused Track"
-msgstr "Wy&cisz/zgłośnij zaznaczoną ścieżkę"
+msgstr "Wycisz/zgł&ośnij zaznaczoną ścieżkę"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Solo/Unsolo Focused Track"
-msgstr "&Oddziel/rozdziel zaznaczoną ścieżkę"
+msgstr "Odd&ziel/rozdziel zaznaczoną ścieżkę"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Close Focused Track"
-msgstr "&Zamknij zaznaczoną ścieżkę"
+msgstr "Zamknij zazna&czoną ścieżkę"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track U&p"
-msgstr "Przesuń zaznaczoną ścieżkę w &górę"
+msgstr "&Przesuń zaznaczoną ścieżkę w górę"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track Do&wn"
-msgstr "Przesuń zaznaczoną ścieżkę w &dół"
+msgstr "Przesuń zaznaczoną ścieżkę &w dół"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track to T&op"
-msgstr "Przesuń zaznaczoną ścieżkę na samą gó&rę"
+msgstr "Przesuń zaznacz&oną ścieżkę na samą górę"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track to &Bottom"
-msgstr "Przesuń zaznaczoną ścieżkę na sam dó&ł"
+msgstr "Przesuń zaznaczoną ścieżkę na sam &dół"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
@@ -15902,12 +15902,12 @@ msgstr "brak etykiet w etykiecie ścieżki"
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &In"
-msgstr "Ustaw &początek pętli"
+msgstr "Ustaw początek pętl&i"
 
 #. i18n-hint Sets an ending point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &Out"
-msgstr "Ustaw &koniec pętli"
+msgstr "Ustaw k&oniec pętli"
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
@@ -15943,15 +15943,15 @@ msgstr "Odtw&arzaj/zatrzymaj"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play/Stop and &Set Cursor"
-msgstr "Odtwarzaj/zatrzymaj i &ustaw kursor"
+msgstr "Odtwarzaj/zatrzymaj i u&staw kursor"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &Once/Stop"
-msgstr "Odtwarzaj &raz/zatrzymaj"
+msgstr "&Odtwarzaj raz/zatrzymaj"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
-msgstr "&Wstrzymaj"
+msgstr "Wstrzy&maj"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Recording"
@@ -15960,15 +15960,15 @@ msgstr "Nag&rywanie"
 #. i18n-hint: (verb)
 #: src/menus/TransportMenus.cpp
 msgid "&Record"
-msgstr "&Nagrywaj"
+msgstr "Nag&rywaj"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Append Record"
-msgstr "&Dołącz nagranie"
+msgstr "Dołącz n&agranie"
 
 #: src/menus/TransportMenus.cpp
 msgid "Record &New Track"
-msgstr "Nagrywaj &nową ścieżkę"
+msgstr "&Nagrywaj nową ścieżkę"
 
 #: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
@@ -15976,7 +15976,7 @@ msgstr "Nagrywaj Punch and Rol&l"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Looping"
-msgstr "&Zapętlaj"
+msgstr "Zapęt&laj"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Clear Loop"
@@ -15984,11 +15984,11 @@ msgstr "Wy&czyść pętlę"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Set Loop to Selection"
-msgstr "&Ustaw pętlę do zaznaczenia"
+msgstr "U&staw pętlę do zaznaczenia"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
-msgstr "&Skanuj ponownie urządzenia dźwiękowe"
+msgstr "Skanuj ponowni&e urządzenia dźwiękowe"
 
 #: src/menus/TransportMenus.cpp
 msgid "Transport &Options"
@@ -15996,11 +15996,11 @@ msgstr "&Opcje transportu"
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound Activation Le&vel..."
-msgstr "Po&ziom aktywacji dźwięku..."
+msgstr "Poziom akty&wacji dźwięku..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound A&ctivated Recording (on/off)"
-msgstr "A&ktywacja nagrywania dźwięku (włącz/wyłącz)"
+msgstr "Aktywa&cja nagrywania dźwięku (włącz/wyłącz)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Overdub (on/off)"
@@ -16008,7 +16008,7 @@ msgstr "&Overdub (włącz/wyłącz)"
 
 #: src/menus/TransportMenus.cpp
 msgid "So&ftware Playthrough (on/off)"
-msgstr "&Oprogramowanie odtwarzania (włącz/wyłącz)"
+msgstr "Oprogramo&wanie odtwarzania (włącz/wyłącz)"
 
 #: src/menus/TransportMenus.cpp
 msgid "A&utomated Recording Level Adjustment (on/off)"
@@ -16034,43 +16034,43 @@ msgstr "&Odtwarzaj 1 sekundę"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play to &Selection"
-msgstr "Odtwarzaj do &zaznaczenia"
+msgstr "Odtwar&zaj do zaznaczenia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &Before Selection Start"
-msgstr "Odtwarzaj p&rzed początkiem zaznaczenia"
+msgstr "O&dtwarzaj przed początkiem zaznaczenia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Af&ter Selection Start"
-msgstr "Odtwarzaj p&o początku zaznaczenia"
+msgstr "Od&twarzaj po początku zaznaczenia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Be&fore Selection End"
-msgstr "Odtwarzaj przed koń&cem zaznaczenia"
+msgstr "Odt&warzaj przed końcem zaznaczenia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Aft&er Selection End"
-msgstr "Odtwarzaj po końc&u zaznaczenia"
+msgstr "Odtwarzaj po końcu zaznacz&enia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Before a&nd After Selection Start"
-msgstr "Odtwarzaj przed i po począ&tku zaznaczenia"
+msgstr "Odtwarzaj przed i po początku zaz&naczenia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Before an&d After Selection End"
-msgstr "Odtwarzaj prze&d i po końcu zaznaczenia"
+msgstr "O&dtwarzaj przed i po końcu zaznaczenia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview"
-msgstr "Odtwarzaj wy&cięty podgląd"
+msgstr "&Odtwarzaj wycięty podgląd"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Pre&vious Label"
-msgstr "Przesuń do &poprzedniej etykiety"
+msgstr "Przes&uń do poprzedniej etykiety"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Ne&xt Label"
-msgstr "Przesuń do &następnej etykiety"
+msgstr "Prze&suń do następnej etykiety"
 
 #: src/menus/ViewMenus.cpp
 msgid "&View"
@@ -16078,11 +16078,11 @@ msgstr "&Widok"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Zoom"
-msgstr "&Powiększenie"
+msgstr "Powięks&zenie"
 
 #: src/menus/ViewMenus.cpp
 msgid "Zoom &In"
-msgstr "Po&większ"
+msgstr "Pow&iększ"
 
 #: src/menus/ViewMenus.cpp
 msgid "Zoom &Normal"
@@ -16090,19 +16090,19 @@ msgstr "&Normalny rozmiar"
 
 #: src/menus/ViewMenus.cpp
 msgid "Zoom &Out"
-msgstr "Po&mniejsz"
+msgstr "P&omniejsz"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Zoom to Selection"
-msgstr "&Powiększ do zaznaczenia"
+msgstr "Powięks&z do zaznaczenia"
 
 #: src/menus/ViewMenus.cpp
 msgid "Zoom &Toggle"
-msgstr "&Przełącz powiększenie"
+msgstr "Pr&zełącz powiększenie"
 
 #: src/menus/ViewMenus.cpp
 msgid "Advanced &Vertical Zooming"
-msgstr "Zaawansowane &pionowe powiększanie"
+msgstr "Zaa&wansowane pionowe powiększanie"
 
 #: src/menus/ViewMenus.cpp
 msgid "T&rack Size"
@@ -16110,7 +16110,7 @@ msgstr "&Rozmiar ścieżki"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Fit to Width"
-msgstr "Dopasuj do &szerokości"
+msgstr "&Dopasuj do szerokości"
 
 #: src/menus/ViewMenus.cpp
 msgid "Fit to &Height"
@@ -16118,11 +16118,11 @@ msgstr "Dopasuj do &wysokości"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Collapse All Tracks"
-msgstr "&Zwiń wszystkie ścieżki"
+msgstr "Zwiń wszystkie ś&cieżki"
 
 #: src/menus/ViewMenus.cpp
 msgid "E&xpand Collapsed Tracks"
-msgstr "&Rozwiń zwinięte ścieżki"
+msgstr "Rozwiń zwinięte ścież&ki"
 
 #: src/menus/ViewMenus.cpp
 msgid "Sk&ip to"
@@ -16142,7 +16142,7 @@ msgstr "Skocz do końca zaznaczenia"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Extra Menus (on/off)"
-msgstr "&Dodatkowe menu (włącz/wyłącz)"
+msgstr "Dodatkow&e menu (włącz/wyłącz)"
 
 #: src/menus/ViewMenus.cpp
 msgid "Track &Name (on/off)"
@@ -16166,7 +16166,7 @@ msgstr "Powiadomienia o aktualizacjach"
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "&Sprawdź aktualizacje"
+msgstr "Sprawdź aktualiza&cje"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid ""
@@ -16190,7 +16190,7 @@ msgstr "Zachowania"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "&Don't apply effects in batch mode"
-msgstr "&Nie stosuje efektów w trybie wsadowym"
+msgstr "Nie stosuje efektów w trybie wsa&dowym"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Audio Settings"
@@ -16227,7 +16227,7 @@ msgstr "Odtwarzanie"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "&Device:"
-msgstr "&Urządzenie:"
+msgstr "Urzą&dzenie:"
 
 #. i18n-hint: modifier as in "Recording preferences", not progressive verb
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -16238,7 +16238,7 @@ msgstr "Nagrywanie"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
-msgstr "Urzą&dzenie:"
+msgstr "&Urządzenie:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Cha&nnels:"
@@ -16246,7 +16246,7 @@ msgstr "Ka&nały:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "&Project Sample Rate:"
-msgstr "Częstotliwość próbkowania &projektu:"
+msgstr "Częstotliwość &próbkowania projektu:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid ""
@@ -16324,7 +16324,7 @@ msgstr "O&twórz:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Browse..."
-msgstr "Wy&bierz..."
+msgstr "W&ybierz..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "S&ave:"
@@ -16332,7 +16332,7 @@ msgstr "Z&apisz:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "B&rowse..."
-msgstr "Wybie&rz..."
+msgstr "Wybier&z..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Import:"
@@ -16532,7 +16532,7 @@ msgstr "Ustawienia rozsz. importu"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
-msgstr "&Wstępna próba użycia filtra w oknie dialogowym otwarcia pliku"
+msgstr "Ws&tępna próba użycia filtra w oknie dialogowym otwarcia pliku"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rules to choose import filters"
@@ -16552,11 +16552,11 @@ msgstr "Kolejność importowania"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Move rule &up"
-msgstr "Przesuń zasadę w &górę"
+msgstr "Przes&uń zasadę w górę"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Move rule &down"
-msgstr "Przesuń zasadę w &dół"
+msgstr "Przesuń zasa&dę w dół"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Move f&ilter up"
@@ -16568,7 +16568,7 @@ msgstr "Przesuń &filtr w dół"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "&Add new rule"
-msgstr "&Dodaj nową zasadę"
+msgstr "Dod&aj nową zasadę"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "De&lete selected rule"
@@ -16618,7 +16618,7 @@ msgstr "Ustawienia GUI"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (\"płytki\" zakres do edycji przy dużych amplitudach)"
+msgstr "-36 dB (\"płytki\" zakres do edytowania przy dużych amplitudach)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-48 dB (PCM range of 8 bit samples)"
@@ -16659,19 +16659,19 @@ msgstr "&Język:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
-msgstr "&Motyw:"
+msgstr "M&otyw:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Meter dB &range:"
-msgstr "&Zakres dB miernika:"
+msgstr "Zak&res dB miernika:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show 'How to Get &Help' at launch"
-msgstr "Pokaż 'Jak uzyskać &pomoc' przy starcie"
+msgstr "&Pokaż 'Jak uzyskać pomoc' przy starcie"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show e&xtra menus"
-msgstr "Pokaż &dodatkowe menu"
+msgstr "Po&każ dodatkowe menu"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show alternative &styling (Mac vs PC)"
@@ -16679,11 +16679,11 @@ msgstr "Pokaż alternatywną &stylistykę (Mac a PC)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "&Beep on completion of longer activities"
-msgstr "&Daj sygnał dźwiękowy po ukończeniu czynności"
+msgstr "&Daj sygnał dźwiękowy po zakończeniu dłuższych czynności"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Re&tain labels if selection snaps to a label"
-msgstr "&Zachowaj etykiety, jeśli zaznaczenie jest przyczepiane do etykiety"
+msgstr "Zachowaj e&tykiety, jeśli zaznaczenie jest przyczepiane do etykiety"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
@@ -16796,7 +16796,7 @@ msgstr "&Skrót:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Tree"
-msgstr "&Drzewo"
+msgstr "Dr&zewo"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Name"
@@ -16828,7 +16828,7 @@ msgstr "Widok klucza"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Searc&h:"
-msgstr "Szu&kaj:"
+msgstr "&Szukaj:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Bindings"
@@ -16841,7 +16841,7 @@ msgstr "Krótkie cięcie"
 #. i18n-hint: (verb)
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Set"
-msgstr "&Ustaw"
+msgstr "U&staw"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
@@ -16992,7 +16992,7 @@ msgstr "Wykorzystując: PortMidi"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
-msgstr "&Opóźnienie syntetyzatora MIDI (ms):"
+msgstr "Opóźnienie syntetyz&atora MIDI (ms):"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -17290,11 +17290,11 @@ msgstr "Wycięty podgląd"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
-msgstr "P&rzed wyciętym obszarem:"
+msgstr "Przed wyciętym o&bszarem:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&After cut region:"
-msgstr "P&o wyciętym obszarze:"
+msgstr "Po wyciętym obsz&arze:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Seek Time when playing"
@@ -17306,7 +17306,7 @@ msgstr "&Krótki odcinek:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Lo&ng period:"
-msgstr "&Długi odcinek:"
+msgstr "Długi odci&nek:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
@@ -17314,7 +17314,7 @@ msgstr "&Mikro-przejścia"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr "Zawsze przewijaj od&piętą"
+msgstr "Zawsze &przewijaj odpiętą"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -17338,7 +17338,7 @@ msgstr "Przekształcanie w czasie rzeczywistym"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Sample Rate Con&verter:"
-msgstr "Prze&kształcanie częstotliwości próbkowania:"
+msgstr "Przekształcanie częstotli&wości próbkowania:"
 
 #. i18n-hint: technical term for randomization to reduce undesirable
 #. resampling artifacts
@@ -17366,7 +17366,7 @@ msgstr "Ustawienia nagrywania"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
-msgstr "Odtwarzaj &inne ścieżki podczas nagrywania (overdub)"
+msgstr "&Odtwarzaj inne ścieżki podczas nagrywania (overdub)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Use &hardware to play other tracks"
@@ -17374,7 +17374,7 @@ msgstr "Użyj &sprzętu, aby odtwarzać inne ścieżki"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Software playthrough of input"
-msgstr "&Oprogramowanie odtwarzania danych wejściowych"
+msgstr "Oprogramowanie odtwar&zania danych wejściowych"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Record on a new track"
@@ -17392,7 +17392,7 @@ msgstr "Nagrywanie aktywowane dźwiękiem"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
-msgstr "Po&ziom (dB):"
+msgstr "&Poziom (dB):"
 
 #. i18n-hint: start of two-part phrase, "Name newly recorded tracks with:"
 #: src/prefs/RecordingPrefs.cpp
@@ -17406,7 +17406,7 @@ msgstr "Z:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom Track &Name"
-msgstr "Niestandardowa &nazwa ścieżki"
+msgstr "&Niestandardowa nazwa ścieżki"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom name text"
@@ -17426,7 +17426,7 @@ msgstr "&Data systemowa"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "System T&ime"
-msgstr "&Czas systemowy"
+msgstr "Czas s&ystemowy"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
@@ -17597,7 +17597,7 @@ msgstr "&Wzmocnienie (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Range (dB):"
-msgstr "&Zakres (dB):"
+msgstr "Zak&res (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
@@ -17613,7 +17613,7 @@ msgstr "A&lgorytm:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
-msgstr "&Rozmiar okna:"
+msgstr "Ro&zmiar okna:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "8 - most wideband"
@@ -17637,11 +17637,11 @@ msgstr "&Typ okna:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Zero padding factor:"
-msgstr "Współczynnik uzupełnienia &zerami:"
+msgstr "Współc&zynnik uzupełnienia zerami:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
-msgstr "&Włącz zaznaczenie widma"
+msgstr "Włącz zaznaczenie wi&dma"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Show a grid along the &Y-axis"
@@ -17675,7 +17675,7 @@ msgstr "Ustawienia ogólne"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble spectral selection"
-msgstr "Włą&cz zaznaczenie widma"
+msgstr "Włącz zaznaczenie wi&dma"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The maximum frequency must be an integer"
@@ -17754,7 +17754,7 @@ msgstr ""
 #. * so keep it as is
 #: src/prefs/ThemePrefs.cpp
 msgid "Theme Cache - Images && Color"
-msgstr "Pamięć podręczna motywu - Obrazy i &kolor"
+msgstr "Pamięć podręczna motywu - Obrazy &i kolor"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Save Theme Cache"
@@ -17798,7 +17798,7 @@ msgid ""
 "Ask me each time.\n"
 "Show dialog each time audio is pasted."
 msgstr ""
-"Pytaj mnie za każdym razem.\n"
+"Zapytaj mnie za każdym razem.\n"
 "Pokaż okno dialogowe za każdym razem, gdy dźwięk jest wklejany."
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -17816,7 +17816,7 @@ msgstr "Włącz &przeciąganie krawędzi zaznaczenia"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Editing a clip can &move other clips"
-msgstr "Edytowanie klipu może &przesunąć inne klipy"
+msgstr "Edytowanie klipu &może przesunąć inne klipy"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -17824,19 +17824,19 @@ msgstr "\"Przesuń uaktywnienie ścieżki\" przesuwa się c&yklicznie przez ści
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Type to create a label"
-msgstr "&Wpisz, aby utworzyć etykietę"
+msgstr "Wpisz, aby u&tworzyć etykietę"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
-msgstr "Użyj okna dialogowego dla &nazwy nowej etykiety"
+msgstr "Użyj ok&na dialogowego dla nazwy nowej etykiety"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable scrolling left of &zero"
-msgstr "Włącz przewijanie na lewo od &zera"
+msgstr "Włąc&z przewijanie na lewo od zera"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Advanced &vertical zooming"
-msgstr "Zaawansowane &pionowe powiększanie"
+msgstr "Zaa&wansowane pionowe powiększanie"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -17925,11 +17925,11 @@ msgstr "Ustawienia ścieżek"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
-msgstr "Automatycznie &dopasuj wysokość ścieżki"
+msgstr "Automatycznie dopasuj &wysokość ścieżki"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w track name as overlay"
-msgstr "Po&każ nazwę ścieżki jako nakładki"
+msgstr "Pokaż naz&wę ścieżki jako nakładki"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -17961,7 +17961,7 @@ msgstr "Wyświetl &sample:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default audio track &name:"
-msgstr "Domyślna &nazwa ścieżki dźwiękowej:"
+msgstr "Domyśl&na nazwa ścieżki dźwiękowej:"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
@@ -17989,11 +17989,11 @@ msgstr "Pokaż ostrzeżenia/podpowiedzi w następujących przypadkach"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &projects"
-msgstr "Zapisywanie &projektów"
+msgstr "Za&pisywanie projektów"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &empty project"
-msgstr "Zapisywanie &pustego projektu"
+msgstr "Zapisywani&e pustego projektu"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &mono during export"
@@ -18001,16 +18001,16 @@ msgstr "Miksowanie do &mono podczas eksportu"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &stereo during export"
-msgstr "Miksowanie do &stereo podczas eksportu"
+msgstr "Mik&sowanie do stereo podczas eksportu"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down on export (&Custom FFmpeg or external program)"
 msgstr ""
-"Miksowanie do eksportu (&niestandardowy FFmpeg lub program zewnętrzny)"
+"Mi&ksowanie do eksportu (niestandardowy FFmpeg lub program zewnętrzny)"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Missing file &name extension during export"
-msgstr "Brak rozszerzenia &nazwy pliku podczas eksportu"
+msgstr "Brak rozszerze&nia nazwy pliku podczas eksportu"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -18023,7 +18023,7 @@ msgstr "Ustawienia kształtów fali"
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range:"
-msgstr "&Zakres dB kształtu fali:"
+msgstr "Zak&res dB kształtu fali:"
 
 #. i18n-hint: Audio setup button text, keep as short as possible
 #: src/toolbars/AudioSetupToolBar.cpp
@@ -18041,7 +18041,7 @@ msgstr "Urządzenie &odtwarzające"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Recording Device"
-msgstr "Urządzenie &nagrywające"
+msgstr "U&rządzenie nagrywające"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "Recording &Channels"
@@ -18049,7 +18049,7 @@ msgstr "&Kanały nagrywania"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Settings..."
-msgstr "Ustawienia &dźwięku..."
+msgstr "Ust&awienia dźwięku..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
@@ -18063,7 +18063,7 @@ msgstr "2 (stereo) kanały nagrywania"
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Setup Toolbar"
-msgstr "Pasek narzędzi ustawień &dźwięku"
+msgstr "P&asek narzędzi ustawień dźwięku"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
 #. Audacity
@@ -18174,15 +18174,15 @@ msgstr "Brak informacji o urządzeniu."
 #. that manages devices
 #: src/toolbars/DeviceToolBar.cpp
 msgid "&Device Toolbar"
-msgstr "Pasek narzędzi &urządzenia"
+msgstr "Pasek narzę&dzi urządzenia"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "De&vice"
-msgstr "Urzą&dzenie"
+msgstr "&Urządzenie"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Change &Recording Device..."
-msgstr "Zmień urządzenie &nagrywające..."
+msgstr "Zmień u&rządzenie nagrywające..."
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Change &Playback Device..."
@@ -18237,7 +18237,7 @@ msgstr "Edycja"
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
 msgid "&Edit Toolbar"
-msgstr "Pasek narzędzi &edycji"
+msgstr "Pas&ek narzędzi edycji"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid " Monitoring "
@@ -18305,11 +18305,11 @@ msgstr "Połączony miernik"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Recording Meter Toolbar"
-msgstr "Pasek narzędzi miernika &nagrywania"
+msgstr "Pasek na&rzędzi miernika nagrywania"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Playback Meter Toolbar"
-msgstr "Pasek narzędzi miernika &odtwarzania"
+msgstr "&Pasek narzędzi miernika odtwarzania"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Mi&xer"
@@ -18317,27 +18317,27 @@ msgstr "Mi&kser"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Ad&just Playback Volume..."
-msgstr "Do&stosuj głośność odtwarzania..."
+msgstr "Dostosu&j głośność odtwarzania..."
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Increase Playback Volume"
-msgstr "Z&większ głośność odtwarzania"
+msgstr "Zw&iększ głośność odtwarzania"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Decrease Playback Volume"
-msgstr "Z&mniejsz głośność odtwarzania"
+msgstr "Zmniejsz głośność o&dtwarzania"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Adj&ust Recording Volume..."
-msgstr "Dos&tosuj głośność nagrywania..."
+msgstr "Dostos&uj głośność nagrywania..."
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "I&ncrease Recording Volume"
-msgstr "Zwię&ksz głośność nagrywania"
+msgstr "Zwiększ głoś&ność nagrywania"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "D&ecrease Recording Volume"
-msgstr "Zmnie&jsz głośność nagrywania"
+msgstr "Zmni&ejsz głośność nagrywania"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scrub"
@@ -18391,7 +18391,7 @@ msgstr "Ukryj linijkę przewijania"
 #. that enables Scrub or Seek playback and Scrub Ruler
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scru&b Toolbar"
-msgstr "Pasek narzędzi &przewijania"
+msgstr "Pasek narzę&dzi przewijania"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18429,7 +18429,7 @@ msgstr "Długość i środek zaznaczenia"
 #. for selecting a time range of audio
 #: src/toolbars/SelectionBar.cpp
 msgid "&Selection Toolbar"
-msgstr "Pasek narzędzi &zaznaczenia"
+msgstr "Pa&sek narzędzi zaznaczenia"
 
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snapping"
@@ -18448,7 +18448,7 @@ msgstr "Przyczep do pola kombi"
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
 msgid "&Snapping Toolbar"
-msgstr "Pasek narzędzi &przyczepiania"
+msgstr "Pa&sek narzędzi przyczepiania"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18478,7 +18478,7 @@ msgstr "Przepustowość"
 #. for selecting a frequency range of audio
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Pasek narzędzi &widmowego zaznaczenia"
+msgstr "Pasek narzędzi widmowego zazna&czenia"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Time Signature"
@@ -18526,7 +18526,7 @@ msgstr "Pozycja dźwięku:"
 #. for viewing actual time of the cursor
 #: src/toolbars/TimeToolBar.cpp
 msgid "&Time Toolbar"
-msgstr "Pasek narzędzi &czasu"
+msgstr "Pa&sek narzędzi czasu"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -18567,19 +18567,19 @@ msgstr "Multinarzędzie"
 #. that has some tools in it
 #: src/toolbars/ToolsToolBar.cpp
 msgid "T&ools Toolbar"
-msgstr "Pasek narzę&dzi narzędzi"
+msgstr "P&asek narzędzi narzędzi"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Selection Tool"
-msgstr "Narzędzie &zaznaczania"
+msgstr "Nar&zędzie zaznaczania"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Envelope Tool"
-msgstr "Narzędzie &obwiedni"
+msgstr "Narzędzi&e obwiedni"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Draw Tool"
-msgstr "Narzędzie &rysowania"
+msgstr "Narzę&dzie rysowania"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Multi Tool"
@@ -18616,15 +18616,15 @@ msgstr "Pasek narzędzi &odtwarzania z prędkością"
 #. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "&Play-at-Speed"
-msgstr "&Odtwarzaj z prędkością"
+msgstr "Odtwarzaj z &prędkością"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play-at-Speed &Once"
-msgstr "Odtwarzaj z prędkością &raz"
+msgstr "&Odtwarzaj z prędkością raz"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "Odtwarzaj wy&cięty podgląd z prędkością"
+msgstr "&Odtwarzaj wycięty podgląd z prędkością"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Ad&just Playback Speed..."
@@ -18632,11 +18632,11 @@ msgstr "Dostosu&j prędkość odtwarzania..."
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "&Increase Playback Speed"
-msgstr "Z&większ prędkość odtwarzania"
+msgstr "Zw&iększ prędkość odtwarzania"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "&Decrease Playback Speed"
-msgstr "Z&mniejsz prędkość odtwarzania"
+msgstr "Zmniejsz prę&dkość odtwarzania"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
@@ -18859,7 +18859,7 @@ msgstr "Ustawienia s&pektrogramu..."
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "S&pectral"
-msgstr "&Widmowe"
+msgstr "Wi&dmowe"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "To&ggle Spectral Selection"
@@ -18871,7 +18871,7 @@ msgstr "Następny &wysoki szczyt częstotliwości"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Lower Peak Frequency"
-msgstr "Następny &niski szczyt częstotliwości"
+msgstr "Następny niski szczyt częstot&liwości"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
@@ -18948,7 +18948,7 @@ msgstr "Zmień format"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Rat&e"
-msgstr "&Częstotliwość"
+msgstr "Częst&otliwość"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "8000 Hz"
@@ -19023,7 +19023,7 @@ msgstr "&Multiwidok"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Ma&ke Stereo Track"
-msgstr "&Utwórz ścieżkę stereo"
+msgstr "Utwórz ścież&kę stereo"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Swap Stereo &Channels"
@@ -19031,7 +19031,7 @@ msgstr "Zamień &kanały stereo"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Spl&it Stereo Track"
-msgstr "Roz&dziel ścieżkę stereo"
+msgstr "Rozdz&iel ścieżkę stereo"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Split Stereo to Mo&no"
@@ -19275,7 +19275,7 @@ msgstr "Skala l&ogarytmiczna"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "&Range..."
-msgstr "&Zakres..."
+msgstr "Zak&res..."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
@@ -19294,7 +19294,7 @@ msgstr "Utworzono nową ścieżkę czasową"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "&Time Track"
-msgstr "Ścieżka &czasowa"
+msgstr "Ścieżka c&zasowa"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
@@ -19339,19 +19339,19 @@ msgstr "&Nazwa..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
-msgstr "Przesuń ścieżkę dźwiękową &wyżej"
+msgstr "Przes&uń ścieżkę dźwiękową wyżej"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Down"
-msgstr "Przesuń ścieżkę dźwiękową &niżej"
+msgstr "Przesuń ścieżkę &dźwiękową niżej"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track to &Top"
-msgstr "Przesuń ścieżkę dźwiękową na samą &górę"
+msgstr "Pr&zesuń ścieżkę dźwiękową na samą górę"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track to &Bottom"
-msgstr "Przesuń ścieżkę dźwiękową na sam &dół"
+msgstr "Przesuń ścieżkę &dźwiękową na sam dół"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Set Track Name"
@@ -19384,7 +19384,7 @@ msgstr "Wyrównana obwiednia."
 #. "Seeking" is normal speed playback but with skips, ...
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
-msgstr "Prze&wijaj"
+msgstr "Pr&zewijaj"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
@@ -19395,7 +19395,7 @@ msgstr "Szukanie"
 #. "Seeking" is normal speed playback but with skips, ...
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
-msgstr "&Linijka przewijania"
+msgstr "Linijka p&rzewijania"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Playing at Speed"
@@ -19411,7 +19411,7 @@ msgstr "Przesuń kursor, aby przewinąć"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scru&bbing"
-msgstr "Prze&wijaj"
+msgstr "&Przewijaj"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub Bac&kwards"
@@ -19419,7 +19419,7 @@ msgstr "Przewiń do &tyłu"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub For&wards"
-msgstr "Przewiń do &przodu"
+msgstr "Prze&wiń do przodu"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
@@ -19780,7 +19780,7 @@ msgstr "&Wyślij"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
-msgstr "&Wyczyść"
+msgstr "Wy&czyść"
 
 #. i18n-hint: A 'Grabber' is a region you can click and drag on
 #. It's used to drag a track around (when in multi-tool mode) rather
@@ -20545,7 +20545,7 @@ msgstr "Rozpocznij numerowanie od"
 
 #: plug-ins/equalabel.ny
 msgid "Message on completion"
-msgstr "Kumunikat po ukończeniu"
+msgstr "Komunikat po zakończeniu"
 
 #: plug-ins/equalabel.ny
 msgid "Details"
