@@ -69,12 +69,14 @@ Item {
             id: play
             icon: isPlaying ? IconCode.SOLID_PAUSE : IconCode.SOLID_PLAY
             iconColor: isPlaying ? UiTheme.fontColor1 : UiTheme.playColor
+            iconSize: 14
             onClicked: toolbarHandler.Play()
          }
 
          FlatButton {
             id: stop
             icon: IconCode.SOLID_STOP
+            iconSize: 14
             onClicked: toolbarHandler.Stop()
          }
 
@@ -82,6 +84,7 @@ Item {
             id: record
             icon: IconCode.SOLID_RECORD
             iconColor: UiTheme.recordColor
+            iconSize: 14
             visible: root.workspaceMode === Workspace.Mode.Classic
             onClicked: toolbarHandler.Record()
          }
@@ -89,6 +92,7 @@ Item {
          FlatButton {
             id: rewind
             icon: IconCode.SOLID_REWIND
+            iconSize: 14
             visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
             onClicked: toolbarHandler.Rewind()
          }
@@ -96,6 +100,7 @@ Item {
          FlatButton {
             id: fastForward
             icon: IconCode.SOLID_FAST_FORWARD
+            iconSize: 14
             visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
             onClicked: toolbarHandler.FastForward()
          }
@@ -104,6 +109,7 @@ Item {
             id: record2
             icon: IconCode.SOLID_RECORD
             iconColor: UiTheme.recordColor
+            iconSize: 14
             visible: root.workspaceMode !== Workspace.Mode.Classic
             onClicked: toolbarHandler.Record()
          }
@@ -111,6 +117,7 @@ Item {
          FlatButton {
             id: loop
             icon: IconCode.LOOP
+            iconSize: 14
             visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
             onClicked: toolbarHandler.Loop()
          }
