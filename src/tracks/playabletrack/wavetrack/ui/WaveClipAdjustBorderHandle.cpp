@@ -88,6 +88,46 @@ namespace {
 
 WaveClipAdjustBorderHandle::AdjustPolicy::~AdjustPolicy() = default;
 
+namespace {
+double GetLeftAdjustLimit(
+   const WaveClip& clip, const WaveTrack& track, bool adjustingLeftBorder,
+   bool isStretchMode)
+{
+   if (!adjustingLeftBorder)
+      // A clip of one sample is invisible - who needs that ? Leave at least 2.
+      return clip.GetPlayStartTime() + 2.0 / clip.GetRate();
+
+   const auto prevClip =
+      track.GetNeighbourClip(clip, PlaybackDirection::backward);
+   if (isStretchMode)
+      return prevClip ? prevClip->GetPlayEndTime() :
+                        std::numeric_limits<double>::min();
+   else
+      return prevClip ?
+                std::max(clip.GetPlayStartTime(), prevClip->GetPlayEndTime()) :
+                clip.GetPlayStartTime();
+}
+
+double GetRightAdjustLimit(
+   const WaveClip& clip, const WaveTrack& track, bool adjustingLeftBorder,
+   bool isStretchMode)
+{
+   if (adjustingLeftBorder)
+      // A clip of one sample is invisible - who needs that ? Leave at least 2.
+      return clip.GetPlayEndTime() - 2.0 / clip.GetRate();
+
+   const auto nextClip =
+      track.GetNeighbourClip(clip, PlaybackDirection::forward);
+   if (isStretchMode)
+      return nextClip ? nextClip->GetPlayStartTime() :
+                        std::numeric_limits<double>::max();
+   else
+      return nextClip ?
+                std::min(clip.GetPlayEndTime(), nextClip->GetPlayStartTime()) :
+                clip.GetPlayEndTime();
+}
+} // namespace
+
 class AdjustClipBorder final : public WaveClipAdjustBorderHandle::AdjustPolicy
 {
 public:
@@ -96,11 +136,10 @@ public:
 private:
    std::shared_ptr<WaveTrack> mTrack;
    std::vector<std::shared_ptr<WaveClip>> mClips;
-   double mInitialBorderPosition{};
    int mDragStartX{ };
-   std::pair<double, double> mRange;
    const bool mAdjustingLeftBorder;
-   const bool mIsStretchMode;
+   const double mInitialBorderPosition;
+   const std::pair<double, double> mRange;
    AdjustHandler mAdjustHandler;
 
    std::unique_ptr<SnapManager> mSnapManager;
@@ -108,9 +147,7 @@ private:
 
    void TrimTo(double t) const
    {
-      if (!mIsStretchMode)
-         // Stretching is allowed outwards, not trimming.
-         t = std::clamp(t, mRange.first, mRange.second);
+      t = std::clamp(t, mRange.first, mRange.second);
       for(auto& clip : mClips)
          mAdjustHandler(*clip, t);
    }
@@ -164,19 +201,19 @@ private:
    }
 
 public:
-
-
-
-   AdjustClipBorder(AdjustHandler adjustHandler,
-                    const std::shared_ptr<WaveTrack>& track,
-                    const std::shared_ptr<WaveClip>& clip,
-                    bool adjustLeftBorder,
-                    bool isStretchMode,
-                    const ZoomInfo& zoomInfo)
-      : mTrack(track)
-      , mAdjustingLeftBorder(adjustLeftBorder)
-      , mIsStretchMode(isStretchMode)
-      , mAdjustHandler(std::move(adjustHandler))
+   AdjustClipBorder(
+      AdjustHandler adjustHandler, const std::shared_ptr<WaveTrack>& track,
+      const std::shared_ptr<WaveClip>& clip, bool adjustLeftBorder,
+      bool isStretchMode, const ZoomInfo& zoomInfo)
+       : mTrack(track)
+       , mAdjustingLeftBorder(adjustLeftBorder)
+       , mInitialBorderPosition { adjustLeftBorder ? clip->GetPlayStartTime() :
+                                                     clip->GetPlayEndTime() }
+       , mRange { GetLeftAdjustLimit(
+                     *clip, *track, adjustLeftBorder, isStretchMode),
+                  GetRightAdjustLimit(
+                     *clip, *track, adjustLeftBorder, isStretchMode) }
+       , mAdjustHandler(std::move(adjustHandler))
    {
       auto clips = track->GetClips();
 
@@ -187,29 +224,6 @@ public:
          mClips = FindClipsInChannels(clip->GetPlayStartTime(), clip->GetPlayEndTime(), track.get());
       else
          mClips.push_back(clip);
-
-      if (mAdjustingLeftBorder)
-      {
-         auto left = clip->GetSequenceStartTime();
-         for (const auto& other : clips)
-            if (other->GetPlayStartTime() < clip->GetPlayStartTime() && other->GetPlayEndTime() > left)
-               left = other->GetPlayEndTime();
-         //not less than 1 sample length
-         mRange = std::make_pair(left, clip->GetPlayEndTime() - 1.0 / clip->GetRate());
-
-         mInitialBorderPosition = mClips[0]->GetPlayStartTime();
-      }
-      else
-      {
-         auto right = clip->GetSequenceEndTime();
-         for (const auto& other : clips)
-            if (other->GetPlayStartTime() > clip->GetPlayStartTime() && other->GetPlayStartTime() < right)
-               right = other->GetPlayStartTime();
-         //not less than 1 sample length
-         mRange = std::make_pair(clip->GetPlayStartTime() + 1.0 / clip->GetRate(), right);
-
-         mInitialBorderPosition = mClips[0]->GetPlayEndTime();
-      }
 
       if(const auto trackList = track->GetOwner())
       {
@@ -246,9 +260,7 @@ public:
          mSnap = mSnapManager->Snap(mTrack.get(), t, !mAdjustingLeftBorder);
       if(mSnap.Snapped())
       {
-         if (
-            mIsStretchMode ||
-            (mSnap.outTime >= mRange.first && mSnap.outTime <= mRange.second))
+         if (mSnap.outTime >= mRange.first && mSnap.outTime <= mRange.second)
          {
             //Make sure that outTime belongs to the adjustment range after snapping
             TrimTo(mSnap.outTime);
