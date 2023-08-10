@@ -696,6 +696,7 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
          copy->ConvertToSampleFormat(GetSampleFormats().Stored());
       newClip = std::move(copy);
    }
+   ApplyStretchRatio();
    newClip->ApplyStretchRatio();
 
    // Paste cut lines contained in pasted clip
