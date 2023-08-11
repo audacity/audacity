@@ -870,34 +870,6 @@ void WaveTrack::ClearAndAddCutLine(double t0, double t1)
       pChannel->HandleClear(t0, t1, true, false);
 }
 
-namespace {
-
-   //Internal structure, which is supposed to contain
-   //data related to clip boundaries, and used during
-   //ClearAndPaste to restore old splits after new
-   //data is pasted
-   struct SplitInfo
-   {
-      //Time, where boundary is located
-      double time;
-      //Contains trimmed data, which should be re-appended to
-      //the clip to the left from the boundary, may be null
-      std::shared_ptr<WaveClip> left;
-      //Contains trimmed data, which should be re-appended to
-      //the clip to the right from the boundary, may be null
-      std::shared_ptr<WaveClip> right;
-      //Contains clip name next to the left from the boundary,
-      //if present, that needs to be re-assigned to the matching
-      //clip after split
-      std::optional<wxString> leftClipName;
-      //Contains clip name next to the right from the boundary,
-      //if present, that needs to be re-assigned to the matching
-      //clip after split
-      std::optional<wxString> rightClipName;
-   };
-
-}
-
 //
 // ClearAndPaste() is a specialized version of HandleClear()
 // followed by Paste() and is used mostly by effects that
@@ -957,21 +929,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
 {
    const auto pFactory = track.mpFactory;
 
-   std::vector<SplitInfo> splits;
    WaveClipHolders cuts;
-
-   //helper routine, that finds SplitInfo by time value,
-   //or creates a new one if no one exists yet
-   auto get_split = [&](double time) {
-      auto it = std::find_if(splits.begin(), splits.end(),
-         [time](const SplitInfo& split) { return split.time == time; });
-      if(it == splits.end())
-         it = splits.insert(
-            splits.end(),
-            { time, nullptr, nullptr, std::nullopt, std::nullopt }
-         );
-      return it;
-   };
 
    // If provided time warper was NULL, use a default one that does nothing
    IdentityTimeWarper localWarper;
@@ -989,35 +947,6 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
    // needs to know if a clip boundary is being crossed since Paste()
    // will add split lines around the pasted clip if so.
    for (const auto &clip : track.mClips) {
-      double st;
-
-      // Remember clip boundaries as locations to split
-      // we need to copy clips, trims and names, because the original ones
-      // could be changed later during Clear/Paste routines
-      st = roundTime(clip->GetPlayStartTime());
-      if (st >= t0 && st <= t1) {
-         auto it = get_split(st);
-         if (clip->GetTrimLeft() != 0) {
-            //keep only hidden left part
-            it->right = std::make_shared<WaveClip>(*clip, pFactory, false);
-            it->right->SetTrimLeft(.0);
-            it->right->ClearRight(clip->GetPlayStartTime());
-         }
-         it->rightClipName = clip->GetName();
-      }
-
-      st = roundTime(clip->GetPlayEndTime());
-      if (st >= t0 && st <= t1) {
-         auto it = get_split(st);
-         if (clip->GetTrimRight() != 0) {
-            //keep only hidden right part
-            it->left = std::make_shared<WaveClip>(*clip, pFactory, false);
-            it->left->SetTrimRight(.0);
-            it->left->ClearLeft(clip->GetPlayEndTime());
-         }
-         it->leftClipName = clip->GetName();
-      }
-
       // Search for cut lines
       auto &cutlines = clip->GetCutLines();
       // May erase from cutlines, so don't use range-for
@@ -1046,32 +975,6 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
    // And paste in the new data
    PasteOne(track, t0, src, startTime, endTime, merge);
 
-   // First, merge the new clip(s) in with the existing clips
-   if (merge && splits.size() > 0) {
-      // Now t1 represents the absolute end of the pasted data.
-      t1 = t0 + endTime;
-
-      // Get a sorted array of the clips
-      auto clips = track.SortedClipArray();
-
-      // Scan the sorted clips for the first clip whose start time
-      // exceeds the pasted regions end time.
-      {
-         WaveClip *prev = nullptr;
-         for (const auto clip : clips) {
-            // Merge this clip and the previous clip if the end time
-            // falls within it and this isn't the first clip in the track.
-            if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
-               if (prev)
-                  track.MergeClips(track.GetClipIndex(prev),
-                     track.GetClipIndex(clip));
-               break;
-            }
-            prev = clip;
-         }
-      }
-   }
-
    if (merge)
    {
       // Refill the array since clips have changed.
@@ -1098,88 +1001,8 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
       }
    }
 
-   // Restore cut/split lines
-   if (preserve) {
-      auto attachLeft = [](WaveClip &target, WaveClip &src)
-      {
-         assert(target.GetWidth() == src.GetWidth());
-         assert(target.GetTrimLeft() == 0);
-         if (target.GetTrimLeft() != 0)
-            return;
-
-         auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
-         auto success = target.Paste(target.GetPlayStartTime(), src);
-         assert(success); // because of precondition above
-         target.SetTrimLeft(trim);
-         //Play start time needs to be adjusted after
-         //prepending data to the sequence
-         target.ShiftBy(-trim);
-      };
-
-      auto attachRight = [](WaveClip &target, WaveClip &src)
-      {
-         assert(target.GetWidth() == src.GetWidth());
-         assert(target.GetTrimRight() == 0);
-         if (target.GetTrimRight() != 0)
-            return;
-
-         auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
-         auto success = target.Paste(target.GetPlayEndTime(), src);
-         assert(success); // because of precondition above
-         target.SetTrimRight(trim);
-      };
-
-      // Restore the split lines and trims, transforming the position appropriately
-      for (const auto& split: splits) {
-         auto at = roundTime(warper->Warp(split.time));
-         for (const auto& clip : track.GetClips()) {
-            // Clips in split began as copies of a clip in the track,
-            // therefore have the same width, satisfying preconditions to
-            // attach
-            if (clip->SplitsPlayRegion(at))//strictly inside
-            {
-               auto newClip =
-                  std::make_shared<WaveClip>(*clip, pFactory, true);
-
-               clip->ClearRight(at);
-               newClip->ClearLeft(at);
-               if (split.left)
-                  // clip was cleared right
-                  attachRight(*clip, *split.left);
-               if (split.right)
-                  // new clip was cleared left
-                  attachLeft(*newClip, *split.right);
-               bool success = track.AddClip(std::move(newClip));
-               assert(success); // copied clip has same width and factory
-               break;
-            }
-            else if (clip->GetPlayStartSample() ==
-               track.TimeToLongSamples(at) && split.right) {
-               // precondition satisfied because... ??
-               attachLeft(*clip, *split.right);
-               break;
-            }
-            else if (clip->GetPlayEndSample() ==
-               track.TimeToLongSamples(at) && split.left) {
-               // precondition satisfied because... ??
-               attachRight(*clip, *split.left);
-               break;
-            }
-         }
-      }
-
-      //Restore clip names
-      for (const auto& split : splits)
-      {
-         auto s = track.TimeToLongSamples(warper->Warp(split.time));
-         for (auto& clip : track.GetClips()) {
-            if (split.rightClipName.has_value() && clip->GetPlayStartSample() == s)
-               clip->SetName(*split.rightClipName);
-            else if (split.leftClipName.has_value() && clip->GetPlayEndSample() == s)
-               clip->SetName(*split.leftClipName);
-         }
-      }
-
+   // Restore cut lines
+   if (preserve && !cuts.empty()) {
       // Restore the saved cut lines, also transforming if time altered
       for (const auto &clip : track.mClips) {
          double st;
@@ -1395,15 +1218,11 @@ void WaveTrack::HandleClear(double t0, double t1,
    // use No-fail-guarantee for the rest
 
    if (!split && editClipCanMove)
-   {
       // Clip is "behind" the region -- offset it unless we're splitting
       // or we're using the "don't move other clips" mode
       for (const auto& clip : mClips)
-      {
-         if (clip->BeforePlayRegion(t1))
+         if (t1 <= clip->GetPlayStartTime())
             clip->ShiftBy(-(t1 - t0));
-      }
-   }
 
    for (const auto &clip: clipsToDelete)
    {
