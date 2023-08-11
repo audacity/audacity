@@ -3207,6 +3207,8 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 
    if (!clip1 || !clip2) // Could happen if one track of a linked pair had a split and the other didn't.
       return; // Don't throw, just do nothing.
+   else if (fabs(clip1->GetStretchRatio() - clip2->GetStretchRatio()) > 1e-6)
+      return; // Same here.
 
    // Append data from second clip to first clip
    // use Strong-guarantee
