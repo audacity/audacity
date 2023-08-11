@@ -1167,21 +1167,20 @@ void WaveClip::ApplyStretchRatio()
    if (stretchRatio == 1.0)
       return;
 
-   Finally Do { [this] {
+   Finally Do { [this, trimLeftBeforeStretch = mTrimLeft,
+                 trimRightBeforeStretch = mTrimRight] {
       this->mClipStretchRatio = 1.0;
       this->mRawAudioTempo = this->mProjectTempo;
+      this->SetTrimLeft(trimLeftBeforeStretch);
+      this->SetTrimRight(trimRightBeforeStretch);
    } };
+
+   SetTrimLeft(0);
+   SetTrimRight(0);
 
    constexpr auto durationToDiscard = 0.0;
    constexpr auto blockSize = 1024;
    const auto numChannels = GetWidth();
-
-   // Let's also pass the hidden part to the stretcher for better result in the
-   // visible part.
-   const auto trimLeftBeforeStretch = mTrimLeft;
-   const auto trimRightBeforeStretch = mTrimRight;
-   SetTrimLeft(0);
-   SetTrimRight(0);
 
    ClipSegment stretcherSource { *this, durationToDiscard,
                                  PlaybackDirection::forward };
@@ -1211,9 +1210,6 @@ void WaveClip::ApplyStretchRatio()
          );
       numOutSamples += numSamplesToGet;
    }
-
-   SetTrimLeft(trimLeftBeforeStretch * stretchRatio);
-   SetTrimRight(trimRightBeforeStretch * stretchRatio);
 
    mSequences = move(newSequences);
    Flush();
