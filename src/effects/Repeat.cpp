@@ -93,7 +93,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {mT0, mT1}, true };
 
    int nTrack = 0;
    bool bGoodResult = true;

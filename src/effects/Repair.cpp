@@ -77,7 +77,7 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
    // This may be too much copying for EffectRepair. To support Cancel, may be
    // able to copy much less.
    // But for now, Cancel isn't supported without this.
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, { mT0, mT1 } };
    bool bGoodResult = true;
 
    int count = 0;

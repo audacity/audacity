@@ -67,7 +67,7 @@ bool PerTrackEffect::Process(
    EffectInstance &instance, EffectSettings &settings) const
 {
    auto pThis = const_cast<PerTrackEffect *>(this);
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {mT0, mT1}, true };
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {

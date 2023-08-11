@@ -94,11 +94,12 @@ void Track::EnsureVisible( bool modifyState )
       pList->EnsureVisibleEvent(SharedPointer(), modifyState);
 }
 
-TrackListHolder Track::Duplicate() const
+TrackListHolder Track::Duplicate(
+   std::optional<std::pair<double, double>> unstretchInterval) const
 {
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
-   auto result = Clone();
+   auto result = Clone(std::move(unstretchInterval));
 
    auto iter = TrackList::Channels(*result->begin()).begin();
    const auto copyOne = [&](const Track *pChannel){
@@ -988,7 +989,7 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
    TrackListHolder tracks;
    std::vector<Track*> result;
    if (src) {
-      tracks = src->Clone(); // not duplicate
+      tracks = src->Clone(std::nullopt); // not duplicate
       assert(NChannels() == tracks->NChannels());
    }
    if (src) {

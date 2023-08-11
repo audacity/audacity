@@ -30,7 +30,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
 
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {mT0, mT1}, true };
 
    // Iterate over the tracks
    bool bGoodResult = true;
@@ -76,7 +76,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
                   ViewInfo::Get(*pProject).selectedRegion;
                track.ClearAndPaste(
                   selectedRegion.t0(), selectedRegion.t1(),
-                  *list, true, false, &warper);
+                  *list, true, true, &warper);
             }
             else
                return;

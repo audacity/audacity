@@ -29,7 +29,8 @@ public:
    static int nEffectsDone;
    static void IncEffectCounter() { ++nEffectsDone; }
 
-   EffectOutputTracks(TrackList &tracks,
+   EffectOutputTracks(
+      TrackList& tracks, std::pair<double, double> effectTimeInterval,
       bool allSyncLockSelected = false);
    EffectOutputTracks(const EffectOutputTracks&) = delete;
 
