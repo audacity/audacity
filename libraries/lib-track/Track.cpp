@@ -650,13 +650,23 @@ TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
    assert(t.IsLeader());
    assert(t.GetOwner().get() == this);
    auto nChannels = t.NChannels();
-   assert(nChannels == (*with.begin())->NChannels());
+
+   // TODO wide wave tracks:  This won't matter, tracks will be 1 to 1
+   assert(nChannels >= (*with.begin())->NChannels());
+
    TrackListHolder result = Temporary(nullptr);
 
-   const auto channels = TrackList::Channels(&t);
-   auto iter = with.ListOfTracks::begin();
+   auto iter = with.ListOfTracks::begin(),
+      end = with.ListOfTracks::end();
    bool isLeader = true;
-   for (const auto pChannel : channels) {
+   std::vector<Track*> saveChannels;
+   for (const auto pChannel : TrackList::Channels(&t))
+      saveChannels.push_back(pChannel);
+
+   // Because default constructor doesn't work
+   std::optional<TrackNodePointer> lastNode;
+
+   for (const auto pChannel : saveChannels) {
       auto spChannel = pChannel->shared_from_this();
 
       //! Move one channel to the temporary list
@@ -668,16 +678,23 @@ TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
       assert(isLeader == pChannel->IsLeader());
       isLeader = false;
 
-      //! Redirect the list element of this
-      const auto pTrack = *iter;
-      *node.first = pTrack;
-      iter = with.erase(iter);
-      pTrack->SetOwner(shared_from_this(), node);
-      pTrack->SetId(pChannel->GetId());
-      RecalcPositions(node);
-
-      DeletionEvent(spChannel, true);
-      AdditionEvent(node);
+      if (iter == end) {
+         node.second->erase(node.first);
+         RecalcPositions(*lastNode);
+         DeletionEvent(spChannel, true);
+      }
+      else {
+         lastNode.emplace(node);
+         //! Redirect the list element of this
+         const auto pTrack = *iter;
+         *node.first = pTrack;
+         iter = with.erase(iter);
+         pTrack->SetOwner(shared_from_this(), node);
+         pTrack->SetId(pChannel->GetId());
+         RecalcPositions(node);
+         DeletionEvent(spChannel, true);
+         AdditionEvent(node);
+      }
    }
    return result;
 }

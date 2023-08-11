@@ -1213,11 +1213,13 @@ public:
    /*!
     Replace channel group `t` with the first group in the given list, return a
     temporary list of the removed tracks, modify given list by removing group
+
+    Replacements may have fewer channels
     Give the replacements the same ids as the replaced
 
     @pre `t.IsLeader()`
     @pre `t.GetOwner().get() == this`
-    @pre `t.NChannels() == (*with.begin())->NChannels()`
+    @pre `t.NChannels() >= (*with.begin())->NChannels()`
     */
    TrackListHolder ReplaceOne(Track &t, TrackList &&with);
 

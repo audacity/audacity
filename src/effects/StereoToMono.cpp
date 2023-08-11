@@ -170,6 +170,7 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
       floatSample);
 
    auto outTrack = left->EmptyCopy();
+   auto tempList = TrackList::Temporary(nullptr, outTrack, nullptr);
    assert(outTrack->IsLeader());
    outTrack->ConvertToSampleFormat(floatSample);
 
