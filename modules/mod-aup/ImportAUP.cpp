@@ -66,8 +66,6 @@ static const auto exts = {wxT("aup")};
 class AUPImportFileHandle;
 using ImportHandle = std::unique_ptr<ImportFileHandle>;
 
-using NewChannelGroup = std::vector<std::shared_ptr<WaveTrack>>;
-
 class AUPImportPlugin final : public ImportPlugin
 {
 public:

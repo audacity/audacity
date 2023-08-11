@@ -76,6 +76,16 @@ public:
       return mEndSample;
    }
 
+   long long GetCorrectedStartSample() const {
+      // Correct the start of range so that the first full window is
+      // centered at that position
+      return std::max<long long>(0, GetStartSample() - 2 * GetHopSize());
+   }
+
+   long long GetLength() const {
+      return GetEndSample() - GetCorrectedStartSample();
+   }
+
    // The double time points is quantized into long long
    void addHopBinData(int hopNum, int freqBin){
       // Update the start and end sampleCount of current selection

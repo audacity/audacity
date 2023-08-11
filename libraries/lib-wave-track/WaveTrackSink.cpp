@@ -96,10 +96,7 @@ void WaveTrackSink::DoConsume(Buffers &data)
 std::shared_ptr<TrackList> WaveTrackSink::Flush(Buffers &data)
 {
    DoConsume(data);
-   if (mGenLeft) {
+   if (mGenLeft)
       mGenLeft->Flush();
-      if (mGenRight)
-         mGenRight->Flush();
-   }
    return mList;
 }

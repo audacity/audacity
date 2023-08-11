@@ -165,8 +165,6 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 
    mixLeft->Flush();
-   if (!mono)
-      mixRight->Flush();
    if (updateResult == ProgressResult::Cancelled ||
        updateResult == ProgressResult::Failed)
       return {};

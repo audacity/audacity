@@ -367,6 +367,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       WaveTrackFactory{ mRate,
                     SampleBlockFactory::New( mProject )  }
          .Create(SampleFormat, mRate.GetRate());
+   const auto tmp0 = TrackList::Temporary(nullptr, t, nullptr);
+   assert(t->IsLeader()); // because it's new and not grouped
 
    t->SetRate(1);
 

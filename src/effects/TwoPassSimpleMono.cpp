@@ -102,6 +102,8 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
          for (const auto pChannel : TrackList::Channels(track))
             if (!ProcessOne(*pChannel, **outIter++, start, end))
                return false;
+         if (!mSecondPassDisabled && mPass == 0)
+            outTrack->Flush();
       }
 
       ++mCurTrackNum;
@@ -212,10 +214,8 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack &track, WaveTrack &outTrack,
    if (mSecondPassDisabled || mPass != 0)
       outTrack.Set((samplePtr)buffer1.get(), floatSample, s - samples1,
          samples1);
-   else {
+   else
       outTrack.Append((samplePtr)buffer1.get(), floatSample, samples1);
-      outTrack.Flush();
-   }
 
    // Return true because the effect processing succeeded.
    return true;

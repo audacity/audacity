@@ -396,9 +396,6 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             }
 
             rb.outputLeftTrack->Flush();
-            if(rightTrack)
-               rb.outputRightTrack->Flush();
-
             Finalize(leftTrack, *rb.outputLeftTrack, *warper);
          }
          mCurTrackNum++;

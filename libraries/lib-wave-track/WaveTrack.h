@@ -299,9 +299,6 @@ private:
     */
    void Trim(double t0, double t1) /* not override */;
 
-   // May assume precondition: t0 <= t1
-   void HandleClear(double t0, double t1, bool addCutLines, bool split);
-
    void SyncLockAdjust(double oldT1, double newT1) override;
 
    /** @brief Returns true if there are no WaveClips in the specified region
@@ -686,7 +683,10 @@ private:
 
    size_t NIntervals() const override;
 
-protected:
+private:
+   void FlushOne();
+   // May assume precondition: t0 <= t1
+   void HandleClear(double t0, double t1, bool addCutLines, bool split);
    static void ClearAndPasteOne(WaveTrack &track,
       double t0, double t1, double startTime, double endTime,
       const WaveTrack &src,

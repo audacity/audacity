@@ -748,8 +748,11 @@ bool EffectNoiseReduction::Worker::Process(
             }
             ++mProgressTrackCount;
          }
-         if (tempList->Size())
+         if (tempList->Size()) {
+            const auto pTrack = *tempList->Any<WaveTrack>().begin();
+            TrackSpectrumTransformer::PostProcess(*pTrack, len);
             track->ClearAndPaste(t0, t0 + tLen, *tempList, true, false);
+         }
       }
    }
 

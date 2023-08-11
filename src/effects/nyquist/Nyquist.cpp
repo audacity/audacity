@@ -1670,16 +1670,21 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
          *this, XO("Nyquist returned nil audio.\n"));
       return false;
    }
-   for (int i = 0; i < outChannels; i++)
-      outputTrack[i]->Flush();
+
+   const auto &out = outputTrack[0];
+   std::shared_ptr<TrackList> tempList;
+   if (outChannels < static_cast<int>(mCurNumChannels)) {
+      // Be careful to do this before duplication
+      outputTrack[0]->Flush();
+      outputTrack[1] = (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
+      tempList = TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
+   }
+   else {
+      tempList = TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
+      outputTrack[0]->Flush();
+   }
 
    {
-      const auto &out = outputTrack[0];
-      if (outChannels < (int)mCurNumChannels)
-         outputTrack[1] =
-            (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
-      auto tempList =
-         TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
       const bool bMergeClips = (mMergeClips < 0)
          // Use sample counts to determine default behaviour - times will rarely
          // be equal.

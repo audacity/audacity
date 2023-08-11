@@ -277,8 +277,6 @@ struct id3_tag_deleter {
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
-using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
-
 void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
                                  WaveTrackFactory *trackFactory,
                                  TrackHolders &outTracks,
@@ -290,7 +288,7 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
 
    wxASSERT(mFile.get());
 
-   NewChannelGroup channels(mInfo.channels);
+   ImportUtils::NewChannelGroup channels(mInfo.channels);
 
    for (size_t c = 0; c < mInfo.channels; ++c)
       channels[c] =
@@ -384,11 +382,8 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
       return;
    }
 
-   for(const auto &channel : channels)
-      channel->Flush();
-
    if (!channels.empty())
-      outTracks.push_back(TrackList::Temporary(nullptr, channels));
+      outTracks.push_back(ImportUtils::MakeTracks(channels));
 
    const char *str;
 
