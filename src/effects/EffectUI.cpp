@@ -1198,7 +1198,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 
    } );
 
-   const auto range = tracks.SelectedLeaders<const WaveTrack>();
+   const auto range = tracks.Selected<const WaveTrack>();
    bool anyTracks = !range.empty();
    bool clean = std::all_of(range.begin(), range.end(),
       [](const WaveTrack *t){ return t->GetEndTime() == 0; });
@@ -1327,9 +1327,9 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
       trackPanel.VerticalScroll( 1.0 );
    }
    else {
-      auto pTrack = *tracks.SelectedLeaders().begin();
+      auto pTrack = *tracks.Selected().begin();
       if (!pTrack)
-         pTrack = *tracks.Leaders().begin();
+         pTrack = *tracks.begin();
       if (pTrack) {
          TrackFocus::Get(project).Set(pTrack);
          pTrack->EnsureVisible();

@@ -259,12 +259,13 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
                             XO("Processing...   0%%"),
                             pdlgHideStopButton };
 
+   // Safe assumption for tracks associated with the context menu
+   assert(pTrack->IsLeader());
+
    // Simply finding a denominator for the progress dialog
-   sampleCount totalSamples{ 0 };
-   for (const auto& channel : TrackList::Channels(pTrack))
-      // Hidden samples are processed too, they should be counted as well
-      // (Correctly counting all samples of all channels)
-      totalSamples += channel->GetSequenceSamplesCount();
+   // Hidden samples are processed too, they should be counted as well
+   // (Correctly counting all samples of all channels)
+   sampleCount totalSamples = pTrack->GetSequenceSamplesCount();
    sampleCount processedSamples{ 0 };
 
    // Below is the lambda function that is passed along the call chain to
@@ -640,7 +641,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                auto &tracks = TrackList::Get( project );
                auto &table = static_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
-               auto next = * ++ tracks.FindLeader(&track);
+               auto next = * ++ tracks.Find(&track);
                canMakeStereo =
                   (next &&
                    TrackList::NChannels(*next) == 1 &&
@@ -749,7 +750,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    wxASSERT(pTrack);
 
    auto partner =
-      static_cast<WaveTrack*>(*tracks.FindLeader(pTrack).advance(1));
+      static_cast<WaveTrack*>(*tracks.Find(pTrack).advance(1));
 
    if (pTrack->GetRate() != partner->GetRate()) {
       using namespace BasicUI;

@@ -54,7 +54,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
    auto &trackPanel = TrackPanel::Get(project);
    auto &window = ProjectWindow::Get(project);
 
-   auto trackRange = tracks.SelectedLeaders<WaveTrack>();
+   auto trackRange = tracks.Selected<WaveTrack>();
    auto newTracks = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
       Mixer::WarpOptions{ tracks.GetOwner() },
       tracks.MakeUniqueTrackName(_("Mix")),
@@ -65,7 +65,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
 
       // But before removing, determine the first track after the removal
       auto last = *trackRange.rbegin();
-      auto insertionPoint = * ++ tracks.FindLeader(last);
+      auto insertionPoint = * ++ tracks.Find(last);
       
       auto selectedCount = trackRange.size();
       wxString firstName;
@@ -84,7 +84,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       // Add new tracks
       const bool stereo = newTracks->NChannels() > 1;
       tracks.Append(std::move(*newTracks));
-      const auto pNewTrack = *tracks.Leaders<WaveTrack>().rbegin();
+      const auto pNewTrack = *tracks.Any<WaveTrack>().rbegin();
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount == 1)
@@ -103,7 +103,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
          std::vector<Track *> arr;
          arr.reserve(tracks.Size());
          size_t iBegin = 0, ii = 0;
-         for (const auto pTrack : tracks.Leaders()) {
+         for (const auto pTrack : tracks) {
             arr.push_back(pTrack);
             if (pTrack == insertionPoint)
                iBegin = ii;
@@ -143,7 +143,7 @@ void DoPanTracks(AudacityProject &project, float PanValue)
    auto &window = ProjectWindow::Get( project );
 
    // count selected wave tracks
-   const auto range = tracks.Leaders< WaveTrack >();
+   const auto range = tracks.Any< WaveTrack >();
    const auto selectedRange = range + &Track::IsSelected;
    auto count = selectedRange.size();
 
@@ -190,7 +190,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
    double delta = 0.0;
    double newPos = -1.0;
 
-   auto trackRange = tracks.SelectedLeaders<AudioTrack>();
+   auto trackRange = tracks.Selected<AudioTrack>();
 
    auto FindOffset =
       [](const Track *pTrack) { return pTrack->GetStartTime(); };
@@ -283,7 +283,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
 
    if ((unsigned)index >= kAlignLabelsCount()) {
       // This is an alignLabelsNoSync command.
-      for (auto t : tracks.SelectedLeaders<AudioTrack>()) {
+      for (auto t : tracks.Selected<AudioTrack>()) {
          // This shifts different tracks in different ways, so no sync-lock
          // move.
          // Only align Wave and Note tracks end to end.
@@ -297,7 +297,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
 
    if (delta != 0.0) {
       // For a fixed-distance shift move sync-lock selected tracks also.
-      for (auto t : tracks.Leaders()
+      for (auto t : tracks.Any()
            + &SyncLock::IsSelectedOrSyncLockSelected )
          t->MoveTo(t->GetStartTime() + delta);
    }
@@ -499,7 +499,7 @@ void DoSortTracks( AudacityProject &project, int flags )
    arr.reserve(tracks.Size());
 
    // First find the permutation.
-   for (const auto pTrack : tracks.Leaders()) {
+   for (const auto pTrack : tracks) {
       auto &track = *pTrack;
       const auto size = arr.size();
       size_t ndx = 0;
@@ -657,7 +657,7 @@ void OnResample(const CommandContext &context)
 
    int ndx = 0;
    auto flags = UndoPush::NONE;
-   for (auto wt : tracks.SelectedLeaders<WaveTrack>()) {
+   for (auto wt : tracks.Selected<WaveTrack>()) {
       auto msg = XO("Resampling track %d").Format(++ndx);
 
       using namespace BasicUI;
@@ -701,7 +701,7 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    const auto soloSimple = (solo == SoloBehaviorSimple);
    const auto soloNone = (solo == SoloBehaviorNone);
 
-   auto iter = selected ? tracks.SelectedLeaders<PlayableTrack>() : tracks.Leaders<PlayableTrack>();
+   auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Any<PlayableTrack>();
    for (auto pt : iter) {
       pt->SetMute(mute);
       if (soloSimple || soloNone)
@@ -797,7 +797,7 @@ void OnScoreAlign(const CommandContext &context)
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
-   tracks.SelectedLeaders().Visit(
+   tracks.Selected().Visit(
       [&](WaveTrack *wt) {
          numWaveTracksSelected++;
          endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();

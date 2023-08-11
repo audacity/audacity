@@ -108,7 +108,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
 {
    outTracks.clear();
 
-   TrackHolders results;
+   std::vector<std::vector<WaveTrack::Holder>> results;
    auto updateResult = ProgressResult::Success;
 
    {
@@ -261,7 +261,8 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    if (!results.empty() && !results[0].empty()) {
       for (const auto &channel : results[0])
          channel->Flush();
-      outTracks.swap(results);
+      for (auto &group : results)
+         outTracks.push_back(TrackList::Temporary(nullptr, group));
    }
 }
 

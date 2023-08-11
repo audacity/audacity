@@ -81,7 +81,7 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
    bool bGoodResult = true;
 
    int count = 0;
-   for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       const double trackStart = track->GetStartTime();
       const double repair_t0 = std::max(mT0, trackStart);
       const double trackEnd = track->GetEndTime();

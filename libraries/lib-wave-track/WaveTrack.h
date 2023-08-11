@@ -123,7 +123,7 @@ private:
 
    void MoveTo(double o) override;
 
-   bool LinkConsistencyFix(bool doFix, bool completeList) override;
+   bool LinkConsistencyFix(bool doFix) override;
 
    //! Implement WideSampleSequence
    double GetStartTime() const override;
@@ -159,9 +159,23 @@ private:
    void SetWaveColorIndex(int colorIndex);
 
    sampleCount GetPlaySamplesCount() const;
-   //! Returns the total number of samples in all underlying sequences
-   //! of all clips (but not counting the cutlines)
+
+   /*!
+    @return the total number of samples in all underlying sequences
+   of all clips, across all channels (including hidden audio but not
+   counting the cutlines)
+
+    @pre `IsLeader()`
+    */
    sampleCount GetSequenceSamplesCount() const;
+
+   /*!
+    @return the total number of blocks in all underlying sequences of all clips,
+   across all channels (including hidden audio but not counting the cutlines)
+
+    @pre `IsLeader()`
+    */
+   size_t CountBlocks() const;
 
    sampleFormat GetSampleFormat() const override { return mFormat; }
 
@@ -191,6 +205,22 @@ private:
    Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
       bool keepLink = true) const;
 
+   //! Make another channel group copying format, rate, color, etc. but
+   //! containing no clips
+   /*!
+    It is important to pass the correct factory (that for the project
+    which will own the copy) in the unusual case that a track is copied from
+    another project or the clipboard.  For copies within one project, the
+    default will do.
+
+    @param keepLink if false, make the new track mono.  But always preserve
+    any other track group data.
+
+    @pre `IsLeader()`
+    */
+   TrackListHolder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
+      bool keepLink = true) const;
+
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make
@@ -216,7 +246,7 @@ private:
       const TimeWarper *effectWarper = nullptr) /* not override */;
    /*!
     Overload that takes a TrackList and passes its first wave track
-    @pre `**src.Leaders<const WaveTrack>().begin()` satisfies preconditions
+    @pre `**src.Any<const WaveTrack>().begin()` satisfies preconditions
     of the other overload for `src`
     */
    void ClearAndPaste(double t0, double t1,
@@ -225,7 +255,7 @@ private:
       bool merge = true,
       const TimeWarper *effectWarper = nullptr)
    {
-      ClearAndPaste(t0, t1, **src.Leaders<const WaveTrack>().begin(),
+      ClearAndPaste(t0, t1, **src.Any<const WaveTrack>().begin(),
          preserve, merge, effectWarper);
    }
 
@@ -559,6 +589,18 @@ private:
    WaveClipPointers SortedClipArray();
    WaveClipConstPointers SortedClipArray() const;
 
+   //! Whether any clips have hidden audio
+   /*!
+    @pre `IsLeader()`
+    */
+   bool HasHiddenData() const;
+
+   //! Remove hidden audio from all clips
+   /*!
+    @pre `IsLeader()`
+    */
+   void DiscardTrimmed();
+
    //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
    /*!
    @return true if possible to offset by `(allowedAmount ? *allowedAmount : amount)`
@@ -705,7 +747,10 @@ private:
    static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
       double startTime, double insertDuration);
 
-   //! Whether all clips have a common rate
+   //! Whether all clips of a leader track have a common rate
+   /*!
+    @pre `IsLeader()`
+    */
    bool RateConsistencyCheck() const;
 
    //! Sets project tempo on clip upon push. Use this instead of

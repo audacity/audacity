@@ -135,11 +135,11 @@ private:
 
       if(const auto trackList = currentTrack->GetOwner())
       {
-         for(const auto track : as_const(*trackList).Leaders())
+         for(const auto track : as_const(*trackList))
          {
             const auto isSameTrack = (track == currentTrack) ||
-               (track->GetLinkType() == Track::LinkType::Aligned && *trackList->FindLeader(currentTrack) == track) ||
-               (currentTrack->GetLinkType() == Track::LinkType::Aligned && *trackList->FindLeader(track) == currentTrack);
+               (track->GetLinkType() == Track::LinkType::Aligned && *trackList->Find(currentTrack) == track) ||
+               (currentTrack->GetLinkType() == Track::LinkType::Aligned && *trackList->Find(track) == currentTrack);
             for(const auto& interval : track->Intervals())
             {
                if(isSameTrack)

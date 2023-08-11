@@ -1107,7 +1107,7 @@ void ProjectWindow::FixScrollbars()
    }
 
    auto LastTime = std::numeric_limits<double>::lowest();
-   for (const Track *track : tracks.Leaders()) {
+   for (const Track *track : tracks) {
       // Iterate over pending changed tracks if present.
       track = track->SubstitutePendingChangedTrack().get();
       LastTime = std::max(LastTime, track->GetEndTime());
@@ -1692,9 +1692,9 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
 
    trackPanel.SetFocus();
    if (!pTrack)
-      pTrack = *tracks.SelectedLeaders().begin();
+      pTrack = *tracks.Selected().begin();
    if (!pTrack)
-      pTrack = *tracks.Leaders().begin();
+      pTrack = *tracks.begin();
    if (pTrack) {
       TrackFocus::Get(project).Set(pTrack);
       pTrack->EnsureVisible();

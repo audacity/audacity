@@ -82,9 +82,9 @@ void SelectionState::SelectRangeOfTracks(
 {
    Track *sTrack = &rsTrack, *eTrack = &reTrack;
    // Swap the track pointers if needed
-   auto begin = tracks.Leaders().begin(),
-      iterS = tracks.FindLeader(sTrack),
-      iterE = tracks.FindLeader(eTrack);
+   auto begin = tracks.begin(),
+      iterS = tracks.Find(sTrack),
+      iterE = tracks.Find(eTrack);
    // Be sure to substitute the leaders for given tracks
    sTrack = *iterS;
    eTrack = *iterE;
@@ -94,13 +94,13 @@ void SelectionState::SelectRangeOfTracks(
       std::swap(sTrack, eTrack);
 
    for (auto track :
-        tracks.Leaders().StartingWith(sTrack).EndingAfter(eTrack))
+        tracks.Any().StartingWith(sTrack).EndingAfter(eTrack))
       SelectTrack(*track, true, false);
 }
 
 void SelectionState::SelectNone(TrackList &tracks)
 {
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       SelectTrack(*t, false, false);
 }
 
@@ -111,14 +111,14 @@ void SelectionState::ChangeSelectionOnShiftClick(
    auto pExtendFrom = tracks.Lock(mLastPickedTrack);
 
    if (!pExtendFrom) {
-      auto trackRange = tracks.SelectedLeaders();
+      auto trackRange = tracks.Selected();
       auto pFirst = *trackRange.begin();
 
       // If our track is at or after the first, extend from the first.
       if (pFirst) {
-         auto begin = tracks.Leaders().begin(),
-            iterT = tracks.FindLeader(&track),
-            iterF = tracks.FindLeader(pFirst);
+         auto begin = tracks.begin(),
+            iterT = tracks.Find(&track),
+            iterF = tracks.Find(pFirst);
          auto indT = std::distance(begin, iterT),
             indF = std::distance(begin, iterF);
          if (indT >= indF)
@@ -130,7 +130,7 @@ void SelectionState::ChangeSelectionOnShiftClick(
          pExtendFrom = Track::SharedPointer(*trackRange.rbegin());
    }
    // Either it's null, or mLastPickedTrack, or the first or last of
-   // SelectedLeaders()
+   // Selected()
    assert(!pExtendFrom || pExtendFrom->IsLeader());
 
    SelectNone(tracks);
@@ -167,7 +167,7 @@ SelectionStateChanger::SelectionStateChanger
    , mInitialLastPickedTrack{ state.mLastPickedTrack }
 {
    // Save initial state of track selections
-   const auto range = tracks.Leaders();
+   const auto range = tracks.Any();
    mInitialTrackSelection.clear();
    mInitialTrackSelection.reserve(range.size());
    for (const auto track : range) {
@@ -185,7 +185,7 @@ SelectionStateChanger::~SelectionStateChanger()
          it = mInitialTrackSelection.begin(),
          end = mInitialTrackSelection.end();
 
-      for (auto track : mTracks.Leaders()) {
+      for (auto track : mTracks) {
          if (it == end)
             break;
          track->SetSelected( *it++ );

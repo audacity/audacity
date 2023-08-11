@@ -118,7 +118,7 @@ bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
    mbDidSomething = false;
 
    int count = 0;
-   for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = std::max(mT0, trackStart);

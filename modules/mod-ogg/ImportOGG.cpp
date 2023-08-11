@@ -53,7 +53,7 @@ static const auto exts = {
 #include "ImportProgressListener.h"
 #include "ImportUtils.h"
 
-using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+using NewChannelGroup = std::vector<std::shared_ptr<WaveTrack>>;
 
 class OggImportPlugin final : public ImportPlugin
 {
@@ -341,7 +341,7 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
    {
       for (auto &channel : link)
          channel->Flush();
-      outTracks.push_back(std::move(link));
+      outTracks.push_back(TrackList::Temporary(nullptr, link));
    }
 
    //\todo { Extract comments from each stream? }

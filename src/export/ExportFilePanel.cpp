@@ -422,7 +422,7 @@ void ExportFilePanel::OnChannelsConfigure(wxCommandEvent &event)
 {
    //Configure for all tracks, but some channels may turn out to be silent
    //if exported region does not contain audio samples
-   auto waveTracks = TrackList::Get(mProject).Leaders<const WaveTrack>();
+   auto waveTracks = TrackList::Get(mProject).Any<const WaveTrack>();
    
    auto mixerSpec = std::make_unique<MixerOptions::Downmix>(*mMixerSpec);
    
@@ -526,7 +526,7 @@ void ExportFilePanel::UpdateMaxChannels(unsigned maxChannels)
          MaxExportChannels);
       if(!mMixerSpec || mMixerSpec->GetMaxNumChannels() != mixerMaxChannels)
       {
-         auto waveTracks = TrackList::Get(mProject).Leaders<const WaveTrack>();
+         auto waveTracks = TrackList::Get(mProject).Any<const WaveTrack>();
          mMixerSpec = std::make_unique<MixerOptions::Downmix>(
             waveTracks.sum([](const auto track) { return track->NChannels(); }),
             mixerMaxChannels);

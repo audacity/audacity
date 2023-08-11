@@ -46,8 +46,7 @@ public:
 protected:
    // Generator implementation
 
-   bool GenerateTrack(EffectSettings &settings,
-      WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
+   bool GenerateTrack(const EffectSettings &settings, TrackList &tmp) override;
 
 private:
    NumericTextCtrl *mDurationT;

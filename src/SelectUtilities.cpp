@@ -48,9 +48,9 @@ void DoSelectTimeAndAudioTracks(
 
    if (bAllTracks) {
       // Unselect all tracks before selecting audio.
-      for (auto t : tracks.Leaders())
+      for (auto t : tracks)
          t->SetSelected(false);
-      for (auto t : tracks.Leaders<WaveTrack>())
+      for (auto t : tracks.Any<WaveTrack>())
          t->SetSelected(true);
       ProjectHistory::Get( project ).ModifyState(false);
    }
@@ -69,7 +69,7 @@ void DoSelectTimeAndTracks
       selectedRegion.setTimes(tracks.GetStartTime(), tracks.GetEndTime());
 
    if( bAllTracks ) {
-      for (auto t : tracks.Leaders())
+      for (auto t : tracks)
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
@@ -79,7 +79,7 @@ void DoSelectTimeAndTracks
 void SelectNone( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       t->SetSelected(false);
 
    auto &trackPanel = TrackPanel::Get( project );
@@ -125,7 +125,7 @@ void DoListSelection(
 
    auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
    // Substitute the leader to satisfy precondition
-   auto pT = *tracks.FindLeader(&t);
+   auto pT = *tracks.Find(&t);
    if (!pT)
       return;
 
@@ -161,7 +161,7 @@ void DoSelectSomething(AudacityProject &project)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
    bool bTime = selectedRegion.isPoint();
-   bool bTracks = tracks.SelectedLeaders().empty();
+   bool bTracks = tracks.Selected().empty();
 
    if (bTime || bTracks)
       DoSelectTimeAndTracks(project, bTime, bTracks);

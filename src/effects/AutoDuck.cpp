@@ -130,7 +130,7 @@ bool EffectAutoDuck::Init()
    // any selected track is not a wave track.
    bool lastWasSelectedWaveTrack = false;
    const WaveTrack *controlTrackCandidate = nullptr;
-   for (auto t : inputTracks()->Leaders()) {
+   for (auto t : *inputTracks()) {
       if (lastWasSelectedWaveTrack && !t->GetSelected())
          // This could be the control track, so remember it
          controlTrackCandidate = dynamic_cast<const WaveTrack *>(t);
@@ -305,7 +305,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
 
       int trackNum = 0;
 
-      for (auto iterTrack : outputs.Get().SelectedLeaders<WaveTrack>()) {
+      for (auto iterTrack : outputs.Get().Selected<WaveTrack>()) {
          for (const auto pChannel : TrackList::Channels(iterTrack))
             for (size_t i = 0; i < regions.size(); ++i) {
                const AutoDuckRegion& region = regions[i];

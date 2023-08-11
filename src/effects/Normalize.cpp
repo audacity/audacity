@@ -119,7 +119,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    else if(!mDC && !mGain)
       topMsg = XO("Not doing anything...\n");   // shouldn't get here
 
-   for (auto track : outputs.Get().SelectedLeaders<WaveTrack>()) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       // Get start and end times from track
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();

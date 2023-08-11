@@ -63,7 +63,7 @@ extern "C" {
 
 
 class FLACImportFileHandle;
-using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+using NewChannelGroup = std::vector<std::shared_ptr<WaveTrack>>;
 
 class MyFLACFile final : public FLAC::Decoder::File
 {
@@ -433,7 +433,7 @@ void FLACImportFileHandle::Import(ImportProgressListener& progressListener,
       channel->Flush();
 
    if (!mChannels.empty())
-      outTracks.push_back(std::move(mChannels));
+      outTracks.push_back(TrackList::Temporary(nullptr, mChannels));
 
    wxString comment;
    wxString description;

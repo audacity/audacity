@@ -629,6 +629,7 @@ void NoteTrack::Silence(double t0, double t1)
 
 void NoteTrack::InsertSilence(double t, double len)
 {
+   assert(IsLeader());
    if (len < 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -982,7 +983,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    if (!mSeq) {
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
-      holder = (*Clone()->Leaders().begin())->SharedPointer();
+      holder = (*Clone()->begin())->SharedPointer();
       saveme = static_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);

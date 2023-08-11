@@ -53,7 +53,7 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
       // In case the project had soloed tracks before importing,
       // the newly imported track is muted.
       const bool projectHasSolo =
-         !(tracks.Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+         !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
 #ifdef EXPERIMENTAL_MIDI_OUT
       if (projectHasSolo)
          pTrack->SetMute(true);

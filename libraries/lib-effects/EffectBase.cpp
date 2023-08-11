@@ -230,7 +230,7 @@ const AudacityProject *EffectBase::FindProject() const
 
 void EffectBase::CountWaveTracks()
 {
-   const auto range = mTracks->SelectedLeaders<const WaveTrack>();
+   const auto range = mTracks->Selected<const WaveTrack>();
    mNumTracks = range.sum(&WaveTrack::NChannels);
    mNumGroups = range.size();
 }

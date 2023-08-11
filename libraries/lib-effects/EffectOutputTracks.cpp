@@ -21,10 +21,9 @@ EffectOutputTracks::EffectOutputTracks(
    // Reset map
    mIMap.clear();
    mOMap.clear();
-
    mOutputTracks = TrackList::Create(mTracks.GetOwner());
 
-   auto trackRange = mTracks.Leaders() +
+   auto trackRange = mTracks.Any() +
       [&] (const Track *pTrack) {
          return allSyncLockSelected
          ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)
@@ -33,16 +32,12 @@ EffectOutputTracks::EffectOutputTracks(
 
    for (auto aTrack : trackRange) {
       auto list = aTrack->Duplicate();
-      assert(aTrack->NChannels() == list->NChannels());
-      auto iter = TrackList::Channels(*list->Leaders().begin()).begin();
-      for (auto pChannel : TrackList::Channels(aTrack)) {
-         Track *o = *iter++;
-         mIMap.push_back(pChannel);
-         mOMap.push_back(o);
-      }
+      mIMap.push_back(aTrack);
+      mOMap.push_back(*list->begin());
       mOutputTracks->Append(std::move(*list));
    }
    // Invariant is established
+   assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());
 }
 
@@ -50,15 +45,18 @@ EffectOutputTracks::~EffectOutputTracks() = default;
 
 Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
 {
-   assert(t && t->IsLeader());
+   assert(t && t->IsLeader() && t->NChannels() == 1);
    mIMap.push_back(nullptr);
    mOMap.push_back(t.get());
+   auto result = mOutputTracks->Add(t);
+   // Invariant is maintained
+   assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());
-   return mOutputTracks->Add(t);
+   return result;
 }
 
-// If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
-// Else clear and DELETE mOutputTracks copies.
+// Replace tracks with successfully processed mOutputTracks copies.
+// Else clear and delete mOutputTracks copies.
 void EffectOutputTracks::Commit()
 {
    if (!mOutputTracks) {
@@ -68,20 +66,11 @@ void EffectOutputTracks::Commit()
       return;
    }
 
-   auto range = mOutputTracks->Any();
-   std::vector<std::shared_ptr<Track>> channels;
-
    size_t cnt = mOMap.size();
    size_t i = 0;
 
-   while (!range.empty()) {
-      auto *const pOutputTrack = *range.first;
-      const auto nChannels = pOutputTrack->NChannels();
-
-      // Get shared pointers to keep the tracks alive after removal from list
-      channels.clear();
-      for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
-         channels.emplace_back((*range.first++)->shared_from_this());
+   while (!mOutputTracks->empty()) {
+      const auto pOutputTrack = *mOutputTracks->begin();
 
       // If tracks were removed from mOutputTracks, then there will be
       // tracks in the map that must be removed from mTracks.
@@ -89,7 +78,7 @@ void EffectOutputTracks::Commit()
          const auto t = mIMap[i];
          // Class invariant justifies the assertion
          assert(t && t->IsLeader());
-         i += t->NChannels();
+         ++i;
          mTracks.Remove(*t);
       }
 
@@ -97,18 +86,14 @@ void EffectOutputTracks::Commit()
       // the map
       assert(i < cnt);
 
-      // Remove the track from the output list...don't delete it
-      mOutputTracks->Remove(*pOutputTrack);
-
       // Find the input track it corresponds to
       if (!mIMap[i])
-         for (auto &o : channels)
-            // This track was an addition to output tracks; add it to mTracks
-            ++i, mTracks.Add(o);
+         // This track was an addition to output tracks; add it to mTracks
+         mTracks.AppendOne(std::move(*mOutputTracks));
       else
-         for (auto &o : channels)
-            // Replace mTracks entry with the new track
-            mTracks.Replace(mIMap[i++], o);
+         // Replace mTracks entry with the new track
+         mTracks.ReplaceOne(*mIMap[i], std::move(*mOutputTracks));
+      ++i;
    }
 
    // If tracks were removed from mOutputTracks, then there may be tracks
@@ -117,7 +102,7 @@ void EffectOutputTracks::Commit()
       const auto t = mIMap[i];
       // Class invariant justifies the assertion
       assert(t && t->IsLeader());
-      i += t->NChannels();
+      ++i;
       mTracks.Remove(*t);
    }
 

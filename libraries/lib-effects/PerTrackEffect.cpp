@@ -120,7 +120,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             iChannel = 0;
          else
             leader =
-               static_cast<WaveTrack *>(*outputs.FindLeader(&left));
+               static_cast<WaveTrack *>(*outputs.Find(&left));
 
          sampleCount len = 0;
          sampleCount start = 0;
@@ -295,7 +295,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             t.SyncLockAdjust(mT1, mT0 + duration);
       };
 
-   outputs.Leaders().VisitWhile(bGoodResult,
+   outputs.Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](WaveTrack &wt) {
          if (!wt.GetSelected())
             return fallthrough();

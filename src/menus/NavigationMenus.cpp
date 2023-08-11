@@ -83,7 +83,7 @@ void DoPrevTrack(
    const auto t = trackFocus.Get();
    if (!t) {
       // if there isn't one, focus on last
-      const auto last = *tracks.Leaders().rbegin();
+      const auto last = *tracks.rbegin();
       trackFocus.Set(last);
       if (last)
          last->EnsureVisible(true);
@@ -92,14 +92,14 @@ void DoPrevTrack(
    assert(t->IsLeader());
 
    if (shift) {
-      auto p = * -- tracks.FindLeader(t); // Get previous track
+      auto p = * -- tracks.Find(t); // Get previous track
       if (!p) {
          // On first track
          // JKC: wxBell() is probably for accessibility, so a blind
          // user knows they were at the top track.
          wxBell();
          if (circularTrackNavigation)
-            p = *tracks.Leaders().rbegin();
+            p = *tracks.rbegin();
          else {
             t->EnsureVisible();
             return;
@@ -140,12 +140,12 @@ void DoPrevTrack(
       }
    }
    else {
-      auto p = * -- tracks.FindLeader(t); // Get previous track
+      auto p = * -- tracks.Find(t); // Get previous track
       if (!p) {
          // On first track so stay there?
          wxBell();
          if (circularTrackNavigation) {
-            auto range = tracks.Leaders();
+            auto range = tracks.Any();
             p = * range.rbegin(); // null if range is empty
             trackFocus.Set(p);   // Wrap to the last track
             if (p)
@@ -179,7 +179,7 @@ void DoNextTrack(
    const auto t = trackFocus.Get();
    if  (!t) {
       // if there isn't one, focus on first
-      const auto first = *tracks.Leaders().begin();
+      const auto first = *tracks.begin();
       trackFocus.Set(first);
       if (first)
          first->EnsureVisible(true);
@@ -188,12 +188,12 @@ void DoNextTrack(
    assert(t->IsLeader());
 
    if (shift) {
-      auto n = * ++ tracks.FindLeader(t); // Get next track
+      auto n = * ++ tracks.Find(t); // Get next track
       if (!n) {
          // On last track so stay there
          wxBell();
          if (circularTrackNavigation)
-            n = *tracks.Leaders().begin();
+            n = *tracks.begin();
          else {
             t->EnsureVisible();
             return;
@@ -234,12 +234,12 @@ void DoNextTrack(
       }
    }
    else {
-      auto n = * ++ tracks.FindLeader(t); // Get next track
+      auto n = * ++ tracks.Find(t); // Get next track
       if (!n) {
          // On last track so stay there
          wxBell();
          if (circularTrackNavigation) {
-            n = *tracks.Leaders().begin();
+            n = *tracks.begin();
             trackFocus.Set(n);   // Wrap to the first track
             if (n)
                n->EnsureVisible( true );
@@ -433,7 +433,7 @@ void OnFirstTrack(const CommandContext &context)
    if (!t)
       return;
 
-   auto f = *tracks.Leaders().begin();
+   auto f = *tracks.begin();
    if (t != f)
       trackFocus.Set(f);
    if (f)
@@ -451,7 +451,7 @@ void OnLastTrack(const CommandContext &context)
    if (!t)
       return;
 
-   auto l = *tracks.Leaders().rbegin();
+   auto l = *tracks.rbegin();
    if (t != l)
       trackFocus.Set(l);
    if (l)

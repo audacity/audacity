@@ -127,7 +127,7 @@ void DoZoomFitV(AudacityProject &project)
 
    // Only nonminimized audio tracks will be resized
    // Assume all channels of the track have the same minimization state
-   auto range = tracks.Leaders<AudioTrack>()
+   auto range = tracks.Any<AudioTrack>()
       - [](const Track *pTrack){
          return ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized(); };
    auto count = range.sum(&Track::NChannels);
@@ -140,7 +140,7 @@ void DoZoomFitV(AudacityProject &project)
    
    // The height of minimized and non-audio tracks cannot be apportioned
    height -=
-      tracks.Leaders().sum(ChannelView::GetChannelGroupHeight)
+      tracks.Any().sum(ChannelView::GetChannelGroupHeight)
          - range.sum(ChannelView::GetChannelGroupHeight);
    
    // Give each resized track the average of the remaining height
@@ -263,7 +263,7 @@ void OnCollapseAllTracks(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       for (auto pChannel : t->Channels())
          ChannelView::Get(*pChannel).SetMinimized(true);
 
@@ -276,7 +276,7 @@ void OnExpandAllTracks(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       for (auto pChannel : t->Channels())
          ChannelView::Get(*pChannel).SetMinimized(false);
 

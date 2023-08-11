@@ -328,7 +328,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
       if (mHasParseError || IsCancelled()) {
          // Revoke additions of tracks
          while (oldNumTracks < tracks.Size())
-            tracks.Remove(**tracks.Leaders().end().advance(-1));
+            tracks.Remove(**tracks.end().advance(-1));
       }
    });
 
@@ -356,6 +356,9 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
    else if(!mErrorMsg.empty())//i.e. warning
       ImportUtils::ShowMessageBox(mErrorMsg);
    
+   // TODO wide wave tracks -- quit here if misaligned tracks are found.
+   // (If we keep this entire source file at all)
+
    sampleCount processed = 0;
    for (auto fi : mFiles)
    {
@@ -877,7 +880,7 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
 
    // Bypass this timetrack if the project already has one
    // (See HandleTimeEnvelope and HandleControlPoint also)
-   if (*tracks.Leaders<TimeTrack>().begin())
+   if (*tracks.Any<TimeTrack>().begin())
    {
       ImportUtils::ShowMessageBox(
          XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."));
@@ -1081,8 +1084,10 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
       waveclip = mClip;
    }
 
-   for (auto pair : mAttrs)
-   {
+   auto pSequence =
+      static_cast<Sequence*>(waveclip->HandleXMLChild("sequence"));
+
+   for (auto pair : mAttrs) {
       auto attr = pair.first;
       auto value = pair.second;
 
@@ -1114,7 +1119,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
 
          mFormat = (sampleFormat) fValue;
          // Assume old AUP format file never had wide clips
-         waveclip->GetSequence(0)->ConvertToSampleFormat(mFormat);
+         pSequence->ConvertToSampleFormat(mFormat);
       }
       else if (attr == "numsamples")
       {
@@ -1342,7 +1347,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    auto oldNumTracks = tracks.Size();
    Track *pLast = nullptr;
    if (oldNumTracks > 0)
-      pLast = *tracks.Any().rbegin();
+      pLast = *tracks.rbegin();
 
    // Guard this call so that C++ exceptions don't propagate through
    // the expat library
@@ -1367,23 +1372,21 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
 
    mAttrs.erase(mAttrs.begin());
 
-   for (auto pTrack: range.Filter<WaveTrack>())
-   {
-      // Most of the "import" tag attributes are the same as for "wavetrack" tags,
-      // so apply them via WaveTrack::HandleXMLTag().
-      bSuccess = pTrack->HandleXMLTag("wavetrack", mAttrs);
+   for (auto pTrack: range.Filter<WaveTrack>()) {
+      for (const auto pChannel : TrackList::Channels(pTrack)) {
+         // Most of the "import" tag attributes are the same as for "wavetrack" tags,
+         // so apply them via WaveTrack::HandleXMLTag().
+         bSuccess = pChannel->HandleXMLTag("wavetrack", mAttrs);
 
-      // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
-      // so handle it here.
-      double dblValue;
-
-      for (auto pair : mAttrs)
-      {
-         auto attr = pair.first;
-         auto value = pair.second;
-
-         if (attr == "offset" && value.TryGet(dblValue) && pTrack->IsLeader())
-            pTrack->MoveTo(dblValue);
+         // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
+         // so handle it here.
+         double dblValue;
+         for (auto pair : mAttrs) {
+            auto attr = pair.first;
+            auto value = pair.second;
+            if (attr == "offset" && value.TryGet(dblValue) && pChannel->IsLeader())
+               pChannel->MoveTo(dblValue);
+         }
       }
    }
    return bSuccess;
@@ -1421,7 +1424,10 @@ bool AUPImportFileHandle::AddSilence(sampleCount len)
    }
    else if (mWaveTrack)
    {
-      mWaveTrack->InsertSilence(mWaveTrack->GetEndTime(), mWaveTrack->LongSamplesToTime(len));
+      // Assume alignment of clips and insert silence into leader only
+      if (mWaveTrack->IsLeader())
+         mWaveTrack->InsertSilence(
+            mWaveTrack->GetEndTime(), mWaveTrack->LongSamplesToTime(len));
    }
 
    return true;

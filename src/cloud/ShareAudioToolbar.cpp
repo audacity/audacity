@@ -130,7 +130,7 @@ void ShareAudioToolbar::EnableDisableButtons()
 
    bool hasAudio = false;
 
-   for (const auto& track : TrackList::Get(mProject).Leaders<PlayableTrack>())
+   for (const auto& track : TrackList::Get(mProject).Any<PlayableTrack>())
    {
       if (track->GetStartTime() != track->GetEndTime())
       {

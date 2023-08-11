@@ -44,7 +44,7 @@ bool DoPasteText(AudacityProject &project)
    auto &window = ProjectWindow::Get( project );
 
    // Paste into the active label (if any)
-   for (auto pLabelTrack : tracks.Leaders<LabelTrack>()) {
+   for (auto pLabelTrack : tracks.Any<LabelTrack>()) {
       // Does this track have an active label?
       if (LabelTrackView::Get( *pLabelTrack ).GetTextEditIndex(project) != -1) {
 
@@ -85,9 +85,7 @@ wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
 {
    wxULongLong result{};
    for (auto waveTrack : src.Any<const WaveTrack>()) {
-      sampleCount samplesCount = 0;
-      for (auto& clip : waveTrack->GetClips())
-         samplesCount += clip->GetSequenceSamplesCount();
+      const auto samplesCount = waveTrack->GetSequenceSamplesCount();
       result += samplesCount.as_long_long() *
          SAMPLE_SIZE(waveTrack->GetSampleFormat());
    }
@@ -97,36 +95,20 @@ wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
 BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList& dst)
 {
    BlockArray::size_type result{};
-   for (auto waveTrack : src.Any<const WaveTrack>()) {
-      for (auto& clip : waveTrack->GetClips())
-         result +=
-            clip->GetWidth() * clip->GetSequenceBlockArray(0)->size();
-   }
+   for (const auto waveTrack : src.Any<const WaveTrack>())
+      result += waveTrack->CountBlocks();
    return result;
 }
 
 std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
    auto result = TrackList::Create(nullptr);
-   for (auto track : src.Leaders()) {
-      auto copies =
+   for (auto track : src) {
+      const auto copies =
          track->Copy(track->GetStartTime(), track->GetEndTime(), false);
-      (*copies->Leaders().begin())->MoveTo(track->GetStartTime());
-      for (const auto pChannel : copies->Any()) {
-         if (auto waveTrack = dynamic_cast<WaveTrack*>(pChannel)) {
-            for (auto clip : waveTrack->GetClips()) {
-               if (clip->GetTrimLeft() != 0) {
-                  auto t0 = clip->GetPlayStartTime();
-                  clip->SetTrimLeft(0);
-                  clip->ClearLeft(t0);
-               }
-               if (clip->GetTrimRight() != 0) {
-                  auto t1 = clip->GetPlayEndTime();
-                  clip->SetTrimRight(0);
-                  clip->ClearRight(t1);
-               }
-            }
-         }
-      }
+      const auto pTrack = *copies->begin();
+      pTrack->MoveTo(track->GetStartTime());
+      if (const auto waveTrack = dynamic_cast<WaveTrack*>(pTrack))
+         waveTrack->DiscardTrimmed();
       result->Append(std::move(*copies));
    }
    return result;
@@ -143,10 +125,10 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
    
-   assert(tracks.SelectedLeaders().empty());
+   assert(tracks.Selected().empty());
 
    Track* pFirstNewTrack = NULL;
-   for (auto pClip : src.Leaders()) {
+   for (auto pClip : src) {
       auto pNewTrack = pClip->PasteInto(project, tracks);
       if (!pFirstNewTrack)
          pFirstNewTrack = pNewTrack.get();
@@ -175,15 +157,9 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
 
 bool HasHiddenData(const TrackList& trackList)
 {
-   for(auto waveTrack : trackList.Any<const WaveTrack>())
-   {
-      for(auto& clip : waveTrack->GetClips())
-      {
-         if(clip->GetTrimLeft() != 0 || clip->GetTrimRight() != 0)
-            return true;
-      }
-   }
-   return false;
+   const auto range = trackList.Any<const WaveTrack>();
+   return std::any_of(range.begin(), range.end(),
+      [](const WaveTrack *pTrack){ return pTrack->HasHiddenData(); });
 }
 
 // Menu handler functions
@@ -210,9 +186,9 @@ void OnUndo(const CommandContext &context)
       [&]( const UndoStackElem &elem ){
          ProjectHistory::Get( project ).PopState( elem.state ); } );
 
-   auto t = *tracks.SelectedLeaders().begin();
+   auto t = *tracks.Selected().begin();
    if (!t)
-      t = *tracks.Leaders().begin();
+      t = *tracks.begin();
    TrackFocus::Get(project).Set(t);
    if (t) {
       t->EnsureVisible();
@@ -240,9 +216,9 @@ void OnRedo(const CommandContext &context)
       [&]( const UndoStackElem &elem ){
          ProjectHistory::Get( project ).PopState( elem.state ); } );
 
-   auto t = *tracks.SelectedLeaders().begin();
+   auto t = *tracks.Selected().begin();
    if (!t)
-      t = *tracks.Leaders().begin();
+      t = *tracks.begin();
    TrackFocus::Get(project).Set(t);
    if (t) {
       t->EnsureVisible();
@@ -262,7 +238,7 @@ void OnCut(const CommandContext &context)
    // cutting the _text_ inside of labels, i.e. if you're
    // in the middle of editing the label text and select "Cut".
 
-   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
+   for (auto lt : tracks.Selected<LabelTrack>()) {
       auto &view = LabelTrackView::Get( *lt );
       if (view.CutSelectedText( context.project )) {
          trackPanel.Refresh(false);
@@ -286,7 +262,7 @@ void OnCut(const CommandContext &context)
    auto pNewClipboard = TrackList::Create( nullptr );
    auto &newClipboard = *pNewClipboard;
 
-   tracks.SelectedLeaders().Visit(
+   tracks.Selected().Visit(
 #if defined(USE_MIDI)
       [&](NoteTrack &n) {
          // Since portsmf has a built-in cut operator, we use that instead
@@ -313,7 +289,7 @@ void OnCut(const CommandContext &context)
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
 
-   (tracks.Leaders() + &SyncLock::IsSelectedOrSyncLockSelected).Visit(
+   (tracks.Any() + &SyncLock::IsSelectedOrSyncLockSelected).Visit(
 #if defined(USE_MIDI)
       [](NoteTrack&) {
          //if NoteTrack, it was cut, so do not clear anything
@@ -350,7 +326,7 @@ void OnDelete(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
-   for (auto n : tracks.Leaders()) {
+   for (auto n : tracks) {
       if (!n->SupportsBasicEditing())
          continue;
       if (SyncLock::IsSelectedOrSyncLockSelected(n)) {
@@ -376,7 +352,7 @@ void OnCopy(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
-   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
+   for (auto lt : tracks.Selected<LabelTrack>()) {
       auto &view = LabelTrackView::Get( *lt );
       if (view.CopySelectedText( context.project )) {
          //trackPanel.Refresh(false);
@@ -398,7 +374,7 @@ void OnCopy(const CommandContext &context)
    auto pNewClipboard = TrackList::Create( nullptr );
    auto &newClipboard = *pNewClipboard;
 
-   for (auto n : tracks.SelectedLeaders()) {
+   for (auto n : tracks.Selected()) {
       if (n->SupportsBasicEditing()) {
          auto dest = n->Copy(selectedRegion.t0(), selectedRegion.t1());
          newClipboard.Append(std::move(*dest));
@@ -512,12 +488,12 @@ Correspondence FindCorrespondence(
    TrackList &dstTracks, const TrackList &srcTracks)
 {
    Correspondence result;
-   auto dstRange = dstTracks.SelectedLeaders();
+   auto dstRange = dstTracks.Selected();
    if (dstRange.size() == 1)
       // Special rule when only one track is selected interprets the user's
       // intent as pasting into that track and following ones
-      dstRange = dstTracks.Leaders().StartingWith(*dstRange.begin());
-   auto srcRange = srcTracks.Leaders();
+      dstRange = dstTracks.Any().StartingWith(*dstRange.begin());
+   auto srcRange = srcTracks.Any();
    while (!(dstRange.empty() || srcRange.empty())) {
       auto &dst = **dstRange.begin();
       auto &src = **srcRange.begin();
@@ -559,7 +535,7 @@ void OnPaste(const CommandContext &context)
 
    auto &tracks = TrackList::Get(project);
    // If nothing's selected, we just insert new tracks.
-   if (!tracks.SelectedLeaders()) {
+   if (!tracks.Selected()) {
       DoPasteNothingSelected(
          project, *srcTracks, clipboard.T0(), clipboard.T1());
       return;
@@ -577,7 +553,7 @@ void OnPaste(const CommandContext &context)
    // Find tracks to paste in
    auto correspondence = FindCorrespondence(tracks, *srcTracks);
    if (correspondence.empty()) {
-      if (tracks.SelectedLeaders().size() == 1)
+      if (tracks.Selected().size() == 1)
          AudacityMessageBox(XO(
 "The content you are trying to paste will span across more tracks than you "
 "currently have available. Add more tracks and try again.")
@@ -593,8 +569,8 @@ void OnPaste(const CommandContext &context)
    const auto endPair = correspondence.cend();
 
    // Outer loop by sync-lock groups
-   auto next = tracks.Leaders().begin();
-   for (auto range = tracks.Leaders(); !range.empty();
+   auto next = tracks.begin();
+   for (auto range = tracks.Any(); !range.empty();
       // Skip to next sync lock group
      range.first = next
    ) {
@@ -602,7 +578,7 @@ void OnPaste(const CommandContext &context)
          // Nothing more to paste
          break;
       auto group = SyncLock::Group(*range.first);
-      next = tracks.FindLeader(*group.rbegin());
+      next = tracks.Find(*group.rbegin());
       ++next;
 
       if (!group.contains(iPair->first))
@@ -677,7 +653,7 @@ void OnDuplicate(const CommandContext &context)
    auto &window = ProjectWindow::Get(project);
 
    // This iteration is unusual because we add to the list inside the loop
-   auto range = tracks.SelectedLeaders();
+   auto range = tracks.Selected();
    auto last = *range.rbegin();
    for (auto n : range) {
       if (!n->SupportsBasicEditing())
@@ -685,7 +661,7 @@ void OnDuplicate(const CommandContext &context)
 
       // Make copies not for clipboard but for direct addition to the project
       auto dest = n->Copy(selectedRegion.t0(), selectedRegion.t1(), false);
-      (*dest->Leaders().begin())
+      (*dest->begin())
          ->MoveTo(std::max(selectedRegion.t0(), n->GetStartTime()));
       tracks.Append(std::move(*dest));
 
@@ -711,7 +687,7 @@ void OnSplitCut(const CommandContext &context)
    auto pNewClipboard = TrackList::Create(nullptr);
    auto &newClipboard = *pNewClipboard;
 
-   tracks.SelectedLeaders().Visit(
+   tracks.Selected().Visit(
       [&](WaveTrack &n) {
          auto tracks = n.SplitCut(selectedRegion.t0(), selectedRegion.t1());
          newClipboard.Append(std::move(*tracks));
@@ -740,7 +716,7 @@ void OnSplitDelete(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    auto &window = ProjectWindow::Get(project);
 
-   tracks.SelectedLeaders().Visit(
+   tracks.Selected().Visit(
       [&](WaveTrack &wt) {
          wt.SplitDelete(selectedRegion.t0(), selectedRegion.t1());
       },
@@ -762,7 +738,7 @@ void OnSilence(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
-   for (auto n : tracks.SelectedLeaders<WaveTrack>())
+   for (auto n : tracks.Selected<WaveTrack>())
       n->Silence(selectedRegion.t0(), selectedRegion.t1());
 
    ProjectHistory::Get(project).PushState(
@@ -782,7 +758,7 @@ void OnTrim(const CommandContext &context)
    if (selectedRegion.isPoint())
       return;
 
-   tracks.SelectedLeaders().Visit( [&](WaveTrack &wt) {
+   tracks.Selected().Visit( [&](WaveTrack &wt) {
       //Hide the section before the left selector
       wt.Trim(selectedRegion.t0(), selectedRegion.t1());
    } );
@@ -798,7 +774,7 @@ void OnSplit(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto [sel0, sel1] = FindSelection(context);
-   if (auto *pTrack = *tracks.FindLeader(context.temporarySelection.pTrack)) {
+   if (auto *pTrack = *tracks.Find(context.temporarySelection.pTrack)) {
       if (auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack))
          pWaveTrack->Split(sel0, sel1);
       else
@@ -806,7 +782,7 @@ void OnSplit(const CommandContext &context)
          return;
    }
    else
-      for (auto wt : tracks.SelectedLeaders<WaveTrack>())
+      for (auto wt : tracks.Selected<WaveTrack>())
          wt->Split(sel0, sel1);
 
    ProjectHistory::Get( project ).PushState(XO("Split"), XO("Split"));
@@ -866,7 +842,7 @@ void OnSplitNew(const CommandContext &context)
    auto &window = ProjectWindow::Get(project);
 
    // This iteration is unusual because we add to the list inside the loop
-   auto range = tracks.SelectedLeaders();
+   auto range = tracks.Selected();
    auto last = *range.rbegin();
    for (auto track : range) {
       track->TypeSwitch(
@@ -883,7 +859,7 @@ void OnSplitNew(const CommandContext &context)
             if (dest) {
                // The copy function normally puts the clip at time 0
                // This offset lines it up with the original track's timing
-               (*dest->Leaders().begin())->MoveTo(newt0);
+               (*dest->begin())->MoveTo(newt0);
                tracks.Append(std::move(*dest));
             }
             wt.SplitDelete(newt0, newt1);
@@ -917,7 +893,7 @@ void OnJoin(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    auto &window = ProjectWindow::Get(project);
 
-   for (auto wt : tracks.SelectedLeaders<WaveTrack>())
+   for (auto wt : tracks.Selected<WaveTrack>())
       wt->Join(selectedRegion.t0(), selectedRegion.t1());
 
    ProjectHistory::Get(project).PushState(
@@ -933,7 +909,7 @@ void OnDisjoin(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    auto &window = ProjectWindow::Get(project);
 
-   for (auto wt : tracks.SelectedLeaders<WaveTrack>())
+   for (auto wt : tracks.Selected<WaveTrack>())
       wt->Disjoin(selectedRegion.t0(), selectedRegion.t1());
 
    ProjectHistory::Get(project).PushState(
@@ -1003,7 +979,7 @@ void OnPasteOver(const CommandContext &context)
 const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
    [](const AudacityProject &project){
-      auto range = TrackList::Get(project).Leaders<const LabelTrack>()
+      auto range = TrackList::Get(project).Any<const LabelTrack>()
          + [&](const LabelTrack *pTrack){
             return LabelTrackView::Get( *pTrack ).IsTextSelected(
                // unhappy const_cast because track focus might be set

@@ -60,7 +60,7 @@ bool ContrastDialog::GetDB(float &dB)
 
    auto p = FindProjectFromWindow( this );
    auto range =
-      TrackList::Get(*p).SelectedLeaders<const WaveTrack>();
+      TrackList::Get(*p).Selected<const WaveTrack>();
    auto numberSelectedTracks = range.size();
    if (numberSelectedTracks > 1) {
       AudacityMessageDialog m(
@@ -378,7 +378,7 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
    auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
-   if (TrackList::Get(*p).SelectedLeaders<const WaveTrack>()) {
+   if (TrackList::Get(*p).Selected<const WaveTrack>()) {
       mForegroundStartT->SetValue(selectedRegion.t0());
       mForegroundEndT->SetValue(selectedRegion.t1());
    }
@@ -394,7 +394,7 @@ void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
    auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
-   if (TrackList::Get(*p).SelectedLeaders<const WaveTrack>()) {
+   if (TrackList::Get(*p).Selected<const WaveTrack>()) {
       mBackgroundStartT->SetValue(selectedRegion.t0());
       mBackgroundEndT->SetValue(selectedRegion.t1());
    }

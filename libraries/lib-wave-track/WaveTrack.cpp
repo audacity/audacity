@@ -346,45 +346,44 @@ void WaveTrack::DoOnProjectTempoChange(
          clip->OnProjectTempoChange(oldTempo, newTempo);
 }
 
-bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
+bool WaveTrack::LinkConsistencyFix(bool doFix)
 {
-   auto err = !WritableSampleTrack::LinkConsistencyFix(doFix, completeList);
-   if (completeList) {
-      auto linkType = GetLinkType();
-      if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
-          linkType == LinkType::Aligned) {
-         auto next =
-            dynamic_cast<WaveTrack*>(*std::next(GetOwner()->Find(this)));
-         if (next == nullptr) {
-            //next track is absent or not a wave track, fix and report error
-            if (doFix) {
-               wxLogWarning(L"Right track %s is expected to be a WaveTrack."
-                  "\n Removing link from left wave track %s.",
-                  next->GetName(), GetName());
-               SetLinkType(LinkType::None);
-            }
-            err = true;
+   assert(!doFix || IsLeader());
+   auto err = !WritableSampleTrack::LinkConsistencyFix(doFix);
+   auto linkType = GetLinkType();
+   if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
+       linkType == LinkType::Aligned) {
+      auto next = dynamic_cast<WaveTrack*>(
+         *TrackList::Channels(this).first.advance(1));
+      if (next == nullptr) {
+         //next track is absent or not a wave track, fix and report error
+         if (doFix) {
+            wxLogWarning(L"Right track %s is expected to be a WaveTrack."
+               "\n Removing link from left wave track %s.",
+               next->GetName(), GetName());
+            SetLinkType(LinkType::None);
          }
-         else if (doFix) {
-            // non-error upgrades happen here
-            auto newLinkType =
-               AreAligned(SortedClipArray(), next->SortedClipArray())
-               ? LinkType::Aligned : LinkType::Group;
-            if (newLinkType != linkType)
-               SetLinkType(newLinkType);
-            else
-               // Be sure to lose any right channel group data that might
-               // have been made during during deserialization of the channel
-               // before joining it
-               next->DestroyGroupData();
-         }
+         err = true;
       }
-      if (doFix) {
-         // More non-error upgrading
-         // Set the common channel group rate from the leader's rate
-         if (IsLeader() && mLegacyRate > 0)
-            SetRate(mLegacyRate);
+      else if (doFix) {
+         // non-error upgrades happen here
+         auto newLinkType =
+            AreAligned(SortedClipArray(), next->SortedClipArray())
+            ? LinkType::Aligned : LinkType::Group;
+         if (newLinkType != linkType)
+            SetLinkType(newLinkType);
+         else
+            // Be sure to lose any right channel group data that might
+            // have been made during during deserialization of the channel
+            // before joining it
+            next->DestroyGroupData();
       }
+   }
+   if (doFix) {
+      // More non-error upgrading
+      // Set the common channel group rate from the leader's rate
+      if (mLegacyRate > 0)
+         SetRate(mLegacyRate);
    }
    return !err;
 }
@@ -624,11 +623,24 @@ sampleCount WaveTrack::GetPlaySamplesCount() const
 
 sampleCount WaveTrack::GetSequenceSamplesCount() const
 {
+   assert(IsLeader());
    sampleCount result{ 0 };
 
-   for (const auto& clip : mClips)
-      result += clip->GetSequenceSamplesCount();
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto& clip : pChannel->mClips)
+         result += clip->GetSequenceSamplesCount();
 
+   return result;
+}
+
+size_t WaveTrack::CountBlocks() const
+{
+   assert(IsLeader());
+   size_t result{};
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (auto& clip : pChannel->GetClips())
+         result += clip->GetWidth() * clip->GetSequenceBlockArray(0)->size();
+   }
    return result;
 }
 
@@ -745,6 +757,19 @@ WaveTrack::Holder WaveTrack::EmptyCopy(
    result->mpFactory = pFactory ? pFactory : mpFactory;
    if (!keepLink)
       result->SetLinkType(LinkType::None);
+   return result;
+}
+
+TrackListHolder WaveTrack::WideEmptyCopy(
+   const SampleBlockFactoryPtr &pFactory, bool keepLink) const
+{
+   assert(IsLeader());
+   auto result = TrackList::Temporary(nullptr);
+   for (const auto pChannel : TrackList::Channels(this)) {
+      const auto pNewTrack =
+         result->Add(pChannel->EmptyCopy(pFactory, keepLink));
+      assert(!keepLink || pNewTrack->IsLeader() == pChannel->IsLeader());
+   }
    return result;
 }
 
@@ -1416,6 +1441,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          for (const auto pChannel : channels) {
             auto tmp = std::make_shared<WaveTrack>(
                mpFactory, GetSampleFormat(), GetRate());
+            assert(tmp->IsLeader()); // It is not yet owned by a TrackList
             tmp->InsertSilence(0.0, duration);
             tmp->Flush();
             PasteOne(*pChannel, oldT1, *tmp, 0.0, duration);
@@ -1595,10 +1621,7 @@ void WaveTrack::PasteOne(
 
 bool WaveTrack::RateConsistencyCheck() const
 {
-   // Assuming a complete track list with consistent channel structure,
-   // check only at the leader tracks
-   if (!IsLeader())
-      return true;
+   assert(IsLeader());
 
    // The channels and all clips in them should have the same sample rate.
    std::optional<double> oRate;
@@ -1666,39 +1689,40 @@ void WaveTrack::Silence(double t0, double t1)
 /*! @excsafety{Strong} */
 void WaveTrack::InsertSilence(double t, double len)
 {
+   assert(IsLeader());
    // Nothing to do, if length is zero.
    // Fixes Bug 1626
-   if( len == 0 )
+   if (len == 0)
       return;
    if (len <= 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   if (mClips.empty())
-   {
-      // Special case if there is no clip yet
-      // TODO wide wave tracks -- match clip width
-      auto clip = std::make_shared<WaveClip>(1,
-         mpFactory, mFormat, GetRate(), this->GetWaveColorIndex());
-      clip->InsertSilence(0, len);
-      // use No-fail-guarantee
-      InsertClip(std::move(clip));
-      return;
-   }
-   else {
-      // Assume at most one clip contains t
-      const auto end = mClips.end();
-      const auto it = std::find_if( mClips.begin(), end,
-         [&](const WaveClipHolder &clip) { return clip->WithinPlayRegion(t); } );
+   for (const auto pChannel : TrackList::Channels(this)) {
+      auto &clips = pChannel->mClips;
+      if (clips.empty()) {
+         // Special case if there is no clip yet
+         // TODO wide wave tracks -- match clip width
+         auto clip = std::make_shared<WaveClip>(1,
+            mpFactory, mFormat, GetRate(), this->GetWaveColorIndex());
+         clip->InsertSilence(0, len);
+         // use No-fail-guarantee
+         pChannel->InsertClip(move(clip));
+      }
+      else {
+         // Assume at most one clip contains t
+         const auto end = clips.end();
+         const auto it = std::find_if(clips.begin(), end,
+            [&](const WaveClipHolder &clip) { return clip->WithinPlayRegion(t); } );
 
-      // use Strong-guarantee
-      if (it != end)
-         it->get()->InsertSilence(t, len);
+         // use Strong-guarantee
+         if (it != end)
+            it->get()->InsertSilence(t, len);
 
-      // use No-fail-guarantee
-      for (const auto &clip : mClips)
-      {
-         if (clip->BeforePlayStartTime(t))
-            clip->ShiftBy(len);
+         // use No-fail-guarantee
+         for (const auto &clip : clips) {
+            if (clip->BeforePlayStartTime(t))
+               clip->ShiftBy(len);
+         }
       }
    }
 }
@@ -2082,10 +2106,12 @@ void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile)
 
 std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 {
-   for (const auto &clip : mClips)
-      for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
-         if (clip->GetSequence(ii)->GetErrorOpening())
-            return XO("A track has a corrupted sample sequence.");
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto &clip : pChannel->mClips)
+         for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
+            if (clip->GetSequence(ii)->GetErrorOpening())
+               return XO("A track has a corrupted sample sequence.");
 
    if (!RateConsistencyCheck())
       return XO(
@@ -2121,7 +2147,7 @@ ClipConstHolders WaveTrack::GetClipInterfaces() const
      if (NChannels() == 2u && pOwner)
      {
         const auto& rightClips =
-           (*++pOwner->Find<const WaveTrack>(this))->mClips;
+           (*TrackList::Channels(this).rbegin())->mClips;
         // This is known to have potential for failure for stereo tracks with
         // misaligned left/right clips - see
         // https://github.com/audacity/audacity/issues/4791.
@@ -2242,7 +2268,7 @@ bool WaveTrack::Get(size_t iChannel, size_t nBuffers,
    std::optional<TrackIter<const WaveTrack>> iter;
    auto pTrack = this;
    if (pOwner) {
-      iter.emplace(pOwner->Find<const WaveTrack>(this).advance(iChannel));
+      iter.emplace(TrackList::Channels(this).first.advance(iChannel));
       pTrack = **iter;
    }
    return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer) {
@@ -2359,7 +2385,7 @@ std::vector<ChannelSampleView> WaveTrack::GetSampleView(
    std::optional<TrackIter<const WaveTrack>> iter;
    auto pTrack = this;
    if (pOwner) {
-      iter.emplace(pOwner->Find<const WaveTrack>(this).advance(iChannel));
+      iter.emplace(TrackList::Channels(this).first.advance(iChannel));
       pTrack = **iter;
    }
    for (auto i = 0u; i < nBuffers; ++i)
@@ -3093,6 +3119,35 @@ WaveClipConstPointers WaveTrack::SortedClipArray() const
    return FillSortedClipArray<WaveClipConstPointers>(mClips);
 }
 
+bool WaveTrack::HasHiddenData() const
+{
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto& clip : pChannel->GetClips())
+         if (clip->GetTrimLeft() != 0 || clip->GetTrimRight() != 0)
+            return true;
+   return false;
+}
+
+void WaveTrack::DiscardTrimmed()
+{
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this)) {
+      for (auto clip : pChannel->GetClips()) {
+         if (clip->GetTrimLeft() != 0) {
+            auto t0 = clip->GetPlayStartTime();
+            clip->SetTrimLeft(0);
+            clip->ClearLeft(t0);
+         }
+         if (clip->GetTrimRight() != 0) {
+            auto t1 = clip->GetPlayEndTime();
+            clip->SetTrimRight(0);
+            clip->ClearRight(t1);
+         }
+      }
+   }
+}
+
 auto WaveTrack::AllClipsIterator::operator ++ () -> AllClipsIterator &
 {
    // The unspecified sequence is a post-order, but there is no
@@ -3123,24 +3178,23 @@ void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
 void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs)
 {
-   for (auto wt : tracks.Any< const WaveTrack >()) {
-      // Scan all clips within current track
-      for(const auto &clip : wt->GetAllClips()) {
-         // Scan all sample blocks within current clip
-         for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
-            auto blocks = clip->GetSequenceBlockArray(ii);
-            for (const auto &block : *blocks) {
-               auto &pBlock = block.sb;
-               if ( pBlock ) {
-                  if ( pIDs && !pIDs->insert(pBlock->GetBlockID()).second )
-                     continue;
-                  if ( visitor )
-                     visitor( *pBlock );
+   for (auto wt : tracks.Any<const WaveTrack>())
+      for (const auto pChannel : TrackList::Channels(wt))
+         // Scan all clips within current track
+         for (const auto &clip : pChannel->GetAllClips())
+            // Scan all sample blocks within current clip
+            for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
+               auto blocks = clip->GetSequenceBlockArray(ii);
+               for (const auto &block : *blocks) {
+                  auto &pBlock = block.sb;
+                  if (pBlock) {
+                     if (pIDs && !pIDs->insert(pBlock->GetBlockID()).second)
+                        continue;
+                     if (visitor)
+                        visitor(*pBlock);
+                  }
                }
             }
-         }
-      }
-   }
 }
 
 void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
@@ -3185,19 +3239,13 @@ void WaveTrackFactory::Destroy( AudacityProject &project )
 }
 
 ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
-   [](const AudacityProject& project) -> ProjectFormatVersion
-   {
+   [](const AudacityProject& project) -> ProjectFormatVersion {
       const TrackList& trackList = TrackList::Get(project);
-
       for (auto wt : trackList.Any<const WaveTrack>())
-      {
-         for (const auto& clip : wt->GetAllClips())
-         {
-            if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
-               return { 3, 1, 0, 0 };
-         }
-      }
-
+         for (const auto pChannel : TrackList::Channels(wt))
+            for (const auto& clip : pChannel->GetAllClips())
+               if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
+                  return { 3, 1, 0, 0 };
       return BaseProjectFormatVersion;
    }
 );

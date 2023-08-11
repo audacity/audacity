@@ -210,7 +210,7 @@ TransportSequences MakeTransportTracks(
 {
    TransportSequences result;
    {
-      const auto range = trackList.Leaders<WaveTrack>()
+      const auto range = trackList.Any<WaveTrack>()
          + (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
          result.playbackSequences.push_back(
@@ -218,7 +218,7 @@ TransportSequences MakeTransportTracks(
    }
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (nonWaveToo) {
-      const auto range = trackList.Leaders<const PlayableTrack>() +
+      const auto range = trackList.Any<const PlayableTrack>() +
          (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
          if (!track_cast<const SampleTrack *>(pTrack))

@@ -4,10 +4,7 @@
 
   Generator.cpp
 
-  Two Abstract classes, Generator, and BlockGenerator, that effects which
-  generate audio should derive from.
-
-  Block Generator breaks the synthesis task up into smaller parts.
+  Effects that generate audio can derive from Generator.
 
   Dominic Mazzoni
   Vaughan Johnson
@@ -39,7 +36,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
    bool bGoodResult = true;
    int ntrack = 0;
 
-   outputs.Get().Leaders().VisitWhile(bGoodResult,
+   outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](WaveTrack &track) {
          if (!track.GetSelected())
             return fallthrough();
@@ -64,18 +61,17 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
             auto list = TrackList::Create(nullptr);
             for (const auto pChannel : TrackList::Channels(&track)) {
                // Create a temporary track
-               auto tmp = track.EmptyCopy();
-               // Fill with data
-               if (!GenerateTrack(settings, &*tmp, track, ntrack))
-                  bGoodResult = false;
-               else {
-                  // Transfer the data from the temporary track to the actual one
-                  tmp->Flush();
-                  list->Add(tmp);
-                  assert(tmp->IsLeader() == pChannel->IsLeader());
-               }
+               auto tmp = pChannel->EmptyCopy();
+               list->Add(tmp);
+               assert(tmp->IsLeader() == pChannel->IsLeader());
             }
+            // Fill with data
+            if (!GenerateTrack(settings, *list))
+               bGoodResult = false;
             if (bGoodResult) {
+               for (const auto pChannel :
+                  TrackList::Channels(*list->Any<WaveTrack>().begin()))
+                  pChannel->Flush();
                PasteTimeWarper warper{ mT1, mT0 + duration };
                auto pProject = FindProject();
                const auto &selectedRegion =
@@ -105,32 +101,5 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
       mT1 = mT0 + duration; // Update selection.
    }
 
-   return bGoodResult;
-}
-
-bool BlockGenerator::GenerateTrack(EffectSettings &settings,
-   WaveTrack *tmp, const WaveTrack &track, int ntrack)
-{
-   bool bGoodResult = true;
-   numSamples = track.TimeToLongSamples(settings.extra.GetDuration());
-   decltype(numSamples) i = 0;
-   Floats data{ tmp->GetMaxBlockSize() };
-
-   while ((i < numSamples) && bGoodResult) {
-      const auto block =
-         limitSampleBufferSize( tmp->GetBestBlockSize(i), numSamples - i );
-
-      GenerateBlock(data.get(), track, block);
-
-      // Add the generated data to the temporary track
-      tmp->Append((samplePtr)data.get(), floatSample, block);
-      i += block;
-
-      // Update the progress meter
-      if (TrackProgress(ntrack,
-                        i.as_double() /
-                        numSamples.as_double()))
-         bGoodResult = false;
-   }
    return bGoodResult;
 }

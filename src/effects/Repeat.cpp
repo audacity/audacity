@@ -99,7 +99,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
    bool bGoodResult = true;
    double maxDestLen = 0.0; // used to change selection to generated bit
 
-   outputs.Get().Leaders().VisitWhile(bGoodResult,
+   outputs.Get().Any().VisitWhile(bGoodResult,
       [&](LabelTrack &track) {
          if (SyncLock::IsSelectedOrSyncLockSelected(&track))
          {
@@ -120,7 +120,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
             return;
 
          auto tempList = track.Copy(mT0, mT1);
-         const auto firstTemp = *tempList->Leaders<const WaveTrack>().begin();
+         const auto firstTemp = *tempList->Any<const WaveTrack>().begin();
 
          std::vector<wxString> clipNames;
          for (auto clip : firstTemp->SortedClipArray()){

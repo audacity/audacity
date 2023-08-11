@@ -18,9 +18,9 @@
 TrackIterRange<const WaveTrack> ExportUtils::FindExportWaveTracks(const TrackList& tracks, bool selectedOnly)
 {
    bool anySolo =
-      !(tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty();
+      !(tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty();
 
-   return tracks.Leaders<const WaveTrack>()
+   return tracks.Any<const WaveTrack>()
       + (selectedOnly ? &Track::IsSelected : &Track::Any)
       - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
 }

@@ -216,7 +216,7 @@ int FindClipBoundaries
    auto &tracks = TrackList::Get( project );
    finalResults.clear();
 
-   bool anyWaveTracksSelected{ tracks.SelectedLeaders<const WaveTrack>() };
+   bool anyWaveTracksSelected{ tracks.Selected<const WaveTrack>() };
 
 
    // first search the tracks individually
@@ -224,7 +224,7 @@ int FindClipBoundaries
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
-   auto leaders = tracks.Leaders();
+   auto leaders = tracks.Any();
    auto rangeLeaders = leaders.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
       rangeLeaders = rangeLeaders + &Track::GetSelected;
@@ -445,14 +445,14 @@ int FindClips
    auto &tracks = TrackList::Get( project );
    finalResults.clear();
 
-   bool anyWaveTracksSelected{ tracks.SelectedLeaders<const WaveTrack>() };
+   bool anyWaveTracksSelected{ tracks.Selected<const WaveTrack>() };
 
    // first search the tracks individually
 
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
-   auto leaders = tracks.Leaders();
+   auto leaders = tracks.Any();
    auto rangeLeaders = leaders.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
       rangeLeaders = rangeLeaders + &Track::GetSelected;

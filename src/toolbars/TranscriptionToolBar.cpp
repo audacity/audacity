@@ -323,7 +323,7 @@ void TranscriptionToolBar::EnableDisableButtons()
    bool recording = gAudioIO->GetNumCaptureChannels() > 0;
 
    // Only interested in audio type tracks
-   bool tracks = p && TrackList::Get(*p).Leaders<AudioTrack>(); // PRL:  PlayableTrack ?
+   bool tracks = p && TrackList::Get(*p).Any<AudioTrack>(); // PRL:  PlayableTrack ?
    SetEnabled(canStopAudioStream && tracks && !recording);
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -506,7 +506,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
    // VariSpeed play reuses Scrubbing.
    bool bFixedSpeedPlay = !gPrefs->ReadBool(wxT("/AudioIO/VariSpeedPlay"), true);
    // Scrubbing doesn't support note tracks, but the fixed-speed method using time tracks does.
-   if (TrackList::Get(*p).Leaders<NoteTrack>())
+   if (TrackList::Get(*p).Any<NoteTrack>())
       bFixedSpeedPlay = true;
 
    // If cutPreview, we have to fall back to fixed speed.

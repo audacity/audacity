@@ -86,20 +86,20 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
    std::optional<ModifiedAnalysisTrack> modifiedTrack;
    const wxString name{ _("Clipping") };
 
-   auto clt = *inputTracks()->Leaders<const LabelTrack>().find_if(
+   auto clt = *inputTracks()->Any<const LabelTrack>().find_if(
       [&](const Track *track){ return track->GetName() == name; });
 
    LabelTrack *lt{};
    if (!clt)
       addedTrack = (AddAnalysisTrack(*this, name)), lt = addedTrack->get();
    else
-      modifiedTrack.emplace(ModifyAnalysisTrack(*this, clt, name)),
+      modifiedTrack.emplace(ModifyAnalysisTrack(*this, *clt, name)),
       lt = modifiedTrack->get();
 
    int count = 0;
 
    // JC: Only process selected tracks.
-   for (auto t : inputTracks()->SelectedLeaders<const WaveTrack>()) {
+   for (auto t : inputTracks()->Selected<const WaveTrack>()) {
       double trackStart = t->GetStartTime();
       double trackEnd = t->GetEndTime();
       double t0 = std::max(trackStart, mT0);

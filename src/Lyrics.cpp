@@ -505,7 +505,7 @@ void LyricsPanel::DoUpdateLyrics()
 
    // Lyrics come from only the first label track.
    auto pLabelTrack =
-      *TrackList::Get(*mProject).Leaders<const LabelTrack>().begin();
+      *TrackList::Get(*mProject).Any<const LabelTrack>().begin();
    if (!pLabelTrack)
       return;
 

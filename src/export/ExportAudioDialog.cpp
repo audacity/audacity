@@ -179,7 +179,7 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    mExportOptionsPanel->Init(filename, format, sampleRate);
 
    auto& tracks = TrackList::Get(mProject);
-   const auto labelTracks = tracks.Leaders<LabelTrack>();
+   const auto labelTracks = tracks.Any<LabelTrack>();
    const auto hasLabels = !labelTracks.empty() &&
       (*labelTracks.begin())->GetNumLabels() > 0;
 
@@ -556,7 +556,7 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
          //all tracks regardless of their mute/solo state, but
          //muted channels should not be present in exported file - 
          //apply channel mask to exclude them
-         auto tracks = TrackList::Get(mProject).Leaders<WaveTrack>();
+         auto tracks = TrackList::Get(mProject).Any<WaveTrack>();
          std::vector<bool> channelMask(
             tracks.sum([](const auto track) { return track->NChannels(); }),
             false);
@@ -647,10 +647,10 @@ namespace {
 unsigned GetNumExportChannels( const TrackList &tracks )
 {
    bool anySolo =
-      !((tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo).empty());
+      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
 
    // Want only unmuted wave tracks.
-   const auto range = tracks.Leaders<const WaveTrack>() -
+   const auto range = tracks.Any<const WaveTrack>() -
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    return std::all_of(range.begin(), range.end(),
       [](auto *pTrack){ return IsMono(*pTrack); }
@@ -665,7 +665,7 @@ unsigned GetNumExportChannels( const TrackList &tracks )
 void ExportAudioDialog::UpdateLabelExportSettings(const ExportPlugin& plugin, int formatIndex, bool byName, bool addNumber, const wxString& prefix)
 {
    const auto& tracks = TrackList::Get(mProject);
-   const auto& labels = (*tracks.Leaders<const LabelTrack>().begin());
+   const auto& labels = (*tracks.Any<const LabelTrack>().begin());
    const auto numLabels = labels->GetNumLabels();
    
    auto numFiles = numLabels;
@@ -770,9 +770,9 @@ void ExportAudioDialog::UpdateTrackExportSettings(const ExportPlugin& plugin, in
 {
    auto& tracks = TrackList::Get(mProject);
    
-   bool anySolo = !(( tracks.Leaders<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
    
-   auto waveTracks = tracks.Leaders<WaveTrack>() -
+   auto waveTracks = tracks.Any<WaveTrack>() -
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    
    const auto numWaveTracks = waveTracks.size();
@@ -896,9 +896,10 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
 {
    auto& tracks = TrackList::Get(mProject);
    
-   bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
+   bool anySolo =
+      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
    
-   auto waveTracks = tracks.Leaders<WaveTrack>() -
+   auto waveTracks = tracks.Any<WaveTrack>() -
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
 
    auto& selectionState = SelectionState::Get( mProject );

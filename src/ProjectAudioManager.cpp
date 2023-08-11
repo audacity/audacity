@@ -336,9 +336,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    bool hasaudio;
    if (nonWaveToo)
-      hasaudio = ! tracks.Leaders<PlayableTrack>().empty();
+      hasaudio = ! tracks.Any<PlayableTrack>().empty();
    else
-      hasaudio = ! tracks.Leaders<WaveTrack>().empty();
+      hasaudio = ! tracks.Any<WaveTrack>().empty();
 
    double latestEnd = tracks.GetEndTime();
 
@@ -591,7 +591,7 @@ WritableSampleTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    auto &trackList = TrackList::Get( *p );
    std::vector<unsigned> channelCounts;
    WritableSampleTrackArray candidates;
-   const auto range = trackList.Leaders<WaveTrack>();
+   const auto range = trackList.Any<WaveTrack>();
    for ( auto candidate : selectedOnly ? range + &Track::IsSelected : range ) {
       if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate)
          continue;
@@ -679,7 +679,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          existingTracks = ChooseExistingRecordingTracks(*p, true, rateOfSelected);
          if (!existingTracks.empty())
             t0 = std::max(t0,
-               TrackList::Get(*p).SelectedLeaders<const WaveTrack>()
+               TrackList::Get(*p).Selected<const WaveTrack>()
                   .max(&Track::GetEndTime));
          else {
             if (anySelected && rateOfSelected != options.rate) {
@@ -877,7 +877,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          wxString defaultTrackName, defaultRecordingTrackName;
 
          // Count the tracks.
-         auto numTracks = trackList.Leaders<const WaveTrack>().size();
+         auto numTracks = trackList.Any<const WaveTrack>().size();
 
          auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
 
@@ -953,7 +953,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(project).Set(first);
          if (!trackList.empty())
-            (*trackList.Leaders().rbegin())->EnsureVisible();
+            (*trackList.rbegin())->EnsureVisible();
       }
 
       //Automated Input Level Adjustment Initialization
@@ -1323,7 +1323,7 @@ GetPropertiesOfSelected(const AudacityProject &proj)
    result.allSameRate = true;
 
    const auto selectedTracks{
-      TrackList::Get(proj).SelectedLeaders<const WaveTrack>() };
+      TrackList::Get(proj).Selected<const WaveTrack>() };
 
    for (const auto & track : selectedTracks) {
       if (rateOfSelection != RATE_NOT_SELECTED &&

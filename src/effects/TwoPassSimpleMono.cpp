@@ -30,15 +30,15 @@ bool EffectTwoPassSimpleMono::Process(
    InitPass1();
    EffectOutputTracks outputs{ *mTracks };
 
-   mWorkTracks = TrackList::Create(
-      const_cast<AudacityProject*>(FindProject()));
+   mWorkTracks = TrackList::Create(const_cast<AudacityProject*>(FindProject()));
    for (auto track : outputs.Get().Selected<WaveTrack>()) {
-      auto pNewTrack = track->EmptyCopy();
-      mWorkTracks->Add(pNewTrack);
-      if (pNewTrack->IsLeader())
-         pNewTrack->ConvertToSampleFormat(floatSample);
+      auto pNewTracks = track->WideEmptyCopy();
+      mWorkTracks->Append(std::move(*pNewTracks));
+   }
+   for (const auto pNewTrack : mWorkTracks->Any<WaveTrack>()) {
+      pNewTrack->ConvertToSampleFormat(floatSample);
       if (mT0 > 0)
-         (*mWorkTracks->rbegin())->InsertSilence(0, mT0);
+         pNewTrack->InsertSilence(0, mT0);
    }
 
    mTrackLists[0] = &outputs.Get();
@@ -66,8 +66,8 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
    mCurTrackNum = 0;
 
    auto outTracks =
-      (*mTrackLists[1 - mPass]).SelectedLeaders<WaveTrack>().begin();
-   for (auto track : (*mTrackLists[mPass]).SelectedLeaders<WaveTrack>()) {
+      (*mTrackLists[1 - mPass]).Selected<WaveTrack>().begin();
+   for (auto track : (*mTrackLists[mPass]).Selected<WaveTrack>()) {
       auto outTrack = *outTracks;
 
       // Get start and end times from track

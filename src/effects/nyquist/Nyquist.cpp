@@ -592,7 +592,7 @@ bool NyquistEffect::Init()
          bool bAllowSpectralEditing = false;
          bool hasSpectral = false;
          for (auto t :
-            TrackList::Get( *project ).SelectedLeaders<const WaveTrack>()) {
+            TrackList::Get( *project ).Selected<const WaveTrack>()) {
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
             auto pView = WaveChannelView::Find(t);
@@ -733,7 +733,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    mNumSelectedChannels = bOnePassTool
       ? 0
-      : oOutputs->Get().SelectedLeaders<const WaveTrack>()
+      : oOutputs->Get().Selected<const WaveTrack>()
          .sum(&WaveTrack::NChannels);
 
    mDebugOutput = {};
@@ -814,7 +814,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       wxString waveTrackList;   // track positions of selected audio tracks.
 
       {
-         auto countRange = TrackList::Get( *project ).Leaders();
+         auto countRange = TrackList::Get( *project ).Any();
          for (auto t : countRange) {
             t->TypeSwitch( [&](const WaveTrack &) {
                numWave++;
@@ -870,7 +870,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    std::optional<TrackIterRange<WaveTrack>> pRange;
    if (!bOnePassTool)
-      pRange.emplace(oOutputs->Get().SelectedLeaders<WaveTrack>());
+      pRange.emplace(oOutputs->Get().Selected<WaveTrack>());
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
@@ -1585,7 +1585,7 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
-      auto ltrack = *pOutputs->Get().Leaders<LabelTrack>().begin();
+      auto ltrack = *pOutputs->Get().Any<LabelTrack>().begin();
       if (!ltrack) {
          auto newTrack = std::make_shared<LabelTrack>();
          //new track name should be unique among the names in the list of input tracks, not output
@@ -1677,7 +1677,7 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       const auto &out = outputTrack[0];
       if (outChannels < (int)mCurNumChannels)
          outputTrack[1] =
-            (*out->Duplicate()->Leaders().begin())->SharedPointer<WaveTrack>();
+            (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
       auto tempList =
          TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
       const bool bMergeClips = (mMergeClips < 0)

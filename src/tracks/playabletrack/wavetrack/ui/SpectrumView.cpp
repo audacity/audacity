@@ -154,7 +154,7 @@ void SpectrumView::ForAll( AudacityProject &project,
 {
    if (!fn)
       return;
-   for (const auto wt : TrackList::Get(project).Leaders<WaveTrack>()) {
+   for (const auto wt : TrackList::Get(project).Any<WaveTrack>()) {
       for (auto pChannel : wt->Channels()) {
          if (auto pWaveChannelView =
              dynamic_cast<WaveChannelView*>(&ChannelView::Get(*pChannel))) {
@@ -1109,7 +1109,7 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
 
    // Find the first selected wave track that is in a spectrogram view.
    const WaveTrack *pTrack {};
-   for (auto wt : tracks.SelectedLeaders<const WaveTrack>()) {
+   for (auto wt : tracks.Selected<const WaveTrack>()) {
       const auto displays = WaveChannelView::Get(*wt).GetDisplays();
       bool hasSpectrum = (displays.end() != std::find(
          displays.begin(), displays.end(),

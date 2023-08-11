@@ -1773,7 +1773,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
 
    ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
-   tracklist.Leaders().Visit([&](const Track &t) {
+   tracklist.Any().Visit([&](const Track &t) {
       auto useTrack = &t;
       if (recording) {
          // When append-recording, there is a temporary "shadow" track accumulating

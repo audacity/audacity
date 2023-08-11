@@ -44,7 +44,7 @@ const ReservedCommandFlag
             }
          );
       };
-      auto range = TrackList::Get(project).SelectedLeaders<const LabelTrack>()
+      auto range = TrackList::Get(project).Selected<const LabelTrack>()
          + test;
       return !range.empty();
    }
@@ -73,9 +73,9 @@ int DoAddLabel(
    const auto pFocusedTrack = trackFocus.Get();
 
    // Look for a label track at or after the focused track
-   auto begin = tracks.Leaders().begin();
+   auto begin = tracks.begin();
    auto iter = pFocusedTrack
-      ? tracks.FindLeader(pFocusedTrack)
+      ? tracks.Find(pFocusedTrack)
       : begin;
    auto lt = * iter.Filter<LabelTrack>();
 
@@ -126,7 +126,7 @@ void GetRegionsByLabel(
    Regions &regions )
 {
    //determine labeled regions
-   for (auto lt : tracks.SelectedLeaders< const LabelTrack >()) {
+   for (auto lt : tracks.Selected< const LabelTrack >()) {
       for (int i = 0; i < lt->GetNumLabels(); i++)
       {
          const LabelStruct *ls = lt->GetLabel(i);
@@ -180,12 +180,12 @@ void EditByLabel(AudacityProject &project,
       return;
 
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
-                           (tracks.SelectedLeaders<PlayableTrack>()).empty());
+                           (tracks.Selected<PlayableTrack>()).empty());
 
    //Apply action on tracks starting from
    //labeled regions in the end. This is to correctly perform
    //actions like 'Delete' which collapse the track area.
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
       if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable)) {
          for (size_t i = regions.size(); i--;) {
@@ -218,7 +218,7 @@ void EditClipboardByLabel(AudacityProject &project,
       return;
 
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
-                           (tracks.SelectedLeaders<PlayableTrack>()).empty());
+                           (tracks.Selected<PlayableTrack>()).empty());
 
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
@@ -230,7 +230,7 @@ void EditClipboardByLabel(AudacityProject &project,
    //labeled regions in the end. This is to correctly perform
    //actions like 'Cut' which collapse the track area.
 
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
       if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable)) {
          // These tracks accumulate the needed clips, right to left:
@@ -241,7 +241,7 @@ void EditClipboardByLabel(AudacityProject &project,
                if (!merged)
                   merged = dest;
                else {
-                  const auto pMerged = *merged->Leaders().begin();
+                  const auto pMerged = *merged->begin();
                   // Paste to the beginning; unless this is the first region,
                   // offset the track to account for time between the regions
                   if (i + 1 < regions.size())
@@ -260,7 +260,7 @@ void EditClipboardByLabel(AudacityProject &project,
                // nothing copied but there is a 'region', so the 'region' must
                // be a 'point label' so offset
                if (i + 1 < regions.size() && merged)
-                  (*merged->Leaders().begin())
+                  (*merged->begin())
                      ->ShiftBy(regions.at(i + 1).start - region.end);
          }
          if (merged)
@@ -319,12 +319,12 @@ void OnPasteNewLabel(const CommandContext &context)
    bool bPastedSomething = false;
 
    {
-      auto trackRange = tracks.SelectedLeaders<const LabelTrack>();
+      auto trackRange = tracks.Selected<const LabelTrack>();
       if (trackRange.empty())
       {
          // If there are no selected label tracks, try to choose the first label
          // track after some other selected track
-         Track *t = *tracks.SelectedLeaders().begin()
+         Track *t = *tracks.Selected().begin()
             .Filter(&Track::Any)
             .Filter<LabelTrack>();
 
@@ -338,7 +338,7 @@ void OnPasteNewLabel(const CommandContext &context)
    }
 
    LabelTrack *plt = NULL; // the previous track
-   for ( auto lt : tracks.SelectedLeaders<LabelTrack>() )
+   for ( auto lt : tracks.Selected<LabelTrack>() )
    {
       // Unselect the last label, so we'll have just one active label when
       // we're done
