@@ -104,8 +104,9 @@ double GetLeftAdjustLimit(
                         std::numeric_limits<double>::min();
    else
       return prevClip ?
-                std::max(clip.GetPlayStartTime(), prevClip->GetPlayEndTime()) :
-                clip.GetPlayStartTime();
+                std::max(
+                   clip.GetSequenceStartTime(), prevClip->GetPlayEndTime()) :
+                clip.GetSequenceStartTime();
 }
 
 double GetRightAdjustLimit(
@@ -123,8 +124,9 @@ double GetRightAdjustLimit(
                         std::numeric_limits<double>::max();
    else
       return nextClip ?
-                std::min(clip.GetPlayEndTime(), nextClip->GetPlayStartTime()) :
-                clip.GetPlayEndTime();
+                std::min(
+                   clip.GetSequenceEndTime(), nextClip->GetPlayStartTime()) :
+                clip.GetSequenceEndTime();
 }
 } // namespace
 
