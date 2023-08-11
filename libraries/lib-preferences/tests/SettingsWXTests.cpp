@@ -5,7 +5,7 @@
 
 TEST_CASE("SettingsWX implementations test", "")
 {
-   auto config
+   std::shared_ptr<wxConfigBase> config
       = std::make_unique<wxFileConfig>(wxEmptyString,
          wxEmptyString,
          "wx-settings-test.cfg",
@@ -15,7 +15,7 @@ TEST_CASE("SettingsWX implementations test", "")
    wxConfigBase::Set(config.get());
 
    audacity::ApplicationSettings::Scope testScope {
-      [&] { return std::make_unique<SettingsWX>(); }
+      [&] { return std::make_unique<SettingsWX>(config); }
    };
 
    SECTION("Application settings read/write")

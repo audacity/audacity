@@ -2719,14 +2719,15 @@ void AudacityApp::AssociateFileTypes()
 static audacity::ApplicationSettings::Scope applicationSettingsScope {
    []{
       static std::once_flag configSetupFlag;
-      std::call_once(configSetupFlag, []{
+      static std::shared_ptr<wxConfigBase> config;
+      std::call_once(configSetupFlag, [&]{
          const auto configFileName = wxFileName { FileNames::Configuration() };
-         static auto config = AudacityFileConfig::Create(
+         config = AudacityFileConfig::Create(
             wxTheApp->GetAppName(), wxEmptyString,
             configFileName.GetFullPath(),
             wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
          wxConfigBase::Set(config.get());
       });
-      return std::make_unique<SettingsWX>();
+      return std::make_unique<SettingsWX>(config);
    }
 };

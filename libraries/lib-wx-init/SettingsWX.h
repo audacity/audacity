@@ -11,16 +11,13 @@ class wxConfigBase;
 class WX_INIT_API SettingsWX final : public audacity::BasicSettings
 {
    wxArrayString mGroupStack;
-   std::unique_ptr<wxConfigBase> mConfig;
-   const bool mIsConfigOwner;
+   std::shared_ptr<wxConfigBase> mConfig;
 protected:
    void DoBeginGroup(const wxString& prefix) override;
    void DoEndGroup() noexcept override;
 
 public:
-   ///@brief Constructs default application settings
-   SettingsWX();
-   explicit SettingsWX(std::unique_ptr<wxConfigBase> config);
+   explicit SettingsWX(std::shared_ptr<wxConfigBase> config);
    ///@brief Constructs BasicSettings object to access BasicSettings stored in the file,
    ///using platform-specific format
    explicit SettingsWX(const wxString& filepath);

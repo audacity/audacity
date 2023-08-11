@@ -29,31 +29,21 @@ void SettingsWX::DoEndGroup() noexcept
    mConfig->SetPath(mGroupStack.Last());
 }
 
-SettingsWX::SettingsWX()
-   : mConfig{wxConfigBase::Get()}
-   , mIsConfigOwner {false}
-{
-   mGroupStack.push_back("/");
-}
-
-SettingsWX::SettingsWX(std::unique_ptr<wxConfigBase> config)
-   : mConfig{std::move(config)}, mIsConfigOwner{true}
+SettingsWX::SettingsWX(std::shared_ptr<wxConfigBase> config)
+   : mConfig{std::move(config)}
 {
    mGroupStack.push_back("/");
 }
 
 SettingsWX::SettingsWX(const wxString& filepath)
-   : mIsConfigOwner {true}
 {
-   mConfig = std::make_unique<wxFileConfig>(wxEmptyString, wxEmptyString, filepath);
+   mConfig = std::make_shared<wxFileConfig>(wxEmptyString, wxEmptyString, filepath);
    mGroupStack.push_back("/");
 }
 
 SettingsWX::~SettingsWX()
 {
    mConfig->Flush();
-   if(!mIsConfigOwner)
-      (void)mConfig.release();
 }
 
 wxString SettingsWX::GetGroup() const
