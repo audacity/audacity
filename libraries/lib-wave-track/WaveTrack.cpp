@@ -292,6 +292,9 @@ void WaveTrack::Init(const WaveTrack &orig)
 
    mFormat = orig.mFormat;
    mWaveColorIndex = orig.mWaveColorIndex;
+
+   WideSampleSequence::Attachments &attachments = *this;
+   attachments = orig;
 }
 
 void WaveTrack::Reinit(const WaveTrack &orig)
