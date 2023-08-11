@@ -904,6 +904,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                   t1 = newTrack->LongSamplesToTime(newTrack->TimeToLongSamples(t1));
             }
 
+            auto tempList = TrackList::Temporary(nullptr, newTrack, nullptr);
             assert(newTrack->IsLeader()); // not yet made into a channel group
             newTrack->MoveTo(t0);
             wxString nameSuffix = wxString(wxT(""));
@@ -940,14 +941,15 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             //create a new clip with a proper name before recording is started
             newTrack->CreateClip(t0, makeNewClipName(newTrack.get()));
 
-            trackList.RegisterPendingNewTrack(newTrack);
-
             if ((recordingChannels > 2) &&
                 !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
                ChannelView::Get(*newTrack->GetChannel(0)).SetMinimized(true);
             }
 
             transportSequences.captureSequences.push_back(newTrack);
+
+            tempList.reset();
+            trackList.RegisterPendingNewTrack(newTrack);
          }
          trackList.MakeMultiChannelTrack(*first, recordingChannels, true);
          // Bug 1548.  First of new tracks needs the focus.
