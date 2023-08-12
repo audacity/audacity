@@ -81,7 +81,9 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
    if (iChannel < NChannels()) {
       const auto pClip = (iChannel == 0 ? mpClip : mpClip1);
       return std::make_shared<WaveChannelInterval>(
-         *pClip, *pClip->GetEnvelope());
+         *pClip,
+         // Always the left clip's envelope
+         *mpClip->GetEnvelope());
    }
    return {};
 }
@@ -2699,7 +2701,11 @@ const WaveClip* WaveTrack::GetClipAtTime(double time) const
 
 Envelope* WaveTrack::GetEnvelopeAtTime(double time)
 {
-   WaveClip* clip = GetClipAtTime(time);
+   auto pTrack = this;
+   if (GetOwner())
+      // Substitute the leader track
+      pTrack = *TrackList::Channels(this).begin();
+   WaveClip* clip = pTrack->GetClipAtTime(time);
    if (clip)
       return clip->GetEnvelope();
    else
