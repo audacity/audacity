@@ -182,7 +182,7 @@ UIHandle::Result EnvelopeHandle::Click
    const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
    const auto pTrack = pView ? pView->FindTrack().get() : nullptr;
 
-   mEnvelopeEditors.clear();
+   mpEnvelopeEditor.reset();
 
    unsigned result = Cancelled;
    if (pTrack)
@@ -195,34 +195,14 @@ UIHandle::Result EnvelopeHandle::Click
          auto &cache = WaveformScale::Get(wt);
          cache.GetDisplayBounds(mLower, mUpper);
          mdBRange = WaveformSettings::Get(wt).dBRange;
-         auto channels = TrackList::Channels(&wt);
-         for ( auto channel : channels ) {
-            if (channel == &wt)
-               mEnvelopeEditors.push_back(
-                  std::make_unique< EnvelopeEditor >( *mEnvelope, true ) );
-            else {
-               auto time =
-                  viewInfo.PositionToTime(event.GetX(), evt.rect.GetX());
-               auto e2 = channel->GetEnvelopeAtTime(time);
-               if (e2)
-                  mEnvelopeEditors.push_back(
-                     std::make_unique< EnvelopeEditor >( *e2, true ) );
-               else {
-                   // There isn't necessarily an envelope there; no guarantee a
-                   // linked track has the same WaveClip structure...
-                }
-            }
-         }
-
+         mpEnvelopeEditor = std::make_unique<EnvelopeEditor>(*mEnvelope, true);
          return RefreshNone;
       },
       [&](TimeTrack &tt) {
          if (!mEnvelope)
             return Cancelled;
          GetTimeTrackData( *pProject, tt, mdBRange, mLog, mLower, mUpper);
-         mEnvelopeEditors.push_back(
-            std::make_unique< EnvelopeEditor >( *mEnvelope, false )
-         );
+         mpEnvelopeEditor = std::make_unique<EnvelopeEditor>(*mEnvelope, false);
 
          return RefreshNone;
       },
@@ -296,7 +276,7 @@ UIHandle::Result EnvelopeHandle::Release
       XO("Envelope")
    );
 
-   mEnvelopeEditors.clear();
+   mpEnvelopeEditor.reset();
 
    using namespace RefreshCode;
    return needUpdate ? RefreshCell : RefreshNone;
@@ -305,7 +285,7 @@ UIHandle::Result EnvelopeHandle::Release
 UIHandle::Result EnvelopeHandle::Cancel(AudacityProject *pProject)
 {
    ProjectHistory::Get( *pProject ).RollbackState();
-   mEnvelopeEditors.clear();
+   mpEnvelopeEditor.reset();
    return RefreshCode::RefreshCell;
 }
 
@@ -318,13 +298,6 @@ bool EnvelopeHandle::ForwardEventToEnvelopes
 
    // AS: I'm not sure why we can't let the Envelope take care of
    //  redrawing itself.  ?
-   bool needUpdate = false;
-   for (const auto &pEditor : mEnvelopeEditors) {
-      needUpdate =
-         pEditor->MouseEvent(
-            event, mRect, viewInfo, mLog, mdBRange, mLower, mUpper)
-         || needUpdate;
-   }
-
-   return needUpdate;
+   return mpEnvelopeEditor && mpEnvelopeEditor->MouseEvent(
+      event, mRect, viewInfo, mLog, mdBRange, mLower, mUpper);
 }

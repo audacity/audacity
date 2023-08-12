@@ -88,7 +88,7 @@ private:
    double mdBRange{};
 
    Envelope *mEnvelope{};
-   std::vector< std::unique_ptr<EnvelopeEditor> > mEnvelopeEditors;
+   std::unique_ptr<EnvelopeEditor> mpEnvelopeEditor;
 
    bool mTimeTrack{};
 };
