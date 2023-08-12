@@ -2537,7 +2537,11 @@ sampleFormat WaveTrack::WidestEffectiveFormat() const
 
 bool WaveTrack::HasTrivialEnvelope() const
 {
-   auto &clips = GetClips();
+   auto pTrack = this;
+   if (GetOwner())
+      // Substitute the leader track
+      pTrack = *TrackList::Channels(this).begin();
+   auto &clips = pTrack->GetClips();
    return std::all_of(clips.begin(), clips.end(),
       [](const auto &pClip){ return pClip->GetEnvelope()->IsTrivial(); });
 }
@@ -2545,6 +2549,11 @@ bool WaveTrack::HasTrivialEnvelope() const
 void WaveTrack::GetEnvelopeValues(
    double* buffer, size_t bufferLen, double t0, bool backwards) const
 {
+   auto pTrack = this;
+   if (GetOwner())
+      // Substitute the leader track
+      pTrack = *TrackList::Channels(this).begin();
+
    if (backwards)
       t0 -= bufferLen / GetRate();
    // The output buffer corresponds to an unbroken span of time which the callers expect
@@ -2566,7 +2575,7 @@ void WaveTrack::GetEnvelopeValues(
    const auto rate = GetRate();
    auto tstep = 1.0 / rate;
    double endTime = t0 + tstep * bufferLen;
-   for (const auto &clip: mClips)
+   for (const auto &clip: pTrack->mClips)
    {
       // IF clip intersects startTime..endTime THEN...
       auto dClipStartTime = clip->GetPlayStartTime();
