@@ -56,6 +56,11 @@ using ChannelSampleView = std::vector<AudioSegmentSampleView>;
 class Envelope;
 class WaveTrack;
 
+class WAVE_TRACK_API WaveChannelInterval final : public ChannelInterval {
+public:
+   ~WaveChannelInterval() override;
+};
+
 class WAVE_TRACK_API WaveChannel
    : public Channel
    // TODO wide wave tracks -- remove "virtual"
@@ -67,6 +72,15 @@ public:
 
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
+
+   auto GetInterval(size_t iInterval) { return
+      ::Channel::GetInterval<WaveChannelInterval>(iInterval); }
+   auto GetInterval(size_t iInterval) const { return
+      ::Channel::GetInterval<const WaveChannelInterval>(iInterval); }
+
+   auto Intervals() { return ::Channel::Intervals<WaveChannelInterval>(); }
+   auto Intervals() const {
+      return ::Channel::Intervals<const WaveChannelInterval>(); }
 
    using WideSampleSequence::GetFloats;
 
@@ -169,6 +183,11 @@ public:
 
    //! May report more than one only when this is a leader track
    size_t NChannels() const override;
+
+   auto GetChannel(size_t iChannel) {
+      return this->ChannelGroup::GetChannel<WaveChannel>(iChannel); }
+   auto GetChannel(size_t iChannel) const {
+      return this->ChannelGroup::GetChannel<const WaveChannel>(iChannel); }
 
    auto Channels() {
       return this->ChannelGroup::Channels<WaveChannel>(); }
@@ -730,6 +749,17 @@ private:
 
       ~Interval() override;
 
+      auto GetChannel(size_t iChannel) { return
+         WideChannelGroupInterval::GetChannel<WaveChannel>(iChannel); }
+      auto GetChannel(size_t iChannel) const { return
+         WideChannelGroupInterval::GetChannel<const WaveChannel>(iChannel); }
+
+      auto Channels() { return
+         WideChannelGroupInterval::Channels<WaveChannel>(); }
+      auto Channels() const { return
+         WideChannelGroupInterval::Channels<const WaveChannel>();
+      }
+
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
@@ -740,6 +770,9 @@ private:
       //! TODO wide wave tracks: eliminate this
       const std::shared_ptr<WaveClip> mpClip1;
    };
+
+   auto Intervals() { return ChannelGroup::Intervals<Interval>(); }
+   auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }
 
    Track::Holder PasteInto(AudacityProject &project, TrackList &list)
       const override;
