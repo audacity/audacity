@@ -58,7 +58,19 @@ class WaveTrack;
 
 class WAVE_TRACK_API WaveChannelInterval final : public ChannelInterval {
 public:
+   //! Assume lifetime of this object nests in those of arguments
+   WaveChannelInterval(WaveClip &clip, Envelope &envelope)
+      : mClip{ clip }
+      , mEnvelope{ envelope }
+   {}
    ~WaveChannelInterval() override;
+
+   const WaveClip &GetClip() const { return mClip; }
+   const Envelope &GetEnvelope() const { return mEnvelope; }
+
+private:
+   WaveClip &mClip;
+   Envelope &mEnvelope;
 };
 
 class WAVE_TRACK_API WaveChannel

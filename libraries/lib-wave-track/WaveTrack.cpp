@@ -78,8 +78,11 @@ WaveTrack::Interval::~Interval() = default;
 std::shared_ptr<ChannelInterval>
 WaveTrack::Interval::DoGetChannel(size_t iChannel)
 {
-   if (iChannel < NChannels())
-      return std::make_shared<WaveChannelInterval>();
+   if (iChannel < NChannels()) {
+      const auto pClip = (iChannel == 0 ? mpClip : mpClip1);
+      return std::make_shared<WaveChannelInterval>(
+         *pClip, *pClip->GetEnvelope());
+   }
    return {};
 }
 

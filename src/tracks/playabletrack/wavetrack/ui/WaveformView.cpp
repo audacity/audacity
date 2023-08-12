@@ -451,6 +451,9 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context, size_t channel,
    bool showPoints, bool muted,
    bool highlight)
 {
+   // TODO wide wave tracks -- don't reassign
+   channel = 0;
+
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
@@ -979,10 +982,22 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
    TrackArt::DrawBackgroundWithSelection(
       context, rect, &track, blankSelectedBrush, blankBrush );
 
-   for (const auto& clip : track.GetClips()) {
+   // Really useful channel numbers are not yet passed in
+   // TODO wide wave tracks -- really use channel
+   assert(channel == 0);
+   channel = (track.IsLeader() ? 0 : 1);
+
+   // TODO wide wave tracks -- remove this workaround
+   auto pLeader = *track.GetOwner()->Find(&track);
+   assert(pLeader->IsLeader());
+
+   for (const auto pInterval :
+      static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
+   ) {
+      auto &clip = pInterval->GetClip();
       DrawClipWaveform(context, channel, track,
-         *clip, *clip->GetEnvelope(), rect,
-         dB, muted, clip.get() == selectedClip);
+         clip, pInterval->GetEnvelope(), rect,
+         dB, muted, &clip == selectedClip);
    }
    DrawBoldBoundaries(context, &track, rect);
 

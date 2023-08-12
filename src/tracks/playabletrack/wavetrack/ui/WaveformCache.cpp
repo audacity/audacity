@@ -66,6 +66,9 @@ bool WaveClipWaveformCache::GetWaveDisplay(
    const WaveClip &clip, size_t channel, WaveDisplay &display, double t0,
    double pixelsPerSecond )
 {
+   // TODO wide wave tracks -- don't reassign
+   channel = 0;
+
    auto &waveCache = mWaveCaches[channel];
 
    t0 += clip.GetTrimLeft();
