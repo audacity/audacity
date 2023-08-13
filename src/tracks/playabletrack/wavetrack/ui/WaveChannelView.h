@@ -63,8 +63,8 @@ public:
 
 protected:
    static void DrawBoldBoundaries(
-      TrackPanelDrawingContext &context, const WaveTrack *track,
-      const wxRect &rect );
+      TrackPanelDrawingContext &context, const WaveTrack &track,
+      const wxRect &rect);
 
    std::weak_ptr<WaveChannelView> GetWaveChannelView() const;
 
@@ -246,7 +246,7 @@ struct AUDACITY_DLL_API ClipParameters
 {
    // Do a bunch of calculations common to waveform and spectrum drawing.
    ClipParameters(
-      const WaveClip* clip, const wxRect& rect, const ZoomInfo& zoomInfo);
+      const WaveClip &clip, const wxRect& rect, const ZoomInfo& zoomInfo);
 
    const double trackRectT0; // absolute time of left edge of track
 
@@ -266,7 +266,8 @@ struct AUDACITY_DLL_API ClipParameters
 
    // returns a clip rectangle restricted by viewRect,
    // and with clipOffsetX - clip horizontal origin offset within view rect
-   static wxRect GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples = nullptr);
+   static wxRect GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo,
+      const wxRect& viewRect, bool* outShowSamples = nullptr);
 };
 
 #endif

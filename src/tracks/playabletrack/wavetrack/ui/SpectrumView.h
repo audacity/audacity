@@ -153,10 +153,9 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   void DoDraw( TrackPanelDrawingContext &context,
-      const WaveTrack *track,
-      const WaveClip* selectedClip,
-      const wxRect & rect );
+   void DoDraw(TrackPanelDrawingContext &context,
+      const WaveTrack &track, const WaveClip* selectedClip,
+      const wxRect & rect);
 
    std::vector<UIHandlePtr> DetailedHitTest(
       const TrackPanelMouseState &state,

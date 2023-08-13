@@ -672,7 +672,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
       return;
    }
 
-   const ClipParameters params { &clip, rect, zoomInfo };
+   const ClipParameters params { clip, rect, zoomInfo };
    const wxRect &hiddenMid = params.hiddenMid;
    // The "hiddenMid" rect contains the part of the display actually
    // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
@@ -992,7 +992,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
          clip, pInterval->GetEnvelope(), rect,
          dB, muted, &clip == selectedClip);
    }
-   DrawBoldBoundaries(context, &track, rect);
+   DrawBoldBoundaries(context, track, rect);
 
    const auto drawSliders = artist->drawSliders;
    if (drawSliders) {

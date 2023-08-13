@@ -826,7 +826,7 @@ std::pair<
 
 
 void WaveChannelSubView::DrawBoldBoundaries(
-   TrackPanelDrawingContext &context, const WaveTrack *track,
+   TrackPanelDrawingContext &context, const WaveTrack &track,
    const wxRect &rect)
 {
    auto &dc = context.dc;
@@ -837,11 +837,11 @@ void WaveChannelSubView::DrawBoldBoundaries(
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
 #endif
-   for (const auto loc : WaveTrackLocations::Get(*track).Get()) {
+   for (const auto loc : WaveTrackLocations::Get(track).Get()) {
       bool highlightLoc = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       highlightLoc =
-         target2 && target2->GetTrack().get() == track &&
+         target2 && target2->GetTrack().get() == &track &&
          target2->GetLocation() == loc;
 #endif
       const int xx = zoomInfo.TimeToPosition(loc.pos);
@@ -1559,23 +1559,23 @@ bool ShowIndividualSamples(
 }
 
 ClipParameters::ClipParameters(
-   const WaveClip* clip, const wxRect& rect, const ZoomInfo& zoomInfo)
+   const WaveClip &clip, const wxRect& rect, const ZoomInfo& zoomInfo)
     : trackRectT0 { zoomInfo.PositionToTime(0, 0, true) }
     , averagePixelsPerSecond { GetPixelsPerSecond(rect, zoomInfo) }
     , showIndividualSamples { ShowIndividualSamples(
-         clip->GetRate(), clip->GetStretchRatio(), averagePixelsPerSecond) }
+         clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond) }
 {
    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width, 0, true);
-   const auto stretchRatio = clip->GetStretchRatio();
-   const auto playStartTime = clip->GetPlayStartTime();
+   const auto stretchRatio = clip.GetStretchRatio();
+   const auto playStartTime = clip.GetPlayStartTime();
 
-   const double clipLength = clip->GetPlayEndTime() - clip->GetPlayStartTime();
+   const double clipLength = clip.GetPlayEndTime() - clip.GetPlayStartTime();
 
    // Hidden duration because too far left.
    const auto tpre = trackRectT0 - playStartTime;
    const auto tpost = trackRectT1 - playStartTime;
 
-   const auto blank = GetBlankSpaceBeforePlayEndTime(*clip);
+   const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
