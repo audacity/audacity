@@ -42,6 +42,8 @@ public:
 
    double GetPlayEndTime() const override;
 
+   sampleCount TimeToSamples(double time) const override;
+
    double GetStretchRatio() const override;
 
 private:

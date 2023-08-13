@@ -30,6 +30,8 @@ public:
 
    virtual double GetPlayEndTime() const = 0;
 
+   virtual sampleCount TimeToSamples(double time) const = 0;
+
    virtual double GetStretchRatio() const = 0;
 };
 

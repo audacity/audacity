@@ -987,7 +987,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
    for (const auto pInterval :
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
-      auto &clip = pInterval->GetClip();
+      auto &clip = pInterval->GetNarrowClip();
       DrawClipWaveform(context, channel, track,
          clip, pInterval->GetEnvelope(), rect,
          dB, muted, &clip == selectedClip);
