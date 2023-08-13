@@ -336,10 +336,11 @@ std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
    return { s0, s1 };
 }
 
-void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
-                      const WaveClip *clip, const wxRect &rect,
-                      const std::shared_ptr<SpectralData> &mpSpectralData,
-                      bool selected) {
+void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
+   const WaveClip &clip, const wxRect &rect,
+   const std::shared_ptr<SpectralData> &mpSpectralData,
+   bool selected)
+{
   auto &dc = context.dc;
   const auto artist = TrackArtist::Get(context);
   bool onBrushTool = artist->onBrushTool;
@@ -352,21 +353,14 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
 
    //If clip is "too small" draw a placeholder instead of
    //attempting to fit the contents into a few pixels
-   if (!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
+   if (!WaveChannelView::ClipDetailsVisible(clip, zoomInfo, rect))
    {
-      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
+      auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, rect);
       TrackArt::DrawClipFolded(dc, clipRect);
       return;
    }
 
-   if (!track)
-      // Leave a blank rectangle.
-      // TODO: rewrite GetSpectrumBounds so it is
-      // not a member of WaveTrack, but fetch UI related ClientData
-      // attachments; then this downcast from SampleTrack will not be needed.
-      return;
-
-   auto &settings = SpectrogramSettings::Get(*track);
+   auto &settings = SpectrogramSettings::Get(track);
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };
@@ -380,12 +374,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
    }
 
    const double &t0 = params.t0;
-   const double playStartTime = clip->GetPlayStartTime();
+   const double playStartTime = clip.GetPlayStartTime();
    const auto [ssel0, ssel1] =
-      GetSelectedSampleIndices(selectedRegion, *clip, track->GetSelected());
+      GetSelectedSampleIndices(selectedRegion, clip, track.GetSelected());
    const double &averagePixelsPerSecond = params.averagePixelsPerSecond;
-   const double sampleRate = clip->GetRate();
-   const double stretchRatio = clip->GetStretchRatio();
+   const double sampleRate = clip.GetRate();
+   const double stretchRatio = clip.GetStretchRatio();
    const double &hiddenLeftOffset = params.hiddenLeftOffset;
    const double &leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
@@ -432,15 +426,15 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
    const sampleCount *where = 0;
    bool updated;
    {
-     updated = WaveClipSpectrumCache::Get(*clip).GetSpectrogram(
-         *clip, freq, settings, where, (size_t)hiddenMid.width, t0,
+     updated = WaveClipSpectrumCache::Get(clip).GetSpectrogram(
+         clip, freq, settings, where, (size_t)hiddenMid.width, t0,
          averagePixelsPerSecond);
    }
    auto nBins = settings.NBins();
 
    float minFreq, maxFreq;
-   SpectrogramBounds::Get(*track)
-      .GetBounds(*track, minFreq, maxFreq);
+   SpectrogramBounds::Get(track)
+      .GetBounds(track, minFreq, maxFreq);
 
    const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
@@ -484,7 +478,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
    }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-   auto &clipCache = WaveClipSpectrumCache::Get( *clip );
+   auto &clipCache = WaveClipSpectrumCache::Get(clip);
    if (!updated && clipCache.mSpecPxCache->valid &&
       ((int)clipCache.mSpecPxCache->len == hiddenMid.height * hiddenMid.width)
       && scaleType == clipCache.mSpecPxCache->scaleType
@@ -691,7 +685,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
             sampleCount(0.5 + sampleRate / stretchRatio * time);
       }
       specCache.Populate(
-         settings, *clip, 0, 0, numPixels,
+         settings, clip, 0, 0, numPixels,
          0 // FIXME: PRL -- make reassignment work with fisheye
       );
    }
@@ -859,29 +853,26 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
    // Draw clip edges, as also in waveform view, which improves the appearance
    // of split views
    {
-      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
+      auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, rect);
       TrackArt::DrawClipEdges(dc, clipRect, selected);
    }
 }
 }
 
 void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
-                                const WaveTrack* track,
-                                const WaveClip* selectedClip,
-                                const wxRect & rect )
+   const WaveTrack &track, const WaveClip* selectedClip, const wxRect & rect)
 {
    const auto artist = TrackArtist::Get( context );
    const auto &blankSelectedBrush = artist->blankSelectedBrush;
    const auto &blankBrush = artist->blankBrush;
    TrackArt::DrawBackgroundWithSelection(
-      context, rect, track, blankSelectedBrush, blankBrush );
+      context, rect, &track, blankSelectedBrush, blankBrush );
 
-   for (const auto &clip: track->GetClips()){
-     DrawClipSpectrum(context, track, clip.get(), rect, mpSpectralData,
-                      clip.get() == selectedClip);
-   }
+   for (const auto &clip: track.GetClips())
+      DrawClipSpectrum(context, track, *clip, rect, mpSpectralData,
+         clip.get() == selectedClip);
 
-   DrawBoldBoundaries( context, track, rect );
+   DrawBoldBoundaries(context, track, rect);
 }
 
 void SpectrumView::Draw(
@@ -914,7 +905,7 @@ void SpectrumView::Draw(
       wxASSERT(waveChannelView.use_count());
 
       auto seletedClip = waveChannelView->GetSelectedClip().lock();
-      DoDraw( context, wt.get(), seletedClip.get(), rect );
+      DoDraw(context, *wt, seletedClip.get(), rect);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
