@@ -904,8 +904,8 @@ void SpectrumView::Draw(
       auto waveChannelView = GetWaveChannelView().lock();
       wxASSERT(waveChannelView.use_count());
 
-      auto seletedClip = waveChannelView->GetSelectedClip().lock();
-      DoDraw(context, *wt, seletedClip.get(), rect);
+      auto selectedClip = waveChannelView->GetSelectedClip().lock();
+      DoDraw(context, *wt, selectedClip.get(), rect);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
