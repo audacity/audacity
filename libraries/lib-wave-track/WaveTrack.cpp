@@ -65,17 +65,17 @@ WaveChannelInterval::~WaveChannelInterval() = default;
 
 bool WaveChannelInterval::Intersects(double t0, double t1) const
 {
-   return mClip.IntersectsPlayRegion(t0, t1);
+   return GetNarrowClip().IntersectsPlayRegion(t0, t1);
 }
 
 double WaveChannelInterval::Start() const
 {
-   return mClip.GetPlayStartTime();
+   return GetNarrowClip().GetPlayStartTime();
 }
 
 double WaveChannelInterval::End() const
 {
-   return mClip.GetPlayEndTime();
+   return GetNarrowClip().GetPlayEndTime();
 }
 
 AudioSegmentSampleView
@@ -83,7 +83,88 @@ WaveChannelInterval::GetSampleView(double t0, double t1, bool mayThrow) const
 {
    constexpr auto iChannel = 0u;
    // TODO wide wave tracks: use the real channel number.
-   return mClip.GetSampleView(iChannel, t0, t1, mayThrow);
+   return GetNarrowClip().GetSampleView(iChannel, t0, t1, mayThrow);
+}
+
+sampleCount WaveChannelInterval::GetVisibleSampleCount() const
+{
+   return GetNarrowClip().GetVisibleSampleCount();
+}
+
+int WaveChannelInterval::GetRate() const
+{
+   return GetNarrowClip().GetRate();
+}
+
+double WaveChannelInterval::GetPlayStartTime() const
+{
+   return GetNarrowClip().GetPlayStartTime();
+}
+
+double WaveChannelInterval::GetPlayEndTime() const
+{
+   return GetNarrowClip().GetPlayEndTime();
+}
+
+sampleCount WaveChannelInterval::TimeToSamples(double time) const
+{
+   return GetNarrowClip().TimeToSamples(time);
+}
+
+double WaveChannelInterval::GetStretchRatio() const
+{
+   return GetNarrowClip().GetStretchRatio();
+}
+
+double WaveChannelInterval::GetTrimLeft() const
+{
+   return GetNarrowClip().GetTrimLeft();
+}
+
+double WaveChannelInterval::GetTrimRight() const
+{
+   return GetNarrowClip().GetTrimRight();
+}
+
+bool WaveChannelInterval::GetSamples(samplePtr buffer, sampleFormat format,
+   sampleCount start, size_t len, bool mayThrow) const
+{
+   // Not just a pass-through, but supply the first argument
+   // TODO wide wave tracks -- pass miChannel not 0
+   return GetNarrowClip().GetSamples(0, buffer, format, start, len, mayThrow);
+}
+
+AudioSegmentSampleView WaveChannelInterval::GetSampleView(
+   sampleCount start, size_t length, bool mayThrow) const
+{
+   // Not just a pass-through, but supply the first argument
+   // TODO wide wave tracks -- pass miChannel not 0
+   return GetNarrowClip().GetSampleView(0, start, length, mayThrow);
+}
+
+const Sequence &WaveChannelInterval::GetSequence() const
+{
+   // TODO wide wave tracks -- use miChannel
+   const auto pSequence = GetNarrowClip().GetSequence(0);
+   // Assume sufficiently wide clip
+   assert(pSequence);
+   return *pSequence;
+}
+
+constSamplePtr WaveChannelInterval::GetAppendBuffer() const
+{
+   // TODO wide wave tracks -- use miChannel
+   return GetNarrowClip().GetAppendBuffer(0);
+}
+
+size_t WaveChannelInterval::GetAppendBufferLen() const
+{
+   return GetNarrowClip().GetAppendBufferLen();
+}
+
+int WaveChannelInterval::GetColourIndex() const
+{
+   return GetNarrowClip().GetColourIndex();
 }
 
 WaveTrack::Interval::Interval(const ChannelGroup &group,
@@ -102,11 +183,13 @@ std::shared_ptr<ChannelInterval>
 WaveTrack::Interval::DoGetChannel(size_t iChannel)
 {
    if (iChannel < NChannels()) {
+      // TODO wide wave tracks: there will be only one, wide clip
       const auto pClip = (iChannel == 0 ? mpClip : mpClip1);
-      return std::make_shared<WaveChannelInterval>(
+      return std::make_shared<WaveChannelInterval>(*mpClip,
          *pClip,
          // Always the left clip's envelope
-         *mpClip->GetEnvelope());
+         *mpClip->GetEnvelope(),
+         iChannel);
    }
    return {};
 }

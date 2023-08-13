@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
+#include "ClipInterface.h"
 #include "PlaybackDirection.h"
 #include "Prefs.h"
 #include "SampleCount.h"
@@ -57,17 +58,26 @@ using ChannelGroupSampleView = std::vector<ChannelSampleView>;
 class Envelope;
 class WaveTrack;
 
-class WAVE_TRACK_API WaveChannelInterval final : public ChannelInterval {
+class WAVE_TRACK_API WaveChannelInterval final
+   : public ChannelInterval
+   , public ClipTimes
+{
 public:
    //! Assume lifetime of this object nests in those of arguments
-   WaveChannelInterval(WaveClip &clip, Envelope &envelope)
-      : mClip{ clip }
+   WaveChannelInterval(WaveClip &wideClip, WaveClip &narrowClip,
+      Envelope &envelope, size_t iChannel
+   )  : mWideClip{ wideClip }
+      , mNarrowClip{ narrowClip }
       , mEnvelope{ envelope }
+      , miChannel{ iChannel }
    {}
    ~WaveChannelInterval() override;
 
-   const WaveClip &GetClip() const { return mClip; }
+   const WaveClip &GetClip() const { return mWideClip; }
+   const WaveClip &GetNarrowClip() const { return mNarrowClip; }
    const Envelope &GetEnvelope() const { return mEnvelope; }
+   size_t GetChannelIndex() const { return miChannel; }
+
    bool Intersects(double t0, double t1) const;
    double Start() const;
    double End() const;
@@ -85,9 +95,34 @@ public:
    AudioSegmentSampleView
    GetSampleView(double t0, double t1, bool mayThrow) const;
 
+   sampleCount GetVisibleSampleCount() const override;
+   int GetRate() const override;
+   double GetPlayStartTime() const override;
+   double GetPlayEndTime() const override;
+   sampleCount TimeToSamples(double time) const override;
+   double GetStretchRatio() const override;
+
+   double GetTrimLeft() const;
+   double GetTrimRight() const;
+
+   bool GetSamples(samplePtr buffer, sampleFormat format,
+      sampleCount start, size_t len, bool mayThrow = true) const;
+
+   AudioSegmentSampleView GetSampleView(
+      sampleCount start, size_t length, bool mayThrow) const;
+
+   const Sequence &GetSequence() const;
+
+   constSamplePtr GetAppendBuffer() const;
+   size_t GetAppendBufferLen() const;
+
+   int GetColourIndex() const;
+
 private:
-   WaveClip &mClip;
+   WaveClip &mWideClip;
+   WaveClip &mNarrowClip;
    Envelope &mEnvelope;
+   const size_t miChannel;
 };
 
 class WAVE_TRACK_API WaveChannel

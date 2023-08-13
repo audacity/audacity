@@ -42,6 +42,8 @@ public:
       return playStartTime + GetPlayDuration();
    }
 
+   sampleCount TimeToSamples(double time) const override;
+
    double GetStretchRatio() const override
    {
       return stretchRatio;
