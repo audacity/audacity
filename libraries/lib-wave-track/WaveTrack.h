@@ -773,6 +773,7 @@ private:
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 
    ChannelGroup &DoGetChannelGroup() const override;
+   ChannelGroup &ReallyDoGetChannelGroup() const override;
 
    //
    // Protected variables

@@ -484,6 +484,15 @@ ChannelGroup &WaveTrack::DoGetChannelGroup() const
    return const_cast<ChannelGroup&>(group);
 }
 
+ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
+{
+   const Track *pTrack = this;
+   if (const auto pOwner = GetOwner())
+      pTrack = *pOwner->Find(this);
+   const ChannelGroup &group = *pTrack;
+   return const_cast<ChannelGroup&>(group);
+}
+
 TrackListHolder WaveTrack::Clone() const
 {
    assert(IsLeader());
