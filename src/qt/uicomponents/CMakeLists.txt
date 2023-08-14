@@ -1,9 +1,5 @@
 set(MODULE_NAME uicomponents)
 
-qt_add_library(${MODULE_NAME} STATIC)
-
-target_link_libraries(${MODULE_NAME} PRIVATE Qt6::Quick)
-
 set(MODULE_SOURCES
    ApplicationConfiguration.cpp
    ApplicationConfiguration.h
@@ -38,10 +34,10 @@ set(MODULE_QML_SOURCES
    qml/WaveClipView.qml
 )
 
-qt_add_qml_module(${MODULE_NAME}
+audacity_qml_module( ${MODULE_NAME}
    URI "Audacity.UiComponents"
+   STATIC
    VERSION 1.0
-   RESOURCE_PREFIX /${MODULE_NAME}
    DEPENDENCIES
       QtQuick
       Audacity.UiThemes
@@ -49,7 +45,7 @@ qt_add_qml_module(${MODULE_NAME}
       ${MODULE_QML_SOURCES}
    SOURCES
       ${MODULE_SOURCES}
-   NO_LINT
-   ${nocachegen}
+   LIBRARIES
+      Qt6::Gui
+      Qt6::Quick
 )
-

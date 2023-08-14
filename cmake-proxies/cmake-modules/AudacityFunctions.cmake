@@ -637,6 +637,119 @@ macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
 endmacro()
 
+function( find_qml_dependencies_recursive VAR TARGET ROOT_TARGET )
+   get_target_property( DEPENDENCIES ${TARGET} MANUALLY_ADDED_DEPENDENCIES )
+   if(NOT DEPENDENCIES STREQUAL "DEPENDENCIES-NOTFOUND")
+      foreach( DEPENDENCY ${DEPENDENCIES} )
+         if(DEPENDENCY MATCHES "${ROOT_TARGET}*")
+            list( APPEND ${VAR} ${DEPENDENCY} )
+            find_qml_dependencies_recursive( ${VAR} ${DEPENDENCY} ${ROOT_TARGET} )
+         endif()
+      endforeach()
+      message ( WARNING "Found dependencies: ${${VAR}}" )
+      set( ${VAR} ${${VAR}} PARENT_SCOPE )
+   endif()
+endfunction()
+
+# Transparently wraps qt_add_qml_module functions adding project-specific
+# behaviour:
+# Adds LIBRARIES parameter - list of libraries linked to backing target
+# Groups additional generated (by now - not all of them...) projects into same filter
+# Sets the default per-project RESOURCE_PREFIX path, though could be overwritten
+# Defines ${MODULE_NAME}_QML_IMPORT_PREFIX with the value of RESOURCE_PREFIX used 
+function( audacity_qml_module MODULE_NAME )
+   message( STATUS "========== Configuring ${MODULE_NAME} ==========" )
+
+   set( OPTIONS NO_RESOURCE_TARGET_PATH NO_LINT NO_CACHEGEN)
+   set( SINGLE_ARGS OUTPUT_TARGETS RESOURCE_PREFIX )
+   set( MULTI_ARGS LIBRARIES )
+
+   cmake_parse_arguments(PARSE_ARGV 1 ARG "${OPTIONS}" "${SINGLE_ARGS}" "${MULTI_ARGS}")
+   
+   set( ADDITIONAL_TARGETS )
+   set( RESOURCE_PREFIX )
+
+   set( FORWARD_ARGS 
+      OUTPUT_TARGETS ADDITIONAL_TARGETS
+   )
+   
+   if( ARG_NO_RESOURCE_TARGET_PATH )
+      list( APPEND FORWARD_ARGS NO_RESOURCE_TARGET_PATH )
+   else()
+      if( ARG_RESOURCE_PREFIX )
+         message( WARNING
+            "RESOURCE_PREFIX overrides default one, make sure that"
+            "${ARG_RESOURCE_PREFIX} is also added to engine's import paths list")
+         set(RESOURCE_PREFIX ${ARG_RESOURCE_PREFIX})
+      else()
+         set(RESOURCE_PREFIX ${AUDACITY_QML_RESOURCE_PREFIX})
+      endif()
+      list( APPEND FORWARD_ARGS RESOURCE_PREFIX ${RESOURCE_PREFIX})
+   endif()
+
+   qt_add_qml_module( ${MODULE_NAME}
+      ${FORWARD_ARGS}
+      ${ARG_UNPARSED_ARGUMENTS}
+      NO_LINT
+      ${nocachegen}
+   )
+   if( ARG_LIBRARIES )
+      target_link_libraries( ${MODULE_NAME} PRIVATE ${ARG_LIBRARIES} )
+   endif()
+
+   if(ARG_OUTPUT_TARGETS)
+      set(${ARG_OUTPUT_TARGETS} ${OUTPUT_TARGETS} PARENT_SCOPE)
+   endif()
+
+   #fixes project dependencies for Visual Studio generators  
+   add_dependencies( ${MODULE_NAME}_qmltyperegistration ${MODULE_NAME} )
+
+   set( MODULE_QML_IMPORT_PREFIX )
+   string( MAKE_C_IDENTIFIER "${MODULE_NAME}_QML_IMPORT_PREFIX" MODULE_QML_IMPORT_PREFIX )
+
+   target_compile_definitions( ${MODULE_NAME} PRIVATE 
+      $<$<CONFIG:Debug>:QT_QML_DEBUG>
+   )
+   if( RESOURCE_PREFIX )
+      target_compile_definitions( ${MODULE_NAME} PRIVATE
+         -D${MODULE_QML_IMPORT_PREFIX}="${RESOURCE_PREFIX}"
+      )
+   endif()
+
+   # for IDE organization below
+
+   set_target_properties(${MODULE_NAME} 
+      PROPERTIES
+         PREFIX ""
+         FOLDER "${MODULE_NAME}"
+   )
+
+   set( MODULE_GROUP )
+   get_target_property( MODULE_GROUP ${MODULE_NAME} MANUALLY_ADDED_DEPENDENCIES )
+   list( APPEND MODULE_GROUP ${MODULE_NAME} ${MODULE_NAME}_qmltyperegistration )
+
+   set( PLUGIN_TARGET )
+   get_target_property( PLUGIN_TARGET ${MODULE_NAME} QT_QML_MODULE_PLUGIN_TARGET )
+   if( NOT PLUGIN_TARGET STREQUAL "PLUGIN_TARGET-NOTFOUND" )
+      list( APPEND MODULE_GROUP ${PLUGIN_TARGET} )
+   endif()
+   
+   if(ADDITIONAL_TARGETS)
+      foreach( TARGET ${ADDITIONAL_TARGETS} )
+         list( APPEND MODULE_GROUP ${TARGET} )
+      endforeach()
+   endif()
+
+   foreach( TARGET ${MODULE_GROUP} )
+      set_target_properties( ${TARGET}
+         PROPERTIES
+            PREFIX ""
+            FOLDER "${MODULE_NAME}"
+      )
+   endforeach()
+
+endfunction()
+
 #
 # Add individual library targets
 #

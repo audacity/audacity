@@ -11,8 +11,7 @@ int main(int argc, char *argv[])
    ApplicationConfiguration appConfig;
 
    QQmlApplicationEngine engine;
-   engine.addImportPath(":/uicomponents");
-   engine.addImportPath(":/uithemes");
+   engine.addImportPath(QString(":%1").arg(AUDACITY_QML_RESOURCE_PREFIX));
 
    engine.setInitialProperties({
       { "appConfig", QVariant::fromValue(&appConfig) }

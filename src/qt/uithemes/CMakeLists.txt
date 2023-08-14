@@ -1,10 +1,5 @@
 set(MODULE_NAME uithemes)
 
-qt_add_library(${MODULE_NAME} STATIC)
-
-set_target_properties(${MODULE_NAME} PROPERTIES AUTOMOC ON)
-target_link_libraries(${MODULE_NAME} PRIVATE Qt6::Quick)
-
 set(MODULE_SOURCES
    UiThemeHandler.h
    UiThemeHandler.cpp
@@ -22,10 +17,10 @@ set(MODULE_QML_SOURCES
    qml/Theme.qml
 )
 
-qt_add_qml_module(${MODULE_NAME}
+audacity_qml_module(${MODULE_NAME}
    URI "Audacity.UiThemes"
+   STATIC
    VERSION 1.0
-   RESOURCE_PREFIX /${MODULE_NAME}
    DEPENDENCIES
       QtQuick
    QML_FILES
@@ -33,6 +28,6 @@ qt_add_qml_module(${MODULE_NAME}
       ${MODULES_QML_SINGLETON_SOURCES}
    SOURCES
       ${MODULE_SOURCES}
-   NO_LINT
+   LIBRARIES
+      Qt6::Quick
 )
-
