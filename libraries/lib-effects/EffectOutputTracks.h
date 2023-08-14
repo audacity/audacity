@@ -37,7 +37,7 @@ public:
     copies those clips are split, and new clips bounded by the interval, with
     the stretches applied, are inserted.
     @pre `!effectTimeInterval.has_value() ||
-       effectTimeInterval->first < effectTimeInterval->second`
+       effectTimeInterval->first <= effectTimeInterval->second`
     */
    EffectOutputTracks(
       TrackList& tracks, std::optional<TimeInterval> effectTimeInterval,

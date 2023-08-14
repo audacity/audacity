@@ -51,6 +51,8 @@ using ChannelSampleView = std::vector<AudioSegmentSampleView>;
 using ChannelGroupSampleView = std::vector<ChannelSampleView>;
 
 using TimeInterval = std::pair<double, double>;
+using ProgressReporter = std::function<void(double)>;
+
 //
 // Tolerance for merging wave tracks (in seconds)
 //
@@ -279,7 +281,7 @@ public:
     @pre `NChannels() == orig.NChannels()`
     */
    void Reinit(const WaveTrack &orig);
-private:
+ private:
    void Init(const WaveTrack &orig);
 
    TrackListHolder Clone() const override;
@@ -481,7 +483,8 @@ private:
     *
     * @pre `!interval.has_value() || interval->first <= interval->second`
     */
-   void ApplyStretchRatio(std::optional<TimeInterval> interval);
+   void ApplyStretchRatio(
+      std::optional<TimeInterval> interval, ProgressReporter reportProgress);
 
    void SyncLockAdjust(double oldT1, double newT1) override;
 
@@ -764,6 +767,7 @@ private:
 
    // Get number of clips in this WaveTrack
    int GetNumClips() const;
+   int GetNumClips(double t0, double t1) const;
 
    // Add all wave clips to the given array 'clips' and sort the array by
    // clip start time. The array is emptied prior to adding the clips.
@@ -1000,7 +1004,8 @@ private:
    //! `mClips.push_back`.
    void InsertClip(WaveClipHolder clip);
 
-   void ApplyStretchRatioOne(double t0, double t1);
+   void ApplyStretchRatioOne(
+      double t0, double t1, const ProgressReporter& reportProgress);
 
    SampleBlockFactoryPtr mpFactory;
 

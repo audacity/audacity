@@ -200,7 +200,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
             const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
             if (pFirstTrack) {
                // TODO a progress indicator?
-               pFirstTrack->ApplyStretchRatio({ { t0, t1 } });
+               pFirstTrack->ApplyStretchRatio({ { t0, t1 } }, {});
                pControlTrack = pFirstTrack;
             }
          }
