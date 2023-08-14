@@ -166,7 +166,8 @@ Alg_seq &NoteTrack::GetSeq() const
 }
 
 TrackListHolder NoteTrack::Clone(
-   std::optional<std::pair<double, double>> /* unstretchInterval */) const
+   std::optional<std::pair<double, double>> /* unstretchInterval */,
+   std::function<void(double)> /* reportProgress */) const
 {
    auto duplicate = std::make_shared<NoteTrack>();
    duplicate->Init(*this);
@@ -205,7 +206,6 @@ TrackListHolder NoteTrack::Clone(
 #endif
    return TrackList::Temporary(nullptr, duplicate, nullptr);
 }
-
 
 void NoteTrack::DoOnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
@@ -984,7 +984,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    if (!mSeq) {
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
-      holder = (*Clone(std::nullopt)->begin())->SharedPointer();
+      holder = (*Clone()->begin())->SharedPointer();
       saveme = static_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);

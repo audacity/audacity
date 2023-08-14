@@ -8,6 +8,7 @@
 
 **********************************************************************/
 #include "EffectOutputTracks.h"
+#include "BasicUI.h"
 #include "SyncLock.h"
 #include "WaveTrack.h"
 
@@ -31,11 +32,20 @@ EffectOutputTracks::EffectOutputTracks(
          : dynamic_cast<const WaveTrack*>(pTrack) && pTrack->GetSelected();
       };
 
+   auto progress = BasicUI::MakeProgress(
+      XO("Time Stretching"),
+      XO("First, time stretching must be rendered onto selected audio."));
+   const auto numTracks = trackRange.size();
+   auto count = 0;
+   auto reportProgress = [&](double progressFraction) {
+      progress->Poll(progressFraction * 1000, 1000);
+   };
    for (auto aTrack : trackRange) {
-      auto list = aTrack->Duplicate(effectTimeInterval);
+      auto list = aTrack->Duplicate(effectTimeInterval, reportProgress);
       mIMap.push_back(aTrack);
       mOMap.push_back(*list->begin());
       mOutputTracks->Append(std::move(*list));
+      ++count;
    }
    // Invariant is established
    assert(mIMap.size() == mOutputTracks->Size());

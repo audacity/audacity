@@ -107,11 +107,13 @@ public:
     @pre `NChannels() == orig.NChannels()`
     */
    void Reinit(const WaveTrack &orig);
-private:
-   void Init(const WaveTrack &orig);
 
-   TrackListHolder Clone(std::optional<std::pair<double, double>>
-                            unstretchInterval) const override;
+private:
+   void Init(const WaveTrack& orig);
+
+   TrackListHolder Clone(
+      std::optional<std::pair<double, double>> unstretchInterval,
+      std::function<void(double)> reportProgress) const override;
 
    friend class WaveTrackFactory;
 
@@ -682,6 +684,7 @@ private:
 
    // Get number of clips in this WaveTrack
    int GetNumClips() const;
+   int GetNumClips(double t0, double t1) const;
 
    // Add all wave clips to the given array 'clips' and sort the array by
    // clip start time. The array is emptied prior to adding the clips.
@@ -869,8 +872,12 @@ private:
    //! `mClips.push_back`.
    void InsertClip(WaveClipHolder clip);
 
-   void ApplyStretchRatio(std::optional<std::pair<double, double>>);
-   void ApplyStretchRatioOne(double t0, double t1);
+   void ApplyStretchRatio(
+      std::optional<std::pair<double, double>> interval,
+      std::function<void(double)> reportProgress);
+   void ApplyStretchRatioOne(
+      double t0, double t1,
+      const std::function<void(double)>& reportProgress);
 
    SampleBlockFactoryPtr mpFactory;
 

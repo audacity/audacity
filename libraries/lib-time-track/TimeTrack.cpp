@@ -234,7 +234,8 @@ void TimeTrack::InsertSilence(double t, double len)
 }
 
 TrackListHolder TimeTrack::Clone(
-   std::optional<std::pair<double, double>> /* unstretchInterval */) const
+   std::optional<std::pair<double, double>> /* unstretchInterval */,
+   std::function<void(double)> /* reportProgress */) const
 {
    assert(IsLeader());
    auto result = std::make_shared<TimeTrack>(*this, ProtectedCreationArg{});

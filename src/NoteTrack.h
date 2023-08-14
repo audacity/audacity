@@ -75,7 +75,10 @@ public:
    using Holder = std::shared_ptr<NoteTrack>;
 
 private:
-   TrackListHolder Clone(std::optional<std::pair<double, double>> unstretchInterval) const override;
+   TrackListHolder Clone(
+      std::optional<std::pair<double, double>> unstretchInterval = std::nullopt,
+      std::function<void(double)> reportProgress = [](double) {
+      }) const override;
 
 public:
    void MoveTo(double origin) override { mOrigin = origin; }

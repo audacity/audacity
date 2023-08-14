@@ -306,8 +306,8 @@ private:
     @post result: `NChannels() == result->NChannels()`
     */
    virtual TrackListHolder Duplicate(
-      std::optional<std::pair<double, double>> unstretchInterval =
-         std::nullopt) const;
+      std::optional<std::pair<double, double>> unstretchInterval = std::nullopt,
+      std::function<void(double)> reportProgress = [](double) {}) const;
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;
@@ -404,8 +404,9 @@ private:
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
-   virtual TrackListHolder
-   Clone(std::optional<std::pair<double, double>> unstretchInterval) const = 0;
+   virtual TrackListHolder Clone(
+      std::optional<std::pair<double, double>> unstretchInterval = std::nullopt,
+      std::function<void(double)> reportProgress = [](double) {}) const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >
