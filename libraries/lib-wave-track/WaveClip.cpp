@@ -665,7 +665,7 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
       if (clipNeedsResampling)
       {
          if (stretchOtherBeforeResampling)
-            copy->ApplyStretchRatio();
+            copy->ApplyStretchRatio([](double) {});
          // The other clip's rate is different from ours, so resample
          copy->Resample(mRate);
       }
@@ -674,8 +674,8 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
          copy->ConvertToSampleFormat(GetSampleFormats().Stored());
       newClip = std::move(copy);
    }
-   ApplyStretchRatio();
-   newClip->ApplyStretchRatio();
+   ApplyStretchRatio([](double) {});
+   newClip->ApplyStretchRatio([](double) {});
 
    // Paste cut lines contained in pasted clip
    WaveClipHolders newCutlines;
@@ -1139,7 +1139,8 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    }
 }
 
-void WaveClip::ApplyStretchRatio()
+void WaveClip::ApplyStretchRatio(
+   const std::function<void(double)>& reportProgress)
 {
    const auto stretchRatio = GetStretchRatio();
    if (stretchRatio == 1.0)
@@ -1195,6 +1196,8 @@ void WaveClip::ApplyStretchRatio()
             widestSampleFormat /* computed samples need dither */
          );
       numOutSamples += numSamplesToGet;
+      reportProgress(
+         numOutSamples.as_double() / totalNumOutSamples.as_double());
    }
 
    std::swap(mSequences, newSequences);

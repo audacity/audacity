@@ -537,7 +537,8 @@ ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
 }
 
 TrackListHolder WaveTrack::Clone(
-   std::optional<std::pair<double, double>> unstretchInterval) const
+   std::optional<TimeInterval> unstretchInterval,
+   ProgressReporter reportProgress) const
 {
    assert(IsLeader());
    auto result = TrackList::Temporary(nullptr);
@@ -554,7 +555,7 @@ TrackListHolder WaveTrack::Clone(
       cloneOne(this);
    if (unstretchInterval)
       dynamic_cast<WaveTrack*>(*result->begin())
-         ->ApplyStretchRatio(unstretchInterval);
+         ->ApplyStretchRatio(unstretchInterval, std::move(reportProgress));
    return result;
 }
 
@@ -1486,7 +1487,7 @@ void WaveTrack::BlindlyMergeClipFromOtherTrackInto(
    double t0, WaveClip& myClip, const WaveClip& otherTrackClip)
 {
    assert(myClip.HasEqualStretchRatio(otherTrackClip));
-   myClip.Paste(t0 - myClip.GetPlayStartTime(), otherTrackClip);
+   myClip.Paste(t0 - myClip.GetPlayStartTime(), otherTrackClip, {});
 }
 
 void WaveTrack::ShiftBackAllClips(double t0, double duration)
@@ -1530,7 +1531,7 @@ void WaveTrack::InsertClip(WaveClipHolder clip)
 }
 
 void WaveTrack::ApplyStretchRatio(
-   std::optional<std::pair<double, double>> interval)
+   std::optional<TimeInterval> interval, ProgressReporter reportProgress)
 {
    assert(IsLeader());
    if (GetNumClips() == 0)
@@ -1543,11 +1544,23 @@ void WaveTrack::ApplyStretchRatio(
                  GetEndTime();
    if (startTime == endTime)
       return;
+   const auto numChannels = NChannels();
+   auto count = 0;
+   const ProgressReporter reportChannelProgress =
+      reportProgress ?
+         [&](double progress) {
+            reportProgress((count + progress) / numChannels);
+         } :
+         ProgressReporter {};
    for (const auto pChannel : TrackList::Channels(this))
-      pChannel->ApplyStretchRatioOne(startTime, endTime);
+   {
+      pChannel->ApplyStretchRatioOne(startTime, endTime, reportChannelProgress);
+      ++count;
+   }
 }
 
-void WaveTrack::ApplyStretchRatioOne(double t0, double t1)
+void WaveTrack::ApplyStretchRatioOne(
+   double t0, double t1, const std::function<void(double)>& reportProgress)
 {
    if (auto clipAtT0 = GetClipAtTime(t0); clipAtT0 &&
                                           clipAtT0->SplitsPlayRegion(t0) &&
@@ -1558,10 +1571,16 @@ void WaveTrack::ApplyStretchRatioOne(double t0, double t1)
                                           !clipAtT1->StretchRatioEquals(1))
       SplitAt(t1);
    auto clip = GetClipAtTime(t0);
+   const auto numClips = GetNumClips(t0, t1);
+   auto count = 0;
+   auto reportClipProgress = [&](double progress) {
+      reportProgress((count + progress) / numClips);
+   };
    while (clip && clip->GetPlayStartTime() < t1)
    {
-      clip->ApplyStretchRatio();
+      clip->ApplyStretchRatio(reportClipProgress);
       clip = GetNextClip(*clip, PlaybackDirection::forward);
+      ++count;
    }
 }
 
@@ -2670,6 +2689,19 @@ const WaveClip* WaveTrack::GetClipByIndex(int index) const
 int WaveTrack::GetNumClips() const
 {
    return mClips.size();
+}
+
+int WaveTrack::GetNumClips(double t0, double t1) const
+{
+   const auto clips = SortedClipArray();
+   const auto firstIn =
+      std::find_if(clips.begin(), clips.end(), [t0](const auto& clip) {
+         return t0 < clip->GetPlayEndTime();
+      });
+   const auto firstOut = std::find_if(firstIn, clips.end(), [t1](const auto& clip) {
+      return t1 < clip->GetPlayStartTime();
+   });
+   return std::distance(firstIn, firstOut);
 }
 
 bool WaveTrack::CanOffsetClips(

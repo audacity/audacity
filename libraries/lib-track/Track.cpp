@@ -94,11 +94,12 @@ void Track::EnsureVisible( bool modifyState )
 }
 
 TrackListHolder Track::Duplicate(
-   std::optional<std::pair<double, double>> unstretchInterval) const
+   std::optional<TimeInterval> unstretchInterval,
+   ProgressReporter reportProgress) const
 {
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
-   auto result = Clone(std::move(unstretchInterval));
+   auto result = Clone(std::move(unstretchInterval), std::move(reportProgress));
 
    auto iter = TrackList::Channels(*result->begin()).begin();
    const auto copyOne = [&](const Track *pChannel){

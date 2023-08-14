@@ -343,7 +343,8 @@ void LabelTrack::SetSelected( bool s )
 }
 
 TrackListHolder LabelTrack::Clone(
-   std::optional<std::pair<double, double>> /* unstretchInterval */) const
+   std::optional<TimeInterval> /* unstretchInterval */,
+   std::function<void(double)> /* reportProgress */) const
 {
    assert(IsLeader());
    auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});

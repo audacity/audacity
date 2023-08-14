@@ -44,6 +44,8 @@ using TrackListHolder = std::shared_ptr<TrackList>;
 struct UndoStackElem;
 
 using ListOfTracks = std::list< std::shared_ptr< Track > >;
+using TimeInterval = std::pair<double, double>;
+using ProgressReporter = std::function<void(double)>;
 
 //! Pairs a std::list iterator and a pointer to a list, for comparison purposes
 /*! Compare owning lists first, and only if same, then the iterators;
@@ -306,8 +308,8 @@ private:
     @post result: `NChannels() == result->NChannels()`
     */
    virtual TrackListHolder Duplicate(
-      std::optional<std::pair<double, double>> unstretchInterval =
-         std::nullopt) const;
+      std::optional<TimeInterval> unstretchInterval = std::nullopt,
+      ProgressReporter reportProgress = {}) const;
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;
@@ -404,8 +406,9 @@ private:
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
-   virtual TrackListHolder
-   Clone(std::optional<std::pair<double, double>> unstretchInterval) const = 0;
+   virtual TrackListHolder Clone(
+      std::optional<TimeInterval> unstretchInterval = {},
+      ProgressReporter reportProgress = {}) const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >

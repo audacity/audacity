@@ -45,6 +45,7 @@ class WaveClip;
 using WaveClipHolder = std::shared_ptr< WaveClip >;
 using WaveClipHolders = std::vector < WaveClipHolder >;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+using ProgressReporter = std::function<void(double)>;
 
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
 // own the storage for those arrays.  If it does, it destroys them.
@@ -181,7 +182,8 @@ public:
     * @brief Renders the stretching of the clip (preserving duration).
     * @post GetStretchRatio() == 1
     */
-   void ApplyStretchRatio();
+   void ApplyStretchRatio(
+      const std::function<void(double)>& reportProgress);
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
@@ -447,7 +449,8 @@ public:
    /*!
     @return true and succeed if and only if `this->GetWidth() == other.GetWidth()`
     */
-   bool Paste(double t0, const WaveClip &other);
+   bool
+   Paste(double t0, const WaveClip& other, ProgressReporter reportProgress);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */
