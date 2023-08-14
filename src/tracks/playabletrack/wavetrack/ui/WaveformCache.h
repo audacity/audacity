@@ -14,6 +14,7 @@
 #include "WaveClip.h"
 
 class WaveCache;
+class WaveChannelInterval;
 
 struct WaveClipWaveformCache final : WaveClipListener
 {
@@ -33,7 +34,7 @@ struct WaveClipWaveformCache final : WaveClipListener
    void Clear();
 
    /** Getting high-level data for screen display */
-   bool GetWaveDisplay(const WaveClip &clip, size_t channel,
+   bool GetWaveDisplay(const WaveChannelInterval &clip,
       WaveDisplay &display, double t0, double pixelsPerSecond);
 };
 

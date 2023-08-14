@@ -640,7 +640,7 @@ void DrawEnvelope(TrackPanelDrawingContext &context,
 // Headers needed only for experimental drawing below
 //#include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
 //#include "tracks/ui/EnvelopeHandle.h"
-void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
+void DrawClipWaveform(TrackPanelDrawingContext &context,
    const WaveTrack &track, const WaveChannelInterval &clip,
    const wxRect &rect, bool dB, bool muted, bool selected)
 {
@@ -763,7 +763,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
          // fisheye moves over the background, there is then less to do when
          // redrawing.
 
-         if (!clipCache.GetWaveDisplay(clip.GetNarrowClip(), channel,
+         if (!clipCache.GetWaveDisplay(clip,
             display, t0, averagePixelsPerSecond))
             return;
       }
@@ -813,7 +813,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
             fisheyeDisplay.width -= skipped;
             // Get a wave display for the fisheye, uncached.
             if (rectPortion.width > 0)
-               if (!clipCache.GetWaveDisplay(clip.GetNarrowClip(), channel,
+               if (!clipCache.GetWaveDisplay(clip,
                      fisheyeDisplay, t0, -1.0)) // ignored
                   continue; // serious error.  just don't draw??
             useMin = fisheyeDisplay.min;
@@ -980,7 +980,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
    for (const auto pInterval :
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
-      DrawClipWaveform(context, channel, track, *pInterval, rect,
+      DrawClipWaveform(context, track, *pInterval, rect,
          dB, muted, (&pInterval->GetNarrowClip() == selectedClip));
    }
    DrawBoldBoundaries(context, track, rect);
