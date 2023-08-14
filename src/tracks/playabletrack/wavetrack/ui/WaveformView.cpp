@@ -981,7 +981,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
       DrawClipWaveform(context, track, *pInterval, rect,
-         dB, muted, (&pInterval->GetNarrowClip() == selectedClip));
+         dB, muted, (&pInterval->GetClip() == selectedClip));
    }
    DrawBoldBoundaries(context, track, rect);
 
