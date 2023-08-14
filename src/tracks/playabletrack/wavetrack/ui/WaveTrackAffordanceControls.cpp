@@ -162,6 +162,8 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     const auto rect = state.rect;
 
     auto track = std::static_pointer_cast<WaveTrack>(FindTrack());
+    // Assume only leader channels have affordance areas
+    assert(track->IsLeader());
 
     {
         auto handle = WaveClipAdjustBorderHandle::HitAnywhere(
