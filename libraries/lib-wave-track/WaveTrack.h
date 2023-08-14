@@ -74,7 +74,6 @@ public:
    ~WaveChannelInterval() override;
 
    const WaveClip &GetClip() const { return mWideClip; }
-   const WaveClip &GetNarrowClip() const { return mNarrowClip; }
    const Envelope &GetEnvelope() const { return mEnvelope; }
    size_t GetChannelIndex() const { return miChannel; }
 
@@ -119,6 +118,8 @@ public:
    int GetColourIndex() const;
 
 private:
+   const WaveClip &GetNarrowClip() const { return mNarrowClip; }
+
    WaveClip &mWideClip;
    WaveClip &mNarrowClip;
    Envelope &mEnvelope;

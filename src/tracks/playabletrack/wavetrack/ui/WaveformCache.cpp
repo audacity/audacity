@@ -67,8 +67,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
    const WaveChannelInterval &clip, WaveDisplay &display,
    double t0, double pixelsPerSecond)
 {
-   // TODO -- use clip.GetChannelIndex()
-   auto &waveCache = mWaveCaches[0];
+   auto &waveCache = mWaveCaches[clip.GetChannelIndex()];
 
    t0 += clip.GetTrimLeft();
 
@@ -270,7 +269,8 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 }
 
 WaveClipWaveformCache::WaveClipWaveformCache(size_t nChannels)
-   : mWaveCaches(nChannels)
+   // TODO wide wave tracks -- won't need std::max here
+   : mWaveCaches(std::max<size_t>(2, nChannels))
 {
    for (auto &pCache : mWaveCaches)
       pCache = std::make_unique<WaveCache>();
