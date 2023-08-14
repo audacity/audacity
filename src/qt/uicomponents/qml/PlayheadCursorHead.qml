@@ -1,6 +1,7 @@
 import QtQuick
 
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Canvas {
    id: root
@@ -12,8 +13,11 @@ Canvas {
    smooth: true
 
    property int radius: 2
-   readonly property color strokeColor: appConfig.timecodeColor
-   readonly property color fillColor: appConfig.fontColor2
+   readonly property color strokeColor: UiTheme.timecodeColor
+   readonly property color fillColor: UiTheme.fontColor2
+
+   onStrokeColorChanged: root.requestPaint()
+   onFillColorChanged: root.requestPaint()
 
    onPaint: {
       var ctx = getContext("2d")

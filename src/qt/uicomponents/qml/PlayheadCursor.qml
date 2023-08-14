@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Item {
    id: root
@@ -16,10 +17,10 @@ Item {
       anchors.centerIn: root
       width: 3
       height: root.height
-      color: appConfig.fontColor2
+      color: UiTheme.fontColor2
 
       border {
-         color: appConfig.timecodeColor
+         color: UiTheme.timecodeColor
          width: 1
       }
    }

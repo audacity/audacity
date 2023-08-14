@@ -23,6 +23,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 FocusScope {
    id: root
@@ -38,11 +39,12 @@ FocusScope {
    property bool accentButton: false
 
    property color normalColor:
-      transparent ? "transparent" : accentButton ? accentColor : appConfig.buttonColor
-   property color hoverHitColor: accentButton ? accentColor : appConfig.buttonColor
-   property color accentColor: appConfig.accentColor
+      transparent ? "transparent" : accentButton ? accentColor : UiTheme.buttonColor
+   property color hoverHitColor: accentButton ? accentColor : UiTheme.buttonColor
+   property color accentColor: UiTheme.accentColor
 
-   property color iconColor: "black"
+   property color iconColor: UiTheme.fontColor1
+
    property real radius: 3
 
    property bool isNarrow: buttonType === FlatButton.Horizontal
@@ -86,9 +88,9 @@ FocusScope {
    objectName: root.text
 
    implicitWidth: contentLoader.implicitWidth + 2 * margins
-   implicitHeight: Math.max(contentLoader.implicitHeight, appConfig.defaultButtonSize)
+   implicitHeight: Math.max(contentLoader.implicitHeight, UiTheme.defaultButtonSize)
 
-   opacity: root.enabled ? 1.0 : appConfig.itemOpacityDisabled
+   opacity: root.enabled ? 1.0 : UiTheme.itemOpacityDisabled
 
    Loader {
       anchors.fill: parent
@@ -103,11 +105,11 @@ FocusScope {
          id: background
 
          color: root.normalColor
-         opacity: appConfig.buttonOpacityNormal
+         opacity: UiTheme.buttonOpacityNormal
 
          radius: root.radius
-         border.width: appConfig.borderWidth
-         border.color: appConfig.strokeColor1
+         border.width: UiTheme.borderWidth
+         border.color: UiTheme.strokeColor
 
          states: [
             State {
@@ -117,7 +119,7 @@ FocusScope {
                PropertyChanges {
                   target: background
                   color: root.hoverHitColor
-                  opacity: appConfig.buttonOpacityHit
+                  opacity: UiTheme.buttonOpacityHit
                }
             },
 
@@ -128,7 +130,7 @@ FocusScope {
                PropertyChanges {
                   target: background
                   color: root.hoverHitColor
-                  opacity: appConfig.buttonOpacityHover
+                  opacity: UiTheme.buttonOpacityHover
                }
             }
          ]
@@ -202,8 +204,8 @@ FocusScope {
 
          PropertyChanges {
             target: root
-            implicitWidth: appConfig.defaultButtonSize
-            implicitHeight: appConfig.defaultButtonSize
+            implicitWidth: UiTheme.defaultButtonSize
+            implicitHeight: UiTheme.defaultButtonSize
          }
       },
 
@@ -215,7 +217,7 @@ FocusScope {
             target: root
             implicitWidth: Math.max(contentLoader.implicitWidth + 2 * root.margins,
                                     root.minWidth)
-            implicitHeight: appConfig.defaultButtonSize
+            implicitHeight: UiTheme.defaultButtonSize
          }
       },
 
@@ -225,7 +227,7 @@ FocusScope {
 
          PropertyChanges {
             target: root
-            implicitHeight: appConfig.defaultButtonSize
+            implicitHeight: UiTheme.defaultButtonSize
          }
       },
 

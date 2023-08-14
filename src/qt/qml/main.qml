@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 import Audacity
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 ApplicationWindow {
    id: root
@@ -15,6 +16,7 @@ ApplicationWindow {
    minimumHeight: 540
 
    required property ApplicationConfiguration appConfig
+   readonly property string theme: UiTheme.currentTheme
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
    property string language: "en"
@@ -106,6 +108,21 @@ ApplicationWindow {
       }
 
       Menu {
+         title: qsTr("Theme")
+         Repeater {
+            model: UiTheme.availableThemes()
+            MenuItem {
+               required property string modelData
+               text: modelData
+               autoExclusive: true
+               checkable: true
+               checked: theme === text
+               onTriggered: UiTheme.changeTheme(text)
+            }
+         }
+      }
+
+      Menu {
          title: qsTr("Testers")
          MenuItem {
             text: qsTr("VolumeControl")
@@ -135,7 +152,7 @@ ApplicationWindow {
       id: trackCanvas
       x: sidebar.width
       width: root.width - sidebar.width
-      color: appConfig.backgroundColor3
+      color: UiTheme.backgroundColor3
       anchors.top: timelineRuler.bottom
       anchors.bottom: footerId.top
 
@@ -182,10 +199,11 @@ ApplicationWindow {
       id: footerId
       width: parent.width
       height: 30
-      color: appConfig.backgroundColor1
+      color: UiTheme.backgroundColor1
 
       Text {
          id: statusBar
+         color: UiTheme.fontColor1
          anchors.centerIn: parent
       }
 
@@ -193,7 +211,7 @@ ApplicationWindow {
          anchors.bottom: parent.top
          height: 1
          width: parent.width
-         color: appConfig.strokeColor1
+         color: UiTheme.strokeColor
       }
    }
 }

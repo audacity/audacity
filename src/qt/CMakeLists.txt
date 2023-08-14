@@ -29,6 +29,7 @@ if(NOT ${_OPT}qt_enable_qml_cache_gen)
 endif()
 
 add_subdirectory(uicomponents)
+add_subdirectory(uithemes)
 
 set(QT_TRANSLATION_SOURCES
    translations/de.ts
@@ -63,6 +64,7 @@ qt_add_qml_module(
    DEPENDENCIES
       QtQuick
       Audacity.UiComponents
+      Audacity.UiThemes
 	QML_FILES
 		${QML_SOURCES}
    SOURCES
@@ -101,7 +103,7 @@ endif()
 
 target_compile_definitions( ${QAUDACITY} PRIVATE $<$<CONFIG:Debug>:QT_QML_DEBUG> )
 target_link_libraries( ${QAUDACITY} PUBLIC ${AUDACITY_LIBRARIES} )
-target_link_libraries( ${QAUDACITY} PRIVATE Qt6::Core Qt6::Gui Qt6::Quick KDAB::kddockwidgets uicomponentsplugin)
+target_link_libraries( ${QAUDACITY} PRIVATE Qt6::Core Qt6::Gui Qt6::Quick KDAB::kddockwidgets uicomponentsplugin uithemesplugin)
 
 qt_finalize_target(${QAUDACITY})
 

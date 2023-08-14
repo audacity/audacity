@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Rectangle {
    id: root
@@ -9,7 +10,7 @@ Rectangle {
    implicitHeight: 124
    width: implicitWidth
    height: implicitHeight
-   color: appConfig.textFieldColor
+   color: UiTheme.clipHeaderColor
    radius: 4
    objectName: "WaveClipView"
 
@@ -49,7 +50,7 @@ Rectangle {
       x: 4
       y: 3
       height: 12
-      color: appConfig.fontColor1
+      color: UiTheme.fontColor1
       fontSizeMode: Text.Fit
       font.family: appConfig.bodyFont.family
       font.pixelSize: 10

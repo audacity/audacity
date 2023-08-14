@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 
    QQmlApplicationEngine engine;
    engine.addImportPath(":/uicomponents");
+   engine.addImportPath(":/uithemes");
 
    engine.setInitialProperties({
       { "appConfig", QVariant::fromValue(&appConfig) }

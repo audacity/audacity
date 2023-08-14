@@ -3,6 +3,7 @@ import QtQuick.Controls
 
 import Audacity
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Item {
    id: root
@@ -54,7 +55,7 @@ Item {
       height: parent.height
       width: root.width - 17
       radius: 3
-      color: appConfig.timecodeColor
+      color: UiTheme.timecodeColor
 
       QtObject {
          id: display
@@ -102,7 +103,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             width: 12
-            color: appConfig.fontColor2
+            color: UiTheme.fontColor2
             font: appConfig.timecodeFont
          },
          Text {
@@ -111,7 +112,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             width: 12
-            color: appConfig.fontColor2
+            color: UiTheme.fontColor2
             font: appConfig.timecodeFont
          },
          Text {
@@ -119,7 +120,7 @@ Item {
             height: root.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: appConfig.fontColor2
+            color: UiTheme.fontColor2
             font: appConfig.timecodeFont
          },
          Text {
@@ -127,7 +128,7 @@ Item {
             height: root.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: appConfig.fontColor2
+            color: UiTheme.fontColor2
             font: appConfig.timecodeFont
          },
          Text {
@@ -135,7 +136,7 @@ Item {
             height: root.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: appConfig.fontColor2
+            color: UiTheme.fontColor2
             font: appConfig.timecodeFont
          },
          Text {
@@ -143,7 +144,7 @@ Item {
             height: root.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: appConfig.fontColor2
+            color: UiTheme.fontColor2
             font: appConfig.timecodeFont
          }
       ]
@@ -155,7 +156,7 @@ Item {
          width: 4
          height: root.height
          verticalAlignment: Text.AlignVCenter
-         color: appConfig.fontColor2
+         color: UiTheme.fontColor2
          font: appConfig.bodyFont
       }
 
@@ -165,7 +166,7 @@ Item {
          width: 10
          height: root.height
          verticalAlignment: Text.AlignVCenter
-         color: appConfig.fontColor2
+         color: UiTheme.fontColor2
          font: appConfig.bodyFont
          opacity: 0.7
       }
@@ -176,7 +177,7 @@ Item {
          width: 14
          height: root.height
          verticalAlignment: Text.AlignVCenter
-         color: appConfig.fontColor2
+         color: UiTheme.fontColor2
          font: appConfig.bodyFont
          opacity: 0.7
       }
@@ -187,7 +188,7 @@ Item {
          width: 9
          height: root.height
          verticalAlignment: Text.AlignVCenter
-         color: appConfig.fontColor2
+         color: UiTheme.fontColor2
          font: appConfig.bodyFont
          opacity: 0.7
       }
@@ -196,7 +197,7 @@ Item {
          x: displayPart.width - width
          width: displayPart.radius
          height: displayPart.height
-         color: appConfig.timecodeColor
+         color: UiTheme.timecodeColor
       }
 
       Component.onCompleted: {
@@ -243,7 +244,7 @@ Item {
       radius: 3
       width: 16
       height: root.height
-      color: appConfig.timecodeColor
+      color: UiTheme.timecodeColor
 
       states: [
          State {
@@ -252,13 +253,13 @@ Item {
 
             PropertyChanges {
                target: buttonPart
-               color: appConfig.backgroundColor3
+               color: UiTheme.backgroundColor3
                opacity: 1.0
             }
 
             PropertyChanges {
                target: buttonPartLeftEdge
-               color: appConfig.backgroundColor3
+               color: UiTheme.backgroundColor3
                opacity: 1.0
             }
          },
@@ -269,13 +270,13 @@ Item {
 
             PropertyChanges {
                target: buttonPart
-               color: appConfig.backgroundColor3
+               color: UiTheme.backgroundColor3
                opacity: 0.5
             }
 
             PropertyChanges {
                target: buttonPartLeftEdge
-               color: appConfig.backgroundColor3
+               color: UiTheme.backgroundColor3
                opacity: 0.5
             }
          },
@@ -302,7 +303,7 @@ Item {
          id: buttonPartLeftEdge
          width: buttonPart.radius
          height: buttonPart.height
-         color: appConfig.timecodeColor
+         color: UiTheme.timecodeColor
       }
 
       Text {
@@ -311,7 +312,7 @@ Item {
          anchors.fill: buttonPart
          verticalAlignment: Text.AlignVCenter
          horizontalAlignment: Text.AlignHCenter
-         color: appConfig.fontColor2
+         color: UiTheme.fontColor2
          text: String.fromCharCode(IconCode.SMALL_ARROW_DOWN)
 
          font {

@@ -2,16 +2,21 @@ import QtQuick
 import QtQuick.Controls
 
 import Audacity.UiComponents
+import Audacity.UiThemes
 
 Rectangle {
    id: root
    height: 6
    width: 100
-   color: appConfig.buttonColor
+   color: UiTheme.buttonColor
    objectName: "MeterPanel"
 
    property alias value: meterPanelHandler.value
    property alias maximumRecentPeaksCount: recentPeaks.maximumCount
+
+   function isBeingClipped() {
+      return peaks.clippedCount >= 4
+   }
 
    // value: [0..1]
    function calculatePeak(value) {
@@ -22,17 +27,12 @@ Rectangle {
       var peak = calculatePeak(value)
       if (peak > clippingZone.xOffset) {
          peaks.clippedCount += 1
-         if (peaks.clippedCount >= 4) {
-            clippingZoneArea.opacity = 1.0
-            clippingZoneArea.color = appConfig.recordColor
-            currentPeakIndicator.color = appConfig.recordColor
-         } else {
-            currentPeakIndicator.color = appConfig.accentColor
+         if (isBeingClipped()) {
+            peaks.hasBeenClipped = true
          }
          peaks.current = clippingZone.xOffset
       } else {
          peaks.clippedCount = 0
-         currentPeakIndicator.color = appConfig.accentColor
          peaks.current = peak
       }
 
@@ -65,6 +65,7 @@ Rectangle {
       readonly property int recent: -1
       readonly property int maximum: -1
       readonly property int clippedCount: 0
+      readonly property bool hasBeenClipped: false
    }
 
    QtObject {
@@ -73,6 +74,7 @@ Rectangle {
       property int recent: defaultPeaks.recent
       property int maximum: defaultPeaks.maximum
       property int clippedCount: defaultPeaks.clippedCount
+      property bool hasBeenClipped: defaultPeaks.hasBeenClipped
    }
 
    QtObject {
@@ -93,9 +95,7 @@ Rectangle {
          peaks.recent = defaultPeaks.recent
          peaks.maximum = defaultPeaks.maximum
          peaks.clippedCount = defaultPeaks.clippedCount
-
-         clippingZoneArea.opacity = 0.1
-         clippingZoneArea.color = appConfig.backgroundColor3
+         peaks.hasBeenClipped = defaultPeaks.hasBeenClipped
       }
    }
 
@@ -103,7 +103,7 @@ Rectangle {
       id: currentPeakIndicator
       height: parent.height
       width: peaks.current
-      color: appConfig.accentColor
+      color: isBeingClipped() ? UiTheme.recordColor : UiTheme.accentColor
    }
 
    Rectangle {
@@ -111,7 +111,7 @@ Rectangle {
       x: peaks.recent
       height: parent.height
       width: 1
-      color: appConfig.accentColor
+      color: UiTheme.accentColor
       visible: peaks.recent !== -1
    }
 
@@ -120,7 +120,7 @@ Rectangle {
       x: peaks.maximum
       height: parent.height
       width: 1
-      color: appConfig.fontColor1
+      color: UiTheme.fontColor1
       visible: peaks.maximum !== -1
    }
 
@@ -129,8 +129,8 @@ Rectangle {
       x: parent.width - clippingZone.width
       height: parent.height
       width: clippingZone.width
-      opacity: 0.1
-      color: appConfig.backgroundColor3
+      opacity: peaks.hasBeenClipped ? 1.0 : 0.1
+      color: peaks.hasBeenClipped ? UiTheme.recordColor : UiTheme.backgroundColor3
    }
 
    Component.onCompleted: {
