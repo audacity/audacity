@@ -14,21 +14,15 @@
 #include "SampleCount.h"
 #include "SampleFormat.h"
 
-class STRETCHING_SEQUENCE_API ClipInterface
+class STRETCHING_SEQUENCE_API ClipTimes
 {
 public:
-   virtual ~ClipInterface();
-
-   virtual AudioSegmentSampleView GetSampleView(
-      size_t iChannel, sampleCount start, size_t length,
-      bool mayThrow = true) const = 0;
+   virtual ~ClipTimes();
 
    /*!
     * The number of raw audio samples not hidden by trimming.
     */
    virtual sampleCount GetVisibleSampleCount() const = 0;
-
-   virtual size_t GetWidth() const = 0;
 
    virtual int GetRate() const = 0;
 
@@ -37,6 +31,18 @@ public:
    virtual double GetPlayEndTime() const = 0;
 
    virtual double GetStretchRatio() const = 0;
+};
+
+class STRETCHING_SEQUENCE_API ClipInterface : public ClipTimes
+{
+public:
+   ~ClipInterface() override;
+
+   virtual AudioSegmentSampleView
+   GetSampleView(size_t iChannel, sampleCount start, size_t length,
+      bool mayThrow = true) const = 0;
+
+   virtual size_t GetWidth() const = 0;
 };
 
 using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;

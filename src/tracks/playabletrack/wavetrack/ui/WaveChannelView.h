@@ -17,6 +17,7 @@ Paul Licameli split from class WaveTrack
 namespace WaveChannelViewConstants{ enum Display : int; }
 struct WaveChannelSubViewType;
 
+class ClipTimes;
 class CutlineHandle;
 class TranslatableString;
 class SampleTrack;
@@ -181,7 +182,8 @@ public:
 
    unsigned LoseFocus(AudacityProject *project) override;
 
-   static bool ClipDetailsVisible(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
+   static bool ClipDetailsVisible(
+      const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
    static wxRect ClipHitTestArea(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
    static bool HitTest(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& rect, const wxPoint& pos);
 
@@ -246,7 +248,7 @@ struct AUDACITY_DLL_API ClipParameters
 {
    // Do a bunch of calculations common to waveform and spectrum drawing.
    ClipParameters(
-      const WaveClip &clip, const wxRect& rect, const ZoomInfo& zoomInfo);
+      const ClipTimes &clip, const wxRect& rect, const ZoomInfo& zoomInfo);
 
    const double trackRectT0; // absolute time of left edge of track
 
@@ -266,7 +268,8 @@ struct AUDACITY_DLL_API ClipParameters
 
    // returns a clip rectangle restricted by viewRect,
    // and with clipOffsetX - clip horizontal origin offset within view rect
-   static wxRect GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo,
+   static wxRect GetClipRect(
+      const ClipTimes& clip, const ZoomInfo& zoomInfo,
       const wxRect& viewRect, bool* outShowSamples = nullptr);
 };
 
