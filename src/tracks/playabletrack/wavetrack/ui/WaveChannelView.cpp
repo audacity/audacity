@@ -1424,7 +1424,7 @@ bool WaveChannelView::CopySelectedText(AudacityProject& project)
       AnyAffordance(project, *this, &WaveTrackAffordanceControls::OnTextCopy);
 }
 
-bool WaveChannelView::ClipDetailsVisible(const WaveClip& clip,
+bool WaveChannelView::ClipDetailsVisible(const ClipTimes& clip,
    const ZoomInfo& zoomInfo, const wxRect& viewRect)
 {
    //Do not fold clips to line at sample zoom level, as
@@ -1537,7 +1537,7 @@ double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
    return .0;
 }
 
-double GetBlankSpaceBeforePlayEndTime(const WaveClip& clip)
+double GetBlankSpaceBeforePlayEndTime(const ClipTimes &clip)
 {
    return 0.99 * clip.GetStretchRatio() / clip.GetRate();
 }
@@ -1559,11 +1559,11 @@ bool ShowIndividualSamples(
 }
 
 ClipParameters::ClipParameters(
-   const WaveClip &clip, const wxRect& rect, const ZoomInfo& zoomInfo)
-    : trackRectT0 { zoomInfo.PositionToTime(0, 0, true) }
-    , averagePixelsPerSecond { GetPixelsPerSecond(rect, zoomInfo) }
-    , showIndividualSamples { ShowIndividualSamples(
-         clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond) }
+   const ClipTimes &clip, const wxRect& rect, const ZoomInfo& zoomInfo
+)  : trackRectT0 { zoomInfo.PositionToTime(0, 0, true) }
+   , averagePixelsPerSecond { GetPixelsPerSecond(rect, zoomInfo) }
+   , showIndividualSamples { ShowIndividualSamples(
+      clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond) }
 {
    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width, 0, true);
    const auto stretchRatio = clip.GetStretchRatio();
@@ -1659,7 +1659,8 @@ ClipParameters::ClipParameters(
    }
 }
 
-wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples)
+wxRect ClipParameters::GetClipRect(const ClipTimes& clip,
+   const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples)
 {
    const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
    const auto showIndividualSamples = ShowIndividualSamples(
