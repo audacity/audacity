@@ -653,6 +653,15 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( USE_AUDIO_UNITS ${${_OPT}use_audio_units} CACHE INTERNAL "" )
 endif()
 
+if(${_OPT}enable_experimental_qt_support)
+   # Disable cache generation for QML files
+   if(NOT ${_OPT}qt_enable_qml_cache_gen)
+      set(nocachegen NO_CACHEGEN)
+   endif()
+   set( AUDACITY_QML_RESOURCE_PREFIX "/audacity/imports" )
+   qt_standard_project_setup()
+endif()
+
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )

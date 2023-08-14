@@ -1,4 +1,3 @@
-qt_standard_project_setup()
 set(QAUDACITY ${CMAKE_PROJECT_NAME})
 
 set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml)
@@ -15,18 +14,12 @@ set(APP_SOURCES
 )
 
 set(RESOURCES
-   audacity.qrc
    fonts/fonts.qrc
 )
 
 qt_add_resources(QT_RESOURCES
    ${RESOURCES}
 )
-
-# Disable cache generation for QML files
-if(NOT ${_OPT}qt_enable_qml_cache_gen)
-   set(nocachegen NO_CACHEGEN)
-endif()
 
 add_subdirectory(uicomponents)
 add_subdirectory(uithemes)
@@ -57,7 +50,7 @@ set(QML_SOURCES
    qml/Workspace.qml
 )
 
-qt_add_qml_module(
+audacity_qml_module(
 	${QAUDACITY}
 	URI Audacity
 	VERSION 1.0
@@ -69,8 +62,14 @@ qt_add_qml_module(
 		${QML_SOURCES}
    SOURCES
       ${APP_SOURCES}
-   NO_LINT
-   ${nocachegen}
+   NO_RESOURCE_TARGET_PATH
+   LIBRARIES
+      Qt6::Core
+      Qt6::Gui
+      Qt6::Quick
+      KDAB::kddockwidgets
+      uicomponentsplugin
+      uithemesplugin
 )
 
 set_target_properties(
@@ -101,9 +100,10 @@ elseif(NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
    )
 endif()
 
-target_compile_definitions( ${QAUDACITY} PRIVATE $<$<CONFIG:Debug>:QT_QML_DEBUG> )
-target_link_libraries( ${QAUDACITY} PUBLIC ${AUDACITY_LIBRARIES} )
-target_link_libraries( ${QAUDACITY} PRIVATE Qt6::Core Qt6::Gui Qt6::Quick KDAB::kddockwidgets uicomponentsplugin uithemesplugin)
+target_compile_definitions( ${QAUDACITY}
+   PRIVATE
+      $<$<CONFIG:Debug>:QT_QML_DEBUG>
+      -DAUDACITY_QML_RESOURCE_PREFIX="${AUDACITY_QML_RESOURCE_PREFIX}")
 
 qt_finalize_target(${QAUDACITY})
 
@@ -126,7 +126,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
          --executable \"$<TARGET_FILE:${QAUDACITY}>\"\
          --source \"$<TARGET_FILE_DIR:${QAUDACITY}>\"\
          --dest \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}\"\
-         --qrc-files \"${CMAKE_CURRENT_SOURCE_DIR}/audacity.qrc\"\
       )"
    )
 
@@ -142,7 +141,6 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
          COMMAND \"${PYTHON}\" \"${CMAKE_SOURCE_DIR}/scripts/build/deploy_macos.py\"\
          --source \"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/Audacity.app\"\
          --dest \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}\"\
-         --qrc-files \"${CMAKE_CURRENT_SOURCE_DIR}/audacity.qrc\"\
       )"
    )
 
@@ -172,7 +170,6 @@ else()
          --executable-name \"$<TARGET_FILE_NAME:${QAUDACITY}>\"\
          --source \"$<TARGET_FILE_DIR:${QAUDACITY}>/..\"\
          --dest \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}\"\
-         --qrc-files \"${CMAKE_CURRENT_SOURCE_DIR}/audacity.qrc\"\
          --lib-dir \"${_PKGLIB}\"\
       )"
    )
