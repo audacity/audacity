@@ -73,7 +73,7 @@ bool EffectReverse::IsInteractive() const
 bool EffectReverse::Process(EffectInstance &, EffectSettings &)
 {
    //all needed because Reverse should move the labels too
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
    bool bGoodResult = true;
    int count = 0;
 

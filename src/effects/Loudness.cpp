@@ -105,7 +105,7 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
    );
 
    // Iterate over each track
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
    bool bGoodResult = true;
    auto topMsg = XO("Normalizing Loudness...\n");
 

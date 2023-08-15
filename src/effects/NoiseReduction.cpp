@@ -637,7 +637,7 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
 {
    // This same code will either reduce noise or profile it
 
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
 
    auto track = *(outputs.Get().Selected<const WaveTrack>()).begin();
    if (!track)
@@ -701,13 +701,14 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
    };
    bool bGoodResult = worker.Process(inWindowType, outWindowType,
       outputs.Get(), mT0, mT1);
+   const auto wasProfile = mSettings->mDoProfile;
    if (mSettings->mDoProfile) {
       if (bGoodResult)
          mSettings->mDoProfile = false; // So that "repeat last effect" will reduce noise
       else
          mStatistics.reset(); // So that profiling must be done again before noise reduction
    }
-   if (bGoodResult)
+   if (bGoodResult && !wasProfile)
       outputs.Commit();
 
    return bGoodResult;

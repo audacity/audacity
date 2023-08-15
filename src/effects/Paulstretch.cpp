@@ -41,7 +41,7 @@ const EffectParameterMethods& EffectPaulstretch::Parameters() const
    return parameters;
 }
 
-/// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop 
+/// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop
 /// of the effect.
 class PaulStretch
 {
@@ -147,7 +147,7 @@ double EffectPaulstretch::CalcPreviewInputLength(
 bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 {
    // Pass true because sync lock adjustment is needed
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
    auto newT1 = mT1;
    int count = 0;
    // Process selected wave tracks first, to find the new t1 value

@@ -15,6 +15,7 @@
 
 *//*******************************************************************/
 #include "TruncSilence.h"
+#include "BasicUI.h"
 #include "EffectEditor.h"
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
@@ -97,7 +98,7 @@ static const size_t DEF_BlendFrameCount = 100;
 
 // Lower bound on the amount of silence to find at a time -- this avoids
 // detecting silence repeatedly in low-frequency sounds.
-static const double DEF_MinTruncMs = 0.001; 
+static const double DEF_MinTruncMs = 0.001;
 
 // Typical fraction of total time taken by detection (better to guess low)
 const double detectFrac = 0.4;
@@ -189,7 +190,7 @@ bool EffectTruncSilence::LoadSettings(
       if (!parms.ReadAndVerify( ActIndex.key, &temp, ActIndex.def,
          kActionStrings, nActions, kObsoleteActions, nObsoleteActions))
          return false;
-   
+
       // TODO:  fix this when settings are really externalized
       const_cast<int&>(mActionIndex) = temp;
    }
@@ -272,7 +273,7 @@ bool EffectTruncSilence::ProcessIndependently()
    // Now do the work
 
    // Copy tracks
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
    double newT1 = 0.0;
 
    {
@@ -306,15 +307,14 @@ bool EffectTruncSilence::ProcessIndependently()
 bool EffectTruncSilence::ProcessAll()
 {
    // Copy tracks
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
 
    // Master list of silent regions.
    // This list should always be kept in order.
    RegionList silences;
 
-   if (FindSilences(silences,
-      inputTracks()->Selected<const WaveTrack>())
-   ) {
+   if (FindSilences(silences, outputs.Get().Selected<const WaveTrack>()))
+   {
       auto trackRange = outputs.Get().Any();
       double totalCutLen = 0.0;
       if (DoRemoval(silences, trackRange, 0, 1, totalCutLen)) {
@@ -427,7 +427,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
       // Don't waste time cutting nothing.
       if( cutLen == 0.0 )
          continue;
-      
+
       totalCutLen += cutLen;
 
       double cutStart = (r->start + r->end - cutLen) / 2;
@@ -514,6 +514,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 {
    assert(wt.IsLeader());
    const auto rate = wt.GetRate();
+
    // Smallest silent region to detect in frames
    auto minSilenceFrames =
       sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs) * rate);

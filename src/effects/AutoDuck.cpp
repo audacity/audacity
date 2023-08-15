@@ -32,7 +32,9 @@
 #include "Theme.h"
 #include "../widgets/valnum.h"
 
+#include "WaveClip.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "AudacityMessageBox.h"
 
 const EffectParameterMethods& EffectAutoDuck::Parameters() const
@@ -83,12 +85,7 @@ END_EVENT_TABLE()
 EffectAutoDuck::EffectAutoDuck()
 {
    Parameters().Reset(*this);
-
    SetLinearEffectFlag(true);
-
-   mControlTrack = NULL;
-
-   mPanel = NULL;
 }
 
 EffectAutoDuck::~EffectAutoDuck()
@@ -189,6 +186,27 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    if (end <= start)
       return false;
 
+   TrackListHolder tempTracks;
+   auto pControlTrack = mControlTrack;
+   // If there is any stretch in the control track, substitute a temporary
+   // rendering before trying to use GetFloats
+   {
+      auto &clips = pControlTrack->GetClips();
+      const auto t0 = pControlTrack->LongSamplesToTime(start);
+      const auto t1 = pControlTrack->LongSamplesToTime(end);
+      if (WaveTrackUtilities::HasStretch(*pControlTrack, t0, t1)) {
+         tempTracks = pControlTrack->Duplicate();
+         if (tempTracks) {
+            const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
+            if (pFirstTrack) {
+               // TODO a progress indicator?
+               pFirstTrack->ApplyStretchRatio({ { t0, t1 } });
+               pControlTrack = pFirstTrack;
+            }
+         }
+      }
+   }
+
    // the minimum number of samples we have to wait until the maximum
    // pause has been exceeded
    double maxPause = mMaximumPause;
@@ -198,7 +216,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
       maxPause = mOuterFadeDownLen + mOuterFadeUpLen;
 
    auto minSamplesPause =
-      mControlTrack->TimeToLongSamples(maxPause);
+      pControlTrack->TimeToLongSamples(maxPause);
 
    double threshold = DB_TO_LINEAR(mThresholdDb);
 
@@ -225,8 +243,8 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
       while (pos < end)
       {
          const auto len = limitSampleBufferSize( kBufSize, end - pos );
-         
-         mControlTrack->GetFloats(buf.get(), pos, len);
+
+         pControlTrack->GetFloats(buf.get(), pos, len);
 
          for (auto i = pos; i < pos + len; i++)
          {
@@ -250,7 +268,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
                   // the threshold has been exceeded for the first time, so
                   // let the duck region begin here
                   inDuckRegion = true;
-                  duckRegionStart = mControlTrack->LongSamplesToTime(i);
+                  duckRegionStart = pControlTrack->LongSamplesToTime(i);
                }
             }
 
@@ -265,7 +283,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
                {
                   // do the actual duck fade and reset all values
                   double duckRegionEnd =
-                     mControlTrack->LongSamplesToTime(i - curSamplesPause);
+                     pControlTrack->LongSamplesToTime(i - curSamplesPause);
 
                   regions.push_back(AutoDuckRegion(
                      duckRegionStart - mOuterFadeDownLen,
@@ -293,7 +311,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
       if (inDuckRegion)
       {
          double duckRegionEnd =
-            mControlTrack->LongSamplesToTime(end - curSamplesPause);
+            pControlTrack->LongSamplesToTime(end - curSamplesPause);
          regions.push_back(AutoDuckRegion(
             duckRegionStart - mOuterFadeDownLen,
             duckRegionEnd + mOuterFadeUpLen));
@@ -301,7 +319,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    }
 
    if (!cancel) {
-      EffectOutputTracks outputs{ *mTracks };
+      EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
 
       int trackNum = 0;
 

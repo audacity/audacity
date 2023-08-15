@@ -15,9 +15,13 @@
 int EffectOutputTracks::nEffectsDone = 0;
 
 EffectOutputTracks::EffectOutputTracks(
-   TrackList &tracks, bool allSyncLockSelected
-)  : mTracks{ tracks }
+   TrackList& tracks, std::optional<TimeInterval> effectTimeInterval,
+   bool allSyncLockSelected)
+    : mTracks { tracks }
 {
+   assert(
+      !effectTimeInterval.has_value() ||
+      effectTimeInterval->first <= effectTimeInterval->second);
    // Reset map
    mIMap.clear();
    mOMap.clear();

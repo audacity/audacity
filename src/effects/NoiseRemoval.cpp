@@ -222,7 +222,7 @@ bool EffectNoiseRemoval::Process(EffectInstance &, EffectSettings &)
 
    // This same code will both remove noise and profile it,
    // depending on 'mDoProfile'
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
    bool bGoodResult = true;
 
    int count = 0;

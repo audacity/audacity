@@ -113,7 +113,7 @@ bool EffectClickRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
 
 bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
 {
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
    bool bGoodResult = true;
    mbDidSomething = false;
 

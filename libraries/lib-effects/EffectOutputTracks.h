@@ -14,6 +14,7 @@ class Track;
 class TrackList;
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 //! Use this object to copy the input tracks to tentative outputTracks
@@ -29,7 +30,17 @@ public:
    static int nEffectsDone;
    static void IncEffectCounter() { ++nEffectsDone; }
 
-   EffectOutputTracks(TrackList &tracks,
+   using TimeInterval = std::pair<double, double>;
+   /*!
+    @param effectTimeInterval if given, and any copied tracks
+    have clips with non-unit stretch intersecting that interval, then in the
+    copies those clips are split, and new clips bounded by the interval, with
+    the stretches applied, are inserted.
+    @pre `!effectTimeInterval.has_value() ||
+       effectTimeInterval->first < effectTimeInterval->second`
+    */
+   EffectOutputTracks(
+      TrackList& tracks, std::optional<TimeInterval> effectTimeInterval,
       bool allSyncLockSelected = false);
    EffectOutputTracks(const EffectOutputTracks&) = delete;
 

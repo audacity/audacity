@@ -1947,6 +1947,45 @@ void WaveTrack::InsertClip(WaveClipHolder clip)
    mClips.push_back(std::move(clip));
 }
 
+void WaveTrack::ApplyStretchRatio(std::optional<TimeInterval> interval)
+{
+   assert(IsLeader());
+   // Assert that the interval is reasonable, but this function will be no-op
+   // anyway if not
+   assert(!interval.has_value() ||
+          interval->first <= interval->second);
+   if (GetNumClips() == 0)
+      return;
+   const auto startTime =
+      interval ? std::max(SnapToSample(interval->first), GetStartTime()) :
+                 GetStartTime();
+   const auto endTime =
+      interval ? std::min(SnapToSample(interval->second), GetEndTime()) :
+                 GetEndTime();
+   if (startTime >= endTime)
+      return;
+   for (const auto pChannel : TrackList::Channels(this))
+      pChannel->ApplyStretchRatioOne(startTime, endTime);
+}
+
+void WaveTrack::ApplyStretchRatioOne(double t0, double t1)
+{
+   if (auto clipAtT0 = GetClipAtTime(t0); clipAtT0 &&
+                                          clipAtT0->SplitsPlayRegion(t0) &&
+                                          !clipAtT0->StretchRatioEquals(1))
+      SplitAt(t0);
+   if (auto clipAtT1 = GetClipAtTime(t1); clipAtT1 &&
+                                          clipAtT1->SplitsPlayRegion(t1) &&
+                                          !clipAtT1->StretchRatioEquals(1))
+      SplitAt(t1);
+   auto clip = GetClipAtTime(t0);
+   while (clip && clip->GetPlayStartTime() < t1)
+   {
+      clip->ApplyStretchRatio();
+      clip = GetNextClip(*clip, PlaybackDirection::forward);
+   }
+}
+
 /*! @excsafety{Weak} */
 void WaveTrack::Paste(double t0, const Track &src)
 {

@@ -50,6 +50,7 @@ using WaveClipConstPointers = std::vector < const WaveClip* >;
 using ChannelSampleView = std::vector<AudioSegmentSampleView>;
 using ChannelGroupSampleView = std::vector<ChannelSampleView>;
 
+using TimeInterval = std::pair<double, double>;
 //
 // Tolerance for merging wave tracks (in seconds)
 //
@@ -472,6 +473,15 @@ private:
     @pre `IsLeader()`
     */
    void Trim(double t0, double t1) /* not override */;
+
+   /*
+    * @param interval Entire track is rendered if nullopt, else only samples
+    * within [interval->first, interval->second), in which case clips are split
+    * at these boundaries before rendering - if rendering is needed.
+    *
+    * @pre `!interval.has_value() || interval->first <= interval->second`
+    */
+   void ApplyStretchRatio(std::optional<TimeInterval> interval);
 
    void SyncLockAdjust(double oldT1, double newT1) override;
 
@@ -989,6 +999,8 @@ private:
    //! Sets project tempo on clip upon push. Use this instead of
    //! `mClips.push_back`.
    void InsertClip(WaveClipHolder clip);
+
+   void ApplyStretchRatioOne(double t0, double t1);
 
    SampleBlockFactoryPtr mpFactory;
 

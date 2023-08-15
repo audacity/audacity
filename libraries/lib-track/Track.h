@@ -393,6 +393,9 @@ private:
    //! Subclass responsibility implements only a part of Duplicate(), copying
    //! the track data proper (not associated data such as for groups and views)
    /*!
+    @param unstretchInterval If set, this time interval's stretching must be applied.
+    @pre `!unstretchInterval.has_value() ||
+       unstretchInterval->first < unstretchInterval->second`
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
@@ -581,7 +584,7 @@ public:
     @tparam F returns a shared pointer to Attachment (or some subtype of it)
 
     @pre `f` never returns null
-   
+
     `f` may assume the precondition that the given channel index is less than
     the given track's number of channels
     */
