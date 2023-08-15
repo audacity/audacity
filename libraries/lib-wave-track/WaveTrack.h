@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
+#include "PlaybackDirection.h"
 #include "Prefs.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
@@ -398,7 +399,32 @@ private:
    //
    Envelope* GetEnvelopeAtTime(double time);
 
+   const WaveClip* GetClipAtTime(double time) const;
    WaveClip* GetClipAtTime(double time);
+
+   /*!
+    * @brief Returns clips next to `clip` in the given direction, or `nullptr`
+    * if there is none.
+    */
+   const WaveClip* GetNextClip(
+      const WaveClip& clip, PlaybackDirection searchDirection) const;
+   /*!
+    * @copydoc GetNextClip(const WaveClip&, PlaybackDirection) const
+    */
+   WaveClip*
+   GetNextClip(const WaveClip& clip, PlaybackDirection searchDirection);
+
+   /*!
+    * @brief Similar to GetNextClip, but returns `nullptr` if the neighbour
+    * clip is not adjacent.
+    */
+   const WaveClip* GetAdjacentClip(
+      const WaveClip& clip, PlaybackDirection searchDirection) const;
+   /*!
+    * @copydoc GetAdjacentClip(const WaveClip&, PlaybackDirection) const
+    */
+   WaveClip*
+   GetAdjacentClip(const WaveClip& clip, PlaybackDirection searchDirection);
 
    //
    // Getting information about the track's internal block sizes
