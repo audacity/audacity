@@ -670,8 +670,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
       return;
    }
 
-   const ClipParameters params{
-      false, track, clip, rect, selectedRegion, zoomInfo };
+   const ClipParameters params { track, clip, rect, selectedRegion, zoomInfo };
    const wxRect &hiddenMid = params.hiddenMid;
    // The "hiddenMid" rect contains the part of the display actually
    // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
@@ -680,14 +679,11 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
    }
 
    const double &t0 = params.t0;
-   const double &tOffset = params.tOffset;
-   const double &h = params.h;
-   const double &tpre = params.tpre;
-   const double &tpost = params.tpost;
-   const double &t1 = params.t1;
+   const double playStartTime = clip->GetPlayStartTime();
+   const double &trackRectT0 = params.trackRectT0;
    const double &averagePixelsPerSecond = params.averagePixelsPerSecond;
-   const double &sampleRate = params.sampleRate;
-   const double &stretchRatio = params.stretchRatio;
+   const double sampleRate = clip->GetRate();
+   const double stretchRatio = clip->GetStretchRatio();
    double leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
 
@@ -706,14 +702,14 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   CommonChannelView::GetEnvelopeValues(*clip->GetEnvelope(),
-       tOffset,
+   CommonChannelView::GetEnvelopeValues(
+      *clip->GetEnvelope(), playStartTime,
 
-        // PRL: change back to make envelope evaluate only at sample times
-        // and then interpolate the display
-        0, // 1.0 / rate,
+      // PRL: change back to make envelope evaluate only at sample times
+      // and then interpolate the display
+      0, // 1.0 / rate,
 
-        env, mid.width, leftOffset, zoomInfo);
+      env, mid.width, leftOffset, zoomInfo);
 
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
@@ -796,7 +792,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
             int jj = 0;
             for (; jj < rectPortion.width; ++jj) {
                const double time =
-                  zoomInfo.PositionToTime(jj, -leftOffset) - tOffset;
+                  zoomInfo.PositionToTime(jj, -leftOffset) - playStartTime;
                const auto sample = clip->TimeToSamples(time);
                if (sample < 0) {
                   ++rectPortion.x;
@@ -840,14 +836,14 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rectPortion.width);
             double *const env2 = &vEnv2[0];
-            CommonChannelView::GetEnvelopeValues(*clip->GetEnvelope(),
-                tOffset,
+            CommonChannelView::GetEnvelopeValues(
+               *clip->GetEnvelope(), playStartTime,
 
-                 // PRL: change back to make envelope evaluate only at sample times
-                 // and then interpolate the display
-                 0, // 1.0 / rate,
+               // PRL: change back to make envelope evaluate only at sample
+               // times and then interpolate the display
+               0, // 1.0 / rate,
 
-                 env2, rectPortion.width, leftOffset, zoomInfo);
+               env2, rectPortion.width, leftOffset, zoomInfo);
 
             DrawMinMaxRMS(context, rectPortion, env2,
                zoomMin, zoomMax,
@@ -881,7 +877,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
 
    // Draw arrows on the left side if the track extends to the left of the
    // beginning of time.  :)
-   if (h == 0.0 && tOffset < 0.0) {
+   if (trackRectT0 == 0.0 && playStartTime < 0.0)
+   {
       TrackArt::DrawNegativeOffsetTrackArrows( context, rect );
    }
    {

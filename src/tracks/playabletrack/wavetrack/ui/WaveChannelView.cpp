@@ -1524,78 +1524,68 @@ std::shared_ptr<ChannelVRulerControls> WaveChannelView::DoGetVRulerControls()
 
 namespace
 {
-   // Returns an offset in seconds to be applied to the right clip
-   // boundary so that it does not overlap the last sample
-   double CalculateAdjustmentForZoomLevel(
-      const wxRect& viewRect,
-      const ZoomInfo& zoomInfo,
-      int sampleRate,
-      double stretchRatio,
-      double& outAvgPixPerSecond,
-      //Is zoom level sufficient to show individual samples?
-      bool& outShowSamples)
-   {
-      static constexpr double pixelsOffset{ 2 };//The desired offset in pixels
+// Returns an offset in seconds to be applied to the right clip
+// boundary so that it does not overlap the last sample
+double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
+{
+   constexpr double pixelsOffset { 2 }; // The desired offset in pixels
+   if (showSamples)
+      // adjustment so that the last circular point doesn't appear
+      // to be hanging off the end
+      return pixelsOffset /
+             avgPixPerSecond; // pixels / ( pixels / second ) = seconds
+   return .0;
+}
 
-      auto h = zoomInfo.PositionToTime(0, 0, true);
-      auto h1 = zoomInfo.PositionToTime(viewRect.width, 0, true);
+double GetBlankSpaceBeforePlayEndTime(const WaveClip& clip)
+{
+   return 0.99 * clip.GetStretchRatio() / clip.GetRate();
+}
 
-      // Determine whether we should show individual samples
-      // or draw circular points as well
-      outAvgPixPerSecond = viewRect.width / (h1 - h);
-      const auto pixelsPerSample = outAvgPixPerSecond / sampleRate;
-      outShowSamples = pixelsPerSample > 0.5;
+double GetPixelsPerSecond(const wxRect& viewRect, const ZoomInfo& zoomInfo)
+{
+   const auto h = zoomInfo.PositionToTime(0, 0, true);
+   const auto trackRectT1 = zoomInfo.PositionToTime(viewRect.width, 0, true);
+   return viewRect.width / (trackRectT1 - h);
+}
 
-      if(outShowSamples)
-         // adjustment so that the last circular point doesn't appear
-         // to be hanging off the end
-         return pixelsOffset * stretchRatio /
-                outAvgPixPerSecond; // pixels / ( pixels / second ) = seconds
-      return .0;
-   }
+bool ShowIndividualSamples(
+   const wxRect& viewRect, const ZoomInfo& zoomInfo, int sampleRate,
+   double stretchRatio, double pixelsPerSecond)
+{
+   const auto secondsPerSample = stretchRatio / sampleRate;
+   const auto pixelsPerSample = pixelsPerSecond * secondsPerSample;
+   return pixelsPerSample > 0.5;
+}
 }
 
 ClipParameters::ClipParameters(
-   bool spectrum, const SampleTrack* track, const WaveClip* clip,
-   const wxRect& rect, const SelectedRegion& selectedRegion,
-   const ZoomInfo& zoomInfo)
-    : tOffset { clip->GetPlayStartTime() }
-    , sampleRate { static_cast<double>(clip->GetRate()) }
-    , stretchRatio { clip->GetStretchRatio() }
+   const SampleTrack* track, const WaveClip* clip, const wxRect& rect,
+   const SelectedRegion& selectedRegion, const ZoomInfo& zoomInfo)
+    : trackRectT0 { zoomInfo.PositionToTime(0, 0, true) }
+    , averagePixelsPerSecond { GetPixelsPerSecond(rect, zoomInfo) }
+    , showIndividualSamples { ShowIndividualSamples(
+         rect, zoomInfo, clip->GetRate(), clip->GetStretchRatio(),
+         averagePixelsPerSecond) }
 {
-   h = zoomInfo.PositionToTime(0, 0
-      , true
-   );
-   h1 = zoomInfo.PositionToTime(rect.width, 0
-      , true
-   );
+   const auto trackRectT1 = zoomInfo.PositionToTime(rect.width, 0, true);
+   const auto stretchRatio = clip->GetStretchRatio();
+   const auto playStartTime = clip->GetPlayStartTime();
 
-   double sel0 = selectedRegion.t0();    //left selection bound
-   double sel1 = selectedRegion.t1();    //right selection bound
+   const double clipLength = clip->GetPlayEndTime() - clip->GetPlayStartTime();
 
-   //If the track isn't selected, make the selection empty
-   if (!track->GetSelected() &&
-      (spectrum ||
-       !SyncLock::IsSyncLockSelected(track))) { // PRL: why was there a difference for spectrum?
-      sel0 = sel1 = 0.0;
-   }
+   // Hidden duration because too far left.
+   const auto tpre = trackRectT0 - playStartTime;
+   const auto tpost = trackRectT1 - playStartTime;
 
-   const double trackLen = clip->GetPlayEndTime() - clip->GetPlayStartTime();
-
-   tpre = h - tOffset;                 // offset corrected time of
-   //  left edge of display
-   tpost = h1 - tOffset;               // offset corrected time of
-   //  right edge of display
-
-   const double sps = 1. / sampleRate;            //seconds-per-sample
+   const auto blank = GetBlankSpaceBeforePlayEndTime(*clip);
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
    t0 = std::max(tpre, .0);
-   t1 = std::min(tpost, trackLen - sps * .99) +
+   t1 = std::min(tpost, clipLength - blank) +
         CalculateAdjustmentForZoomLevel(
-           rect, zoomInfo, sampleRate, stretchRatio, averagePixelsPerSecond,
-           showIndividualSamples);
+           averagePixelsPerSecond, showIndividualSamples);
 
    // Make sure t1 (the right bound) is greater than 0
    if (t1 < 0.0) {
@@ -1605,21 +1595,6 @@ ClipParameters::ClipParameters(
    // Make sure t1 is greater than t0
    if (t0 > t1) {
       t0 = t1;
-   }
-
-   // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
-   ssel0 = std::max(sampleCount(0), spectrum
-      ? sampleCount((sel0 - tOffset) * sampleRate + .99) // PRL: why?
-      : track->TimeToLongSamples(sel0 - tOffset)
-   );
-   ssel1 = std::max(sampleCount(0), spectrum
-      ? sampleCount((sel1 - tOffset) * sampleRate + .99) // PRL: why?
-      : track->TimeToLongSamples(sel1 - tOffset)
-   );
-
-   //trim selection so that it only contains the actual samples
-   if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * sampleRate)) {
-      ssel1 = sampleCount( 0.5 + trackLen * sampleRate );
    }
 
    // The variable "hiddenMid" will be the rectangle containing the
@@ -1633,7 +1608,7 @@ ClipParameters::ClipParameters(
    hiddenLeftOffset = 0;
    if (tpre < 0) {
       // Fix Bug #1296 caused by premature conversion to (int).
-      wxInt64 time64 = zoomInfo.TimeToPosition(tOffset, 0 , true);
+      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, true);
       if( time64 < 0 )
          time64 = 0;
       hiddenLeftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
@@ -1647,7 +1622,7 @@ ClipParameters::ClipParameters(
    // of the track.  Reduce the "hiddenMid" rect by the
    // size of the blank area.
    if (tpost > t1) {
-      wxInt64 time64 = zoomInfo.TimeToPosition(tOffset+t1, 0 , true);
+      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, true);
       if( time64 < 0 )
          time64 = 0;
       const int hiddenRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
@@ -1664,7 +1639,7 @@ ClipParameters::ClipParameters(
    // left of the track.  Reduce the "mid"
    leftOffset = 0;
    if (tpre < 0) {
-      wxInt64 time64 = zoomInfo.TimeToPosition(tOffset, 0 , false);
+      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, false);
       if( time64 < 0 )
          time64 = 0;
       leftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
@@ -1678,7 +1653,7 @@ ClipParameters::ClipParameters(
    // of the track.  Reduce the "mid" rect by the
    // size of the blank area.
    if (tpost > t1) {
-      wxInt64 time64 = zoomInfo.TimeToPosition(tOffset+t1, 0 , false);
+      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, false);
       if( time64 < 0 )
          time64 = 0;
       const int distortedRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
@@ -1689,36 +1664,34 @@ ClipParameters::ClipParameters(
 
 wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples)
 {
-    auto srs = 1. / static_cast<double>(clip.GetRate());
-    double averagePixelsPerSample{};
-    bool showIndividualSamples{};
-    const auto clipEndingAdjustemt = CalculateAdjustmentForZoomLevel(
-        viewRect, zoomInfo, clip.GetRate(), clip.GetStretchRatio(),
-        averagePixelsPerSample, showIndividualSamples);
-    if (outShowSamples != nullptr)
-       *outShowSamples = showIndividualSamples;
-    constexpr auto edgeLeft = static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
-    constexpr auto edgeRight = static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
-    auto left = std::clamp(
-       zoomInfo.TimeToPosition(
-          clip.GetPlayStartTime(), viewRect.x, true
-       ), edgeLeft, edgeRight
-    );
-    auto right = std::clamp(
-       zoomInfo.TimeToPosition(
-          clip.GetPlayEndTime() - .99 * srs + clipEndingAdjustemt, viewRect.x, true
-       ), edgeLeft, edgeRight
-    );
-    if (right >= left)
-    {
-        //after clamping we can expect that left and right
-        //are small enough to be put into int
-        return wxRect(
-           static_cast<int>(left),
-           viewRect.y,
-           std::max(1, static_cast<int>(right - left)),
-           viewRect.height
-        );
+   const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
+   const auto showIndividualSamples = ShowIndividualSamples(
+      viewRect, zoomInfo, clip.GetRate(), clip.GetStretchRatio(),
+      pixelsPerSecond);
+   const auto clipEndingAdjustemt =
+      CalculateAdjustmentForZoomLevel(pixelsPerSecond, showIndividualSamples);
+   if (outShowSamples != nullptr)
+      *outShowSamples = showIndividualSamples;
+   constexpr auto edgeLeft =
+      static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
+   constexpr auto edgeRight =
+      static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
+   const auto left = std::clamp(
+      zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x, true),
+      edgeLeft, edgeRight);
+   const auto right = std::clamp(
+      zoomInfo.TimeToPosition(
+         clip.GetPlayEndTime() - GetBlankSpaceBeforePlayEndTime(clip) +
+            clipEndingAdjustemt,
+         viewRect.x, true),
+      edgeLeft, edgeRight);
+   if (right >= left)
+   {
+      // after clamping we can expect that left and right
+      // are small enough to be put into int
+      return wxRect(
+         static_cast<int>(left), viewRect.y,
+         std::max(1, static_cast<int>(right - left)), viewRect.height);
     }
     return wxRect();
 }

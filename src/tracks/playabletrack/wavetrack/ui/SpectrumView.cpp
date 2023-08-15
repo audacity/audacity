@@ -320,6 +320,22 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
    return  AColor::ColorGradientTimeSelected;
 }
 
+std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
+   const ClipParameters& params, const SelectedRegion& selectedRegion,
+   const WaveClip& clip, bool trackIsSelected)
+{
+   if (!trackIsSelected)
+      return { 0, 0 };
+   const double t0 = selectedRegion.t0(); // left selection bound
+   const double t1 = selectedRegion.t1(); // right selection bound
+   const auto startTime = clip.GetPlayStartTime();
+   const auto s0 = std::max(sampleCount(0), clip.TimeToSamples(t0 - startTime));
+   auto s1 = std::clamp(
+      clip.TimeToSamples(t1 - startTime), sampleCount { 0 },
+      clip.GetVisibleSampleCount());
+   return { s0, s1 };
+}
+
 void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
                       const WaveClip *clip, const wxRect &rect,
                       const std::shared_ptr<SpectralData> &mpSpectralData,
@@ -355,8 +371,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
 
    enum { DASH_LENGTH = 10 /* pixels */ };
 
-   const ClipParameters params{
-      true, track, clip, rect, selectedRegion, zoomInfo };
+   const ClipParameters params { track, clip, rect, selectedRegion, zoomInfo };
    const wxRect &hiddenMid = params.hiddenMid;
    // The "hiddenMid" rect contains the part of the display actually
    // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
@@ -365,12 +380,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
    }
 
    const double &t0 = params.t0;
-   const double &tOffset = params.tOffset;
-   const auto &ssel0 = params.ssel0;
-   const auto &ssel1 = params.ssel1;
+   const double playStartTime = clip->GetPlayStartTime();
+   const auto [ssel0, ssel1] = GetSelectedSampleIndices(
+      params, selectedRegion, *clip, track->GetSelected());
    const double &averagePixelsPerSecond = params.averagePixelsPerSecond;
-   const double &sampleRate = params.sampleRate;
-   const double &stretchRatio = params.stretchRatio;
+   const double sampleRate = clip->GetRate();
+   const double stretchRatio = clip->GetStretchRatio();
    const double &hiddenLeftOffset = params.hiddenLeftOffset;
    const double &leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
@@ -671,8 +686,9 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
 
    if (numPixels > 0) {
       for (int ii = begin; ii < end; ++ii) {
-         const double time = zoomInfo.PositionToTime(ii, -leftOffset) - tOffset;
-         specCache.where[ii - begin] = sampleCount(0.5 + sampleRate * time);
+         const double time = zoomInfo.PositionToTime(ii, -leftOffset) - playStartTime;
+         specCache.where[ii - begin] =
+            sampleCount(0.5 + sampleRate / stretchRatio * time);
       }
       specCache.Populate(
          settings, *clip, 0, 0, numPixels,
@@ -742,11 +758,13 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
 
       // zoomInfo must be queried for each column since with fisheye enabled
       // time between columns is variable
-      auto w0 = sampleCount(0.5 + sampleRate *
-                   (zoomInfo.PositionToTime(xx, -leftOffset) - tOffset));
+      const auto w0 = sampleCount(
+         0.5 + sampleRate / stretchRatio *
+                  (zoomInfo.PositionToTime(xx, -leftOffset) - playStartTime));
 
-      auto w1 = sampleCount(0.5 + sampleRate *
-                    (zoomInfo.PositionToTime(xx+1, -leftOffset) - tOffset));
+      const auto w1 = sampleCount(
+         0.5 + sampleRate / stretchRatio *
+                  (zoomInfo.PositionToTime(xx + 1, -leftOffset) - playStartTime));
 
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
       maybeSelected = maybeSelected || (xx == selectedX);

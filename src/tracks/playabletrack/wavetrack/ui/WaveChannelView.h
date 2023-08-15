@@ -245,28 +245,18 @@ struct AUDACITY_DLL_API ClipParameters
 {
    // Do a bunch of calculations common to waveform and spectrum drawing.
    ClipParameters(
-      bool spectrum, const SampleTrack *track,
-      const WaveClip *clip, const wxRect &rect,
-      const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
+      const SampleTrack* track, const WaveClip* clip, const wxRect& rect,
+      const SelectedRegion& selectedRegion, const ZoomInfo& zoomInfo);
 
-   const double tOffset;
-   const double sampleRate;
-   const double stretchRatio;
-   double h; // absolute time of left edge of display
-   double tpre; // offset corrected time of left edge of display
-   double h1;
-   double tpost; // offset corrected time of right edge of display
+   const double trackRectT0; // absolute time of left edge of track
 
-   // Calculate actual selection bounds so that t0 > 0 and t1 < the
-   // end of the track
+   // Lower and upper visible time boundaries (relative to clip). If completely
+   // off-screen, `t0 == t1`.
    double t0;
    double t1;
 
-   double averagePixelsPerSecond;
-   bool showIndividualSamples;
-
-   sampleCount ssel0;
-   sampleCount ssel1;
+   const double averagePixelsPerSecond;
+   const bool showIndividualSamples;
 
    wxRect hiddenMid;
    int hiddenLeftOffset;
