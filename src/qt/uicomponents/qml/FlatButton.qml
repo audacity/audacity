@@ -125,7 +125,7 @@ FocusScope {
 
             State {
                name: "HOVERED"
-               when: mouseArea.containsMouse && !mouseArea.pressed
+               when: root.enabled && mouseArea.containsMouse && !mouseArea.pressed
 
                PropertyChanges {
                   target: background
