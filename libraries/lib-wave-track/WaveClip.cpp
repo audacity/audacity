@@ -1188,13 +1188,23 @@ void WaveClip::ApplyStretchRatio(
    if (stretchRatio == targetRatio)
       return;
 
-   Finally Do { [this, trimLeftBeforeStretch = mTrimLeft,
-                 trimRightBeforeStretch = mTrimRight, targetRatio] {
-      this->mClipStretchRatio = targetRatio;
-      this->mRawAudioTempo = this->mProjectTempo;
-      assert(this->GetStretchRatio() == targetRatio);
+   auto success = false;
+   auto newSequences = GetEmptySequenceCopies();
+
+   Finally Do { [&, trimLeftBeforeStretch = mTrimLeft,
+                 trimRightBeforeStretch = mTrimRight] {
+      // Whether successful or not, the right thing to do is to restore the
+      // original trim values.
       this->SetTrimLeft(trimLeftBeforeStretch);
       this->SetTrimRight(trimRightBeforeStretch);
+      if (success)
+      {
+         this->mClipStretchRatio = targetRatio;
+         this->mRawAudioTempo = this->mProjectTempo;
+         assert(this->GetStretchRatio() == targetRatio);
+      }
+      else
+         std::swap(mSequences, newSequences);
    } };
 
    SetTrimLeft(0);
@@ -1213,7 +1223,6 @@ void WaveClip::ApplyStretchRatio(
    const auto totalNumOutSamples = sampleCount {
       GetVisibleSampleCount().as_double() * stretchRatio / targetRatio + .5
    };
-   auto newSequences = GetEmptySequenceCopies();
 
    sampleCount numOutSamples { 0 };
    AudioContainer container(blockSize, numChannels);
@@ -1234,9 +1243,11 @@ void WaveClip::ApplyStretchRatio(
          numOutSamples.as_double() / totalNumOutSamples.as_double());
    }
 
-   mSequences = move(newSequences);
+   std::swap(mSequences, newSequences);
    Flush();
    Caches::ForEach(std::mem_fn(&WaveClipListener::Invalidate));
+
+   success = true;
 }
 
 // Used by commands which interact with clips using the keyboard.
