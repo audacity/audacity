@@ -113,6 +113,11 @@ public:
     */
    double LongSamplesToTime(sampleCount pos) const;
 
+   /*!
+    @return `LongSamplesToTime(TimeToLongSamples(t))`
+    */
+   double SnapToSample(double t) const;
+
    //! @return widest effective SampleFormat in any part of the track
    virtual sampleFormat WidestEffectiveFormat() const = 0;
 

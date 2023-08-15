@@ -1239,7 +1239,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
    const TimeWarper *warper = (effectWarper ? effectWarper : &localWarper);
 
    const auto roundTime = [&track](double t){
-      return track.LongSamplesToTime(track.TimeToLongSamples(t));
+      return track.SnapToSample(t);
    };
 
    // Align to a sample
@@ -3195,7 +3195,7 @@ void WaveTrack::SplitAt(double t)
    {
       if (c->WithinPlayRegion(t))
       {
-         t = LongSamplesToTime(TimeToLongSamples(t));
+         t = SnapToSample(t);
          auto newClip = std::make_shared<WaveClip>(*c, mpFactory, true);
          c->TrimRightTo(t);// put t on a sample
          newClip->TrimLeftTo(t);
@@ -3451,8 +3451,7 @@ bool WaveTrack::ReverseOne(WaveTrack &track,
             revClips.push_back(track.RemoveAndReturnClip(clip));
             // align time to a sample and set offset
             revClips.back()->SetPlayStartTime(
-               track.LongSamplesToTime(
-                  track.TimeToLongSamples(offsetStartTime)));
+               track.SnapToSample(offsetStartTime));
          }
       }
       else if (clipStart >= end) {

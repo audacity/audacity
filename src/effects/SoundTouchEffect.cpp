@@ -419,8 +419,8 @@ void EffectSoundTouch::Finalize(
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {
-      auto st = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.first));
-      auto et = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.second));
+      const auto st = orig.SnapToSample(gap.first);
+      const auto et = orig.SnapToSample(gap.second);
       if (st >= mT0 && et <= mT1 && st != et)
          orig.SplitDelete(warper.Warp(st), warper.Warp(et));
    }

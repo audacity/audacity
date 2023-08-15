@@ -185,9 +185,7 @@ auto EffectChangeSpeed::FindGaps(
    // these gaps are for later deletion
    Gaps gaps;
    const auto newGap = [&](double st, double et){
-      gaps.emplace_back(
-         track.LongSamplesToTime(track.TimeToLongSamples(st)),
-         track.LongSamplesToTime(track.TimeToLongSamples(et)));
+      gaps.emplace_back(track.SnapToSample(st), track.SnapToSample(et));
    };
    double last = curT0;
    auto clips = track.SortedClipArray();

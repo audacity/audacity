@@ -444,8 +444,8 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             // In WaveTracks, clear with a cross-fade
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
-            cutStart = wt.LongSamplesToTime(wt.TimeToLongSamples(cutStart));
-            cutEnd = wt.LongSamplesToTime(wt.TimeToLongSamples(cutEnd));
+            cutStart = wt.SnapToSample(cutStart);
+            cutEnd = wt.SnapToSample(cutEnd);
 
             // Make sure the cross-fade does not affect non-silent frames
             if (wt.LongSamplesToTime(blendFrames) > inLength) {

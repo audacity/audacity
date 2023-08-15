@@ -83,7 +83,7 @@ namespace {
    inline double adjustTime(const WaveTrack *wt, double time)
    {
       // Round to an exact sample time
-      return wt->LongSamplesToTime(wt->TimeToLongSamples(time));
+      return wt->SnapToSample(time);
    }
 
    // Is the sample horizontally nearest to the cursor sufficiently separated
