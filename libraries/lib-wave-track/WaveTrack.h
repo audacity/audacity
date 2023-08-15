@@ -483,16 +483,16 @@ private:
     * @brief Returns clips next to `clip` in the given direction, or `nullptr`
     * if there is none.
     */
-   const WaveClip* GetNeighbourClip(
-      const WaveClip& clip, PlaybackDirection searchDirection) const;
+   const WaveClip*
+   GetNextClip(const WaveClip& clip, PlaybackDirection searchDirection) const;
    /*!
-    * @copydoc GetNeighbourClip(const WaveClip&, PlaybackDirection) const
+    * @copydoc GetNextClip(const WaveClip&, PlaybackDirection) const
     */
    WaveClip*
-   GetNeighbourClip(const WaveClip& clip, PlaybackDirection searchDirection);
+   GetNextClip(const WaveClip& clip, PlaybackDirection searchDirection);
 
    /*!
-    * @brief Similar to GetNeighbourClip, but returns `nullptr` if the neighbour
+    * @brief Similar to GetNextClip, but returns `nullptr` if the neighbour
     * clip is not adjacent.
     */
    const WaveClip* GetAdjacentClip(

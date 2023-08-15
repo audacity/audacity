@@ -1513,7 +1513,7 @@ void WaveTrack::ApplyStretchRatioOne(
    {
       constexpr auto targetStretchRatio = 1.0;
       clip->ApplyStretchRatio(targetStretchRatio, reportClipProgress);
-      clip = GetNeighbourClip(*clip, PlaybackDirection::forward);
+      clip = GetNextClip(*clip, PlaybackDirection::forward);
       ++count;
    }
 }
@@ -2381,7 +2381,7 @@ void WaveTrack::SetFloatsWithinTimeRange(
       clip->SetFloatsFromTime(
          tt0 - clipStartTime, iChannel, values.data(), numSamples,
          effectiveFormat);
-      clip = GetNeighbourClip(*clip, PlaybackDirection::forward);
+      clip = GetNextClip(*clip, PlaybackDirection::forward);
    }
 }
 
@@ -2686,11 +2686,10 @@ void WaveTrack::GetEnvelopeValues(
 // latter clip is returned.
 WaveClip* WaveTrack::GetClipAtTime(double time)
 {
-   return const_cast<WaveClip*>(
-      const_cast<const WaveTrack&>(*this).GetClipAtTime(time));
+   return const_cast<WaveClip*>(std::as_const(*this).GetClipAtTime(time));
 }
 
-const WaveClip* WaveTrack::GetNeighbourClip(
+const WaveClip* WaveTrack::GetNextClip(
    const WaveClip& clip, PlaybackDirection direction) const
 {
    const auto clips = SortedClipArray();
@@ -2704,16 +2703,16 @@ const WaveClip* WaveTrack::GetNeighbourClip(
 }
 
 WaveClip*
-WaveTrack::GetNeighbourClip(const WaveClip& clip, PlaybackDirection direction)
+WaveTrack::GetNextClip(const WaveClip& clip, PlaybackDirection direction)
 {
    return const_cast<WaveClip*>(
-      const_cast<const WaveTrack&>(*this).GetNeighbourClip(clip, direction));
+      std::as_const(*this).GetNextClip(clip, direction));
 }
 
 const WaveClip* WaveTrack::GetAdjacentClip(
    const WaveClip& clip, PlaybackDirection direction) const
 {
-   const auto neighbour = GetNeighbourClip(clip, direction);
+   const auto neighbour = GetNextClip(clip, direction);
    if (!neighbour)
       return nullptr;
    else if (direction == PlaybackDirection::forward)

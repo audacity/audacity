@@ -98,7 +98,7 @@ double GetLeftAdjustLimit(
       return clip.GetPlayStartTime() + 2.0 / clip.GetRate();
 
    const auto prevClip =
-      track.GetNeighbourClip(clip, PlaybackDirection::backward);
+      track.GetNextClip(clip, PlaybackDirection::backward);
    if (isStretchMode)
       return prevClip ? prevClip->GetPlayEndTime() :
                         std::numeric_limits<double>::min();
@@ -118,7 +118,7 @@ double GetRightAdjustLimit(
       return clip.GetPlayEndTime() - 2.0 / clip.GetRate();
 
    const auto nextClip =
-      track.GetNeighbourClip(clip, PlaybackDirection::forward);
+      track.GetNextClip(clip, PlaybackDirection::forward);
    if (isStretchMode)
       return nextClip ? nextClip->GetPlayStartTime() :
                         std::numeric_limits<double>::max();
@@ -256,7 +256,7 @@ public:
       const auto eventT = viewInfo.PositionToTime(viewInfo.TimeToPosition(mInitialBorderPosition, event.rect.x) + dx, event.rect.x);
 
       const auto offset = sampleCount(floor((eventT - mInitialBorderPosition) * mClips[0]->GetRate())).as_double() / mClips[0]->GetRate();
-      const auto t = mInitialBorderPosition + offset;
+      const auto t = std::clamp(mInitialBorderPosition + offset, mRange.first, mRange.second);
       const auto wasSnapped = mSnap.Snapped();
       if(mSnapManager)
          mSnap = mSnapManager->Snap(mTrack.get(), t, !mAdjustingLeftBorder);
