@@ -1472,9 +1472,11 @@ void WaveTrack::ApplyStretchRatio(
    if (GetNumClips() == 0)
       return;
    const auto startTime =
-      interval ? std::max(interval->first, GetStartTime()) : GetStartTime();
+      interval ? std::max(SnapToSample(interval->first), GetStartTime()) :
+                 GetStartTime();
    const auto endTime =
-      interval ? std::min(interval->second, GetEndTime()) : GetEndTime();
+      interval ? std::min(SnapToSample(interval->second), GetEndTime()) :
+                 GetEndTime();
    if (startTime == endTime)
       return;
    const auto numChannels = NChannels();
