@@ -342,7 +342,8 @@ void LabelTrack::SetSelected( bool s )
          this->SharedPointer<LabelTrack>(), {}, -1, -1 });
 }
 
-TrackListHolder LabelTrack::Clone() const
+TrackListHolder LabelTrack::Clone(
+   std::optional<std::pair<double, double>> /* unstretchInterval */) const
 {
    assert(IsLeader());
    auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});

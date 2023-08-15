@@ -305,7 +305,9 @@ private:
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
-   virtual TrackListHolder Duplicate() const;
+   virtual TrackListHolder Duplicate(
+      std::optional<std::pair<double, double>> unstretchInterval =
+         std::nullopt) const;
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;
@@ -398,10 +400,12 @@ private:
    //! Subclass responsibility implements only a part of Duplicate(), copying
    //! the track data proper (not associated data such as for groups and views)
    /*!
+    @param unstretchInterval If set, this time interval's stretching must be applied.
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
-   virtual TrackListHolder Clone() const = 0;
+   virtual TrackListHolder
+   Clone(std::optional<std::pair<double, double>> unstretchInterval) const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >

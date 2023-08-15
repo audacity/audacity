@@ -233,7 +233,8 @@ void TimeTrack::InsertSilence(double t, double len)
    mEnvelope->InsertSpace(t, len);
 }
 
-TrackListHolder TimeTrack::Clone() const
+TrackListHolder TimeTrack::Clone(
+   std::optional<std::pair<double, double>> /* unstretchInterval */) const
 {
    assert(IsLeader());
    auto result = std::make_shared<TimeTrack>(*this, ProtectedCreationArg{});

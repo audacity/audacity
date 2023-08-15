@@ -637,7 +637,7 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
 {
    // This same code will either reduce noise or profile it
 
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, { mT0, mT1 } };
 
    auto track = *(outputs.Get().Selected<const WaveTrack>()).begin();
    if (!track)

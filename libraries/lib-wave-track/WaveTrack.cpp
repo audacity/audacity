@@ -536,7 +536,8 @@ ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
    return const_cast<ChannelGroup&>(group);
 }
 
-TrackListHolder WaveTrack::Clone() const
+TrackListHolder WaveTrack::Clone(
+   std::optional<std::pair<double, double>> unstretchInterval) const
 {
    assert(IsLeader());
    auto result = TrackList::Temporary(nullptr);
@@ -551,6 +552,9 @@ TrackListHolder WaveTrack::Clone() const
          cloneOne(pChannel);
    else
       cloneOne(this);
+   if (unstretchInterval)
+      dynamic_cast<WaveTrack*>(*result->begin())
+         ->ApplyStretchRatio(unstretchInterval);
    return result;
 }
 
@@ -1350,10 +1354,6 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack &other)
    const auto endTime = other.GetEndTime();
    auto iter = TrackList::Channels(&other).begin();
    for (const auto pChannel : TrackList::Channels(this)) {
-      // todo(mhodgkinson) When we repair destructive effects we will expose
-      // `mergeIfPossible` as an argument, so as to preserve the old behavior
-      // when possible. For now we are only concerned with copy/pasting, which
-      // should adopt the new behavior.
       constexpr auto mergeIfPossible = false;
       PasteOne(*pChannel, t0, **iter, startTime, endTime, mergeIfPossible);
       if (otherNChannels > 1)
@@ -1527,6 +1527,42 @@ void WaveTrack::InsertClip(WaveClipHolder clip)
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    mClips.push_back(std::move(clip));
+}
+
+void WaveTrack::ApplyStretchRatio(
+   std::optional<std::pair<double, double>> interval)
+{
+   assert(IsLeader());
+   if (GetNumClips() == 0)
+      return;
+   const auto startTime =
+      interval ? std::max(SnapToSample(interval->first), GetStartTime()) :
+                 GetStartTime();
+   const auto endTime =
+      interval ? std::min(SnapToSample(interval->second), GetEndTime()) :
+                 GetEndTime();
+   if (startTime == endTime)
+      return;
+   for (const auto pChannel : TrackList::Channels(this))
+      pChannel->ApplyStretchRatioOne(startTime, endTime);
+}
+
+void WaveTrack::ApplyStretchRatioOne(double t0, double t1)
+{
+   if (auto clipAtT0 = GetClipAtTime(t0); clipAtT0 &&
+                                          clipAtT0->SplitsPlayRegion(t0) &&
+                                          !clipAtT0->StretchRatioEquals(1))
+      SplitAt(t0);
+   if (auto clipAtT1 = GetClipAtTime(t1); clipAtT1 &&
+                                          clipAtT1->SplitsPlayRegion(t1) &&
+                                          !clipAtT1->StretchRatioEquals(1))
+      SplitAt(t1);
+   auto clip = GetClipAtTime(t0);
+   while (clip && clip->GetPlayStartTime() < t1)
+   {
+      clip->ApplyStretchRatio();
+      clip = GetNextClip(*clip, PlaybackDirection::forward);
+   }
 }
 
 /*! @excsafety{Weak} */
@@ -2062,6 +2098,11 @@ double WaveTrack::GetStartTime() const
 double WaveTrack::GetEndTime() const
 {
    return ChannelGroup::GetEndTime();
+}
+
+double WaveTrack::SnapToSample(double t) const
+{
+   return LongSamplesToTime(TimeToLongSamples(t));
 }
 
 double WaveTrack::GetDuration() const

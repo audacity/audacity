@@ -197,7 +197,7 @@ bool EffectEqualization::VisitSettings(
    // Curve point parameters -- how many isn't known statically
    {
       curves[0].points.clear();
-   
+
       for (int i = 0; i < 200; i++)
       {
          const wxString nameFreq = wxString::Format("f%i",i);
@@ -289,7 +289,7 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
    if (index < 0)
       return {};
 
-   // mParams = 
+   // mParams =
    wxString params = FactoryPresets[index].values;
 
    CommandParameters eap(params);
@@ -403,7 +403,7 @@ struct EffectEqualization::Task {
 
 bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 {
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, { mT0, mT1 } };
    mParameters.CalcFilter();
    bool bGoodResult = true;
 
@@ -424,7 +424,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto pTempTrack = *temp->Any<WaveTrack>().begin();
          pTempTrack->ConvertToSampleFormat(floatSample);
          auto iter0 = pTempTrack->Channels().begin();
-   
+
          for (const auto pChannel : track->Channels()) {
             constexpr auto windowSize = EqualizationFilter::windowSize;
             const auto &M = mParameters.mM;

@@ -15,8 +15,9 @@
 int EffectOutputTracks::nEffectsDone = 0;
 
 EffectOutputTracks::EffectOutputTracks(
-   TrackList &tracks, bool allSyncLockSelected
-)  : mTracks{ tracks }
+   TrackList& tracks, std::pair<double, double> effectTimeInterval,
+   bool allSyncLockSelected)
+    : mTracks { tracks }
 {
    // Reset map
    mIMap.clear();
@@ -31,7 +32,7 @@ EffectOutputTracks::EffectOutputTracks(
       };
 
    for (auto aTrack : trackRange) {
-      auto list = aTrack->Duplicate();
+      auto list = aTrack->Duplicate(effectTimeInterval);
       mIMap.push_back(aTrack);
       mOMap.push_back(*list->begin());
       mOutputTracks->Append(std::move(*list));

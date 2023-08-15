@@ -248,7 +248,8 @@ public:
 private:
    void Init(const WaveTrack &orig);
 
-   TrackListHolder Clone() const override;
+   TrackListHolder Clone(std::optional<std::pair<double, double>>
+                            unstretchInterval) const override;
 
    friend class WaveTrackFactory;
 
@@ -268,6 +269,8 @@ private:
    double GetStartTime() const override;
    //! Implement WideSampleSequence
    double GetEndTime() const override;
+
+   double SnapToSample(double t) const;
 
    //
    // Identifying the type of track
@@ -922,6 +925,9 @@ private:
    //! Sets project tempo on clip upon push. Use this instead of
    //! `mClips.push_back`.
    void InsertClip(WaveClipHolder clip);
+
+   void ApplyStretchRatio(std::optional<std::pair<double, double>>);
+   void ApplyStretchRatioOne(double t0, double t1);
 
    SampleBlockFactoryPtr mpFactory;
 

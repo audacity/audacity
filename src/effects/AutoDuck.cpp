@@ -225,7 +225,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
       while (pos < end)
       {
          const auto len = limitSampleBufferSize( kBufSize, end - pos );
-         
+
          mControlTrack->GetFloats(buf.get(), pos, len);
 
          for (auto i = pos; i < pos + len; i++)
@@ -301,7 +301,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    }
 
    if (!cancel) {
-      EffectOutputTracks outputs{ *mTracks };
+      EffectOutputTracks outputs { *mTracks, { mT0, mT1 } };
 
       int trackNum = 0;
 

@@ -122,7 +122,7 @@ private:
    using Holder = std::unique_ptr<TimeTrack>;
 
 private:
-   TrackListHolder Clone() const override;
+   TrackListHolder Clone(std::optional<std::pair<double, double>> unstretchInterval) const override;
 };
 
 ENUMERATE_TRACK_TYPE(TimeTrack);
