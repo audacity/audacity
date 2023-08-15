@@ -1578,7 +1578,8 @@ void WaveTrack::ApplyStretchRatioOne(
    };
    while (clip && clip->GetPlayStartTime() < t1)
    {
-      clip->ApplyStretchRatio(reportClipProgress);
+      constexpr auto targetStretchRatio = 1.0;
+      clip->ApplyStretchRatio(targetStretchRatio, reportClipProgress);
       clip = GetNextClip(*clip, PlaybackDirection::forward);
       ++count;
    }
@@ -1746,16 +1747,27 @@ void WaveTrack::Disjoin(double t0, double t1)
 }
 
 /*! @excsafety{Weak} */
-void WaveTrack::Join(double t0, double t1)
+void WaveTrack::Join(
+   double t0, double t1, const std::function<void(double)>& reportProgress)
 {
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
 
+   const auto numChannels = NChannels();
+   auto count = 0;
+   const auto reportChannelProgress = [&](double channelProgress) {
+      reportProgress((count + channelProgress) / numChannels);
+   };
    for (const auto pChannel : TrackList::Channels(this))
-      JoinOne(*pChannel, t0, t1);
+   {
+      JoinOne(*pChannel, t0, t1, reportChannelProgress);
+      ++count;
+   }
 }
 
-void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
+void WaveTrack::JoinOne(
+   WaveTrack& track, double t0, double t1,
+   const std::function<void(double)>& reportProgress)
 {
    WaveClipPointers clipsToDelete;
    WaveClip* newClip{};
@@ -1784,6 +1796,11 @@ void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
    newClip = track.CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
       clipsToDelete[0]->GetName());
 
+   auto count = 0;
+   const auto reportClipProgress = [&](double clipProgress) {
+      reportProgress((count + clipProgress) / clipsToDelete.size());
+   };
+
    for (const auto &clip : clipsToDelete) {
       //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
       //       t, clip->GetOffset(), clip->GetStartTime(), clip->GetEndTime());
@@ -1798,7 +1815,8 @@ void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
       }
 
       //wxPrintf("Pasting at %.6f\n", t);
-      bool success = newClip->Paste(t, *clip);
+      bool success = newClip->Paste(t, *clip, reportClipProgress);
+      ++count;
       assert(success); // promise of CreateClip
 
       t = newClip->GetPlayEndTime();
@@ -2909,7 +2927,10 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 
    // Append data from second clip to first clip
    // use Strong-guarantee
-   bool success = clip1->Paste(clip1->GetPlayEndTime(), *clip2);
+   bool success = clip1->Paste(
+      clip1->GetPlayEndTime(), *clip2,
+      // No stretching needed -> no progress bar needed
+      {});
    assert(success);  // assuming clips of the same track must have same width
 
    // use No-fail-guarantee for the rest

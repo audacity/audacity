@@ -1,4 +1,5 @@
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
@@ -591,9 +592,20 @@ void OnJoinLabels(const CommandContext &context)
    if (selectedRegion.isPoint())
       return;
 
+   const auto progress = BasicUI::MakeProgress(
+      XO("Pre-processing"), XO("Rendering Time-Stretched Audio"));
+   auto count = 0;
+   const auto numWaveTracks = tracks.Any<WaveTrack>().size();
+   const auto reportTrackProgress = [&](double trackProgress) {
+      const auto overallProgress = (count + trackProgress) / numWaveTracks;
+      progress->Poll(overallProgress * 1000, 1000);
+      ++count;
+   };
    auto editfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
-      track.TypeSwitch( [&](WaveTrack &t) { t.Join(t0, t1); } );
+      track.TypeSwitch([&](WaveTrack& t) {
+         t.Join(t0, t1, reportTrackProgress);
+      });
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
 
@@ -663,10 +675,10 @@ BaseItemSharedPtr LabelEditMenus()
       LabelsSelectedFlag() | WaveTracksExistFlag() | TimeSelectedFlag();
 
    // Returns TWO menus.
-   
+
    static BaseItemSharedPtr menus{
    Items( wxT("LabelEditMenus"),
-   
+
    Menu( wxT("Labels"), XXO("&Labels"),
       Section( "",
          Command( wxT("EditLabels"), XXO("&Edit Labels..."), OnEditLabels,

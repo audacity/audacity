@@ -13,6 +13,7 @@
 #ifndef __AUDACITY_PASTE_OVER_PRESERVING_CLIPS__
 #define __AUDACITY_PASTE_OVER_PRESERVING_CLIPS__
 
+#include <functional>
 #include <vector>
 
 class sampleCount;
@@ -21,6 +22,7 @@ class wxString;
 
 using Gap = std::pair<double, double>;
 using Gaps = std::vector<Gap>;
+using ProgressReporter = std::function<void(double)>;
 
 struct ClipData {
    //Find the bits of clips that need replacing
@@ -50,8 +52,8 @@ WAVE_TRACK_API ClipData CollectClipData(
  @pre `newContents.IsLeader()`
  @pre `oldTrack.NChannels() == newContents.NChannels()`
  */
-WAVE_TRACK_API void PasteOverPreservingClips(const ClipData &data,
-   WaveTrack &oldTrack, sampleCount start, sampleCount len,
-   const WaveTrack &newContents);
+WAVE_TRACK_API void PasteOverPreservingClips(
+   const ClipData& data, WaveTrack& oldTrack, sampleCount start,
+   sampleCount len, const WaveTrack& newContents);
 
 #endif

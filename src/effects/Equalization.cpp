@@ -443,8 +443,8 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
                goto done;
          }
          pTempTrack->Flush();
-         PasteOverPreservingClips(data, *track, start, len,
-            **temp->Any<WaveTrack>().begin());
+         PasteOverPreservingClips(
+            data, *track, start, len, **temp->Any<WaveTrack>().begin());
       }
 
       count++;

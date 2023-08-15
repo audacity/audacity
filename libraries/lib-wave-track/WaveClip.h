@@ -180,10 +180,10 @@ public:
 
    /*!
     * @brief Renders the stretching of the clip (preserving duration).
-    * @post GetStretchRatio() == 1
+    * @post StretchRatioEquals(targetRatio)
     */
    void ApplyStretchRatio(
-      const std::function<void(double)>& reportProgress);
+      double targetRatio, const std::function<void(double)>& reportProgress);
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
