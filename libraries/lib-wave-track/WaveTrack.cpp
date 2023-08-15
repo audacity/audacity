@@ -795,11 +795,6 @@ auto WaveTrack::CopyOne(
    const auto &pFactory = track.mpFactory;
    auto result = track.EmptyCopy();
    WaveTrack *newTrack = result.get();
-   const auto& tempo = track.GetProjectTempo();
-   // Even if `forClipboard`, we need some project tempo to place the clips
-   // correctly. When pasting, the track's tempo shall be set to the destination
-   // project tempo.
-   newTrack->mProjectTempo = tempo;
 
    // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
    // but that was the old behavior.  But this function is also used by the

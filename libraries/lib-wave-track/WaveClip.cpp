@@ -644,6 +644,9 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
    Transaction transaction{ *this };
 
    const bool clipNeedsResampling = other.mRate != mRate;
+   // For performance, apply time stretching onto the other clip while at its
+   // lowest rate.
+   const auto stretchOtherBeforeResampling = other.mRate < mRate;
    const bool clipNeedsNewFormat =
       other.GetSampleFormats().Stored() != GetSampleFormats().Stored();
    std::shared_ptr<WaveClip> newClip;
@@ -685,8 +688,12 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
    {
       auto copy = std::make_shared<WaveClip>(*newClip.get(), factory, true);
       if (clipNeedsResampling)
+      {
+         if (stretchOtherBeforeResampling)
+            copy->ApplyStretchRatio([](double) {});
          // The other clip's rate is different from ours, so resample
-          copy->Resample(mRate);
+         copy->Resample(mRate);
+      }
       if (clipNeedsNewFormat)
          // Force sample formats to match.
          copy->ConvertToSampleFormat(GetSampleFormats().Stored());
@@ -1168,6 +1175,7 @@ void WaveClip::ApplyStretchRatio(
                  trimRightBeforeStretch = mTrimRight] {
       this->mClipStretchRatio = 1.0;
       this->mRawAudioTempo = this->mProjectTempo;
+      assert(this->GetStretchRatio() == 1);
       this->SetTrimLeft(trimLeftBeforeStretch);
       this->SetTrimRight(trimRightBeforeStretch);
    } };
@@ -1187,16 +1195,14 @@ void WaveClip::ApplyStretchRatio(
                                     std::move(params) };
    const auto totalNumOutSamples =
       sampleCount { GetVisibleSampleCount().as_double() * stretchRatio + .5 };
-   sampleCount numProcessedSamples { 0 };
-
    auto newSequences = GetEmptySequenceCopies();
 
    sampleCount numOutSamples { 0 };
    AudioContainer container(blockSize, numChannels);
    while (numOutSamples < totalNumOutSamples)
    {
-      const auto numSamplesToGet = limitSampleBufferSize(
-         blockSize, totalNumOutSamples - numProcessedSamples);
+      const auto numSamplesToGet =
+         limitSampleBufferSize(blockSize, totalNumOutSamples - numOutSamples);
       stretcher.GetSamples(container.Get(), numSamplesToGet);
       auto channel = 0u;
       for (auto& newSequence : newSequences)

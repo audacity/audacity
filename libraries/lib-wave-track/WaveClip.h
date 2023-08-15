@@ -196,12 +196,17 @@ public:
    //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
-   //! Closed-begin of play region.
+   //! Closed-begin of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayStartTime() const noexcept override;
    void SetPlayStartTime(double time);
 
-   //! Open-end of play region.
+   //! Open-end of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayEndTime() const override;
+
+   //! Always a multiple of the track's sample period, whether the clip is
+   //! stretched or not.
    double GetPlayDuration() const;
 
    /*!

@@ -1,37 +1,37 @@
 
 #include "../AdornedRulerPanel.h"
-#include "../AudioPasteDialog.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
-#include "../ProjectWindow.h"
-#include "../ProjectWindows.h"
-#include "../SelectUtilities.h"
-#include "../TrackPanel.h"
-#include "../TrackPanelAx.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
-#include "../prefs/PrefsDialog.h"
-#include "../prefs/TracksBehaviorsPrefs.h"
-#include "../tracks/labeltrack/ui/LabelTrackView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
-#include "../widgets/VetoDialogHook.h"
-#include "AudacityMessageBox.h"
-#include "BasicUI.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "ProjectTimeSignature.h"
-#include "SampleBlock.h"
-#include "Sequence.h"
+#include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
+#include "../SelectUtilities.h"
 #include "SyncLock.h"
-#include "TimeWarper.h"
+#include "../TrackPanel.h"
+#include "../TrackPanelAx.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"
+#include "WaveClip.h"
+#include "SampleBlock.h"
+#include "../commands/CommandContext.h"
+#include "../commands/CommandManager.h"
+#include "TimeWarper.h"
+#include "../prefs/PrefsDialog.h"
+#include "../prefs/TracksBehaviorsPrefs.h"
+#include "../tracks/labeltrack/ui/LabelTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
+#include "AudacityMessageBox.h"
+#include "../widgets/VetoDialogHook.h"
+#include "../AudioPasteDialog.h"
+#include "BasicUI.h"
+#include "Sequence.h"
 
 // private helper classes and functions
 namespace {
@@ -144,6 +144,9 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    const double srcTempo =
       pFirstNewTrack ? pFirstNewTrack->GetProjectTempo().value_or(projTempo) :
                        projTempo;
+   // Apply adequat stretching to the selection. A selection of 10 seconds of
+   // audio in project A should become 5 seconds in project B if tempo in B is
+   // twice as fast.
    const double quantT0 = QUANTIZED_TIME(t0 * srcTempo / projTempo, projRate);
    const double quantT1 = QUANTIZED_TIME(t1 * srcTempo / projTempo, projRate);
    selectedRegion.setTimes(
