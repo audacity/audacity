@@ -164,9 +164,11 @@ public:
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
 
-   //! Stretches from left to the absolute time (if in expected range)
+   //! Sets the play start time to absolute time `to` by means of stretching, or
+   //! does nothing if `to` >= play end time.
    void StretchLeftTo(double to);
-   //! Sets from the right to the absolute time (if in expected range)
+   //! Sets the play end time to absolute time `to` by means of stretching, or
+   //! does nothing if `to` <= play start time.
    void StretchRightTo(double to);
 
    double GetStretchRatio() const override;
@@ -201,14 +203,6 @@ public:
    //! Open-end of play region.
    double GetPlayEndTime() const override;
    double GetPlayDuration() const;
-
-   /*!
-    * `GetPlayEndTime()` is the right edge of a left-closed and right-open
-    * interval. There is a little space (one track's sample period) left at the
-    * end of the clips, though. To get the exact location of the right border of
-    * this clip, use this method.
-    */
-   double GetBorderEndTime() const;
 
    /*!
     * Accessors for visible boundaries within a track after stretching, that is
@@ -281,7 +275,7 @@ public:
     * @brief [t0, t1) ∩ [...) != ∅
     * @pre t0 <= t1
     */
-   bool OverlapsPlayRegion(double t0, double t1) const;
+   bool IntersectsPlayRegion(double t0, double t1) const;
    /*!
     * @brief t0 <= [ and ) <= t1, such that removing [t0, t1) from the track
     * deletes this clip.
@@ -520,16 +514,6 @@ public:
     */
    sampleCount TimeToSamples(double time) const noexcept;
    double SamplesToTime(sampleCount s) const noexcept;
-   /*!
-    * Given the possibility of some clips of a track being time-stretched, and
-    * our approach to render to the track's sample rate only upon playback, the
-    * samples of clips may lie anywhere on the time track, not just at multiples
-    * of the track's sample period.
-    * Nevertheless, we maintain play start and end times, which define the
-    * visible boundaries of clips, on this sample rate grid. This is sufficient
-    * precision and preserves a little spacing between clips.
-    */
-   double SnapToTrackSample(double time) const noexcept;
 
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
    void SetSilence(sampleCount offset, sampleCount length);
@@ -551,6 +535,7 @@ private:
    const SampleBlockFactoryPtr &GetFactory();
    std::vector<std::unique_ptr<Sequence>> GetEmptySequenceCopies() const;
    void StretchCutLines(double ratioChange);
+   double SnapToTrackSample(double time) const noexcept;
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
@@ -569,13 +554,18 @@ private:
       bool committed{ false };
    };
 
+   // Real-time durations, i.e., stretching the clip modifies these.
    double mSequenceOffset { 0 };
    double mTrimLeft{ 0 };
    double mTrimRight{ 0 };
+
+   // Used in GetStretchRatio which computes the factor, by which the sample
+   // interval is multiplied, to get a realtime duration.
    double mClipStretchRatio = 1.;
    std::optional<double> mRawAudioTempo;
    std::optional<double> mProjectTempo;
 
+   // Sample rate of the raw audio, i.e., before stretching.
    int mRate;
    int mColourIndex;
 

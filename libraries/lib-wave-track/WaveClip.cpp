@@ -62,8 +62,6 @@ WaveClip::WaveClip(
     : mClipStretchRatio { orig.mClipStretchRatio }
     , mRawAudioTempo { orig.mRawAudioTempo }
     , mProjectTempo { orig.mProjectTempo }
-// Project tempo is not copied on purpose, since `orig` might come from another
-// project.
 {
    // essentially a copy constructor - but you must pass in the
    // current sample block factory, because we might be copying
@@ -99,8 +97,6 @@ WaveClip::WaveClip(
     : mClipStretchRatio { orig.mClipStretchRatio }
     , mRawAudioTempo { orig.mRawAudioTempo }
     , mProjectTempo { orig.mProjectTempo }
-// Project tempo is not copied on purpose, since `orig` might come from another
-// project.
 {
    assert(orig.CountSamples(t0, t1) > 0);
 
@@ -1296,11 +1292,6 @@ double WaveClip::GetPlayEndTime() const
     return SnapToTrackSample(maxLen);
 }
 
-double WaveClip::GetBorderEndTime() const
-{
-   return GetPlayEndTime() - 1.0 / mRate;
-}
-
 double WaveClip::GetPlayDuration() const
 {
    return GetPlayEndTime() - GetPlayStartTime();
@@ -1395,11 +1386,6 @@ void WaveClip::ShiftBy(double delta) noexcept
     SetSequenceStartTime(GetSequenceStartTime() + delta);
 }
 
-// Bug 2288 allowed overlapping clips.
-// This was a classic fencepost error.
-// We are within the clip if start <= t < end.
-// Note that BeforeClip and AfterClip must be consistent
-// with this definition.
 bool WaveClip::SplitsPlayRegion(double t) const
 {
    return GetPlayStartTime() < t && t < GetPlayEndTime();
@@ -1424,7 +1410,7 @@ bool WaveClip::PartlyWithinPlayRegion(double t0, double t1) const
    return WithinPlayRegion(t0) != WithinPlayRegion(t1);
 }
 
-bool WaveClip::OverlapsPlayRegion(double t0, double t1) const
+bool WaveClip::IntersectsPlayRegion(double t0, double t1) const
 {
    assert(t0 <= t1);
    // t1 is the open end of the interval, so it must be excluded from the closed

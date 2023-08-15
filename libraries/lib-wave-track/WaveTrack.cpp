@@ -670,7 +670,7 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
    //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
    for (const auto &clip : mClips)
    {
-      if (clip->OverlapsPlayRegion(t0, t1)) {
+      if (clip->IntersectsPlayRegion(t0, t1)) {
          //wxPrintf("Overlapping clip: %.6f...%.6f\n",
          //       clip->GetStartTime(),
          //       clip->GetEndTime());
@@ -1139,7 +1139,7 @@ void WaveTrack::HandleClear(double t0, double t1,
          // Whole clip must be deleted - remember this
          clipsToDelete.push_back(clip.get());
       }
-      else if (clip->OverlapsPlayRegion(t0, t1))
+      else if (clip->IntersectsPlayRegion(t0, t1))
       {
          // Clip data is affected by command
          if (addCutLines)
