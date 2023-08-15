@@ -162,6 +162,8 @@ list( APPEND SOURCES
       ProjectSettings.cpp
       ProjectSettings.h
       ProjectTempoListener.cpp
+      ProjectTimeRuler.cpp
+      ProjectTimeRuler.h
       ProjectWindow.cpp
       ProjectWindow.h
       ProjectWindowBase.cpp
@@ -199,6 +201,8 @@ list( APPEND SOURCES
       ThemedWrappers.h
       TimeDialog.cpp
       TimeDialog.h
+      TimeDisplayMode.cpp
+      TimeDisplayMode.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
       TimerRecordExportDialog.cpp
@@ -580,7 +584,7 @@ list( APPEND SOURCES
       import/ImportRaw.h
 
       # Optional importers
-      
+
       $<$<BOOL:${USE_MIDI}>:
          export/ExportMIDI.cpp
          import/ImportMIDI.cpp

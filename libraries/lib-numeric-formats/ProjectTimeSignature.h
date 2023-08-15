@@ -42,6 +42,10 @@ public:
    int  GetLowerTimeSignature() const;
    void SetLowerTimeSignature(int lowerTimeSignature);
 
+   double GetQuarterDuration() const;
+   double GetBeatDuration() const;
+   double GetBarDuration() const;
+
 private:
    void PublishSignatureChange();
    

@@ -92,7 +92,8 @@ Ruler::Ruler(const RulerUpdater &updater, const RulerFormat &format)
 
 Ruler::~Ruler()
 {
-   Invalidate();  // frees up our arrays
+   // DV: Why?
+   // Invalidate();  // frees up our arrays
 }
 
 void Ruler::SetTwoTone(bool twoTone)
@@ -323,6 +324,8 @@ void Ruler::Invalidate()
    mpCache.reset();
    // Bug 2316 we must preserve off-limit pixels.
    // mUserBits.clear();
+
+   Publish(RulerInvalidatedMessage {});
 }
 
 struct Ruler::Cache {
