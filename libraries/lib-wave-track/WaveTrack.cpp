@@ -1586,7 +1586,7 @@ void WaveTrack::InsertSilence(double t, double len)
             it->get()->InsertSilence(t, len);
 
          // use No-fail-guarantee
-         for (const auto &clip : mClips)
+         for (const auto &clip : clips)
             if (clip->BeforePlayRegion(t))
                clip->ShiftBy(len);
       }
