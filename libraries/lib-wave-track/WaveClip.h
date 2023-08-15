@@ -182,7 +182,7 @@ public:
     * @post GetStretchRatio() == 1
     */
    void ApplyStretchRatio(
-      const std::function<void(double)>& reportProgress);
+      double targetRatio, const std::function<void(double)>& reportProgress);
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
@@ -456,7 +456,9 @@ public:
    /*!
     @return true and succeed if and only if `this->GetWidth() == other.GetWidth()`
     */
-   bool Paste(double t0, const WaveClip &other);
+   bool Paste(
+      double t0, const WaveClip& other,
+      std::function<void(double)> reportProgress);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */

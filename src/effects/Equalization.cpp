@@ -448,8 +448,13 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
                goto done;
          }
          pTempTrack->Flush();
-         PasteOverPreservingClips(data, *track, start, len,
-            **temp->Any<WaveTrack>().begin());
+         // The equalized region of the track already had its stretching
+         // applied, so there shouldn't be a need for stretching now and hence
+         // we don't bother with a progress bar.
+         constexpr auto reportProgress = [](double) {};
+         PasteOverPreservingClips(
+            data, *track, start, len, **temp->Any<WaveTrack>().begin(),
+            reportProgress);
       }
 
       count++;

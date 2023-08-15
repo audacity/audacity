@@ -635,7 +635,8 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
 }
 
 /*! @excsafety{Strong} */
-bool WaveClip::Paste(double t0, const WaveClip &other)
+bool WaveClip::Paste(
+   double t0, const WaveClip& other, std::function<void(double)> reportProgress)
 {
    if (GetWidth() != other.GetWidth())
       return false;
@@ -644,10 +645,16 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
 
    Transaction transaction{ *this };
 
+   const auto otherStretchRatio = other.GetStretchRatio();
+   if (GetSequenceSamplesCount() == sampleCount{0})
+      // This is empty: use stretch ratio of other clip to avoid unnecessary stretching.
+      ApplyStretchRatio(otherStretchRatio, [](double) {});
+   const auto thisStretchRatio = GetStretchRatio();
+   const bool clipNeedsStretching =
+      fabs(thisStretchRatio - other.GetStretchRatio()) > 1e-6;
    const bool clipNeedsResampling = other.mRate != mRate;
    // For performance, apply time stretching onto the other clip while at its
    // lowest rate.
-   const auto stretchOtherBeforeResampling = other.mRate < mRate;
    const bool clipNeedsNewFormat =
       other.GetSampleFormats().Stored() != GetSampleFormats().Stored();
    std::shared_ptr<WaveClip> newClip;
@@ -685,23 +692,29 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
       newClip->SetTrimRight(0);
    }
 
-   if (clipNeedsResampling || clipNeedsNewFormat)
+   if (clipNeedsResampling || clipNeedsNewFormat || clipNeedsStretching)
    {
       auto copy = std::make_shared<WaveClip>(*newClip.get(), factory, true);
+
+      // For computational efficiency, apply stretching while or once at lowest
+      // sample rate.
+      const auto stretchBeforeResampling = other.mRate < mRate;
+
+      if (clipNeedsStretching && stretchBeforeResampling)
+         copy->ApplyStretchRatio(thisStretchRatio, reportProgress);
+
       if (clipNeedsResampling)
-      {
-         if (stretchOtherBeforeResampling)
-            copy->ApplyStretchRatio([](double) {});
          // The other clip's rate is different from ours, so resample
          copy->Resample(mRate);
-      }
+
+      if (clipNeedsStretching && !stretchBeforeResampling)
+         copy->ApplyStretchRatio(thisStretchRatio, reportProgress);
+
       if (clipNeedsNewFormat)
          // Force sample formats to match.
          copy->ConvertToSampleFormat(GetSampleFormats().Stored());
       newClip = std::move(copy);
    }
-   ApplyStretchRatio([](double) {});
-   newClip->ApplyStretchRatio([](double) {});
 
    // Paste cut lines contained in pasted clip
    WaveClipHolders newCutlines;
@@ -997,10 +1010,13 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
       // Envelope::Paste takes offset into account, WaveClip::Paste doesn't!
       // Do this to get the right result:
       cutline->mEnvelope->SetOffset(0);
-
-      bool success =
-         Paste(GetSequenceStartTime() + cutline->GetSequenceStartTime(),
-            *cutline);
+      // Normally, cutline stretch ratios are kept equal to that of the hosting
+      // clip, so no need for stretching or a progress bar. Nevertheless do not
+      // assert this : maybe the cutline was imported from a buggy project.
+      const auto reportProgress = [](double) {};
+      bool success = Paste(
+         GetSequenceStartTime() + cutline->GetSequenceStartTime(), *cutline,
+         reportProgress);
       assert(success); // class invariant promises cutlines have correct width
 
       // Now erase the cutline,
@@ -1166,17 +1182,17 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 }
 
 void WaveClip::ApplyStretchRatio(
-   const std::function<void(double)>& reportProgress)
+   double targetRatio, const std::function<void(double)>& reportProgress)
 {
    const auto stretchRatio = GetStretchRatio();
-   if (stretchRatio == 1.0)
+   if (stretchRatio == targetRatio)
       return;
 
    Finally Do { [this, trimLeftBeforeStretch = mTrimLeft,
-                 trimRightBeforeStretch = mTrimRight] {
-      this->mClipStretchRatio = 1.0;
+                 trimRightBeforeStretch = mTrimRight, targetRatio] {
+      this->mClipStretchRatio = targetRatio;
       this->mRawAudioTempo = this->mProjectTempo;
-      assert(this->GetStretchRatio() == 1);
+      assert(this->GetStretchRatio() == targetRatio);
       this->SetTrimLeft(trimLeftBeforeStretch);
       this->SetTrimRight(trimRightBeforeStretch);
    } };
@@ -1191,11 +1207,12 @@ void WaveClip::ApplyStretchRatio(
    ClipSegment stretcherSource { *this, durationToDiscard,
                                  PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
-   params.timeRatio = stretchRatio;
+   params.timeRatio = stretchRatio / targetRatio;
    StaffPadTimeAndPitch stretcher { numChannels, stretcherSource,
                                     std::move(params) };
-   const auto totalNumOutSamples =
-      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio + .5 };
+   const auto totalNumOutSamples = sampleCount {
+      GetVisibleSampleCount().as_double() * stretchRatio / targetRatio + .5
+   };
    auto newSequences = GetEmptySequenceCopies();
 
    sampleCount numOutSamples { 0 };

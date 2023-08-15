@@ -293,7 +293,9 @@ private:
    /*!
     @pre `IsLeader()`
     */
-   void Join(double t0, double t1) /* not override */;
+   void Join(
+      double t0, double t1,
+      const std::function<void(double)>& reportProgress) /* not override */;
    // May assume precondition: t0 <= t1
    /*!
     @pre `IsLeader()`
@@ -797,7 +799,9 @@ private:
       const WaveTrack &src,
       bool preserve, bool merge, const TimeWarper *effectWarper);
 
-   static void JoinOne(WaveTrack &track, double t0, double t1);
+   static void JoinOne(
+      WaveTrack& track, double t0, double t1,
+      const std::function<void(double)>& reportProgress);
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile);

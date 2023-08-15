@@ -50,9 +50,10 @@ ClipData CollectClipData(
    return results;
 }
 
-void PasteOverPreservingClips(const ClipData &data,
-   WaveTrack &oldTrack, sampleCount start, sampleCount len,
-   const WaveTrack &newContents)
+void PasteOverPreservingClips(
+   const ClipData& data, WaveTrack& oldTrack, sampleCount start,
+   sampleCount len, const WaveTrack& newContents,
+   std::function<void(double)> reportProgress)
 {
    assert(oldTrack.IsLeader());
    assert(newContents.IsLeader());
@@ -76,7 +77,7 @@ void PasteOverPreservingClips(const ClipData &data,
       //remove the old audio and get the NEW
       auto [start, end] = clipStartEndTimes[i];
       oldTrack.Clear(start, end);
-   
+
       auto toClipOutput = newContents.Copy(start - startT, end - startT);
       oldTrack.Paste(start, *toClipOutput);
 
@@ -91,6 +92,6 @@ void PasteOverPreservingClips(const ClipData &data,
       auto [realStart, realEnd] = clipRealStartEndTimes[i];
       if ((realStart  != start || realEnd != end) &&
          !(realStart <= startT && realEnd >= startT + lenT))
-         oldTrack.Join(realStart, realEnd);
+         oldTrack.Join(realStart, realEnd, reportProgress);
    }
 }
