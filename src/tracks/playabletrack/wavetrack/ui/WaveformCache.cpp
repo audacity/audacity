@@ -95,18 +95,15 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       const double samplesPerPixel =
          sampleRate / pixelsPerSecond / stretchRatio;
 
-      // Make a tolerant comparison of the pps values in this wise:
+      // Make a tolerant comparison of the samples-per-pixel values in this wise:
       // accumulated difference of times over the number of pixels is less than
       // a sample period.
-      const bool ppsMatch =
+      const bool samplesPerPixelMatch =
          waveCache &&
          (fabs(samplesPerPixel - waveCache->samplesPerPixel) * numPixels < 1.0);
 
-      const bool match =
-         waveCache &&
-         ppsMatch &&
-         waveCache->len > 0 &&
-         waveCache->dirty == mDirty;
+      const bool match = waveCache && samplesPerPixelMatch &&
+                         waveCache->len > 0 && waveCache->dirty == mDirty;
 
       if (match &&
          waveCache->start == t0 &&
