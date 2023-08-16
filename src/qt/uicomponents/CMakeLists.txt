@@ -19,6 +19,7 @@ set(MODULE_QML_SOURCES
    qml/StereoTrackControlPanel.qml
    qml/StyledDial.qml
    qml/StyledIconLabel.qml
+   qml/StyledProgressBar.qml
    qml/StyledSlider.qml
    qml/StyledTextLabel.qml
    qml/TimeControl.qml
