@@ -106,7 +106,12 @@ ComponentInterfaceSymbol EffectCompressor::GetSymbol() const
 
 TranslatableString EffectCompressor::GetDescription() const
 {
-   return XO("Compresses the dynamic range of audio");
+   return XO("Compresses the dynamic range of audio. 
+   \nThreshold: Any signals above the threshold will be compressed. 
+   \nNoise Floor: Prevents the gain from increasing during pauses or quieter signals, thus avoiding over-amplifying background noise. 
+   \nRatio: Specifies the amount of compression applied to the signal (2:1 means that a 2dB signal will be attenuated down to 1dB. 
+   \nAttack Time: Controls how long it takes for the compressor to kick in after a signal exceeds the threshold. 
+   \nRelease Time: Controls how long it takes for the compressor to let go of a signal.");
 }
 
 ManualPageID EffectCompressor::ManualPage() const
