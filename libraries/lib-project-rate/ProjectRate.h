@@ -27,8 +27,8 @@ public:
    static const ProjectRate &Get( const AudacityProject &project );
    
    explicit ProjectRate(AudacityProject &project);
-   ProjectRate( const ProjectRate & ) PROHIBITED;
-   ProjectRate &operator=( const ProjectRate & ) PROHIBITED;
+   ProjectRate( const ProjectRate & ) = delete;
+   ProjectRate &operator=( const ProjectRate & ) = delete;
 
    void SetRate(double rate);
    double GetRate() const;

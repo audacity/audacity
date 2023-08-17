@@ -39,8 +39,8 @@ public:
    static const ProjectManager &Get( const AudacityProject &project );
 
    explicit ProjectManager( AudacityProject &project );
-   ProjectManager( const ProjectManager & ) PROHIBITED;
-   ProjectManager &operator=( const ProjectManager & ) PROHIBITED;
+   ProjectManager( const ProjectManager & ) = delete;
+   ProjectManager &operator=( const ProjectManager & ) = delete;
    ~ProjectManager() override;
 
    // This is the factory for projects:
@@ -74,7 +74,7 @@ public:
          , mReuseNonemptyProject{ reuseNonemptyProject }
       {}
       //! Don't copy.  Use std::ref to pass it to ProjectFileManager
-      ProjectChooser( const ProjectChooser& ) PROHIBITED;
+      ProjectChooser( const ProjectChooser& ) = delete;
       //! Destroy any fresh project, or rollback the existing project, unless committed
       ~ProjectChooser();
       //! May create a fresh project

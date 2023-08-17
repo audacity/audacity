@@ -249,10 +249,6 @@ function( audacity_append_common_compiler_options var use_pch )
          # This value is used in the resource compiler for Windows
          -DAUDACITY_FILE_VERSION=L"${AUDACITY_VERSION},${AUDACITY_RELEASE},${AUDACITY_REVISION},${AUDACITY_MODLEVEL}"
 
-         # This renames a good use of this C++ keyword that we don't need
-	      # to review when hunting for leaks because of naked new and delete.
-	      -DPROHIBITED==delete
-
          # Reviewed, certified, non-leaky uses of NEW that immediately entrust
 	      # their results to RAII objects.
          # You may use it in NEW code when constructing a wxWindow subclass

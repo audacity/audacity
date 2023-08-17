@@ -74,8 +74,8 @@ class AUDACITY_DLL_API TrackPanelCell /* not final */ : public TrackPanelNode
 {
 public:
    TrackPanelCell() = default;
-   TrackPanelCell( const TrackPanelCell & ) PROHIBITED;
-   TrackPanelCell &operator=( const TrackPanelCell & ) PROHIBITED;
+   TrackPanelCell( const TrackPanelCell & ) = delete;
+   TrackPanelCell &operator=( const TrackPanelCell & ) = delete;
 
    virtual ~TrackPanelCell () = 0;
 

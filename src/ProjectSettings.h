@@ -60,8 +60,8 @@ public:
    };
 
    explicit ProjectSettings( AudacityProject &project );
-   ProjectSettings( const ProjectSettings & ) PROHIBITED;
-   ProjectSettings &operator=( const ProjectSettings & ) PROHIBITED;
+   ProjectSettings( const ProjectSettings & ) = delete;
+   ProjectSettings &operator=( const ProjectSettings & ) = delete;
 
 
    bool GetTracksFitVerticallyZoomed() const { return mTracksFitVerticallyZoomed; } //lda

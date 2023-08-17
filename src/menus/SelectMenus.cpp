@@ -881,8 +881,8 @@ Handler()
 {
    UpdatePrefs();
 }
-Handler( const Handler & ) PROHIBITED;
-Handler &operator=( const Handler & ) PROHIBITED;
+Handler( const Handler & ) = delete;
+Handler &operator=( const Handler & ) = delete;
 
 }; // struct Handler
 

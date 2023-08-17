@@ -65,8 +65,8 @@ class AUDACITY_DLL_API ToolManager final
    static const ToolManager &Get( const AudacityProject &project );
 
    ToolManager( AudacityProject *parent );
-   ToolManager( const ToolManager & ) PROHIBITED;
-   ToolManager &operator=( const ToolManager & ) PROHIBITED;
+   ToolManager( const ToolManager & ) = delete;
+   ToolManager &operator=( const ToolManager & ) = delete;
    ~ToolManager();
 
    void CreateWindows();

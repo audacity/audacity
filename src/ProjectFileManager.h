@@ -39,8 +39,8 @@ public:
    static void DiscardAutosave(const FilePath &filename);
 
    explicit ProjectFileManager( AudacityProject &project );
-   ProjectFileManager( const ProjectFileManager & ) PROHIBITED;
-   ProjectFileManager &operator=( const ProjectFileManager & ) PROHIBITED;
+   ProjectFileManager( const ProjectFileManager & ) = delete;
+   ProjectFileManager &operator=( const ProjectFileManager & ) = delete;
    ~ProjectFileManager();
 
    bool OpenProject();

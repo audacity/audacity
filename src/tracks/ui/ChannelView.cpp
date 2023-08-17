@@ -256,8 +256,8 @@ struct TrackPositioner final : ClientData::Base
       mSubscription = TrackList::Get( project )
          .Subscribe(*this, &TrackPositioner::OnUpdate);
    }
-   TrackPositioner( const TrackPositioner & ) PROHIBITED;
-   TrackPositioner &operator=( const TrackPositioner & ) PROHIBITED;
+   TrackPositioner( const TrackPositioner & ) = delete;
+   TrackPositioner &operator=( const TrackPositioner & ) = delete;
 
    void OnUpdate(const TrackListEvent & e)
    {

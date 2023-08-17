@@ -48,10 +48,10 @@ protected:
 
    //! Don't allow moves of this class or subclasses
    // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2442
-   AudacityException( AudacityException&& ) PROHIBITED;
+   AudacityException( AudacityException&& ) = delete;
 
    //! Disallow assignment
-   AudacityException &operator = ( const AudacityException & ) PROHIBITED;
+   AudacityException &operator = ( const AudacityException & ) = delete;
 };
 
 //! Abstract AudacityException subclass displays a message, specified by further subclass
@@ -109,7 +109,7 @@ public:
 
    SimpleMessageBoxException( const SimpleMessageBoxException& ) = default;
    SimpleMessageBoxException &operator = (
-      SimpleMessageBoxException && ) PROHIBITED;
+      SimpleMessageBoxException && ) = delete;
 
    // Format a default, internationalized error message for this exception.
    virtual TranslatableString ErrorMessage() const override;

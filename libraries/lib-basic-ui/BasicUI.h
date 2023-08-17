@@ -31,9 +31,9 @@ public:
    WindowPlacement() = default;
 
    //! Don't slice
-   WindowPlacement( const WindowPlacement& ) PROHIBITED;
+   WindowPlacement( const WindowPlacement& ) = delete;
    //! Don't slice
-   WindowPlacement &operator=( const WindowPlacement& ) PROHIBITED;
+   WindowPlacement &operator=( const WindowPlacement& ) = delete;
    //! Whether null; default in the base class returns false
    virtual explicit operator bool() const;
    virtual ~WindowPlacement();
