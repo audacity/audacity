@@ -20,11 +20,13 @@ Popup {
    QtObject {
       id: prv
       property string type
-      property string numberOfTracks: qsTr("Number of tracks")
+      property string numberOfTracksPrompt: numberOfTracks
+      readonly property string numberOfTracks: qsTr("Number of tracks")
       property bool validNumberOfTracks: true
    }
 
    onAboutToShow: {
+      prv.numberOfTracksPrompt = prv.numberOfTracks
       input.text = numberOfTracksValidator.bottom
       input.focus = false
    }
@@ -103,7 +105,7 @@ Popup {
       id: numberOfTracksLabel
       y: 96
       height: 16
-      text: prv.numberOfTracks
+      text: prv.numberOfTracksPrompt
       color: UiTheme.fontColor1
       font.family: appConfig.bodyFont.family
       font.pixelSize: 12
@@ -178,7 +180,7 @@ Popup {
          onTextChanged: {
             prv.validNumberOfTracks = (text === "" || acceptableInput)
             if (prv.validNumberOfTracks === true) {
-               numberOfTracksLabel.text = prv.numberOfTracks
+               prv.numberOfTracksPrompt = prv.numberOfTracks
             }
 
             if (text === "") {
@@ -186,7 +188,7 @@ Popup {
             }
 
             if (acceptableInput === false) {
-               numberOfTracksLabel.text =
+               prv.numberOfTracksPrompt =
                   qsTr("Enter a value between %1-%2")
                      .arg(numberOfTracksValidator.bottom)
                      .arg(numberOfTracksValidator.top)
