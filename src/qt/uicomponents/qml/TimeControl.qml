@@ -57,7 +57,7 @@ Item {
       height: parent.height
       width: root.width - 17
       radius: 3
-      color: UiTheme.timecodeColor
+      color: UiTheme.backgroundColor4
 
       QtObject {
          id: display
@@ -159,7 +159,7 @@ Item {
          height: root.height
          verticalAlignment: Text.AlignVCenter
          color: UiTheme.fontColor2
-         font: UiTheme.bodyFont
+         font: UiTheme.bodyFont.family
       }
 
       Text {
@@ -169,8 +169,8 @@ Item {
          height: root.height
          verticalAlignment: Text.AlignVCenter
          color: UiTheme.fontColor2
-         font: UiTheme.bodyFont
-         opacity: 0.7
+         font: UiTheme.bodyFont.family
+         opacity: UiTheme.opacityStrong
       }
 
       Text {
@@ -180,8 +180,8 @@ Item {
          height: root.height
          verticalAlignment: Text.AlignVCenter
          color: UiTheme.fontColor2
-         font: UiTheme.bodyFont
-         opacity: 0.7
+         font: UiTheme.bodyFont.family
+         opacity: UiTheme.opacityStrong
       }
 
       Text {
@@ -191,15 +191,15 @@ Item {
          height: root.height
          verticalAlignment: Text.AlignVCenter
          color: UiTheme.fontColor2
-         font: UiTheme.bodyFont
-         opacity: 0.7
+         font: UiTheme.bodyFont.family
+         opacity: UiTheme.opacityStrong
       }
 
       Rectangle {
          x: displayPart.width - width
          width: displayPart.radius
          height: displayPart.height
-         color: UiTheme.timecodeColor
+         color: UiTheme.backgroundColor4
       }
 
       Component.onCompleted: {
@@ -246,7 +246,7 @@ Item {
       radius: 3
       width: 16
       height: root.height
-      color: UiTheme.timecodeColor
+      color: UiTheme.backgroundColor4
 
       states: [
          State {
@@ -256,13 +256,13 @@ Item {
             PropertyChanges {
                target: buttonPart
                color: UiTheme.backgroundColor3
-               opacity: 1.0
+               opacity: UiTheme.opacityOpaque
             }
 
             PropertyChanges {
                target: buttonPartLeftEdge
                color: UiTheme.backgroundColor3
-               opacity: 1.0
+               opacity: opacityOpaque
             }
          },
 
@@ -273,13 +273,13 @@ Item {
             PropertyChanges {
                target: buttonPart
                color: UiTheme.backgroundColor3
-               opacity: 0.5
+               opacity: opacityMedium
             }
 
             PropertyChanges {
                target: buttonPartLeftEdge
                color: UiTheme.backgroundColor3
-               opacity: 0.5
+               opacity: opacityMedium
             }
          },
 
@@ -290,13 +290,13 @@ Item {
             PropertyChanges {
                target: buttonPart
                color: "black"
-               opacity: 1.0
+               opacity: opacityOpaque
             }
 
             PropertyChanges {
                target: buttonPartLeftEdge
                color: "black"
-               opacity: 1.0
+               opacity: opacityOpaque
             }
          }
       ]
@@ -305,7 +305,7 @@ Item {
          id: buttonPartLeftEdge
          width: buttonPart.radius
          height: buttonPart.height
-         color: UiTheme.timecodeColor
+         color: UiTheme.backgroundColor4
       }
 
       Text {

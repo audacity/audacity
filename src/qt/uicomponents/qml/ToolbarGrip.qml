@@ -58,7 +58,8 @@ Item {
       id: gripEdge
       width: 1
       height: parent.height
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor1
+      opacity: UiTheme.opacityMedium
    }
 
    MouseArea {

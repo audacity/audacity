@@ -15,8 +15,8 @@ Rectangle {
 
    property color backgroundColor: UiTheme.backgroundColor2
    property color buttonColor: UiTheme.buttonColor
-   property color strokeColor: UiTheme.strokeColor
-   property color accentColor: UiTheme.accentColor
+   property color strokeColor: UiTheme.strokeColor2
+   property color brandColor: UiTheme.brandColor
    property bool snapped: false
 
    signal clicked()
@@ -46,7 +46,7 @@ Rectangle {
 
             PropertyChanges {
                target: snappingButton
-               color: snapped ? accentColor : buttonColor
+               color: snapped ? brandColor : buttonColor
                opacity: 0.5
             }
          },
@@ -57,7 +57,7 @@ Rectangle {
 
             PropertyChanges {
                target: snappingButton
-               color: accentColor
+               color: brandColor
                opacity: 0.7
             }
          }

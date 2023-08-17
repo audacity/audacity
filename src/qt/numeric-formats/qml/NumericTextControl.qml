@@ -167,7 +167,7 @@ Item {
          implicitWidth : timeLayout.Layout.minimumWidth + timeLayout.anchors.leftMargin + timeLayout.anchors.rightMargin
 
          radius : 3
-         color : UiTheme.timecodeColor
+         color : UiTheme.backgroundColor4
 
          RowLayout
          {
@@ -188,7 +188,7 @@ Item {
          implicitWidth : 16
 
          radius : 3
-         color : UiTheme.timecodeColor
+         color : UiTheme.backgroundColor4
          Text
          {
             anchors.fill : parent

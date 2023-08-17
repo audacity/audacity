@@ -14,6 +14,7 @@ Item {
       width: 1
       height: 28
       anchors.centerIn: parent
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor1
+      opacity: UiTheme.opacityMedium
    }
 }

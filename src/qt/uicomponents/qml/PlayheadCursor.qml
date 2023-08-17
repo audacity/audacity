@@ -20,7 +20,7 @@ Item {
       color: UiTheme.fontColor2
 
       border {
-         color: UiTheme.timecodeColor
+         color: UiTheme.backgroundColor4
          width: 1
       }
    }

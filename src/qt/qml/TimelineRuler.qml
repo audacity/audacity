@@ -39,12 +39,12 @@ Rectangle {
       x: 12
       width: 1
       height: parent.height
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor2
    }
 
    Rectangle {
       height: 1
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor2
       anchors.verticalCenter: parent.verticalCenter
       anchors.left: playheadRecessSeparator.right
       anchors.right: snappingButton.left
@@ -55,7 +55,7 @@ Rectangle {
       y: parent.height - 1
       width: parent.width
       height: 1
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor2
    }
 
    PlayheadCursor {

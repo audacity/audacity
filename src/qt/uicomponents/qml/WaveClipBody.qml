@@ -15,7 +15,7 @@ Canvas {
    objectName: "WaveClipBody"
 
    property int radius: 3
-   property color color: UiTheme.backgroundColor1
+   property color color: UiTheme.backgroundColor2
 
    function colorWithAlpha(color, alpha) {
       return Qt.rgba(color.r, color.g, color.b, alpha)
@@ -27,7 +27,7 @@ Canvas {
 
    onPaint: {
       var ctx = getContext("2d")
-      ctx.fillStyle = root.color // colorWithAlpha(root.color, 0.7)
+      ctx.fillStyle = colorWithAlpha(root.color, UiTheme.opacityMedium)
 
       ctx.beginPath()
          // top edge

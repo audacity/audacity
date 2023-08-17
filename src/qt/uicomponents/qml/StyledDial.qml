@@ -41,11 +41,13 @@ Dial {
 
       readonly property real outerArcLineWidth: 3
       readonly property real innerArcLineWidth: 2
+      readonly property real dialOffset: outerArcLineWidth + innerArcLineWidth
 
-      readonly property color valueArcColor: UiTheme.accentColor
-      readonly property color outerArcColor: UiTheme.buttonColor
-      readonly property color innerArcColor: colorWithAlpha(UiTheme.fontColor1, 0.5)
-      readonly property color dialNeedleColor: UiTheme.fontColor1
+      readonly property color valueArcColor: UiTheme.brandColor
+      readonly property color outerArcColor: colorWithAlpha(UiTheme.strokeColor1, UiTheme.opacityLight)
+      readonly property color innerArcColor: UiTheme.strokeColor1
+      readonly property color dialNeedleColor: UiTheme.strokeColor3
+      readonly property color dialBackgroundColor: UiTheme.backgroundColor1
 
       property int initialValue: 0
       property real dragStartX: 0
@@ -59,6 +61,7 @@ Dial {
       onOuterArcColorChanged: canvas.requestPaint()
       onInnerArcColorChanged: canvas.requestPaint()
       onDialNeedleColorChanged: canvas.requestPaint()
+      onDialBackgroundColorChanged: canvas.requestPaint()
    }
 
    onAngleChanged: canvas.requestPaint()
@@ -73,10 +76,16 @@ Dial {
          var ctx = canvas.context
          if (!ctx) {
             ctx = getContext("2d")
-            ctx.lineCap = "squared"
+            ctx.lineCap = "round"
          }
 
          ctx.clearRect(0, 0, canvasSize.width, canvasSize.height)
+
+         // Dial background
+         ctx.fillStyle = prv.dialBackgroundColor
+         ctx.beginPath()
+         ctx.ellipse(prv.dialOffset, prv.dialOffset, canvasSize.width - 2 * prv.dialOffset, canvasSize.height - 2 * prv.dialOffset)
+         ctx.fill()
 
          // Gauge background
          ctx.lineWidth = prv.outerArcLineWidth

@@ -130,7 +130,7 @@ Rectangle {
       anchors.top: root.bottom
       height: 1
       width: parent.width
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor2
    }
 }
 
