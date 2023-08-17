@@ -94,8 +94,8 @@ class AUDACITY_DLL_API Overlay
 {
 public:
    Overlay() = default;
-   Overlay( const Overlay & ) PROHIBITED;
-   Overlay &operator=( const Overlay & ) PROHIBITED;
+   Overlay( const Overlay & ) = delete;
+   Overlay &operator=( const Overlay & ) = delete;
    virtual ~Overlay() = 0;
 
    ///\brief This number determines an ordering of overlays, so that those

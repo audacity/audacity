@@ -104,8 +104,8 @@ private:
    // It is an error to copy a WaveClip without specifying the
    // sample block factory.
 
-   WaveClip(const WaveClip&) PROHIBITED;
-   WaveClip& operator= (const WaveClip&) PROHIBITED;
+   WaveClip(const WaveClip&) = delete;
+   WaveClip& operator= (const WaveClip&) = delete;
 
 public:
    using Caches = Site< WaveClip, WaveClipListener >;

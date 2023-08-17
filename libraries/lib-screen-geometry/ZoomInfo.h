@@ -44,8 +44,8 @@ public:
    ~ZoomInfo();
 
    // Be sure we don't slice
-   ZoomInfo(const ZoomInfo&) PROHIBITED;
-   ZoomInfo& operator= (const ZoomInfo&) PROHIBITED;
+   ZoomInfo(const ZoomInfo&) = delete;
+   ZoomInfo& operator= (const ZoomInfo&) = delete;
 
    int vpos;                    // vertical scroll pos
 

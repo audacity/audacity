@@ -76,8 +76,8 @@ public:
    static bool UseDuplex();
 
    explicit ProjectAudioManager( AudacityProject &project );
-   ProjectAudioManager( const ProjectAudioManager & ) PROHIBITED;
-   ProjectAudioManager &operator=( const ProjectAudioManager & ) PROHIBITED;
+   ProjectAudioManager( const ProjectAudioManager & ) = delete;
+   ProjectAudioManager &operator=( const ProjectAudioManager & ) = delete;
    ~ProjectAudioManager() override;
 
    bool IsTimerRecordCancelled() { return mTimerRecordCanceled; }

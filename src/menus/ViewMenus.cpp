@@ -372,8 +372,8 @@ Handler( AudacityProject &project )
       .Subscribe(*this, &Handler::OnUndoPushed);
 }
 
-Handler( const Handler & ) PROHIBITED;
-Handler &operator=( const Handler & ) PROHIBITED;
+Handler( const Handler & ) = delete;
+Handler &operator=( const Handler & ) = delete;
 
 Observer::Subscription mUndoSubscription;
 AudacityProject &mProject;

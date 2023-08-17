@@ -35,7 +35,7 @@ public:
       reinit(count, initialize);
    }
 
-   //ArrayOf(const ArrayOf&) PROHIBITED;
+   //ArrayOf(const ArrayOf&) = delete;
    ArrayOf(const ArrayOf&) = delete;
    ArrayOf(ArrayOf&& that)
       : std::unique_ptr < X[] >
@@ -97,7 +97,7 @@ public:
          (*this)[ii] = ArrayOf<X>{ M, initialize };
    }
 
-   //ArraysOf(const ArraysOf&) PROHIBITED;
+   //ArraysOf(const ArraysOf&) = delete;
    ArraysOf(const ArraysOf&) =delete;
    ArraysOf& operator= (ArraysOf&& that)
    {
