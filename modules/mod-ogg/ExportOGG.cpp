@@ -84,12 +84,12 @@ namespace
          return {};
       }
 
-      void Load(const wxConfigBase& config) override
+      void Load(const audacity::BasicSettings& config) override
       {
          mQualityUnscaled = config.Read(wxT("/FileFormats/OggExportQuality"),50)/10;
       }
 
-      void Store(wxConfigBase& config) const override
+      void Store(audacity::BasicSettings& config) const override
       {
          config.Write(wxT("/FileFormats/OggExportQuality"), mQualityUnscaled * 10);
       }

@@ -29,12 +29,11 @@ function.
 #include <wx/button.h>
 #include <wx/textctrl.h>
 
+#include "BasicSettings.h"
 #include "Mix.h"
 #include "Tags.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
-
-#include "Export.h"
 
 #include "ExportFFmpegOptions.h"
 #include "SelectFile.h"
@@ -488,7 +487,7 @@ public:
       return {};
    }
 
-   void Load(const wxConfigBase& config) override
+   void Load(const audacity::BasicSettings& config) override
    {
       mValues[FELanguageID] = std::string(config.Read(wxT("/FileFormats/FFmpegLanguage"), wxT("")).ToUTF8());
       mValues[FESampleRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegSampleRate"), 0L));
@@ -514,7 +513,7 @@ public:
       mValues[FEFormatID] = std::string(config.Read(wxT("/FileFormats/FFmpegFormat")));
    }
 
-   void Store(wxConfigBase& config) const override
+   void Store(audacity::BasicSettings& settings) const override
    {
       
    }

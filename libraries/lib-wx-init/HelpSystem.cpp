@@ -241,9 +241,9 @@ void HelpSystem::ShowHelp(wxWindow *parent,
 
 // DA: Default for DA is manual from internet.
 #ifdef EXPERIMENTAL_DA
-   gPrefs->Read(wxT("/GUI/Help"), &HelpMode, wxT("FromInternet") );
+   gPrefs->Read(wxT("/GUI/Help"), &HelpMode, {"FromInternet"} );
 #else
-   gPrefs->Read(wxT("/GUI/Help"), &HelpMode, wxT("Local") );
+   gPrefs->Read(wxT("/GUI/Help"), &HelpMode, {"Local"} );
 #endif
 
    {

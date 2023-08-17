@@ -717,7 +717,6 @@ int ToolManager::FilterEvent(wxEvent &event)
 //
 void ToolManager::ReadConfig()
 {
-   wxString oldpath = gPrefs->GetPath();
    std::vector<Identifier> unordered[ DockCount ];
    std::vector<ToolBar*> dockedAndHidden;
    std::map<Identifier, bool> show;
@@ -733,12 +732,12 @@ void ToolManager::ReadConfig()
 #endif
 
    // Change to the bar root
-   gPrefs->SetPath( wxT("/GUI/ToolBars") );
+   auto toolbarsGroup = gPrefs->BeginGroup("/GUI/ToolBars");
 
    ToolBarConfiguration::Legacy topLegacy, botLegacy;
 
    int vMajor, vMinor, vMicro;
-   gPrefs->GetVersionKeysInit(vMajor, vMinor, vMicro);
+   GetPreferencesVersion(vMajor, vMinor, vMicro);
    bool useLegacyDock = false;
    // note that vMajor, vMinor, and vMicro will all be zero if either it's a new audacity.cfg file
    // or the version is less than 1.3.13 (when there were no version keys according to the comments in
@@ -758,7 +757,7 @@ void ToolManager::ReadConfig()
 
       // Change to the bar subkey
       auto ndx = bar->GetSection();
-      gPrefs->SetPath( ndx.GET() );
+      auto barGroup = gPrefs->BeginGroup(ndx.GET());
 
       const bool bShownByDefault = bar->ShownByDefault();
       const int defaultDock = bar->DefaultDockID();
@@ -872,12 +871,6 @@ void ToolManager::ReadConfig()
          // Show or hide it
          Expose( bar->GetSection(), show[ ndx ] );
       }
-
-      // Change back to the bar root
-      //gPrefs->SetPath( wxT("..") );  <-- Causes a warning...
-      // May or may not have gone into a subdirectory,
-      // so use an absolute path.
-      gPrefs->SetPath( wxT("/GUI/ToolBars") );
    });
 
    mTopDock->GetConfiguration().PostRead(topLegacy);
@@ -910,8 +903,7 @@ void ToolManager::ReadConfig()
       bar->Expose(false);
    }
 
-   // Restore original config path
-   gPrefs->SetPath( oldpath );
+   toolbarsGroup.Reset();
 
 #if defined(__WXMAC__)
    // Reinstate original transition
@@ -942,16 +934,12 @@ void ToolManager::WriteConfig()
       return;
    }
 
-   wxString oldpath = gPrefs->GetPath();
-   int ndx;
-
-   // Change to the bar root
-   gPrefs->SetPath( wxT("/GUI/ToolBars") );
+   auto toolbarsGroup = gPrefs->BeginGroup("/GUI/ToolBars");
 
    // Save state of each bar
    ForEach([this](ToolBar *bar){
       // Change to the bar subkey
-      gPrefs->SetPath( bar->GetSection().GET() );
+      auto sectionGroup = gPrefs->BeginGroup(bar->GetSection().GET());
 
       // Search both docks for toolbar order
       bool to = mTopDock->GetConfiguration().Contains( bar );
@@ -981,13 +969,7 @@ void ToolManager::WriteConfig()
       gPrefs->Write( wxT("Y"), pos.y );
       gPrefs->Write( wxT("W"), sz.x );
       gPrefs->Write( wxT("H"), sz.y );
-
-      // Change back to the bar root
-      gPrefs->SetPath( wxT("..") );
    });
-
-   // Restore original config path
-   gPrefs->SetPath( oldpath );
    gPrefs->Flush();
 }
 

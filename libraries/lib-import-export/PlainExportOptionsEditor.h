@@ -43,8 +43,8 @@ public:
    bool GetValue(int id, ExportValue& value) const override;
    bool SetValue(int id, const ExportValue& value) override;
 
-   void Load(const wxConfigBase& config) override;
-   void Store(wxConfigBase& config) const override;
+   void Load(const audacity::BasicSettings& config) override;
+   void Store(audacity::BasicSettings&) const override;
    
    SampleRateList GetSampleRateList() const override;
    

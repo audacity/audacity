@@ -42,13 +42,18 @@
 
 #include "ComponentInterfaceSymbol.h"
 #include "wxArrayStringEx.h"
-#include "FileConfig.h"
 
-#include <memory>
+#include <wx/filename.h>
+#include <wx/textfile.h>
 
-class wxFileName;
+#include "GlobalVariable.h"
 
-PREFERENCES_API void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
+#include "BasicSettings.h"
+
+
+PREFERENCES_API void InitPreferences( std::unique_ptr<audacity::BasicSettings> uPrefs );
+PREFERENCES_API void GetPreferencesVersion(int& vMajor, int& vMinor, int& vMicro);
+PREFERENCES_API void SetPreferencesVersion(int vMajor, int vMinor, int vMicor);
 //! Call this to reset preferences to an (almost)-"new" default state
 /*!
  There is at least one exception to that: user preferences we want to make
@@ -57,7 +62,7 @@ PREFERENCES_API void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
 PREFERENCES_API void ResetPreferences();
 PREFERENCES_API void FinishPreferences();
 
-extern PREFERENCES_API FileConfig *gPrefs;
+extern PREFERENCES_API audacity::BasicSettings *gPrefs;
 extern int gMenusDirty;
 
 
@@ -78,7 +83,7 @@ public:
    SettingBase( const wxChar *path ) : mPath{ path } {}
    SettingBase( const wxString &path ) : mPath{ path } {}
 
-   wxConfigBase *GetConfig() const;
+   audacity::BasicSettings *GetConfig() const;
 
    const SettingPath &GetPath() const { return mPath; }
 

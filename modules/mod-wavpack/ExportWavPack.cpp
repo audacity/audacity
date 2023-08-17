@@ -176,7 +176,7 @@ public:
       return {};
    }
 
-   void Load(const wxConfigBase& config) override
+   void Load(const audacity::BasicSettings& config) override
    {
       auto quality = std::get_if<int>(&mValues[OptionIDQuality]);
       auto bitDepth = std::get_if<int>(&mValues[OptionIDBitDepth]);
@@ -193,7 +193,7 @@ public:
       OnHybridModeChange(*hybridMode);
    }
 
-   void Store(wxConfigBase& config) const override
+   void Store(audacity::BasicSettings& config) const override
    {
       auto it = mValues.find(OptionIDQuality);
       if(it != mValues.end())

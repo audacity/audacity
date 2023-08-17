@@ -385,7 +385,7 @@ public:
       return result;
    }
 
-   void Load(const wxConfigBase& config) override
+   void Load(const audacity::BasicSettings& config) override
    {
       wxString mode;
       if(config.Read(wxT("/FileFormats/MP3RateModeChoice"), &mode))
@@ -406,7 +406,7 @@ public:
       OnModeChange(*std::get_if<std::string>(&mValues[MP3OptionIDMode]));
    }
 
-   void Store(wxConfigBase& config) const override
+   void Store(audacity::BasicSettings& config) const override
    {
       auto it = mValues.find(MP3OptionIDMode);
       config.Write(wxT("/FileFormats/MP3RateModeChoice"), wxString(*std::get_if<std::string>(&it->second)));

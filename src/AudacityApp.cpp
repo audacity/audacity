@@ -109,7 +109,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "prefs/DirectoriesPrefs.h"
 #include "prefs/GUISettings.h"
 #include "tracks/ui/Scrubbing.h"
-#include "FileConfig.h"
 #include "widgets/FileHistory.h"
 #include "wxWidgetsBasicUI.h"
 #include "LogWindow.h"
@@ -168,6 +167,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <thread>
 
 #include "ExportPluginRegistry.h"
+#include "SettingsWX.h"
 
 #ifdef HAS_CUSTOM_URL_HANDLING
 #include "URLSchemesRegistry.h"
@@ -281,7 +281,7 @@ void PopulatePreferences()
    bool newPrefsInitialized = false;
    gPrefs->Read(wxT("/NewPrefsInitialized"), &newPrefsInitialized, false);
    if (newPrefsInitialized) {
-      gPrefs->DeleteEntry(wxT("/NewPrefsInitialized"), true);  // take group as well if empty
+      gPrefs->DeleteEntry(wxT("/NewPrefsInitialized"));
    }
 
    // record the Prefs version for future checking (this has not been used for a very
@@ -297,8 +297,8 @@ void PopulatePreferences()
    int vMinor = gPrefs->Read(wxT("/Version/Minor"), (long) 0);
    int vMicro = gPrefs->Read(wxT("/Version/Micro"), (long) 0);
 
-   gPrefs->SetVersionKeysInit(vMajor, vMinor, vMicro);   // make a note of these initial values
-                                                            // for use by ToolManager::ReadConfig()
+   SetPreferencesVersion(vMajor, vMinor, vMicro);   // make a note of these initial values
+                                                          // for use by ToolManager::ReadConfig()
 
    // These integer version keys were introduced april 4 2011 for 1.3.13
    // The device toolbar needs to be enabled due to removal of source selection features in
@@ -329,31 +329,25 @@ void PopulatePreferences()
 
       // Read in all of the existing values
       long dock, order, show, x, y, w, h;
-      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Dock"), &dock, -1);
-      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Order"), &order, -1);
-      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Show"), &show, -1);
-      gPrefs->Read(wxT("/GUI/ToolBars/Meter/X"), &x, -1);
-      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Y"), &y, -1);
-      gPrefs->Read(wxT("/GUI/ToolBars/Meter/W"), &w, -1);
-      gPrefs->Read(wxT("/GUI/ToolBars/Meter/H"), &h, -1);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Dock"), &dock, -1L);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Order"), &order, -1L);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Show"), &show, -1L);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/X"), &x, -1L);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Y"), &y, -1L);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/W"), &w, -1L);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/H"), &h, -1L);
 
       // "Order" must be adjusted since we're inserting two NEW toolbars
       if (dock > 0) {
-         wxString oldPath = gPrefs->GetPath();
-         gPrefs->SetPath(wxT("/GUI/ToolBars"));
 
-         wxString bar;
-         long ndx = 0;
-         bool cont = gPrefs->GetFirstGroup(bar, ndx);
-         while (cont) {
-            long o;
-            if (gPrefs->Read(bar + wxT("/Order"), &o) && o >= order) {
-               gPrefs->Write(bar + wxT("/Order"), o + 2);
-            }
-            cont = gPrefs->GetNextGroup(bar, ndx);
+         const auto toolbarsGroup = gPrefs->BeginGroup("/GUI/ToolBars");
+         for(const auto& group : gPrefs->GetChildGroups())
+         {
+            long orderValue;
+            const auto orderKey = group + wxT("/Order");
+            if(gPrefs->Read(orderKey, &orderValue) && orderValue >= order)
+               gPrefs->Write(orderKey, orderValue + 2);
          }
-         gPrefs->SetPath(oldPath);
-
          // And override the height
          h = 27;
       }
@@ -1361,12 +1355,7 @@ bool AudacityApp::OnInit()
 
    // Initialize preferences and language
    {
-      wxFileName configFileName{ FileNames::Configuration() };
-      auto appName = wxTheApp->GetAppName();
-      InitPreferences( AudacityFileConfig::Create(
-         appName, wxEmptyString,
-         configFileName.GetFullPath(),
-         wxEmptyString, wxCONFIG_USE_LOCAL_FILE) );
+      InitPreferences(audacity::ApplicationSettings::Call());
       PopulatePreferences();
    }
 
@@ -1443,7 +1432,10 @@ bool AudacityApp::InitPart2()
 
    // Initialize the PluginManager
    PluginManager::Get().Initialize( [](const FilePath &localFileName){
-      return AudacityFileConfig::Create({}, {}, localFileName); } );
+      return std::make_unique<SettingsWX>(
+         AudacityFileConfig::Create({}, {}, localFileName)
+      );
+   });
 
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
@@ -1616,7 +1608,7 @@ bool AudacityApp::InitPart2()
    CallAfter( [=] () mutable {
       // Remove duplicate shortcuts when there's a change of version
       int vMajorInit, vMinorInit, vMicroInit;
-      gPrefs->GetVersionKeysInit(vMajorInit, vMinorInit, vMicroInit);
+      GetPreferencesVersion(vMajorInit, vMinorInit, vMicroInit);
       if (vMajorInit != AUDACITY_VERSION || vMinorInit != AUDACITY_RELEASE
          || vMicroInit != AUDACITY_REVISION) {
          CommandManager::Get(*project).RemoveDuplicateShortcuts();
@@ -2724,3 +2716,18 @@ void AudacityApp::AssociateFileTypes()
 }
 #endif
 
+static audacity::ApplicationSettings::Scope applicationSettingsScope {
+   []{
+      static std::once_flag configSetupFlag;
+      static std::shared_ptr<wxConfigBase> config;
+      std::call_once(configSetupFlag, [&]{
+         const auto configFileName = wxFileName { FileNames::Configuration() };
+         config = AudacityFileConfig::Create(
+            wxTheApp->GetAppName(), wxEmptyString,
+            configFileName.GetFullPath(),
+            wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
+         wxConfigBase::Set(config.get());
+      });
+      return std::make_unique<SettingsWX>(config);
+   }
+};

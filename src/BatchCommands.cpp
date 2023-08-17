@@ -771,7 +771,7 @@ bool MacroCommands::ReportAndSkip(
    const TranslatableString & friendlyCommand, const wxString & params)
 {
    int bDebug;
-   gPrefs->Read(wxT("/Batch/Debug"), &bDebug, false);
+   gPrefs->Read(wxT("/Batch/Debug"), &bDebug, 0);
    if( bDebug == 0 )
       return false;
 

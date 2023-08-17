@@ -11,6 +11,8 @@
 #include "PlainExportOptionsEditor.h"
 #include <wx/config.h>
 
+#include "BasicSettings.h"
+
 PlainExportOptionsEditor::PlainExportOptionsEditor(std::initializer_list<OptionDesc> options,
                                                    Listener* listener)
    : mOptionsListener(listener)
@@ -64,7 +66,7 @@ bool PlainExportOptionsEditor::SetValue(int id, const ExportValue& value)
    return false;
 }
 
-void PlainExportOptionsEditor::Load(const wxConfigBase& config)
+void PlainExportOptionsEditor::Load(const audacity::BasicSettings& config)
 {
    auto index = 0;
    for(const auto& option : mOptions)
@@ -87,7 +89,7 @@ void PlainExportOptionsEditor::Load(const wxConfigBase& config)
    }
 }
 
-void PlainExportOptionsEditor::Store(wxConfigBase& config) const
+void PlainExportOptionsEditor::Store(audacity::BasicSettings& config) const
 {
    auto index = 0;
    for(const auto& option : mOptions)

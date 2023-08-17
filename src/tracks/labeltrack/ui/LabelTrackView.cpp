@@ -256,7 +256,7 @@ void LabelTrackView::ResetFont()
 {
    mFontHeight = -1;
    wxString facename = gPrefs->Read(wxT("/GUI/LabelFontFacename"), wxT(""));
-   int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), DefaultFontSize);
+   int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), static_cast<int>(DefaultFontSize));
    msFont = GetFont(facename, size);
 }
 

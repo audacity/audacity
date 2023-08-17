@@ -12,7 +12,10 @@
 
 #include "ExportTypes.h"
 
-class wxConfigBase;
+namespace audacity
+{
+   class BasicSettings;
+}
 
 ///\brief Editor objects are used to retrieve a set of export options,
 ///and configure exporting parameters according the plugin internal logic.
@@ -50,6 +53,6 @@ public:
 
    virtual SampleRateList GetSampleRateList() const = 0;
    
-   virtual void Store(wxConfigBase& config) const = 0;
-   virtual void Load(const wxConfigBase& config) = 0;
+   virtual void Store(audacity::BasicSettings& settings) const = 0;
+   virtual void Load(const audacity::BasicSettings& config) = 0;
 };

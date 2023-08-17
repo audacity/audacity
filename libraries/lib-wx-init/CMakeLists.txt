@@ -39,12 +39,15 @@ set( SOURCES
    wxWidgetsBasicUI.h
    wxWidgetsWindowPlacement.cpp
    wxWidgetsWindowPlacement.h
+   SettingsWX.cpp
+   SettingsWX.h
 )
 set( LIBRARIES
    lib-shuttlegui-interface
    lib-string-utils-interface
    lib-theme-interface
    lib-wx-wrappers-interface
+   lib-preferences-interface
    # If Sentry reporting is enabled, this library depends on
    # lib-network-manager-interface
    # If Sentry reporting is disabled, an INTERFACE library
