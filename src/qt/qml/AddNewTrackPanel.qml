@@ -7,8 +7,8 @@ import Audacity.UiThemes
 
 Popup {
    id: root
-   implicitWidth: 324
-   implicitHeight: 204
+   implicitWidth: 331
+   implicitHeight: 212
    padding: 0
    modal: true
    focus: true
@@ -20,6 +20,7 @@ Popup {
    QtObject {
       id: prv
       property string type
+      property string numberOfTracks: qsTr("Number of tracks")
       property bool validNumberOfTracks: true
    }
 
@@ -40,8 +41,8 @@ Popup {
    FlatButton {
       id: mono
       x: 12
-      y: 12
-      width: 96
+      y: 20
+      width: 97
       height: 64
       text: qsTr("Mono")
       icon: IconCode.MICROPHONE
@@ -62,9 +63,9 @@ Popup {
 
    FlatButton {
       id: stereo
-      x: 114
-      y: 12
-      width: 96
+      x: 117
+      y: 20
+      width: 97
       height: 64
       text: qsTr("Stereo")
       icon: IconCode.MICROPHONE
@@ -81,9 +82,9 @@ Popup {
 
    FlatButton {
       id: label
-      x: 216
-      y: 12
-      width: 96
+      x: 222
+      y: 20
+      width: 97
       height: 64
       text: qsTr("Label")
       icon: IconCode.FLAG
@@ -100,12 +101,12 @@ Popup {
 
    Text {
       id: numberOfTracksLabel
-      y: 88
+      y: 96
       height: 16
-      text: qsTr("Number of tracks")
+      text: prv.numberOfTracks
       color: UiTheme.fontColor1
-      font.pixelSize: 12
       font.family: appConfig.bodyFont.family
+      font.pixelSize: 12
       anchors.left: mono.left
       anchors.right: label.right
       verticalAlignment: Text.AlignVCenter
@@ -114,8 +115,8 @@ Popup {
 
    FlatButton {
       id: subtract
-      x: 106
-      y: 112
+      x: 94
+      y: 120
       width: 28
       height: 28
       text: "-"
@@ -139,9 +140,9 @@ Popup {
 
    Rectangle {
       id: numberOfTracks
-      x: 138
-      y: 112
-      width: 48
+      x: 126
+      y: 120
+      width: 79
       height: 28
       color: UiTheme.textFieldColor
       radius: 3
@@ -177,7 +178,7 @@ Popup {
          onTextChanged: {
             prv.validNumberOfTracks = (text === "" || acceptableInput)
             if (prv.validNumberOfTracks === true) {
-               numberOfTracksLabel.text = qsTr("Number of tracks")
+               numberOfTracksLabel.text = prv.numberOfTracks
             }
 
             if (text === "") {
@@ -208,8 +209,8 @@ Popup {
 
    FlatButton {
       id: add
-      x: 190
-      y: 112
+      x: 209
+      y: 120
       width: 28
       height: 28
       text: "+"
@@ -236,7 +237,7 @@ Popup {
       text: qsTr("Create")
       x: (root.width - width) / 2
       y: separator.y + (root.height - separator.y - height) / 2
-      width: 288
+      width: 307
       height: 28
       accentButton: true
       enabled: prv.validNumberOfTracks
@@ -248,7 +249,9 @@ Popup {
    }
 
    background: Rectangle {
-      anchors.fill: parent
+      y: 8
+      width: root.width
+      height: root.height - 8
       color: UiTheme.backgroundColor2
       radius: 4
 
@@ -256,13 +259,40 @@ Popup {
          color: UiTheme.strokeColor
          width: 1
       }
+   }
 
-      Rectangle {
-         id: separator
-         y: root.height - 52
-         width: parent.width
-         height: 1
-         color: UiTheme.strokeColor
+   Canvas {
+      id: canvas
+      x: 131
+      width: 15
+      height: 9
+      antialiasing: true
+
+      onPaint: {
+         var context = canvas.context
+         if (!context) {
+            context = getContext("2d")
+            context.lineCap = "squared"
+         }
+
+         context.lineWidth = 2
+         context.strokeStyle = UiTheme.strokeColor
+         context.beginPath()
+         context.moveTo(0, 9)
+         context.lineTo(7, 0)
+         context.lineTo(14, 9)
+         context.stroke()
+
+         context.fillStyle = UiTheme.backgroundColor2
+         context.fill()
       }
+   }
+
+   Rectangle {
+      id: separator
+      y: root.height - 52
+      width: parent.width
+      height: 1
+      color: UiTheme.strokeColor
    }
 }

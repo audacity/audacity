@@ -86,6 +86,7 @@ Rectangle {
 
       AddNewTrackPanel {
          id: addNewTrack
+         x: 8
          y: parent.height
 
          onCreateTracks: (type, quantity) => {
