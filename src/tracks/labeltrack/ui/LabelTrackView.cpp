@@ -256,7 +256,7 @@ void LabelTrackView::ResetFont()
 {
    mFontHeight = -1;
    wxString facename = gPrefs->Read(wxT("/GUI/LabelFontFacename"), wxT(""));
-   int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), DefaultFontSize);
+   int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), static_cast<int>(DefaultFontSize));
    msFont = GetFont(facename, size);
 }
 
@@ -1683,7 +1683,7 @@ bool LabelTrackView::DoKeyDown(
       case WXK_NUMPAD_ENTER:
       case WXK_TAB:
          if (mRestoreFocus >= 0) {
-            auto track = *TrackList::Get(project).Leaders()
+            auto track = *TrackList::Get(project).Any()
                .begin().advance(mRestoreFocus);
             if (track)
                TrackFocus::Get( project ).Set(track);

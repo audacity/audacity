@@ -535,7 +535,7 @@ UIHandle::Result SelectHandle::Click(
    auto &trackList = TrackList::Get(*pProject);
    const auto sTrack = trackList.Lock(FindTrack());
    const auto pTrack = sTrack.get();
-   const auto pLeader = *trackList.FindLeader(pTrack);
+   const auto pLeader = *trackList.Find(pTrack);
    auto &trackPanel = TrackPanel::Get(*pProject);
    auto &viewInfo = ViewInfo::Get(*pProject);
 
@@ -569,7 +569,7 @@ UIHandle::Result SelectHandle::Click(
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength(
-         viewInfo, *pTrack, SyncLockState::Get(*pProject).IsSyncLocked());
+         viewInfo, *pLeader, SyncLockState::Get(*pProject).IsSyncLocked());
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip
@@ -1371,7 +1371,7 @@ void SelectHandle::StartSnappingFreqSelection
    frequencySnappingData.resize(effectiveLength, 0.0f);
    pTrack->GetFloats(
       &frequencySnappingData[0],
-      start, length, fillZero,
+      start, length, FillFormat::fillZero,
       // Don't try to cope with exceptions, just read zeroes instead.
       false);
 

@@ -59,6 +59,7 @@ is time to refresh some aspect of the screen.
 #include "ProjectWindows.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
+#include "ProjectTimeRuler.h"
 #include "ProjectWindow.h"
 #include "SyncLock.h"
 #include "Theme.h"
@@ -333,6 +334,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
             //update "effects" button 
             RefreshTrack(pTrack);
       });
+
+   mProjectRulerInvalidatedSubscription =
+      ProjectTimeRuler::Get(*theProject).GetRuler().Subscribe([this](auto mode) { Refresh(); });
 
    UpdatePrefs();
 }
@@ -630,7 +634,7 @@ void TrackPanel::UpdateSelectionDisplay()
 // Counts selected tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetSelectedTrackCount() const
 {
-   return GetTracks()->SelectedLeaders().size();
+   return GetTracks()->Selected().size();
 }
 
 void TrackPanel::UpdateViewIfNoTracks()
@@ -747,7 +751,7 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 
    // Always move to the first channel of the group, and use only
    // the sum of channel heights, not the height of any channel alone!
-   trk = *GetTracks()->FindLeader(trk);
+   trk = *GetTracks()->Find(trk);
    auto height = ChannelView::GetChannelGroupHeight(trk);
 
    // Set rectangle top according to the scrolling position, `vpos`
@@ -839,7 +843,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    brushFlag   = (ToolCodes::brushTool == settings.GetTool());
 #endif
 
-   const bool hasSolo = GetTracks()->Leaders<PlayableTrack>()
+   const bool hasSolo = GetTracks()->Any<PlayableTrack>()
       .any_of( [](const PlayableTrack *pt) {
          pt = static_cast<const PlayableTrack *>(
             pt->SubstitutePendingChangedTrack().get());
@@ -918,7 +922,7 @@ std::vector<int> FindAdjustedChannelHeights(Track &t)
 
 void TrackPanel::UpdateVRulers()
 {
-   for (auto t : GetTracks()->Leaders<WaveTrack>())
+   for (auto t : GetTracks()->Any<WaveTrack>())
       UpdateTrackVRuler(*t);
 
    UpdateVRulerSize();
@@ -974,7 +978,7 @@ void TrackPanel::UpdateTrackVRuler(Track &t)
 
 void TrackPanel::UpdateVRulerSize()
 {
-   auto trackRange = GetTracks()->Leaders();
+   auto trackRange = GetTracks()->Any();
    if (trackRange) {
       wxSize s{ 0, 0 };
       // Find maximum width over all channels
@@ -1010,7 +1014,7 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
    assert(!t || t->IsLeader());
    int trackTop = 0;
    int trackHeight =0;
-   for (auto it : GetTracks()->Leaders()) {
+   for (auto it : *GetTracks()) {
       trackTop += trackHeight;
       trackHeight = ChannelView::GetChannelGroupHeight(it);
 
@@ -1050,7 +1054,7 @@ void TrackPanel::VerticalScroll( float fracPosition){
 
    auto tracks = GetTracks();
 
-   auto range = tracks->Leaders();
+   auto range = tracks->Any();
    if (!range.empty()) {
       trackHeight = ChannelView::GetChannelGroupHeight(*range.rbegin());
       --range.second;
@@ -1625,7 +1629,7 @@ struct Subgroup final : TrackPanelGroup {
          refinement.emplace_back( yy, EmptyCell::Instance() ),
          yy += kTopMargin;
 
-      for (const auto leader : tracks.Leaders()) {
+      for (const auto leader : tracks) {
          wxCoord height = 0;
          for (auto pChannel : leader->Channels()) {
             auto &view = ChannelView::Get(*pChannel);
@@ -1673,7 +1677,7 @@ std::shared_ptr<TrackPanelNode> TrackPanel::Root()
 // The given track is assumed to be the first channel
 wxRect TrackPanel::FindTrackRect( const Track * target )
 {
-   auto leader = *GetTracks()->FindLeader( target );
+   auto leader = *GetTracks()->Find( target );
    if (!leader) {
       return {};
    }

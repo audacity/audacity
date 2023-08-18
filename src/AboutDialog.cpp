@@ -611,11 +611,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr
       << wxT("<table>");   // start table of file formats supported
 
-
-   #if defined(USE_LIBMAD)
-   /* i18n-hint: This is what the library (libmad) does - imports MP3 files */
-   AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), enabled);
-   #elif defined(USE_LIBID3TAG)
+   #if defined(USE_LIBID3TAG)
    AddBuildinfoRow(&informationStr, wxT("libmpg123"), XO("MP3 Importing"), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), disabled);
@@ -669,12 +665,6 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, wxT("ffmpeg"), XO("FFmpeg Import/Export"), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("ffmpeg"), XO("FFmpeg Import/Export"), disabled);
-   #endif
-
-   #ifdef USE_GSTREAMER
-   AddBuildinfoRow(&informationStr, wxT("gstreamer"), XO("Import via GStreamer"), enabled);
-   #else
-   AddBuildinfoRow(&informationStr, wxT("gstreamer"), XO("Import via GStreamer"), disabled);
    #endif
 
    informationStr << wxT("</table>\n");  //end table of file formats supported

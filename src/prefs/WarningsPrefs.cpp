@@ -70,7 +70,7 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Show Warnings/Prompts for"));
    {
-      S.TieCheckBox(XXO("Saving &projects"),
+      S.TieCheckBox(XXO("Saving &projects versus exporting audio"),
                     {wxT("/Warnings/FirstProjectSave"),
                      true});
       S.TieCheckBox(XXO("Saving &empty project"),

@@ -15,6 +15,7 @@ set( LIBRARIES
    lib-preferences
    lib-math
    lib-files
+   lib-import-export
    lib-ipc
    lib-registries
    lib-xml
@@ -22,7 +23,7 @@ set( LIBRARIES
    lib-project
    lib-screen-geometry
    lib-project-rate
-   lib-ffmpeg-support
+   lib-file-formats
    lib-track
    lib-transactions
    lib-sample-track
@@ -62,6 +63,7 @@ if( NOT ${_OPT}enable_experimental_qt_support )
       lib-wx-init
       lib-wx-wrappers
       lib-shuttlegui
+      lib-export-ui
    )
 endif()
 
@@ -75,7 +77,6 @@ endif()
 
 if ( ${_OPT}has_audiocom_upload)
    list( APPEND LIBRARIES
-      lib-cloud-upload
       lib-cloud-audiocom
    )
 endif()

@@ -75,12 +75,11 @@ public:
    using Holder = std::shared_ptr<NoteTrack>;
 
 private:
-   Track::Holder Clone() const override;
+   TrackListHolder Clone() const override;
 
 public:
-   double GetOffset() const override;
-   double GetStartTime() const override;
-   double GetEndTime() const override;
+   void MoveTo(double origin) override { mOrigin = origin; }
+
    Alg_seq &GetSeq() const;
 
    void WarpAndTransposeNotes(double t0, double t1,
@@ -100,11 +99,12 @@ public:
    bool ExportAllegro(const wxString &f) const;
 
    // High-level editing
-   Track::Holder Cut  (double t0, double t1) override;
-   Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
+   TrackListHolder Cut(double t0, double t1) override;
+   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const override;
    bool Trim (double t0, double t1) /* not override */;
    void Clear(double t0, double t1) override;
-   void Paste(double t, const Track *src) override;
+   void Paste(double t, const Track &src) override;
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
    bool Shift(double t) /* not override */;
@@ -203,7 +203,8 @@ public:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto(AudacityProject &project, TrackList &list)
+      const override;
 
    size_t NIntervals() const override;
 
@@ -255,6 +256,7 @@ private:
    std::atomic<unsigned> mVisibleChannels{ ALL_CHANNELS };
 
    std::weak_ptr<StretchHandle> mStretchHandle;
+   double mOrigin{ 0.0 };
 };
 
 /// Data used to display a note track

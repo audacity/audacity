@@ -60,15 +60,12 @@ public:
    };
 
    explicit ProjectSettings( AudacityProject &project );
-   ProjectSettings( const ProjectSettings & ) PROHIBITED;
-   ProjectSettings &operator=( const ProjectSettings & ) PROHIBITED;
+   ProjectSettings( const ProjectSettings & ) = delete;
+   ProjectSettings &operator=( const ProjectSettings & ) = delete;
 
 
    bool GetTracksFitVerticallyZoomed() const { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
-
-   bool GetShowId3Dialog() const { return mShowId3Dialog; } //lda
-   void SetShowId3Dialog(bool flag) { mShowId3Dialog = flag; } //lda
 
    // Current tool
 
@@ -101,7 +98,6 @@ private:
    bool mbOvertones { false };
    
    bool mTracksFitVerticallyZoomed{ false };  //lda
-   bool mShowId3Dialog{ true }; //lda
    bool mEmptyCanBeDirty;
    bool mShowSplashScreen;
 };

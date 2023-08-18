@@ -27,8 +27,7 @@
 // private helper classes and functions
 namespace {
 
-double NearestZeroCrossing
-(AudacityProject &project, double t0)
+double NearestZeroCrossing(AudacityProject &project, double t0)
 {
    auto rate = ProjectRate::Get(project).GetRate();
    auto &tracks = TrackList::Get( project );
@@ -38,43 +37,50 @@ double NearestZeroCrossing
    Floats dist{ windowSize, true };
 
    int nTracks = 0;
-   for (auto one : tracks.Selected< const WaveTrack >()) {
+   for (auto one : tracks.Selected<const WaveTrack>()) {
+      const auto nChannels = one->NChannels();
       auto oneWindowSize = size_t(std::max(1.0, one->GetRate() / 100));
-      Floats oneDist{ oneWindowSize };
+      Floats buffer1{ oneWindowSize };
+      Floats buffer2{ oneWindowSize };
+      float *const buffers[]{ buffer1.get(), buffer2.get() };
       auto s = one->TimeToLongSamples(t0);
+
       // fillTwo to ensure that missing values are treated as 2, and hence do
       // not get used as zero crossings.
-      one->GetFloats(oneDist.get(),
-               s - (int)oneWindowSize/2, oneWindowSize, fillTwo);
+      one->GetFloats(0, nChannels, buffers,
+         s - (int)oneWindowSize/2, oneWindowSize, false, FillFormat::fillTwo);
 
 
-      // Looking for actual crossings.
-      double prev = 2.0;
-      for(size_t i=0; i<oneWindowSize; i++){
-         float fDist = fabs( oneDist[i]); // score is absolute value
-         if( prev * oneDist[i] > 0 ) // both same sign?  No good.
-            fDist = fDist + 0.4; // No good if same sign.
-         else if( prev > 0.0 )
-            fDist = fDist + 0.1; // medium penalty for downward crossing.
-         prev = oneDist[i];
-         oneDist[i] = fDist;
-      }
+      // Looking for actual crossings.  Update dist
+      for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
+         const auto oneDist = buffers[iChannel];
+         double prev = 2.0;
+         for (size_t i = 0; i < oneWindowSize; ++i) {
+            float fDist = fabs(oneDist[i]); // score is absolute value
+            if (prev * oneDist[i] > 0) // both same sign?  No good.
+               fDist = fDist + 0.4; // No good if same sign.
+            else if (prev > 0.0)
+               fDist = fDist + 0.1; // medium penalty for downward crossing.
+            prev = oneDist[i];
+            oneDist[i] = fDist;
+         }
 
-      // TODO: The mixed rate zero crossing code is broken,
-      // if oneWindowSize > windowSize we'll miss out some
-      // samples - so they will still be zero, so we'll use them.
-      for(size_t i = 0; i < windowSize; i++) {
-         size_t j;
-         if (windowSize != oneWindowSize)
-            j = i * (oneWindowSize-1) / (windowSize-1);
-         else
-            j = i;
+         // TODO: The mixed rate zero crossing code is broken,
+         // if oneWindowSize > windowSize we'll miss out some
+         // samples - so they will still be zero, so we'll use them.
+         for (size_t i = 0; i < windowSize; i++) {
+            size_t j;
+            if (windowSize != oneWindowSize)
+               j = i * (oneWindowSize - 1) / (windowSize - 1);
+            else
+               j = i;
 
-         dist[i] += oneDist[j];
-         // Apply a small penalty for distance from the original endpoint
-         // We'll always prefer an upward
-         dist[i] +=
-            0.1 * (abs(int(i) - int(windowSize/2))) / float(windowSize/2);
+            dist[i] += oneDist[j];
+            // Apply a small penalty for distance from the original endpoint
+            // We'll always prefer an upward
+            dist[i] +=
+               0.1 * (abs(int(i) - int(windowSize / 2))) / float(windowSize / 2);
+         }
       }
       nTracks++;
    }
@@ -82,7 +88,7 @@ double NearestZeroCrossing
    // Find minimum
    int argmin = 0;
    float min = 3.0;
-   for(size_t i=0; i<windowSize; i++) {
+   for (size_t i = 0; i < windowSize; ++i) {
       if (dist[i] < min) {
          argmin = i;
          min = dist[i];
@@ -90,13 +96,13 @@ double NearestZeroCrossing
    }
 
    // If we're worse than 0.2 on average, on one track, then no good.
-   if(( nTracks == 1 ) && ( min > (0.2*nTracks) ))
+   if ((nTracks == 1) && (min > (0.2 * nTracks)))
       return t0;
    // If we're worse than 0.6 on average, on multi-track, then no good.
-   if(( nTracks > 1 ) && ( min > (0.6*nTracks) ))
+   if ((nTracks > 1) && (min > (0.6 * nTracks)))
       return t0;
 
-   return t0 + (argmin - (int)windowSize/2) / rate;
+   return t0 + (argmin - (int)windowSize / 2) / rate;
 }
 
 // If this returns true, then there was a key up, and nothing more to do,
@@ -198,19 +204,18 @@ double OffsetTime
 void MoveWhenAudioInactive
 (AudacityProject &project, double seekStep, TimeUnit timeUnit)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &ruler = AdornedRulerPanel::Get( project );
-   const auto &settings = ProjectSnap::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &trackPanel = TrackPanel::Get(project);
+   auto &tracks = TrackList::Get(project);
+   auto &ruler = AdornedRulerPanel::Get(project);
+   const auto &settings = ProjectSnap::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
    auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    // Move the cursor
    // Already in cursor mode?
@@ -250,12 +255,12 @@ void SeekWhenAudioInactive
 (AudacityProject &project, double seekStep, TimeUnit timeUnit,
 SelectionOperation operation)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-   const auto &settings = ProjectSnap::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
+   const auto &settings = ProjectSnap::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
-   if( operation == CURSOR_MOVE )
+   if (operation == CURSOR_MOVE)
    {
       MoveWhenAudioInactive( project, seekStep, timeUnit);
       return;
@@ -265,8 +270,7 @@ SelectionOperation operation)
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    // Is it t0 or t1 moving?
    bool bMoveT0 = (operation == SELECTION_CONTRACT && seekStep > 0) ||
@@ -348,9 +352,9 @@ void DoCursorMove(
 
 void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 {
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
+   auto &window = ProjectWindow::Get(project);
 
    // step is negative, then is moving left.  step positive, moving right.
    // Move the left/right selection boundary, to expand the selection
@@ -359,18 +363,15 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    // holding the key down and should move faster.
    wxLongLong curtime = ::wxGetUTCTimeMillis();
    int pixels = step;
-   if( curtime - info.mLastSelectionAdjustment < 50 )
-   {
+   if (curtime - info.mLastSelectionAdjustment < 50)
       pixels *= 4;
-   }
    info.mLastSelectionAdjustment = curtime;
 
    // we used to have a parameter boundaryContract to say if expanding or
    // contracting.  it is no longer needed.
    bool bMoveT0 = (step < 0 );// ^ boundaryContract ;
 
-   if( ProjectAudioIO::Get( project ).IsAudioActive() )
-   {
+   if (ProjectAudioIO::Get(project).IsAudioActive()) {
       auto gAudioIO = AudioIO::Get();
       double indicator = gAudioIO->GetStreamTime();
       if( bMoveT0 )
@@ -385,8 +386,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max(
-      tracks.GetEndTime(),
-      viewInfo.GetScreenEndTime());
+      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    double newT = viewInfo.OffsetTimeByPixels( bMoveT0 ? t0 : t1, pixels);
    // constrain to be in the track/screen limits.
@@ -426,7 +426,7 @@ void OnSelectAll(const CommandContext &context)
    auto& trackPanel = TrackPanel::Get(context.project);
    auto& tracks = TrackList::Get(context.project);
 
-   for (auto lt : tracks.SelectedLeaders<LabelTrack>()) {
+   for (auto lt : tracks.Selected<LabelTrack>()) {
       auto& view = LabelTrackView::Get(*lt);
       if (view.SelectAllText(context.project)) {
          trackPanel.Refresh(false);
@@ -469,7 +469,7 @@ void OnSelectSyncLockSel(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    bool selected = false;
-   for (auto t : tracks.Leaders() + &Track::SupportsBasicEditing
+   for (auto t : tracks.Any() + &Track::SupportsBasicEditing
          + &SyncLock::IsSyncLockSelected - &Track::IsSelected) {
       t->SetSelected(true);
       selected = true;
@@ -494,64 +494,62 @@ void OnSetRightSelection(const CommandContext &context)
 void OnSelectStartCursor(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
    auto range = tracks.Selected();
-   if ( ! range )
+   if (!range)
       return;
 
-   double minOffset = range.min( &Track::GetStartTime );
+   double minOffset = range.min(&Track::GetStartTime);
 
    if( minOffset >=
        (kWayOverToRight * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setT0(minOffset);
-
-   ProjectHistory::Get( project ).ModifyState(false);
+   ProjectHistory::Get(project).ModifyState(false);
 }
 
 void OnSelectCursorEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
    auto range = tracks.Selected();
-   if ( ! range )
+   if (!range)
       return;
 
-   double maxEndOffset = range.max( &Track::GetEndTime );
+   double maxEndOffset = range.max(&Track::GetEndTime);
 
    if( maxEndOffset <=
        (kWayOverToLeft * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setT1(maxEndOffset);
-
-   ProjectHistory::Get( project ).ModifyState(false);
+   ProjectHistory::Get(project).ModifyState(false);
 }
 
 void OnSelectTrackStartToEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
 
    auto range = tracks.Selected();
-   double maxEndOffset = range.max( &Track::GetEndTime );
-   double minOffset = range.min( &Track::GetStartTime );
+   double maxEndOffset = range.max(&Track::GetEndTime);
+   double minOffset = range.min(&Track::GetStartTime);
 
    if( maxEndOffset < minOffset)
       return;
 
-   viewInfo.selectedRegion.setTimes( minOffset, maxEndOffset );
-   ProjectHistory::Get( project ).ModifyState(false);
+   viewInfo.selectedRegion.setTimes(minOffset, maxEndOffset);
+   ProjectHistory::Get(project).ModifyState(false);
 }
 
 // Handler state:
@@ -734,9 +732,9 @@ void OnCursorSelEnd(const CommandContext &context)
 void OnCursorTrackStart(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
@@ -746,23 +744,23 @@ void OnCursorTrackStart(const CommandContext &context)
       return;
 
    // Range is surely nonempty now
-   auto minOffset = std::max( 0.0, trackRange.min( &Track::GetOffset ) );
+   auto minOffset = std::max(0.0, trackRange.min(&Track::GetStartTime));
 
    if( minOffset >=
        (kWayOverToRight * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setTimes(minOffset, minOffset);
-   ProjectHistory::Get( project ).ModifyState(false);
+   ProjectHistory::Get(project).ModifyState(false);
    window.ScrollIntoView(selectedRegion.t0());
 }
 
 void OnCursorTrackEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   auto &window = ProjectWindow::Get(project);
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
@@ -772,14 +770,14 @@ void OnCursorTrackEnd(const CommandContext &context)
       return;
 
    // Range is surely nonempty now
-   auto maxEndOffset = trackRange.max( &Track::GetEndTime );
+   auto maxEndOffset = trackRange.max(&Track::GetEndTime);
 
    if( maxEndOffset <
        (kWayOverToLeft * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setTimes(maxEndOffset, maxEndOffset);
-   ProjectHistory::Get( project ).ModifyState(false);
+   ProjectHistory::Get(project).ModifyState(false);
    window.ScrollIntoView(selectedRegion.t1());
 }
 
@@ -883,8 +881,8 @@ Handler()
 {
    UpdatePrefs();
 }
-Handler( const Handler & ) PROHIBITED;
-Handler &operator=( const Handler & ) PROHIBITED;
+Handler( const Handler & ) = delete;
+Handler &operator=( const Handler & ) = delete;
 
 }; // struct Handler
 

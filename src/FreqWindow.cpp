@@ -586,11 +586,13 @@ void FrequencyPlotDialog::GetAudio()
 
    int selcount = 0;
    bool warning = false;
-   for (auto track : TrackList::Get( *mProject ).Selected< const WaveTrack >()) {
-      auto &selectedRegion = ViewInfo::Get( *mProject ).selectedRegion;
-      if (selcount==0) {
+   for (auto track :
+      TrackList::Get(*mProject).Selected<const WaveTrack>()
+   ) {
+      auto &selectedRegion = ViewInfo::Get(*mProject).selectedRegion;
+      auto start = track->TimeToLongSamples(selectedRegion.t0());
+      if (selcount == 0) {
          mRate = track->GetRate();
-         auto start = track->TimeToLongSamples(selectedRegion.t0());
          auto end = track->TimeToLongSamples(selectedRegion.t1());
          auto dataLen = end - start;
          // Permit approximately 46.60 minutes of selected samples at
@@ -600,32 +602,33 @@ void FrequencyPlotDialog::GetAudio()
             warning = true;
             mDataLen = maxDataLen;
          }
-         else {
+         else
             mDataLen = dataLen.as_size_t();
-         }
          mData = Floats{ mDataLen };
-         // Don't allow throw for bad reads
-         track->GetFloats(mData.get(), start, mDataLen,
-                    fillZero, false);
       }
-      else {
-         if (track->GetRate() != mRate) {
-            AudacityMessageBox(
-               XO(
+      const auto nChannels = track->NChannels();
+      if (track->GetRate() != mRate) {
+         AudacityMessageBox(
+            XO(
 "To plot the spectrum, all selected tracks must be the same sample rate.") );
-            mData.reset();
-            mDataLen = 0;
-            return;
-         }
-         auto start = track->TimeToLongSamples(selectedRegion.t0());
-         Floats buffer2{ mDataLen };
-         // Again, stop exceptions
-         track->GetFloats(buffer2.get(), start, mDataLen,
-                    fillZero, false);
-         for (size_t i = 0; i < mDataLen; i++)
-            mData[i] += buffer2[i];
+         mData.reset();
+         mDataLen = 0;
+         return;
       }
-      selcount++;
+      Floats buffer1{ mDataLen };
+      Floats buffer2{ mDataLen };
+      float *const buffers[]{ buffer1.get(), buffer2.get() };
+      // Don't allow throw for bad reads
+      track->GetFloats(0, nChannels, buffers, start, mDataLen,
+         false, FillFormat::fillZero, false);
+      for (size_t i = 0; i < mDataLen; i++)
+         mData[i] = buffers[0][i];
+      for (size_t iChannel = 1; iChannel < nChannels; ++iChannel) {
+         const auto buffer = buffers[iChannel];
+         for (size_t i = 0; i < mDataLen; i++)
+            mData[i] += buffer[i];
+      }
+      ++selcount;
    }
 
    if (selcount == 0)

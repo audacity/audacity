@@ -156,12 +156,12 @@ HitTestPreview TrackSelectHandle::Preview
    //static auto clickedCursor =
    //   ::MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
 
-   const auto trackCount = TrackList::Get( *project ).Leaders().size();
+   const auto trackCount = TrackList::Get( *project ).Any().size();
    auto message = Message(trackCount);
    if (mClicked) {
       const bool unsafe =
          ProjectAudioIO::Get( *project ).IsAudioActive();
-      const bool canMove = TrackList::Get( *project ).Leaders().size() > 1;
+      const bool canMove = TrackList::Get( *project ).Any().size() > 1;
       return {
          message,
          (unsafe
@@ -227,7 +227,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(
       mMoveUpThreshold =
          event.m_y -
             ChannelView::GetChannelGroupHeight(
-               * -- tracks.FindLeader(mpTrack.get()));
+               * -- tracks.Find(mpTrack.get()));
    else
       mMoveUpThreshold = INT_MIN;
 
@@ -235,7 +235,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(
       mMoveDownThreshold =
          event.m_y +
             ChannelView::GetChannelGroupHeight(
-               * ++ tracks.FindLeader(mpTrack.get()));
+               * ++ tracks.Find(mpTrack.get()));
    else
       mMoveDownThreshold = INT_MAX;
 }

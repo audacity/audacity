@@ -89,7 +89,7 @@ bool SetLabelCommand::Apply(const CommandContext & context)
    LabelTrack *labelTrack = nullptr;
    auto ii = mLabelIndex;
    if ( mLabelIndex >= 0 ) {
-      for (auto lt : tracks.Leaders<LabelTrack>()) {
+      for (auto lt : tracks.Any<LabelTrack>()) {
          const auto &labels = lt->GetLabels();
          const auto nLabels = labels.size();
          if( ii >= (int)nLabels )

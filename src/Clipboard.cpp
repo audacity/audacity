@@ -53,6 +53,7 @@ void Clipboard::Clear()
 void Clipboard::Assign( TrackList && newContents,
    double t0, double t1, const std::weak_ptr<AudacityProject> &pProject )
 {
+   assert(!newContents.GetOwner());
    newContents.Swap( *mTracks );
    newContents.Clear();
    

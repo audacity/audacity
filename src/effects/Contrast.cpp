@@ -60,7 +60,7 @@ bool ContrastDialog::GetDB(float &dB)
 
    auto p = FindProjectFromWindow( this );
    auto range =
-      TrackList::Get( *p ).SelectedLeaders< const WaveTrack >();
+      TrackList::Get(*p).Selected<const WaveTrack>();
    auto numberSelectedTracks = range.size();
    if (numberSelectedTracks > 1) {
       AudacityMessageDialog m(
@@ -81,15 +81,13 @@ bool ContrastDialog::GetDB(float &dB)
       return false;
    }
 
-   const auto channels = TrackList::Channels( *range.begin() );
-   for ( auto t : channels ) {
-      wxASSERT(mT0 <= mT1);
-
-      // Ignore whitespace beyond ends of track.
-      if(mT0 < t->GetStartTime())
-         mT0 = t->GetStartTime();
-      if(mT1 > t->GetEndTime())
-         mT1 = t->GetEndTime();
+   const auto first = *range.begin();
+   const auto channels = TrackList::Channels(first);
+   assert(mT0 <= mT1);
+   // Ignore whitespace beyond ends of track.
+   mT0 = std::max(mT0, first->GetStartTime());
+   mT1 = std::min(mT1, first->GetEndTime());
+   for (auto t : channels) {
 
       auto SelT0 = t->TimeToLongSamples(mT0);
       auto SelT1 = t->TimeToLongSamples(mT1);
@@ -380,7 +378,7 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
    auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
-   if (TrackList::Get(*p).SelectedLeaders<const WaveTrack>()) {
+   if (TrackList::Get(*p).Selected<const WaveTrack>()) {
       mForegroundStartT->SetValue(selectedRegion.t0());
       mForegroundEndT->SetValue(selectedRegion.t1());
    }
@@ -396,7 +394,7 @@ void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
    auto p = FindProjectFromWindow( this );
    auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
 
-   if (TrackList::Get(*p).SelectedLeaders<const WaveTrack>()) {
+   if (TrackList::Get(*p).Selected<const WaveTrack>()) {
       mBackgroundStartT->SetValue(selectedRegion.t0());
       mBackgroundEndT->SetValue(selectedRegion.t1());
    }

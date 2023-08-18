@@ -38,7 +38,7 @@ void LabelDefaultClickHandle::SaveState( AudacityProject *pProject )
    auto &pairs = mLabelState->mPairs;
    auto &tracks = TrackList::Get( *pProject );
 
-   for (auto lt : tracks.Leaders<LabelTrack>()) {
+   for (auto lt : tracks.Any<LabelTrack>()) {
       auto &view = LabelTrackView::Get( *lt );
       pairs.push_back( std::make_pair(
          lt->SharedPointer<LabelTrack>(), view.SaveFlags() ) );
@@ -69,7 +69,7 @@ UIHandle::Result LabelDefaultClickHandle::Click
       SaveState( pProject );
 
       const auto pLT = evt.pCell.get();
-      for (auto lt : TrackList::Get(*pProject).Leaders<LabelTrack>()) {
+      for (auto lt : TrackList::Get(*pProject).Any<LabelTrack>()) {
          if (pLT != &ChannelView::Get(*lt)) {
             auto &view = LabelTrackView::Get( *lt );
             view.ResetFlags();

@@ -15,6 +15,8 @@
 #include "wxPanelWrapper.h" // to inherit
 
 class ShuttleGui;
+class wxStaticText;
+class wxButton;
 
 class TagsEditorDialog final : public wxDialogWrapper
 {
@@ -22,28 +24,28 @@ class TagsEditorDialog final : public wxDialogWrapper
    // constructors and destructors
    TagsEditorDialog(wxWindow * parent,
               const TranslatableString &title,
-              Tags * tags,
+              std::vector<Tags*> tags,
+              std::vector<wxString> names, 
               bool editTitle,
               bool editTrack);
 
    virtual ~TagsEditorDialog();
 
    AUDACITY_DLL_API static bool ShowEditDialog( Tags &tags,
-      wxWindow *parent, const TranslatableString &title, bool force = false);
+      wxWindow *parent, const TranslatableString &title );
 
    //! Invoke ShowEditDialog on project's tags;  commit change in undo history,
    //! return true if not cancelled
-   AUDACITY_DLL_API static bool DoEditMetadata(AudacityProject &project,
+   AUDACITY_DLL_API static bool EditProjectMetadata(AudacityProject &project,
       const TranslatableString &title,
-      const TranslatableString &shortUndoDescription, bool force);
+      const TranslatableString &shortUndoDescription);
 
 #if !defined(__WXMSW__)
    bool IsEscapeKey(const wxKeyEvent& /*event*/) override { return false; }
 #endif
 
    void PopulateOrExchange(ShuttleGui & S);
-
-   void OnDontShow( wxCommandEvent & Evt);
+   
    void OnHelp(wxCommandEvent & Evt);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
@@ -51,6 +53,9 @@ class TagsEditorDialog final : public wxDialogWrapper
  private:
    void PopulateGenres();
    void SetEditors();
+
+   void OnNext(wxCommandEvent&);
+   void OnPrev(wxCommandEvent&);
 
    void OnChange(wxGridEvent & event);
 
@@ -75,13 +80,19 @@ class TagsEditorDialog final : public wxDialogWrapper
    bool IsWindowRectValid(const wxRect *windowRect) const;
 
  private:
-   Tags *mTags;
+   std::vector<Tags*> mTags;
+   std::vector<wxString> mNames;
+   int mSelectedIndex{0};
+
    bool mEditTitle;
    bool mEditTrack;
 
-   Tags mLocal;
+   std::vector<std::unique_ptr<Tags>> mEditTags;
 
    Grid *mGrid;
+   wxStaticText* mName{};
+   wxButton* mNext{};
+   wxButton* mPrev{};
    ComboEditor *mComboEditor;
    wxGridCellStringRenderer *mStringRenderer;
 

@@ -110,18 +110,14 @@ class AUDACITY_DLL_API LabelTrack final
 
    void SetLabel( size_t iLabel, const LabelStruct &newLabel );
 
-   void SetOffset(double dOffset) override;
+   void MoveTo(double dOffset) override;
 
    void SetSelected(bool s) override;
-
-   double GetOffset() const override;
-   double GetStartTime() const override;
-   double GetEndTime() const override;
 
    using Holder = std::shared_ptr<LabelTrack>;
 
 private:
-   Track::Holder Clone() const override;
+   TrackListHolder Clone() const override;
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;
 
@@ -130,10 +126,11 @@ public:
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 
-   Track::Holder Cut  (double t0, double t1) override;
-   Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
+   TrackListHolder Cut(double t0, double t1) override;
+   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const override;
    void Clear(double t0, double t1) override;
-   void Paste(double t, const Track * src) override;
+   void Paste(double t, const Track &src) override;
    bool Repeat(double t0, double t1, int n);
    void SyncLockAdjust(double oldT1, double newT1) override;
 
@@ -155,7 +152,7 @@ public:
    void DeleteLabel(int index);
 
    // This pastes labels without shifting existing ones
-   bool PasteOver(double t, const Track *src);
+   bool PasteOver(double t, const Track &src);
 
    // PRL:  These functions were not used because they were not overrides!  Was that right?
    //Track::Holder SplitCut(double b, double e) /* not override */;
@@ -176,7 +173,8 @@ public:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto(AudacityProject &project, TrackList &list)
+      const override;
 
    struct Interval final : WideChannelGroupInterval {
       Interval(const ChannelGroup &group,

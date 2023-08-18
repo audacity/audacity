@@ -22,8 +22,8 @@
 */
 
 MATH_API
-bool ComputeSpectrum(const float * data, size_t width, size_t windowSize,
-                     double rate, float *out, bool autocorrelation,
-                     int windowFunc = eWinFuncHann);
+bool ComputeSpectrum(
+   const float* data, size_t width, size_t windowSize, float* out,
+   bool autocorrelation, int windowFunc = eWinFuncHann);
 
 #endif

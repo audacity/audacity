@@ -259,12 +259,13 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
                             XO("Processing...   0%%"),
                             pdlgHideStopButton };
 
+   // Safe assumption for tracks associated with the context menu
+   assert(pTrack->IsLeader());
+
    // Simply finding a denominator for the progress dialog
-   sampleCount totalSamples{ 0 };
-   for (const auto& channel : TrackList::Channels(pTrack))
-      // Hidden samples are processed too, they should be counted as well
-      // (Correctly counting all samples of all channels)
-      totalSamples += channel->GetSequenceSamplesCount();
+   // Hidden samples are processed too, they should be counted as well
+   // (Correctly counting all samples of all channels)
+   sampleCount totalSamples = pTrack->GetSequenceSamplesCount();
    sampleCount processedSamples{ 0 };
 
    // Below is the lambda function that is passed along the call chain to
@@ -285,9 +286,10 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
          throw UserException{};
    };
 
-   for (auto channel : TrackList::Channels(pTrack))
-      channel->ConvertToSampleFormat(
-         newFormat, progressUpdate);
+   // We get here from the context menu only in the TrackControlPanel cell
+   // which is always associated with a leader track
+   assert(pTrack->IsLeader());
+   pTrack->ConvertToSampleFormat(newFormat, progressUpdate);
          
    ProjectHistory::Get( *project )
    /* i18n-hint: The strings name a track and a format */
@@ -562,7 +564,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
       // Multi-view check mark item, if more than one track sub-view type is
       // known
       Append(Adapt<My>([](My &table) {
-         return (WaveChannelSubViews::slots() > 1)
+         return (WaveChannelSubViews::numFactories() > 1)
             ? std::make_unique<Entry>(
                "MultiView", Entry::CheckItem, OnMultiViewID, XXO("&Multi-view"),
                POPUP_MENU_FN( OnMultiView ),
@@ -639,7 +641,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                auto &tracks = TrackList::Get( project );
                auto &table = static_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
-               auto next = * ++ tracks.FindLeader(&track);
+               auto next = * ++ tracks.Find(&track);
                canMakeStereo =
                   (next &&
                    TrackList::NChannels(*next) == 1 &&
@@ -748,7 +750,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    wxASSERT(pTrack);
 
    auto partner =
-      static_cast<WaveTrack*>(*tracks.FindLeader(pTrack).advance(1));
+      static_cast<WaveTrack*>(*tracks.Find(pTrack).advance(1));
 
    if (pTrack->GetRate() != partner->GetRate()) {
       using namespace BasicUI;

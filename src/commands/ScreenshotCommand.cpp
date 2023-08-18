@@ -751,7 +751,7 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
    };
 
    int count = 0;
-   for (auto t : TrackList::Get( *pProj ).Leaders()) {
+   for (auto t : TrackList::Get( *pProj )) {
       count +=  1;
       if( count > n )
       {

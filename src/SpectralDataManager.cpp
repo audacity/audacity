@@ -33,29 +33,89 @@ struct SpectralDataManager::Setting{
    bool mNeedOutput = true;
 };
 
+namespace {
+const std::shared_ptr<SpectralData> FindSpectralData(Channel *pChannel)
+{
+   auto &view = ChannelView::Get(*pChannel);
+   if (auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)){
+      for (const auto &subViewPtr : waveChannelViewPtr->GetAllSubViews()){
+         if (subViewPtr->IsSpectral()) {
+            auto sView =
+               std::static_pointer_cast<SpectrumView>(subViewPtr).get();
+            const auto pData = sView->GetSpectralData();
+            if (!pData->dataHistory.empty()) {
+               return pData;
+            }
+         }
+      }
+   }
+   return {};
+}
+}
+
 bool SpectralDataManager::ProcessTracks(AudacityProject &project){
    auto &tracks = TrackList::Get(project);
    int applyCount = 0;
    Setting setting;
    Worker worker(setting);
-   for (auto wt : tracks.Leaders<WaveTrack>()) {
+   for (auto wt : tracks.Any<WaveTrack>()) {
+      using Type = long long;
+      Type startSample{ std::numeric_limits<Type>::max() };
+      Type endSample{ std::numeric_limits<Type>::min() };
+      for (auto pChannel : wt->Channels()) {
+         if (const auto pData = FindSpectralData(pChannel.get())) {
+            const auto &hopSize = pData->GetHopSize();
+            auto start = pData->GetStartSample();
+            endSample = std::max(endSample, pData->GetEndSample());
+
+            // Correct the start of range so that the first full window is
+            // centered at that position
+            start = std::max(static_cast<long long>(0), start - 2 * hopSize);
+            startSample = std::min(startSample, start);
+         }
+      }
+      if (startSample >= endSample)
+         continue;
+      const auto t0 = wt->LongSamplesToTime(startSample);
+      const auto len = endSample - startSample;
+      const auto tLen = wt->LongSamplesToTime(len);
+      auto tempList = TrackList::Create(nullptr);
+      long long processed{};
       for (auto pChannel : wt->Channels()) {
          auto &view = ChannelView::Get(*pChannel);
 
-         if(auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)){
-            for(const auto &subViewPtr : waveChannelViewPtr->GetAllSubViews()){
-               if(!subViewPtr->IsSpectral())
+         if (auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)){
+            for (const auto &subViewPtr : waveChannelViewPtr->GetAllSubViews()){
+               if (!subViewPtr->IsSpectral())
                   continue;
                auto sView = std::static_pointer_cast<SpectrumView>(subViewPtr).get();
                auto pSpectralData = sView->GetSpectralData();
 
-               if(!pSpectralData->dataHistory.empty()){
-                  worker.Process(wt, pSpectralData);
+               if (!pSpectralData->dataHistory.empty()) {
+                  // TODO make this correct in case start or end of spectral data in
+                  // the channels differs
+                  processed = std::max(processed, pSpectralData->GetLength());
+                  worker.Process(
+                     static_cast<WaveTrack*>(pChannel.get()), pSpectralData);
                   applyCount += static_cast<int>(pSpectralData->dataHistory.size());
                   pSpectralData->clearAllData();
                }
+               // TODO make sure tempList gets as many channels as wt, if any
+               tempList->Add(worker.mOutputTrack);
+               assert(worker.mOutputTrack->IsLeader() ==
+                  static_cast<WaveTrack*>(pChannel.get())->IsLeader());
+               worker.mOutputTrack.reset();
             }
          }
+      }
+      if (!tempList->empty()) {
+         const auto pTrack = *tempList->Any<WaveTrack>().begin();
+         TrackSpectrumTransformer::PostProcess(*pTrack, processed);
+         // Take the output track and insert it in place of the original
+         // sample data
+         // TODO make this correct in case start or end of spectral data in
+         // the channels differs
+         wt->ClearAndPaste(t0, t0 + tLen, *tempList, true, false);
       }
    }
 
@@ -113,24 +173,17 @@ bool SpectralDataManager::Worker::DoFinish() {
 }
 
 bool SpectralDataManager::Worker::Process(WaveTrack* wt,
-                                          const std::shared_ptr<SpectralData>& pSpectralData)
+   const std::shared_ptr<SpectralData> &pSpectralData)
 {
    mpSpectralData = pSpectralData;
-   const auto &hopSize = mpSpectralData->GetHopSize();
-   auto startSample =  mpSpectralData->GetStartSample();
-   const auto &endSample = mpSpectralData->GetEndSample();
+   const auto hopSize = mpSpectralData->GetHopSize();
+   const auto startSample = mpSpectralData->GetStartSample();
    // Correct the first hop num, because SpectrumTransformer will send
    // a few initial windows that overlay the range only partially
    mStartHopNum = startSample / hopSize - (mStepsPerWindow - 1);
    mWindowCount = 0;
-
-   // Correct the start of range so that the first full window is
-   // centered at that position
-   startSample = std::max(static_cast<long long>(0), startSample - 2 * hopSize);
-   if (!TrackSpectrumTransformer::Process( Processor, wt, 1, startSample, endSample - startSample))
-      return false;
-
-   return true;
+   return TrackSpectrumTransformer::Process(Processor, wt, 1,
+      mpSpectralData->GetCorrectedStartSample(), mpSpectralData->GetLength());
 }
 
 int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,

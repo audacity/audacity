@@ -73,7 +73,7 @@ std::shared_ptr<Track> TrackPanelAx::GetFocus()
       }
       if (!focusedTrack) {
          focusedTrack =
-            Track::SharedPointer(*GetTracks().Leaders().first);
+            Track::SharedPointer(*GetTracks().Any().first);
          // only call SetFocus if the focus has changed to avoid
          // unnecessary focus events
          if (focusedTrack) 
@@ -108,7 +108,7 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
 #endif
 
    if (!track)
-      track = Track::SharedPointer(*GetTracks().Leaders().begin());
+      track = Track::SharedPointer(*GetTracks().begin());
 
    if ( mFocusedTrack.lock() != track ) {
       mFocusedTrack = track;
@@ -157,8 +157,7 @@ int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )
    // found
    int ndx = 0;
 
-   for ( auto t : GetTracks().Leaders() )
-   {
+   for (auto t : GetTracks()) {
       ndx++;
       if( t == target.get() )
       {
@@ -173,8 +172,7 @@ std::shared_ptr<Track> TrackPanelAx::FindTrack( int num )
 {
    int ndx = 0;
 
-   for ( auto t : GetTracks().Leaders() )
-   {
+   for (auto t : GetTracks()) {
       ndx++;
       if( ndx == num )
          return t->SharedPointer();
@@ -250,7 +248,7 @@ wxAccStatus TrackPanelAx::GetChild( int childId, wxAccessible** child )
 // Gets the number of children.
 wxAccStatus TrackPanelAx::GetChildCount( int* childCount )
 {
-   *childCount = GetTracks().Leaders().size();
+   *childCount = GetTracks().Any().size();
    return wxACC_OK;
 }
 
@@ -739,7 +737,7 @@ Track *TrackFocus::Get()
 void TrackFocus::Set( Track *pTrack )
 {
    if (mAx) {
-      pTrack = *TrackList::Get( mProject ).FindLeader( pTrack );
+      pTrack = *TrackList::Get( mProject ).Find( pTrack );
       mAx->SetFocus( Track::SharedPointer( pTrack ) );
    }
 }

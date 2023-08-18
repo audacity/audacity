@@ -129,16 +129,16 @@ public:
 
    //! Copy prohibited for other Tag classes or case sensitivity
    template< typename Tag2, bool b >
-   TaggedIdentifier( const TaggedIdentifier<Tag2, b>& ) PROHIBITED;
+   TaggedIdentifier( const TaggedIdentifier<Tag2, b>& ) = delete;
    //! Move prohibited for other Tag classes or case sensitivity
    template< typename Tag2, bool b >
-   TaggedIdentifier( TaggedIdentifier<Tag2, b>&& ) PROHIBITED;
+   TaggedIdentifier( TaggedIdentifier<Tag2, b>&& ) = delete;
    //! Copy prohibited for other Tag classes or case sensitivity
    template< typename Tag2, bool b >
-   TaggedIdentifier& operator= ( const TaggedIdentifier<Tag2, b>& ) PROHIBITED;
+   TaggedIdentifier& operator= ( const TaggedIdentifier<Tag2, b>& ) = delete;
    //! Move prohibited for other Tag classes or case sensitivity
    template< typename Tag2, bool b >
-   TaggedIdentifier& operator= ( TaggedIdentifier<Tag2, b>&& ) PROHIBITED;
+   TaggedIdentifier& operator= ( TaggedIdentifier<Tag2, b>&& ) = delete;
 
    /*! Allow implicit conversion to this class from un-tagged Identifier,
       but not from; resolution will use other overloads above if argument has a tag */

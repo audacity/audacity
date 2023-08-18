@@ -30,9 +30,9 @@ public:
    static const ProjectSelectionManager &Get( const AudacityProject &project );
 
    explicit ProjectSelectionManager( AudacityProject &project );
-   ProjectSelectionManager( const ProjectSelectionManager & ) PROHIBITED;
+   ProjectSelectionManager( const ProjectSelectionManager & ) = delete;
    ProjectSelectionManager &operator=(
-      const ProjectSelectionManager & ) PROHIBITED;
+      const ProjectSelectionManager & ) = delete;
    ~ProjectSelectionManager() override;
 
    // SelectionBarListener callback methods

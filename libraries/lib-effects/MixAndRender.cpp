@@ -19,17 +19,15 @@ Paul Licameli split from Mix.cpp
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
-void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
+TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    const Mixer::WarpOptions &warpOptions,
    const wxString &newTrackName,
    WaveTrackFactory *trackFactory,
    double rate, sampleFormat format,
-   double startTime, double endTime,
-   WaveTrack::Holder &uLeft, WaveTrack::Holder &uRight)
+   double startTime, double endTime)
 {
-   uLeft.reset(), uRight.reset();
    if (trackRange.empty())
-      return;
+      return {};
 
    // This function was formerly known as "Quick Mix".
    bool mono = false;   /* flag if output can be mono without losing anything*/
@@ -102,6 +100,15 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    // And reset pan and gain
    auto mixLeft =
       first->EmptyCopy(trackFactory->GetSampleBlockFactory(), false);
+
+   // TODO: more-than-two-channels
+
+   decltype(mixLeft) mixRight{};
+   if (!mono)
+      mixRight = trackFactory->Create(format, rate);
+
+   auto result = TrackList::Temporary(nullptr, mixLeft, mixRight);
+
    mixLeft->SetPan(0);
    mixLeft->SetGain(1);
    mixLeft->SetRate(rate);
@@ -111,15 +118,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    else
       /* i18n-hint: noun, means a track, made by mixing other tracks */
       mixLeft->SetName(newTrackName);
-   mixLeft->SetOffset(mixStartTime);
-
-   // TODO: more-than-two-channels
-   decltype(mixLeft) mixRight{};
-   if (!mono) {
-      mixRight = trackFactory->Create(format, rate);
-      mixRight->SetOffset(mixStartTime);
-   }
-
+   mixLeft->MoveTo(mixStartTime);
 
    auto maxBlockLen = mixLeft->GetIdealBlockSize();
 
@@ -166,14 +165,10 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 
    mixLeft->Flush();
-   if (!mono)
-      mixRight->Flush();
-   if (updateResult == ProgressResult::Cancelled || updateResult == ProgressResult::Failed)
-   {
-      return;
-   }
+   if (updateResult == ProgressResult::Cancelled ||
+       updateResult == ProgressResult::Failed)
+      return {};
    else {
-      uLeft = mixLeft, uRight = mixRight;
 #if 0
    int elapsedMS = wxGetElapsedTime();
    double elapsedTime = elapsedMS * 0.001;
@@ -187,10 +182,12 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    wxPrintf("Max number of tracks to mix in real time: %f\n", maxTracks);
 #endif
 
-      for (auto pTrack : { uLeft.get(), uRight.get() })
+      for (auto pTrack : { mixLeft, mixRight })
          if (pTrack)
             RealtimeEffectList::Get(*pTrack).Clear();
    }
+
+   return result;
 }
 
 #include "RealtimeEffectList.h"

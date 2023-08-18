@@ -54,6 +54,7 @@ deps=(
    mesa-libEGL-devel
    mpg123-devel
    wavpack-devel
+   rapidjson
 )
 
 dnf install -y \

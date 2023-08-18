@@ -121,23 +121,21 @@ bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
    for (auto track : outputs.Get().Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
-      double t0 = mT0 < trackStart? trackStart: mT0;
-      double t1 = mT1 > trackEnd? trackEnd: mT1;
+      double t0 = std::max(mT0, trackStart);
+      double t1 = std::min(trackEnd, mT1);
 
       if (t1 > t0) {
          auto start = track->TimeToLongSamples(t0);
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
-
-         if (!ProcessOne(count, track, start, len))
-         {
-            bGoodResult = false;
-            break;
-         }
+         for (const auto pChannel : TrackList::Channels(track))
+            if (!ProcessOne(count++, *pChannel, start, len)) {
+               bGoodResult = false;
+               goto done;
+            }
       }
-
-      count++;
    }
+   done:
    if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective.
       EffectUIServices::DoMessageBox(*this,
          XO("Algorithm not effective on this audio. Nothing changed."),
@@ -149,10 +147,10 @@ bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
    return bGoodResult && mbDidSomething;
 }
 
-bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount start, sampleCount len)
+bool EffectClickRemoval::ProcessOne(
+   int count, WaveTrack &track, sampleCount start, sampleCount len)
 {
-   if (len <= windowSize / 2)
-   {
+   if (len <= windowSize / 2) {
       EffectUIServices::DoMessageBox(*this,
          XO("Selection must be larger than %d samples.")
             .Format(windowSize / 2),
@@ -160,7 +158,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
       return false;
    }
 
-   auto idealBlockLen = track->GetMaxBlockSize() * 4;
+   auto idealBlockLen = track.GetMaxBlockSize() * 4;
    if (idealBlockLen % windowSize != 0)
       idealBlockLen += (windowSize - (idealBlockLen % windowSize));
 
@@ -168,39 +166,30 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    decltype(len) s = 0;
    Floats buffer{ idealBlockLen };
    Floats datawindow{ windowSize };
-   while ((len - s) > windowSize / 2)
-   {
-      auto block = limitSampleBufferSize( idealBlockLen, len - s );
-
-      track->GetFloats(buffer.get(), start + s, block);
-
-      for (decltype(block) i = 0; i + windowSize / 2 < block; i += windowSize / 2)
-      {
-         auto wcopy = std::min( windowSize, block - i );
-
-         for(decltype(wcopy) j = 0; j < wcopy; j++)
-            datawindow[j] = buffer[i+j];
-         for(auto j = wcopy; j < windowSize; j++)
+   while ((len - s) > windowSize / 2) {
+      auto block = limitSampleBufferSize(idealBlockLen, len - s);
+      track.GetFloats(buffer.get(), start + s, block);
+      for (decltype(block) i = 0;
+           i + windowSize / 2 < block; i += windowSize / 2
+      ) {
+         auto wcopy = std::min(windowSize, block - i);
+         for (decltype(wcopy) j = 0; j < wcopy; ++j)
+            datawindow[j] = buffer[i + j];
+         for (auto j = wcopy; j < windowSize; ++j)
             datawindow[j] = 0;
-
          mbDidSomething |= RemoveClicks(windowSize, datawindow.get());
-
-         for(decltype(wcopy) j = 0; j < wcopy; j++)
+         for (decltype(wcopy) j = 0; j < wcopy; ++j)
            buffer[i+j] = datawindow[j];
       }
 
       if (mbDidSomething) // RemoveClicks() actually did something.
-         track->Set((samplePtr) buffer.get(), floatSample, start + s, block);
-
+         track.Set((samplePtr) buffer.get(), floatSample, start + s, block);
       s += block;
-
-      if (TrackProgress(count, s.as_double() /
-                               len.as_double())) {
+      if (TrackProgress(count, s.as_double() / len.as_double())) {
          bResult = false;
          break;
       }
    }
-
    return bResult;
 }
 

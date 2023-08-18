@@ -29,8 +29,15 @@ public:
    static SelectionState &Get( AudacityProject &project );
    static const SelectionState &Get( const AudacityProject &project );
 
-   static void SelectTrackLength
-      ( ViewInfo &viewInfo, Track &track, bool syncLocked );
+   /*!
+    Set selection length to the length of a track -- but if sync-lock is turned
+    on, use the largest possible selection in the sync-lock group.
+    If it's a stereo track, do the same for the stereo channels.
+
+    @pre `track.IsLeader()`
+    */
+   static void SelectTrackLength(
+      ViewInfo &viewInfo, Track &track, bool syncLocked);
 
    /*!
     @pre `track.IsLeader()`

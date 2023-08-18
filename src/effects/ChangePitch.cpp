@@ -421,7 +421,7 @@ void EffectChangePitch::DeduceFrequencies()
     auto FirstTrack = [&]()->const WaveTrack *{
       if( IsBatchProcessing() || !inputTracks() )
          return nullptr;
-      return *(inputTracks()->SelectedLeaders<const WaveTrack>()).first;
+      return *(inputTracks()->Selected<const WaveTrack>()).first;
    };
 
    m_dStartFrequency = 261.265;// Middle C.
@@ -457,8 +457,9 @@ void EffectChangePitch::DeduceFrequencies()
 
       track->GetFloats(buffer.get(), start, analyzeSize);
       for(unsigned i = 0; i < numWindows; i++) {
-         ComputeSpectrum(buffer.get() + i * windowSize, windowSize,
-                         windowSize, rate, freq.get(), true);
+         ComputeSpectrum(
+            buffer.get() + i * windowSize, windowSize, windowSize, freq.get(),
+            true);
          for(size_t j = 0; j < windowSize / 2; j++)
             freqa[j] += freq[j];
       }

@@ -768,7 +768,7 @@ void ScreenshotBigDialog::SizeTracks(int h)
    // each channel as high as for a stereo channel
 
    auto &tracks = TrackList::Get( mContext.project );
-   for (auto t : tracks.Leaders<WaveTrack>()) {
+   for (auto t : tracks.Any<WaveTrack>()) {
       auto channels = t->Channels();
       auto nChannels = channels.size();
       auto height = nChannels == 1 ? 2 * h : h;
@@ -780,7 +780,7 @@ void ScreenshotBigDialog::SizeTracks(int h)
 
 void ScreenshotBigDialog::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   for (auto t : TrackList::Get(mContext.project).Leaders<WaveTrack>()) {
+   for (auto t : TrackList::Get(mContext.project).Any<WaveTrack>()) {
       for (auto pChannel : t->Channels()) {
          auto &view = ChannelView::Get(*pChannel);
          view.SetExpandedHeight(view.GetMinimizedHeight());

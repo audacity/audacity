@@ -78,7 +78,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto &projectAudioManager = ProjectAudioManager::Get(project);
 
    // Find the number of label tracks, and ptr to last track found
-   auto trackRange = tracks.Leaders<LabelTrack>();
+   auto trackRange = tracks.Any<LabelTrack>();
    auto lt = *trackRange.rbegin();
    auto nLabelTrack = trackRange.size();
 
@@ -88,7 +88,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    else if (nLabelTrack > 1) {
       // find first label track, if any, starting at the focused track
       lt =
-         *tracks.FindLeader(trackFocus.Get()).Filter<LabelTrack>();
+         *tracks.Find(trackFocus.Get()).Filter<LabelTrack>();
       if (!lt)
          trackFocus.MessageForScreenReader(
             XO("no label track at or below focused track"));
@@ -309,8 +309,10 @@ void OnPunchAndRoll(const CommandContext &context)
    }
 
    t1 = newt1;
+   double endTime{};
    for (const auto &wt : tracks) {
-      const auto endTime = wt->GetEndTime();
+      if (wt->IsLeader())
+         endTime = wt->GetEndTime();
       const auto duration =
          std::max(0.0, std::min(crossFadeDuration, endTime - t1));
       const size_t getLen = floor(duration * wt->GetRate());
@@ -324,9 +326,9 @@ void OnPunchAndRoll(const CommandContext &context)
    }
 
    // Change tracks only after passing the error checks above
-   for (const auto &wt : tracks) {
-      wt->Clear(t1, wt->GetEndTime());
-   }
+   for (const auto &wt : tracks)
+      if (wt->IsLeader())
+         wt->Clear(t1, wt->GetEndTime());
 
    // Choose the tracks for playback.
    TransportSequences transportTracks;
@@ -349,7 +351,7 @@ void OnPunchAndRoll(const CommandContext &context)
    // Try to start recording
    auto options = ProjectAudioIO::GetDefaultOptions(project);
    options.rate = rateOfSelected;
-   options.preRoll = std::max(0L,
+   options.preRoll = std::max(0.0,
       gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS));
    options.pCrossfadeData = &crossfadeData;
    bool success = ProjectAudioManager::Get( project ).DoRecord(project,

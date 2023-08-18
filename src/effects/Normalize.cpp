@@ -119,86 +119,92 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    else if(!mDC && !mGain)
       topMsg = XO("Not doing anything...\n");   // shouldn't get here
 
-   for (auto track : outputs.Get().Selected<WaveTrack>()
-            + (mStereoInd ? &Track::Any : &Track::IsLeader )) {
-      //Get start and end times from track
-      // PRL:  No accounting for multiple channels?
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
+      // Get start and end times from track
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
 
-      //Set the current bounds to whichever left marker is
-      //greater and whichever right marker is less:
-      mCurT0 = mT0 < trackStart? trackStart: mT0;
-      mCurT1 = mT1 > trackEnd? trackEnd: mT1;
-
-      auto range = mStereoInd
-         ? TrackList::SingletonRange(track)
-         : TrackList::Channels(track);
+      // Set the current bounds to whichever left marker is
+      // greater and whichever right marker is less:
+      mCurT0 = std::max(trackStart, mT0);
+      mCurT1 = std::min(trackEnd, mT1);
 
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
          wxString trackName = track->GetName();
 
-         float extent;
-         // Will compute a maximum
-         extent = std::numeric_limits<float>::lowest();
+         std::vector<float> extents;
+         float maxExtent{ std::numeric_limits<float>::lowest() };
          std::vector<float> offsets;
 
-         auto msg = (range.size() == 1)
-            // mono or 'stereo tracks independently'
+         const auto channels = TrackList::Channels(track);
+         // mono or 'stereo tracks independently'
+         const bool oneChannel = (channels.size() == 1 || mStereoInd);
+         auto msg = oneChannel
             ? topMsg +
-               XO("Analyzing: %s").Format( trackName )
+               XO("Analyzing: %s").Format(trackName)
             : topMsg +
                // TODO: more-than-two-channels-message
-               XO("Analyzing first track of stereo pair: %s").Format( trackName );
-         
+               XO("Analyzing first track of stereo pair: %s").Format(trackName);
+
+         const auto progressReport = [&](double fraction){
+            return !TotalProgress(
+               (progress + fraction / double(2 * GetNumWaveTracks())), msg);
+         };
+
          // Analysis loop over channels collects offsets and extent
-         for (auto channel : range) {
+         for (auto channel : channels) {
             float offset = 0;
-            float extent2 = 0;
-            bGoodResult =
-               AnalyseTrack( channel, msg, progress, offset, extent2 );
-            if ( ! bGoodResult )
+            float extent = 0;
+            bGoodResult = AnalyseTrack(*channel, progressReport, mGain, mDC,
+               mCurT0, mCurT1, offset, extent);
+            if (!bGoodResult)
                goto break2;
-            extent = std::max( extent, extent2 );
+            progress += 1.0 / double(2 * GetNumWaveTracks());
+            extents.push_back(extent);
+            maxExtent = std::max(maxExtent, extent);
             offsets.push_back(offset);
             // TODO: more-than-two-channels-message
-            msg = topMsg +
-               XO("Analyzing second track of stereo pair: %s").Format( trackName );
+            if (!oneChannel)
+               msg = topMsg +
+                  XO("Analyzing second track of stereo pair: %s")
+                     .Format(trackName);
          }
 
-         // Compute the multiplier using extent
-         if( (extent > 0) && mGain ) {
-            mMult = ratio / extent;
-         }
-         else
-            mMult = 1.0;
-
-         if (range.size() == 1) {
+         if (oneChannel) {
             if (TrackList::NChannels(*track) == 1)
                // really mono
                msg = topMsg +
-                  XO("Processing: %s").Format( trackName );
+                  XO("Processing: %s").Format(trackName);
             else
                //'stereo tracks independently'
                // TODO: more-than-two-channels-message
                msg = topMsg +
-                  XO("Processing stereo channels independently: %s").Format( trackName );
+                  XO("Processing stereo channels independently: %s")
+                     .Format(trackName);
          }
          else
             msg = topMsg +
                // TODO: more-than-two-channels-message
-               XO("Processing first track of stereo pair: %s").Format( trackName );
+               XO("Processing first track of stereo pair: %s")
+                  .Format(trackName);
 
          // Use multiplier in the second, processing loop over channels
          auto pOffset = offsets.begin();
-         for (auto channel : range) {
+         auto pExtent = extents.begin();
+         for (const auto channel : channels) {
+            const auto extent = oneChannel ? *pExtent++: maxExtent;
+            if ((extent > 0) && mGain)
+               mMult = ratio / extent;
+            else
+               mMult = 1.0;
             if (false ==
-                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++)) )
+                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++)))
                goto break2;
             // TODO: more-than-two-channels-message
             msg = topMsg +
-               XO("Processing second track of stereo pair: %s").Format( trackName );
+               XO("Processing second track of stereo pair: %s")
+                  .Format(trackName);
          }
       }
    }
@@ -290,53 +296,50 @@ bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
 
 // EffectNormalize implementation
 
-bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableString &msg,
-                                   double &progress, float &offset, float &extent)
+bool EffectNormalize::AnalyseTrack(const WaveTrack &track,
+   const ProgressReport &report,
+   const bool gain, const bool dc, const double curT0, const double curT1,
+   float &offset, float &extent)
 {
    bool result = true;
    float min, max;
-
-   if(mGain)
-   {
+   if (gain) {
       // set mMin, mMax.  No progress bar here as it's fast.
-      auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
+      auto pair = track.GetMinMax(curT0, curT1); // may throw
       min = pair.first, max = pair.second;
 
-      if(mDC)
-      {
-         result = AnalyseTrackData(track, msg, progress, offset);
+      if (dc) {
+         result = AnalyseTrackData(track, report, curT0, curT1, offset);
          min += offset;
          max += offset;
       }
    }
-   else if(mDC)
-   {
+   else if (dc) {
       min = -1.0, max = 1.0;   // sensible defaults?
-      result = AnalyseTrackData(track, msg, progress, offset);
+      result = AnalyseTrackData(track, report, curT0, curT1, offset);
       min += offset;
       max += offset;
    }
-   else
-   {
+   else {
       wxFAIL_MSG("Analysing Track when nothing to do!");
       min = -1.0, max = 1.0;   // sensible defaults?
       offset = 0.0;
    }
    extent = fmax(fabs(min), fabs(max));
-
    return result;
 }
 
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg,
-                                double &progress, float &offset)
+bool EffectNormalize::AnalyseTrackData(const WaveTrack &track,
+   const ProgressReport &report, const double curT0, const double curT1,
+   float &offset)
 {
    bool rc = true;
 
    //Transform the marker timepoints to samples
-   auto start = track->TimeToLongSamples(mCurT0);
-   auto end = track->TimeToLongSamples(mCurT1);
+   auto start = track.TimeToLongSamples(curT0);
+   auto end = track.TimeToLongSamples(curT1);
 
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
@@ -345,9 +348,9 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   Floats buffer{ track->GetMaxBlockSize() };
+   Floats buffer{ track.GetMaxBlockSize() };
 
-   mSum   = 0.0; // dc offset inits
+   double sum = 0.0; // dc offset inits
 
    sampleCount blockSamples;
    sampleCount totalSamples = 0;
@@ -359,33 +362,33 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
+         track.GetBestBlockSize(s),
          end - s
       );
 
       //Get the samples from the track and put them in the buffer
-      track->GetFloats(buffer.get(), s, block, fillZero, true, &blockSamples);
+      track.GetFloats(
+         buffer.get(), s, block, FillFormat::fillZero, true, &blockSamples);
       totalSamples += blockSamples;
 
       //Process the buffer.
-      AnalyseDataDC(buffer.get(), block);
+      sum = AnalyseDataDC(buffer.get(), block, sum);
 
       //Increment s one blockfull of samples
       s += block;
 
       //Update the Progress meter
-      if (TotalProgress(progress +
-                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
+      if (!report((s - start).as_double() / len)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
    }
-   if( totalSamples > 0 )
-      offset = -mSum / totalSamples.as_double();  // calculate actual offset (amount that needs to be added on)
+   if (totalSamples > 0)
+      // calculate actual offset (amount that needs to be added on)
+      offset = -sum / totalSamples.as_double();
    else
       offset = 0.0;
 
-   progress += 1.0/double(2*GetNumWaveTracks());
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;
 }
@@ -449,10 +452,11 @@ bool EffectNormalize::ProcessOne(
 }
 
 /// @see AnalyseDataLoudnessDC
-void EffectNormalize::AnalyseDataDC(float *buffer, size_t len)
+double EffectNormalize::AnalyseDataDC(float *buffer, size_t len, double sum)
 {
    for(decltype(len) i = 0; i < len; i++)
-      mSum += (double)buffer[i];
+      sum += (double)buffer[i];
+   return sum;
 }
 
 void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)

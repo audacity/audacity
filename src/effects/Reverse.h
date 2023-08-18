@@ -14,6 +14,7 @@
 #define __AUDACITY_EFFECT_REVERSE__
 
 #include "StatefulEffect.h"
+#include <functional>
 
 class EffectReverse final : public StatefulEffect
 {
@@ -36,13 +37,6 @@ public:
    // Effect implementation
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-
-private:
-   // EffectReverse implementation
-
-   bool ProcessOneClip(int count, WaveTrack* track,
-                   sampleCount start, sampleCount len, sampleCount originalStart, sampleCount originalEnd);
-   bool ProcessOneWave(int count, WaveTrack* track, sampleCount start, sampleCount len);
  };
 
 #endif

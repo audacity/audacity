@@ -40,8 +40,8 @@ public:
    ~SampleTrack() override;
 
    // Fix the otherwise ambiguous lookup of these virtual function names
-   using Track::GetStartTime;
-   using Track::GetEndTime;
+   using ChannelGroup::GetStartTime;
+   using ChannelGroup::GetEndTime;
    using Track::IsLeader;
 
    const TypeInfo &GetTypeInfo() const override;
@@ -53,7 +53,7 @@ public:
 
    //! "narrow" overload fetches first channel only
    bool GetFloats(float *buffer, sampleCount start, size_t len,
-      fillFormat fill = fillZero, bool mayThrow = true,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       sampleCount * pNumWithinClips = nullptr) const
    {
       constexpr auto backwards = false;

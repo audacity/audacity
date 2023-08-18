@@ -37,7 +37,7 @@ public:
 
    //! Use this to add an output track, not corresponding to an input.
    /*!
-    @pre `t && t->IsLeader()`
+    @pre `t && t->IsLeader() && t->NChannels() == 1`
     @return a pointer to the given track
     */
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
@@ -57,10 +57,9 @@ public:
 private:
    TrackList &mTracks;
    /*!
+    @invariant `mIMap.size() == mOutputTracks->Size()`
     @invariant `mIMap.size() == mOMap.size()`
-
-    TODO wide wave tracks -- remove this
-    @invariant mIMap is a concatenation of complete channel groups
+    @invariant mIMap points to leaders only, or nulls
     */
    std::vector<Track*> mIMap;
    std::vector<Track*> mOMap;

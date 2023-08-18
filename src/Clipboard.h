@@ -39,6 +39,9 @@ public:
 
    void Clear();
    
+   /*!
+    @pre `!newContents.GetOwner()`
+    */
    void Assign(
      TrackList && newContents, double t0, double t1,
      const std::weak_ptr<AudacityProject> &pProject );
@@ -54,6 +57,9 @@ private:
    Clipboard(const Clipboard &) = delete;
    Clipboard &operator=(const Clipboard &) = delete;
 
+   /*!
+    @invariant `!mTracks->GetOwner()`
+    */
    std::shared_ptr<TrackList> mTracks;
    std::weak_ptr<AudacityProject> mProject{};
    double mT0{ 0 };

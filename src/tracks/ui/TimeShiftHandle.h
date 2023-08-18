@@ -198,7 +198,7 @@ private:
 };
 
 //! Used in default of other reimplementations to shift any track as a whole,
-//! invoking Track::Offset()
+//! invoking Track::ShiftBy()
 class CoarseTrackShifter final : public TrackShifter {
 public:
    /*!
@@ -231,8 +231,8 @@ class ViewInfo;
 struct AUDACITY_DLL_API ClipMoveState {
    ClipMoveState() = default;
 
-   ClipMoveState(const ClipMoveState&) PROHIBITED;
-   ClipMoveState& operator =(const ClipMoveState&) PROHIBITED;
+   ClipMoveState(const ClipMoveState&) = delete;
+   ClipMoveState& operator =(const ClipMoveState&) = delete;
 
    ClipMoveState(ClipMoveState&&) = default;
    ClipMoveState& operator =(ClipMoveState&&) = default;

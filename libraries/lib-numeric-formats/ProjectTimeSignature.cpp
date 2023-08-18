@@ -94,6 +94,21 @@ void ProjectTimeSignature::SetLowerTimeSignature(int lowerTimeSignature)
    }
 }
 
+double ProjectTimeSignature::GetQuarterDuration() const
+{
+   return 60.0 / mTempo;
+}
+
+double ProjectTimeSignature::GetBeatDuration() const
+{
+   return GetQuarterDuration() * 4.0 / mLowerTimeSignature;
+}
+
+double ProjectTimeSignature::GetBarDuration() const
+{
+   return GetBeatDuration() * mUpperTimeSignature;
+}
+
 void ProjectTimeSignature::PublishSignatureChange()
 {
    Publish(TimeSignatureChangedMessage { mTempo, mUpperTimeSignature,

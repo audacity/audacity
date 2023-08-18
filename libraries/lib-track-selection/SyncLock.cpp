@@ -126,7 +126,7 @@ std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember)
 
    // Step back through any label tracks.
    auto pList = pMember->GetOwner();
-   auto member = pList->FindLeader(pMember);
+   auto member = pList->Find(pMember);
    while (*member && IsSeparatorTrack(*member))
       --member;
 
@@ -142,7 +142,7 @@ std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember)
       // consider the track to be the sole member of a group.
       return { pMember, pMember };
 
-   auto last = pList->FindLeader(first);
+   auto last = pList->Find(first);
    auto next = last;
    bool inLabels = false;
 
@@ -153,17 +153,17 @@ std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember)
       inLabels = IsSeparatorTrack(*last);
    }
 
-   auto lastTrack = *TrackList::Channels(*last).rbegin();
-   return { first, lastTrack };
+   return { first, *last };
 }
 
 }
 
-TrackIterRange< Track > SyncLock::Group( Track *pTrack )
+TrackIterRange<Track> SyncLock::Group( Track *pTrack )
 {
    auto pList = pTrack->GetOwner();
    auto tracks = FindSyncLockGroup(const_cast<Track*>( pTrack ) );
-   return pList->Any().StartingWith(tracks.first).EndingAfter(tracks.second);
+   return pList->Any()
+      .StartingWith(tracks.first).EndingAfter(tracks.second);
 }
 
 DEFINE_ATTACHED_VIRTUAL(GetSyncLockPolicy) {

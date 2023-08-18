@@ -73,7 +73,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    Sequence(const Sequence &orig, const SampleBlockFactoryPtr &pFactory);
 
    Sequence( const Sequence& ) = delete;
-   Sequence& operator= (const Sequence&) PROHIBITED;
+   Sequence& operator= (const Sequence&) = delete;
 
    ~Sequence();
 

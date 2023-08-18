@@ -116,7 +116,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
       mRelativeTo = 0;
 
    AudacityProject * p = &context.project;
-   double end = TrackList::Get( *p ).GetEndTime();
+   double end = TrackList::Get(*p).GetEndTime();
    double t0;
    double t1;
 
@@ -268,7 +268,7 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
    double last = mFirstTrack + mNumTracks;
    double first = mFirstTrack;
 
-   for (auto t : tracks.Leaders()) {
+   for (auto t : tracks) {
       const bool sel = first <= index && index < last;
       if (mMode == 0) // Set
          t->SetSelected(sel);

@@ -109,4 +109,10 @@
              DropHintHighlight: #c8c8d6;
       EffectListItemBackground: #f4f4f4;
           EffectListItemBorder: #cccccc;
+              BeatSeparatorPen: #bebebe;
+               BarSeparatorPen: #888888;
+           BeatFillStrongBrush: #cccccc;
+             BeatFillWeakBrush: #dcdcdc;
+        BeatFillStrongSelBrush: #c5d7fc;
+          BeatFillWeakSelBrush: #d5e3ff;
 }

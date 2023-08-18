@@ -26,7 +26,7 @@
 #include "ProjectFileIO.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectManager.h"
-#include "../export/Export.h"
+#include "Export.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "CommandContext.h"

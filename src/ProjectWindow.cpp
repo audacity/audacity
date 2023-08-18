@@ -466,7 +466,7 @@ mutable -> unsigned {
       xx = viewInfo.TimeToPosition(center_h, trackLeftEdge);
 
       // Time corresponding to last (most far right) audio.
-      double audioEndTime = TrackList::Get( *pProject ).GetEndTime();
+      double audioEndTime = TrackList::Get(*pProject).GetEndTime();
 
 // Disabled this code to fix Bug 1923 (tricky to wheel-zoom right of waveform).
 #if 0
@@ -742,10 +742,10 @@ void ProjectWindow::ApplyUpdatedTheme()
    ClearBackground();// For wxGTK.
 }
 
-void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
+void ProjectWindow::RedrawProject()
 {
    auto pThis = wxWeakRef<ProjectWindow>(this);
-   CallAfter( [pThis, bForceWaveTracks]{
+   CallAfter( [pThis]{
 
    if (!pThis)
       return;
@@ -760,12 +760,6 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = GetProjectPanel( project );
    pThis->FixScrollbars();
-   if (bForceWaveTracks)
-   {
-      for ( auto pWaveTrack : tracks.Any< WaveTrack >() )
-         for (const auto &clip: pWaveTrack->GetClips())
-            clip->MarkChanged();
-   }
    trackPanel.Refresh(false);
 
    });
@@ -991,8 +985,8 @@ double ProjectWindow::ScrollingLowerBoundTime() const
    if (!pProject)
       return 0;
    auto &project = *pProject;
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &viewInfo = ViewInfo::Get(project);
    if (!MayScrollBeyondZero())
       return 0;
    const double screen = viewInfo.GetScreenEndTime() - viewInfo.h;
@@ -1116,7 +1110,7 @@ void ProjectWindow::FixScrollbars()
    for (const Track *track : tracks) {
       // Iterate over pending changed tracks if present.
       track = track->SubstitutePendingChangedTrack().get();
-      LastTime = std::max( LastTime, track->GetEndTime() );
+      LastTime = std::max(LastTime, track->GetEndTime());
    }
    LastTime =
       std::max(LastTime, viewInfo.selectedRegion.t1());
@@ -1698,9 +1692,9 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
 
    trackPanel.SetFocus();
    if (!pTrack)
-      pTrack = *tracks.SelectedLeaders().begin();
+      pTrack = *tracks.Selected().begin();
    if (!pTrack)
-      pTrack = *tracks.Leaders().begin();
+      pTrack = *tracks.begin();
    if (pTrack) {
       TrackFocus::Get(project).Set(pTrack);
       pTrack->EnsureVisible();
@@ -1778,8 +1772,8 @@ void ProjectWindow::SkipEnd(bool shift)
    if (!pProject)
       return;
    auto &project = *pProject;
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &viewInfo = ViewInfo::Get(project);
    double len = tracks.GetEndTime();
 
    viewInfo.selectedRegion.setT1(len, false);
@@ -1978,12 +1972,12 @@ double ProjectWindow::GetZoomOfToFit() const
    if (!pProject)
       return 1.0;
    auto &project = *pProject;
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
+   auto &tracks = TrackList::Get(project);
+   auto &viewInfo = ViewInfo::Get(project);
 
    const double end = tracks.GetEndTime();
    const double start = viewInfo.bScrollBeyondZero
-      ? std::min( tracks.GetStartTime(), 0.0)
+      ? std::min(tracks.GetStartTime(), 0.0)
       : 0;
    const double len = end - start;
 
@@ -2001,8 +1995,8 @@ void ProjectWindow::DoZoomFit()
    if (!pProject)
       return;
    auto &project = *pProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
    auto &window = *this;
 
    const double start = viewInfo.bScrollBeyondZero

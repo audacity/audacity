@@ -29,22 +29,20 @@ const SelectionState &SelectionState::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-// Set selection length to the length of a track -- but if sync-lock is turned
-// on, use the largest possible selection in the sync-lock group.
-// If it's a stereo track, do the same for the stereo channels.
-void SelectionState::SelectTrackLength
-( ViewInfo &viewInfo, Track &track, bool syncLocked )
+void SelectionState::SelectTrackLength(
+   ViewInfo &viewInfo, Track &track, bool syncLocked)
 {
+   assert(track.IsLeader());
    auto trackRange = syncLocked
    // If we have a sync-lock group and sync-lock linking is on,
    // check the sync-lock group tracks.
    ? SyncLock::Group(&track)
 
-   // Otherwise, check for a stereo pair
-   : TrackList::Channels(&track);
+   // Otherwise, check for one track
+   : TrackList::SingletonRange(&track);
 
-   auto minOffset = trackRange.min( &Track::GetOffset );
-   auto maxEnd = trackRange.max( &Track::GetEndTime );
+   auto minOffset = trackRange.min(&Track::GetStartTime);
+   auto maxEnd = trackRange.max(&Track::GetEndTime);
 
    // PRL: double click or click on track control.
    // should this select all frequencies too?  I think not.
@@ -84,9 +82,9 @@ void SelectionState::SelectRangeOfTracks(
 {
    Track *sTrack = &rsTrack, *eTrack = &reTrack;
    // Swap the track pointers if needed
-   auto begin = tracks.Leaders().begin(),
-      iterS = tracks.FindLeader(sTrack),
-      iterE = tracks.FindLeader(eTrack);
+   auto begin = tracks.begin(),
+      iterS = tracks.Find(sTrack),
+      iterE = tracks.Find(eTrack);
    // Be sure to substitute the leaders for given tracks
    sTrack = *iterS;
    eTrack = *iterE;
@@ -96,13 +94,13 @@ void SelectionState::SelectRangeOfTracks(
       std::swap(sTrack, eTrack);
 
    for (auto track :
-        tracks.Leaders().StartingWith(sTrack).EndingAfter(eTrack))
+        tracks.Any().StartingWith(sTrack).EndingAfter(eTrack))
       SelectTrack(*track, true, false);
 }
 
 void SelectionState::SelectNone(TrackList &tracks)
 {
-   for (auto t : tracks.Leaders())
+   for (auto t : tracks)
       SelectTrack(*t, false, false);
 }
 
@@ -113,14 +111,14 @@ void SelectionState::ChangeSelectionOnShiftClick(
    auto pExtendFrom = tracks.Lock(mLastPickedTrack);
 
    if (!pExtendFrom) {
-      auto trackRange = tracks.SelectedLeaders();
+      auto trackRange = tracks.Selected();
       auto pFirst = *trackRange.begin();
 
       // If our track is at or after the first, extend from the first.
       if (pFirst) {
-         auto begin = tracks.Leaders().begin(),
-            iterT = tracks.FindLeader(&track),
-            iterF = tracks.FindLeader(pFirst);
+         auto begin = tracks.begin(),
+            iterT = tracks.Find(&track),
+            iterF = tracks.Find(pFirst);
          auto indT = std::distance(begin, iterT),
             indF = std::distance(begin, iterF);
          if (indT >= indF)
@@ -132,7 +130,7 @@ void SelectionState::ChangeSelectionOnShiftClick(
          pExtendFrom = Track::SharedPointer(*trackRange.rbegin());
    }
    // Either it's null, or mLastPickedTrack, or the first or last of
-   // SelectedLeaders()
+   // Selected()
    assert(!pExtendFrom || pExtendFrom->IsLeader());
 
    SelectNone(tracks);
@@ -169,7 +167,7 @@ SelectionStateChanger::SelectionStateChanger
    , mInitialLastPickedTrack{ state.mLastPickedTrack }
 {
    // Save initial state of track selections
-   const auto range = tracks.Leaders();
+   const auto range = tracks.Any();
    mInitialTrackSelection.clear();
    mInitialTrackSelection.reserve(range.size());
    for (const auto track : range) {
@@ -187,7 +185,7 @@ SelectionStateChanger::~SelectionStateChanger()
          it = mInitialTrackSelection.begin(),
          end = mInitialTrackSelection.end();
 
-      for (auto track : mTracks.Leaders()) {
+      for (auto track : mTracks) {
          if (it == end)
             break;
          track->SetSelected( *it++ );

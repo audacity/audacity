@@ -44,7 +44,7 @@ cycles.
 // Strong predicate excludes tracks that do not support basic editing.
 bool EditableTracksSelectedPred(const AudacityProject &project)
 {
-   auto range = TrackList::Get(project).SelectedLeaders()
+   auto range = TrackList::Get(project).Selected()
      - [](const Track *pTrack){
         return !pTrack->SupportsBasicEditing(); };
    return !range.empty();
@@ -53,7 +53,7 @@ bool EditableTracksSelectedPred(const AudacityProject &project)
 // Weaker predicate.
 bool AnyTracksSelectedPred(const AudacityProject &project)
 {
-   auto range = TrackList::Get(project).SelectedLeaders();
+   auto range = TrackList::Get(project).Selected();
    return !range.empty();
 };
 
@@ -140,7 +140,7 @@ const ReservedCommandFlag&
       [](const AudacityProject &project){
          // TODO: more-than-two-channels
          auto range =
-            TrackList::Get(project).SelectedLeaders<const WaveTrack>();
+            TrackList::Get(project).Selected<const WaveTrack>();
          return std::any_of(range.begin(), range.end(),
             [](auto pTrack){ return pTrack->NChannels() > 1; });
       },
@@ -163,7 +163,7 @@ const ReservedCommandFlag&
    WaveTracksSelectedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return
-            !TrackList::Get(project).SelectedLeaders<const WaveTrack>().empty();
+            !TrackList::Get(project).Selected<const WaveTrack>().empty();
       },
       { [](const TranslatableString&) { return
          XO("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
@@ -172,7 +172,7 @@ const ReservedCommandFlag&
 const ReservedCommandFlag&
    TracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return !TrackList::Get(project).Leaders().empty();
+         return !TrackList::Get(project).Any().empty();
       },
       CommandFlagOptions{}.DisableDefaultMessage()
    }; return flag; }
@@ -224,7 +224,7 @@ const ReservedCommandFlag&
    LabelTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get(project)
-            .SelectedLeaders<const LabelTrack>().empty();
+            .Selected<const LabelTrack>().empty();
       }
    }; return flag; }
 const ReservedCommandFlag&
@@ -245,7 +245,7 @@ const ReservedCommandFlag&
          return
             ViewInfo::Get(project).ZoomInAvailable()
          &&
-            !TrackList::Get(project).Leaders().empty()
+            !TrackList::Get(project).Any().empty()
          ;
       }
    }; return flag; }
@@ -255,14 +255,14 @@ const ReservedCommandFlag&
          return
             ViewInfo::Get(project).ZoomOutAvailable()
          &&
-            !TrackList::Get(project).Leaders().empty()
+            !TrackList::Get(project).Any().empty()
          ;
       }
    }; return flag; }
 const ReservedCommandFlag&
    WaveTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return !TrackList::Get(project).Leaders<const WaveTrack>().empty();
+         return !TrackList::Get(project).Any<const WaveTrack>().empty();
       }
    }; return flag; }
 const ReservedCommandFlag&

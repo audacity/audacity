@@ -338,8 +338,9 @@ bool SpectrumTransformer::QueueIsFull() const
       return (mOutStepCount >= 0);
 }
 
-bool TrackSpectrumTransformer::Process( const WindowProcessor &processor,
-   WaveTrack *track, size_t queueLength, sampleCount start, sampleCount len)
+bool TrackSpectrumTransformer::Process(const WindowProcessor &processor,
+   const WaveTrack *track, size_t queueLength, sampleCount start,
+   sampleCount len)
 {
    if (!track)
       return false;
@@ -349,8 +350,6 @@ bool TrackSpectrumTransformer::Process( const WindowProcessor &processor,
    if (!Start(queueLength))
       return false;
 
-   mStart = start;
-   mLen = len;
    auto bufferSize = track->GetMaxBlockSize();
    FloatVector buffer(bufferSize);
 
@@ -365,7 +364,6 @@ bool TrackSpectrumTransformer::Process( const WindowProcessor &processor,
       //Get the samples from the track and put them in the buffer
       track->GetFloats(buffer.data(), samplePos, blockSize);
       samplePos += blockSize;
-
       bLoopSuccess = ProcessSamples(processor, buffer.data(), blockSize);
    }
 
@@ -377,21 +375,18 @@ bool TrackSpectrumTransformer::Process( const WindowProcessor &processor,
 
 bool TrackSpectrumTransformer::DoFinish()
 {
-   if (mOutputTrack) {
-      // Flush the output WaveTrack (since it's buffered)
-      mOutputTrack->Flush();
+   return SpectrumTransformer::DoFinish();
+}
 
-      // Take the output track and insert it in place of the original
-      // sample data
-      auto t0 = mOutputTrack->LongSamplesToTime(mStart);
-      auto tLen = mOutputTrack->LongSamplesToTime(mLen);
-      // Filtering effects always end up with more data than they started with.
-      // Delete this 'tail'.
-      mOutputTrack->HandleClear(tLen, mOutputTrack->GetEndTime(), false, false);
-      mpTrack->ClearAndPaste(t0, t0 + tLen, &*mOutputTrack, true, false);
-   }
-
-   mOutputTrack.reset();
+bool TrackSpectrumTransformer::PostProcess(
+   WaveTrack &outputTrack, sampleCount len)
+{
+   assert(outputTrack.IsLeader());
+   outputTrack.Flush();
+   auto tLen = outputTrack.LongSamplesToTime(len);
+   // Filtering effects always end up with more data than they started with.
+   // Delete this 'tail'.
+   outputTrack.Clear(tLen, outputTrack.GetEndTime());
    return true;
 }
 

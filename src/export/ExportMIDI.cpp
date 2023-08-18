@@ -33,7 +33,7 @@ namespace {
 const ReservedCommandFlag&
    NoteTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return !TrackList::Get(project).Leaders<const NoteTrack>().empty();
+         return !TrackList::Get(project).Any<const NoteTrack>().empty();
       }
    }; return flag; }  //gsw
 
@@ -47,7 +47,7 @@ void OnExportMIDI(const CommandContext &context)
 
    // Make sure that there is
    // exactly one NoteTrack selected.
-   const auto range = tracks.SelectedLeaders<const NoteTrack>();
+   const auto range = tracks.Selected<const NoteTrack>();
    const auto numNoteTracksSelected = range.size();
 
    if(numNoteTracksSelected > 1) {
@@ -126,8 +126,8 @@ void OnExportMIDI(const CommandContext &context)
 }
 
 AttachedItem sAttachment{
-   { wxT("File/Import-Export/Export"),
-      { OrderingHint::After, {"ExportMultiple"} } },
+   { wxT("File/Import-Export/ExportOther"),
+      { OrderingHint::After, {"ExportLabels"} } },
    Command( wxT("ExportMIDI"), XXO("Export MI&DI..."), OnExportMIDI,
       AudioIONotBusyFlag() | NoteTracksExistFlag() )
 };

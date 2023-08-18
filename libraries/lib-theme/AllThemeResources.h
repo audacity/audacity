@@ -414,3 +414,10 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrDropHintHighlight, wxColour( 71, 140, 247 ), wxT("DropHintHighlight") );
    DEFINE_COLOUR( clrEffectListItemBackground, wxColour( 60, 60, 60 ), wxT("EffectListItemBackground"));
    DEFINE_COLOUR( clrEffectListItemBorder, wxColour( 204, 204, 204 ), wxT("EffectListItemBorder"));
+
+   DEFINE_COLOUR( clrBeatSeparatorPen, wxColour( 0xBE, 0xBE, 0xBE ), wxT("BeatSeparatorPen") );
+   DEFINE_COLOUR( clrBarSeparatorPen, wxColour( 0xBE, 0xBE, 0xBE ), wxT("BarSeparatorPen") );
+   DEFINE_COLOUR( clrBeatFillStrongBrush, wxColour( 0xD6, 0xD6, 0xD6 ), wxT("BeatFillStrongBrush") );
+   DEFINE_COLOUR( clrBeatFillWeakBrush, wxColour( 0xDC, 0xDC, 0xDC ), wxT("BeatFillWeakBrush") );
+   DEFINE_COLOUR( clrBeatFillStrongSelBrush, wxColour( 0xD6, 0xD6, 0xD6 ), wxT("BeatFillStrongSelBrush") );
+   DEFINE_COLOUR( clrBeatFillWeakSelBrush, wxColour( 0xDC, 0xDC, 0xDC ), wxT("BeatFillWeakSelBrush") );

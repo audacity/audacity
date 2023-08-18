@@ -74,7 +74,16 @@ bool ZoomInfo::ZoomOutAvailable() const
 }
 
 double ZoomInfo::GetZoom( ) const { return zoom;};
-double ZoomInfo::GetMaxZoom( ) { return gMaxZoom;};
+
+double ZoomInfo::GetAbsoluteOffset(double offset) const
+{
+   return std::floor(0.5 + h * zoom + offset);
+}
+
+double ZoomInfo::GetMaxZoom()
+{
+   return gMaxZoom;
+};
 double ZoomInfo::GetMinZoom( ) { return gMinZoom;};
 
 void ZoomInfo::SetZoom(double pixelsPerSecond)
@@ -100,8 +109,8 @@ void ZoomInfo::ZoomBy(double multiplier)
    SetZoom(zoom * multiplier);
 }
 
-void ZoomInfo::FindIntervals
-   (double /*rate*/, Intervals &results, int64 width, int64 origin) const
+void ZoomInfo::FindIntervals(
+   Intervals& results, int64 width, int64 origin) const
 {
    results.clear();
    results.reserve(2);

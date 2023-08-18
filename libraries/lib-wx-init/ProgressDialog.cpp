@@ -1648,7 +1648,7 @@ void ProgressDialog::Beep() const
 
    gPrefs->Read(wxT("/GUI/BeepOnCompletion"), &should, false);
    gPrefs->Read(wxT("/GUI/BeepAfterDuration"), &after, 60);
-   gPrefs->Read(wxT("/GUI/BeepFileName"), &name, wxEmptyString);
+   gPrefs->Read(wxT("/GUI/BeepFileName"), &name, {});
 
    if (should && wxGetUTCTimeMillis().GetValue() - mStartTime > after * 1000)
    {

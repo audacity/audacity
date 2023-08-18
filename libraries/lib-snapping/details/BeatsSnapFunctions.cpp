@@ -24,12 +24,8 @@ bps = tempo / 60
 double SnapToBar(const AudacityProject& project)
 {
    auto& timeSignature = ProjectTimeSignature::Get(project);
-   // DV: For now, BPM uses quarter notes, i. e. 1/4 = BPM in musical notation
-   const auto quarterDuration = 60.0 / timeSignature.GetTempo();
-   const auto beatDuration =
-      quarterDuration * 4.0 / timeSignature.GetLowerTimeSignature();
-   const auto barDuration =
-      beatDuration * timeSignature.GetUpperTimeSignature();
+   
+   const auto barDuration = timeSignature.GetBarDuration();
    const auto multiplier = 1 / barDuration;
 
    return multiplier;
@@ -41,7 +37,7 @@ MultiplierFunctor SnapToBeat(int divisor)
    {
       auto& timeSignature = ProjectTimeSignature::Get(project);
 
-      const auto quarterDuration = 60.0 / timeSignature.GetTempo();
+      const auto quarterDuration = timeSignature.GetQuarterDuration();
       // DV: It was decided that for the time being,
       // BPM sets the duration for quarter notes.
       // For this reason, `cfg.timeSignature.second` is ignored

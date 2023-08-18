@@ -20,13 +20,12 @@ set( SOURCES
 
 
 set ( LIBRARIES
-   lib-cloud-upload-interface
    lib-network-manager-interface # Required for the networking
    lib-files-interface # FileNames
    lib-strings-interface # Languages
-
-   PRIVATE
+   PUBLIC
       rapidjson::rapidjson # Protocol is JSON based
+   PRIVATE
       wxwidgets::base # Required to retrieve the OS information
 )
 

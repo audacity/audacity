@@ -19,21 +19,12 @@ namespace {
 struct FoundTrack {
    const WaveTrack* waveTrack{};
    int trackNum{};
-   bool channel{};
 
    wxString ComposeTrackName() const
    {
       /* i18n-hint: The %d is replaced by the number of the track.*/
-      auto shortName = wxString::Format(_("Track %d"), trackNum).Append(" " + waveTrack->GetName());
-      if (channel) {
-         // TODO: more-than-two-channels-message
-         if ( waveTrack->IsLeader() )
-         /* i18n-hint: given the name of a track, specify its left channel */
-            return XO("%s left").Translation().Format(shortName);
-         else
-         /* i18n-hint: given the name of a track, specify its right channel */
-            return XO("%s right").Translation().Format(shortName);
-      }
+      auto shortName = wxString::Format(_("Track %d"), trackNum)
+         .Append(" " + waveTrack->GetName());
       return shortName;
    }
 };
@@ -57,48 +48,7 @@ struct FoundClipBoundary : FoundTrack {
    bool clipStart2{};
 };
 
-bool TwoChannelsHaveSameBoundaries
-( const WaveTrack *first, const WaveTrack *second )
-{
-   bool sameClips = false;
-
-   auto& left = first->GetClips();
-   auto& right = second->GetClips();
-   
-   // PRL:  should that have been? :
-   // auto left = first->SortedClipArray();
-   // auto right = second->SortedClipArray();
-
-   if (left.size() == right.size()) {
-      sameClips = true;
-      for (unsigned int i = 0; i < left.size(); i++) {
-         if (left[i]->GetPlayStartTime() != right[i]->GetPlayStartTime() ||
-            left[i]->GetPlayEndTime() != right[i]->GetPlayEndTime()) {
-            sameClips = false;
-            break;
-         }
-      }
-   }
-   return sameClips;
-}
-
-bool ChannelsHaveDifferentClipBoundaries(
-   const WaveTrack* wt)
-{
-   // This is quadratic in the number of channels
-   auto channels = TrackList::Channels(wt);
-   while (!channels.empty()) {
-      auto channel = *channels.first++;
-      for (auto other : channels) {
-         if (!TwoChannelsHaveSameBoundaries(channel, other))
-            return true;
-      }
-   }
-
-   return false;
-}
-
-// When two clips are immediately next to each other, the GetPlayEndTime() of the 
+// When two clips are immediately next to each other, the GetPlayEndTime() of the
 // first clip and the GetPlayStartTime() of the second clip may not be exactly equal
 // due to rounding errors. When searching for the next/prev start time from a
 // given time, the following function adjusts that given time if necessary to
@@ -266,7 +216,7 @@ int FindClipBoundaries
    auto &tracks = TrackList::Get( project );
    finalResults.clear();
 
-   bool anyWaveTracksSelected{ tracks.SelectedLeaders<const WaveTrack>() };
+   bool anyWaveTracksSelected{ tracks.Selected<const WaveTrack>() };
 
 
    // first search the tracks individually
@@ -274,26 +224,17 @@ int FindClipBoundaries
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
-   auto leaders = tracks.Leaders();
+   auto leaders = tracks.Any();
    auto rangeLeaders = leaders.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
       rangeLeaders = rangeLeaders + &Track::GetSelected;
    for (auto waveTrack : rangeLeaders) {
-      bool stereoAndDiff = ChannelsHaveDifferentClipBoundaries(waveTrack);
-
-      auto rangeChan = stereoAndDiff
-         ? TrackList::Channels( waveTrack )
-         : TrackList::SingletonRange(waveTrack);
-
-      for (auto wt : rangeChan) {
-         auto result = next ? FindNextClipBoundary(wt, time) :
-         FindPrevClipBoundary(wt, time);
-         if (result.nFound > 0) {
-            result.trackNum =
-               1 + std::distance( leaders.begin(), leaders.find( waveTrack ) );
-            result.channel = stereoAndDiff;
-            results.push_back(result);
-         }
+      auto result = next ? FindNextClipBoundary(waveTrack, time) :
+         FindPrevClipBoundary(waveTrack, time);
+      if (result.nFound > 0) {
+         result.trackNum =
+            1 + std::distance(leaders.begin(), leaders.find(waveTrack));
+         results.push_back(result);
       }
 
       nTracksSearched++;
@@ -504,35 +445,25 @@ int FindClips
    auto &tracks = TrackList::Get( project );
    finalResults.clear();
 
-   bool anyWaveTracksSelected{ tracks.SelectedLeaders<const WaveTrack>() };
+   bool anyWaveTracksSelected{ tracks.Selected<const WaveTrack>() };
 
    // first search the tracks individually
 
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
-   auto leaders = tracks.Leaders();
+   auto leaders = tracks.Any();
    auto rangeLeaders = leaders.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
       rangeLeaders = rangeLeaders + &Track::GetSelected;
    for (auto waveTrack : rangeLeaders) {
-      bool stereoAndDiff = ChannelsHaveDifferentClipBoundaries(waveTrack);
-
-      auto rangeChans = stereoAndDiff
-         ? TrackList::Channels( waveTrack )
-         : TrackList::SingletonRange( waveTrack );
-
-      for ( auto wt : rangeChans ) {
-         auto result = next ? FindNextClip(project, wt, t0, t1) :
-            FindPrevClip(project, wt, t0, t1);
-         if (result.found) {
-            result.trackNum =
-               1 + std::distance( leaders.begin(), leaders.find( waveTrack ) );
-            result.channel = stereoAndDiff;
-            results.push_back(result);
-         }
+      auto result = next ? FindNextClip(project, waveTrack, t0, t1) :
+         FindPrevClip(project, waveTrack, t0, t1);
+      if (result.found) {
+         result.trackNum =
+            1 + std::distance(leaders.begin(), leaders.find(waveTrack));
+         results.push_back(result);
       }
-
       nTracksSearched++;
    }
 

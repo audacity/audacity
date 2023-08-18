@@ -19,6 +19,7 @@ Paul Licameli split from Prefs.cpp
 #include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/sizer.h>
+#include <wx/wfstream.h>
 
 AudacityFileConfig::AudacityFileConfig(
    const wxString& appName,
@@ -28,10 +29,55 @@ AudacityFileConfig::AudacityFileConfig(
    long style,
    const wxMBConv& conv
 )
-: FileConfig{ appName, vendorName, localFilename, globalFilename, style, conv }
-{}
+: wxFileConfig{ appName, vendorName, localFilename, globalFilename, style, conv }
+, mLocalFilename(localFilename)
+{
+}
 
-AudacityFileConfig::~AudacityFileConfig() = default;
+void AudacityFileConfig::Init()
+{
+   // Prevent wxFileConfig from attempting a Flush() during object deletion. This happens
+   // because we don't use the wxFileConfig::Flush() method and so the wxFileConfig dirty
+   // flag never gets reset. During deletion, the dirty flag is checked and a Flush()
+   // performed. This can (and probably will) create bogus temporary files.
+   DisableAutoSave();
+
+   while (true)
+   {
+      bool canRead = false;
+      bool canWrite = false;
+      int fd;
+
+      fd = wxOpen(mLocalFilename, O_RDONLY, S_IREAD);
+      if (fd != -1 || errno == ENOENT)
+      {
+         canRead = true;
+         if (fd != -1)
+         {
+            wxClose(fd);
+         }
+      }
+
+      fd = wxOpen(mLocalFilename, O_WRONLY | O_CREAT, S_IWRITE);
+      if (fd != -1)
+      {
+         canWrite = true;
+         wxClose(fd);
+      }
+
+      if (canRead && canWrite)
+      {
+         break;
+      }
+
+      Warn();
+   }
+}
+
+AudacityFileConfig::~AudacityFileConfig()
+{
+   wxASSERT(mDirty == false);
+}
 
 std::unique_ptr<AudacityFileConfig> AudacityFileConfig::Create(
    const wxString& appName,
@@ -50,7 +96,51 @@ std::unique_ptr<AudacityFileConfig> AudacityFileConfig::Create(
    return result;
 }
 
-void AudacityFileConfig::Warn()
+bool AudacityFileConfig::Flush(bool bCurrentOnly)
+{
+   if (!mDirty)
+   {
+      return true;
+   }
+
+   while (true)
+   {
+      FilePath backup = mLocalFilename + ".bkp";
+
+      if (!wxFileExists(backup) || (wxRemove(backup) == 0))
+      {
+         if (!wxFileExists(mLocalFilename) || (wxRename(mLocalFilename, backup) == 0))
+         {
+            wxFileOutputStream stream(mLocalFilename);
+            if (stream.IsOk())
+            {
+               if (Save(stream))
+               {
+                  stream.Sync();
+                  if (stream.IsOk() && stream.Close())
+                  {
+                     if (!wxFileExists(backup) || (wxRemove(backup) == 0))
+                     {
+                        mDirty = false;
+                        return true;
+                     }
+                  }
+               }
+            }
+
+            if (wxFileExists(backup))
+            {
+               wxRemove(mLocalFilename);
+               wxRename(backup, mLocalFilename);
+            }
+         }
+      }
+
+      Warn();
+   }
+}
+
+void AudacityFileConfig::Warn() const
 {
    wxDialogWrapper dlg(nullptr, wxID_ANY, XO("Audacity Configuration Error"));
 
@@ -74,7 +164,7 @@ void AudacityFileConfig::Warn()
                "You can attempt to correct the issue and then click \"Retry\" to continue.\n\n"
                "If you choose to \"Quit Audacity\", your project may be left in an unsaved "
                "state which will be recovered the next time you open it.")
-            .Format(GetFilePath()),
+            .Format(mLocalFilename),
             false,
             500);
       }
@@ -130,3 +220,85 @@ void AudacityFileConfig::Warn()
 
    dlg.Unbind(wxEVT_BUTTON, onButton);
 }
+
+bool AudacityFileConfig::RenameEntry(const wxString& oldName, const wxString& newName)
+{
+   auto res = wxFileConfig::RenameEntry(oldName, newName);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
+}
+
+bool AudacityFileConfig::RenameGroup(const wxString& oldName, const wxString& newName)
+{
+   auto res = wxFileConfig::RenameGroup(oldName, newName);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
+}
+
+bool AudacityFileConfig::DeleteEntry(const wxString& key, bool bDeleteGroupIfEmpty)
+{
+   auto res = wxFileConfig::DeleteEntry(key, bDeleteGroupIfEmpty);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
+}
+
+bool AudacityFileConfig::DeleteGroup(const wxString& key)
+{
+   auto res = wxFileConfig::DeleteGroup(key);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
+}
+
+bool AudacityFileConfig::DeleteAll()
+{
+   auto res = wxFileConfig::DeleteAll();
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
+}
+
+bool AudacityFileConfig::DoWriteString(const wxString& key, const wxString& szValue)
+{
+   bool res = wxFileConfig::DoWriteString(key, szValue);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
+}
+
+bool AudacityFileConfig::DoWriteLong(const wxString& key, long lValue)
+{
+   bool res = wxFileConfig::DoWriteLong(key, lValue);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
+}
+
+#if wxUSE_BASE64
+bool AudacityFileConfig::DoWriteBinary(const wxString& key, const wxMemoryBuffer& buf)
+{
+   bool res = wxFileConfig::DoWriteBinary(key, buf);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
+}
+#endif // wxUSE_BASE64

@@ -104,8 +104,8 @@ private:
    // It is an error to copy a WaveClip without specifying the
    // sample block factory.
 
-   WaveClip(const WaveClip&) PROHIBITED;
-   WaveClip& operator= (const WaveClip&) PROHIBITED;
+   WaveClip(const WaveClip&) = delete;
+   WaveClip& operator= (const WaveClip&) = delete;
 
 public:
    using Caches = Site< WaveClip, WaveClipListener >;
@@ -155,7 +155,6 @@ public:
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range
    sampleCount TimeToSequenceSamples(double t) const;
-   sampleCount ToSequenceSamples(sampleCount s) const;
 
    int GetRate() const { return mRate; }
 
@@ -176,8 +175,6 @@ public:
    double GetSequenceEndTime() const;
    //! Returns the index of the first sample of the underlying sequence
    sampleCount GetSequenceStartSample() const;
-   //! Returns the index of the sample next after the last sample of the underlying sequence
-   sampleCount GetSequenceEndSample() const;
    //! Returns the total number of samples in all underlying sequences
    //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
@@ -189,7 +186,7 @@ public:
 
    sampleCount GetPlayStartSample() const;
    sampleCount GetPlayEndSample() const;
-   sampleCount GetPlaySamplesCount() const override;
+   sampleCount GetVisibleSampleCount() const override;
 
    //! Sets the play start offset in seconds from the beginning of the underlying sequence
    void SetTrimLeft(double trim);
@@ -212,7 +209,7 @@ public:
    void TrimRightTo(double to);
 
    /*! @excsafety{No-fail} */
-   void Offset(double delta) noexcept;
+   void ShiftBy(double delta) noexcept;
 
    // One and only one of the following is true for a given t (unless the clip
    // has zero length -- then BeforePlayStartTime() and AfterPlayEndTime() can both be true).

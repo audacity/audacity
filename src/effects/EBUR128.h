@@ -27,29 +27,28 @@ public:
    ~EBUR128() = default;
 
    static ArrayOf<Biquad> CalcWeightingFilter(double fs);
-   void Initialize();
-   void ProcessSampleFromChannel(float x_in, size_t channel);
+   void ProcessSampleFromChannel(float x_in, size_t channel) const;
    void NextSample();
    double IntegrativeLoudness();
    inline double IntegrativeLoudnessToLUFS(double loudness)
       { return 10 * log10(loudness); }
 
 private:
-   void HistogramSums(size_t start_idx, double& sum_v, long int& sum_c);
+   void HistogramSums(size_t start_idx, double& sum_v, long int& sum_c) const;
    void AddBlockToHistogram(size_t validLen);
 
-   static const size_t HIST_BIN_COUNT = 65536;
+   static constexpr size_t HIST_BIN_COUNT = 65536;
    /// EBU R128 absolute threshold
    static constexpr double GAMMA_A = (-70.0 + 0.691) / 10.0;
    ArrayOf<long int> mLoudnessHist;
    Doubles mBlockRingBuffer;
-   size_t mSampleCount;
-   size_t mBlockRingPos;
-   size_t mBlockRingSize;
-   size_t mBlockSize;
-   size_t mBlockOverlap;
-   size_t mChannelCount;
-   double mRate;
+   size_t mSampleCount{ 0 };
+   size_t mBlockRingPos{ 0 };
+   size_t mBlockRingSize{ 0 };
+   const size_t mChannelCount;
+   const double mRate;
+   const size_t mBlockSize;
+   const size_t mBlockOverlap;
 
    /// This is be an array of arrays of the type
    /// mWeightingFilter[CHANNEL][FILTER] with

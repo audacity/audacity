@@ -592,7 +592,7 @@ bool NyquistEffect::Init()
          bool bAllowSpectralEditing = false;
          bool hasSpectral = false;
          for (auto t :
-            TrackList::Get( *project ).SelectedLeaders<const WaveTrack>()) {
+            TrackList::Get( *project ).Selected<const WaveTrack>()) {
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
             auto pView = WaveChannelView::Find(t);
@@ -733,7 +733,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    mNumSelectedChannels = bOnePassTool
       ? 0
-      : oOutputs->Get().SelectedLeaders<const WaveTrack>()
+      : oOutputs->Get().Selected<const WaveTrack>()
          .sum(&WaveTrack::NChannels);
 
    mDebugOutput = {};
@@ -814,7 +814,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       wxString waveTrackList;   // track positions of selected audio tracks.
 
       {
-         auto countRange = TrackList::Get( *project ).Leaders();
+         auto countRange = TrackList::Get( *project ).Any();
          for (auto t : countRange) {
             t->TypeSwitch( [&](const WaveTrack &) {
                numWave++;
@@ -870,7 +870,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    std::optional<TrackIterRange<WaveTrack>> pRange;
    if (!bOnePassTool)
-      pRange.emplace(oOutputs->Get().SelectedLeaders<WaveTrack>());
+      pRange.emplace(oOutputs->Get().Selected<WaveTrack>());
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
@@ -900,14 +900,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
                mCurNumChannels = 2;
 
                mCurTrack[1] = * ++ channels.first;
-               if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
-                  EffectUIServices::DoMessageBox(*this,
-                     XO(
-"Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
-                     wxOK | wxCENTRE );
-                  success = false;
-                  goto finish;
-               }
                mCurStart[1] = mCurTrack[1]->TimeToLongSamples(mT0);
             }
 
@@ -1270,9 +1262,8 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp);
 
-      auto channels = TrackList::Channels( mCurTrack[0] );
-      double startTime = channels.min( &Track::GetStartTime );
-      double endTime = channels.max( &Track::GetEndTime );
+      const double startTime = mCurTrack[0]->GetStartTime();
+      const double endTime = mCurTrack[0]->GetEndTime();
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
                               Internat::ToString(startTime));
@@ -1594,7 +1585,7 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
-      auto ltrack = *pOutputs->Get().Leaders<LabelTrack>().begin();
+      auto ltrack = *pOutputs->Get().Any<LabelTrack>().begin();
       if (!ltrack) {
          auto newTrack = std::make_shared<LabelTrack>();
          //new track name should be unique among the names in the list of input tracks, not output
@@ -1673,46 +1664,42 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
    if (!success)
       return false;
 
-   for (int i = 0; i < outChannels; i++) {
-      outputTrack[i]->Flush();
-      mOutputTime = outputTrack[i]->GetEndTime();
-
-      if (mOutputTime <= 0) {
-         EffectUIServices::DoMessageBox(
-            *this, XO("Nyquist returned nil audio.\n"));
-         return false;
-      }
+   mOutputTime = outputTrack[0]->GetEndTime();
+   if (mOutputTime <= 0) {
+      EffectUIServices::DoMessageBox(
+         *this, XO("Nyquist returned nil audio.\n"));
+      return false;
    }
 
-   for (size_t i = 0; i < mCurNumChannels; i++) {
-      WaveTrack *out;
+   const auto &out = outputTrack[0];
+   std::shared_ptr<TrackList> tempList;
+   if (outChannels < static_cast<int>(mCurNumChannels)) {
+      // Be careful to do this before duplication
+      outputTrack[0]->Flush();
+      outputTrack[1] = (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
+      tempList = TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
+   }
+   else {
+      tempList = TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
+      outputTrack[0]->Flush();
+   }
 
-      if (outChannels == (int)mCurNumChannels) {
-         out = outputTrack[i].get();
-      }
-      else {
-         out = outputTrack[0].get();
-      }
+   {
+      const bool bMergeClips = (mMergeClips < 0)
+         // Use sample counts to determine default behaviour - times will rarely
+         // be equal.
+         ? (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime)
+            == out->TimeToLongSamples(mT1))
+         : mMergeClips != 0;
+      mCurTrack[0]
+         ->ClearAndPaste(mT0, mT1, *tempList, mRestoreSplits, bMergeClips);
+   }
 
-      if (mMergeClips < 0) {
-         // Use sample counts to determine default behaviour - times will rarely be equal.
-         bool bMergeClips = (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime) ==
-                                                                     out->TimeToLongSamples(mT1));
-         mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, bMergeClips);
-      }
-      else {
-         mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, mMergeClips != 0);
-      }
-
-      // If we were first in the group adjust non-selected group tracks
-      if (mFirstInGroup) {
-         for (auto t : SyncLock::Group(mCurTrack[i]))
-         {
-            if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t)) {
-               t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
-            }
-         }
-      }
+   // If we were first in the group adjust non-selected group tracks
+   if (mFirstInGroup) {
+      for (auto t : SyncLock::Group(mCurTrack[0]))
+         if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t))
+            t->SyncLockAdjust(mT1, mT0 + outputTrack[0]->GetEndTime());
 
       // Only the first channel can be first in its group
       mFirstInGroup = false;

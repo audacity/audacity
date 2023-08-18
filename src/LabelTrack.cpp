@@ -120,11 +120,13 @@ auto LabelTrack::ClassTypeInfo() -> const TypeInfo &
    return typeInfo();
 }
 
-Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
+Track::Holder LabelTrack::PasteInto(AudacityProject &, TrackList &list) const
 {
+   assert(IsLeader());
    auto pNewTrack = std::make_shared<LabelTrack>();
    pNewTrack->Init(*this);
-   pNewTrack->Paste(0.0, this);
+   pNewTrack->Paste(0.0, *this);
+   list.Add(pNewTrack);
    return pNewTrack;
 }
 
@@ -161,15 +163,20 @@ LabelTrack::~LabelTrack()
 {
 }
 
-void LabelTrack::SetOffset(double dOffset)
+void LabelTrack::MoveTo(double origin)
 {
-   for (auto &labelStruct: mLabels)
-      labelStruct.selectedRegion.move(dOffset);
+   if (!mLabels.empty()) {
+      const auto offset = origin - mLabels[0].selectedRegion.t0();
+      for (auto &labelStruct: mLabels) {
+         labelStruct.selectedRegion.move(offset);
+      }
+   }
 }
 
 void LabelTrack::DoOnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
+   assert(IsLeader());
    if (!oldTempo.has_value())
       return;
    const auto ratio = *oldTempo / newTempo;
@@ -180,6 +187,7 @@ void LabelTrack::DoOnProjectTempoChange(
 
 void LabelTrack::Clear(double b, double e)
 {
+   assert(IsLeader());
    // May DELETE labels, so use subscripts to iterate
    for (size_t i = 0; i < mLabels.size(); ++i) {
       auto &labelStruct = mLabels[i];
@@ -334,40 +342,12 @@ void LabelTrack::SetSelected( bool s )
          this->SharedPointer<LabelTrack>(), {}, -1, -1 });
 }
 
-double LabelTrack::GetOffset() const
+TrackListHolder LabelTrack::Clone() const
 {
-   return mOffset;
-}
-
-double LabelTrack::GetStartTime() const
-{
-   if (mLabels.empty())
-      return 0.0;
-   else
-      return mLabels[0].getT0();
-}
-
-double LabelTrack::GetEndTime() const
-{
-   //we need to scan through all the labels, because the last
-   //label might not have the right-most end (if there is overlap).
-   if (mLabels.empty())
-      return 0.0;
-
-   double end = 0.0;
-   for (auto &labelStruct: mLabels) {
-      const double t1 = labelStruct.getT1();
-      if(t1 > end)
-         end = t1;
-   }
-   return end;
-}
-
-Track::Holder LabelTrack::Clone() const
-{
+   assert(IsLeader());
    auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return result;
+   return TrackList::Temporary(nullptr, result, nullptr);
 }
 
 // Adjust label's left or right boundary, depending which is requested.
@@ -666,6 +646,7 @@ XMLTagHandler *LabelTrack::HandleXMLChild(const std::string_view& tag)
 void LabelTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
+   assert(IsLeader());
    int len = mLabels.size();
 
    xmlFile.StartTag(wxT("labeltrack"));
@@ -684,12 +665,11 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("labeltrack"));
 }
 
-Track::Holder LabelTrack::Cut(double t0, double t1)
+TrackListHolder LabelTrack::Cut(double t0, double t1)
 {
+   assert(IsLeader());
    auto tmp = Copy(t0, t1);
-
    Clear(t0, t1);
-
    return tmp;
 }
 
@@ -707,7 +687,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 }
 #endif
 
-Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
+TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
 {
    auto tmp = std::make_shared<LabelTrack>();
    tmp->Init(*this);
@@ -755,13 +735,13 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
    }
    lt->mClipLen = (t1 - t0);
 
-   return tmp;
+   return TrackList::Temporary(nullptr, tmp, nullptr);
 }
 
 
-bool LabelTrack::PasteOver(double t, const Track * src)
+bool LabelTrack::PasteOver(double t, const Track &src)
 {
-   auto result = src->TypeSwitch< bool >( [&](const LabelTrack &sl) {
+   auto result = src.TypeSwitch<bool>([&](const LabelTrack &sl) {
       int len = mLabels.size();
       int pos = 0;
 
@@ -779,27 +759,27 @@ bool LabelTrack::PasteOver(double t, const Track * src)
       }
 
       return true;
-   } );
+   });
 
-   if (! result )
+   if (!result)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       (void)0;// intentionally do nothing
 
    return result;
 }
 
-void LabelTrack::Paste(double t, const Track *src)
+void LabelTrack::Paste(double t, const Track &src)
 {
-   bool bOk = src->TypeSwitch< bool >( [&](const LabelTrack &lt) {
+   bool bOk = src.TypeSwitch<bool>([&](const LabelTrack &lt) {
       double shiftAmt = lt.mClipLen > 0.0 ? lt.mClipLen : lt.GetEndTime();
 
       ShiftLabelsOnInsert(shiftAmt, t);
       PasteOver(t, src);
 
       return true;
-   } );
+   });
 
-   if ( !bOk )
+   if (!bOk)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       (void)0;// intentionally do nothing
 }
@@ -859,6 +839,7 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
 
 void LabelTrack::SyncLockAdjust(double oldT1, double newT1)
 {
+   assert(IsLeader());
    if (newT1 > oldT1) {
       // Insert space within the track
 
@@ -877,6 +858,7 @@ void LabelTrack::SyncLockAdjust(double oldT1, double newT1)
 
 void LabelTrack::Silence(double t0, double t1)
 {
+   assert(IsLeader());
    int len = mLabels.size();
 
    // mLabels may resize as we iterate, so use subscripting
@@ -923,6 +905,7 @@ void LabelTrack::Silence(double t0, double t1)
 
 void LabelTrack::InsertSilence(double t, double len)
 {
+   assert(IsLeader());
    for (auto &labelStruct: mLabels) {
       double t0 = labelStruct.getT0();
       double t1 = labelStruct.getT1();

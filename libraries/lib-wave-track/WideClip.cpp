@@ -22,9 +22,9 @@ WideClip::GetSampleView(size_t ii, sampleCount start, size_t len) const
    return mChannels[ii]->GetSampleView(0u, start, len);
 }
 
-sampleCount WideClip::GetPlaySamplesCount() const
+sampleCount WideClip::GetVisibleSampleCount() const
 {
-   return mChannels[0u]->GetPlaySamplesCount();
+   return mChannels[0u]->GetVisibleSampleCount();
 }
 
 size_t WideClip::GetWidth() const

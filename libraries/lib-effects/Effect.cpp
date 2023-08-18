@@ -334,8 +334,8 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings,
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect(settings, finder, mProjectRate, mTracks, mFactory,
-      region, mUIFlags, nullptr);
+   return delegate.DoEffect(settings, finder, mProjectRate, mTracks.get(),
+      mFactory, region, mUIFlags, nullptr);
 }
 
 bool Effect::TotalProgress(double frac, const TranslatableString &msg) const
@@ -367,17 +367,11 @@ bool Effect::TrackGroupProgress(
 }
 
 void Effect::GetBounds(
-   const WaveTrack &track, const WaveTrack *pRight,
-   sampleCount *start, sampleCount *len)
+   const WaveTrack &track, sampleCount *start, sampleCount *len)
 {
-   auto t0 = std::max( mT0, track.GetStartTime() );
-   auto t1 = std::min( mT1, track.GetEndTime() );
-
-   if ( pRight ) {
-      t0 = std::min( t0, std::max( mT0, pRight->GetStartTime() ) );
-      t1 = std::max( t1, std::min( mT1, pRight->GetEndTime() ) );
-   }
-
+   assert(track.IsLeader());
+   const auto t0 = std::max(mT0, track.GetStartTime());
+   const auto t1 = std::min(mT1, track.GetEndTime());
    if (t1 > t0) {
       *start = track.TimeToLongSamples(t0);
       auto end = track.TimeToLongSamples(t1);

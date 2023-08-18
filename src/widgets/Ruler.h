@@ -14,6 +14,8 @@
 #include "RulerUpdater.h" // member variable
 #include "NumberScale.h" // member variable
 
+#include "Observer.h"
+
 #include <wx/colour.h> // member variable
 #include <wx/font.h> // member variable
 #include <wx/pen.h> // member variable
@@ -25,7 +27,11 @@ class RulerFormat;
 
 #include "TranslatableString.h"
 
-class AUDACITY_DLL_API Ruler {
+struct RulerInvalidatedMessage {};
+
+class AUDACITY_DLL_API Ruler :
+    public Observer::Publisher<RulerInvalidatedMessage>
+{
  public:
 
     struct TickLengths {

@@ -54,7 +54,7 @@ int ChannelView::GetCumulativeHeight(const Track *pTrack)
 
 int ChannelView::GetTotalHeight(const TrackList &list)
 {
-   return GetCumulativeHeight(*list.Leaders().rbegin());
+   return GetCumulativeHeight(*list.rbegin());
 }
 
 void ChannelView::CopyTo(Track &track) const
@@ -256,8 +256,8 @@ struct TrackPositioner final : ClientData::Base
       mSubscription = TrackList::Get( project )
          .Subscribe(*this, &TrackPositioner::OnUpdate);
    }
-   TrackPositioner( const TrackPositioner & ) PROHIBITED;
-   TrackPositioner &operator=( const TrackPositioner & ) PROHIBITED;
+   TrackPositioner( const TrackPositioner & ) = delete;
+   TrackPositioner &operator=( const TrackPositioner & ) = delete;
 
    void OnUpdate(const TrackListEvent & e)
    {
@@ -271,7 +271,7 @@ struct TrackPositioner final : ClientData::Base
          return;
       }
       auto iter =
-         TrackList::Get(mProject).FindLeader(e.mpTrack.lock().get());
+         TrackList::Get(mProject).Find(e.mpTrack.lock().get());
       if (!*iter)
          return;
 

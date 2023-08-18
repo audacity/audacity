@@ -39,6 +39,7 @@
 #include "ProjectAudioManager.h"
 #include "ProjectWindows.h"
 #include "ProjectStatus.h"
+#include "ProjectTimeRuler.h"
 #include "ProjectTimeSignature.h"
 #include "ProjectWindow.h"
 #include "RefreshCode.h"
@@ -92,20 +93,6 @@ enum : int {
 enum {
    ScrubHeight = 14,
    ProperRulerHeight = 29
-};
-
-EnumSetting<AdornedRulerPanel::RulerTypeValues> RulerPanelViewPreference{
-   L"/GUI/RulerType",
-   {
-      { wxT("MinutesAndSeconds"), XO("Minutes and Seconds") },
-      { wxT("BeatsAndMeasures"), XO("Beats and Measures") },
-   },
-
-   0, // minutes and seconds
-   {
-      AdornedRulerPanel::stMinutesAndSeconds,
-      AdornedRulerPanel::stBeatsAndMeasures,
-   }
 };
 
 inline int IndicatorHeightForWidth(int width)
@@ -1300,7 +1287,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    const wxSize& size,
    ViewInfo *viewinfo
 )  : CellularPanel(parent, id, pos, size, viewinfo)
-   , mProject(project)
+   , mProject { project }
+   , mUpdater { ProjectTimeRuler::Get(*project).GetUpdater() }
+   , mRuler { ProjectTimeRuler::Get(*project).GetRuler() }   
 {
    SetLayoutDirection(wxLayout_LeftToRight);
 
@@ -1323,7 +1312,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mOuter = GetClientRect();
 
-   mRulerType = RulerPanelViewPreference.ReadEnum();
+   mTimeDisplayMode = TimeDisplayModePreference.ReadEnum();
 
    mUpdater.SetData(mViewInfo, mLeftOffset);
 
@@ -1353,18 +1342,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    mPlayRegionSubscription = mViewInfo->selectedRegion.Subscribe(
       *this, &AdornedRulerPanel::OnSelectionChange);
 
-   // Bind event that updates the time signature
-   mProjectTimeSignatureChangedSubscription =
-      ProjectTimeSignature::Get(*project).Subscribe(
-         [this](auto)
-         {
-            if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures)
-            {
-               UpdateBeatsAndMeasuresFormat();
-               Refresh();
-            }
-         });
-
+   mRulerInvalidatedSubscription =
+      mRuler.Subscribe([this](auto) { Refresh(); });
+   
    // And call it once to initialize it
    DoSelectionChange( mViewInfo->selectedRegion );
 }
@@ -1403,8 +1383,8 @@ void AdornedRulerPanel::UpdatePrefs()
 #endif
 #endif
 
-   mRulerType = RulerPanelViewPreference.ReadEnum();
-   RefreshTimelineFormat();
+   mTimeDisplayMode = TimeDisplayModePreference.ReadEnum();
+   Refresh();
    // Update();
 }
 
@@ -1424,7 +1404,7 @@ void AdornedRulerPanel::ReCreateButtons()
    }
 
    size_t iButton = 0;
-   // Make the short row of time ruler pushbottons.
+   // Make the short row of time ruler push buttons.
    // Don't bother with sizers.  Their sizes and positions are fixed.
    // Add a grabber converted to a spacer.
    // This makes it visually clearer that the button is a button.
@@ -2040,7 +2020,7 @@ auto AdornedRulerPanel::QPHandle::Release(
 
 void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 {
-   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   auto &viewInfo = ViewInfo::Get(*GetProject());
    auto &playRegion = viewInfo.playRegion;
    playRegion.Order();
 
@@ -2294,13 +2274,13 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    {
       auto item = rulerMenu.AppendRadioItem(OnMinutesAndSecondsID,
          _("Minutes and Seconds"));
-      item->Check(mRulerType == AdornedRulerPanel::stMinutesAndSeconds);
+      item->Check(mTimeDisplayMode == TimeDisplayMode::MinutesAndSeconds);
    }
 
    {
       auto item = rulerMenu.AppendRadioItem(OnBeatsAndMeasuresID,
          _("Beats and Measures"));
-      item->Check(mRulerType == AdornedRulerPanel::stBeatsAndMeasures);
+      item->Check(mTimeDisplayMode == TimeDisplayMode::BeatsAndMeasures);
    }
 
    rulerMenu.AppendSeparator();
@@ -2378,45 +2358,17 @@ void AdornedRulerPanel::HandleSnapping(size_t index)
    mIsSnapped[index] = results.Snapped();
 }
 
-void AdornedRulerPanel::UpdateBeatsAndMeasuresFormat()
-{
-   auto& timeSignature = ProjectTimeSignature::Get(*mProject);
-
-   mBeatsFormat.SetData(
-      timeSignature.GetTempo(), timeSignature.GetUpperTimeSignature(),
-      timeSignature.GetLowerTimeSignature());
-
-   mRuler.Invalidate();
-}
-
-void AdornedRulerPanel::RefreshTimelineFormat()
-{
-   if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures) {
-      UpdateBeatsAndMeasuresFormat();
-      mRuler.SetFormat(&mBeatsFormat);
-   }
-   else if (mRulerType == AdornedRulerPanel::stMinutesAndSeconds) {
-      mRuler.SetFormat(&TimeFormat::Instance());
-   }
-   Refresh();
-}
-
 void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
 {
    int id = event.GetId();
-   RulerTypeValues changeFlag = mRulerType;
+   TimeDisplayMode changeFlag = mTimeDisplayMode;
    wxASSERT(id == OnMinutesAndSecondsID || id == OnBeatsAndMeasuresID);
-   mRulerType = id == OnBeatsAndMeasuresID ?
-      AdornedRulerPanel::stBeatsAndMeasures : AdornedRulerPanel::stMinutesAndSeconds;
-   RulerPanelViewPreference.WriteEnum(mRulerType);
-   if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures){
-      UpdateBeatsAndMeasuresFormat();
-      mRuler.SetFormat(&mBeatsFormat);
-   }
-   else if (mRulerType == AdornedRulerPanel::stMinutesAndSeconds){
-      mRuler.SetFormat(&TimeFormat::Instance());
-   }
-   if (changeFlag != mRulerType)
+   mTimeDisplayMode = id == OnBeatsAndMeasuresID ? TimeDisplayMode::BeatsAndMeasures :
+                                             TimeDisplayMode::MinutesAndSeconds;
+   
+   TimeDisplayModePreference.WriteEnum(mTimeDisplayMode);
+
+   if (changeFlag != mTimeDisplayMode)
       Refresh();
 }
 
@@ -2570,11 +2522,11 @@ void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
 
    mRuler.SetTickColour( theTheme.Colour( TimelineTextColor() ) );
    mRuler.SetRange( min, max, hiddenMin, hiddenMax );
-   if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures)
+   if (mTimeDisplayMode == TimeDisplayMode::BeatsAndMeasures)
    {
       mRuler.SetTickLengths({ 5, 3, 1 });
    }
-   else if (mRulerType == AdornedRulerPanel::stMinutesAndSeconds)
+   else if (mTimeDisplayMode == TimeDisplayMode::MinutesAndSeconds)
    {
       mRuler.SetTickLengths({ 4, 2, 2 });
    }
@@ -2936,19 +2888,19 @@ void AdornedRulerPanel::TogglePinnedHead()
       scrubber.SetScrollScrubbing(value);
 }
 
-AdornedRulerPanel::RulerTypeValues AdornedRulerPanel::GetRulerType() const
+TimeDisplayMode AdornedRulerPanel::GetTimeDisplayMode() const
 {
-   return mRulerType;
+   return mTimeDisplayMode;
 }
 
-void AdornedRulerPanel::SetRulerType (RulerTypeValues type)
+void AdornedRulerPanel::SetTimeDisplayMode(TimeDisplayMode type)
 {
-   if (mRulerType == type)
+   if (mTimeDisplayMode == type)
       return;
 
-   mRulerType = type;
-   RulerPanelViewPreference.WriteEnum(mRulerType);
-   RefreshTimelineFormat();
+   mTimeDisplayMode = type;
+   TimeDisplayModePreference.WriteEnum(mTimeDisplayMode);
+   Refresh();
 }
 
 // Attach menu item

@@ -34,7 +34,7 @@ TimeShiftHandle::TimeShiftHandle(std::shared_ptr<Track> pTrack, bool gripHit)
    //! Substitute the leader track before assigning mCapturedTrack
    if (pTrack)
       if (const auto pOwner = pTrack->GetOwner())
-         pTrack = (*pOwner->FindLeader(pTrack.get()))->SharedPointer();
+         pTrack = (*pOwner->Find(pTrack.get()))->SharedPointer();
    mClipMoveState.mCapturedTrack = pTrack;
 }
 
@@ -118,16 +118,14 @@ TimeShiftHandle::~TimeShiftHandle()
 {
 }
 
-void ClipMoveState::DoHorizontalOffset( double offset )
+void ClipMoveState::DoHorizontalOffset(double offset)
 {
-   if ( !shifters.empty() ) {
-      for ( auto &pair : shifters )
-         pair.second->DoHorizontalOffset( offset );
+   if (!shifters.empty()) {
+      for (auto &pair : shifters)
+         pair.second->DoHorizontalOffset(offset);
    }
-   else {
-      for (auto channel : TrackList::Channels( mCapturedTrack.get() ))
-         channel->Offset( offset );
-   }
+   else if (mCapturedTrack)
+      mCapturedTrack->ShiftBy(offset);
 }
 
 TrackShifter::TrackShifter() = default;
@@ -228,10 +226,10 @@ bool TrackShifter::FinishMigration()
    return true;
 }
 
-void TrackShifter::DoHorizontalOffset( double offset )
+void TrackShifter::DoHorizontalOffset(double offset)
 {
    if (!AllFixed())
-      GetTrack().Offset( offset );
+      GetTrack().ShiftBy(offset);
 }
 
 double TrackShifter::AdjustT0(double t0) const
@@ -315,7 +313,7 @@ void ClipMoveState::Init(
    state.shifters[&capturedTrack] = std::move( pHit );
 
    // Collect TrackShifters for the rest of the tracks
-   for (auto track : trackList.Leaders()) {
+   for (auto track : trackList) {
       auto &pShifter = state.shifters[track];
       if (!pShifter)
          pShifter = MakeTrackShifter::Call(*track, project);
@@ -352,7 +350,7 @@ void ClipMoveState::Init(
                continue;
             auto &track = shifter.GetTrack();
             auto group = SyncLock::Group(&track);
-            if ( group.size() <= 1 )
+            if (group.size() <= 1)
                continue;
 
             auto &intervals = shifter.MovingIntervals();
@@ -360,10 +358,10 @@ void ClipMoveState::Init(
 
                // ...and tell all other tracks in the sync lock group
                // to select that interval...
-               for ( auto pTrack2 : group ) {
+               for (auto pTrack2 : group) {
                   if (pTrack2 == &track)
                      continue;
-                  
+                  // shifters maps from leader tracks only
                   auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();
                   shifter2.SelectInterval(*interval);
@@ -479,7 +477,7 @@ UIHandle::Result TimeShiftHandle::Click(
    auto &trackList = TrackList::Get(*pProject);
    // Substitute the leader track before giving it to MakeTrackShifter
    // and ClipMoveState::Init
-   const auto pTrack = *trackList.FindLeader(clickedTrack);
+   const auto pTrack = *trackList.Find(clickedTrack);
 
    mClipMoveState.clear();
    mDidSlideVertically = false;
@@ -610,13 +608,13 @@ namespace {
          return false;
    
       // All tracks of the same kind as the captured track
-      auto range = trackList.Leaders() + sameType;
+      auto range = trackList.Any() + sameType;
 
       // Find how far this track would shift down among those (signed)
       const auto myPosition =
-         std::distance(range.first, trackList.FindLeader(&capturedTrack));
+         std::distance(range.first, trackList.Find(&capturedTrack));
       const auto otherPosition =
-         std::distance(range.first, trackList.FindLeader(&track));
+         std::distance(range.first, trackList.Find(&track));
       auto diff = otherPosition - myPosition;
 
       // Point to destination track for first of range, when diff >= 0
@@ -738,7 +736,7 @@ void TimeShiftHandle::DoSlideVertical(
    Correspondence correspondence;
 
    // Substitute leader track before reassigning mCapturedTrack
-   dstTrack = *trackList.FindLeader(dstTrack);
+   dstTrack = *trackList.Find(dstTrack);
 
    // See if captured track corresponds to another
    auto &capturedTrack = *mClipMoveState.mCapturedTrack;
@@ -748,10 +746,10 @@ void TimeShiftHandle::DoSlideVertical(
 
    // Try to extend the correpondence
    auto tryExtend = [&](bool forward) {
-      auto range = trackList.Leaders();
+      auto range = trackList.Any();
       auto begin = range.begin(), end = range.end();
-      auto pCaptured = trackList.FindLeader(&capturedTrack);
-      auto pDst = trackList.FindLeader(dstTrack);
+      auto pCaptured = trackList.Find(&capturedTrack);
+      auto pDst = trackList.Find(dstTrack);
       // Scan for more correspondences
       while (true) {
          // Remember that TrackIter wraps circularly to the end iterator when
@@ -832,8 +830,10 @@ UIHandle::Result TimeShiftHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
+   auto &trackList = TrackList::Get(*pProject);
    ChannelView *trackView = dynamic_cast<ChannelView*>(evt.pCell.get());
-   Track *track = trackView ? trackView->FindTrack().get() : nullptr;
+   Track *track =
+      *trackList.Find(trackView ? trackView->FindTrack().get() : nullptr);
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
@@ -852,9 +852,6 @@ UIHandle::Result TimeShiftHandle::Drag
    auto pTrack = Track::SharedPointer( track );
    if (!pTrack)
       return RefreshCode::RefreshNone;
-
-
-   auto &trackList = TrackList::Get( *pProject );
 
    // GM: slide now implementing snap-to
    // samples functionality based on sample rate.

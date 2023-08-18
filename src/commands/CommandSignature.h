@@ -30,8 +30,8 @@ class AUDACITY_DLL_API CommandSignature
 private:
    ParamValueMap mDefaults;
    ValidatorMap mValidators;
-   CommandSignature(const CommandSignature &) PROHIBITED;
-   CommandSignature& operator=(const CommandSignature &) PROHIBITED;
+   CommandSignature(const CommandSignature &) = delete;
+   CommandSignature& operator=(const CommandSignature &) = delete;
 public:
    explicit CommandSignature();
    ~CommandSignature();

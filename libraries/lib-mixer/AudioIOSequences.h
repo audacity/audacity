@@ -63,9 +63,17 @@ struct MIXER_API RecordableSequence {
       */
    ) = 0;
 
-   //! Flush must be called after last Append
+   virtual bool IsLeader() const = 0;
+
+   //! Flush of related leader must be called after last Append
+   /*!
+    @pre `IsLeader()`
+    */
    virtual void Flush() = 0;
 
+   /*!
+    @pre `IsLeader()`
+    */
    virtual void InsertSilence(double t, double len) = 0;
 };
 

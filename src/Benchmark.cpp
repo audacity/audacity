@@ -367,6 +367,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       WaveTrackFactory{ mRate,
                     SampleBlockFactory::New( mProject )  }
          .Create(SampleFormat, mRate.GetRate());
+   const auto tmp0 = TrackList::Temporary(nullptr, t, nullptr);
+   assert(t->IsLeader()); // because it's new and not grouped
 
    t->SetRate(1);
 
@@ -422,11 +424,11 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    // as we're about to do).
    t->GetEndTime();
 
-   if (t->GetClipByIndex(0)->GetPlaySamplesCount() != nChunks * chunkSize) {
+   if (t->GetClipByIndex(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
       Printf( XO("Expected len %lld, track len %lld.\n")
          .Format(
             nChunks * chunkSize,
-            t->GetClipByIndex(0)->GetPlaySamplesCount()
+            t->GetClipByIndex(0)->GetVisibleSampleCount()
                .as_long_long() ) );
       goto fail;
    }
@@ -448,9 +450,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Cut: %lld - %lld \n")
             .Format( x0 * chunkSize, (x0 + xlen) * chunkSize) );
 
-      Track::Holder tmp;
+      TrackListHolder tmp;
       try {
-         tmp = t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
+         tmp =
+            t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
       }
       catch (const AudacityException&) {
          Printf( XO("Trial %d\n").Format( z ) );
@@ -459,7 +462,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Expected len %lld, track len %lld.\n")
             .Format(
                nChunks * chunkSize,
-               t->GetClipByIndex(0)->GetPlaySamplesCount()
+               t->GetClipByIndex(0)->GetVisibleSampleCount()
                   .as_long_long() ) );
          goto fail;
       }
@@ -472,19 +475,19 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Paste: %lld\n").Format( y0 * chunkSize ) );
 
       try {
-         t->Paste((double)(y0 * chunkSize), tmp.get());
+         t->Paste((double)(y0 * chunkSize), *tmp);
       }
       catch (const AudacityException&) {
          Printf( XO("Trial %d\nFailed on Paste.\n").Format( z ) );
          goto fail;
       }
 
-      if (t->GetClipByIndex(0)->GetPlaySamplesCount() != nChunks * chunkSize) {
+      if (t->GetClipByIndex(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
          Printf( XO("Trial %d\n").Format( z ) );
          Printf( XO("Expected len %lld, track len %lld.\n")
             .Format(
                nChunks * chunkSize,
-               t->GetClipByIndex(0)->GetPlaySamplesCount()
+               t->GetClipByIndex(0)->GetVisibleSampleCount()
                   .as_long_long() ) );
          goto fail;
       }

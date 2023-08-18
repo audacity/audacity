@@ -148,7 +148,7 @@ double ProjectSelectionManager::SSBL_GetRate() const
    auto &tracks = TrackList::Get( project );
    // Return maximum of project rate and all track rates.
    return std::max( ProjectRate::Get( project ).GetRate(),
-      tracks.Leaders<const WaveTrack>().max(&WaveTrack::GetRate));
+      tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate));
 }
 
 const NumericFormatSymbol &

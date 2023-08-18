@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
+#include "PlaybackDirection.h"
 #include "Prefs.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
@@ -98,13 +99,18 @@ public:
 
    AudioGraph::ChannelType GetChannelType() const override;
 
-   // overwrite data excluding the sample sequence but including display
-   // settings
+   //! Overwrite data excluding the sample sequence but including display
+   //! settings
+   /*!
+    @pre `IsLeader()`
+    @pre `orig.IsLeader()`
+    @pre `NChannels() == orig.NChannels()`
+    */
    void Reinit(const WaveTrack &orig);
 private:
    void Init(const WaveTrack &orig);
 
-   Track::Holder Clone() const override;
+   TrackListHolder Clone() const override;
 
    friend class WaveTrackFactory;
 
@@ -116,22 +122,13 @@ private:
 
    virtual ~WaveTrack();
 
-   double GetOffset() const override;
-   void SetOffset(double o) override;
+   void MoveTo(double o) override;
 
-   bool LinkConsistencyFix(bool doFix, bool completeList) override;
+   bool LinkConsistencyFix(bool doFix) override;
 
-   /** @brief Get the time at which the first clip in the track starts
-    *
-    * @return time in seconds, or zero if there are no clips in the track
-    */
+   //! Implement WideSampleSequence
    double GetStartTime() const override;
-
-   /** @brief Get the time at which the last clip in the track ends, plus
-    * recorded stuff
-    *
-    * @return time in seconds, or zero if there are no clips in the track.
-    */
+   //! Implement WideSampleSequence
    double GetEndTime() const override;
 
    //
@@ -157,15 +154,35 @@ private:
    float GetChannelGain(int channel) const override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
+   /*!
+    @pre `IsLeader()`
+    */
    void SetWaveColorIndex(int colorIndex);
 
-   sampleCount GetPlaySamplesCount() const;
-   //! Returns the total number of samples in all underlying sequences
-   //! of all clips (but not counting the cutlines)
+   sampleCount GetVisibleSampleCount() const;
+
+   /*!
+    @return the total number of samples in all underlying sequences
+   of all clips, across all channels (including hidden audio but not
+   counting the cutlines)
+
+    @pre `IsLeader()`
+    */
    sampleCount GetSequenceSamplesCount() const;
+
+   /*!
+    @return the total number of blocks in all underlying sequences of all clips,
+   across all channels (including hidden audio but not counting the cutlines)
+
+    @pre `IsLeader()`
+    */
+   size_t CountBlocks() const;
 
    sampleFormat GetSampleFormat() const override { return mFormat; }
 
+   /*!
+    @pre `IsLeader()`
+    */
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 
@@ -173,7 +190,7 @@ private:
    // High-level editing
    //
 
-   Track::Holder Cut(double t0, double t1) override;
+   TrackListHolder Cut(double t0, double t1) override;
 
    //! Make another track copying format, rate, color, etc. but containing no
    //! clips
@@ -189,43 +206,99 @@ private:
    Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
       bool keepLink = true) const;
 
+   //! Make another channel group copying format, rate, color, etc. but
+   //! containing no clips
+   /*!
+    It is important to pass the correct factory (that for the project
+    which will own the copy) in the unusual case that a track is copied from
+    another project or the clipboard.  For copies within one project, the
+    default will do.
+
+    @param keepLink if false, make the new track mono.  But always preserve
+    any other track group data.
+
+    @pre `IsLeader()`
+    */
+   TrackListHolder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
+      bool keepLink = true) const;
+
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make
    // GetEndTime() correct.  This clip is not re-copied when pasting.
-   Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
-   Track::Holder CopyNonconst(double t0, double t1) /* not override */;
+   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+      const override;
 
    void Clear(double t0, double t1) override;
-   void Paste(double t0, const Track *src) override;
-   // May assume precondition: t0 <= t1
+   void Paste(double t0, const Track &src) override;
+   using Track::Paste; // Get the non-virtual overload too
+
+   /*!
+    May assume precondition: t0 <= t1
+    If the source has one channel and this has more, then replicate source
+    @pre `IsLeader()`
+    @pre `src.IsLeader()`
+    @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
+    */
    void ClearAndPaste(double t0, double t1,
-                              const Track *src,
-                              bool preserve = true,
-                              bool merge = true,
-                              const TimeWarper *effectWarper = NULL) /* not override */;
+      const WaveTrack &src,
+      bool preserve = true,
+      bool merge = true,
+      const TimeWarper *effectWarper = nullptr) /* not override */;
+   /*!
+    Overload that takes a TrackList and passes its first wave track
+    @pre `**src.Any<const WaveTrack>().begin()` satisfies preconditions
+    of the other overload for `src`
+    */
+   void ClearAndPaste(double t0, double t1,
+      const TrackList &src,
+      bool preserve = true,
+      bool merge = true,
+      const TimeWarper *effectWarper = nullptr)
+   {
+      ClearAndPaste(t0, t1, **src.Any<const WaveTrack>().begin(),
+         preserve, merge, effectWarper);
+   }
 
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
-   void SplitAt(double t) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    */
    void Split(double t0, double t1) /* not override */;
-   // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
-   // May assume precondition: t0 <= t1
+   /*!
+    May assume precondition: t0 <= t1
+    @pre `IsLeader()`
+    */
    void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
-   Track::Holder SplitCut(double t0, double t1) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    @post result: `result->NChannels() == NChannels()`
+    */
+   TrackListHolder SplitCut(double t0, double t1) /* not override */;
+
    // May assume precondition: t0 <= t1
+   /*!
+    @pre `IsLeader()`
+    */
    void SplitDelete(double t0, double t1) /* not override */;
+   /*!
+    @pre `IsLeader()`
+    */
    void Join(double t0, double t1) /* not override */;
    // May assume precondition: t0 <= t1
+   /*!
+    @pre `IsLeader()`
+    */
    void Disjoin(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
+   /*!
+    @pre `IsLeader()`
+    */
    void Trim(double t0, double t1) /* not override */;
-
-   // May assume precondition: t0 <= t1
-   void HandleClear(double t0, double t1, bool addCutLines, bool split);
 
    void SyncLockAdjust(double oldT1, double newT1) override;
 
@@ -275,9 +348,9 @@ private:
    ///
 
    bool Get(
-      size_t iChannel, size_t nBuffers, samplePtr buffers[],
+      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
-      fillFormat fill = fillZero, bool mayThrow = true,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
@@ -326,7 +399,32 @@ private:
    //
    Envelope* GetEnvelopeAtTime(double time);
 
+   const WaveClip* GetClipAtTime(double time) const;
    WaveClip* GetClipAtTime(double time);
+
+   /*!
+    * @brief Returns clips next to `clip` in the given direction, or `nullptr`
+    * if there is none.
+    */
+   const WaveClip* GetNextClip(
+      const WaveClip& clip, PlaybackDirection searchDirection) const;
+   /*!
+    * @copydoc GetNextClip(const WaveClip&, PlaybackDirection) const
+    */
+   WaveClip*
+   GetNextClip(const WaveClip& clip, PlaybackDirection searchDirection);
+
+   /*!
+    * @brief Similar to GetNextClip, but returns `nullptr` if the neighbour
+    * clip is not adjacent.
+    */
+   const WaveClip* GetAdjacentClip(
+      const WaveClip& clip, PlaybackDirection searchDirection) const;
+   /*!
+    * @copydoc GetAdjacentClip(const WaveClip&, PlaybackDirection) const
+    */
+   WaveClip*
+   GetAdjacentClip(const WaveClip& clip, PlaybackDirection searchDirection);
 
    //
    // Getting information about the track's internal block sizes
@@ -514,6 +612,18 @@ private:
    WaveClipPointers SortedClipArray();
    WaveClipConstPointers SortedClipArray() const;
 
+   //! Whether any clips have hidden audio
+   /*!
+    @pre `IsLeader()`
+    */
+   bool HasHiddenData() const;
+
+   //! Remove hidden audio from all clips
+   /*!
+    @pre `IsLeader()`
+    */
+   void DiscardTrimmed();
+
    //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
    /*!
    @return true if possible to offset by `(allowedAmount ? *allowedAmount : amount)`
@@ -560,6 +670,12 @@ private:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
+   //! Argument is in (0, 1)
+   //! @return true if processing should continue
+   using ProgressReport = std::function<bool(double)>;
+   bool Reverse(sampleCount start, sampleCount len,
+      const ProgressReport &report = {});
+
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
@@ -585,14 +701,33 @@ private:
       const std::shared_ptr<WaveClip> mpClip1;
    };
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto(AudacityProject &project, TrackList &list)
+      const override;
 
    //! Returns nullptr if clip with such name was not found
    const WaveClip* FindClipByName(const wxString& name) const;
 
    size_t NIntervals() const override;
 
-protected:
+private:
+   void FlushOne();
+   // May assume precondition: t0 <= t1
+   void HandleClear(double t0, double t1, bool addCutLines, bool split);
+   static void ClearAndPasteOne(WaveTrack &track,
+      double t0, double t1, double startTime, double endTime,
+      const WaveTrack &src,
+      bool preserve, bool merge, const TimeWarper *effectWarper);
+   static void JoinOne(WaveTrack &track, double t0, double t1);
+   static Holder CopyOne(const WaveTrack &track,
+      double t0, double t1, bool forClipboard);
+   static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile);
+   static bool ReverseOne(WaveTrack &track,
+      sampleCount start, sampleCount len, const ProgressReport &report = {});
+   static bool ReverseOneClip(WaveTrack &track,
+      sampleCount start, sampleCount len, sampleCount originalStart,
+      sampleCount originalEnd, const ProgressReport &report = {});
+   void SplitAt(double t) /* not override */;
+
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
@@ -611,6 +746,8 @@ protected:
 
    sampleFormat  mFormat;
    mutable int   mLegacyRate{ 0 }; //!< used only during deserialization
+
+   // TODO move to a ClientData attachment on the channel group
    int           mWaveColorIndex;
 
 private:
@@ -628,9 +765,18 @@ private:
    void DoSetPan(float value);
    void DoSetGain(float value);
 
-   void PasteWaveTrack(double t0, const WaveTrack* other);
+   /*
+    @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
+    @pre `IsLeader()`
+    */
+   void PasteWaveTrack(double t0, const WaveTrack &other);
+   static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
+      double startTime, double insertDuration);
 
-   //! Whether all clips have a common rate
+   //! Whether all clips of a leader track have a common rate
+   /*!
+    @pre `IsLeader()`
+    */
    bool RateConsistencyCheck() const;
 
    //! Sets project tempo on clip upon push. Use this instead of
@@ -642,6 +788,7 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
+   double mOrigin{ 0.0 };
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
@@ -683,8 +830,8 @@ class WAVE_TRACK_API WaveTrackFactory final
        , mpFactory(pFactory)
    {
    }
-   WaveTrackFactory( const WaveTrackFactory & ) PROHIBITED;
-   WaveTrackFactory &operator=( const WaveTrackFactory & ) PROHIBITED;
+   WaveTrackFactory( const WaveTrackFactory & ) = delete;
+   WaveTrackFactory &operator=( const WaveTrackFactory & ) = delete;
 
    const SampleBlockFactoryPtr &GetSampleBlockFactory() const
    { return mpFactory; }

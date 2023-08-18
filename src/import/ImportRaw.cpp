@@ -25,9 +25,10 @@ and sample size to help you importing data of an unknown format.
 #include "ImportRaw.h"
 
 #include "ImportPlugin.h"
+#include "ImportUtils.h"
 
 #include "AudioIOBase.h"
-#include "../FileFormats.h"
+#include "FileFormats.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
 #include "SelectFile.h"
@@ -107,7 +108,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
 {
    outTracks.clear();
 
-   TrackHolders results;
+   ImportUtils::NewChannelGroup results;
    auto updateResult = ProgressResult::Success;
 
    {
@@ -174,21 +175,14 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       // the quality of the original file.
       //
 
-      const auto format = ImportFileHandle::ChooseFormat(
+      const auto format = ImportUtils::ChooseFormat(
          sf_subtype_to_effective_format(encoding));
 
-      results.resize(1);
-      auto &channels = results[0];
-      channels.resize(numChannels);
+      results.resize(numChannels);
+      for (size_t c = 0; c < numChannels; ++c)
+         results[c] = trackFactory->Create(format, rate);
 
-      {
-         // iter not used outside this scope.
-         auto iter = channels.begin();
-         for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c)
-            *iter = trackFactory->Create(format, rate);
-      }
-      const auto firstChannel = channels.begin()->get();
-      auto maxBlockSize = firstChannel->GetMaxBlockSize();
+      const auto maxBlockSize = results[0]->GetMaxBlockSize();
 
       SampleBuffer srcbuffer(maxBlockSize * numChannels, format);
       SampleBuffer buffer(maxBlockSize, format);
@@ -225,21 +219,23 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
          }
 
          if (block) {
-            auto iter = channels.begin();
-            for(decltype(numChannels) c = 0; c < numChannels; ++iter, ++c) {
-               if (format==int16Sample) {
-                  for(decltype(block) j=0; j<block; j++)
+            size_t c = 0;
+            for (const auto &pChannel : results) {
+               if (format == int16Sample) {
+                  for (decltype(block) j = 0; j < block; ++j)
                      ((short *)buffer.ptr())[j] =
-                     ((short *)srcbuffer.ptr())[numChannels*j+c];
+                     ((short *)srcbuffer.ptr())[numChannels * j + c];
                }
                else {
-                  for(decltype(block) j=0; j<block; j++)
+                  for (decltype(block) j = 0; j < block; ++j)
                      ((float *)buffer.ptr())[j] =
-                     ((float *)srcbuffer.ptr())[numChannels*j+c];
+                     ((float *)srcbuffer.ptr())[numChannels * j + c];
                }
 
-               iter->get()->Append(buffer.ptr(), (format == int16Sample)?int16Sample:floatSample, block,
+               pChannel->Append(buffer.ptr(),
+                  ((format == int16Sample) ? int16Sample : floatSample), block,
                   1, sf_subtype_to_effective_format(encoding));
+               ++c;
             }
             framescompleted += block;
          }
@@ -257,11 +253,8 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
       throw UserException{};
 
-   if (!results.empty() && !results[0].empty()) {
-      for (const auto &channel : results[0])
-         channel->Flush();
-      outTracks.swap(results);
-   }
+   if (!results.empty())
+      outTracks.push_back(ImportUtils::MakeTracks(results));
 }
 
 

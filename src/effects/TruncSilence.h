@@ -19,6 +19,7 @@
 
 #include "StatefulEffect.h"
 #include "ShuttleAutomation.h"
+#include "Track.h"
 #include <wx/weakref.h>
 
 class ShuttleGui;
@@ -58,14 +59,13 @@ public:
    // Analyze a single track to find silences
    // If inputLength is not NULL we are calculating the minimum
    // amount of input for previewing.
-   bool Analyze(RegionList &silenceList,
-                        RegionList &trackSilences,
-                        const WaveTrack *wt,
-                        sampleCount* silentFrame,
-                        sampleCount* index,
-                        int whichTrack,
-                        double* inputLength = NULL,
-                        double* minInputLength = NULL) const;
+   /*!
+    @pre `wt.IsLeader()`
+    */
+   bool Analyze(RegionList &silenceList, RegionList &trackSilences,
+      const WaveTrack &wt, sampleCount* silentFrame, sampleCount* index,
+      int whichTrack, double* inputLength = nullptr,
+      double* minInputLength = nullptr) const;
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectEditor> PopulateOrExchange(
@@ -88,11 +88,17 @@ private:
 
    bool ProcessIndependently();
    bool ProcessAll();
-   bool FindSilences
-      (RegionList &silences, const TrackList *list,
-       const Track *firstTrack, const Track *lastTrack);
-   bool DoRemoval(TrackList &outputs,
-      const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
+   /*!
+    @pre range visits leaders only
+    */
+   bool FindSilences(RegionList &silences,
+      const TrackIterRange<const WaveTrack> &range);
+   /*!
+    @pre range visits leaders only
+    */
+   bool DoRemoval(const RegionList &silences,
+      const TrackIterRange<Track> &range,
+      unsigned iGroup, unsigned nGroups,
       double &totalCutLen);
 
    wxWeakRef<wxWindow> mUIParent{};

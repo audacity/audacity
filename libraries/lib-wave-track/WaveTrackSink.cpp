@@ -14,7 +14,6 @@
 #include "WaveTrackSink.h"
 
 #include "AudioGraphBuffers.h"
-#include "TimeWarper.h"
 #include "WaveTrack.h"
 #include <cassert>
 
@@ -24,6 +23,10 @@ WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
 )  : mLeft{ left }, mpRight{ pRight }
    , mGenLeft{ isGenerator ? left.EmptyCopy() : nullptr }
    , mGenRight{ pRight && isGenerator ? pRight->EmptyCopy() : nullptr }
+   , mList{ mGenLeft
+      ? TrackList::Temporary(nullptr, mGenLeft, mGenRight)
+      : nullptr
+   }
    , mIsProcessor{ isProcessor }
    , mEffectiveFormat{ effectiveFormat }
    , mOutPos{ start }
@@ -90,18 +93,10 @@ void WaveTrackSink::DoConsume(Buffers &data)
    assert(data.BlockSize() <= data.Remaining());
 }
 
-void WaveTrackSink::Flush(Buffers &data, const double t0, const double t1)
+std::shared_ptr<TrackList> WaveTrackSink::Flush(Buffers &data)
 {
    DoConsume(data);
-   if (mGenLeft) {
-      // Transfer the data from the temporary tracks to the actual ones
+   if (mGenLeft)
       mGenLeft->Flush();
-      // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      PasteTimeWarper warper{ t1, t0 + mGenLeft->GetEndTime() };
-      mLeft.ClearAndPaste(t0, t1, mGenLeft.get(), true, true, &warper);
-      if (mGenRight) {
-         mGenRight->Flush();
-         mpRight->ClearAndPaste(t0, t1, mGenRight.get(), true, true, &warper);
-      }
-   }
+   return mList;
 }

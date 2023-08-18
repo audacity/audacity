@@ -66,8 +66,9 @@ public:
 private:
    // EffectEqualization implementation
 
-   bool ProcessOne(int count, WaveTrack * t,
-                   sampleCount start, sampleCount len);
+   struct Task;
+   bool ProcessOne(Task &task, int count, const WaveTrack &t,
+      sampleCount start, sampleCount len);
    
    wxWeakRef<wxWindow> mUIParent{};
    EqualizationFilter mParameters;

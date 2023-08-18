@@ -102,7 +102,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    artist.pZoomInfo = &zoomInfo;
    int y = rulerPageHeight;
 
-   for (auto l : mTracks->Leaders()) {
+   for (auto l : *mTracks) {
       for (auto n : l->Channels()) {
          auto &view = ChannelView::Get(*n);
          wxRect r;

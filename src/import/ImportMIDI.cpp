@@ -53,7 +53,7 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
       // In case the project had soloed tracks before importing,
       // the newly imported track is muted.
       const bool projectHasSolo =
-         !(tracks.Leaders<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+         !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
 #ifdef EXPERIMENTAL_MIDI_OUT
       if (projectHasSolo)
          pTrack->SetMute(true);
@@ -118,7 +118,7 @@ bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
    }
 
    dest->SetSequence(std::move(new_seq));
-   dest->SetOffset(offset);
+   dest->MoveTo(offset);
    wxString trackNameBase = fName.AfterLast(wxFILE_SEP_PATH).BeforeLast('.');
    dest->SetName(trackNameBase);
    mf.Close();

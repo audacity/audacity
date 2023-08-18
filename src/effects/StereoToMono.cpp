@@ -83,24 +83,19 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
    bool bGoodResult = true;
 
    // Determine the total time (in samples) used by all of the target tracks
+   // only for progress dialog
    sampleCount totalTime = 0;
    
-   auto trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
+   auto trackRange = outputs.Get().Selected<WaveTrack>();
    while (trackRange.first != trackRange.second)
    {
       auto left = *trackRange.first;
       auto channels = TrackList::Channels(left);
-      if (channels.size() > 1)
-      {
-         auto right = *channels.rbegin();
-         auto start = wxMin(left->TimeToLongSamples(left->GetStartTime()),
-                            right->TimeToLongSamples(right->GetStartTime()));
-         auto end = wxMax(left->TimeToLongSamples(left->GetEndTime()),
-                            right->TimeToLongSamples(right->GetEndTime()));
-
+      if (channels.size() > 1) {
+         auto start = left->TimeToLongSamples(left->GetStartTime());
+         auto end = left->TimeToLongSamples(left->GetEndTime());
          totalTime += (end - start);
       }
-
       ++trackRange.first;
    }
 
@@ -110,7 +105,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
    mProgress->SetMessage(XO("Mixing down to mono"));
 
-   trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
+   trackRange = outputs.Get().Selected<WaveTrack>();
    while (trackRange.first != trackRange.second)
    {
       auto left = *trackRange.first;
@@ -132,7 +127,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
       if (refreshIter)
       {
-         trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
+         trackRange = outputs.Get().Selected<WaveTrack>();
          refreshIter = false;
       }
       else
@@ -155,34 +150,35 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    bool bResult = true;
    sampleCount processed = 0;
 
-   auto start = wxMin(left->GetStartTime(), right->GetStartTime());
-   auto end = wxMax(left->GetEndTime(), right->GetEndTime());
+   const auto start = left->GetStartTime();
+   const auto end = left->GetEndTime();
 
    Mixer::Inputs tracks;
    tracks.emplace_back(
       left->SharedPointer<const SampleTrack>(), GetEffectStages(*left));
 
    Mixer mixer(move(tracks),
-               true,                // Throw to abort mix-and-render if read fails:
-               Mixer::WarpOptions{ inputTracks()->GetOwner() },
-               start,
-               end,
-               1,
-               idealBlockLen,
-               false,               // Not interleaved
-               left->GetRate(),     // Process() checks that left and right
-                                    // rates are the same
-               floatSample);
+      true,                // Throw to abort mix-and-render if read fails:
+      Mixer::WarpOptions{ inputTracks()->GetOwner() },
+      start,
+      end,
+      1,
+      idealBlockLen,
+      false,               // Not interleaved
+      left->GetRate(),     // Process() checks that left and right
+                           // rates are the same
+      floatSample);
 
    auto outTrack = left->EmptyCopy();
+   auto tempList = TrackList::Temporary(nullptr, outTrack, nullptr);
+   assert(outTrack->IsLeader());
    outTrack->ConvertToSampleFormat(floatSample);
 
    while (auto blockLen = mixer.Process()) {
       auto buffer = mixer.GetBuffer();
       for (auto i = 0; i < blockLen; i++)
-      {
          ((float *)buffer)[i] /= 2.0;
-      }
+
       // If mixing channels that both had only 16 bit effective format
       // (for example), and no gains or envelopes, still there should be
       // dithering because of the averaging above, which may introduce samples
@@ -192,19 +188,17 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
 
       curTime += blockLen;
       if (TotalProgress(curTime.as_double() / totalTime.as_double()))
-      {
          return false;
-      }
    }
    outTrack->Flush();
 
-   double minStart = wxMin(left->GetStartTime(), right->GetStartTime());
-   left->Clear(left->GetStartTime(), left->GetEndTime());
-   left->Paste(minStart, outTrack.get());
    outputs.UnlinkChannels(*left);
    // Should be a consequence of unlinking:
    assert(right->IsLeader());
    outputs.Remove(*right);
+
+   left->Clear(start, end);
+   left->Paste(start, *outTrack);
    RealtimeEffectList::Get(*left).Clear();
 
    return bResult;

@@ -82,14 +82,11 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
 
    int count = 0;
    for (auto track : outputs.Get().Selected<WaveTrack>()) {
-      const
-      double trackStart = track->GetStartTime();
+      const double trackStart = track->GetStartTime();
       const double repair_t0 = std::max(mT0, trackStart);
-      const
-      double trackEnd = track->GetEndTime();
+      const double trackEnd = track->GetEndTime();
       const double repair_t1 = std::min(mT1, trackEnd);
-      const
-      double repair_deltat = repair_t1 - repair_t0;
+      const double repair_deltat = repair_t1 - repair_t0;
       if (repair_deltat > 0) {  // selection is within track audio
          const auto repair0 = track->TimeToLongSamples(repair_t0);
          const auto repair1 = track->TimeToLongSamples(repair_t1);
@@ -122,19 +119,20 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
             break;
          }
 
-         if (!ProcessOne(count, track, s0,
-                         // len is at most 5 * 128.
-                         len.as_size_t(),
-                         repairStart,
-                         // repairLen is at most 128.
-                         repairLen.as_size_t() )) {
-            bGoodResult = false;
-            break;
-         }
+         for (const auto pChannel : TrackList::Channels(track))
+            if (!ProcessOne(count++, *pChannel, s0,
+               // len is at most 5 * 128.
+               len.as_size_t(),
+               repairStart,
+               // repairLen is at most 128.
+               repairLen.as_size_t())
+            ) {
+               bGoodResult = false;
+               goto done;
+            }
       }
-
-      count++;
    }
+done:
 
    if (bGoodResult)
       outputs.Commit();
@@ -142,15 +140,13 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-bool EffectRepair::ProcessOne(int count, WaveTrack * track,
-                              sampleCount start,
-                              size_t len,
-                              size_t repairStart, size_t repairLen)
+bool EffectRepair::ProcessOne(int count, WaveTrack &track,
+   sampleCount start, size_t len, size_t repairStart, size_t repairLen)
 {
    Floats buffer{ len };
-   track->GetFloats(buffer.get(), start, len);
+   track.GetFloats(buffer.get(), start, len);
    InterpolateAudio(buffer.get(), len, repairStart, repairLen);
-   track->Set((samplePtr)&buffer[repairStart], floatSample,
+   track.Set((samplePtr)&buffer[repairStart], floatSample,
       start + repairStart, repairLen,
       // little repairs shouldn't force dither on rendering:
       narrowestSampleFormat

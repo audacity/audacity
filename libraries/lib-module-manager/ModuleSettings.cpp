@@ -20,6 +20,17 @@ static const std::unordered_set<wxString> &autoEnabledModules()
    // Add names to this list, of modules that are expected to ship
    // with Audacity and enable automatically.
    static std::unordered_set<wxString> modules{
+      "mod-ogg",
+      "mod-flac",
+      "mod-mp2",
+      "mod-wavpack",
+      "mod-mp3",
+      "mod-mpg123",
+      "mod-pcm",
+      "mod-ffmpeg",
+      "mod-cl",
+      "mod-lof",
+      "mod-aup",
    };
    return modules;
 }
@@ -40,7 +51,7 @@ int ModuleSettings::GetModuleStatus(const FilePath &fname)
    wxString ModulePath = gPrefs->Read( PathPref, wxEmptyString );
    if( ModulePath.IsSameAs( fname ) )
    {
-      gPrefs->Read( StatusPref, &iStatus, kModuleNew );
+      gPrefs->Read( StatusPref, &iStatus, static_cast<int>(kModuleNew) );
 
       wxDateTime DateTime = FileName.GetModificationTime();
       wxDateTime OldDateTime;

@@ -26,8 +26,7 @@ class TrackList;
 class WaveTrack;
 class XMLTagHandler;
 
-using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
-using TrackHolders = std::vector< WaveTrackArray >;
+using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
 
 class AUDACITY_DLL_API ProjectFileManager final
    : public ClientData::Base
@@ -40,8 +39,8 @@ public:
    static void DiscardAutosave(const FilePath &filename);
 
    explicit ProjectFileManager( AudacityProject &project );
-   ProjectFileManager( const ProjectFileManager & ) PROHIBITED;
-   ProjectFileManager &operator=( const ProjectFileManager & ) PROHIBITED;
+   ProjectFileManager( const ProjectFileManager & ) = delete;
+   ProjectFileManager &operator=( const ProjectFileManager & ) = delete;
    ~ProjectFileManager();
 
    bool OpenProject();

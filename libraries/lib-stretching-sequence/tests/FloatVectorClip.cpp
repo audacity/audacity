@@ -47,7 +47,7 @@ AudioSegmentSampleView FloatVectorClip::GetSampleView(
       std::move(blockViews), start.as_size_t(), sampleCount { len });
 }
 
-sampleCount FloatVectorClip::GetPlaySamplesCount() const
+sampleCount FloatVectorClip::GetVisibleSampleCount() const
 {
    return mAudio[0].size();
 }

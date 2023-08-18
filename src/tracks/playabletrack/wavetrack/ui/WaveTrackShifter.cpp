@@ -166,15 +166,15 @@ public:
                // TODO wide wave tracks -- guarantee matching clip width
                if (!pTrack->AddClip(pClip))
                   return false;
+               mMigrated.insert(pClip.get());
             }
-            mMigrated.insert(pClip.get());
          }
          if (offset == .0)
             mMoving.emplace_back(std::move(interval));
          else {
             for (auto pClip : clips)
                if (pClip)
-                  pClip->Offset(offset);
+                  pClip->ShiftBy(offset);
             mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(
                GetTrack(), clips[0], clips[1]));
          }
@@ -198,9 +198,9 @@ public:
    {
       for (auto &interval : MovingIntervals()) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         data.GetClip(0)->Offset(offset);
+         data.GetClip(0)->ShiftBy(offset);
          if (const auto pClip1 = data.GetClip(1))
-            pClip1->Offset(offset);
+            pClip1->ShiftBy(offset);
       }
    }
 

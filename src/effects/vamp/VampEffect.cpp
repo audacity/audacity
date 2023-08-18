@@ -300,7 +300,7 @@ bool VampEffect::Init()
    if (inputTracks()->empty())
       mRate = mProjectRate;
    else
-      mRate = (*inputTracks()->Leaders<const WaveTrack>().begin())->GetRate();
+      mRate = (*inputTracks()->Any<const WaveTrack>().begin())->GetRate();
 
    // The plugin must be reloaded to allow changing parameters
 
@@ -339,7 +339,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
 
    std::vector<std::shared_ptr<AddedAnalysisTrack>> addedTracks;
 
-   for (auto leader : inputTracks()->Leaders<const WaveTrack>())
+   for (auto leader : inputTracks()->Any<const WaveTrack>())
    {
       auto channelGroup = TrackList::Channels(leader);
       auto left = *channelGroup.first++;
@@ -354,7 +354,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
 
       sampleCount start = 0;
       sampleCount len = 0;
-      GetBounds(*left, right, &start, &len);
+      GetBounds(*leader, &start, &len);
 
       // TODO: more-than-two-channels
 

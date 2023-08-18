@@ -48,8 +48,8 @@ public:
 
    explicit
    Scrubber(AudacityProject *project);
-   Scrubber( const Scrubber & ) PROHIBITED;
-   Scrubber &operator=( const Scrubber & ) PROHIBITED;
+   Scrubber( const Scrubber & ) = delete;
+   Scrubber &operator=( const Scrubber & ) = delete;
    ~Scrubber();
 
    static bool ShouldScrubPinned();

@@ -541,7 +541,7 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
          // Recursively copy cutlines of cutlines.  They don't need
          // their offsets adjusted.
          true);
-      cutlineCopy->Offset(t0 - GetSequenceStartTime());
+      cutlineCopy->ShiftBy(t0 - GetSequenceStartTime());
       newCutlines.push_back(std::move(cutlineCopy));
    }
 
@@ -641,7 +641,7 @@ void WaveClip::Clear(double t0, double t1)
     ClearSequence(st0, st1);
 
     if (offset != .0)
-        Offset(offset);
+       ShiftBy(offset);
 }
 
 void WaveClip::ClearLeft(double t)
@@ -708,7 +708,7 @@ void WaveClip::ClearSequence(double t0, double t1)
             {
                 if (cutlinePosition >= t1)
                 {
-                    clip->Offset(clip_t0 - clip_t1);
+                    clip->ShiftBy(clip_t0 - clip_t1);
                 }
                 ++it;
             }
@@ -764,7 +764,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
       {
          if (cutlinePosition >= t1)
          {
-            clip->Offset(clip_t0 - clip_t1);
+            clip->ShiftBy(clip_t0 - clip_t1);
          }
          ++it;
       }
@@ -803,7 +803,7 @@ bool WaveClip::FindCutLine(double cutLinePosition,
          if (cutlineStart)
             *cutlineStart = startTime;
          if (cutlineEnd)
-            *cutlineEnd = startTime + cutline->SamplesToTime(cutline->GetPlaySamplesCount());
+            *cutlineEnd = startTime + cutline->SamplesToTime(cutline->GetVisibleSampleCount());
          return true;
       }
    }
@@ -870,7 +870,7 @@ void WaveClip::OffsetCutLines(double t0, double len)
    for (const auto &cutLine : mCutLines)
    {
       if (GetSequenceStartTime() + cutLine->GetSequenceStartTime() >= t0)
-         cutLine->Offset(len);
+         cutLine->ShiftBy(len);
    }
 }
 
@@ -1005,7 +1005,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 // be exactly equal due to rounding errors.
 bool WaveClip::SharesBoundaryWithNextClip(const WaveClip* next) const
 {
-   double endThis = GetRate() * GetPlayStartTime() + GetPlaySamplesCount().as_double();
+   double endThis = GetRate() * GetPlayStartTime() + GetVisibleSampleCount().as_double();
    double startNext = next->GetRate() * next->GetPlayStartTime();
 
    // given that a double has about 15 significant digits, using a criterion
@@ -1077,10 +1077,10 @@ sampleCount WaveClip::GetPlayStartSample() const
 
 sampleCount WaveClip::GetPlayEndSample() const
 {
-    return GetPlayStartSample() + GetPlaySamplesCount();
+   return GetPlayStartSample() + GetVisibleSampleCount();
 }
 
-sampleCount WaveClip::GetPlaySamplesCount() const
+sampleCount WaveClip::GetVisibleSampleCount() const
 {
     return GetNumSamples()
        - TimeToSamples(mTrimRight) - TimeToSamples(mTrimLeft);
@@ -1154,12 +1154,7 @@ sampleCount WaveClip::GetSequenceStartSample() const
     return TimeToSamples(mSequenceOffset);
 }
 
-sampleCount WaveClip::GetSequenceEndSample() const
-{
-    return GetSequenceStartSample() + GetNumSamples();
-}
-
-void WaveClip::Offset(double delta) noexcept
+void WaveClip::ShiftBy(double delta) noexcept
 {
     SetSequenceStartTime(GetSequenceStartTime() + delta);
 }
@@ -1207,11 +1202,6 @@ sampleCount WaveClip::TimeToSequenceSamples(double t) const
     else if (t > GetSequenceEndTime())
         return GetNumSamples();
     return TimeToSamples(t - GetSequenceStartTime());
-}
-
-sampleCount WaveClip::ToSequenceSamples(sampleCount s) const
-{
-    return s - GetSequenceStartSample();
 }
 
 bool WaveClip::CheckInvariants() const

@@ -177,7 +177,7 @@ bool SpecCache::CalculateOneSpectrum
             if (sequence.GetFloats(
                    0u, 1u, &data,
                    sampleCount(floor(0.5 + from.as_double() + offset * rate)),
-                   myLen, backwards, fillZero,
+                   myLen, backwards, FillFormat::fillZero,
                    // Don't throw in this drawing operation
                    false))
                useBuffer = floats.data();
@@ -199,8 +199,8 @@ bool SpecCache::CalculateOneSpectrum
          wxASSERT(xx >= 0);
          float *const results = &out[nBins * xx];
          // This function does not mutate useBuffer
-         ComputeSpectrum(useBuffer, windowSizeSetting, windowSizeSetting,
-            rate, results,
+         ComputeSpectrum(
+            useBuffer, windowSizeSetting, windowSizeSetting, results,
             autocorrelation, settings.windowType);
       }
       else if (reassignment) {
