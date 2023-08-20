@@ -94,17 +94,16 @@ void ClipSegment::Pull(float* const* buffers, size_t samplesPerChannel)
       constexpr auto mayThrow = false;
       const auto start =
          forward ? mLastReadSample : mLastReadSample - numSamplesToRead;
-      const auto offset = forward ? 0u : samplesPerChannel - numSamplesToRead;
       const auto nChannels = mClip.GetWidth();
       ChannelSampleViews newViews;
       for (auto i = 0u; i < nChannels; ++i)
       {
          auto channelView = mClip.GetSampleView(i, start, numSamplesToRead);
-         channelView.Copy(buffers[i] + offset, samplesPerChannel);
+         channelView.Copy(buffers[i], samplesPerChannel);
          newViews.push_back(std::move(channelView));
          if (!forward)
             ReverseSamples(
-               reinterpret_cast<samplePtr>(buffers[i] + offset), floatSample, 0,
+               reinterpret_cast<samplePtr>(buffers[i]), floatSample, 0,
                numSamplesToRead);
       }
       mChannelSampleViews = std::move(newViews);
@@ -120,10 +119,8 @@ void ClipSegment::Pull(float* const* buffers, size_t samplesPerChannel)
    }
    if (numSamplesToRead < samplesPerChannel)
    {
-      const auto begin = forward ? numSamplesToRead : 0;
-      const auto end =
-         forward ? samplesPerChannel : samplesPerChannel - numSamplesToRead;
       for (auto i = 0u; i < mClip.GetWidth(); ++i)
-         std::fill(buffers[i] + begin, buffers[i] + end, 0.f);
+         std::fill(buffers[i] + numSamplesToRead,
+            buffers[i] + samplesPerChannel, 0.f);
    }
 }
