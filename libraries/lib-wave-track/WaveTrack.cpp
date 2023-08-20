@@ -2285,7 +2285,8 @@ bool WaveTrack::Get(size_t iChannel, size_t nBuffers,
    std::optional<TrackIter<const WaveTrack>> iter;
    auto pTrack = this;
    if (pOwner) {
-      iter.emplace(TrackList::Channels(this).first.advance(iChannel));
+      const auto ppLeader = TrackList::Channels(this).first;
+      iter.emplace(ppLeader.advance(IsLeader() ? iChannel : 1));
       pTrack = **iter;
    }
    return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer) {
@@ -2402,7 +2403,8 @@ std::vector<ChannelSampleView> WaveTrack::GetSampleView(
    std::optional<TrackIter<const WaveTrack>> iter;
    auto pTrack = this;
    if (pOwner) {
-      iter.emplace(TrackList::Channels(this).first.advance(iChannel));
+      const auto ppLeader = TrackList::Channels(this).first;
+      iter.emplace(ppLeader.advance(IsLeader() ? iChannel : 1));
       pTrack = **iter;
    }
    for (auto i = 0u; i < nBuffers; ++i)
