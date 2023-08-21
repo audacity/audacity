@@ -1,8 +1,6 @@
 set(MODULE_NAME uicomponents)
 
 set(MODULE_SOURCES
-   ApplicationConfiguration.cpp
-   ApplicationConfiguration.h
    VolumeControlHandler.cpp
    VolumeControlHandler.h
    MeterPanelHandler.cpp

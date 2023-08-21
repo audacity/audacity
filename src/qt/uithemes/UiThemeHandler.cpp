@@ -1,7 +1,17 @@
 #include "UiThemeHandler.h"
 
+#include <QFontDatabase>
+#include <QGuiApplication>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDirIterator>
+
+UiThemeHandler::UiThemeHandler()
+{
+   m_timecodeFont = QFontDatabase::font("Lato", "Bold", 14);
+   m_iconFont = QFontDatabase::font("MusescoreIcon", "", 12);
+   m_bodyFont = QGuiApplication::font();
+   m_bodyFont.setPixelSize(16);
+}
 
 QStringList UiThemeHandler::themeFiles()
 {
@@ -24,4 +34,19 @@ QStringList UiThemeHandler::themeFiles()
    }
 
    return themes;
+}
+
+QFont UiThemeHandler::IconFont() const
+{
+   return m_iconFont;
+}
+
+QFont UiThemeHandler::BodyFont() const
+{
+   return m_bodyFont;
+}
+
+QFont UiThemeHandler::TimecodeFont() const
+{
+   return m_timecodeFont;
 }

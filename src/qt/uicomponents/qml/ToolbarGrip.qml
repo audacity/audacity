@@ -48,7 +48,7 @@ Item {
       height: 16
       iconCode: IconCode.TOOLBAR_GRIP
       color: "#838393"
-      font.family: appConfig.iconFont.family
+      font.family: UiTheme.iconFont.family
       font.pixelSize: 8
       anchors.centerIn: background
    }

@@ -52,7 +52,7 @@ Rectangle {
       height: 12
       color: UiTheme.fontColor1
       fontSizeMode: Text.Fit
-      font.family: appConfig.bodyFont.family
+      font.family: UiTheme.bodyFont.family
       font.pixelSize: 10
    }
 

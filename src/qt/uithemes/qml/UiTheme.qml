@@ -10,6 +10,10 @@ Theme {
    property var themes: []
    property string currentTheme: ""
 
+   property font bodyFont
+   property font iconFont
+   property font timecodeFont
+
    signal themeChanged()
 
    function availableThemes() {
@@ -55,6 +59,10 @@ Theme {
 
    Component.onCompleted: {
       var themeFiles = UiThemeHandler.themeFiles()
+
+      bodyFont = UiThemeHandler.bodyFont
+      iconFont = UiThemeHandler.iconFont
+      timecodeFont = UiThemeHandler.timecodeFont
 
       for (var i = 0; i < themeFiles.length; i++) {
          var component = Qt.createComponent(themeFiles[i]);

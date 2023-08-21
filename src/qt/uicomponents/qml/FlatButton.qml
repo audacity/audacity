@@ -32,8 +32,8 @@ FocusScope {
    property string text: ""
    property int textFormat: Text.AutoText
 
-   property font iconFont: appConfig.iconFont
-   property font textFont: appConfig.bodyFont
+   property font iconFont: UiTheme.iconFont
+   property font textFont: UiTheme.bodyFont
 
    property bool transparent: false
    property bool accentButton: false

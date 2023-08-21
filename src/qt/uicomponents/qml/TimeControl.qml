@@ -104,7 +104,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             width: 12
             color: UiTheme.fontColor2
-            font: appConfig.timecodeFont
+            font: UiTheme.timecodeFont
          },
          Text {
             x: 20
@@ -113,7 +113,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             width: 12
             color: UiTheme.fontColor2
-            font: appConfig.timecodeFont
+            font: UiTheme.timecodeFont
          },
          Text {
             width: 12
@@ -121,7 +121,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color: UiTheme.fontColor2
-            font: appConfig.timecodeFont
+            font: UiTheme.timecodeFont
          },
          Text {
             width: 12
@@ -129,7 +129,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color: UiTheme.fontColor2
-            font: appConfig.timecodeFont
+            font: UiTheme.timecodeFont
          },
          Text {
             width: 12
@@ -137,7 +137,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color: UiTheme.fontColor2
-            font: appConfig.timecodeFont
+            font: UiTheme.timecodeFont
          },
          Text {
             width: 12
@@ -145,7 +145,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color: UiTheme.fontColor2
-            font: appConfig.timecodeFont
+            font: UiTheme.timecodeFont
          }
       ]
 
@@ -157,7 +157,7 @@ Item {
          height: root.height
          verticalAlignment: Text.AlignVCenter
          color: UiTheme.fontColor2
-         font: appConfig.bodyFont
+         font: UiTheme.bodyFont
       }
 
       Text {
@@ -167,7 +167,7 @@ Item {
          height: root.height
          verticalAlignment: Text.AlignVCenter
          color: UiTheme.fontColor2
-         font: appConfig.bodyFont
+         font: UiTheme.bodyFont
          opacity: 0.7
       }
 
@@ -178,7 +178,7 @@ Item {
          height: root.height
          verticalAlignment: Text.AlignVCenter
          color: UiTheme.fontColor2
-         font: appConfig.bodyFont
+         font: UiTheme.bodyFont
          opacity: 0.7
       }
 
@@ -189,7 +189,7 @@ Item {
          height: root.height
          verticalAlignment: Text.AlignVCenter
          color: UiTheme.fontColor2
-         font: appConfig.bodyFont
+         font: UiTheme.bodyFont
          opacity: 0.7
       }
 
@@ -316,7 +316,7 @@ Item {
          text: String.fromCharCode(IconCode.SMALL_ARROW_DOWN)
 
          font {
-            family: appConfig.iconFont.family
+            family: UiTheme.iconFont.family
             pixelSize: 16
          }
       }

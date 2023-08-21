@@ -65,7 +65,7 @@ Item {
       }
 
       font {
-         family: appConfig.iconFont.family
+         family: UiTheme.iconFont.family
          pixelSize: 16
       }
    }
