@@ -1,8 +1,6 @@
 pragma Singleton
 import QtQml
 
-import Audacity.UiThemes
-
 Theme {
    objectName: "Light"
 

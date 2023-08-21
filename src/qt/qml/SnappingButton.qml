@@ -81,7 +81,7 @@ Rectangle {
       verticalAlignment: Text.AlignVCenter
       text: String.fromCharCode(IconCode.MAGNET)
       color: UiTheme.fontColor1
-      font.family: appConfig.iconFont.family
+      font.family: UiTheme.iconFont.family
       font.pixelSize: 14
    }
 
@@ -106,7 +106,7 @@ Rectangle {
       radius: 0
       transparent: true
       text: String.fromCharCode(IconCode.SMALL_ARROW_DOWN)
-      textFont.family: appConfig.iconFont.family
+      textFont.family: UiTheme.iconFont.family
       textFont.pixelSize: 16
       anchors.right: parent.right
    }

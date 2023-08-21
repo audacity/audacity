@@ -54,7 +54,7 @@ Item {
             text: String.fromCharCode(IconCode.FLAG)
 
             font {
-               family: appConfig.iconFont.family
+               family: UiTheme.iconFont.family
                pixelSize: 16
             }
          }
@@ -68,7 +68,7 @@ Item {
             text: name
 
             font {
-               family: appConfig.bodyFont.family
+               family: UiTheme.bodyFont.family
                pixelSize: 12
             }
          }

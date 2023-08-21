@@ -15,7 +15,6 @@ ApplicationWindow {
    minimumWidth: 480
    minimumHeight: 540
 
-   required property ApplicationConfiguration appConfig
    readonly property string theme: UiTheme.currentTheme
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
