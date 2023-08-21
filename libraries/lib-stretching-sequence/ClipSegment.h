@@ -33,10 +33,11 @@ public:
    bool Empty() const override;
    size_t GetWidth() const override;
 
-private:
+public: // Left public for testing
    // TimeAndPitchSource
    void Pull(float* const*, size_t samplesPerChannel) override;
 
+private:
    const ClipInterface& mClip;
    sampleCount mLastReadSample = 0;
    const sampleCount mTotalNumSamplesToProduce;
