@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Audacity
 import Audacity.UiComponents
 import Audacity.UiThemes
+import Audacity.NumericFormats
 
 Item {
    id: root
@@ -19,16 +20,32 @@ Item {
 
    signal updateStatusBar(status: string)
 
+   property double lastUpdateTime : 0
+
    function start() {
-      timeControl.start()
+      lastUpdateTime = Date.now()
+      timer.start()
    }
 
    function stop() {
-      timeControl.reset()
+      projectTime.value = 0
+      timer.stop()
    }
 
    function pause() {
-      timeControl.stop()
+      timer.stop()
+   }
+
+   Timer {
+      id: timer
+      interval: 1
+      repeat: true
+
+      onTriggered: {
+         var now = Date.now()
+         projectTime.value += (now - lastUpdateTime) / 1000
+         lastUpdateTime = now
+      }
    }
 
    RowLayout {
@@ -50,8 +67,11 @@ Item {
             color: UiTheme.backgroundColor1
          }
 
-         TimeControl {
-            id: timeControl
+         NumericTextControl {
+            id : projectTime
+            Layout.fillWidth : true
+            implicitHeight : 28
+            type : "time"
          }
       }
 
