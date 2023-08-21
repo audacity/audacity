@@ -21,6 +21,8 @@ set( SOURCES
    SilenceSegment.h
    StretchingSequence.cpp
    StretchingSequence.h
+   ClipTimeAndPitchSource.cpp
+   ClipTimeAndPitchSource.h
 )
 set( LIBRARIES
    lib-time-and-pitch
