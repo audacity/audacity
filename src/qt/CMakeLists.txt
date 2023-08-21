@@ -1,7 +1,5 @@
 set(QAUDACITY ${CMAKE_PROJECT_NAME})
 
-set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml)
-
 set(APP_SOURCES
    EditToolbarHandler.cpp
    EditToolbarHandler.h
@@ -70,6 +68,8 @@ audacity_qml_module(
       KDAB::kddockwidgets
       uicomponentsplugin
       uithemesplugin
+      lib-qt-init
+      lib-project
 )
 
 set_target_properties(

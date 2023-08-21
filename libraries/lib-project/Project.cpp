@@ -11,9 +11,6 @@
 
 #include "Project.h"
 
-#include <wx/display.h>
-#include <wx/filename.h>
-
 size_t AllProjects::size() const
 {
    return gAudacityProjects.size();

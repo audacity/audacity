@@ -65,6 +65,10 @@ if( NOT ${_OPT}enable_experimental_qt_support )
       lib-shuttlegui
       lib-export-ui
    )
+else()
+   list(APPEND LIBRARIES
+      lib-qt-init
+   )
 endif()
 
 if ( ${_OPT}has_networking )
