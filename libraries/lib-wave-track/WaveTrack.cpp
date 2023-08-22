@@ -357,11 +357,15 @@ void WaveTrack::Init(const WaveTrack &orig)
 
 void WaveTrack::Reinit(const WaveTrack &orig)
 {
+   // TODO wide wave tracks: this method will be reduced to the body of the for
+   // loop (call `this->Init(orig)` and then overwrite the
+   // SampleTrack::Attachments.). We must wait until tracks really are wide
+   // before doing this, though.
    assert(IsLeader());
    assert(orig.IsLeader());
    assert(NChannels() == orig.NChannels());
-   const auto channels = TrackList::Channels(this);
-   auto iter = TrackList::Channels(&orig).begin();
+   const auto channels = EasyToRemoveCallToTrackListChannels();
+   auto iter = orig.EasyToRemoveCallToTrackListChannels().begin();
    for (const auto pChannel : channels) {
       pChannel->Init(**iter);
 
