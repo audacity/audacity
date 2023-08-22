@@ -125,6 +125,13 @@ bool WaveTrack::Interval::GetErrorOpening() const
    return mpClip->GetErrorOpening() || (mpClip1 && mpClip1->GetErrorOpening());
 }
 
+void WaveTrack::Interval::CloseLock()
+{
+   mpClip->CloseLock();
+   if (mpClip1)
+      mpClip1->CloseLock();
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -2239,10 +2246,8 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 bool WaveTrack::CloseLock() noexcept
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto &clip : pChannel->mClips)
-         clip->CloseLock();
-
+   for (const auto interval : Intervals())
+      interval->CloseLock();
    return true;
 }
 
