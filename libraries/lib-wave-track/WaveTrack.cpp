@@ -119,6 +119,12 @@ sampleCount WaveTrack::Interval::GetPlayEndSample() const
    return mpClip->GetPlayEndSample();
 }
 
+bool WaveTrack::Interval::GetErrorOpening() const
+{
+   // TODO wide wave tracks: discard check on mpClip1.
+   return mpClip->GetErrorOpening() || (mpClip1 && mpClip1->GetErrorOpening());
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -2215,11 +2221,11 @@ void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile)
 std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto &clip : pChannel->mClips)
-         for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
-            if (clip->GetSequence(ii)->GetErrorOpening())
-               return XO("A track has a corrupted sample sequence.");
+   const auto intervals = Intervals();
+   if (std::any_of(
+          intervals.begin(), intervals.end(),
+          [](const auto& interval) { return interval->GetErrorOpening(); }))
+      return XO("A track has a corrupted sample sequence.");
 
    if (!RateConsistencyCheck())
       return XO(

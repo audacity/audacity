@@ -306,6 +306,13 @@ constSamplePtr WaveClip::GetAppendBuffer(size_t ii) const
    return mSequences[ii]->GetAppendBuffer();
 }
 
+bool WaveClip::GetErrorOpening() const
+{
+   return std::any_of(
+      mSequences.begin(), mSequences.end(),
+      [](const auto& pSequence) { return pSequence->GetErrorOpening(); });
+}
+
 void WaveClip::MarkChanged() // NOFAIL-GUARANTEE
 {
    Caches::ForEach( std::mem_fn( &WaveClipListener::MarkChanged ) );

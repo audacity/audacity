@@ -334,6 +334,8 @@ public:
     */
    const Sequence* GetSequence(size_t ii) const { return mSequences[ii].get(); }
 
+   bool GetErrorOpening() const;
+
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
     * has changed, like when member functions SetSamples() etc. are called. */
