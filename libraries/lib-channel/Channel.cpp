@@ -49,6 +49,19 @@ int Channel::FindChannelIndex() const
    return index;
 }
 
+size_t Channel::ReallyGetChannelIndex() const
+{
+   auto &group = ReallyDoGetChannelGroup();
+   int index = -1;
+   for (size_t ii = 0, nn = group.NChannels(); ii < nn; ++ii)
+      if (group.GetChannel(ii).get() == this) {
+         index = ii;
+         break;
+      }
+   assert(index >= 0);
+   return index;
+}
+
 const ChannelGroup &Channel::GetChannelGroup() const
 {
    assert(FindChannelIndex() >= 0);
@@ -64,6 +77,11 @@ ChannelGroup &Channel::GetChannelGroup()
 size_t Channel::GetChannelIndex() const
 {
    return FindChannelIndex();
+}
+
+ChannelGroup &Channel::ReallyDoGetChannelGroup() const
+{
+   return DoGetChannelGroup();
 }
 
 ChannelGroup::~ChannelGroup() = default;

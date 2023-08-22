@@ -123,7 +123,8 @@ public:
 
    Intervals Detach() override
    {
-      auto pRight = mpTrack->GetChannel<WaveTrack>(1);
+      // TODO wide wave tracks -- simplify when clips are really wide
+      auto pRight = mpTrack->ChannelGroup::GetChannel<WaveTrack>(1);
       for (auto &interval: mMoving) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
          auto pClip = data.GetClip(0).get();
@@ -160,7 +161,8 @@ public:
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
          WaveClipHolder clips[2];
          for (size_t ii : { 0, 1 }) {
-            auto pTrack = mpTrack->GetChannel<WaveTrack>(ii);
+            // TODO wide wave tracks -- simplify when clips are really wide
+            auto pTrack = mpTrack->ChannelGroup::GetChannel<WaveTrack>(ii);
             auto &pClip = clips[ii] = data.GetClip(ii);
             if (pClip) {
                // TODO wide wave tracks -- guarantee matching clip width
