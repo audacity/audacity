@@ -88,6 +88,23 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
    return {};
 }
 
+void WaveTrack::Interval::SetSilence(sampleCount offset, sampleCount length)
+{
+   mpClip->SetSilence(offset, length);
+   if (mpClip1)
+      mpClip1->SetSilence(offset, length);
+}
+
+sampleCount WaveTrack::Interval::GetPlayStartSample() const
+{
+   return mpClip->GetPlayStartSample();
+}
+
+sampleCount WaveTrack::Interval::GetPlayEndSample() const
+{
+   return mpClip->GetPlayEndSample();
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -1718,16 +1735,17 @@ void WaveTrack::Silence(double t0, double t1)
    auto start = TimeToLongSamples(t0);
    auto end = TimeToLongSamples(t1);
 
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto &clip : pChannel->mClips) {
-         auto clipStart = clip->GetPlayStartSample();
-         auto clipEnd = clip->GetPlayEndSample();
-         if (clipEnd > start && clipStart < end) {
-            auto offset = std::max(start - clipStart, sampleCount(0));
-            // Clip sample region and Get/Put sample region overlap
-            auto length = std::min(end, clipEnd) - (clipStart + offset);
-            clip->SetSilence(offset, length);
-         }
+   const auto intervals = Intervals();
+   for (const auto& interval : intervals)
+   {
+      auto intervalStart = interval->GetPlayStartSample();
+      auto intervalEnd = interval->GetPlayEndSample();
+      if (intervalEnd > start && intervalStart < end)
+      {
+         auto offset = std::max(start - intervalStart, sampleCount(0));
+         // Clip sample region and Get/Put sample region overlap
+         auto length = std::min(end, intervalEnd) - (intervalStart + offset);
+         interval->SetSilence(offset, length);
       }
    }
 }
