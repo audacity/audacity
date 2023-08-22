@@ -217,6 +217,20 @@ public:
     */
    void Reinit(const WaveTrack &orig);
 private:
+   //! A provisional wrapper around `TrackList::Channels` for usages that will
+   //! become obsolete one `WaveTrack`s really become wide and can blindly be
+   //! removed. This really serves as documentation that the usage was reviewed
+   //! and approved for removal.
+   inline auto EasyToRemoveCallToTrackListChannels() const
+   {
+      return TrackList::Channels(this);
+   }
+
+   inline auto EasyToRemoveCallToTrackListChannels()
+   {
+      return TrackList::Channels(this);
+   }
+
    void Init(const WaveTrack &orig);
 
    TrackListHolder Clone() const override;
