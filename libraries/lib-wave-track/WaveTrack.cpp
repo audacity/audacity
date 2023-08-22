@@ -392,14 +392,13 @@ WaveTrack::~WaveTrack()
 /*! @excsafety{No-fail} */
 void WaveTrack::MoveTo(double origin)
 {
-   double delta = origin - GetStartTime();
+   const double delta = origin - GetStartTime();
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto &clip : pChannel->mClips)
-         // assume No-fail-guarantee
-         clip->ShiftBy(delta);
+   for (const auto interval : Intervals())
+      interval->ShiftBy(delta);
+   // TODO wide wave tracks: this loop gets replaced by `mOrigin = origin`.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       pChannel->mOrigin = origin;
-   }
 }
 
 void WaveTrack::DoOnProjectTempoChange(
