@@ -20,6 +20,7 @@ struct WaveChannelSubViewType;
 class CutlineHandle;
 class TranslatableString;
 class SampleTrack;
+class WaveChannel;
 class WaveTrack;
 class WaveChannelView;
 class WaveClip;
@@ -104,10 +105,10 @@ public:
 
    using Display = WaveChannelViewConstants::Display;
 
-   static WaveChannelView &Get(WaveTrack &track);
-   static const WaveChannelView &Get(const WaveTrack &track);
-   static WaveChannelView *Find(WaveTrack *pTrack);
-   static const WaveChannelView *Find(const WaveTrack *pTrack);
+   static WaveChannelView &Get(WaveChannel &channel);
+   static const WaveChannelView &Get(const WaveChannel &channel);
+   static WaveChannelView *Find(WaveChannel *pChannel);
+   static const WaveChannelView *Find(const WaveChannel *pChannel);
 
    //! Construct a view of one channel
    /*!

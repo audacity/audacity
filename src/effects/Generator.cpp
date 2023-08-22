@@ -58,13 +58,8 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
          }
 
          if (duration > 0.0) {
-            auto list = TrackList::Create(nullptr);
-            for (const auto pChannel : TrackList::Channels(&track)) {
-               // Create a temporary track
-               auto tmp = pChannel->EmptyCopy();
-               list->Add(tmp);
-               assert(tmp->IsLeader() == pChannel->IsLeader());
-            }
+            // Create a temporary track
+            auto list = track.WideEmptyCopy();
             // Fill with data
             if (!GenerateTrack(settings, *list))
                bGoodResult = false;

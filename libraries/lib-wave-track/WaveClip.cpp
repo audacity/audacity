@@ -887,7 +887,7 @@ void WaveClip::SetRate(int rate)
 {
    const auto trimLeftSampleNum = TimeToSamples(mTrimLeft);
    const auto trimRightSampleNum = TimeToSamples(mTrimRight);
-   auto ratio = mRate / rate;
+   auto ratio = static_cast<double>(mRate) / rate;
    mRate = rate;
    mTrimLeft = SamplesToTime(trimLeftSampleNum);
    mTrimRight = SamplesToTime(trimRightSampleNum);

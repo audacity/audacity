@@ -23,6 +23,7 @@ class wxTextCtrl;
 class LabelTrack;
 class NumericTextCtrl;
 class ShuttleGui;
+class WaveChannel;
 
 class EffectChangeSpeed final : public StatefulEffect
 {
@@ -66,8 +67,8 @@ private:
    Gaps FindGaps(
       const WaveTrack &track, const double curT0, const double curT1);
 
-   std::shared_ptr<WaveTrack> ProcessOne(
-      const WaveTrack &t, sampleCount start, sampleCount end);
+   bool ProcessOne(const WaveChannel &track, WaveChannel &outputTrack,
+      sampleCount start, sampleCount end);
    bool ProcessLabelTrack(LabelTrack *t);
 
    // handlers

@@ -138,8 +138,8 @@ bool CompareAudioCommand::Apply(const CommandContext & context)
    // Compare tracks block by block
    auto s0 = mTrack0->TimeToLongSamples(mT0);
    auto s1 = mTrack0->TimeToLongSamples(mT1);
-   const auto channels0 = TrackList::Channels(mTrack0);
-   auto iter = TrackList::Channels(mTrack1).begin();
+   const auto channels0 = mTrack0->Channels();
+   auto iter = mTrack1->Channels().begin();
    for (const auto pChannel0 : channels0) {
       const auto pChannel1 = *iter++;
       auto position = s0;
@@ -153,12 +153,8 @@ bool CompareAudioCommand::Apply(const CommandContext & context)
          pChannel1->GetFloats(buff1.get(), position, block);
 
          for (decltype(block) buffPos = 0; buffPos < block; ++buffPos)
-         {
             if (CompareSample(buff0[buffPos], buff1[buffPos]) > errorThreshold)
-            {
                ++errorCount;
-            }
-         }
 
          position += block;
          context.Progress(

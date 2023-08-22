@@ -82,7 +82,7 @@ bool ContrastDialog::GetDB(float &dB)
    }
 
    const auto first = *range.begin();
-   const auto channels = TrackList::Channels(first);
+   const auto channels = first->Channels();
    assert(mT0 <= mT1);
    // Ignore whitespace beyond ends of track.
    mT0 = std::max(mT0, first->GetStartTime());

@@ -98,8 +98,8 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
             return false;
 
          // ProcessOne() (implemented below) processes a single track
-         auto outIter = TrackList::Channels(outTrack).begin();
-         for (const auto pChannel : TrackList::Channels(track))
+         auto outIter = outTrack->Channels().begin();
+         for (const auto pChannel : track->Channels())
             if (!ProcessOne(*pChannel, **outIter++, start, end))
                return false;
          if (!mSecondPassDisabled && mPass == 0)
@@ -116,8 +116,8 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and executes TwoBufferProcessPass1 or TwoBufferProcessPass2 on these blocks
-bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack &track, WaveTrack &outTrack,
-   sampleCount start, sampleCount end)
+bool EffectTwoPassSimpleMono::ProcessOne(WaveChannel &track,
+   WaveChannel &outTrack, sampleCount start, sampleCount end)
 {
    bool ret;
 

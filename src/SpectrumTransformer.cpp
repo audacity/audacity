@@ -339,18 +339,15 @@ bool SpectrumTransformer::QueueIsFull() const
 }
 
 bool TrackSpectrumTransformer::Process(const WindowProcessor &processor,
-   const WaveTrack *track, size_t queueLength, sampleCount start,
+   const WaveChannel &channel, size_t queueLength, sampleCount start,
    sampleCount len)
 {
-   if (!track)
-      return false;
-
-   mpTrack = track;
+   mpChannel = &channel;
 
    if (!Start(queueLength))
       return false;
 
-   auto bufferSize = track->GetMaxBlockSize();
+   auto bufferSize = channel.GetMaxBlockSize();
    FloatVector buffer(bufferSize);
 
    bool bLoopSuccess = true;
@@ -358,11 +355,11 @@ bool TrackSpectrumTransformer::Process(const WindowProcessor &processor,
    while (bLoopSuccess && samplePos < start + len) {
       //Get a blockSize of samples (smaller than the size of the buffer)
       const auto blockSize = limitSampleBufferSize(
-         std::min(bufferSize, track->GetBestBlockSize(samplePos)),
+         std::min(bufferSize, channel.GetBestBlockSize(samplePos)),
          start + len - samplePos);
 
       //Get the samples from the track and put them in the buffer
-      track->GetFloats(buffer.data(), samplePos, blockSize);
+      channel.GetFloats(buffer.data(), samplePos, blockSize);
       samplePos += blockSize;
       bLoopSuccess = ProcessSamples(processor, buffer.data(), blockSize);
    }
@@ -398,6 +395,5 @@ TrackSpectrumTransformer::~TrackSpectrumTransformer() = default;
 
 bool TrackSpectrumTransformer::DoStart()
 {
-   mOutputTrack = NeedsOutput() && mpTrack ? mpTrack->EmptyCopy() : nullptr;
    return SpectrumTransformer::DoStart();
 }

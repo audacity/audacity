@@ -197,8 +197,8 @@ bool TrackShifter::CommonMayMigrateTo(Track &otherTrack)
       // Can migrate to another track of the same kind...
       if (otherTrack.SameKindAs(track)) {
          // ... with the same number of channels
-         auto myChannels = TrackList::Channels(&track);
-         auto otherChannels = TrackList::Channels(&otherTrack);
+         auto myChannels = track.Channels();
+         auto otherChannels = otherTrack.Channels();
          return (myChannels.size() == otherChannels.size());
       }
    }

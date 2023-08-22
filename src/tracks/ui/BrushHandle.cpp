@@ -343,8 +343,9 @@ UIHandle::Result BrushHandle::Drag
          if(mIsSmartSelection){
             // Correct the y coord (snap to highest energy freq. bin)
             if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
-               int resFreqBin = SpectralDataManager::FindFrequencySnappingBin(wt,
-                                 h0 * hopSize, hopSize, mFreqSnappingRatio, bm);
+               int resFreqBin =
+                  SpectralDataManager::FindFrequencySnappingBin(*wt,
+                     h0 * hopSize, hopSize, mFreqSnappingRatio, bm);
                if(resFreqBin != - 1)
                   bm = resFreqBin;
             }

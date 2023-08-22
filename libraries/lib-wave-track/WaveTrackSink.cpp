@@ -17,16 +17,15 @@
 #include "WaveTrack.h"
 #include <cassert>
 
-WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
-   sampleCount start, bool isGenerator, bool isProcessor,
+WaveTrackSink::WaveTrackSink(WaveChannel &left, WaveChannel *pRight,
+   WaveTrack *pGenerated,
+   sampleCount start, bool isProcessor,
    sampleFormat effectiveFormat
 )  : mLeft{ left }, mpRight{ pRight }
-   , mGenLeft{ isGenerator ? left.EmptyCopy() : nullptr }
-   , mGenRight{ pRight && isGenerator ? pRight->EmptyCopy() : nullptr }
-   , mList{ mGenLeft
-      ? TrackList::Temporary(nullptr, mGenLeft, mGenRight)
-      : nullptr
-   }
+   , mpGenerated{ pGenerated }
+   , mGenLeft{ pGenerated ? (*pGenerated->Channels().begin()).get() : nullptr }
+   , mGenRight{ pRight && pGenerated
+      ? (*pGenerated->Channels().rbegin()).get() : nullptr }
    , mIsProcessor{ isProcessor }
    , mEffectiveFormat{ effectiveFormat }
    , mOutPos{ start }
@@ -93,10 +92,9 @@ void WaveTrackSink::DoConsume(Buffers &data)
    assert(data.BlockSize() <= data.Remaining());
 }
 
-std::shared_ptr<TrackList> WaveTrackSink::Flush(Buffers &data)
+void WaveTrackSink::Flush(Buffers &data)
 {
    DoConsume(data);
-   if (mGenLeft)
-      mGenLeft->Flush();
-   return mList;
+   if (mpGenerated)
+      mpGenerated->Flush();
 }

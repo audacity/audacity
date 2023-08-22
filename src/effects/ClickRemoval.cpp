@@ -128,7 +128,7 @@ bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
          auto start = track->TimeToLongSamples(t0);
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
-         for (const auto pChannel : TrackList::Channels(track))
+         for (const auto pChannel : track->Channels())
             if (!ProcessOne(count++, *pChannel, start, len)) {
                bGoodResult = false;
                goto done;
@@ -148,7 +148,7 @@ bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
 }
 
 bool EffectClickRemoval::ProcessOne(
-   int count, WaveTrack &track, sampleCount start, sampleCount len)
+   int count, WaveChannel &track, sampleCount start, sampleCount len)
 {
    if (len <= windowSize / 2) {
       EffectUIServices::DoMessageBox(*this,

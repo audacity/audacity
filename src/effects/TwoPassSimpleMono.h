@@ -14,7 +14,7 @@
 
 #include "StatefulEffect.h"
 
-class WaveTrack;
+class WaveChannel;
 
 class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */
    : public StatefulEffect
@@ -94,7 +94,7 @@ protected:
    TrackList *mTrackLists[2];
 
 private:
-   bool ProcessOne(WaveTrack &t, WaveTrack &outTrack,
+   bool ProcessOne(WaveChannel &t, WaveChannel &outTrack,
       sampleCount start, sampleCount end);
    bool ProcessPass(EffectSettings &settings);
 };

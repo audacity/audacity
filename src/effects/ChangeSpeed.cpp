@@ -251,14 +251,13 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
             const auto gaps = FindGaps(outWaveTrack, mCurT0, mCurT1);
 
-            auto newTracks = TrackList::Create(nullptr);
-            for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
+            auto newTracks = outWaveTrack.WideEmptyCopy();
+            auto iter =
+               (*newTracks->Any<WaveTrack>().begin())->Channels().begin();
+            for (const auto pChannel : outWaveTrack.Channels()) {
                // ProcessOne() (implemented below) processes a single channel
-               if (const auto outputTrack = ProcessOne(*pChannel, start, end)) {
-                  newTracks->Add(outputTrack);
-                  assert(outputTrack->IsLeader() == pChannel->IsLeader());
+               if (ProcessOne(*pChannel, **iter++, start, end))
                   ++mCurTrackNum;
-               }
                else {
                   newTracks.reset();
                   break;
@@ -499,14 +498,10 @@ bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
-std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
-   const WaveTrack &track, sampleCount start, sampleCount end)
+bool EffectChangeSpeed::ProcessOne(
+   const WaveChannel &track, WaveChannel &outputTrack,
+   sampleCount start, sampleCount end)
 {
-   // initialization, per examples of Mixer::Mixer and
-   // EffectSoundTouch::ProcessOne
-
-   auto outputTrack = track.EmptyCopy();
-
    //Get the length of the selection (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
@@ -548,7 +543,7 @@ std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
       const auto outgen = results.second;
 
       if (outgen > 0)
-         outputTrack->Append((samplePtr)outBuffer.get(), floatSample,
+         outputTrack.Append((samplePtr)outBuffer.get(), floatSample,
                              outgen);
 
       // Increment samplePos
@@ -561,9 +556,7 @@ std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
       }
    }
 
-   if (bResult)
-      return outputTrack;
-   return {};
+   return bResult;
 }
 
 // handler implementations for EffectChangeSpeed

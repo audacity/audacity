@@ -198,6 +198,8 @@ Track::LinkType ToLinkType(int value)
 
 static auto DefaultName = XO("Audio");
 
+WaveChannel::~WaveChannel() = default;
+
 wxString WaveTrack::GetDefaultAudioTrackNamePreference()
 {
    const auto name = AudioTrackNameSetting.ReadWithDefault(L"");
@@ -308,7 +310,7 @@ void WaveTrack::Reinit(const WaveTrack &orig)
       pChannel->Init(**iter);
 
       // Copy attached data from orig.  Nullify data in this where orig had null.
-      Attachments &attachments = *pChannel;
+      SampleTrack::Attachments &attachments = *pChannel;
       attachments = **iter;
       ++iter;
    }
@@ -318,7 +320,7 @@ void WaveTrack::Merge(const Track &orig)
 {
    orig.TypeSwitch( [&](const WaveTrack &wt) {
       // Copy attached data from orig.  Nullify data in this where orig had null.
-      Attachments &attachments = *this;
+      SampleTrack::Attachments &attachments = *this;
       attachments = wt;
    });
 }
@@ -1882,11 +1884,11 @@ void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
 /*! @excsafety{Partial}
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
-bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
+bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
    size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
    constSamplePtr buffers[]{ buffer };
-   return RightmostOrNewClip()
+   return GetTrack().RightmostOrNewClip()
       ->Append(buffers, format, len, stride, effectiveFormat);
 }
 
@@ -2195,7 +2197,7 @@ double WaveTrack::GetEndTime() const
 // expressed relative to t=0.0 at the track's sample rate.
 //
 
-std::pair<float, float> WaveTrack::GetMinMax(
+std::pair<float, float> WaveChannel::GetMinMax(
    double t0, double t1, bool mayThrow) const
 {
    std::pair<float, float> results {
@@ -2213,7 +2215,7 @@ std::pair<float, float> WaveTrack::GetMinMax(
    if (t0 == t1)
       return results;
 
-   for (const auto &clip: mClips)
+   for (const auto &clip: GetTrack().mClips)
    {
       if (t1 >= clip->GetPlayStartTime() && t0 <= clip->GetPlayEndTime())
       {
@@ -2235,7 +2237,7 @@ std::pair<float, float> WaveTrack::GetMinMax(
    return results;
 }
 
-float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
+float WaveChannel::GetRMS(double t0, double t1, bool mayThrow) const
 {
    if (t0 > t1) {
       if (mayThrow)
@@ -2249,7 +2251,7 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
    double sumsq = 0.0;
    sampleCount length = 0;
 
-   for (const auto &clip: mClips)
+   for (const auto &clip: GetTrack().mClips)
    {
       // If t1 == clip->GetStartTime() or t0 == clip->GetEndTime(), then the clip
       // is not inside the selection, so we don't want it.
@@ -2461,10 +2463,10 @@ ChannelSampleView WaveTrack::GetOneSampleView(
 }
 
 /*! @excsafety{Weak} */
-void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
+void WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
-   for (const auto &clip: mClips)
+   for (const auto &clip: GetTrack().mClips)
    {
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();

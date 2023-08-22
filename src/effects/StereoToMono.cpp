@@ -87,16 +87,12 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
    sampleCount totalTime = 0;
    
    auto trackRange = outputs.Get().Selected<WaveTrack>();
-   while (trackRange.first != trackRange.second)
-   {
-      auto left = *trackRange.first;
-      auto channels = TrackList::Channels(left);
-      if (channels.size() > 1) {
+   for (const auto left : trackRange) {
+      if (left->Channels().size() > 1) {
          auto start = left->TimeToLongSamples(left->GetStartTime());
          auto end = left->TimeToLongSamples(left->GetEndTime());
          totalTime += (end - start);
       }
-      ++trackRange.first;
    }
 
    // Process each stereo track
@@ -105,35 +101,23 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
    mProgress->SetMessage(XO("Mixing down to mono"));
 
-   trackRange = outputs.Get().Selected<WaveTrack>();
-   while (trackRange.first != trackRange.second)
-   {
-      auto left = *trackRange.first;
-      auto channels = TrackList::Channels(left);
-      if (channels.size() > 1)
-      {
-         auto right = *channels.rbegin();
-
-         bGoodResult =
-            ProcessOne(outputs.Get(), curTime, totalTime, left, right);
-         if (!bGoodResult)
-         {
+   // Don't use range-for, because iterators may be invalidated by erasure from
+   // the track list
+   while (trackRange.first != trackRange.second) {
+      auto track = *trackRange.first;
+      if (track->Channels().size() > 1) {
+         if (!ProcessOne(outputs.Get(), curTime, totalTime, *track))
             break;
-         }
-
          // The right channel has been deleted, so we must restart from the beginning
          refreshIter = true;
       }
 
-      if (refreshIter)
-      {
+      if (refreshIter) {
          trackRange = outputs.Get().Selected<WaveTrack>();
          refreshIter = false;
       }
       else
-      {
          ++trackRange.first;
-      }
    }
 
    if (bGoodResult)
@@ -143,19 +127,18 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 }
 
 bool EffectStereoToMono::ProcessOne(TrackList &outputs,
-   sampleCount & curTime, sampleCount totalTime,
-   WaveTrack *left, WaveTrack *right)
+   sampleCount & curTime, sampleCount totalTime, WaveTrack &track)
 {
-   auto idealBlockLen = left->GetMaxBlockSize() * 2;
+   auto idealBlockLen = track.GetMaxBlockSize() * 2;
    bool bResult = true;
    sampleCount processed = 0;
 
-   const auto start = left->GetStartTime();
-   const auto end = left->GetEndTime();
+   const auto start = track.GetStartTime();
+   const auto end = track.GetEndTime();
 
    Mixer::Inputs tracks;
    tracks.emplace_back(
-      left->SharedPointer<const SampleTrack>(), GetEffectStages(*left));
+      track.SharedPointer<const SampleTrack>(), GetEffectStages(track));
 
    Mixer mixer(move(tracks),
       true,                // Throw to abort mix-and-render if read fails:
@@ -165,11 +148,11 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
       1,
       idealBlockLen,
       false,               // Not interleaved
-      left->GetRate(),     // Process() checks that left and right
-                           // rates are the same
+      track.GetRate(),
       floatSample);
 
-   auto outTrack = left->EmptyCopy();
+   // Always make mono output; don't use WideEmptyCopy
+   auto outTrack = track.EmptyCopy();
    auto tempList = TrackList::Temporary(nullptr, outTrack, nullptr);
    assert(outTrack->IsLeader());
    outTrack->ConvertToSampleFormat(floatSample);
@@ -192,14 +175,15 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    }
    outTrack->Flush();
 
-   outputs.UnlinkChannels(*left);
+   outputs.UnlinkChannels(track);
+   const auto right = * ++track.GetOwner()->Find(&track);
    // Should be a consequence of unlinking:
    assert(right->IsLeader());
    outputs.Remove(*right);
 
-   left->Clear(start, end);
-   left->Paste(start, *outTrack);
-   RealtimeEffectList::Get(*left).Clear();
+   track.Clear(start, end);
+   track.Paste(start, *outTrack);
+   RealtimeEffectList::Get(track).Clear();
 
    return bResult;
 }
