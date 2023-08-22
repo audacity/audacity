@@ -1,14 +1,224 @@
 /*  SPDX-License-Identifier: GPL-2.0-or-later */
 
-#include <QtCore/QDebug>
+#include "TranslatableString.h"
+
 #include <QFontDatabase>
 #include <QQmlComponent>
 #include <QGuiApplication>
+#include <QQuickWindow>
+#include <QWindow>
 
 #include "BasicSettings.h"
 #include "Project.h"
 #include "QMLEngineFactory.h"
 #include "ProjectQMLEnvironment.h"
+#include "CodeConversions.h"
+#include "ExtraMenu.h"
+#include "QtQuickUiServices.h"
+
+//Takes an ownership, ensures that window is properly deleted
+class ProjectWindow final : public ClientData::Base
+{
+   std::unique_ptr<QWindow> mWindow;
+public:
+   ProjectWindow(AudacityProject& project)
+   {
+      QQmlComponent component {
+         &audacity::ProjectQMLEnvironment::Get(project).GetEngine(),
+         "qrc:/qml/main.qml"
+      };
+      mWindow.reset(
+         qobject_cast<QQuickWindow*>(component.create())
+      );
+      if(!mWindow)
+         throw std::runtime_error(component.errorString().toStdString());
+   }
+
+   QWindow* GetWindow() const
+   {
+      return mWindow.get();
+   }
+
+   static ProjectWindow& Get(AudacityProject& project);
+
+   static QWindow* GetWindow(AudacityProject& project)
+   {
+      return Get(project).GetWindow();
+   }
+};
+
+struct Projects final : GlobalVariable<Projects, std::vector<std::shared_ptr<AudacityProject>>> { };
+
+static AudacityProject::AttachedObjects::RegisteredFactory sProjectWindow {
+   [](AudacityProject& project) {
+      return std::make_unique<ProjectWindow>(project);
+   }
+};
+
+ProjectWindow& ProjectWindow::Get(AudacityProject& project)
+{
+   return project.Get<ProjectWindow>(sProjectWindow);
+}
+
+static bool CreateProjectWindow()
+{
+   auto project = AudacityProject::Create();
+   try
+   {
+      ProjectWindow::Get(*project);//request the window
+   }
+   catch(std::exception& e){
+      BasicUI::ShowErrorDialog(
+         {}, XO("Error"),
+         XO("Failed to load applicaiton window:\n%s")
+            .Format(e.what()),
+         {});
+      return false;
+   }
+   //Ideally, delete the project and everything when window is closed
+   //, but it does not compile as there are undefines...
+   /*QObject::connect(window, &QQuickWindow::closing,
+      [window](QQuickCloseEvent*) {
+         for(const auto& project : Projects::Get())
+         {
+            if(window == ProjectWindow::GetWindow(*project))
+            {
+               Projects::Get().Remove(*project);
+               break;
+            }
+         }
+      }
+   );*/
+   Projects::Get().push_back(project);
+   return true;
+}
+
+static ExtraMenu::Item newWindowItem {
+   XO("New window"),
+   [] {
+      CreateProjectWindow();
+   }
+};
+
+static ExtraMenu::Item exitMenuItem {
+   XO("&Exit"),
+   [] {
+      using namespace BasicUI;
+      CallAfter([]{
+         if(ShowMessageBox(XO("Are you sure you want to exit?"),
+            MessageBoxOptions{}
+               .ButtonStyle(Button::YesNo)
+               .IconStyle(Icon::Question)) == MessageBoxResult::Yes)
+         {
+            if(const auto focusWindow = QGuiApplication::focusWindow())
+               focusWindow->close();
+         }
+      });
+   }
+};
+
+static ExtraMenu::Item showProgress {
+   XO("Show progress"),
+   [] {
+      using namespace BasicUI;
+      CallAfter([] {
+         using namespace std::chrono;
+         const auto progress = MakeProgress(XO("Progress dialog"),
+            XO("This is application modal progress dialog"),
+            ProgressConfirmStopOrCancel | ProgressShowStop);
+         const auto startTime = system_clock::now();
+         while(true)
+         {
+            constexpr milliseconds::rep progressDuration = 15000; 
+            const auto now = system_clock::now();
+            const auto elapsed = std::min(
+               duration_cast<milliseconds>(now - startTime).count(),
+               progressDuration);
+            if(progress->Poll(elapsed, progressDuration) != ProgressResult::Success)
+               break;
+            if(elapsed == progressDuration)
+               break;
+            Yield();//Process the event loop
+         }
+      });
+   }
+};
+
+static ExtraMenu::Item showGenericProgress {
+   XO("Show generic progress"),
+   [] {
+      using namespace BasicUI;
+      CallAfter([] {
+         using namespace std::chrono;
+         const auto progress = MakeGenericProgress(*FindFocus(),
+            XO("Progress dialog"),
+            XO("This is project window modal generic progress dialog"));
+         const auto startTime = system_clock::now();
+         while(true)
+         {
+            constexpr milliseconds::rep progressDuration = 15000; 
+            const auto now = system_clock::now();
+            const auto elapsed = std::min(
+               duration_cast<milliseconds>(now - startTime).count(),
+               progressDuration);
+            progress->Pulse();
+            if(elapsed == progressDuration)
+               break;
+            Yield();//Process the event loop
+         }
+      });
+   }
+};
+
+static ExtraMenu::Item showGenericProgressOrphaned {
+   XO("Show generic progress (application modal)"),
+   [] {
+      using namespace BasicUI;
+      CallAfter([] {
+         using namespace std::chrono;
+         const auto progress = MakeGenericProgress({},
+            XO("Progress dialog"),
+            XO("This is application modal generic progress dialog"));
+         const auto startTime = system_clock::now();
+         while(true)
+         {
+            constexpr milliseconds::rep progressDuration = 15000; 
+            const auto now = system_clock::now();
+            const auto elapsed = std::min(
+               duration_cast<milliseconds>(now - startTime).count(),
+               progressDuration);
+            progress->Pulse();
+            if(elapsed == progressDuration)
+               break;
+            Yield();//Process event loop
+         }
+      });
+   }
+};
+
+static ExtraMenu::Item showMultiDialog {
+   XO("MultiDialog"),
+   []
+   {
+      using namespace BasicUI;
+      CallAfter([]
+      {
+         auto buttons = TranslatableStrings { XO("Option 1"), XO("Option 2"), XO("Option 3") };
+         auto result = ShowMultiDialog(
+            XO("Application modal dialog that offers multiple choices"),
+            XO("MultiDialog"),
+            buttons, "", XO("Options"), false);
+         ShowMessageBox(XO("Your choice is %s").Format(buttons[result]));
+      });
+   }
+};
+
+static audacity::ProjectQMLEnvironment::Property extraMenu {
+   "extraMenu",
+   [](QQmlEngine&, AudacityProject&) {
+      return std::make_unique<ExtraMenu>();
+   }
+};
 
 static audacity::QMLEngineFactory::Scope qmlEngineFactory {
    [] {
@@ -20,6 +230,7 @@ static audacity::QMLEngineFactory::Scope qmlEngineFactory {
 
 int main(int argc, char *argv[])
 {
+   QtQuickUiServices::Get();//install
    QGuiApplication app(argc, argv);
 
    QFontDatabase::addApplicationFont(":/fonts/MusescoreIcon.ttf");
@@ -28,17 +239,11 @@ int main(int argc, char *argv[])
    QFontDatabase::addApplicationFont(":/fonts/Lato-Italic.ttf");
    QFontDatabase::addApplicationFont(":/fonts/Lato-Regular.ttf");
 
-   auto project = AudacityProject::Create();
-   auto& engine = audacity::ProjectQMLEnvironment::Get(*project).GetEngine();
-
-   QQmlComponent applicationWindowComponent (&engine, "qrc:/qml/main.qml");
-   auto applicationWindow = std::unique_ptr<QObject>(applicationWindowComponent.create());
-   if(applicationWindow == nullptr)
-   {
-      qDebug() << "Unable to load main.qml: " <<
-         applicationWindowComponent.errorString();
-      return -1;
-   }
+   //cleans up everything when leave the scope
+   Projects::Scope projects{{}};
+   
+   if(!CreateProjectWindow())
+      return 0;
 
    return app.exec();
 }
