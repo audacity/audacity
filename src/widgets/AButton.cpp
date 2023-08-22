@@ -811,13 +811,16 @@ wxAccStatus AButtonAx::GetName(int WXUNUSED(childId), wxString* name)
    /* In the MSAA frame work, there isn't such a thing as a toggle button.
    In particular, narrator does not read the wxACC_STATE_SYSTEM_PRESSED state at all.
    So to imitate a toggle button, include the role and the state in the name, and
-   create a name change event when the state changes. */
+   create a name change event when the state changes. To enable screen reader
+   scripts to determine the state of the toggle button in the absence of the
+   accessibility state indicating this, add the '\a' character to the end of the name
+   when the button is pressed. ('\a' is read silently by screen readers.) */
    if (ab->mToggle) {
       *name += wxT(" ") +
          _("Button")
          + wxT(" ") +
          /* i18n-hint: whether a button is pressed or not pressed */
-         (ab->IsDown() ? _("pressed") : _("not pressed"));
+         (ab->IsDown() ? _("pressed") + wxT('\a') : _("not pressed"));
    }
 
    return wxACC_OK;
