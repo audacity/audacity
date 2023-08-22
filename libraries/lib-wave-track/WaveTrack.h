@@ -878,6 +878,9 @@ private:
     @pre `IsLeader()`
     */
    bool RateConsistencyCheck() const;
+   // Can be deleted when there are no more leaders.
+   //! @copydoc RateConsistencyCheck
+   bool TrackListRateConsistencyCheck(double leaderRate) const;
 
    //! Sets project tempo on clip upon push. Use this instead of
    //! `mClips.push_back`.

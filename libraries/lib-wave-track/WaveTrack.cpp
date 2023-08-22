@@ -1643,9 +1643,35 @@ bool WaveTrack::RateConsistencyCheck() const
 {
    assert(IsLeader());
 
+   // All clips should have the same sample rate.
+   const auto intervals = Intervals();
+   const auto clipsHaveConsistentRate = std::all_of(
+      intervals.begin(), intervals.end(),
+      [&](const auto& interval)
+      {
+         // TODO wide wave tracks -- get rid of right-channel check
+         const auto rightClip = interval->GetClip(1);
+         return interval->GetClip(0)->GetRate() == mLegacyRate &&
+                (rightClip == nullptr || rightClip->GetRate() == mLegacyRate);
+      });
+
+   // TODO wide wave tracks -- get rid of TrackListRateConsistencyCheck
+   const auto linkedTracksToo = TrackListRateConsistencyCheck(mLegacyRate);
+
+   mLegacyRate = 0;
+
+   return clipsHaveConsistentRate && linkedTracksToo;
+}
+
+bool WaveTrack::TrackListRateConsistencyCheck(double leaderRate) const
+{
+   assert(IsLeader());
+
    // The channels and all clips in them should have the same sample rate.
    std::optional<double> oRate;
-   auto channels = TrackList::Channels(this);
+   // This instance of `TrackList::Channels`, along with this entire method, can
+   // be blindly removed as soon as WaveTracks really are wide.
+   auto channels = EasyToRemoveCallToTrackListChannels();
    return std::all_of(channels.begin(), channels.end(),
       [&](const WaveTrack *pTrack){
          if (!pTrack)
