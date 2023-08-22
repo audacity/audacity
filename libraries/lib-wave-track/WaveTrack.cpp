@@ -419,13 +419,16 @@ void WaveTrack::DoOnProjectTempoChange(
 
 bool WaveTrack::LinkConsistencyFix(bool doFix)
 {
+   // TODO wide wave tracks: no need for this method once stereo tracks are not
+   // made up of two mono tracks whose boundaries must be maintained consistent
+   // anymore.
    assert(!doFix || IsLeader());
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix);
    auto linkType = GetLinkType();
    if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
        linkType == LinkType::Aligned) {
       auto next = dynamic_cast<WaveTrack*>(
-         *TrackList::Channels(this).first.advance(1));
+         *EasyToRemoveCallToTrackListChannels().first.advance(1));
       if (next == nullptr) {
          //next track is absent or not a wave track, fix and report error
          if (doFix) {
