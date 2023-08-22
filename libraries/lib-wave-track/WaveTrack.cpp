@@ -88,11 +88,25 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
    return {};
 }
 
+void WaveTrack::Interval::InsertSilence(double t, double len)
+{
+   mpClip->InsertSilence(t, len);
+   if (mpClip1)
+      mpClip1->InsertSilence(t, len);
+}
+
 void WaveTrack::Interval::SetSilence(sampleCount offset, sampleCount length)
 {
    mpClip->SetSilence(offset, length);
    if (mpClip1)
       mpClip1->SetSilence(offset, length);
+}
+
+void WaveTrack::Interval::ShiftBy(double t)
+{
+   mpClip->ShiftBy(t);
+   if (mpClip1)
+      mpClip1->ShiftBy(t);
 }
 
 sampleCount WaveTrack::Interval::GetPlayStartSample() const
@@ -515,6 +529,21 @@ ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
       pTrack = *pOwner->Find(this);
    const ChannelGroup &group = *pTrack;
    return const_cast<ChannelGroup&>(group);
+}
+
+std::shared_ptr<WaveTrack::Interval> WaveTrack::InsertInterval()
+{
+   assert(IsLeader());
+   const auto clip = std::make_shared<WaveClip>(
+      1, mpFactory, mFormat, GetRate(), this->GetWaveColorIndex());
+   InsertClip(clip);
+   WaveClipHolder clip1;
+   if (NChannels() == 2) {
+      clip1 = std::make_shared<WaveClip>(
+         1, mpFactory, mFormat, GetRate(), this->GetWaveColorIndex());
+      (*TrackList::Channels(this).rbegin())->InsertClip(clip1);
+   }
+   return std::make_shared<Interval>(*this, clip, clip1);
 }
 
 TrackListHolder WaveTrack::Clone() const
@@ -1761,7 +1790,9 @@ void WaveTrack::InsertSilence(double t, double len)
    if (len <= 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   for (const auto pChannel : TrackList::Channels(this)) {
+   // TODO wide wave tracks -- simply remove the outer loop when `WaveTrack`s
+   // really get wide.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels()) {
       auto &clips = pChannel->mClips;
       if (clips.empty()) {
          // Special case if there is no clip yet
@@ -1772,16 +1803,15 @@ void WaveTrack::InsertSilence(double t, double len)
          // use No-fail-guarantee
          pChannel->InsertClip(move(clip));
       }
-      else
-      {
+      else {
          // Assume at most one clip contains t
          const auto end = clips.end();
          const auto it = std::find_if(clips.begin(), end,
             [&](const WaveClipHolder &clip) { return clip->WithinPlayRegion(t); } );
 
-         // use Strong-guarantee
-         if (it != end)
-            it->get()->InsertSilence(t, len);
+      // use Strong-guarantee
+      if (it != end)
+         (*it)->InsertSilence(t, len);
 
          // use No-fail-guarantee
          for (const auto &clip : clips)

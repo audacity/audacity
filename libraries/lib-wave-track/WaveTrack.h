@@ -786,7 +786,9 @@ private:
          WideChannelGroupInterval::Channels<const WaveChannel>();
       }
 
+      void InsertSilence(double t, double len);
       void SetSilence(sampleCount offset, sampleCount length);
+      void ShiftBy(double t);
       sampleCount GetPlayStartSample() const;
       sampleCount GetPlayEndSample() const;
 
@@ -837,6 +839,11 @@ private:
 
    ChannelGroup &DoGetChannelGroup() const override;
    ChannelGroup &ReallyDoGetChannelGroup() const override;
+
+   /*!
+    * @pre IsLeader()
+    */
+   std::shared_ptr<Interval> InsertInterval();
 
    //
    // Protected variables
