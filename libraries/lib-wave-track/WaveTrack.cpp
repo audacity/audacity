@@ -137,6 +137,14 @@ ClipConstHolder WaveTrack::Interval::GetClipInterface() const
    return std::make_shared<WideClip>(mpClip, mpClip1);
 }
 
+void WaveTrack::Interval::OnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   mpClip->OnProjectTempoChange(oldTempo, newTempo);
+   if (mpClip1)
+      mpClip1->OnProjectTempoChange(oldTempo, newTempo);
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -405,9 +413,8 @@ void WaveTrack::DoOnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto& clip : pChannel->mClips)
-         clip->OnProjectTempoChange(oldTempo, newTempo);
+   for (const auto interval : Intervals())
+      interval->OnProjectTempoChange(oldTempo, newTempo);
 }
 
 bool WaveTrack::LinkConsistencyFix(bool doFix)
