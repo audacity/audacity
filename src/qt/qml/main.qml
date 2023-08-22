@@ -34,7 +34,7 @@ ApplicationWindow {
          title: qsTr("File")
          MenuItem {
             text: qsTr("Exit")
-            onTriggered: Qt.quit()
+            onTriggered: close()
          }
       }
 
@@ -129,6 +129,17 @@ ApplicationWindow {
             checked: enableVolumeTester
             onTriggered: {
                enableVolumeTester = !enableVolumeTester
+            }
+         }
+      }
+
+      Menu {
+         title : qsTr("Extra")
+         Repeater {
+            model : extraMenu.items
+            MenuItem {
+               text : modelData
+               onTriggered : extraMenu.activate(index)
             }
          }
       }
