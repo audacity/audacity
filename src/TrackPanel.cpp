@@ -799,7 +799,9 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
    }
    wxWindow::Refresh(eraseBackground, rect);
 
-   CallAfter([this]{ CellularPanel::HandleCursorForPresentMouseState(); } );
+   CallAfter([this]{
+      if (GetProject())
+         CellularPanel::HandleCursorForPresentMouseState(); } );
 }
 
 void TrackPanel::OnAudioIO(AudioIOEvent evt)
