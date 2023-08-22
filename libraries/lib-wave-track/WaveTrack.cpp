@@ -132,6 +132,11 @@ void WaveTrack::Interval::CloseLock()
       mpClip1->CloseLock();
 }
 
+ClipConstHolder WaveTrack::Interval::GetClipInterface() const
+{
+   return std::make_shared<WideClip>(mpClip, mpClip1);
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -2253,32 +2258,15 @@ bool WaveTrack::CloseLock() noexcept
 
 ClipConstHolders WaveTrack::GetClipInterfaces() const
 {
-  // We're constructing possibly wide clips here, and for this we need to have
-  // access to the other channel-tracks.
-  assert(IsLeader());
-  const auto pOwner = GetOwner();
-  ClipConstHolders wideClips;
-  wideClips.reserve(mClips.size());
-  for (auto clipIndex = 0u; clipIndex < mClips.size(); ++clipIndex)
-  {
-     const auto leftClip = mClips[clipIndex];
-     WaveClipHolder rightClip;
-     if (NChannels() == 2u && pOwner)
-     {
-        const auto& rightClips =
-           (*TrackList::Channels(this).rbegin())->mClips;
-        // This is known to have potential for failure for stereo tracks with
-        // misaligned left/right clips - see
-        // https://github.com/audacity/audacity/issues/4791.
-        // If what you are trying to do is something else and this fails,
-        // please report.
-        assert(clipIndex < rightClips.size());
-        if (clipIndex < rightClips.size())
-           rightClip = rightClips[clipIndex];
-     }
-     wideClips.emplace_back(
-        std::make_shared<WideClip>(leftClip, std::move(rightClip)));
-  }
+   // We're constructing possibly wide clips here, and for this we need to have
+   // access to the other channel-tracks.
+   assert(IsLeader());
+   const auto intervals = Intervals();
+   ClipConstHolders wideClips;
+   wideClips.reserve(intervals.size());
+   std::transform(
+      intervals.begin(), intervals.end(), std::back_inserter(wideClips),
+      [](const auto& interval) { return interval->GetClipInterface(); });
    return wideClips;
 }
 

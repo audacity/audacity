@@ -40,7 +40,8 @@ using WaveClipHolder = std::shared_ptr<WaveClip>;
 using WaveClipHolders = std::vector<WaveClipHolder>;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
-using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
+using ClipConstHolder = std::shared_ptr<const ClipInterface>;
+using ClipConstHolders = std::vector<ClipConstHolder>;
 
 // Temporary arrays of mere pointers
 using WaveClipPointers = std::vector < WaveClip* >;
@@ -793,6 +794,7 @@ private:
       sampleCount GetPlayEndSample() const;
       bool GetErrorOpening() const;
       void CloseLock();
+      ClipConstHolder GetClipInterface() const;
 
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
