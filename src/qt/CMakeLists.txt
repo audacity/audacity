@@ -3,6 +3,8 @@ set(QAUDACITY ${CMAKE_PROJECT_NAME})
 set(APP_SOURCES
    EditToolbarHandler.cpp
    EditToolbarHandler.h
+   ExtraMenu.cpp
+   ExtraMenu.h
    ToolsToolbarHandler.cpp
    ToolsToolbarHandler.h
    TranslationManager.cpp
@@ -56,8 +58,8 @@ audacity_qml_module(
       QtQuick
       Audacity.UiComponents
       Audacity.UiThemes
-	QML_FILES
-		${QML_SOURCES}
+   QML_FILES
+      ${QML_SOURCES}
    SOURCES
       ${APP_SOURCES}
    NO_RESOURCE_TARGET_PATH
