@@ -2253,7 +2253,9 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
+   // TODO wide wave tracks -- replace this with the body of WriteOneXML and get
+   // rid of WriteOneXML.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       WriteOneXML(*pChannel, xmlFile);
 }
 
