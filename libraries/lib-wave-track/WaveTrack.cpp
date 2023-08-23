@@ -2108,7 +2108,9 @@ clip gets appended; no previously saved contents are lost. */
 void WaveTrack::Flush()
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
+   // TODO wide wave tracks -- just replace this with the body of FlushOne and
+   // get rid of FlushOne
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       pChannel->FlushOne();
 }
 
