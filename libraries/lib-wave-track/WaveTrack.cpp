@@ -145,6 +145,13 @@ void WaveTrack::Interval::OnProjectTempoChange(
       mpClip1->OnProjectTempoChange(oldTempo, newTempo);
 }
 
+void WaveTrack::Interval::SetColorIndex(int colorIndex)
+{
+   mpClip->SetColourIndex(colorIndex);
+   if (mpClip1)
+      mpClip1->SetColourIndex(colorIndex);
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -704,11 +711,12 @@ float WaveTrack::GetChannelGain(int channel) const
 void WaveTrack::SetWaveColorIndex(int colorIndex)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto &clip : pChannel->mClips)
-         clip->SetColourIndex(colorIndex);
+   for (const auto interval : Intervals())
+      interval->SetColorIndex(colorIndex);
+   // TODO wide wave tracks: just replace the loop below with `mWaveColorIndex =
+   // colorIndex;`
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       pChannel->mWaveColorIndex = colorIndex;
-   }
 }
 
 sampleCount WaveTrack::GetVisibleSampleCount() const
