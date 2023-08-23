@@ -909,7 +909,9 @@ TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       THROW_INCONSISTENCY_EXCEPTION;
 
    auto list = TrackList::Create(nullptr);
-   for (const auto pChannel : TrackList::Channels(this))
+   // TODO wide wave tracks: this method will be replaced in its body and return
+   // value by CopyOne
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       list->Add(CopyOne(*pChannel, t0, t1, forClipboard));
    return list;
 }
