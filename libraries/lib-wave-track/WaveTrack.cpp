@@ -152,6 +152,12 @@ void WaveTrack::Interval::SetColorIndex(int colorIndex)
       mpClip1->SetColourIndex(colorIndex);
 }
 
+sampleCount WaveTrack::Interval::GetSequenceSamplesCount() const
+{
+   return mpClip->GetSequenceSamplesCount() +
+          (mpClip1 ? mpClip1->GetSequenceSamplesCount() : sampleCount { 0 });
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -732,13 +738,12 @@ sampleCount WaveTrack::GetVisibleSampleCount() const
 sampleCount WaveTrack::GetSequenceSamplesCount() const
 {
    assert(IsLeader());
-   sampleCount result{ 0 };
-
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto& clip : pChannel->mClips)
-         result += clip->GetSequenceSamplesCount();
-
-   return result;
+   const auto intervals = Intervals();
+   return std::accumulate(
+      intervals.begin(), intervals.end(), sampleCount { 0 },
+      [](sampleCount sum, const auto& interval) {
+         return sum + interval->GetSequenceSamplesCount();
+      });
 }
 
 size_t WaveTrack::CountBlocks() const
