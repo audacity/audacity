@@ -588,7 +588,9 @@ TrackListHolder WaveTrack::Clone() const
       result->Add(pTrack);
    };
    if (GetOwner())
-      for (const auto pChannel : TrackList::Channels(this))
+      // When we start using wide wave tracks, `Clone` should return a single
+      // track and this method will reduce to the lambda above.
+      for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
          cloneOne(pChannel);
    else
       cloneOne(this);
