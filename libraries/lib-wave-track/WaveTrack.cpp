@@ -158,6 +158,13 @@ sampleCount WaveTrack::Interval::GetSequenceSamplesCount() const
           (mpClip1 ? mpClip1->GetSequenceSamplesCount() : sampleCount { 0 });
 }
 
+size_t WaveTrack::Interval::CountBlocks() const
+{
+   // TODO wide wave tracks: change this with `mpClip->GetWidth()`.
+   const auto width = mpClip1 ? 2 : 1;
+   return width * mpClip->GetSequenceBlockArray(0)->size();
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -749,12 +756,12 @@ sampleCount WaveTrack::GetSequenceSamplesCount() const
 size_t WaveTrack::CountBlocks() const
 {
    assert(IsLeader());
-   size_t result{};
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (auto& clip : pChannel->GetClips())
-         result += clip->GetWidth() * clip->GetSequenceBlockArray(0)->size();
-   }
-   return result;
+   const auto intervals = Intervals();
+   return std::accumulate(
+      intervals.begin(), intervals.end(), size_t { 0 },
+      [](size_t sum, const auto& interval) {
+         return sum + interval->CountBlocks();
+      });
 }
 
 /*! @excsafety{Weak} -- Might complete on only some clips */
