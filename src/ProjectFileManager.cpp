@@ -1149,12 +1149,6 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       });
    }
 
-   // Automatically assign rate of imported file to whole project,
-   // if this is the first file that is imported
-   if (initiallyEmpty && newRate > 0) {
-      ProjectRate::Get(project).SetRate( newRate );
-   }
-
    history.PushState(XO("Imported '%s'").Format( fileName ),
        XO("Import"));
 
