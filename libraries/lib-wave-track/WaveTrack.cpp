@@ -986,7 +986,9 @@ void WaveTrack::Clear(double t0, double t1)
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
+   // TODO wide wave tracks: this method will just call `HandleClear(t0, t1,
+   // true, false)`.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       pChannel->HandleClear(t0, t1, true, false);
 }
 
