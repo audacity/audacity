@@ -85,7 +85,6 @@ public:
       : len{ cacheLen }
       , values{ len }
    {
-      valid = false;
       scaleType = 0;
       range = gain = -1;
       minFreq = maxFreq = -1;
@@ -93,7 +92,6 @@ public:
 
    size_t  len;
    Floats values;
-   bool         valid;
 
    int scaleType;
    int range;
