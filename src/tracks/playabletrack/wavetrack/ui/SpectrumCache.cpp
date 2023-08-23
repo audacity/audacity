@@ -571,7 +571,6 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
 WaveClipSpectrumCache::WaveClipSpectrumCache()
 : mSpecCache{ std::make_unique<SpecCache>() }
-, mSpecPxCache{ std::make_unique<SpecPxCache>(1) }
 {
 }
 
