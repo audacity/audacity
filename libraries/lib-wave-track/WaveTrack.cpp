@@ -165,6 +165,14 @@ size_t WaveTrack::Interval::CountBlocks() const
    return width * mpClip->GetSequenceBlockArray(0)->size();
 }
 
+void WaveTrack::Interval::ConvertToSampleFormat(
+   sampleFormat format, const std::function<void(size_t)>& progressReport)
+{
+   mpClip->ConvertToSampleFormat(format, progressReport);
+   if (mpClip1)
+      mpClip1->ConvertToSampleFormat(format, progressReport);
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;
@@ -769,11 +777,12 @@ void WaveTrack::ConvertToSampleFormat(sampleFormat format,
    const std::function<void(size_t)> & progressReport)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto& clip : pChannel->mClips)
-         clip->ConvertToSampleFormat(format, progressReport);
+   for (const auto interval : Intervals())
+      interval->ConvertToSampleFormat(format, progressReport);
+   // TODO wide wave tracks: just replace the loop below with `mFormat =
+   // format;`
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       pChannel->mFormat = format;
-   }
 }
 
 
