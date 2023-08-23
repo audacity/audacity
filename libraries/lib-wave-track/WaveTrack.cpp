@@ -894,7 +894,8 @@ TrackListHolder WaveTrack::WideEmptyCopy(
 {
    assert(IsLeader());
    auto result = TrackList::Temporary(nullptr);
-   for (const auto pChannel : TrackList::Channels(this)) {
+   // TODO wide wave tracks: this method should disappear.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels()) {
       const auto pNewTrack =
          result->Add(pChannel->EmptyCopy(pFactory, keepLink));
       assert(!keepLink || pNewTrack->IsLeader() == pChannel->IsLeader());
