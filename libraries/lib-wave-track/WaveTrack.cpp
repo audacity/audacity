@@ -1559,7 +1559,9 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       // value as T1, when T1 was set to be at the end of one of those clips.
       oldT1 >= endTime)
          return;
-   const auto channels = TrackList::Channels(this);
+   // TODO wide wave tracks: loops over `channels` can be removed. In the
+   // second, `PasteOne` may already be eliminated and `Paste` used instead.
+   const auto channels = EasyToRemoveCallToTrackListChannels();
    if (newT1 > oldT1) {
       // Insert space within the track
 
