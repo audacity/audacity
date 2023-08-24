@@ -2432,30 +2432,27 @@ bool WaveTrack::Get(size_t iChannel, size_t nBuffers,
 {
    const auto nChannels = NChannels();
    assert(iChannel + nBuffers <= nChannels); // precondition
-   const auto pOwner = GetOwner();
-   if (!pOwner) {
-      //! an un-owned track should have reported one channel only
-      assert(nChannels == 1);
-      nBuffers = std::min<size_t>(nBuffers, 1);
-   }
-   std::optional<TrackIter<const WaveTrack>> iter;
-   auto pTrack = this;
-   if (pOwner) {
-      const auto ppLeader = TrackList::Channels(this).first;
-      iter.emplace(ppLeader.advance(IsLeader() ? iChannel : 1));
-      pTrack = **iter;
-   }
-   return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer) {
-      const auto result = pTrack->GetOne(
-         buffer, format, start, len, backwards, fill, mayThrow,
+   // TODO wide wave tracks -- Only the `true` branch of this if-statement can
+   // stay.
+   if (IsLeader())
+   {
+      auto channelIter = Channels().begin();
+      for (auto i = 0u; i < nBuffers; ++i)
+         if (!(*channelIter++)
+                 ->Get(
+                    buffers[i++], format, start, len, backwards, fill, mayThrow,
+                    pNumWithinClips))
+            return false;
+      return true;
+   } else {
+      assert(iChannel == 0);
+      return WaveChannel::Get(
+         buffers[0], format, start, len, backwards, fill, mayThrow,
          pNumWithinClips);
-      if (iter)
-         pTrack = *(++ *iter);
-      return result;
-   });
+   }
 }
 
-bool WaveTrack::GetOne(
+bool WaveChannel::Get(
    samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
    bool backwards, fillFormat fill, bool mayThrow,
    sampleCount* pNumWithinClips) const
@@ -2468,6 +2465,7 @@ bool WaveTrack::GetOne(
    bool doClear = true;
    bool result = true;
    sampleCount samplesCopied = 0;
+   const auto& mClips = GetTrack().mClips;
    for (const auto &clip: mClips)
    {
       if (start >= clip->GetPlayStartSample() && start+len <= clip->GetPlayEndSample())
@@ -2525,7 +2523,10 @@ bool WaveTrack::GetOne(
             // samplesToCopy is positive and not more than len
          }
 
-         if (!clip->GetSamples(0,
+         // TODO wide wave tracks -- iChannel becomes the channel number of
+         // `this`.
+         constexpr auto iChannel = 0u;
+         if (!clip->GetSamples(iChannel,
                (samplePtr)(((char*)buffer) +
                            startDelta.as_size_t() *
                            SAMPLE_SIZE(format)),

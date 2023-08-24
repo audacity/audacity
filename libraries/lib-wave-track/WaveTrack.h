@@ -107,6 +107,11 @@ public:
          0, 1, &buffer, start, len, backwards, fill, mayThrow, pNumWithinClips);
    }
 
+   bool Get(
+      samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
+      bool backwards, fillFormat fill = FillFormat::fillZero,
+      bool mayThrow = true, sampleCount* pNumWithinClips = nullptr) const;
+
    //! Random-access assignment of a range of samples
    void Set(constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
@@ -872,13 +877,6 @@ private:
    void SetClipRates(double newRate);
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;
-
-   bool GetOne(
-      samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
-      bool backwards, fillFormat fill, bool mayThrow,
-      sampleCount* pNumWithinClips) const;
-   ChannelSampleView
-   GetOneSampleView(sampleCount start, size_t len, bool backwards) const;
 
    void DoSetPan(float value);
    void DoSetGain(float value);
