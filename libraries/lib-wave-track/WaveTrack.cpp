@@ -1603,8 +1603,9 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack &other)
    assert(otherNChannels == 1 || otherNChannels == NChannels());
    const auto startTime = other.GetStartTime();
    const auto endTime = other.GetEndTime();
-   auto iter = TrackList::Channels(&other).begin();
-   for (const auto pChannel : TrackList::Channels(this)) {
+   // TODO wide wave tracks: the body of `PasteOne` could replace this loop.
+   auto iter = other.EasyToRemoveCallToTrackListChannels().begin();
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels()) {
       PasteOne(*pChannel, t0, **iter, startTime, endTime);
       if (otherNChannels > 1)
          ++iter;
