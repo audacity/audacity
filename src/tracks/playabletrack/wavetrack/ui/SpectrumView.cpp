@@ -860,7 +860,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
 }
 }
 
-void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
+void SpectrumView::DoDraw(TrackPanelDrawingContext& context, size_t channel,
    const WaveTrack &track, const WaveClip* selectedClip, const wxRect & rect)
 {
    const auto artist = TrackArtist::Get( context );
@@ -869,6 +869,18 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
    TrackArt::DrawBackgroundWithSelection(
       context, rect, &track, blankSelectedBrush, blankBrush );
 
+   // Really useful channel numbers are not yet passed in
+   // TODO wide wave tracks -- really use channel
+   assert(channel == 0);
+   channel = (track.IsLeader() ? 0 : 1);
+
+   // TODO wide wave tracks -- remove this workaround
+   auto pLeader = *track.GetHolder()->Find(&track);
+   assert(pLeader->IsLeader());
+
+   // TODO this different iteration
+   //for (const auto pInterval :
+   // static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals())
    for (const auto &clip: track.GetClips())
       DrawClipSpectrum(context, track, *clip, rect, mpSpectralData,
          clip.get() == selectedClip);
@@ -906,7 +918,7 @@ void SpectrumView::Draw(
       wxASSERT(waveChannelView.use_count());
 
       auto selectedClip = waveChannelView->GetSelectedClip().lock();
-      DoDraw(context, *wt, selectedClip.get(), rect);
+      DoDraw(context, GetChannelIndex(), *wt, selectedClip.get(), rect);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);

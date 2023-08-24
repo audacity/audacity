@@ -153,7 +153,7 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   void DoDraw(TrackPanelDrawingContext &context,
+   void DoDraw(TrackPanelDrawingContext &context, size_t channel,
       const WaveTrack &track, const WaveClip* selectedClip,
       const wxRect & rect);
 
