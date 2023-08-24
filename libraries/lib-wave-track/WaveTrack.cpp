@@ -3424,7 +3424,8 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs)
 {
    for (auto wt : tracks.Any<const WaveTrack>())
-      for (const auto pChannel : TrackList::Channels(wt))
+      // TODO wide wave tracks -- just remove this outer loop.
+      for (const auto pChannel : wt->EasyToRemoveCallToTrackListChannels())
          // Scan all clips within current track
          for (const auto &clip : pChannel->GetAllClips())
             // Scan all sample blocks within current clip
