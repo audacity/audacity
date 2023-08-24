@@ -3000,10 +3000,17 @@ bool WaveTrack::CanInsertClip(
 void WaveTrack::Split(double t0, double t1)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      pChannel->SplitAt(t0);
+   SplitAt(t0);
+   if (t0 != t1)
+      SplitAt(t1);
+
+   // TODO wide wave tracks -- just remove everything below.
+   if (NChannels() == 2)
+   {
+      const auto rightChannel = *EasyToRemoveCallToTrackListChannels().rbegin();
+      rightChannel->SplitAt(t0);
       if (t0 != t1)
-         pChannel->SplitAt(t1);
+         rightChannel->SplitAt(t1);
    }
 }
 
