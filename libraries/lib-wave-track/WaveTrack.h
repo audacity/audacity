@@ -64,17 +64,15 @@ class WAVE_TRACK_API WaveChannelInterval final
 {
 public:
    //! Assume lifetime of this object nests in those of arguments
-   WaveChannelInterval(WaveClip &wideClip, WaveClip &narrowClip,
-      Envelope &envelope, size_t iChannel
+   WaveChannelInterval(WaveClip &wideClip, WaveClip &narrowClip, size_t iChannel
    )  : mWideClip{ wideClip }
       , mNarrowClip{ narrowClip }
-      , mEnvelope{ envelope }
       , miChannel{ iChannel }
    {}
    ~WaveChannelInterval() override;
 
    const WaveClip &GetClip() const { return mWideClip; }
-   const Envelope &GetEnvelope() const { return mEnvelope; }
+   const Envelope &GetEnvelope() const;
    size_t GetChannelIndex() const { return miChannel; }
 
    bool Intersects(double t0, double t1) const;
@@ -122,7 +120,6 @@ private:
 
    WaveClip &mWideClip;
    WaveClip &mNarrowClip;
-   Envelope &mEnvelope;
    const size_t miChannel;
 };
 
