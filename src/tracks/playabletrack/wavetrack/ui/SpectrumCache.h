@@ -13,6 +13,7 @@
 
 class sampleCount;
 class SpectrogramSettings;
+class WaveChannelInterval;
 class WideSampleSequence;
 
 #include <vector>
@@ -50,8 +51,8 @@ public:
 
    // Calculate the dirty columns at the begin and end of the cache
    void Populate(
-      const SpectrogramSettings& settings, const WaveClip& clip, int copyBegin,
-      int copyEnd, size_t numPixels, double pixelsPerSecond);
+      const SpectrogramSettings& settings, const WaveChannelInterval& clip,
+      int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond);
 
    size_t       len { 0 }; // counts pixels, not samples
    int          algorithm;
@@ -71,8 +72,8 @@ public:
 private:
    // Calculate one column of the spectrum
    bool CalculateOneSpectrum(
-      const SpectrogramSettings& settings, const WaveClip& clip, const int xx,
-      double pixelsPerSecond, int lowerBoundX, int upperBoundX,
+      const SpectrogramSettings& settings, const WaveChannelInterval &clip,
+      const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
       const std::vector<float>& gainFactors, float* __restrict scratch,
       float* __restrict out) const;
 
@@ -120,10 +121,11 @@ struct WaveClipSpectrumCache final : WaveClipListener
    // > only the 0th channel of sequence is really used
    // > In the interim, this still works correctly for WideSampleSequence backed
    // > by a right channel track, which always ignores its partner.
-   bool GetSpectrogram(const WaveClip &clip, const float *&spectrogram,
-                       SpectrogramSettings &spectrogramSettings,
-                       const sampleCount *&where, size_t numPixels,
-                       double t0 /*absolute time*/, double pixelsPerSecond);
+   bool GetSpectrogram(const WaveChannelInterval &clip,
+      const float *&spectrogram,
+      SpectrogramSettings &spectrogramSettings,
+      const sampleCount *&where, size_t numPixels,
+      double t0 /*absolute time*/, double pixelsPerSecond);
 };
 
 #endif
