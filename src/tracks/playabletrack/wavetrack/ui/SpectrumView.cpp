@@ -321,7 +321,7 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
 }
 
 std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
-   const SelectedRegion& selectedRegion, const WaveClip& clip,
+   const SelectedRegion& selectedRegion, const WaveChannelInterval& clip,
    bool trackIsSelected)
 {
    if (!trackIsSelected)
@@ -337,7 +337,7 @@ std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
 }
 
 void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
-   const WaveClip &clip, const wxRect &rect,
+   const WaveChannelInterval &clip, const wxRect &rect,
    const std::shared_ptr<SpectralData> &mpSpectralData,
    bool selected)
 {
@@ -424,12 +424,11 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
    const double binUnit = sampleRate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;
-   bool updated;
-   {
-     updated = WaveClipSpectrumCache::Get(clip).GetSpectrogram(
-         clip, freq, settings, where, (size_t)hiddenMid.width, t0,
-         averagePixelsPerSecond);
-   }
+   // Get the cache from the leader clip, but pass the WaveChannelInterval
+   // to use the correct channel in the cache
+   bool updated = WaveClipSpectrumCache::Get(clip.GetClip()).GetSpectrogram(
+      clip, freq, settings, where, (size_t)hiddenMid.width, t0,
+      averagePixelsPerSecond);
    auto nBins = settings.NBins();
 
    float minFreq, maxFreq;
@@ -478,9 +477,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
    }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-   auto &clipCache = WaveClipSpectrumCache::Get(clip);
-   // TODO vary the subscript
-   auto &specPxCache = clipCache.mSpecPxCaches[0];
+   auto &clipCache = WaveClipSpectrumCache::Get(clip.GetClip());
+   auto &specPxCache = clipCache.mSpecPxCaches[clip.GetChannelIndex()];
    if (!updated && specPxCache &&
       ((int)specPxCache->len == hiddenMid.height * hiddenMid.width)
       && scaleType == specPxCache->scaleType
@@ -878,12 +876,10 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context, size_t channel,
    auto pLeader = *track.GetHolder()->Find(&track);
    assert(pLeader->IsLeader());
 
-   // TODO this different iteration
-   //for (const auto pInterval :
-   // static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals())
-   for (const auto &clip: track.GetClips())
-      DrawClipSpectrum(context, track, *clip, rect, mpSpectralData,
-         clip.get() == selectedClip);
+   for (const auto pInterval :
+      static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals())
+      DrawClipSpectrum(context, track, *pInterval, rect, mpSpectralData,
+         &pInterval->GetClip() == selectedClip);
 
    DrawBoldBoundaries(context, track, rect);
 }
