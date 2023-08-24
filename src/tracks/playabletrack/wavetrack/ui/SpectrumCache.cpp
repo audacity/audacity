@@ -464,6 +464,9 @@ bool WaveClipSpectrumCache::GetSpectrogram(
    double pixelsPerSecond)
 
 {
+   // TODO vary the subscript
+   auto &mSpecCache = mSpecCaches[0];
+
    const auto sampleRate = clip.GetRate();
    const auto stretchRatio = clip.GetStretchRatio();
    const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
@@ -569,17 +572,21 @@ bool WaveClipSpectrumCache::GetSpectrogram(
    return true;
 }
 
-WaveClipSpectrumCache::WaveClipSpectrumCache()
-: mSpecCache{ std::make_unique<SpecCache>() }
+WaveClipSpectrumCache::WaveClipSpectrumCache(size_t nChannels)
+   // TODO wide wave tracks -- won't need std::max here
+   : mSpecCaches(std::max<size_t>(2, nChannels))
+   , mSpecPxCaches(std::max<size_t>(2, nChannels))
 {
+   for (auto &pCache : mSpecCaches)
+      pCache = std::make_unique<SpecCache>();
 }
 
 WaveClipSpectrumCache::~WaveClipSpectrumCache()
 {
 }
 
-static WaveClip::Caches::RegisteredFactory sKeyS{ []( WaveClip& ){
-   return std::make_unique< WaveClipSpectrumCache >();
+static WaveClip::Caches::RegisteredFactory sKeyS{ [](WaveClip &clip){
+   return std::make_unique<WaveClipSpectrumCache>(clip.GetWidth());
 } };
 
 WaveClipSpectrumCache &WaveClipSpectrumCache::Get( const WaveClip &clip )
@@ -596,5 +603,6 @@ void WaveClipSpectrumCache::MarkChanged()
 void WaveClipSpectrumCache::Invalidate()
 {
    // Invalidate the spectrum display cache
-   mSpecCache = std::make_unique<SpecCache>();
+   for (auto &pCache : mSpecCaches)
+      pCache = std::make_unique<SpecCache>();
 }
