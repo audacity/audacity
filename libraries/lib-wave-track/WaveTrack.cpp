@@ -3122,11 +3122,16 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 */
 void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto &clip : pChannel->mClips)
-         clip->Resample(rate, progress);
-      pChannel->SetRate(rate);
-   }
+   for (const auto& clip : mClips)
+      clip->Resample(rate, progress);
+   SetRate(rate);
+   if (NChannels() == 1)
+      return;
+   // TODO wide wave tracks -- just remove everything below.
+   const auto rightChannel = *EasyToRemoveCallToTrackListChannels().rbegin();
+   for (const auto& clip : rightChannel->mClips)
+      clip->Resample(rate, progress);
+   rightChannel->SetRate(rate);
 }
 
 bool WaveTrack::Reverse(sampleCount start, sampleCount len,
