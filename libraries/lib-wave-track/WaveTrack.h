@@ -443,14 +443,6 @@ private:
    bool GetSolo() const override;
    //! @}
 
-   /*!
-    * @pre `iChannel + nBuffers <= NChannels()`
-    * @return nBuffers `ChannelSampleView`s, one per channel.
-    */
-   std::vector<ChannelSampleView> GetSampleView(
-      size_t iChannel, size_t nBuffers, sampleCount start, size_t len,
-      bool backwards) const;
-
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
    /// have a continuous space of samples anymore, but we simulate it,
