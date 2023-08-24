@@ -3138,7 +3138,9 @@ bool WaveTrack::Reverse(sampleCount start, sampleCount len,
    const ProgressReport &progress)
 {
    size_t count = 0;
-   const auto range = TrackList::Channels(this);
+   // TODO wide wave tracks -- ReverseOne replaces this body, passing `progress`
+   // directly.
+   const auto range = EasyToRemoveCallToTrackListChannels();
    const auto myProgress = [&](double fraction){
       return progress((count + fraction) / range.size());
    };
