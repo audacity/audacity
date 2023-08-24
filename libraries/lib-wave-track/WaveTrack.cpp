@@ -3354,7 +3354,8 @@ WaveClipConstPointers WaveTrack::SortedClipArray() const
 bool WaveTrack::HasHiddenData() const
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
+   // TODO wide wave tracks -- remove the outer loop.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       for (const auto& clip : pChannel->GetClips())
          if (clip->GetTrimLeft() != 0 || clip->GetTrimRight() != 0)
             return true;
