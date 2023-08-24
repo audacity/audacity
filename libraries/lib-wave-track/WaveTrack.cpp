@@ -86,6 +86,12 @@ WaveChannelInterval::GetSampleView(double t0, double t1, bool mayThrow) const
    return GetNarrowClip().GetSampleView(iChannel, t0, t1, mayThrow);
 }
 
+const Envelope &WaveChannelInterval::GetEnvelope() const
+{
+   // Always the left clip's envelope
+   return *mWideClip.GetEnvelope();
+}
+
 sampleCount WaveChannelInterval::GetVisibleSampleCount() const
 {
    return GetNarrowClip().GetVisibleSampleCount();
@@ -186,10 +192,7 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
       // TODO wide wave tracks: there will be only one, wide clip
       const auto pClip = (iChannel == 0 ? mpClip : mpClip1);
       return std::make_shared<WaveChannelInterval>(*mpClip,
-         *pClip,
-         // Always the left clip's envelope
-         *mpClip->GetEnvelope(),
-         iChannel);
+         *pClip, iChannel);
    }
    return {};
 }
