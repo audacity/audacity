@@ -7,13 +7,16 @@ import Audacity.UiThemes
 
 Rectangle {
    id: root
-   implicitHeight: 28
+   implicitHeight: 32
    height: implicitHeight
    color: UiTheme.backgroundColor2
    objectName: "TimelineRuler"
 
    property alias playheadCursorHeight: playheadCursor.height
    property bool snapped: false
+   property color separatorColor: UiTheme.fontColor1
+   property color textColor: UiTheme.fontColor1
+   property font textFont: UiTheme.bodyFont
 
    function start() {
       if (playheadMovementAnimation.paused) {
@@ -34,18 +37,23 @@ Rectangle {
       playheadCursor.visible = false
    }
 
+   function updateTheme() {
+      ruler.UpdateTheme()
+   }
+
    Rectangle {
       id: playheadRecessSeparator
       x: 12
       width: 1
       height: parent.height
-      color: UiTheme.strokeColor2
+      color: separatorColor
+      visible: false
    }
 
    Rectangle {
       height: 1
       color: UiTheme.strokeColor2
-      anchors.verticalCenter: parent.verticalCenter
+      y: parent.height / 2
       anchors.left: playheadRecessSeparator.right
       anchors.right: snappingButton.left
    }
@@ -56,6 +64,12 @@ Rectangle {
       width: parent.width
       height: 1
       color: UiTheme.strokeColor2
+   }
+
+   AdornedRulerPanel {
+      id: ruler
+      offset: playheadRecessSeparator.x
+      anchors.fill: parent
    }
 
    PlayheadCursor {

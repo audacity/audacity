@@ -1,6 +1,8 @@
 set(QAUDACITY ${CMAKE_PROJECT_NAME})
 
 set(APP_SOURCES
+   AdornedQtRulerPanel.cpp
+   AdornedQtRulerPanel.h
    EditToolbarHandler.cpp
    EditToolbarHandler.h
    ExtraMenu.cpp

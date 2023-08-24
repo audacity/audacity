@@ -6,8 +6,8 @@ import Audacity.UiThemes
 
 Rectangle {
    id: root
-   implicitWidth: 40
-   implicitHeight: 28
+   implicitWidth: 44
+   implicitHeight: 32
    width: implicitWidth
    height: implicitHeight
    color: backgroundColor
@@ -23,8 +23,8 @@ Rectangle {
 
    Rectangle {
       id: snappingButton
-      width: 28
-      height: 28
+      width: 32
+      height: 32
       color: backgroundColor
       anchors.left: parent.left
 
@@ -102,7 +102,7 @@ Rectangle {
    FlatButton {
       id: snappingIconButton
       width: 12
-      height: 28
+      height: 32
       radius: 0
       transparent: true
       text: String.fromCharCode(IconCode.SMALL_ARROW_DOWN)

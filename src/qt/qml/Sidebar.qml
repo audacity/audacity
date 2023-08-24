@@ -69,7 +69,7 @@ Rectangle {
    FlatButton {
       id: button
       width: root.width
-      height: 28
+      height: 32
       radius: 0
       transparent: true
       textFont.pixelSize: 12
