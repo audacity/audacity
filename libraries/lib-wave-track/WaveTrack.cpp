@@ -3365,7 +3365,8 @@ bool WaveTrack::HasHiddenData() const
 void WaveTrack::DiscardTrimmed()
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
+   // TODO wide wave tracks -- remove the outer loop.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels()) {
       for (auto clip : pChannel->GetClips()) {
          if (clip->GetTrimLeft() != 0) {
             auto t0 = clip->GetPlayStartTime();
