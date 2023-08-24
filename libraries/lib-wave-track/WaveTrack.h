@@ -217,7 +217,7 @@ public:
     @pre `NChannels() == orig.NChannels()`
     */
    void Reinit(const WaveTrack &orig);
-private:
+
    //! A provisional wrapper around `TrackList::Channels` for usages that will
    //! become obsolete one `WaveTrack`s really become wide and can blindly be
    //! removed. This really serves as documentation that the usage was reviewed
@@ -227,6 +227,7 @@ private:
       return TrackList::Channels(this);
    }
 
+private:
    inline auto EasyToRemoveCallToTrackListChannels()
    {
       return TrackList::Channels(this);

@@ -516,7 +516,9 @@ Track::Holder WaveTrack::PasteInto(
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    Track::Holder pFirstTrack;
    const WaveTrack *pFirstChannel{};
-   for (const auto pChannel : TrackList::Channels(this)) {
+   // TODO wide wave tracks: remove the outer loop; `pFirstChannel` becomes
+   // `this`, and `pFirstTrack` becomes `this->EmptyCopy(...)`.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels()) {
       auto pNewTrack = pChannel->EmptyCopy(pSampleBlockFactory);
       list.Add(pNewTrack);
       assert(pNewTrack->IsLeader() == pChannel->IsLeader());
@@ -566,10 +568,10 @@ std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
    auto nChannels = NChannels();
    if (iChannel >= nChannels)
       return {};
+   // TODO: more-than-two-channels : `pTrack` will just be `this`.
    auto pTrack = (iChannel == 0)
       ? this
-      // TODO: more-than-two-channels
-      : *TrackList::Channels(this).rbegin();
+      : *EasyToRemoveCallToTrackListChannels().rbegin();
    // Use aliasing constructor of std::shared_ptr
    ::Channel *alias = pTrack;
    return { pTrack->shared_from_this(), alias };
@@ -597,10 +599,11 @@ std::shared_ptr<WaveTrack::Interval> WaveTrack::InsertInterval()
       1, mpFactory, mFormat, GetRate(), this->GetWaveColorIndex());
    InsertClip(clip);
    WaveClipHolder clip1;
+   // TODO wide wave tracks: No need for this if-statement or for `clip1`.
    if (NChannels() == 2) {
       clip1 = std::make_shared<WaveClip>(
          1, mpFactory, mFormat, GetRate(), this->GetWaveColorIndex());
-      (*TrackList::Channels(this).rbegin())->InsertClip(clip1);
+      (*EasyToRemoveCallToTrackListChannels().rbegin())->InsertClip(clip1);
    }
    return std::make_shared<Interval>(*this, clip, clip1);
 }
@@ -841,7 +844,8 @@ void WaveTrack::Trim (double t0, double t1)
    bool inside0 = false;
    bool inside1 = false;
 
-   const auto range = TrackList::Channels(this);
+   // TODO wide wave tracks: no need for the outer loop.
+   const auto range = EasyToRemoveCallToTrackListChannels();
    for (auto pChannel : range) {
       for (const auto &clip : pChannel->mClips) {
          if (t1 > clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
@@ -1062,8 +1066,10 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       return;
    }
 
-   auto iter = TrackList::Channels(&src).begin();
-   const auto myChannels = TrackList::Channels(this);
+   // TODO wide wave tracks: paste the body of `ClearAndPasteOne` below - no
+   // need for the loop.
+   auto iter = src.EasyToRemoveCallToTrackListChannels().begin();
+   const auto myChannels = EasyToRemoveCallToTrackListChannels();
    for (const auto pChannel : myChannels) {
       ClearAndPasteOne(*pChannel, t0, t1, startTime, endTime,
          **iter, preserve, merge, effectWarper);
@@ -1333,9 +1339,10 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
 void WaveTrack::SplitDelete(double t0, double t1)
 {
    assert(IsLeader());
-   bool addCutLines = false;
-   bool split = true;
-   for (const auto pChannel : TrackList::Channels(this))
+   constexpr bool addCutLines = false;
+   constexpr bool split = true;
+   // TODO wide wave tracks: remove the outer loop.
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       pChannel->HandleClear(t0, t1, addCutLines, split);
 }
 
@@ -3476,7 +3483,8 @@ ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
    [](const AudacityProject& project) -> ProjectFormatVersion {
       const TrackList& trackList = TrackList::Get(project);
       for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto pChannel : TrackList::Channels(wt))
+         // TODO wide wave tracks -- just remove this outer loop.
+         for (const auto pChannel : wt->EasyToRemoveCallToTrackListChannels())
             for (const auto& clip : pChannel->GetAllClips())
                if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
                   return { 3, 1, 0, 0 };
