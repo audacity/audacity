@@ -1992,7 +1992,8 @@ void WaveTrack::Join(double t0, double t1)
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
 
-   for (const auto pChannel : TrackList::Channels(this))
+   // TODO wide wave tracks -- ...
+   for (const auto pChannel : EasyToRemoveCallToTrackListChannels())
       JoinOne(*pChannel, t0, t1);
 }
 
