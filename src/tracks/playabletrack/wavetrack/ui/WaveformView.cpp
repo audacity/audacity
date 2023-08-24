@@ -988,7 +988,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
    channel = (track.IsLeader() ? 0 : 1);
 
    // TODO wide wave tracks -- remove this workaround
-   auto pLeader = *track.GetOwner()->Find(&track);
+   auto pLeader = *track.GetHolder()->Find(&track);
    assert(pLeader->IsLeader());
 
    for (const auto pInterval :
