@@ -7112,7 +7112,7 @@ msgstr "Przesyłanie nagrania..."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Upload complete!"
-msgstr "Przesyłanie ukończone."
+msgstr "Przesyłanie zakończone."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Upload error"
