@@ -475,6 +475,7 @@ private:
    //! @pre `IsLeader()`
    bool HasTrivialEnvelope() const override;
 
+   //! @pre `IsLeader()`
    void GetEnvelopeValues(
       double* buffer, size_t bufferLen, double t0,
       bool backwards) const override;

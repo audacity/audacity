@@ -2669,10 +2669,7 @@ bool WaveTrack::HasTrivialEnvelope() const
 void WaveTrack::GetEnvelopeValues(
    double* buffer, size_t bufferLen, double t0, bool backwards) const
 {
-   auto pTrack = this;
-   if (GetOwner())
-      // Substitute the leader track
-      pTrack = *TrackList::Channels(this).begin();
+   assert(IsLeader());
 
    if (backwards)
       t0 -= bufferLen / GetRate();
@@ -2695,7 +2692,7 @@ void WaveTrack::GetEnvelopeValues(
    const auto rate = GetRate();
    auto tstep = 1.0 / rate;
    double endTime = t0 + tstep * bufferLen;
-   for (const auto &clip: pTrack->mClips)
+   for (const auto &clip: mClips)
    {
       // IF clip intersects startTime..endTime THEN...
       auto dClipStartTime = clip->GetPlayStartTime();
