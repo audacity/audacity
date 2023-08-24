@@ -2661,12 +2661,8 @@ sampleFormat WaveTrack::WidestEffectiveFormat() const
 
 bool WaveTrack::HasTrivialEnvelope() const
 {
-   auto pTrack = this;
-   if (GetOwner())
-      // Substitute the leader track
-      pTrack = *TrackList::Channels(this).begin();
-   auto &clips = pTrack->GetClips();
-   return std::all_of(clips.begin(), clips.end(),
+   assert(IsLeader());
+   return std::all_of(mClips.begin(), mClips.end(),
       [](const auto &pClip){ return pClip->GetEnvelope()->IsTrivial(); });
 }
 

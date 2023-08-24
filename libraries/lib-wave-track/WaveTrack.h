@@ -472,6 +472,7 @@ private:
 
    sampleFormat WidestEffectiveFormat() const override;
 
+   //! @pre `IsLeader()`
    bool HasTrivialEnvelope() const override;
 
    void GetEnvelopeValues(
