@@ -251,7 +251,7 @@ public:
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
-   ListOfTracks* GetHolder() const { return mNode.second; }
+   inline TrackList* GetHolder() const;
 
    LinkType GetLinkType() const noexcept;
    //! Returns true if the leader track has link type LinkType::Aligned
@@ -1160,8 +1160,7 @@ public:
       static auto Channels( TrackType *pTrack )
          -> TrackIterRange< TrackType >
    {
-      return Channels_<TrackType>(
-         static_cast<TrackList*>(pTrack->GetHolder())->Find(pTrack));
+      return Channels_<TrackType>(pTrack->GetHolder()->Find(pTrack));
    }
 
    //! Count channels of a track
@@ -1471,5 +1470,8 @@ private:
    //! false for temporaries
    bool mAssignsIds{ true };
 };
+
+TrackList* Track::GetHolder() const {
+   return static_cast<TrackList*>(mNode.second); }
 
 #endif

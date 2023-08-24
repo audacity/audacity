@@ -494,7 +494,7 @@ ChannelGroup &WaveTrack::DoGetChannelGroup() const
 ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
 {
    const Track *pTrack = this;
-   if (const auto pOwner = GetOwner())
+   if (const auto pOwner = GetHolder())
       pTrack = *pOwner->Find(this);
    const ChannelGroup &group = *pTrack;
    return const_cast<ChannelGroup&>(group);
