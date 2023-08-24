@@ -102,12 +102,12 @@ public:
 
 struct WaveClipSpectrumCache final : WaveClipListener
 {
-   WaveClipSpectrumCache();
+   explicit WaveClipSpectrumCache(size_t nChannels);
    ~WaveClipSpectrumCache() override;
 
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
-   std::unique_ptr<SpecPxCache> mSpecPxCache;
-   std::unique_ptr<SpecCache> mSpecCache;
+   std::vector<std::unique_ptr<SpecPxCache>> mSpecPxCaches;
+   std::vector<std::unique_ptr<SpecCache>> mSpecCaches;
    int mDirty { 0 };
 
    static WaveClipSpectrumCache &Get( const WaveClip &clip );

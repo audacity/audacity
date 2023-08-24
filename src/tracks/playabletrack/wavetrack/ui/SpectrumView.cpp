@@ -479,7 +479,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
    auto &clipCache = WaveClipSpectrumCache::Get(clip);
-   auto &specPxCache = clipCache.mSpecPxCache;
+   // TODO vary the subscript
+   auto &specPxCache = clipCache.mSpecPxCaches[0];
    if (!updated && specPxCache &&
       ((int)specPxCache->len == hiddenMid.height * hiddenMid.width)
       && scaleType == specPxCache->scaleType
