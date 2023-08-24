@@ -2648,20 +2648,15 @@ void WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
 
 sampleFormat WaveTrack::WidestEffectiveFormat() const
 {
-   auto result = narrowestSampleFormat;
-   const auto accumulate = [&](const WaveTrack &track) {
-      for (const auto &pClip : track.GetClips())
-         for (size_t ii = 0, width = pClip->GetWidth(); ii < width; ++ii)
-            result = std::max(result,
-               pClip->GetSequence(ii)->GetSampleFormats().Effective());
-   };
-   if (auto pOwner = GetOwner()) {
-      for (auto channel : TrackList::Channels(this))
-         accumulate(*channel);
-   }
-   else
-      accumulate(*this);
-   return result;
+   // todo(mhodgkinson): have we already prohibited wide clips with left/right
+   // format discrepancy ? If so, this solution should be fine. If not, I'll
+   // have to add a method to `WaveTrack::Interval`.
+   return std::accumulate(
+      mClips.begin(), mClips.end(), narrowestSampleFormat,
+      [](sampleFormat widest, const auto& clip) {
+         return std::max(
+            widest, clip->GetSequence(0)->GetSampleFormats().Effective());
+      });
 }
 
 bool WaveTrack::HasTrivialEnvelope() const
