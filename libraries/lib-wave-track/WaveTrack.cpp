@@ -2819,7 +2819,8 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
    auto pTrack = this;
    if (GetOwner())
       // Substitute the leader track
-      pTrack = *TrackList::Channels(this).begin();
+      // TODO wide wave tracks -- `pTrack` is always `this` ; just remove.
+      pTrack = *EasyToRemoveCallToTrackListChannels().begin();
    WaveClip* clip = pTrack->GetClipAtTime(time);
    if (clip)
       return clip->GetEnvelope();
