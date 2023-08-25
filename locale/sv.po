@@ -2188,12 +2188,12 @@ msgstr "Dessa är våra sätt att ge support:"
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[help:Quick_Help|Quick Help]]"
-msgstr "[[help:Snabbhjälp|Snabbhjälp]]"
+msgstr "[[help:Quick_Help|Snabbhjälp]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid " [[help:Main_Page|Manual]]"
-msgstr " [[hjälp:Huvudsida|Manual]]"
+msgstr " [[help:Main_Page|Manual]]"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
