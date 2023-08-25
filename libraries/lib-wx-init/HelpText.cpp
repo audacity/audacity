@@ -268,7 +268,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          << XO(
 "Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
-the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| \
+the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| \
 FFmpeg library]] to your computer.")
          << wxT("</p><p>")
          <<  XO(
