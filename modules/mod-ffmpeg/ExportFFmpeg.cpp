@@ -152,11 +152,12 @@ enum : int
    AACOptionIDQuality = 0
 };
 
+//NB: user-entered values for AAC are not always followed; mono is clamped to 98-160, stereo 196-320
 const std::initializer_list<PlainExportOptionsEditor::OptionDesc> AACOptions {
    {
       {
          AACOptionIDQuality, XO("Quality (kbps)"),
-         98,
+         256,
          ExportOption::TypeRange,
          {98, 320}
       }, wxT("/FileFormats/AACQuality")
