@@ -185,6 +185,30 @@ WaveTrack::Interval::Interval(const ChannelGroup &group,
 
 WaveTrack::Interval::~Interval() = default;
 
+void WaveTrack::Interval::TrimLeftTo(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->TrimLeftTo(t);
+}
+
+void WaveTrack::Interval::TrimRightTo(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->TrimRightTo(t);
+}
+
+void WaveTrack::Interval::StretchLeftTo(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->StretchLeftTo(t);
+}
+
+void WaveTrack::Interval::StretchRightTo(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->StretchRightTo(t);
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });

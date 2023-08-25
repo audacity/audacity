@@ -29,37 +29,24 @@
 
 namespace {
 
-    std::vector<std::shared_ptr<WaveClip>> FindClipsInChannels(double start, double end, WaveTrack* track) {
-        std::vector<std::shared_ptr<WaveClip>> result;
-        for (auto channel : TrackList::Channels(track))
-        {
-            for (auto& clip : channel->GetClips())
-            {
-                if (clip->GetPlayStartTime() == start && clip->GetPlayEndTime() == end)
-                    result.push_back(clip);
-            }
-        }
-        return result;
-    }
-
-   void TrimLeftTo(WaveClip& clip, double t)
+   void TrimLeftTo(WaveTrack::Interval& interval, double t)
    {
-      clip.TrimLeftTo(t);
+      interval.TrimLeftTo(t);
    }
 
-   void TrimRightTo(WaveClip& clip, double t)
+   void TrimRightTo(WaveTrack::Interval& interval, double t)
    {
-      clip.TrimRightTo(t);
+      interval.TrimRightTo(t);
    }
 
-   void StretchLeftTo(WaveClip& clip, double t)
+   void StretchLeftTo(WaveTrack::Interval& interval, double t)
    {
-      clip.StretchLeftTo(t);
+      interval.StretchLeftTo(t);
    }
 
-   void StretchRightTo(WaveClip& clip, double t)
+   void StretchRightTo(WaveTrack::Interval& interval, double t)
    {
-      clip.StretchRightTo(t);
+      interval.StretchRightTo(t);
    }
 }
 
@@ -89,67 +76,67 @@ namespace {
 WaveClipAdjustBorderHandle::AdjustPolicy::~AdjustPolicy() = default;
 
 namespace {
-double GetLeftAdjustLimit(
-   const WaveClip& clip, const WaveTrack& track, bool adjustingLeftBorder,
-   bool isStretchMode)
+double GetLeftAdjustLimit(const WaveTrack::Interval& interval,
+                          const WaveTrack& track,
+                          bool adjustingLeftBorder,
+                          bool isStretchMode)
 {
    if (!adjustingLeftBorder)
       // A clip of one sample is invisible - who needs that ? Leave at least 2.
-      return clip.GetPlayStartTime() + 2.0 / clip.GetRate();
+      return interval.Start() + 2.0 / track.GetRate();
 
-   const auto prevClip = track.GetNextClip(clip, PlaybackDirection::backward);
-   if (isStretchMode)
-      return prevClip ? prevClip->GetPlayEndTime() :
-                        std::numeric_limits<double>::lowest();
-   else
-      return prevClip ?
-                std::max(
-                   clip.GetSequenceStartTime(), prevClip->GetPlayEndTime()) :
-                clip.GetSequenceStartTime();
+   const auto prevInterval = track.GetNextInterval(interval, PlaybackDirection::backward);
+   if(isStretchMode)
+      return prevInterval ? prevInterval->End() :
+                            std::numeric_limits<double>::lowest();
+   if(prevInterval)
+      return std::max(interval.GetClip(0)->GetSequenceStartTime(),
+                prevInterval->End());
+   return interval.GetClip(0)->GetSequenceStartTime();
 }
 
 double GetRightAdjustLimit(
-   const WaveClip& clip, const WaveTrack& track, bool adjustingLeftBorder,
+   const WaveTrack::Interval& interval, const WaveTrack& track, bool adjustingLeftBorder,
    bool isStretchMode)
 {
    if (adjustingLeftBorder)
       // A clip of one sample is invisible - who needs that ? Leave at least 2.
-      return clip.GetPlayEndTime() - 2.0 / clip.GetRate();
+      return interval.End() - 2.0 / track.GetRate();
 
-   const auto nextClip = track.GetNextClip(clip, PlaybackDirection::forward);
+   const auto nextInterval = track.GetNextInterval(interval, PlaybackDirection::forward);
    if (isStretchMode)
-      return nextClip ? nextClip->GetPlayStartTime() :
-                        std::numeric_limits<double>::max();
-   else
-      return nextClip ?
-                std::min(
-                   clip.GetSequenceEndTime(), nextClip->GetPlayStartTime()) :
-                clip.GetSequenceEndTime();
+      return nextInterval ? nextInterval->Start() :
+                            std::numeric_limits<double>::max();
+
+   if(nextInterval)
+      return std::min(interval.GetClip(0)->GetSequenceEndTime(),
+                      nextInterval->Start());
+   return interval.GetClip(0)->GetSequenceEndTime();
 }
 } // namespace
 
 class AdjustClipBorder final : public WaveClipAdjustBorderHandle::AdjustPolicy
 {
 public:
-   using AdjustHandler = std::function<void(WaveClip&, double)>;
+   using AdjustHandler = std::function<void(WaveTrack::Interval&, double)>;
 
 private:
    std::shared_ptr<WaveTrack> mTrack;
-   std::vector<std::shared_ptr<WaveClip>> mClips;
+   std::shared_ptr<WaveTrack::Interval> mInterval;
    int mDragStartX{ };
    const bool mAdjustingLeftBorder;
    const double mInitialBorderPosition;
+   double mBorderPosition;
    const std::pair<double, double> mRange;
    AdjustHandler mAdjustHandler;
 
    std::unique_ptr<SnapManager> mSnapManager;
    SnapResults mSnap;
 
-   void TrimTo(double t) const
+   void TrimTo(double t)
    {
-      t = std::clamp(t, mRange.first, mRange.second);
-      for(auto& clip : mClips)
-         mAdjustHandler(*clip, t);
+      mBorderPosition = std::clamp(t, mRange.first, mRange.second);
+      mAdjustHandler(*mInterval, mBorderPosition);
    }
 
    //Search for a good snap points among all tracks, including
@@ -157,7 +144,7 @@ private:
    //the borders of adjusted clip
    static SnapPointArray FindSnapPoints(
       const WaveTrack* currentTrack,
-      WaveClip* adjustedClip,
+      WaveTrack::Interval& adjustedInterval,
       const std::pair<double, double> range)
    {
       SnapPointArray result;
@@ -177,20 +164,14 @@ private:
       {
          for(const auto track : as_const(*trackList))
          {
-            const auto isSameTrack = (track == currentTrack) ||
-               (track->GetLinkType() == Track::LinkType::Aligned && *trackList->Find(currentTrack) == track) ||
-               (currentTrack->GetLinkType() == Track::LinkType::Aligned && *trackList->Find(track) == currentTrack);
+            if(track == currentTrack)
+            {
+               //skip track that interval belongs to
+               continue;
+            }
+
             for(const auto& interval : track->Intervals())
             {
-               if(isSameTrack)
-               {
-                  auto waveTrackIntervalData =
-                     std::dynamic_pointer_cast<const WaveTrack::Interval>(
-                        interval);
-                  if(waveTrackIntervalData->GetClip(0).get() == adjustedClip)
-                  //exclude boundaries of the adjusted clip
-                     continue;
-               }
                addSnapPoint(interval->Start(), track);
                if(interval->Start() != interval->End())
                   addSnapPoint(interval->End(), track);
@@ -201,35 +182,27 @@ private:
    }
 
 public:
-   AdjustClipBorder(
-      AdjustHandler adjustHandler, const std::shared_ptr<WaveTrack>& track,
-      const std::shared_ptr<WaveClip>& clip, bool adjustLeftBorder,
-      bool isStretchMode, const ZoomInfo& zoomInfo)
-       : mTrack(track)
-       , mAdjustingLeftBorder(adjustLeftBorder)
-       , mInitialBorderPosition { adjustLeftBorder ? clip->GetPlayStartTime() :
-                                                     clip->GetPlayEndTime() }
-       , mRange { GetLeftAdjustLimit(
-                     *clip, *track, adjustLeftBorder, isStretchMode),
-                  GetRightAdjustLimit(
-                     *clip, *track, adjustLeftBorder, isStretchMode) }
-       , mAdjustHandler(std::move(adjustHandler))
+   AdjustClipBorder(AdjustHandler adjustHandler,
+                    std::shared_ptr<WaveTrack> track,
+                    std::shared_ptr<WaveTrack::Interval> interval,
+                    bool adjustLeftBorder,
+                    bool isStretchMode,
+                    const ZoomInfo& zoomInfo)
+      : mTrack { std::move(track) }
+      , mInterval { std::move(interval) }
+      , mAdjustingLeftBorder { adjustLeftBorder }
+      , mInitialBorderPosition { adjustLeftBorder ? mInterval->Start() :
+                                             mInterval->End() }
+      , mBorderPosition { mInitialBorderPosition } 
+      , mRange { GetLeftAdjustLimit( *mInterval, *mTrack, adjustLeftBorder, isStretchMode),
+                 GetRightAdjustLimit(*mInterval, *mTrack, adjustLeftBorder, isStretchMode) }
+      , mAdjustHandler { std::move(adjustHandler) }
    {
-      auto clips = track->GetClips();
-
-      wxASSERT(std::find(clips.begin(), clips.end(), clip) != clips.end());
-
-      if (track->IsAlignedWithLeader() || track->GetLinkType() == Track::LinkType::Aligned)
-         //find clips in other channels which are also should be trimmed
-         mClips = FindClipsInChannels(clip->GetPlayStartTime(), clip->GetPlayEndTime(), track.get());
-      else
-         mClips.push_back(clip);
-
-      if(const auto trackList = track->GetOwner())
+      if(const auto trackList = mTrack->GetOwner())
       {
          mSnapManager = std::make_unique<SnapManager>(
             *trackList->GetOwner(),
-            FindSnapPoints(track.get(), clip.get(), mRange),
+            FindSnapPoints(mTrack.get(), *mInterval, mRange),
             zoomInfo);
       }
    }
@@ -250,10 +223,14 @@ public:
       const auto dx = eventX - mDragStartX;
 
       const auto& viewInfo = ViewInfo::Get(project);
+      
+      const auto eventT = viewInfo.PositionToTime(
+         viewInfo.TimeToPosition(mInitialBorderPosition, event.rect.x) + dx,
+         event.rect.x
+      );
 
-      const auto eventT = viewInfo.PositionToTime(viewInfo.TimeToPosition(mInitialBorderPosition, event.rect.x) + dx, event.rect.x);
-
-      const auto offset = sampleCount(floor((eventT - mInitialBorderPosition) * mClips[0]->GetRate())).as_double() / mClips[0]->GetRate();
+      const auto offset = sampleCount(floor((eventT - mInitialBorderPosition) * mTrack->GetRate())).as_double()
+         / mTrack->GetRate();
       const auto t = std::clamp(mInitialBorderPosition + offset, mRange.first, mRange.second);
       const auto wasSnapped = mSnap.Snapped();
       if(mSnapManager)
@@ -266,15 +243,9 @@ public:
             TrimTo(mSnap.outTime);
             return RefreshCode::RefreshAll;
          }
-         else
-         {
-            //Otherwise snapping cannot be performed
-            mSnap = {};
-            TrimTo(t);
-         }
+         mSnap = {};
       }
-      else
-         TrimTo(t);
+      TrimTo(t);
       //If there was a snap line, make sure it is removed
       //from the screen by redrawing whole TrackPanel
       return wasSnapped ? RefreshCode::RefreshAll : RefreshCode::RefreshCell;
@@ -282,11 +253,11 @@ public:
 
    void Finish(AudacityProject& project) override
    {
-      if (mClips[0]->GetPlayStartTime() != mInitialBorderPosition)
+      const auto dt = std::abs(mInitialBorderPosition - mBorderPosition);
+      if (dt != 0)
       {
          if (mAdjustingLeftBorder)
          {
-            auto dt = std::abs(mClips[0]->GetPlayStartTime() - mInitialBorderPosition);
             /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown*/
             ProjectHistory::Get(project).PushState(XO("Adjust left trim by %.02f seconds").Format(dt),
                /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown*/
@@ -294,7 +265,6 @@ public:
          }
          else
          {
-            auto dt = std::abs(mInitialBorderPosition - mClips[0]->GetPlayEndTime());
             /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown*/
             ProjectHistory::Get(project).PushState(XO("Adjust right trim by %.02f seconds").Format(dt),
             /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown*/
@@ -390,85 +360,86 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    const AudacityProject* pProject,
    const TrackPanelMouseState& state)
 {
-    const auto rect = state.rect;
+   assert(waveTrack->IsLeader());
 
-    auto px = state.state.m_x;
+   const auto rect = state.rect;
 
-    auto& zoomInfo = ViewInfo::Get(*pProject);
+   const auto px = state.state.m_x;
 
-    std::shared_ptr<WaveClip> leftClip;
-    std::shared_ptr<WaveClip> rightClip;
+   auto& zoomInfo = ViewInfo::Get(*pProject);
 
-    //Test left and right boundaries of each clip
-    //to determine which kind of adjustment is
-    //more appropriate
-    for (auto& clip : waveTrack->GetClips())
-    {
-        if (!WaveChannelView::ClipDetailsVisible(*clip, zoomInfo, rect))
-           continue;
+   std::shared_ptr<WaveTrack::Interval> leftInterval;
+   std::shared_ptr<WaveTrack::Interval> rightInterval;
 
-        auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+   //Test left and right boundaries of each clip
+   //to determine which kind of adjustment is
+   //more appropriate
+   for(const auto& interval : waveTrack->Intervals())
+   {
+      const auto& clip = *interval->GetClip(0);
+      if(!WaveChannelView::ClipDetailsVisible(clip, zoomInfo, rect))
+         continue;
 
-        //double the hit testing area in case if clip are close to each other
-        if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold * 2)
-           rightClip = clip;
-        else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold * 2)
-           leftClip = clip;
-    }
+      auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, rect);
+      if(std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold * 2)
+         rightInterval = interval;
+      else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold * 2)
+         leftInterval = interval;
+   }
 
-    std::shared_ptr<WaveClip> adjustedClip;
-    bool adjustLeftBorder {false};
-    if (leftClip && rightClip)
-    {
-       //between adjacent clips
-       if(ClipParameters::GetClipRect(*leftClip, zoomInfo, rect).GetRight() > px)
-       {
-          adjustedClip = leftClip;
-          adjustLeftBorder = false;
-       }
-       else
-       {
-          adjustedClip = rightClip;
-          adjustLeftBorder = true;
-       }
-    }
-    else
-    {
-       adjustedClip = leftClip ? leftClip : rightClip;
-       if (adjustedClip)
-       {
-          //single clip case, determine the border,
-          //hit testing area differs from one
-          //used for general case
-          const auto clipRect = ClipParameters::GetClipRect(*adjustedClip, zoomInfo, rect);
-          if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
-             adjustLeftBorder = true;
-          else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold)
-             adjustLeftBorder = false;
-          else
-             adjustedClip.reset();
-       }
-    }
+   std::shared_ptr<WaveTrack::Interval> adjustedInterval;
+   bool adjustLeftBorder {false};
+   if (leftInterval && rightInterval)
+   {
+      //between adjacent clips
+      if(ClipParameters::GetClipRect(*leftInterval->GetClip(0), zoomInfo, rect).GetRight() > px)
+      {
+         adjustedInterval = leftInterval;
+         adjustLeftBorder = false;
+      }
+      else
+      {
+         adjustedInterval = rightInterval;
+         adjustLeftBorder = true;
+      }
+   }
+   else
+   {
+      adjustedInterval = leftInterval ? leftInterval : rightInterval;
+      if (adjustedInterval)
+      {
+         //single clip case, determine the border,
+         //hit testing area differs from one
+         //used for general case
+         const auto clipRect = ClipParameters::GetClipRect(*adjustedInterval->GetClip(0), zoomInfo, rect);
+         if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
+            adjustLeftBorder = true;
+         else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold)
+            adjustLeftBorder = false;
+         else
+            adjustedInterval.reset();
+      }
+   }
 
-    if(adjustedClip)
-    {
-       const auto isStretchMode = state.state.AltDown();
-       AdjustClipBorder::AdjustHandler adjustHandler = isStretchMode
-          ? (adjustLeftBorder ? StretchLeftTo : StretchRightTo)
-          : (adjustLeftBorder ? TrimLeftTo : TrimRightTo);
+   if(adjustedInterval)
+   {
+      const auto isStretchMode = state.state.AltDown();
+      AdjustClipBorder::AdjustHandler adjustHandler = isStretchMode
+         ? (adjustLeftBorder ? StretchLeftTo : StretchRightTo)
+         : (adjustLeftBorder ? TrimLeftTo : TrimRightTo);
 
-       std::unique_ptr<AdjustPolicy> policy =
-          std::make_unique<AdjustClipBorder>(
-             adjustHandler, waveTrack, adjustedClip, adjustLeftBorder,
-             isStretchMode, zoomInfo);
+      std::unique_ptr<AdjustPolicy> policy =
+         std::make_unique<AdjustClipBorder>(
+            adjustHandler, waveTrack, adjustedInterval, adjustLeftBorder,
+            isStretchMode, zoomInfo);
 
-       return AssignUIHandlePtr(
-          holder,
-          std::make_shared<WaveClipAdjustBorderHandle>(policy,
-             isStretchMode,
-             adjustLeftBorder));
-    }
-    return { };
+      return AssignUIHandlePtr(
+         holder,
+         std::make_shared<WaveClipAdjustBorderHandle>(policy,
+            isStretchMode,
+            adjustLeftBorder));
+   }
+   return { };
 }
 
 UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBorderHandle>& holder,
@@ -477,7 +448,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
 {
     auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack());
     //For multichannel tracks, show adjustment handle only for the leader track
-    if (!waveTrack->IsLeader() && waveTrack->IsAlignedWithLeader())
+    if (!waveTrack->IsLeader())
         return {};
 
     std::vector<UIHandlePtr> results;
