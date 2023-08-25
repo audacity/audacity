@@ -128,12 +128,12 @@ void AboutDialog::CreateCreditsList()
       XO("%s, graphics");
 
    // The Audacity Team: developers and support
-   AddCredit(wxT("Gonzalo Guzm\u00E1n"), documentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Matthieu Hodgkinson"), developerFormat, roleTeamMember);
    AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
+   AddCredit(wxT("Yana Larina"), roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Ryan Miller"), testerFormat, roleTeamMember);
    AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
    AddCredit(wxT("K. Soze"), developerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
@@ -190,6 +190,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Anton Gerasimov"), developerFormat, roleContributor);
    AddCredit(wxT("Mitch Golden"), developerFormat, roleContributor);
    AddCredit(wxT("Brian Gunlogson"), developerFormat, roleContributor);
+   AddCredit(wxT("Gonzalo Guzm\u00E1n"), documentationAndSupportFormat, roleContributor);
    AddCredit(wxT("Andrew Hallendorff"), developerFormat, roleContributor);
    AddCredit(wxT("Robert H\u00E4nggi"), developerFormat, roleContributor);
    AddCredit(wxT("Jouni Helminen"), designerFormat, roleContributor);
@@ -207,6 +208,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Pietro Marcello"), developerFormat, roleContributor);
    AddCredit(wxT("Greg Mekkes"), developerFormat, roleContributor);
    AddCredit(wxT("Abe Milde"), developerFormat, roleContributor);
+   AddCredit(wxT("Ryan Miller"), testerFormat, roleContributor);
    AddCredit(wxT("Paul Nasca"), developerFormat, roleContributor);
    AddCredit(wxT("Clayton Otey"), developerFormat, roleContributor);
    AddCredit(wxT("Pavel Penikov"), testerFormat, roleContributor);
