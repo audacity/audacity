@@ -854,9 +854,9 @@ private:
       double GetPlayStartTime() const;
 
       auto GetChannel(size_t iChannel) { return
-         WideChannelGroupInterval::GetChannel<WaveChannel>(iChannel); }
+         WideChannelGroupInterval::GetChannel<WaveChannelInterval>(iChannel); }
       auto GetChannel(size_t iChannel) const { return
-         WideChannelGroupInterval::GetChannel<const WaveChannel>(iChannel); }
+         WideChannelGroupInterval::GetChannel<const WaveChannelInterval>(iChannel); }
 
       auto Channels() { return
          WideChannelGroupInterval::Channels<WaveChannel>(); }
