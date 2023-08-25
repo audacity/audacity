@@ -245,6 +245,36 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
    return {};
 }
 
+std::shared_ptr<const WaveTrack::Interval>
+WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDirection) const
+{
+   std::shared_ptr<const Interval> result;
+   auto bestMatchTime = searchDirection == PlaybackDirection::forward
+      ? std::numeric_limits<double>::max()
+      : std::numeric_limits<double>::lowest();
+   
+   for(const auto& other : Intervals())
+   {
+      if((searchDirection == PlaybackDirection::forward &&
+         (other->Start() > interval.Start() && other->Start() < bestMatchTime))
+         ||
+         (searchDirection == PlaybackDirection::backward &&
+         (other->Start() < interval.Start() && other->Start() > bestMatchTime)))
+      {
+         result = other;
+         bestMatchTime = other->Start();
+      }
+   }
+   return result;
+}
+
+std::shared_ptr<WaveTrack::Interval>
+WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDirection)
+{
+   return std::const_pointer_cast<Interval>(
+      std::as_const(*this).GetNextInterval(interval, searchDirection));
+}
+
 namespace {
 struct WaveTrackData : ClientData::Cloneable<> {
    WaveTrackData() = default;

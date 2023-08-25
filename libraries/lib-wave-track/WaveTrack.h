@@ -881,6 +881,17 @@ private:
       const std::shared_ptr<WaveClip> mpClip1;
    };
 
+
+   ///@return Interval that starts after(before) the beginning of the passed interval
+   std::shared_ptr<const Interval>
+   GetNextInterval(const Interval& interval, PlaybackDirection searchDirection) const;
+
+   /*!
+    * @copydoc GetNextInterval(const Interval&, PlaybackDirection) const
+    */
+   std::shared_ptr<Interval>
+   GetNextInterval(const Interval& interval, PlaybackDirection searchDirection);
+
    auto Intervals() { return ChannelGroup::Intervals<Interval>(); }
    auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }
 
