@@ -126,6 +126,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
          --executable \"$<TARGET_FILE:${QAUDACITY}>\"\
          --source \"$<TARGET_FILE_DIR:${QAUDACITY}>\"\
          --dest \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}\"\
+         --qrc-files \"${CMAKE_CURRENT_SOURCE_DIR}/audacity.qrc\"\
       )"
    )
 
@@ -141,6 +142,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
          COMMAND \"${PYTHON}\" \"${CMAKE_SOURCE_DIR}/scripts/build/deploy_macos.py\"\
          --source \"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/Audacity.app\"\
          --dest \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}\"\
+         --qrc-files \"${CMAKE_CURRENT_SOURCE_DIR}/audacity.qrc\"\
       )"
    )
 
@@ -170,6 +172,7 @@ else()
          --executable-name \"$<TARGET_FILE_NAME:${QAUDACITY}>\"\
          --source \"$<TARGET_FILE_DIR:${QAUDACITY}>/..\"\
          --dest \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}\"\
+         --qrc-files \"${CMAKE_CURRENT_SOURCE_DIR}/audacity.qrc\"\
          --lib-dir \"${_PKGLIB}\"\
       )"
    )
