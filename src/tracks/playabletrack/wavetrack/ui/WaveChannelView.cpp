@@ -1396,19 +1396,16 @@ namespace {
 using PMF = bool (WaveTrackAffordanceControls::*)(AudacityProject &);
 bool AnyAffordance(AudacityProject& project, WaveChannelView &view, PMF pmf)
 {
-   const auto pLeader = *TrackList::Channels(view.FindTrack().get()).begin();
-   const auto channels = pLeader->Channels();
-   return std::any_of(channels.begin(), channels.end(),
-      [&](const std::shared_ptr<Channel> &pChannel) {
-         auto& channelView = ChannelView::Get(*pChannel);
-         if (const auto affordance =
-            std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
-               channelView.GetAffordanceControls()).get()
-            ; affordance && (affordance->*pmf)(project)
-         )
-            return true;
-         return false;
-      });
+   const auto pLeader = static_cast<WaveTrack*>(
+      *TrackList::Channels(view.FindTrack().get()).begin());
+   auto& channelView = ChannelView::Get(*pLeader);
+   if (const auto affordance =
+      std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
+         channelView.GetAffordanceControls()).get()
+      ; affordance && (affordance->*pmf)(project)
+   )
+      return true;
+   return false;
 }
 }
 

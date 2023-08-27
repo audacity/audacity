@@ -340,15 +340,13 @@ SelectedClipOfFocusedTrack(AudacityProject &project)
    // a track focus if there was none
    if (auto pWaveTrack =
       dynamic_cast<WaveTrack *>(TrackFocus::Get(project).Get())) {
-      for (auto pChannel : TrackList::Channels(pWaveTrack)) {
-         if (FindAffordance(*pChannel)) {
-            auto &viewInfo = ViewInfo::Get(project);
-            auto &clips = pChannel->GetClips();
-            auto begin = clips.begin(), end = clips.end(),
-               iter = WaveTrackUtils::SelectedClip(viewInfo, begin, end);
-            if (iter != end)
-               return { pChannel, *iter };
-         }
+      if (FindAffordance(*pWaveTrack)) {
+         auto &viewInfo = ViewInfo::Get(project);
+         auto &clips = pWaveTrack->GetClips();
+         auto begin = clips.begin(), end = clips.end(),
+            iter = WaveTrackUtils::SelectedClip(viewInfo, begin, end);
+         if (iter != end)
+            return { pWaveTrack, *iter };
       }
    }
    return { nullptr, nullptr };
