@@ -30,6 +30,7 @@
 #include "ViewInfo.h"
 
 #include "AllThemeResources.h"
+#include "AudioIO.h"
 
 #include "ProjectTimeSignature.h"
 #include "wxArrayStringEx.h"
@@ -70,6 +71,7 @@ TimeSignatureToolBar::TimeSignatureToolBar(AudacityProject& project)
                   mLowerSignatureControl->SetValue(
                      wxString::Format("%d", settings.newLowerTimeSignature));
             }))
+    , mPlaybackStateChangedSubscription(AudioIO::Get()->Subscribe(*this, &TimeSignatureToolBar::OnAudioIOEvent))
 {
 }
 
@@ -232,6 +234,21 @@ void TimeSignatureToolBar::OnSize(wxSizeEvent& evt)
 
    evt.Skip();
 }
+
+void TimeSignatureToolBar::OnAudioIOEvent(const AudioIOEvent& event)
+{
+   switch(event.type)
+   {
+   case AudioIOEvent::PLAYBACK:
+   case AudioIOEvent::CAPTURE:
+      {
+         if(mTempoControl)
+            mTempoControl->Enable(!event.on);
+      } break;
+   default: break;
+   }
+}
+
 
 void TimeSignatureToolBar::AddTitle(
    const TranslatableString& Title, wxSizer* pSizer, int flags, int border,
