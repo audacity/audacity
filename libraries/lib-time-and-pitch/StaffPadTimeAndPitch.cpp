@@ -6,7 +6,9 @@
 
 namespace
 {
-constexpr auto maxBlockSize = 512;
+// Let's use StaffPad's default value. (We have to reproduce it here as it has
+// to be specified in the `setup` call.)
+constexpr auto maxBlockSize = 1024;
 
 std::vector<float*>
 GetOffsetBuffer(float* const* buffer, size_t numChannels, size_t offset)
@@ -56,15 +58,6 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
    auto numOutputSamples = 0u;
    while (numOutputSamples < outputLen)
    {
-      // One would expect that feeding `getSamplesToNextHop()` samples would
-      // always bring mTimeAndPitch to return `getNumAvailableOutputSamples() >
-      // 0`, right ? With pitch shifting I saw the opposite happening. Brief
-      // debugging hinted that `getSamplesToNextHop` might indeed be yielding an
-      // underestimation. In that case repeating the operation once should
-      // produce the expected result, but let's not write and infinite loop for
-      // that until we know for sure what the problem is.
-      // todo(mhodgkinson) figure this out
-      auto firstCall = true;
       auto numOutputSamplesAvailable =
          mTimeAndPitch->getNumAvailableOutputSamples();
       while (numOutputSamplesAvailable == 0)
@@ -79,11 +72,6 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
          }
          numOutputSamplesAvailable =
             mTimeAndPitch->getNumAvailableOutputSamples();
-         if (!firstCall)
-         {
-            break;
-         }
-         firstCall = false;
       }
       while (numOutputSamples < outputLen && numOutputSamplesAvailable > 0)
       {
