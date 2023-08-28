@@ -2472,6 +2472,8 @@ ChannelSampleView WaveTrack::GetOneSampleView(
       t0 += newSegment.GetSampleCount().as_double() / GetRate();
       segments.push_back(std::move(newSegment));
       length -= len;
+      if (length == 0)
+         break;
    }
    if (length > 0u)
       segments.push_back(AudioSegmentSampleView{length});
