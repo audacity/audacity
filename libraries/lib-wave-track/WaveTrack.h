@@ -46,8 +46,6 @@ using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
 using WaveClipPointers = std::vector < WaveClip* >;
 using WaveClipConstPointers = std::vector < const WaveClip* >;
 
-using ChannelSampleView = std::vector<AudioSegmentSampleView>;
-
 //
 // Tolerance for merging wave tracks (in seconds)
 //
@@ -426,14 +424,6 @@ private:
    bool GetMute() const override;
    bool GetSolo() const override;
    //! @}
-
-   /*!
-    * @pre `iChannel + nBuffers <= NChannels()`
-    * @return nBuffers `ChannelSampleView`s, one per channel.
-    */
-   std::vector<ChannelSampleView> GetSampleView(
-      size_t iChannel, size_t nBuffers, sampleCount start, size_t len,
-      bool backwards) const;
 
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
@@ -845,8 +835,6 @@ private:
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
       bool backwards, fillFormat fill, bool mayThrow,
       sampleCount* pNumWithinClips) const;
-   ChannelSampleView
-   GetOneSampleView(sampleCount start, size_t len, bool backwards) const;
 
    void DoSetPan(float value);
    void DoSetGain(float value);
