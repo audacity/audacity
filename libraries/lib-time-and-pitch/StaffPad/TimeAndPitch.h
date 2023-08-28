@@ -32,9 +32,10 @@ public:
    void setTimeStretchAndPitchFactor(double timeStretch, double pitchFactor);
 
    /**
-     Return the ~number of samples until the next hop gets processed (might be 1
-     or 2 too high) If this number of samples is added using feedAudio(), more
-     output samples are produced.
+     Return the ~number of samples until the next hop gets analysed (might be 1
+     or 2 too high). For extremely small stretch ratios, several analyses might
+     be needed to produce samples, so you may have to repeat the process.
+     Eventually, more output samples are produced.
      */
    int getSamplesToNextHop() const;
 
