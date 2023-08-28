@@ -111,4 +111,19 @@ TEST_CASE("StaffPadTimeAndPitch")
       const auto outputEqualsInput = container.channelVectors == input;
       REQUIRE(outputEqualsInput);
    }
+
+   SECTION("Extreme stretch ratios")
+   {
+      constexpr auto originalDuration = 60.; // 1 minute
+      constexpr auto targetDuration = 1. / 44100; // 1 sample
+      constexpr auto superSmallRatio = targetDuration / originalDuration;
+      constexpr auto requestedNumSamples = 1; // ... a single sample, but which is the condensed form of one minute of audio :D
+      constexpr auto numChannels = 1;
+      TimeAndPitchFakeSource src;
+      AudioContainer container(requestedNumSamples, numChannels);
+      TimeAndPitchInterface::Parameters params;
+      params.timeRatio = superSmallRatio;
+      StaffPadTimeAndPitch sut(numChannels, src, std::move(params));
+      sut.GetSamples(container.Get(), requestedNumSamples); // This is just not supposed to hang.
+   }
 }
