@@ -167,6 +167,12 @@ public:
 
    double GetStretchRatio() const override;
 
+   //! Checks for stretch-ratio equality, accounting for rounding errors.
+   //! @{
+   bool HasEqualStretchRatio(const WaveClip& other) const;
+   bool StretchRatioEquals(double value) const;
+   //! @}
+
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
