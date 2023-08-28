@@ -185,6 +185,11 @@ WindowPlacement::~WindowPlacement() = default;
 
 WindowPlacement::operator bool() const { return false; }
 
+MessageBoxOptions::MessageBoxOptions() = default;
+MessageBoxOptions::MessageBoxOptions(MessageBoxOptions&&) = default;
+MessageBoxOptions& MessageBoxOptions::operator=(MessageBoxOptions&&) = default;
+MessageBoxOptions::~MessageBoxOptions() = default;
+
 Services::~Services() = default;
 
 ProgressDialog::~ProgressDialog() = default;

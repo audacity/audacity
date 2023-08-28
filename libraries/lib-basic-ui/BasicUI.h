@@ -90,7 +90,16 @@ enum class Button {
    YesNo    //!< Two buttons
 };
 
-struct MessageBoxOptions {
+struct BASIC_UI_API MessageBoxOptions final {
+
+   MessageBoxOptions();
+   MessageBoxOptions(MessageBoxOptions&&);
+   MessageBoxOptions& operator=(MessageBoxOptions&&);
+   ~MessageBoxOptions();
+
+   MessageBoxOptions(const MessageBoxOptions&) = delete;
+   MessageBoxOptions& operator=(const MessageBoxOptions&) = delete;
+
    //! @name Chain-call style initializers
    //! @{
 
