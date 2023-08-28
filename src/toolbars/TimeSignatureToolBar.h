@@ -27,6 +27,8 @@ class SpinControl;
 
 class AudacityProject;
 
+struct AudioIOEvent;
+
 class TimeSignatureToolBar final : public ToolBar
 {
 
@@ -54,12 +56,15 @@ class TimeSignatureToolBar final : public ToolBar
  private:
    void OnSize(wxSizeEvent& evt);
    
+   void OnAudioIOEvent(const AudioIOEvent& event);
+
    void AddTitle(
       const TranslatableString& Title, wxSizer* pSizer,
       int flags = wxEXPAND | wxRIGHT, int border = 5,
       double fontMultiplier = 1.0);
    
    Observer::Subscription mTimeSignatureChangedSubscription;
+   Observer::Subscription mPlaybackStateChangedSubscription;
 
    wxWeakRef<SpinControl> mTempoControl;
    wxWeakRef<SpinControl> mUpperSignatureControl;
