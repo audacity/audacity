@@ -86,6 +86,10 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    bool Get(samplePtr buffer, sampleFormat format,
             sampleCount start, size_t len, bool mayThrow) const;
 
+   /*!
+    Get a view of the lesser of `len` samples or what remains after `start`
+    @pre `start < GetNumSamples()`
+    */
    AudioSegmentSampleView
    GetFloatSampleView(sampleCount start, size_t len) const;
 
