@@ -23,6 +23,7 @@ executable.
 
 *//*******************************************************************/
 
+#include <stdio.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,8 +44,14 @@ int main(int argc, char *argv[])
    {
       strcpy(++slash, audacity);
    }
+   // change argv[0] so that `ps` will show the actually running binary
+   argv[0] = path;
 
-   unsetenv("DYLD_LIBRARY_PATH");
+   if (!getenv("AUDACITY_PRESERVE_LIBRARY_PATH")) {
+      unsetenv("DYLD_LIBRARY_PATH");
+   }
 
    execve(path, argv, environ);
+   perror(path);
+   exit(-1);
 }
