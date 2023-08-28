@@ -2573,6 +2573,16 @@ const WaveClip* WaveTrack::GetNextClip(
       return p == clips.begin() ? nullptr : *(p - 1);
 }
 
+WaveClipConstHolders WaveTrack::GetClipsIntersecting(double t0, double t1) const
+{
+   assert(t0 <= t1);
+   WaveClipConstHolders intersectingClips;
+   for (const auto& clip : mClips)
+      if (clip->IntersectsPlayRegion(t0, t1))
+         intersectingClips.push_back(clip);
+   return intersectingClips;
+}
+
 WaveClip*
 WaveTrack::GetNextClip(const WaveClip& clip, PlaybackDirection direction)
 {

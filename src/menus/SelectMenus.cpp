@@ -1,5 +1,6 @@
 #include "../AdornedRulerPanel.h"
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "../CommonCommandFlags.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -15,6 +16,7 @@
 #include "../SelectUtilities.h"
 #include "SyncLock.h"
 #include "../TrackPanel.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../commands/CommandContext.h"
@@ -27,13 +29,18 @@
 // private helper classes and functions
 namespace {
 
+constexpr auto GetWindowSize(double projectRate)
+{
+   return size_t(std::max(1.0, projectRate / 100));
+}
+
 double NearestZeroCrossing(AudacityProject &project, double t0)
 {
    auto rate = ProjectRate::Get(project).GetRate();
    auto &tracks = TrackList::Get( project );
 
    // Window is 1/100th of a second.
-   auto windowSize = size_t(std::max(1.0, rate / 100));
+   auto windowSize = GetWindowSize(rate);
    Floats dist{ windowSize, true };
 
    int nTracks = 0;
@@ -172,7 +179,7 @@ double GridMove
 {
    auto& projectSnap = ProjectSnap::Get(project);
    auto &viewInfo = ViewInfo::Get( project );
-   
+
    auto result = projectSnap.SingleStep(t, minPix >= 0).time;
 
    if (
@@ -618,6 +625,38 @@ void OnZeroCrossing(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   const auto& tracks = TrackList::Get(project);
+
+   // Selecting precise sample indices across tracks that may have clips with
+   // various stretch ratios in itself is not possible. Even in single-track
+   // mode, we cannot know what the final waveform will look like until
+   // stretching is applied, making this operation futile. Hence we disallow
+   // it if any stretched clip is involved.
+   const auto projectRate = ProjectRate(project).GetRate();
+   const auto searchWindowDuration = GetWindowSize(projectRate) / projectRate;
+   const auto wouldSearchStretchedClip =
+      [searchWindowDuration](const WaveTrack& track, double t) {
+         const auto clips = track.GetClipsIntersecting(
+            t - searchWindowDuration / 2, t + searchWindowDuration / 2);
+         return std::any_of(
+            clips.begin(), clips.end(),
+            [](const std::shared_ptr<const WaveClip>& clip) {
+               return !clip->StretchRatioEquals(1);
+            });
+      };
+   const auto selected = tracks.Selected<const WaveTrack>();
+   if (std::any_of(
+          selected.begin(), selected.end(), [&](const WaveTrack* track) {
+             return wouldSearchStretchedClip(*track, selectedRegion.t0()) ||
+                    wouldSearchStretchedClip(*track, selectedRegion.t1());
+          }))
+   {
+      using namespace BasicUI;
+      ShowMessageBox(
+         XO("Zero-crossing search regions intersect stretched clip(s)."),
+         MessageBoxOptions {}.Caption(XO("Error")).IconStyle(Icon::Error));
+      return;
+   }
 
    const double t0 = NearestZeroCrossing(project, selectedRegion.t0());
    if (selectedRegion.isPoint())

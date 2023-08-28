@@ -282,6 +282,16 @@ double WaveClip::GetStretchRatio() const
    return mClipStretchRatio * dstSrcRatio;
 }
 
+bool WaveClip::HasEqualStretchRatio(const WaveClip& other) const
+{
+   return StretchRatioEquals(other.GetStretchRatio());
+}
+
+bool WaveClip::StretchRatioEquals(double value) const
+{
+   return fabs(GetStretchRatio() - value) < 1e-6;
+}
+
 sampleCount WaveClip::GetNumSamples() const
 {
    // All sequences have equal lengths by class invariant

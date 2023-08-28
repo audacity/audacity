@@ -463,6 +463,7 @@ private:
 
    const WaveClip* GetClipAtTime(double time) const;
    WaveClip* GetClipAtTime(double time);
+   WaveClipConstHolders GetClipsIntersecting(double t0, double t1) const;
 
    /*!
     * @brief Returns clips next to `clip` in the given direction, or `nullptr`
