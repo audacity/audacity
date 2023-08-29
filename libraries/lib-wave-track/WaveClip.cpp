@@ -150,6 +150,16 @@ AudioSegmentSampleView WaveClip::GetSampleView(
       start + TimeToSamples(mTrimLeft), length, mayThrow);
 }
 
+AudioSegmentSampleView WaveClip::GetSampleView(
+   size_t iChannel, double t0, double t1, bool mayThrow) const
+{
+   assert(iChannel < GetWidth());
+   const auto start = TimeToSamples(std::max(0., t0));
+   const auto length =
+      (std::min(GetNumSamples(), TimeToSamples(t1)) - start).as_size_t();
+   return GetSampleView(iChannel, start, length, mayThrow);
+}
+
 size_t WaveClip::GetWidth() const
 {
    return mSequences.size();

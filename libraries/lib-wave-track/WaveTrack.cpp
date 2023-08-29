@@ -63,6 +63,29 @@ using std::max;
 
 WaveChannelInterval::~WaveChannelInterval() = default;
 
+bool WaveChannelInterval::Intersects(double t0, double t1) const
+{
+   return mClip.IntersectsPlayRegion(t0, t1);
+}
+
+double WaveChannelInterval::Start() const
+{
+   return mClip.GetPlayStartTime();
+}
+
+double WaveChannelInterval::End() const
+{
+   return mClip.GetPlayEndTime();
+}
+
+AudioSegmentSampleView
+WaveChannelInterval::GetSampleView(double t0, double t1, bool mayThrow) const
+{
+   constexpr auto iChannel = 0u;
+   // TODO wide wave tracks: use the real channel number.
+   return mClip.GetSampleView(iChannel, t0, t1, mayThrow);
+}
+
 WaveTrack::Interval::Interval(const ChannelGroup &group,
    const std::shared_ptr<WaveClip> &pClip,
    const std::shared_ptr<WaveClip> &pClip1
@@ -2405,6 +2428,58 @@ bool WaveTrack::GetOne(
    if (result == true && backwards)
       ReverseSamples(buffer, format, 0, len);
    return result;
+}
+
+ChannelGroupSampleView
+WaveTrack::GetSampleView(double t0, double t1, bool mayThrow) const
+{
+   assert(IsLeader());
+   ChannelGroupSampleView result;
+   for (const auto& channel : Channels()) {
+      result.push_back(channel->GetSampleView(t0, t1, mayThrow));
+   }
+   return result;
+}
+
+ChannelSampleView
+WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
+{
+   std::vector<std::shared_ptr<const WaveChannelInterval>>
+      intersectingIntervals;
+   for (const auto& interval : Intervals())
+      if (interval->Intersects(t0, t1))
+         intersectingIntervals.push_back(interval);
+   if (intersectingIntervals.empty())
+      return { AudioSegmentSampleView { TimeToLongSamples(t1) -
+                                        TimeToLongSamples(t0) } };
+   std::sort(
+      intersectingIntervals.begin(), intersectingIntervals.end(),
+      [](const auto& a, const auto& b) { return a->Start() < b->Start(); });
+   std::vector<AudioSegmentSampleView> segments;
+   segments.reserve(intersectingIntervals.size());
+   for (auto i = 0u; i < intersectingIntervals.size();++i)
+   {
+      const auto& interval = intersectingIntervals[i];
+      const auto intervalStartTime = interval->Start();
+      if (t0 < intervalStartTime)
+      {
+         const auto numSamples = TimeToLongSamples(intervalStartTime - t0);
+         segments.push_back(AudioSegmentSampleView{numSamples});
+         t0 = intervalStartTime;
+      }
+      const auto intervalT0 = t0 - intervalStartTime;
+      const auto intervalT1 = std::min(t1, interval->End()) - intervalStartTime;
+      auto newSegment =
+         interval->GetSampleView(intervalT0, intervalT1, mayThrow);
+      t0 += intervalT1 - intervalT0;
+      segments.push_back(std::move(newSegment));
+      if (t0 == t1)
+         break;
+   }
+   if (t0 < t1)
+      segments.push_back(AudioSegmentSampleView { TimeToLongSamples(t1) -
+                                                  TimeToLongSamples(t0) });
+   return segments;
 }
 
 /*! @excsafety{Weak} */
