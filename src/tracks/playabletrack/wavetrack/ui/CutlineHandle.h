@@ -24,9 +24,8 @@ class CutlineHandle final : public UIHandle
    static HitTestPreview HitPreview(bool cutline, bool unsafe);
 
 public:
-   explicit CutlineHandle
-      ( const std::shared_ptr<WaveTrack> &pTrack,
-        WaveTrackLocation location );
+   explicit CutlineHandle(const std::shared_ptr<WaveTrack> &pTrack,
+      WaveTrackLocations locations, WaveTrackLocation location);
 
    CutlineHandle &operator=(const CutlineHandle&) = default;
 
@@ -70,7 +69,8 @@ private:
    enum Operation { Merge, Expand, Remove };
    Operation mOperation{ Merge };
    double mStartTime{}, mEndTime{};
-   WaveTrackLocation mLocation {};
+   WaveTrackLocations mLocations;
+   WaveTrackLocation mLocation{};
 };
 
 #endif
