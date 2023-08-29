@@ -46,6 +46,9 @@ using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
 using WaveClipPointers = std::vector < WaveClip* >;
 using WaveClipConstPointers = std::vector < const WaveClip* >;
 
+using ChannelSampleView = std::vector<AudioSegmentSampleView>;
+using ChannelGroupSampleView = std::vector<ChannelSampleView>;
+
 //
 // Tolerance for merging wave tracks (in seconds)
 //
@@ -65,6 +68,20 @@ public:
 
    const WaveClip &GetClip() const { return mClip; }
    const Envelope &GetEnvelope() const { return mEnvelope; }
+   bool Intersects(double t0, double t1) const;
+   double Start() const;
+   double End() const;
+
+   /*!
+    * @brief Request interval samples within [t0, t1). `t0` and `t1` are
+    * truncated to the interval start and end. Stretching influences the number
+    * of samples fitting into [t0, t1), i.e., half as many for twice as large a
+    * stretch ratio, due to a larger spacing of the raw samples. The actual
+    * number of samples available from the returned view is queried through
+    * `AudioSegmentSampleView::GetSampleCount()`.
+    */
+   AudioSegmentSampleView
+   GetSampleView(double t0, double t1, bool mayThrow) const;
 
 private:
    WaveClip &mClip;
@@ -103,6 +120,16 @@ public:
       return GetFloats(
          0, 1, &buffer, start, len, backwards, fill, mayThrow, pNumWithinClips);
    }
+
+   /*!
+    * @brief Request channel samples within [t0, t1), not knowing in advance how
+    * many this will be.
+    *
+    * @details The stretching of intersecting intervals influences the number of
+    * samples fitting into [t0, t1), i.e., half as many for twice as large a
+    * stretch ratio, due to a larger spacing of the raw samples.
+    */
+   ChannelSampleView GetSampleView(double t0, double t1, bool mayThrow) const;
 
    //! Random-access assignment of a range of samples
    void Set(constSamplePtr buffer, sampleFormat format,
@@ -445,6 +472,20 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount* pNumWithinClips = nullptr) const override;
+
+   /*!
+    * @brief Request samples within [t0, t1), not knowing in advance how
+    * many this will be.
+    *
+    * @details The stretching of intersecting intervals influences the number of
+    * samples fitting into [t0, t1), i.e., half as many for twice as large a
+    * stretch ratio, due to a larger spacing of the raw samples.
+    *
+    * @pre `IsLeader()`
+    * @post result: `result.size() == NChannels()`
+    */
+   ChannelGroupSampleView
+   GetSampleView(double t0, double t1, bool mayThrow = true) const;
 
    sampleFormat WidestEffectiveFormat() const override;
 

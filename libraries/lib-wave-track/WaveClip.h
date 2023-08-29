@@ -283,6 +283,19 @@ public:
       size_t iChannel, sampleCount start, size_t length,
       bool mayThrow = true) const override;
 
+   /*!
+    * @brief Request interval samples within [t0, t1). `t0` and `t1` are
+    * truncated to the clip's play start and end. Stretching influences the
+    * number of samples fitting into [t0, t1), i.e., half as many for twice as
+    * large a stretch ratio, due to a larger spacing of the raw samples. The
+    * actual number of samples available from the returned view is queried
+    * through `AudioSegmentSampleView::GetSampleCount()`.
+    *
+    * @pre `iChannel < GetWidth()`
+    */
+   AudioSegmentSampleView GetSampleView(
+      size_t iChannel, double t0, double t1, bool mayThrow = true) const;
+
    //! Get samples from one channel
    /*!
     @param ii identifies the channel
@@ -537,7 +550,7 @@ private:
    std::optional<double> mRawAudioTempo;
    std::optional<double> mProjectTempo;
 
-   // Sample rate of the raw audio, i.e., before stretching.
+   //! Sample rate of the raw audio, i.e., before stretching.
    int mRate;
    int mColourIndex;
 
