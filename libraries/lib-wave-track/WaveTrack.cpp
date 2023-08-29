@@ -1863,10 +1863,7 @@ bool WaveTrack::RateConsistencyCheck() const
          else if (*oRate != rate)
             return false;
          pTrack->mLegacyRate = 0;
-
-         auto &clips = pTrack->mClips;
-         return std::all_of(clips.begin(), clips.end(),
-            [rate](auto &pClip){ return pClip->GetRate() == rate; });
+         return true;
       });
 }
 
