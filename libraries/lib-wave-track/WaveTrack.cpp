@@ -2454,7 +2454,7 @@ ChannelSampleView WaveTrack::GetOneSampleView(
       });
    std::vector<AudioSegmentSampleView> segments;
    segments.reserve(intersectingClips.size());
-   for (auto i = 0u; i < intersectingClips.size();++i)
+   for (auto i = 0u; length > 0 && i < intersectingClips.size(); ++i)
    {
       const auto& clip = intersectingClips[i];
       const auto clipStartTime = clip->GetPlayStartTime();
@@ -2468,12 +2468,15 @@ ChannelSampleView WaveTrack::GetOneSampleView(
       const auto clipS0 = TimeToLongSamples(clipT0);
       const auto len =
          limitSampleBufferSize(length, clip->GetVisibleSampleCount() - clipS0);
-      auto newSegment = clip->GetSampleView(0u, clipS0, len);
-      t0 += newSegment.GetSampleCount().as_double() / GetRate();
-      segments.push_back(std::move(newSegment));
-      length -= len;
-      if (length == 0)
-         break;
+      if (len > 0) {
+         auto newSegment = clip->GetSampleView(0u, clipS0, len);
+         t0 += newSegment.GetSampleCount().as_double() / GetRate();
+         segments.push_back(std::move(newSegment));
+         length -= len;
+      }
+      else
+         // There is still progress to loop termination, incrementing i
+         ;
    }
    if (length > 0u)
       segments.push_back(AudioSegmentSampleView{length});
