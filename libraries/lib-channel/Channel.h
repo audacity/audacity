@@ -234,13 +234,13 @@ public:
          const Channel, Channel>;
    public:
       IntervalIterator() = default;
-      IntervalIterator(ChannelType *pChannel, size_t index)
-         : mpChannel{ pChannel }, mIndex{ index }
+      IntervalIterator(ChannelType *pChannel, size_t index, size_t nIntervals)
+         : mpChannel{ pChannel }, mIndex{ index }, mNIntervals{ nIntervals }
       {}
 
       std::shared_ptr<IntervalType> operator *() const
       {
-         if (!mpChannel || mIndex >= mpChannel->NIntervals())
+         if (!mpChannel || mIndex >= mNIntervals)
             return {};
          return mpChannel->template GetInterval<IntervalType>(mIndex);
       }
@@ -261,24 +261,19 @@ public:
    private:
       ChannelType *mpChannel{};
       size_t mIndex{};
+      size_t mNIntervals{};
    };
 
    //! Get range of intervals with mutative access
    template<typename IntervalType = Interval>
-   IteratorRange<IntervalIterator<IntervalType>> Intervals()
-   {
-      return { { this, 0 }, { this, NIntervals() } };
-   }
+   IteratorRange<IntervalIterator<IntervalType>> Intervals();
 
    //! Get range of intervals with read-only access
    template<typename IntervalType = const Interval>
    auto Intervals() const
       -> std::enable_if_t<std::is_const_v<IntervalType>,
          IteratorRange<IntervalIterator<IntervalType>>
-      >
-   {
-      return { { this, 0 }, { this, NIntervals() } };
-   }
+      >;
 
    /*!
       @}
@@ -594,5 +589,23 @@ auto Channel::GetInterval(size_t iInterval) const
 {
    return ReallyDoGetChannelGroup().GetInterval(iInterval)
       ->template GetChannel<IntervalType>(ReallyGetChannelIndex());
+}
+
+template<typename IntervalType>
+auto Channel::Intervals()
+   -> IteratorRange<IntervalIterator<IntervalType>>
+{
+   const auto nIntervals = ReallyDoGetChannelGroup().NIntervals();
+   return { { this, 0, nIntervals }, { this, nIntervals, nIntervals } };
+}
+
+template<typename IntervalType>
+auto Channel::Intervals() const
+   -> std::enable_if_t<std::is_const_v<IntervalType>,
+      IteratorRange<IntervalIterator<IntervalType>>
+   >
+{
+   const auto nIntervals = ReallyDoGetChannelGroup().NIntervals();
+   return { { this, 0, nIntervals }, { this, nIntervals, nIntervals } };
 }
 #endif
