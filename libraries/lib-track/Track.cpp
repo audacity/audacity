@@ -183,7 +183,7 @@ Track::ChannelGroupData &Track::MakeGroupData()
 Track::ChannelGroupData &Track::GetGroupData()
 {
    auto pTrack = this;
-   if (auto pList = GetOwner())
+   if (auto pList = GetHolder())
       if (auto pLeader = *pList->Find(pTrack))
          pTrack = pLeader;
    // May make on demand
