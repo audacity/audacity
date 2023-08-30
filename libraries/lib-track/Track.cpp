@@ -1005,7 +1005,7 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
    std::vector<Track*> result;
    if (src) {
       tracks = src->Clone(); // not duplicate
-      assert(NChannels() == tracks->NChannels());
+      assert(src->NChannels() == tracks->NChannels());
    }
    if (src) {
       // Share the satellites with the original, though they do not point back
