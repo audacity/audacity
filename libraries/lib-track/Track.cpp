@@ -42,7 +42,6 @@ Track::Track()
 }
 
 Track::Track(const Track& orig, ProtectedCreationArg&&)
-    : mProjectTempo { orig.mProjectTempo }
 {
    mIndex = 0;
 }
@@ -1384,17 +1383,14 @@ bool ChannelAttachmentsBase::HandleXMLAttribute(
 void Track::OnProjectTempoChange(double newTempo)
 {
    assert(IsLeader());
+   auto &mProjectTempo = GetGroupData().mProjectTempo;
    DoOnProjectTempoChange(mProjectTempo, newTempo);
    mProjectTempo = newTempo;
 }
 
 const std::optional<double>& Track::GetProjectTempo() const
 {
-   auto pTrack = this;
-   if (const auto pOwner = GetOwner())
-      // Substitute the leader track
-      pTrack = *pOwner->Find(this);
-   return pTrack->mProjectTempo;
+   return GetGroupData().mProjectTempo;
 }
 
 // Undo/redo handling of selection changes

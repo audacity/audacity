@@ -16,6 +16,7 @@
 #define __AUDACITY_CHANNEL__
 
 #include <cassert>
+#include <optional>
 #include <vector>
 
 #include "ClientData.h"
@@ -555,6 +556,7 @@ public:
    struct CHANNEL_API ChannelGroupData : ChannelGroupAttachments {
       wxString mName;
       LinkType mLinkType{ LinkType::None };
+      std::optional<double> mProjectTempo;
       bool mSelected{ false };
    };
 
