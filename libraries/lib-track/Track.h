@@ -486,9 +486,6 @@ protected:
     */
    virtual void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) = 0;
-
-private:
-   std::optional<double> mProjectTempo;
 };
 
 ENUMERATE_TRACK_TYPE(Track);
