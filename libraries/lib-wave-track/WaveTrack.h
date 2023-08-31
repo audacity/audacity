@@ -291,7 +291,7 @@ private:
    //! Takes gain and pan into account
    float GetChannelGain(int channel) const override;
 
-   int GetWaveColorIndex() const { return mWaveColorIndex; };
+   int GetWaveColorIndex() const;
    /*!
     @pre `IsLeader()`
     */
@@ -870,9 +870,6 @@ private:
 
    sampleFormat  mFormat;
    mutable int   mLegacyRate{ 0 }; //!< used only during deserialization
-
-   // TODO move to a ClientData attachment on the channel group
-   int           mWaveColorIndex;
 
 private:
    void SetClipRates(double newRate);

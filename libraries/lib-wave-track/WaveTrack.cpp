@@ -122,6 +122,9 @@ struct WaveTrackData : ClientData::Cloneable<> {
    static WaveTrackData &Get(WaveTrack &track);
    static const WaveTrackData &Get(const WaveTrack &track);
 
+   int GetWaveColorIndex() const;
+   void SetWaveColorIndex(int index);
+
    double GetOrigin() const;
    void SetOrigin(double origin);
 
@@ -141,6 +144,7 @@ private:
 
    int mRate{ 44100 };
    double mOrigin{ 0.0 };
+   int mWaveColorIndex{ 0 };
 };
 
 static const Track::ChannelGroupAttachments::RegisteredFactory
@@ -153,6 +157,7 @@ WaveTrackData::WaveTrackData(const WaveTrackData &other) {
    SetPan(other.GetPan());
    mRate = other.mRate;
    mOrigin = other.mOrigin;
+   mWaveColorIndex = other.mWaveColorIndex;
 }
 
 WaveTrackData::~WaveTrackData() = default;
@@ -169,6 +174,16 @@ WaveTrackData &WaveTrackData::Get(WaveTrack &track) {
 const WaveTrackData &WaveTrackData::Get(const WaveTrack &track)
 {
    return Get(const_cast<WaveTrack &>(track));
+}
+
+int WaveTrackData::GetWaveColorIndex() const
+{
+   return mWaveColorIndex;
+}
+
+void WaveTrackData::SetWaveColorIndex(int index)
+{
+   mWaveColorIndex = index;
 }
 
 double WaveTrackData::GetOrigin() const
@@ -290,7 +305,6 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
 
    mFormat = format;
    SetRate(static_cast<int>(rate));
-   mWaveColorIndex = 0;
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
@@ -336,7 +350,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    mpFactory = orig.mpFactory;
 
    mFormat = orig.mFormat;
-   mWaveColorIndex = orig.mWaveColorIndex;
 
    WideSampleSequence::Attachments &attachments = *this;
    attachments = orig;
@@ -657,6 +670,11 @@ float WaveTrack::GetChannelGain(int channel) const
       return right * gain;
 }
 
+int WaveTrack::GetWaveColorIndex() const
+{
+   return WaveTrackData::Get(*this).GetWaveColorIndex();
+}
+
 /*! @excsafety{Strong} */
 void WaveTrack::SetWaveColorIndex(int colorIndex)
 {
@@ -664,8 +682,8 @@ void WaveTrack::SetWaveColorIndex(int colorIndex)
    for (const auto pChannel : TrackList::Channels(this)) {
       for (const auto &clip : pChannel->mClips)
          clip->SetColourIndex(colorIndex);
-      pChannel->mWaveColorIndex = colorIndex;
    }
+   WaveTrackData::Get(*this).SetWaveColorIndex(colorIndex);
 }
 
 sampleCount WaveTrack::GetVisibleSampleCount() const
@@ -2072,7 +2090,7 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
             SetLinkType(ToLinkType(nValue), false);
          else if (attr == "colorindex" && value.TryGet(nValue))
             // Don't use SetWaveColorIndex as it sets the clips too.
-            mWaveColorIndex  = nValue;
+            WaveTrackData::Get(*this).SetWaveColorIndex(nValue);
          else if (attr == "sampleformat" && value.TryGet(nValue) &&
                   Sequence::IsValidSampleFormat(nValue))
             mFormat = static_cast<sampleFormat>(nValue);
@@ -2162,7 +2180,7 @@ void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile)
    // a project is opened in an earlier version.
    xmlFile.WriteAttr(wxT("gain"), static_cast<double>(track.GetGain()));
    xmlFile.WriteAttr(wxT("pan"), static_cast<double>(track.GetPan()));
-   xmlFile.WriteAttr(wxT("colorindex"), track.mWaveColorIndex);
+   xmlFile.WriteAttr(wxT("colorindex"), track.GetWaveColorIndex());
 
    xmlFile.WriteAttr(wxT("sampleformat"), static_cast<long>(track.mFormat));
 
