@@ -2450,13 +2450,13 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
       if (interval->Intersects(t0, t1))
          intersectingIntervals.push_back(interval);
    if (intersectingIntervals.empty())
-      return { AudioSegmentSampleView { TimeToLongSamples(t1) -
-                                        TimeToLongSamples(t0) } };
+      return { AudioSegmentSampleView {
+         (TimeToLongSamples(t1) - TimeToLongSamples(t0)).as_size_t() } };
    std::sort(
       intersectingIntervals.begin(), intersectingIntervals.end(),
       [](const auto& a, const auto& b) { return a->Start() < b->Start(); });
    std::vector<AudioSegmentSampleView> segments;
-   segments.reserve(intersectingIntervals.size());
+   segments.reserve(2 * intersectingIntervals.size() + 1);
    for (auto i = 0u; i < intersectingIntervals.size();++i)
    {
       const auto& interval = intersectingIntervals[i];
@@ -2464,7 +2464,7 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
       if (t0 < intervalStartTime)
       {
          const auto numSamples = TimeToLongSamples(intervalStartTime - t0);
-         segments.push_back(AudioSegmentSampleView{numSamples});
+         segments.push_back(AudioSegmentSampleView{numSamples.as_size_t()});
          t0 = intervalStartTime;
       }
       const auto intervalT0 = t0 - intervalStartTime;
@@ -2477,8 +2477,8 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
          break;
    }
    if (t0 < t1)
-      segments.push_back(AudioSegmentSampleView { TimeToLongSamples(t1) -
-                                                  TimeToLongSamples(t0) });
+      segments.push_back(AudioSegmentSampleView {
+         (TimeToLongSamples(t1) - TimeToLongSamples(t0)).as_size_t() });
    return segments;
 }
 

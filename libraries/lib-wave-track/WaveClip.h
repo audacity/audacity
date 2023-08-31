@@ -292,6 +292,7 @@ public:
     * through `AudioSegmentSampleView::GetSampleCount()`.
     *
     * @pre `iChannel < GetWidth()`
+    * @pre stretched samples in [t0, t1) can be counted in a `size_t`
     */
    AudioSegmentSampleView GetSampleView(
       size_t iChannel, double t0, double t1, bool mayThrow = true) const;

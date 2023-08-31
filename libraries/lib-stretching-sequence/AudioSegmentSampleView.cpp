@@ -14,7 +14,7 @@
 #include <numeric>
 
 AudioSegmentSampleView::AudioSegmentSampleView(
-   std::vector<BlockSampleView> blockViews, size_t start, sampleCount length)
+   std::vector<BlockSampleView> blockViews, size_t start, size_t length)
     : mBlockViews { std::move(blockViews) }
     , mStart { start }
     , mLength { length }
@@ -27,7 +27,7 @@ AudioSegmentSampleView::AudioSegmentSampleView(
          [](size_t acc, const auto& block) { return acc + block->size(); }));
 }
 
-AudioSegmentSampleView::AudioSegmentSampleView(sampleCount length)
+AudioSegmentSampleView::AudioSegmentSampleView(size_t length)
     : mLength { length }
     , mIsSilent { true }
 {
@@ -39,7 +39,7 @@ void AudioSegmentSampleView::Copy(float* buffer, size_t bufferSize) const
                DoCopy(buffer, bufferSize);
 }
 
-sampleCount AudioSegmentSampleView::GetSampleCount() const
+size_t AudioSegmentSampleView::GetSampleCount() const
 {
    return mLength;
 }

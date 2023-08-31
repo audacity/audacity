@@ -44,7 +44,7 @@ AudioSegmentSampleView FloatVectorClip::GetSampleView(
    };
    // todo(mhodgkinson) review argument types.
    return AudioSegmentSampleView(
-      std::move(blockViews), start.as_size_t(), sampleCount { len });
+      std::move(blockViews), start.as_size_t(), len);
 }
 
 sampleCount FloatVectorClip::GetVisibleSampleCount() const
