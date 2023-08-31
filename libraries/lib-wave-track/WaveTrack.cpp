@@ -122,13 +122,16 @@ struct WaveTrackData : ClientData::Cloneable<> {
    static WaveTrackData &Get(WaveTrack &track);
    static const WaveTrackData &Get(const WaveTrack &track);
 
+   double GetOrigin() const;
+   void SetOrigin(double origin);
+
    float GetGain() const;
    void SetGain(float value);
    float GetPan() const;
    void SetPan(float value);
 
-   double GetRate() const;
-   void SetRate(double value);
+   int GetRate() const;
+   void SetRate(int value);
 
 private:
    //! Atomic because it may be read by worker threads in playback
@@ -137,6 +140,7 @@ private:
    std::atomic<float> mPan{ 0.0f };
 
    int mRate{ 44100 };
+   double mOrigin{ 0.0 };
 };
 
 static const Track::ChannelGroupAttachments::RegisteredFactory
@@ -148,6 +152,7 @@ WaveTrackData::WaveTrackData(const WaveTrackData &other) {
    SetGain(other.GetGain());
    SetPan(other.GetPan());
    mRate = other.mRate;
+   mOrigin = other.mOrigin;
 }
 
 WaveTrackData::~WaveTrackData() = default;
@@ -164,6 +169,15 @@ WaveTrackData &WaveTrackData::Get(WaveTrack &track) {
 const WaveTrackData &WaveTrackData::Get(const WaveTrack &track)
 {
    return Get(const_cast<WaveTrack &>(track));
+}
+
+double WaveTrackData::GetOrigin() const
+{
+   return mOrigin;
+}
+void WaveTrackData::SetOrigin(double origin)
+{
+   mOrigin = origin;
 }
 
 float WaveTrackData::GetGain() const
@@ -186,12 +200,12 @@ void WaveTrackData::SetPan(float value)
    mPan.store(value, std::memory_order_relaxed);
 }
 
-double WaveTrackData::GetRate() const
+int WaveTrackData::GetRate() const
 {
    return mRate;
 }
 
-void WaveTrackData::SetRate(double value)
+void WaveTrackData::SetRate(int value)
 {
    mRate = value;
 }
@@ -286,7 +300,6 @@ WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
    mLegacyProjectFileOffset = 0;
    for (const auto &clip : orig.mClips)
       InsertClip(std::make_shared<WaveClip>(*clip, mpFactory, true));
-   mOrigin = orig.mOrigin;
 }
 
 size_t WaveTrack::GetWidth() const
@@ -368,8 +381,8 @@ void WaveTrack::MoveTo(double origin)
       for (const auto &clip : pChannel->mClips)
          // assume No-fail-guarantee
          clip->ShiftBy(delta);
-      pChannel->mOrigin = origin;
    }
+   WaveTrackData::Get(*this).SetOrigin(origin);
 }
 
 void WaveTrack::DoOnProjectTempoChange(
@@ -2745,7 +2758,7 @@ WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 WaveClip* WaveTrack::NewestOrNewClip()
 {
    if (mClips.empty()) {
-      return CreateClip(mOrigin, MakeNewClipName());
+      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
    }
    else
       return mClips.back().get();
@@ -2755,7 +2768,7 @@ WaveClip* WaveTrack::NewestOrNewClip()
 WaveClip* WaveTrack::RightmostOrNewClip()
 {
    if (mClips.empty()) {
-      return CreateClip(mOrigin, MakeNewClipName());
+      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
    }
    else
    {
