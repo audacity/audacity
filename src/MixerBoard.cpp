@@ -517,7 +517,7 @@ size_t GetNumSamplesInView(const ChannelSampleView& view)
    return std::accumulate(
       view.begin(), view.end(), 0,
       [](size_t total, const AudioSegmentSampleView& segmentView) {
-         return total + segmentView.GetSampleCount().as_size_t();
+         return total + segmentView.GetSampleCount();
       });
 }
 
@@ -527,7 +527,7 @@ void FillBufferWithSampleView(float* buffer, const ChannelSampleView& view)
    size_t copiedSamples = 0;
    for (const auto& segmentView : view)
    {
-      const auto sampleCount = segmentView.GetSampleCount().as_size_t();
+      const auto sampleCount = segmentView.GetSampleCount();
       segmentView.Copy(buffer + copiedSamples, sampleCount);
       copiedSamples += sampleCount;
    }

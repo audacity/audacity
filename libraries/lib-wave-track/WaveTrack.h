@@ -79,6 +79,8 @@ public:
     * stretch ratio, due to a larger spacing of the raw samples. The actual
     * number of samples available from the returned view is queried through
     * `AudioSegmentSampleView::GetSampleCount()`.
+    *
+    * @pre samples in [t0, t1) can be counted with `size_t`
     */
    AudioSegmentSampleView
    GetSampleView(double t0, double t1, bool mayThrow) const;
@@ -128,6 +130,8 @@ public:
     * @details The stretching of intersecting intervals influences the number of
     * samples fitting into [t0, t1), i.e., half as many for twice as large a
     * stretch ratio, due to a larger spacing of the raw samples.
+    *
+    * @pre samples in [t0, t1) can be counted with `size_t`
     */
    ChannelSampleView GetSampleView(double t0, double t1, bool mayThrow) const;
 
@@ -483,6 +487,7 @@ private:
     *
     * @pre `IsLeader()`
     * @post result: `result.size() == NChannels()`
+    * @pre samples in [t0, t1) can be counted with `size_t`
     */
    ChannelGroupSampleView
    GetSampleView(double t0, double t1, bool mayThrow = true) const;
