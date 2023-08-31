@@ -436,6 +436,7 @@ private:
    /// guaranteed that the same samples are affected.
    ///
 
+   //! This fails if any clip overlapping the range has non-unit stretch ratio!
    bool Get(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,

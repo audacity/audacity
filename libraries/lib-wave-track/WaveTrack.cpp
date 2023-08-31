@@ -2364,6 +2364,10 @@ bool WaveTrack::GetOne(
 
       if (clipEnd > start && clipStart < start+len)
       {
+         // Yes, exact comparison
+         if (clip->GetStretchRatio() != 1.0)
+            return false;
+
          // Clip sample region and Get/Put sample region overlap
          auto samplesToCopy =
             std::min( start+len - clipStart, clip->GetVisibleSampleCount() );
