@@ -632,6 +632,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 
    // Don't throw on read error in this drawing update routine
    constexpr auto mayThrow = false;
+
+   // Not sure how to prove satisfaction of the invariant of GetSampleView
    mSampleView = pTrack->GetSampleView(t0, t1, mayThrow);
 
    // Expect that the difference of t1 and t0 is the part of a track played
@@ -639,14 +641,29 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    // unless stretch ratio is extremely low.
    const auto nFrames = GetNumSamplesInView(mSampleView[0]);
 
-   Floats tempFloatsArray{ std::numeric_limits<size_t>::max() };
+   Floats tempFloatsArray;
+   try {
+      tempFloatsArray.reinit(nFrames);
+   }
+   catch (const std::bad_alloc&) {
+      // Just in case we did not satisfy GetSampleView and computed a bogus
+      // size_t value
+      return;
+   }
    FillBufferWithSampleView(tempFloatsArray.get(), mSampleView[0]);
 
    decltype(tempFloatsArray) meterFloatsArray;
    // We always pass a stereo sample array to the meter, as it shows 2 channels.
    // Mono shows same in both meters.
    // Since we're not mixing, need to duplicate same signal for "right" channel in mono case.
-   meterFloatsArray = Floats{ 2 * nFrames };
+   try {
+      meterFloatsArray.reinit(2 * nFrames );
+   }
+   catch (const std::bad_alloc&) {
+      // Just in case we did not satisfy GetSampleView and computed a bogus
+      // size_t value
+      return;
+   }
 
    // Interleave for stereo. Left/mono first.
    for (unsigned int index = 0; index < nFrames; index++)
