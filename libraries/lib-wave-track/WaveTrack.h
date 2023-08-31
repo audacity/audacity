@@ -910,7 +910,6 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
-   double mOrigin{ 0.0 };
 
    friend WaveChannel;
 };
