@@ -59,9 +59,9 @@ HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
 namespace
 {
    int FindMergeLine(const WaveTrackLocations &locations,
-      WaveTrack *track, double time)
+      WaveTrack &track, double time)
    {
-      const double tolerance = 0.5 / track->GetRate();
+      const double tolerance = 0.5 / track.GetRate();
       int ii = 0;
       for (const auto loc: locations) {
          if (loc.typ == WaveTrackLocation::locationMergePoint &&
@@ -176,15 +176,11 @@ UIHandle::Result CutlineHandle::Click
       }
       else if (mLocation.typ == WaveTrackLocation::locationMergePoint) {
          const double pos = mLocation.pos;
-         for (auto channel :
-              TrackList::Channels(mpTrack.get())) {
-            // Don't assume correspondence of merge points across channels!
-            int idx = FindMergeLine(mLocations, channel, pos);
-            if (idx >= 0) {
-               auto location = mLocations[idx];
-               channel->MergeClips(
-                  location.clipidx1, location.clipidx2);
-            }
+         int idx = FindMergeLine(mLocations, *mpTrack, pos);
+         if (idx >= 0) {
+            auto location = mLocations[idx];
+            mpTrack->MergeClips(
+               location.clipidx1, location.clipidx2);
          }
 
          mOperation = Merge;
