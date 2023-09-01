@@ -54,12 +54,12 @@ namespace {
 
    void StretchLeftTo(WaveClip& clip, double t)
    {
-      //clip.StretchLeftTo(t);
+      clip.StretchLeftTo(t);
    }
 
    void StretchRightTo(WaveClip& clip, double t)
    {
-      //clip.StretchRightTo(t);
+      clip.StretchRightTo(t);
    }
 }
 

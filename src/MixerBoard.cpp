@@ -33,6 +33,7 @@
 #include "NoteTrack.h"
 #endif
 
+#include "AudioSegmentSampleView.h"
 #include "CommonCommandFlags.h"
 #include "KeyboardCapture.h"
 #include "prefs/GUISettings.h" // for RTL_WORKAROUND
@@ -63,6 +64,8 @@
 #endif
 
 #include "commands/CommandManager.h"
+
+#include <numeric> // accumulate
 
 #define AudacityMixerBoardTitle XO("Audacity Mixer%s")
 
@@ -281,7 +284,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mToggleButton_Mute->SetAlternateImages(
       1,
       *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver),
-      *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDown), 
+      *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDown),
       *(mMixerBoard->mImageMuteDisabled));
 
    ctrlPos.y += MUTE_SOLO_HEIGHT;
@@ -289,7 +292,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew AButton(this, ID_TOGGLEBUTTON_SOLO,
                   ctrlPos, ctrlSize,
                   *(mMixerBoard->mImageSoloUp), *(mMixerBoard->mImageSoloOver),
-                  *(mMixerBoard->mImageSoloDown), *(mMixerBoard->mImageSoloDown), 
+                  *(mMixerBoard->mImageSoloDown), *(mMixerBoard->mImageSoloDown),
                   *(mMixerBoard->mImageSoloDisabled),
                   true); // toggle button
    mToggleButton_Solo->SetName(_("Solo"));
@@ -457,6 +460,8 @@ void MixerTrackCluster::ResetMeter(const bool bResetClipping)
 {
    if (mMeter)
       mMeter->Reset(GetWave()->GetRate(), bResetClipping);
+   // Release view to allow cache eviction after/before playback.
+   mSampleView.clear();
 }
 
 
@@ -504,6 +509,29 @@ void MixerTrackCluster::UpdateForStateChange()
    else
       mSlider_Velocity->Set(GetNote()->GetVelocity());
 #endif
+}
+
+namespace {
+size_t GetNumSamplesInView(const ChannelSampleView& view)
+{
+   return std::accumulate(
+      view.begin(), view.end(), 0,
+      [](size_t total, const AudioSegmentSampleView& segmentView) {
+         return total + segmentView.GetSampleCount();
+      });
+}
+
+// Assumes that buffer has capacity >= GetNumSamplesInView(view)
+void FillBufferWithSampleView(float* buffer, const ChannelSampleView& view)
+{
+   size_t copiedSamples = 0;
+   for (const auto& segmentView : view)
+   {
+      const auto sampleCount = segmentView.GetSampleCount();
+      segmentView.Copy(buffer + copiedSamples, sampleCount);
+      copiedSamples += sampleCount;
+   }
+}
 }
 
 void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
@@ -601,63 +629,71 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    // of the meter display, but instead consult PlaybackPolicy
 
    const auto pTrack = GetWave();
-   auto startSample = (sampleCount)((pTrack->GetRate() * t0) + 0.5);
-   auto scnFrames = (sampleCount)((pTrack->GetRate() * (t1 - t0)) + 0.5);
+
+   // Don't throw on read error in this drawing update routine
+   constexpr auto mayThrow = false;
+
+   // Not sure how to prove satisfaction of the invariant of GetSampleView
+   mSampleView = pTrack->GetSampleView(t0, t1, mayThrow);
 
    // Expect that the difference of t1 and t0 is the part of a track played
-   // in about 1/20 second (ticks of TrackPanel timer), so this won't overflow
-   auto nFrames = scnFrames.as_size_t();
+   // in about 1/20 second (ticks of TrackPanel timer), so this won't overflow,
+   // unless stretch ratio is extremely low.
+   const auto nFrames = GetNumSamplesInView(mSampleView[0]);
 
-   Floats tempFloatsArray{ nFrames };
-   decltype(tempFloatsArray) meterFloatsArray;
-   // Don't throw on read error in this drawing update routine
-   bool bSuccess = pTrack->GetFloats(tempFloatsArray.get(),
-      startSample, nFrames, FillFormat::fillZero, false);
-   if (bSuccess)
-   {
-      // We always pass a stereo sample array to the meter, as it shows 2 channels.
-      // Mono shows same in both meters.
-      // Since we're not mixing, need to duplicate same signal for "right" channel in mono case.
-      meterFloatsArray = Floats{ 2 * nFrames };
-
-      // Interleave for stereo. Left/mono first.
-      for (unsigned int index = 0; index < nFrames; index++)
-         meterFloatsArray[2 * index] = tempFloatsArray[index];
-
-      if (GetRight())
-         // Again, don't throw
-         bSuccess = GetRight()->GetFloats(tempFloatsArray.get(),
-            startSample, nFrames, FillFormat::fillZero, false);
-
-      if (bSuccess)
-         // Interleave right channel, or duplicate same signal for "right" channel in mono case.
-         for (unsigned int index = 0; index < nFrames; index++)
-            meterFloatsArray[(2 * index) + 1] = tempFloatsArray[index];
+   Floats tempFloatsArray;
+   try {
+      tempFloatsArray.reinit(nFrames);
    }
+   catch (const std::bad_alloc&) {
+      // Just in case we did not satisfy GetSampleView and computed a bogus
+      // size_t value
+      return;
+   }
+   FillBufferWithSampleView(tempFloatsArray.get(), mSampleView[0]);
+
+   decltype(tempFloatsArray) meterFloatsArray;
+   // We always pass a stereo sample array to the meter, as it shows 2 channels.
+   // Mono shows same in both meters.
+   // Since we're not mixing, need to duplicate same signal for "right" channel in mono case.
+   try {
+      meterFloatsArray.reinit(2 * nFrames );
+   }
+   catch (const std::bad_alloc&) {
+      // Just in case we did not satisfy GetSampleView and computed a bogus
+      // size_t value
+      return;
+   }
+
+   // Interleave for stereo. Left/mono first.
+   for (unsigned int index = 0; index < nFrames; index++)
+      meterFloatsArray[2 * index] = tempFloatsArray[index];
+
+   if (mSampleView.size() > 1u)
+      FillBufferWithSampleView(tempFloatsArray.get(), mSampleView[1]);
+
+   // Interleave right channel, or duplicate same signal for "right" channel in mono case.
+   for (unsigned int index = 0; index < nFrames; index++)
+      meterFloatsArray[(2 * index) + 1] = tempFloatsArray[index];
 
    //const bool bWantPostFadeValues = true; //v Turn this into a checkbox on MixerBoard? For now, always true.
    //if (bSuccess && bWantPostFadeValues)
-   if (bSuccess)
-   {
-      //vvv Need to apply envelope, too? See Mixer::MixSameRate.
-      float gain = pTrack->GetChannelGain(0);
-      for (unsigned int index = 0; index < nFrames; index++)
-         meterFloatsArray[2 * index] *= gain;
-      gain = pTrack->GetChannelGain(1);
-      for (unsigned int index = 0; index < nFrames; index++)
-         meterFloatsArray[(2 * index) + 1] *= gain;
-      // Clip to [-1.0, 1.0] range.
-      for (unsigned int index = 0; index < 2 * nFrames; index++)
-         if (meterFloatsArray[index] < -1.0)
-            meterFloatsArray[index] = -1.0;
-         else if (meterFloatsArray[index] > 1.0)
-            meterFloatsArray[index] = 1.0;
+   //vvv Need to apply envelope, too? See Mixer::MixSameRate.
+   float gain = pTrack->GetChannelGain(0);
+   for (unsigned int index = 0; index < nFrames; index++)
+      meterFloatsArray[2 * index] *= gain;
+   gain = pTrack->GetChannelGain(1);
+   for (unsigned int index = 0; index < nFrames; index++)
+      meterFloatsArray[(2 * index) + 1] *= gain;
+   // Clip to [-1.0, 1.0] range.
+   for (unsigned int index = 0; index < 2 * nFrames; index++)
+      if (meterFloatsArray[index] < -1.0)
+         meterFloatsArray[index] = -1.0;
+      else if (meterFloatsArray[index] > 1.0)
+         meterFloatsArray[index] = 1.0;
 
-      if (mMeter)
-         mMeter->UpdateDisplay(2, nFrames, meterFloatsArray.get());
-   }
-   else
-      this->ResetMeter(false);
+   if (mMeter)
+      mMeter->UpdateDisplay(2, nFrames, meterFloatsArray.get());
 }
 
 // private
@@ -1225,7 +1261,7 @@ void MixerBoard::CreateMuteSoloImages()
    wxBitmap bitmap(mMuteSoloWidth, MUTE_SOLO_HEIGHT,24);
    dc.SelectObject(bitmap);
    wxRect bev(0, 0, mMuteSoloWidth, MUTE_SOLO_HEIGHT);
-   
+
    const bool up=true;
    const bool down=false;
 

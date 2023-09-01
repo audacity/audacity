@@ -28,10 +28,12 @@ bool WavFileIO::Read(
       std::cerr << "libsndfile could not read "s + inputPath << std::endl;
       return false;
    }
-   const auto upToSamples = static_cast<int>(upTo->count() * sfInfo.samplerate);
-   const auto numFramesToRead = upTo.has_value() ?
-                                   std::min<int>(sfInfo.frames, upToSamples) :
-                                   sfInfo.frames;
+   const auto numFramesToRead =
+      upTo.has_value() ?
+         std::min<int>(
+            sfInfo.frames,
+            static_cast<int>(upTo->count() * sfInfo.samplerate)) :
+         sfInfo.frames;
    std::vector<float> tmp(numFramesToRead * sfInfo.channels);
    const auto numReadFrames =
       sf_readf_float(sndfile, tmp.data(), numFramesToRead);

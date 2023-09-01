@@ -32,7 +32,6 @@ Paul Licameli split from WaveChannelView.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "CachingPlayableSequence.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../ProjectSettings.h"
 #include "WaveTrackLocation.h"
@@ -201,7 +200,7 @@ void SpectrumView::DoSetMinimized( bool minimized )
    if( bHalfWave && minimized)
    {
       // It is all right to set the top of scale to a huge number,
-      // not knowing the track rate here -- because when retrieving the
+      // not knowing the track sampleRate here -- because when retrieving the
       // value, then we pass in a sample rate and clamp it above to the
       // Nyquist frequency.
       constexpr auto max = std::numeric_limits<float>::max();
@@ -321,19 +320,31 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
    return  AColor::ColorGradientTimeSelected;
 }
 
-void DrawClipSpectrum(TrackPanelDrawingContext &context,
-                                   const WideSampleSequence &sequence,
-                                   const WaveTrack* track,
-                                   const WaveClip *clip,
-                                   const wxRect &rect,
-                                   const std::shared_ptr<SpectralData> &mpSpectralData,
-                                   bool selected)
+std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
+   const SelectedRegion& selectedRegion, const WaveClip& clip,
+   bool trackIsSelected)
 {
-   auto &dc = context.dc;
-   const auto artist = TrackArtist::Get( context );
-   bool onBrushTool = artist->onBrushTool;
-   const auto &selectedRegion = *artist->pSelectedRegion;
-   const auto &zoomInfo = *artist->pZoomInfo;
+   if (!trackIsSelected)
+      return { 0, 0 };
+   const double t0 = selectedRegion.t0(); // left selection bound
+   const double t1 = selectedRegion.t1(); // right selection bound
+   const auto startTime = clip.GetPlayStartTime();
+   const auto s0 = std::max(sampleCount(0), clip.TimeToSamples(t0 - startTime));
+   auto s1 = std::clamp(
+      clip.TimeToSamples(t1 - startTime), sampleCount { 0 },
+      clip.GetVisibleSampleCount());
+   return { s0, s1 };
+}
+
+void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack *track,
+                      const WaveClip *clip, const wxRect &rect,
+                      const std::shared_ptr<SpectralData> &mpSpectralData,
+                      bool selected) {
+  auto &dc = context.dc;
+  const auto artist = TrackArtist::Get(context);
+  bool onBrushTool = artist->onBrushTool;
+  const auto &selectedRegion = *artist->pSelectedRegion;
+  const auto &zoomInfo = *artist->pZoomInfo;
 
 #ifdef PROFILE_WAVEFORM
    Profiler profiler;
@@ -360,8 +371,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    enum { DASH_LENGTH = 10 /* pixels */ };
 
-   const ClipParameters params{
-      true, track, clip, rect, selectedRegion, zoomInfo };
+   const ClipParameters params { clip, rect, zoomInfo };
    const wxRect &hiddenMid = params.hiddenMid;
    // The "hiddenMid" rect contains the part of the display actually
    // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
@@ -370,11 +380,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    }
 
    const double &t0 = params.t0;
-   const double &tOffset = params.tOffset;
-   const auto &ssel0 = params.ssel0;
-   const auto &ssel1 = params.ssel1;
-   const double &averagePixelsPerSample = params.averagePixelsPerSample;
-   const double &rate = params.rate;
+   const double playStartTime = clip->GetPlayStartTime();
+   const auto [ssel0, ssel1] =
+      GetSelectedSampleIndices(selectedRegion, *clip, track->GetSelected());
+   const double &averagePixelsPerSecond = params.averagePixelsPerSecond;
+   const double sampleRate = clip->GetRate();
+   const double stretchRatio = clip->GetStretchRatio();
    const double &hiddenLeftOffset = params.hiddenLeftOffset;
    const double &leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
@@ -416,15 +427,14 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    unsigned char *data = image.GetData();
 
    const auto half = settings.GetFFTLength() / 2;
-   const double binUnit = rate / (2 * half);
+   const double binUnit = sampleRate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;
    bool updated;
    {
-      const double pps = averagePixelsPerSample * rate;
-      updated = WaveClipSpectrumCache::Get(*clip).GetSpectrogram(
-         *clip, sequence, freq, settings, where, (size_t)hiddenMid.width, t0,
-         pps);
+     updated = WaveClipSpectrumCache::Get(*clip).GetSpectrogram(
+         *clip, freq, settings, where, (size_t)hiddenMid.width, t0,
+         averagePixelsPerSecond);
    }
    auto nBins = settings.NBins();
 
@@ -523,7 +533,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       int maxima[128];
       float maxima0[128], maxima1[128];
       const float
-         f2bin = half / (rate / 2.0f),
+         f2bin = half / (sampleRate / 2.0f),
          bin2f = 1.0f / f2bin,
          minDistance = powf(2.0f, 2.0f / 12.0f),
          i0 = expf(lmin) / binUnit,
@@ -676,16 +686,14 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    if (numPixels > 0) {
       for (int ii = begin; ii < end; ++ii) {
-         const double time = zoomInfo.PositionToTime(ii, -leftOffset) - tOffset;
-         specCache.where[ii - begin] = sampleCount(0.5 + rate * time);
+         const double time = zoomInfo.PositionToTime(ii, -leftOffset) - playStartTime;
+         specCache.where[ii - begin] =
+            sampleCount(0.5 + sampleRate / stretchRatio * time);
       }
-      specCache.Populate
-         (settings, sequence,
-          0, 0, numPixels,
-          clip->GetVisibleSampleCount(),
-          tOffset, rate,
-          0 // FIXME: PRL -- make reassignment work with fisheye
-       );
+      specCache.Populate(
+         settings, *clip, 0, 0, numPixels,
+         0 // FIXME: PRL -- make reassignment work with fisheye
+      );
    }
 
    // build color gradient tables (not thread safe)
@@ -750,11 +758,13 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
       // zoomInfo must be queried for each column since with fisheye enabled
       // time between columns is variable
-      auto w0 = sampleCount(0.5 + rate *
-                   (zoomInfo.PositionToTime(xx, -leftOffset) - tOffset));
+      const auto w0 = sampleCount(
+         0.5 + sampleRate / stretchRatio *
+                  (zoomInfo.PositionToTime(xx, -leftOffset) - playStartTime));
 
-      auto w1 = sampleCount(0.5 + rate *
-                    (zoomInfo.PositionToTime(xx+1, -leftOffset) - tOffset));
+      const auto w1 = sampleCount(
+         0.5 + sampleRate / stretchRatio *
+                  (zoomInfo.PositionToTime(xx + 1, -leftOffset) - playStartTime));
 
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
       maybeSelected = maybeSelected || (xx == selectedX);
@@ -853,7 +863,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       TrackArt::DrawClipEdges(dc, clipRect, selected);
    }
 }
-
 }
 
 void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
@@ -867,11 +876,9 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
    TrackArt::DrawBackgroundWithSelection(
       context, rect, track, blankSelectedBrush, blankBrush );
 
-   const CachingPlayableSequence cachingSequence { *track };
    for (const auto &clip: track->GetClips()){
-      DrawClipSpectrum(
-         context, cachingSequence, track, clip.get(), rect, mpSpectralData,
-         clip.get() == selectedClip);
+     DrawClipSpectrum(context, track, clip.get(), rect, mpSpectralData,
+                      clip.get() == selectedClip);
    }
 
    DrawBoldBoundaries( context, track, rect );

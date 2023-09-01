@@ -1114,8 +1114,8 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
    return true;
 }
 
-AudioSegmentSampleView
-Sequence::GetFloatSampleView(sampleCount start, size_t length) const
+AudioSegmentSampleView Sequence::GetFloatSampleView(
+   sampleCount start, size_t length, bool mayThrow) const
 {
    assert(start < mNumSamples);
    length = limitSampleBufferSize(length, mNumSamples - start);
@@ -1128,7 +1128,7 @@ Sequence::GetFloatSampleView(sampleCount start, size_t length) const
    {
       const auto b = FindBlock(cursor);
       const SeqBlock& block = mBlock[b];
-      blockViews.push_back(block.sb->GetFloatSampleView());
+      blockViews.push_back(block.sb->GetFloatSampleView(mayThrow));
       cursor = block.start + block.sb->GetSampleCount();
    }
    return { std::move(blockViews), sequenceOffset, length };

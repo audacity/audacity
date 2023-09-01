@@ -33,7 +33,7 @@ class SqliteSampleBlockFactory;
 class SqliteSampleBlock final : public SampleBlock
 {
 public:
-   BlockSampleView GetFloatSampleView() override;
+   BlockSampleView GetFloatSampleView(bool mayThrow) override;
 
 private:
    std::weak_ptr<std::vector<float>> mCache;
@@ -298,7 +298,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    return sb;
 }
 
-BlockSampleView SqliteSampleBlock::GetFloatSampleView()
+BlockSampleView SqliteSampleBlock::GetFloatSampleView(bool mayThrow)
 {
    assert(mSampleCount > 0);
 
@@ -315,10 +315,18 @@ BlockSampleView SqliteSampleBlock::GetFloatSampleView()
 
    const auto newCache =
       std::make_shared<std::vector<float>>(mSampleCount);
-   const auto cachedSize = DoGetSamples(
-      reinterpret_cast<samplePtr>(newCache->data()), floatSample, 0,
-      mSampleCount);
-   assert(cachedSize == mSampleCount);
+   try {
+      const auto cachedSize = DoGetSamples(
+         reinterpret_cast<samplePtr>(newCache->data()), floatSample, 0,
+         mSampleCount);
+      assert(cachedSize == mSampleCount);
+   }
+   catch (...)
+   {
+      if (mayThrow)
+         std::rethrow_exception(std::current_exception());
+      std::fill(newCache->begin(), newCache->end(), 0.f);
+   }
    mCache = newCache;
    return newCache;
 }

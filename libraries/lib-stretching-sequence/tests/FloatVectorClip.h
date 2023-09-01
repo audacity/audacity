@@ -22,8 +22,9 @@ public:
    FloatVectorClip(
       int sampleRate, const std::vector<float>& audio, size_t numChannels);
 
-   AudioSegmentSampleView
-   GetSampleView(size_t iChannel, sampleCount start, size_t len) const override;
+   AudioSegmentSampleView GetSampleView(
+      size_t iChannel, sampleCount start, size_t len,
+      bool mayThrow) const override;
 
    sampleCount GetVisibleSampleCount() const override;
 

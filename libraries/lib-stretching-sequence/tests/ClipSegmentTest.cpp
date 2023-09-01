@@ -8,9 +8,10 @@
   Matthieu Hodgkinson
 
 **********************************************************************/
-#include "AudioContainer.h"
 #include "ClipSegment.h"
+#include "AudioContainer.h"
 #include "FloatVectorClip.h"
+
 
 #include <catch2/catch.hpp>
 

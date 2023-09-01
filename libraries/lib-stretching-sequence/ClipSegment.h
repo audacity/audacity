@@ -11,18 +11,15 @@
 #pragma once
 
 #include "AudioSegment.h"
-#include "AudioSegmentSampleView.h"
 #include "PlaybackDirection.h"
-#include "TimeAndPitchInterface.h"
+#include "ClipTimeAndPitchSource.h"
 
 #include <memory>
 
 class ClipInterface;
-using ChannelSampleViews = std::vector<AudioSegmentSampleView>;
+class TimeAndPitchInterface;
 
-class STRETCHING_SEQUENCE_API ClipSegment final :
-    public AudioSegment,
-    public TimeAndPitchSource
+class STRETCHING_SEQUENCE_API ClipSegment final : public AudioSegment
 {
 public:
    ClipSegment(
@@ -34,15 +31,9 @@ public:
    size_t GetWidth() const override;
 
 private:
-   // TimeAndPitchSource
-   void Pull(float* const*, size_t samplesPerChannel) override;
-
-   const ClipInterface& mClip;
-   sampleCount mLastReadSample = 0;
    const sampleCount mTotalNumSamplesToProduce;
    sampleCount mTotalNumSamplesProduced = 0;
-   const PlaybackDirection mPlaybackDirection;
-   ChannelSampleViews mChannelSampleViews;
+   ClipTimeAndPitchSource mSource;
    // Careful that this guy is constructed last, as its ctor refers to *this.
    // todo(mhodgkinson) make this safe.
    std::unique_ptr<TimeAndPitchInterface> mStretcher;

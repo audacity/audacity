@@ -37,14 +37,14 @@ FloatVectorClip::FloatVectorClip(
 }
 
 AudioSegmentSampleView FloatVectorClip::GetSampleView(
-   size_t iChannel, sampleCount start, size_t len) const
+   size_t iChannel, sampleCount start, size_t len, bool mayThrow) const
 {
    std::vector<BlockSampleView> blockViews {
       std::make_shared<std::vector<float>>(mAudio[iChannel])
    };
    // todo(mhodgkinson) review argument types.
    return AudioSegmentSampleView(
-      std::move(blockViews), start.as_size_t(), sampleCount { len });
+      std::move(blockViews), start.as_size_t(), len);
 }
 
 sampleCount FloatVectorClip::GetVisibleSampleCount() const

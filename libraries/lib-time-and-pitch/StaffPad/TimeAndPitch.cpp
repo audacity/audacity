@@ -472,11 +472,9 @@ void TimeAndPitch::feedAudio(const float* const* input_smp, int numSamples)
    if (d->exact_hop_s == 0.0) // this happens if feedAudio is called without
                               // setting up stretch factors
       d->exact_hop_s = d->next_exact_hop_s;
-   int hop_s = int(d->exact_hop_s + d->hop_s_err);
-   d->hop_s_err += d->exact_hop_s - hop_s;
 
-   int hop_a = int(d->exact_hop_a + d->hop_a_err);
-   d->hop_a_err += d->exact_hop_a - hop_a;
+   const int hop_s = int(d->exact_hop_s + d->hop_s_err);
+   const int hop_a = int(d->exact_hop_a + d->hop_a_err);
 
    double step = 0.0;
    double read_pos = _resampleReadPos;
@@ -498,6 +496,8 @@ void TimeAndPitch::feedAudio(const float* const* input_smp, int numSamples)
       if (_analysis_hop_counter >= hop_a)
       {
          _analysis_hop_counter -= hop_a;
+         d->hop_s_err += d->exact_hop_s - hop_s;
+         d->hop_a_err += d->exact_hop_a - hop_a;
          for (int ch = 0; ch < _numChannels; ++ch)
             d->inCircularBuffer[ch].readBlock(
                -fftSize, fftSize, d->fft_timeseries.getPtr(ch));

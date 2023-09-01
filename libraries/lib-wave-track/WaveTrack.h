@@ -47,6 +47,7 @@ using WaveClipPointers = std::vector < WaveClip* >;
 using WaveClipConstPointers = std::vector < const WaveClip* >;
 
 using ChannelSampleView = std::vector<AudioSegmentSampleView>;
+using ChannelGroupSampleView = std::vector<ChannelSampleView>;
 
 //
 // Tolerance for merging wave tracks (in seconds)
@@ -67,6 +68,22 @@ public:
 
    const WaveClip &GetClip() const { return mClip; }
    const Envelope &GetEnvelope() const { return mEnvelope; }
+   bool Intersects(double t0, double t1) const;
+   double Start() const;
+   double End() const;
+
+   /*!
+    * @brief Request interval samples within [t0, t1). `t0` and `t1` are
+    * truncated to the interval start and end. Stretching influences the number
+    * of samples fitting into [t0, t1), i.e., half as many for twice as large a
+    * stretch ratio, due to a larger spacing of the raw samples. The actual
+    * number of samples available from the returned view is queried through
+    * `AudioSegmentSampleView::GetSampleCount()`.
+    *
+    * @pre samples in [t0, t1) can be counted with `size_t`
+    */
+   AudioSegmentSampleView
+   GetSampleView(double t0, double t1, bool mayThrow) const;
 
 private:
    WaveClip &mClip;
@@ -105,6 +122,18 @@ public:
       return GetFloats(
          0, 1, &buffer, start, len, backwards, fill, mayThrow, pNumWithinClips);
    }
+
+   /*!
+    * @brief Request channel samples within [t0, t1), not knowing in advance how
+    * many this will be.
+    *
+    * @details The stretching of intersecting intervals influences the number of
+    * samples fitting into [t0, t1), i.e., half as many for twice as large a
+    * stretch ratio, due to a larger spacing of the raw samples.
+    *
+    * @pre samples in [t0, t1) can be counted with `size_t`
+    */
+   ChannelSampleView GetSampleView(double t0, double t1, bool mayThrow) const;
 
    //! Random-access assignment of a range of samples
    void Set(constSamplePtr buffer, sampleFormat format,
@@ -427,14 +456,6 @@ private:
    bool GetSolo() const override;
    //! @}
 
-   /*!
-    * @pre `iChannel + nBuffers <= NChannels()`
-    * @return nBuffers `ChannelSampleView`s, one per channel.
-    */
-   std::vector<ChannelSampleView> GetSampleView(
-      size_t iChannel, size_t nBuffers, sampleCount start, size_t len,
-      bool backwards) const;
-
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
    /// have a continuous space of samples anymore, but we simulate it,
@@ -446,6 +467,7 @@ private:
    /// guaranteed that the same samples are affected.
    ///
 
+   //! This fails if any clip overlapping the range has non-unit stretch ratio!
    bool Get(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
@@ -454,6 +476,21 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount* pNumWithinClips = nullptr) const override;
+
+   /*!
+    * @brief Request samples within [t0, t1), not knowing in advance how
+    * many this will be.
+    *
+    * @details The stretching of intersecting intervals influences the number of
+    * samples fitting into [t0, t1), i.e., half as many for twice as large a
+    * stretch ratio, due to a larger spacing of the raw samples.
+    *
+    * @pre `IsLeader()`
+    * @post result: `result.size() == NChannels()`
+    * @pre samples in [t0, t1) can be counted with `size_t`
+    */
+   ChannelGroupSampleView
+   GetSampleView(double t0, double t1, bool mayThrow = true) const;
 
    sampleFormat WidestEffectiveFormat() const override;
 
@@ -472,6 +509,7 @@ private:
 
    const WaveClip* GetClipAtTime(double time) const;
    WaveClip* GetClipAtTime(double time);
+   WaveClipConstHolders GetClipsIntersecting(double t0, double t1) const;
 
    /*!
     * @brief Returns clips next to `clip` in the given direction, or `nullptr`
@@ -845,8 +883,6 @@ private:
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
       bool backwards, fillFormat fill, bool mayThrow,
       sampleCount* pNumWithinClips) const;
-   ChannelSampleView
-   GetOneSampleView(sampleCount start, size_t len, bool backwards) const;
 
    void DoSetPan(float value);
    void DoSetGain(float value);
