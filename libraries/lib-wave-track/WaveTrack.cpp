@@ -497,9 +497,6 @@ void WaveTrack::Init(const WaveTrack &orig)
 {
    WritableSampleTrack::Init(orig);
    mpFactory = orig.mpFactory;
-
-   WideSampleSequence::Attachments &attachments = *this;
-   attachments = orig;
 }
 
 void WaveTrack::Reinit(const WaveTrack &orig)
@@ -509,23 +506,8 @@ void WaveTrack::Reinit(const WaveTrack &orig)
    assert(NChannels() == orig.NChannels());
    const auto channels = TrackList::Channels(this);
    auto iter = TrackList::Channels(&orig).begin();
-   for (const auto pChannel : channels) {
-      pChannel->Init(**iter);
-
-      // Copy attached data from orig.  Nullify data in this where orig had null.
-      WideSampleSequence::Attachments &attachments = *pChannel;
-      attachments = **iter;
-      ++iter;
-   }
-}
-
-void WaveTrack::Merge(const Track &orig)
-{
-   orig.TypeSwitch( [&](const WaveTrack &wt) {
-      // Copy attached data from orig.  Nullify data in this where orig had null.
-      WideSampleSequence::Attachments &attachments = *this;
-      attachments = wt;
-   });
+   for (const auto pChannel : channels)
+      pChannel->Init(**iter++);
 }
 
 WaveTrack::~WaveTrack()

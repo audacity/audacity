@@ -11,27 +11,18 @@ Paul Licameli split from SampleFrame.h
 #define __AUDACITY_WIDE_SAMPLE_SEQUENCE_
 
 #include "AudioGraphChannel.h"
-#include "ClientData.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
 
 class WideSampleSequence;
-
-//! Hosting of objects attached by higher level code
-using SequenceAttachments = ClientData::Site<
-   WideSampleSequence, ClientData::Cloneable<>, ClientData::DeepCopying
->;
 
 //! An interface for random-access fetches from a collection of streams of
 //! samples, associated with the same time; also defines an envelope that
 //! applies to all the streams.
 class MIXER_API WideSampleSequence
    : public AudioGraph::Channel
-   , public SequenceAttachments
 {
 public:
-   using Attachments = SequenceAttachments;
-
    virtual ~WideSampleSequence();
 
    const WideSampleSequence& GetDecorated() const;

@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <optional>
+#include <vector>
 
 class AudioSegment;
 class AudioSegmentFactoryInterface;

@@ -24,15 +24,15 @@
 #include "PluginProvider.h" // for PluginID
 #include "RealtimeEffectList.h"
 
+class ChannelGroup;
 class EffectInstance;
-class WideSampleSequence;
 
 namespace RealtimeEffects {
    class InitializationScope;
    class ProcessingScope;
 }
 
-///Posted when effect is being added or removed to/from sequence or project
+///Posted when effect is being added or removed to/from channel group or project
 struct RealtimeEffectManagerMessage
 {
    enum class Type
@@ -42,7 +42,7 @@ struct RealtimeEffectManagerMessage
       EffectRemoved
    };
    Type type{};
-   WideSampleSequence *sequence{}; ///< null, if changes happened in the project scope
+   ChannelGroup *group{}; ///< null, if changes happened in the project scope
 };
 
 class REALTIME_EFFECTS_API RealtimeEffectManager final :
@@ -64,24 +64,25 @@ public:
    bool IsActive() const noexcept;
 //   Latency GetLatency() const;
 
-   //! Main thread appends a global or per-sequence effect
+   //! Main thread appends a global or per-group effect
    /*!
     @param pScope if realtime is active but scope is absent, there is no effect
-    @param pSequence if null, then state is added to the global list
+    @param pGroup if null, then state is added to the global list
     @param id identifies the effect
     @return if null, the given id was not found
 
+    @pre `!pGroup || pGroup->IsLeader()`
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState> AddState(
       RealtimeEffects::InitializationScope *pScope,
-      WideSampleSequence *pSequence,
+      ChannelGroup *pGroup,
       const PluginID & id);
 
-   //! Main thread replaces a global or per-sequence effect
+   //! Main thread replaces a global or per-group effect
    /*!
     @param pScope if realtime is active but scope is absent, there is no effect
-    @param pSequence if null, then state is added to the global list
+    @param pGroup if null, then state is added to the global list
     @param index position in the list to replace; no effect if out of range
     @param id identifies the effect
     @return if null, the given id was not found and the old state remains
@@ -90,23 +91,23 @@ public:
     */
    std::shared_ptr<RealtimeEffectState> ReplaceState(
       RealtimeEffects::InitializationScope *pScope,
-      WideSampleSequence *pSequence,
+      ChannelGroup *pGroup,
       size_t index, const PluginID & id);
 
-   //! Main thread removes a global or per-sequence effect
+   //! Main thread removes a global or per-group effect
    /*!
     @param pScope if realtime is active but scope is absent, there is no effect
-    @param pSequence if null, then state is added to the global list
+    @param pGroup if null, then state is added to the global list
     @param state the state to be removed
     */
    /*! No effect if realtime is active but scope is not supplied */
    void RemoveState(RealtimeEffects::InitializationScope *pScope,
-      WideSampleSequence *pSequence,
+      ChannelGroup *pGroup,
       std::shared_ptr<RealtimeEffectState> pState);
 
-   //! Report the position of a state in the global or a per-sequence list
+   //! Report the position of a state in the global or a per-group list
    std::optional<size_t> FindState(
-      WideSampleSequence *pSequence,
+      ChannelGroup *pGroup,
       const std::shared_ptr<RealtimeEffectState> &pState) const;
 
    bool GetSuspended() const
@@ -125,18 +126,24 @@ public:
 private:
    friend RealtimeEffects::InitializationScope;
 
+   /*!
+    @pre `!pGroup || pGroup->IsLeader()`
+    */
    std::shared_ptr<RealtimeEffectState>
    MakeNewState(RealtimeEffects::InitializationScope *pScope,
-      WideSampleSequence *pSequence,
+      ChannelGroup *pGroup,
       const PluginID &id);
 
-   //! Main thread begins to define a set of sequences for playback
+   //! Main thread begins to define a set of groups for playback
    void Initialize(RealtimeEffects::InitializationScope &scope,
       double sampleRate);
-   //! Main thread adds one sequence (passing the first of one or more
+   //! Main thread adds one group (passing the first of one or more
    //! channels), still before playback
-   void AddSequence(RealtimeEffects::InitializationScope &scope,
-      const WideSampleSequence &sequence, unsigned chans, float rate);
+   /*!
+    @pre `group.IsLeader()`
+    */
+   void AddGroup(RealtimeEffects::InitializationScope &scope,
+      const ChannelGroup &group, unsigned chans, float rate);
    //! Main thread cleans up after playback
    void Finalize() noexcept;
 
@@ -153,7 +160,7 @@ private:
    void ProcessStart(bool suspended);
    /*! @copydoc ProcessScope::Process */
    size_t Process(bool suspended,
-      const WideSampleSequence &sequence,
+      const ChannelGroup &group,
       float *const *buffers, float *const *scratch, float *dummy,
       unsigned nBuffers, size_t numSamples);
    void ProcessEnd(bool suspended) noexcept;
@@ -168,37 +175,37 @@ private:
 
    //! Visit the per-project states first, then states for leader if not null
    template<typename StateVisitor>
-   void VisitGroup(WideSampleSequence &sequence, const StateVisitor &func)
+   void VisitGroup(ChannelGroup &group, const StateVisitor &func)
    {
       // Call the function for each effect on the master list
       RealtimeEffectList::Get(mProject).Visit(func);
 
-      // Call the function for each effect on the sequence list
-      RealtimeEffectList::Get(sequence).Visit(func);
+      // Call the function for each effect on the group list
+      RealtimeEffectList::Get(group).Visit(func);
    }
 
    template<typename StateVisitor>
    void VisitGroup(
-      const WideSampleSequence &sequence, const StateVisitor &func)
+      const ChannelGroup &group, const StateVisitor &func)
    {
       // Call the function for each effect on the master list
       RealtimeEffectList::Get(mProject).Visit(func);
 
-      // Call the function for each effect on the sequence list
-      RealtimeEffectList::Get(sequence).Visit(func);
+      // Call the function for each effect on the group list
+      RealtimeEffectList::Get(group).Visit(func);
    }
 
-   //! Visit the per-project states first, then all sequences from AddSequence
-   /*! Sequences are visited in unspecified order */
+   //! Visit the per-project states first, then all groups from AddGroup
+   /*! Groups are visited in unspecified order */
    template<typename StateVisitor>
    void VisitAll(const StateVisitor &func)
    {
       // Call the function for each effect on the master list
       RealtimeEffectList::Get(mProject).Visit(func);
 
-      // And all sequence lists
-      for (auto sequence : mSequences)
-         RealtimeEffectList::Get(*sequence).Visit(func);
+      // And all group lists
+      for (auto group : mGroups)
+         RealtimeEffectList::Get(*group).Visit(func);
    }
 
    AudacityProject &mProject;
@@ -208,11 +215,11 @@ private:
 
    bool mActive{ false };
 
-   // This member is mutated only by Initialize(), AddSequence(), Finalize()
+   // This member is mutated only by Initialize(), AddGroup(), Finalize()
    // which are to be called only while there is no playback
-   std::vector<const WideSampleSequence *> mSequences; //!< all are non-null
+   std::vector<const ChannelGroup *> mGroups; //!< all are non-null
 
-   std::unordered_map<const WideSampleSequence *, double> mRates;
+   std::unordered_map<const ChannelGroup *, double> mRates;
 };
 
 namespace RealtimeEffects {
@@ -238,12 +245,15 @@ public:
          RealtimeEffectManager::Get(*pProject).Finalize();
    }
 
-   void AddSequence(const WideSampleSequence &sequence,
+   /*!
+    @pre `group.IsLeader()`
+    */
+   void AddGroup(const ChannelGroup &group,
       unsigned chans, float rate)
    {
       if (auto pProject = mwProject.lock())
          RealtimeEffectManager::Get(*pProject)
-            .AddSequence(*this, sequence, chans, rate);
+            .AddGroup(*this, group, chans, rate);
    }
 
    std::vector<std::shared_ptr<EffectInstance>> mInstances;
@@ -282,7 +292,7 @@ public:
    }
 
    //! @return how many samples to discard for latency
-   size_t Process(const WideSampleSequence &sequence,
+   size_t Process(const ChannelGroup &group,
       float *const *buffers,
       float *const *scratch,
       float *dummy,
@@ -292,7 +302,7 @@ public:
    {
       if (auto pProject = mwProject.lock())
          return RealtimeEffectManager::Get(*pProject)
-            .Process(mSuspended, sequence, buffers, scratch, dummy,
+            .Process(mSuspended, group, buffers, scratch, dummy,
                nBuffers, numSamples);
       else
          return 0; // consider them trivially processed

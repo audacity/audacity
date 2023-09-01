@@ -79,9 +79,9 @@ public:
    }
 
    // PlayableSequence
-   bool IsLeader() const override
+   const ChannelGroup *FindChannelGroup() const override
    {
-      return false;
+      return nullptr;
    }
 
    bool GetSolo() const override

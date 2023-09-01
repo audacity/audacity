@@ -819,10 +819,6 @@ private:
     */
    bool RemoveCutLine(double cutLinePosition);
 
-   // This track has been merged into a stereo track.  Copy shared parameters
-   // from the NEW partner.
-   void Merge(const Track &orig);
-
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 

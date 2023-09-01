@@ -779,9 +779,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 
    tracks.MakeMultiChannelTrack( *pTrack, 2, false );
 
-   // Set partner's parameters to match target.
-   partner->Merge(*pTrack);
-
    pTrack->SetPan( 0.0f );
 
    // Set NEW track heights and minimized state
