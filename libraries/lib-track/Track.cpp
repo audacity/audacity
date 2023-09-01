@@ -49,11 +49,8 @@ Track::Track(const Track& orig, ProtectedCreationArg&&)
 // Copy all the track properties except the actual contents
 void Track::Init(const Track &orig)
 {
+   ChannelGroup::Init(orig);
    mId = orig.mId;
-
-   // Deep copy of any group data
-   mpGroupData = orig.mpGroupData ?
-      std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
 }
 
 const wxString &Track::GetName() const
@@ -166,32 +163,18 @@ void Track::SetLinkType(LinkType linkType, bool completeList)
    }
 }
 
-void Track::DestroyGroupData()
-{
-   mpGroupData.reset();
-}
-
-Track::ChannelGroupData &Track::MakeGroupData()
-{
-   if (!mpGroupData)
-      // Make on demand
-      mpGroupData = std::make_unique<ChannelGroupData>();
-   return *mpGroupData;
-}
-
-Track::ChannelGroupData &Track::GetGroupData()
+ChannelGroup::ChannelGroupData &Track::GetGroupData()
 {
    auto pTrack = this;
    if (auto pList = GetHolder())
       if (auto pLeader = *pList->Find(pTrack))
          pTrack = pLeader;
    // May make on demand
-   return pTrack->MakeGroupData();
+   return pTrack->ChannelGroup::GetGroupData();
 }
 
-const Track::ChannelGroupData &Track::GetGroupData() const
+const ChannelGroup::ChannelGroupData &Track::GetGroupData() const
 {
-   // May make group data on demand, but consider that logically const
    return const_cast<Track *>(this)->GetGroupData();
 }
 
@@ -207,35 +190,34 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
 
       // First ensure there is no partner
       if (auto partner = GetLinkedTrack())
-         partner->mpGroupData.reset();
+         partner->DestroyGroupData();
       assert(!GetLinkedTrack());
 
       // Change the link type
-      MakeGroupData().mLinkType = linkType;
+      GetGroupData().mLinkType = linkType;
 
       // If this acquired a partner, it loses any old group data
       if (auto partner = GetLinkedTrack())
-         partner->mpGroupData.reset();
+         partner->DestroyGroupData();
    }
    else if (linkType == LinkType::None) {
       // Becoming unlinked
-      assert(mpGroupData);
+      assert(FindGroupData());
       if (HasLinkedTrack()) {
          if (auto partner = GetLinkedTrack()) {
             // Make independent copy of group data in the partner, which should
             // have had none
-            assert(!partner->mpGroupData);
-            partner->mpGroupData =
-               std::make_unique<ChannelGroupData>(*mpGroupData);
-            partner->mpGroupData->mLinkType = LinkType::None;
+            assert(!partner->FindGroupData());
+            partner->ChannelGroup::Init(*this);
+            partner->GetGroupData().mLinkType = LinkType::None;
          }
       }
-      mpGroupData->mLinkType = LinkType::None;
+      GetGroupData().mLinkType = LinkType::None;
    }
    else {
       // Remaining linked, changing the type
-      assert(mpGroupData);
-      MakeGroupData().mLinkType = linkType;
+      assert(FindGroupData());
+      GetGroupData().mLinkType = linkType;
    }
 
    // Assertion checks only in a debug build, does not have side effects!
@@ -270,7 +252,8 @@ Track *Track::GetLinkedTrack() const
 
 bool Track::HasLinkedTrack() const noexcept
 {
-    return mpGroupData && mpGroupData->mLinkType != LinkType::None;
+   auto pGroupData = FindGroupData();
+   return pGroupData && pGroupData->mLinkType != LinkType::None;
 }
 
 std::optional<TranslatableString> Track::GetErrorOpening() const
@@ -570,10 +553,10 @@ bool TrackList::SwapChannels(Track &track)
       return false;
 
    // Swap channels, avoiding copying of GroupData
-   auto pData = move(track.mpGroupData);
+   auto pData = track.DetachGroupData();
    assert(pData);
    pOwner->MoveUp(pPartner);
-   pPartner->mpGroupData = move(pData);
+   pPartner->AssignGroupData(move(pData));
    return true;
 }
 
@@ -622,13 +605,13 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
 {
    if (!ListOfTracks::empty()) {
       auto &pLast = *ListOfTracks::rbegin();
-      if (auto &pGroupData = pLast->mpGroupData
+      if (auto pGroupData = pLast->FindGroupData()
          ; pGroupData && pGroupData->mLinkType != Track::LinkType::None
       ) {
          // Assume the newly added track is intended to pair with the last
          // Avoid upsetting assumptions in case this track had its own group
          // data initialized during Duplicate()
-         t->mpGroupData.reset();
+         t->DestroyGroupData();
       }
    }
 
@@ -1292,7 +1275,8 @@ bool TrackList::HasPendingTracks() const
 
 Track::LinkType Track::GetLinkType() const noexcept
 {
-    return mpGroupData ? mpGroupData->mLinkType : LinkType::None;
+   const auto pGroupData = FindGroupData();
+   return pGroupData ? pGroupData->mLinkType : LinkType::None;
 }
 
 bool Track::IsAlignedWithLeader() const

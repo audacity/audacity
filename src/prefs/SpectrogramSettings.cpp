@@ -104,13 +104,13 @@ SpectrogramSettings::Globals
    return instance;
 }
 
-static const Track::ChannelGroupAttachments::RegisteredFactory
+static const ChannelGroup::Attachments::RegisteredFactory
 key1{ [](auto &) { return nullptr; } };
 
 SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   auto pSettings = mutTrack.GetGroupData().Track::ChannelGroupAttachments
+   auto pSettings = mutTrack.GetGroupData().Attachments
       ::Find<SpectrogramSettings>(key1);
    if (pSettings)
       return *pSettings;
@@ -120,12 +120,12 @@ SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
 
 SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
 {
-   auto pSettings = track.GetGroupData().Track::ChannelGroupAttachments
+   auto pSettings = track.GetGroupData().Attachments
       ::Find<SpectrogramSettings>(key1);
    if (!pSettings) {
       auto uSettings = std::make_unique<SpectrogramSettings>();
       pSettings = uSettings.get();
-      track.GetGroupData().Track::ChannelGroupAttachments
+      track.GetGroupData().Attachments
          ::Assign(key1, std::move(uSettings));
    }
    return *pSettings;
@@ -133,7 +133,7 @@ SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
 
 void SpectrogramSettings::Reset(WaveTrack &track)
 {
-   track.GetGroupData().Track::ChannelGroupAttachments
+   track.GetGroupData().Attachments
       ::Assign(key1, nullptr);
 }
 
@@ -693,12 +693,12 @@ bool SpectrogramSettings::SpectralSelectionEnabled() const
 #endif
 }
 
-static const Track::ChannelGroupAttachments::RegisteredFactory
+static const ChannelGroup::Attachments::RegisteredFactory
 key2{ [](auto &) { return std::make_unique<SpectrogramBounds>(); } };
 
 SpectrogramBounds &SpectrogramBounds::Get( WaveTrack &track )
 {
-   return track.GetGroupData().Track::ChannelGroupAttachments
+   return track.GetGroupData().Attachments
       ::Get<SpectrogramBounds>(key2);
 }
 

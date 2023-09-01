@@ -64,13 +64,13 @@ struct PlacementArray : ClientData::Cloneable<> {
    bool mMultiView{ false };
 };
 
-static const Track::ChannelGroupAttachments::RegisteredFactory
+static const ChannelGroup::Attachments::RegisteredFactory
 key { [](auto &) { return std::make_unique<PlacementArray>(); } };
 
 // Access for per-track effect list
 PlacementArray &PlacementArray::Get(Track &track)
 {
-   return track.GetGroupData().Track::ChannelGroupAttachments
+   return track.GetGroupData().Attachments
       ::Get<PlacementArray>(key);
 }
 

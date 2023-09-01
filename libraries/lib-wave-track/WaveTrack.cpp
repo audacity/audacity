@@ -285,7 +285,7 @@ private:
    sampleFormat mFormat { floatSample };
 };
 
-static const Track::ChannelGroupAttachments::RegisteredFactory
+static const ChannelGroup::Attachments::RegisteredFactory
 waveTrackDataFactory{
    [](auto &) { return std::make_unique<WaveTrackData>(); } };
 
@@ -306,7 +306,7 @@ std::unique_ptr<ClientData::Cloneable<>> WaveTrackData::Clone() const {
 }
 
 WaveTrackData &WaveTrackData::Get(WaveTrack &track) {
-   return track.GetGroupData().Track::ChannelGroupAttachments
+   return track.GetGroupData().Attachments
       ::Get<WaveTrackData>(waveTrackDataFactory);
 }
 

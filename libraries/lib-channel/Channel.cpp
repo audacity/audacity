@@ -86,6 +86,41 @@ ChannelGroup &Channel::ReallyDoGetChannelGroup() const
 
 ChannelGroup::~ChannelGroup() = default;
 
+void ChannelGroup::Init(const ChannelGroup &orig)
+{
+   // Deep copy of any group data
+   mpGroupData = orig.mpGroupData ?
+      std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
+}
+
+void ChannelGroup::DestroyGroupData()
+{
+   mpGroupData.reset();
+}
+
+auto ChannelGroup::DetachGroupData() -> std::unique_ptr<ChannelGroupData>
+{
+   return move(mpGroupData);
+}
+
+void ChannelGroup::AssignGroupData(std::unique_ptr<ChannelGroupData> pGroupData)
+{
+   mpGroupData = move(pGroupData);
+}
+
+auto ChannelGroup::GetGroupData() -> ChannelGroupData &
+{
+   if (!mpGroupData)
+      // Make on demand
+      mpGroupData = std::make_unique<ChannelGroupData>();
+   return *mpGroupData;
+}
+
+auto ChannelGroup::GetGroupData() const -> const ChannelGroupData &
+{
+   return const_cast<ChannelGroup *>(this)->GetGroupData();
+}
+
 double ChannelGroup::GetStartTime() const
 {
    auto range = Intervals();

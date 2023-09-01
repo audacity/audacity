@@ -46,21 +46,21 @@ WaveformSettings::Globals
    return instance;
 }
 
-static const Track::ChannelGroupAttachments::RegisteredFactory
+static const ChannelGroup::Attachments::RegisteredFactory
 key1{ [](auto &) {
    return std::make_unique<WaveformSettings>(WaveformSettings::defaults()); } };
 
 WaveformSettings &WaveformSettings::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   return mutTrack.GetGroupData().Track::ChannelGroupAttachments
+   return mutTrack.GetGroupData().Attachments
       ::Get<WaveformSettings>(key1);
 }
 
 void WaveformSettings::Set(
    WaveTrack &track, std::unique_ptr<WaveformSettings> pSettings)
 {
-   track.GetGroupData().Track::ChannelGroupAttachments
+   track.GetGroupData().Attachments
       ::Assign(key1, move(pSettings));
 }
 
@@ -197,13 +197,13 @@ auto WaveformSettings::Clone() const -> PointerType
    return std::make_unique<WaveformSettings>(*this);
 }
 
-static const Track::ChannelGroupAttachments::RegisteredFactory
+static const ChannelGroup::Attachments::RegisteredFactory
 key2{ [](auto &) { return std::make_unique<WaveformScale>(); } };
 
 WaveformScale &WaveformScale::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   return mutTrack.GetGroupData().Track::ChannelGroupAttachments
+   return mutTrack.GetGroupData().Attachments
       ::Get<WaveformScale>(key2);
 }
 
