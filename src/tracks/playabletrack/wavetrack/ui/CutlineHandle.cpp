@@ -99,12 +99,20 @@ namespace
    }
 }
 
-UIHandlePtr CutlineHandle::HitTest
-(std::weak_ptr<CutlineHandle> &holder,
- const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject,
- const std::shared_ptr<WaveTrack> &pTrack)
+UIHandlePtr CutlineHandle::HitTest(
+   std::weak_ptr<CutlineHandle> &holder,
+   const wxMouseState &state, const wxRect &rect,
+   const AudacityProject *pProject,
+   std::shared_ptr<WaveTrack> pTrack)
 {
+   // Substitute the leader
+   if (!pTrack->GetOwner())
+      return {};
+   auto iter = pTrack->GetOwner()->Find(pTrack.get());
+   if (!*iter)
+      return {};
+   pTrack = (*iter)->SharedPointer<WaveTrack>();
+
    auto &viewInfo = ViewInfo::Get(*pProject);
    /// method that tells us if the mouse event landed on an
    /// editable Cutline
@@ -162,16 +170,7 @@ UIHandle::Result CutlineHandle::Click
 
          // When user presses left button on cut line, expand the line again
          double cutlineStart = 0, cutlineEnd = 0;
-         double *pCutlineStart = &cutlineStart, *pCutlineEnd = &cutlineEnd;
-
-         for (auto channel :
-              TrackList::Channels(mpTrack.get())) {
-            channel->ExpandCutLine(
-               mLocation.pos, pCutlineStart, pCutlineEnd);
-            if ( channel == mpTrack.get() )
-               pCutlineStart = pCutlineEnd = nullptr;
-         }
-
+         mpTrack->ExpandCutLine(mLocation.pos, &cutlineStart, &cutlineEnd);
          viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
       }
       else if (mLocation.typ == WaveTrackLocation::locationMergePoint) {
@@ -188,15 +187,10 @@ UIHandle::Result CutlineHandle::Click
    }
    else if (event.RightDown())
    {
-      bool removed = false;
-      for (auto channel :
-           TrackList::Channels(mpTrack.get()))
-         removed = channel->RemoveCutLine(mLocation.pos) || removed;
-
+      bool removed = mpTrack->RemoveCutLine(mLocation.pos);
       if (!removed)
          // Nothing happened, make no Undo item
          return Cancelled;
-
       mOperation = Remove;
    }
    else

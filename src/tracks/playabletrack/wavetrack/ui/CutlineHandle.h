@@ -29,13 +29,13 @@ public:
 
    CutlineHandle &operator=(const CutlineHandle&) = default;
 
-   static UIHandlePtr HitAnywhere
-      (const AudacityProject *pProject, bool cutline, UIHandlePtr ptr);
-   static UIHandlePtr HitTest
-      (std::weak_ptr<CutlineHandle> &holder,
-       const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject,
-       const std::shared_ptr<WaveTrack> &pTrack);
+   static UIHandlePtr HitAnywhere(
+      const AudacityProject *pProject, bool cutline, UIHandlePtr ptr);
+   static UIHandlePtr HitTest(
+      std::weak_ptr<CutlineHandle> &holder,
+      const wxMouseState &state, const wxRect &rect,
+      const AudacityProject *pProject,
+      std::shared_ptr<WaveTrack> pTrack);
 
    virtual ~CutlineHandle();
 

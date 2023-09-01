@@ -3138,9 +3138,21 @@ void WaveTrack::SplitAt(double t)
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
-/*! @excsafety{Strong} */
+// Can't promise strong exception safety for a pair of tracks together
 void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
+{
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this)) {
+      pChannel->ExpandOneCutLine(cutLinePosition, cutlineStart, cutlineEnd);
+      // Assign the out parameters at most once
+      cutlineStart = cutlineEnd = nullptr;
+   }
+}
+
+/*! @excsafety{Strong} */
+void WaveTrack::ExpandOneCutLine(double cutLinePosition,
+   double* cutlineStart, double* cutlineEnd)
 {
    bool editClipCanMove = GetEditClipsCanMove();
 
@@ -3194,11 +3206,17 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
 
 bool WaveTrack::RemoveCutLine(double cutLinePosition)
 {
-   for (const auto &clip : mClips)
-      if (clip->RemoveCutLine(cutLinePosition))
-         return true;
+   assert(IsLeader());
+   
+   bool removed = false;
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto &clip : pChannel->mClips)
+         if (clip->RemoveCutLine(cutLinePosition)) {
+            removed = true;
+            break;
+         }
 
-   return false;
+   return removed;
 }
 
 /*! @excsafety{Strong} */

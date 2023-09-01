@@ -801,10 +801,20 @@ private:
    // clipidx1 and clipidx2 are indices into the clip list.
    void MergeClips(int clipidx1, int clipidx2);
 
-   // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
-   void ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
+   //! Expand cut line (that is, re-insert audio, then delete audio saved in
+   //! cut line)
+   /*
+    @pre `IsLeader()`
+    @param[out] cutlineStart start time of the insertion
+    @param[out] cutlineEnd end time of the insertion
+    */
+   void ExpandCutLine(double cutLinePosition,
+      double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
 
-   // Remove cut line, without expanding the audio in it
+   //! Remove cut line, without expanding the audio in it
+   /*
+    @pre `IsLeader()`
+    */
    bool RemoveCutLine(double cutLinePosition);
 
    // This track has been merged into a stereo track.  Copy shared parameters
@@ -900,6 +910,8 @@ private:
       sampleCount start, sampleCount len, sampleCount originalStart,
       sampleCount originalEnd, const ProgressReport &report = {});
    void SplitAt(double t) /* not override */;
+   void ExpandOneCutLine(double cutLinePosition,
+      double* cutlineStart, double* cutlineEnd);
 
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
