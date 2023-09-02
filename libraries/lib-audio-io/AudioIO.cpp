@@ -96,6 +96,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <wx/power.h>
 #endif
 
+#include "Channel.h"
 #include "Meter.h"
 #include "Mix.h"
 #include "Resample.h"
@@ -138,8 +139,9 @@ struct AudioIoCallback::TransportState {
          // The following adds a new effect processor for each logical sequence.
          for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
             // An array only of non-null leaders should be given to us
-            auto vt = playbackSequences[i].get();
-            if (!(vt && vt->IsLeader())) {
+            const auto vt = playbackSequences[i].get();
+            const auto pGroup = vt ? vt->FindChannelGroup() : nullptr;
+            if (!(pGroup && pGroup->IsLeader())) {
                assert(false);
                continue;
             }
@@ -780,7 +782,10 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // precondition
    assert(std::all_of(
       sequences.playbackSequences.begin(), sequences.playbackSequences.end(),
-      [](const auto &pSequence){ return pSequence && pSequence->IsLeader(); }
+      [](const auto &pSequence){
+         const auto pGroup =
+            pSequence ? pSequence->FindChannelGroup() : nullptr;
+         return pGroup && pGroup->IsLeader(); }
    ));
 
    const auto &pStartTime = options.pStartTime;
@@ -1228,7 +1233,8 @@ bool AudioIO::AllocateBuffers(
 
                // By the precondition of StartStream which is sole caller of
                // this function:
-               assert(pSequence->IsLeader());
+               assert(pSequence->FindChannelGroup());
+               assert(pSequence->FindChannelGroup()->IsLeader());
                // use sequence time for the end time, not real time!
                double startTime, endTime;
                if (!sequences.prerollSequences.empty())

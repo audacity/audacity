@@ -2199,6 +2199,11 @@ bool WaveTrack::IsLeader() const
    return Track::IsLeader();
 }
 
+const ChannelGroup *WaveTrack::FindChannelGroup() const
+{
+   return this;
+}
+
 bool WaveTrack::GetMute() const
 {
    return PlayableTrack::GetMute();

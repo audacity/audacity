@@ -482,9 +482,11 @@ private:
 
    void Flush() override;
 
+   bool IsLeader() const override;
+
    //! @name PlayableSequence implementation
    //! @{
-   bool IsLeader() const override;
+   const ChannelGroup *FindChannelGroup() const override;
    bool GetMute() const override;
    bool GetSolo() const override;
    //! @}

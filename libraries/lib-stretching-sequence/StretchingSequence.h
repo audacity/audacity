@@ -54,7 +54,7 @@ public:
       sampleCount* pNumWithinClips = nullptr) const override;
 
    // PlayableSequence
-   bool IsLeader() const override;
+   const ChannelGroup *FindChannelGroup() const override;
    bool GetSolo() const override;
    bool GetMute() const override;
 

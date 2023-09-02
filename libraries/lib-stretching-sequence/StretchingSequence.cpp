@@ -98,9 +98,9 @@ bool StretchingSequence::Get(size_t iChannel, size_t nBuffers,
       iChannel, nBuffers, buffers, format, start, len, backwards);
 }
 
-bool StretchingSequence::IsLeader() const
+const ChannelGroup *StretchingSequence::FindChannelGroup() const
 {
-   return mSequence.IsLeader();
+   return mSequence.FindChannelGroup();
 }
 
 bool StretchingSequence::GetSolo() const

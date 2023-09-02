@@ -467,8 +467,9 @@ public:
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive()
     *
-    * @pre `p && p->IsLeader()` for all pointers `p` in
-    * `sequences.playbackSequences`
+    * @pre `p && p->FindChannelGroup() &&
+    *    p->FindChannelGroup()->IsLeader()` for all pointers `p` in
+    *    `sequences.playbackSequences`
     */
 
    int StartStream(const TransportSequences &sequences,

@@ -13,6 +13,7 @@
 #define __AUDACITY_AUDIO_IO_SEQUENCES__
 
 #include "WideSampleSequence.h"
+class ChannelGroup;
 
 /*!
  Extends the interface for random access into a sample stream with tests for
@@ -24,7 +25,8 @@ struct MIXER_API PlayableSequence
 {
    ~PlayableSequence() override;
 
-   virtual bool IsLeader() const = 0; //!< To be removed
+   //! Find associated ChannelGroup if any
+   virtual const ChannelGroup *FindChannelGroup() const = 0;
 
    //! May vary asynchronously
    virtual bool GetSolo() const = 0;
