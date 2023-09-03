@@ -163,11 +163,6 @@ bool StretchingSequence::GetFloats(
       len, backwards);
 }
 
-const WideSampleSequence* StretchingSequence::DoGetDecorated() const
-{
-   return &mSequence;
-}
-
 bool StretchingSequence::MutableGet(
    size_t iChannel, size_t nBuffers, const samplePtr buffers[],
    sampleFormat format, sampleCount start, size_t len, bool backwards)

@@ -25,8 +25,6 @@ class MIXER_API WideSampleSequence
 public:
    virtual ~WideSampleSequence();
 
-   const WideSampleSequence& GetDecorated() const;
-
    //! A constant property
    /*!
     @post result: `result > 0`
@@ -129,9 +127,6 @@ public:
     */
    virtual void GetEnvelopeValues(
       double* buffer, size_t bufferLen, double t0, bool backwards) const = 0;
-
-private:
-   virtual const WideSampleSequence* DoGetDecorated() const;
 };
 
 #endif

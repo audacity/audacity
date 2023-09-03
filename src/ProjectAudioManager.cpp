@@ -738,8 +738,8 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             auto it = std::find_if(
                transportTracks.playbackSequences.begin(), end,
                [&wt](const auto& playbackSequence) {
-                  return &playbackSequence->GetDecorated() ==
-                         &wt->GetDecorated();
+                  return playbackSequence->FindChannelGroup() ==
+                         wt->FindChannelGroup();
                });
             if (it != end)
                transportTracks.playbackSequences.erase(it);

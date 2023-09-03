@@ -69,7 +69,6 @@ public:
 private:
    using AudioSegments = std::vector<std::shared_ptr<AudioSegment>>;
 
-   const WideSampleSequence* DoGetDecorated() const override;
    void ResetCursor(double t, PlaybackDirection);
    bool GetNext(float *const buffers[], size_t numChannels, size_t numSamples);
    bool MutableGet(
