@@ -311,6 +311,8 @@ private:
    //
 
    double GetRate() const override;
+   ///!brief Sets the new rate for the track without resampling it
+   ///!pre newRate > 0
    void SetRate(double newRate);
 
    // Multiplicative factor.  Only converted to dB for display.
@@ -922,6 +924,8 @@ private:
    sampleFormat mLegacyFormat; //!< used only during deserialization
 
 private:
+   //Updates rate parameter only in WaveTrackData
+   void DoSetRate(double newRate);
    void SetClipRates(double newRate);
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;

@@ -447,13 +447,12 @@ WaveTrack *WaveTrack::New( AudacityProject &project )
 
 WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    sampleFormat format, double rate )
-   : WritableSampleTrack()
-   , mpFactory(pFactory)
+   : mpFactory(pFactory)
 {
    mLegacyProjectFileOffset = 0;
 
    WaveTrackData::Get(*this).SetSampleFormat(format);
-   SetRate(static_cast<int>(rate));
+   DoSetRate(static_cast<int>(rate));
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
@@ -745,11 +744,18 @@ double WaveTrack::GetRate() const
 
 void WaveTrack::SetRate(double newRate)
 {
-   wxASSERT( newRate > 0 );
+   assert( newRate > 0 );
    newRate = std::max( 1.0, newRate );
+   DoSetRate(newRate);
+
+   for(const auto& channel : Channels())
+      channel->GetTrack().SetClipRates(newRate);
+}
+
+void WaveTrack::DoSetRate(double newRate)
+{
    auto &data = WaveTrackData::Get(*this);
    data.SetRate(static_cast<int>(newRate));
-   SetClipRates(newRate);
 }
 
 void WaveTrack::SetClipRates(double newRate)
@@ -980,7 +986,7 @@ WaveTrack::Holder WaveTrack::EmptyCopy(
    // in case the track needs to make WaveClips before it is properly joined
    // with the opposite channel in a TrackList.
    // TODO wide wave tracks -- all of the comment above will be irrelevant!
-   result->SetRate(rate);
+   result->DoSetRate(rate);
    result->mpFactory = pFactory ? pFactory : mpFactory;
    if (!keepLink)
       result->SetLinkType(LinkType::None);
@@ -3228,8 +3234,8 @@ void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
    for (const auto pChannel : TrackList::Channels(this)) {
       for (const auto &clip : pChannel->mClips)
          clip->Resample(rate, progress);
-      pChannel->SetRate(rate);
    }
+   DoSetRate(rate);
 }
 
 bool WaveTrack::Reverse(sampleCount start, sampleCount len,

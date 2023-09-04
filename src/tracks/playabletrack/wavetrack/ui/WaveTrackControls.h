@@ -34,7 +34,7 @@ public:
    explicit
    WaveTrackControls( std::shared_ptr<Track> pTrack )
       : PlayableTrackControls( pTrack ) {}
-   ~WaveTrackControls();
+   ~WaveTrackControls() override;
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
