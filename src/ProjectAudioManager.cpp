@@ -37,6 +37,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "TransportUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
@@ -862,7 +863,24 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                // Less than or equal, not just less than, to ensure a clip boundary.
                // when append recording.
                const auto pending = static_cast<WaveTrack*>(newTrack);
-               if (endTime <= t0)
+               const auto lastClip = pending->GetRightmostClip();
+               // RoundedT0 to have a new clip created when punch-and-roll
+               // recording with the cursor in the second half of the space
+               // between two samples
+               // (https://github.com/audacity/audacity/issues/5113#issuecomment-1705154108)
+               const auto recordingStart =
+                  std::round(t0 * pending->GetRate()) / pending->GetRate();
+               const auto recordingStartsBeforeTrackEnd =
+                  lastClip && recordingStart < lastClip->GetPlayEndTime();
+               // Recording doesn't start before the beginning of the last clip
+               // - or the check for creating a new clip or not should be more
+               // general than that ...
+               assert(
+                  !recordingStartsBeforeTrackEnd ||
+                  lastClip->WithinPlayRegion(recordingStart));
+               if (
+                  !recordingStartsBeforeTrackEnd ||
+                  !lastClip->StretchRatioEquals(1))
                   pending->CreateClip(t0, makeNewClipName(pending));
                transportSequences.captureSequences
                   .push_back(pending->SharedPointer<WaveTrack>());
