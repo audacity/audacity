@@ -29,14 +29,6 @@ public:
    virtual bool ApplyInner(const CommandContext &context, Track &t) = 0;
 };
 
-class SetChannelsBase : public AudacityCommand
-{
-public:
-   bool Apply(const CommandContext & context) final;
-   virtual bool ApplyInner(const CommandContext &context, Track *t) = 0;
-};
-
-
 class SetTrackStatusCommand : public SetTrackBase
 {
 public:
