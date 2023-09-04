@@ -185,6 +185,54 @@ WaveTrack::Interval::Interval(const ChannelGroup &group,
 
 WaveTrack::Interval::~Interval() = default;
 
+void WaveTrack::Interval::SetName(const wxString& name)
+{
+   ForEachClip([&](auto& clip) { clip.SetName(name); });
+}
+
+const wxString& WaveTrack::Interval::GetName() const
+{
+   //TODO wide wave tracks:  assuming that all 'narrow' clips share common name
+   return mpClip->GetName();
+}
+
+void WaveTrack::Interval::SetColorIndex(int index)
+{
+   ForEachClip([&](auto& clip) { clip.SetColourIndex(index); });
+}
+
+int WaveTrack::Interval::GetColorIndex() const
+{
+   //TODO wide wave tracks:  assuming that all 'narrow' clips share common color index
+   return mpClip->GetColourIndex();
+}
+
+void WaveTrack::Interval::SetPlayStartTime(double time)
+{
+   ForEachClip([&](auto& clip) { clip.SetPlayStartTime(time); });
+}
+
+double WaveTrack::Interval::GetPlayStartTime() const
+{
+   //TODO wide wave tracks:  assuming that all 'narrow' clips share common beginning
+   return mpClip->GetPlayStartTime();
+}
+
+bool WaveTrack::Interval::IsPlaceholder() const
+{
+   return mpClip->GetIsPlaceholder();
+}
+
+void WaveTrack::Interval::ForEachClip(const std::function<void(WaveClip&)>& op)
+{
+   for(unsigned channel = 0,
+      channelCount = NChannels();
+      channel < channelCount; ++channel)
+   {
+      op(*GetClip(channel));
+   }
+}
+
 std::shared_ptr<ChannelInterval>
 WaveTrack::Interval::DoGetChannel(size_t iChannel)
 {
