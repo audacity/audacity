@@ -581,6 +581,8 @@ private:
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
+   const WaveClip* GetRightmostClip() const;
+
    /**
     * @brief Get access to the (visible) clips in the tracks, in unspecified
     * order.

@@ -2220,6 +2220,17 @@ bool WaveTrack::CloseLock() noexcept
    return true;
 }
 
+const WaveClip* WaveTrack::GetRightmostClip() const {
+   if (mClips.empty())
+      return nullptr;
+   return std::max_element(
+             mClips.begin(), mClips.end(),
+             [](const auto& a, const auto b) {
+                return a->GetPlayEndTime() < b->GetPlayEndTime();
+             })
+      ->get();
+}
+
 ClipConstHolders WaveTrack::GetClipInterfaces() const
 {
   // We're constructing possibly wide clips here, and for this we need to have
