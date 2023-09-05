@@ -994,18 +994,24 @@ WaveChannelView::DoDetailedHitTest(
 
    const auto& viewInfo = ViewInfo::Get(*pProject);
 
-   for (auto& clip : pTrack->GetClips())
    {
-      if (!WaveChannelView::ClipDetailsVisible(*clip, viewInfo, st.rect)
-         && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
+      //Do hit test folded (single line) clips
+      const auto pLeader = static_cast<WaveTrack*>(
+         *TrackList::Channels(view.FindTrack().get()).begin());
+      for(const auto& interval : pLeader->Intervals())
       {
-         auto &waveChannelView = WaveChannelView::Get(*pTrack);
-         results.push_back(
-            AssignUIHandlePtr(
-               waveChannelView.mAffordanceHandle,
-               std::make_shared<WaveTrackAffordanceHandle>(pTrack, clip)
-            )
-         );
+         auto& clip = interval->GetClip(view.GetChannelIndex());
+         if (!ClipDetailsVisible(*clip, viewInfo, st.rect)
+            && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
+         {
+            
+            results.push_back(
+               AssignUIHandlePtr(
+                  WaveChannelView::Get(*pTrack).mAffordanceHandle,
+                  std::make_shared<WaveTrackAffordanceHandle>(pLeader->shared_from_this(), interval)
+               )
+            );
+         }
       }
    }
 
@@ -1705,7 +1711,10 @@ std::weak_ptr<WaveClip> WaveChannelView::GetSelectedClip()
 {
    if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(GetAffordanceControls()))
    {
-      return affordance->GetSelectedClip();
+      if(auto interval = *affordance->GetSelectedInterval())
+      {
+         return interval->GetClip(GetChannelIndex());
+      }
    }
    return {};
 }

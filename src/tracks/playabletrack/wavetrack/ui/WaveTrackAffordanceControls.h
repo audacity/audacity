@@ -12,10 +12,12 @@
 
 #include <wx/font.h>
 
+#include "Channel.h"
 #include "Observer.h"
 #include "ViewInfo.h"
-#include "../../../ui/CommonTrackPanelCell.h"
-#include "../../../ui/TextEditHelper.h"
+#include "WaveTrack.h"
+#include "tracks/ui/CommonTrackPanelCell.h"
+#include "tracks/ui/TextEditHelper.h"
 
 
 struct TrackListEvent;
@@ -36,20 +38,22 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     public TextEditDelegate,
     public std::enable_shared_from_this<WaveTrackAffordanceControls>
 {
-    std::weak_ptr<WaveClip> mFocusClip;
+   using IntervalIterator = ChannelGroup::IntervalIterator<WaveTrack::Interval>;
+
+    IntervalIterator mFocusInterval;
     std::weak_ptr<WaveTrackAffordanceHandle> mAffordanceHandle;
     std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
     std::weak_ptr<WaveClipTitleEditHandle> mTitleEditHandle;
     std::weak_ptr<SelectHandle> mSelectHandle;
     std::weak_ptr<WaveClipAdjustBorderHandle> mClipBorderAdjustHandle;
 
-    std::weak_ptr<WaveClip> mEditedClip;
+    IntervalIterator mEditedInterval;
     std::shared_ptr<TextEditHelper> mTextEditHelper;
 
     wxFont mClipNameFont;
    
     //Helper container used to track clips names visibility
-    std::vector<const WaveClip*> mLastVisibleClips;
+    std::vector<IntervalIterator> mVisibleIntervals;
 
 public:
     WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack);
@@ -58,7 +62,7 @@ public:
 
     void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
 
-    std::weak_ptr<WaveClip> GetSelectedClip() const;
+    IntervalIterator GetSelectedInterval() const;
 
     unsigned CaptureKey
     (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
@@ -89,10 +93,10 @@ public:
 
 private:
    
-    bool IsClipNameVisible(const WaveClip& clip) const noexcept;
+    bool IsIntervalVisible(const IntervalIterator& it) const noexcept;
     ///@brief Starts in-place clip name editing or shows a Clip Name Edit dialog, depending on prefs
     ///@param clip to be edited. Should belong to the same `WaveTrack` as returned by `FindTrack()`
-    bool StartEditClipName(AudacityProject& project, const std::shared_ptr<WaveClip>& clip);
+    bool StartEditClipName(AudacityProject& project, IntervalIterator it);
    
     void ResetClipNameEdit();
 

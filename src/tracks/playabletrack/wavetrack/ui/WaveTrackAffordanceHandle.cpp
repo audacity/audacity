@@ -20,14 +20,16 @@
 
 #include <wx/event.h>
 
-WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<WaveClip>& target)
-   : AffordanceHandle(track), mTarget(target)
+WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track,
+                                                     const std::shared_ptr<WaveTrack::Interval>& target)
+   : AffordanceHandle(track)
+   , mTarget(target)
 { }
 
 UIHandle::Result WaveTrackAffordanceHandle::Click(const TrackPanelMouseEvent& event, AudacityProject* project)
 {
    Result result = RefreshCode::RefreshNone;
-   if (WaveChannelView::ClipDetailsVisible(*mTarget, ViewInfo::Get(*project), event.rect))
+   if (WaveChannelView::ClipDetailsVisible(*mTarget->GetClip(0), ViewInfo::Get(*project), event.rect))
    {
       auto affordanceControl = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(event.pCell);
 
@@ -45,7 +47,7 @@ UIHandle::Result WaveTrackAffordanceHandle::Click(const TrackPanelMouseEvent& ev
 UIHandle::Result WaveTrackAffordanceHandle::SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project)
 {
    auto& viewInfo = ViewInfo::Get(*project);
-   viewInfo.selectedRegion.setTimes(mTarget->GetPlayStartTime(), mTarget->GetPlayEndTime());
+   viewInfo.selectedRegion.setTimes(mTarget->Start(), mTarget->End());
 
    ProjectHistory::Get(*project).ModifyState(false);
 
