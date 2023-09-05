@@ -1144,7 +1144,7 @@ const wxString& WaveClip::GetName() const
    return mName;
 }
 
-sampleCount WaveClip::TimeToSamples(double time) const noexcept
+sampleCount WaveClip::TimeToSamples(double time) const
 {
    return sampleCount(floor(time * mRate / GetStretchRatio() + 0.5));
 }

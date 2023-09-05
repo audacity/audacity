@@ -177,8 +177,8 @@ public:
    // the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
-   void SetColourIndex( int index ){ mColourIndex = index;};
-   int GetColourIndex( ) const { return mColourIndex;};
+   void SetColourIndex(int index) { mColourIndex = index; }
+   int GetColourIndex() const { return mColourIndex; }
 
    double GetSequenceStartTime() const noexcept;
    void SetSequenceStartTime(double startTime);
@@ -493,7 +493,7 @@ public:
 
    // TimeToSamples and SamplesToTime take clip stretch ratio into account.
    // Use them to convert time / sample offsets.
-   sampleCount TimeToSamples(double time) const noexcept;
+   sampleCount TimeToSamples(double time) const override;
    double SamplesToTime(sampleCount s) const noexcept;
 
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)

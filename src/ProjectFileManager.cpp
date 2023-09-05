@@ -41,7 +41,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"
-#include "WaveClip.h"
 #include "wxFileNameWrapper.h"
 #include "Export.h"
 #include "Import.h"
@@ -1142,10 +1141,9 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       newTrack->TypeSwitch([&](WaveTrack &wt) {
          if (newRate == 0)
             newRate = wt.GetRate();
-         auto trackName = wt.GetName();
-         for (const auto pChannel : TrackList::Channels(&wt))
-            for (auto& clip : pChannel->GetClips())
-               clip->SetName(trackName);
+         const auto trackName = wt.GetName();
+         for(const auto& interval : wt.Intervals())
+            interval->SetName(trackName);
       });
    }
 

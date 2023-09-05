@@ -826,7 +826,7 @@ std::pair<
 
 
 void WaveChannelSubView::DrawBoldBoundaries(
-   TrackPanelDrawingContext &context, const WaveTrack *track,
+   TrackPanelDrawingContext &context, const WaveTrack &track,
    const wxRect &rect)
 {
    auto &dc = context.dc;
@@ -837,11 +837,11 @@ void WaveChannelSubView::DrawBoldBoundaries(
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
 #endif
-   for (const auto loc : WaveTrackLocations::Get(*track).Get()) {
+   for (const auto loc : WaveTrackLocations::Get(track).Get()) {
       bool highlightLoc = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       highlightLoc =
-         target2 && target2->GetTrack().get() == track &&
+         target2 && target2->GetTrack().get() == &track &&
          target2->GetLocation() == loc;
 #endif
       const int xx = zoomInfo.TimeToPosition(loc.pos);
@@ -1396,19 +1396,16 @@ namespace {
 using PMF = bool (WaveTrackAffordanceControls::*)(AudacityProject &);
 bool AnyAffordance(AudacityProject& project, WaveChannelView &view, PMF pmf)
 {
-   const auto pLeader = *TrackList::Channels(view.FindTrack().get()).begin();
-   const auto channels = pLeader->Channels();
-   return std::any_of(channels.begin(), channels.end(),
-      [&](const std::shared_ptr<Channel> &pChannel) {
-         auto& channelView = ChannelView::Get(*pChannel);
-         if (const auto affordance =
-            std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
-               channelView.GetAffordanceControls()).get()
-            ; affordance && (affordance->*pmf)(project)
-         )
-            return true;
-         return false;
-      });
+   const auto pLeader = static_cast<WaveTrack*>(
+      *TrackList::Channels(view.FindTrack().get()).begin());
+   auto& channelView = ChannelView::Get(*pLeader);
+   if (const auto affordance =
+      std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
+         channelView.GetAffordanceControls()).get()
+      ; affordance && (affordance->*pmf)(project)
+   )
+      return true;
+   return false;
 }
 }
 
@@ -1424,7 +1421,7 @@ bool WaveChannelView::CopySelectedText(AudacityProject& project)
       AnyAffordance(project, *this, &WaveTrackAffordanceControls::OnTextCopy);
 }
 
-bool WaveChannelView::ClipDetailsVisible(const WaveClip& clip,
+bool WaveChannelView::ClipDetailsVisible(const ClipTimes& clip,
    const ZoomInfo& zoomInfo, const wxRect& viewRect)
 {
    //Do not fold clips to line at sample zoom level, as
@@ -1537,7 +1534,7 @@ double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
    return .0;
 }
 
-double GetBlankSpaceBeforePlayEndTime(const WaveClip& clip)
+double GetBlankSpaceBeforePlayEndTime(const ClipTimes &clip)
 {
    return 0.99 * clip.GetStretchRatio() / clip.GetRate();
 }
@@ -1559,23 +1556,23 @@ bool ShowIndividualSamples(
 }
 
 ClipParameters::ClipParameters(
-   const WaveClip* clip, const wxRect& rect, const ZoomInfo& zoomInfo)
-    : trackRectT0 { zoomInfo.PositionToTime(0, 0, true) }
-    , averagePixelsPerSecond { GetPixelsPerSecond(rect, zoomInfo) }
-    , showIndividualSamples { ShowIndividualSamples(
-         clip->GetRate(), clip->GetStretchRatio(), averagePixelsPerSecond) }
+   const ClipTimes &clip, const wxRect& rect, const ZoomInfo& zoomInfo
+)  : trackRectT0 { zoomInfo.PositionToTime(0, 0, true) }
+   , averagePixelsPerSecond { GetPixelsPerSecond(rect, zoomInfo) }
+   , showIndividualSamples { ShowIndividualSamples(
+      clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond) }
 {
    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width, 0, true);
-   const auto stretchRatio = clip->GetStretchRatio();
-   const auto playStartTime = clip->GetPlayStartTime();
+   const auto stretchRatio = clip.GetStretchRatio();
+   const auto playStartTime = clip.GetPlayStartTime();
 
-   const double clipLength = clip->GetPlayEndTime() - clip->GetPlayStartTime();
+   const double clipLength = clip.GetPlayEndTime() - clip.GetPlayStartTime();
 
    // Hidden duration because too far left.
    const auto tpre = trackRectT0 - playStartTime;
    const auto tpost = trackRectT1 - playStartTime;
 
-   const auto blank = GetBlankSpaceBeforePlayEndTime(*clip);
+   const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
@@ -1659,7 +1656,8 @@ ClipParameters::ClipParameters(
    }
 }
 
-wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples)
+wxRect ClipParameters::GetClipRect(const ClipTimes& clip,
+   const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples)
 {
    const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
    const auto showIndividualSamples = ShowIndividualSamples(

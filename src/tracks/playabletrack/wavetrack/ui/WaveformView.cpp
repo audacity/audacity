@@ -443,19 +443,17 @@ void DrawMinMaxRMS(
    }
 }
 
-void DrawIndividualSamples(TrackPanelDrawingContext &context, size_t channel,
+void DrawIndividualSamples(TrackPanelDrawingContext &context,
    int leftOffset, const wxRect &rect,
    float zoomMin, float zoomMax,
    bool dB, float dBRange,
-   const WaveClip &clip, const Envelope &envelope,
+   const WaveChannelInterval &clip,
    bool showPoints, bool muted,
    bool highlight)
 {
-   // TODO wide wave tracks -- don't reassign
-   channel = 0;
-
+   const Envelope &envelope = clip.GetEnvelope();
    auto &dc = context.dc;
-   const auto artist = TrackArtist::Get( context );
+   const auto artist = TrackArtist::Get(context);
    const auto &zoomInfo = *artist->pZoomInfo;
 
    const double toffset = clip.GetPlayStartTime();
@@ -477,7 +475,7 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context, size_t channel,
       return;
 
    Floats buffer{ size_t(slen) };
-   clip.GetSamples(channel, (samplePtr)buffer.get(), floatSample, s0, slen,
+   clip.GetSamples((samplePtr)buffer.get(), floatSample, s0, slen,
                     // Suppress exceptions in this drawing operation:
                     false);
 
@@ -642,16 +640,13 @@ void DrawEnvelope(TrackPanelDrawingContext &context,
 // Headers needed only for experimental drawing below
 //#include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
 //#include "tracks/ui/EnvelopeHandle.h"
-void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
-   const WaveTrack &track,
-   const WaveClip &clip, const Envelope &envelope,
-   const wxRect &rect,
-   bool dB,
-   bool muted,
-   bool selected)
+void DrawClipWaveform(TrackPanelDrawingContext &context,
+   const WaveTrack &track, const WaveChannelInterval &clip,
+   const wxRect &rect, bool dB, bool muted, bool selected)
 {
+   const Envelope &envelope = clip.GetEnvelope();
    auto &dc = context.dc;
-   const auto artist = TrackArtist::Get( context );
+   const auto artist = TrackArtist::Get(context);
    const auto &selectedRegion = *artist->pSelectedRegion;
    const auto &zoomInfo = *artist->pZoomInfo;
 
@@ -672,7 +667,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
       return;
    }
 
-   const ClipParameters params { &clip, rect, zoomInfo };
+   const ClipParameters params { clip, rect, zoomInfo };
    const wxRect &hiddenMid = params.hiddenMid;
    // The "hiddenMid" rect contains the part of the display actually
    // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
@@ -747,7 +742,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * sampleRate / stretchRatio;
 
-   auto &clipCache = WaveClipWaveformCache::Get(clip);
+   auto &clipCache = WaveClipWaveformCache::Get(clip.GetClip());
 
    {
       bool showIndividualSamples = false;
@@ -768,8 +763,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
          // fisheye moves over the background, there is then less to do when
          // redrawing.
 
-         if (!clipCache.GetWaveDisplay(
-                clip, channel, display, t0, averagePixelsPerSecond))
+         if (!clipCache.GetWaveDisplay(clip,
+            display, t0, averagePixelsPerSecond))
             return;
       }
    }
@@ -818,7 +813,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
             fisheyeDisplay.width -= skipped;
             // Get a wave display for the fisheye, uncached.
             if (rectPortion.width > 0)
-               if (!clipCache.GetWaveDisplay(clip, channel,
+               if (!clipCache.GetWaveDisplay(clip,
                      fisheyeDisplay, t0, -1.0)) // ignored
                   continue; // serious error.  just don't draw??
             useMin = fisheyeDisplay.min;
@@ -859,10 +854,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context, size_t channel,
             highlight = target && target->GetTrack().get() == track;
 #endif
             DrawIndividualSamples(
-               context, channel, leftOffset, rectPortion, zoomMin, zoomMax,
-               dB, dBRange,
-               clip, envelope,
-               showPoints, muted, highlight);
+               context, leftOffset, rectPortion, zoomMin, zoomMax,
+               dB, dBRange, clip, showPoints, muted, highlight);
          }
       }
 
@@ -987,12 +980,10 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
    for (const auto pInterval :
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
-      auto &clip = pInterval->GetClip();
-      DrawClipWaveform(context, channel, track,
-         clip, pInterval->GetEnvelope(), rect,
-         dB, muted, &clip == selectedClip);
+      DrawClipWaveform(context, track, *pInterval, rect,
+         dB, muted, (&pInterval->GetClip() == selectedClip));
    }
-   DrawBoldBoundaries(context, &track, rect);
+   DrawBoldBoundaries(context, track, rect);
 
    const auto drawSliders = artist->drawSliders;
    if (drawSliders) {

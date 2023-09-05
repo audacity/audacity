@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
+#include "ClipInterface.h"
 #include "PlaybackDirection.h"
 #include "Prefs.h"
 #include "SampleCount.h"
@@ -57,17 +58,23 @@ using ChannelGroupSampleView = std::vector<ChannelSampleView>;
 class Envelope;
 class WaveTrack;
 
-class WAVE_TRACK_API WaveChannelInterval final : public ChannelInterval {
+class WAVE_TRACK_API WaveChannelInterval final
+   : public ChannelInterval
+   , public ClipTimes
+{
 public:
    //! Assume lifetime of this object nests in those of arguments
-   WaveChannelInterval(WaveClip &clip, Envelope &envelope)
-      : mClip{ clip }
-      , mEnvelope{ envelope }
+   WaveChannelInterval(WaveClip &wideClip, WaveClip &narrowClip, size_t iChannel
+   )  : mWideClip{ wideClip }
+      , mNarrowClip{ narrowClip }
+      , miChannel{ iChannel }
    {}
    ~WaveChannelInterval() override;
 
-   const WaveClip &GetClip() const { return mClip; }
-   const Envelope &GetEnvelope() const { return mEnvelope; }
+   const WaveClip &GetClip() const { return mWideClip; }
+   const Envelope &GetEnvelope() const;
+   size_t GetChannelIndex() const { return miChannel; }
+
    bool Intersects(double t0, double t1) const;
    double Start() const;
    double End() const;
@@ -85,9 +92,35 @@ public:
    AudioSegmentSampleView
    GetSampleView(double t0, double t1, bool mayThrow) const;
 
+   sampleCount GetVisibleSampleCount() const override;
+   int GetRate() const override;
+   double GetPlayStartTime() const override;
+   double GetPlayEndTime() const override;
+   sampleCount TimeToSamples(double time) const override;
+   double GetStretchRatio() const override;
+
+   double GetTrimLeft() const;
+   double GetTrimRight() const;
+
+   bool GetSamples(samplePtr buffer, sampleFormat format,
+      sampleCount start, size_t len, bool mayThrow = true) const;
+
+   AudioSegmentSampleView GetSampleView(
+      sampleCount start, size_t length, bool mayThrow) const;
+
+   const Sequence &GetSequence() const;
+
+   constSamplePtr GetAppendBuffer() const;
+   size_t GetAppendBufferLen() const;
+
+   int GetColourIndex() const;
+
 private:
-   WaveClip &mClip;
-   Envelope &mEnvelope;
+   const WaveClip &GetNarrowClip() const { return mNarrowClip; }
+
+   WaveClip &mWideClip;
+   WaveClip &mNarrowClip;
+   const size_t miChannel;
 };
 
 class WAVE_TRACK_API WaveChannel
@@ -801,6 +834,15 @@ private:
 
       ~Interval() override;
 
+      void SetName(const wxString& name);
+      const wxString& GetName() const;
+
+      void SetColorIndex(int index);
+      int GetColorIndex() const;
+
+      void SetPlayStartTime(double time);
+      double GetPlayStartTime() const;
+
       auto GetChannel(size_t iChannel) { return
          WideChannelGroupInterval::GetChannel<WaveChannel>(iChannel); }
       auto GetChannel(size_t iChannel) const { return
@@ -812,11 +854,17 @@ private:
          WideChannelGroupInterval::Channels<const WaveChannel>();
       }
 
+      bool IsPlaceholder() const;
+
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
       { return iChannel == 0 ? mpClip : mpClip1; }
    private:
+
+      // Helper function in time of migration to wide clips
+      void ForEachClip(const std::function<void(WaveClip&)>& op);
+
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
       const std::shared_ptr<WaveClip> mpClip;
       //! TODO wide wave tracks: eliminate this

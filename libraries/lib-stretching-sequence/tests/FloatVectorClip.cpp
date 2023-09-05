@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include "FloatVectorClip.h"
+#include <cmath>
 
 FloatVectorClip::FloatVectorClip(
    int sampleRate, const std::vector<std::vector<float>>& audio)
@@ -60,6 +61,11 @@ size_t FloatVectorClip::GetWidth() const
 int FloatVectorClip::GetRate() const
 {
    return mSampleRate;
+}
+
+sampleCount FloatVectorClip::TimeToSamples(double time) const
+{
+   return sampleCount(floor(time * GetRate() + 0.5));
 }
 
 double FloatVectorClip::GetPlayDuration() const

@@ -12,6 +12,7 @@
 
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "RealFFTf.h"
+#include "Sequence.h"
 #include "Spectrum.h"
 #include "WaveClipUtilities.h"
 #include "WaveTrack.h"
@@ -91,8 +92,8 @@ bool SpecCache::Matches(
 }
 
 bool SpecCache::CalculateOneSpectrum(
-   const SpectrogramSettings& settings, const WaveClip& clip, const int xx,
-   double pixelsPerSecond, int lowerBoundX, int upperBoundX,
+   const SpectrogramSettings& settings, const WaveChannelInterval& clip,
+   const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
    const std::vector<float>& gainFactors, float* __restrict scratch,
    float* __restrict out) const
 {
@@ -103,7 +104,7 @@ bool SpecCache::CalculateOneSpectrum(
 
    sampleCount from;
 
-   const auto numSamples = clip.GetSequenceSamplesCount() / clip.GetWidth();
+   const auto numSamples = clip.GetSequence().GetNumSamples();
    const auto sampleRate = clip.GetRate();
    const auto stretchRatio = clip.GetStretchRatio();
    const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
@@ -169,7 +170,7 @@ bool SpecCache::CalculateOneSpectrum(
             constexpr auto iChannel = 0u;
             constexpr auto mayThrow = false; // Don't throw just for display
             mSampleCacheHolder.emplace(
-               clip.GetSampleView(iChannel, from, myLen, mayThrow));
+               clip.GetSampleView(from, myLen, mayThrow));
             floats.resize(myLen);
             mSampleCacheHolder->Copy(floats.data(), myLen);
             useBuffer = floats.data();
@@ -339,8 +340,8 @@ void SpecCache::Grow(
 }
 
 void SpecCache::Populate(
-   const SpectrogramSettings& settings, const WaveClip& clip, int copyBegin,
-   int copyEnd, size_t numPixels, double pixelsPerSecond)
+   const SpectrogramSettings& settings, const WaveChannelInterval& clip,
+   int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond)
 {
    const auto sampleRate = clip.GetRate();
    const int &frequencyGainSetting = settings.frequencyGain;
@@ -458,12 +459,14 @@ void SpecCache::Populate(
 }
 
 bool WaveClipSpectrumCache::GetSpectrogram(
-   const WaveClip& clip,
+   const WaveChannelInterval &clip,
    const float*& spectrogram, SpectrogramSettings& settings,
    const sampleCount*& where, size_t numPixels, double t0,
    double pixelsPerSecond)
 
 {
+   auto &mSpecCache = mSpecCaches[clip.GetChannelIndex()];
+
    const auto sampleRate = clip.GetRate();
    const auto stretchRatio = clip.GetStretchRatio();
    const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
@@ -569,18 +572,21 @@ bool WaveClipSpectrumCache::GetSpectrogram(
    return true;
 }
 
-WaveClipSpectrumCache::WaveClipSpectrumCache()
-: mSpecCache{ std::make_unique<SpecCache>() }
-, mSpecPxCache{ std::make_unique<SpecPxCache>(1) }
+WaveClipSpectrumCache::WaveClipSpectrumCache(size_t nChannels)
+   // TODO wide wave tracks -- won't need std::max here
+   : mSpecCaches(std::max<size_t>(2, nChannels))
+   , mSpecPxCaches(std::max<size_t>(2, nChannels))
 {
+   for (auto &pCache : mSpecCaches)
+      pCache = std::make_unique<SpecCache>();
 }
 
 WaveClipSpectrumCache::~WaveClipSpectrumCache()
 {
 }
 
-static WaveClip::Caches::RegisteredFactory sKeyS{ []( WaveClip& ){
-   return std::make_unique< WaveClipSpectrumCache >();
+static WaveClip::Caches::RegisteredFactory sKeyS{ [](WaveClip &clip){
+   return std::make_unique<WaveClipSpectrumCache>(clip.GetWidth());
 } };
 
 WaveClipSpectrumCache &WaveClipSpectrumCache::Get( const WaveClip &clip )
@@ -597,5 +603,6 @@ void WaveClipSpectrumCache::MarkChanged()
 void WaveClipSpectrumCache::Invalidate()
 {
    // Invalidate the spectrum display cache
-   mSpecCache = std::make_unique<SpecCache>();
+   for (auto &pCache : mSpecCaches)
+      pCache = std::make_unique<SpecCache>();
 }

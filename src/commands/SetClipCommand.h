@@ -18,7 +18,7 @@
 
 #include "SetTrackInfoCommand.h"
 
-class SetClipCommand : public SetChannelsBase
+class SetClipCommand : public AudacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -34,7 +34,7 @@ public:
 
    // AudacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_clip";}
-   bool ApplyInner( const CommandContext & context, Track * t ) override;
+   bool Apply( const CommandContext & context ) override;
 
 public:
    double mContainsTime;

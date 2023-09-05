@@ -47,6 +47,11 @@ double WideClip::GetPlayEndTime() const
    return mChannels[0u]->GetPlayEndTime();
 }
 
+sampleCount WideClip::TimeToSamples(double time) const
+{
+   return mChannels[0u]->TimeToSamples(time);
+}
+
 double WideClip::GetStretchRatio() const
 {
    return mChannels[0u]->GetStretchRatio();

@@ -14,6 +14,7 @@
 #include "Sequence.h"
 #include "GetWaveDisplay.h"
 #include "WaveClipUtilities.h"
+#include "WaveTrack.h"
 
 class WaveCache {
 public:
@@ -63,13 +64,10 @@ public:
 //
 
 bool WaveClipWaveformCache::GetWaveDisplay(
-   const WaveClip &clip, size_t channel, WaveDisplay &display, double t0,
-   double pixelsPerSecond )
+   const WaveChannelInterval &clip, WaveDisplay &display,
+   double t0, double pixelsPerSecond)
 {
-   // TODO wide wave tracks -- don't reassign
-   channel = 0;
-
-   auto &waveCache = mWaveCaches[channel];
+   auto &waveCache = mWaveCaches[clip.GetChannelIndex()];
 
    t0 += clip.GetTrimLeft();
 
@@ -178,8 +176,8 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 
       /* handle values in the append buffer */
 
-      const auto sequence = clip.GetSequence(channel);
-      auto numSamples = sequence->GetNumSamples();
+      const auto &sequence = clip.GetSequence();
+      auto numSamples = sequence.GetNumSamples();
       auto a = p0;
 
       // Not all of the required columns might be in the sequence.
@@ -193,8 +191,8 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       //compute the values that are outside the overlap from scratch.
       if (a < p1) {
          const auto appendBufferLen = clip.GetAppendBufferLen();
-         const auto &appendBuffer = clip.GetAppendBuffer(channel);
-         sampleFormat seqFormat = sequence->GetSampleFormats().Stored();
+         const auto &appendBuffer = clip.GetAppendBuffer();
+         sampleFormat seqFormat = sequence.GetSampleFormats().Stored();
          bool didUpdate = false;
          for(auto i = a; i < p1; i++) {
             auto left = std::max(sampleCount{ 0 },
@@ -251,11 +249,8 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       // Done with append buffer, now fetch the rest of the cache miss
       // from the sequence
       if (p1 > p0) {
-         if (!::GetWaveDisplay(*sequence, &min[p0],
-                                        &max[p0],
-                                        &rms[p0],
-                                        p1-p0,
-                                        &where[p0]))
+         if (!::GetWaveDisplay(sequence, &min[p0], &max[p0], &rms[p0], p1 - p0,
+            &where[p0]))
          {
             return false;
          }
@@ -274,7 +269,8 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 }
 
 WaveClipWaveformCache::WaveClipWaveformCache(size_t nChannels)
-   : mWaveCaches(nChannels)
+   // TODO wide wave tracks -- won't need std::max here
+   : mWaveCaches(std::max<size_t>(2, nChannels))
 {
    for (auto &pCache : mWaveCaches)
       pCache = std::make_unique<WaveCache>();
