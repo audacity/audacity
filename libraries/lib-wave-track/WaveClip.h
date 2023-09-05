@@ -240,6 +240,10 @@ public:
     */
    bool BeforePlayRegion(double t) const;
    /*!
+    * @brief  t <= [
+    */
+   bool AtOrBeforePlayRegion(double t) const;
+   /*!
     * @brief  ) <= t
     */
    bool AfterPlayRegion(double t) const;

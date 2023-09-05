@@ -1665,7 +1665,7 @@ void WaveTrack::HandleClear(double t0, double t1,
       // or we're using the "don't move other clips" mode
       for (const auto& clip : mClips)
       {
-         if (clip->BeforePlayRegion(t1))
+         if (clip->AtOrBeforePlayRegion(t1))
             clip->ShiftBy(-(t1 - t0));
       }
    }
