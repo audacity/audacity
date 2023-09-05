@@ -1276,7 +1276,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
             // falls within it and this isn't the first clip in the track.
             if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
                if (prev)
-                  track.MergeClips(track.GetClipIndex(prev),
+                  track.MergeOneClipPair(track.GetClipIndex(prev),
                      track.GetClipIndex(clip));
                break;
             }
@@ -1297,7 +1297,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
             // It must be that clip is what was pasted and it begins where
             // prev ends.
             // use Weak-guarantee
-            track.MergeClips(track.GetClipIndex(prev),
+            track.MergeOneClipPair(track.GetClipIndex(prev),
                track.GetClipIndex(clip));
             break;
          }
@@ -3219,8 +3219,15 @@ bool WaveTrack::RemoveCutLine(double cutLinePosition)
    return removed;
 }
 
-/*! @excsafety{Strong} */
+// Can't promise strong exception safety for a pair of tracks together
 void WaveTrack::MergeClips(int clipidx1, int clipidx2)
+{
+   for (const auto pChannel : TrackList::Channels(this))
+      pChannel->MergeOneClipPair(clipidx1, clipidx2);
+}
+
+/*! @excsafety{Strong} */
+void WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
 {
    WaveClip* clip1 = GetClipByIndex(clipidx1);
    WaveClip* clip2 = GetClipByIndex(clipidx2);

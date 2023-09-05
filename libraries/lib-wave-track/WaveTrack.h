@@ -912,6 +912,7 @@ private:
    void SplitAt(double t) /* not override */;
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
+   void MergeOneClipPair(int clipidx1, int clipidx2);
 
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
