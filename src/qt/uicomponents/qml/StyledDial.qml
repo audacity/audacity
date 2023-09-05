@@ -73,7 +73,7 @@ Dial {
          var ctx = canvas.context
          if (!ctx) {
             ctx = getContext("2d")
-            ctx.linCap = "squared"
+            ctx.lineCap = "squared"
          }
 
          ctx.clearRect(0, 0, canvasSize.width, canvasSize.height)

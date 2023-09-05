@@ -50,6 +50,8 @@ Theme {
             root.waveformPeakColor = themes[i].waveformPeakColor
             root.clipStrokeColor = themes[i].clipStrokeColor
             root.clipHeaderColor = themes[i].clipHeaderColor
+            root.textHighlightColor = themes[i].textHighlightColor
+            root.invalidInputColor = themes[i].invalidInputColor
             root.currentTheme = themes[i].objectName
             root.themeChanged()
             break

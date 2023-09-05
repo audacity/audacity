@@ -27,4 +27,6 @@ QtObject {
    property color waveformPeakColor
    property color clipStrokeColor
    property color clipHeaderColor
+   property color textHighlightColor
+   property color invalidInputColor
 }
