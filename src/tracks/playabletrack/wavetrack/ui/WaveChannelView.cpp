@@ -1705,7 +1705,11 @@ std::weak_ptr<WaveClip> WaveChannelView::GetSelectedClip()
 {
    if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(GetAffordanceControls()))
    {
-      return affordance->GetSelectedClip();
+      assert(GetChannelIndex() == 0);
+      if(auto interval = *affordance->GetSelectedInterval())
+      {
+         return interval->GetClip(0);
+      }
    }
    return {};
 }

@@ -853,6 +853,8 @@ private:
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
 
+      double GetStretchRatio() const;
+
       auto GetChannel(size_t iChannel) { return
          WideChannelGroupInterval::GetChannel<WaveChannel>(iChannel); }
       auto GetChannel(size_t iChannel) const { return
