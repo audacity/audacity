@@ -1398,7 +1398,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
             // Clips in split began as copies of a clip in the track,
             // therefore have the same width, satisfying preconditions to
             // attach
-            if (clip->WithinPlayRegion(at))//strictly inside
+            if (clip->SplitsPlayRegion(at))//strictly inside
             {
                auto newClip =
                   std::make_shared<WaveClip>(*clip, pFactory, true);
