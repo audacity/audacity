@@ -1309,52 +1309,54 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
 
    // First, merge the new clip(s) in with the existing clips
    if (merge && splits.size() > 0) {
-      // Now t1 represents the absolute end of the pasted data.
-      t1 = t0 + endTime;
-
-      // Get a sorted array of the clips
-      auto clips = track.SortedClipArray();
-
-      // Scan the sorted clips for the first clip whose start time
-      // exceeds the pasted regions end time.
       {
-         WaveClip *prev = nullptr;
-         for (const auto clip : clips) {
-            // Merge this clip and the previous clip if the end time
-            // falls within it and this isn't the first clip in the track.
-            if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
-               if (prev)
-                  track.MergeOneClipPair(track.GetClipIndex(prev),
-                     track.GetClipIndex(clip));
-               break;
+         // Now t1 represents the absolute end of the pasted data.
+         t1 = t0 + endTime;
+
+         // Get a sorted array of the clips
+         auto clips = track.SortedClipArray();
+
+         // Scan the sorted clips for the first clip whose start time
+         // exceeds the pasted regions end time.
+         {
+            WaveClip *prev = nullptr;
+            for (const auto clip : clips) {
+               // Merge this clip and the previous clip if the end time
+               // falls within it and this isn't the first clip in the track.
+               if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
+                  if (prev)
+                     track.MergeOneClipPair(track.GetClipIndex(prev),
+                        track.GetClipIndex(clip));
+                  break;
+               }
+               prev = clip;
             }
-            prev = clip;
          }
       }
-   }
 
-   {
-      // Refill the array since clips have changed.
-      auto clips = track.SortedClipArray();
+      {
+         // Refill the array since clips have changed.
+         auto clips = track.SortedClipArray();
 
-      // Scan the sorted clips to look for the start of the pasted
-      // region.
-      WaveClip *prev = nullptr;
-      for (const auto clip : clips) {
-         if (prev) {
-            // It must be that clip is what was pasted and it begins where
-            // prev ends.
-            // use Weak-guarantee
-            track.MergeOneClipPair(track.GetClipIndex(prev),
-               track.GetClipIndex(clip));
-            break;
+         // Scan the sorted clips to look for the start of the pasted
+         // region.
+         WaveClip *prev = nullptr;
+         for (const auto clip : clips) {
+            if (prev) {
+               // It must be that clip is what was pasted and it begins where
+               // prev ends.
+               // use Weak-guarantee
+               track.MergeOneClipPair(track.GetClipIndex(prev),
+                  track.GetClipIndex(clip));
+               break;
+            }
+            if (fabs(t0 - clip->GetPlayEndTime()) < tolerance)
+               // Merge this clip and the next clip if the start time
+               // falls within it and this isn't the last clip in the track.
+               prev = clip;
+            else
+               prev = nullptr;
          }
-         if (fabs(t0 - clip->GetPlayEndTime()) < tolerance)
-            // Merge this clip and the next clip if the start time
-            // falls within it and this isn't the last clip in the track.
-            prev = clip;
-         else
-            prev = nullptr;
       }
    }
 
