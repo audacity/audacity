@@ -1417,13 +1417,21 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
             }
             else if (clip->GetPlayStartSample() ==
                track.TimeToLongSamples(at) && split.right) {
-               // precondition satisfied because... ??
+               // Satisfy the precondition of attachLeft first!
+               const auto trim = clip->GetTrimLeft();
+               const auto seqStartTime = clip->GetSequenceStartTime();
+               clip->Clear(seqStartTime, seqStartTime + trim);
+               // This clearing, although only removing the hidden part, moved
+               // the clip leftwards. We don't want this in this case.
+               clip->ShiftBy(trim);
                attachLeft(*clip, *split.right);
                break;
             }
             else if (clip->GetPlayEndSample() ==
                track.TimeToLongSamples(at) && split.left) {
-               // precondition satisfied because... ??
+               // Satisfy the precondition of attachRight first!
+               clip->Clear(
+                  clip->GetPlayEndTime(), clip->GetSequenceEndTime());
                attachRight(*clip, *split.left);
                break;
             }
