@@ -349,7 +349,7 @@ private:
     */
    size_t CountBlocks() const;
 
-   sampleFormat GetSampleFormat() const override { return mFormat; }
+   sampleFormat GetSampleFormat() const override;
 
    /*!
     @pre `IsLeader()`
@@ -918,8 +918,8 @@ private:
     */
    WaveClipHolders mClips;
 
-   sampleFormat  mFormat;
-   mutable int   mLegacyRate{ 0 }; //!< used only during deserialization
+   mutable int  mLegacyRate{ 0 }; //!< used only during deserialization
+   sampleFormat mLegacyFormat; //!< used only during deserialization
 
 private:
    void SetClipRates(double newRate);
@@ -947,6 +947,11 @@ private:
     @pre `IsLeader()`
     */
    bool RateConsistencyCheck() const;
+   //! Whether all tracks in group and all clips have a common sample format
+   /*!
+    @pre `IsLeader()`
+    */
+   bool FormatConsistencyCheck() const;
 
    //! Sets project tempo on clip upon push. Use this instead of
    //! `mClips.push_back`.

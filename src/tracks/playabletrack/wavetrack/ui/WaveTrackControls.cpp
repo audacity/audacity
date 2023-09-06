@@ -762,6 +762,16 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
            .IconStyle(Icon::Error));
       return;
    }
+   if(pTrack->GetSampleFormat() != partner->GetSampleFormat())
+   {
+      BasicUI::ShowMessageBox(XO(
+"Mono tracks must have the same sample format in order to be combined"
+"into a stereo track"),
+         BasicUI::MessageBoxOptions{}
+            .Caption(XO("Error"))
+            .IconStyle(BasicUI::Icon::Error));
+      return;
+   }
 
    bool bBothMinimizedp =
       ((ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized()) &&
