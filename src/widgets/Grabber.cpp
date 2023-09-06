@@ -70,6 +70,8 @@ Grabber::Grabber(wxWindow * parent, Identifier id)
    of horizontal bumps */
    SetLabel(_("Grabber"));
    SetName(_("Grabber"));
+
+   SetCursor(wxCURSOR_SIZING);
 }
 
 //
