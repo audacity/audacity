@@ -1324,7 +1324,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
                // Merge this clip and the previous clip if the end time
                // falls within it and this isn't the first clip in the track.
                if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
-                  if (prev)
+                  if (prev && clip->HasEqualStretchRatio(*prev))
                      track.MergeOneClipPair(track.GetClipIndex(prev),
                         track.GetClipIndex(clip));
                   break;
@@ -1346,8 +1346,9 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
                // It must be that clip is what was pasted and it begins where
                // prev ends.
                // use Weak-guarantee
-               track.MergeOneClipPair(track.GetClipIndex(prev),
-                  track.GetClipIndex(clip));
+               if (clip->HasEqualStretchRatio(*prev))
+                  track.MergeOneClipPair(
+                     track.GetClipIndex(prev), track.GetClipIndex(clip));
                break;
             }
             if (fabs(t0 - clip->GetPlayEndTime()) < tolerance)
@@ -3290,20 +3291,26 @@ bool WaveTrack::RemoveCutLine(double cutLinePosition)
 }
 
 // Can't promise strong exception safety for a pair of tracks together
-void WaveTrack::MergeClips(int clipidx1, int clipidx2)
+bool WaveTrack::MergeClips(int clipidx1, int clipidx2)
 {
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->MergeOneClipPair(clipidx1, clipidx2);
+   const auto channels = TrackList::Channels(this);
+   return std::all_of(channels.begin(), channels.end(),
+      [&](const auto pChannel){
+         return pChannel->MergeOneClipPair(clipidx1, clipidx2); });
 }
 
 /*! @excsafety{Strong} */
-void WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
+bool WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
 {
    WaveClip* clip1 = GetClipByIndex(clipidx1);
    WaveClip* clip2 = GetClipByIndex(clipidx2);
 
    if (!clip1 || !clip2) // Could happen if one track of a linked pair had a split and the other didn't.
-      return; // Don't throw, just do nothing.
+      return false; // Don't throw, just do nothing.
+
+   const auto stretchRatiosEqual = clip1->HasEqualStretchRatio(*clip2);
+   if (!stretchRatiosEqual)
+      return false;
 
    // Append data from second clip to first clip
    // use Strong-guarantee
@@ -3314,6 +3321,8 @@ void WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
    // Delete second clip
    auto it = FindClip(mClips, clip2);
    mClips.erase(it);
+
+   return true;
 }
 
 /*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!

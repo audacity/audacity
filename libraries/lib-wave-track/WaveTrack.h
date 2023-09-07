@@ -803,7 +803,7 @@ private:
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
    // clipidx1 and clipidx2 are indices into the clip list.
-   void MergeClips(int clipidx1, int clipidx2);
+   bool MergeClips(int clipidx1, int clipidx2);
 
    //! Expand cut line (that is, re-insert audio, then delete audio saved in
    //! cut line)
@@ -930,7 +930,7 @@ private:
    void SplitAt(double t) /* not override */;
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
-   void MergeOneClipPair(int clipidx1, int clipidx2);
+   bool MergeOneClipPair(int clipidx1, int clipidx2);
 
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
