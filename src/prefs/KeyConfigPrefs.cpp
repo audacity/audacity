@@ -91,8 +91,7 @@ END_EVENT_TABLE()
 KeyConfigPrefs::KeyConfigPrefs(
    wxWindow * parent, wxWindowID winid, AudacityProject *pProject,
    const CommandID &name)
-/* i18n-hint: as in computer keyboard (not musical!) */
-:  PrefsPanel(parent, winid, XO("Keyboard")),
+:  PrefsPanel(parent, winid, XO("Shortcuts")),
    mView(NULL),
    mKey(NULL),
    mFilter(NULL),

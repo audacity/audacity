@@ -151,9 +151,6 @@ void MousePrefs::CreateList()
    AddItem(XO("Shift-Drag"),       XO("Zoom"),      XO("Zoom out on a Range"));
    AddItem(XO("Middle-Click"),     XO("Zoom"),      XO("Zoom default"));
 
-   AddItem(XO("Left-Drag"),        XO("Time-Shift"),XO("Move clip left/right or between tracks"));
-   AddItem(XO("Shift-Left-Drag"),  XO("Time-Shift"),XO("Move all clips in track left/right"));
-   AddItem(CTRL + XO("-Left-Drag"),XO("Time-Shift"),XO("Move clip up/down between tracks"));
 
    AddItem(XO("Left-Drag"),
    /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
@@ -182,6 +179,10 @@ void MousePrefs::CreateList()
    AddItem(XO("Shift-Wheel-Rotate"),          XO("Any"),   XO("Scroll waveform"));
    AddItem(CTRL + XO("-Wheel-Rotate"),        XO("Any"),   XO("Zoom waveform in or out"));
    AddItem(CTRL + XO("-Shift-Wheel-Rotate"),  XO("Any"),   XO("Vertical Scale Waveform (dB) range"));
+   
+   AddItem(XO("Shift-Left-Drag"),  XO("Any"),XO("Move all clips in track left/right"), XO("using clip handles"));
+   AddItem(CTRL + XO("-Left-Drag"),XO("Any"),XO("Move clip up/down between tracks"), XO("using clip handles"));
+   AddItem(XO("Left-Drag"),        XO("Any"),XO("Move clip left/right or between tracks"), XO("using clip handles"));
 
    mList->SetColumnWidth(ToolColumn, wxLIST_AUTOSIZE);
    mList->SetColumnWidth(ActionColumn, wxLIST_AUTOSIZE);
