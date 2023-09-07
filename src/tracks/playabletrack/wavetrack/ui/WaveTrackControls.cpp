@@ -760,7 +760,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    if(pTrack->GetSampleFormat() != partner->GetSampleFormat())
    {
       BasicUI::ShowMessageBox(XO(
-"Mono tracks must have the same sample format in order to be combined"
+"Mono tracks must have the same sample format in order to be combined "
 "into a stereo track"),
          BasicUI::MessageBoxOptions{}
             .Caption(XO("Error"))
