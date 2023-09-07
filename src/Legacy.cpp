@@ -24,7 +24,7 @@ which is needed when producing a NEW version of a file which may fail.
 On failure the old version is put back in place.
 
 *//*******************************************************************/
-
+// simply thingy for assignment
 
 
 #include "Legacy.h"
