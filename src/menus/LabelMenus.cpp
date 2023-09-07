@@ -669,7 +669,7 @@ BaseItemSharedPtr LabelEditMenus()
    
    Menu( wxT("Labels"), XXO("&Labels"),
       Section( "",
-         Command( wxT("EditLabels"), XXO("&Edit Labels..."), OnEditLabels,
+         Command( wxT("EditLabels"), XXO("Label &Editor"), OnEditLabels,
                     AudioIONotBusyFlag() )
       ),
 
