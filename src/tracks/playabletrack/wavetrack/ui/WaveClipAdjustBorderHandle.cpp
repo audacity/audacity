@@ -287,14 +287,18 @@ public:
          if (mAdjustingLeftBorder)
          {
             auto dt = std::abs(mClips[0]->GetPlayStartTime() - mInitialBorderPosition);
-            ProjectHistory::Get(project).PushState(XO("Clip-Trim-Left"),
-                XO("Moved by %.02f").Format(dt));
+            /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown*/
+            ProjectHistory::Get(project).PushState(XO("Adjust left trim by %.02f seconds").Format(dt),
+               /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown*/
+                XO("Trim by %.02fs").Format(dt));
          }
          else
          {
             auto dt = std::abs(mInitialBorderPosition - mClips[0]->GetPlayEndTime());
-            ProjectHistory::Get(project).PushState(XO("Clip-Trim-Right"),
-                XO("Moved by %.02f").Format(dt));
+            /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown*/
+            ProjectHistory::Get(project).PushState(XO("Adjust right trim by %.02f seconds").Format(dt),
+            /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown*/
+                XO("Trim by %.02fs").Format(dt));
          }
       }
    }
