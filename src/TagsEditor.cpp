@@ -1040,7 +1040,7 @@ using namespace MenuTable;
 
 AttachedItem sAttachment{
    wxT("Edit/Other"),
-   Command( wxT("EditMetaData"), XXO("&Metadata"), OnEditMetadata,
+   Command( wxT("EditMetaData"), XXO("&Metadata Editor"), OnEditMetadata,
       AudioIONotBusyFlag() )
 };
 }
