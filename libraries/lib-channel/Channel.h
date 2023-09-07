@@ -539,9 +539,32 @@ public:
 
    //! Hosting of objects attached by higher level code
    struct ChannelGroupData;
-   using ChannelGroupAttachments = ClientData::Site<
+   using Attachments = ClientData::Site<
       ChannelGroupData, ClientData::Cloneable<>, ClientData::DeepCopying
    >;
+
+   //! Make attachment site on demand as needed
+   ChannelGroupData &GetGroupData();
+   //! Make attachment site on demand as needed
+   //! May make new group data on demand, but consider that logically const
+   const ChannelGroupData &GetGroupData() const;
+
+   //! Do not make attachment site on demand if absent
+   ChannelGroupData *FindGroupData() { return mpGroupData.get(); }
+   //! Do not make attachment site on demand if absent
+   const ChannelGroupData *FindGroupData() const { return mpGroupData.get(); }
+
+   //! Copy, including cloning of attached objects
+   void Init(const ChannelGroup &other);
+
+   //! Leave all attachments null
+   void DestroyGroupData();
+
+   //! Move attachments out
+   std::unique_ptr<ChannelGroupData> DetachGroupData();
+
+   //! Replace any previous attachments
+   void AssignGroupData(std::unique_ptr<ChannelGroupData> pGroupData);
 
    // TODO wide wave tracks -- remove this
    //! For two tracks describes the type of the linkage
@@ -553,7 +576,8 @@ public:
 
    // Structure describing data common to channels of a group of tracks
    // Should be deep-copyable (think twice before adding shared pointers!)
-   struct CHANNEL_API ChannelGroupData : ChannelGroupAttachments {
+   struct CHANNEL_API ChannelGroupData : Attachments {
+      using Attachments = ChannelGroup::Attachments;
       wxString mName;
       LinkType mLinkType{ LinkType::None };
       std::optional<double> mProjectTempo;
@@ -573,6 +597,7 @@ protected:
     */
    virtual std::shared_ptr<Interval> DoGetInterval(size_t iInterval) = 0;
 
+private:
    // TODO wide wave tracks -- Make ChannelGroup itself the Site
    std::unique_ptr<ChannelGroupData> mpGroupData;
 };

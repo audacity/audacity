@@ -21,20 +21,11 @@ enum class sampleFormat : unsigned;
 
 class SampleTrack;
 
-using SampleTrackAttachments = ClientData::Site<
-   SampleTrack,
-   ClientData::Cloneable< ClientData::UniquePtr >,
-   ClientData::DeepCopying
->;
-
 class SAMPLE_TRACK_API SampleTrack /* not final */
    : public PlayableTrack
-   , public SampleTrackAttachments
    , public PlayableSequence
 {
 public:
-   using Attachments = SampleTrackAttachments;
-
    SampleTrack();
    SampleTrack(const SampleTrack &other, ProtectedCreationArg&&);
    ~SampleTrack() override;

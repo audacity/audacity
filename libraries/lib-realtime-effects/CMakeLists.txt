@@ -12,7 +12,8 @@ set( SOURCES
    RealtimeEffectState.h
 )
 set( LIBRARIES
-   lib-mixer-interface
+   lib-channel-interface
+   lib-math-interface
    lib-module-manager-interface
    lib-project-history-interface
 )

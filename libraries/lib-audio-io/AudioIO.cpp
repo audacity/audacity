@@ -96,6 +96,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <wx/power.h>
 #endif
 
+#include "Channel.h"
 #include "Meter.h"
 #include "Mix.h"
 #include "Resample.h"
@@ -138,13 +139,14 @@ struct AudioIoCallback::TransportState {
          // The following adds a new effect processor for each logical sequence.
          for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
             // An array only of non-null leaders should be given to us
-            auto vt = playbackSequences[i].get();
-            if (!(vt && vt->IsLeader())) {
+            const auto vt = playbackSequences[i].get();
+            const auto pGroup = vt ? vt->FindChannelGroup() : nullptr;
+            if (!(pGroup && pGroup->IsLeader())) {
                assert(false);
                continue;
             }
             mpRealtimeInitialization
-               ->AddSequence(*vt, numPlaybackChannels, sampleRate);
+               ->AddGroup(*pGroup, numPlaybackChannels, sampleRate);
          }
       }
    }
@@ -340,36 +342,38 @@ AudioIO::~AudioIO()
 
 std::shared_ptr<RealtimeEffectState>
 AudioIO::AddState(AudacityProject &project,
-   WideSampleSequence *pSequence, const PluginID & id)
+   ChannelGroup *pGroup, const PluginID & id)
 {
+   assert(!pGroup || pGroup->IsLeader());
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
          pInit = &*mpTransportState->mpRealtimeInitialization;
-   return RealtimeEffectManager::Get(project).AddState(pInit, pSequence, id);
+   return RealtimeEffectManager::Get(project).AddState(pInit, pGroup, id);
 }
 
 std::shared_ptr<RealtimeEffectState>
 AudioIO::ReplaceState(AudacityProject &project,
-   WideSampleSequence *pSequence, size_t index, const PluginID & id)
+   ChannelGroup *pGroup, size_t index, const PluginID & id)
 {
+   assert(!pGroup || pGroup->IsLeader());
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
          pInit = &*mpTransportState->mpRealtimeInitialization;
    return RealtimeEffectManager::Get(project)
-      .ReplaceState(pInit, pSequence, index, id);
+      .ReplaceState(pInit, pGroup, index, id);
 }
 
 void AudioIO::RemoveState(AudacityProject &project,
-   WideSampleSequence *pSequence,
+   ChannelGroup *pGroup,
    const std::shared_ptr<RealtimeEffectState> pState)
 {
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
          pInit = &*mpTransportState->mpRealtimeInitialization;
-   RealtimeEffectManager::Get(project).RemoveState(pInit, pSequence, pState);
+   RealtimeEffectManager::Get(project).RemoveState(pInit, pGroup, pState);
 }
 
 void AudioIO::SetMixer(int inputSource, float recordVolume,
@@ -780,7 +784,10 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // precondition
    assert(std::all_of(
       sequences.playbackSequences.begin(), sequences.playbackSequences.end(),
-      [](const auto &pSequence){ return pSequence && pSequence->IsLeader(); }
+      [](const auto &pSequence){
+         const auto pGroup =
+            pSequence ? pSequence->FindChannelGroup() : nullptr;
+         return pGroup && pGroup->IsLeader(); }
    ));
 
    const auto &pStartTime = options.pStartTime;
@@ -1228,7 +1235,8 @@ bool AudioIO::AllocateBuffers(
 
                // By the precondition of StartStream which is sole caller of
                // this function:
-               assert(pSequence->IsLeader());
+               assert(pSequence->FindChannelGroup());
+               assert(pSequence->FindChannelGroup()->IsLeader());
                // use sequence time for the end time, not real time!
                double startTime, endTime;
                if (!sequences.prerollSequences.empty())
@@ -2012,6 +2020,9 @@ void AudioIO::TransformPlayBuffers(
    for (const auto vt : mPlaybackSequences) {
       if (!vt)
          continue;
+      const auto pGroup = vt->FindChannelGroup();
+      if (!pGroup)
+         continue;
       // vt is mono, or is the first of its group of channels
       const auto nChannels = std::min<size_t>(
          mNumPlaybackChannels, vt->NChannels());
@@ -2043,7 +2054,7 @@ void AudioIO::TransformPlayBuffers(
             memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
 
          if (len && pScope) {
-            auto discardable = pScope->Process( *vt, &pointers[0],
+            auto discardable = pScope->Process(*pGroup, &pointers[0],
                mScratchPointers.data(),
                // The single dummy output buffer:
                mScratchPointers[mNumPlaybackChannels],

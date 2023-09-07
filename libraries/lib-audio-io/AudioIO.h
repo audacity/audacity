@@ -432,23 +432,25 @@ public:
 
    //! Forwards to RealtimeEffectManager::AddState with proper init scope
    /*!
+    @pre `!pGroup || pGroup->IsLeader()`
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState>
    AddState(AudacityProject &project,
-      WideSampleSequence *pSequence, const PluginID & id);
+      ChannelGroup *pGroup, const PluginID & id);
 
    //! Forwards to RealtimeEffectManager::ReplaceState with proper init scope
    /*!
+    @pre `!pGroup || pGroup->IsLeader()`
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState>
    ReplaceState(AudacityProject &project,
-      WideSampleSequence *pSequence, size_t index, const PluginID & id);
+      ChannelGroup *pGroup, size_t index, const PluginID & id);
 
    //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
    void RemoveState(AudacityProject &project,
-      WideSampleSequence *pSequence,
+      ChannelGroup *pGroup,
       std::shared_ptr<RealtimeEffectState> pState);
 
    /** \brief Start up Portaudio for capture and recording as needed for
@@ -467,8 +469,9 @@ public:
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive()
     *
-    * @pre `p && p->IsLeader()` for all pointers `p` in
-    * `sequences.playbackSequences`
+    * @pre `p && p->FindChannelGroup() &&
+    *    p->FindChannelGroup()->IsLeader()` for all pointers `p` in
+    *    `sequences.playbackSequences`
     */
 
    int StartStream(const TransportSequences &sequences,

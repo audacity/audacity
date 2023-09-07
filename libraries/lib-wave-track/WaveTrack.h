@@ -482,9 +482,11 @@ private:
 
    void Flush() override;
 
+   bool IsLeader() const override;
+
    //! @name PlayableSequence implementation
    //! @{
-   bool IsLeader() const override;
+   const ChannelGroup *FindChannelGroup() const override;
    bool GetMute() const override;
    bool GetSolo() const override;
    //! @}
@@ -816,10 +818,6 @@ private:
     @pre `IsLeader()`
     */
    bool RemoveCutLine(double cutLinePosition);
-
-   // This track has been merged into a stereo track.  Copy shared parameters
-   // from the NEW partner.
-   void Merge(const Track &orig);
 
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);

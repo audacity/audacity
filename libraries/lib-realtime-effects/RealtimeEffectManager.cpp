@@ -9,7 +9,7 @@
  **********************************************************************/
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
-#include "WideSampleSequence.h"
+#include "Channel.h"
 
 #include <memory>
 #include "Project.h"
@@ -55,7 +55,7 @@ void RealtimeEffectManager::Initialize(
 {
    // (Re)Set processor parameters
    mRates.clear();
-   mSequences.clear();
+   mGroups.clear();
 
    // RealtimeAdd/RemoveEffect() needs to know when we're active so it can
    // initialize newly added effects
@@ -70,16 +70,17 @@ void RealtimeEffectManager::Initialize(
    SetSuspended(false);
 }
 
-void RealtimeEffectManager::AddSequence(
+void RealtimeEffectManager::AddGroup(
    RealtimeEffects::InitializationScope &scope,
-   const WideSampleSequence &sequence, unsigned chans, float rate)
+   const ChannelGroup &group, unsigned chans, float rate)
 {
-   mSequences.push_back(&sequence);
-   mRates.insert({&sequence, rate});
+   assert(group.IsLeader());
+   mGroups.push_back(&group);
+   mRates.insert({&group, rate});
 
-   VisitGroup(sequence,
+   VisitGroup(group,
       [&](RealtimeEffectState & state, bool) {
-         scope.mInstances.push_back(state.AddSequence(sequence, chans, rate));
+         scope.mInstances.push_back(state.AddGroup(group, chans, rate));
       }
    );
 }
@@ -95,7 +96,7 @@ void RealtimeEffectManager::Finalize() noexcept
    VisitAll([](RealtimeEffectState &state, bool){ state.Finalize(); });
 
    // Reset processor parameters
-   mSequences.clear();
+   mGroups.clear();
    mRates.clear();
 
    // No longer active
@@ -119,7 +120,7 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
 // This will be called in a thread other than the main GUI thread.
 //
 size_t RealtimeEffectManager::Process(bool suspended,
-   const WideSampleSequence &sequence,
+   const ChannelGroup &group,
    float *const *buffers, float *const *scratch, float *const dummy,
    unsigned nBuffers, size_t numSamples)
 {
@@ -150,11 +151,11 @@ size_t RealtimeEffectManager::Process(bool suspended,
    // Tracks how many processors were called
    size_t called = 0;
    size_t discardable = 0;
-   VisitGroup(sequence,
+   VisitGroup(group,
       [&](RealtimeEffectState &state, bool)
       {
          discardable +=
-            state.Process(sequence, nBuffers, ibuf, obuf, dummy, numSamples);
+            state.Process(group, nBuffers, ibuf, obuf, dummy, numSamples);
          for (auto i = 0; i < nBuffers; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
@@ -198,9 +199,9 @@ AllListsLock::AllListsLock(RealtimeEffectManager *pManager)
    if (mpManager) {
       // Paralleling VisitAll
       RealtimeEffectList::Get(mpManager->mProject).GetLock().lock();
-      // And all sequence lists
-      for (auto sequence : mpManager->mSequences)
-         RealtimeEffectList::Get(*sequence).GetLock().lock();
+      // And all group lists
+      for (auto group : mpManager->mGroups)
+         RealtimeEffectList::Get(*group).GetLock().lock();
    }
 }
 
@@ -226,9 +227,9 @@ void RealtimeEffectManager::AllListsLock::Reset()
    if (mpManager) {
       // Paralleling VisitAll
       RealtimeEffectList::Get(mpManager->mProject).GetLock().unlock();
-      // And all sequence lists
-      for (auto sequence : mpManager->mSequences)
-         RealtimeEffectList::Get(*sequence).GetLock().unlock();
+      // And all group lists
+      for (auto group : mpManager->mGroups)
+         RealtimeEffectList::Get(*group).GetLock().unlock();
       mpManager = nullptr;
    }
 }
@@ -236,8 +237,9 @@ void RealtimeEffectManager::AllListsLock::Reset()
 std::shared_ptr<RealtimeEffectState>
 RealtimeEffectManager::MakeNewState(
    RealtimeEffects::InitializationScope *pScope,
-   WideSampleSequence *pSequence, const PluginID &id)
+   ChannelGroup *pGroup, const PluginID &id)
 {
+   assert(!pGroup || pGroup->IsLeader());
    if (!pScope && mActive)
       return nullptr;
    auto pNewState = RealtimeEffectState::make_shared(id);
@@ -246,15 +248,14 @@ RealtimeEffectManager::MakeNewState(
       // Adding a state while playback is in-flight
       auto pInstance = state.Initialize(pScope->mSampleRate);
       pScope->mInstances.push_back(pInstance);
-      for (auto &sequence : mSequences) {
-         // Add all sequences to a per-project state, but add only the same
-         // sequence to a state in the per-sequence list
-         if (
-            pSequence && &pSequence->GetDecorated() != &sequence->GetDecorated())
+      for (const auto group : mGroups) {
+         // Add all groups to a per-project state, but add only the same
+         // group to a state in the per-group list
+         if (pGroup && pGroup != group)
             continue;
-         auto rate = mRates[sequence];
+         auto rate = mRates[group];
          auto pInstance2 =
-            state.AddSequence(*sequence, pScope->mNumPlaybackChannels, rate);
+            state.AddGroup(*group, pScope->mNumPlaybackChannels, rate);
          if (pInstance2 != pInstance)
             pScope->mInstances.push_back(pInstance2);
       }
@@ -264,19 +265,20 @@ RealtimeEffectManager::MakeNewState(
 
 namespace {
 RealtimeEffectList &
-FindStates(AudacityProject &project, WideSampleSequence *pSequence) {
-   return pSequence
-      ? RealtimeEffectList::Get(*pSequence)
+FindStates(AudacityProject &project, ChannelGroup *pGroup) {
+   return pGroup
+      ? RealtimeEffectList::Get(*pGroup)
       : RealtimeEffectList::Get(project);
 }
 }
 
 std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    RealtimeEffects::InitializationScope *pScope,
-   WideSampleSequence *pSequence, const PluginID & id)
+   ChannelGroup *pGroup, const PluginID & id)
 {
-   auto &states = FindStates(mProject, pSequence);
-   auto pState = MakeNewState(pScope, pSequence, id);
+   assert(!pGroup || pGroup->IsLeader());
+   auto &states = FindStates(mProject, pGroup);
+   auto pState = MakeNewState(pScope, pGroup, id);
    if (!pState)
       return nullptr;
 
@@ -285,20 +287,21 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
       return nullptr;
    Publish({
       RealtimeEffectManagerMessage::Type::EffectAdded,
-      pSequence ? pSequence : nullptr
+      pGroup ? pGroup : nullptr
    });
    return pState;
 }
 
 std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
    RealtimeEffects::InitializationScope *pScope,
-   WideSampleSequence *pSequence, size_t index, const PluginID & id)
+   ChannelGroup *pGroup, size_t index, const PluginID & id)
 {
-   auto &states = FindStates(mProject, pSequence);
+   assert(!pGroup || pGroup->IsLeader());
+   auto &states = FindStates(mProject, pGroup);
    auto pOldState = states.GetStateAt(index);
    if (!pOldState)
       return nullptr;
-   auto pNewState = MakeNewState(pScope, pSequence, id);
+   auto pNewState = MakeNewState(pScope, pGroup, id);
    if (!pNewState)
       return nullptr;
 
@@ -308,17 +311,17 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
    if (mActive)
       pOldState->Finalize();
    Publish({
-      RealtimeEffectManagerMessage::Type::EffectReplaced, pSequence
+      RealtimeEffectManagerMessage::Type::EffectReplaced, pGroup
    });
    return pNewState;
 }
 
 void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
-   WideSampleSequence *pSequence,
+   ChannelGroup *pGroup,
    const std::shared_ptr<RealtimeEffectState> pState)
 {
-   auto &states = FindStates(mProject, pSequence);
+   auto &states = FindStates(mProject, pGroup);
 
    // Remove the state from processing (under the lock guard) before finalizing
    states.RemoveState(pState);
@@ -326,15 +329,15 @@ void RealtimeEffectManager::RemoveState(
       pState->Finalize();
    Publish({
       RealtimeEffectManagerMessage::Type::EffectRemoved,
-      pSequence ? pSequence : nullptr
+      pGroup ? pGroup : nullptr
    });
 }
 
 std::optional<size_t> RealtimeEffectManager::FindState(
-   WideSampleSequence *pSequence,
+   ChannelGroup *pGroup,
    const std::shared_ptr<RealtimeEffectState> &pState) const
 {
-   auto &states = FindStates(mProject, pSequence);
+   auto &states = FindStates(mProject, pGroup);
    return states.FindState(pState);
 }
 

@@ -285,7 +285,7 @@ private:
    sampleFormat mFormat { floatSample };
 };
 
-static const Track::ChannelGroupAttachments::RegisteredFactory
+static const ChannelGroup::Attachments::RegisteredFactory
 waveTrackDataFactory{
    [](auto &) { return std::make_unique<WaveTrackData>(); } };
 
@@ -306,7 +306,7 @@ std::unique_ptr<ClientData::Cloneable<>> WaveTrackData::Clone() const {
 }
 
 WaveTrackData &WaveTrackData::Get(WaveTrack &track) {
-   return track.GetGroupData().Track::ChannelGroupAttachments
+   return track.GetGroupData().Attachments
       ::Get<WaveTrackData>(waveTrackDataFactory);
 }
 
@@ -497,9 +497,6 @@ void WaveTrack::Init(const WaveTrack &orig)
 {
    WritableSampleTrack::Init(orig);
    mpFactory = orig.mpFactory;
-
-   WideSampleSequence::Attachments &attachments = *this;
-   attachments = orig;
 }
 
 void WaveTrack::Reinit(const WaveTrack &orig)
@@ -509,23 +506,8 @@ void WaveTrack::Reinit(const WaveTrack &orig)
    assert(NChannels() == orig.NChannels());
    const auto channels = TrackList::Channels(this);
    auto iter = TrackList::Channels(&orig).begin();
-   for (const auto pChannel : channels) {
-      pChannel->Init(**iter);
-
-      // Copy attached data from orig.  Nullify data in this where orig had null.
-      SampleTrack::Attachments &attachments = *pChannel;
-      attachments = **iter;
-      ++iter;
-   }
-}
-
-void WaveTrack::Merge(const Track &orig)
-{
-   orig.TypeSwitch( [&](const WaveTrack &wt) {
-      // Copy attached data from orig.  Nullify data in this where orig had null.
-      SampleTrack::Attachments &attachments = *this;
-      attachments = wt;
-   });
+   for (const auto pChannel : channels)
+      pChannel->Init(**iter++);
 }
 
 WaveTrack::~WaveTrack()
@@ -2197,6 +2179,11 @@ void WaveTrack::FlushOne()
 bool WaveTrack::IsLeader() const
 {
    return Track::IsLeader();
+}
+
+const ChannelGroup *WaveTrack::FindChannelGroup() const
+{
+   return this;
 }
 
 bool WaveTrack::GetMute() const

@@ -258,6 +258,7 @@ public:
    bool IsAlignedWithLeader() const;
 
    ChannelGroupData &GetGroupData();
+   //! May make group data on demand, but consider that logically const
    const ChannelGroupData &GetGroupData() const;
 
 protected:
@@ -267,14 +268,10 @@ protected:
     */
    void SetLinkType(LinkType linkType, bool completeList = true);
 
-   // Use this only to fix temporary inconsistency during deserialization!
-   void DestroyGroupData();
-
 private:
    int GetIndex() const;
    void SetIndex(int index);
 
-   ChannelGroupData &MakeGroupData();
    /*!
     @param completeList only influences debug build consistency checking
     */

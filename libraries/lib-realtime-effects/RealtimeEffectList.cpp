@@ -10,7 +10,7 @@
 #include "RealtimeEffectState.h"
 
 #include "Project.h"
-#include "WideSampleSequence.h"
+#include "Channel.h"
 
 RealtimeEffectList::RealtimeEffectList()
 {
@@ -58,25 +58,26 @@ RealtimeEffectList::Get(const AudacityProject &project)
    return Get(const_cast<AudacityProject &>(project));
 }
 
-static const SequenceAttachments::RegisteredFactory sequenceEffects
+static const ChannelGroup::Attachments::RegisteredFactory
+channelGroupEffects
 {
-   [](WideSampleSequence &)
+   [](ChannelGroup::ChannelGroupData&)
    {
       return std::make_unique<RealtimeEffectList>();
    }
 };
 
-// Access for per-sequence effect list
-RealtimeEffectList &RealtimeEffectList::Get(WideSampleSequence &sequence)
+// Access for per-group effect list
+RealtimeEffectList &RealtimeEffectList::Get(ChannelGroup &group)
 {
-   return const_cast<WideSampleSequence&>(sequence.GetDecorated())
-      .Attachments::Get<RealtimeEffectList>(sequenceEffects);
+   return group.GetGroupData()
+      .Attachments::Get<RealtimeEffectList>(channelGroupEffects);
 }
 
 const RealtimeEffectList &RealtimeEffectList::Get(
-   const WideSampleSequence &sequence)
+   const ChannelGroup &group)
 {
-   return Get(const_cast<WideSampleSequence &>(sequence));
+   return Get(const_cast<ChannelGroup &>(group));
 }
 
 bool

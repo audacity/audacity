@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <optional>
+#include <vector>
 
 class AudioSegment;
 class AudioSegmentFactoryInterface;
@@ -54,7 +55,7 @@ public:
       sampleCount* pNumWithinClips = nullptr) const override;
 
    // PlayableSequence
-   bool IsLeader() const override;
+   const ChannelGroup *FindChannelGroup() const override;
    bool GetSolo() const override;
    bool GetMute() const override;
 
@@ -68,7 +69,6 @@ public:
 private:
    using AudioSegments = std::vector<std::shared_ptr<AudioSegment>>;
 
-   const WideSampleSequence* DoGetDecorated() const override;
    void ResetCursor(double t, PlaybackDirection);
    bool GetNext(float *const buffers[], size_t numChannels, size_t numSamples);
    bool MutableGet(
