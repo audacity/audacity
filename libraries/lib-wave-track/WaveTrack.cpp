@@ -1276,7 +1276,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
             // falls within it and this isn't the first clip in the track.
             if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
                if (prev)
-                  track.MergeClips(track.GetClipIndex(prev),
+                  track.MergeOneClipPair(track.GetClipIndex(prev),
                      track.GetClipIndex(clip));
                break;
             }
@@ -1297,7 +1297,7 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
             // It must be that clip is what was pasted and it begins where
             // prev ends.
             // use Weak-guarantee
-            track.MergeClips(track.GetClipIndex(prev),
+            track.MergeOneClipPair(track.GetClipIndex(prev),
                track.GetClipIndex(clip));
             break;
          }
@@ -3138,9 +3138,21 @@ void WaveTrack::SplitAt(double t)
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
-/*! @excsafety{Strong} */
+// Can't promise strong exception safety for a pair of tracks together
 void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
+{
+   assert(IsLeader());
+   for (const auto pChannel : TrackList::Channels(this)) {
+      pChannel->ExpandOneCutLine(cutLinePosition, cutlineStart, cutlineEnd);
+      // Assign the out parameters at most once
+      cutlineStart = cutlineEnd = nullptr;
+   }
+}
+
+/*! @excsafety{Strong} */
+void WaveTrack::ExpandOneCutLine(double cutLinePosition,
+   double* cutlineStart, double* cutlineEnd)
 {
    bool editClipCanMove = GetEditClipsCanMove();
 
@@ -3194,15 +3206,28 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
 
 bool WaveTrack::RemoveCutLine(double cutLinePosition)
 {
-   for (const auto &clip : mClips)
-      if (clip->RemoveCutLine(cutLinePosition))
-         return true;
+   assert(IsLeader());
+   
+   bool removed = false;
+   for (const auto pChannel : TrackList::Channels(this))
+      for (const auto &clip : pChannel->mClips)
+         if (clip->RemoveCutLine(cutLinePosition)) {
+            removed = true;
+            break;
+         }
 
-   return false;
+   return removed;
+}
+
+// Can't promise strong exception safety for a pair of tracks together
+void WaveTrack::MergeClips(int clipidx1, int clipidx2)
+{
+   for (const auto pChannel : TrackList::Channels(this))
+      pChannel->MergeOneClipPair(clipidx1, clipidx2);
 }
 
 /*! @excsafety{Strong} */
-void WaveTrack::MergeClips(int clipidx1, int clipidx2)
+void WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
 {
    WaveClip* clip1 = GetClipByIndex(clipidx1);
    WaveClip* clip2 = GetClipByIndex(clipidx2);

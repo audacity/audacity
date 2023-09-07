@@ -24,19 +24,18 @@ class CutlineHandle final : public UIHandle
    static HitTestPreview HitPreview(bool cutline, bool unsafe);
 
 public:
-   explicit CutlineHandle
-      ( const std::shared_ptr<WaveTrack> &pTrack,
-        WaveTrackLocation location );
+   explicit CutlineHandle(const std::shared_ptr<WaveTrack> &pTrack,
+      WaveTrackLocations locations, WaveTrackLocation location);
 
    CutlineHandle &operator=(const CutlineHandle&) = default;
 
-   static UIHandlePtr HitAnywhere
-      (const AudacityProject *pProject, bool cutline, UIHandlePtr ptr);
-   static UIHandlePtr HitTest
-      (std::weak_ptr<CutlineHandle> &holder,
-       const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject,
-       const std::shared_ptr<WaveTrack> &pTrack);
+   static UIHandlePtr HitAnywhere(
+      const AudacityProject *pProject, bool cutline, UIHandlePtr ptr);
+   static UIHandlePtr HitTest(
+      std::weak_ptr<CutlineHandle> &holder,
+      const wxMouseState &state, const wxRect &rect,
+      const AudacityProject *pProject,
+      std::shared_ptr<WaveTrack> pTrack);
 
    virtual ~CutlineHandle();
 
@@ -70,7 +69,8 @@ private:
    enum Operation { Merge, Expand, Remove };
    Operation mOperation{ Merge };
    double mStartTime{}, mEndTime{};
-   WaveTrackLocation mLocation {};
+   WaveTrackLocations mLocations;
+   WaveTrackLocation mLocation{};
 };
 
 #endif
