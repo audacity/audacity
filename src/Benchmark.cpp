@@ -528,7 +528,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       v = small1[i];
       auto pBlock = reinterpret_cast<samplePtr>(block.get());
       constexpr auto backwards = false;
-      t->Get(0, 1, &pBlock, SampleFormat, i * chunkSize, chunkSize, backwards);
+      t->DoGet(0, 1, &pBlock, SampleFormat, i * chunkSize, chunkSize, backwards);
       for (uint64_t b = 0; b < chunkSize; b++)
          if (block[b] != v) {
             bad++;
@@ -556,7 +556,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       v = small1[i];
       auto pBlock = reinterpret_cast<samplePtr>(block.get());
       constexpr auto backwards = false;
-      t->Get(0, 1, &pBlock, SampleFormat, i * chunkSize, chunkSize, backwards);
+      t->DoGet(0, 1, &pBlock, SampleFormat, i * chunkSize, chunkSize, backwards);
       for (uint64_t b = 0; b < chunkSize; b++)
          if (block[b] != v)
             bad++;

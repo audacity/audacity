@@ -2689,7 +2689,7 @@ float WaveChannel::GetRMS(double t0, double t1, bool mayThrow) const
    return duration > 0 ? sqrt(sumsq / duration) : 0.0;
 }
 
-bool WaveTrack::Get(size_t iChannel, size_t nBuffers,
+bool WaveTrack::DoGet(size_t iChannel, size_t nBuffers,
    const samplePtr buffers[], sampleFormat format,
    sampleCount start, size_t len, bool backwards, fillFormat fill,
    bool mayThrow, sampleCount* pNumWithinClips) const

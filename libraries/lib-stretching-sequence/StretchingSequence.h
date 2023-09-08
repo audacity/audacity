@@ -48,7 +48,7 @@ public:
    void GetEnvelopeValues(
       double* buffer, size_t bufferLen, double t0,
       bool backwards) const override;
-   bool Get(
+   bool DoGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
