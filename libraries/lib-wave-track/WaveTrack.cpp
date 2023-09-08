@@ -1290,13 +1290,14 @@ namespace {
 //
 /*! @excsafety{Weak} -- This WaveTrack remains destructible in case of AudacityException.
 But some of its cutline clips may have been destroyed. */
-void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
-   double t1, // End of time to clear
-   const WaveTrack &src, // What to paste
-   bool preserve, // Whether to reinsert splits/cuts
-   bool merge, // Whether to remove 'extra' splits
-   const TimeWarper *effectWarper // How does time change
-)
+void WaveTrack::ClearAndPaste(
+   double t0,                      // Start of time to clear
+   double t1,                      // End of time to clear
+   const WaveTrack& src,           // What to paste
+   bool preserve,                  // Whether to reinsert splits/cuts
+   bool merge,                     // Whether to remove 'extra' splits
+   const TimeWarper* effectWarper, // How does time change
+   bool clearByTrimming)
 {
    // Get a modifiable copy of `src` because it may come from another project
    // with different tempo, making boundary queries incorrect.
@@ -1305,12 +1306,13 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       THROW_INCONSISTENCY_EXCEPTION;
    WaveTrack* copy;
    const auto copyHolder = src.DuplicateWithOtherTempo(*tempo, copy);
-   ClearAndPasteAtSameTempo(t0, t1, *copy, preserve, merge, effectWarper);
+   ClearAndPasteAtSameTempo(
+      t0, t1, *copy, preserve, merge, effectWarper, clearByTrimming);
 }
 
 void WaveTrack::ClearAndPasteAtSameTempo(
    double t0, double t1, const WaveTrack& src, bool preserve, bool merge,
-   const TimeWarper* effectWarper)
+   const TimeWarper* effectWarper, bool clearByTrimming)
 {
    const auto srcNChannels = src.NChannels();
    assert(IsLeader());
@@ -1330,24 +1332,25 @@ void WaveTrack::ClearAndPasteAtSameTempo(
    // If duration is 0, then it's just a plain paste
    if (dur == 0.0) {
       // use Weak-guarantee
-      Paste(t0, src);
+      PasteWaveTrack(t0, src, merge);
       return;
    }
 
    auto iter = TrackList::Channels(&src).begin();
    const auto myChannels = TrackList::Channels(this);
    for (const auto pChannel : myChannels) {
-      ClearAndPasteOne(*pChannel, t0, t1, startTime, endTime,
-         **iter, preserve, merge, effectWarper);
+      ClearAndPasteOne(
+         *pChannel, t0, t1, startTime, endTime, **iter, preserve, merge,
+         effectWarper, clearByTrimming);
       if (srcNChannels > 1)
          ++iter;
    }
 }
 
-void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
-   const double startTime, const double endTime,
-   const WaveTrack &src, bool preserve, bool merge,
-   const TimeWarper *effectWarper)
+void WaveTrack::ClearAndPasteOne(
+   WaveTrack& track, double t0, double t1, const double startTime,
+   const double endTime, const WaveTrack& src, bool preserve, bool merge,
+   const TimeWarper* effectWarper, bool clearByTrimming)
 {
    const auto pFactory = track.mpFactory;
 
@@ -1434,11 +1437,19 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
 
    const auto tolerance = 2.0 / track.GetRate();
 
+   // The split option to `HandleClear` will trim rather than clear `[t0, t1]`.
+   const auto split = clearByTrimming;
+
+   // Shift clip at t1 to t0, so that it appends itself to what we'll be pasting
+   // after the clear, and we get neither the "There is not enough room" message
+   // nor empty space.
+   constexpr auto shiftClipAtT1ToT0 = true;
+
    // Now, clear the selection
-   track.HandleClear(t0, t1, false, false);
+   track.HandleClear(t0, t1, false, split, shiftClipAtT1ToT0);
 
    // And paste in the new data
-   PasteOne(track, t0, src, startTime, endTime);
+   PasteOne(track, t0, src, startTime, endTime, !split);
 
    // First, merge the new clip(s) in with the existing clips
    if (merge && splits.size() > 0) {
@@ -1496,12 +1507,18 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
 
    // Restore cut/split lines
    if (preserve) {
-      auto attachLeft = [](WaveClip &target, WaveClip &src)
-      {
-         assert(target.GetWidth() == src.GetWidth());
+      auto attachLeft = [](WaveClip& target, WaveClip& src) {
+         // What this lambda does is restoring the left hidden data of `target`
+         // that was cleared by `HandleClear`. Hence, `target` has no left
+         // hidden data at this stage.
          assert(target.GetTrimLeft() == 0);
          if (target.GetTrimLeft() != 0)
             return;
+
+         // `src` was created by copy from `target`, so they have equal width
+         // and stretch ratio.
+         assert(target.GetWidth() == src.GetWidth());
+         assert(target.GetStretchRatio() == src.GetStretchRatio());
 
          auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
          auto success = target.Paste(target.GetPlayStartTime(), src);
@@ -1514,10 +1531,12 @@ void WaveTrack::ClearAndPasteOne(WaveTrack &track, double t0, double t1,
 
       auto attachRight = [](WaveClip &target, WaveClip &src)
       {
-         assert(target.GetWidth() == src.GetWidth());
+         // See `attachLeft` for rationale behind these asserts.
          assert(target.GetTrimRight() == 0);
          if (target.GetTrimRight() != 0)
             return;
+         assert(target.GetWidth() == src.GetWidth());
+         assert(target.GetStretchRatio() == src.GetStretchRatio());
 
          auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
          auto success = target.Paste(target.GetPlayEndTime(), src);
@@ -1687,16 +1706,14 @@ bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 }
 
 /*! @excsafety{Strong} */
-void WaveTrack::HandleClear(double t0, double t1,
-                            bool addCutLines, bool split)
+void WaveTrack::HandleClear(
+   double t0, double t1, bool addCutLines, bool split, bool shiftClipAtT1ToT0)
 {
    // For debugging, use an ASSERT so that we stop
    // closer to the problem.
    wxASSERT( t1 >= t0 );
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
-
-   bool editClipCanMove = GetEditClipsCanMove();
 
    WaveClipPointers clipsToDelete;
    WaveClipHolders clipsToAdd;
@@ -1801,7 +1818,8 @@ void WaveTrack::HandleClear(double t0, double t1,
    // Only now, change the contents of this track
    // use No-fail-guarantee for the rest
 
-   if (!split && editClipCanMove)
+   const auto moveClipsLeft = !split && GetEditClipsCanMove();
+   if (moveClipsLeft)
       // Clip is "behind" the region -- offset it unless we're splitting
       // or we're using the "don't move other clips" mode
       for (const auto& clip : mClips)
@@ -1819,6 +1837,11 @@ void WaveTrack::HandleClear(double t0, double t1,
 
    for (auto &clip: clipsToAdd)
       InsertClip(std::move(clip)); // transfer ownership
+
+   if (!moveClipsLeft && shiftClipAtT1ToT0)
+      if (const auto clip = GetClipAtTime(t1);
+          clip && clip->GetPlayStartTime() == t1)
+         clip->ShiftBy(-(t1 - t0));
 }
 
 void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
@@ -1868,7 +1891,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       Clear(newT1, oldT1);
 }
 
-void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other)
+void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other, bool merge)
 {
    // Get a modifiable copy of `src` because it may come from another project
    // with different tempo, making boundary queries incorrect.
@@ -1877,10 +1900,11 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other)
       THROW_INCONSISTENCY_EXCEPTION;
    WaveTrack* copy;
    const auto copyHolder = other.DuplicateWithOtherTempo(*tempo, copy);
-   PasteWaveTrackAtSameTempo(t0, *copy);
+   PasteWaveTrackAtSameTempo(t0, *copy, merge);
 }
 
-void WaveTrack::PasteWaveTrackAtSameTempo(double t0, const WaveTrack &other)
+void WaveTrack::PasteWaveTrackAtSameTempo(
+   double t0, const WaveTrack& other, bool merge)
 {
    assert(IsLeader());
    const auto otherNChannels = other.NChannels();
@@ -1892,15 +1916,15 @@ void WaveTrack::PasteWaveTrackAtSameTempo(double t0, const WaveTrack &other)
    const auto endTime = other.GetEndTime();
    auto iter = TrackList::Channels(&other).begin();
    for (const auto pChannel : TrackList::Channels(this)) {
-      PasteOne(*pChannel, t0, **iter, startTime, endTime);
+      PasteOne(*pChannel, t0, **iter, startTime, endTime, merge);
       if (otherNChannels > 1)
          ++iter;
    }
 }
 
 void WaveTrack::PasteOne(
-   WaveTrack &track, double t0, const WaveTrack &other, const double startTime,
-   const double insertDuration)
+   WaveTrack& track, double t0, const WaveTrack& other, const double startTime,
+   const double insertDuration, bool merge)
 {
     //
     // Pasting is a bit complicated, because with the existence of multiclip mode,
@@ -1940,7 +1964,7 @@ void WaveTrack::PasteOne(
     const bool singleClipMode =
        other.GetNumClips() == 1 &&
        std::abs(startTime) < track.LongSamplesToTime(1) * 0.5 &&
-       stretchRatiosMatch;
+       stretchRatiosMatch && merge;
 
     const auto rate = track.GetRate();
     if (insertDuration != 0 && insertDuration < 1.0 / rate)
@@ -1955,6 +1979,12 @@ void WaveTrack::PasteOne(
     auto pastingFromTempTrack = !other.GetOwner();
     bool editClipCanMove = GetEditClipsCanMove();
 
+    const SimpleMessageBoxException notEnoughSpaceException {
+       ExceptionType::BadUserAction,
+       XO("There is not enough room available to paste the selection"),
+       XO("Warning"), "Error:_Insufficient_space_in_track"
+    };
+
     // Make room for the pasted data
     if (editClipCanMove) {
         if (!singleClipMode) {
@@ -1967,6 +1997,17 @@ void WaveTrack::PasteOne(
         for (const auto& clip : track.mClips)
             if (clip->GetPlayStartTime() > t0 - (1.0 / rate))
                 clip->ShiftBy(insertDuration);
+    }
+    else
+    {
+       if (!merge)
+          track.SplitAt(t0);
+       const auto clipAtT0 = track.GetClipAtTime(t0);
+       const auto t = clipAtT0 ? clipAtT0->GetPlayEndTime() : t0;
+       if (!track.IsEmpty(t, t + insertDuration))
+          throw notEnoughSpaceException;
+       if (clipAtT0 && clipAtT0->GetPlayStartTime() == t0)
+          clipAtT0->ShiftBy(insertDuration);
     }
 
     if (singleClipMode) {
@@ -2006,13 +2047,7 @@ void WaveTrack::PasteOne(
                         clip->GetPlayStartTime())
                         // Strong-guarantee in case of this path
                         // not that it matters.
-                        throw SimpleMessageBoxException{
-                           ExceptionType::BadUserAction,
-                              XO(
-"There is not enough room available to paste the selection"),
-                              XO("Warning"),
-                              "Error:_Insufficient_space_in_track"
-                    };
+                        throw notEnoughSpaceException;
                 }
             }
             if (auto *pClip = other.GetClipByIndex(0)) {
@@ -2038,12 +2073,7 @@ void WaveTrack::PasteOne(
         !track.IsEmpty(t0, t0 + insertDuration - 1.0 / rate))
         // Strong-guarantee in case of this path
         // not that it matters.
-        throw SimpleMessageBoxException{
-           ExceptionType::BadUserAction,
-           XO("There is not enough room available to paste the selection"),
-           XO("Warning"),
-           "Error:_Insufficient_space_in_track"
-        };
+        throw notEnoughSpaceException;
 
     for (const auto& clip : other.mClips) {
         // AWD Oct. 2009: Don't actually paste in placeholder clips
@@ -2169,7 +2199,12 @@ void WaveTrack::Paste(double t0, const Track &src)
 {
    assert(IsLeader()); // pre of Track::Paste
    if (const auto other = dynamic_cast<const WaveTrack*>(&src))
-      PasteWaveTrack(t0, *other);
+   {
+      // Currently `Paste` isn't used by code that wants the newer "don't merge
+      // when copy/pasting" behaviour ...
+      constexpr auto merge = true;
+      PasteWaveTrack(t0, *other, merge);
+   }
    else
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       (void)0;// Empty if intentional.

@@ -418,11 +418,10 @@ public:
     @pre `src.IsLeader()`
     @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
     */
-   void ClearAndPaste(double t0, double t1,
-      const WaveTrack &src,
-      bool preserve = true,
-      bool merge = true,
-      const TimeWarper *effectWarper = nullptr) /* not override */;
+   void ClearAndPaste(
+      double t0, double t1, const WaveTrack& src, bool preserve = true,
+      bool merge = true, const TimeWarper* effectWarper = nullptr,
+      bool clearByTrimming = false) /* not override */;
    /*!
     Overload that takes a TrackList and passes its first wave track
     @pre `**src.Any<const WaveTrack>().begin()` satisfies preconditions
@@ -1009,7 +1008,9 @@ public:
 private:
    void FlushOne();
    // May assume precondition: t0 <= t1
-   void HandleClear(double t0, double t1, bool addCutLines, bool split);
+   void HandleClear(
+      double t0, double t1, bool addCutLines, bool split,
+      bool shiftClipAtT1ToT0 = false);
    /*
     * @brief Copy/Paste operations must preserve beat durations, but time
     * boundaries are expressed in seconds. For pasting to work, source and
@@ -1020,11 +1021,11 @@ private:
     */
    void ClearAndPasteAtSameTempo(
       double t0, double t1, const WaveTrack& src, bool preserve, bool merge,
-      const TimeWarper* effectWarper);
-   static void ClearAndPasteOne(WaveTrack &track,
-      double t0, double t1, double startTime, double endTime,
-      const WaveTrack &src,
-      bool preserve, bool merge, const TimeWarper *effectWarper);
+      const TimeWarper* effectWarper, bool clearByTrimming);
+   static void ClearAndPasteOne(
+      WaveTrack& track, double t0, double t1, double startTime, double endTime,
+      const WaveTrack& src, bool preserve, bool merge,
+      const TimeWarper* effectWarper, bool clearByTrimming);
 
    static void JoinOne(
       WaveTrack& track, double t0, double t1,
@@ -1109,16 +1110,18 @@ private:
     @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
     @pre `IsLeader()`
     */
-   void PasteWaveTrack(double t0, const WaveTrack &other);
+   void PasteWaveTrack(double t0, const WaveTrack &other, bool merge);
    /*
     * @copybrief ClearAndPasteAtSameTempo
     * @pre Preconditions of `PasteWaveTrack`
     * @pre `GetProjectTempo().has_value() && GetProjectTempo() ==
     * other.GetProjectTempo()`
     */
-   void PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other);
-   static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
-      double startTime, double insertDuration);
+   void
+   PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, bool merge);
+   static void PasteOne(
+      WaveTrack& track, double t0, const WaveTrack& other, double startTime,
+      double insertDuration, bool merge = true);
 
    //! Whether all clips of a leader track have a common rate
    /*!
