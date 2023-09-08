@@ -69,7 +69,7 @@ BaseItemSharedPtr ExtraMiscItems()
 
          return (
          // Accel key is not bindable.
-         Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
+         Command( wxT("FullScreenOnOff"), XXO("Enable &Full Screen"),
             OnFullScreen,
             AlwaysEnabledFlag,
             Options{ key }.CheckTest( []( const AudacityProject &project ) {
