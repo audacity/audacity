@@ -837,9 +837,10 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // playbackSequences contains only leaders; prerollSequences should
             // be a subset of it.  Non-leader might not be found, but that is
             // all right.
-            bool prerollTrack =
-               make_iterator_range(transportSequences.playbackSequences)
-                  .contains(shared);
+            const auto &range = transportSequences.playbackSequences;
+            bool prerollTrack = any_of(range.begin(), range.end(),
+               [&](const auto &pSequence){
+                  return shared.get() == pSequence->FindChannelGroup(); });
             if (prerollTrack)
                transportSequences.prerollSequences.push_back(shared);
 
