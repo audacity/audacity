@@ -683,6 +683,15 @@ void WaveTrack::DoOnProjectTempoChange(
          clip->OnProjectTempoChange(oldTempo, newTempo);
 }
 
+TrackListHolder
+WaveTrack::DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const
+{
+   const auto srcCopyList = Duplicate();
+   leader = *srcCopyList->Any<WaveTrack>().begin();
+   leader->OnProjectTempoChange(newTempo);
+   return srcCopyList;
+}
+
 bool WaveTrack::LinkConsistencyFix(bool doFix)
 {
    assert(!doFix || IsLeader());
@@ -1289,10 +1298,28 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    const TimeWarper *effectWarper // How does time change
 )
 {
+   // Get a modifiable copy of `src` because it may come from another project
+   // with different tempo, making boundary queries incorrect.
+   const auto& tempo = GetProjectTempo();
+   if (!tempo.has_value())
+      THROW_INCONSISTENCY_EXCEPTION;
+   WaveTrack* copy;
+   const auto copyHolder = src.DuplicateWithOtherTempo(*tempo, copy);
+   ClearAndPasteAtSameTempo(t0, t1, *copy, preserve, merge, effectWarper);
+}
+
+void WaveTrack::ClearAndPasteAtSameTempo(
+   double t0, double t1, const WaveTrack& src, bool preserve, bool merge,
+   const TimeWarper* effectWarper)
+{
    const auto srcNChannels = src.NChannels();
    assert(IsLeader());
    assert(src.IsLeader());
    assert(srcNChannels == 1 || srcNChannels == NChannels());
+   assert(
+      GetProjectTempo().has_value() &&
+      GetProjectTempo() == src.GetProjectTempo());
+
    const auto startTime = src.GetStartTime();
    const auto endTime = src.GetEndTime();
    double dur = std::min(t1 - t0, endTime);
@@ -1842,11 +1869,26 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       Clear(newT1, oldT1);
 }
 
-void WaveTrack::PasteWaveTrack(double t0, const WaveTrack &other)
+void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other)
+{
+   // Get a modifiable copy of `src` because it may come from another project
+   // with different tempo, making boundary queries incorrect.
+   const auto& tempo = GetProjectTempo();
+   if (!tempo.has_value())
+      THROW_INCONSISTENCY_EXCEPTION;
+   WaveTrack* copy;
+   const auto copyHolder = other.DuplicateWithOtherTempo(*tempo, copy);
+   PasteWaveTrackAtSameTempo(t0, *copy);
+}
+
+void WaveTrack::PasteWaveTrackAtSameTempo(double t0, const WaveTrack &other)
 {
    assert(IsLeader());
    const auto otherNChannels = other.NChannels();
    assert(otherNChannels == 1 || otherNChannels == NChannels());
+   assert(
+      GetProjectTempo().has_value() &&
+      GetProjectTempo() == other.GetProjectTempo());
    const auto startTime = other.GetStartTime();
    const auto endTime = other.GetEndTime();
    auto iter = TrackList::Channels(&other).begin();

@@ -276,11 +276,11 @@ void WaveClip::OnProjectTempoChange(
       // read-up or signal analysis) we can use something smarter than that. In
       // the meantime, use the tempo of the project when the clip is created as
       // source tempo.
-      mRawAudioTempo = oldTempo;
+      mRawAudioTempo = oldTempo.value_or(newTempo);
 
    if (oldTempo.has_value())
    {
-      const auto ratioChange = *mProjectTempo / newTempo;
+      const auto ratioChange = *oldTempo / newTempo;
       mSequenceOffset *= ratioChange;
       mTrimLeft *= ratioChange;
       mTrimRight *= ratioChange;

@@ -479,9 +479,9 @@ public:
    // Return true iff the attribute is recognized.
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
 
-protected:
    const std::optional<double>& GetProjectTempo() const;
 
+protected:
    /*!
     @pre `IsLeader()`
     */

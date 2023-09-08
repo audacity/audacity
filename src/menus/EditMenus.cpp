@@ -8,6 +8,7 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
+#include "ProjectTimeSignature.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
@@ -139,9 +140,16 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    // Select some pasted samples, which is probably impossible to get right
    // with various project and track sample rates.
    // So do it at the sample rate of the project
-   double projRate = ProjectRate::Get( project ).GetRate();
-   double quantT0 = QUANTIZED_TIME(t0, projRate);
-   double quantT1 = QUANTIZED_TIME(t1, projRate);
+   const double projRate = ProjectRate::Get( project ).GetRate();
+   const double projTempo = ProjectTimeSignature::Get(project).GetTempo();
+   const double srcTempo =
+      pFirstNewTrack ? pFirstNewTrack->GetProjectTempo().value_or(projTempo) :
+                       projTempo;
+   // Apply adequate stretching to the selection. A selection of 10 seconds of
+   // audio in project A should become 5 seconds in project B if tempo in B is
+   // twice as fast.
+   const double quantT0 = QUANTIZED_TIME(t0 * srcTempo / projTempo, projRate);
+   const double quantT1 = QUANTIZED_TIME(t1 * srcTempo / projTempo, projRate);
    selectedRegion.setTimes(
       0.0,   // anywhere else and this should be
              // half a sample earlier
