@@ -1007,6 +1007,17 @@ private:
    void FlushOne();
    // May assume precondition: t0 <= t1
    void HandleClear(double t0, double t1, bool addCutLines, bool split);
+   /*
+    * @brief Copy/Paste operations must preserve beat durations, but time
+    * boundaries are expressed in seconds. For pasting to work, source and
+    * destination tracks must therefore have equal tempo.
+    * @pre Preconditions of `ClearAndPaste`
+    * @pre `GetProjectTempo().has_value() && GetProjectTempo() ==
+    * src.GetProjectTempo()`
+    */
+   void ClearAndPasteAtSameTempo(
+      double t0, double t1, const WaveTrack& src, bool preserve, bool merge,
+      const TimeWarper* effectWarper);
    static void ClearAndPasteOne(WaveTrack &track,
       double t0, double t1, double startTime, double endTime,
       const WaveTrack &src,
@@ -1052,6 +1063,13 @@ private:
    void SetClipRates(double newRate);
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;
+   /*!
+    * @pre `IsLeader()`
+    * @param[out] leader
+    */
+   //! @pre `IsLeader()`
+   [[nodiscard]] TrackListHolder
+   DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const;
 
    bool GetOne(
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
@@ -1086,6 +1104,13 @@ private:
     @pre `IsLeader()`
     */
    void PasteWaveTrack(double t0, const WaveTrack &other);
+   /*
+    * @copybrief ClearAndPasteAtSameTempo
+    * @pre Preconditions of `PasteWaveTrack`
+    * @pre `GetProjectTempo().has_value() && GetProjectTempo() ==
+    * other.GetProjectTempo()`
+    */
+   void PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other);
    static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
       double startTime, double insertDuration);
 
