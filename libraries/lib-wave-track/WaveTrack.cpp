@@ -2268,11 +2268,6 @@ void WaveTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
    // File compatibility breaks have intervened long since, and the line above
    // would now have undesirable side effects
 #endif
-
-   // Make clips (which don't serialize the rate) consistent with channel rate,
-   // though the consistency check of channels with each other remains to do
-   if (mLegacyRate > 0)
-      SetClipRates(mLegacyRate);
 }
 
 XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
@@ -2310,7 +2305,17 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
    // This is for the NEW file format (post-1.2)
    //
    if (tag == "waveclip")
-      return CreateClip();
+   {
+      // Make clips (which don't serialize the rate) consistent with channel rate,
+      // though the consistency check of channels with each other remains to do.
+      // Not all `WaveTrackData` fields are properly initialized by now,
+      // use deserialization helpers.
+      auto clip = std::make_shared<WaveClip>(1,
+         mpFactory, mLegacyFormat, mLegacyRate, GetWaveColorIndex());
+      const auto xmlHandler = clip.get();
+      InsertClip(std::move(clip));
+      return xmlHandler;
+   }
 
    return nullptr;
 }
