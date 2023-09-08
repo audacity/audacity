@@ -616,8 +616,18 @@ void OnPaste(const CommandContext &context)
                   bPastedSomething = true;
                   // For correct remapping of preserved split lines:
                   PasteTimeWarper warper{ t1, t0 + src->GetEndTime() };
-                  wn.ClearAndPaste(t0, t1,
-                     *static_cast<const WaveTrack*>(src), true, true, &warper);
+                  // New desired behaviour as of 3.4: pasting should result in a
+                  // new clip - don't erase boundaries to surrounding clips ...
+                  constexpr auto merge = false;
+                  // ... and of course, don't preserve the boundaries strictly
+                  // in [t0, t1].
+                  constexpr auto preserveExistingBoundaries = false;
+                  // Data in `[t0, t1]` must be recoverable though trimming.
+                  constexpr auto clearByTrimming = true;
+                  wn.ClearAndPaste(
+                     t0, t1, *static_cast<const WaveTrack*>(src),
+                     preserveExistingBoundaries, merge, &warper,
+                     clearByTrimming);
                },
                [&](LabelTrack &ln){
                   // Per Bug 293, users expect labels to move on a paste into
