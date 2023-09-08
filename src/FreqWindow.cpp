@@ -59,19 +59,20 @@ the mouse around.
 
 #include <math.h>
 
-#include "SelectFile.h"
-#include "ShuttleGui.h"
 #include "AColor.h"
+#include "AllThemeResources.h"
+#include "BasicUI.h"
 #include "CommonCommandFlags.h"
+#include "Decibels.h"
 #include "FFT.h"
 #include "PitchName.h"
-#include "Decibels.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindow.h"
+#include "SelectFile.h"
+#include "ShuttleGui.h"
 #include "Theme.h"
 #include "ViewInfo.h"
-#include "AllThemeResources.h"
 
 #include "FileNames.h"
 
@@ -441,7 +442,7 @@ void FrequencyPlotDialog::Populate()
    // -------------------------------------------------------------------
    // ROW 5: Spacer
    // -------------------------------------------------------------------
-   
+
    S.AddSpace(5);
 
    S.SetBorder(2);
@@ -567,7 +568,8 @@ bool FrequencyPlotDialog::Show(bool show)
       dBRange = DecibelScaleCutoff.Read();
       if(dBRange < 90.)
          dBRange = 90.;
-      GetAudio();
+      if (!GetAudio())
+         return false;
       // Don't send an event.  We need the recalc right away.
       // so that mAnalyst is valid when we paint.
       //SendRecalcEvent();
@@ -579,7 +581,7 @@ bool FrequencyPlotDialog::Show(bool show)
    return res;
 }
 
-void FrequencyPlotDialog::GetAudio()
+bool FrequencyPlotDialog::GetAudio()
 {
    mData.reset();
    mDataLen = 0;
@@ -608,19 +610,30 @@ void FrequencyPlotDialog::GetAudio()
       }
       const auto nChannels = track->NChannels();
       if (track->GetRate() != mRate) {
-         AudacityMessageBox(
-            XO(
-"To plot the spectrum, all selected tracks must be the same sample rate.") );
+         using namespace BasicUI;
+         ShowMessageBox(
+            XO("To plot the spectrum, all selected tracks must have the same sample rate."),
+            MessageBoxOptions {}.Caption(XO("Error")).IconStyle(Icon::Error));
          mData.reset();
          mDataLen = 0;
-         return;
+         return false;
       }
       Floats buffer1{ mDataLen };
       Floats buffer2{ mDataLen };
       float *const buffers[]{ buffer1.get(), buffer2.get() };
       // Don't allow throw for bad reads
-      track->GetFloats(0, nChannels, buffers, start, mDataLen,
-         false, FillFormat::fillZero, false);
+      if (!track->GetFloats(
+             0, nChannels, buffers, start, mDataLen, false,
+             FillFormat::fillZero, false))
+      {
+         using namespace BasicUI;
+         ShowMessageBox(
+            XO("Audio could not be analyzed. This may be due to a stretched clip.\nTry resetting any stretched clips, or mixing and rendering the tracks before analyzing"),
+            MessageBoxOptions {}.Caption(XO("Error")).IconStyle(Icon::Error));
+         mData.reset();
+         mDataLen = 0;
+         return false;
+      }
       for (size_t i = 0; i < mDataLen; i++)
          mData[i] = buffers[0][i];
       for (size_t iChannel = 1; iChannel < nChannels; ++iChannel) {
@@ -632,7 +645,7 @@ void FrequencyPlotDialog::GetAudio()
    }
 
    if (selcount == 0)
-      return;
+      return false;
 
    if (warning) {
       auto msg = XO(
@@ -640,6 +653,7 @@ void FrequencyPlotDialog::GetAudio()
          .Format(mDataLen / mRate);
       AudacityMessageBox( msg );
    }
+   return true;
 }
 
 void FrequencyPlotDialog::OnSize(wxSizeEvent & WXUNUSED(event))
@@ -695,7 +709,7 @@ void FrequencyPlotDialog::DrawPlot()
       }
 
       memDC.SelectObject(wxNullBitmap);
-      
+
       mFreqPlot->Refresh();
 
       Refresh();
