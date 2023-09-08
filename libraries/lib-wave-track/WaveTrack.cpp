@@ -2262,7 +2262,7 @@ void WaveTrack::InsertSilence(double t, double len)
          // Assume at most one clip contains t
          const auto end = clips.end();
          const auto it = std::find_if(clips.begin(), end,
-            [&](const WaveClipHolder &clip) { return clip->WithinPlayRegion(t); } );
+            [&](const WaveClipHolder &clip) { return clip->SplitsPlayRegion(t); } );
 
          // use Strong-guarantee
          if (it != end)
