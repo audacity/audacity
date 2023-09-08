@@ -221,7 +221,7 @@ void WaveTrack::Interval::ApplyStretchRatio(
 
    for (unsigned channel = 0; channel < channelsCount; ++channel)
    {
-      GetClip(channel)->ApplyStretchRatio(
+      GetClip(channel)->ApplyStretchRatio(1.,
          [&reportProgress, channel, channelsCount](double progress)
          { reportProgress((channel + progress) / channelsCount); });
    }
@@ -1320,6 +1320,9 @@ void WaveTrack::ClearAndPasteAtSameTempo(
       GetProjectTempo().has_value() &&
       GetProjectTempo() == src.GetProjectTempo());
 
+   t0 = SnapToSample(t0);
+   t1 = SnapToSample(t1);
+
    const auto startTime = src.GetStartTime();
    const auto endTime = src.GetEndTime();
    double dur = std::min(t1 - t0, endTime);
@@ -1799,15 +1802,11 @@ void WaveTrack::HandleClear(double t0, double t1,
    // use No-fail-guarantee for the rest
 
    if (!split && editClipCanMove)
-   {
       // Clip is "behind" the region -- offset it unless we're splitting
       // or we're using the "don't move other clips" mode
       for (const auto& clip : mClips)
-      {
          if (clip->AtOrBeforePlayRegion(t1))
             clip->ShiftBy(-(t1 - t0));
-      }
-   }
 
    for (const auto &clip: clipsToDelete)
    {
@@ -1929,8 +1928,19 @@ void WaveTrack::PasteOne(
 
     //wxPrintf("paste: we have at least one clip\n");
 
-    bool singleClipMode = other.GetNumClips() == 1 &&
-        std::abs(startTime) < track.LongSamplesToTime(1) * 0.5;
+    const auto clipAtT0 = track.GetClipAtTime(t0);
+    const auto otherFirstClip = other.GetLeftmostClip();
+    const auto otherLastClip = other.GetRightmostClip();
+    const auto stretchRatiosMatch =
+       !clipAtT0 || (clipAtT0->HasEqualStretchRatio(*otherFirstClip) &&
+                     clipAtT0->HasEqualStretchRatio(*otherLastClip));
+
+    // `singleClipMode` will try to merge. Only allow this if clips on both ends
+    // of the selection have equal stretch ratio.
+    const bool singleClipMode =
+       other.GetNumClips() == 1 &&
+       std::abs(startTime) < track.LongSamplesToTime(1) * 0.5 &&
+       stretchRatiosMatch;
 
     const auto rate = track.GetRate();
     if (insertDuration != 0 && insertDuration < 1.0 / rate)
@@ -2006,6 +2016,9 @@ void WaveTrack::PasteOne(
                 }
             }
             if (auto *pClip = other.GetClipByIndex(0)) {
+               // This branch only gets executed in `singleClipMode` - we've
+               // already made sure that stretch ratios are equal, satisfying
+               // `WaveClip::Paste`'s precondition.
                bool success = insideClip->Paste(t0, *pClip);
                // TODO wide wave tracks -- prove success, or propagate failure,
                // or we might throw a MessageBoxException
@@ -2144,7 +2157,8 @@ void WaveTrack::ApplyStretchRatioOne(
       : ProgressReporter{};
    while (clip && clip->GetPlayStartTime() < t1)
    {
-      clip->ApplyStretchRatio(reportClipProgress);
+      constexpr auto targetStretchRatio = 1.0;
+      clip->ApplyStretchRatio(targetStretchRatio, reportClipProgress);
       clip = GetNextClip(*clip, PlaybackDirection::forward);
       ++count;
    }
@@ -2318,16 +2332,30 @@ void WaveTrack::Disjoin(double t0, double t1)
 }
 
 /*! @excsafety{Weak} */
-void WaveTrack::Join(double t0, double t1)
+void WaveTrack::Join(
+   double t0, double t1, const ProgressReporter& reportProgress)
 {
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
 
+   const auto numChannels = NChannels();
+   auto count = 0;
+   const auto reportChannelProgress =
+      reportProgress ?
+         [&](double channelProgress) {
+            reportProgress((count + channelProgress) / numChannels);
+         } :
+         ProgressReporter {};
    for (const auto pChannel : TrackList::Channels(this))
-      JoinOne(*pChannel, t0, t1);
+   {
+      JoinOne(*pChannel, t0, t1, reportChannelProgress);
+      ++count;
+   }
 }
 
-void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
+void WaveTrack::JoinOne(
+   WaveTrack& track, double t0, double t1,
+   const ProgressReporter& reportProgress)
 {
    WaveClipPointers clipsToDelete;
    WaveClip* newClip{};
@@ -2356,6 +2384,14 @@ void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
    newClip = track.CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
       clipsToDelete[0]->GetName());
 
+   auto count = 0;
+   const ProgressReporter reportClipProgress =
+      reportProgress ?
+         [&](double clipProgress) {
+            reportProgress((count + clipProgress) / clipsToDelete.size());
+         } :
+         ProgressReporter {};
+
    for (const auto &clip : clipsToDelete) {
       //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
       //       t, clip->GetOffset(), clip->GetStartTime(), clip->GetEndTime());
@@ -2369,7 +2405,7 @@ void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
          t += addedSilence;
       }
 
-      //wxPrintf("Pasting at %.6f\n", t);
+      // wxPrintf("Pasting at %.6f\n", t);
       bool success = newClip->Paste(t, *clip);
       assert(success); // promise of CreateClip
 
@@ -2705,6 +2741,17 @@ bool WaveTrack::CloseLock() noexcept
          clip->CloseLock();
 
    return true;
+}
+
+const WaveClip* WaveTrack::GetLeftmostClip() const {
+   if (mClips.empty())
+      return nullptr;
+   return std::min_element(
+             mClips.begin(), mClips.end(),
+             [](const auto& a, const auto b) {
+                return a->GetPlayStartTime() < b->GetPlayStartTime();
+             })
+      ->get();
 }
 
 const WaveClip* WaveTrack::GetRightmostClip() const {

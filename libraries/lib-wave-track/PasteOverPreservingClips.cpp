@@ -76,7 +76,7 @@ void PasteOverPreservingClips(const ClipData &data,
       //remove the old audio and get the NEW
       auto [start, end] = clipStartEndTimes[i];
       oldTrack.Clear(start, end);
-   
+
       auto toClipOutput = newContents.Copy(start - startT, end - startT);
       oldTrack.Paste(start, *toClipOutput);
 
@@ -84,13 +84,15 @@ void PasteOverPreservingClips(const ClipData &data,
       auto newClip = oldTrack.GetClipAtTime(start + 0.5 / oldTrack.GetRate());
       newClip->SetName(clipNames[i]);
 
-      //if the clip was only partially selected, the Paste will have created a
-      // split line.  Join is needed to take care of this
-      //This is not true when the selection is fully contained within one clip
-      // (second half of conditional)
+      // The Paste will have created a split line. Join is needed to take care
+      // of this.
       auto [realStart, realEnd] = clipRealStartEndTimes[i];
-      if ((realStart  != start || realEnd != end) &&
-         !(realStart <= startT && realEnd >= startT + lenT))
-         oldTrack.Join(realStart, realEnd);
+      oldTrack.Join(
+         realStart, realEnd,
+         // At the time of writing, PasteOverPreservingClips is only used by
+         // the equalization effect. The equalized region of the track
+         // already had its stretching applied, so there shouldn't be a need
+         // for stretching now and hence we don't bother with a progress bar.
+         {});
    }
 }

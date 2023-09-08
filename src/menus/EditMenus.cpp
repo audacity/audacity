@@ -918,9 +918,18 @@ void OnJoin(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    auto &window = ProjectWindow::Get(project);
-
-   for (auto wt : tracks.Selected<WaveTrack>())
-      wt->Join(selectedRegion.t0(), selectedRegion.t1());
+   const auto progress = BasicUI::MakeProgress(
+      XO("Pre-processing"), XO("Rendering Time-Stretched Audio"), 0);
+   const auto selectedTracks = tracks.Selected<WaveTrack>();
+   auto count = 0;
+   for (auto wt : selectedTracks)
+      wt->Join(
+         selectedRegion.t0(), selectedRegion.t1(), [&](double trackProgress) {
+            const auto overallProgress =
+               (count + trackProgress) / selectedTracks.size();
+            progress->Poll(overallProgress * 1000, 1000);
+            ++count;
+         });
 
    ProjectHistory::Get(project).PushState(
       XO("Joined %.2f seconds at t=%.2f")
