@@ -22,7 +22,7 @@ public:
    }
 
    // WideSampleSequence
-   bool Get(
+   bool DoGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,

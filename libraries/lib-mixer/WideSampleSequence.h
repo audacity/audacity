@@ -53,18 +53,12 @@ public:
     @pre `iChannel + nBuffers <= NChannels()`
     @return false when `mayThrow` is false and not all samples could be
        retrieved
+    @post if return value is false, buffers are zero-filled
     */
    bool GetFloats(size_t iChannel, size_t nBuffers,
       float *const buffers[], sampleCount start, size_t len,
       bool backwards = false, fillFormat fill = FillFormat::fillZero,
-      bool mayThrow = true, sampleCount* pNumWithinClips = nullptr) const
-   {
-      // Cast the pointers to pass them to Get() which handles multiple
-      // destination formats
-      return Get(
-         iChannel, nBuffers, reinterpret_cast<const samplePtr*>(buffers),
-         floatSample, start, len, backwards, fill, mayThrow, pNumWithinClips);
-   }
+      bool mayThrow = true, sampleCount* pNumWithinClips = nullptr) const;
 
    //! Retrieve samples of one of the channels from a sequence in a specified
    //! format
@@ -73,8 +67,9 @@ public:
     @param format sample format of the destination buffer
     @param backward retrieves samples from `start` (inclusive) to `start + len`
     if false, else from `start` (exclusive) to `start - len` in reverse order.
+    @return whether successful; if not, assume nothing about buffer contents
     */
-   virtual bool Get(
+   virtual bool DoGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backward,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,

@@ -531,7 +531,7 @@ public:
    ///
 
    //! This fails if any clip overlapping the range has non-unit stretch ratio!
-   bool Get(
+   bool DoGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
