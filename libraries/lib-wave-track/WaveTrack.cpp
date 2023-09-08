@@ -3356,6 +3356,31 @@ void WaveTrack::GetEnvelopeValues(
       std::reverse(buffer, buffer + bufferLen);
 }
 
+const WaveClip* WaveTrack::GetAdjacentClip(
+   const WaveClip& clip, PlaybackDirection direction) const
+{
+   const auto neighbour = GetNextClip(clip, direction);
+   if (!neighbour)
+      return nullptr;
+   else if (direction == PlaybackDirection::forward)
+      return std::abs(clip.GetPlayEndTime() - neighbour->GetPlayStartTime()) <
+                   1e-9 ?
+                neighbour :
+                nullptr;
+   else
+      return std::abs(clip.GetPlayStartTime() - neighbour->GetPlayEndTime()) <
+                   1e-9 ?
+                neighbour :
+                nullptr;
+}
+
+WaveClip*
+WaveTrack::GetAdjacentClip(const WaveClip& clip, PlaybackDirection direction)
+{
+   return const_cast<WaveClip*>(
+      std::as_const(*this).GetAdjacentClip(clip, direction));
+}
+
 // When the time is both the end of a clip and the start of the next clip, the
 // latter clip is returned.
 WaveClip* WaveTrack::GetClipAtTime(double time)
@@ -3391,31 +3416,6 @@ WaveTrack::GetNextClip(const WaveClip& clip, PlaybackDirection direction)
 {
    return const_cast<WaveClip*>(
       std::as_const(*this).GetNextClip(clip, direction));
-}
-
-const WaveClip* WaveTrack::GetAdjacentClip(
-   const WaveClip& clip, PlaybackDirection direction) const
-{
-   const auto neighbour = GetNextClip(clip, direction);
-   if (!neighbour)
-      return nullptr;
-   else if (direction == PlaybackDirection::forward)
-      return std::abs(clip.GetPlayEndTime() - neighbour->GetPlayStartTime()) <
-                   1e-9 ?
-                neighbour :
-                nullptr;
-   else
-      return std::abs(clip.GetPlayStartTime() - neighbour->GetPlayEndTime()) <
-                   1e-9 ?
-                neighbour :
-                nullptr;
-}
-
-WaveClip*
-WaveTrack::GetAdjacentClip(const WaveClip& clip, PlaybackDirection direction)
-{
-   return const_cast<WaveClip*>(
-      std::as_const(*this).GetAdjacentClip(clip, direction));
 }
 
 const WaveClip* WaveTrack::GetClipAtTime(double time) const
