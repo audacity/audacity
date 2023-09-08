@@ -3423,8 +3423,7 @@ const WaveClip* WaveTrack::GetClipAtTime(double time) const
    const auto clips = SortedClipArray();
    auto p = std::find_if(
       clips.rbegin(), clips.rend(), [&](const WaveClip* const& clip) {
-         return time >= clip->GetPlayStartTime() &&
-                time <= clip->GetPlayEndTime();
+         return clip->WithinPlayRegion(time);
       });
 
    // When two clips are immediately next to each other, the GetPlayEndTime() of the first clip
