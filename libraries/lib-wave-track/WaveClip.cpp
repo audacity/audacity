@@ -21,12 +21,10 @@
 #include <vector>
 #include <wx/log.h>
 
-#include "AudioContainer.h"
 #include "BasicUI.h"
 #include "ClipTimeAndPitchSource.h"
 #include "Envelope.h"
 #include "InconsistencyException.h"
-#include "Prefs.h"
 #include "Resample.h"
 #include "Sequence.h"
 #include "StaffPadTimeAndPitch.h"
@@ -660,7 +658,7 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
 }
 
 /*! @excsafety{Strong} */
-bool WaveClip::Paste(double t0, const WaveClip &other)
+bool WaveClip::Paste(double t0, const WaveClip& other)
 {
    if (GetWidth() != other.GetWidth())
       return false;
@@ -708,9 +706,11 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
       auto copy = std::make_shared<WaveClip>(*newClip.get(), factory, true);
+
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
-          copy->Resample(mRate);
+         copy->Resample(mRate);
+
       if (clipNeedsNewFormat)
          // Force sample formats to match.
          copy->ConvertToSampleFormat(GetSampleFormats().Stored());
@@ -742,9 +742,11 @@ bool WaveClip::Paste(double t0, const WaveClip &other)
 
    // Assume No-fail-guarantee in the remaining
    MarkChanged();
-   auto sampleTime = 1.0 / GetRate();
-   mEnvelope->PasteEnvelope
-      (s0.as_double()/mRate + GetSequenceStartTime(), newClip->mEnvelope.get(), sampleTime);
+   const auto sampleTime = 1.0 / GetRate();
+   const auto timeOffsetInEnvelope =
+      s0.as_double() * GetStretchRatio() / mRate + GetSequenceStartTime();
+   mEnvelope->PasteEnvelope(
+      timeOffsetInEnvelope, newClip->mEnvelope.get(), sampleTime);
    OffsetCutLines(t0, newClip->GetPlayEndTime() - newClip->GetPlayStartTime());
 
    for (auto &holder : newCutlines)
@@ -1011,10 +1013,8 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
       // Envelope::Paste takes offset into account, WaveClip::Paste doesn't!
       // Do this to get the right result:
       cutline->mEnvelope->SetOffset(0);
-
-      bool success =
-         Paste(GetSequenceStartTime() + cutline->GetSequenceStartTime(),
-            *cutline);
+      bool success = Paste(
+         GetSequenceStartTime() + cutline->GetSequenceStartTime(), *cutline);
       assert(success); // class invariant promises cutlines have correct width
 
       // Now erase the cutline,
@@ -1179,30 +1179,32 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    }
 }
 
-void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
+void WaveClip::ApplyStretchRatio(
+   double targetRatio, const ProgressReporter& reportProgress)
 {
-   const auto stretchRatio = GetStretchRatio();
-   if (stretchRatio == 1.0)
+   assert(mProjectTempo.has_value());
+
+   if (StretchRatioEquals(targetRatio))
       return;
+   const auto stretchRatio = GetStretchRatio();
 
    auto success = false;
    auto newSequences = GetEmptySequenceCopies();
    bool swappedOnce = false;
 
-   Finally Do { [&, trimLeftBeforeStretch = GetTrimLeft(),
-                 trimRightBeforeStretch = GetTrimRight(),
-                 offsetBeforeStretch = GetSequenceStartTime()] {
+   Finally Do { [&, oldTrimLeft = GetTrimLeft(), oldTrimRight = GetTrimRight(),
+                 oldOffset = GetSequenceStartTime(),
+                 oldRawAudioTempo = mRawAudioTempo,
+                 oldClipStretchRatio = mClipStretchRatio] {
       if (success)
-      {
-         this->mClipStretchRatio = 1.0;
-         this->mRawAudioTempo = this->mProjectTempo;
-         assert(this->GetStretchRatio() == 1.0);
-      }
+         assert(GetStretchRatio() == 1);
       else
       {
-         this->SetTrimLeft(trimLeftBeforeStretch);
-         this->SetTrimRight(trimRightBeforeStretch);
-         this->SetSequenceStartTime(offsetBeforeStretch);
+         this->mClipStretchRatio = oldClipStretchRatio;
+         this->mRawAudioTempo = oldRawAudioTempo;
+         this->SetTrimLeft(oldTrimLeft);
+         this->SetTrimRight(oldTrimRight);
+         this->SetSequenceStartTime(oldOffset);
          if (swappedOnce)
             std::swap(mSequences, newSequences);
       }
@@ -1227,7 +1229,7 @@ void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
    ClipTimeAndPitchSource stretcherSource { *this, sourceDurationToDiscard,
                                             PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
-   params.timeRatio = stretchRatio;
+   params.timeRatio = stretchRatio / targetRatio;
    StaffPadTimeAndPitch stretcher { GetRate(), numChannels, stretcherSource,
                                     std::move(params) };
 
@@ -1237,7 +1239,8 @@ void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
    const int endSamplesToDiscard =
       (GetPlayEndTime() - originalPlayEndTime) * GetRate() + .5;
    const auto totalNumOutSamples =
-      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio -
+      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio /
+                       targetRatio -
                     beginSamplesToDiscard - endSamplesToDiscard + .5 };
 
    sampleCount numOutSamples { 0 };
@@ -1275,6 +1278,8 @@ void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
    SetTrimLeft(0.);
    SetTrimRight(0.);
    SetSequenceStartTime(originalPlayStartTime);
+   mRawAudioTempo = *mProjectTempo;
+   mClipStretchRatio = targetRatio;
 
    Flush();
    Caches::ForEach(std::mem_fn(&WaveClipListener::Invalidate));
