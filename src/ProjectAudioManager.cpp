@@ -1124,7 +1124,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    }
 }
 
-void ProjectAudioManager::OnAudioIONewBlocks(const RecordableSequences &)
+void ProjectAudioManager::OnAudioIONewBlocks()
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );

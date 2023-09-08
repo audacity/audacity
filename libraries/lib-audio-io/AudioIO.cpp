@@ -2250,7 +2250,7 @@ void AudioIO::DrainRecordBuffers()
 
          auto pListener = GetListener();
          if (pListener && newBlocks)
-            pListener->OnAudioIONewBlocks(mCaptureSequences);
+            pListener->OnAudioIONewBlocks();
 
       }
       // end of record buffering
