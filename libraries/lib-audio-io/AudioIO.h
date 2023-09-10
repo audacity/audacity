@@ -313,6 +313,7 @@ public:
    /*! Read by a worker thread but unchanging during playback */
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
+   double              mCaptureRate{};
    unsigned long long  mLostSamples{ 0 };
    std::atomic<bool>   mAudioThreadShouldCallSequenceBufferExchangeOnce;
    std::atomic<bool>   mAudioThreadSequenceBufferExchangeLoopRunning;
@@ -603,9 +604,7 @@ private:
     * being floating point always. Returns true if the stream opened successfully
     * and false if it did not. */
    bool StartPortAudioStream(const AudioIOStartStreamOptions &options,
-                             unsigned int numPlaybackChannels,
-                             unsigned int numCaptureChannels,
-                             sampleFormat captureFormat);
+      unsigned int numPlaybackChannels, unsigned int numCaptureChannels);
 
    void SetOwningProject( const std::shared_ptr<AudacityProject> &pProject );
    void ResetOwningProject();

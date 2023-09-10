@@ -470,9 +470,7 @@ static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
 }
 
 bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
-                                   unsigned int numPlaybackChannels,
-                                   unsigned int numCaptureChannels,
-                                   sampleFormat captureFormat)
+   unsigned int numPlaybackChannels, unsigned int numCaptureChannels)
 {
    auto sampleRate = options.rate;
    mNumPauseFrames = 0;
@@ -499,6 +497,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // July 2016 (Carsten and Uwe)
    // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using
    // userData.
+   auto captureFormat = mCaptureFormat;
    auto captureFormat_saved = captureFormat;
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
@@ -560,7 +559,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    if( numCaptureChannels > 0)
    {
       useCapture = true;
-      mCaptureFormat = captureFormat;
 
       const PaDeviceInfo *captureDeviceInfo;
       // retrieve the index of the device set in the prefs, or a sensible
@@ -746,9 +744,11 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    // FIXME: TRAP_ERR StartPortAudioStream (a PaError may be present)
    // but StartPortAudioStream function only returns true or false.
    mUsingAlsa = false;
-   success = StartPortAudioStream(options, (unsigned int)playbackChannels,
-                                  (unsigned int)captureChannels,
-                                  captureFormat);
+   mCaptureFormat = captureFormat;
+   mCaptureRate = 44100.0; // Shouldn't matter
+   success = StartPortAudioStream(options,
+      static_cast<unsigned int>(playbackChannels),
+      static_cast<unsigned int>(captureChannels));
 
    auto pOwningProject = mOwningProject.lock();
    if (!success) {
@@ -892,6 +892,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    unsigned int playbackChannels = 0;
    unsigned int captureChannels = 0;
    sampleFormat captureFormat = floatSample;
+   double captureRate = 44100.0;
 
    auto pListener = GetListener();
 
@@ -914,7 +915,9 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       // we would set the sound card to capture in 16 bits and the second
       // sequence wouldn't get the benefit of all 24 bits the card is capable
       // of.
-      captureFormat = mCaptureSequences[0]->GetSampleFormat();
+      const auto &sequence0 = mCaptureSequences[0];
+      captureFormat = sequence0->GetSampleFormat();
+      captureRate = sequence0->GetRate();
 
       // Tell project that we are about to start recording
       if (pListener)
@@ -923,8 +926,10 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
    bool successAudio;
 
-   successAudio = StartPortAudioStream(options, playbackChannels,
-                                       captureChannels, captureFormat);
+   mCaptureFormat = captureFormat;
+   mCaptureRate = captureRate;
+   successAudio =
+      StartPortAudioStream(options, playbackChannels, captureChannels);
 
    // Call this only after reassignment of mRate that might happen in the
    // previous call.
@@ -1301,7 +1306,7 @@ bool AudioIO::AllocateBuffers(
             for( unsigned int i = 0; i < mCaptureSequences.size(); i++ )
             {
                mCaptureBuffers[i] = std::make_unique<RingBuffer>(
-                  mCaptureSequences[i]->GetSampleFormat(), captureBufferSize );
+                  mCaptureFormat, captureBufferSize);
                mResample[i] =
                   std::make_unique<Resample>(true, mFactor, mFactor);
                   // constant rate resampling
@@ -2116,11 +2121,7 @@ void AudioIO::DrainRecordBuffers()
          // (WaveTracks have their own buffering for efficiency.)
          auto numChannels = mCaptureSequences.size();
 
-         for( size_t i = 0; i < numChannels; i++ )
-         {
-            sampleFormat sequenceFormat =
-               mCaptureSequences[i]->GetSampleFormat();
-
+         for (size_t i = 0; i < numChannels; ++i) {
             size_t discarded = 0;
 
             if (!mRecordingSchedule.mLatencyCorrected) {
@@ -2130,9 +2131,9 @@ void AudioIO::DrainRecordBuffers()
                   // Once only (per sequence per recording), insert some initial
                   // silence.
                   size_t size = floor( correction * mRate * mFactor);
-                  SampleBuffer temp(size, sequenceFormat);
-                  ClearSamples(temp.ptr(), sequenceFormat, 0, size);
-                  mCaptureSequences[i]->Append(temp.ptr(), sequenceFormat, size, 1,
+                  SampleBuffer temp(size, mCaptureFormat);
+                  ClearSamples(temp.ptr(), mCaptureFormat, 0, size);
+                  mCaptureSequences[i]->Append(temp.ptr(), mCaptureFormat, size, 1,
                      // Do not dither recordings
                      narrowestSampleFormat);
                }
@@ -2164,7 +2165,7 @@ void AudioIO::DrainRecordBuffers()
                totalCrossfadeLength = data.size();
                if (totalCrossfadeLength) {
                   crossfadeStart =
-                     floor(mRecordingSchedule.Consumed() * mCaptureSequences[i]->GetRate());
+                     floor(mRecordingSchedule.Consumed() * mCaptureRate);
                   if (crossfadeStart < totalCrossfadeLength)
                      pCrossfadeSrc = data.data() + crossfadeStart;
                }
@@ -2183,7 +2184,7 @@ void AudioIO::DrainRecordBuffers()
                   // Change to float for crossfade calculation
                   format = floatSample;
                else
-                  format = sequenceFormat;
+                  format = mCaptureFormat;
                temp.Allocate(size, format);
                const auto got =
                   mCaptureBuffers[i]->Get(temp.ptr(), format, toGet);
