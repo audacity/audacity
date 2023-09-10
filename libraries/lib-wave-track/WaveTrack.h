@@ -255,6 +255,9 @@ public:
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
 
+   //! Temporary - always 1
+   size_t NRecordingChannels() const override;
+
    //! May report more than one only when this is a leader track
    size_t NChannels() const override;
 
