@@ -503,7 +503,8 @@ public:
     */
    bool Append(constSamplePtr buffer, sampleFormat format,
       size_t len, unsigned int stride = 1,
-      sampleFormat effectiveFormat = widestSampleFormat) override;
+      sampleFormat effectiveFormat = widestSampleFormat, size_t iChannel = 0)
+   override;
 
    void Flush() override;
 

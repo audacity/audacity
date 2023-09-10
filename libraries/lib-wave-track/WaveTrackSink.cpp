@@ -76,7 +76,7 @@ void WaveTrackSink::DoConsume(Buffers &data)
       }
       else if (mGenLeft) {
          mGenLeft->Append(data.GetReadPosition(0),
-            floatSample, inputBufferCnt);
+            floatSample, inputBufferCnt );
          if (mGenRight)
             mGenRight->Append(data.GetReadPosition(1),
                floatSample, inputBufferCnt);

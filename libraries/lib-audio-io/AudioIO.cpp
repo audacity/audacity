@@ -890,7 +890,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       t0, t1, options, mCaptureSequences.empty() ? nullptr : &mRecordingSchedule );
 
    unsigned int playbackChannels = 0;
-   unsigned int captureChannels = 0;
+   size_t numCaptureChannels = 0;
    sampleFormat captureFormat = floatSample;
    double captureRate = 44100.0;
 
@@ -903,10 +903,12 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    if (mSoftwarePlaythrough)
       playbackChannels = 2;
 
-   if (sequences.captureSequences.size() > 0)
-   {
-      // For capture, every input channel gets its own sequence
-      captureChannels = mCaptureSequences.size();
+   if (mCaptureSequences.size() > 0) {
+      numCaptureChannels = accumulate(
+         mCaptureSequences.begin(), mCaptureSequences.end(), size_t{},
+         [](auto acc, const auto &pSequence) {
+            return acc + pSequence->NRecordingChannels();
+         });
       // I don't deal with the possibility of the capture sequences
       // having different sample formats, since it will never happen
       // with the current code.  This code wouldn't *break* if this
@@ -929,7 +931,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mCaptureFormat = captureFormat;
    mCaptureRate = captureRate;
    successAudio =
-      StartPortAudioStream(options, playbackChannels, captureChannels);
+      StartPortAudioStream(options, playbackChannels, numCaptureChannels);
 
    // Call this only after reassignment of mRate that might happen in the
    // previous call.
@@ -947,7 +949,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 #endif
 
    if (!successAudio) {
-      if (pListener && captureChannels > 0)
+      if (pListener && numCaptureChannels > 0)
          pListener->OnAudioIOStopRecording();
       mStreamToken = 0;
 
@@ -1157,9 +1159,9 @@ bool AudioIO::AllocateBuffers(
    mPlaybackRingBufferSecs = times.ringBufferDelay;
 
    mCaptureRingBufferSecs =
-      4.5 + 0.5 * std::min(size_t(16), mCaptureSequences.size());
+      4.5 + 0.5 * std::min(size_t(16), mNumCaptureChannels);
    mMinCaptureSecsToCopy =
-      0.2 + 0.2 * std::min(size_t(16), mCaptureSequences.size());
+      0.2 + 0.2 * std::min(size_t(16), mNumCaptureChannels);
 
    bool bDone;
    do
@@ -1298,13 +1300,12 @@ bool AudioIO::AllocateBuffers(
             }
 
             mCaptureBuffers.resize(0);
-            mCaptureBuffers.resize(mCaptureSequences.size());
+            mCaptureBuffers.resize(mNumCaptureChannels);
             mResample.resize(0);
-            mResample.resize(mCaptureSequences.size());
+            mResample.resize(mNumCaptureChannels);
             mFactor = sampleRate / mRate;
 
-            for( unsigned int i = 0; i < mCaptureSequences.size(); i++ )
-            {
+            for (unsigned int i = 0; i < mNumCaptureChannels; ++i) {
                mCaptureBuffers[i] = std::make_unique<RingBuffer>(
                   mCaptureFormat, captureBufferSize);
                mResample[i] =
@@ -1518,8 +1519,7 @@ void AudioIO::StopStream()
       //
       // Offset all recorded sequences to account for latency
       //
-      if (mCaptureSequences.size() > 0)
-      {
+      if (mCaptureSequences.size() > 0) {
          mCaptureBuffers.clear();
          mResample.clear();
 
@@ -2119,9 +2119,16 @@ void AudioIO::DrainRecordBuffers()
 
          // Append captured samples to the end of the RecordableSequences.
          // (WaveTracks have their own buffering for efficiency.)
-         auto numChannels = mCaptureSequences.size();
-
-         for (size_t i = 0; i < numChannels; ++i) {
+         auto iter = mCaptureSequences.begin();
+         auto width = (*iter)->NRecordingChannels();
+         size_t iChannel = 0;
+         for (size_t i = 0; i < mNumCaptureChannels; ++i) {
+            Finally Do {[&]{
+               if (++iChannel == width) {
+                  ++iter;
+                  width = (*iter)->NRecordingChannels();
+               }
+            }};
             size_t discarded = 0;
 
             if (!mRecordingSchedule.mLatencyCorrected) {
@@ -2133,9 +2140,9 @@ void AudioIO::DrainRecordBuffers()
                   size_t size = floor( correction * mRate * mFactor);
                   SampleBuffer temp(size, mCaptureFormat);
                   ClearSamples(temp.ptr(), mCaptureFormat, 0, size);
-                  mCaptureSequences[i]->Append(temp.ptr(), mCaptureFormat, size, 1,
+                  (*iter)->Append(temp.ptr(), mCaptureFormat, size, 1,
                      // Do not dither recordings
-                     narrowestSampleFormat);
+                     narrowestSampleFormat, iChannel);
                }
                else {
                   // Leftward shift
@@ -2238,10 +2245,10 @@ void AudioIO::DrainRecordBuffers()
 
             // Now append
             // see comment in second handler about guarantee
-            newBlocks = mCaptureSequences[i]->Append(
+            newBlocks = (*iter)->Append(
                temp.ptr(), format, size, 1,
                // Do not dither recordings
-               narrowestSampleFormat
+               narrowestSampleFormat, iChannel
             ) || newBlocks;
          } // end loop over capture channels
 

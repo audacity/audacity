@@ -2265,10 +2265,16 @@ bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
 bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
-   size_t len, unsigned int stride, sampleFormat effectiveFormat)
+   size_t len, unsigned int stride, sampleFormat effectiveFormat,
+   size_t iChannel)
 {
+   // TODO wide wave tracks -- there will be only one clip, and its `Append`
+   // (or an overload) must take iChannel
+   auto pTrack = this;
+   if (GetOwner() && iChannel == 1)
+      pTrack = *TrackList::Channels(this).rbegin();
    constSamplePtr buffers[]{ buffer };
-   return GetTrack().RightmostOrNewClip()
+   return pTrack->RightmostOrNewClip()
       ->Append(buffers, format, len, stride, effectiveFormat);
 }
 

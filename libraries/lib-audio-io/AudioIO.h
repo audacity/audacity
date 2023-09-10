@@ -309,9 +309,9 @@ public:
    bool                mPauseRec;
    float               mSilenceLevel;
    /*! Read by a worker thread but unchanging during playback */
-   unsigned int        mNumCaptureChannels;
+   size_t              mNumCaptureChannels;
    /*! Read by a worker thread but unchanging during playback */
-   unsigned int        mNumPlaybackChannels;
+   size_t              mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
    double              mCaptureRate{};
    unsigned long long  mLostSamples{ 0 };
@@ -531,8 +531,8 @@ public:
    wxArrayString GetInputSourceNames();
 
    sampleFormat GetCaptureFormat() { return mCaptureFormat; }
-   unsigned GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
-   unsigned GetNumCaptureChannels() const { return mNumCaptureChannels; }
+   size_t GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
+   size_t GetNumCaptureChannels() const { return mNumCaptureChannels; }
 
    // Meaning really capturing, not just pre-rolling
    bool IsCapturing() const;
