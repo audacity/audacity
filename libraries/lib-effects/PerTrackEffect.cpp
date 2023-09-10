@@ -112,8 +112,8 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
    int iChannel = 0;
    TrackListHolder results;
    const auto waveTrackVisitor =
-      [&](WaveTrack &leader, WaveChannel &chan) {
-         if (chan.IsLeader())
+      [&](WaveTrack &leader, WaveChannel &chan, bool isLeader) {
+         if (isLeader)
             iChannel = 0;
 
          sampleCount len = 0;
@@ -310,10 +310,14 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             return fallthrough();
          const auto channels = wt.Channels();
          if (multichannel)
-            waveTrackVisitor(wt, **channels.begin());
-         else
-            for (const auto pChannel : channels)
-               waveTrackVisitor(wt, *pChannel);
+            waveTrackVisitor(wt, **channels.begin(), true);
+         else {
+            bool first = true;
+            for (const auto pChannel : channels) {
+               waveTrackVisitor(wt, *pChannel, first);
+               first = false;
+            }
+         }
          if (results) {
             const auto t1 = ViewInfo::Get(*FindProject()).selectedRegion.t1();
             PasteTimeWarper warper{ t1, mT0 + wt.GetEndTime() };

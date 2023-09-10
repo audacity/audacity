@@ -59,8 +59,9 @@ public:
    // Not required by callbacks, but makes for easier cleanup
    std::unique_ptr<Resampler> resampler;
    std::unique_ptr<SBSMSQuality> quality;
-   WaveChannel *outputLeftTrack;
-   WaveChannel *outputRightTrack;
+   WaveTrack *outputTrack{};
+   WaveChannel *outputLeftChannel{};
+   WaveChannel *outputRightChannel{};
 
    std::exception_ptr mpException {};
 };
@@ -347,9 +348,10 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             std::shared_ptr<TrackList> tempList = track.WideEmptyCopy();
             const auto outputTrack = *tempList->Any<WaveTrack>().begin();
             auto iter = outputTrack->Channels().begin();
-            rb.outputLeftTrack = (*iter++).get();
+            rb.outputTrack = outputTrack;
+            rb.outputLeftChannel = (*iter++).get();
             if (rightTrack)
-               rb.outputRightTrack = (*iter).get();
+               rb.outputRightChannel = (*iter).get();
 
             long pos = 0;
             long outputCount = -1;
@@ -366,10 +368,10 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
                      outBufRight[i] = outBuf[i][1];
                }
                pos += outputCount;
-               rb.outputLeftTrack->Append(
+               rb.outputLeftChannel->Append(
                   (samplePtr)outBufLeft, floatSample, outputCount);
                if (rightTrack)
-                  rb.outputRightTrack->Append(
+                  rb.outputRightChannel->Append(
                      (samplePtr)outBufRight, floatSample, outputCount);
 
                double frac = static_cast<double>(pos) / samplesOut.as_double();
@@ -401,7 +403,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
                   std::rethrow_exception(pException);
             }
 
-            rb.outputLeftTrack->Flush();
+            rb.outputTrack->Flush();
             Finalize(track, *outputTrack, *warper);
          }
          mCurTrackNum++;

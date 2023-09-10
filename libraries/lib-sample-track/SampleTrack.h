@@ -57,7 +57,7 @@ ENUMERATE_TRACK_TYPE(SampleTrack)
 
 class SAMPLE_TRACK_API WritableSampleTrack /* not final */
    : public SampleTrack
-   , public virtual RecordableSequence
+   , public RecordableSequence
 {
 public:
    WritableSampleTrack();
