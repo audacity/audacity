@@ -844,7 +844,7 @@ BaseItemSharedPtr TransportMenu()
                      true
 #endif
                   ) ),
-               Command( wxT("SWPlaythrough"), XXO("Enable input &monitoring"),
+               Command( wxT("SWPlaythrough"), XXO("Enable audible input &monitoring"),
                   OnToggleSWPlaythrough,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
                   Options{}.CheckTest( wxT("/AudioIO/SWPlaythrough"), false ) )

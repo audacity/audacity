@@ -1952,9 +1952,9 @@ void MeterPanel::ShowMenu(const wxPoint & pos)
    if (mIsInput) {
       wxMenuItem *mi;
       if (mMonitoring)
-         mi = menu.Append(OnMonitorID, _("Stop Monitoring"));
+         mi = menu.Append(OnMonitorID, _("Disable silent Monitoring"));
       else
-         mi = menu.Append(OnMonitorID, _("Start Monitoring"));
+         mi = menu.Append(OnMonitorID, _("Enable silent Monitoring"));
       mi->Enable(!mActive || mMonitoring);
    }
 
