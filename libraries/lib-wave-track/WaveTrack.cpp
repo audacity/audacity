@@ -3663,7 +3663,7 @@ void WaveTrack::SplitAt(double t)
 {
    for (const auto &c : mClips)
    {
-      if (c->WithinPlayRegion(t))
+      if (c->SplitsPlayRegion(t))
       {
          t = SnapToSample(t);
          auto newClip = std::make_shared<WaveClip>(*c, mpFactory, true);
