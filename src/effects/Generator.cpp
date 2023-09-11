@@ -69,9 +69,15 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
                auto pProject = FindProject();
                const auto &selectedRegion =
                   ViewInfo::Get(*pProject).selectedRegion;
+               // According to https://manual.audacityteam.org/man/silence.html,
+               // generating silence with an audio selection should behave like
+               // the "Silence Audio" command, which doesn't affect track clip
+               // boundaries.
+               constexpr auto preserve = true;
+               constexpr auto merge = true;
                track.ClearAndPaste(
-                  selectedRegion.t0(), selectedRegion.t1(),
-                  *list, true, false, &warper);
+                  selectedRegion.t0(), selectedRegion.t1(), *list, preserve,
+                  merge, &warper);
             }
             else
                return;
