@@ -451,13 +451,13 @@ BaseItemSharedPtr ViewMenu()
       Section( "Windows" ),
 
       Section( "Other",
-         Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
+         Command( wxT("ShowExtraMenus"), XXO("Enable &Extra Menus"),
             FN(OnShowExtraMenus), AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
-         Command( wxT("ShowTrackNameInWaveform"), XXO("Track &Name (on/off)"),
+         Command( wxT("ShowTrackNameInWaveform"), XXO("Show Track &Name as overlay"),
             FN(OnShowNameOverlay), AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowTrackNameInWaveform"), false ) ),
-         Command( wxT("ShowClipping"), XXO("&Show Clipping (on/off)"),
+         Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
             FN(OnShowClipping), AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
       )
