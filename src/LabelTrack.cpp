@@ -855,8 +855,7 @@ void LabelTrack::SyncLockAdjust(double oldT1, double newT1)
    }
 }
 
-
-void LabelTrack::Silence(double t0, double t1)
+void LabelTrack::Silence(double t0, double t1, ProgressReporter)
 {
    assert(IsLeader());
    int len = mLabels.size();

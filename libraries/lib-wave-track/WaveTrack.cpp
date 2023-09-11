@@ -2027,11 +2027,13 @@ void WaveTrack::Paste(double t0, const Track &src)
       (void)0;// Empty if intentional.
 }
 
-void WaveTrack::Silence(double t0, double t1)
+void WaveTrack::Silence(double t0, double t1, ProgressReporter reportProgress)
 {
    assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
+
+   ApplyStretchRatio({ { t0, t1 } }, std::move(reportProgress));
 
    auto start = TimeToLongSamples(t0);
    auto end = TimeToLongSamples(t1);
