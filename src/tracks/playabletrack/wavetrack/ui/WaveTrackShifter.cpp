@@ -123,18 +123,10 @@ public:
 
    Intervals Detach() override
    {
-      // TODO wide wave tracks -- simplify when clips are really wide
-      auto pRight = mpTrack->ChannelGroup::GetChannel<WaveTrack>(1);
       for (auto &interval: mMoving) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         auto pClip = data.GetClip(0).get();
-         // interval will still hold the clip, so ignore the return:
-         (void) mpTrack->RemoveAndReturnClip(pClip);
-         mMigrated.erase(pClip);
-         if (const auto pClip1 = data.GetClip(1).get()) {
-            (void) pRight->RemoveAndReturnClip(pClip1);
-            mMigrated.erase(pClip1);
-         }
+         data.Detach();
+         mMigrated.erase(interval);
       }
       return std::move(mMoving);
    }
@@ -159,39 +151,24 @@ public:
    {
       for (auto &interval : intervals) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         WaveClipHolder clips[2];
-         for (size_t ii : { 0, 1 }) {
-            // TODO wide wave tracks -- simplify when clips are really wide
-            auto pTrack = mpTrack->ChannelGroup::GetChannel<WaveTrack>(ii);
-            auto &pClip = clips[ii] = data.GetClip(ii);
-            if (pClip) {
-               // TODO wide wave tracks -- guarantee matching clip width
-               if (!pTrack->AddClip(pClip))
-                  return false;
-               mMigrated.insert(pClip.get());
-            }
-         }
-         if (offset == .0)
-            mMoving.emplace_back(std::move(interval));
-         else {
-            for (auto pClip : clips)
-               if (pClip)
-                  pClip->ShiftBy(offset);
-            mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(
-               GetTrack(), clips[0], clips[1]));
-         }
+         mMigrated.insert(interval);
+         if(offset != .0)
+            data.ShiftBy(offset);
+         data.Attach(*mpTrack);
+
+         mMoving.emplace_back(std::move(interval));
       }
       return true;
    }
 
    bool FinishMigration() override
    {
-      auto rate = mpTrack->GetRate();
-      for (auto pClip : mMigrated) {
+      for(auto& interval : mMigrated)
+      {
          // Now that user has dropped the clip into a different track,
          // make sure the sample rate matches the destination track.
-         pClip->Resample(rate);
-         pClip->MarkChanged();
+         auto& data = static_cast<WaveTrack::Interval&>(*interval);
+         data.Resample(mpTrack->GetRate());
       }
       return true;
    }
@@ -200,9 +177,7 @@ public:
    {
       for (auto &interval : MovingIntervals()) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         data.GetClip(0)->ShiftBy(offset);
-         if (const auto pClip1 = data.GetClip(1))
-            pClip1->ShiftBy(offset);
+         data.ShiftBy(offset);
       }
    }
 
@@ -226,7 +201,7 @@ private:
    const std::shared_ptr<WaveTrack> mpTrack;
 
    // Clips that may require resampling
-   std::unordered_set<WaveClip *> mMigrated;
+   std::unordered_set<std::shared_ptr<ChannelGroupInterval>> mMigrated;
 };
 
 using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;
