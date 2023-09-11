@@ -51,6 +51,8 @@ using ListOfTracks = std::list< std::shared_ptr< Track > >;
 using TrackNodePointer =
 std::pair< ListOfTracks::iterator, ListOfTracks* >;
 
+using ProgressReporter = std::function<void(double)>;
+
 inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
 { return a.second == b.second && a.first == b.first; }
 
@@ -381,7 +383,8 @@ public:
    /*!
     @pre `IsLeader()`
     */
-   virtual void Silence(double t0, double t1) = 0;
+   virtual void
+   Silence(double t0, double t1, ProgressReporter reportProgress = {}) = 0;
 
    /*!
     May assume precondition: t0 <= t1

@@ -222,7 +222,8 @@ void TimeTrack::Paste(double t, const Track &src)
       (void)0;// intentionally do nothing.
 }
 
-void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))
+void TimeTrack::Silence(
+   double WXUNUSED(t0), double WXUNUSED(t1), ProgressReporter)
 {
    assert(IsLeader());
 }

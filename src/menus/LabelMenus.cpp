@@ -525,7 +525,9 @@ void OnSilenceLabels(const CommandContext &context)
 
    auto editfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
-      track.TypeSwitch( [&](WaveTrack &t) { t.Silence(t0, t1); } );
+      // TODO use progress-bar utilities pending in
+      // https://github.com/audacity/audacity/pull/5043
+      track.TypeSwitch([&](WaveTrack& t) { t.Silence(t0, t1, {}); });
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
 
@@ -663,10 +665,10 @@ BaseItemSharedPtr LabelEditMenus()
       LabelsSelectedFlag() | WaveTracksExistFlag() | TimeSelectedFlag();
 
    // Returns TWO menus.
-   
+
    static BaseItemSharedPtr menus{
    Items( wxT("LabelEditMenus"),
-   
+
    Menu( wxT("Labels"), XXO("&Labels"),
       Section( "",
          Command( wxT("EditLabels"), XXO("Label &Editor"), OnEditLabels,

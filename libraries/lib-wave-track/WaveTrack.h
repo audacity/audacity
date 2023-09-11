@@ -436,7 +436,7 @@ public:
          preserve, merge, effectWarper);
    }
 
-   void Silence(double t0, double t1) override;
+   void Silence(double t0, double t1, ProgressReporter reportProgress) override;
    void InsertSilence(double t, double len) override;
 
    /*!

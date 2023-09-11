@@ -611,7 +611,7 @@ void NoteTrack::Paste(double t, const Track &src)
       (void)0;// intentionally do nothing
 }
 
-void NoteTrack::Silence(double t0, double t1)
+void NoteTrack::Silence(double t0, double t1, ProgressReporter)
 {
    assert(IsLeader());
    if (t1 < t0)
