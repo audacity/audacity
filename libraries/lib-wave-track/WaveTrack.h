@@ -915,14 +915,25 @@ public:
 
    class WAVE_TRACK_API Interval final : public WideChannelGroupInterval {
    public:
-      /*!
-       @pre `pClip != nullptr`
-       */
-      Interval(const ChannelGroup &group,
-         const std::shared_ptr<WaveClip> &pClip,
-         const std::shared_ptr<WaveClip> &pClip1);
+      Interval(WaveTrack &waveTrack, size_t iInterval);
 
       ~Interval() override;
+
+      //! @brief Attaches associated clip to another track
+      //! @pre track.NChannels() == NChannels())
+      //! @pre IsDetached()
+      void Attach(WaveTrack& track);
+      //! @returns true if associated clips were detached previously
+      bool IsDetached() const;
+      //! @brief Removes associated clip from the track (if any)
+      void Detach();
+
+      //! @brief Resamples associated clips, beware that this should
+      //! stay consistent with the sample rate of the track
+      void Resample(double sampleRate);
+
+      //! @brief Offsets associated clips by \p offset value 
+      void ShiftBy(double offset);
 
       void SetName(const wxString& name);
       const wxString& GetName() const;
@@ -963,18 +974,18 @@ public:
       bool StretchRatioEquals(double value) const;
 
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
-      { return iChannel == 0 ? mpClip : mpClip1; }
+      { return mClips[iChannel]; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
-      { return iChannel == 0 ? mpClip : mpClip1; }
+      { return mClips[iChannel]; }
    private:
 
       // Helper function in time of migration to wide clips
-      void ForEachClip(const std::function<void(WaveClip&)>& op);
+      void ForEachClip(const std::function<void(const std::shared_ptr<WaveClip>&)>& op);
 
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
-      const std::shared_ptr<WaveClip> mpClip;
+      std::weak_ptr<Track> mpTrack;
       //! TODO wide wave tracks: eliminate this
-      const std::shared_ptr<WaveClip> mpClip1;
+      std::vector<std::shared_ptr<WaveClip>> mClips;
    };
 
 

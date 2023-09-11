@@ -175,17 +175,66 @@ int WaveChannelInterval::GetColourIndex() const
    return GetNarrowClip().GetColourIndex();
 }
 
-WaveTrack::Interval::Interval(const ChannelGroup &group,
-   const std::shared_ptr<WaveClip> &pClip,
-   const std::shared_ptr<WaveClip> &pClip1
-)  : WideChannelGroupInterval{ group,
-      pClip->GetPlayStartTime(), pClip->GetPlayEndTime() }
-   , mpClip{ pClip }
-   , mpClip1{ pClip1 }
+WaveTrack::Interval::Interval(WaveTrack &waveTrack, size_t iInterval)
+   : WideChannelGroupInterval{ waveTrack,
+      waveTrack.GetClipByIndex(iInterval)->GetPlayStartTime(),
+      waveTrack.GetClipByIndex(iInterval)->GetPlayEndTime() }
+   , mpTrack{ waveTrack.weak_from_this() }
 {
+   // TODO wide wave tracks
+   // This assumed correspondence of clips may be wrong if they misalign
+   for(const auto& channel : waveTrack.Channels())
+      mClips.push_back(static_cast<WaveTrack&>(*channel).mClips[iInterval]);
 }
 
 WaveTrack::Interval::~Interval() = default;
+
+void WaveTrack::Interval::Attach(WaveTrack& track)
+{
+   assert(track.NChannels() == mClips.size());
+
+   if(!mpTrack.expired())
+      return;
+
+   for(unsigned i = 0; i < track.NChannels(); ++i)
+   {
+      auto channel = track.GetChannel(i);
+      static_cast<WaveTrack&>(*channel).AddClip(mClips[i]);
+   }
+
+   mpTrack = track.weak_from_this();
+}
+
+void WaveTrack::Interval::Detach()
+{
+   auto track = mpTrack.lock();
+   if(!track)
+      return;
+
+   for(unsigned i = 0; i < mClips.size(); ++i)
+   {
+      auto channel = track->GetChannel(i);
+      if(channel == nullptr)
+         continue;
+      // interval will still hold the clip, so ignore the return:
+      (void)static_cast<WaveTrack&>(*channel).RemoveAndReturnClip(mClips[i].get());
+   }
+   mpTrack.reset();
+}
+
+void WaveTrack::Interval::Resample(double sampleRate)
+{
+   ForEachClip([&](auto& clip)
+   {
+      clip->Resample(static_cast<int>(sampleRate));
+      clip->MarkChanged();
+   });
+}
+
+void WaveTrack::Interval::ShiftBy(double offset)
+{
+   ForEachClip([&](auto& clip) { clip->ShiftBy(offset); });
+}
 
 void WaveTrack::Interval::TrimLeftTo(double t)
 {
@@ -239,84 +288,83 @@ bool WaveTrack::Interval::StretchRatioEquals(double value) const
 
 void WaveTrack::Interval::SetName(const wxString& name)
 {
-   ForEachClip([&](auto& clip) { clip.SetName(name); });
+   ForEachClip([&](auto& clip) { clip->SetName(name); });
 }
 
 const wxString& WaveTrack::Interval::GetName() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common name
-   return mpClip->GetName();
+   return mClips[0]->GetName();
 }
 
 void WaveTrack::Interval::SetColorIndex(int index)
 {
-   ForEachClip([&](auto& clip) { clip.SetColourIndex(index); });
+   ForEachClip([&](auto& clip) { clip->SetColourIndex(index); });
 }
 
 int WaveTrack::Interval::GetColorIndex() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common color index
-   return mpClip->GetColourIndex();
+   return mClips[0]->GetColourIndex();
 }
 
 void WaveTrack::Interval::SetPlayStartTime(double time)
 {
-   ForEachClip([&](auto& clip) { clip.SetPlayStartTime(time); });
+   ForEachClip([&](auto& clip) { clip->SetPlayStartTime(time); });
 }
 
 double WaveTrack::Interval::GetPlayStartTime() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common beginning
-   return mpClip->GetPlayStartTime();
+   return mClips[0]->GetPlayStartTime();
 }
 
 double WaveTrack::Interval::GetPlayEndTime() const
 {
-   // TODO wide wave tracks:  assuming that all 'narrow' clips share common
-   // beginning
-   return mpClip->GetPlayEndTime();
+   // TODO wide wave tracks:  assuming that all 'narrow' clips share common beginning
+   return mClips[0]->GetPlayEndTime();
 }
 
 double WaveTrack::Interval::GetStretchRatio() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common stretch ratio
-   return mpClip->GetStretchRatio();
+   return mClips[0]->GetStretchRatio();
 }
 
 sampleCount WaveTrack::Interval::TimeToSamples(double time) const
 {
-   return mpClip->TimeToSamples(time);
+   return mClips[0]->TimeToSamples(time);
 }
 
 double WaveTrack::Interval::SamplesToTime(sampleCount s) const
 {
-   return mpClip->SamplesToTime(s);
+   return mClips[0]->SamplesToTime(s);
 }
 
 double WaveTrack::Interval::GetTrimLeft() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common trims
-   return mpClip->GetTrimLeft();
+   return mClips[0]->GetTrimLeft();
 }
 
 double WaveTrack::Interval::GetTrimRight() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common trims
-   return mpClip->GetTrimRight();
+   return mClips[0]->GetTrimRight();
 }
 
 bool WaveTrack::Interval::IsPlaceholder() const
 {
-   return mpClip->GetIsPlaceholder();
+   return mClips[0]->GetIsPlaceholder();
 }
 
-void WaveTrack::Interval::ForEachClip(const std::function<void(WaveClip&)>& op)
+void WaveTrack::Interval::ForEachClip(const std::function<void(const std::shared_ptr<WaveClip>&)>& op)
 {
    for(unsigned channel = 0,
       channelCount = NChannels();
       channel < channelCount; ++channel)
    {
-      op(*GetClip(channel));
+      op(GetClip(channel));
    }
 }
 
@@ -325,9 +373,8 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
 {
    if (iChannel < NChannels()) {
       // TODO wide wave tracks: there will be only one, wide clip
-      const auto pClip = (iChannel == 0 ? mpClip : mpClip1);
-      return std::make_shared<WaveChannelInterval>(*mpClip,
-         *pClip, iChannel);
+      return std::make_shared<WaveChannelInterval>(*mClips[0],
+         *mClips[iChannel], iChannel);
    }
    return {};
 }
@@ -778,15 +825,7 @@ std::shared_ptr<WideChannelGroupInterval>
 WaveTrack::DoGetInterval(size_t iInterval)
 {
    if (iInterval < NIntervals()) {
-      WaveClipHolder pClip = mClips[iInterval],
-         pClip1;
-      // TODO wide wave tracks
-      // This assumed correspondence of clips may be wrong if they misalign
-      if (auto right = ChannelGroup::GetChannel<WaveTrack>(1)
-         ; right && iInterval < right->mClips.size()
-      )
-         pClip1 = right->mClips[iInterval];
-      return std::make_shared<Interval>(*this, pClip, pClip1);
+      return std::make_shared<Interval>(*this, iInterval);
    }
    return {};
 }
