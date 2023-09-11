@@ -907,7 +907,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       numCaptureChannels = accumulate(
          mCaptureSequences.begin(), mCaptureSequences.end(), size_t{},
          [](auto acc, const auto &pSequence) {
-            return acc + pSequence->NRecordingChannels();
+            return acc + pSequence->NChannels();
          });
       // I don't deal with the possibility of the capture sequences
       // having different sample formats, since it will never happen
@@ -1531,7 +1531,7 @@ void AudioIO::StopStream()
          // first sequence in a project.
          //
 
-         for (unsigned int i = 0; i < mCaptureSequences.size(); i++) {
+         for (auto &sequence : mCaptureSequences) {
             // The calls to Flush
             // may cause exceptions because of exhaustion of disk space.
             // Stop those exceptions here, or else they propagate through too
@@ -1542,7 +1542,6 @@ void AudioIO::StopStream()
             // guarded call, relying on the guarantee that the sequence will be
             // left in a flushed state, though the append buffer may be lost.
 
-            auto sequence = mCaptureSequences[i].get();
             if (sequence->IsLeader())
                GuardedCall( [&] {
                   // use No-fail-guarantee that sequence is flushed,
@@ -2120,13 +2119,14 @@ void AudioIO::DrainRecordBuffers()
          // Append captured samples to the end of the RecordableSequences.
          // (WaveTracks have their own buffering for efficiency.)
          auto iter = mCaptureSequences.begin();
-         auto width = (*iter)->NRecordingChannels();
+         auto width = (*iter)->NChannels();
          size_t iChannel = 0;
          for (size_t i = 0; i < mNumCaptureChannels; ++i) {
             Finally Do {[&]{
                if (++iChannel == width) {
                   ++iter;
-                  width = (*iter)->NRecordingChannels();
+                  if (iter != mCaptureSequences.end())
+                     width = (*iter)->NChannels();
                }
             }};
             size_t discarded = 0;

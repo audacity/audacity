@@ -589,43 +589,42 @@ WritableSampleTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    if (!strictRules && !selectedOnly)
       return {};
 
-   auto &trackList = TrackList::Get( *p );
-   std::vector<unsigned> channelCounts;
+   auto &trackList = TrackList::Get(*p);
    WritableSampleTrackArray candidates;
+   std::vector<unsigned> channelCounts;
+   size_t totalChannels = 0;
    const auto range = trackList.Any<WaveTrack>();
-   for ( auto candidate : selectedOnly ? range + &Track::IsSelected : range ) {
+   for (auto candidate : selectedOnly ? range + &Track::IsSelected : range) {
       if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate)
          continue;
 
       // count channels in this track
-      const auto channels = TrackList::Channels( candidate );
-      unsigned nChannels = channels.size();
-
+      const auto nChannels = candidate->NChannels();
       if (strictRules && nChannels > recordingChannels) {
          // The recording would under-fill this track's channels
          // Can't use any partial accumulated results
          // either.  Keep looking.
          candidates.clear();
          channelCounts.clear();
+         totalChannels = 0;
          continue;
       }
       else {
          // Might use this but may have to discard some of the accumulated
          while(strictRules &&
-               nChannels + candidates.size() > recordingChannels) {
+               nChannels + totalChannels > recordingChannels) {
+            candidates.erase(candidates.begin());
             auto nOldChannels = channelCounts[0];
-            wxASSERT(nOldChannels > 0);
+            assert(nOldChannels > 0);
             channelCounts.erase(channelCounts.begin());
-            candidates.erase(candidates.begin(),
-                             candidates.begin() + nOldChannels);
+            totalChannels -= nOldChannels;
          }
+         candidates.push_back(candidate->SharedPointer<WaveTrack>());
          channelCounts.push_back(nChannels);
-         for ( auto channel : channels ) {
-            candidates.push_back(channel->SharedPointer<WaveTrack>());
-            if(candidates.size() == recordingChannels)
-               // Done!
-               return candidates;
-         }
+         totalChannels += nChannels;
+         if (totalChannels >= recordingChannels)
+            // Done!
+            return candidates;
       }
    }
 
@@ -697,14 +696,11 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             existingTracks = ChooseExistingRecordingTracks(*p, false, options.rate);
             if (!existingTracks.empty())
             {
-               const auto endTime = std::accumulate(
-                  existingTracks.begin(),
-                  existingTracks.end(),
+               const auto endTime = accumulate(
+                  existingTracks.begin(), existingTracks.end(),
                   std::numeric_limits<double>::lowest(),
                   [](double acc, auto &pTrack) {
-                     return pTrack->IsLeader()
-                        ? std::max(acc, pTrack->GetEndTime())
-                        : acc;
+                     return std::max(acc, pTrack->GetEndTime());
                   }
                );
 

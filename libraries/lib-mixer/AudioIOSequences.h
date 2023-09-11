@@ -51,7 +51,7 @@ struct MIXER_API RecordableSequence {
    /*!
     @post result: `result > 0`
     */
-   virtual size_t NRecordingChannels() const = 0;
+   virtual size_t NChannels() const = 0;
 
    /** @brief Append the sample data to the track. You must call Flush()
     * after the last Append.

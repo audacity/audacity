@@ -65,8 +65,9 @@ public:
       const WritableSampleTrack &other, ProtectedCreationArg&&);
    ~WritableSampleTrack() override;
 
-   // Resolve lookup ambiguity
+   // Resolve ambiguous lookups
    using Track::IsLeader;
+   using ChannelGroup::NChannels;
 
    // Needed to resolve ambiguity with WideSampleSequence::GetRate, when this
    // abstract interface is used directly.

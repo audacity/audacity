@@ -540,11 +540,6 @@ size_t WaveTrack::GetWidth() const
    return 1;
 }
 
-size_t WaveTrack::NRecordingChannels() const
-{
-   return 1;
-}
-
 size_t WaveTrack::NChannels() const
 {
    if (IsLeader() && GetOwner()) {

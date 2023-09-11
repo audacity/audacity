@@ -1231,7 +1231,10 @@ void OnTimerRecord(const CommandContext &context)
       return;
    }
 
-   const auto existingTracks{ ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected) };
+   // Only need the size
+   const auto existingTracks =
+      ProjectAudioManager::ChooseExistingRecordingTracks(project, true,
+      rateOfSelected);
    if (existingTracks.empty()) {
       if (anySelected && rateOfSelected !=
           ProjectRate::Get(project).GetRate()) {

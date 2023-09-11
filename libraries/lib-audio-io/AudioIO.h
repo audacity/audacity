@@ -473,6 +473,8 @@ public:
     * @pre `p && p->FindChannelGroup() &&
     *    p->FindChannelGroup()->IsLeader()` for all pointers `p` in
     *    `sequences.playbackSequences`
+    * @pre `p && p->IsLeader()` for all pointers `p` in
+    *    `sequences.captureSequences`
     */
 
    int StartStream(const TransportSequences &sequences,
