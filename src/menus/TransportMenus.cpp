@@ -834,7 +834,7 @@ BaseItemSharedPtr TransportMenu()
             ),
 
             Section( "Part2",
-               Command( wxT("Overdub"), XXO("Hear other tracks during recording"),
+               Command( wxT("Overdub"), XXO("Hear &other tracks during recording"),
                   OnTogglePlayRecording,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
                   Options{}.CheckTest( wxT("/AudioIO/Duplex"),
