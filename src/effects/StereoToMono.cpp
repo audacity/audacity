@@ -177,12 +177,10 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    }
    outTrack->Flush();
 
-   outputs.UnlinkChannels(track);
-   const auto right = * ++track.GetOwner()->Find(&track);
-   // Should be a consequence of unlinking:
-   assert(right->IsLeader());
-   outputs.Remove(*right);
-
+   const auto unlinkedTracks = outputs.UnlinkChannels(track);
+   assert(unlinkedTracks.size() == 2);
+   outputs.Remove(*unlinkedTracks[1]);
+   
    track.Clear(start, end);
    track.Paste(start, *outTrack);
    RealtimeEffectList::Get(track).Clear();

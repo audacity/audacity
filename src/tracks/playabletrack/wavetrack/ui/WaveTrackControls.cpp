@@ -509,6 +509,8 @@ struct WaveTrackMenuTable : WaveTrackPopupMenuTable
 
    // TODO: more-than-two-channels
    // How should we define generalized channel manipulation operations?
+   /// @brief Splits stereo track into two mono tracks, preserving
+   /// panning if \p stereo is set
    void SplitStereo(bool stereo);
 
    void OnSwapChannels(wxCommandEvent & event);
@@ -800,31 +802,22 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 /// Split a stereo track (or more-than-stereo?) into two (or more) tracks...
 void WaveTrackMenuTable::SplitStereo(bool stereo)
 {
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack);
    AudacityProject *const project = &mpData->project;
-
-   auto channelRange = pTrack->Channels();
 
    int totalHeight = 0;
    int nChannels = 0;
 
-   std::vector<WaveChannel *> channels;
-   for (auto pChannel : channelRange)
-      channels.push_back(pChannel.get());
+   auto unlinkedTracks = TrackList::Get(*project).UnlinkChannels(*mpData->pTrack);
+   assert(unlinkedTracks.size() == 2);
+   if(stereo)
+   {
+      static_cast<WaveTrack*>(unlinkedTracks[0])->SetPan(-1.0f);
+      static_cast<WaveTrack*>(unlinkedTracks[1])->SetPan(1.0f);
+   }
 
-   TrackList::Get(*project).UnlinkChannels(*pTrack);
-
-   float pan = -1.0f;
-   for (const auto pChannel : channels) {
-      // See comment on channelRange
-      assert(pChannel);
-      auto &view = ChannelView::Get(*pChannel);
-      if (stereo) {
-         pChannel->GetTrack().SetPan(pan);
-         pan += 2.0f;
-      }
-
+   for (const auto track : unlinkedTracks) {
+      auto &view = ChannelView::Get(*track->GetChannel(0));
+      
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())
          view.SetExpandedHeight(view.GetMinimizedHeight());
@@ -834,9 +827,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    int averageHeight = totalHeight / nChannels;
 
-   for (const auto pChannel : channels)
+   for (const auto track : unlinkedTracks)
       // Make tracks the same height
-      ChannelView::Get(*pChannel).SetExpandedHeight(averageHeight);
+      ChannelView::Get(*track->GetChannel(0)).SetExpandedHeight(averageHeight);
 }
 
 /// Swap the left and right channels of a stero track...

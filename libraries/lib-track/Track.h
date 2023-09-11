@@ -1191,7 +1191,7 @@ public:
          { return static_cast< TrackKind* >( DoAdd( t ) ); }
 
    //! Removes linkage if track belongs to a group
-   void UnlinkChannels(Track& track);
+   std::vector<Track*> UnlinkChannels(Track& track);
    /** \brief Converts channels to a multichannel track.
    * @param first and the following must be in this list. Tracks should
    * not be a part of another group (not linked)

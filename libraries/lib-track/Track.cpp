@@ -681,14 +681,15 @@ TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
    return result;
 }
 
-void TrackList::UnlinkChannels(Track& track)
+std::vector<Track*> TrackList::UnlinkChannels(Track& track)
 {
    auto list = track.mList.lock();
    if (list.get() == this)
    {
       auto channels = TrackList::Channels(&track);
       for (auto c : channels)
-          c->SetLinkType(Track::LinkType::None);
+         c->SetLinkType(Track::LinkType::None);
+      return { channels.begin(), channels.end() };
    }
    else
       THROW_INCONSISTENCY_EXCEPTION;
