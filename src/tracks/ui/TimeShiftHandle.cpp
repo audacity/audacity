@@ -964,7 +964,7 @@ UIHandle::Result TimeShiftHandle::Release
          .Format( fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
-   ProjectHistory::Get( *pProject ).PushState(msg, XO("Time-Shift"),
+   ProjectHistory::Get( *pProject ).PushState(msg, XO("Move Clip"),
       consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::NONE));
 
    return result | FixScrollbars;
