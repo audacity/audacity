@@ -2285,7 +2285,7 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 
    rulerMenu.AppendSeparator();
 
-   auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Setting a loop region also selects audio"));
+   auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Setting a loop region also makes an audio selection"));
    pDrag->Check(mPlayRegionDragsSelection && playRegion.Active());
    pDrag->Enable(playRegion.Active());
 
