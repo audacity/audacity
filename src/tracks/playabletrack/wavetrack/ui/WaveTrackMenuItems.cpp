@@ -60,22 +60,15 @@ void OnNewStereoTrack(const CommandContext &context)
 
    SelectUtilities::SelectNone( project );
 
-   auto left = trackFactory.Create(defaultFormat, rate);
-   tracks.Add(left);
-
-   auto right = trackFactory.Create(defaultFormat, rate);
-   tracks.Add(right);
-
-   tracks.MakeMultiChannelTrack(*left, 2, true);
-
-   left->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
-   left->SetSelected(true);
+   tracks.Append(std::move(*trackFactory.Create(2, defaultFormat, rate)));
+   (*tracks.rbegin())->SetSelected(true);
+   (*tracks.rbegin())->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
 
    ProjectHistory::Get( project )
       .PushState(XO("Created new stereo audio track"), XO("New Track"));
 
-   TrackFocus::Get(project).Set(left.get());
-   left->EnsureVisible();
+   TrackFocus::Get(project).Set(*tracks.rbegin());
+   (*tracks.rbegin())->EnsureVisible();
 }
 
 AttachedItem sAttachment{ wxT("Tracks/Add/Add"),
