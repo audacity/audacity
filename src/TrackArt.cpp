@@ -15,6 +15,7 @@
 #include "SelectedRegion.h"
 #include "SyncLock.h"
 #include "Theme.h"
+#include "TimeAndPitchInterface.h"
 #include "Track.h"
 #include "TrackArtist.h"
 #include "TrackPanelDrawingContext.h"
@@ -248,21 +249,102 @@ wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight
    return titleRect;
 }
 
-bool TrackArt::DrawClipTitle(wxDC &dc, const wxRect &titleRect, const wxString &title)
+namespace{
+wxString GetPlaybackSpeedFullText(double clipStretchRatio)
+{
+   // clang-format off
+   // We reckon that most of the time, a rounded percentage value is sufficient.
+   // There are two exceptions:
+   // - The clip is only slightly stretched such that the rounded value is 100.
+   //   There should be an indicator if and only if the clip is stretched, this
+   //   must be reliable. Yet showing "100%" would be confusing. Hence in that
+   //   case we constrain the values to [99.1, ..., 99.9, 100.1,
+   //   ..., 100.9], i.e., omitting 100.0.
+   // - The clip is stretched so much that the playback speed is less than 1%.
+   //   Make sure in that case that we never show 0%, but always at least 0.1%.
+   // clang-format on
+
+   const auto playbackSpeed = 100 / clipStretchRatio;
+   wxString fullText;
+
+   // We compare with .95 rather than 1, since playback speeds within [100.95,
+   // 101) get rounded to 101.0 and (99, 99.05] to 99.0 by `wxString::Format`.
+   // Let these be processed by the integer-display branch of this if statement
+   // instead.
+   if (fabs(playbackSpeed - 100.) < .95)
+      // Never show 100.0%
+      fullText = wxString::Format(
+         "Speed : %.1f%%", playbackSpeed > 100 ?
+                              std::max(playbackSpeed, 100.1) :
+                              std::min(playbackSpeed, 99.9));
+   else if (playbackSpeed < 1)
+      // Never show 0.0%
+      fullText =
+         wxString::Format("Speed : %.1f%%", std::max(playbackSpeed, 0.1));
+   else {
+      const auto roundedPlaybackSpeed =
+         static_cast<int>(std::round(playbackSpeed));
+      fullText = wxString::Format("Speed : %d%%", roundedPlaybackSpeed);
+   }
+   return fullText;
+}
+
+struct ClipTitle {
+   const wxString text;
+   const int alignment;
+};
+
+std::optional<ClipTitle> DoDrawAudioTitle(
+   wxDC& dc, const wxRect& titleRect, const wxString& title)
 {
    if(titleRect.IsEmpty())
-      return false;
+      return std::nullopt;
+   const auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ?
+                          wxALIGN_RIGHT :
+                          wxALIGN_LEFT;
+   const auto alignment = hAlign | wxALIGN_CENTER_VERTICAL;
    if(title.empty())
-      return true;
-
+      return ClipTitle { "", alignment  };
    auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
    if (!truncatedTitle.empty())
    {
-      auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ? wxALIGN_RIGHT : wxALIGN_LEFT;
-      dc.DrawLabel(truncatedTitle, titleRect, hAlign | wxALIGN_CENTER_VERTICAL);
-      return true;
+      dc.DrawLabel(truncatedTitle, titleRect, alignment);
+      return ClipTitle{ truncatedTitle, alignment };
    }
-   return false;
+   return std::nullopt;
+}
+
+}
+
+bool TrackArt::DrawClipTitle(
+   wxDC& dc, const wxRect& titleRect, const wxString& title)
+{
+   return DoDrawAudioTitle(dc, titleRect, title).has_value();
+}
+
+bool TrackArt::DrawAudioClipTitle(
+   wxDC& dc, const wxRect& titleRect, const wxString& title,
+   double clipStretchRatio)
+{
+   const auto clipTitle = DoDrawAudioTitle(dc, titleRect, title);
+   if (!clipTitle.has_value())
+      return false;
+   if (!TimeAndPitchInterface::IsPassThroughMode(clipStretchRatio))
+   {
+      const auto fullText = GetPlaybackSpeedFullText(clipStretchRatio);
+      constexpr auto minSpaceBetweenTitleAndSpeed = 12; // pixels
+      const auto remainingWidth = std::max(
+         titleRect.GetWidth() - dc.GetTextExtent(clipTitle->text).GetWidth() -
+            minSpaceBetweenTitleAndSpeed,
+         0);
+      const auto horizontalAlign =
+         (clipTitle->alignment & wxHORIZONTAL) == wxALIGN_LEFT ? wxALIGN_RIGHT :
+                                                                 wxALIGN_LEFT;
+      dc.DrawLabel(
+         TrackArt::TruncateText(dc, fullText, remainingWidth), titleRect,
+         horizontalAlign | wxALIGN_CENTER_VERTICAL);
+   }
+   return true;
 }
 
 void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
@@ -500,7 +582,7 @@ void DrawBackground (
       dc.DrawRectangle(subRect);
       return;
    }
-   
+
    auto [firstIndex, lastIndex] =
       GetBoundaries (subRect, fullRect, noteWidth);
 
@@ -539,7 +621,7 @@ private:
 
       return *track.GetOwner()->GetOwner();
    }
-   
+
    int64_t CalculateNotesInBeat() const
    {
       if (UseAlternatingColors())
@@ -555,7 +637,7 @@ private:
 
       if (notesInMajorTick == 0)
          return false;
-      
+
       return noteIndex % notesInMajorTick == 0;
    }
 
@@ -593,7 +675,7 @@ private:
                                 subdivision.minor;
 
       while (minorMinorLength <= minSubdivisionWidth)
-      {         
+      {
          tick.lower /= 2;
          tick.duration *= 2.0;
          minorMinorLength *= 2.0;
@@ -617,7 +699,7 @@ void TrackArt::DrawBackgroundWithSelection(
    const auto &selectedRegion = *artist->pSelectedRegion;
    const auto& zoomInfo = *artist->pZoomInfo;
 
-   
+
    //MM: Draw background. We should optimize that a bit more.
    const double sel0 = useSelection ? selectedRegion.t0() : 0.0;
    const double sel1 = useSelection ? selectedRegion.t1() : 0.0;
@@ -711,7 +793,7 @@ void TrackArt::DrawCursor(TrackPanelDrawingContext& context,
    const auto dc = &context.dc;
    const auto artist = TrackArtist::Get(context);
    const auto& selectedRegion = *artist->pSelectedRegion;
-   
+
    if (selectedRegion.isPoint())
    {
        const auto& zoomInfo = *artist->pZoomInfo;

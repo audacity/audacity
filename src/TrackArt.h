@@ -30,6 +30,11 @@ namespace TrackArt {
    bool DrawClipTitle(wxDC& dc, const wxRect& titleRect, const wxString& title);
 
    AUDACITY_DLL_API
+   bool DrawAudioClipTitle(
+      wxDC& dc, const wxRect& titleRect, const wxString& title,
+      double clipStretchRatio);
+
+   AUDACITY_DLL_API
    void DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected = false);
 
    //Used to draw clip boundaries without contents/details when it's not
