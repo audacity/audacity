@@ -26,7 +26,9 @@ std::unique_ptr<staffpad::TimeAndPitch> MaybeCreateTimeAndPitch(
 {
    const auto timeRatio = params.timeRatio.value_or(1.);
    const auto pitchRatio = params.pitchRatio.value_or(1.);
-   if (timeRatio == 1. && pitchRatio == 1.)
+   if (
+      TimeAndPitchInterface::IsPassThroughMode(timeRatio) &&
+      TimeAndPitchInterface::IsPassThroughMode(pitchRatio))
    {
       return nullptr;
    }
