@@ -50,6 +50,7 @@ from the project that will own the track.
 
 #include "Project.h"
 #include "ProjectRate.h"
+#include "SampleBlock.h"
 
 #include "Prefs.h"
 #include "SyncLock.h"
@@ -505,6 +506,37 @@ std::shared_ptr<WaveTrack> WaveTrackFactory::Create()
 std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double rate)
 {
    return std::make_shared<WaveTrack>(mpFactory, format, rate);
+}
+
+TrackListHolder WaveTrackFactory::Create(size_t nChannels)
+{
+   return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
+}
+
+TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
+{
+   auto channels = std::vector<std::shared_ptr<Track>>{ };
+   std::generate_n(
+      std::back_inserter(channels),
+      nChannels,
+      [&] { return Create(format, rate); }
+   );
+   if(nChannels == 2)
+      return TrackList::Temporary(nullptr, channels[0], channels[1]);
+   return TrackList::Temporary(nullptr, channels);
+}
+
+TrackListHolder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
+{
+   auto channels = std::vector<std::shared_ptr<Track>>{};
+   std::generate_n(
+      std::back_inserter(channels),
+      nChannels,
+      [&]{ return proto.EmptyCopy(mpFactory, false); }
+   );
+   if(nChannels == 2)
+      return TrackList::Temporary(nullptr, channels[0], channels[1]);
+   return TrackList::Temporary(nullptr, channels);
 }
 
 WaveTrack *WaveTrack::New( AudacityProject &project )
@@ -3936,7 +3968,6 @@ void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
    }
 }
 
-#include "SampleBlock.h"
 void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs)
 {
@@ -3966,8 +3997,6 @@ void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
       const_cast<TrackList &>(tracks), std::move( inspector ), pIDs );
 }
 
-#include "Project.h"
-#include "SampleBlock.h"
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
    return std::make_shared< WaveTrackFactory >(
       ProjectRate::Get( project ),

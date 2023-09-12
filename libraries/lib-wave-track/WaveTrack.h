@@ -1183,6 +1183,28 @@ class WAVE_TRACK_API WaveTrackFactory final
     */
    std::shared_ptr<WaveTrack> Create(sampleFormat format, double rate);
 
+   /**
+    * \brief Creates new \p nChannels tracks with project's default rate and format.
+    * If number of channels is exactly two then a single stereo track is created
+    * instead.
+    */
+   TrackListHolder Create(size_t nChannels);
+
+   /**
+    * \brief Creates new \p nChannels tracks with specified \p format and
+    * \p rate and places them into TrackList.
+    * If number of channels is exactly two then a single stereo track is created
+    * instead.
+    */
+   TrackListHolder Create(size_t nChannels, sampleFormat format, double rate);
+
+   /**
+    * \brief Creates new \p nChannels tracks by creating empty copies of \p proto.
+    * If number of channels is exactly two then a single stereo track is created
+    * instead.
+    */
+   TrackListHolder Create(size_t nChannels, const WaveTrack& proto);
+
  private:
    const ProjectRate &mRate;
    SampleBlockFactoryPtr mpFactory;
