@@ -269,24 +269,28 @@ public:
          return std::nullopt;
 
       double t = 0.0;
-
+      size_t lastIndex = 0;
+      
       for (size_t i = 0; i < mFields.size(); i++)
       {
-         const auto pos = mFields[i].pos;
-         const auto digits = mFields[i].digits;
+         const auto& field = mFields[i];
 
-         if (pos >= valueString.size() || pos + digits > valueString.size())
-            return std::nullopt;
-
+         const size_t labelIndex = field.label.empty() ?
+                                      wxString::npos :
+                                      valueString.find(field.label, lastIndex); 
+            
          long val;
 
-         const auto fieldStringValue =
-            valueString.Mid(mFields[i].pos, mFields[i].digits);
+         const auto fieldStringValue = valueString.Mid(
+            lastIndex,
+            labelIndex == wxString::npos ? labelIndex : labelIndex - lastIndex);
 
          if (!fieldStringValue.ToLong(&val))
             return std::nullopt;
 
          t += (val - mFieldValueOffset) * mFieldLengths[i];
+
+         lastIndex = labelIndex + field.label.Length();
       }
 
       return t;
