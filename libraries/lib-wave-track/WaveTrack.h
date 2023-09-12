@@ -181,6 +181,8 @@ public:
       */
    );
 
+   bool AppendBuffer(constSamplePtr buffer, sampleFormat format, size_t len, unsigned stride, sampleFormat effectiveFormat);
+
    /*!
     If there is an existing WaveClip in the WaveTrack that owns the channel,
     then the data are appended to that clip. If there are no WaveClips in the

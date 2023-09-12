@@ -2282,6 +2282,15 @@ void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
 /*! @excsafety{Partial}
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
+bool WaveChannel::AppendBuffer(constSamplePtr buffer, sampleFormat format,
+   size_t len, unsigned stride, sampleFormat effectiveFormat)
+{
+   return GetTrack().Append(buffer, format, len, stride, effectiveFormat);
+}
+
+/*! @excsafety{Partial}
+-- Some prefix (maybe none) of the buffer is appended,
+and no content already flushed to disk is lost. */
 bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
    size_t len)
 {
