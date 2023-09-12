@@ -843,25 +843,17 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 
    AudacityProject *const project = &mpData->project;
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   auto channels = TrackList::Channels( pTrack );
-   if (channels.size() != 2)
-      return;
-
    auto &trackFocus = TrackFocus::Get( *project );
-   Track *const focused = trackFocus.Get();
-   const bool hasFocus = channels.contains( focused );
+   const bool hasFocus = trackFocus.Get() == mpData->pTrack;
 
-   auto partner = *channels.rbegin();
-
-   if (TrackList::SwapChannels(*pTrack)) {
-      auto &tracks = TrackList::Get( *project );
+   if (auto track = TrackList::SwapChannels(*mpData->pTrack))
+   {
       if (hasFocus)
-         trackFocus.Set(partner);
+         trackFocus.Set(track);
 
       ProjectHistory::Get( *project ).PushState(
          /* i18n-hint: The string names a track  */
-         XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
+         XO("Swapped Channels in '%s'").Format( track->GetName() ),
          XO("Swap Channels"));
    }
 

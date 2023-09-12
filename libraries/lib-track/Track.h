@@ -1168,8 +1168,8 @@ public:
    }
 
    //! If the given track is one of a pair of channels, swap them
-   /*! @return success */
-   static bool SwapChannels(Track &track);
+   //! @return New left track on success
+   static Track* SwapChannels(Track &track);
 
    friend class Track;
 
