@@ -1026,12 +1026,6 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
    return result;
 }
 
-void TrackList::RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack )
-{
-   Add<Track>( pTrack );
-   pTrack->SetId( TrackId{} );
-}
-
 void TrackList::UpdatePendingTracks()
 {
    if (!mPendingUpdates)
@@ -1458,6 +1452,16 @@ void TrackList::Append(TrackList &&list)
       auto pTrack = *iter;
       iter = list.erase(iter);
       this->Add(pTrack);
+   }
+}
+
+void TrackList::RegisterPendingNewTracks(TrackList&& list)
+{
+   for(auto it = list.ListOfTracks::begin(); it != list.ListOfTracks::end();)
+   {
+      Add(*it);
+      (*it)->SetId({});
+      it = list.erase(it);
    }
 }
 

@@ -786,6 +786,9 @@ public:
       return { AllClipsConstIterator{ *this }, AllClipsConstIterator{ } };
    }
 
+   /// @pre IsLeader()
+   void CreateWideClip(double offset = .0, const wxString& name = wxEmptyString);
+
    //! Create new clip and add it to this track.
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and

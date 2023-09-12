@@ -1290,6 +1290,15 @@ public:
    //! Remove all tracks from `list` and put them at the end of `this`
    void Append(TrackList &&list);
 
+   // Like RegisterPendingChangedTrack, but for a list of new tracks,
+   // not a replacement track.  Caller
+   // supplies the list, and there are no updates.
+   // Pending tracks will have an unassigned TrackId.
+   // Pending new tracks WILL occur in iterations, always after actual
+   // tracks, and in the sequence that they were added.  They can be
+   // distinguished from actual tracks by TrackId.
+   void RegisterPendingNewTracks(TrackList &&list);
+
    //! Remove first channel group (if any) from `list` and put it at the end of
    //! `this`
    void AppendOne(TrackList &&list);
@@ -1427,14 +1436,6 @@ public:
       Updater updater,
       Track *src
    );
-
-   // Like the previous, but for a NEW track, not a replacement track.  Caller
-   // supplies the track, and there are no updates.
-   // Pending track will have an unassigned TrackId.
-   // Pending changed tracks WILL occur in iterations, always after actual
-   // tracks, and in the sequence that they were added.  They can be
-   // distinguished from actual tracks by TrackId.
-   void RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack );
 
    // Invoke the updaters of pending tracks.  Pass any exceptions from the
    // updater functions.

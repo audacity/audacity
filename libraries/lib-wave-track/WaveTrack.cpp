@@ -3352,6 +3352,13 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
       return NULL;
 }
 
+void WaveTrack::CreateWideClip(double offset, const wxString& name)
+{
+   assert(IsLeader());
+   for(auto channel : TrackList::Channels(this))
+      channel->CreateClip(offset, name);
+}
+
 WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 {
    // TODO wide wave tracks -- choose clip width correctly for the track

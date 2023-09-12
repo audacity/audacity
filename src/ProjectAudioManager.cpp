@@ -905,27 +905,25 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
-         Track *first {};
-         for (int c = 0; c < recordingChannels; c++) {
-            auto newTrack = WaveTrackFactory::Get(*p).Create();
-            if (!first)
-               first = newTrack.get();
-
+         auto newTracks = WaveTrackFactory::Get(*p).Create(recordingChannels);
+         const auto first = *newTracks->begin();
+         int trackCounter = 0;
+         const auto minimizeChannelView = recordingChannels > 2 &&
+            !ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed();
+         for (auto newTrack : newTracks->Any<WaveTrack>()) {
             // Quantize bounds to the rate of the new track.
-            if (c == 0) {
+            if (newTrack == first) {
                if (t0 < DBL_MAX)
                   t0 = newTrack->SnapToSample(t0);
                if (t1 < DBL_MAX)
                   t1 = newTrack->SnapToSample(t1);
             }
 
-            auto tempList = TrackList::Temporary(nullptr, newTrack, nullptr);
-            assert(newTrack->IsLeader()); // not yet made into a channel group
             newTrack->MoveTo(t0);
             wxString nameSuffix = wxString(wxT(""));
 
             if (useTrackNumber) {
-               nameSuffix += wxString::Format(wxT("%d"), 1 + (int) numTracks + c);
+               nameSuffix += wxString::Format(wxT("%d"), 1 + (int) numTracks + trackCounter++);
             }
 
             if (useDateStamp) {
@@ -945,7 +943,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // ISO standard would be nice, but ":" is unsafe for file name.
             nameSuffix.Replace(wxT(":"), wxT("-"));
 
-            if (newTrack.get() == first) {
+            if (newTrack == first) {
                if (baseTrackName.empty())
                   newTrack->SetName(nameSuffix);
                else if (nameSuffix.empty())
@@ -953,23 +951,20 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                else
                   newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
+
             //create a new clip with a proper name before recording is started
-            newTrack->CreateClip(t0, makeNewClipName(newTrack.get()));
+            newTrack->CreateWideClip(t0, makeNewClipName(newTrack));
 
-            if ((recordingChannels > 2) &&
-                !(ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed())) {
-               ChannelView::Get(*newTrack->GetChannel(0)).SetMinimized(true);
+            transportSequences.captureSequences.push_back(
+               std::static_pointer_cast<WaveTrack>(newTrack->shared_from_this())
+            );
+               
+            for(auto channel : newTrack->Channels())
+            {
+               ChannelView::Get(*channel).SetMinimized(minimizeChannelView);
             }
-
-            // Temporary until there is a "wide" overload of
-            // WaveTrackFactory::Create
-            if (!(c == 1 && recordingChannels == 2))
-               transportSequences.captureSequences.push_back(newTrack);
-
-            tempList.reset();
-            trackList.RegisterPendingNewTrack(newTrack);
          }
-         trackList.MakeMultiChannelTrack(*first, recordingChannels, true);
+         trackList.RegisterPendingNewTracks(std::move(*newTracks));
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(project).Set(first);
          if (!trackList.empty())
