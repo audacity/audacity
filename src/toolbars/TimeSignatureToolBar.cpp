@@ -153,7 +153,7 @@ void TimeSignatureToolBar::Populate()
       wxString::Format(
          "%d", ProjectTimeSignature::Get(mProject).GetLowerTimeSignature()),
       wxDefaultPosition, timeSigSize,
-      wxArrayStringEx { L"1", L"2", L"4", L"8", L"16", L"32", L"64" },
+      wxArrayStringEx { L"2", L"4", L"8", L"16", L"32", L"64" },
       wxCB_READONLY);
 
    mLowerSignatureControl->SetName(XO("Lower Time Signature").Translation());
