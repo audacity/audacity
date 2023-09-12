@@ -721,6 +721,14 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
          return false;
 
       (*first)->SetLinkType(aligned ? Track::LinkType::Aligned : Track::LinkType::Group);
+
+      //Cleanup the group data in all channels except the first
+      for(auto it = std::next(first), last = std::next(first, nChannels);
+         it != last;
+         ++it)
+      {
+         (*it)->DestroyGroupData();
+      }
    }
    else
       THROW_INCONSISTENCY_EXCEPTION;
