@@ -86,7 +86,7 @@ public:
     WaveClipTitleEditHandle(const std::shared_ptr<TextEditHelper>& helper)
         : mHelper(helper)
     { }
-   
+
    ~WaveClipTitleEditHandle()
    {
    }
@@ -231,7 +231,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
         TrackArt::DrawBackgroundWithSelection(context, rect, track.get(), artist->blankSelectedBrush, artist->blankBrush);
 
         mLastVisibleClips.clear();
-       
+
         const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
         const auto& zoomInfo = *artist->pZoomInfo;
         {
@@ -263,11 +263,15 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                     if(!mTextEditHelper->Draw(context.dc, titleRect))
                     {
                         mTextEditHelper->Cancel(nullptr);
-                        TrackArt::DrawClipTitle(context.dc, titleRect, clip->GetName());
+                        TrackArt::DrawAudioClipTitle(
+                           context.dc, titleRect, clip->GetName(),
+                           clip->GetStretchRatio());
                     }
                 }
-                else if(TrackArt::DrawClipTitle(context.dc, titleRect, clip->GetName()))
-                    mLastVisibleClips.push_back(clip.get());
+                else if (TrackArt::DrawAudioClipTitle(
+                            context.dc, titleRect, clip->GetName(),
+                            clip->GetStretchRatio()))
+                   mLastVisibleClips.push_back(clip.get());
             }
         }
 
@@ -303,14 +307,14 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject& project, co
     {
         if(!IsClipNameVisible(*clip))
            return false;
-       
+
         if (mTextEditHelper)
             mTextEditHelper->Finish(&project);
 
         mEditedClip = clip;
         mTextEditHelper = MakeTextEditHelper(clip->GetName());
     }
-   
+
     return true;
 }
 
@@ -370,7 +374,7 @@ const ReservedCommandFlag &SomeClipIsSelectedFlag()
 
 unsigned WaveTrackAffordanceControls::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
-    if (!mTextEditHelper 
+    if (!mTextEditHelper
        || !mTextEditHelper->CaptureKey(event.GetKeyCode(), event.GetModifiers()))
        // Handle the event if it can be processed by the text editor (if any)
        event.Skip();
@@ -381,10 +385,10 @@ unsigned WaveTrackAffordanceControls::CaptureKey(wxKeyEvent& event, ViewInfo& vi
 unsigned WaveTrackAffordanceControls::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*, AudacityProject* project)
 {
     auto keyCode = event.GetKeyCode();
-    
+
     if (mTextEditHelper)
     {
-       if (!mTextEditHelper->OnKeyDown(keyCode, event.GetModifiers(), project) 
+       if (!mTextEditHelper->OnKeyDown(keyCode, event.GetModifiers(), project)
           && !TextEditHelper::IsGoodEditKeyCode(keyCode))
           event.Skip();
 
@@ -546,7 +550,7 @@ std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(
     auto helper = std::make_shared<TextEditHelper>(shared_from_this(), text, mClipNameFont);
     helper->SetTextColor(theTheme.Colour(clrClipNameText));
     helper->SetTextSelectionColor(theTheme.Colour(clrClipNameTextSelection));
-    return helper; 
+    return helper;
 }
 
 // Register a menu item
@@ -558,7 +562,7 @@ namespace {
 void OnEditClipName(const CommandContext &context)
 {
    auto &project = context.project;
-   
+
    if(auto pWaveTrack = dynamic_cast<WaveTrack *>(TrackFocus::Get(project).Get()))
    {
       if(auto pAffordance = FindAffordance(*pWaveTrack))
