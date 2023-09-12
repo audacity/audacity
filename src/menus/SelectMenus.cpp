@@ -221,8 +221,6 @@ void MoveWhenAudioInactive
    // If TIME_UNIT_SECONDS, snap-to will be off.
    auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
-   const double end = std::max(
-      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    // Move the cursor
    // Already in cursor mode?
@@ -232,7 +230,6 @@ void MoveWhenAudioInactive
          t0, seekStep, timeUnit, snapMode);
       // constrain.
       newT = std::max(0.0, newT);
-      newT = std::min(newT, end);
       // Move
       viewInfo.selectedRegion.setT0(
          newT,
