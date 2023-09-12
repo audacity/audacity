@@ -241,10 +241,15 @@ public:
          return result;
       }
 
+      // Calculate the epsilon only once, so the total loss of precision is addressed.
+      // This is a "multiplicative" epsilon, so there is no need to calculate 1 + eps every time.
+      const auto eps =
+         1.0 + std::max(1.0, value) * std::numeric_limits<double>::epsilon();
+
       for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex)
       {
          const auto fieldLength = mFieldLengths[fieldIndex];
-         const auto fieldValue = static_cast<int>(std::floor(value / fieldLength));
+         const auto fieldValue = static_cast<int>(std::floor(value * eps / fieldLength));
 
          result.fieldValueStrings[fieldIndex] = wxString::Format(
             mFields[fieldIndex].formatStr, fieldValue + mFieldValueOffset);
