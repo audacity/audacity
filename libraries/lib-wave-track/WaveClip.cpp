@@ -22,11 +22,12 @@
 #include <wx/log.h>
 
 #include "BasicUI.h"
-#include "Sequence.h"
-#include "Prefs.h"
 #include "Envelope.h"
-#include "Resample.h"
 #include "InconsistencyException.h"
+#include "Prefs.h"
+#include "Resample.h"
+#include "Sequence.h"
+#include "TimeAndPitchInterface.h"
 #include "UserException.h"
 
 #ifdef _OPENMP
@@ -299,7 +300,8 @@ bool WaveClip::HasEqualStretchRatio(const WaveClip& other) const
 
 bool WaveClip::StretchRatioEquals(double value) const
 {
-   return fabs(GetStretchRatio() - value) < 1e-6;
+   return TimeAndPitchInterface::IsPassThroughMode(
+      1 + GetStretchRatio() - value);
 }
 
 sampleCount WaveClip::GetNumSamples() const

@@ -25,6 +25,7 @@ set( SOURCES
    AudioContainer.h
    StaffPadTimeAndPitch.cpp
    StaffPadTimeAndPitch.h
+   TimeAndPitchInterface.cpp
    TimeAndPitchInterface.h
 )
 set( LIBRARIES
