@@ -17,6 +17,7 @@
 #define __AUDACITY_NUMERIC_CONVERTER__
 
 #include <memory>
+#include <numeric>
 
 #include "NumericConverterType.h"
 #include "NumericConverterFormatter.h"
@@ -82,11 +83,11 @@ protected:
 
    NumericConverterType mType;
 
-   double         mValue;
-
-   double         mMinValue;
-   double         mMaxValue;
+   double         mMinValue { 0.0 };
+   double         mMaxValue { std::numeric_limits<double>::max() };
    double         mInvalidValue { -1 };
+
+   double         mValue { mInvalidValue };
 
    std::unique_ptr<NumericConverterFormatter>
                  mFormatter;
