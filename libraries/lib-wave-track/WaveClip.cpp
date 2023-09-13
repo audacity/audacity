@@ -1179,12 +1179,11 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    }
 }
 
-void WaveClip::ApplyStretchRatio(
-   double targetRatio, const ProgressReporter& reportProgress)
+void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
 {
    assert(mProjectTempo.has_value());
 
-   if (StretchRatioEquals(targetRatio))
+   if (StretchRatioEquals(1))
       return;
    const auto stretchRatio = GetStretchRatio();
 
@@ -1229,7 +1228,7 @@ void WaveClip::ApplyStretchRatio(
    ClipTimeAndPitchSource stretcherSource { *this, sourceDurationToDiscard,
                                             PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
-   params.timeRatio = stretchRatio / targetRatio;
+   params.timeRatio = stretchRatio;
    StaffPadTimeAndPitch stretcher { GetRate(), numChannels, stretcherSource,
                                     std::move(params) };
 
@@ -1239,8 +1238,7 @@ void WaveClip::ApplyStretchRatio(
    const int endSamplesToDiscard =
       (GetPlayEndTime() - originalPlayEndTime) * GetRate() + .5;
    const auto totalNumOutSamples =
-      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio /
-                       targetRatio -
+      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio -
                     beginSamplesToDiscard - endSamplesToDiscard + .5 };
 
    sampleCount numOutSamples { 0 };
@@ -1279,7 +1277,7 @@ void WaveClip::ApplyStretchRatio(
    SetTrimRight(0.);
    SetSequenceStartTime(originalPlayStartTime);
    mRawAudioTempo = *mProjectTempo;
-   mClipStretchRatio = targetRatio;
+   mClipStretchRatio = 1;
 
    Flush();
    Caches::ForEach(std::mem_fn(&WaveClipListener::Invalidate));

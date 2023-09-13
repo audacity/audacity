@@ -48,30 +48,25 @@ EffectOutputTracks::EffectOutputTracks(
       effectTimeInterval.has_value() &&
       effectTimeInterval->second > effectTimeInterval->first)
    {
-      using namespace BasicUI;
-      auto progress = MakeProgress(
-         XO("Pre-processing"), XO("Rendering Time-Stretched Audio"),
-         ProgressShowCancel);
-      const auto waveTracks = (stretchSyncLocked
-         ? mOutputTracks->Any<WaveTrack>()
-         : mOutputTracks->Selected<WaveTrack>())
-      + [&](const WaveTrack *pTrack){
-         return WaveTrackUtilities::HasStretch(*pTrack,
-            effectTimeInterval->first, effectTimeInterval->second);
-      };
-      const auto numTracks = waveTracks.size();
-      auto count = 0;
-      auto reportProgress = [&](double progressFraction) {
-         const auto overallProgress = (count + progressFraction) / numTracks;
-         const auto result = progress->Poll(overallProgress * 1000, 1000);
-         if (result != ProgressResult::Success)
-            throw UserException {};
-      };
-      for (const auto& track : waveTracks)
-      {
-         track->ApplyStretchRatio(effectTimeInterval, reportProgress);
-         ++count;
-      }
+      WaveTrackUtilities::WithStretchRenderingProgress(
+         [&](const ProgressReporter& parent)
+         {
+            const auto tracksToUnstretch =
+               (stretchSyncLocked ? mOutputTracks->Any<WaveTrack>() :
+                                    mOutputTracks->Selected<WaveTrack>()) +
+               [&](const WaveTrack* pTrack)
+            {
+               return WaveTrackUtilities::HasStretch(
+                  *pTrack, effectTimeInterval->first,
+                  effectTimeInterval->second);
+            };
+            BasicUI::SplitProgress(
+               tracksToUnstretch.begin(), tracksToUnstretch.end(),
+               [&](WaveTrack* aTrack, const ProgressReporter& child) {
+                  aTrack->ApplyStretchRatio(effectTimeInterval, child);
+               },
+               parent);
+         });
    }
 
    // Invariant is established

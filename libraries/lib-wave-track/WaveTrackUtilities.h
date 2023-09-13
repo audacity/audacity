@@ -12,7 +12,11 @@
 
 **********************************************************************/
 
+#include "Internat.h"
+#include "TranslatableString.h"
+
 class WaveTrack;
+using ProgressReporter = std::function<void(double)>;
 
 namespace WaveTrackUtilities {
 
@@ -21,4 +25,10 @@ namespace WaveTrackUtilities {
 WAVE_TRACK_API
 bool HasStretch(const WaveTrack &track, double t0, double t1);
 
+extern WAVE_TRACK_API const TranslatableString defaultStretchRenderingTitle;
+
+WAVE_TRACK_API void WithStretchRenderingProgress(
+   std::function<void(const ProgressReporter&)> action,
+   TranslatableString title = defaultStretchRenderingTitle,
+   TranslatableString message = XO("Rendering Time-Stretched Audio"));
 }

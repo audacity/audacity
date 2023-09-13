@@ -18,6 +18,7 @@
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "WaveClip.h"
 #include "SampleBlock.h"
 #include "../commands/CommandContext.h"
@@ -757,27 +758,16 @@ void OnSilence(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
-   using namespace BasicUI;
    const auto selectedWaveTracks = tracks.Selected<WaveTrack>();
-   // TODO replace this with utilities pending in
-   // https://github.com/audacity/audacity/pull/5043
-   auto progress = MakeProgress(
-      XO("Pre-processing"), XO("Rendering Time-Stretched Audio"),
-      ProgressShowCancel);
-   const auto numTracks = selectedWaveTracks.size();
-   auto count = 0;
-   auto reportProgress = [&](double progressFraction) {
-      const auto overallProgress = (count + progressFraction) / numTracks;
-      if (
-         progress->Poll(overallProgress * 1000, 1000) !=
-         ProgressResult::Success)
-         throw UserException{};
-   };
-   for (auto n : selectedWaveTracks)
-   {
-      n->Silence(selectedRegion.t0(), selectedRegion.t1(), reportProgress);
-      ++count;
-   }
+   WaveTrackUtilities::WithStretchRenderingProgress(
+      [&](const ProgressReporter& parent) {
+         BasicUI::SplitProgress(
+            selectedWaveTracks.begin(), selectedWaveTracks.end(),
+            [&](WaveTrack* n, const ProgressReporter& child) {
+               n->Silence(selectedRegion.t0(), selectedRegion.t1(), child);
+            },
+            parent);
+      });
 
    ProjectHistory::Get(project).PushState(
       XO("Silenced selected tracks for %.2f seconds at %.2f")
@@ -928,18 +918,18 @@ void OnJoin(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    auto &window = ProjectWindow::Get(project);
-   const auto progress = BasicUI::MakeProgress(
-      XO("Pre-processing"), XO("Rendering Time-Stretched Audio"), 0);
    const auto selectedTracks = tracks.Selected<WaveTrack>();
-   auto count = 0;
-   for (auto wt : selectedTracks)
-      wt->Join(
-         selectedRegion.t0(), selectedRegion.t1(), [&](double trackProgress) {
-            const auto overallProgress =
-               (count + trackProgress) / selectedTracks.size();
-            progress->Poll(overallProgress * 1000, 1000);
-            ++count;
-         });
+   WaveTrackUtilities::WithStretchRenderingProgress(
+      [&](const ProgressReporter& reportProgress) {
+         using namespace BasicUI;
+         SplitProgress(
+            selectedTracks.begin(), selectedTracks.end(),
+            [&](WaveTrack* wt, const ProgressReporter& childProgress) {
+               wt->Join(
+                  selectedRegion.t0(), selectedRegion.t1(), childProgress);
+            },
+            reportProgress);
+      });
 
    ProjectHistory::Get(project).PushState(
       XO("Joined %.2f seconds at t=%.2f")

@@ -25,6 +25,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
+#include "WaveTrackUtilities.h"
 #include "UndoManager.h"
 #include "ShuttleGui.h"
 #include "../../../../ProjectWindows.h"
@@ -622,17 +623,11 @@ void WaveTrackAffordanceControls::OnRenderClipStretching(
    if (!interval || interval->StretchRatioEquals(1.0))
       return;
 
-   auto progressDialog = BasicUI::MakeProgress(
-      XO("Applying..."), XO("Rendering Time-Stretched Audio"),
-      BasicUI::ProgressShowCancel);
-
-   interval->ApplyStretchRatio(
-      [&progressDialog](double progress)
-      {
-         const auto result = progressDialog->Poll(progress * 1000, 1000);
-         if (result != BasicUI::ProgressResult::Success)
-            throw UserException {};
-      });
+   WaveTrackUtilities::WithStretchRenderingProgress(
+      [&interval](const ProgressReporter& progress) {
+         interval->ApplyStretchRatio(progress);
+      },
+      XO("Applying..."));
 
    ProjectHistory::Get(project).PushState(
       XO("Rendered time-stretched audio"), XO("Render"));

@@ -52,10 +52,12 @@ from the project that will own the track.
 #include "ProjectRate.h"
 #include "SampleBlock.h"
 
+#include "BasicUI.h"
 #include "Prefs.h"
+#include "QualitySettings.h"
 #include "SyncLock.h"
 #include "TimeWarper.h"
-#include "QualitySettings.h"
+
 
 #include "InconsistencyException.h"
 
@@ -220,11 +222,10 @@ void WaveTrack::Interval::ApplyStretchRatio(
    assert(channelsCount > 0);
 
    for (unsigned channel = 0; channel < channelsCount; ++channel)
-   {
-      GetClip(channel)->ApplyStretchRatio(1.,
-         [&reportProgress, channel, channelsCount](double progress)
-         { reportProgress((channel + progress) / channelsCount); });
-   }
+      GetClip(channel)->ApplyStretchRatio(
+         [&reportProgress, channel, channelsCount](double progress) {
+            reportProgress((channel + progress) / channelsCount);
+         });
 }
 
 bool WaveTrack::Interval::StretchRatioEquals(double value) const
@@ -2152,19 +2153,13 @@ void WaveTrack::ApplyStretchRatio(
                  GetEndTime();
    if (startTime >= endTime)
       return;
-   const auto numChannels = NChannels();
-   auto count = 0;
-   const ProgressReporter reportChannelProgress =
-      reportProgress ?
-         [&](double progress) {
-            reportProgress((count + progress) / numChannels);
-         } :
-         ProgressReporter {};
-   for (const auto pChannel : TrackList::Channels(this))
-   {
-      pChannel->ApplyStretchRatioOne(startTime, endTime, reportChannelProgress);
-      ++count;
-   }
+   const auto channels = TrackList::Channels(this);
+   BasicUI::SplitProgress(
+      channels.begin(), channels.end(),
+      [&](WaveTrack* pChannel, ProgressReporter child) {
+         pChannel->ApplyStretchRatioOne(startTime, endTime, child);
+      },
+      reportProgress);
 }
 
 void WaveTrack::ApplyStretchRatioOne(
@@ -2178,20 +2173,19 @@ void WaveTrack::ApplyStretchRatioOne(
                                           clipAtT1->SplitsPlayRegion(t1) &&
                                           !clipAtT1->StretchRatioEquals(1))
       SplitAt(t1);
+   std::vector<WaveClip*> intersectedClips;
    auto clip = GetClipAtTime(t0);
-   const auto numClips = GetNumClips(t0, t1);
-   auto count = 0;
-   auto reportClipProgress = reportProgress ? [&](double progress) {
-      reportProgress((count + progress) / numClips);
-   }
-      : ProgressReporter{};
    while (clip && clip->GetPlayStartTime() < t1)
    {
-      constexpr auto targetStretchRatio = 1.0;
-      clip->ApplyStretchRatio(targetStretchRatio, reportClipProgress);
+      intersectedClips.push_back(clip);
       clip = GetNextClip(*clip, PlaybackDirection::forward);
-      ++count;
    }
+   BasicUI::SplitProgress(
+      intersectedClips.begin(), intersectedClips.end(),
+      [&](WaveClip* clip, ProgressReporter reportClipProgress) {
+         clip->ApplyStretchRatio(reportClipProgress);
+      },
+      reportProgress);
 }
 
 /*! @excsafety{Weak} */
@@ -2371,21 +2365,14 @@ void WaveTrack::Join(
    double t0, double t1, const ProgressReporter& reportProgress)
 {
    assert(IsLeader());
+   const auto channels = TrackList::Channels(this);
    // Merge all WaveClips overlapping selection into one
-
-   const auto numChannels = NChannels();
-   auto count = 0;
-   const auto reportChannelProgress =
-      reportProgress ?
-         [&](double channelProgress) {
-            reportProgress((count + channelProgress) / numChannels);
-         } :
-         ProgressReporter {};
-   for (const auto pChannel : TrackList::Channels(this))
-   {
-      JoinOne(*pChannel, t0, t1, reportChannelProgress);
-      ++count;
-   }
+   BasicUI::SplitProgress(
+      channels.begin(), channels.end(),
+      [&](WaveTrack* pChannel, ProgressReporter child) {
+         pChannel->JoinOne(*pChannel, t0, t1, child);
+      },
+      reportProgress);
 }
 
 void WaveTrack::JoinOne(
@@ -2419,36 +2406,33 @@ void WaveTrack::JoinOne(
    newClip = track.CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
       clipsToDelete[0]->GetName());
 
-   auto count = 0;
-   const ProgressReporter reportClipProgress =
-      reportProgress ?
-         [&](double clipProgress) {
-            reportProgress((count + clipProgress) / clipsToDelete.size());
-         } :
-         ProgressReporter {};
+   BasicUI::SplitProgress(
+      clipsToDelete.begin(), clipsToDelete.end(),
+      [&](WaveClip* clip, ProgressReporter reportClipProgress) {
+         // wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
+         //       t, clip->GetOffset(), clip->GetStartTime(),
+         //       clip->GetEndTime());
 
-   for (const auto &clip : clipsToDelete) {
-      //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
-      //       t, clip->GetOffset(), clip->GetStartTime(), clip->GetEndTime());
-
-      if (clip->GetPlayStartTime() - t > (1.0 / rate)) {
-         double addedSilence = (clip->GetPlayStartTime() - t);
-         //wxPrintf("Adding %.6f seconds of silence\n");
-         auto offset = clip->GetPlayStartTime();
-         auto value = clip->GetEnvelope()->GetValue(offset);
-         newClip->AppendSilence(addedSilence, value);
-         t += addedSilence;
-      }
+         if (clip->GetPlayStartTime() - t > (1.0 / rate))
+         {
+            double addedSilence = (clip->GetPlayStartTime() - t);
+            // wxPrintf("Adding %.6f seconds of silence\n");
+            auto offset = clip->GetPlayStartTime();
+            auto value = clip->GetEnvelope()->GetValue(offset);
+            newClip->AppendSilence(addedSilence, value);
+            t += addedSilence;
+         }
 
       // wxPrintf("Pasting at %.6f\n", t);
       bool success = newClip->Paste(t, *clip);
       assert(success); // promise of CreateClip
 
-      t = newClip->GetPlayEndTime();
+         t = newClip->GetPlayEndTime();
 
-      auto it = FindClip(clips, clip);
-      clips.erase(it); // deletes the clip
-   }
+         auto it = FindClip(clips, clip);
+         clips.erase(it); // deletes the clip
+      },
+      reportProgress);
 }
 
 /*! @excsafety{Partial}
