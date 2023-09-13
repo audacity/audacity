@@ -430,6 +430,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
 
       totalCutLen += cutLen;
 
+      bool success = true;
       double cutStart = (r->start + r->end - cutLen) / 2;
       double cutEnd = cutStart + cutLen;
       (range
@@ -438,7 +439,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
            // Don't waste time past the end of a track
            pTrack->GetEndTime() < r->start;
          }
-      ).Visit(
+      ).VisitWhile(success,
          [&](WaveTrack &wt) {
             assert(wt.IsLeader());
             // In WaveTracks, clear with a cross-fade
@@ -485,6 +486,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             for (const auto pChannel : wt.Channels()) {
                // Write cross-faded data
                auto &buffer = buffers[iChannel];
+               success = success &&
                pChannel->Set((samplePtr)buffer.buf1.get(), floatSample, t1,
                   blendFrames,
                   // This effect mostly shifts samples to remove silences, and
@@ -501,6 +503,8 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             t.SyncLockAdjust(cutEnd, cutStart);
          }
       );
+      if (!success)
+         return false;
       ++whichReg;
    }
 

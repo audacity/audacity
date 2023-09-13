@@ -182,8 +182,14 @@ bool EffectClickRemoval::ProcessOne(
            buffer[i+j] = datawindow[j];
       }
 
-      if (mbDidSomething) // RemoveClicks() actually did something.
-         track.Set((samplePtr) buffer.get(), floatSample, start + s, block);
+      if (mbDidSomething) {
+         // RemoveClicks() actually did something.
+         if(!track.Set(
+            (samplePtr) buffer.get(), floatSample, start + s, block)) {
+            bResult = false;
+            break;
+         }
+      }
       s += block;
       if (TrackProgress(count, s.as_double() / len.as_double())) {
          bResult = false;

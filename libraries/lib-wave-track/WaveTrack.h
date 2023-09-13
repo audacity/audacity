@@ -170,7 +170,7 @@ public:
    ChannelSampleView GetSampleView(double t0, double t1, bool mayThrow) const;
 
    //! Random-access assignment of a range of samples
-   void Set(constSamplePtr buffer, sampleFormat format,
+   [[nodiscard]] bool Set(constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       sampleFormat effectiveFormat = widestSampleFormat /*!<
          Make the effective format of the data at least the minumum of this

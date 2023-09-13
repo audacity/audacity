@@ -2805,7 +2805,7 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
 }
 
 /*! @excsafety{Weak} */
-void WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
+bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
    for (const auto &clip: GetTrack().mClips)
@@ -2815,6 +2815,10 @@ void WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
 
       if (clipEnd > start && clipStart < start+len)
       {
+         // Test as also in WaveTrack::GetOne()
+         if (clip->GetStretchRatio() != 1.0)
+            return false;
+
          // Clip sample region and Get/Put sample region overlap
          auto samplesToCopy =
             std::min( start+len - clipStart, clip->GetVisibleSampleCount() );
@@ -2843,6 +2847,7 @@ void WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
          clip->MarkChanged();
       }
    }
+   return true;
 }
 
 sampleFormat WaveTrack::WidestEffectiveFormat() const
@@ -3317,7 +3322,7 @@ void WaveTrack::ExpandOneCutLine(double cutLinePosition,
 bool WaveTrack::RemoveCutLine(double cutLinePosition)
 {
    assert(IsLeader());
-   
+
    bool removed = false;
    for (const auto pChannel : TrackList::Channels(this))
       for (const auto &clip : pChannel->mClips)
@@ -3546,10 +3551,14 @@ bool WaveTrack::ReverseOneClip(WaveTrack &track,
       track.GetFloats(buffer2.get(), second, block);
       std::reverse(pBuffer2, pBuffer2 + block);
       // Don't dither on later rendering if only reversing samples
-      track.Set((samplePtr)buffer2.get(), floatSample, first, block,
-         narrowestSampleFormat);
-      track.Set((samplePtr)buffer1.get(), floatSample, second, block,
-         narrowestSampleFormat);
+      const bool success =
+         track.Set((samplePtr)buffer2.get(), floatSample, first, block,
+            narrowestSampleFormat)
+         &&
+         track.Set((samplePtr)buffer1.get(), floatSample, second, block,
+            narrowestSampleFormat);
+      if (!success)
+         return false;
 
       len -= 2 * block;
       first += block;

@@ -49,7 +49,7 @@ bool WaveTrackSink::Acquire(Buffers &data)
       // (less than one block remains; maybe nonzero because of samples
       // discarded for initial latency correction)
       DoConsume(data);
-   return true;
+   return IsOk();
 }
 
 bool WaveTrackSink::Release(const Buffers &, size_t)
@@ -66,11 +66,13 @@ void WaveTrackSink::DoConsume(Buffers &data)
    if (inputBufferCnt > 0) {
       // Some data still unwritten
       if (mIsProcessor) {
-         mLeft.Set(data.GetReadPosition(0),
-            floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
-         if (mpRight)
-            mpRight->Set(data.GetReadPosition(1),
+         mOk = mOk &&
+            mLeft.Set(data.GetReadPosition(0),
                floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
+         if (mpRight)
+            mOk = mOk &&
+               mpRight->Set(data.GetReadPosition(1),
+                  floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
       }
       else if (mGenLeft) {
          mGenLeft->Append(data.GetReadPosition(0),

@@ -286,7 +286,8 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             genLength, sampleRate, leader, inBuffers, outBuffers);
          if (bGoodResult) {
             sink.Flush(outBuffers);
-            if (tempList) {
+            bGoodResult = sink.IsOk();
+            if (bGoodResult && tempList) {
                if (!results)
                   results = tempList;
                else

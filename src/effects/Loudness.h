@@ -72,13 +72,13 @@ private:
    void FreeBuffers();
    static bool GetTrackRMS(WaveChannel &track,
       double curT0, double curT1, float &rms);
-   bool ProcessOne(WaveChannel &track, size_t nChannels,
+   [[nodiscard]] bool ProcessOne(WaveChannel &track, size_t nChannels,
       double curT0, double curT1, float mult, EBUR128 *pLoudnessProcessor);
    void LoadBufferBlock(WaveChannel &track, size_t nChannels,
       sampleCount pos, size_t len);
    bool AnalyseBufferBlock(EBUR128 &loudnessProcessor);
    bool ProcessBufferBlock(float mult);
-   void StoreBufferBlock(WaveChannel &track, size_t nChannels,
+   [[nodiscard]] bool StoreBufferBlock(WaveChannel &track, size_t nChannels,
       sampleCount pos, size_t len);
 
    bool UpdateProgress();

@@ -205,11 +205,11 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 
       if (mStereoInd) {
          for (const auto pChannel : channels)
-            if (!processOne(*pChannel))
+            if (!(bGoodResult = processOne(*pChannel)))
                goto done;
       }
       else {
-         if (!processOne(*pTrack))
+         if (!(bGoodResult = processOne(*pTrack)))
             break;
       }
    }
@@ -432,7 +432,8 @@ bool EffectLoudness::ProcessOne(WaveChannel &track, size_t nChannels,
       else {
          if (!ProcessBufferBlock(mult))
             return false;
-         StoreBufferBlock(track, nChannels, s, blockLen);
+         if (!StoreBufferBlock(track, nChannels, s, blockLen))
+            return false;
       }
 
       // Increment s one blockfull of samples
@@ -493,20 +494,25 @@ bool EffectLoudness::ProcessBufferBlock(const float mult)
    return true;
 }
 
-void EffectLoudness::StoreBufferBlock(WaveChannel &track, size_t nChannels,
+bool EffectLoudness::StoreBufferBlock(WaveChannel &track, size_t nChannels,
    sampleCount pos, size_t len)
 {
    size_t idx = 0;
    const auto setOne = [&](WaveChannel &channel){
       // Copy the newly-changed samples back onto the track.
-      channel.Set((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+      return channel.Set(
+         (samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
    };
 
    if (nChannels == 1)
-      setOne(track);
-   else for (auto channel : track.GetTrack().Channels()) {
-      setOne(*channel);
-      ++idx;
+      return setOne(track);
+   else {
+      for (auto channel : track.GetTrack().Channels()) {
+         if (!setOne(*channel))
+            return false;
+         ++idx;
+      }
+      return true;
    }
 }
 

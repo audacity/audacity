@@ -43,6 +43,9 @@ public:
     */
    void Flush(Buffers &data);
 
+   //! Whether any errors have occurred in writing data
+   bool IsOk() const { return mOk; }
+
 private:
    /*!
     @pre `data.Channels() > 0`
@@ -59,5 +62,6 @@ private:
    const sampleFormat mEffectiveFormat;
 
    sampleCount mOutPos;
+   bool mOk{ true };
 };
 #endif
