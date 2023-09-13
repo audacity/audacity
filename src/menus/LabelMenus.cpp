@@ -14,6 +14,7 @@
 #include "../TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
@@ -176,7 +177,7 @@ using EditFunctionWithProgress =
 void EditByLabel(
    AudacityProject& project, TrackList& tracks,
    const SelectedRegion& selectedRegion, EditFunctionWithProgress action,
-   std::unique_ptr<BasicUI::ProgressDialog> progress)
+   ProgressReporter progress)
 {
    Regions regions;
 
@@ -187,36 +188,25 @@ void EditByLabel(
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
                            (tracks.Selected<PlayableTrack>()).empty());
 
-   std::vector<Track*> tracksToEdit;
-   for (auto t : tracks)
-   {
-      const bool playable = dynamic_cast<const PlayableTrack*>(t) != nullptr;
-      if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable))
-         tracksToEdit.push_back(t);
-   }
+   const auto tracksToEdit = tracks.Any<Track>() + [&](const auto pTrack) {
+      return SyncLock::IsSyncLockSelected(pTrack) ||
+             (notLocked && dynamic_cast<const PlayableTrack*>(pTrack) != nullptr);
+   };
 
-   const auto numIterations = tracksToEdit.size() * regions.size();
-
-   auto count = 0;
-   ProgressReporter reporter =
-      progress ?
-         [&](double progressFraction) {
-            const auto overallProgress =
-               (count + progressFraction) / numIterations;
-            progress->Poll(overallProgress * 1000, 1000);
-         } :
-         ProgressReporter {};
-
-   // Apply action on tracks starting from
-   // labeled regions in the end. This is to correctly perform
-   // actions like 'Delete' which collapse the track area.
-   for (auto t : tracksToEdit)
-      for (size_t i = regions.size(); i--;)
-      {
-         const Region& region = regions.at(i);
-         action(*t, region.start, region.end, reporter);
-         ++count;
-      }
+   BasicUI::SplitProgress(
+      tracksToEdit.begin(), tracksToEdit.end(),
+      [&](Track* aTrack, const ProgressReporter& child) {
+         // Apply action on tracks starting from labeled regions in the end.
+         // This is to correctly perform actions like 'Delete' which collapse
+         // the track area.
+         BasicUI::SplitProgress(
+            regions.rbegin(), regions.rend(),
+            [&](const Region& region, const ProgressReporter& grandChild) {
+               action(*aTrack, region.start, region.end, grandChild);
+            },
+            child);
+      },
+      progress);
 }
 
 void EditByLabel(
@@ -633,10 +623,10 @@ void OnJoinLabels(const CommandContext &context)
       track.TypeSwitch(
          [&](WaveTrack& t) { t.Join(t0, t1, std::move(reportProgress)); });
    };
-   EditByLabel(
-      project, tracks, selectedRegion, editfunc,
-      BasicUI::MakeProgress(
-         XO("Pre-processing"), XO("Rendering Time-Stretched Audio")));
+   WaveTrackUtilities::WithStretchRenderingProgress(
+      [&](ProgressReporter progress) {
+         EditByLabel(project, tracks, selectedRegion, editfunc, progress);
+      });
 
    ProjectHistory::Get(project).PushState(
       /* i18n-hint: (verb) Audacity has just joined the labeled audio (points or
