@@ -961,7 +961,10 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                ChannelView::Get(*newTrack->GetChannel(0)).SetMinimized(true);
             }
 
-            transportSequences.captureSequences.push_back(newTrack);
+            // Temporary until there is a "wide" overload of
+            // WaveTrackFactory::Create
+            if (!(c == 1 && recordingChannels == 2))
+               transportSequences.captureSequences.push_back(newTrack);
 
             tempList.reset();
             trackList.RegisterPendingNewTrack(newTrack);
