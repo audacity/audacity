@@ -1210,9 +1210,7 @@ sampleCount WaveClip::GetPlayStartSample() const
 
 sampleCount WaveClip::GetPlayEndSample() const
 {
-   return GetPlayStartSample() +
-          sampleCount(
-             GetVisibleSampleCount().as_double() * GetStretchRatio() + 0.5);
+   return sampleCount { GetPlayEndTime() * mRate + 0.5 };
 }
 
 sampleCount WaveClip::GetVisibleSampleCount() const
