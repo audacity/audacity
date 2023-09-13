@@ -189,15 +189,25 @@ public:
    //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
+   //! Closed-begin of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayStartTime() const noexcept override;
    void SetPlayStartTime(double time);
 
+   //! Open-end of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayEndTime() const override;
+
+   //! Always a multiple of the track's sample period, whether the clip is
+   //! stretched or not.
    double GetPlayDuration() const;
 
-   // todo comment
+   //! Real start time of the clip, quantized to raw sample rate (track's rate)
    sampleCount GetPlayStartSample() const;
+   //! Real end time of the clip, quantized to raw sample rate (track's rate)
    sampleCount GetPlayEndSample() const;
+
+   // todo comment
    sampleCount GetVisibleSampleCount() const override;
 
    //! Sets the play start offset in seconds from the beginning of the underlying sequence
