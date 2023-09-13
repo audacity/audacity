@@ -2919,7 +2919,7 @@ using namespace MenuTable;
 using Options = CommandManager::Options;
 AttachedItem sAttachment{
    { wxT("Transport/Other/Options/Part2"), { OrderingHint::Begin, {} } },
-   Command( wxT("PinnedHead"), XXO("Enable Pinned Play &Head"),
+   Command( wxT("PinnedHead"), XXO("Enable pinned play &head"),
       OnTogglePinnedHead,
       // Switching of scrolling on and off is permitted
       // even during transport

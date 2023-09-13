@@ -824,10 +824,10 @@ BaseItemSharedPtr TransportMenu()
             Section( "Part1",
                // Sound Activated recording options
                Command( wxT("SoundActivationLevel"),
-                  XXO("Sound Activation Le&vel..."), OnSoundActivated,
+                  XXO("Set sound activation le&vel..."), OnSoundActivated,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
                Command( wxT("SoundActivation"),
-                  XXO("Enable Sound A&ctivated Recording"),
+                  XXO("Enable sound a&ctivated recording"),
                   OnToggleSoundActivated,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
                   Options{}.CheckTest(SoundActivatedRecord) )
