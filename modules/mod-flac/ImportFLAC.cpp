@@ -149,7 +149,7 @@ private:
    FLAC__uint64          mNumSamples;
    FLAC__uint64          mSamplesDone;
    bool                  mStreamInfoDone;
-   ImportUtils::NewChannelGroup mChannels;
+   TrackListHolder       mTrackList;
 };
 
 
@@ -223,8 +223,9 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
    return GuardedCall< FLAC__StreamDecoderWriteStatus > ( [&] {
       auto tmp = ArrayOf< short >{ frame->header.blocksize };
 
-      auto iter = mFile->mChannels.begin();
-      for (unsigned int chn=0; chn<mFile->mNumChannels; ++iter, ++chn) {
+      unsigned chn = 0;
+      ImportUtils::ForEachChannel(*mFile->mTrackList, [&](auto& channel)
+      {
          if (frame->header.bits_per_sample <= 16) {
             if (frame->header.bits_per_sample == 8) {
                for (unsigned int s = 0; s < frame->header.blocksize; s++) {
@@ -236,18 +237,19 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
                }
             }
 
-            iter->get()->Append((samplePtr)tmp.get(),
+            channel.AppendBuffer((samplePtr)tmp.get(),
                      int16Sample,
                      frame->header.blocksize, 1,
                      int16Sample);
          }
          else {
-            iter->get()->Append((samplePtr)buffer[chn],
+            channel.AppendBuffer((samplePtr)buffer[chn],
                      int24Sample,
                      frame->header.blocksize, 1,
                      int24Sample);
          }
-      }
+         ++chn;
+      });
 
       mFile->mSamplesDone += frame->header.blocksize;
 
@@ -404,14 +406,8 @@ void FLACImportFileHandle::Import(ImportProgressListener& progressListener,
    
    wxASSERT(mStreamInfoDone);
 
-   mChannels.resize(mNumChannels);
+   mTrackList = ImportUtils::NewWaveTrack(*trackFactory, mNumChannels, mFormat, mSampleRate);
 
-   {
-      auto iter = mChannels.begin();
-      for (size_t c = 0; c < mNumChannels; ++iter, ++c)
-         *iter = ImportUtils::NewWaveTrack(*trackFactory, mFormat, mSampleRate);
-   }
-   
    mFile->mImportProgressListener = &progressListener;
 
    // TODO: Vigilant Sentry: Variable res unused after assignment (error code DA1)
@@ -428,8 +424,7 @@ void FLACImportFileHandle::Import(ImportProgressListener& progressListener,
       return;
    }
 
-   if (!mChannels.empty())
-      outTracks.push_back(ImportUtils::MakeTracks(mChannels));
+   ImportUtils::FinalizeImport(outTracks, mTrackList);
 
    wxString comment;
    wxString description;
