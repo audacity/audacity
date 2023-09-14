@@ -289,9 +289,15 @@ wxString GetPlaybackSpeedFullText(double clipStretchRatio)
    return fullText;
 }
 
+enum class HAlign
+{
+   left,
+   right
+};
+
 struct ClipTitle {
    const wxString text;
-   const int alignment;
+   const HAlign alignment;
 };
 
 std::optional<ClipTitle> DoDrawAudioTitle(
@@ -300,16 +306,18 @@ std::optional<ClipTitle> DoDrawAudioTitle(
    if(titleRect.IsEmpty())
       return std::nullopt;
    const auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ?
-                          wxALIGN_RIGHT :
-                          wxALIGN_LEFT;
-   const auto alignment = hAlign | wxALIGN_CENTER_VERTICAL;
+                          HAlign::right :
+                          HAlign::left;
    if(title.empty())
-      return ClipTitle { "", alignment  };
+      return ClipTitle { "", hAlign  };
    auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
    if (!truncatedTitle.empty())
    {
-      dc.DrawLabel(truncatedTitle, titleRect, alignment);
-      return ClipTitle{ truncatedTitle, alignment };
+      dc.DrawLabel(
+         truncatedTitle, titleRect,
+         (hAlign == HAlign::left ? wxALIGN_LEFT : wxALIGN_RIGHT) |
+            wxALIGN_CENTER_VERTICAL);
+      return ClipTitle{ truncatedTitle, hAlign };
    }
    return std::nullopt;
 }
@@ -337,12 +345,10 @@ bool TrackArt::DrawAudioClipTitle(
          titleRect.GetWidth() - dc.GetTextExtent(clipTitle->text).GetWidth() -
             minSpaceBetweenTitleAndSpeed,
          0);
-      const auto horizontalAlign =
-         (clipTitle->alignment & wxHORIZONTAL) == wxALIGN_LEFT ? wxALIGN_RIGHT :
-                                                                 wxALIGN_LEFT;
       dc.DrawLabel(
          TrackArt::TruncateText(dc, fullText, remainingWidth), titleRect,
-         horizontalAlign | wxALIGN_CENTER_VERTICAL);
+         (clipTitle->alignment == HAlign::left ? wxALIGN_RIGHT : wxALIGN_LEFT) |
+            wxALIGN_CENTER_VERTICAL);
    }
    return true;
 }
