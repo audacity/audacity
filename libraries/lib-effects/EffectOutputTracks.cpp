@@ -38,31 +38,35 @@ EffectOutputTracks::EffectOutputTracks(
 
    for (auto aTrack : trackRange) {
       auto list = aTrack->Duplicate();
-      if (effectTimeInterval.has_value() && effectTimeInterval->second > effectTimeInterval->first)
-      {
-         using namespace BasicUI;
-         auto progress = MakeProgress(
-            XO("Pre-processing"), XO("Rendering Time-Stretched Audio"),
-            ProgressShowCancel);
-         const auto waveTracks = list->Any<WaveTrack>();
-         const auto numTracks = waveTracks.size();
-         auto count = 0;
-         auto reportProgress = [&](double progressFraction) {
-            const auto overallProgress = (count + progressFraction) / numTracks;
-            const auto result = progress->Poll(overallProgress * 1000, 1000);
-            if (result != ProgressResult::Success)
-               throw UserException {};
-         };
-         for (const auto& track : waveTracks)
-         {
-            track->ApplyStretchRatio(effectTimeInterval, reportProgress);
-            ++count;
-         }
-      }
       mIMap.push_back(aTrack);
       mOMap.push_back(*list->begin());
       mOutputTracks->Append(std::move(*list));
    }
+
+   if (
+      effectTimeInterval.has_value() &&
+      effectTimeInterval->second > effectTimeInterval->first)
+   {
+      using namespace BasicUI;
+      auto progress = MakeProgress(
+         XO("Pre-processing"), XO("Rendering Time-Stretched Audio"),
+         ProgressShowCancel);
+      const auto waveTracks = mOutputTracks->Any<WaveTrack>();
+      const auto numTracks = waveTracks.size();
+      auto count = 0;
+      auto reportProgress = [&](double progressFraction) {
+         const auto overallProgress = (count + progressFraction) / numTracks;
+         const auto result = progress->Poll(overallProgress * 1000, 1000);
+         if (result != ProgressResult::Success)
+            throw UserException {};
+      };
+      for (const auto& track : waveTracks)
+      {
+         track->ApplyStretchRatio(effectTimeInterval, reportProgress);
+         ++count;
+      }
+   }
+
    // Invariant is established
    assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());
