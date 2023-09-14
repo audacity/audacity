@@ -31,8 +31,6 @@
 #include "WaveTrackSink.h"
 #include "WideSampleSource.h"
 
-AudioGraph::Sink::~Sink() = default;
-
 PerTrackEffect::Instance::~Instance() = default;
 
 bool PerTrackEffect::Instance::Process(EffectSettings &settings)
