@@ -397,6 +397,9 @@ public:
    TrackListHolder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
       bool keepLink = true) const;
 
+   //! @pre !GetOwner()
+   TrackListHolder MonoToStereo();
+
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make

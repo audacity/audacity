@@ -1091,6 +1091,16 @@ TrackListHolder WaveTrack::WideEmptyCopy(
    return result;
 }
 
+TrackListHolder WaveTrack::MonoToStereo()
+{
+   assert(!GetOwner());
+
+   auto result = Duplicate();
+   result->MakeMultiChannelTrack(**result->begin(), 2, true);
+
+   return result;
+}
+
 TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 < t0)

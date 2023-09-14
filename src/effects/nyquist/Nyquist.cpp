@@ -1696,12 +1696,10 @@ bool NyquistEffect::ProcessOne(
    if (outChannels < static_cast<int>(mCurNumChannels)) {
       // Be careful to do this before duplication
       out->Flush();
-      auto dup = (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
       // Must destroy one temporary list before repopulating another with
       // correct channel grouping
       nyxContext.mOutputTracks.reset();
-      tempList = TrackList::Temporary(nullptr, out, dup);
-      assert(!dup->IsLeader());
+      tempList = out->MonoToStereo();
    }
    else {
       tempList = move(nyxContext.mOutputTracks);
