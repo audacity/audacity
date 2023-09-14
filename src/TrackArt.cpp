@@ -274,17 +274,17 @@ wxString GetPlaybackSpeedFullText(double clipStretchRatio)
    if (fabs(playbackSpeed - 100.) < .95)
       // Never show 100.0%
       fullText = wxString::Format(
-         "Speed : %.1f%%", playbackSpeed > 100 ?
+         "%.1f%% speed", playbackSpeed > 100 ?
                               std::max(playbackSpeed, 100.1) :
                               std::min(playbackSpeed, 99.9));
    else if (playbackSpeed < 1)
       // Never show 0.0%
       fullText =
-         wxString::Format("Speed : %.1f%%", std::max(playbackSpeed, 0.1));
+         wxString::Format("%.1f%% speed", std::max(playbackSpeed, 0.1));
    else {
       const auto roundedPlaybackSpeed =
          static_cast<int>(std::round(playbackSpeed));
-      fullText = wxString::Format("Speed : %d%%", roundedPlaybackSpeed);
+      fullText = wxString::Format("%d%% speed", roundedPlaybackSpeed);
    }
    return fullText;
 }
