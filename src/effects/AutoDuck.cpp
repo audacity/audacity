@@ -16,9 +16,11 @@
 
 *******************************************************************/
 #include "AutoDuck.h"
+#include "BasicUI.h"
 #include "EffectEditor.h"
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
+#include "UserException.h"
 
 #include <math.h>
 
@@ -198,9 +200,20 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
          tempTracks = pControlTrack->Duplicate();
          if (tempTracks) {
             const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
-            if (pFirstTrack) {
-               // TODO a progress indicator?
-               pFirstTrack->ApplyStretchRatio({ { t0, t1 } }, {});
+            if (pFirstTrack)
+            {
+               using namespace BasicUI;
+               const auto progress = MakeProgress(
+                  XO("Pre-processing"),
+                  XO("Rendering Control-Track Time-Stretched Audio"),
+                  ProgressShowCancel);
+               pFirstTrack->ApplyStretchRatio(
+                  { { t0, t1 } }, [&](double progressFraction) {
+                     const auto result =
+                        progress->Poll(progressFraction * 1000, 1000);
+                     if (result != ProgressResult::Success)
+                        throw UserException {};
+                  });
                pControlTrack = pFirstTrack;
             }
          }
