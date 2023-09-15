@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-08-24 08:00+0000\n"
+"PO-Revision-Date: 2023-09-15 09:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -6889,7 +6889,7 @@ msgstr "Zaznaczony"
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
 msgid " Sync Locked"
-msgstr "Zsynchronizowany-zablokowany"
+msgstr "Blokada synchronizacji"
 
 #. i18n-hint: The %d is replaced by the number of the track.
 #: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
@@ -10894,7 +10894,7 @@ msgid ""
 " each Sync-Locked Track Group."
 msgstr ""
 "Przy obcinaniu niezależnym może być zaznaczona tylko jedna ścieżka dźwiękowa"
-" w każdej zsynchronizowanej-zablokowanej grupie ścieżek."
+" w każdej grupie ścieżek z blokadą synchronizacji."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -15230,11 +15230,11 @@ msgstr "We wszys&tkich ścieżkach"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "We w&szystkich zsynchronizowanych-zablokowanych ścieżkach"
+msgstr "We w&szystkich ścieżkach z blokadą synchronizacji"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Sync-Locked"
-msgstr "Zaznacz zsynchronizowane-zablokowane"
+msgstr "Zaznacz z blokadą synchronizacji"
 
 #: src/menus/SelectMenus.cpp
 msgid "R&egion"
@@ -18228,7 +18228,7 @@ msgstr "Wycisz zaznaczony dźwięk"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Sync-Lock Tracks"
-msgstr "Synchronizuj-zablokuj ścieżki"
+msgstr "Ścieżki z blokadą synchronizacji"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Edit"
