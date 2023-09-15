@@ -345,10 +345,16 @@ bool TrackArt::DrawAudioClipTitle(
          titleRect.GetWidth() - dc.GetTextExtent(clipTitle->text).GetWidth() -
             minSpaceBetweenTitleAndSpeed,
          0);
-      dc.DrawLabel(
-         TrackArt::TruncateText(dc, fullText, remainingWidth), titleRect,
-         (clipTitle->alignment == HAlign::left ? wxALIGN_RIGHT : wxALIGN_LEFT) |
-            wxALIGN_CENTER_VERTICAL);
+      const auto truncatedText =
+         TrackArt::TruncateText(dc, fullText, remainingWidth);
+      if (truncatedText.find('%') != std::string::npos)
+         // Only show if there is room for the % sign, or else it can be hard to
+         // interpret.
+         dc.DrawLabel(
+            TrackArt::TruncateText(dc, fullText, remainingWidth), titleRect,
+            (clipTitle->alignment == HAlign::left ? wxALIGN_RIGHT :
+                                                    wxALIGN_LEFT) |
+               wxALIGN_CENTER_VERTICAL);
    }
    return true;
 }
