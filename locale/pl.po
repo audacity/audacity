@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-09-15 09:00+0000\n"
+"PO-Revision-Date: 2023-09-15 20:10+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -6869,19 +6869,19 @@ msgstr "WidokŚcieżki"
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
 msgid " Muted"
-msgstr "Wyciszony"
+msgstr " Wyciszona"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is soloed. (The Solo button is on.)
 #: src/TrackPanelAx.cpp
 msgid " Soloed"
-msgstr "Zsolowany"
+msgstr " Zsolowana"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: src/TrackPanelAx.cpp
 msgid " Selected"
-msgstr "Zaznaczony"
+msgstr " Zaznaczona"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
@@ -6889,7 +6889,7 @@ msgstr "Zaznaczony"
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
 msgid " Sync Locked"
-msgstr "Blokada synchronizacji"
+msgstr " Blokada synchronizacji"
 
 #. i18n-hint: The %d is replaced by the number of the track.
 #: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
@@ -6899,15 +6899,15 @@ msgstr "Ścieżka %d"
 
 #: src/TrackPanelAx.cpp
 msgid " Mute On"
-msgstr "Wyciszone"
+msgstr " Włącz wycisz"
 
 #: src/TrackPanelAx.cpp
 msgid " Solo On"
-msgstr "Włączone solo"
+msgstr " Włącz solo"
 
 #: src/TrackPanelAx.cpp
 msgid " Select On"
-msgstr "Włączone zaznaczenie"
+msgstr " Włącz zaznacz"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid ""
