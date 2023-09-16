@@ -36,12 +36,18 @@ public:
     have clips with non-unit stretch intersecting that interval, then in the
     copies those clips are split, and new clips bounded by the interval, with
     the stretches applied, are inserted.
+    @param allSyncLockSelected if true, unselected tracks that are sync-locked
+    with a selected track are copied too
+    @param stretchSyncLocked if false, do not apply the stretch interval to any
+    unselected WaveTrack that is copied
+
     @pre `!effectTimeInterval.has_value() ||
        effectTimeInterval->first <= effectTimeInterval->second`
     */
    EffectOutputTracks(
       TrackList& tracks, std::optional<TimeInterval> effectTimeInterval,
-      bool allSyncLockSelected = false);
+      bool allSyncLockSelected = false,
+      bool stretchSyncLocked = false);
    EffectOutputTracks(const EffectOutputTracks&) = delete;
 
    ~EffectOutputTracks();

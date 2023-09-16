@@ -273,7 +273,7 @@ bool EffectTruncSilence::ProcessIndependently()
    // Now do the work
 
    // Copy tracks
-   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true, true };
    double newT1 = 0.0;
 
    {
@@ -307,7 +307,7 @@ bool EffectTruncSilence::ProcessIndependently()
 bool EffectTruncSilence::ProcessAll()
 {
    // Copy tracks
-   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true, true };
 
    // Master list of silent regions.
    // This list should always be kept in order.

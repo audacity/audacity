@@ -18,7 +18,7 @@ int EffectOutputTracks::nEffectsDone = 0;
 
 EffectOutputTracks::EffectOutputTracks(
    TrackList& tracks, std::optional<TimeInterval> effectTimeInterval,
-   bool allSyncLockSelected)
+   bool allSyncLockSelected, bool stretchSyncLocked)
     : mTracks { tracks }
 {
    assert(
@@ -51,7 +51,9 @@ EffectOutputTracks::EffectOutputTracks(
       auto progress = MakeProgress(
          XO("Pre-processing"), XO("Rendering Time-Stretched Audio"),
          ProgressShowCancel);
-      const auto waveTracks = mOutputTracks->Any<WaveTrack>();
+      const auto waveTracks = stretchSyncLocked
+         ? mOutputTracks->Any<WaveTrack>()
+         : mOutputTracks->Selected<WaveTrack>();
       const auto numTracks = waveTracks.size();
       auto count = 0;
       auto reportProgress = [&](double progressFraction) {
