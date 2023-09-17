@@ -12,6 +12,7 @@
 #include "SyncLock.h"
 #include "UserException.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 // Effect application counter
 int EffectOutputTracks::nEffectsDone = 0;
@@ -51,9 +52,13 @@ EffectOutputTracks::EffectOutputTracks(
       auto progress = MakeProgress(
          XO("Pre-processing"), XO("Rendering Time-Stretched Audio"),
          ProgressShowCancel);
-      const auto waveTracks = stretchSyncLocked
+      const auto waveTracks = (stretchSyncLocked
          ? mOutputTracks->Any<WaveTrack>()
-         : mOutputTracks->Selected<WaveTrack>();
+         : mOutputTracks->Selected<WaveTrack>())
+      + [&](const WaveTrack *pTrack){
+         return WaveTrackUtilities::HasStretch(*pTrack,
+            effectTimeInterval->first, effectTimeInterval->second);
+      };
       const auto numTracks = waveTracks.size();
       auto count = 0;
       auto reportProgress = [&](double progressFraction) {
