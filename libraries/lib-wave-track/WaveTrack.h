@@ -854,9 +854,9 @@ private:
       double GetPlayStartTime() const;
 
       auto GetChannel(size_t iChannel) { return
-         WideChannelGroupInterval::GetChannel<WaveChannel>(iChannel); }
+         WideChannelGroupInterval::GetChannel<WaveChannelInterval>(iChannel); }
       auto GetChannel(size_t iChannel) const { return
-         WideChannelGroupInterval::GetChannel<const WaveChannel>(iChannel); }
+         WideChannelGroupInterval::GetChannel<const WaveChannelInterval>(iChannel); }
 
       auto Channels() { return
          WideChannelGroupInterval::Channels<WaveChannel>(); }
@@ -865,6 +865,11 @@ private:
       }
 
       bool IsPlaceholder() const;
+
+      void TrimLeftTo(double t);
+      void TrimRightTo(double t);
+      void StretchLeftTo(double t);
+      void StretchRightTo(double t);
 
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
@@ -880,6 +885,17 @@ private:
       //! TODO wide wave tracks: eliminate this
       const std::shared_ptr<WaveClip> mpClip1;
    };
+
+
+   ///@return Interval that starts after(before) the beginning of the passed interval
+   std::shared_ptr<const Interval>
+   GetNextInterval(const Interval& interval, PlaybackDirection searchDirection) const;
+
+   /*!
+    * @copydoc GetNextInterval(const Interval&, PlaybackDirection) const
+    */
+   std::shared_ptr<Interval>
+   GetNextInterval(const Interval& interval, PlaybackDirection searchDirection);
 
    auto Intervals() { return ChannelGroup::Intervals<Interval>(); }
    auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }

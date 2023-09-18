@@ -185,6 +185,30 @@ WaveTrack::Interval::Interval(const ChannelGroup &group,
 
 WaveTrack::Interval::~Interval() = default;
 
+void WaveTrack::Interval::TrimLeftTo(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->TrimLeftTo(t);
+}
+
+void WaveTrack::Interval::TrimRightTo(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->TrimRightTo(t);
+}
+
+void WaveTrack::Interval::StretchLeftTo(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->StretchLeftTo(t);
+}
+
+void WaveTrack::Interval::StretchRightTo(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->StretchRightTo(t);
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -243,6 +267,36 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
          *pClip, iChannel);
    }
    return {};
+}
+
+std::shared_ptr<const WaveTrack::Interval>
+WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDirection) const
+{
+   std::shared_ptr<const Interval> result;
+   auto bestMatchTime = searchDirection == PlaybackDirection::forward
+      ? std::numeric_limits<double>::max()
+      : std::numeric_limits<double>::lowest();
+   
+   for(const auto& other : Intervals())
+   {
+      if((searchDirection == PlaybackDirection::forward &&
+         (other->Start() > interval.Start() && other->Start() < bestMatchTime))
+         ||
+         (searchDirection == PlaybackDirection::backward &&
+         (other->Start() < interval.Start() && other->Start() > bestMatchTime)))
+      {
+         result = other;
+         bestMatchTime = other->Start();
+      }
+   }
+   return result;
+}
+
+std::shared_ptr<WaveTrack::Interval>
+WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDirection)
+{
+   return std::const_pointer_cast<Interval>(
+      std::as_const(*this).GetNextInterval(interval, searchDirection));
 }
 
 namespace {

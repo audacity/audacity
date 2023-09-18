@@ -886,16 +886,13 @@ std::vector<int> FindAdjustedChannelHeights(Track &t)
    int nAffordances = 0;
    int totalHeight = 0;
    std::vector<int> oldHeights;
-   bool first = true;
    for (auto pChannel : channels) {
       auto &view = ChannelView::Get(*pChannel);
       const auto height = view.GetHeight();
       totalHeight += height;
       oldHeights.push_back(height);
-      // Only the first channel of a group may have an affordance
-      if (first && view.GetAffordanceControls())
+      if (view.GetAffordanceControls())
          ++nAffordances;
-      first = false;
    }
 
    // Allocate results
@@ -1432,25 +1429,21 @@ struct ChannelStack final : TrackPanelGroup {
       wxCoord yy = rect.GetTop();
       auto heights = FindAdjustedChannelHeights(*mpTrack);
       auto pHeight = heights.begin();
-      bool first = true;
       for (auto pChannel : channels) {
-         if (first) {
-            auto &view = ChannelView::Get(*pChannel);
-            if (auto affordance = view.GetAffordanceControls()) {
-               auto panelRect = std::make_shared<EmptyPanelRect>(pChannel,
-                  mpTrack->GetSelected()
-                     ? clrTrackInfoSelected : clrTrackInfo);
-               Refinement hgroup {
-                  std::make_pair(rect.GetLeft() + 1, panelRect),
-                  std::make_pair(mLeftOffset, affordance)
-               };
-               refinement
-                  .emplace_back(yy, std::make_shared<HorizontalGroup>(hgroup));
-               yy += kAffordancesAreaHeight;
-            }
+         auto &view = ChannelView::Get(*pChannel);
+         if (auto affordance = view.GetAffordanceControls()) {
+            auto panelRect = std::make_shared<EmptyPanelRect>(pChannel,
+               mpTrack->GetSelected()
+                  ? clrTrackInfoSelected : clrTrackInfo);
+            Refinement hgroup {
+               std::make_pair(rect.GetLeft() + 1, panelRect),
+               std::make_pair(mLeftOffset, affordance)
+            };
+            refinement
+               .emplace_back(yy, std::make_shared<HorizontalGroup>(hgroup));
+            yy += kAffordancesAreaHeight;
          }
-         first = false;
-
+         
          auto height = *pHeight++;
          rect.SetTop(yy);
          rect.SetHeight(height - kChannelSeparatorThickness);
@@ -1481,14 +1474,11 @@ struct ChannelStack final : TrackPanelGroup {
          assert(mpTrack->IsLeader()); // by construction
          auto heights = FindAdjustedChannelHeights(*mpTrack);
          auto pHeight = heights.begin();
-         bool first = true;
          for (auto pChannel : channels) {
             auto& view = ChannelView::Get(*pChannel);
             auto height = *pHeight++;
-            if (first)
-               if (auto affordance = view.GetAffordanceControls())
-                  height += kAffordancesAreaHeight;
-            first = false;
+            if (auto affordance = view.GetAffordanceControls())
+               height += kAffordancesAreaHeight;
             auto trackRect = wxRect(
                mLeftOffset,
                yy,

@@ -254,8 +254,6 @@ public:
    inline TrackList* GetHolder() const;
 
    LinkType GetLinkType() const noexcept;
-   //! Returns true if the leader track has link type LinkType::Aligned
-   bool IsAlignedWithLeader() const;
 
    ChannelGroupData &GetGroupData();
    //! May make group data on demand, but consider that logically const

@@ -1279,16 +1279,6 @@ Track::LinkType Track::GetLinkType() const noexcept
    return pGroupData ? pGroupData->mLinkType : LinkType::None;
 }
 
-bool Track::IsAlignedWithLeader() const
-{
-   if (auto owner = GetOwner())
-   {
-      auto leader = *owner->Find(this);
-      return leader != this && leader->GetLinkType() == Track::LinkType::Aligned;
-   }
-   return false;
-}
-
 TrackAttachment &ChannelAttachmentsBase::Get(
    const AttachedTrackObjects::RegisteredFactory &key,
    Track &track, size_t iChannel)
