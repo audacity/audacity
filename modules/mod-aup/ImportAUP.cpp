@@ -1371,20 +1371,18 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    mAttrs.erase(mAttrs.begin());
 
    for (auto pTrack: range.Filter<WaveTrack>()) {
-      for (const auto pChannel : TrackList::Channels(pTrack)) {
-         // Most of the "import" tag attributes are the same as for "wavetrack" tags,
-         // so apply them via WaveTrack::HandleXMLTag().
-         bSuccess = pChannel->HandleXMLTag("wavetrack", mAttrs);
+      // Most of the "import" tag attributes are the same as for "wavetrack" tags,
+      // so apply them via WaveTrack::HandleXMLTag().
+      bSuccess = pTrack->HandleXMLTag("wavetrack", mAttrs);
 
-         // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
-         // so handle it here.
-         double dblValue;
-         for (auto pair : mAttrs) {
-            auto attr = pair.first;
-            auto value = pair.second;
-            if (attr == "offset" && value.TryGet(dblValue) && pChannel->IsLeader())
-               pChannel->MoveTo(dblValue);
-         }
+      // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
+      // so handle it here.
+      double dblValue;
+      for (auto pair : mAttrs) {
+         auto attr = pair.first;
+         auto value = pair.second;
+         if (attr == "offset" && value.TryGet(dblValue))
+            pTrack->MoveTo(dblValue);
       }
    }
    return bSuccess;
