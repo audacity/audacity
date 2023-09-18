@@ -875,10 +875,10 @@ public:
          WideChannelGroupInterval::GetChannel<const WaveChannelInterval>(iChannel); }
 
       auto Channels() { return
-         WideChannelGroupInterval::Channels<WaveChannel>(); }
+         WideChannelGroupInterval::Channels<WaveChannelInterval>(); }
+
       auto Channels() const { return
-         WideChannelGroupInterval::Channels<const WaveChannel>();
-      }
+         WideChannelGroupInterval::Channels<const WaveChannelInterval>(); }
 
       bool IsPlaceholder() const;
 
