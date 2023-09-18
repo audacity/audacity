@@ -1715,6 +1715,8 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          for (const auto pChannel : channels) {
             auto tmp = std::make_shared<WaveTrack>(
                mpFactory, GetSampleFormat(), GetRate());
+            // tmpList exists only to fix assertion crashes in usage of tmp
+            auto tmpList = TrackList::Temporary(nullptr, tmp, nullptr);
             assert(tmp->IsLeader()); // It is not yet owned by a TrackList
             tmp->InsertSilence(0.0, duration);
             tmp->FlushOne();
