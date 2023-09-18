@@ -1173,6 +1173,11 @@ public:
 
    friend class Track;
 
+   //! @brief Inserts tracks form \p trackList starting from position where
+   //! \p before is located. If \p before is nullptr tracks are appended.
+   //! @pre `before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>())`
+   void Insert(const Track* before, TrackList&& trackList);
+
    /*!
     @pre `tracks` contains pointers only to leader tracks of this, and each of
     them exactly once
