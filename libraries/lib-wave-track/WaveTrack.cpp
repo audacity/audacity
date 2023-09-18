@@ -258,6 +258,18 @@ double WaveTrack::Interval::SamplesToTime(sampleCount s) const
    return mpClip->SamplesToTime(s);
 }
 
+double WaveTrack::Interval::GetTrimLeft() const
+{
+   //TODO wide wave tracks:  assuming that all 'narrow' clips share common trims
+   return mpClip->GetTrimLeft();
+}
+
+double WaveTrack::Interval::GetTrimRight() const
+{
+   //TODO wide wave tracks:  assuming that all 'narrow' clips share common trims
+   return mpClip->GetTrimRight();
+}
+
 bool WaveTrack::Interval::IsPlaceholder() const
 {
    return mpClip->GetIsPlaceholder();

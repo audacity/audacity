@@ -43,6 +43,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/frame.h>
 #include <wx/sizer.h>
 
+#include "MixAndRender.h"
+
 WaveTrackControls::~WaveTrackControls() = default;
 
 std::vector<UIHandlePtr> WaveTrackControls::HitTest
@@ -741,56 +743,99 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    AudacityProject *const project = &mpData->project;
    auto &tracks = TrackList::Get( *project );
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack);
+   const auto first = tracks.Any<WaveTrack>().find(mpData->pTrack);
+   const auto left = *first;
+   const auto right = *std::next(first);
 
-   auto partner =
-      static_cast<WaveTrack*>(*tracks.Find(pTrack).advance(1));
-
-   if (pTrack->GetRate() != partner->GetRate()) {
-      using namespace BasicUI;
-      ShowMessageBox(XO(
-"Mono tracks must have the same sample rate in order to be combined into a "
-"stereo track"),
-         MessageBoxOptions{}
-           .Caption(XO("Error"))
-           .IconStyle(Icon::Error));
-      return;
-   }
-   if(pTrack->GetSampleFormat() != partner->GetSampleFormat())
+   const auto checkAligned = [](const WaveTrack& left, const WaveTrack& right)
    {
-      BasicUI::ShowMessageBox(XO(
-"Mono tracks must have the same sample format in order to be combined "
-"into a stereo track"),
+      const auto isPlainInterval = [](const WaveTrack::Interval& interval)
+      {
+         return interval.GetTrimLeft() == .0 &&
+            interval.GetTrimRight() == .0 &&
+            interval.GetStretchRatio() == 1.0;
+      };
+      const auto rightIntervals = right.Intervals();
+      for(const auto& a : left.Intervals())
+      {
+         if(!isPlainInterval(*a))
+            return false;
+
+         auto it = std::find_if(
+            rightIntervals.begin(),
+            rightIntervals.end(),
+            [&](const auto& b)
+            {
+               return a->Start() == b->Start() &&
+                  a->End() == b->End() &&
+                  isPlainInterval(*b);
+            });
+         if(it == rightIntervals.end())
+            return false;
+      }
+      return true;
+   };
+
+   if(RealtimeEffectList::Get(*left).GetStatesCount() != 0 ||
+      RealtimeEffectList::Get(*right).GetStatesCount() != 0 ||
+      !checkAligned(*left, *right))
+   {
+      const auto answer = BasicUI::ShowMessageBox(
+         XO(
+"The tracks you are attempting to merge to stereo contain clips at\n"
+"different positions, or otherwise mismatching clips. Merging them\n"
+"will render the tracks.\n\n"
+"This causes any realtime effects to be applied to the waveform and\n"
+"hidden data to be removed. Additionally, the entire track will\n"
+"become one large clip.\n\n"
+"Do you wish to continue?"
+         ),
          BasicUI::MessageBoxOptions{}
-            .Caption(XO("Error"))
-            .IconStyle(BasicUI::Icon::Error));
-      return;
+            .ButtonStyle(BasicUI::Button::YesNo)
+            .Caption(XO("Combine mono to stereo")));
+      if(answer != BasicUI::MessageBoxResult::Yes)
+         return;
    }
 
-   bool bBothMinimizedp =
-      ((ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized()) &&
-       (ChannelView::Get(*partner->GetChannel(0)).GetMinimized()));
+   const auto viewMinimized =
+      ChannelView::Get(*left->GetChannel(0)).GetMinimized() &&
+      ChannelView::Get(*right->GetChannel(0)).GetMinimized();
+   const auto averageViewHeight =
+      (WaveChannelView::Get(*left).GetHeight() +
+      WaveChannelView::Get(*right).GetHeight()) / 2;
 
-   tracks.MakeMultiChannelTrack( *pTrack, 2, false );
+   left->SetPan(-1.0f);
+   right->SetPan(1.0f);
+   auto mix = MixAndRender(
+      TrackIterRange {
+         tracks.Any<const WaveTrack>().find(left),
+         ++tracks.Any<const WaveTrack>().find(right)
+      },
+      Mixer::WarpOptions{ tracks.GetOwner() },
+      (*first)->GetName(),
+      &WaveTrackFactory::Get(*project),
+      //use highest sample rate
+      std::max(left->GetRate(), right->GetRate()),
+      //use widest sample format
+      std::max(left->GetSampleFormat(), right->GetSampleFormat()),
+      0.0, 0.0);
 
-   pTrack->SetPan( 0.0f );
+   const auto newTrack = *mix->begin();
 
-   // Set NEW track heights and minimized state
-   auto
-      &view = WaveChannelView::Get(*pTrack),
-      &partnerView = WaveChannelView::Get(*partner);
-   view.SetMinimized(false);
-   partnerView.SetMinimized(false);
-   int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
-   view.SetExpandedHeight(AverageHeight);
-   partnerView.SetExpandedHeight(AverageHeight);
-   view.SetMinimized(bBothMinimizedp);
-   partnerView.SetMinimized(bBothMinimizedp);
-
+   tracks.Insert(*first, std::move(*mix));
+   tracks.Remove(*left);
+   tracks.Remove(*right);
+   
+   for(const auto& channel : newTrack->Channels())
+   {
+      // Set NEW track heights and minimized state
+      auto& view = ChannelView::Get(*channel);
+      view.SetMinimized(viewMinimized);
+      view.SetExpandedHeight(averageViewHeight);
+   }
    ProjectHistory::Get( *project ).PushState(
       /* i18n-hint: The string names a track */
-      XO("Made '%s' a stereo track").Format( pTrack->GetName() ),
+      XO("Made '%s' a stereo track").Format( newTrack->GetName() ),
       XO("Make Stereo"));
 
    using namespace RefreshCode;
