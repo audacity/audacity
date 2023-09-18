@@ -869,6 +869,9 @@ public:
 
       double GetStretchRatio() const;
 
+      sampleCount TimeToSamples(double time) const;
+      double SamplesToTime(sampleCount s) const;
+
       auto GetChannel(size_t iChannel) { return
          WideChannelGroupInterval::GetChannel<WaveChannelInterval>(iChannel); }
       auto GetChannel(size_t iChannel) const { return
