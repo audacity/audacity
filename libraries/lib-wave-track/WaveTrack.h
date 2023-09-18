@@ -937,6 +937,8 @@ public:
 
       sampleCount TimeToSamples(double time) const;
       double SamplesToTime(sampleCount s) const;
+      double GetTrimLeft() const;
+      double GetTrimRight() const;
 
       auto GetChannel(size_t iChannel) { return
          WideChannelGroupInterval::GetChannel<WaveChannelInterval>(iChannel); }
