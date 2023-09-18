@@ -560,6 +560,30 @@ Track* TrackList::SwapChannels(Track &track)
    return pPartner;
 }
 
+void TrackList::Insert(const Track* before, TrackList&& trackList)
+{
+   assert(before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>()));
+
+   if(before == nullptr)
+   {
+      Append(std::move(trackList));
+      return;
+   }
+
+   std::vector<Track *> arr;
+   arr.reserve(Size() + trackList.Size());
+   for (const auto track : *this) {
+      if (track == before)
+      {
+         for(const auto addedTrack : trackList)
+            arr.push_back(addedTrack);
+      }
+      arr.push_back(track);
+   }
+   Append(std::move(trackList));
+   Permute(arr);
+}
+
 void TrackList::Permute(const std::vector<Track *> &tracks)
 {
    std::vector<TrackNodePointer> permutation;
