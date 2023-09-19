@@ -42,36 +42,16 @@ void CutlineHandle::Enter(bool, AudacityProject *)
 #endif
 }
 
-HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
+HitTestPreview CutlineHandle::HitPreview(bool unsafe)
 {
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return {
-      (cutline
-       ? XO("Left-Click to expand, Right-Click to remove")
-       : XO("Left-Click to merge clips")),
-      (unsafe
-       ? &*disabledCursor
-       : &arrowCursor)
-   };
+   return { XO("Left-Click to expand, Right-Click to remove"),
+            (unsafe ? &*disabledCursor : &arrowCursor) };
 }
 namespace
 {
-   int FindMergeLine(const WaveTrackLocations &locations,
-      WaveTrack &track, double time)
-   {
-      const double tolerance = 0.5 / track.GetRate();
-      int ii = 0;
-      for (const auto loc: locations) {
-         if (loc.typ == WaveTrackLocation::locationMergePoint &&
-             fabs(time - loc.pos) < tolerance)
-            return ii;
-         ++ii;
-      }
-      return -1;
-   }
-   
    bool IsOverCutline(const WaveTrackLocations &locations,
       const ViewInfo &viewInfo,
       const wxRect &rect, const wxMouseState &state,
@@ -162,29 +142,14 @@ UIHandle::Result CutlineHandle::Click
 
    if (event.LeftDown())
    {
-      if (mLocation.typ == WaveTrackLocation::locationCutLine)
-      {
-         mOperation = Expand;
-         mStartTime = viewInfo.selectedRegion.t0();
-         mEndTime = viewInfo.selectedRegion.t1();
+      mOperation = Expand;
+      mStartTime = viewInfo.selectedRegion.t0();
+      mEndTime = viewInfo.selectedRegion.t1();
 
-         // When user presses left button on cut line, expand the line again
-         double cutlineStart = 0, cutlineEnd = 0;
-         mpTrack->ExpandCutLine(mLocation.pos, &cutlineStart, &cutlineEnd);
-         viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
-      }
-      else if (mLocation.typ == WaveTrackLocation::locationMergePoint) {
-         const double pos = mLocation.pos;
-         int idx = FindMergeLine(mLocations, *mpTrack, pos);
-         if (idx >= 0) {
-            auto location = mLocations[idx];
-            if (!mpTrack->MergeClips(
-               location.clipidx1, location.clipidx2))
-               return Cancelled;
-         }
-
-         mOperation = Merge;
-      }
+      // When user presses left button on cut line, expand the line again
+      double cutlineStart = 0, cutlineEnd = 0;
+      mpTrack->ExpandCutLine(mLocation.pos, &cutlineStart, &cutlineEnd);
+      viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
    }
    else if (event.RightDown())
    {
@@ -210,8 +175,7 @@ HitTestPreview CutlineHandle::Preview
 (const TrackPanelMouseState &, AudacityProject *pProject)
 {
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-   auto bCutline = (mLocation.typ == WaveTrackLocation::locationCutLine);
-   return HitPreview( bCutline, unsafe );
+   return HitPreview( unsafe );
 }
 
 UIHandle::Result CutlineHandle::Release

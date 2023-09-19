@@ -18,23 +18,16 @@ class WaveTrack;
 
 struct WaveTrackLocation {
 
-   enum LocationType {
-      locationCutLine = 1,
-      locationMergePoint
-   };
-
    WaveTrackLocation() = default;
 
-   WaveTrackLocation(double pos, LocationType typ,
-    int clipidx1 = -1, int clipidx2 = -1
-   )  : pos{ pos }, typ{ typ }, clipidx1{ clipidx1 }, clipidx2{ clipidx2 }
+   WaveTrackLocation(double pos, int clipidx1 = -1, int clipidx2 = -1)
+       : pos { pos }
+       , clipidx1 { clipidx1 }
+       , clipidx2 { clipidx2 }
    {}
 
    // Position of track location
    double pos{ 0.0 };
-
-   // Type of track location
-   LocationType typ{ locationCutLine };
 
    // Only for typ==locationMergePoint
    int clipidx1{ -1 }; // first clip (left one)
@@ -45,7 +38,6 @@ inline
 bool operator == (const WaveTrackLocation &a, const WaveTrackLocation &b)
 {
    return a.pos == b.pos &&
-   a.typ == b.typ &&
    a.clipidx1 == b.clipidx1 &&
    a.clipidx2 == b.clipidx2;
 }

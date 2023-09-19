@@ -22,18 +22,8 @@ WaveTrackLocations FindWaveTrackLocations(const WaveTrack &track)
 
    // Count number of display locations
    int num = 0;
-   {
-      const WaveClip *prev = nullptr;
-      for (const auto clip : clips) {
-         num += clip->NumCutLines();
-
-         if (prev && fabs(prev->GetPlayEndTime() -
-            clip->GetPlayStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
-            ++num;
-
-         prev = clip;
-      }
-   }
+   for (const auto clip : clips)
+      num += clip->NumCutLines();
 
    if (num == 0)
       return locations;
@@ -44,36 +34,18 @@ WaveTrackLocations FindWaveTrackLocations(const WaveTrack &track)
    // Add all display locations to cache
    int curpos = 0;
 
-   const WaveClip *previousClip = nullptr;
    for (const auto clip: clips) {
       for (const auto &cc : clip->GetCutLines()) {
          auto cutlinePosition =
             clip->GetSequenceStartTime() + cc->GetSequenceStartTime();
          if (clip->WithinPlayRegion(cutlinePosition)) {
              // Add cut line expander point
-             locations.emplace_back(cutlinePosition,
-                WaveTrackLocation::locationCutLine);
+             locations.emplace_back(cutlinePosition);
          }
          // If cutline is skipped, we still need to count it
          // so that curpos matches num at the end
          curpos++;
       }
-
-      if (previousClip) {
-         if (fabs(previousClip->GetPlayEndTime() - clip->GetPlayStartTime())
-            < WAVETRACK_MERGE_POINT_TOLERANCE
-         ) {
-            // Add merge point
-            locations.emplace_back(previousClip->GetPlayEndTime(),
-               WaveTrackLocation::locationMergePoint,
-               track.GetClipIndex(previousClip),
-               track.GetClipIndex(clip)
-            );
-            curpos++;
-         }
-      }
-
-      previousClip = clip;
    }
 
    assert(curpos == num);
