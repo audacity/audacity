@@ -694,7 +694,7 @@ BaseItemSharedPtr LabelEditMenus()
 
       Section( "",
          Command( wxT("TypeToCreateLabel"),
-            XXO("&Type to Create a Label (on/off)"),
+            XXO("&Typing Creates New Labels"),
             OnToggleTypeToCreateLabel, AlwaysEnabledFlag,
             Options{}.CheckTest(wxT("/GUI/TypeToCreateLabel"), false) )
       )
