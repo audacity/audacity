@@ -248,6 +248,16 @@ double WaveTrack::Interval::GetStretchRatio() const
    return mpClip->GetStretchRatio();
 }
 
+sampleCount WaveTrack::Interval::TimeToSamples(double time) const
+{
+   return mpClip->TimeToSamples(time);
+}
+
+double WaveTrack::Interval::SamplesToTime(sampleCount s) const
+{
+   return mpClip->SamplesToTime(s);
+}
+
 bool WaveTrack::Interval::IsPlaceholder() const
 {
    return mpClip->GetIsPlaceholder();
@@ -2092,12 +2102,12 @@ void WaveTrack::Disjoin(double t0, double t1)
    std::vector<float> buffer;
    std::vector<samplePtr> buffers;
    Regions regions;
+   
+   const size_t width = NChannels();
 
-   // TODO wide wave tracks -- use width of the clip
-   const size_t width = 1;
-   for (const auto &clip : mClips) {
-      double startTime = clip->GetPlayStartTime();
-      double endTime = clip->GetPlayEndTime();
+   for (const auto &interval : Intervals()) {
+      double startTime = interval->Start();
+      double endTime = interval->End();
 
       if (endTime < t0 || startTime > t1)
          continue;
@@ -2124,15 +2134,19 @@ void WaveTrack::Disjoin(double t0, double t1)
       // sequence is longer than the minimum number, split-delete the region
 
       sampleCount seqStart = -1;
-      auto start = clip->TimeToSamples(std::max(.0, t0 - startTime));
-      auto end = clip->TimeToSamples(std::min(endTime, t1) - startTime);
+      auto start = interval->TimeToSamples(std::max(.0, t0 - startTime));
+      auto end = interval->TimeToSamples(std::min(endTime, t1) - startTime);
 
       auto len = (end - start);
       for (decltype(len) done = 0; done < len; done += maxAtOnce) {
          auto numSamples = limitSampleBufferSize(maxAtOnce, len - done);
 
-         clip
-            ->GetSamples(buffers.data(), floatSample, start + done, numSamples);
+         auto bufferIt = buffers.begin();
+
+         for (auto channel : interval->Channels())
+            channel->GetSamples(
+               *bufferIt++, floatSample, start + done, numSamples);
+         
          for (decltype(numSamples) i = 0; i < numSamples; ++i) {
             auto curSamplePos = start + done + i;
 
@@ -2151,8 +2165,8 @@ void WaveTrack::Disjoin(double t0, double t1)
                   if (seqEnd - seqStart + 1 > minSamples) {
                      regions.push_back(
                         Region(
-                           startTime + clip->SamplesToTime(seqStart),
-                           startTime + clip->SamplesToTime(seqEnd)
+                           startTime + interval->SamplesToTime(seqStart),
+                           startTime + interval->SamplesToTime(seqEnd)
                         )
                      );
                   }
