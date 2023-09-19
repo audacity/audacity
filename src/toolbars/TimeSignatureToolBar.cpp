@@ -274,7 +274,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       for selecting a time range of audio */
-   TimeSignatureToolBar::ID(), wxT("ShowTimeSignatureTB"), XXO("Time Signature Toolbar (Beta)")
+   TimeSignatureToolBar::ID(), wxT("ShowTimeSignatureTB"), XXO("Time Signature Toolbar")
 };
 
 // Undo/redo handling of time signature changes
