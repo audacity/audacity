@@ -938,7 +938,8 @@ private:
    static void JoinOne(WaveTrack &track, double t0, double t1);
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
-   static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile);
+   static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
+      size_t iChannel, size_t nChannels);
    static bool ReverseOne(WaveTrack &track,
       sampleCount start, sampleCount len, const ProgressReport &report = {});
    static bool ReverseOneClip(WaveTrack &track,

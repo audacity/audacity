@@ -2472,15 +2472,36 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      WriteOneXML(*pChannel, xmlFile);
+   const auto channels = TrackList::Channels(this);
+   size_t iChannel = 0,
+      nChannels = channels.size();
+   for (const auto pChannel : channels)
+      WriteOneXML(*pChannel, xmlFile, iChannel++, nChannels);
 }
 
-void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile)
+void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
+   size_t iChannel, size_t nChannels)
 // may throw
 {
    xmlFile.StartTag(wxT("wavetrack"));
    track.Track::WriteCommonXMLAttributes(xmlFile);
+
+   // Write the "channel" attribute so earlier versions can interpret stereo
+   // tracks, but this version doesn't read it
+   {
+      enum ChannelType {
+         LeftChannel = 0,
+         RightChannel = 1,
+         MonoChannel = 2
+      };
+      const auto channelType = (nChannels == 0)
+         ? MonoChannel
+         : (iChannel == 0)
+            ? LeftChannel
+            : RightChannel;
+      xmlFile.WriteAttr(wxT("channel"), channelType);
+   }
+
    xmlFile.WriteAttr(wxT("linked"), static_cast<int>(track.GetLinkType()));
    track.WritableSampleTrack::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("rate"), track.GetRate());
