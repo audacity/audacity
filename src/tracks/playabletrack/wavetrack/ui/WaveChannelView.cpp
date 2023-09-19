@@ -848,17 +848,7 @@ void WaveChannelSubView::DrawBoldBoundaries(
       if (xx >= 0 && xx < rect.width) {
          dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
          AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
-         if (loc.typ == WaveTrackLocation::locationCutLine) {
-            dc.SetPen( highlightLoc ? AColor::uglyPen : *wxRED_PEN );
-         }
-         else {
-#ifdef EXPERIMENTAL_DA
-            // JKC Black does not show up enough.
-            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxWHITE_PEN);
-#else
-            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxBLACK_PEN);
-#endif
-         }
+         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxRED_PEN );
          AColor::Line(dc, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
          dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
          AColor::Line(dc, (int) (rect.x + xx + 1), rect.y, (int) (rect.x + xx + 1), rect.y + rect.height);

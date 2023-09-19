@@ -21,7 +21,7 @@ class WaveTrack;
 class CutlineHandle final : public UIHandle
 {
    CutlineHandle(const CutlineHandle&) = delete;
-   static HitTestPreview HitPreview(bool cutline, bool unsafe);
+   static HitTestPreview HitPreview(bool unsafe);
 
 public:
    explicit CutlineHandle(const std::shared_ptr<WaveTrack> &pTrack,
