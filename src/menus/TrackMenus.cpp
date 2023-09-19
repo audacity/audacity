@@ -1273,7 +1273,7 @@ BaseItemSharedPtr TracksMenu()
       ),
 
       Section( "",
-         Command( wxT("SyncLock"), XXO("Keep tracks synchronized (Sync &Lock)"),
+         Command( wxT("SyncLock"), XXO("Keep tracks synchronized (Sync-&Lock)"),
             OnSyncLock, AlwaysEnabledFlag,
             Options{}.CheckTest(SyncLockTracks) )
       )
