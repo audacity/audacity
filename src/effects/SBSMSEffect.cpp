@@ -223,7 +223,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 
    //Iterate over each track
    //all needed because this effect needs to introduce silence in the group tracks to keep sync
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
    mCurTrackNum = 0;
 
    double maxDuration = 0.0;
@@ -321,7 +321,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
                   0,
                   rb.quality.get());
             }
-            
+
             Resampler resampler(outResampleCB, &rb, outSlideType);
 
             audio outBuf[SBSMSOutBlockSize];
@@ -457,8 +457,8 @@ void EffectSBSMS::Finalize(
 
    // Finally, recreate the gaps
    for (auto gap : gaps) {
-      auto st = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.first));
-      auto et = orig.LongSamplesToTime(orig.TimeToLongSamples(gap.second));
+      const auto st = orig.SnapToSample(gap.first);
+      const auto et = orig.SnapToSample(gap.second);
       if (st >= mT0 && et <= mT1 && st != et)
          orig.SplitDelete(warper.Warp(st), warper.Warp(et));
    }

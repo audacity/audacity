@@ -21,13 +21,16 @@
 #include <vector>
 #include <wx/log.h>
 
+#include "AudioContainer.h"
 #include "BasicUI.h"
+#include "ClipTimeAndPitchSource.h"
 #include "Envelope.h"
 #include "InconsistencyException.h"
 #include "Prefs.h"
 #include "Resample.h"
 #include "Sequence.h"
-#include "TimeAndPitchInterface.h"
+#include "StaffPadTimeAndPitch.h"
+//#include "TimeAndPitchInterface.h"
 #include "UserException.h"
 
 #ifdef _OPENMP
@@ -320,6 +323,16 @@ const SampleBlockFactoryPtr &WaveClip::GetFactory()
 {
    // All sequences have the same factory by class invariant
    return mSequences[0]->GetFactory();
+}
+
+std::vector<std::unique_ptr<Sequence>> WaveClip::GetEmptySequenceCopies() const
+{
+   decltype(mSequences) newSequences;
+   newSequences.reserve(mSequences.size());
+   for (auto& pSequence : mSequences)
+      newSequences.push_back(std::make_unique<Sequence>(
+         pSequence->GetFactory(), pSequence->GetSampleFormats()));
+   return newSequences;
 }
 
 constSamplePtr WaveClip::GetAppendBuffer(size_t ii) const
@@ -1042,11 +1055,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    const auto numSamples = GetNumSamples();
 
    // These sequences are appended to below
-   decltype(mSequences) newSequences;
-   newSequences.reserve(mSequences.size());
-   for (auto &pSequence : mSequences)
-      newSequences.push_back(std::make_unique<Sequence>(
-         pSequence->GetFactory(), pSequence->GetSampleFormats()));
+   auto newSequences = GetEmptySequenceCopies();
 
    /**
     * We want to keep going as long as we have something to feed the resampler
@@ -1119,6 +1128,76 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       Flush();
       Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
    }
+}
+
+void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
+{
+   const auto stretchRatio = GetStretchRatio();
+   if (stretchRatio == 1.0)
+      return;
+
+   auto success = false;
+   auto newSequences = GetEmptySequenceCopies();
+   bool swappedOnce = false;
+
+   Finally Do { [&, trimLeftBeforeStretch = mTrimLeft,
+                 trimRightBeforeStretch = mTrimRight] {
+      // Whether successful or not, the right thing to do is to restore the
+      // original trim values.
+      this->SetTrimLeft(trimLeftBeforeStretch);
+      this->SetTrimRight(trimRightBeforeStretch);
+      if (success)
+      {
+         this->mClipStretchRatio = 1.0;
+         this->mRawAudioTempo = this->mProjectTempo;
+         assert(this->GetStretchRatio() == 1.0);
+      }
+      else if (swappedOnce)
+         std::swap(mSequences, newSequences);
+   } };
+
+   SetTrimLeft(0);
+   SetTrimRight(0);
+
+   constexpr auto durationToDiscard = 0.0;
+   constexpr auto blockSize = 1024;
+   const auto numChannels = GetWidth();
+
+   ClipTimeAndPitchSource stretcherSource { *this, durationToDiscard,
+                                        PlaybackDirection::forward };
+   TimeAndPitchInterface::Parameters params;
+   params.timeRatio = stretchRatio;
+   StaffPadTimeAndPitch stretcher { numChannels, stretcherSource,
+                                    std::move(params) };
+   const auto totalNumOutSamples =
+      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio + .5 };
+
+   sampleCount numOutSamples { 0 };
+   AudioContainer container(blockSize, numChannels);
+   while (numOutSamples < totalNumOutSamples)
+   {
+      const auto numSamplesToGet =
+         limitSampleBufferSize(blockSize, totalNumOutSamples - numOutSamples);
+      stretcher.GetSamples(container.Get(), numSamplesToGet);
+      auto channel = 0u;
+      for (auto& newSequence : newSequences)
+         newSequence->Append(
+            reinterpret_cast<samplePtr>(container.Get()[channel++]),
+            floatSample, numSamplesToGet, 1,
+            widestSampleFormat /* computed samples need dither */
+         );
+      numOutSamples += numSamplesToGet;
+      if (reportProgress)
+         reportProgress(
+            numOutSamples.as_double() / totalNumOutSamples.as_double());
+   }
+
+   std::swap(mSequences, newSequences);
+   swappedOnce = true;
+   Flush();
+   Caches::ForEach(std::mem_fn(&WaveClipListener::Invalidate));
+
+   success = true;
 }
 
 // Used by commands which interact with clips using the keyboard.
@@ -1210,9 +1289,7 @@ sampleCount WaveClip::GetPlayStartSample() const
 
 sampleCount WaveClip::GetPlayEndSample() const
 {
-   return GetPlayStartSample() +
-          sampleCount(
-             GetVisibleSampleCount().as_double() * GetStretchRatio() + 0.5);
+   return sampleCount { GetPlayEndTime() * mRate + 0.5 };
 }
 
 sampleCount WaveClip::GetVisibleSampleCount() const
@@ -1333,6 +1410,11 @@ bool WaveClip::CoversEntirePlayRegion(double t0, double t1) const
 bool WaveClip::BeforePlayRegion(double t) const
 {
    return t < GetPlayStartTime();
+}
+
+bool WaveClip::AtOrBeforePlayRegion(double t) const
+{
+   return t <= GetPlayStartTime();
 }
 
 bool WaveClip::AfterPlayRegion(double t) const

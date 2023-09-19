@@ -31,8 +31,6 @@
 #include "WaveTrackSink.h"
 #include "WideSampleSource.h"
 
-AudioGraph::Sink::~Sink() = default;
-
 PerTrackEffect::Instance::~Instance() = default;
 
 bool PerTrackEffect::Instance::Process(EffectSettings &settings)
@@ -67,7 +65,7 @@ bool PerTrackEffect::Process(
    EffectInstance &instance, EffectSettings &settings) const
 {
    auto pThis = const_cast<PerTrackEffect *>(this);
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {
@@ -288,7 +286,8 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             genLength, sampleRate, leader, inBuffers, outBuffers);
          if (bGoodResult) {
             sink.Flush(outBuffers);
-            if (tempList) {
+            bGoodResult = sink.IsOk();
+            if (bGoodResult && tempList) {
                if (!results)
                   results = tempList;
                else

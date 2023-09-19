@@ -45,6 +45,7 @@ class WaveClip;
 using WaveClipHolder = std::shared_ptr< WaveClip >;
 using WaveClipHolders = std::vector < WaveClipHolder >;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+using ProgressReporter = std::function<void(double)>;
 
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
 // own the storage for those arrays.  If it does, it destroys them.
@@ -175,7 +176,14 @@ public:
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
-   void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
+   void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
+
+   /*!
+    * @brief Renders the stretching of the clip (preserving duration).
+    * @post GetStretchRatio() == 1
+    */
+   void ApplyStretchRatio(
+      const std::function<void(double)>& reportProgress);
 
    void SetColourIndex(int index) { mColourIndex = index; }
    int GetColourIndex() const { return mColourIndex; }
@@ -189,15 +197,25 @@ public:
    //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
+   //! Closed-begin of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayStartTime() const noexcept override;
    void SetPlayStartTime(double time);
 
+   //! Open-end of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayEndTime() const override;
+
+   //! Always a multiple of the track's sample period, whether the clip is
+   //! stretched or not.
    double GetPlayDuration() const;
 
-   // todo comment
+   //! Real start time of the clip, quantized to raw sample rate (track's rate)
    sampleCount GetPlayStartSample() const;
+   //! Real end time of the clip, quantized to raw sample rate (track's rate)
    sampleCount GetPlayEndSample() const;
+
+   // todo comment
    sampleCount GetVisibleSampleCount() const override;
 
    //! Sets the play start offset in seconds from the beginning of the underlying sequence
@@ -239,6 +257,10 @@ public:
     * @brief  t < [
     */
    bool BeforePlayRegion(double t) const;
+   /*!
+    * @brief  t <= [
+    */
+   bool AtOrBeforePlayRegion(double t) const;
    /*!
     * @brief  ) <= t
     */
@@ -434,7 +456,7 @@ public:
    /*!
     @return true and succeed if and only if `this->GetWidth() == other.GetWidth()`
     */
-   bool Paste(double t0, const WaveClip &other);
+   bool Paste(double t0, const WaveClip& other);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */
@@ -518,6 +540,7 @@ private:
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();
+   std::vector<std::unique_ptr<Sequence>> GetEmptySequenceCopies() const;
    void StretchCutLines(double ratioChange);
    double SnapToTrackSample(double time) const noexcept;
 

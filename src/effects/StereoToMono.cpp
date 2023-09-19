@@ -79,13 +79,16 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 {
    // Do not use mWaveTracks here.  We will possibly DELETE tracks,
    // so we must use the "real" tracklist.
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks,
+      // This effect ignores mT0 and mT1 but always mixes the entire tracks.
+      {{ mTracks->GetStartTime(), mTracks->GetEndTime() }}
+   };
    bool bGoodResult = true;
 
    // Determine the total time (in samples) used by all of the target tracks
    // only for progress dialog
    sampleCount totalTime = 0;
-   
+
    auto trackRange = outputs.Get().Selected<WaveTrack>();
    for (const auto left : trackRange) {
       if (left->Channels().size() > 1) {

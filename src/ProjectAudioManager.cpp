@@ -918,9 +918,9 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // Quantize bounds to the rate of the new track.
             if (c == 0) {
                if (t0 < DBL_MAX)
-                  t0 = newTrack->LongSamplesToTime(newTrack->TimeToLongSamples(t0));
+                  t0 = newTrack->SnapToSample(t0);
                if (t1 < DBL_MAX)
-                  t1 = newTrack->LongSamplesToTime(newTrack->TimeToLongSamples(t1));
+                  t1 = newTrack->SnapToSample(t1);
             }
 
             auto tempList = TrackList::Temporary(nullptr, newTrack, nullptr);

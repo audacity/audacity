@@ -713,10 +713,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    {
       double tt0, tt1;
       if (SyncLock::IsSelectedOrSyncLockSelected(&track)) {
-         tt0 = track.LongSamplesToTime(
-            track.TimeToLongSamples(selectedRegion.t0()));
-         tt1 = track.LongSamplesToTime(
-            track.TimeToLongSamples(selectedRegion.t1()));
+         tt0 = track.SnapToSample(selectedRegion.t0());
+         tt1 = track.SnapToSample(selectedRegion.t1());
       }
       else
          tt0 = tt1 = 0.0;

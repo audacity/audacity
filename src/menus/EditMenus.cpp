@@ -849,10 +849,8 @@ void OnSplitNew(const CommandContext &context)
          [&](WaveTrack &wt) {
             // Clips must be aligned to sample positions or the NEW clip will
             // not fit in the gap where it came from
-            double newt0 = wt.LongSamplesToTime(wt.TimeToLongSamples(
-               selectedRegion.t0()));
-            double newt1 = wt.LongSamplesToTime(wt.TimeToLongSamples(
-               selectedRegion.t1()));
+            const double newt0 = wt.SnapToSample(selectedRegion.t0());
+            const double newt1 = wt.SnapToSample(selectedRegion.t1());
             // Fix issue 2846 by calling copy with forClipboard = false.
             // This avoids creating the blank placeholder clips
             const auto dest = wt.Copy(newt0, newt1, false);

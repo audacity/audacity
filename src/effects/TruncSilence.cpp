@@ -15,6 +15,7 @@
 
 *//*******************************************************************/
 #include "TruncSilence.h"
+#include "BasicUI.h"
 #include "EffectEditor.h"
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
@@ -97,7 +98,7 @@ static const size_t DEF_BlendFrameCount = 100;
 
 // Lower bound on the amount of silence to find at a time -- this avoids
 // detecting silence repeatedly in low-frequency sounds.
-static const double DEF_MinTruncMs = 0.001; 
+static const double DEF_MinTruncMs = 0.001;
 
 // Typical fraction of total time taken by detection (better to guess low)
 const double detectFrac = 0.4;
@@ -189,7 +190,7 @@ bool EffectTruncSilence::LoadSettings(
       if (!parms.ReadAndVerify( ActIndex.key, &temp, ActIndex.def,
          kActionStrings, nActions, kObsoleteActions, nObsoleteActions))
          return false;
-   
+
       // TODO:  fix this when settings are really externalized
       const_cast<int&>(mActionIndex) = temp;
    }
@@ -272,7 +273,7 @@ bool EffectTruncSilence::ProcessIndependently()
    // Now do the work
 
    // Copy tracks
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true, true };
    double newT1 = 0.0;
 
    {
@@ -306,15 +307,14 @@ bool EffectTruncSilence::ProcessIndependently()
 bool EffectTruncSilence::ProcessAll()
 {
    // Copy tracks
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true, true };
 
    // Master list of silent regions.
    // This list should always be kept in order.
    RegionList silences;
 
-   if (FindSilences(silences,
-      inputTracks()->Selected<const WaveTrack>())
-   ) {
+   if (FindSilences(silences, outputs.Get().Selected<const WaveTrack>()))
+   {
       auto trackRange = outputs.Get().Any();
       double totalCutLen = 0.0;
       if (DoRemoval(silences, trackRange, 0, 1, totalCutLen)) {
@@ -427,9 +427,10 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
       // Don't waste time cutting nothing.
       if( cutLen == 0.0 )
          continue;
-      
+
       totalCutLen += cutLen;
 
+      bool success = true;
       double cutStart = (r->start + r->end - cutLen) / 2;
       double cutEnd = cutStart + cutLen;
       (range
@@ -438,14 +439,14 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
            // Don't waste time past the end of a track
            pTrack->GetEndTime() < r->start;
          }
-      ).Visit(
+      ).VisitWhile(success,
          [&](WaveTrack &wt) {
             assert(wt.IsLeader());
             // In WaveTracks, clear with a cross-fade
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
-            cutStart = wt.LongSamplesToTime(wt.TimeToLongSamples(cutStart));
-            cutEnd = wt.LongSamplesToTime(wt.TimeToLongSamples(cutEnd));
+            cutStart = wt.SnapToSample(cutStart);
+            cutEnd = wt.SnapToSample(cutEnd);
 
             // Make sure the cross-fade does not affect non-silent frames
             if (wt.LongSamplesToTime(blendFrames) > inLength) {
@@ -485,6 +486,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             for (const auto pChannel : wt.Channels()) {
                // Write cross-faded data
                auto &buffer = buffers[iChannel];
+               success = success &&
                pChannel->Set((samplePtr)buffer.buf1.get(), floatSample, t1,
                   blendFrames,
                   // This effect mostly shifts samples to remove silences, and
@@ -501,6 +503,8 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             t.SyncLockAdjust(cutEnd, cutStart);
          }
       );
+      if (!success)
+         return false;
       ++whichReg;
    }
 
@@ -514,6 +518,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 {
    assert(wt.IsLeader());
    const auto rate = wt.GetRate();
+
    // Smallest silent region to detect in frames
    auto minSilenceFrames =
       sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs) * rate);

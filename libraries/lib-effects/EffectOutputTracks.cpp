@@ -8,16 +8,23 @@
 
 **********************************************************************/
 #include "EffectOutputTracks.h"
+#include "BasicUI.h"
 #include "SyncLock.h"
+#include "UserException.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 // Effect application counter
 int EffectOutputTracks::nEffectsDone = 0;
 
 EffectOutputTracks::EffectOutputTracks(
-   TrackList &tracks, bool allSyncLockSelected
-)  : mTracks{ tracks }
+   TrackList& tracks, std::optional<TimeInterval> effectTimeInterval,
+   bool allSyncLockSelected, bool stretchSyncLocked)
+    : mTracks { tracks }
 {
+   assert(
+      !effectTimeInterval.has_value() ||
+      effectTimeInterval->first <= effectTimeInterval->second);
    // Reset map
    mIMap.clear();
    mOMap.clear();
@@ -36,6 +43,37 @@ EffectOutputTracks::EffectOutputTracks(
       mOMap.push_back(*list->begin());
       mOutputTracks->Append(std::move(*list));
    }
+
+   if (
+      effectTimeInterval.has_value() &&
+      effectTimeInterval->second > effectTimeInterval->first)
+   {
+      using namespace BasicUI;
+      auto progress = MakeProgress(
+         XO("Pre-processing"), XO("Rendering Time-Stretched Audio"),
+         ProgressShowCancel);
+      const auto waveTracks = (stretchSyncLocked
+         ? mOutputTracks->Any<WaveTrack>()
+         : mOutputTracks->Selected<WaveTrack>())
+      + [&](const WaveTrack *pTrack){
+         return WaveTrackUtilities::HasStretch(*pTrack,
+            effectTimeInterval->first, effectTimeInterval->second);
+      };
+      const auto numTracks = waveTracks.size();
+      auto count = 0;
+      auto reportProgress = [&](double progressFraction) {
+         const auto overallProgress = (count + progressFraction) / numTracks;
+         const auto result = progress->Poll(overallProgress * 1000, 1000);
+         if (result != ProgressResult::Success)
+            throw UserException {};
+      };
+      for (const auto& track : waveTracks)
+      {
+         track->ApplyStretchRatio(effectTimeInterval, reportProgress);
+         ++count;
+      }
+   }
+
    // Invariant is established
    assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());

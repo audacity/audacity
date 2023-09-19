@@ -113,7 +113,7 @@ bool EffectClickRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
 
 bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
 {
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
    bool bGoodResult = true;
    mbDidSomething = false;
 
@@ -182,8 +182,14 @@ bool EffectClickRemoval::ProcessOne(
            buffer[i+j] = datawindow[j];
       }
 
-      if (mbDidSomething) // RemoveClicks() actually did something.
-         track.Set((samplePtr) buffer.get(), floatSample, start + s, block);
+      if (mbDidSomething) {
+         // RemoveClicks() actually did something.
+         if(!track.Set(
+            (samplePtr) buffer.get(), floatSample, start + s, block)) {
+            bResult = false;
+            break;
+         }
+      }
       s += block;
       if (TrackProgress(count, s.as_double() / len.as_double())) {
          bResult = false;

@@ -72,7 +72,7 @@ private:
    double mThresholdDb;
    double mMaximumPause;
 
-   const WaveTrack *mControlTrack;
+   const WaveTrack *mControlTrack{};
 
    wxTextCtrl *mDuckAmountDbBox;
    wxTextCtrl *mInnerFadeDownLenBox;
@@ -83,7 +83,7 @@ private:
    wxTextCtrl *mMaximumPauseBox;
 
    class Panel;
-   Panel *mPanel;
+   Panel *mPanel{};
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()

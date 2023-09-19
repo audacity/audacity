@@ -178,8 +178,9 @@ UIHandle::Result CutlineHandle::Click
          int idx = FindMergeLine(mLocations, *mpTrack, pos);
          if (idx >= 0) {
             auto location = mLocations[idx];
-            mpTrack->MergeClips(
-               location.clipidx1, location.clipidx2);
+            if (!mpTrack->MergeClips(
+               location.clipidx1, location.clipidx2))
+               return Cancelled;
          }
 
          mOperation = Merge;

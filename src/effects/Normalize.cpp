@@ -106,7 +106,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    }
 
    //Iterate over each track
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
    bool bGoodResult = true;
    double progress = 0;
    TranslatableString topMsg;
@@ -433,7 +433,10 @@ bool EffectNormalize::ProcessOne(WaveChannel &track,
       ProcessData(buffer.get(), block, offset);
 
       //Copy the newly-changed samples back onto the track.
-      track.Set((samplePtr) buffer.get(), floatSample, s, block);
+      if (!track.Set((samplePtr) buffer.get(), floatSample, s, block)) {
+         rc = false;
+         break;
+      }
 
       //Increment s one blockfull of samples
       s += block;
