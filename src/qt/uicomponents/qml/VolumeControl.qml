@@ -11,6 +11,8 @@ Item {
    objectName: "VolumeControl"
 
    readonly property int meterPanelWidth: 120
+   readonly property int icon: IconCode.SPEAKER_ON
+   readonly property alias iconColor: speaker.color
 
    function setLeftChannelValue(value) {
       volumeControlHandler.leftValue = value

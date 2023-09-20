@@ -12,6 +12,7 @@ Item {
    height: implicitHeight
    implicitHeight:48
    implicitWidth: contents.width
+   visible: toolbarHandler.toolbarVisible
 
    objectName: "TimeToolbar"
 
@@ -48,6 +49,14 @@ Item {
       }
    }
 
+   function registerToolbarConfiguration() {
+      toolbarHandler.RegisterToolbarConfiguration()
+   }
+
+   TimeToolbarHandler {
+      id: toolbarHandler
+   }
+
    RowLayout {
       id: contents
       anchors.verticalCenter: parent.verticalCenter
@@ -78,5 +87,9 @@ Item {
       ToolbarSeparator {
          visible: separatorVisible
       }
+   }
+
+   Component.onCompleted: {
+      toolbarHandler.StoreToolbarManager(ToolbarManager)
    }
 }

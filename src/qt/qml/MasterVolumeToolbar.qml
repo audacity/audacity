@@ -11,6 +11,7 @@ Item {
    height: implicitHeight
    implicitHeight: 48
    implicitWidth: contents.width
+   visible: toolbarHandler.toolbarVisible
 
    objectName: "MasterVolumeToolbar"
 
@@ -31,6 +32,14 @@ Item {
 
    function pauseDemo() {
       volumeControlTester.pauseDemo()
+   }
+
+   function registerToolbarConfiguration() {
+      toolbarHandler.RegisterToolbarConfiguration()
+   }
+
+   MasterVolumeToolbarHandler {
+      id: toolbarHandler
    }
 
    RowLayout {
@@ -54,6 +63,7 @@ Item {
 
          VolumeControl {
             id: volumeControl
+            visible: toolbarHandler.masterVolumeVisible
          }
 
          VolumeControlTester {
@@ -87,5 +97,9 @@ Item {
       ToolbarSeparator {
          visible: separatorVisible
       }
+   }
+
+   Component.onCompleted: {
+      toolbarHandler.StoreToolbarManager(ToolbarManager)
    }
 }
