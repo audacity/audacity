@@ -187,10 +187,6 @@ UIHandle::Result CutlineHandle::Release
    switch (mOperation) {
    default:
       wxASSERT(false);
-   case Merge:
-      ProjectHistory::Get( *pProject )
-         .PushState(XO("Merged Clips"), XO("Merge"), UndoPush::CONSOLIDATE);
-      break;
    case Expand:
       ProjectHistory::Get( *pProject )
          .PushState(XO("Expanded Cut Line"), XO("Expand"));
