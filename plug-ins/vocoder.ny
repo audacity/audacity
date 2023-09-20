@@ -20,35 +20,34 @@ $copyright (_ "GNU General Public License v2.0")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control dst (_ "Distance: (1 to 120, default = 20)") float "" 20 1 120
-$control mst (_ "Output choice") choice (("BothChannels" (_ "Both Channels"))
+$control DST (_ "Distance: (1 to 120, default = 20)") float "" 20 1 120
+$control MST (_ "Output choice") choice (("BothChannels" (_ "Both Channels"))
                                          ("RightOnly" (_ "Right Only"))) 0
-$control bands (_ "Number of vocoder bands") int "" 40 10 240
-$control track-vl (_ "Amplitude of carrier wave (percent)") float "" 100 0 100
-$control noise-vl (_ "Amplitude of white noise (percent)") float "" 0 0 100
-$control radar-vl (_ "Amplitude of Radar Needles (percent)") float "" 0 0 100
-$control radar-f (_ "Frequency of Radar Needles (Hz)") float "" 30 1 100
+$control BANDS (_ "Number of vocoder bands") int "" 40 10 240
+$control TRACK-VL (_ "Amplitude of carrier wave (percent)") float "" 100 0 100
+$control NOISE-VL (_ "Amplitude of white noise (percent)") float "" 0 0 100
+$control RADAR-VL (_ "Amplitude of Radar Needles (percent)") float "" 0 0 100
+$control RADAR-F (_ "Frequency of Radar Needles (Hz)") float "" 30 1 100
 
 
 ;; Return log to base 2 of x.
 (defun log2 (x)
   (/ (log (float x)) (log 2.0)))
 
+
+;; Global constants.
+;; Scale slider values for better control.
+(setf TRACK-VOL (sqrt (/ TRACK-VL 100.0)))
+(setf NOISE-VOL (expt (/ NOISE-VL 100.0) 2.0))
+(setf RADAR-VOL (sqrt (/ RADAR-VL 100.0)))
+
 ;; number of octaves from 20 Hz.
 ;; Maximum number of octaves is: log2(high-hz / low-hz)
 ;; "2.205" is for compatibility with older versions of vocoder effect.
-(setf octaves (log2 (/ (/ *sound-srate* 2.205) 20)))
-
+(setf OCTAVES (log2 (/ (/ *sound-srate* 2.205) 20)))
 
 ;; interval - number of semitones per vocoder band
-(setf interval (/ (* octaves 12.0) bands))
-
-
-;; Scale slider values for better control.
-(setf track-vl (sqrt (/ track-vl 100.0)))
-(setf noise-vol (expt (/ noise-vl 100.0) 2.0))
-(setf radar-vol (sqrt (/ radar-vl 100.0)))
-
+(setf INTERVAL (/ (* OCTAVES 12.0) BANDS))
 
 
 (defun make-radar-table (hz)
@@ -62,23 +61,23 @@ $control radar-f (_ "Frequency of Radar Needles (Hz)") float "" 30 1 100
 
 ;;; The Mixer
 (defun mix-noise (sig)
-  (sum (cond ((= track-vl 0) 0)
-             ((< track-vl 1) (mult track-vl sig))
+  (sum (cond ((= TRACK-VOL 0) 0)
+             ((< TRACK-VOL 1) (mult TRACK-VOL sig))
              (t sig))
-       (if (> radar-vl 0)
-           (let ((r-table (make-radar-table radar-f)))
-             (mult radar-vol
-                   (osc (hz-to-step radar-f) 1 r-table)))
+       (if (> RADAR-VL 0)
+           (let ((r-table (make-radar-table RADAR-F)))
+             (mult RADAR-VOL
+                   (osc (hz-to-step RADAR-F) 1 r-table)))
            0)
-       (if (> noise-vl 0)
-           (mult noise-vol (noise 1))
+       (if (> NOISE-VL 0)
+           (mult NOISE-VOL (noise 1))
            0)))
 
 
-;; Raise 'hz' by 'interval' semitones.
-(defmacro next-hz (hz interval)
+;; Raise 'hz' by 'INTERVAL' semitones.
+(defmacro next-hz (hz INTERVAL)
   `(let* ((prev-step (hz-to-step ,hz))
-          (next-step (+ prev-step ,interval)))
+          (next-step (+ prev-step ,INTERVAL)))
     (step-to-hz next-step)))
 
 
@@ -92,19 +91,19 @@ $control radar-f (_ "Frequency of Radar Needles (Hz)") float "" 30 1 100
         band
         (result 0))
     (do ((i 0 (1+ i))
-         (q (/ (sqrt 2.0) (/ octaves bands)))  ; quick approximation of q
-         (f (next-hz 20 (/ interval 2.0))
-            (next-hz f interval)))
-        ((= i bands) result)
+         (q (/ (sqrt 2.0) (/ OCTAVES BANDS)))  ; quick approximation of q
+         (f (next-hz 20 (/ INTERVAL 2.0))
+            (next-hz f INTERVAL)))
+        ((= i BANDS) result)
       (when is-mono-track
-        (sumto (aref sig 1) (mult 0.5 (/ track-vl bands) (hzosc f))))
+        (sumto (aref sig 1) (mult 0.5 (/ TRACK-VOL BANDS) (hzosc f))))
       (setf band (bandpass2 sig f q)) ; intermediate results (2 channels)
-      (setf mod-envelope (lowpass8 (s-abs (aref band 0)) (/ f dst)))
+      (setf mod-envelope (lowpass8 (s-abs (aref band 0)) (/ f DST)))
       (sumto result (bandpass2 (mult mod-envelope (aref band 1)) f q)))))
 
 
 ;;; The Program
-(if (= (+ track-vl noise-vol radar-vol) 0)
+(if (= (+ TRACK-VOL NOISE-VOL RADAR-VOL) 0)
     (format nil (_ "Error.~%No modulation carrier."))
     (progn
       (if (arrayp *track*)
@@ -113,6 +112,6 @@ $control radar-f (_ "Frequency of Radar Needles (Hz)") float "" 30 1 100
       (setf sig (vocoder sig (soundp *track*)))
       ;; Normalize *track* to 0 db peak based on first 10 million samples.
       (setf sig (scale (/ (peak sig 10000000)) sig))
-      (if (or mst (soundp *track*))
+      (if (or MST (soundp *track*))
           sig
           (vector (aref *track* 0) sig))))
