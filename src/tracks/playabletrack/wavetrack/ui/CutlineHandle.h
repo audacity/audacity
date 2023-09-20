@@ -66,8 +66,8 @@ public:
 
 private:
    std::shared_ptr<WaveTrack> mpTrack{};
-   enum Operation { Merge, Expand, Remove };
-   Operation mOperation{ Merge };
+   enum Operation { Expand, Remove };
+   Operation mOperation{ Expand };
    double mStartTime{}, mEndTime{};
    WaveTrackLocations mLocations;
    WaveTrackLocation mLocation{};
