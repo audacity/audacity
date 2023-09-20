@@ -1140,37 +1140,56 @@ void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
    auto newSequences = GetEmptySequenceCopies();
    bool swappedOnce = false;
 
-   Finally Do { [&, trimLeftBeforeStretch = mTrimLeft,
-                 trimRightBeforeStretch = mTrimRight] {
-      // Whether successful or not, the right thing to do is to restore the
-      // original trim values.
-      this->SetTrimLeft(trimLeftBeforeStretch);
-      this->SetTrimRight(trimRightBeforeStretch);
+   Finally Do { [&, trimLeftBeforeStretch = GetTrimLeft(),
+                 trimRightBeforeStretch = GetTrimRight(),
+                 offsetBeforeStretch = GetSequenceStartTime()] {
       if (success)
       {
          this->mClipStretchRatio = 1.0;
          this->mRawAudioTempo = this->mProjectTempo;
          assert(this->GetStretchRatio() == 1.0);
       }
-      else if (swappedOnce)
-         std::swap(mSequences, newSequences);
+      else
+      {
+         this->SetTrimLeft(trimLeftBeforeStretch);
+         this->SetTrimRight(trimRightBeforeStretch);
+         this->SetSequenceStartTime(offsetBeforeStretch);
+         if (swappedOnce)
+            std::swap(mSequences, newSequences);
+      }
    } };
 
-   SetTrimLeft(0);
-   SetTrimRight(0);
+   const auto originalPlayStartTime = GetPlayStartTime();
+   const auto originalPlayEndTime = GetPlayEndTime();
 
-   constexpr auto durationToDiscard = 0.0;
+   // Leave 1 second of raw, unstretched audio before and after visible region
+   // to ensure the algorithm is in a steady state when reaching the play
+   // boundaries.
+   TrimLeftTo(originalPlayStartTime - stretchRatio);
+   TrimRightTo(originalPlayEndTime + stretchRatio);
+
+   // Let's not use the `durationToDiscard` functionality of the
+   // `TimeAndPitchSource`: this determines the source readout offset. We want
+   // to do better here: feed earlier samples, but discard the early output.
+   constexpr auto sourceDurationToDiscard = 0.;
    constexpr auto blockSize = 1024;
    const auto numChannels = GetWidth();
 
-   ClipTimeAndPitchSource stretcherSource { *this, durationToDiscard,
-                                        PlaybackDirection::forward };
+   ClipTimeAndPitchSource stretcherSource { *this, sourceDurationToDiscard,
+                                            PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = stretchRatio;
    StaffPadTimeAndPitch stretcher { numChannels, stretcherSource,
                                     std::move(params) };
+
+   // Post-rendering sample counts, i.e., stretched units
+   int beginSamplesToDiscard =
+      (originalPlayStartTime - GetPlayStartTime()) * GetRate() + .5;
+   const int endSamplesToDiscard =
+      (GetPlayEndTime() - originalPlayEndTime) * GetRate() + .5;
    const auto totalNumOutSamples =
-      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio + .5 };
+      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio -
+                    beginSamplesToDiscard - endSamplesToDiscard + .5 };
 
    sampleCount numOutSamples { 0 };
    AudioContainer container(blockSize, numChannels);
@@ -1179,14 +1198,21 @@ void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
       const auto numSamplesToGet =
          limitSampleBufferSize(blockSize, totalNumOutSamples - numOutSamples);
       stretcher.GetSamples(container.Get(), numSamplesToGet);
+      const auto numSamplesToConsume =
+         std::max(0, static_cast<int>(numSamplesToGet) - beginSamplesToDiscard);
+      beginSamplesToDiscard -= numSamplesToGet - numSamplesToConsume;
+      if (numSamplesToConsume == 0)
+         continue;
       auto channel = 0u;
       for (auto& newSequence : newSequences)
          newSequence->Append(
-            reinterpret_cast<samplePtr>(container.Get()[channel++]),
-            floatSample, numSamplesToGet, 1,
+            reinterpret_cast<samplePtr>(
+               container.Get()[channel++] + numSamplesToGet -
+               numSamplesToConsume),
+            floatSample, numSamplesToConsume, 1,
             widestSampleFormat /* computed samples need dither */
          );
-      numOutSamples += numSamplesToGet;
+      numOutSamples += numSamplesToConsume;
       if (reportProgress)
          reportProgress(
             numOutSamples.as_double() / totalNumOutSamples.as_double());
@@ -1194,6 +1220,13 @@ void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
 
    std::swap(mSequences, newSequences);
    swappedOnce = true;
+
+   // Now that sequences are swapped we don't have hidden data anymore. The
+   // position of the visible part must be preserved, though.
+   SetTrimLeft(0.);
+   SetTrimRight(0.);
+   SetSequenceStartTime(originalPlayStartTime);
+
    Flush();
    Caches::ForEach(std::mem_fn(&WaveClipListener::Invalidate));
 
@@ -1320,12 +1353,12 @@ double WaveClip::GetTrimRight() const noexcept
 
 void WaveClip::TrimLeft(double deltaTime)
 {
-    mTrimLeft += deltaTime;
+   SetTrimLeft(mTrimLeft + deltaTime);
 }
 
 void WaveClip::TrimRight(double deltaTime)
 {
-    mTrimRight += deltaTime;
+   SetTrimRight(mTrimRight + deltaTime);
 }
 
 void WaveClip::TrimLeftTo(double to)
