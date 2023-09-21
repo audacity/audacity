@@ -119,7 +119,7 @@ public:
    
    void Cancel()
    {
-      mCancelled.store(std::memory_order_release);
+      mCancelled.store(true, std::memory_order_release);
    }
    
    ExportResult GetResult() const
@@ -148,7 +148,7 @@ public:
    
    void OnProgress(double value) override
    {
-      mProgress.store(std::memory_order_release);
+      mProgress.store(value, std::memory_order_release);
    }
 
    void UpdateUI()
