@@ -27,4 +27,8 @@ public:
 
 protected:
     virtual Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* pProject) = 0;
+
+private:
+    Result UpdateTrackSelection(
+       const TrackPanelMouseEvent& event, AudacityProject* pProject);
 };

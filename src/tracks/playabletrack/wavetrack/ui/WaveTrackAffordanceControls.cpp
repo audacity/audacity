@@ -48,6 +48,7 @@
 #include "../WaveTrackUtils.h"
 
 #include "WaveClipAdjustBorderHandle.h"
+#include "WaveClipUtilities.h"
 
 
 
@@ -562,6 +563,13 @@ std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(
     helper->SetTextColor(theTheme.Colour(clrClipNameText));
     helper->SetTextSelectionColor(theTheme.Colour(clrClipNameTextSelection));
     return helper;
+}
+
+auto WaveTrackAffordanceControls::GetMenuItems(
+   const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject)
+      -> std::vector<MenuItem>
+{
+   return GetWaveClipMenuItems();
 }
 
 // Register a menu item

@@ -70,17 +70,23 @@ UIHandle::Result AffordanceHandle::Release(const TrackPanelMouseEvent& event, Au
 {
     auto result = TimeShiftHandle::Release(event, pProject, pParent);
     if (!WasMoved())
-    {
-        auto& trackList = TrackList::Get(*pProject);
-        if(const auto track = trackList.Lock<Track>(GetTrack()))
-        {
-            auto& selectionState = SelectionState::Get(*pProject);
-            selectionState.SelectNone(trackList);
-            if (auto pTrack = *trackList.Find(track.get()))
-               selectionState.SelectTrack(*pTrack, true, true);
-
-            result |= SelectAt(event, pProject);
-        }
-    }
+        result |= UpdateTrackSelection(event, pProject);
     return result;
+}
+
+UIHandle::Result AffordanceHandle::UpdateTrackSelection(const TrackPanelMouseEvent& event, AudacityProject* pProject)
+{
+    auto& trackList = TrackList::Get(*pProject);
+
+    if(const auto track = trackList.Lock<Track>(GetTrack()))
+    {
+        auto& selectionState = SelectionState::Get(*pProject);
+        selectionState.SelectNone(trackList);
+        if (auto pTrack = *trackList.Find(track.get()))
+           selectionState.SelectTrack(*pTrack, true, true);
+
+        return SelectAt(event, pProject);
+    }
+
+    return RefreshCode::RefreshNone;
 }

@@ -91,6 +91,9 @@ public:
    
     void StartEditSelectedClipName(AudacityProject& project);
 
+    std::vector<MenuItem> GetMenuItems(
+       const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+    override;
 private:
    
     bool IsIntervalVisible(const IntervalIterator& it) const noexcept;

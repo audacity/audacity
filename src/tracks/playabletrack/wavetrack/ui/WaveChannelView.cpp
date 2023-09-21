@@ -48,6 +48,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackAffordanceHandle.h"
 #include "WaveClipAdjustBorderHandle.h"
+#include "WaveClipUtilities.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
@@ -875,16 +876,7 @@ auto WaveChannelSubView::GetMenuItems(
    }
 
    if (pClip)
-      return {
-         { L"Cut", XO("Cut") },
-         { L"Copy", XO("Copy") },
-         { L"Paste", XO("Paste")  },
-         {},
-         { L"Split", XO("Split Clip") },
-         { L"TrackMute", XO("Mute/Unmute Track") },
-         {},
-         { L"RenameClip", XO("Rename Clip...") },
-      };
+      return GetWaveClipMenuItems();
    else
       return {
          { L"Paste", XO("Paste")  },
