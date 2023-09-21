@@ -59,6 +59,7 @@ public:
    QQmlEngine& GetEngine() noexcept;
 
    static ProjectQMLEnvironment& Get(AudacityProject& project);
+   static AudacityProject* GetProject(QQmlEngine& engine);
 };
 
 }

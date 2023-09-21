@@ -31,6 +31,7 @@ ProjectQMLEnvironment::ProjectQMLEnvironment(AudacityProject& project)
    , mEngine { QMLEngineFactory::Call() }
    , mProperties { *this }
 {
+   mEngine->setProperty("project", QVariant::fromValue(static_cast<void*>(&project)));
 }
 
 ProjectQMLEnvironment::~ProjectQMLEnvironment() = default;
@@ -56,4 +57,9 @@ static AudacityProject::AttachedObjects::RegisteredFactory sQMLEnvironment {
 ProjectQMLEnvironment& ProjectQMLEnvironment::Get(AudacityProject& project)
 {
    return project.Get<ProjectQMLEnvironment>(sQMLEnvironment);
+}
+
+AudacityProject* ProjectQMLEnvironment::GetProject(QQmlEngine& engine)
+{
+   return static_cast<AudacityProject*>(engine.property("project").value<void*>());
 }
