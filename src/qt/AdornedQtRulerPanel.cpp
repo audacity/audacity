@@ -10,6 +10,8 @@
 #include <QtGui/QWheelEvent>
 #include <QtQml/QQmlContext>
 #include "AdornedQtRulerPanel.h"
+#include "ProjectQMLEnvironment.h"
+#include "ViewInfo.h"
 
 AdornedQtRulerPanel::AdornedQtRulerPanel(QQuickItem *parent)
    : QQuickPaintedItem(parent)
@@ -155,4 +157,14 @@ void AdornedQtRulerPanel::wheelEvent(QWheelEvent *event)
    }
 
    update();
+}
+
+void AdornedQtRulerPanel::componentComplete()
+{
+   QQuickItem::componentComplete();
+
+   auto engine = qmlEngine(this);
+   auto project = audacity::ProjectQMLEnvironment::GetProject(*engine);
+
+   m_viewInfo = &ViewInfo::Get(*project);
 }

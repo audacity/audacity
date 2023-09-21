@@ -5,6 +5,7 @@
 
 class QPainter;
 class QWheelEvent;
+class ViewInfo;
 
 class AdornedQtRulerPanel : public QQuickPaintedItem
 {
@@ -31,7 +32,9 @@ public:
 
 protected:
    void wheelEvent(QWheelEvent *event) override;
+   void componentComplete() override;
 
    int m_offset{ 0 };
    int m_interval{ 40 };
+   ViewInfo* m_viewInfo{};
 };

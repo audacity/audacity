@@ -83,6 +83,7 @@ audacity_qml_module(
       lib-project
       lib-audio-io
       lib-numeric-formats
+      lib-time-frequency-selection
 )
 
 set_target_properties(
