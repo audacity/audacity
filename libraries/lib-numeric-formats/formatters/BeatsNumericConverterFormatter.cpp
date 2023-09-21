@@ -101,6 +101,53 @@ public:
          return mFields.size() == 2;
    }
 
+   void UpdateFields (size_t barsDigits)
+   {
+      mFields.clear();
+      mDigits.clear();
+
+      // Range is assumed to allow 999 bars.
+      auto& barsField =
+         mFields.emplace_back(NumericField::WithDigits(barsDigits));
+
+      barsField.label = L" " + mBarString + L" ";
+
+      // Beats format is 1 based. For the time point "0" the expected output is
+      // "1 bar 1 beat [1]" For this reason we use (uts + 1) as the "range". On
+      // top of that, we want at least two digits to be shown. NumericField
+      // accepts range as in [0, range), so add 1.
+
+      auto& beatsField = mFields.emplace_back(NumericField::ForRange(
+         std::max<size_t>(UPPER_BOUNDS[1], mUpperTimeSignature + 1)));
+
+      beatsField.label = L" " + mBeatString;
+
+      const auto hasFracPart = mFracPart > mLowerTimeSignature;
+
+      if (hasFracPart)
+      {
+         beatsField.label += L" ";
+         // See the reasoning above about the range
+         auto& fracField = mFields.emplace_back(NumericField::ForRange(
+            std::max(11, mFracPart / mLowerTimeSignature + 1)));
+      }
+
+      // Fill the aux mDigits structure
+      size_t pos = 0;
+      for (size_t i = 0; i < mFields.size(); i++)
+      {
+         mFields[i].pos = pos;
+
+         for (size_t j = 0; j < mFields[i].digits; j++)
+         {
+            mDigits.push_back(DigitInfo { i, j, pos });
+            pos++;
+         }
+
+         pos += mFields[i].label.length();
+      }
+   }
+
    void UpdateFormat(const AudacityProject& project)
    {
       auto& timeSignature = ProjectTimeSignature::Get(project);
@@ -137,47 +184,32 @@ public:
       if (formatOk)
          return ;
       
-      mFields.clear();
-      mDigits.clear();
-      
-      // Range is assumed to allow 999 bars.
-      auto& barsField =
-         mFields.emplace_back(NumericField::WithDigits(MIN_DIGITS[0]));
-      
-      barsField.label = L" " + mBarString + L" ";
+      UpdateFields(MIN_DIGITS[0]);
+   }
 
-      // Beats format is 1 based. For the time point "0" the expected output is
-      // "1 bar 1 beat [1]" For this reason we use (uts + 1) as the "range". On
-      // top of that, we want at least two digits to be shown. NumericField
-      // accepts range as in [0, range), so add 1.
+   void UpdateFormatForValue(double value) override
+   {
+      const bool negativeValue = value < 0;
 
-      auto& beatsField = mFields.emplace_back(NumericField::ForRange(
-         std::max<size_t>(UPPER_BOUNDS[1], mUpperTimeSignature + 1)));
-      
-      beatsField.label = L" " + mBeatString;
+      if (negativeValue)
+         value = -value;
 
-      if (hasFracPart)
-      {
-         beatsField.label += L" ";
-         // See the reasoning above about the range
-         auto& fracField = mFields.emplace_back(NumericField::ForRange(
-            std::max(11, mFracPart / mLowerTimeSignature + 1)));
-      }
+      // ForRange has a preserved weird behavior
+      const auto barsCount =
+         // Range is not inclusive
+         1 +
+         // Bars can start from 1
+         mFieldValueOffset +
+         static_cast<int>(std::floor(value / mFieldLengths[0]));
 
-      // Fill the aux mDigits structure
-      size_t pos = 0;
-      for (size_t i = 0; i < mFields.size(); i++)
-      {
-         mFields[i].pos = pos;
+      const auto barsField = NumericField::ForRange(
+         barsCount, true, MIN_DIGITS[0] + (negativeValue ? 1 : 0));
 
-         for (size_t j = 0; j < mFields[i].digits; j++)
-         {
-            mDigits.push_back(DigitInfo { i, j, pos });
-            pos++;
-         }
+      if (mFields[0].digits == barsField.digits)
+         return;
 
-         pos += mFields[i].label.length();
-      }
+      UpdateFields(barsField.digits);
+      Publish({});
    }
 
    void UpdateResultString(ConversionResult& result) const
