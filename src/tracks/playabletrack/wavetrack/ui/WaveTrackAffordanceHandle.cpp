@@ -26,7 +26,13 @@ WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track
 
 UIHandle::Result WaveTrackAffordanceHandle::Click(const TrackPanelMouseEvent& event, AudacityProject* project)
 {
+   // We only care about left clicks here,
+   // however we need to intercept Release events for right clicks later
+   if (event.event.GetButton() != wxMOUSE_BTN_LEFT)
+      return RefreshCode::RefreshNone;
+
    Result result = RefreshCode::RefreshNone;
+
    if (WaveChannelView::ClipDetailsVisible(*mTarget, ViewInfo::Get(*project), event.rect))
    {
       auto affordanceControl = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(event.pCell);
@@ -50,4 +56,19 @@ UIHandle::Result WaveTrackAffordanceHandle::SelectAt(const TrackPanelMouseEvent&
    ProjectHistory::Get(*project).ModifyState(false);
 
    return RefreshCode::RefreshAll | RefreshCode::Cancelled;
+}
+
+bool WaveTrackAffordanceHandle::HandlesRightClick()
+{
+   return true;
+}
+
+UIHandle::Result WaveTrackAffordanceHandle::Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent)
+{
+    auto result = AffordanceHandle::Release(event, pProject, pParent);
+
+    if (event.event.RightUp())
+        result |= event.pCell->DoContextMenu(event.rect, pParent, nullptr, pProject);
+
+    return result;
 }

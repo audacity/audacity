@@ -14,6 +14,8 @@
 #include <cstddef>
 #include <vector>
 
+#include "../../../ui/CommonTrackPanelCell.h"
+
 class sampleCount;
 
 AUDACITY_DLL_API
@@ -26,5 +28,7 @@ AUDACITY_DLL_API
 void fillWhere(
    std::vector<sampleCount>& where, size_t len, bool addBias, double correction,
    double t0, double sampleRate, double stretchRatio, double samplesPerPixel);
+
+std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems();
 
 #endif

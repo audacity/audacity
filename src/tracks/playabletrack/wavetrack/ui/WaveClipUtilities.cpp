@@ -69,3 +69,17 @@ void fillWhere(
    for (decltype(len) x = 1; x < len + 1; x++)
       where[x] = sampleCount( floor(w0 + double(x) * samplesPerPixel) );
 }
+
+std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
+{
+    return {
+        { L"Cut", XO("Cut") },
+        { L"Copy", XO("Copy") },
+        { L"Paste", XO("Paste")  },
+        {},
+        { L"Split", XO("Split Clip") },
+        { L"TrackMute", XO("Mute/Unmute Track") },
+        {},
+        { L"RenameClip", XO("Rename Clip...") },
+     };;
+}
