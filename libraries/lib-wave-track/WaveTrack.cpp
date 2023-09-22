@@ -1108,7 +1108,7 @@ TrackListHolder WaveTrack::MonoToStereo()
    assert(!GetOwner());
 
    auto result = Duplicate();
-   result->MakeMultiChannelTrack(**result->begin(), 2, true);
+   result->MakeMultiChannelTrack(**result->begin(), 2);
 
    return result;
 }
