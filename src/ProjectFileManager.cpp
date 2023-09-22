@@ -60,6 +60,8 @@ Paul Licameli split from AudacityProject.cpp
 
 #include <optional>
 
+#include "RealtimeEffectList.h"
+
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileManagerKey{
    []( AudacityProject &parent ){
       auto result = std::make_shared< ProjectFileManager >( parent );
@@ -165,6 +167,7 @@ auto ProjectFileManager::ReadProjectFile(
    const bool bParseSuccess = parseResult.has_value();
    
    bool err = false;
+   bool waveTrackLinkTypeChanged = false;
 
    TranslatableString otherError;
 
@@ -172,12 +175,27 @@ auto ProjectFileManager::ReadProjectFile(
    {
       auto &tracks = TrackList::Get(project);
       for (auto t : tracks) {
+         const auto linkType = t->GetLinkType();
          // Note, the next function may have an important upgrading side effect,
          // and return no error; or it may find a real error and repair it, but
          // that repaired track won't be used because opening will fail.
          if (!t->LinkConsistencyFix()) {
             otherError = XO("A channel of a stereo track was missing.");
             err = true;
+         }
+         if(!err &&
+            linkType != ChannelGroup::LinkType::None &&
+            t->GetLinkType() == ChannelGroup::LinkType::None)
+         {
+            //Not an elegant way to deal with wave track linking
+            //compatibility between versions
+            if(const auto left = dynamic_cast<WaveTrack*>(t))
+            {
+               RealtimeEffectList::Get(*left).Clear();
+               if(const auto right = dynamic_cast<WaveTrack*>(*tracks.Find(left).advance(1)))
+                  RealtimeEffectList::Get(*right).Clear();
+               waveTrackLinkTypeChanged = true;
+            }
          }
 
          if (const auto message = t->GetErrorOpening()) {
@@ -191,6 +209,17 @@ auto ProjectFileManager::ReadProjectFile(
       }
 
       if (!err) {
+         if(waveTrackLinkTypeChanged && !discardAutosave)
+         {
+            BasicUI::ShowMessageBox(XO(
+"This project contained stereo tracks with non-aligned content.\n"
+"This feature is not supported in Audacity versions past 3.3.3.\n"
+"These stereo tracks have been split into mono tracks.\n"
+"As a result, some realtime effects may be missing.\n"
+"Please verify that everything works as intended before saving."
+            ));
+         }
+
          parseResult->Commit();
          if (discardAutosave)
             // REVIEW: Failure OK?
@@ -198,7 +227,8 @@ auto ProjectFileManager::ReadProjectFile(
          else if (projectFileIO.IsRecovered()) {
             bool resaved = false;
 
-            if (!projectFileIO.IsTemporary())
+            if (!projectFileIO.IsTemporary() &&
+               !waveTrackLinkTypeChanged)
             {
                // Re-save non-temporary project to its own path.  This
                // might fail to update the document blob in the database.

@@ -654,11 +654,9 @@ bool WaveTrack::LinkConsistencyFix(bool doFix)
 {
    assert(!doFix || IsLeader());
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix);
-   auto linkType = GetLinkType();
-   if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
-       linkType == LinkType::Aligned) {
-      auto next = dynamic_cast<WaveTrack*>(
-         *TrackList::Channels(this).first.advance(1));
+   const auto linkType = GetLinkType();
+   if (linkType != LinkType::None) {
+      auto next = *TrackList::Channels(this).first.advance(1);
       if (next == nullptr) {
          //next track is absent or not a wave track, fix and report error
          if (doFix) {
@@ -671,16 +669,16 @@ bool WaveTrack::LinkConsistencyFix(bool doFix)
       }
       else if (doFix) {
          // non-error upgrades happen here
-         auto newLinkType =
-            AreAligned(SortedClipArray(), next->SortedClipArray())
-            ? LinkType::Aligned : LinkType::Group;
-         if (newLinkType != linkType)
-            SetLinkType(newLinkType);
+         if (!AreAligned(SortedClipArray(), next->SortedClipArray()))
+            SetLinkType(LinkType::None);
          else
+         {
+            SetLinkType(LinkType::Aligned);
             // Be sure to lose any right channel group data that might
             // have been made during during deserialization of the channel
             // before joining it
             next->DestroyGroupData();
+         }
       }
    }
    if (doFix) {
