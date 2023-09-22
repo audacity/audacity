@@ -854,34 +854,33 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
             // Get a copy of the track to be appended, to be pushed into
             // undo history only later.
-            auto tracks = trackList.RegisterPendingChangedTrack(updater, wt);
-            for (auto newTrack : tracks) {
-               // End of current track is before or at recording start time.
-               // Less than or equal, not just less than, to ensure a clip boundary.
-               // when append recording.
-               const auto pending = static_cast<WaveTrack*>(newTrack);
-               const auto lastClip = pending->GetRightmostClip();
-               // RoundedT0 to have a new clip created when punch-and-roll
-               // recording with the cursor in the second half of the space
-               // between two samples
-               // (https://github.com/audacity/audacity/issues/5113#issuecomment-1705154108)
-               const auto recordingStart =
-                  std::round(t0 * pending->GetRate()) / pending->GetRate();
-               const auto recordingStartsBeforeTrackEnd =
-                  lastClip && recordingStart < lastClip->GetPlayEndTime();
-               // Recording doesn't start before the beginning of the last clip
-               // - or the check for creating a new clip or not should be more
-               // general than that ...
-               assert(
-                  !recordingStartsBeforeTrackEnd ||
-                  lastClip->WithinPlayRegion(recordingStart));
-               if (
-                  !recordingStartsBeforeTrackEnd ||
-                  !lastClip->StretchRatioEquals(1))
-                  pending->CreateClip(t0, makeNewClipName(pending));
-               transportSequences.captureSequences
-                  .push_back(pending->SharedPointer<WaveTrack>());
-            }
+            const auto pending = static_cast<WaveTrack*>(
+               trackList.RegisterPendingChangedTrack(updater, wt)
+            );
+            // End of current track is before or at recording start time.
+            // Less than or equal, not just less than, to ensure a clip boundary.
+            // when append recording.
+            //const auto pending = static_cast<WaveTrack*>(newTrack);
+            const auto lastClip = pending->GetRightmostClip();
+            // RoundedT0 to have a new clip created when punch-and-roll
+            // recording with the cursor in the second half of the space
+            // between two samples
+            // (https://github.com/audacity/audacity/issues/5113#issuecomment-1705154108)
+            const auto recordingStart =
+               std::round(t0 * pending->GetRate()) / pending->GetRate();
+            const auto recordingStartsBeforeTrackEnd =
+               lastClip && recordingStart < lastClip->GetPlayEndTime();
+            // Recording doesn't start before the beginning of the last clip
+            // - or the check for creating a new clip or not should be more
+            // general than that ...
+            assert(
+               !recordingStartsBeforeTrackEnd ||
+               lastClip->WithinPlayRegion(recordingStart));
+            if (!recordingStartsBeforeTrackEnd ||
+               !lastClip->StretchRatioEquals(1))
+               pending->CreateWideClip(t0, makeNewClipName(pending));
+            transportSequences.captureSequences
+               .push_back(pending->SharedPointer<WaveTrack>());
          }
          trackList.UpdatePendingTracks();
       }

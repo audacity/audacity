@@ -1432,7 +1432,7 @@ public:
     @pre `src->IsLeader()`
     @post result: `src->NChannels() == result.size()`
     */
-   std::vector<Track*> RegisterPendingChangedTrack(
+   Track* RegisterPendingChangedTrack(
       Updater updater,
       Track *src
    );

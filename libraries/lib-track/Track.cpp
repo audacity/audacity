@@ -987,19 +987,16 @@ double TrackList::GetEndTime() const
       std::numeric_limits<double>::lowest(), std::max);
 }
 
-std::vector<Track*>
+Track*
 TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
    // This is only done on the TrackList belonging to a project
    assert(GetOwner()); // which implies mPendingUpdates is not null
    assert(src->IsLeader());
-   TrackListHolder tracks;
-   std::vector<Track*> result;
-   if (src) {
-      tracks = src->Clone(); // not duplicate
-      assert(src->NChannels() == tracks->NChannels());
-   }
-   if (src) {
+   
+   auto tracks = src->Clone(); // not duplicate
+   assert(src->NChannels() == tracks->NChannels());
+   {
       // Share the satellites with the original, though they do not point back
       // to the pending track
       const auto channels = TrackList::Channels(src);
@@ -1008,21 +1005,18 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
          ((AttachedTrackObjects&)**iter++) = *pChannel; // shallow copy
    }
 
-   if (tracks) {
-      mUpdaters.push_back(updater);
-      auto iter = tracks->ListOfTracks::begin(),
-         end = tracks->ListOfTracks::end();
-      while (iter != end) {
-         auto pTrack = *iter;
-         iter = tracks->erase(iter);
-         mPendingUpdates->ListOfTracks::push_back(pTrack->SharedPointer());
-         auto n = mPendingUpdates->ListOfTracks::end();
-         --n;
-         pTrack->SetOwner(shared_from_this(), {n, &*mPendingUpdates});
-         result.push_back(pTrack.get());
-      }
+   const auto result = *tracks->begin();
+   mUpdaters.push_back(updater);
+   auto iter = tracks->ListOfTracks::begin(),
+      end = tracks->ListOfTracks::end();
+   while (iter != end) {
+      auto pTrack = *iter;
+      iter = tracks->erase(iter);
+      mPendingUpdates->ListOfTracks::push_back(pTrack->SharedPointer());
+      auto n = mPendingUpdates->ListOfTracks::end();
+      --n;
+      pTrack->SetOwner(shared_from_this(), {n, &*mPendingUpdates});
    }
-
    return result;
 }
 
