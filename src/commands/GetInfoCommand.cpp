@@ -243,7 +243,7 @@ public:
    wxTextCtrl * TieNumericTextBox(
       const TranslatableString & Prompt,
       const DoubleSetting &Setting,
-      const int nChars) override;
+      const int nChars, bool acceptEnter) override;
    wxSlider * TieSlider(
       const TranslatableString & Prompt,
       const IntSetting &Setting,
@@ -361,7 +361,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
 wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    const TranslatableString & Prompt,
    const DoubleSetting &Setting,
-   const int nChars)
+   const int nChars, bool acceptEnter)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
@@ -369,7 +369,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    AddItem( "number", "type" );
    AddItem( Setting.GetDefault(), "default"  );
    EndStruct();
-   return ShuttleGui::TieNumericTextBox( Prompt, Setting, nChars );
+   return ShuttleGui::TieNumericTextBox( Prompt, Setting, nChars, acceptEnter );
 }
 
 wxSlider * ShuttleGuiGetDefinition::TieSlider(
