@@ -1201,11 +1201,9 @@ public:
    * @param first and the following must be in this list. Tracks should
    * not be a part of another group (not linked)
    * @param nChannels number of channels, for now only 2 channels supported
-   * @param aligned if true, the link type will be set to Track::LinkType::Aligned,
-   * or Track::LinkType::Group otherwise
    * @returns true on success, false if some prerequisites do not met
    */
-   bool MakeMultiChannelTrack(Track& first, int nChannels, bool aligned);
+   bool MakeMultiChannelTrack(Track& first, int nChannels);
 
    /*!
     Replace channel group `t` with the first group in the given list, return a

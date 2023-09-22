@@ -719,7 +719,7 @@ std::vector<Track*> TrackList::UnlinkChannels(Track& track)
       THROW_INCONSISTENCY_EXCEPTION;
 }
 
-bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
+bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels)
 {
    if (nChannels != 2)
       return false;
@@ -744,7 +744,7 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
       if (!canLink)
          return false;
 
-      (*first)->SetLinkType(aligned ? Track::LinkType::Aligned : Track::LinkType::Group);
+      (*first)->SetLinkType(Track::LinkType::Aligned);
 
       //Cleanup the group data in all channels except the first
       for(auto it = std::next(first), last = std::next(first, nChannels);
@@ -1443,7 +1443,7 @@ TrackListHolder TrackList::Temporary(AudacityProject *pProject,
       tempList->Add(left);
       if (right) {
          tempList->Add(right);
-         tempList->MakeMultiChannelTrack(*left, 2, true);
+         tempList->MakeMultiChannelTrack(*left, 2);
       }
    }
    tempList->mAssignsIds = false;
