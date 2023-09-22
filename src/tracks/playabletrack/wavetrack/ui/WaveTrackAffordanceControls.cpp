@@ -690,7 +690,7 @@ using namespace MenuTable;
 
 // Register menu items
 
-AttachedItem sAttachment{ wxT("Edit/Other"),
+AttachedItem sAttachment{ wxT("Edit/Other/Clip"),
    Command( L"RenameClip", XXO("Rename Clip..."),
       OnEditClipName, SomeClipIsSelectedFlag(), wxT("Ctrl+F2") )
 };
