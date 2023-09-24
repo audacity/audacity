@@ -166,6 +166,7 @@ void TimeAndPitch::reset()
       d->outCircularBuffer[ch].reset();
    }
    d->normalizationBuffer.reset();
+   d->last_mag.zeroOut();
    d->last_phase.zeroOut();
    d->phase_accum.zeroOut();
    _outBufferWriteOffset = 0;
