@@ -129,3 +129,22 @@ while ((s < (NUM_SAMPLES_IN - BUFFERSIZE)) && (s_out < NUM_SAMPLES_OUT))
   s += n;
 }
 ```
+
+\[14/07/2023\] Latency in output samples
+---------------------------------------------
+
+A more practical and accurate latency calculation is now available:
+```C++
+/**
+  Latency in output samples, calculated on the given timeStretch factor
+*/
+int getLatencySamplesForStretchRatio(float timeStretch) const;
+```
+It is recommended to use this new method in place of `getLatencySamples()`, as long as it's possible to discard the initial silent samples once the initial stretch factor is known. This will minimise undesired side-effects of the previous latency compensation like, in some corner cases, chopping a transient at the very beginning of playback.
+
+Example:
+```C++
+// Replace `const int latency = tp.getLatencySamples();` in "Example 2" above with:
+const int latency = tp.getLatencySamples(TIME_STRETCH); // Discard `latency` output samples
+// ...
+```

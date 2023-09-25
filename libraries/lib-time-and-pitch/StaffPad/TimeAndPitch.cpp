@@ -504,4 +504,11 @@ int TimeAndPitch::getLatencySamples() const
   return fftSize - fftSize / overlap + 3; // 3 for resampling
 }
 
+
+int TimeAndPitch::getLatencySamplesForStretchRatio(float timeStretch) const
+{
+  const float coeff = (timeStretch < 1.f) ? (1.f / 3.f) : (2.f / 3.f);
+  return int(getLatencySamples() * (timeStretch * coeff + (1 - coeff)));
+}
+
 } // namespace staffpad

@@ -61,9 +61,14 @@ public:
   void processPitchShift(float* const* smp, int numSamples, double pitchFactor);
 
   /**
-    Latency in input samples, output_latency = input_latency * time_scale
+    Latency in input samples
   */
   int getLatencySamples() const;
+
+  /**
+    Latency in output samples, calculated on the given timeStretch factor
+  */
+  int getLatencySamplesForStretchRatio(float timeStretch) const;
 
   /**
     Resets the internal state, discards any buffered input
