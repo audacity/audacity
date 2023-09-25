@@ -96,9 +96,8 @@ void StaffPadTimeAndPitch::BootStretcher()
       // Bypass
       return;
    }
-   const auto latencySamples = mTimeAndPitch->getLatencySamples();
    auto numOutputSamplesToDiscard =
-      static_cast<int>(latencySamples * mTimeRatio + 0.5);
+      mTimeAndPitch->getLatencySamplesForStretchRatio(mTimeRatio);
    AudioContainer container(maxBlockSize, mNumChannels);
    while (numOutputSamplesToDiscard > 0)
    {
