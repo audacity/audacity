@@ -387,6 +387,21 @@ const ReservedCommandFlag &SomeClipIsSelectedFlag()
    return flag;
 }
 
+const ReservedCommandFlag &StretchedClipIsSelectedFlag()
+{
+   static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         // const_cast isn't pretty but not harmful in this case
+         auto result = SelectedIntervalOfFocusedTrack(
+            const_cast<AudacityProject&>(project));
+
+         auto interval = *result.second;
+         return interval != nullptr && !interval->StretchRatioEquals(1.0);
+      }
+   };
+   return flag;
+}
+
 }
 
 unsigned WaveTrackAffordanceControls::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
@@ -703,6 +718,6 @@ AttachedItem sAttachment2{ wxT("Edit/Other/Clip"),
 
 AttachedItem sAttachment3{ wxT("Edit/Other/Clip"),
    Command( L"RenderClipStretching", XXO("Render Clip Stretching"),
-      OnRenderClipStretching, SomeClipIsSelectedFlag())
+      OnRenderClipStretching, StretchedClipIsSelectedFlag())
 };
 }
