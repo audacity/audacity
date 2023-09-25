@@ -17,7 +17,6 @@ set( SOURCES
    StaffPad/SimdTypes_scalar.h
    StaffPad/SimdTypes_sse2.h
    StaffPad/TimeAndPitch.h
-   StaffPad/TimeAndPitchAudioReader.h
    StaffPad/TimeAndPitch.cpp
    StaffPad/TimeAndPitch.h
    StaffPad/VectorOps.h
