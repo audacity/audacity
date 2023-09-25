@@ -367,7 +367,8 @@ SelectedIntervalOfFocusedTrack(AudacityProject &project)
             return interval->Start() == viewInfo.selectedRegion.t0() &&
                interval->End() == viewInfo.selectedRegion.t1();
          });
-         if(it != ChannelGroup::IntervalIterator<WaveTrack::Interval> { })
+
+         if(it != intervals.end())
             return { pWaveTrack, it };
       }
    }
