@@ -6,6 +6,8 @@
 
 #include <cassert>
 
+#include "ViewInfo.h"
+
 class ProjectTempoListener final : public ClientData::Base
 {
 public:
@@ -13,6 +15,9 @@ public:
    void OnProjectTempoChange(double newTempo);
 
 private:
+   AudacityProject& mProject;
+   ViewInfo& mViewInfo;
+   double mTempo { 0 };
    TrackList& mTrackList;
    Observer::Subscription mTrackListSubstription;
    Observer::Subscription mProjectTimeSignatureSubscription;
@@ -27,12 +32,15 @@ static const AttachedProjectObjects::RegisteredFactory key {
 
 ProjectTempoListener::ProjectTempoListener(
    AudacityProject& project, TrackList& trackList)
-    : mTrackList { trackList }
+    : mProject { project }
+    , mViewInfo { ViewInfo::Get(project) }
+    , mTempo { ProjectTimeSignature::Get(project).GetTempo() }
+    , mTrackList { trackList }
     , mTrackListSubstription { trackList.Subscribe(
-         [this, &project](const TrackListEvent& event) {
+         [this](const TrackListEvent& event) {
             if (event.mType == TrackListEvent::ADDITION)
             {
-               const auto tempo = ProjectTimeSignature::Get(project).GetTempo();
+               const auto tempo = ProjectTimeSignature::Get(mProject).GetTempo();
                if (const auto track = event.mpTrack.lock()) {
                   // TODO wide wave tracks: just call on the track itself
                   if (auto pLeader = *mTrackList.Find(track.get()))
@@ -53,4 +61,14 @@ void ProjectTempoListener::OnProjectTempoChange(double newTempo)
 {
    for (auto track : mTrackList)
       track->OnProjectTempoChange(newTempo);
+   
+   if(!mViewInfo.playRegion.Empty() && mTempo > 0 && newTempo > 0)
+   {
+      const auto tempoRate = mTempo / newTempo;
+      mViewInfo.playRegion.SetTimes(
+         mViewInfo.playRegion.GetStart() * tempoRate,
+         mViewInfo.playRegion.GetEnd() * tempoRate
+      );
+   }
+   mTempo = newTempo;
 }
