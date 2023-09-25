@@ -244,6 +244,13 @@ double WaveTrack::Interval::GetPlayStartTime() const
    return mpClip->GetPlayStartTime();
 }
 
+double WaveTrack::Interval::GetPlayEndTime() const
+{
+   // TODO wide wave tracks:  assuming that all 'narrow' clips share common
+   // beginning
+   return mpClip->GetPlayEndTime();
+}
+
 double WaveTrack::Interval::GetStretchRatio() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common stretch ratio

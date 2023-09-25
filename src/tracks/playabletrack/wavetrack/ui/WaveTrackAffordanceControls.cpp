@@ -557,6 +557,38 @@ void WaveTrackAffordanceControls::StartEditSelectedClipName(AudacityProject& pro
    StartEditClipName(project, it);
 }
 
+namespace
+{
+void SelectInterval(AudacityProject& project, const WaveTrack::Interval& interval)
+{
+   auto& viewInfo = ViewInfo::Get(project);
+   viewInfo.selectedRegion.setTimes(interval.GetPlayStartTime(), interval.GetPlayEndTime());
+   ProjectHistory::Get(project).ModifyState(false);
+}
+}
+
+void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
+   AudacityProject& project)
+{
+   auto [track, it] = SelectedIntervalOfFocusedTrack(project);
+
+   if (track != FindTrack().get())
+      return;
+
+   auto interval = *it;
+
+   if (!interval)
+      return;
+
+   ChangeClipSpeedDialog dlg(*track, *interval, &GetProjectFrame(project));
+
+   if (wxID_OK == dlg.ShowModal())
+   {
+      PushClipSpeedChangedUndoState(project, 100.0 / interval->GetStretchRatio());
+      SelectInterval(project, *interval);
+   }
+}
+
 std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(const wxString& text)
 {
     auto helper = std::make_shared<TextEditHelper>(shared_from_this(), text, mClipNameFont);
@@ -593,6 +625,19 @@ void OnEditClipName(const CommandContext &context)
    }
 }
 
+void OnChangeClipSpeed(const CommandContext& context)
+{
+   auto& project = context.project;
+
+   if (
+      auto pWaveTrack =
+         dynamic_cast<WaveTrack*>(TrackFocus::Get(project).Get()))
+   {
+      if (auto pAffordance = FindAffordance(*pWaveTrack))
+         pAffordance->StartEditSelectedClipSpeed(project);
+   }
+}
+
 using namespace MenuTable;
 
 // Register menu items
@@ -602,4 +647,8 @@ AttachedItem sAttachment{ wxT("Edit/Other"),
       OnEditClipName, SomeClipIsSelectedFlag(), wxT("Ctrl+F2") )
 };
 
+AttachedItem sAttachment2{ wxT("Edit/Other/Clip"),
+   Command( L"ChangeClipSpeed", XXO("Change Speed..."),
+      OnChangeClipSpeed, SomeClipIsSelectedFlag() )
+};
 }

@@ -15,6 +15,9 @@
 #include <cassert>
 #include <cmath>
 
+#include "ProjectHistory.h"
+#include "UndoManager.h"
+
 void findCorrection(
    const std::vector<sampleCount>& oldWhere, size_t oldLen, size_t newLen,
    double t0, double sampleRate, double stretchRatio, double samplesPerPixel,
@@ -81,5 +84,17 @@ std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
         { L"TrackMute", XO("Mute/Unmute Track") },
         {},
         { L"RenameClip", XO("Rename Clip...") },
+        { L"ChangeClipSpeed", XO("Change Speed...") },
      };;
+}
+
+void PushClipSpeedChangedUndoState(
+   AudacityProject& project, double speedInPercent)
+{
+    ProjectHistory::Get(project).PushState(
+       /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
+       XO("Changed clip speed to %.01f%%").Format(speedInPercent),
+       /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
+       XO("Changed speed to %.01f%%").Format(speedInPercent),
+       UndoPush::CONSOLIDATE);
 }

@@ -932,6 +932,7 @@ public:
 
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
+      double GetPlayEndTime() const;
 
       double GetStretchRatio() const;
 
