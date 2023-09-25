@@ -85,6 +85,7 @@ std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
         {},
         { L"RenameClip", XO("Rename Clip...") },
         { L"ChangeClipSpeed", XO("Change Speed...") },
+        { L"RenderClipStretching", XO("Render Clip Stretching") },
      };;
 }
 

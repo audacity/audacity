@@ -50,6 +50,10 @@
 #include "WaveClipAdjustBorderHandle.h"
 #include "WaveClipUtilities.h"
 
+#include "ChangeClipSpeedDialog.h"
+
+#include "BasicUI.h"
+#include "UserException.h"
 
 
 class SetWaveClipNameCommand : public AudacityCommand
@@ -589,6 +593,37 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    }
 }
 
+void WaveTrackAffordanceControls::OnRenderClipStretching(
+   AudacityProject& project)
+{
+   auto [track, it] = SelectedIntervalOfFocusedTrack(project);
+
+   if (track != FindTrack().get())
+      return;
+
+   auto interval = *it;
+
+   if (!interval || interval->StretchRatioEquals(1.0))
+      return;
+
+   auto progressDialog = BasicUI::MakeProgress(
+      XO("Applying..."), XO("Rendering Time-Stretched Audio"),
+      BasicUI::ProgressShowCancel);
+
+   interval->ApplyStretchRatio(
+      [&progressDialog](double progress)
+      {
+         const auto result = progressDialog->Poll(progress * 1000, 1000);
+         if (result != BasicUI::ProgressResult::Success)
+            throw UserException {};
+      });
+
+   ProjectHistory::Get(project).PushState(
+      XO("Rendered time-stretched audio"), XO("Render"));
+
+   SelectInterval(project, *interval);
+}
+
 std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(const wxString& text)
 {
     auto helper = std::make_shared<TextEditHelper>(shared_from_this(), text, mClipNameFont);
@@ -638,6 +673,19 @@ void OnChangeClipSpeed(const CommandContext& context)
    }
 }
 
+void OnRenderClipStretching(const CommandContext& context)
+{
+   auto& project = context.project;
+
+   if (
+      auto pWaveTrack =
+         dynamic_cast<WaveTrack*>(TrackFocus::Get(project).Get()))
+   {
+      if (auto pAffordance = FindAffordance(*pWaveTrack))
+         pAffordance->OnRenderClipStretching(project);
+   }
+}
+
 using namespace MenuTable;
 
 // Register menu items
@@ -650,5 +698,10 @@ AttachedItem sAttachment{ wxT("Edit/Other"),
 AttachedItem sAttachment2{ wxT("Edit/Other/Clip"),
    Command( L"ChangeClipSpeed", XXO("Change Speed..."),
       OnChangeClipSpeed, SomeClipIsSelectedFlag() )
+};
+
+AttachedItem sAttachment3{ wxT("Edit/Other/Clip"),
+   Command( L"RenderClipStretching", XXO("Render Clip Stretching"),
+      OnRenderClipStretching, SomeClipIsSelectedFlag())
 };
 }
