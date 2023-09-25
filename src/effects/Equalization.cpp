@@ -37,7 +37,6 @@
 #include "EffectEditor.h"
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
-#include "PasteOverPreservingClips.h"
 #include "ShuttleGui.h"
 
 #include "WaveClip.h"
@@ -418,7 +417,6 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto start = track->TimeToLongSamples(t0);
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
-         const auto data = CollectClipData(*track, start, len);
 
          auto temp = track->WideEmptyCopy();
          auto pTempTrack = *temp->Any<WaveTrack>().begin();
@@ -437,14 +435,14 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
                idealBlockLen += (L - (idealBlockLen % L));
             auto pNewChannel = *iter0++;
             Task task{ M, idealBlockLen, *pNewChannel };
-
             bGoodResult = ProcessOne(task, count, *pChannel, start, len);
             if (!bGoodResult)
                goto done;
          }
          pTempTrack->Flush();
-         PasteOverPreservingClips(data, *track, start, len,
-            **temp->Any<WaveTrack>().begin());
+         // Remove trailing data from the temp track
+         pTempTrack->Clear(t1 - t0, pTempTrack->GetEndTime());
+         track->ClearAndPaste(t0, t1, *pTempTrack, true, true);
       }
 
       count++;
