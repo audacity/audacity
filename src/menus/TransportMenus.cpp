@@ -266,15 +266,10 @@ void OnPunchAndRoll(const CommandContext &context)
    double newt1 = t1;
    using Iterator =
       ChannelGroup::IntervalIterator<const WideChannelGroupInterval>;
-   IteratorRange<Iterator> intervals{ {}, {} };
    for (const auto &wt : tracks) {
       auto rate = wt->GetRate();
       sampleCount testSample(floor(t1 * rate));
-      if (wt->IsLeader())
-         intervals = as_const(*wt).Intervals();
-      else
-         // non-leader channel is assumed to have the same intervals
-         ;
+      const auto intervals = as_const(*wt).Intervals();
       auto pred = [rate](sampleCount testSample){ return
          [rate, testSample](const auto &pInterval){
             auto start = floor(pInterval->Start() * rate + 0.5);
@@ -309,26 +304,31 @@ void OnPunchAndRoll(const CommandContext &context)
    }
 
    t1 = newt1;
-   double endTime{};
    for (const auto &wt : tracks) {
-      if (wt->IsLeader())
-         endTime = wt->GetEndTime();
+      const auto endTime = wt->GetEndTime();
       const auto duration =
          std::max(0.0, std::min(crossFadeDuration, endTime - t1));
       const size_t getLen = floor(duration * wt->GetRate());
-      std::vector<float> data(getLen);
       if (getLen > 0) {
-         float *const samples = data.data();
+         // TODO more-than-two-channels
+         const auto nChannels = std::min<size_t>(2, wt->NChannels());
+         crossfadeData.resize(nChannels);
+         float *buffers[2]{};
+         for (size_t ii = 0; ii < nChannels; ++ii) {
+            auto &data = crossfadeData[ii];
+            data.resize(getLen);
+            buffers[ii] = data.data();
+         }
          const sampleCount pos = wt->TimeToLongSamples(t1);
-         wt->GetFloats(samples, pos, getLen);
+         if (!wt->GetFloats(0, nChannels, buffers, pos, getLen))
+            // TODO error message
+            return;
       }
-      crossfadeData.push_back(std::move(data));
    }
 
    // Change tracks only after passing the error checks above
    for (const auto &wt : tracks)
-      if (wt->IsLeader())
-         wt->Clear(t1, wt->GetEndTime());
+      wt->Clear(t1, wt->GetEndTime());
 
    // Choose the tracks for playback.
    TransportSequences transportTracks;
@@ -340,8 +340,7 @@ void OnPunchAndRoll(const CommandContext &context)
    else
       // play recording tracks only
       for (auto &pTrack : tracks)
-         if (pTrack->IsLeader())
-            transportTracks.playbackSequences.push_back(pTrack);
+         transportTracks.playbackSequences.push_back(pTrack);
       
    // Unlike with the usual recording, a track may be chosen both for playback
    // and recording.

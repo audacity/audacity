@@ -470,9 +470,7 @@ static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
 }
 
 bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
-                                   unsigned int numPlaybackChannels,
-                                   unsigned int numCaptureChannels,
-                                   sampleFormat captureFormat)
+   unsigned int numPlaybackChannels, unsigned int numCaptureChannels)
 {
    auto sampleRate = options.rate;
    mNumPauseFrames = 0;
@@ -499,6 +497,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // July 2016 (Carsten and Uwe)
    // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using
    // userData.
+   auto captureFormat = mCaptureFormat;
    auto captureFormat_saved = captureFormat;
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
@@ -560,7 +559,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    if( numCaptureChannels > 0)
    {
       useCapture = true;
-      mCaptureFormat = captureFormat;
 
       const PaDeviceInfo *captureDeviceInfo;
       // retrieve the index of the device set in the prefs, or a sensible
@@ -746,9 +744,11 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    // FIXME: TRAP_ERR StartPortAudioStream (a PaError may be present)
    // but StartPortAudioStream function only returns true or false.
    mUsingAlsa = false;
-   success = StartPortAudioStream(options, (unsigned int)playbackChannels,
-                                  (unsigned int)captureChannels,
-                                  captureFormat);
+   mCaptureFormat = captureFormat;
+   mCaptureRate = 44100.0; // Shouldn't matter
+   success = StartPortAudioStream(options,
+      static_cast<unsigned int>(playbackChannels),
+      static_cast<unsigned int>(captureChannels));
 
    auto pOwningProject = mOwningProject.lock();
    if (!success) {
@@ -890,8 +890,9 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       t0, t1, options, mCaptureSequences.empty() ? nullptr : &mRecordingSchedule );
 
    unsigned int playbackChannels = 0;
-   unsigned int captureChannels = 0;
+   size_t numCaptureChannels = 0;
    sampleFormat captureFormat = floatSample;
+   double captureRate = 44100.0;
 
    auto pListener = GetListener();
 
@@ -902,10 +903,12 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    if (mSoftwarePlaythrough)
       playbackChannels = 2;
 
-   if (sequences.captureSequences.size() > 0)
-   {
-      // For capture, every input channel gets its own sequence
-      captureChannels = mCaptureSequences.size();
+   if (mCaptureSequences.size() > 0) {
+      numCaptureChannels = accumulate(
+         mCaptureSequences.begin(), mCaptureSequences.end(), size_t{},
+         [](auto acc, const auto &pSequence) {
+            return acc + pSequence->NChannels();
+         });
       // I don't deal with the possibility of the capture sequences
       // having different sample formats, since it will never happen
       // with the current code.  This code wouldn't *break* if this
@@ -914,7 +917,9 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       // we would set the sound card to capture in 16 bits and the second
       // sequence wouldn't get the benefit of all 24 bits the card is capable
       // of.
-      captureFormat = mCaptureSequences[0]->GetSampleFormat();
+      const auto &sequence0 = mCaptureSequences[0];
+      captureFormat = sequence0->GetSampleFormat();
+      captureRate = sequence0->GetRate();
 
       // Tell project that we are about to start recording
       if (pListener)
@@ -923,8 +928,10 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
    bool successAudio;
 
-   successAudio = StartPortAudioStream(options, playbackChannels,
-                                       captureChannels, captureFormat);
+   mCaptureFormat = captureFormat;
+   mCaptureRate = captureRate;
+   successAudio =
+      StartPortAudioStream(options, playbackChannels, numCaptureChannels);
 
    // Call this only after reassignment of mRate that might happen in the
    // previous call.
@@ -942,7 +949,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 #endif
 
    if (!successAudio) {
-      if (pListener && captureChannels > 0)
+      if (pListener && numCaptureChannels > 0)
          pListener->OnAudioIOStopRecording();
       mStreamToken = 0;
 
@@ -1152,9 +1159,9 @@ bool AudioIO::AllocateBuffers(
    mPlaybackRingBufferSecs = times.ringBufferDelay;
 
    mCaptureRingBufferSecs =
-      4.5 + 0.5 * std::min(size_t(16), mCaptureSequences.size());
+      4.5 + 0.5 * std::min(size_t(16), mNumCaptureChannels);
    mMinCaptureSecsToCopy =
-      0.2 + 0.2 * std::min(size_t(16), mCaptureSequences.size());
+      0.2 + 0.2 * std::min(size_t(16), mNumCaptureChannels);
 
    bool bDone;
    do
@@ -1293,15 +1300,14 @@ bool AudioIO::AllocateBuffers(
             }
 
             mCaptureBuffers.resize(0);
-            mCaptureBuffers.resize(mCaptureSequences.size());
+            mCaptureBuffers.resize(mNumCaptureChannels);
             mResample.resize(0);
-            mResample.resize(mCaptureSequences.size());
+            mResample.resize(mNumCaptureChannels);
             mFactor = sampleRate / mRate;
 
-            for( unsigned int i = 0; i < mCaptureSequences.size(); i++ )
-            {
+            for (unsigned int i = 0; i < mNumCaptureChannels; ++i) {
                mCaptureBuffers[i] = std::make_unique<RingBuffer>(
-                  mCaptureSequences[i]->GetSampleFormat(), captureBufferSize );
+                  mCaptureFormat, captureBufferSize);
                mResample[i] =
                   std::make_unique<Resample>(true, mFactor, mFactor);
                   // constant rate resampling
@@ -1513,8 +1519,7 @@ void AudioIO::StopStream()
       //
       // Offset all recorded sequences to account for latency
       //
-      if (mCaptureSequences.size() > 0)
-      {
+      if (mCaptureSequences.size() > 0) {
          mCaptureBuffers.clear();
          mResample.clear();
 
@@ -1526,26 +1531,24 @@ void AudioIO::StopStream()
          // first sequence in a project.
          //
 
-         for (unsigned int i = 0; i < mCaptureSequences.size(); i++) {
+         for (auto &sequence : mCaptureSequences) {
             // The calls to Flush
             // may cause exceptions because of exhaustion of disk space.
             // Stop those exceptions here, or else they propagate through too
             // many parts of Audacity that are not effects or editing
             // operations.  GuardedCall ensures that the user sees a warning.
 
-            // Also be sure to Flush each leader sequence, at the top of the
+            // Also be sure to Flush each sequence, at the top of the
             // guarded call, relying on the guarantee that the sequence will be
             // left in a flushed state, though the append buffer may be lost.
 
-            auto sequence = mCaptureSequences[i].get();
-            if (sequence->IsLeader())
-               GuardedCall( [&] {
-                  // use No-fail-guarantee that sequence is flushed,
-                  // Partial-guarantee that some initial length of the recording
-                  // is saved.
-                  // See comments in SequenceBufferExchange().
-                  sequence->Flush();
-               } );
+            GuardedCall( [&] {
+               // use No-fail-guarantee that sequence is flushed,
+               // Partial-guarantee that some initial length of the recording
+               // is saved.
+               // See comments in SequenceBufferExchange().
+               sequence->Flush();
+            } );
          }
 
 
@@ -1558,12 +1561,10 @@ void AudioIO::StopStream()
             for (auto &interval : mLostCaptureIntervals) {
                auto &start = interval.first;
                auto duration = interval.second;
-               for (auto &sequence : mCaptureSequences) {
-                  if (sequence->IsLeader())
-                     GuardedCall([&] {
-                        sequence->InsertSilence(start, duration);
-                     });
-               }
+               for (auto &sequence : mCaptureSequences)
+                  GuardedCall([&] {
+                     sequence->InsertSilence(start, duration);
+                  });
             }
             if (pScope)
                pScope->Commit();
@@ -2114,13 +2115,17 @@ void AudioIO::DrainRecordBuffers()
 
          // Append captured samples to the end of the RecordableSequences.
          // (WaveTracks have their own buffering for efficiency.)
-         auto numChannels = mCaptureSequences.size();
-
-         for( size_t i = 0; i < numChannels; i++ )
-         {
-            sampleFormat sequenceFormat =
-               mCaptureSequences[i]->GetSampleFormat();
-
+         auto iter = mCaptureSequences.begin();
+         auto width = (*iter)->NChannels();
+         size_t iChannel = 0;
+         for (size_t i = 0; i < mNumCaptureChannels; ++i) {
+            Finally Do {[&]{
+               if (++iChannel == width) {
+                  ++iter;
+                  if (iter != mCaptureSequences.end())
+                     width = (*iter)->NChannels();
+               }
+            }};
             size_t discarded = 0;
 
             if (!mRecordingSchedule.mLatencyCorrected) {
@@ -2130,11 +2135,11 @@ void AudioIO::DrainRecordBuffers()
                   // Once only (per sequence per recording), insert some initial
                   // silence.
                   size_t size = floor( correction * mRate * mFactor);
-                  SampleBuffer temp(size, sequenceFormat);
-                  ClearSamples(temp.ptr(), sequenceFormat, 0, size);
-                  mCaptureSequences[i]->Append(temp.ptr(), sequenceFormat, size, 1,
+                  SampleBuffer temp(size, mCaptureFormat);
+                  ClearSamples(temp.ptr(), mCaptureFormat, 0, size);
+                  (*iter)->Append(temp.ptr(), mCaptureFormat, size, 1,
                      // Do not dither recordings
-                     narrowestSampleFormat);
+                     narrowestSampleFormat, iChannel);
                }
                else {
                   // Leftward shift
@@ -2164,7 +2169,7 @@ void AudioIO::DrainRecordBuffers()
                totalCrossfadeLength = data.size();
                if (totalCrossfadeLength) {
                   crossfadeStart =
-                     floor(mRecordingSchedule.Consumed() * mCaptureSequences[i]->GetRate());
+                     floor(mRecordingSchedule.Consumed() * mCaptureRate);
                   if (crossfadeStart < totalCrossfadeLength)
                      pCrossfadeSrc = data.data() + crossfadeStart;
                }
@@ -2183,7 +2188,7 @@ void AudioIO::DrainRecordBuffers()
                   // Change to float for crossfade calculation
                   format = floatSample;
                else
-                  format = sequenceFormat;
+                  format = mCaptureFormat;
                temp.Allocate(size, format);
                const auto got =
                   mCaptureBuffers[i]->Get(temp.ptr(), format, toGet);
@@ -2237,10 +2242,10 @@ void AudioIO::DrainRecordBuffers()
 
             // Now append
             // see comment in second handler about guarantee
-            newBlocks = mCaptureSequences[i]->Append(
+            newBlocks = (*iter)->Append(
                temp.ptr(), format, size, 1,
                // Do not dither recordings
-               narrowestSampleFormat
+               narrowestSampleFormat, iChannel
             ) || newBlocks;
          } // end loop over capture channels
 
@@ -2250,7 +2255,7 @@ void AudioIO::DrainRecordBuffers()
 
          auto pListener = GetListener();
          if (pListener && newBlocks)
-            pListener->OnAudioIONewBlocks(mCaptureSequences);
+            pListener->OnAudioIONewBlocks();
 
       }
       // end of record buffering

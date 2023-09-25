@@ -50,6 +50,7 @@ from the project that will own the track.
 
 #include "Project.h"
 #include "ProjectRate.h"
+#include "SampleBlock.h"
 
 #include "Prefs.h"
 #include "SyncLock.h"
@@ -505,6 +506,37 @@ std::shared_ptr<WaveTrack> WaveTrackFactory::Create()
 std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double rate)
 {
    return std::make_shared<WaveTrack>(mpFactory, format, rate);
+}
+
+TrackListHolder WaveTrackFactory::Create(size_t nChannels)
+{
+   return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
+}
+
+TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
+{
+   auto channels = std::vector<std::shared_ptr<Track>>{ };
+   std::generate_n(
+      std::back_inserter(channels),
+      nChannels,
+      [&] { return Create(format, rate); }
+   );
+   if(nChannels == 2)
+      return TrackList::Temporary(nullptr, channels[0], channels[1]);
+   return TrackList::Temporary(nullptr, channels);
+}
+
+TrackListHolder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
+{
+   auto channels = std::vector<std::shared_ptr<Track>>{};
+   std::generate_n(
+      std::back_inserter(channels),
+      nChannels,
+      [&]{ return proto.EmptyCopy(mpFactory, false); }
+   );
+   if(nChannels == 2)
+      return TrackList::Temporary(nullptr, channels[0], channels[1]);
+   return TrackList::Temporary(nullptr, channels);
 }
 
 WaveTrack *WaveTrack::New( AudacityProject &project )
@@ -1056,6 +1088,16 @@ TrackListHolder WaveTrack::WideEmptyCopy(
          result->Add(pChannel->EmptyCopy(pFactory, keepLink));
       assert(!keepLink || pNewTrack->IsLeader() == pChannel->IsLeader());
    }
+   return result;
+}
+
+TrackListHolder WaveTrack::MonoToStereo()
+{
+   assert(!GetOwner());
+
+   auto result = Duplicate();
+   result->MakeMultiChannelTrack(**result->begin(), 2, true);
+
    return result;
 }
 
@@ -2250,11 +2292,35 @@ void WaveTrack::JoinOne(WaveTrack &track, double t0, double t1)
 /*! @excsafety{Partial}
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
-bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
-   size_t len, unsigned int stride, sampleFormat effectiveFormat)
+bool WaveChannel::AppendBuffer(constSamplePtr buffer, sampleFormat format,
+   size_t len, unsigned stride, sampleFormat effectiveFormat)
 {
+   return GetTrack().Append(buffer, format, len, stride, effectiveFormat);
+}
+
+/*! @excsafety{Partial}
+-- Some prefix (maybe none) of the buffer is appended,
+and no content already flushed to disk is lost. */
+bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
+   size_t len)
+{
+   return GetTrack().Append(buffer, format, len, 1, widestSampleFormat);
+}
+
+/*! @excsafety{Partial}
+-- Some prefix (maybe none) of the buffer is appended,
+and no content already flushed to disk is lost. */
+bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
+   size_t len, unsigned int stride, sampleFormat effectiveFormat,
+   size_t iChannel)
+{
+   // TODO wide wave tracks -- there will be only one clip, and its `Append`
+   // (or an overload) must take iChannel
+   auto pTrack = this;
+   if (GetOwner() && iChannel == 1)
+      pTrack = *TrackList::Channels(this).rbegin();
    constSamplePtr buffers[]{ buffer };
-   return GetTrack().RightmostOrNewClip()
+   return pTrack->RightmostOrNewClip()
       ->Append(buffers, format, len, stride, effectiveFormat);
 }
 
@@ -3305,6 +3371,13 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
       return NULL;
 }
 
+void WaveTrack::CreateWideClip(double offset, const wxString& name)
+{
+   assert(IsLeader());
+   for(auto channel : TrackList::Channels(this))
+      channel->CreateClip(offset, name);
+}
+
 WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 {
    // TODO wide wave tracks -- choose clip width correctly for the track
@@ -3921,7 +3994,6 @@ void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
    }
 }
 
-#include "SampleBlock.h"
 void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs)
 {
@@ -3951,8 +4023,6 @@ void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
       const_cast<TrackList &>(tracks), std::move( inspector ), pIDs );
 }
 
-#include "Project.h"
-#include "SampleBlock.h"
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
    return std::make_shared< WaveTrackFactory >(
       ProjectRate::Get( project ),

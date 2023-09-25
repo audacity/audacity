@@ -273,10 +273,7 @@ private:
    bool                  mCancelled = false;     //!< True if importing was canceled by user
    bool                  mStopped = false;       //!< True if importing was stopped by user
    const FilePath        mName;
-   std::vector<std::vector<WaveTrack::Holder>> mChannels; //!< 2-dimensional array of WaveTracks.
-      //!< First dimension - streams,
-      //!< After Import(), same size as mStreamContexts;
-      //!< second - channels of a stream.
+   std::vector<TrackListHolder> mStreams;
 };
 
 
@@ -465,31 +462,22 @@ void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
       return !ctx.Use;
    }), mStreamContexts.end());
 
-   mChannels.resize(mStreamContexts.size());
-
-   int s = -1;
-   for (auto &stream : mChannels)
+   for(unsigned s = 0; s < mStreamContexts.size(); ++s)
    {
-      ++s;
-
       const StreamContext& sc = mStreamContexts[s];
 
-      stream.resize(sc.InitialChannels);
+      auto stream = ImportUtils::NewWaveTrack(
+         *trackFactory,
+         sc.InitialChannels,
+         sc.SampleFormat,
+         sc.CodecContext->GetSampleRate()
+      );
 
-      for (auto &channel : stream)
-         channel = ImportUtils::NewWaveTrack(*trackFactory, sc.SampleFormat, sc.CodecContext->GetSampleRate());
-   }
-
-   // Handles the start_time by creating silence. This may or may not be correct.
-   // There is a possibility that we should ignore first N milliseconds of audio instead. I do not know.
-   /// TODO: Nag FFmpeg devs about start_time until they finally say WHAT is this and HOW to handle it.
-   s = -1;
-   for (auto &stream : mChannels)
-   {
-      ++s;
+      // Handles the start_time by creating silence. This may or may not be correct.
+      // There is a possibility that we should ignore first N milliseconds of audio instead. I do not know.
+      /// TODO: Nag FFmpeg devs about start_time until they finally say WHAT is this and HOW to handle it.
 
       int64_t stream_delay = 0;
-      const auto& sc = mStreamContexts[s];
 
       const int64_t streamStartTime =
          mAVFormatContext->GetStream(sc.StreamIndex)->GetStartTime();
@@ -504,15 +492,13 @@ void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
       }
 
       if (stream_delay > 0) {
-         int c = -1;
-         for (auto &channel : stream) {
-            ++c;
-            WaveTrack *t = channel.get();
-            assert(t->IsLeader()); // channels are not yet grouped
-            t->InsertSilence(0, double(stream_delay) / AUDACITY_AV_TIME_BASE);
-         }
+         for (auto track : *stream)
+            track->InsertSilence(0, double(stream_delay) / AUDACITY_AV_TIME_BASE);
       }
+
+      mStreams.push_back(std::move(stream));
    }
+
    // This is the heart of the importing process
    
    // Read frames.
@@ -552,9 +538,7 @@ void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
    }
 
    // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)
-   for (auto &stream : mChannels)
-      if (!stream.empty())
-         outTracks.push_back(ImportUtils::MakeTracks(stream));
+   ImportUtils::FinalizeImport(outTracks, mStreams);
 
    // Save metadata
    WriteMetadata(tags);
@@ -582,62 +566,68 @@ void FFmpegImportFileHandle::Stop()
 
 void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper* packet)
 {
-   // Find the stream index in mStreamContexts array
-   int streamid = -1;
-   auto iter = mChannels.begin();
+   // Find the stream in mStreamContexts array
+   auto streamIt = std::find_if(
+      mStreamContexts.begin(),
+      mStreamContexts.end(),
+      [&](StreamContext& context) { return sc == &context; }
+   );
 
-   for (int i = 0; i < static_cast<int>(mStreamContexts.size()); ++iter, ++i)
-   {
-      if (&mStreamContexts[i] == sc)
-      {
-         streamid = i;
-         break;
-      }
-   }
    // Stream is not found. This should not really happen
-   if (streamid == -1)
+   if (streamIt == mStreamContexts.end())
    {
       //VS: Shouldn't this mean import failure?
       return;
    }
+   auto stream = mStreams[std::distance(mStreamContexts.begin(), streamIt)];
 
-   size_t nChannels = std::min(sc->CodecContext->GetChannels(), sc->InitialChannels);
+   const auto nChannels = std::min(sc->CodecContext->GetChannels(), sc->InitialChannels);
 
+   // Write audio into WaveTracks
    if (sc->SampleFormat == int16Sample)
    {
       auto data = sc->CodecContext->DecodeAudioPacketInt16(packet);
+      const auto channelsCount = sc->CodecContext->GetChannels();
+      const auto samplesPerChannel = data.size() / channelsCount;
 
-      const int channelsCount = sc->CodecContext->GetChannels();
-      const int samplesPerChannel = data.size() / channelsCount;
-
-      // Write audio into WaveTracks
-      auto iter2 = iter->begin();
-      for (size_t chn = 0; chn < nChannels; ++iter2, ++chn)
+      unsigned chn = 0;
+      ImportUtils::ForEachChannel(*stream, [&](auto& channel)
       {
-         iter2->get()->Append(
-            reinterpret_cast<samplePtr>(data.data() + chn), sc->SampleFormat,
+         if(chn >= nChannels)
+            return;
+
+         channel.AppendBuffer(
+            reinterpret_cast<samplePtr>(data.data() + chn),
+            sc->SampleFormat,
             samplesPerChannel,
-            sc->CodecContext->GetChannels(), sc->SampleFormat);
-      }
+            sc->CodecContext->GetChannels(),
+            sc->SampleFormat
+         );
+         ++chn;
+      });
    }
    else if (sc->SampleFormat == floatSample)
    {
       auto data = sc->CodecContext->DecodeAudioPacketFloat(packet);
+      const auto channelsCount = sc->CodecContext->GetChannels();
+      const auto samplesPerChannel = data.size() / channelsCount;
 
-      const int channelsCount = sc->CodecContext->GetChannels();
-      const int samplesPerChannel = data.size() / channelsCount;
-
-      // Write audio into WaveTracks
-      auto iter2 = iter->begin();
-      for (size_t chn = 0; chn < nChannels; ++iter2, ++chn)
+      auto channelIndex = 0;
+      ImportUtils::ForEachChannel(*stream, [&](auto& channel)
       {
-         iter2->get()->Append(
-            reinterpret_cast<samplePtr>(data.data() + chn), sc->SampleFormat,
-            samplesPerChannel, sc->CodecContext->GetChannels(),
-            sc->SampleFormat);
-      }
-   }
+         if(channelIndex >= nChannels)
+            return;
 
+         channel.AppendBuffer(
+            reinterpret_cast<samplePtr>(data.data() + channelIndex),
+            sc->SampleFormat,
+            samplesPerChannel,
+            sc->CodecContext->GetChannels(),
+            sc->SampleFormat
+         );
+         ++channelIndex;
+      });
+   }
    const AVStreamWrapper* avStream = mAVFormatContext->GetStream(sc->StreamIndex);
 
    int64_t filesize = mFFmpeg->avio_size(mAVFormatContext->GetAVIOContext()->GetWrappedValue());

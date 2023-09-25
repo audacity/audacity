@@ -130,7 +130,6 @@ class WAVE_TRACK_API WaveChannel
    : public Channel
    // TODO wide wave tracks -- remove "virtual"
    , public virtual WideSampleSequence
-   , public virtual RecordableSequence
 {
 public:
    ~WaveChannel() override;
@@ -182,15 +181,15 @@ public:
       */
    );
 
+   bool AppendBuffer(constSamplePtr buffer, sampleFormat format, size_t len, unsigned stride, sampleFormat effectiveFormat);
+
    /*!
     If there is an existing WaveClip in the WaveTrack that owns the channel,
     then the data are appended to that clip. If there are no WaveClips in the
     track, then a new one is created.
     @return true if at least one complete block was created
     */
-   bool Append(constSamplePtr buffer, sampleFormat format,
-      size_t len, unsigned int stride = 1,
-      sampleFormat effectiveFormat = widestSampleFormat) override;
+   bool Append(constSamplePtr buffer, sampleFormat format, size_t len);
 
    // Get signed min and max sample values
    /*!
@@ -398,6 +397,9 @@ public:
    TrackListHolder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
       bool keepLink = true) const;
 
+   //! @pre !GetOwner()
+   TrackListHolder MonoToStereo();
+
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make
@@ -494,6 +496,17 @@ public:
     * false otherwise.
     */
    bool IsEmpty(double t0, double t1) const;
+
+   /*!
+    If there is an existing WaveClip in the WaveTrack,
+    then the data are appended to that clip. If there are no WaveClips in the
+    track, then a new one is created.
+    @return true if at least one complete block was created
+    */
+   bool Append(constSamplePtr buffer, sampleFormat format,
+      size_t len, unsigned int stride = 1,
+      sampleFormat effectiveFormat = widestSampleFormat, size_t iChannel = 0)
+   override;
 
    void Flush() override;
 
@@ -777,6 +790,9 @@ public:
    {
       return { AllClipsConstIterator{ *this }, AllClipsConstIterator{ } };
    }
+
+   /// @pre IsLeader()
+   void CreateWideClip(double offset = .0, const wxString& name = wxEmptyString);
 
    //! Create new clip and add it to this track.
    /*!
@@ -1174,6 +1190,28 @@ class WAVE_TRACK_API WaveTrackFactory final
     * \return Orphaned WaveTrack
     */
    std::shared_ptr<WaveTrack> Create(sampleFormat format, double rate);
+
+   /**
+    * \brief Creates new \p nChannels tracks with project's default rate and format.
+    * If number of channels is exactly two then a single stereo track is created
+    * instead.
+    */
+   TrackListHolder Create(size_t nChannels);
+
+   /**
+    * \brief Creates new \p nChannels tracks with specified \p format and
+    * \p rate and places them into TrackList.
+    * If number of channels is exactly two then a single stereo track is created
+    * instead.
+    */
+   TrackListHolder Create(size_t nChannels, sampleFormat format, double rate);
+
+   /**
+    * \brief Creates new \p nChannels tracks by creating empty copies of \p proto.
+    * If number of channels is exactly two then a single stereo track is created
+    * instead.
+    */
+   TrackListHolder Create(size_t nChannels, const WaveTrack& proto);
 
  private:
    const ProjectRate &mRate;

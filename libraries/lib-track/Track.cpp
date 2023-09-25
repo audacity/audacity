@@ -541,23 +541,23 @@ auto TrackList::Find(Track *pTrack) -> TrackIter<Track>
    return iter.Filter( &Track::IsLeader );
 }
 
-bool TrackList::SwapChannels(Track &track)
+Track* TrackList::SwapChannels(Track &track)
 {
    if (!track.HasLinkedTrack())
-      return false;
+      return nullptr;
    auto pOwner = track.GetOwner();
    if (!pOwner)
-      return false;
+      return nullptr;
    auto pPartner = pOwner->GetNext(&track, false);
    if (!pPartner)
-      return false;
+      return nullptr;
 
    // Swap channels, avoiding copying of GroupData
    auto pData = track.DetachGroupData();
    assert(pData);
    pOwner->MoveUp(pPartner);
    pPartner->AssignGroupData(move(pData));
-   return true;
+   return pPartner;
 }
 
 void TrackList::Permute(const std::vector<Track *> &tracks)
@@ -681,14 +681,15 @@ TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
    return result;
 }
 
-void TrackList::UnlinkChannels(Track& track)
+std::vector<Track*> TrackList::UnlinkChannels(Track& track)
 {
    auto list = track.mList.lock();
    if (list.get() == this)
    {
       auto channels = TrackList::Channels(&track);
       for (auto c : channels)
-          c->SetLinkType(Track::LinkType::None);
+         c->SetLinkType(Track::LinkType::None);
+      return { channels.begin(), channels.end() };
    }
    else
       THROW_INCONSISTENCY_EXCEPTION;
@@ -720,6 +721,14 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
          return false;
 
       (*first)->SetLinkType(aligned ? Track::LinkType::Aligned : Track::LinkType::Group);
+
+      //Cleanup the group data in all channels except the first
+      for(auto it = std::next(first), last = std::next(first, nChannels);
+         it != last;
+         ++it)
+      {
+         (*it)->DestroyGroupData();
+      }
    }
    else
       THROW_INCONSISTENCY_EXCEPTION;
@@ -978,19 +987,16 @@ double TrackList::GetEndTime() const
       std::numeric_limits<double>::lowest(), std::max);
 }
 
-std::vector<Track*>
+Track*
 TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
    // This is only done on the TrackList belonging to a project
    assert(GetOwner()); // which implies mPendingUpdates is not null
    assert(src->IsLeader());
-   TrackListHolder tracks;
-   std::vector<Track*> result;
-   if (src) {
-      tracks = src->Clone(); // not duplicate
-      assert(src->NChannels() == tracks->NChannels());
-   }
-   if (src) {
+   
+   auto tracks = src->Clone(); // not duplicate
+   assert(src->NChannels() == tracks->NChannels());
+   {
       // Share the satellites with the original, though they do not point back
       // to the pending track
       const auto channels = TrackList::Channels(src);
@@ -999,28 +1005,19 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
          ((AttachedTrackObjects&)**iter++) = *pChannel; // shallow copy
    }
 
-   if (tracks) {
-      mUpdaters.push_back(updater);
-      auto iter = tracks->ListOfTracks::begin(),
-         end = tracks->ListOfTracks::end();
-      while (iter != end) {
-         auto pTrack = *iter;
-         iter = tracks->erase(iter);
-         mPendingUpdates->ListOfTracks::push_back(pTrack->SharedPointer());
-         auto n = mPendingUpdates->ListOfTracks::end();
-         --n;
-         pTrack->SetOwner(shared_from_this(), {n, &*mPendingUpdates});
-         result.push_back(pTrack.get());
-      }
+   const auto result = *tracks->begin();
+   mUpdaters.push_back(updater);
+   auto iter = tracks->ListOfTracks::begin(),
+      end = tracks->ListOfTracks::end();
+   while (iter != end) {
+      auto pTrack = *iter;
+      iter = tracks->erase(iter);
+      mPendingUpdates->ListOfTracks::push_back(pTrack->SharedPointer());
+      auto n = mPendingUpdates->ListOfTracks::end();
+      --n;
+      pTrack->SetOwner(shared_from_this(), {n, &*mPendingUpdates});
    }
-
    return result;
-}
-
-void TrackList::RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack )
-{
-   Add<Track>( pTrack );
-   pTrack->SetId( TrackId{} );
 }
 
 void TrackList::UpdatePendingTracks()
@@ -1449,6 +1446,16 @@ void TrackList::Append(TrackList &&list)
       auto pTrack = *iter;
       iter = list.erase(iter);
       this->Add(pTrack);
+   }
+}
+
+void TrackList::RegisterPendingNewTracks(TrackList&& list)
+{
+   for(auto it = list.ListOfTracks::begin(); it != list.ListOfTracks::end();)
+   {
+      Add(*it);
+      (*it)->SetId({});
+      it = list.erase(it);
    }
 }
 

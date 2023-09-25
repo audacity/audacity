@@ -57,7 +57,7 @@ ENUMERATE_TRACK_TYPE(SampleTrack)
 
 class SAMPLE_TRACK_API WritableSampleTrack /* not final */
    : public SampleTrack
-   , public virtual RecordableSequence
+   , public RecordableSequence
 {
 public:
    WritableSampleTrack();
@@ -65,8 +65,9 @@ public:
       const WritableSampleTrack &other, ProtectedCreationArg&&);
    ~WritableSampleTrack() override;
 
-   // Resolve lookup ambiguity
+   // Resolve ambiguous lookups
    using Track::IsLeader;
+   using ChannelGroup::NChannels;
 
    // Needed to resolve ambiguity with WideSampleSequence::GetRate, when this
    // abstract interface is used directly.
