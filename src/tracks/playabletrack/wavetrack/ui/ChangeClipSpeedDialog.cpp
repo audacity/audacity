@@ -68,7 +68,9 @@ void ChangeClipSpeedDialog::PopulateOrExchange(ShuttleGui& s)
       {
          s.AddPrompt(XO("Clip speed"));
          s.AddSpace(0, 0, 1);
-         s.TieNumericTextBox({}, mClipSpeed, 14, true)
+         s.Name(XO("Clip speed"))
+            .NameSuffix(Verbatim("%"))
+            .TieNumericTextBox({}, mClipSpeed, 14, true)
             ->Bind(wxEVT_TEXT_ENTER, [this](auto&) { OnOk(); });
 
          s.AddFixedText(Verbatim("%"));
@@ -92,8 +94,9 @@ void ChangeClipSpeedDialog::PopulateOrExchange(ShuttleGui& s)
 
             s.AddSpace(4, 0, 0);
 
-            s.AddButton(XXO("&Ok"))
-               ->Bind(wxEVT_BUTTON, [this](auto&) { OnOk(); });
+            auto okBtn = s.AddButton(XXO("&Ok"));
+            okBtn->Bind(wxEVT_BUTTON, [this](auto&) { OnOk(); });
+            okBtn->SetDefault();
          }
          s.EndHorizontalLay();
       }
