@@ -94,8 +94,8 @@ void PushClipSpeedChangedUndoState(
 {
     ProjectHistory::Get(project).PushState(
        /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
-       XO("Changed clip speed to %.01f%%").Format(speedInPercent),
+       XO("Changed Clip Speed to %.01f%%").Format(speedInPercent),
        /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
-       XO("Changed speed to %.01f%%").Format(speedInPercent),
+       XO("Changed Speed to %.01f%%").Format(speedInPercent),
        UndoPush::CONSOLIDATE);
 }
