@@ -51,6 +51,9 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
    if (items.empty())
       return RefreshCode::RefreshNone;
 
+   auto& menuManager = MenuManager::Get(*pProject);
+   menuManager.UpdateMenus();
+
    // Set up command context with extras
    CommandContext context{ *pProject };
    SelectedRegion region;
@@ -62,7 +65,7 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
    context.temporarySelection.pTrack = FindTrack().get();
 
    auto &commandManager = CommandManager::Get(*pProject);
-   auto flags = MenuManager::Get( *pProject ).GetUpdateFlags();
+   auto flags = menuManager.GetUpdateFlags();
 
    // Common dispatcher for the menu items
    auto dispatcher = [&]( wxCommandEvent &evt ){

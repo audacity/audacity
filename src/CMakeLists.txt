@@ -743,6 +743,8 @@ list( APPEND SOURCES
       tracks/playabletrack/ui/PlayableTrackButtonHandles.h
       tracks/playabletrack/ui/PlayableTrackControls.cpp
       tracks/playabletrack/ui/PlayableTrackControls.h
+      tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+      tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.h
       tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
       tracks/playabletrack/wavetrack/ui/CutlineHandle.h
       tracks/playabletrack/wavetrack/ui/GetWaveDisplay.cpp

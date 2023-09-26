@@ -932,6 +932,7 @@ public:
 
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
+      double GetPlayEndTime() const;
 
       double GetStretchRatio() const;
 
@@ -957,6 +958,9 @@ public:
       void TrimRightTo(double t);
       void StretchLeftTo(double t);
       void StretchRightTo(double t);
+
+      void ApplyStretchRatio(const std::function<void(double)>& reportProgress);
+      bool StretchRatioEquals(double value) const;
 
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }

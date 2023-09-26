@@ -17,6 +17,7 @@
 #include "../../../ui/CommonTrackPanelCell.h"
 
 class sampleCount;
+class AudacityProject;
 
 AUDACITY_DLL_API
 void findCorrection(
@@ -30,5 +31,7 @@ void fillWhere(
    double t0, double sampleRate, double stretchRatio, double samplesPerPixel);
 
 std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems();
+
+void PushClipSpeedChangedUndoState(AudacityProject& project, double speedInPercent);
 
 #endif

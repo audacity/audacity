@@ -26,6 +26,7 @@
 #include "ViewInfo.h"
 #include "ProjectHistory.h"
 #include "UndoManager.h"
+#include "WaveClipUtilities.h"
 
 namespace {
 
@@ -125,6 +126,7 @@ private:
    std::shared_ptr<WaveTrack::Interval> mInterval;
    int mDragStartX{ };
    const bool mAdjustingLeftBorder;
+   const bool mIsStretchMode;
    const double mInitialBorderPosition;
    double mBorderPosition;
    const std::pair<double, double> mRange;
@@ -191,6 +193,7 @@ public:
       : mTrack { std::move(track) }
       , mInterval { std::move(interval) }
       , mAdjustingLeftBorder { adjustLeftBorder }
+      , mIsStretchMode { isStretchMode }
       , mInitialBorderPosition { adjustLeftBorder ? mInterval->Start() :
                                              mInterval->End() }
       , mBorderPosition { mInitialBorderPosition } 
@@ -256,7 +259,12 @@ public:
       const auto dt = std::abs(mInitialBorderPosition - mBorderPosition);
       if (dt != 0)
       {
-         if (mAdjustingLeftBorder)
+         if (mIsStretchMode)
+         {
+            PushClipSpeedChangedUndoState(
+               project, 100.0 / mInterval->GetStretchRatio());
+         }
+         else if (mAdjustingLeftBorder)
          {
             /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown*/
             ProjectHistory::Get(project).PushState(XO("Adjust left trim by %.02f seconds").Format(dt),

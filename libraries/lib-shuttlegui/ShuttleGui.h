@@ -294,8 +294,8 @@ public:
       const TranslatableString &Caption,
       const wxString &Value, const int nChars);
    wxTextCtrl * AddNumericTextBox(
-      const TranslatableString &Caption,
-      const wxString &Value, const int nChars);
+      const TranslatableString &Caption, const wxString& Value,
+      const int nChars, bool acceptEnter = false);
    wxTextCtrl * AddTextWindow(const wxString &Value);
    wxListBox * AddListBox(const wxArrayStringEx &choices);
 
@@ -400,8 +400,12 @@ public:
    wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt, double &Value, const int nChars=0);
 
-   wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, int &Value, const int nChars=0);
-   wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, double &Value, const int nChars=0);
+   wxTextCtrl* TieNumericTextBox(
+      const TranslatableString& Prompt, int& Value, const int nChars = 0,
+      bool acceptEnter = false);
+   wxTextCtrl* TieNumericTextBox(
+      const TranslatableString& Prompt, double& Value, const int nChars = 0,
+      bool acceptEnter = false);
 
    wxCheckBox * TieCheckBox( const TranslatableString &Prompt, bool & Var );
    wxCheckBox * TieCheckBoxOnRight( const TranslatableString & Prompt, bool & Var );
@@ -469,7 +473,7 @@ public:
    virtual wxTextCtrl * TieNumericTextBox(
       const TranslatableString & Prompt,
       const DoubleSetting &Setting,
-      const int nChars);
+      const int nChars, bool acceptEnter = false);
    virtual wxSlider * TieSlider(
       const TranslatableString & Prompt,
       const IntSetting &Setting,
@@ -557,7 +561,8 @@ private:
       const TranslatableString &Prompt,
       WrappedType &  WrappedRef, const int nChars);
    wxTextCtrl * DoTieNumericTextBox(
-      const TranslatableString &Prompt, WrappedType &  WrappedRef, const int nChars);
+      const TranslatableString& Prompt, WrappedType& WrappedRef,
+      const int nChars, bool acceptEnter = false);
    wxCheckBox * DoTieCheckBox( const TranslatableString &Prompt, WrappedType & WrappedRef );
    wxSlider * DoTieSlider(
       const TranslatableString &Prompt,
