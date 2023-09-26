@@ -243,9 +243,11 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    mInputChannels.AppendSubMenu(*this,
       menu, &AudioSetupToolBar::OnChannels, _("Recording &Channels"));
    menu.AppendSeparator();
+   menu.Append(kAudioDeviceRescan, _("R&escan Audio Devices"));
    menu.Append(kAudioSettings, _("&Audio Settings..."));
 
    menu.Bind(wxEVT_MENU_CLOSE, [this](auto&) { mAudioSetup->PopUp(); });
+   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnAudioDeviceRescan, this, kAudioDeviceRescan);
    menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnSettings, this, kAudioSettings);
 
    wxWindow* btn = FindWindow(ID_AUDIO_SETUP_BUTTON);
@@ -712,6 +714,14 @@ void AudioSetupToolBar::OnOutput(int id)
 {
    ChangeDeviceLabel(id, mOutput, false);
    CommonMenuItemSteps(false);
+}
+
+void AudioSetupToolBar::OnAudioDeviceRescan(wxCommandEvent&)
+{
+   BasicUI::CallAfter([]
+   {
+      DeviceManager::Instance()->Rescan();
+   });
 }
 
 void AudioSetupToolBar::OnSettings(wxCommandEvent& event)
