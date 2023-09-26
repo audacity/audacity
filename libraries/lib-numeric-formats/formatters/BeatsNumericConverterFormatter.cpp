@@ -249,7 +249,8 @@ public:
       for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex)
       {
          const auto fieldLength = mFieldLengths[fieldIndex];
-         const auto fieldValue = static_cast<int>(std::floor(value * eps / fieldLength));
+         const auto fieldValue = std::max(
+            0, static_cast<int>(std::floor(value * eps / fieldLength)));
 
          result.fieldValueStrings[fieldIndex] = wxString::Format(
             mFields[fieldIndex].formatStr, fieldValue + mFieldValueOffset);
