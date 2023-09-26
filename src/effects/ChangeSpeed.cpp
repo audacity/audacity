@@ -85,7 +85,7 @@ static const double kSliderWarp = 1.30105;      // warp power takes max from 100
 //
 
 const ComponentInterfaceSymbol EffectChangeSpeed::Symbol
-{ XO("Change Speed") };
+{ XO("Change Speed and Pitch") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectChangeSpeed > reg; }
 
@@ -321,10 +321,6 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
 
    S.StartVerticalLay(0);
    {
-      S.AddSpace(0, 5);
-      S.AddTitle(XO("Change Speed, affecting both Tempo and Pitch"));
-      S.AddSpace(0, 10);
-
       // Speed multiplier and percent change controls.
       S.StartMultiColumn(4, wxCENTER);
       {

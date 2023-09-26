@@ -27,7 +27,7 @@
         <Name>Pitch and Tempo</Name>
         <Effects>
             <Effect>Change Pitch</Effect>
-            <Effect>Change Speed</Effect>
+            <Effect>Change Speed and Pitch</Effect>
             <Effect>Change Tempo</Effect>
             <Effect>Paulstretch</Effect>
             <Effect>Sliding Stretch</Effect>

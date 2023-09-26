@@ -201,10 +201,6 @@ std::unique_ptr<EffectEditor> EffectChangeTempo::PopulateOrExchange(
 
    S.StartVerticalLay(0);
    {
-      S.AddSpace(0, 5);
-      S.AddTitle(XO("Change Tempo without Changing Pitch"));
-      S.SetBorder(5);
-
       //
       S.StartMultiColumn(2, wxCENTER);
       {
