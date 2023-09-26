@@ -22,7 +22,8 @@ GetOffsetBuffer(float* const* buffer, size_t numChannels, size_t offset)
 }
 
 std::unique_ptr<staffpad::TimeAndPitch> MaybeCreateTimeAndPitch(
-   size_t numChannels, const TimeAndPitchInterface::Parameters& params)
+   int sampleRate, size_t numChannels,
+   const TimeAndPitchInterface::Parameters& params)
 {
    const auto timeRatio = params.timeRatio.value_or(1.);
    const auto pitchRatio = params.pitchRatio.value_or(1.);
@@ -32,7 +33,7 @@ std::unique_ptr<staffpad::TimeAndPitch> MaybeCreateTimeAndPitch(
    {
       return nullptr;
    }
-   auto timeAndPitch = std::make_unique<staffpad::TimeAndPitch>();
+   auto timeAndPitch = std::make_unique<staffpad::TimeAndPitch>(sampleRate);
    timeAndPitch->setup(static_cast<int>(numChannels), maxBlockSize);
    timeAndPitch->setTimeStretchAndPitchFactor(timeRatio, pitchRatio);
    return timeAndPitch;
@@ -40,13 +41,14 @@ std::unique_ptr<staffpad::TimeAndPitch> MaybeCreateTimeAndPitch(
 } // namespace
 
 StaffPadTimeAndPitch::StaffPadTimeAndPitch(
-   size_t numChannels, TimeAndPitchSource& audioSource,
+   int sampleRate, size_t numChannels, TimeAndPitchSource& audioSource,
    const Parameters& parameters)
     : mAudioSource(audioSource)
     , mReadBuffer(maxBlockSize, numChannels)
     , mNumChannels(numChannels)
     , mTimeRatio(parameters.timeRatio.value_or(1.))
-    , mTimeAndPitch(MaybeCreateTimeAndPitch(numChannels, parameters))
+    , mTimeAndPitch(
+         MaybeCreateTimeAndPitch(sampleRate, numChannels, parameters))
 {
    BootStretcher();
 }

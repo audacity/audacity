@@ -1228,7 +1228,7 @@ void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
                                             PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = stretchRatio;
-   StaffPadTimeAndPitch stretcher { numChannels, stretcherSource,
+   StaffPadTimeAndPitch stretcher { GetRate(), numChannels, stretcherSource,
                                     std::move(params) };
 
    // Post-rendering sample counts, i.e., stretched units
