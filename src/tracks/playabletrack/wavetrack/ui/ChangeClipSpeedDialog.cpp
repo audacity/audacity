@@ -107,11 +107,11 @@ void ChangeClipSpeedDialog::PopulateOrExchange(ShuttleGui& s)
 
 void ChangeClipSpeedDialog::OnOk()
 {
-   if (ApplyStretchRatio())
+   if (SetClipSpeedFromDialog())
       EndModal(wxID_OK);
 }
 
-bool ChangeClipSpeedDialog::ApplyStretchRatio()
+bool ChangeClipSpeedDialog::SetClipSpeedFromDialog()
 {
    {
       ShuttleGui S(this, eIsGettingFromDialog);
@@ -133,7 +133,11 @@ bool ChangeClipSpeedDialog::ApplyStretchRatio()
                               nextClip->Start() :
                               std::numeric_limits<double>::infinity();
 
-   const auto expectedEndTime = mTrackInterval.End() * mOldClipSpeed / mClipSpeed;
+   const auto start = mTrackInterval.Start();
+   const auto end = mTrackInterval.End();
+
+   const auto expectedEndTime =
+      start + (end - start) * mOldClipSpeed / mClipSpeed;
 
    if (expectedEndTime >= maxEndTime)
    {

@@ -29,7 +29,7 @@ private:
 
    void OnOk();
 
-   bool ApplyStretchRatio();
+   bool SetClipSpeedFromDialog();
 
    WaveTrack& mTrack;
    WaveTrack::Interval& mTrackInterval;
