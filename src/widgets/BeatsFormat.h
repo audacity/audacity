@@ -13,10 +13,12 @@
 
 #include "RulerFormat.h"
 
+class ProjectTimeSignature;
+
 class BeatsFormat final : public RulerFormat {
 public:
    struct Tick final
-   { 
+   {
       int upper { 1 };
       int lower { 1 };
       // Duration is in seconds
@@ -31,8 +33,9 @@ public:
    };
 
    using RulerFormat::RulerFormat;
-   BeatsFormat(double bpm, int timeSigUpper, int timeSigLower);
-      
+   BeatsFormat(const ProjectTimeSignature& timeSignature);
+   BeatsFormat() = delete;
+
    ~BeatsFormat() override;
 
    void SetTickSizes(

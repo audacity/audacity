@@ -9,6 +9,7 @@
 **********************************************************************/
 
 #include "BeatsFormat.h"
+#include "ProjectTimeSignature.h"
 
 #include <cassert>
 
@@ -79,7 +80,7 @@ void BeatsFormat::SetData(double bpm, int timeSigUpper, int timeSigLower)
 
    if (mTimeSigLower & (mTimeSigLower - 1))
       return;
-   
+
    mBpm = bpm;
    mTimeSigUpper = timeSigUpper;
    mTimeSigLower = timeSigLower;
@@ -88,7 +89,7 @@ void BeatsFormat::SetData(double bpm, int timeSigUpper, int timeSigLower)
 void BeatsFormat::UpdateSubdivision(double units)
 {
    Ticks ticks;
-   
+
    const auto lower = static_cast<double>(mTimeSigLower);
    if (units < .025 * (60 / mBpm) * (4 / lower))
    {
@@ -169,7 +170,7 @@ void BeatsFormat::UpdateSubdivision(double units)
       ticks.minorMinor = { factor * 2, mTimeSigLower,
                            60 / (mBpm * (lower / (8 * factor))) };
    }
-   
+
    mTicks = ticks;
 }
 
@@ -178,9 +179,10 @@ const BeatsFormat::Ticks& BeatsFormat::GetSubdivision() const
    return mTicks;
 }
 
-BeatsFormat::BeatsFormat(double bpm, int timeSigUpper, int timeSigLower)
+BeatsFormat::BeatsFormat(const ProjectTimeSignature& sig)
 {
-   SetData(bpm, timeSigUpper, timeSigLower);
+   SetData(
+      sig.GetTempo(), sig.GetUpperTimeSignature(), sig.GetLowerTimeSignature());
 }
 
 BeatsFormat::~BeatsFormat() = default;
