@@ -16,7 +16,7 @@
 #include "BasicEffectUIServices.h"
 #include <wx/event.h>
 
-class StatefulEffectUIServices
+class AUDACITY_DLL_API StatefulEffectUIServices
    : public wxEvtHandler
    , public BasicEffectUIServices
 {
