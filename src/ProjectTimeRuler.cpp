@@ -39,20 +39,18 @@ const ProjectTimeRuler& ProjectTimeRuler::Get(const AudacityProject& project)
 struct ProjectTimeRuler::Impl final
 {
    explicit Impl(AudacityProject& project)
-       : projectTimeSignatureChanged {
-          ProjectTimeSignature::Get(project).Subscribe(
-             [this](const auto& msg)
-             {
-                beatsFormat.SetData(
-                   msg.newTempo, msg.newUpperTimeSignature,
-                   msg.newLowerTimeSignature);
+       : beatsFormat { ProjectTimeSignature::Get(project) }
+       , projectTimeSignatureChanged { ProjectTimeSignature::Get(project)
+                                          .Subscribe([this](const auto& msg) {
+                                             beatsFormat.SetData(
+                                                msg.newTempo,
+                                                msg.newUpperTimeSignature,
+                                                msg.newLowerTimeSignature);
 
-                ruler.Invalidate();
-             })
-       }
+                                             ruler.Invalidate();
+                                          }) }
        , timeDisplayModeChanged { TimeDisplayModePreference.Subscribe(
-            [this](TimeDisplayMode newMode)
-            {
+            [this](TimeDisplayMode newMode) {
                switch (newMode)
                {
                case TimeDisplayMode::BeatsAndMeasures:
@@ -68,15 +66,7 @@ struct ProjectTimeRuler::Impl final
             }) }
    {
       if (mode == TimeDisplayMode::BeatsAndMeasures)
-      {
-         auto& timeSignature = ProjectTimeSignature::Get(project);
-
-         beatsFormat.SetData(
-            timeSignature.GetTempo(), timeSignature.GetUpperTimeSignature(),
-            timeSignature.GetLowerTimeSignature());
-
          ruler.SetFormat(&beatsFormat);
-      }
    }
 
    TimeDisplayMode mode { TimeDisplayModePreference.ReadEnum() };
