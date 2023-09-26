@@ -43,6 +43,17 @@ inline float lagrange6(const float (&smp)[6], float t)
   return (c0 + c1 * t) + (c2 + c3 * t) * t2 + (c4 + c5 * t) * t2 * t2;
 }
 
+inline int getFftSize(int sampleRate)
+{
+  // 44.1kHz maps to 4096 samples (i.e., 93ms).
+  // We grow the FFT size proportionally with the sample rate to keep the
+  // window duration roughly constant, with quantization due to the
+  // power-of-two constraint.
+  // If needed some time in the future, we can decouple analysis window and
+  // FFT sizes by zero-padding, allowing for very fine-grained window duration
+  // without compromising performance.
+  return 1 << (12 + (int)std::round(std::log2(sampleRate / 44100.)));
+}
 } // namespace
 
 struct TimeAndPitch::impl
@@ -75,6 +86,11 @@ struct TimeAndPitch::impl
 
   std::vector<int> peak_index, trough_index;
 };
+
+TimeAndPitch::TimeAndPitch(int sampleRate)
+    : fftSize(getFftSize(sampleRate))
+{
+}
 
 TimeAndPitch::~TimeAndPitch()
 {

@@ -61,7 +61,8 @@ TEST_CASE("StaffPadTimeAndPitch")
             params.timeRatio = tr;
             params.pitchRatio = pr;
             TimeAndPitchRealSource src(input);
-            StaffPadTimeAndPitch sut(info.numChannels, src, std::move(params));
+            StaffPadTimeAndPitch sut(
+               info.sampleRate, info.numChannels, src, std::move(params));
             constexpr size_t blockSize = 1234u;
             auto offset = 0u;
             while (offset < numOutputFrames)
@@ -104,7 +105,8 @@ TEST_CASE("StaffPadTimeAndPitch")
       AudioContainer container(info.numFrames, info.numChannels);
       TimeAndPitchInterface::Parameters params;
       TimeAndPitchRealSource src(input);
-      StaffPadTimeAndPitch sut(info.numChannels, src, std::move(params));
+      StaffPadTimeAndPitch sut(
+         info.sampleRate, info.numChannels, src, std::move(params));
       sut.GetSamples(container.Get(), info.numFrames);
       // Calling REQUIRE(container.channelVectors == input) directly for large
       // vectors might be rough on stdout in case of an error printout ...
@@ -114,16 +116,20 @@ TEST_CASE("StaffPadTimeAndPitch")
 
    SECTION("Extreme stretch ratios")
    {
-      constexpr auto originalDuration = 60.; // 1 minute
+      constexpr auto originalDuration = 60.;      // 1 minute
       constexpr auto targetDuration = 1. / 44100; // 1 sample
       constexpr auto superSmallRatio = targetDuration / originalDuration;
-      constexpr auto requestedNumSamples = 1; // ... a single sample, but which is the condensed form of one minute of audio :D
+      constexpr auto requestedNumSamples =
+         1; // ... a single sample, but which is the condensed form of one
+            // minute of audio :D
       constexpr auto numChannels = 1;
       TimeAndPitchFakeSource src;
       AudioContainer container(requestedNumSamples, numChannels);
       TimeAndPitchInterface::Parameters params;
       params.timeRatio = superSmallRatio;
-      StaffPadTimeAndPitch sut(numChannels, src, std::move(params));
-      sut.GetSamples(container.Get(), requestedNumSamples); // This is just not supposed to hang.
+      StaffPadTimeAndPitch sut(44100, numChannels, src, std::move(params));
+      sut.GetSamples(
+         container.Get(),
+         requestedNumSamples); // This is just not supposed to hang.
    }
 }

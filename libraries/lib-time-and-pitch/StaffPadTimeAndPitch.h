@@ -9,7 +9,8 @@ class TIME_AND_PITCH_API StaffPadTimeAndPitch final :
 {
 public:
    StaffPadTimeAndPitch(
-      size_t numChannels, TimeAndPitchSource&, const Parameters&);
+      int sampleRate, size_t numChannels, TimeAndPitchSource&,
+      const Parameters&);
    void GetSamples(float* const*, size_t) override;
 
 private:

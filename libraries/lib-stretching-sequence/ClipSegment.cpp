@@ -41,7 +41,8 @@ ClipSegment::ClipSegment(
          clip, durationToDiscard) }
     , mSource { clip, durationToDiscard, direction }
     , mStretcher { std::make_unique<StaffPadTimeAndPitch>(
-         clip.GetWidth(), mSource, GetStretchingParameters(clip)) }
+         clip.GetRate(), clip.GetWidth(), mSource,
+         GetStretchingParameters(clip)) }
 {
 }
 
