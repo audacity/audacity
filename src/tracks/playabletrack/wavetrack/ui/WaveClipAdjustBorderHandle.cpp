@@ -141,12 +141,10 @@ private:
       mAdjustHandler(*mInterval, mBorderPosition);
    }
 
-   //Search for a good snap points among all tracks, including
-   //the one to which the adjusted clip belongs, but not counting
-   //the borders of adjusted clip
+   //Search for a good snap points among all tracks except
+   //one to which moving interval belongs to
    static SnapPointArray FindSnapPoints(
       const WaveTrack* currentTrack,
-      WaveTrack::Interval& adjustedInterval,
       const std::pair<double, double> range)
    {
       SnapPointArray result;
@@ -205,7 +203,7 @@ public:
       {
          mSnapManager = std::make_unique<SnapManager>(
             *trackList->GetOwner(),
-            FindSnapPoints(mTrack.get(), *mInterval, mRange),
+            FindSnapPoints(mTrack.get(), mRange),
             zoomInfo);
       }
    }
