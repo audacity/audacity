@@ -26,6 +26,7 @@ struct DeviceSourceMap;
 
 class AudioSetupToolBar final : public ToolBar {
    static constexpr int kAudioSettings = 15800;
+   static constexpr int kAudioDeviceRescan = 15801;
 
  public:
    static Identifier ID();
@@ -55,6 +56,7 @@ class AudioSetupToolBar final : public ToolBar {
    void OnInput(int id);
    void OnChannels(int id);
    void OnOutput(int id);
+   void OnAudioDeviceRescan(wxCommandEvent&);
    void OnSettings(wxCommandEvent& event);
    void CommonMenuItemSteps(bool audioSettingsChosen);
 
