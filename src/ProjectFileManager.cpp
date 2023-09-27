@@ -167,12 +167,13 @@ auto ProjectFileManager::ReadProjectFile(
    const bool bParseSuccess = parseResult.has_value();
    
    bool err = false;
-   bool waveTrackLinkTypeChanged = false;
+   std::optional<TranslatableString> linkTypeChangeReason;
 
    TranslatableString otherError;
 
    if (bParseSuccess)
    {
+      Track* unlinkedTrack {};
       auto &tracks = TrackList::Get(project);
       for (auto t : tracks) {
          const auto linkType = t->GetLinkType();
@@ -183,19 +184,38 @@ auto ProjectFileManager::ReadProjectFile(
             otherError = XO("A channel of a stereo track was missing.");
             err = true;
          }
+         if(!err && unlinkedTrack != nullptr)
+         {
+            //Not an elegant way to deal with stereo wave track linking
+            //compatibility between versions
+            if(const auto left = dynamic_cast<WaveTrack*>(unlinkedTrack))
+            {
+               if(const auto right = dynamic_cast<WaveTrack*>(t))
+               {
+                  left->SetPan(-1.0f);
+                  right->SetPan(1.0f);
+                  RealtimeEffectList::Get(*left).Clear();
+                  RealtimeEffectList::Get(*right).Clear();
+                  if(left->GetRate() != right->GetRate())
+                     //i18n-hint: explains why opened project was auto-modified 
+                     linkTypeChangeReason = XO("This project contained stereo tracks with different sample rates per channel.");
+                  else if(left->GetSampleFormat() != right->GetSampleFormat())
+                     //i18n-hint: explains why opened project was auto-modified  
+                     linkTypeChangeReason = XO("This project contained stereo tracks with different sample formats in channels.");
+                  else
+                     //i18n-hint: explains why opened project was auto-modified 
+                     linkTypeChangeReason = XO("This project contained stereo tracks with non-aligned content.");
+               }
+            }
+            unlinkedTrack = nullptr;
+         }
+
          if(!err &&
             linkType != ChannelGroup::LinkType::None &&
             t->GetLinkType() == ChannelGroup::LinkType::None)
          {
-            //Not an elegant way to deal with wave track linking
-            //compatibility between versions
-            if(const auto left = dynamic_cast<WaveTrack*>(t))
-            {
-               RealtimeEffectList::Get(*left).Clear();
-               if(const auto right = dynamic_cast<WaveTrack*>(*tracks.Find(left).advance(1)))
-                  RealtimeEffectList::Get(*right).Clear();
-               waveTrackLinkTypeChanged = true;
-            }
+            //Wait when LinkConsistencyFix is called on the second track
+            unlinkedTrack = t;
          }
 
          if (const auto message = t->GetErrorOpening()) {
@@ -209,15 +229,19 @@ auto ProjectFileManager::ReadProjectFile(
       }
 
       if (!err) {
-         if(waveTrackLinkTypeChanged && !discardAutosave)
+         if(linkTypeChangeReason && !discardAutosave)
          {
             BasicUI::ShowMessageBox(XO(
-"This project contained stereo tracks with non-aligned content.\n"
+//i18n-hint: Text of the message dialog that may appear on attempt
+//to open a project created by Audacity version prior to 3.4.
+//%s will be replaced with an explanation of the actual reason of
+//project modification.
+"%s\n"
 "This feature is not supported in Audacity versions past 3.3.3.\n"
 "These stereo tracks have been split into mono tracks.\n"
 "As a result, some realtime effects may be missing.\n"
 "Please verify that everything works as intended before saving."
-            ));
+            ).Format(linkTypeChangeReason->Translation()));
          }
 
          parseResult->Commit();
@@ -228,7 +252,7 @@ auto ProjectFileManager::ReadProjectFile(
             bool resaved = false;
 
             if (!projectFileIO.IsTemporary() &&
-               !waveTrackLinkTypeChanged)
+               !linkTypeChangeReason)
             {
                // Re-save non-temporary project to its own path.  This
                // might fail to update the document blob in the database.
