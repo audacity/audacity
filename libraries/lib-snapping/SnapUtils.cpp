@@ -315,13 +315,25 @@ public:
          return { time, false };
       
       const auto multiplier = mMultiplierFunctor(project);
-      const auto step = (upwards ? 1.0 : -1.0) / multiplier;
-      const double result = time + step;
+
+      const auto eps =
+         std::max(1.0, time) * std::numeric_limits<double>::epsilon();
+
+      const auto current = static_cast<int>(std::floor(time * (1.0 + eps) * multiplier));
+      const auto next = upwards ? current + 1 : current - 1;
+
+      double result = next / multiplier;
 
       if (result < 0.0)
          return { 0.0, false };
 
-      return SnapWithMultiplier(result, multiplier, true);
+      while (static_cast<int>(std::floor(result * multiplier)) < next)
+         result += eps;
+
+      while (static_cast<int>(std::floor(result * multiplier)) > next)
+         result -= eps;
+
+      return { result, true };
    }
 
 private:

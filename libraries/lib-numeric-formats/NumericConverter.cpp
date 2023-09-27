@@ -80,6 +80,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    if (!mFormatter)
       return;
 
+   mFormatter->UpdateFormatForValue(rawValue);
    auto result = mFormatter->ValueToString(rawValue, nearest);
 
    mValueString = std::move(result.valueString);
