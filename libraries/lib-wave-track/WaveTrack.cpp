@@ -702,8 +702,11 @@ bool WaveTrack::LinkConsistencyFix(bool doFix)
       }
       else if (doFix) {
          // non-error upgrades happen here
-         if (!AreAligned(SortedClipArray(), next->SortedClipArray()))
+         if (!AreAligned(SortedClipArray(), next->SortedClipArray()) ||
+             !RateConsistencyCheck() || !FormatConsistencyCheck())
+         {
             SetLinkType(LinkType::None);
+         }
          else
          {
             SetLinkType(LinkType::Aligned);
@@ -718,7 +721,11 @@ bool WaveTrack::LinkConsistencyFix(bool doFix)
       // More non-error upgrading
       // Set the common channel group rate from the leader's rate
       if (mLegacyRate > 0)
+      {
          SetRate(mLegacyRate);
+         mLegacyRate = 0;
+         WaveTrackData::Get(*this).SetSampleFormat(mLegacyFormat);
+      }
    }
    return !err;
 }
@@ -2019,7 +2026,6 @@ bool WaveTrack::RateConsistencyCheck() const
             oRate = rate;
          else if (*oRate != rate)
             return false;
-         pTrack->mLegacyRate = 0;
          return true;
       });
 }
@@ -2507,7 +2513,6 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          {
             //Remember sample format until consistency check is performed.
             mLegacyFormat = static_cast<sampleFormat>(nValue);
-            WaveTrackData::Get(*this).SetSampleFormat(mLegacyFormat);
          }
       } // while
       return true;
@@ -2641,18 +2646,6 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
          for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
             if (clip->GetSequence(ii)->GetErrorOpening())
                return XO("A track has a corrupted sample sequence.");
-
-   if (!RateConsistencyCheck())
-      return XO(
-"This project cannot be opened because it contains a stereo track with "
-"different sample rates. This functionality is no longer supported since the "
-"release of Audacity version 3.4");
-
-   if(!FormatConsistencyCheck())
-      return XO(
-"This project cannot be opened because it contains a stereo track with "
-"different sample formats. This functionality is no longer supported since the "
-"release of Audacity version 3.4");
 
    return {};
 }
