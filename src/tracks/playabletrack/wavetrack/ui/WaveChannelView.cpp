@@ -866,19 +866,21 @@ auto WaveChannelSubView::GetMenuItems(
    const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject)
       -> std::vector<MenuItem>
 {
-   const WaveClip *pClip = nullptr;
    auto pTrack = static_cast<WaveTrack*>( FindTrack().get() );
-   double time = 0.0;
-   if ( pTrack && pPosition ) {
-      auto &viewInfo = ViewInfo::Get(*pProject);
-      time = viewInfo.PositionToTime( pPosition->x, rect.x );
-      pClip = pTrack->GetClipAtTime( time );
+   if(pTrack != nullptr && pPosition != nullptr)
+   {
+      const auto &viewInfo = ViewInfo::Get(*pProject);
+      const auto t = viewInfo.PositionToTime(pPosition->x, rect.x);
+      if((pTrack->IsSelected() &&
+         t > viewInfo.selectedRegion.t0() && t < viewInfo.selectedRegion.t1() &&
+         !pTrack->GetClipsIntersecting(viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1()).empty())
+         ||
+         pTrack->GetClipAtTime(t))
+      {
+         return GetWaveClipMenuItems();
+      }
    }
-
-   if (pClip)
-      return GetWaveClipMenuItems();
-   else
-      return {
+   return {
          { L"Paste", XO("Paste")  },
          {},
          { L"TrackMute", XO("Mute/Unmute Track") },
