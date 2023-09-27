@@ -23,6 +23,7 @@
 #include <vector>
 #include <wx/string.h>
 #include "Callable.h"
+#include "TypedAny.h"
 #include "TypeList.h"
 #include "Variant.h"
 
@@ -60,10 +61,10 @@ namespace detail {
 
 //! type-erased value communicated from source or stage, to stage or sink; may
 //! have different types at different joints of the pipeline
-using Data = std::any;
+struct Data : audacity::TypedAny<Data>{ using TypedAny::TypedAny; };
 //! type-erased status code of the last call to a source or stage or sink; may
 //! have different types for different steps
-using Status = std::any;
+struct Status : audacity::TypedAny<Status>{ using TypedAny::TypedAny; };
 using Initializer = std::function<std::pair<Data, Status>()>;
 using Input =  Data *;
 using Output = StageResult<Data, Status>;
@@ -260,7 +261,7 @@ template<typename TypedSource> Source AdaptSource(TypedSource source)
                Status{ std::move(output.second) } }; },
          [](More) -> Output { return More{}; },
       };
-      return Variant::Visit(visitor, source(std::any_cast<TypedData>(p)));
+      return Variant::Visit(visitor, source(p->cast<TypedData>()));
    };
 }
 
@@ -285,8 +286,8 @@ Stage AdaptStage(TypedStage stage)
          [](More) -> Output { return More{}; },
       };
       const auto pTypedInput =
-         input ? std::any_cast<TypedInput>(input) : nullptr;
-      const auto pTypedData = std::any_cast<TypedData>(p);
+         input ? input->cast<TypedInput>() : nullptr;
+      const auto pTypedData = p->cast<TypedData>();
       return Variant::Visit(visitor, stage(pTypedInput, pTypedData));
    };
 }
@@ -300,8 +301,7 @@ auto AdaptSink(TypedSink sink) -> Sink
 {
    return [sink = std::move(sink)] (Input input) -> Status {
       using Answer = LastReturn_t<TypedInput, TypedSink>;
-      const auto pTypedInput =
-         input ? std::any_cast<TypedInput>(input) : nullptr;
+      const auto pTypedInput = input ? input->cast<TypedInput>() : nullptr;
       if constexpr (std::is_void_v<Answer>) {
          sink(pTypedInput);
          return Status{ EmptyStatus{} };
@@ -353,7 +353,7 @@ class Pipeline : detail::TypeErasedPipeline
                // Assume `it` is in bounds;
                // assume the std::any there has the right type
                return std::tuple_cat(
-                  std::tuple{ std::move(*std::any_cast<Status>(&*it)) },
+                  std::tuple{ std::move(*it->cast<Status>()) },
                   move(rest));
          }
       };
