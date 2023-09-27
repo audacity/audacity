@@ -81,6 +81,7 @@ std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
         { L"Paste", XO("Paste")  },
         {},
         { L"Split", XO("Split Clip") },
+        { L"Join", XO("Join Clips") },
         { L"TrackMute", XO("Mute/Unmute Track") },
         {},
         { L"RenameClip", XO("Rename Clip...") },
