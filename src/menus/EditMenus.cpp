@@ -1019,6 +1019,30 @@ const ReservedCommandFlag
    cutCopyOptions()
 }; return flag; }
 
+const ReservedCommandFlag
+&JoinClipsAvailableFlag() { static ReservedCommandFlag flag {
+   [](const AudacityProject &project)
+   {
+      if(AudioIOBusyPred(project))
+         return false;
+      
+      const auto &viewInfo = ViewInfo::Get(project);
+      if(viewInfo.selectedRegion.isPoint())
+         return false;
+
+      const auto selectedTracks = TrackList::Get(project).Selected<const WaveTrack>();
+      for(const auto track : selectedTracks)
+      {
+         const auto selectedClips =
+            track->GetClipsIntersecting(viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1());
+         if(selectedClips.size() > 1)
+            return true;
+      }
+      return false;
+   },
+   CommandFlagOptions{}.DisableDefaultMessage()
+}; return flag; }
+
 using namespace MenuTable;
 BaseItemSharedPtr EditMenu()
 {
@@ -1126,7 +1150,7 @@ BaseItemSharedPtr EditMenu()
             Section( "",
                /* i18n-hint: (verb)*/
                Command( wxT("Join"), XXO("&Join"), OnJoin,
-                  NotBusyTimeAndTracksFlags, wxT("Ctrl+J") ),
+                  JoinClipsAvailableFlag(), wxT("Ctrl+J") ),
                Command( wxT("Disjoin"), XXO("Detac&h at Silences"), OnDisjoin,
                   NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+J") )
             )
