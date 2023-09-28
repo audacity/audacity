@@ -6,9 +6,9 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-05 16:57+0300\n"
-"PO-Revision-Date: 2023-03-05 21:54+0100\n"
-"Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
-"Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2023-09-28 09:51+0200\n"
+"Last-Translator: Pavel <pavelfric@seznam.cz>\n"
+"Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,8 +201,12 @@ msgid "Out of memory!"
 msgstr "Nedostatek paměti!"
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
-msgstr "Automatizované upravení úrovně nahrávání zastaveno. Nebylo možno ji více vyladit. Stále je příliš vysoká."
+msgid ""
+"Automated Recording Level Adjustment stopped. It was not possible to optimize"
+" it more. Still too high."
+msgstr ""
+"Automatizované upravení úrovně nahrávání zastaveno. Nebylo možno ji více"
+" vyladit. Stále je příliš vysoká."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
@@ -210,8 +214,12 @@ msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr "Automatizované upravení úrovně nahrávání snížilo hlasitost na %f."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
-msgstr "Automatizované upravení úrovně nahrávání zastaveno. Nebylo možno ji více vyladit. Stále je ještě nízká."
+msgid ""
+"Automated Recording Level Adjustment stopped. It was not possible to optimize"
+" it more. Still too low."
+msgstr ""
+"Automatizované upravení úrovně nahrávání zastaveno. Nebylo možno ji více"
+" vyladit. Stále je ještě nízká."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
@@ -219,17 +227,28 @@ msgid "Automated Recording Level Adjustment increased the volume to %.2f."
 msgstr "Automatizované upravení úrovně nahrávání snížilo hlasitost na %.2f."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
-msgstr "Automatizované upravení úrovně nahrávání zastaveno. Celkový počet rozborů byl překročen bez nalezení přijatelného objemu. Stále je příliš vysoká."
+msgid ""
+"Automated Recording Level Adjustment stopped. The total number of analyses"
+" has been exceeded without finding an acceptable volume. Still too high."
+msgstr ""
+"Automatizované upravení úrovně nahrávání zastaveno. Celkový počet rozborů byl"
+" překročen bez nalezení přijatelného objemu. Stále je příliš vysoká."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
-msgstr "Automatizované upravení úrovně nahrávání zastaveno. Celkový počet rozborů byl překročen bez nalezení přijatelného objemu. Stále je příliš nízká."
+msgid ""
+"Automated Recording Level Adjustment stopped. The total number of analyses"
+" has been exceeded without finding an acceptable volume. Still too low."
+msgstr ""
+"Automatizované upravení úrovně nahrávání zastaveno. Celkový počet rozborů byl"
+" překročen bez nalezení přijatelného objemu. Stále je příliš nízká."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
-msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
-msgstr "Automatizované upravení úrovně nahrávání zastaveno. %.2f se zdá jako přijatelná hlasitost."
+msgid ""
+"Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr ""
+"Automatizované upravení úrovně nahrávání zastaveno. %.2f se zdá jako"
+" přijatelná hlasitost."
 
 #: libraries/lib-basic-ui/BasicUI.cpp
 #: libraries/lib-exceptions/AudacityException.h
@@ -280,7 +299,8 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
 "Chyba při otevírání zvukového zařízení.\n"
-"Pokuste se změnit hostitele zvuku, přehrávací zařízení a vzorkovací kmitočet projektu."
+"Pokuste se změnit hostitele zvuku, přehrávací zařízení a vzorkovací kmitočet"
+" projektu."
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
@@ -354,7 +374,9 @@ msgstr "Audacity se nepodařilo přečíst soubor v %s."
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "Audacity se úspěšně podařilo zapsat soubor v %s, ale nepodařilo se jej přejmenovat na %s."
+msgstr ""
+"Audacity se úspěšně podařilo zapsat soubor v %s, ale nepodařilo se jej"
+" přejmenovat na %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -714,7 +736,7 @@ msgstr "hh:mm:ss"
 #. * minutes, seconds and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
 msgid "hh:mm:ss + milliseconds"
-msgstr "hh:mm:ss + millisekundy"
+msgstr "hh:mm:ss + milisekundy"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and hundredths of a second (1/100 second)
@@ -739,24 +761,23 @@ msgstr "Oktávy"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
-#, fuzzy
 msgid "bar"
-msgstr "Nástrojový pruh"
+msgstr "takt"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr ""
+msgstr "doba"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr ""
+msgstr "takt:doba"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr ""
+msgstr "takt:doba:tik"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -768,9 +789,8 @@ msgstr "01000,01000 sekund"
 #. i18n-hint: Name of time display format that shows time in seconds
 #. * and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "seconds + milliseconds"
-msgstr "hh:mm:ss + millisekundy"
+msgstr "sekund + milisekundy"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
 #. * as fractional seconds. Change the comma in the middle to the 1000s separator
@@ -778,9 +798,8 @@ msgstr "hh:mm:ss + millisekundy"
 #. * Don't change the numbers. The decimal separator is specified using '<' if
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "01000,01000>01000 seconds"
-msgstr "01000,01000 sekund"
+msgstr "01000,01000>01000 sekund"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -1105,7 +1124,8 @@ msgstr "Nepodařilo se nastavit nouzový režim na hlavním připojení k %s"
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Nepodařilo se nastavit nouzový režim při připojení ke kontrolnímu bodu %s"
+msgstr ""
+"Nepodařilo se nastavit nouzový režim při připojení ke kontrolnímu bodu %s"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 msgid "Checkpointing project"
@@ -1417,10 +1437,12 @@ msgstr "(Obnoveno)"
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
+"You are using Audacity %s. You may need to upgrade to a newer version to open"
+" this file."
 msgstr ""
 "Tento soubor byl uložen Audacity %s.\n"
-"Používáte Audacity %s. Pro otevření tohoto souboru bude třeba, abyste program povýšil na novější verzi."
+"Používáte Audacity %s. Pro otevření tohoto souboru bude třeba, abyste program"
+" povýšil na novější verzi."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -1428,7 +1450,9 @@ msgstr "Nelze otevřít soubor s projektem"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
-msgstr "Nepodařilo se odstranit informaci o automatickém uložení ze souboru s projektem."
+msgstr ""
+"Nepodařilo se odstranit informaci o automatickém uložení ze souboru s"
+" projektem."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
@@ -1439,8 +1463,12 @@ msgid "Unable to parse project information."
 msgstr "Nelze zpracovat informace o projektu."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
-msgstr "Databázi projektu se nepodařilo znovu otevřít, pravděpodobně kvůli omezenému prostoruna úložném zařízení."
+msgid ""
+"The project's database failed to reopen, possibly because of limited space on"
+" the storage device."
+msgstr ""
+"Databázi projektu se nepodařilo znovu otevřít, pravděpodobně kvůli omezenému"
+" prostoruna úložném zařízení."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Saving project"
@@ -1475,7 +1503,8 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Nelze odebrat informace o automatickém ukládání, pravděpodobně kvůli omezenému prostoru\n"
+"Nelze odebrat informace o automatickém ukládání, pravděpodobně kvůli"
+" omezenému prostoru\n"
 "na úložném zařízení.\n"
 "\n"
 "%s"
@@ -1519,17 +1548,22 @@ msgstr "24 bit"
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr "Skupina přídavného modulu %s byla sloučena s předtím stanovenou skupinou"
+msgstr ""
+"Skupina přídavného modulu %s byla sloučena s předtím stanovenou skupinou"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
-msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr "Položka přídavného modulu (rozšíření) při %s je ve střetu s předtím stanovenou položkou a byla zahozena"
+msgid ""
+"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr ""
+"Položka přídavného modulu (rozšíření) při %s je ve střetu s předtím"
+" stanovenou položkou a byla zahozena"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in items at %s specify conflicting placements"
-msgstr "Položky přídavných modulů (rozšíření) při %s stanovují rozporná umístění"
+msgstr ""
+"Položky přídavných modulů (rozšíření) při %s stanovují rozporná umístění"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
 msgid "Sample Track"
@@ -1573,83 +1607,78 @@ msgstr "&Diagnóza"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Beats"
-msgstr "&Doby"
+msgstr "Doby"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Bar"
-msgstr "Štěknutí"
+msgstr "Takt"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "1/2"
-msgstr "128"
+msgstr "1/2"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/4"
-msgstr ""
+msgstr "1/4"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "1/8"
-msgstr "128"
+msgstr "1/8"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/16"
-msgstr ""
+msgstr "1/16"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/32"
-msgstr ""
+msgstr "1/32"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/64"
-msgstr ""
+msgstr "1/64"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/128"
-msgstr ""
+msgstr "1/128"
 
 #. i18n-hint: The music theory "triplet"
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "Triplets"
-msgstr ""
+msgstr "Trioly"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/2 (triplets)"
-msgstr ""
+msgstr "1/2 (trioly)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/4 (triplets)"
-msgstr ""
+msgstr "1/4 (trioly)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/8 (triplets)"
-msgstr ""
+msgstr "1/8 (trioly)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/16 (triplets)"
-msgstr ""
+msgstr "1/16 (trioly)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/32 (triplets)"
-msgstr ""
+msgstr "1/32 (trioly)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/64 (triplets)"
-msgstr ""
+msgstr "1/64 (trioly)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
 msgid "1/128 (triplets)"
-msgstr ""
+msgstr "1/128 (trioly)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Seconds && samples"
-msgstr "Druhý největší"
+msgstr "Sekundy && vzorky"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 #: plug-ins/sample-data-export.ny
@@ -1657,48 +1686,40 @@ msgid "Seconds"
 msgstr "Sekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Deciseconds"
-msgstr "Centisekundy"
+msgstr "Decisekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Centiseconds"
 msgstr "Centisekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Milliseconds"
-msgstr "milisekund"
+msgstr "Milisekundy"
 
 #: libraries/lib-snapping/SnapUtils.cpp src/prefs/TracksPrefs.cpp
 msgid "Samples"
 msgstr "Vzorky"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Video frames"
-msgstr "NTSC snímky"
+msgstr "Snímky videa"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "Film frames (24 fps)"
-msgstr "film frames - rámce (24 fps)"
+msgstr "Filmové snímky (24 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "NTSC frames (29.97 fps)"
-msgstr "CDDA snímků (75 fps)"
+msgstr "Snímky NTSC (29,97 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "NTSC frames (30 fps)"
-msgstr "CDDA snímků (75 fps)"
+msgstr "Snímky NTSC (30 fps)"
 
 #: libraries/lib-snapping/SnapUtils.cpp
-#, fuzzy
 msgid "CD frames"
-msgstr "NTSC snímky"
+msgstr "Snímky CD"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
@@ -1706,7 +1727,7 @@ msgstr "Vyjmout/Kopírovat/Vložit"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr "Nástrojový panel &Vyjmout/Kopírovat/Vložit"
+msgstr "Panel nástrojů pro &vyjmutí/kopírování/vložení"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -2116,11 +2137,13 @@ msgid "No Local Help"
 msgstr "Není místní nápověda"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
+msgid ""
+"<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
 msgstr "<br><br>Používaná verze Audacity je <b>zkušební verze Alpha</b>."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgid ""
+"<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
 msgstr "<br><br>Používaná verze Audacity je <b>zkušební verze Beta</b>."
 
 #: libraries/lib-wx-init/HelpText.cpp
@@ -2128,12 +2151,20 @@ msgid "Get the Official Released Version of Audacity"
 msgstr "Získejte oficiální vydanou verzi Audacity"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
-msgstr "Naléhavě se doporučuje používat nejnovější vydanou verzi, která má úplnou dokumentaci a plnou podporu.<br><br>"
+msgid ""
+"We strongly recommend that you use our latest stable released version, which"
+" has full documentation and support.<br><br>"
+msgstr ""
+"Naléhavě se doporučuje používat nejnovější vydanou verzi, která má úplnou"
+" dokumentaci a plnou podporu.<br><br>"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
-msgstr "Můžete pomoci s přípravou Audacity na vydání, tím, že se připojíte k našemu [[https://www.audacityteam.org/community/|společenství]].<hr><br><br>"
+msgid ""
+"You can help us get Audacity ready for release by joining our"
+" [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgstr ""
+"Můžete pomoci s přípravou Audacity na vydání, tím, že se připojíte k našemu"
+" [[https://www.audacityteam.org/community/|společenství]].<hr><br><br>"
 
 #. i18n-hint: %s is replaced with Audacity version
 #: libraries/lib-wx-init/HelpText.cpp
@@ -2152,36 +2183,72 @@ msgstr "Toto jsou námi podporované způsoby:"
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[help:Quick_Help|Quick Help]]"
-msgstr ""
+msgstr "[[help:Quick_Help|Rychlá nápověda]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid " [[help:Main_Page|Manual]]"
-msgstr ""
+msgstr " [[help:Main_Page|Příručka]]"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
+msgstr "[[https://support.audacityteam.org/|Návody a postupy]]"
+
+#: libraries/lib-wx-init/HelpText.cpp
+msgid ""
+" [[https://forum.audacityteam.org/|Forum]] - ask your question directly,"
+" online."
 msgstr ""
+" [[https://forum.audacityteam.org/|Fórum]] - zeptejte se přímo na internetu."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr " [[https://forum.audacityteam.org/|Fórum]] - zeptejte se přímo na internetu."
+msgid ""
+"Audacity can import unprotected files in many other formats (such as M4A and"
+" WMA, compressed WAV files from portable recorders and audio from video"
+" files) if you download and install the optional"
+" [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#forei"
+"gn| FFmpeg library]] to your computer."
+msgstr ""
+"Audacity dokáže nahrát nechráněné soubory v mnoha jiných formátech (např. M4A"
+" a WMA, komprimované WAV soubory z přenosných přehrávačů a zvuk z video"
+" souborů), pokud si stáhnete a nainstalujete volitelnou"
+" [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#forei"
+"gn|FFmpeg knihovnu]] do počítače."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
-msgstr "Audacity dokáže nahrát nechráněné soubory v mnoha jiných formátech (např. M4A a WMA, komprimované WAV soubory z přenosných přehrávačů a zvuk z video souborů), pokud si stáhnete a nainstalujete volitelnou [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|FFmpeg knihovnu]] do počítače."
+msgid ""
+"You can also read our help on importing [[https://manual.audacityteam.org/man/"
+"playing_and_recording.html#midi|MIDI files]] and tracks from"
+" [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromc"
+"d| audio CDs]]."
+msgstr ""
+"Můžete také přečíst naši nápovědu k nahrávání"
+" [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|M"
+"IDI souborů]] a stop z [[https://manual.audacityteam.org/man/faq_opening_and_s"
+"aving_files.html#fromcd| audio CD]]."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
-msgstr "Můžete také přečíst naši nápovědu k nahrávání [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI souborů]] a stop z [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CD]]."
+msgid ""
+"The Manual does not appear to be installed. Please [[*URL*|view the Manual"
+" online]].<br><br>To always view the Manual online, change \"Location of"
+" Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+"Zdá se, že není nainstalována příručka. Prosím, [[*URL*|zhlédněte ji na"
+" internetu]].<br><br> Abyste vždy viděli internetovou příručku, změňte"
+" umístění příručky v nastavení rozhraní na \"Z internetu\"."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Zdá se, že není nainstalována příručka. Prosím, [[*URL*|zhlédněte ji na internetu]].<br><br> Abyste vždy viděli internetovou příručku, změňte umístění příručky v nastavení rozhraní na \"Z internetu\"."
-
-#: libraries/lib-wx-init/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Zdá se, že nemáte nainstalovanou složku s nápovědou. Prosím, [[*URL*|zhlédněte ji na internetu]] nebo [[https://manual.audacityteam.org/man/unzipping_the_manual.html| stáhněte nynější příručku]].<br><br> Abyste vždy viděli internetovou příručku, změňte umístění příručky v nastavení rozhraní na \"Z internetu\"."
+msgid ""
+"The Manual does not appear to be installed. Please [[*URL*|view the Manual"
+" online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html|"
+" download the Manual]].<br><br>To always view the Manual online, change"
+" \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+"Zdá se, že nemáte nainstalovanou složku s nápovědou. Prosím,"
+" [[*URL*|zhlédněte ji na internetu]] nebo"
+" [[https://manual.audacityteam.org/man/unzipping_the_manual.html| stáhněte"
+" nynější příručku]].<br><br> Abyste vždy viděli internetovou příručku, změňte"
+" umístění příručky v nastavení rozhraní na \"Z internetu\"."
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Check Online"
@@ -2268,7 +2335,8 @@ msgid "Confirm Close"
 msgstr "Potvrdit zavření"
 
 #: libraries/lib-wx-init/SelectFile.cpp
-msgid "The specified filename could not be converted due to Unicode character use."
+msgid ""
+"The specified filename could not be converted due to Unicode character use."
 msgstr "Název souboru nelze převést kvůli použití znaků Unicode."
 
 #: libraries/lib-wx-init/SelectFile.cpp
@@ -2461,7 +2529,8 @@ msgstr "Nahrát skript Nyquist"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr "Skripty Nyquist (*.ny)|*.ny|Skripty Lisp (*.lsp)|*.lsp|Všechny soubory|*"
+msgstr ""
+"Skripty Nyquist (*.ny)|*.ny|Skripty Lisp (*.lsp)|*.lsp|Všechny soubory|*"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
@@ -2492,8 +2561,10 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 od Lelanda Lucia"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr "Vnější modul Audacity, který poskytuje jednoduché IDE pro zápis efektů."
+msgid ""
+"External Audacity module which provides a simple IDE for writing effects."
+msgstr ""
+"Vnější modul Audacity, který poskytuje jednoduché IDE pro zápis efektů."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -2794,7 +2865,9 @@ msgstr "O programu %s"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "Český překlad: Aleš Tošovský, Dominik Joe Pantůček, Vladimír Krupka (Audacity 1.x), Pavel Fric (Audacity 2.x)"
+msgstr ""
+"Český překlad: Aleš Tošovský, Dominik Joe Pantůček, Vladimír Krupka (Audacity"
+" 1.x), Pavel Fric (Audacity 2.x)"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -2803,8 +2876,12 @@ msgstr "<h3>"
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s the free, open source, cross-platform software for recording and editing sounds."
-msgstr "%s je program zadarmo, s otevřeným zdrojovým kódem, pro více operačních systémů, na nahrávání a upravování zvuku"
+msgid ""
+"%s the free, open source, cross-platform software for recording and editing"
+" sounds."
+msgstr ""
+"%s je program zadarmo, s otevřeným zdrojovým kódem, pro více operačních"
+" systémů, na nahrávání a upravování zvuku"
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -2862,9 +2939,9 @@ msgstr "Stránky %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2023 %s Team."
-msgstr "Kopírovací právo k software %s %s 1999-2021 tým %s."
+msgstr "Kopírovací právo k software %s %s 1999-2023 tým %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -3042,8 +3119,12 @@ msgid "PRIVACY POLICY"
 msgstr "ZÁSADY OCHRANY OSOBNÍCH ÚDAJŮ"
 
 #: src/AboutDialog.cpp
-msgid "App update checking and error reporting require network access. These features are optional."
-msgstr "Kontrola aktualizací aplikace a hlášení chyb vyžadují přístup k síti. Tyto funkce jsou volitelné."
+msgid ""
+"App update checking and error reporting require network access. These"
+" features are optional."
+msgstr ""
+"Kontrola aktualizací aplikace a hlášení chyb vyžadují přístup k síti. Tyto"
+" funkce jsou volitelné."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
@@ -3059,14 +3140,12 @@ msgid "our Privacy Policy"
 msgstr "naše zásady ochrany osobních údajů"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Minutes and Seconds"
-msgstr "Pětiny sekund"
+msgstr "Minuty a sekundy"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Beats and Measures"
-msgstr "Vyhledávač dob"
+msgstr "Doby a takty"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
@@ -3078,7 +3157,9 @@ msgstr "Činnosti časové osy během nahrávání zvuku zakázány"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr "Klepnutí a táhnutí pro přizpůsobení, dvojité klepnutí pro vrácení do výchozího stavu"
+msgstr ""
+"Klepnutí a táhnutí pro přizpůsobení, dvojité klepnutí pro vrácení do"
+" výchozího stavu"
 
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
@@ -3096,7 +3177,9 @@ msgstr "Časová osa"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
-msgstr "Klepněte nebo táhněte pro započetí přehrávání normální rychlostí s přeskakováním"
+msgstr ""
+"Klepněte nebo táhněte pro započetí přehrávání normální rychlostí s"
+" přeskakováním"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -3112,7 +3195,9 @@ msgstr "Klepněte nebo táhněte pro započetí přehrávání proměnlivou rych
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Klepněte a pohybujte pro přehrávání proměnlivou rychlostí. Klepněte a táhněte pro přehrávání normální rychlostí s přeskakováním."
+msgstr ""
+"Klepněte a pohybujte pro přehrávání proměnlivou rychlostí. Klepněte a táhněte"
+" pro přehrávání normální rychlostí s přeskakováním."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -3132,15 +3217,21 @@ msgstr "Pohybovat pro přehrávání proměnlivou rychlostí"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release to stop seeking."
-msgstr "Táhněte pro přehrávání normální rychlostí s přeskakováním. Přestaňte pro ukončení přehrávání normální rychlostí s přeskakováním."
+msgstr ""
+"Táhněte pro přehrávání normální rychlostí s přeskakováním. Přestaňte pro"
+" ukončení přehrávání normální rychlostí s přeskakováním."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
-msgstr "Táhněte pro přehrávání normální rychlostí s přeskakováním. Přestaňte a pohybujte pro přehrávání proměnlivou rychlostí."
+msgstr ""
+"Táhněte pro přehrávání normální rychlostí s přeskakováním. Přestaňte a"
+" pohybujte pro přehrávání proměnlivou rychlostí."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
-msgstr "Pohybujte pro přehrávání proměnlivou rychlostí. Táhněte pro přehrávání normální rychlostí s přeskakováním."
+msgstr ""
+"Pohybujte pro přehrávání proměnlivou rychlostí. Táhněte pro přehrávání"
+" normální rychlostí s přeskakováním."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play disabled"
@@ -3192,11 +3283,13 @@ msgstr "Selhalo!"
 msgid ""
 "Reset Preferences?\n"
 "\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
+"This is a one-time question, after an 'install' where you asked to have the"
+" Preferences reset."
 msgstr ""
 "Vynulovat nastavení?\n"
 "\n"
-"Toto je jednorázová otázka pokládaná po instalaci, kde jste dotazováni na obnovení výchozího nastavení."
+"Toto je jednorázová otázka pokládaná po instalaci, kde jste dotazováni na"
+" obnovení výchozího nastavení."
 
 #: src/AudacityApp.cpp
 msgid "Reset Audacity Preferences"
@@ -3215,7 +3308,8 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
-msgstr "Knihovnu SQLite se nepodařilo inicializovat. Audacity nemůže pokračovat."
+msgstr ""
+"Knihovnu SQLite se nepodařilo inicializovat. Audacity nemůže pokračovat."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -3254,11 +3348,13 @@ msgstr "&Soubor"
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
+"Audacity needs a place where automatic cleanup programs won't delete the"
+" temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Audacity se nepodařilo najít místo pro uložení dočasných souborů.\n"
-"Audacity potřebuje místo, kde automatické čisticí programy nesmažou dočasné soubory.\n"
+"Audacity potřebuje místo, kde automatické čisticí programy nesmažou dočasné"
+" soubory.\n"
 "Zadejte, prosím, příslušnou složku v dialogu Nastavení."
 
 #: src/AudacityApp.cpp
@@ -3270,8 +3366,12 @@ msgstr ""
 "Zadejte, prosím, příslušnou složku v dialogu Nastavení."
 
 #: src/AudacityApp.cpp
-msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
-msgstr "Ukončení Audacity. Spusťte, prosím, Audacity znovu, aby se použil nový dočasný adresář."
+msgid ""
+"Audacity is now going to exit. Please launch Audacity again to use the new"
+" temporary directory."
+msgstr ""
+"Ukončení Audacity. Spusťte, prosím, Audacity znovu, aby se použil nový"
+" dočasný adresář."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -3460,21 +3560,28 @@ msgid ""
 "\n"
 "\t%s\n"
 "\n"
-"This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. More information can be obtained by clicking the help button below.\n"
+"This could be caused by many reasons, but the most likely are that the disk"
+" is full or you do not have write permissions to the file. More information"
+" can be obtained by clicking the help button below.\n"
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved"
+" state which will be recovered the next time you open it."
 msgstr ""
 "Nelze získat přístup k následujícímu nastavovacímu souboru: \n"
 "\n"
 "\t%s\n"
 "\n"
-"To může být způsobeno mnoha důvody, ale nejpravděpodobnější je, že diskje plný nebo nemáte oprávnění k zápisu do souboru. Více informacílze získat klepnutím na tlačítko nápovědy níže. \n"
+"To může být způsobeno mnoha důvody, ale nejpravděpodobnější je, že diskje"
+" plný nebo nemáte oprávnění k zápisu do souboru. Více informacílze získat"
+" klepnutím na tlačítko nápovědy níže. \n"
 "\n"
-"Můžete se pokusit problém opravit a poté pokračovat klepnutím na „Zkusit znovu“. \n"
+"Můžete se pokusit problém opravit a poté pokračovat klepnutím na „Zkusit"
+" znovu“. \n"
 "\n"
-"Pokud se rozhodnete „Ukončit Audacity“, může být váš projekt ponechán v neuloženém stavu, který bude obnoven při příštím otevření."
+"Pokud se rozhodnete „Ukončit Audacity“, může být váš projekt ponechán v"
+" neuloženém stavu, který bude obnoven při příštím otevření."
 
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 msgid "&Quit Audacity"
@@ -3487,33 +3594,38 @@ msgstr "&Zkusit znovu"
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
-"The entire source clip will be pasted into your project, allowing you to access\n"
+"The entire source clip will be pasted into your project, allowing you to"
+" access\n"
 "trimmed audio data anytime."
 msgstr ""
+"Chytrý klip.\n"
+"Celý zdrojový klip se vloží do projektu a umožní vám přistupovat k\n"
+"oříznutým zvukovým datům kdykoli."
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Selected audio only.\n"
 "Only the selected portion of the source clip will be pasted."
 msgstr ""
+"Pouze vybraný zvuk.\n"
+"Vloží se pouze vybraná část zdrojového klipu."
 
 #: src/AudioPasteDialog.cpp
-#, fuzzy
 msgid "Paste audio"
-msgstr "Sdílet zvuk"
+msgstr "Vložit zvuk"
 
 #: src/AudioPasteDialog.cpp
 msgid "How would you like to paste your audio?"
-msgstr ""
+msgstr "Jak chcete zvuk vložit?"
 
 #: src/AudioPasteDialog.cpp
 #, c-format
 msgid "Audio data is %s. Larger sizes will take longer to paste."
-msgstr ""
+msgstr "Zvuková data jsou %s. Vkládání větších velikostí bude trvat déle."
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
-msgstr ""
+msgstr "Zapamatovat si mou volbu a už se neptat"
 
 #: src/AudioPasteDialog.cpp
 msgid "Continue"
@@ -3525,11 +3637,13 @@ msgstr "Automatické obnovení po chybě"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Audacity was run"
+" and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Následující projekty nebyly správně uloženy naposledy, co byl Audacityspuštěn a lze je automaticky obnovit.\n"
+"Následující projekty nebyly správně uloženy naposledy, co byl Audacityspuštěn"
+" a lze je automaticky obnovit.\n"
 "\n"
 "Po obnovení projekty uložte, abyste zajistili zápis změn na disk."
 
@@ -4095,14 +4209,20 @@ msgstr ""
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-msgstr "Vyberte zvuk pro %s (např. Cmd+A pro výběr všeho), potom to zkuste znovu."
+msgid ""
+"Select the audio for %s to use (for example, Cmd + A to Select All) then try"
+" again."
+msgstr ""
+"Vyberte zvuk pro %s (např. Cmd+A pro výběr všeho), potom to zkuste znovu."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-msgstr "Vyberte zvuk pro %s (např. Ctrl+A pro výběr všeho), potom to zkuste znovu."
+msgid ""
+"Select the audio for %s to use (for example, Ctrl + A to Select All) then try"
+" again."
+msgstr ""
+"Vyberte zvuk pro %s (např. Ctrl+A pro výběr všeho), potom to zkuste znovu."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
@@ -4114,14 +4234,16 @@ msgstr "Nebyl vybrán žádný zvuk"
 msgid ""
 "Select the audio for %s to use.\n"
 "\n"
-"1. Select audio that represents noise and use %s to get your 'noise profile'.\n"
+"1. Select audio that represents noise and use %s to get your 'noise"
+" profile'.\n"
 "\n"
 "2. When you have got your noise profile, select the audio you want to change\n"
 "and use %s to change that audio."
 msgstr ""
 "Vyberte zvuk pro %s k použití.\n"
 "\n"
-"1. Vyberte zvuk, který představuje šum, a použijte %s k získání profilu šumu.\n"
+"1. Vyberte zvuk, který představuje šum, a použijte %s k získání profilu"
+" šumu.\n"
 "\n"
 "2. Po obdržení profilu šumu vyberte zvuk, který chcete změnit,\n"
 "a použijte %s ke změně tohoto zvuku."
@@ -4187,8 +4309,10 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Soubory uvedené jako chybějící byly přesunuty nebo odstraněny a nelze je kopírovat.\n"
-"Obnovte je do jejich původního umístění, aby bylo možné je kopírovat do projektu."
+"Soubory uvedené jako chybějící byly přesunuty nebo odstraněny a nelze je"
+" kopírovat.\n"
+"Obnovte je do jejich původního umístění, aby bylo možné je kopírovat do"
+" projektu."
 
 #: src/Dependencies.cpp
 msgid "Project Dependencies"
@@ -4263,18 +4387,23 @@ msgid "Missing"
 msgstr "Chybí"
 
 #: src/Dependencies.cpp
-msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
-msgstr "Pokud budete pokračovat, nebude váš projekt uložen na disk. Opravdu to tak chcete?"
+msgid ""
+"If you proceed, your project will not be saved to disk. Is this what you want?"
+msgstr ""
+"Pokud budete pokračovat, nebude váš projekt uložen na disk. Opravdu to tak"
+" chcete?"
 
 #: src/Dependencies.cpp
 msgid ""
-"Your project is self-contained; it does not depend on any external audio files. \n"
+"Your project is self-contained; it does not depend on any external audio"
+" files. \n"
 "\n"
 "Some older Audacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
 "New projects will be self-contained and are less risky."
 msgstr ""
-"Váš projekt je v současné době samostatný, nezávisí na vnějších zvukových souborech. \n"
+"Váš projekt je v současné době samostatný, nezávisí na vnějších zvukových"
+" souborech. \n"
 "\n"
 "Některé starší projekty Audacity nejsou samostatné a je potřeba se postarat\n"
 "o zachování jejich vnějších závislostí na správném místě.\n"
@@ -4322,8 +4451,10 @@ msgid ""
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"FFmpeg byl nastaven v Nastavení a předtím úspěšně nahrán,                         \n"
-"nyní ho ale Audacity nedokázalo při spuštění nahrát.                         \n"
+"FFmpeg byl nastaven v Nastavení a předtím úspěšně nahrán,                    "
+"     \n"
+"nyní ho ale Audacity nedokázalo při spuštění nahrát.                        "
+" \n"
 "\n"
 "Můžete se vrátit do Nastavení → Knihovny a znovu ho nastavit."
 
@@ -4403,7 +4534,8 @@ msgstr ""
 "Audacity se pokusil použít FFmpeg k zavedení zvukového souboru,\n"
 "ale knihovny nebyly nalezeny.\n"
 "\n"
-"Pro užití FFmpeg k nahrání zvukového souboru přejděte do Úpravy → Nastavení → Knihovny\n"
+"Pro užití FFmpeg k nahrání zvukového souboru přejděte do Úpravy → Nastavení →"
+" Knihovny\n"
 "pro stažení nebo vyhledání knihoven FFmpeg."
 
 #: src/FFmpeg.cpp
@@ -4535,12 +4667,17 @@ msgstr "&Vykreslit znovu..."
 
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
-msgstr "Chcete-li vykreslit spektrum, musí mít všechny vybrané stopy stejný vzorkovací kmitočet."
+msgstr ""
+"Chcete-li vykreslit spektrum, musí mít všechny vybrané stopy stejný"
+" vzorkovací kmitočet."
 
 #: src/FreqWindow.cpp
 #, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "Bylo vybráno příliš mnoho zvuku. Bude rozebráno jen prvních %.1f sekund zvuku."
+msgid ""
+"Too much audio was selected. Only the first %.1f seconds of audio will be"
+" analyzed."
+msgstr ""
+"Bylo vybráno příliš mnoho zvuku. Bude rozebráno jen prvních %.1f sekund zvuku."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -4672,9 +4809,8 @@ msgid "Incompatible plugin(s) found"
 msgstr "Nalezeny nekompatibilní přídavné moduly"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "&Manage Plugins"
-msgstr "Spravovat přídavné moduly"
+msgstr "&Spravovat přídavné moduly"
 
 #: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
@@ -4688,13 +4824,27 @@ msgstr "&OK"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr "Audacity nalezl %d nekompatibilních přídavných modulů, které nebylo možné nahrát. Tyto přídavné moduly jsme zakázali, abychom předešli případnému zaseknutí nebo pádu. Pokud se přesto chcete pokusit tyto přídavné moduly používat, můžete je povolit pomocí \"Správa přídavných modulů\". V opačném případě vyberte možnost \"Pokračovat\"."
+msgid ""
+"Audacity has found %d incompatible plugins which could not be loaded. We have"
+" disabled these plugins to avoid any stalling or crashes. If you would still"
+" like to attempt to use these plugins, you can enable them using \"Manage"
+" Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
+"Audacity nalezl %d nekompatibilních přídavných modulů, které nebylo možné"
+" nahrát. Tyto přídavné moduly jsme zakázali, abychom předešli případnému"
+" zaseknutí nebo pádu. Pokud se přesto chcete pokusit tyto přídavné moduly"
+" používat, můžete je povolit pomocí \"Správa přídavných modulů\". V opačném"
+" případě vyberte možnost \"Pokračovat\"."
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy, c-format
-msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
-msgstr "Audacity nalezl %d nekompatibilních přídavných modulů, které nebylo možné nahrát. Tyto přídavné moduly jsme zakázali, abychom předešli případnému zaseknutí nebo pádu. Pokud se přesto chcete pokusit tyto přídavné moduly používat, můžete je povolit pomocí \"Správa přídavných modulů\". V opačném případě vyberte možnost \"Pokračovat\"."
+#, c-format
+msgid ""
+"Audacity has found %d incompatible plugins which could not be loaded. We have"
+" disabled these plugins to avoid any stalling or crashes."
+msgstr ""
+"Audacity nalezl %d nekompatibilních přídavných modulů, které nebylo možné"
+" nahrát. Tyto přídavné moduly byly zakázány, aby se předešlo případnému"
+" zaseknutí nebo pádu."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -4800,7 +4950,9 @@ msgstr "Vyberte jazyk, který se v Audacity bude používat:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
+msgid ""
+"The language you have chosen, %s (%s), is not the same as the system"
+" language, %s (%s)."
 msgstr "Vámi vybraný jazyk, %s (%s), se neshoduje s jazykem systému, %s (%s)."
 
 #: src/Legacy.cpp
@@ -5103,7 +5255,9 @@ msgstr "Spravovat přídavné moduly"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "Vyberte efekt, klepněte na tlačítko Povolit nebo Zakázat, potom klepněte na OK."
+msgstr ""
+"Vyberte efekt, klepněte na tlačítko Povolit nebo Zakázat, potom klepněte na"
+" OK."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginRegistrationDialog.cpp
@@ -5238,7 +5392,8 @@ msgstr "Nynější hodnota vzorkování: %d"
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
-msgstr "Všechny pro nahrávání vybrané stopy  musí mít stejný vzorkovací kmitočet"
+msgstr ""
+"Všechny pro nahrávání vybrané stopy  musí mít stejný vzorkovací kmitočet"
 
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
@@ -5252,7 +5407,8 @@ msgid ""
 "each stereo track)"
 msgstr ""
 "Pro nahrávání při tomto vzorkovacím kmitočtu je vybráno příliš málo stop.\n"
-"(Audacity vyžaduje dva kanály se stejným vzorkovacím kmitočtem pro každou stereo stopu)"
+"(Audacity vyžaduje dva kanály se stejným vzorkovacím kmitočtem pro každou"
+" stereo stopu)"
 
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 msgid "Too Few Compatible Tracks Selected"
@@ -5287,8 +5443,14 @@ msgid "Close project immediately with no changes"
 msgstr "Zavřít projekt okamžitě beze změn"
 
 #: src/ProjectFSCK.cpp
-msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
-msgstr "Pokračujte s opravami popsanými v zápisu a zkontrolujte, zda tam není více chyb. To zachová projekt v jeho současném stavu, s výjimkou \"Zavřít projekt hned\" dalších chybových záznamů."
+msgid ""
+"Continue with repairs noted in log, and check for more errors. This will save"
+" the project in its current state, unless you \"Close project immediately\""
+" on further error alerts."
+msgstr ""
+"Pokračujte s opravami popsanými v zápisu a zkontrolujte, zda tam není více"
+" chyb. To zachová projekt v jeho současném stavu, s výjimkou \"Zavřít projekt"
+" hned\" dalších chybových záznamů."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -5447,7 +5609,8 @@ msgid ""
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
 msgstr ""
-"Během automatického obnovení byly kontrolou projektu nalezeny nesrovnalosti v souborech.\n"
+"Během automatického obnovení byly kontrolou projektu nalezeny nesrovnalosti v"
+" souborech.\n"
 "\n"
 "Vyberte Nápověda → Diagnostika → Zobrazit zápis... pro zobrazení detailů. "
 
@@ -5525,8 +5688,12 @@ msgstr ""
 "Vyberte jiný disk s větším volným místem."
 
 #: src/ProjectFileManager.cpp
-msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
-msgstr "Při zápisu na formátovaný souborový systém FAT32 projekt překračuje největší velikost 4 GB."
+msgid ""
+"The project exceeds the maximum size of 4GB when writing to a FAT32 formatted"
+" filesystem."
+msgstr ""
+"Při zápisu na formátovaný souborový systém FAT32 projekt překračuje největší"
+" velikost 4 GB."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -5535,10 +5702,12 @@ msgstr "Uloženo %s"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the file name provided would overwrite another project.\n"
+"The project was not saved because the file name provided would overwrite"
+" another project.\n"
 "Please try again and select an original name."
 msgstr ""
-"Projekt byl uložen, protože by poskytnutý název souboru přepsal jiný projekt.\n"
+"Projekt byl uložen, protože by poskytnutý název souboru přepsal jiný"
+" projekt.\n"
 "Zkuste to, prosím, znovu a vyberte původní název."
 
 #: src/ProjectFileManager.cpp
@@ -5581,7 +5750,8 @@ msgstr "Varování ohledně přepsání projektu"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the selected project is open in another window.\n"
+"The project was not saved because the selected project is open in another"
+" window.\n"
 "Please try again and select an original name."
 msgstr ""
 "Projekt nebyl uložen, protože vybraný projekt je otevřen v jiném okně.\n"
@@ -5704,19 +5874,23 @@ msgstr "Scelit projekt"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
-"Compacting this project will free up disk space by removing unused bytes within the file.\n"
+"Compacting this project will free up disk space by removing unused bytes"
+" within the file.\n"
 "\n"
 "There is %s of free disk space and this project is currently using %s.\n"
 "\n"
-"If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be"
+" discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
 msgstr ""
-"Scelením tohoto projektu uvolníte místo na disku odstraněním nevyužitých bajtův souboru.\n"
+"Scelením tohoto projektu uvolníte místo na disku odstraněním nevyužitých"
+" bajtův souboru.\n"
 "\n"
 "Na disku je %s volného místa a tento projekt aktuálně používá %s.\n"
 "\n"
-"Pokud budete pokračovat, budou aktuální historie kroků Zpět/Znovu a obsah schránkyzahozeny a obnovíte přibližně %s místa na disku.\n"
+"Pokud budete pokračovat, budou aktuální historie kroků Zpět/Znovu a obsah"
+" schránkyzahozeny a obnovíte přibližně %s místa na disku.\n"
 "\n"
 "Chceš pokračovat?"
 
@@ -5865,7 +6039,7 @@ msgstr "Přidat efekt"
 #. i18n-hint: Hyperlink to the effects stack panel tutorial video
 #: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
-msgstr "Podívat se na video"
+msgstr "Podívat se na obrazový záznam"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -5910,11 +6084,12 @@ msgid ""
 "This plugin could not be loaded.\n"
 "It may have been deleted."
 msgstr ""
+"Tento přídavný modul se nepodařilo nahrát.\n"
+"Možná byl odstraněn."
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-#, fuzzy
 msgid "Plugin Error"
-msgstr "Chyba v hodnotě"
+msgstr "Chyba v přídavném modulu"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -6011,7 +6186,7 @@ msgstr "Zachytit část okna s projektem a uložit jako soubor"
 
 #: src/Screenshot.cpp
 msgid "All Toolbars"
-msgstr "Všechny nástrojové lišty"
+msgstr "Všechny nástrojové panely"
 
 #: src/Screenshot.cpp
 msgid "All Effects"
@@ -6198,7 +6373,8 @@ msgstr "Poznámky"
 
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr "Použijte klávesy šipek (nebo po úpravě klávesu Enter) pro pohyb v polích."
+msgstr ""
+"Použijte klávesy šipek (nebo po úpravě klávesu Enter) pro pohyb v polích."
 
 #: src/TagsEditor.cpp
 msgid "Tag"
@@ -6356,14 +6532,16 @@ msgstr "Chyba v automatickém ukládání v jiném formátu"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid ""
-"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n"
+"You may not have enough free disk space to complete this Timer Recording,"
+" based on your current settings.\n"
 "\n"
 "Do you wish to continue?\n"
 "\n"
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
-"Možná (založeno na nynějším nastavení) nemáte dost volného místa na disku pro dokončení tohoto časovaného nahrávání.\n"
+"Možná (založeno na nynějším nastavení) nemáte dost volného místa na disku pro"
+" dokončení tohoto časovaného nahrávání.\n"
 "\n"
 "Chcete pokračovat?\n"
 "\n"
@@ -6694,8 +6872,12 @@ msgid " Select On"
 msgstr " Výběr zapnut"
 
 #: src/TrackPanelResizeHandle.cpp
-msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
-msgstr "Klepněte a táhněte pro přizpůsobení poměrné velikosti stereo stop. Dvakrát klepněte pro učinění výšek stejnými"
+msgid ""
+"Click and drag to adjust relative size of stereo tracks, double-click to make"
+" heights equal"
+msgstr ""
+"Klepněte a táhněte pro přizpůsobení poměrné velikosti stereo stop. Dvakrát"
+" klepněte pro učinění výšek stejnými"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -6815,7 +6997,7 @@ msgstr "Sdílet zvuk"
 #. that opens Share Audio dialog
 #: src/cloud/ShareAudioToolbar.cpp
 msgid "&Share Audio Toolbar"
-msgstr "Panel pro &sdílení zvuku"
+msgstr "Panel nástrojů pro &sdílení zvuku"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/LinkFailedDialog.cpp
@@ -6864,8 +7046,12 @@ msgid "Unlisted"
 msgstr "Neuvedeno v seznamu"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Poslouchat tento zvukový záznam budete moci pouze vy a osoby, se kterými tento odkaz sdílíte."
+msgid ""
+"Only you and people you share a link with will be able to listen to this"
+" audio."
+msgstr ""
+"Poslouchat tento zvukový záznam budete moci pouze vy a osoby, se kterými"
+" tento odkaz sdílíte."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
@@ -6892,8 +7078,12 @@ msgid "Upload error"
 msgstr "Chyba při nahrávání"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "Tento soubor se nám nedaří nahrát. Zkuste to znovu. Před nahráním se ujistěte, že jste připojení ke svému účtu u audio.com."
+msgid ""
+"We are unable to upload this file. Please try again and make sure to link to"
+" your audio.com account before uploading."
+msgstr ""
+"Tento soubor se nám nedaří nahrát. Zkuste to znovu. Před nahráním se"
+" ujistěte, že jste připojení ke svému účtu u audio.com."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Export error"
@@ -6921,8 +7111,12 @@ msgstr "Stisknutím tlačítka \"Pokračovat\" nahrajte na server audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
-msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
-msgstr "Váš zvuk bude nahrán do naší služby sdílení: %s,%%k jejímuž použití je třeba bezplatný účet."
+msgid ""
+"Your audio will be uploaded to our sharing service: %s,%%which requires a"
+" free account to use."
+msgstr ""
+"Váš zvuk bude nahrán do naší služby sdílení: %s,%%k jejímuž použití je třeba"
+" bezplatný účet."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"
@@ -6984,8 +7178,14 @@ msgstr ""
 "* %s, protože jste přiřadil zkratku %s k %s"
 
 #: src/commands/CommandManager.cpp
-msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr "U následujících příkaz byly odstraněny jejich klávesové zkratky, protože jejich výchozí klávesová zkratka je nová nebo se změnila, a je stejná jako zkratka přiřazená vámi jinému příkazu."
+msgid ""
+"The following commands have had their shortcuts removed, because their"
+" default shortcut is new or changed, and is the same shortcut that you have"
+" assigned to another command."
+msgstr ""
+"U následujících příkaz byly odstraněny jejich klávesové zkratky, protože"
+" jejich výchozí klávesová zkratka je nová nebo se změnila, a je stejná jako"
+" zkratka přiřazená vámi jinému příkazu."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -7707,9 +7907,8 @@ msgstr "Nastavit podobu stopy"
 #. i18n-hint: abbreviates amplitude
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (amp)"
-msgstr "Lineární vstup"
+msgstr "Lineární (amp)"
 
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
@@ -7720,13 +7919,12 @@ msgstr "Logaritmický (dB)"
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (dB)"
-msgstr "Lineární"
+msgstr "Lineární (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
-msgstr "Nastavit znovu"
+msgstr "Obnovit výchozí"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Times 2"
@@ -7823,22 +8021,34 @@ msgid "Auto Duck"
 msgstr "Automatické zeslabení"
 
 #: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Sníží hlasitost jedné nebo více stop vždy, když hlasitost určené kontrolní stopy dosáhne určité úrovně"
+msgid ""
+"Reduces (ducks) the volume of one or more tracks whenever the volume of a"
+" specified \"control\" track reaches a particular level"
+msgstr ""
+"Sníží hlasitost jedné nebo více stop vždy, když hlasitost určené kontrolní"
+" stopy dosáhne určité úrovně"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "Je vybrána stopa, která neobsahuje zvuková data. Automatické zeslabení může zpracovávat jen zvukové stopy."
+msgid ""
+"You selected a track which does not contain audio. AutoDuck can only process"
+" audio tracks."
+msgstr ""
+"Je vybrána stopa, která neobsahuje zvuková data. Automatické zeslabení může"
+" zpracovávat jen zvukové stopy."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Automatické zeslabení vyžaduje řídící stopu, která musí být umístěna pod vybranou stopou (stopami)."
+msgid ""
+"Auto Duck needs a control track which must be placed below the selected"
+" track(s)."
+msgstr ""
+"Automatické zeslabení vyžaduje řídící stopu, která musí být umístěna pod"
+" vybranou stopou (stopami)."
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -8219,7 +8429,8 @@ msgstr "Odstranění praskání"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "Odstranění praskání je navrženo k odstranění praskání ve zvukových stopách"
+msgstr ""
+"Odstranění praskání je navrženo k odstranění praskání ve zvukových stopách"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -8371,7 +8582,8 @@ msgstr "Čas uvolnění: %.1f sek."
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
-msgstr "Stopy můžete počítat jen jednotlivě. Vyberte, prosím, odpovídající oblast."
+msgstr ""
+"Stopy můžete počítat jen jednotlivě. Vyberte, prosím, odpovídající oblast."
 
 #: src/effects/Contrast.cpp
 msgid "Please select an audio track."
@@ -8395,8 +8607,12 @@ msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
-msgstr "Analyzátor kontrastu pro měření rozdílů v hlasitosti RMS mezi dvěma vybranými oblastmi jedné stopy."
+msgid ""
+"Contrast Analyzer, for measuring RMS volume differences between two"
+" selections of audio."
+msgstr ""
+"Analyzátor kontrastu pro měření rozdílů v hlasitosti RMS mezi dvěma vybranými"
+" oblastmi jedné stopy."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -8879,8 +9095,12 @@ msgid "DTMF Tones"
 msgstr "Tóny DTMF"
 
 #: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Vytváří duální vícekmitočtové (DTMF) tóny, jako jsou ty, které dělají klávesnice telefonů"
+msgid ""
+"Generates dual-tone multi-frequency (DTMF) tones like those produced by the"
+" keypad on telephones"
+msgstr ""
+"Vytváří duální vícekmitočtové (DTMF) tóny, jako jsou ty, které dělají"
+" klávesnice telefonů"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -9187,8 +9407,11 @@ msgid "Treble Cut"
 msgstr "Ořezání výšek"
 
 #: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Chcete-li použít ekvalizaci, musí mít všechny vybrané stopy stejný vzorkovací kmitočet."
+msgid ""
+"To apply Equalization, all selected tracks must have the same sample rate."
+msgstr ""
+"Chcete-li použít ekvalizaci, musí mít všechny vybrané stopy stejný vzorkovací"
+" kmitočet."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -9410,10 +9633,13 @@ msgstr "Kubická"
 #: src/effects/EqualizationUI.cpp
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve,"
+" then use that one."
 msgstr ""
-"Pro použití této filtrovací křivky v makru pro ni, prosím, vyberte nový název.\n"
-"Vyberte tlačítko Uložit/Spravovat křivky... a přejmenujte nepojmenovanou křivku. Potom tuto křivku použijte."
+"Pro použití této filtrovací křivky v makru pro ni, prosím, vyberte nový"
+" název.\n"
+"Vyberte tlačítko Uložit/Spravovat křivky... a přejmenujte nepojmenovanou"
+" křivku. Potom tuto křivku použijte."
 
 #: src/effects/EqualizationUI.cpp
 msgid "Filter Curve EQ needs a different name"
@@ -9691,8 +9917,11 @@ msgid "All noise profile data must have the same sample rate."
 msgstr "Všechna data profilu šumu musí mít stejný vzorkovací kmitočet."
 
 #: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "Vzorkovací kmitočet profilu šumu musí odpovídat profilu zvuku ke zpracování."
+msgid ""
+"The sample rate of the noise profile must match that of the sound to be"
+" processed."
+msgstr ""
+"Vzorkovací kmitočet profilu šumu musí odpovídat profilu zvuku ke zpracování."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Selected noise profile is too short."
@@ -9770,7 +9999,9 @@ msgstr "Krok 2"
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to reduce noise.\n"
-msgstr "Označte všechen zvuk, jejž chcete filtrovat. Zvolte míru odfiltrování šumu, a potom klepněte na OK pro zmenšení šumu.\n"
+msgstr ""
+"Označte všechen zvuk, jejž chcete filtrovat. Zvolte míru odfiltrování šumu, a"
+" potom klepněte na OK pro zmenšení šumu.\n"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise:"
@@ -9978,7 +10209,8 @@ msgstr "PaulStretch"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Program Paulstretch je jen na mimořádné protažení času nebo zpomalovací efekt"
+msgstr ""
+"Program Paulstretch je jen na mimořádné protažení času nebo zpomalovací efekt"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -10114,11 +10346,13 @@ msgstr "Nastaví vrcholový rozkmit jedné nebo více stop"
 
 #: src/effects/Repair.cpp
 msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"The Repair effect is intended to be used on very short sections of damaged"
+" audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"Tento opravný efekt je určen k použití na velmi krátkých úsecích poškozeného záznamu (do 128 vzorků).\n"
+"Tento opravný efekt je určen k použití na velmi krátkých úsecích poškozeného"
+" záznamu (do 128 vzorků).\n"
 "\n"
 "Nastavte si velké zvětšení a zvolte malou část k opravě."
 
@@ -10296,11 +10530,15 @@ msgstr "Klasické filtry"
 #. i18n-hint: "infinite impulse response"
 #: src/effects/ScienFilter.cpp
 msgid "Performs IIR filtering that emulates analog filters"
-msgstr "Provede filtrování IIR (filtr s nekonečnou impulzní odezvou), které napodobuje analogové filtry"
+msgstr ""
+"Provede filtrování IIR (filtr s nekonečnou impulzní odezvou), které"
+" napodobuje analogové filtry"
 
 #: src/effects/ScienFilter.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "Chcete-li použít filtr, musí mít všechny vybrané stopy stejný vzorkovací kmitočet."
+msgstr ""
+"Chcete-li použít filtr, musí mít všechny vybrané stopy stejný vzorkovací"
+" kmitočet."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -10585,12 +10823,18 @@ msgid "Truncate Silence"
 msgstr "Ořezat ticho"
 
 #: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgid ""
+"Automatically reduces the length of passages where the volume is below a"
+" specified level"
 msgstr "Automaticky zmenší délku částí, kde je hlasitost pod stanovenou úrovní"
 
 #: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "Když se zkracuje nezávisle, může být v každé skupině stop s uzamknutou synchronizací vybrána pouze jedna zvuková stopa."
+msgid ""
+"When truncating independently, there may only be one selected audio track in"
+" each Sync-Locked Track Group."
+msgstr ""
+"Když se zkracuje nezávisle, může být v každé skupině stop s uzamknutou"
+" synchronizací vybrána pouze jedna zvuková stopa."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -10636,8 +10880,17 @@ msgstr "Velikost vyrovnávací paměti"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
-msgstr "Velikost vyrovnávací paměti řídí počet vzorků poslaných efektu při každém opakování. Menší hodnoty povedou k pomalejšímu zpracování a některé efekty vyžadují 8192 vzorků nebo méně, aby pracovaly správně. Většina efektů ovšem může přijmout velké vyrovnávací paměti a jejich použití značně zmenší dobu zpracování."
+msgid ""
+"The buffer size controls the number of samples sent to the effect on each"
+" iteration. Smaller values will cause slower processing and some effects"
+" require 8192 samples or less to work properly. However most effects can"
+" accept large buffers and using them will greatly reduce processing time."
+msgstr ""
+"Velikost vyrovnávací paměti řídí počet vzorků poslaných efektu při každém"
+" opakování. Menší hodnoty povedou k pomalejšímu zpracování a některé efekty"
+" vyžadují 8192 vzorků nebo méně, aby pracovaly správně. Většina efektů ovšem"
+" může přijmout velké vyrovnávací paměti a jejich použití značně zmenší dobu"
+" zpracování."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -10650,8 +10903,16 @@ msgid "Latency Compensation"
 msgstr "Vyrovnávání prodlevy"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
-msgstr "Jako část jejich zpracování některé efekty VST musí zpozdit vrácení zvuku do Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si vložení malých tich do zvuku. Povolení této volby toto vyrovnání poskytne, nemusí však pracovat pro všechny efekty VST."
+msgid ""
+"As part of their processing, some VST effects must delay returning audio to"
+" Audacity. When not compensating for this delay, you will notice that small"
+" silences have been inserted into the audio. Enabling this option will"
+" provide that compensation, but it may not work for all VST effects."
+msgstr ""
+"Jako část jejich zpracování některé efekty VST musí zpozdit vrácení zvuku do"
+" Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si vložení malých"
+" tich do zvuku. Povolení této volby toto vyrovnání poskytne, nemusí však"
+" pracovat pro všechny efekty VST."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -10665,8 +10926,14 @@ msgid "Graphical Mode"
 msgstr "Obrazový režim"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Většina efektů VST má grafické rozhraní pro nastavení hodnot parametrů. Je dostupná i základní jen textová metoda. Aby se to projevilo, efekt znovu otevřete."
+msgid ""
+"Most VST effects have a graphical interface for setting parameter values. A"
+" basic text-only method is also available.  Reopen the effect for this to"
+" take effect."
+msgstr ""
+"Většina efektů VST má grafické rozhraní pro nastavení hodnot parametrů. Je"
+" dostupná i základní jen textová metoda. Aby se to projevilo, efekt znovu"
+" otevřete."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2Preferences.cpp
@@ -10755,20 +11022,37 @@ msgid "Load VST3 preset:"
 msgstr "Nahrát přednastavení VST3:"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
-msgstr "Jako část jejich zpracování některé efekty VST3 musí zpozdit vrácení zvuku do Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si vložení malých tich do zvuku. Povolení této volby toto vyrovnání poskytne, nemusí však pracovat pro všechny efekty VST3."
+msgid ""
+"As part of their processing, some VST3 effects must delay returning audio to"
+" Audacity. When not compensating for this delay, you will notice that small"
+" silences have been inserted into the audio. Enabling this option will"
+" provide that compensation, but it may not work for all VST3 effects."
+msgstr ""
+"Jako část jejich zpracování některé efekty VST3 musí zpozdit vrácení zvuku do"
+" Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si vložení malých"
+" tich do zvuku. Povolení této volby toto vyrovnání poskytne, nemusí však"
+" pracovat pro všechny efekty VST3."
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Většina efektů VST3 má grafické rozhraní pro nastavení hodnot parametrů. Je dostupná i základní jen textová metoda. Aby se to projevilo, efekt znovu otevřete."
+msgid ""
+"Most VST3 effects have a graphical interface for setting parameter values. A"
+" basic text-only method is also available.  Reopen the effect for this to"
+" take effect."
+msgstr ""
+"Většina efektů VST3 má grafické rozhraní pro nastavení hodnot parametrů. Je"
+" dostupná i základní jen textová metoda. Aby se to projevilo, efekt znovu"
+" otevřete."
 
 #: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
 msgstr "Kvákadlo (Wahwah)"
 
 #: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Rychlé rozdíly v jakosti tónu, jako u v 70. letech 20. století tolik oblíbeného kytarového zvuku"
+msgid ""
+"Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr ""
+"Rychlé rozdíly v jakosti tónu, jako u v 70. letech 20. století tolik"
+" oblíbeného kytarového zvuku"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -10868,16 +11152,33 @@ msgid "Audio Unit Effect Options"
 msgstr "Volby pro efekty Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr "Jako část jejich zpracování některé efekty Audio Unit musí zpozdit vrácení zvuku do Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si vloženímalých tich do zvuku. Povolení této volby toto vyrovnání poskytne, nemusí však pracovat pro všechny efekty Audio Unit."
+msgid ""
+"As part of their processing, some Audio Unit effects must delay returning"
+" audio to Audacity. When not compensating for this delay, you will notice"
+" that small silences have been inserted into the audio. Enabling this option"
+" will provide that compensation, but it may not work for all Audio Unit"
+" effects."
+msgstr ""
+"Jako část jejich zpracování některé efekty Audio Unit musí zpozdit vrácení"
+" zvuku do Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si"
+" vloženímalých tich do zvuku. Povolení této volby toto vyrovnání poskytne,"
+" nemusí však pracovat pro všechny efekty Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
 msgstr "Uživatelské rozhraní"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr "Vyberte \"Úplné\" pro použití obrazového rozhraní, pokud jsou připraveny Audio Unit. Vyberte \"Obecné\" pro použití systému poskytnutého obecným rozhraním. Vyberte \"Základní\" pro základní jen rozhraní rozhraní. Efekt otevřete znovu, aby se toto projevilo."
+msgid ""
+"Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
+" Select \"Generic\" to use the system supplied generic interface. Select"
+" \"Basic\" for a basic text-only interface. Reopen the effect for this to"
+" take effect."
+msgstr ""
+"Vyberte \"Úplné\" pro použití obrazového rozhraní, pokud jsou připraveny"
+" Audio Unit. Vyberte \"Obecné\" pro použití systému poskytnutého obecným"
+" rozhraním. Vyberte \"Základní\" pro základní jen rozhraní rozhraní. Efekt"
+" otevřete znovu, aby se toto projevilo."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select &interface"
@@ -10969,8 +11270,16 @@ msgid "LADSPA Effect Options"
 msgstr "Volby pro efekty LADSPA"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
-msgstr "Jako část jejich zpracování některé efekty LADSPA musí zpozdit vrácení zvuku do Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si vloženímalých tich do zvuku. Povolení této volby toto vyrovnání poskytne, nemusí však pracovat pro všechny efekty LADSPA."
+msgid ""
+"As part of their processing, some LADSPA effects must delay returning audio"
+" to Audacity. When not compensating for this delay, you will notice that"
+" small silences have been inserted into the audio. Enabling this option will"
+" provide that compensation, but it may not work for all LADSPA effects."
+msgstr ""
+"Jako část jejich zpracování některé efekty LADSPA musí zpozdit vrácení zvuku"
+" do Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si"
+" vloženímalých tich do zvuku. Povolení této volby toto vyrovnání poskytne,"
+" nemusí však pracovat pro všechny efekty LADSPA."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
 #. appears in a following text box window; translate with appropriate punctuation
@@ -11016,12 +11325,26 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&Velikost vyrovnávací paměti (8 až %d) vzorků:"
 
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr "Jako část jejich zpracování některé efekty LV2 musí zpozdit vrácení zvuku do Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si vloženímalých tich do zvuku. Povolení této volby toto vyrovnání poskytne, nemusí však pracovat pro všechny efekty LV2."
+msgid ""
+"As part of their processing, some LV2 effects must delay returning audio to"
+" Audacity. When not compensating for this delay, you will notice that small"
+" silences have been inserted into the audio. Enabling this setting will"
+" provide that compensation, but it may not work for all LV2 effects."
+msgstr ""
+"Jako část jejich zpracování některé efekty LV2 musí zpozdit vrácení zvuku do"
+" Audacity. Pokud toto zpoždění nebude vyrovnáno, povšimnete si vloženímalých"
+" tich do zvuku. Povolení této volby toto vyrovnání poskytne, nemusí však"
+" pracovat pro všechny efekty LV2."
 
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Efekty LV2 mohou mít obrazové rozhraní pro nastavení hodnot parametrů. Je dostupná i základní jen textová metoda. Aby se to projevilo, efekt znovu otevřete."
+msgid ""
+"LV2 effects can have a graphical interface for setting parameter values. A"
+" basic text-only method is also available.  Reopen the effect for this to"
+" take effect."
+msgstr ""
+"Efekty LV2 mohou mít obrazové rozhraní pro nastavení hodnot parametrů. Je"
+" dostupná i základní jen textová metoda. Aby se to projevilo, efekt znovu"
+" otevřete."
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "LV2 Effects"
@@ -11073,7 +11396,9 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "Chyba: V hlavičce je stanoven soubor \"%s\". Ten však nebyl nalezen v cestě s přídavným modulem.\n"
+msgstr ""
+"Chyba: V hlavičce je stanoven soubor \"%s\". Ten však nebyl nalezen v cestě s"
+" přídavným modulem.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Audio selection required."
@@ -11084,8 +11409,11 @@ msgid "Nyquist Error"
 msgstr "Chyba v Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr "Promiňte, ale efekt nemůže být použit na stereo stopy, u kterých  nesouhlasí jednotlivé kanály."
+msgid ""
+"Sorry, cannot apply effect on stereo tracks where the tracks don't match."
+msgstr ""
+"Promiňte, ale efekt nemůže být použit na stereo stopy, u kterých  nesouhlasí"
+" jednotlivé kanály."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -11157,13 +11485,17 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist vrátil nulová zvuková data.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Varování: Nyquist vrátil neplatný řetězec UTF-8, zde převedený jako Latin-1]"
+msgid ""
+"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr ""
+"[Varování: Nyquist vrátil neplatný řetězec UTF-8, zde převedený jako Latin-1]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Tato verze Audacity nebyla sestavena s podporou pro přídavný modul Nyquist verze %ld"
+msgstr ""
+"Tato verze Audacity nebyla sestavena s podporou pro přídavný modul Nyquist"
+" verze %ld"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -11278,8 +11610,12 @@ msgid "Provides Vamp Effects support to Audacity"
 msgstr "Poskytuje Audacity podporu pro efekty Vamp"
 
 #: src/effects/vamp/VampEffect.cpp
-msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
-msgstr "Promiňte, ale přídavný modul Vamp nelze použít na stereo stopy, u kterých  nesouhlasí jednotlivé kanály."
+msgid ""
+"Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual"
+" channels of the track do not match."
+msgstr ""
+"Promiňte, ale přídavný modul Vamp nelze použít na stereo stopy, u kterých "
+" nesouhlasí jednotlivé kanály."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -11333,13 +11669,15 @@ msgstr "Opravdu chcete soubor uložit jako \"%s\"?\n"
 msgid ""
 "You are about to export a %s file with the name \"%s\".\n"
 "\n"
-"Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
+"Normally these files end in \".%s\", and some programs will not open files"
+" with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to export the file under this name?"
 msgstr ""
 "Chystáte se uložit soubor %s pod názvem \"%s\".\n"
 "\n"
-"Obvykle názvy těchto souborů končí na \".%s\" a některé programy neumí otevřít soubory s nestandardními příponami.\n"
+"Obvykle názvy těchto souborů končí na \".%s\" a některé programy neumí"
+" otevřít soubory s nestandardními příponami.\n"
 "\n"
 "Opravdu chcete uložit tento soubor pod tímto názvem?"
 
@@ -11361,8 +11699,12 @@ msgid "Your tracks will be mixed down and exported as one stereo file."
 msgstr "Stopy budou smíchány a uloženy jako jeden stereo kanál."
 
 #: src/export/Export.cpp
-msgid "Your tracks will be mixed down to one exported file according to the encoder settings."
-msgstr "Stopy budou v uloženém souboru smíchány do jednoho souboru uloženého v jiném formátu podle nastavení kodéru."
+msgid ""
+"Your tracks will be mixed down to one exported file according to the encoder"
+" settings."
+msgstr ""
+"Stopy budou v uloženém souboru smíchány do jednoho souboru uloženého v jiném"
+" formátu podle nastavení kodéru."
 
 #: src/export/Export.cpp
 msgid "Advanced Mixing Options"
@@ -11418,8 +11760,12 @@ msgstr "Ukázat výstup"
 #. in the program as a format string.  Keep %f unchanged.
 #: src/export/ExportCL.cpp
 #, c-format
-msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
-msgstr "Data budou předána standardnímu vstupu. \"%f\" použije název souboru v okně pro ukládání."
+msgid ""
+"Data will be piped to standard in. \"%f\" uses the file name in the export"
+" window."
+msgstr ""
+"Data budou předána standardnímu vstupu. \"%f\" použije název souboru v okně"
+" pro ukládání."
 
 #. i18n-hint files that can be run as programs
 #: src/export/ExportCL.cpp
@@ -11497,17 +11843,24 @@ msgstr "FFmpeg: CHYBA - Nelze přidělit prostředí výstupního formátu."
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr "FFmpeg: CHYBA - Nelze přidat zvukový proud do výstupního souboru \"%s\"."
+msgstr ""
+"FFmpeg: CHYBA - Nelze přidat zvukový proud do výstupního souboru \"%s\"."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr "FFmpeg: CHYBA - Nelze otevřít výstupní soubor \"%s\" pro zápis. Kód chyby je %d."
+msgid ""
+"FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
+msgstr ""
+"FFmpeg: CHYBA - Nelze otevřít výstupní soubor \"%s\" pro zápis. Kód chyby je "
+"%d."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr "FFmpeg: CHYBA - Nelze zapsat hlavičky do výstupního souboru \"%s\". Kód chyby je %d."
+msgid ""
+"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+msgstr ""
+"FFmpeg: CHYBA - Nelze zapsat hlavičky do výstupního souboru \"%s\". Kód chyby"
+" je %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -11541,11 +11894,14 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr "FFmpeg: CHYBA - Nelze přidělit vyrovnávací paměť k vykládání ze zvukového FIFO."
+msgstr ""
+"FFmpeg: CHYBA - Nelze přidělit vyrovnávací paměť k vykládání ze zvukového"
+" FIFO."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
-msgstr "FFmpeg: CHYBA - Nepodařilo se zapsat zvukový snímek do výstupního souboru."
+msgstr ""
+"FFmpeg: CHYBA - Nepodařilo se zapsat zvukový snímek do výstupního souboru."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
@@ -11553,7 +11909,8 @@ msgstr "FFmpeg: CHYBA - Nepodařilo se získat vyrovnávací paměť vzorku"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
-msgstr "FFmpeg: CHYBA - Nepodařilo se přidělit byty pro vyrovnávací paměť vzorků"
+msgstr ""
+"FFmpeg: CHYBA - Nepodařilo se přidělit byty pro vyrovnávací paměť vzorků"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
@@ -11577,8 +11934,12 @@ msgstr "FFmpeg: CHYBA - Nelze zakódovat zvukový snímek."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
-msgstr "Pokusili jste se uložit %d kanály, ale největší počet kanálů pro vybraný výstupná formát je %d"
+msgid ""
+"Attempted to export %d channels, but maximum number of channels for selected"
+" output format is %d"
+msgstr ""
+"Pokusili jste se uložit %d kanály, ale největší počet kanálů pro vybraný"
+" výstupná formát je %d"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11604,14 +11965,18 @@ msgstr "Převzorkovat"
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
-msgstr "Vzorkovací kmitočet projektu (%d) není podporován nynější výstupním souborovým formátem."
+msgstr ""
+"Vzorkovací kmitočet projektu (%d) není podporován nynější výstupním"
+" souborovým formátem."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
-msgstr "Vzorkovací kmitočet projektu (%d) a datový tok (%d kb/s) není podporován nynější výstupním souborovým formátem."
+msgstr ""
+"Vzorkovací kmitočet projektu (%d) a datový tok (%d kb/s) není podporován"
+" nynější výstupním souborovým formátem."
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -11894,7 +12259,9 @@ msgid "Codec:"
 msgstr "Kodek:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
+msgid ""
+"Not all formats and codecs are compatible. Nor are all option combinations"
+" compatible with all codecs."
 msgstr "Ne všechny formáty, kodeky a volby lze navzájem dávat dohromady."
 
 #: src/export/ExportFFmpegDialogs.cpp
@@ -12511,10 +12878,12 @@ msgstr "Kde je %s?"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with"
+" Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
-"Chcete nastavit lame_enc.dll v%d.%d. Tato verze ale není slučitelná s Audacity %d.%d.%d.\n"
+"Chcete nastavit lame_enc.dll v%d.%d. Tato verze ale není slučitelná s"
+" Audacity %d.%d.%d.\n"
 "Stáhněte, prosím, poslední verzi knihovny LAME pro Audacity."
 
 #: src/export/ExportMP3.cpp
@@ -12574,7 +12943,8 @@ msgstr "Zvuk se ukládá s přednastavením %s"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
-msgstr "Ukládají se vybraná zvuková data ve kvalitě proměnlivého datového toku VBR %s"
+msgstr ""
+"Ukládají se vybraná zvuková data ve kvalitě proměnlivého datového toku VBR %s"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -12611,7 +12981,8 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
-"Spojení vzorkovacího kmitočtu projektu (%d) a datového toku (%d kb/s) není podporováno\n"
+"Spojení vzorkovacího kmitočtu projektu (%d) a datového toku (%d kb/s) není"
+" podporováno\n"
 "souborovým formátem MP3."
 
 #: src/export/ExportMP3.cpp
@@ -12731,7 +13102,9 @@ msgstr "Ukládání zastaveno po uložení následujícího(ch) souboru(ů) %lld
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid "Something went really wrong after exporting the following %lld file(s)."
-msgstr "Při ukládání následujícího(ch) souboru(ů) %lld se něco opravdu hodně nepodařilo."
+msgstr ""
+"Při ukládání následujícího(ch) souboru(ů) %lld se něco opravdu hodně"
+" nepodařilo."
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -12840,7 +13213,8 @@ msgstr "Jiné nekomprimované soubory"
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
+"You have attempted to Export a WAV or AIFF file which would be greater than"
+" 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 "Pokusil jste se uložit soubor WAV nebo AIFF, který by byl větší než 4GB.\n"
@@ -13003,7 +13377,8 @@ msgid ""
 msgstr ""
 "\"%s\" \n"
 "je soubor MIDI, ne zvukový soubor. \n"
-"Audacity nedokáže soubory MIDI otevřít, a pak přehrávat, ale můžete jej upravit\n"
+"Audacity nedokáže soubory MIDI otevřít, a pak přehrávat, ale můžete jej"
+" upravit\n"
 "klepnutím na Soubor → Nahrát → MIDI."
 
 #: src/import/Import.cpp
@@ -13045,11 +13420,14 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other files. \n"
-"You may be able to open it in a text editor and download the actual audio files."
+"Audacity cannot open this file because it only contains links to other files."
+" \n"
+"You may be able to open it in a text editor and download the actual audio"
+" files."
 msgstr ""
 "\"%s\"  je seznam souborů k přehrávání (seznam skladeb).\n"
-"Audacity tento soubor nemůže otevřít, protože obsahuje jen odkazy na jiné soubory.\n"
+"Audacity tento soubor nemůže otevřít, protože obsahuje jen odkazy na jiné"
+" soubory.\n"
 "Dá se ale otevřít v textovém editoru a jednotlivé soubory stáhnout."
 
 #. i18n-hint: %s will be the filename
@@ -13062,7 +13440,8 @@ msgid ""
 msgstr ""
 "\"%s\" je zvukový soubor Windows Media. \n"
 "Audacity tento typ souboru nemůže otevřít vinou patentových omezení.\n"
-"Je třeba provést převod do některého z podporovaných formátů, např. WAV nebo AIFF."
+"Je třeba provést převod do některého z podporovaných formátů, např. WAV nebo"
+" AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -13070,7 +13449,8 @@ msgstr ""
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
 "Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
-"Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
+"Otherwise, you need to convert it to a supported audio format, such as WAV or"
+" AIFF."
 msgstr ""
 "\"%s\" je soubor AAC (Advanced Audio Coding). \n"
 "Audacity tento typ souboru bez zvláštní knihovny FFmpeg neumí otevřít.\n"
@@ -13086,7 +13466,8 @@ msgid ""
 "Try recording the file into Audacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
 msgstr ""
-"\"%s\" je zakódovaný zvukový soubor, pravděpodobně z internetového obchodu s hudbou. \n"
+"\"%s\" je zakódovaný zvukový soubor, pravděpodobně z internetového obchodu s"
+" hudbou. \n"
 "Kvůli zakódování Audacity nedokáže tento soubor otevřít.\n"
 "Zkuste jej do Audacity nahrát nebo vypálit na CD a následně \n"
 "převést do některého podporovaného formátu, jako je WAV nebo AIFF."
@@ -13101,7 +13482,8 @@ msgid ""
 msgstr ""
 "\"%s\" je soubor pro RealPlayer. \n"
 "Audacity tento patentově chráněný formát neumí otevřít.\n"
-"Je třeba provést převod do některého z podporovaných formátů, např. WAV nebo AIFF."
+"Je třeba provést převod do některého z podporovaných formátů, např. WAV nebo"
+" AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -13124,7 +13506,8 @@ msgid ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported"
+" audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" je zvukový soubor Musepack. \n"
@@ -13143,7 +13526,8 @@ msgid ""
 msgstr ""
 "\"%s\" je zvukový soubor Wavpack. \n"
 "Audacity tento typ souboru neumí otevřít.\n"
-"Je třeba provést převod do podporovaného zvukového formátu, např. WAV nebo AIFF."
+"Je třeba provést převod do podporovaného zvukového formátu, např. WAV nebo"
+" AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -13155,7 +13539,8 @@ msgid ""
 msgstr ""
 "\"%s\" je zvukový soubor Dolby Digital. \n"
 "Audacity tento typ souboru v současné době neumí otevřít.\n"
-"Je třeba provést převod do podporovaného zvukového formátu, např. WAV nebo AIFF."
+"Je třeba provést převod do podporovaného zvukového formátu, např. WAV nebo"
+" AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -13167,7 +13552,8 @@ msgid ""
 msgstr ""
 "\"%s\" je zvukový soubor Ogg Speex. \n"
 "Audacity tento typ souboru v současné době neumí otevřít.\n"
-"Je třeba provést převod do podporovaného zvukového formátu, např. WAV nebo AIFF."
+"Je třeba provést převod do podporovaného zvukového formátu, např. WAV nebo"
+" AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -13179,7 +13565,8 @@ msgid ""
 msgstr ""
 "\"%s\" je video soubor. \n"
 "Audacity tento typ souboru v současné době neumí otevřít.\n"
-"Je třeba provést vytažení zvuku do podporovaného zvukového formátu, např. WAV nebo AIFF."
+"Je třeba provést vytažení zvuku do podporovaného zvukového formátu, např. WAV"
+" nebo AIFF."
 
 #: src/import/Import.cpp
 #, c-format
@@ -13196,7 +13583,8 @@ msgid ""
 msgstr ""
 "Audacity se nepodařilo rozpoznat typ souboru '%s'.\n"
 "\n"
-"%sPro nekomprimované soubory vyzkoušejte i Soubor → Nahrát → Nezpracovaná data."
+"%sPro nekomprimované soubory vyzkoušejte i Soubor → Nahrát → Nezpracovaná"
+" data."
 
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -13288,16 +13676,24 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Nepodařilo se najít složku s daty projektu: \"%s\""
 
 #: src/import/ImportAUP.cpp
-msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
-msgstr "V souboru projektu byly nalezeny stopy MIDI, ale toto sestavení Audacitynezahrnuje podporu MIDI, proto se stopa obejde."
+msgid ""
+"MIDI tracks found in project file, but this build of Audacity does not"
+" include MIDI support, bypassing track."
+msgstr ""
+"V souboru projektu byly nalezeny stopy MIDI, ale toto sestavení"
+" Audacitynezahrnuje podporu MIDI, proto se stopa obejde."
 
 #: src/import/ImportAUP.cpp
 msgid "Project Import"
 msgstr "Zavedení projektu"
 
 #: src/import/ImportAUP.cpp
-msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
-msgstr "Činný projekt již má časovou stopu a jedna byl nalezen v zaváděném projektu, proto se zavedená časová stopa obejde."
+msgid ""
+"The active project already has a time track and one was encountered in the"
+" project being imported, bypassing imported time track."
+msgstr ""
+"Činný projekt již má časovou stopu a jedna byl nalezen v zaváděném projektu,"
+" proto se zavedená časová stopa obejde."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -13384,17 +13780,16 @@ msgid "FFmpeg-compatible files"
 msgstr "S FFmpeg kompatibilní soubory"
 
 #: src/import/ImportFFmpeg.cpp
-#, fuzzy
 msgid "Try installing FFmpeg.\n"
-msgstr ""
-"Zkuste nainstalovat FFmpeg.\n"
-"\n"
+msgstr "Zkuste nainstalovat FFmpeg.\n"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
 #, c-format
-msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr "Index[%02x] Kodek[%s], Jazyk[%s], Datový tok[%s], Kanály[%d], Doba trvání[%d]"
+msgid ""
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr ""
+"Index[%02x] Kodek[%s], Jazyk[%s], Datový tok[%s], Kanály[%d], Doba trvání[%d]"
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
@@ -13455,7 +13850,8 @@ msgstr "Chybná doba trvání v souboru LOF."
 
 #: src/import/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr "MIDI stopy nemohou být posunuty zvlášť, to lze udělat jen u zvukových stop."
+msgstr ""
+"MIDI stopy nemohou být posunuty zvlášť, to lze udělat jen u zvukových stop."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp
@@ -14028,13 +14424,12 @@ msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Vymazáno %.2f sekund v t=%.2f"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Paste clip"
-msgstr "Vložit ze schránky"
+msgstr "Vložit klip"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting clip contents, please wait"
-msgstr ""
+msgstr "Vkládá se obsah klipu. Prosím, počkejte"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
@@ -14442,7 +14837,8 @@ msgstr "Smazat štítky označené oblasti zvuku"
 #. regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Rozdělit a vyjmout štítky označené oblasti zvuku a zkopírovat do schránky"
+msgstr ""
+"Rozdělit a vyjmout štítky označené oblasti zvuku a zkopírovat do schránky"
 
 #. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/menus/LabelMenus.cpp
@@ -14753,7 +15149,7 @@ msgstr "Nastavit pravou hranici výběru"
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/SelectMenus.cpp
 msgid "&Select"
-msgstr "&Vybrat"
+msgstr "&Výběr"
 
 #: src/menus/SelectMenus.cpp
 msgid "&None"
@@ -15206,8 +15602,11 @@ msgstr "Vyberte, prosím, alespoň jednu zvukovou stopu a jednu stopu MIDI."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr "Zarovnání dokončeno: MIDI od %.2f do %.2f sek., Zvuk od %.2f do %.2f sek."
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f"
+" secs."
+msgstr ""
+"Zarovnání dokončeno: MIDI od %.2f do %.2f sek., Zvuk od %.2f do %.2f sek."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -15215,8 +15614,12 @@ msgstr "Synchronizovat MIDI se zvukem"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr "Zarovnání se nezdařilo: Vstup je příliš krátký: MIDI od %.2f do %.2f sek., Zvuk od %.2f do %.2f sek."
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Zarovnání se nezdařilo: Vstup je příliš krátký: MIDI od %.2f do %.2f sek.,"
+" Zvuk od %.2f do %.2f sek."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -15706,8 +16109,12 @@ msgid "&Check for updates"
 msgstr "&Zkontrolovat aktualizace"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Kontrola aktualizací aplikace vyžaduje přístup k síti. Za účelem ochrany vašehosoukromí Audacity neukládá žádné osobní údaje."
+msgid ""
+"App update checking requires network access. In order to protect your"
+" privacy, Audacity does not store any personal information."
+msgstr ""
+"Kontrola aktualizací aplikace vyžaduje přístup k síti. Za účelem ochrany"
+" vašehosoukromí Audacity neukládá žádné osobní údaje."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -15726,9 +16133,8 @@ msgid "&Don't apply effects in batch mode"
 msgstr "N&epoužívat efekty v režimu dávkového zpracování"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "Audio Settings"
-msgstr "Nastavení zvuku:"
+msgstr "Nastavení zvuku"
 
 #: src/prefs/DevicePrefs.cpp
 #, c-format
@@ -15779,18 +16185,22 @@ msgid "Cha&nnels:"
 msgstr "&Kanály:"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "&Project Sample Rate:"
-msgstr "Vzorkovací kmitočet:"
+msgstr "Vzorkovací kmitočet &projektu:"
 
 #: src/prefs/DevicePrefs.cpp
-msgid "Project Sample Rate used when recording new tracks and for playback, mixdowns and exports in this project"
+msgid ""
+"Project Sample Rate used when recording new tracks and for playback, mixdowns"
+" and exports in this project"
 msgstr ""
+"Vzorkovací kmitočet projektu používaný při nahrávání nových stop a pro"
+" přehrávání, konečnou mixáž (smíchání) - stažení více nahraných stop do"
+" dvoustopé stereo nahrávky, a vyvádění - ukládání v jiném formátu, v tomto"
+" projektu."
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "D&efault Sample Rate:"
-msgstr "Výchozí &rychlost vzorkování:"
+msgstr "&Výchozí vzorkovací kmitočet:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Default Sample &Format:"
@@ -15847,7 +16257,8 @@ msgid ""
 "Leave a field empty to go to the last directory used for that operation.\n"
 "Fill in a field to always go to that directory for that operation."
 msgstr ""
-"Ponechte pole prázdné a přejděte do posledního adresáře použitého pro tuto operaci.\n"
+"Ponechte pole prázdné a přejděte do posledního adresáře použitého pro tuto"
+" operaci.\n"
 "Vyplňte pole, abyste pro danou operaci vždy přešli do daného adresáře."
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15963,7 +16374,9 @@ msgid "Directory %s is not writable"
 msgstr "Do adresáře %s nelze zapisovat"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Changes to temporary directory will not take effect until Audacity is restarted"
+msgid ""
+"Changes to temporary directory will not take effect until Audacity is"
+" restarted"
 msgstr "Změna dočasného adresáře se projeví až po opětovném spuštění Audacity."
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15995,39 +16408,32 @@ msgid "Preferences for Effects"
 msgstr "Nastavení efektů"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by effect name"
-msgstr "Seřazeno podle názvu efektu"
+msgstr "Řadit podle názvu efektu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by publisher and effect name"
-msgstr "Seřazeno podle vydavatele a názvu efektu"
+msgstr "Řadit podle vydavatele a názvu efektu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by type and effect name"
-msgstr "Seřazeno podle typu a názvu efektu"
+msgstr "Řadit podle typu a názvu efektu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by publisher"
-msgstr "Seskupeno podle vydavatele"
+msgstr "Seskupit podle vydavatele"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type"
-msgstr "Seskupeno podle typu"
+msgstr "Seskupit podle typu"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by category"
-msgstr "Seskupeno podle typu"
+msgstr "Seskupit podle skupiny"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type and publisher"
-msgstr "Seskupeno podle vydavatele"
+msgstr "Seskupit podle vydavatele"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -16035,12 +16441,11 @@ msgstr "Volby pro efekty"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
-msgstr ""
+msgstr "&Uspořádání nabídky efektů:"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Realtime effect o&rganization:"
-msgstr "Efekty v reálném čase pro %s"
+msgstr "Us&pořádání efektů v reálném čase:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -16051,15 +16456,14 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "&Použít SSE/SSE2/.../AVX"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Open Plugin Manager"
-msgstr "Správce přídavných modulů"
+msgstr "Otevřít správce přídavných modulů"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Extended Import"
-msgstr "Rozšířené nahrávání"
+msgstr "Rozšířené nahrávání souborů"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Preferences for ExtImport"
@@ -16114,8 +16518,16 @@ msgid "Unused filters:"
 msgstr "Nepoužívané filtry:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
-msgstr "V jednom z prvků jsou prázdné znaky (mezery, zalomení řádků, zarážky (tabulátory) nebo posunutí řádků). Pravděpodobně poruší shodu vzoru. Pokud nevíte, co činíte, doporučuje se prázdné znaky zkrátit. Má Audacity tyto prázdné znaky zkrátit?"
+msgid ""
+"There are space characters (spaces, newlines, tabs or linefeeds) in one of"
+" the items. They are likely to break the pattern matching. Unless you know"
+" what you are doing, it is recommended to trim spaces. Do you want Audacity"
+" to trim spaces for you?"
+msgstr ""
+"V jednom z prvků jsou prázdné znaky (mezery, zalomení řádků, zarážky"
+" (tabulátory) nebo posunutí řádků). Pravděpodobně poruší shodu vzoru. Pokud"
+" nevíte, co činíte, doporučuje se prázdné znaky zkrátit. Má Audacity tyto"
+" prázdné znaky zkrátit?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -16145,7 +16557,8 @@ msgstr "Nastavení rozhraní"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (dynamika audiokazety - mělký rozsah pro vysokofrekvenční úpravy)"
+msgstr ""
+"-36 dB (dynamika audiokazety - mělký rozsah pro vysokofrekvenční úpravy)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-48 dB (PCM range of 8 bit samples)"
@@ -16371,7 +16784,9 @@ msgstr "&Nastavit"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr "Poznámka: Stisknutí Cmd+Q vede k ukončení. Všechny ostatní klávesy jsou platné."
+msgstr ""
+"Poznámka: Stisknutí Cmd+Q vede k ukončení. Všechny ostatní klávesy jsou"
+" platné."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -16401,10 +16816,12 @@ msgstr "Chyba při nahrávání klávesových zkratek"
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
-"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\""
+" and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
-"Soubor s klávesovými zkratkami obsahuje neplatné kopie zkratek pro \"%s\" a \"%s\".\n"
+"Soubor s klávesovými zkratkami obsahuje neplatné kopie zkratek pro \"%s\" a"
+" \"%s\".\n"
 "Nic není zavedeno."
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -16415,10 +16832,12 @@ msgstr "Nahráno %d klávesových zkratek\n"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
 "\n"
-"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
+"The following commands are not mentioned in the imported file, but have their"
+" shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 "\n"
-"Následující příkazy nejsou v zavedeném souboru zmíněny, mají ale odstraněny své klávesové zkratky kvůli střetu s jinými novými klávesovými zkratkami:\n"
+"Následující příkazy nejsou v zavedeném souboru zmíněny, mají ale odstraněny"
+" své klávesové zkratky kvůli střetu s jinými novými klávesovými zkratkami:\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -16536,21 +16955,29 @@ msgstr "Nastavení modulu"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
+"These are experimental modules. Enable them only if you've read the Audacity"
+" Manual\n"
 "and know what you are doing."
 msgstr ""
-"Tyto jsou pokusné moduly. Povolte je jen tehdy, pokud jste si přečetli příručku k Audacity,\n"
+"Tyto jsou pokusné moduly. Povolte je jen tehdy, pokud jste si přečetli"
+" příručku k Audacity,\n"
 "a víte tedy, co děláte."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-msgstr "  Ptát se znamená, že Audacity se zeptá, zda chcete modul nahrát, pokaždé když je program spuštěn."
+msgid ""
+"  'Ask' means Audacity will ask if you want to load the module each time it"
+" starts."
+msgstr ""
+"  Ptát se znamená, že Audacity se zeptá, zda chcete modul nahrát, pokaždé"
+" když je program spuštěn."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr "  Nepodařilo se, znamená, že Audacity si myslí, že modul je poškozen, a nespustí jej."
+msgstr ""
+"  Nepodařilo se, znamená, že Audacity si myslí, že modul je poškozen, a"
+" nespustí jej."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -17236,21 +17663,26 @@ msgstr "Informace"
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
-"To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
+"To try it out, click \"Save Theme Cache\" then find and modify the images and"
+" colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity."
+"Click \"Load Theme Cache\" to load the changed images and colors back into"
+" Audacity."
 msgstr ""
 "Možnost měnit vzhled je pokusná vlastnost.\n"
 "\n"
-"Pro její vyzkoušení klepněte na Uložit vyrovnávací paměť vzhledu, potom najděte a změňte obrázek a barvy v\n"
+"Pro její vyzkoušení klepněte na Uložit vyrovnávací paměť vzhledu, potom"
+" najděte a změňte obrázek a barvy v\n"
 "ImageCacheVxx.png v programu na upravování obrázků, jako je Gimp.\n"
 "\n"
-"Klepněte na Nahrát vyrovnávací paměť vzhledu pro nahrání změněného obrázku a barev do Audacity."
+"Klepněte na Nahrát vyrovnávací paměť vzhledu pro nahrání změněného obrázku a"
+" barev do Audacity."
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+"Saving and loading individual theme files uses a separate file for each"
+" image, but is\n"
 "otherwise the same idea."
 msgstr ""
 "Při ukládání a nahrávání jednotlivých souborů s tématem vzhledu se pro každý\n"
@@ -17304,6 +17736,8 @@ msgid ""
 "Ask me each time.\n"
 "Show dialog each time audio is pasted."
 msgstr ""
+"Pokaždé se mě zeptat.\n"
+"Zobrazit dialogové okno při každém vložení zvuku."
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Select all audio, if selection required"
@@ -17347,14 +17781,12 @@ msgid "Solo &Button:"
 msgstr "&Tlačítko sólo:"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Pasted audio"
-msgstr "Š&títky označený zvuk"
+msgstr "Vložený zvuk"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Paste audio from other Audacity project as"
-msgstr "Vložit ze schránky"
+msgstr "Vložit zvuk z jiného projektu Audacity jako"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -17511,7 +17943,8 @@ msgstr "Při ukládání spojit (smíchat) do sterea"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr "Smíchat při uložení v jiném formátu (&vlastní FFmpeg nebo vnější program)"
+msgstr ""
+"Smíchat při uložení v jiném formátu (&vlastní FFmpeg nebo vnější program)"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Missing file &name extension during export"
@@ -17568,7 +18001,7 @@ msgstr "2 (stereo) nahrávací kanály"
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Setup Toolbar"
-msgstr "Panel pro nastavení &zvuku"
+msgstr "Panel nástrojů pro nastavení &zvuku"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
@@ -17579,7 +18012,7 @@ msgstr "Zastaveno"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Transport"
-msgstr "Pohyb"
+msgstr "Přehrávání"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
@@ -17633,7 +18066,7 @@ msgstr "%s."
 #. with the big buttons on it (play record etc)
 #: src/toolbars/ControlToolBar.cpp
 msgid "&Transport Toolbar"
-msgstr "Panel &přehrávání"
+msgstr "Panel nástrojů pro &přehrávání"
 
 #. i18n-hint: (noun) It's the device used for playback.
 #: src/toolbars/DeviceToolBar.cpp
@@ -17677,7 +18110,7 @@ msgstr "Informace o zařízení nejsou dostupné"
 #. that manages devices
 #: src/toolbars/DeviceToolBar.cpp
 msgid "&Device Toolbar"
-msgstr "Panel &zařízení"
+msgstr "Panel nástrojů pro &zařízení"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "De&vice"
@@ -17740,7 +18173,7 @@ msgstr "Úpravy"
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
 msgid "&Edit Toolbar"
-msgstr "Panel ú&prav"
+msgstr "Panel nástrojů pro ú&pravy"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid " Monitoring "
@@ -17766,23 +18199,23 @@ msgstr " Zastřiženo "
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
-msgstr "Hladina nahrávání"
+msgstr "Měřič nahrávání"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Recording Level"
-msgstr "Nahrávací úroveň"
+msgstr "Úroveň nahrávání"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Record"
-msgstr "Nastavení nahrávání"
+msgstr "Řízení nahrávání"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Playback Meter"
-msgstr "Přehrávací měřič"
+msgstr "Měřič přehrávání"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/toolbars/MeterToolBar.cpp
@@ -17794,11 +18227,11 @@ msgstr "Úroveň přehrávání"
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Play"
-msgstr "Nastavení přehrávání"
+msgstr "Řízení přehrávání"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Recording Meter"
-msgstr "Nahrávací měřič"
+msgstr "Ukazatel nahrávání"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
@@ -17806,11 +18239,11 @@ msgstr "Spojený měřič"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Recording Meter Toolbar"
-msgstr "Měřicí panel hladiny &nahrávání"
+msgstr "Panel nástrojů pro ukazatel &nahrávání"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Playback Meter Toolbar"
-msgstr "Měřicí panel hladiny &přehrávání"
+msgstr "Panel nástrojů pro ukazatel &přehrávání"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Mi&xer"
@@ -17842,7 +18275,7 @@ msgstr "S&nížit hlasitost nahrávání"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scrub"
-msgstr "Přehrávat proměnlivou rychlostí"
+msgstr "Přehrávat proměnlivou rychlostí - smykovat"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
@@ -17896,7 +18329,7 @@ msgstr "Skrýt pravítko pro přehrávání proměnlivou rychlostí"
 #. that enables Scrub or Seek playback and Scrub Ruler
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scru&b Toolbar"
-msgstr "Nástrojový panel pro posouvání"
+msgstr "Panel nástrojů pro &smykování"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -17911,9 +18344,8 @@ msgid "Center"
 msgstr "Střed"
 
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy
 msgid "Selection Toolbar Setup"
-msgstr "Panel &výběru"
+msgstr "Nastavení panelu nástrojů pro výběr"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and End of Selection"
@@ -17935,29 +18367,26 @@ msgstr "Délka a střed výběru"
 #. for selecting a time range of audio
 #: src/toolbars/SelectionBar.cpp
 msgid "&Selection Toolbar"
-msgstr "Panel &výběru"
+msgstr "Panel nástrojů pro &výběr"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snapping"
-msgstr "(přichytávání)"
+msgstr "Přichytávání"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snap"
 msgstr "Přichytávat"
 
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap to combo box"
-msgstr ""
+msgstr "Přichytávat k rozbalovacímu seznamu"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "&Snapping Toolbar"
-msgstr "Panel &výběru"
+msgstr "&Panel nástrojů pro přichycení"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -17987,44 +18416,41 @@ msgstr "Šířka pásma"
 #. for selecting a frequency range of audio
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Panel výběru &spektra"
+msgstr "Panel nástrojů pro výběr &spektra"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Time Signature"
-msgstr "Změnit klouzavě tempo/výšku tónu"
+msgstr "Předznamenání"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo"
-msgstr "Výška tónu/Tempo"
+msgstr "Tempo"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature"
-msgstr ""
+msgstr "Horní předznamenání"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature"
-msgstr ""
+msgstr "Dolní předznamenání"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo Changed"
-msgstr "Tempo na konci (změna v %)"
+msgstr "Tempo změněno"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature Changed"
-msgstr ""
+msgstr "Horní předznamenání změněno"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature Changed"
-msgstr ""
+msgstr "Dolní předznamenání změněno"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Time Signature Toolbar (Beta)"
-msgstr ""
+msgstr "Panel nástrojů pro předznamenání (beta)"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -18038,13 +18464,13 @@ msgstr "Poloha zvuku"
 #. for viewing actual time of the cursor
 #: src/toolbars/TimeToolBar.cpp
 msgid "&Time Toolbar"
-msgstr "Panel č&asu"
+msgstr "Panel nástrojů pro č&as"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
 #, c-format
 msgid "Audacity %s Toolbar"
-msgstr "Audacity %s panel nástrojů"
+msgstr "Panel nástrojů pro %s Audacity"
 
 #: src/toolbars/ToolBar.cpp
 msgid "Click and drag to resize toolbar"
@@ -18079,7 +18505,7 @@ msgstr "Víceúčelový nástroj"
 #. that has some tools in it
 #: src/toolbars/ToolsToolBar.cpp
 msgid "T&ools Toolbar"
-msgstr "Panel &nástrojů"
+msgstr "Panel nástrojů pro &nástroje"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Selection Tool"
@@ -18123,7 +18549,7 @@ msgstr "Přehrát jednou nastavenou rychlostí"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Pla&y-at-Speed Toolbar"
-msgstr "Panel pro &přehrávání nastavenou rychlostí"
+msgstr "Panel nástrojů pro &přehrávání nastavenou rychlostí"
 
 #. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/toolbars/TranscriptionToolBar.cpp
@@ -18152,7 +18578,9 @@ msgstr "&Snížit rychlost přehrávání"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr "Přetáhněte štítek. Podržením klávesy Shift a přetažením přesunete všechny štítky na stejnou stopu."
+msgstr ""
+"Přetáhněte štítek. Podržením klávesy Shift a přetažením přesunete všechny"
+" štítky na stejnou stopu."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -18243,8 +18671,12 @@ msgstr "Informace o zařízení &MIDI..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
-msgstr "Klepněte pro svislé přiblížení. Shift+klepnutí pro oddálení. Táhněte pro přiblížení oblasti."
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom"
+" region."
+msgstr ""
+"Klepněte pro svislé přiblížení. Shift+klepnutí pro oddálení. Táhněte pro"
+" přiblížení oblasti."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -18323,7 +18755,9 @@ msgstr "Klepněte a táhněte pro upravení vzorků"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr "Kreslení je možné použít, když budete zvětšovat pohled, dokud neuvidíte jednotlivé vzorky."
+msgstr ""
+"Kreslení je možné použít, když budete zvětšovat pohled, dokud neuvidíte"
+" jednotlivé vzorky."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -18651,8 +19085,11 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% vpravo"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Klepněte a táhněte pro přizpůsobení velikosti podpohledů, dvojité klepnutí pro jejich stejnoměrné rozdělení"
+msgid ""
+"Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgstr ""
+"Klepněte a táhněte pro přizpůsobení velikosti podpohledů, dvojité klepnutí"
+" pro jejich stejnoměrné rozdělení"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -18782,8 +19219,10 @@ msgid "Logarithmic &Interpolation"
 msgstr "Logaritmická &interpolace"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Tato verze Audacity umožňuje pouze jednorázovou stopu pro každé okno projektu."
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Tato verze Audacity umožňuje pouze jednorázovou stopu pro každé okno projektu."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -18795,8 +19234,12 @@ msgstr "&Časová stopa"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
-msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
-msgstr "Táhněte klipy pro změnu jejich polohy. Podržte klávesu Shift a táhněte pro posunutí všech klipů ve stejné stopě."
+msgid ""
+"Drag clips to reposition them. Hold Shift and drag to move all clips on the"
+" same track."
+msgstr ""
+"Táhněte klipy pro změnu jejich polohy. Podržte klávesu Shift a táhněte pro"
+" posunutí všech klipů ve stejné stopě."
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -18898,7 +19341,8 @@ msgstr "Přehrávání s nastavenou rychlostí"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Seek"
-msgstr "Pohybovat ukazovátkem myši pro přehrávání normální rychlostí s přeskakováním"
+msgstr ""
+"Pohybovat ukazovátkem myši pro přehrávání normální rychlostí s přeskakováním"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Scrub"
@@ -18934,7 +19378,8 @@ msgstr "Klepněte a táhněte pro posunutí horního kmitočtu výběru."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr "Klepněte a táhněte pro posunutí středového kmitočtu výběru na vrchol spektra."
+msgstr ""
+"Klepněte a táhněte pro posunutí středového kmitočtu výběru na vrchol spektra."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
@@ -18953,7 +19398,8 @@ msgstr "Úpravy, Nastavení..."
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-msgstr "Vícenástrojový režim: Stiskněte klávesu %s pro nastavení myši a klávesnice."
+msgstr ""
+"Vícenástrojový režim: Stiskněte klávesu %s pro nastavení myši a klávesnice."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to set frequency bandwidth."
@@ -19024,7 +19470,9 @@ msgstr "Ctrl-klepnutí"
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr "%s pro vybrání nebo zrušení výběru stopy. Táhněte nahoru nebo dolů pro změnu pořadí stop."
+msgstr ""
+"%s pro vybrání nebo zrušení výběru stopy. Táhněte nahoru nebo dolů pro změnu"
+" pořadí stop."
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -19053,7 +19501,9 @@ msgstr "Klepněte pro přiblížení, Shift+klepnutí pro oddálení"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "Táhnout levým tlačítkem myši pro přiblížení oblasti, stisknutím pravého tlačítka myši dojde k oddálení"
+msgstr ""
+"Táhnout levým tlačítkem myši pro přiblížení oblasti, stisknutím pravého"
+" tlačítka myši dojde k oddálení"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
@@ -19071,8 +19521,12 @@ msgstr "Zkontrolovat aktualizace"
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
-msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
-msgstr "Pokud chcete změnit nastavení automatické kontroly aktualizací, naleznete je v %s."
+msgid ""
+"If you want to change your preference for automatic updates checking, you can"
+" find it in %s."
+msgstr ""
+"Pokud chcete změnit nastavení automatické kontroly aktualizací, naleznete je"
+" v %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
@@ -19121,13 +19575,21 @@ msgstr "Kontrola aktualizace aplikace"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Abyste zůstal v obraze, obdržíte v aplikaci upozornění, kdykoli se objeví nová verze Audacity ke stažení."
+msgid ""
+"To stay up to date, you will receive an in-app notification whenever there is"
+" a new version of Audacity available to download."
+msgstr ""
+"Abyste zůstal v obraze, obdržíte v aplikaci upozornění, kdykoli se objeví"
+" nová verze Audacity ke stažení."
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "V zájmu ochrany vašeho soukromí Audacity neshromažďuje žádné osobní údaje.Kontrola aktualizací aplikace však vyžaduje přístup k síti."
+msgid ""
+"In order to protect your privacy, Audacity does not collect any personal"
+" information. However, app update checking does require network access."
+msgstr ""
+"V zájmu ochrany vašeho soukromí Audacity neshromažďuje žádné osobní"
+" údaje.Kontrola aktualizací aplikace však vyžaduje přístup k síti."
 
 #. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -19335,27 +19797,30 @@ msgid "Vertical"
 msgstr "Svislé"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-#, fuzzy
 msgid "Missing Plugins"
-msgstr "Spravovat přídavné moduly"
+msgstr "Chybějící přídavné moduly"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-msgid "This project contains some realtime effect plugins that cannot be found on this system."
+msgid ""
+"This project contains some realtime effect plugins that cannot be found on"
+" this system."
 msgstr ""
+"Tento projekt obsahuje některé přídavné moduly s efekty ve skutečném čase,"
+" které v tomto systému nelze nalézt."
 
 #. i18n-hint: %s will be replaced with "Learn more"
 #: src/widgets/MissingPluginsErrorDialog.cpp
 #, c-format
 msgid "The project may sound different than intended. %s"
-msgstr ""
+msgstr "Projekt může znít jinak, než bylo zamýšleno. %s"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "Learn more"
-msgstr ""
+msgstr "Zjistit více"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
-msgstr "(Pomocí související nabídky změnit formát.)"
+msgstr "(Ke změně formátu použijte související nabídku.)"
 
 #: src/widgets/PopupMenuTable.h
 #, c-format
@@ -19370,8 +19835,12 @@ msgstr "Nelze zapsat soubory do adresáře: %s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr "Zkontrolujte, zda adresář existuje, zda má potřebná oprávnění, a že disk není plný."
+msgid ""
+"Please check that the directory exists, has the necessary permissions, and"
+" the drive isn't full."
+msgstr ""
+"Zkontrolujte, zda adresář existuje, zda má potřebná oprávnění, a že disk není"
+" plný."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -19441,9 +19910,8 @@ msgid "Value must not be greater than %s"
 msgstr "Hodnota nesmí být větší než %s"
 
 #: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Shelf Filter"
-msgstr "Vědecký filtr"
+msgstr "Policový filtr"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
@@ -19463,17 +19931,16 @@ msgid "GNU General Public License v2.0"
 msgstr "GNU General Public License verze 2.0"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Filter type"
-msgstr "Typ filtru"
+msgstr "Druh filtru"
 
 #: plug-ins/ShelfFilter.ny
 msgid "Low-shelf"
-msgstr ""
+msgstr "Nízkoprůchodový policový filtr"
 
 #: plug-ins/ShelfFilter.ny
 msgid "High-shelf"
-msgstr ""
+msgstr "Vysokoprůchodový policový filtr"
 
 #: plug-ins/ShelfFilter.ny plug-ins/highpass.ny plug-ins/lowpass.ny
 #: plug-ins/notch.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
@@ -19481,14 +19948,13 @@ msgid "Frequency (Hz)"
 msgstr "Kmitočet (Hz)"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Amount (dB)"
-msgstr "Vlevo (dB)"
+msgstr "Množství (dB)"
 
 #: plug-ins/ShelfFilter.ny
 #, lisp-format
 msgid "Error.~%Frequency set too high for selected track."
-msgstr ""
+msgstr "Chyba.~%Kmitočet je pro vybranou stopu nastaven příliš vysoko."
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Multi Tool"
@@ -19560,11 +20026,13 @@ msgstr "~aStřední kmitočet musí být větší než 0 Hz."
 #, lisp-format
 msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting cannot~%~\n"
+"                        For the current track, the high frequency setting"
+" cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
 "~aVýběr kmitočtu je pro vzorkovací kmitočet stopy příliš vysoký.~%~\n"
-"                        Pro nynější stopu nesmí být nastavení vysokého kmitočtu~%~\n"
+"                        Pro nynější stopu nesmí být nastavení vysokého"
+" kmitočtu~%~\n"
 "                        větší než ~a Hz"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
@@ -19858,12 +20326,11 @@ msgstr "Výška tónu/Tempo"
 
 #: plug-ins/delay.ny
 msgid "Low-quality Pitch Shift"
-msgstr "Změna výšky tónu s nízkou jakostí"
+msgstr "Nízká kvalita posunu výšky tónu"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "High-quality Pitch Shift"
-msgstr "Změna výšky tónu s nízkou jakostí"
+msgstr "Vysoce kvalitní posun výšky tónu"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
@@ -20084,7 +20551,8 @@ msgid ""
 "                   Track sample rate is ~a Hz~%~\n"
 "                   Frequency must be less than ~a Hz."
 msgstr ""
-"Chyba:~%~%Kmitočet (~a Hz) je příliš vysoký pro vzorkovací kmitočet stopy.~%~%~\n"
+"Chyba:~%~%Kmitočet (~a Hz) je příliš vysoký pro vzorkovací kmitočet stopy.~%~"
+"%~\n"
 "                   Vzorkovací kmitočet stopy je ~a Hz~%~\n"
 "                   Kmitočet musí být nižší než ~a Hz."
 
@@ -20162,7 +20630,8 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Bylo zjištěno příliš mnoho ticha.~%Přidáno pouze prvních 10 000 štítků."
+msgstr ""
+"Bylo zjištěno příliš mnoho ticha.~%Přidáno pouze prvních 10 000 štítků."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -20171,14 +20640,18 @@ msgid "Error.~%Selection must be less than ~a."
 msgstr "Chyba.~%Výběr musí být menší než ~a."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "No sounds found.~%Try lowering 'Threshold level (dB)'."
-msgstr "Nebyly nalezeny žádné zvuky.~%Zkuste snížit práh nebo zmenšit nejmenší dobu trvání ticha."
+msgstr "Nebyly nalezeny žádné zvuky.~%Zkuste snížit \"Prahovou úroveň (dB)\"."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
-msgstr "Označení oblastí mezi zvuky vyžaduje~% alespoň dva zvuky.~%Zjištěn pouze jedenzvuk."
+msgid ""
+"Labelling regions between sounds requires~%at least two sounds.~%Only one"
+" sound detected."
+msgstr ""
+"Označení oblastí mezi zvuky vyžaduje~% alespoň dva zvuky.~%Zjištěn pouze"
+" jedenzvuk."
 
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
@@ -20354,7 +20827,8 @@ msgid ""
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"Chyba:~%~%Kmitočet (~a Hz) je příliš vysoký pro vzorkovací kmitočet stopy.~%~%~\n"
+"Chyba:~%~%Kmitočet (~a Hz) je příliš vysoký pro vzorkovací kmitočet stopy.~%~"
+"%~\n"
 "                   Vzorkovací kmitočet stopy je ~a Hz.~%~\n"
 "                   Kmitočet musí být nižší než ~a Hz."
 
@@ -20413,7 +20887,9 @@ msgstr "Varování.~%Nepodařilo se zkopírovat některé soubory:~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr "Přídavné moduly nainstalovány.~%(Pro povolení efektů použijte správce přídavného modulu):"
+msgstr ""
+"Přídavné moduly nainstalovány.~%(Pro povolení efektů použijte správce"
+" přídavného modulu):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20721,8 +21197,11 @@ msgstr "Vzorkovací kmitočet: ~a Hz.  Hodnoty vzorku na ~a stupnici.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr "~a   ~a~%~aVzorkovací kmitočet: ~a Hz.~%Zpracovaná délka: ~a vzorků ~a sekund.~a"
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+"~a   ~a~%~aVzorkovací kmitočet: ~a Hz.~%Zpracovaná délka: ~a vzorků ~a"
+" sekund.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20736,12 +21215,16 @@ msgstr ""
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
-"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed:"
+" ~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB. "
+" Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
-"~a~%Vzorkovací kmitočet: ~a Hz. Hodnoty vzorku na ~a stupnici. ~a.~%~aZpracovaná délka: ~a ~\n"
-"                  vzorků, ~a sekund.~%Vrcholový rozkmit: ~a (lineární) ~a dB.  Nevyhodnocené RMS: ~a dB.~%~\n"
+"~a~%Vzorkovací kmitočet: ~a Hz. Hodnoty vzorku na ~a stupnici. ~a.~"
+"%~aZpracovaná délka: ~a ~\n"
+"                  vzorků, ~a sekund.~%Vrcholový rozkmit: ~a (lineární) ~a dB."
+"  Nevyhodnocené RMS: ~a dB.~%~\n"
 "                  stejnosměrná složka (DC offset): ~a~a"
 
 #: plug-ins/sample-data-export.ny
@@ -21056,8 +21539,12 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
-msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-msgstr "Poloha vyvážení: ~a~%Levý a pravý kanál si odpovídají v asi ~a %. To znamená:~%~a~%"
+msgid ""
+"Pan position: ~a~%The left and right channels are correlated by about ~a %."
+" This means:~%~a~%"
+msgstr ""
+"Poloha vyvážení: ~a~%Levý a pravý kanál si odpovídají v asi ~a %. To"
+" znamená:~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -21067,24 +21554,31 @@ msgid ""
 msgstr ""
 " - Tyto dva kanály jsou totožné, to jest, kupř. jde o duální mono.\n"
 "                Střed nelze odstranit.\n"
-"                Jakýkoli zbývající rozdíl může být způsoben ztrátovým zakódováním."
+"                Jakýkoli zbývající rozdíl může být způsoben ztrátovým"
+" zakódováním."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
+" - The two Channels are strongly related, i.e. nearly mono or extremely"
+" panned.\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
-" - Tyto dva kanály jsou spolu silně spojeny, to jest, kupř. téměř mono nebo jsou mimořádně vyrovnány.\n"
+" - Tyto dva kanály jsou spolu silně spojeny, to jest, kupř. téměř mono nebo"
+" jsou mimořádně vyrovnány.\n"
 "                Vytažení středu bude mít velice pravděpodobně chabý výsledek."
 
 #: plug-ins/vocalrediso.ny
-msgid " - A fairly good value, at least stereo in average and not too wide spread."
-msgstr " - Docela dobrá hodnota, v průměru alespoň stereo a ne příliš široce rozšířeno."
+msgid ""
+" - A fairly good value, at least stereo in average and not too wide spread."
+msgstr ""
+" - Docela dobrá hodnota, v průměru alespoň stereo a ne příliš široce"
+" rozšířeno."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used reverb."
+"                However, the center extraction depends also on the used"
+" reverb."
 msgstr ""
 " - Nejlepší hodnota pro Stereo.\n"
 "                Nicméně, vytažení středu závisí také na použitém dozvuku."
@@ -21092,11 +21586,13 @@ msgstr ""
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
+"                Either you have only noise or the piece is mastered in a"
+" unbalanced manner.\n"
 "                The center extraction can still be good though."
 msgstr ""
 " - Tyto dva kanály skoro nejsou příbuzné.\n"
-"                Buď máte pouze šum anebo je konečné zpracování nahrávky díla uděláno nevyváženým způsobem.\n"
+"                Buď máte pouze šum anebo je konečné zpracování nahrávky díla"
+" uděláno nevyváženým způsobem.\n"
 "                Vytažení středu však i tak může dopadnout dobře."
 
 #: plug-ins/vocalrediso.ny
@@ -21107,13 +21603,15 @@ msgid ""
 msgstr ""
 " - Ačkoli ta stopa je stereo, pole je očividně hodně široké.\n"
 "                To může vést k zřídkakdy viděným efektům.\n"
-"                Obzvláště, když se přehrávání děje za pomoci jen jednoho reproduktoru."
+"                Obzvláště, když se přehrávání děje za pomoci jen jednoho"
+" reproduktoru."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between the speakers.\n"
+"                  to spread the signal over the physical distance between the"
+" speakers.\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
 " - Tyto dva kanály jsou skoro totožné.\n"
