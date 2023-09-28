@@ -182,7 +182,7 @@ void DoRemoveTrack(AudacityProject &project, Track *toRemove)
       trackFocus.Set(**newFocus);
 
    ProjectHistory::Get(project).PushState(
-      XO("Removed track '%s.'").Format(name),
+      XO("Removed track '%s'.").Format(name),
       XO("Track Remove"));
 }
 
