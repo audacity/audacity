@@ -2385,8 +2385,7 @@ void WaveTrack::JoinOne(
    const auto rate = track.GetRate();
    auto &clips = track.mClips;
    for (const auto &clip: clips) {
-      if (clip->GetPlayStartTime() < t1 - (1.0 / rate) &&
-         clip->GetPlayEndTime() - (1.0 / rate) > t0) {
+      if (clip->IntersectsPlayRegion(t0, t1)) {
          // Put in sorted order
          auto it = clipsToDelete.begin(), end = clipsToDelete.end();
          for (; it != end; ++it)
