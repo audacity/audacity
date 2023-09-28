@@ -93,6 +93,19 @@ Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
    return result;
 }
 
+Track *EffectOutputTracks::AddToOutputTracks(TrackList &&list)
+{
+   assert(list.Size() == 1);
+   mIMap.push_back(nullptr);
+   auto result = *list.begin();
+   mOMap.push_back(result);
+   mOutputTracks->Append(std::move(list));
+   // Invariant is maintained
+   assert(mIMap.size() == mOutputTracks->Size());
+   assert(mIMap.size() == mOMap.size());
+   return result;
+}
+
 // Replace tracks with successfully processed mOutputTracks copies.
 // Else clear and delete mOutputTracks copies.
 void EffectOutputTracks::Commit()

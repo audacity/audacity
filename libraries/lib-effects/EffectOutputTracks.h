@@ -59,6 +59,14 @@ public:
     */
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
 
+   //! An overload to add a "wide" output track, now represented as a TrackList,
+   //! which will be moved-from.
+   /*!
+    @pre `list.Size() == 1`
+    @return a pointer to the given (leader) track
+    */
+   Track *AddToOutputTracks(TrackList &&list);
+
    //! Replace input tracks with temporaries only on commit
    /*
     @pre `Commit()` was not previously called
