@@ -634,9 +634,15 @@ bool FrequencyPlotDialog::GetAudio()
          mDataLen = 0;
          return false;
       }
-      for (size_t i = 0; i < mDataLen; i++)
-         mData[i] = buffers[0][i];
-      for (size_t iChannel = 1; iChannel < nChannels; ++iChannel) {
+      size_t iChannel = 0;
+      if (selcount == 0) {
+         // First channel -- assign into mData
+         for (size_t i = 0; i < mDataLen; i++)
+            mData[i] = buffers[0][i];
+         ++iChannel;
+      }
+      // Later channels -- accumulate
+      for (; iChannel < nChannels; ++iChannel) {
          const auto buffer = buffers[iChannel];
          for (size_t i = 0; i < mDataLen; i++)
             mData[i] += buffer[i];
