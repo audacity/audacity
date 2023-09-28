@@ -13,7 +13,7 @@ Canvas {
    smooth: true
 
    property int radius: 2
-   readonly property color strokeColor: UiTheme.timecodeColor
+   readonly property color strokeColor: UiTheme.backgroundColor4
    readonly property color fillColor: UiTheme.fontColor2
 
    onStrokeColorChanged: root.requestPaint()

@@ -73,7 +73,7 @@ Item {
          FlatButton {
             id: play
             icon: isPlaying ? IconCode.SOLID_PAUSE : IconCode.SOLID_PLAY
-            iconColor: isPlaying ? UiTheme.fontColor1 : UiTheme.playColor
+            iconColor: isPlaying ? UiTheme.fontColor1 : UiTheme.successColor
             iconSize: 14
             visible: toolbarHandler.playVisible
             onClicked: toolbarHandler.Play()
@@ -90,7 +90,7 @@ Item {
          FlatButton {
             id: record
             icon: IconCode.SOLID_RECORD
-            iconColor: UiTheme.recordColor
+            iconColor: UiTheme.dangerColor
             iconSize: 14
             visible: toolbarHandler.recordVisible && root.workspaceMode === Workspace.Mode.Classic
             onClicked: toolbarHandler.Record()
@@ -115,7 +115,7 @@ Item {
          FlatButton {
             id: record2
             icon: IconCode.SOLID_RECORD
-            iconColor: UiTheme.recordColor
+            iconColor: UiTheme.dangerColor
             iconSize: 14
             visible: toolbarHandler.recordVisible && root.workspaceMode !== Workspace.Mode.Classic
             onClicked: toolbarHandler.Record()

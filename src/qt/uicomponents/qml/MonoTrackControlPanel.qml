@@ -26,7 +26,7 @@ Item {
       id: background
       anchors.fill: parent
       color: UiTheme.backgroundColor2
-      opacity: 1.0
+      opacity: UiTheme.opacityOpaque
 
       states: [
          State {
@@ -36,7 +36,7 @@ Item {
             PropertyChanges {
                target: background
                color: UiTheme.backgroundColor1
-               opacity: UiTheme.buttonOpacityHover
+               opacity: UiTheme.opacityStrong
             }
          }
       ]
@@ -144,7 +144,8 @@ Item {
             x: 255
             width: 1
             height: root.height
-            color: UiTheme.strokeColor
+            color: UiTheme.strokeColor1
+            opacity: UiTheme.opacityLight
          }
 
          TrackVolumeMeter {
@@ -161,6 +162,7 @@ Item {
       y: root.height - horizontalSeparator.height
       height: 2
       width: root.width
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor1
+      opacity: UiTheme.opacityLight
    }
 }

@@ -103,7 +103,7 @@ Rectangle {
       id: currentPeakIndicator
       height: parent.height
       width: peaks.current
-      color: isBeingClipped() ? UiTheme.recordColor : UiTheme.accentColor
+      color: isBeingClipped() ? UiTheme.dangerColor : UiTheme.brandColor
    }
 
    Rectangle {
@@ -111,7 +111,7 @@ Rectangle {
       x: peaks.recent
       height: parent.height
       width: 1
-      color: UiTheme.accentColor
+      color: UiTheme.brandColor
       visible: peaks.recent !== -1
    }
 
@@ -130,7 +130,7 @@ Rectangle {
       height: parent.height
       width: clippingZone.width
       opacity: peaks.hasBeenClipped ? 1.0 : 0.1
-      color: peaks.hasBeenClipped ? UiTheme.recordColor : UiTheme.backgroundColor3
+      color: peaks.hasBeenClipped ? UiTheme.dangerColor : UiTheme.backgroundColor3
    }
 
    Component.onCompleted: {

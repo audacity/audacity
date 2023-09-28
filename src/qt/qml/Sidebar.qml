@@ -63,7 +63,7 @@ Rectangle {
       x: parent.width
       width: 1
       height: parent.height
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor2
    }
 
    FlatButton {
@@ -81,7 +81,7 @@ Rectangle {
          y: parent.height - 1
          width: parent.width
          height: 1
-         color: UiTheme.strokeColor
+         color: UiTheme.strokeColor2
       }
 
       AddNewTrackPanel {

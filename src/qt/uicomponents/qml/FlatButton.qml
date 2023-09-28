@@ -41,7 +41,7 @@ FocusScope {
    property color normalColor:
       transparent ? "transparent" : accentButton ? accentColor : UiTheme.buttonColor
    property color hoverHitColor: accentButton ? accentColor : UiTheme.buttonColor
-   property color accentColor: UiTheme.accentColor
+   property color accentColor: UiTheme.brandColor
 
    property color iconColor: UiTheme.fontColor1
    property int iconSize: 16
@@ -91,7 +91,7 @@ FocusScope {
    implicitWidth: contentLoader.implicitWidth + 2 * margins
    implicitHeight: Math.max(contentLoader.implicitHeight, UiTheme.defaultButtonSize)
 
-   opacity: root.enabled ? 1.0 : UiTheme.itemOpacityDisabled
+   opacity: root.enabled ? UiTheme.opacityOpaque : UiTheme.itemOpacityDisabled
 
    Loader {
       anchors.fill: parent
@@ -106,11 +106,11 @@ FocusScope {
          id: background
 
          color: root.normalColor
-         opacity: UiTheme.buttonOpacityNormal
+         opacity: UiTheme.opacityMedium
 
          radius: root.radius
          border.width: UiTheme.borderWidth
-         border.color: UiTheme.strokeColor
+         border.color: UiTheme.strokeColor1
 
          states: [
             State {
@@ -120,7 +120,7 @@ FocusScope {
                PropertyChanges {
                   target: background
                   color: root.hoverHitColor
-                  opacity: UiTheme.buttonOpacityHit
+                  opacity: transparent ? UiTheme.opacityMedium : UiTheme.opacityOpaque
                }
             },
 
@@ -131,7 +131,7 @@ FocusScope {
                PropertyChanges {
                   target: background
                   color: root.hoverHitColor
-                  opacity: UiTheme.buttonOpacityHover
+                  opacity: transparent ? UiTheme.opacityLight : UiTheme.opacityStrong
                }
             }
          ]

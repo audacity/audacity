@@ -232,7 +232,7 @@ ApplicationWindow {
          anchors.bottom: parent.top
          height: 1
          width: parent.width
-         color: UiTheme.strokeColor
+         color: UiTheme.strokeColor2
       }
    }
 }

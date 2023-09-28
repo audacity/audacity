@@ -10,7 +10,7 @@ Rectangle {
    implicitHeight: 124
    width: implicitWidth
    height: implicitHeight
-   color: UiTheme.clipHeaderColor
+   color: UiTheme.backgroundColor1
    radius: 4
    objectName: "WaveClipView"
 
