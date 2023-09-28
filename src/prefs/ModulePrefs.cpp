@@ -57,9 +57,6 @@ ManualPageID ModulePrefs::HelpPageName()
 }
 
 void ModulePrefs::GetAllModuleStatuses(){
-   wxString str;
-   long dummy;
-
    // Modules could for example be:
    //    mod-script-pipe
    //    mod-nyq-bench
@@ -79,16 +76,16 @@ void ModulePrefs::GetAllModuleStatuses(){
    for(const auto& key : gPrefs->GetChildKeys())
    {
       int iStatus;
-      gPrefs->Read( str, &iStatus, static_cast<decltype(iStatus)>(kModuleDisabled) );
+      gPrefs->Read( key, &iStatus, static_cast<decltype(iStatus)>(kModuleDisabled) );
       wxString fname;
-      gPrefs->Read(wxT("/ModulePath/") + str, &fname, {} );
+      gPrefs->Read(wxT("/ModulePath/") + key, &fname, {} );
       if( !fname.empty() && wxFileExists( fname ) ){
          if( iStatus > kModuleNew ){
             iStatus = kModuleNew;
-            gPrefs->Write( str, iStatus );
+            gPrefs->Write( key, iStatus );
          }
          //wxLogDebug( wxT("Entry: %s Value: %i"), str, iStatus );
-         mModules.push_back( str );
+         mModules.push_back( key );
          mStatuses.push_back( iStatus );
          mPaths.push_back( fname );
       }
