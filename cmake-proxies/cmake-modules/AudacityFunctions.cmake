@@ -274,7 +274,12 @@ function( audacity_append_common_compiler_options var use_pch )
          $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
 
          $<$<PLATFORM_ID:Darwin>:-DUSE_AQUA_THEME>
+
+         # Enable SIMD support when available
+         ${MMX_FLAG}
+         ${SSE_FLAG}
    )
+
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
       list( APPEND ${var} -DIS_ALPHA -DUSE_ALPHA_MANUAL )
@@ -400,7 +405,7 @@ function(collect_edges TARGET IMPORT_TARGETS LIBTYPE)
    endif()
 
    propagate_interesting_dependencies( ${TARGET} "${IMPORT_TARGETS}" )
- 
+
    append_node_attributes( ATTRIBUTES ${TARGET} )
 
    list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
