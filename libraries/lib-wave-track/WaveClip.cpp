@@ -767,8 +767,8 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
       SetTrimRight(.0);
    }
 
-   auto s0 = TimeToSequenceSamples(t);
-   auto slen = (sampleCount)floor(len * mRate + 0.5);
+   const auto s0 = TimeToSequenceSamples(t);
+   const auto slen = TimeToSamples(len);
 
    // use Strong-guarantee
    for (auto &pSequence : mSequences)
