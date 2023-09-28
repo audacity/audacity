@@ -16,6 +16,7 @@ Paul Licameli split from Menus.cpp
 #include <wx/frame.h>
 
 #include "AudioIO.h"
+#include "Clipboard.h"
 #include "LabelTrack.h"
 #include "Menus.h"
 #include "Project.h"
@@ -299,8 +300,14 @@ const ReservedCommandFlag&
       CommandFlagOptions{}.QuickTest()
    }; return flag; }
 const ReservedCommandFlag&
+   ClipboardNotEmptyFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject& project) {
+         return !Clipboard::Get().GetTracks().empty();
+      },
+      CommandFlagOptions{}.QuickTest()
+   }; return flag; }
+const ReservedCommandFlag&
    NoAutoSelect() { static ReservedCommandFlag flag{
      [](const AudacityProject &){ return true; }
    }; return flag; } // jkc
-;
 
