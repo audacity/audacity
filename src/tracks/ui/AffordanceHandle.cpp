@@ -20,6 +20,7 @@
 #include "../../../images/Cursors.h"
 
 #include <wx/cursor.h>
+#include <wx/event.h>
 
 HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe, bool moving)
 {
@@ -63,7 +64,23 @@ AffordanceHandle::AffordanceHandle(const std::shared_ptr<Track>& track)
 UIHandle::Result AffordanceHandle::Click(const TrackPanelMouseEvent& evt, AudacityProject* pProject)
 {
     auto result = TimeShiftHandle::Click(evt, pProject);
+    mClickPosition = evt.event.GetPosition();
     return result | RefreshCode::RefreshCell;
+}
+
+UIHandle::Result AffordanceHandle::Drag(const TrackPanelMouseEvent& event, AudacityProject* pProject)
+{
+    if(!mMoving)
+    {
+        if(std::abs(mClickPosition.x - event.event.m_x) >= MoveThreshold ||
+           std::abs(mClickPosition.y - event.event.m_y) >= MoveThreshold)
+        {
+            mMoving = true;
+        }
+        else
+            return RefreshCode::RefreshNone;
+    }
+    return TimeShiftHandle::Drag(event, pProject);
 }
 
 UIHandle::Result AffordanceHandle::Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent)
