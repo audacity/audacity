@@ -459,7 +459,8 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format,
 /*! @excsafety{No-fail} */
 void WaveClip::UpdateEnvelopeTrackLen()
 {
-   auto len = (GetNumSamples().as_double()) / mRate;
+   // The envelope time points account for stretching.
+   const auto len = GetNumSamples().as_double() * GetStretchRatio() / mRate;
    if (len != mEnvelope->GetTrackLen())
       mEnvelope->SetTrackLen(len, 1.0 / GetRate());
 }
@@ -1075,8 +1076,9 @@ void WaveClip::SetRate(int rate)
    mRate = rate;
    mTrimLeft = SamplesToTime(trimLeftSampleNum);
    mTrimRight = SamplesToTime(trimRightSampleNum);
-   auto newLength = GetNumSamples().as_double() / mRate;
-   mEnvelope->RescaleTimes( newLength );
+   const auto newLength =
+      GetNumSamples().as_double() * GetStretchRatio() / mRate;
+   mEnvelope->RescaleTimes(newLength);
    MarkChanged();
    SetSequenceStartTime(GetSequenceStartTime() * ratio);
 }
