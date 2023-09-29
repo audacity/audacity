@@ -936,6 +936,7 @@ public:
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
       double GetPlayEndTime() const;
+      bool IntersectsPlayRegion(double t0, double t1) const;
 
       double GetStretchRatio() const;
 
@@ -1027,9 +1028,8 @@ private:
       const WaveTrack& src, bool preserve, bool merge,
       const TimeWarper* effectWarper, bool clearByTrimming);
 
-   static void JoinOne(
-      WaveTrack& track, double t0, double t1,
-      const ProgressReporter& reportProgress);
+   //! @pre All clips intersecting [t0, t1) have unit stretch ratio
+   static void JoinOne(WaveTrack& track, double t0, double t1);
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,

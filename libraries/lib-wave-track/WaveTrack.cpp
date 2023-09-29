@@ -278,6 +278,13 @@ double WaveTrack::Interval::GetPlayEndTime() const
    return mpClip->GetPlayEndTime();
 }
 
+bool WaveTrack::Interval::IntersectsPlayRegion(double t0, double t1) const
+{
+   // TODO wide wave tracks:  assuming that all 'narrow' clips share common
+   // boundaries
+   return mpClip->IntersectsPlayRegion(t0, t1);
+}
+
 double WaveTrack::Interval::GetStretchRatio() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common stretch ratio
@@ -2365,19 +2372,37 @@ void WaveTrack::Join(
    double t0, double t1, const ProgressReporter& reportProgress)
 {
    assert(IsLeader());
-   const auto channels = TrackList::Channels(this);
    // Merge all WaveClips overlapping selection into one
-   BasicUI::SplitProgress(
-      channels.begin(), channels.end(),
-      [&](WaveTrack* pChannel, ProgressReporter child) {
-         pChannel->JoinOne(*pChannel, t0, t1, child);
-      },
-      reportProgress);
+   const auto intervals = Intervals();
+   std::vector<std::shared_ptr<Interval>> intervalsToJoin;
+   for (auto interval : intervals)
+      if (interval->IntersectsPlayRegion(t0, t1))
+         // TODO after this loop's iteration executes, the object referred to by
+         // `interval` would get destroyed if `intervalsToJoin` were a vector of
+         // raw pointers - why is that ?
+         intervalsToJoin.push_back(interval);
+   if (intervalsToJoin.size() < 2u)
+      return;
+   if (std::any_of(
+          intervalsToJoin.begin() + 1, intervalsToJoin.end(),
+          [first =
+              intervalsToJoin[0]->GetStretchRatio()](const auto& interval) {
+             return first != interval->GetStretchRatio();
+          }))
+      BasicUI::SplitProgress(
+         intervalsToJoin.begin(), intervalsToJoin.end(),
+         [&](
+            const std::shared_ptr<Interval>& interval, ProgressReporter child) {
+            interval->ApplyStretchRatio(child);
+         },
+         reportProgress);
+
+   for (const auto pChannel : TrackList::Channels(this))
+      JoinOne(*pChannel, t0, t1);
 }
 
 void WaveTrack::JoinOne(
-   WaveTrack& track, double t0, double t1,
-   const ProgressReporter& reportProgress)
+   WaveTrack& track, double t0, double t1)
 {
    WaveClipPointers clipsToDelete;
    WaveClip* newClip{};
@@ -2405,33 +2430,30 @@ void WaveTrack::JoinOne(
    newClip = track.CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
       clipsToDelete[0]->GetName());
 
-   BasicUI::SplitProgress(
-      clipsToDelete.begin(), clipsToDelete.end(),
-      [&](WaveClip* clip, ProgressReporter reportClipProgress) {
-         // wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
-         //       t, clip->GetOffset(), clip->GetStartTime(),
-         //       clip->GetEndTime());
+   for (auto clip : clipsToDelete) {
+      // wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
+      //       t, clip->GetOffset(), clip->GetStartTime(),
+      //       clip->GetEndTime());
 
-         if (clip->GetPlayStartTime() - t > (1.0 / rate))
-         {
-            double addedSilence = (clip->GetPlayStartTime() - t);
-            // wxPrintf("Adding %.6f seconds of silence\n");
-            auto offset = clip->GetPlayStartTime();
-            auto value = clip->GetEnvelope()->GetValue(offset);
-            newClip->AppendSilence(addedSilence, value);
-            t += addedSilence;
-         }
+      if (clip->GetPlayStartTime() - t > (1.0 / rate))
+      {
+         double addedSilence = (clip->GetPlayStartTime() - t);
+         // wxPrintf("Adding %.6f seconds of silence\n");
+         auto offset = clip->GetPlayStartTime();
+         auto value = clip->GetEnvelope()->GetValue(offset);
+         newClip->AppendSilence(addedSilence, value);
+         t += addedSilence;
+      }
 
       // wxPrintf("Pasting at %.6f\n", t);
       bool success = newClip->Paste(t, *clip);
       assert(success); // promise of CreateClip
 
-         t = newClip->GetPlayEndTime();
+      t = newClip->GetPlayEndTime();
 
-         auto it = FindClip(clips, clip);
-         clips.erase(it); // deletes the clip
-      },
-      reportProgress);
+      auto it = FindClip(clips, clip);
+      clips.erase(it); // deletes the clip
+   }
 }
 
 /*! @excsafety{Partial}
