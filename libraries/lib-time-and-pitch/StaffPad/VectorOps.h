@@ -96,16 +96,18 @@ inline void calcPhases(const std::complex<float>* src, float* dst, int32_t n)
     dst[i] = std::arg(src[i]);
 }
 
-inline void calcMagnitudes(const std::complex<float>* src, float* dst, int32_t n)
+inline void calcNorms(const std::complex<float>* src, float* dst, int32_t n)
 {
   for (int32_t i = 0; i < n; i++)
-    dst[i] = std::abs(src[i]);
+    dst[i] = std::norm(src[i]);
 }
 
-inline void convertPolarToCartesian(const float* srcMag, const float* srcPh, std::complex<float>* dst, int32_t n)
+inline void rotate(const float* oldPhase, const float* newPhase, std::complex<float>* dst, int32_t n)
 {
-  for (int32_t i = 0; i < n; i++)
-    dst[i] = std::polar<float>(srcMag[i], srcPh[i]);
+  for (int32_t i = 0; i < n; i++) {
+    auto theta = newPhase[i] - oldPhase[i];
+    dst[i] *= std::complex<float>(cosf(theta), sinf(theta));
+  }
 }
 
 } // namespace vo
