@@ -664,6 +664,16 @@ bool WaveClip::Paste(double t0, const WaveClip& other)
    if (GetWidth() != other.GetWidth())
       return false;
 
+   if (GetSequenceSamplesCount() == 0)
+   {
+      // Empty clip: we're flexible and adopt the other's stretching.
+      mRawAudioTempo = other.mRawAudioTempo;
+      mClipStretchRatio = other.mClipStretchRatio;
+      mProjectTempo = other.mProjectTempo;
+   }
+   else if (GetStretchRatio() != other.GetStretchRatio())
+      return false;
+
    Finally Do{ [this]{ assert(CheckInvariants()); } };
 
    Transaction transaction{ *this };

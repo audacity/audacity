@@ -496,8 +496,9 @@ public:
    void ClearAndAddCutLine(double t0, double t1);
 
    /*!
-    @return true and succeed if and only if `this->GetWidth() ==
-    other.GetWidth()`
+    * @return true and succeed if and only if `this->GetWidth() ==
+    * other.GetWidth()` and either this is empty or `this->GetStretchRatio() ==
+    * other.GetStretchRatio()`.
     */
    bool Paste(double t0, const WaveClip& other);
 
