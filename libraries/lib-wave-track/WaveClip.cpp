@@ -1418,17 +1418,20 @@ void WaveClip::TrimRight(double deltaTime)
 void WaveClip::TrimLeftTo(double to)
 {
    mTrimLeft =
-      std::clamp(to, mSequenceOffset, GetPlayEndTime()) - mSequenceOffset;
+      std::clamp(to, SnapToTrackSample(mSequenceOffset), GetPlayEndTime()) -
+      mSequenceOffset;
 }
 
 void WaveClip::TrimRightTo(double to)
 {
-    mTrimRight = GetSequenceEndTime() - std::clamp(to, GetPlayStartTime(), GetSequenceEndTime());
+   const auto endTime = SnapToTrackSample(GetSequenceEndTime());
+   mTrimRight = endTime - std::clamp(to, GetPlayStartTime(), endTime);
 }
 
 double WaveClip::GetSequenceStartTime() const noexcept
 {
     // JS: mSequenceOffset is the minimum value and it is returned; no clipping to 0
+    // Do we need to `SnapToTrackSample` before returning?
     return mSequenceOffset;
 }
 
