@@ -132,7 +132,7 @@ void SplashDialog::Populate( ShuttleGui & S )
 
 
    //Setup to scale the logo larger and smaller as necessary
-   const float fScale=1.0;
+   const float fScale=1.0f;
    wxImage RescaledImage( m_pLogo->ConvertToImage() );
    wxColour MainColour( 
       RescaledImage.GetRed(1,1), 
