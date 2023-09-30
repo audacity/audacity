@@ -119,7 +119,7 @@ void TimeAndPitch::setup(int numChannels, int maxBlockSize)
 
   // fft coefficient buffers
   d->spectrum.setSize(_numChannels, _numBins);
-  d->norm.setSize(_numChannels, _numBins);
+  d->norm.setSize(1, _numBins);
   d->last_norm.setSize(1, _numBins);
   d->phase.setSize(_numChannels, _numBins);
   d->last_phase.setSize(_numChannels, _numBins);
@@ -347,11 +347,11 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
 
     // determine norm/phase
     d->fft.forwardReal(d->fft_timeseries, d->spectrum);
+    // norms of the mid channel only (or sole channel) are needed in
+    // _time_stretch
+    vo::calcNorms(d->spectrum.getPtr(0), d->norm.getPtr(0), d->spectrum.getNumSamples());
     for (int ch = 0; ch < _numChannels; ++ch)
-    {
-      vo::calcNorms(d->spectrum.getPtr(ch), d->norm.getPtr(ch), d->spectrum.getNumSamples());
       vo::calcPhases(d->spectrum.getPtr(ch), d->phase.getPtr(ch), d->spectrum.getNumSamples());
-    }
 
     if (_numChannels == 1)
       _time_stretch<1>((float)hop_a, (float)hop_s);
