@@ -131,10 +131,8 @@ void SplashDialog::Populate( ShuttleGui & S )
    m_pLogo = std::make_unique<wxBitmap>((const char **) AudacityLogoWithName_xpm); //v
 
 
-   // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
-   // our source, but this allows us to tweak the size - if we want to.
-   // It also makes it easier to revert to full size if we decide to.
-   const float fScale=0.5f;// smaller size.
+   //Setup to scale the logo larger and smaller as necessary
+   const float fScale=1.0;
    wxImage RescaledImage( m_pLogo->ConvertToImage() );
    wxColour MainColour( 
       RescaledImage.GetRed(1,1), 
