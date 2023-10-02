@@ -6914,7 +6914,7 @@ msgid ""
 "Click and drag to adjust relative size of stereo tracks, double-click to "
 "make heights equal"
 msgstr ""
-"Kliknij i przeciągnij, aby określić relatywny rozmiar ścieżek stereo, "
+"Kliknij i przeciągnij, aby dostosować relatywny rozmiar ścieżek stereo, "
 "kliknij podwójnie myszką, aby wyrównać wysokości"
 
 #: src/TrackPanelResizeHandle.cpp
@@ -6932,7 +6932,7 @@ msgstr "Usuń ścieżkę"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "Usunięto ścieżkę '%s.'"
+msgstr "Usunięto ścieżkę '%s'."
 
 #: src/TrackUtilities.cpp
 msgid "Track Remove"
