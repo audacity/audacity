@@ -133,6 +133,12 @@ __finl float_x4 __vecc sqrt(const float_x4 &a)
   return _mm_sqrt_ps(a.s);
 }
 
+__finl float __vecc rint(float x)
+{
+  __m128i A = _mm_cvtps_epi32(_mm_set_ss(x));
+  return _mm_cvtss_f32(_mm_cvtepi32_ps(A));
+}
+
 __finl float_x4 __vecc rint(const float_x4 &a)
 {
   __m128i A = _mm_cvtps_epi32(a.s);
