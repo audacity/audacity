@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-09-15 20:10+0000\n"
+"PO-Revision-Date: 2023-10-02 08:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -699,7 +699,7 @@ msgid ""
 "Failed to register:\n"
 "%s"
 msgstr ""
-"Błąd przy rejestracji:\n"
+"Nie udało się zarejestrować:\n"
 "%s"
 
 #. i18n-hint A plug-in is an optional added program for a sound
@@ -3310,7 +3310,7 @@ msgstr "Podpięty do &głowicy nagrywania/odtwarzania (włącz/wyłącz)"
 #: src/AudacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
-msgstr "Błąd przy usuwaniu %s"
+msgstr "Nie udało się usunąć %s"
 
 #: src/AudacityApp.cpp
 msgid "Failed!"
@@ -3328,7 +3328,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Reset Audacity Preferences"
-msgstr "Zresetuj ustawienia Audacity"
+msgstr "Resetuj ustawienia Audacity"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -4001,7 +4001,7 @@ msgstr "Nazwa nie może być pusta"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
-msgstr "Nazwy nie mogą zawierać '%c' ani '%c'"
+msgstr "Nazwy nie mogą zawierać '%c' i '%c'"
 
 #. i18n-hint: %s will be replaced by the name of a file.
 #: src/BatchProcessDialog.cpp
@@ -5152,7 +5152,7 @@ msgstr "Obsługuje wejście: %d\n"
 #: src/NoteTrack.cpp
 #, c-format
 msgid "Opened: %d\n"
-msgstr "Otwarty: %d\n"
+msgstr "Otwarto: %d\n"
 
 #: src/NoteTrack.cpp
 #, c-format
@@ -5400,7 +5400,7 @@ msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
 msgstr ""
-"Efekt lub polecenie %s nie powiodły się:\n"
+"Efektu lub polecenia %s nie udało się zarejestrować:\n"
 "%s"
 
 #: src/PluginStartupRegistration.cpp
@@ -5884,7 +5884,7 @@ msgstr "%s %d"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "Imported '%s'"
-msgstr "Importowano '%s'"
+msgstr "Zaimportowano '%s'"
 
 #: src/ProjectFileManager.cpp
 msgid "Import"
@@ -6381,7 +6381,7 @@ msgstr "Nazwisko artysty"
 
 #: src/TagsEditor.cpp
 msgid "Track Title"
-msgstr "Tytuł utworu"
+msgstr "Tytuł ścieżki"
 
 #: src/TagsEditor.cpp
 msgid "Album Title"
@@ -6463,7 +6463,7 @@ msgstr "Nie można zapisać pliku z gatunkami."
 
 #: src/TagsEditor.cpp
 msgid "Reset Genres"
-msgstr "Zresetuj gatunki"
+msgstr "Resetuj gatunki"
 
 #: src/TagsEditor.cpp
 msgid "Are you sure you want to reset the genre list to defaults?"
@@ -6914,7 +6914,7 @@ msgid ""
 "Click and drag to adjust relative size of stereo tracks, double-click to "
 "make heights equal"
 msgstr ""
-"Kliknij i przeciągnij, aby określić relatywny rozmiar ścieżek stereo, "
+"Kliknij i przeciągnij, aby dostosować relatywny rozmiar ścieżek stereo, "
 "kliknij podwójnie myszką, aby wyrównać wysokości"
 
 #: src/TrackPanelResizeHandle.cpp
@@ -6923,7 +6923,7 @@ msgstr "Kliknij i przeciągnij, aby zmienić rozmiar ścieżki."
 
 #: src/TrackUtilities.cpp
 msgid "Removed audio track(s)"
-msgstr "Usunięta(e) ścieżka(i) dźwiękowa(e)"
+msgstr "Usunięto ścieżkę(i) dźwiękową(e)"
 
 #: src/TrackUtilities.cpp
 msgid "Remove Track"
@@ -6932,7 +6932,7 @@ msgstr "Usuń ścieżkę"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "Usunięta ścieżka '%s.'"
+msgstr "Usunięto ścieżkę '%s'."
 
 #: src/TrackUtilities.cpp
 msgid "Track Remove"
@@ -6942,7 +6942,7 @@ msgstr "Usunięcie ścieżki"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Moved '%s' to Top"
-msgstr "Przesuń '%s' na samą górę"
+msgstr "Przesunięto '%s' na samą górę"
 
 #: src/TrackUtilities.cpp
 msgid "Move Track to Top"
@@ -6952,7 +6952,7 @@ msgstr "Przesuń ścieżkę dźwiękową na samą górę"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Moved '%s' to Bottom"
-msgstr "Przesuń '%s' na sam dół"
+msgstr "Przesunięto '%s' na sam dół"
 
 #: src/TrackUtilities.cpp
 msgid "Move Track to Bottom"
@@ -6962,12 +6962,12 @@ msgstr "Przesuń ścieżkę dźwiękową na sam dół"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Moved '%s' Up"
-msgstr "Przesuń '%s' wyżej"
+msgstr "Przesunięto '%s' wyżej"
 
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Moved '%s' Down"
-msgstr "Przesuń '%s' niżej"
+msgstr "Przesunięto '%s' niżej"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/TrackUtilities.cpp
@@ -7920,11 +7920,11 @@ msgstr "Ustaw status ścieżki"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Unnamed"
-msgstr "Nienazwany"
+msgstr "Nienazwana"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
-msgstr "Skupiony"
+msgstr "Skupiona"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Audio"
@@ -7962,7 +7962,7 @@ msgstr "Liniowa (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
-msgstr "Zresetuj"
+msgstr "Resetuj"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Times 2"
@@ -8004,7 +8004,7 @@ msgstr "Zaznaczenie widma"
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
 msgctxt "spectrum prefs"
 msgid "Sche&me"
-msgstr "Sche&mat"
+msgstr "Sche&mat:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -11712,7 +11712,7 @@ msgstr "Eksportuj dźwięk"
 
 #: src/export/Export.cpp
 msgid "Exported Tags"
-msgstr "Eksportowane znaczniki"
+msgstr "Wyeksportowano znaczniki"
 
 #: src/export/Export.cpp
 msgid "All selected audio is muted."
@@ -12616,7 +12616,7 @@ msgstr ""
 #. it has a hard to predict effect on the degree of compression
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Mux Rate:"
-msgstr "Współczynnik Muks:"
+msgstr "Współczynnik MUX:"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on
 #. compression ratio for MPEG
@@ -12678,12 +12678,12 @@ msgstr "Niekompatybilny format i kodek"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
-msgstr "Nie odgadnięto formatu"
+msgstr "Nie udało się odgadnąć formatu"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to find the codec"
-msgstr "Nie znaleziono kodeka"
+msgstr "Nie udało się znaleźć kodeka"
 
 #: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "16 bit"
@@ -13146,7 +13146,7 @@ msgstr "Pomyślnie utworzono \"%s\"."
 
 #: src/export/ExportMultiple.cpp
 msgid "Choose a location to save the exported files"
-msgstr "Wybierz miejsce do zapisania eksportowanych plików"
+msgstr "Wybierz miejsce do zapisania wyeksportowanych plików"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -13751,8 +13751,8 @@ msgid ""
 "The active project already has a time track and one was encountered in the "
 "project being imported, bypassing imported time track."
 msgstr ""
-"Aktywny projekt ma już ścieżkę czasową i napotkano ją w importowanym "
-"projekcie, pomijając importowaną ścieżkę czasową."
+"Aktywny projekt ma już ścieżkę czasową i napotkano ją w zaimportowanym "
+"projekcie, pomijając zaimportowaną ścieżkę czasową."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -13822,7 +13822,7 @@ msgstr ""
 #: src/import/ImportAUP.cpp
 #, c-format
 msgid "Failed to open %s"
-msgstr "Błąd przy otwieraniu %s"
+msgstr "Nie udało się otworzyć %s"
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -13922,7 +13922,7 @@ msgstr "Nieprawidłowe przesunięcie ścieżki w pliku LOF."
 #: src/import/ImportMIDI.cpp
 #, c-format
 msgid "Imported MIDI from '%s'"
-msgstr "Importowano MIDI z '%s'"
+msgstr "Zaimportowano MIDI z '%s'"
 
 #: src/import/ImportMIDI.cpp
 msgid "Import MIDI"
@@ -14695,7 +14695,7 @@ msgstr "Nie ma ścieżek z etykietą do eksportu."
 #: src/menus/FileMenus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
-msgstr "Importowano etykiety z '%s'"
+msgstr "Zaimportowano etykiety z '%s'"
 
 #: src/menus/FileMenus.cpp
 msgid "Import Labels"
@@ -15102,35 +15102,35 @@ msgstr "Przejdź d&o przodu z pasków narzędzi do ścieżek"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Previous Track"
-msgstr "&Przenieś uaktywnienie do poprzedniej ścieżki"
+msgstr "&Przenieś skupienie do poprzedniej ścieżki"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Next Track"
-msgstr "Prze&nieś uaktywnienie do następnej ścieżki"
+msgstr "Prze&nieś skupienie do następnej ścieżki"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &First Track"
-msgstr "Przenieś uakty&wnienie do pierwszej ścieżki"
+msgstr "Przenieś skupienie do pier&wszej ścieżki"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Last Track"
-msgstr "Przenieś uak&tywnienie do ostatniej ścieżki"
+msgstr "&Przenieś skupienie do ostatniej ścieżki"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to P&revious and Select"
-msgstr "P&rzenieś uaktywnienie do poprzedniej i zaznacz"
+msgstr "P&rzenieś skupienie do poprzedniej i zaznacz"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to N&ext and Select"
-msgstr "Prz&enieś uaktywnienie do następnej i zaznacz"
+msgstr "Prz&enieś skupienie do następnej i zaznacz"
 
 #: src/menus/NavigationMenus.cpp
 msgid "&Toggle Focused Track"
-msgstr "Przemie&szczaj się między ścieżkami"
+msgstr "Pr&zełącz się między skupionymi ścieżkami"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Toggle Focuse&d Track"
-msgstr "Przemieszczaj się mię&dzy ścieżkami"
+msgstr "Przełącz się mię&dzy skupionymi ścieżkami"
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
@@ -15466,7 +15466,7 @@ msgstr "Pa&ski narzędzi"
 #. i18n-hint: (verb)
 #: src/menus/ToolbarMenus.cpp
 msgid "Reset Toolb&ars"
-msgstr "Zresetuj p&aski narzędzi"
+msgstr "Resetuj p&aski narzędzi"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix"
@@ -15475,7 +15475,7 @@ msgstr "Miksuj"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
-msgstr "Wszystkie dźwięki renderowane w ścieżce '%s'"
+msgstr "Wyrenderowano cały dźwięk w ścieżce '%s'"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
@@ -15486,17 +15486,17 @@ msgstr "Renderuj"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "Wymieszane i renderowane %d ścieżki w jedną nową ścieżkę stereo"
+msgstr "Zmiksowano i wyrenderowano %d ścieżki w jedną nową ścieżkę stereo"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "Wymieszane i renderowane %d ścieżki w jedną nową ścieżkę mono"
+msgstr "Zmiksowano i wyrenderowano %d ścieżki w jedną nową ścieżkę mono"
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
 msgid "Panned audio track(s)"
-msgstr "Wyśrodkowana(e) ścieżka(i) dźwiękowa(e)"
+msgstr "Wyśrodkowano ścieżkę(i) dźwiękową(e)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan Track"
@@ -15627,11 +15627,11 @@ msgstr "Synchronizowanie MIDI i ścieżek dźwiękowych"
 
 #: src/menus/TrackMenus.cpp
 msgid "Adjusted gain"
-msgstr "Dostrojone wzmocnienie"
+msgstr "Skorygowano wzmocnienie"
 
 #: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
-msgstr "Dostrojone przesunięcie"
+msgstr "Skorygowano panoramę"
 
 #: src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -15823,59 +15823,59 @@ msgstr "Ścież&ka"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change P&an on Focused Track..."
-msgstr "Zmień przesunięcie n&a zaznaczonej ścieżce..."
+msgstr "Zmień p&anoramę na skupionej ścieżce..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan &Left on Focused Track"
-msgstr "Przesuń w &lewo na zaznaczonej ścieżce"
+msgstr "&Lewa panorama na skupionej ścieżce"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan &Right on Focused Track"
-msgstr "P&rzesuń w prawo na zaznaczonej ścieżce"
+msgstr "P&rawa panorama na skupionej ścieżce"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change Gai&n on Focused Track..."
-msgstr "Zmień moc syg&nału na zaznaczonej ścieżce..."
+msgstr "Zmień moc syg&nału na skupionej ścieżce..."
 
 #: src/menus/TrackMenus.cpp
 msgid "&Increase Gain on Focused Track"
-msgstr "Zw&iększ moc sygnału na zaznaczonej ścieżce"
+msgstr "Zw&iększ moc sygnału na skupionej ścieżce"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Decrease Gain on Focused Track"
-msgstr "Zmniejsz mo&c sygnału na zaznaczonej ścieżce"
+msgstr "Zmniejsz mo&c sygnału na skupionej ścieżce"
 
 #: src/menus/TrackMenus.cpp
 msgid "Op&en Menu on Focused Track..."
-msgstr "Otwórz m&enu na zaznaczonej ścieżce..."
+msgstr "Otwórz m&enu na skupionej ścieżce..."
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute Focused Track"
-msgstr "Wycisz/zgł&ośnij zaznaczoną ścieżkę"
+msgstr "Wycisz/zgłośnij sk&upioną ścieżkę"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Solo/Unsolo Focused Track"
-msgstr "&Solo/unsolo zaznaczoną ścieżkę"
+msgstr "&Solo/unsolo skupioną ścieżkę"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Close Focused Track"
-msgstr "Zamknij zazna&czoną ścieżkę"
+msgstr "Zamknij skupioną ś&cieżkę"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track U&p"
-msgstr "&Przesuń zaznaczoną ścieżkę w górę"
+msgstr "&Przesuń skupioną ścieżkę w górę"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track Do&wn"
-msgstr "Przesuń zaznaczoną ścieżkę &w dół"
+msgstr "Przesuń skupioną ścieżkę &w dół"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track to T&op"
-msgstr "Przesuń zaznacz&oną ścieżkę na samą górę"
+msgstr "Przesuń skupi&oną ścieżkę na samą górę"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track to &Bottom"
-msgstr "Przesuń zaznaczoną ścieżkę na sam &dół"
+msgstr "Przesuń skupioną ścieżkę na sam &dół"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
@@ -15883,7 +15883,7 @@ msgstr "brak etykiety ścieżki"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track at or below focused track"
-msgstr "brak etykiety powyżej lub poniżej zaznaczonej ścieżki"
+msgstr "brak etykiety powyżej lub poniżej skupionej ścieżki"
 
 #. i18n-hint:
 #. String is replaced by the name of a label,
@@ -16733,7 +16733,7 @@ msgstr "&Użyj zaawansowanych opcji miksowania"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&tandard"
-msgstr "S&tandardowe"
+msgstr "S&tandardowy"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "E&xtended (with frequency ranges)"
@@ -16763,7 +16763,7 @@ msgstr "&Ignoruj puste miejsce na początku"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Label Style:"
-msgstr "Eksportowany styl etykiety:"
+msgstr "Wyeksportowany styl etykiety:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -16881,7 +16881,7 @@ msgid ""
 "Nothing is imported."
 msgstr ""
 "Plik ze skrótami zawiera niedozwolone duplikaty skrótów dla \"%s\" i \"%s\".\n"
-"Nic nie zostało importowane."
+"Nic nie zostało zaimportowane."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -16894,7 +16894,7 @@ msgid ""
 "The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 "\n"
-"Następujące polecenia nie są wymienione w importowanym pliku, ale ich skróty zostały usunięte z powodu konfliktu z innymi nowymi skrótami:\n"
+"Następujące polecenia nie są wymienione w zaimportowanym pliku, ale ich skróty zostały usunięte z powodu konfliktu z innymi nowymi skrótami:\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -17820,7 +17820,7 @@ msgstr "Edytowanie klipu &może przesunąć inne klipy"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
-msgstr "\"Przesuń uaktywnienie ścieżki\" przesuwa się c&yklicznie przez ścieżki"
+msgstr "\"Przesuń skupienie ścieżki\" przesuwa się c&yklicznie przez ścieżki"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Type to create a label"
@@ -17880,7 +17880,7 @@ msgstr "Ustaw powiększenie domyślne"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Minutes"
-msgstr "Minut"
+msgstr "Minuty"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "5ths of Seconds"
@@ -17908,7 +17908,7 @@ msgstr "Pięćsetne sekundy"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "MilliSeconds"
-msgstr "Milisekund"
+msgstr "Milisekundy"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "4 Pixels per Sample"
@@ -18750,7 +18750,7 @@ msgstr "Kliknij prawym przyciskiem myszki, aby wyświetlić menu."
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Reset"
-msgstr "Zresetuj powiększenie"
+msgstr "Resetuj powiększenie"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
@@ -18809,7 +18809,7 @@ msgstr "Rozszerz"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
-msgstr "Usunięta linia cięcia"
+msgstr "Usunięto linię cięcia"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -18822,7 +18822,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
-msgstr "Przeniesiono sample"
+msgstr "Przesunięto sample"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Sample Edit"
@@ -19377,7 +19377,7 @@ msgstr "Kliknij i przeciągnij, aby edytować obwiednię wzmocnienia"
 #. i18n-hint: (verb) Audacity has just adjusted the envelope .
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Adjusted envelope."
-msgstr "Wyrównana obwiednia."
+msgstr "Skorygowano obwiednię."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -19451,7 +19451,7 @@ msgstr ""
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to adjust frequency bandwidth."
 msgstr ""
-"Kliknij i przeciągnij, aby określić przepustowość pasma częstotliwości."
+"Kliknij i przeciągnij, aby dostosować przepustowość pasma częstotliwości."
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
@@ -19490,7 +19490,7 @@ msgstr "Nie można przełączać się między ścieżkami"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Moved clips to another track"
-msgstr "Klipy przeniesione do innej ścieżki"
+msgstr "Przesunięto klipy do innej ścieżki"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, c-format
@@ -19552,12 +19552,12 @@ msgstr "%s, aby zaznaczyć lub odznaczyć ścieżki."
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "Moved '%s' up"
-msgstr "Przesuń '%s' w górę"
+msgstr "Przesunięto '%s' w górę"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "Moved '%s' down"
-msgstr "Przesuń '%s' w dół"
+msgstr "Przesunięto '%s' w dół"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Move Track"
@@ -20145,7 +20145,7 @@ msgstr "Zaznaczenie jest za krótkie.~%Musi być większe niż 2 sample."
 
 #: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 msgid "Adjustable Fade"
-msgstr "Przejście dające się regulować"
+msgstr "Regulowane przejście"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Type"
@@ -20651,7 +20651,7 @@ msgstr "Poziom szczytowy"
 
 #: plug-ins/label-sounds.ny
 msgid "Average level"
-msgstr "Średni poziom"
+msgstr "Poziom średni"
 
 #: plug-ins/label-sounds.ny
 msgid "RMS level"
