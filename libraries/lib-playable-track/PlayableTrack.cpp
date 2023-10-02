@@ -189,9 +189,9 @@ EnumSetting<SoloBehavior> TracksBehaviorsSolo{
    wxT("/GUI/Solo"),
    {
       ByColumns,
-      { XO("Simple"),  XO("Multi-track"), XO("None") },
-      { wxT("Simple"), wxT("Multi"),      wxT("None") }
+      { XO("Multi-track"), XO("Simple"),  XO("None") },
+      { wxT("Multi"),     wxT("Simple"), wxT("None") }
    },
    0, // "Simple"
-   { SoloBehaviorSimple, SoloBehaviorMulti, SoloBehaviorNone },
+   { SoloBehaviorMulti, SoloBehaviorSimple, SoloBehaviorNone },
 };
