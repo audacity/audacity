@@ -79,7 +79,7 @@ TimeSignatureToolBar::~TimeSignatureToolBar() = default;
 
 bool TimeSignatureToolBar::ShownByDefault() const
 {
-   return false;
+   return true;
 }
 
 ToolBar::DockID TimeSignatureToolBar::DefaultDockID() const
