@@ -999,6 +999,9 @@ public:
 
    size_t NIntervals() const override;
 
+   //!< used only during deserialization
+   void SetLegacyFormat(sampleFormat format);
+
 private:
    void FlushOne();
    // May assume precondition: t0 <= t1

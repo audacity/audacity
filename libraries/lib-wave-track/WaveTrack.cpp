@@ -2435,6 +2435,11 @@ void WaveTrack::Flush()
       pChannel->FlushOne();
 }
 
+void WaveTrack::SetLegacyFormat(sampleFormat format)
+{
+   mLegacyFormat = format;
+}
+
 /*! @excsafety{Mixed} */
 /*! @excsafety{No-fail} -- The rightmost clip will be in a flushed state. */
 /*! @excsafety{Partial}
@@ -2512,7 +2517,7 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
                   Sequence::IsValidSampleFormat(nValue))
          {
             //Remember sample format until consistency check is performed.
-            mLegacyFormat = static_cast<sampleFormat>(nValue);
+            SetLegacyFormat(static_cast<sampleFormat>(nValue));
          }
       } // while
       return true;

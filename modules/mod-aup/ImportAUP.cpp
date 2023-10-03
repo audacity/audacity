@@ -318,7 +318,6 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
    auto &history = ProjectHistory::Get(mProject);
    auto &tracks = TrackList::Get(mProject);
    auto &viewInfo = ViewInfo::Get(mProject);
-   auto &settings = ProjectSettings::Get(mProject);
    auto &selman = ProjectSelectionManager::Get(mProject);
 
    auto oldNumTracks = tracks.Size();
@@ -351,10 +350,12 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
       progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
       return;
    }
-   else if(!mErrorMsg.empty())//i.e. warning
+   if(!mErrorMsg.empty())//i.e. warning
+   {
       ImportUtils::ShowMessageBox(mErrorMsg);
+      mErrorMsg = {};
+   }
    
-   // TODO wide wave tracks -- quit here if misaligned tracks are found.
    // (If we keep this entire source file at all)
 
    sampleCount processed = 0;
@@ -394,6 +395,33 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
 
    for (auto pClip : mClips)
       pClip->UpdateEnvelopeTrackLen();
+
+   ProjectFileManager::FixTracks(
+      tracks,
+      [&](const auto& errorMessage) { SetError(errorMessage); },
+      [&](const auto& unlinkReason) { SetWarning(XO(
+//i18n-hint: Text of the message dialog that may appear on attempt
+//to import an AUP project.
+//%s will be replaced with an explanation of the actual reason of
+//project modification.
+"%s\n"
+"This feature is not supported in Audacity versions past 3.3.3.\n"
+"These stereo tracks have been split into mono tracks.\n"
+"Please verify that everything works as intended before saving.")
+                     .Format(unlinkReason));
+      }
+   );
+
+   if(mHasParseError)
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
+   }
+   if(!mErrorMsg.empty())
+   {
+      ImportUtils::ShowMessageBox(mErrorMsg);
+      mErrorMsg = {};
+   }
 
    // If the active project is "dirty", then bypass the below updates as we don't
    // want to going changing things the user may have already set up.
@@ -557,6 +585,9 @@ void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
    {
       node.handler->HandleXMLEndTag(tag);
    }
+
+   if (tag == "wavetrack")
+      mWaveTrack->SetLegacyFormat(mFormat);
 
    mHandlers.pop_back();
 
