@@ -97,6 +97,7 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    auto result = trackFactory->Create(mono ? 1 : 2, *first);
    auto mix = static_cast<WaveTrack*>(*result->begin());
+   mix->SetPan(0);
    mix->SetRate(rate);
    mix->ConvertToSampleFormat(format);
    if(!oneinput)
