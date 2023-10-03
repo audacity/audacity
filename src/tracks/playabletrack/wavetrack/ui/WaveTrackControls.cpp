@@ -24,6 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "ShuttleGui.h"
+#include "SyncLock.h"
 #include "Theme.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
@@ -381,7 +382,15 @@ int RateMenuTable::IdOfRate(int rate)
 void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
 {
    AudacityProject *const project = &mpData->project;
+   auto end1 = pTrack->GetEndTime();
    pTrack->SetRate(rate);
+   if (SyncLockState::Get(*project).IsSyncLocked()) {
+      auto end2 = pTrack->GetEndTime();
+      for (auto pLocked : SyncLock::Group(pTrack)) {
+         if (pLocked != pTrack)
+            pLocked->SyncLockAdjust(end1, end2);
+      }
+   }
 
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
