@@ -1020,7 +1020,7 @@ ExportResult ExportAudioDialog::DoExport(const ExportPlugin& plugin,
    {
       result = ExportProgressUI::Show(ExportTaskBuilder{}.SetPlugin(&plugin, formatIndex)
                                     .SetParameters(parameters)
-                                    .SetRange(t0, t1)
+                                    .SetRange(t0, t1, selectedOnly)
                                     .SetTags(&tags)
                                     .SetNumChannels(channels)
                                     .SetFileName(fullPath)
