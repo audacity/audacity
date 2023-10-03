@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-10-02 08:00+0000\n"
+"PO-Revision-Date: 2023-10-03 09:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -4605,7 +4605,7 @@ msgstr "Widmo"
 
 #: src/FreqWindow.cpp
 msgid "Standard Autocorrelation"
-msgstr "Standardowa autokorelacja"
+msgstr "Autokorelacja standardowa"
 
 #: src/FreqWindow.cpp
 msgid "Cuberoot Autocorrelation"
@@ -4613,7 +4613,7 @@ msgstr "Autokorelacja Cuberoot"
 
 #: src/FreqWindow.cpp
 msgid "Enhanced Autocorrelation"
-msgstr "Ulepszona autokorelacja"
+msgstr "Autokorelacja ulepszona"
 
 #. i18n-hint: This is a technical term, derived from the word
 #. * "spectrum".  Do not translate it unless you are sure you
@@ -6467,7 +6467,7 @@ msgstr "Resetuj gatunki"
 
 #: src/TagsEditor.cpp
 msgid "Are you sure you want to reset the genre list to defaults?"
-msgstr "Na pewno chcesz zresetować listę gatunków do domyślnych?"
+msgstr "Na pewno chcesz zresetować listę gatunków do wartości domyślnych?"
 
 #: src/TagsEditor.cpp
 msgid "Unable to open genre file."
@@ -9243,7 +9243,7 @@ msgstr "Presety użytkownika"
 
 #: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
 msgid "Factory Presets"
-msgstr "Presety fabryczne"
+msgstr "Presety wbudowane"
 
 #: src/effects/EffectManager.cpp
 msgid "Current Settings"
@@ -9251,7 +9251,7 @@ msgstr "Bieżące ustawienia"
 
 #: src/effects/EffectManager.cpp
 msgid "Factory Defaults"
-msgstr "Ustawienia fabryczne"
+msgstr "Ustawienia domyślne"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -9355,7 +9355,7 @@ msgstr "Wersja: %s"
 #: src/effects/EffectUI.cpp
 #, c-format
 msgid "Vendor: %s"
-msgstr "Sprzedawca: %s"
+msgstr "Dostawca: %s"
 
 #: src/effects/EffectUI.cpp
 #, c-format
@@ -16062,7 +16062,7 @@ msgstr "O&dtwarzaj przed i po końcu zaznaczenia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview"
-msgstr "&Odtwarzaj wycięty podgląd"
+msgstr "&Odtwarzaj podgląd cięcia"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Pre&vious Label"
@@ -16585,14 +16585,14 @@ msgid ""
 "what you are doing, it is recommended to trim spaces. Do you want Audacity "
 "to trim spaces for you?"
 msgstr ""
-"W jednym z elementów istnieją znaki odstępu (spacje, nowe linie, "
-"tabulatory). Na pewno popsują one dopasowywanie do wzorca. Zalecane jest "
-"obcięcie spacji, chyba że wiesz, co robisz. Chcesz, aby Audacity obciął "
-"spacje za Ciebie?"
+"W jednym z elementów istnieją znaki niedrukowalne (spacje, znaki nowej "
+"linii, tabulatory lub znaki końca linii). Na pewno popsują one dopasowywanie"
+" do wzorca. Zalecane jest obcięcie spacji, chyba że wiesz, co robisz. "
+"Chcesz, aby Audacity obciął spacje za Ciebie?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
-msgstr "Usuniętych odstępów"
+msgstr "Wykryto spacje"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Do you really want to delete selected rule?"
@@ -16667,15 +16667,15 @@ msgstr "Zak&res dB miernika:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show 'How to Get &Help' at launch"
-msgstr "&Pokaż 'Jak uzyskać pomoc' przy starcie"
+msgstr "&Pokazuj 'Jak uzyskać pomoc' przy starcie"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show e&xtra menus"
-msgstr "Po&każ dodatkowe menu"
+msgstr "Po&kazuj dodatkowe menu"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show alternative &styling (Mac vs PC)"
-msgstr "Pokaż alternatywną &stylistykę (Mac a PC)"
+msgstr "Pokazuj alternatywną &stylistykę (Mac a PC)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "&Beep on completion of longer activities"
@@ -16692,7 +16692,7 @@ msgstr "B&lend systemu i motyw Audacity"
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
-msgstr "Użyj najczęściej układy od lewej do prawej w językach RTL"
+msgstr "W językach RTL używaj głównie układów od lewej do prawej"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
@@ -16700,11 +16700,11 @@ msgstr "Nigdy nie używaj przecinka jako przecinka dziesiętnego"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
-msgstr "Pokaż podpowiedzi osi czasu"
+msgstr "Pokazuj podpowiedzi osi czasu"
 
 #: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
 msgid "Show Scrub Ruler"
-msgstr "Pokaż linijkę przewijania"
+msgstr "Pokazuj linijkę przewijania"
 
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
@@ -17286,7 +17286,7 @@ msgstr "&Długość:"
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr "Wycięty podgląd"
+msgstr "Podgląd cięcia"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
@@ -17384,7 +17384,7 @@ msgstr "Nagrywaj na nowej ścieżce"
 #. recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
-msgstr "Wykryj przerwy"
+msgstr "Wykrywaj przerwy"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
@@ -17925,15 +17925,15 @@ msgstr "Ustawienia ścieżek"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
-msgstr "Automatycznie dopasuj &wysokość ścieżki"
+msgstr "Automatycznie dopasowuj &wysokość ścieżki"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w track name as overlay"
-msgstr "Pokaż naz&wę ścieżki jako nakładki"
+msgstr "Pokazuj naz&wę ścieżki jako nakładki"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
-msgstr "Użyj wyświetlacza &półfalowego, gdy zwinięty"
+msgstr "Używaj wyświetlacza &półfalowego, gdy jest zwinięty"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -17941,7 +17941,7 @@ msgstr "&Podpięty do głowicy nagrywania/odtwarzania"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "A&uto-scroll if head unpinned"
-msgstr "A&utomatycznie przewiń, jeśli głowica jest odpięta"
+msgstr "A&utomatycznie przewijaj, jeśli głowica jest odpięta"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Pinned &head position"
@@ -18624,7 +18624,7 @@ msgstr "&Odtwarzaj z prędkością raz"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "&Odtwarzaj wycięty podgląd z prędkością"
+msgstr "&Odtwarzaj podgląd cięcia z prędkością"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Ad&just Playback Speed..."
@@ -20312,7 +20312,7 @@ msgstr ""
 msgid ""
 "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
 msgstr ""
-"Błąd.~%Nieprawidłowe zaznaczenie.~%EPusta przestrzeń na początku/końcu "
+"Błąd.~%Nieprawidłowe zaznaczenie.~%EPuste miejsce na początku/końcu "
 "zaznaczenia."
 
 #: plug-ins/crossfadeclips.ny
