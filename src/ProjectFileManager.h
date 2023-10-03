@@ -105,6 +105,16 @@ public:
    bool GetMenuClose() const { return mMenuClose; }
    void SetMenuClose(bool value) { mMenuClose = value; }
 
+   /*!
+    * \brief Attempts to find and fix problems in tracks.
+    * \param tracks A list of tracks to be fixed
+    * \param onError Called each time unrepairable error has been found.
+    * \param onUnlink Called when tracks unlinked due to link inconsistency.
+    */
+   static void FixTracks(TrackList& tracks,
+                         const std::function<void(const TranslatableString&/*errorMessage*/)>& onError,
+                         const std::function<void(const TranslatableString&/*unlinkReason*/)>& onUnlink);
+
 private:
    /*!
     @param fileName a path assumed to exist and contain an .aup3 project

@@ -61,6 +61,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <optional>
 
 #include "RealtimeEffectList.h"
+#include "tracks/playabletrack/wavetrack/WaveTrackUtils.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileManagerKey{
    []( AudacityProject &parent ){
@@ -173,60 +174,12 @@ auto ProjectFileManager::ReadProjectFile(
 
    if (bParseSuccess)
    {
-      Track* unlinkedTrack {};
-      auto &tracks = TrackList::Get(project);
-      for (auto t : tracks) {
-         const auto linkType = t->GetLinkType();
-         // Note, the next function may have an important upgrading side effect,
-         // and return no error; or it may find a real error and repair it, but
-         // that repaired track won't be used because opening will fail.
-         if (!t->LinkConsistencyFix()) {
-            otherError = XO("A channel of a stereo track was missing.");
-            err = true;
-         }
-         if(!err && unlinkedTrack != nullptr)
-         {
-            //Not an elegant way to deal with stereo wave track linking
-            //compatibility between versions
-            if(const auto left = dynamic_cast<WaveTrack*>(unlinkedTrack))
-            {
-               if(const auto right = dynamic_cast<WaveTrack*>(t))
-               {
-                  left->SetPan(-1.0f);
-                  right->SetPan(1.0f);
-                  RealtimeEffectList::Get(*left).Clear();
-                  RealtimeEffectList::Get(*right).Clear();
-                  if(left->GetRate() != right->GetRate())
-                     //i18n-hint: explains why opened project was auto-modified 
-                     linkTypeChangeReason = XO("This project contained stereo tracks with different sample rates per channel.");
-                  else if(left->GetSampleFormat() != right->GetSampleFormat())
-                     //i18n-hint: explains why opened project was auto-modified  
-                     linkTypeChangeReason = XO("This project contained stereo tracks with different sample formats in channels.");
-                  else
-                     //i18n-hint: explains why opened project was auto-modified 
-                     linkTypeChangeReason = XO("This project contained stereo tracks with non-aligned content.");
-               }
-            }
-            unlinkedTrack = nullptr;
-         }
-
-         if(!err &&
-            linkType != ChannelGroup::LinkType::None &&
-            t->GetLinkType() == ChannelGroup::LinkType::None)
-         {
-            //Wait when LinkConsistencyFix is called on the second track
-            unlinkedTrack = t;
-         }
-
-         if (const auto message = t->GetErrorOpening()) {
-            wxLogWarning(
-               wxT("Track %s had error reading clip values from project file."),
-               t->GetName());
-            err = true;
-            // Keep at most one of the error messages
-            otherError = *message;
-         }
-      }
+      auto& tracks = TrackList::Get(project);
+      FixTracks(
+         tracks,
+         // Keep at most one of the error messages
+         [&](const auto& errorMessage) { otherError = errorMessage; err = true; },
+         [&](const auto& unlinkReason) { linkTypeChangeReason = unlinkReason; });
 
       if (!err) {
          if(linkTypeChangeReason && !discardAutosave)
@@ -1052,6 +1005,62 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
 
    auto &project = chooser(true);
    return Get(project).OpenProjectFile(fileName, addtohistory);
+}
+
+void ProjectFileManager::FixTracks(TrackList& tracks,
+   const std::function<void(const TranslatableString&)>& onError,
+   const std::function<void(const TranslatableString&)>& onUnlink)
+{
+   Track* unlinkedTrack {};
+   for (const auto t : tracks) {
+      const auto linkType = t->GetLinkType();
+      // Note, the next function may have an important upgrading side effect,
+      // and return no error; or it may find a real error and repair it, but
+      // that repaired track won't be used because opening will fail.
+      if (!t->LinkConsistencyFix()) {
+         onError(XO("A channel of a stereo track was missing."));
+         unlinkedTrack = nullptr;
+      }
+      if(unlinkedTrack != nullptr)
+      {
+         //Not an elegant way to deal with stereo wave track linking
+         //compatibility between versions
+         if(const auto left = dynamic_cast<WaveTrack*>(unlinkedTrack))
+         {
+            if(const auto right = dynamic_cast<WaveTrack*>(t))
+            {
+               left->SetPan(-1.0f);
+               right->SetPan(1.0f);
+               RealtimeEffectList::Get(*left).Clear();
+               RealtimeEffectList::Get(*right).Clear();
+
+               if(left->GetRate() != right->GetRate())
+                  //i18n-hint: explains why opened project was auto-modified 
+                  onUnlink(XO("This project contained stereo tracks with different sample rates per channel."));
+               if(left->GetSampleFormat() != right->GetSampleFormat())
+                  //i18n-hint: explains why opened project was auto-modified  
+                  onUnlink(XO("This project contained stereo tracks with different sample formats in channels."));
+               //i18n-hint: explains why opened project was auto-modified 
+               onUnlink(XO("This project contained stereo tracks with non-aligned content."));
+            }
+         }
+         unlinkedTrack = nullptr;
+      }
+
+      if(linkType != ChannelGroup::LinkType::None &&
+         t->GetLinkType() == ChannelGroup::LinkType::None)
+      {
+         //Wait when LinkConsistencyFix is called on the second track
+         unlinkedTrack = t;
+      }
+
+      if (const auto message = t->GetErrorOpening()) {
+         wxLogWarning(
+            wxT("Track %s had error reading clip values from project file."),
+            t->GetName());
+         onError(*message);
+      }
+   }
 }
 
 AudacityProject *ProjectFileManager::OpenProjectFile(
