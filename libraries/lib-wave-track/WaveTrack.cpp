@@ -3561,7 +3561,7 @@ bool WaveTrack::CanOffsetClips(
 }
 
 bool WaveTrack::CanInsertClip(
-   WaveClip* clip,  double &slideBy, double &tolerance) const
+   WaveClip* clip, double& slideBy, double tolerance) const
 {
    for (const auto &c : mClips)
    {

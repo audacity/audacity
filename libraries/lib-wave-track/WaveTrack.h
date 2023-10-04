@@ -866,7 +866,7 @@ public:
    // Before moving a clip into a track (or inserting a clip), use this
    // function to see if the times are valid (i.e. don't overlap with
    // existing clips).
-   bool CanInsertClip(WaveClip* clip, double &slideBy, double &tolerance) const;
+   bool CanInsertClip(WaveClip* clip, double &slideBy, double tolerance) const;
 
    // Remove the clip from the track and return a SMART pointer to it.
    // You assume responsibility for its memory!
