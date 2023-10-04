@@ -12,6 +12,7 @@ set( SOURCES
    StaffPad/FourierTransform_pffft.cpp
    StaffPad/FourierTransform_pffft.h
    StaffPad/SamplesFloat.h
+   StaffPad/SimdComplexConversions_sse2.h
    StaffPad/SimdTypes.h
    StaffPad/SimdTypes_neon.h
    StaffPad/SimdTypes_scalar.h
