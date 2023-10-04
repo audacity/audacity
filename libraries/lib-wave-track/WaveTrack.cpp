@@ -3570,10 +3570,9 @@ bool WaveTrack::CanInsertClip(
    const auto candidateClipEndTime = candidateClip.GetPlayEndTime();
    const auto t0 = SnapToSample(candidateClipStartTime + slideBy);
    const auto t1 = SnapToSample(candidateClipEndTime + slideBy);
-   const auto sortedClips = SortedClipArray();
    std::vector<double> overlaps;
    std::transform(
-      sortedClips.begin(), sortedClips.end(), std::back_inserter(overlaps),
+      mClips.begin(), mClips.end(), std::back_inserter(overlaps),
       [&](const auto& pClip) {
          return pClip->IntersectsPlayRegion(t0, t1) ?
                    std::min(pClip->GetPlayEndTime(), t1) -
@@ -3583,16 +3582,20 @@ bool WaveTrack::CanInsertClip(
    const auto maxOverlap = std::max_element(overlaps.begin(), overlaps.end());
    if (*maxOverlap > tolerance)
       return false;
-   const auto overlappedClip = sortedClips[std::distance(
-      overlaps.begin(), maxOverlap)];
+   const auto overlappedClip =
+      mClips[std::distance(overlaps.begin(), maxOverlap)];
    const auto requiredOffset =  slideBy +
              *maxOverlap * (overlappedClip->GetPlayStartTime() < t0 ? 1 : -1);
    // Brute-force check to see if there's another clip that'd be in the way.
-   if (std::any_of(mClips.begin(), mClips.end(), [&](const auto& pClip) {
-          return pClip->IntersectsPlayRegion(
-             SnapToSample(candidateClipStartTime + requiredOffset),
-             SnapToSample(candidateClipEndTime + requiredOffset));
-       }))
+   if (std::any_of(
+          mClips.begin(), mClips.end(),
+          [&](const auto& pClip)
+          {
+             const auto result = pClip->IntersectsPlayRegion(
+                SnapToSample(candidateClipStartTime + requiredOffset),
+                SnapToSample(candidateClipEndTime + requiredOffset));
+             return result;
+          }))
       return false;
    slideBy = requiredOffset;
    return true;
