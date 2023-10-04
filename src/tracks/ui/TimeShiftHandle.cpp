@@ -335,7 +335,7 @@ void ClipMoveState::Init(
             shifter.SelectInterval( interval );
       }
    }
-   
+
    // Sync lock propagation of unfixing of intervals
    if ( syncLocked ) {
       bool change = true;
@@ -606,7 +606,7 @@ namespace {
       };
       if (!sameType(&track))
          return false;
-   
+
       // All tracks of the same kind as the captured track
       auto range = trackList.Any() + sameType;
 
@@ -669,7 +669,7 @@ namespace {
    {
       bool ok = true;
       double firstTolerance = tolerance;
-      
+
       // The desiredSlideAmount may change and the tolerance may get used up.
       for ( unsigned iPass = 0; iPass < 2 && ok; ++iPass ) {
          for ( auto &pair : state.shifters ) {
@@ -791,10 +791,10 @@ void TimeShiftHandle::DoSlideVertical(
    // Now check that the move is possible
    auto slideAmount = desiredSlideAmount;
    // The test for tolerance will need review with FishEye!
-   // The tolerance is supposed to be the time for one pixel,
-   // i.e. one pixel tolerance at current zoom.
+   // The tolerance is supposed to be the time for twenty pixels,
+   // i.e. twenty pixel tolerance at current zoom.
    double tolerance =
-      viewInfo.PositionToTime(xx + 1) - viewInfo.PositionToTime(xx);
+      viewInfo.PositionToTime(xx + 10) - viewInfo.PositionToTime(xx - 10);
    bool ok = CheckFit( mClipMoveState, correspondence, remover.detached,
       tolerance, slideAmount /*in,out*/ );
 
@@ -870,7 +870,7 @@ UIHandle::Result TimeShiftHandle::Drag
    double desiredSlideAmount = 0.0;
    if(!mSlideUpDownOnly)
    {
-      desiredSlideAmount = 
+      desiredSlideAmount =
          viewInfo.PositionToTime(event.m_x) -
          viewInfo.PositionToTime(mClipMoveState.mMouseClickX);
 
@@ -947,7 +947,7 @@ UIHandle::Result TimeShiftHandle::Release
    for ( auto &pair : mClipMoveState.shifters )
       if (!pair.second->FinishMigration())
          MigrationFailure();
-   
+
    TranslatableString msg;
    bool consolidate;
    if (mDidSlideVertically) {

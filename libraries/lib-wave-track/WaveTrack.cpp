@@ -339,7 +339,7 @@ WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDir
    auto bestMatchTime = searchDirection == PlaybackDirection::forward
       ? std::numeric_limits<double>::max()
       : std::numeric_limits<double>::lowest();
-   
+
    for(const auto& other : Intervals())
    {
       if((searchDirection == PlaybackDirection::forward &&
@@ -2196,7 +2196,7 @@ void WaveTrack::Disjoin(double t0, double t1)
    std::vector<float> buffer;
    std::vector<samplePtr> buffers;
    Regions regions;
-   
+
    const size_t width = NChannels();
 
    for (const auto &interval : Intervals()) {
@@ -2240,7 +2240,7 @@ void WaveTrack::Disjoin(double t0, double t1)
          for (auto channel : interval->Channels())
             channel->GetSamples(
                *bufferIt++, floatSample, start + done, numSamples);
-         
+
          for (decltype(numSamples) i = 0; i < numSamples; ++i) {
             auto curSamplePos = start + done + i;
 
@@ -3561,40 +3561,40 @@ bool WaveTrack::CanOffsetClips(
 }
 
 bool WaveTrack::CanInsertClip(
-   WaveClip* clip, double& slideBy, double tolerance) const
+   const WaveClip& candidateClip, double& slideBy, double tolerance) const
 {
-   for (const auto &c : mClips)
-   {
-      //VS: Do we need to take into account sample rate difference?
-      double d1 = c->GetPlayStartTime() - (clip->GetPlayEndTime()+slideBy);
-      double d2 = (clip->GetPlayStartTime()+slideBy) - c->GetPlayEndTime();
-      if ( (d1<0) &&  (d2<0) )
-      {
-         // clips overlap.
-         // Try to rescue it.
-         // The rescue logic is not perfect, and will typically
-         // move the clip at most once.
-         // We divide by 1000 rather than set to 0, to allow for
-         // a second 'micro move' that is really about rounding error.
-
-         // VS: clip could be moved more than once, moving it in opposite
-         // direction may reintroduce overlapping condition
-         if( -d1 < tolerance ){
-            // right edge of clip overlaps slightly.
-            // slide clip left a small amount.
-            slideBy +=d1;
-            tolerance /=1000;
-         } else if( -d2 < tolerance ){
-            // left edge of clip overlaps slightly.
-            // slide clip right a small amount.
-            slideBy -= d2;
-            tolerance /=1000;
-         }
-         else
-            return false; // clips overlap  No tolerance left.
-      }
-   }
-
+   if (mClips.empty())
+      return true;
+   // Find clip in this that overlaps most with `clip`:
+   const auto candidateClipStartTime = candidateClip.GetPlayStartTime();
+   const auto candidateClipEndTime = candidateClip.GetPlayEndTime();
+   const auto t0 = SnapToSample(candidateClipStartTime + slideBy);
+   const auto t1 = SnapToSample(candidateClipEndTime + slideBy);
+   const auto sortedClips = SortedClipArray();
+   std::vector<double> overlaps;
+   std::transform(
+      sortedClips.begin(), sortedClips.end(), std::back_inserter(overlaps),
+      [&](const auto& pClip) {
+         return pClip->IntersectsPlayRegion(t0, t1) ?
+                   std::min(pClip->GetPlayEndTime(), t1) -
+                      std::max(pClip->GetPlayStartTime(), t0) :
+                   0.0;
+      });
+   const auto maxOverlap = std::max_element(overlaps.begin(), overlaps.end());
+   if (*maxOverlap > tolerance)
+      return false;
+   const auto overlappedClip = sortedClips[std::distance(
+      overlaps.begin(), maxOverlap)];
+   const auto requiredOffset =  slideBy +
+             *maxOverlap * (overlappedClip->GetPlayStartTime() < t0 ? 1 : -1);
+   // Brute-force check to see if there's another clip that'd be in the way.
+   if (std::any_of(mClips.begin(), mClips.end(), [&](const auto& pClip) {
+          return pClip->IntersectsPlayRegion(
+             SnapToSample(candidateClipStartTime + requiredOffset),
+             SnapToSample(candidateClipEndTime + requiredOffset));
+       }))
+      return false;
+   slideBy = requiredOffset;
    return true;
 }
 

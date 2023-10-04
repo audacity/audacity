@@ -45,7 +45,7 @@ public:
                return clip;
          return {};
       }();
-      
+
       if (!pClip)
          return HitTestResult::Miss;
 
@@ -62,7 +62,7 @@ public:
          return static_cast<const WaveTrack::Interval&>(interval).GetClip(0)
            == pClip;
       });
-      
+
       return HitTestResult::Intervals;
    }
 
@@ -75,8 +75,8 @@ public:
          auto clip = data.GetClip(0).get();
          const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
          const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
-         return 
-             mpTrack->TimeToLongSamples(interval.Start()) < c1 && 
+         return
+             mpTrack->TimeToLongSamples(interval.Start()) < c1 &&
              mpTrack->TimeToLongSamples(interval.End()) > c0;
       });
    }
@@ -101,7 +101,7 @@ public:
          desiredOffset *= -1;
       return desiredOffset;
    }
-   
+
    double QuantizeOffset( double desiredOffset ) override
    {
       const auto rate = mpTrack->GetRate();
@@ -148,7 +148,9 @@ public:
       for (auto &interval: intervals) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
          auto pClip = data.GetClip(0).get();
-         ok = pOtherWaveTrack->CanInsertClip(pClip, desiredOffset, tolerance);
+         ok = pClip ? pOtherWaveTrack->CanInsertClip(
+                         *pClip, desiredOffset, tolerance) :
+                      true;
          if (!ok)
             break;
       }
@@ -221,7 +223,7 @@ public:
       }
       return t0;
    }
-   
+
 private:
    const std::shared_ptr<WaveTrack> mpTrack;
 
