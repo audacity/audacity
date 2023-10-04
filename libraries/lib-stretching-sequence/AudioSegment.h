@@ -27,13 +27,12 @@ public:
    /**
     * @brief Fills `buffers` with as many as `numSamples` or the number of
     * remaining samples, whichever is smaller.
-    * @param buffers A vector of pointers to buffers, one for each channel.
+    * @param buffers Pointers to buffers, one for each channel.
     * @param numSamples The max. number of samples to write to each buffer.
-    * @pre `buffers.size() == GetWidth()`
     * @return The number of samples actually provided in each buffer.
     */
    virtual size_t
-   GetFloats(std::vector<float*>& buffers, size_t numSamples) = 0;
+   GetFloats(float *const *buffers, size_t numSamples) = 0;
 
    /**
     * @brief The number of channels in the segment.

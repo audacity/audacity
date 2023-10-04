@@ -26,7 +26,7 @@ public:
       const ClipInterface&, double durationToDiscard, PlaybackDirection);
 
    // AudioSegment
-   size_t GetFloats(std::vector<float*>& buffers, size_t numSamples) override;
+   size_t GetFloats(float *const *buffers, size_t numSamples) override;
    bool Empty() const override;
    size_t GetWidth() const override;
 

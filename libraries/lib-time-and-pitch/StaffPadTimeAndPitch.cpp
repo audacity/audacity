@@ -10,15 +10,12 @@ namespace
 // to be specified in the `setup` call.)
 constexpr auto maxBlockSize = 1024;
 
-std::vector<float*>
-GetOffsetBuffer(float* const* buffer, size_t numChannels, size_t offset)
+void
+GetOffsetBuffer(float **offsetBuffer,
+   float* const* buffer, size_t numChannels, size_t offset)
 {
-   std::vector<float*> offsetBuffer(numChannels);
    for (auto i = 0u; i < numChannels; ++i)
-   {
       offsetBuffer[i] = buffer[i] + offset;
-   }
-   return offsetBuffer;
 }
 
 std::unique_ptr<staffpad::TimeAndPitch> MaybeCreateTimeAndPitch(
@@ -82,9 +79,11 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
          const auto numSamplesToGet =
             std::min({ maxBlockSize, numOutputSamplesAvailable,
                        static_cast<int>(outputLen - numOutputSamples) });
-         const auto buffer =
-            GetOffsetBuffer(output, mNumChannels, numOutputSamples);
-         mTimeAndPitch->retrieveAudio(buffer.data(), numSamplesToGet);
+         // More-than-stereo isn't supported
+         assert(mNumChannels <= 2);
+         float *buffer[2]{};
+         GetOffsetBuffer(buffer, output, mNumChannels, numOutputSamples);
+         mTimeAndPitch->retrieveAudio(buffer, numSamplesToGet);
          numOutputSamplesAvailable -= numSamplesToGet;
          numOutputSamples += numSamplesToGet;
       }
