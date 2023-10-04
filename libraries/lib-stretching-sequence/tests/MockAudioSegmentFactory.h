@@ -16,7 +16,7 @@
 class NiceAudioSegment final : public AudioSegment
 {
 public:
-   size_t GetFloats(std::vector<float*>&, size_t numSamples) override
+   size_t GetFloats(float *const *, size_t numSamples) override
    {
       return numSamples;
    }

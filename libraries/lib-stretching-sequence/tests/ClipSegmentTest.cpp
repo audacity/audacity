@@ -38,7 +38,7 @@ TEST_CASE("ClipSegment")
                FloatVectorVector { { 1.f, 2.f, 3.f }, { -1.f, -2.f, -3.f } });
       ClipSegment sut { *clip, 0., direction };
       AudioContainer output(sampleRate, numChannels);
-      REQUIRE(sut.GetFloats(output.channelPointers, sampleRate) == sampleRate);
+      REQUIRE(sut.GetFloats(output.channelPointers.data(), sampleRate) == sampleRate);
       if (numChannels == 1u)
       {
          const auto expected = direction == PlaybackDirection::forward ?
@@ -69,7 +69,7 @@ TEST_CASE("ClipSegment")
       constexpr auto playbackOffset = 2 / static_cast<double>(sampleRate);
       ClipSegment sut { *clip, playbackOffset, direction };
       AudioContainer output(numSamples, 1u);
-      REQUIRE(sut.GetFloats(output.channelPointers, numSamples) == 3);
+      REQUIRE(sut.GetFloats(output.channelPointers.data(), numSamples) == 3);
       const auto expected = direction == PlaybackDirection::forward ?
                                std::vector<float> { 3.f, 4.f, 5.f, 0.f, 0.f } :
                                std::vector<float> { 3.f, 2.f, 1.f, 0.f, 0.f };

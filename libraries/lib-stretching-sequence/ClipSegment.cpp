@@ -46,12 +46,11 @@ ClipSegment::ClipSegment(
 {
 }
 
-size_t ClipSegment::GetFloats(std::vector<float*>& buffers, size_t numSamples)
+size_t ClipSegment::GetFloats(float *const *buffers, size_t numSamples)
 {
-   assert(buffers.size() == mSource.GetWidth());
    const auto numSamplesToProduce = limitSampleBufferSize(
       numSamples, mTotalNumSamplesToProduce - mTotalNumSamplesProduced);
-   mStretcher->GetSamples(buffers.data(), numSamplesToProduce);
+   mStretcher->GetSamples(buffers, numSamplesToProduce);
    mTotalNumSamplesProduced += numSamplesToProduce;
    return numSamplesToProduce;
 }

@@ -18,7 +18,7 @@ class STRETCHING_SEQUENCE_API SilenceSegment final : public AudioSegment
 {
 public:
    SilenceSegment(size_t numChannels, sampleCount numSamples);
-   size_t GetFloats(std::vector<float*>& buffers, size_t numSamples) override;
+   size_t GetFloats(float *const *buffers, size_t numSamples) override;
    bool Empty() const override;
    size_t GetWidth() const override;
 
