@@ -8,7 +8,8 @@ Rectangle {
    id: root
    height: 6
    width: 100
-   color: UiTheme.buttonColor
+   color: UiTheme.strokeColor1
+   opacity: UiTheme.opacityLight
    objectName: "MeterPanel"
 
    property alias value: meterPanelHandler.value
@@ -129,8 +130,8 @@ Rectangle {
       x: parent.width - clippingZone.width
       height: parent.height
       width: clippingZone.width
-      opacity: peaks.hasBeenClipped ? 1.0 : 0.1
-      color: peaks.hasBeenClipped ? UiTheme.dangerColor : UiTheme.backgroundColor3
+      opacity: peaks.hasBeenClipped ? UiTheme.opacityOpaque : UiTheme.opacityMedium
+      color: peaks.hasBeenClipped ? UiTheme.dangerColor : UiTheme.strokeColor1
    }
 
    Component.onCompleted: {

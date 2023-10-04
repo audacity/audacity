@@ -151,7 +151,7 @@ Popup {
       smooth: true
       clip: true
       border.color: prv.validNumberOfTracks
-         ? (input.focus ? UiTheme.accentColor : UiTheme.strokeColor)
+         ? (input.focus ? UiTheme.accentColor : UiTheme.strokeColor2)
          : (input.focus ? UiTheme.recordColor : UiTheme.invalidInputColor)
 
       TextInput {
@@ -258,7 +258,7 @@ Popup {
       radius: 4
 
       border {
-         color: UiTheme.strokeColor
+         color: UiTheme.strokeColor2
          width: 1
       }
    }
@@ -278,7 +278,7 @@ Popup {
          }
 
          context.lineWidth = 2
-         context.strokeStyle = UiTheme.strokeColor
+         context.strokeStyle = UiTheme.strokeColor2
          context.beginPath()
          context.moveTo(0, 9)
          context.lineTo(7, 0)
@@ -295,6 +295,7 @@ Popup {
       y: root.height - 52
       width: parent.width
       height: 1
-      color: UiTheme.strokeColor
+      color: UiTheme.strokeColor1
+      opacity: UiTheme.opacityLight
    }
 }

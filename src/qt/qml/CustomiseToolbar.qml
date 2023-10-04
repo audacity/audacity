@@ -53,7 +53,8 @@ ApplicationWindow {
                   width: parent.width - 16
                   height: 1
                   anchors.verticalCenter: parent.verticalCenter
-                  color: UiTheme.strokeColor
+                  color: UiTheme.strokeColor1
+                  opacity: UiTheme.opacityLight
                }
             }
          }
