@@ -320,7 +320,8 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          }
          if (results) {
             const auto t1 = ViewInfo::Get(*FindProject()).selectedRegion.t1();
-            PasteTimeWarper warper{ t1, mT0 + wt.GetEndTime() };
+            PasteTimeWarper warper { t1,
+                                     mT0 + (*results->begin())->GetEndTime() };
             wt.ClearAndPaste(mT0, t1, *results, true, true, &warper);
             results.reset();
          }
