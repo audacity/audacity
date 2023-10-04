@@ -6,7 +6,7 @@ Theme {
 
    backgroundColor1: "#F8F8F9"
    backgroundColor2: "#EDEFF2"
-   backgroundColor3: "#E4E6EB"
+   backgroundColor3: "#4D5566"
    backgroundColor4: "#212733"
    fontColor1: "#14161A"
    fontColor2: "#F4F6F9"
