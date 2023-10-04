@@ -51,35 +51,36 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
-#include "BasicUI.h"
-#include "../EffectEditor.h"
-#include "../EffectManager.h"
-#include "FileNames.h"
 #include "../../LabelTrack.h"
-#include "Languages.h"
 #include "../../NoteTrack.h"
-#include "TimeTrack.h"
-#include "../../prefs/SpectrogramSettings.h"
-#include "PluginManager.h"
-#include "Project.h"
-#include "ProjectRate.h"
-#include "ShuttleAutomation.h"
 #include "../../ShuttleGetDefinition.h"
-#include "ShuttleGui.h"
-#include "TempDirectory.h"
-#include "SyncLock.h"
-#include "ViewInfo.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-#include "../../widgets/valnum.h"
-#include "AudacityMessageBox.h"
-#include "Prefs.h"
-#include "wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
+#include "../../prefs/SpectrogramSettings.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
 #include "../../widgets/NumericTextCtrl.h"
+#include "../../widgets/valnum.h"
+#include "../EffectEditor.h"
+#include "../EffectManager.h"
+#include "AudacityMessageBox.h"
+#include "BasicUI.h"
+#include "FileNames.h"
+#include "Languages.h"
+#include "PluginManager.h"
+#include "Prefs.h"
 #include "ProgressDialog.h"
+#include "Project.h"
+#include "ProjectRate.h"
+#include "ShuttleAutomation.h"
+#include "ShuttleGui.h"
+#include "SyncLock.h"
+#include "TempDirectory.h"
+#include "TimeTrack.h"
+#include "TimeWarper.h"
+#include "ViewInfo.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "wxFileNameWrapper.h"
 
 #include "FileDialog/FileDialog.h"
 
@@ -1713,8 +1714,9 @@ bool NyquistEffect::ProcessOne(
          ? (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime)
             == out->TimeToLongSamples(mT1))
          : mMergeClips != 0;
-      mCurChannelGroup
-         ->ClearAndPaste(mT0, mT1, *tempList, mRestoreSplits, bMergeClips);
+      PasteTimeWarper warper { mT1, mT0 + (*tempList->begin())->GetEndTime() };
+      mCurChannelGroup->ClearAndPaste(
+         mT0, mT1, *tempList, mRestoreSplits, bMergeClips, &warper);
    }
 
    // If we were first in the group adjust non-selected group tracks
