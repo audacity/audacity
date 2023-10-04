@@ -452,10 +452,8 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
       wxBitmap logo(AudacityLogoWithName_xpm); //v
 
-      // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
-      // our source, but this allows us to tweak the size - if we want to.
-      // It also makes it easier to revert to full size if we decide to.
-      const float fScale = 0.5f;// smaller size.
+      //Setup to scale the logo larger and smaller as necessary
+      const float fScale = 1.0f;
       wxImage RescaledImage(logo.ConvertToImage());
       wxColour MainColour(
          RescaledImage.GetRed(1,1),
