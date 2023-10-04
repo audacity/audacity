@@ -70,14 +70,13 @@ struct TimeAndPitch::impl
 
   SamplesReal fft_timeseries;
   SamplesComplex spectrum;
-  SamplesReal mag;
+  SamplesReal norm;
   SamplesReal phase;
   SamplesReal last_phase;
   SamplesReal phase_accum;
   SamplesReal cosWindow;
   SamplesReal sqWindow;
-  SamplesReal last_mag;
-  SamplesReal mag_flag;
+  SamplesReal last_norm;
 
   double exact_hop_a = 512.0, hop_a_err = 0.0;
   double exact_hop_s = 0.0;
@@ -120,9 +119,8 @@ void TimeAndPitch::setup(int numChannels, int maxBlockSize)
 
   // fft coefficient buffers
   d->spectrum.setSize(_numChannels, _numBins);
-  d->mag.setSize(_numChannels, _numBins);
-  d->last_mag.setSize(1, _numBins);
-  d->mag_flag.setSize(1, _numBins);
+  d->norm.setSize(1, _numBins);
+  d->last_norm.setSize(1, _numBins);
   d->phase.setSize(_numChannels, _numBins);
   d->last_phase.setSize(_numChannels, _numBins);
   d->phase_accum.setSize(_numChannels, _numBins);
@@ -172,7 +170,7 @@ void TimeAndPitch::reset()
     d->outCircularBuffer[ch].reset();
   }
   d->normalizationBuffer.reset();
-  d->last_mag.zeroOut();
+  d->last_norm.zeroOut();
   d->last_phase.zeroOut();
   d->phase_accum.zeroOut();
   _outBufferWriteOffset = 0;
@@ -234,36 +232,35 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
 {
   auto alpha = a_s / a_a; // this is the real stretch factor based on integer hop sizes
 
-  // Create a magnitude array
-  auto* mags = d->mag_flag.getPtr(0);
-  vo::copy(d->mag.getPtr(0), mags, _numBins); // for stereo, just use the mid-channel
-  const auto* mags_last = d->last_mag.getPtr(0);
+  // Create a norm array
+  auto* norms = d->norm.getPtr(0); // for stereo, just use the mid-channel
+  const auto* norms_last = d->last_norm.getPtr(0);
 
   d->peak_index.clear();
   d->trough_index.clear();
-  float lowest = mags[0];
+  float lowest = norms[0];
   int trough = 0;
-  if (mags_last[0] >= mags[1])
+  if (norms_last[0] >= norms[1])
   {
     d->peak_index.emplace_back(0);
     d->trough_index.emplace_back(0);
   }
   for (int i = 1; i < _numBins - 1; ++i)
   {
-    if (mags_last[i] >= mags[i - 1] && mags_last[i] >= mags[i + 1])
+    if (norms_last[i] >= norms[i - 1] && norms_last[i] >= norms[i + 1])
     {
       d->peak_index.emplace_back(i);
       d->trough_index.emplace_back(trough);
       trough = i;
-      lowest = mags[i];
+      lowest = norms[i];
     }
-    else if (mags[i] < lowest)
+    else if (norms[i] < lowest)
     {
-      lowest = mags[i];
+      lowest = norms[i];
       trough = i;
     }
   }
-  if (mags_last[_numBins - 1] > mags[_numBins - 2])
+  if (norms_last[_numBins - 1] > norms[_numBins - 2])
   {
     d->peak_index.emplace_back(_numBins - 1);
     d->trough_index.emplace_back(trough);
@@ -271,10 +268,10 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
 
   if (d->peak_index.size() == 0)
   {
-    // use max magnitude of last frame
+    // use max norm of last frame
     int max_idx = 0;
-    float max_mag = 0.f;
-    vo::findMaxElement(mags_last, _numBins, max_idx, max_mag);
+    float max_norm = 0.f;
+    vo::findMaxElement(norms_last, _numBins, max_idx, max_norm);
     d->peak_index.emplace_back(max_idx);
   }
 
@@ -307,7 +304,7 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
       acc[ch][n - 1] = acc[ch][n] - alpha * _unwrapPhase(p[ch][n] - p[ch][n - 1]);
   }
 
-  // 'grow' from pairs of peaks to the lowest magnitude in between
+  // 'grow' from pairs of peaks to the lowest norm in between
   for (int i = 0; i < num_peaks - 1; ++i)
   {
     const int mid = d->trough_index[i + 1];
@@ -330,7 +327,7 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
       acc[ch][n + 1] = acc[ch][n] + alpha * _unwrapPhase(p[ch][n + 1] - p[ch][n]);
   }
 
-  d->last_mag.assignSamples(d->mag_flag);
+  d->last_norm.assignSamples(d->norm);
   d->last_phase.assignSamples(d->phase);
 }
 
@@ -348,13 +345,13 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
       _fft_shift(d->fft_timeseries.getPtr(ch), fftSize);
     }
 
-    // determine mag/phase
+    // determine norm/phase
     d->fft.forwardReal(d->fft_timeseries, d->spectrum);
+    // norms of the mid channel only (or sole channel) are needed in
+    // _time_stretch
+    vo::calcNorms(d->spectrum.getPtr(0), d->norm.getPtr(0), d->spectrum.getNumSamples());
     for (int ch = 0; ch < _numChannels; ++ch)
-    {
-      vo::calcMagnitudes(d->spectrum.getPtr(ch), d->mag.getPtr(ch), d->spectrum.getNumSamples());
       vo::calcPhases(d->spectrum.getPtr(ch), d->phase.getPtr(ch), d->spectrum.getNumSamples());
-    }
 
     if (_numChannels == 1)
       _time_stretch<1>((float)hop_a, (float)hop_s);
@@ -365,7 +362,7 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
       _unwrapPhaseVec(d->phase_accum.getPtr(ch), _numBins);
 
     for (int ch = 0; ch < _numChannels; ++ch)
-      vo::convertPolarToCartesian(d->mag.getPtr(ch), d->phase_accum.getPtr(ch), d->spectrum.getPtr(ch),
+      vo::rotate(d->phase.getPtr(ch), d->phase_accum.getPtr(ch), d->spectrum.getPtr(ch),
                                   d->spectrum.getNumSamples());
     d->fft.inverseReal(d->spectrum, d->fft_timeseries);
 
