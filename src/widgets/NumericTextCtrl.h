@@ -112,8 +112,8 @@ class AUDACITY_DLL_API NumericTextCtrl final
    int GetFocusedDigit() { return mFocusedDigit; }
 
 private:
-   void OnFormatUpdated() override;
-   void HandleFormatterChanged();
+   void OnFormatUpdated(bool resetFocus) override;
+   void HandleFormatterChanged(bool resetFocus);
 
    void OnCaptureKey(wxCommandEvent &event);
    void OnKeyDown(wxKeyEvent &event);

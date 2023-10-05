@@ -240,7 +240,7 @@ bool NumericTextCtrl::SetTypeAndFormatName(const NumericConverterType& type, con
    if (!NumericConverter::SetTypeAndFormatName(type, formatName))
       return false;
 
-   HandleFormatterChanged();
+   HandleFormatterChanged(true);
 
    return true;
 }
@@ -250,7 +250,7 @@ bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol& formatName)
    if (!NumericConverter::SetFormatName(formatName))
       return false;
 
-   HandleFormatterChanged();
+   HandleFormatterChanged(true);
 
    return true;
 }
@@ -260,7 +260,7 @@ bool NumericTextCtrl::SetCustomFormat(const TranslatableString& customFormat)
    if (!NumericConverter::SetCustomFormat(customFormat))
    return false;
 
-   HandleFormatterChanged();
+   HandleFormatterChanged(true);
 
    return true;
 }
@@ -687,20 +687,38 @@ void NumericTextCtrl::OnFocus(wxFocusEvent &event)
    event.Skip( false ); // PRL: not sure why, but preserving old behavior
 }
 
-void NumericTextCtrl::OnFormatUpdated()
+void NumericTextCtrl::OnFormatUpdated(bool resetFocus)
 {
-   NumericConverter::OnFormatUpdated();
-   HandleFormatterChanged();
+   NumericConverter::OnFormatUpdated(resetFocus);
+   HandleFormatterChanged(resetFocus);
 }
 
-void NumericTextCtrl::HandleFormatterChanged()
+void NumericTextCtrl::HandleFormatterChanged(bool resetFocus)
 {
+   const auto boxesCount = mBoxes.size();
    mBoxes.clear();
+
    Layout();
    Fit();
    ValueToControls();
    ControlsToValue();
-   UpdateAutoFocus();
+
+   const auto newBoxesCount = mBoxes.size();
+
+   if (resetFocus || boxesCount > newBoxesCount)
+   {
+      // Handle the case when format was changed as a result of
+      // user action or if the format shrunk for some reason
+      UpdateAutoFocus();
+   }
+   else
+   {
+      // Try to keep the focus on the same digit
+      mFocusedDigit += newBoxesCount - boxesCount;
+      // Perform sanity check for the focused digit index
+      if (mFocusedDigit >= newBoxesCount)
+         UpdateAutoFocus();
+   }
 }
 
 void NumericTextCtrl::OnCaptureKey(wxCommandEvent& event)

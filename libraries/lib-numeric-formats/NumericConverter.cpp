@@ -248,14 +248,17 @@ bool NumericConverter::UpdateFormatter()
    if (mFormatter)
    {
       mFormatUpdatedSubscription =
-         mFormatter->Subscribe([this](auto) { OnFormatUpdated(); });
+         mFormatter->Subscribe([this](const auto& msg) {
+            OnFormatUpdated(false);
+            Publish({ msg.value });
+      });
    }
 
-   OnFormatUpdated();
+   OnFormatUpdated(true);
    return mFormatter != nullptr;
 }
 
-void NumericConverter::OnFormatUpdated()
+void NumericConverter::OnFormatUpdated(bool)
 {
    if (!mFormatter)
       return;
