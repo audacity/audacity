@@ -77,7 +77,7 @@ public:
       {
          S.StartMultiColumn(2, wxALIGN_CENTER_VERTICAL);
          {
-            S.Id(CustomSampleRateID).AddNumericTextBox(XO("New Sample Rate (Hz)"), wxString::Format("%d", mSampleRate), 0);
+            S.Id(CustomSampleRateID).AddNumericTextBox(XO("New sample rate (Hz):"), wxString::Format("%d", mSampleRate), 0);
          }
          S.EndMultiColumn();
       }
