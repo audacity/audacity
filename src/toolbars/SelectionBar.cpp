@@ -234,6 +234,16 @@ void SelectionBar::AddTime(
    pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
 
    mTimeControls[id] = pCtrl;
+
+   mFormatChangedToFitValueSubscription[id] = pCtrl->Subscribe(
+      [this, id](const auto& msg)
+      {
+         auto altCtrl = mTimeControls[id == 0 ? 1 : 0];
+         if (altCtrl != nullptr)
+            altCtrl->UpdateFormatToFit(msg.value);
+
+         FitToTimeControls();
+      });
 }
 
 void SelectionBar::AddSelectionSetupButton(wxSizer* pSizer)
@@ -506,12 +516,7 @@ void SelectionBar::SelectionModeUpdated()
    // We just changed the mode.  Remember it.
    UpdateSelectionMode(mSelectionMode);
 
-   wxSize sz = GetMinSize();
-   sz.SetWidth( 10 );
-   SetMinSize( sz );
-   Fit();
-   Layout();
-   Updated();
+   FitToTimeControls();
 }
 
 // We used to have 8 modes which showed different combinations of the
@@ -631,6 +636,16 @@ void SelectionBar::UpdateTimeControlsFormat(const NumericFormatSymbol& format)
                   format :
                   NumericConverterFormats::GetBestDurationFormat(format));
    }
+}
+
+void SelectionBar::FitToTimeControls()
+{
+   wxSize sz = GetMinSize();
+   sz.SetWidth(10);
+   SetMinSize(sz);
+   Fit();
+   Layout();
+   Updated();
 }
 
 static RegisteredToolbarFactory factory{

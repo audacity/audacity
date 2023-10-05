@@ -92,6 +92,8 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
    void UpdateTimeControlsFormat(const NumericFormatSymbol& format);
 
+   void FitToTimeControls();
+
    SelectionBarListener * mListener;
    double mRate;
    double mStart, mEnd, mLength, mCenter;
@@ -101,6 +103,8 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
    std::array<NumericTextCtrl*, 2> mTimeControls {};
    AButton* mSetupButton{};
+
+   Observer::Subscription mFormatChangedToFitValueSubscription[2];
 
    wxString mLastValidText;
    
