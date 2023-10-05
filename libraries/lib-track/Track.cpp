@@ -1453,11 +1453,12 @@ TrackListHolder TrackList::Temporary(AudacityProject *pProject,
 TrackListHolder TrackList::Temporary(AudacityProject *pProject,
    const std::vector<Track::Holder> &channels)
 {
+   size_t iChannel = 0;
    auto nChannels = channels.size();
-   auto tempList = Temporary(pProject,
-      (nChannels > 0 ? channels[0] : nullptr),
-      (nChannels > 1 ? channels[1] : nullptr));
-   for (size_t iChannel = 2; iChannel < nChannels; ++iChannel)
+   auto left = (nChannels == 2 ? channels[iChannel++] : nullptr);
+   auto right = (nChannels == 2 ? channels[iChannel++] : nullptr);
+   auto tempList = Temporary(pProject, left, right);
+   for (; iChannel < nChannels; ++iChannel)
       tempList->Add(channels[iChannel]);
    return tempList;
 }
