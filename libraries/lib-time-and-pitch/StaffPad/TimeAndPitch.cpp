@@ -185,7 +185,8 @@ namespace {
 // wrap a phase value into -PI..PI
 inline float _unwrapPhase(float arg)
 {
-  return arg - std::rint(arg * 0.15915494309f) * 6.283185307f;
+  using namespace audio::simd;
+  return arg - rint(arg * 0.15915494309f) * 6.283185307f;
 }
 
 void _unwrapPhaseVec(float* v, int n)

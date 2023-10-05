@@ -96,6 +96,11 @@ __finl float_x4 __vecc sqrt(const float_x4 &a)
   return {std::sqrt(a[0]), std::sqrt(a[1]), std::sqrt(a[2]), std::sqrt(a[3])};
 }
 
+__finl float __vecc rint(float a)
+{
+  return std::rint(a);
+}
+
 __finl float_x4 __vecc rint(const float_x4 &a)
 {
   return {std::rint(a[0]), std::rint(a[1]), std::rint(a[2]), std::rint(a[3])};

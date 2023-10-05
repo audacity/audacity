@@ -15,7 +15,7 @@
 #define __vecc
 #endif
 
-#if defined(__SSE2__) || (defined(_M_AMD64) || defined(_M_X64))
+#if defined(__SSE2__) || (defined(_M_AMD64) || defined(_M_X64)) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2)
 #include "SimdTypes_sse2.h"
 #elif defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM64)
 #include "SimdTypes_neon.h"

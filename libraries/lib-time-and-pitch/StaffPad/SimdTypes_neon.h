@@ -14,6 +14,8 @@
 #define __vecc
 #endif
 
+#include <cmath>
+
 namespace staffpad::audio::simd {
 
 struct float_x4
@@ -139,6 +141,11 @@ __finl float_x4 __vecc operator*(float_x4 a, float_x4 b)
 __finl float_x4 __vecc sqrt(const float_x4 &a)
 {
   return vsqrtq_f32(a.s);
+}
+
+__finl float __vecc rint(float a)
+{
+  return std::rint(a);
 }
 
 __finl float_x4 __vecc rint(const float_x4 &a)
