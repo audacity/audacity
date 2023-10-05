@@ -30,6 +30,7 @@
 #include "AudacityMessageBox.h"
 #include "Prefs.h"
 #include "SyncLock.h"
+#include "TimeWarper.h"
 
 #include "WaveTrack.h"
 
@@ -167,8 +168,10 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
          const auto pNewTrack = *tempList->Any<WaveTrack>().begin();
          pNewTrack->Flush();
          newT1 = std::max(newT1, mT0 + pNewTrack->GetEndTime());
-         track->Clear(t0, t1);
-         track->Paste(t0, *tempList);
+         PasteTimeWarper warper { t1, t0 + (*tempList->begin())->GetEndTime() };
+         constexpr auto preserve = false;
+         constexpr auto merge = true;
+         track->ClearAndPaste(t0, t1, *tempList, preserve, merge, &warper);
       }
       else
          count += track->NChannels();
