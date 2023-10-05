@@ -1723,6 +1723,9 @@ void WaveTrack::HandleClear(
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
+   t0 = SnapToSample(t0);
+   t1 = SnapToSample(t1);
+
    WaveClipPointers clipsToDelete;
    WaveClipHolders clipsToAdd;
 
@@ -1957,6 +1960,8 @@ void WaveTrack::PasteOne(
 
     if (other.GetNumClips() == 0)
         return;
+
+    t0 = track.SnapToSample(t0);
 
     //wxPrintf("paste: we have at least one clip\n");
 
