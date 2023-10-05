@@ -68,6 +68,8 @@ public:
    double GetValue();
    wxString GetString();
 
+   void UpdateFormatToFit(double value);
+
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
    void Adjust(int steps, int dir, int focusedDigit);

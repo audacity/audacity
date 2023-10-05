@@ -80,7 +80,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    if (!mFormatter)
       return;
 
-   mFormatter->UpdateFormatForValue(rawValue);
+   UpdateFormatToFit(rawValue);
    auto result = mFormatter->ValueToString(rawValue, nearest);
 
    mValueString = std::move(result.valueString);
@@ -200,6 +200,11 @@ wxString NumericConverter::GetString()
 {
    ValueToControls();
    return mValueString;
+}
+
+void NumericConverter::UpdateFormatToFit(double value)
+{
+   mFormatter->UpdateFormatForValue(value, false);
 }
 
 int NumericConverter::GetSafeFocusedDigit(int focusedDigit) const noexcept
