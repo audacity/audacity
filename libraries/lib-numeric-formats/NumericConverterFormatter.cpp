@@ -58,7 +58,7 @@ NumericConverterFormatter::~NumericConverterFormatter()
 {
 }
 
-void NumericConverterFormatter::UpdateFormatForValue(double) 
+void NumericConverterFormatter::UpdateFormatForValue(double, bool)
 {
 }
 

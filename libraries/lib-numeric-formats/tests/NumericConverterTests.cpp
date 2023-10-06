@@ -213,7 +213,7 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
             const auto value = bar * timeSignature.GetBarDuration() +
                                beat * timeSignature.GetBeatDuration();
 
-            basicFormatter->UpdateFormatForValue(value);
+            basicFormatter->UpdateFormatForValue(value, true);
 
             const auto formattedString =
                wxString::Format("%03d bar %02d beat", bar + 1, beat + 1);

@@ -53,6 +53,8 @@ using DigitInfos = std::vector<DigitInfo>;
 
 struct NumericConverterFormatChangedMessage final
 {
+   double value;
+   bool shrunk;
 };
 
 struct NUMERIC_FORMATS_API NumericConverterFormatter /* not final */ :
@@ -67,7 +69,7 @@ struct NUMERIC_FORMATS_API NumericConverterFormatter /* not final */ :
    };
 
    //! Potentially updates the format so it can fit the `value`. Default implementation is empty.
-   virtual void UpdateFormatForValue(double value);
+   virtual void UpdateFormatForValue(double value, bool canShrink);
    //! @post result: `GetFields().size() == result.fieldValueStrings.size()`
    virtual ConversionResult
    ValueToString(double value, bool nearest) const = 0;

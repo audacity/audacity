@@ -187,12 +187,10 @@ public:
       UpdateFields(MIN_DIGITS[0]);
    }
 
-   void UpdateFormatForValue(double value) override
+   void UpdateFormatForValue(double value, bool canShrink) override
    {
-      const bool negativeValue = value < 0;
-
-      if (negativeValue)
-         value = -value;
+      // Beats formatter does not support negative values
+      value = std::max(0.0, value);
 
       // ForRange has a preserved weird behavior
       const auto barsCount =
@@ -203,13 +201,18 @@ public:
          static_cast<int>(std::floor(value / mFieldLengths[0]));
 
       const auto barsField = NumericField::ForRange(
-         barsCount, true, MIN_DIGITS[0] + (negativeValue ? 1 : 0));
+         barsCount, true, MIN_DIGITS[0]);
 
-      if (mFields[0].digits == barsField.digits)
+      const auto oldDigits = mFields[0].digits;
+
+      const bool updateNeeded = canShrink ? oldDigits != barsField.digits :
+                                            oldDigits < barsField.digits;
+
+      if (!updateNeeded)
          return;
 
       UpdateFields(barsField.digits);
-      Publish({});
+      Publish({ value, oldDigits > mFields[0].digits });
    }
 
    void UpdateResultString(ConversionResult& result) const

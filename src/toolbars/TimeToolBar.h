@@ -62,16 +62,13 @@ private:
 
    static const int minDigitH = 17;
    static const int maxDigitH = 100;
-   
+
+   Observer::Subscription mFormatChangedToFitValueSubscription;
+
 public:
    
    DECLARE_CLASS(TimeToolBar)
    DECLARE_EVENT_TABLE()
 };
-
-inline wxSize TimeToolBar::ComputeSizing(int digitH)
-{
-   return mAudioTime->ComputeSizing(false, digitH * mDigitRatio, digitH);
-}
 
 #endif

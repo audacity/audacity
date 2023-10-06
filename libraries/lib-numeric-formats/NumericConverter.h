@@ -26,8 +26,10 @@
 #include "ComponentInterfaceSymbol.h"
 #include "TranslatableString.h"
 
+struct FormatChangedToFitValueMessage final { double value; };
 
-class NUMERIC_FORMATS_API NumericConverter /* not final */
+class NUMERIC_FORMATS_API NumericConverter /* not final */ :
+    public Observer::Publisher<FormatChangedToFitValueMessage>
 {
 public:
    NumericConverter(const FormatterContext& context, NumericConverterType type,
@@ -68,6 +70,8 @@ public:
    double GetValue();
    wxString GetString();
 
+   void UpdateFormatToFit(double value);
+
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
    void Adjust(int steps, int dir, int focusedDigit);
@@ -77,7 +81,7 @@ public:
 
 protected:
    bool UpdateFormatter();
-   virtual void OnFormatUpdated();
+   virtual void OnFormatUpdated(bool resetFocus);
 
    FormatterContext mContext;
 

@@ -107,7 +107,13 @@ void TimeToolBar::Populate()
    mSettingInitialSize = true;
 
    // Establish initial resizing limits
-//   SetResizingLimits();
+   //   SetResizingLimits();
+   mFormatChangedToFitValueSubscription = mAudioTime->Subscribe(
+      [this](auto)
+      {
+         wxSizeEvent e;
+         OnSize(e);
+      });
 }
 
 void TimeToolBar::UpdatePrefs()
@@ -369,6 +375,11 @@ void TimeToolBar::OnIdle(wxIdleEvent &evt)
    }
 
    mAudioTime->SetValue(wxMax(0.0, audioTime));
+}
+
+wxSize TimeToolBar::ComputeSizing(int digitH)
+{
+   return mAudioTime->ComputeSizing(false, digitH * mDigitRatio, digitH);
 }
 
 static RegisteredToolbarFactory factory{

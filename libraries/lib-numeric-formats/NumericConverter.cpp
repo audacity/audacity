@@ -80,7 +80,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    if (!mFormatter)
       return;
 
-   mFormatter->UpdateFormatForValue(rawValue);
+   UpdateFormatToFit(rawValue);
    auto result = mFormatter->ValueToString(rawValue, nearest);
 
    mValueString = std::move(result.valueString);
@@ -202,6 +202,11 @@ wxString NumericConverter::GetString()
    return mValueString;
 }
 
+void NumericConverter::UpdateFormatToFit(double value)
+{
+   mFormatter->UpdateFormatForValue(value, false);
+}
+
 int NumericConverter::GetSafeFocusedDigit(int focusedDigit) const noexcept
 {
    if (focusedDigit < 0)
@@ -243,14 +248,17 @@ bool NumericConverter::UpdateFormatter()
    if (mFormatter)
    {
       mFormatUpdatedSubscription =
-         mFormatter->Subscribe([this](auto) { OnFormatUpdated(); });
+         mFormatter->Subscribe([this](const auto& msg) {
+            OnFormatUpdated(false);
+            Publish({ msg.value });
+      });
    }
 
-   OnFormatUpdated();
+   OnFormatUpdated(true);
    return mFormatter != nullptr;
 }
 
-void NumericConverter::OnFormatUpdated()
+void NumericConverter::OnFormatUpdated(bool)
 {
    if (!mFormatter)
       return;
