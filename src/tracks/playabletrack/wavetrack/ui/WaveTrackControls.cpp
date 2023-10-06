@@ -861,7 +861,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    int totalHeight = 0;
    int nChannels = 0;
 
-   auto unlinkedTracks = TrackList::Get(*project).UnlinkChannels(*mpData->pTrack);
+   const auto pTrack = mpData->pTrack;
+   static_cast<WaveTrack*>(pTrack)->CopyClipEnvelopes();
+   auto unlinkedTracks = TrackList::Get(*project).UnlinkChannels(*pTrack);
    assert(unlinkedTracks.size() == 2);
    if(stereo)
    {
@@ -898,9 +900,10 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    AudacityProject *const project = &mpData->project;
 
    auto &trackFocus = TrackFocus::Get( *project );
-   const bool hasFocus = trackFocus.Get() == mpData->pTrack;
-
-   if (auto track = TrackList::SwapChannels(*mpData->pTrack))
+   const auto pTrack = mpData->pTrack;
+   const bool hasFocus = trackFocus.Get() == pTrack;
+   static_cast<WaveTrack*>(pTrack)->CopyClipEnvelopes();
+   if (auto track = TrackList::SwapChannels(*pTrack))
    {
       if (hasFocus)
          trackFocus.Set(track);
