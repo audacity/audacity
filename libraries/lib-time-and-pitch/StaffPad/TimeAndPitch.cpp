@@ -112,7 +112,7 @@ void TimeAndPitch::setup(int numChannels, int maxBlockSize)
   {
     d->inResampleInputBuffer[ch].setSize(_maxBlockSize +
                                          6); // needs additional history for resampling. more in the future
-    d->inCircularBuffer[ch].setSize(fftSize);
+    d->inCircularBuffer[ch].setSize(std::max(fftSize, _maxBlockSize));
     d->outCircularBuffer[ch].setSize(outBufferSize);
   }
   d->normalizationBuffer.setSize(outBufferSize);
@@ -427,9 +427,53 @@ void TimeAndPitch::setTimeStretchAndPitchFactor(double timeScale, double pitchFa
   }
 }
 
+// Alternative procedure writes inCircularBuffer directly without resampling
+void
+TimeAndPitch::feedAudioDirectly(const float* const* input_smp, int numSamples)
+{
+  assert(numSamples <= _maxBlockSize);
+
+  // determine integer hop size for the next hop.
+  // The error accumulators will make the value fluctuate by one to reach arbitrary scale
+  // ratios
+  if (d->exact_hop_s == 0.0) // this happens if feedAudio is called without setting up stretch factors
+    d->exact_hop_s = d->next_exact_hop_s;
+
+  const int hop_s = int(d->exact_hop_s + d->hop_s_err);
+  const int hop_a = int(d->exact_hop_a + d->hop_a_err);
+
+  int offset = 0;
+  while (numSamples > 0)
+  {
+    auto batch =
+      std::clamp(numSamples, 0, hop_a - _analysis_hop_counter);
+    for (int ch = 0; ch < _numChannels; ++ch)
+    {
+      d->inCircularBuffer[ch].writeBlock(0, batch, input_smp[ch] + offset);
+      d->inCircularBuffer[ch].advance(batch);
+    }
+
+    _analysis_hop_counter += batch;
+    if (_analysis_hop_counter >= hop_a)
+    {
+      _analysis_hop_counter -= hop_a;
+      d->hop_s_err += d->exact_hop_s - hop_s;
+      d->hop_a_err += d->exact_hop_a - hop_a;
+      for (int ch = 0; ch < _numChannels; ++ch)
+        d->inCircularBuffer[ch].readBlock(-fftSize, fftSize, d->fft_timeseries.getPtr(ch));
+      _process_hop(hop_a, hop_s);
+    }
+    offset += batch;
+    numSamples -= batch;
+  }
+}
+
 void TimeAndPitch::feedAudio(const float* const* input_smp, int numSamples)
 {
   assert(numSamples <= _maxBlockSize);
+  if (_pitchFactor == 1)
+    return feedAudioDirectly(input_smp, numSamples);
+
   for (int ch = 0; ch < _numChannels; ++ch)
   {
     d->inResampleInputBuffer[ch].writeBlock(0, numSamples, input_smp[ch]);
