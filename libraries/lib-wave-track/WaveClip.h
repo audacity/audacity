@@ -393,6 +393,7 @@ public:
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
+   void SetEnvelope(std::unique_ptr<Envelope> p);
 
    //! @param ii identifies the channel
    /*!

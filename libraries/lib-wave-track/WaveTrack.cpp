@@ -2563,6 +2563,27 @@ void WaveTrack::SetLegacyFormat(sampleFormat format)
    mLegacyFormat = format;
 }
 
+void WaveTrack::CopyClipEnvelopes()
+{
+   const auto channels = TrackList::Channels(this);
+   if (channels.size() != 2)
+      return;
+   // Assume correspondence of clips
+   const auto left = *channels.begin();
+   auto it = begin(left->mClips),
+      last = end(left->mClips);
+   const auto right = *channels.rbegin();
+   auto it2 = begin(right->mClips),
+      last2 = end(right->mClips);
+   for (; it != last; ++it, ++it2) {
+      if (it2 == last2) {
+         assert(false);
+         break;
+      }
+      (*it2)->SetEnvelope(std::make_unique<Envelope>(*(*it)->GetEnvelope()));
+   }
+}
+
 /*! @excsafety{Mixed} */
 /*! @excsafety{No-fail} -- The rightmost clip will be in a flushed state. */
 /*! @excsafety{Partial}

@@ -248,6 +248,11 @@ void WaveClip::SetFloatAtTime(
    SetFloatsCenteredAroundTime(t, iChannel, &value, 0u, effectiveFormat);
 }
 
+void WaveClip::SetEnvelope(std::unique_ptr<Envelope> p)
+{
+   mEnvelope = move(p);
+}
+
 BlockArray* WaveClip::GetSequenceBlockArray(size_t ii)
 {
    assert(ii < GetWidth());

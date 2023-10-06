@@ -1006,6 +1006,9 @@ public:
    //!< used only during deserialization
    void SetLegacyFormat(sampleFormat format);
 
+   // TODO wide-wave-track: some other API
+   void CopyClipEnvelopes();
+
 private:
    void FlushOne();
    // May assume precondition: t0 <= t1
