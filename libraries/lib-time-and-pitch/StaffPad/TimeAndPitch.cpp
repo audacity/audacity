@@ -456,7 +456,7 @@ void TimeAndPitch::feedAudio(const float* const* input_smp, int numSamples)
     {
       float smp[6];
       d->inResampleInputBuffer[ch].readBlock(int_pos - 6, 6, smp);
-      float s = lagrange6(smp, frac_pos);
+      float s = (frac_pos == 0) ? smp[2] : lagrange6(smp, frac_pos);
       d->inCircularBuffer[ch].writeOffset0(s);
       d->inCircularBuffer[ch].advance(1);
     }
