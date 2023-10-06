@@ -1,4 +1,5 @@
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
@@ -13,6 +14,7 @@
 #include "../TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
@@ -161,17 +163,21 @@ void GetRegionsByLabel(
 /*!
  @pre `track.IsLeader()`
  */
-using EditFunction = std::function<void(Track &track, double, double)>;
+using EditFunction = std::function<void(Track& track, double, double)>;
+using EditFunctionWithProgress =
+   std::function<void(Track& track, double, double, ProgressReporter)>;
 
-//Executes the edit function on all selected wave tracks with
-//regions specified by selected labels
-//If No tracks selected, function is applied on all tracks
-//If the function replaces the selection with audio of a different length,
+// Executes the edit function on all selected wave tracks with
+// regions specified by selected labels
+// If No tracks selected, function is applied on all tracks
+// If the function replaces the selection with audio of a different length,
 // bSyncLockedTracks should be set true to perform the same action on sync-lock
 // selected tracks.
-void EditByLabel(AudacityProject &project,
-   TrackList &tracks, const SelectedRegion &selectedRegion,
-   EditFunction action)
+// If `progress` is non-null, `action` is passed a callable `ProgressReporter`.
+void EditByLabel(
+   AudacityProject& project, TrackList& tracks,
+   const SelectedRegion& selectedRegion, EditFunctionWithProgress action,
+   ProgressReporter progress)
 {
    Regions regions;
 
@@ -182,18 +188,37 @@ void EditByLabel(AudacityProject &project,
    const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
                            (tracks.Selected<PlayableTrack>()).empty());
 
-   //Apply action on tracks starting from
-   //labeled regions in the end. This is to correctly perform
-   //actions like 'Delete' which collapse the track area.
-   for (auto t : tracks) {
-      const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
-      if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable)) {
-         for (size_t i = regions.size(); i--;) {
-            const Region &region = regions.at(i);
-            action(*t, region.start, region.end);
-         }
-      }
-   }
+   const auto tracksToEdit = tracks.Any<Track>() + [&](const auto pTrack) {
+      return SyncLock::IsSyncLockSelected(pTrack) ||
+             (notLocked && dynamic_cast<const PlayableTrack*>(pTrack) != nullptr);
+   };
+
+   BasicUI::SplitProgress(
+      tracksToEdit.begin(), tracksToEdit.end(),
+      [&](Track* aTrack, const ProgressReporter& child) {
+         // Apply action on tracks starting from labeled regions in the end.
+         // This is to correctly perform actions like 'Delete' which collapse
+         // the track area.
+         BasicUI::SplitProgress(
+            regions.rbegin(), regions.rend(),
+            [&](const Region& region, const ProgressReporter& grandChild) {
+               action(*aTrack, region.start, region.end, grandChild);
+            },
+            child);
+      },
+      progress);
+}
+
+void EditByLabel(
+   AudacityProject& project, TrackList& tracks,
+   const SelectedRegion& selectedRegion, EditFunction action)
+{
+   EditByLabel(
+      project, tracks, selectedRegion,
+      [&](Track& track, double t0, double t1, ProgressReporter) {
+         action(track, t0, t1);
+      },
+      nullptr);
 }
 
 //! The argument is always a leader track and the return has an equal number
@@ -593,11 +618,15 @@ void OnJoinLabels(const CommandContext &context)
    if (selectedRegion.isPoint())
       return;
 
-   auto editfunc = [&](Track &track, double t0, double t1) {
+   auto editfunc = [&](Track& track, double t0, double t1, ProgressReporter reportProgress) {
       assert(track.IsLeader());
-      track.TypeSwitch( [&](WaveTrack &t) { t.Join(t0, t1); } );
+      track.TypeSwitch(
+         [&](WaveTrack& t) { t.Join(t0, t1, std::move(reportProgress)); });
    };
-   EditByLabel(project, tracks, selectedRegion, editfunc);
+   WaveTrackUtilities::WithStretchRenderingProgress(
+      [&](ProgressReporter progress) {
+         EditByLabel(project, tracks, selectedRegion, editfunc, progress);
+      });
 
    ProjectHistory::Get(project).PushState(
       /* i18n-hint: (verb) Audacity has just joined the labeled audio (points or

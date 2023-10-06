@@ -179,11 +179,12 @@ public:
    void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
 
    /*!
-    * @brief Renders the stretching of the clip (preserving duration).
+    * @brief Renders the stretching of the clip (preserving duration). Clip must
+    * be part of a project and know its tempo.
+    * @pre mProjectTempo.has_value()
     * @post GetStretchRatio() == 1
     */
-   void ApplyStretchRatio(
-      const std::function<void(double)>& reportProgress);
+   void ApplyStretchRatio(const ProgressReporter& reportProgress);
 
    void SetColourIndex(int index) { mColourIndex = index; }
    int GetColourIndex() const { return mColourIndex; }
@@ -494,9 +495,10 @@ public:
    /// if there is at least one clip sample between t0 and t1, noop otherwise.
    void ClearAndAddCutLine(double t0, double t1);
 
-   //! Paste data from other clip, resampling it if not equal rate
    /*!
-    @return true and succeed if and only if `this->GetWidth() == other.GetWidth()`
+    * @return true and succeed if and only if `this->GetWidth() ==
+    * other.GetWidth()` and either this is empty or `this->GetStretchRatio() ==
+    * other.GetStretchRatio()`.
     */
    bool Paste(double t0, const WaveClip& other);
 

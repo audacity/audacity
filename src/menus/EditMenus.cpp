@@ -8,6 +8,7 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
+#include "ProjectTimeSignature.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
@@ -17,6 +18,7 @@
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "WaveClip.h"
 #include "SampleBlock.h"
 #include "../commands/CommandContext.h"
@@ -139,9 +141,16 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    // Select some pasted samples, which is probably impossible to get right
    // with various project and track sample rates.
    // So do it at the sample rate of the project
-   double projRate = ProjectRate::Get( project ).GetRate();
-   double quantT0 = QUANTIZED_TIME(t0, projRate);
-   double quantT1 = QUANTIZED_TIME(t1, projRate);
+   const double projRate = ProjectRate::Get( project ).GetRate();
+   const double projTempo = ProjectTimeSignature::Get(project).GetTempo();
+   const double srcTempo =
+      pFirstNewTrack ? pFirstNewTrack->GetProjectTempo().value_or(projTempo) :
+                       projTempo;
+   // Apply adequate stretching to the selection. A selection of 10 seconds of
+   // audio in project A should become 5 seconds in project B if tempo in B is
+   // twice as fast.
+   const double quantT0 = QUANTIZED_TIME(t0 * srcTempo / projTempo, projRate);
+   const double quantT1 = QUANTIZED_TIME(t1 * srcTempo / projTempo, projRate);
    selectedRegion.setTimes(
       0.0,   // anywhere else and this should be
              // half a sample earlier
@@ -608,8 +617,18 @@ void OnPaste(const CommandContext &context)
                   bPastedSomething = true;
                   // For correct remapping of preserved split lines:
                   PasteTimeWarper warper{ t1, t0 + src->GetEndTime() };
-                  wn.ClearAndPaste(t0, t1,
-                     *static_cast<const WaveTrack*>(src), true, true, &warper);
+                  // New desired behaviour as of 3.4: pasting should result in a
+                  // new clip - don't erase boundaries to surrounding clips ...
+                  constexpr auto merge = false;
+                  // ... and of course, don't preserve the boundaries strictly
+                  // in [t0, t1].
+                  constexpr auto preserveExistingBoundaries = false;
+                  // Data in `[t0, t1]` must be recoverable though trimming.
+                  constexpr auto clearByTrimming = true;
+                  wn.ClearAndPaste(
+                     t0, t1, *static_cast<const WaveTrack*>(src),
+                     preserveExistingBoundaries, merge, &warper,
+                     clearByTrimming);
                },
                [&](LabelTrack &ln){
                   // Per Bug 293, users expect labels to move on a paste into
@@ -739,27 +758,16 @@ void OnSilence(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
-   using namespace BasicUI;
    const auto selectedWaveTracks = tracks.Selected<WaveTrack>();
-   // TODO replace this with utilities pending in
-   // https://github.com/audacity/audacity/pull/5043
-   auto progress = MakeProgress(
-      XO("Pre-processing"), XO("Rendering Time-Stretched Audio"),
-      ProgressShowCancel);
-   const auto numTracks = selectedWaveTracks.size();
-   auto count = 0;
-   auto reportProgress = [&](double progressFraction) {
-      const auto overallProgress = (count + progressFraction) / numTracks;
-      if (
-         progress->Poll(overallProgress * 1000, 1000) !=
-         ProgressResult::Success)
-         throw UserException{};
-   };
-   for (auto n : selectedWaveTracks)
-   {
-      n->Silence(selectedRegion.t0(), selectedRegion.t1(), reportProgress);
-      ++count;
-   }
+   WaveTrackUtilities::WithStretchRenderingProgress(
+      [&](const ProgressReporter& parent) {
+         BasicUI::SplitProgress(
+            selectedWaveTracks.begin(), selectedWaveTracks.end(),
+            [&](WaveTrack* n, const ProgressReporter& child) {
+               n->Silence(selectedRegion.t0(), selectedRegion.t1(), child);
+            },
+            parent);
+      });
 
    ProjectHistory::Get(project).PushState(
       XO("Silenced selected tracks for %.2f seconds at %.2f")
@@ -910,9 +918,18 @@ void OnJoin(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    auto &window = ProjectWindow::Get(project);
-
-   for (auto wt : tracks.Selected<WaveTrack>())
-      wt->Join(selectedRegion.t0(), selectedRegion.t1());
+   const auto selectedTracks = tracks.Selected<WaveTrack>();
+   WaveTrackUtilities::WithStretchRenderingProgress(
+      [&](const ProgressReporter& reportProgress) {
+         using namespace BasicUI;
+         SplitProgress(
+            selectedTracks.begin(), selectedTracks.end(),
+            [&](WaveTrack* wt, const ProgressReporter& childProgress) {
+               wt->Join(
+                  selectedRegion.t0(), selectedRegion.t1(), childProgress);
+            },
+            reportProgress);
+      });
 
    ProjectHistory::Get(project).PushState(
       XO("Joined %.2f seconds at t=%.2f")

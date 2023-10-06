@@ -418,11 +418,10 @@ public:
     @pre `src.IsLeader()`
     @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
     */
-   void ClearAndPaste(double t0, double t1,
-      const WaveTrack &src,
-      bool preserve = true,
-      bool merge = true,
-      const TimeWarper *effectWarper = nullptr) /* not override */;
+   void ClearAndPaste(
+      double t0, double t1, const WaveTrack& src, bool preserve = true,
+      bool merge = true, const TimeWarper* effectWarper = nullptr,
+      bool clearByTrimming = false) /* not override */;
    /*!
     Overload that takes a TrackList and passes its first wave track
     @pre `**src.Any<const WaveTrack>().begin()` satisfies preconditions
@@ -465,7 +464,9 @@ public:
    /*!
     @pre `IsLeader()`
     */
-   void Join(double t0, double t1) /* not override */;
+   void Join(
+      double t0, double t1,
+      const ProgressReporter& reportProgress) /* not override */;
    // May assume precondition: t0 <= t1
    /*!
     @pre `IsLeader()`
@@ -694,6 +695,7 @@ public:
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
+   const WaveClip* GetLeftmostClip() const;
    const WaveClip* GetRightmostClip() const;
 
    /**
@@ -934,6 +936,7 @@ public:
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
       double GetPlayEndTime() const;
+      bool IntersectsPlayRegion(double t0, double t1) const;
 
       double GetStretchRatio() const;
 
@@ -1006,12 +1009,27 @@ public:
 private:
    void FlushOne();
    // May assume precondition: t0 <= t1
-   void HandleClear(double t0, double t1, bool addCutLines, bool split);
-   static void ClearAndPasteOne(WaveTrack &track,
-      double t0, double t1, double startTime, double endTime,
-      const WaveTrack &src,
-      bool preserve, bool merge, const TimeWarper *effectWarper);
-   static void JoinOne(WaveTrack &track, double t0, double t1);
+   void HandleClear(
+      double t0, double t1, bool addCutLines, bool split,
+      bool shiftClipAtT1ToT0 = false);
+   /*
+    * @brief Copy/Paste operations must preserve beat durations, but time
+    * boundaries are expressed in seconds. For pasting to work, source and
+    * destination tracks must therefore have equal tempo.
+    * @pre Preconditions of `ClearAndPaste`
+    * @pre `GetProjectTempo().has_value() && GetProjectTempo() ==
+    * src.GetProjectTempo()`
+    */
+   void ClearAndPasteAtSameTempo(
+      double t0, double t1, const WaveTrack& src, bool preserve, bool merge,
+      const TimeWarper* effectWarper, bool clearByTrimming);
+   static void ClearAndPasteOne(
+      WaveTrack& track, double t0, double t1, double startTime, double endTime,
+      const WaveTrack& src, bool preserve, bool merge,
+      const TimeWarper* effectWarper, bool clearByTrimming);
+
+   //! @pre All clips intersecting [t0, t1) have unit stretch ratio
+   static void JoinOne(WaveTrack& track, double t0, double t1);
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
@@ -1052,6 +1070,13 @@ private:
    void SetClipRates(double newRate);
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;
+   /*!
+    * @pre `IsLeader()`
+    * @param[out] leader
+    */
+   //! @pre `IsLeader()`
+   [[nodiscard]] TrackListHolder
+   DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const;
 
    bool GetOne(
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
@@ -1085,9 +1110,18 @@ private:
     @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
     @pre `IsLeader()`
     */
-   void PasteWaveTrack(double t0, const WaveTrack &other);
-   static void PasteOne(WaveTrack &track, double t0, const WaveTrack &other,
-      double startTime, double insertDuration);
+   void PasteWaveTrack(double t0, const WaveTrack &other, bool merge);
+   /*
+    * @copybrief ClearAndPasteAtSameTempo
+    * @pre Preconditions of `PasteWaveTrack`
+    * @pre `GetProjectTempo().has_value() && GetProjectTempo() ==
+    * other.GetProjectTempo()`
+    */
+   void
+   PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, bool merge);
+   static void PasteOne(
+      WaveTrack& track, double t0, const WaveTrack& other, double startTime,
+      double insertDuration, bool merge = true);
 
    //! Whether all clips of a leader track have a common rate
    /*!

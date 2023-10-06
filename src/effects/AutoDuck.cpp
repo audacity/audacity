@@ -202,18 +202,13 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
             const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
             if (pFirstTrack)
             {
-               using namespace BasicUI;
-               const auto progress = MakeProgress(
-                  XO("Pre-processing"),
-                  XO("Rendering Control-Track Time-Stretched Audio"),
-                  ProgressShowCancel);
-               pFirstTrack->ApplyStretchRatio(
-                  { { t0, t1 } }, [&](double progressFraction) {
-                     const auto result =
-                        progress->Poll(progressFraction * 1000, 1000);
-                     if (result != ProgressResult::Success)
-                        throw UserException {};
-                  });
+               WaveTrackUtilities::WithStretchRenderingProgress(
+                  [&](const ProgressReporter& reportProgress) {
+                     pFirstTrack->ApplyStretchRatio(
+                        { { t0, t1 } }, reportProgress);
+                  },
+                  WaveTrackUtilities::defaultStretchRenderingTitle,
+                  XO("Rendering Control-Track Time-Stretched Audio"));
                pControlTrack = pFirstTrack;
             }
          }
