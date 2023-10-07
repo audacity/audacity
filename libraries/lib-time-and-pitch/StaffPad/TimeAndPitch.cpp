@@ -112,7 +112,7 @@ void TimeAndPitch::setup(int numChannels, int maxBlockSize)
   {
     d->inResampleInputBuffer[ch].setSize(_maxBlockSize +
                                          6); // needs additional history for resampling. more in the future
-    d->inCircularBuffer[ch].setSize(std::max(fftSize, _maxBlockSize));
+    d->inCircularBuffer[ch].setSize(std::max(fftSize, _maxBlockSize) + 6);
     d->outCircularBuffer[ch].setSize(outBufferSize);
   }
   d->normalizationBuffer.setSize(outBufferSize);
@@ -460,7 +460,7 @@ TimeAndPitch::feedAudioDirectly(const float* const* input_smp, int numSamples)
       d->hop_s_err += d->exact_hop_s - hop_s;
       d->hop_a_err += d->exact_hop_a - hop_a;
       for (int ch = 0; ch < _numChannels; ++ch)
-        d->inCircularBuffer[ch].readBlock(-fftSize, fftSize, d->fft_timeseries.getPtr(ch));
+        d->inCircularBuffer[ch].readBlock(-fftSize-4, fftSize, d->fft_timeseries.getPtr(ch));
       _process_hop(hop_a, hop_s);
     }
     offset += batch;
