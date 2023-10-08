@@ -98,6 +98,9 @@ private:
   double _overlap_a = overlap;
 
   int _analysis_hop_counter = 0;
+  static constexpr int leadingZeros = 4;
+  int _leading_zeros = leadingZeros;
+  bool _padded = false;
 
   double _expectedPhaseChangePerBinPerSample = 0.01;
   double _timeStretch = 1.0;
