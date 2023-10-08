@@ -70,13 +70,14 @@ struct TimeAndPitch::impl
 
   SamplesReal fft_timeseries;
   SamplesComplex spectrum;
-  SamplesReal norm;
-  SamplesReal phase;
-  SamplesReal last_phase;
+
+  static constexpr size_t historyLength = 2;
+  SamplesReal norm[historyLength];
+  SamplesReal phase[historyLength];
+  
   SamplesReal phase_accum;
   SamplesReal cosWindow;
   SamplesReal sqWindow;
-  SamplesReal last_norm;
 
   double exact_hop_a = 512.0, hop_a_err = 0.0;
   double exact_hop_s = 0.0;
@@ -84,6 +85,7 @@ struct TimeAndPitch::impl
   double hop_s_err = 0.0;
 
   std::vector<int> peak_index, trough_index;
+  std::uint8_t index = 0;
 };
 
 TimeAndPitch::TimeAndPitch(int sampleRate)
@@ -119,10 +121,12 @@ void TimeAndPitch::setup(int numChannels, int maxBlockSize)
 
   // fft coefficient buffers
   d->spectrum.setSize(_numChannels, _numBins);
-  d->norm.setSize(1, _numBins);
-  d->last_norm.setSize(1, _numBins);
-  d->phase.setSize(_numChannels, _numBins);
-  d->last_phase.setSize(_numChannels, _numBins);
+  d->index = 0;
+  for (size_t ii = 0; ii < d->historyLength; ++ii)
+  {
+    d->norm[ii].setSize(1, _numBins);
+    d->phase[ii].setSize(_numChannels, _numBins);
+  }
   d->phase_accum.setSize(_numChannels, _numBins);
 
   _expectedPhaseChangePerBinPerSample = twoPi / double(fftSize);
@@ -170,8 +174,11 @@ void TimeAndPitch::reset()
     d->outCircularBuffer[ch].reset();
   }
   d->normalizationBuffer.reset();
-  d->last_norm.zeroOut();
-  d->last_phase.zeroOut();
+  for (size_t ii = 0; ii < d->historyLength; ++ii)
+  {
+    d->norm[ii].zeroOut();
+    d->phase[ii].zeroOut();
+  }
   d->phase_accum.zeroOut();
   _outBufferWriteOffset = 0;
   d->hop_a_err = 0.0;
@@ -234,8 +241,10 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
   auto alpha = a_s / a_a; // this is the real stretch factor based on integer hop sizes
 
   // Create a norm array
-  auto* norms = d->norm.getPtr(0); // for stereo, just use the mid-channel
-  const auto* norms_last = d->last_norm.getPtr(0);
+  const auto index = d->index;
+  const auto last_index = (d->index + d->historyLength - 1) % d->historyLength;
+  auto* norms = d->norm[index].getPtr(0); // for stereo, just use the mid-channel
+  const auto* norms_last = d->norm[last_index].getPtr(0);
 
   d->peak_index.clear();
   d->trough_index.clear();
@@ -276,8 +285,8 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
     d->peak_index.emplace_back(max_idx);
   }
 
-  const float** p = const_cast<const float**>(d->phase.getPtrs());
-  const float** p_l = const_cast<const float**>(d->last_phase.getPtrs());
+  const float** p = const_cast<const float**>(d->phase[index].getPtrs());
+  const float** p_l = const_cast<const float**>(d->phase[last_index].getPtrs());
   float** acc = d->phase_accum.getPtrs();
 
   float expChange_a = a_a * float(_expectedPhaseChangePerBinPerSample);
@@ -328,8 +337,7 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
       acc[ch][n + 1] = acc[ch][n] + alpha * _unwrapPhase(p[ch][n + 1] - p[ch][n]);
   }
 
-  d->last_norm.assignSamples(d->norm);
-  d->last_phase.assignSamples(d->phase);
+  d->index = (d->index + 1) % d->historyLength;
 }
 
 /// process one hop/chunk in _fft_timeSeries and add the result to output circular buffer
@@ -350,9 +358,10 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
     d->fft.forwardReal(d->fft_timeseries, d->spectrum);
     // norms of the mid channel only (or sole channel) are needed in
     // _time_stretch
-    vo::calcNorms(d->spectrum.getPtr(0), d->norm.getPtr(0), d->spectrum.getNumSamples());
+    const auto index = d->index;
+    vo::calcNorms(d->spectrum.getPtr(0), d->norm[index].getPtr(0), d->spectrum.getNumSamples());
     for (int ch = 0; ch < _numChannels; ++ch)
-      vo::calcPhases(d->spectrum.getPtr(ch), d->phase.getPtr(ch), d->spectrum.getNumSamples());
+      vo::calcPhases(d->spectrum.getPtr(ch), d->phase[index].getPtr(ch), d->spectrum.getNumSamples());
 
     if (_numChannels == 1)
       _time_stretch<1>((float)hop_a, (float)hop_s);
@@ -363,7 +372,7 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
       _unwrapPhaseVec(d->phase_accum.getPtr(ch), _numBins);
 
     for (int ch = 0; ch < _numChannels; ++ch)
-      vo::rotate(d->phase.getPtr(ch), d->phase_accum.getPtr(ch), d->spectrum.getPtr(ch),
+      vo::rotate(d->phase[index].getPtr(ch), d->phase_accum.getPtr(ch), d->spectrum.getPtr(ch),
                                   d->spectrum.getNumSamples());
     d->fft.inverseReal(d->spectrum, d->fft_timeseries);
 
