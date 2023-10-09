@@ -106,7 +106,7 @@ inline void calcPhases(const std::complex<float>* src, float* dst, int32_t n)
   simd_complex_conversions::perform_parallel_simd_aligned(
      src, dst, n,
      [](const __m128 rp, const __m128 ip, __m128& out)
-     { out = simd_complex_conversions::atan2_ps(ip, rp); });
+     { out = simd_complex_conversions::atan2_ps_alternating(ip, rp); });
 }
 
 inline void calcNorms(const std::complex<float>* src, float* dst, int32_t n)
@@ -128,7 +128,7 @@ inline void rotate(
 inline void calcPhases(const std::complex<float>* src, float* dst, int32_t n)
 {
   for (int32_t i = 0; i < n; i++)
-    dst[i] = std::arg(src[i]);
+    dst[i] = std::arg((i % 2) ? -src[i] : src[i]);
 }
 
 inline void calcNorms(const std::complex<float>* src, float* dst, int32_t n)

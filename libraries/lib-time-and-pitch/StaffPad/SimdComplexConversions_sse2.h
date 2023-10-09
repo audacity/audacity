@@ -133,7 +133,6 @@ inline __m128 atan2_ps(__m128 y, __m128 x)
    __m128 zero = _mm_setzero_ps();
    __m128 x_eq_0 = _mm_cmpeq_ps(x, zero);
    __m128 x_gt_0 = _mm_cmpgt_ps(x, zero);
-   __m128 x_le_0 = _mm_cmple_ps(x, zero);
    __m128 y_eq_0 = _mm_cmpeq_ps(y, zero);
    __m128 x_lt_0 = _mm_cmplt_ps(x, zero);
    __m128 y_lt_0 = _mm_cmplt_ps(y, zero);
@@ -176,6 +175,13 @@ inline __m128 atan2_ps(__m128 y, __m128 x)
    result = _mm_or_ps(result, pi_result);
 
    return result;
+}
+
+// Computes atan2 for pairs of values, but inverting phase for odd subscripts
+inline __m128 atan2_ps_alternating(__m128 y, __m128 x)
+{
+   __m128 signs = _mm_setr_ps(1.f, -1.f, 1.f, -1.f);
+   return atan2_ps(_mm_mul_ps(y, signs), _mm_mul_ps(x, signs));
 }
 
 inline std::pair<__m128, __m128> sincos_ps(__m128 x)
