@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <cfenv>
 #include <utility>
 
 #include "CircularSampleBuffer.h"
@@ -185,12 +186,14 @@ namespace {
 // wrap a phase value into -PI..PI
 inline float _unwrapPhase(float arg)
 {
+  assert(std::fegetround() == FE_TOWARDZERO);
   using namespace audio::simd;
   return arg - rint(arg * 0.15915494309f) * 6.283185307f;
 }
 
 void _unwrapPhaseVec(float* v, int n)
 {
+  assert(std::fegetround() == FE_TOWARDZERO);
   audio::simd::perform_parallel_simd_aligned(v, n, [](auto& a) { a = a - rint(a * 0.15915494309f) * 6.283185307f; });
 }
 
@@ -354,6 +357,10 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
     for (int ch = 0; ch < _numChannels; ++ch)
       vo::calcPhases(d->spectrum.getPtr(ch), d->phase.getPtr(ch), d->spectrum.getNumSamples());
 
+    const auto oldMode = std::fegetround();
+    // The assumption that _unwrapPhase and _unwrapPhaseVec make
+    std::fesetround(FE_TOWARDZERO);
+
     if (_numChannels == 1)
       _time_stretch<1>((float)hop_a, (float)hop_s);
     else if (_numChannels == 2)
@@ -361,6 +368,8 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
 
     for (int ch = 0; ch < _numChannels; ++ch)
       _unwrapPhaseVec(d->phase_accum.getPtr(ch), _numBins);
+
+    std::fesetround(oldMode);
 
     for (int ch = 0; ch < _numChannels; ++ch)
       vo::rotate(d->phase.getPtr(ch), d->phase_accum.getPtr(ch), d->spectrum.getPtr(ch),
