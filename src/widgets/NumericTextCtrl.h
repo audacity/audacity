@@ -108,7 +108,6 @@ class AUDACITY_DLL_API NumericTextCtrl final
    // this control returns to the program, so you can specify.
    void SetInvalidValue(double invalidValue);
 
-   int GetFocusedField() { return mLastField; }
    int GetFocusedDigit() { return mFocusedDigit; }
 
 private:
@@ -165,8 +164,6 @@ private:
    int            mWidth;
    int            mHeight;
    int            mButtonWidth;
-
-   int            mLastField;
 
    int            mFocusedDigit { 0 };
 

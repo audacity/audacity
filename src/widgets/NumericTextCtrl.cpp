@@ -156,7 +156,6 @@ NumericTextCtrl::NumericTextCtrl(
    mBackgroundBitmap{},
    mDigitFont{},
    mLabelFont{},
-   mLastField(1),
    mAutoPos(options.autoPos)
    , mType(type)
 {
@@ -913,7 +912,6 @@ void NumericTextCtrl::SetFieldFocus(int  digit)
       return;
    }
    mFocusedDigit = digit;
-   mLastField = mFormatter->GetDigitInfos()[mFocusedDigit].field + 1;
 
    GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
                                 this,
@@ -1138,7 +1136,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
    auto & mFieldValueStrings = mCtrl->mFieldValueStrings;
 
    wxString ctrlString = mCtrl->GetString();
-   int field = mCtrl->GetFocusedField();
+   int field = mDigits[mCtrl->GetFocusedDigit()].field + 1;
 
    // Return the entire string including the control label
    // when the requested child ID is wxACC_SELF.  (Mainly when
