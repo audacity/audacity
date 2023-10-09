@@ -580,11 +580,10 @@ public:
 
    /*!
     * @brief Provides a means of setting clip values as a function of time.
-    * Included are closest sample to t0 up to closest sample to t1, inclusively.
-    * Given that `t0 <= t1`, always at least one sample is included.
+    * Included are closest sample to t0 up to closest sample to t1, exclusively.
+    * If the given interval is empty, i.e., `t0 >= t1`, no action is taken.
     * @param producer a function taking sample (absolute, not clip-relative)
     * time and returning the desired value for the sample at that time.
-    * @pre t0 <= t1
     */
    void SetFloatsWithinTimeRange(
       double t0, double t1, size_t iChannel,
