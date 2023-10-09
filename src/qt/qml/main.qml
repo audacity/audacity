@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt.labs.platform
 
 import Audacity
 import Audacity.UiComponents
@@ -34,7 +35,7 @@ ApplicationWindow {
       visible: false
    }
 
-   menuBar: MenuBar {
+   MenuBar {
       Menu {
          title: qsTr("File")
          MenuItem {
@@ -47,7 +48,6 @@ ApplicationWindow {
          title: qsTr("Workspace")
          MenuItem {
             text: qsTr("Classic")
-            autoExclusive: true
             checkable: true
             checked: root.workspaceMode === Workspace.Mode.Classic
             onTriggered: {
@@ -57,7 +57,6 @@ ApplicationWindow {
 
          MenuItem {
             text: qsTr("Simple recording")
-            autoExclusive: true
             checkable: true
             checked: root.workspaceMode === Workspace.Mode.SimpleRecording
             onTriggered: {
@@ -67,7 +66,6 @@ ApplicationWindow {
 
          MenuItem {
             text: qsTr("Audio editing")
-            autoExclusive: true
             checkable: true
             checked: root.workspaceMode === Workspace.Mode.AudioEditing
             onTriggered: {
@@ -77,7 +75,6 @@ ApplicationWindow {
 
          MenuItem {
             text: qsTr("Spectral editing")
-            autoExclusive: true
             checkable: true
             checked: root.workspaceMode === Workspace.Mode.SpectralEditing
             onTriggered: {
@@ -90,7 +87,6 @@ ApplicationWindow {
          title: qsTr("Language")
          MenuItem {
             text: "English"
-            autoExclusive: true
             checkable: true
             checked: language === "en"
             onTriggered:{
@@ -102,7 +98,6 @@ ApplicationWindow {
 
          MenuItem {
             text: "Deutsch"
-            autoExclusive: true
             checkable: true
             checked: language === "de"
             onTriggered: {
@@ -114,13 +109,14 @@ ApplicationWindow {
       }
 
       Menu {
+         id: themeMenu
          title: qsTr("Theme")
-         Repeater {
+
+         Instantiator {
             model: UiTheme.availableThemes()
             MenuItem {
                required property string modelData
                text: modelData
-               autoExclusive: true
                checkable: true
                checked: theme === text
                onTriggered: {
@@ -128,6 +124,9 @@ ApplicationWindow {
                   toolsToolbar.refreshSetup()
                }
             }
+
+            onObjectAdded: themeMenu.insertItem(index, object)
+            onObjectRemoved: themeMenu.removeItem(object)
          }
       }
 
@@ -144,13 +143,18 @@ ApplicationWindow {
       }
 
       Menu {
+         id: extras
          title : qsTr("Extra")
-         Repeater {
+
+         Instantiator {
             model : extraMenu.items
             MenuItem {
                text : modelData
                onTriggered : extraMenu.activate(index)
             }
+
+            onObjectAdded: extras.insertItem(index, object)
+            onObjectRemoved: extras.removeItem(object)
          }
       }
    }
