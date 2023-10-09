@@ -307,8 +307,7 @@ void FindWavePortions
    // (except when they are squeezed to zero width), and at least one for inside
    // the fisheye.
 
-   ZoomInfo::Intervals intervals;
-   zoomInfo.FindIntervals(intervals, rect.width, rect.x);
+   const auto intervals = zoomInfo.FindIntervals(rect.width, rect.x);
    ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
    wxASSERT(it != end && it->position == rect.x);
    const int rightmost = rect.x + rect.width;

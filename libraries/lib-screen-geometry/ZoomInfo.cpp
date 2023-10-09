@@ -109,10 +109,10 @@ void ZoomInfo::ZoomBy(double multiplier)
    SetZoom(zoom * multiplier);
 }
 
-void ZoomInfo::FindIntervals(
-   Intervals& results, int64 width, int64 origin) const
+ZoomInfo::Intervals
+ZoomInfo::FindIntervals(int64 width, int64 origin) const
 {
-   results.clear();
+   ZoomInfo::Intervals results;
    results.reserve(2);
 
    const int64 rightmost(origin + (0.5 + width));
@@ -124,4 +124,5 @@ void ZoomInfo::FindIntervals(
    if (origin < rightmost)
       results.push_back(Interval(rightmost, 0, false));
    assert(!results.empty() && results[0].position == origin);
+   return results;
 }

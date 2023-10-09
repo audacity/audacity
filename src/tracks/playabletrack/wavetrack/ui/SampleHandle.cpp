@@ -95,14 +95,13 @@ namespace {
    // Is the sample horizontally nearest to the cursor sufficiently separated
    // from its neighbors that the pencil tool should be allowed to drag it?
    bool SampleResolutionTest(
-      const ViewInfo& viewInfo, const WaveClip& clip, int width)
+      const ViewInfo& viewInfo, const WaveClip& clip,
+      const ZoomInfo::Intervals& intervals)
    {
       // Require more than 3 pixels per sample
       const auto xx = std::max<ZoomInfo::int64>(
          0, viewInfo.TimeToPosition(clip.GetPlayStartTime()));
-      ZoomInfo::Intervals intervals;
       const double rate = clip.GetRate() / clip.GetStretchRatio();
-      viewInfo.FindIntervals(intervals, width);
       ZoomInfo::Intervals::const_iterator it = intervals.begin(),
          end = intervals.end(), prev;
       wxASSERT(it != end && it->position == 0);
@@ -131,7 +130,8 @@ UIHandlePtr SampleHandle::HitTest
       return {};
 
    const double tt = adjustTime(*wavetrack, time);
-   if (!SampleResolutionTest(viewInfo, *clickedClip, rect.width))
+   const auto intervals = viewInfo.FindIntervals(rect.width);
+   if (!SampleResolutionTest(viewInfo, *clickedClip, intervals))
       return {};
 
    // Just get one sample.
@@ -192,8 +192,9 @@ UIHandle::Result SampleHandle::Click
    if (!mClickedClip)
       return Cancelled;
 
+   const auto intervals = viewInfo.FindIntervals(rect.width);
    /// Someone has just clicked the mouse.  What do we do?
-   if (!SampleResolutionTest(viewInfo, *mClickedClip, rect.width))
+   if (!SampleResolutionTest(viewInfo, *mClickedClip, intervals))
    {
       AudacityMessageBox(
          XO("To use Draw, zoom in further until you can see the individual samples."),
@@ -322,7 +323,7 @@ namespace
 {
 size_t GetLastEditableClipStartingFromNthClip(
    size_t n, bool forward, const WaveClipPointers& sortedClips,
-   const ViewInfo& viewInfo, int rectWidth)
+   const ViewInfo& viewInfo, const ZoomInfo::Intervals& intervals)
 {
    assert(n < sortedClips.size());
    const auto increment = forward ? 1 : -1;
@@ -330,7 +331,7 @@ size_t GetLastEditableClipStartingFromNthClip(
    const auto limit = forward ? sortedClips.size() : -1;
    while (last != limit)
    {
-      if (!SampleResolutionTest(viewInfo, *sortedClips[last], rectWidth))
+      if (!SampleResolutionTest(viewInfo, *sortedClips[last], intervals))
          break;
       last += increment;
    }
@@ -386,10 +387,11 @@ UIHandle::Result SampleHandle::Drag
    const auto clickedClipIndex = std::distance(
       clips.begin(), std::find(clips.begin(), clips.end(), mClickedClip));
    constexpr auto forward = true;
+   const auto intervals = viewInfo.FindIntervals(mRect.width);
    const size_t leftmostEditable = GetLastEditableClipStartingFromNthClip(
-      clickedClipIndex, !forward, clips, viewInfo, mRect.width);
+      clickedClipIndex, !forward, clips, viewInfo, intervals);
    const size_t rightmostEditable = GetLastEditableClipStartingFromNthClip(
-      clickedClipIndex, forward, clips, viewInfo, mRect.width);
+      clickedClipIndex, forward, clips, viewInfo, intervals);
 
    const auto editStart =
       std::max(start, clips[leftmostEditable]->GetPlayStartTime());
