@@ -652,7 +652,8 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
             anonInfoPanel = s.StartInvisiblePanel();
             {
                AccessibleLinksFormatter privacyPolicy(XO(
-                  "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."));
+                  /*i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context. */
+                  "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."));
 
                privacyPolicy.FormatLink(
                   L"%s", XO("audio.com"), "https://audio.com");
