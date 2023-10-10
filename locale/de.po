@@ -12,10 +12,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.3.2\n"
+"Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-04-29 10:00+0000\n"
+"PO-Revision-Date: 2023-10-10 20:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (https://app.transifex.com/klyok/teams/690/de/)\n"
 "MIME-Version: 1.0\n"
@@ -2943,7 +2943,7 @@ msgid ""
 "sounds."
 msgstr ""
 "%s, die kostenlose, quelloffene, plattformübergreifende Software zur "
-"Aufnahme und Bearbeitung von Klängen."
+"Aufnahme und Bearbeitung von Audio."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -4240,7 +4240,7 @@ msgid ""
 msgstr ""
 "Für die Aktion „%s“ bitte zuerst Audio auswählen.\n"
 "\n"
-"Strg + A wählt alles aus."
+"Strg+A wählt alles aus."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
 #. Cut, Fade.
@@ -4261,7 +4261,7 @@ msgid ""
 "Select the audio for %s to use (for example, Ctrl + A to Select All) then "
 "try again."
 msgstr ""
-"Wählen Sie das Audio für %s aus (zum Beispiel: Strg + A um alles "
+"Wählen Sie das Audio für %s aus (zum Beispiel: Strg+A um alles "
 "auszuwählen) und versuchen Sie es erneut."
 
 #: src/CommonCommandFlags.cpp
@@ -4300,7 +4300,7 @@ msgid ""
 "You must first select some stereo audio to perform this\n"
 "action. (You cannot use this with mono.)"
 msgstr ""
-"Für diese Aktion müssen Sie zuerst Stereoton\n"
+"Für diese Aktion müssen Sie zuerst Stereo-Audio\n"
 "auswählen. (Mono ist nicht möglich.)"
 
 #: src/CommonCommandFlags.cpp
@@ -4465,7 +4465,7 @@ msgid ""
 "\n"
 "You are saving directly to a slow external storage device\n"
 msgstr ""
-"Aufgezeichneter Ton ging an den gekennzeichneten Stellen verloren. Mögliche Ursachen:\n"
+"Aufgezeichnetes Audio ging an den gekennzeichneten Stellen verloren. Mögliche Ursachen:\n"
 "\n"
 "Andere Anwendungen lassen Audacity nicht genügend Prozessorzeit übrig\n"
 "\n"
@@ -6946,7 +6946,7 @@ msgstr "Spur entfernen"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "Spur „%s“ entfernt"
+msgstr "Spur „%s“ entfernt."
 
 #: src/TrackUtilities.cpp
 msgid "Track Remove"
@@ -8181,11 +8181,11 @@ msgstr "Bass und Höhe"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
-msgstr "Einfacher Klang-Steuerungseffekt"
+msgstr "Einfacher Ton-Steuerungseffekt"
 
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
-msgstr "Klang-Steuerung"
+msgstr "Ton-Steuerung"
 
 #: src/effects/BassTreble.cpp
 msgid "Bass (dB):"
@@ -8217,7 +8217,7 @@ msgstr "Pegel"
 
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
-msgstr "&Lautstärkeneinstellung an Klangeinstellung binden"
+msgstr "&Lautstärkeneinstellung an Ton-Steuerung binden"
 
 #: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Pitch"
@@ -9197,7 +9197,7 @@ msgstr "%.1f %%"
 
 #: src/effects/DtmfGen.cpp
 msgid "Tone duration:"
-msgstr "Dauer des Tons:"
+msgstr "Tondauer:"
 
 #. i18n-hint milliseconds
 #: src/effects/DtmfGen.cpp
@@ -9986,7 +9986,7 @@ msgid ""
 "The sample rate of the noise profile must match that of the sound to be "
 "processed."
 msgstr ""
-"Die Abtastrate des Geräuschprofils muss mit dem des zu verarbeitenden Klangs"
+"Die Abtastrate des Geräuschprofils muss mit dem zu verarbeitendem Geräusch"
 " übereinstimmen."
 
 #: src/effects/NoiseReduction.cpp
@@ -10436,9 +10436,9 @@ msgid ""
 msgstr ""
 "Die Reparatur erfolgt, indem Audiodaten außerhalb der Auswahl verwendet werden.\n"
 "\n"
-"Bitte wählen Sie einen Bereich, der mindestens auf einer Seite von Ton berührt wird.\n"
+"Bitte wählen Sie einen Bereich, der mindestens auf einer Seite von Audio berührt wird.\n"
 "\n"
-"Je mehr umgebender Ton, desto besser die Wirkung."
+"Je mehr umgebendes Audio, desto besser die Wirkung."
 
 #: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
 msgid "Repeat"
@@ -10854,7 +10854,7 @@ msgstr "Zirpen"
 
 #: src/effects/ToneGen.cpp
 msgid "Tone"
-msgstr "Klang"
+msgstr "Ton"
 
 #: src/effects/ToneGen.cpp
 msgid "Generates an ascending or descending tone of one of four types"
@@ -11541,7 +11541,7 @@ msgstr "Verarbeitung beendet."
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "„;type tool“ Effekte können aus Nyquist keinen Ton zurückgeben.\n"
+msgstr "„;type tool“ Effekte können aus Nyquist kein Audio zurückgeben.\n"
 
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
@@ -11759,11 +11759,11 @@ msgstr "Exportierte Tags"
 
 #: src/export/Export.cpp
 msgid "All selected audio is muted."
-msgstr "Sämtlicher ausgewählter Ton ist stummgestellt."
+msgstr "Sämtliches ausgewähltes Audio ist stummgestellt."
 
 #: src/export/Export.cpp src/export/ExportMultiple.cpp
 msgid "All audio is muted."
-msgstr "Sämtlicher Ton ist stummgestellt."
+msgstr "Sämtliches Audio ist stummgestellt."
 
 #: src/export/Export.cpp
 #, c-format
@@ -11900,7 +11900,7 @@ msgstr "Exportieren"
 #: src/export/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
 msgstr ""
-"Ausgewähltes Audio wird durch Verwendung des Befehlszeilenencoders "
+"Ausgewähltes Audio wird durch Verwendung des Befehlszeilen-Encoder "
 "exportiert"
 
 #: src/export/ExportCL.cpp
@@ -13810,7 +13810,7 @@ msgstr "Ungültiges Sequenzattribut „numsamples“."
 
 #: src/import/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
-msgstr "Wellenblock-Startattribut kann nicht analysiert werden"
+msgstr "Wellenblock-Startattribut kann nicht analysiert werden."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -15740,7 +15740,7 @@ msgstr "Nach Name sortieren"
 
 #: src/menus/TrackMenus.cpp
 msgid "Can't delete track with active audio"
-msgstr "Spur mit aktivem Ton kann nicht gelöscht werden"
+msgstr "Spur mit aktivem Audio kann nicht gelöscht werden"
 
 #: src/menus/TrackMenus.cpp
 msgid "Add &New"
@@ -16906,7 +16906,7 @@ msgid ""
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
 msgstr ""
 "\n"
-"   *   \"%s\"  (weil die Verknüpfung '%s' von \"%s\" verwendet wird)\n"
+"   *   „%s“  (weil die Verknüpfung „%s“ von „%s“ verwendet wird)\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -19509,7 +19509,7 @@ msgstr "Klicken und Ziehen, um die Frequenzbandbreite festzulegen."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to select audio"
-msgstr "Klicken und Ziehen, um Audio auszuwählen"
+msgstr "Klicken und Ziehen, um Audio auszuwählen."
 
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any
 #. nearby label or clip boundaries
