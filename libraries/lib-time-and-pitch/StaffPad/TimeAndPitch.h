@@ -78,7 +78,6 @@ public:
 private:
   const int fftSize;
   static constexpr int overlap = 4;
-  static constexpr bool normalize_window = true; // compensate for ola window overlaps
   static constexpr bool modulate_synthesis_hop = true;
 
   void _process_hop(int hop_a, int hop_s);
@@ -94,6 +93,7 @@ private:
   int _availableOutputSamples = 0;
   int _numBins = fftSize / 2 + 1;
   double _overlap_a = overlap;
+  double _overlap_s = overlap;
 
   int _analysis_hop_counter = 0;
 
@@ -102,6 +102,9 @@ private:
   double _pitchFactor = 1.0;
 
   int _outBufferWriteOffset = 0;
+
+  const bool _useNewScaling;
+  const bool normalize_window; // compensate for ola window overlaps
 };
 
 } // namespace staffpad

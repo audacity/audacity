@@ -4,6 +4,7 @@
 #include <array>
 #include <cassert>
 #include <utility>
+#include <fstream>
 
 #include "CircularSampleBuffer.h"
 #include "FourierTransform_pffft.h"
@@ -86,8 +87,30 @@ struct TimeAndPitch::impl
   std::vector<int> peak_index, trough_index;
 };
 
+namespace
+{
+bool useNewScaling()
+{
+   std::ifstream ifs { "C:/Users/saint/Downloads/useNewScaling.txt" };
+   if (!ifs.good())
+      return false;
+   std::string txt;
+   ifs >> txt;
+   try
+   {
+      return static_cast<bool>(std::stoi(txt));
+   }
+   catch (...)
+   {
+      return false;
+   }
+}
+} // namespace
+
 TimeAndPitch::TimeAndPitch(int sampleRate)
     : fftSize(getFftSize(sampleRate))
+    , _useNewScaling(useNewScaling())
+    , normalize_window(!_useNewScaling)
 {
 }
 
@@ -387,7 +410,13 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
   }
 
   {
-    float gainFact = float(_timeStretch * ((8.f / 3.f) / _overlap_a)); // overlap add normalization factor
+    const auto a0 = 0.5;
+    const auto a1 = -0.5;
+    const float alpha = 0.5 * _overlap_s * (a0 * a0 + (a0 * a0 + a1 * a1));
+    float gainFact = _useNewScaling ?
+                        1 / alpha :
+                        float(_timeStretch * ((8.f / 3.f) / _overlap_a)); //
+    //  overlap add normalization factor
     for (int ch = 0; ch < _numChannels; ++ch)
       d->outCircularBuffer[ch].writeAddBlockWithGain(_outBufferWriteOffset, fftSize, d->fft_timeseries.getPtr(ch),
                                                      gainFact);
@@ -407,21 +436,20 @@ void TimeAndPitch::setTimeStretchAndPitchFactor(double timeScale, double pitchFa
   _timeStretch = timeScale * pitchFactor;
 
   _overlap_a = overlap;
-  double overlap_s = overlap;
   if (_timeStretch > 1.0 || !modulate_synthesis_hop)
     _overlap_a *= _timeStretch;
   else
-    overlap_s /= _timeStretch;
+    _overlap_s /= _timeStretch;
 
   d->exact_hop_a = double(fftSize) / _overlap_a;
   if (!modulate_synthesis_hop)
   {
-    d->exact_hop_s = double(fftSize) / overlap_s;
+    d->exact_hop_s = double(fftSize) / _overlap_s;
   }
   else
   {
     // switch after processing next block, unless it's the first one
-    d->next_exact_hop_s = double(fftSize) / overlap_s;
+    d->next_exact_hop_s = double(fftSize) / _overlap_s;
     if (d->exact_hop_s == 0.0) // on first chunk set it immediately
       d->exact_hop_s = d->next_exact_hop_s;
   }
