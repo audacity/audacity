@@ -1,5 +1,42 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.4.0
+
+Audacity 3.4 adds a musical view, time stretching and a new exporter.
+
+ Major changes
+   * Music workflows
+     Audacity now features several music related features, such as switching between hh:mm:ss time and Beats & Measures, and time-stretching clips to align them to a song's tempo. 
+   * Time stretching
+     Hold Alt (macOS: Option) while hovering over the top third of a clip edge to stretch it. 
+   * New exporter
+     Audacity now features a new export window with easier access to options such as sample rate and custom mapping (for 5.1 or 7.1 audio). Additionally, the "Browse" button uses the native file browser now!
+
+ Other changes
+   * For MP3, Audacity now always uses Joint Stereo mode, which always delivers the best possible quality.
+   * #4720 Simplified pasting logic.
+   * Simplified stereo tracks. Left and right channels now always have synchronized clip starts and ends, and the same sample rate in both channels. 
+   * #5014 Added cursors trimming and stretching left and right, and changed the I-beam cursor to be less similar to either.
+   * #4448 When importing audio, the project sample rate no longer changes.
+   * #5204 The spectrogram colors are now perceptually uniform, and the colormap has gotten a name: Roseus. It also can be used for dataviz outside of Audacity, see https://github.com/dofuuz/roseus for more info!
+   * New defaults: The Time Signature toolbar now gets shown, the solo button is set to multi-track mode, time tracks have a wider starting range.
+   * #5291 Unsquished the Audacity logo found in some places of the app.
+   * #2330 Clicking on the border of two clips no longer merges them.
+
+ Libraries
+   * lib-time-and-pitch implements a time stretching algorithm originating in Staffpad.
+   * Audacity now uses Conan 2.
+   * Continued extracting code into libraries and modules.
+
+ Bug fixes
+   * #3778 --nogap metadata no longer is ignored.
+   * #4410 fixed a crash with LV2 plugins (thanks jfroyall!).
+   * #2471 #4798 fixed some crashes related to macros.
+   * #4769 fixed a crash when pasting in certain configurations.
+   * #4677 Accessibility: GUI can be disabled again for VST2 plugins (thanks, David Bailes!).
+   * #4988 Accessibility: Restored window control IDs, improving NVDA compatibility (thanks again, David Bailes!).
+   * #4872 fixed a crash on launch on OSX 10.9 (thanks, René Bertin!).
+
 Changes in version 3.3.3
 
  This is a hotfix release. It fixes the following bugs: 
