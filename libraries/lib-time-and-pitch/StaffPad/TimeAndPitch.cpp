@@ -212,6 +212,12 @@ void _ms_to_lr(float* ch1, float* ch2, int n)
   });
 }
 
+template <class T>
+inline void multiply(T* dst, const T* src, int32_t n)
+{
+  audio::simd::perform_parallel_simd_aligned(dst, const_cast<T*>(src), n,
+    [](auto& d, auto& s) { d = d * s; });
+}
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -329,7 +335,7 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
       _lr_to_ms(d->fft_timeseries.getPtr(0), d->fft_timeseries.getPtr(1), fftSize);
 
     for (int ch = 0; ch < _numChannels; ++ch)
-      vo::multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), d->fft_timeseries.getPtr(ch), fftSize);
+      multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), fftSize);
 
     // determine norm/phase
     d->fft.forwardReal(d->fft_timeseries, d->spectrum);
@@ -360,12 +366,12 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
       _ms_to_lr(d->fft_timeseries.getPtr(0), d->fft_timeseries.getPtr(1), fftSize);
 
     for (int ch = 0; ch < _numChannels; ++ch)
-      vo::multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), d->fft_timeseries.getPtr(ch), fftSize);
+      multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), fftSize);
   }
   else
   { // stretch factor == 1.0 => just apply window
     for (int ch = 0; ch < _numChannels; ++ch)
-      vo::multiply(d->fft_timeseries.getPtr(ch), d->sqWindow.getPtr(0), d->fft_timeseries.getPtr(ch), fftSize);
+      multiply(d->fft_timeseries.getPtr(ch), d->sqWindow.getPtr(0), fftSize);
   }
 
   {

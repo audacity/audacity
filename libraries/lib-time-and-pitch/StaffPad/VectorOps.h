@@ -71,13 +71,6 @@ inline void constantMultiplyAndAdd(const T* src, T constant, T* dst, int32_t n)
 }
 
 template <class T>
-inline void multiply(const T* src1, const T* src2, T* dst, int32_t n)
-{
-  for (int32_t i = 0; i < n; i++)
-    dst[i] = src1[i] * src2[i];
-}
-
-template <class T>
 inline void setToZero(T* dst, int32_t n)
 {
   std::fill(dst, dst + n, 0.f);
