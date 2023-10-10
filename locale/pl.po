@@ -15855,7 +15855,7 @@ msgstr "Wycisz/zgłośnij sk&upioną ścieżkę"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Solo/Unsolo Focused Track"
-msgstr "&Solo/unsolo skupioną ścieżkę"
+msgstr "&Soluj/niesoluj skupioną ścieżkę"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Close Focused Track"
