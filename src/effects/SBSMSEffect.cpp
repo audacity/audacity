@@ -224,7 +224,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 
    //Iterate over each track
    //all needed because this effect needs to introduce silence in the group tracks to keep sync
-   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
    mCurTrackNum = 0;
 
    double maxDuration = 0.0;

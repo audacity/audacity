@@ -13,6 +13,8 @@
 class Track;
 class TrackList;
 
+#include "EffectInterface.h"
+
 #include <memory>
 #include <optional>
 #include <vector>
@@ -45,9 +47,9 @@ public:
        effectTimeInterval->first <= effectTimeInterval->second`
     */
    EffectOutputTracks(
-      TrackList& tracks, std::optional<TimeInterval> effectTimeInterval,
-      bool allSyncLockSelected = false,
-      bool stretchSyncLocked = false);
+      TrackList& tracks, EffectType effectType,
+      std::optional<TimeInterval> effectTimeInterval,
+      bool allSyncLockSelected = false, bool stretchSyncLocked = false);
    EffectOutputTracks(const EffectOutputTracks&) = delete;
 
    ~EffectOutputTracks();
@@ -81,6 +83,7 @@ public:
 
 private:
    TrackList &mTracks;
+   const EffectType mEffectType;
    /*!
     @invariant `mIMap.size() == mOutputTracks->Size()`
     @invariant `mIMap.size() == mOMap.size()`

@@ -18,9 +18,11 @@
 int EffectOutputTracks::nEffectsDone = 0;
 
 EffectOutputTracks::EffectOutputTracks(
-   TrackList& tracks, std::optional<TimeInterval> effectTimeInterval,
-   bool allSyncLockSelected, bool stretchSyncLocked)
+   TrackList& tracks, EffectType effectType,
+   std::optional<TimeInterval> effectTimeInterval, bool allSyncLockSelected,
+   bool stretchSyncLocked)
     : mTracks { tracks }
+    , mEffectType { effectType }
 {
    assert(
       !effectTimeInterval.has_value() ||
@@ -136,9 +138,14 @@ void EffectOutputTracks::Commit()
       if (!mIMap[i])
          // This track was an addition to output tracks; add it to mTracks
          mTracks.AppendOne(std::move(*mOutputTracks));
-      else
+      else if (
+         mEffectType != EffectTypeNone && mEffectType != EffectTypeAnalyze)
          // Replace mTracks entry with the new track
          mTracks.ReplaceOne(*mIMap[i], std::move(*mOutputTracks));
+      else
+         // This output track was just a placeholder for pre-processing. Discard
+         // it.
+         mOutputTracks->Remove(*pOutputTrack);
       ++i;
    }
 
