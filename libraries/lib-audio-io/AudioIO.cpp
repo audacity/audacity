@@ -2122,6 +2122,7 @@ void AudioIO::DrainRecordBuffers()
             Finally Do {[&]{
                if (++iChannel == width) {
                   ++iter;
+                  iChannel = 0;
                   if (iter != mCaptureSequences.end())
                      width = (*iter)->NChannels();
                }
