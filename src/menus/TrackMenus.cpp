@@ -1234,7 +1234,7 @@ BaseItemSharedPtr TracksMenu()
 
             Section( "",
                Command( wxT("MoveSelectionWithTracks"),
-                  XXO("&Move Selection with Tracks (on/off)"),
+                  XXO("&Move Selection with Tracks"),
                   OnMoveSelectionWithTracks,
                   AlwaysEnabledFlag,
                   Options{}.CheckTest( wxT("/GUI/MoveSelectionWithTracks"), false ) )
