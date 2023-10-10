@@ -11828,7 +11828,7 @@ msgid ""
 "Data will be piped to standard in. \"%f\" uses the file name in the export "
 "window."
 msgstr ""
-"Dane zostaną przekierowane do standardowego wejścia. \"%f\" używa nazwy "
+"Dane zostaną przekierowane do standardowego wejścia. „%f” używa nazwy "
 "pliku w oknie eksportu."
 
 #. i18n-hint files that can be run as programs
