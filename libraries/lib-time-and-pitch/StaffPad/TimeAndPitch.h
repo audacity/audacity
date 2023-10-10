@@ -8,7 +8,7 @@
 
 namespace staffpad {
 
-class TimeAndPitch
+class TIME_AND_PITCH_API TimeAndPitch
 {
 public:
   TimeAndPitch(int sampleRate);

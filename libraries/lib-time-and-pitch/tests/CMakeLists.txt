@@ -8,6 +8,7 @@ add_unit_test(
       StaffPadTimeAndPitchTest.cpp
       TimeAndPitchFakeSource.h
       TimeAndPitchRealSource.h
+      TimeAndPitchTest.cpp
    LIBRARIES
       lib-utility
       lib-time-and-pitch-interface
