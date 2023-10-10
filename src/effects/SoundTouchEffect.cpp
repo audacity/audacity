@@ -87,7 +87,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
 
    //Iterate over each track
    // Needs all for sync-lock grouping.
-   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
    bool bGoodResult = true;
 
    mPreserveLength = preserveLength;

@@ -76,7 +76,7 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
    // But for now, Cancel isn't supported without this.
    // Repair doesn't make sense for stretched clips, so don't pass a stretch
    // interval.
-   EffectOutputTracks outputs { *mTracks, {} };
+   EffectOutputTracks outputs { *mTracks, GetType(), {} };
    bool bGoodResult = true;
 
    int count = 0;

@@ -79,9 +79,11 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 {
    // Do not use mWaveTracks here.  We will possibly DELETE tracks,
    // so we must use the "real" tracklist.
-   EffectOutputTracks outputs { *mTracks,
+   EffectOutputTracks outputs {
+      *mTracks,
+      GetType(),
       // This effect ignores mT0 and mT1 but always mixes the entire tracks.
-      {{ mTracks->GetStartTime(), mTracks->GetEndTime() }}
+      { { mTracks->GetStartTime(), mTracks->GetEndTime() } }
    };
    bool bGoodResult = true;
 
@@ -180,7 +182,7 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    const auto unlinkedTracks = outputs.UnlinkChannels(track);
    assert(unlinkedTracks.size() == 2);
    outputs.Remove(*unlinkedTracks[1]);
-   
+
    track.Clear(start, end);
    track.Paste(start, *outTrack);
    RealtimeEffectList::Get(track).Clear();

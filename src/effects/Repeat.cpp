@@ -92,7 +92,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
-   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
 
    int nTrack = 0;
    bool bGoodResult = true;
@@ -121,7 +121,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          auto tempList = track.Copy(mT0, mT1);
          const auto firstTemp = *tempList->Any<const WaveTrack>().begin();
 
-         
+
 
          auto t0 = tc;
          for (size_t j = 0; j < repeatCount; ++j) {

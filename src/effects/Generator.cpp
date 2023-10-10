@@ -30,7 +30,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
 
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
-   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
 
    // Iterate over the tracks
    bool bGoodResult = true;

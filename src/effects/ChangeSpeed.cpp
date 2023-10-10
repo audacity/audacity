@@ -214,7 +214,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
    // Iterate over each track.
    // All needed because this effect needs to introduce
    // silence in the sync-lock group tracks to keep sync
-   EffectOutputTracks outputs{ *mTracks, {{ mT0, mT1 }}, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
    bool bGoodResult = true;
 
    mCurTrackNum = 0;

@@ -327,7 +327,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    }
 
    if (!cancel) {
-      EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
+      EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
 
       int trackNum = 0;
 

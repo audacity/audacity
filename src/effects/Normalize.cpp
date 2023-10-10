@@ -106,7 +106,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    }
 
    //Iterate over each track
-   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
    bool bGoodResult = true;
    double progress = 0;
    TranslatableString topMsg;

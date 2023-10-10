@@ -28,7 +28,7 @@ bool EffectTwoPassSimpleMono::Process(
    mSecondPassDisabled = false;
 
    InitPass1();
-   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
 
    mWorkTracks = TrackList::Create(const_cast<AudacityProject*>(FindProject()));
    for (auto track : outputs.Get().Selected<WaveTrack>()) {

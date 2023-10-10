@@ -770,8 +770,9 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    // to operate on the selected wave tracks
    std::optional<EffectOutputTracks> oOutputs;
    if (!bOnePassTool)
-      oOutputs.emplace(*mTracks,
-         EffectOutputTracks::TimeInterval{ mT0, mT1 }, true);
+      oOutputs.emplace(
+         *mTracks, GetType(), EffectOutputTracks::TimeInterval { mT0, mT1 },
+         true, false);
 
    mNumSelectedChannels = bOnePassTool
       ? 0

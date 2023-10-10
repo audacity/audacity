@@ -101,7 +101,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
 
    // JC: Only process selected tracks.
    // PRL:  Compute the strech into temporary tracks.  Don't commit the stretch.
-   EffectOutputTracks temp{ *mTracks, { {mT0, mT1} } };
+   EffectOutputTracks temp { *mTracks, GetType(), { { mT0, mT1 } } };
    for (auto t : temp.Get().Selected<const WaveTrack>()) {
       double trackStart = t->GetStartTime();
       double trackEnd = t->GetEndTime();

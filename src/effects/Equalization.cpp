@@ -402,7 +402,7 @@ struct EffectEqualization::Task {
 
 bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 {
-   EffectOutputTracks outputs { *mTracks, {{ mT0, mT1 }} };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
    mParameters.CalcFilter();
    bool bGoodResult = true;
 
