@@ -15006,7 +15006,7 @@ msgstr "Wpisz, aby u&tworzyć etykietę (włącz/wyłącz)"
 
 #: src/menus/LabelMenus.cpp
 msgid "La&beled Audio"
-msgstr "Etykieta &dźwięku"
+msgstr "Oznaczony &dźwięk"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
