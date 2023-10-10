@@ -215,7 +215,7 @@ void _ms_to_lr(float* ch1, float* ch2, int n)
 template <class T>
 inline void multiply(T* dst, const T* src, int32_t n)
 {
-  audio::simd::perform_parallel_simd_aligned(dst, const_cast<T*>(src), n,
+  audio::simd::perform_parallel_simd_aligned(dst, src, n,
     [](auto& d, auto& s) { d = d * s; });
 }
 } // namespace
