@@ -5491,8 +5491,8 @@ msgid ""
 "immediately\" on further error alerts."
 msgstr ""
 "Kontynuuj z naprawami wymienionymi w dzienniku i poszukaj kolejnych błędów. "
-"Zapisze to projekt w jego obecnym stanie, chyba że \"Zamkniesz projekt "
-"natychmiastowo\" przy przyszłych ostrzeżeniach o błędach."
+"Zapisze to projekt w jego obecnym stanie, chyba że „Zamkniesz projekt "
+"natychmiastowo” przy przyszłych ostrzeżeniach o błędach."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
