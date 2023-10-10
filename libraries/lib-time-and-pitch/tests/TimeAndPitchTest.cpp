@@ -54,7 +54,7 @@ TEST_CASE("TimeAndPitch")
       auto toDiscard = sut.getLatencySamplesForStretchRatio(stretchRatio);
       while (toDiscard > 0)
       {
-         while (sut.getNumAvailableOutputSamples() == 0)
+         while (sut.getNumAvailableOutputSamples() <= 0)
          {
             source.Pull(container.Get(), maxBlockSize);
             sut.feedAudio(container.Get(), maxBlockSize);
@@ -74,13 +74,17 @@ TEST_CASE("TimeAndPitch")
       auto numOut = 0;
       while (numOut < outSize)
       {
-         while (sut.getNumAvailableOutputSamples() == 0)
+         while (sut.getNumAvailableOutputSamples() <= 0)
          {
             source.Pull(container.Get(), maxBlockSize);
             sut.feedAudio(container.Get(), maxBlockSize);
          }
-         const auto numSamplesToRetrieve = std::min(outSize, maxBlockSize);
-         sut.retrieveAudio(outputPtrs.data() + numOut, numSamplesToRetrieve);
+         const auto numSamplesToRetrieve = std::min(
+            { outSize, maxBlockSize, sut.getNumAvailableOutputSamples() });
+         std::vector<float*> offsetPtr(info.numChannels);
+         for (auto i = 0u; i < info.numChannels; ++i)
+            offsetPtr[i] = outputPtrs[i] + numOut;
+         sut.retrieveAudio(offsetPtr.data(), numSamplesToRetrieve);
          numOut += numSamplesToRetrieve;
       }
 
