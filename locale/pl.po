@@ -20780,7 +20780,7 @@ msgstr "Przytrzymanie (ms)"
 
 #: plug-ins/limiter.ny
 msgid "Apply Make-up Gain"
-msgstr "Zastosuj Uczyń ze wzmocnienia"
+msgstr "Zastosuj Upiększanie wzmocnienia"
 
 #: plug-ins/lowpass.ny resources/EffectsMenuDefaults.xml
 msgid "Low-Pass Filter"
