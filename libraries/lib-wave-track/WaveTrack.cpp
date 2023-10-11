@@ -3122,7 +3122,8 @@ void WaveTrack::SetFloatsWithinTimeRange(
    const std::function<float(double sampleTime)>& producer,
    sampleFormat effectiveFormat)
 {
-   assert(t0 <= t1);
+   if (t0 >= t1)
+      return;
    const auto sortedClips = SortedClipArray();
    if (sortedClips.empty())
       return;
@@ -3137,7 +3138,7 @@ void WaveTrack::SetFloatsWithinTimeRange(
          std::round((t0 - clipStartTime) * sampsPerSec) / sampsPerSec +
          clipStartTime;
       const auto roundedT1 =
-         std::round((t1 - clipStartTime) * sampsPerSec + 1) / sampsPerSec +
+         std::round((t1 - clipStartTime) * sampsPerSec) / sampsPerSec +
          clipStartTime;
       if (clipStartTime > roundedT1)
          break;

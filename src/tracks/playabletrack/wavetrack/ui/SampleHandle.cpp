@@ -81,12 +81,12 @@ UIHandlePtr SampleHandle::HitAnywhere
 }
 
 namespace {
-   inline double adjustTime(const WaveTrack *wt, double time)
+   inline double adjustTime(const WaveTrack& wt, double time)
    {
       // Round to an exact sample time
-      const auto clip = wt->GetClipAtTime(time);
+      const auto clip = wt.GetClipAtTime(time);
       if (!clip)
-         return wt->SnapToSample(time);
+         return wt.SnapToSample(time);
       const auto sampleOffset =
          clip->TimeToSamples(time - clip->GetPlayStartTime());
       return clip->SamplesToTime(sampleOffset) + clip->GetPlayStartTime();
@@ -94,18 +94,14 @@ namespace {
 
    // Is the sample horizontally nearest to the cursor sufficiently separated
    // from its neighbors that the pencil tool should be allowed to drag it?
-   bool SampleResolutionTest
-      ( const ViewInfo &viewInfo, const WaveTrack *wt, double time, int width )
+   bool SampleResolutionTest(
+      const ViewInfo& viewInfo, const WaveClip& clip,
+      const ZoomInfo::Intervals& intervals)
    {
       // Require more than 3 pixels per sample
-      const auto xx = std::max<ZoomInfo::int64>(0, viewInfo.TimeToPosition(time));
-      const auto clip = wt->GetClipAtTime(time);
-      if (!clip)
-         // Don't bother the user about that with a pop-up.
-         return true;
-      ZoomInfo::Intervals intervals;
-      const double rate = clip->GetRate() / clip->GetStretchRatio();
-      viewInfo.FindIntervals(intervals, width);
+      const auto xx = std::max<ZoomInfo::int64>(
+         0, viewInfo.TimeToPosition(clip.GetPlayStartTime()));
+      const double rate = clip.GetRate() / clip.GetStretchRatio();
       ZoomInfo::Intervals::const_iterator it = intervals.begin(),
          end = intervals.end(), prev;
       wxASSERT(it != end && it->position == 0);
@@ -129,9 +125,13 @@ UIHandlePtr SampleHandle::HitTest
    /// editable sample
    const auto wavetrack = pTrack.get();
    const auto time = viewInfo.PositionToTime(state.m_x, rect.x);
+   const auto clickedClip = wavetrack->GetClipAtTime(time);
+   if (!clickedClip)
+      return {};
 
-   const double tt = adjustTime(wavetrack, time);
-   if (!SampleResolutionTest(viewInfo, wavetrack, tt, rect.width))
+   const double tt = adjustTime(*wavetrack, time);
+   const auto intervals = viewInfo.FindIntervals(rect.width);
+   if (!SampleResolutionTest(viewInfo, *clickedClip, intervals))
       return {};
 
    // Just get one sample.
@@ -174,28 +174,6 @@ SampleHandle::~SampleHandle()
 {
 }
 
-namespace {
-   /// Determines if we can edit samples in a wave track.
-   /// Also pops up warning messages in certain cases where we can't.
-   ///  @return true if we can edit the samples, false otherwise.
-   bool IsSampleEditingPossible
-      (const wxMouseEvent &event,
-       const wxRect &rect, const ViewInfo &viewInfo, WaveTrack *wt, int width)
-   {
-      //If we aren't zoomed in far enough, show a message dialog.
-      const double time = adjustTime(wt, viewInfo.PositionToTime(event.m_x, rect.x));
-      if (!SampleResolutionTest(viewInfo, wt, time, width))
-      {
-         AudacityMessageBox(
-            XO(
-"To use Draw, zoom in further until you can see the individual samples."),
-            XO("Draw Tool"));
-         return false;
-      }
-      return true;
-   }
-}
-
 UIHandle::Result SampleHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
@@ -210,11 +188,19 @@ UIHandle::Result SampleHandle::Click
 
    const double t0 = viewInfo.PositionToTime(event.m_x, rect.x);
    const auto pTrack = mClickedTrack.get();
-
-   /// Someone has just clicked the mouse.  What do we do?
-   if (!IsSampleEditingPossible(
-         event, rect, viewInfo, pTrack, rect.width))
+   mClickedClip = pTrack->GetClipAtTime(t0);
+   if (!mClickedClip)
       return Cancelled;
+
+   const auto intervals = viewInfo.FindIntervals(rect.width);
+   /// Someone has just clicked the mouse.  What do we do?
+   if (!SampleResolutionTest(viewInfo, *mClickedClip, intervals))
+   {
+      AudacityMessageBox(
+         XO("To use Draw, zoom in further until you can see the individual samples."),
+         XO("Draw Tool"));
+      return Cancelled;
+   }
 
    /// We're in a track view and zoomed enough to see the samples.
    mRect = rect;
@@ -333,6 +319,28 @@ UIHandle::Result SampleHandle::Click
    return RefreshCell;
 }
 
+namespace
+{
+size_t GetLastEditableClipStartingFromNthClip(
+   size_t n, bool forward, const WaveClipPointers& sortedClips,
+   const ViewInfo& viewInfo, const ZoomInfo::Intervals& intervals)
+{
+   assert(n < sortedClips.size());
+   const auto increment = forward ? 1 : -1;
+   int last = n + increment;
+   const auto limit = forward ? sortedClips.size() : -1;
+   while (last != limit)
+   {
+      if (!SampleResolutionTest(viewInfo, *sortedClips[last], intervals))
+         break;
+      last += increment;
+   }
+   last -= increment;
+   assert(last >= 0 && last < sortedClips.size());
+   return last;
+}
+} // namespace
+
 UIHandle::Result SampleHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
@@ -341,16 +349,16 @@ UIHandle::Result SampleHandle::Drag
    const auto &viewInfo = ViewInfo::Get( *pProject );
 
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-
-   /// Someone has just clicked the mouse.  What do we do?
-   const auto samplesVisible = IsSampleEditingPossible(
-      event, mRect, viewInfo, mClickedTrack.get(), mRect.width);
-
-   if (unsafe || !samplesVisible)
+   if (unsafe)
    {
       this->Cancel(pProject);
       return RefreshCell | Cancelled;
    }
+
+   // There must have been some clicking before dragging ...
+   assert(mClickedTrack && mClickedClip);
+   if (!(mClickedTrack && mClickedClip))
+      return Cancelled;
 
    //*************************************************
    //***    DRAG-DRAWING                           ***
@@ -369,6 +377,27 @@ UIHandle::Result SampleHandle::Drag
    const float newLevel = FindSampleEditingLevel(event, viewInfo, t0);
    const auto start = std::min(t0, t1);
    const auto end = std::max(t0, t1);
+
+   // Starting from the originally clicked clip, restrict the editing boundaries
+   // to the succession of clips with visible samples. If, of clips A, B and C,
+   // only B had invisible samples, it'd mean one could not drag-draw from A
+   // into C, but that probably isn't a behavior worthwhile much implementation
+   // complications.
+   const auto clips = mClickedTrack->SortedClipArray();
+   const auto clickedClipIndex = std::distance(
+      clips.begin(), std::find(clips.begin(), clips.end(), mClickedClip));
+   constexpr auto forward = true;
+   const auto intervals = viewInfo.FindIntervals(mRect.width);
+   const size_t leftmostEditable = GetLastEditableClipStartingFromNthClip(
+      clickedClipIndex, !forward, clips, viewInfo, intervals);
+   const size_t rightmostEditable = GetLastEditableClipStartingFromNthClip(
+      clickedClipIndex, forward, clips, viewInfo, intervals);
+
+   const auto editStart =
+      std::max(start, clips[leftmostEditable]->GetPlayStartTime());
+   const auto editEnd =
+      std::min(end, clips[rightmostEditable]->GetPlayEndTime());
+
    // For fast pencil movements covering more than one sample between two
    // updates, we draw a line going from v0 at t0 to v1 at t1.
    const auto interpolator = [t0, t1, v0 = mLastDragSampleValue,
@@ -382,7 +411,7 @@ UIHandle::Result SampleHandle::Drag
    };
    constexpr auto iChannel = 0u;
    mClickedTrack->SetFloatsWithinTimeRange(
-      start, end, iChannel, interpolator, narrowestSampleFormat);
+      editStart, editEnd, iChannel, interpolator, narrowestSampleFormat);
 
    mLastDragPixel = x1;
    mLastDragSampleValue = newLevel;
@@ -410,6 +439,7 @@ UIHandle::Result SampleHandle::Release
    //*************************************************
    //On up-click, send the state to the undo stack
    mClickedTrack.reset();       //Set this to NULL so it will catch improper drag events.
+   mClickedClip = nullptr;
    ProjectHistory::Get( *pProject ).PushState(XO("Moved Samples"),
       XO("Sample Edit"),
       UndoPush::CONSOLIDATE);
