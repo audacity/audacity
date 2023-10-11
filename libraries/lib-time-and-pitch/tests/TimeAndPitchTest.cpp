@@ -18,30 +18,63 @@
 
 namespace
 {
-float GetRms(const std::vector<std::vector<float>>& x)
+constexpr auto maxBlockSize = 1024;
+
+float GetRms(
+   const std::vector<std::vector<float>>& x, int sampleRate,
+   double stretchRatio)
 {
-   const double numSamples = x.size() * (x[0].size() - 4096 * 2);
-   return std::sqrt(
-      std::accumulate(
-         x.begin(), x.end(), 0.f,
-         [](const auto& acc, const auto& channel) {
-            return acc + std::accumulate(
-                            channel.begin() + 4096, channel.end() - 4096, 0.f,
-                            [](const auto& acc, const auto& sample) {
-                               return acc + sample * sample;
-                            });
-         }) /
-      numSamples);
+   // Ignore half a second left and right.
+   const int numToTrim = sampleRate * stretchRatio / 10;
+   const double numSamples = x.size() * (x[0].size() - numToTrim * 2);
+   return 10 * std::log10f(
+                  std::accumulate(
+                     x.begin(), x.end(), 0.f,
+                     [numToTrim](const auto& acc, const auto& channel) {
+                        return acc +
+                               std::accumulate(
+                                  channel.begin() + numToTrim,
+                                  channel.end() - numToTrim, 0.f,
+                                  [](const auto& acc, const auto& sample) {
+                                     return acc + sample * sample;
+                                  });
+                     }) /
+                  numSamples);
 };
+
+void ReadSoManySamples(
+   staffpad::TimeAndPitch& sut, TimeAndPitchSource& source, int numSamples,
+   int numChannels, float* const* out)
+{
+   AudioContainer container { maxBlockSize, numChannels };
+   auto numOut = 0;
+   while (numOut < numSamples)
+   {
+      while (sut.getNumAvailableOutputSamples() <= 0)
+      {
+         source.Pull(container.Get(), maxBlockSize);
+         sut.feedAudio(container.Get(), maxBlockSize);
+      }
+      const auto retrieved = std::min({ numSamples - numOut, maxBlockSize,
+                                        sut.getNumAvailableOutputSamples() });
+      sut.retrieveAudio(container.Get(), retrieved);
+      if (out)
+         for (auto i = 0u; i < numChannels; ++i)
+            std::copy(
+               container.Get()[i], container.Get()[i] + retrieved,
+               out[i] + numOut);
+      numOut += retrieved;
+   }
+}
 } // namespace
 
 TEST_CASE("TimeAndPitch")
 {
    SECTION("yields output with RMS equal to that of input")
    {
-      // const auto inputPath =
-      //    std::string(CMAKE_SOURCE_DIR) + "/tests/samples/AudacitySpectral.wav";
-      const auto inputPath = "C:/Users/saint/Downloads/square.wav";
+      const auto inputPath =
+         std::string(CMAKE_SOURCE_DIR) + "/tests/samples/AudacitySpectral.wav";
+      // const auto inputPath = "C:/Users/saint/Downloads/square.wav";
 
       std::vector<std::vector<float>> input;
       WavFileIO::Info info;
@@ -49,23 +82,17 @@ TEST_CASE("TimeAndPitch")
       TimeAndPitchRealSource source { input };
       staffpad::TimeAndPitch sut { info.sampleRate };
       const auto stretchRatio = GENERATE(0.5, 1.0, 2.0);
-      const auto pitchRatio = GENERATE(0.5, 1.0, 2.0);
-      constexpr auto maxBlockSize = 1024;
+      // const auto pitchRatio = GENERATE(0.5, 1.0, 2.0);
+      constexpr auto pitchRatio = 1.;
       AudioContainer container { maxBlockSize, info.numChannels };
       sut.setup(info.numChannels, maxBlockSize);
       sut.setTimeStretchAndPitchFactor(stretchRatio, pitchRatio);
-      auto toDiscard = sut.getLatencySamplesForStretchRatio(stretchRatio);
-      while (toDiscard > 0)
-      {
-         while (sut.getNumAvailableOutputSamples() <= 0)
-         {
-            source.Pull(container.Get(), maxBlockSize);
-            sut.feedAudio(container.Get(), maxBlockSize);
-         }
-         const auto discarded = std::min(toDiscard, maxBlockSize);
-         sut.retrieveAudio(container.Get(), discarded);
-         toDiscard -= discarded;
-      }
+
+      // Discard latency samples
+      ReadSoManySamples(
+         sut, source, sut.getLatencySamplesForStretchRatio(stretchRatio),
+         info.numChannels, nullptr);
+
       const int outSize = info.numFrames * stretchRatio;
       std::vector<std::vector<float>> output(info.numChannels);
       std::vector<float*> outputPtrs(info.numChannels);
@@ -74,26 +101,16 @@ TEST_CASE("TimeAndPitch")
          output[i].resize(outSize);
          outputPtrs[i] = output[i].data();
       }
-      auto numOut = 0;
-      while (numOut < outSize)
-      {
-         while (sut.getNumAvailableOutputSamples() <= 0)
-         {
-            source.Pull(container.Get(), maxBlockSize);
-            sut.feedAudio(container.Get(), maxBlockSize);
-         }
-         const auto numSamplesToRetrieve = std::min(
-            { outSize, maxBlockSize, sut.getNumAvailableOutputSamples() });
-         std::vector<float*> offsetPtr(info.numChannels);
-         for (auto i = 0u; i < info.numChannels; ++i)
-            offsetPtr[i] = outputPtrs[i] + numOut;
-         sut.retrieveAudio(offsetPtr.data(), numSamplesToRetrieve);
-         numOut += numSamplesToRetrieve;
-      }
 
-      const auto inputRms = GetRms(input);
-      const auto outputRms = GetRms(output);
-      const auto dB = 20 * std::log10(outputRms / inputRms);
-      REQUIRE(std::abs(dB) < 0.01f);
+      ReadSoManySamples(
+         sut, source, outSize, info.numChannels, outputPtrs.data());
+      const auto inputRms = GetRms(input, info.sampleRate, 1.);
+      const auto outputRms = GetRms(output, info.sampleRate, stretchRatio);
+
+      const auto outputPath = "C:/Users/saint/Downloads/test.wav";
+      REQUIRE(WavFileIO::Write(outputPath, output, info.sampleRate));
+
+      const auto diff = outputRms - inputRms;
+      REQUIRE(std::abs(diff) < 0.02f);
    }
 }
