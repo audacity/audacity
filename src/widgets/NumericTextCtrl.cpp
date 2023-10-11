@@ -1137,6 +1137,11 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
 
    wxString ctrlString = mCtrl->GetString();
    int field = mDigits[mCtrl->GetFocusedDigit()].field + 1;
+   // In bar formats, the size of the first field can automatically
+   // increase. So use the position of the focused digit from
+   // the end, rather than the start, to determine whether
+   // the focus has changed. See issue #5344.
+   int childIdFromEnd = mCtrl->mBoxes.size() - childId + 1;
 
    // Return the entire string including the control label
    // when the requested child ID is wxACC_SELF.  (Mainly when
@@ -1161,7 +1166,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
    // when the focus has been moved to another digit. This else if statement
    // ensures that this is the case, by using a cached value if nothing
    // has changed.
-   else if (childId == mLastDigit && ctrlString.IsSameAs(mLastCtrlString)) {
+   else if (childIdFromEnd == mLastDigit && ctrlString.IsSameAs(mLastCtrlString)) {
       *name = mCachedName;
    }
    else {
@@ -1194,13 +1199,13 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
                  wxT(", ") +     // comma inserts a slight pause
                  mCtrl->GetString().at(mDigits[childId - 1].pos);
          mLastField = field;
-         mLastDigit = childId;
+         mLastDigit = childIdFromEnd;
       }
       // The user has moved from one digit to another within a field so
       // just report the digit under the cursor.
-      else if (mLastDigit != childId) {
+      else if (mLastDigit != childIdFromEnd) {
          *name = mCtrl->GetString().at(mDigits[childId - 1].pos);
-         mLastDigit = childId;
+         mLastDigit = childIdFromEnd;
       }
       // The user has updated the value of a field, so report the field's
       // value only.
