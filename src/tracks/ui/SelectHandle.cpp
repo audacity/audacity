@@ -980,7 +980,7 @@ HitTestPreview SelectHandle::Preview
       }
    }
    if (tip.empty()) {
-      tip = XO("Click and drag to select audio");
+      tip = XO("Click and drag to select audio.");
    }
    if (HasEscape(pProject) && mUseSnap) {
       tip.Join(
