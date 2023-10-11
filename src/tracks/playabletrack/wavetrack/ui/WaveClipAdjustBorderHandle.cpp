@@ -83,8 +83,7 @@ double GetLeftAdjustLimit(const WaveTrack::Interval& interval,
                           bool isStretchMode)
 {
    if (!adjustingLeftBorder)
-      // A clip of one sample is invisible - who needs that ? Leave at least 2.
-      return interval.Start() + 2.0 / track.GetRate();
+      return interval.Start() + 1.0 / track.GetRate();
 
    const auto prevInterval = track.GetNextInterval(interval, PlaybackDirection::backward);
    if(isStretchMode)
@@ -101,8 +100,7 @@ double GetRightAdjustLimit(
    bool isStretchMode)
 {
    if (adjustingLeftBorder)
-      // A clip of one sample is invisible - who needs that ? Leave at least 2.
-      return interval.End() - 2.0 / track.GetRate();
+      return interval.End() - 1.0 / track.GetRate();
 
    const auto nextInterval = track.GetNextInterval(interval, PlaybackDirection::forward);
    if (isStretchMode)
@@ -199,6 +197,7 @@ public:
                  GetRightAdjustLimit(*mInterval, *mTrack, adjustLeftBorder, isStretchMode) }
       , mAdjustHandler { std::move(adjustHandler) }
    {
+      assert(mRange.first <= mRange.second);
       if(const auto trackList = mTrack->GetOwner())
       {
          mSnapManager = std::make_unique<SnapManager>(
