@@ -84,15 +84,11 @@ static CommandFlagOptions result{
 #ifdef __WXMAC__
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
       format = XO("Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-      // No need to explain what a help button is for.
-      // "\n\nClick the Help button to learn more about selection methods."
       );
 
 #else
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
       format = XO("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-      // No need to explain what a help button is for.
-      // "\n\nClick the Help button to learn more about selection methods."
       );
 #endif
 #endif
