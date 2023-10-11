@@ -33,7 +33,7 @@ TEST_CASE("StaffPadTimeAndPitch")
 
       std::optional<std::string> outputDir;
       // Uncomment this if you want to look at the output locally.
-      // outputDir = "C:/Users/saint/Downloads/StaffPadTimeAndPitchTestOut";
+      outputDir = "C:/Users/saint/Downloads/StaffPadTimeAndPitchTestOut";
 
       std::vector<std::vector<float>> input;
       WavFileIO::Info info;

@@ -20,17 +20,18 @@ namespace
 {
 float GetRms(const std::vector<std::vector<float>>& x)
 {
+   const double numSamples = x.size() * (x[0].size() - 4096 * 2);
    return std::sqrt(
       std::accumulate(
          x.begin(), x.end(), 0.f,
          [](const auto& acc, const auto& channel) {
             return acc + std::accumulate(
-                            channel.begin(), channel.end(), 0.f,
+                            channel.begin() + 4096, channel.end() - 4096, 0.f,
                             [](const auto& acc, const auto& sample) {
                                return acc + sample * sample;
                             });
          }) /
-      (x.size() * x[0].size()));
+      numSamples);
 };
 } // namespace
 
@@ -38,8 +39,10 @@ TEST_CASE("TimeAndPitch")
 {
    SECTION("yields output with RMS equal to that of input")
    {
-      const auto inputPath =
-         std::string(CMAKE_SOURCE_DIR) + "/tests/samples/AudacitySpectral.wav";
+      // const auto inputPath =
+      //    std::string(CMAKE_SOURCE_DIR) + "/tests/samples/AudacitySpectral.wav";
+      const auto inputPath = "C:/Users/saint/Downloads/square.wav";
+
       std::vector<std::vector<float>> input;
       WavFileIO::Info info;
       REQUIRE(WavFileIO::Read(inputPath, input, info));

@@ -93,7 +93,7 @@ private:
   int _availableOutputSamples = 0;
   int _numBins = fftSize / 2 + 1;
   double _overlap_a = overlap;
-  double _overlap_s = overlap;
+  double _gainFact;
 
   int _analysis_hop_counter = 0;
 
@@ -102,9 +102,6 @@ private:
   double _pitchFactor = 1.0;
 
   int _outBufferWriteOffset = 0;
-
-  const bool _useNewScaling;
-  const bool normalize_window; // compensate for ola window overlaps
 };
 
 } // namespace staffpad
