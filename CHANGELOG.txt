@@ -18,7 +18,7 @@ Audacity 3.4 adds a musical view, time stretching and a new exporter.
    * Simplified stereo tracks. Left and right channels now always have synchronized clip starts and ends, and the same sample rate in both channels. 
    * #5014 Added cursors trimming and stretching left and right, and changed the I-beam cursor to be less similar to either.
    * #4448 When importing audio, the project sample rate no longer changes.
-   * #5204 The spectrogram colors are now perceptually uniform, and the colormap has gotten a name: Roseus. It also can be used for dataviz outside of Audacity, see https://github.com/dofuuz/roseus for more info!
+   * #5204 The spectrogram colors are now perceptually uniform, and the colormap has gotten a name: Roseus. It also can be used for dataviz outside of Audacity, see https://github.com/dofuuz/roseus for more info! (Thanks, Myungchul Keum)
    * New defaults: The Time Signature toolbar now gets shown, the solo button is set to multi-track mode, time tracks have a wider starting range.
    * #5291 Unsquished the Audacity logo found in some places of the app.
    * #2330 Clicking on the border of two clips no longer merges them.
@@ -26,7 +26,7 @@ Audacity 3.4 adds a musical view, time stretching and a new exporter.
  Libraries
    * lib-time-and-pitch implements a time stretching algorithm originating in Staffpad.
    * Audacity now uses Conan 2.
-   * Continued extracting code into libraries and modules.
+   * Continued extracting code into libraries and modules, especially in the context of importing and exporting.
 
  Bug fixes
    * #3778 --nogap metadata no longer is ignored.
