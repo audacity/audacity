@@ -55,6 +55,8 @@ deps=(
    mpg123-devel
    wavpack-devel
    rapidjson
+   opusfile-devel
+   opus-devel
 )
 
 dnf install -y \
