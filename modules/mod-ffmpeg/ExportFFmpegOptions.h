@@ -30,7 +30,9 @@ enum FFmpegExposedFormat
    FMT_M4A,
    FMT_AC3,
    FMT_AMRNB,
+#ifdef SHOW_FFMPEG_OPUS_EXPORT
    FMT_OPUS,
+#endif
    FMT_WMA2,
    FMT_OTHER,
    FMT_LAST
