@@ -211,6 +211,8 @@ public:
    //! stretched or not.
    double GetPlayDuration() const;
 
+   bool IsEmpty() const;
+
    //! Real start time of the clip, quantized to raw sample rate (track's rate)
    sampleCount GetPlayStartSample() const;
    //! Real end time of the clip, quantized to raw sample rate (track's rate)

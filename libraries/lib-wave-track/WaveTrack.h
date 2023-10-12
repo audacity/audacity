@@ -1136,9 +1136,11 @@ private:
     */
    bool FormatConsistencyCheck() const;
 
+   //! Adds clip to the track. Clip should be not empty or to be a placeholder.
    //! Sets project tempo on clip upon push. Use this instead of
    //! `mClips.push_back`.
-   void InsertClip(WaveClipHolder clip);
+   //! @returns true on success
+   bool InsertClip(WaveClipHolder clip);
 
    void ApplyStretchRatioOne(
       double t0, double t1, const ProgressReporter& reportProgress);
