@@ -2687,6 +2687,12 @@ void WaveTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
    // File compatibility breaks have intervened long since, and the line above
    // would now have undesirable side effects
 #endif
+   // Check for zero-length clips and remove them
+   for (auto it = mClips.begin(); it != mClips.end();)
+      if ((*it)->IsEmpty())
+         it = mClips.erase(it);
+      else
+         ++it;
 }
 
 XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
