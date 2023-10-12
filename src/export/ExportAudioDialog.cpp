@@ -77,7 +77,7 @@ ChoiceSetting ExportAudioSplitNamePolicy { L"/ExportAudioDialog/SplitNamePolicy"
    0
 };
 
-IntSetting ExportAudioSampleRate { "L/ExportAudioDialog/SampleRate", 0 };//use project rate until overwritten
+IntSetting ExportAudioSampleRate { L"/ExportAudioDialog/SampleRate", 0 }; // use project rate until overwritten
 
 BoolSetting ExportAudioIncludeAudioBeforeFirstLabel { L"/ExportAudioDialog/IncludeAudioBeforeFirstLabel", false };
 

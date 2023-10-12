@@ -576,7 +576,14 @@ void ExportFilePanel::UpdateSampleRateList()
    }
    else if(customRate != 0)//sample rate not in the list
    {
-      mSampleRate = (*rates)[preferredItemIndex];
+      auto selectedRate = (*rates)[preferredItemIndex];
+      if (selectedRate < customRate)
+      {
+         if ((preferredItemIndex + 1) < rates->size())
+            selectedRate = (*rates)[++preferredItemIndex];
+      }
+
+      mSampleRate = selectedRate;
       selectedItemIndex = preferredItemIndex;
    }
    mRates->SetSelection(selectedItemIndex);
