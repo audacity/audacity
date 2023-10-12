@@ -3285,10 +3285,13 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
       }
       const auto intervalT0 = t0 - intervalStartTime;
       const auto intervalT1 = std::min(t1, interval->End()) - intervalStartTime;
-      auto newSegment =
-         interval->GetSampleView(intervalT0, intervalT1, mayThrow);
-      t0 += intervalT1 - intervalT0;
-      segments.push_back(std::move(newSegment));
+      if(intervalT1 > intervalT0)
+      {
+         auto newSegment =
+            interval->GetSampleView(intervalT0, intervalT1, mayThrow);
+         t0 += intervalT1 - intervalT0;
+         segments.push_back(std::move(newSegment));
+      }
       if (t0 == t1)
          break;
    }
