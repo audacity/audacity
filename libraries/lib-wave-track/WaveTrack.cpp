@@ -201,16 +201,10 @@ void WaveTrack::Interval::TrimRightTo(double t)
       GetClip(channel)->TrimRightTo(t);
 }
 
-void WaveTrack::Interval::StretchLeftTo(double t)
+void WaveTrack::Interval::Stretch(double duration, bool toLeft)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)
-      GetClip(channel)->StretchLeftTo(t);
-}
-
-void WaveTrack::Interval::StretchRightTo(double t)
-{
-   for(unsigned channel = 0; channel < NChannels(); ++channel)
-      GetClip(channel)->StretchRightTo(t);
+      GetClip(channel)->Stretch(duration, toLeft);
 }
 
 void WaveTrack::Interval::ApplyStretchRatio(

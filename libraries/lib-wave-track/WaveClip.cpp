@@ -274,6 +274,7 @@ size_t WaveClip::GetAppendBufferLen() const
 void WaveClip::OnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
+   const auto duration = GetPlayDuration();
    if (!mRawAudioTempo.has_value())
       // When we have tempo detection ready (either by header-file
       // read-up or signal analysis) we can use something smarter than that. In
@@ -281,50 +282,50 @@ void WaveClip::OnProjectTempoChange(
       // source tempo.
       mRawAudioTempo = oldTempo.value_or(newTempo);
 
-   if (oldTempo.has_value())
+   mProjectTempo = newTempo;
+   if(oldTempo.has_value())
    {
       const auto ratioChange = *oldTempo / newTempo;
-      mSequenceOffset *= ratioChange;
+      Stretch(std::floor(duration * ratioChange * mRate) / mRate);
+   }
+}
+
+void WaveClip::Stretch(double duration, bool toLeft)
+{
+   const auto dstSrcRatio =
+      mProjectTempo.has_value() && mRawAudioTempo.has_value() ?
+         *mRawAudioTempo / *mProjectTempo :
+         1.0;
+
+   const auto newRatio =
+      duration / ((GetNumSamples().as_double() / mRate - (mTrimLeft + mTrimRight) / mClipStretchRatio) * dstSrcRatio);
+
+   const auto ratioChange = newRatio / GetStretchRatio();
+
+   if(toLeft)
+   {
+      //Calculate clip end time as if pivot was not snapped,
+      //so that end time stays at the same position
+      const auto endTime = mSequenceOffset + mTrimLeft + GetPlayDuration();
+      mSequenceOffset = endTime - duration - mTrimLeft * ratioChange;
       mTrimLeft *= ratioChange;
       mTrimRight *= ratioChange;
-      StretchCutLines(ratioChange);
+      mClipStretchRatio = newRatio;
+      mEnvelope->SetOffset(mSequenceOffset);
       mEnvelope->RescaleTimesBy(ratioChange);
+      StretchCutLines(ratioChange);
    }
-   mProjectTempo = newTempo;
-}
-
-void WaveClip::StretchLeftTo(double to)
-{
-   const auto pet = GetPlayEndTime();
-   if (to >= pet)
-      return;
-   const auto oldPlayDuration = pet - GetPlayStartTime();
-   const auto newPlayDuration = pet - to;
-   const auto ratioChange = newPlayDuration / oldPlayDuration;
-   mSequenceOffset = pet - (pet - mSequenceOffset) * ratioChange;
-   mTrimLeft *= ratioChange;
-   mTrimRight *= ratioChange;
-   mClipStretchRatio *= ratioChange;
-   mEnvelope->SetOffset(mSequenceOffset);
-   mEnvelope->RescaleTimesBy(ratioChange);
-   StretchCutLines(ratioChange);
-}
-
-void WaveClip::StretchRightTo(double to)
-{
-   const auto pst = GetPlayStartTime();
-   if (to <= pst)
-      return;
-   const auto oldPlayDuration = GetPlayEndTime() - pst;
-   const auto newPlayDuration = to - pst;
-   const auto ratioChange = newPlayDuration / oldPlayDuration;
-   mSequenceOffset = pst - mTrimLeft * ratioChange;
-   mTrimLeft *= ratioChange;
-   mTrimRight *= ratioChange;
-   mClipStretchRatio *= ratioChange;
-   mEnvelope->SetOffset(mSequenceOffset);
-   mEnvelope->RescaleTimesBy(ratioChange);
-   StretchCutLines(ratioChange);
+   else
+   {
+      //Do not move pivot `mSequenceOffset + mTrimLift`!
+      mSequenceOffset += mTrimLeft * (1.0 - ratioChange);
+      mTrimLeft *= ratioChange;
+      mTrimRight *= ratioChange;
+      mClipStretchRatio = newRatio;
+      mEnvelope->SetOffset(mSequenceOffset);
+      mEnvelope->RescaleTimesBy(ratioChange);
+      StretchCutLines(ratioChange);
+   }
 }
 
 void WaveClip::StretchCutLines(double ratioChange)
@@ -1353,7 +1354,7 @@ sampleCount WaveClip::GetSequenceSamplesCount() const
 
 double WaveClip::GetPlayStartTime() const noexcept
 {
-   return SnapToTrackSample(mSequenceOffset + mTrimLeft);
+   return std::floor((mSequenceOffset + mTrimLeft) * mRate + 0.5) / mRate;
 }
 
 void WaveClip::SetPlayStartTime(double time)
@@ -1363,19 +1364,14 @@ void WaveClip::SetPlayStartTime(double time)
 
 double WaveClip::GetPlayEndTime() const
 {
-    const auto numSamples = GetNumSamples();
-    double maxLen = mSequenceOffset +
-                    ((numSamples + GetAppendBufferLen()).as_double()) *
-                       GetStretchRatio() / mRate -
-                    mTrimRight;
-    // JS: calculated value is not the length;
-    // it is a maximum value and can be negative; no clipping to 0
-    return SnapToTrackSample(maxLen);
+   return GetPlayStartTime() + GetPlayDuration();
 }
 
 double WaveClip::GetPlayDuration() const
 {
-   return GetPlayEndTime() - GetPlayStartTime();
+   const auto seqSamples = (GetNumSamples() + GetAppendBufferLen()).as_double();
+   const auto playSamples = seqSamples * GetStretchRatio() - (mTrimLeft + mTrimRight) * mRate;
+   return std::floor(playSamples + 0.5) / mRate;
 }
 
 bool WaveClip::IsEmpty() const
@@ -1431,21 +1427,21 @@ void WaveClip::TrimRight(double deltaTime)
 
 void WaveClip::TrimLeftTo(double to)
 {
-   mTrimLeft =
-      std::clamp(to, SnapToTrackSample(mSequenceOffset), GetPlayEndTime()) -
-      mSequenceOffset;
+   const auto delta = to - GetPlayStartTime();
+   mTrimLeft = std::max(mTrimLeft + delta, .0);
 }
 
 void WaveClip::TrimRightTo(double to)
 {
-   const auto endTime = SnapToTrackSample(GetSequenceEndTime());
-   mTrimRight = endTime - std::clamp(to, GetPlayStartTime(), endTime);
+   const auto delta = GetPlayEndTime() - to;
+   mTrimRight = std::max(mTrimRight + delta, .0);
 }
 
 double WaveClip::GetSequenceStartTime() const noexcept
 {
     // JS: mSequenceOffset is the minimum value and it is returned; no clipping to 0
     // Do we need to `SnapToTrackSample` before returning?
+    // Probably not - mSequenceOffset used as cutline offset 
     return mSequenceOffset;
 }
 
@@ -1541,11 +1537,11 @@ sampleCount WaveClip::CountSamples(double t0, double t1) const
 
 sampleCount WaveClip::TimeToSequenceSamples(double t) const
 {
-    if (t < GetSequenceStartTime())
-        return 0;
-    else if (t > GetSequenceEndTime())
-        return GetNumSamples();
-    return TimeToSamples(t - GetSequenceStartTime());
+   if (t < GetSequenceStartTime())
+      return 0;
+   if (t > GetSequenceEndTime())
+     return GetNumSamples();
+   return TimeToSamples(t - GetSequenceStartTime());
 }
 
 bool WaveClip::CheckInvariants() const

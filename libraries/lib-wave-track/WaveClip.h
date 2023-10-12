@@ -161,10 +161,10 @@ public:
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
 
+   void Stretch(double duration, bool toLeft = false);
+
    //! Stretches from left to the absolute time (if in expected range)
-   void StretchLeftTo(double to);
    //! Sets from the right to the absolute time (if in expected range)
-   void StretchRightTo(double to);
 
    double GetStretchRatio() const override;
 

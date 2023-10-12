@@ -959,8 +959,7 @@ public:
 
       void TrimLeftTo(double t);
       void TrimRightTo(double t);
-      void StretchLeftTo(double t);
-      void StretchRightTo(double t);
+      void Stretch(double duration, bool toLeft = false);
 
       void ApplyStretchRatio(const std::function<void(double)>& reportProgress);
       bool StretchRatioEquals(double value) const;

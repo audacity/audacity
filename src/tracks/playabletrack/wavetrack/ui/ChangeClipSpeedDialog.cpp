@@ -136,8 +136,11 @@ bool ChangeClipSpeedDialog::SetClipSpeedFromDialog()
    const auto start = mTrackInterval.Start();
    const auto end = mTrackInterval.End();
 
+   const auto rate = mTrack.GetRate();
+   const auto newDuration = std::floor((end - start) * mOldClipSpeed / mClipSpeed * rate + 0.5) / rate;
+
    const auto expectedEndTime =
-      start + (end - start) * mOldClipSpeed / mClipSpeed;
+      start + std::max(newDuration, 1.0 / rate);
 
    if (expectedEndTime >= maxEndTime)
    {
@@ -148,7 +151,7 @@ bool ChangeClipSpeedDialog::SetClipSpeedFromDialog()
       return false;
    }
 
-   mTrackInterval.StretchRightTo(expectedEndTime);
+   mTrackInterval.Stretch(newDuration);
    mOldClipSpeed = mClipSpeed = 100 / mTrackInterval.GetStretchRatio();
 
    {
