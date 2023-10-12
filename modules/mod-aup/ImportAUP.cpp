@@ -1179,7 +1179,7 @@ bool AUPImportFileHandle::HandleWaveBlock(XMLTagHandler *&handler)
          long long llvalue;
          if (!value.TryGet(llvalue) || (llvalue < 0))
          {
-            return SetError(XO("Unable to parse the waveblock 'start' attribute"));
+            return SetError(XO("Unable to parse the waveblock 'start' attribute."));
          }
       }
    }
