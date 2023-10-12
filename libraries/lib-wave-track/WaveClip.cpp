@@ -1373,6 +1373,11 @@ double WaveClip::GetPlayDuration() const
    return GetPlayEndTime() - GetPlayStartTime();
 }
 
+bool WaveClip::IsEmpty() const
+{
+   return std::floor(GetPlayDuration() * mRate + 0.5) < 2.0;
+}
+
 sampleCount WaveClip::GetPlayStartSample() const
 {
    return sampleCount { GetPlayStartTime() * mRate + 0.5 };
