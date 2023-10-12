@@ -1138,6 +1138,7 @@ private:
 
    //! Sets project tempo on clip upon push. Use this instead of
    //! `mClips.push_back`.
+   //! @pre clip->GetIsPlaceholder() || !clip->IsEmpty()
    void InsertClip(WaveClipHolder clip);
 
    void ApplyStretchRatioOne(
