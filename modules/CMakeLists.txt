@@ -41,6 +41,10 @@ if ( USE_FFMPEG )
    list ( APPEND MODULES mod-ffmpeg )
 endif()
 
+if ( USE_LIBOPUS AND USE_OPUSFILE AND USE_LIBOGG )
+   list ( APPEND MODULES mod-opus )
+endif()
+
 foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()
