@@ -6,9 +6,9 @@
   <project_license>GPL-3.0-only</project_license>
   <metadata_license>CC0-1.0</metadata_license>
   <name>Audacity</name>
-  <summary>Record and edit audio files</summary>
+  <summary>Audacity is the world's most popular audio editing and recording app</summary>
   <description>
-    <p>Audacity® is a free, easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux and other operating systems. The interface is translated into many languages.</p>
+    <p>Audacity is the world's most popular audio editing and recording app.</p>
     <p>You can use Audacity to:</p>
     <ul>
       <li>Record live audio</li>
@@ -17,6 +17,7 @@
       <li>Cut, copy, splice or mix sounds together</li>
       <li>Change the speed or pitch of a recording</li>
       <li>Apply a wide range of other effects to audio recordings</li>
+      <li>and much more!</li>
     </ul>
   </description>
   <categories>
@@ -25,39 +26,16 @@
   </categories>
   <content_rating type="oars-1.1" />
   <url type="homepage">https://www.audacityteam.org/</url>
-  <url type="bugtracker">https://bugzilla.audacityteam.org/</url>
+  <url type="bugtracker">https://github.com/audacity/audacity/issues</url>
   <url type="faq">https://manual.audacityteam.org/man/faq.html</url>
-  <url type="help">https://manual.audacityteam.org/</url>
-  <url type="translate">https://www.audacityteam.org/community/translators/</url>
-  <screenshots>
-    <screenshot type="default">
-      <image type="source">https://www.audacityteam.org/wp-content/uploads/2016/01/audacity-212-linux.png</image>
-    </screenshot>
-    <screenshot>
-      <image type="source">https://www.audacityteam.org/wp-content/uploads/2015/11/Audacity-2-2-0-on-Linux.png</image>
-    </screenshot>
-  </screenshots>
-  <update_contact>audacity-devel@lists.sourceforge.net</update_contact>
+  <url type="help">https://support.audacityteam.org/</url>
+  <url type="translate">https://support.audacityteam.org/community/contributing/translating</url>
   <releases>
-    <release version="2.3.0" date="2018-09-29">
+    <release version="3.4.0" date="2023-11-01">
      <description>
-        <p>New features in Audacity 2.3.0:</p>
-        <ul>
-          <li>New feature – Punch and Roll Recording.</li>
-          <li>Pinned-play-head can now be repositioned by dragging.</li>
-          <li>Play-at-speed now can be adjusted whilst playing.</li>
-          <li>Toolbars controlling volume and speed can now be resized for greater precision.</li>
-          <li>Macros (formerly Chains) substantially extended.</li>
-          <li>New Tools menu.</li>
-          <li>New Scriptables commands.</li>
-          <li>Nyquist gains AUD-DO command.</li>
-          <li>Nyquist effects are now translatable and translated.</li>
-          <li>More dialogs have help buttons now.</li>
-          <li>Increased legibility of trackname display.</li>
-          <li>Half-wave option for collapsed tracks.</li>
-          <li>Sliding Stretch.</li>
-          <li>Dialog (option) for entering labels.</li>
-        </ul>
+        <p>New in Audacity 3.4: Our first dedicated music release, featuring beats &amp; bars, time stretching, a new exporter and more!</p>
+        <p>Watch the <a href="https://audacityteam.org/3.4.0-video">Release video</a> or read the <a href="https://support.audacityteam.org/additional-resources/changelog"> changelog</a> to learn more.</p>
+        <p>The changelog also contains information about subsequent 3.4.x patches, should any be available.</p>
       </description>
     </release>
   </releases>
