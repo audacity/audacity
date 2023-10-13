@@ -89,6 +89,8 @@ BEGIN_EVENT_TABLE(EffectAmplify, wxEvtHandler)
    EVT_CHECKBOX(ID_Clip, EffectAmplify::OnClipCheckBox)
 END_EVENT_TABLE()
 
+EffectAmplify::Instance::~Instance() = default;
+
 EffectAmplify::EffectAmplify()
 {
    mAmp = Amp.def;
@@ -330,6 +332,13 @@ bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
    ClampRatio();
 
    return true;
+}
+
+std::shared_ptr<EffectInstance> EffectAmplify::MakeInstance() const
+{
+   // Cheat with const_cast to return an object that calls through to
+   // non-const methods of a stateful effect.
+   return std::make_shared<Instance>(const_cast<EffectAmplify&>(*this));
 }
 
 // EffectAmplify implementation
