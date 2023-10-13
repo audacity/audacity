@@ -331,7 +331,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       .Subscribe([this](const RealtimeEffectManagerMessage& msg)
       {
          if (auto pTrack = dynamic_cast<Track *>(msg.group))
-            //update "effects" button 
+            //update "effects" button
             RefreshTrack(pTrack);
       });
 
@@ -475,7 +475,13 @@ void TrackPanel::OnUndoReset(UndoRedoMessage message)
 ///  completing a repaint operation.
 void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 {
-   mLastDrawnSelectedRegion = mViewInfo->selectedRegion;
+   // If the selected region changes - we must repaint the tracks, because the
+   // selection is baked into track image
+   if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion)
+   {
+      mRefreshBacking = true;
+      mLastDrawnSelectedRegion = mViewInfo->selectedRegion;
+   }
 
    auto sw =
       FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::TrackPanel);
@@ -1443,7 +1449,7 @@ struct ChannelStack final : TrackPanelGroup {
                .emplace_back(yy, std::make_shared<HorizontalGroup>(hgroup));
             yy += kAffordancesAreaHeight;
          }
-         
+
          auto height = *pHeight++;
          rect.SetTop(yy);
          rect.SetHeight(height - kChannelSeparatorThickness);
