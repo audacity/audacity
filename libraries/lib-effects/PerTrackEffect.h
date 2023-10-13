@@ -20,7 +20,9 @@
 #include "MemoryX.h"
 #include "SampleCount.h"
 #include <functional>
+#include <memory>
 
+class EffectOutputTracks;
 class SampleTrack;
 
 //! Base class for Effects that treat each (mono or stereo) track independently
@@ -66,6 +68,12 @@ protected:
 
    sampleCount    mSampleCnt{};
 
+   // Pre-compute the output track list
+   std::shared_ptr<EffectOutputTracks> MakeOutputTracks();
+
+   // Clean up unnecessary output track list
+   void DestroyOutputTracks() const;
+
 private:
    using Buffers = AudioGraph::Buffers;
 
@@ -89,5 +97,8 @@ private:
       std::optional<sampleCount> genLength,
       double sampleRate, const SampleTrack &leader,
       Buffers &inBuffers, Buffers &outBuffers);
+
+   // TODO: put this in struct EffectContext? (Which doesn't exist yet)
+   mutable std::shared_ptr<EffectOutputTracks> mpOutputTracks;
 };
 #endif
