@@ -55,7 +55,7 @@ void ExportPluginRegistry::Initialize()
    using namespace Registry;
    static OrderingPreferenceInitializer init{
       PathStart,
-      { {wxT(""), wxT("PCM,MP3,OGG,FLAC,MP2,CommandLine,FFmpeg") } },
+      { {wxT(""), wxT("PCM,MP3,OGG,Opus,FLAC,WavPack,FFmpeg,MP2,CommandLine") } },
    };
 
    struct CreatePluginsVisitor final : Visitor {
