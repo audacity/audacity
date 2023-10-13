@@ -329,9 +329,14 @@ size_t Mixer::Process(const size_t maxToProcess)
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
          auto &sequence = upstream.GetSequence();
-         if (mApplyTrackGains)
-            for (size_t c = 0; c < mNumChannels; ++c)
-               gains[c] = sequence.GetChannelGain(c);
+         if (mApplyTrackGains) {
+            for (size_t c = 0; c < mNumChannels; ++c) {
+               if (mNumChannels > 1)
+                  gains[c] = sequence.GetChannelGain(c);
+               else
+                  gains[c] = sequence.GetChannelGain(j);
+            }
+         }
          const auto flags =
             findChannelFlags(upstream.MixerSpec(j), sequence, j);
          MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, result);
