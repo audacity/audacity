@@ -415,11 +415,13 @@ void PopulatePreferences()
          gPrefs->DeleteEntry("/GUI/ToolBars/Share Audio/W");
    }
 
-   // We need to reset the toolbar layout for 3.3
-   if (std::pair { vMajor, vMinor } < std::pair { 3, 3 })
+   // We need to reset the toolbar layout and force the splash screen for 3.4
+   if (std::pair { vMajor, vMinor } < std::pair { 3, 4 })
    {
       if (gPrefs->Exists(wxT("/GUI/ToolBars")))
          gPrefs->DeleteGroup(wxT("/GUI/ToolBars"));
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
    }
 
    // write out the version numbers to the prefs file for future checking
