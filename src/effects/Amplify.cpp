@@ -35,8 +35,10 @@
 #include <wx/valtext.h>
 #include <wx/log.h>
 
+#include "EffectOutputTracks.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "../widgets/valnum.h"
 
 
@@ -89,7 +91,11 @@ BEGIN_EVENT_TABLE(EffectAmplify, wxEvtHandler)
    EVT_CHECKBOX(ID_Clip, EffectAmplify::OnClipCheckBox)
 END_EVENT_TABLE()
 
-EffectAmplify::Instance::~Instance() = default;
+EffectAmplify::Instance::~Instance()
+{
+   // In case the dialog is cancelled before effect processing
+   static_cast<EffectAmplify&>(GetEffect()).DestroyOutputTracks();
+}
 
 EffectAmplify::EffectAmplify()
 {
@@ -183,8 +189,14 @@ OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings &settings)
 
 bool EffectAmplify::Init()
 {
+   auto range = inputTracks()->Selected<const WaveTrack>();
+   bool hasStretch = any_of(begin(range), end(range),
+      [this](auto *pTrack){
+         return WaveTrackUtilities::HasStretch(*pTrack, mT0, mT1); });
+   if (hasStretch)
+      range = MakeOutputTracks()->Get().Selected<const WaveTrack>();
    mPeak = 0.0;
-   for (auto t : inputTracks()->Selected<const WaveTrack>()) {
+   for (auto t : range) {
       for (const auto pChannel : t->Channels()) {
          auto pair = pChannel->GetMinMax(mT0, mT1); // may throw
          const float min = pair.first, max = pair.second;
