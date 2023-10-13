@@ -162,10 +162,11 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    assert(outTrack->IsLeader());
    outTrack->ConvertToSampleFormat(floatSample);
 
+   double denominator = track.GetChannelGain(0) + track.GetChannelGain(1);
    while (auto blockLen = mixer.Process()) {
       auto buffer = mixer.GetBuffer();
       for (auto i = 0; i < blockLen; i++)
-         ((float *)buffer)[i] /= 2.0;
+         ((float *)buffer)[i] /= denominator;
 
       // If mixing channels that both had only 16 bit effective format
       // (for example), and no gains or envelopes, still there should be
