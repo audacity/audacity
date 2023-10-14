@@ -13,8 +13,99 @@
 
 #include <cassert>
 
+#include <wx/dialog.h>
+#include <wx/stattext.h>
+
+#include "Sequence.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
+
 // private helper classes and functions
 namespace {
+
+   class ClipDebugInfoDialog : public wxDialog
+   {
+      wxStaticText* mOffset;
+      wxStaticText* mEndTime;
+      wxStaticText* mLeftTrim;
+      wxStaticText* mRightTrim;
+      wxStaticText* mStretchFactor;
+      wxStaticText* mLengthError;
+
+      AudacityProject& mProject;
+      std::weak_ptr<WaveClip> mClip;
+
+      Observer::Subscription mSelectionChangeSubscription;
+
+      std::unique_ptr<wxTimer> mTimer;
+
+   public:
+      ClipDebugInfoDialog(AudacityProject& project, wxWindow* parent = nullptr)
+         : wxDialog(parent, wxID_ANY, "Clip Debug Info"), mProject(project)
+      {
+         auto sizer = std::make_unique<wxGridSizer>(2);
+
+         sizer->Add(safenew wxStaticText(this, wxID_ANY, "Offset:"));
+         sizer->Add(mOffset = safenew wxStaticText(this, wxID_ANY, ""));
+
+         sizer->Add(safenew wxStaticText(this, wxID_ANY, "End time:"));
+         sizer->Add(mEndTime = safenew wxStaticText(this, wxID_ANY, ""));
+
+         sizer->Add(safenew wxStaticText(this, wxID_ANY, "Left trim:"));
+         sizer->Add(mLeftTrim = safenew wxStaticText(this, wxID_ANY, ""));
+
+         sizer->Add(safenew wxStaticText(this, wxID_ANY, "Right trim:"));
+         sizer->Add(mRightTrim = safenew wxStaticText(this, wxID_ANY, ""));
+            
+         sizer->Add(safenew wxStaticText(this, wxID_ANY, "Stretch factor:"));
+         sizer->Add(mStretchFactor = safenew wxStaticText(this, wxID_ANY, ""));
+
+         sizer->Add(safenew wxStaticText(this, wxID_ANY, "Length error:"));
+         sizer->Add(mLengthError = safenew wxStaticText(this, wxID_ANY, ""));
+
+         SetSizer(sizer.release());
+
+         mSelectionChangeSubscription =
+            ViewInfo::Get(project)
+               .selectedRegion
+               .Subscribe(*this, &ClipDebugInfoDialog::OnSelectedRegionChange);
+
+         Bind(wxEVT_TIMER, &ClipDebugInfoDialog::OnTimer, this);
+
+         mTimer = std::make_unique<wxTimer>(this);
+         mTimer->Start(33);
+      }
+
+      void OnSelectedRegionChange(NotifyingSelectedRegionMessage)
+      {
+         const auto selectedTracks = TrackList::Get(mProject).Selected<WaveTrack>();
+         if(selectedTracks.empty())
+            return;
+
+         const auto channel = (*selectedTracks.begin())->GetChannel(0);
+         auto& view = WaveChannelView::Get(*channel);
+         auto clip = view.GetSelectedClip();
+         if(auto lck = clip.lock())
+            mClip = clip;
+      }
+
+      void OnTimer(const wxTimerEvent&)
+      {
+         if(auto clip = mClip.lock())
+         {
+            auto numSamples = clip->GetSequence(0)->GetNumSamples().as_double() * clip->GetStretchRatio() -
+               (clip->GetTrimLeft() + clip->GetTrimRight()) * clip->GetRate();
+            auto lengthError = std::abs(numSamples - clip->GetPlayDuration() * clip->GetRate());
+            mOffset->SetLabel(wxString::Format("%.16f", clip->GetSequenceStartTime()));
+            mEndTime->SetLabel(wxString::Format("%.16f", clip->GetPivot() + clip->GetPlayDuration()));
+            mLeftTrim->SetLabel(wxString::Format("%.16f", clip->GetTrimLeft()));
+            mRightTrim->SetLabel(wxString::Format("%.16f", clip->GetTrimRight()));
+            mStretchFactor->SetLabel(wxString::Format("%.16f", clip->GetStretchRatio()));
+            mLengthError->SetLabel(wxString::Format("%.16f", lengthError));
+            mLengthError->SetForegroundColour(
+               lengthError > numSamples * std::numeric_limits<double>::epsilon() ? *wxRED : *wxBLACK);
+         }
+      }
+   };
 
 struct FoundTrack {
    const WaveTrack* waveTrack{};
@@ -744,6 +835,13 @@ void OnClipRight(const CommandContext &context)
    }
 }
 
+void OnClipDebugInfo(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto dialog = safenew ClipDebugInfoDialog(project, &ProjectWindow::Get(project));
+   dialog->Show();
+}
+
 // Menu definitions
 
 using namespace MenuTable;
@@ -769,7 +867,8 @@ BaseItemSharedPtr ClipSelectMenu()
          Options{ wxT("Alt+,"), XO("Select Previous Clip") } ),
       Command( wxT("SelNextClip"), XXO("N&ext Clip"), OnSelectNextClip,
          WaveTracksExistFlag(),
-         Options{ wxT("Alt+."), XO("Select Next Clip") } )
+         Options{ wxT("Alt+."), XO("Select Next Clip") } ),
+      Command( wxT("ClipDebugInfo"), XXO("Clip Debug Info"), OnClipDebugInfo, CommandFlag{})
    ) };
    return menu;
 }
@@ -811,7 +910,8 @@ BaseItemSharedPtr ExtraTimeShiftItems()
       Command( wxT("ClipLeft"), XXO("Time Shift &Left"), OnClipLeft,
          TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() ),
       Command( wxT("ClipRight"), XXO("Time Shift &Right"), OnClipRight,
-         TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() )
+         TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() ),
+      Command( wxT("ClipDebugInfo"), XXO("Clip Debug Info"), OnClipDebugInfo, CommandFlag{})
    ) };
    return items;
 }

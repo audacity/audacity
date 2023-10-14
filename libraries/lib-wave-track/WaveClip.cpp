@@ -1437,6 +1437,11 @@ void WaveClip::TrimRightTo(double to)
    mTrimRight = std::max(mTrimRight + delta, .0);
 }
 
+double WaveClip::GetPivot() const noexcept
+{
+   return mSequenceOffset + mTrimLeft;
+}
+
 double WaveClip::GetSequenceStartTime() const noexcept
 {
     // JS: mSequenceOffset is the minimum value and it is returned; no clipping to 0

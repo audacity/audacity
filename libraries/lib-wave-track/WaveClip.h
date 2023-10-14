@@ -189,6 +189,7 @@ public:
    void SetColourIndex(int index) { mColourIndex = index; }
    int GetColourIndex() const { return mColourIndex; }
 
+   double GetPivot() const noexcept;
    double GetSequenceStartTime() const noexcept;
    void SetSequenceStartTime(double startTime);
    double GetSequenceEndTime() const;
