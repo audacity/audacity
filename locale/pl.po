@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-13 08:18+0000\n"
-"PO-Revision-Date: 2023-10-10 18:00+0000\n"
+"PO-Revision-Date: 2023-10-16 03:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -815,7 +815,7 @@ msgstr "sekundy + milisekundy"
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000>01000 seconds"
-msgstr "01000,01000>01000 sekundy"
+msgstr "01000,01000<01000 sekundy"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -857,7 +857,7 @@ msgstr "0100 dni 024 g 060 m 060 s"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060>0100 s"
-msgstr "0100 g 060 m 060>0100 s"
+msgstr "0100 g 060 m 060<0100 s"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "centiseconds"
@@ -874,7 +874,7 @@ msgstr "setnych sekundy"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060>01000 s"
-msgstr "0100 g 060 m 060>01000 s"
+msgstr "0100 g 060 m 060<01000 s"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -886,7 +886,7 @@ msgstr "0100 g 060 m 060>01000 s"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+># samples"
-msgstr "0100 g 060 m 060 s+># sampli"
+msgstr "0100 g 060 m 060 s+<# sampli"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
@@ -920,7 +920,7 @@ msgstr "gg:mm:ss + klatki filmu (24 fps)"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
-msgstr "0100 g 060 m 060 s+>24 klatki"
+msgstr "0100 g 060 m 060 s+<24 klatki"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
 #. * frames) at 24 frames per second (commonly used for films)
@@ -952,7 +952,7 @@ msgstr "gg:mm:ss + porzucone klatki NTSC"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
-msgstr "0100 g 060 m 060 s+>30 klatek|N"
+msgstr "0100 g 060 m 060 s+<30 klatek|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
@@ -971,7 +971,7 @@ msgstr "gg:mm:ss + nieporzucone klatki NTSC"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
-msgstr "0100 g 060 m 060 s+>030 klatek| .999000999"
+msgstr "0100 g 060 m 060 s+<030 klatek| .999000999"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
 #. * TV frame rate (used for American / Japanese TV
@@ -1003,7 +1003,7 @@ msgstr "gg:mm:ss + klatki PAL (25 fps)"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
-msgstr "0100 g 060 m 060 s+>25 klatek"
+msgstr "0100 g 060 m 060 s+<25 klatek"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
 #. * TV frame rate (used for European TV)
@@ -1035,7 +1035,7 @@ msgstr "gg:mm:ss + klatki CDDA (75 fps)"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
-msgstr "0100 g 060 m 060 s+>75 klatek"
+msgstr "0100 g 060 m 060 s+<75 klatek"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
 #. * Audio frame rate (75 frames per second)
@@ -1059,7 +1059,7 @@ msgstr "01000,01000 klatek|75"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "010,01000>0100 Hz"
-msgstr "010,01000>0100 Hz"
+msgstr "010,01000<0100 Hz"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "centihertz"
@@ -1077,7 +1077,7 @@ msgstr "kHz"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000>01000 kHz|0.001"
-msgstr "01000>01000 kHz|0,001"
+msgstr "01000<01000 kHz|0,001"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hertz"
@@ -1090,7 +1090,7 @@ msgstr "herc"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "100>01000 octaves|1.442695041"
-msgstr "100>01000 oktaw|1,442695041"
+msgstr "100<01000 oktaw|1,442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
@@ -1111,7 +1111,7 @@ msgstr "półtonów + centów"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
-msgstr "1000 półtonów >0100 centów|17,312340491"
+msgstr "1000 półtonów <0100 centów|17,312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
@@ -1128,7 +1128,7 @@ msgstr "dekad"
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "10>01000 decades|0.434294482"
-msgstr "10>01000 dekad|0,434294482"
+msgstr "10<01000 dekad|0,434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
@@ -2193,7 +2193,7 @@ msgid ""
 "You can help us get Audacity ready for release by joining our "
 "[[https://www.audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"Możesz pomóc nam stworzyć gotowego do wydania Audacity, dołączając do naszej"
+"Możesz pomóc nam przygotować Audacity do wydania, dołączając do naszej"
 " [[https://www.audacityteam.org/community/|społeczności]].<hr><br><br>"
 
 #. i18n-hint: %s is replaced with Audacity version
@@ -3388,7 +3388,7 @@ msgid ""
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Audacity nie może znaleźć miejsca na przechowywanie plików tymczasowych.\n"
-"Audacity potrzebuje miejsca, gdzie automatyczne programy oczyszczania nie usuną plików tymczasowych.\n"
+"Audacity potrzebuje miejsca, w którym programy do automatycznego czyszczenia nie usuną plików tymczasowych.\n"
 "Podaj odpowiedni katalog w oknie dialogowym Ustawienia."
 
 #: src/AudacityApp.cpp
@@ -4456,7 +4456,7 @@ msgid ""
 "\n"
 "You are saving directly to a slow external storage device\n"
 msgstr ""
-"Nagrany dźwięk zaginął w oznaczonych miejscach. Możliwe przyczyny:\n"
+"Nagrany dźwięk został utracony w oznaczonych miejscach. Możliwe przyczyny:\n"
 "\n"
 "Inne aplikacje konkurują z Audacity o czas procesora\n"
 "\n"
@@ -4628,7 +4628,7 @@ msgstr "Cepstrum"
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%s window"
-msgstr "%s okno"
+msgstr "Okno %s"
 
 #: src/FreqWindow.cpp
 msgid "Linear frequency"
@@ -4900,12 +4900,12 @@ msgstr "Etykieta"
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/TimerRecordDialog.cpp
 msgid "Start Time"
-msgstr "Czas początku"
+msgstr "Czas rozpoczęcia"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/TimerRecordDialog.cpp
 msgid "End Time"
-msgstr "Czas końca"
+msgstr "Czas zakończenia"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
@@ -5650,7 +5650,7 @@ msgid ""
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
 msgstr ""
-"Sprawdzanie projektu znalazło nieciągłości w plikach podczas samoczynnego odzyskiwania.\n"
+"Sprawdzanie projektu znalazło nieciągłości w plikach podczas automatycznego odzyskiwania.\n"
 "\n"
 "Wybierz „Pomoc > Diagnostyka > Pokaż dziennik...”, aby zobaczyć szczegóły."
 
@@ -6719,19 +6719,19 @@ msgstr "099 dni 024 g 060 m 060 s"
 #. displayed is seconds.
 #: src/TimerRecordDialog.cpp
 msgid "Start Date and Time"
-msgstr "Data i czas początku"
+msgstr "Data i godzina rozpoczęcia"
 
 #: src/TimerRecordDialog.cpp
 msgid "Start Date"
-msgstr "Data początku"
+msgstr "Data rozpoczęcia"
 
 #: src/TimerRecordDialog.cpp
 msgid "End Date and Time"
-msgstr "Data i czas końca"
+msgstr "Data i godzina zakończenia"
 
 #: src/TimerRecordDialog.cpp
 msgid "End Date"
-msgstr "Data końca"
+msgstr "Data zakończenia"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save"
@@ -7695,11 +7695,11 @@ msgstr "Koniec zaznaczenia"
 
 #: src/commands/SelectCommand.cpp
 msgid "Start Time:"
-msgstr "Czas początku:"
+msgstr "Czas rozpoczęcia:"
 
 #: src/commands/SelectCommand.cpp
 msgid "End Time:"
-msgstr "Czas końca:"
+msgstr "Czas zakończenia:"
 
 #: src/commands/SelectCommand.cpp
 msgid "Select Frequencies"
@@ -8223,7 +8223,7 @@ msgstr "Zmień wysokość bez zmiany tempa"
 #: src/effects/ChangePitch.cpp
 #, c-format
 msgid "Estimated Start Pitch: %s%d (%.3f Hz)"
-msgstr "Szacowana początkowa wysokość: %s%d (%.3f Hz)"
+msgstr "Szacowana wysokość początkowa: %s%d (%.3f Hz)"
 
 #. i18n-hint: (noun) Musical pitch.
 #: src/effects/ChangePitch.cpp
@@ -8846,12 +8846,12 @@ msgstr "Pierwszy plan"
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "Time started = %2d hour(s), %2d minute(s), %.2f seconds."
-msgstr "Czas początku = %2d godzina(y), %2d minuta(y), %.2f sekundy."
+msgstr "Początek czasu = %2d godzina(y), %2d minuta(y), %.2f sekundy."
 
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "Time ended = %2d hour(s), %2d minute(s), %.2f seconds."
-msgstr "Czas końca = %2d godzina(y), %2d minuta(y), %.2f sekundy."
+msgstr "Koniec czasu = %2d godzina(y), %2d minuta(y), %.2f sekundy."
 
 #: src/effects/Contrast.cpp
 msgid "Background"
@@ -9802,11 +9802,11 @@ msgstr "Obcinanie"
 
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
-msgstr "Rozpocznij próg (&sample):"
+msgstr "Próg początkowy (&sample):"
 
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
-msgstr "Z&atrzymaj próg (sample):"
+msgstr "Próg k&ońcowy (sample):"
 
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -11676,8 +11676,8 @@ msgid ""
 "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
 "channels of the track do not match."
 msgstr ""
-"Niestety, wtyczka Vamp nie działa na ścieżkach stereo, gdzie poszczególne "
-"kanały nie pasują."
+"Niestety, wtyczek Vamp nie można uruchomić na ścieżkach stereo, w których"
+" poszczególne kanały ścieżki nie pasują do siebie."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -14278,7 +14278,7 @@ msgstr "Kanały:"
 #. i18n-hint: (noun)
 #: src/import/ImportRaw.cpp
 msgid "Start offset:"
-msgstr "Przesunięcie początku:"
+msgstr "Początkowe przesunięcie:"
 
 #: src/import/ImportRaw.cpp
 msgid "bytes"
@@ -15006,7 +15006,7 @@ msgstr "Wpisz, aby u&tworzyć etykietę (włącz/wyłącz)"
 
 #: src/menus/LabelMenus.cpp
 msgid "La&beled Audio"
-msgstr "Oznaczony &dźwięk"
+msgstr "Etykieta &dźwięku"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -15807,7 +15807,7 @@ msgstr "S&ortuj ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Start Time"
-msgstr "Według cza&su początku"
+msgstr "Według cza&su rozpoczęcia"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Name"
@@ -15815,7 +15815,7 @@ msgstr "Według &nazwy"
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync-&Lock Tracks (on/off)"
-msgstr "Synchronizuj-zab&lokuj ścieżki (włącz/wyłącz)"
+msgstr "Ścieżki z b&lokadą synchronizacji (włącz/wyłącz)"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Track"
@@ -21075,7 +21075,7 @@ msgstr "Używany, jeśli „Liczba taktów” = 0"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
-msgstr "Przesunięcie początku"
+msgstr "Przesunięcie czasu rozpoczęcia"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Silence before first beat"
