@@ -173,6 +173,7 @@ fallback_libraries=(
   libglib-2.0.so.0
   libgobject-2.0.so.0
   libgthread-2.0.so.0
+  libpixman-1.so.0 # https://github.com/audacity/audacity/issues/5327
 )
 
 for file in "${unwanted_files[@]}"; do
