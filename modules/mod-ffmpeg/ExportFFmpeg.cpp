@@ -199,6 +199,7 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> AMRNBOptions {
    }
 };
 
+#ifdef SHOW_FFMPEG_OPUS_EXPORT
 enum : int
 {
    OPUSOptionIDBitRate = 0,
@@ -322,6 +323,7 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
       }, wxT("/FileFormats/OPUSCutoff")
    },
 };
+#endif
 
 enum : int
 {
@@ -794,8 +796,10 @@ ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* lis
          AMRNBOptions,
          ExportOptionsEditor::SampleRateList {8000},
          listener);
+#ifdef SHOW_FFMPEG_OPUS_EXPORT
    case FMT_OPUS:
       return std::make_unique<PlainExportOptionsEditor>(OPUSOptions, listener);
+#endif
    case FMT_WMA2:
       return std::make_unique<PlainExportOptionsEditor>(
          WMAOptions,
@@ -1019,6 +1023,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
       mSampleRate = 8000;
       mEncAudioCodecCtx->SetBitRate(ExportPluginHelpers::GetParameterValue(parameters, AMRNBOptionIDBitRate, 12200));
       break;
+#ifdef SHOW_FFMPEG_OPUS_EXPORT
    case FMT_OPUS:
       options.Set("b", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDBitRate, "128000"), 0);
       options.Set("vbr", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDVBRMode, "on"), 0);
@@ -1028,6 +1033,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
       options.Set("cutoff", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDCutoff, "0"), 0);
       options.Set("mapping_family", mChannels <= 2 ? "0" : "255", 0);
       break;
+#endif
    case FMT_WMA2:
       mEncAudioCodecCtx->SetBitRate(ExportPluginHelpers::GetParameterValue(parameters, WMAOptionIDBitRate, 198000));
       if (!CheckSampleRate(

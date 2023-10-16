@@ -17,6 +17,7 @@ audacity_find_package(WavPack)
 audacity_find_package(Ogg OPTION_NAME libogg)
 audacity_find_package(FLAC OPTION_NAME libflac)
 audacity_find_package(Opus OPTION_NAME libopus)
+audacity_find_package(opusfile OPTION_NAME opusfile)
 audacity_find_package(Vorbis OPTION_NAME libvorbis)
 audacity_find_package(SndFile CONAN_PACKAGE_NAME libsndfile OPTION_NAME libsndfile)
 

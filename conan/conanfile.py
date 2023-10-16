@@ -163,6 +163,7 @@ class AudacityConan(ConanFile):
         AudacityDependency("ogg", "1.3.5"),
         AudacityDependency("flac", "1.4.2"),
         AudacityDependency("opus", "1.3.1"),
+        AudacityDependency("opusfile", "0.12", package_options={ "shared": False, "http": False }),
         AudacityDependency("vorbis", "1.3.7"),
         AudacityDependency("libsndfile", "1.0.31", package_options={ "programs": False }),
 

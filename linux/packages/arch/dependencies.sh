@@ -45,6 +45,8 @@ deps=(
    wxwidgets-gtk3
    vst3sdk
    rapidjson
+   opusfile
+   opus
 )
 
 pacman -Syu --noconfirm \

@@ -62,6 +62,7 @@ deps=(
    libegl1-mesa-dev
    libmpg123-dev
    libwavpack-dev
+   libopusfile-dev
 )
 
 apt-get update
