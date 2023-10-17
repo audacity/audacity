@@ -426,7 +426,7 @@ std::vector<long> AudioIOBase::GetSupportedPlaybackRates(int devIndex, double ra
    {
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
-      if (!(isDirectSound && RatesToTry[i] > 200000))
+      if (!(isDirectSound && irate > 200000))
          if (Pa_IsFormatSupported(NULL, &pars, irate) == 0)
             supported.push_back(irate);
    }
@@ -495,7 +495,7 @@ std::vector<long> AudioIOBase::GetSupportedCaptureRates(int devIndex, double rat
    {
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
-      if (!(isDirectSound && RatesToTry[i] > 200000))
+      if (!(isDirectSound && irate > 200000))
          if (Pa_IsFormatSupported(&pars, NULL, irate) == 0)
             supported.push_back(irate);
    }
