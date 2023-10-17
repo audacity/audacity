@@ -7135,15 +7135,6 @@ msgstr ""
 
 #: src/FreqWindow.cpp
 #, c-format
-msgid ""
-"Too much audio was selected. Only the first %.1f seconds of audio will be "
-"analyzed."
-msgstr ""
-"Вибрано надто велику звукову ділянку. Будуть проаналізовані лише перші %.1f "
-"секунд звуку."
-
-#: src/FreqWindow.cpp
-#, c-format
 msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
 msgstr "Вибрано надто велику звукову ділянку. Будуть проаналізовані лише перші %.1f секунд звуку."
 
