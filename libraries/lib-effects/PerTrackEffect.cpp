@@ -65,18 +65,27 @@ bool PerTrackEffect::Process(
    EffectInstance &instance, EffectSettings &settings) const
 {
    auto pThis = const_cast<PerTrackEffect *>(this);
-   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
+
+   // Destroy any pre-formed output tracks when done
+   auto pOutputs = mpOutputTracks.get();
+
+   std::optional<EffectOutputTracks> outputs;
+   if (!pOutputs)
+      pOutputs = &outputs.emplace(*mTracks, GetType(),
+         EffectOutputTracks::TimeInterval{ mT0, mT1 }, true);
+
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {
       auto &myInstance = dynamic_cast<Instance&>(instance);
-      bGoodResult = pThis->ProcessPass(outputs.Get(), myInstance, settings);
+      bGoodResult = pThis->ProcessPass(pOutputs->Get(), myInstance, settings);
       // mPass = 2;
       if (bGoodResult && DoPass2())
-         bGoodResult = pThis->ProcessPass(outputs.Get(), myInstance, settings);
+         bGoodResult = pThis->ProcessPass(pOutputs->Get(), myInstance, settings);
    }
    if (bGoodResult)
-      outputs.Commit();
+      pOutputs->Commit();
+   DestroyOutputTracks();
    return bGoodResult;
 }
 
@@ -358,4 +367,16 @@ bool PerTrackEffect::ProcessTrack(int channel, const Factory &factory,
 
    AudioGraph::Task task{ *pSource, outBuffers, sink };
    return task.RunLoop();
+}
+
+std::shared_ptr<EffectOutputTracks> PerTrackEffect::MakeOutputTracks()
+{
+   return mpOutputTracks =
+      std::make_shared<EffectOutputTracks>(*mTracks, GetType(),
+         EffectOutputTracks::TimeInterval{ mT0, mT1 }, true);
+}
+
+void PerTrackEffect::DestroyOutputTracks() const
+{
+   mpOutputTracks.reset();
 }

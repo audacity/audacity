@@ -63,7 +63,14 @@ public:
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+
 private:
+   struct Instance : StatefulPerTrackEffect::Instance {
+      using StatefulPerTrackEffect::Instance::Instance;
+      ~Instance() override;
+   };
+
    void ClampRatio();
 
    // EffectAmplify implementation
