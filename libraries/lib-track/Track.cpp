@@ -146,18 +146,8 @@ void Track::SetIndex(int index)
 
 void Track::SetLinkType(LinkType linkType, bool completeList)
 {
-   auto pList = mList.lock();
-   if (pList && pList->mPendingUpdates && !pList->mPendingUpdates->empty()) {
-      auto orig = pList->FindById( GetId() );
-      if (orig && orig != this) {
-         orig->SetLinkType(linkType);
-         return;
-      }
-   }
-
    DoSetLinkType(linkType, completeList);
-
-   if (pList) {
+   if (const auto pList = mList.lock()) {
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
@@ -1059,7 +1049,6 @@ void TrackList::UpdatePendingTracks()
             updater(*pendingTrack, *src);
       }
       ++pUpdater;
-      pendingTrack->DoSetLinkType(src->GetLinkType());
    }
 }
 
