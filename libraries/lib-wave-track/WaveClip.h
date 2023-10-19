@@ -178,14 +178,6 @@ public:
    // the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
 
-   /*!
-    * @brief Renders the stretching of the clip (preserving duration). Clip must
-    * be part of a project and know its tempo.
-    * @pre mProjectTempo.has_value()
-    * @post GetStretchRatio() == 1
-    */
-   void ApplyStretchRatio(const ProgressReporter& reportProgress);
-
    void SetColourIndex(int index) { mColourIndex = index; }
    int GetColourIndex() const { return mColourIndex; }
 
