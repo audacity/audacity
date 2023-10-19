@@ -471,8 +471,8 @@ void WaveClip::UpdateEnvelopeTrackLen()
 }
 
 /*! @excsafety{Strong} */
-std::shared_ptr<SampleBlock> WaveClip::AppendNewBlock(
-   samplePtr buffer, sampleFormat format, size_t len)
+std::shared_ptr<SampleBlock>
+WaveClip::AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len)
 {
    // This is a special use function for legacy files only and this assertion
    // does not need to be relaxed

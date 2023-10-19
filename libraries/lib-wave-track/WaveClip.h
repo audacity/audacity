@@ -448,8 +448,8 @@ public:
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
    //! @pre `GetWidth() == 1`
-   std::shared_ptr<SampleBlock> AppendNewBlock(
-      samplePtr buffer, sampleFormat format, size_t len);
+   std::shared_ptr<SampleBlock>
+   AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks
    //! @pre `GetWidth() == 1`
