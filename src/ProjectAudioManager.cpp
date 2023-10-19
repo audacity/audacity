@@ -24,6 +24,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "DefaultPlaybackPolicy.h"
 #include "Meter.h"
 #include "Mix.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -812,6 +813,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
       }
    };
 
+   auto &pendingTracks = PendingTracks::Get(project);
+
    {
       if (appendRecord) {
          // Append recording:
@@ -855,7 +858,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // Get a copy of the track to be appended, to be pushed into
             // undo history only later.
             const auto pending = static_cast<WaveTrack*>(
-               trackList.RegisterPendingChangedTrack(updater, wt)
+               pendingTracks.RegisterPendingChangedTrack(updater, wt)
             );
             // End of current track is before or at recording start time.
             // Less than or equal, not just less than, to ensure a clip boundary.
@@ -882,7 +885,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             transportSequences.captureSequences
                .push_back(pending->SharedPointer<WaveTrack>());
          }
-         trackList.UpdatePendingTracks();
+         pendingTracks.UpdatePendingTracks();
       }
 
       if (transportSequences.captureSequences.empty()) {
@@ -961,7 +964,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                ChannelView::Get(*channel).SetMinimized(minimizeChannelView);
             }
          }
-         trackList.RegisterPendingNewTracks(std::move(*newTracks));
+         pendingTracks.RegisterPendingNewTracks(std::move(*newTracks));
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(project).Set(first);
          if (!trackList.empty())
@@ -1057,7 +1060,7 @@ bool ProjectAudioManager::Paused() const
 void ProjectAudioManager::CancelRecording()
 {
    const auto project = &mProject;
-   TrackList::Get( *project ).ClearPendingTracks();
+   PendingTracks::Get(*project).ClearPendingTracks();
 }
 
 void ProjectAudioManager::OnAudioIORate(int rate)
@@ -1126,7 +1129,7 @@ void ProjectAudioManager::OnAudioIONewBlocks()
 void ProjectAudioManager::OnCommitRecording()
 {
    const auto project = &mProject;
-   TrackList::Get( *project ).ApplyPendingTracks();
+   PendingTracks::Get(*project).ApplyPendingTracks();
 }
 
 void ProjectAudioManager::OnSoundActivationThreshold()

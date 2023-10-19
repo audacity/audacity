@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Envelope.h"
 #include "../../../EnvelopeEditor.h"
 #include "../../../HitTestResult.h"
+#include "PendingTracks.h"
 #include "Theme.h"
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelDrawingContext.h"
@@ -158,6 +159,8 @@ void TimeTrackView::Draw(
    const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassTracks ) {
+      const auto artist = TrackArtist::Get(context);
+      const auto &pendingTracks = *artist->pPendingTracks;
       const auto pTrack = FindTrack();
       const auto pList = pTrack->GetOwner();
       if (!pList)
@@ -183,7 +186,7 @@ void TimeTrackView::Draw(
       ruler.SetLabelEdges(false);
 
       const auto tt = std::static_pointer_cast<const TimeTrack>(
-         pTrack->SubstitutePendingChangedTrack());
+         pendingTracks.SubstitutePendingChangedTrack(*pTrack));
       DrawTimeTrack(context, *tt, ruler, rect);
    }
    CommonChannelView::Draw(context, rect, iPass);

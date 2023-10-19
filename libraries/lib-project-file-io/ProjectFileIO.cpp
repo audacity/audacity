@@ -24,6 +24,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "CodeConversions.h"
 #include "DBConnection.h"
 #include "FileNames.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSerializer.h"
@@ -1773,6 +1774,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
 
    ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
+   auto &pendingTracks = PendingTracks::Get(proj);
    tracklist.Any().Visit([&](const Track &t) {
       auto useTrack = &t;
       if (recording) {
@@ -1781,7 +1783,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
          // regular track list.  That is the one that we want to back up.
          // SubstitutePendingChangedTrack() fetches the shadow, if the track has
          // one, else it gives the same track back.
-         useTrack = t.SubstitutePendingChangedTrack().get();
+         useTrack = pendingTracks.SubstitutePendingChangedTrack(t).get();
       }
       else if (useTrack->GetId() == TrackId{}) {
          // This is a track added during a non-appending recording that is

@@ -24,6 +24,7 @@ Paul Licameli split from WaveChannelView.cpp
 #include "../../../ui/BrushHandle.h"
 
 #include "AColor.h"
+#include "PendingTracks.h"
 #include "Prefs.h"
 #include "NumberScale.h"
 #include "../../../../TrackArt.h"
@@ -888,12 +889,13 @@ void SpectrumView::Draw(
    TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassTracks ) {
+      const auto artist = TrackArtist::Get(context);
+      const auto &pendingTracks = *artist->pPendingTracks;
+
       auto &dc = context.dc;
  
       const auto wt = std::static_pointer_cast<const WaveTrack>(
-         FindTrack()->SubstitutePendingChangedTrack());
-
-      const auto artist = TrackArtist::Get( context );
+         pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();

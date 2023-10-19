@@ -9,11 +9,12 @@
  **********************************************************************/
 #include "PendingTracks.h"
 #include "Project.h"
+#include "Track.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory
 sPendingTracksKey{
   [](AudacityProject &project){
-     return std::make_shared<PendingTracks>();
+     return std::make_shared<PendingTracks>(project);
    }
 };
 
@@ -27,4 +28,51 @@ const PendingTracks &PendingTracks::Get(const AudacityProject &project)
    return Get(const_cast<AudacityProject &>(project));
 }
 
+PendingTracks::PendingTracks(AudacityProject &project)
+   : mTracks{ TrackList::Get(project) }
+{}
+
 PendingTracks::~PendingTracks() = default;
+
+void PendingTracks::RegisterPendingNewTracks(TrackList &&list)
+{
+   mTracks.RegisterPendingNewTracks(std::move(list));
+}
+
+std::shared_ptr<Track>
+PendingTracks::SubstitutePendingChangedTrack(Track &track) const
+{
+   return track.SubstitutePendingChangedTrack();
+}
+
+std::shared_ptr<const Track>
+PendingTracks::SubstitutePendingChangedTrack(const Track &track) const
+{
+   return track.SubstitutePendingChangedTrack();
+}
+
+std::shared_ptr<const Track>
+PendingTracks::SubstituteOriginalTrack(const Track &track) const
+{
+   return track.SubstituteOriginalTrack();
+}
+
+Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)
+{
+   return mTracks.RegisterPendingChangedTrack(move(updater), src);
+}
+
+void PendingTracks::UpdatePendingTracks()
+{
+   mTracks.UpdatePendingTracks();
+}
+
+void PendingTracks::ClearPendingTracks()
+{
+   mTracks.ClearPendingTracks();
+}
+
+bool PendingTracks::ApplyPendingTracks()
+{
+   return mTracks.ApplyPendingTracks();
+}

@@ -16,6 +16,7 @@ Paul Licameli split from class TrackView (now called ChannelView)
 #include "ZoomHandle.h"
 #include "../ui/SelectHandle.h"
 #include "AColor.h"
+#include "PendingTracks.h"
 #include "../../ProjectSettings.h"
 #include "Track.h"
 #include "../../TrackArtist.h"
@@ -81,8 +82,14 @@ std::shared_ptr<TrackPanelCell> CommonChannelView::ContextMenuDelegate()
 int CommonChannelView::GetMinimizedHeight() const
 {
    auto height = TrackInfo::MinimumTrackHeight();
-   const auto pTrack = FindTrack();
-   auto channels = TrackList::Channels(pTrack->SubstituteOriginalTrack().get());
+   std::shared_ptr<const Track> pTrack = FindTrack();
+   if (const auto pList = pTrack->GetOwner()) {
+      if (const auto p = pList->GetOwner()) {
+         pTrack = PendingTracks::Get(*p).SubstituteOriginalTrack(*pTrack);
+      }
+   }
+
+   auto channels = TrackList::Channels(pTrack.get());
    auto nChannels = channels.size();
    auto begin = channels.begin();
    auto index =

@@ -36,6 +36,7 @@
 #include "WaveChannelView.h"//need only ClipParameters
 #include "WaveTrackAffordanceHandle.h"
 
+#include "PendingTracks.h"
 #include "ProjectHistory.h"
 #include "../../../../ProjectSettings.h"
 #include "SelectionState.h"
@@ -192,7 +193,8 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         );
     }
 
-    const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
+    const auto waveTrack = std::static_pointer_cast<WaveTrack>(
+       PendingTracks::Get(*pProject).SubstitutePendingChangedTrack(*track));
     auto& zoomInfo = ViewInfo::Get(*pProject);
     const auto intervals = waveTrack->Intervals();
     for(auto it = intervals.begin(); it != intervals.end(); ++it)
@@ -234,12 +236,14 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
     if (iPass == TrackArtist::PassBackground) {
         auto track = FindTrack();
         const auto artist = TrackArtist::Get(context);
+        const auto &pendingTracks = *artist->pPendingTracks;
 
         TrackArt::DrawBackgroundWithSelection(context, rect, track.get(), artist->blankSelectedBrush, artist->blankBrush);
 
         mVisibleIntervals.clear();
 
-        const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
+        const auto waveTrack = std::static_pointer_cast<WaveTrack>(
+           pendingTracks.SubstitutePendingChangedTrack(*track));
         const auto& zoomInfo = *artist->pZoomInfo;
         {
             wxDCClipper dcClipper(context.dc, rect);
