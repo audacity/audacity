@@ -41,6 +41,7 @@
 #include "RealtimeEffectState.h"
 #include "effects/RealtimeEffectStateUI.h"
 #include "UndoManager.h"
+#include "PendingTracks.h"
 #include "Prefs.h"
 #include "BasicUI.h"
 #include "ListNavigationEnabled.h"
@@ -1140,7 +1141,8 @@ RealtimeEffectPanel::RealtimeEffectPanel(
    SetSizerAndFit(vSizer.release());
 
    Bind(wxEVT_CHAR_HOOK, &RealtimeEffectPanel::OnCharHook, this);
-   mTrackListChanged = TrackList::Get(mProject).Subscribe([this](const TrackListEvent& evt) {
+   mTrackListChanged =
+   PendingTracks::Get(mProject).Subscribe([this](const TrackListEvent& evt) {
          auto track = evt.mpTrack.lock();
          auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(track);
 

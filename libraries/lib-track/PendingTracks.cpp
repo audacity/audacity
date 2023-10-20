@@ -30,6 +30,21 @@ const PendingTracks &PendingTracks::Get(const AudacityProject &project)
 
 PendingTracks::PendingTracks(AudacityProject &project)
    : mTracks{ TrackList::Get(project) }
+   , mTrackListSubscription { mTracks.Subscribe(
+      [this](const TrackListEvent &event){
+         switch (event.mType) {
+         case TrackListEvent::PERMUTED:
+         case TrackListEvent::RESIZING:
+         case TrackListEvent::ADDITION:
+         case TrackListEvent::DELETION:
+            UpdatePendingTracks();
+            break;
+         default:
+            break;
+         }
+         // Pass along to downstream listeners
+         Publish(event);
+   })}
 {}
 
 PendingTracks::~PendingTracks() = default;

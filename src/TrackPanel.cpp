@@ -300,8 +300,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mTrackListSubscription =
-   mTracks->Subscribe([this](const TrackListEvent &event){
+   mTrackListSubscription = PendingTracks::Get(*GetProject())
+   .Subscribe([this](const TrackListEvent &event){
       switch (event.mType) {
       case TrackListEvent::RESIZING:
       case TrackListEvent::ADDITION:

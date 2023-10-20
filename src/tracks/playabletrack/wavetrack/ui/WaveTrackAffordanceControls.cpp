@@ -18,6 +18,7 @@
 #include "CommandFlag.h"
 #include "CommandFunctors.h"
 #include "MenuRegistry.h"
+#include "PendingTracks.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
@@ -36,7 +37,6 @@
 #include "WaveChannelView.h"//need only ClipParameters
 #include "WaveTrackAffordanceHandle.h"
 
-#include "PendingTracks.h"
 #include "ProjectHistory.h"
 #include "../../../../ProjectSettings.h"
 #include "SelectionState.h"
@@ -144,19 +144,20 @@ WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<T
     : CommonTrackCell{ pTrack, 0 }
     , mClipNameFont{ wxFontInfo{} }
 {
-    if (auto trackList = pTrack->GetOwner())
-    {
-        mTrackListEventSubscription = trackList->Subscribe(
+   if (auto trackList = pTrack->GetOwner()) {
+      if (auto pProject = trackList->GetOwner()) {
+         mTrackListEventSubscription = PendingTracks(*pProject).Subscribe(
             *this, &WaveTrackAffordanceControls::OnTrackListEvent);
-        if(auto project = trackList->GetOwner())
-        {
+         if(auto project = trackList->GetOwner())
+         {
             auto& viewInfo = ViewInfo::Get(*project);
             mSelectionChangeSubscription =
-                viewInfo.selectedRegion.Subscribe(
-                    *this,
-                    &WaveTrackAffordanceControls::OnSelectionChange);
-        }
-    }
+            viewInfo.selectedRegion.Subscribe(
+               *this,
+               &WaveTrackAffordanceControls::OnSelectionChange);
+         }
+      }
+   }
 }
 
 std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMouseState& state, const AudacityProject* pProject)

@@ -11,13 +11,16 @@
 #define __AUDACITY_PENDING_TRACKS__
 
 #include "ClientData.h"
+#include "Observer.h"
 
 class AudacityProject;
 class Track;
 class TrackList;
+struct TrackListEvent;
 
 class TRACK_API PendingTracks final
    : public ClientData::Base
+   , public Observer::Publisher<TrackListEvent>
 {
 public:
    static PendingTracks &Get(AudacityProject &project);
@@ -87,6 +90,7 @@ public:
 
 private:
    TrackList &mTracks;
+   Observer::Subscription mTrackListSubscription;
 };
 
 #endif

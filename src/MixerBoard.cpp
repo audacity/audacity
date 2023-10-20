@@ -37,6 +37,7 @@
 #include "CommonCommandFlags.h"
 #include "KeyboardCapture.h"
 #include "prefs/GUISettings.h" // for RTL_WORKAROUND
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
@@ -955,7 +956,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
       .Subscribe(*this, &MixerBoard::OnTimer);
 
    mTrackPanelSubscription =
-   mTracks->Subscribe([this](const TrackListEvent &event){
+   PendingTracks::Get(*mProject).Subscribe([this](const TrackListEvent &event){
       switch (event.mType) {
       case TrackListEvent::SELECTION_CHANGE:
       case TrackListEvent::TRACK_DATA_CHANGE:

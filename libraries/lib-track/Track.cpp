@@ -448,8 +448,6 @@ void TrackList::RecalcPositions(TrackNodePointer node)
       t = *n;
       t->SetIndex(i++);
    }
-
-   UpdatePendingTracks();
 }
 
 void TrackList::QueueEvent(TrackListEvent event)
