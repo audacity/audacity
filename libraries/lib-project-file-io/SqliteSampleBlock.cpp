@@ -20,6 +20,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 
 #include "SampleBlock.h" // to inherit
 #include "UndoManager.h"
+#include "UndoTracks.h"
 #include "WaveTrack.h"
 
 #include "SentryHelper.h"
@@ -1067,7 +1068,7 @@ static size_t EstimateRemovedBlocks(
    // Collect ids that survive
    SampleBlockIDSet wontDelete;
    auto f = [&](const UndoStackElem &elem) {
-      if (auto pTracks = TrackList::FindUndoTracks(elem))
+      if (auto pTracks = UndoTracks::Find(elem))
          InspectBlocks(*pTracks, {}, &wontDelete);
    };
    manager.VisitStates(f, 0, begin);
@@ -1079,7 +1080,7 @@ static size_t EstimateRemovedBlocks(
    // Collect ids that won't survive (and are not negative pseudo ids)
    SampleBlockIDSet seen, mayDelete;
    manager.VisitStates([&](const UndoStackElem &elem) {
-      if (auto pTracks = TrackList::FindUndoTracks(elem)) {
+      if (auto pTracks = UndoTracks::Find(elem)) {
          InspectBlocks(*pTracks,
             [&](const SampleBlock &block){
                auto id = block.GetBlockID();

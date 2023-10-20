@@ -36,6 +36,7 @@ undo memory so as to free up space.
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
+#include "UndoTracks.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
@@ -90,7 +91,7 @@ struct SpaceUsageCalculator {
       manager.VisitStates(
          [this, &seen](const UndoStackElem &elem) {
             // Scan all tracks at current level
-            if (auto pTracks = TrackList::FindUndoTracks(elem))
+            if (auto pTracks = UndoTracks::Find(elem))
                space.push_back(CalculateUsage(*pTracks, seen));
          },
          true // newest state first

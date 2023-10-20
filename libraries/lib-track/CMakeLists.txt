@@ -26,6 +26,8 @@ set( SOURCES
    Track.h
    TrackAttachment.cpp
    TrackAttachment.h
+   UndoTracks.cpp
+   UndoTracks.h
 )
 set( LIBRARIES
    lib-channel-interface

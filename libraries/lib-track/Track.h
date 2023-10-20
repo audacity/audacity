@@ -41,7 +41,6 @@ using TrackArray = std::vector< Track* >;
 
 class TrackList;
 using TrackListHolder = std::shared_ptr<TrackList>;
-struct UndoStackElem;
 
 using ListOfTracks = std::list< std::shared_ptr< Track > >;
 
@@ -1004,8 +1003,6 @@ class TRACK_API TrackList final
  public:
    static TrackList &Get( AudacityProject &project );
    static const TrackList &Get( const AudacityProject &project );
-
-   static TrackList *FindUndoTracks(const UndoStackElem &state);
 
    // Create an empty TrackList
    // Don't call directly -- use Create() instead
