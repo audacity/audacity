@@ -390,13 +390,6 @@ void TrackList::Swap(TrackList &that)
    const auto self = shared_from_this();
    const auto otherSelf = that.shared_from_this();
    SwapLOTs( *this, self, that, otherSelf );
-
-   assert(!GetOwner() && !that.GetOwner()); // precondition
-   // which implies (see constructor)
-   assert(!this->mPendingUpdates);
-   assert(!that.mPendingUpdates);
-
-   mUpdaters.swap(that.mUpdaters);
 }
 
 TrackList::~TrackList()
