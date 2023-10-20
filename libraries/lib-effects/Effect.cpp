@@ -66,13 +66,6 @@ TranslatableString Effect::GetDescription() const
    return {};
 }
 
-// EffectDefinitionInterface implementation
-
-EffectType Effect::GetType() const
-{
-   return EffectTypeNone;
-}
-
 EffectFamilySymbol Effect::GetFamily() const
 {
    // Unusually, the internal and visible strings differ for the built-in
