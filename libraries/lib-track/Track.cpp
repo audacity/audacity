@@ -808,8 +808,6 @@ void TrackList::Clear(bool sendEvent)
 
    if (mPendingUpdates)
       mPendingUpdates = Temporary(nullptr);
-
-   mUpdaters.clear();
 }
 
 /// Return a track in the list that comes after Track t
@@ -1009,8 +1007,7 @@ double TrackList::GetEndTime() const
       std::numeric_limits<double>::lowest(), std::max);
 }
 
-Track*
-TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
+Track* TrackList::RegisterPendingChangedTrack(Track *src)
 {
    // This is only done on the TrackList belonging to a project
    assert(GetOwner()); // which implies mPendingUpdates is not null
@@ -1019,7 +1016,6 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
    auto tracks = src->Duplicate(true); // shallow copy of attachments
 
    const auto result = *tracks->begin();
-   mUpdaters.push_back(updater);
    auto iter = tracks->ListOfTracks::begin(),
       end = tracks->ListOfTracks::end();
    while (iter != end) {
@@ -1031,24 +1027,6 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
       pTrack->SetOwner(shared_from_this(), {n, &*mPendingUpdates});
    }
    return result;
-}
-
-void TrackList::UpdatePendingTracks()
-{
-   if (!mPendingUpdates)
-      return;
-   auto pUpdater = mUpdaters.begin();
-   for (const auto &pendingTrack : *mPendingUpdates) {
-      auto src = FindById(pendingTrack->GetId());
-      // Copy just a part of the track state, according to the update
-      // function
-      const auto &updater = *pUpdater;
-      if (pendingTrack && src) {
-         if (updater)
-            updater(*pendingTrack, *src);
-      }
-      ++pUpdater;
-   }
 }
 
 /*! @excsafety{No-fail} */
@@ -1068,8 +1046,6 @@ void TrackList::ClearPendingTracks(
          iter = list.erase(iter);
       }
    }
-
-   mUpdaters.clear();
 
    if (pAdded)
       pAdded->clear();

@@ -91,6 +91,8 @@ public:
 private:
    TrackList &mTracks;
    Observer::Subscription mTrackListSubscription;
+   std::vector<Updater> mUpdaters;
+   std::vector<std::shared_ptr<Track>> mPendingUpdates;
 };
 
 #endif

@@ -74,16 +74,34 @@ PendingTracks::SubstituteOriginalTrack(const Track &track) const
 
 Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
-   return mTracks.RegisterPendingChangedTrack(move(updater), src);
+   mUpdaters.push_back(move(updater));
+   auto result = mTracks.RegisterPendingChangedTrack(src);
+   mPendingUpdates.push_back(result->SharedPointer());
+   return result;
 }
 
 void PendingTracks::UpdatePendingTracks()
 {
-   mTracks.UpdatePendingTracks();
+   if (mPendingUpdates.empty())
+      return;
+   auto pUpdater = mUpdaters.begin();
+   for (const auto &pendingTrack : mPendingUpdates) {
+      auto src = mTracks.FindById(pendingTrack->GetId());
+      // Copy just a part of the track state, according to the update
+      // function
+      const auto &updater = *pUpdater;
+      if (pendingTrack && src) {
+         if (updater)
+            updater(*pendingTrack, *src);
+      }
+      ++pUpdater;
+   }
 }
 
 void PendingTracks::ClearPendingTracks()
 {
+   mUpdaters.clear();
+   mPendingUpdates.clear();
    mTracks.ClearPendingTracks();
 }
 
@@ -97,6 +115,9 @@ bool PendingTracks::ApplyPendingTracks()
          mTracks.ClearPendingTracks(&additions, &pendingUpdates);
       });
       UpdatePendingTracks();
+      // Clear updaters before any more track list events are processed
+      mUpdaters.clear();
+      mPendingUpdates.clear();
    }
    return mTracks.ApplyPendingTracks(move(additions), move(pendingUpdates));
 }

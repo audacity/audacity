@@ -1424,9 +1424,6 @@ private:
    static long sCounter;
 
 public:
-   //! The tracks supplied to this function will be leaders with the same number
-   //! of channels
-   using Updater = std::function<void(Track &dest, const Track &src)>;
    // Start a deferred update of the project.
    // The return value is a duplicate of the given track.
    // While ApplyPendingTracks or ClearPendingTracks is not yet called,
@@ -1446,14 +1443,7 @@ public:
     @pre `src->IsLeader()`
     @post result: `src->NChannels() == result.size()`
     */
-   Track* RegisterPendingChangedTrack(
-      Updater updater,
-      Track *src
-   );
-
-   // Invoke the updaters of pending tracks.  Pass any exceptions from the
-   // updater functions.
-   void UpdatePendingTracks();
+   Track* RegisterPendingChangedTrack(Track *src);
 
    /*
     Forget pending track additions and changes;
@@ -1482,8 +1472,6 @@ private:
    //! a list so that channel grouping works
    /*! Beware, they are in a disjoint iteration sequence from ordinary tracks */
    std::shared_ptr<TrackList> mPendingUpdates;
-   //! This is in correspondence with leader tracks in mPendingUpdates
-   std::vector< Updater > mUpdaters;
    //! Whether the list assigns unique ids to added tracks;
    //! false for temporaries
    bool mAssignsIds{ true };
