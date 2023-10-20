@@ -56,7 +56,6 @@ class EFFECTS_API Effect /* not final */
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() const override;
    EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() const override;
    bool IsDefault() const override;

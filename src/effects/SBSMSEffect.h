@@ -45,6 +45,8 @@ protected:
    ComponentInterfaceSymbol GetSymbol() const override { return mProxyEffectName; }
 
 private:
+   EffectType GetType() const override;
+
    bool ProcessLabelTrack(LabelTrack *track);
    /*!
     @pre `orig.IsLeader()`

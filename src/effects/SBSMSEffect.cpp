@@ -195,6 +195,11 @@ std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double durati
       return std::make_unique<IdentityTimeWarper>();
 }
 
+EffectType EffectSBSMS::GetType() const
+{
+   return EffectTypeProcess;
+}
+
 // Labels inside the affected region are moved to match the audio; labels after
 // it are shifted along appropriately.
 bool EffectSBSMS::ProcessLabelTrack(LabelTrack *lt)
