@@ -1054,12 +1054,23 @@ void TrackList::UpdatePendingTracks()
 }
 
 /*! @excsafety{No-fail} */
-void TrackList::ClearPendingTracks(std::vector<TrackListHolder> *pAdded)
+void TrackList::ClearPendingTracks(
+   std::vector<TrackListHolder> *pAdded,
+   std::shared_ptr<TrackList> *pPendingUpdates)
 {
    assert(GetOwner()); // which implies mPendingUpdates is not null
-   for (const auto &pTrack: static_cast<ListOfTracks&>(*mPendingUpdates))
-      pTrack->SetOwner( {}, {} );
-   mPendingUpdates->ListOfTracks::clear();
+   {
+      auto &list = static_cast<ListOfTracks&>(*mPendingUpdates);
+      auto iter = list.begin(), end = list.end();
+      while (iter != end) {
+         auto pTrack = *iter;
+         pTrack->SetOwner( {}, {} );
+         if (pPendingUpdates && *pPendingUpdates)
+            (*pPendingUpdates)->Add(pTrack);
+         iter = list.erase(iter);
+      }
+   }
+
    mUpdaters.clear();
 
    if (pAdded)
@@ -1079,24 +1090,21 @@ void TrackList::ClearPendingTracks(std::vector<TrackListHolder> *pAdded)
       }
    }
 
+   // Eliminating trailing empty track lists
+   while (pAdded && !pAdded->empty() && !pAdded->back())
+      pAdded->pop_back();
+
    if (!empty()) {
       RecalcPositions(getBegin());
    }
 }
 
 /*! @excsafety{Strong} */
-bool TrackList::ApplyPendingTracks()
+bool TrackList::ApplyPendingTracks(
+   std::vector<TrackListHolder> &&additions,
+   std::shared_ptr<TrackList> &&updates)
 {
    bool result = false;
-
-   std::vector<std::shared_ptr<TrackList>> additions;
-   auto updates = Temporary(nullptr);
-   {
-      // Always clear, even if one of the update functions throws
-      auto cleanup = finally( [&] { ClearPendingTracks( &additions ); } );
-      UpdatePendingTracks();
-      updates.swap(mPendingUpdates);
-   }
 
    // Remaining steps must be No-fail-guarantee so that this function
    // gives Strong-guarantee
@@ -1139,7 +1147,7 @@ bool TrackList::ApplyPendingTracks()
          // This emits appropriate track list events
          Insert(*iter, std::move(*pendingTrack));
       else
-         assert(iter != end()); // Deduce that from ClearPendingTrack's contract
+         assert(iter != end()); // Deduce that from ClearPendingTrack
       iter = next;
    }
 

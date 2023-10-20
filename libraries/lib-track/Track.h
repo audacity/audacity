@@ -1459,16 +1459,19 @@ public:
     Forget pending track additions and changes;
     if requested, give back the pending added tracks, as channel groups,
     stored in the vector at their original positions in iteration order and
-    nulls corresponding with non-added tracks in original iteration order
+    nulls corresponding with non-added tracks in original iteration order; no
+    trailing nulls
     @pre `GetOwner()`
     */
-   void ClearPendingTracks(std::vector<TrackListHolder> *pAdded = nullptr);
+   void ClearPendingTracks(std::vector<TrackListHolder> *pAdded = nullptr,
+      std::shared_ptr<TrackList> *pPendingUpdates = nullptr);
 
    // Change the state of the project.
    // Strong guarantee for project state in case of exceptions.
    // Will always clear the pending updates.
    // Return true if the state of the track list really did change.
-   bool ApplyPendingTracks();
+   bool ApplyPendingTracks(std::vector<TrackListHolder> &&additions,
+      std::shared_ptr<TrackList> &&updates);
 
    bool HasPendingTracks() const;
 

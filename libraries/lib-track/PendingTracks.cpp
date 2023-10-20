@@ -74,5 +74,14 @@ void PendingTracks::ClearPendingTracks()
 
 bool PendingTracks::ApplyPendingTracks()
 {
-   return mTracks.ApplyPendingTracks();
+   std::vector<std::shared_ptr<TrackList>> additions;
+   std::shared_ptr<TrackList> pendingUpdates = TrackList::Temporary(nullptr);
+   {
+      // Always clear, even if one of the update functions throws
+      auto cleanup = finally([&]{
+         mTracks.ClearPendingTracks(&additions, &pendingUpdates);
+      });
+      UpdatePendingTracks();
+   }
+   return mTracks.ApplyPendingTracks(move(additions), move(pendingUpdates));
 }
