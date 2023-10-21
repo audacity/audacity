@@ -1327,16 +1327,6 @@ void TrackList::Append(TrackList &&list, bool assignIds)
    }
 }
 
-void TrackList::RegisterPendingNewTracks(TrackList&& list)
-{
-   for(auto it = list.ListOfTracks::begin(); it != list.ListOfTracks::end();)
-   {
-      Add(*it);
-      (*it)->SetId({});
-      it = list.erase(it);
-   }
-}
-
 void TrackList::AppendOne(TrackList &&list)
 {
    auto iter = list.ListOfTracks::begin(),

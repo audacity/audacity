@@ -1289,15 +1289,6 @@ public:
       return Temporary(pProject, temp);
    }
 
-   // Like RegisterPendingChangedTrack, but for a list of new tracks,
-   // not a replacement track.  Caller
-   // supplies the list, and there are no updates.
-   // Pending tracks will have an unassigned TrackId.
-   // Pending new tracks WILL occur in iterations, always after actual
-   // tracks, and in the sequence that they were added.  They can be
-   // distinguished from actual tracks by TrackId.
-   void RegisterPendingNewTracks(TrackList &&list);
-
    //! Remove all tracks from `list` and put them at the end of `this`
    /*!
     @param assignIds ignored if `this` is a temporary list; else if false,

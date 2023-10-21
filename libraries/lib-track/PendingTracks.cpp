@@ -51,7 +51,7 @@ PendingTracks::~PendingTracks() = default;
 
 void PendingTracks::RegisterPendingNewTracks(TrackList &&list)
 {
-   mTracks.RegisterPendingNewTracks(std::move(list));
+   mTracks.Append(std::move(list), false);
 }
 
 namespace {
