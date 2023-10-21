@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-19 09:30+0200\n"
+"PO-Revision-Date: 2023-10-20 18:16+0200\n"
 "Last-Translator: Jozef Matta <jozef.m923@gmail.com>\n"
 "Language-Team: jozefM\n"
 "Language: sk\n"
@@ -7307,6 +7307,9 @@ msgid ""
 "Try resetting any stretched clips, or mixing and rendering the tracks before "
 "analyzing"
 msgstr ""
+"Audio nebolo možné analyzovať. Môže to byť spôsobené natiahnutým strihom.\n"
+"Skúste vynulovať všetky natiahnuté strihy alebo pred analýzou stopy "
+"zmiešajte a vykreslite."
 
 #: src/FreqWindow.cpp
 #, c-format
@@ -10887,7 +10890,7 @@ msgstr ""
 
 #: src/effects/AutoDuck.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr ""
+msgstr "Vykresľovanie natiahnutého audia na ovládajúcej stope"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -13158,7 +13161,7 @@ msgstr "Nastaví amplitúdu špičky jednej alebo viacerých stôp"
 
 #: src/effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
+msgstr "Efekt opravy nemôže byť použitý na roztiahnuté, alebo zúžené strihy"
 
 #: src/effects/Repair.cpp
 msgid ""
@@ -13314,7 +13317,7 @@ msgstr "Preklopí vybrané audio"
 
 #: src/effects/SBSMSEffect.h
 msgid "SBSMS Time / Pitch Stretch"
-msgstr "Čas SBSMS/Stupeň napnutia"
+msgstr "SBSMS časové/výškové predĺženie"
 
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
@@ -19198,7 +19201,7 @@ msgstr "Kliknúť ľavým/ťahať ľavým"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
-msgstr "Kliknite a ťahajte pre natiahnutie vybranej oblasti."
+msgstr "Kliknite a ťahajte pre roztiahnutie vybranej oblasti."
 
 #. i18n-hint: (noun) The track that is used for MIDI notes which can be
 #. dragged to change their duration.
@@ -19414,7 +19417,7 @@ msgstr "Zmeniť rýchlosť..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 msgid "Render Clip Stretching"
-msgstr ""
+msgstr "Vykresľovanie natiahnutia strihu"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
