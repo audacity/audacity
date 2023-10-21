@@ -82,9 +82,8 @@ template<typename T>
 //! An in-session identifier of track objects across undo states.  It does not persist between sessions
 /*!
     Default constructed value is not equal to the id of any track that has ever
-    been added to a TrackList, or (directly or transitively) copied from such.
-    (A track added by TrackList::RegisterPendingNewTrack() that is not yet applied is not
-    considered added.)
+    been added to a non-temporary TrackList, or (directly or transitively)
+    copied from such.
 
     TrackIds are assigned uniquely across projects. */
 class TrackId
@@ -397,12 +396,14 @@ public:
 private:
    //! Subclass responsibility implements only a part of Duplicate(), copying
    //! the track data proper (not associated data such as for groups and views)
+   //! including TrackId
    /*!
     @param unstretchInterval If set, this time interval's stretching must be applied.
     @pre `!unstretchInterval.has_value() ||
        unstretchInterval->first < unstretchInterval->second`
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
+    @post result tracks have same TrackIds as the channels of `this`
     */
    virtual TrackListHolder Clone() const = 0;
 
@@ -1266,7 +1267,7 @@ public:
 
    //! Construct a temporary list owned by `pProject` (if that is not null)
    //! so that `TrackList::Channels(left.get())` will enumerate the given
-   //! tracks
+   //! tracks; TrackIds are not changed
    /*!
     @pre `left == nullptr || left->GetOwner() == nullptr`
     @pre `right == nullptr || (left && right->GetOwner() == nullptr)`
@@ -1276,7 +1277,7 @@ public:
 
    //! Construct a temporary list whose first channel group contains the given
    //! channels, up to the limit of channel group size; excess channels go each
-   //! into a separate group
+   //! into a separate group; TrackIds are not changed
    static TrackListHolder Temporary(
       AudacityProject *pProject, const std::vector<Track::Holder> &channels);
 
