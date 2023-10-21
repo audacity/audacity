@@ -367,8 +367,6 @@ const TrackList &TrackList::Get( const AudacityProject &project )
 TrackList::TrackList( AudacityProject *pOwner )
    : mOwner{ pOwner }
 {
-   if (mOwner)
-      mPendingUpdates = Temporary(nullptr);
 }
 
 // Factory function
@@ -796,18 +794,8 @@ void TrackList::Clear(bool sendEvent)
          DeletionEvent(pTrack->shared_from_this(), false);
    }
 
-   if (mPendingUpdates)
-      for (auto pTrack: static_cast<ListOfTracks&>(*mPendingUpdates)) {
-         pTrack->SetOwner({}, {});
-         if (sendEvent)
-            DeletionEvent(pTrack, false);
-      }
-
    ListOfTracks tempList;
    tempList.swap( *this );
-
-   if (mPendingUpdates)
-      mPendingUpdates = Temporary(nullptr);
 }
 
 /// Return a track in the list that comes after Track t
@@ -1005,127 +993,6 @@ double TrackList::GetEndTime() const
 {
    return Accumulate(*this, &Track::GetEndTime,
       std::numeric_limits<double>::lowest(), std::max);
-}
-
-Track* TrackList::RegisterPendingChangedTrack(Track *src)
-{
-   // This is only done on the TrackList belonging to a project
-   assert(GetOwner()); // which implies mPendingUpdates is not null
-   assert(src->IsLeader());
-   
-   auto tracks = src->Duplicate(true); // shallow copy of attachments
-
-   const auto result = *tracks->begin();
-   auto iter = tracks->ListOfTracks::begin(),
-      end = tracks->ListOfTracks::end();
-   while (iter != end) {
-      auto pTrack = *iter;
-      iter = tracks->erase(iter);
-      mPendingUpdates->ListOfTracks::push_back(pTrack->SharedPointer());
-      auto n = mPendingUpdates->ListOfTracks::end();
-      --n;
-      pTrack->SetOwner(shared_from_this(), {n, &*mPendingUpdates});
-   }
-   return result;
-}
-
-/*! @excsafety{No-fail} */
-void TrackList::ClearPendingTracks(
-   std::vector<TrackListHolder> *pAdded,
-   std::shared_ptr<TrackList> *pPendingUpdates)
-{
-   assert(GetOwner()); // which implies mPendingUpdates is not null
-   {
-      auto &list = static_cast<ListOfTracks&>(*mPendingUpdates);
-      auto iter = list.begin(), end = list.end();
-      while (iter != end) {
-         auto pTrack = *iter;
-         pTrack->SetOwner( {}, {} );
-         if (pPendingUpdates && *pPendingUpdates)
-            (*pPendingUpdates)->Add(pTrack);
-         iter = list.erase(iter);
-      }
-   }
-
-   if (pAdded)
-      pAdded->clear();
-
-   auto [it, end] = Any();
-   while (it != end) {
-      const auto pTrack = *it;
-      ++it;
-      if (pTrack->GetId() == TrackId{}) {
-         if (pAdded)
-            pAdded->emplace_back(Remove(*pTrack));
-      }
-      else {
-         if (pAdded)
-            pAdded->push_back(nullptr);
-      }
-   }
-
-   // Eliminating trailing empty track lists
-   while (pAdded && !pAdded->empty() && !pAdded->back())
-      pAdded->pop_back();
-
-   if (!empty()) {
-      RecalcPositions(getBegin());
-   }
-}
-
-/*! @excsafety{Strong} */
-bool TrackList::ApplyPendingTracks(
-   std::vector<TrackListHolder> &&additions,
-   std::shared_ptr<TrackList> &&updates)
-{
-   bool result = false;
-
-   // Remaining steps must be No-fail-guarantee so that this function
-   // gives Strong-guarantee
-
-   std::vector<std::shared_ptr<Track>> reinstated;
-
-   if (updates)
-      for (const auto pendingTrack : *updates)
-         for (const auto pChannel : TrackList::Channels(pendingTrack))
-            pChannel->ReparentAllAttachments();
-   while (updates && !updates->empty()) {
-      auto iter = updates->begin();
-      auto pendingTrack = *iter;
-      auto src = FindById(pendingTrack->GetId());
-      if (src) {
-         this->ReplaceOne(*src, std::move(*updates));
-         result = true;
-      }
-      else {
-         // Perhaps a track marked for pending changes got deleted by
-         // some other action.  Recreate it so we don't lose the
-         // accumulated changes.
-         reinstated.push_back(pendingTrack->SharedPointer());
-         updates->Remove(*pendingTrack);
-      }
-   }
-
-   // If there are tracks to reinstate, append them to the list.
-   for (auto &pendingTrack : reinstated)
-      if (pendingTrack)
-         this->Add( pendingTrack ), result = true;
-
-   // Put the pending added tracks back into the list, preserving their
-   // positions.
-   auto iter = begin();
-   for (auto &pendingTrack : additions) {
-      auto next = iter;
-      ++next;
-      if (pendingTrack)
-         // This emits appropriate track list events
-         Insert(*iter, std::move(*pendingTrack));
-      else
-         assert(iter != end()); // Deduce that from ClearPendingTrack
-      iter = next;
-   }
-
-   return result;
 }
 
 auto Track::ClassTypeInfo() -> const TypeInfo &

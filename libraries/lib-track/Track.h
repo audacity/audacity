@@ -1355,9 +1355,7 @@ private:
    TrackIterRange< Track > EmptyRange() const;
 
    bool isNull(TrackNodePointer p) const
-   { return (p.second == this && p.first == ListOfTracks::end())
-      || (mPendingUpdates && p.second == &*mPendingUpdates &&
-          p.first == mPendingUpdates->ListOfTracks::end()); }
+   { return (p.second == this && p.first == ListOfTracks::end()); }
    TrackNodePointer getEnd() const
    { return { const_cast<TrackList*>(this)->ListOfTracks::end(),
               const_cast<TrackList*>(this)}; }
@@ -1406,53 +1404,8 @@ private:
    // Used to assign ids to added tracks.
    static long sCounter;
 
-public:
-   // Start a deferred update of the project.
-   // The return value is a duplicate of the given track.
-   // While ApplyPendingTracks or ClearPendingTracks is not yet called,
-   // there may be other direct changes to the project that push undo history.
-   // Meanwhile the returned object can accumulate other changes for a deferred
-   // push, and temporarily shadow the actual project track for display purposes.
-   // The Updater function, if not null, merges state (from the actual project
-   // into the pending track) which is not meant to be overridden by the
-   // accumulated pending changes.
-   // To keep the display consistent, the Y and Height values, minimized state,
-   // and Linked state must be copied, and this will be done even if the
-   // Updater does not do it.
-   // Pending track will have the same TrackId as the actual.
-   // Pending changed tracks will not occur in iterations.
-   /*!
-    @pre `GetOwner()`
-    @pre `src->IsLeader()`
-    @post result: `src->NChannels() == result.size()`
-    */
-   Track* RegisterPendingChangedTrack(Track *src);
-
-   /*
-    Forget pending track additions and changes;
-    if requested, give back the pending added tracks, as channel groups,
-    stored in the vector at their original positions in iteration order and
-    nulls corresponding with non-added tracks in original iteration order; no
-    trailing nulls
-    @pre `GetOwner()`
-    */
-   void ClearPendingTracks(std::vector<TrackListHolder> *pAdded = nullptr,
-      std::shared_ptr<TrackList> *pPendingUpdates = nullptr);
-
-   // Change the state of the project.
-   // Strong guarantee for project state in case of exceptions.
-   // Will always clear the pending updates.
-   // Return true if the state of the track list really did change.
-   bool ApplyPendingTracks(std::vector<TrackListHolder> &&additions,
-      std::shared_ptr<TrackList> &&updates);
-
-private:
    AudacityProject *mOwner;
 
-   //! Shadow tracks holding append-recording in progress; need to put them into
-   //! a list so that channel grouping works
-   /*! Beware, they are in a disjoint iteration sequence from ordinary tracks */
-   std::shared_ptr<TrackList> mPendingUpdates;
    //! Whether the list assigns unique ids to added tracks;
    //! false for temporaries
    bool mAssignsIds{ true };

@@ -79,8 +79,15 @@ public:
    // updater functions.
    void UpdatePendingTracks();
 
-   //! Forget pending track additions and changes
-   void ClearPendingTracks();
+   //! Forget pending track additions and changes;
+   /*!
+    if requested, give back the pending added tracks, as channel groups,
+    stored in the vector at their original positions in iteration order and
+    nulls corresponding with non-added tracks in original iteration order; no
+    trailing nulls
+   */
+   void ClearPendingTracks(
+      std::vector<std::shared_ptr<TrackList>> *pAdded = nullptr);
 
    // Change the state of the project.
    // Strong guarantee for project state in case of exceptions.
@@ -94,7 +101,7 @@ private:
    TrackList &mTracks;
    Observer::Subscription mTrackListSubscription;
    std::vector<Updater> mUpdaters;
-   std::vector<std::shared_ptr<Track>> mPendingUpdates;
+   std::shared_ptr<TrackList> mPendingUpdates;
 };
 
 #endif
