@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-21 15:51+0900\n"
+"PO-Revision-Date: 2023-10-23 00:26+0900\n"
 "Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
 "Language-Team: Akira Nishimura, Atsushi YOSHIDA, Phroneris, SakiPapa\n"
 "Language: ja\n"
@@ -2512,7 +2512,7 @@ msgstr "前処理(&P): "
 #: libraries/lib-wave-track/WaveTrackUtilities.h
 #, fuzzy
 msgid "Rendering Time-Stretched Audio"
-msgstr "時間伸長したオーディオをレンダリング"
+msgstr "時間伸縮したオーディオをレンダリング"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -3133,7 +3133,7 @@ msgstr "圧縮"
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Frame Duration"
-msgstr "フレーム間隔"
+msgstr "フレーム長"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
 msgid "2.5 ms"
@@ -4919,7 +4919,7 @@ msgstr "VBR モード"
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Optimize for"
-msgstr "最適化目的"
+msgstr "最適化用途"
 
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
@@ -7183,14 +7183,13 @@ msgstr ""
 "数でなければなりません。"
 
 #: src/FreqWindow.cpp
-#, fuzzy
 msgid ""
 "Audio could not be analyzed. This may be due to a stretched clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before "
 "analyzing"
 msgstr ""
-"オーディオを解析できませんでした。伸長したクリップが原因と思われます。\n"
-"伸長したクリップをリセットするか、解析前にトラックのミキシングとレンダリング"
+"オーディオを解析できませんでした。伸縮したクリップが原因と思われます。\n"
+"伸縮したクリップをリセットするか、解析前にトラックのミキシングとレンダリング"
 "を行ってください"
 
 #: src/FreqWindow.cpp
@@ -10708,8 +10707,8 @@ msgid ""
 "Reduces (ducks) the volume of one or more tracks whenever the volume of a "
 "specified \"control\" track reaches a particular level"
 msgstr ""
-"指定された「コントロール」トラックが特定のレベルに達したら、1 本以上のトラッ"
-"クのレベルを低減（ダッキング）します"
+"指定された「コントロール」トラックが特定のレベルに達したら、1 本または複数の"
+"トラックのレベルを低減（ダッキング）します"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
@@ -10735,7 +10734,7 @@ msgstr ""
 #: src/effects/AutoDuck.cpp
 #, fuzzy
 msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr "コントロールトラックの時間伸長オーディオのレンダリング"
+msgstr "コントロールトラックの時間伸縮オーディオをレンダリング"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -10747,23 +10746,23 @@ msgstr "ダッキング量(&A):"
 
 #: src/effects/AutoDuck.cpp
 msgid "Ma&ximum pause:"
-msgstr "最大休止長さ(&X):"
+msgstr "最大一時停止時間(&X):"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade &down length:"
-msgstr "外側のフェードダウンする長さ(&D):"
+msgstr "外側フェードダウン時間(&D):"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade &up length:"
-msgstr "外側のフェードアップする長さ(&U):"
+msgstr "外側フェードアップ時間(&U):"
 
 #: src/effects/AutoDuck.cpp
 msgid "Inner fade d&own length:"
-msgstr "内側のフェードダウンする長さ(&O):"
+msgstr "内側フェードダウン時間(&O):"
 
 #: src/effects/AutoDuck.cpp
 msgid "Inner &fade up length:"
-msgstr "内側のフェードアップする長さ(&F):"
+msgstr "内側フェードアップ時間(&F):"
 
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/TruncSilence.cpp
@@ -12907,7 +12906,7 @@ msgstr "Paul ストレッチ"
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
-"Paul ストレッチは、極端な時間伸縮や「停滞的」エフェクトだけに使用します"
+"Paul ストレッチは、極端な時間伸長や「停滞的」エフェクトだけに使用します"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -13045,7 +13044,7 @@ msgstr "1 本以上のトラックに対してピーク振幅を設定します"
 #: src/effects/Repair.cpp
 #, fuzzy
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "リペアエフェクトは伸長・縮小を行ったクリップ内では使用できません。"
+msgstr "リペアエフェクトは伸長・短縮を行ったクリップ内では使用できません。"
 
 #: src/effects/Repair.cpp
 msgid ""
@@ -14806,8 +14805,9 @@ msgid "Split to new track"
 msgstr "新規トラックに分割"
 
 #: src/menus/EditMenus.cpp
+#, fuzzy
 msgid "Split New"
-msgstr "新しく分割"
+msgstr "分割して新規"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15453,9 +15453,8 @@ msgid "Set Right Selection Boundary"
 msgstr "右側の選択境界を設定"
 
 #: src/menus/SelectMenus.cpp
-#, fuzzy
 msgid "Zero-crossing search regions intersect stretched clip(s)."
-msgstr "ゼロ交点の検索領域が伸長されたクリップを含んでいます。"
+msgstr "ゼロ交差の検索領域に伸長したクリップが含まれています。"
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/SelectMenus.cpp
@@ -15552,11 +15551,11 @@ msgstr "カーソル位置を記憶(&I)"
 
 #: src/menus/SelectMenus.cpp
 msgid "At &Zero Crossings"
-msgstr "ゼロ交点へ(&Z)"
+msgstr "ゼロ交差へ(&Z)"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Zero Crossing"
-msgstr "ゼロ交点を選択"
+msgstr "ゼロ交差を選択"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Selection"
@@ -18223,7 +18222,7 @@ msgstr "警告/プロンプトの表示"
 #: src/prefs/WarningsPrefs.cpp
 #, fuzzy
 msgid "Saving &projects versus exporting audio"
-msgstr "プロジェクトの保存とオーディオのエクスポート"
+msgstr "オーディオのエクスポートではなくプロジェクトを保存する時(&P)"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &empty project"
@@ -19031,23 +19030,22 @@ msgstr "速度を変更"
 #: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
 #, fuzzy
 msgid "Clip speed"
-msgstr "クリッピング速度"
+msgstr "クリップ速度"
 
 #. i18n-hint: Title of an error message shown, when invalid clip speed is set
 #: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
 #, fuzzy
 msgid "Invalid clip speed"
-msgstr "無効なクリッピング速度"
+msgstr "無効なクリップ速度"
 
 #: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
 #, fuzzy
 msgid "Clip speed must be a positive value"
-msgstr "クリッピング速度は正の値でなければなりません"
+msgstr "クリップ速度は正の値でなければなりません"
 
 #: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-#, fuzzy
 msgid "There is not enough space to stretch the clip to the selected speed"
-msgstr "選択した速度にクリップを引き伸ばすための十分なスペースがありません"
+msgstr "選択した速度にクリップを伸長できる十分なスペースがありません"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -19200,7 +19198,7 @@ msgstr "クリップを分割"
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy
 msgid "Join Clips"
-msgstr "クリップに参加"
+msgstr "クリップを結合"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 msgid "Rename Clip..."
@@ -19213,7 +19211,7 @@ msgstr "スピードの変更..."
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy
 msgid "Render Clip Stretching"
-msgstr "クリップ伸長をレンダリング"
+msgstr "クリップ伸縮をレンダリング"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
@@ -19246,7 +19244,7 @@ msgstr "クリップ名の編集"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
 msgid "Rendered time-stretched audio"
-msgstr "時間伸長したオーディオをレンダリング"
+msgstr "時間伸縮したオーディオをレンダリング"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
@@ -19261,7 +19259,7 @@ msgstr "スピードを変更...(&S)"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
 msgid "Render Clip S&tretching"
-msgstr "クリップ伸長をレンダリング(&T)"
+msgstr "クリップ伸縮をレンダリング(&T)"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
