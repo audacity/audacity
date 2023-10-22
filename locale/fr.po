@@ -4898,7 +4898,7 @@ msgstr "horodatage non valide"
 #: modules/mod-opus/ImportOpus.cpp
 #, c-format
 msgid "Failed to decode Opus file: %s"
-msgstr "Échec du décodage du fichier Opus : "%s"
+msgstr "Échec du décodage du fichier Opus : %s"
 
 #: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
@@ -5999,7 +5999,7 @@ msgstr ""
 "\n"
 "\t%s\n"
 "\n"
-"Cela peut être dû à de nombreuses raisons, mais les plus probables sont que le disque est plein ou que vous n’avez pas les droits d’écriture sur le fichier."\n"
+"Cela peut être dû à de nombreuses raisons, mais les plus probables sont que le disque est plein ou que vous n’avez pas les droits d’écriture sur le fichier.\n"
 "\n"
 "Vous pouvez essayer de corriger le problème et cliquer ensuite sur \"Réessayer\" pour continuer.\n"
 "\n"
@@ -6045,7 +6045,7 @@ msgstr "De quelle manière voulez-vous coller votre audio ?"
 msgid "The full smart clip is %s. Larger sizes will take longer to paste."
 msgstr ""
 "Le clip intelligent complet est %s. Les tailles plus grandes prendront plus "
-"de temps à coller.
+"de temps à coller."
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
@@ -15854,6 +15854,314 @@ msgstr "Enregistrer une &nouvelle piste"
 msgid "Punch and Rol&l Record"
 msgstr "Enregistrement punch & roll"
 
+    trebmuh
+    /
+    audacity
+
+Code
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+Pane width
+
+Use a value between 14% and 46%
+Files
+t
+
+.github
+cmake-proxies
+conan
+crashreporter
+dox2-src
+help
+images
+include
+lib-src
+libraries
+linux
+locale
+
+inactive
+CMakeLists.txt
+CeePlusPlusifyLanguageNames.pl
+LINGUAS
+LanguageNames.txt
+af.po
+ar.po
+audacity.pot
+be.po
+bg.po
+bn.po
+bs.po
+ca.po
+ca_ES@valencia.po
+co.po
+cs.po
+cy.po
+da.po
+de.po
+diagnostics.sh
+el.po
+es.po
+eu.po
+eu_ES.po
+fa.po
+fi.po
+find-duplicates.pl
+fr.po
+ga.po
+gl.po
+he.po
+hi.po
+hr.po
+hu.po
+hy.po
+id.po
+it.po
+ja.po
+ka.po
+km.po
+ko.po
+lt.po
+mk.po
+mr.po
+msgfmt.py
+my.po
+nb.po
+nl.po
+no_id.sh
+oc.po
+pl.po
+pt_BR.po
+pt_PT.po
+resources.its
+ro.po
+ru.po
+sk.po
+sl.po
+sr_RS.po
+sr_RS@latin.po
+sv.po
+ta.po
+tg.po
+tr.po
+uk.po
+update_po_files.sh
+vi.po
+zh_CN.po
+
+    zh_TW.po
+
+mac
+modules
+nyq-po
+nyquist
+plug-ins
+resources
+scripts
+src
+tests
+win
+.editorconfig
+.gitattributes
+.gitignore
+ABOUT-NLS
+BUILDING.md
+CHANGELOG.txt
+CMakeLists.txt
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+INSTALL
+LICENSE.txt
+README.md
+audacity.dox
+audacity.dox.in
+
+    nographs.dox
+
+Documentation • Share feedback
+Breadcrumbs
+
+    audacity/locale
+
+/
+in
+master
+
+Indent mode
+Indent size
+Line wrap mode
+Editing fr.po file contents
+15593
+15594
+15595
+15596
+15597
+15598
+15599
+15600
+15601
+15602
+15603
+15604
+15605
+15606
+15607
+15608
+15609
+15610
+15611
+15612
+15613
+15614
+15615
+15616
+15617
+15618
+15619
+15620
+15621
+15622
+15623
+15624
+15625
+15626
+15627
+15628
+15629
+15630
+15631
+15632
+15633
+15634
+15635
+15636
+15637
+15638
+15639
+15640
+15641
+15642
+15643
+15644
+15645
+15646
+15647
+15648
+15649
+15650
+15651
+15652
+15653
+15654
+15655
+15656
+15657
+15658
+15659
+15660
+15661
+15662
+15663
+15664
+15665
+15666
+15667
+15668
+15669
+15670
+15671
+15672
+msgid "Remove"
+msgid "Remo&ve Tracks"
+msgstr "Sup&primer la (les) piste(s)"
+
+# trebmuh to check (accélérateur)
+#: src/menus/TrackMenus.cpp
+msgid "M&ute/Unmute"
+msgstr "Silencer/désilencer (&u)"
+
+# trebmuh to check (accélérateur)
+#: src/menus/TrackMenus.cpp
+msgid "&Mute All Tracks"
+msgstr "Silencer toutes les pistes (&m)"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Unmute All Tracks"
+msgstr "Désilencer to&utes les pistes"
+
+#: src/menus/TrackMenus.cpp
+msgid "Mut&e Tracks"
+msgstr "Sil&encer toutes les pistes"
+
+#: src/menus/TrackMenus.cpp
+msgid "U&nmute Tracks"
+msgstr "Désile&ncer toutes les pistes"
+
+# trebmuh to check (vérifier que ce n’est pas une abbréviation)
+#: src/menus/TrackMenus.cpp
+msgid "&Pan"
+msgstr "&Panoramique"
+
+# trebmuh to check (accélérateur)
+#: src/menus/TrackMenus.cpp
+msgid "&Left"
+msgstr "Gauche (&l)"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Left"
+msgstr "Pan gauche"
+
+# trebmuh to check (accélérateur)
+#: src/menus/TrackMenus.cpp
+msgid "&Right"
+msgstr "D&roit"
+
+# trebmuh to check (accélérateur)
+#: src/menus/TrackMenus.cpp
+msgid "Pan Right"
+msgstr "Pan droit"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Center"
+msgstr "&Centré"
+
+#: src/menus/TrackMenus.cpp
+msgid "Pan Center"
+msgstr "Pan centré"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align Tracks"
+msgstr "&Aligner les pistes"
+
+#: src/menus/TrackMenus.cpp
+msgid "&Align End to End"
+msgstr "&Aligner bout à bout"
+
+#: src/menus/TrackMenus.cpp
+msgid "Align &Together"
+msgstr "Aligner ensemble"
+
+# trebmuh to check (accélérateur)
+#: src/menus/TrackMenus.cpp
+msgid "&Move Selection with Tracks"
+msgstr "Déplacer la sélectio&n avec les pistes"
+
+#: src/menus/TrackMenus.cpp
+msgid "Move Sele&ction and Tracks"
+msgstr "Descendre la séle&ction et les pistes"
+
+# trebmuh to check (accélérateur)
+#: src/menus/TrackMenus.cpp
+Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
+
+
 #: src/menus/TransportMenus.cpp
 msgid "&Looping"
 msgstr "Bouclage"
@@ -16810,7 +17118,7 @@ msgstr ""
 "\t%s\n"
 "\n"
 "Sinon, cliquez sur Annuler."
-
+17239
 #: src/prefs/KeyConfigPrefs.h
 msgid "Key Config"
 msgstr "Configuration clavier"
@@ -21890,7 +22198,7 @@ msgstr "Outils spectraux"
 
 #~ msgid "Error Exporting"
 #~ msgstr "Erreur d’exportation"
-
+Mixage
 #~ msgid ""
 #~ "Your exported WAV file has been truncated as Audacity cannot export WAV\n"
 #~ "files bigger than 4GB."
@@ -21946,7 +22254,7 @@ msgstr "Outils spectraux"
 
 #~ msgid "Unable to start QuickTime extraction"
 #~ msgstr "Impossible de démarrer l’extraction Quicktime"
-
+Mixage
 #~ msgid "Unable to set QuickTime render quality"
 #~ msgstr "Impossible de régler la qualité de rendu Quicktime"
 
