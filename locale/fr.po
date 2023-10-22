@@ -10079,7 +10079,7 @@ msgstr "Ajouter"
 #: src/commands/SelectCommand.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
-msgstr "Retirer"
+msgstr "Supprimer"
 
 #: src/commands/SelectCommand.cpp
 msgid "First Track:"
