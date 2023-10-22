@@ -16325,7 +16325,7 @@ msgstr "Mise à jour du répertoire temporaire"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Open' directory cannot be set."
-msgstr "Le répertoire 'ouvert" ne peut pas être paramétré."
+msgstr "Le répertoire 'ouvert' ne peut pas être paramétré."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Save' directory cannot be set."
@@ -17233,7 +17233,7 @@ msgstr "Utiliser le matériel pour jouer les autres pistes (&h)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Audible input &monitoring"
-msgstr "Surveillance de l'entrée sonore
+msgstr "Surveillance de l'entrée sonore"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Record on a new track"
@@ -20608,8 +20608,8 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 "Le marquage des régions entre les sons nécessite~%~\n"
-                  au moins deux sons.~%~\n"
-                  Un seul son détecté."
+"                 au moins deux sons.~%~\n"
+"                 Un seul son détecté."
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
@@ -22370,7 +22370,7 @@ msgstr "Outils spectraux"
 #~ msgstr "Marquer l’effet comme favori"
 
 #~ msgid "Remove effect from the rack"
-#~ msgstr "Retirer l’effet du rack"Mixage
+#~ msgstr "Retirer l’effet du rack"
 
 #~ msgid "Name of the effect"
 #~ msgstr "Nom de l’effet"
