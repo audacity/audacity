@@ -4898,7 +4898,7 @@ msgstr "horodatage non valide"
 #: modules/mod-opus/ImportOpus.cpp
 #, c-format
 msgid "Failed to decode Opus file: %s"
-msgstr "Échec du décodage du fichier Opus : "%s"
+msgstr "Échec du décodage du fichier Opus : %s"
 
 #: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
@@ -5999,7 +5999,7 @@ msgstr ""
 "\n"
 "\t%s\n"
 "\n"
-"Cela peut être dû à de nombreuses raisons, mais les plus probables sont que le disque est plein ou que vous n’avez pas les droits d’écriture sur le fichier."\n"
+"Cela peut être dû à de nombreuses raisons, mais les plus probables sont que le disque est plein ou que vous n’avez pas les droits d’écriture sur le fichier.\n"
 "\n"
 "Vous pouvez essayer de corriger le problème et cliquer ensuite sur \"Réessayer\" pour continuer.\n"
 "\n"
@@ -6043,9 +6043,7 @@ msgstr "De quelle manière voulez-vous coller votre audio ?"
 #: src/AudioPasteDialog.cpp
 #, c-format
 msgid "The full smart clip is %s. Larger sizes will take longer to paste."
-msgstr ""
-"Le clip intelligent complet est %s. Les tailles plus grandes prendront plus "
-"de temps à coller.
+msgstr "Le clip intelligent complet est %s. Les tailles plus grandes prendront plus de temps à coller."
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
@@ -16331,7 +16329,7 @@ msgstr "Le répertoire 'ouvert" ne peut pas être paramétré."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Save' directory cannot be set."
-msgstr "Le répertoire 'de sauvegarde" ne peut pas être paramétré."
+msgstr "Le répertoire de 'sauvegarde' ne peut pas être paramétré."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Import' directory cannot be set."
