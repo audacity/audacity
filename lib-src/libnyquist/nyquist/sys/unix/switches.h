@@ -39,7 +39,9 @@
 */
 #define nyquist_printf printf
 
-#if (__APPLE__ && __GNUC__) || FreeBSD /* Mac OS X or FreeBSD */
+/* macOS, FreeBSD or OpenBSD */
+#if (defined(__APPLE__) && defined(__GNUC__)) || defined(__FreeBSD__) || \
+    defined(__OpenBSD__)
 #define NEED_ULONG 1
 #else
 #include <sys/types.h>

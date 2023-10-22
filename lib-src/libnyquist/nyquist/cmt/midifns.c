@@ -118,7 +118,9 @@
 #ifdef UNIX
 #ifndef UNIX_IRIX
 #include "sys/time.h"
+#ifndef __OpenBSD__
 #include "sys/timeb.h"
+#endif
 #include "cmtio.h"
 #else
 #include <sys/types.h>

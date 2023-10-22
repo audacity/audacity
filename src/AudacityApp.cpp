@@ -712,14 +712,22 @@ class GnomeShutdown
  public:
    GnomeShutdown()
    {
+#ifdef __OpenBSD__
+      const char *libgnomeui = "libgnomeui-2.so";
+      const char *libgnome = "libgnome-2.so";
+#else
+      const char *libgnomeui = "libgnomeui-2.so.0";
+      const char *libgnome = "libgnome-2.so.0";
+#endif
+
       mArgv[0].reset(strdup("Audacity"));
 
-      mGnomeui = dlopen("libgnomeui-2.so.0", RTLD_NOW);
+      mGnomeui = dlopen(libgnomeui, RTLD_NOW);
       if (!mGnomeui) {
          return;
       }
 
-      mGnome = dlopen("libgnome-2.so.0", RTLD_NOW);
+      mGnome = dlopen(libgnome, RTLD_NOW);
       if (!mGnome) {
          return;
       }

@@ -1449,7 +1449,30 @@ FileNames::FileTypes MP3Exporter::GetLibraryTypes()
    };
 }
 
-#else //!__WXMAC__
+#elif defined(__OpenBSD__)
+/* Values for OpenBSD systems */
+
+wxString MP3Exporter::GetLibraryPath()
+{
+   return wxT(LIBDIR);
+}
+
+wxString MP3Exporter::GetLibraryName()
+{
+   return wxT("libmp3lame.so");
+}
+
+FileNames::FileTypes MP3Exporter::GetLibraryTypes()
+{
+   return {
+      { XO("Only libmp3lame.so"), { wxT("libmp3lame.so") } },
+      { XO("Primary shared object files"), { wxT("so") }, true },
+      { XO("Extended libraries"), { wxT("so*") }, true },
+      FileNames::AllFiles
+   };
+}
+
+#else //!__OpenBSD__
 /* Values for Linux / Unix systems */
 
 wxString MP3Exporter::GetLibraryPath()
