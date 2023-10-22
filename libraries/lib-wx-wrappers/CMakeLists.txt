@@ -21,7 +21,7 @@ set( SOURCES
       FileDialog/mac/FileDialogPrivate.mm
       FileDialog/mac/FileDialogPrivate.h
    >
-   $<$<PLATFORM_ID:Linux,FreeBSD,CYGWIN>:
+   $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,CYGWIN>:
       FileDialog/gtk/FileDialogPrivate.cpp
       FileDialog/gtk/FileDialogPrivate.h
    >
