@@ -8344,9 +8344,11 @@ msgstr "Retirés %s de %s"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
+#: src/commands/SelectCommand.cpp
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 #, c-format
 msgid "Remove"
-msgstr "Retirer"
+msgstr "Supprimer"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
@@ -10075,11 +10077,6 @@ msgstr "Attribuer"
 #: src/commands/SelectCommand.cpp
 msgid "Add"
 msgstr "Ajouter"
-
-#: src/commands/SelectCommand.cpp
-#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
-msgid "Remove"
-msgstr "Supprimer"
 
 #: src/commands/SelectCommand.cpp
 msgid "First Track:"
