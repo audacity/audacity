@@ -54,22 +54,90 @@ void PendingTracks::RegisterPendingNewTracks(TrackList &&list)
    mTracks.RegisterPendingNewTracks(std::move(list));
 }
 
+namespace {
+// function-making function
+auto finder(TrackId id, int &distance) {
+   // Predicate returns true if any channel of the track's channel group has
+   // the given id and as a side-effect reports the position of the channel in
+   // the group
+   return [id, &distance](const auto &pTrack) {
+      const auto channels = TrackList::Channels(&*pTrack);
+      const auto begin = channels.begin();
+      const auto end = channels.end();
+      const auto pred = [id](const auto &ptr) { return ptr->GetId() == id; };
+      auto iter = std::find_if(begin, end, pred);
+      if (iter == end) {
+         distance = -1;
+         return false;
+      }
+      else {
+         distance = std::distance(begin, iter);
+         return true;
+      }
+   };
+}
+}
+
 std::shared_ptr<Track>
 PendingTracks::SubstitutePendingChangedTrack(Track &track) const
 {
-   return track.SubstitutePendingChangedTrack();
+   // Linear search.  Tracks in a project are usually very few.
+   auto pTrack = &track;
+   // track might not be a leader
+   if (!mPendingUpdates.empty()) {
+      const auto id = track.GetId();
+      const auto end = mPendingUpdates.end();
+      int distance{ -1 };
+      // Find the leader of the group of shadow tracks containing the id
+      if (const auto it =
+          std::find_if(mPendingUpdates.begin(), end, finder(id, distance))
+          ; it != end) {
+         // Find the correct corresponding channel
+         auto channelIter = TrackList::Channels(&**it).begin();
+         std::advance(channelIter, distance);
+         pTrack = *channelIter;
+      }
+   }
+   return pTrack->SharedPointer();
 }
 
 std::shared_ptr<const Track>
 PendingTracks::SubstitutePendingChangedTrack(const Track &track) const
 {
-   return track.SubstitutePendingChangedTrack();
+   return SubstitutePendingChangedTrack(const_cast<Track&>(track));
 }
 
 std::shared_ptr<const Track>
 PendingTracks::SubstituteOriginalTrack(const Track &track) const
 {
-   return track.SubstituteOriginalTrack();
+   auto pTrack = &track;
+   // track might not be a leader
+   if (!mPendingUpdates.empty()) {
+      const auto id = track.GetId();
+      const auto end = mPendingUpdates.end();
+      int distance1{ -1 };
+      // Find the leader of the group of shadow tracks containing the id
+      if (const auto it =
+          std::find_if(mPendingUpdates.begin(), end, finder(id, distance1))
+         ; it != end)
+      {
+         const auto end2 = mTracks.end();
+         int distance2{ -1 };
+         // Find the leader of the group of original tracks containing the id
+         const auto it2 =
+            std::find_if(mTracks.begin(), end2, finder(id, distance2));
+         if (it2 != end2) {
+            // This should be provable from how RegisterPendingChangedTrack
+            // constructs the substitutes
+            assert(distance1 == distance2);
+            // Find the correct corresponding channel
+            auto channelIter = TrackList::Channels(&**it2).begin();
+            std::advance(channelIter, distance2);
+            pTrack = *channelIter;
+         }
+      }
+   }
+   return pTrack->SharedPointer();
 }
 
 Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)
@@ -120,4 +188,14 @@ bool PendingTracks::ApplyPendingTracks()
       mPendingUpdates.clear();
    }
    return mTracks.ApplyPendingTracks(move(additions), move(pendingUpdates));
+}
+
+bool PendingTracks::HasPendingTracks() const
+{
+   if (!mPendingUpdates.empty())
+      return true;
+   const auto end = mTracks.end();
+   return (end != std::find_if(mTracks.begin(), end, [](const Track *t){
+      return t->GetId() == TrackId{};
+   }));
 }

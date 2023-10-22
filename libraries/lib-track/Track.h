@@ -183,15 +183,6 @@ private:
    static inline std::shared_ptr<Subclass> SharedPointer( const Track *pTrack )
    { return pTrack ? pTrack->SharedPointer<Subclass>() : nullptr; }
 
-   // Find anything registered with TrackList::RegisterPendingChangedTrack and
-   // not yet cleared or applied; if no such exists, return this track
-   std::shared_ptr<Track> SubstitutePendingChangedTrack();
-   std::shared_ptr<const Track> SubstitutePendingChangedTrack() const;
-
-   // If this track is a pending changed track, return the corresponding
-   // original; else return this track
-   std::shared_ptr<const Track> SubstituteOriginalTrack() const;
-
    //! Names of a track type for various purposes.
    /*! Some of the distinctions exist only for historical reasons. */
    struct TypeNames {
@@ -1463,8 +1454,6 @@ public:
    // Return true if the state of the track list really did change.
    bool ApplyPendingTracks(std::vector<TrackListHolder> &&additions,
       std::shared_ptr<TrackList> &&updates);
-
-   bool HasPendingTracks() const;
 
 private:
    AudacityProject *mOwner;

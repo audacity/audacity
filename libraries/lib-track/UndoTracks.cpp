@@ -8,6 +8,7 @@
  
  **********************************************************************/
 #include "UndoTracks.h"
+#include "PendingTracks.h"
 #include "Track.h"
 #include "UndoManager.h"
 
@@ -31,7 +32,7 @@ struct TrackListRestorer final : UndoStateExtension {
          dstTracks.Append(std::move(*pTrack->Duplicate()));
    }
    bool CanUndoOrRedo(const AudacityProject &project) override {
-      return !TrackList::Get(project).HasPendingTracks();
+      return !PendingTracks::Get(project).HasPendingTracks();
    }
    const std::shared_ptr<TrackList> mpTracks;
 };

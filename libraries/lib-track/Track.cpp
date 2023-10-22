@@ -1128,48 +1128,6 @@ bool TrackList::ApplyPendingTracks(
    return result;
 }
 
-std::shared_ptr<Track> Track::SubstitutePendingChangedTrack()
-{
-   // Linear search.  Tracks in a project are usually very few.
-   auto pList = mList.lock();
-   if (pList && pList->mPendingUpdates) {
-      const auto id = GetId();
-      const auto end = pList->mPendingUpdates->ListOfTracks::end();
-      auto it = std::find_if(
-         pList->mPendingUpdates->ListOfTracks::begin(), end,
-         [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
-      if (it != end)
-         return *it;
-   }
-   return SharedPointer();
-}
-
-std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
-{
-   return const_cast<Track*>(this)->SubstitutePendingChangedTrack();
-}
-
-std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
-{
-   auto pList = mList.lock();
-   if (pList && pList->mPendingUpdates) {
-      const auto id = GetId();
-      const auto pred = [=]( const ListOfTracks::value_type &ptr ) {
-         return ptr->GetId() == id; };
-      const auto end = pList->mPendingUpdates->ListOfTracks::end();
-      const auto it =
-         std::find_if(pList->mPendingUpdates->ListOfTracks::begin(), end, pred);
-      if (it != end) {
-         const auto &list2 = (const ListOfTracks &) *pList;
-         const auto end2 = list2.end();
-         const auto it2 = std::find_if( list2.begin(), end2, pred );
-         if ( it2 != end2 )
-            return *it2;
-      }
-   }
-   return SharedPointer();
-}
-
 auto Track::ClassTypeInfo() -> const TypeInfo &
 {
    static Track::TypeInfo info{
@@ -1231,17 +1189,6 @@ void Track::AdjustPositions()
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
-}
-
-bool TrackList::HasPendingTracks() const
-{
-   if (mPendingUpdates && !mPendingUpdates->empty())
-      return true;
-   if (End() != std::find_if(Begin(), End(), [](const Track *t){
-      return t->GetId() == TrackId{};
-   }))
-      return true;
-   return false;
 }
 
 Track::LinkType Track::GetLinkType() const noexcept

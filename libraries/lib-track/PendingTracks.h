@@ -88,6 +88,8 @@ public:
    // Return true if the state of the track list really did change.
    bool ApplyPendingTracks();
 
+   bool HasPendingTracks() const;
+
 private:
    TrackList &mTracks;
    Observer::Subscription mTrackListSubscription;
