@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-20 02:00+0000\n"
+"PO-Revision-Date: 2023-10-22 02:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -8850,7 +8850,7 @@ msgstr ""
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording Disk Space Warning"
-msgstr "Nagrywanie czasowe Miejsce na dysku Ostrzeżenie"
+msgstr "Ostrzeżenie o miejscu na dysku podczas nagrywania czasowego"
 
 #: src/TimerRecordDialog.cpp
 msgid "Current Project"
@@ -9610,7 +9610,7 @@ msgstr "Typ:"
 
 #: src/commands/GetInfoCommand.cpp
 msgid "Get Info..."
-msgstr "&Uzyskaj informacje..."
+msgstr "Uzyskaj informacje..."
 
 #: src/commands/GetInfoCommand.h
 msgid "Gets information in JSON format."
