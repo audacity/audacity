@@ -1215,11 +1215,11 @@ public:
     */
    TrackListHolder ReplaceOne(Track &t, TrackList &&with);
 
-   //! Remove a channel group, given the leader
+   //! Remove a channel group, given the leader, and return it
    /*!
     @pre `track.IsLeader()`
     */
-   void Remove(Track &track);
+   std::shared_ptr<TrackList> Remove(Track &track);
 
    /// Make the list empty
    void Clear(bool sendEvent = true);

@@ -741,8 +741,9 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels)
    return true;
 }
 
-void TrackList::Remove(Track &track)
+std::shared_ptr<TrackList> TrackList::Remove(Track &track)
 {
+   auto result = TrackList::Temporary(nullptr);
    assert(track.IsLeader());
    auto *t = &track;
    const size_t nChannels = NChannels(*t);
@@ -764,8 +765,10 @@ void TrackList::Remove(Track &track)
          }
 
          DeletionEvent(t->shared_from_this(), false);
+         result->Add(move(holder));
       }
    }
+   return result;
 }
 
 void TrackList::Clear(bool sendEvent)
