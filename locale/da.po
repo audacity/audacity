@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-19 14:44+0200\n"
+"PO-Revision-Date: 2023-10-23 17:53+0200\n"
 "Last-Translator: Thomas Breinstrup\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -2517,7 +2517,7 @@ msgstr "Alle rapporter er anonyme. Se %s for flere oplysninger."
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr "vores Privatlivspolitik"
+msgstr "vores privatlivspolitik"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Problem details"
@@ -6104,7 +6104,7 @@ msgid ""
 "access\n"
 "trimmed audio data anytime."
 msgstr ""
-"Smartklip.\\n\n"
+"Smartklip.\n"
 "Hele originalfilen vil blive indsat i dit projekt, således at du kan tilgå\n"
 "tilklippede lyddata til enhver tid."
 
@@ -8795,17 +8795,17 @@ msgid ""
 "<br><br>The version of Audacity you are using is an <b>Alpha test version</"
 "b>."
 msgstr ""
-"<br><br>Den version du bruger af Audacity er en <b>Alpha-testversion</b>."
+"<br><br>Den version, du bruger af Audacity, er en <b>Alpha-testversion</b>."
 
 #: src/SplashDialog.cpp
 msgid ""
 "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
 msgstr ""
-"<br><br>Den version af Audacity du bruger er en <b>Beta-testversion</b>."
+"<br><br>Den version af Audacity, du bruger, er en <b>Beta-testversion</b>."
 
 #: src/SplashDialog.cpp
 msgid "Get the Official Released Version of Audacity"
-msgstr "Hent den officielle udgivet version af Audacity"
+msgstr "Hent den officielt udgivne version af Audacity"
 
 #: src/SplashDialog.cpp
 msgid "Check Online"
@@ -16266,11 +16266,11 @@ msgstr ""
 
 #: src/prefs/DevicePrefs.cpp
 msgid "D&efault Sample Rate:"
-msgstr "Standard samplingshastigh&ed:"
+msgstr "Standardsamplingshastigh&ed:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Default Sample &Format:"
-msgstr "Standard optage&format:"
+msgstr "Standardoptage&format:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Latency"
@@ -16748,7 +16748,7 @@ msgstr "Eksporteret etiketstil:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
-msgstr "Eksporterede Allegro-filers (.gro) gemmetid som:"
+msgstr "Eksporterede Allegro-filers (.gro) gemmetid angives som:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17865,11 +17865,11 @@ msgstr "Tiendedele af sekunder"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "20ths of Seconds"
-msgstr "tyvendedele af sekunder"
+msgstr "Tyvendedele af sekunder"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "50ths of Seconds"
-msgstr "Halvtredsnedele af sekunder"
+msgstr "Halvtredsindstyvendedele af sekunder"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "100ths of Seconds"
@@ -17914,7 +17914,7 @@ msgstr "&Fastgjort optagelses-/afspilningspunkt"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "A&uto-scroll if head unpinned"
-msgstr "Rul &automatisk hvis hoved ikke er fastgjort"
+msgstr "Rul &automatisk, hvis hoved ikke er fastgjort"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Pinned &head position"
@@ -17926,7 +17926,7 @@ msgstr "Standard&visningstilstand:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default Waveform scale:"
-msgstr "Standard bølgeformsskala:"
+msgstr "Standardbølgeformsskala:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
