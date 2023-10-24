@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-23 00:26+0900\n"
+"PO-Revision-Date: 2023-10-24 23:38+0900\n"
 "Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
 "Language-Team: Akira Nishimura, Atsushi YOSHIDA, Phroneris, SakiPapa\n"
 "Language: ja\n"
@@ -463,7 +463,7 @@ msgstr ""
 "ファイルを %s に書き込むことができましたが、名前を %s に変更できません。"
 
 #: libraries/lib-files/FileException.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full."
@@ -1576,7 +1576,7 @@ msgid "Could not write to %s.\n"
 msgstr "パスに書き込めませんでした: %s\n"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Disk is full.\n"
 "%s"
@@ -2337,7 +2337,6 @@ msgid "Custom"
 msgstr "カスタム"
 
 #: libraries/lib-time-frequency-selection/ViewInfo.cpp
-#, fuzzy
 msgid "Enable &Looping"
 msgstr "ループを有効化(&L)"
 
@@ -2496,7 +2495,6 @@ msgid "There is not enough room available to paste the selection"
 msgstr "選択範囲を貼り付けるのに十分な余裕がありません"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
-#, fuzzy
 msgid "A track has a corrupted sample sequence."
 msgstr "トラックに破損したサンプルシーケンスがあります。"
 
@@ -2505,12 +2503,10 @@ msgid "There is not enough room available to expand the cut line"
 msgstr "カットラインを延長するのに十分な余裕がありません"
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
-#, fuzzy
 msgid "Pre-processing"
 msgstr "前処理(&P): "
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-#, fuzzy
 msgid "Rendering Time-Stretched Audio"
 msgstr "時間伸縮したオーディオをレンダリング"
 
@@ -2656,7 +2652,6 @@ msgid "No Local Help"
 msgstr "ローカルヘルプがありません"
 
 #: libraries/lib-wx-init/HelpText.cpp
-#, fuzzy
 msgid ""
 "Audacity can import unprotected files in many other formats (such as M4A and "
 "WMA, compressed WAV files from portable recorders and audio from video "
@@ -2860,7 +2855,7 @@ msgstr ""
 #. %s will be replaced with an explanation of the actual reason of
 #. project modification.
 #: modules/mod-aup/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s\n"
 "This feature is not supported in Audacity versions past 3.3.3.\n"
@@ -3117,12 +3112,10 @@ msgstr "%.2f kbps"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
 #: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Bit Rate"
 msgstr "ビットレート"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp
-#, fuzzy
 msgid "Quality (kbps)"
 msgstr "品質（kbps）"
 
@@ -3131,7 +3124,6 @@ msgid "Compression"
 msgstr "圧縮"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Frame Duration"
 msgstr "フレーム長"
 
@@ -3160,7 +3152,6 @@ msgid "60 ms"
 msgstr "60 ミリ秒"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp
-#, fuzzy
 msgid "Vbr Mode"
 msgstr "VBR モード"
 
@@ -4147,12 +4138,10 @@ msgid "Version"
 msgstr "バージョン"
 
 #: modules/mod-mp2/ExportMP2.cpp
-#, fuzzy
 msgid "MPEG2"
 msgstr "MPEG2"
 
 #: modules/mod-mp2/ExportMP2.cpp
-#, fuzzy
 msgid "MPEG1"
 msgstr "MPEG1"
 
@@ -4257,7 +4246,6 @@ msgid "Medium"
 msgstr "控えめ"
 
 #: modules/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Bit Rate Mode"
 msgstr "ビットレートモード"
 
@@ -4857,43 +4845,34 @@ msgid "Internal logic fault"
 msgstr "内部処理エラー"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "no error"
 msgstr "エラーなし"
 
 #: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid argument"
 msgstr "無効なサンプリング周波数"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "buffer too small"
 msgstr "バッファが小さすぎます"
 
 #: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
-#, fuzzy
-#| msgid "Internal Error"
 msgid "internal error"
 msgstr "内部エラー"
 
 #: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid packet"
 msgstr "無効なパケット"
 
 #: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "not implemented"
 msgstr "未実装"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "invalid state"
 msgstr "無効な状態"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "memory allocation has failed"
 msgstr "メモリの割り当てに失敗しました"
 
@@ -4902,32 +4881,26 @@ msgid "Unknown error"
 msgstr "不明なエラー（Unknown error）"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Auto"
 msgstr "自動"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Maximum"
 msgstr "最大"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "VBR Mode"
 msgstr "VBR モード"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Optimize for"
 msgstr "最適化用途"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Speech"
 msgstr "スピーチ"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Buffer overflow in OGG packet"
 msgstr "OGG パケットのバッファオーバーフロー"
 
@@ -4936,122 +4909,99 @@ msgid "Unable to write OGG page header"
 msgstr "OGG ページヘッダーを書き込めません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to write OGG page"
 msgstr "OGG ページを書き込めません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Opus Files"
 msgstr "Opus ファイル"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unsupported sample rate"
 msgstr "未対応のサンプリング周波数"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Exporting selected audio as Opus"
 msgstr "選択したオーディオを Opus としてエクスポート中"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Exporting the audio as Opus"
 msgstr "オーディオを Opus としてエクスポート中"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to create Opus encoder"
 msgstr "Opus エンコーダを作成できません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set bitrate"
 msgstr "ビットレートを設定できません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set complexity"
 msgstr "複雑度を設定できません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set bandwidth"
 msgstr "バンド幅を設定できません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set VBR mode"
 msgstr "VBR モードを設定できません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set CVBR mode"
 msgstr "CVBR モードを設定できません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to get lookahead"
 msgstr "先読みを取得できません"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Failed to calculate correct preskip"
 msgstr "正しい preskip 値を計算できませんでした"
 
 #: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Failed to encode input buffer"
 msgstr "入力バッファのエンコードに失敗しました"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "Opus files"
 msgstr "Opus ファイル"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "file has changed the number of channels in the middle."
-msgstr "ファイル中央のチャンネル数を変更しました。"
+msgstr "中央のチャンネル数が変更されました。"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "IO error reading from file"
 msgstr "ファイル読み込み中の IO エラー"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "not an Opus file"
 msgstr "Opus ファイルではありません"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid header"
 msgstr "無効なヘッダー"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "unsupported version"
 msgstr "未対応バージョン"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid stream structure"
 msgstr "無効なストリーム構造"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "stream is not seekable"
 msgstr "ストリームはシークできません"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid timestamp"
 msgstr "無効なタイムスタンプ"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to decode Opus file: %s"
 msgstr "Opus ファイル「%s」のデコードに失敗"
 
@@ -5064,12 +5014,10 @@ msgid "WAV (Microsoft)"
 msgstr "WAV（Microsoft）"
 
 #: modules/mod-pcm/ExportPCM.cpp
-#, fuzzy
 msgid "Encoding"
 msgstr "エンコーディング"
 
 #: modules/mod-pcm/ExportPCM.cpp
-#, fuzzy
 msgid "Header"
 msgstr "ヘッダー"
 
@@ -5650,14 +5598,12 @@ msgid "File Format Support"
 msgstr "サポートするファイル形式"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "MP3 Import"
 msgstr "MP3 インポート"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
 #.
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "MP3 Export"
 msgstr "MP3 エクスポート"
 
@@ -5667,7 +5613,6 @@ msgstr "MP3 エクスポート"
 #. i18n-hint: Opus is the codec name. This name should not be translated
 #.
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Opus Import and Export"
 msgstr "Opus インポートとエクスポート"
 
@@ -5842,7 +5787,6 @@ msgid "Beats and Measures"
 msgstr "拍と小節"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Setting a loop region also makes an audio selection"
 msgstr "ループ領域を設定すると、オーディオも選択されます"
 
@@ -5869,7 +5813,6 @@ msgstr "録音/再生ヘッドをピン留め"
 
 # スクラブルーラのコンテキストメニュー
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Enable pinned play &head"
 msgstr "再生ヘッドをピン留め(&H)"
 
@@ -6164,7 +6107,7 @@ msgid "Audacity Configuration Error"
 msgstr "Audacity 設定エラー"
 
 #: src/AudacityFileConfig.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
 "\n"
@@ -6228,7 +6171,7 @@ msgstr "どの方法でオーディオを貼り付けますか?"
 
 #. i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.
 #: src/AudioPasteDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The full smart clip is %s. Larger sizes will take longer to paste."
 msgstr ""
 "スマートクリップ全体で %s あります。サイズが大きい場合は、貼り付けに時間がか"
@@ -7175,7 +7118,6 @@ msgid "&Replot..."
 msgstr "再描画(&R)..."
 
 #: src/FreqWindow.cpp
-#, fuzzy
 msgid ""
 "To plot the spectrum, all selected tracks must have the same sample rate."
 msgstr ""
@@ -8154,7 +8096,7 @@ msgstr "警告: 自動復旧に問題が起きました"
 #. %s will be replaced with an explanation of the actual reason of
 #. project modification.
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s\n"
 "This feature is not supported in Audacity versions past 3.3.3.\n"
@@ -8385,13 +8327,11 @@ msgstr ""
 "開くためには、他のドライブにコピーしてください。"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "A channel of a stereo track was missing."
 msgstr "ステレオトラックの片チャンネルが欠落しています。"
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid ""
 "This project contained stereo tracks with different sample rates per channel."
 msgstr ""
@@ -8400,7 +8340,6 @@ msgstr ""
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid ""
 "This project contained stereo tracks with different sample formats in "
 "channels."
@@ -8410,7 +8349,6 @@ msgstr ""
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "This project contained stereo tracks with non-aligned content."
 msgstr ""
 "このプロジェクトには、揃っていない内容のステレオトラックが含まれていました。"
@@ -8947,7 +8885,6 @@ msgid "Check Online"
 msgstr "オンラインで確認"
 
 #: src/SplashDialog.cpp
-#, fuzzy
 msgid ""
 "We strongly recommend that you use our latest stable released version, which "
 "has full documentation and support.<br/><br/>"
@@ -8956,7 +8893,6 @@ msgstr ""
 "お勧めします。<br/><br/>"
 
 #: src/SplashDialog.cpp
-#, fuzzy
 msgid ""
 "You can help us get Audacity ready for release by joining our [[https://www."
 "audacityteam.org/community/|community]].<hr/><br/><br/>"
@@ -8971,13 +8907,12 @@ msgid "What's new in Audacity %s"
 msgstr "Audacity %s の更新内容"
 
 #: src/SplashDialog.cpp
-#, fuzzy
 msgid ""
 "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
 msgstr "<p>今回のリリースでは、拍と小節、時間伸長などが追加されました。<br/>"
 
 #: src/SplashDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Watch the [[%s|release video]] or read the [[https://support.audacityteam."
 "org/additional-resources/changelog|changelog]] to learn more!</p>"
@@ -9140,7 +9075,6 @@ msgid "Metadata Tags"
 msgstr "メタデータタグ"
 
 #: src/TagsEditor.cpp
-#, fuzzy
 msgid "&Metadata Editor"
 msgstr "メタデータエディタ(&M)"
 
@@ -9506,12 +9440,10 @@ msgid "Export Audio"
 msgstr "オーディオをエクスポート"
 
 #: src/TimerRecordExportDialog.cpp src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Edit &Metadata..."
 msgstr "メタデータを編集...(&M)"
 
 #: src/TimerRecordExportDialog.cpp
-#, fuzzy
 msgid "O&K"
 msgstr "O&K"
 
@@ -9597,7 +9529,7 @@ msgid "Remove Track"
 msgstr "トラックを削除"
 
 #: src/TrackUtilities.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Removed track '%s'."
 msgstr "トラック「%s」を削除しました。"
 
@@ -9806,7 +9738,7 @@ msgstr "アカウントをリンク(&L)"
 
 #. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
 "account\" above to proceed."
@@ -10643,7 +10575,6 @@ msgstr "スペクトル選択"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Sche&me:"
 msgstr "配色(&M):"
@@ -10732,7 +10663,6 @@ msgstr ""
 "自動ダッキングは、選択したトラックの下にコントロールトラックを必要とします。"
 
 #: src/effects/AutoDuck.cpp
-#, fuzzy
 msgid "Rendering Control-Track Time-Stretched Audio"
 msgstr "コントロールトラックの時間伸縮オーディオをレンダリング"
 
@@ -10948,7 +10878,6 @@ msgid "78"
 msgstr "78"
 
 #: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Change Speed and Pitch"
 msgstr "速度とピッチを変更"
 
@@ -12447,7 +12376,7 @@ msgstr "クリッピング"
 #. "second", etc.)
 #.
 #: src/effects/FindClipping.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "find clipping"
 msgid "%lld of %lld"
 msgstr "%lld（ %lld 中）"
@@ -13042,7 +12971,6 @@ msgid "Sets the peak amplitude of a one or more tracks"
 msgstr "1 本以上のトラックに対してピーク振幅を設定します"
 
 #: src/effects/Repair.cpp
-#, fuzzy
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
 msgstr "リペアエフェクトは伸長・短縮を行ったクリップ内では使用できません。"
 
@@ -13324,7 +13252,6 @@ msgstr "無音のしきい値"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
-#, fuzzy
 msgid "Presmooth Time:"
 msgstr "Presmooth Time:"
 
@@ -13333,7 +13260,6 @@ msgstr "Presmooth Time:"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
-#, fuzzy
 msgid "Presmooth Time"
 msgstr "Presmooth Time"
 
@@ -13342,7 +13268,6 @@ msgstr "Presmooth Time"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
-#, fuzzy
 msgid "Line Time:"
 msgstr "Line Time:"
 
@@ -13351,12 +13276,10 @@ msgstr "Line Time:"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
-#, fuzzy
 msgid "Line Time"
 msgstr "Line Time"
 
 #: src/effects/ScoreAlignDialog.cpp
-#, fuzzy
 msgid "Smooth Time:"
 msgstr "Smooth Time:"
 
@@ -13365,7 +13288,6 @@ msgstr "Smooth Time:"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
-#, fuzzy
 msgid "Smooth Time"
 msgstr "Smooth Time"
 
@@ -14161,17 +14083,14 @@ msgid "Vamp"
 msgstr "Vamp"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Entire &Project"
 msgstr "プロジェクト全体(&P)"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "M&ultiple Files"
 msgstr "複数ファイル(&U)"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Curren&t selection"
 msgstr "現在の選択範囲(&T)"
 
@@ -14188,27 +14107,22 @@ msgid "Numbering after File name prefix"
 msgstr "ファイル名プレフィックスの後に番号付け"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Export Range:"
 msgstr "エクスポート範囲:"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Export entire project"
 msgstr "プロジェクト全体をエクスポート"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Export multiple files"
 msgstr "複数ファイルをエクスポート"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Export current selection"
 msgstr "選択範囲をエクスポート"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Trim blank space before first clip"
 msgstr "最初のクリップ以前の空白をトリミング"
 
@@ -14237,7 +14151,6 @@ msgid "&Export"
 msgstr "エクスポート(&E)"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Unable to create destination folder"
 msgstr "保存先フォルダーを作成できません"
 
@@ -14284,7 +14197,6 @@ msgid "Export"
 msgstr "エクスポート"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Custom Sample Rate"
 msgstr "カスタムサンプリング周波数"
 
@@ -14294,12 +14206,10 @@ msgid "New sample rate (Hz):"
 msgstr "新規サンプリング周波数（Hz）:"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "File &Name:"
 msgstr "ファイル名(&N):"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Fo&lder:"
 msgstr "フォルダー(&L):"
 
@@ -14308,49 +14218,40 @@ msgid "&Browse..."
 msgstr "参照(&B)..."
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "&Format:"
 msgstr "形式(&F):"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Audio options"
 msgstr "オーディオオプション"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Channels"
 msgstr "チャンネル"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "M&ono"
 msgstr "モノラル(&O)"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "&Stereo"
 msgstr "ステレオ(&S)"
 
 #. i18n-hint refers to custom channel mapping configuration
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Custom mappin&g"
 msgstr "カスタムマッピング(&G)"
 
 #. i18n-hint accessibility hint, refers to export channel configuration
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Configure custom mapping"
 msgstr "カスタムマッピングの設定"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Configure"
 msgstr "設定"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Sample &Rate"
 msgstr "サンプリング周波数(&R)"
 
@@ -14363,7 +14264,7 @@ msgid "Advanced Mixing Options"
 msgstr "高度なミキシングオプション"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%d Hz (custom)"
 msgstr "%d Hz（カスタム）"
 
@@ -14438,7 +14339,6 @@ msgid "No format specific options"
 msgstr "この形式にはオプションはありません"
 
 #: src/export/ExportProgressUI.cpp
-#, fuzzy
 msgid "Export completed with error."
 msgstr "エラーによりエクスポートが終了しました。"
 
@@ -14628,17 +14528,14 @@ msgid_plural "%s, %d of %d clips %s"
 msgstr[0] "%1$s、%3$d個中%2$d個目のクリップ、%4$s"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Moved clips to the right"
 msgstr "クリップを右に移動"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Moved clips to the left"
 msgstr "クリップを左に移動"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Move audio clips"
 msgstr "オーディオクリップを移動"
 
@@ -14733,7 +14630,6 @@ msgid "Pasting clip contents, please wait"
 msgstr "クリップ内容を貼り付けます。お待ちください"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid ""
 "The content you are trying to paste will span across more tracks than you "
 "currently have available. Add more tracks and try again."
@@ -14742,7 +14638,6 @@ msgstr ""
 "トラックを追加して、もう一度試してください。"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid ""
 "There are not enough tracks selected to accommodate your copied content. "
 "Select additional tracks and try again."
@@ -14805,7 +14700,6 @@ msgid "Split to new track"
 msgstr "新規トラックに分割"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Split New"
 msgstr "分割して新規"
 
@@ -14914,7 +14808,6 @@ msgid "Ext&ra"
 msgstr "拡張(&R)"
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "Enable &Full Screen"
 msgstr "フルスクリーンを有効化(&F)"
 
@@ -14981,7 +14874,6 @@ msgid "&Export Audio..."
 msgstr "オーディオをエクスポート(&E)..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Export Other"
 msgstr "他をエクスポート"
 
@@ -15227,7 +15119,6 @@ msgid "&Labels"
 msgstr "ラベル(&L)"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label &Editor"
 msgstr "ラベルエディタ(&E)"
 
@@ -15244,7 +15135,6 @@ msgid "Paste Te&xt to New Label"
 msgstr "新規ラベルにテキストを貼り付け(&X)"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "&Typing Creates New Labels"
 msgstr "タイピングして新規ラベル(&T)"
 
@@ -15710,7 +15600,6 @@ msgid "Long Seek Rig&ht During Playback"
 msgstr "再生中に右へ大シーク(&H)"
 
 #: src/menus/TimelineMenus.cpp
-#, fuzzy
 msgid "&Timeline"
 msgstr "タイムライン(&T)"
 
@@ -16046,8 +15935,6 @@ msgid "Align &Together"
 msgstr "同じ開始点に整列(&T)"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
-#| msgid "&Move Selection with Tracks (on/off)"
 msgid "&Move Selection with Tracks"
 msgstr "トラックと共に選択範囲を移動(&M)"
 
@@ -16068,7 +15955,6 @@ msgid "By &Name"
 msgstr "名前(&N)"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Keep tracks synchronized (Sync-&Lock)"
 msgstr "トラックの同期を維持（同期ロック）(&L)"
 
@@ -16254,22 +16140,18 @@ msgid "Transport &Options"
 msgstr "録音/再生オプション(&O)"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Set sound activation le&vel..."
 msgstr "録音起動音量レベルを設定(&V)..."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Enable sound a&ctivated recording"
 msgstr "サウンドによる録音起動を有効化(&C)"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Hear &other tracks during recording"
 msgstr "他のトラックを再生しながら録音(&O)"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Enable audible input &monitoring"
 msgstr "オーディオ入力のモニタリングを有効化(&M)"
 
@@ -16404,17 +16286,14 @@ msgid "Skip to Selection End"
 msgstr "選択範囲の最後へ移動"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Enable &Extra Menus"
 msgstr "エクストラメニューを有効化(&E)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Show Track &Name as overlay"
 msgstr "トラック名をオーバーレイ表示(&N)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "&Show Clipping in Waveform"
 msgstr "波形にクリッピングを表示(&S)"
 
@@ -16511,7 +16390,6 @@ msgid "&Project Sample Rate:"
 msgstr "プロジェクトのサンプリング周波数 (&P):"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid ""
 "Sample Rate used when recording new tracks, mixing down tracks and for "
 "playback in this project."
@@ -17011,8 +16889,6 @@ msgid "IMPORT EXPORT"
 msgstr "インポート エクスポート"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
-#| msgid "Short cut"
 msgid "Shortcuts"
 msgstr "ショートカット"
 
@@ -17501,7 +17377,6 @@ msgid "Move all clips in track left/right"
 msgstr "トラック内のすべてのクリップを左右に移動"
 
 #: src/prefs/MousePrefs.cpp
-#, fuzzy
 msgid "using clip handles"
 msgstr "クリップハンドルを使用"
 
@@ -17605,8 +17480,6 @@ msgid "Preferences for Recording"
 msgstr "録音の環境設定"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
-#| msgid "Play &other tracks while recording (overdub)"
 msgid "Hear &other tracks while recording (overdub)"
 msgstr "他のトラックを再生しながら録音（オーバーダビング）(&O)"
 
@@ -17615,7 +17488,6 @@ msgid "Use &hardware to play other tracks"
 msgstr "他のトラックの再生にハードウェアを使用(&H)"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Audible input &monitoring"
 msgstr "オーディオ入力をモニタリング(&M)"
 
@@ -17737,7 +17609,6 @@ msgstr "周期"
 
 #. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
 #: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (Roseus)"
 msgstr "カラー（ローズ）"
@@ -18220,7 +18091,6 @@ msgid "Show Warnings/Prompts for"
 msgstr "警告/プロンプトの表示"
 
 #: src/prefs/WarningsPrefs.cpp
-#, fuzzy
 msgid "Saving &projects versus exporting audio"
 msgstr "オーディオのエクスポートではなくプロジェクトを保存する時(&P)"
 
@@ -18751,7 +18621,6 @@ msgstr "拍子記号の下（音価）を変更"
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Time Signature Toolbar"
 msgstr "拍子記号ツールバー"
 
@@ -19028,18 +18897,15 @@ msgid "Change Speed"
 msgstr "速度を変更"
 
 #: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-#, fuzzy
 msgid "Clip speed"
 msgstr "クリップ速度"
 
 #. i18n-hint: Title of an error message shown, when invalid clip speed is set
 #: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-#, fuzzy
 msgid "Invalid clip speed"
 msgstr "無効なクリップ速度"
 
 #: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-#, fuzzy
 msgid "Clip speed must be a positive value"
 msgstr "クリップ速度は正の値でなければなりません"
 
@@ -19166,19 +19032,19 @@ msgstr "同時表示(&M)"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Adjust left trim by %.02f seconds"
 msgstr "左トリミングを %.02f 秒単位で調節"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Trim by %.02fs"
 msgstr "%.02f トリミング"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Adjust right trim by %.02f seconds"
 msgstr "右トリミングを %.02f 秒単位で調節"
 
@@ -19187,7 +19053,6 @@ msgid "Click and drag to move clip boundary in time"
 msgstr "クリック＆ドラッグしてクリップの境界を時間移動"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-#, fuzzy
 msgid "Click and drag to stretch clip"
 msgstr "クリック＆ドラッグしてクリップを伸縮します。"
 
@@ -19196,7 +19061,6 @@ msgid "Split Clip"
 msgstr "クリップを分割"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-#, fuzzy
 msgid "Join Clips"
 msgstr "クリップを結合"
 
@@ -19209,19 +19073,18 @@ msgid "Change Speed..."
 msgstr "スピードの変更..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-#, fuzzy
 msgid "Render Clip Stretching"
 msgstr "クリップ伸縮をレンダリング"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr "クリップ速度を %.01f%% に変更"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Changed Speed to %.01f%%"
 msgstr "速度を %.01f%% に変更"
 
@@ -19242,22 +19105,18 @@ msgid "Clip Name Edit"
 msgstr "クリップ名の編集"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Rendered time-stretched audio"
 msgstr "時間伸縮したオーディオをレンダリング"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "&Rename Clip..."
 msgstr "クリップ名を変更...(&R)"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Change &Speed..."
 msgstr "スピードを変更...(&S)"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Render Clip S&tretching"
 msgstr "クリップ伸縮をレンダリング(&T)"
 
@@ -19377,7 +19236,6 @@ msgid "Split Stereo to Mo&no"
 msgstr "ステレオからモノラルに分割(&N)"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid ""
 "The tracks you are attempting to merge to stereo contain clips at\n"
 "different positions, or otherwise mismatching clips. Merging them\n"
@@ -19399,7 +19257,6 @@ msgstr ""
 "続行してもよろしいですか?"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "Combine mono to stereo"
 msgstr "モノラルをステレオに統合"
 
@@ -19798,7 +19655,6 @@ msgid "Time shifted tracks/clips left %.02f seconds"
 msgstr "トラックまたはクリップを左に %.02f 秒移動しました"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
-#, fuzzy
 msgid "Move Clip"
 msgstr "クリップを移動"
 
@@ -20063,12 +19919,10 @@ msgid "Meter"
 msgstr "メーター"
 
 #: src/widgets/MeterPanel.cpp
-#, fuzzy
 msgid "Disable Silent Monitoring"
 msgstr "無音モニタリングを無効化"
 
 #: src/widgets/MeterPanel.cpp
-#, fuzzy
 msgid "Enable Silent Monitoring"
 msgstr "無音モニタリングを有効化"
 
@@ -20520,7 +20374,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aパーセント値に 1000% を超える数値を指定できません。"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                      Hint: 6 dB doubles the amplitude~%~\n"
@@ -20583,8 +20437,6 @@ msgid "Crossfade Tracks"
 msgstr "クロスフェード: トラック"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
-#| msgid "Fade Type"
 msgid "Fade TYPE"
 msgstr "フェードの種類"
 
@@ -20887,7 +20739,7 @@ msgid "Frequency must be at least 0.1 Hz."
 msgstr "周波数は少なくとも 0.1Hz である必要があります。"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz~%~\n"
@@ -20976,7 +20828,7 @@ msgstr ""
 "検出された無音部が多すぎます。~%最初の 10000 件だけにラベルを付加します。"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "No sounds found.~%~\n"
 "                 Try lowering 'Threshold level (dB)'."
@@ -20985,7 +20837,7 @@ msgstr ""
 "                 「しきい値（dB）」を小さくしてください。"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Labelling regions between sounds requires~%~\n"
 "                 at least two sounds.~%~\n"
@@ -21101,7 +20953,7 @@ msgid "Decay (ms)"
 msgstr "ディケイ（ミリ秒）"
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.~%~\n"
 "                             Gate frequencies above: ~s kHz~%~\n"
@@ -21114,7 +20966,7 @@ msgstr ""
 "                             ~a kHz 以下に設定してください。"
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.~%~\n"
 "                            Insufficient audio selected.~%~\n"
@@ -21125,7 +20977,7 @@ msgstr ""
 "                            ~a ミリ秒より長く選択してください。"
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Peak based on first ~a seconds ~a dB~%~\n"
 "               Suggested Threshold Setting ~a dB."
@@ -21152,7 +21004,7 @@ msgid "Q (higher value reduces width)"
 msgstr "Q（大きいほど幅が狭くなります）"
 
 #: plug-ins/notch.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "               Track sample rate is ~a Hz.~%~\n"
@@ -21389,7 +21241,7 @@ msgid "MIDI pitch of weak beat"
 msgstr "弱ビートの MIDI ピッチ"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Set either 'Number of bars' or~%~\n"
 "                    'Rhythm track duration' to greater than zero."
@@ -21820,7 +21672,6 @@ msgstr "波形の種類"
 
 # ディザリング手法のひとつ。ピーク振幅はシェープドより小さいが、ノイズの広域集中が少ない
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Triangle"
 msgstr "三角"
 
