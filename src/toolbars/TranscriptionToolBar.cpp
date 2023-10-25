@@ -100,7 +100,7 @@ Identifier TranscriptionToolBar::ID()
 TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
 : ToolBar( project, XO("Play-at-Speed"), ID(), true )
 {
-   SetPlaySpeed( 1.0 * 100.0 );
+   SetPlaySpeed( 1.0 * 1000.0 );
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mVk = std::make_unique<VoiceKey>();
 #endif
@@ -164,7 +164,7 @@ void TranscriptionToolBar::Create(wxWindow * parent)
    //JKC: Set speed this way is better, as we don't
    //then stop Audio if it is playing, so we can be playing
    //audio and open a second project.
-   SetPlaySpeed( (mPlaySpeedSlider->Get()) * 100 );
+   SetPlaySpeed( (mPlaySpeedSlider->Get()) * 1000 );
 
    // Simulate a size event to set initial placement/size
    wxSizeEvent event(GetSize(), GetId());
@@ -244,7 +244,7 @@ void TranscriptionToolBar::Populate()
          .Page( 1.6667f )
    );
    mPlaySpeedSlider->SetSizeHints(wxSize(100, 25), wxSize(2000, 25));
-   mPlaySpeedSlider->Set(mPlaySpeed / 100.0);
+   mPlaySpeedSlider->Set(mPlaySpeed / 1000.0);
    mPlaySpeedSlider->SetLabel(_("Playback Speed"));
    Add( mPlaySpeedSlider, 1, wxALIGN_CENTER );
    mPlaySpeedSlider->Bind(wxEVT_SET_FOCUS,
@@ -527,7 +527,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
       // Set the speed range
       //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
       //mTimeTrack->SetRangeLower((double)mPlaySpeed / 100.0);
-      mEnvelope->Flatten((double)mPlaySpeed / 100.0);
+      mEnvelope->Flatten((double)mPlaySpeed / 1000.0);
    }
 
    // Pop up the button
@@ -577,7 +577,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & event)
 
 void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
 {
-   SetPlaySpeed( (mPlaySpeedSlider->Get()) * 100 );
+   SetPlaySpeed( (mPlaySpeedSlider->Get()) * 1000 );
    RegenerateTooltips();
 
    // If IO is busy, abort immediately
@@ -1132,7 +1132,7 @@ void OnPlaySpeedInc(const CommandContext &context)
    auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
-      tb->AdjustPlaySpeed(0.1f);
+      tb->AdjustPlaySpeed(0.01f);
    }
 }
 
@@ -1142,7 +1142,7 @@ void OnPlaySpeedDec(const CommandContext &context)
    auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
-      tb->AdjustPlaySpeed(-0.1f);
+      tb->AdjustPlaySpeed(-0.01f);
    }
 }
 

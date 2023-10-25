@@ -42,8 +42,8 @@ class TipWindow;
 #define DB_MAX 36.0f
 #define FRAC_MIN 0.0f
 #define FRAC_MAX 1.0f
-#define SPEED_MIN 0.01f
-#define SPEED_MAX 3.0f
+#define SPEED_MIN 0.001f
+#define SPEED_MAX 3.000f
 #define VEL_MIN -50.0f
 #define VEL_MAX 50.0f
 

@@ -278,6 +278,11 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
       prec = 1;
       trailing = NumValidatorStyle::ONE_TRAILING_ZERO;
    }
+   if (style == SPEED_SLIDER)
+   {
+      prec = 3;
+      trailing = NumValidatorStyle::THREE_TRAILING_ZEROES;
+   }
 
    ShuttleGui S(this, eIsCreating);
 
@@ -538,8 +543,8 @@ LWSlider::LWSlider(wxWindow *parent,
       stepValue = STEP_CONTINUOUS;
       break;
    case SPEED_SLIDER:
-      minValue = 0.01f;
-      maxValue = 3.0f;
+      minValue = 0.001f;
+      maxValue = 3.000f;
       stepValue = STEP_CONTINUOUS;
       break;
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1037,7 +1042,7 @@ TranslatableString LWSlider::GetTip(float value) const
 
       case SPEED_SLIDER:
          /* i18n-hint: "x" suggests a multiplicative factor */
-         val = XO("%.2fx").Format( value );
+         val = XO("%.3fx").Format( value );
          break;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1583,7 +1588,7 @@ void LWSlider::Increase(float steps)
 
    if ( stepValue == 0.0 )
    {
-      stepValue = ( mMaxValue - mMinValue ) / 10.0;
+      stepValue = ( mMaxValue - mMinValue ) / 100.0;
    }
 
    mCurrentValue += ( steps * stepValue );
@@ -1606,7 +1611,7 @@ void LWSlider::Decrease(float steps)
 
    if ( stepValue == 0.0 )
    {
-      stepValue = ( mMaxValue - mMinValue ) / 10.0;
+      stepValue = ( mMaxValue - mMinValue ) / 100.0;
    }
 
    mCurrentValue -= ( steps * stepValue );
