@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-22 02:00+0000\n"
+"PO-Revision-Date: 2023-10-26 22:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -13115,7 +13115,7 @@ msgstr "W ramach przetwarzania niektóre efekty VST muszą opóźniać powrót d
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "Enable &compensation"
-msgstr "Włącz &kompensatę"
+msgstr "Włą&cz kompensatę"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14781,7 +14781,7 @@ msgstr "N&arzędzia"
 
 #: src/menus/PluginMenus.cpp
 msgid "Reset &Configuration"
-msgstr "Resetuj &konfigurację"
+msgstr "Resetuj konfigura&cję"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Run Benchmark..."
@@ -17034,7 +17034,7 @@ msgstr "Okres"
 #: src/prefs/SpectrogramSettings.cpp
 msgctxt "spectrum prefs"
 msgid "Color (Roseus)"
-msgstr "Kolor (różowy)"
+msgstr "Kolor (Roseus)"
 
 #. i18n-hint: Classic color scheme(from theme) for spectrograms
 #: src/prefs/SpectrogramSettings.cpp
