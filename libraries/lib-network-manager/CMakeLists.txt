@@ -35,6 +35,7 @@ set( SOURCES
 
 set ( LIBRARIES
     lib-string-utils-interface
+    lib-preferences-interface
 PRIVATE
     CURL::libcurl
     threadpool::threadpool
