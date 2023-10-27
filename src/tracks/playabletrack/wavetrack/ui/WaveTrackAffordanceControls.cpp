@@ -701,18 +701,21 @@ using namespace MenuTable;
 
 // Register menu items
 
-AttachedItem sAttachment{ wxT("Edit/Other/Clip"),
+AttachedItem sAttachment{
    Command( L"RenameClip", XXO("&Rename Clip..."),
-      OnEditClipName, SomeClipIsSelectedFlag(), wxT("Ctrl+F2") )
+      OnEditClipName, SomeClipIsSelectedFlag(), wxT("Ctrl+F2") ),
+   wxT("Edit/Other/Clip")
 };
 
-AttachedItem sAttachment2{ wxT("Edit/Other/Clip"),
+AttachedItem sAttachment2{
    Command( L"ChangeClipSpeed", XXO("Change &Speed..."),
-      OnChangeClipSpeed, SomeClipIsSelectedFlag() )
+      OnChangeClipSpeed, SomeClipIsSelectedFlag() ),
+   wxT("Edit/Other/Clip")
 };
 
-AttachedItem sAttachment3{ wxT("Edit/Other/Clip"),
+AttachedItem sAttachment3{
    Command( L"RenderClipStretching", XXO("Render Clip S&tretching"),
-      OnRenderClipStretching, StretchedClipIsSelectedFlag())
+      OnRenderClipStretching, StretchedClipIsSelectedFlag()),
+   wxT("Edit/Other/Clip")
 };
 }

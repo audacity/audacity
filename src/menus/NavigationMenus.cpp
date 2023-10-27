@@ -522,12 +522,11 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 namespace {
 using namespace MenuTable;
-BaseItemSharedPtr ExtraGlobalCommands()
+auto ExtraGlobalCommands()
 {
    // Ceci n'est pas un menu
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Items( wxT("Navigation"),
       Command( wxT("PrevWindow"), XXO("Move Backward Through Active Windows"),
@@ -540,16 +539,15 @@ BaseItemSharedPtr ExtraGlobalCommands()
    return items;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraGlobalCommands())
+AttachedItem sAttachment2{ Indirect(ExtraGlobalCommands()),
+   wxT("Optional/Extra/Part2")
 };
 
-BaseItemSharedPtr ExtraFocusMenu()
+auto ExtraFocusMenu()
 {
-   static const auto FocusedTracksFlags = TracksExistFlag() | TrackPanelHasFocus();
-
-   static BaseItemSharedPtr menu{
+   static const auto FocusedTracksFlags =
+      TracksExistFlag() | TrackPanelHasFocus();
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Focus"), XXO("Foc&us"),
       Command( wxT("PrevFrame"),
@@ -578,9 +576,8 @@ BaseItemSharedPtr ExtraFocusMenu()
    return menu;
 }
 
-AttachedItem sAttachment3{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraFocusMenu())
+AttachedItem sAttachment3{ Indirect(ExtraFocusMenu()),
+   wxT("Optional/Extra/Part2")
 };
 
 }

@@ -882,13 +882,13 @@ using namespace MenuTable;
 // Register menu items
 
 AttachedItem sAttachment{
-   wxT("Optional/Extra/Part2/Scriptables2"),
    // Note that the PLUGIN_SYMBOL must have a space between words,
    // whereas the short-form used here must not.
    // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
    // you would have to use "CompareAudio" here.)
    // i18n-hint: Screenshot in the help menu has a much bigger dialog.
    Command( wxT("Screenshot"), XXO("Screenshot (short format)..."),
-      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+   wxT("Optional/Extra/Part2/Scriptables2")
 };
 }

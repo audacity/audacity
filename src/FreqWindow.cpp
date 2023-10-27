@@ -1253,10 +1253,11 @@ void OnPlotSpectrum(const CommandContext &context)
 // Register that menu item
 
 using namespace MenuTable;
-AttachedItem sAttachment{ wxT("Analyze/Analyzers/Windows"),
+AttachedItem sAttachment{
    Command( wxT("PlotSpectrum"), XXO("Plot Spectrum..."),
       OnPlotSpectrum,
-      AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag() )
+      AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag() ),
+   wxT("Analyze/Analyzers/Windows")
 };
 
 }

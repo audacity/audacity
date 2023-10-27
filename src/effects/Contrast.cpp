@@ -687,11 +687,12 @@ namespace {
 // Register that menu item
 
 using namespace MenuTable;
-AttachedItem sAttachment{ wxT("Analyze/Analyzers/Windows"),
+AttachedItem sAttachment{
    Command( wxT("ContrastAnalyser"), XXO("Contrast..."),
       OnContrast,
       AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
-      wxT("Ctrl+Shift+T") )
+      wxT("Ctrl+Shift+T") ),
+   wxT("Analyze/Analyzers/Windows")
 };
 
 }

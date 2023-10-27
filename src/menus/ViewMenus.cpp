@@ -399,11 +399,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 // Under /MenuBar
 namespace {
 using namespace MenuTable;
-BaseItemSharedPtr ViewMenu()
+auto ViewMenu()
 {
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XXO("&View"),
       Section( "Basic",
@@ -463,13 +462,9 @@ BaseItemSharedPtr ViewMenu()
       )
    ) ) };
    return menu;
-   
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(ViewMenu())
-};
+AttachedItem sAttachment1{ Indirect(ViewMenu()) };
 }
 
 #undef FN

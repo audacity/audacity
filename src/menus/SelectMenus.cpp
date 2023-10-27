@@ -940,10 +940,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 namespace {
 using namespace MenuTable;
-BaseItemSharedPtr SelectMenu()
+auto SelectMenu()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: (verb) It's an item on a menu. */
    Menu( wxT("Select"), XXO("&Select"),
@@ -1029,15 +1029,12 @@ BaseItemSharedPtr SelectMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(SelectMenu())
-};
+AttachedItem sAttachment1{ Indirect(SelectMenu()) };
 
-BaseItemSharedPtr ExtraSelectionMenu()
+auto ExtraSelectionMenu()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Select"), XXO("&Selection"),
       Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
@@ -1076,14 +1073,13 @@ BaseItemSharedPtr ExtraSelectionMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraSelectionMenu())
+AttachedItem sAttachment2{ Indirect(ExtraSelectionMenu()),
+   wxT("Optional/Extra/Part1")
 };
 }
 
 namespace {
-BaseItemSharedPtr CursorMenu()
+auto CursorMenu()
 {
    using Options = CommandManager::Options;
    static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
@@ -1093,7 +1089,7 @@ BaseItemSharedPtr CursorMenu()
    // GA: 'Skip to' moves the viewpoint to center of the track and preserves the
    // selection. 'Cursor to' does neither. 'Center at' might describe it better
    // than 'Skip'.
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XXO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
@@ -1125,15 +1121,14 @@ BaseItemSharedPtr CursorMenu()
    return menu;
 }
 
-AttachedItem sAttachment0{
-   wxT("Transport/Basic"),
-   Indirect(CursorMenu())
+AttachedItem sAttachment0{ Indirect(CursorMenu()),
+   wxT("Transport/Basic")
 };
 
-BaseItemSharedPtr ExtraCursorMenu()
+auto ExtraCursorMenu()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XXO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
@@ -1158,15 +1153,14 @@ BaseItemSharedPtr ExtraCursorMenu()
    return menu;
 }
 
-AttachedItem sAttachment4{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraCursorMenu())
+AttachedItem sAttachment4{ Indirect(ExtraCursorMenu()),
+   wxT("Optional/Extra/Part2")
 };
 
-BaseItemSharedPtr ExtraSeekMenu()
+auto ExtraSeekMenu()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Seek"), XXO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
@@ -1186,9 +1180,8 @@ BaseItemSharedPtr ExtraSeekMenu()
    return menu;
 }
 
-AttachedItem sAttachment5{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraSeekMenu())
+AttachedItem sAttachment5{ Indirect(ExtraSeekMenu()),
+   wxT("Optional/Extra/Part1")
 };
 
 }

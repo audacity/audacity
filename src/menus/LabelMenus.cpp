@@ -684,7 +684,7 @@ void OnNewLabelTrack(const CommandContext &context)
 // Menu definitions
 
 using namespace MenuTable;
-BaseItemSharedPtr LabelEditMenus()
+auto LabelEditMenus()
 {
    using namespace MenuTable;
    using Options = CommandManager::Options;
@@ -695,7 +695,7 @@ BaseItemSharedPtr LabelEditMenus()
 
    // Returns TWO menus.
 
-   static BaseItemSharedPtr menus{
+   static auto menus = std::shared_ptr{
    Items( wxT("LabelEditMenus"),
 
    Menu( wxT("Labels"), XXO("&Labels"),
@@ -783,15 +783,15 @@ BaseItemSharedPtr LabelEditMenus()
    return menus;
 }
 
-AttachedItem sAttachment1{
+AttachedItem sAttachment1{ Indirect(LabelEditMenus()),
    { wxT("Edit/Other"),
-     { OrderingHint::Before, wxT("EditMetaData") } },
-   Indirect(LabelEditMenus())
+     { OrderingHint::Before, wxT("EditMetaData") } }
 };
 
-AttachedItem sAttachment2{ wxT("Tracks/Add/Add"),
+AttachedItem sAttachment2{
    Command( wxT("NewLabelTrack"), XXO("&Label Track"),
-      OnNewLabelTrack, AudioIONotBusyFlag() )
+      OnNewLabelTrack, AudioIONotBusyFlag() ),
+   wxT("Tracks/Add/Add")
 };
 
 }

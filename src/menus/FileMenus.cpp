@@ -10,6 +10,7 @@
 #include "../ProjectManager.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
+#include "Registry.h"
 #include "SelectFile.h"
 #include "../TagsEditor.h"
 #include "../SelectUtilities.h"
@@ -428,11 +429,10 @@ void OnExportFLAC(const CommandContext &context)
 
 using namespace MenuTable;
 
-BaseItemSharedPtr FileMenu()
+auto FileMenu()
 {
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("File"), XXO("&File"),
       Section( "Basic",
          /*i18n-hint: "New" is an action (verb) to create a NEW project*/
@@ -542,15 +542,11 @@ BaseItemSharedPtr FileMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(FileMenu())
-};
+AttachedItem sAttachment1{ Indirect(FileMenu()) };
 
-BaseItemSharedPtr HiddenFileMenu()
+auto HiddenFileMenu()
 {
-   static BaseItemSharedPtr menu
-   {
+   static auto menu = std::shared_ptr{
       ConditionalItems( wxT("HiddenFileItems"),
          []()
          {
@@ -568,14 +564,11 @@ BaseItemSharedPtr HiddenFileMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT(""),
-   Indirect(HiddenFileMenu())
-};
+AttachedItem sAttachment2{ Indirect(HiddenFileMenu()) };
 
-BaseItemSharedPtr ExtraExportMenu()
+auto ExtraExportMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
       Section( "Import-Export",
          Menu( wxT("Export"), XXO("&Export"),
             // Enable Export audio commands only when there are audio tracks.
@@ -593,8 +586,8 @@ BaseItemSharedPtr ExtraExportMenu()
 }
 
 AttachedItem sAttachment3{
-   wxT("Optional/Extra/Part1"),
-   Indirect( ExtraExportMenu() )
+   Indirect( ExtraExportMenu() ),
+   wxT("Optional/Extra/Part1")
 };
 
 }

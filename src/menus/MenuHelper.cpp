@@ -254,16 +254,6 @@ void AddSortedEffectMenuItems(
    }
 }
 
-auto MenuOrItems(const TranslatableString &label)
-   -> std::unique_ptr<MenuHelper::Group>
-{
-   using namespace MenuTable;
-   if (label.empty())
-      return Items("");
-   else
-      return Menu("", label);
-}
-
 auto MakeAddGroupItems(
    const EffectsMenuGroups& list,
    CommandFlag batchflags,
@@ -301,11 +291,21 @@ auto MakeAddGroupItems(
 
          if (!groupNames.empty())
          {
-            auto temp = MenuOrItems(p.first);
-            AddEffectMenuItemGroup(*temp,
-               groupNames, groupPlugs, groupFlags,
-               onMenuCommand);
-            items.push_back(move(temp));
+            using namespace MenuTable;
+            if (p.first.empty()) {
+               auto temp = Items("");
+               AddEffectMenuItemGroup(*temp,
+                  groupNames, groupPlugs, groupFlags,
+                  onMenuCommand);
+               items.push_back(move(temp));
+            }
+            else {
+               auto temp = Menu("", p.first);
+               AddEffectMenuItemGroup(*temp,
+                  groupNames, groupPlugs, groupFlags,
+                  onMenuCommand);
+               items.push_back(move(temp));
+            }
          }
       }
    };
@@ -332,13 +332,22 @@ void AddGroupedEffectMenuItems(
 
    auto doAddGroup = [&]
    {
+      using namespace MenuTable;
       if(names.empty())
          return;
 
       const auto inSubmenu = !path.empty() && (names.size() > 1);
-      auto items = MenuOrItems(inSubmenu ? path.back() : TranslatableString{});
-      AddEffectMenuItemGroup(*items, names, group, flags, onMenuCommand);
-      parentTable->push_back(move(items));
+      const auto label = inSubmenu ? path.back() : TranslatableString{};
+      if (label.empty()) {
+         auto items = Items("");
+         AddEffectMenuItemGroup(*items, names, group, flags, onMenuCommand);
+         parentTable->push_back(move(items));
+      }
+      else {
+         auto items = Menu("", label);
+         AddEffectMenuItemGroup(*items, names, group, flags, onMenuCommand);
+         parentTable->push_back(move(items));
+      }
 
       names.clear();
       group.clear();
@@ -753,16 +762,19 @@ void MenuHelper::PopulateEffectsMenu(
       if(section.compare != nullptr)
          std::sort(section.plugins.begin(), section.plugins.end(), section.compare);
 
-      std::unique_ptr<Group> group;
-      if (menuItems.empty())
-         group = MenuTable::Items("");
-      else
-         group = MenuTable::Section("");
-      section.add(*group, section.plugins);
-
-      if (group->empty())
-         continue;
-
-      menuItems.push_back(move(group));
+      if (menuItems.empty()) {
+         auto group = MenuTable::Items("");
+         section.add(*group, section.plugins);
+         if (group->empty())
+            continue;
+         menuItems.push_back(move(group));
+      }
+      else {
+         auto group = MenuTable::Section("");
+         section.add(*group, section.plugins);
+         if (group->empty())
+            continue;
+         menuItems.push_back(move(group));
+      }
    }
 }

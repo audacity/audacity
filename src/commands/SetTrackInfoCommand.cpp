@@ -428,7 +428,6 @@ using namespace MenuTable;
 // Register menu items
 
 AttachedItem sAttachment1{
-   wxT("Optional/Extra/Part2/Scriptables1"),
    Items( wxT(""),
       // Note that the PLUGIN_SYMBOL must have a space between words,
       // whereas the short-form used here must not.
@@ -440,16 +439,17 @@ AttachedItem sAttachment1{
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
-   )
+   ),
+   wxT("Optional/Extra/Part2/Scriptables1")
 };
 
 AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part2/Scriptables2"),
    // Note that the PLUGIN_SYMBOL must have a space between words,
    // whereas the short-form used here must not.
    // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
    // you would have to use "CompareAudio" here.)
    Command( wxT("SetTrack"), XXO("Set Track..."),
-      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+   wxT("Optional/Extra/Part2/Scriptables2")
 };
 }

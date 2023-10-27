@@ -29,7 +29,7 @@ void OnFullScreen(const CommandContext &context)
 
 using namespace MenuTable;
 
-BaseItemSharedPtr ExtraMenu()
+auto ExtraMenu()
 {
    static const auto pred =
       []{ return gPrefs->ReadBool(wxT("/GUI/ShowExtraMenus"), false); };
@@ -43,18 +43,15 @@ BaseItemSharedPtr ExtraMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(ExtraMenu())
-};
+AttachedItem sAttachment1{ Indirect(ExtraMenu()) };
 
 // Under /MenuBar/Optional/Extra/Part2
-BaseItemSharedPtr ExtraMiscItems()
+auto ExtraMiscItems()
 {
    using Options = CommandManager::Options;
 
    // Not a menu.
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( wxT("Misc"),
       // Delayed evaluation
       []( AudacityProject &project ) {
@@ -81,9 +78,8 @@ BaseItemSharedPtr ExtraMiscItems()
    return items;
 }
 
-AttachedItem sAttachment2{
-   Placement{ wxT("Optional/Extra/Part2"), { OrderingHint::End } },
-   Indirect(ExtraMiscItems())
+AttachedItem sAttachment2{ Indirect(ExtraMiscItems()),
+   Placement{ wxT("Optional/Extra/Part2"), { OrderingHint::End } }
 };
 
 }

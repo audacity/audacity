@@ -105,19 +105,20 @@ void MenuManager::UpdatePrefs()
 
 MenuVisitor::~MenuVisitor() = default;
 
-void MenuVisitor::BeginGroup( Registry::GroupItemBase &item, const Path &path )
+void MenuVisitor::BeginGroup(
+   const Registry::GroupItemBase &item, const Path &path)
 {
    bool isMenu = false;
    bool isExtension = false;
    auto pItem = &item;
-   const bool inlined = dynamic_cast<MenuTable::MenuItems*>(pItem);
+   const bool inlined = dynamic_cast<const MenuTable::MenuItems*>(pItem);
    if (inlined) {
    }
-   else if (dynamic_cast<MenuTable::MenuSection*>(pItem)) {
+   else if (dynamic_cast<const MenuTable::MenuSection*>(pItem)) {
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
    }
-   else if (auto pWhole = dynamic_cast<MenuTable::WholeMenu*>(pItem)) {
+   else if (auto pWhole = dynamic_cast<const MenuTable::WholeMenu*>(pItem)) {
       isMenu = true;
       isExtension = pWhole->extension;
       MaybeDoSeparator();
@@ -132,17 +133,18 @@ void MenuVisitor::BeginGroup( Registry::GroupItemBase &item, const Path &path )
    }
 }
 
-void MenuVisitor::EndGroup( Registry::GroupItemBase &item, const Path &path )
+void MenuVisitor::EndGroup(
+   const Registry::GroupItemBase &item, const Path &path)
 {
    auto pItem = &item;
-   const bool inlined = dynamic_cast<MenuTable::MenuItems*>(pItem);
+   const bool inlined = dynamic_cast<const MenuTable::MenuItems*>(pItem);
    if (inlined) {
    }
-   else if (dynamic_cast<MenuTable::MenuSection*>(pItem)) {
+   else if (dynamic_cast<const MenuTable::MenuSection*>(pItem)) {
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
    }
-   else if ( dynamic_cast<MenuTable::WholeMenu*>(pItem)) {
+   else if ( dynamic_cast<const MenuTable::WholeMenu*>(pItem)) {
       firstItem.pop_back();
       needSeparator.pop_back();
    }
@@ -151,10 +153,10 @@ void MenuVisitor::EndGroup( Registry::GroupItemBase &item, const Path &path )
       DoEndGroup(item, path);
 }
 
-void MenuVisitor::Visit( Registry::SingleItem &item, const Path &path )
+void MenuVisitor::Visit(const Registry::SingleItem &item, const Path &path)
 {
    MaybeDoSeparator();
-   DoVisit( item, path );
+   DoVisit(item, path);
 }
 
 void MenuVisitor::MaybeDoSeparator()
@@ -170,15 +172,15 @@ void MenuVisitor::MaybeDoSeparator()
       DoSeparator();
 }
 
-void MenuVisitor::DoBeginGroup( Registry::GroupItemBase &, const Path & )
+void MenuVisitor::DoBeginGroup(const Registry::GroupItemBase &, const Path &)
 {
 }
 
-void MenuVisitor::DoEndGroup( Registry::GroupItemBase &, const Path & )
+void MenuVisitor::DoEndGroup(const Registry::GroupItemBase &, const Path &)
 {
 }
 
-void MenuVisitor::DoVisit( Registry::SingleItem &, const Path & )
+void MenuVisitor::DoVisit(const Registry::SingleItem &, const Path &)
 {
 }
 
@@ -187,11 +189,6 @@ void MenuVisitor::DoSeparator()
 }
 
 ProjectMenuVisitor::~ProjectMenuVisitor() = default;
-
-void *ProjectMenuVisitor::GetComputedItemContext()
-{
-   return &mProject;
-}
 
 namespace MenuTable {
 
@@ -257,16 +254,10 @@ const auto MenuPathStart = wxT("MenuBar");
 
 }
 
-Registry::GroupItemBase &MenuTable::ItemRegistry::Registry()
+auto MenuTable::ItemRegistry::Registry() -> Registry::GroupItem<Traits> &
 {
    static GroupItem<Traits> registry{ MenuPathStart };
    return registry;
-}
-
-MenuTable::AttachedItem::AttachedItem(
-   const Placement &placement, BaseItemPtr pItem )
-   : RegisteredItem{ std::move(pItem), placement }
-{
 }
 
 namespace {
@@ -278,7 +269,7 @@ struct MenuItemVisitor : ProjectMenuVisitor
    MenuItemVisitor( AudacityProject &proj, CommandManager &man )
       : ProjectMenuVisitor{ proj }, manager{ man } {}
 
-   void DoBeginGroup( GroupItemBase &item, const Path& ) override
+   void DoBeginGroup(const GroupItemBase &item, const Path&) override
    {
       auto pItem = &item;
       if (const auto pMenu = dynamic_cast<const MenuItem*>(pItem)) {
@@ -299,29 +290,29 @@ struct MenuItemVisitor : ProjectMenuVisitor
          wxASSERT( false );
    }
 
-   void DoEndGroup( GroupItemBase &item, const Path& ) override
+   void DoEndGroup(const GroupItemBase &item, const Path&) override
    {
       auto pItem = &item;
       if (const auto pMenu =
-          dynamic_cast<MenuItem*>( pItem )) {
+          dynamic_cast<const MenuItem*>( pItem )) {
          manager.EndMenu();
       }
       else
       if (const auto pConditionalGroup =
-          dynamic_cast<ConditionalGroupItem*>( pItem )) {
+          dynamic_cast<const ConditionalGroupItem*>( pItem )) {
          const bool flag = flags.back();
          if (!flag)
             manager.EndOccultCommands();
          flags.pop_back();
       }
       else
-      if ( const auto pGroup = dynamic_cast<MenuSection*>( pItem ) ) {
+      if ( const auto pGroup = dynamic_cast<const MenuSection*>( pItem ) ) {
       }
       else
          wxASSERT( false );
    }
 
-   void DoVisit( SingleItem &item, const Path& ) override
+   void DoVisit(const SingleItem &item, const Path&) override
    {
       const auto pCurrentMenu = manager.CurrentMenu();
       if ( !pCurrentMenu ) {
@@ -332,7 +323,7 @@ struct MenuItemVisitor : ProjectMenuVisitor
       }
       auto pItem = &item;
       if (const auto pCommand =
-          dynamic_cast<CommandItem*>( pItem )) {
+          dynamic_cast<const CommandItem*>(pItem)) {
          manager.AddItem(mProject,
             pCommand->name, pCommand->label_in,
             pCommand->finder, pCommand->callback,
@@ -341,7 +332,7 @@ struct MenuItemVisitor : ProjectMenuVisitor
       }
       else
       if (const auto pCommandList =
-         dynamic_cast<CommandGroupItem*>( pItem ) ) {
+         dynamic_cast<const CommandGroupItem*>(pItem)) {
          manager.AddItemList(pCommandList->name,
             pCommandList->items.data(), pCommandList->items.size(),
             pCommandList->finder, pCommandList->callback,
@@ -349,7 +340,7 @@ struct MenuItemVisitor : ProjectMenuVisitor
       }
       else
       if (const auto pSpecial =
-          dynamic_cast<SpecialItem*>( pItem )) {
+          dynamic_cast<const SpecialItem*>(pItem)) {
          wxASSERT( pCurrentMenu );
          pSpecial->fn(mProject, *pCurrentMenu);
       }
@@ -436,8 +427,8 @@ void MenuManager::Visit(ProjectMenuVisitor &visitor)
    static const auto menuTree = MenuTable::Items( MenuPathStart );
 
    wxLogNull nolog;
-   Registry::Visit( visitor, menuTree.get(),
-      &MenuTable::ItemRegistry::Registry() );
+   Registry::Visit(visitor, menuTree.get(),
+      &MenuTable::ItemRegistry::Registry(), visitor.mProject);
 }
 
 // TODO: This surely belongs in CommandManager?

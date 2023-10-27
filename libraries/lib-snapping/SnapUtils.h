@@ -56,7 +56,10 @@ struct SNAPPING_API SnapResult final
    bool snapped {};
 };
 
-struct SnapRegistryTraits : Registry::DefaultTraits{};
+struct SnapRegistryTraits : Registry::DefaultTraits{
+   using LeafTypes = List<SnapRegistryItem>;
+   using NodeTypes = List<SnapRegistryGroup, SnapFunctionSuperGroup>;
+};
 
 struct SnapRegistryGroupData {
    const TranslatableString label;
@@ -88,13 +91,13 @@ struct SNAPPING_API SnapRegistryItem : public Registry::SingleItem
    virtual SnapResult SingleStep(const AudacityProject& project, double time, bool upwards) const = 0;
 };
 
-SNAPPING_API Registry::BaseItemPtr TimeInvariantSnapFunction(
+std::unique_ptr<SnapRegistryItem> TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    double multiplier);
 
 using MultiplierFunctor = std::function<double(const AudacityProject&)>;
 
-SNAPPING_API Registry::BaseItemPtr TimeInvariantSnapFunction(
+std::unique_ptr<SnapRegistryItem> TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    MultiplierFunctor functor);
 
@@ -102,11 +105,11 @@ constexpr auto SnapFunctionGroup = Callable::UniqueMaker<
    SnapRegistryGroup, const Identifier &, SnapRegistryGroupData>();
 
 struct SNAPPING_API SnapFunctionsRegistry final {
-   static Registry::GroupItemBase& Registry();
+   static Registry::GroupItem<SnapRegistryTraits>& Registry();
 
    static void Visit(SnapRegistryVisitor& visitor);
 
-   static SnapRegistryItem* Find(const Identifier& id);
+   static const SnapRegistryItem* Find(const Identifier& id);
 
    static SnapResult Snap(const Identifier& id, const AudacityProject& project, double time, bool nearest);
    static SnapResult SingleStep(
@@ -114,20 +117,8 @@ struct SNAPPING_API SnapFunctionsRegistry final {
       bool upwards);
 };
 
-struct SNAPPING_API SnapRegistryItemRegistrator final :
-    public Registry::RegisteredItem<Registry::BaseItem, SnapFunctionsRegistry>
-{
-   SnapRegistryItemRegistrator(
-      const Registry::Placement& placement, Registry::BaseItemPtr pItem);
-
-   SnapRegistryItemRegistrator(
-      const wxString& path, Registry::BaseItemPtr pItem)
-       // Delegating constructor
-       : SnapRegistryItemRegistrator(
-            Registry::Placement { path }, std::move(pItem))
-   {
-   }
-};
+using SnapRegistryItemRegistrator =
+   Registry::RegisteredItem<SnapFunctionsRegistry>;
 
 struct SnapFunctionSuperGroup : Composite::Extension<
    Registry::GroupItem<SnapRegistryTraits>, void, const Identifier&

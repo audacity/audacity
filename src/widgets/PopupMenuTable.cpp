@@ -30,11 +30,6 @@ PopupSubMenu::PopupSubMenu(const Identifier &stringId,
 
 PopupMenuVisitor::~PopupMenuVisitor() = default;
 
-void *PopupMenuVisitor::GetComputedItemContext()
-{
-   return this;
-}
-
 PopupMenu::~PopupMenu() = default;
 
 namespace {
@@ -62,9 +57,11 @@ public:
       , mpUserData{ pUserData }
    {}
 
-   void DoBeginGroup( Registry::GroupItemBase &item, const Path &path ) override;
-   void DoEndGroup( Registry::GroupItemBase &item, const Path &path ) override;
-   void DoVisit( Registry::SingleItem &item, const Path &path ) override;
+   void DoBeginGroup(const Registry::GroupItemBase &item, const Path &path)
+      override;
+   void DoEndGroup(const Registry::GroupItemBase &item, const Path &path)
+      override;
+   void DoVisit(const Registry::SingleItem &item, const Path &path) override;
    void DoSeparator() override;
 
    std::vector< std::unique_ptr<PopupMenuImpl> > mMenus;
@@ -72,9 +69,10 @@ public:
    void *const mpUserData;
 };
 
-void PopupMenuBuilder::DoBeginGroup( Registry::GroupItemBase &item, const Path &path )
+void PopupMenuBuilder::DoBeginGroup(
+   const Registry::GroupItemBase &item, const Path &path)
 {
-   if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
+   if ( auto pItem = dynamic_cast<const PopupSubMenu*>(&item) ) {
       if ( !pItem->caption.empty() ) {
          auto newMenu =
             std::make_unique<PopupMenuImpl>( mMenu->pUserData );
@@ -84,9 +82,10 @@ void PopupMenuBuilder::DoBeginGroup( Registry::GroupItemBase &item, const Path &
    }
 }
 
-void PopupMenuBuilder::DoEndGroup( Registry::GroupItemBase &item, const Path &path )
+void PopupMenuBuilder::DoEndGroup(
+   const Registry::GroupItemBase &item, const Path &path)
 {
-   if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
+   if ( auto pItem = dynamic_cast<const PopupSubMenu*>(&item) ) {
       if ( !pItem->caption.empty() ) {
          auto subMenu = std::move( mMenus.back() );
          mMenus.pop_back();
@@ -96,9 +95,10 @@ void PopupMenuBuilder::DoEndGroup( Registry::GroupItemBase &item, const Path &pa
    }
 }
 
-void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
+void PopupMenuBuilder::DoVisit(
+   const Registry::SingleItem &item, const Path &path)
 {
-   auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
+   auto pEntry = static_cast<const PopupMenuTableEntry*>( &item );
    switch (pEntry->type) {
       case PopupMenuTable::Entry::Item:
       {
@@ -156,14 +156,8 @@ void PopupMenuTable::ExtendMenu( PopupMenu &menu, PopupMenuTable &table )
    auto &theMenu = dynamic_cast<PopupMenuImpl&>(menu);
 
    PopupMenuBuilder visitor{ table, theMenu, theMenu.pUserData };
-   Registry::Visit(
-      visitor, table.Get( theMenu.pUserData ).get(), table.GetRegistry() );
-}
-
-void PopupMenuTable::RegisterItem(
-   const Registry::Placement &placement, Registry::BaseItemPtr pItem )
-{
-   Registry::RegisterItem( *mRegistry, placement, std::move( pItem ) );
+   Registry::Visit(visitor, table.Get( theMenu.pUserData ).get(),
+      table.GetRegistry(), visitor);
 }
 
 void PopupMenuTable::Append(

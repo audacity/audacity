@@ -1565,7 +1565,6 @@ AttachedToolBarMenuItem::AttachedToolBarMenuItem(
    std::vector< Identifier > excludeIDs
 )  : mId{ id }
    , mAttachedItem{
-      Registry::Placement{ wxT("View/Other/Toolbars/Toolbars/Other"), hint },
       (  MenuTable::FinderScope(
             [this](AudacityProject &) -> CommandHandlerObject&
                { return *this; } ),
@@ -1574,7 +1573,9 @@ AttachedToolBarMenuItem::AttachedToolBarMenuItem(
             AlwaysEnabledFlag,
             CommandManager::Options{}.CheckTest( [id](AudacityProject &project){
                auto &toolManager = ToolManager::Get( project );
-               return toolManager.IsVisible( id ); } ) ) ) }
+               return toolManager.IsVisible( id ); } ) ) ),
+      Registry::Placement{ wxT("View/Other/Toolbars/Toolbars/Other"), hint }
+   }
    , mExcludeIds{ std::move( excludeIDs ) }
 {}
 

@@ -83,7 +83,7 @@ public:
    // Objects of this type are statically constructed in files implementing
    // subclasses of ImportPlugin
    struct IMPORT_EXPORT_API RegisteredImportPlugin final
-      : public Registry::RegisteredItem<ImporterItem>
+      : Registry::RegisteredItem<ImporterItem>
    {
       RegisteredImportPlugin(
          const Identifier &id, // an internal string naming the plug-in
@@ -179,8 +179,11 @@ public:
               TranslatableString &errorMessage);
 
 private:
+   struct Traits : Registry::DefaultTraits {
+      using LeafTypes = List<ImporterItem>;
+   };
    struct IMPORT_EXPORT_API ImporterItem final : Registry::SingleItem {
-      static Registry::GroupItemBase &Registry();
+      static Registry::GroupItem<Traits> &Registry();
 
       ImporterItem( const Identifier &id, std::unique_ptr<ImportPlugin> pPlugin );
       ~ImporterItem();

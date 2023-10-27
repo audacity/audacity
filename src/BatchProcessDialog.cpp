@@ -1523,10 +1523,10 @@ const ReservedCommandFlag&
 
 using namespace MenuTable;
 
-BaseItemSharedPtr PluginMenuItems()
+auto PluginMenuItems()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( "Macros",
       Section( "RepeatLast",
          // Delayed evaluation:
@@ -1572,37 +1572,32 @@ BaseItemSharedPtr PluginMenuItems()
    return items;
 }
 
-AttachedItem sAttachment1{
-   wxT("Tools/Manage"),
-   Indirect(PluginMenuItems())
-};
+AttachedItem sAttachment1{ Indirect(PluginMenuItems()), wxT("Tools/Manage") };
 
-BaseItemSharedPtr ExtraScriptablesIMenu()
+auto ExtraScriptablesIMenu()
 {
    // These are the more useful to VI user Scriptables.
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables1"), XXO("Script&ables I") )
    };
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraScriptablesIMenu())
+AttachedItem sAttachment2{ Indirect(ExtraScriptablesIMenu()),
+   wxT("Optional/Extra/Part2")
 };
 
-BaseItemSharedPtr ExtraScriptablesIIMenu()
+auto ExtraScriptablesIIMenu()
 {
    // Less useful to VI users.
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables2"), XXO("Scripta&bles II") )
    };
    return menu;
 }
 
-AttachedItem sAttachment3{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraScriptablesIIMenu())
+AttachedItem sAttachment3{ Indirect(ExtraScriptablesIIMenu()),
+   wxT("Optional/Extra/Part2")
 };

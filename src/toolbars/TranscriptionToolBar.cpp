@@ -1148,21 +1148,20 @@ void OnPlaySpeedDec(const CommandContext &context)
 
 using namespace MenuTable;
 
-BaseItemSharedPtr ExtraPlayAtSpeedMenu()
+auto ExtraPlayAtSpeedMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
       Menu( wxT("PlayAtSpeed"), XXO("&Play-at-Speed") ) };
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraPlayAtSpeedMenu())
+AttachedItem sAttachment2{ Indirect(ExtraPlayAtSpeedMenu()),
+   wxT("Optional/Extra/Part1")
 };
 
-BaseItemSharedPtr ExtraPlayAtSpeedItems()
+auto ExtraPlayAtSpeedItems()
 {
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( "",
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
       Command( wxT("PlayAtSpeedLooped"), XXO("&Play-at-Speed"),
@@ -1181,10 +1180,9 @@ BaseItemSharedPtr ExtraPlayAtSpeedItems()
    return items;
 }
 
-AttachedItem sAttachment3{
+AttachedItem sAttachment3{ Indirect(ExtraPlayAtSpeedItems()),
    Placement{ wxT("Optional/Extra/Part1/PlayAtSpeed"),
-     OrderingHint::Begin },
-   Indirect(ExtraPlayAtSpeedItems())
+     OrderingHint::Begin }
 };
 
 }

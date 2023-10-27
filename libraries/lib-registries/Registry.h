@@ -13,14 +13,20 @@ Paul Licameli split from CommandManager.h
 
 #include "Prefs.h"
 #include "Composite.h"
+#include "TypeList.h"
 #include <type_traits>
 
 // Define classes and functions that associate parts of the user interface
 // with path names
 namespace Registry {
-   struct EmptyContext{};
+   struct REGISTRIES_API EmptyContext{
+      static EmptyContext Instance;
+   };
    struct DefaultTraits {
+      template<typename... T> using List = TypeList::List<T...>;
       using ComputedItemContextType = EmptyContext;
+      using LeafTypes = TypeList::Nil;
+      using NodeTypes = TypeList::Nil;
    };
 
    // Items in the registry form an unordered tree, but each may also describe a
@@ -38,15 +44,14 @@ namespace Registry {
          Before, After,
          Begin, End,
          Unspecified // keep this last
-      } type{ Unspecified };
+      } type;
 
       // name of some other BaseItem; significant only when type is Before or
       // After:
       Identifier name;
 
-      OrderingHint() {}
-      OrderingHint( Type type_, const wxString &name_ = {} )
-         : type(type_), name(name_) {}
+      OrderingHint(Type type = Unspecified, const wxString &name = {})
+         : type{ type }, name{ name } {}
 
       bool operator == ( const OrderingHint &other ) const
       { return name == other.name && type == other.type; }
@@ -62,6 +67,7 @@ namespace Registry {
    struct Placement;
    struct GroupItemBase;
 
+namespace detail {
    struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
       explicit
@@ -74,14 +80,16 @@ namespace Registry {
 
       OrderingHint orderingHint;
    };
-   using BaseItemPtr = std::unique_ptr<BaseItem>;
-   using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
-   using BaseItemPtrs = std::vector<BaseItemPtr>;
+
+   using BaseItemPtr = std::unique_ptr<detail::BaseItem>;
+}
 
    class Visitor;
    
 
 namespace detail {
+   using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
+
    struct REGISTRIES_API IndirectItemBase : BaseItem {
       explicit IndirectItemBase(const BaseItemSharedPtr &ptr)
          : BaseItem{ wxEmptyString }
@@ -92,6 +100,35 @@ namespace detail {
       BaseItemSharedPtr ptr;
    };
 
+   struct ComputedItemBase;
+}
+
+   //! The underlying registry merging procedure assumes the listed types
+   //! are an exhaustive partition
+   using BaseItemTypes = TypeList::List<
+      detail::IndirectItemBase, detail::ComputedItemBase,
+      // see below
+      struct SingleItem, struct GroupItemBase
+   >;
+   template<typename Item> using AcceptableBaseItem =
+      TypeList::HasBaseIn<Item, BaseItemTypes>;
+   template<typename Item> constexpr auto AcceptableBaseItem_v =
+      AcceptableBaseItem<Item>::value;
+
+   template<typename RegistryTraits> struct AllTypes {
+      using type = TypeList::Append_t<
+         typename RegistryTraits::LeafTypes,
+         typename RegistryTraits::NodeTypes
+      >;
+   };
+   template<typename RegistryTraits> using AllTypes_t =
+      typename AllTypes<RegistryTraits>::type;
+
+   template<typename RegistryTraits> constexpr auto AcceptableTraits_v =
+      TypeList::Every_v<TypeList::Fn<AcceptableBaseItem>,
+         AllTypes_t<RegistryTraits>>;
+
+namespace detail {
    //! An item that delegates to another held in a shared pointer
    /*!
     This allows static tables of items to be computed once and reused.
@@ -99,9 +136,9 @@ namespace detail {
     IndirectItem's ordering hint is used if the delegate has none
     */
    template<typename Item>
-   struct IndirectItem final : detail::IndirectItemBase {
+   struct IndirectItem final : IndirectItemBase {
       using ItemType = Item;
-      static_assert(std::is_base_of_v<BaseItem, ItemType>);
+      static_assert(AcceptableBaseItem_v<ItemType>);
       explicit IndirectItem(const std::shared_ptr<Item> &ptr)
          : IndirectItemBase{ ptr }
       {}
@@ -136,9 +173,9 @@ namespace detail {
     ComputedItem's ordering hint is used if the substitute has none
     */
    template<typename Context, typename Item>
-   struct ComputedItem final : detail::ComputedItemBase {
+   struct ComputedItem final : ComputedItemBase {
       using ItemType = Item;
-      static_assert(std::is_base_of_v<BaseItem, ItemType>);
+      static_assert(AcceptableBaseItem_v<ItemType>);
 
       //! Type-erasing constructor template
       /*!
@@ -149,8 +186,8 @@ namespace detail {
        */
       template<typename Factory> ComputedItem(const Factory &factory)
          : ComputedItemBase{ [factory](void *p) -> BaseItemSharedPtr {
-            // p comes from RegistryVisitor::GetComputedItemContext which must
-            // return non-null
+            // p comes from the compute item context argument of
+            // Registry::Visit, passed by reference
             assert(p);
             return factory(*static_cast<Context *>(p));
          } }
@@ -159,14 +196,20 @@ namespace detail {
 }
 
    //! Common abstract base class for items that are not groups
-   struct REGISTRIES_API SingleItem : BaseItem {
+   struct REGISTRIES_API SingleItem : detail::BaseItem {
       using BaseItem::BaseItem;
       ~SingleItem() override = 0;
    };
 
+namespace detail {
+   //! Type-erased implementation details, don't call directly
+   REGISTRIES_API void RegisterItem(GroupItemBase &registry,
+      const Placement &placement, BaseItemPtr pItem);
+}
+
    //! Common abstract base class for items that group other items
    struct REGISTRIES_API GroupItemBase : Composite::Base<
-      BaseItem, std::unique_ptr<BaseItem>, const Identifier &
+      detail::BaseItem, std::unique_ptr<detail::BaseItem>, const Identifier &
    > {
       using Base::Base;
    
@@ -192,8 +235,8 @@ namespace detail {
       virtual Ordering GetOrdering() const;
 
    private:
-      friend REGISTRIES_API void RegisterItem(GroupItemBase &registry,
-         const Placement &placement, BaseItemPtr pItem);
+      friend REGISTRIES_API void detail::RegisterItem(GroupItemBase &registry,
+         const Placement &placement, detail::BaseItemPtr pItem);
    };
 
    // Forward declarations necessary before customizing Composite::Traits
@@ -209,11 +252,12 @@ template<typename RegistryTraits> struct Composite::Traits<
    static constexpr auto ItemBuilder =
    Registry::detail::Builder<RegistryTraits>{};
    //! Prohibit pushing-back of type-unchecked BaseItemPtr directly
-   template<typename T> static constexpr auto enables_item_type_v = true;
+   template<typename T> static constexpr auto enables_item_type_v =
+      !std::is_same_v<T, Registry::detail::BaseItemPtr>;
 };
 
 namespace Registry {
-   //! Extends GroupItemBase with a variadic constructor
+   //! Extends GroupItemBase with a variadic constructor that checks types
    /*!
     @tparam RegistryTraits defines associated types
     */
@@ -235,10 +279,33 @@ namespace Registry {
       wxString path;
       OrderingHint hint;
 
-      Placement( const wxString &path_, const OrderingHint &hint_ = {} )
-         : path( path_ ), hint( hint_ )
+      Placement(const wxString &path = {}, const OrderingHint &hint = {})
+         : path{ path }, hint{ hint }
+      {}
+      Placement(const wxChar *path, const OrderingHint &hint = {})
+         : path{ path }, hint{ hint }
       {}
    };
+
+   //! Find the real item type (following chains of indirections)
+   template<typename T> struct ActualItem{ using type = T; };
+   template<typename T> using ActualItem_t = typename ActualItem<T>::type;
+   template<typename T> struct ActualItem<detail::IndirectItem<T>>
+      { using type = ActualItem_t<T>; };
+   template<typename C, typename T>
+   struct ActualItem<detail::ComputedItem<C, T>>
+      { using type = ActualItem_t<T>; };
+
+   template<typename Item, typename TypeList> struct AcceptableItemType {
+      static constexpr auto value =
+         ::TypeList::HasBaseIn_v<ActualItem_t<Item>, TypeList>;
+   };
+
+   template<typename RegistryTraits, typename Item> using AcceptableType =
+      AcceptableItemType<Item, AllTypes_t<RegistryTraits>>;
+   template<typename RegistryTraits, typename Item>
+   constexpr auto AcceptableType_v =
+      AcceptableType<RegistryTraits, Item>::value;
 
 namespace detail {
    template<typename RegistryTraits>
@@ -247,6 +314,7 @@ namespace detail {
 
       template<typename ItemType>
       auto operator () (std::unique_ptr<ItemType> ptr) const {
+         static_assert(AcceptableType_v<RegistryTraits, ItemType>);
          return move(ptr);
       }
       //! This overload allows a lambda or function pointer in the variadic
@@ -256,11 +324,13 @@ namespace detail {
          typename std::invoke_result_t<Factory, Context&>::element_type
       >
       auto operator () (const Factory &factory) const {
+         static_assert(AcceptableType_v<RegistryTraits, ItemType>);
          return std::make_unique<ComputedItem<Context, ItemType>>(factory);
       }
       //! This overload lets you supply a shared pointer to an item, directly
       template<typename ItemType>
       auto operator () (const std::shared_ptr<ItemType> &ptr) const {
+         static_assert(AcceptableType_v<RegistryTraits, ItemType>);
          return std::make_unique<IndirectItem<ItemType>>(ptr);
       }
    };
@@ -272,25 +342,31 @@ namespace detail {
    // The sequence of calls to RegisterItem has no significance for
    // determining the visitation ordering.  When sequence is important, register
    // a GroupItem.
-   REGISTRIES_API
-   void RegisterItem( GroupItemBase &registry, const Placement &placement,
-      BaseItemPtr pItem //!< Registry takes ownership
-   );
+   template<typename RegistryTraits, typename Item>
+   void RegisterItem(GroupItem<RegistryTraits> &registry,
+      const Placement &placement, std::unique_ptr<Item> pItem)
+   {
+      static_assert(AcceptableTraits_v<RegistryTraits>);
+      static_assert(AcceptableType_v<RegistryTraits, Item>,
+         "Registered item must be of one of the types listed in the registry's "
+         "traits");
+      detail::RegisterItem(registry, placement, move(pItem));
+   }
    
    //! Generates classes whose instances register items at construction
    /*!
        Usually constructed statically
-       @tparam Item inherits `BaseItem`
-       @tparam RegistryClass defines static member `Registry()`
-          returning `GroupItemBase&`
+       @tparam RegistryClass defines static member `Registry()` returning
+          `GroupItem<RegistryTraits>&`, for some traits class
     */
-   template<typename Item, typename RegistryClass = Item> class RegisteredItem {
+   template<typename RegistryClass>
+   class RegisteredItem {
    public:
-      RegisteredItem(std::unique_ptr<Item> pItem, const Placement &placement)
+      template<typename Ptr>
+      RegisteredItem(Ptr pItem, const Placement &placement = {})
       {
          if (pItem)
-            RegisterItem(
-               RegistryClass::Registry(), placement, std::move( pItem ) );
+            RegisterItem(RegistryClass::Registry(), placement, move(pItem));
       }
    };
    
@@ -302,30 +378,42 @@ namespace detail {
    public:
       virtual ~Visitor();
       using Path = std::vector< Identifier >;
-      //! Get context given to Computed items during visitation
-      /*!
-       Default returns a pointer to a static EmptyContext
-       @post result: `result != nullptr`
-       */
-      virtual void *GetComputedItemContext();
-      virtual void BeginGroup( GroupItemBase &item, const Path &path );
-      virtual void EndGroup( GroupItemBase &item, const Path &path );
-      virtual void Visit( SingleItem &item, const Path &path );
+      virtual void BeginGroup(const GroupItemBase &item, const Path &path);
+      virtual void EndGroup(const GroupItemBase &item, const Path &path);
+      virtual void Visit(const SingleItem &item, const Path &path);
    };
 
-   // Top-down visitation of all items and groups in a tree rooted in
-   // pTopItem, as merged with pRegistry.
-   // The merger of the trees is recomputed in each call, not saved.
-   // So neither given tree is modified.
-   // But there may be a side effect on preferences to remember the ordering
-   // imposed on each node of the unordered tree of registered items; each item
-   // seen in the registry for the first time is placed somehere, and that
-   // ordering should be kept the same thereafter in later runs (which may add
-   // yet other previously unknown items).
+namespace detail {
    REGISTRIES_API void Visit(
       Visitor &visitor,
-      BaseItem *pTopItem,
-      const GroupItemBase *pRegistry = nullptr );
+      const GroupItemBase *pTopItem,
+      const GroupItemBase *pRegistry,
+      void *pComputedItemContext);
+}
+
+   //! Top-down visitation of all items and groups in a tree rooted in
+   //! pTopItem, as merged with pRegistry.
+   /*!
+    The merger of the trees is recomputed in each call, not saved.
+    So neither given tree is modified.
+    But there may be a side effect on preferences to remember the ordering
+    imposed on each node of the unordered tree of registered items; each item
+    seen in the registry for the first time is placed somewhere, and that
+    ordering should be kept the same thereafter in later runs (which may add
+    yet other previously unknown items).
+
+    @param computedItemContext is passed to factory functions of computed items
+    */
+   template<typename RegistryTraits> void Visit(
+      Visitor &visitor,
+      const GroupItem<RegistryTraits> *pTopItem,
+      const GroupItem<RegistryTraits> *pRegistry = {},
+      typename RegistryTraits::ComputedItemContextType &computedItemContext =
+         RegistryTraits::ComputedItemContextType::Instance)
+   {
+      static_assert(AcceptableTraits_v<RegistryTraits>);
+      detail::Visit(visitor, pTopItem, pRegistry, &computedItemContext);
+   }
 
    // Typically a static object.  Constructor initializes certain preferences
    // if they are not present.  These preferences determine an extrinsic

@@ -383,7 +383,7 @@ private:
    const bool mTimeFormat;
 };
 
-Registry::BaseItemPtr BuildBeatsGroup(bool timeFormat)
+auto BuildBeatsGroup(bool timeFormat)
 {
    return NumericConverterFormatterGroup(
       timeFormat ? "beatsTime" : "beatsDuration",
@@ -400,13 +400,13 @@ Registry::BaseItemPtr BuildBeatsGroup(bool timeFormat)
 }
 
 NumericConverterItemRegistrator beatsTime {
-   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedTime" } },
-   BuildBeatsGroup(true)
+   BuildBeatsGroup(true),
+   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedTime" } }
 };
 
 NumericConverterItemRegistrator beatsDuration {
-   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedDuration" } },
-   BuildBeatsGroup(false)
+   BuildBeatsGroup(false),
+   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedDuration" } }
 };
 } // namespace
 

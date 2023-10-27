@@ -13,9 +13,10 @@ Paul Licameli split from PrefsDialog.cpp
 
 static const auto PathStart = L"Preferences";
 
-Registry::GroupItemBase &PrefsPanel::PrefsItem::Registry()
+
+auto PrefsPanel::PrefsItem::Registry() -> Registry::GroupItem<Traits>&
 {
-   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
+   static Registry::GroupItem<Traits> registry{ PathStart };
    return registry;
 }
 
@@ -33,9 +34,9 @@ struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
    {
       childCounts.push_back( 0 );
    }
-   void BeginGroup( Registry::GroupItemBase &item, const Path & ) override
+   void BeginGroup(const Registry::GroupItemBase &item, const Path &) override
    {
-      auto pItem = dynamic_cast<PrefsItem*>( &item );
+      auto pItem = dynamic_cast<const PrefsItem*>( &item );
       if (!pItem || !pItem->factory)
          return;
       indices.push_back( factories.size() );
@@ -43,9 +44,9 @@ struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
       ++childCounts.back();
       childCounts.push_back( 0 );
    }
-   void EndGroup( Registry::GroupItemBase &item, const Path & ) override
+   void EndGroup(const Registry::GroupItemBase &item, const Path &) override
    {
-      auto pItem = dynamic_cast<PrefsItem*>( &item );
+      auto pItem = dynamic_cast<const PrefsItem*>( &item );
       if (!pItem || !pItem->factory)
          return;
       auto &factory = factories[ indices.back() ];
@@ -120,7 +121,7 @@ PrefsPanel::Factories
 
    std::call_once( flag, []{
       PrefsItem::Visitor visitor{ factories };
-      Registry::GroupItem<Registry::DefaultTraits> top{ PathStart };
+      Registry::GroupItem<Traits> top{ PathStart };
       Registry::Visit( visitor, &top, &PrefsItem::Registry() );
    } );
    return factories;

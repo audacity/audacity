@@ -34,7 +34,7 @@ class LibraryPrefs final : public PrefsPanel
 
    //! To be statically constructed, it registers additions to the Library preference page
    struct AUDACITY_DLL_API RegisteredControls
-      : public Registry::RegisteredItem<PopulatorItem>
+      : Registry::RegisteredItem<PopulatorItem>
    {
       // Whether any controls have been registered
       static bool Any();
@@ -56,8 +56,11 @@ class LibraryPrefs final : public PrefsPanel
 
 
  private:
+   struct Traits : Registry::DefaultTraits {
+      using LeafTypes = List<PopulatorItem>;
+   };
    struct AUDACITY_DLL_API PopulatorItem final : Registry::SingleItem {
-      static Registry::GroupItemBase &Registry();
+      static Registry::GroupItem<Traits> &Registry();
    
       PopulatorItem(const Identifier &id, Populator populator);
 

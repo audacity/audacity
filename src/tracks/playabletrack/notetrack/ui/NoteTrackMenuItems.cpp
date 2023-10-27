@@ -36,10 +36,10 @@ void OnMidiDeviceInfo(const CommandContext &context)
 
 using namespace MenuTable;
 AttachedItem sAttachment{
-   { wxT("Help/Other/Diagnostics"),
-      { OrderingHint::After, wxT("DeviceInfo") } },
    Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
-      OnMidiDeviceInfo, AudioIONotBusyFlag() )
+      OnMidiDeviceInfo, AudioIONotBusyFlag() ),
+   { wxT("Help/Other/Diagnostics"),
+      { OrderingHint::After, wxT("DeviceInfo") } }
 };
 }
 #endif

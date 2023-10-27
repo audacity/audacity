@@ -1061,7 +1061,7 @@ const ReservedCommandFlag
 }; return flag; }
 
 using namespace MenuTable;
-BaseItemSharedPtr EditMenu()
+auto EditMenu()
 {
    using Options = CommandManager::Options;
 
@@ -1087,7 +1087,7 @@ BaseItemSharedPtr EditMenu()
 #endif
    ;
 
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Edit"), XXO("&Edit"),
       Section( "UndoRedo",
          Command( wxT("Undo"), XXO("&Undo"), OnUndo,
@@ -1188,17 +1188,14 @@ BaseItemSharedPtr EditMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(EditMenu())
-};
+AttachedItem sAttachment1{ Indirect(EditMenu()) };
 
-BaseItemSharedPtr ExtraEditMenu()
+auto ExtraEditMenu()
 {
    using Options = CommandManager::Options;
    static const auto flags =
       AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag();
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Edit"), XXO("&Edit"),
       Command( wxT("DeleteKey"), XXO("&Delete Key"), OnDelete,
          (flags | NoAutoSelect()),
@@ -1248,9 +1245,8 @@ RegisteredMenuItemEnabler selectWaveTracks2{{
    selectAll
 }};
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraEditMenu())
+AttachedItem sAttachment2{ Indirect(ExtraEditMenu()),
+   wxT("Optional/Extra/Part1")
 };
 
 }

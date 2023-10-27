@@ -45,10 +45,10 @@ TimeDisplayMode GetTimeDisplayMode(const AudacityProject& project)
 
 using namespace MenuTable;
 
-BaseItemSharedPtr ExtraSelectionMenu()
+auto ExtraSelectionMenu()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu { Menu(
+   static auto menu = std::shared_ptr{ Menu(
       wxT("Timeline"), XXO("&Timeline"),
       Command(
          wxT("MinutesAndSeconds"), XXO("Minutes and Seconds"),
@@ -69,7 +69,7 @@ BaseItemSharedPtr ExtraSelectionMenu()
    return menu;
 }
 
-AttachedItem sAttachment2 { wxT("Optional/Extra/Part1"),
-   Indirect(ExtraSelectionMenu()) };
+AttachedItem sAttachment2 { Indirect(ExtraSelectionMenu()),
+   wxT("Optional/Extra/Part1") };
 
 } // namespace

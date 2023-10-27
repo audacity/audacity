@@ -84,7 +84,7 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    // Typically you make a static object of this type in the .cpp file that
    // also implements the PrefsPanel subclass.
    struct AUDACITY_DLL_API Registration final
-      : public Registry::RegisteredItem<PrefsItem>
+      : Registry::RegisteredItem<PrefsItem>
    {
       Registration( const wxString &name, const Factory &factory,
          bool expanded = true,
@@ -126,12 +126,15 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    virtual void Cancel();
 
  private:
+   struct Traits : Registry::DefaultTraits {
+      using NodeTypes = List<PrefsItem>;
+   };
    struct AUDACITY_DLL_API PrefsItem final
-      : Registry::GroupItem<Registry::DefaultTraits> {
+      : Registry::GroupItem<Traits> {
       PrefsPanel::Factory factory;
       bool expanded{ false };
 
-      static Registry::GroupItemBase &Registry();
+      static Registry::GroupItem<Traits> &Registry();
 
       PrefsItem(const wxString &name,
          const PrefsPanel::Factory &factory, bool expanded);

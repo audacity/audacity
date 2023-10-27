@@ -750,11 +750,11 @@ using namespace MenuTable;
 
 // Register menu items
 
-BaseItemSharedPtr ClipSelectMenu()
+auto ClipSelectMenu()
 {
    using Options = CommandManager::Options;
 
-   static BaseItemSharedPtr menu {
+   static auto menu = std::shared_ptr{
    Menu( wxT("Clip"), XXO("Audi&o Clips"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
@@ -774,16 +774,12 @@ BaseItemSharedPtr ClipSelectMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT("Select/Basic"),
-   Indirect(ClipSelectMenu())
-};
+AttachedItem sAttachment1{ Indirect(ClipSelectMenu()), wxT("Select/Basic") };
 
-BaseItemSharedPtr ClipCursorItems()
+auto ClipCursorItems()
 {
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( wxT("Clip"),
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
          OnCursorPrevClipBoundary,
@@ -797,16 +793,15 @@ BaseItemSharedPtr ClipCursorItems()
    return items;
 }
 
-AttachedItem sAttachment2{
+AttachedItem sAttachment2{ Indirect(ClipCursorItems()),
    { wxT("Transport/Basic/Cursor"),
-     { OrderingHint::Before, wxT("CursProjectStart") } },
-   Indirect(ClipCursorItems())
+     { OrderingHint::Before, wxT("CursProjectStart") } }
 };
 
-BaseItemSharedPtr ExtraTimeShiftItems()
+auto ExtraTimeShiftItems()
 {
    using Options = CommandManager::Options;
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( wxT("TimeShift"),
       Command( wxT("ClipLeft"), XXO("Time Shift &Left"), OnClipLeft,
          TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() ),
@@ -816,9 +811,8 @@ BaseItemSharedPtr ExtraTimeShiftItems()
    return items;
 }
 
-AttachedItem sAttachment3{
-  { wxT("Optional/Extra/Part1/Edit"), { OrderingHint::End, {} } },
-   Indirect(ExtraTimeShiftItems())
+AttachedItem sAttachment3{ Indirect(ExtraTimeShiftItems()),
+  { wxT("Optional/Extra/Part1/Edit"), { OrderingHint::End, {} } }
 };
 
 }

@@ -6,9 +6,10 @@ namespace {
    const auto PathStart = L"Exporters";
 }
 
-Registry::GroupItemBase &ExportPluginRegistry::ExportPluginRegistryItem::Registry()
+auto ExportPluginRegistry::ExportPluginRegistryItem::Registry()
+   -> Registry::GroupItem<Traits> &
 {
-   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
+   static Registry::GroupItem<Traits> registry{ PathStart };
    return registry;
 }
 
@@ -64,17 +65,17 @@ void ExportPluginRegistry::Initialize()
       {
       }
 
-      void Visit( SingleItem &item, const Path &path ) override
+      void Visit(const SingleItem &item, const Path &path) override
       {
          mPlugins.emplace_back(
-            static_cast<ExportPluginRegistryItem&>( item ).mFactory() );
+            static_cast<const ExportPluginRegistryItem&>(item).mFactory() );
       }
 
       ExportPlugins& mPlugins;
    } visitor(mPlugins);
    // visit the registry to collect the plug-ins properly
    // sorted
-   GroupItem<Registry::DefaultTraits> top{ PathStart };
+   GroupItem<Traits> top{ PathStart };
    Registry::Visit( visitor, &top, &ExportPluginRegistryItem::Registry() );
 }
 

@@ -29,10 +29,15 @@ class wxCommandEvent;
 #include "../commands/CommandManager.h"
 
 class PopupMenuHandler;
+struct PopupMenuSection;
 class PopupMenuTable;
+struct PopupMenuTableEntry;
 struct PopupMenuVisitor;
+struct PopupSubMenu;
 struct PopupMenuTableTraits : Registry::DefaultTraits {
    using ComputedItemContextType = PopupMenuVisitor;
+   using LeafTypes = List<PopupMenuTableEntry>;
+   using NodeTypes = List<PopupMenuSection, PopupSubMenu>;
 };
 using PopupMenuGroupItem = Registry::GroupItem<PopupMenuTableTraits>;
 
@@ -104,7 +109,6 @@ public:
 struct PopupMenuVisitor : public MenuVisitor {
    explicit PopupMenuVisitor( PopupMenuTable &table ) : mTable{ table } {}
    ~PopupMenuVisitor() override;
-   void *GetComputedItemContext() override;
    PopupMenuTable &mTable;
 };
 
@@ -122,7 +126,7 @@ public:
    using Entry = PopupMenuTableEntry;
 
    // Supply a nonempty caption for sub-menu tables
-   PopupMenuTable( const Identifier &id, const TranslatableString &caption = {} )
+   PopupMenuTable(const Identifier &id, const TranslatableString &caption = {})
       : mId{ id }
       , mCaption{ caption }
       , mRegistry{
@@ -139,9 +143,9 @@ public:
    const auto *GetRegistry() const { return mRegistry.get(); }
 
    // Typically statically constructed:
-   struct AttachedItem {
+   template<typename Ptr> struct AttachedItem {
       AttachedItem( PopupMenuTable &table,
-         const Registry::Placement &placement, Registry::BaseItemPtr pItem )
+         const Registry::Placement &placement, Ptr pItem )
       { table.RegisterItem( placement, std::move( pItem ) ); }
    };
 
@@ -174,8 +178,11 @@ public:
    }
 
 private:
-   void RegisterItem(
-      const Registry::Placement &placement, Registry::BaseItemPtr pItem );
+   template<typename Ptr> void RegisterItem(
+      const Registry::Placement &placement, Ptr pItem)
+   {
+      Registry::RegisterItem(*mRegistry, placement, move(pItem));
+   }
 
 protected:
    // This convenience function composes a label, with the following optional
@@ -220,7 +227,7 @@ protected:
    void BeginSection( const Identifier &name );
    void EndSection();
 
-   std::shared_ptr<PopupMenuGroupItem> mTop;
+   std::shared_ptr<PopupSubMenu> mTop;
    std::vector<PopupMenuGroupItem*> mStack;
    Identifier mId;
    TranslatableString mCaption;

@@ -269,14 +269,12 @@ const ReservedCommandFlag&
       }
    }; return flag; }
 
-BaseItemSharedPtr GenerateMenu()
+auto GenerateMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
-
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Generate"), XXO("&Generate"),
       Section( "Manage",
          Command( wxT("ManageGenerators"), XXO("Plugin Manager"),
@@ -327,10 +325,7 @@ static const ReservedCommandFlag
    }
 }; return flag; }  //lll
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(GenerateMenu())
-};
+AttachedItem sAttachment1{ Indirect(GenerateMenu()) };
 
 const ReservedCommandFlag&
    HasLastEffectFlag() { static ReservedCommandFlag flag{
@@ -350,12 +345,11 @@ static const ReservedCommandFlag&
    return flag;
 }
 
-BaseItemSharedPtr EffectMenu()
+auto EffectMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Effect"), XXO("Effe&ct"),
       Section( "Manage",
          Command( wxT("ManageEffects"), XXO("Plugin Manager"),
@@ -404,10 +398,7 @@ BaseItemSharedPtr EffectMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT(""),
-   Indirect(EffectMenu())
-};
+AttachedItem sAttachment2{ Indirect(EffectMenu()) };
 
 const ReservedCommandFlag&
    HasLastAnalyzerFlag() { static ReservedCommandFlag flag{
@@ -418,14 +409,12 @@ const ReservedCommandFlag&
    }; return flag;
 }
 
-BaseItemSharedPtr AnalyzeMenu()
+auto AnalyzeMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
-
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Analyze"), XXO("&Analyze"),
       Section( "Manage",
          Command( wxT("ManageAnalyzers"), XXO("Plugin Manager"),
@@ -471,16 +460,12 @@ BaseItemSharedPtr AnalyzeMenu()
    return menu;
 }
 
-AttachedItem sAttachment3{
-   wxT(""),
-   Indirect(AnalyzeMenu())
-};
+AttachedItem sAttachment3{ Indirect(AnalyzeMenu()) };
 
-BaseItemSharedPtr ToolsMenu()
+auto ToolsMenu()
 {
    using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
          Command( wxT("ManageTools"), XXO("Plugin Manager"),
@@ -557,9 +542,6 @@ BaseItemSharedPtr ToolsMenu()
    return menu;
 }
 
-AttachedItem sAttachment4{
-   wxT(""),
-   Indirect(ToolsMenu())
-};
+AttachedItem sAttachment4{ Indirect(ToolsMenu()) };
 
 }

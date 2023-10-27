@@ -393,16 +393,19 @@ struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
    ~MenuVisitor() override;
 
    // final overrides
-   void BeginGroup( Registry::GroupItemBase &item, const Path &path ) final;
-   void EndGroup( Registry::GroupItemBase &item, const Path& ) final;
-   void Visit( Registry::SingleItem &item, const Path &path ) final;
+   void BeginGroup(const Registry::GroupItemBase &item, const Path &path )
+      final;
+   void EndGroup(const Registry::GroupItemBase &item, const Path& ) final;
+   void Visit(const Registry::SingleItem &item, const Path &path ) final;
 
    // added virtuals
    //! Groups of type MenuItems are excluded from this callback
-   virtual void DoBeginGroup( Registry::GroupItemBase &item, const Path &path );
+   virtual void DoBeginGroup(
+      const Registry::GroupItemBase &item, const Path &path);
    //! Groups of type MenuItems are excluded from this callback
-   virtual void DoEndGroup( Registry::GroupItemBase &item, const Path &path );
-   virtual void DoVisit( Registry::SingleItem &item, const Path &path );
+   virtual void DoEndGroup(
+      const Registry::GroupItemBase &item, const Path &path);
+   virtual void DoVisit(const Registry::SingleItem &item, const Path &path);
    virtual void DoSeparator();
 
 private:
@@ -415,7 +418,6 @@ struct ProjectMenuVisitor : MenuVisitor
 {
    explicit ProjectMenuVisitor(AudacityProject &p) : mProject{ p } {}
    ~ProjectMenuVisitor() override;
-   virtual void *GetComputedItemContext() override;
    AudacityProject &mProject;
 };
 
@@ -423,8 +425,20 @@ struct ProjectMenuVisitor : MenuVisitor
 namespace MenuTable {
    using namespace Registry;
 
+   struct CommandItem;
+   struct CommandGroupItem;
+   struct ConditionalGroupItem;
+   struct MenuItem;
+   struct MenuItems;
+   struct SpecialItem;
+   struct MenuPart;
+
    struct Traits : Registry::DefaultTraits {
       using ComputedItemContextType = AudacityProject;
+      using LeafTypes = List<
+         CommandItem, CommandGroupItem, SpecialItem>;
+      using NodeTypes = List<
+         ConditionalGroupItem, MenuItem, MenuItems, MenuPart>;
    };
 
    // These are found by dynamic_cast
@@ -685,22 +699,13 @@ namespace MenuTable {
    //! @}
 
    struct ItemRegistry {
-      static GroupItemBase &Registry();
+      static GroupItem<Traits> &Registry();
    };
 
    // Typically you make a static object of this type in the .cpp file that
    // also defines the added menu actions.
    // pItem can be specified by an expression using the inline functions above.
-   struct AUDACITY_DLL_API AttachedItem final
-      : public RegisteredItem<BaseItem, ItemRegistry>
-   {
-      AttachedItem( const Placement &placement, BaseItemPtr pItem );
-
-      AttachedItem( const wxString &path, BaseItemPtr pItem )
-         // Delegating constructor
-         : AttachedItem( Placement{ path }, std::move( pItem ) )
-      {}
-   };
+   using AttachedItem = RegisteredItem<ItemRegistry>;
 }
 
 #endif

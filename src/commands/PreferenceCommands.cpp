@@ -115,7 +115,6 @@ using namespace MenuTable;
 // Register menu items
 
 AttachedItem sAttachment1{
-   wxT("Optional/Extra/Part2/Scriptables1"),
    Items( wxT(""),
       // Note that the PLUGIN_SYMBOL must have a space between words,
       // whereas the short-form used here must not.
@@ -125,6 +124,7 @@ AttachedItem sAttachment1{
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetPreference"), XXO("Set Preference..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
-   )
+   ),
+   wxT("Optional/Extra/Part2/Scriptables1")
 };
 }
