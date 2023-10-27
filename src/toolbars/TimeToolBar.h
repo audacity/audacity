@@ -44,7 +44,7 @@ public:
    wxSize GetDockedSize() override;
    void SetDocked(ToolDock *dock, bool pushed) override;
    void SetListener(TimeToolBarListener *l);
-   void SetAudioTimeFormat(const NumericFormatSymbol & format);
+   void SetAudioTimeFormat(const NumericFormatID & format);
    void ResizingDone() override;
 
 private:

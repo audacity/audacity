@@ -48,8 +48,8 @@ public:
    void UpdatePrefs() override;
 
    void SetFrequencies(double bottom, double top);
-   void SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName);
-   void SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName);
+   void SetFrequencySelectionFormatName(const NumericFormatID & formatName);
+   void SetBandwidthSelectionFormatName(const NumericFormatID & formatName);
    void SetListener(SpectralSelectionBarListener *l);
 
    void RegenerateTooltips() override {};

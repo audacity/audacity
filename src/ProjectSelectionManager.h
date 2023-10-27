@@ -36,20 +36,20 @@ public:
    ~ProjectSelectionManager() override;
 
    // SelectionBarListener callback methods
-   const NumericFormatSymbol & AS_GetSelectionFormat() override;
-   void AS_SetSelectionFormat(const NumericFormatSymbol & format) override;
-   const NumericFormatSymbol & TT_GetAudioTimeFormat() override;
-   void TT_SetAudioTimeFormat(const NumericFormatSymbol & format) override;
+   NumericFormatID AS_GetSelectionFormat() override;
+   void AS_SetSelectionFormat(const NumericFormatID & format) override;
+   NumericFormatID TT_GetAudioTimeFormat() override;
+   void TT_SetAudioTimeFormat(const NumericFormatID & format) override;
    void AS_ModifySelection(double &start, double &end, bool done) override;
 
    // SpectralSelectionBarListener callback methods
    double SSBL_GetRate() const override;
-   const NumericFormatSymbol & SSBL_GetFrequencySelectionFormatName() override;
+   NumericFormatID SSBL_GetFrequencySelectionFormatName() override;
    void SSBL_SetFrequencySelectionFormatName(
-      const NumericFormatSymbol & formatName) override;
-   const NumericFormatSymbol & SSBL_GetBandwidthSelectionFormatName() override;
+      const NumericFormatID & formatName) override;
+   NumericFormatID SSBL_GetBandwidthSelectionFormatName() override;
    void SSBL_SetBandwidthSelectionFormatName(
-      const NumericFormatSymbol & formatName) override;
+      const NumericFormatID & formatName) override;
    void SSBL_ModifySpectralSelection(
       double &bottom, double &top, bool done) override;
 

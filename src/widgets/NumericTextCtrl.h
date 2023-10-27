@@ -45,7 +45,7 @@ class AUDACITY_DLL_API NumericTextCtrl final
       bool menuEnabled { true };
       bool hasInvalidValue { false };
       double invalidValue { -1.0 };
-      NumericFormatSymbol formatSymbol {};
+      NumericFormatID formatSymbol {};
       TranslatableString customFormat {};
       bool hasValue { false };
       double value{ -1.0 };
@@ -58,7 +58,7 @@ class AUDACITY_DLL_API NumericTextCtrl final
       Options &InvalidValue (bool has, double v = -1.0)
          { hasInvalidValue = has, invalidValue = v; return *this; }
       // use a custom format not in the tables:
-      Options& FormatSymbol(const NumericFormatSymbol& f)
+      Options& FormatSymbol(const NumericFormatID& f)
          { formatSymbol = f; return *this; }
       Options& CustomFormat(const TranslatableString& f)
          { customFormat = f; return *this; }
@@ -69,7 +69,7 @@ class AUDACITY_DLL_API NumericTextCtrl final
    NumericTextCtrl(
       const FormatterContext& context, wxWindow* parent, wxWindowID winid,
                    NumericConverterType type,
-                   const NumericFormatSymbol &formatName = {},
+                   const NumericFormatID &formatName = {},
                    double value = 0.0,
                    const Options &options = {},
                    const wxPoint &pos = wxDefaultPosition,
@@ -89,9 +89,9 @@ class AUDACITY_DLL_API NumericTextCtrl final
 
    // returns true if the format type really changed:
    bool SetTypeAndFormatName(
-      const NumericConverterType& type, const NumericFormatSymbol& formatName);
+      const NumericConverterType& type, const NumericFormatID& formatName);
    // returns true iff the format name really changed:
-   bool SetFormatName(const NumericFormatSymbol & formatName);
+   bool SetFormatName(const NumericFormatID &formatName);
    bool SetCustomFormat(const TranslatableString& customFormat);
 
    void SetFieldFocus(int /* digit */);

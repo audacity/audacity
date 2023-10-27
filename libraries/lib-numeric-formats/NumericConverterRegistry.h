@@ -96,7 +96,7 @@ struct NUMERIC_FORMATS_API NumericConverterRegistry final
 
    static const NumericConverterRegistryItem* Find(
       const FormatterContext& context, const NumericConverterType& type,
-      const NumericFormatSymbol& symbol);
+      const NumericFormatID& symbol);
 };
 
 constexpr auto NumericConverterFormatterItem =

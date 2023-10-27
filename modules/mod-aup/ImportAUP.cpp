@@ -442,34 +442,22 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
 
    if (mProjectAttrs.haveselectionformat)
    {
-      selman.AS_SetSelectionFormat(NumericConverterFormats::Lookup(
-         FormatterContext::ProjectContext(mProject), NumericConverterType_TIME(),
-         mProjectAttrs.selectionformat));
+      selman.AS_SetSelectionFormat(mProjectAttrs.selectionformat);
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
-      selman.TT_SetAudioTimeFormat(NumericConverterFormats::Lookup(
-         FormatterContext::ProjectContext(mProject), NumericConverterType_TIME(),
-         mProjectAttrs.audiotimeformat));
+      selman.TT_SetAudioTimeFormat(mProjectAttrs.audiotimeformat);
    }
 
    if (mProjectAttrs.havefrequencyformat)
    {
-      selman.SSBL_SetFrequencySelectionFormatName(
-         NumericConverterFormats::Lookup(
-            FormatterContext::ProjectContext(mProject),
-            NumericConverterType_FREQUENCY(),
-         mProjectAttrs.frequencyformat));
+      selman.SSBL_SetFrequencySelectionFormatName(mProjectAttrs.frequencyformat);
    }
 
    if (mProjectAttrs.havebandwidthformat)
    {
-      selman.SSBL_SetBandwidthSelectionFormatName(
-         NumericConverterFormats::Lookup(
-            FormatterContext::ProjectContext(mProject),
-            NumericConverterType_BANDWIDTH(),
-         mProjectAttrs.bandwidthformat));
+      selman.SSBL_SetBandwidthSelectionFormatName(mProjectAttrs.bandwidthformat);
    }
 
    // PRL: It seems this must happen after SetSnapTo

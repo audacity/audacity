@@ -111,7 +111,7 @@ private:
 
    Identifier mSnapTo {};
    double mRate{ 0.0 };
-   NumericFormatSymbol mFormat{};
+   NumericFormatID mFormat{};
 };
 
 #endif
