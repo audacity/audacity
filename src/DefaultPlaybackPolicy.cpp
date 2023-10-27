@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file DefaultPlaybackPolicy.cpp
- 
+
  Paul Licameli split from PlaybackSchedule.cpp
- 
+
  **********************************************************************/
 
 #include "DefaultPlaybackPolicy.h"
@@ -182,7 +182,8 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
    // adjust the schedule...
    auto mine = std::tie(schedule.mT0, mLoopEndTime);
    auto theirs = std::tie(data.mT0, data.mT1);
-   if ( mLoopEnabled ? (mine != theirs) : loopWasEnabled ) {
+   if ((loopWasEnabled != mLoopEnabled) || (mLoopEnabled && mine != theirs))
+   {
       kicked = true;
       if (!empty) {
          mine = theirs;
