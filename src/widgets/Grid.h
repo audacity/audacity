@@ -41,7 +41,7 @@ class AUDACITY_DLL_API NumericEditor /* not final */ : public wxGridCellEditor
 public:
 
    NumericEditor
-      (const FormatterContext& context, NumericConverterType type, const NumericFormatSymbol &format);
+      (const FormatterContext& context, NumericConverterType type, const NumericFormatID &format);
 
    ~NumericEditor();
 
@@ -60,8 +60,8 @@ public:
 
    void Reset() override;
 
-   NumericFormatSymbol GetFormat() const;
-   void SetFormat(const NumericFormatSymbol &format);
+   NumericFormatID GetFormat() const;
+   void SetFormat(const NumericFormatID &format);
 
    wxGridCellEditor *Clone() const override;
    wxString GetValue() const override;
@@ -71,7 +71,7 @@ public:
 
  private:
 
-   NumericFormatSymbol mFormat;
+   NumericFormatID mFormat;
    NumericConverterType mType;
    double mOld;
    wxString mOldString;

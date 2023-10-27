@@ -223,7 +223,7 @@ void SelectionBar::AddTitle(
 void SelectionBar::AddTime(
    int id, wxSizer * pSizer ){
    auto formatName = mListener ? mListener->AS_GetSelectionFormat()
-      : NumericFormatSymbol{};
+      : NumericFormatID{};
    auto pCtrl = safenew NumericTextCtrl(FormatterContext::ProjectContext(mProject),
       this, id, NumericConverterType_TIME(), formatName, 0.0);
 
@@ -474,9 +474,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
          std::distance(mTimeControls.begin(), focusedCtrlIt) :
          -1;
 
-   auto format = NumericConverterFormats::Lookup(
-      FormatterContext::ProjectContext(mProject), NumericConverterType_TIME(),
-      evt.GetString());
+   auto format = evt.GetString();
 
    // Save format name before recreating the controls so they resize properly
    if (mTimeControls.front())
@@ -580,7 +578,7 @@ void SelectionBar::SetTimes(double start, double end)
    }
 }
 
-void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
+void SelectionBar::SetSelectionFormat(const NumericFormatID & format)
 {
    if (mTimeControls.front() == nullptr)
       return;
@@ -590,7 +588,7 @@ void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
    // Test first whether changed, to avoid infinite recursion from OnUpdate
    if ( changed ) {
       wxCommandEvent e;
-      e.SetString(format.Internal());
+      e.SetString(format.GET());
       OnUpdate(e);
    }
 }
@@ -618,7 +616,7 @@ void SelectionBar::OnCaptureKey(wxCommandEvent &event)
    event.Skip();
 }
 
-void SelectionBar::UpdateTimeControlsFormat(const NumericFormatSymbol& format)
+void SelectionBar::UpdateTimeControlsFormat(const NumericFormatID& format)
 {
    for (size_t controlIndex = 0; controlIndex < mTimeControls.size();
         ++controlIndex)
@@ -633,8 +631,8 @@ void SelectionBar::UpdateTimeControlsFormat(const NumericFormatSymbol& format)
 
       ctrl->SetTypeAndFormatName(
          type, type != NumericConverterType_DURATION() ?
-                  format :
-                  NumericConverterFormats::GetBestDurationFormat(format));
+            format :
+            NumericConverterFormats::GetBestDurationFormat(format));
    }
 }
 

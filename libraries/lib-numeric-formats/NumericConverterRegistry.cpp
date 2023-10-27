@@ -119,7 +119,7 @@ void NumericConverterRegistry::Visit(
 
 const NumericConverterRegistryItem* NumericConverterRegistry::Find(
    const FormatterContext& context, 
-   const NumericConverterType& type, const NumericFormatSymbol& symbol)
+   const NumericConverterType& type, const NumericFormatID& symbol)
 {
    const NumericConverterRegistryItem* result = nullptr;
 
@@ -128,7 +128,7 @@ const NumericConverterRegistryItem* NumericConverterRegistry::Find(
       type,
       [&result, symbol](const NumericConverterRegistryItem& item)
       {
-         if (item.symbol == symbol)
+         if (item.symbol.Internal() == symbol)
             result = &item;
       });
 

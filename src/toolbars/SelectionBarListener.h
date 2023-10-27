@@ -23,8 +23,8 @@ class AUDACITY_DLL_API SelectionBarListener /* not final */ {
    SelectionBarListener(){};
    virtual ~SelectionBarListener(){};
 
-   virtual const NumericFormatSymbol & AS_GetSelectionFormat() = 0;
-   virtual void AS_SetSelectionFormat(const NumericFormatSymbol & format) = 0;
+   virtual NumericFormatID AS_GetSelectionFormat() = 0;
+   virtual void AS_SetSelectionFormat(const NumericFormatID & format) = 0;
    virtual void AS_ModifySelection(double &start, double &end, bool done) = 0;
 };
 
@@ -35,8 +35,8 @@ class AUDACITY_DLL_API TimeToolBarListener /* not final */ {
    TimeToolBarListener(){};
    virtual ~TimeToolBarListener(){};
 
-   virtual const NumericFormatSymbol & TT_GetAudioTimeFormat() = 0;
-   virtual void TT_SetAudioTimeFormat(const NumericFormatSymbol & format) = 0;
+   virtual NumericFormatID TT_GetAudioTimeFormat() = 0;
+   virtual void TT_SetAudioTimeFormat(const NumericFormatID & format) = 0;
 };
 
 #endif

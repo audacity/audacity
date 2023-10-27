@@ -121,7 +121,7 @@ void TimeToolBar::UpdatePrefs()
    // Since the language may have changed, we need to force an update to accommodate
    // different length text
    wxCommandEvent e;
-   e.SetString(mAudioTime->GetFormatName().Internal());
+   e.SetString(mAudioTime->GetFormatName().GET());
    OnUpdate(e);
 
    // Language may have changed so reset label
@@ -138,7 +138,8 @@ void TimeToolBar::SetToDefaultSize()
    SetMinSize(wxDefaultSize);
 
    // Set the default time format
-   SetAudioTimeFormat(NumericConverterFormats::HoursMinsSecondsFormat());
+   SetAudioTimeFormat(
+      NumericConverterFormats::HoursMinsSecondsFormat().Internal());
 
    // Set the default size
    SetSize(GetInitialWidth(), 48);
@@ -200,18 +201,18 @@ void TimeToolBar::SetListener(TimeToolBarListener *l)
    // OnUpdate() will not be called and need it to set the initial size.
    if (mSettingInitialSize) {
       wxCommandEvent e;
-      e.SetString(mAudioTime->GetFormatName().Internal());
+      e.SetString(mAudioTime->GetFormatName().GET());
       OnUpdate(e);
    }
 }
 
-void TimeToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
+void TimeToolBar::SetAudioTimeFormat(const NumericFormatID & format)
 {
    // Set the format if it's different from previous
    if (mAudioTime->SetFormatName(format)) {
       // Simulate an update since the format has changed.
       wxCommandEvent e;
-      e.SetString(format.Internal());
+      e.SetString(format.GET());
       OnUpdate(e);
    }
 }

@@ -144,10 +144,10 @@ void SpectralSelectionBar::Populate()
 
    auto frequencyFormatName = mListener
       ? mListener->SSBL_GetFrequencySelectionFormatName()
-      : NumericFormatSymbol{};
+      : NumericFormatID{};
    auto bandwidthFormatName = mListener
       ? mListener->SSBL_GetBandwidthSelectionFormatName()
-      : NumericFormatSymbol{};
+      : NumericFormatID{};
 
    wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(1, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
@@ -235,14 +235,16 @@ void SpectralSelectionBar::UpdatePrefs()
 {
    {
       wxCommandEvent e(EVT_FREQUENCYTEXTCTRL_UPDATED);
-      e.SetString((mbCenterAndWidth ? mCenterCtrl : mLowCtrl)->GetFormatName().Internal());
+      e.SetString(
+         (mbCenterAndWidth ? mCenterCtrl : mLowCtrl)
+            ->GetFormatName().GET());
       OnUpdate(e);
    }
 
    if (mbCenterAndWidth)
    {
       wxCommandEvent e(EVT_BANDWIDTHTEXTCTRL_UPDATED);
-      e.SetString(mWidthCtrl->GetFormatName().Internal());
+      e.SetString(mWidthCtrl->GetFormatName().GET());
       OnUpdate(e);
    }
 
@@ -468,7 +470,8 @@ void SpectralSelectionBar::SetFrequencies(double bottom, double top)
    }
 }
 
-void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName)
+void SpectralSelectionBar::SetFrequencySelectionFormatName(
+   const NumericFormatID &formatName)
 {
    NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
    bool changed =
@@ -476,12 +479,13 @@ void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatSy
    // Test first whether changed, to avoid infinite recursion from OnUpdate
    if (changed) {
       wxCommandEvent e(EVT_FREQUENCYTEXTCTRL_UPDATED);
-      e.SetString(frequencyCtrl->GetFormatName().Internal());
+      e.SetString(frequencyCtrl->GetFormatName().GET());
       OnUpdate(e);
    }
 }
 
-void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName)
+void SpectralSelectionBar::SetBandwidthSelectionFormatName(
+   const NumericFormatID &formatName)
 {
    if (mbCenterAndWidth) {
       bool changed =
@@ -489,7 +493,7 @@ void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSy
       // Test first whether changed, to avoid infinite recursion from OnUpdate
       if (changed) {
          wxCommandEvent e(EVT_BANDWIDTHTEXTCTRL_UPDATED);
-         e.SetString(mWidthCtrl->GetFormatName().Internal());
+         e.SetString(mWidthCtrl->GetFormatName().GET());
          OnUpdate(e);
       }
    }

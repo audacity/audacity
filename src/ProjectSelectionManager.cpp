@@ -89,40 +89,40 @@ void ProjectSelectionManager::SnapSelection()
    }
 }
 
-const NumericFormatSymbol & ProjectSelectionManager::AS_GetSelectionFormat()
+NumericFormatID ProjectSelectionManager::AS_GetSelectionFormat()
 {
    auto &project = mProject;
    return ProjectNumericFormats::Get(project).GetSelectionFormat();
 }
 
 void ProjectSelectionManager::AS_SetSelectionFormat(
-   const NumericFormatSymbol & format)
+   const NumericFormatID & format)
 {
    auto &project = mProject;
    auto &formats = ProjectNumericFormats::Get( project );
    formats.SetSelectionFormat( format );
 
-   gPrefs->Write(wxT("/SelectionFormat"), format.Internal());
+   gPrefs->Write(wxT("/SelectionFormat"), format);
    gPrefs->Flush();
 
    SelectionBar::Get( project ).SetSelectionFormat(format);
 }
 
-const NumericFormatSymbol & ProjectSelectionManager::TT_GetAudioTimeFormat()
+NumericFormatID ProjectSelectionManager::TT_GetAudioTimeFormat()
 {
    auto &project = mProject;
    auto &formats = ProjectNumericFormats::Get( project );
    return formats.GetAudioTimeFormat();
 }
 
-void ProjectSelectionManager::TT_SetAudioTimeFormat(
-   const NumericFormatSymbol & format)
+void
+ProjectSelectionManager::TT_SetAudioTimeFormat(const NumericFormatID & format)
 {
    auto &project = mProject;
    auto &formats = ProjectNumericFormats::Get( project );
    formats.SetAudioTimeFormat( format );
 
-   gPrefs->Write(wxT("/AudioTimeFormat"), format.Internal());
+   gPrefs->Write(wxT("/AudioTimeFormat"), format.GET());
    gPrefs->Flush();
 
    TimeToolBar::Get( project ).SetAudioTimeFormat(format);
@@ -151,7 +151,7 @@ double ProjectSelectionManager::SSBL_GetRate() const
       tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate));
 }
 
-const NumericFormatSymbol &
+NumericFormatID
 ProjectSelectionManager::SSBL_GetFrequencySelectionFormatName()
 {
    auto &project = mProject;
@@ -160,7 +160,7 @@ ProjectSelectionManager::SSBL_GetFrequencySelectionFormatName()
 }
 
 void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
-   const NumericFormatSymbol & formatName)
+   const NumericFormatID &formatName)
 {
    auto &project = mProject;
    auto &formats = ProjectNumericFormats::Get( project );
@@ -168,7 +168,7 @@ void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
    formats.SetFrequencySelectionFormatName( formatName );
 
    gPrefs->Write(wxT("/FrequencySelectionFormatName"),
-                 formatName.Internal());
+                 formatName.GET());
    gPrefs->Flush();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -176,7 +176,7 @@ void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
 #endif
 }
 
-const NumericFormatSymbol &
+NumericFormatID
 ProjectSelectionManager::SSBL_GetBandwidthSelectionFormatName()
 {
    auto &project = mProject;
@@ -185,19 +185,19 @@ ProjectSelectionManager::SSBL_GetBandwidthSelectionFormatName()
 }
 
 void ProjectSelectionManager::SSBL_SetBandwidthSelectionFormatName(
-   const NumericFormatSymbol & formatName)
+   const NumericFormatID & formatName)
 {
    auto &project = mProject;
    auto &formats = ProjectNumericFormats::Get( project );
 
    formats.SetBandwidthSelectionFormatName( formatName );
 
-   gPrefs->Write(wxT("/BandwidthSelectionFormatName"),
-      formatName.Internal());
+   gPrefs->Write(wxT("/BandwidthSelectionFormatName"), formatName.GET());
    gPrefs->Flush();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetBandwidthSelectionFormatName(formatName);
+   SpectralSelectionBar::Get(project)
+      .SetBandwidthSelectionFormatName(formatName.GET());
 #endif
 }
 

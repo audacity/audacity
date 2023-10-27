@@ -235,5 +235,7 @@ using CommandIDs = std::vector<CommandID>;
 struct ManualPageIDTag;
 using ManualPageID = TaggedIdentifier< ManualPageIDTag >;
 
+using NumericFormatID = TaggedIdentifier<struct NumericFormatIDTag>;
+
 #endif
 

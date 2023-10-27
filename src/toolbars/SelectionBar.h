@@ -66,7 +66,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
    void SetTimes(double start, double end);
 
-   void SetSelectionFormat(const NumericFormatSymbol & format);
+   void SetSelectionFormat(const NumericFormatID & format);
    void SetListener(SelectionBarListener *l);
    void RegenerateTooltips() override;
 
@@ -90,7 +90,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void ModifySelection(int driver, bool done = false);
    void SelectionModeUpdated();
 
-   void UpdateTimeControlsFormat(const NumericFormatSymbol& format);
+   void UpdateTimeControlsFormat(const NumericFormatID& format);
 
    void FitToTimeControls();
 

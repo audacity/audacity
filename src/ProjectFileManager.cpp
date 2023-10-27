@@ -1085,10 +1085,12 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
 
       auto &selectionManager = ProjectSelectionManager::Get( project );
 
-      selectionManager.AS_SetSelectionFormat(formats.GetSelectionFormat());
-      selectionManager.TT_SetAudioTimeFormat(formats.GetAudioTimeFormat());
+      selectionManager.AS_SetSelectionFormat(
+         formats.GetSelectionFormat());
+      selectionManager.TT_SetAudioTimeFormat(
+         formats.GetAudioTimeFormat());
       selectionManager.SSBL_SetFrequencySelectionFormatName(
-      formats.GetFrequencySelectionFormatName());
+         formats.GetFrequencySelectionFormatName());
       selectionManager.SSBL_SetBandwidthSelectionFormatName(
          formats.GetBandwidthSelectionFormatName());
       

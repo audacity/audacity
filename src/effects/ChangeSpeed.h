@@ -120,7 +120,7 @@ private:
    // private effect parameters
    int      mToVinyl;         // to standard vinyl speed (rpm)
    double   mToLength;        // target length of selection
-   NumericFormatSymbol mFormat;          // time control format
+   NumericFormatID mFormat;          // time control format
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
