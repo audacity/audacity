@@ -742,8 +742,10 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
    mEnabled = mEnableBtn->IsDown();
 
    auto mpState = mwState.lock();
-   if (mpState)
+   if (mpState) {
       mpState->SetActive(mEnabled);
+      UndoManager::Get(mProject).MarkUnsaved();
+   }
 
    UpdateControls();
 }
