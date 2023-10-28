@@ -19,6 +19,16 @@
 #include <wx/log.h>
 
 namespace MenuRegistry {
+auto Options::MakeCheckFn(const wxString key, bool defaultValue ) -> CheckFn
+{
+   return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
+}
+
+auto Options::MakeCheckFn(const BoolSetting &setting ) -> CheckFn
+{
+   return MakeCheckFn( setting.GetPath(), setting.GetDefault() );
+}
+
 std::pair<bool, bool> detail::VisitorBase::ShouldBeginGroup(
    const ItemProperties *pProperties)
 {
