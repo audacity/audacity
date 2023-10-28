@@ -298,10 +298,13 @@ private:
 
    //! public nonvirtual duplication function that invokes Clone()
    /*!
+    @param shallowCopyAttachments if true, then share AttachedTrackObjects
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
-   virtual TrackListHolder Duplicate() const;
+   virtual TrackListHolder Duplicate(bool shallowCopyAttachments = false) const;
+
+   void ReparentAllAttachments();
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;
@@ -1454,10 +1457,12 @@ public:
 
    /*
     Forget pending track additions and changes;
-    if requested, give back the pending added tracks.
+    if requested, give back the pending added tracks, as channel groups,
+    stored in the vector at their original positions in iteration order and
+    nulls corresponding with non-added tracks in original iteration order
     @pre `GetOwner()`
     */
-   void ClearPendingTracks(ListOfTracks *pAdded = nullptr);
+   void ClearPendingTracks(std::vector<TrackListHolder> *pAdded = nullptr);
 
    // Change the state of the project.
    // Strong guarantee for project state in case of exceptions.

@@ -52,6 +52,13 @@ void Track::Init(const Track &orig)
    mId = orig.mId;
 }
 
+void Track::ReparentAllAttachments()
+{
+   this->AttachedTrackObjects::ForEach([&](auto &attachment){
+      attachment.Reparent(this->SharedPointer());
+   });
+}
+
 const wxString &Track::GetName() const
 {
    return GetGroupData().mName;
@@ -89,7 +96,7 @@ void Track::EnsureVisible( bool modifyState )
       pList->EnsureVisibleEvent(SharedPointer(), modifyState);
 }
 
-TrackListHolder Track::Duplicate() const
+TrackListHolder Track::Duplicate(bool shallowCopyAttachments) const
 {
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
@@ -97,10 +104,17 @@ TrackListHolder Track::Duplicate() const
 
    auto iter = TrackList::Channels(*result->begin()).begin();
    const auto copyOne = [&](const Track *pChannel){
-      pChannel->AttachedTrackObjects::ForEach([&](auto &attachment){
-         // Copy view state that might be important to undo/redo
-         attachment.CopyTo(**iter);
-      });
+      if (shallowCopyAttachments) {
+         // Share the satellites with the original, though they do not point
+         // back to the duplicate track
+         AttachedTrackObjects &attachments = (**iter);
+         attachments = *pChannel; // shallow copy
+      }
+      else
+         pChannel->AttachedTrackObjects::ForEach([&](auto &attachment){
+            // Copy view state that might be important to undo/redo
+            attachment.CopyTo(**iter);
+         });
       ++iter;
    };
 
@@ -1004,16 +1018,7 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
    assert(GetOwner()); // which implies mPendingUpdates is not null
    assert(src->IsLeader());
    
-   auto tracks = src->Clone(); // not duplicate
-   assert(src->NChannels() == tracks->NChannels());
-   {
-      // Share the satellites with the original, though they do not point back
-      // to the pending track
-      const auto channels = TrackList::Channels(src);
-      auto iter = TrackList::Channels(*tracks->begin()).begin();
-      for (const auto pChannel : channels)
-         ((AttachedTrackObjects&)**iter++) = *pChannel; // shallow copy
-   }
+   auto tracks = src->Duplicate(true); // shallow copy of attachments
 
    const auto result = *tracks->begin();
    mUpdaters.push_back(updater);
@@ -1049,7 +1054,7 @@ void TrackList::UpdatePendingTracks()
 }
 
 /*! @excsafety{No-fail} */
-void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
+void TrackList::ClearPendingTracks(std::vector<TrackListHolder> *pAdded)
 {
    assert(GetOwner()); // which implies mPendingUpdates is not null
    for (const auto &pTrack: static_cast<ListOfTracks&>(*mPendingUpdates))
@@ -1060,29 +1065,18 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
    if (pAdded)
       pAdded->clear();
 
-   // To find the first node that remains after the first deleted one
-   TrackNodePointer node;
-   bool foundNode = false;
-
-   for (auto it = ListOfTracks::begin(), stop = ListOfTracks::end();
-        it != stop;) {
-      if (it->get()->GetId() == TrackId{}) {
-         do {
-            if (pAdded)
-               pAdded->push_back( *it );
-            (*it)->SetOwner( {}, {} );
-            DeletionEvent(*it, false);
-            it = erase( it );
-         }
-         while (it != stop && it->get()->GetId() == TrackId{});
-
-         if (!foundNode && it != stop) {
-            node = (*it)->GetNode();
-            foundNode = true;
-         }
+   auto [it, end] = Any();
+   while (it != end) {
+      const auto pTrack = *it;
+      ++it;
+      if (pTrack->GetId() == TrackId{}) {
+         if (pAdded)
+            pAdded->emplace_back(Remove(*pTrack));
       }
-      else
-         ++it;
+      else {
+         if (pAdded)
+            pAdded->push_back(nullptr);
+      }
    }
 
    if (!empty()) {
@@ -1095,7 +1089,7 @@ bool TrackList::ApplyPendingTracks()
 {
    bool result = false;
 
-   ListOfTracks additions;
+   std::vector<std::shared_ptr<TrackList>> additions;
    auto updates = Temporary(nullptr);
    {
       // Always clear, even if one of the update functions throws
@@ -1107,15 +1101,14 @@ bool TrackList::ApplyPendingTracks()
    // Remaining steps must be No-fail-guarantee so that this function
    // gives Strong-guarantee
 
-   std::vector< std::shared_ptr<Track> > reinstated;
+   std::vector<std::shared_ptr<Track>> reinstated;
 
    if (updates)
-      for (auto pendingTrack : static_cast<ListOfTracks &>(*updates))
-         pendingTrack->AttachedTrackObjects::ForEach([&](auto &attachment){
-            attachment.Reparent( pendingTrack );
-         });
+      for (const auto pendingTrack : *updates)
+         for (const auto pChannel : TrackList::Channels(pendingTrack))
+            pChannel->ReparentAllAttachments();
    while (updates && !updates->empty()) {
-      auto iter = updates->ListOfTracks::begin();
+      auto iter = updates->begin();
       auto pendingTrack = *iter;
       auto src = FindById(pendingTrack->GetId());
       if (src) {
@@ -1126,8 +1119,8 @@ bool TrackList::ApplyPendingTracks()
          // Perhaps a track marked for pending changes got deleted by
          // some other action.  Recreate it so we don't lose the
          // accumulated changes.
-         reinstated.push_back(pendingTrack);
-         updates->ListOfTracks::erase(iter);
+         reinstated.push_back(pendingTrack->SharedPointer());
+         updates->Remove(*pendingTrack);
       }
    }
 
@@ -1138,26 +1131,16 @@ bool TrackList::ApplyPendingTracks()
 
    // Put the pending added tracks back into the list, preserving their
    // positions.
-   bool inserted = false;
-   ListOfTracks::iterator first;
+   auto iter = begin();
    for (auto &pendingTrack : additions) {
-      if (pendingTrack) {
-         auto iter = ListOfTracks::begin();
-         std::advance( iter, pendingTrack->GetIndex() );
-         iter = ListOfTracks::insert( iter, pendingTrack );
-         pendingTrack->SetOwner( shared_from_this(), {iter, this} );
-         pendingTrack->SetId( TrackId{ ++sCounter } );
-         if (!inserted) {
-            first = iter;
-            inserted = true;
-         }
-      }
-   }
-   if (inserted) {
-      TrackNodePointer node{first, this};
-      RecalcPositions(node);
-      AdditionEvent(node);
-      result = true;
+      auto next = iter;
+      ++next;
+      if (pendingTrack)
+         // This emits appropriate track list events
+         Insert(*iter, std::move(*pendingTrack));
+      else
+         assert(iter != end()); // Deduce that from ClearPendingTrack's contract
+      iter = next;
    }
 
    return result;
