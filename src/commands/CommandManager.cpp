@@ -119,11 +119,10 @@ struct MenuBarListEntry
 
 struct SubMenuListEntry
 {
-   SubMenuListEntry( const TranslatableString &name_ );
-   SubMenuListEntry( SubMenuListEntry&& ) = default;
+   SubMenuListEntry();
+   SubMenuListEntry(SubMenuListEntry&&) = default;
    ~SubMenuListEntry();
 
-   TranslatableString name;
    std::unique_ptr<wxMenu> menu;
 };
 
@@ -136,8 +135,8 @@ MenuBarListEntry::~MenuBarListEntry()
 {
 }
 
-SubMenuListEntry::SubMenuListEntry( const TranslatableString &name_ )
-   : name(name_), menu( std::make_unique< wxMenu >() )
+SubMenuListEntry::SubMenuListEntry()
+   : menu{ std::make_unique<wxMenu>() }
 {
 }
 
@@ -320,7 +319,9 @@ void CommandManager::Populator::DoBeginGroup(
    using namespace MenuRegistry;
    auto pItem = &item;
    if (const auto pMenu = dynamic_cast<const MenuItem*>( pItem )) {
-      BeginMenu(pMenu->GetTitle());
+      const auto &title = pMenu->GetTitle();
+      mMenuNames.emplace_back(title);
+      BeginMenu(title);
    }
    else if (const auto pConditionalGroup =
       dynamic_cast<const ConditionalGroupItem*>( pItem )
@@ -364,6 +365,7 @@ void CommandManager::Populator::DoEndGroup(
    auto pItem = &item;
    if (const auto pMenu = dynamic_cast<const MenuItem*>(pItem)) {
       EndMenu();
+      mMenuNames.pop_back();
    }
    else
    if (const auto pConditionalGroup =
@@ -454,10 +456,10 @@ void CommandManager::Populator::PopMenuBar()
 ///
 wxMenu *CommandManager::Populator::BeginMenu(const TranslatableString & tName)
 {
-   if ( mCurrentMenu )
-      return BeginSubMenu( tName );
+   if (mCurrentMenu)
+      return BeginSubMenu(tName);
    else
-      return BeginMainMenu( tName );
+      return BeginMainMenu(tName);
 }
 
 
@@ -467,7 +469,7 @@ wxMenu *CommandManager::Populator::BeginMenu(const TranslatableString & tName)
 ///
 void CommandManager::Populator::EndMenu()
 {
-   if ( mSubMenuList.empty() )
+   if (mSubMenuList.empty())
       EndMainMenu();
    else
       EndSubMenu();
@@ -481,7 +483,6 @@ wxMenu *CommandManager::Populator::BeginMainMenu(const TranslatableString & tNam
 {
    uCurrentMenu = std::make_unique<wxMenu>();
    mCurrentMenu = uCurrentMenu.get();
-   mCurrentMenuName = tName;
    return mCurrentMenu;
 }
 
@@ -496,9 +497,8 @@ void CommandManager::Populator::EndMainMenu()
    // items like Preferences, About, and Quit.
    wxASSERT(uCurrentMenu);
    CurrentMenuBar()->Append(
-      uCurrentMenu.release(), mCurrentMenuName.Translation());
+      uCurrentMenu.release(), MenuNames()[0].Translation());
    mCurrentMenu = nullptr;
-   mCurrentMenuName = COMMAND;
 }
 
 
@@ -507,7 +507,7 @@ void CommandManager::Populator::EndMainMenu()
 /// the function's argument.
 wxMenu* CommandManager::Populator::BeginSubMenu(const TranslatableString & tName)
 {
-   mSubMenuList.emplace_back( tName );
+   mSubMenuList.emplace_back();
    mbSeparatorAllowed = false;
    return mSubMenuList.back().menu.get();
 }
@@ -526,7 +526,7 @@ void CommandManager::Populator::EndSubMenu()
    mSubMenuList.pop_back();
 
    //Add the submenu to the current menu
-   auto name = tmpSubMenu.name.Translation();
+   auto name = MenuNames().back().Translation();
    CurrentMenu()->Append(0, name, tmpSubMenu.menu.release(),
       name /* help string */ );
    mbSeparatorAllowed = true;
@@ -705,8 +705,9 @@ auto CommandManager::Populator::NewIdentifier(const CommandID & nameIn,
       assert(entry);
 
       TranslatableString labelPrefix;
-      if (!mSubMenuList.empty())
-         labelPrefix = mSubMenuList.back().name.Stripped();
+      if (MenuNames().size() > 1)
+         // submenus only, not main
+         labelPrefix = MenuNames().back().Stripped();
 
       // For key bindings for commands with a list, such as align,
       // the name in prefs is the category name plus the effect name.
@@ -748,7 +749,7 @@ auto CommandManager::Populator::NewIdentifier(const CommandID & nameIn,
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
-      entry->labelTop = mCurrentMenuName.Stripped();
+      entry->labelTop = MenuNames()[0].Stripped();
       entry->finder = finder;
       entry->callback = callback;
       entry->isEffect = bIsEffect;

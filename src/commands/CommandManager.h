@@ -208,6 +208,8 @@ public:
       wxMenu * CurrentSubMenu() const;
    protected:
       wxMenu * CurrentMenu() const;
+      //! Stack of names of menus that were begun and not yet ended
+      const TranslatableStrings &MenuNames() const { return mMenuNames; }
    private:
       void SetMaxList();
       // mMaxList only holds shortcuts that should not be added (by default)
@@ -215,12 +217,12 @@ public:
       std::vector<NormalizedKeyString> mMaxListOnly;
       MenuBarList  mMenuBarList;
       SubMenuList  mSubMenuList;
+      TranslatableStrings mMenuNames;
       int mCurrentID{ 17000 };
    protected:
       // false at the start of a menu and immediately after a separator.
       bool mbSeparatorAllowed{ false };
    private:
-      TranslatableString mCurrentMenuName{ COMMAND };
       std::unique_ptr<wxMenu> uCurrentMenu;
       wxMenu *mCurrentMenu {};
       bool bMakingOccultCommands{ false };
