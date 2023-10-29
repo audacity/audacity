@@ -17,7 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../widgets/BasicMenu.h"
 #include "BasicUI.h"
 #include "CommandContext.h"
-#include "../../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "../../HitTestResult.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"

@@ -62,8 +62,6 @@ CommandManager.  It holds the callback for one command.
 #include "BasicUI.h"
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "AudacityMessageBox.h"
-#include "HelpSystem.h"
 #include "UndoManager.h"
 
 #include <cassert>

@@ -814,7 +814,7 @@ void ScreenshotBigDialog::UpdatePrefs()
 }
 
 #include "CommonCommandFlags.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 
 namespace {
 void OnScreenshot(const CommandContext &context )

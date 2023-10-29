@@ -42,7 +42,7 @@
 #include "ClientData.h"
 #include "Clipboard.h"
 #include "CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "UndoManager.h"
 #include "Prefs.h"
 #include "Project.h"

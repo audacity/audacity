@@ -13,7 +13,7 @@
 #define __AUDACITY_MENU_CREATOR__
 
 #include "Callable.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 
 class AUDACITY_DLL_API MenuCreator final : public CommandManager
 {

@@ -19,7 +19,7 @@
 #include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"
 #include "BasicUI.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "ConfigInterface.h"
 #include "EffectManager.h"
 #include "PluginManager.h"
@@ -1135,7 +1135,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "WaveTrack.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 
 /// DoEffect() takes a PluginID and executes the associated effect.
 ///

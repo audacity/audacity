@@ -23,7 +23,7 @@
 #include "TempDirectory.h"
 #include "UndoManager.h"
 #include "CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "RealtimeEffectManager.h"

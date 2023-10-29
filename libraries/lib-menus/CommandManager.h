@@ -46,7 +46,7 @@ class CommandContext;
 //! Sent when menus update (such as for changing enablement of items)
 struct MenuUpdateMessage {};
 
-class AUDACITY_DLL_API CommandManager /* not final */
+class MENUS_API CommandManager /* not final */
    : public XMLTagHandler
    , public ClientData::Base
    , public Observer::Publisher<MenuUpdateMessage>
@@ -67,7 +67,7 @@ public:
 
    // Interception of menu item handling.
    // If it returns true, bypass the usual dispatch of commands.
-   struct AUDACITY_DLL_API GlobalMenuHook : GlobalHook<GlobalMenuHook,
+   struct MENUS_API GlobalMenuHook : GlobalHook<GlobalMenuHook,
       bool(const CommandID&)
    >{};
 
@@ -119,7 +119,7 @@ public:
 
    void PurgeData();
 
-   struct AUDACITY_DLL_API Populator
+   struct MENUS_API Populator
       : MenuRegistry::Visitor<MenuRegistry::Traits>
    {
       using LeafVisitor = std::function<
@@ -373,7 +373,7 @@ protected:
    AudacityProject &mProject;
 
 public:
-   struct CommandListEntry
+   struct MENUS_API CommandListEntry
    {
       static wxString FormatLabelForMenu(
          const TranslatableString &translatableLabel,

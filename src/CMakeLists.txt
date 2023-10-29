@@ -258,8 +258,6 @@ list( APPEND SOURCES
       commands/CommandDispatch.h
       commands/CommandHandler.cpp
       commands/CommandHandler.h
-      commands/CommandManager.cpp
-      commands/CommandManager.h
       commands/CommandManagerWindowClasses.cpp
       commands/CommandManagerWindowClasses.h
       commands/CommandMisc.h

@@ -44,7 +44,7 @@
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
 #include "Track.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "Effect.h"
 #include "effects/EffectUI.h"
 #include "../images/Arrow.xpm"

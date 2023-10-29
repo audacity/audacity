@@ -24,7 +24,7 @@ Paul Licameli split from TrackControls.cpp
 #include "../../TrackUtilities.h"
 #include <wx/textdlg.h>
 #include "../../commands/AudacityCommand.h"
-#include "../../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "ShuttleGui.h"
 #include "Track.h"
 #include "../../widgets/PopupMenuTable.h"

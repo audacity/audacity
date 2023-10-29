@@ -19,7 +19,7 @@
 #include "Project.h"
 
 #include "CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "../commands/CommandDispatch.h"
 
 // flags so 1,2,4,8 etc.
