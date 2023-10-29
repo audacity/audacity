@@ -130,8 +130,6 @@ public:
       virtual ~Populator();
 
    protected:
-      AudacityProject &mProject;
-
       void DoBeginGroup(
          const MenuRegistry::GroupItem<MenuRegistry::Traits> &item);
       void DoVisit(const Registry::SingleItem &item);
@@ -173,6 +171,9 @@ public:
 
       void DoSeparator();
 
+      //! Stack of names of menus that were begun and not yet ended
+      const TranslatableStrings &MenuNames() const { return mMenuNames; }
+
    private:
       void AddItemList(const CommandID & name,
                        const ComponentInterfaceSymbol items[],
@@ -200,22 +201,22 @@ public:
                             CommandHandlerFinder finder,
                             CommandFunctorPointer callback,
                             const MenuRegistry::Options &options = {});
-   protected:
-      //! Stack of names of menus that were begun and not yet ended
-      const TranslatableStrings &MenuNames() const { return mMenuNames; }
-   private:
       void SetMaxList();
+
+   protected:
+      AudacityProject &mProject;
+
+      // false at the start of a menu and immediately after a separator.
+      bool mbSeparatorAllowed{ false };
+
+   private:
       // mMaxList only holds shortcuts that should not be added (by default)
       // and is sorted.
       std::vector<NormalizedKeyString> mMaxListOnly;
       TranslatableStrings mMenuNames;
-      int mCurrentID{ 17000 };
-   protected:
-      // false at the start of a menu and immediately after a separator.
-      bool mbSeparatorAllowed{ false };
-   private:
-      bool bMakingOccultCommands{ false };
       std::vector<bool> mFlags;
+      int mCurrentID{ 17000 };
+      bool bMakingOccultCommands{ false };
    };
 
 public:
