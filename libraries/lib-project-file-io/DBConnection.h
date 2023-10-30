@@ -36,7 +36,7 @@ struct DBConnectionErrors
    wxString mLog;
 };
 
-class DBConnection
+class PROJECT_FILE_IO_API DBConnection final
 {
 public:
    using CheckpointFailureCallback = std::function<void()>;
