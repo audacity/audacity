@@ -38,6 +38,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "SentryHelper.h"
 #include "MemoryX.h"
 
+#include "ProjectFileIOExtension.h"
 #include "ProjectFormatExtensionsRegistry.h"
 
 #include "BufferedStreamReader.h"
@@ -535,6 +536,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 
    SetFileName(fileName);
 
+   ProjectFileIOExtensionRegistry::OnLoad(mProject);
    return true;
 }
 
@@ -2324,6 +2326,8 @@ bool ProjectFileIO::SaveProject(
    // Adjust the title
    SetProjectTitle();
 
+   ProjectFileIOExtensionRegistry::OnSave(mProject);
+
    return true;
 }
 
@@ -2340,6 +2344,9 @@ bool ProjectFileIO::OpenProject()
 
 bool ProjectFileIO::CloseProject()
 {
+   if (!ProjectFileIOExtensionRegistry::OnClose(mProject))
+      return false;
+
    auto &currConn = CurrConn();
    if (!currConn)
    {
