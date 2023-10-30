@@ -1,5 +1,5 @@
 
-add_library( ${TARGET} STATIC )
+add_library( ${TARGET} SHARED )
 
 def_vars()
 
@@ -18,6 +18,7 @@ set( INCLUDES
 )
 
 set( DEFINES
+
    PRIVATE
       #
       # Recommended in SQLite docs
@@ -38,6 +39,20 @@ set( DEFINES
       $<$<BOOL:${HAVE_LOCALTIME_R}>:HAVE_LOCALTIME_R>
       $<$<BOOL:${HAVE_LOCALTIME_S}>:HAVE_LOCALTIME_S>
 )
+
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   set(DEFINES ${DEFINES}
+      INTERFACE
+         "SQLITE_API=__declspec(dllimport)"
+      PRIVATE
+         "SQLITE_API=__declspec(dllexport)"
+   )
+else()
+   set(DEFINES ${DEFINES}
+      INTERFACE
+         "SQLITE_API=__attribute__((visibility(\"default\")))"
+   )
+endif()
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
