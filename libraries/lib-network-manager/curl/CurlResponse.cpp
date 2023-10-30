@@ -374,6 +374,8 @@ void CurlResponse::perform ()
         {
             if (mHttpCode == 0)
                 mHttpCode = handle.getHTTPCode ();
+            if (mHttpCode >= 400)
+               mNetworkError = NetworkError::HTTPError;
         }
 
         mRequestFinished = true;
