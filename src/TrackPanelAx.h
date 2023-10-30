@@ -47,6 +47,11 @@ public:
    // Returns currently focused track or first one if none focused
    std::shared_ptr<Track> GetFocus();
 
+   // Returns currently focused track, never changing it
+   std::shared_ptr<Track> PeekFocus() const;
+
+   int NumFocusedTrack() const { return mNumFocusedTrack; }
+
    // Changes focus to a specified track
    // Return is the actual focused track, which may be different from
    // the argument when that is null
@@ -129,7 +134,8 @@ public:
 private:
 
    TrackList &GetTracks();
-   int TrackNum( const std::shared_ptr<Track> &track );
+   const TrackList &GetTracks() const;
+   int TrackNum(const std::shared_ptr<Track> &track) const;
    std::shared_ptr<Track> FindTrack( int num );
 
    AudacityProject &mProject;
