@@ -11,6 +11,7 @@ set( SOURCES
    MIDIPlay.h
    NoteTrack.cpp
    NoteTrack.h
+   WrapAllegro.h
 )
 set( LIBRARIES
    lib-audio-io-interface

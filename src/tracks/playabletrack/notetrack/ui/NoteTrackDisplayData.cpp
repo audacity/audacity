@@ -11,7 +11,7 @@
 
 #include "NoteTrackDisplayData.h"
 #include "NoteTrack.h"
-#include "../../lib-src/header-substitutes/allegro.h"
+#include "WrapAllegro.h"
 
 static NoteTrackAttachments::RegisteredFactory key{
    [](NoteTrack&){ return std::make_unique<NoteTrackRange>(); }

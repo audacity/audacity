@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "NoteTrackDisplayData.h"
 
 #ifdef USE_MIDI
-#include "../lib-src/header-substitutes/allegro.h"
+#include "WrapAllegro.h"
 
 #include "NoteTrackVRulerControls.h"
 #include "NoteTrack.h"

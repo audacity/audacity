@@ -24,7 +24,7 @@
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackPanelDrawingContext.h"
 
-#include "../lib-src/header-substitutes/allegro.h"
+#include "WrapAllegro.h"
 
 
 #include "ProjectHistory.h"
