@@ -196,14 +196,10 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    {
       mSplitByLabels->Disable();
       mSplitByTracks->SetValue(true);
-      if(ExportAudioExportRange.Read() != "split")
-         mSplitsPanel->Hide();
    }
-   else
-   {
-      mRangeSplit->SetValue(true);
-      mSplitByLabels->SetValue(true);
-   }
+
+   if (ExportAudioExportRange.Read() != "split")
+      mSplitsPanel->Hide();
    
    mExportOptionsPanel->SetCustomMappingEnabled(!mRangeSplit->GetValue());
 
