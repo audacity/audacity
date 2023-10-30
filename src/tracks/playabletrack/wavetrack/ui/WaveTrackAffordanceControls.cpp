@@ -613,7 +613,7 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
 void WaveTrackAffordanceControls::OnRenderClipStretching(
    AudacityProject& project)
 {
-   auto [track, it] = SelectedIntervalOfFocusedTrack(project);
+   const auto [track, it] = SelectedIntervalOfFocusedTrack(project);
 
    if (track != FindTrack().get())
       return;
@@ -624,8 +624,10 @@ void WaveTrackAffordanceControls::OnRenderClipStretching(
       return;
 
    WaveTrackUtilities::WithStretchRenderingProgress(
-      [&interval](const ProgressReporter& progress) {
-         interval->ApplyStretchRatio(progress);
+      [track = track, interval = interval](const ProgressReporter& progress) {
+         track->ApplyStretchRatio(
+            { { interval->GetPlayStartTime(), interval->GetPlayEndTime() } },
+            progress);
       },
       XO("Applying..."));
 

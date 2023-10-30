@@ -45,8 +45,10 @@ from the project that will own the track.
 #include "float_cast.h"
 
 #include "AudioSegmentSampleView.h"
+#include "ClipTimeAndPitchSource.h"
 #include "Envelope.h"
 #include "Sequence.h"
+#include "StaffPadTimeAndPitch.h"
 
 #include "Project.h"
 #include "ProjectRate.h"
@@ -187,7 +189,30 @@ WaveTrack::Interval::Interval(const ChannelGroup &group,
 {
 }
 
+WaveTrack::Interval::Interval(
+   const ChannelGroup& group, size_t width,
+   const SampleBlockFactoryPtr& factory, int rate, sampleFormat format)
+    : Interval(
+         group, std::make_shared<WaveClip>(1, factory, format, rate, 0),
+         width == 2 ?
+            std::make_shared<WaveClip>(1, factory, format, rate, 0) :
+            nullptr)
+{
+}
+
 WaveTrack::Interval::~Interval() = default;
+
+void WaveTrack::Interval::Append(
+   constSamplePtr buffer[], sampleFormat format, size_t len)
+{
+   for (unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->AppendNewBlock(buffer[channel], format, len);
+}
+
+void WaveTrack::Interval::Flush()
+{
+   ForEachClip([](auto& clip) { clip.Flush(); });
+}
 
 void WaveTrack::Interval::TrimLeftTo(double t)
 {
@@ -199,6 +224,30 @@ void WaveTrack::Interval::TrimRightTo(double t)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)
       GetClip(channel)->TrimRightTo(t);
+}
+
+void WaveTrack::Interval::SetTrimLeft(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->SetTrimLeft(t);
+}
+
+void WaveTrack::Interval::SetTrimRight(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->SetTrimRight(t);
+}
+
+void WaveTrack::Interval::ClearLeft(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->ClearLeft(t);
+}
+
+void WaveTrack::Interval::ClearRight(double t)
+{
+   for(unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->ClearRight(t);
 }
 
 void WaveTrack::Interval::StretchLeftTo(double t)
@@ -213,19 +262,95 @@ void WaveTrack::Interval::StretchRightTo(double t)
       GetClip(channel)->StretchRightTo(t);
 }
 
-void WaveTrack::Interval::ApplyStretchRatio(
-   const std::function<void(double)>& reportProgress)
+WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
+   const std::function<void(double)>& reportProgress, const ChannelGroup& group,
+   const SampleBlockFactoryPtr& factory, sampleFormat format)
 {
-   const auto channelsCount = NChannels();
+   const auto dst = std::make_shared<Interval>(
+      group, NChannels(), factory, mpClip->GetRate(), format);
 
-   // It is safe to assume that the track has at least one channel
-   assert(channelsCount > 0);
+   if (GetStretchRatio() == 1)
+      return dst;
 
-   for (unsigned channel = 0; channel < channelsCount; ++channel)
-      GetClip(channel)->ApplyStretchRatio(
-         [&reportProgress, channel, channelsCount](double progress) {
-            reportProgress((channel + progress) / channelsCount);
-         });
+   const auto originalPlayStartTime = GetPlayStartTime();
+   const auto originalPlayEndTime = GetPlayEndTime();
+   const auto stretchRatio = GetStretchRatio();
+
+   auto success = false;
+   Finally Do { [&] {
+      if (!success)
+      {
+         TrimLeftTo(originalPlayStartTime);
+         TrimRightTo(originalPlayEndTime);
+      }
+   } };
+
+   // Leave 1 second of raw, unstretched audio before and after visible region
+   // to give the algorithm a chance to be in a steady state when reaching the
+   // play boundaries.
+   const auto tmpPlayStartTime =
+      std::max(GetSequenceStartTime(), originalPlayStartTime - stretchRatio);
+   const auto tmpPlayEndTime =
+      std::min(GetSequenceEndTime(), originalPlayEndTime + stretchRatio);
+   TrimLeftTo(tmpPlayStartTime);
+   TrimRightTo(tmpPlayEndTime);
+
+   WideClip wideClip { mpClip, mpClip1 };
+
+   constexpr auto sourceDurationToDiscard = 0.;
+   constexpr auto blockSize = 1024;
+   const auto numChannels = NChannels();
+   ClipTimeAndPitchSource stretcherSource { wideClip, sourceDurationToDiscard,
+                                            PlaybackDirection::forward };
+   TimeAndPitchInterface::Parameters params;
+   params.timeRatio = stretchRatio;
+   StaffPadTimeAndPitch stretcher { mpClip->GetRate(), numChannels,
+                                    stretcherSource, std::move(params) };
+
+   // Post-rendering sample counts, i.e., stretched units
+   const auto totalNumOutSamples =
+      sampleCount { wideClip.GetVisibleSampleCount().as_double() *
+                    stretchRatio };
+
+   sampleCount numOutSamples { 0 };
+   AudioContainer container(blockSize, numChannels);
+
+   while (numOutSamples < totalNumOutSamples)
+   {
+      const auto numSamplesToGet =
+         limitSampleBufferSize(blockSize, totalNumOutSamples - numOutSamples);
+      stretcher.GetSamples(container.Get(), numSamplesToGet);
+      constSamplePtr data[2];
+      data[0] = reinterpret_cast<constSamplePtr>(container.Get()[0]);
+      if (NChannels() == 2)
+         data[1] = reinterpret_cast<constSamplePtr>(container.Get()[1]);
+      dst->Append(data, floatSample, numSamplesToGet);
+      numOutSamples += numSamplesToGet;
+      if (reportProgress)
+         reportProgress(
+            numOutSamples.as_double() / totalNumOutSamples.as_double());
+   }
+   dst->Flush();
+
+   // Now we're all like `this` except unstretched. We can clear leading and
+   // trailing, stretching transient parts.
+   dst->SetPlayStartTime(tmpPlayStartTime);
+   dst->ClearLeft(originalPlayStartTime);
+   dst->ClearRight(originalPlayEndTime);
+
+   // We don't preserve cutlines but the relevant part of the envelope.
+   Envelope dstEnvelope = GetEnvelope();
+   const auto samplePeriod = 1. / mpClip->GetRate();
+   dstEnvelope.CollapseRegion(
+      originalPlayEndTime, GetSequenceEndTime() + samplePeriod, samplePeriod);
+   dstEnvelope.CollapseRegion(0, originalPlayStartTime, samplePeriod);
+   dstEnvelope.SetOffset(originalPlayStartTime);
+   dst->SetEnvelope(dstEnvelope);
+
+   success = true;
+
+   assert(dst->GetStretchRatio() == 1);
+   return dst;
 }
 
 bool WaveTrack::Interval::StretchRatioEquals(double value) const
@@ -285,6 +410,11 @@ bool WaveTrack::Interval::IntersectsPlayRegion(double t0, double t1) const
    return mpClip->IntersectsPlayRegion(t0, t1);
 }
 
+bool WaveTrack::Interval::WithinPlayRegion(double t) const
+{
+   return mpClip->WithinPlayRegion(t);
+}
+
 double WaveTrack::Interval::GetStretchRatio() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common stretch ratio
@@ -299,6 +429,21 @@ sampleCount WaveTrack::Interval::TimeToSamples(double time) const
 double WaveTrack::Interval::SamplesToTime(sampleCount s) const
 {
    return mpClip->SamplesToTime(s);
+}
+
+double WaveTrack::Interval::GetSequenceStartTime() const
+{
+   return mpClip->GetSequenceStartTime();
+}
+
+void WaveTrack::Interval::SetSequenceStartTime(double t)
+{
+   ForEachClip([t](auto& clip) { clip.SetSequenceStartTime(t); });
+}
+
+double WaveTrack::Interval::GetSequenceEndTime() const
+{
+   return mpClip->GetSequenceEndTime();
 }
 
 double WaveTrack::Interval::GetTrimLeft() const
@@ -316,6 +461,16 @@ double WaveTrack::Interval::GetTrimRight() const
 bool WaveTrack::Interval::IsPlaceholder() const
 {
    return mpClip->GetIsPlaceholder();
+}
+
+const Envelope& WaveTrack::Interval::GetEnvelope() const
+{
+   return *mpClip->GetEnvelope();
+}
+
+void WaveTrack::Interval::SetEnvelope(const Envelope& envelope)
+{
+   mpClip->SetEnvelope(std::make_unique<Envelope>(envelope));
 }
 
 void WaveTrack::Interval::ForEachClip(const std::function<void(WaveClip&)>& op)
@@ -363,11 +518,20 @@ WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDir
    return result;
 }
 
-std::shared_ptr<WaveTrack::Interval>
-WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDirection)
+WaveTrack::IntervalHolder WaveTrack::GetNextInterval(
+   const Interval& interval, PlaybackDirection searchDirection)
 {
    return std::const_pointer_cast<Interval>(
       std::as_const(*this).GetNextInterval(interval, searchDirection));
+}
+
+WaveTrack::IntervalHolder WaveTrack::GetIntervalAtTime(double t)
+{
+   IntervalHolder result;
+   for (const auto& interval : Intervals())
+      if (interval->WithinPlayRegion(t))
+         return interval;
+   return nullptr;
 }
 
 namespace {
@@ -2173,39 +2337,26 @@ void WaveTrack::ApplyStretchRatio(
                  GetEndTime();
    if (startTime >= endTime)
       return;
-   const auto channels = TrackList::Channels(this);
-   BasicUI::SplitProgress(
-      channels.begin(), channels.end(),
-      [&](WaveTrack* pChannel, ProgressReporter child) {
-         pChannel->ApplyStretchRatioOne(startTime, endTime, child);
-      },
-      reportProgress);
-}
 
-void WaveTrack::ApplyStretchRatioOne(
-   double t0, double t1, const ProgressReporter& reportProgress)
-{
-   if (auto clipAtT0 = GetClipAtTime(t0); clipAtT0 &&
-                                          clipAtT0->SplitsPlayRegion(t0) &&
-                                          !clipAtT0->StretchRatioEquals(1))
-      SplitAt(t0);
-   if (auto clipAtT1 = GetClipAtTime(t1); clipAtT1 &&
-                                          clipAtT1->SplitsPlayRegion(t1) &&
-                                          !clipAtT1->StretchRatioEquals(1))
-      SplitAt(t1);
-   std::vector<WaveClip*> intersectedClips;
-   auto clip = GetClipAtTime(t0);
-   while (clip && clip->GetPlayStartTime() < t1)
+   // Here we assume that left- and right clips are aligned.
+   if (auto clipAtT0 = GetClipAtTime(startTime);
+       clipAtT0 && clipAtT0->SplitsPlayRegion(startTime) &&
+       !clipAtT0->StretchRatioEquals(1))
+      Split(startTime, startTime);
+   if (auto clipAtT1 = GetClipAtTime(endTime);
+       clipAtT1 && clipAtT1->SplitsPlayRegion(endTime) &&
+       !clipAtT1->StretchRatioEquals(1))
+      Split(endTime, endTime);
+
+   std::vector<IntervalHolder> srcIntervals;
+   auto clip = GetIntervalAtTime(startTime);
+   while (clip && clip->GetPlayStartTime() < endTime)
    {
-      intersectedClips.push_back(clip);
-      clip = GetNextClip(*clip, PlaybackDirection::forward);
+      srcIntervals.push_back(clip);
+      clip = GetNextInterval(*clip, PlaybackDirection::forward);
    }
-   BasicUI::SplitProgress(
-      intersectedClips.begin(), intersectedClips.end(),
-      [&](WaveClip* clip, ProgressReporter reportClipProgress) {
-         clip->ApplyStretchRatio(reportClipProgress);
-      },
-      reportProgress);
+
+   ApplyStretchRatioOnIntervals(srcIntervals, reportProgress);
 }
 
 /*! @excsafety{Weak} */
@@ -2387,12 +2538,9 @@ void WaveTrack::Join(
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
    const auto intervals = Intervals();
-   std::vector<std::shared_ptr<Interval>> intervalsToJoin;
+   std::vector<IntervalHolder> intervalsToJoin;
    for (auto interval : intervals)
       if (interval->IntersectsPlayRegion(t0, t1))
-         // TODO after this loop's iteration executes, the object referred to by
-         // `interval` would get destroyed if `intervalsToJoin` were a vector of
-         // raw pointers - why is that ?
          intervalsToJoin.push_back(interval);
    if (intervalsToJoin.size() < 2u)
       return;
@@ -2402,13 +2550,7 @@ void WaveTrack::Join(
               intervalsToJoin[0]->GetStretchRatio()](const auto& interval) {
              return first != interval->GetStretchRatio();
           }))
-      BasicUI::SplitProgress(
-         intervalsToJoin.begin(), intervalsToJoin.end(),
-         [&](
-            const std::shared_ptr<Interval>& interval, ProgressReporter child) {
-            interval->ApplyStretchRatio(child);
-         },
-         reportProgress);
+      ApplyStretchRatioOnIntervals(intervalsToJoin, reportProgress);
 
    for (const auto pChannel : TrackList::Channels(this))
       JoinOne(*pChannel, t0, t1);
@@ -3928,6 +4070,59 @@ bool WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
    mClips.erase(it);
 
    return true;
+}
+
+void WaveTrack::ApplyStretchRatioOnIntervals(
+   const std::vector<IntervalHolder>& srcIntervals,
+   const ProgressReporter& reportProgress)
+{
+   std::vector<IntervalHolder> dstIntervals;
+   dstIntervals.reserve(srcIntervals.size());
+   std::transform(
+      srcIntervals.begin(), srcIntervals.end(),
+      std::back_inserter(dstIntervals), [&](const IntervalHolder& interval) {
+         return interval->GetStretchRenderedCopy(
+            reportProgress, *this, mpFactory, GetSampleFormat());
+      });
+
+   // If we reach this point it means that no error was thrown - we can replace
+   // the source with the destination intervals.
+   for (auto i = 0; i < srcIntervals.size(); ++i)
+      ReplaceInterval(srcIntervals[i], dstIntervals[i]);
+}
+
+void WaveTrack::InsertInterval(const IntervalHolder& interval)
+{
+   assert(IsLeader());
+   auto channel = 0;
+   for (const auto pChannel : TrackList::Channels(this))
+   {
+      const auto clip = interval->GetClip(channel++);
+      if (clip)
+         pChannel->InsertClip(clip);
+   }
+}
+
+void WaveTrack::RemoveInterval(const IntervalHolder& interval)
+{
+   assert(IsLeader());
+   auto channel = 0;
+   for (const auto pChannel : TrackList::Channels(this))
+   {
+      const auto clip = interval->GetClip(channel);
+      if (clip)
+         pChannel->RemoveAndReturnClip(clip.get());
+      ++channel;
+   }
+}
+
+void WaveTrack::ReplaceInterval(
+   const IntervalHolder& oldOne, const IntervalHolder& newOne)
+{
+   assert(IsLeader());
+   assert(oldOne->NChannels() == newOne->NChannels());
+   RemoveInterval(oldOne);
+   InsertInterval(newOne);
 }
 
 /*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!

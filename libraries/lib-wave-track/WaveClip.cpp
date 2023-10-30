@@ -22,13 +22,11 @@
 #include <wx/log.h>
 
 #include "BasicUI.h"
-#include "ClipTimeAndPitchSource.h"
 #include "Envelope.h"
 #include "InconsistencyException.h"
 #include "Resample.h"
 #include "Sequence.h"
-#include "StaffPadTimeAndPitch.h"
-//#include "TimeAndPitchInterface.h"
+#include "TimeAndPitchInterface.h"
 #include "UserException.h"
 
 #ifdef _OPENMP
@@ -471,8 +469,8 @@ void WaveClip::UpdateEnvelopeTrackLen()
 }
 
 /*! @excsafety{Strong} */
-std::shared_ptr<SampleBlock> WaveClip::AppendNewBlock(
-   samplePtr buffer, sampleFormat format, size_t len)
+std::shared_ptr<SampleBlock>
+WaveClip::AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len)
 {
    // This is a special use function for legacy files only and this assertion
    // does not need to be relaxed
@@ -1199,101 +1197,6 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       Flush();
       Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
    }
-}
-
-void WaveClip::ApplyStretchRatio(const ProgressReporter& reportProgress)
-{
-   assert(mProjectTempo.has_value());
-
-   if (StretchRatioEquals(1))
-      return;
-   const auto stretchRatio = GetStretchRatio();
-
-   auto success = false;
-   auto newSequences = GetEmptySequenceCopies();
-   bool swappedOnce = false;
-
-   Finally Do { [&, oldTrimLeft = GetTrimLeft(), oldTrimRight = GetTrimRight(),
-                 oldOffset = GetSequenceStartTime(),
-                 oldRawAudioTempo = mRawAudioTempo,
-                 oldClipStretchRatio = mClipStretchRatio] {
-      if (success)
-         assert(GetStretchRatio() == 1);
-      else
-      {
-         this->mClipStretchRatio = oldClipStretchRatio;
-         this->mRawAudioTempo = oldRawAudioTempo;
-         this->SetTrimLeft(oldTrimLeft);
-         this->SetTrimRight(oldTrimRight);
-         this->SetSequenceStartTime(oldOffset);
-         if (swappedOnce)
-            std::swap(mSequences, newSequences);
-      }
-   } };
-
-   const auto originalPlayStartTime = GetPlayStartTime();
-   const auto originalPlayEndTime = GetPlayEndTime();
-
-   // Leave 1 second of raw, unstretched audio before and after visible region
-   // to ensure the algorithm is in a steady state when reaching the play
-   // boundaries.
-   SetTrimLeft(0);
-   SetTrimRight(0);
-   ClearLeft(originalPlayStartTime - stretchRatio);
-   ClearRight(originalPlayEndTime + stretchRatio);
-
-   // Let's not use the `durationToDiscard` functionality of the
-   // `TimeAndPitchSource`: this determines the source readout offset. We want
-   // to do better here: feed earlier samples, but discard the early output.
-   constexpr auto sourceDurationToDiscard = 0.;
-   constexpr auto blockSize = 1024;
-   const auto numChannels = GetWidth();
-
-   ClipTimeAndPitchSource stretcherSource { *this, sourceDurationToDiscard,
-                                            PlaybackDirection::forward };
-   TimeAndPitchInterface::Parameters params;
-   params.timeRatio = stretchRatio;
-   StaffPadTimeAndPitch stretcher { GetRate(), numChannels, stretcherSource,
-                                    std::move(params) };
-
-   // Post-rendering sample counts, i.e., stretched units
-   const auto totalNumOutSamples =
-      sampleCount { GetVisibleSampleCount().as_double() * stretchRatio };
-
-   sampleCount numOutSamples { 0 };
-   AudioContainer container(blockSize, numChannels);
-   while (numOutSamples < totalNumOutSamples)
-   {
-      const auto numSamplesToGet =
-         limitSampleBufferSize(blockSize, totalNumOutSamples - numOutSamples);
-      stretcher.GetSamples(container.Get(), numSamplesToGet);
-      auto channel = 0u;
-      for (auto& newSequence : newSequences)
-         newSequence->Append(
-            reinterpret_cast<samplePtr>(container.Get()[channel++]),
-            floatSample, numSamplesToGet, 1,
-            widestSampleFormat /* computed samples need dither */
-         );
-      numOutSamples += numSamplesToGet;
-      if (reportProgress)
-         reportProgress(
-            numOutSamples.as_double() / totalNumOutSamples.as_double());
-   }
-   for (const auto& sequence : newSequences)
-      sequence->Flush();
-
-   std::swap(mSequences, newSequences);
-   swappedOnce = true;
-   mRawAudioTempo = *mProjectTempo;
-   mClipStretchRatio = 1;
-
-   ClearLeft(originalPlayStartTime);
-   ClearRight(originalPlayEndTime);
-
-   Flush();
-   Caches::ForEach(std::mem_fn(&WaveClipListener::Invalidate));
-
-   success = true;
 }
 
 // Used by commands which interact with clips using the keyboard.

@@ -178,14 +178,6 @@ public:
    // the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
 
-   /*!
-    * @brief Renders the stretching of the clip (preserving duration). Clip must
-    * be part of a project and know its tempo.
-    * @pre mProjectTempo.has_value()
-    * @post GetStretchRatio() == 1
-    */
-   void ApplyStretchRatio(const ProgressReporter& reportProgress);
-
    void SetColourIndex(int index) { mColourIndex = index; }
    int GetColourIndex() const { return mColourIndex; }
 
@@ -448,8 +440,8 @@ public:
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
    //! @pre `GetWidth() == 1`
-   std::shared_ptr<SampleBlock> AppendNewBlock(
-      samplePtr buffer, sampleFormat format, size_t len);
+   std::shared_ptr<SampleBlock>
+   AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks
    //! @pre `GetWidth() == 1`

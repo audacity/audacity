@@ -158,7 +158,10 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    /*! @excsafety{Strong} */
    void InsertSilence(sampleCount s0, sampleCount len);
 
-   const SampleBlockFactoryPtr &GetFactory() { return mpFactory; }
+   const SampleBlockFactoryPtr& GetFactory() const
+   {
+      return mpFactory;
+   }
 
    //
    // XMLTagHandler callback methods for loading and saving
