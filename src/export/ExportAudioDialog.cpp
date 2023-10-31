@@ -182,6 +182,7 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    const auto labelTracks = tracks.Any<LabelTrack>();
    const auto hasLabels = !labelTracks.empty() &&
       (*labelTracks.begin())->GetNumLabels() > 0;
+   const auto hasMultipleWaveTracks = tracks.Any<WaveTrack>().size() > 1;
 
    if(ExportUtils::FindExportWaveTracks(tracks, true).empty() ||
       ViewInfo::Get(mProject).selectedRegion.isPoint())
@@ -195,15 +196,27 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    if(!hasLabels)
    {
       mSplitByLabels->Disable();
-      mSplitByTracks->SetValue(true);
-      if(ExportAudioExportRange.Read() != "split")
-         mSplitsPanel->Hide();
+      if (hasMultipleWaveTracks)
+         mSplitByTracks->SetValue(true);
    }
-   else
+
+   if (!hasMultipleWaveTracks)
    {
-      mRangeSplit->SetValue(true);
-      mSplitByLabels->SetValue(true);
+      mSplitByTracks->Disable();
+      if (hasLabels)
+         mSplitByLabels->SetValue(true);
    }
+
+   if (!hasLabels && !hasMultipleWaveTracks)
+   {
+      mRangeSplit->Disable();
+      if (ExportAudioExportRange.Read() == "split")
+         mRangeProject->SetValue(true);
+      mSplitsPanel->Hide();
+   }
+
+   if (ExportAudioExportRange.Read() != "split")
+      mSplitsPanel->Hide();
    
    mExportOptionsPanel->SetCustomMappingEnabled(!mRangeSplit->GetValue());
 
