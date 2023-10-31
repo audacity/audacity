@@ -388,42 +388,82 @@ private:
    std::unique_ptr< wxMenuBar > mTempMenuBar;
 };
 
-struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
-{
-   ~MenuVisitor() override;
-
-   // final overrides
-   void BeginGroup(const Registry::GroupItemBase &item, const Path &path )
-      final;
-   void EndGroup(const Registry::GroupItemBase &item, const Path& ) final;
-   void Visit(const Registry::SingleItem &item, const Path &path ) final;
-
-   // added virtuals
-   //! Groups of type MenuItems are excluded from this callback
-   virtual void DoBeginGroup(
-      const Registry::GroupItemBase &item, const Path &path);
-   //! Groups of type MenuItems are excluded from this callback
-   virtual void DoEndGroup(
-      const Registry::GroupItemBase &item, const Path &path);
-   virtual void DoVisit(const Registry::SingleItem &item, const Path &path);
-   virtual void DoSeparator();
-
-private:
-   void MaybeDoSeparator();
-   std::vector<bool> firstItem;
-   std::vector<bool> needSeparator;
-};
-
-struct ProjectMenuVisitor : MenuVisitor
-{
-   explicit ProjectMenuVisitor(AudacityProject &p) : mProject{ p } {}
-   ~ProjectMenuVisitor() override;
-   AudacityProject &mProject;
-};
-
 // Define items that populate tables that specifically describe menu trees
 namespace MenuTable {
-   using namespace Registry;
+using namespace Registry;
+
+   //! A mix-in discovered by dynamic_cast; independent of the Traits
+   struct MenuItemProperties {
+      enum Properties {
+         None,
+         Inline,
+         Section,
+         Whole,
+         Extension,
+      };
+      virtual ~MenuItemProperties();
+      virtual Properties GetProperties() const = 0;
+   };
+
+namespace detail {
+   struct VisitorBase {
+      std::pair<bool, bool>
+         ShouldBeginGroup(const MenuItemProperties *pProperties);
+      void AfterBeginGroup(const MenuItemProperties *pProperties);
+      bool ShouldEndGroup(const MenuItemProperties *pProperties);
+      bool ShouldDoSeparator();
+
+      std::vector<bool> firstItem;
+      std::vector<bool> needSeparator;
+   };
+}
+
+   //! Wraps the behavior of another VisitorFuntions<MenuTraits>, and also
+   //! needs a callback for what to do at separator lines
+   template<typename MenuTraits> struct Visitor
+      : VisitorFunctions<MenuTraits>
+      , detail::VisitorBase
+   {
+      Visitor(VisitorFunctions<MenuTraits> functions,
+         std::function<void()> doSeparator
+      )  : VisitorFunctions<MenuTraits>{ std::tuple{
+
+      [this](const GroupItem<MenuTraits> &item, const Path &path)
+      {
+         using namespace MenuTable;
+         const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
+         auto [begin, separate] = ShouldBeginGroup(pProperties);
+         if (separate)
+            mDoSeparator();
+         if (begin)
+            mWrapped.BeginGroup(item, path);
+         AfterBeginGroup(pProperties);
+      },
+
+      [this](const Registry::SingleItem &item, const Path &path)
+      {
+         if (ShouldDoSeparator())
+            mDoSeparator();
+         mWrapped.Visit(item, path);
+      },
+
+      [this](const GroupItem<MenuTraits> &item, const Path &path)
+      {
+         using namespace MenuTable;
+         const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
+         if (ShouldEndGroup(pProperties))
+            mWrapped.EndGroup(item, path);
+      }
+
+      }}
+      , mWrapped{ move(functions) }
+      , mDoSeparator{ move(doSeparator) }
+      {}
+
+   private:
+      const VisitorFunctions<MenuTraits> mWrapped;
+      const std::function<void()> mDoSeparator;
+   };
 
    struct CommandItem;
    struct CommandGroupItem;
@@ -441,14 +481,11 @@ namespace MenuTable {
          ConditionalGroupItem, MenuItem, MenuItems, MenuPart>;
    };
 
-   // These are found by dynamic_cast
-   struct AUDACITY_DLL_API MenuSection {
-      virtual ~MenuSection();
-   };
-   struct AUDACITY_DLL_API WholeMenu {
-      WholeMenu( bool extend = false ) : extension{ extend }  {}
-      virtual ~WholeMenu();
-      bool extension;
+   template<typename RegistryTraits>
+   static inline bool IsSection(const GroupItem<RegistryTraits> &item) {
+      auto pProperties = dynamic_cast<const MenuItemProperties *>(&item);
+      return pProperties && pProperties->GetProperties() ==
+         MenuItemProperties::Section;
    };
 
    struct MenuItemData {
@@ -461,11 +498,12 @@ namespace MenuTable {
       : Composite::Extension<
          GroupItem<Traits>, MenuItemData, const Identifier&
       >
-      , WholeMenu
+      , MenuItemProperties
    {
       using Extension::Extension;
       ~MenuItem() override;
       const auto &GetTitle() const { return mTitle; }
+      Properties GetProperties() const override;
    };
 
    using Condition = std::function<bool()>;
@@ -628,21 +666,24 @@ namespace MenuTable {
       : Composite::Extension<
          GroupItem<Traits>, void, const Identifier &
       >
+      , MenuItemProperties
    {
       using Extension::Extension;
       ~MenuItems() override;
       //! Anonymous if its name is empty, else weakly ordered
       Ordering GetOrdering() const override;
+      Properties GetProperties() const override;
    };
 
    struct MenuPart
       : Composite::Extension<
          GroupItem<Traits>, void, const Identifier &
       >
-      , MenuSection
+      , MenuItemProperties
    {
       using Extension::Extension;
       ~MenuPart() override;
+      Properties GetProperties() const override;
    };
 
    /*! @name Factories

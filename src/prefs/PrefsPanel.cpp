@@ -27,39 +27,6 @@ PrefsPanel::PrefsItem::PrefsItem(const wxString &name,
    , expanded{ expanded }
 {}
 
-// Collects registry tree nodes into a vector, in preorder.
-struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
-   Visitor( PrefsPanel::Factories &factories_ )
-      : factories{ factories_ }
-   {
-      childCounts.push_back( 0 );
-   }
-   void BeginGroup(const Registry::GroupItemBase &item, const Path &) override
-   {
-      auto pItem = dynamic_cast<const PrefsItem*>( &item );
-      if (!pItem || !pItem->factory)
-         return;
-      indices.push_back( factories.size() );
-      factories.emplace_back( pItem->factory, 0, pItem->expanded );
-      ++childCounts.back();
-      childCounts.push_back( 0 );
-   }
-   void EndGroup(const Registry::GroupItemBase &item, const Path &) override
-   {
-      auto pItem = dynamic_cast<const PrefsItem*>( &item );
-      if (!pItem || !pItem->factory)
-         return;
-      auto &factory = factories[ indices.back() ];
-      factory.nChildren = childCounts.back();
-      childCounts.pop_back();
-      indices.pop_back();
-   }
-
-   PrefsPanel::Factories &factories;
-   std::vector<size_t> childCounts;
-   std::vector<size_t> indices;
-};
-
 PluginPath PrefsPanel::GetPath() const
 { return BUILTIN_PREFS_PANEL_PREFIX + GetSymbol().Internal(); }
 
@@ -116,13 +83,37 @@ PrefsPanel::Factories
       }
    };
 
-   static Factories factories;
+   static Factories sFactories;
    static std::once_flag flag;
 
-   std::call_once( flag, []{
-      PrefsItem::Visitor visitor{ factories };
+   std::call_once(flag, []{
+      // Collect registry tree nodes into a vector, in preorder.
+      std::vector<size_t> childCounts;
+      std::vector<size_t> indices;
+      childCounts.push_back(0);
+      Factories factories;
+
       Registry::GroupItem<Traits> top{ PathStart };
-      Registry::Visit( visitor, &top, &PrefsItem::Registry() );
-   } );
-   return factories;
+      Registry::Visit(std::tuple{
+         [&](const PrefsItem &item, auto&) {
+            if (!item.factory)
+               return;
+            indices.push_back(factories.size());
+            factories.emplace_back(item.factory, 0, item.expanded);
+            ++childCounts.back();
+            childCounts.push_back(0);
+         },
+         Registry::NoOp,
+         [&](const PrefsItem &item, auto&) {
+            if (!item.factory)
+               return;
+            auto &factory = factories[indices.back()];
+            factory.nChildren = childCounts.back();
+            childCounts.pop_back();
+            indices.pop_back();
+         }
+      }, &top, &PrefsItem::Registry());
+      sFactories.swap(factories);
+   });
+   return sFactories;
 }

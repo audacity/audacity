@@ -32,10 +32,9 @@ class PopupMenuHandler;
 struct PopupMenuSection;
 class PopupMenuTable;
 struct PopupMenuTableEntry;
-struct PopupMenuVisitor;
 struct PopupSubMenu;
 struct PopupMenuTableTraits : Registry::DefaultTraits {
-   using ComputedItemContextType = PopupMenuVisitor;
+   using ComputedItemContextType = PopupMenuTable;
    using LeafTypes = List<PopupMenuTableEntry>;
    using NodeTypes = List<PopupMenuSection, PopupSubMenu>;
 };
@@ -73,7 +72,8 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    ~PopupMenuTableEntry() override;
 };
 
-struct AUDACITY_DLL_API PopupSubMenu : PopupMenuGroupItem, MenuTable::WholeMenu
+struct AUDACITY_DLL_API PopupSubMenu
+   : PopupMenuGroupItem, MenuTable::MenuItemProperties
 {
    TranslatableString caption;
    PopupMenuTable &table;
@@ -82,11 +82,15 @@ struct AUDACITY_DLL_API PopupSubMenu : PopupMenuGroupItem, MenuTable::WholeMenu
       const TranslatableString &caption_, PopupMenuTable &table );
 
    ~PopupSubMenu() override;
+   Properties GetProperties() const override;
 };
 
-struct PopupMenuSection : PopupMenuGroupItem, MenuTable::MenuSection
+struct PopupMenuSection
+   : PopupMenuGroupItem, MenuTable::MenuItemProperties
 {
    using PopupMenuGroupItem::PopupMenuGroupItem;
+   ~PopupMenuSection() override;
+   Properties GetProperties() const override { return Section; }
 };
 
 class PopupMenuHandler : public wxEvtHandler
@@ -104,12 +108,6 @@ public:
       before any other menus are built.
     */
    virtual void InitUserData(void *pUserData) = 0;
-};
-
-struct PopupMenuVisitor : public MenuVisitor {
-   explicit PopupMenuVisitor( PopupMenuTable &table ) : mTable{ table } {}
-   ~PopupMenuVisitor() override;
-   PopupMenuTable &mTable;
 };
 
 // Opaque structure built by PopupMenuTable::BuildMenu
@@ -171,9 +169,8 @@ public:
    template<typename Table, typename Factory>
    static auto Adapt(const Factory &factory)
    {
-      return [factory](PopupMenuVisitor &visitor){
-         auto &table = static_cast<Table&>(visitor.mTable);
-         return std::shared_ptr{ factory(table) };
+      return [factory](PopupMenuTable &table){
+         return std::shared_ptr{ factory(static_cast<Table&>(table)) };
       };
    }
 

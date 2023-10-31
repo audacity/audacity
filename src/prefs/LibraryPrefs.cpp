@@ -107,22 +107,12 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   struct MyVisitor final : Visitor {
-      MyVisitor( ShuttleGui &S ) : S{ S }
-      {
-         // visit the registry to collect the plug-ins properly
-         // sorted
-         GroupItem<Traits> top{ PathStart };
-         Registry::Visit( *this, &top, &PopulatorItem::Registry() );
-      }
-
-      void Visit(const Registry::SingleItem &item, const Path &path) override
-      {
-         static_cast<const PopulatorItem&>(item).mPopulator(S);
-      }
-
-      ShuttleGui &S;
-   } visitor{ S };
+   // visit the registry to collect the plug-ins properly
+   // sorted
+   GroupItem<Traits> top{ PathStart };
+   Registry::Visit(
+      [&](const PopulatorItem &item, auto &) { item.mPopulator(S); },
+      &top, &PopulatorItem::Registry());
 
    S.EndScroller();
 }

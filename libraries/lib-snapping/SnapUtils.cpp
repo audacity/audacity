@@ -24,40 +24,6 @@ const wxString OldSnapToKey = L"/SnapTo";
 const wxString SelectionFormatKey = L"/SelectionFormat";
 
 const auto PathStart = L"SnapFunctions";
-
-struct RegistryVisitor : public Registry::Visitor
-{
-   explicit RegistryVisitor(SnapRegistryVisitor& _visitor)
-       : visitor(_visitor)
-   {
-   }
-   
-   void BeginGroup(const Registry::GroupItemBase& item, const Path&) final
-   {
-      auto group = dynamic_cast<const SnapRegistryGroup*>(&item);
-
-      if (group != nullptr)
-         visitor.BeginGroup(*group);
-   }
-
-   void EndGroup(const Registry::GroupItemBase& item, const Path&) final
-   {
-      auto group = dynamic_cast<const SnapRegistryGroup*>(&item);
-
-      if (group != nullptr)
-         visitor.EndGroup(*group);
-   }
-
-   void Visit(const Registry::SingleItem& item, const Path&) final
-   {
-      auto concreteItem = dynamic_cast<const SnapRegistryItem*>(&item);
-
-      if (concreteItem != nullptr)
-         visitor.Visit(*concreteItem);
-   }
-
-   SnapRegistryVisitor& visitor;
-};
 } // namespace
 
 StringSetting SnapToSetting { SnapToKey, "seconds" };
@@ -141,16 +107,15 @@ Registry::GroupItem<SnapRegistryTraits>& SnapFunctionsRegistry::Registry()
    return registry;
 }
 
-void SnapFunctionsRegistry::Visit(SnapRegistryVisitor& visitor)
+void SnapFunctionsRegistry::Visit(const SnapRegistryVisitor& visitor)
 {
    static Registry::OrderingPreferenceInitializer init {
       PathStart,
       { { L"", L"beats,triplets,time,video,cd" } },
    };
 
-   RegistryVisitor registryVisitor { visitor };
    Registry::GroupItem<SnapRegistryTraits> top { PathStart };
-   Registry::Visit(registryVisitor, &top, &Registry());
+   Registry::VisitWithFunctions(visitor, &top, &Registry());
 }
 
 const SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
@@ -162,34 +127,16 @@ const SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
    if (it != cache.end())
       return it->second;
 
-   struct CacheUpdater final : Registry::Visitor
-   {
-      explicit CacheUpdater(Cache& _cache)
-          : cache(_cache)
+   auto visitor = [&](const SnapRegistryItem &item, auto&) {
+      auto it = cache.find(item.name);
+
+      if (it == cache.end())
       {
+         cache.insert({ item.name, &item });
       }
-
-      void Visit(const Registry::SingleItem& item, const Path&) override
-      {
-         auto concreteItem = dynamic_cast<const SnapRegistryItem*>(&item);
-
-         if (concreteItem == nullptr)
-            return;
-
-         auto it = cache.find(concreteItem->name);
-
-         if (it == cache.end())
-         {
-            cache.insert(
-               std::make_pair(concreteItem->name, concreteItem));
-         }
-      }
-
-      Cache& cache;
    };
 
-   CacheUpdater update { cache };
-   Registry::Visit(update, &Registry());
+   Registry::Visit(visitor, &Registry());
 
    it = cache.find(id);
 

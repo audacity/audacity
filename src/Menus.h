@@ -32,7 +32,10 @@ typedef wxString PluginID;
 typedef wxString MacroID;
 typedef wxArrayString PluginIDs;
 
-namespace Registry{ class Visitor; }
+namespace MenuTable {
+   struct Traits;
+   template<typename MenuTraits> struct Visitor;
+}
 
 class AUDACITY_DLL_API MenuCreator
 {
@@ -68,8 +71,6 @@ public:
    unsigned mRepeatToolFlags;
 };
 
-struct ProjectMenuVisitor;
-
 //! Sent when menus update (such as for changing enablement of items)
 struct MenuUpdateMessage {};
 
@@ -90,7 +91,8 @@ public:
    MenuManager &operator=( const MenuManager & ) = delete;
    ~MenuManager();
 
-   static void Visit(ProjectMenuVisitor &visitor);
+   static void Visit(
+      MenuTable::Visitor<MenuTable::Traits> &visitor, AudacityProject &project);
 
    static void ModifyUndoMenuItems(AudacityProject &project);
 

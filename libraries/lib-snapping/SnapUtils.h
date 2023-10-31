@@ -34,13 +34,6 @@ struct SnapRegistryGroup;
 struct SnapRegistryItem;
 struct SnapFunctionSuperGroup;
 
-struct SNAPPING_API SnapRegistryVisitor /* not final */
-{
-   virtual void BeginGroup(const SnapRegistryGroup& item) = 0;
-   virtual void EndGroup(const SnapRegistryGroup& item) = 0;
-   virtual void Visit(const SnapRegistryItem& item) = 0;
-};
-
 class AudacityProject;
 
 struct SNAPPING_API SnapResult final
@@ -60,6 +53,7 @@ struct SnapRegistryTraits : Registry::DefaultTraits{
    using LeafTypes = List<SnapRegistryItem>;
    using NodeTypes = List<SnapRegistryGroup, SnapFunctionSuperGroup>;
 };
+using SnapRegistryVisitor = Registry::VisitorFunctions<SnapRegistryTraits>;
 
 struct SnapRegistryGroupData {
    const TranslatableString label;
@@ -107,7 +101,7 @@ constexpr auto SnapFunctionGroup = Callable::UniqueMaker<
 struct SNAPPING_API SnapFunctionsRegistry final {
    static Registry::GroupItem<SnapRegistryTraits>& Registry();
 
-   static void Visit(SnapRegistryVisitor& visitor);
+   static void Visit(const SnapRegistryVisitor& visitor);
 
    static const SnapRegistryItem* Find(const Identifier& id);
 

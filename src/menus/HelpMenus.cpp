@@ -323,57 +323,46 @@ void OnAssertion(const CommandContext &)
 void OnMenuTree(const CommandContext &context)
 {
    auto &project = context.project;
-   
-   using namespace MenuTable;
-   struct MyVisitor : ProjectMenuVisitor
-   {
-      using ProjectMenuVisitor::ProjectMenuVisitor;
+   enum : unsigned { TAB = 3 };
 
-      enum : unsigned { TAB = 3 };
-      void DoBeginGroup(const GroupItemBase &item, const Path&) override
-      {
-         if ( dynamic_cast<const MenuItem*>( &item ) ) {
+   unsigned level{};
+   wxString indentation;
+   wxString info;
+   auto Indent = [&](){ info += indentation; };
+   auto Return = [&](){ info += '\n'; };
+
+   using namespace MenuTable;
+   auto visitor = Visitor<Traits>{
+      std::tuple{
+         [&](const MenuItem &item, const auto&) {
             Indent();
             // using GET for alpha only diagnostic tool
             info += item.name.GET();
             Return();
             indentation = wxString{ ' ', TAB * ++level };
-         }
-      }
+         },
 
-      void DoEndGroup(const GroupItemBase &item, const Path&) override
-      {
-         if ( dynamic_cast<const MenuItem*>( &item ) )
+         [&](const SingleItem &item, const auto&) {
+            // using GET for alpha only diagnostic tool
+            Indent();
+            info += item.name.GET();
+            Return();
+         },
+
+         [&](const MenuItem &item, const auto&) {
             indentation = wxString{ ' ', TAB * --level };
-      }
-
-      void DoVisit(const SingleItem &item, const Path&) override
-      {
-         // using GET for alpha only diagnostic tool
-         Indent();
-         info += item.name.GET();
-         Return();
-      }
-
-      void DoSeparator() override
-      {
+         }
+      },
+      [&]() {
          static const wxString separatorName{ '=', 20 };
          Indent();
          info += separatorName;
          Return();
       }
+   };
+   MenuManager::Visit(visitor, project);
 
-      void Indent() { info += indentation; }
-      void Return() { info += '\n'; }
-
-      unsigned level{};
-      wxString indentation;
-      wxString info;
-   } visitor{ project };
-
-   MenuManager::Visit( visitor );
-
-   ShowDiagnostics( project, visitor.info,
+   ShowDiagnostics( project, info,
       Verbatim("Menu Tree"), wxT("menutree.txt"), true );
 }
 

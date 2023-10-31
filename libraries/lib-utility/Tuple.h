@@ -14,14 +14,26 @@
 
 #include <cstddef>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 
 namespace Tuple {
 //! Type test metapredicate, for specializations of std::tuple only
-template<typename T, typename = void> struct is_tuple : std::false_type{};
+template<typename T> struct is_tuple : std::false_type{};
 template<typename... Types> struct is_tuple<std::tuple<Types...>>
    : std::true_type{};
 template<typename T> static constexpr auto is_tuple_v = is_tuple<T>::value;
+
+//! Type test metapredicate, for more general tuple-like types
+template<typename T, typename = void> struct is_tuple_like : std::false_type{};
+template<typename T> struct is_tuple_like<T,
+   // std::tuple_size<T> is only forward-declared except where customized for
+   // T = std::tuple<U...> or other (possibly user) types
+   std::void_t<decltype(std::tuple_size<T>{})>
+>
+   : std::true_type{};
+template<typename T> static constexpr auto is_tuple_like_v =
+   is_tuple_like<T>::value;
 
 template<typename Tuple> constexpr bool Empty_v =
    (0 == size_t(std::tuple_size_v<Tuple>));
@@ -103,6 +115,27 @@ template<size_t... Indices, typename Tuple> constexpr auto ForwardingProjection(
 {
    return ForwardProject<Indices...>(std::forward<Tuple>(tuple));
 }
+
+//! Projection of all of a tuple
+template<typename Tuple> auto All(Tuple&& tuple) {
+   constexpr auto Length = std::tuple_size_v<std::decay_t<Tuple>>;
+   return Projection(
+      std::make_index_sequence<Length>{}, std::forward<Tuple>(tuple));
+}
+
+//! Type of projection of all of a tuple
+template<typename Tuple> using All_t = decltype(All(std::declval<Tuple>()));
+
+//! Forwarding of all of a tuple
+template<typename Tuple> auto ForwardAll(Tuple&& tuple) {
+   constexpr auto Length = std::tuple_size_v<std::decay_t<Tuple>>;
+   return ForwardingProjection(
+      std::make_index_sequence<Length>{}, std::forward<Tuple>(tuple));
+}
+
+//! Type of forwarding references to all members of a tuple
+template<typename Tuple> using ForwardAll_t =
+   decltype(ForwardAll(std::declval<Tuple>()));
 
 //! Projection of the tail of a tuple
 template<typename Tuple,

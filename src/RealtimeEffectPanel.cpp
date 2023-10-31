@@ -56,68 +56,52 @@
 
 namespace
 {
-   
-   class RealtimeEffectsMenuVisitor final : public MenuVisitor
-   {
+   using namespace MenuTable;
+   class RealtimeEffectsMenuVisitor final : public Visitor<Traits> {
       wxMenu& mMenu;
       wxMenu* mMenuPtr { nullptr };
       int mMenuItemIdCounter { wxID_HIGHEST };
       std::vector<Identifier> mIndexedPluginList;
       int mMenuLevelCounter { 0 };
    public:
-      
-      RealtimeEffectsMenuVisitor(wxMenu& menu)
-         : mMenu(menu), mMenuPtr(&mMenu) { }
-      
-      void DoBeginGroup(const MenuTable::GroupItemBase &item, const Path&) override
-      {
-         if(auto menuItem = dynamic_cast<const MenuTable::MenuItem*>(&item))
+      RealtimeEffectsMenuVisitor(wxMenu& menu) : Visitor<Traits>{ std::tuple{
+      [this](const MenuTable::MenuItem &menuItem, const auto&) {
+         //Don't create a group item for root
+         if (mMenuLevelCounter != 0)
          {
-            //Don't create a group item for root
-            if (mMenuLevelCounter != 0)
-            {
-               auto submenu = std::make_unique<wxMenu>();
-               mMenuPtr->AppendSubMenu(submenu.get(), menuItem->GetTitle().Translation());
-               mMenuPtr = submenu.release();
-            }
-            ++mMenuLevelCounter;
+            auto submenu = std::make_unique<wxMenu>();
+            mMenuPtr->AppendSubMenu(submenu.get(), menuItem.GetTitle().Translation());
+            mMenuPtr = submenu.release();
          }
-      }
+         ++mMenuLevelCounter;
+      },
 
-      void DoEndGroup(const MenuTable::GroupItemBase &item, const Path&) override
-      {
-         if(auto menuItem = dynamic_cast<const MenuTable::MenuItem*>(&item))
+      [this](const MenuTable::CommandItem &commandItem, const auto&) {
+         mMenuPtr->Append(mMenuItemIdCounter, commandItem.label_in.Translation());
+         mIndexedPluginList.push_back(commandItem.name);
+         ++mMenuItemIdCounter;
+      },
+
+      [this](const MenuTable::MenuItem &, const auto&) {
+         --mMenuLevelCounter;
+         if (mMenuLevelCounter != 0)
          {
-            --mMenuLevelCounter;
-            if (mMenuLevelCounter != 0)
-            {
-               assert(mMenuPtr->GetParent() != nullptr);
-               mMenuPtr = mMenuPtr->GetParent();
-            }
+            assert(mMenuPtr->GetParent() != nullptr);
+            mMenuPtr = mMenuPtr->GetParent();
          }
-      }
+      }},
 
-      void DoVisit(const MenuTable::SingleItem &item, const Path&) override
-      {
-         if(auto commandItem = dynamic_cast<const MenuTable::CommandItem*>(&item))
-         {
-            mMenuPtr->Append(mMenuItemIdCounter, commandItem->label_in.Translation());
-            mIndexedPluginList.push_back(commandItem->name);
-            ++mMenuItemIdCounter;
-         }
-      }
-
-      void DoSeparator() override
-      {
+      [this]() {
          mMenuPtr->AppendSeparator();
-      }
-      
+      }}
+      , mMenu(menu), mMenuPtr(&mMenu)
+      {}
+
       Identifier GetPluginID(int menuIndex) const
       {
          assert(menuIndex >= wxID_HIGHEST && menuIndex < (wxID_HIGHEST + mIndexedPluginList.size()));
          return mIndexedPluginList[menuIndex - wxID_HIGHEST];
       }
-      
    };
 
    template <typename Visitor>
@@ -767,7 +751,7 @@ public:
       
       RealtimeEffectsMenuVisitor visitor { menu };
       
-      Registry::Visit(visitor, mEffectMenuRoot.get(), {}, *mProject);
+      Registry::VisitWithFunctions(visitor, mEffectMenuRoot.get(), {}, *mProject);
       
       int commandId = wxID_NONE;
       

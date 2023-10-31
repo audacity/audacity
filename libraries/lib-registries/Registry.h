@@ -13,8 +13,11 @@ Paul Licameli split from CommandManager.h
 
 #include "Prefs.h"
 #include "Composite.h"
-#include "TypeList.h"
+#include "TypeSwitch.h"
+#include "Variant.h"
+#include <functional>
 #include <type_traits>
+#include <utility>
 
 // Define classes and functions that associate parts of the user interface
 // with path names
@@ -64,10 +67,14 @@ namespace Registry {
       }
    };
 
+   template<typename RegistryTraits> struct GroupItem;
+   using Path = std::vector<Identifier>;
    struct Placement;
+   struct SingleItem;
+
+namespace detail { using namespace TypeList;
    struct GroupItemBase;
 
-namespace detail {
    struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
       explicit
@@ -81,13 +88,8 @@ namespace detail {
       OrderingHint orderingHint;
    };
 
-   using BaseItemPtr = std::unique_ptr<detail::BaseItem>;
-}
+   using BaseItemPtr = std::unique_ptr<BaseItem>;
 
-   class Visitor;
-   
-
-namespace detail {
    using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
 
    struct REGISTRIES_API IndirectItemBase : BaseItem {
@@ -101,6 +103,27 @@ namespace detail {
    };
 
    struct ComputedItemBase;
+
+   template<typename Type, typename List> struct ConsUnique {
+      template<typename L> struct NotAlready {
+         static constexpr bool value = !std::is_same_v<Type, Head_t<L>>;
+      };
+      using type = std::conditional_t<
+         std::disjunction<Null<List>, NotAlready<List>>::value,
+         Cons_t<Type, List>, List
+      >;
+   };
+   template<typename Type, typename List> using ConsUnique_t
+      = typename ConsUnique<Type, List>::type;
+
+   template<typename RegistryTraits> using VisitedNodeTypes =
+      ConsUnique_t<const GroupItem<RegistryTraits>, Map_t<Fn<std::add_const_t>,
+         typename RegistryTraits::NodeTypes>>;
+   template<typename RegistryTraits> using VisitedLeafTypes =
+      ConsUnique_t<const SingleItem, Map_t<Fn<std::add_const_t>,
+         typename RegistryTraits::LeafTypes>>;
+   template<typename Types> using VisitorFunction =
+      std::function<void(Head_t<Types> &, const Path &)>;
 }
 
    //! The underlying registry merging procedure assumes the listed types
@@ -108,7 +131,7 @@ namespace detail {
    using BaseItemTypes = TypeList::List<
       detail::IndirectItemBase, detail::ComputedItemBase,
       // see below
-      struct SingleItem, struct GroupItemBase
+      struct SingleItem, struct detail::GroupItemBase
    >;
    template<typename Item> using AcceptableBaseItem =
       TypeList::HasBaseIn<Item, BaseItemTypes>;
@@ -126,7 +149,9 @@ namespace detail {
 
    template<typename RegistryTraits> constexpr auto AcceptableTraits_v =
       TypeList::Every_v<TypeList::Fn<AcceptableBaseItem>,
-         AllTypes_t<RegistryTraits>>;
+         AllTypes_t<RegistryTraits>> &&
+      TypeSwitch::TypeListCheck_v<detail::VisitedNodeTypes<RegistryTraits>> &&
+      TypeSwitch::TypeListCheck_v<detail::VisitedLeafTypes<RegistryTraits>>;
 
 namespace detail {
    //! An item that delegates to another held in a shared pointer
@@ -205,11 +230,10 @@ namespace detail {
    //! Type-erased implementation details, don't call directly
    REGISTRIES_API void RegisterItem(GroupItemBase &registry,
       const Placement &placement, BaseItemPtr pItem);
-}
 
    //! Common abstract base class for items that group other items
    struct REGISTRIES_API GroupItemBase : Composite::Base<
-      detail::BaseItem, std::unique_ptr<detail::BaseItem>, const Identifier &
+      BaseItem, std::unique_ptr<BaseItem>, const Identifier &
    > {
       using Base::Base;
    
@@ -235,9 +259,10 @@ namespace detail {
       virtual Ordering GetOrdering() const;
 
    private:
-      friend REGISTRIES_API void detail::RegisterItem(GroupItemBase &registry,
-         const Placement &placement, detail::BaseItemPtr pItem);
+      friend REGISTRIES_API void RegisterItem(GroupItemBase &registry,
+         const Placement &placement, BaseItemPtr pItem);
    };
+}
 
    // Forward declarations necessary before customizing Composite::Traits
    template<typename RegistryTraits> struct GroupItem;
@@ -247,7 +272,7 @@ namespace detail {
 }
 
 template<typename RegistryTraits> struct Composite::Traits<
-   Registry::GroupItemBase, Registry::GroupItem<RegistryTraits>
+   Registry::detail::GroupItemBase, Registry::GroupItem<RegistryTraits>
 > {
    static constexpr auto ItemBuilder =
    Registry::detail::Builder<RegistryTraits>{};
@@ -257,17 +282,17 @@ template<typename RegistryTraits> struct Composite::Traits<
 };
 
 namespace Registry {
-   //! Extends GroupItemBase with a variadic constructor that checks types
+   //! Has variadic and range constructors that check types
    /*!
     @tparam RegistryTraits defines associated types
     */
    template<typename RegistryTraits>
    struct GroupItem : Composite::Builder<
-      GroupItemBase, GroupItem<RegistryTraits>, const Identifier &
+      detail::GroupItemBase, GroupItem<RegistryTraits>, const Identifier &
    > {
       ~GroupItem() override = default;
       using Composite::Builder<
-         GroupItemBase, GroupItem<RegistryTraits>, const Identifier &
+         detail::GroupItemBase, GroupItem<RegistryTraits>, const Identifier &
       >::Builder;
    };
 
@@ -369,26 +394,192 @@ namespace detail {
             RegisterItem(RegistryClass::Registry(), placement, move(pItem));
       }
    };
-   
-   // Define actions to be done in Visit.
-   // Default implementations do nothing
-   // The supplied path does not include the name of the item
-   class REGISTRIES_API Visitor
-   {
-   public:
-      virtual ~Visitor();
-      using Path = std::vector< Identifier >;
-      virtual void BeginGroup(const GroupItemBase &item, const Path &path);
-      virtual void EndGroup(const GroupItemBase &item, const Path &path);
-      virtual void Visit(const SingleItem &item, const Path &path);
-   };
 
 namespace detail {
+   // Helpers allowing a single callable instead of a tuple
+   template<typename V> auto ForwardTuple_(const V &visitor, std::false_type) {
+      // Visitor is not a tuple
+      return std::tuple<const V&>{ visitor };
+   }
+   template<typename V> auto ForwardTuple_(const V &visitor, std::true_type) {
+      // Visitor is a tuple
+      return Tuple::ForwardAll(visitor);
+   }
+   template<typename V> auto ForwardTuple(const V &visitor) {
+      return ForwardTuple_(visitor,
+         std::bool_constant<Tuple::is_tuple_like_v<V>>{});
+   }
+
+   template<typename V> auto MakeTuple_(const V &visitor, std::false_type) {
+      // Visitor is not a tuple
+      return std::tuple<V>{ visitor };
+   }
+   template<typename V> auto MakeTuple_(const V &visitor, std::true_type) {
+      // Visitor is a tuple
+      return Tuple::All(visitor);
+   }
+   template<typename V> auto MakeTuple(const V &visitor) {
+      return MakeTuple_(visitor,
+         std::bool_constant<Tuple::is_tuple_like_v<V>>{});
+   }
+
+   template<typename V> auto CaptureTuple_(const V &visitor, std::true_type) {
+      // Capture by reference
+      return ForwardTuple(visitor);
+   }
+   template<typename V> auto CaptureTuple_(const V &visitor, std::false_type) {
+      // Capture by value
+      return MakeTuple(visitor);
+   }
+   template<bool Reference, typename V> auto CaptureTuple(const V &visitor) {
+      return CaptureTuple_(visitor, std::bool_constant<Reference>{});
+   }
+
+   //! Capture a callable for Visit() in a std::function wrapper
+   template<typename Types, bool Reference, typename Visitor>
+   VisitorFunction<Types> MakeVisitorFunction(const Visitor &visitor) {
+      return [visitor = CaptureTuple<Reference>(visitor)](
+         Head_t<Types> &object, const Path &path
+      ){
+         // The compile time checking of reachability of cases still applies
+         // before the visitor is wrapped
+         TypeSwitch::Dispatch<void, Types>(object, visitor, path);
+      };
+   }
+
+   //! How large a tuple to make from Visitors
+   template<typename Visitors> static constexpr auto TupleSize =
+      std::conditional_t<
+         Tuple::is_tuple_like_v<Visitors>,
+         std::tuple_size<Visitors>,
+         std::integral_constant<size_t, 1>
+      >::value;
+
+   template<typename RegistryTraits> using NodeVisitorFunction =
+      VisitorFunction<VisitedNodeTypes<RegistryTraits>>;
+   template<typename RegistryTraits> using LeafVisitorFunction =
+      VisitorFunction<VisitedLeafTypes<RegistryTraits>>;
+   template<typename RegistryTraits> using VisitorFunctionTriple = std::tuple<
+      NodeVisitorFunction<RegistryTraits>,
+      LeafVisitorFunction<RegistryTraits>,
+      NodeVisitorFunction<RegistryTraits>
+   >;
+}
+
+   //! Adapt visitors, suitable to Visit(), as a std::function or a tuple
+   //! of three std::functions, which other visitors may decorate with other
+   //! steps
+   /*!
+    @tparam Reference if true, capture visitors by reference; else, move them
+    */
+   template<typename RegistryTraits, bool Reference = false>
+   struct VisitorFunctions : std::variant<
+      detail::LeafVisitorFunction<RegistryTraits>,
+      detail::VisitorFunctionTriple<RegistryTraits>
+   >{
+      using NodeTypes = detail::VisitedNodeTypes<RegistryTraits>;
+      using LeafTypes = detail::VisitedLeafTypes<RegistryTraits>;
+
+      //! Type-erasing constructor
+      /*!
+       @param visitors one callable, for leaves only; or else a tuple(-like) of
+       three callables (or type-switching tuples of callables), for group
+       pre-visit, leaf visit, and group post-visit
+       */
+      template<typename Visitors> VisitorFunctions(Visitors &&visitors) {
+         using namespace detail;
+         using namespace std;
+         decltype(auto) forwarded = forward<Visitors>(visitors);
+         static constexpr auto size = TupleSize<std::decay_t<Visitors>>;
+         static_assert(size == 1 || size == 3);
+         if constexpr (size == 1)
+            this->template emplace<0>(
+               MakeVisitorFunction<LeafTypes, Reference>(forwarded));
+         else if constexpr (size == 3)
+            this->template emplace<1>(
+               MakeVisitorFunction<NodeTypes, Reference>(get<0>(forwarded)),
+               MakeVisitorFunction<LeafTypes, Reference>(get<1>(forwarded)),
+               MakeVisitorFunction<NodeTypes, Reference>(get<2>(forwarded)));
+      }
+      //! Call-through for a decorating pre-visitor
+      void BeginGroup(const GroupItem<RegistryTraits> &item, const Path &path)
+      const {
+         if (const auto *pTriple = std::get_if<1>(this))
+            (std::get<0>(*pTriple))(item, path);
+      }
+      //! Call-through for a decorating leaf-visitor
+      void Visit(const SingleItem &item, const Path &path) const {
+         using Function = detail::LeafVisitorFunction<RegistryTraits>;
+         static const auto selector = Callable::OverloadSet{
+            [](const Function& fn) -> const Function & { return fn; },
+            [](auto &&self) -> const Function & {
+               return std::get<1>(self); }
+         };
+         const auto &function = Variant::Visit(selector, *this);
+         function(item, path);
+      }
+      //! Call-through for a decorating post-visitor
+      void EndGroup(const GroupItem<RegistryTraits> &item, const Path &path)
+      const {
+         if (const auto *pTriple = std::get_if<1>(this))
+            (std::get<2>(*pTriple))(item, path);
+      }
+   };
+
+   //! Supply this when one member of a visitor function triple isn't needed
+   constexpr auto NoOp = [](auto&, auto&){};
+
+namespace detail {
+   class REGISTRIES_API VisitorBase
+   {
+   public:
+      virtual ~VisitorBase();
+      virtual void BeginGroup(const GroupItemBase &item, const Path &path)
+         const = 0;
+      virtual void Visit(const SingleItem &item, const Path &path)
+         const = 0;
+      virtual void EndGroup(const GroupItemBase &item, const Path &path)
+         const = 0;
+   };
+
    REGISTRIES_API void Visit(
-      Visitor &visitor,
+      VisitorBase &visitor,
       const GroupItemBase *pTopItem,
       const GroupItemBase *pRegistry,
       void *pComputedItemContext);
+
+   //! Type-erasing adapter class (with no std::function overhead)
+   /*!
+    See TypeSwitch for details of function signatures
+    */
+   template<typename RegistryTraits, typename Visitors>
+   struct Visitor : VisitorBase {
+      using NodeTypes = ConsUnique_t<const GroupItemBase,
+         VisitedNodeTypes<RegistryTraits>>;
+      using LeafTypes = VisitedLeafTypes<RegistryTraits>;
+      static constexpr auto size = TupleSize<Visitors>;
+      static_assert(size == 1 || size == 3);
+      Visitor(const Visitors &visitors) : visitors{ visitors } {}
+
+      void BeginGroup(const GroupItemBase &item, const Path &path)
+      const override {
+         if constexpr (size == 3)
+            TypeSwitch::Dispatch<void, NodeTypes>(item,
+               ForwardTuple(std::get<0>(visitors)), path);
+      }
+      void Visit(const SingleItem &item, const Path &path) const override {
+         TypeSwitch::Dispatch<void, LeafTypes>(item,
+            ForwardTuple(std::get<size == 1 ? 0 : 1>(ForwardTuple(visitors))),
+            path);
+      }
+      void EndGroup(const GroupItemBase &item, const Path &path)
+      const override {
+         if constexpr (size == 3)
+            TypeSwitch::Dispatch<void, NodeTypes>(item,
+               ForwardTuple(std::get<2>(visitors)), path);
+      }
+      const Visitors &visitors;
+   };
 }
 
    //! Top-down visitation of all items and groups in a tree rooted in
@@ -402,17 +593,43 @@ namespace detail {
     ordering should be kept the same thereafter in later runs (which may add
     yet other previously unknown items).
 
+    @param visitors A tuple of size 1 or 3, or a callable.
+      - If a triple, the first member is for pre-visit of group nodes, the last
+         is for post-visit, and the middle for leaf visits.
+      - If single, or a callable, then visit leaves only.
+      - If a tuple, each member can be a tuple of callables (passed to
+        TypeSwitch::Dispatch), or simply a single callable.
+      - "tuple" means std::tuple or any other tuple-like type.
+    The callables take a reference to an object of a const
+    GroupItem<RegistryTraits> or a const SingleItem subtype, and the path up to
+    its parent node.
     @param computedItemContext is passed to factory functions of computed items
     */
-   template<typename RegistryTraits> void Visit(
-      Visitor &visitor,
+   template<typename RegistryTraits, typename Visitors>
+   void Visit(const Visitors &visitors,
       const GroupItem<RegistryTraits> *pTopItem,
       const GroupItem<RegistryTraits> *pRegistry = {},
       typename RegistryTraits::ComputedItemContextType &computedItemContext =
          RegistryTraits::ComputedItemContextType::Instance)
    {
       static_assert(AcceptableTraits_v<RegistryTraits>);
+      detail::Visitor<RegistryTraits, Visitors> visitor{ visitors };
       detail::Visit(visitor, pTopItem, pRegistry, &computedItemContext);
+   }
+
+   //! @copydoc Visit
+   //! Like Visit but passing function(s) wrapped in std::function
+   template<typename RegistryTraits>
+   void VisitWithFunctions(const VisitorFunctions<RegistryTraits> &visitors,
+      const GroupItem<RegistryTraits> *pTopItem,
+      const GroupItem<RegistryTraits> *pRegistry = {},
+      typename RegistryTraits::ComputedItemContextType &computedItemContext =
+         RegistryTraits::ComputedItemContextType::Instance)
+   {
+      static_assert(AcceptableTraits_v<RegistryTraits>);
+      Variant::Visit([&](auto &&visitor){
+         Visit(visitor, pTopItem, pRegistry, computedItemContext);
+      }, visitors);
    }
 
    // Typically a static object.  Constructor initializes certain preferences

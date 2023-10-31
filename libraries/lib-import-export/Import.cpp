@@ -178,21 +178,16 @@ bool Importer::Initialize()
       // placed at the end if present
    };
 
-   static struct MyVisitor final : Visitor {
-      MyVisitor()
-      {
-         // Once only, visit the registry to collect the plug-ins properly
-         // sorted
-         GroupItem<Traits> top{ PathStart };
-         Registry::Visit( *this, &top, &ImporterItem::Registry() );
-      }
-
-      void Visit(const SingleItem &item, const Path &path) override
-      {
-         sImportPluginList().push_back(
-            static_cast<const ImporterItem&>( item ).mpPlugin.get() );
-      }
-   } visitor;
+   // Once only, visit the registry to collect the plug-ins properly
+   // sorted
+   static std::once_flag flag;
+   std::call_once(flag, []{
+      GroupItem<Traits> top{ PathStart };
+      Registry::Visit(
+         [](const ImporterItem &item, auto&) {
+            sImportPluginList().push_back(item.mpPlugin.get()); },
+         &top, &ImporterItem::Registry());
+   });
 
    // Ordering of the unusable plugin list is not important.
 

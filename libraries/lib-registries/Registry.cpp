@@ -622,12 +622,12 @@ void CollectedItems::MergeItems(ItemOrdering &itemOrdering,
 
 // forward declaration for mutually recursive functions
 void VisitItem(
-   Registry::Visitor &visitor, CollectedItems &collection,
+   VisitorBase &visitor, CollectedItems &collection,
    Path &path, const BaseItem *pItem,
    const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush, void *pComputedItemContext);
 void VisitItems(
-   Registry::Visitor &visitor, CollectedItems &collection,
+   VisitorBase &visitor, CollectedItems &collection,
    Path &path, const GroupItemBase &group,
    const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush, void *pComputedItemContext)
@@ -676,7 +676,7 @@ void VisitItems(
    path.pop_back();
 }
 void VisitItem(
-   Registry::Visitor &visitor, CollectedItems &collection,
+   VisitorBase &visitor, CollectedItems &collection,
    Path &path, const BaseItem *pItem,
    const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush, void *pComputedItemContext)
@@ -720,13 +720,9 @@ SingleItem::~SingleItem() {}
 GroupItemBase::~GroupItemBase() {}
 auto GroupItemBase::GetOrdering() const -> Ordering { return Strong; }
 
-Visitor::~Visitor() = default;
+VisitorBase::~VisitorBase() = default;
 
-void Visitor::BeginGroup(const GroupItemBase &, const Path &) {}
-void Visitor::EndGroup(const GroupItemBase &, const Path &) {}
-void Visitor::Visit(const SingleItem &, const Path &) {}
-
-void detail::Visit(Visitor &visitor,
+void detail::Visit(VisitorBase &visitor,
    const GroupItemBase *pTopItem,
    const GroupItemBase *pRegistry, void *pComputedItemContext)
 {

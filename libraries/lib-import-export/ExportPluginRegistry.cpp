@@ -59,24 +59,13 @@ void ExportPluginRegistry::Initialize()
       { {wxT(""), wxT("PCM,MP3,OGG,Opus,FLAC,WavPack,FFmpeg,MP2,CommandLine") } },
    };
 
-   struct CreatePluginsVisitor final : Visitor {
-      CreatePluginsVisitor(ExportPlugins& plugins)
-         : mPlugins(plugins)
-      {
-      }
-
-      void Visit(const SingleItem &item, const Path &path) override
-      {
-         mPlugins.emplace_back(
-            static_cast<const ExportPluginRegistryItem&>(item).mFactory() );
-      }
-
-      ExportPlugins& mPlugins;
-   } visitor(mPlugins);
    // visit the registry to collect the plug-ins properly
    // sorted
    GroupItem<Traits> top{ PathStart };
-   Registry::Visit( visitor, &top, &ExportPluginRegistryItem::Registry() );
+   Registry::Visit(
+      [&](const ExportPluginRegistryItem &item, auto&){
+         mPlugins.emplace_back(item.mFactory()); },
+      &top, &ExportPluginRegistryItem::Registry());
 }
 
 std::tuple<ExportPlugin*, int>
