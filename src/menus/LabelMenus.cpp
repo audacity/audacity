@@ -7,7 +7,7 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
-#include "../ProjectWindow.h"
+
 #include "../SelectUtilities.h"
 #include "SyncLock.h"
 #include "TrackFocus.h"

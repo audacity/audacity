@@ -11,7 +11,7 @@ Paul Licameli split from TrackMenus.cpp
 
 #include "CommonCommandFlags.h"
 #include "ProjectHistory.h"
-#include "ProjectWindow.h"
+
 #include "SelectUtilities.h"
 #include "TimeTrack.h"
 #include "TrackFocus.h"
@@ -26,8 +26,6 @@ void OnNewTimeTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
-   
 
    if (*tracks.Any<TimeTrack>().begin()) {
       AudacityMessageBox(

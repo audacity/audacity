@@ -18,7 +18,6 @@
 #include "ProjectFileManager.h"
 #include "ProjectWindow.h"
 #include "TrackPanel.h"
-#include "Import.h"
 #include "import/ImportMIDI.h"
 
 #if wxUSE_DRAG_AND_DROP

@@ -12,7 +12,6 @@
 
 #include "PlayableTrack.h"
 #include "ProjectHistory.h"
-#include "ProjectWindow.h"
 #include "TrackFocus.h"
 #include "TrackPanel.h"
 
@@ -155,7 +154,6 @@ void DoRemoveTrack(AudacityProject &project, Track *toRemove)
 
    auto &tracks = TrackList::Get(project);
    auto &trackFocus = TrackFocus::Get(project);
-   auto &window = ProjectWindow::Get(project);
 
    const auto iter = tracks.Find(toRemove);
 

@@ -261,7 +261,6 @@ void OnCollapseAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    for (auto t : tracks)
       for (auto pChannel : t->Channels())
@@ -274,7 +273,6 @@ void OnExpandAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    for (auto t : tracks)
       for (auto pChannel : t->Channels())

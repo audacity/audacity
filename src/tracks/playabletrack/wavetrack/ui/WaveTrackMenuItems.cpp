@@ -12,7 +12,7 @@ Paul Licameli split from TrackMenus.cpp
 #include "CommonCommandFlags.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
-#include "ProjectWindow.h"
+
 #include "SelectUtilities.h"
 #include "TrackFocus.h"
 #include "WaveTrack.h"
@@ -28,7 +28,6 @@ void OnNewWaveTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualitySettings::SampleFormatChoice();
 
@@ -53,7 +52,6 @@ void OnNewStereoTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualitySettings::SampleFormatChoice();
    auto rate = ProjectRate::Get(project).GetRate();

@@ -47,7 +47,7 @@
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 #include "../VoiceKey.h"
-#include "../ProjectWindow.h"
+
 #endif
 
 IMPLEMENT_CLASS(TranscriptionToolBar, ToolBar);
