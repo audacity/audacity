@@ -66,10 +66,73 @@ public:
    virtual void ShowVerticalScrollbar(bool shown) = 0;
 };
 
+class AUDACITY_DLL_API Viewport {
+public:
+   explicit Viewport(AudacityProject &project);
+   void SetCallbacks(ViewportCallbacks *pCallbacks);
+
+   double ScrollingLowerBoundTime() const;
+
+   //! Cause refresh of viewport contents after setting scrolling or zooming
+   void DoScroll();
+
+   /*!
+    This method 'rewinds' the track, by setting the cursor to 0 and
+    scrolling the window to fit 0 on the left side of it
+    (maintaining  current zoom).
+    If extend is true, it will extend the left edge of the
+    selection to 0 (holding right edge constant), otherwise it will
+    move both left and right edge of selection to 0
+    */
+   void ScrollToStart(bool extend);
+
+   void ScrollToTop();
+
+   /// This method handles general left-scrolling, either for drag-scrolling
+   /// or when the scrollbar is clicked to the left of the thumb
+   void OnScrollLeft();
+
+   /// This method handles general right-scrolling, either for drag-scrolling
+   /// or when the scrollbar is clicked to the right of the thumb
+   void OnScrollRight();
+
+   ///  This handles the event when the left direction button on the scrollbar
+   ///  is depressed
+   void OnScrollLeftButton();
+
+   ///  This handles  the event when the right direction button on the scrollbar
+   ///  is depressed
+   void OnScrollRightButton();
+
+   void SetHorizontalThumb(double scrollto, bool doScroll = true);
+
+   /// Give uncollapsed audio tracks equal height, fitting into the view if
+   /// possible, and scroll to the top
+   void ZoomFitVertically();
+
+protected:
+   // How many pixels are covered by the period from lowermost scrollable time, to the given time:
+   // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
+   double PixelWidthBeforeTime(double scrollto) const;
+
+private:
+   void FinishAutoScroll();
+
+   std::shared_ptr<AudacityProject> LockProject()
+      { return mwProject.lock(); }
+   std::shared_ptr<const AudacityProject> LockProject() const
+      { return mwProject.lock(); }
+
+   std::weak_ptr<AudacityProject> mwProject;
+   ViewportCallbacks *mpCallbacks{};
+   bool mAutoScrolling{ false };
+};
+
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
 class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
    , public ViewportCallbacks
+   , public Viewport // this inheritance will be removed
    , public PrefsListener
    , public Observer::Publisher<ProjectWindowDestroyedMessage>
 {
@@ -168,10 +231,6 @@ public:
    /// Set horizontal zoom according to the extents of the tracks, and scroll
    /// to the start
    void ZoomFitHorizontally();
-
-   /// Give uncollapsed autio tracks equal height, fitting into the view if
-   /// possible, and scroll to the top
-   void ZoomFitVertically();
    
    void ApplyUpdatedTheme();
 
@@ -183,18 +242,12 @@ public:
    void ScrollIntoView(double pos);
    void ScrollIntoView(int x);
 
-   void OnScrollLeft();
-   void OnScrollRight();
-
-   void Rewind(bool shift);
    void SkipEnd(bool shift);
 
    void ScrollToBottom();
 
    void OnScrollLeftButton(wxScrollEvent & event);
    void OnScrollRightButton(wxScrollEvent & event);
-
-   void FinishAutoScroll();
 
    //! Change scrollbar bounds in response to changes in the TrackList,
    //! and sometimes rescroll to the top or left and repaint the whole view
@@ -223,12 +276,6 @@ public:
    void SetVerticalScrollbar(int position, int thumbSize,
       int range, int pageSize, bool refresh) override;
    void ShowVerticalScrollbar(bool shown) override;
-
-   double ScrollingLowerBoundTime() const;
-   // How many pixels are covered by the period from lowermost scrollable time, to the given time:
-   // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
-   double PixelWidthBeforeTime(double scrollto) const;
-   void SetHorizontalThumb(double scrollto, bool doScroll = true);
 
    // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
    // TrackPanel access
@@ -260,7 +307,6 @@ public:
    void UpdateLayout();
    void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);
-   void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
    void OnUndoPushedModified();
@@ -282,7 +328,6 @@ private:
 
    int mNextWindowID{};
 
-   bool mAutoScrolling{ false };
    bool mActive{ true };
    bool mIconized{ false };
    bool mShownOnce{ false };

@@ -688,7 +688,7 @@ void OnSelToStart(const CommandContext &context)
 {
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
-   window.Rewind(true);
+   window.ScrollToStart(true);
    ProjectHistory::Get( project ).ModifyState(false);
 }
 

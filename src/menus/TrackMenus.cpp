@@ -680,7 +680,7 @@ void OnResample(const CommandContext &context)
    undoManager.StopConsolidating();
 
    // Need to reset
-   window.FinishAutoScroll();
+   window.DoScroll();
 }
 
 void OnRemoveTracks(const CommandContext &context)
