@@ -209,7 +209,6 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
 
    if (!hasLabels && !hasMultipleWaveTracks)
    {
-      mRangeSplit->Disable();
       if (ExportAudioExportRange.Read() == "split")
          mRangeProject->SetValue(true);
       mSplitsPanel->Hide();
