@@ -18,6 +18,7 @@ Paul Licameli split from AudacityProject.h
 
 class CommandContext;
 class Track;
+class TrackList;
 
 class wxScrollBar;
 class wxPanel;
@@ -31,9 +32,44 @@ void InitProjectWindow( ProjectWindow &window );
 //! Message sent when the project window is closed.
 struct ProjectWindowDestroyedMessage final : Observer::Message {};
 
+//! A callback facade hiding GUI toolkit details
+class AUDACITY_DLL_API ViewportCallbacks {
+public:
+   virtual ~ViewportCallbacks();
+
+   //! Width and height in pixels of proper viewport area (excluding scrollbars)
+   virtual std::pair<int, int> ViewportSize() const = 0;
+
+   virtual bool MayScrollBeyondZero() const = 0;
+
+   virtual unsigned MinimumTrackHeight() = 0;
+   virtual bool IsTrackMinimized(const Track &track) = 0;
+   virtual void SetMinimized(Track &track, bool minimized) = 0;
+   virtual int GetTrackHeight(const Track &track) = 0;
+   virtual void SetChannelHeights(Track &track, unsigned height) = 0;
+   virtual int GetTotalHeight(const TrackList &trackList) = 0;
+
+   virtual int GetHorizontalThumbPosition() const = 0;
+   virtual int GetHorizontalThumbSize() const = 0;
+   virtual int GetHorizontalRange() const = 0;
+   virtual void SetHorizontalThumbPosition(int viewStart) = 0;
+   virtual void SetHorizontalScrollbar(int position, int thumbSize,
+      int range, int pageSize, bool refresh) = 0;
+   virtual void ShowHorizontalScrollbar(bool shown) = 0;
+
+   virtual int GetVerticalThumbPosition() const = 0;
+   virtual int GetVerticalThumbSize() const = 0;
+   virtual int GetVerticalRange() const = 0;
+   virtual void SetVerticalThumbPosition(int viewStart) = 0;
+   virtual void SetVerticalScrollbar(int position, int thumbSize,
+      int range, int pageSize, bool refresh) = 0;
+   virtual void ShowVerticalScrollbar(bool shown) = 0;
+};
+
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
 class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
+   , public ViewportCallbacks
    , public PrefsListener
    , public Observer::Publisher<ProjectWindowDestroyedMessage>
 {
@@ -164,7 +200,30 @@ public:
    //! and sometimes rescroll to the top or left and repaint the whole view
    void UpdateScrollbarsForTracks();
 
-   bool MayScrollBeyondZero() const;
+   std::pair<int, int> ViewportSize() const override;
+   bool MayScrollBeyondZero() const override;
+   unsigned MinimumTrackHeight() override;
+   bool IsTrackMinimized(const Track &track) override;
+   void SetMinimized(Track &track, bool minimized) override;
+   int GetTrackHeight(const Track &track) override;
+   void SetChannelHeights(Track &track, unsigned height) override;
+   int GetTotalHeight(const TrackList &trackList) override;
+   int GetHorizontalThumbPosition() const override;
+   int GetHorizontalThumbSize() const override;
+   int GetHorizontalRange() const override;
+   void SetHorizontalThumbPosition(int viewStart) override;
+   void SetHorizontalScrollbar(int position, int thumbSize,
+      int range, int pageSize, bool refresh) override;
+   void ShowHorizontalScrollbar(bool shown) override;
+
+   int GetVerticalThumbPosition() const override;
+   int GetVerticalThumbSize() const override;
+   int GetVerticalRange() const override;
+   void SetVerticalThumbPosition(int viewStart) override;
+   void SetVerticalScrollbar(int position, int thumbSize,
+      int range, int pageSize, bool refresh) override;
+   void ShowVerticalScrollbar(bool shown) override;
+
    double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac

@@ -551,6 +551,8 @@ AttachedWindows::RegisteredFactory sProjectWindowKey{
 
 }
 
+ViewportCallbacks::~ViewportCallbacks() = default;
+
 ProjectWindow &ProjectWindow::Get( AudacityProject &project )
 {
    return GetAttachedWindows(project).Get< ProjectWindow >(sProjectWindowKey);
@@ -952,6 +954,17 @@ void ProjectWindow::OnScrollRightButton(wxScrollEvent & /*event*/)
    }
 }
 
+std::pair<int, int> ProjectWindow::ViewportSize() const
+{
+   auto pProject = FindProject();
+   if (!pProject)
+      return { 0, 0 };
+   auto &project = *pProject;
+   auto &trackPanel = TrackPanel::Get(project);
+   int width, height;
+   trackPanel.GetSize(&width, &height);
+   return { width, height };
+}
 
 bool ProjectWindow::MayScrollBeyondZero() const
 {
@@ -975,6 +988,108 @@ bool ProjectWindow::MayScrollBeyondZero() const
    }
 
    return false;
+}
+
+unsigned ProjectWindow::MinimumTrackHeight()
+{
+   return CommonTrackInfo::MinimumTrackHeight();
+}
+
+bool ProjectWindow::IsTrackMinimized(const Track &track)
+{
+   return ChannelView::Get(*track.GetChannel(0)).GetMinimized();
+}
+
+void ProjectWindow::SetMinimized(Track &track, bool minimized)
+{
+   for (auto pChannel : track.Channels())
+      ChannelView::Get(*pChannel).SetMinimized(minimized);
+}
+
+int ProjectWindow::GetTrackHeight(const Track &track)
+{
+   return ChannelView::GetChannelGroupHeight(&track);
+}
+
+int ProjectWindow::GetTotalHeight(const TrackList &trackList)
+{
+   return ChannelView::GetTotalHeight(trackList);
+}
+
+void ProjectWindow::SetChannelHeights(Track &track, unsigned height)
+{
+   for (auto pChannel : track.Channels())
+      ChannelView::Get(*pChannel).SetExpandedHeight(height);
+}
+
+int ProjectWindow::GetHorizontalThumbPosition() const
+{
+   return mHsbar->GetThumbPosition();
+}
+
+int ProjectWindow::GetHorizontalThumbSize() const
+{
+   return mHsbar->GetThumbSize();
+}
+
+int ProjectWindow::GetHorizontalRange() const
+{
+   return mHsbar->GetRange();
+}
+
+void ProjectWindow::SetHorizontalThumbPosition(int viewStart)
+{
+   mHsbar->SetThumbPosition(viewStart);
+}
+
+void ProjectWindow::SetHorizontalScrollbar(int position, int thumbSize,
+   int range, int pageSize, bool refresh)
+{
+   mHsbar->SetScrollbar(position, thumbSize, range, pageSize, refresh);
+}
+
+void ProjectWindow::ShowHorizontalScrollbar(bool shown)
+{
+#ifdef __WXGTK__
+   mHsbar->Show(shown);
+#else
+   mHsbar->Enable(shown);
+#endif
+}
+
+int ProjectWindow::GetVerticalThumbPosition() const
+{
+   return mVsbar->GetThumbPosition();
+}
+
+int ProjectWindow::GetVerticalThumbSize() const
+{
+   return mVsbar->GetThumbPosition();
+}
+
+int ProjectWindow::GetVerticalRange() const
+{
+   return mVsbar->GetThumbPosition();
+}
+
+void ProjectWindow::SetVerticalThumbPosition(int viewStart)
+{
+   mVsbar->SetThumbPosition(viewStart);
+}
+
+void ProjectWindow::SetVerticalScrollbar(int position, int thumbSize,
+   int range, int pageSize, bool refresh)
+{
+   mVsbar->SetScrollbar(position, thumbSize, range, pageSize, refresh);
+}
+
+void ProjectWindow::ShowVerticalScrollbar(bool shown)
+{
+#ifdef __WXGTK__
+   mVsbar->Show(shown);
+#else
+   mVsbar->Enable(shown);
+#endif
 }
 
 double ProjectWindow::ScrollingLowerBoundTime() const
@@ -1076,7 +1191,7 @@ void ProjectWindow::UpdateScrollbarsForTracks()
    bool rescroll = false;
 
    // Gather inputs
-   const int totalHeight = ChannelView::GetTotalHeight(tracks) + 32;
+   const int totalHeight = GetTotalHeight(tracks) + 32;
 
    // (From Debian...at least I think this is the change corresponding
    // to this comment)
@@ -1781,12 +1896,12 @@ void ProjectWindow::ScrollToBottom()
    auto range = tracks.Any();
    int trackHeight = 0;
    if (!range.empty()) {
-      trackHeight = ChannelView::GetChannelGroupHeight(*range.rbegin());
+      trackHeight = GetTrackHeight(**range.rbegin());
       --range.second;
    }
-   int trackTop = range.sum(ChannelView::GetChannelGroupHeight);
-   int width, height;
-   trackPanel.GetSize(&width, &height);
+   int trackTop =
+      range.sum([this](auto pTrack){ return GetTrackHeight(*pTrack); });
+   const auto [width, height] = ViewportSize();
    const auto step = viewInfo.scrollStep;
    const int delta = ((trackTop + trackHeight - height) - viewInfo.vpos
       + step) / step;
@@ -2006,9 +2121,8 @@ void ProjectWindow::ZoomFitVertically()
    // Only nonminimized audio tracks will be resized
    // Assume all channels of the track have the same minimization state
    auto range = tracks.Any<AudioTrack>()
-      - [](const Track *pTrack){
-         return ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized(); };
-   auto count = range.sum(&Track::NChannels);
+      - [this](const Track *pTrack){ return IsTrackMinimized(*pTrack); };
+   auto count = static_cast<int>(range.sum(&Track::NChannels));
    if (count == 0)
       return;
 
@@ -2017,24 +2131,16 @@ void ProjectWindow::ZoomFitVertically()
    height -= 28;
    
    // The height of minimized and non-audio tracks cannot be apportioned
-   height -=
-      tracks.Any().sum(ChannelView::GetChannelGroupHeight)
-         - range.sum(ChannelView::GetChannelGroupHeight);
-   
-   // Give each resized track the average of the remaining height
-   // Bug 2803: Cast count to int, because otherwise the result of
-   // division will be unsigned too, and will be a very large number
-   // if height was negative!
-   height = height / (int)count;
-   // Use max() so that we don't set a negative height when there is
-   // not enough room.
-   height = std::max((int)CommonTrackInfo::MinimumTrackHeight(), height);
+   const auto fn =
+      [this](const Track *pTrack){ return GetTrackHeight(*pTrack); };
+   height -= tracks.Any().sum(fn) - range.sum(fn);
+   height /= count;
+   height = std::max<int>(MinimumTrackHeight(), height);
 
    for (auto t : range)
-      for (auto pChannel : t->Channels())
-         ChannelView::Get(*pChannel).SetExpandedHeight(height);
+      SetChannelHeights(*t, height);
 
-   GetVerticalScrollBar().SetThumbPosition(0);
+   SetVerticalThumbPosition(0);
 }
 
 static ToolManager::TopPanelHook::Scope scope {
