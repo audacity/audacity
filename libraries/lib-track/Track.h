@@ -1126,7 +1126,7 @@ public:
 
 private:
    Track *DoAddToHead(const std::shared_ptr<Track> &t);
-   Track *DoAdd(const std::shared_ptr<Track> &t);
+   Track *DoAdd(const std::shared_ptr<Track> &t, bool assignIds);
 
    template< typename TrackType, typename InTrackType >
       static TrackIterRange< TrackType >
@@ -1170,10 +1170,14 @@ public:
 
    friend class Track;
 
-   //! @brief Inserts tracks form \p trackList starting from position where
-   //! \p before is located. If \p before is nullptr tracks are appended.
+   //! @brief Moves all tracks from \p trackList starting from position
+   //! where \p before is located. If \p before is nullptr the tracks are
+   //! appended.
+   //! @param assignIds ignored if `this` is a temporary list; else if false,
+   //! suppresses TrackId assignment
    //! @pre `before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>())`
-   void Insert(const Track* before, TrackList&& trackList);
+   void Insert(
+      const Track* before, TrackList&& trackList, bool assignIds = false);
 
    /*!
     @pre `tracks` contains pointers only to leader tracks of this, and each of
@@ -1183,14 +1187,17 @@ public:
 
    Track *FindById( TrackId id );
 
-   /// Add a Track, giving it a fresh id
+   /// Add a Track, giving it a fresh id if `this` is not temporary
    template<typename TrackKind>
-      TrackKind *AddToHead( const std::shared_ptr< TrackKind > &t )
-         { return static_cast< TrackKind* >( DoAddToHead( t ) ); }
+      TrackKind *AddToHead( const std::shared_ptr<TrackKind> &t )
+         { return static_cast<TrackKind*>(DoAddToHead(t)); }
 
+   /// Add a Track, giving it a fresh id if `this` is not temporary and
+   /// assignIds is true
    template<typename TrackKind>
-      TrackKind *Add( const std::shared_ptr< TrackKind > &t )
-         { return static_cast< TrackKind* >( DoAdd( t ) ); }
+      TrackKind *Add(const std::shared_ptr<TrackKind> &t,
+         bool assignIds = true)
+            { return static_cast<TrackKind*>(DoAdd(t, assignIds)); }
 
    //! Removes linkage if track belongs to a group
    std::vector<Track*> UnlinkChannels(Track& track);
@@ -1287,9 +1294,6 @@ public:
       return Temporary(pProject, temp);
    }
 
-   //! Remove all tracks from `list` and put them at the end of `this`
-   void Append(TrackList &&list);
-
    // Like RegisterPendingChangedTrack, but for a list of new tracks,
    // not a replacement track.  Caller
    // supplies the list, and there are no updates.
@@ -1298,6 +1302,13 @@ public:
    // tracks, and in the sequence that they were added.  They can be
    // distinguished from actual tracks by TrackId.
    void RegisterPendingNewTracks(TrackList &&list);
+
+   //! Remove all tracks from `list` and put them at the end of `this`
+   /*!
+    @param assignIds ignored if `this` is a temporary list; else if false,
+    suppresses TrackId assignment
+    */
+   void Append(TrackList &&list, bool assignIds = true);
 
    //! Remove first channel group (if any) from `list` and put it at the end of
    //! `this`

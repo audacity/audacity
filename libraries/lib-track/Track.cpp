@@ -542,13 +542,14 @@ Track* TrackList::SwapChannels(Track &track)
    return pPartner;
 }
 
-void TrackList::Insert(const Track* before, TrackList&& trackList)
+void TrackList::Insert(
+   const Track* before, TrackList&& trackList, bool assignIds)
 {
    assert(before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>()));
 
    if(before == nullptr)
    {
-      Append(std::move(trackList));
+      Append(std::move(trackList), assignIds);
       return;
    }
 
@@ -562,7 +563,7 @@ void TrackList::Insert(const Track* before, TrackList&& trackList)
       }
       arr.push_back(track);
    }
-   Append(std::move(trackList));
+   Append(std::move(trackList), assignIds);
    Permute(arr);
 }
 
@@ -607,7 +608,7 @@ Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
    return front().get();
 }
 
-Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
+Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
 {
    if (!ListOfTracks::empty()) {
       auto &pLast = *ListOfTracks::rbegin();
@@ -626,7 +627,7 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
    auto n = getPrev( getEnd() );
 
    t->SetOwner(shared_from_this(), n);
-   if (mAssignsIds)
+   if (mAssignsIds && assignIds)
       t->SetId(TrackId{ ++sCounter });
    RecalcPositions(n);
    AdditionEvent(n);
@@ -1403,14 +1404,14 @@ TrackListHolder TrackList::Temporary(AudacityProject *pProject,
    return tempList;
 }
 
-void TrackList::Append(TrackList &&list)
+void TrackList::Append(TrackList &&list, bool assignIds)
 {
    auto iter = list.ListOfTracks::begin(),
       end = list.ListOfTracks::end();
    while (iter != end) {
       auto pTrack = *iter;
       iter = list.erase(iter);
-      this->Add(pTrack);
+      this->Add(pTrack, assignIds);
    }
 }
 
