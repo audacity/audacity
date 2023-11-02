@@ -60,6 +60,7 @@ set( LIBRARIES
    lib-stretching-sequence
    lib-menus
    lib-note-track
+   lib-viewport
 )
 
 if ( ${_OPT}has_networking )

@@ -12,9 +12,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "BasicUI.h"
 #include "tracks/ui/CommonTrackInfo.h"
-#include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
 #include "ProjectWindows.h"
@@ -22,7 +20,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSnap.h"
 #include "RefreshCode.h"
 #include "TrackPanelMouseEvent.h"
-#include "TrackFocus.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
@@ -44,7 +41,6 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/sizer.h>
 #include <wx/splitter.h>
 #include <wx/wupdlock.h>
-#include <numeric>
 
 #include "TrackPanel.h"
 
@@ -551,33 +547,6 @@ AttachedWindows::RegisteredFactory sProjectWindowKey{
 
 }
 
-ViewportCallbacks::~ViewportCallbacks() = default;
-
-static const AudacityProject::AttachedObjects::RegisteredFactory
-sKey{
-  []( AudacityProject &project ){
-     auto result = std::make_shared<Viewport>(project);
-     return result;
-   }
-};
-
-Viewport &Viewport::Get(AudacityProject &project)
-{
-   return project.AttachedObjects::Get<Viewport>(sKey);
-}
-
-const Viewport &Viewport::Get(const AudacityProject &project)
-{
-   return Get(const_cast<AudacityProject &>(project));
-}
-
-Viewport::Viewport(AudacityProject &project) : mProject{ project } {}
-
-void Viewport::SetCallbacks(std::unique_ptr<ViewportCallbacks> pCallbacks)
-{
-   mpCallbacks = move(pCallbacks);
-}
-
 ProjectWindow &ProjectWindow::Get( AudacityProject &project )
 {
    return GetAttachedWindows(project).Get< ProjectWindow >(sProjectWindowKey);
@@ -894,101 +863,7 @@ void ProjectWindow::UpdatePrefs()
    UpdateStatusWidths();
 }
 
-void Viewport::FinishAutoScroll()
-{
-   // Set a flag so we don't have to generate two update events
-   mAutoScrolling = true;
-
-   // Call our Scroll method which updates our ViewInfo variables
-   // to reflect the positions of the scrollbars
-   DoScroll();
-
-   mAutoScrolling = false;
-}
-
-#if defined(__WXMAC__)
-// const int sbarSpaceWidth = 15;
-// const int sbarControlWidth = 16;
-// const int sbarExtraLen = 1;
-const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
-#elif defined(__WXMSW__)
-const int sbarSpaceWidth = 16;
-const int sbarControlWidth = 16;
-const int sbarExtraLen = 0;
-const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
-#else // wxGTK, wxMOTIF, wxX11
-const int sbarSpaceWidth = 15;
-const int sbarControlWidth = 15;
-const int sbarExtraLen = 0;
-const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
 #include "AllThemeResources.h"
-#endif
-
-// Make sure selection edge is in view
-void Viewport::ScrollIntoView(double pos)
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   auto w = viewInfo.GetTracksUsableWidth();
-
-   int pixel = viewInfo.TimeToPosition(pos);
-   if (pixel < 0 || pixel >= w) {
-      SetHorizontalThumb(viewInfo.OffsetTimeByPixels(pos, -(w / 2)));
-      Publish({ true, false, false });
-   }
-}
-
-void Viewport::ScrollIntoView(int x)
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   ScrollIntoView(viewInfo.PositionToTime(x, viewInfo.GetLeftOffset()));
-}
-
-void Viewport::OnScrollLeft()
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
-   const auto prevPos = pos;
-   // move at least one scroll increment
-   pos -= std::max<wxInt64>((sbarHjump * viewInfo.sbarScale), 1);
-   pos = std::max<wxInt64>(pos, 0);
-   viewInfo.sbarH -= sbarHjump;
-   viewInfo.sbarH = std::max(viewInfo.sbarH,
-      -(wxInt64) PixelWidthBeforeTime(0.0));
-
-
-   if (mpCallbacks && pos != prevPos) {
-      mpCallbacks->SetHorizontalThumbPosition(static_cast<int>(pos));
-      FinishAutoScroll();
-   }
-}
-
-void Viewport::OnScrollRight()
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
-   const auto prevPos = pos;
-   // move at least one scroll increment
-   // use wxInt64 for calculation to prevent temporary overflow
-   pos += std::max<wxInt64>((sbarHjump * viewInfo.sbarScale), 1);
-   wxInt64 max = mpCallbacks
-      ? mpCallbacks->GetHorizontalRange()
-         - mpCallbacks->GetHorizontalThumbSize()
-      : 0;
-   pos = std::min(pos, max);
-   viewInfo.sbarH += sbarHjump;
-   viewInfo.sbarH = std::min(viewInfo.sbarH,
-      viewInfo.sbarTotal
-         - (wxInt64) PixelWidthBeforeTime(0.0) - viewInfo.sbarScreen);
-
-   if (mpCallbacks && pos != prevPos) {
-      mpCallbacks->SetHorizontalThumbPosition(static_cast<int>(pos));
-      FinishAutoScroll();
-   }
-}
 
 void ProjectWindow::OnScrollLeftButton(wxScrollEvent &)
 {
@@ -998,56 +873,12 @@ void ProjectWindow::OnScrollLeftButton(wxScrollEvent &)
    Viewport::Get(*pProject).OnScrollLeftButton();
 }
 
-void Viewport::OnScrollLeftButton()
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
-   const auto prevPos = pos;
-   // move at least one scroll increment
-   pos -= std::max<wxInt64>((sbarHjump * viewInfo.sbarScale), 1);
-   pos = std::max<wxInt64>(pos, 0);
-   viewInfo.sbarH -= sbarHjump;
-   viewInfo.sbarH = std::max(viewInfo.sbarH,
-      - (wxInt64) PixelWidthBeforeTime(0.0));
-
-   if (mpCallbacks && pos != prevPos) {
-      mpCallbacks->SetHorizontalThumbPosition(static_cast<int>(pos));
-      DoScroll();
-   }
-}
-
 void ProjectWindow::OnScrollRightButton(wxScrollEvent &)
 {
    auto pProject = FindProject();
    if (!pProject)
       return;
    Viewport::Get(*pProject).OnScrollRightButton();
-}
-
-void Viewport::OnScrollRightButton()
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
-   const auto prevPos = pos;
-   // move at least one scroll increment
-   // use wxInt64 for calculation to prevent temporary overflow
-   pos += std::max<wxInt64>((sbarHjump * viewInfo.sbarScale), 1);
-   wxInt64 max = mpCallbacks
-      ? mpCallbacks->GetHorizontalRange()
-         - mpCallbacks->GetHorizontalThumbSize()
-      : 0;
-   pos = std::min(pos, max);
-   viewInfo.sbarH += sbarHjump;
-   viewInfo.sbarH = std::min(viewInfo.sbarH,
-      viewInfo.sbarTotal
-         - (wxInt64) PixelWidthBeforeTime(0.0) - viewInfo.sbarScreen);
-
-   if (mpCallbacks && pos != prevPos) {
-      mpCallbacks->SetHorizontalThumbPosition(static_cast<int>(pos));
-      DoScroll();
-   }
 }
 
 std::pair<int, int> ProjectWindow::ViewportSize() const
@@ -1188,231 +1019,6 @@ void ProjectWindow::ShowVerticalScrollbar(bool shown)
 #endif
 }
 
-double Viewport::ScrollingLowerBoundTime() const
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get(project);
-   auto &viewInfo = ViewInfo::Get(project);
-   if (!(mpCallbacks && mpCallbacks->MayScrollBeyondZero()))
-      return 0;
-   const double screen = viewInfo.GetScreenEndTime() - viewInfo.hpos;
-   return std::min(tracks.GetStartTime(), -screen);
-}
-
-// PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
-// That's why ViewInfo::TimeRangeToPixelWidth was defined, with some regret.
-double Viewport::PixelWidthBeforeTime(double scrollto) const
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   const double lowerBound = ScrollingLowerBoundTime();
-   return
-      // Ignoring fisheye is correct here
-      viewInfo.TimeRangeToPixelWidth(scrollto - lowerBound);
-}
-
-void Viewport::SetHorizontalThumb(double scrollto, bool doScroll)
-{
-   if (!mpCallbacks)
-      return;
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   const auto unscaled = PixelWidthBeforeTime(scrollto);
-   const int max =
-      mpCallbacks->GetHorizontalRange() - mpCallbacks->GetHorizontalThumbSize();
-   const int pos =
-      std::min(max,
-         std::max(0,
-            (int)(floor(0.5 + unscaled * viewInfo.sbarScale))));
-   mpCallbacks->SetHorizontalThumbPosition(pos);
-   viewInfo.sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
-   viewInfo.sbarH = std::max(viewInfo.sbarH,
-      - (wxInt64) PixelWidthBeforeTime(0.0));
-   viewInfo.sbarH = std::min(viewInfo.sbarH,
-      viewInfo.sbarTotal
-         - (wxInt64) PixelWidthBeforeTime(0.0) - viewInfo.sbarScreen);
-
-   if (doScroll)
-      DoScroll();
-}
-
-bool Viewport::ScrollUpDown(int delta)
-{
-   int oldPos = mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0;
-   int pos = oldPos + delta;
-   int max = mpCallbacks
-      ? mpCallbacks->GetVerticalRange() - mpCallbacks->GetVerticalThumbSize()
-      : 0;
-
-   // Can be negative in case of only one track
-   if (max < 0)
-      max = 0;
-
-   if (pos > max)
-      pos = max;
-   else if (pos < 0)
-      pos = 0;
-
-   if (pos != oldPos)
-   {
-      if (mpCallbacks)
-         mpCallbacks->SetVerticalThumbPosition(pos);
-
-      DoScroll();
-      return true;
-   }
-   else
-      return false;
-}
-
-void Viewport::UpdateScrollbarsForTracks()
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-
-   // To decide whether to repaint the view
-   bool refresh = false;
-   bool rescroll = false;
-
-   // Gather inputs
-   const int totalHeight =
-      (mpCallbacks ? mpCallbacks->GetTotalHeight(tracks) : 0) + 32;
-
-   // (From Debian...at least I think this is the change corresponding
-   // to this comment)
-   //
-   // (2.) GTK critical warning "IA__gtk_range_set_range: assertion
-   // 'min < max' failed" because of negative numbers as result of window
-   // size checking. Added a sanity check that straightens up the numbers
-   // in edge cases.
-   const auto panelWidth = std::max(0, viewInfo.GetTracksUsableWidth());
-   const auto panelHeight = std::max(0, viewInfo.GetHeight());
-
-   // Whether scrollbars are visible now
-   const bool oldhstate =
-      (viewInfo.GetScreenEndTime() - viewInfo.hpos) < viewInfo.total;
-   const bool oldvstate = panelHeight < totalHeight;
-
-   const auto LastTime = std::accumulate(tracks.begin(), tracks.end(),
-      viewInfo.selectedRegion.t1(),
-      [](double acc, const Track *track){
-         // Iterate over pending changed tracks if present.
-         track = track->SubstitutePendingChangedTrack().get();
-         return std::max(acc, track->GetEndTime());
-      });
-
-   const double screen = viewInfo.GetScreenEndTime() - viewInfo.hpos;
-   const double halfScreen = screen / 2.0;
-
-   // If we can scroll beyond zero,
-   // Add 1/2 of a screen of blank space to the end
-   // and another 1/2 screen before the beginning
-   // so that any point within the union of the selection and the track duration
-   // may be scrolled to the midline.
-   // May add even more to the end, so that you can always scroll a negative
-   // starting time up to the left edge.
-   const double lowerBound = ScrollingLowerBoundTime();
-   const double additional = mpCallbacks && mpCallbacks->MayScrollBeyondZero()
-      ? -lowerBound + std::max(halfScreen, screen - LastTime)
-      : screen / 4.0;
-
-   viewInfo.total = LastTime + additional;
-
-   // Don't remove time from total that's still on the screen
-   viewInfo.total = std::max(viewInfo.total, viewInfo.hpos + screen);
-
-   // Scroll the view later if needed to respect the lower bound
-   if (viewInfo.hpos < lowerBound) {
-      viewInfo.hpos = lowerBound;
-      rescroll = true;
-   }
-
-   // To compute new horizontal scrollbar settings
-   viewInfo.sbarTotal = (wxInt64) (viewInfo.GetTotalWidth());
-   viewInfo.sbarScreen = (wxInt64)(panelWidth);
-   viewInfo.sbarH = (wxInt64) (viewInfo.GetBeforeScreenWidth());
-
-   // PRL:  Can someone else find a more elegant solution to bug 812, than
-   // introducing this boolean member variable?
-   // Setting mVSbar earlier, in HandlXMLTag, didn't succeed in restoring
-   // the vertical scrollbar to its saved position.  So defer that till now.
-   // mbInitializingScrollbar should be true only at the start of the life
-   // of an AudacityProject reopened from disk.
-   if (!mbInitializingScrollbar)
-      viewInfo.vpos =
-         (mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0)
-         * viewInfo.scrollStep;
-   mbInitializingScrollbar = false;
-
-   // Constrain new top of visible area
-   viewInfo.vpos = std::clamp(viewInfo.vpos, 0, totalHeight - 1);
-
-   // Decide whether the tracks are large enough to scroll for the zoom level
-   // and heights
-   bool newhstate =
-      (viewInfo.GetScreenEndTime() - viewInfo.hpos) < viewInfo.total;
-   bool newvstate = panelHeight < totalHeight;
-
-   // Hide scrollbar thumbs and buttons if not scrollable
-   if (mpCallbacks) {
-      mpCallbacks->ShowHorizontalScrollbar(newhstate);
-      mpCallbacks->ShowVerticalScrollbar(newvstate);
-   }
-
-   // When not scrollable in either axis, align viewport to top or left and
-   // repaint it later
-   if (!newvstate && viewInfo.vpos != 0) {
-      viewInfo.vpos = 0;
-
-      refresh = true;
-      rescroll = false;
-   }
-   if (!newhstate && viewInfo.sbarH != 0) {
-      viewInfo.sbarH = 0;
-
-      refresh = true;
-      rescroll = false;
-   }
-
-   // wxScrollbar only supports int values but we need a greater range, so
-   // we scale the scrollbar coordinates on demand. We only do this if we
-   // would exceed the int range, so we can always use the maximum resolution
-   // available.
-
-   // Don't use the full 2^31 max int range but a bit less, so rounding
-   // errors in calculations do not overflow max int
-   wxInt64 maxScrollbarRange = (wxInt64)(2147483647 * 0.999);
-   if (viewInfo.sbarTotal > maxScrollbarRange)
-      viewInfo.sbarScale = ((double)maxScrollbarRange) / viewInfo.sbarTotal;
-   else
-      viewInfo.sbarScale = 1.0; // use maximum resolution
-
-   {
-      int scaledSbarH = (int)(viewInfo.sbarH * viewInfo.sbarScale);
-      int scaledSbarScreen = (int)(viewInfo.sbarScreen * viewInfo.sbarScale);
-      int scaledSbarTotal = (int)(viewInfo.sbarTotal * viewInfo.sbarScale);
-      const int offset =
-         (int)(floor(0.5 + viewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
-
-      if (mpCallbacks)
-         mpCallbacks->SetHorizontalScrollbar(
-            scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
-            scaledSbarScreen, true);
-   }
-
-   if (mpCallbacks)
-      mpCallbacks->SetVerticalScrollbar(viewInfo.vpos / viewInfo.scrollStep,
-         panelHeight / viewInfo.scrollStep,
-         totalHeight / viewInfo.scrollStep,
-         panelHeight / viewInfo.scrollStep, true);
-
-   rescroll = (rescroll &&
-       (viewInfo.GetScreenEndTime() - viewInfo.hpos) < viewInfo.total);
-   Publish({ (refresh || rescroll),
-      (oldhstate != newhstate || oldvstate != newvstate), false });
-}
-
 void ProjectWindow::UpdateLayout()
 {
    auto pProject = FindProject();
@@ -1456,15 +1062,6 @@ void ProjectWindow::UpdateLayout()
    SetMinSize( wxSize(250, 250));
    SetMaxSize( wxSize(20000, 20000));
 }
-
-void Viewport::HandleResize()
-{
-   BasicUI::CallAfter( [this]{
-      UpdateScrollbarsForTracks();
-      Publish({ false, false, true });
-   });
-}
-
 
 bool ProjectWindow::IsIconized() const
 {
@@ -1715,56 +1312,6 @@ void ProjectWindow::OnScroll(wxScrollEvent &)
    Viewport::Get(*pProject).OnScroll();
 }
 
-void Viewport::OnScroll()
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   const wxInt64 offset = PixelWidthBeforeTime(0.0);
-   const auto pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
-   viewInfo.sbarH = static_cast<wxInt64>(pos / viewInfo.sbarScale) - offset;
-   DoScroll();
-
-#ifndef __WXMAC__
-   // Bug2179
-   // This keeps the time ruler in sync with horizontal scrolling, without
-   // making an undesirable compilation dependency of this source file on
-   // the ruler
-   BasicUI::Yield();
-#endif
-}
-
-void Viewport::DoScroll()
-{
-   auto &project = mProject;
-   auto &trackPanel = GetProjectPanel( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   const double lowerBound = ScrollingLowerBoundTime();
-
-   auto width = viewInfo.GetTracksUsableWidth();
-   viewInfo.SetBeforeScreenWidth(viewInfo.sbarH, width, lowerBound);
-
-   if (mpCallbacks && mpCallbacks->MayScrollBeyondZero()) {
-      enum { SCROLL_PIXEL_TOLERANCE = 10 };
-      if (std::abs(viewInfo.TimeToPosition(0.0, 0
-                                   )) < SCROLL_PIXEL_TOLERANCE) {
-         // Snap the scrollbar to 0
-         viewInfo.hpos = 0;
-         SetHorizontalThumb(0.0, false);
-      }
-   }
-
-   const auto pos = mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0;
-   viewInfo.vpos = pos * viewInfo.scrollStep;
-
-   //mchinen: do not always set this project to be the active one.
-   //a project may autoscroll while playing in the background
-   //I think this is okay since OnMouseEvent has one of these.
-   //SetActiveProject(this);
-
-   if (!mAutoScrolling)
-      Publish({ true, false, false });
-}
-
 void ProjectWindow::OnMenu(wxCommandEvent & event)
 {
 #ifdef __WXMSW__
@@ -1856,110 +1403,6 @@ void ProjectWindow::OnMouseEvent(wxMouseEvent & event)
       SetActiveProject( &project );
 }
 
-void Viewport::ZoomFitHorizontallyAndShowTrack(Track *pTrack)
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
-
-   ZoomFitHorizontally();
-
-   if (!pTrack)
-      pTrack = *tracks.Selected().begin();
-   if (!pTrack)
-      pTrack = *tracks.begin();
-   if (pTrack) {
-      TrackFocus::Get(project).Set(pTrack, true);
-      pTrack->EnsureVisible();
-   }
-}
-
-// Utility function called by other zoom methods
-void Viewport::Zoom(double pixelsPerSecond)
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   viewInfo.SetZoom(pixelsPerSecond);
-   UpdateScrollbarsForTracks();
-   // See if we can center the selection on screen, and have it actually fit.
-   // tOnLeft is the amount of time we would need before the selection left edge to center it.
-   float t0 = viewInfo.selectedRegion.t0();
-   float t1 = viewInfo.selectedRegion.t1();
-   float tAvailable = viewInfo.GetScreenEndTime() - viewInfo.hpos;
-   float tOnLeft = (tAvailable - t0 + t1)/2.0;
-   // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
-   // If tOnLeft is positive, then we have room for the selection, so scroll to it.
-   if (tOnLeft >= 0)
-      SetHorizontalThumb(t0 - tOnLeft);
-}
-
-void Viewport::ZoomBy(double multiplier)
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   viewInfo.ZoomBy(multiplier);
-   UpdateScrollbarsForTracks();
-}
-
-void Viewport::ScrollToStart(bool extend)
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-   viewInfo.selectedRegion.setT0(0, false);
-   if (!extend)
-      viewInfo.selectedRegion.setT1(0);
-
-   SetHorizontalThumb(0);
-}
-
-void Viewport::ScrollToTop()
-{
-   if (mpCallbacks)
-      mpCallbacks->SetVerticalThumbPosition(0);
-}
-
-
-void Viewport::ScrollToEnd(bool extend)
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get(project);
-   auto &viewInfo = ViewInfo::Get(project);
-   double len = tracks.GetEndTime();
-
-   viewInfo.selectedRegion.setT1(len, false);
-   if (!extend)
-      viewInfo.selectedRegion.setT0(len);
-
-   // Make sure the end of the track is visible
-   ScrollIntoView(len);
-}
-
-void Viewport::ScrollToBottom()
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get(project);
-   auto &viewInfo = ViewInfo::Get(project);
-
-   auto range = tracks.Any();
-   int trackHeight = 0;
-   const auto getHeight = [this](auto pTrack){
-      return mpCallbacks ? mpCallbacks->GetTrackHeight(*pTrack) : 0;
-   };
-   if (!range.empty()) {
-      trackHeight = getHeight(*range.rbegin());
-      --range.second;
-   }
-   int trackTop =
-      range.sum(getHeight);
-   const auto size =
-      mpCallbacks ? mpCallbacks->ViewportSize() : std::pair{ 1, 1 };
-   const auto [width, height] = size;
-   const auto step = viewInfo.scrollStep;
-   const int delta = ((trackTop + trackHeight - height) - viewInfo.vpos
-      + step) / step;
-   ScrollUpDown(delta);
-   Publish({ true, false, false });
-}
-
 ProjectWindow::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 : mProject(project)
 {
@@ -2014,180 +1457,6 @@ void ProjectWindow::PlaybackScroller::OnTimer()
          viewInfo.hpos = std::max(0.0, viewInfo.hpos);
       trackPanel.Refresh(false);
    }
-}
-
-void Viewport::ZoomAboutSelection(double multiplier)
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-
-   // DMM: Here's my attempt to get logical zooming behavior
-   // when there's a selection that's currently at least
-   // partially on-screen
-
-   const double endTime = viewInfo.GetScreenEndTime();
-   const double duration = endTime - viewInfo.hpos;
-
-   bool selectionIsOnscreen =
-      (viewInfo.selectedRegion.t0() < endTime) &&
-      (viewInfo.selectedRegion.t1() >= viewInfo.hpos);
-
-   bool selectionFillsScreen =
-      (viewInfo.selectedRegion.t0() < viewInfo.hpos) &&
-      (viewInfo.selectedRegion.t1() > endTime);
-
-   if (selectionIsOnscreen && !selectionFillsScreen) {
-      // Start with the center of the selection
-      double selCenter = (viewInfo.selectedRegion.t0() +
-                          viewInfo.selectedRegion.t1()) / 2;
-
-      // If the selection center is off-screen, pick the
-      // center of the part that is on-screen.
-      if (selCenter < viewInfo.hpos)
-         selCenter = viewInfo.hpos +
-                     (viewInfo.selectedRegion.t1() - viewInfo.hpos) / 2;
-      if (selCenter > endTime)
-         selCenter = endTime -
-            (endTime - viewInfo.selectedRegion.t0()) / 2;
-
-      // Zoom in
-      ZoomBy(multiplier);
-      const double newDuration =
-         viewInfo.GetScreenEndTime() - viewInfo.hpos;
-
-      // Recenter on selCenter
-      SetHorizontalThumb(selCenter - newDuration / 2);
-      return;
-   }
-
-
-   double origLeft = viewInfo.hpos;
-   double origWidth = duration;
-   ZoomBy(multiplier);
-
-   const double newDuration =
-      viewInfo.GetScreenEndTime() - viewInfo.hpos;
-   double newh = origLeft + (origWidth - newDuration) / 2;
-
-   // MM: Commented this out because it was confusing users
-   /*
-   // make sure that the *right-hand* end of the selection is
-   // no further *left* than 1/3 of the way across the screen
-   if (viewInfo.selectedRegion.t1() < newh + viewInfo.screen / 3)
-      newh = viewInfo.selectedRegion.t1() - viewInfo.screen / 3;
-
-   // make sure that the *left-hand* end of the selection is
-   // no further *right* than 2/3 of the way across the screen
-   if (viewInfo.selectedRegion.t0() > newh + viewInfo.screen * 2 / 3)
-      newh = viewInfo.selectedRegion.t0() - viewInfo.screen * 2 / 3;
-   */
-
-   SetHorizontalThumb(newh);
-}
-
-void Viewport::ZoomAboutCenter(double multiplier)
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
-
-   //Zoom() may change these, so record original values:
-   const double origLeft = viewInfo.hpos;
-   const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
-
-   ZoomBy(multiplier);
-   const double newWidth = viewInfo.GetScreenEndTime() - viewInfo.hpos;
-
-   const double newh = origLeft + (origWidth - newWidth) / 2;
-   // newh = (newh > 0) ? newh : 0;
-   SetHorizontalThumb(newh);
-}
-
-double Viewport::GetZoomOfToFit() const
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get(project);
-   auto &viewInfo = ViewInfo::Get(project);
-
-   const double end = tracks.GetEndTime();
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min(tracks.GetStartTime(), 0.0)
-      : 0;
-   const double len = end - start;
-
-   if (len <= 0.0)
-      return viewInfo.GetZoom();
-
-   auto w = viewInfo.GetTracksUsableWidth();
-   w -= 10;
-   return w/len;
-}
-
-void Viewport::ZoomFitHorizontally()
-{
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get(project);
-   auto &tracks = TrackList::Get(project);
-
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min(tracks.GetStartTime(), 0.0)
-      : 0;
-
-   Zoom(GetZoomOfToFit());
-   SetHorizontalThumb(start);
-}
-
-void Viewport::ZoomFitVertically()
-{
-   if (!mpCallbacks)
-      return;
-   auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get(project);
-   auto &tracks = TrackList::Get(project);
-
-   // Only nonminimized audio tracks will be resized
-   // Assume all channels of the track have the same minimization state
-   auto range = tracks.Any<AudioTrack>()
-      - [this](const Track *pTrack){
-         return mpCallbacks->IsTrackMinimized(*pTrack); };
-   auto count = static_cast<int>(range.sum(&Track::NChannels));
-   if (count == 0)
-      return;
-
-   // Find total height to apportion
-   auto height = viewInfo.GetHeight();
-   height -= 28;
-   
-   // The height of minimized and non-audio tracks cannot be apportioned
-   const auto fn = [this](const Track *pTrack){
-      return mpCallbacks->GetTrackHeight(*pTrack);
-   };
-   height -= tracks.Any().sum(fn) - range.sum(fn);
-   height /= count;
-   height = std::max<int>(mpCallbacks->MinimumTrackHeight(), height);
-   for (auto t : range)
-      mpCallbacks->SetChannelHeights(*t, height);
-
-   ScrollToTop();
-}
-
-void Viewport::ExpandAllTracks()
-{
-   if (!mpCallbacks)
-      return;
-   auto &project = mProject;
-   auto &tracks = TrackList::Get(project);
-   for (auto t : tracks)
-      mpCallbacks->SetMinimized(*t, false);
-}
-
-void Viewport::CollapseAllTracks()
-{
-   if (!mpCallbacks)
-      return;
-   auto &project = mProject;
-   auto &tracks = TrackList::Get(project);
-   for (auto t : tracks)
-      mpCallbacks->SetMinimized(*t, true);
 }
 
 void ProjectWindow::OnViewportMessage(const ViewportMessage &message)

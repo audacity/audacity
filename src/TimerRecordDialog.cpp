@@ -1175,7 +1175,6 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "UndoManager.h"
 
 namespace {

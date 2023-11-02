@@ -69,8 +69,7 @@
 
 *//*******************************************************************/
 
-
-
+#include <wx/frame.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
@@ -85,7 +84,7 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
-#include "ProjectWindow.h"
+#include "Viewport.h"
 #include "ProjectWindows.h"
 #include "ImportUtils.h"
 

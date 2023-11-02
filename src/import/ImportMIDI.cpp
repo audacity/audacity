@@ -29,7 +29,7 @@
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
-#include "../ProjectWindow.h"
+#include "Viewport.h"
 #include "ProjectWindows.h"
 #include "SelectFile.h"
 #include "../SelectUtilities.h"

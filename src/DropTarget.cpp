@@ -16,7 +16,7 @@
 #include "FileNames.h"
 #include "Project.h"
 #include "ProjectFileManager.h"
-#include "ProjectWindow.h"
+#include "Viewport.h"
 #include "TrackPanel.h"
 #include "import/ImportMIDI.h"
 
