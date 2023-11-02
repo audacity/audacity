@@ -66,7 +66,13 @@ public:
    virtual void ShowVerticalScrollbar(bool shown) = 0;
 };
 
-class AUDACITY_DLL_API Viewport {
+struct ViewportMessage {
+
+};
+
+class AUDACITY_DLL_API Viewport
+   : public Observer::Publisher<ViewportMessage>
+{
 public:
    explicit Viewport(AudacityProject &project);
    void SetCallbacks(ViewportCallbacks *pCallbacks);
@@ -340,6 +346,7 @@ private:
    bool mIsDeleting{ false };
 
 private:
+   void OnViewportMessage(const ViewportMessage &message);
 
    Observer::Subscription mUndoSubscription
       , mThemeChangeSubscription
@@ -347,6 +354,7 @@ private:
       , mSnappingChangedSubscription
    ;
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
+   const Observer::Subscription mViewportSubscription;
 
    DECLARE_EVENT_TABLE()
 };

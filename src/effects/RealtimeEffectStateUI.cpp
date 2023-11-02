@@ -107,7 +107,9 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
       mpProject = &project;
    }
 
-   mProjectWindowDestroyedSubscription = projectWindow.Subscribe(
+   mProjectWindowDestroyedSubscription = projectWindow
+      // Fix this ugly ambiguity resolution later
+      .Observer::Publisher<ProjectWindowDestroyedMessage>::Subscribe(
       [this, &project](ProjectWindowDestroyedMessage) {
          // This achieves autosave on close of project before other important
          // project state is destroyed

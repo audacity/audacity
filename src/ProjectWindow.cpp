@@ -613,6 +613,8 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    const wxSize & size, AudacityProject &project
 )  : Viewport{ project }
    , ProjectWindowBase{ parent, id, pos, size, project }
+   , mViewportSubscription{
+      Viewport::Subscribe(*this, &ProjectWindow::OnViewportMessage) }
 {
    Viewport::SetCallbacks(this);
 
@@ -2177,6 +2179,10 @@ void Viewport::CollapseAllTracks()
    auto &tracks = TrackList::Get(project);
    for (auto t : tracks)
       mpCallbacks->SetMinimized(*t, true);
+}
+
+void ProjectWindow::OnViewportMessage(const ViewportMessage &message)
+{
 }
 
 static ToolManager::TopPanelHook::Scope scope {
