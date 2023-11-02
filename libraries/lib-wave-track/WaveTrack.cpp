@@ -4124,6 +4124,7 @@ void WaveTrack::ReplaceInterval(
    assert(oldOne->NChannels() == newOne->NChannels());
    RemoveInterval(oldOne);
    InsertInterval(newOne);
+   newOne->SetName(oldOne->GetName());
 }
 
 /*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!
