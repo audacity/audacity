@@ -1991,17 +1991,6 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
    auto &project = *pProject;
    auto &viewInfo = ViewInfo::Get( project );
 
-   auto gAudioIO = AudioIO::Get();
-   // LLL: Handling positioning differently when audio is
-   // actively playing.  Don't do this if paused.
-   if (gAudioIO->IsStreamActive(
-         ProjectAudioIO::Get( project ).GetAudioIOToken()) &&
-       !gAudioIO->IsPaused()){
-      ZoomBy(ZoomFactor);
-      ScrollIntoView(gAudioIO->GetStreamTime());
-      return;
-   }
-
    // DMM: Here's my attempt to get logical zooming behavior
    // when there's a selection that's currently at least
    // partially on-screen
