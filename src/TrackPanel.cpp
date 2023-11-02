@@ -261,7 +261,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                        AdornedRulerPanel * ruler)
    : CellularPanel(parent, id, pos, size, viewInfo,
                    wxWANTS_CHARS | wxNO_BORDER),
-     mListener( &ProjectWindow::Get( *project ) ),
      mTracks(tracks),
      mRuler(ruler),
      mTrackArtist(nullptr),
@@ -529,7 +528,12 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 void TrackPanel::MakeParentRedrawScrollbars()
 {
-   mListener->TP_RedrawScrollbars();
+   ProjectWindow::Get(*GetProject()).FixScrollbars();
+}
+
+void TrackPanel::MakeParentScrollVertically(int delta)
+{
+   ProjectWindow::Get(*GetProject()).ScrollUpDown(delta);
 }
 
 namespace {
@@ -599,7 +603,7 @@ void TrackPanel::ProcessUIHandleResult
       panel->MakeParentRedrawScrollbars();
 
    if (refreshResult & Resize)
-      panel->GetListener()->TP_HandleResize();
+      ProjectWindow::Get(*GetProject()).HandleResize();
 
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack) {
       TrackFocus::Get(*GetProject()).Set(pClickedTrack);
@@ -609,12 +613,14 @@ void TrackPanel::ProcessUIHandleResult
 
 void TrackPanel::HandlePageUpKey()
 {
-   mListener->TP_ScrollWindow(2 * mViewInfo->h - mViewInfo->GetScreenEndTime());
+   ProjectWindow::Get(*GetProject())
+      .SetHorizontalThumb(2 * mViewInfo->h - mViewInfo->GetScreenEndTime());
 }
 
 void TrackPanel::HandlePageDownKey()
 {
-   mListener->TP_ScrollWindow(mViewInfo->GetScreenEndTime());
+   ProjectWindow::Get(*GetProject())
+      .SetHorizontalThumb(mViewInfo->GetScreenEndTime());
 }
 
 bool TrackPanel::IsAudioActive()
@@ -664,7 +670,7 @@ void TrackPanel::UpdateViewIfNoTracks()
       // Bug 972
       mViewInfo->h = 0;
 
-      mListener->TP_HandleResize();
+      ProjectWindow::Get(*GetProject()).HandleResize();
       //STM: Clear message if all tracks are removed
       ProjectStatus::Get( *GetProject() ).Set({});
    }
@@ -681,7 +687,7 @@ void TrackPanel::OnTrackListResizing(const TrackListEvent &e)
       UpdateVRuler(t.get());
 
    // fix for bug 2477
-   mListener->TP_RedrawScrollbars();
+   MakeParentRedrawScrollbars();
 }
 
 // Tracks have been removed from the list.
@@ -1041,12 +1047,12 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
          if (trackTop < mViewInfo->vpos) {
             height = mViewInfo->vpos - trackTop + mViewInfo->scrollStep;
             height /= mViewInfo->scrollStep;
-            mListener->TP_ScrollUpDown(-height);
+            MakeParentScrollVertically(-height);
          }
          else if (trackTop + trackHeight > mViewInfo->vpos + height) {
             height = (trackTop + trackHeight) - (mViewInfo->vpos + height);
             height = (height + mViewInfo->scrollStep + 1) / mViewInfo->scrollStep;
-            mListener->TP_ScrollUpDown(height);
+            MakeParentScrollVertically(height);
          }
 
          break;
@@ -1083,7 +1089,7 @@ void TrackPanel::VerticalScroll( float fracPosition){
    delta = (fracPosition * (trackTop + trackHeight - height)) - mViewInfo->vpos + mViewInfo->scrollStep;
    //wxLogDebug( "Scroll down by %i pixels", delta );
    delta /= mViewInfo->scrollStep;
-   mListener->TP_ScrollUpDown(delta);
+   MakeParentScrollVertically(delta);
    Refresh(false);
 }
 

@@ -410,7 +410,7 @@ mutable -> unsigned {
       )
    {
       // MM: Scroll left/right when used with Shift key down
-      window.TP_ScrollWindow(
+      window.SetHorizontalThumb(
          viewInfo.OffsetTimeByPixels(
             viewInfo.PositionToTime(0), 50.0 * -steps));
    }
@@ -507,7 +507,7 @@ mutable -> unsigned {
          double lines = steps * 4 + mVertScrollRemainder;
          mVertScrollRemainder = lines - floor(lines);
          lines = floor(lines);
-         auto didSomething = window.TP_ScrollUpDown((int)-lines);
+         auto didSomething = window.ScrollUpDown((int)-lines);
          if (!didSomething)
             result |= Cancelled;
       }
@@ -829,8 +829,7 @@ void ProjectWindow::ScrollIntoView(double pos)
    int pixel = viewInfo.TimeToPosition(pos);
    if (pixel < 0 || pixel >= w)
    {
-      TP_ScrollWindow
-         (viewInfo.OffsetTimeByPixels(pos, -(w / 2)));
+      SetHorizontalThumb(viewInfo.OffsetTimeByPixels(pos, -(w / 2)));
       trackPanel.Refresh(false);
    }
 }
@@ -1005,7 +1004,7 @@ double ProjectWindow::PixelWidthBeforeTime(double scrollto) const
       viewInfo.TimeRangeToPixelWidth(scrollto - lowerBound);
 }
 
-void ProjectWindow::SetHorizontalThumb(double scrollto)
+void ProjectWindow::SetHorizontalThumb(double scrollto, bool doScroll)
 {
    auto pProject = FindProject();
    if (!pProject)
@@ -1025,27 +1024,16 @@ void ProjectWindow::SetHorizontalThumb(double scrollto)
    viewInfo.sbarH = std::min(viewInfo.sbarH,
       viewInfo.sbarTotal
          - (wxInt64) PixelWidthBeforeTime(0.0) - viewInfo.sbarScreen);
+
+   if (doScroll)
+      DoScroll();
 }
 
-//
-// This method, like the other methods prefaced with TP, handles TrackPanel
-// 'callback'.
-//
-void ProjectWindow::TP_ScrollWindow(double scrollto)
-{
-   SetHorizontalThumb(scrollto);
-
-   // Call our Scroll method which updates our ViewInfo variables
-   // to reflect the positions of the scrollbars
-   DoScroll();
-}
-
-//
 // Scroll vertically. This is called for example by the mouse wheel
 // handler in Track Panel. A positive argument makes the window
 // scroll down, while a negative argument scrolls up.
 //
-bool ProjectWindow::TP_ScrollUpDown(int delta)
+bool ProjectWindow::ScrollUpDown(int delta)
 {
    int oldPos = mVsbar->GetThumbPosition();
    int pos = oldPos + delta;
@@ -1569,7 +1557,7 @@ void ProjectWindow::DoScroll()
                                    )) < SCROLL_PIXEL_TOLERANCE) {
          // Snap the scrollbar to 0
          viewInfo.h = 0;
-         SetHorizontalThumb(0.0);
+         SetHorizontalThumb(0.0, false);
       }
    }
 
@@ -1716,8 +1704,8 @@ void ProjectWindow::Zoom(double level)
    float tOnLeft = (tAvailable - t0 + t1)/2.0;
    // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
    // If tOnLeft is positive, then we have room for the selection, so scroll to it.
-   if( tOnLeft >=0 )
-      TP_ScrollWindow( t0-tOnLeft);
+   if (tOnLeft >= 0)
+      SetHorizontalThumb(t0 - tOnLeft);
 }
 
 // Utility function called by other zoom methods
@@ -1751,7 +1739,7 @@ void ProjectWindow::Rewind(bool shift)
    if (!shift)
       viewInfo.selectedRegion.setT1(0);
 
-   TP_ScrollWindow(0);
+   SetHorizontalThumb(0);
 }
 
 
@@ -1779,29 +1767,6 @@ void ProjectWindow::SkipEnd(bool shift)
 
    // Make sure the end of the track is visible
    ScrollIntoView(len);
-}
-
-// TrackPanel callback method
-void ProjectWindow::TP_ScrollLeft()
-{
-   OnScrollLeft();
-}
-
-// TrackPanel callback method
-void ProjectWindow::TP_ScrollRight()
-{
-   OnScrollRight();
-}
-
-// TrackPanel callback method
-void ProjectWindow::TP_RedrawScrollbars()
-{
-   FixScrollbars();
-}
-
-void ProjectWindow::TP_HandleResize()
-{
-   HandleResize();
 }
 
 ProjectWindow::PlaybackScroller::PlaybackScroller(AudacityProject *project)
@@ -1914,7 +1879,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
          viewInfo.GetScreenEndTime() - viewInfo.h;
 
       // Recenter on selCenter
-      TP_ScrollWindow(selCenter - newDuration / 2);
+      SetHorizontalThumb(selCenter - newDuration / 2);
       return;
    }
 
@@ -1940,7 +1905,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
       newh = viewInfo.selectedRegion.t0() - viewInfo.screen * 2 / 3;
    */
 
-   TP_ScrollWindow(newh);
+   SetHorizontalThumb(newh);
 }
 
 void ProjectWindow::ZoomOutByFactor( double ZoomFactor )
@@ -1960,7 +1925,7 @@ void ProjectWindow::ZoomOutByFactor( double ZoomFactor )
 
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;
-   TP_ScrollWindow(newh);
+   SetHorizontalThumb(newh);
 }
 
 double ProjectWindow::GetZoomOfToFit() const
@@ -2001,7 +1966,7 @@ void ProjectWindow::DoZoomFit()
       : 0;
 
    window.Zoom( window.GetZoomOfToFit() );
-   window.TP_ScrollWindow(start);
+   window.SetHorizontalThumb(start);
 }
 
 static ToolManager::TopPanelHook::Scope scope {

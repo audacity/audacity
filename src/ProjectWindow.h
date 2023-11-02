@@ -13,7 +13,6 @@ Paul Licameli split from AudacityProject.h
 
 #include <memory>
 #include "ProjectWindowBase.h" // to inherit
-#include "TrackPanelListener.h" // to inherit
 #include "Prefs.h"
 #include "Observer.h"
 
@@ -35,7 +34,6 @@ struct ProjectWindowDestroyedMessage final : Observer::Message {};
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
 class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
-   , public TrackPanelListener
    , public PrefsListener
    , public Observer::Publisher<ProjectWindowDestroyedMessage>
 {
@@ -159,19 +157,15 @@ public:
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
    double PixelWidthBeforeTime(double scrollto) const;
-   void SetHorizontalThumb(double scrollto);
+   void SetHorizontalThumb(double scrollto, bool doScroll = true);
 
    // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
    // TrackPanel access
    wxSize GetTPTracksUsableArea() /* not override */;
    void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
-   void TP_RedrawScrollbars() override;
-   void TP_ScrollLeft() override;
-   void TP_ScrollRight() override;
-   void TP_ScrollWindow(double scrollto) override;
-   bool TP_ScrollUpDown(int delta) override;
-   void TP_HandleResize() override;
+   bool ScrollUpDown(int delta);
+   void HandleResize();
 
  private:
 
@@ -192,7 +186,6 @@ public:
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);
-   void HandleResize();
    void UpdateLayout();
    void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);

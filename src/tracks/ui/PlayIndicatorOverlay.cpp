@@ -221,7 +221,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
                newPos = viewInfo.OffsetTimeByPixels( newPos, -width );
                newPos = std::max( newPos, window.ScrollingLowerBoundTime() );
             }
-            window.TP_ScrollWindow(newPos);
+            window.SetHorizontalThumb(newPos);
             // Might yet be off screen, check it
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
@@ -233,7 +233,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
       // Always update scrollbars even if not scrolling the window. This is
       // important when NEW audio is recorded, because this can change the
       // length of the project and therefore the appearance of the scrollbar.
-      window.TP_RedrawScrollbars();
+      window.FixScrollbars();
 
       if (onScreen)
          mNewIndicatorX =

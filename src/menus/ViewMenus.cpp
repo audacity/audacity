@@ -200,7 +200,7 @@ void OnZoomSel(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    window.Zoom( GetZoomOfSelection( project ) );
-   window.TP_ScrollWindow(selectedRegion.t0());
+   window.SetHorizontalThumb(selectedRegion.t0());
 }
 
 void OnZoomToggle(const CommandContext &context)
@@ -224,7 +224,7 @@ void OnZoomToggle(const CommandContext &context)
    trackPanel.Refresh(false);
 //   const double newWidth = GetScreenEndTime() - viewInfo.h;
 //   const double newh = origLeft + (origWidth - newWidth) / 2;
-//   TP_ScrollWindow(newh);
+//   SetHorizontalThumb(newh);
 }
 
 void OnZoomFit(const CommandContext &context)
@@ -291,7 +291,7 @@ void OnGoSelStart(const CommandContext &context)
    if (selectedRegion.isPoint())
       return;
 
-   window.TP_ScrollWindow(
+   window.SetHorizontalThumb(
       selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 
@@ -305,7 +305,7 @@ void OnGoSelEnd(const CommandContext &context)
    if (selectedRegion.isPoint())
       return;
 
-   window.TP_ScrollWindow(
+   window.SetHorizontalThumb(
       selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
 }
 

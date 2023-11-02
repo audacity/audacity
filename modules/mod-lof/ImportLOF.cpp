@@ -564,7 +564,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
 
    if (callScrollOffset)
    {
-      ProjectWindow::Get( *mProject ).TP_ScrollWindow(scrollOffset);
+      ProjectWindow::Get(*mProject).SetHorizontalThumb(scrollOffset);
       callScrollOffset = false;
    }
 

@@ -48,9 +48,6 @@ class LWSlider;
 
 class TrackPanelAx;
 
-// Declared elsewhere, to reduce compilation dependencies
-class TrackPanelListener;
-
 struct TrackPanelDrawingContext;
 
 enum class UndoPush : unsigned char;
@@ -139,6 +136,7 @@ protected:
 
 public:
    void MakeParentRedrawScrollbars();
+   void MakeParentScrollVertically(int delta);
 
    /*!
     @return includes track control panel, and the vertical ruler, and
@@ -172,7 +170,6 @@ public:
    const TrackList * GetTracks() const { return mTracks.get(); }
    TrackList * GetTracks() { return mTracks.get(); }
    ViewInfo * GetViewInfo(){ return mViewInfo;}
-   TrackPanelListener * GetListener(){ return mListener;}
    AdornedRulerPanel * GetRuler(){ return mRuler;}
 
 protected:
@@ -197,8 +194,6 @@ protected:
       , mProjectRulerInvalidatedSubscription
       , mSelectionSubscription
    ;
-
-   TrackPanelListener *mListener;
 
    std::shared_ptr<TrackList> mTracks;
 

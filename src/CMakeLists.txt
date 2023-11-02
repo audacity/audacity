@@ -215,7 +215,6 @@ list( APPEND SOURCES
       TrackPanelDrawable.cpp
       TrackPanelDrawable.h
       TrackPanelDrawingContext.h
-      TrackPanelListener.h
       TrackPanelMouseEvent.h
       TrackPanelResizeHandle.cpp
       TrackPanelResizeHandle.h
