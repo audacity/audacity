@@ -67,7 +67,9 @@ public:
 };
 
 struct ViewportMessage {
-
+   const bool rescroll;
+   const bool scrollbarVisibilityChanged;
+   const bool resize;
 };
 
 class AUDACITY_DLL_API Viewport
@@ -85,14 +87,28 @@ public:
    /*!
     This method 'rewinds' the track, by setting the cursor to 0 and
     scrolling the window to fit 0 on the left side of it
-    (maintaining  current zoom).
+    (maintaining current zoom).
     If extend is true, it will extend the left edge of the
     selection to 0 (holding right edge constant), otherwise it will
     move both left and right edge of selection to 0
     */
    void ScrollToStart(bool extend);
 
+   /*!
+    This method 'fast-forwards' the track, by setting the cursor to
+    the end of the samples on the selected track and scrolling the
+    window to fit the end on its right side (maintaining current zoom).
+    If extend is true, it will extend the right edge of the
+    selection to the end (holding left edge constant), otherwise it will
+    move both left and right edge of selection to the end
+    */
+   void ScrollToEnd(bool extend);
+
    void ScrollToTop();
+   void ScrollToBottom();
+
+   void ScrollIntoView(double pos);
+   void ScrollIntoView(int x);
 
    /// This method handles general left-scrolling, either for drag-scrolling
    /// or when the scrollbar is clicked to the left of the thumb
@@ -110,7 +126,24 @@ public:
    ///  is depressed
    void OnScrollRightButton();
 
+   void OnScroll();
+
+   // Scroll vertically. A positive argument makes the window
+   // scroll down, while a negative argument scrolls up.
+   bool ScrollUpDown(int delta);
+
    void SetHorizontalThumb(double scrollto, bool doScroll = true);
+
+   void Zoom(double level);
+   void ZoomInByFactor( double ZoomFactor );
+   void ZoomOutByFactor( double ZoomFactor );
+   void ZoomBy(double multiplier);
+   void ZoomAfterImport(Track *pTrack);
+   double GetZoomOfToFit() const;
+
+   /// Set horizontal zoom according to the extents of the tracks, and scroll
+   /// to the start
+   void ZoomFitHorizontally();
 
    /// Give uncollapsed audio tracks equal height, fitting into the view if
    /// possible, and scroll to the top
@@ -119,12 +152,19 @@ public:
    void ExpandAllTracks();
    void CollapseAllTracks();
 
-protected:
+   //! Change scrollbar bounds in response to changes in the TrackList,
+   //! and sometimes rescroll to the top or left and repaint the whole view
+   void UpdateScrollbarsForTracks();
+
+   void HandleResize();
+
+   bool mbInitializingScrollbar{ false };
+
+private:
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
    double PixelWidthBeforeTime(double scrollto) const;
 
-private:
    void FinishAutoScroll();
 
    std::shared_ptr<AudacityProject> LockProject()
@@ -229,17 +269,6 @@ public:
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
 
    void RedrawProject();
-
-   void Zoom(double level);
-   void ZoomInByFactor( double ZoomFactor );
-   void ZoomOutByFactor( double ZoomFactor );
-   void ZoomBy(double multiplier);
-   void ZoomAfterImport(Track *pTrack);
-   double GetZoomOfToFit() const;
-
-   /// Set horizontal zoom according to the extents of the tracks, and scroll
-   /// to the start
-   void ZoomFitHorizontally();
    
    void ApplyUpdatedTheme();
 
@@ -248,19 +277,8 @@ public:
    wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
    wxScrollBar &GetHorizontalScrollBar() { return *mHsbar; }
 
-   void ScrollIntoView(double pos);
-   void ScrollIntoView(int x);
-
-   void SkipEnd(bool shift);
-
-   void ScrollToBottom();
-
    void OnScrollLeftButton(wxScrollEvent & event);
    void OnScrollRightButton(wxScrollEvent & event);
-
-   //! Change scrollbar bounds in response to changes in the TrackList,
-   //! and sometimes rescroll to the top or left and repaint the whole view
-   void UpdateScrollbarsForTracks();
 
    std::pair<int, int> ViewportSize() const override;
    bool MayScrollBeyondZero() const override;
@@ -291,9 +309,6 @@ public:
    wxSize GetTPTracksUsableArea() /* not override */;
    void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
-   bool ScrollUpDown(int delta);
-   void HandleResize();
-
  private:
 
    void OnThemeChange(struct ThemeChangeMessage);
@@ -322,8 +337,6 @@ public:
    void OnUndoRedo();
    void OnUndoReset();
    void OnProjectTitleChange(ProjectFileIOMessage);
-
-   bool mbInitializingScrollbar{ false };
 
 private:
    wxRect mNormalizedWindowState;

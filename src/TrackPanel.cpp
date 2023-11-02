@@ -1735,8 +1735,10 @@ void TrackPanel::SetFocusedCell()
    KeyboardCapture::Capture(this);
 }
 
-void TrackPanel::OnTrackFocusChange(TrackFocusChangeMessage)
+void TrackPanel::OnTrackFocusChange(TrackFocusChangeMessage message)
 {
+   if (message.focusPanel)
+      SetFocus();
    if (auto cell = GetFocusedCell())
-      Refresh( false );
+      Refresh(false);
 }

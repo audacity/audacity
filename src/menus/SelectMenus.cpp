@@ -696,7 +696,7 @@ void OnSelToEnd(const CommandContext &context)
 {
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
-   window.SkipEnd(true);
+   window.ScrollToEnd(true);
    ProjectHistory::Get( project ).ModifyState(false);
 }
 

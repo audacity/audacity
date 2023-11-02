@@ -52,7 +52,6 @@ public:
       std::weak_ptr<TrackFocus> wFocus, RectangleFinder finder);
    ~TrackPanelAx() override;
 
-
    // Called to signal changes to a track
    void Updated();
 

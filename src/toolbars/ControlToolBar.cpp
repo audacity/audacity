@@ -666,7 +666,7 @@ void ControlToolBar::OnFF(wxCommandEvent & WXUNUSED(evt))
 
    {
       ProjectAudioManager::Get( *p ).StopIfPaused();
-      ProjectWindow::Get( *p ).SkipEnd(mFF->WasShiftDown());
+      ProjectWindow::Get(*p).ScrollToEnd(mFF->WasShiftDown());
    }
 }
 

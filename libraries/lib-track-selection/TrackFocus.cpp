@@ -65,7 +65,8 @@ std::shared_ptr<Track> TrackFocus::PeekFocus() const
 }
 
 // Changes focus to a specified track
-std::shared_ptr<Track> TrackFocus::SetFocus(std::shared_ptr<Track> track)
+std::shared_ptr<Track> TrackFocus::SetFocus(
+   std::shared_ptr<Track> track, bool focusPanel)
 {
    if (mpCallbacks)
       mpCallbacks->BeginChangeFocus();
@@ -73,13 +74,17 @@ std::shared_ptr<Track> TrackFocus::SetFocus(std::shared_ptr<Track> track)
    if (!track)
       track = Track::SharedPointer(*GetTracks().begin());
 
-   if (PeekFocus() != track) {
+   const bool focusChanged = (PeekFocus() != track);
+   if (focusChanged) {
       mFocusedTrack = track;
-      BasicUI::CallAfter([wFocus = weak_from_this()]{
-         if (auto pFocus = wFocus.lock())
-            pFocus->Publish({});
-      });
    }
+   if (focusChanged || focusPanel)
+      BasicUI::CallAfter([
+         wFocus = weak_from_this(), focusPanel
+      ]{
+         if (auto pFocus = wFocus.lock())
+            pFocus->Publish({ focusPanel });
+      });
    mNumFocusedTrack = TrackNum(track);
 
    if (mpCallbacks)
@@ -153,10 +158,10 @@ Track *TrackFocus::Get()
    return GetFocus().get();
 }
 
-void TrackFocus::Set( Track *pTrack )
+void TrackFocus::Set(Track *pTrack, bool focusPanel)
 {
    pTrack = *TrackList::Get(mProject).Find(pTrack);
-   SetFocus(Track::SharedPointer(pTrack));
+   SetFocus(Track::SharedPointer(pTrack), focusPanel);
 }
 
 void TrackFocus::MessageForScreenReader(const TranslatableString &message)

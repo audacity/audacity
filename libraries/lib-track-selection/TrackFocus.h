@@ -21,7 +21,9 @@ class AudacityProject;
 class Track;
 class TrackList;
 
-struct TrackFocusChangeMessage {};
+struct TrackFocusChangeMessage {
+   bool focusPanel = false; //!< whether to focus the window that shows tracks
+};
 
 //! A façade hiding platform-specific accessibility API
 struct TRACK_SELECTION_API TrackFocusCallbacks {
@@ -60,8 +62,11 @@ public:
 
    Track *Get();
 
-   // Set the track focus to a given track or to null
-   void Set(Track *pTrack);
+   //! Set the track focus to a given track or to null
+   /*!
+    @param focusPanel whether also to focus the window that shows tracks
+    */
+   void Set(Track *pTrack, bool focusPanel = false);
 
    void MessageForScreenReader(const TranslatableString& message);
 
@@ -85,7 +90,8 @@ public:
    // Changes focus to a specified track
    // Return is the actual focused track, which may be different from
    // the argument when that is null
-   std::shared_ptr<Track> SetFocus(std::shared_ptr<Track> track = {});
+   std::shared_ptr<Track> SetFocus(std::shared_ptr<Track> track = {},
+      bool focusPanel = false);
 
 private:
    TrackList &GetTracks();
