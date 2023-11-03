@@ -10,7 +10,7 @@
 #include "../ProjectSettings.h"
 #include "PluginManager.h"
 #include "ProjectStatus.h"
-#include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "ShuttleGui.h"
 #include "SyncLock.h"
@@ -20,6 +20,7 @@
 #include "UndoManager.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
 #include "../effects/EffectManager.h"
@@ -586,7 +587,7 @@ void OnResample(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &undoManager = UndoManager::Get(project);
    auto &viewport = Viewport::Get(project);
-   auto &window = ProjectWindow::Get(project);
+   auto &window = GetProjectFrame(project);
 
    int newRate;
 

@@ -25,7 +25,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "ProjectHistory.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "../../../ProjectWindow.h"
 #include "../../../ProjectWindows.h"
 #include "../../../RefreshCode.h"
 #include "SyncLock.h"
@@ -37,6 +36,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "AudacityTextEntryDialog.h"
 #include "wxWidgetsWindowPlacement.h"
 
@@ -1910,7 +1910,7 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
 
    // Bug 2044.  parent can be nullptr after a context switch.
    if( !parent )
-      parent = &GetProjectFrame( project );
+      parent = &GetProjectFrame(project);
 
    if( parent )
    {
@@ -2278,7 +2278,7 @@ void LabelTrackView::DoEditLabels
       freqFormat = formats.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame(project);
 
    LabelDialog dlg(&window, project, &tracks,
                    lt, index,
@@ -2311,7 +2311,7 @@ int LabelTrackView::DialogForLabelName(
       - 39;
    position.y += 2;  // just below the bottom of the track
    position = trackPanel.ClientToScreen(position);
-   auto &window = GetProjectFrame( project );
+   auto &window = GetProjectFrame(project);
    AudacityTextEntryDialog dialog{ &window,
       XO("Name:"),
       XO("New label"),

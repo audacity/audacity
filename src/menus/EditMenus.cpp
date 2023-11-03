@@ -8,7 +8,7 @@
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "ProjectTimeSignature.h"
-#include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "SyncLock.h"
@@ -32,6 +32,9 @@
 #include "BasicUI.h"
 #include "Sequence.h"
 #include "UserException.h"
+#include "Viewport.h"
+
+#include <wx/frame.h>
 
 // private helper classes and functions
 namespace {
@@ -415,7 +418,7 @@ std::pair<double, double> FindSelection(const CommandContext &context)
 std::shared_ptr<const TrackList> FindSourceTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get(project);
+   auto &window = GetProjectFrame(project);
    auto &tracks = TrackList::Get(project);
    const auto &clipboard = Clipboard::Get();
    auto discardTrimmed = false;
@@ -944,7 +947,7 @@ void OnPreferences(const CommandContext &context)
 {
    auto &project = context.project;
 
-   GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */, &project );
+   GlobalPrefsDialog dialog(&GetProjectFrame(project) /* parent */, &project );
 
    if( VetoDialogHook::Call( &dialog ) )
       return;

@@ -45,6 +45,7 @@ the mouse around.
 #include <wx/dcmemory.h>
 #include <wx/font.h>
 #include <wx/file.h>
+#include <wx/frame.h>
 #include <wx/scrolbar.h>
 #include <wx/slider.h>
 #include <wx/statbmp.h>
@@ -68,7 +69,7 @@ the mouse around.
 #include "PitchName.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "Theme.h"
@@ -1227,7 +1228,7 @@ namespace {
 
 AttachedWindows::RegisteredFactory sFrequencyWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
+      auto &window = GetProjectFrame(parent);
       return safenew FrequencyPlotDialog(
          &window, -1, parent, FrequencyAnalysisTitle,
          wxPoint{ 150, 150 }
