@@ -10,7 +10,6 @@ set( LIBRARIES
    PRIVATE
       lib-import-export-interface
       lib-file-formats-interface
-      lib-wx-init-interface
 )
 
 if ( USE_LIBID3TAG )
