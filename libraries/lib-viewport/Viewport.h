@@ -50,6 +50,8 @@ public:
    virtual void SetVerticalScrollbar(int position, int thumbSize,
       int range, int pageSize, bool refresh) = 0;
    virtual void ShowVerticalScrollbar(bool shown) = 0;
+
+   virtual void SetToDefaultSize() = 0;
 };
 
 struct ViewportMessage {
@@ -175,6 +177,9 @@ public:
    void ReinitScrollbars() { mbInitializingScrollbar = true; }
 
    void Redraw();
+
+   //! Send a message to the main window PARENT of the viewport, to resize
+   void SetToDefaultSize();
 
 private:
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:

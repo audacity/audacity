@@ -16,8 +16,6 @@ Paul Licameli split from AudacityProject.h
 #include "Prefs.h"
 #include "Viewport.h"
 
-class CommandContext;
-
 class wxScrollBar;
 class wxPanel;
 class wxSplitterWindow;
@@ -43,8 +41,6 @@ public:
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
 
-   static void OnResetWindow(const CommandContext& context);
-
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
       const wxPoint & pos, const wxSize &size,
@@ -59,8 +55,6 @@ public:
 
    bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
-
-   void Reset();
 
    /**
     * \brief Track list window is the parent container for TrackPanel
@@ -153,6 +147,8 @@ public:
    void SetVerticalScrollbar(int position, int thumbSize,
       int range, int pageSize, bool refresh) ;
    void ShowVerticalScrollbar(bool shown) ;
+
+   void SetToDefaultSize();
 
    // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
    // TrackPanel access

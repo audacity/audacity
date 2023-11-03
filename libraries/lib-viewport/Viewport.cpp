@@ -781,6 +781,12 @@ void Viewport::Redraw()
    });
 }
 
+void Viewport::SetToDefaultSize()
+{
+   if (mpCallbacks)
+      mpCallbacks->SetToDefaultSize();
+}
+
 void Viewport::OnUndoPushedModified()
 {
    Redraw();

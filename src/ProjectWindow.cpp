@@ -20,7 +20,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "CommandContext.h"
 #include "CommandManager.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
@@ -429,14 +428,6 @@ const ProjectWindow *ProjectWindow::Find( const AudacityProject *pProject )
    return Find( const_cast< AudacityProject * >( pProject ) );
 }
 
-void ProjectWindow::OnResetWindow(const CommandContext& context)
-{
-   auto& project = context.project;
-   auto& window = ProjectWindow::Get(project);
-
-   window.Reset();
-}
-
 int ProjectWindow::NextWindowID()
 {
    return mNextWindowID++;
@@ -522,6 +513,11 @@ struct Adapter final : ViewportCallbacks {
    {
       if (mwWindow)
          mwWindow->ShowVerticalScrollbar(shown);
+   }
+   void SetToDefaultSize() override
+   {
+      if (mwWindow)
+         mwWindow->SetToDefaultSize();
    }
 
    wxWeakRef<ProjectWindow> mwWindow;
@@ -902,7 +898,7 @@ wxPanel* ProjectWindow::GetTopPanel() noexcept
    return mTopPanel;
 }
 
-void ProjectWindow::Reset()
+void ProjectWindow::SetToDefaultSize()
 {
    wxRect defaultRect;
    GetDefaultWindowRect(&defaultRect);
