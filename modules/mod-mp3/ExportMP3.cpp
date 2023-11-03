@@ -1689,7 +1689,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
    if (!exporter.InitLibrary(wxT(""))) {
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
-      throw ExportException(_("Could not initialize MP3 encoding library!"))
+      throw ExportException(_("Could not initialize MP3 encoding library!"));
    }
 #else
    if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
