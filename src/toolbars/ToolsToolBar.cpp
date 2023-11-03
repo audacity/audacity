@@ -50,8 +50,8 @@
 #include "ImageManipulation.h"
 #include "Project.h"
 #include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
 #include "../tracks/ui/Scrubbing.h"
+#include "Viewport.h"
 
 #include "../widgets/AButton.h"
 
@@ -227,7 +227,7 @@ void ToolsToolBar::OnToolChanged(ProjectSettingsEvent evt)
    if (evt.type != ProjectSettingsEvent::ChangedTool)
       return;
    DoToolChanged();
-   ProjectWindow::Get( mProject ).RedrawProject();
+   Viewport::Get(mProject).Redraw();
 }
 
 void ToolsToolBar::DoToolChanged()

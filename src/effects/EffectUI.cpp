@@ -26,11 +26,13 @@
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindowBase.h"
+#include "../ProjectWindows.h"
 #include "TrackFocus.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
 #include "Theme.h"
+#include "Viewport.h"
 #include "wxWidgetsWindowPlacement.h"
 
 static PluginID GetID(EffectPlugin &effect)
@@ -1131,7 +1133,6 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 
 #include "PluginManager.h"
 #include "ProjectRate.h"
-#include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "WaveTrack.h"
 #include "CommandManager.h"
@@ -1152,7 +1153,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &commandManager = CommandManager::Get( project );
    auto &viewport = Viewport::Get(project);
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame(project);
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
 
@@ -1312,8 +1313,8 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          viewport.ZoomFitHorizontally();
    }
 
-   // PRL:  RedrawProject explicitly because sometimes history push is skipped
-   window.RedrawProject();
+   // PRL:  Redraw explicitly because sometimes history push is skipped
+   viewport.Redraw();
 
    if (focus != nullptr && focus->GetParent()==parent) {
       focus->SetFocus();

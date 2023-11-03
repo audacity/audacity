@@ -79,6 +79,7 @@ is time to refresh some aspect of the screen.
 #include "TrackArtist.h"
 #include "TrackPanelAx.h"
 #include "TrackPanelResizerCell.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 
 #include "FrameStatistics.h"
@@ -416,6 +417,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
 
    AudacityProject *const p = GetProject();
    auto &window = ProjectWindow::Get( *p );
+   auto &viewport = Viewport::Get(*p);
 
    auto &projectAudioIO = ProjectAudioIO::Get( *p );
    auto gAudioIO = AudioIO::Get();
@@ -435,7 +437,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
          !gAudioIO->IsAudioTokenActive(projectAudioIO.GetAudioIOToken()))
    {
       projectAudioIO.SetAudioIOToken(0);
-      window.RedrawProject();
+      viewport.Redraw();
    }
    if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion) {
       UpdateSelectionDisplay();

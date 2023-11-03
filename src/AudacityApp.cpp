@@ -97,6 +97,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Track.h"
 #include "prefs/PrefsDialog.h"
 #include "Theme.h"
+#include "Viewport.h"
 #include "PlatformCompatibility.h"
 #include "AutoRecoveryDialog.h"
 #include "SplashDialog.h"
@@ -1198,8 +1199,7 @@ bool AudacityApp::OnExceptionInMainLoop()
 
             // Forget pending changes in the TrackList
             TrackList::Get( *pProject ).ClearPendingTracks();
-
-            ProjectWindow::Get( *pProject ).RedrawProject();
+            Viewport::Get(*pProject).Redraw();
          }
 
          // Give the user an alert

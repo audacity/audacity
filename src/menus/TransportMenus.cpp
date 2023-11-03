@@ -8,7 +8,6 @@
 #include "../ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindows.h"
-#include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../SoundActivatedRecord.h"
 #include "TrackFocus.h"
@@ -19,6 +18,7 @@
 #include "../prefs/TracksPrefs.h"
 #include "WaveTrack.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "CommandContext.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/ToolManager.h"
@@ -72,7 +72,6 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    auto &tracks = TrackList::Get( project );
    auto &trackFocus = TrackFocus::Get( project );
    auto &viewport = Viewport::Get(project);
-   auto &window = ProjectWindow::Get( project );
    auto &projectAudioManager = ProjectAudioManager::Get(project);
 
    // Find the number of label tracks, and ptr to last track found
@@ -108,13 +107,13 @@ void DoMoveToLabel(AudacityProject &project, bool next)
          if (ProjectAudioIO::Get( project ).IsAudioActive()) {
             TransportUtilities::DoStopPlaying(project);
             selectedRegion = label->selectedRegion;
-            window.RedrawProject();
+            viewport.Redraw();
             TransportUtilities::DoStartPlaying(project, newDefault);
          }
          else {
             selectedRegion = label->selectedRegion;
             viewport.ScrollIntoView(selectedRegion.t0());
-            window.RedrawProject();
+            viewport.Redraw();
          }
          /* i18n-hint:
             String is replaced by the name of a label,

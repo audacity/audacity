@@ -659,29 +659,6 @@ void ProjectWindow::ApplyUpdatedTheme()
    ClearBackground();// For wxGTK.
 }
 
-void ProjectWindow::RedrawProject()
-{
-   auto pThis = wxWeakRef<ProjectWindow>(this);
-   CallAfter( [pThis]{
-
-   if (!pThis)
-      return;
-   if (pThis->IsBeingDeleted())
-      return;
-
-   auto pProject = pThis->FindProject();
-   if (!pProject)
-      return;
-
-   auto &project = *pProject;
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = GetProjectPanel( project );
-   Viewport::Get(project).UpdateScrollbarsForTracks();
-   trackPanel.Refresh(false);
-
-   });
-}
-
 void ProjectWindow::OnThemeChange(ThemeChangeMessage message)
 {
    auto pProject = FindProject();

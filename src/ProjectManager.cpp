@@ -22,15 +22,16 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
-#include "ProjectWindows.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "SelectUtilities.h"
 #include "TrackPanel.h"
 #include "TrackUtilities.h"
 #include "UndoManager.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "Import.h"
@@ -403,6 +404,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    const auto &settings = ProjectSettings::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
+   auto &viewport = Viewport::Get(project);
    auto &window = ProjectWindow::Get( project );
    auto gAudioIO = AudioIO::Get();
 
@@ -437,7 +439,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       ProjectAudioManager::Get( project ).Stop();
 
       projectAudioIO.SetAudioIOToken(0);
-      window.RedrawProject();
+      viewport.Redraw();
    }
    else if (gAudioIO->IsMonitoring()) {
       gAudioIO->StopStream();

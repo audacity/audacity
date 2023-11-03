@@ -16,10 +16,12 @@
 #include "CommandManager.h"
 #include "PluginManager.h"
 #include "ProjectAudioManager.h"
-#include "ProjectWindow.h"
+#include "ProjectWindows.h"
+#include "Viewport.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include <wx/log.h>
+#include <wx/frame.h>
 
 bool CommandDispatch::HandleTextualCommand(
    const CommandID & Str,
@@ -58,7 +60,7 @@ bool CommandDispatch::DoAudacityCommand(
    const PluginID & ID, const CommandContext & context, unsigned flags )
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame(project);
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
       return false;
@@ -89,7 +91,7 @@ bool CommandDispatch::DoAudacityCommand(
       PushState(longDesc, shortDesc);
    }
 */
-   window.RedrawProject();
+   Viewport::Get(project).Redraw();
    return true;
 }
 

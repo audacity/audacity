@@ -29,9 +29,9 @@
 #include "LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectWindow.h"
 #include "SelectFile.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "tracks/labeltrack/ui/LabelTrackView.h"
 #include "AudacityMessageBox.h"
 #include "AudacityTextEntryDialog.h"
@@ -749,7 +749,7 @@ void LabelDialog::OnSelectCell(wxGridEvent &event)
       RowData &rd = mData[event.GetRow()];
       mViewInfo->selectedRegion = rd.selectedRegion;
 
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
    }
 
    event.Skip();

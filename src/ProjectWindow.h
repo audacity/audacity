@@ -119,7 +119,6 @@ public:
    void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
 
-   void RedrawProject();
    
    void ApplyUpdatedTheme();
 
@@ -161,7 +160,6 @@ public:
    void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
  private:
-
    void OnThemeChange(struct ThemeChangeMessage);
 
    // PrefsListener implementation
