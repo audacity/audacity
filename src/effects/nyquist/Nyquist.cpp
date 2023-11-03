@@ -1367,13 +1367,11 @@ bool NyquistEffect::ProcessOne(
       auto &mCurTrack = nyxContext.mCurTrack;
       for (size_t i = 0; i < mCurNumChannels; i++) {
          float maxPeak = 0.0;
-
-         // A list of clips for mono, or an array of lists for multi-channel.
          if (mCurNumChannels > 1)
-            clips = wxT("(list ") + clipBoundaries + wxT(" )");
-         else
-            clips = clipBoundaries;
-
+            clips += wxT("(list ");
+         clips += clipBoundaries;
+         if (mCurNumChannels > 1)
+            clips += wxT(" )");
          float min, max;
          auto pair = mCurTrack[i]->GetMinMax(mT0, mT1); // may throw
          min = pair.first, max = pair.second;
