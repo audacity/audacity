@@ -522,7 +522,13 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // unpacking unaligned bytes and would be inefficient.
    // ANSWER ME: is floatSample 64 bit on 64 bit machines?
    if (captureFormat == int24Sample)
+   {
       captureFormat = floatSample;
+      // mCaptureFormat is overwritten before the call to
+      // StartPortAudioStream. So the hack with captureFormat_saved is
+      // still working (assuming it worked before).
+      mCaptureFormat = captureFormat;
+   }
 
    mNumPlaybackChannels = numPlaybackChannels;
    mNumCaptureChannels = numCaptureChannels;
