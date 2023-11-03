@@ -1039,6 +1039,7 @@ ExportResult ExportAudioDialog::DoExport(const ExportPlugin& plugin,
                                     .SetTags(&tags)
                                     .SetNumChannels(channels)
                                     .SetFileName(fullPath)
+                                    .SetSampleRate(mExportOptionsPanel->GetSampleRate())
                                     .Build(mProject));
    });
 
