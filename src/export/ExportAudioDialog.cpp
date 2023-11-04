@@ -192,6 +192,8 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
       if(ExportAudioExportRange.Read() == "selection")
          mRangeProject->SetValue(true);
    }
+   else if (!hasLabels && !hasMultipleWaveTracks)
+      mRangeSelection->MoveAfterInTabOrder(mRangeProject);
    
    if(!hasLabels)
    {

@@ -266,11 +266,11 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
    const std::function<void(double)>& reportProgress, const ChannelGroup& group,
    const SampleBlockFactoryPtr& factory, sampleFormat format)
 {
+   if (GetStretchRatio() == 1)
+      return std::make_shared<Interval>(group, mpClip, mpClip1);
+
    const auto dst = std::make_shared<Interval>(
       group, NChannels(), factory, mpClip->GetRate(), format);
-
-   if (GetStretchRatio() == 1)
-      return dst;
 
    const auto originalPlayStartTime = GetPlayStartTime();
    const auto originalPlayEndTime = GetPlayEndTime();
@@ -2352,7 +2352,8 @@ void WaveTrack::ApplyStretchRatio(
    auto clip = GetIntervalAtTime(startTime);
    while (clip && clip->GetPlayStartTime() < endTime)
    {
-      srcIntervals.push_back(clip);
+      if (clip->GetStretchRatio() != 1)
+         srcIntervals.push_back(clip);
       clip = GetNextInterval(*clip, PlaybackDirection::forward);
    }
 
@@ -4123,6 +4124,7 @@ void WaveTrack::ReplaceInterval(
    assert(oldOne->NChannels() == newOne->NChannels());
    RemoveInterval(oldOne);
    InsertInterval(newOne);
+   newOne->SetName(oldOne->GetName());
 }
 
 /*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!
