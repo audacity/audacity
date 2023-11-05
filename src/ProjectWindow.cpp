@@ -43,6 +43,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/sizer.h>
 #include <wx/splitter.h>
 #include <wx/wupdlock.h>
+#include <numeric>
 
 #include "TrackPanel.h"
 
@@ -756,7 +757,7 @@ void ProjectWindow::RedrawProject()
    auto &project = *pProject;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = GetProjectPanel( project );
-   pThis->FixScrollbars();
+   pThis->UpdateScrollbarsForTracks();
    trackPanel.Refresh(false);
 
    });
@@ -1059,7 +1060,7 @@ bool ProjectWindow::ScrollUpDown(int delta)
       return false;
 }
 
-void ProjectWindow::FixScrollbars()
+void ProjectWindow::UpdateScrollbarsForTracks()
 {
    auto pProject = FindProject();
    if (!pProject)
@@ -1069,13 +1070,12 @@ void ProjectWindow::FixScrollbars()
    auto &trackPanel = GetProjectPanel( project );
    auto &viewInfo = ViewInfo::Get( project );
 
+   // To decide whether to repaint the view
    bool refresh = false;
    bool rescroll = false;
 
-   int totalHeight = ChannelView::GetTotalHeight(tracks) + 32;
-
-   auto panelWidth = viewInfo.GetTracksUsableWidth();
-   auto panelHeight = viewInfo.GetHeight();
+   // Gather inputs
+   const int totalHeight = ChannelView::GetTotalHeight(tracks) + 32;
 
    // (From Debian...at least I think this is the change corresponding
    // to this comment)
@@ -1084,24 +1084,18 @@ void ProjectWindow::FixScrollbars()
    // 'min < max' failed" because of negative numbers as result of window
    // size checking. Added a sanity check that straightens up the numbers
    // in edge cases.
-   if (panelWidth < 0) {
-      panelWidth = 0;
-   }
-   if (panelHeight < 0) {
-      panelHeight = 0;
-   }
+   const auto panelWidth = std::max(0, viewInfo.GetTracksUsableWidth());
+   const auto panelHeight = std::max(0, viewInfo.GetHeight());
 
-   auto LastTime = std::numeric_limits<double>::lowest();
-   for (const Track *track : tracks) {
-      // Iterate over pending changed tracks if present.
-      track = track->SubstitutePendingChangedTrack().get();
-      LastTime = std::max(LastTime, track->GetEndTime());
-   }
-   LastTime =
-      std::max(LastTime, viewInfo.selectedRegion.t1());
+   const auto LastTime = std::accumulate(tracks.begin(), tracks.end(),
+      viewInfo.selectedRegion.t1(),
+      [](double acc, const Track *track){
+         // Iterate over pending changed tracks if present.
+         track = track->SubstitutePendingChangedTrack().get();
+         return std::max(acc, track->GetEndTime());
+      });
 
-   const double screen =
-      viewInfo.GetScreenEndTime() - viewInfo.h;
+   const double screen = viewInfo.GetScreenEndTime() - viewInfo.h;
    const double halfScreen = screen / 2.0;
 
    // If we can scroll beyond zero,
@@ -1109,7 +1103,8 @@ void ProjectWindow::FixScrollbars()
    // and another 1/2 screen before the beginning
    // so that any point within the union of the selection and the track duration
    // may be scrolled to the midline.
-   // May add even more to the end, so that you can always scroll the starting time to zero.
+   // May add even more to the end, so that you can always scroll a negative
+   // starting time up to the left edge.
    const double lowerBound = ScrollingLowerBoundTime();
    const double additional = MayScrollBeyondZero()
       ? -lowerBound + std::max(halfScreen, screen - LastTime)
@@ -1120,37 +1115,39 @@ void ProjectWindow::FixScrollbars()
    // Don't remove time from total that's still on the screen
    viewInfo.total = std::max(viewInfo.total, viewInfo.h + screen);
 
+   // Scroll the view later if needed to respect the lower bound
    if (viewInfo.h < lowerBound) {
       viewInfo.h = lowerBound;
       rescroll = true;
    }
 
+   // To compute new horizontal scrollbar settings
    viewInfo.sbarTotal = (wxInt64) (viewInfo.GetTotalWidth());
    viewInfo.sbarScreen = (wxInt64)(panelWidth);
    viewInfo.sbarH = (wxInt64) (viewInfo.GetBeforeScreenWidth());
 
    // PRL:  Can someone else find a more elegant solution to bug 812, than
    // introducing this boolean member variable?
-   // Setting mVSbar earlier, int HandlXMLTag, didn't succeed in restoring
+   // Setting mVSbar earlier, in HandlXMLTag, didn't succeed in restoring
    // the vertical scrollbar to its saved position.  So defer that till now.
    // mbInitializingScrollbar should be true only at the start of the life
    // of an AudacityProject reopened from disk.
-   if (!mbInitializingScrollbar) {
+   if (!mbInitializingScrollbar)
       viewInfo.vpos = mVsbar->GetThumbPosition() * viewInfo.scrollStep;
-   }
    mbInitializingScrollbar = false;
 
-   if (viewInfo.vpos >= totalHeight)
-      viewInfo.vpos = totalHeight - 1;
-   if (viewInfo.vpos < 0)
-      viewInfo.vpos = 0;
+   // Constrain new top of visible area
+   viewInfo.vpos = std::clamp(viewInfo.vpos, 0, totalHeight - 1);
 
-   bool oldhstate;
-   bool oldvstate;
+   // Decide whether the tracks are large enough to scroll for the zoom level
+   // and heights
+   bool oldhstate{};
+   bool oldvstate{};
    bool newhstate =
       (viewInfo.GetScreenEndTime() - viewInfo.h) < viewInfo.total;
    bool newvstate = panelHeight < totalHeight;
 
+   // Hide scrollbar thumbs and buttons if not scrollable
 #ifdef __WXGTK__
    oldhstate = mHsbar->IsShown();
    oldvstate = mVsbar->IsShown();
@@ -1163,7 +1160,9 @@ void ProjectWindow::FixScrollbars()
    mVsbar->Enable(panelHeight < totalHeight);
 #endif
 
-   if (panelHeight >= totalHeight && viewInfo.vpos != 0) {
+   // When not scrollable in either axis, align viewport to top or left and
+   // repaint it later
+   if (!newvstate && viewInfo.vpos != 0) {
       viewInfo.vpos = 0;
 
       refresh = true;
@@ -1197,19 +1196,18 @@ void ProjectWindow::FixScrollbars()
          (int)(floor(0.5 + viewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
-         scaledSbarScreen, TRUE);
+         scaledSbarScreen, true);
    }
 
    // Vertical scrollbar
    mVsbar->SetScrollbar(viewInfo.vpos / viewInfo.scrollStep,
                         panelHeight / viewInfo.scrollStep,
                         totalHeight / viewInfo.scrollStep,
-                        panelHeight / viewInfo.scrollStep, TRUE);
+                        panelHeight / viewInfo.scrollStep, true);
 
    if (refresh || (rescroll &&
-       (viewInfo.GetScreenEndTime() - viewInfo.h) < viewInfo.total)) {
+      (viewInfo.GetScreenEndTime() - viewInfo.h) < viewInfo.total))
       trackPanel.Refresh(false);
-   }
 
    CommandManager::Get(project).UpdateMenus();
 
@@ -1275,7 +1273,7 @@ void ProjectWindow::HandleResize()
    if (mIsDeleting)
       return;
 
-   FixScrollbars();
+   UpdateScrollbarsForTracks();
    UpdateLayout();
 
    });
@@ -1695,7 +1693,7 @@ void ProjectWindow::Zoom(double level)
    auto &project = *pProject;
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.SetZoom(level);
-   FixScrollbars();
+   UpdateScrollbarsForTracks();
    // See if we can center the selection on screen, and have it actually fit.
    // tOnLeft is the amount of time we would need before the selection left edge to center it.
    float t0 = viewInfo.selectedRegion.t0();
@@ -1717,7 +1715,7 @@ void ProjectWindow::ZoomBy(double multiplier)
    auto &project = *pProject;
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.ZoomBy(multiplier);
-   FixScrollbars();
+   UpdateScrollbarsForTracks();
 }
 
 ///////////////////////////////////////////////////////////////////

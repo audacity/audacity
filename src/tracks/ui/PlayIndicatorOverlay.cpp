@@ -233,7 +233,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
       // Always update scrollbars even if not scrolling the window. This is
       // important when NEW audio is recorded, because this can change the
       // length of the project and therefore the appearance of the scrollbar.
-      window.FixScrollbars();
+      window.UpdateScrollbarsForTracks();
 
       if (onScreen)
          mNewIndicatorX =

@@ -47,12 +47,15 @@ public:
    ZoomInfo(const ZoomInfo&) = delete;
    ZoomInfo& operator= (const ZoomInfo&) = delete;
 
-   int vpos;                    // vertical scroll pos
+   //! Pixel distance from top of tracks to top of visible scrolled area
+   int vpos;
 
-   double h;                    // h pos in secs
+   //! Leftmost visible timeline position in seconds
+   double h;
 
 protected:
-   double zoom;                 // pixels per second
+   //! pixels per second
+   double zoom;
 
 public:
    // do NOT use this once to convert a pixel width to a duration!

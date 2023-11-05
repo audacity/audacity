@@ -150,7 +150,10 @@ public:
    void OnScrollRightButton(wxScrollEvent & event);
 
    void FinishAutoScroll();
-   void FixScrollbars();
+
+   //! Change scrollbar bounds in response to changes in the TrackList,
+   //! and sometimes rescroll to the top or left and repaint the whole view
+   void UpdateScrollbarsForTracks();
 
    bool MayScrollBeyondZero() const;
    double ScrollingLowerBoundTime() const;

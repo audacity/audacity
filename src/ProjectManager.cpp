@@ -285,7 +285,7 @@ void InitProjectWindow( ProjectWindow &window )
    // MM: Give track panel the focus to ensure keyboard commands work
    trackPanel.SetFocus();
 
-   window.FixScrollbars();
+   window.UpdateScrollbarsForTracks();
    ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
 
    //

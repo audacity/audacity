@@ -528,7 +528,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 void TrackPanel::MakeParentRedrawScrollbars()
 {
-   ProjectWindow::Get(*GetProject()).FixScrollbars();
+   ProjectWindow::Get(*GetProject()).UpdateScrollbarsForTracks();
 }
 
 void TrackPanel::MakeParentScrollVertically(int delta)
