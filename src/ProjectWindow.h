@@ -153,6 +153,8 @@ public:
    void Rewind(bool shift);
    void SkipEnd(bool shift);
 
+   void ScrollToBottom();
+
    void OnScrollLeftButton(wxScrollEvent & event);
    void OnScrollRightButton(wxScrollEvent & event);
 

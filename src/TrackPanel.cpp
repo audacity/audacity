@@ -1064,36 +1064,6 @@ void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
       ProjectHistory::Get(*GetProject()).ModifyState(false);
 }
 
-// 0.0 scrolls to top
-// 1.0 scrolls to bottom.
-void TrackPanel::VerticalScroll( float fracPosition){
-
-   int trackTop = 0;
-   int trackHeight = 0;
-
-   auto tracks = GetTracks();
-
-   auto range = tracks->Any();
-   if (!range.empty()) {
-      trackHeight = ChannelView::GetChannelGroupHeight(*range.rbegin());
-      --range.second;
-   }
-   trackTop = range.sum(ChannelView::GetChannelGroupHeight);
-
-   int delta;
-
-   //Get the size of the trackpanel.
-   int width, height;
-   GetSize(&width, &height);
-
-   delta = (fracPosition * (trackTop + trackHeight - height)) - mViewInfo->vpos + mViewInfo->scrollStep;
-   //wxLogDebug( "Scroll down by %i pixels", delta );
-   delta /= mViewInfo->scrollStep;
-   MakeParentScrollVertically(delta);
-   Refresh(false);
-}
-
-
 namespace {
    // Drawing constants
    // DisplaceX and MarginX are large enough to avoid overwriting <- symbol

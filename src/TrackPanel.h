@@ -112,8 +112,6 @@ class AUDACITY_DLL_API TrackPanel final
 
    void OnTrackMenu(Track *t = NULL);
 
-   void VerticalScroll( float fracPosition);
-
    TrackPanelCell *GetFocusedCell() override;
    void SetFocusedCell() override;
 

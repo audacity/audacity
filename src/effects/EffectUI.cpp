@@ -1133,7 +1133,6 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 #include "ProjectRate.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "../TrackPanel.h"
 #include "WaveTrack.h"
 #include "CommandManager.h"
 
@@ -1148,7 +1147,6 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 {
    AudacityProject &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto rate = ProjectRate::Get(project).GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -1311,7 +1309,6 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    {
       if (!anyTracks || (clean && selectedRegion.t0() == 0.0))
          window.ZoomFitHorizontally();
-         //  trackPanel->Refresh(false);
    }
 
    // PRL:  RedrawProject explicitly because sometimes history push is skipped
@@ -1326,8 +1323,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    // Don't care what track type.  An analyser might just have added a
    // Label track and we want to see it.
    if (tracks.Size() > nTracksOriginally) {
-      // 0.0 is min scroll position, 1.0 is max scroll position.
-      trackPanel.VerticalScroll( 1.0 );
+      window.ScrollToBottom();
    }
    else {
       auto pTrack = *tracks.Selected().begin();

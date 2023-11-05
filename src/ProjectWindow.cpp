@@ -1768,6 +1768,32 @@ void ProjectWindow::SkipEnd(bool shift)
    ScrollIntoView(len);
 }
 
+void ProjectWindow::ScrollToBottom()
+{
+   auto pProject = FindProject();
+   if (!pProject)
+      return;
+   auto &project = *pProject;
+   auto &tracks = TrackList::Get(project);
+   auto &trackPanel = GetProjectPanel(project);
+   auto &viewInfo = ViewInfo::Get(project);
+
+   auto range = tracks.Any();
+   int trackHeight = 0;
+   if (!range.empty()) {
+      trackHeight = ChannelView::GetChannelGroupHeight(*range.rbegin());
+      --range.second;
+   }
+   int trackTop = range.sum(ChannelView::GetChannelGroupHeight);
+   int width, height;
+   trackPanel.GetSize(&width, &height);
+   const auto step = viewInfo.scrollStep;
+   const int delta = ((trackTop + trackHeight - height) - viewInfo.vpos
+      + step) / step;
+   ScrollUpDown(delta);
+   trackPanel.Refresh(false);
+}
+
 ProjectWindow::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 : mProject(project)
 {
