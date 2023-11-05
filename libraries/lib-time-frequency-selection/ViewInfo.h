@@ -207,7 +207,7 @@ public:
 
    double GetBeforeScreenWidth() const
    {
-      return h * zoom;
+      return hpos * zoom;
    }
    void SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime = 0.0);
 

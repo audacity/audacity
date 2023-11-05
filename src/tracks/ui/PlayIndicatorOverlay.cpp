@@ -189,7 +189,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
          ? 1.5 * std::chrono::duration<double>{kTimerInterval}.count()
          : 0;
       bool onScreen = playPos >= 0.0 &&
-         between_incexc(viewInfo.h - tolerance,
+         between_incexc(viewInfo.hpos - tolerance,
          playPos,
          viewInfo.GetScreenEndTime() + tolerance);
 
@@ -213,7 +213,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
             )
          {
             auto newPos = playPos;
-            if (playPos < viewInfo.h) {
+            if (playPos < viewInfo.hpos) {
                // This is possible when scrubbing backwards.
                // We want to page leftward by (at least) a whole screen, not
                // just a little bit equal to the scrubbing poll interval
@@ -224,7 +224,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
             window.SetHorizontalThumb(newPos);
             // Might yet be off screen, check it
             onScreen = playPos >= 0.0 &&
-            between_incexc(viewInfo.h,
+            between_incexc(viewInfo.hpos,
                            playPos,
                            viewInfo.GetScreenEndTime());
          }

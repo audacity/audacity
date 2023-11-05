@@ -40,6 +40,9 @@ class SCREEN_GEOMETRY_API ZoomInfo /* not final */
 public:
    using int64 = std::int64_t;
 
+   /*!
+    @param start leftmost visible timeline position, in seconds
+    */
    ZoomInfo(double start, double pixelsPerSecond);
    ~ZoomInfo();
 
@@ -51,7 +54,7 @@ public:
    int vpos;
 
    //! Leftmost visible timeline position in seconds
-   double h;
+   double hpos;
 
 protected:
    //! pixels per second

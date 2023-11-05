@@ -292,7 +292,7 @@ void OnGoSelStart(const CommandContext &context)
       return;
 
    window.SetHorizontalThumb(
-      selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.hpos) / 2));
 }
 
 void OnGoSelEnd(const CommandContext &context)
@@ -306,7 +306,7 @@ void OnGoSelEnd(const CommandContext &context)
       return;
 
    window.SetHorizontalThumb(
-      selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
+      selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.hpos) / 2));
 }
 
 void OnShowExtraMenus(const CommandContext &context)

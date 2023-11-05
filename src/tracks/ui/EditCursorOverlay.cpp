@@ -92,7 +92,7 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    const auto &viewInfo = ViewInfo::Get( *mProject );
 
    const bool
-   onScreen = between_incexc(viewInfo.h,
+   onScreen = between_incexc(viewInfo.hpos,
                              mCursorTime,
                              viewInfo.GetScreenEndTime());
 

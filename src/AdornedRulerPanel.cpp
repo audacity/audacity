@@ -1560,7 +1560,7 @@ void AdornedRulerPanel::DoIdle()
      || mLastDrawnSelectedRegion != selectedRegion
      || mLastDrawnPlayRegion != std::pair{
          playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() }
-     || mLastDrawnH != viewInfo.h
+     || mLastDrawnH != viewInfo.hpos
      || mLastDrawnZoom != viewInfo.GetZoom()
      || mLastPlayRegionActive != viewInfo.playRegion.Active()
    ;
@@ -1600,7 +1600,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    const auto &playRegion = viewInfo.playRegion;
    const auto playRegionBounds = std::pair{
       playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() };
-   mLastDrawnH = viewInfo.h;
+   mLastDrawnH = viewInfo.hpos;
    mLastDrawnZoom = viewInfo.GetZoom();
    mLastDrawnPlayRegion = playRegionBounds;
    mLastDrawnSelectedRegion = viewInfo.selectedRegion;

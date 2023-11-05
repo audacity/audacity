@@ -614,7 +614,7 @@ void TrackPanel::ProcessUIHandleResult
 void TrackPanel::HandlePageUpKey()
 {
    ProjectWindow::Get(*GetProject())
-      .SetHorizontalThumb(2 * mViewInfo->h - mViewInfo->GetScreenEndTime());
+      .SetHorizontalThumb(2 * mViewInfo->hpos - mViewInfo->GetScreenEndTime());
 }
 
 void TrackPanel::HandlePageDownKey()
@@ -668,7 +668,7 @@ void TrackPanel::UpdateViewIfNoTracks()
 
       // PRL:  Following causes the time ruler to align 0 with left edge.
       // Bug 972
-      mViewInfo->h = 0;
+      mViewInfo->hpos = 0;
 
       ProjectWindow::Get(*GetProject()).HandleResize();
       //STM: Clear message if all tracks are removed

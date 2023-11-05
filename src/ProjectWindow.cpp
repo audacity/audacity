@@ -443,8 +443,8 @@ mutable -> unsigned {
 
       // Scrubbing? Expand or contract about the center, ignoring mouse position
       if (scrubber.IsScrollScrubbing())
-         center_h = viewInfo.h +
-            (viewInfo.GetScreenEndTime() - viewInfo.h) / 2.0;
+         center_h = viewInfo.hpos +
+            (viewInfo.GetScreenEndTime() - viewInfo.hpos) / 2.0;
       // Zooming out? Focus on mouse.
       else if( steps <= 0 )
          center_h = mouse_h;
@@ -484,12 +484,12 @@ mutable -> unsigned {
       viewInfo.ZoomBy(pow(2.0, steps/4.0));
 
       double new_center_h = viewInfo.PositionToTime(xx, trackLeftEdge);
-      viewInfo.h += (center_h - new_center_h);
+      viewInfo.hpos += (center_h - new_center_h);
 
       // If wave has gone off screen, bring it back.
       // This means that the end of the track stays where it was.
-      if( viewInfo.h > audioEndTime )
-         viewInfo.h += audioEndTime - viewInfo.PositionToTime( xTrackEnd );
+      if( viewInfo.hpos > audioEndTime )
+         viewInfo.hpos += audioEndTime - viewInfo.PositionToTime( xTrackEnd );
 
 
       result |= FixScrollbars;
@@ -986,7 +986,7 @@ double ProjectWindow::ScrollingLowerBoundTime() const
    auto &viewInfo = ViewInfo::Get(project);
    if (!MayScrollBeyondZero())
       return 0;
-   const double screen = viewInfo.GetScreenEndTime() - viewInfo.h;
+   const double screen = viewInfo.GetScreenEndTime() - viewInfo.hpos;
    return std::min(tracks.GetStartTime(), -screen);
 }
 
@@ -1095,7 +1095,7 @@ void ProjectWindow::UpdateScrollbarsForTracks()
          return std::max(acc, track->GetEndTime());
       });
 
-   const double screen = viewInfo.GetScreenEndTime() - viewInfo.h;
+   const double screen = viewInfo.GetScreenEndTime() - viewInfo.hpos;
    const double halfScreen = screen / 2.0;
 
    // If we can scroll beyond zero,
@@ -1113,11 +1113,11 @@ void ProjectWindow::UpdateScrollbarsForTracks()
    viewInfo.total = LastTime + additional;
 
    // Don't remove time from total that's still on the screen
-   viewInfo.total = std::max(viewInfo.total, viewInfo.h + screen);
+   viewInfo.total = std::max(viewInfo.total, viewInfo.hpos + screen);
 
    // Scroll the view later if needed to respect the lower bound
-   if (viewInfo.h < lowerBound) {
-      viewInfo.h = lowerBound;
+   if (viewInfo.hpos < lowerBound) {
+      viewInfo.hpos = lowerBound;
       rescroll = true;
    }
 
@@ -1144,7 +1144,7 @@ void ProjectWindow::UpdateScrollbarsForTracks()
    bool oldhstate{};
    bool oldvstate{};
    bool newhstate =
-      (viewInfo.GetScreenEndTime() - viewInfo.h) < viewInfo.total;
+      (viewInfo.GetScreenEndTime() - viewInfo.hpos) < viewInfo.total;
    bool newvstate = panelHeight < totalHeight;
 
    // Hide scrollbar thumbs and buttons if not scrollable
@@ -1206,7 +1206,7 @@ void ProjectWindow::UpdateScrollbarsForTracks()
                         panelHeight / viewInfo.scrollStep, true);
 
    if (refresh || (rescroll &&
-      (viewInfo.GetScreenEndTime() - viewInfo.h) < viewInfo.total))
+      (viewInfo.GetScreenEndTime() - viewInfo.hpos) < viewInfo.total))
       trackPanel.Refresh(false);
 
    CommandManager::Get(project).UpdateMenus();
@@ -1554,7 +1554,7 @@ void ProjectWindow::DoScroll()
       if (std::abs(viewInfo.TimeToPosition(0.0, 0
                                    )) < SCROLL_PIXEL_TOLERANCE) {
          // Snap the scrollbar to 0
-         viewInfo.h = 0;
+         viewInfo.hpos = 0;
          SetHorizontalThumb(0.0, false);
       }
    }
@@ -1698,7 +1698,7 @@ void ProjectWindow::Zoom(double level)
    // tOnLeft is the amount of time we would need before the selection left edge to center it.
    float t0 = viewInfo.selectedRegion.t0();
    float t1 = viewInfo.selectedRegion.t1();
-   float tAvailable = viewInfo.GetScreenEndTime() - viewInfo.h;
+   float tAvailable = viewInfo.GetScreenEndTime() - viewInfo.hpos;
    float tOnLeft = (tAvailable - t0 + t1)/2.0;
    // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
    // If tOnLeft is positive, then we have room for the selection, so scroll to it.
@@ -1814,11 +1814,11 @@ void ProjectWindow::PlaybackScroller::OnTimer()
          case Mode::Right:
             deltaX = posX - width;        break;
       }
-      viewInfo.h =
-         viewInfo.OffsetTimeByPixels(viewInfo.h, deltaX, true);
+      viewInfo.hpos =
+         viewInfo.OffsetTimeByPixels(viewInfo.hpos, deltaX, true);
       if (!ProjectWindow::Get( *mProject ).MayScrollBeyondZero())
          // Can't scroll too far left
-         viewInfo.h = std::max(0.0, viewInfo.h);
+         viewInfo.hpos = std::max(0.0, viewInfo.hpos);
       trackPanel.Refresh(false);
    }
 }
@@ -1847,14 +1847,14 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
    // partially on-screen
 
    const double endTime = viewInfo.GetScreenEndTime();
-   const double duration = endTime - viewInfo.h;
+   const double duration = endTime - viewInfo.hpos;
 
    bool selectionIsOnscreen =
       (viewInfo.selectedRegion.t0() < endTime) &&
-      (viewInfo.selectedRegion.t1() >= viewInfo.h);
+      (viewInfo.selectedRegion.t1() >= viewInfo.hpos);
 
    bool selectionFillsScreen =
-      (viewInfo.selectedRegion.t0() < viewInfo.h) &&
+      (viewInfo.selectedRegion.t0() < viewInfo.hpos) &&
       (viewInfo.selectedRegion.t1() > endTime);
 
    if (selectionIsOnscreen && !selectionFillsScreen) {
@@ -1864,9 +1864,9 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
 
       // If the selection center is off-screen, pick the
       // center of the part that is on-screen.
-      if (selCenter < viewInfo.h)
-         selCenter = viewInfo.h +
-                     (viewInfo.selectedRegion.t1() - viewInfo.h) / 2;
+      if (selCenter < viewInfo.hpos)
+         selCenter = viewInfo.hpos +
+                     (viewInfo.selectedRegion.t1() - viewInfo.hpos) / 2;
       if (selCenter > endTime)
          selCenter = endTime -
             (endTime - viewInfo.selectedRegion.t0()) / 2;
@@ -1874,7 +1874,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
       // Zoom in
       ZoomBy(ZoomFactor);
       const double newDuration =
-         viewInfo.GetScreenEndTime() - viewInfo.h;
+         viewInfo.GetScreenEndTime() - viewInfo.hpos;
 
       // Recenter on selCenter
       SetHorizontalThumb(selCenter - newDuration / 2);
@@ -1882,12 +1882,12 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
    }
 
 
-   double origLeft = viewInfo.h;
+   double origLeft = viewInfo.hpos;
    double origWidth = duration;
    ZoomBy(ZoomFactor);
 
    const double newDuration =
-      viewInfo.GetScreenEndTime() - viewInfo.h;
+      viewInfo.GetScreenEndTime() - viewInfo.hpos;
    double newh = origLeft + (origWidth - newDuration) / 2;
 
    // MM: Commented this out because it was confusing users
@@ -1915,11 +1915,11 @@ void ProjectWindow::ZoomOutByFactor( double ZoomFactor )
    auto &viewInfo = ViewInfo::Get( project );
 
    //Zoom() may change these, so record original values:
-   const double origLeft = viewInfo.h;
+   const double origLeft = viewInfo.hpos;
    const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
 
    ZoomBy(ZoomFactor);
-   const double newWidth = viewInfo.GetScreenEndTime() - viewInfo.h;
+   const double newWidth = viewInfo.GetScreenEndTime() - viewInfo.hpos;
 
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;

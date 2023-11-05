@@ -277,7 +277,7 @@ void ViewInfo::UpdatePrefs()
 
 void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime)
 {
-   h =
+   hpos =
       std::max(lowerBoundTime,
          std::min(total - screenWidth / zoom,
          beforeWidth / zoom));
@@ -288,7 +288,7 @@ void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile) const
 {
    selectedRegion.WriteXMLAttributes(xmlFile, "sel0", "sel1");
    xmlFile.WriteAttr(wxT("vpos"), vpos);
-   xmlFile.WriteAttr(wxT("h"), h, 10);
+   xmlFile.WriteAttr(wxT("h"), hpos, 10);
    xmlFile.WriteAttr(wxT("zoom"), zoom, 10);
 }
 
@@ -313,7 +313,7 @@ ProjectFileIORegistry::AttributeReaderEntries entries2 {
       // reassignment of vpos, except in handling the vertical scroll.
    } },
    { "h", [](auto &viewInfo, auto value){
-      viewInfo.h = value.Get(viewInfo.h);
+      viewInfo.hpos = value.Get(viewInfo.hpos);
    } },
    { "zoom", [](auto &viewInfo, auto value){
       viewInfo.zoom = value.Get(viewInfo.zoom);
