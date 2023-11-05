@@ -4,7 +4,6 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../tracks/ui/CommonTrackInfo.h"
 #include "../TrackPanel.h"
@@ -158,14 +157,9 @@ void DoZoomFitV(AudacityProject &project)
 }
 }
 
-namespace ViewActions {
+namespace {
 
 // Menu handler functions
-
-struct Handler final
-   : CommandHandlerObject // MUST be the first base class!
-   , ClientData::Base
-{
 
 void OnZoomIn(const CommandContext &context)
 {
@@ -353,46 +347,9 @@ void OnShowNameOverlay(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
-// Not a menu item, but a listener for events
-void OnUndoPushed(UndoRedoMessage message)
-{
-   if (message.type == UndoRedoMessage::Pushed) {
-      const auto &settings = ProjectSettings::Get( mProject );
-      if (settings.GetTracksFitVerticallyZoomed())
-         DoZoomFitV( mProject );
-   }
-}
-
-Handler( AudacityProject &project )
-   : mProject{ project }
-{
-   mUndoSubscription = UndoManager::Get(mProject)
-      .Subscribe(*this, &Handler::OnUndoPushed);
-}
-
-Handler( const Handler & ) = delete;
-Handler &operator=( const Handler & ) = delete;
-
-Observer::Subscription mUndoSubscription;
-AudacityProject &mProject;
-
-}; // struct Handler
-
 } // namespace
 
-// Handler needs a back-reference to the project, so needs a factory registered
-// with AudacityProject.
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
-   []( AudacityProject &project ) {
-      return std::make_unique< ViewActions::Handler >( project ); } };
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
-   return project.AttachedObjects::Get< ViewActions::Handler >( key );
-};
-
 // Menu definitions
-
-#define FN(X) (& ViewActions::Handler :: X)
 
 // Under /MenuBar
 namespace {
@@ -400,45 +357,44 @@ using namespace MenuRegistry;
 auto ViewMenu()
 {
    static auto menu = std::shared_ptr{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XXO("&View"),
       Section( "Basic",
          Menu( wxT("Zoom"), XXO("&Zoom"),
             Section( "",
-               Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
+               Command( wxT("ZoomIn"), XXO("Zoom &In"), OnZoomIn,
                   ZoomInAvailableFlag(), wxT("Ctrl+1") ),
-               Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
+               Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), OnZoomNormal,
                   TracksExistFlag(), wxT("Ctrl+2") ),
-               Command( wxT("ZoomOut"), XXO("Zoom &Out"), FN(OnZoomOut),
+               Command( wxT("ZoomOut"), XXO("Zoom &Out"), OnZoomOut,
                   ZoomOutAvailableFlag(), wxT("Ctrl+3") ),
-               Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), FN(OnZoomSel),
+               Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), OnZoomSel,
                   TimeSelectedFlag(), wxT("Ctrl+E") ),
-               Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
+               Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), OnZoomToggle,
                   TracksExistFlag(), wxT("Shift+Z") )
             ),
             Section( "",
                Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
-                  FN(OnAdvancedVZoom), AlwaysEnabledFlag,
+                  OnAdvancedVZoom, AlwaysEnabledFlag,
                   Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
             )
          ),
 
          Menu( wxT("TrackSize"), XXO("T&rack Size"),
-            Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
+            Command( wxT("FitInWindow"), XXO("&Fit to Width"), OnZoomFit,
                TracksExistFlag(), wxT("Ctrl+F") ),
-            Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
+            Command( wxT("FitV"), XXO("Fit to &Height"), OnZoomFitV,
                TracksExistFlag(), wxT("Ctrl+Shift+F") ),
             Command( wxT("CollapseAllTracks"), XXO("&Collapse All Tracks"),
-               FN(OnCollapseAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+C") ),
+               OnCollapseAllTracks, TracksExistFlag(), wxT("Ctrl+Shift+C") ),
             Command( wxT("ExpandAllTracks"), XXO("E&xpand Collapsed Tracks"),
-               FN(OnExpandAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+X") )
+               OnExpandAllTracks, TracksExistFlag(), wxT("Ctrl+Shift+X") )
          ),
 
          Menu( wxT("SkipTo"), XXO("Sk&ip to"),
             Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
-               FN(OnGoSelStart), TimeSelectedFlag(),
+               OnGoSelStart, TimeSelectedFlag(),
                Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),
-            Command( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
+            Command( wxT("SkipSelEnd"), XXO("Selection En&d"), OnGoSelEnd,
                TimeSelectedFlag(),
                Options{ wxT("Ctrl+]"), XO("Skip to Selection End") } )
          )
@@ -448,16 +404,16 @@ auto ViewMenu()
 
       Section( "Other",
          Command( wxT("ShowExtraMenus"), XXO("Enable &Extra Menus"),
-            FN(OnShowExtraMenus), AlwaysEnabledFlag,
+            OnShowExtraMenus, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
          Command( wxT("ShowTrackNameInWaveform"), XXO("Show Track &Name as overlay"),
-            FN(OnShowNameOverlay), AlwaysEnabledFlag,
+            OnShowNameOverlay, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowTrackNameInWaveform"), false ) ),
          Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
-            FN(OnShowClipping), AlwaysEnabledFlag,
+            OnShowClipping, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
       )
-   ) ) };
+   ) };
    return menu;
 }
 
