@@ -128,7 +128,14 @@ public:
    void ZoomBy(double multiplier);
    void ZoomAfterImport(Track *pTrack);
    double GetZoomOfToFit() const;
-   void DoZoomFit();
+
+   /// Set horizontal zoom according to the extents of the tracks, and scroll
+   /// to the start
+   void ZoomFitHorizontally();
+
+   /// Give uncollapsed autio tracks equal height, fitting into the view if
+   /// possible, and scroll to the top
+   void ZoomFitVertically();
    
    void ApplyUpdatedTheme();
 

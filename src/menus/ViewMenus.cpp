@@ -1,11 +1,10 @@
 #include "../CommonCommandFlags.h"
 #include "../MenuCreator.h"
-#include "PlayableTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindow.h"
-#include "../tracks/ui/CommonTrackInfo.h"
+#include "Track.h"
 #include "../TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -14,7 +13,6 @@
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
 #include "../tracks/ui/ChannelView.h"
-
 
 #include <wx/app.h>
 #include <wx/scrolbar.h>
@@ -119,45 +117,6 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
 }
 
 namespace {
-void DoZoomFitV(AudacityProject &project)
-{
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-
-   // Only nonminimized audio tracks will be resized
-   // Assume all channels of the track have the same minimization state
-   auto range = tracks.Any<AudioTrack>()
-      - [](const Track *pTrack){
-         return ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized(); };
-   auto count = range.sum(&Track::NChannels);
-   if (count == 0)
-      return;
-
-   // Find total height to apportion
-   auto height = viewInfo.GetHeight();
-   height -= 28;
-   
-   // The height of minimized and non-audio tracks cannot be apportioned
-   height -=
-      tracks.Any().sum(ChannelView::GetChannelGroupHeight)
-         - range.sum(ChannelView::GetChannelGroupHeight);
-   
-   // Give each resized track the average of the remaining height
-   // Bug 2803: Cast count to int, because otherwise the result of 
-   // division will be unsigned too, and will be a very large number 
-   // if height was negative!
-   height = height / (int)count;
-   // Use max() so that we don't set a negative height when there is
-   // not enough room.
-   height = std::max( (int)CommonTrackInfo::MinimumTrackHeight(), height );
-
-   for (auto t : range)
-      for (auto pChannel : t->Channels())
-         ChannelView::Get(*pChannel).SetExpandedHeight(height);
-}
-}
-
-namespace {
 
 // Menu handler functions
 
@@ -225,7 +184,7 @@ void OnZoomFit(const CommandContext &context)
 {
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
-   window.DoZoomFit();
+   window.ZoomFitHorizontally();
 }
 
 void OnZoomFitV(const CommandContext &context)
@@ -233,9 +192,7 @@ void OnZoomFitV(const CommandContext &context)
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
 
-   DoZoomFitV(project);
-
-   window.GetVerticalScrollBar().SetThumbPosition(0);
+   window.ZoomFitVertically();
    ProjectHistory::Get( project ).ModifyState(true);
 }
 

@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
+#include "tracks/ui/CommonTrackInfo.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -1671,7 +1672,7 @@ void ProjectWindow::ZoomAfterImport(Track *pTrack)
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = GetProjectPanel( project );
 
-   DoZoomFit();
+   ZoomFitHorizontally();
 
    trackPanel.SetFocus();
    if (!pTrack)
@@ -1949,7 +1950,7 @@ double ProjectWindow::GetZoomOfToFit() const
    return w/len;
 }
 
-void ProjectWindow::DoZoomFit()
+void ProjectWindow::ZoomFitHorizontally()
 {
    auto pProject = FindProject();
    if (!pProject)
@@ -1965,6 +1966,49 @@ void ProjectWindow::DoZoomFit()
 
    window.Zoom( window.GetZoomOfToFit() );
    window.SetHorizontalThumb(start);
+}
+
+void ProjectWindow::ZoomFitVertically()
+{
+   auto pProject = FindProject();
+   if (!pProject)
+      return;
+   auto &project = *pProject;
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(project);
+
+   // Only nonminimized audio tracks will be resized
+   // Assume all channels of the track have the same minimization state
+   auto range = tracks.Any<AudioTrack>()
+      - [](const Track *pTrack){
+         return ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized(); };
+   auto count = range.sum(&Track::NChannels);
+   if (count == 0)
+      return;
+
+   // Find total height to apportion
+   auto height = viewInfo.GetHeight();
+   height -= 28;
+   
+   // The height of minimized and non-audio tracks cannot be apportioned
+   height -=
+      tracks.Any().sum(ChannelView::GetChannelGroupHeight)
+         - range.sum(ChannelView::GetChannelGroupHeight);
+   
+   // Give each resized track the average of the remaining height
+   // Bug 2803: Cast count to int, because otherwise the result of
+   // division will be unsigned too, and will be a very large number
+   // if height was negative!
+   height = height / (int)count;
+   // Use max() so that we don't set a negative height when there is
+   // not enough room.
+   height = std::max((int)CommonTrackInfo::MinimumTrackHeight(), height);
+
+   for (auto t : range)
+      for (auto pChannel : t->Channels())
+         ChannelView::Get(*pChannel).SetExpandedHeight(height);
+
+   GetVerticalScrollBar().SetThumbPosition(0);
 }
 
 static ToolManager::TopPanelHook::Scope scope {

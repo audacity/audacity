@@ -290,7 +290,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
             newPos += (t->GetEndTime() - t->GetStartTime());
       }
       if (index == kAlignEndToEnd)
-         window.DoZoomFit();
+         window.ZoomFitHorizontally();
    }
 
    if (delta != 0.0) {

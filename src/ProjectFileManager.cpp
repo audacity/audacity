@@ -1202,10 +1202,10 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
 
 #if defined(__WXGTK__)
    // See bug #1224
-   // The track panel hasn't we been fully created, so the DoZoomFit() will not give
+   // The track panel hasn't been fully created, so ZoomFitHorizontally() will not give
    // expected results due to a window width of zero.  Should be safe to yield here to
    // allow the creation to complete.  If this becomes a problem, it "might" be possible
-   // to queue a dummy event to trigger the DoZoomFit().
+   // to queue a dummy event to trigger ZoomFitHorizontally().
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif
 

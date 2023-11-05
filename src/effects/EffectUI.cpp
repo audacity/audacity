@@ -1310,7 +1310,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    if (type == EffectTypeGenerate)
    {
       if (!anyTracks || (clean && selectedRegion.t0() == 0.0))
-         window.DoZoomFit();
+         window.ZoomFitHorizontally();
          //  trackPanel->Refresh(false);
    }
 
