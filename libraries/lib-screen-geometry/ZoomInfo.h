@@ -50,9 +50,6 @@ public:
    ZoomInfo(const ZoomInfo&) = delete;
    ZoomInfo& operator= (const ZoomInfo&) = delete;
 
-   //! Pixel distance from top of tracks to top of visible scrolled area
-   int vpos;
-
    //! Leftmost visible timeline position in seconds
    double hpos;
 

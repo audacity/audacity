@@ -221,6 +221,9 @@ public:
 
    // Scroll info
 
+   //! Pixel distance from top of tracks to top of visible scrolled area
+   int vpos{ 0 };
+
    double total;                // total width in secs
    // Current horizontal scroll bar positions, in pixels
    wxInt64 sbarH;

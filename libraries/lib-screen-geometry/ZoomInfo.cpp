@@ -19,8 +19,7 @@ static const double gMinZoom = 0.001;
 }
 
 ZoomInfo::ZoomInfo(double start, double pixelsPerSecond)
-   : vpos{ 0 }
-   , hpos{ start }
+   : hpos{ start }
    , zoom{ pixelsPerSecond }
 {
 }
