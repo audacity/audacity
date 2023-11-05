@@ -12,7 +12,6 @@
 #include "CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
-#include "../tracks/ui/ChannelView.h"
 
 #include <wx/app.h>
 #include <wx/scrolbar.h>
@@ -211,25 +210,15 @@ void OnAdvancedVZoom(const CommandContext &context)
 void OnCollapseAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-
-   for (auto t : tracks)
-      for (auto pChannel : t->Channels())
-         ChannelView::Get(*pChannel).SetMinimized(true);
-
-   ProjectHistory::Get( project ).ModifyState(true);
+   ProjectWindow::Get(project).CollapseAllTracks();
+   ProjectHistory::Get(project).ModifyState(true);
 }
 
 void OnExpandAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-
-   for (auto t : tracks)
-      for (auto pChannel : t->Channels())
-         ChannelView::Get(*pChannel).SetMinimized(false);
-
-   ProjectHistory::Get( project ).ModifyState(true);
+   ProjectWindow::Get(project).ExpandAllTracks();
+   ProjectHistory::Get(project).ModifyState(true);
 }
 
 void OnGoSelStart(const CommandContext &context)

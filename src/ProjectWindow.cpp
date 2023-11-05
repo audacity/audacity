@@ -2164,6 +2164,32 @@ void Viewport::ZoomFitVertically()
    ScrollToTop();
 }
 
+void Viewport::ExpandAllTracks()
+{
+   if (!mpCallbacks)
+      return;
+   auto pProject = LockProject();
+   if (!pProject)
+      return;
+   auto &project = *pProject;
+   auto &tracks = TrackList::Get(project);
+   for (auto t : tracks)
+      mpCallbacks->SetMinimized(*t, false);
+}
+
+void Viewport::CollapseAllTracks()
+{
+   if (!mpCallbacks)
+      return;
+   auto pProject = LockProject();
+   if (!pProject)
+      return;
+   auto &project = *pProject;
+   auto &tracks = TrackList::Get(project);
+   for (auto t : tracks)
+      mpCallbacks->SetMinimized(*t, true);
+}
+
 static ToolManager::TopPanelHook::Scope scope {
 []( wxWindow &window ){
    auto pProjectWindow = dynamic_cast< ProjectWindow* >( &window );

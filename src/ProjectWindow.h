@@ -110,6 +110,9 @@ public:
    /// possible, and scroll to the top
    void ZoomFitVertically();
 
+   void ExpandAllTracks();
+   void CollapseAllTracks();
+
 protected:
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
