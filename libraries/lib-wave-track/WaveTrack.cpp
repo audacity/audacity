@@ -2386,7 +2386,7 @@ void WaveTrack::ApplyStretchRatio(
        !clipAtT1->StretchRatioEquals(1))
       Split(endTime, endTime);
 
-   std::vector<IntervalHolder> srcIntervals;
+   IntervalHolders srcIntervals;
    auto clip = GetIntervalAtTime(startTime);
    while (clip && clip->GetPlayStartTime() < endTime)
    {
@@ -2577,7 +2577,7 @@ void WaveTrack::Join(
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
    const auto intervals = Intervals();
-   std::vector<IntervalHolder> intervalsToJoin;
+   IntervalHolders intervalsToJoin;
    for (auto interval : intervals)
       if (interval->IntersectsPlayRegion(t0, t1))
          intervalsToJoin.push_back(interval);
@@ -4106,10 +4106,10 @@ bool WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
 }
 
 void WaveTrack::ApplyStretchRatioOnIntervals(
-   const std::vector<IntervalHolder>& srcIntervals,
+   const IntervalHolders& srcIntervals,
    const ProgressReporter& reportProgress)
 {
-   std::vector<IntervalHolder> dstIntervals;
+   IntervalHolders dstIntervals;
    dstIntervals.reserve(srcIntervals.size());
    std::transform(
       srcIntervals.begin(), srcIntervals.end(),

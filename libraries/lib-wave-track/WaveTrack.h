@@ -1043,6 +1043,7 @@ public:
    };
 
    using IntervalHolder = std::shared_ptr<Interval>;
+   using IntervalHolders = std::vector<IntervalHolder>;
    using IntervalConstHolder = std::shared_ptr<const Interval>;
 
    ///@return Interval that starts after(before) the beginning of the passed interval
@@ -1112,7 +1113,7 @@ private:
       double* cutlineStart, double* cutlineEnd);
    bool MergeOneClipPair(int clipidx1, int clipidx2);
    void ApplyStretchRatioOnIntervals(
-      const std::vector<IntervalHolder>& intervals,
+      const IntervalHolders& intervals,
       const ProgressReporter& reportProgress);
    //! @pre `IsLeader()`
    void InsertInterval(const IntervalHolder& interval);
