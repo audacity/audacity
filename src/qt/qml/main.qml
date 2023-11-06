@@ -126,7 +126,7 @@ ApplicationWindow {
                }
             }
 
-            onObjectAdded: themeMenu.insertItem(index, object)
+            onObjectAdded: (index, object) => themeMenu.insertItem(index, object)
             onObjectRemoved: themeMenu.removeItem(object)
          }
       }
@@ -154,7 +154,7 @@ ApplicationWindow {
                onTriggered : extraMenu.activate(index)
             }
 
-            onObjectAdded: extras.insertItem(index, object)
+            onObjectAdded: (index, object) => extras.insertItem(index, object)
             onObjectRemoved: extras.removeItem(object)
          }
       }
