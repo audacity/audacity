@@ -219,6 +219,11 @@ class WAVE_TRACK_API WaveTrack final
    , public WaveChannel
 {
 public:
+   class Interval;
+   using IntervalHolder = std::shared_ptr<Interval>;
+   using IntervalHolders = std::vector<IntervalHolder>;
+   using IntervalConstHolder = std::shared_ptr<const Interval>;
+
    // Resolve ambiguous lookup
    using SampleTrack::GetFloats;
 
@@ -813,7 +818,13 @@ public:
    }
 
    /// @pre IsLeader()
-   void CreateWideClip(double offset = .0, const wxString& name = wxEmptyString);
+   //! Create new clip and add it to this track.
+   /*!
+    Returns a pointer to the newly created clip. Optionally initial offset and
+    clip name may be provided
+    */
+   IntervalHolder
+   CreateWideClip(double offset = .0, const wxString& name = wxEmptyString);
 
    //! Create new clip and add it to this track.
    /*!
@@ -822,7 +833,8 @@ public:
 
     @post result: `result->GetWidth() == GetWidth()`
     */
-   WaveClip* CreateClip(double offset = .0, const wxString& name = wxEmptyString);
+   WaveClipHolder
+   CreateClip(double offset = .0, const wxString& name = wxEmptyString);
 
    /** @brief Get access to the most recently added clip, or create a clip,
    *  if there is not already one.  THIS IS NOT NECESSARILY RIGHTMOST.
@@ -1049,10 +1061,6 @@ public:
       //! TODO wide wave tracks: eliminate this
       const std::shared_ptr<WaveClip> mpClip1;
    };
-
-   using IntervalHolder = std::shared_ptr<Interval>;
-   using IntervalHolders = std::vector<IntervalHolder>;
-   using IntervalConstHolder = std::shared_ptr<const Interval>;
 
    ///@return Interval that starts after(before) the beginning of the passed interval
    IntervalConstHolder GetNextInterval(

@@ -2639,7 +2639,7 @@ void WaveTrack::JoinOne(
    auto t = clipsToDelete[0]->GetPlayStartTime();
    //preserve left trim data if any
    newClip = track.CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
-      clipsToDelete[0]->GetName());
+      clipsToDelete[0]->GetName()).get();
 
    for (auto clip : clipsToDelete) {
       // wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
@@ -3776,14 +3776,19 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
       return NULL;
 }
 
-void WaveTrack::CreateWideClip(double offset, const wxString& name)
+auto WaveTrack::CreateWideClip(double offset, const wxString& name)
+   -> IntervalHolder
 {
    assert(IsLeader());
-   for(auto channel : TrackList::Channels(this))
-      channel->CreateClip(offset, name);
+   WaveClipHolders holders;
+   for (auto channel : TrackList::Channels(this))
+      holders.emplace_back(channel->CreateClip(offset, name));
+   return std::make_shared<Interval>(*this,
+      holders[0], (holders.size() > 1) ? holders[1] : nullptr);
 }
 
-WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
+auto WaveTrack::CreateClip(double offset, const wxString& name)
+   -> WaveClipHolder
 {
    // TODO wide wave tracks -- choose clip width correctly for the track
    auto clip = std::make_shared<WaveClip>(1,
@@ -3796,7 +3801,7 @@ WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    mClips.push_back(std::move(clip));
 
-   auto result = mClips.back().get();
+   auto result = mClips.back();
    // TODO wide wave tracks -- for now assertion is correct because widths are
    // always 1
    assert(result->GetWidth() == GetWidth());
@@ -3806,7 +3811,8 @@ WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 WaveClip* WaveTrack::NewestOrNewClip()
 {
    if (mClips.empty()) {
-      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
+      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName())
+         .get();
    }
    else
       return mClips.back().get();
@@ -3816,7 +3822,8 @@ WaveClip* WaveTrack::NewestOrNewClip()
 WaveClip* WaveTrack::RightmostOrNewClip()
 {
    if (mClips.empty()) {
-      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
+      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName())
+         .get();
    }
    else
    {
