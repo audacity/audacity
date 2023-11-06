@@ -281,6 +281,26 @@ public:
     */
    void Reinit(const WaveTrack &orig);
  private:
+   using ConstIterPair = std::pair<
+      WaveClipHolders::const_iterator, WaveClipHolders::const_iterator>;
+   /*!
+    @param clip is searched for in the leader channel
+    @pre `IsLeader()`
+    @return first is iterator to clip if found, and if stereo, second is the
+       corresponding clip of the other channel
+    */
+   ConstIterPair FindWideClip(const WaveClip &clip, int *pDistance = nullptr)
+      const;
+
+   using IterPair = std::pair<
+      WaveClipHolders::iterator, WaveClipHolders::iterator>;
+   /*!
+    @copydoc FindWideClip(const WaveClip &, int *)
+    */
+   IterPair FindWideClip(const WaveClip &clip, int *pDistance = nullptr);
+
+   void RemoveWideClip(IterPair pair);
+
    void Init(const WaveTrack &orig);
 
    TrackListHolder Clone() const override;

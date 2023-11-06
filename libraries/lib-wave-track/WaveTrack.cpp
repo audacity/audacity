@@ -1851,6 +1851,61 @@ namespace
    }
 }
 
+auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance) const
+   -> ConstIterPair
+{
+   const WaveClipHolders &list = mClips;
+   const WaveClipHolders *pList2{};
+   const auto channels = TrackList::Channels(this);
+   if (channels.size() > 1)
+      pList2 = &(*channels.rbegin())->mClips;
+   int distance = 0;
+   auto it = list.begin();
+   for (const auto end = list.end(); it != end; ++it) {
+      if (it->get() == &clip)
+         break;
+      ++distance;
+   }
+   if (pDistance)
+      *pDistance = distance;
+   WaveClipHolders::const_iterator it2{};
+   if (pList2)
+      it2 = pList2->begin() + distance;
+   return { it, it2 };
+}
+
+auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
+   -> IterPair
+{
+   WaveClipHolders &list = mClips;
+   WaveClipHolders *pList2{};
+   const auto channels = TrackList::Channels(this);
+   if (channels.size() > 1)
+      pList2 = &(*channels.rbegin())->mClips;
+   int distance = 0;
+   auto it = list.begin();
+   for (const auto end = list.end(); it != end; ++it) {
+      if (it->get() == &clip)
+         break;
+      ++distance;
+   }
+   if (pDistance)
+      *pDistance = distance;
+   WaveClipHolders::iterator it2{};
+   if (pList2)
+      it2 = pList2->begin() + distance;
+   return { it, it2 };
+}
+
+void WaveTrack::RemoveWideClip(IterPair pair)
+{
+   mClips.erase(pair.first);
+   const auto channels = TrackList::Channels(this);
+   if (channels.size() > 1)
+      (*channels.rbegin())->mClips.erase(pair.second);
+
+}
+
 std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
 {
    // Be clear about who owns the clip!!
