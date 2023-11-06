@@ -463,8 +463,45 @@ void Viewport::ZoomFitHorizontallyAndShowTrack(Track *pTrack)
       pTrack = *tracks.begin();
    if (pTrack) {
       TrackFocus::Get(project).Set(pTrack, true);
-      pTrack->EnsureVisible();
+      ShowTrack(*pTrack);
    }
+}
+
+void Viewport::ShowTrack(const Track &track)
+{
+   assert(track.IsLeader());
+   auto &viewInfo = ViewInfo::Get(mProject);
+
+   int trackTop = 0;
+   int trackHeight = 0;
+   for (auto it : TrackList::Get(mProject)) {
+      trackTop += trackHeight;
+      trackHeight = mpCallbacks ? mpCallbacks->GetTrackHeight(*it) : 0;
+
+      if (it == &track) {
+         //We have found the track we want to ensure is visible.
+
+         //Get the size of the trackpanel.
+         const auto size =
+            mpCallbacks ? mpCallbacks->ViewportSize() : std::pair{ 1, 1 };
+         auto [width, height] = size;
+
+         if (trackTop < viewInfo.vpos) {
+            height = viewInfo.vpos - trackTop + viewInfo.scrollStep;
+            height /= viewInfo.scrollStep;
+            ScrollUpDown(-height);
+         }
+         else if (trackTop + trackHeight > viewInfo.vpos + height) {
+            height = (trackTop + trackHeight) - (viewInfo.vpos + height);
+            height = (height + viewInfo.scrollStep + 1) / viewInfo.scrollStep;
+            ScrollUpDown(height);
+         }
+
+         break;
+      }
+   }
+
+   Publish({ true, false, false });
 }
 
 // Utility function called by other zoom methods

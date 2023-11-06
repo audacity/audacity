@@ -890,7 +890,7 @@ UIHandle::Result TimeShiftHandle::Drag
       // Scroll during vertical drag.
       // If the mouse is over a track that isn't the captured track,
       // decide which tracks the captured clips should go to.
-      // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
+      // Viewport::Get(*pProject).ShowTrack(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
 
       //move intervals with new start/end times
       DoSlideVertical(

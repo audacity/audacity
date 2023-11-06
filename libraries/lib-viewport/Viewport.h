@@ -61,6 +61,7 @@ struct ViewportMessage {
 class VIEWPORT_API Viewport final
    : public Observer::Publisher<ViewportMessage>
    , public ClientData::Base
+   , public std::enable_shared_from_this<Viewport>
 {
 public:
    static Viewport &Get(AudacityProject &project);
@@ -145,6 +146,11 @@ public:
    //! null, the first selected track, or if none such, the first track) is
    //! visible
    void ZoomFitHorizontallyAndShowTrack(Track *pTrack);
+
+   /*!
+    @pre `track.IsLeader()`
+    */
+   void ShowTrack(const Track &track);
 
    //! Find pixels-per-second that would fit all tracks on the timeline
    double GetZoomOfToFit() const;

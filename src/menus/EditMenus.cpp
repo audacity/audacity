@@ -158,7 +158,7 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
 
    if (pFirstNewTrack) {
       TrackFocus::Get(project).Set(pFirstNewTrack);
-      pFirstNewTrack->EnsureVisible();
+      Viewport::Get(project).ShowTrack(*pFirstNewTrack);
    }
 }
 
@@ -196,9 +196,8 @@ void OnUndo(const CommandContext &context)
    if (!t)
       t = *tracks.begin();
    TrackFocus::Get(project).Set(t);
-   if (t) {
-      t->EnsureVisible();
-   }
+   if (t)
+      Viewport::Get(project).ShowTrack(*t);
 }
 
 void OnRedo(const CommandContext &context)
@@ -225,9 +224,8 @@ void OnRedo(const CommandContext &context)
    if (!t)
       t = *tracks.begin();
    TrackFocus::Get(project).Set(t);
-   if (t) {
-      t->EnsureVisible();
-   }
+   if (t)
+      Viewport::Get(project).ShowTrack(*t);
 }
 
 void OnCut(const CommandContext &context)
@@ -656,7 +654,7 @@ void OnPaste(const CommandContext &context)
 
       if (ff) {
          TrackFocus::Get(project).Set(ff);
-         ff->EnsureVisible();
+         Viewport::Get(project).ShowTrack(*ff);
       }
    }
 }

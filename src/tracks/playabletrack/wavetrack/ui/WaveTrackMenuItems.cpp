@@ -15,6 +15,7 @@ Paul Licameli split from TrackMenus.cpp
 
 #include "SelectUtilities.h"
 #include "TrackFocus.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
 #include "MenuRegistry.h"
@@ -44,7 +45,7 @@ void OnNewWaveTrack(const CommandContext &context)
       .PushState(XO("Created new audio track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(track.get());
-   track->EnsureVisible();
+   Viewport::Get(project).ShowTrack(*track);
 }
 
 void OnNewStereoTrack(const CommandContext &context)
@@ -66,7 +67,7 @@ void OnNewStereoTrack(const CommandContext &context)
       .PushState(XO("Created new stereo audio track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(*tracks.rbegin());
-   (*tracks.rbegin())->EnsureVisible();
+   Viewport::Get(project).ShowTrack(**tracks.rbegin());
 }
 
 AttachedItem sAttachment{

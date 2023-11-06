@@ -1332,7 +1332,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          pTrack = *tracks.begin();
       if (pTrack) {
          TrackFocus::Get(project).Set(pTrack);
-         pTrack->EnsureVisible();
+         Viewport::Get(project).ShowTrack(*pTrack);
       }
    }
 

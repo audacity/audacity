@@ -130,7 +130,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
 
       trackPanel.SetFocus();
       TrackFocus::Get(project).Set(pNewTrack);
-      pNewTrack->EnsureVisible();
+      Viewport::Get(project).ShowTrack(*pNewTrack);
    }
 }
 

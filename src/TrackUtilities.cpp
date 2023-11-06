@@ -14,6 +14,7 @@
 #include "ProjectHistory.h"
 #include "TrackFocus.h"
 #include "TrackPanel.h"
+#include "Viewport.h"
 
 namespace TrackUtilities {
 
@@ -50,7 +51,7 @@ void DoRemoveTracks(AudacityProject &project)
    // If we actually have something left, then set focus and make sure it's seen
    if (f) {
       TrackFocus::Get(project).Set(f);
-      f->EnsureVisible();
+      Viewport::Get(project).ShowTrack(*f);
    }
 
    ProjectHistory::Get(project)

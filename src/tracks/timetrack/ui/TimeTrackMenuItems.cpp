@@ -15,6 +15,7 @@ Paul Licameli split from TrackMenus.cpp
 #include "SelectUtilities.h"
 #include "TimeTrack.h"
 #include "TrackFocus.h"
+#include "Viewport.h"
 #include "CommandContext.h"
 #include "MenuRegistry.h"
 #include "AudacityMessageBox.h"
@@ -44,7 +45,7 @@ void OnNewTimeTrack(const CommandContext &context)
       .PushState(XO("Created new time track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(t);
-   t->EnsureVisible();
+   Viewport::Get(project).ShowTrack(*t);
 }
 
 AttachedItem sAttachment{

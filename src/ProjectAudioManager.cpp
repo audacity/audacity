@@ -36,6 +36,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "TransportUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "toolbars/ToolManager.h"
@@ -963,7 +964,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(project).Set(first);
          if (!trackList.empty())
-            (*trackList.rbegin())->EnsureVisible();
+            Viewport::Get(project).ShowTrack(**trackList.rbegin());
       }
 
       //Automated Input Level Adjustment Initialization

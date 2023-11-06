@@ -285,9 +285,11 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
          return {};
       };
       auto &focus = TrackFocus::Get(*GetProject());
+      auto &viewport = Viewport::Get(*GetProject());
       TrackPanelAx *pAx{};
       SetAccessible(pAx =
-         safenew TrackPanelAx{ focus.weak_from_this(), finder });
+         safenew TrackPanelAx{
+            viewport.weak_from_this(), focus.weak_from_this(), finder });
       focus.SetCallbacks(std::make_unique<TrackPanelAx::Adapter>(pAx));
    }
 #endif
@@ -309,8 +311,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
          OnTrackListResizing(event); break;
       case TrackListEvent::DELETION:
          OnTrackListDeletion(); break;
-      case TrackListEvent::TRACK_REQUEST_VISIBLE:
-         OnEnsureVisible(event); break;
       default:
          break;
       }
@@ -531,11 +531,6 @@ void TrackPanel::MakeParentRedrawScrollbars()
    Viewport::Get(*GetProject()).UpdateScrollbarsForTracks();
 }
 
-void TrackPanel::MakeParentScrollVertically(int delta)
-{
-   Viewport::Get(*GetProject()).ScrollUpDown(delta);
-}
-
 namespace {
    std::shared_ptr<Track> FindTrack(TrackPanelCell *pCell )
    {
@@ -607,7 +602,7 @@ void TrackPanel::ProcessUIHandleResult
 
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack) {
       TrackFocus::Get(*GetProject()).Set(pClickedTrack);
-      pClickedTrack->EnsureVisible();
+      Viewport::Get(*GetProject()).ShowTrack(*pClickedTrack);
    }
 }
 
@@ -740,13 +735,13 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
 
    if (event.ButtonUp()) {
-      //EnsureVisible should be called after processing the up-click.
+      //ShowTrack should be called after processing the up-click.
       this->CallAfter( [this, event]{
          const auto foundCell = FindCell(event.m_x, event.m_y);
          const auto t = FindTrack( foundCell.pCell.get() );
          if ( t ) {
             TrackFocus::Get(*GetProject()).Set(t.get());
-            t->EnsureVisible();
+            Viewport::Get(*GetProject()).ShowTrack(*t);
          }
       } );
    }
@@ -1021,47 +1016,6 @@ void TrackPanel::OnTrackMenu(Track *t)
 {
    CellularPanel::DoContextMenu(
       t ? &ChannelView::Get(*t->GetChannel(0)) : nullptr);
-}
-
-// Tracks have been removed from the list.
-void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
-{
-   bool modifyState = e.mExtra;
-   auto pTrack = e.mpTrack.lock();
-   auto t = pTrack.get();
-   // Promised by TrackListEvent for this event type:
-   assert(!t || t->IsLeader());
-   int trackTop = 0;
-   int trackHeight =0;
-   for (auto it : *GetTracks()) {
-      trackTop += trackHeight;
-      trackHeight = ChannelView::GetChannelGroupHeight(it);
-
-      if (it == t) {
-         //We have found the track we want to ensure is visible.
-
-         //Get the size of the trackpanel.
-         int width, height;
-         GetSize(&width, &height);
-
-         if (trackTop < mViewInfo->vpos) {
-            height = mViewInfo->vpos - trackTop + mViewInfo->scrollStep;
-            height /= mViewInfo->scrollStep;
-            MakeParentScrollVertically(-height);
-         }
-         else if (trackTop + trackHeight > mViewInfo->vpos + height) {
-            height = (trackTop + trackHeight) - (mViewInfo->vpos + height);
-            height = (height + mViewInfo->scrollStep + 1) / mViewInfo->scrollStep;
-            MakeParentScrollVertically(height);
-         }
-
-         break;
-      }
-   }
-   Refresh(false);
-
-   if (modifyState)
-      ProjectHistory::Get(*GetProject()).ModifyState(false);
 }
 
 namespace {
