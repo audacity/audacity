@@ -174,6 +174,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
       }
    }
    else {
+      auto &viewport = Viewport::Get(*mProject);
       auto &window = ProjectWindow::Get( *mProject );
       auto &scroller = window.GetPlaybackScroller();
       // Calculate the horizontal position of the indicator
@@ -219,9 +220,9 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
                // just a little bit equal to the scrubbing poll interval
                // duration.
                newPos = viewInfo.OffsetTimeByPixels( newPos, -width );
-               newPos = std::max( newPos, window.ScrollingLowerBoundTime() );
+               newPos = std::max(newPos, viewport.ScrollingLowerBoundTime());
             }
-            window.SetHorizontalThumb(newPos);
+            viewport.SetHorizontalThumb(newPos);
             // Might yet be off screen, check it
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.hpos,
@@ -233,7 +234,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
       // Always update scrollbars even if not scrolling the window. This is
       // important when NEW audio is recorded, because this can change the
       // length of the project and therefore the appearance of the scrollbar.
-      window.UpdateScrollbarsForTracks();
+      viewport.UpdateScrollbarsForTracks();
 
       if (onScreen)
          mNewIndicatorX =

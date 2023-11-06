@@ -403,7 +403,7 @@ mutable -> unsigned {
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
    Scrubber &scrubber = Scrubber::Get( *pProject );
-   auto &window = ProjectWindow::Get( *pProject );
+   auto &viewport = Viewport::Get(*pProject);
    const auto steps = evt.steps;
 
    if (event.ShiftDown()
@@ -413,7 +413,7 @@ mutable -> unsigned {
       )
    {
       // MM: Scroll left/right when used with Shift key down
-      window.SetHorizontalThumb(
+      viewport.SetHorizontalThumb(
          viewInfo.OffsetTimeByPixels(
             viewInfo.PositionToTime(0), 50.0 * -steps));
    }
@@ -429,9 +429,9 @@ mutable -> unsigned {
          if( steps > 0 )
             // PRL:  Track panel refresh may be needed if you reenable this
             // code, but we don't want this file dependent on TrackPanel.cpp
-            p->ZoomInByFactor( ZoomFactor );
+            p->ZoomAboutSelection( ZoomFactor );
          else
-            p->ZoomOutByFactor( ZoomFactor );
+            p->ZoomAboutCenter( ZoomFactor );
 #endif
       // MM: Zoom in/out when used with Control key down
       // We're converting pixel positions to times,
@@ -510,7 +510,7 @@ mutable -> unsigned {
          double lines = steps * 4 + mVertScrollRemainder;
          mVertScrollRemainder = lines - floor(lines);
          lines = floor(lines);
-         auto didSomething = window.ScrollUpDown((int)-lines);
+         auto didSomething = viewport.ScrollUpDown((int)-lines);
          if (!didSomething)
             result |= Cancelled;
       }
@@ -554,13 +554,29 @@ AttachedWindows::RegisteredFactory sProjectWindowKey{
 
 ViewportCallbacks::~ViewportCallbacks() = default;
 
-Viewport::Viewport(AudacityProject &project)
-   : mwProject{ project.weak_from_this() }
-{}
+static const AudacityProject::AttachedObjects::RegisteredFactory
+sKey{
+  []( AudacityProject &project ){
+     auto result = std::make_shared<Viewport>(project);
+     return result;
+   }
+};
 
-void Viewport::SetCallbacks(ViewportCallbacks *pCallbacks)
+Viewport &Viewport::Get(AudacityProject &project)
 {
-   mpCallbacks = pCallbacks;
+   return project.AttachedObjects::Get<Viewport>(sKey);
+}
+
+const Viewport &Viewport::Get(const AudacityProject &project)
+{
+   return Get(const_cast<AudacityProject &>(project));
+}
+
+Viewport::Viewport(AudacityProject &project) : mProject{ project } {}
+
+void Viewport::SetCallbacks(std::unique_ptr<ViewportCallbacks> pCallbacks)
+{
+   mpCallbacks = move(pCallbacks);
 }
 
 ProjectWindow &ProjectWindow::Get( AudacityProject &project )
@@ -609,15 +625,90 @@ enum {
    NextID,
 };
 
+namespace {
+//! This allows either the ProjectWindow or the AudacityProject to be
+//! destroyed first.  This object is given to an attached object of the project.
+struct Adapter final : ViewportCallbacks {
+   explicit Adapter(ProjectWindow &window) : mwWindow{ &window } {}
+   ~Adapter() override = default;
+
+   std::pair<int, int> ViewportSize() const override
+   { return mwWindow ? mwWindow->ViewportSize() : std::pair{ 1, 1 }; }
+   bool MayScrollBeyondZero() const override
+   { return mwWindow ? mwWindow->MayScrollBeyondZero() : false; }
+
+   unsigned MinimumTrackHeight() override
+   { return mwWindow ? mwWindow->MinimumTrackHeight() : 0; }
+   bool IsTrackMinimized(const Track &track) override
+   { return mwWindow ? mwWindow->IsTrackMinimized(track) : false; }
+   void SetMinimized(Track &track, bool minimized) override
+   { if (mwWindow) mwWindow->SetMinimized(track, minimized); }
+   int GetTrackHeight(const Track &track) override
+   { return mwWindow ? mwWindow->GetTrackHeight(track) : 0; }
+   void SetChannelHeights(Track &track, unsigned height) override
+   { if (mwWindow) mwWindow->SetChannelHeights(track, height); }
+   int GetTotalHeight(const TrackList &trackList) override
+   { return mwWindow ? mwWindow->GetTotalHeight(trackList) : 0; }
+
+   int GetHorizontalThumbPosition() const override
+   { return mwWindow ? mwWindow->GetHorizontalThumbPosition() : 0; }
+   int GetHorizontalThumbSize() const override
+   { return mwWindow ? mwWindow->GetHorizontalThumbSize() : 0; }
+   int GetHorizontalRange() const override
+   { return mwWindow ? mwWindow->GetHorizontalRange() : 0; }
+   void SetHorizontalThumbPosition(int viewStart) override
+   {
+      if (mwWindow) mwWindow->SetHorizontalThumbPosition(viewStart);
+   }
+   void SetHorizontalScrollbar(int position, int thumbSize,
+      int range, int pageSize, bool refresh) override
+   {
+      if (mwWindow)
+         mwWindow->SetHorizontalScrollbar(
+           position, thumbSize, range, pageSize, refresh);
+   }
+   void ShowHorizontalScrollbar(bool shown) override
+   {
+      if (mwWindow)
+         mwWindow->ShowHorizontalScrollbar(shown);
+   }
+
+   int GetVerticalThumbPosition() const override
+   { return mwWindow ? mwWindow->GetVerticalThumbPosition() : 0; }
+   int GetVerticalThumbSize() const override
+   { return mwWindow ? mwWindow->GetVerticalThumbSize() : 0; }
+   int GetVerticalRange() const override
+   { return mwWindow ? mwWindow->GetVerticalRange() : 0; }
+   void SetVerticalThumbPosition(int viewStart) override
+   {
+      if (mwWindow) mwWindow->SetVerticalThumbPosition(viewStart);
+   }
+   void SetVerticalScrollbar(int position, int thumbSize,
+      int range, int pageSize, bool refresh) override
+   {
+      if (mwWindow)
+         mwWindow->SetVerticalScrollbar(
+           position, thumbSize, range, pageSize, refresh);
+   }
+   void ShowVerticalScrollbar(bool shown) override
+   {
+      if (mwWindow)
+         mwWindow->ShowVerticalScrollbar(shown);
+   }
+
+   wxWeakRef<ProjectWindow> mwWindow;
+};
+}
+
 ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    const wxPoint & pos,
    const wxSize & size, AudacityProject &project
-)  : Viewport{ project }
-   , ProjectWindowBase{ parent, id, pos, size, project }
+)  : ProjectWindowBase{ parent, id, pos, size, project }
    , mViewportSubscription{
-      Viewport::Subscribe(*this, &ProjectWindow::OnViewportMessage) }
+      Viewport::Get(project)
+         .Subscribe(*this, &ProjectWindow::OnViewportMessage) }
 {
-   Viewport::SetCallbacks(this);
+   Viewport::Get(project).SetCallbacks(std::make_unique<Adapter>(*this));
 
    mNextWindowID = NextID;
    
@@ -775,7 +866,7 @@ void ProjectWindow::RedrawProject()
    auto &project = *pProject;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = GetProjectPanel( project );
-   pThis->UpdateScrollbarsForTracks();
+   Viewport::Get(project).UpdateScrollbarsForTracks();
    trackPanel.Refresh(false);
 
    });
@@ -837,10 +928,7 @@ const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the 
 // Make sure selection edge is in view
 void Viewport::ScrollIntoView(double pos)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    auto w = viewInfo.GetTracksUsableWidth();
 
@@ -853,20 +941,14 @@ void Viewport::ScrollIntoView(double pos)
 
 void Viewport::ScrollIntoView(int x)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    ScrollIntoView(viewInfo.PositionToTime(x, viewInfo.GetLeftOffset()));
 }
 
 void Viewport::OnScrollLeft()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
    const auto prevPos = pos;
@@ -886,10 +968,7 @@ void Viewport::OnScrollLeft()
 
 void Viewport::OnScrollRight()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
    const auto prevPos = pos;
@@ -914,15 +993,15 @@ void Viewport::OnScrollRight()
 
 void ProjectWindow::OnScrollLeftButton(wxScrollEvent &)
 {
-   Viewport::OnScrollLeftButton();
+   auto pProject = FindProject();
+   if (!pProject)
+      return;
+   Viewport::Get(*pProject).OnScrollLeftButton();
 }
 
 void Viewport::OnScrollLeftButton()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
    const auto prevPos = pos;
@@ -941,15 +1020,15 @@ void Viewport::OnScrollLeftButton()
 
 void ProjectWindow::OnScrollRightButton(wxScrollEvent &)
 {
-   Viewport::OnScrollRightButton();
+   auto pProject = FindProject();
+   if (!pProject)
+      return;
+   Viewport::Get(*pProject).OnScrollRightButton();
 }
 
 void Viewport::OnScrollRightButton()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
    const auto prevPos = pos;
@@ -1112,10 +1191,7 @@ void ProjectWindow::ShowVerticalScrollbar(bool shown)
 
 double Viewport::ScrollingLowerBoundTime() const
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return 0;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &tracks = TrackList::Get(project);
    auto &viewInfo = ViewInfo::Get(project);
    if (!(mpCallbacks && mpCallbacks->MayScrollBeyondZero()))
@@ -1128,10 +1204,7 @@ double Viewport::ScrollingLowerBoundTime() const
 // That's why ViewInfo::TimeRangeToPixelWidth was defined, with some regret.
 double Viewport::PixelWidthBeforeTime(double scrollto) const
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return 0;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
    return
@@ -1143,10 +1216,7 @@ void Viewport::SetHorizontalThumb(double scrollto, bool doScroll)
 {
    if (!mpCallbacks)
       return;
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    const auto unscaled = PixelWidthBeforeTime(scrollto);
    const int max =
@@ -1198,10 +1268,7 @@ bool Viewport::ScrollUpDown(int delta)
 
 void Viewport::UpdateScrollbarsForTracks()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
@@ -1548,7 +1615,9 @@ void ProjectWindow::OnSize(wxSizeEvent & event)
    // keep track of wxShowEvent events and inhibit those actions until the
    // window is first shown.
    if (mShownOnce) {
-      HandleResize();
+      auto pProject = FindProject();
+      if (pProject)
+         Viewport::Get(*pProject).HandleResize();
       if (!this->IsMaximized() && !this->IsIconized())
          SetNormalizedWindowState(this->GetRect());
    }
@@ -1597,8 +1666,9 @@ void ProjectWindow::OnShow(wxShowEvent & event)
 ///
 void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
 {
-   HandleResize();
-
+   auto pProject = FindProject();
+   if (pProject)
+      Viewport::Get(*pProject).HandleResize();
    event.Skip(false);             /* No need to propagate any further */
 }
 
@@ -1609,13 +1679,17 @@ void ProjectWindow::OnUndoPushedModified()
 
 void ProjectWindow::OnUndoRedo()
 {
-   HandleResize();
+   auto pProject = FindProject();
+   if (pProject)
+      Viewport::Get(*pProject).HandleResize();
    RedrawProject();
 }
 
 void ProjectWindow::OnUndoReset()
 {
-   HandleResize();
+   auto pProject = FindProject();
+   if (pProject)
+      Viewport::Get(*pProject).HandleResize();
    // RedrawProject();  // Should we do this here too?
 }
 
@@ -1636,15 +1710,15 @@ void ProjectWindow::OnProjectTitleChange(ProjectFileIOMessage message)
 
 void ProjectWindow::OnScroll(wxScrollEvent &)
 {
-   Viewport::OnScroll();
+   auto pProject = FindProject();
+   if (!pProject)
+      return;
+   Viewport::Get(*pProject).OnScroll();
 }
 
 void Viewport::OnScroll()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    const wxInt64 offset = PixelWidthBeforeTime(0.0);
    const auto pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
@@ -1662,10 +1736,7 @@ void Viewport::OnScroll()
 
 void Viewport::DoScroll()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &trackPanel = GetProjectPanel( project );
    auto &viewInfo = ViewInfo::Get( project );
    const double lowerBound = ScrollingLowerBoundTime();
@@ -1786,12 +1857,9 @@ void ProjectWindow::OnMouseEvent(wxMouseEvent & event)
       SetActiveProject( &project );
 }
 
-void Viewport::ZoomAfterImport(Track *pTrack)
+void Viewport::ZoomFitHorizontallyAndShowTrack(Track *pTrack)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &tracks = TrackList::Get( project );
 
    ZoomFitHorizontally();
@@ -1807,14 +1875,11 @@ void Viewport::ZoomAfterImport(Track *pTrack)
 }
 
 // Utility function called by other zoom methods
-void Viewport::Zoom(double level)
+void Viewport::Zoom(double pixelsPerSecond)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
-   viewInfo.SetZoom(level);
+   viewInfo.SetZoom(pixelsPerSecond);
    UpdateScrollbarsForTracks();
    // See if we can center the selection on screen, and have it actually fit.
    // tOnLeft is the amount of time we would need before the selection left edge to center it.
@@ -1828,13 +1893,9 @@ void Viewport::Zoom(double level)
       SetHorizontalThumb(t0 - tOnLeft);
 }
 
-// Utility function called by other zoom methods
 void Viewport::ZoomBy(double multiplier)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.ZoomBy(multiplier);
    UpdateScrollbarsForTracks();
@@ -1842,10 +1903,7 @@ void Viewport::ZoomBy(double multiplier)
 
 void Viewport::ScrollToStart(bool extend)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.selectedRegion.setT0(0, false);
    if (!extend)
@@ -1863,10 +1921,7 @@ void Viewport::ScrollToTop()
 
 void Viewport::ScrollToEnd(bool extend)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &tracks = TrackList::Get(project);
    auto &viewInfo = ViewInfo::Get(project);
    double len = tracks.GetEndTime();
@@ -1881,10 +1936,7 @@ void Viewport::ScrollToEnd(bool extend)
 
 void Viewport::ScrollToBottom()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &tracks = TrackList::Get(project);
    auto &viewInfo = ViewInfo::Get(project);
 
@@ -1965,12 +2017,9 @@ void ProjectWindow::PlaybackScroller::OnTimer()
    }
 }
 
-void Viewport::ZoomInByFactor(double ZoomFactor)
+void Viewport::ZoomAboutSelection(double multiplier)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
 
    // DMM: Here's my attempt to get logical zooming behavior
@@ -2003,7 +2052,7 @@ void Viewport::ZoomInByFactor(double ZoomFactor)
             (endTime - viewInfo.selectedRegion.t0()) / 2;
 
       // Zoom in
-      ZoomBy(ZoomFactor);
+      ZoomBy(multiplier);
       const double newDuration =
          viewInfo.GetScreenEndTime() - viewInfo.hpos;
 
@@ -2015,7 +2064,7 @@ void Viewport::ZoomInByFactor(double ZoomFactor)
 
    double origLeft = viewInfo.hpos;
    double origWidth = duration;
-   ZoomBy(ZoomFactor);
+   ZoomBy(multiplier);
 
    const double newDuration =
       viewInfo.GetScreenEndTime() - viewInfo.hpos;
@@ -2037,19 +2086,16 @@ void Viewport::ZoomInByFactor(double ZoomFactor)
    SetHorizontalThumb(newh);
 }
 
-void Viewport::ZoomOutByFactor(double ZoomFactor)
+void Viewport::ZoomAboutCenter(double multiplier)
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
 
    //Zoom() may change these, so record original values:
    const double origLeft = viewInfo.hpos;
    const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
 
-   ZoomBy(ZoomFactor);
+   ZoomBy(multiplier);
    const double newWidth = viewInfo.GetScreenEndTime() - viewInfo.hpos;
 
    const double newh = origLeft + (origWidth - newWidth) / 2;
@@ -2059,10 +2105,7 @@ void Viewport::ZoomOutByFactor(double ZoomFactor)
 
 double Viewport::GetZoomOfToFit() const
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return 1.0;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &tracks = TrackList::Get(project);
    auto &viewInfo = ViewInfo::Get(project);
 
@@ -2082,10 +2125,7 @@ double Viewport::GetZoomOfToFit() const
 
 void Viewport::ZoomFitHorizontally()
 {
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get(project);
    auto &tracks = TrackList::Get(project);
 
@@ -2101,10 +2141,7 @@ void Viewport::ZoomFitVertically()
 {
    if (!mpCallbacks)
       return;
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &viewInfo = ViewInfo::Get(project);
    auto &tracks = TrackList::Get(project);
 
@@ -2138,10 +2175,7 @@ void Viewport::ExpandAllTracks()
 {
    if (!mpCallbacks)
       return;
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &tracks = TrackList::Get(project);
    for (auto t : tracks)
       mpCallbacks->SetMinimized(*t, false);
@@ -2151,10 +2185,7 @@ void Viewport::CollapseAllTracks()
 {
    if (!mpCallbacks)
       return;
-   auto pProject = LockProject();
-   if (!pProject)
-      return;
-   auto &project = *pProject;
+   auto &project = mProject;
    auto &tracks = TrackList::Get(project);
    for (auto t : tracks)
       mpCallbacks->SetMinimized(*t, true);

@@ -26,11 +26,11 @@ namespace {
 double GetZoomOfSelection( const AudacityProject &project )
 {
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    const double lowerBound =
       std::max(viewInfo.selectedRegion.t0(),
-         window.ScrollingLowerBoundTime());
+         viewport.ScrollingLowerBoundTime());
    const double denom =
       viewInfo.selectedRegion.t1() - lowerBound;
    if (denom <= 0.0)
@@ -59,8 +59,8 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
    const double pixelsPerUnit = 5.0;
 
    double result = 1.0;
-   auto &window = ProjectWindow::Get( project );
-   double zoomToFit = window.GetZoomOfToFit();
+   auto &viewport = Viewport::Get(project);
+   double zoomToFit = viewport.GetZoomOfToFit();
    using namespace WaveChannelViewConstants;
    switch(preset) {
       default:
@@ -125,7 +125,7 @@ void OnZoomIn(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    auto gAudioIO = AudioIO::Get();
    // LLL: Handling positioning differently when audio is
@@ -133,11 +133,11 @@ void OnZoomIn(const CommandContext &context)
    if (gAudioIO->IsStreamActive(
          ProjectAudioIO::Get(project).GetAudioIOToken()) &&
        !gAudioIO->IsPaused()){
-      window.ZoomBy(2.0);
-      window.ScrollIntoView(gAudioIO->GetStreamTime());
+      viewport.ZoomBy(2.0);
+      viewport.ScrollIntoView(gAudioIO->GetStreamTime());
    }
    else
-      window.ZoomInByFactor(2.0);
+      viewport.ZoomAboutSelection(2.0);
 
    trackPanel.Refresh(false);
 }
@@ -146,27 +146,25 @@ void OnZoomNormal(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   window.Zoom(ZoomInfo::GetDefaultZoom());
+   auto &viewport = Viewport::Get(project);
+   viewport.Zoom(ZoomInfo::GetDefaultZoom());
    trackPanel.Refresh(false);
 }
 
 void OnZoomOut(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   window.ZoomOutByFactor( 1 /2.0 );
+   auto &viewport = Viewport::Get(project);
+   viewport.ZoomAboutCenter(0.5);
 }
 
 void OnZoomSel(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
-
-   window.Zoom( GetZoomOfSelection( project ) );
-   window.SetHorizontalThumb(selectedRegion.t0());
+   auto &viewport = Viewport::Get(project);
+   viewport.Zoom(GetZoomOfSelection(project));
+   viewport.SetHorizontalThumb(selectedRegion.t0());
 }
 
 void OnZoomToggle(const CommandContext &context)
@@ -174,7 +172,7 @@ void OnZoomToggle(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
 //   const double origLeft = viewInfo.h;
 //   const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
@@ -186,7 +184,7 @@ void OnZoomToggle(const CommandContext &context)
    double ChosenZoom =
       fabs(log(Zoom1 / Z)) > fabs(log( Z / Zoom2)) ? Zoom1:Zoom2;
 
-   window.Zoom(ChosenZoom);
+   viewport.Zoom(ChosenZoom);
    trackPanel.Refresh(false);
 //   const double newWidth = GetScreenEndTime() - viewInfo.h;
 //   const double newh = origLeft + (origWidth - newWidth) / 2;
@@ -196,16 +194,15 @@ void OnZoomToggle(const CommandContext &context)
 void OnZoomFit(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   window.ZoomFitHorizontally();
+   auto &viewport = Viewport::Get(project);
+   viewport.ZoomFitHorizontally();
 }
 
 void OnZoomFitV(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-
-   window.ZoomFitVertically();
+   auto &viewport = Viewport::Get(project);
+   viewport.ZoomFitVertically();
    ProjectHistory::Get( project ).ModifyState(true);
 }
 
@@ -224,14 +221,14 @@ void OnAdvancedVZoom(const CommandContext &context)
 void OnCollapseAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectWindow::Get(project).CollapseAllTracks();
+   Viewport::Get(project).CollapseAllTracks();
    ProjectHistory::Get(project).ModifyState(true);
 }
 
 void OnExpandAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectWindow::Get(project).ExpandAllTracks();
+   Viewport::Get(project).ExpandAllTracks();
    ProjectHistory::Get(project).ModifyState(true);
 }
 
@@ -240,12 +237,12 @@ void OnGoSelStart(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    if (selectedRegion.isPoint())
       return;
 
-   window.SetHorizontalThumb(
+   viewport.SetHorizontalThumb(
       selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.hpos) / 2));
 }
 
@@ -254,12 +251,12 @@ void OnGoSelEnd(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    if (selectedRegion.isPoint())
       return;
 
-   window.SetHorizontalThumb(
+   viewport.SetHorizontalThumb(
       selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.hpos) / 2));
 }
 

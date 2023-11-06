@@ -528,12 +528,12 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 void TrackPanel::MakeParentRedrawScrollbars()
 {
-   ProjectWindow::Get(*GetProject()).UpdateScrollbarsForTracks();
+   Viewport::Get(*GetProject()).UpdateScrollbarsForTracks();
 }
 
 void TrackPanel::MakeParentScrollVertically(int delta)
 {
-   ProjectWindow::Get(*GetProject()).ScrollUpDown(delta);
+   Viewport::Get(*GetProject()).ScrollUpDown(delta);
 }
 
 namespace {
@@ -603,7 +603,7 @@ void TrackPanel::ProcessUIHandleResult
       panel->MakeParentRedrawScrollbars();
 
    if (refreshResult & Resize)
-      ProjectWindow::Get(*GetProject()).HandleResize();
+      Viewport::Get(*GetProject()).HandleResize();
 
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack) {
       TrackFocus::Get(*GetProject()).Set(pClickedTrack);
@@ -613,13 +613,13 @@ void TrackPanel::ProcessUIHandleResult
 
 void TrackPanel::HandlePageUpKey()
 {
-   ProjectWindow::Get(*GetProject())
+   Viewport::Get(*GetProject())
       .SetHorizontalThumb(2 * mViewInfo->hpos - mViewInfo->GetScreenEndTime());
 }
 
 void TrackPanel::HandlePageDownKey()
 {
-   ProjectWindow::Get(*GetProject())
+   Viewport::Get(*GetProject())
       .SetHorizontalThumb(mViewInfo->GetScreenEndTime());
 }
 
@@ -670,7 +670,7 @@ void TrackPanel::UpdateViewIfNoTracks()
       // Bug 972
       mViewInfo->hpos = 0;
 
-      ProjectWindow::Get(*GetProject()).HandleResize();
+      Viewport::Get(*GetProject()).HandleResize();
       //STM: Clear message if all tracks are removed
       ProjectStatus::Get( *GetProject() ).Set({});
    }

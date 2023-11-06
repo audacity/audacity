@@ -164,6 +164,7 @@ void InitProjectWindow( ProjectWindow &window )
    if (!pProject)
       return;
    auto &project = *pProject;
+   auto &viewport = Viewport::Get(project);
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -285,7 +286,7 @@ void InitProjectWindow( ProjectWindow &window )
    // MM: Give track panel the focus to ensure keyboard commands work
    trackPanel.SetFocus();
 
-   window.UpdateScrollbarsForTracks();
+   viewport.UpdateScrollbarsForTracks();
    ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
 
    //
@@ -723,8 +724,8 @@ AudacityProject *ProjectManager::OpenProject(
 
       auto &projectFileIO = ProjectFileIO::Get( *pProject );
       if( projectFileIO.IsRecovered() ) {
-         auto &window = ProjectWindow::Get( *pProject );
-         window.Zoom( window.GetZoomOfToFit() );
+         auto &viewport = Viewport::Get(*pProject);
+         viewport.Zoom(viewport.GetZoomOfToFit());
          // "Project was recovered" replaces "Create new project" in Undo History.
          auto &undoManager = UndoManager::Get( *pProject );
          undoManager.RemoveStates(0, 1);

@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.h
 #define __AUDACITY_PROJECT_WINDOW__
 
 #include <memory>
+#include "ClientData.h"
 #include "ProjectWindowBase.h" // to inherit
 #include "Prefs.h"
 #include "Observer.h"
@@ -72,12 +73,16 @@ struct ViewportMessage {
    const bool resize;
 };
 
-class AUDACITY_DLL_API Viewport
+class AUDACITY_DLL_API Viewport final
    : public Observer::Publisher<ViewportMessage>
+   , public ClientData::Base
 {
 public:
+   static Viewport &Get(AudacityProject &project);
+   static const Viewport &Get(const AudacityProject &project);
+
    explicit Viewport(AudacityProject &project);
-   void SetCallbacks(ViewportCallbacks *pCallbacks);
+   void SetCallbacks(std::unique_ptr<ViewportCallbacks> pCallbacks);
 
    double ScrollingLowerBoundTime() const;
 
@@ -107,7 +112,11 @@ public:
    void ScrollToTop();
    void ScrollToBottom();
 
+   //! Center view horizontally at the given time, if it was not in bounds
    void ScrollIntoView(double pos);
+
+   //! Center the view horizontally at the given pixel position relative to
+   //! the left edge, if it was not in bounds
    void ScrollIntoView(int x);
 
    /// This method handles general left-scrolling, either for drag-scrolling
@@ -134,11 +143,25 @@ public:
 
    void SetHorizontalThumb(double scrollto, bool doScroll = true);
 
-   void Zoom(double level);
-   void ZoomInByFactor( double ZoomFactor );
-   void ZoomOutByFactor( double ZoomFactor );
+   //! Set timeline magnification; unchanged left edge time
+   void Zoom(double pixelsPerSecond);
+
+   //! Multiply the magnification; unchanged left edge time
    void ZoomBy(double multiplier);
-   void ZoomAfterImport(Track *pTrack);
+
+   //! Multiply timeline magnification, conserving a selected portion that
+   //! incompletely fills the width, if possible; else like ZoomAboutCenter
+   void ZoomAboutSelection(double multiplier);
+
+   //! Multiply timeline magnification, conserving the midpoint time if possible
+   void ZoomAboutCenter(double multiplier);
+
+   //! Fit horizontally; scroll vertically so that the given track (or if that's
+   //! null, the first selected track, or if none such, the first track) is
+   //! visible
+   void ZoomFitHorizontallyAndShowTrack(Track *pTrack);
+
+   //! Find pixels-per-second that would fit all tracks on the timeline
    double GetZoomOfToFit() const;
 
    /// Set horizontal zoom according to the extents of the tracks, and scroll
@@ -158,7 +181,7 @@ public:
 
    void HandleResize();
 
-   bool mbInitializingScrollbar{ false };
+   void ReinitScrollbars() { mbInitializingScrollbar = true; }
 
 private:
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
@@ -167,22 +190,16 @@ private:
 
    void FinishAutoScroll();
 
-   std::shared_ptr<AudacityProject> LockProject()
-      { return mwProject.lock(); }
-   std::shared_ptr<const AudacityProject> LockProject() const
-      { return mwProject.lock(); }
-
-   std::weak_ptr<AudacityProject> mwProject;
-   ViewportCallbacks *mpCallbacks{};
+   AudacityProject &mProject;
+   std::unique_ptr<ViewportCallbacks> mpCallbacks{};
    bool mAutoScrolling{ false };
+   bool mbInitializingScrollbar{ false };
 };
 
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
 class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
-   , public ViewportCallbacks
-   , public Viewport // this inheritance will be removed
-   , public PrefsListener
+, public PrefsListener
    , public Observer::Publisher<ProjectWindowDestroyedMessage>
 {
 public:
@@ -280,29 +297,29 @@ public:
    void OnScrollLeftButton(wxScrollEvent & event);
    void OnScrollRightButton(wxScrollEvent & event);
 
-   std::pair<int, int> ViewportSize() const override;
-   bool MayScrollBeyondZero() const override;
-   unsigned MinimumTrackHeight() override;
-   bool IsTrackMinimized(const Track &track) override;
-   void SetMinimized(Track &track, bool minimized) override;
-   int GetTrackHeight(const Track &track) override;
-   void SetChannelHeights(Track &track, unsigned height) override;
-   int GetTotalHeight(const TrackList &trackList) override;
-   int GetHorizontalThumbPosition() const override;
-   int GetHorizontalThumbSize() const override;
-   int GetHorizontalRange() const override;
-   void SetHorizontalThumbPosition(int viewStart) override;
+   std::pair<int, int> ViewportSize() const;
+   bool MayScrollBeyondZero() const;
+   unsigned MinimumTrackHeight() ;
+   bool IsTrackMinimized(const Track &track) ;
+   void SetMinimized(Track &track, bool minimized) ;
+   int GetTrackHeight(const Track &track) ;
+   void SetChannelHeights(Track &track, unsigned height) ;
+   int GetTotalHeight(const TrackList &trackList) ;
+   int GetHorizontalThumbPosition() const ;
+   int GetHorizontalThumbSize() const ;
+   int GetHorizontalRange() const ;
+   void SetHorizontalThumbPosition(int viewStart) ;
    void SetHorizontalScrollbar(int position, int thumbSize,
-      int range, int pageSize, bool refresh) override;
-   void ShowHorizontalScrollbar(bool shown) override;
+      int range, int pageSize, bool refresh) ;
+   void ShowHorizontalScrollbar(bool shown) ;
 
-   int GetVerticalThumbPosition() const override;
-   int GetVerticalThumbSize() const override;
-   int GetVerticalRange() const override;
-   void SetVerticalThumbPosition(int viewStart) override;
+   int GetVerticalThumbPosition() const ;
+   int GetVerticalThumbSize() const ;
+   int GetVerticalRange() const ;
+   void SetVerticalThumbPosition(int viewStart) ;
    void SetVerticalScrollbar(int position, int thumbSize,
-      int range, int pageSize, bool refresh) override;
-   void ShowVerticalScrollbar(bool shown) override;
+      int range, int pageSize, bool refresh) ;
+   void ShowVerticalScrollbar(bool shown) ;
 
    // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
    // TrackPanel access

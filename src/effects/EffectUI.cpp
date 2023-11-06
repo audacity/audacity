@@ -1151,6 +1151,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    auto rate = ProjectRate::Get(project).GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &commandManager = CommandManager::Get( project );
+   auto &viewport = Viewport::Get(project);
    auto &window = ProjectWindow::Get( project );
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
@@ -1308,7 +1309,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    if (type == EffectTypeGenerate)
    {
       if (!anyTracks || (clean && selectedRegion.t0() == 0.0))
-         window.ZoomFitHorizontally();
+         viewport.ZoomFitHorizontally();
    }
 
    // PRL:  RedrawProject explicitly because sometimes history push is skipped
@@ -1323,7 +1324,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    // Don't care what track type.  An analyser might just have added a
    // Label track and we want to see it.
    if (tracks.Size() > nTracksOriginally) {
-      window.ScrollToBottom();
+      viewport.ScrollToBottom();
    }
    else {
       auto pTrack = *tracks.Selected().begin();

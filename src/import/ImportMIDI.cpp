@@ -66,7 +66,7 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
             XO("Import MIDI")
          );
       
-      ProjectWindow::Get( project ).ZoomAfterImport(pTrack);
+      Viewport::Get(project).ZoomFitHorizontallyAndShowTrack(pTrack);
       FileHistory::Global().Append(fileName);
 
       // If the project was clean and temporary (not permanently saved), then set

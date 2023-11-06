@@ -973,7 +973,7 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
          if (FileNames::IsMidi(fileName)) {
             auto &project = chooser(false);
             // If this succeeds, indo history is incremented, and it also does
-            // ZoomAfterImport:
+            // ZoomFitHorizontallyAndShowTrack:
             if(DoImportMIDI(project, fileName))
                return &project;
             return nullptr;
@@ -985,7 +985,7 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
             // Undo history is incremented inside this:
             // Bug 2743: Don't zoom with lof.
             if (!fileName.AfterLast('.').IsSameAs(wxT("lof"), false))
-               ProjectWindow::Get(project).ZoomAfterImport(nullptr);
+               Viewport::Get(project).ZoomFitHorizontallyAndShowTrack(nullptr);
             return &project;
          }
          return nullptr;
@@ -1069,7 +1069,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get( project );
 
    auto results = ReadProjectFile( fileName );
    const bool bParseSuccess = results.parseSuccess;
@@ -1077,11 +1077,11 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const bool err = results.trackError;
 
    if (bParseSuccess && !err) {
-      window.mbInitializingScrollbar = true;
+      Viewport::Get(project).ReinitScrollbars();
 
       ProjectHistory::Get( project ).InitialState();
       TrackFocus::Get(project).Set(*tracks.begin());
-      window.HandleResize();
+      viewport.HandleResize();
       trackPanel.Refresh(false);
 
       // ? Old rationale in this comment no longer applies in 3.0.0, with no

@@ -71,6 +71,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 {
    auto &tracks = TrackList::Get( project );
    auto &trackFocus = TrackFocus::Get( project );
+   auto &viewport = Viewport::Get(project);
    auto &window = ProjectWindow::Get( project );
    auto &projectAudioManager = ProjectAudioManager::Get(project);
 
@@ -112,7 +113,7 @@ void DoMoveToLabel(AudacityProject &project, bool next)
          }
          else {
             selectedRegion = label->selectedRegion;
-            window.ScrollIntoView(selectedRegion.t0());
+            viewport.ScrollIntoView(selectedRegion.t0());
             window.RedrawProject();
          }
          /* i18n-hint:
