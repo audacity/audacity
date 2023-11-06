@@ -894,10 +894,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       wxString isPreviewing = (this->IsPreviewing())? wxT("T") : wxT("NIL");
       mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing);
 
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
-                                 Internat::ToString(mT0));
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
-                                 Internat::ToString(mT1));
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList);
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
    }
@@ -1029,6 +1025,13 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
+
+            mPerTrackProps += wxString::Format(
+                wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
+                Internat::ToString(mCurChannelGroup->SnapToSample(mT0)));
+            mPerTrackProps += wxString::Format(
+                wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
+                Internat::ToString(mCurChannelGroup->SnapToSample(mT1)));
          }
 
          success = ProcessOne(nyxContext, oOutputs ? &*oOutputs : nullptr);
