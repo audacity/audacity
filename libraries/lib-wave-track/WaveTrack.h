@@ -1011,8 +1011,16 @@ public:
       { return iChannel == 0 ? mpClip : mpClip1; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
       { return iChannel == 0 ? mpClip : mpClip1; }
+
+      /** Insert silence at the end, and causes the envelope to ramp
+          linearly to the given value */
+      void AppendSilence(double len, double envelopeValue);
+
+      bool Paste(double t0, const Interval &src);
+
    private:
       const Envelope& GetEnvelope() const;
+
       void SetEnvelope(const Envelope& envelope);
 
       // Helper function in time of migration to wide clips

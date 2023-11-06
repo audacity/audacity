@@ -363,6 +363,23 @@ bool WaveTrack::Interval::StretchRatioEquals(double value) const
    return true;
 }
 
+/** Insert silence at the end, and causes the envelope to ramp
+    linearly to the given value */
+void WaveTrack::Interval::AppendSilence(double len, double envelopeValue)
+{
+   ForEachClip([&](WaveClip &clip){ clip.AppendSilence(len, envelopeValue); });
+}
+
+bool WaveTrack::Interval::Paste(double t0, const Interval &src)
+{
+   bool result = true;
+   ForCorrespondingClips(*this, src,
+   [&](WaveClip &dstClip, const WaveClip &srcClip){
+      result = result && dstClip.Paste(t0, srcClip);
+   });
+   return result;
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
