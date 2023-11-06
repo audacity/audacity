@@ -8489,7 +8489,7 @@ msgstr "<p>В этом выпуске мы добавили такты и раз
 #: src/SplashDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr "Ознайомтесь із [[%s|видео релиза]] или прочитайте [[https://support.audacityteam.org/additional-resources/changelog|changelog]], чтоб узнать больше!</p>"
+msgstr "Ознакомьтесь в [[%s|видео релиза]] или прочитайте [[https://support.audacityteam.org/additional-resources/changelog|журнал изменений]], чтобы узнать больше!</p>"
 
 #: src/SplashDialog.cpp
 msgid "How to get help"
@@ -8513,7 +8513,7 @@ msgstr " [[help:Main_Page|Учебник]]"
 
 #: src/SplashDialog.cpp
 msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
+msgstr "[[https://support.audacityteam.org/|Пособия и рекомендации]]"
 
 #: src/SplashDialog.cpp
 msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
