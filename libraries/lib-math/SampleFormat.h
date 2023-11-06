@@ -28,6 +28,7 @@ extern MATH_API DitherType gLowQualityDither, gHighQualityDither;
 //! The ordering of these values with operator < agrees with the order of increasing bit width
 /*! These values persist in saved project files, so must not be changed in later program versions */
 enum class sampleFormat : unsigned {
+   undefinedSample = 0,
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
    floatSample = 0x0004000F,
@@ -38,6 +39,7 @@ enum class sampleFormat : unsigned {
 };
 
 // C++20 using enum sampleFormat;
+constexpr sampleFormat undefinedSample = sampleFormat::undefinedSample;
 constexpr sampleFormat int16Sample = sampleFormat::int16Sample;
 constexpr sampleFormat int24Sample = sampleFormat::int24Sample;
 constexpr sampleFormat floatSample = sampleFormat::floatSample;
