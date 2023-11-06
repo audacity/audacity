@@ -44,8 +44,11 @@ struct float_x4
     s.n128_f32[1] = v1;
     s.n128_f32[2] = v2;
     s.n128_f32[3] = v3;
-#else
+#elif __clang__
     s = {v0, v1, v2, v3};
+#else
+    float f[4] = {v0, v1, v2, v3};
+    s = vld1q_f32(f);
 #endif
   }
 
