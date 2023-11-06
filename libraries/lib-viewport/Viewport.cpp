@@ -82,16 +82,13 @@ void Viewport::ScrollIntoView(int x)
 void Viewport::OnScrollLeft()
 {
    auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
    const auto prevPos = pos;
    // move at least one scroll increment
-   pos -= std::max<wxInt64>((sbarHjump * viewInfo.sbarScale), 1);
+   pos -= std::max<wxInt64>((sbarHjump * sbarScale), 1);
    pos = std::max<wxInt64>(pos, 0);
-   viewInfo.sbarH -= sbarHjump;
-   viewInfo.sbarH = std::max(viewInfo.sbarH,
-      -(wxInt64) PixelWidthBeforeTime(0.0));
-
+   sbarH -= sbarHjump;
+   sbarH = std::max<wxInt64>(sbarH, -PixelWidthBeforeTime(0.0));
 
    if (mpCallbacks && pos != prevPos) {
       mpCallbacks->SetHorizontalThumbPosition(static_cast<int>(pos));
@@ -102,21 +99,19 @@ void Viewport::OnScrollLeft()
 void Viewport::OnScrollRight()
 {
    auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
    const auto prevPos = pos;
    // move at least one scroll increment
    // use wxInt64 for calculation to prevent temporary overflow
-   pos += std::max<wxInt64>((sbarHjump * viewInfo.sbarScale), 1);
+   pos += std::max<wxInt64>((sbarHjump * sbarScale), 1);
    wxInt64 max = mpCallbacks
       ? mpCallbacks->GetHorizontalRange()
          - mpCallbacks->GetHorizontalThumbSize()
       : 0;
    pos = std::min(pos, max);
-   viewInfo.sbarH += sbarHjump;
-   viewInfo.sbarH = std::min(viewInfo.sbarH,
-      viewInfo.sbarTotal
-         - (wxInt64) PixelWidthBeforeTime(0.0) - viewInfo.sbarScreen);
+   sbarH += sbarHjump;
+   sbarH = std::min<wxInt64>(sbarH,
+      sbarTotal - PixelWidthBeforeTime(0.0) - sbarScreen);
 
    if (mpCallbacks && pos != prevPos) {
       mpCallbacks->SetHorizontalThumbPosition(static_cast<int>(pos));
@@ -127,15 +122,13 @@ void Viewport::OnScrollRight()
 void Viewport::OnScrollLeftButton()
 {
    auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
    const auto prevPos = pos;
    // move at least one scroll increment
-   pos -= std::max<wxInt64>((sbarHjump * viewInfo.sbarScale), 1);
+   pos -= std::max<wxInt64>((sbarHjump * sbarScale), 1);
    pos = std::max<wxInt64>(pos, 0);
-   viewInfo.sbarH -= sbarHjump;
-   viewInfo.sbarH = std::max(viewInfo.sbarH,
-      - (wxInt64) PixelWidthBeforeTime(0.0));
+   sbarH -= sbarHjump;
+   sbarH = std::max<wxInt64>(sbarH, -PixelWidthBeforeTime(0.0));
 
    if (mpCallbacks && pos != prevPos) {
       mpCallbacks->SetHorizontalThumbPosition(static_cast<int>(pos));
@@ -146,21 +139,19 @@ void Viewport::OnScrollLeftButton()
 void Viewport::OnScrollRightButton()
 {
    auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
    wxInt64 pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
    const auto prevPos = pos;
    // move at least one scroll increment
    // use wxInt64 for calculation to prevent temporary overflow
-   pos += std::max<wxInt64>((sbarHjump * viewInfo.sbarScale), 1);
+   pos += std::max<wxInt64>((sbarHjump * sbarScale), 1);
    wxInt64 max = mpCallbacks
       ? mpCallbacks->GetHorizontalRange()
          - mpCallbacks->GetHorizontalThumbSize()
       : 0;
    pos = std::min(pos, max);
-   viewInfo.sbarH += sbarHjump;
-   viewInfo.sbarH = std::min(viewInfo.sbarH,
-      viewInfo.sbarTotal
-         - (wxInt64) PixelWidthBeforeTime(0.0) - viewInfo.sbarScreen);
+   sbarH += sbarHjump;
+   sbarH = std::min<wxInt64>(sbarH,
+      sbarTotal - PixelWidthBeforeTime(0.0) - sbarScreen);
 
    if (mpCallbacks && pos != prevPos) {
       mpCallbacks->SetHorizontalThumbPosition(static_cast<int>(pos));
@@ -196,21 +187,15 @@ void Viewport::SetHorizontalThumb(double scrollto, bool doScroll)
    if (!mpCallbacks)
       return;
    auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get( project );
    const auto unscaled = PixelWidthBeforeTime(scrollto);
    const int max =
       mpCallbacks->GetHorizontalRange() - mpCallbacks->GetHorizontalThumbSize();
-   const int pos =
-      std::min(max,
-         std::max(0,
-            (int)(floor(0.5 + unscaled * viewInfo.sbarScale))));
+   const int pos = std::clamp<int>(floor(0.5 + unscaled * sbarScale), 0, max);
    mpCallbacks->SetHorizontalThumbPosition(pos);
-   viewInfo.sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
-   viewInfo.sbarH = std::max(viewInfo.sbarH,
-      - (wxInt64) PixelWidthBeforeTime(0.0));
-   viewInfo.sbarH = std::min(viewInfo.sbarH,
-      viewInfo.sbarTotal
-         - (wxInt64) PixelWidthBeforeTime(0.0) - viewInfo.sbarScreen);
+   sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
+   sbarH = std::clamp<wxInt64>(sbarH,
+      -PixelWidthBeforeTime(0.0),
+      sbarTotal - PixelWidthBeforeTime(0.0) - sbarScreen);
 
    if (doScroll)
       DoScroll();
@@ -270,8 +255,7 @@ void Viewport::UpdateScrollbarsForTracks()
    const auto panelHeight = std::max(0, viewInfo.GetHeight());
 
    // Whether scrollbars are visible now
-   const bool oldhstate =
-      (viewInfo.GetScreenEndTime() - viewInfo.hpos) < viewInfo.total;
+   const bool oldhstate = (viewInfo.GetScreenEndTime() - viewInfo.hpos) < total;
    const bool oldvstate = panelHeight < totalHeight;
 
    const auto LastTime = std::accumulate(tracks.begin(), tracks.end(),
@@ -297,10 +281,10 @@ void Viewport::UpdateScrollbarsForTracks()
       ? -lowerBound + std::max(halfScreen, screen - LastTime)
       : screen / 4.0;
 
-   viewInfo.total = LastTime + additional;
+   total = LastTime + additional;
 
    // Don't remove time from total that's still on the screen
-   viewInfo.total = std::max(viewInfo.total, viewInfo.hpos + screen);
+   total = std::max(total, viewInfo.hpos + screen);
 
    // Scroll the view later if needed to respect the lower bound
    if (viewInfo.hpos < lowerBound) {
@@ -309,9 +293,9 @@ void Viewport::UpdateScrollbarsForTracks()
    }
 
    // To compute new horizontal scrollbar settings
-   viewInfo.sbarTotal = (wxInt64) (viewInfo.GetTotalWidth());
-   viewInfo.sbarScreen = (wxInt64)(panelWidth);
-   viewInfo.sbarH = (wxInt64) (viewInfo.GetBeforeScreenWidth());
+   sbarTotal = static_cast<wxInt64>(total * viewInfo.GetZoom());
+   sbarScreen = static_cast<wxInt64>(panelWidth);
+   sbarH = static_cast<wxInt64>(viewInfo.GetBeforeScreenWidth());
 
    // PRL:  Can someone else find a more elegant solution to bug 812, than
    // introducing this boolean member variable?
@@ -322,7 +306,7 @@ void Viewport::UpdateScrollbarsForTracks()
    if (!mbInitializingScrollbar)
       viewInfo.vpos =
          (mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0)
-         * viewInfo.scrollStep;
+         * scrollStep;
    mbInitializingScrollbar = false;
 
    // Constrain new top of visible area
@@ -331,7 +315,7 @@ void Viewport::UpdateScrollbarsForTracks()
    // Decide whether the tracks are large enough to scroll for the zoom level
    // and heights
    bool newhstate =
-      (viewInfo.GetScreenEndTime() - viewInfo.hpos) < viewInfo.total;
+      (viewInfo.GetScreenEndTime() - viewInfo.hpos) < total;
    bool newvstate = panelHeight < totalHeight;
 
    // Hide scrollbar thumbs and buttons if not scrollable
@@ -348,8 +332,8 @@ void Viewport::UpdateScrollbarsForTracks()
       refresh = true;
       rescroll = false;
    }
-   if (!newhstate && viewInfo.sbarH != 0) {
-      viewInfo.sbarH = 0;
+   if (!newhstate && sbarH != 0) {
+      sbarH = 0;
 
       refresh = true;
       rescroll = false;
@@ -363,17 +347,17 @@ void Viewport::UpdateScrollbarsForTracks()
    // Don't use the full 2^31 max int range but a bit less, so rounding
    // errors in calculations do not overflow max int
    wxInt64 maxScrollbarRange = (wxInt64)(2147483647 * 0.999);
-   if (viewInfo.sbarTotal > maxScrollbarRange)
-      viewInfo.sbarScale = ((double)maxScrollbarRange) / viewInfo.sbarTotal;
+   if (sbarTotal > maxScrollbarRange)
+      sbarScale = (static_cast<double>(maxScrollbarRange)) / sbarTotal;
    else
-      viewInfo.sbarScale = 1.0; // use maximum resolution
+      sbarScale = 1.0; // use maximum resolution
 
    {
-      int scaledSbarH = (int)(viewInfo.sbarH * viewInfo.sbarScale);
-      int scaledSbarScreen = (int)(viewInfo.sbarScreen * viewInfo.sbarScale);
-      int scaledSbarTotal = (int)(viewInfo.sbarTotal * viewInfo.sbarScale);
-      const int offset =
-         (int)(floor(0.5 + viewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
+      auto scaledSbarH = static_cast<int>(sbarH * sbarScale);
+      auto scaledSbarScreen = static_cast<int>(sbarScreen * sbarScale);
+      auto scaledSbarTotal = static_cast<int>(sbarTotal * sbarScale);
+      const auto offset =
+         static_cast<int>(floor(0.5 + sbarScale * PixelWidthBeforeTime(0.0)));
 
       if (mpCallbacks)
          mpCallbacks->SetHorizontalScrollbar(
@@ -382,13 +366,13 @@ void Viewport::UpdateScrollbarsForTracks()
    }
 
    if (mpCallbacks)
-      mpCallbacks->SetVerticalScrollbar(viewInfo.vpos / viewInfo.scrollStep,
-         panelHeight / viewInfo.scrollStep,
-         totalHeight / viewInfo.scrollStep,
-         panelHeight / viewInfo.scrollStep, true);
+      mpCallbacks->SetVerticalScrollbar(viewInfo.vpos / scrollStep,
+         panelHeight / scrollStep,
+         totalHeight / scrollStep,
+         panelHeight / scrollStep, true);
 
    rescroll = (rescroll &&
-       (viewInfo.GetScreenEndTime() - viewInfo.hpos) < viewInfo.total);
+       (viewInfo.GetScreenEndTime() - viewInfo.hpos) < total);
    Publish({ (refresh || rescroll),
       (oldhstate != newhstate || oldvstate != newvstate), false });
 }
@@ -407,7 +391,7 @@ void Viewport::OnScroll()
    auto &viewInfo = ViewInfo::Get( project );
    const wxInt64 offset = PixelWidthBeforeTime(0.0);
    const auto pos = mpCallbacks ? mpCallbacks->GetHorizontalThumbPosition() : 0;
-   viewInfo.sbarH = static_cast<wxInt64>(pos / viewInfo.sbarScale) - offset;
+   sbarH = static_cast<wxInt64>(pos / sbarScale) - offset;
    DoScroll();
 
 #ifndef __WXMAC__
@@ -426,7 +410,8 @@ void Viewport::DoScroll()
    const double lowerBound = ScrollingLowerBoundTime();
 
    auto width = viewInfo.GetTracksUsableWidth();
-   viewInfo.SetBeforeScreenWidth(viewInfo.sbarH, width, lowerBound);
+   const auto zoom = viewInfo.GetZoom();
+   viewInfo.hpos = std::clamp(sbarH / zoom, lowerBound, total - width / zoom);
 
    if (mpCallbacks && mpCallbacks->MayScrollBeyondZero()) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
@@ -439,7 +424,7 @@ void Viewport::DoScroll()
    }
 
    const auto pos = mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0;
-   viewInfo.vpos = pos * viewInfo.scrollStep;
+   viewInfo.vpos = pos * scrollStep;
 
    //mchinen: do not always set this project to be the active one.
    //a project may autoscroll while playing in the background
@@ -487,13 +472,13 @@ void Viewport::ShowTrack(const Track &track)
          auto [width, height] = size;
 
          if (trackTop < viewInfo.vpos) {
-            height = viewInfo.vpos - trackTop + viewInfo.scrollStep;
-            height /= viewInfo.scrollStep;
+            height = viewInfo.vpos - trackTop + scrollStep;
+            height /= scrollStep;
             ScrollUpDown(-height);
          }
          else if (trackTop + trackHeight > viewInfo.vpos + height) {
             height = (trackTop + trackHeight) - (viewInfo.vpos + height);
-            height = (height + viewInfo.scrollStep + 1) / viewInfo.scrollStep;
+            height = (height + scrollStep + 1) / scrollStep;
             ScrollUpDown(height);
          }
 
@@ -584,7 +569,7 @@ void Viewport::ScrollToBottom()
    const auto size =
       mpCallbacks ? mpCallbacks->ViewportSize() : std::pair{ 1, 1 };
    const auto [width, height] = size;
-   const auto step = viewInfo.scrollStep;
+   const auto step = scrollStep;
    const int delta = ((trackTop + trackHeight - height) - viewInfo.vpos
       + step) / step;
    ScrollUpDown(delta);

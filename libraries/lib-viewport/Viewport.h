@@ -183,6 +183,23 @@ private:
 
    AudacityProject &mProject;
    std::unique_ptr<ViewportCallbacks> mpCallbacks{};
+
+   double total{ 1.0 };                // total width in secs
+
+   // Current horizontal scroll bar positions, in pixels
+   wxInt64 sbarH{ 0 };
+   wxInt64 sbarScreen{ 1 };
+   wxInt64 sbarTotal{ 1 };
+
+   // Internal wxScrollbar positions are only int in range, so multiply
+   // the above values with the following member to get the actual
+   // scroll bar positions as reported by the horizontal wxScrollbar's members
+   // i.e. units are scroll increments per pixel
+   double sbarScale{ 1.0 };
+
+   // Vertical scroll step
+   int scrollStep{ 16 };
+
    bool mAutoScrolling{ false };
    bool mbInitializingScrollbar{ false };
 };
