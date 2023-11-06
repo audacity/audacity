@@ -473,16 +473,6 @@ void WaveTrack::Interval::SetEnvelope(const Envelope& envelope)
    mpClip->SetEnvelope(std::make_unique<Envelope>(envelope));
 }
 
-void WaveTrack::Interval::ForEachClip(const std::function<void(WaveClip&)>& op)
-{
-   for(unsigned channel = 0,
-      channelCount = NChannels();
-      channel < channelCount; ++channel)
-   {
-      op(*GetClip(channel));
-   }
-}
-
 std::shared_ptr<ChannelInterval>
 WaveTrack::Interval::DoGetChannel(size_t iChannel)
 {

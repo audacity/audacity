@@ -996,7 +996,25 @@ public:
       void SetEnvelope(const Envelope& envelope);
 
       // Helper function in time of migration to wide clips
-      void ForEachClip(const std::function<void(WaveClip&)>& op);
+      template<typename Callable> void ForEachClip(const Callable& op) {
+         for (size_t channel = 0, channelCount = NChannels();
+            channel < channelCount; ++channel)
+            op(*GetClip(channel));
+      }
+
+      // Helper function in time of migration to wide clips
+      /*!
+       @pre `src.NChannels() == dst.NChannels()`
+       */
+      template<typename Callable>
+      static void ForCorrespondingClips(Interval &dst, const Interval &src,
+         const Callable& binop)
+      {
+         const auto channelCount = src.NChannels();
+         assert(channelCount == dst.NChannels());
+         for (size_t channel = 0; channel < channelCount; ++channel)
+            binop(*dst.GetClip(channel), *src.GetClip(channel));
+      }
 
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
       const std::shared_ptr<WaveClip> mpClip;
