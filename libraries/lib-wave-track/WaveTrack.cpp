@@ -2594,33 +2594,28 @@ void WaveTrack::Join(
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
    const auto intervals = Intervals();
-   IntervalHolders intervalsToJoin;
-   for (auto interval : intervals)
-      if (interval->IntersectsPlayRegion(t0, t1))
-         intervalsToJoin.push_back(interval);
-   if (intervalsToJoin.size() < 2u)
-      return;
-   if (std::any_of(
-          intervalsToJoin.begin() + 1, intervalsToJoin.end(),
-          [first =
-              intervalsToJoin[0]->GetStretchRatio()](const auto& interval) {
-             return first != interval->GetStretchRatio();
-          }))
-      ApplyStretchRatioOnIntervals(intervalsToJoin, reportProgress);
 
-   for (const auto pChannel : TrackList::Channels(this))
-      JoinOne(*pChannel, t0, t1);
-}
+   {
+      IntervalHolders intervalsToJoin;
+      for (const auto &interval : intervals)
+         if (interval->IntersectsPlayRegion(t0, t1))
+            intervalsToJoin.push_back(interval);
+      if (intervalsToJoin.size() < 2u)
+         return;
+      if (std::any_of(
+             intervalsToJoin.begin() + 1, intervalsToJoin.end(),
+             [first =
+                 intervalsToJoin[0]->GetStretchRatio()](const auto& interval) {
+                return first != interval->GetStretchRatio();
+             }))
+         ApplyStretchRatioOnIntervals(intervalsToJoin, reportProgress);
+   }
 
-void WaveTrack::JoinOne(
-   WaveTrack& track, double t0, double t1)
-{
-   WaveClipPointers clipsToDelete;
-   WaveClip* newClip{};
+   IntervalHolders clipsToDelete;
+   IntervalHolder newClip{};
 
-   const auto rate = track.GetRate();
-   auto &clips = track.mClips;
-   for (const auto &clip: clips) {
+   const auto rate = GetRate();
+   for (const auto &clip: intervals) {
       if (clip->IntersectsPlayRegion(t0, t1)) {
          // Put in sorted order
          auto it = clipsToDelete.begin(), end = clipsToDelete.end();
@@ -2628,20 +2623,22 @@ void WaveTrack::JoinOne(
             if ((*it)->GetPlayStartTime() > clip->GetPlayStartTime())
                break;
          //wxPrintf("Insert clip %.6f at position %d\n", clip->GetStartTime(), i);
-         clipsToDelete.insert(it, clip.get());
+         clipsToDelete.insert(it, clip);
       }
    }
 
-   //if there are no clips to DELETE, nothing to do
+   //if there are no clips to delete, nothing to do
    if (clipsToDelete.empty())
       return;
 
-   auto t = clipsToDelete[0]->GetPlayStartTime();
+   const auto firstToDelete = clipsToDelete[0].get();
+   auto t = firstToDelete->GetPlayStartTime();
    //preserve left trim data if any
-   newClip = track.CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
-      clipsToDelete[0]->GetName()).get();
+   newClip = CreateWideClip(
+      firstToDelete->GetSequenceStartTime(),
+      firstToDelete->GetName());
 
-   for (auto clip : clipsToDelete) {
+   for (const auto &clip : clipsToDelete) {
       // wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
       //       t, clip->GetOffset(), clip->GetStartTime(),
       //       clip->GetEndTime());
@@ -2651,7 +2648,7 @@ void WaveTrack::JoinOne(
          double addedSilence = (clip->GetPlayStartTime() - t);
          // wxPrintf("Adding %.6f seconds of silence\n");
          auto offset = clip->GetPlayStartTime();
-         auto value = clip->GetEnvelope()->GetValue(offset);
+         auto value = clip->GetEnvelope().GetValue(offset);
          newClip->AppendSilence(addedSilence, value);
          t += addedSilence;
       }
@@ -2662,8 +2659,7 @@ void WaveTrack::JoinOne(
 
       t = newClip->GetPlayEndTime();
 
-      auto it = FindClip(clips, clip);
-      clips.erase(it); // deletes the clip
+      RemoveWideClip(FindWideClip(*clip->GetClip(0)));
    }
 }
 

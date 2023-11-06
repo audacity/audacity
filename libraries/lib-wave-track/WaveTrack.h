@@ -1030,9 +1030,9 @@ public:
 
       bool Paste(double t0, const Interval &src);
 
-   private:
       const Envelope& GetEnvelope() const;
 
+   private:
       void SetEnvelope(const Envelope& envelope);
 
       // Helper function in time of migration to wide clips
