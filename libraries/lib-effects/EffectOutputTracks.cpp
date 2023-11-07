@@ -103,6 +103,15 @@ Track *EffectOutputTracks::AddToOutputTracks(TrackList &&list)
    return result;
 }
 
+const Track* EffectOutputTracks::GetMatchingInput(const Track& outTrack) const
+{
+   const auto it = std::find(mOMap.begin(), mOMap.end(), &outTrack);
+   if (it == mOMap.end())
+      return nullptr;
+   const auto index = it - mOMap.begin();
+   return mIMap[index];
+}
+
 // Replace tracks with successfully processed mOutputTracks copies.
 // Else clear and delete mOutputTracks copies.
 void EffectOutputTracks::Commit()

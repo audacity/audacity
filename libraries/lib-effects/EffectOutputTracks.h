@@ -69,6 +69,12 @@ public:
     */
    Track *AddToOutputTracks(TrackList &&list);
 
+   /*!
+    * @brief Gets the matching input track for the given output track if it
+    * finds its match, else nullptr.
+    */
+   const Track* GetMatchingInput(const Track& outTrack) const;
+
    //! Replace input tracks with temporaries only on commit
    /*
     @pre `Commit()` was not previously called

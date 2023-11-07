@@ -894,10 +894,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       wxString isPreviewing = (this->IsPreviewing())? wxT("T") : wxT("NIL");
       mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing);
 
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
-                                 Internat::ToString(mT0));
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
-                                 Internat::ToString(mT1));
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList);
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
    }
@@ -1029,6 +1025,13 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
+
+            mPerTrackProps += wxString::Format(
+                wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
+                Internat::ToString(mCurChannelGroup->SnapToSample(mT0)));
+            mPerTrackProps += wxString::Format(
+                wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
+                Internat::ToString(mCurChannelGroup->SnapToSample(mT1)));
          }
 
          success = ProcessOne(nyxContext, oOutputs ? &*oOutputs : nullptr);
@@ -1223,6 +1226,42 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
    return TransferDataFromEffectWindow();
 }
 
+namespace
+{
+wxString GetClipBoundaries(const Track* t)
+{
+   wxString clips;
+   const auto wt = dynamic_cast<const WaveTrack*>(t);
+   if (!wt)
+      return clips;
+   auto ca = wt->SortedClipArray();
+   // Each clip is a list (start-time, end-time)
+   // Limit number of clips added to avoid argument stack overflow error (bug
+   // 2300).
+   for (size_t i = 0, n = ca.size(); i < n; ++i)
+   {
+      if (i < 1000)
+      {
+         clips += wxString::Format(
+            wxT("(list (float %s) (float %s))"),
+            Internat::ToString(ca[i]->GetPlayStartTime()),
+            Internat::ToString(ca[i]->GetPlayEndTime()));
+      }
+      else if (i == 1000)
+      {
+         // If final clip is NIL, plug-in developer knows there are more than
+         // 1000 clips in channel.
+         clips += "NIL";
+      }
+      else if (i > 1000)
+      {
+         break;
+      }
+   }
+   return clips;
+};
+} // namespace
+
 // NyquistEffect implementation
 
 bool NyquistEffect::ProcessOne(
@@ -1344,34 +1383,25 @@ bool NyquistEffect::ProcessOne(
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat);
 
       float maxPeakLevel = 0.0;  // Deprecated as of 2.1.3
-      const auto clipBoundaries = [&]() -> wxString {
-         wxString clips;
-         auto ca = mCurChannelGroup->SortedClipArray();
-         // Each clip is a list (start-time, end-time)
-         // Limit number of clips added to avoid argument stack overflow error (bug 2300).
-         for (size_t i = 0, n = ca.size(); i < n; ++i) {
-            if (i < 1000) {
-               clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                  Internat::ToString(ca[i]->GetPlayStartTime()),
-                  Internat::ToString(ca[i]->GetPlayEndTime()));
-            } else if (i == 1000) {
-               // If final clip is NIL, plug-in developer knows there are more than 1000 clips in channel.
-               clips += "NIL";
-            } else if (i > 1000) {
-               break;
-            }
-         }
-         return clips;
-      }();
-      wxString clips, peakString, rmsString;
+      const auto inClipBoundaries = GetClipBoundaries(
+         pOutputs ? pOutputs->GetMatchingInput(*mCurChannelGroup) : nullptr);
+      const auto outClipBoundaries = GetClipBoundaries(mCurChannelGroup);
+      wxString inClips, outClips, peakString, rmsString;
       auto &mCurTrack = nyxContext.mCurTrack;
       for (size_t i = 0; i < mCurNumChannels; i++) {
          float maxPeak = 0.0;
          if (mCurNumChannels > 1)
-            clips += wxT("(list ");
-         clips += clipBoundaries;
+         {
+            inClips += wxT("(list ");
+            outClips += wxT("(list ");
+         }
+         inClips += inClipBoundaries;
+         outClips += outClipBoundaries;
          if (mCurNumChannels > 1)
-            clips += wxT(" )");
+         {
+            inClips += wxT(" )");
+            outClips += wxT(" )");
+         }
          float min, max;
          auto pair = mCurTrack[i]->GetMinMax(mT0, mT1); // may throw
          min = pair.first, max = pair.second;
@@ -1393,9 +1423,12 @@ bool NyquistEffect::ProcessOne(
          }
       }
       // A list of clips for mono, or an array of lists for multi-channel.
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
-                              (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
-                              clips);
+      cmd += wxString::Format(
+         wxT("(putprop '*TRACK* %s%s ) 'INCLIPS)\n"),
+         (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "), inClips);
+      cmd += wxString::Format(
+         wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
+         (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "), outClips);
 
       (mCurNumChannels > 1)?
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'PEAK)\n"), peakString) :
