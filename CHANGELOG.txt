@@ -1,5 +1,20 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.4.1
+
+ This is a hotfix release. It fixes the following bugs:
+
+   * #5467 Fix 24-bit recording.
+   * #5488 Fix a crash with .aup importing.
+   * #5471 #5483 Fix crossfading of clips and tracks.
+   * #5473 Exporting multiple files honors sample rate settings again.
+   * #5480 #5417 Fix crashes related to external program exports.
+   * #5479 #5476 Fix BSD and ARM builds.
+   * #5498 Ctrl+J is now a standard shortcut for joining clips.
+   * #5389 Stereo tracks no longer randomly split into mono.
+   * #5007 When exporting a file, the file extension is now always added (except for custom FFmpeg and external program exports).
+   * #5516 Fix a crash when exporting Opus with older CPUs that don't support AVX.
+
 Changes in version 3.4.0
 
 Audacity 3.4 adds a musical view, time stretching and a new exporter.
