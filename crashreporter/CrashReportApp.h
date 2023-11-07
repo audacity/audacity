@@ -24,6 +24,7 @@ class CrashReportApp final : public wxApp
     std::map<std::string, std::string> mArguments;
 
     bool mSilent{ false };
+    bool mShowError { false };
 public:
     bool OnInit() override;
     void OnInitCmdLine(wxCmdLineParser& parser) override;
