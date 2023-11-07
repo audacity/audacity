@@ -24,7 +24,7 @@ if( NOT opusfile_FOUND )
          add_library( opusfile::opusfile INTERFACE IMPORTED GLOBAL )
 
          target_include_directories( opusfile::opusfile INTERFACE ${opusfile_INCLUDE_DIR} "${opusfile_INCLUDE_DIR}/opus" )
-         target_link_libraries( opusfile::opusfile INTERFACE ${Oopusfile_LIBRARIES} )
+         target_link_libraries( opusfile::opusfile INTERFACE ${opusfile_LIBRARIES} )
       endif()
 
       mark_as_advanced(

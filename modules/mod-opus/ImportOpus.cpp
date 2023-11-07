@@ -331,7 +331,7 @@ opus_int64 OpusImportFileHandle::OpusTellCallback(void* pstream)
 {
    auto stream = static_cast<OpusImportFileHandle*>(pstream);
 
-   return opus_int64(stream->mFile.Tell());
+   return static_cast<opus_int64>(stream->mFile.Tell());
 }
 
 int OpusImportFileHandle::OpusCloseCallback(void* pstream)
