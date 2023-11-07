@@ -33,7 +33,23 @@ namespace
         return std::wstring_convert<std::codecvt_utf8<std::wstring::traits_type::char_type>, std::wstring::traits_type::char_type>().from_bytes(utf8);
     }
 
-    bool SendMinidump(const std::string& url, const wxString& minidumpPath, const std::map<std::string, std::string>& arguments, const wxString& commentsFilePath)
+    wxString StringifyReportResult(google_breakpad::ReportResult result)
+    {
+       switch(result)
+       {
+       case google_breakpad::RESULT_FAILED:
+           return "RESULT_FAILED";
+       case google_breakpad::RESULT_REJECTED:
+           return "RESULT_REJECTED";
+       case google_breakpad::RESULT_SUCCEEDED:
+           return "RESULT_SUCCEEDED";
+       case google_breakpad::RESULT_THROTTLED:
+           return "RESULT_THROTTLED";
+       }
+       return "unknown result";
+    }
+
+    bool SendMinidump(const std::string& url, const wxString& minidumpPath, const std::map<std::string, std::string>& arguments, const wxString& commentsFilePath, wxString& errorString)
     {
         std::map<std::wstring, std::wstring> files;
         files[L"upload_file_minidump"] = minidumpPath.wc_str();
@@ -56,6 +72,10 @@ namespace
             files,
             nullptr
         );
+
+        if(result != google_breakpad::RESULT_SUCCEEDED)
+            errorString = wxString::Format("SendMinidump filed with result: %s", StringifyReportResult(result));
+        
         return result == google_breakpad::RESULT_SUCCEEDED;
     }
 }
@@ -65,7 +85,7 @@ namespace
 
 namespace
 {
-    bool SendMinidump(const std::string& url, const wxString& minidumpPath, const std::map<std::string, std::string>& arguments, const wxString& commentsFilePath)
+    bool SendMinidump(const std::string& url, const wxString& minidumpPath, const std::map<std::string, std::string>& arguments, const wxString& commentsFilePath, wxString& error)
     {
         std::map<std::string, std::string> files;
         files["upload_file_minidump"] = minidumpPath.ToStdString();
@@ -85,6 +105,9 @@ namespace
             &response,
             NULL,
             &error);
+
+        if(!success)
+            errorString = wxString::Format("SendMinidump failed with error: %s", error.c_str());
             
         return success;
     }
@@ -395,7 +418,12 @@ bool CrashReportApp::OnInit()
     if (mSilent)
     {
         if (!mURL.empty())
-            SendMinidump(mURL, mMinidumpPath, mArguments, wxEmptyString);
+        {
+            wxString error;
+            auto result = SendMinidump(mURL, mMinidumpPath, mArguments, wxEmptyString, error);
+            if(!result && mShowError)
+                wxMessageBox(error);
+        }
     }
     else
     {
@@ -439,6 +467,7 @@ void CrashReportApp::OnInitCmdLine(wxCmdLineParser& parser)
     static const wxCmdLineEntryDesc cmdLineEntryDesc[] =
     {
          { wxCMD_LINE_SWITCH, "s", "silent", "Send without displaying the confirmation dialog" },
+         {wxCMD_LINE_SWITCH, "e", "error_code", "Show error code/message on sending failure" },
          { wxCMD_LINE_OPTION, "u", "url", "Crash report server URL", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
          { wxCMD_LINE_OPTION, "a", "args", "A set of arguments to send", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
          { wxCMD_LINE_PARAM,  NULL, NULL, "path to minidump file", wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY },
@@ -472,6 +501,7 @@ bool CrashReportApp::OnCmdLineParsed(wxCmdLineParser& parser)
     }
     mMinidumpPath = parser.GetParam(0);
     mSilent = parser.Found("s");
+    mShowError = parser.Found("e");
     
     return wxApp::OnCmdLineParsed(parser);
 }
@@ -501,13 +531,17 @@ void CrashReportApp::ShowCrashReport(const wxString& header, const wxString& tex
                     }
                 }
 
-                auto result = SendMinidump(mURL, mMinidumpPath, mArguments, commentsFilePath);
+                wxString error;
+                auto result = SendMinidump(mURL, mMinidumpPath, mArguments, commentsFilePath, error);
                 if (!commentsFilePath.empty())
                     wxRemoveFile(commentsFilePath);
 
                 if (!result)
                 {
-                    wxMessageBox(_("Failed to send crash report"));
+                    if(mShowError)
+                        wxMessageBox(error);
+                    else
+                        wxMessageBox(_("Failed to send crash report"));
                 }
                 return result;
             });
