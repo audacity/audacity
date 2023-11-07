@@ -617,14 +617,17 @@ void OnPaste(const CommandContext &context)
                   bPastedSomething = true;
                   // For correct remapping of preserved split lines:
                   PasteTimeWarper warper{ t1, t0 + src->GetEndTime() };
-                  // New desired behaviour as of 3.4: pasting should result in a
-                  // new clip - don't erase boundaries to surrounding clips ...
-                  constexpr auto merge = false;
-                  // ... and of course, don't preserve the boundaries strictly
-                  // in [t0, t1].
-                  constexpr auto preserveExistingBoundaries = false;
-                  // Data in `[t0, t1]` must be recoverable though trimming.
-                  constexpr auto clearByTrimming = true;
+                  const auto newClipOnPaste =
+                     gPrefs->ReadBool(wxT("/GUI/PasteAsNewClips"), false);
+                  // The new-clip-on-paste behavior means: not merging the
+                  // clipboard data with data at the selection borders; not
+                  // reproducing boundaries within the selected region in the
+                  // new clip; preserving the data underneath by trimming
+                  // (rather than deleting).
+                  // The legacy behavior is the opposite.
+                  const auto merge = newClipOnPaste ? false : true;
+                  const auto preserveExistingBoundaries = newClipOnPaste ? false : true;
+                  auto clearByTrimming = newClipOnPaste ? true : false;
                   wn.ClearAndPaste(
                      t0, t1, *static_cast<const WaveTrack*>(src),
                      preserveExistingBoundaries, merge, &warper,
@@ -1042,7 +1045,7 @@ const ReservedCommandFlag
    {
       if(AudioIOBusyPred(project))
          return false;
-      
+
       const auto &viewInfo = ViewInfo::Get(project);
       if(viewInfo.selectedRegion.isPoint())
          return false;
