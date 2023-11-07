@@ -8,6 +8,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-playable-track-interface
+   lib-snapping-interface
    lib-track-selection-interface
 )
 audacity_library( lib-viewport "${SOURCES}" "${LIBRARIES}"

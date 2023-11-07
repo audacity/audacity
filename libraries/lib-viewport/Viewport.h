@@ -183,8 +183,17 @@ private:
 
    void FinishAutoScroll();
 
+   void OnUndoPushedModified();
+   void OnUndoRedo();
+   void OnUndoReset();
+
    AudacityProject &mProject;
    std::unique_ptr<ViewportCallbacks> mpCallbacks{};
+
+   const Observer::Subscription
+        mSnappingChangedSubscription
+      , mUndoSubscription
+   ;
 
    double total{ 1.0 };                // total width in secs
 

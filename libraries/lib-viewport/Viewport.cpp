@@ -12,7 +12,9 @@ Paul Licameli split from ProjectWindow.cpp
 #include "BasicUI.h"
 #include "PlayableTrack.h" // just for AudioTrack
 #include "Project.h"
+#include "ProjectSnap.h"
 #include "TrackFocus.h"
+#include "UndoManager.h"
 #include "ViewInfo.h"
 
 #include <numeric>
@@ -37,7 +39,26 @@ const Viewport &Viewport::Get(const AudacityProject &project)
    return Get(const_cast<AudacityProject &>(project));
 }
 
-Viewport::Viewport(AudacityProject &project) : mProject{ project } {}
+Viewport::Viewport(AudacityProject &project)
+   : mProject{ project }
+   , mSnappingChangedSubscription{
+      ProjectSnap::Get(project).Subscribe([this](auto&){ Redraw(); }) }
+   , mUndoSubscription{
+      UndoManager::Get(project).Subscribe([this](UndoRedoMessage message){
+         switch (message.type) {
+         case UndoRedoMessage::Pushed:
+         case UndoRedoMessage::Modified:
+            return OnUndoPushedModified();
+         case UndoRedoMessage::UndoOrRedo:
+            return OnUndoRedo();
+         case UndoRedoMessage::Reset:
+            return OnUndoReset();
+         default:
+            return;
+         }
+      }) }
+{
+}
 
 void Viewport::SetCallbacks(std::unique_ptr<ViewportCallbacks> pCallbacks)
 {
@@ -758,4 +779,21 @@ void Viewport::Redraw()
       UpdateScrollbarsForTracks();
       Publish({ true, false, false });
    });
+}
+
+void Viewport::OnUndoPushedModified()
+{
+   Redraw();
+}
+
+void Viewport::OnUndoRedo()
+{
+   HandleResize();
+   Redraw();
+}
+
+void Viewport::OnUndoReset()
+{
+   HandleResize();
+   // Redraw();  // Should we do this here too?
 }

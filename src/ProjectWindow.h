@@ -184,9 +184,6 @@ public:
    void OnMove(wxMoveEvent & event);
    void OnScroll(wxScrollEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
-   void OnUndoPushedModified();
-   void OnUndoRedo();
-   void OnUndoReset();
    void OnProjectTitleChange(ProjectFileIOMessage);
 
 private:
@@ -212,8 +209,8 @@ private:
 private:
    void OnViewportMessage(const ViewportMessage &message);
 
-   Observer::Subscription mUndoSubscription
-      , mThemeChangeSubscription
+   Observer::Subscription
+        mThemeChangeSubscription
       , mTitleChangeSubscription
       , mSnappingChangedSubscription
    ;

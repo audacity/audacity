@@ -17,8 +17,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 #include "ProjectWindows.h"
 #include "ProjectStatus.h"
-#include "ProjectSnap.h"
-#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -618,21 +616,6 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mHsbar->SetName(_("Horizontal Scrollbar"));
    mVsbar->SetName(_("Vertical Scrollbar"));
 
-   mUndoSubscription = UndoManager::Get(project)
-      .Subscribe([this](UndoRedoMessage message){
-         switch (message.type) {
-         case UndoRedoMessage::Pushed:
-         case UndoRedoMessage::Modified:
-            return OnUndoPushedModified();
-         case UndoRedoMessage::UndoOrRedo:
-            return OnUndoRedo();
-         case UndoRedoMessage::Reset:
-            return OnUndoReset();
-         default:
-            return;
-         }
-      });
-
    mThemeChangeSubscription =
       theTheme.Subscribe(*this, &ProjectWindow::OnThemeChange);
 
@@ -640,9 +623,6 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mTitleChangeSubscription = ProjectFileIO::Get(project)
       .Subscribe(*this, &ProjectWindow::OnProjectTitleChange);
 
-   // Subscribe to snapping changes
-   mSnappingChangedSubscription =
-      ProjectSnap::Get(project).Subscribe([this](auto) { RedrawProject(); });
    // And also establish my initial consistency with it
    this->OnProjectTitleChange(ProjectFileIOMessage::ProjectTitleChange);
 }
@@ -1128,27 +1108,6 @@ void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
    if (pProject)
       Viewport::Get(*pProject).HandleResize();
    event.Skip(false);             /* No need to propagate any further */
-}
-
-void ProjectWindow::OnUndoPushedModified()
-{
-   RedrawProject();
-}
-
-void ProjectWindow::OnUndoRedo()
-{
-   auto pProject = FindProject();
-   if (pProject)
-      Viewport::Get(*pProject).HandleResize();
-   RedrawProject();
-}
-
-void ProjectWindow::OnUndoReset()
-{
-   auto pProject = FindProject();
-   if (pProject)
-      Viewport::Get(*pProject).HandleResize();
-   // RedrawProject();  // Should we do this here too?
 }
 
 void ProjectWindow::OnProjectTitleChange(ProjectFileIOMessage message)
