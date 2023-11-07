@@ -136,6 +136,7 @@ list( APPEND SOURCES
       MenuCreator.h
       MixerBoard.cpp
       MixerBoard.h
+      MouseWheelHandler.cpp
       MovableControl.cpp
       MovableControl.h
       PitchName.cpp
