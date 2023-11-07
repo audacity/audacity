@@ -749,3 +749,13 @@ void Viewport::CollapseAllTracks()
    for (auto t : tracks)
       mpCallbacks->SetMinimized(*t, true);
 }
+
+void Viewport::Redraw()
+{
+   // Delay it until after channel views update their Y coordinates in response
+   // to TrackList mesages
+   BasicUI::CallAfter([this]{
+      UpdateScrollbarsForTracks();
+      Publish({ true, false, false });
+   });
+}

@@ -174,6 +174,8 @@ public:
 
    void ReinitScrollbars() { mbInitializingScrollbar = true; }
 
+   void Redraw();
+
 private:
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
