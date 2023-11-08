@@ -1851,29 +1851,6 @@ namespace
    }
 }
 
-auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance) const
-   -> ConstIterPair
-{
-   const WaveClipHolders &list = mClips;
-   const WaveClipHolders *pList2{};
-   const auto channels = TrackList::Channels(this);
-   if (channels.size() > 1)
-      pList2 = &(*channels.rbegin())->mClips;
-   int distance = 0;
-   auto it = list.begin();
-   for (const auto end = list.end(); it != end; ++it) {
-      if (it->get() == &clip)
-         break;
-      ++distance;
-   }
-   if (pDistance)
-      *pDistance = distance;
-   WaveClipHolders::const_iterator it2{};
-   if (pList2)
-      it2 = pList2->begin() + distance;
-   return { it, it2 };
-}
-
 auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
    -> IterPair
 {
@@ -1895,6 +1872,12 @@ auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
    if (pList2)
       it2 = pList2->begin() + distance;
    return { it, it2 };
+}
+
+auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance) const
+   -> ConstIterPair
+{
+   return const_cast<WaveTrack&>(*this).FindWideClip(clip, pDistance);
 }
 
 void WaveTrack::RemoveWideClip(IterPair pair)
