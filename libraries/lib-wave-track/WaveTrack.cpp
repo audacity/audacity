@@ -1869,7 +1869,7 @@ auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
    if (pDistance)
       *pDistance = distance;
    WaveClipHolders::iterator it2{};
-   if (pList2)
+   if (pList2 && pList2->size() > distance)
       it2 = pList2->begin() + distance;
    return { it, it2 };
 }
