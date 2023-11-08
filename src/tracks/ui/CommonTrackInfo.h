@@ -85,6 +85,10 @@ namespace CommonTrackInfo
    AUDACITY_DLL_API
    bool HideTopItem( const wxRect &rect, const wxRect &subRect,
                                int allowance = 0 );
+
+   // To help subclasses define GetTCPLines
+   AUDACITY_DLL_API
+   const TCPLines& StaticTCPLines();
 };
 
 #endif

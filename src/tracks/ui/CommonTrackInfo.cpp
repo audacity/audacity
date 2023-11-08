@@ -32,6 +32,7 @@ Paul Licameli split from TrackInfo.cpp
 #include "SyncLock.h"
 #include "Theme.h"
 #include "Track.h"
+#include "TrackControls.h"
 #include "TrackPanelDrawingContext.h"
 #include "UIHandle.h"
 #include "ViewInfo.h"
@@ -59,8 +60,7 @@ static const TCPLines &commonTrackTCPLines()
    return theLines;
 }
 
-#include "tracks/ui/CommonTrackControls.h"
-const TCPLines &CommonTrackControls::StaticTCPLines()
+const TCPLines &CommonTrackInfo::StaticTCPLines()
 {
    return commonTrackTCPLines();
 }
@@ -111,11 +111,6 @@ std::pair< int, int > CalcBottomItemY
 
 }
 
-const TCPLines &CommonTrackControls::GetTCPLines() const
-{
-   return commonTrackTCPLines();
-}
-
 unsigned CommonTrackInfo::MinimumTrackHeight()
 {
    unsigned height = 0;
@@ -141,8 +136,7 @@ void CommonTrackInfo::DrawItems
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track &track  )
 {
-   auto &trackControl = static_cast<const CommonTrackControls&>(
-      TrackControls::Get( track ) );
+   auto &trackControl = TrackControls::Get(track);
    const auto &topLines = trackControl.GetTCPLines();
    const auto &bottomLines = commonTrackTCPBottomLines;
    DrawItems

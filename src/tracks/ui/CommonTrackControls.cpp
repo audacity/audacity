@@ -425,3 +425,8 @@ wxRect CommonTrackControls::DrawingArea(
    else
       return rect;
 }
+
+const TCPLines &CommonTrackControls::GetTCPLines() const
+{
+   return CommonTrackInfo::StaticTCPLines();
+}

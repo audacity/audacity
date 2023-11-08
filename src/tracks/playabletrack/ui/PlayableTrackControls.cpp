@@ -255,7 +255,7 @@ const TCPLines& PlayableTrackControls::StaticNoteTCPLines()
    static TCPLines playableTrackTCPLines;
    static std::once_flag flag;
    std::call_once( flag, []{
-      playableTrackTCPLines = CommonTrackControls::StaticTCPLines();
+      playableTrackTCPLines = CommonTrackInfo::StaticTCPLines();
       playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
       { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
          MuteAndSoloDrawFunction },
@@ -269,7 +269,7 @@ const TCPLines& PlayableTrackControls::StaticWaveTCPLines()
    static TCPLines playableTrackTCPLines;
    static std::once_flag flag;
    std::call_once( flag, []{
-      playableTrackTCPLines = CommonTrackControls::StaticTCPLines();
+      playableTrackTCPLines = CommonTrackInfo::StaticTCPLines();
       playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
       { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
          MuteAndSoloDrawFunction },
