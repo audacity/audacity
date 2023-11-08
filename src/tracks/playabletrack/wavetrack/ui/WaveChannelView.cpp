@@ -306,6 +306,14 @@ public:
          --mMySubView;
    }
 
+   std::shared_ptr<const Channel> FindChannel() const override
+   {
+      auto pView = mAdjuster.mwView.lock();
+      if (pView)
+         return pView->FindChannel();
+      return nullptr;
+   }
+
    Result Click(
       const TrackPanelMouseEvent &event, AudacityProject *pProject ) override
    {
@@ -530,6 +538,14 @@ public:
       , mMySubView{ subViewIndex }
       , mViewHeight{ viewHeight }
    {
+   }
+
+   std::shared_ptr<const Channel> FindChannel() const override
+   {
+      auto pView = mAdjuster.mwView.lock();
+      if (pView)
+         return pView->FindChannel();
+      return nullptr;
    }
 
    Result Click(

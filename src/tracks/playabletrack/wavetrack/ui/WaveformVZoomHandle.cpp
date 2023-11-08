@@ -30,6 +30,11 @@ WaveformVZoomHandle::WaveformVZoomHandle(
 
 WaveformVZoomHandle::~WaveformVZoomHandle() = default;
 
+std::shared_ptr<const Channel> WaveformVZoomHandle::FindChannel() const
+{
+   return std::dynamic_pointer_cast<const Channel>(mpTrack.lock());
+}
+
 void WaveformVZoomHandle::Enter( bool, AudacityProject* )
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING

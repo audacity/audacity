@@ -31,6 +31,8 @@ public:
 
    virtual ~TrackSelectHandle();
 
+   std::shared_ptr<const Channel> FindChannel() const override;
+
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 

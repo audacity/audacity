@@ -132,7 +132,7 @@ void WideMuteDrawFunction
    GetWideMuteSoloHorizontalBounds( rect, bev );
    auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
    bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
    MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
 }
@@ -146,7 +146,7 @@ void WideSoloDrawFunction
    GetWideMuteSoloHorizontalBounds( rect, bev );
    auto target = dynamic_cast<SoloButtonHandle*>( context.target.get() );
    bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
    MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
 }
@@ -166,7 +166,7 @@ void MuteAndSoloDrawFunction
    {
       auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
       bool hit = target && target->GetTrack().get() == pTrack;
-      bool captured = hit && target->IsClicked();
+      bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
       MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
    }
@@ -178,7 +178,7 @@ void MuteAndSoloDrawFunction
    {
       auto target = dynamic_cast<SoloButtonHandle*>( context.target.get() );
       bool hit = target && target->GetTrack().get() == pTrack;
-      bool captured = hit && target->IsClicked();
+      bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
       MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
    }
@@ -196,7 +196,7 @@ void EffectsDrawFunction
    {
       auto target = dynamic_cast<EffectsButtonHandle*>( context.target.get() );
       bool hit = target && target->GetTrack().get() == pTrack;
-      bool captured = hit && target->IsClicked();
+      bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
       EffectsDrawFunction( dc, bev, pTrack, down, captured, hit );
    }

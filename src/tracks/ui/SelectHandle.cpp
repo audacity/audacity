@@ -55,7 +55,7 @@ enum {
 
 // #define SPECTRAL_EDITING_ESC_KEY
 
-bool SelectHandle::IsClicked() const
+bool SelectHandle::IsDragging() const
 {
    return mSelectionStateChanger.get() != NULL;
 }
@@ -458,6 +458,13 @@ SelectHandle::~SelectHandle()
 {
 }
 
+std::shared_ptr<const Channel> SelectHandle::FindChannel() const
+{
+   if (auto pView = mpView.lock())
+      return pView->FindChannel();
+   return nullptr;
+}
+
 namespace {
    // Is the distance between A and B less than D?
    template < class A, class B, class DIST > bool within(A a, B b, DIST d)
@@ -491,7 +498,7 @@ void SelectHandle::SetUseSnap(bool use, AudacityProject *project)
       // Repaint to turn the snap lines on or off
       mChangeHighlight = RefreshCode::RefreshAll;
 
-   if (IsClicked()) {
+   if (IsDragging()) {
       // Readjust the moving selection end
       AssignSelection(
          ViewInfo::Get( *project ),
@@ -503,7 +510,7 @@ void SelectHandle::SetUseSnap(bool use, AudacityProject *project)
 bool SelectHandle::HasSnap() const
 {
    return
-      (IsClicked() ? mSnapEnd : mSnapStart).snappedPoint;
+      (IsDragging() ? mSnapEnd : mSnapStart).snappedPoint;
 }
 
 bool SelectHandle::HasEscape(AudacityProject *) const
@@ -898,7 +905,7 @@ HitTestPreview SelectHandle::Preview
 
    TranslatableString tip;
    wxCursor *pCursor = SelectCursor();
-   if ( IsClicked() )
+   if (IsDragging())
       // Use same cursor as at the click
       SetTipAndCursorForBoundary
          (SelectionBoundary(mSelectionBoundary),
@@ -1027,8 +1034,8 @@ void SelectHandle::Draw(
       auto &dc = context.dc;
       // Draw snap guidelines if we have any
       if ( mSnapManager ) {
-         auto coord1 = (mUseSnap || IsClicked()) ? mSnapStart.outCoord : -1;
-         auto coord2 = (!mUseSnap || !IsClicked()) ? -1 : mSnapEnd.outCoord;
+         auto coord1 = (mUseSnap || IsDragging()) ? mSnapStart.outCoord : -1;
+         auto coord2 = (!mUseSnap || !IsDragging()) ? -1 : mSnapEnd.outCoord;
          mSnapManager->Draw( &dc, coord1, coord2 );
       }
    }

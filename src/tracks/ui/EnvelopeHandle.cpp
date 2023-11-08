@@ -30,8 +30,10 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/event.h>
 
-EnvelopeHandle::EnvelopeHandle( Envelope *pEnvelope )
-   : mEnvelope{ pEnvelope }
+EnvelopeHandle::EnvelopeHandle(Envelope *pEnvelope,
+   std::weak_ptr<const Channel> wChannel
+)  : mEnvelope{ pEnvelope }
+   , mwChannel{ move(wChannel) }
 {
 }
 
@@ -45,10 +47,16 @@ void EnvelopeHandle::Enter(bool, AudacityProject *)
 EnvelopeHandle::~EnvelopeHandle()
 {}
 
-UIHandlePtr EnvelopeHandle::HitAnywhere
-(std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope, bool timeTrack)
+std::shared_ptr<const Channel> EnvelopeHandle::FindChannel() const
 {
-   auto result = AssignUIHandlePtr(holder, std::make_shared<EnvelopeHandle>(envelope));
+   return mwChannel.lock();
+}
+
+UIHandlePtr EnvelopeHandle::HitAnywhere(std::weak_ptr<EnvelopeHandle> &holder,
+   Envelope *envelope, std::weak_ptr<const Channel> wChannel, bool timeTrack)
+{
+   auto result = AssignUIHandlePtr(holder,
+      std::make_shared<EnvelopeHandle>(envelope, move(wChannel)));
    result->mTimeTrack = timeTrack;
    return result;
 }
@@ -70,10 +78,10 @@ namespace {
    }
 }
 
-UIHandlePtr EnvelopeHandle::TimeTrackHitTest
-(std::weak_ptr<EnvelopeHandle> &holder,
- const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt)
+UIHandlePtr EnvelopeHandle::TimeTrackHitTest(
+   std::weak_ptr<EnvelopeHandle> &holder,
+   const wxMouseState &state, const wxRect &rect,
+   const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt)
 {
    auto envelope = tt->GetEnvelope();
    if (!envelope)
@@ -82,9 +90,9 @@ UIHandlePtr EnvelopeHandle::TimeTrackHitTest
    double dBRange;
    float zoomMin, zoomMax;
    GetTimeTrackData( *pProject, *tt, dBRange, dB, zoomMin, zoomMax);
-   return EnvelopeHandle::HitEnvelope
-      (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange,
-       true);
+   return EnvelopeHandle::HitEnvelope(holder, state, rect, pProject, envelope,
+      std::dynamic_pointer_cast<const Channel>(tt),
+      zoomMin, zoomMax, dB, dBRange, true);
 }
 
 UIHandlePtr EnvelopeHandle::WaveTrackHitTest
@@ -110,15 +118,17 @@ UIHandlePtr EnvelopeHandle::WaveTrackHitTest
 
    const float dBRange = WaveformSettings::Get(*wt).dBRange;
 
-   return EnvelopeHandle::HitEnvelope
-       (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange, false);
+   return EnvelopeHandle::HitEnvelope(holder, state, rect, pProject, envelope,
+      std::dynamic_pointer_cast<const Channel>(wt),
+      zoomMin, zoomMax, dB, dBRange, false);
 }
 
-UIHandlePtr EnvelopeHandle::HitEnvelope
-(std::weak_ptr<EnvelopeHandle> &holder,
- const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject,
- Envelope *envelope, float zoomMin, float zoomMax,
- bool dB, float dBRange, bool timeTrack)
+UIHandlePtr EnvelopeHandle::HitEnvelope(std::weak_ptr<EnvelopeHandle> &holder,
+   const wxMouseState &state, const wxRect &rect,
+   const AudacityProject *pProject,
+   Envelope *envelope, std::weak_ptr<const Channel> wChannel,
+   float zoomMin, float zoomMax,
+   bool dB, float dBRange, bool timeTrack)
 {
    const auto &viewInfo = ViewInfo::Get( *pProject );
 
@@ -166,7 +176,7 @@ UIHandlePtr EnvelopeHandle::HitEnvelope
    if (distance >= yTolerance)
       return {};
 
-   return HitAnywhere(holder, envelope, timeTrack);
+   return HitAnywhere(holder, envelope, move(wChannel), timeTrack);
 }
 
 UIHandle::Result EnvelopeHandle::Click

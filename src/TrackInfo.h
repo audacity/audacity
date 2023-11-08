@@ -21,10 +21,10 @@ class wxPoint;
 class wxRect;
 class wxWindow;
 
-class ButtonHandle;
 class LWSlider;
 class Track;
 struct TrackPanelDrawingContext;
+class UIHandle;
 
 static const int TitleSoloBorderOverlap = 1;
 
@@ -86,9 +86,8 @@ namespace TrackInfo
         const std::vector<TCPLine> &bottomLines );
 
    AUDACITY_DLL_API
-   void DrawCloseButton(
-      TrackPanelDrawingContext &context, const wxRect &bev,
-      const Track *pTrack, ButtonHandle *target );
+   void DrawCloseButton(TrackPanelDrawingContext &context, const wxRect &bev,
+      const Track *pTrack, UIHandle *target);
 
    AUDACITY_DLL_API
    void CloseTitleDrawFunction

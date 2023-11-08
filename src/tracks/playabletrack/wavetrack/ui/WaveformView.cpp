@@ -93,7 +93,9 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
                   viewInfo.PositionToTime(st.state.m_x, st.rect.GetX());
                auto envelope = pTrack->GetEnvelopeAtTime(time);
                result = EnvelopeHandle::HitAnywhere(
-                  view.mEnvelopeHandle, envelope, false);
+                  view.mEnvelopeHandle, envelope,
+                  std::dynamic_pointer_cast<const Channel>(pTrack),
+                  false);
                break;
             }
             case ToolCodes::drawTool:

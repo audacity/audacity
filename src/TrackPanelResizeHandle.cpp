@@ -53,6 +53,16 @@ TrackPanelResizeHandle::~TrackPanelResizeHandle()
 {
 }
 
+std::shared_ptr<const Channel> TrackPanelResizeHandle::FindChannel() const
+{
+   return mwChannel.lock();
+}
+
+std::shared_ptr<Channel> TrackPanelResizeHandle::FindChannel()
+{
+   return mwChannel.lock();
+}
+
 UIHandle::Result TrackPanelResizeHandle::Click(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject )
 {

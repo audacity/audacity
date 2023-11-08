@@ -43,7 +43,7 @@ public:
 
    virtual ~SampleHandle();
 
-   std::shared_ptr<WaveTrack> GetTrack() const { return mClickedTrack; }
+   std::shared_ptr<const Channel> FindChannel() const override;
 
    void Enter(bool forward, AudacityProject *) override;
 

@@ -993,7 +993,7 @@ void PanSliderDrawFunction
    auto target = dynamic_cast<PanSliderHandle*>( context.target.get() );
    auto dc = &context.dc;
    bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
 
    const auto artist = TrackArtist::Get( context );
    auto pParent = FindProjectFrame( artist->parent->GetProject() );
@@ -1012,7 +1012,7 @@ void GainSliderDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    if( hit )
       hit=hit;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
 
    const auto artist = TrackArtist::Get( context );
    auto pParent = FindProjectFrame( artist->parent->GetProject() );

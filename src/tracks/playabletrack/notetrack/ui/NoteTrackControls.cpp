@@ -193,7 +193,7 @@ void VelocitySliderDrawFunction
    auto dc = &context.dc;
    auto target = dynamic_cast<VelocitySliderHandle*>( context.target.get() );
    bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
 
    const auto artist = TrackArtist::Get( context );
    auto pParent = FindProjectFrame( artist->parent->GetProject() );

@@ -32,8 +32,9 @@ public:
 
    SliderHandle &operator=(const SliderHandle&) = default;
 
+   std::shared_ptr<const Channel> FindChannel() const override;
    std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
-   bool IsClicked() const { return mIsClicked; }
+   bool IsDragging() const override;
 
 protected:
    virtual ~SliderHandle();
@@ -79,7 +80,7 @@ protected:
 
    float mStartingValue {};
 
-   bool mIsClicked{};
+   bool mIsDragging{};
 };
 
 #endif

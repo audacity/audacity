@@ -49,6 +49,9 @@ public:
    virtual ~BackgroundHandle()
    {}
 
+   std::shared_ptr<const Channel> FindChannel() const override
+   { return nullptr; }
+
    Result Click
       (const TrackPanelMouseEvent &evt, AudacityProject *pProject) override
    {

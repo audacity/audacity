@@ -41,6 +41,11 @@ NoteTrackButtonHandle::~NoteTrackButtonHandle()
 {
 }
 
+std::shared_ptr<const Channel> NoteTrackButtonHandle::FindChannel() const
+{
+   return mpTrack.lock();
+}
+
 UIHandle::Result NoteTrackButtonHandle::NeedChangeHighlight
 (const NoteTrackButtonHandle &oldState, const NoteTrackButtonHandle &newState)
 {

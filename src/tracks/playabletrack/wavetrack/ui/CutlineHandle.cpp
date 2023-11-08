@@ -112,6 +112,11 @@ CutlineHandle::~CutlineHandle()
 {
 }
 
+std::shared_ptr<const Channel> CutlineHandle::FindChannel() const
+{
+   return mpTrack;
+}
+
 bool CutlineHandle::HandlesRightClick()
 {
    return true;
