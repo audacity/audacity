@@ -211,7 +211,7 @@ void OpusImportFileHandle::Import(ImportProgressListener &progressListener,
 
       if (linkChannels != mNumChannels)
       {
-         NotifyImportFailed(progressListener, XO("file has changed the number of channels in the middle."));
+         NotifyImportFailed(progressListener, XO("File has changed the number of channels in the middle."));
          return;
       }
 
