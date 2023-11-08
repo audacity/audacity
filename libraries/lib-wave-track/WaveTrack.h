@@ -1103,7 +1103,7 @@ private:
    WaveClipHolders mClips;
 
    mutable int  mLegacyRate{ 0 }; //!< used only during deserialization
-   sampleFormat mLegacyFormat; //!< used only during deserialization
+   sampleFormat mLegacyFormat{ undefinedSample }; //!< used only during deserialization
 
 private:
    //Updates rate parameter only in WaveTrackData

@@ -62,13 +62,14 @@ $control DIRECTION (_ "Fade direction") choice (
     (sum 1
          (mult (/ -1 (- 1 epsilon))
                (diff logcurve epsilon)))))
- 
+
 (defun guessdirection ()
   ;;; If the selection is closer to the start of the
-  ;;; audio clip, fade in, otherwise fade out."
+  ;;; audio clip, fade in, otherwise fade out.
+  ;;; Use `inclips`, i.e., the clip boundaries before the stretch-rendering pre-processing step.
   (let* ((start (get '*selection* 'start))
          (end (get '*selection* 'end))
-         (clips (get '*track* 'clips))
+         (clips (get '*track* 'inclips))
          (in-dist end)
          (out-dist end))
     (if (arrayp clips)

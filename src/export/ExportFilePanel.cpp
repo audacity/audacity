@@ -160,6 +160,7 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
       S.SetStretchyCol(1);
       
       mFullName = S.AddTextBox(XO("File &Name:"), {}, 0);
+      mFullName->Bind(wxEVT_KILL_FOCUS, &ExportFilePanel::OnFullNameFocusKill, this);
       S.AddSpace(1);
       
       mFolder = S.AddTextBox(XO("Fo&lder:"), {}, 0);
@@ -357,6 +358,43 @@ int ExportFilePanel::GetChannels() const
 MixerOptions::Downmix* ExportFilePanel::GetMixerSpec() const
 {
    return mMixerSpec.get();
+}
+
+void ExportFilePanel::OnFullNameFocusKill(wxFocusEvent& event)
+{
+   //When user has finished typing make sure that file extension
+   //is one of extensions supplied by FormatInfo
+
+   event.Skip();
+
+   if(mSelectedPlugin == nullptr)
+      return;
+
+   const auto formatInfo = mSelectedPlugin->GetFormatInfo(mSelectedFormatIndex);
+   if(formatInfo.extensions.empty())
+      return;
+
+   wxFileName filename;
+   filename.SetFullName(mFullName->GetValue());
+
+   //Remove extra whitespaces
+   auto desiredExt = filename.GetExt().Trim().Trim(false);
+
+   auto it = std::find_if(
+      formatInfo.extensions.begin(),
+      formatInfo.extensions.end(),
+      // if typed extension uses different case (e.g. MP3 instead of mp3)
+      // we'll reset the file extension to one provided by FormatInfo
+      [&](const auto& ext) { return desiredExt.IsSameAs(ext, false); });
+
+   if(it == formatInfo.extensions.end())
+      it = formatInfo.extensions.begin();
+
+   if(!it->empty() && !it->IsSameAs(filename.GetExt()))
+   {
+      filename.SetExt(*it);
+      mFullName->SetValue(filename.GetFullName());
+   }
 }
 
 void ExportFilePanel::OnFormatChange(wxCommandEvent &event)

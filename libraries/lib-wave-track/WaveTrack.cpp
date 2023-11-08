@@ -905,7 +905,8 @@ bool WaveTrack::LinkConsistencyFix(bool doFix)
       {
          SetRate(mLegacyRate);
          mLegacyRate = 0;
-         WaveTrackData::Get(*this).SetSampleFormat(mLegacyFormat);
+         if (mLegacyFormat != undefinedSample)
+            WaveTrackData::Get(*this).SetSampleFormat(mLegacyFormat);
       }
 
       // Check for zero-length clips and remove them

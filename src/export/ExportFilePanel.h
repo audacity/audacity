@@ -70,6 +70,7 @@ public:
 
 private:
 
+   void OnFullNameFocusKill(wxFocusEvent& event);
    void OnFormatChange(wxCommandEvent& event);
    void OnSampleRateChange(wxCommandEvent& event);
    

@@ -242,7 +242,7 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
       const char *const strings[] = {
          // "Ctrl+I",
          "Ctrl+Alt+I",
-         "Ctrl+J",
+         //"Ctrl+J",
          "Ctrl+Alt+J",
          "Ctrl+Alt+V",
          "Alt+X",
