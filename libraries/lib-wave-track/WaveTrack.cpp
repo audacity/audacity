@@ -2214,8 +2214,7 @@ void WaveTrack::PasteOne(
             }
             else {
                 // If clips are immovable we also allow prepending to clips
-                if (clip->WithinPlayRegion(t0) ||
-                    track.TimeToLongSamples(t0) == clip->GetPlayStartSample())
+                if (clip->WithinPlayRegion(t0))
                 {
                     insideClip = clip.get();
                     break;
