@@ -127,13 +127,18 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
         # add_library( wxBase ALIAS wxwidgets::wxwidgets )
         make_wxBase(wxwidgets::wxwidgets)
     endif()
+
+    set ( toolkit ${wxWidgets_LIBRARIES} )
 else()
     set_target_properties(wxwidgets::base PROPERTIES IMPORTED_GLOBAL On)
     make_wxbase(wxwidgets::base)
+
+    # Assume that Conan package is built with GTK2 for now
+    # TODO: Find a way to autodetect the toolkit used by the Conan package
+    set( toolkit "libwx_gtk2u_core-3.1.so" )
 endif()
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
-    set( toolkit "${wxWidgets_LIBRARIES}" )
     message(STATUS "Trying to retrieve GTK version from ${toolkit}")
 
     if( "${toolkit}" MATCHES ".*gtk2.*" )
