@@ -1622,19 +1622,14 @@ void WaveTrack::ClearAndPasteOne(
 
    const auto tolerance = 2.0 / track.GetRate();
 
-   // The split option to `HandleClear` will trim rather than clear `[t0, t1]`.
-   const auto split = clearByTrimming;
-
-   // Shift clip at t1 to t0, so that it appends itself to what we'll be pasting
-   // after the clear, and we get neither the "There is not enough room" message
-   // nor empty space.
-   constexpr auto shiftClipAtT1ToT0 = true;
+   // This is not a split-cut operation.
+   constexpr auto split = false;
 
    // Now, clear the selection
-   track.HandleClear(t0, t1, false, split, shiftClipAtT1ToT0);
+   track.HandleClear(t0, t1, false, split, clearByTrimming);
 
    // And paste in the new data
-   PasteOne(track, t0, src, startTime, endTime, !split);
+   PasteOne(track, t0, src, startTime, endTime, merge);
 
    // First, merge the new clip(s) in with the existing clips
    if (merge && splits.size() > 0) {
@@ -1892,7 +1887,7 @@ bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 
 /*! @excsafety{Strong} */
 void WaveTrack::HandleClear(
-   double t0, double t1, bool addCutLines, bool split, bool shiftClipAtT1ToT0)
+   double t0, double t1, bool addCutLines, bool split, bool clearByTrimming)
 {
    // For debugging, use an ASSERT so that we stop
    // closer to the problem.
@@ -1942,7 +1937,7 @@ void WaveTrack::HandleClear(
          }
          else
          {
-            if (split) {
+            if (split || clearByTrimming) {
                // Three cases:
 
                if (clip->BeforePlayRegion(t0)) {
@@ -1954,6 +1949,10 @@ void WaveTrack::HandleClear(
                   auto newClip =
                      std::make_shared<WaveClip>(*clip, mpFactory, true);
                   newClip->TrimLeft(t1 - clip->GetPlayStartTime());
+                  if (!split)
+                     // If this is not a split-cut, where things are left in
+                     // place, we need to reposition the clip.
+                     newClip->ShiftBy(t0 - t1);
                   clipsToAdd.push_back( std::move( newClip ) );
                }
                else if (clip->AfterPlayRegion(t1)) {
@@ -1979,7 +1978,11 @@ void WaveTrack::HandleClear(
 
                   auto rightClip =
                      std::make_shared<WaveClip>(*clip, mpFactory, true);
-                  rightClip->TrimLeft(t1 - rightClip->GetPlayStartTime());
+                  rightClip->TrimLeft(t1 - clip->GetPlayStartTime());
+                  if (!split)
+                     // If this is not a split-cut, where things are left in
+                     // place, we need to reposition the clip.
+                     rightClip->ShiftBy(t0 - t1);
                   clipsToAdd.push_back(std::move(rightClip));
 
                   clipsToDelete.push_back(clip.get());
@@ -2025,11 +2028,6 @@ void WaveTrack::HandleClear(
 
    for (auto &clip: clipsToAdd)
       InsertClip(std::move(clip)); // transfer ownership
-
-   if (!moveClipsLeft && shiftClipAtT1ToT0)
-      if (const auto clip = GetClipAtTime(t1);
-          clip && clip->GetPlayStartTime() == t1)
-         clip->ShiftBy(-(t1 - t0));
 }
 
 void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
