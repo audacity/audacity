@@ -502,6 +502,12 @@ void InitCrashreports()
 static bool gInited = false;
 static bool gIsQuitting = false;
 
+//Config instance that is set as current instance of `wxConfigBase`
+//and used to initialize `SettingsWX` objects created by
+//`audacity::ApplicationSettings` hook.
+//Created on demand by calling `audacity::ApplicationSettings::Call()`
+static std::shared_ptr<wxConfigBase> gConfig;
+
 static bool CloseAllProjects( bool force )
 {
    ProjectManager::SetClosingAll(true);
@@ -1225,6 +1231,16 @@ bool AudacityApp::Initialize(int& argc, wxChar** argv)
       InitCrashreports();
    }
    return wxApp::Initialize(argc, argv);
+}
+
+void AudacityApp::CleanUp()
+{
+   //Reset the current wxConfigBase instance manually
+   //to avoid double deletion in wxWidgets 3.2
+   //See Bug #5511
+   wxConfigBase::Set(nullptr);
+   gConfig.reset();
+   wxApp::CleanUp();
 }
 
 #ifdef __WXMAC__
@@ -2717,15 +2733,14 @@ void AudacityApp::AssociateFileTypes()
 static audacity::ApplicationSettings::Scope applicationSettingsScope {
    []{
       static std::once_flag configSetupFlag;
-      static std::shared_ptr<wxConfigBase> config;
       std::call_once(configSetupFlag, [&]{
          const auto configFileName = wxFileName { FileNames::Configuration() };
-         config = AudacityFileConfig::Create(
+         gConfig = AudacityFileConfig::Create(
             wxTheApp->GetAppName(), wxEmptyString,
             configFileName.GetFullPath(),
             wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
-         wxConfigBase::Set(config.get());
+         wxConfigBase::Set(gConfig.get());
       });
-      return std::make_unique<SettingsWX>(config);
+      return std::make_unique<SettingsWX>(gConfig);
    }
 };
