@@ -123,22 +123,6 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
         >
     )
 
-    set( toolkit "${wxWidgets_LIBRARIES}" )
-
-    message(STATUS "Trying to retrieve GTK version from ${toolkit}")
-
-    if( "${toolkit}" MATCHES ".*gtk2.*" )
-        set( gtk gtk+-2.0 )
-        set( glib glib-2.0 )
-    elseif( "${toolkit}" MATCHES ".*gtk3.*" )
-        set( gtk gtk+-3.0 )
-        set( glib glib-2.0 )
-    elseif( "${toolkit}" MATCHES ".*gtk4.*" )
-        set( gtk gtk+-4.0 )
-        set( glib glib-2.0 )
-    endif()
-
-
     if( NOT TARGET wxBase )
         # add_library( wxBase ALIAS wxwidgets::wxwidgets )
         make_wxBase(wxwidgets::wxwidgets)
@@ -149,10 +133,46 @@ else()
 endif()
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
+set( toolkit "${wxWidgets_LIBRARIES}" )
+
+message(STATUS "Trying to retrieve GTK version from ${toolkit}")
+
+    if( "${toolkit}" MATCHES ".*gtk2.*" )
+       set( gtk gtk+-2.0 )
+       set( glib glib-2.0 )
+    elseif( "${toolkit}" MATCHES ".*gtk3.*" )
+       set( gtk gtk+-3.0 )
+       set( glib glib-2.0 )
+    elseif( "${toolkit}" MATCHES ".*gtk4.*" )
+       set( gtk gtk+-4.0 )
+       set( glib glib-2.0 )
+    endif()
 
     if( NOT DEFINED gtk )
-        set( gtk gtk+-2.0 )
-        set( glib glib-2.0 )
+       execute_process(
+         COMMAND
+           wx-config --query-toolkit
+         OUTPUT_VARIABLE
+            wx_config_toolkit
+         OUTPUT_STRIP_TRAILING_WHITESPACE
+       )
+
+       message(STATUS "wx-config --query-toolkit --> ${wx_config_toolkit}")
+
+       if( "${wx_config_toolkit}" STREQUAL "gtk2" )
+          set( gtk gtk+-2.0 )
+          set( glib glib-2.0 )
+       elseif( "${wx_config_toolkit}" STREQUAL "gtk3" )
+          set( gtk gtk+-3.0 )
+          set( glib glib-2.0 )
+       elseif( "${wx_config_toolkit}" STREQUAL "gtk4" )
+          set( gtk gtk+-4.0 )
+          set( glib glib-2.0 )
+       endif()
+    endif()
+
+    if( NOT DEFINED gtk )
+       message(FATAL_ERROR "Could not determine GTK version from ${toolkit}")
     endif()
 
     find_package(PkgConfig)
