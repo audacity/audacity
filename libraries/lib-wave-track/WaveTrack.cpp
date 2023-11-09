@@ -2205,7 +2205,7 @@ void WaveTrack::PasteOne(
         WaveClip* insideClip = nullptr;
         for (const auto& clip : track.mClips) {
             if (editClipCanMove) {
-                if (clip->WithinPlayRegion(t0)) {
+                if (clip->SplitsPlayRegion(t0)) {
                     //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
                     //       t0, clip->GetStartTime(), clip->GetEndTime());
                     insideClip = clip.get();
