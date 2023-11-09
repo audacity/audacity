@@ -202,6 +202,23 @@ WaveTrack::Interval::Interval(
 
 WaveTrack::Interval::~Interval() = default;
 
+bool WaveTrack::Interval::EqualSequenceLengthInvariant() const
+{
+   if (NChannels() < 2)
+      return true;
+   const auto &pClip0 = GetClip(0);
+   const auto &pClip1 = GetClip(1);
+   return
+      pClip0->GetSequenceStartTime() == pClip1->GetSequenceStartTime()
+   &&
+      pClip0->GetSequenceEndTime() == pClip1->GetSequenceEndTime()
+   &&
+      pClip0->GetPlayStartTime() == pClip1->GetPlayStartTime()
+   &&
+      pClip0->GetPlayEndTime() == pClip1->GetPlayEndTime()
+   ;
+}
+
 void WaveTrack::Interval::Append(
    constSamplePtr buffer[], sampleFormat format, size_t len)
 {
@@ -554,6 +571,20 @@ bool WaveTrack::Interval::IsPlaceholder() const
 const Envelope& WaveTrack::Interval::GetEnvelope() const
 {
    return *mpClip->GetEnvelope();
+}
+
+bool WaveTrack::Interval::FindCutLine(double cutLinePosition,
+   double* cutLineStart, double *cutLineEnd) const
+{
+   return mpClip->FindCutLine(cutLinePosition, cutLineStart, cutLineEnd);
+}
+
+void WaveTrack::Interval::ExpandCutLine(double cutlinePosition)
+{
+   // TODO stronger exception safety guarantee in case the second expansion
+   // throws
+   ForEachClip([=](auto &clip){ clip.ExpandCutLine(cutlinePosition); });
+   assert(EqualSequenceLengthInvariant());
 }
 
 void WaveTrack::Interval::SetEnvelope(const Envelope& envelope)
@@ -4123,39 +4154,26 @@ auto WaveTrack::SplitOneAt(double t) -> std::pair<WaveClipHolder, WaveClipHolder
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
-// Can't promise strong exception safety for a pair of tracks together
+// Can't yet promise strong exception safety for a pair of channels together
 void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      pChannel->ExpandOneCutLine(cutLinePosition, cutlineStart, cutlineEnd);
-      // Assign the out parameters at most once
-      cutlineStart = cutlineEnd = nullptr;
-   }
-}
-
-/*! @excsafety{Strong} */
-void WaveTrack::ExpandOneCutLine(double cutLinePosition,
-   double* cutlineStart, double* cutlineEnd)
-{
-   bool editClipCanMove = GetEditClipsCanMove();
+   const bool editClipCanMove = GetEditClipsCanMove();
 
    // Find clip which contains this cut line
    double start = 0, end = 0;
-   auto pEnd = mClips.end();
-   auto pClip = std::find_if( mClips.begin(), pEnd,
-      [&](const WaveClipHolder &clip) {
-         return clip->FindCutLine(cutLinePosition, &start, &end); } );
-   if (pClip != pEnd)
-   {
-      auto &clip = *pClip;
-      if (!editClipCanMove)
-      {
+   const auto &&clips = Intervals();
+   const auto pEnd = clips.end();
+   const auto pClip = std::find_if(clips.begin(), pEnd,
+      [&](const auto &clip) {
+         return clip->FindCutLine(cutLinePosition, &start, &end); });
+   if (pClip != pEnd) {
+      auto &&clip = *pClip;
+      if (!editClipCanMove) {
          // We are not allowed to move the other clips, so see if there
          // is enough room to expand the cut line
-         for (const auto &clip2: mClips)
-         {
+         for (const auto &clip2: clips)
             if (clip2->GetPlayStartTime() > clip->GetPlayStartTime() &&
                 clip->GetPlayEndTime() + end - start > clip2->GetPlayStartTime())
                // Strong-guarantee in case of this path
@@ -4165,7 +4183,6 @@ void WaveTrack::ExpandOneCutLine(double cutLinePosition,
                   XO("Warning"),
                   "Error:_Insufficient_space_in_track"
                };
-          }
       }
 
       clip->ExpandCutLine(cutLinePosition);
@@ -4179,13 +4196,9 @@ void WaveTrack::ExpandOneCutLine(double cutLinePosition,
 
       // Move clips which are to the right of the cut line
       if (editClipCanMove)
-      {
-         for (const auto &clip2 : mClips)
-         {
+         for (const auto &clip2 : clips)
             if (clip2->GetPlayStartTime() > clip->GetPlayStartTime())
                clip2->ShiftBy(end - start);
-         }
-      }
    }
 }
 

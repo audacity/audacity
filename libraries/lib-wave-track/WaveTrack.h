@@ -979,6 +979,9 @@ public:
 
       ~Interval() override;
 
+      //! An invariant condition, for assertions
+      bool EqualSequenceLengthInvariant() const;
+
       void Append(constSamplePtr buffer[], sampleFormat format, size_t len);
       void Flush();
 
@@ -1081,6 +1084,15 @@ public:
       bool Paste(double t0, const Interval &src);
 
       const Envelope& GetEnvelope() const;
+
+      /** Find cut line at (approximately) this position. Returns true and fills
+       * in cutLineStart and cutLineEnd (if specified) if a cut line at this
+       * position could be found. Return false otherwise. */
+      bool FindCutLine(double cutLinePosition,
+         double* cutLineStart = nullptr,
+         double *cutLineEnd = nullptr) const;
+
+      void ExpandCutLine(double cutlinePosition);
 
    private:
       void SetEnvelope(const Envelope& envelope);
