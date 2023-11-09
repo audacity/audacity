@@ -2,7 +2,6 @@
 #include "../CommonCommandFlags.h"
 #include "DeviceManager.h"
 #include "../LabelTrack.h"
-#include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -21,8 +20,7 @@
 #include "../prefs/TracksPrefs.h"
 #include "WaveTrack.h"
 #include "ViewInfo.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/ToolManager.h"
 #include "AudacityMessageBox.h"
@@ -733,10 +731,9 @@ void OnStopSelect(const CommandContext &context)
 // Menu definitions
 
 // Under /MenuBar
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto TransportMenu()
 {
-   using Options = CommandManager::Options;
    static const auto CanStopFlags =
       AudioIONotBusyFlag() | CanStopAudioStreamFlag();
    static auto menu = std::shared_ptr{
@@ -915,7 +912,6 @@ AttachedItem sAttachment2{ Indirect(ExtraTransportMenu()),
 
 auto ExtraSelectionItems()
 {
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    Items(wxT("MoveToLabel"),
       Command(wxT("MoveToPrevLabel"), XXO("Move to Pre&vious Label"),

@@ -14,11 +14,7 @@
 It handles initialization and termination by subclassing wxApp.
 
 *//*******************************************************************/
-
-
 #include "AudacityApp.h"
-
-
 
 #if 0
 // This may be used to debug memory leaks.
@@ -81,7 +77,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/ASlider.h"
 #include "Journal.h"
 #include "Languages.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "PathList.h"
 #include "PluginManager.h"
 #include "Project.h"
@@ -1617,7 +1613,7 @@ bool AudacityApp::InitPart2()
       GetPreferencesVersion(vMajorInit, vMinorInit, vMicroInit);
       if (vMajorInit != AUDACITY_VERSION || vMinorInit != AUDACITY_RELEASE
          || vMicroInit != AUDACITY_REVISION) {
-         CommandManager::Get(*project).RemoveDuplicateShortcuts();
+         MenuCreator::Get(*project).RemoveDuplicateShortcuts();
       }
       //
       // Auto-recovery

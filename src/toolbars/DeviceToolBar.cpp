@@ -770,7 +770,7 @@ AttachedToolBarMenuItem sAttachment{
 
 
 // Define some related menu items
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../CommonCommandFlags.h"
 
 namespace {
@@ -804,7 +804,7 @@ void OnAudioHost(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 // Under /MenuBar/Optional/Extra/Part1
 auto ExtraDeviceMenu()
 {

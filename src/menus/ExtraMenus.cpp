@@ -1,10 +1,8 @@
 #include "../CommonCommandFlags.h"
-#include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindows.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "../toolbars/ToolManager.h"
 
 #include <wx/frame.h>
@@ -27,7 +25,7 @@ void OnFullScreen(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto ExtraMenu()
 {
@@ -48,13 +46,11 @@ AttachedItem sAttachment1{ Indirect(ExtraMenu()) };
 // Under /MenuBar/Optional/Extra/Part2
 auto ExtraMiscItems()
 {
-   using Options = CommandManager::Options;
-
    // Not a menu.
    static auto items = std::shared_ptr{
    Items( wxT("Misc"),
       // Delayed evaluation
-      []( AudacityProject &project ) {
+      [](AudacityProject &) {
 
    static const auto key =
 #ifdef __WXMAC__

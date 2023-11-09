@@ -1170,8 +1170,8 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
 
 // Register a menu item
 
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 #include "Project.h"
 #include "ProjectHistory.h"
@@ -1324,7 +1324,7 @@ void OnTimerRecord(const CommandContext &context)
 
 const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("TimerRecord"), XXO("&Timer Record..."),
       OnTimerRecord, CanStopFlags, wxT("Shift+T") ),

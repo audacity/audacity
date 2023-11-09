@@ -1,6 +1,7 @@
 #include "../CommonCommandFlags.h"
 #include "FileNames.h"
 #include "../LabelTrack.h"
+#include "MenuCreator.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -17,8 +18,7 @@
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 #include "Import.h"
@@ -427,11 +427,10 @@ void OnExportFLAC(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto FileMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("File"), XXO("&File"),
       Section( "Basic",
@@ -463,7 +462,7 @@ auto FileMenu()
             XXO("Recent &Files")
    #endif
             ,
-            Special( wxT("PopulateRecentFilesStep"),
+            MenuCreator::Special( wxT("PopulateRecentFilesStep"),
             [](AudacityProject &, wxMenu &theMenu){
                // Recent Files and Recent Projects menus
                auto &history = FileHistory::Global();

@@ -18,8 +18,8 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 
 #include "Screenshot.h"
 #include "commands/ScreenshotCommand.h"
-#include "commands/CommandTargets.h"
-#include "commands/CommandContext.h"
+#include "commands/wxCommandTargets.h"
+#include "CommandContext.h"
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/frame.h>
@@ -826,7 +826,7 @@ void OnScreenshot(const CommandContext &context )
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
       OnScreenshot, AudioIONotBusyFlag() ),

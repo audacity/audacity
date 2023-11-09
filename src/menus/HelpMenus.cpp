@@ -13,7 +13,6 @@
 #include "HelpText.h"
 #include "../HelpUtilities.h"
 #include "LogWindow.h"
-#include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectSnap.h"
@@ -24,8 +23,8 @@
 #include "../SplashDialog.h"
 #include "SyncLock.h"
 #include "Theme.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "../prefs/PrefsDialog.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
@@ -331,7 +330,7 @@ void OnMenuTree(const CommandContext &context)
    auto Indent = [&](){ info += indentation; };
    auto Return = [&](){ info += '\n'; };
 
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    auto visitor = Visitor<Traits>{
       std::tuple{
          [&](const MenuItem &item, const auto&) {
@@ -360,7 +359,7 @@ void OnMenuTree(const CommandContext &context)
          Return();
       }
    };
-   MenuManager::Visit(visitor, project);
+   MenuRegistry::Visit(visitor, project);
 
    ShowDiagnostics( project, info,
       Verbatim("Menu Tree"), wxT("menutree.txt"), true );
@@ -416,7 +415,7 @@ void OnHelpWelcome(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto HelpMenu()
 {
    static auto menu = std::shared_ptr{

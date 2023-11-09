@@ -1,6 +1,5 @@
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
-#include "../Menus.h"
 #include "MixAndRender.h"
 
 #include "Prefs.h"
@@ -22,8 +21,7 @@
 #include "WaveClip.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "QualitySettings.h"
@@ -1134,11 +1132,10 @@ void OnTrackMoveBottom(const CommandContext &context)
 // Menu definitions
 
 // Under /MenuBar
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto TracksMenu()
 {
    // Tracks Menu (formerly Project Menu)
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("Tracks"), XXO("&Tracks"),
       Section( "Add",
@@ -1285,7 +1282,6 @@ AttachedItem sAttachment1{ Indirect(TracksMenu()) };
 
 auto ExtraTrackMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("Track"), XXO("&Track"),
       Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),

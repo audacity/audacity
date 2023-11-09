@@ -23,7 +23,7 @@
 #include "Project.h"
 #include "ProjectWindowBase.h"
 #include "LabelTrack.h"
-#include "commands/CommandManager.h"
+#include "MenuCreator.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 
@@ -542,9 +542,8 @@ void LyricsPanel::OnShow(wxShowEvent &e)
 
 void LyricsPanel::OnKeyEvent(wxKeyEvent & event)
 {
-   auto project = FindProjectFromWindow( this );
-   auto &commandManager = CommandManager::Get( *project );
-   commandManager.FilterKeyEvent(project, event, true);
+   if (auto project = FindProjectFromWindow(this))
+      MenuCreator::FilterKeyEvent(*project, event, true);
    event.Skip();
 }
 

@@ -1,5 +1,5 @@
 #include "../CommonCommandFlags.h"
-#include "../Menus.h"
+#include "../MenuCreator.h"
 #include "PlayableTrack.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -10,7 +10,7 @@
 #include "../TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
@@ -398,10 +398,9 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 // Under /MenuBar
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ViewMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XXO("&View"),

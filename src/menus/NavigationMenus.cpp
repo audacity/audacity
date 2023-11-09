@@ -11,8 +11,7 @@
 #include "SelectionState.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "../toolbars/ToolManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
@@ -521,11 +520,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 #define FN(X) (& NavigationActions::Handler :: X)
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ExtraGlobalCommands()
 {
    // Ceci n'est pas un menu
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Items( wxT("Navigation"),

@@ -13,7 +13,7 @@
 #include "Project.h"
 
 #include "../commands/CommandManager.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 
 namespace
 {
@@ -24,7 +24,7 @@ void SetTimeDisplayMode(const CommandContext& context, TimeDisplayMode type)
    auto& ruler = AdornedRulerPanel::Get(project);
    ruler.SetTimeDisplayMode(type);
 
-   CommandManager::Get(project).UpdateCheckmarks(project);
+   CommandManager::Get(project).UpdateCheckmarks();
 }
 
 void OnSetMinutesSeconds(const CommandContext& context)
@@ -43,17 +43,16 @@ TimeDisplayMode GetTimeDisplayMode(const AudacityProject& project)
    return panel.GetTimeDisplayMode();
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto ExtraSelectionMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{ Menu(
       wxT("Timeline"), XXO("&Timeline"),
       Command(
          wxT("MinutesAndSeconds"), XXO("Minutes and Seconds"),
          OnSetMinutesSeconds, AlwaysEnabledFlag,
-         CommandManager::Options {}.CheckTest(
+         Options{}.CheckTest(
             [](const AudacityProject& project) {
                return GetTimeDisplayMode(project) ==
                       TimeDisplayMode::MinutesAndSeconds;
@@ -61,7 +60,7 @@ auto ExtraSelectionMenu()
       Command(
          wxT("BeatsAndMeasures"), XXO("Beats and Measures"),
          OnSetBeatsAndMeasures, AlwaysEnabledFlag,
-         CommandManager::Options {}.CheckTest(
+         Options{}.CheckTest(
             [](const AudacityProject& project) {
                return GetTimeDisplayMode(project) ==
                       TimeDisplayMode::BeatsAndMeasures;

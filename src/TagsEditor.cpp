@@ -1024,8 +1024,8 @@ bool TagsEditorDialog::EditProjectMetadata(AudacityProject &project,
 }
 
 // Attach menu item
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 
 namespace {
@@ -1036,7 +1036,7 @@ void OnEditMetadata(const CommandContext &context)
       XO("Edit Metadata Tags"), XO("Metadata Tags"));
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 AttachedItem sAttachment{
    Command( wxT("EditMetaData"), XXO("&Metadata Editor"), OnEditMetadata,

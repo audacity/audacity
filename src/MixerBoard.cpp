@@ -63,7 +63,7 @@
    #include "../images/AudacityLogo48x48.xpm"
 #endif
 
-#include "commands/CommandManager.h"
+#include "MenuCreator.h"
 
 #include <numeric> // accumulate
 
@@ -1497,9 +1497,8 @@ void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 
 void MixerBoardFrame::OnKeyEvent(wxKeyEvent & event)
 {
-   AudacityProject *project = mMixerBoard->mProject;
-   auto &commandManager = CommandManager::Get( *project );
-   commandManager.FilterKeyEvent(project, event, true);
+   if (auto project = mMixerBoard->mProject)
+      MenuCreator::FilterKeyEvent(*project, event, true);
 }
 
 void MixerBoardFrame::Recreate( AudacityProject *pProject )
@@ -1532,7 +1531,7 @@ void MixerBoardFrame::SetWindowTitle()
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 
 namespace {
 
@@ -1570,7 +1569,7 @@ void OnMixerBoard(const CommandContext &context)
 
 // Register that menu item
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("MixerBoard"), XXO("&Mixer"), OnMixerBoard,
       PlayableTracksExistFlag()),

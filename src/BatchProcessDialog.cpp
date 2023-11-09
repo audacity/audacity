@@ -13,8 +13,6 @@
 \brief Shows progress in executing commands in MacroCommands.
 
 *//*******************************************************************/
-
-
 #include "BatchProcessDialog.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -37,7 +35,7 @@
 
 #include "Clipboard.h"
 #include "ShuttleGui.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectFileManager.h"
@@ -772,7 +770,7 @@ void MacrosWindow::UpdateMenus()
 {
    // OK even on mac, as dialog is modal.
    auto p = &mProject;
-   MenuManager::Get(*p).RebuildMenuBar(*p);
+   MenuCreator::Get(*p).RebuildMenuBar();
 }
 
 void MacrosWindow::UpdateDisplay( bool bExpanded )
@@ -1383,7 +1381,7 @@ void MacrosWindow::UpdatePrefs()
 // The rest of this file installs hooks
 
 #include "CommonCommandFlags.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "effects/EffectManager.h"
 #include "ProjectWindows.h"
 namespace {
@@ -1397,29 +1395,31 @@ AttachedWindows::RegisteredFactory sMacrosWindowKey{
    }
 };
 
+using MacroID = wxString;
+
 void OnApplyMacroDirectlyByName(
    const CommandContext& context, const MacroID& Name);
 
 void OnRepeatLastTool(const CommandContext& context)
 {
-   auto& menuManager = MenuManager::Get(context.project);
-   switch (menuManager.mLastToolRegistration) {
-     case MenuCreator::repeattypeplugin:
+   auto& commandManager = CommandManager::Get(context.project);
+   switch (commandManager.mLastToolRegistration) {
+     case CommandManager::repeattypeplugin:
      {
-        auto lastEffect = menuManager.mLastTool;
+        auto lastEffect = commandManager.mLastTool;
         if (!lastEffect.empty())
         {
            EffectUI::DoEffect(
-              lastEffect, context, menuManager.mRepeatToolFlags);
+              lastEffect, context, commandManager.mRepeatToolFlags);
         }
      }
        break;
-     case MenuCreator::repeattypeunique:
+     case CommandManager::repeattypeunique:
         CommandManager::Get(context.project).DoRepeatProcess(context,
-           menuManager.mLastToolRegisteredId);
+           commandManager.mLastToolRegisteredId);
         break;
-     case MenuCreator::repeattypeapplymacro:
-        OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
+     case CommandManager::repeattypeapplymacro:
+        OnApplyMacroDirectlyByName(context, commandManager.mLastTool);
         break;
    }
 }
@@ -1477,7 +1477,7 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 #endif
    /* i18n-hint: %s will be the name of the macro which will be
     * repeated if this menu item is chosen */
-   MenuManager::ModifyUndoMenuItems( project );
+   MenuCreator::Get(project).ModifyUndoMenuItems();
 
    TranslatableString desc;
    EffectManager& em = EffectManager::Get();
@@ -1489,23 +1489,25 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
        undoManager.GetShortDescription(cur, &desc);
        commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat %s")
           .Format(desc));
-       auto& menuManager = MenuManager::Get(project);
-       menuManager.mLastTool = Name;
-       menuManager.mLastToolRegistration = MenuCreator::repeattypeapplymacro;
+       auto& commandManager = CommandManager::Get(project);
+       commandManager.mLastTool = Name;
+       commandManager.mLastToolRegistration =
+          CommandManager::repeattypeapplymacro;
    }
 
 }
 
-void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
+void PopulateMacrosMenu(MenuRegistry::MenuItems &items, CommandFlag flags)
 {
+   using namespace MenuRegistry;
    auto names = MacroCommands::GetNames(); // these names come from filenames
    for (const auto &name : names) {
       auto MacroID = ApplyMacroDialog::MacroIdOfName(name);
-      items.push_back(MenuTable::Command(MacroID,
+      items.push_back(MenuRegistry::Command(MacroID,
          Verbatim(name), // file name verbatim
          OnApplyMacroDirectly,
          flags,
-         CommandManager::Options{}.AllowInMacros()
+         Options{}.AllowInMacros()
       ));
    }
 }
@@ -1513,26 +1515,27 @@ void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
 const ReservedCommandFlag&
    HasLastToolFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project) {
-      auto& menuManager = MenuManager::Get(project);
-         if (menuManager.mLastToolRegistration == MenuCreator::repeattypeunique) return true;
-         return !menuManager.mLastTool.empty();
+      auto& commandManager = CommandManager::Get(project);
+         if (commandManager.mLastToolRegistration ==
+             CommandManager::repeattypeunique)
+            return true;
+         return !commandManager.mLastTool.empty();
       }
    }; return flag;
 }
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto PluginMenuItems()
 {
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    Items( "Macros",
       Section( "RepeatLast",
          // Delayed evaluation:
          [](AudacityProject &project)
          {
-            const auto &lastTool = MenuManager::Get(project).mLastTool;
+            const auto &lastTool = CommandManager::Get(project).mLastTool;
             TranslatableString buildMenuLabel;
             if (!lastTool.empty())
                buildMenuLabel = XO("Repeat %s")

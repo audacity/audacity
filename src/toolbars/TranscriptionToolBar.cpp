@@ -1146,7 +1146,7 @@ void OnPlaySpeedDec(const CommandContext &context)
    }
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto ExtraPlayAtSpeedMenu()
 {

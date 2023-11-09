@@ -24,7 +24,6 @@ This class now lists
 #include "GetInfoCommand.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Project.h"
@@ -783,7 +782,7 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

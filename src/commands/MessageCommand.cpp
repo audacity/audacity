@@ -17,7 +17,7 @@
 #include "MessageCommand.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "CommandContext.h"
@@ -58,7 +58,7 @@ bool MessageCommand::Apply(const CommandContext & context){
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

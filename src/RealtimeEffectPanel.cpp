@@ -47,7 +47,6 @@
 #include "ListNavigationPanel.h"
 #include "MovableControl.h"
 #include "menus/MenuHelper.h"
-#include "Menus.h"
 #include "prefs/EffectsPrefs.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -56,7 +55,7 @@
 
 namespace
 {
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    class RealtimeEffectsMenuVisitor final : public Visitor<Traits> {
       wxMenu& mMenu;
       wxMenu* mMenuPtr { nullptr };
@@ -65,7 +64,7 @@ namespace
       int mMenuLevelCounter { 0 };
    public:
       RealtimeEffectsMenuVisitor(wxMenu& menu) : Visitor<Traits>{ std::tuple{
-      [this](const MenuTable::MenuItem &menuItem, const auto&) {
+      [this](const MenuRegistry::MenuItem &menuItem, const auto&) {
          //Don't create a group item for root
          if (mMenuLevelCounter != 0)
          {
@@ -76,13 +75,13 @@ namespace
          ++mMenuLevelCounter;
       },
 
-      [this](const MenuTable::CommandItem &commandItem, const auto&) {
+      [this](const MenuRegistry::CommandItem &commandItem, const auto&) {
          mMenuPtr->Append(mMenuItemIdCounter, commandItem.label_in.Translation());
          mIndexedPluginList.push_back(commandItem.name);
          ++mMenuItemIdCounter;
       },
 
-      [this](const MenuTable::MenuItem &, const auto&) {
+      [this](const MenuRegistry::MenuItem &, const auto&) {
          --mMenuLevelCounter;
          if (mMenuLevelCounter != 0)
          {
@@ -572,7 +571,7 @@ class RealtimeEffectListWindow
    wxWindow* mAddEffectTutorialLink{nullptr};
    wxWindow* mEffectListContainer{nullptr};
 
-   std::unique_ptr<MenuTable::MenuItem> mEffectMenuRoot;
+   std::unique_ptr<MenuRegistry::MenuItem> mEffectMenuRoot;
    
    Observer::Subscription mEffectListItemMovedSubscription;
    Observer::Subscription mPluginsChangedSubscription;
@@ -775,7 +774,7 @@ public:
    
    void UpdateEffectMenuItems()
    {
-      using namespace MenuTable;
+      using namespace MenuRegistry;
       auto root = Menu("", TranslatableString{});
 
       static auto realtimeEffectPredicate = [](const PluginDescriptor& desc)

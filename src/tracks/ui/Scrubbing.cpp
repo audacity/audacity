@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <functional>
 
 #include "AudioIO.h"
+#include "commands/CommandManager.h"
 #include "../../CommonCommandFlags.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -1132,10 +1133,9 @@ static const auto finder =
    [](AudacityProject &project) -> CommandHandlerObject&
      { return Scrubber::Get( project ); };
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ToolbarMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = []{
       FinderScope scope{ finder };
       auto menu = std::shared_ptr{ Menu("Scrubbing", XXO("Scru&bbing")) };
@@ -1160,7 +1160,6 @@ AttachedItem sAttachment{ Indirect(ToolbarMenu()), wxT("Transport/Basic") };
 
 auto KeyboardScrubbingItems()
 {
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    ( FinderScope{ finder },
    Items( wxT("KeyboardScrubbing"),

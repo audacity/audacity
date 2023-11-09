@@ -19,13 +19,13 @@ SetPreferenceCommand classes
 #include "PreferenceCommands.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Prefs.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../prefs/PrefsDialog.h"
 
 const ComponentInterfaceSymbol GetPreferenceCommand::Symbol
@@ -110,7 +110,7 @@ bool SetPreferenceCommand::Apply(const CommandContext & context)
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

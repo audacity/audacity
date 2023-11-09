@@ -15,12 +15,12 @@ Paul Licameli split from TrackMenus.cpp
 #include "SelectUtilities.h"
 #include "TimeTrack.h"
 #include "TrackPanelAx.h"
-#include "../../../commands/CommandContext.h"
-#include "../../../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "AudacityMessageBox.h"
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 void OnNewTimeTrack(const CommandContext &context)
 {

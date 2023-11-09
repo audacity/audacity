@@ -28,7 +28,7 @@ effects.
 
 #include "ConfigInterface.h"
 #include "../ShuttleGetDefinition.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../commands/AudacityCommand.h"
 #include "PluginManager.h"
 #include "Track.h"

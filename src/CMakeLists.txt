@@ -132,8 +132,8 @@ list( APPEND SOURCES
       Lyrics.h
       LyricsWindow.cpp
       LyricsWindow.h
-      Menus.cpp
-      Menus.h
+      MenuCreator.cpp
+      MenuCreator.h
       MIDIPlay.cpp
       MIDIPlay.h
       MixerBoard.cpp
@@ -252,25 +252,19 @@ list( APPEND SOURCES
       commands/Command.h
       commands/CommandBuilder.cpp
       commands/CommandBuilder.h
-      commands/CommandContext.cpp
-      commands/CommandContext.h
       commands/CommandDirectory.cpp
       commands/CommandDirectory.h
-      commands/CommandFlag.cpp
-      commands/CommandFlag.h
-      commands/CommandFunctors.h
       commands/CommandDispatch.cpp
       commands/CommandDispatch.h
       commands/CommandHandler.cpp
       commands/CommandHandler.h
       commands/CommandManager.cpp
       commands/CommandManager.h
+      commands/CommandManagerWindowClasses.cpp
       commands/CommandManagerWindowClasses.h
       commands/CommandMisc.h
       commands/CommandSignature.cpp
       commands/CommandSignature.h
-      commands/CommandTargets.cpp
-      commands/CommandTargets.h
       commands/CommandType.cpp
       commands/CommandType.h
       commands/CompareAudioCommand.cpp
@@ -287,8 +281,6 @@ list( APPEND SOURCES
       commands/HelpCommand.h
       commands/ImportExportCommands.cpp
       commands/ImportExportCommands.h
-      commands/Keyboard.cpp
-      commands/Keyboard.h
       commands/LoadCommands.cpp
       commands/LoadCommands.h
       commands/MessageCommand.cpp
@@ -316,6 +308,8 @@ list( APPEND SOURCES
       commands/SetTrackInfoCommand.cpp
       commands/SetTrackInfoCommand.h
       commands/Validators.h
+      commands/wxCommandTargets.cpp
+      commands/wxCommandTargets.h
 
       # Built-in Effects
 
@@ -1350,6 +1344,7 @@ set( AUDACITY_LIBRARIES
    lib-import-export-interface
    lib-export-ui-interface
    lib-file-formats-interface
+   lib-menus-interface
 )
 
 if (USE_VST)

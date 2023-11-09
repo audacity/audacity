@@ -7,7 +7,6 @@
   @author Vitaly Sverchinsky
 
 **********************************************************************/
-
 #include "IncompatiblePluginsDialog.h"
 
 #include <wx/sizer.h>
@@ -17,7 +16,7 @@
 
 #include "Internat.h"
 #include "BasicUI.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "PluginRegistrationDialog.h"
 
 IncompatiblePluginsDialog::IncompatiblePluginsDialog(

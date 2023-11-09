@@ -19,9 +19,9 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "AudioIO.h"
 #include "BasicUI.h"
+#include "commands/CommandManager.h"
 #include "CommonCommandFlags.h"
 #include "DefaultPlaybackPolicy.h"
-#include "Menus.h"
 #include "Meter.h"
 #include "Mix.h"
 #include "Project.h"
@@ -776,7 +776,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
    CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
 
    // NB: The call may have the side effect of changing flags.
-   bool allowed = MenuManager::Get(project).TryToMakeActionAllowed(
+   bool allowed = CommandManager::Get(project).TryToMakeActionAllowed(
       flags,
       AudioIONotBusyFlag() | CanStopAudioStreamFlag());
 
@@ -1317,9 +1317,9 @@ static RegisteredMenuItemEnabler stopIfPaused{{
    []{ return PausedFlag(); },
    []{ return AudioIONotBusyFlag(); },
    []( const AudacityProject &project ){
-      return MenuManager::Get( project ).mStopIfWasPaused; },
+      return CommandManager::Get( project ).mStopIfWasPaused; },
    []( AudacityProject &project, CommandFlag ){
-      if ( MenuManager::Get( project ).mStopIfWasPaused )
+      if ( CommandManager::Get( project ).mStopIfWasPaused )
          ProjectAudioManager::Get( project ).StopIfPaused();
    }
 }};

@@ -13,7 +13,7 @@ Paul Licameli split from Menus.cpp
 
 
 
-#include "commands/CommandFlag.h"
+#include "CommandFlag.h"
 
 AUDACITY_DLL_API
 bool EditableTracksSelectedPred( const AudacityProject &project );

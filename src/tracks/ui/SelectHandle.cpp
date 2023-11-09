@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ChannelView.h"
 
 #include "AColor.h"
+#include "commands/CommandManager.h"
 #include "../../SpectrumAnalyst.h"
 #include "../../LabelTrack.h"
 #include "NumberScale.h"

@@ -19,8 +19,8 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../LabelTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
@@ -939,10 +939,9 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 #define FN(X) (& SelectActions::Handler :: X)
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto SelectMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: (verb) It's an item on a menu. */
@@ -1033,7 +1032,6 @@ AttachedItem sAttachment1{ Indirect(SelectMenu()) };
 
 auto ExtraSelectionMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Select"), XXO("&Selection"),
@@ -1081,7 +1079,6 @@ AttachedItem sAttachment2{ Indirect(ExtraSelectionMenu()),
 namespace {
 auto CursorMenu()
 {
-   using Options = CommandManager::Options;
    static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
    // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it
@@ -1127,7 +1124,6 @@ AttachedItem sAttachment0{ Indirect(CursorMenu()),
 
 auto ExtraCursorMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XXO("&Cursor"),
@@ -1159,7 +1155,6 @@ AttachedItem sAttachment4{ Indirect(ExtraCursorMenu()),
 
 auto ExtraSeekMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Seek"), XXO("See&k"),

@@ -2905,8 +2905,7 @@ void AdornedRulerPanel::SetTimeDisplayMode(TimeDisplayMode type)
 
 // Attach menu item
 
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
 #include "CommonCommandFlags.h"
 
 namespace {
@@ -2915,8 +2914,7 @@ void OnTogglePinnedHead(const CommandContext &context)
    AdornedRulerPanel::Get( context.project ).TogglePinnedHead();
 }
 
-using namespace MenuTable;
-using Options = CommandManager::Options;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("PinnedHead"), XXO("Enable pinned play &head"),
       OnTogglePinnedHead,
