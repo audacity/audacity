@@ -48,6 +48,7 @@ set(QML_SOURCES
    qml/CustomiseToolbar.qml
    qml/EditToolbar.qml
    qml/MasterVolumeToolbar.qml
+   qml/ScrollableRuler.qml
    qml/Sidebar.qml
    qml/SnappingButton.qml
    qml/TimelineRuler.qml
