@@ -53,7 +53,6 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
    &IsSyncLockedFlag(),  //awd
    &NotMinimizedFlag(), // prl
    &PausedFlag(), // jkc
-   &ClipboardNotEmptyFlag(),
    &NoAutoSelect() // jkc
 ;
 

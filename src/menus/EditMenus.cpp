@@ -1120,7 +1120,7 @@ BaseItemSharedPtr EditMenu()
             AudioIONotBusyFlag() | CutCopyAvailableFlag(), wxT("Ctrl+C") ),
          /* i18n-hint: (verb)*/
          Command( wxT("Paste"), XXO("&Paste"), OnPaste,
-            AudioIONotBusyFlag() | ClipboardNotEmptyFlag(), wxT("Ctrl+V") ),
+            AudioIONotBusyFlag(), wxT("Ctrl+V") ),
          /* i18n-hint: (verb)*/
          Command( wxT("Duplicate"), XXO("Duplic&ate"), OnDuplicate,
             NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
