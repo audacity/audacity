@@ -219,6 +219,11 @@ class WAVE_TRACK_API WaveTrack final
    , public WaveChannel
 {
 public:
+   class Interval;
+   using IntervalHolder = std::shared_ptr<Interval>;
+   using IntervalHolders = std::vector<IntervalHolder>;
+   using IntervalConstHolder = std::shared_ptr<const Interval>;
+
    // Resolve ambiguous lookup
    using SampleTrack::GetFloats;
 
@@ -281,6 +286,26 @@ public:
     */
    void Reinit(const WaveTrack &orig);
  private:
+   using ConstIterPair = std::pair<
+      WaveClipHolders::const_iterator, WaveClipHolders::const_iterator>;
+   /*!
+    @param clip is searched for in the leader channel
+    @pre `IsLeader()`
+    @return first is iterator to clip if found, and if stereo, second is the
+       corresponding clip of the other channel
+    */
+   ConstIterPair FindWideClip(const WaveClip &clip, int *pDistance = nullptr)
+      const;
+
+   using IterPair = std::pair<
+      WaveClipHolders::iterator, WaveClipHolders::iterator>;
+   /*!
+    @copydoc FindWideClip(const WaveClip &, int *)
+    */
+   IterPair FindWideClip(const WaveClip &clip, int *pDistance = nullptr);
+
+   void RemoveWideClip(IterPair pair);
+
    void Init(const WaveTrack &orig);
 
    TrackListHolder Clone() const override;
@@ -793,7 +818,13 @@ public:
    }
 
    /// @pre IsLeader()
-   void CreateWideClip(double offset = .0, const wxString& name = wxEmptyString);
+   //! Create new clip and add it to this track.
+   /*!
+    Returns a pointer to the newly created clip. Optionally initial offset and
+    clip name may be provided
+    */
+   IntervalHolder
+   CreateWideClip(double offset = .0, const wxString& name = wxEmptyString);
 
    //! Create new clip and add it to this track.
    /*!
@@ -802,7 +833,8 @@ public:
 
     @post result: `result->GetWidth() == GetWidth()`
     */
-   WaveClip* CreateClip(double offset = .0, const wxString& name = wxEmptyString);
+   WaveClipHolder
+   CreateClip(double offset = .0, const wxString& name = wxEmptyString);
 
    /** @brief Get access to the most recently added clip, or create a clip,
    *  if there is not already one.  THIS IS NOT NECESSARILY RIGHTMOST.
@@ -991,21 +1023,44 @@ public:
       { return iChannel == 0 ? mpClip : mpClip1; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
       { return iChannel == 0 ? mpClip : mpClip1; }
-   private:
+
+      /** Insert silence at the end, and causes the envelope to ramp
+          linearly to the given value */
+      void AppendSilence(double len, double envelopeValue);
+
+      bool Paste(double t0, const Interval &src);
+
       const Envelope& GetEnvelope() const;
+
+   private:
       void SetEnvelope(const Envelope& envelope);
 
       // Helper function in time of migration to wide clips
-      void ForEachClip(const std::function<void(WaveClip&)>& op);
+      template<typename Callable> void ForEachClip(const Callable& op) {
+         for (size_t channel = 0, channelCount = NChannels();
+            channel < channelCount; ++channel)
+            op(*GetClip(channel));
+      }
+
+      // Helper function in time of migration to wide clips
+      /*!
+       @pre `src.NChannels() == dst.NChannels()`
+       */
+      template<typename Callable>
+      static void ForCorrespondingClips(Interval &dst, const Interval &src,
+         const Callable& binop)
+      {
+         const auto channelCount = src.NChannels();
+         assert(channelCount == dst.NChannels());
+         for (size_t channel = 0; channel < channelCount; ++channel)
+            binop(*dst.GetClip(channel), *src.GetClip(channel));
+      }
 
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
       const std::shared_ptr<WaveClip> mpClip;
       //! TODO wide wave tracks: eliminate this
       const std::shared_ptr<WaveClip> mpClip1;
    };
-
-   using IntervalHolder = std::shared_ptr<Interval>;
-   using IntervalConstHolder = std::shared_ptr<const Interval>;
 
    ///@return Interval that starts after(before) the beginning of the passed interval
    IntervalConstHolder GetNextInterval(
@@ -1074,7 +1129,7 @@ private:
       double* cutlineStart, double* cutlineEnd);
    bool MergeOneClipPair(int clipidx1, int clipidx2);
    void ApplyStretchRatioOnIntervals(
-      const std::vector<IntervalHolder>& intervals,
+      const IntervalHolders& intervals,
       const ProgressReporter& reportProgress);
    //! @pre `IsLeader()`
    void InsertInterval(const IntervalHolder& interval);

@@ -363,6 +363,23 @@ bool WaveTrack::Interval::StretchRatioEquals(double value) const
    return true;
 }
 
+/** Insert silence at the end, and causes the envelope to ramp
+    linearly to the given value */
+void WaveTrack::Interval::AppendSilence(double len, double envelopeValue)
+{
+   ForEachClip([&](WaveClip &clip){ clip.AppendSilence(len, envelopeValue); });
+}
+
+bool WaveTrack::Interval::Paste(double t0, const Interval &src)
+{
+   bool result = true;
+   ForCorrespondingClips(*this, src,
+   [&](WaveClip &dstClip, const WaveClip &srcClip){
+      result = result && dstClip.Paste(t0, srcClip);
+   });
+   return result;
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -471,16 +488,6 @@ const Envelope& WaveTrack::Interval::GetEnvelope() const
 void WaveTrack::Interval::SetEnvelope(const Envelope& envelope)
 {
    mpClip->SetEnvelope(std::make_unique<Envelope>(envelope));
-}
-
-void WaveTrack::Interval::ForEachClip(const std::function<void(WaveClip&)>& op)
-{
-   for(unsigned channel = 0,
-      channelCount = NChannels();
-      channel < channelCount; ++channel)
-   {
-      op(*GetClip(channel));
-   }
 }
 
 std::shared_ptr<ChannelInterval>
@@ -1861,6 +1868,44 @@ namespace
    }
 }
 
+auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
+   -> IterPair
+{
+   WaveClipHolders &list = mClips;
+   WaveClipHolders *pList2{};
+   const auto channels = TrackList::Channels(this);
+   if (channels.size() > 1)
+      pList2 = &(*channels.rbegin())->mClips;
+   int distance = 0;
+   auto it = list.begin();
+   for (const auto end = list.end(); it != end; ++it) {
+      if (it->get() == &clip)
+         break;
+      ++distance;
+   }
+   if (pDistance)
+      *pDistance = distance;
+   WaveClipHolders::iterator it2{};
+   if (pList2 && pList2->size() > distance)
+      it2 = pList2->begin() + distance;
+   return { it, it2 };
+}
+
+auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance) const
+   -> ConstIterPair
+{
+   return const_cast<WaveTrack&>(*this).FindWideClip(clip, pDistance);
+}
+
+void WaveTrack::RemoveWideClip(IterPair pair)
+{
+   mClips.erase(pair.first);
+   const auto channels = TrackList::Channels(this);
+   if (channels.size() > 1)
+      (*channels.rbegin())->mClips.erase(pair.second);
+
+}
+
 std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
 {
    // Be clear about who owns the clip!!
@@ -2358,7 +2403,7 @@ void WaveTrack::ApplyStretchRatio(
        !clipAtT1->StretchRatioEquals(1))
       Split(endTime, endTime);
 
-   std::vector<IntervalHolder> srcIntervals;
+   IntervalHolders srcIntervals;
    auto clip = GetIntervalAtTime(startTime);
    while (clip && clip->GetPlayStartTime() < endTime)
    {
@@ -2549,33 +2594,28 @@ void WaveTrack::Join(
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
    const auto intervals = Intervals();
-   std::vector<IntervalHolder> intervalsToJoin;
-   for (auto interval : intervals)
-      if (interval->IntersectsPlayRegion(t0, t1))
-         intervalsToJoin.push_back(interval);
-   if (intervalsToJoin.size() < 2u)
-      return;
-   if (std::any_of(
-          intervalsToJoin.begin() + 1, intervalsToJoin.end(),
-          [first =
-              intervalsToJoin[0]->GetStretchRatio()](const auto& interval) {
-             return first != interval->GetStretchRatio();
-          }))
-      ApplyStretchRatioOnIntervals(intervalsToJoin, reportProgress);
 
-   for (const auto pChannel : TrackList::Channels(this))
-      JoinOne(*pChannel, t0, t1);
-}
+   {
+      IntervalHolders intervalsToJoin;
+      for (const auto &interval : intervals)
+         if (interval->IntersectsPlayRegion(t0, t1))
+            intervalsToJoin.push_back(interval);
+      if (intervalsToJoin.size() < 2u)
+         return;
+      if (std::any_of(
+             intervalsToJoin.begin() + 1, intervalsToJoin.end(),
+             [first =
+                 intervalsToJoin[0]->GetStretchRatio()](const auto& interval) {
+                return first != interval->GetStretchRatio();
+             }))
+         ApplyStretchRatioOnIntervals(intervalsToJoin, reportProgress);
+   }
 
-void WaveTrack::JoinOne(
-   WaveTrack& track, double t0, double t1)
-{
-   WaveClipPointers clipsToDelete;
-   WaveClip* newClip{};
+   IntervalHolders clipsToDelete;
+   IntervalHolder newClip{};
 
-   const auto rate = track.GetRate();
-   auto &clips = track.mClips;
-   for (const auto &clip: clips) {
+   const auto rate = GetRate();
+   for (const auto &clip: intervals) {
       if (clip->IntersectsPlayRegion(t0, t1)) {
          // Put in sorted order
          auto it = clipsToDelete.begin(), end = clipsToDelete.end();
@@ -2583,20 +2623,22 @@ void WaveTrack::JoinOne(
             if ((*it)->GetPlayStartTime() > clip->GetPlayStartTime())
                break;
          //wxPrintf("Insert clip %.6f at position %d\n", clip->GetStartTime(), i);
-         clipsToDelete.insert(it, clip.get());
+         clipsToDelete.insert(it, clip);
       }
    }
 
-   //if there are no clips to DELETE, nothing to do
+   //if there are no clips to delete, nothing to do
    if (clipsToDelete.empty())
       return;
 
-   auto t = clipsToDelete[0]->GetPlayStartTime();
+   const auto firstToDelete = clipsToDelete[0].get();
+   auto t = firstToDelete->GetPlayStartTime();
    //preserve left trim data if any
-   newClip = track.CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
-      clipsToDelete[0]->GetName());
+   newClip = CreateWideClip(
+      firstToDelete->GetSequenceStartTime(),
+      firstToDelete->GetName());
 
-   for (auto clip : clipsToDelete) {
+   for (const auto &clip : clipsToDelete) {
       // wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
       //       t, clip->GetOffset(), clip->GetStartTime(),
       //       clip->GetEndTime());
@@ -2606,7 +2648,7 @@ void WaveTrack::JoinOne(
          double addedSilence = (clip->GetPlayStartTime() - t);
          // wxPrintf("Adding %.6f seconds of silence\n");
          auto offset = clip->GetPlayStartTime();
-         auto value = clip->GetEnvelope()->GetValue(offset);
+         auto value = clip->GetEnvelope().GetValue(offset);
          newClip->AppendSilence(addedSilence, value);
          t += addedSilence;
       }
@@ -2617,8 +2659,7 @@ void WaveTrack::JoinOne(
 
       t = newClip->GetPlayEndTime();
 
-      auto it = FindClip(clips, clip);
-      clips.erase(it); // deletes the clip
+      RemoveWideClip(FindWideClip(*clip->GetClip(0)));
    }
 }
 
@@ -3731,14 +3772,19 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
       return NULL;
 }
 
-void WaveTrack::CreateWideClip(double offset, const wxString& name)
+auto WaveTrack::CreateWideClip(double offset, const wxString& name)
+   -> IntervalHolder
 {
    assert(IsLeader());
-   for(auto channel : TrackList::Channels(this))
-      channel->CreateClip(offset, name);
+   WaveClipHolders holders;
+   for (auto channel : TrackList::Channels(this))
+      holders.emplace_back(channel->CreateClip(offset, name));
+   return std::make_shared<Interval>(*this,
+      holders[0], (holders.size() > 1) ? holders[1] : nullptr);
 }
 
-WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
+auto WaveTrack::CreateClip(double offset, const wxString& name)
+   -> WaveClipHolder
 {
    // TODO wide wave tracks -- choose clip width correctly for the track
    auto clip = std::make_shared<WaveClip>(1,
@@ -3751,7 +3797,7 @@ WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    mClips.push_back(std::move(clip));
 
-   auto result = mClips.back().get();
+   auto result = mClips.back();
    // TODO wide wave tracks -- for now assertion is correct because widths are
    // always 1
    assert(result->GetWidth() == GetWidth());
@@ -3761,7 +3807,8 @@ WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 WaveClip* WaveTrack::NewestOrNewClip()
 {
    if (mClips.empty()) {
-      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
+      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName())
+         .get();
    }
    else
       return mClips.back().get();
@@ -3771,7 +3818,8 @@ WaveClip* WaveTrack::NewestOrNewClip()
 WaveClip* WaveTrack::RightmostOrNewClip()
 {
    if (mClips.empty()) {
-      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
+      return CreateClip(WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName())
+         .get();
    }
    else
    {
@@ -4078,10 +4126,10 @@ bool WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
 }
 
 void WaveTrack::ApplyStretchRatioOnIntervals(
-   const std::vector<IntervalHolder>& srcIntervals,
+   const IntervalHolders& srcIntervals,
    const ProgressReporter& reportProgress)
 {
-   std::vector<IntervalHolder> dstIntervals;
+   IntervalHolders dstIntervals;
    dstIntervals.reserve(srcIntervals.size());
    std::transform(
       srcIntervals.begin(), srcIntervals.end(),

@@ -1031,7 +1031,7 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
    {
       WaveTrack *wavetrack = static_cast<WaveTrack *>(node.handler);
 
-      handler = wavetrack->CreateClip();
+      handler = wavetrack->CreateClip().get();
    }
    else if (mParentTag == "waveclip")
    {
