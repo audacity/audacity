@@ -133,9 +133,8 @@ else()
 endif()
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
-set( toolkit "${wxWidgets_LIBRARIES}" )
-
-message(STATUS "Trying to retrieve GTK version from ${toolkit}")
+    set( toolkit "${wxWidgets_LIBRARIES}" )
+    message(STATUS "Trying to retrieve GTK version from ${toolkit}")
 
     if( "${toolkit}" MATCHES ".*gtk2.*" )
        set( gtk gtk+-2.0 )
