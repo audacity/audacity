@@ -27,7 +27,6 @@ and TimeTrack.
 
 #include "BasicUI.h"
 #include "Project.h"
-#include "UndoManager.h"
 
 #include "InconsistencyException.h"
 
@@ -51,6 +50,13 @@ void Track::Init(const Track &orig)
 {
    ChannelGroup::Init(orig);
    mId = orig.mId;
+}
+
+void Track::ReparentAllAttachments()
+{
+   this->AttachedTrackObjects::ForEach([&](auto &attachment){
+      attachment.Reparent(this->SharedPointer());
+   });
 }
 
 const wxString &Track::GetName() const
@@ -90,7 +96,7 @@ void Track::EnsureVisible( bool modifyState )
       pList->EnsureVisibleEvent(SharedPointer(), modifyState);
 }
 
-TrackListHolder Track::Duplicate() const
+TrackListHolder Track::Duplicate(bool shallowCopyAttachments) const
 {
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
@@ -98,10 +104,17 @@ TrackListHolder Track::Duplicate() const
 
    auto iter = TrackList::Channels(*result->begin()).begin();
    const auto copyOne = [&](const Track *pChannel){
-      pChannel->AttachedTrackObjects::ForEach([&](auto &attachment){
-         // Copy view state that might be important to undo/redo
-         attachment.CopyTo(**iter);
-      });
+      if (shallowCopyAttachments) {
+         // Share the satellites with the original, though they do not point
+         // back to the duplicate track
+         AttachedTrackObjects &attachments = (**iter);
+         attachments = *pChannel; // shallow copy
+      }
+      else
+         pChannel->AttachedTrackObjects::ForEach([&](auto &attachment){
+            // Copy view state that might be important to undo/redo
+            attachment.CopyTo(**iter);
+         });
       ++iter;
    };
 
@@ -146,18 +159,8 @@ void Track::SetIndex(int index)
 
 void Track::SetLinkType(LinkType linkType, bool completeList)
 {
-   auto pList = mList.lock();
-   if (pList && pList->mPendingUpdates && !pList->mPendingUpdates->empty()) {
-      auto orig = pList->FindById( GetId() );
-      if (orig && orig != this) {
-         orig->SetLinkType(linkType);
-         return;
-      }
-   }
-
    DoSetLinkType(linkType, completeList);
-
-   if (pList) {
+   if (const auto pList = mList.lock()) {
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
@@ -364,8 +367,6 @@ const TrackList &TrackList::Get( const AudacityProject &project )
 TrackList::TrackList( AudacityProject *pOwner )
    : mOwner{ pOwner }
 {
-   if (mOwner)
-      mPendingUpdates = Temporary(nullptr);
 }
 
 // Factory function
@@ -401,13 +402,6 @@ void TrackList::Swap(TrackList &that)
    const auto self = shared_from_this();
    const auto otherSelf = that.shared_from_this();
    SwapLOTs( *this, self, that, otherSelf );
-
-   assert(!GetOwner() && !that.GetOwner()); // precondition
-   // which implies (see constructor)
-   assert(!this->mPendingUpdates);
-   assert(!that.mPendingUpdates);
-
-   mUpdaters.swap(that.mUpdaters);
 }
 
 TrackList::~TrackList()
@@ -452,8 +446,6 @@ void TrackList::RecalcPositions(TrackNodePointer node)
       t = *n;
       t->SetIndex(i++);
    }
-
-   UpdatePendingTracks();
 }
 
 void TrackList::QueueEvent(TrackListEvent event)
@@ -560,13 +552,14 @@ Track* TrackList::SwapChannels(Track &track)
    return pPartner;
 }
 
-void TrackList::Insert(const Track* before, TrackList&& trackList)
+void TrackList::Insert(
+   const Track* before, TrackList&& trackList, bool assignIds)
 {
    assert(before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>()));
 
    if(before == nullptr)
    {
-      Append(std::move(trackList));
+      Append(std::move(trackList), assignIds);
       return;
    }
 
@@ -580,7 +573,7 @@ void TrackList::Insert(const Track* before, TrackList&& trackList)
       }
       arr.push_back(track);
    }
-   Append(std::move(trackList));
+   Append(std::move(trackList), assignIds);
    Permute(arr);
 }
 
@@ -625,7 +618,7 @@ Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
    return front().get();
 }
 
-Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
+Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
 {
    if (!ListOfTracks::empty()) {
       auto &pLast = *ListOfTracks::rbegin();
@@ -644,7 +637,7 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
    auto n = getPrev( getEnd() );
 
    t->SetOwner(shared_from_this(), n);
-   if (mAssignsIds)
+   if (mAssignsIds && assignIds)
       t->SetId(TrackId{ ++sCounter });
    RecalcPositions(n);
    AdditionEvent(n);
@@ -759,8 +752,9 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels)
    return true;
 }
 
-void TrackList::Remove(Track &track)
+std::shared_ptr<TrackList> TrackList::Remove(Track &track)
 {
+   auto result = TrackList::Temporary(nullptr);
    assert(track.IsLeader());
    auto *t = &track;
    const size_t nChannels = NChannels(*t);
@@ -782,8 +776,10 @@ void TrackList::Remove(Track &track)
          }
 
          DeletionEvent(t->shared_from_this(), false);
+         result->Add(move(holder));
       }
    }
+   return result;
 }
 
 void TrackList::Clear(bool sendEvent)
@@ -798,20 +794,8 @@ void TrackList::Clear(bool sendEvent)
          DeletionEvent(pTrack->shared_from_this(), false);
    }
 
-   if (mPendingUpdates)
-      for (auto pTrack: static_cast<ListOfTracks&>(*mPendingUpdates)) {
-         pTrack->SetOwner({}, {});
-         if (sendEvent)
-            DeletionEvent(pTrack, false);
-      }
-
    ListOfTracks tempList;
    tempList.swap( *this );
-
-   if (mPendingUpdates)
-      mPendingUpdates = Temporary(nullptr);
-
-   mUpdaters.clear();
 }
 
 /// Return a track in the list that comes after Track t
@@ -1011,215 +995,6 @@ double TrackList::GetEndTime() const
       std::numeric_limits<double>::lowest(), std::max);
 }
 
-Track*
-TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
-{
-   // This is only done on the TrackList belonging to a project
-   assert(GetOwner()); // which implies mPendingUpdates is not null
-   assert(src->IsLeader());
-   
-   auto tracks = src->Clone(); // not duplicate
-   assert(src->NChannels() == tracks->NChannels());
-   {
-      // Share the satellites with the original, though they do not point back
-      // to the pending track
-      const auto channels = TrackList::Channels(src);
-      auto iter = TrackList::Channels(*tracks->begin()).begin();
-      for (const auto pChannel : channels)
-         ((AttachedTrackObjects&)**iter++) = *pChannel; // shallow copy
-   }
-
-   const auto result = *tracks->begin();
-   mUpdaters.push_back(updater);
-   auto iter = tracks->ListOfTracks::begin(),
-      end = tracks->ListOfTracks::end();
-   while (iter != end) {
-      auto pTrack = *iter;
-      iter = tracks->erase(iter);
-      mPendingUpdates->ListOfTracks::push_back(pTrack->SharedPointer());
-      auto n = mPendingUpdates->ListOfTracks::end();
-      --n;
-      pTrack->SetOwner(shared_from_this(), {n, &*mPendingUpdates});
-   }
-   return result;
-}
-
-void TrackList::UpdatePendingTracks()
-{
-   if (!mPendingUpdates)
-      return;
-   auto pUpdater = mUpdaters.begin();
-   for (const auto &pendingTrack : *mPendingUpdates) {
-      auto src = FindById(pendingTrack->GetId());
-      // Copy just a part of the track state, according to the update
-      // function
-      const auto &updater = *pUpdater;
-      if (pendingTrack && src) {
-         if (updater)
-            updater(*pendingTrack, *src);
-      }
-      ++pUpdater;
-      pendingTrack->DoSetLinkType(src->GetLinkType());
-   }
-}
-
-/*! @excsafety{No-fail} */
-void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
-{
-   assert(GetOwner()); // which implies mPendingUpdates is not null
-   for (const auto &pTrack: static_cast<ListOfTracks&>(*mPendingUpdates))
-      pTrack->SetOwner( {}, {} );
-   mPendingUpdates->ListOfTracks::clear();
-   mUpdaters.clear();
-
-   if (pAdded)
-      pAdded->clear();
-
-   // To find the first node that remains after the first deleted one
-   TrackNodePointer node;
-   bool foundNode = false;
-
-   for (auto it = ListOfTracks::begin(), stop = ListOfTracks::end();
-        it != stop;) {
-      if (it->get()->GetId() == TrackId{}) {
-         do {
-            if (pAdded)
-               pAdded->push_back( *it );
-            (*it)->SetOwner( {}, {} );
-            DeletionEvent(*it, false);
-            it = erase( it );
-         }
-         while (it != stop && it->get()->GetId() == TrackId{});
-
-         if (!foundNode && it != stop) {
-            node = (*it)->GetNode();
-            foundNode = true;
-         }
-      }
-      else
-         ++it;
-   }
-
-   if (!empty()) {
-      RecalcPositions(getBegin());
-   }
-}
-
-/*! @excsafety{Strong} */
-bool TrackList::ApplyPendingTracks()
-{
-   bool result = false;
-
-   ListOfTracks additions;
-   auto updates = Temporary(nullptr);
-   {
-      // Always clear, even if one of the update functions throws
-      auto cleanup = finally( [&] { ClearPendingTracks( &additions ); } );
-      UpdatePendingTracks();
-      updates.swap(mPendingUpdates);
-   }
-
-   // Remaining steps must be No-fail-guarantee so that this function
-   // gives Strong-guarantee
-
-   std::vector< std::shared_ptr<Track> > reinstated;
-
-   if (updates)
-      for (auto pendingTrack : static_cast<ListOfTracks &>(*updates))
-         pendingTrack->AttachedTrackObjects::ForEach([&](auto &attachment){
-            attachment.Reparent( pendingTrack );
-         });
-   while (updates && !updates->empty()) {
-      auto iter = updates->ListOfTracks::begin();
-      auto pendingTrack = *iter;
-      auto src = FindById(pendingTrack->GetId());
-      if (src) {
-         this->ReplaceOne(*src, std::move(*updates));
-         result = true;
-      }
-      else {
-         // Perhaps a track marked for pending changes got deleted by
-         // some other action.  Recreate it so we don't lose the
-         // accumulated changes.
-         reinstated.push_back(pendingTrack);
-         updates->ListOfTracks::erase(iter);
-      }
-   }
-
-   // If there are tracks to reinstate, append them to the list.
-   for (auto &pendingTrack : reinstated)
-      if (pendingTrack)
-         this->Add( pendingTrack ), result = true;
-
-   // Put the pending added tracks back into the list, preserving their
-   // positions.
-   bool inserted = false;
-   ListOfTracks::iterator first;
-   for (auto &pendingTrack : additions) {
-      if (pendingTrack) {
-         auto iter = ListOfTracks::begin();
-         std::advance( iter, pendingTrack->GetIndex() );
-         iter = ListOfTracks::insert( iter, pendingTrack );
-         pendingTrack->SetOwner( shared_from_this(), {iter, this} );
-         pendingTrack->SetId( TrackId{ ++sCounter } );
-         if (!inserted) {
-            first = iter;
-            inserted = true;
-         }
-      }
-   }
-   if (inserted) {
-      TrackNodePointer node{first, this};
-      RecalcPositions(node);
-      AdditionEvent(node);
-      result = true;
-   }
-
-   return result;
-}
-
-std::shared_ptr<Track> Track::SubstitutePendingChangedTrack()
-{
-   // Linear search.  Tracks in a project are usually very few.
-   auto pList = mList.lock();
-   if (pList && pList->mPendingUpdates) {
-      const auto id = GetId();
-      const auto end = pList->mPendingUpdates->ListOfTracks::end();
-      auto it = std::find_if(
-         pList->mPendingUpdates->ListOfTracks::begin(), end,
-         [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
-      if (it != end)
-         return *it;
-   }
-   return SharedPointer();
-}
-
-std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
-{
-   return const_cast<Track*>(this)->SubstitutePendingChangedTrack();
-}
-
-std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
-{
-   auto pList = mList.lock();
-   if (pList && pList->mPendingUpdates) {
-      const auto id = GetId();
-      const auto pred = [=]( const ListOfTracks::value_type &ptr ) {
-         return ptr->GetId() == id; };
-      const auto end = pList->mPendingUpdates->ListOfTracks::end();
-      const auto it =
-         std::find_if(pList->mPendingUpdates->ListOfTracks::begin(), end, pred);
-      if (it != end) {
-         const auto &list2 = (const ListOfTracks &) *pList;
-         const auto end2 = list2.end();
-         const auto it2 = std::find_if( list2.begin(), end2, pred );
-         if ( it2 != end2 )
-            return *it2;
-      }
-   }
-   return SharedPointer();
-}
-
 auto Track::ClassTypeInfo() -> const TypeInfo &
 {
    static Track::TypeInfo info{
@@ -1281,17 +1056,6 @@ void Track::AdjustPositions()
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
-}
-
-bool TrackList::HasPendingTracks() const
-{
-   if (mPendingUpdates && !mPendingUpdates->empty())
-      return true;
-   if (End() != std::find_if(Begin(), End(), [](const Track *t){
-      return t->GetId() == TrackId{};
-   }))
-      return true;
-   return false;
 }
 
 Track::LinkType Track::GetLinkType() const noexcept
@@ -1388,50 +1152,6 @@ const std::optional<double>& Track::GetProjectTempo() const
    return GetGroupData().mProjectTempo;
 }
 
-// Undo/redo handling of selection changes
-namespace {
-struct TrackListRestorer final : UndoStateExtension {
-   TrackListRestorer(AudacityProject &project)
-      : mpTracks{ TrackList::Create(nullptr) }
-   {
-      for (auto pTrack : TrackList::Get(project)) {
-         if (pTrack->GetId() == TrackId{})
-            // Don't copy a pending added track
-            continue;
-         mpTracks->Append(std::move(*pTrack->Duplicate()));
-      }
-   }
-   void RestoreUndoRedoState(AudacityProject &project) override {
-      auto &dstTracks = TrackList::Get(project);
-      dstTracks.Clear();
-      for (auto pTrack : *mpTracks)
-         dstTracks.Append(std::move(*pTrack->Duplicate()));
-   }
-   bool CanUndoOrRedo(const AudacityProject &project) override {
-      return !TrackList::Get(project).HasPendingTracks();
-   }
-   const std::shared_ptr<TrackList> mpTracks;
-};
-
-UndoRedoExtensionRegistry::Entry sEntry {
-   [](AudacityProject &project) -> std::shared_ptr<UndoStateExtension> {
-      return std::make_shared<TrackListRestorer>(project);
-   }
-};
-}
-
-TrackList *TrackList::FindUndoTracks(const UndoStackElem &state)
-{
-   auto &exts = state.state.extensions;
-   auto end = exts.end(),
-      iter = std::find_if(exts.begin(), end, [](auto &pExt){
-         return dynamic_cast<TrackListRestorer*>(pExt.get());
-      });
-   if (iter != end)
-      return static_cast<TrackListRestorer*>(iter->get())->mpTracks.get();
-   return nullptr;
-}
-
 TrackListHolder TrackList::Temporary(AudacityProject *pProject,
    const Track::Holder &left, const Track::Holder &right)
 {
@@ -1463,24 +1183,14 @@ TrackListHolder TrackList::Temporary(AudacityProject *pProject,
    return tempList;
 }
 
-void TrackList::Append(TrackList &&list)
+void TrackList::Append(TrackList &&list, bool assignIds)
 {
    auto iter = list.ListOfTracks::begin(),
       end = list.ListOfTracks::end();
    while (iter != end) {
       auto pTrack = *iter;
       iter = list.erase(iter);
-      this->Add(pTrack);
-   }
-}
-
-void TrackList::RegisterPendingNewTracks(TrackList&& list)
-{
-   for(auto it = list.ListOfTracks::begin(); it != list.ListOfTracks::end();)
-   {
-      Add(*it);
-      (*it)->SetId({});
-      it = list.erase(it);
+      this->Add(pTrack, assignIds);
    }
 }
 

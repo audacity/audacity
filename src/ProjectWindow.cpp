@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -1106,7 +1107,8 @@ void ProjectWindow::FixScrollbars()
    auto LastTime = std::numeric_limits<double>::lowest();
    for (const Track *track : tracks) {
       // Iterate over pending changed tracks if present.
-      track = track->SubstitutePendingChangedTrack().get();
+      track = PendingTracks::Get(project)
+         .SubstitutePendingChangedTrack(*track).get();
       LastTime = std::max(LastTime, track->GetEndTime());
    }
    LastTime =

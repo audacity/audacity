@@ -18,6 +18,7 @@
 #include "CommandFlag.h"
 #include "CommandFunctors.h"
 #include "MenuRegistry.h"
+#include "PendingTracks.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
@@ -143,19 +144,20 @@ WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<T
     : CommonTrackCell{ pTrack, 0 }
     , mClipNameFont{ wxFontInfo{} }
 {
-    if (auto trackList = pTrack->GetOwner())
-    {
-        mTrackListEventSubscription = trackList->Subscribe(
+   if (auto trackList = pTrack->GetOwner()) {
+      if (auto pProject = trackList->GetOwner()) {
+         mTrackListEventSubscription = PendingTracks(*pProject).Subscribe(
             *this, &WaveTrackAffordanceControls::OnTrackListEvent);
-        if(auto project = trackList->GetOwner())
-        {
+         if(auto project = trackList->GetOwner())
+         {
             auto& viewInfo = ViewInfo::Get(*project);
             mSelectionChangeSubscription =
-                viewInfo.selectedRegion.Subscribe(
-                    *this,
-                    &WaveTrackAffordanceControls::OnSelectionChange);
-        }
-    }
+            viewInfo.selectedRegion.Subscribe(
+               *this,
+               &WaveTrackAffordanceControls::OnSelectionChange);
+         }
+      }
+   }
 }
 
 std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMouseState& state, const AudacityProject* pProject)
@@ -192,7 +194,8 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         );
     }
 
-    const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
+    const auto waveTrack = std::static_pointer_cast<WaveTrack>(
+       PendingTracks::Get(*pProject).SubstitutePendingChangedTrack(*track));
     auto& zoomInfo = ViewInfo::Get(*pProject);
     const auto intervals = waveTrack->Intervals();
     for(auto it = intervals.begin(); it != intervals.end(); ++it)
@@ -234,12 +237,14 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
     if (iPass == TrackArtist::PassBackground) {
         auto track = FindTrack();
         const auto artist = TrackArtist::Get(context);
+        const auto &pendingTracks = *artist->pPendingTracks;
 
         TrackArt::DrawBackgroundWithSelection(context, rect, track.get(), artist->blankSelectedBrush, artist->blankBrush);
 
         mVisibleIntervals.clear();
 
-        const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
+        const auto waveTrack = std::static_pointer_cast<WaveTrack>(
+           pendingTracks.SubstitutePendingChangedTrack(*track));
         const auto& zoomInfo = *artist->pZoomInfo;
         {
             wxDCClipper dcClipper(context.dc, rect);

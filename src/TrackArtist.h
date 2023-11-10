@@ -28,6 +28,7 @@
 
 class wxRect;
 
+class PendingTracks;
 class TrackList;
 class TrackPanel;
 class SelectedRegion;
@@ -121,6 +122,7 @@ public:
 
    const SelectedRegion *pSelectedRegion{};
    ZoomInfo *pZoomInfo{};
+   const PendingTracks *pPendingTracks{};
 
    bool drawEnvelope{ false };
    bool bigPoints{ false };

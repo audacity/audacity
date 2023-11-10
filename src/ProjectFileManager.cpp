@@ -40,6 +40,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "TrackPanelAx.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
+#include "UndoTracks.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "Export.h"
@@ -1521,7 +1522,7 @@ void ProjectFileManager::Compact()
    const auto greatest = std::max<size_t>(savedState, currentState);
    std::vector<const TrackList*> trackLists;
    auto fn = [&](const UndoStackElem& elem) {
-      if (auto pTracks = TrackList::FindUndoTracks(elem))
+      if (auto pTracks = UndoTracks::Find(elem))
          trackLists.push_back(pTracks);
    };
    undoManager.VisitStates(fn, least, 1 + least);

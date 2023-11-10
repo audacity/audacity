@@ -11,6 +11,7 @@ Paul Licameli split from Track.cpp
 
 #include "SyncLock.h"
 
+#include "PendingTracks.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Track.h"
@@ -91,7 +92,7 @@ bool SyncLock::IsSyncLockSelected(const Track *pTrack)
    if (!p || !SyncLockState::Get( *p ).IsSyncLocked())
       return false;
 
-   auto shTrack = pTrack->SubstituteOriginalTrack();
+   auto shTrack = PendingTracks::Get(*p).SubstituteOriginalTrack(*pTrack);
    if (!shTrack)
       return false;
 

@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackButtonHandles.h"
 
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
@@ -155,7 +156,8 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    auto pTrack = mpTrack.lock();
    if (pTrack)
    {
-      auto toRemove = pTrack->SubstitutePendingChangedTrack();
+      auto toRemove = PendingTracks::Get(*pProject)
+         .SubstitutePendingChangedTrack(*pTrack);
       ProjectAudioManager::Get( *pProject ).StopIfPaused();
       if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:

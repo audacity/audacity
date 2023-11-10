@@ -41,7 +41,6 @@ using TrackArray = std::vector< Track* >;
 
 class TrackList;
 using TrackListHolder = std::shared_ptr<TrackList>;
-struct UndoStackElem;
 
 using ListOfTracks = std::list< std::shared_ptr< Track > >;
 
@@ -83,9 +82,8 @@ template<typename T>
 //! An in-session identifier of track objects across undo states.  It does not persist between sessions
 /*!
     Default constructed value is not equal to the id of any track that has ever
-    been added to a TrackList, or (directly or transitively) copied from such.
-    (A track added by TrackList::RegisterPendingNewTrack() that is not yet applied is not
-    considered added.)
+    been added to a non-temporary TrackList, or (directly or transitively)
+    copied from such.
 
     TrackIds are assigned uniquely across projects. */
 class TrackId
@@ -184,15 +182,6 @@ private:
    template<typename Subclass = const Track>
    static inline std::shared_ptr<Subclass> SharedPointer( const Track *pTrack )
    { return pTrack ? pTrack->SharedPointer<Subclass>() : nullptr; }
-
-   // Find anything registered with TrackList::RegisterPendingChangedTrack and
-   // not yet cleared or applied; if no such exists, return this track
-   std::shared_ptr<Track> SubstitutePendingChangedTrack();
-   std::shared_ptr<const Track> SubstitutePendingChangedTrack() const;
-
-   // If this track is a pending changed track, return the corresponding
-   // original; else return this track
-   std::shared_ptr<const Track> SubstituteOriginalTrack() const;
 
    //! Names of a track type for various purposes.
    /*! Some of the distinctions exist only for historical reasons. */
@@ -299,10 +288,13 @@ private:
 
    //! public nonvirtual duplication function that invokes Clone()
    /*!
+    @param shallowCopyAttachments if true, then share AttachedTrackObjects
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
-   virtual TrackListHolder Duplicate() const;
+   virtual TrackListHolder Duplicate(bool shallowCopyAttachments = false) const;
+
+   void ReparentAllAttachments();
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;
@@ -395,12 +387,14 @@ public:
 private:
    //! Subclass responsibility implements only a part of Duplicate(), copying
    //! the track data proper (not associated data such as for groups and views)
+   //! including TrackId
    /*!
     @param unstretchInterval If set, this time interval's stretching must be applied.
     @pre `!unstretchInterval.has_value() ||
        unstretchInterval->first < unstretchInterval->second`
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
+    @post result tracks have same TrackIds as the channels of `this`
     */
    virtual TrackListHolder Clone() const = 0;
 
@@ -1005,8 +999,6 @@ class TRACK_API TrackList final
    static TrackList &Get( AudacityProject &project );
    static const TrackList &Get( const AudacityProject &project );
 
-   static TrackList *FindUndoTracks(const UndoStackElem &state);
-
    // Create an empty TrackList
    // Don't call directly -- use Create() instead
    explicit TrackList( AudacityProject *pOwner );
@@ -1129,7 +1121,7 @@ public:
 
 private:
    Track *DoAddToHead(const std::shared_ptr<Track> &t);
-   Track *DoAdd(const std::shared_ptr<Track> &t);
+   Track *DoAdd(const std::shared_ptr<Track> &t, bool assignIds);
 
    template< typename TrackType, typename InTrackType >
       static TrackIterRange< TrackType >
@@ -1173,10 +1165,14 @@ public:
 
    friend class Track;
 
-   //! @brief Inserts tracks form \p trackList starting from position where
-   //! \p before is located. If \p before is nullptr tracks are appended.
+   //! @brief Moves all tracks from \p trackList starting from position
+   //! where \p before is located. If \p before is nullptr the tracks are
+   //! appended.
+   //! @param assignIds ignored if `this` is a temporary list; else if false,
+   //! suppresses TrackId assignment
    //! @pre `before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>())`
-   void Insert(const Track* before, TrackList&& trackList);
+   void Insert(
+      const Track* before, TrackList&& trackList, bool assignIds = false);
 
    /*!
     @pre `tracks` contains pointers only to leader tracks of this, and each of
@@ -1186,14 +1182,17 @@ public:
 
    Track *FindById( TrackId id );
 
-   /// Add a Track, giving it a fresh id
+   /// Add a Track, giving it a fresh id if `this` is not temporary
    template<typename TrackKind>
-      TrackKind *AddToHead( const std::shared_ptr< TrackKind > &t )
-         { return static_cast< TrackKind* >( DoAddToHead( t ) ); }
+      TrackKind *AddToHead( const std::shared_ptr<TrackKind> &t )
+         { return static_cast<TrackKind*>(DoAddToHead(t)); }
 
+   /// Add a Track, giving it a fresh id if `this` is not temporary and
+   /// assignIds is true
    template<typename TrackKind>
-      TrackKind *Add( const std::shared_ptr< TrackKind > &t )
-         { return static_cast< TrackKind* >( DoAdd( t ) ); }
+      TrackKind *Add(const std::shared_ptr<TrackKind> &t,
+         bool assignIds = true)
+            { return static_cast<TrackKind*>(DoAdd(t, assignIds)); }
 
    //! Removes linkage if track belongs to a group
    std::vector<Track*> UnlinkChannels(Track& track);
@@ -1218,11 +1217,11 @@ public:
     */
    TrackListHolder ReplaceOne(Track &t, TrackList &&with);
 
-   //! Remove a channel group, given the leader
+   //! Remove a channel group, given the leader, and return it
    /*!
     @pre `track.IsLeader()`
     */
-   void Remove(Track &track);
+   std::shared_ptr<TrackList> Remove(Track &track);
 
    /// Make the list empty
    void Clear(bool sendEvent = true);
@@ -1259,7 +1258,7 @@ public:
 
    //! Construct a temporary list owned by `pProject` (if that is not null)
    //! so that `TrackList::Channels(left.get())` will enumerate the given
-   //! tracks
+   //! tracks; TrackIds are not changed
    /*!
     @pre `left == nullptr || left->GetOwner() == nullptr`
     @pre `right == nullptr || (left && right->GetOwner() == nullptr)`
@@ -1269,7 +1268,7 @@ public:
 
    //! Construct a temporary list whose first channel group contains the given
    //! channels, up to the limit of channel group size; excess channels go each
-   //! into a separate group
+   //! into a separate group; TrackIds are not changed
    static TrackListHolder Temporary(
       AudacityProject *pProject, const std::vector<Track::Holder> &channels);
 
@@ -1291,16 +1290,11 @@ public:
    }
 
    //! Remove all tracks from `list` and put them at the end of `this`
-   void Append(TrackList &&list);
-
-   // Like RegisterPendingChangedTrack, but for a list of new tracks,
-   // not a replacement track.  Caller
-   // supplies the list, and there are no updates.
-   // Pending tracks will have an unassigned TrackId.
-   // Pending new tracks WILL occur in iterations, always after actual
-   // tracks, and in the sequence that they were added.  They can be
-   // distinguished from actual tracks by TrackId.
-   void RegisterPendingNewTracks(TrackList &&list);
+   /*!
+    @param assignIds ignored if `this` is a temporary list; else if false,
+    suppresses TrackId assignment
+    */
+   void Append(TrackList &&list, bool assignIds = true);
 
    //! Remove first channel group (if any) from `list` and put it at the end of
    //! `this`
@@ -1361,9 +1355,7 @@ private:
    TrackIterRange< Track > EmptyRange() const;
 
    bool isNull(TrackNodePointer p) const
-   { return (p.second == this && p.first == ListOfTracks::end())
-      || (mPendingUpdates && p.second == &*mPendingUpdates &&
-          p.first == mPendingUpdates->ListOfTracks::end()); }
+   { return (p.second == this && p.first == ListOfTracks::end()); }
    TrackNodePointer getEnd() const
    { return { const_cast<TrackList*>(this)->ListOfTracks::end(),
               const_cast<TrackList*>(this)}; }
@@ -1412,62 +1404,8 @@ private:
    // Used to assign ids to added tracks.
    static long sCounter;
 
-public:
-   //! The tracks supplied to this function will be leaders with the same number
-   //! of channels
-   using Updater = std::function<void(Track &dest, const Track &src)>;
-   // Start a deferred update of the project.
-   // The return value is a duplicate of the given track.
-   // While ApplyPendingTracks or ClearPendingTracks is not yet called,
-   // there may be other direct changes to the project that push undo history.
-   // Meanwhile the returned object can accumulate other changes for a deferred
-   // push, and temporarily shadow the actual project track for display purposes.
-   // The Updater function, if not null, merges state (from the actual project
-   // into the pending track) which is not meant to be overridden by the
-   // accumulated pending changes.
-   // To keep the display consistent, the Y and Height values, minimized state,
-   // and Linked state must be copied, and this will be done even if the
-   // Updater does not do it.
-   // Pending track will have the same TrackId as the actual.
-   // Pending changed tracks will not occur in iterations.
-   /*!
-    @pre `GetOwner()`
-    @pre `src->IsLeader()`
-    @post result: `src->NChannels() == result.size()`
-    */
-   Track* RegisterPendingChangedTrack(
-      Updater updater,
-      Track *src
-   );
-
-   // Invoke the updaters of pending tracks.  Pass any exceptions from the
-   // updater functions.
-   void UpdatePendingTracks();
-
-   /*
-    Forget pending track additions and changes;
-    if requested, give back the pending added tracks.
-    @pre `GetOwner()`
-    */
-   void ClearPendingTracks(ListOfTracks *pAdded = nullptr);
-
-   // Change the state of the project.
-   // Strong guarantee for project state in case of exceptions.
-   // Will always clear the pending updates.
-   // Return true if the state of the track list really did change.
-   bool ApplyPendingTracks();
-
-   bool HasPendingTracks() const;
-
-private:
    AudacityProject *mOwner;
 
-   //! Shadow tracks holding append-recording in progress; need to put them into
-   //! a list so that channel grouping works
-   /*! Beware, they are in a disjoint iteration sequence from ordinary tracks */
-   std::shared_ptr<TrackList> mPendingUpdates;
-   //! This is in correspondence with leader tracks in mPendingUpdates
-   std::vector< Updater > mUpdaters;
    //! Whether the list assigns unique ids to added tracks;
    //! false for temporaries
    bool mAssignsIds{ true };

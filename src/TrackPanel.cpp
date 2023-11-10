@@ -52,6 +52,7 @@ is time to refresh some aspect of the screen.
 #include "AdornedRulerPanel.h"
 #include "tracks/ui/CommonTrackPanelCell.h"
 #include "KeyboardCapture.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
@@ -299,8 +300,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mTrackListSubscription =
-   mTracks->Subscribe([this](const TrackListEvent &event){
+   mTrackListSubscription = PendingTracks::Get(*GetProject())
+   .Subscribe([this](const TrackListEvent &event){
       switch (event.mType) {
       case TrackListEvent::RESIZING:
       case TrackListEvent::ADDITION:
@@ -554,7 +555,7 @@ void TrackPanel::ProcessUIHandleResult
 
    // Copy data from the underlying tracks to the pending tracks that are
    // really displayed
-   TrackList::Get( *panel->GetProject() ).UpdatePendingTracks();
+   PendingTracks::Get(*panel->GetProject()).UpdatePendingTracks();
 
    using namespace RefreshCode;
 
@@ -831,6 +832,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    const SelectedRegion &sr = mViewInfo->selectedRegion;
    mTrackArtist->pSelectedRegion = &sr;
+   const auto &pendingTracks = PendingTracks::Get(*GetProject());
+   mTrackArtist->pPendingTracks = &pendingTracks;
    mTrackArtist->pZoomInfo = mViewInfo;
    TrackPanelDrawingContext context {
       *dc, Target(), mLastMouseState, mTrackArtist.get()
@@ -852,9 +855,9 @@ void TrackPanel::DrawTracks(wxDC * dc)
 #endif
 
    const bool hasSolo = GetTracks()->Any<PlayableTrack>()
-      .any_of( [](const PlayableTrack *pt) {
+      .any_of( [&](const PlayableTrack *pt) {
          pt = static_cast<const PlayableTrack *>(
-            pt->SubstitutePendingChangedTrack().get());
+            pendingTracks.SubstitutePendingChangedTrack(*pt).get());
          return (pt && pt->GetSolo());
       } );
 
@@ -1136,7 +1139,10 @@ void DrawTrackName(int leftOffset, TrackPanelDrawingContext &context,
 {
    if (!TrackArtist::Get(context)->mbShowTrackNameInTrack)
       return;
-   auto &track = *GetTrack(channel).SubstitutePendingChangedTrack();
+   const auto artist = TrackArtist::Get(context);
+   const auto &pendingTracks = *artist->pPendingTracks;
+   auto &track =
+      *pendingTracks.SubstitutePendingChangedTrack(GetTrack(channel));
    auto name = track.GetName();
    if (name.IsEmpty())
       return;

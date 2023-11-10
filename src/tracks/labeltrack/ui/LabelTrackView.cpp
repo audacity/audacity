@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../widgets/BasicMenu.h"
 #include "AllThemeResources.h"
 #include "../../../HitTestResult.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectNumericFormats.h"
@@ -782,6 +783,7 @@ void LabelTrackView::Draw
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
+   const auto &pendingTracks = *artist->pPendingTracks;
 
    auto pHit = findHit( artist->parent );
 
@@ -792,7 +794,7 @@ void LabelTrackView::Draw
       calculateFontHeight(dc);
 
    const auto pTrack = std::static_pointer_cast< const LabelTrack >(
-      FindTrack()->SubstitutePendingChangedTrack());
+      pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
    const auto &mLabels = pTrack->GetLabels();
 
    TrackArt::DrawBackgroundWithSelection( context, r, pTrack.get(),

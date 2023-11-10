@@ -37,6 +37,7 @@
 #include "CommandContext.h"
 #include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "TrackPanel.h"
 
@@ -52,10 +53,11 @@ class AudacityPrintout final : public wxPrintout
 {
  public:
    AudacityPrintout(wxString title,
-                    TrackList *tracks, TrackPanel &panel):
-      wxPrintout(title),
-        mPanel(panel)
-      , mTracks(tracks)
+      TrackList *tracks, TrackPanel &panel, PendingTracks &pendingTracks
+   )  : wxPrintout{ title }
+      , mPanel{ panel }
+      , mTracks{ tracks }
+      , mPendingTracks{ pendingTracks }
    {
    }
    bool OnPrintPage(int page);
@@ -67,6 +69,7 @@ class AudacityPrintout final : public wxPrintout
  private:
    TrackPanel &mPanel;
    TrackList *mTracks;
+   PendingTracks &mPendingTracks;
 };
 
 bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
@@ -98,6 +101,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    const double screenDuration = mTracks->GetEndTime();
    SelectedRegion region{};
    artist.pSelectedRegion = &region;
+   artist.pPendingTracks = &mPendingTracks;
    ZoomInfo zoomInfo(0.0, width / screenDuration);
    artist.pZoomInfo = &zoomInfo;
    int y = rulerPageHeight;
@@ -177,12 +181,12 @@ void HandlePageSetup(wxWindow *parent)
 
 void HandlePrint(
    wxWindow *parent, const wxString &name, TrackList *tracks,
-   TrackPanel &panel)
+   TrackPanel &panel, PendingTracks &pendingTracks)
 {
    wxPrintDialogData printDialogData(gPrintData());
 
    wxPrinter printer(&printDialogData);
-   AudacityPrintout printout(name, tracks, panel);
+   AudacityPrintout printout(name, tracks, panel, pendingTracks);
    if (!printer.Print(parent, &printout, true)) {
       if (wxPrinter::GetLastError() == wxPRINTER_ERROR) {
          AudacityMessageBox(
@@ -212,7 +216,8 @@ void OnPrint(const CommandContext &context)
    auto name = project.GetProjectName();
    auto &tracks = TrackList::Get( project );
    auto &window = GetProjectFrame( project );
-   HandlePrint(&window, name, &tracks, TrackPanel::Get( project ));
+   HandlePrint(&window,
+      name, &tracks, TrackPanel::Get(project), PendingTracks::Get(project));
 }
 
 using namespace MenuRegistry;

@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Track.h"
 
 #include "ClientData.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "XMLTagHandler.h"
 #include "XMLWriter.h"
@@ -253,7 +254,7 @@ struct TrackPositioner final : ClientData::Base
    explicit TrackPositioner( AudacityProject &project )
       : mProject{ project }
    {
-      mSubscription = TrackList::Get( project )
+      mSubscription = PendingTracks::Get(project)
          .Subscribe(*this, &TrackPositioner::OnUpdate);
    }
    TrackPositioner( const TrackPositioner & ) = delete;

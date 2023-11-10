@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "../../../../HitTestResult.h"
+#include "PendingTracks.h"
 #include "Theme.h"
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
@@ -726,9 +727,12 @@ void NoteTrackView::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
+   const auto artist = TrackArtist::Get(context);
+   const auto &pendingTracks = *artist->pPendingTracks;
+
    if ( iPass == TrackArtist::PassTracks ) {
       const auto nt = std::static_pointer_cast<const NoteTrack>(
-         FindTrack()->SubstitutePendingChangedTrack());
+         pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
       bool muted = false;
 #ifdef EXPERIMENTAL_MIDI_OUT
       const auto artist = TrackArtist::Get( context );

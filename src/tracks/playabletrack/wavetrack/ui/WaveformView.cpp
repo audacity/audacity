@@ -22,6 +22,7 @@ Paul Licameli split from WaveChannelView.cpp
 #include "AColor.h"
 #include "Envelope.h"
 #include "../../../../EnvelopeEditor.h"
+#include "PendingTracks.h"
 #include "../../../../ProjectSettings.h"
 #include "SelectedRegion.h"
 #include "SyncLock.h"
@@ -993,12 +994,13 @@ void WaveformView::Draw(
    TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassTracks ) {
+      const auto artist = TrackArtist::Get(context);
+      const auto &pendingTracks = *artist->pPendingTracks;
       auto &dc = context.dc;
 
       const auto wt = std::static_pointer_cast<const WaveTrack>(
-         FindTrack()->SubstitutePendingChangedTrack());
+         pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
 
-      const auto artist = TrackArtist::Get( context );
       const auto hasSolo = artist->hasSolo;
       bool muted = (hasSolo || wt->GetMute()) &&
       !wt->GetSolo();
