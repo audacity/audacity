@@ -2574,11 +2574,12 @@ void AdornedRulerPanel::DoDrawPlayRegion(
    wxDC * dc, const wxRect &rectP, const wxRect &rectL, const wxRect &rectR)
 {
    const auto &viewInfo = ViewInfo::Get(*mProject);
-   const auto &playRegion = viewInfo.playRegion;
-   if (playRegion.IsLastActiveRegionClear())
-      return;
+   const auto& playRegion = viewInfo.playRegion;
 
    const bool isActive = (mLastPlayRegionActive = playRegion.Active());
+
+   if (playRegion.IsLastActiveRegionClear())
+      return;
 
    // Paint the selected region bolder if independently varying, else dim
    const auto color = TimelineLoopRegionColor(isActive);
