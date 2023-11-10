@@ -13,7 +13,7 @@
 #define __AUDACITY_MENU_CREATOR__
 
 #include "Callable.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 
 class AUDACITY_DLL_API MenuCreator final : public CommandManager
 {
@@ -50,20 +50,15 @@ public:
    void RebuildMenuBar();
    static void RebuildAllMenuBars();
 
-   void ModifyUndoMenuItems();
-
-   // checkActive is a temporary hack that should be removed as soon as we
+   // a temporary hack that should be removed as soon as we
    // get multiple effect preview working
-   void UpdateMenus( bool checkActive = true );
+   bool ReallyDoQuickCheck() override;
 
    void RemoveDuplicateShortcuts();
 
 private:
    void ExecuteCommand(const CommandContext &context,
       const wxEvent *evt, const CommandListEntry &entry) override;
-
-   void OnUndoRedo(struct UndoRedoMessage);
-   Observer::Subscription mUndoSubscription;
 };
 
 struct NormalizedKeyString;

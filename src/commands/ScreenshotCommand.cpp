@@ -44,7 +44,7 @@ small calculations of rectangles.
 #include "Track.h"
 #include "../widgets/VetoDialogHook.h"
 #include "CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "CommandDispatch.h"
 #include "../CommonCommandFlags.h"
 

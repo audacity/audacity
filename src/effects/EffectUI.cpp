@@ -19,6 +19,7 @@
 #include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"
 #include "BasicUI.h"
+#include "CommandManager.h"
 #include "ConfigInterface.h"
 #include "EffectManager.h"
 #include "PluginManager.h"
@@ -96,7 +97,6 @@ private:
 #include "../../images/Effect.h"
 #include "AudioIO.h"
 #include "../CommonCommandFlags.h"
-#include "../MenuCreator.h"
 #include "../prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "../ProjectAudioManager.h"
@@ -1135,7 +1135,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "WaveTrack.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 
 /// DoEffect() takes a PluginID and executes the associated effect.
 ///
@@ -1195,7 +1195,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          // For now, we're limiting realtime preview to a single effect, so
          // make sure the menus reflect that fact that one may have just been
          // opened.
-         MenuCreator::Get(project).UpdateMenus( false );
+         CommandManager::Get(project).UpdateMenus( false );
       }
 
    } );

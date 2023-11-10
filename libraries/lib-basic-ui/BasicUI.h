@@ -221,6 +221,8 @@ public:
 
    virtual std::unique_ptr<WindowPlacement> DoFindFocus() = 0;
    virtual void DoSetFocus(const WindowPlacement &focus) = 0;
+
+   virtual bool IsUsingRtlLayout() const = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -381,6 +383,14 @@ inline void SetFocus(const WindowPlacement &focus)
 {
    if (auto p = Get())
       p->DoSetFocus(focus);
+}
+
+//! Whether using a right-to-left language layout
+inline bool IsUsingRtlLayout()
+{
+   if (auto p = Get())
+      return p->IsUsingRtlLayout();
+   return false;
 }
 
 //! @}

@@ -229,3 +229,8 @@ void wxWidgetsBasicUI::DoSetFocus(const BasicUI::WindowPlacement &focus)
    auto pWindow = wxWidgetsWindowPlacement::GetParent(focus);
    pWindow->SetFocus();
 }
+
+bool wxWidgetsBasicUI::IsUsingRtlLayout() const
+{
+   return wxLayout_RightToLeft == wxTheApp->GetLayoutDirection();
+}

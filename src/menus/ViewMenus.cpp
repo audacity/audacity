@@ -11,7 +11,7 @@
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
 #include "../tracks/ui/ChannelView.h"

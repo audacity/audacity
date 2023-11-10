@@ -615,14 +615,17 @@ void OnPaste(const CommandContext &context)
                   bPastedSomething = true;
                   // For correct remapping of preserved split lines:
                   PasteTimeWarper warper{ t1, t0 + src->GetEndTime() };
-                  // New desired behaviour as of 3.4: pasting should result in a
-                  // new clip - don't erase boundaries to surrounding clips ...
-                  constexpr auto merge = false;
-                  // ... and of course, don't preserve the boundaries strictly
-                  // in [t0, t1].
-                  constexpr auto preserveExistingBoundaries = false;
-                  // Data in `[t0, t1]` must be recoverable though trimming.
-                  constexpr auto clearByTrimming = true;
+                  const auto newClipOnPaste =
+                     gPrefs->ReadBool(wxT("/GUI/PasteAsNewClips"), false);
+                  // The new-clip-on-paste behavior means: not merging the
+                  // clipboard data with data at the selection borders; not
+                  // reproducing boundaries within the selected region in the
+                  // new clip; preserving the data underneath by trimming
+                  // (rather than deleting).
+                  // The legacy behavior is the opposite.
+                  const auto merge = newClipOnPaste ? false : true;
+                  const auto preserveExistingBoundaries = newClipOnPaste ? false : true;
+                  auto clearByTrimming = newClipOnPaste ? true : false;
                   wn.ClearAndPaste(
                      t0, t1, *static_cast<const WaveTrack*>(src),
                      preserveExistingBoundaries, merge, &warper,
@@ -1031,7 +1034,7 @@ const ReservedCommandFlag
 
       return false;
    },
-   cutCopyOptions()
+   CommandFlagOptions{}.DisableDefaultMessage()
 }; return flag; }
 
 const ReservedCommandFlag
@@ -1040,7 +1043,7 @@ const ReservedCommandFlag
    {
       if(AudioIOBusyPred(project))
          return false;
-      
+
       const auto &viewInfo = ViewInfo::Get(project);
       if(viewInfo.selectedRegion.isPoint())
          return false;
@@ -1095,7 +1098,7 @@ auto EditMenu()
          MenuCreator::Special( wxT("UndoItemsUpdateStep"),
          [](AudacityProject &project, wxMenu&) {
             // Change names in the CommandManager as a side-effect
-            MenuCreator::Get(project).ModifyUndoMenuItems();
+            CommandManager::Get(project).ModifyUndoMenuItems();
          })
       ),
 
@@ -1103,7 +1106,7 @@ auto EditMenu()
          // Basic Edit commands
          /* i18n-hint: (verb)*/
          Command( wxT("Cut"), XXO("Cu&t"), OnCut,
-            AudioIONotBusyFlag() | CutCopyAvailableFlag(),
+            AudioIONotBusyFlag() | CutCopyAvailableFlag() | NoAutoSelect(),
             wxT("Ctrl+X") ),
          Command( wxT("Delete"), XXO("&Delete"), OnDelete,
             AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
@@ -1113,7 +1116,7 @@ auto EditMenu()
             AudioIONotBusyFlag() | CutCopyAvailableFlag(), wxT("Ctrl+C") ),
          /* i18n-hint: (verb)*/
          Command( wxT("Paste"), XXO("&Paste"), OnPaste,
-            AudioIONotBusyFlag() | ClipboardNotEmptyFlag(), wxT("Ctrl+V") ),
+            AudioIONotBusyFlag(), wxT("Ctrl+V") ),
          /* i18n-hint: (verb)*/
          Command( wxT("Duplicate"), XXO("Duplic&ate"), OnDuplicate,
             NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
@@ -1227,7 +1230,7 @@ RegisteredMenuItemEnabler selectAnyTracks{{
 
 RegisteredMenuItemEnabler selectWaveTracks{{
    []{ return WaveTracksExistFlag(); },
-   []{ return TimeSelectedFlag() | WaveTracksSelectedFlag(); },
+   []{ return TimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
 }};
@@ -1235,7 +1238,7 @@ RegisteredMenuItemEnabler selectWaveTracks{{
 // Also enable select for the noise reduction case.
 RegisteredMenuItemEnabler selectWaveTracks2{{
    []{ return WaveTracksExistFlag(); },
-   []{ return NoiseReductionTimeSelectedFlag() | WaveTracksSelectedFlag(); },
+   []{ return NoiseReductionTimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
 }};

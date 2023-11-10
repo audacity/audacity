@@ -26,7 +26,7 @@ class wxCommandEvent;
 #include <memory>
 
 #include "Internat.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 
 class PopupMenuHandler;
 struct PopupMenuSection;

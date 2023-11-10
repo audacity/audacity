@@ -31,23 +31,59 @@
 #include "JournalOutput.h"
 #include "JournalRegistry.h"
 #include "Registry.h"
-#include "ProjectHistory.h"
 #include "ProjectWindows.h"
-#include "UndoManager.h"
 #include "AudacityMessageBox.h"
 
 #include <wx/evtloop.h>
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/menu.h>
 #include <wx/windowptr.h>
+
+namespace {
+struct MenuBarListEntry
+{
+   MenuBarListEntry(const wxString &name, wxMenuBar *menubar);
+   ~MenuBarListEntry();
+
+   wxString name;
+   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
+};
+
+struct SubMenuListEntry
+{
+   SubMenuListEntry();
+   SubMenuListEntry(SubMenuListEntry&&) = default;
+   ~SubMenuListEntry();
+
+   TranslatableString name;
+   std::unique_ptr<wxMenu> menu;
+};
+
+MenuBarListEntry::MenuBarListEntry(const wxString &name, wxMenuBar *menubar)
+   : name{ name }, menubar{ menubar }
+{
+}
+
+MenuBarListEntry::~MenuBarListEntry()
+{
+}
+
+SubMenuListEntry::SubMenuListEntry()
+   : menu{ std::make_unique<wxMenu>() }
+{
+}
+
+SubMenuListEntry::~SubMenuListEntry()
+{
+}
+}
 
 MenuCreator::SpecialItem::~SpecialItem() = default;
 
 MenuCreator::MenuCreator(AudacityProject &project)
    : CommandManager{ project }
 {
-   mUndoSubscription = UndoManager::Get(project)
-      .Subscribe(*this, &MenuCreator::OnUndoRedo);
 }
 
 MenuCreator::~MenuCreator() = default;
@@ -70,134 +106,342 @@ namespace {
 
 using namespace MenuRegistry;
 
-struct MenuItemVisitor : Visitor<Traits> {
-   MenuItemVisitor(AudacityProject &proj, CommandManager &man)
-   : Visitor<Traits> { std::tuple{
-      // pre-visit
-      std::tuple {
-         [this](const MenuItem &menu, auto&) {
-            manager.BeginMenu(menu.GetTitle());
-         },
-         [this](const ConditionalGroupItem &conditionalGroup, auto&) {
-            const auto flag = conditionalGroup();
-            if (!flag)
-               manager.BeginOccultCommands();
-            // to avoid repeated call of condition predicate in EndGroup():
-            flags.push_back(flag);
-         },
-         [this](auto &item, auto&) {
-            assert(IsSection(item));
-         }
-      },
-
+struct MenuItemVisitor final : CommandManager::Populator {
+   explicit MenuItemVisitor(AudacityProject &proj)
+   : CommandManager::Populator { proj,
       // leaf visit
       [this](const auto &item, const auto&) {
-         const auto pCurrentMenu = manager.CurrentMenu();
+         const auto pCurrentMenu = CurrentMenu();
          if (!pCurrentMenu) {
-            // There may have been a mistake in the placement hint that registered
-            // this single item.  It's not within any menu.
+            // There may have been a mistake in the placement hint that
+            // registered this single item.  It's not within any menu.
             assert(false);
          }
          else TypeSwitch::VDispatch<void, LeafTypes>(item,
-            [&](const CommandItem &command) {
-               manager.AddItem(
-                  command.name, command.label_in,
-                  command.finder, command.callback,
-                  command.flags, command.options);
-            },
-            [&](const CommandGroupItem &commandList) {
-               manager.AddItemList(commandList.name,
-                  commandList.items.data(), commandList.items.size(),
-                  commandList.finder, commandList.callback,
-                  commandList.flags, commandList.isEffect);
-            },
             [&](const SpecialItem &special) {
                if (auto pSpecial =
                   dynamic_cast<const MenuCreator::SpecialItem*>(&special))
                   pSpecial->fn(mProject, *pCurrentMenu);
-            }
+            },
+            [this](auto &item){ DoVisit(item); }
          );
       },
 
-      // post-visit
-      std::tuple {
-         [this](const MenuItem &, const auto&) {
-            manager.EndMenu();
-         },
-         [this](const ConditionalGroupItem &, const auto&) {
-            const bool flag = flags.back();
-            if (!flag)
-               manager.EndOccultCommands();
-            flags.pop_back();
-         },
-         [this](auto &item, auto&) {
-            assert(IsSection(item));
-         }
-      }},
-
-      [this]() {
-         manager.AddSeparator();
+      [this]{
+         if (mbSeparatorAllowed)
+            CurrentMenu()->AppendSeparator();
+         Populator::DoSeparator();
       }
    }
-   , mProject{ proj }
-   , manager{ man }
-   {}
+   {
+      auto menubar = AddMenuBar(wxT("appmenu"));
+      assert(menubar);
 
-   AudacityProject &mProject;
-   CommandManager &manager;
-   std::vector<bool> flags;
+      MenuRegistry::Visit(*this, mProject);
+
+      GetProjectFrame(mProject).SetMenuBar(menubar.release());
+   }
+
+   ~MenuItemVisitor() override;
+
+   struct CommandListEntryEx final : CommandManager::CommandListEntry {
+      ~CommandListEntryEx() final;
+      void UpdateCheckmark(AudacityProject &project) final;
+      void Modify(const TranslatableString &newLabel) final;
+      bool GetEnabled() const final;
+      void Check(bool checked) final;
+      void Enable(bool enabled) final;
+      void EnableMultiItem(bool enabled) final;
+
+      wxMenu *menu{};
+   };
+
+private:
+   std::unique_ptr<CommandManager::CommandListEntry>
+      AllocateEntry(const MenuRegistry::Options &options) final;
+   void VisitEntry(CommandManager::CommandListEntry &,
+      const MenuRegistry::Options *pOptions) final;
+   void BeginMenu(const TranslatableString & tName) final;
+   void EndMenu() final;
+   void BeginMainMenu(const TranslatableString & tName);
+   void EndMainMenu();
+   void BeginSubMenu(const TranslatableString & tName);
+   void EndSubMenu();
+   void BeginOccultCommands() final;
+   void EndOccultCommands() final;
+
+   std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
+   wxMenuBar * CurrentMenuBar() const;
+   wxMenuBar * GetMenuBar(const wxString & sMenu) const;
+   wxMenu * CurrentSubMenu() const;
+   wxMenu * CurrentMenu() const;
+
+   std::vector<MenuBarListEntry> mMenuBarList;
+   std::vector<SubMenuListEntry> mSubMenuList;
+   std::unique_ptr<wxMenuBar> mTempMenuBar;
+   std::unique_ptr<wxMenu> uCurrentMenu;
+   wxMenu *mCurrentMenu {};
 };
+
+MenuItemVisitor::CommandListEntryEx::~CommandListEntryEx() = default;
+
+void
+MenuItemVisitor::CommandListEntryEx::UpdateCheckmark(AudacityProject &project)
+{
+   if (menu && checkmarkFn && !isOccult) {
+      menu->Check(id, checkmarkFn(project));
+   }
+}
+
+void
+MenuItemVisitor::CommandListEntryEx::Modify(const TranslatableString &newLabel)
+{
+   if (menu) {
+      label = newLabel;
+      menu->SetLabel(id, FormatLabelForMenu());
+   }
+}
+
+bool MenuItemVisitor::CommandListEntryEx::GetEnabled() const
+{
+   if (!menu)
+      return false;
+   return enabled;
+}
+
+void MenuItemVisitor::CommandListEntryEx::Check(bool checked)
+{
+   if (!menu || isOccult)
+      return;
+   menu->Check(id, checked);
+}
+
+void MenuItemVisitor::CommandListEntryEx::Enable(bool b)
+{
+   if (!menu) {
+      enabled = b;
+      return;
+   }
+
+   // LL:  Refresh from real state as we can get out of sync on the
+   //      Mac due to its reluctance to enable menus when in a modal
+   //      state.
+   enabled = menu->IsEnabled(id);
+
+   // Only enabled if needed
+   if (enabled != b) {
+      menu->Enable(id, b);
+      enabled = menu->IsEnabled(id);
+   }
+}
+
+void MenuItemVisitor::CommandListEntryEx::EnableMultiItem(bool b)
+{
+   if (menu) {
+      const auto item = menu->FindItem(id);
+      if (item) {
+         item->Enable(b);
+         return;
+      }
+   }
+   // using GET in a log message for devs' eyes only
+   wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
+       id, name.GET());
+}
+
+auto MenuItemVisitor::AllocateEntry(const MenuRegistry::Options &options)
+   -> std::unique_ptr<CommandManager::CommandListEntry>
+{
+   auto result = std::make_unique<CommandListEntryEx>();
+   if (!options.global)
+      result->menu = CurrentMenu();
+   return result;
+}
+
+// A label that may have its accelerator disabled.
+// The problem is that as soon as we show accelerators in the menu, the menu might
+// catch them in normal wxWidgets processing, rather than passing the key presses on
+// to the controls that had the focus.  We would like all the menu accelerators to be
+// disabled, in fact.
+static wxString
+FormatLabelWithDisabledAccel(const CommandManager::CommandListEntry &entry)
+{
+   auto label = entry.label.Translation();
+#if 1
+   wxString Accel;
+   do{
+      if (!entry.key.empty())
+      {
+         // Dummy accelerator that looks Ok in menus but is non functional.
+         // Note the space before the key.
+#ifdef __WXMSW__
+         // using GET to compose menu item name for wxWidgets
+         auto key = entry.key.GET();
+         Accel = wxString("\t ") + key;
+         if( key.StartsWith("Left" )) break;
+         if( key.StartsWith("Right")) break;
+         if( key.StartsWith("Up" )) break;
+         if( key.StartsWith("Down")) break;
+         if( key.StartsWith("Return")) break;
+         if( key.StartsWith("Tab")) break;
+         if( key.StartsWith("Shift+Tab")) break;
+         if( key.StartsWith("0")) break;
+         if( key.StartsWith("1")) break;
+         if( key.StartsWith("2")) break;
+         if( key.StartsWith("3")) break;
+         if( key.StartsWith("4")) break;
+         if( key.StartsWith("5")) break;
+         if( key.StartsWith("6")) break;
+         if( key.StartsWith("7")) break;
+         if( key.StartsWith("8")) break;
+         if( key.StartsWith("9")) break;
+         // Uncomment the below so as not to add the illegal accelerators.
+         // Accel = "";
+         //if( entry.key.StartsWith("Space" )) break;
+         // These ones appear to be illegal already and mess up accelerator processing.
+         if( key.StartsWith("NUMPAD_ENTER" )) break;
+         if( key.StartsWith("Backspace" )) break;
+         if( key.StartsWith("Delete" )) break;
+
+         // https://github.com/audacity/audacity/issues/4457
+         // This code was proposed by David Bailes to fix
+         // the decimal separator input in wxTextCtrls that
+         // are children of the main window.
+         if( key.StartsWith(",") ) break;
+         if( key.StartsWith(".") ) break;
+
+#endif
+         //wxLogDebug("Added Accel:[%s][%s]", entry.label, entry.key );
+         // Normal accelerator.
+         // using GET to compose menu item name for wxWidgets
+         Accel = wxString("\t") + entry.key.GET();
+      }
+   } while (false );
+   label += Accel;
+#endif
+   return label;
+}
+
+void MenuItemVisitor::VisitEntry(CommandManager::CommandListEntry &entry,
+   const MenuRegistry::Options *pOptions)
+{
+   if (!pOptions)
+      // command list item
+      CurrentMenu()->Append(entry.id, entry.FormatLabelForMenu());
+   else if (pOptions->global)
+      ;
+   else {
+      auto ID = entry.id;
+      auto label = FormatLabelWithDisabledAccel(entry);
+      auto &checker = pOptions->checker;
+      if (checker) {
+         CurrentMenu()->AppendCheckItem(ID, label);
+         CurrentMenu()->Check(ID, checker(mProject));
+      }
+      else
+         CurrentMenu()->Append(ID, label);
+   }
+}
+
+MenuItemVisitor::~MenuItemVisitor() = default;
+
+void MenuItemVisitor::BeginMenu(const TranslatableString & tName)
+{
+   if (mCurrentMenu)
+      return BeginSubMenu(tName);
+   else
+      return BeginMainMenu(tName);
+}
+
+/// This attaches a menu, if it's main, to the menubar
+//  and in all cases ends the menu
+void MenuItemVisitor::EndMenu()
+{
+   if (mSubMenuList.empty())
+      EndMainMenu();
+   else
+      EndSubMenu();
+}
+
+void MenuItemVisitor::BeginMainMenu(const TranslatableString & tName)
+{
+   uCurrentMenu = std::make_unique<wxMenu>();
+   mCurrentMenu = uCurrentMenu.get();
+}
+
+/// This attaches a menu to the menubar and ends the menu
+void MenuItemVisitor::EndMainMenu()
+{
+   // Add the menu to the menubar after all menu items have been
+   // added to the menu to allow OSX to rearrange special menu
+   // items like Preferences, About, and Quit.
+   assert(uCurrentMenu);
+   CurrentMenuBar()->Append(
+      uCurrentMenu.release(), MenuNames()[0].Translation());
+   mCurrentMenu = nullptr;
+}
+
+/// This starts a new submenu, and names it according to
+/// the function's argument.
+void MenuItemVisitor::BeginSubMenu(const TranslatableString & tName)
+{
+   mSubMenuList.emplace_back();
+   mbSeparatorAllowed = false;
+}
+
+/// This function is called after the final item of a SUBmenu is added.
+/// Submenu items are added just like regular menu items; they just happen
+/// after BeginSubMenu() is called but before EndSubMenu() is called.
+void MenuItemVisitor::EndSubMenu()
+{
+   //Save the submenu's information
+   SubMenuListEntry tmpSubMenu{ std::move( mSubMenuList.back() ) };
+
+   //Pop off the NEW submenu so CurrentMenu returns the parent of the submenu
+   mSubMenuList.pop_back();
+
+   //Add the submenu to the current menu
+   auto name = MenuNames().back().Translation();
+   CurrentMenu()->Append(0, name, tmpSubMenu.menu.release(),
+      name /* help string */ );
+   mbSeparatorAllowed = true;
+}
+
+void MenuItemVisitor::BeginOccultCommands()
+{
+   // To do:  perhaps allow occult item switching at lower levels of the
+   // menu tree.
+   assert(!CurrentMenu());
+
+   // Make a temporary menu bar collecting items added after.
+   // This bar will be discarded but other side effects on the command
+   // manager persist.
+   mTempMenuBar = AddMenuBar(wxT("ext-menu"));
+}
+
+void MenuItemVisitor::EndOccultCommands()
+{
+   auto iter = mMenuBarList.end();
+   if (iter != mMenuBarList.begin())
+      mMenuBarList.erase(--iter);
+   else
+      assert(false);
+   mTempMenuBar.reset();
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands()
 {
-   auto &project = mProject;
-
-   // The list of defaults to exclude depends on
-   // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
-   SetMaxList();
-
-   auto menubar = AddMenuBar(wxT("appmenu"));
-   wxASSERT(menubar);
-
-   MenuItemVisitor visitor{ project, *this };
-   MenuRegistry::Visit(visitor, project);
-
-   GetProjectFrame( project ).SetMenuBar(menubar.release());
+   {
+      MenuItemVisitor visitor{ mProject };
+   }
 
    mLastFlags = AlwaysEnabledFlag;
 
 #if defined(_DEBUG)
 //   c->CheckDups();
 #endif
-}
-
-// TODO: This surely belongs in CommandManager?
-void MenuCreator::ModifyUndoMenuItems()
-{
-   auto &project = mProject;
-   TranslatableString desc;
-   auto &undoManager = UndoManager::Get( project );
-   int cur = undoManager.GetCurrentState();
-
-   if (undoManager.UndoAvailable()) {
-      undoManager.GetShortDescription(cur, &desc);
-      Modify(wxT("Undo"), XXO("&Undo %s").Format(desc));
-      Enable(wxT("Undo"), ProjectHistory::Get(project).UndoAvailable());
-   }
-   else {
-      Modify(wxT("Undo"), XXO("&Undo"));
-   }
-
-   if (undoManager.RedoAvailable()) {
-      undoManager.GetShortDescription(cur+1, &desc);
-      Modify(wxT("Redo"), XXO("&Redo %s").Format( desc ));
-      Enable(wxT("Redo"), ProjectHistory::Get(project).RedoAvailable());
-   }
-   else {
-      Modify(wxT("Redo"), XXO("&Redo"));
-      Enable(wxT("Redo"), false);
-   }
 }
 
 // Get hackcess to a protected method
@@ -217,7 +461,7 @@ void MenuCreator::RebuildMenuBar()
    {
       wxDialog *dlg =
          wxDynamicCast(wxGetTopLevelParent(wxWindow::FindFocus()), wxDialog);
-      wxASSERT((!dlg || !dlg->IsModal()));
+      assert((!dlg || !dlg->IsModal()));
    }
 #endif
 
@@ -243,59 +487,11 @@ void MenuCreator::ExecuteCommand(const CommandContext &context,
    return CommandManager::ExecuteCommand(context, evt, entry);
 }
 
-void MenuCreator::OnUndoRedo(UndoRedoMessage message)
-{
-   switch (message.type) {
-   case UndoRedoMessage::UndoOrRedo:
-   case UndoRedoMessage::Reset:
-   case UndoRedoMessage::Pushed:
-   case UndoRedoMessage::Renamed:
-      break;
-   default:
-      return;
-   }
-   ModifyUndoMenuItems();
-   UpdateMenus();
-}
-
-// checkActive is a temporary hack that should be removed as soon as we
+// a temporary hack that should be removed as soon as we
 // get multiple effect preview working
-void MenuCreator::UpdateMenus( bool checkActive )
+bool MenuCreator::ReallyDoQuickCheck()
 {
-   auto &project = mProject;
-
-   auto flags = GetUpdateFlags(checkActive);
-   // Return from this function if nothing's changed since
-   // the last time we were here.
-   if (flags == mLastFlags)
-      return;
-   mLastFlags = flags;
-
-   auto flags2 = flags;
-
-   // We can enable some extra items if we have select-all-on-none.
-   //EXPLAIN-ME: Why is this here rather than in GetUpdateFlags()?
-   //ANSWER: Because flags2 is used in the menu enable/disable.
-   //The effect still needs flags to determine whether it will need
-   //to actually do the 'select all' to make the command valid.
-
-   for ( const auto &enabler : RegisteredMenuItemEnabler::Enablers() ) {
-      auto actual = enabler.actualFlags();
-      if (
-         enabler.applicable( project ) && (flags & actual) == actual
-      )
-         flags2 |= enabler.possibleFlags();
-   }
-
-   // With select-all-on-none, some items that we don't want enabled may have
-   // been enabled, since we changed the flags.  Here we manually disable them.
-   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-   EnableUsingFlags(
-      flags2, // the "lax" flags
-      (mWhatIfNoSelection == 0 ? flags2 : flags) // the "strict" flags
-   );
-
-   Publish({});
+   return !GetProjectFrame(mProject).IsActive();
 }
 
 /// The following method moves to the previous track
@@ -754,4 +950,77 @@ NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & event)
    }
 
    return NormalizedKeyString{ newStr };
+}
+
+///
+/// Makes a NEW menubar for placement on the top of a project
+/// Names it according to the passed-in string argument.
+///
+/// If the menubar already exists, that's unexpected.
+std::unique_ptr<wxMenuBar> MenuItemVisitor::AddMenuBar(const wxString & sMenu)
+{
+   wxMenuBar *menuBar = GetMenuBar(sMenu);
+   if (menuBar) {
+      wxASSERT(false);
+      return {};
+   }
+
+   auto result = std::make_unique<wxMenuBar>();
+   mMenuBarList.emplace_back(sMenu, result.get());
+
+   return result;
+}
+
+///
+/// Retrieves the menubar based on the name given in AddMenuBar(name)
+///
+wxMenuBar *MenuItemVisitor::GetMenuBar(const wxString & sMenu) const
+{
+   for (const auto &entry : mMenuBarList)
+   {
+      if(entry.name == sMenu)
+         return entry.menubar;
+   }
+
+   return NULL;
+}
+
+///
+/// Retrieve the 'current' menubar; either NULL or the
+/// last on in the mMenuBarList.
+wxMenuBar *MenuItemVisitor::CurrentMenuBar() const
+{
+   if(mMenuBarList.empty())
+      return NULL;
+
+   return mMenuBarList.back().menubar;
+}
+
+/// This returns the 'Current' Submenu, which is the one at the
+///  end of the mSubMenuList (or NULL, if it doesn't exist).
+wxMenu *MenuItemVisitor::CurrentSubMenu() const
+{
+   if(mSubMenuList.empty())
+      return NULL;
+
+   return mSubMenuList.back().menu.get();
+}
+
+///
+/// This returns the current menu that we're appending to - note that
+/// it could be a submenu if BeginSubMenu was called and we haven't
+/// reached EndSubMenu yet.
+wxMenu * MenuItemVisitor::CurrentMenu() const
+{
+   if(!mCurrentMenu)
+      return NULL;
+
+   wxMenu * tmpCurrentSubMenu = CurrentSubMenu();
+
+   if(!tmpCurrentSubMenu)
+   {
+      return mCurrentMenu;
+   }
+
+   return tmpCurrentSubMenu;
 }
