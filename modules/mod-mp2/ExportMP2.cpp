@@ -126,7 +126,7 @@ const std::initializer_list<ExportOption> MP2Options {
       MP2OptionIDBitRateMPEG1, XO("Bit Rate"),
       192,
       ExportOption::TypeEnum,
-      {32, 48, 56, 64, 80, 96,112,128,160, 192, 224, 256 },
+      { 32, 48, 56, 64, 80, 96,112,128,160, 192, 224, 256, 320, 384 },
       BitRateMPEG1Names
    },
    {

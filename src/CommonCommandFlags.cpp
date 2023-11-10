@@ -295,13 +295,6 @@ const ReservedCommandFlag&
       CommandFlagOptions{}.QuickTest()
    }; return flag; }
 const ReservedCommandFlag&
-   ClipboardNotEmptyFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject& project) {
-         return !Clipboard::Get().GetTracks().empty();
-      },
-      CommandFlagOptions{}.QuickTest()
-   }; return flag; }
-const ReservedCommandFlag&
    NoAutoSelect() { static ReservedCommandFlag flag{
      [](const AudacityProject &){ return true; }
    }; return flag; } // jkc

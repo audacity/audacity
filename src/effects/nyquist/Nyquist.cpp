@@ -1026,12 +1026,16 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
 
+            const auto t0 =
+               mCurChannelGroup ? mCurChannelGroup->SnapToSample(mT0) : mT0;
+            const auto t1 =
+               mCurChannelGroup ? mCurChannelGroup->SnapToSample(mT1) : mT1;
             mPerTrackProps += wxString::Format(
-                wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
-                Internat::ToString(mCurChannelGroup->SnapToSample(mT0)));
+               wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
+               Internat::ToString(t0));
             mPerTrackProps += wxString::Format(
-                wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
-                Internat::ToString(mCurChannelGroup->SnapToSample(mT1)));
+               wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
+               Internat::ToString(t1));
          }
 
          success = ProcessOne(nyxContext, oOutputs ? &*oOutputs : nullptr);
@@ -1291,7 +1295,7 @@ bool NyquistEffect::ProcessOne(
       cmd += mPerTrackProps;
    }
 
-   auto &mCurChannelGroup = nyxContext.mCurChannelGroup;
+   const auto& mCurChannelGroup = nyxContext.mCurChannelGroup;
 
    if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
       // Set the track TYPE and VIEW properties

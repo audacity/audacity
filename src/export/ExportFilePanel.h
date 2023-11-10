@@ -58,7 +58,7 @@ public:
    void SetCustomMappingEnabled(bool enabled);
 
    wxString GetPath() const;
-   wxString GetFullName() const;
+   wxString GetFullName();
 
    const ExportPlugin* GetPlugin() const;
    int GetFormat() const;
@@ -69,6 +69,8 @@ public:
    MixerOptions::Downmix* GetMixerSpec() const;
 
 private:
+
+   void ValidateAndFixExt();
 
    void OnFullNameFocusKill(wxFocusEvent& event);
    void OnFormatChange(wxCommandEvent& event);

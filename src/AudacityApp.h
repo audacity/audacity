@@ -44,6 +44,7 @@ class AudacityApp final : public wxApp {
    bool OSXIsGUIApplication() override;
 #endif
    
+   void CleanUp() override;
    bool OnInit() override;
    bool InitPart2();
    int OnRun() override;

@@ -322,8 +322,9 @@ wxString ExportFilePanel::GetPath() const
    return mFolder->GetValue();
 }
 
-wxString ExportFilePanel::GetFullName() const
+wxString ExportFilePanel::GetFullName()
 {
+   ValidateAndFixExt();
    return mFullName->GetValue();
 }
 
@@ -360,13 +361,8 @@ MixerOptions::Downmix* ExportFilePanel::GetMixerSpec() const
    return mMixerSpec.get();
 }
 
-void ExportFilePanel::OnFullNameFocusKill(wxFocusEvent& event)
+void ExportFilePanel::ValidateAndFixExt()
 {
-   //When user has finished typing make sure that file extension
-   //is one of extensions supplied by FormatInfo
-
-   event.Skip();
-
    if(mSelectedPlugin == nullptr)
       return;
 
@@ -395,6 +391,16 @@ void ExportFilePanel::OnFullNameFocusKill(wxFocusEvent& event)
       filename.SetExt(*it);
       mFullName->SetValue(filename.GetFullName());
    }
+}
+
+void ExportFilePanel::OnFullNameFocusKill(wxFocusEvent& event)
+{
+   //When user has finished typing make sure that file extension
+   //is one of extensions supplied by FormatInfo
+
+   event.Skip();
+
+   ValidateAndFixExt();
 }
 
 void ExportFilePanel::OnFormatChange(wxCommandEvent &event)
