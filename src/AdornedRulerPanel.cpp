@@ -2743,7 +2743,7 @@ void AdornedRulerPanel::ClearPlayRegion()
 
    auto &viewInfo = ViewInfo::Get( *GetProject() );
    auto &playRegion = viewInfo.playRegion;
-   playRegion.SetTimes( -1, -1 );
+   playRegion.Clear();
 
    Refresh();
 }
