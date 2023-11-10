@@ -10,7 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "PlayableTrackButtonHandles.h"
 #include "PlayableTrack.h"
 #include "PlayableTrackControls.h"
-#include "../../../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "Project.h"
 #include "../../../RefreshCode.h"
 #include "../../../RealtimeEffectPanel.h"

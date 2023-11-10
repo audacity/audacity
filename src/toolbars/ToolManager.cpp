@@ -50,7 +50,7 @@
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "ImageManipulation.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -1538,7 +1538,7 @@ void ToolManager::ModifyAllProjectToolbarMenus()
    }
 }
 
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 void ToolManager::ModifyToolbarMenus(AudacityProject &project)
 {
    // Refreshes can occur during shutdown and the toolmanager may already

@@ -48,7 +48,7 @@ in which buttons can be placed.
 #include "AColor.h"
 #include "ImageManipulation.h"
 #include "Project.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 #include "Prefs.h"

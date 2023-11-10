@@ -33,7 +33,7 @@
 #include "Prefs.h"
 #include "ProjectWindows.h"
 #include "ShuttleGui.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 
 #include "PrefsPanel.h"
 

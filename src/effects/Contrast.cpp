@@ -652,7 +652,7 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 
 // Remaining code hooks this add-on into the application
 #include "CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "ProjectWindows.h"
 
 namespace {

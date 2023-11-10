@@ -35,17 +35,10 @@
 #include <unordered_map>
 
 class wxEvent;
-class wxMenu;
-class wxMenuBar;
 
 class BoolSetting;
 
-struct MenuBarListEntry;
 using PluginID = wxString;
-struct SubMenuListEntry;
-
-using MenuBarList = std::vector < MenuBarListEntry >;
-using SubMenuList = std::vector < SubMenuListEntry >;
 
 class AudacityProject;
 class CommandContext;
@@ -53,13 +46,18 @@ class CommandContext;
 //! Sent when menus update (such as for changing enablement of items)
 struct MenuUpdateMessage {};
 
-class AUDACITY_DLL_API CommandManager /* not final */
+class MENUS_API CommandManager /* not final */
    : public XMLTagHandler
    , public ClientData::Base
    , public Observer::Publisher<MenuUpdateMessage>
    , private PrefsListener
 {
+protected:
+   static const TranslatableString COMMAND;
+
 public:
+   struct CommandListEntry;
+
    struct Factory : DefaultedGlobalHook<Factory,
       Callable::SharedPtrFactory<CommandManager, AudacityProject &>::Function
    >{};
@@ -69,7 +67,7 @@ public:
 
    // Interception of menu item handling.
    // If it returns true, bypass the usual dispatch of commands.
-   struct AUDACITY_DLL_API GlobalMenuHook : GlobalHook<GlobalMenuHook,
+   struct MENUS_API GlobalMenuHook : GlobalHook<GlobalMenuHook,
       bool(const CommandID&)
    >{};
 
@@ -78,9 +76,8 @@ public:
    CommandManager &operator=(const CommandManager &) = delete;
    ~CommandManager() override;
 
-   // If checkActive, do not do complete flags testing on an
-   // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags( bool checkActive = false ) const;
+   // If quick, skip some needlessly expensive checks.
+   CommandFlag GetUpdateFlags(bool quick = false) const;
    void UpdatePrefs() override;
 
    // Command Handling
@@ -118,47 +115,112 @@ public:
    bool mStopIfWasPaused{ true };
 
    AudacityProject &GetProject() { return mProject; }
+   size_t NCommands() const { return mCommandList.size(); }
 
-   void SetMaxList();
    void PurgeData();
 
-   //
-   // Creating menus and adding commands
-   //
+   struct MENUS_API Populator
+      : MenuRegistry::Visitor<MenuRegistry::Traits>
+   {
+      using LeafVisitor = std::function<
+         void(const Registry::SingleItem &, const Registry::Path&)>;
+      Populator(AudacityProject &project,
+         LeafVisitor leafVisitor,
+         std::function<void()> doSeparator);
+      virtual ~Populator();
 
-   std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
+   protected:
+      void DoBeginGroup(
+         const MenuRegistry::GroupItem<MenuRegistry::Traits> &item);
+      void DoVisit(const Registry::SingleItem &item);
+      void DoEndGroup(
+         const MenuRegistry::GroupItem<MenuRegistry::Traits> &item);
+      
+      //! Called by DoBeginGroup
+      //! Default implementation does nothing
+      virtual void BeginMenu(const TranslatableString & tName);
 
-   wxMenu *BeginMenu(const TranslatableString & tName);
-   void EndMenu();
+      //! Called by DoBeginGroup
+      //! Default implementation does nothing
+      virtual void BeginOccultCommands();
+
+      //! Called by DoEndGroup
+      //! Default implementation does nothing
+      virtual void EndMenu();
+
+      //! Called by DoEndGroup
+      //! Default implementation does nothing
+      virtual void EndOccultCommands();
+
+      //! Called by DoVisit
+      //! Override to make entries that carry extra information.
+      //! Not called for every visit, because existing items may be reused
+      /*!
+       @post result: `result != nullptr`
+       */
+      virtual std::unique_ptr<CommandListEntry>
+         AllocateEntry(const MenuRegistry::Options &options);
+      //! Called by DoVisit
+      //! Override to intercept all visits of items;
+      //! default implementation is noop
+      /*!
+       @param options null if a member of a list of commands
+       */
+      virtual void VisitEntry(CommandListEntry &entry,
+         const MenuRegistry::Options *options);
+
+      void DoSeparator();
+
+      //! Stack of names of menus that were begun and not yet ended
+      const TranslatableStrings &MenuNames() const { return mMenuNames; }
+
+   private:
+      void AddItemList(const CommandID & name,
+                       const ComponentInterfaceSymbol items[],
+                       size_t nItems,
+                       CommandHandlerFinder finder,
+                       CommandFunctorPointer callback,
+                       CommandFlag flags,
+                       bool bIsEffect = false);
+      void AddItem(const CommandID & name,
+                   const TranslatableString &label_in,
+                   CommandHandlerFinder finder,
+                   CommandFunctorPointer callback,
+                   CommandFlag flags,
+                   const MenuRegistry::Options &options = {});
+      CommandListEntry *NewIdentifier(const CommandID & name,
+                                      const TranslatableString & label,
+                                      CommandHandlerFinder finder,
+                                      CommandFunctorPointer callback,
+                                      const CommandID &nameSuffix,
+                                      int index,
+                                      int count,
+                                      const MenuRegistry::Options &options);
+      void AddGlobalCommand(const CommandID &name,
+                            const TranslatableString &label,
+                            CommandHandlerFinder finder,
+                            CommandFunctorPointer callback,
+                            const MenuRegistry::Options &options = {});
+      void SetMaxList();
+
+   protected:
+      AudacityProject &mProject;
+
+      // false at the start of a menu and immediately after a separator.
+      bool mbSeparatorAllowed{ false };
+
+   private:
+      // mMaxList only holds shortcuts that should not be added (by default)
+      // and is sorted.
+      std::vector<NormalizedKeyString> mMaxListOnly;
+      TranslatableStrings mMenuNames;
+      std::vector<bool> mFlags;
+      int mCurrentID{ 17000 };
+      bool bMakingOccultCommands{ false };
+   };
 
 public:
-   void AddItemList(const CommandID & name,
-                    const ComponentInterfaceSymbol items[],
-                    size_t nItems,
-                    CommandHandlerFinder finder,
-                    CommandFunctorPointer callback,
-                    CommandFlag flags,
-                    bool bIsEffect = false);
-
-   void AddItem(const CommandID & name,
-                const TranslatableString &label_in,
-                CommandHandlerFinder finder,
-                CommandFunctorPointer callback,
-                CommandFlag flags,
-                const MenuRegistry::Options &options = {});
-
-   void AddSeparator();
-
-   void PopMenuBar();
-   void BeginOccultCommands();
-   void EndOccultCommands();
-
-
    void SetCommandFlags(const CommandID &name, CommandFlag flags);
-
-   //
-   // Modifying menus
-   //
 
    void EnableUsingFlags(
       CommandFlag flags, CommandFlag strictFlags);
@@ -171,11 +233,8 @@ public:
    //
 
    void SetKeyFromName(const CommandID &name, const NormalizedKeyString &key);
+   //! @pre `0 <= i && i < NCommands()`
    void SetKeyFromIndex(int i, const NormalizedKeyString &key);
-
-   //
-   // Executing commands
-   //
 
    bool HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled);
    void RegisterLastAnalyzer(const CommandContext& context);
@@ -216,15 +275,15 @@ public:
 
    // Each command is assigned a numerical ID for use in wxMenu and wxEvent,
    // which need not be the same across platforms or sessions
-   CommandID GetNameFromNumericID( int id );
+   CommandID GetNameFromNumericID(int id) const;
 
-   TranslatableString GetLabelFromName(const CommandID &name);
-   TranslatableString GetPrefixedLabelFromName(const CommandID &name);
-   TranslatableString GetCategoryFromName(const CommandID &name);
+   TranslatableString GetLabelFromName(const CommandID &name) const;
+   TranslatableString GetPrefixedLabelFromName(const CommandID &name) const;
+   TranslatableString GetCategoryFromName(const CommandID &name) const;
    NormalizedKeyString GetKeyFromName(const CommandID &name) const;
-   NormalizedKeyString GetDefaultKeyFromName(const CommandID &name);
+   NormalizedKeyString GetDefaultKeyFromName(const CommandID &name) const;
 
-   bool GetEnabled(const CommandID &name);
+   bool GetEnabled(const CommandID &name) const;
    int GetNumberOfKeysRead() const;
 
 #if defined(_DEBUG)
@@ -250,36 +309,10 @@ public:
    // Sorted list of the shortcut keys to be excluded from the standard defaults
    static const std::vector<NormalizedKeyString> &ExcludedList();
 
-protected:
-   struct CommandListEntry;
-
 private:
 
-   //
-   // Creating menus and adding commands
-   //
-
-   int NextIdentifier(int ID);
-   CommandListEntry *NewIdentifier(const CommandID & name,
-                                   const TranslatableString & label,
-                                   wxMenu *menu,
-                                   CommandHandlerFinder finder,
-                                   CommandFunctorPointer callback,
-                                   const CommandID &nameSuffix,
-                                   int index,
-                                   int count,
-                                   const MenuRegistry::Options &options);
+   static int NextIdentifier(int ID);
    
-   void AddGlobalCommand(const CommandID &name,
-                         const TranslatableString &label,
-                         CommandHandlerFinder finder,
-                         CommandFunctorPointer callback,
-                         const MenuRegistry::Options &options = {});
-
-   //
-   // Executing commands
-   //
-
 protected:
    bool HandleCommandEntry(
       const CommandListEntry * entry, CommandFlag flags,
@@ -294,22 +327,13 @@ protected:
    //
 
 private:
-   void Enable(CommandListEntry *entry, bool enabled);
-   wxMenu *BeginMainMenu(const TranslatableString & tName);
-   void EndMainMenu();
-   wxMenu* BeginSubMenu(const TranslatableString & tName);
-   void EndSubMenu();
+   void Enable(CommandListEntry &entry, bool enabled);
 
    //
    // Accessing
    //
 
-   wxMenuBar * CurrentMenuBar() const;
-   wxMenuBar * GetMenuBar(const wxString & sMenu) const;
-   wxMenu * CurrentSubMenu() const;
 public:
-   wxMenu * CurrentMenu() const;
-
    void UpdateCheckmarks();
 
    //! Format a string appropriate for insertion in a menu
@@ -320,12 +344,17 @@ public:
    wxString FormatLabelForMenu(
       const CommandID &id, const TranslatableString *pLabel) const;
 
+   void ModifyUndoMenuItems();
+
+   // checkActive is a temporary hack that should be removed as soon as we
+   // get multiple effect preview working
+   void UpdateMenus(bool checkActive = true);
+
+protected:
+   //! Default implementation returns true
+   virtual bool ReallyDoQuickCheck();
+
 private:
-   wxString FormatLabelForMenu(const CommandListEntry *entry) const;
-   wxString FormatLabelForMenu(
-      const TranslatableString &translatableLabel,
-      const NormalizedKeyString &keyStr) const;
-   wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry) const;
 
    //
    // Loading/Saving
@@ -338,11 +367,37 @@ private:
    void TellUserWhyDisallowed(const TranslatableString & Name, CommandFlag flagsGot,
       CommandFlag flagsRequired);
 
+   void OnUndoRedo(struct UndoRedoMessage);
+
 protected:
    AudacityProject &mProject;
 
-   struct CommandListEntry
+public:
+   struct MENUS_API CommandListEntry
    {
+      static wxString FormatLabelForMenu(
+         const TranslatableString &translatableLabel,
+         const NormalizedKeyString &keyStr);
+
+      virtual ~CommandListEntry();
+
+      //! Default implementation does nothing
+      virtual void UpdateCheckmark(AudacityProject &project);
+      //! Default implementation simply assigns `this->label`
+      virtual void Modify(const TranslatableString &newLabel);
+      //! Default implementation simply returns `this->enabled`
+      virtual bool GetEnabled() const;
+      //! Default implementation does nothing
+      virtual void Check(bool checked);
+      //! Default implementation simply assigns `this->enabled`
+      virtual void Enable(bool enabled);
+      //! Default implementation simply assigns `this->enabled`
+      virtual void EnableMultiItem(bool enabled);
+
+      wxString FormatLabelForMenu() const {
+         return FormatLabelForMenu(label, key);
+      }
+
       int id;
       CommandID name;
       TranslatableString longLabel;
@@ -351,7 +406,6 @@ protected:
       TranslatableString label;
       TranslatableString labelPrefix;
       TranslatableString labelTop;
-      wxMenu *menu;
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
       CommandParameter parameter;
@@ -374,41 +428,36 @@ protected:
       CommandFlag flags;
       bool useStrictFlags{ false };
    };
+
+protected:
    using CommandKeyHash =
       std::unordered_map<NormalizedKeyString, CommandListEntry*>;
+   //! @invariant for each [key, value]: for some 0 <= i < NCommands():
+   //! `value == mCommandList[i].get()`
    CommandKeyHash mCommandKeyHash;
 
 private:
-   // mMaxList only holds shortcuts that should not be added (by default)
-   // and is sorted.
-   std::vector<NormalizedKeyString> mMaxListOnly;
-
-   MenuBarList  mMenuBarList;
-   SubMenuList  mSubMenuList;
-
    // This is an array of pointers, not structures, because the hash maps also
    // point to them,
    // so we don't want the structures to relocate with vector operations.
    using CommandList = std::vector<std::unique_ptr<CommandListEntry>>;
+   //! @invariant for all 0 <= i < NCommands(): `mCommandList[i] != nullptr`
    CommandList  mCommandList;
 
    using CommandNameHash = std::unordered_map<CommandID, CommandListEntry*>;
+   //! @invariant for each [key, value]: for some 0 <= i < NCommands():
+   //! `value == mCommandList[i].get()`
    CommandNameHash  mCommandNameHash;
 
    using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
+   //! @invariant for each [key, value]: for some 0 <= i < NCommands():
+   //! `value == mCommandList[i].get()`
    CommandNumericIDHash  mCommandNumericIDHash;
-   int mCurrentID;
    int mXMLKeysRead;
 
-   bool mbSeparatorAllowed; // false at the start of a menu and immediately after a separator.
-
-   TranslatableString mCurrentMenuName;
    TranslatableString mNiceName;
    int mLastProcessId;
-   std::unique_ptr<wxMenu> uCurrentMenu;
-   wxMenu *mCurrentMenu {};
 
-   bool bMakingOccultCommands;
-   std::unique_ptr< wxMenuBar > mTempMenuBar;
+   const Observer::Subscription mUndoSubscription;
 };
 #endif

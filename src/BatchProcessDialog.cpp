@@ -44,7 +44,7 @@
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
 #include "Track.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "Effect.h"
 #include "effects/EffectUI.h"
 #include "../images/Arrow.xpm"
@@ -1477,7 +1477,7 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 #endif
    /* i18n-hint: %s will be the name of the macro which will be
     * repeated if this menu item is chosen */
-   MenuCreator::Get(project).ModifyUndoMenuItems();
+   CommandManager::Get(project).ModifyUndoMenuItems();
 
    TranslatableString desc;
    EffectManager& em = EffectManager::Get();
