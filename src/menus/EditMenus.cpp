@@ -1036,7 +1036,7 @@ const ReservedCommandFlag
 
       return false;
    },
-   cutCopyOptions()
+   CommandFlagOptions{}.DisableDefaultMessage()
 }; return flag; }
 
 const ReservedCommandFlag
