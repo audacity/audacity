@@ -1110,7 +1110,7 @@ BaseItemSharedPtr EditMenu()
          // Basic Edit commands
          /* i18n-hint: (verb)*/
          Command( wxT("Cut"), XXO("Cu&t"), OnCut,
-            AudioIONotBusyFlag() | CutCopyAvailableFlag(),
+            AudioIONotBusyFlag() | CutCopyAvailableFlag() | NoAutoSelect(),
             wxT("Ctrl+X") ),
          Command( wxT("Delete"), XXO("&Delete"), OnDelete,
             AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
@@ -1238,7 +1238,7 @@ RegisteredMenuItemEnabler selectAnyTracks{{
 
 RegisteredMenuItemEnabler selectWaveTracks{{
    []{ return WaveTracksExistFlag(); },
-   []{ return TimeSelectedFlag() | WaveTracksSelectedFlag(); },
+   []{ return TimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
 }};
@@ -1246,7 +1246,7 @@ RegisteredMenuItemEnabler selectWaveTracks{{
 // Also enable select for the noise reduction case.
 RegisteredMenuItemEnabler selectWaveTracks2{{
    []{ return WaveTracksExistFlag(); },
-   []{ return NoiseReductionTimeSelectedFlag() | WaveTracksSelectedFlag(); },
+   []{ return NoiseReductionTimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
 }};
