@@ -21,7 +21,7 @@
 #include "SetProjectCommand.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Project.h"
@@ -101,7 +101,7 @@ bool SetProjectCommand::Apply(const CommandContext & context)
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

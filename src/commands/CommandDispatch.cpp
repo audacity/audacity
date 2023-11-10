@@ -21,10 +21,11 @@
 #include "../effects/EffectUI.h"
 #include <wx/log.h>
 
-bool CommandDispatch::HandleTextualCommand( CommandManager &commandManager,
+bool CommandDispatch::HandleTextualCommand(
    const CommandID & Str,
    const CommandContext & context, CommandFlag flags, bool alwaysEnabled)
 {
+   auto &commandManager = CommandManager::Get(context.project);
    switch ( commandManager.HandleTextualCommand(
       Str, context, flags, alwaysEnabled) ) {
    case CommandManager::CommandSuccess:

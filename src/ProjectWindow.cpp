@@ -7,15 +7,12 @@ ProjectWindow.cpp
 Paul Licameli split from AudacityProject.cpp
 
 **********************************************************************/
-
 #include "ProjectWindow.h"
-
-
 
 #include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -29,7 +26,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
@@ -1226,7 +1223,7 @@ void ProjectWindow::FixScrollbars()
       trackPanel.Refresh(false);
    }
 
-   MenuManager::Get( project ).UpdateMenus();
+   MenuCreator::Get( project ).UpdateMenus();
 
    if (oldhstate != newhstate || oldvstate != newvstate) {
       UpdateLayout();
@@ -1608,8 +1605,8 @@ void ProjectWindow::OnMenu(wxCommandEvent & event)
       return;
    auto &project = *pProject;
    auto &commandManager = CommandManager::Get( project );
-   bool handled = commandManager.HandleMenuID( project,
-      event.GetId(), MenuManager::Get( project ).GetUpdateFlags(),
+   bool handled = commandManager.HandleMenuID(
+      event.GetId(), CommandManager::Get( project ).GetUpdateFlags(),
       false);
 
    if (handled)
@@ -1626,7 +1623,7 @@ void ProjectWindow::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
    if (!pProject)
       return;
    auto &project = *pProject;
-   MenuManager::Get( project ).UpdateMenus();
+   MenuCreator::Get( project ).UpdateMenus();
 }
 
 void ProjectWindow::OnActivate(wxActivateEvent & event)

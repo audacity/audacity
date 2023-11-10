@@ -1,9 +1,8 @@
-
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
-#include "../Menus.h"
+#include "../MenuCreator.h"
 #include "../NoteTrack.h"
 #include "Project.h"
 #include "ProjectHistory.h"
@@ -21,8 +20,7 @@
 #include "WaveTrackUtilities.h"
 #include "WaveClip.h"
 #include "SampleBlock.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "TimeWarper.h"
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
@@ -971,7 +969,7 @@ void OnPreferences(const CommandContext &context)
    //      rebuilding the menus while the PrefsDialog is still in the modal
    //      state.
    for (auto p : AllProjects{}) {
-      MenuManager::Get(*p).RebuildMenuBar(*p);
+      MenuCreator::Get(*p).RebuildMenuBar();
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:
@@ -1060,11 +1058,9 @@ const ReservedCommandFlag
    CommandFlagOptions{}.DisableDefaultMessage()
 }; return flag; }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto EditMenu()
 {
-   using Options = CommandManager::Options;
-
    static const auto NotBusyTimeAndTracksFlags =
       AudioIONotBusyFlag() | TimeSelectedFlag() | EditableTracksSelectedFlag();
 
@@ -1096,10 +1092,10 @@ auto EditMenu()
          Command( wxT("Redo"), XXO("&Redo"), OnRedo,
             AudioIONotBusyFlag() | RedoAvailableFlag(), redoKey ),
 
-         Special( wxT("UndoItemsUpdateStep"),
+         MenuCreator::Special( wxT("UndoItemsUpdateStep"),
          [](AudacityProject &project, wxMenu&) {
             // Change names in the CommandManager as a side-effect
-            MenuManager::ModifyUndoMenuItems(project);
+            MenuCreator::Get(project).ModifyUndoMenuItems();
          })
       ),
 
@@ -1192,7 +1188,6 @@ AttachedItem sAttachment1{ Indirect(EditMenu()) };
 
 auto ExtraEditMenu()
 {
-   using Options = CommandManager::Options;
    static const auto flags =
       AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag();
    static auto menu = std::shared_ptr{
@@ -1208,9 +1203,9 @@ auto ExtraEditMenu()
 }
 
 auto canSelectAll = [](const AudacityProject &project){
-   return MenuManager::Get( project ).mWhatIfNoSelection != 0; };
+   return CommandManager::Get( project ).mWhatIfNoSelection != 0; };
 auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
-   if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
+   if ( CommandManager::Get( project ).mWhatIfNoSelection == 1 &&
       (flagsRqd & NoAutoSelect()).none() )
       SelectUtilities::DoSelectAllAudio(project);
 };

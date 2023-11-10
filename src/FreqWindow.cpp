@@ -1219,7 +1219,7 @@ void FreqPlot::OnMouseEvent(wxMouseEvent & event)
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "commands/CommandManager.h"
 #include "ProjectWindows.h"
 
@@ -1239,7 +1239,7 @@ AttachedWindows::RegisteredFactory sFrequencyWindowKey{
 void OnPlotSpectrum(const CommandContext &context)
 {
    auto &project = context.project;
-   CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Plot Spectrum as Last Analyzer
+   CommandManager::Get(project).RegisterLastAnalyzer(context);
    auto freqWindow = &GetAttachedWindows(project)
       .Get< FrequencyPlotDialog >( sFrequencyWindowKey );
 
@@ -1252,7 +1252,7 @@ void OnPlotSpectrum(const CommandContext &context)
 
 // Register that menu item
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("PlotSpectrum"), XXO("Plot Spectrum..."),
       OnPlotSpectrum,

@@ -19,8 +19,6 @@ channels for Error, Progress and Status.  Status is used for general
 messaging from a command back to its invoker.
 
 *//*******************************************************************/
-
-
 #include "CommandContext.h"
 
 #include <map>
@@ -38,7 +36,7 @@ CommandContext::CommandContext(
    )
       : project{ p }
       // No target specified?  Use the special interactive one that pops up a dialog.
-      , pOutput( std::make_unique<InteractiveOutputTargets>() )
+      , pOutput{ TargetFactory::Call() }
       , pEvt{ e }
       , index{ ii }
       , parameter{ param }

@@ -15,8 +15,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "toolbars/ToolManager.h"
 
@@ -683,11 +682,10 @@ void OnNewLabelTrack(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto LabelEditMenus()
 {
-   using namespace MenuTable;
-   using Options = CommandManager::Options;
+   using namespace MenuRegistry;
 
    static const auto NotBusyLabelsAndWaveFlags =
       AudioIONotBusyFlag() |

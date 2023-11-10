@@ -16,12 +16,12 @@ Paul Licameli split from TrackMenus.cpp
 #include "SelectUtilities.h"
 #include "TrackPanelAx.h"
 #include "WaveTrack.h"
-#include "../../../../commands/CommandContext.h"
-#include "../../../../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "QualitySettings.h"
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 void OnNewWaveTrack(const CommandContext &context)
 {

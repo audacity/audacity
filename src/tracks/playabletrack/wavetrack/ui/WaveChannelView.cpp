@@ -25,7 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../../images/Cursors.h"
 #include "AllThemeResources.h"
 
-#include "../../../../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../../../../HitTestResult.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"

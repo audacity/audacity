@@ -11,11 +11,11 @@
 
 // Flags used in command handling.
 
+#include "TranslatableString.h"
+
 #include <bitset>
 #include <functional>
 #include <utility>
-
-#include "audacity/Types.h"
 
 class AudacityProject;
 
@@ -84,7 +84,7 @@ struct CommandFlagOptions{
 // Construct one statically to register (and reserve) a bit position in the set
 // an associate it with a test function; those with quickTest = true are cheap
 // to compute and always checked
-class AUDACITY_DLL_API ReservedCommandFlag : public CommandFlag
+class MENUS_API ReservedCommandFlag : public CommandFlag
 {
 public:
    using Predicate = std::function< bool( const AudacityProject& ) >;
@@ -122,7 +122,7 @@ struct MenuItemEnabler {
 using MenuItemEnablers = std::vector<MenuItemEnabler>;
 
 // Typically this is statically constructed:
-struct AUDACITY_DLL_API RegisteredMenuItemEnabler{
+struct MENUS_API RegisteredMenuItemEnabler{
    static const MenuItemEnablers &Enablers();
    RegisteredMenuItemEnabler( const MenuItemEnabler &enabler );
 };

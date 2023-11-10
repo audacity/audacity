@@ -16,10 +16,11 @@
 #include "Identifier.h" // for CommandID
 
 class CommandContext;
-class CommandManager;
+
+using PluginID = wxString;
 
 namespace CommandDispatch {
-AUDACITY_DLL_API bool HandleTextualCommand( CommandManager &commandManager,
+AUDACITY_DLL_API bool HandleTextualCommand(
    const CommandID & Str,
    const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
 

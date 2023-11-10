@@ -546,7 +546,7 @@ AttachedToolBarMenuItem sAttachment2{
 }
 
 // Now define other related menu items
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 
 namespace {
 void OnOutputGain(const CommandContext &context)
@@ -591,7 +591,7 @@ void OnInputGainDec(const CommandContext &context)
    tb.AdjustInputGain(-1);
 }
    
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ExtraMixerMenu()
 {
    static auto menu = std::shared_ptr{

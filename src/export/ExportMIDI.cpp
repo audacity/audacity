@@ -25,8 +25,8 @@
 #include "FileDialog/FileDialog.h"
 
 // Insert a menu item
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 
 namespace {
@@ -37,7 +37,7 @@ const ReservedCommandFlag&
       }
    }; return flag; }  //gsw
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 void OnExportMIDI(const CommandContext &context)
 {

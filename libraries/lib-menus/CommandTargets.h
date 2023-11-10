@@ -30,10 +30,6 @@ status in a briefer listing
 \brief LispyCommandMessageTarget is a CommandOutputTarget that provides status 
 in a lispy style.
 
-\class MessageDialogTarget
-\brief MessageDialogTarget is a CommandOutputTarget that sends its status
-to the LongMessageDialog.
-
 \class CommandOutputTargets
 \brief CommandOutputTargets a mix of three output classes to output 
 progress indication, status messages and errors.
@@ -66,16 +62,16 @@ class wxStatusBar;
 class CommandProgressTarget /* not final */
 {
 public:
-   virtual ~CommandProgressTarget() {}
+   virtual ~CommandProgressTarget();
    virtual void Update(double completed) = 0;
 };
 
 /// Interface for objects that can receive (string) messages from a command
-class AUDACITY_DLL_API CommandMessageTarget /* not final */
+class MENUS_API CommandMessageTarget /* not final */
 {
 public:
    CommandMessageTarget() {mCounts.push_back(0);}
-   virtual ~CommandMessageTarget() { Flush();}
+   virtual ~CommandMessageTarget();
    virtual void Update(const wxString &message) = 0;
    virtual void StartArray();
    virtual void EndArray();
@@ -91,11 +87,12 @@ public:
    std::vector<int> mCounts;
 };
 
-class CommandMessageTargetDecorator : public CommandMessageTarget
+class MENUS_API CommandMessageTargetDecorator : public CommandMessageTarget
 {
 public:
-   CommandMessageTargetDecorator( CommandMessageTarget & target): mTarget(target) {}
-   ~CommandMessageTargetDecorator() override { }
+   CommandMessageTargetDecorator(CommandMessageTarget & target)
+      : mTarget(target) {}
+   ~CommandMessageTargetDecorator() override;
    void Update(const wxString &message) override { mTarget.Update( message );}
    void StartArray() override { mTarget.StartArray();}
    void EndArray() override { mTarget.EndArray();}
@@ -116,68 +113,58 @@ public:
    CommandMessageTarget & mTarget;
 };
 
-class LispyCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
+class MENUS_API LispyCommandMessageTarget
+   : public CommandMessageTargetDecorator /* not final */
 {
 public:
-   LispyCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   LispyCommandMessageTarget( CommandMessageTarget & target)
+      : CommandMessageTargetDecorator(target) {};
+   ~LispyCommandMessageTarget() override;
    virtual void StartArray() override;
    virtual void EndArray() override;
    virtual void StartStruct() override;
    virtual void EndStruct() override;
-   virtual void AddItem(const wxString &value , const wxString &name = {} )override;
-   virtual void AddBool(const bool value      , const wxString &name = {} )override;
-   virtual void AddItem(const double value    , const wxString &name = {} )override;
+   virtual void AddItem(const wxString &value , const wxString &name = {})
+      override;
+   virtual void AddBool(const bool value      , const wxString &name = {})
+      override;
+   virtual void AddItem(const double value    , const wxString &name = {})
+      override;
    virtual void StartField( const wxString &name = {} )override;
    virtual void EndField( ) override;
 };
 
-class BriefCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
+class MENUS_API BriefCommandMessageTarget
+   : public CommandMessageTargetDecorator /* not final */
 {
 public:
-   BriefCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   BriefCommandMessageTarget( CommandMessageTarget & target)
+      : CommandMessageTargetDecorator(target) {};
+   ~BriefCommandMessageTarget() override;
    virtual void StartArray() override;
    virtual void EndArray() override;
    virtual void StartStruct() override;
    virtual void EndStruct() override;
-   virtual void AddItem(const wxString &value , const wxString &name = {} )override;
-   virtual void AddBool(const bool value      , const wxString &name = {} )override;
-   virtual void AddItem(const double value    , const wxString &name = {} )override;
+   virtual void AddItem(const wxString &value , const wxString &name = {})
+      override;
+   virtual void AddBool(const bool value      , const wxString &name = {})
+      override;
+   virtual void AddItem(const double value    , const wxString &name = {})
+      override;
    virtual void StartField( const wxString &name = {} )override;
    virtual void EndField( ) override;
 };
 
 /// Used to ignore a command's progress updates
-class NullProgressTarget final : public CommandProgressTarget
+class MENUS_API NullProgressTarget final : public CommandProgressTarget
 {
 public:
-   virtual ~NullProgressTarget() {}
+   ~NullProgressTarget() override;
    void Update(double WXUNUSED(completed)) override {}
 };
 
-#if 0
-
-//#include "ProgressDialog.h" // Member variable
-
-/// Sends command progress information to a ProgressDialog
-class GUIProgressTarget final : public CommandProgressTarget
-{
-private:
-   ProgressDialog &mProgress;
-public:
-   GUIProgressTarget(ProgressDialog &pd)
-      : mProgress(pd)
-   {}
-   virtual ~GUIProgressTarget() {}
-   void Update(double completed) override
-   {
-      mProgress.Update(completed);
-   }
-};
-#endif
-
-
 ///
-class ProgressToMessageTarget final : public CommandProgressTarget
+class MENUS_API ProgressToMessageTarget final : public CommandProgressTarget
 {
 private:
    std::unique_ptr<CommandMessageTarget> mTarget;
@@ -185,9 +172,7 @@ public:
    ProgressToMessageTarget(std::unique_ptr<CommandMessageTarget> &&target)
       : mTarget(std::move(target))
    { }
-   virtual ~ProgressToMessageTarget()
-   {
-   }
+   ~ProgressToMessageTarget() override;
    void Update(double completed) override
    {
       mTarget->Update(wxString::Format(wxT("%.2f%%"), completed*100));
@@ -195,35 +180,23 @@ public:
 };
 
 /// Used to ignore a command's message updates
-class NullMessageTarget final : public CommandMessageTarget
+class MENUS_API NullMessageTarget final : public CommandMessageTarget
 {
 public:
-   virtual ~NullMessageTarget() {}
+   ~NullMessageTarget() override;
    void Update(const wxString &) override {}
 };
 
-/// Displays messages from a command in an AudacityMessageBox
-class AUDACITY_DLL_API MessageBoxTarget final : public CommandMessageTarget
+/// Displays messages from a command in a BasicUI::MessageBox
+class MENUS_API MessageBoxTarget final : public CommandMessageTarget
 {
 public:
-   virtual ~MessageBoxTarget() {}
-   void Update(const wxString &message) override;
-};
-
-/// Displays messages from a command in a wxStatusBar
-class AUDACITY_DLL_API StatusBarTarget final : public CommandMessageTarget
-{
-private:
-   wxStatusBar &mStatus;
-public:
-   StatusBarTarget(wxStatusBar &sb)
-      : mStatus(sb)
-   {}
+   ~MessageBoxTarget() override;
    void Update(const wxString &message) override;
 };
 
 /// Constructs a response (to be sent back to a script)
-class ResponseTarget final : public CommandMessageTarget
+class MENUS_API ResponseTarget final : public CommandMessageTarget
 {
 private:
    wxSemaphore mSemaphore;
@@ -236,9 +209,7 @@ public:
       // Cater for handling long responses quickly.
       mBuffer.Alloc(40000);
    }
-   virtual ~ResponseTarget()
-   {
-   }
+   ~ResponseTarget() override;
    void Update(const wxString &message) override
    {
       mBuffer += message;
@@ -255,7 +226,7 @@ public:
 };
 
 /// Sends messages to two message targets at once
-class CombinedMessageTarget final : public CommandMessageTarget
+class MENUS_API CombinedMessageTarget final : public CommandMessageTarget
 {
 private:
    std::unique_ptr<CommandMessageTarget> m1, m2;
@@ -267,9 +238,7 @@ public:
       wxASSERT(m1);
       wxASSERT(m2);
    }
-   ~CombinedMessageTarget()
-   {
-   }
+   ~CombinedMessageTarget() override;
    void Update(const wxString &message) override
    {
       m1->Update(message);
@@ -280,8 +249,8 @@ public:
 
 /** 
 \class TargetFactory
-\brief TargetFactory makes Command output targets.  By default, we ignore progress 
-updates but display all other messages directly
+\brief TargetFactory makes Command output targets.
+ By default, we ignore progress updates but display all other messages directly
 */
 class TargetFactory
 {
@@ -309,12 +278,13 @@ public:
    std::shared_ptr<CommandMessageTarget> mStatusTarget;
    std::shared_ptr<CommandMessageTarget> mErrorTarget;
 public:
-   // && is not a reference to a reference, but rather a way to allow reference to a temporary
-   // that will be gone or transferred after we have taken it.  It's a reference to an xvalue, 
-   // or 'expiring value'.
-   CommandOutputTargets(std::unique_ptr<CommandProgressTarget> &&pt = TargetFactory::ProgressDefault(),
-                       std::shared_ptr<CommandMessageTarget>  &&st = TargetFactory::MessageDefault(),
-                       std::shared_ptr<CommandMessageTarget> &&et = TargetFactory::MessageDefault())
+   CommandOutputTargets(
+      std::unique_ptr<CommandProgressTarget> pt =
+                        TargetFactory::ProgressDefault(),
+      std::shared_ptr<CommandMessageTarget>  st =
+                        TargetFactory::MessageDefault(),
+      std::shared_ptr<CommandMessageTarget>  et =
+                        TargetFactory::MessageDefault())
       : mProgressTarget(std::move(pt)), mStatusTarget(st), mErrorTarget(et)
    { }
    ~CommandOutputTargets()
@@ -386,7 +356,7 @@ public:
    }
 };
 
-class AUDACITY_DLL_API LispifiedCommandOutputTargets
+class MENUS_API LispifiedCommandOutputTargets
    : public CommandOutputTargets
 {
 public :
@@ -396,20 +366,13 @@ private:
    CommandOutputTargets * pToRestore;
 };
 
-class AUDACITY_DLL_API BriefCommandOutputTargets : public CommandOutputTargets
+class MENUS_API BriefCommandOutputTargets : public CommandOutputTargets
 {
 public :
    BriefCommandOutputTargets( CommandOutputTargets & target );
    ~BriefCommandOutputTargets();
 private:
    CommandOutputTargets * pToRestore;
-};
-
-class InteractiveOutputTargets : public CommandOutputTargets
-{
-public:
-   InteractiveOutputTargets();
-
 };
 
 #endif /* End of include guard: __COMMANDTARGETS__ */

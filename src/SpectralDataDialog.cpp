@@ -41,9 +41,8 @@
 #include "AudioIO.h"
 #include "ClientData.h"
 #include "Clipboard.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "commands/CommandManager.h"
-#include "Menus.h"
 #include "UndoManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -482,14 +481,14 @@ void OnSpectralEditingPanel(const CommandContext &context)
    dialog.Show( !dialog.IsShown() );
 }
 
-using namespace MenuTable;
-MenuTable::AttachedItem sAttachment{
+using namespace MenuRegistry;
+MenuRegistry::AttachedItem sAttachment{
    wxT("View/Other/Toolbars/Toolbars/Other"),
    Command( wxT("ShowSpectralSelectionPanel"),
       XXO("Spectra&l Selection Panel"),
       OnSpectralEditingPanel,
       AlwaysEnabledFlag,
-      CommandManager::Options{}
+      Options{}
          .CheckTest( [](AudacityProject &project) {
             // Find not Get to avoid creating the dialog if not yet done
             auto pDialog = SpectralDataDialog::Find(&project);

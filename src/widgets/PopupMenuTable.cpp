@@ -50,10 +50,10 @@ struct PopupMenuImpl : PopupMenu, wxMenu
    void *pUserData;
 };
 
-class PopupMenuBuilder : public MenuTable::Visitor<PopupMenuTableTraits> {
+class PopupMenuBuilder : public MenuRegistry::Visitor<PopupMenuTableTraits> {
 public:
    PopupMenuBuilder(PopupMenuTable &table, PopupMenuImpl &menu, void *pUserData)
-   : MenuTable::Visitor<PopupMenuTableTraits>{ std::tuple{
+   : MenuRegistry::Visitor<PopupMenuTableTraits>{ std::tuple{
       [this](const PopupSubMenu &item, const auto &){
          if (!item.caption.empty()) {
             auto newMenu =

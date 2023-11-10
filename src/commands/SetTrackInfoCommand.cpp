@@ -38,7 +38,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "SetTrackInfoCommand.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Project.h"
@@ -423,7 +423,7 @@ bool SetTrackCommand::VisitSettings( ConstSettingsVisitor & S )
    { return VisitSettings<true>(S); }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

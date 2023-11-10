@@ -58,15 +58,22 @@ class MacroCommands final {
  public:
    // constructors and destructors
    MacroCommands( AudacityProject &project );
+   AudacityProject &GetProject() { return mProject; }
  public:
    bool ApplyMacro( const MacroCommandsCatalog &catalog,
       const wxString & filename = {});
+   /*!
+    @pre `!pContext || &pContext->project == &GetProject()`
+    */
    bool ApplyCommand( const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString & params,
-      CommandContext const * pContext=NULL );
+      CommandContext const * pContext = nullptr);
+   /*!
+    @pre `!pContext || &pContext->project == &GetProject()`
+    */
    bool ApplyCommandInBatchMode( const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString &params,
-      CommandContext const * pContext = NULL);
+      CommandContext const * pContext = nullptr);
    bool ApplyEffectCommand(
       const PluginID & ID, const TranslatableString &friendlyCommand,
       const CommandID & command,
@@ -109,7 +116,7 @@ class MacroCommands final {
    void Split(const wxString & str, wxString & command, wxString & param);
    wxString Join(const wxString & command, const wxString & param);
 
-private:
+private:	
    AudacityProject &mProject;
 
    CommandIDs mCommandMacro;

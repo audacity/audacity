@@ -47,13 +47,12 @@
 
 #include "AllThemeResources.h"
 #include "ImageManipulation.h"
-#include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "UndoManager.h"
 #include "../widgets/AButton.h"
 
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/CommandDispatch.h"
 

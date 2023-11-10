@@ -194,8 +194,8 @@ void LyricsWindow::UpdatePrefs()
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 
 namespace {
 
@@ -218,7 +218,7 @@ void OnKaraoke(const CommandContext &context)
 
 // Register that menu item
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("Karaoke"), XXO("&Karaoke"), OnKaraoke,
       LabelTracksExistFlag() ),

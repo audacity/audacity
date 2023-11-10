@@ -7,17 +7,14 @@ ProjectManager.cpp
 Paul Licameli split from AudacityProject.cpp
 
 **********************************************************************/
-
 #include "ProjectManager.h"
-
-
 
 #include "ActiveProject.h"
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "Clipboard.h"
 #include "FileNames.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "ModuleManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -345,7 +342,7 @@ AudacityProject *ProjectManager::New()
    // There is a dependency on the order of initialisation.
    // The menus must be created, and registered, before
    // InitProjectWindows can UpdateMenus.
-   MenuManager::Get(project).CreateMenusAndCommands(project);
+   MenuCreator::Get(project).CreateMenusAndCommands();
 
    InitProjectWindow( window );
 

@@ -924,7 +924,7 @@ static const WaveChannelSubViews::RegisteredFactory key{
 // source file with the rest of the spectrum view implementation.
 #include "WaveTrackControls.h"
 #include "AudioIOBase.h"
-#include "../../../../Menus.h"
+#include "../../../../MenuCreator.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../prefs/PrefsDialog.h"
@@ -1096,7 +1096,7 @@ unsigned SpectrumView::Char(
 #include "../../../../CommonCommandFlags.h"
 #include "Project.h"
 #include "../../../../SpectrumAnalyst.h"
-#include "../../../../commands/CommandContext.h"
+#include "CommandContext.h"
 
 namespace {
 void DoNextPeakFrequency(AudacityProject &project, bool up)
@@ -1178,7 +1178,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
    return project.AttachedObjects::Get< Handler >( key );
 };
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 #define FN(X) (& Handler :: X)
 
 auto SpectralSelectionMenu()

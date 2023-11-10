@@ -44,7 +44,7 @@ small calculations of rectangles.
 #include "Track.h"
 #include "../widgets/VetoDialogHook.h"
 #include "CommandContext.h"
-#include "CommandManager.h"
+#include "commands/CommandManager.h"
 #include "CommandDispatch.h"
 #include "../CommonCommandFlags.h"
 
@@ -417,7 +417,6 @@ void ScreenshotCommand::CapturePreferences(
    using namespace std::chrono;
    (void)&FileName;//compiler food.
    (void)&context;
-   CommandManager &commandManager = CommandManager::Get( *pProject );
 
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
@@ -436,7 +435,7 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Flush();
       CommandID Command{ wxT("Preferences") };
       const CommandContext projectContext( *pProject );
-      if( !CommandDispatch::HandleTextualCommand( commandManager,
+      if( !CommandDispatch::HandleTextualCommand(
          Command, projectContext, AlwaysEnabledFlag, true ) )
       {
          // using GET in a log message for devs' eyes only
@@ -877,7 +876,7 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

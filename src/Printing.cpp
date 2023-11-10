@@ -34,8 +34,8 @@
 
 #include "tracks/ui/ChannelView.h"
 
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 #include "Project.h"
 #include "TrackPanel.h"
@@ -215,7 +215,7 @@ void OnPrint(const CommandContext &context)
    HandlePrint(&window, name, &tracks, TrackPanel::Get( project ));
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto PrintingItems()
 {
    static auto items = std::shared_ptr{

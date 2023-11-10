@@ -21,7 +21,7 @@
 
 #include "CommandContext.h"
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "ProjectHistory.h"
@@ -106,7 +106,7 @@ bool SetEnvelopeCommand::ApplyInner(const CommandContext &context, Track &t)
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

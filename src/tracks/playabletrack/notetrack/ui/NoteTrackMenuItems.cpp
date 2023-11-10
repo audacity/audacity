@@ -17,8 +17,8 @@ Paul Licameli split from TrackMenus.cpp
 // Attach a menu item for diagnostic information
 
 #include "AudioIOBase.h"
-#include "../../../../commands/CommandContext.h"
-#include "../../../../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 #include "HelpUtilities.h"
 #include "NoteTrack.h"
@@ -34,7 +34,7 @@ void OnMidiDeviceInfo(const CommandContext &context)
       XO("MIDI Device Info"), wxT("midideviceinfo.txt") );
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
       OnMidiDeviceInfo, AudioIONotBusyFlag() ),

@@ -22,7 +22,7 @@ threshold of difference in two selected tracks
 #include "CompareAudioCommand.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "ViewInfo.h"
@@ -173,7 +173,7 @@ bool CompareAudioCommand::Apply(const CommandContext & context)
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

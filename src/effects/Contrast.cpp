@@ -651,7 +651,7 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "commands/CommandManager.h"
 #include "ProjectWindows.h"
 
@@ -673,7 +673,7 @@ namespace {
    void OnContrast(const CommandContext &context)
    {
       auto &project = context.project;
-      CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Contrast as Last Analyzer
+      CommandManager::Get(project).RegisterLastAnalyzer(context);
       auto contrastDialog = &GetAttachedWindows(project)
          .Get< ContrastDialog >( sContrastDialogKey );
 
@@ -686,7 +686,7 @@ namespace {
 
 // Register that menu item
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("ContrastAnalyser"), XXO("Contrast..."),
       OnContrast,
