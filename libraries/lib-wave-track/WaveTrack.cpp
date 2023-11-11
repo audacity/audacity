@@ -2252,7 +2252,6 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       // value as T1, when T1 was set to be at the end of one of those clips.
       oldT1 >= endTime)
          return;
-   const auto channels = TrackList::Channels(this);
    if (newT1 > oldT1) {
       // Insert space within the track
 
@@ -2262,10 +2261,9 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          if (EditClipsCanMove.Read()) {
             const auto offset = newT1 - oldT1;
             const auto rate = GetRate();
-            for (const auto pChannel : channels)
-               for (const auto& clip : pChannel->mClips)
-                  if (clip->GetPlayStartTime() > oldT1 - (1.0 / rate))
-                     clip->ShiftBy(offset);
+            for (const auto &&clip : Intervals())
+               if (clip->GetPlayStartTime() > oldT1 - (1.0 / rate))
+                  clip->ShiftBy(offset);
          }
          return;
       }
@@ -2273,16 +2271,11 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          // AWD: Could just use InsertSilence() on its own here, but it doesn't
          // follow EditClipCanMove rules (Paste() does it right)
          const auto duration = newT1 - oldT1;
-         for (const auto pChannel : channels) {
-            auto tmp = std::make_shared<WaveTrack>(
-               mpFactory, GetSampleFormat(), GetRate());
-            // tmpList exists only to fix assertion crashes in usage of tmp
-            auto tmpList = TrackList::Temporary(nullptr, tmp, nullptr);
-            assert(tmp->IsLeader()); // It is not yet owned by a TrackList
-            tmp->InsertSilence(0.0, duration);
-            tmp->FlushOne();
-            PasteOne(*pChannel, oldT1, *tmp, 0.0, duration);
-         }
+         auto tmpList = WideEmptyCopy(mpFactory);
+         auto &tmp = **tmpList->Any<WaveTrack>().begin();
+         tmp.InsertSilence(0.0, duration);
+         tmp.Flush();
+         Paste(oldT1, tmp);
       }
    }
    else if (newT1 < oldT1)
