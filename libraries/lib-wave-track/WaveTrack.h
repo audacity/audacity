@@ -719,8 +719,8 @@ public:
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
-   const WaveClip* GetLeftmostClip() const;
-   const WaveClip* GetRightmostClip() const;
+   IntervalConstHolder GetLeftmostClip() const;
+   IntervalConstHolder GetRightmostClip() const;
 
    /**
     * @brief Get access to the (visible) clips in the tracks, in unspecified
@@ -972,6 +972,10 @@ public:
       void SetColorIndex(int index);
       int GetColorIndex() const;
 
+      //! Real start time of the clip, quantized to raw sample rate (track's
+      //! rate)
+      sampleCount GetPlayStartSample() const;
+
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
       double GetPlayEndTime() const;
@@ -1010,6 +1014,8 @@ public:
       void ClearLeft(double t);
       void ClearRight(double t);
 
+      void ShiftBy(double delta);
+
       /*!
        * @post result: `result->GetStretchRatio() == 1`
        */
@@ -1017,7 +1023,12 @@ public:
          const std::function<void(double)>& reportProgress,
          const ChannelGroup& group, const SampleBlockFactoryPtr& factory,
          sampleFormat format);
+
+      //! Checks for stretch-ratio equality, accounting for rounding errors.
+      //! @{
+      bool HasEqualStretchRatio(const Interval& other) const;
       bool StretchRatioEquals(double value) const;
+      //! @}
 
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
@@ -1029,6 +1040,14 @@ public:
       void AppendSilence(double len, double envelopeValue);
 
       bool Paste(double t0, const Interval &src);
+
+      /** WaveTrack calls this whenever data in the wave clip changes. It is
+       * called automatically when WaveClip has a chance to know that something
+       * has changed, like when member functions SetSamples() etc. are called. */
+      /*! @excsafety{No-fail} */
+      void MarkChanged();
+
+      void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
 
       const Envelope& GetEnvelope() const;
 
@@ -1140,6 +1159,8 @@ private:
    void
    ReplaceInterval(const IntervalHolder& oldOne, const IntervalHolder& newOne);
 
+   IntervalHolder GetWideClip(size_t iClip);
+   IntervalConstHolder GetWideClip(size_t iClip) const;
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
