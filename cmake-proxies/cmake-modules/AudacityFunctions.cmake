@@ -816,5 +816,6 @@ function(fix_bundle target_name)
          ${PYTHON}
          ${CMAKE_SOURCE_DIR}/scripts/build/macOS/fix_bundle.py
          $<TARGET_FILE:${target_name}>
+	 -config=$<CONFIG>
    )
 endfunction()

@@ -94,7 +94,11 @@ def run_install_name_tool(file, dep_path_prefix):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('bundle', help='The bundle to fix')
+    parser.add_argument('-config', help='Configuration type')
     args = parser.parse_args()
+
+    if (args.config == "Debug"):
+       exit(0)
 
     bundle = args.bundle
 
