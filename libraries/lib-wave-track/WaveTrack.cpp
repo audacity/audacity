@@ -1316,6 +1316,7 @@ WaveTrack::Holder WaveTrack::EmptyCopy(
    result->mpFactory = pFactory ? pFactory : mpFactory;
    if (!keepLink)
       result->SetLinkType(LinkType::None);
+   WaveTrackData::Get(*result).SetOrigin(0);
    return result;
 }
 
