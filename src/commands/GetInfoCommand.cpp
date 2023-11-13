@@ -528,6 +528,7 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
             context.AddItem(pClip->GetPlayStartTime(), "start");
             context.AddItem(pClip->GetPlayEndTime(), "end");
             context.AddItem(pClip->GetColourIndex(), "color");
+            context.AddItem(pClip->GetName(), "name");
             context.EndStruct();
          }
       });
