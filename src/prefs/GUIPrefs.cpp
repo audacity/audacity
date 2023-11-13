@@ -68,7 +68,7 @@ void GUIPrefs::GetRangeChoices(
    int *pDefaultRangeIndex
 )
 {
-   static const auto sCodes = {
+   static const wxArrayStringEx sCodes = {
       wxT("36") ,
       wxT("48") ,
       wxT("60") ,
