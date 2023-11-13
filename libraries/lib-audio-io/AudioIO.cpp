@@ -2708,6 +2708,9 @@ bool AudioIoCallback::FillOutputBuffers(
             len = mPlaybackBuffers[iBuffer]->Discard(toGet);
             // keep going here.
             // we may still need to issue a paComplete.
+
+            // Keep tempBufs initialized to avoid NaNs and Infs
+            memset(tempBufs[c], 0, framesPerBuffer * sizeof(float));
          }
          else {
             len = mPlaybackBuffers[iBuffer]
