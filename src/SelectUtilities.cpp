@@ -215,6 +215,9 @@ void ClearPlayRegion(AudacityProject &project)
    auto &viewInfo = ViewInfo::Get( project );
    auto &playRegion = viewInfo.playRegion;
    playRegion.Clear();
+
+   if (playRegion.Active())
+      InactivatePlayRegion(project);
 }
 
 void SetPlayRegionToSelection(AudacityProject &project)
