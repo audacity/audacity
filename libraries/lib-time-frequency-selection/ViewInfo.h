@@ -173,7 +173,7 @@ private:
    void Notify();
 
    // Times:
-   static constexpr auto invalidValue = std::numeric_limits<double>::min();
+   static constexpr auto invalidValue = -std::numeric_limits<double>::infinity();
 
    double mStart { invalidValue };
    double mEnd { invalidValue };

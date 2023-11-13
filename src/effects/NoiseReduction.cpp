@@ -780,7 +780,10 @@ bool EffectNoiseReduction::Worker::Process(
          }
          if (ppTempList) {
             TrackSpectrumTransformer::PostProcess(*pFirstTrack, len);
-            track->ClearAndPaste(t0, t0 + tLen, **ppTempList, true, false);
+            constexpr auto preserveSplits = true;
+            constexpr auto merge = true;
+            track->ClearAndPaste(
+               t0, t0 + tLen, **ppTempList, preserveSplits, merge);
          }
       }
    }

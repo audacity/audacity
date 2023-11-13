@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  TagsEditor.cpp
- 
+
  Paul Licameli split from Tags.cpp
- 
+
  **********************************************************************/
 
 #include "TagsEditor.h"
@@ -42,7 +42,7 @@ class ComboEditor final : public wxGridCellChoiceEditor
 public:
    ComboEditor(const wxArrayString& choices, bool allowOthers = false)
    :  wxGridCellChoiceEditor(choices, allowOthers)
-   ,  m_choices{ choices }
+   ,  m_choices( choices )
    ,  m_allowOthers{ allowOthers }
    {
    }
