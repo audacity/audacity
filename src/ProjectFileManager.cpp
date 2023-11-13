@@ -31,6 +31,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
+#include "ProjectTimeSignature.h"
 #include "ProjectWindow.h"
 #include "SelectFile.h"
 #include "SelectUtilities.h"
@@ -1404,6 +1405,11 @@ bool ProjectFileManager::Import(
       }
       if (!success)
          return false;
+
+      const auto projectTempo = ProjectTimeSignature::Get(project).GetTempo();
+      for (auto trackList : newTracks)
+         for (auto track : *trackList)
+            track->OnProjectTempoChange(projectTempo);
 
       if (addToHistory) {
          FileHistory::Global().Append(fileName);
