@@ -170,7 +170,7 @@ public:
       bool trigger, bool logarithmic
    )  : LV2Port{ port, index, isInput, symbol, name, group }
       , mScaleValues{ move(scaleValues) }
-      , mScaleLabels{ std::move(scaleLabels) }
+      , mScaleLabels( std::move(scaleLabels) )
       , mUnits{ units }
       , mMin{ min }, mMax{ max }, mDef{ def }
       , mHasLo{ hasLo }, mHasHi{ hasHi }
