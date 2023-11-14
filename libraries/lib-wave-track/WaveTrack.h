@@ -921,6 +921,7 @@ public:
        @pre `pClip != nullptr`
        */
       Interval(const ChannelGroup &group,
+		 const SampleBlockFactoryPtr& factory,
          const std::shared_ptr<WaveClip> &pClip,
          const std::shared_ptr<WaveClip> &pClip1);
 
@@ -991,6 +992,8 @@ public:
       { return iChannel == 0 ? mpClip : mpClip1; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
       { return iChannel == 0 ? mpClip : mpClip1; }
+	  const SampleBlockFactoryPtr& GetFactory()
+	  { return mpFactory; }
    private:
       const Envelope& GetEnvelope() const;
       void SetEnvelope(const Envelope& envelope);
@@ -1002,6 +1005,7 @@ public:
       const std::shared_ptr<WaveClip> mpClip;
       //! TODO wide wave tracks: eliminate this
       const std::shared_ptr<WaveClip> mpClip1;
+	  const SampleBlockFactoryPtr& mpFactory;
    };
 
    using IntervalHolder = std::shared_ptr<Interval>;

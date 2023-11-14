@@ -180,7 +180,7 @@ public:
                if (pClip)
                   pClip->ShiftBy(offset);
             mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(
-               GetTrack(), clips[0], clips[1]));
+               GetTrack(), data.GetFactory(), clips[0], clips[1]));
          }
       }
       return true;

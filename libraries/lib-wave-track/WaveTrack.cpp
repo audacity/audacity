@@ -180,10 +180,12 @@ int WaveChannelInterval::GetColourIndex() const
 }
 
 WaveTrack::Interval::Interval(const ChannelGroup &group,
+   const SampleBlockFactoryPtr& factory,
    const std::shared_ptr<WaveClip> &pClip,
    const std::shared_ptr<WaveClip> &pClip1
 )  : WideChannelGroupInterval{ group,
       pClip->GetPlayStartTime(), pClip->GetPlayEndTime() }
+   , mpFactory{ factory }
    , mpClip{ pClip }
    , mpClip1{ pClip1 }
 {
@@ -193,7 +195,7 @@ WaveTrack::Interval::Interval(
    const ChannelGroup& group, size_t width,
    const SampleBlockFactoryPtr& factory, int rate, sampleFormat format)
     : Interval(
-         group, std::make_shared<WaveClip>(1, factory, format, rate, 0),
+         group, factory, std::make_shared<WaveClip>(1, factory, format, rate, 0),
          width == 2 ?
             std::make_shared<WaveClip>(1, factory, format, rate, 0) :
             nullptr)
@@ -267,7 +269,7 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
    const SampleBlockFactoryPtr& factory, sampleFormat format)
 {
    if (GetStretchRatio() == 1)
-      return std::make_shared<Interval>(group, mpClip, mpClip1);
+      return std::make_shared<Interval>(group, factory, mpClip, mpClip1);
 
    const auto dst = std::make_shared<Interval>(
       group, NChannels(), factory, mpClip->GetRate(), format);
@@ -988,7 +990,7 @@ WaveTrack::DoGetInterval(size_t iInterval)
          ; right && iInterval < right->mClips.size()
       )
          pClip1 = right->mClips[iInterval];
-      return std::make_shared<Interval>(*this, pClip, pClip1);
+      return std::make_shared<Interval>(*this, mpFactory, pClip, pClip1);
    }
    return {};
 }
