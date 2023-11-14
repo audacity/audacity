@@ -867,7 +867,21 @@ WaveTrack::DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const
 bool WaveTrack::LinkConsistencyFix(bool doFix)
 {
    assert(!doFix || IsLeader());
+
+
+   const auto removeZeroClips = [](WaveClipHolders& clips) {
+      // Check for zero-length clips and remove them
+      for (auto it = clips.begin(); it != clips.end();)
+      {
+         if ((*it)->IsEmpty())
+            it = clips.erase(it);
+         else
+            ++it;
+      }
+   };
+
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix);
+
    const auto linkType = GetLinkType();
    if (linkType != LinkType::None) {
       auto next = *TrackList::Channels(this).first.advance(1);
@@ -895,6 +909,11 @@ bool WaveTrack::LinkConsistencyFix(bool doFix)
             // have been made during during deserialization of the channel
             // before joining it
             next->DestroyGroupData();
+            //clean up zero clips only after alignment check has completed
+            //this can't break alignment as there should be a "twin"
+            //in the right channel which will also be removed, otherwise
+            //track will be unlinked
+            removeZeroClips(next->mClips);
          }
       }
    }
@@ -908,15 +927,7 @@ bool WaveTrack::LinkConsistencyFix(bool doFix)
          if (mLegacyFormat != undefinedSample)
             WaveTrackData::Get(*this).SetSampleFormat(mLegacyFormat);
       }
-
-      // Check for zero-length clips and remove them
-      for (auto it = mClips.begin(); it != mClips.end();)
-      {
-         if ((*it)->IsEmpty())
-            it = mClips.erase(it);
-         else
-            ++it;
-      }
+      removeZeroClips(mClips);
    }
    return !err;
 }
@@ -1316,6 +1327,7 @@ WaveTrack::Holder WaveTrack::EmptyCopy(
    result->mpFactory = pFactory ? pFactory : mpFactory;
    if (!keepLink)
       result->SetLinkType(LinkType::None);
+   WaveTrackData::Get(*result).SetOrigin(0);
    return result;
 }
 
