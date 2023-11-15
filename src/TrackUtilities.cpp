@@ -13,7 +13,7 @@
 #include "PlayableTrack.h"
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "TrackPanel.h"
 
 namespace TrackUtilities {

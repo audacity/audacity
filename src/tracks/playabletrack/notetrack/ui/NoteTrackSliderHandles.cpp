@@ -18,7 +18,7 @@
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackInfo.h"
 #include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "UndoManager.h"
 #include "../../../../NoteTrack.h"
 #include "ViewInfo.h"

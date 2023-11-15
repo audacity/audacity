@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../SelectUtilities.h"
 #include "../../RefreshCode.h"
 #include "Track.h"
-#include "../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../TrackInfo.h"
 #include "../../TrackPanel.h"
 #include "../../TrackUtilities.h"

@@ -20,7 +20,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSnap.h"
 #include "RefreshCode.h"
 #include "TrackPanelMouseEvent.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"

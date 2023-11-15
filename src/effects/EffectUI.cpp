@@ -26,7 +26,7 @@
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindowBase.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"

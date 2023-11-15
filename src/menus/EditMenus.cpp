@@ -13,7 +13,7 @@
 #include "../SelectUtilities.h"
 #include "SyncLock.h"
 #include "../TrackPanel.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"

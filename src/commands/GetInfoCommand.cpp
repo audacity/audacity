@@ -32,7 +32,7 @@ This class now lists
 #include "CommandTargets.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/Overlay.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"

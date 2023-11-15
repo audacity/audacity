@@ -17,7 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Project.h"
 #include "../../ProjectWindows.h"
 #include "Track.h" //
-#include "../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../TrackPanel.h"
 #include "ViewInfo.h"
 

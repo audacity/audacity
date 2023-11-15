@@ -1,7 +1,7 @@
 #include "../CommonCommandFlags.h"
 #include "ProjectHistory.h"
 #include "SyncLock.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../ProjectWindow.h"
 #include "UndoManager.h"
 #include "WaveClip.h"
