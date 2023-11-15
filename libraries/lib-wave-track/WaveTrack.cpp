@@ -255,6 +255,11 @@ void WaveChannelInterval::SetSamples(constSamplePtr buffer, sampleFormat format,
       0, buffer, format, start, len, effectiveFormat);
 }
 
+void WaveChannelInterval::WriteXML(XMLWriter &xmlFile) const
+{
+   GetNarrowClip().WriteXML(xmlFile);
+}
+
 WaveTrack::Interval::Interval(const ChannelGroup &group,
    const std::shared_ptr<WaveClip> &pClip,
    const std::shared_ptr<WaveClip> &pClip1
@@ -3254,18 +3259,28 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
    assert(IsLeader());
-   const auto channels = TrackList::Channels(this);
+   const auto channels = Channels();
    size_t iChannel = 0,
       nChannels = channels.size();
    for (const auto pChannel : channels)
       WriteOneXML(*pChannel, xmlFile, iChannel++, nChannels);
 }
 
-void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
+void WaveTrack::WriteOneXML(const WaveChannel &channel, XMLWriter &xmlFile,
    size_t iChannel, size_t nChannels)
 // may throw
 {
+   // Track data has always been written using channel-major iteration.
+   // Do it still this way for compatibility.
+
+   // Some values don't vary independently in channels but have been written
+   // redundantly for each channel.  Keep doing this in 3.4 and later in case
+   // a project is opened in an earlier version.
+
    xmlFile.StartTag(WaveTrack_tag);
+   auto &track = channel.GetTrack();
+
+   // Name, selectedness, etc. are channel group properties
    track.Track::WriteCommonXMLAttributes(xmlFile);
 
    // Write the "channel" attribute so earlier versions can interpret stereo
@@ -3284,20 +3299,24 @@ void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
       xmlFile.WriteAttr(Channel_attr, channelType);
    }
 
-   xmlFile.WriteAttr(Linked_attr, static_cast<int>(track.GetLinkType()));
+   // The "linked" flag is used to define the beginning of a channel group
+   // that isn't mono
+   const auto linkType = static_cast<int>((iChannel == 0)
+      ? track.GetLinkType()
+      : LinkType::None);
+   xmlFile.WriteAttr(Linked_attr, linkType);
+
+   // More channel group properties written redundantly
    track.WritableSampleTrack::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(Rate_attr, track.GetRate());
-
-   // Some values don't vary independently in channels but have been written
-   // redundantly for each channel.  Keep doing this in 3.4 and later in case
-   // a project is opened in an earlier version.
    xmlFile.WriteAttr(Gain_attr, static_cast<double>(track.GetGain()));
    xmlFile.WriteAttr(Pan_attr, static_cast<double>(track.GetPan()));
    xmlFile.WriteAttr(SampleFormat_attr, static_cast<long>(track.GetSampleFormat()));
 
+   // Other persistent data specified elsewhere
    WaveTrackIORegistry::Get().CallWriters(track, xmlFile);
 
-   for (const auto &clip : track.mClips)
+   for (const auto &clip : channel.Intervals())
       clip->WriteXML(xmlFile);
 
    xmlFile.EndTag(WaveTrack_tag);

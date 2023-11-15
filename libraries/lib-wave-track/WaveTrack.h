@@ -185,6 +185,8 @@ public:
       */
    );
 
+   void WriteXML(XMLWriter &xmlFile) const;
+
 private:
    WaveClip &GetWideClip() { return *mpWideClip; }
    WaveClip &GetNarrowClip() { return *mpNarrowClip; }
@@ -1188,8 +1190,8 @@ private:
    static void JoinOne(WaveTrack& track, double t0, double t1);
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
-   static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
-     size_t iChannel, size_t nChannels);
+   static void WriteOneXML(const WaveChannel &channel, XMLWriter &xmlFile,
+      size_t iChannel, size_t nChannels);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
    void ApplyPitchAndSpeedOnIntervals(
