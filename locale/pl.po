@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-26 22:00+0000\n"
+"PO-Revision-Date: 2023-11-15 12:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -4826,7 +4826,7 @@ msgstr "Pliki Opus"
 
 #: modules/mod-opus/ImportOpus.cpp
 msgid "file has changed the number of channels in the middle."
-msgstr "Plik zmienił liczbę kanałów w środku."
+msgstr "Plik ma zmienioną liczbę kanałów w środku."
 
 #: modules/mod-opus/ImportOpus.cpp
 msgid "IO error reading from file"
