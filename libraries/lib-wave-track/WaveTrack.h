@@ -934,6 +934,10 @@ public:
 
       void Append(constSamplePtr buffer[], sampleFormat format, size_t len);
       void Flush();
+   	  void HandleClear(
+		  double t0, double t1,
+		  bool addCutLines, bool split,
+		  bool clearByTrimming = false);
 
       void SetName(const wxString& name);
       const wxString& GetName() const;
