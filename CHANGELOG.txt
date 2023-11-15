@@ -1,5 +1,27 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.4.2
+
+ This is a hotfix release. It fixes the following issues:
+
+   * #5568 Fix a crash when opening projects with zero-length clips.
+   * #5032 When exporting a file, the sample rate of the tracks is now considered, and last-used sample rate is remembered. 
+   * #5555 Copy-pasting now pastes into audio again by default. 
+     This can be changed via Preferences -> Track Behavior -> Always paste audio as new clips.
+   * #5549 Mix and render now also resets the gain for the resulting track.
+   * #5571 Fix clips shifting to the right when effects are applied to them.
+   * #5106 Fix clicks occurring when overdubbing a project with muted tracks.
+   * #5533 Fix files being exported without a file extension in rare cases.
+   * #5539 Show all sample rates possible for MP2 exports.
+   * #5518 Fix pasting into labels.
+   * #5543 Fix a crash when clearing loops.
+   * #5529 Fix copying when "select all audio if selection required" is enabled.
+   * #5598 #5552 Fix GTK detection and compilation for wxWidgets 3.2.4.
+   * #5551 Fix Nyquist-related crashes.
+   * #5604 Fix EQs in macros.
+   * #5511 Fix a crash when closing Audacity.
+   * #5476 Fix builds on arm64/armhf.
+
 Changes in version 3.4.1
 
  This is a hotfix release. It fixes the following bugs:
