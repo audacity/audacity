@@ -1047,9 +1047,6 @@ public:
 private:
    void FlushOne();
    // May assume precondition: t0 <= t1
-   void HandleClear(
-      double t0, double t1, bool addCutLines, bool split,
-      bool clearByTrimming = false);
    /*
     * @brief Copy/Paste operations must preserve beat durations, but time
     * boundaries are expressed in seconds. For pasting to work, source and
