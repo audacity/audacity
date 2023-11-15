@@ -53,6 +53,9 @@ using BlockPtrArray = std::vector<SeqBlock*>; // non-owning pointers
 class WAVE_TRACK_API Sequence final : public XMLTagHandler{
  public:
 
+   static const char *Sequence_tag;
+   static const char *WaveBlock_tag;
+
    //
    // Static methods
    //

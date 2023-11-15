@@ -3132,9 +3132,19 @@ bool WaveTrack::GetSolo() const
    return PlayableTrack::GetSolo();
 }
 
+const char *WaveTrack::WaveTrack_tag = "wavetrack";
+
+static constexpr auto Offset_attr = "offset";
+static constexpr auto Rate_attr = "rate";
+static constexpr auto Gain_attr = "gain";
+static constexpr auto Pan_attr = "pan";
+static constexpr auto Linked_attr = "linked";
+static constexpr auto SampleFormat_attr = "sampleformat";
+static constexpr auto Channel_attr = "channel"; // write-only!
+
 bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
-   if (tag == "wavetrack") {
+   if (tag == WaveTrack_tag) {
       double dblValue;
       long nValue;
 
@@ -3143,7 +3153,7 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          const auto& attr = pair.first;
          const auto& value = pair.second;
 
-         if (attr == "rate")
+         if (attr == Rate_attr)
          {
             // mRate is an int, but "rate" in the project file is a float.
             if (!value.TryGet(dblValue) ||
@@ -3153,7 +3163,7 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
             // Defer the setting of rate until LinkConsistencyFix
             mLegacyRate = lrint(dblValue);
          }
-         else if (attr == "offset" && value.TryGet(dblValue))
+         else if (attr == Offset_attr && value.TryGet(dblValue))
          {
             // Offset is only relevant for legacy project files. The value
             // is cached until the actual WaveClip containing the legacy
@@ -3164,14 +3174,14 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          {}
          else if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
-         else if (attr == "gain" && value.TryGet(dblValue))
+         else if (attr == Gain_attr && value.TryGet(dblValue))
             DoSetGain(dblValue);
-         else if (attr == "pan" && value.TryGet(dblValue) &&
+         else if (attr == Pan_attr && value.TryGet(dblValue) &&
                   (dblValue >= -1.0) && (dblValue <= 1.0))
             DoSetPan(dblValue);
-         else if (attr == "linked" && value.TryGet(nValue))
+         else if (attr == Linked_attr && value.TryGet(nValue))
             SetLinkType(ToLinkType(nValue), false);
-         else if (attr == "sampleformat" && value.TryGet(nValue) &&
+         else if (attr == SampleFormat_attr && value.TryGet(nValue) &&
                   Sequence::IsValidSampleFormat(nValue))
          {
             //Remember sample format until consistency check is performed.
@@ -3189,7 +3199,7 @@ void WaveTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
 #if 0
    // In case we opened a pre-multiclip project, we need to
    // simulate closing the waveclip tag.
-   NewestOrNewClip()->HandleXMLEndTag("waveclip");
+   NewestOrNewClip()->HandleXMLEndTag(WaveClip::WaveClip_tag);
 #else
    // File compatibility breaks have intervened long since, and the line above
    // would now have undesirable side effects
@@ -3198,20 +3208,17 @@ void WaveTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
 
 XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
 {
-   if ( auto pChild = WaveTrackIORegistry::Get()
-          .CallObjectAccessor(tag, *this) )
+   if (auto pChild = WaveTrackIORegistry::Get().CallObjectAccessor(tag, *this))
+      // Deserialize any extra attached structures
       return pChild;
 
-   //
-   // This is legacy code (1.2 and previous) and is not called for NEW projects!
-   //
-   if (tag == "sequence" || tag == "envelope")
-   {
+   // This is legacy code (1.2 and previous) and is not called for new projects!
+   if (tag == Sequence::Sequence_tag || tag == "envelope") {
       // This is a legacy project, so set the cached offset
       NewestOrNewClip()->SetSequenceStartTime(mLegacyProjectFileOffset);
 
       // Legacy project file tracks are imported as one single wave clip
-      if (tag == "sequence")
+      if (tag == Sequence::Sequence_tag)
          return NewestOrNewClip()->GetSequence(0);
       else if (tag == "envelope")
          return NewestOrNewClip()->GetEnvelope();
@@ -3219,19 +3226,15 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
 
    // JKC... for 1.1.0, one step better than what we had, but still badly broken.
    // If we see a waveblock at this level, we'd better generate a sequence.
-   if (tag == "waveblock")
-   {
+   if (tag == Sequence::WaveBlock_tag) {
       // This is a legacy project, so set the cached offset
       NewestOrNewClip()->SetSequenceStartTime(mLegacyProjectFileOffset);
       Sequence *pSeq = NewestOrNewClip()->GetSequence(0);
       return pSeq;
    }
 
-   //
-   // This is for the NEW file format (post-1.2)
-   //
-   if (tag == "waveclip")
-   {
+   // This is for the new file format (post-1.2)
+   if (tag == WaveClip::WaveClip_tag) {
       // Make clips (which don't serialize the rate) consistent with channel rate,
       // though the consistency check of channels with each other remains to do.
       // Not all `WaveTrackData` fields are properly initialized by now,
@@ -3262,7 +3265,7 @@ void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
    size_t iChannel, size_t nChannels)
 // may throw
 {
-   xmlFile.StartTag(wxT("wavetrack"));
+   xmlFile.StartTag(WaveTrack_tag);
    track.Track::WriteCommonXMLAttributes(xmlFile);
 
    // Write the "channel" attribute so earlier versions can interpret stereo
@@ -3278,26 +3281,26 @@ void WaveTrack::WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
          : (iChannel == 0)
             ? LeftChannel
             : RightChannel;
-      xmlFile.WriteAttr(wxT("channel"), channelType);
+      xmlFile.WriteAttr(Channel_attr, channelType);
    }
 
-   xmlFile.WriteAttr(wxT("linked"), static_cast<int>(track.GetLinkType()));
+   xmlFile.WriteAttr(Linked_attr, static_cast<int>(track.GetLinkType()));
    track.WritableSampleTrack::WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(wxT("rate"), track.GetRate());
+   xmlFile.WriteAttr(Rate_attr, track.GetRate());
 
    // Some values don't vary independently in channels but have been written
    // redundantly for each channel.  Keep doing this in 3.4 and later in case
    // a project is opened in an earlier version.
-   xmlFile.WriteAttr(wxT("gain"), static_cast<double>(track.GetGain()));
-   xmlFile.WriteAttr(wxT("pan"), static_cast<double>(track.GetPan()));
-   xmlFile.WriteAttr(wxT("sampleformat"), static_cast<long>(track.GetSampleFormat()));
+   xmlFile.WriteAttr(Gain_attr, static_cast<double>(track.GetGain()));
+   xmlFile.WriteAttr(Pan_attr, static_cast<double>(track.GetPan()));
+   xmlFile.WriteAttr(SampleFormat_attr, static_cast<long>(track.GetSampleFormat()));
 
    WaveTrackIORegistry::Get().CallWriters(track, xmlFile);
 
    for (const auto &clip : track.mClips)
       clip->WriteXML(xmlFile);
 
-   xmlFile.EndTag(wxT("wavetrack"));
+   xmlFile.EndTag(WaveTrack_tag);
 }
 
 std::optional<TranslatableString> WaveTrack::GetErrorOpening() const

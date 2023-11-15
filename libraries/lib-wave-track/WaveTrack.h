@@ -305,6 +305,8 @@ class WAVE_TRACK_API WaveTrack final
 {
    struct CreateToken {};
 public:
+   static const char *WaveTrack_tag;
+
    class Interval;
    using IntervalHolder = std::shared_ptr<Interval>;
    using IntervalHolders = std::vector<IntervalHolder>;

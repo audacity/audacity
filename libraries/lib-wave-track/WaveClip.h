@@ -128,6 +128,8 @@ private:
    WaveClip& operator= (const WaveClip&) = delete;
 
 public:
+   static const char *WaveClip_tag;
+
    using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
 
    //! typical constructor
