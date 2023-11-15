@@ -9,6 +9,8 @@ Very much not toolkit-neutral!
 set( SOURCES
    AudacityTextEntryDialog.cpp
    AudacityTextEntryDialog.h
+   AudacityDontAskAgainMessageDialog.cpp
+   AudacityDontAskAgainMessageDialog.h
    SpinControl.cpp
    SpinControl.h
    FileDialog/FileDialog.cpp

@@ -603,6 +603,8 @@ list( APPEND SOURCES
       prefs/MidiIOPrefs.h
       prefs/ModulePrefs.cpp
       prefs/ModulePrefs.h
+      prefs/MusicInformationRetrievalPrefs.cpp
+      prefs/MusicInformationRetrievalPrefs.h
       prefs/PlaybackPrefs.cpp
       prefs/PlaybackPrefs.h
       prefs/PrefsDialog.cpp
