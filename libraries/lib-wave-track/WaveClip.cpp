@@ -647,9 +647,11 @@ XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
       return nullptr;
 }
 
-void WaveClip::WriteXML(XMLWriter &xmlFile) const
+void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
 // may throw
 {
+   assert(ii < GetWidth());
+
    if (GetSequenceSamplesCount() <= 0)
       // Oops, I'm empty? How did that happen? Anyway, I do nothing but causing
       // problems, don't save me.
@@ -667,12 +669,11 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
       listener.WriteXMLAttributes(xmlFile);
    });
 
-   for (auto &pSequence : mSequences)
-      pSequence->WriteXML(xmlFile);
+   mSequences[ii]->WriteXML(xmlFile);
    mEnvelope->WriteXML(xmlFile);
 
    for (const auto &clip: mCutLines)
-      clip->WriteXML(xmlFile);
+      clip->WriteXML(ii, xmlFile);
 
    xmlFile.EndTag(WaveClip_tag);
 }

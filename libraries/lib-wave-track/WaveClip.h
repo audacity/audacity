@@ -533,7 +533,14 @@ public:
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    void HandleXMLEndTag(const std::string_view& tag) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
-   void WriteXML(XMLWriter &xmlFile) const /* not override */;
+
+   //! Wave clip data has always been written by channel-major iteration and
+   //! is still done so for compatibility.  Therefore, the first argument.
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   void WriteXML(size_t ii, XMLWriter &xmlFile) const;
 
    // AWD, Oct 2009: for pasting whitespace at the end of selection
    bool GetIsPlaceholder() const { return mIsPlaceholder; }

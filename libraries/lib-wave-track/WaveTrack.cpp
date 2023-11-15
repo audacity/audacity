@@ -257,7 +257,8 @@ void WaveChannelInterval::SetSamples(constSamplePtr buffer, sampleFormat format,
 
 void WaveChannelInterval::WriteXML(XMLWriter &xmlFile) const
 {
-   GetNarrowClip().WriteXML(xmlFile);
+   // TODO wide wave tracks -- use miChannel
+   GetNarrowClip().WriteXML(0, xmlFile);
 }
 
 WaveTrack::Interval::Interval(const ChannelGroup &group,
