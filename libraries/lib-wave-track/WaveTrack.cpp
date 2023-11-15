@@ -1429,17 +1429,19 @@ auto WaveTrack::CopyOne(
 /*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1)
 {
-   assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->HandleClear(t0, t1, false, false);
+    assert(IsLeader());
+    for (const auto clip : Intervals()){
+        clip->HandleClear(SnapToSample(t0), SnapToSample(t1), false, false);
+    }
 }
 
 /*! @excsafety{Strong} */
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->HandleClear(t0, t1, true, false);
+   for (const auto clip : Intervals()){
+      clip->HandleClear(SnapToSample(t0), SnapToSample(t1), true, false);
+   }
 }
 
 namespace {
@@ -1640,8 +1642,9 @@ void WaveTrack::ClearAndPasteOne(
    constexpr auto split = false;
 
    // Now, clear the selection
-   track.HandleClear(t0, t1, false, split, clearByTrimming);
-
+   for (const auto clip : track.Intervals()){
+      clip->HandleClear(track.SnapToSample(t0), track.SnapToSample(t1), true, false);
+   }
    // And paste in the new data
    PasteOne(track, t0, src, startTime, endTime, merge);
 
@@ -1831,8 +1834,9 @@ void WaveTrack::SplitDelete(double t0, double t1)
    assert(IsLeader());
    bool addCutLines = false;
    bool split = true;
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->HandleClear(t0, t1, addCutLines, split);
+    for (const auto clip : Intervals()){
+        clip->HandleClear(SnapToSample(t0), SnapToSample(t1), addCutLines, split);
+    }
 }
 
 namespace
