@@ -262,6 +262,12 @@ void WaveTrack::Interval::StretchRightTo(double t)
       GetClip(channel)->StretchRightTo(t);
 }
 
+void WaveTrack::Interval::StretchBy(double ratio)
+{
+   for (unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->StretchBy(ratio);
+}
+
 WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
    const std::function<void(double)>& reportProgress, const ChannelGroup& group,
    const SampleBlockFactoryPtr& factory, sampleFormat format)
@@ -419,6 +425,11 @@ double WaveTrack::Interval::GetStretchRatio() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common stretch ratio
    return mpClip->GetStretchRatio();
+}
+
+void WaveTrack::Interval::SetRawAudioTempo(double tempo)
+{
+   ForEachClip([&](auto& clip) { clip.SetRawAudioTempo(tempo); });
 }
 
 sampleCount WaveTrack::Interval::TimeToSamples(double time) const

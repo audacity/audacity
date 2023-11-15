@@ -316,13 +316,19 @@ void WaveClip::StretchRightTo(double to)
    const auto oldPlayDuration = GetPlayEndTime() - pst;
    const auto newPlayDuration = to - pst;
    const auto ratioChange = newPlayDuration / oldPlayDuration;
-   mSequenceOffset = pst - mTrimLeft * ratioChange;
-   mTrimLeft *= ratioChange;
-   mTrimRight *= ratioChange;
-   mClipStretchRatio *= ratioChange;
+   StretchBy(ratioChange);
+}
+
+void WaveClip::StretchBy(double ratio)
+{
+   const auto pst = GetPlayStartTime();
+   mSequenceOffset = pst - mTrimLeft * ratio;
+   mTrimLeft *= ratio;
+   mTrimRight *= ratio;
+   mClipStretchRatio *= ratio;
    mEnvelope->SetOffset(mSequenceOffset);
-   mEnvelope->RescaleTimesBy(ratioChange);
-   StretchCutLines(ratioChange);
+   mEnvelope->RescaleTimesBy(ratio);
+   StretchCutLines(ratio);
 }
 
 void WaveClip::StretchCutLines(double ratioChange)
@@ -1099,6 +1105,11 @@ void WaveClip::SetRate(int rate)
    mEnvelope->RescaleTimes(newLength);
    MarkChanged();
    SetSequenceStartTime(GetSequenceStartTime() * ratio);
+}
+
+void WaveClip::SetRawAudioTempo(double tempo)
+{
+   mRawAudioTempo = tempo;
 }
 
 /*! @excsafety{Strong} */
