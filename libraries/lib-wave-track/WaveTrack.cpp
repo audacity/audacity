@@ -2252,7 +2252,7 @@ void WaveTrack::PasteOne(
     if (editClipCanMove) {
         if (!singleClipMode) {
             // We need to insert multiple clips, so split the current clip and ...
-            track.SplitAt(t0);
+            track.SplitOneAt(t0);
         }
         //else if there is a clip at t0 insert new clip inside it and ...
 
@@ -2264,7 +2264,7 @@ void WaveTrack::PasteOne(
     else
     {
        if (!merge)
-          track.SplitAt(t0);
+          track.SplitOneAt(t0);
        const auto clipAtT0 = track.GetClipAtTime(t0);
        const auto t = clipAtT0 ? clipAtT0->GetPlayEndTime() : t0;
        if (!track.IsEmpty(t, t + insertDuration))
@@ -4011,14 +4011,36 @@ void WaveTrack::Split(double t0, double t1)
 {
    assert(IsLeader());
    for (const auto pChannel : TrackList::Channels(this)) {
-      pChannel->SplitAt(t0);
+      pChannel->SplitOneAt(t0);
       if (t0 != t1)
-         pChannel->SplitAt(t1);
+         pChannel->SplitOneAt(t1);
    }
 }
 
 /*! @excsafety{Weak} */
-auto WaveTrack::SplitAt(double t) -> std::pair<WaveClipHolder, WaveClipHolder>
+auto WaveTrack::SplitAt(double t0) -> std::pair<IntervalHolder, IntervalHolder>
+{
+   assert(IsLeader());
+   std::vector<std::pair<WaveClipHolder, WaveClipHolder>> pairs;
+   for (const auto pChannel : TrackList::Channels(this)) {
+      pairs.emplace_back(pChannel->SplitOneAt(t0));
+   }
+   // Convert one or two channel-major "narrow" pairs to one interval-major
+   // "wide" pair
+   if (pairs.size() == 1)
+      return {
+         std::make_shared<Interval>(*this, pairs[0].first, nullptr),
+         std::make_shared<Interval>(*this, pairs[0].second, nullptr),
+      };
+   else
+      return {
+         std::make_shared<Interval>(*this, pairs[0].first, pairs[1].first),
+         std::make_shared<Interval>(*this, pairs[0].second, pairs[1].second)
+      };
+}
+
+/*! @excsafety{Weak} */
+auto WaveTrack::SplitOneAt(double t) -> std::pair<WaveClipHolder, WaveClipHolder>
 {
    for (const auto &c : mClips) {
       if (c->SplitsPlayRegion(t)) {
@@ -4222,32 +4244,16 @@ void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
 bool WaveTrack::Reverse(sampleCount start, sampleCount len,
    const ProgressReport &progress)
 {
-   size_t count = 0;
-   const auto range = TrackList::Channels(this);
-   const auto myProgress = [&](double fraction){
-      return progress((count + fraction) / range.size());
-   };
-   for (const auto pChannel : range) {
-      if (!ReverseOne(*pChannel, start, len, myProgress))
-         return false;
-      ++count;
-   }
-   return true;
-}
-
-bool WaveTrack::ReverseOne(WaveTrack &track,
-   sampleCount start, sampleCount len,
-   const ProgressReport &progress)
-{
    bool rValue = true; // return value
+   auto &track = *this;
 
    // start, end, len refer to the selected reverse region
    auto end = start + len;
 
-   auto clipArray = track.SortedClipArray();
+   auto clipArray = track.SortedIntervalArray();
    const auto invariant = [&]{
       return std::is_sorted(clipArray.begin(), clipArray.end(),
-         [](WaveClip *pA, WaveClip *pB){
+         [](const auto &pA, const auto &pB){
             return pA->GetPlayStartTime() < pB->GetPlayEndTime();
          });
    };
@@ -4264,7 +4270,7 @@ bool WaveTrack::ReverseOne(WaveTrack &track,
       const auto splitAt = [&](double splitTime){
          auto [_, second] = track.SplitAt(splitTime);
          if (second)
-            clipArray.insert(clipArray.begin() + ii + 1, second.get());
+            clipArray.insert(clipArray.begin() + ii + 1, second);
       };
       if (clipStart < start && clipEnd > start && clipEnd <= end) {
          // the reverse selection begins at the inside of a clip
@@ -4297,11 +4303,14 @@ bool WaveTrack::ReverseOne(WaveTrack &track,
    auto currentEnd = end;
 
    // holds the reversed clips
-   WaveClipHolders revClips;
+   IntervalHolders revClips;
    // holds the clips that appear after the reverse selection region
-   WaveClipHolders otherClips;
-   for (size_t i = 0, n = clipArray.size(); i < n; ++i) {
-      WaveClip *clip = clipArray[i];
+   IntervalHolders otherClips;
+   // Unlike in the previous iteration, clipArray is not inserted or
+   // erased
+   size_t i = 0;
+   for (const auto &clip : clipArray) {
+      Finally Do([&]{ ++i; });
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
 
@@ -4343,7 +4352,8 @@ bool WaveTrack::ReverseOne(WaveTrack &track,
             }
 
             // detach the clip from track
-            revClips.push_back(track.RemoveAndReturnClip(clip));
+            revClips.push_back(clip);
+            track.RemoveInterval(clip);
             // align time to a sample and set offset
             revClips.back()->SetPlayStartTime(
                track.SnapToSample(offsetStartTime));
@@ -4352,7 +4362,8 @@ bool WaveTrack::ReverseOne(WaveTrack &track,
       else if (clipStart >= end) {
          // clip is after the selection region
          // simply remove and append to otherClips
-         otherClips.push_back(track.RemoveAndReturnClip(clip));
+         otherClips.push_back(clip);
+         track.RemoveInterval(clip);
       }
    }
 
@@ -4362,15 +4373,14 @@ bool WaveTrack::ReverseOne(WaveTrack &track,
    // PRL:  I don't think that matters, the sequence of storage of clips in the
    // track is not elsewhere assumed to be by time
    for (auto it = revClips.rbegin(), revEnd = revClips.rend();
-        rValue && it != revEnd; ++it)
-      rValue = track.AddClip(*it);
+         it != revEnd; ++it)
+      track.InsertInterval(*it);
 
    if (!rValue)
       return false;
 
    for (auto &clip : otherClips)
-      if (!(rValue = track.AddClip(clip)))
-          break;
+      track.InsertInterval(clip);
 
    return rValue;
 }
@@ -4385,10 +4395,21 @@ bool WaveTrack::ReverseOneClip(WaveTrack &track,
    auto first = start;
 
    auto blockSize = track.GetMaxBlockSize();
-   Floats buffer1{ blockSize };
-   const auto pBuffer1 = buffer1.get();
-   Floats buffer2{ blockSize };
-   const auto pBuffer2 = buffer2.get();
+   const auto width = track.NChannels();
+   Floats buffers0[2]{
+      Floats(blockSize), width > 1 ? Floats(blockSize) : Floats{} };
+   float *pointers0[2]{ buffers0[0].get(),
+      width > 1 ? buffers0[1].get() : nullptr };
+   Floats buffers1[2]{
+      Floats(blockSize), width > 1 ? Floats(blockSize) : Floats{} };
+   float *pointers1[2]{ buffers1[0].get(),
+      width > 1 ? buffers1[1].get() : nullptr };
+   constexpr auto reverseBuffers =
+   [](float *const (&pointers)[2], size_t size){
+      for (const auto pointer : pointers)
+         if (pointer)
+            std::reverse(pointer, pointer + size);
+   };
 
    auto originalLen = originalEnd - originalStart;
 
@@ -4397,17 +4418,15 @@ bool WaveTrack::ReverseOneClip(WaveTrack &track,
          limitSampleBufferSize(track.GetBestBlockSize(first), len / 2);
       auto second = first + (len - block);
 
-      track.GetFloats(buffer1.get(), first, block);
-      std::reverse(pBuffer1, pBuffer1 + block);
-      track.GetFloats(buffer2.get(), second, block);
-      std::reverse(pBuffer2, pBuffer2 + block);
+      track.GetFloats(0, width, pointers0, first, block);
+      reverseBuffers(pointers0, block);
+      track.GetFloats(0, width, pointers1, second, block);
+      reverseBuffers(pointers1, block);
       // Don't dither on later rendering if only reversing samples
       const bool success =
-         track.WaveChannel::SetFloats(buffer2.get(), first, block,
-            narrowestSampleFormat)
+         track.SetFloats(pointers1, first, block, narrowestSampleFormat)
          &&
-         track.WaveChannel::SetFloats(buffer1.get(), second, block,
-            narrowestSampleFormat);
+         track.SetFloats(pointers0, second, block, narrowestSampleFormat);
       if (!success)
          return false;
 

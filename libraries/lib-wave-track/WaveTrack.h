@@ -488,7 +488,13 @@ public:
    /*!
     @pre `IsLeader()`
     */
-   void Split(double t0, double t1) /* not override */;
+   void Split(double t0, double t1);
+
+   /*!
+    @pre `IsLeader()`
+    */
+   std::pair<IntervalHolder, IntervalHolder> SplitAt(double t);
+
    /*!
     May assume precondition: t0 <= t1
     @pre `IsLeader()`
@@ -1166,12 +1172,10 @@ private:
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
       size_t iChannel, size_t nChannels);
-   static bool ReverseOne(WaveTrack &track,
-      sampleCount start, sampleCount len, const ProgressReport &report = {});
    static bool ReverseOneClip(WaveTrack &track,
       sampleCount start, sampleCount len, sampleCount originalStart,
       sampleCount originalEnd, const ProgressReport &report = {});
-   std::pair<WaveClipHolder, WaveClipHolder> SplitAt(double t);
+   std::pair<WaveClipHolder, WaveClipHolder> SplitOneAt(double t);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
    bool MergeOneClipPair(int clipidx1, int clipidx2);
