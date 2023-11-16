@@ -55,7 +55,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveTrack.h"
 #include "XMLFileReader.h"
 #include "import/ImportStreamDialog.h"
-#include "prefs/MusicInformationRetrievalPrefs.h"
+#include "prefs/ImportExportPrefs.h"
 #include "toolbars/SelectionBar.h"
 #include "tracks/playabletrack/wavetrack/WaveTrackUtils.h"
 #include "widgets/FileHistory.h"
@@ -1323,7 +1323,7 @@ enum class UserResponseToMirPrompt
 
 UserResponseToMirPrompt UserWantsMirResultToConfigureProject(AudacityProject& project)
 {
-   const auto policy = UseMirResultToConfigureProject.Read();
+   const auto policy = ImportExportPrefs::MusicFileImportSetting.Read();
    if (policy == wxString("Ask"))
    {
       AudacityDontAskAgainMessageDialog m(
@@ -1331,7 +1331,7 @@ UserResponseToMirPrompt UserWantsMirResultToConfigureProject(AudacityProject& pr
          XO("Use detected music information to configure project?"));
       const auto yes = m.ShowDialog();
       if (m.IsChecked())
-         UseMirResultToConfigureProject.Write(
+         ImportExportPrefs::MusicFileImportSetting.Write(
             yes ? wxString("Yes") : wxString("No"));
       return yes ? UserResponseToMirPrompt::ManualYes :
                    UserResponseToMirPrompt::No;
