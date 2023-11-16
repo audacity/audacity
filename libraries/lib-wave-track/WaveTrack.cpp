@@ -420,6 +420,16 @@ double WaveTrack::Interval::GetPlayEndTime() const
    return mpClip->GetPlayEndTime();
 }
 
+sampleCount WaveTrack::Interval::GetPlayStartSample() const
+{
+   return mpClip->GetPlayStartSample();
+}
+
+sampleCount WaveTrack::Interval::GetPlayEndSample() const
+{
+   return mpClip->GetPlayEndSample();
+}
+
 bool WaveTrack::Interval::IntersectsPlayRegion(double t0, double t1) const
 {
    // TODO wide wave tracks:  assuming that all 'narrow' clips share common
@@ -4425,6 +4435,26 @@ WaveClipPointers WaveTrack::SortedClipArray()
 WaveClipConstPointers WaveTrack::SortedClipArray() const
 {
    return FillSortedClipArray<WaveClipConstPointers>(mClips);
+}
+
+auto WaveTrack::SortedIntervalArray() -> IntervalHolders
+{
+   auto intervals = Intervals();
+   IntervalHolders result;
+   copy(intervals.begin(), intervals.end(), back_inserter(result));
+   sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){
+      return pA->GetPlayStartTime() < pB->GetPlayStartTime(); });
+   return result;
+}
+
+auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
+{
+   auto intervals = Intervals();
+   IntervalConstHolders result;
+   copy(intervals.begin(), intervals.end(), back_inserter(result));
+   sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){
+      return pA->GetPlayStartTime() < pB->GetPlayStartTime(); });
+   return result;
 }
 
 bool WaveTrack::HasHiddenData() const

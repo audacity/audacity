@@ -225,6 +225,7 @@ public:
    using IntervalHolder = std::shared_ptr<Interval>;
    using IntervalHolders = std::vector<IntervalHolder>;
    using IntervalConstHolder = std::shared_ptr<const Interval>;
+   using IntervalConstHolders = std::vector<IntervalConstHolder>;
 
    // Resolve ambiguous lookup
    using SampleTrack::GetFloats;
@@ -872,10 +873,15 @@ public:
    int GetNumClips() const;
    int GetNumClips(double t0, double t1) const;
 
-   // Add all wave clips to the given array 'clips' and sort the array by
-   // clip start time. The array is emptied prior to adding the clips.
+   //! Return all WaveClips sorted by clip play start time.
    WaveClipPointers SortedClipArray();
+   //! Return all WaveClips sorted by clip play start time.
    WaveClipConstPointers SortedClipArray() const;
+
+   //! Return all (wide) WaveClips sorted by clip play start time.
+   IntervalHolders SortedIntervalArray();
+   //! Return all (wide) WaveClips sorted by clip play start time.
+   IntervalConstHolders SortedIntervalArray() const;
 
    //! Whether any clips have hidden audio
    /*!
@@ -979,6 +985,13 @@ public:
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
       double GetPlayEndTime() const;
+
+      //! Real start time of the clip, quantized to raw sample rate (track's rate)
+      sampleCount GetPlayStartSample() const;
+
+      //! Real end time of the clip, quantized to raw sample rate (track's rate)
+      sampleCount GetPlayEndSample() const;
+
       bool IntersectsPlayRegion(double t0, double t1) const;
       bool WithinPlayRegion(double t) const;
 
