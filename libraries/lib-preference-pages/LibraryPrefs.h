@@ -33,7 +33,7 @@ class LibraryPrefs final : public PrefsPanel
    using Populator = std::function< void(ShuttleGui&) >;
 
    //! To be statically constructed, it registers additions to the Library preference page
-   struct AUDACITY_DLL_API RegisteredControls
+   struct PREFERENCE_PAGES_API RegisteredControls
       : Registry::RegisteredItem<PopulatorItem>
    {
       // Whether any controls have been registered
@@ -42,7 +42,7 @@ class LibraryPrefs final : public PrefsPanel
       RegisteredControls( const Identifier &id, Populator populator,
          const Registry::Placement &placement = { wxEmptyString, {} } );
 
-      struct AUDACITY_DLL_API Init{ Init(); };
+      struct PREFERENCE_PAGES_API Init{ Init(); };
    };
 
    LibraryPrefs(wxWindow * parent, wxWindowID winid);
@@ -59,7 +59,7 @@ class LibraryPrefs final : public PrefsPanel
    struct Traits : Registry::DefaultTraits {
       using LeafTypes = List<PopulatorItem>;
    };
-   struct AUDACITY_DLL_API PopulatorItem final : Registry::SingleItem {
+   struct PREFERENCE_PAGES_API PopulatorItem final : Registry::SingleItem {
       static Registry::GroupItem<Traits> &Registry();
    
       PopulatorItem(const Identifier &id, Populator populator);

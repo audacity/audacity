@@ -11,7 +11,7 @@
 \class PrefsPanel
 \brief Base class for a panel in the PrefsDialog.  Classes derived from 
 this class include BatchPrefs, DirectoriesPrefs, GUIPrefs, KeyConfigPrefs, 
-QualityPrefs, SpectrumPrefs and ThemePrefs.
+MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 
   The interface works like this: Each panel in the preferences dialog
   must derive from PrefsPanel. You must override Apply() with code
@@ -46,7 +46,7 @@ QualityPrefs, SpectrumPrefs and ThemePrefs.
 class AudacityProject;
 class ShuttleGui;
 
-class AUDACITY_DLL_API PrefsPanel /* not final */
+class PREFERENCE_PAGES_API PrefsPanel /* not final */
    : public wxPanelWrapper, ComponentInterface
 {
    struct PrefsItem;
@@ -83,7 +83,7 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
 
    // Typically you make a static object of this type in the .cpp file that
    // also implements the PrefsPanel subclass.
-   struct AUDACITY_DLL_API Registration final
+   struct PREFERENCE_PAGES_API Registration final
       : Registry::RegisteredItem<PrefsItem>
    {
       Registration( const wxString &name, const Factory &factory,
@@ -129,7 +129,7 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    struct Traits : Registry::DefaultTraits {
       using NodeTypes = List<PrefsItem>;
    };
-   struct AUDACITY_DLL_API PrefsItem final
+   struct PREFERENCE_PAGES_API PrefsItem final
       : Registry::GroupItem<Traits> {
       PrefsPanel::Factory factory;
       bool expanded{ false };
