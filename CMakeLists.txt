@@ -530,6 +530,7 @@ check_include_file( "strings.h" HAVE_STRINGS_H )
 check_include_file( "unistd.h" HAVE_UNISTD_H )
 check_include_file( "sys/stat.h" HAVE_SYS_STAT_H )
 check_include_file( "sys/types.h" HAVE_SYS_TYPES_H )
+check_include_file( "dlfcn.h" HAVE_DLFCN_H )
 
 check_symbol_exists( fileno "stdio.h" HAVE_FILENO )
 check_symbol_exists( flock "sys/file.h" HAVE_FLOCK )
