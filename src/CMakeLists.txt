@@ -622,8 +622,6 @@ list( APPEND SOURCES
       prefs/ImportExportPrefs.h
       prefs/KeyConfigPrefs.cpp
       prefs/KeyConfigPrefs.h
-      prefs/LibraryPrefs.cpp
-      prefs/LibraryPrefs.h
       prefs/MidiIOPrefs.cpp
       prefs/MidiIOPrefs.h
       prefs/ModulePrefs.cpp
@@ -634,8 +632,6 @@ list( APPEND SOURCES
       prefs/PlaybackPrefs.h
       prefs/PrefsDialog.cpp
       prefs/PrefsDialog.h
-      prefs/PrefsPanel.cpp
-      prefs/PrefsPanel.h
       prefs/QualityPrefs.cpp
       prefs/QualityPrefs.h
       prefs/RecordingPrefs.cpp
@@ -1345,6 +1341,7 @@ set( AUDACITY_LIBRARIES
    lib-export-ui-interface
    lib-file-formats-interface
    lib-menus-interface
+   lib-preference-pages-interface
 )
 
 if (USE_VST)
