@@ -99,9 +99,6 @@
 #include "ExportPluginRegistry.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
-#include "ProjectWindows.h"
-
-#include <wx/frame.h>
 
 //----------------------------------------------------------------------------
 // ExportMP3Options
@@ -1787,9 +1784,6 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
    context.channels = channels;
 
    int rate = lrint(sampleRate);
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-   wxWindow *parent = FindProjectFrame(&project);
-#endif // DISABLE_DYNAMIC_LOADING_LAME
    const auto &tracks = TrackList::Get( project );
    auto& exporter = context.exporter;
 
@@ -1800,7 +1794,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
       throw ExportException(_("Could not initialize MP3 encoding library!"));
    }
 #else
-   if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
+   if (!exporter.LoadLibrary(nullptr, MP3Exporter::Maybe)) {
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
       throw ExportException(_("Could not open MP3 encoding library!"));
