@@ -9,8 +9,10 @@ set( SOURCES
 
 set( LIBRARIES
    PRIVATE
-      Audacity
-      libmp3lame::libmp3lame
+     lib-import-export-interface
+     lib-preference-pages-interface
+     lib-wx-init-interface
+     libmp3lame::libmp3lame
 )
 
 if ( USE_LIBID3TAG )

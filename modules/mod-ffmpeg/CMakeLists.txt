@@ -17,8 +17,11 @@ set( SOURCES
 
 set( LIBRARIES
    PRIVATE
-      lib-ffmpeg-support
-      Audacity
+      lib-export-ui-interface
+      lib-ffmpeg-support-interface
+      lib-import-export-interface
+      lib-preference-pages-interface
+      lib-wx-init-interface
 )
 
 if( "${${_OPT}use_ffmpeg}" STREQUAL "linked" )
