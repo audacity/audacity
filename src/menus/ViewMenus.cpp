@@ -6,7 +6,7 @@
 #include "ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
-#include "../TrackInfo.h"
+#include "../tracks/ui/CommonTrackInfo.h"
 #include "../TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -150,7 +150,7 @@ void DoZoomFitV(AudacityProject &project)
    height = height / (int)count;
    // Use max() so that we don't set a negative height when there is
    // not enough room.
-   height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
+   height = std::max( (int)CommonTrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)
       for (auto pChannel : t->Channels())

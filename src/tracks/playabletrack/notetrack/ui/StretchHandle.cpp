@@ -156,6 +156,11 @@ StretchHandle::~StretchHandle()
 {
 }
 
+std::shared_ptr<const Channel> StretchHandle::FindChannel() const
+{
+   return mpTrack;
+}
+
 UIHandle::Result StretchHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {

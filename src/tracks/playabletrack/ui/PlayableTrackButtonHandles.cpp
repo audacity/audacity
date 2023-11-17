@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../RealtimeEffectPanel.h"
 #include "SampleTrack.h"
 #include "TrackFocus.h"
-#include "../../../TrackInfo.h"
+#include "../../ui/CommonTrackInfo.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../TrackUtilities.h"
 
@@ -64,7 +64,7 @@ UIHandlePtr MuteButtonHandle::HitTest
    if ( pTrack )
       PlayableTrackControls::GetMuteSoloRect(rect, buttonRect, false,
          (TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone), pTrack.get());
-   if ( TrackInfo::HideTopItem( rect, buttonRect ) )
+   if ( CommonTrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
    if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {
@@ -121,7 +121,7 @@ UIHandlePtr SoloButtonHandle::HitTest
       PlayableTrackControls::GetMuteSoloRect(rect, buttonRect, true,
          (TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone), pTrack.get());
 
-   if ( TrackInfo::HideTopItem( rect, buttonRect ) )
+   if ( CommonTrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
    if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {
@@ -181,7 +181,7 @@ UIHandlePtr EffectsButtonHandle::HitTest
       PlayableTrackControls::GetEffectsRect(rect, buttonRect,
          pTrack.get());
 
-   if ( TrackInfo::HideTopItem( rect, buttonRect ) )
+   if ( CommonTrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
    if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {

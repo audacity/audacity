@@ -861,6 +861,9 @@ public:
 
    ~DefaultRightButtonHandler() override;
 
+   std::shared_ptr<const Channel> FindChannel() const override
+   { return nullptr; }
+
    virtual Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
    {

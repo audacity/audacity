@@ -118,6 +118,11 @@ TimeShiftHandle::~TimeShiftHandle()
 {
 }
 
+std::shared_ptr<const Channel> TimeShiftHandle::FindChannel() const
+{
+   return std::dynamic_pointer_cast<const Channel>(GetTrack());
+}
+
 void ClipMoveState::DoHorizontalOffset(double offset)
 {
    if (!shifters.empty()) {

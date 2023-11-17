@@ -41,7 +41,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../ui/ButtonHandle.h"
-#include "../../../../TrackInfo.h"
+#include "../../../ui/CommonTrackInfo.h"
 
 #include "../WaveTrackUtils.h"
 
@@ -306,6 +306,14 @@ public:
          --mMySubView;
    }
 
+   std::shared_ptr<const Channel> FindChannel() const override
+   {
+      auto pView = mAdjuster.mwView.lock();
+      if (pView)
+         return pView->FindChannel();
+      return nullptr;
+   }
+
    Result Click(
       const TrackPanelMouseEvent &event, AudacityProject *pProject ) override
    {
@@ -532,6 +540,14 @@ public:
    {
    }
 
+   std::shared_ptr<const Channel> FindChannel() const override
+   {
+      auto pView = mAdjuster.mwView.lock();
+      if (pView)
+         return pView->FindChannel();
+      return nullptr;
+   }
+
    Result Click(
       const TrackPanelMouseEvent &event, AudacityProject *pProject ) override
    {
@@ -729,7 +745,7 @@ public:
       override
    {
       if ( iPass == TrackArtist::PassMargins ) { // after PassTracks
-          TrackInfo::DrawCloseButton(
+          CommonTrackInfo::DrawCloseButton(
              context, GetButtonRect(rect), GetTrack().get(), this );
       }
    }

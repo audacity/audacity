@@ -130,6 +130,9 @@ public:
       , mChoice( menuChoice )
    {}
 
+   std::shared_ptr<const Channel> FindChannel() const override
+   { return nullptr; }
+
    bool Clicked() const { return mClicked != Button::None; }
 
    static UIHandle::Result NeedChangeHighlight(
@@ -921,6 +924,9 @@ public:
       : mpParent{ &parent }
       , mX( xx )
    {}
+
+   std::shared_ptr<const Channel> FindChannel() const override
+   { return nullptr; }
 
    static UIHandle::Result NeedChangeHighlight(
       const PlayheadHandle &oldState, const PlayheadHandle &newState)

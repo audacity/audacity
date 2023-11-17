@@ -54,3 +54,8 @@ bool UIHandle::StopsOnKeystroke()
 void UIHandle::OnProjectChange(AudacityProject *)
 {
 }
+
+bool UIHandle::IsDragging() const
+{
+   return false;
+}

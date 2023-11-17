@@ -62,6 +62,8 @@ namespace {
     virtual void Finish(AudacityProject& project) = 0;
     virtual void Cancel() = 0;
 
+    virtual std::shared_ptr<Track> FindTrack() const = 0;
+
     virtual void Draw(
         TrackPanelDrawingContext &context,
         const wxRect &rect,
@@ -207,6 +209,11 @@ public:
       }
    }
 
+   std::shared_ptr<Track> FindTrack() const override
+   {
+      return mTrack;
+   }
+
    bool Init(const TrackPanelMouseEvent& event) override
    {
       if (event.event.LeftDown())
@@ -336,10 +343,13 @@ HitTestPreview WaveClipAdjustBorderHandle::HitPreviewStretch(const AudacityProje
    };
 }
 
-WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPolicy>& adjustPolicy,
-                                                       bool stretchMode,
-                                                       bool leftBorder)
+WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(
+   std::unique_ptr<AdjustPolicy>& adjustPolicy,
+   std::shared_ptr<const WaveTrack> pTrack,
+   bool stretchMode,
+   bool leftBorder)
    : mAdjustPolicy{ std::move(adjustPolicy) }
+   , mpTrack{ move(pTrack) }
    , mIsStretchMode{stretchMode}
    , mIsLeftBorder{leftBorder}
 {
@@ -348,6 +358,11 @@ WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPol
 
 WaveClipAdjustBorderHandle::~WaveClipAdjustBorderHandle() = default;
 
+std::shared_ptr<const Channel> WaveClipAdjustBorderHandle::FindChannel() const
+{
+   return mpTrack;
+}
+   
 WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(WaveClipAdjustBorderHandle&&) noexcept = default;
 
 WaveClipAdjustBorderHandle& WaveClipAdjustBorderHandle::operator=(WaveClipAdjustBorderHandle&&) noexcept = default;
@@ -440,7 +455,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
 
       return AssignUIHandlePtr(
          holder,
-         std::make_shared<WaveClipAdjustBorderHandle>(policy,
+         std::make_shared<WaveClipAdjustBorderHandle>(policy, waveTrack,
             isStretchMode,
             adjustLeftBorder));
    }

@@ -30,6 +30,11 @@ SpectrumVZoomHandle::SpectrumVZoomHandle
 
 SpectrumVZoomHandle::~SpectrumVZoomHandle() = default;
 
+std::shared_ptr<const Channel> SpectrumVZoomHandle::FindChannel() const
+{
+   return mpTrack.lock();
+}
+
 void SpectrumVZoomHandle::Enter( bool, AudacityProject* )
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING

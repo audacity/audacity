@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../NoteTrack.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../TrackInfo.h"
+#include "../../../ui/CommonTrackInfo.h"
 
 #include <wx/event.h>
 
@@ -41,6 +41,11 @@ NoteTrackButtonHandle::~NoteTrackButtonHandle()
 {
 }
 
+std::shared_ptr<const Channel> NoteTrackButtonHandle::FindChannel() const
+{
+   return mpTrack.lock();
+}
+
 UIHandle::Result NoteTrackButtonHandle::NeedChangeHighlight
 (const NoteTrackButtonHandle &oldState, const NoteTrackButtonHandle &newState)
 {
@@ -57,7 +62,7 @@ UIHandlePtr NoteTrackButtonHandle::HitTest
 {
    wxRect midiRect;
    NoteTrackControls::GetMidiControlsRect(rect, midiRect);
-   if ( TrackInfo::HideTopItem( rect, midiRect ) )
+   if ( CommonTrackInfo::HideTopItem( rect, midiRect ) )
       return {};
    if (midiRect.Contains(state.m_x, state.m_y)) {
       auto channel = pTrack->FindChannel(midiRect, state.m_x, state.m_y);

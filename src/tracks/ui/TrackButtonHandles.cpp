@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "Track.h"
 #include "TrackFocus.h"
-#include "../../TrackInfo.h"
+#include "CommonTrackInfo.h"
 #include "../../TrackPanel.h"
 #include "../../TrackUtilities.h"
 #include "CommandManager.h"
@@ -68,7 +68,7 @@ UIHandlePtr MinimizeButtonHandle::HitTest
  const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
 {
    wxRect buttonRect;
-   TrackInfo::GetMinimizeRect(rect, buttonRect);
+   CommonTrackInfo::GetMinimizeRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
       auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
@@ -123,7 +123,7 @@ UIHandlePtr SelectButtonHandle::HitTest
  const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
 {
    wxRect buttonRect;
-   TrackInfo::GetSelectButtonRect(rect, buttonRect);
+   CommonTrackInfo::GetSelectButtonRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
       auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
@@ -189,7 +189,7 @@ UIHandlePtr CloseButtonHandle::HitTest
  const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
 {
    wxRect buttonRect;
-   TrackInfo::GetCloseBoxRect(rect, buttonRect);
+   CommonTrackInfo::GetCloseBoxRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
       auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
@@ -250,7 +250,7 @@ UIHandlePtr MenuButtonHandle::HitTest
  const std::shared_ptr<TrackPanelCell> &pCell)
 {
    wxRect buttonRect;
-   TrackInfo::GetTitleBarRect(rect, buttonRect);
+   CommonTrackInfo::GetTitleBarRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
       auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();

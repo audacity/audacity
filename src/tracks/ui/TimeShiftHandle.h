@@ -314,6 +314,8 @@ public:
 
    virtual ~TimeShiftHandle();
 
+   std::shared_ptr<const Channel> FindChannel() const override;
+
    void Enter(bool forward, AudacityProject *) override;
 
    Result Click(
@@ -336,13 +338,15 @@ public:
 
    bool Clicked() const;
 
-protected:
    /*!
     @return will point only to a leader
     */
    std::shared_ptr<Track> GetTrack() const;
+
+protected:
    //There were attempt to move clip/track horizontally, or to move it vertically
    bool WasMoved() const;
+
 private:
 
    // Try to move clips from one track to another with offset, allowing 1px tolerance,
