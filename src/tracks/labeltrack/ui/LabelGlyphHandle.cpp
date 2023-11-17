@@ -114,6 +114,11 @@ LabelGlyphHandle::~LabelGlyphHandle()
 {
 }
 
+std::shared_ptr<const Channel> LabelGlyphHandle::FindChannel() const
+{
+   return mpLT;
+}
+
 void LabelGlyphHandle::HandleGlyphClick
 (LabelTrackHit &hit, const wxMouseEvent & evt,
  const wxRect & r, const ZoomInfo &zoomInfo,

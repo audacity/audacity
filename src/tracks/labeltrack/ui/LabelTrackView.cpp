@@ -33,7 +33,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Theme.h"
 #include "../../../TrackArt.h"
 #include "../../../TrackArtist.h"
-#include "../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
@@ -852,7 +852,9 @@ void LabelTrackView::Draw
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       bool highlightTrack = false;
       auto target = dynamic_cast<LabelTextHandle*>(context.target.get());
-      highlightTrack = target && target->GetTrack().get() == this;
+      highlightTrack = target &&
+         target->FindChannel().get() ==
+            static_cast<const LabelTrack*>(FindTrack().get());
 #endif
       int i = -1; for (const auto &labelStruct : mLabels) { ++i;
          bool highlight = false;

@@ -94,7 +94,9 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
                   viewInfo.PositionToTime(st.state.m_x, st.rect.GetX());
                auto envelope = pTrack->GetEnvelopeAtTime(time);
                result = EnvelopeHandle::HitAnywhere(
-                  view.mEnvelopeHandle, envelope, false);
+                  view.mEnvelopeHandle, envelope,
+                  std::dynamic_pointer_cast<const Channel>(pTrack),
+                  false);
                break;
             }
             case ToolCodes::drawTool:
@@ -655,7 +657,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    bool highlightEnvelope = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-   highlightEnvelope = target && target->GetEnvelope() == clip.GetEnvelope();
+   highlightEnvelope = target && target->GetEnvelope() == &envelope;
 #endif
 
    //If clip is "too small" draw a placeholder instead of
@@ -849,7 +851,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
             auto target = dynamic_cast<SampleHandle*>(context.target.get());
-            highlight = target && target->GetTrack().get() == track;
+            highlight = target && target->FindChannel().get() == &track;
 #endif
             DrawIndividualSamples(
                context, leftOffset, rectPortion, zoomMin, zoomMax,
@@ -956,7 +958,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<TimeShiftHandle*>(context.target.get());
    gripHit = target && target->IsGripHit();
-   highlight = target && target->GetTrack().get() == track;
+   highlight = target && target->GetTrack().get() == &track;
 #endif
 
    const bool dB = !WaveformSettings::Get(track).isLinear();

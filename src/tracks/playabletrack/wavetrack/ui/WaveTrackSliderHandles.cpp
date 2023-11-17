@@ -14,9 +14,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackControls.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../TrackInfo.h"
+#include "../../../ui/CommonTrackInfo.h"
 #include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"
 
@@ -92,7 +92,7 @@ UIHandlePtr GainSliderHandle::HitTest
 
    wxRect sliderRect;
    WaveTrackControls::GetGainRect(rect.GetTopLeft(), sliderRect);
-   if ( TrackInfo::HideTopItem( rect, sliderRect))
+   if ( CommonTrackInfo::HideTopItem( rect, sliderRect))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       wxRect sliderRect2;
@@ -200,7 +200,7 @@ UIHandlePtr PanSliderHandle::HitTest
 
    wxRect sliderRect;
    WaveTrackControls::GetPanRect(rect.GetTopLeft(), sliderRect);
-   if ( TrackInfo::HideTopItem( rect, sliderRect))
+   if ( CommonTrackInfo::HideTopItem( rect, sliderRect))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       auto sliderFn =

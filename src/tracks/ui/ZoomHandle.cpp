@@ -83,6 +83,11 @@ ZoomHandle::~ZoomHandle()
 {
 }
 
+std::shared_ptr<const Channel> ZoomHandle::FindChannel() const
+{
+   return nullptr;
+}
+
 bool ZoomHandle::HandlesRightClick()
 {
    return true;

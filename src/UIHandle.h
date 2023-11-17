@@ -23,6 +23,7 @@ class wxWindow;
 
 class AudacityProject;
 struct HitTestPreview;
+class Channel;
 class TrackPanelCell;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
@@ -117,6 +118,13 @@ public:
    // to avoid dangling pointers to tracks.  But maybe there will be a future
    // use?
    virtual void OnProjectChange(AudacityProject *pProject);
+
+   //! @return pointer to associated channel, if any
+   virtual std::shared_ptr<const Channel> FindChannel() const = 0;
+
+   //! Whether the handle is dragging, affecting other panel painting;
+   //! default returns false
+   virtual bool IsDragging() const;
 
 public:
    Result GetChangeHighlight() const { return mChangeHighlight; }

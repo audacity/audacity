@@ -28,12 +28,17 @@ private:
     static HitTestPreview HitPreviewStretch(const AudacityProject*, bool unsafe, bool isLeftBorder);
 
     std::unique_ptr<AdjustPolicy> mAdjustPolicy{};
+    std::shared_ptr<const WaveTrack> mpTrack;
     bool mIsStretchMode;
     bool mIsLeftBorder;
     
 public:
-    WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPolicy>& adjustPolicy, bool stretchMode, bool leftBorder);
+    WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPolicy>& adjustPolicy,
+        std::shared_ptr<const WaveTrack> pTrack,
+        bool stretchMode, bool leftBorder);
     ~WaveClipAdjustBorderHandle() override;
+
+   std::shared_ptr<const Channel> FindChannel() const override;
 
     WaveClipAdjustBorderHandle(WaveClipAdjustBorderHandle&&) noexcept;
     WaveClipAdjustBorderHandle& operator = (WaveClipAdjustBorderHandle&&) noexcept;

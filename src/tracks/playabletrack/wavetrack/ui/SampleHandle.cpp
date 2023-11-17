@@ -174,6 +174,11 @@ SampleHandle::~SampleHandle()
 {
 }
 
+std::shared_ptr<const Channel> SampleHandle::FindChannel() const
+{
+   return mClickedTrack;
+}
+
 UIHandle::Result SampleHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {

@@ -65,6 +65,11 @@ TrackSelectHandle::~TrackSelectHandle()
 {
 }
 
+std::shared_ptr<const Channel> TrackSelectHandle::FindChannel() const
+{
+   return std::dynamic_pointer_cast<const Channel>(mpTrack);
+}
+
 UIHandle::Result TrackSelectHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {

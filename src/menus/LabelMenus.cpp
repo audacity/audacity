@@ -10,7 +10,7 @@
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "SyncLock.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"

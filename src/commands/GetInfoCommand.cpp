@@ -32,7 +32,7 @@ This class now lists
 #include "CommandTargets.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/Overlay.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"
@@ -528,6 +528,7 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
             context.AddItem(pClip->GetPlayStartTime(), "start");
             context.AddItem(pClip->GetPlayEndTime(), "end");
             context.AddItem(pClip->GetColourIndex(), "color");
+            context.AddItem(pClip->GetName(), "name");
             context.EndStruct();
          }
       });

@@ -29,6 +29,16 @@ ButtonHandle::~ButtonHandle()
 {
 }
 
+std::shared_ptr<const Channel> ButtonHandle::FindChannel() const
+{
+   return std::dynamic_pointer_cast<const Channel>(mpTrack.lock());
+}
+
+bool ButtonHandle::IsDragging() const
+{
+   return mIsDragging;
+}
+
 void ButtonHandle::Enter(bool, AudacityProject *)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
@@ -49,7 +59,7 @@ UIHandle::Result ButtonHandle::Click
    // Come here for left click or double click
    if (mRect.Contains(event.m_x, event.m_y)) {
       mWasIn = true;
-      mIsClicked = true;
+      mIsDragging = true;
       // Toggle visible button state
       return RefreshCell;
    }

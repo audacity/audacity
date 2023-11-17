@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Theme.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
 #include "RealtimeEffectManager.h"
@@ -967,7 +967,7 @@ WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
 
 // drawing related
 #include "../../../../widgets/ASlider.h"
-#include "../../../../TrackInfo.h"
+#include "../../../ui/CommonTrackInfo.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 
@@ -981,7 +981,7 @@ void SliderDrawFunction
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
-   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   CommonTrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto wt = static_cast<const WaveTrack*>( pTrack );
    Selector( sliderRect, wt, captured, pParent )->OnPaint(*dc, highlight);
 }
@@ -993,7 +993,7 @@ void PanSliderDrawFunction
    auto target = dynamic_cast<PanSliderHandle*>( context.target.get() );
    auto dc = &context.dc;
    bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
 
    const auto artist = TrackArtist::Get( context );
    auto pParent = FindProjectFrame( artist->parent->GetProject() );
@@ -1012,7 +1012,7 @@ void GainSliderDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    if( hit )
       hit=hit;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
 
    const auto artist = TrackArtist::Get( context );
    auto pParent = FindProjectFrame( artist->parent->GetProject() );
@@ -1092,7 +1092,7 @@ static const struct WaveTrackTCPLines
 
 void WaveTrackControls::GetGainRect(const wxPoint &topleft, wxRect & dest)
 {
-   TrackInfo::GetSliderHorizontalBounds( topleft, dest );
+   CommonTrackInfo::GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
    dest.y = topleft.y + results.first;
    dest.height = results.second;
@@ -1107,7 +1107,7 @@ void WaveTrackControls::GetPanRect(const wxPoint &topleft, wxRect & dest)
 
 unsigned WaveTrackControls::DefaultWaveTrackHeight()
 {
-   return TrackInfo::DefaultTrackHeight( waveTrackTCPLines );
+   return CommonTrackInfo::DefaultTrackHeight( waveTrackTCPLines );
 }
 
 const TCPLines &WaveTrackControls::GetTCPLines() const

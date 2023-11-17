@@ -32,7 +32,7 @@
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "AColor.h"
 #include "WaveTrack.h"
 #include "effects/EffectUI.h"

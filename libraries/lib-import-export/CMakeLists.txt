@@ -21,9 +21,10 @@ set( SOURCES
    ExportTypes.h
    ExportUtils.cpp
    ExportUtils.h
-
    Import.cpp
    Import.h
+   ImportExport.cpp
+   ImportExport.h
    ImportForwards.h
    ImportPlugin.cpp
    ImportPlugin.h
@@ -39,6 +40,7 @@ set( LIBRARIES
    rapidjson::rapidjson
    lib-tags-interface
    lib-wave-track-interface
+   lib-project-interface
    PRIVATE
       lib-effects-interface      
 )

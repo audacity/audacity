@@ -45,7 +45,7 @@
 #include "../../../../../images/Cursors.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 
 #include "../WaveTrackUtils.h"
 
@@ -88,15 +88,23 @@ const ComponentInterfaceSymbol SetWaveClipNameCommand::Symbol
 class WaveClipTitleEditHandle final : public UIHandle
 {
     std::shared_ptr<TextEditHelper> mHelper;
+    std::shared_ptr<WaveTrack> mpTrack;
 public:
 
-    WaveClipTitleEditHandle(const std::shared_ptr<TextEditHelper>& helper)
+    WaveClipTitleEditHandle(const std::shared_ptr<TextEditHelper>& helper,
+        const std::shared_ptr<WaveTrack> pTrack)
         : mHelper(helper)
+        , mpTrack{ move(pTrack) }
     { }
 
    ~WaveClipTitleEditHandle()
    {
    }
+
+    std::shared_ptr<const Channel> FindChannel() const override
+    {
+        return mpTrack;
+    }
 
     Result Click(const TrackPanelMouseEvent& event, AudacityProject* project) override
     {
@@ -189,7 +197,8 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         results.push_back(
             AssignUIHandlePtr(
                 mTitleEditHandle,
-                std::make_shared<WaveClipTitleEditHandle>(mTextEditHelper)
+                std::make_shared<WaveClipTitleEditHandle>(
+                    mTextEditHelper, track)
             )
         );
     }

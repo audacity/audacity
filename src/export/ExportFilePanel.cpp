@@ -225,17 +225,15 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
 }
 
 void ExportFilePanel::Init(const wxFileName& filename,
-                           const wxString& format,
                            int sampleRate,
+                           const wxString& format,
                            int channels,
                            const ExportProcessor::Parameters& parameters,
                            const MixerOptions::Downmix* mixerSpec)
 {
    mFolder->SetValue(filename.GetPath());
    mFullName->SetValue(filename.GetFullName());
-   mSampleRate = sampleRate == 0
-      ? ProjectRate::Get(mProject).GetRate()
-      : sampleRate;
+   mSampleRate = sampleRate;
 
    auto selectedFormatIndex = 0;
    if(!format.empty())
@@ -581,16 +579,20 @@ void ExportFilePanel::UpdateMaxChannels(unsigned maxChannels)
 void ExportFilePanel::UpdateSampleRateList()
 {
    auto availableRates = mOptionsHandler->GetSampleRateList();
-   
+   std::sort(availableRates.begin(), availableRates.end());
+
    const auto* rates = availableRates.empty() ? &DefaultRates : &availableRates;
    
    mRates->Clear();
    
    void* clientData;
-   const auto projectRate = static_cast<int>(ProjectRate::Get(mProject).GetRate());
    int customRate = mSampleRate;
    int selectedItemIndex = 0;
-   int preferredItemIndex = 0;
+   //Prefer lowest possible sample rate that is not less than mSampleRate.
+   //Initialize with highest value, so that if all available rates are less
+   //than mSampleRate then we will choose highest rate
+   int preferredRate = rates->back();
+   int preferredItemIndex = rates->size() - 1;
    for(auto rate : *rates)
    {
       *reinterpret_cast<int*>(&clientData) = rate;
@@ -603,9 +605,13 @@ void ExportFilePanel::UpdateSampleRateList()
          customRate = 0;
          selectedItemIndex = itemIndex;
       }
-      if(rate <= projectRate)
+      if(rate >= mSampleRate && rate < preferredRate)
+      {
          preferredItemIndex = itemIndex;
+         preferredRate = rate;
+      }
    }
+   
    if(rates == &DefaultRates)
    {
       if(customRate != 0)
@@ -621,12 +627,6 @@ void ExportFilePanel::UpdateSampleRateList()
    else if(customRate != 0)//sample rate not in the list
    {
       auto selectedRate = (*rates)[preferredItemIndex];
-      if (selectedRate < customRate)
-      {
-         if ((preferredItemIndex + 1) < rates->size())
-            selectedRate = (*rates)[++preferredItemIndex];
-      }
-
       mSampleRate = selectedRate;
       selectedItemIndex = preferredItemIndex;
    }

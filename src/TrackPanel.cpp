@@ -276,20 +276,23 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    SetName(XO("Track Panel"));
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
+#if wxUSE_ACCESSIBILITY
+   // Inject finder of track rectangles into the accessibility helper
    {
-      auto pAx = std::make_unique <TrackPanelAx>( *project );
-      pAx->SetWindow( this );
-      wxWeakRef< TrackPanel > weakThis{ this };
-      pAx->SetFinder(
-         [weakThis]( const Track &track ) -> wxRect {
-            if (weakThis)
-               return weakThis->FindTrackRect( &track );
-            return {};
-         }
-      );
-      TrackFocus::Get( *GetProject() ).SetAccessible(
-         *this, std::move( pAx ) );
+      const auto finder = [
+         weakThis = wxWeakRef<TrackPanel>{ this }
+      ] (const Track &track) -> wxRect {
+         if (weakThis)
+            return weakThis->FindTrackRect(&track);
+         return {};
+      };
+      auto &focus = TrackFocus::Get(*GetProject());
+      TrackPanelAx *pAx{};
+      SetAccessible(pAx =
+         safenew TrackPanelAx{ focus.weak_from_this(), finder });
+      focus.SetCallbacks(std::make_unique<TrackPanelAx::Adapter>(pAx));
    }
+#endif
 
    mTrackArtist = std::make_unique<TrackArtist>( this );
 

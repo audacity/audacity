@@ -811,6 +811,8 @@ list( APPEND SOURCES
       tracks/ui/CommonChannelView.h
       tracks/ui/CommonTrackControls.cpp
       tracks/ui/CommonTrackControls.h
+      tracks/ui/CommonTrackInfo.cpp
+      tracks/ui/CommonTrackInfo.h
       tracks/ui/CommonTrackPanelCell.cpp
       tracks/ui/CommonTrackPanelCell.h
       tracks/ui/EditCursorOverlay.cpp

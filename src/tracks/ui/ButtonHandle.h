@@ -28,7 +28,7 @@ class AUDACITY_DLL_API ButtonHandle /* not final */ : public UIHandle
 
 public:
    std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
-   bool IsClicked() const { return mIsClicked; }
+   bool IsDragging() const override;
 
 protected:
    explicit ButtonHandle
@@ -37,6 +37,8 @@ protected:
    ButtonHandle &operator=(const ButtonHandle&) = default;
 
    virtual ~ButtonHandle();
+
+   std::shared_ptr<const Channel> FindChannel() const override;
 
    // This NEW abstract virtual simplifies the duties of further subclasses.
    // This class will decide whether to refresh the clicked cell for button state
@@ -72,7 +74,7 @@ protected:
    std::weak_ptr<Track> mpTrack;
    wxRect mRect;
    bool mWasIn{ true };
-   bool mIsClicked{};
+   bool mIsDragging{};
 };
 
 #endif

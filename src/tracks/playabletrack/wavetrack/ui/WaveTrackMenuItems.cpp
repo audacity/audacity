@@ -14,7 +14,7 @@ Paul Licameli split from TrackMenus.cpp
 #include "ProjectRate.h"
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
 #include "MenuRegistry.h"

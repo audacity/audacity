@@ -33,7 +33,11 @@ SIMD_INLINE(void) vStorSum(float * a, v4_t b) {
 
 #elif defined __arm__
 
+#if defined(_M_ARM64)
+#include <arm64_neon.h>
+#else
 #include <arm_neon.h>
+#endif
 
 #define vZero()      vdupq_n_f32(0)
 #define vMul(a,b)    vmulq_f32(a,b)

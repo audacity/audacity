@@ -51,7 +51,7 @@ void GetOSString (std::ostringstream& output, const wxPlatformInfo& platformInfo
     output << "x64";
 #elif defined(__i386__) || defined(i386) || defined(_M_IX86) || defined(_X86_) || defined(__THW_INTEL)
     output << "x86";
-#elif defined(__arm64__) || defined(__aarch64__)
+#elif defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM64)
     output << "arm64";
 #elif defined(arm) || defined(__arm__) || defined(ARM) || defined(_ARM_)
     output << "arm";
