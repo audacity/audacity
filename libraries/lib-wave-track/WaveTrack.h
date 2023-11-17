@@ -954,6 +954,21 @@ public:
    bool Reverse(sampleCount start, sampleCount len,
       const ProgressReport &report = {});
 
+   //! Random-access assignment of a range of samples
+   /*!
+    @param buffers a span of pointers of size `NChannels()`
+    @pre each of buffers is non-null
+    */
+   [[nodiscard]] bool SetFloats(const float *const *buffers,
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
+
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 

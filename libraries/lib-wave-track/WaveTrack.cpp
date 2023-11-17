@@ -4391,10 +4391,10 @@ bool WaveTrack::ReverseOneClip(WaveTrack &track,
       std::reverse(pBuffer2, pBuffer2 + block);
       // Don't dither on later rendering if only reversing samples
       const bool success =
-         track.Set((samplePtr)buffer2.get(), floatSample, first, block,
+         track.WaveChannel::Set((samplePtr)buffer2.get(), floatSample, first, block,
             narrowestSampleFormat)
          &&
-         track.Set((samplePtr)buffer1.get(), floatSample, second, block,
+         track.WaveChannel::Set((samplePtr)buffer1.get(), floatSample, second, block,
             narrowestSampleFormat);
       if (!success)
          return false;
@@ -4411,6 +4411,20 @@ bool WaveTrack::ReverseOneClip(WaveTrack &track,
    }
 
    return rc;
+}
+
+bool WaveTrack::SetFloats(const float *const *buffers,
+   sampleCount start, size_t len, sampleFormat effectiveFormat)
+{
+   bool result = true;
+   size_t ii = 0;
+   for (const auto &pChannel : Channels()) {
+      const auto buffer = reinterpret_cast<constSamplePtr>(buffers[ii++]);
+      assert(buffer); // precondition
+      result = pChannel->Set(buffer, floatSample, start, len, effectiveFormat)
+         && result;
+   }
+   return result;
 }
 
 namespace {
