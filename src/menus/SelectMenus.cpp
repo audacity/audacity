@@ -218,14 +218,13 @@ void MoveWhenAudioInactive
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
    auto snapMode = settings.GetSnapMode();
-   const double t0 = viewInfo.selectedRegion.t0();
 
    // Move the cursor
    // Already in cursor mode?
-   if( viewInfo.selectedRegion.isPoint() )
+   if (viewInfo.selectedRegion.isPoint())
    {
-      double newT = OffsetTime(project,
-         t0, seekStep, timeUnit, snapMode);
+      double newT = OffsetTime(
+         project, viewInfo.selectedRegion.t0(), seekStep, timeUnit, snapMode);
       // constrain.
       newT = std::max(0.0, newT);
       // Move
@@ -241,10 +240,23 @@ void MoveWhenAudioInactive
    else
    {
       // Transition to cursor mode.
-      if( seekStep < 0 )
+      constexpr auto maySwapBoundaries = false;
+      if (seekStep < 0)
+      {
+         if (snapMode != SnapMode::SNAP_OFF)
+            viewInfo.selectedRegion.setT0(
+               settings.SnapTime(viewInfo.selectedRegion.t0()).time,
+               maySwapBoundaries);
          viewInfo.selectedRegion.collapseToT0();
+      }
       else
+      {
+         if (snapMode != SnapMode::SNAP_OFF)
+            viewInfo.selectedRegion.setT1(
+               settings.SnapTime(viewInfo.selectedRegion.t1()).time,
+               maySwapBoundaries);
          viewInfo.selectedRegion.collapseToT1();
+      }
       trackPanel.Refresh(false);
    }
 
