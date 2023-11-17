@@ -231,6 +231,8 @@ public:
    void TrimLeft(double deltaTime);
    //! Moves play end position by deltaTime
    void TrimRight(double deltaTime);
+   //! Same as `TrimRight`, but expressed as quarter notes
+   void TrimQuarternotesFromRight(double quarters);
 
    //! Sets the the left trimming to the absolute time (if that is in bounds)
    void TrimLeftTo(double to);

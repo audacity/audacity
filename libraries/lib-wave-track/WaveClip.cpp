@@ -1343,6 +1343,15 @@ void WaveClip::TrimRight(double deltaTime)
    SetTrimRight(mTrimRight + deltaTime);
 }
 
+void WaveClip::TrimQuarternotesFromRight(double quarters)
+{
+   assert(mRawAudioTempo.has_value());
+   if (!mRawAudioTempo.has_value())
+      return;
+   const auto secondsPerQuarter = 60 * GetStretchRatio() / *mRawAudioTempo;
+   TrimRight(quarters * secondsPerQuarter);
+}
+
 void WaveClip::TrimLeftTo(double to)
 {
    mTrimLeft =

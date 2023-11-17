@@ -976,6 +976,7 @@ public:
       void SetSequenceStartTime(double t);
       void TrimLeftTo(double t);
       void TrimRightTo(double t);
+      void TrimQuarternotesFromRight(double numQuarternotes);
       void StretchLeftTo(double t);
       void StretchRightTo(double t);
       void StretchBy(double ratio);

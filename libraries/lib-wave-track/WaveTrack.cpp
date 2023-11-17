@@ -226,6 +226,12 @@ void WaveTrack::Interval::TrimRightTo(double t)
       GetClip(channel)->TrimRightTo(t);
 }
 
+void WaveTrack::Interval::TrimQuarternotesFromRight(double quarters)
+{
+   ForEachClip(
+      [quarters](auto& clip) { clip.TrimQuarternotesFromRight(quarters); });
+}
+
 void WaveTrack::Interval::SetTrimLeft(double t)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)

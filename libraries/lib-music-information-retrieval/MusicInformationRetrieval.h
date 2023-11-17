@@ -31,6 +31,13 @@ struct ProjectSyncInfo
     * of stretching needed to match the project tempo.
     */
    const double recommendedStretchFactor;
+
+   /*!
+    * It is common that loops fill up a bit more than the intended number of
+    * bars. If this is detected, this value is written here and may be used for
+    * trimming.
+    */
+   const double excessDurationInQuarternotes;
 };
 
 class MUSIC_INFORMATION_RETRIEVAL_API MusicInformation
@@ -59,8 +66,6 @@ public:
    GetProjectSyncInfo(const std::optional<double>& projectTempo) const;
 
 private:
-   void AdjustTempoToExactNumBeatsIfLoop();
-
    /*!
     * For now we either detect constant tempo or no tempo. We may need to
     * extend it to a `map<double , double >` when we have a master track with

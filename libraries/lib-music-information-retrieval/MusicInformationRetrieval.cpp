@@ -38,23 +38,6 @@ MusicInformation::MusicInformation(const std::string& filename, double duration)
     , duration { duration }
     , mBpm { GetBpmFromFilename(filename) }
 {
-   // A file's title may claim a BPM of e.g. 120. Based on this and the
-   // duration, we get a number of beats. If we detect that this number is very
-   // close to being round, then we probably have a loop.
-
-   // A perfectly edited loop would actually yield an exactly round number. In
-   // practice, though, this is often not the case. In this situation, either
-
-   // 1. we don't do anything, leaving the tempo untouched. But then if the user
-   // repeats the loop by copy-pasting, a drift will build up. Or
-
-   // 2. we assume an exact number of beats, thus modifying slightly the tempo
-   // to probably a fractional value.
-
-   // Solution 2. "distributes" the error across the loop duration, which for
-   // decently edited loops shouldn't be perceivable. Drift introduced by 1 may
-   // very well become perceivable, though. So let's go for 2.
-   AdjustTempoToExactNumBeatsIfLoop();
 }
 
 MusicInformation::operator bool() const
@@ -80,17 +63,15 @@ ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
       recommendedStretch =
          std::pow(2., std::round(std::log2(*projectTempo / qpm)));
 
-   return { qpm, recommendedStretch };
-}
+   auto excessDurationInQuarternotes = 0.;
+   auto numQuarters = duration * qpm / 60.;
+   const auto roundedNumQuarters = std::round(numQuarters);
+   const auto delta = numQuarters - roundedNumQuarters;
+   // If there is an excess less than a 32nd, we treat it as an edit error.
+   if (0 < delta && delta / 8)
+      excessDurationInQuarternotes = delta;
 
-void MusicInformation::AdjustTempoToExactNumBeatsIfLoop()
-{
-   if (!mBpm.has_value())
-      return;
-   auto numbeats = duration * *mBpm / 60.;
-   const auto roundedNumbeats = std::round(numbeats);
-   if (std::abs(numbeats - roundedNumbeats) < 0.1)
-      mBpm = 60. * roundedNumbeats / duration;
+   return { qpm, recommendedStretch, excessDurationInQuarternotes };
 }
 
 std::optional<double> GetBpmFromFilename(const std::string& filename)
