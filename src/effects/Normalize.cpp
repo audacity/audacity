@@ -433,7 +433,7 @@ bool EffectNormalize::ProcessOne(WaveChannel &track,
       ProcessData(buffer.get(), block, offset);
 
       //Copy the newly-changed samples back onto the track.
-      if (!track.Set((samplePtr) buffer.get(), floatSample, s, block)) {
+      if (!track.SetFloats(buffer.get(), s, block)) {
          rc = false;
          break;
       }

@@ -500,8 +500,7 @@ bool EffectLoudness::StoreBufferBlock(WaveChannel &track, size_t nChannels,
    size_t idx = 0;
    const auto setOne = [&](WaveChannel &channel){
       // Copy the newly-changed samples back onto the track.
-      return channel.Set(
-         (samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+      return channel.SetFloats(mTrackBuffer[idx].get(), pos, len);
    };
 
    if (nChannels == 1)
