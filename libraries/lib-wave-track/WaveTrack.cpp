@@ -4018,23 +4018,23 @@ void WaveTrack::Split(double t0, double t1)
 }
 
 /*! @excsafety{Weak} */
-void WaveTrack::SplitAt(double t)
+auto WaveTrack::SplitAt(double t) -> std::pair<WaveClipHolder, WaveClipHolder>
 {
-   for (const auto &c : mClips)
-   {
-      if (c->SplitsPlayRegion(t))
-      {
+   for (const auto &c : mClips) {
+      if (c->SplitsPlayRegion(t)) {
          t = SnapToSample(t);
          auto newClip = std::make_shared<WaveClip>(*c, mpFactory, true);
          c->TrimRightTo(t);// put t on a sample
          newClip->TrimLeftTo(t);
+         auto result = std::pair{ c, newClip };
 
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
-         InsertClip(std::move(newClip)); // transfer ownership
-         return;
+         InsertClip(move(newClip)); // transfer ownership
+         return result;
       }
    }
+   return {};
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
@@ -4244,33 +4244,46 @@ bool WaveTrack::ReverseOne(WaveTrack &track,
    // start, end, len refer to the selected reverse region
    auto end = start + len;
 
+   auto clipArray = track.SortedClipArray();
+   const auto invariant = [&]{
+      return std::is_sorted(clipArray.begin(), clipArray.end(),
+         [](WaveClip *pA, WaveClip *pB){
+            return pA->GetPlayStartTime() < pB->GetPlayEndTime();
+         });
+   };
+   assert(invariant());
+
    // STEP 1:
    // If a reverse selection begins and/or ends at the inside of a clip
    // perform a split at the start and/or end of the reverse selection
-   const auto &clips = track.GetClips();
-   // Beware, the array grows as we loop over it.  Use integer subscripts, not
-   // iterators.
-   for (size_t ii = 0; ii < clips.size(); ++ii) {
-      const auto &clip = clips[ii].get();
-      auto clipStart = clip->GetPlayStartSample();
-      auto clipEnd = clip->GetPlayEndSample();
+   // Beware, the array grows as we loop over it, so don't use range-for
+   for (size_t ii = 0; ii < clipArray.size(); ++ii) {
+      const auto &clip = *clipArray[ii];
+      auto clipStart = clip.GetPlayStartSample();
+      auto clipEnd = clip.GetPlayEndSample();
+      const auto splitAt = [&](double splitTime){
+         auto [_, second] = track.SplitAt(splitTime);
+         if (second)
+            clipArray.insert(clipArray.begin() + ii + 1, second.get());
+      };
       if (clipStart < start && clipEnd > start && clipEnd <= end) {
          // the reverse selection begins at the inside of a clip
          double splitTime = track.LongSamplesToTime(start);
-         track.SplitAt(splitTime);
+         splitAt(splitTime);
       }
       else if (clipStart >= start && clipStart < end && clipEnd > end) {
          // the reverse selection ends at the inside of a clip
          double splitTime = track.LongSamplesToTime(end);
-         track.SplitAt(splitTime);
+         splitAt(splitTime);
       }
       else if (clipStart < start && clipEnd > end) {
          // the selection begins AND ends at the inside of a clip
-         double splitTime = track.LongSamplesToTime(start);
-         track.SplitAt(splitTime);
-         splitTime = track.LongSamplesToTime(end);
-         track.SplitAt(splitTime);
+         double splitTime = track.LongSamplesToTime(end);
+         splitAt(splitTime);
+         splitTime = track.LongSamplesToTime(start);
+         splitAt(splitTime);
       }
+      assert(invariant());
    }
 
    //STEP 2:
@@ -4287,8 +4300,7 @@ bool WaveTrack::ReverseOne(WaveTrack &track,
    WaveClipHolders revClips;
    // holds the clips that appear after the reverse selection region
    WaveClipHolders otherClips;
-   auto clipArray = track.SortedClipArray();
-   for (size_t i = 0; i < clipArray.size(); ++i) {
+   for (size_t i = 0, n = clipArray.size(); i < n; ++i) {
       WaveClip *clip = clipArray[i];
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();

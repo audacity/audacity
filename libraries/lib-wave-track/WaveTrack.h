@@ -1171,7 +1171,7 @@ private:
    static bool ReverseOneClip(WaveTrack &track,
       sampleCount start, sampleCount len, sampleCount originalStart,
       sampleCount originalEnd, const ProgressReport &report = {});
-   void SplitAt(double t) /* not override */;
+   std::pair<WaveClipHolder, WaveClipHolder> SplitAt(double t);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
    bool MergeOneClipPair(int clipidx1, int clipidx2);
