@@ -969,12 +969,6 @@ public:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
-   //! Argument is in (0, 1)
-   //! @return true if processing should continue
-   using ProgressReport = std::function<bool(double)>;
-   bool Reverse(sampleCount start, sampleCount len,
-      const ProgressReport &report = {});
-
    //! Random-access assignment of a range of samples
    /*!
     @param buffers a span of pointers of size `NChannels()`
@@ -1130,6 +1124,12 @@ public:
    auto Intervals() { return ChannelGroup::Intervals<Interval>(); }
    auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }
 
+   //! @pre `IsLeader()`
+   void InsertInterval(const IntervalHolder& interval);
+
+   //! @pre `IsLeader()`
+   void RemoveInterval(const IntervalHolder& interval);
+
    Track::Holder PasteInto(AudacityProject &project, TrackList &list)
       const override;
 
@@ -1172,9 +1172,6 @@ private:
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
       size_t iChannel, size_t nChannels);
-   static bool ReverseOneClip(WaveTrack &track,
-      sampleCount start, sampleCount len, sampleCount originalStart,
-      sampleCount originalEnd, const ProgressReport &report = {});
    std::pair<WaveClipHolder, WaveClipHolder> SplitOneAt(double t);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
@@ -1182,10 +1179,6 @@ private:
    void ApplyStretchRatioOnIntervals(
       const IntervalHolders& intervals,
       const ProgressReporter& reportProgress);
-   //! @pre `IsLeader()`
-   void InsertInterval(const IntervalHolder& interval);
-   //! @pre `IsLeader()`
-   void RemoveInterval(const IntervalHolder& interval);
    //! @pre `IsLeader()`
    //! @pre `oldOne->NChannels() == newOne->NChannels()`
    void
