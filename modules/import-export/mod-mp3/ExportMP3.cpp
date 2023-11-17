@@ -77,12 +77,13 @@
 
 #include "FileNames.h"
 #include "float_cast.h"
+#include "HelpSystem.h"
 #include "Mix.h"
 #include "Prefs.h"
 #include "Tags.h"
 #include "Track.h"
-#include "HelpSystem.h"
 #include "wxFileNameWrapper.h"
+#include "wxPanelWrapper.h"
 #include "Project.h"
 
 #include "Export.h"

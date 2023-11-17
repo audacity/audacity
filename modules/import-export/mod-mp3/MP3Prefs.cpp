@@ -13,7 +13,6 @@
 #include "Internat.h"
 #include "ShuttleGui.h"
 #include "LibraryPrefs.h"
-#include "HelpSystem.h"
 #include "ReadOnlyText.h"
 
 namespace {
