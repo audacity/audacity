@@ -280,6 +280,12 @@ WaveClipWaveformCache::~WaveClipWaveformCache()
 {
 }
 
+std::unique_ptr<WaveClipListener> WaveClipWaveformCache::Clone() const
+{
+   // Don't need to copy contents
+   return std::make_unique<WaveClipWaveformCache>(mWaveCaches.size());
+}
+
 static WaveClip::Caches::RegisteredFactory sKeyW{ [](WaveClip &clip) {
    return std::make_unique<WaveClipWaveformCache>(clip.GetWidth());
 } };

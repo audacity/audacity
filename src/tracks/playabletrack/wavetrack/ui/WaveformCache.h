@@ -21,6 +21,8 @@ struct WaveClipWaveformCache final : WaveClipListener
    explicit WaveClipWaveformCache(size_t nChannels);
    ~WaveClipWaveformCache() override;
 
+   std::unique_ptr<WaveClipListener> Clone() const override;
+
    // Cache of values for drawing the waveform
    std::vector<std::unique_ptr<WaveCache>> mWaveCaches;
    int mDirty { 0 };

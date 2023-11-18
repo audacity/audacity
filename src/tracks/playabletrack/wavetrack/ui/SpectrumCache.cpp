@@ -585,6 +585,12 @@ WaveClipSpectrumCache::~WaveClipSpectrumCache()
 {
 }
 
+std::unique_ptr<WaveClipListener> WaveClipSpectrumCache::Clone() const
+{
+   // Don't need to copy contents
+   return std::make_unique<WaveClipSpectrumCache>(mSpecCaches.size());
+}
+
 static WaveClip::Caches::RegisteredFactory sKeyS{ [](WaveClip &clip){
    return std::make_unique<WaveClipSpectrumCache>(clip.GetWidth());
 } };

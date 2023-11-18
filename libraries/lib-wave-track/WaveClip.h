@@ -8,13 +8,11 @@
   ?? Markus Meyer
 
 *******************************************************************/
-
 #ifndef __AUDACITY_WAVECLIP__
 #define __AUDACITY_WAVECLIP__
 
-
-
 #include "ClientData.h"
+#include "CRTPBase.h"
 #include "SampleFormat.h"
 #include "ClipInterface.h"
 #include "XMLTagHandler.h"
@@ -90,8 +88,10 @@ public:
    }
 };
 
-struct WAVE_TRACK_API WaveClipListener
-{
+struct WAVE_TRACK_API WaveClipListener;
+CRTP_BASE(WaveClipListenerBase, struct,
+   ClientData::Cloneable<WaveClipListener>);
+struct WaveClipListener : WaveClipListenerBase {
    virtual ~WaveClipListener() = 0;
    virtual void MarkChanged() = 0;
    virtual void Invalidate() = 0;
@@ -109,7 +109,8 @@ struct CentShiftChange
 class WAVE_TRACK_API WaveClip final :
     public ClipInterface,
     public XMLTagHandler,
-    public ClientData::Site<WaveClip, WaveClipListener>,
+    public ClientData::Site<
+      WaveClip, WaveClipListener, ClientData::DeepCopying>,
     public Observer::Publisher<CentShiftChange>
 {
 private:
@@ -120,7 +121,7 @@ private:
    WaveClip& operator= (const WaveClip&) = delete;
 
 public:
-   using Caches = Site< WaveClip, WaveClipListener >;
+   using Caches = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
 
    //! typical constructor
    /*!
