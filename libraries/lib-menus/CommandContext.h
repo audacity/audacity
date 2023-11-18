@@ -36,7 +36,7 @@ struct TemporarySelection {
 
 class MENUS_API CommandContext {
 public:
-   struct TargetFactory : DefaultedGlobalHook< TargetFactory,
+   struct MENUS_API TargetFactory : DefaultedGlobalHook< TargetFactory,
       Callable::UniquePtrFactory<CommandOutputTargets>::Function
    >{};
 
