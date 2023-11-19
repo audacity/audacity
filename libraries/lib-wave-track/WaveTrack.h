@@ -199,16 +199,28 @@ private:
    const size_t miChannel;
 };
 
+struct WaveTrackMessage {
+   const WaveClipHolder pClip{};
+   const enum Type {
+      New, //!< newly created and empty
+      Deserialized, //!< being read from project file
+      Inserted, //!< (partly) copied from another clip, or moved from a track
+   } type{};
+};
+
 class WAVE_TRACK_API WaveChannel
    : public Channel
    // TODO wide wave tracks -- remove "virtual"
    , public virtual WideSampleSequence
+   , public Observer::Publisher<WaveTrackMessage>
 {
 public:
    ~WaveChannel() override;
 
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
+
+   CallbackReturn Publish(const WaveTrackMessage &message);
 
    auto GetInterval(size_t iInterval) { return
       ::Channel::GetInterval<WaveChannelInterval>(iInterval); }
@@ -1124,7 +1136,10 @@ public:
    auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }
 
    //! @pre `IsLeader()`
-   void InsertInterval(const IntervalHolder& interval);
+   /*
+    @param newClip false if clip has contents from another clip or track
+    */
+   void InsertInterval(const IntervalHolder& interval, bool newClip);
 
    //! @pre `IsLeader()`
    void RemoveInterval(const IntervalHolder& interval);
@@ -1275,7 +1290,7 @@ private:
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
     */
-   bool InsertClip(WaveClipHolder clip, bool backup = false);
+   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup = false);
 
    void ApplyPitchAndSpeedOne(
       double t0, double t1, const ProgressReporter& reportProgress);

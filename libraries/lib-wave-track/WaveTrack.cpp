@@ -1027,6 +1027,15 @@ static auto DefaultName = XO("Audio");
 
 WaveChannel::~WaveChannel() = default;
 
+auto WaveChannel::Publish(const WaveTrackMessage &message) -> CallbackReturn
+{
+   auto pTrack = static_cast<WaveTrack *>(this);
+   if (pTrack->GetOwner())
+      // Substitute the leader track
+      pTrack = *TrackList::Channels(pTrack).begin();
+   return pTrack->Observer::Publisher<WaveTrackMessage>::Publish(message);
+}
+
 wxString WaveTrack::GetDefaultAudioTrackNamePreference()
 {
    const auto name = AudioTrackNameSetting.ReadWithDefault(L"");
@@ -1188,7 +1197,8 @@ WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a,
 {
    mLegacyProjectFileOffset = 0;
    for (const auto &clip : orig.mClips)
-      InsertClip(std::make_shared<WaveClip>(*clip, mpFactory, true), backup);
+      InsertClip(std::make_shared<WaveClip>(*clip, mpFactory, true),
+         false, backup);
 }
 
 size_t WaveTrack::GetWidth() const
@@ -1804,7 +1814,7 @@ auto WaveTrack::CopyOne(
          //wxPrintf("copy: clip %i is in copy region\n", (int)clip);
 
          newTrack->InsertClip(
-            std::make_shared<WaveClip>(*clip, pFactory, !forClipboard));
+            std::make_shared<WaveClip>(*clip, pFactory, !forClipboard), false);
          WaveClip *const newClip = newTrack->mClips.back().get();
          newClip->ShiftBy(-t0);
       }
@@ -1820,7 +1830,7 @@ auto WaveTrack::CopyOne(
          if (newClip->GetPlayStartTime() < 0)
             newClip->SetPlayStartTime(0);
 
-         newTrack->InsertClip(std::move(newClip)); // transfer ownership
+         newTrack->InsertClip(std::move(newClip), false); // transfer ownership
       }
    }
 
@@ -1838,7 +1848,7 @@ auto WaveTrack::CopyOne(
       placeholder->SetIsPlaceholder(true);
       placeholder->InsertSilence(0, (t1 - t0) - newTrack->GetEndTime());
       placeholder->ShiftBy(newTrack->GetEndTime());
-      newTrack->InsertClip(std::move(placeholder)); // transfer ownership
+      newTrack->InsertClip(std::move(placeholder), true); // transfer ownership
    }
    return newTrack->SharedPointer<WaveTrack>();
 }
@@ -2150,7 +2160,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
                if (split.right)
                   // new clip was cleared left
                   attachLeft(*newClip, *split.right);
-               track.InsertInterval(move(newClip));
+               track.InsertInterval(move(newClip), false);
                break;
             }
             else if (clip->GetPlayStartSample() ==
@@ -2319,7 +2329,7 @@ bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 
    // Uncomment the following line after we correct the problem of zero-length clips
    //if (CanInsertClip(clip))
-   InsertClip(clip); // transfer ownership
+   InsertClip(clip, false); // transfer ownership
 
    return true;
 }
@@ -2443,7 +2453,7 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
             clip->ShiftBy(-(t1 - t0));
 
    for (auto &clip: clipsToAdd)
-      InsertInterval(move(clip));
+      InsertInterval(move(clip), false);
 }
 
 void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
@@ -2678,7 +2688,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
             const auto newClip =
                CreateWideClip(newSequenceStart, name, clip.get());
             newClip->Resample(rate);
-            track.InsertInterval(move(newClip));
+            track.InsertInterval(move(newClip), false);
         }
     }
 }
@@ -2715,7 +2725,7 @@ bool WaveTrack::FormatConsistencyCheck() const
       });
 }
 
-bool WaveTrack::InsertClip(WaveClipHolder clip, bool backup)
+bool WaveTrack::InsertClip(WaveClipHolder clip, bool newClip, bool backup)
 {
    if(!backup && !clip->GetIsPlaceholder() && clip->IsEmpty())
       return false;
@@ -2724,6 +2734,8 @@ bool WaveTrack::InsertClip(WaveClipHolder clip, bool backup)
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    mClips.push_back(std::move(clip));
+   Publish({ mClips.back(),
+      newClip ? WaveTrackMessage::New : WaveTrackMessage::Inserted });
 
    return true;
 }
@@ -2826,7 +2838,7 @@ void WaveTrack::InsertSilence(double t, double len)
       auto clip = CreateWideClip(0);
       clip->InsertSilence(0, len);
       // use No-fail-guarantee
-      InsertInterval(move(clip));
+      InsertInterval(move(clip), true);
    }
    else
    {
@@ -3010,7 +3022,7 @@ void WaveTrack::Join(
       RemoveWideClip(FindWideClip(*clip->GetClip(0)));
    }
 
-   InsertInterval(move(newClip));
+   InsertInterval(move(newClip), false);
 }
 
 /*! @excsafety{Partial}
@@ -3286,6 +3298,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
          mpFactory, mLegacyFormat, mLegacyRate, GetWaveColorIndex());
       const auto xmlHandler = clip.get();
       mClips.push_back(std::move(clip));
+      Publish({ mClips.back(), WaveTrackMessage::Deserialized });
       return xmlHandler;
    }
 
@@ -3810,8 +3823,8 @@ auto WaveTrack::CreateClip(double offset, const wxString& name)
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    mClips.push_back(std::move(clip));
-
    auto result = mClips.back();
+   Publish({ result, WaveTrackMessage::New });
    // TODO wide wave tracks -- for now assertion is correct because widths are
    // always 1
    assert(result->GetWidth() == GetWidth());
@@ -4027,7 +4040,7 @@ auto WaveTrack::SplitAt(double t) -> std::pair<IntervalHolder, IntervalHolder>
 
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
-         InsertInterval(move(newClip)); // transfer ownership
+         InsertInterval(move(newClip), false); // transfer ownership
          return result;
       }
    }
@@ -4076,7 +4089,7 @@ void WaveTrack::ApplyPitchAndSpeedOnIntervals(
       ReplaceInterval(srcIntervals[i], dstIntervals[i]);
 }
 
-void WaveTrack::InsertInterval(const IntervalHolder& interval)
+void WaveTrack::InsertInterval(const IntervalHolder& interval, bool newClip)
 {
    assert(IsLeader());
    auto channel = 0;
@@ -4084,7 +4097,7 @@ void WaveTrack::InsertInterval(const IntervalHolder& interval)
    {
       const auto clip = interval->GetClip(channel++);
       if (clip) {
-         pChannel->InsertClip(clip);
+         pChannel->InsertClip(clip, newClip);
          // Detect errors resulting in duplicate shared pointers to clips
          assert(pChannel->ClipsAreUnique());
       }
@@ -4110,7 +4123,7 @@ void WaveTrack::ReplaceInterval(
    assert(IsLeader());
    assert(oldOne->NChannels() == newOne->NChannels());
    RemoveInterval(oldOne);
-   InsertInterval(newOne);
+   InsertInterval(newOne, false);
    newOne->SetName(oldOne->GetName());
 }
 
