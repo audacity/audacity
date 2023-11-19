@@ -138,7 +138,7 @@ public:
     */
    WaveClip(size_t width,
       const SampleBlockFactoryPtr &factory, sampleFormat format,
-      int rate, int colourIndex);
+      int rate);
 
    //! essentially a copy constructor - but you must pass in the
    //! current sample block factory, because we might be copying
@@ -207,9 +207,6 @@ public:
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
-
-   void SetColourIndex(int index) { mColourIndex = index; }
-   int GetColourIndex() const { return mColourIndex; }
 
    double GetSequenceStartTime() const noexcept;
    void SetSequenceStartTime(double startTime);
@@ -613,7 +610,6 @@ private:
 
    //! Sample rate of the raw audio, i.e., before stretching.
    int mRate;
-   int mColourIndex;
 
    /*!
     @invariant `mSequences.size() > 0`

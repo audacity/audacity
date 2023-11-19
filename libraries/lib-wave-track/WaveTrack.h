@@ -153,8 +153,6 @@ public:
    constSamplePtr GetAppendBuffer() const;
    size_t GetAppendBufferLen() const;
 
-   int GetColourIndex() const;
-
    BlockArray *GetSequenceBlockArray();
 
    /*!
@@ -200,7 +198,7 @@ private:
 };
 
 struct WaveTrackMessage {
-   const WaveClipHolder pClip{};
+   WaveClipHolder pClip{};
    const enum Type {
       New, //!< newly created and empty
       Deserialized, //!< being read from project file
@@ -452,12 +450,6 @@ public:
    //! Takes gain and pan into account
    float GetChannelGain(int channel) const override;
 
-   int GetWaveColorIndex() const;
-   /*!
-    @pre `IsLeader()`
-    */
-   void SetWaveColorIndex(int colorIndex);
-
    sampleCount GetVisibleSampleCount() const;
 
    sampleFormat GetSampleFormat() const override;
@@ -474,7 +466,7 @@ public:
 
    TrackListHolder Cut(double t0, double t1) override;
 
-   //! Make another track copying format, rate, color, etc. but containing no
+   //! Make another track copying format, rate, etc. but containing no
    //! clips; and always with a unique channel
    /*!
     It is important to pass the correct factory (that for the project
@@ -488,7 +480,7 @@ public:
    Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
       bool keepLink = true) const;
 
-   //! Make another channel group copying format, rate, color, etc. but
+   //! Make another channel group copying format, rate, etc. but
    //! containing no clips; with as many channels as in `this`
    /*!
     It is important to pass the correct factory (that for the project
@@ -888,9 +880,6 @@ public:
 
       void SetName(const wxString& name);
       const wxString& GetName() const;
-
-      void SetColorIndex(int index);
-      int GetColorIndex() const;
 
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;

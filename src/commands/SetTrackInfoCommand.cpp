@@ -11,7 +11,7 @@
 
 \file SetTrackCommand.cpp
 \brief Definitions for SetTrackCommand built up from 
-SetChannelsBase, SetTrackBase, SetTrackStatusCommand, SetTrackAudioCommand and
+SetTrackBase, SetTrackStatusCommand, SetTrackAudioCommand and
 SetTrackVisualsCommand
 
 \class SetTrackBase
@@ -20,17 +20,17 @@ loops over selected tracks. Subclasses override ApplyInner() to change
 one track.
 
 \class SetTrackStatusCommand
-\brief A SetChannelsBase that sets name, selected and focus.
+\brief A SetTrackBase that sets name, selected and focus.
 
 \class SetTrackAudioCommand
-\brief A SetChannelsBase that sets pan, gain, mute and solo.
+\brief A SetTrackBase that sets pan, gain, mute and solo.
 
 \class SetTrackVisualsCommand
-\brief A SetChannelsBase that sets appearance of a track.
+\brief A SetTrackBase that sets appearance of a track.
 
 \class SetTrackCommand
-\brief A SetChannelsBase that combines SetTrackStatusCommand,
-SetTrackAudioCommand and SetTrackVisualsCommand.
+\brief A SetTrackBase that combines SetTrackStatusCommand,
+SetTrackAudioConmmand and SetTrackVisualsCommand.
 
 *//*******************************************************************/
 
@@ -44,13 +44,15 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "Project.h"
 #include "TrackFocus.h"
 #include "../TrackPanel.h"
-#include "WaveTrack.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveformAppearance.h"
 #include "../prefs/WaveformSettings.h"
+#include "WaveTrack.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveformView.h"
 #include "CommandContext.h"
 
 bool SetTrackBase::Apply(const CommandContext & context)
@@ -330,7 +332,7 @@ bool SetTrackVisualsCommand::ApplyInner(
    static const double ZOOMLIMIT = 0.001f;
 
    if (bHasColour)
-      wt->SetWaveColorIndex(mColour);
+      WaveformAppearance::Get(*wt).SetColorIndex(mColour);
 
    if (bHasHeight)
       for (auto pChannel : t.Channels<WaveTrack>())

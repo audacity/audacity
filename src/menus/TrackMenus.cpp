@@ -66,9 +66,6 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       auto insertionPoint = * ++ tracks.Find(last);
 
       auto selectedCount = trackRange.size();
-      int firstColour = -1;
-      if (selectedCount > 0)
-         firstColour = (*trackRange.begin())->GetWaveColorIndex();
       if (!toNewTrack)  {
          // Beware iterator invalidation!
          while (!trackRange.empty())
@@ -83,10 +80,8 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       const auto pNewTrack = *tracks.Any<WaveTrack>().rbegin();
 
       // Bug 2218, remember more things...
-      if (selectedCount >= 1) {
+      if (selectedCount >= 1)
          pNewTrack->SetSelected(!toNewTrack);
-         pNewTrack->SetWaveColorIndex(firstColour);
-      }
 
       // Permute the tracks as needed
       // The new track appears after the old tracks (or where the old tracks

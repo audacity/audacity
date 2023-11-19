@@ -37,7 +37,6 @@ public:
       Operations operations = [](WaveClip&) {}) const;
 
 private:
-   static constexpr int colourIndex = 0;
    static constexpr bool copyCutLines = false;
 
    const int mSampleRate;
