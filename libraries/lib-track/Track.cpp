@@ -89,6 +89,21 @@ void Track::SetSelected(bool s)
    }
 }
 
+void Track::CopyAttachments(Track &dst, const Track &src, bool deep)
+{
+   if (!deep) {
+      // Share the satellites with the original, though they do not point
+      // back to the duplicate track
+      AttachedTrackObjects &attachments = dst;
+      attachments = src; // shallow copy
+   }
+   else
+      src.AttachedTrackObjects::ForEach([&](auto &attachment){
+         // Copy view state that might be important to undo/redo
+         attachment.CopyTo(dst);
+      });
+}
+
 TrackListHolder Track::Duplicate(DuplicateOptions options) const
 {
    assert(IsLeader());
@@ -96,26 +111,13 @@ TrackListHolder Track::Duplicate(DuplicateOptions options) const
    auto result = Clone(options.backup);
 
    auto iter = TrackList::Channels(*result->begin()).begin();
-   const auto copyOne = [&](const Track *pChannel){
-      if (options.shallowCopyAttachments) {
-         // Share the satellites with the original, though they do not point
-         // back to the duplicate track
-         AttachedTrackObjects &attachments = (**iter);
-         attachments = *pChannel; // shallow copy
-      }
-      else
-         pChannel->AttachedTrackObjects::ForEach([&](auto &attachment){
-            // Copy view state that might be important to undo/redo
-            attachment.CopyTo(**iter);
-         });
-      ++iter;
-   };
-
    if (GetOwner())
-      for (const auto pChannel : TrackList::Channels(this))
-         copyOne(pChannel);
+      for (const auto pChannel : TrackList::Channels(this)) {
+         CopyAttachments(**iter, *pChannel, !options.shallowCopyAttachments);
+         ++iter;
+      }
    else
-      copyOne(this);
+      CopyAttachments(**iter, *this, !options.shallowCopyAttachments);
 
    return result;
 }

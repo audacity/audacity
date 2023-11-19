@@ -285,6 +285,9 @@ private:
 
    void Init(const Track &orig);
 
+   //! Copy (deep) or just share (!deep) AttachedTrackObjects
+   static void CopyAttachments(Track &dst, const Track &src, bool deep);
+
    //! Choices when duplicating a track
    struct DuplicateOptions {
       DuplicateOptions()

@@ -285,6 +285,7 @@ class WAVE_TRACK_API WaveTrack final
    // TODO wide wave tracks -- remove this base class
    , public WaveChannel
 {
+   struct CreateToken {};
 public:
    class Interval;
    using IntervalHolder = std::shared_ptr<Interval>;
@@ -324,8 +325,16 @@ public:
    // Construct and also build all attachments
    static WaveTrack *New( AudacityProject &project );
 
-   WaveTrack(
+   //! Don't call directly, but use Create
+   WaveTrack(CreateToken&&,
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
+
+   using Holder = std::shared_ptr<WaveTrack>;
+
+   //! Factory builds all AttachedTrackObjects
+   static Holder Create(
+      const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
+
    //! Copied only in WaveTrack::Clone() !
    WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&, bool backup);
 
@@ -385,8 +394,6 @@ public:
    wxString MakeClipCopyName(const wxString& originalName) const;
    wxString MakeNewClipName() const;
  public:
-
-   using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
 

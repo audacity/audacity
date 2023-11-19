@@ -1042,7 +1042,12 @@ std::shared_ptr<WaveTrack> WaveTrackFactory::Create()
 
 std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double rate)
 {
-   return std::make_shared<WaveTrack>(mpFactory, format, rate);
+   auto result = std::make_shared<WaveTrack>(
+      WaveTrack::CreateToken{}, mpFactory, format, rate);
+   // Only after make_shared returns, can weak_from_this be used, which
+   // attached object factories may need
+   result->AttachedTrackObjects::BuildAll();
+   return result;
 }
 
 TrackListHolder WaveTrackFactory::Create(size_t nChannels)
@@ -1081,11 +1086,10 @@ WaveTrack *WaveTrack::New( AudacityProject &project )
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &tracks = TrackList::Get( project );
    auto result = tracks.Add(trackFactory.Create());
-   result->AttachedTrackObjects::BuildAll();
    return result;
 }
 
-WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
+WaveTrack::WaveTrack(CreateToken&&, const SampleBlockFactoryPtr &pFactory,
    sampleFormat format, double rate )
    : mpFactory(pFactory)
 {
@@ -1093,6 +1097,19 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
 
    WaveTrackData::Get(*this).SetSampleFormat(format);
    DoSetRate(static_cast<int>(rate));
+}
+
+auto WaveTrack::Create(
+   const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate)
+      -> Holder
+{
+   auto result =
+      std::make_shared<WaveTrack>(CreateToken{}, pFactory, format, rate);
+   // Only after make_shared returns, can weak_from_this be used, which
+   // attached object factories may need
+   // (but this is anyway just the factory for unit test purposes)
+   result->AttachedTrackObjects::BuildAll();
+   return result;
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a,
@@ -1629,8 +1646,11 @@ WaveTrack::Holder WaveTrack::EmptyCopy(
    const SampleBlockFactoryPtr &pFactory, bool keepLink) const
 {
    const auto rate = GetRate();
-   auto result = std::make_shared<WaveTrack>(pFactory, GetSampleFormat(), rate);
+   auto result = std::make_shared<WaveTrack>(CreateToken{},
+      pFactory, GetSampleFormat(), rate);
    result->Init(*this);
+   // Copy state rather than BuildAll()
+   Track::CopyAttachments(*result, *this, true /* deep copy */);
    // The previous line might have destroyed the rate information stored in
    // channel group data.  The copy is not yet in a TrackList.  Reassign rate
    // in case the track needs to make WaveClips before it is properly joined
