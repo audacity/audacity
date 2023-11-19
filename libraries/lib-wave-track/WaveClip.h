@@ -95,6 +95,13 @@ struct WaveClipListener : WaveClipListenerBase {
    virtual ~WaveClipListener() = 0;
    virtual void MarkChanged() = 0;
    virtual void Invalidate() = 0;
+
+   // Default implementation does nothing
+   virtual void WriteXMLAttributes(XMLWriter &writer) const;
+
+   // Default implementation just returns false
+   virtual bool HandleXMLAttribute(
+      const std::string_view &attr, const XMLAttributeValueView &valueView);
 };
 
 struct CentShiftChange
@@ -121,7 +128,7 @@ private:
    WaveClip& operator= (const WaveClip&) = delete;
 
 public:
-   using Caches = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
+   using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
 
    //! typical constructor
    /*!

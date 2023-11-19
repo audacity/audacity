@@ -33,8 +33,16 @@
 #include <omp.h>
 #endif
 
-WaveClipListener::~WaveClipListener()
+WaveClipListener::~WaveClipListener() = default;
+
+void WaveClipListener::WriteXMLAttributes(XMLWriter &) const
 {
+}
+
+bool WaveClipListener::HandleXMLAttribute(
+   const std::string_view &, const XMLAttributeValueView &)
+{
+   return false;
 }
 
 WaveClip::WaveClip(size_t width,
@@ -70,6 +78,11 @@ WaveClip::WaveClip(
    mTrimRight = orig.mTrimRight;
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
+
+   // Deep copy of attachments
+   Attachments &attachments = *this;
+   attachments = orig;
+
    mSequences.reserve(orig.GetWidth());
    for (auto &pSequence : orig.mSequences)
       mSequences.push_back(
@@ -119,7 +132,12 @@ WaveClip::WaveClip(
       mTrimRight = orig.mTrimRight;
 
    mRate = orig.mRate;
+
    mColourIndex = orig.mColourIndex;
+
+   // Deep copy of attachments
+   Attachments &attachments = *this;
+   attachments = orig;
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 
@@ -369,7 +387,7 @@ constSamplePtr WaveClip::GetAppendBuffer(size_t ii) const
 
 void WaveClip::MarkChanged() // NOFAIL-GUARANTEE
 {
-   Caches::ForEach( std::mem_fn( &WaveClipListener::MarkChanged ) );
+   Attachments::ForEach(std::mem_fn(&WaveClipListener::MarkChanged));
 }
 
 std::pair<float, float> WaveClip::GetMinMax(size_t ii,
@@ -571,6 +589,11 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
                return false;
             SetColourIndex(longValue);
          }
+         else if (Attachments::FindIf(
+            [&](WaveClipListener &listener){
+               return listener.HandleXMLAttribute(attr, value); }
+         ))
+            ;
       }
       return true;
    }
@@ -638,6 +661,9 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("clipStretchRatio"), mClipStretchRatio, 8);
    xmlFile.WriteAttr(wxT("name"), mName);
    xmlFile.WriteAttr(wxT("colorindex"), mColourIndex );
+   Attachments::ForEach([&](const WaveClipListener &listener){
+      listener.WriteXMLAttributes(xmlFile);
+   });
 
    for (auto &pSequence : mSequences)
       pSequence->WriteXML(xmlFile);
@@ -1198,7 +1224,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       mSequences = move(newSequences);
       mRate = rate;
       Flush();
-      Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
+      Attachments::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
       MarkChanged();
    }
 }

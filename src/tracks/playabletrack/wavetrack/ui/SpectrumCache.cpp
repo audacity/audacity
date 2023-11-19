@@ -591,7 +591,7 @@ std::unique_ptr<WaveClipListener> WaveClipSpectrumCache::Clone() const
    return std::make_unique<WaveClipSpectrumCache>(mSpecCaches.size());
 }
 
-static WaveClip::Caches::RegisteredFactory sKeyS{ [](WaveClip &clip){
+static WaveClip::Attachments::RegisteredFactory sKeyS{ [](WaveClip &clip){
    return std::make_unique<WaveClipSpectrumCache>(clip.GetWidth());
 } };
 
@@ -599,7 +599,7 @@ WaveClipSpectrumCache &
 WaveClipSpectrumCache::Get(const WaveChannelInterval &clip)
 {
    return const_cast<WaveClip&>(clip.GetWideClip()) // Consider it mutable data
-      .Caches::Get< WaveClipSpectrumCache >( sKeyS );
+      .Attachments::Get< WaveClipSpectrumCache >( sKeyS );
 }
 
 void WaveClipSpectrumCache::MarkChanged()
