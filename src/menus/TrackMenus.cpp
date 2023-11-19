@@ -66,12 +66,9 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       auto insertionPoint = * ++ tracks.Find(last);
 
       auto selectedCount = trackRange.size();
-      wxString firstName;
       int firstColour = -1;
-      if (selectedCount > 0) {
-         firstName = (*trackRange.begin())->GetName();
+      if (selectedCount > 0)
          firstColour = (*trackRange.begin())->GetWaveColorIndex();
-      }
       if (!toNewTrack)  {
          // Beware iterator invalidation!
          while (!trackRange.empty())
@@ -81,12 +78,9 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
 
       // Add new tracks
       const bool stereo = newTracks->NChannels() > 1;
+      const auto firstName = (*newTracks->begin())->GetName();
       tracks.Append(std::move(*newTracks));
       const auto pNewTrack = *tracks.Any<WaveTrack>().rbegin();
-
-      // If we're just rendering (not mixing), keep the track name the same
-      if (selectedCount == 1)
-         pNewTrack->SetName(firstName);
 
       // Bug 2218, remember more things...
       if (selectedCount >= 1) {
@@ -114,8 +108,8 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       }
 
       // Smart history/undo message
-      if (selectedCount==1) {
-         auto msg = XO("Rendered all audio in track '%s'").Format( firstName );
+      if (selectedCount == 1) {
+         auto msg = XO("Rendered all audio in track '%s'").Format(firstName);
          /* i18n-hint: Convert the audio into a more usable form, so apply
           * panning and amplification and write to some external file.*/
          ProjectHistory::Get( project ).PushState(msg, XO("Render"));
