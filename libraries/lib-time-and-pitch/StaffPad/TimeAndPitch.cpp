@@ -206,24 +206,6 @@ void _fft_shift(float* v, int n)
   });
 }
 
-void _lr_to_ms(float* ch1, float* ch2, int n)
-{
-  audio::simd::perform_parallel_simd_aligned(ch1, ch2, n, [](auto& a, auto& b) {
-    auto l = a, r = b;
-    a = 0.5f * (l + r);
-    b = 0.5f * (l - r);
-  });
-}
-
-void _ms_to_lr(float* ch1, float* ch2, int n)
-{
-  audio::simd::perform_parallel_simd_aligned(ch1, ch2, n, [](auto& a, auto& b) {
-    auto m = a, s = b;
-    a = m + s;
-    b = m - s;
-  });
-}
-
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -332,14 +314,27 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
   d->last_phase.assignSamples(d->phase);
 }
 
+// Figure out SSE optimizations later
+inline void calcNorms(const std::complex<float>* src1,
+    const std::complex<float>* src2, float* dst, int32_t n)
+{
+  constexpr float (*unary)(const std::complex<float> &) =
+    std::norm<float>;
+  constexpr auto binary =
+    [](const std::complex<float> &a, const std::complex<float> &b){
+       return std::norm(a + b);
+    };
+  if (src2)
+    std::transform(src1, src1 + n, src2, dst, binary);
+  else
+    std::transform(src1, src1 + n, dst, unary);
+}
+
 /// process one hop/chunk in _fft_timeSeries and add the result to output circular buffer
 void TimeAndPitch::_process_hop(int hop_a, int hop_s)
 {
   if (d->exact_hop_a != d->exact_hop_s)
   {
-    if (_numChannels == 2)
-      _lr_to_ms(d->fft_timeseries.getPtr(0), d->fft_timeseries.getPtr(1), fftSize);
-
     for (int ch = 0; ch < _numChannels; ++ch)
     {
       vo::multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), d->fft_timeseries.getPtr(ch), fftSize);
@@ -348,9 +343,11 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
 
     // determine norm/phase
     d->fft.forwardReal(d->fft_timeseries, d->spectrum);
-    // norms of the mid channel only (or sole channel) are needed in
-    // _time_stretch
-    vo::calcNorms(d->spectrum.getPtr(0), d->norm.getPtr(0), d->spectrum.getNumSamples());
+    // norms, only are needed in _time_stretch (not abs -- avoid taking sqrt)
+    // Take norms of sole channel, or of sum of channels
+    calcNorms(d->spectrum.getPtr(0),
+        (_numChannels == 2 ? d->spectrum.getPtr(1) : nullptr),
+        d->norm.getPtr(0), d->spectrum.getNumSamples());
     for (int ch = 0; ch < _numChannels; ++ch)
       vo::calcPhases(d->spectrum.getPtr(ch), d->phase.getPtr(ch), d->spectrum.getNumSamples());
 
@@ -370,9 +367,6 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
     for (int ch = 0; ch < _numChannels; ++ch)
       vo::constantMultiply(d->fft_timeseries.getPtr(ch), 1.f / fftSize, d->fft_timeseries.getPtr(ch),
                            d->fft_timeseries.getNumSamples());
-
-    if (_numChannels == 2)
-      _ms_to_lr(d->fft_timeseries.getPtr(0), d->fft_timeseries.getPtr(1), fftSize);
 
     for (int ch = 0; ch < _numChannels; ++ch)
     {
