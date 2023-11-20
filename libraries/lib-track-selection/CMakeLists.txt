@@ -20,7 +20,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-time-frequency-selection-interface
-   lib-track-interface
 )
 audacity_library( lib-track-selection "${SOURCES}" "${LIBRARIES}"
    "" ""

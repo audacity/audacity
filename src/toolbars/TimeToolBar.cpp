@@ -23,7 +23,6 @@
 #endif
 
 #include "TimeToolBar.h"
-#include "SelectionBarListener.h"
 #include "ToolManager.h"
 
 #include "AudioIO.h"
@@ -57,9 +56,11 @@ Identifier TimeToolBar::ID()
 }
 
 TimeToolBar::TimeToolBar(AudacityProject &project)
-:  ToolBar(project, XO("Time"), ID(), true),
-   mListener(NULL), mAudioTime(NULL)
+   :  ToolBar(project, XO("Time"), ID(), true)
+   , mAudioTime{ nullptr }
 {
+   mFormatsSubscription = ProjectNumericFormats::Get(project)
+      .Subscribe(*this, &TimeToolBar::OnFormatsChanged);
 }
 
 TimeToolBar::~TimeToolBar()
@@ -105,6 +106,20 @@ void TimeToolBar::Populate()
    // from being used as we want to ensure the saved size is used instead. See SetDocked()
    // and OnUpdate() for more info.
    mSettingInitialSize = true;
+   CallAfter([this]{
+      auto &formats = ProjectNumericFormats::Get(mProject);
+      // Get (and set) the saved time format
+      SetAudioTimeFormat(formats.GetAudioTimeFormat());
+
+      // During initialization, if the saved format is the same as the default,
+      // OnUpdate() will not otherwise be called but we need it to set the
+      // initial size.
+      if (mSettingInitialSize) {
+         wxCommandEvent e;
+         e.SetString(mAudioTime->GetFormatName().GET());
+         OnUpdate(e);
+      }
+   });
 
    // Establish initial resizing limits
    //   SetResizingLimits();
@@ -121,7 +136,7 @@ void TimeToolBar::UpdatePrefs()
    // Since the language may have changed, we need to force an update to accommodate
    // different length text
    wxCommandEvent e;
-   e.SetString(mAudioTime->GetFormatName().Internal());
+   e.SetString(mAudioTime->GetFormatName().GET());
    OnUpdate(e);
 
    // Language may have changed so reset label
@@ -138,7 +153,8 @@ void TimeToolBar::SetToDefaultSize()
    SetMinSize(wxDefaultSize);
 
    // Set the default time format
-   SetAudioTimeFormat(NumericConverterFormats::HoursMinsSecondsFormat());
+   SetAudioTimeFormat(
+      NumericConverterFormats::HoursMinsSecondsFormat().Internal());
 
    // Set the default size
    SetSize(GetInitialWidth(), 48);
@@ -188,30 +204,13 @@ void TimeToolBar::SetDocked(ToolDock *dock, bool pushed)
    }
 }
 
-void TimeToolBar::SetListener(TimeToolBarListener *l)
-{
-   // Remember the listener
-   mListener = l;
-
-   // Get (and set) the saved time format
-   SetAudioTimeFormat(mListener->TT_GetAudioTimeFormat());
-
-   // During initialization, if the saved format is the same as the default,
-   // OnUpdate() will not be called and need it to set the initial size.
-   if (mSettingInitialSize) {
-      wxCommandEvent e;
-      e.SetString(mAudioTime->GetFormatName().Internal());
-      OnUpdate(e);
-   }
-}
-
-void TimeToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
+void TimeToolBar::SetAudioTimeFormat(const NumericFormatID & format)
 {
    // Set the format if it's different from previous
    if (mAudioTime->SetFormatName(format)) {
       // Simulate an update since the format has changed.
       wxCommandEvent e;
-      e.SetString(format.Internal());
+      e.SetString(format.GET());
       OnUpdate(e);
    }
 }
@@ -275,6 +274,18 @@ void TimeToolBar::SetResizingLimits()
    SetMaxSize(maxSize);
 }
 
+void TimeToolBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
+{
+   auto &settings = ProjectNumericFormats::Get(mProject);
+   switch (evt.type) {
+   case ProjectNumericFormatsEvent::ChangedAudioTimeFormat:
+      SetAudioTimeFormat(settings.GetAudioTimeFormat());
+      break;
+   default:
+      break;
+   }
+}
+
 // Called when the format drop downs is changed.
 // This causes recreation of the toolbar contents.
 void TimeToolBar::OnUpdate(wxCommandEvent &evt)
@@ -288,10 +299,10 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
    SetMaxSize(wxDefaultSize);
 
    // Save format name before recreating the controls so they resize properly
-   if (mListener) {
-      mListener->TT_SetAudioTimeFormat(evt.GetString());
-   }
-   
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   formats.SetAudioTimeFormat(evt.GetString());
+   // Then my subscription is called
+
    // During initialization, the desired size will have already been set at this point
    // and the "best" size" would override it, so we simply send a size event to force
    // the content to fit inside the toolbar.

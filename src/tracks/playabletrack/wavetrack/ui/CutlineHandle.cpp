@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../Snap.h" // for kPixelTolerance
+#include "Snap.h" // for kPixelTolerance
 #include "../../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"

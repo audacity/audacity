@@ -157,8 +157,6 @@ list( APPEND SOURCES
       ProjectFileManager.h
       ProjectManager.cpp
       ProjectManager.h
-      ProjectSelectionManager.cpp
-      ProjectSelectionManager.h
       ProjectSettings.cpp
       ProjectSettings.h
       ProjectTempoListener.cpp
@@ -181,8 +179,6 @@ list( APPEND SOURCES
       SelectUtilities.h
       ShuttleGetDefinition.cpp
       ShuttleGetDefinition.h
-      Snap.cpp
-      Snap.h
       SoundActivatedRecord.cpp
       SoundActivatedRecord.h
       SpectralDataDialog.cpp
@@ -675,12 +671,10 @@ list( APPEND SOURCES
       toolbars/ScrubbingToolBar.h
       toolbars/SelectionBar.cpp
       toolbars/SelectionBar.h
-      toolbars/SelectionBarListener.h
       toolbars/SnappingToolBar.cpp
       toolbars/SnappingToolBar.h
       toolbars/SpectralSelectionBar.cpp
       toolbars/SpectralSelectionBar.h
-      toolbars/SpectralSelectionBarListener.h
       toolbars/TimeSignatureToolBar.cpp
       toolbars/TimeSignatureToolBar.h
       toolbars/TimeToolBar.cpp

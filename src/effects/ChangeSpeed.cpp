@@ -107,7 +107,7 @@ EffectChangeSpeed::EffectChangeSpeed()
    mToVinyl = kVinyl_33AndAThird;
    mFromLength = 0.0;
    mToLength = 0.0;
-   mFormat = NumericConverterFormats::DefaultSelectionFormat();
+   mFormat = NumericConverterFormats::DefaultSelectionFormat().Internal();
    mbLoopDetect = false;
 
    SetLinearEffectFlag(true);
@@ -152,7 +152,7 @@ OptionalMessage
 EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mFromVinyl = kVinyl_33AndAThird;
-   mFormat = NumericConverterFormats::DefaultSelectionFormat();
+   mFormat = NumericConverterFormats::DefaultSelectionFormat().Internal();
 
    return Effect::LoadFactoryDefaults(settings);
 }
@@ -308,10 +308,10 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
       wxString formatId;
       GetConfig(GetDefinition(), PluginSettings::Private,
          CurrentSettingsGroup(),
-         wxT("TimeFormat"), formatId, mFormat.Internal());
+         wxT("TimeFormat"), formatId, mFormat.GET());
       mFormat = NumericConverterFormats::Lookup(
          FormatterContext::SampleRateContext(mProjectRate),
-         NumericConverterType_TIME(), formatId);
+         NumericConverterType_TIME(), formatId).Internal();
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(),
@@ -470,7 +470,7 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
 
    // TODO: just visit these effect settings the default way
    SetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
+      CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.GET());
    SetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
@@ -673,7 +673,7 @@ void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 {
    mFormat = NumericConverterFormats::Lookup(
       FormatterContext::SampleRateContext(mProjectRate),
-      NumericConverterType_TIME(), evt.GetString());
+      NumericConverterType_TIME(), evt.GetString()).Internal();
 
    mpFromLengthCtrl->SetFormatName(mFormat);
    // Update From/To Length controls (precision has changed).
