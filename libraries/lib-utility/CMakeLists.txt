@@ -1,5 +1,5 @@
 #[[
-A small library defining various constants and utilities
+A library defining various constants and utilities
 
 No dependencies on wxWidgets.  Few symbols with linkage.  Many templates.
 
@@ -20,6 +20,7 @@ set( SOURCES
    BufferedStreamReader.h
    CFResources.cpp
    CFResources.h
+   CRTPBase.h
    Callable.cpp
    Callable.h
    CommandLineArgs.cpp

@@ -251,7 +251,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_FOREGROUNDSTART_T,
                          NumericConverterType_TIME(),
-                         NumericConverterFormats::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat().Internal(),
                          0.0,
                          options);
          }
@@ -264,7 +264,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_FOREGROUNDEND_T,
                          NumericConverterType_TIME(),
-                         NumericConverterFormats::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat().Internal(),
                          0.0,
                          options);
          }
@@ -285,7 +285,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_BACKGROUNDSTART_T,
                          NumericConverterType_TIME(),
-                         NumericConverterFormats::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat().Internal(),
                          0.0,
                          options);
          }
@@ -298,7 +298,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_BACKGROUNDEND_T,
                          NumericConverterType_TIME(),
-                         NumericConverterFormats::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat().Internal(),
                          0.0,
                          options);
          }

@@ -5,7 +5,6 @@
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectSettings.h"
 #include "../ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "../ProjectManager.h"

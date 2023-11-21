@@ -33,7 +33,7 @@ class NUMERIC_FORMATS_API NumericConverter /* not final */ :
 {
 public:
    NumericConverter(const FormatterContext& context, NumericConverterType type,
-                    const NumericFormatSymbol & formatName = {},
+                    const NumericFormatID & formatName = {},
                     double value = 0.0f);
 
    virtual ~NumericConverter();  
@@ -53,11 +53,11 @@ private:
 
 public:
    // returns true if the format type really changed:
-   bool SetTypeAndFormatName(const NumericConverterType& type, const NumericFormatSymbol& formatName);
+   bool SetTypeAndFormatName(const NumericConverterType& type, const NumericFormatID& formatName);
    // returns true if the format name really changed:
-   bool SetFormatName(const NumericFormatSymbol & formatName);
+   bool SetFormatName(const NumericFormatID &formatName);
    // Could be empty if custom format is used
-   NumericFormatSymbol GetFormatName() const;
+   NumericFormatID GetFormatName() const;
 
    bool SetCustomFormat(const TranslatableString& customFormat);
 
@@ -96,7 +96,7 @@ protected:
    std::unique_ptr<NumericConverterFormatter>
                  mFormatter;
    
-   NumericFormatSymbol mFormatSymbol;
+   NumericFormatID mFormatID;
    TranslatableString mCustomFormat;
 
    // Formatted mValue, by ValueToControls().

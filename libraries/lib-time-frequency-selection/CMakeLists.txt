@@ -4,14 +4,15 @@ spectral selection, and play region
 ]]
 
 set( SOURCES
+   ProjectSelectionManager.cpp
+   ProjectSelectionManager.h
    SelectedRegion.cpp
    SelectedRegion.h
    ViewInfo.cpp
    ViewInfo.h
 )
 set( LIBRARIES
-   lib-project-history-interface
-   lib-screen-geometry-interface
+   lib-snapping-interface
 )
 audacity_library( lib-time-frequency-selection "${SOURCES}" "${LIBRARIES}"
    "" ""

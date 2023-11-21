@@ -15,6 +15,9 @@
 
 #include <wx/platinfo.h>
 
+#include "Prefs.h"
+#include "CodeConversions.h"
+
 namespace audacity
 {
 namespace network_manager
@@ -60,6 +63,22 @@ void GetOSString (std::ostringstream& output, const wxPlatformInfo& platformInfo
 #endif
 }
 
+BoolSetting EnableSSLValidationPref { "/CURL/EnableSSLValidation", true };
+StringSetting ProxyStringPref { "/CURL/Proxy", "" };
+
+struct CurlConfig final : private PrefsListener
+{
+    std::string Proxy;
+    bool SSLValidation { true };
+
+    void UpdatePrefs() override
+    {
+       SSLValidation = EnableSSLValidationPref.Read();
+       Proxy = audacity::ToUTF8(ProxyStringPref.Read());
+    }
+};
+
+static CurlConfig gCurlConfig;
 }
 
 constexpr std::chrono::milliseconds CurlHandleManager::KEEP_ALIVE_IDLE;
@@ -104,7 +123,10 @@ CurlHandleManager::Handle::Handle(CurlHandleManager* owner, CURL* handle, Reques
 
     setOption (CURLOPT_NOSIGNAL, 1L);
 
-    enableSSLValidation();
+    if (gCurlConfig.SSLValidation)
+       enableSSLValidation();
+    else
+      disableSSLValidation();
 
     setOption (CURLOPT_ACCEPT_ENCODING, "");
 }
@@ -256,6 +278,8 @@ CurlHandleManager::CurlHandleManager ()
     ss << ")";
 
     mUserAgent = ss.str ();
+
+    mProxy = gCurlConfig.Proxy;
 }
 
 CurlHandleManager::~CurlHandleManager ()

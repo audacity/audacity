@@ -134,14 +134,10 @@ list( APPEND SOURCES
       LyricsWindow.h
       MenuCreator.cpp
       MenuCreator.h
-      MIDIPlay.cpp
-      MIDIPlay.h
       MixerBoard.cpp
       MixerBoard.h
       MovableControl.cpp
       MovableControl.h
-      NoteTrack.cpp
-      NoteTrack.h
       PitchName.cpp
       PitchName.h
       PluginRegistrationDialog.cpp
@@ -157,8 +153,6 @@ list( APPEND SOURCES
       ProjectFileManager.h
       ProjectManager.cpp
       ProjectManager.h
-      ProjectSelectionManager.cpp
-      ProjectSelectionManager.h
       ProjectSettings.cpp
       ProjectSettings.h
       ProjectTempoListener.cpp
@@ -181,8 +175,6 @@ list( APPEND SOURCES
       SelectUtilities.h
       ShuttleGetDefinition.cpp
       ShuttleGetDefinition.h
-      Snap.cpp
-      Snap.h
       SoundActivatedRecord.cpp
       SoundActivatedRecord.h
       SpectralDataDialog.cpp
@@ -675,12 +667,10 @@ list( APPEND SOURCES
       toolbars/ScrubbingToolBar.h
       toolbars/SelectionBar.cpp
       toolbars/SelectionBar.h
-      toolbars/SelectionBarListener.h
       toolbars/SnappingToolBar.cpp
       toolbars/SnappingToolBar.h
       toolbars/SpectralSelectionBar.cpp
       toolbars/SpectralSelectionBar.h
-      toolbars/SpectralSelectionBarListener.h
       toolbars/TimeSignatureToolBar.cpp
       toolbars/TimeSignatureToolBar.h
       toolbars/TimeToolBar.cpp
@@ -719,6 +709,8 @@ list( APPEND SOURCES
       tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h
       tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackControls.h
+      tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.cpp
+      tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.h
       tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackShifter.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -1046,8 +1038,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
-      $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_SBSMS}>:libsbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
@@ -1345,6 +1335,7 @@ set( AUDACITY_LIBRARIES
    lib-export-ui-interface
    lib-file-formats-interface
    lib-menus-interface
+   lib-note-track-interface
 )
 
 if (USE_VST)

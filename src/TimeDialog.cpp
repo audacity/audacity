@@ -28,7 +28,7 @@ END_EVENT_TABLE()
 
 TimeDialog::TimeDialog(wxWindow *parent,
                        const TranslatableString &title,
-                       const NumericFormatSymbol &format,
+                       const NumericFormatID &format,
                        const AudacityProject &project,
                        double time,
                        const TranslatableString &prompt)
@@ -96,7 +96,7 @@ const double TimeDialog::GetTimeValue()
    return mTime;
 }
 
-void TimeDialog::SetFormatString(const NumericFormatSymbol &formatString)
+void TimeDialog::SetFormatString(const NumericFormatID &formatString)
 {
    mFormat = formatString;
    TransferDataToWindow();

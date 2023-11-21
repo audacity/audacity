@@ -30,7 +30,6 @@ class wxSizeEvent;
 class wxStaticText;
 
 class AudacityProject;
-class SelectionBarListener;
 class NumericTextCtrl;
 
 extern IntSetting SelectionToolbarMode;
@@ -66,8 +65,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
    void SetTimes(double start, double end);
 
-   void SetSelectionFormat(const NumericFormatSymbol & format);
-   void SetListener(SelectionBarListener *l);
+   void SetSelectionFormat(const NumericFormatID & format);
    void RegenerateTooltips() override;
 
  private:
@@ -90,11 +88,12 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void ModifySelection(int driver, bool done = false);
    void SelectionModeUpdated();
 
-   void UpdateTimeControlsFormat(const NumericFormatSymbol& format);
+   void UpdateTimeControlsFormat(const NumericFormatID& format);
 
    void FitToTimeControls();
 
-   SelectionBarListener * mListener;
+   void OnFormatsChanged(struct ProjectNumericFormatsEvent);
+
    double mRate;
    double mStart, mEnd, mLength, mCenter;
 
@@ -107,7 +106,8 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    Observer::Subscription mFormatChangedToFitValueSubscription[2];
 
    wxString mLastValidText;
-   
+   const Observer::Subscription mFormatsSubscription;
+
  public:
 
    DECLARE_CLASS(SelectionBar)

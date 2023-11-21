@@ -27,7 +27,6 @@ class AUDACITY_DLL_API ImportExportPrefs final : public PrefsPanel
 {
  public:
    static EnumSetting< bool > LabelStyleSetting;
-   static EnumSetting< bool > AllegroStyleSetting;
 
    ImportExportPrefs(wxWindow * parent, wxWindowID winid);
    ~ImportExportPrefs();

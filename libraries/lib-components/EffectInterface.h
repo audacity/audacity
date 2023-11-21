@@ -76,9 +76,9 @@ using EffectFamilySymbol = ComponentInterfaceSymbol;
 class COMPONENTS_API EffectSettingsExtra final {
 public:
    static const RegistryPath &DurationKey();
-   const NumericFormatSymbol& GetDurationFormat() const
+   const NumericFormatID& GetDurationFormat() const
       { return mDurationFormat; }
-   void SetDurationFormat(const NumericFormatSymbol &durationFormat)
+   void SetDurationFormat(const NumericFormatID &durationFormat)
       { mDurationFormat = durationFormat; }
 
    //! @return value is not negative
@@ -88,7 +88,7 @@ public:
    bool GetActive() const { return mActive; }
    void SetActive(bool value) { mActive = value; }
 private:
-   NumericFormatSymbol mDurationFormat{};
+   NumericFormatID mDurationFormat{};
    double mDuration{}; //!< @invariant non-negative
    bool mActive{ true };
 };

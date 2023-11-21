@@ -27,12 +27,12 @@ class AUDACITY_DLL_API TimeDialog final : public wxDialogWrapper
 
    TimeDialog(wxWindow *parent,
               const TranslatableString &title,
-              const NumericFormatSymbol &format,
+              const NumericFormatID &format,
               const AudacityProject &project,
               double time,
               const TranslatableString &prompt = XO("Duration"));
 
-   void SetFormatString(const NumericFormatSymbol &formatString);
+   void SetFormatString(const NumericFormatID &formatString);
    void SetTimeValue(double newTime);
    const double GetTimeValue();
 
@@ -47,7 +47,7 @@ class AUDACITY_DLL_API TimeDialog final : public wxDialogWrapper
  private:
 
    TranslatableString mPrompt;
-   NumericFormatSymbol mFormat;
+   NumericFormatID mFormat;
    const AudacityProject &mProject;
    double mTime;
 

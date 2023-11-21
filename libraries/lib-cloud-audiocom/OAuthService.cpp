@@ -53,13 +53,16 @@ void WriteCommonFields(
       document.GetAllocator());
 
    const auto clientID = GetServiceConfig().GetOAuthClientID();
+   const auto clientSecret = GetServiceConfig().GetOAuthClientSecret();
 
    document.AddMember(
-      "client_id", StringRef(clientID.data(), clientID.size()),
+      "client_id",
+      Value(clientID.data(), clientID.size(), document.GetAllocator()),
       document.GetAllocator());
 
    document.AddMember(
-      "client_secret", StringRef("shKqnY2sLTfRK7hztwzNEVxnmhJfOy1i"),
+      "client_secret",
+      Value(clientSecret.data(), clientSecret.size(), document.GetAllocator()),
       document.GetAllocator());
 
    document.AddMember(

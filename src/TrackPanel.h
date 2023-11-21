@@ -195,6 +195,7 @@ protected:
       , mRealtimeEffectManagerSubscription
       , mSyncLockSubscription
       , mProjectRulerInvalidatedSubscription
+      , mSelectionSubscription
    ;
 
    TrackPanelListener *mListener;

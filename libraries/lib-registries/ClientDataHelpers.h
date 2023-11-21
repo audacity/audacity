@@ -39,6 +39,7 @@ enum CopyingPolicy {
 // forward declarations
 struct Base;
 template<
+   typename Covariant,
    template<typename> class Owner
 > struct Cloneable;
 

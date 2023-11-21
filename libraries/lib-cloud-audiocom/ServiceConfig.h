@@ -12,7 +12,6 @@
 
 #include <chrono>
 #include <string>
-#include <string_view>
 #include <vector>
 #include <rapidjson/fwd.h>
 
@@ -23,14 +22,17 @@ namespace cloud::audiocom
 class CLOUD_AUDIOCOM_API ServiceConfig final
 {
 public:
+   ServiceConfig();
    //! API endpoint
-   std::string_view GetAPIEndpoint() const;
-   //! Page to open in browser to initiate OAuth 
-   std::string_view GetOAuthLoginPage() const;
+   std::string GetAPIEndpoint() const;
+   //! Page to open in browser to initiate OAuth
+   std::string GetOAuthLoginPage() const;
    //! OAuth2 client ID
-   std::string_view GetOAuthClientID() const;
+   std::string GetOAuthClientID() const;
+   //! OAuth2 client secret
+   std::string GetOAuthClientSecret() const;
    //! OAuth2 redirect URL. Only used to satisfy the protocol
-   std::string_view GetOAuthRedirectURL() const;
+   std::string GetOAuthRedirectURL() const;
    //! Helper to construct the full URLs for the API
    std::string GetAPIUrl(std::string_view apiURI) const;
    //! Helper to construct the page URL for the anonymous upload last stage
@@ -43,10 +45,21 @@ public:
    std::vector<std::string> GetPreferredAudioFormats() const;
    //! Export configuration suitable for the mime type provided
    rapidjson::Document GetExportConfig(const std::string& exporterName) const;
-   //! Return the mime type server should store the file. This is a requirement from audiocom
+   //! Return the mime type server should store the file. This is a requirement
+   //! from audiocom
    std::string GetDownloadMime() const;
    //! Returns the preferred language
    std::string GetAcceptLanguageValue() const;
+
+private:
+   std::string mApiEndpoint;
+   std::string mOAuthClientID;
+   std::string mOAuthClientSecret;
+   std::string mOAuthRedirectURL;
+   std::string mOAuthLoginPage;
+   std::string mFinishUploadPage;
+   std::string mAudioURL;
+   std::string mPreferredMimeType;
 };
 
 //! Returns the instance of the ServiceConfig

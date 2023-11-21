@@ -52,7 +52,7 @@ struct SnapResults {
    bool Snapped() const { return snappedPoint || snappedTime; }
 };
 
-class AUDACITY_DLL_API SnapManager
+class SNAPPING_API SnapManager
 {
 public:
    //! Construct only for specified candidate points
@@ -80,9 +80,6 @@ public:
    SnapResults Snap(Track *currentTrack,
              double t,
              bool rightEdge);
-   
-   // The two coordinates need not be ordered:
-   static void Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 );
 
 private:
 
@@ -111,7 +108,7 @@ private:
 
    Identifier mSnapTo {};
    double mRate{ 0.0 };
-   NumericFormatSymbol mFormat{};
+   NumericFormatID mFormat{};
 };
 
 #endif

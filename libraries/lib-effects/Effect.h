@@ -89,7 +89,8 @@ class EFFECTS_API Effect /* not final */
    // EffectPlugin implementation
 
    const EffectSettingsManager& GetDefinition() const override;
-   virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
+   // time format in Selection toolbar
+   virtual NumericFormatID GetSelectionFormat() /* not override? */;
 
    bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
