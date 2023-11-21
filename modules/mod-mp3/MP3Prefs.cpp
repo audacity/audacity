@@ -12,8 +12,7 @@
 #include "ExportMP3.h"
 #include "Internat.h"
 #include "ShuttleGui.h"
-#include "prefs/LibraryPrefs.h"
-#include "HelpSystem.h"
+#include "LibraryPrefs.h"
 #include "ReadOnlyText.h"
 
 namespace {

@@ -12,7 +12,7 @@
 #include "../FFmpeg.h"
 #include "Internat.h"
 #include "ShuttleGui.h"
-#include "prefs/LibraryPrefs.h"
+#include "LibraryPrefs.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 #include "ReadOnlyText.h"
