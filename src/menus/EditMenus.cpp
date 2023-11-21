@@ -3,7 +3,7 @@
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../MenuCreator.h"
-#include "../NoteTrack.h"
+#include "NoteTrack.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"

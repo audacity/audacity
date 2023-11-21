@@ -20,6 +20,7 @@
 
 #include <wx/defs.h>
 
+#include "NoteTrack.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
 
@@ -73,22 +74,6 @@ EnumSetting< bool > ImportExportPrefs::LabelStyleSetting{
    },
 };
 
-EnumSetting< bool > ImportExportPrefs::AllegroStyleSetting{
-   wxT("/FileFormats/AllegroStyleChoice"),
-   {
-      EnumValueSymbol{ wxT("Seconds"), XXO("&Seconds") },
-      /* i18n-hint: The music theory "beat" */
-      EnumValueSymbol{ wxT("Beats"), XXO("&Beats") },
-   },
-   0, // true
-
-   // for migrating old preferences:
-   {
-      true, false,
-   },
-   wxT("/FileFormats/AllegroStyle"),
-};
-
 void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -118,7 +103,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       // on the Mac, VoiceOver will announce as radio buttons.
       S.StartPanel();
       {
-         S.StartRadioButtonGroup(ImportExportPrefs::AllegroStyleSetting);
+         S.StartRadioButtonGroup(NoteTrack::AllegroStyleSetting);
          {
             S.TieRadioButton();
             S.TieRadioButton();

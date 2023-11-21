@@ -59,6 +59,7 @@ set( LIBRARIES
    lib-channel
    lib-stretching-sequence
    lib-menus
+   lib-note-track
 )
 
 if ( ${_OPT}has_networking )

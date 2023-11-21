@@ -11,13 +11,13 @@ Paul Licameli split from TrackPanel.cpp
 
 
 #ifdef USE_MIDI
-#include "../lib-src/header-substitutes/allegro.h"
+#include "WrapAllegro.h"
 
 #include "StretchHandle.h"
 
 #include "../../../ui/CommonTrackPanelCell.h"
 #include "../../../../HitTestResult.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"

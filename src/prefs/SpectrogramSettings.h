@@ -27,7 +27,7 @@ class WaveTrack;
 
 class AUDACITY_DLL_API SpectrogramSettings
    : public PrefsListener
-   , public ClientData::Cloneable< ClientData::UniquePtr >
+   , public ClientData::Cloneable<>
 {
    friend class SpectrumPrefs;
 public:
@@ -201,7 +201,7 @@ public:
 extern AUDACITY_DLL_API IntSetting SpectrumMaxFreq;
 
 class AUDACITY_DLL_API SpectrogramBounds
-   : public ClientData::Cloneable< ClientData::UniquePtr >
+   : public ClientData::Cloneable<>
 {
 public:
 

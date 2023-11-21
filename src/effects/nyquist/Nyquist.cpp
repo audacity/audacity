@@ -52,7 +52,7 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "../../LabelTrack.h"
-#include "../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "../../ShuttleGetDefinition.h"
 #include "../../prefs/GUIPrefs.h"
 #include "../../prefs/SpectrogramSettings.h"

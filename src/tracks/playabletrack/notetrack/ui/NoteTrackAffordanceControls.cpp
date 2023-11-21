@@ -17,14 +17,14 @@
 #include "../../../ui/ChannelView.h"
 #include "AllThemeResources.h"
 #include "AColor.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "ViewInfo.h"
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackPanelDrawingContext.h"
 
-#include "../lib-src/header-substitutes/allegro.h"
+#include "WrapAllegro.h"
 
 
 #include "ProjectHistory.h"

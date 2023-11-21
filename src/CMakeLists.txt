@@ -134,14 +134,10 @@ list( APPEND SOURCES
       LyricsWindow.h
       MenuCreator.cpp
       MenuCreator.h
-      MIDIPlay.cpp
-      MIDIPlay.h
       MixerBoard.cpp
       MixerBoard.h
       MovableControl.cpp
       MovableControl.h
-      NoteTrack.cpp
-      NoteTrack.h
       PitchName.cpp
       PitchName.h
       PluginRegistrationDialog.cpp
@@ -713,6 +709,8 @@ list( APPEND SOURCES
       tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h
       tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackControls.h
+      tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.cpp
+      tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.h
       tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackShifter.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -1040,8 +1038,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
-      $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_SBSMS}>:libsbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
@@ -1339,6 +1335,7 @@ set( AUDACITY_LIBRARIES
    lib-export-ui-interface
    lib-file-formats-interface
    lib-menus-interface
+   lib-note-track-interface
 )
 
 if (USE_VST)

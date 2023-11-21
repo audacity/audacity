@@ -14,7 +14,7 @@ Paul Licameli split from AudIOBase.h
 
 #include "AudioIOExt.h"
 #include <optional>
-#include "../lib-src/header-substitutes/allegro.h"
+#include "WrapAllegro.h"
 
 typedef void PmStream;
 typedef int32_t PmTimestamp;

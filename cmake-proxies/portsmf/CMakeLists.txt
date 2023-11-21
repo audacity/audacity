@@ -17,7 +17,7 @@ set( SOURCES
 
 set( INCLUDES
    PUBLIC
-      ${TARGET_ROOT}/include
+      ${TARGET_ROOT}
 )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
