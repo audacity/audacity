@@ -58,7 +58,7 @@ protected:
 public:
    struct CommandListEntry;
 
-   struct Factory : DefaultedGlobalHook<Factory,
+   struct MENUS_API Factory : DefaultedGlobalHook<Factory,
       Callable::SharedPtrFactory<CommandManager, AudacityProject &>::Function
    >{};
 
