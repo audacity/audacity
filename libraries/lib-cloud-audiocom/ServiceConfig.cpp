@@ -11,53 +11,138 @@
 #include "ServiceConfig.h"
 #include "Languages.h"
 
-#include <rapidjson/document.h>
+#include <cassert>
 #include <stdexcept>
+#include <string_view>
+
+#include <rapidjson/document.h>
+
+#include "Prefs.h"
+#include "CodeConversions.h"
+
+
 
 namespace cloud::audiocom
 {
-std::string_view ServiceConfig::GetAPIEndpoint() const
+namespace
 {
-   return "https://api.audio.com";
+StringSetting audioComApiEndpoint {
+   L"/CloudServices/AudioCom/ApiEndpoint",
+   L"https://api.audio.com"
+};
+
+StringSetting audioComOAuthClientID {
+   L"/CloudServices/AudioCom/OAuthClientID",
+   L"1741964426607541"
+};
+
+StringSetting audioComOAuthClientSecret {
+   L"/CloudServices/AudioCom/OAuthClientSecret",
+   L"shKqnY2sLTfRK7hztwzNEVxnmhJfOy1i"
+};
+
+StringSetting audioComOAuthRedirectURL {
+   L"/CloudServices/AudioCom/OAuthRedirectURL",
+   L"https://audio.com/auth/sign-in/success"
+};
+
+StringSetting audioComOAuthLoginPage {
+   L"/CloudServices/AudioCom/OAuthLoginPage",
+   L"https://audio.com/audacity/link?clientId={auth_client_id}"
+};
+
+StringSetting audioComFinishUploadPage {
+   L"/CloudServices/AudioCom/FinishUploadPage",
+   L"https://audio.com/audacity/upload?audioId={audio_id}&token={auth_token}&clientId={auth_client_id}"
+};
+
+StringSetting audioComAudioURL {
+   L"/CloudServices/AudioCom/AudioURL",
+   L"https://audio.com/{user_slug}/audio/{audio_slug}/edit"
+};
+
+StringSetting audioComAudioDownloadMimeType {
+   L"/CloudServices/AudioCom/DownloadMimeType",
+   L"audio/x-wav"
+};
+
+std::string Substitute(std::string pattern, std::initializer_list<std::pair<std::string_view, std::string_view>> substitutions)
+{
+   for(auto& [key, value] : substitutions)
+   {
+      auto pos = pattern.find(key);
+
+      if (pos > 0 && pos != std::string::npos)
+      {
+         // There is no need to check that pos + key.size() is valid, there
+         // will be a zero terminator in the worst case.
+         if (pattern[pos - 1] == '{' && pattern[pos + key.size()] == '}')
+            pattern.replace(pos - 1, key.size() + 2, value);
+      }
+   }
+
+   return std::move(pattern);
 }
 
-std::string_view ServiceConfig::GetOAuthLoginPage() const
-{
-   static const std::string loginPage =
-      std::string("https://audio.com/audacity/link?clientId=") +
-      std::string(GetOAuthClientID());
+} // namespace
 
-   return loginPage;
+ServiceConfig::ServiceConfig()
+{
+   mApiEndpoint = audacity::ToUTF8(audioComApiEndpoint.Read());
+   mOAuthClientID = audacity::ToUTF8(audioComOAuthClientID.Read());
+   mOAuthClientSecret = audacity::ToUTF8(audioComOAuthClientSecret.Read());
+   mOAuthRedirectURL = audacity::ToUTF8(audioComOAuthRedirectURL.Read());
+   mOAuthLoginPage = audacity::ToUTF8(audioComOAuthLoginPage.Read());
+   mFinishUploadPage = audacity::ToUTF8(audioComFinishUploadPage.Read());
+   mAudioURL = audacity::ToUTF8(audioComAudioURL.Read());
+   mPreferredMimeType = audacity::ToUTF8(audioComAudioDownloadMimeType.Read());
 }
 
-std::string_view ServiceConfig::GetOAuthClientID() const
+std::string ServiceConfig::GetAPIEndpoint() const
 {
-   return "1741964426607541";
+   return mApiEndpoint;
 }
 
-std::string_view ServiceConfig::GetOAuthRedirectURL() const
+std::string ServiceConfig::GetOAuthLoginPage() const
 {
-   //return "audacity://link";
-   return "https://audio.com/auth/sign-in/success";
+   return Substitute(
+      mOAuthLoginPage, { { "auth_client_id", GetOAuthClientID() } });
+}
+
+std::string ServiceConfig::GetOAuthClientID() const
+{
+   return mOAuthClientID;
+}
+
+std::string ServiceConfig::GetOAuthClientSecret() const
+{
+   return mOAuthClientSecret;
+}
+
+std::string ServiceConfig::GetOAuthRedirectURL() const
+{
+   return mOAuthRedirectURL;
 }
 
 std::string ServiceConfig::GetAPIUrl(std::string_view apiURI) const
 {
-   return std::string(GetAPIEndpoint()) + std::string(apiURI);
+   return mApiEndpoint + std::string(apiURI);
 }
 
 std::string ServiceConfig::GetFinishUploadPage(
    std::string_view audioID, std::string_view token) const
 {
-   return "https://audio.com/audacity/upload?audioId=" + std::string(audioID) +
-          "&token=" + std::string(token) +
-          "&clientId=" + std::string(GetOAuthClientID());
+   return Substitute(
+      mFinishUploadPage, { { "audio_id", audioID },
+                           { "auth_token", token },
+                           { "auth_client_id", mOAuthClientID } });
 }
 
 std::string ServiceConfig::GetAudioURL(
    std::string_view userSlug, std::string_view audioSlug) const
 {
-   return "https://audio.com/" + std::string(userSlug) + "/audio/" + std::string(audioSlug) + "/edit";
+   return Substitute(
+      mAudioURL, { { "user_slug", userSlug }, { "audio_slug", audioSlug } });
 }
 
 std::chrono::milliseconds ServiceConfig::GetProgressCallbackTimeout() const
@@ -99,7 +184,7 @@ rapidjson::Document ServiceConfig::GetExportConfig(const std::string& mimeType) 
 
 std::string ServiceConfig::GetDownloadMime() const
 {
-   return "audio/x-wav";
+   return mPreferredMimeType;
 }
 
 std::string ServiceConfig::GetAcceptLanguageValue() const
