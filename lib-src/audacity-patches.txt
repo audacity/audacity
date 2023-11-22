@@ -24,28 +24,6 @@ Patches: mac-asm-fixes.patch. Fixes build on OS X Intel 10.4 by creating and
             gcc (4.0)...not need after we upgrade past Xcode 3.2.6.
 Upstream version: 1.3.1
 
-libid3tag
----------
-MP3 tag manipulation library. Comes with libmad (below)
-arguments ([-Wall foreign]) added to AM_INIT_AUTOMAKE to avoid autoreconf
-failures
-arguments (--no-verify) removed from ltconfig execution to prevent configure
-failures
-Patches: libid3tag-srcdir.patch  Adds srcdir handling
-
-libmad
-------
-http://www.underbit.com/products/mad/
-MP3 decoding library
-Version in Audacity SVN: 0.15.1 (beta)
-Patches: libmad-mp2-out-of-spec.patch:	Import some forms of MP2 file that are
-theoretically out of spec but in practise work fine (msmeyer)
-osx-universal-build.patch: Makes build work on OS X for universal binary by
-using compiler-defined symbols for targets as well as hosts.
-autotools.patch:			Update to autotools to work with recent auto{conf,
-make}
-Upstream version: 0.15.1 (beta)
-
 libnyquist
 ----------
 Digital Audio scripting language, with our own library interface added to it
