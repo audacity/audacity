@@ -1012,8 +1012,13 @@ void ProjectFileManager::FixTracks(TrackList& tracks,
    const std::function<void(const TranslatableString&)>& onError,
    const std::function<void(const TranslatableString&)>& onUnlink)
 {
-   Track* unlinkedTrack {};
-   for (const auto t : tracks) {
+   // This is successively assigned the left member of each pair that
+   // becomes unlinked
+   Track::Holder unlinkedTrack;
+   // Beware iterator invalidation, because stereo channels get zipped,
+   // replacing WaveTracks
+   for (auto iter = tracks.begin(); iter != tracks.end();) {
+      auto t = (*iter++)->SharedPointer();
       const auto linkType = t->GetLinkType();
       // Note, the next function may have an important upgrading side effect,
       // and return no error; or it may find a real error and repair it, but
@@ -1022,14 +1027,27 @@ void ProjectFileManager::FixTracks(TrackList& tracks,
          onError(XO("A channel of a stereo track was missing."));
          unlinkedTrack = nullptr;
       }
-      if(unlinkedTrack != nullptr)
-      {
+      if (!unlinkedTrack) {
+         if (linkType != ChannelGroup::LinkType::None &&
+            t->GetLinkType() == ChannelGroup::LinkType::None) {
+            // The track became unlinked.
+            // It should NOT have been replaced with a "zip"
+            assert(t->GetOwner().get() == &tracks);
+            // Wait until LinkConsistencyFix is called on the second track
+            unlinkedTrack = t;
+            // Fix the iterator, which skipped the right channel before the
+            // unlinking
+            iter = tracks.Find(t.get());
+            ++iter;
+         }
+      }
+      else {
          //Not an elegant way to deal with stereo wave track linking
          //compatibility between versions
-         if(const auto left = dynamic_cast<WaveTrack*>(unlinkedTrack))
-         {
-            if(const auto right = dynamic_cast<WaveTrack*>(t))
-            {
+         if (const auto left = dynamic_cast<WaveTrack*>(unlinkedTrack.get())) {
+            if (const auto right = dynamic_cast<WaveTrack*>(t.get())) {
+               // As with the left, it should not have vanished from the list
+               assert(right->GetOwner().get() == &tracks);
                left->SetPan(-1.0f);
                right->SetPan(1.0f);
                RealtimeEffectList::Get(*left).Clear();
@@ -1046,13 +1064,6 @@ void ProjectFileManager::FixTracks(TrackList& tracks,
             }
          }
          unlinkedTrack = nullptr;
-      }
-
-      if(linkType != ChannelGroup::LinkType::None &&
-         t->GetLinkType() == ChannelGroup::LinkType::None)
-      {
-         //Wait when LinkConsistencyFix is called on the second track
-         unlinkedTrack = t;
       }
 
       if (const auto message = t->GetErrorOpening()) {

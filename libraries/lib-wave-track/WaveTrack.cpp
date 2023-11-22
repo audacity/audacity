@@ -1265,7 +1265,7 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
 
    auto err = !WritableSampleTrack::LinkConsistencyFix(doFix);
 
-   const auto linkType = GetLinkType();
+   auto linkType = GetLinkType();
    if (linkType != LinkType::None) {
       auto next = *TrackList::Channels(this).first.advance(1);
       if (next == nullptr) {
@@ -1283,15 +1283,16 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
          if (!AreAligned(SortedClipArray(), next->SortedClipArray()) ||
              !RateConsistencyCheck() || !FormatConsistencyCheck())
          {
-            SetLinkType(LinkType::None);
+            SetLinkType(linkType = LinkType::None);
          }
          else
          {
-            SetLinkType(LinkType::Aligned);
+            SetLinkType(linkType = LinkType::Aligned);
             //clean up zero clips only after alignment check has completed
             //this can't break alignment as there should be a "twin"
             //in the right channel which will also be removed, otherwise
-            //track will be unlinked
+            //track will be unlinked because AreAligned returned false
+            removeZeroClips(mClips);
             removeZeroClips(next->mClips);
          }
       }
@@ -1313,7 +1314,12 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
          if (next && next->mLegacyFormat != undefinedSample)
             WaveTrackData::Get(*next).SetSampleFormat(mLegacyFormat);
       }
-      removeZeroClips(mClips);
+      if (linkType == LinkType::None)
+         // Did not visit the other call to removeZeroClips, do it now
+         removeZeroClips(mClips);
+      else
+         // Make a real wide wave track from two deserialized narrow tracks
+         ZipClips();
    }
    return !err;
 }
@@ -4166,6 +4172,20 @@ bool WaveTrack::ClipsAreUnique() const
 {
    return mClips.size() ==
       std::set<WaveClipHolder>{ mClips.begin(), mClips.end() }.size();
+}
+
+void WaveTrack::ZipClips(bool really)
+{
+   const auto pOwner = GetOwner();
+   assert(GetOwner() && TrackList::Channels(this).size() == 2);
+
+   // TODO wide wave tracks -- really!
+   if (!really)
+      return;
+
+   // Don't visit this code yet but check that it compiles
+   auto newTracks = WideEmptyCopy();
+   pOwner->ReplaceOne(*this, std::move(*newTracks));
 }
 
 static auto TrackFactoryFactory = []( AudacityProject &project ) {

@@ -28,7 +28,7 @@ Paul Licameli split from WaveChannelVRulerControls.cpp
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 
-// These are doubles beacuse of the type of value in Label,
+// These are doubles because of the type of value in Label,
 // but for the purpose of labelling the linear dB waveform ruler,
 // these should always be integer numbers.
 using LinearDBValues = std::vector<double>;

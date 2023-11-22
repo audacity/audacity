@@ -1280,6 +1280,13 @@ private:
    //! Used only in assertions checking invariants
    bool ClipsAreUnique() const;
 
+   //! Convert deserialized channel-major storage to interval-major,
+   //! replacing two tracks with one in the owning TrackList
+   /*!
+    @pre `GetOwner() && NChannels() == 2`
+    */
+   void ZipClips(bool really = false);
+
    SampleBlockFactoryPtr mpFactory;
 
    wxCriticalSection mFlushCriticalSection;
