@@ -50,7 +50,6 @@ set( LIBRARIES
    lib-vst3
    lib-snapping
    lib-vst
-   lib-lv2
    lib-ladspa
    lib-audio-unit
    lib-playable-track
@@ -61,6 +60,10 @@ set( LIBRARIES
    lib-menus
    lib-note-track
 )
+
+if ( ${_OPT}use_lv2 )
+   list( APPEND LIBRARIES lib-lv2)
+endif()
 
 if ( ${_OPT}has_networking )
    list( APPEND LIBRARIES lib-network-manager)
