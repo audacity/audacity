@@ -1288,10 +1288,6 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
          else
          {
             SetLinkType(LinkType::Aligned);
-            // Be sure to lose any right channel group data that might
-            // have been made during during deserialization of the channel
-            // before joining it
-            next->DestroyGroupData();
             //clean up zero clips only after alignment check has completed
             //this can't break alignment as there should be a "twin"
             //in the right channel which will also be removed, otherwise
