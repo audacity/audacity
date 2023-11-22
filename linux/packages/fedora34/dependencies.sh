@@ -22,7 +22,6 @@ deps=(
    ladspa-devel
    lame-devel
    libid3tag-devel
-   libmad-devel
    taglib-devel
    twolame-devel
    libogg-devel
