@@ -3313,8 +3313,10 @@ void WaveTrack::WriteOneXML(const WaveChannel &channel, XMLWriter &xmlFile,
    xmlFile.WriteAttr(Pan_attr, static_cast<double>(track.GetPan()));
    xmlFile.WriteAttr(SampleFormat_attr, static_cast<long>(track.GetSampleFormat()));
 
-   // Other persistent data specified elsewhere
-   WaveTrackIORegistry::Get().CallWriters(track, xmlFile);
+   // Other persistent data specified elsewhere;
+   // NOT written redundantly any more
+   if (iChannel == 0)
+      WaveTrackIORegistry::Get().CallWriters(track, xmlFile);
 
    for (const auto &clip : channel.Intervals())
       clip->WriteXML(xmlFile);
