@@ -152,7 +152,7 @@ bool EffectRepair::ProcessOne(int count, WaveChannel &track,
    Floats buffer{ len };
    track.GetFloats(buffer.get(), start, len);
    InterpolateAudio(buffer.get(), len, repairStart, repairLen);
-   if (!track.Set((samplePtr)&buffer[repairStart], floatSample,
+   if (!track.SetFloats(&buffer[repairStart],
       start + repairStart, repairLen,
       // little repairs shouldn't force dither on rendering:
       narrowestSampleFormat

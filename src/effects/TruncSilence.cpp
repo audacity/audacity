@@ -491,7 +491,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
                // Write cross-faded data
                auto &buffer = buffers[iChannel];
                success = success &&
-               pChannel->Set((samplePtr)buffer.buf1.get(), floatSample, t1,
+               pChannel->SetFloats(buffer.buf1.get(), t1,
                   blendFrames,
                   // This effect mostly shifts samples to remove silences, and
                   // does only a little bit of floating point calculations to

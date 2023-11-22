@@ -183,6 +183,21 @@ public:
       */
    );
 
+   //! Random-access assignment of a range of samples
+   [[nodiscard]] bool SetFloats(const float *buffer,
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   )
+   {
+      return Set(reinterpret_cast<constSamplePtr>(buffer), floatSample,
+         start, len, effectiveFormat);
+   }
+
    bool AppendBuffer(constSamplePtr buffer, sampleFormat format, size_t len, unsigned stride, sampleFormat effectiveFormat);
 
    /*!
@@ -225,6 +240,7 @@ public:
    using IntervalHolder = std::shared_ptr<Interval>;
    using IntervalHolders = std::vector<IntervalHolder>;
    using IntervalConstHolder = std::shared_ptr<const Interval>;
+   using IntervalConstHolders = std::vector<IntervalConstHolder>;
 
    // Resolve ambiguous lookup
    using SampleTrack::GetFloats;
@@ -472,7 +488,13 @@ public:
    /*!
     @pre `IsLeader()`
     */
-   void Split(double t0, double t1) /* not override */;
+   void Split(double t0, double t1);
+
+   /*!
+    @pre `IsLeader()`
+    */
+   std::pair<IntervalHolder, IntervalHolder> SplitAt(double t);
+
    /*!
     May assume precondition: t0 <= t1
     @pre `IsLeader()`
@@ -872,10 +894,15 @@ public:
    int GetNumClips() const;
    int GetNumClips(double t0, double t1) const;
 
-   // Add all wave clips to the given array 'clips' and sort the array by
-   // clip start time. The array is emptied prior to adding the clips.
+   //! Return all WaveClips sorted by clip play start time.
    WaveClipPointers SortedClipArray();
+   //! Return all WaveClips sorted by clip play start time.
    WaveClipConstPointers SortedClipArray() const;
+
+   //! Return all (wide) WaveClips sorted by clip play start time.
+   IntervalHolders SortedIntervalArray();
+   //! Return all (wide) WaveClips sorted by clip play start time.
+   IntervalConstHolders SortedIntervalArray() const;
 
    //! Whether any clips have hidden audio
    /*!
@@ -942,11 +969,20 @@ public:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
-   //! Argument is in (0, 1)
-   //! @return true if processing should continue
-   using ProgressReport = std::function<bool(double)>;
-   bool Reverse(sampleCount start, sampleCount len,
-      const ProgressReport &report = {});
+   //! Random-access assignment of a range of samples
+   /*!
+    @param buffers a span of pointers of size `NChannels()`
+    @pre each of buffers is non-null
+    */
+   [[nodiscard]] bool SetFloats(const float *const *buffers,
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
@@ -979,6 +1015,13 @@ public:
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
       double GetPlayEndTime() const;
+
+      //! Real start time of the clip, quantized to raw sample rate (track's rate)
+      sampleCount GetPlayStartSample() const;
+
+      //! Real end time of the clip, quantized to raw sample rate (track's rate)
+      sampleCount GetPlayEndSample() const;
+
       bool IntersectsPlayRegion(double t0, double t1) const;
       bool WithinPlayRegion(double t) const;
 
@@ -1081,6 +1124,12 @@ public:
    auto Intervals() { return ChannelGroup::Intervals<Interval>(); }
    auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }
 
+   //! @pre `IsLeader()`
+   void InsertInterval(const IntervalHolder& interval);
+
+   //! @pre `IsLeader()`
+   void RemoveInterval(const IntervalHolder& interval);
+
    Track::Holder PasteInto(AudacityProject &project, TrackList &list)
       const override;
 
@@ -1123,22 +1172,13 @@ private:
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
       size_t iChannel, size_t nChannels);
-   static bool ReverseOne(WaveTrack &track,
-      sampleCount start, sampleCount len, const ProgressReport &report = {});
-   static bool ReverseOneClip(WaveTrack &track,
-      sampleCount start, sampleCount len, sampleCount originalStart,
-      sampleCount originalEnd, const ProgressReport &report = {});
-   void SplitAt(double t) /* not override */;
+   std::pair<WaveClipHolder, WaveClipHolder> SplitOneAt(double t);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
    bool MergeOneClipPair(int clipidx1, int clipidx2);
    void ApplyStretchRatioOnIntervals(
       const IntervalHolders& intervals,
       const ProgressReporter& reportProgress);
-   //! @pre `IsLeader()`
-   void InsertInterval(const IntervalHolder& interval);
-   //! @pre `IsLeader()`
-   void RemoveInterval(const IntervalHolder& interval);
    //! @pre `IsLeader()`
    //! @pre `oldOne->NChannels() == newOne->NChannels()`
    void

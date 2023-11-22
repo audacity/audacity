@@ -7,14 +7,14 @@
 
   Paul Licameli
 
-  @brief some convenient iterations over clips, needing only the public
- interface of WaveTrack
+  @brief Various operations on WaveTrack, needing only its public interface
 
 **********************************************************************/
 
 #include "Internat.h"
 #include "TranslatableString.h"
 
+class sampleCount;
 class WaveTrack;
 using ProgressReporter = std::function<void(double)>;
 
@@ -31,4 +31,11 @@ WAVE_TRACK_API void WithStretchRenderingProgress(
    std::function<void(const ProgressReporter&)> action,
    TranslatableString title = defaultStretchRenderingTitle,
    TranslatableString message = XO("Rendering Time-Stretched Audio"));
+
+//! Argument is in (0, 1)
+//! @return true if processing should continue
+using ProgressReport = std::function<bool(double)>;
+
+WAVE_TRACK_API bool Reverse(WaveTrack &track,
+   sampleCount start, sampleCount len, const ProgressReport &report = {});
 }

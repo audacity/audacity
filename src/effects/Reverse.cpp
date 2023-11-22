@@ -12,9 +12,6 @@
 \brief An Effect that reverses the selected audio.
 
 *//********************************************************************/
-
-
-
 #include "Reverse.h"
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
@@ -26,6 +23,7 @@
 #include "SyncLock.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 //
 // EffectReverse
@@ -90,7 +88,7 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
             auto end = track.TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!track.Reverse(start, len, progress))
+            if (!WaveTrackUtilities::Reverse(track, start, len, progress))
                bGoodResult = false;
          }
          count += track.NChannels();

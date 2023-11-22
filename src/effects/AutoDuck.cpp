@@ -503,7 +503,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveChannel &track,
          buf[ ( i - pos ).as_size_t() ] *= DB_TO_LINEAR(gain);
       }
 
-      if (!track.Set((samplePtr)buf.get(), floatSample, pos, len)) {
+      if (!track.SetFloats(buf.get(), pos, len)) {
          cancel = true;
          break;
       }

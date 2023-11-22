@@ -172,7 +172,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveChannel &track,
       // Processing succeeded. copy the newly-changed samples back
       // onto the track.
       if (mSecondPassDisabled || mPass != 0) {
-         if (!outTrack.Set((samplePtr)buffer1.get(), floatSample, s - samples1,
+         if (!outTrack.SetFloats(buffer1.get(), s - samples1,
             samples1))
             return false;
       }
@@ -214,7 +214,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveChannel &track,
    // Processing succeeded. copy the newly-changed samples back
    // onto the track.
    if (mSecondPassDisabled || mPass != 0) {
-      if (!outTrack.Set((samplePtr)buffer1.get(), floatSample, s - samples1,
+      if (!outTrack.SetFloats(buffer1.get(), s - samples1,
          samples1))
          return false;
    }
