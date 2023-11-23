@@ -2,7 +2,7 @@
 #include "ProjectHistory.h"
 #include "SyncLock.h"
 #include "TrackFocus.h"
-#include "../ProjectWindow.h"
+#include "Viewport.h"
 #include "UndoManager.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"
@@ -510,7 +510,7 @@ void DoSelectClip(AudacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackFocus = TrackFocus::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    std::vector<FoundClip> results;
    FindClips(project, selectedRegion.t0(),
@@ -523,7 +523,7 @@ void DoSelectClip(AudacityProject &project, bool next)
       double t1 = results[0].endTime;
       selectedRegion.setTimes(t0, t1);
       ProjectHistory::Get( project ).ModifyState(false);
-      window.ScrollIntoView(selectedRegion.t0());
+      viewport.ScrollIntoView(selectedRegion.t0());
 
       // create and send message to screen reader
       TranslatableString message;
@@ -561,7 +561,7 @@ void DoCursorClipBoundary
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackFocus = TrackFocus::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    std::vector<FoundClipBoundary> results;
    FindClipBoundaries(project, next ? selectedRegion.t1() :
@@ -573,7 +573,7 @@ void DoCursorClipBoundary
       double time = results[0].time;
       selectedRegion.setTimes(time, time);
       ProjectHistory::Get( project ).ModifyState(false);
-      window.ScrollIntoView(selectedRegion.t0());
+      viewport.ScrollIntoView(selectedRegion.t0());
 
       auto message = ClipBoundaryMessage(results);
       trackFocus.MessageForScreenReader(message);
@@ -635,7 +635,7 @@ void DoClipLeftOrRight
 (AudacityProject &project, bool right, bool keyUp )
 {
    auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    if (keyUp) {
       undoManager.StopConsolidating();
@@ -650,7 +650,7 @@ void DoClipLeftOrRight
 
    auto amount = DoClipMove(project, tracks, isSyncLocked, right);
 
-   window.ScrollIntoView(selectedRegion.t0());
+   viewport.ScrollIntoView(selectedRegion.t0());
 
    if (amount != 0.0) {
       auto message = right? XO("Moved clips to the right") :

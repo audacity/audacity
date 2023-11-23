@@ -25,7 +25,6 @@ cmake_options=(
     -Daudacity_use_sqlite=local # We prefer using the latest version of SQLite
     -Daudacity_use_ffmpeg=loaded
     -Daudacity_use_id3tag=system # This library has bugs, that are fixed in *local* version
-    -Daudacity_use_mad=system # This library has bugs, that are fixed in *local* version
     -Daudacity_use_nyquist=local # This library is not available
     -Daudacity_use_vamp=local # The dev package for this library is not available
     -Daudacity_use_ogg=system 

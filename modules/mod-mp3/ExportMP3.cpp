@@ -97,7 +97,9 @@
 #include "ExportPluginRegistry.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
-#include "ProjectWindow.h"
+#include "ProjectWindows.h"
+
+#include <wx/frame.h>
 
 //----------------------------------------------------------------------------
 // ExportMP3Options
@@ -1703,7 +1705,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
 
    int rate = lrint(sampleRate);
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
-   wxWindow *parent = ProjectWindow::Find( &project );
+   wxWindow *parent = FindProjectFrame(&project);
 #endif // DISABLE_DYNAMIC_LOADING_LAME
    const auto &tracks = TrackList::Get( project );
    auto& exporter = context.exporter;

@@ -78,14 +78,17 @@ void DoPrevTrack(
    auto &trackFocus = TrackFocus::Get(project);
    auto &tracks = TrackList::Get(project);
    auto &selectionState = SelectionState::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    const auto t = trackFocus.Get();
    if (!t) {
       // if there isn't one, focus on last
       const auto last = *tracks.rbegin();
       trackFocus.Set(last);
-      if (last)
-         last->EnsureVisible(true);
+      if (last) {
+         viewport.ShowTrack(*last);
+         projectHistory.ModifyState(false);
+      }
       return;
    }
    assert(t->IsLeader());
@@ -100,7 +103,7 @@ void DoPrevTrack(
          if (circularTrackNavigation)
             p = *tracks.rbegin();
          else {
-            t->EnsureVisible();
+            viewport.ShowTrack(*t);
             return;
          }
       }
@@ -112,29 +115,37 @@ void DoPrevTrack(
       if (tSelected && pSelected) {
          selectionState.SelectTrack(*t, false, false);
          trackFocus.Set(p);   // move focus to next track up
-         if (p)
-            p->EnsureVisible(true);
+         if (p) {
+            viewport.ShowTrack(*p);
+            projectHistory.ModifyState(false);
+         }
          return;
       }
       if (tSelected && !pSelected) {
          selectionState.SelectTrack(*p, true, false);
          trackFocus.Set(p);   // move focus to next track up
-         if (p)
-            p->EnsureVisible(true);
+         if (p) {
+            viewport.ShowTrack(*p);
+            projectHistory.ModifyState(false);
+         }
          return;
       }
       if (!tSelected && pSelected) {
          selectionState.SelectTrack(*p, false, false);
          trackFocus.Set(p);   // move focus to next track up
-         if (p)
-            p->EnsureVisible(true);
+         if (p) {
+            viewport.ShowTrack(*p);
+            projectHistory.ModifyState(false);
+         }
          return;
       }
       if (!tSelected && !pSelected) {
          selectionState.SelectTrack(*t, true, false);
          trackFocus.Set(p);   // move focus to next track up
-         if (p)
-            p->EnsureVisible(true);
+         if (p) {
+            viewport.ShowTrack(*p);
+            projectHistory.ModifyState(false);
+         }
          return;
       }
    }
@@ -147,18 +158,21 @@ void DoPrevTrack(
             auto range = tracks.Any();
             p = * range.rbegin(); // null if range is empty
             trackFocus.Set(p);   // Wrap to the last track
-            if (p)
-               p->EnsureVisible(true);
+            if (p) {
+               viewport.ShowTrack(*p);
+               projectHistory.ModifyState(false);
+            }
             return;
          }
          else {
-            t->EnsureVisible();
+            viewport.ShowTrack(*t);
             return;
          }
       }
       else {
          trackFocus.Set(p);   // move focus to next track up
-         p->EnsureVisible(true);
+         viewport.ShowTrack(*p);
+         projectHistory.ModifyState(false);
          return;
       }
    }
@@ -174,14 +188,17 @@ void DoNextTrack(
    auto &trackFocus = TrackFocus::Get(project);
    auto &tracks = TrackList::Get(project);
    auto &selectionState = SelectionState::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    const auto t = trackFocus.Get();
    if  (!t) {
       // if there isn't one, focus on first
       const auto first = *tracks.begin();
       trackFocus.Set(first);
-      if (first)
-         first->EnsureVisible(true);
+      if (first) {
+         viewport.ShowTrack(*first);
+         projectHistory.ModifyState(false);
+      }
       return;
    }
    assert(t->IsLeader());
@@ -194,7 +211,7 @@ void DoNextTrack(
          if (circularTrackNavigation)
             n = *tracks.begin();
          else {
-            t->EnsureVisible();
+            viewport.ShowTrack(*t);
             return;
          }
       }
@@ -206,29 +223,37 @@ void DoNextTrack(
       if (tSelected && nSelected) {
          selectionState.SelectTrack(*t, false, false);
          trackFocus.Set(n);   // move focus to next track down
-         if (n)
-            n->EnsureVisible(true);
+         if (n) {
+            viewport.ShowTrack(*n);
+            projectHistory.ModifyState(false);
+         }
          return;
       }
       if (tSelected && !nSelected) {
          selectionState.SelectTrack(*n, true, false);
          trackFocus.Set(n);   // move focus to next track down
-         if (n)
-            n->EnsureVisible(true);
+         if (n) {
+            viewport.ShowTrack(*n);
+            projectHistory.ModifyState(false);
+         }
          return;
       }
       if (!tSelected && nSelected) {
          selectionState.SelectTrack(*n, false, false);
          trackFocus.Set(n);   // move focus to next track down
-         if (n)
-            n->EnsureVisible(true);
+         if (n) {
+            viewport.ShowTrack(*n);
+            projectHistory.ModifyState(false);
+         }
          return;
       }
       if (!tSelected && !nSelected) {
          selectionState.SelectTrack(*t, true, false);
          trackFocus.Set(n);   // move focus to next track down
-         if (n)
-            n->EnsureVisible(true);
+         if (n) {
+            viewport.ShowTrack(*n);
+            projectHistory.ModifyState(false);
+         }
          return;
       }
    }
@@ -240,18 +265,21 @@ void DoNextTrack(
          if (circularTrackNavigation) {
             n = *tracks.begin();
             trackFocus.Set(n);   // Wrap to the first track
-            if (n)
-               n->EnsureVisible( true );
+            if (n) {
+               viewport.ShowTrack(*n);
+               projectHistory.ModifyState(false);
+            }
             return;
          }
          else {
-            t->EnsureVisible();
+            viewport.ShowTrack(*t);
             return;
          }
       }
       else {
          trackFocus.Set(n);   // move focus to next track down
-         n->EnsureVisible(true);
+         viewport.ShowTrack(*n);
+         projectHistory.ModifyState(false);
          return;
       }
    }
@@ -425,8 +453,10 @@ void OnCursorDown(const CommandContext &context)
 void OnFirstTrack(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &projectHistory = ProjectHistory::Get(project);
    auto &trackFocus = TrackFocus::Get( project );
    auto &tracks = TrackList::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    auto t = trackFocus.Get();
    if (!t)
@@ -435,15 +465,20 @@ void OnFirstTrack(const CommandContext &context)
    auto f = *tracks.begin();
    if (t != f)
       trackFocus.Set(f);
-   if (f)
-      f->EnsureVisible( t != f );
+   if (f) {
+      viewport.ShowTrack(*f);
+      if (t != f)
+         projectHistory.ModifyState(false);
+   }
 }
 
 void OnLastTrack(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &projectHistory = ProjectHistory::Get(project);
    auto &trackFocus = TrackFocus::Get( project );
    auto &tracks = TrackList::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    Track *t = trackFocus.Get();
    assert(t->IsLeader());
@@ -453,8 +488,11 @@ void OnLastTrack(const CommandContext &context)
    auto l = *tracks.rbegin();
    if (t != l)
       trackFocus.Set(l);
-   if (l)
-      l->EnsureVisible(t != l);
+   if (l) {
+      viewport.ShowTrack(*l);
+      if (t != l)
+         projectHistory.ModifyState(false);
+   }
 }
 
 void OnShiftUp(const CommandContext &context)
@@ -472,8 +510,10 @@ void OnShiftDown(const CommandContext &context)
 void OnToggle(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &projectHistory = ProjectHistory::Get(project);
    auto &trackFocus = TrackFocus::Get(project);
    auto &selectionState = SelectionState::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    Track *t;
 
@@ -482,7 +522,8 @@ void OnToggle(const CommandContext &context)
       return;
    assert(t->IsLeader()); // TrackFocus promises this
    selectionState.SelectTrack(*t, !t->GetSelected(), true);
-   t->EnsureVisible( true );
+   viewport.ShowTrack(*t);
+   projectHistory.ModifyState(false);
 
    trackFocus.UpdateAccessibility();
 

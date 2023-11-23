@@ -18,7 +18,7 @@
 #include <wx/dcmemory.h>
 #include <wx/clipbrd.h>
 
-#include "../../ProjectWindow.h"
+
 #include "../../RefreshCode.h"
 
 TextEditDelegate::~TextEditDelegate() = default;

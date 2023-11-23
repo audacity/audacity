@@ -16,9 +16,8 @@
 #include "FileNames.h"
 #include "Project.h"
 #include "ProjectFileManager.h"
-#include "ProjectWindow.h"
+#include "Viewport.h"
 #include "TrackPanel.h"
-#include "Import.h"
 #include "import/ImportMIDI.h"
 
 #if wxUSE_DRAG_AND_DROP
@@ -164,7 +163,7 @@ public:
          sortednames.Sort(FileNames::CompareNoCase);
 
          auto cleanup = finally( [&] {
-            ProjectWindow::Get( *mProject ).HandleResize(); // Adjust scrollers for NEW track sizes.
+            Viewport::Get(*mProject).HandleResize(); // Adjust scrollers for NEW track sizes.
          } );
 
          for (const auto &name : sortednames) {
@@ -176,8 +175,8 @@ public:
                ProjectFileManager::Get( *mProject ).Import(name);
          }
 
-         auto &window = ProjectWindow::Get( *mProject );
-         window.ZoomAfterImport(nullptr);
+         auto &viewport = Viewport::Get(*mProject);
+         viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
 
          return true;
       } );

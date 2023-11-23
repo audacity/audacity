@@ -136,6 +136,7 @@ list( APPEND SOURCES
       MenuCreator.h
       MixerBoard.cpp
       MixerBoard.h
+      MouseWheelHandler.cpp
       MovableControl.cpp
       MovableControl.h
       PitchName.cpp
@@ -215,7 +216,6 @@ list( APPEND SOURCES
       TrackPanelDrawable.cpp
       TrackPanelDrawable.h
       TrackPanelDrawingContext.h
-      TrackPanelListener.h
       TrackPanelMouseEvent.h
       TrackPanelResizeHandle.cpp
       TrackPanelResizeHandle.h
@@ -1328,7 +1328,6 @@ set( AUDACITY_LIBRARIES
    lib-effects-interface
    lib-wx-init-interface
    lib-time-track-interface
-   lib-snapping-interface
    lib-audio-io-interface
    lib-stretching-sequence-interface
    lib-import-export-interface
@@ -1336,6 +1335,7 @@ set( AUDACITY_LIBRARIES
    lib-file-formats-interface
    lib-menus-interface
    lib-note-track-interface
+   lib-viewport-interface
 )
 
 if (USE_VST)

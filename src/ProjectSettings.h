@@ -62,10 +62,6 @@ public:
    ProjectSettings( const ProjectSettings & ) = delete;
    ProjectSettings &operator=( const ProjectSettings & ) = delete;
 
-
-   bool GetTracksFitVerticallyZoomed() const { return mTracksFitVerticallyZoomed; } //lda
-   void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
-
    // Current tool
 
    void SetTool(int tool);
@@ -96,7 +92,6 @@ private:
    bool mbSmartSelection { false };
    bool mbOvertones { false };
    
-   bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mEmptyCanBeDirty;
    bool mShowSplashScreen;
 };

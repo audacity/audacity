@@ -38,7 +38,6 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectStatus.h"
-#include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
@@ -46,6 +45,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "HelpSystem.h"
 
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 
 class OldStyleCommandType;
@@ -725,12 +725,13 @@ void ScreenshotBigDialog::OnCaptureSomething(wxCommandEvent &  event)
 
 void ScreenshotBigDialog::TimeZoom(double seconds)
 {
-   auto &viewInfo = ViewInfo::Get( mContext.project );
-   auto &window = ProjectWindow::Get( mContext.project );
+   auto &project = mContext.project;
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &window = GetProjectFrame(project);
    int width, height;
    window.GetClientSize(&width, &height);
    viewInfo.SetZoom((0.75 * width) / seconds);
-   window.RedrawProject();
+   Viewport::Get(project).Redraw();
 }
 
 void ScreenshotBigDialog::OnOneSec(wxCommandEvent & WXUNUSED(event))
@@ -767,7 +768,8 @@ void ScreenshotBigDialog::SizeTracks(int h)
    // If there should be more-than-stereo tracks, this makes
    // each channel as high as for a stereo channel
 
-   auto &tracks = TrackList::Get( mContext.project );
+   auto &project = mContext.project;
+   auto &tracks = TrackList::Get(project);
    for (auto t : tracks.Any<WaveTrack>()) {
       auto channels = t->Channels();
       auto nChannels = channels.size();
@@ -775,19 +777,20 @@ void ScreenshotBigDialog::SizeTracks(int h)
       for (auto pChannel : channels)
          ChannelView::Get(*pChannel).SetExpandedHeight(height);
    }
-   ProjectWindow::Get( mContext.project ).RedrawProject();
+   Viewport::Get(project).Redraw();
 }
 
 void ScreenshotBigDialog::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   for (auto t : TrackList::Get(mContext.project).Any<WaveTrack>()) {
+   auto &project = mContext.project;
+   for (auto t : TrackList::Get(project).Any<WaveTrack>()) {
       for (auto pChannel : t->Channels()) {
          auto &view = ChannelView::Get(*pChannel);
          view.SetExpandedHeight(view.GetMinimizedHeight());
       }
    }
 
-   ProjectWindow::Get( mContext.project ).RedrawProject();
+   Viewport::Get(project).Redraw();
 }
 
 void ScreenshotBigDialog::OnMedTracks(wxCommandEvent & WXUNUSED(event))

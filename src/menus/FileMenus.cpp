@@ -9,13 +9,13 @@
 #include "ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindows.h"
-#include "../ProjectWindow.h"
 #include "Registry.h"
 #include "SelectFile.h"
 #include "../TagsEditor.h"
 #include "../SelectUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
 #include "RealtimeEffectList.h"
@@ -33,6 +33,7 @@
 
 #include <wx/app.h>
 #include <wx/menu.h>
+#include <wx/frame.h>
 
 #include "ExportPluginRegistry.h"
 #include "ProjectRate.h"
@@ -60,7 +61,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
             false);
          return;
       }
-      ExportAudioDialog dialog(&ProjectWindow::Get(project),
+      ExportAudioDialog dialog(&GetProjectFrame(project),
                                project,
                                project.GetProjectName(),
                                format);
@@ -140,7 +141,8 @@ void DoImport(const CommandContext &context, bool isRaw)
 {
    auto &project = context.project;
    auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
+   auto &window = GetProjectFrame(project);
 
    auto selectedFiles = ProjectFileManager::ShowOpenDialog(FileNames::Operation::Import);
    if (selectedFiles.size() == 0) {
@@ -158,8 +160,8 @@ void DoImport(const CommandContext &context, bool isRaw)
    auto cleanup = finally( [&] {
 
       Importer::SetLastOpenType({});
-      window.ZoomAfterImport(nullptr);
-      window.HandleResize(); // Adjust scrollers for NEW track sizes.
+      viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
+      viewport.HandleResize(); // Adjust scrollers for NEW track sizes.
    } );
 
    for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
@@ -239,7 +241,7 @@ void OnProjectReset(const CommandContext &context)
 void OnClose(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame(project);
    ProjectFileManager::Get( project ).SetMenuClose(true);
    window.Close();
 }
@@ -298,7 +300,7 @@ void OnExportLabels(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &window = GetProjectFrame( project );
+   auto &window = GetProjectFrame(project);
 
    /* i18n-hint: filename containing exported text from label tracks */
    wxString fName = _("labels.txt");
@@ -366,7 +368,8 @@ void OnImportLabels(const CommandContext &context)
    auto &project = context.project;
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
+   auto &window = GetProjectFrame(project);
 
    wxString fileName =
        SelectFile(FileNames::Operation::Open,
@@ -403,7 +406,7 @@ void OnImportLabels(const CommandContext &context)
          XO("Imported labels from '%s'").Format( fileName ),
             XO("Import Labels"));
 
-      window.ZoomAfterImport(nullptr);
+      viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
    }
 }
 

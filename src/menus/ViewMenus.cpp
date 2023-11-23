@@ -1,21 +1,19 @@
+#include "AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../MenuCreator.h"
-#include "PlayableTrack.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../tracks/ui/CommonTrackInfo.h"
+#include "Track.h"
 #include "../TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"
-#include "../tracks/ui/ChannelView.h"
-
 
 #include <wx/app.h>
 #include <wx/scrolbar.h>
@@ -28,11 +26,11 @@ namespace {
 double GetZoomOfSelection( const AudacityProject &project )
 {
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    const double lowerBound =
       std::max(viewInfo.selectedRegion.t0(),
-         window.ScrollingLowerBoundTime());
+         viewport.ScrollingLowerBoundTime());
    const double denom =
       viewInfo.selectedRegion.t1() - lowerBound;
    if (denom <= 0.0)
@@ -61,8 +59,8 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
    const double pixelsPerUnit = 5.0;
 
    double result = 1.0;
-   auto &window = ProjectWindow::Get( project );
-   double zoomToFit = window.GetZoomOfToFit();
+   auto &viewport = Viewport::Get(project);
+   double zoomToFit = viewport.GetZoomOfToFit();
    using namespace WaveChannelViewConstants;
    switch(preset) {
       default:
@@ -120,59 +118,27 @@ double GetZoomOfPreset( const AudacityProject &project, int preset )
 }
 
 namespace {
-void DoZoomFitV(AudacityProject &project)
-{
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &tracks = TrackList::Get( project );
-
-   // Only nonminimized audio tracks will be resized
-   // Assume all channels of the track have the same minimization state
-   auto range = tracks.Any<AudioTrack>()
-      - [](const Track *pTrack){
-         return ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized(); };
-   auto count = range.sum(&Track::NChannels);
-   if (count == 0)
-      return;
-
-   // Find total height to apportion
-   auto height = viewInfo.GetHeight();
-   height -= 28;
-   
-   // The height of minimized and non-audio tracks cannot be apportioned
-   height -=
-      tracks.Any().sum(ChannelView::GetChannelGroupHeight)
-         - range.sum(ChannelView::GetChannelGroupHeight);
-   
-   // Give each resized track the average of the remaining height
-   // Bug 2803: Cast count to int, because otherwise the result of 
-   // division will be unsigned too, and will be a very large number 
-   // if height was negative!
-   height = height / (int)count;
-   // Use max() so that we don't set a negative height when there is
-   // not enough room.
-   height = std::max( (int)CommonTrackInfo::MinimumTrackHeight(), height );
-
-   for (auto t : range)
-      for (auto pChannel : t->Channels())
-         ChannelView::Get(*pChannel).SetExpandedHeight(height);
-}
-}
-
-namespace ViewActions {
 
 // Menu handler functions
-
-struct Handler final
-   : CommandHandlerObject // MUST be the first base class!
-   , ClientData::Base
-{
 
 void OnZoomIn(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
-   window.ZoomInByFactor( 2.0 );
+   auto &viewport = Viewport::Get(project);
+
+   auto gAudioIO = AudioIO::Get();
+   // LLL: Handling positioning differently when audio is
+   // actively playing.  Don't do this if paused.
+   if (gAudioIO->IsStreamActive(
+         ProjectAudioIO::Get(project).GetAudioIOToken()) &&
+       !gAudioIO->IsPaused()){
+      viewport.ZoomBy(2.0);
+      viewport.ScrollIntoView(gAudioIO->GetStreamTime());
+   }
+   else
+      viewport.ZoomAboutSelection(2.0);
+
    trackPanel.Refresh(false);
 }
 
@@ -180,27 +146,25 @@ void OnZoomNormal(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   window.Zoom(ZoomInfo::GetDefaultZoom());
+   auto &viewport = Viewport::Get(project);
+   viewport.Zoom(ZoomInfo::GetDefaultZoom());
    trackPanel.Refresh(false);
 }
 
 void OnZoomOut(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   window.ZoomOutByFactor( 1 /2.0 );
+   auto &viewport = Viewport::Get(project);
+   viewport.ZoomAboutCenter(0.5);
 }
 
 void OnZoomSel(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
-
-   window.Zoom( GetZoomOfSelection( project ) );
-   window.TP_ScrollWindow(selectedRegion.t0());
+   auto &viewport = Viewport::Get(project);
+   viewport.Zoom(GetZoomOfSelection(project));
+   viewport.SetHorizontalThumb(selectedRegion.t0());
 }
 
 void OnZoomToggle(const CommandContext &context)
@@ -208,7 +172,7 @@ void OnZoomToggle(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
 //   const double origLeft = viewInfo.h;
 //   const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
@@ -220,28 +184,25 @@ void OnZoomToggle(const CommandContext &context)
    double ChosenZoom =
       fabs(log(Zoom1 / Z)) > fabs(log( Z / Zoom2)) ? Zoom1:Zoom2;
 
-   window.Zoom(ChosenZoom);
+   viewport.Zoom(ChosenZoom);
    trackPanel.Refresh(false);
 //   const double newWidth = GetScreenEndTime() - viewInfo.h;
 //   const double newh = origLeft + (origWidth - newWidth) / 2;
-//   TP_ScrollWindow(newh);
+//   SetHorizontalThumb(newh);
 }
 
 void OnZoomFit(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   window.DoZoomFit();
+   auto &viewport = Viewport::Get(project);
+   viewport.ZoomFitHorizontally();
 }
 
 void OnZoomFitV(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-
-   DoZoomFitV(project);
-
-   window.GetVerticalScrollBar().SetThumbPosition(0);
+   auto &viewport = Viewport::Get(project);
+   viewport.ZoomFitVertically();
    ProjectHistory::Get( project ).ModifyState(true);
 }
 
@@ -260,27 +221,15 @@ void OnAdvancedVZoom(const CommandContext &context)
 void OnCollapseAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   for (auto t : tracks)
-      for (auto pChannel : t->Channels())
-         ChannelView::Get(*pChannel).SetMinimized(true);
-
-   ProjectHistory::Get( project ).ModifyState(true);
+   Viewport::Get(project).CollapseAllTracks();
+   ProjectHistory::Get(project).ModifyState(true);
 }
 
 void OnExpandAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   for (auto t : tracks)
-      for (auto pChannel : t->Channels())
-         ChannelView::Get(*pChannel).SetMinimized(false);
-
-   ProjectHistory::Get( project ).ModifyState(true);
+   Viewport::Get(project).ExpandAllTracks();
+   ProjectHistory::Get(project).ModifyState(true);
 }
 
 void OnGoSelStart(const CommandContext &context)
@@ -288,13 +237,13 @@ void OnGoSelStart(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    if (selectedRegion.isPoint())
       return;
 
-   window.TP_ScrollWindow(
-      selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
+   viewport.SetHorizontalThumb(
+      selectedRegion.t0() - ((viewInfo.GetScreenEndTime() - viewInfo.hpos) / 2));
 }
 
 void OnGoSelEnd(const CommandContext &context)
@@ -302,13 +251,13 @@ void OnGoSelEnd(const CommandContext &context)
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    if (selectedRegion.isPoint())
       return;
 
-   window.TP_ScrollWindow(
-      selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.h) / 2));
+   viewport.SetHorizontalThumb(
+      selectedRegion.t1() - ((viewInfo.GetScreenEndTime() - viewInfo.hpos) / 2));
 }
 
 void OnShowExtraMenus(const CommandContext &context)
@@ -355,46 +304,9 @@ void OnShowNameOverlay(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
-// Not a menu item, but a listener for events
-void OnUndoPushed(UndoRedoMessage message)
-{
-   if (message.type == UndoRedoMessage::Pushed) {
-      const auto &settings = ProjectSettings::Get( mProject );
-      if (settings.GetTracksFitVerticallyZoomed())
-         DoZoomFitV( mProject );
-   }
-}
-
-Handler( AudacityProject &project )
-   : mProject{ project }
-{
-   mUndoSubscription = UndoManager::Get(mProject)
-      .Subscribe(*this, &Handler::OnUndoPushed);
-}
-
-Handler( const Handler & ) = delete;
-Handler &operator=( const Handler & ) = delete;
-
-Observer::Subscription mUndoSubscription;
-AudacityProject &mProject;
-
-}; // struct Handler
-
 } // namespace
 
-// Handler needs a back-reference to the project, so needs a factory registered
-// with AudacityProject.
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
-   []( AudacityProject &project ) {
-      return std::make_unique< ViewActions::Handler >( project ); } };
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
-   return project.AttachedObjects::Get< ViewActions::Handler >( key );
-};
-
 // Menu definitions
-
-#define FN(X) (& ViewActions::Handler :: X)
 
 // Under /MenuBar
 namespace {
@@ -402,45 +314,44 @@ using namespace MenuRegistry;
 auto ViewMenu()
 {
    static auto menu = std::shared_ptr{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XXO("&View"),
       Section( "Basic",
          Menu( wxT("Zoom"), XXO("&Zoom"),
             Section( "",
-               Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
+               Command( wxT("ZoomIn"), XXO("Zoom &In"), OnZoomIn,
                   ZoomInAvailableFlag(), wxT("Ctrl+1") ),
-               Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
+               Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), OnZoomNormal,
                   TracksExistFlag(), wxT("Ctrl+2") ),
-               Command( wxT("ZoomOut"), XXO("Zoom &Out"), FN(OnZoomOut),
+               Command( wxT("ZoomOut"), XXO("Zoom &Out"), OnZoomOut,
                   ZoomOutAvailableFlag(), wxT("Ctrl+3") ),
-               Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), FN(OnZoomSel),
+               Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), OnZoomSel,
                   TimeSelectedFlag(), wxT("Ctrl+E") ),
-               Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
+               Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), OnZoomToggle,
                   TracksExistFlag(), wxT("Shift+Z") )
             ),
             Section( "",
                Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
-                  FN(OnAdvancedVZoom), AlwaysEnabledFlag,
+                  OnAdvancedVZoom, AlwaysEnabledFlag,
                   Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
             )
          ),
 
          Menu( wxT("TrackSize"), XXO("T&rack Size"),
-            Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
+            Command( wxT("FitInWindow"), XXO("&Fit to Width"), OnZoomFit,
                TracksExistFlag(), wxT("Ctrl+F") ),
-            Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
+            Command( wxT("FitV"), XXO("Fit to &Height"), OnZoomFitV,
                TracksExistFlag(), wxT("Ctrl+Shift+F") ),
             Command( wxT("CollapseAllTracks"), XXO("&Collapse All Tracks"),
-               FN(OnCollapseAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+C") ),
+               OnCollapseAllTracks, TracksExistFlag(), wxT("Ctrl+Shift+C") ),
             Command( wxT("ExpandAllTracks"), XXO("E&xpand Collapsed Tracks"),
-               FN(OnExpandAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+X") )
+               OnExpandAllTracks, TracksExistFlag(), wxT("Ctrl+Shift+X") )
          ),
 
          Menu( wxT("SkipTo"), XXO("Sk&ip to"),
             Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
-               FN(OnGoSelStart), TimeSelectedFlag(),
+               OnGoSelStart, TimeSelectedFlag(),
                Options{ wxT("Ctrl+["), XO("Skip to Selection Start") } ),
-            Command( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
+            Command( wxT("SkipSelEnd"), XXO("Selection En&d"), OnGoSelEnd,
                TimeSelectedFlag(),
                Options{ wxT("Ctrl+]"), XO("Skip to Selection End") } )
          )
@@ -450,16 +361,16 @@ auto ViewMenu()
 
       Section( "Other",
          Command( wxT("ShowExtraMenus"), XXO("Enable &Extra Menus"),
-            FN(OnShowExtraMenus), AlwaysEnabledFlag,
+            OnShowExtraMenus, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
          Command( wxT("ShowTrackNameInWaveform"), XXO("Show Track &Name as overlay"),
-            FN(OnShowNameOverlay), AlwaysEnabledFlag,
+            OnShowNameOverlay, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowTrackNameInWaveform"), false ) ),
          Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
-            FN(OnShowClipping), AlwaysEnabledFlag,
+            OnShowClipping, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
       )
-   ) ) };
+   ) };
    return menu;
 }
 

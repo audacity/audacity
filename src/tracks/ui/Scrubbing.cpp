@@ -69,7 +69,7 @@ namespace {
       // and the extremes to the maximum scrub speed.
 
       auto partScreen = screen * TracksPrefs::GetPinnedHeadPositionPreference();
-      const double origin = viewInfo.h + partScreen;
+      const double origin = viewInfo.hpos + partScreen;
       if (timeAtMouse >= origin)
          partScreen = screen - partScreen;
 
@@ -119,7 +119,7 @@ namespace {
 
       // Width of visible track area, in time terms:
       auto partScreen = screen * TracksPrefs::GetPinnedHeadPositionPreference();
-      const double origin = viewInfo.h + partScreen;
+      const double origin = viewInfo.hpos + partScreen;
       if (timeAtMouse >= origin)
          partScreen = screen - partScreen;
 
@@ -831,7 +831,7 @@ double Scrubber::FindScrubSpeed(bool seeking, double time) const
 {
    auto &viewInfo = ViewInfo::Get( *mProject );
    const double screen =
-      viewInfo.GetScreenEndTime() - viewInfo.h;
+      viewInfo.GetScreenEndTime() - viewInfo.hpos;
    return (seeking ? FindSeekSpeed : FindScrubbingSpeed)
       (viewInfo, mMaxSpeed, screen, time);
 }

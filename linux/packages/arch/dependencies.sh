@@ -18,7 +18,6 @@ deps=(
    flac
    lame
    twolame
-   libmad
    libsndfile
    jack
    lilv

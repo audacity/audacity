@@ -174,6 +174,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
       }
    }
    else {
+      auto &viewport = Viewport::Get(*mProject);
       auto &window = ProjectWindow::Get( *mProject );
       auto &scroller = window.GetPlaybackScroller();
       // Calculate the horizontal position of the indicator
@@ -189,7 +190,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
          ? 1.5 * std::chrono::duration<double>{kTimerInterval}.count()
          : 0;
       bool onScreen = playPos >= 0.0 &&
-         between_incexc(viewInfo.h - tolerance,
+         between_incexc(viewInfo.hpos - tolerance,
          playPos,
          viewInfo.GetScreenEndTime() + tolerance);
 
@@ -213,18 +214,18 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
             )
          {
             auto newPos = playPos;
-            if (playPos < viewInfo.h) {
+            if (playPos < viewInfo.hpos) {
                // This is possible when scrubbing backwards.
                // We want to page leftward by (at least) a whole screen, not
                // just a little bit equal to the scrubbing poll interval
                // duration.
                newPos = viewInfo.OffsetTimeByPixels( newPos, -width );
-               newPos = std::max( newPos, window.ScrollingLowerBoundTime() );
+               newPos = std::max(newPos, viewport.ScrollingLowerBoundTime());
             }
-            window.TP_ScrollWindow(newPos);
+            viewport.SetHorizontalThumb(newPos);
             // Might yet be off screen, check it
             onScreen = playPos >= 0.0 &&
-            between_incexc(viewInfo.h,
+            between_incexc(viewInfo.hpos,
                            playPos,
                            viewInfo.GetScreenEndTime());
          }
@@ -233,7 +234,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
       // Always update scrollbars even if not scrolling the window. This is
       // important when NEW audio is recorded, because this can change the
       // length of the project and therefore the appearance of the scrollbar.
-      window.TP_RedrawScrollbars();
+      viewport.UpdateScrollbarsForTracks();
 
       if (onScreen)
          mNewIndicatorX =

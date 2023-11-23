@@ -28,7 +28,6 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "FileNames.h"

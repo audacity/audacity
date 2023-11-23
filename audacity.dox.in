@@ -2071,7 +2071,6 @@ PREDEFINED             = AUDACITY_DLL_API \
                          USE_AUDIO_UNITS \
                          USE_MIDI=1 \
                          USE_LIBVORBIS=1 \
-                         USE_LIBMAD=1 \
                          USE_LIBFLAC=1 \
                          USE_SBSMS=1 \
                          USE_GSTREAMER \

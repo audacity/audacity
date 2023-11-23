@@ -50,6 +50,7 @@
 #include "TrackPanel.h"
 #include "TrackUtilities.h"
 #include "UndoManager.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 
 #include "widgets/AButton.h"
@@ -794,7 +795,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 
    // Update the TrackPanel correspondingly.
    if (TracksBehaviorsSolo.ReadEnum() == SoloBehaviorSimple)
-      ProjectWindow::Get( *mProject ).RedrawProject();
+      Viewport::Get(*mProject).Redraw();
    else
       // Update only the changed track.
       TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
@@ -809,7 +810,7 @@ void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 
    // Update the TrackPanel correspondingly.
    // Bug 509: Must repaint all, as many tracks can change with one Solo change.
-   ProjectWindow::Get( *mProject ).RedrawProject();
+   Viewport::Get(*mProject).Redraw();
 }
 
 

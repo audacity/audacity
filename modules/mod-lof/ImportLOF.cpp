@@ -69,8 +69,7 @@
 
 *//*******************************************************************/
 
-
-
+#include <wx/frame.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
@@ -85,7 +84,7 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
-#include "ProjectWindow.h"
+#include "Viewport.h"
 #include "ProjectWindows.h"
 #include "ImportUtils.h"
 
@@ -558,13 +557,13 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
    if (callDurationFactor)
    {
       double longestDuration = TrackList::Get(*mProject).GetEndTime();
-      ProjectWindow::Get( *mProject ).ZoomBy(longestDuration / durationFactor);
+      Viewport::Get(*mProject).ZoomBy(longestDuration / durationFactor);
       callDurationFactor = false;
    }
 
    if (callScrollOffset)
    {
-      ProjectWindow::Get( *mProject ).TP_ScrollWindow(scrollOffset);
+      Viewport::Get(*mProject).SetHorizontalThumb(scrollOffset);
       callScrollOffset = false;
    }
 

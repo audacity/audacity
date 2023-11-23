@@ -47,7 +47,7 @@
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 #include "../VoiceKey.h"
-#include "../ProjectWindow.h"
+
 #endif
 
 IMPLEMENT_CLASS(TranscriptionToolBar, ToolBar);
@@ -616,7 +616,7 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT0( newpos );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
       SetButton(false, mButtons[TTB_StartOn]);
    }
@@ -649,7 +649,7 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT0( newpos );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
       SetButton(false, mButtons[TTB_StartOn]);
    }
@@ -684,7 +684,7 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT1( newpos );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
       SetButton(false, mButtons[TTB_EndOn]);
    }
@@ -720,7 +720,7 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT1( newpos );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
       SetButton(false, mButtons[TTB_EndOff]);
    }
@@ -760,7 +760,7 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setTimes(
          newstart.as_double() / rate, newend.as_double() /  rate );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
    }
 
@@ -797,7 +797,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setTimes(
          newstart.as_double() / rate, newend.as_double() / rate);
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
    }
 
@@ -979,7 +979,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
          start = newEnd;
 
          DoAddLabel(mProject, SelectedRegion(newStartPos, newEndPos));
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
       }
       SetButton(false, mButtons[TTB_AutomateSelection]);
    }

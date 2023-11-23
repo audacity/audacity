@@ -466,7 +466,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
 
    if (mProjectAttrs.haveh)
    {
-      viewInfo.h = mProjectAttrs.h;
+      viewInfo.hpos = mProjectAttrs.h;
    }
 
    if (mProjectAttrs.havezoom)

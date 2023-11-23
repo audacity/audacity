@@ -24,6 +24,7 @@
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
+#include <wx/frame.h>
 #include <wx/log.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
@@ -41,7 +42,7 @@
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
-#include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "SelectUtilities.h"
 #include "Track.h"
 #include "CommandManager.h"
@@ -50,6 +51,7 @@
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
+#include "Viewport.h"
 
 #include "AllThemeResources.h"
 
@@ -461,7 +463,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
          auto success = GuardedCall< bool >([&] {
             ProjectFileManager::Get(*project).Import(files[i]);
-            ProjectWindow::Get(*project).ZoomAfterImport(nullptr);
+            Viewport::Get(*project).ZoomFitHorizontallyAndShowTrack(nullptr);
             SelectUtilities::DoSelectAll(*project);
             if (!mMacroCommands.ApplyMacro(mCatalog))
                return false;
@@ -1383,12 +1385,11 @@ void MacrosWindow::UpdatePrefs()
 #include "CommonCommandFlags.h"
 #include "CommandContext.h"
 #include "effects/EffectManager.h"
-#include "ProjectWindows.h"
 namespace {
 
 AttachedWindows::RegisteredFactory sMacrosWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
+      auto &window = GetProjectFrame(parent);
       return safenew MacrosWindow(
          &window, parent, true
       );
@@ -1460,7 +1461,7 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame(project);
    //wxLogDebug( "Macro was: %s", context.parameter);
    ApplyMacroDialog dlg( &window, project );
    //const auto &Name = context.parameter;

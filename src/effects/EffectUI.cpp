@@ -26,11 +26,13 @@
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindowBase.h"
+#include "../ProjectWindows.h"
 #include "TrackFocus.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
 #include "Theme.h"
+#include "Viewport.h"
 #include "wxWidgetsWindowPlacement.h"
 
 static PluginID GetID(EffectPlugin &effect)
@@ -1131,9 +1133,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 
 #include "PluginManager.h"
 #include "ProjectRate.h"
-#include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "../TrackPanel.h"
 #include "WaveTrack.h"
 #include "CommandManager.h"
 
@@ -1148,12 +1148,12 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 {
    AudacityProject &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto rate = ProjectRate::Get(project).GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &commandManager = CommandManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
+   auto &window = GetProjectFrame(project);
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
 
@@ -1310,12 +1310,11 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    if (type == EffectTypeGenerate)
    {
       if (!anyTracks || (clean && selectedRegion.t0() == 0.0))
-         window.DoZoomFit();
-         //  trackPanel->Refresh(false);
+         viewport.ZoomFitHorizontally();
    }
 
-   // PRL:  RedrawProject explicitly because sometimes history push is skipped
-   window.RedrawProject();
+   // PRL:  Redraw explicitly because sometimes history push is skipped
+   viewport.Redraw();
 
    if (focus != nullptr && focus->GetParent()==parent) {
       focus->SetFocus();
@@ -1326,8 +1325,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    // Don't care what track type.  An analyser might just have added a
    // Label track and we want to see it.
    if (tracks.Size() > nTracksOriginally) {
-      // 0.0 is min scroll position, 1.0 is max scroll position.
-      trackPanel.VerticalScroll( 1.0 );
+      viewport.ScrollToBottom();
    }
    else {
       auto pTrack = *tracks.Selected().begin();
@@ -1335,7 +1333,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          pTrack = *tracks.begin();
       if (pTrack) {
          TrackFocus::Get(project).Set(pTrack);
-         pTrack->EnsureVisible();
+         Viewport::Get(project).ShowTrack(*pTrack);
       }
    }
 

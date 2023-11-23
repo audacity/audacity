@@ -10,7 +10,7 @@
 #include "../ProjectSettings.h"
 #include "PluginManager.h"
 #include "ProjectStatus.h"
-#include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "ShuttleGui.h"
 #include "SyncLock.h"
@@ -20,6 +20,7 @@
 #include "UndoManager.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
 #include "../effects/EffectManager.h"
@@ -50,7 +51,6 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
    auto rate = ProjectRate::Get(project).GetRate();
    auto defaultFormat = QualitySettings::SampleFormatChoice();
    auto &trackPanel = TrackPanel::Get(project);
-   auto &window = ProjectWindow::Get(project);
 
    auto trackRange = tracks.Selected<WaveTrack>();
    auto newTracks = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
@@ -131,14 +131,13 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
 
       trackPanel.SetFocus();
       TrackFocus::Get(project).Set(pNewTrack);
-      pNewTrack->EnsureVisible();
+      Viewport::Get(project).ShowTrack(*pNewTrack);
    }
 }
 
 void DoPanTracks(AudacityProject &project, float PanValue)
 {
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    // count selected wave tracks
    const auto range = tracks.Any< WaveTrack >();
@@ -182,7 +181,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    TranslatableString action, shortAction;
    double delta = 0.0;
@@ -290,7 +289,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
             newPos += (t->GetEndTime() - t->GetStartTime());
       }
       if (index == kAlignEndToEnd)
-         window.DoZoomFit();
+         viewport.ZoomFitHorizontally();
    }
 
    if (delta != 0.0) {
@@ -587,7 +586,8 @@ void OnResample(const CommandContext &context)
    auto projectRate = ProjectRate::Get(project).GetRate();
    auto &tracks = TrackList::Get(project);
    auto &undoManager = UndoManager::Get(project);
-   auto &window = ProjectWindow::Get(project);
+   auto &viewport = Viewport::Get(project);
+   auto &window = GetProjectFrame(project);
 
    int newRate;
 
@@ -680,7 +680,7 @@ void OnResample(const CommandContext &context)
    undoManager.StopConsolidating();
 
    // Need to reset
-   window.FinishAutoScroll();
+   viewport.DoScroll();
 }
 
 void OnRemoveTracks(const CommandContext &context)
@@ -693,7 +693,6 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    const auto solo = TracksBehaviorsSolo.ReadEnum();
    const auto soloSimple = (solo == SoloBehaviorSimple);

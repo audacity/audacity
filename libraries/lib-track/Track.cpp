@@ -89,13 +89,6 @@ void Track::SetSelected(bool s)
    }
 }
 
-void Track::EnsureVisible( bool modifyState )
-{
-   auto pList = mList.lock();
-   if (pList)
-      pList->EnsureVisibleEvent(SharedPointer(), modifyState);
-}
-
 TrackListHolder Track::Duplicate(bool shallowCopyAttachments) const
 {
    assert(IsLeader());
@@ -474,16 +467,6 @@ void TrackList::DataEvent(
          doQueueEvent(channel->shared_from_this());
    else
       doQueueEvent(pTrack);
-}
-
-void TrackList::EnsureVisibleEvent(
-   const std::shared_ptr<Track> &pTrack, bool modifyState )
-{
-   // Substitute leader track
-   const auto pLeader = *Find(pTrack.get());
-   QueueEvent({ TrackListEvent::TRACK_REQUEST_VISIBLE,
-      pLeader ? pLeader->SharedPointer() : nullptr,
-      static_cast<int>(modifyState) });
 }
 
 void TrackList::PermutationEvent(TrackNodePointer node)

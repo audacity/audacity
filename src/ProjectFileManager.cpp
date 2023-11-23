@@ -30,7 +30,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectTimeSignature.h"
-#include "ProjectWindow.h"
+#include "Viewport.h"
 #include "SelectFile.h"
 #include "SelectUtilities.h"
 #include "SelectionState.h"
@@ -974,7 +974,7 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
          if (FileNames::IsMidi(fileName)) {
             auto &project = chooser(false);
             // If this succeeds, indo history is incremented, and it also does
-            // ZoomAfterImport:
+            // ZoomFitHorizontallyAndShowTrack:
             if(DoImportMIDI(project, fileName))
                return &project;
             return nullptr;
@@ -986,7 +986,7 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
             // Undo history is incremented inside this:
             // Bug 2743: Don't zoom with lof.
             if (!fileName.AfterLast('.').IsSameAs(wxT("lof"), false))
-               ProjectWindow::Get(project).ZoomAfterImport(nullptr);
+               Viewport::Get(project).ZoomFitHorizontallyAndShowTrack(nullptr);
             return &project;
          }
          return nullptr;
@@ -1070,7 +1070,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get( project );
 
    auto results = ReadProjectFile( fileName );
    const bool bParseSuccess = results.parseSuccess;
@@ -1078,11 +1078,11 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const bool err = results.trackError;
 
    if (bParseSuccess && !err) {
-      window.mbInitializingScrollbar = true;
+      Viewport::Get(project).ReinitScrollbars();
 
       ProjectHistory::Get( project ).InitialState();
       TrackFocus::Get(project).Set(*tracks.begin());
-      window.HandleResize();
+      viewport.HandleResize();
       trackPanel.Refresh(false);
 
       // ? Old rationale in this comment no longer applies in 3.0.0, with no
@@ -1203,10 +1203,10 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
 
 #if defined(__WXGTK__)
    // See bug #1224
-   // The track panel hasn't we been fully created, so the DoZoomFit() will not give
+   // The track panel hasn't been fully created, so ZoomFitHorizontally() will not give
    // expected results due to a window width of zero.  Should be safe to yield here to
    // allow the creation to complete.  If this becomes a problem, it "might" be possible
-   // to queue a dummy event to trigger the DoZoomFit().
+   // to queue a dummy event to trigger ZoomFitHorizontally().
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif
 
