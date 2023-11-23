@@ -8,7 +8,7 @@
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "ProjectTimeSignature.h"
-#include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "SyncLock.h"
@@ -32,6 +32,9 @@
 #include "BasicUI.h"
 #include "Sequence.h"
 #include "UserException.h"
+#include "Viewport.h"
+
+#include <wx/frame.h>
 
 // private helper classes and functions
 namespace {
@@ -42,7 +45,7 @@ bool DoPasteText(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    // Paste into the active label (if any)
    for (auto pLabelTrack : tracks.Any<LabelTrack>()) {
@@ -60,7 +63,7 @@ bool DoPasteText(AudacityProject &project)
             // Make sure caret is in view
             int x;
             if (view.CalcCursorX( project, &x )) {
-               window.ScrollIntoView(x);
+               viewport.ScrollIntoView(x);
             }
 
             return true;
@@ -124,7 +127,6 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    assert(tracks.Selected().empty());
 
@@ -159,7 +161,7 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
 
    if (pFirstNewTrack) {
       TrackFocus::Get(project).Set(pFirstNewTrack);
-      pFirstNewTrack->EnsureVisible();
+      Viewport::Get(project).ShowTrack(*pFirstNewTrack);
    }
 }
 
@@ -178,7 +180,6 @@ void OnUndo(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    if (!ProjectHistory::Get( project ).UndoAvailable()) {
       AudacityMessageBox( XO("Nothing to undo") );
@@ -198,9 +199,8 @@ void OnUndo(const CommandContext &context)
    if (!t)
       t = *tracks.begin();
    TrackFocus::Get(project).Set(t);
-   if (t) {
-      t->EnsureVisible();
-   }
+   if (t)
+      Viewport::Get(project).ShowTrack(*t);
 }
 
 void OnRedo(const CommandContext &context)
@@ -209,7 +209,6 @@ void OnRedo(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    if (!ProjectHistory::Get( project ).RedoAvailable()) {
       AudacityMessageBox( XO("Nothing to redo") );
@@ -228,9 +227,8 @@ void OnRedo(const CommandContext &context)
    if (!t)
       t = *tracks.begin();
    TrackFocus::Get(project).Set(t);
-   if (t) {
-      t->EnsureVisible();
-   }
+   if (t)
+      Viewport::Get(project).ShowTrack(*t);
 }
 
 void OnCut(const CommandContext &context)
@@ -240,7 +238,6 @@ void OnCut(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &ruler = AdornedRulerPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    // This doesn't handle cutting labels, it handles
    // cutting the _text_ inside of labels, i.e. if you're
@@ -332,7 +329,6 @@ void OnDelete(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
 
    for (auto n : tracks) {
       if (!n->SupportsBasicEditing())
@@ -422,7 +418,7 @@ std::pair<double, double> FindSelection(const CommandContext &context)
 std::shared_ptr<const TrackList> FindSourceTracks(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get(project);
+   auto &window = GetProjectFrame(project);
    auto &tracks = TrackList::Get(project);
    const auto &clipboard = Clipboard::Get();
    auto discardTrimmed = false;
@@ -661,7 +657,7 @@ void OnPaste(const CommandContext &context)
 
       if (ff) {
          TrackFocus::Get(project).Set(ff);
-         ff->EnsureVisible();
+         Viewport::Get(project).ShowTrack(*ff);
       }
    }
 }
@@ -671,7 +667,6 @@ void OnDuplicate(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
 
    // This iteration is unusual because we add to the list inside the loop
    auto range = tracks.Selected();
@@ -700,7 +695,6 @@ void OnSplitCut(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
 
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
@@ -735,7 +729,6 @@ void OnSplitDelete(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
 
    tracks.Selected().Visit(
       [&](WaveTrack &wt) {
@@ -782,7 +775,6 @@ void OnTrim(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
 
    if (selectedRegion.isPoint())
       return;
@@ -868,7 +860,6 @@ void OnSplitNew(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
 
    // This iteration is unusual because we add to the list inside the loop
    auto range = tracks.Selected();
@@ -918,7 +909,6 @@ void OnJoin(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
    const auto selectedTracks = tracks.Selected<WaveTrack>();
    WaveTrackUtilities::WithStretchRenderingProgress(
       [&](const ProgressReporter& reportProgress) {
@@ -943,7 +933,6 @@ void OnDisjoin(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
 
    for (auto wt : tracks.Selected<WaveTrack>())
       wt->Disjoin(selectedRegion.t0(), selectedRegion.t1());
@@ -958,7 +947,7 @@ void OnPreferences(const CommandContext &context)
 {
    auto &project = context.project;
 
-   GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */, &project );
+   GlobalPrefsDialog dialog(&GetProjectFrame(project) /* parent */, &project );
 
    if( VetoDialogHook::Call( &dialog ) )
       return;

@@ -29,6 +29,7 @@
 #include "LabelTrack.h"
 #include "NoteTrack.h"
 #include "TimeTrack.h"
+#include "Viewport.h"
 
 TrackPanelAx::Adapter::~Adapter() = default;
 
@@ -59,13 +60,14 @@ void TrackPanelAx::Adapter::UpdateAccessibility()
 }
 
 
-TrackPanelAx::TrackPanelAx(
+TrackPanelAx::TrackPanelAx(std::weak_ptr<Viewport> wViewport,
    std::weak_ptr<TrackFocus> wFocus, RectangleFinder finder
 )  :
 #if wxUSE_ACCESSIBILITY
    // window pointer must be set after construction
      WindowAccessible(nullptr),
 #endif
+     mwViewport{ move(wViewport) },
      mwFocus{ move(wFocus) }
    , mFinder{ move(finder) }
 {
@@ -680,7 +682,9 @@ wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
       Track* t = pFocus->FindTrack(childId).get();
       if (t) {
          pFocus->SetFocus(t->SharedPointer());
-         t->EnsureVisible();
+         auto pViewport = mwViewport.lock();
+         if (pViewport)
+            pViewport->ShowTrack(*t);
       }
    }
    else

@@ -18,7 +18,7 @@
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectRate.h"
-#include "../ProjectWindow.h"
+#include "../ProjectWindowBase.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "FileNames.h"
@@ -660,7 +660,7 @@ namespace {
 // Contrast window attached to each project is built on demand by:
 AttachedWindows::RegisteredFactory sContrastDialogKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
+      auto &window = GetProjectFrame(parent);
       return safenew ContrastDialog(
          &window, -1, XO("Contrast Analysis (WCAG 2 compliance)"),
          wxPoint{ 150, 150 }

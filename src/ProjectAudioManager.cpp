@@ -29,7 +29,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
-#include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindows.h"
 #include "ScrubState.h"
@@ -37,6 +36,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "TransportUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "toolbars/ToolManager.h"
@@ -907,8 +907,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          auto newTracks = WaveTrackFactory::Get(*p).Create(recordingChannels);
          const auto first = *newTracks->begin();
          int trackCounter = 0;
-         const auto minimizeChannelView = recordingChannels > 2 &&
-            !ProjectSettings::Get(*p).GetTracksFitVerticallyZoomed();
+         const auto minimizeChannelView = recordingChannels > 2;
          for (auto newTrack : newTracks->Any<WaveTrack>()) {
             // Quantize bounds to the rate of the new track.
             if (newTrack == first) {
@@ -965,7 +964,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(project).Set(first);
          if (!trackList.empty())
-            (*trackList.rbegin())->EnsureVisible();
+            Viewport::Get(project).ShowTrack(**trackList.rbegin());
       }
 
       //Automated Input Level Adjustment Initialization

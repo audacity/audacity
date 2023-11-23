@@ -12,9 +12,10 @@ Paul Licameli split from TrackMenus.cpp
 #include "CommonCommandFlags.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
-#include "ProjectWindow.h"
+
 #include "SelectUtilities.h"
 #include "TrackFocus.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
 #include "MenuRegistry.h"
@@ -28,7 +29,6 @@ void OnNewWaveTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualitySettings::SampleFormatChoice();
 
@@ -45,7 +45,7 @@ void OnNewWaveTrack(const CommandContext &context)
       .PushState(XO("Created new audio track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(track.get());
-   track->EnsureVisible();
+   Viewport::Get(project).ShowTrack(*track);
 }
 
 void OnNewStereoTrack(const CommandContext &context)
@@ -53,7 +53,6 @@ void OnNewStereoTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualitySettings::SampleFormatChoice();
    auto rate = ProjectRate::Get(project).GetRate();
@@ -68,7 +67,7 @@ void OnNewStereoTrack(const CommandContext &context)
       .PushState(XO("Created new stereo audio track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(*tracks.rbegin());
-   (*tracks.rbegin())->EnsureVisible();
+   Viewport::Get(project).ShowTrack(**tracks.rbegin());
 }
 
 AttachedItem sAttachment{

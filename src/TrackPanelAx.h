@@ -21,6 +21,7 @@
 #include "WindowAccessible.h" // to inherit
 #endif
 
+class Viewport;
 class wxRect;
 class wxWindow;
 
@@ -48,10 +49,9 @@ public:
 
    using RectangleFinder = std::function< wxRect(Track&) >;
 
-   explicit TrackPanelAx(
+   TrackPanelAx(std::weak_ptr<Viewport> wViewport,
       std::weak_ptr<TrackFocus> wFocus, RectangleFinder finder);
    ~TrackPanelAx() override;
-
 
    // Called to signal changes to a track
    void Updated();
@@ -132,6 +132,7 @@ private:
    void EndChangeFocus(const std::shared_ptr<Track> &track) override;
    void UpdateAccessibility() override;
 
+   std::weak_ptr<Viewport> mwViewport;
    std::weak_ptr<TrackFocus> mwFocus;
 
 #if !wxUSE_ACCESSIBILITY

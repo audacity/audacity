@@ -22,15 +22,16 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
-#include "ProjectWindows.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "SelectUtilities.h"
 #include "TrackPanel.h"
 #include "TrackUtilities.h"
 #include "UndoManager.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "Import.h"
@@ -164,6 +165,7 @@ void InitProjectWindow( ProjectWindow &window )
    if (!pProject)
       return;
    auto &project = *pProject;
+   auto &viewport = Viewport::Get(project);
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -285,7 +287,7 @@ void InitProjectWindow( ProjectWindow &window )
    // MM: Give track panel the focus to ensure keyboard commands work
    trackPanel.SetFocus();
 
-   window.FixScrollbars();
+   viewport.UpdateScrollbarsForTracks();
    ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
 
    //
@@ -402,6 +404,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    const auto &settings = ProjectSettings::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
+   auto &viewport = Viewport::Get(project);
    auto &window = ProjectWindow::Get( project );
    auto gAudioIO = AudioIO::Get();
 
@@ -436,7 +439,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       ProjectAudioManager::Get( project ).Stop();
 
       projectAudioIO.SetAudioIOToken(0);
-      window.RedrawProject();
+      viewport.Redraw();
    }
    else if (gAudioIO->IsMonitoring()) {
       gAudioIO->StopStream();
@@ -723,8 +726,8 @@ AudacityProject *ProjectManager::OpenProject(
 
       auto &projectFileIO = ProjectFileIO::Get( *pProject );
       if( projectFileIO.IsRecovered() ) {
-         auto &window = ProjectWindow::Get( *pProject );
-         window.Zoom( window.GetZoomOfToFit() );
+         auto &viewport = Viewport::Get(*pProject);
+         viewport.Zoom(viewport.GetZoomOfToFit());
          // "Project was recovered" replaces "Create new project" in Undo History.
          auto &undoManager = UndoManager::Get( *pProject );
          undoManager.RemoveStates(0, 1);

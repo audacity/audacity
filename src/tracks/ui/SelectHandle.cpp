@@ -1108,14 +1108,14 @@ void SelectHandle::TimerHandler::OnTimer(Observer::Message)
 
    const auto project = mConnectedProject;
    const auto &trackPanel = TrackPanel::Get( *project );
-   auto &window = ProjectWindow::Get( *project );
+   auto &viewport = Viewport::Get(*project);
    if (mParent->mMostRecentX >= mParent->mRect.x + mParent->mRect.width) {
       mParent->mAutoScrolling = true;
-      window.TP_ScrollRight();
+      viewport.OnScrollRight();
    }
    else if (mParent->mMostRecentX < mParent->mRect.x) {
       mParent->mAutoScrolling = true;
-      window.TP_ScrollLeft();
+      viewport.OnScrollLeft();
    }
    else {
       // Bug1387:  enable autoscroll during drag, if the pointer is at either
@@ -1126,14 +1126,14 @@ void SelectHandle::TimerHandler::OnTimer(Observer::Message)
       trackPanel.ClientToScreen(&xx, &yy);
       if (xx == 0) {
          mParent->mAutoScrolling = true;
-         window.TP_ScrollLeft();
+         viewport.OnScrollLeft();
       }
       else {
          int width, height;
          ::wxDisplaySize(&width, &height);
          if (xx == width - 1) {
             mParent->mAutoScrolling = true;
-            window.TP_ScrollRight();
+            viewport.OnScrollRight();
          }
       }
    }
