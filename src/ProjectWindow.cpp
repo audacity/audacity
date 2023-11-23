@@ -1064,12 +1064,12 @@ int ProjectWindow::GetVerticalThumbPosition() const
 
 int ProjectWindow::GetVerticalThumbSize() const
 {
-   return mVsbar->GetThumbPosition();
+   return mVsbar->GetThumbSize();
 }
 
 int ProjectWindow::GetVerticalRange() const
 {
-   return mVsbar->GetThumbPosition();
+   return mVsbar->GetRange();
 }
 
 void ProjectWindow::SetVerticalThumbPosition(int viewStart)
