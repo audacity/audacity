@@ -85,9 +85,6 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Mixing down on export (&Custom FFmpeg or external program)"),
                     {wxT("/Warnings/MixUnknownChannels"),
                      true});
-      S.TieCheckBox(XXO("Missing file &name extension during export"),
-                    {wxT("/Warnings/MissingExtension"),
-                     true});
    }
    S.EndStatic();
    S.EndScroller();
