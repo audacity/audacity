@@ -462,7 +462,6 @@ public:
 
    std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
 
-   bool CheckFileName(wxFileName &filename, int format) const override;
 };
 
 int ExportCL::GetFormatCount() const
@@ -855,21 +854,6 @@ std::vector<char> CLExportProcessor::GetMetaChunk(const Tags *tags)
 #endif
 
    return buffer;
-}
-
-bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format)) const
-{
-   ExtendPath ep;
-
-   if (filename.GetExt().empty()) {
-      if (ShowWarningDialog(NULL,
-                            wxT("MissingExtension"),
-                            XO("You've specified a file name without an extension. Are you sure?"),
-                            true) == wxID_CANCEL) {
-         return false;
-      }
-   }
-   return true;
 }
 
 static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "CommandLine",
