@@ -317,7 +317,6 @@ auto ViewMenu()
    Menu( wxT("View"), XXO("&View"),
       Section( "Basic",
          Menu( wxT("Zoom"), XXO("&Zoom"),
-            Section( "",
                Command( wxT("ZoomIn"), XXO("Zoom &In"), OnZoomIn,
                   ZoomInAvailableFlag(), wxT("Ctrl+1") ),
                Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), OnZoomNormal,
@@ -328,12 +327,6 @@ auto ViewMenu()
                   TimeSelectedFlag(), wxT("Ctrl+E") ),
                Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), OnZoomToggle,
                   TracksExistFlag(), wxT("Shift+Z") )
-            ),
-            Section( "",
-               Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
-                  OnAdvancedVZoom, AlwaysEnabledFlag,
-                  Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
-            )
          ),
 
          Menu( wxT("TrackSize"), XXO("T&rack Size"),
