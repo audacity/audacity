@@ -297,17 +297,15 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   *(mMixerBoard->mImageSoloDisabled),
                   true); // toggle button
    mToggleButton_Solo->SetName(_("Solo"));
-   bool bSoloNone = (TracksBehaviorsSolo.ReadEnum() == SoloBehaviorNone);
-   mToggleButton_Solo->Show(!bSoloNone);
 
 
    // meter
-   ctrlPos.y += (bSoloNone ? 0 : MUTE_SOLO_HEIGHT) + kDoubleInset;
+   ctrlPos.y += MUTE_SOLO_HEIGHT + kDoubleInset;
    const int nMeterHeight =
       nGainSliderHeight -
       (MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH + kDoubleInset) -
       (PAN_HEIGHT + kDoubleInset) -
-      (MUTE_SOLO_HEIGHT + (bSoloNone ? 0 : MUTE_SOLO_HEIGHT) + kDoubleInset);
+      (MUTE_SOLO_HEIGHT + MUTE_SOLO_HEIGHT + kDoubleInset);
    ctrlSize.Set(kRightSideStackWidth, nMeterHeight);
 
    mMeter.Release();
@@ -396,14 +394,10 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
    mSlider_Velocity->SetSize(-1, nGainSliderHeight);
 #endif
 
-   bool bSoloNone = TracksBehaviorsSolo.ReadEnum() == SoloBehaviorNone;
-
-   mToggleButton_Solo->Show(!bSoloNone);
-
    const int nRequiredHeightAboveMeter =
       MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH + kDoubleInset +
       PAN_HEIGHT + kDoubleInset +
-      MUTE_SOLO_HEIGHT + (bSoloNone ? 0 : MUTE_SOLO_HEIGHT) + kDoubleInset;
+      MUTE_SOLO_HEIGHT + MUTE_SOLO_HEIGHT + kDoubleInset;
    const int nMeterY =
       kDoubleInset + // margin at top
       TRACK_NAME_HEIGHT + kDoubleInset +
