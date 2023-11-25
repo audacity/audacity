@@ -60,13 +60,13 @@ UIHandle::Result WaveformVZoomHandle::Drag
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    if (!pTrack)
       return Cancelled;
-   return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd);
+   return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd, false);
 }
 
 HitTestPreview WaveformVZoomHandle::Preview
 (const TrackPanelMouseState &st, AudacityProject *)
 {
-   return WaveChannelVZoomHandle::HitPreview(st.state);
+   return WaveChannelVZoomHandle::HitPreview(false);
 }
 
 UIHandle::Result WaveformVZoomHandle::Release
@@ -94,7 +94,7 @@ void WaveformVZoomHandle::Draw(
    if (!mpTrack.lock()) //? TrackList::Lock()
       return;
    return WaveChannelVZoomHandle::DoDraw(
-      context, rect, iPass, mZoomStart, mZoomEnd);
+      context, rect, iPass, mZoomStart, mZoomEnd, false);
 }
 
 wxRect WaveformVZoomHandle::DrawingArea(
@@ -129,11 +129,6 @@ void WaveformVZoomHandle::DoZoom(
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
 
-   bool bDragZoom = WaveChannelVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
-
-   // Possibly override the zoom kind.
-   if( bDragZoom )
-      ZoomKind = kZoomInByDrag;
 
    float top=2.0;
    float half=0.5;

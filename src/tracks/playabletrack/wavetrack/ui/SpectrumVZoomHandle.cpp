@@ -60,13 +60,13 @@ UIHandle::Result SpectrumVZoomHandle::Drag
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    if (!pTrack)
       return Cancelled;
-   return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd);
+   return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd, true);
 }
 
 HitTestPreview SpectrumVZoomHandle::Preview
 (const TrackPanelMouseState &st, AudacityProject *)
 {
-   return WaveChannelVZoomHandle::HitPreview(st.state);
+   return WaveChannelVZoomHandle::HitPreview(true);
 }
 
 UIHandle::Result SpectrumVZoomHandle::Release
@@ -94,7 +94,7 @@ void SpectrumVZoomHandle::Draw(
    if (!mpTrack.lock()) //? TrackList::Lock()
       return;
    return WaveChannelVZoomHandle::DoDraw(
-      context, rect, iPass, mZoomStart, mZoomEnd );
+      context, rect, iPass, mZoomStart, mZoomEnd, true );
 }
 
 wxRect SpectrumVZoomHandle::DrawingArea(
@@ -133,8 +133,7 @@ void SpectrumVZoomHandle::DoZoom(
    const bool spectrumLinear =
       (SpectrogramSettings::Get(*pTrack).scaleType == SpectrogramSettings::stLinear);
 
-
-   bool bDragZoom = WaveChannelVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
+   bool bDragZoom = WaveChannelVZoomHandle::IsDragZooming(zoomStart, zoomEnd, true);
    // Add 100 if spectral to separate the kinds of zoom.
    const int kSpectral = 100;
 
