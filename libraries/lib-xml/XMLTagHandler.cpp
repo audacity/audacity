@@ -88,17 +88,26 @@ bool XMLValueChecker::IsGoodPathString(const FilePath &str)
             (str.length() <= PLATFORM_MAX_PATH));
 }
 
-void XMLTagHandler::ReadXMLEndTag(const char *tag)
+XMLTagHandlerBase::XMLTagHandlerBase() = default;
+XMLTagHandlerBase::~XMLTagHandlerBase() = default;
+
+void XMLTagHandlerBase::HandleXMLEndTag(const std::string_view &tag)
+{}
+
+void XMLTagHandlerBase::HandleXMLContent(const std::string_view &content)
+{}
+
+void XMLTagHandlerBase::ReadXMLEndTag(const char *tag)
 {
-   HandleXMLEndTag(tag);
+   DoHandleXMLEndTag(tag);
 }
 
-void XMLTagHandler::ReadXMLContent(const char *s, int len)
+void XMLTagHandlerBase::ReadXMLContent(const char *s, int len)
 {
-   HandleXMLContent(std::string_view(s, len));
+   DoHandleXMLContent(std::string_view(s, len));
 }
 
-XMLTagHandler *XMLTagHandler::ReadXMLChild(const char *tag)
+XMLTagHandlerBase *XMLTagHandlerBase::ReadXMLChild(const char *tag)
 {
-   return HandleXMLChild(tag);
+   return DoHandleXMLChild(tag);
 }

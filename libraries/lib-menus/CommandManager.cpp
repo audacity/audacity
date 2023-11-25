@@ -1179,7 +1179,7 @@ void CommandManager::HandleXMLEndTag(const std::string_view& tag)
    */
 }
 
-XMLTagHandler *CommandManager::HandleXMLChild(const std::string_view&  WXUNUSED(tag))
+XMLTagHandlerBase *CommandManager::HandleXMLChild(const std::string_view& tag)
 {
    return this;
 }

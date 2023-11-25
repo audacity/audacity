@@ -69,7 +69,7 @@ class TIME_TRACK_API TimeTrack final
 
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
    void HandleXMLEndTag(const std::string_view& tag) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
+   XMLTagHandlerBase *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 
    // Lock and unlock the track: you must lock the track before

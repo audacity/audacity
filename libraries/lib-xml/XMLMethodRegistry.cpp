@@ -26,7 +26,7 @@ void XMLMethodRegistryBase::Register(
    mTagTable[ newtag ] = move( accessor );
 }
 
-XMLTagHandler *XMLMethodRegistryBase::CallObjectAccessor(
+XMLTagHandlerBase *XMLMethodRegistryBase::CallObjectAccessor(
    const std::string_view &tag, void *p )
 {
    const auto &table = mTagTable;

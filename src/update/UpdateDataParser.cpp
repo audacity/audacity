@@ -160,13 +160,10 @@ void UpdateDataParser::HandleXMLContent(const std::string_view& content)
     }
 }
 
-XMLTagHandler* UpdateDataParser::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase* UpdateDataParser::HandleXMLChild(const std::string_view& tag)
 {
     for (auto& xmlTag : mXmlTagNames)
-    {
         if (tag == xmlTag.second)
             return this;
-    }
-
-    return NULL;
+    return nullptr;
 }

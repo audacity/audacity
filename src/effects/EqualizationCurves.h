@@ -79,7 +79,7 @@ public:
 
    // XMLTagHandler callback methods for loading and saving
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
+   XMLTagHandlerBase *HandleXMLChild(const std::string_view& tag) override;
 
    void LoadCurves(const wxString &fileName = {}, bool append = false);
 

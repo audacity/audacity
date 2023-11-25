@@ -140,7 +140,7 @@ public:
       ( QuantizedTimeAndBeat t0, QuantizedTimeAndBeat t1, double newDur );
 
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
+   XMLTagHandlerBase *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 
    // channels are numbered as integers 0-15, visible channels

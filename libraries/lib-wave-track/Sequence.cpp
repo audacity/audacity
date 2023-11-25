@@ -981,13 +981,10 @@ void Sequence::HandleXMLEndTag(const std::string_view& tag)
    }
 }
 
-XMLTagHandler *Sequence::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *Sequence::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "waveblock")
-   {
       return this;
-   }
-
    return nullptr;
 }
 

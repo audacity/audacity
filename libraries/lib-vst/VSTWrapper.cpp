@@ -1655,34 +1655,19 @@ void VSTWrapper::HandleXMLContent(const std::string_view& content)
    }
 }
 
-XMLTagHandler *VSTWrapper::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *VSTWrapper::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "vstprogrampersistence")
-   {
       return this;
-   }
-
    if (tag == "effect")
-   {
       return this;
-   }
-
    if (tag == "program")
-   {
       return this;
-   }
-
    if (tag == "param")
-   {
       return this;
-   }
-
    if (tag == "chunk")
-   {
       return this;
-   }
-
-   return NULL;
+   return nullptr;
 }
 
 void VSTWrapper::ForEachParameter(ParameterVisitor visitor) const

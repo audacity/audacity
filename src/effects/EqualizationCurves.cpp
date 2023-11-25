@@ -429,24 +429,15 @@ bool EQCurveReader::HandleXMLTag(
 //
 // Return handler for recognized tags
 //
-XMLTagHandler *EQCurveReader::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *EQCurveReader::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "equalizationeffect")
-   {
       return this;
-   }
-
    if (tag == "curve")
-   {
       return this;
-   }
-
    if (tag == "point")
-   {
       return this;
-   }
-
-   return NULL;
+   return nullptr;
 }
 
 //

@@ -738,7 +738,7 @@ void RealtimeEffectState::HandleXMLEndTag(const std::string_view &tag)
    }
 }
 
-XMLTagHandler *RealtimeEffectState::HandleXMLChild(const std::string_view &tag)
+XMLTagHandlerBase *RealtimeEffectState::HandleXMLChild(const std::string_view &tag)
 {
    // Tag may be for the state, or the list of parameters, or for one parameter.
    // See the writing method below.  All are handled by this

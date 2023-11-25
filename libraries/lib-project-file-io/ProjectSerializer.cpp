@@ -221,7 +221,7 @@ public:
       if (mInTag)
          EmitStartTag();
 
-      if (XMLTagHandler* const handler = mHandlers.back())
+      if (const auto handler = mHandlers.back())
          handler->HandleXMLEndTag(name);
 
       mHandlers.pop_back();
@@ -252,7 +252,7 @@ public:
       if (mInTag)
          EmitStartTag();
 
-      if (XMLTagHandler* const handler = mHandlers.back())
+      if (const auto handler = mHandlers.back())
          handler->HandleXMLContent(CacheString(std::move(value)));
    }
 
@@ -284,13 +284,13 @@ private:
       }
       else
       {
-         if (XMLTagHandler* const handler = mHandlers.back())
+         if (const auto handler = mHandlers.back())
             mHandlers.push_back(handler->HandleXMLChild(mCurrentTagName));
          else
-            mHandlers.push_back(NULL);
+            mHandlers.push_back(nullptr);
       }
 
-      if (XMLTagHandler*& handler = mHandlers.back())
+      if (auto &handler = mHandlers.back())
       {
          if (!handler->HandleXMLTag(mCurrentTagName, mAttributes))
          {
@@ -312,9 +312,9 @@ private:
       return mStringsCache.back();
    }
 
-   XMLTagHandler* mBaseHandler;
+   XMLTagHandlerBase* mBaseHandler;
 
-   std::vector<XMLTagHandler*> mHandlers;
+   std::vector<XMLTagHandlerBase*> mHandlers;
 
    std::string_view mCurrentTagName;
 

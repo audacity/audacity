@@ -234,7 +234,7 @@ private:
 
    // XMLTagHandler callback methods
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
+   XMLTagHandlerBase *HandleXMLChild(const std::string_view& tag) override;
 
    void UpdatePrefs() override;
 

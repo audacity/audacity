@@ -331,12 +331,11 @@ bool Envelope::HandleXMLTag(const std::string_view& tag, const AttributesList& a
    return true;
 }
 
-XMLTagHandler *Envelope::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *Envelope::HandleXMLChild(const std::string_view& tag)
 {
    if (tag != "controlpoint")
-      return NULL;
-
-   mEnv.push_back( EnvPoint{} );
+      return nullptr;
+   mEnv.push_back(EnvPoint{});
    return &mEnv.back();
 }
 

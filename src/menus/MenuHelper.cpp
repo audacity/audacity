@@ -51,7 +51,7 @@ struct EffectsMenuGroupsHandler : XMLTagHandler
             effects.emplace_back(TranslatableString { *textContent, {} });
          textContent.reset();
       }
-      XMLTagHandler* HandleXMLChild(const std::string_view& tag) override
+      XMLTagHandlerBase* HandleXMLChild(const std::string_view& tag) override
       {
          if(tag == "Effect")
             return this;
@@ -76,7 +76,7 @@ struct EffectsMenuGroupsHandler : XMLTagHandler
             group.first = TranslatableString { *textContent, { } };
          textContent.reset();
       }
-      XMLTagHandler* HandleXMLChild(const std::string_view& tag) override
+      XMLTagHandlerBase* HandleXMLChild(const std::string_view& tag) override
       {
          if(tag == "Effects")
          {

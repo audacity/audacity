@@ -39,42 +39,55 @@ public:
 using Attribute = std::pair<std::string_view, XMLAttributeValueView>;
 using AttributesList = std::vector<Attribute>;
 
-class XML_API XMLTagHandler /* not final */ {
+class XML_API XMLTagHandlerBase /* not final */ {
  public:
-   XMLTagHandler(){};
-   virtual ~XMLTagHandler(){};
-   //
-   // Methods to override
-   //
+   XMLTagHandlerBase();
+   virtual ~XMLTagHandlerBase();
 
-   // This method will be called on your class if your class has
-   // been registered to handle this particular tag.  Parse the
-   // tag and the attribute-value pairs (null-terminated), and
-   // return true on success, and false on failure.  If you return
-   // false, you will not get any calls about children.
-   virtual bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) = 0;
+   //! Parse the tag and the attribute-value pairs (null-terminated), and
+   //! return true on success, and false on failure.
+   /*!
+    If you return
+    false, you will not get any calls about children.
+    */
+   virtual bool HandleXMLTag(
+      const std::string_view& tag, const AttributesList& attrs) = 0;
+   auto DoHandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
+      { return HandleXMLTag(tag, attrs); }
 
-   // This method will be called when a closing tag is encountered.
-   // It is optional to override this method.
-   virtual void HandleXMLEndTag(const std::string_view& WXUNUSED(tag)) {}
+   //! This method will be called when a closing tag is encountered.
+   //! It is optional to override this method.
+   virtual void HandleXMLEndTag(const std::string_view &tag);
+   auto DoHandleXMLEndTag(const std::string_view& tag)
+      { HandleXMLEndTag(tag); }
 
-   // This method will be called when element content has been
-   // encountered.
-   // It is optional to override this method.
-   virtual void HandleXMLContent(const std::string_view& WXUNUSED(content)) {}
+   //! This method will be called when element content has been encountered.
+   //! It is optional to override this method.
+   virtual void HandleXMLContent(const std::string_view &content);
+   auto DoHandleXMLContent(const std::string_view &content)
+      { HandleXMLContent(content); }
 
-   // If the XML document has children of your tag, this method
-   // should be called.  Typically you should construct a NEW
-   // object for the child, insert it into your own local data
-   // structures, and then return it.  If you do not wish to
-   // handle this child, return NULL and it will be ignored.
-   virtual XMLTagHandler *HandleXMLChild(const std::string_view& tag) = 0;
+   //! If the XML document has children of your tag, this method
+   //! should be called.
+   /*! Typically you should construct a new object for the child, insert it
+    into your own local data structures, and then return it.  If you do not
+    wish to handle this child, return NULL and it will be ignored.
+    */
+   virtual XMLTagHandlerBase *HandleXMLChild(const std::string_view& tag) = 0;
+   auto DoHandleXMLChild(const std::string_view& tag)
+      { return HandleXMLChild(tag); }
 
    // These functions receive data from expat.  They do charset
    // conversion and then pass the data to the handlers above.
    void ReadXMLEndTag(const char *tag);
    void ReadXMLContent(const char *s, int len);
-   XMLTagHandler *ReadXMLChild(const char *tag);
+   XMLTagHandlerBase *ReadXMLChild(const char *tag);
+};
+
+class XMLTagHandler : public XMLTagHandlerBase
+{
+public:
+   using XMLTagHandlerBase::XMLTagHandlerBase;
 };
 
 #endif // define __AUDACITY_XML_TAG_HANDLER__

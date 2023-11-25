@@ -20,7 +20,7 @@
 #include <utility>
 #include <vector>
 
-class XMLTagHandler;
+class XMLTagHandlerBase;
 class XMLWriter;
 class XMLAttributeValueView;
 
@@ -41,14 +41,14 @@ using Mutators = std::vector< std::pair< std::string, Mutator<Substructure> > >;
    XMLMethodRegistryBase();
    ~XMLMethodRegistryBase();
 protected:
-   using TypeErasedObjectAccessor = std::function< XMLTagHandler *( void* ) >;
+   using TypeErasedObjectAccessor = std::function<XMLTagHandlerBase*(void*)>;
    using TagTable =
       std::unordered_map< std::string_view, TypeErasedObjectAccessor >;
    TagTable mTagTable;
    std::forward_list<std::string> mTags;
 
    void Register(std::string tag, TypeErasedObjectAccessor accessor);
-   XMLTagHandler *CallObjectAccessor( const std::string_view &tag, void *p );
+   XMLTagHandlerBase *CallObjectAccessor( const std::string_view &tag, void *p );
 
    using TypeErasedAccessor = std::function< void*( void* ) >;
    using TypeErasedAccessors = std::vector< TypeErasedAccessor >;
@@ -96,7 +96,7 @@ struct ObjectReaderEntry {
  lifetime, which is assumed to outlast the project loading procedure.
  */
       typename ObjectAccessor /*!< Often a lambda.
-         A function from Host& to XMLTagHandler*, maybe returning null */
+         A function from Host& to XMLTagHandlerBase*, maybe returning null */
    >
    ObjectReaderEntry( const std::string &tag, ObjectAccessor fn )
    {
@@ -108,7 +108,7 @@ struct ObjectReaderEntry {
    }
 };
 
-XMLTagHandler *CallObjectAccessor(const std::string_view& tag, Host& host)
+XMLTagHandlerBase *CallObjectAccessor(const std::string_view& tag, Host& host)
 {
    return XMLMethodRegistryBase::CallObjectAccessor( tag, &host );
 }

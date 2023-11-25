@@ -148,7 +148,7 @@ public:
       const std::string_view &tag, const AttributesList &attrs) override;
 
    //! Use only in the main thread.  May add a state while deserializing
-   XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
+   XMLTagHandlerBase *HandleXMLChild(const std::string_view &tag) override;
 
    //! Use only in the main thread, to avoid races
    void WriteXML(XMLWriter &xmlFile) const;

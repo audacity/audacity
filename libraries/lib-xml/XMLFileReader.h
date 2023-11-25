@@ -21,12 +21,13 @@ class XML_API XMLFileReader final {
    XMLFileReader();
    ~XMLFileReader();
 
-   bool Parse(XMLTagHandler *baseHandler,
+   bool Parse(XMLTagHandlerBase *baseHandler,
               const FilePath &fname);
-   bool ParseString(XMLTagHandler *baseHandler,
+   bool ParseString(XMLTagHandlerBase *baseHandler,
                     const wxString &xmldata);
 
-   bool ParseMemoryStream(XMLTagHandler* baseHandler, const MemoryStream& xmldata);
+   bool ParseMemoryStream(XMLTagHandlerBase* baseHandler,
+      const MemoryStream& xmldata);
 
    const TranslatableString &GetErrorStr() const;
    const TranslatableString &GetLibraryErrorStr() const;
@@ -41,12 +42,12 @@ class XML_API XMLFileReader final {
    static void charHandler(void *userData, const char *s, int len);
 
  private:
-   bool ParseBuffer(
-      XMLTagHandler* baseHandler, const char* buffer, size_t len, bool isFinal);
+   bool ParseBuffer(XMLTagHandlerBase* baseHandler,
+      const char* buffer, size_t len, bool isFinal);
 
    XML_Parser       mParser;
-   XMLTagHandler   *mBaseHandler;
-   using Handlers = std::vector<XMLTagHandler*>;
+   XMLTagHandlerBase   *mBaseHandler;
+   using Handlers = std::vector<XMLTagHandlerBase*>;
    Handlers mHandler;
    TranslatableString mErrorStr;
    TranslatableString mLibraryErrorStr;

@@ -528,17 +528,13 @@ bool Tags::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs
    return false;
 }
 
-XMLTagHandler *Tags::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *Tags::HandleXMLChild(const std::string_view& tag)
 {
-   if (tag == "tags") {
+   if (tag == "tags")
       return this;
-   }
-
-   if (tag == "tag") {
+   if (tag == "tag")
       return this;
-   }
-
-   return NULL;
+   return nullptr;
 }
 
 void Tags::WriteXML(XMLWriter &xmlFile) const

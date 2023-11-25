@@ -1727,7 +1727,7 @@ bool ProjectFileIO::HandleXMLTag(const std::string_view& tag, const AttributesLi
    return true;
 }
 
-XMLTagHandler *ProjectFileIO::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *ProjectFileIO::HandleXMLChild(const std::string_view& tag)
 {
    auto &project = mProject;
    return ProjectFileIORegistry::Get().CallObjectAccessor(tag, project);

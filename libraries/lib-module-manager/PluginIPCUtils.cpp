@@ -132,7 +132,7 @@ bool PluginValidationResult::HandleXMLTag(const std::string_view& tag, const Att
 }
 void PluginValidationResult::HandleXMLEndTag(const std::string_view&) { }
 
-XMLTagHandler* PluginValidationResult::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *PluginValidationResult::HandleXMLChild(const std::string_view& tag)
 {
    if(tag == PluginDescriptor::XMLNodeName)
    {

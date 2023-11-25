@@ -386,22 +386,15 @@ bool FFmpegPresets::HandleXMLTag(const std::string_view& tag, const AttributesLi
    return false;
 }
 
-XMLTagHandler *FFmpegPresets::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *FFmpegPresets::HandleXMLChild(const std::string_view& tag)
 {
    if (mAbortImport)
-   {
-      return NULL;
-   }
-
+      return nullptr;
    if (tag == "preset")
-   {
       return this;
-   }
    else if (tag == "setctrlstate")
-   {
       return this;
-   }
-   return NULL;
+   return nullptr;
 }
 
 void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile) const

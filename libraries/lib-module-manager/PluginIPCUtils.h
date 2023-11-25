@@ -77,7 +77,7 @@ namespace detail
 
       bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
       void HandleXMLEndTag(const std::string_view&) override;
-      XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
+      XMLTagHandlerBase* HandleXMLChild(const std::string_view& tag) override;
 
       void WriteXML(XMLWriter& writer) const;
    };

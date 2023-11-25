@@ -258,7 +258,7 @@ bool RealtimeEffectList::HandleXMLTag(
    return false;
 }
 
-XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
+XMLTagHandlerBase *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 {
    if (tag == RealtimeEffectState::XMLTag()) {
       mStates.push_back(RealtimeEffectState::make_shared(PluginID{}));

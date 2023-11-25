@@ -635,12 +635,12 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList 
    return false;
 }
 
-XMLTagHandler *LabelTrack::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *LabelTrack::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "label")
       return this;
    else
-      return NULL;
+      return nullptr;
 }
 
 void LabelTrack::WriteXML(XMLWriter &xmlFile) const

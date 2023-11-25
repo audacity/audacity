@@ -305,12 +305,11 @@ void TimeTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
    }
 }
 
-XMLTagHandler *TimeTrack::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase *TimeTrack::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "envelope")
       return mEnvelope.get();
-
-  return NULL;
+  return nullptr;
 }
 
 void TimeTrack::WriteXML(XMLWriter &xmlFile) const

@@ -329,7 +329,7 @@ bool PluginDescriptor::HandleXMLTag(const std::string_view& tag, const Attribute
    return false;
 }
 
-XMLTagHandler* PluginDescriptor::HandleXMLChild(const std::string_view& tag)
+XMLTagHandlerBase* PluginDescriptor::HandleXMLChild(const std::string_view& tag)
 {
    return nullptr;
 }

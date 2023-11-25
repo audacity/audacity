@@ -38,7 +38,7 @@ XMLFileReader::~XMLFileReader()
    XML_ParserFree(mParser);
 }
 
-bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
+bool XMLFileReader::Parse(XMLTagHandlerBase *baseHandler,
                           const FilePath &fname)
 {
    wxFFile theXMLFile(fname, wxT("rb"));
@@ -132,7 +132,7 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
    }
 }
 
-bool XMLFileReader::ParseString(XMLTagHandler *baseHandler,
+bool XMLFileReader::ParseString(XMLTagHandlerBase *baseHandler,
                                 const wxString &xmldata)
 {
    auto utf8 = xmldata.ToUTF8();
@@ -157,7 +157,7 @@ bool XMLFileReader::ParseString(XMLTagHandler *baseHandler,
 }
 
 bool XMLFileReader::ParseMemoryStream(
-   XMLTagHandler* baseHandler, const MemoryStream& xmldata)
+   XMLTagHandlerBase* baseHandler, const MemoryStream& xmldata)
 {
    mBaseHandler = baseHandler;
 
@@ -200,13 +200,13 @@ void XMLFileReader::startElement(void *userData, const char *name,
       handlers.push_back(This->mBaseHandler);
    }
    else {
-      if (XMLTagHandler *const handler = handlers.back())
+      if (const auto handler = handlers.back())
          handlers.push_back(handler->ReadXMLChild(name));
       else
          handlers.push_back(NULL);
    }
 
-   if (XMLTagHandler *& handler = handlers.back()) {
+   if (auto *& handler = handlers.back()) {
       This->mCurrentTagAttributes.clear();
 
       while(*atts)
@@ -218,7 +218,7 @@ void XMLFileReader::startElement(void *userData, const char *name,
             std::string_view(name), XMLAttributeValueView(std::string_view(value)));
       }
 
-      if (!handler->HandleXMLTag(name, This->mCurrentTagAttributes)) {
+      if (!handler->DoHandleXMLTag(name, This->mCurrentTagAttributes)) {
          handler = nullptr;
          if (handlers.size() == 1)
             This->mBaseHandler = nullptr;
@@ -232,7 +232,7 @@ void XMLFileReader::endElement(void *userData, const char *name)
    XMLFileReader *This = (XMLFileReader *)userData;
    Handlers &handlers = This->mHandler;
 
-   if (XMLTagHandler *const handler = handlers.back())
+   if (const auto handler = handlers.back())
       handler->ReadXMLEndTag(name);
 
    handlers.pop_back();
@@ -244,12 +244,12 @@ void XMLFileReader::charHandler(void *userData, const char *s, int len)
    XMLFileReader *This = (XMLFileReader *)userData;
    Handlers &handlers = This->mHandler;
 
-   if (XMLTagHandler *const handler = handlers.back())
+   if (const auto handler = handlers.back())
       handler->ReadXMLContent(s, len);
 }
 
 bool XMLFileReader::ParseBuffer(
-   XMLTagHandler* baseHandler, const char* buffer, size_t len, bool isFinal)
+   XMLTagHandlerBase* baseHandler, const char* buffer, size_t len, bool isFinal)
 {
    if (!XML_Parse(mParser, buffer, len, isFinal))
    {
