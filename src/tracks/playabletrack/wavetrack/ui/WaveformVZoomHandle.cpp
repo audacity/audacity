@@ -206,51 +206,26 @@ void WaveformVZoomHandle::DoZoom(
       break;
    case kZoomIn:
       {
-         // Enforce maximum vertical zoom
-         const float oldRange = max - min;
-         const float l = std::max(ZOOMLIMIT, 0.5f * oldRange);
-         const float ratio = l / (max - min);
+         const float zoomFactor = 0.5f;
+         const float currentRange = max - min;
 
-         const float p1 = (zoomStart - ypos) / (float)height;
-         float c = (max * (1.0 - p1) + min * p1);
-         if (fixedMousePoint)
-            min = c - ratio * (1.0f - p1) * oldRange,
-            max = c + ratio * p1 * oldRange;
-         else
-            min = c - 0.5 * l,
-            max = c + 0.5 * l;
+         const float nextRange = zoomFactor * currentRange; 
+
+         if (nextRange > ZOOMLIMIT) {
+            min = -(0.5f * nextRange);
+            max = 0.5f * nextRange;
+         }
       }
       break;
    case kZoomOut:
       {
-         // Zoom out
-         if (min <= -1.0 && max >= 1.0) {
-            min = -top;
-            max = top;
-         }
-         else {
-            // limit to +/- 1 range unless already outside that range...
-            float minRange = (min < -1) ? -top : -1.0;
-            float maxRange = (max > 1) ? top : 1.0;
-            // and enforce vertical zoom limits.
-            const float p1 = (zoomStart - ypos) / (float)height;
-            if (fixedMousePoint) {
-               const float oldRange = max - min;
-               const float c = (max * (1.0 - p1) + min * p1);
-               min = std::min(maxRange - ZOOMLIMIT,
-                  std::max(minRange, c - 2 * (1.0f - p1) * oldRange));
-               max = std::max(minRange + ZOOMLIMIT,
-                  std::min(maxRange, c + 2 * p1 * oldRange));
-            }
-            else {
-               const float c = p1 * min + (1 - p1) * max;
-               const float l = (max - min);
-               min = std::min(maxRange - ZOOMLIMIT,
-                              std::max(minRange, c - l));
-               max = std::max(minRange + ZOOMLIMIT,
-                              std::min(maxRange, c + l));
-            }
-         }
+         const float zoomFactor = 2.0f;
+         const float currentRange = max - min;
+
+         const float nextRange = zoomFactor * currentRange; 
+
+         min = std::max(-2.0f, -(0.5f * nextRange));
+         max = std::min(2.0f, 0.5f * nextRange);
       }
       break;
    }
