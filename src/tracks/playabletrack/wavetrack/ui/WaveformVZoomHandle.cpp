@@ -248,10 +248,6 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
 }
 
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
-   // Accelerators only if zooming enabled.
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-
    BeginSection( "Scales" );
    {
       const auto & names = WaveformSettings::GetScaleNames();
@@ -275,25 +271,18 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
    BeginSection( "Zoom" );
       BeginSection( "Basic" );
-         AppendItem( "Reset", OnZoomFitVerticalID,
-            MakeLabel( XXO("Zoom Reset"), bVZoom, XXO("Shift-Right-Click") ),
-            POPUP_MENU_FN( OnZoomReset ) );
-         AppendItem( "TimesHalf", OnZoomDiv2ID,        XXO("Zoom x1/2"),
-            POPUP_MENU_FN( OnZoomDiv2Vertical ) );
-         AppendItem( "TimesTwo", OnZoomTimes2ID,      XXO("Zoom x2"),                       POPUP_MENU_FN( OnZoomTimes2Vertical ) );
+         AppendItem( "Reset", OnZoomFitVerticalID, XXO("Zoom Reset"), POPUP_MENU_FN( OnZoomReset ) );
+         AppendItem( "TimesHalf", OnZoomDiv2ID, XXO("Zoom x1/2"), POPUP_MENU_FN( OnZoomDiv2Vertical ) );
+         AppendItem( "TimesTwo", OnZoomTimes2ID, XXO("Zoom x2"), POPUP_MENU_FN( OnZoomTimes2Vertical ) );
 
    #ifdef EXPERIMENTAL_HALF_WAVE
-         AppendItem( "HalfWave", OnZoomHalfWaveID,    XXO("Half Wave"),                     POPUP_MENU_FN( OnZoomHalfWave ) );
+         AppendItem( "HalfWave", OnZoomHalfWaveID, XXO("Half Wave"), POPUP_MENU_FN( OnZoomHalfWave ) );
    #endif
       EndSection();
 
       BeginSection( "InOut" );
-         AppendItem( "In", OnZoomInVerticalID,
-            MakeLabel( XXO("Zoom In"), bVZoom, XXO("Left-Click/Left-Drag") ),
-            POPUP_MENU_FN( OnZoomInVertical ) );
-         AppendItem( "Out", OnZoomOutVerticalID,
-            MakeLabel( XXO("Zoom Out"), bVZoom, XXO("Shift-Left-Click") ),
-            POPUP_MENU_FN( OnZoomOutVertical ) );
+         AppendItem( "In", OnZoomInVerticalID, XXO("Zoom In"), POPUP_MENU_FN( OnZoomInVertical ) );
+         AppendItem( "Out", OnZoomOutVerticalID, XXO("Zoom Out"), POPUP_MENU_FN( OnZoomOutVertical ) );
       EndSection();
    EndSection();
 
