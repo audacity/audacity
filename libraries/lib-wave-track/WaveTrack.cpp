@@ -392,6 +392,16 @@ sampleCount WaveTrack::Interval::GetSequenceSamplesCount() const
    return result;
 }
 
+size_t WaveTrack::Interval::CountBlocks() const
+{
+   size_t result{};
+   ForEachClip([&](const WaveClip &clip){
+      const auto width = clip.GetWidth();
+      for (size_t ii = 0; ii < width; ++ii)
+         result += clip.GetSequenceBlockArray(ii)->size(); });
+   return result;
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -1224,10 +1234,8 @@ size_t WaveTrack::CountBlocks() const
 {
    assert(IsLeader());
    size_t result{};
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (auto& clip : pChannel->GetClips())
-         result += clip->GetWidth() * clip->GetSequenceBlockArray(0)->size();
-   }
+   for (const auto &&pInterval : Intervals())
+      result += pInterval->CountBlocks();
    return result;
 }
 
