@@ -427,6 +427,14 @@ SampleFormats WaveTrack::Interval::GetSampleFormats() const
    return GetClip(0)->GetSampleFormats();
 }
 
+bool WaveTrack::Interval::RemoveCutLine(double cutLinePosition)
+{
+   bool result = false;
+   ForEachClip([&](auto& clip) {
+      result = clip.RemoveCutLine(cutLinePosition) || result; });
+   return true;
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -4178,15 +4186,12 @@ void WaveTrack::ExpandOneCutLine(double cutLinePosition,
 bool WaveTrack::RemoveCutLine(double cutLinePosition)
 {
    assert(IsLeader());
-
    bool removed = false;
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto &clip : pChannel->mClips)
-         if (clip->RemoveCutLine(cutLinePosition)) {
-            removed = true;
-            break;
-         }
-
+   for (const auto &&pClip : Intervals())
+      if (pClip->RemoveCutLine(cutLinePosition)) {
+         removed = true;
+         break;
+      }
    return removed;
 }
 
