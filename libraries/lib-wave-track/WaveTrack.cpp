@@ -385,6 +385,13 @@ void WaveTrack::Interval::ShiftBy(double delta) noexcept
    ForEachClip([&](auto& clip) { clip.ShiftBy(delta); });
 }
 
+sampleCount WaveTrack::Interval::GetSequenceSamplesCount() const
+{
+   sampleCount result{};
+   ForEachClip([&](auto& clip) { result += clip.GetSequenceSamplesCount(); });
+   return result;
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -1217,11 +1224,8 @@ sampleCount WaveTrack::GetSequenceSamplesCount() const
 {
    assert(IsLeader());
    sampleCount result{ 0 };
-
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto& clip : pChannel->mClips)
-         result += clip->GetSequenceSamplesCount();
-
+   for (const auto &&pInterval : Intervals())
+      result += pInterval->GetSequenceSamplesCount();
    return result;
 }
 

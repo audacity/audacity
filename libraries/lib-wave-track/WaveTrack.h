@@ -1069,6 +1069,8 @@ public:
       /*! @excsafety{No-fail} */
       void ShiftBy(double delta) noexcept;
 
+      sampleCount GetSequenceSamplesCount() const;
+
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
@@ -1087,6 +1089,13 @@ public:
 
       // Helper function in time of migration to wide clips
       template<typename Callable> void ForEachClip(const Callable& op) {
+         for (size_t channel = 0, channelCount = NChannels();
+            channel < channelCount; ++channel)
+            op(*GetClip(channel));
+      }
+
+      // Helper function in time of migration to wide clips
+      template<typename Callable> void ForEachClip(const Callable& op) const {
          for (size_t channel = 0, channelCount = NChannels();
             channel < channelCount; ++channel)
             op(*GetClip(channel));
