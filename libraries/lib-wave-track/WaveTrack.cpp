@@ -3064,14 +3064,6 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
    return {};
 }
 
-bool WaveTrack::CloseLock() noexcept
-{
-   assert(IsLeader());
-   for (const auto &&pClip : Intervals())
-      pClip->CloseLock();
-   return true;
-}
-
 const WaveClip* WaveTrack::GetLeftmostNarrowClip() const {
    if (mClips.empty())
       return nullptr;

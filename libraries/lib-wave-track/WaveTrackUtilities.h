@@ -55,4 +55,11 @@ across all channels (including hidden audio but not counting the cutlines)
  @pre `track.IsLeader()`
  */
 WAVE_TRACK_API size_t CountBlocks(const WaveTrack &track);
+
+//! Should be called upon project close.  Not balanced by unlocking calls.
+/*!
+ @pre `track.IsLeader()`
+ @excsafety{No-fail}
+ */
+WAVE_TRACK_API void CloseLock(WaveTrack &track) noexcept;
 }

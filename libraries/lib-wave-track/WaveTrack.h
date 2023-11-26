@@ -709,13 +709,6 @@ public:
    // doing a copy and paste between projects.
    //
 
-   //! Should be called upon project close.  Not balanced by unlocking calls.
-   /*!
-    @pre `IsLeader()`
-    @excsafety{No-fail}
-    */
-   bool CloseLock() noexcept;
-
    //! Get access to the (visible) clips in the tracks, in unspecified order
    //! (not necessarily sequenced in time).
    /*!

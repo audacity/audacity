@@ -41,6 +41,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "UndoManager.h"
 #include "UndoTracks.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "wxFileNameWrapper.h"
 #include "Export.h"
 #include "Import.h"
@@ -88,7 +89,7 @@ void ProjectFileManager::DiscardAutosave(const FilePath &filename)
 
    if (projectFileManager.mLastSavedTracks) {
       for (auto wt : projectFileManager.mLastSavedTracks->Any<WaveTrack>())
-         wt->CloseLock();
+         WaveTrackUtilities::CloseLock(*wt);
       projectFileManager.mLastSavedTracks.reset();
    }
 
@@ -761,7 +762,7 @@ void ProjectFileManager::CompactProjectOnClose()
    if (mLastSavedTracks)
    {
       for (auto wt : mLastSavedTracks->Any<WaveTrack>())
-         wt->CloseLock();
+         WaveTrackUtilities::CloseLock(*wt);
 
       // Attempt to compact the project
       projectFileIO.Compact( { mLastSavedTracks.get() } );
@@ -1104,7 +1105,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
       // here is a better way to accomplish the intent, doing like what happens
       // when the project closes:
       for (auto pTrack : tracks.Any<WaveTrack>())
-         pTrack->CloseLock();
+         WaveTrackUtilities::CloseLock(*pTrack);
 
       tracks.Clear(); //tracks.Clear(true);
 
