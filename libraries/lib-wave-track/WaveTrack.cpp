@@ -402,6 +402,14 @@ size_t WaveTrack::Interval::CountBlocks() const
    return result;
 }
 
+void WaveTrack::Interval::ConvertToSampleFormat(sampleFormat format,
+   const std::function<void(size_t)> & progressReport)
+{
+   // TODO fix progress denominator?
+   ForEachClip([&](auto& clip) {
+      clip.ConvertToSampleFormat(format, progressReport); });
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -1240,10 +1248,8 @@ void WaveTrack::ConvertToSampleFormat(sampleFormat format,
    const std::function<void(size_t)> & progressReport)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto& clip : pChannel->mClips)
-         clip->ConvertToSampleFormat(format, progressReport);
-   }
+   for (const auto &&pClip : Intervals())
+      pClip->ConvertToSampleFormat(format, progressReport);
    WaveTrackData::Get(*this).SetSampleFormat(format);
 }
 

@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "WaveTrackUtilities.h"
 #include "BasicUI.h"
+#include "Sequence.h"
 #include "UserException.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
