@@ -202,7 +202,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
             const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
             if (pFirstTrack)
             {
-               WaveTrackUtilities::WithClipRenderingProgress(
+               UserException::WithCancellableProgress(
                   [&](const ProgressReporter& reportProgress) {
                      pFirstTrack->ApplyPitchAndSpeed(
                         { { t0, t1 } }, reportProgress);

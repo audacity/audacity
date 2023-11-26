@@ -128,10 +128,10 @@ bool HasPitchOrSpeed(const WaveTrack &track, double t0, double t1);
 
 extern WAVE_TRACK_API const TranslatableString defaultStretchRenderingTitle;
 
+// Calls UserException::WithCancellableProgress supplying title and caption
 WAVE_TRACK_API void WithClipRenderingProgress(
    std::function<void(const ProgressReporter&)> action,
-   TranslatableString title = defaultStretchRenderingTitle,
-   TranslatableString message = XO("Rendering Clip"));
+   TranslatableString title = defaultStretchRenderingTitle);
 
 //! Argument is in (0, 1)
 //! @return true if processing should continue

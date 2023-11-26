@@ -77,17 +77,10 @@ bool WaveTrackUtilities::HasPitchOrSpeed(
 
 void WaveTrackUtilities::WithClipRenderingProgress(
    std::function<void(const ProgressReporter&)> action,
-   TranslatableString title, TranslatableString message)
+   const TranslatableString title)
 {
-   using namespace BasicUI;
-   auto progress =
-      MakeProgress(std::move(title), std::move(message), ProgressShowCancel);
-   const auto reportProgress = [&](double progressFraction) {
-      const auto result = progress->Poll(progressFraction * 1000, 1000);
-      if (result != ProgressResult::Success)
-         throw UserException {};
-   };
-   action(reportProgress);
+   return UserException::WithCancellableProgress(move(action),
+      std::move(title), XO("Rendering Clip"));
 }
 
 namespace {
