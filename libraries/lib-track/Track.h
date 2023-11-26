@@ -329,12 +329,6 @@ private:
 
 public:
 
-   //! method to set project tempo on track
-   /*!
-    @pre `IsLeader()`
-    */
-   void OnProjectTempoChange(double newTempo);
-
    //! Create tracks and modify this track
    /*!
     @return non-NULL or else throw
@@ -486,15 +480,6 @@ public:
 
    // Return true iff the attribute is recognized.
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
-
-   const std::optional<double>& GetProjectTempo() const;
-
-protected:
-   /*!
-    @pre `IsLeader()`
-    */
-   virtual void DoOnProjectTempoChange(
-      const std::optional<double>& oldTempo, double newTempo) = 0;
 };
 
 ENUMERATE_TRACK_TYPE(Track);

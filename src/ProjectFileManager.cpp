@@ -47,6 +47,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "SelectionState.h"
 #include "Tags.h"
 #include "TempDirectory.h"
+#include "TempoChange.h"
 #include "TimeDisplayMode.h"
 #include "TrackFocus.h"
 #include "TrackPanel.h"
@@ -1464,7 +1465,7 @@ bool ProjectFileManager::Import(
       const auto projectTempo = ProjectTimeSignature::Get(project).GetTempo();
       for (auto trackList : newTracks)
          for (auto track : *trackList)
-            track->OnProjectTempoChange(projectTempo);
+            DoProjectTempoChange(*track, projectTempo);
 
       if (!newTracks.empty() && newTracks[0])
       {

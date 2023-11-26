@@ -51,6 +51,7 @@ from the project that will own the track.
 #include "Sequence.h"
 #include "StaffPadTimeAndPitch.h"
 
+#include "TempoChange.h"
 #include "Project.h"
 #include "ProjectRate.h"
 #include "SampleBlock.h"
@@ -1231,20 +1232,12 @@ void WaveTrack::MoveTo(double origin)
    WaveTrackData::Get(*this).SetOrigin(origin);
 }
 
-void WaveTrack::DoOnProjectTempoChange(
-   const std::optional<double>& oldTempo, double newTempo)
-{
-   assert(IsLeader());
-   for (const auto pClip : Intervals())
-      pClip->OnProjectTempoChange(oldTempo, newTempo);
-}
-
 TrackListHolder
 WaveTrack::DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const
 {
    const auto srcCopyList = Duplicate();
    leader = *srcCopyList->Any<WaveTrack>().begin();
-   leader->OnProjectTempoChange(newTempo);
+   ::DoProjectTempoChange(*leader, newTempo);
    return srcCopyList;
 }
 
@@ -1877,7 +1870,7 @@ void WaveTrack::ClearAndPaste(
 {
    // Get a modifiable copy of `src` because it may come from another project
    // with different tempo, making boundary queries incorrect.
-   const auto& tempo = GetProjectTempo();
+   const auto& tempo = GetProjectTempo(*this);
    if (!tempo.has_value())
       THROW_INCONSISTENCY_EXCEPTION;
    WaveTrack* copy;
@@ -1895,8 +1888,8 @@ void WaveTrack::ClearAndPasteAtSameTempo(
    assert(src.IsLeader());
    assert(srcNChannels == NChannels());
    assert(
-      GetProjectTempo().has_value() &&
-      GetProjectTempo() == src.GetProjectTempo());
+      GetProjectTempo(*this).has_value() &&
+      GetProjectTempo(*this) == GetProjectTempo(src));
 
    t0 = SnapToSample(t0);
    t1 = SnapToSample(t1);
@@ -2452,7 +2445,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other, bool merge)
 {
    // Get a modifiable copy of `src` because it may come from another project
    // with different tempo, making boundary queries incorrect.
-   const auto& tempo = GetProjectTempo();
+   const auto& tempo = GetProjectTempo(*this);
    if (!tempo.has_value())
       THROW_INCONSISTENCY_EXCEPTION;
    WaveTrack* copy;
@@ -2467,8 +2460,8 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
    const auto otherNChannels = other.NChannels();
    assert(otherNChannels == NChannels());
    assert(
-      GetProjectTempo().has_value() &&
-      GetProjectTempo() == other.GetProjectTempo());
+      GetProjectTempo(*this).has_value() &&
+      GetProjectTempo(*this) == GetProjectTempo(other));
    const auto startTime = other.GetStartTime();
    const auto endTime = other.GetEndTime();
 
@@ -2682,7 +2675,7 @@ bool WaveTrack::InsertClip(WaveClipHolder clip, bool newClip, bool backup)
    if(!backup && !clip->GetIsPlaceholder() && clip->IsEmpty())
       return false;
 
-   const auto& tempo = GetProjectTempo();
+   const auto& tempo = GetProjectTempo(*this);
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    mClips.push_back(std::move(clip));
@@ -3766,7 +3759,7 @@ auto WaveTrack::CreateClip(double offset, const wxString& name)
    clip->SetName(name);
    clip->SetSequenceStartTime(offset);
 
-   const auto& tempo = GetProjectTempo();
+   const auto& tempo = GetProjectTempo(*this);
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    mClips.push_back(std::move(clip));

@@ -12,6 +12,7 @@
 #include "BasicUI.h"
 #include "SampleBlock.h"
 #include "Sequence.h"
+#include "TempoChange.h"
 #include "UserException.h"
 #include "WaveClip.h"
 #include <algorithm>
@@ -34,4 +35,15 @@ void TimeStretching::WithClipRenderingProgress(
 {
    return UserException::WithCancellableProgress(move(action),
       std::move(title), XO("Rendering Clip"));
+}
+
+using OnWaveTrackProjectTempoChange = OnProjectTempoChange::Override<WaveTrack>;
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(OnWaveTrackProjectTempoChange) {
+   return [](WaveTrack &track,
+      const std::optional<double> &oldTempo, double newTempo)
+   {
+      assert(track.IsLeader());
+      for (const auto pClip : track.Intervals())
+         pClip->OnProjectTempoChange(oldTempo, newTempo);
+   };
 }

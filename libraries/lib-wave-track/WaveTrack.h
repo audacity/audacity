@@ -1231,8 +1231,6 @@ private:
 private:
    //Updates rate parameter only in WaveTrackData
    void DoSetRate(double newRate);
-   void DoOnProjectTempoChange(
-      const std::optional<double>& oldTempo, double newTempo) override;
    /*!
     * @pre `IsLeader()`
     * @param[out] leader

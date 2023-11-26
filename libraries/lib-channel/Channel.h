@@ -591,7 +591,6 @@ public:
       using Attachments = ChannelGroup::Attachments;
       wxString mName;
       LinkType mLinkType{ LinkType::None };
-      std::optional<double> mProjectTempo;
       bool mSelected{ false };
    };
 
