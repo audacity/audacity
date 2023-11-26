@@ -381,14 +381,6 @@ public:
 
    sampleCount GetVisibleSampleCount() const;
 
-   /*!
-    @return the total number of blocks in all underlying sequences of all clips,
-   across all channels (including hidden audio but not counting the cutlines)
-
-    @pre `IsLeader()`
-    */
-   size_t CountBlocks() const;
-
    sampleFormat GetSampleFormat() const override;
 
    /*!

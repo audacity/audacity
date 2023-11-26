@@ -257,3 +257,12 @@ sampleCount WaveTrackUtilities::GetSequenceSamplesCount(const WaveTrack &track)
       result += pInterval->GetSequenceSamplesCount();
    return result;
 }
+
+size_t WaveTrackUtilities::CountBlocks(const WaveTrack &track)
+{
+   assert(track.IsLeader());
+   size_t result{};
+   for (const auto &&pInterval : track.Intervals())
+      result += pInterval->CountBlocks();
+   return result;
+}

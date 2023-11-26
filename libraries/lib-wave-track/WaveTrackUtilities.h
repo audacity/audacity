@@ -47,4 +47,12 @@ counting the cutlines)
  @pre `track.IsLeader()`
  */
 WAVE_TRACK_API sampleCount GetSequenceSamplesCount(const WaveTrack &track);
+
+/*!
+ @return the total number of blocks in all underlying sequences of all clips,
+across all channels (including hidden audio but not counting the cutlines)
+
+ @pre `track.IsLeader()`
+ */
+WAVE_TRACK_API size_t CountBlocks(const WaveTrack &track);
 }

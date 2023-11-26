@@ -101,7 +101,7 @@ BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList
 {
    BlockArray::size_type result{};
    for (const auto waveTrack : src.Any<const WaveTrack>())
-      result += waveTrack->CountBlocks();
+      result += WaveTrackUtilities::CountBlocks(*waveTrack);
    return result;
 }
 
