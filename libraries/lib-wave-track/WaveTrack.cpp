@@ -2812,8 +2812,10 @@ clip gets appended; no previously saved contents are lost. */
 void WaveTrack::Flush()
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->FlushOne();
+   if (NIntervals() == 0)
+      return;
+   // After appending, presumably.  Do this to the clip that gets appended.
+   GetRightmostClip()->Flush();
 }
 
 void WaveTrack::SetLegacyFormat(sampleFormat format)
