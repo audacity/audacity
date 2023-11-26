@@ -1220,15 +1220,6 @@ sampleCount WaveTrack::GetVisibleSampleCount() const
     return result;
 }
 
-sampleCount WaveTrack::GetSequenceSamplesCount() const
-{
-   assert(IsLeader());
-   sampleCount result{ 0 };
-   for (const auto &&pInterval : Intervals())
-      result += pInterval->GetSequenceSamplesCount();
-   return result;
-}
-
 size_t WaveTrack::CountBlocks() const
 {
    assert(IsLeader());

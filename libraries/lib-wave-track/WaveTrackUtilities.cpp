@@ -248,3 +248,12 @@ bool WaveTrackUtilities::Reverse(WaveTrack &track,
 
    return rValue;
 }
+
+sampleCount WaveTrackUtilities::GetSequenceSamplesCount(const WaveTrack &track)
+{
+   assert(track.IsLeader());
+   sampleCount result{ 0 };
+   for (const auto &&pInterval : track.Intervals())
+      result += pInterval->GetSequenceSamplesCount();
+   return result;
+}

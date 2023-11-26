@@ -38,4 +38,13 @@ using ProgressReport = std::function<bool(double)>;
 
 WAVE_TRACK_API bool Reverse(WaveTrack &track,
    sampleCount start, sampleCount len, const ProgressReport &report = {});
+
+/*!
+ @return the total number of samples in all underlying sequences
+of all clips, across all channels (including hidden audio but not
+counting the cutlines)
+
+ @pre `track.IsLeader()`
+ */
+WAVE_TRACK_API sampleCount GetSequenceSamplesCount(const WaveTrack &track);
 }
