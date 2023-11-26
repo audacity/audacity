@@ -422,6 +422,11 @@ void WaveTrack::Interval::CloseLock() noexcept
    ForEachClip(std::mem_fn(&WaveClip::CloseLock));
 }
 
+SampleFormats WaveTrack::Interval::GetSampleFormats() const
+{
+   return GetClip(0)->GetSampleFormats();
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -3656,18 +3661,8 @@ bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
 sampleFormat WaveTrack::WidestEffectiveFormat() const
 {
    auto result = narrowestSampleFormat;
-   const auto accumulate = [&](const WaveTrack &track) {
-      for (const auto &pClip : track.GetClips())
-         for (size_t ii = 0, width = pClip->GetWidth(); ii < width; ++ii)
-            result = std::max(result,
-               pClip->GetSequence(ii)->GetSampleFormats().Effective());
-   };
-   if (auto pOwner = GetOwner()) {
-      for (auto channel : TrackList::Channels(this))
-         accumulate(*channel);
-   }
-   else
-      accumulate(*this);
+   for (const auto &pClip : Intervals())
+      result = std::max(result, pClip->GetSampleFormats().Effective());
    return result;
 }
 
