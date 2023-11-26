@@ -10,6 +10,8 @@
   @brief Various operations on WaveTrack, needing only its public interface
 
 **********************************************************************/
+#ifndef __AUDACITY_WAVE_TRACK_UTILITIES__
+#define __AUDACITY_WAVE_TRACK_UTILITIES__
 
 #include "Internat.h"
 #include "TranslatableString.h"
@@ -80,3 +82,5 @@ WAVE_TRACK_API bool RemoveCutLine(WaveTrack &track, double cutLinePosition);
 WAVE_TRACK_API void ExpandCutLine(WaveTrack &track, double cutLinePosition,
    double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
 }
+
+#endif
