@@ -520,8 +520,7 @@ WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDir
       ? std::numeric_limits<double>::max()
       : std::numeric_limits<double>::lowest();
 
-   for(const auto& other : Intervals())
-   {
+   for (const auto &&other : Intervals()) {
       if((searchDirection == PlaybackDirection::forward &&
          (other->Start() > interval.Start() && other->Start() < bestMatchTime))
          ||
@@ -545,7 +544,7 @@ WaveTrack::IntervalHolder WaveTrack::GetNextInterval(
 WaveTrack::IntervalHolder WaveTrack::GetIntervalAtTime(double t)
 {
    IntervalHolder result;
-   for (const auto& interval : Intervals())
+   for (const auto &&interval : Intervals())
       if (interval->WithinPlayRegion(t))
          return interval;
    return nullptr;
@@ -2540,7 +2539,7 @@ void WaveTrack::Disjoin(double t0, double t1)
 
    const size_t width = NChannels();
 
-   for (const auto &interval : Intervals()) {
+   for (const auto &&interval : Intervals()) {
       double startTime = interval->Start();
       double endTime = interval->End();
 
@@ -2622,11 +2621,11 @@ void WaveTrack::Join(
 {
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
-   const auto intervals = Intervals();
+   const auto &&intervals = Intervals();
 
    {
       IntervalHolders intervalsToJoin;
-      for (const auto &interval : intervals)
+      for (const auto &&interval : intervals)
          if (interval->IntersectsPlayRegion(t0, t1))
             intervalsToJoin.push_back(interval);
       if (intervalsToJoin.size() < 2u)
@@ -2644,7 +2643,7 @@ void WaveTrack::Join(
    IntervalHolder newClip{};
 
    const auto rate = GetRate();
-   for (const auto &clip: intervals) {
+   for (const auto &&clip: intervals) {
       if (clip->IntersectsPlayRegion(t0, t1)) {
          // Put in sorted order
          auto it = clipsToDelete.begin(), end = clipsToDelete.end();
@@ -3514,7 +3513,7 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
 {
    std::vector<std::shared_ptr<const WaveChannelInterval>>
       intersectingIntervals;
-   for (const auto& interval : Intervals())
+   for (const auto &&interval : Intervals())
       if (interval->Intersects(t0, t1))
          intersectingIntervals.push_back(interval);
    if (intersectingIntervals.empty())
@@ -4281,7 +4280,7 @@ WaveClipConstPointers WaveTrack::SortedClipArray() const
 
 auto WaveTrack::SortedIntervalArray() -> IntervalHolders
 {
-   auto intervals = Intervals();
+   const auto &&intervals = Intervals();
    IntervalHolders result;
    copy(intervals.begin(), intervals.end(), back_inserter(result));
    sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){
@@ -4291,7 +4290,7 @@ auto WaveTrack::SortedIntervalArray() -> IntervalHolders
 
 auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
 {
-   auto intervals = Intervals();
+   const auto &&intervals = Intervals();
    IntervalConstHolders result;
    copy(intervals.begin(), intervals.end(), back_inserter(result));
    sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){

@@ -206,7 +206,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     const auto waveTrack = std::static_pointer_cast<WaveTrack>(
        PendingTracks::Get(*pProject).SubstitutePendingChangedTrack(*track));
     auto& zoomInfo = ViewInfo::Get(*pProject);
-    const auto intervals = waveTrack->Intervals();
+    const auto &&intervals = waveTrack->Intervals();
     for(auto it = intervals.begin(); it != intervals.end(); ++it)
     {
         if (it == mEditedInterval)
@@ -265,7 +265,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             auto px = context.lastState.m_x;
             auto py = context.lastState.m_y;
 
-            const auto intervals = waveTrack->Intervals();
+            const auto &&intervals = waveTrack->Intervals();
             for(auto it = intervals.begin(); it != intervals.end(); ++it)
             {
                 auto interval = *it;
@@ -375,7 +375,7 @@ SelectedIntervalOfFocusedTrack(AudacityProject &project)
       dynamic_cast<WaveTrack *>(TrackFocus::Get(project).Get())) {
       if (FindAffordance(*pWaveTrack)) {
          auto &viewInfo = ViewInfo::Get(project);
-         auto intervals = pWaveTrack->Intervals();
+         const auto &&intervals = pWaveTrack->Intervals();
 
          auto it = std::find_if(intervals.begin(), intervals.end(), [&](const auto& interval)
          {

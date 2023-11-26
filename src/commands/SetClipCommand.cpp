@@ -94,8 +94,7 @@ bool SetClipCommand::Apply(const CommandContext& context)
 
       // if no 'At' is specified, then any clip in any selected track will be set.
       track->TypeSwitch([&](WaveTrack &waveTrack) {
-         for(const auto& interval : waveTrack.Intervals())
-         {
+         for (const auto &&interval : waveTrack.Intervals()) {
             if(!bHasContainsTime || 
                (interval->Start() <= mContainsTime &&
                interval->End() >= mContainsTime ))

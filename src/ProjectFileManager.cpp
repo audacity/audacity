@@ -1182,7 +1182,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
          if (newRate == 0)
             newRate = wt.GetRate();
          const auto trackName = wt.GetName();
-         for(const auto& interval : wt.Intervals())
+         for (const auto &&interval : wt.Intervals())
             interval->SetName(trackName);
       });
    }
