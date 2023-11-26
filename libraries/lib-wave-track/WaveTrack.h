@@ -942,13 +942,6 @@ public:
    void ExpandCutLine(double cutLinePosition,
       double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
 
-   //! Remove cut line, without expanding the audio in it
-   /*
-    @pre `IsLeader()`
-    @return whether any cutline existed at the position and was removed
-    */
-   bool RemoveCutLine(double cutLinePosition);
-
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 

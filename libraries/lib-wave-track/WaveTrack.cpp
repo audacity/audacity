@@ -4183,18 +4183,6 @@ void WaveTrack::ExpandOneCutLine(double cutLinePosition,
    }
 }
 
-bool WaveTrack::RemoveCutLine(double cutLinePosition)
-{
-   assert(IsLeader());
-   bool removed = false;
-   for (const auto &&pClip : Intervals())
-      if (pClip->RemoveCutLine(cutLinePosition)) {
-         removed = true;
-         break;
-      }
-   return removed;
-}
-
 // Can't promise strong exception safety for a pair of tracks together
 bool WaveTrack::MergeClips(int clipidx1, int clipidx2)
 {

@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "../../../../../images/Cursors.h"
 
 CutlineHandle::CutlineHandle(
@@ -158,7 +159,7 @@ UIHandle::Result CutlineHandle::Click
    }
    else if (event.RightDown())
    {
-      bool removed = mpTrack->RemoveCutLine(mLocation.pos);
+      bool removed = WaveTrackUtilities::RemoveCutLine(*mpTrack, mLocation.pos);
       if (!removed)
          // Nothing happened, make no Undo item
          return Cancelled;

@@ -274,3 +274,15 @@ void WaveTrackUtilities::CloseLock(WaveTrack &track) noexcept
    for (const auto &&pClip : track.Intervals())
       pClip->CloseLock();
 }
+
+bool WaveTrackUtilities::RemoveCutLine(WaveTrack &track, double cutLinePosition)
+{
+   assert(track.IsLeader());
+   bool removed = false;
+   for (const auto &&pClip : track.Intervals())
+      if (pClip->RemoveCutLine(cutLinePosition)) {
+         removed = true;
+         break;
+      }
+   return removed;
+}

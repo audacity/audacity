@@ -62,4 +62,11 @@ WAVE_TRACK_API size_t CountBlocks(const WaveTrack &track);
  @excsafety{No-fail}
  */
 WAVE_TRACK_API void CloseLock(WaveTrack &track) noexcept;
+
+//! Remove cut line, without expanding the audio in it
+/*
+ @pre `track.IsLeader()`
+ @return whether any cutline existed at the position and was removed
+ */
+WAVE_TRACK_API bool RemoveCutLine(WaveTrack &track, double cutLinePosition);
 }
