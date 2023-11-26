@@ -1035,6 +1035,26 @@ size_t WaveTrack::NIntervals() const
    return mClips.size();
 }
 
+auto WaveTrack::GetWideClip(size_t iInterval) -> IntervalHolder
+{
+   assert(IsLeader());
+   if (iInterval < NIntervals()) {
+      WaveClipHolder pClip = mClips[iInterval],
+         pClip1;
+      if (auto right = ChannelGroup::GetChannel<WaveTrack>(1)
+         ; right && iInterval < right->mClips.size()
+      )
+         pClip1 = right->mClips[iInterval];
+      return std::make_shared<Interval>(*this, pClip, pClip1);
+   }
+   return {};
+}
+
+auto WaveTrack::GetWideClip(size_t iInterval) const -> IntervalConstHolder
+{
+   return const_cast<WaveTrack&>(*this).GetWideClip(iInterval);
+}
+
 std::shared_ptr<WideChannelGroupInterval>
 WaveTrack::DoGetInterval(size_t iInterval)
 {
@@ -2225,8 +2245,8 @@ void WaveTrack::PasteOne(
     //wxPrintf("paste: we have at least one clip\n");
 
     const auto clipAtT0 = track.GetClipAtTime(t0);
-    const auto otherFirstClip = other.GetLeftmostClip();
-    const auto otherLastClip = other.GetRightmostClip();
+    const auto otherFirstClip = other.GetLeftmostNarrowClip();
+    const auto otherLastClip = other.GetRightmostNarrowClip();
     const auto stretchRatiosMatch =
        !clipAtT0 || (clipAtT0->HasEqualStretchRatio(*otherFirstClip) &&
                      clipAtT0->HasEqualStretchRatio(*otherLastClip));
@@ -3047,7 +3067,7 @@ bool WaveTrack::CloseLock() noexcept
    return true;
 }
 
-const WaveClip* WaveTrack::GetLeftmostClip() const {
+const WaveClip* WaveTrack::GetLeftmostNarrowClip() const {
    if (mClips.empty())
       return nullptr;
    return std::min_element(
@@ -3058,7 +3078,7 @@ const WaveClip* WaveTrack::GetLeftmostClip() const {
       ->get();
 }
 
-const WaveClip* WaveTrack::GetRightmostClip() const {
+const WaveClip* WaveTrack::GetRightmostNarrowClip() const {
    if (mClips.empty())
       return nullptr;
    return std::max_element(
@@ -3067,6 +3087,36 @@ const WaveClip* WaveTrack::GetRightmostClip() const {
                 return a->GetPlayEndTime() < b->GetPlayEndTime();
              })
       ->get();
+}
+
+auto WaveTrack::GetLeftmostClip() -> IntervalHolder {
+   if (mClips.empty())
+      return nullptr;
+   const auto begin = mClips.begin(),
+      iter = std::min_element(begin, mClips.end(),
+          [](const auto& a, const auto b) {
+             return a->GetPlayStartTime() < b->GetPlayStartTime();
+          });
+   return GetWideClip(iter - begin);
+}
+
+auto WaveTrack::GetLeftmostClip() const -> IntervalConstHolder {
+   return const_cast<WaveTrack&>(*this).GetLeftmostClip();
+}
+
+auto WaveTrack::GetRightmostClip() -> IntervalHolder {
+   if (mClips.empty())
+      return nullptr;
+   const auto begin = mClips.begin(),
+      iter = std::max_element(begin, mClips.end(),
+          [](const auto& a, const auto b) {
+             return a->GetPlayEndTime() < b->GetPlayEndTime();
+          });
+   return GetWideClip(iter - begin);
+}
+
+auto WaveTrack::GetRightmostClip() const -> IntervalConstHolder {
+   return const_cast<WaveTrack&>(*this).GetRightmostClip();
 }
 
 ClipConstHolders WaveTrack::GetClipInterfaces() const

@@ -728,8 +728,14 @@ public:
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
-   const WaveClip* GetLeftmostClip() const;
-   const WaveClip* GetRightmostClip() const;
+   const WaveClip* GetLeftmostNarrowClip() const;
+   const WaveClip* GetRightmostNarrowClip() const;
+
+   IntervalHolder GetLeftmostClip();
+   IntervalConstHolder GetLeftmostClip() const;
+
+   IntervalHolder GetRightmostClip();
+   IntervalConstHolder GetRightmostClip() const;
 
    /**
     * @brief Get access to the (visible) clips in the tracks, in unspecified
@@ -1140,6 +1146,15 @@ public:
    const WaveClip* FindClipByName(const wxString& name) const;
 
    size_t NIntervals() const override;
+
+   /*!
+    @pre `IsLeader()`
+    */
+   IntervalHolder GetWideClip(size_t iInterval);
+   /*!
+    @pre `IsLeader()`
+    */
+   IntervalConstHolder GetWideClip(size_t iInterval) const;
 
    //!< used only during deserialization
    void SetLegacyFormat(sampleFormat format);
