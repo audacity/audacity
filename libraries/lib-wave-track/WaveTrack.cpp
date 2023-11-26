@@ -506,6 +506,13 @@ bool WaveTrack::Interval::HasEqualPitchAndSpeed(const Interval& other) const
    return GetClip(0u)->HasEqualPitchAndSpeed(*other.GetClip(0u));
 }
 
+void WaveTrack::Interval::OnProjectTempoChange(
+   const std::optional<double>& oldTempo, double newTempo)
+{
+   ForEachClip([&](WaveClip &clip){
+      clip.OnProjectTempoChange(oldTempo, newTempo); });
+}
+
 /** Insert silence at the end, and causes the envelope to ramp
     linearly to the given value */
 void WaveTrack::Interval::AppendSilence(double len, double envelopeValue)
@@ -1228,9 +1235,8 @@ void WaveTrack::DoOnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto& clip : pChannel->mClips)
-         clip->OnProjectTempoChange(oldTempo, newTempo);
+   for (const auto pClip : Intervals())
+      pClip->OnProjectTempoChange(oldTempo, newTempo);
 }
 
 TrackListHolder
