@@ -417,6 +417,11 @@ void WaveTrack::Interval::SetSilence(sampleCount offset, sampleCount length)
    ForEachClip([&](auto& clip) { clip.SetSilence(offset, length); });
 }
 
+void WaveTrack::Interval::CloseLock() noexcept
+{
+   ForEachClip(std::mem_fn(&WaveClip::CloseLock));
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -3062,10 +3067,8 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 bool WaveTrack::CloseLock() noexcept
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto &clip : pChannel->mClips)
-         clip->CloseLock();
-
+   for (const auto &&pClip : Intervals())
+      pClip->CloseLock();
    return true;
 }
 
