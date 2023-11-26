@@ -410,6 +410,13 @@ void WaveTrack::Interval::ConvertToSampleFormat(sampleFormat format,
       clip.ConvertToSampleFormat(format, progressReport); });
 }
 
+//! Silences the 'length' amount of samples starting from 'offset'
+//! (relative to the play start)
+void WaveTrack::Interval::SetSilence(sampleCount offset, sampleCount length)
+{
+   ForEachClip([&](auto& clip) { clip.SetSilence(offset, length); });
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -2473,16 +2480,14 @@ void WaveTrack::Silence(double t0, double t1, ProgressReporter reportProgress)
    auto start = TimeToLongSamples(t0);
    auto end = TimeToLongSamples(t1);
 
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto &clip : pChannel->mClips) {
-         auto clipStart = clip->GetPlayStartSample();
-         auto clipEnd = clip->GetPlayEndSample();
-         if (clipEnd > start && clipStart < end) {
-            auto offset = std::max(start - clipStart, sampleCount(0));
-            // Clip sample region and Get/Put sample region overlap
-            auto length = std::min(end, clipEnd) - (clipStart + offset);
-            clip->SetSilence(offset, length);
-         }
+   for (const auto &&pClip : Intervals()) {
+      auto clipStart = pClip->GetPlayStartSample();
+      auto clipEnd = pClip->GetPlayEndSample();
+      if (clipEnd > start && clipStart < end) {
+         auto offset = std::max(start - clipStart, sampleCount(0));
+         // Clip sample region and Get/Put sample region overlap
+         auto length = std::min(end, clipEnd) - (clipStart + offset);
+         pClip->SetSilence(offset, length);
       }
    }
 }
