@@ -21,6 +21,8 @@ set( SOURCES
    SampleBlock.h
    Sequence.cpp
    Sequence.h
+   TimeStretching.cpp
+   TimeStretching.h
    WaveChannelUtilities.cpp
    WaveChannelUtilities.h
    WaveClip.cpp

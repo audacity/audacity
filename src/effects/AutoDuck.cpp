@@ -36,7 +36,7 @@
 
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "AudacityMessageBox.h"
 
 const EffectParameterMethods& EffectAutoDuck::Parameters() const
@@ -196,7 +196,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
       auto &clips = pControlTrack->GetClips();
       const auto t0 = pControlTrack->LongSamplesToTime(start);
       const auto t1 = pControlTrack->LongSamplesToTime(end);
-      if (WaveTrackUtilities::HasPitchOrSpeed(*pControlTrack, t0, t1)) {
+      if (TimeStretching::HasPitchOrSpeed(*pControlTrack, t0, t1)) {
          tempTracks = pControlTrack->Duplicate();
          if (tempTracks) {
             const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
@@ -207,7 +207,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
                      pFirstTrack->ApplyPitchAndSpeed(
                         { { t0, t1 } }, reportProgress);
                   },
-                  WaveTrackUtilities::defaultStretchRenderingTitle,
+                  TimeStretching::defaultStretchRenderingTitle,
                   XO("Rendering Control-Track Time-Stretched Audio"));
                pControlTrack = pFirstTrack;
             }

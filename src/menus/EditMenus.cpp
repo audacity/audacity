@@ -18,6 +18,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "WaveClip.h"
 #include "SampleBlock.h"
 #include "CommandContext.h"
@@ -757,7 +758,7 @@ void OnSilence(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
    const auto selectedWaveTracks = tracks.Selected<WaveTrack>();
-   WaveTrackUtilities::WithClipRenderingProgress(
+   TimeStretching::WithClipRenderingProgress(
       [&](const ProgressReporter& parent) {
          BasicUI::SplitProgress(
             selectedWaveTracks.begin(), selectedWaveTracks.end(),
@@ -914,7 +915,7 @@ void OnJoin(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    const auto selectedTracks = tracks.Selected<WaveTrack>();
-   WaveTrackUtilities::WithClipRenderingProgress(
+   TimeStretching::WithClipRenderingProgress(
       [&](const ProgressReporter& reportProgress) {
          using namespace BasicUI;
          SplitProgress(

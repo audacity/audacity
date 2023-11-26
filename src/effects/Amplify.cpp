@@ -39,7 +39,7 @@
 #include "ShuttleGui.h"
 #include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "../widgets/valnum.h"
 
 
@@ -192,7 +192,7 @@ bool EffectAmplify::Init()
 {
    auto range = inputTracks()->Selected<const WaveTrack>();
    bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {
-      return WaveTrackUtilities::HasPitchOrSpeed(*pTrack, mT0, mT1);
+      return TimeStretching::HasPitchOrSpeed(*pTrack, mT0, mT1);
    });
    if (hasPitchOrSpeed)
       range = MakeOutputTracks()->Get().Selected<const WaveTrack>();

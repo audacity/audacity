@@ -9,10 +9,8 @@
 
 **********************************************************************/
 #include "WaveTrackUtilities.h"
-#include "BasicUI.h"
 #include "SampleBlock.h"
 #include "Sequence.h"
-#include "UserException.h"
 #include "WaveClip.h"
 #include <algorithm>
 
@@ -61,26 +59,6 @@ void WaveTrackUtilities::AllClipsIterator::Push(IntervalHolders clips)
       mStack.push_back({ move(clips), 0 });
       clips = move(nextClips);
    }
-}
-
-const TranslatableString WaveTrackUtilities::defaultStretchRenderingTitle =
-   XO("Pre-processing");
-
-bool WaveTrackUtilities::HasPitchOrSpeed(
-   const WaveTrack &track, double t0, double t1)
-{
-   auto &clips = track.GetClips();
-   return any_of(clips.begin(), clips.end(), [&](auto& pClip) {
-      return pClip->IntersectsPlayRegion(t0, t1) && pClip->HasPitchOrSpeed();
-   });
-}
-
-void WaveTrackUtilities::WithClipRenderingProgress(
-   std::function<void(const ProgressReporter&)> action,
-   const TranslatableString title)
-{
-   return UserException::WithCancellableProgress(move(action),
-      std::move(title), XO("Rendering Clip"));
 }
 
 namespace {

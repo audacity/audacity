@@ -15,7 +15,7 @@
 #include "ViewInfo.h"
 #include "Viewport.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "CommandContext.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "toolbars/ToolManager.h"
@@ -623,7 +623,7 @@ void OnJoinLabels(const CommandContext &context)
       track.TypeSwitch(
          [&](WaveTrack& t) { t.Join(t0, t1, std::move(reportProgress)); });
    };
-   WaveTrackUtilities::WithClipRenderingProgress(
+   TimeStretching::WithClipRenderingProgress(
       [&](ProgressReporter progress) {
          EditByLabel(project, tracks, selectedRegion, editfunc, progress);
       });
