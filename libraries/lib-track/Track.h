@@ -404,9 +404,6 @@ private:
    //! the track data proper (not associated data such as for groups and views)
    //! including TrackId
    /*!
-    @param unstretchInterval If set, this time interval's stretching must be applied.
-    @pre `!unstretchInterval.has_value() ||
-       unstretchInterval->first < unstretchInterval->second`
     @pre `IsLeader()`
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
