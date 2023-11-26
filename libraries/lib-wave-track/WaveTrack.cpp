@@ -435,6 +435,12 @@ bool WaveTrack::Interval::RemoveCutLine(double cutLinePosition)
    return true;
 }
 
+void WaveTrack::Interval::Resample(int rate, BasicUI::ProgressDialog *progress)
+{
+   // TODO Progress denominator?
+   ForEachClip([&](auto& clip) { clip.Resample(rate, progress); });
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -4276,10 +4282,8 @@ void WaveTrack::ReplaceInterval(
 */
 void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto &clip : pChannel->mClips)
-         clip->Resample(rate, progress);
-   }
+   for (const auto &&pClip : Intervals())
+      pClip->Resample(rate, progress);
    DoSetRate(rate);
 }
 
