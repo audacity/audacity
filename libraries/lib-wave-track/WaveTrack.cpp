@@ -380,6 +380,11 @@ bool WaveTrack::Interval::Paste(double t0, const Interval &src)
    return result;
 }
 
+void WaveTrack::Interval::ShiftBy(double delta) noexcept
+{
+   ForEachClip([&](auto& clip) { clip.ShiftBy(delta); });
+}
+
 void WaveTrack::Interval::SetName(const wxString& name)
 {
    ForEachClip([&](auto& clip) { clip.SetName(name); });
@@ -862,11 +867,9 @@ void WaveTrack::MoveTo(double origin)
 {
    double delta = origin - GetStartTime();
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (const auto &clip : pChannel->mClips)
-         // assume No-fail-guarantee
-         clip->ShiftBy(delta);
-   }
+   for (const auto &&pInterval : Intervals())
+      // assume No-fail-guarantee
+      pInterval->ShiftBy(delta);
    WaveTrackData::Get(*this).SetOrigin(origin);
 }
 
