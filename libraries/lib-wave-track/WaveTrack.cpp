@@ -4488,25 +4488,6 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    return result;
 }
 
-void WaveTrack::DiscardTrimmed()
-{
-   assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (auto clip : pChannel->GetClips()) {
-         if (clip->GetTrimLeft() != 0) {
-            auto t0 = clip->GetPlayStartTime();
-            clip->SetTrimLeft(0);
-            clip->ClearLeft(t0);
-         }
-         if (clip->GetTrimRight() != 0) {
-            auto t1 = clip->GetPlayEndTime();
-            clip->SetTrimRight(0);
-            clip->ClearRight(t1);
-         }
-      }
-   }
-}
-
 auto WaveTrack::AllClipsIterator::operator ++ () -> AllClipsIterator &
 {
    // The unspecified sequence is a post-order, but there is no

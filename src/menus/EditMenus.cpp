@@ -112,7 +112,7 @@ std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
       const auto pTrack = *copies->begin();
       pTrack->MoveTo(track->GetStartTime());
       if (const auto waveTrack = dynamic_cast<WaveTrack*>(pTrack))
-         waveTrack->DiscardTrimmed();
+         WaveTrackUtilities::DiscardTrimmed(*waveTrack);
       result->Append(std::move(*copies));
    }
    return result;

@@ -345,3 +345,20 @@ bool WaveTrackUtilities::HasHiddenData(const WaveTrack &track)
       return pClip->GetTrimLeft() != 0 || pClip->GetTrimRight() != 0;
    });
 }
+
+void WaveTrackUtilities::DiscardTrimmed(WaveTrack &track)
+{
+   assert(track.IsLeader());
+   for (const auto &&pClip : track.Intervals()) {
+      if (pClip->GetTrimLeft() != 0) {
+         auto t0 = pClip->GetPlayStartTime();
+         pClip->SetTrimLeft(0);
+         pClip->ClearLeft(t0);
+      }
+      if (pClip->GetTrimRight() != 0) {
+         auto t1 = pClip->GetPlayEndTime();
+         pClip->SetTrimRight(0);
+         pClip->ClearRight(t1);
+      }
+   }
+}

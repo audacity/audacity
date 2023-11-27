@@ -888,12 +888,6 @@ public:
    //! Return all (wide) WaveClips sorted by clip play start time.
    IntervalConstHolders SortedIntervalArray() const;
 
-   //! Remove hidden audio from all clips
-   /*!
-    @pre `IsLeader()`
-    */
-   void DiscardTrimmed();
-
    //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
    /*!
    @return true if possible to offset by `(allowedAmount ? *allowedAmount : amount)`
