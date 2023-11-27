@@ -742,8 +742,11 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          const auto foundCell = FindCell(event.m_x, event.m_y);
          const auto t = FindTrack( foundCell.pCell.get() );
          if ( t ) {
-            TrackFocus::Get(*GetProject()).Set(t.get());
-            Viewport::Get(*GetProject()).ShowTrack(*t);
+            auto &focus = TrackFocus::Get(*GetProject());
+            focus.Set(t.get());
+            auto pLeader = focus.Get();
+            if (pLeader)
+               Viewport::Get(*GetProject()).ShowTrack(*pLeader);
          }
       } );
    }
