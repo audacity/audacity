@@ -182,8 +182,6 @@ protected:
 // Note that these can be with or without spectrum view which
 // adds a constant.
 //const int kZoom1to1 = 1;
-//const int kZoomTimes2 = 2;
-//const int kZoomDiv2 = 3;
 //const int kZoomHalfWave = 4;
 //const int kZoomInByDrag = 5;
       kZoomIn = 6,
@@ -198,8 +196,6 @@ protected:
    void OnZoom( int iZoomCode );
 // void OnZoomFitVertical(wxCommandEvent&){ OnZoom( kZoom1to1 );};
    void OnZoomReset(wxCommandEvent&){ OnZoom( kZoomReset );};
-// void OnZoomDiv2Vertical(wxCommandEvent&){ OnZoom( kZoomDiv2 );};
-// void OnZoomTimes2Vertical(wxCommandEvent&){ OnZoom( kZoomTimes2 );};
 // void OnZoomHalfWave(wxCommandEvent&){ OnZoom( kZoomHalfWave );};
    void OnZoomInVertical(wxCommandEvent&){ OnZoom( kZoomIn );};
    void OnZoomOutVertical(wxCommandEvent&){ OnZoom( kZoomOut );};

@@ -161,21 +161,6 @@ void WaveformVZoomHandle::DoZoom(
          max = 1.0;
       }
       break;
-   case kZoomDiv2:
-      {
-         // Zoom out even more than full :-)
-         // -2.0..+2.0 (or logarithmic equivalent)
-         min = -top;
-         max = top;
-      }
-      break;
-   case kZoomTimes2:
-      {
-         // Zoom in to -0.5..+0.5
-         min = -half;
-         max = half;
-      }
-      break;
    case kZoomHalfWave:
       {
          // Zoom to show fractionally more than the top half of the wave.
@@ -243,42 +228,36 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
 }
 
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
-   BeginSection( "Scales" );
-   {
-      const auto & names = WaveformSettings::GetScaleNames();
-      for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         AppendRadioItem( names[ii].Internal(),
-            OnFirstWaveformScaleID + ii, names[ii].Msgid(),
-            POPUP_MENU_FN( OnWaveformScaleType ),
-            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-               const auto pData =
-                  static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
-               WaveTrack *const wt = pData->pTrack;
-               if ( id ==
-                  OnFirstWaveformScaleID +
-                  static_cast<int>(WaveformSettings::Get(*wt).scaleType) )
-                  menu.Check(id, true);
-            }
-          );
-      }
+   // this generates the linear(amp), log(dB), linear(dB) entries
+   const auto & names = WaveformSettings::GetScaleNames();
+   for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
+      AppendRadioItem( names[ii].Internal(),
+         OnFirstWaveformScaleID + ii, names[ii].Msgid(),
+         POPUP_MENU_FN( OnWaveformScaleType ),
+         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+            const auto pData =
+               static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
+            WaveTrack *const wt = pData->pTrack;
+            if ( id ==
+               OnFirstWaveformScaleID +
+               static_cast<int>(WaveformSettings::Get(*wt).scaleType) )
+               menu.Check(id, true);
+         }
+         );
    }
-   EndSection();
 
    BeginSection( "Zoom" );
       BeginSection( "Basic" );
-         AppendItem( "Reset", OnZoomFitVerticalID, XXO("Zoom Reset"), POPUP_MENU_FN( OnZoomReset ) );
-         AppendItem( "TimesHalf", OnZoomDiv2ID, XXO("Zoom x1/2"), POPUP_MENU_FN( OnZoomDiv2Vertical ) );
-         AppendItem( "TimesTwo", OnZoomTimes2ID, XXO("Zoom x2"), POPUP_MENU_FN( OnZoomTimes2Vertical ) );
-
-   #ifdef EXPERIMENTAL_HALF_WAVE
-         AppendItem( "HalfWave", OnZoomHalfWaveID, XXO("Half Wave"), POPUP_MENU_FN( OnZoomHalfWave ) );
-   #endif
-      EndSection();
-
-      BeginSection( "InOut" );
          AppendItem( "In", OnZoomInVerticalID, XXO("Zoom In"), POPUP_MENU_FN( OnZoomInVertical ) );
          AppendItem( "Out", OnZoomOutVerticalID, XXO("Zoom Out"), POPUP_MENU_FN( OnZoomOutVertical ) );
+         AppendItem( "Reset", OnZoomFitVerticalID, XXO("Reset Zoom"), POPUP_MENU_FN( OnZoomReset ) );
       EndSection();
+
+   #ifdef EXPERIMENTAL_HALF_WAVE
+      BeginSection( "InOut" );
+         AppendItem( "HalfWave", OnZoomHalfWaveID, XXO("Half Wave"), POPUP_MENU_FN( OnZoomHalfWave ) );
+      EndSection();
+   #endif
    EndSection();
 
 END_POPUP_MENU()

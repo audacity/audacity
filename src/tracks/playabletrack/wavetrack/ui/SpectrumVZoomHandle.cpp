@@ -177,8 +177,6 @@ void SpectrumVZoomHandle::DoZoom(
       }
       break;
    case kZoom1to1:
-   case kZoomDiv2:
-   case kZoomTimes2:
    case kZoomHalfWave:
       {
          // Zoom out full
@@ -272,34 +270,30 @@ PopupMenuTable &SpectrumVRulerMenuTable::Instance()
 }
 
 BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
-
-BeginSection( "Scales" );
-   {
-      const auto & names = SpectrogramSettings::GetScaleNames();
-      for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         AppendRadioItem( names[ii].Internal(),
-            OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
-            POPUP_MENU_FN( OnSpectrumScaleType ),
-            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-               WaveTrack *const wt =
-                  static_cast<SpectrumVRulerMenuTable&>( handler )
-                     .mpData->pTrack;
-               if ( id ==
-                  OnFirstSpectrumScaleID +
-                      static_cast<int>(SpectrogramSettings::Get(*wt).scaleType))
-                  menu.Check(id, true);
-            }
-         );
-      }
+   //Generate scales (Mel, Logarithmic, etc)
+   const auto & names = SpectrogramSettings::GetScaleNames();
+   for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
+      AppendRadioItem( names[ii].Internal(),
+         OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
+         POPUP_MENU_FN( OnSpectrumScaleType ),
+         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+            WaveTrack *const wt =
+               static_cast<SpectrumVRulerMenuTable&>( handler )
+                  .mpData->pTrack;
+            if ( id ==
+               OnFirstSpectrumScaleID +
+                     static_cast<int>(SpectrogramSettings::Get(*wt).scaleType))
+               menu.Check(id, true);
+         }
+      );
    }
-EndSection();
 
 
 BeginSection( "Zoom" );
-   AppendItem( "Reset", OnZoomResetID, XXO("Zoom Reset"),POPUP_MENU_FN( OnZoomReset ) );
-   AppendItem( "Fit", OnZoomFitVerticalID, XXO("Zoom to Fit"), POPUP_MENU_FN( OnZoomFitVertical ) );
    AppendItem( "In", OnZoomInVerticalID, XXO("Zoom In"),POPUP_MENU_FN( OnZoomInVertical ) );
    AppendItem( "Out", OnZoomOutVerticalID, XXO("Zoom Out"), POPUP_MENU_FN( OnZoomOutVertical ) );
+   AppendItem( "Fit", OnZoomFitVerticalID, XXO("Zoom to Fit"), POPUP_MENU_FN( OnZoomFitVertical ) );
+   AppendItem( "Reset", OnZoomResetID, XXO("Reset Zoom"),POPUP_MENU_FN( OnZoomReset ) );
 EndSection();
 
 END_POPUP_MENU()

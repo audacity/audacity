@@ -90,10 +90,6 @@ protected:
       { OnZoom(WaveChannelViewConstants::kZoom1to1); }
    void OnZoomReset(wxCommandEvent&)
       { OnZoom(WaveChannelViewConstants::kZoomReset); }
-   void OnZoomDiv2Vertical(wxCommandEvent&)
-      { OnZoom(WaveChannelViewConstants::kZoomDiv2); }
-   void OnZoomTimes2Vertical(wxCommandEvent&)
-      { OnZoom(WaveChannelViewConstants::kZoomTimes2); }
    void OnZoomHalfWave(wxCommandEvent&)
       { OnZoom(WaveChannelViewConstants::kZoomHalfWave); }
    void OnZoomInVertical(wxCommandEvent&)
@@ -107,8 +103,6 @@ protected:
 enum {
    OnZoomFitVerticalID = 20000,
    OnZoomResetID,
-   OnZoomDiv2ID,
-   OnZoomTimes2ID,
    OnZoomHalfWaveID,
    OnZoomInVerticalID,
    OnZoomOutVerticalID,
