@@ -102,7 +102,7 @@ $control DECAY (_ "Decay (ms)") float "" 100 10 4000
       (let ((peakL (peak (aref sig 0) test-len))
             (peakR (peak (aref sig 1) test-len)))
         (linear-to-db (max peakL peakR)))
-      (linear-to-db test-len)))
+      (linear-to-db (peak sig test-len))))
 
 
 ;;; Utility functions

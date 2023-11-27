@@ -19,15 +19,43 @@
 #include "FileNames.h"
 #include "NoteTrack.h"
 #include "Project.h"
-#include "../ProjectWindows.h"
+#include "ProjectWindows.h"
 #include "SelectFile.h"
 #include "AudacityMessageBox.h"
 #include "FileDialog/FileDialog.h"
 
+#include "ShuttleGui.h"
+#include "prefs/ImportExportPrefs.h"
+
+namespace {
+void AddControls(ShuttleGui &S)
+{
+   S.StartStatic(XO("Exported Allegro (.gro) files save time as:"));
+   {
+      // Bug 2692: Place button group in panel so tabbing will work and,
+      // on the Mac, VoiceOver will announce as radio buttons.
+      S.StartPanel();
+      {
+         S.StartRadioButtonGroup(NoteTrack::AllegroStyleSetting);
+         {
+            S.TieRadioButton();
+            S.TieRadioButton();
+         }
+         S.EndRadioButtonGroup();
+      }
+      S.EndPanel();
+   }
+   S.EndStatic();
+}
+
+ImportExportPrefs::RegisteredControls reg{
+   wxT("AllegroTimeOption"), AddControls };
+}
+
 // Insert a menu item
 #include "CommandContext.h"
 #include "MenuRegistry.h"
-#include "../CommonCommandFlags.h"
+#include "CommonCommandFlags.h"
 
 namespace {
 const ReservedCommandFlag&
@@ -133,4 +161,5 @@ AttachedItem sAttachment{
 };
 
 }
+
 #endif

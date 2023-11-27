@@ -145,7 +145,6 @@ list( APPEND SOURCES
       PluginRegistrationDialog.h
       PluginStartupRegistration.cpp
       PluginStartupRegistration.h
-      Printing.cpp
       Profiler.cpp
       Profiler.h
       ProjectAudioManager.cpp
@@ -566,14 +565,6 @@ list( APPEND SOURCES
       import/SpecPowerMeter.h
       import/ImportRaw.cpp
       import/ImportRaw.h
-
-      # Optional importers
-
-      $<$<BOOL:${USE_MIDI}>:
-         export/ExportMIDI.cpp
-         import/ImportMIDI.cpp
-         import/ImportMIDI.h
-      >
 
       # Menus
 

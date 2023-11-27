@@ -71,6 +71,7 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    {
       // This path queries the user for files to open
       auto project = &context.project;
+      // Error check?
       ProjectManager::OpenFiles(project);
    }
    else
