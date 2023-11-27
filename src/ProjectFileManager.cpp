@@ -45,7 +45,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Import.h"
 #include "ImportProgressListener.h"
 #include "ImportPlugin.h"
-#include "import/ImportMIDI.h"
 #include "import/ImportStreamDialog.h"
 #include "AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
@@ -969,16 +968,6 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
             return nullptr;
          }
 #endif
-#ifdef USE_MIDI
-         if (FileNames::IsMidi(fileName)) {
-            auto &project = chooser(false);
-            // If this succeeds, indo history is incremented, and it also does
-            // ZoomFitHorizontallyAndShowTrack:
-            if(DoImportMIDI(project, fileName))
-               return &project;
-            return nullptr;
-         }
-#endif
          auto &project = chooser(false);
          // Undo history is incremented inside this:
          if (Get(project).Import(fileName)) {
@@ -1156,7 +1145,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo) {
       for (auto &group : newTracks)
-         for (const auto pTrack : group->Any<WaveTrack>())
+         for (const auto pTrack : group->Any<PlayableTrack>())
             pTrack->SetMute(true);
    }
 

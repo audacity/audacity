@@ -3,6 +3,7 @@
 # The list of modules is ordered so that each module occurs after any others
 # that it depends on
 set( MODULES
+   mod-midi-import-export
    mod-script-pipe
    mod-mp3
    mod-pcm

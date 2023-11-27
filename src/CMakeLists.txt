@@ -566,14 +566,6 @@ list( APPEND SOURCES
       import/ImportRaw.cpp
       import/ImportRaw.h
 
-      # Optional importers
-
-      $<$<BOOL:${USE_MIDI}>:
-         export/ExportMIDI.cpp
-         import/ImportMIDI.cpp
-         import/ImportMIDI.h
-      >
-
       # Menus
 
       menus/ClipMenus.cpp

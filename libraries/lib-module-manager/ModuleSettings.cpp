@@ -32,6 +32,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-lof",
       "mod-aup",
       "mod-opus",
+      "mod-midi-import-export",
    };
    return modules;
 }
