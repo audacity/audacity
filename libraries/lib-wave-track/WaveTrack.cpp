@@ -63,8 +63,6 @@ from the project that will own the track.
 
 #include "InconsistencyException.h"
 
-#include "ProjectFormatExtensionsRegistry.h"
-
 using std::max;
 
 WaveChannelInterval::~WaveChannelInterval() = default;
@@ -4488,32 +4486,6 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    return result;
 }
 
-auto AllClipsIterator::operator ++ () -> AllClipsIterator &
-{
-   // The unspecified sequence is a post-order, but there is no
-   // promise whether sister nodes are ordered in time.
-   if ( !mStack.empty() ) {
-      auto &pair =  mStack.back();
-      if ( ++pair.first == pair.second ) {
-         mStack.pop_back();
-      }
-      else
-         push( (*pair.first)->GetCutLines() );
-   }
-
-   return *this;
-}
-
-void AllClipsIterator::push(WaveClipHolders &clips)
-{
-   auto pClips = &clips;
-   while (!pClips->empty()) {
-      auto first = pClips->begin();
-      mStack.push_back( Pair( first, pClips->end() ) );
-      pClips = &(*first)->GetCutLines();
-   }
-}
-
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
    return std::make_shared< WaveTrackFactory >(
       ProjectRate::Get( project ),
@@ -4544,36 +4516,6 @@ WaveTrackFactory &WaveTrackFactory::Reset( AudacityProject &project )
 void WaveTrackFactory::Destroy( AudacityProject &project )
 {
    project.AttachedObjects::Assign( key2, nullptr );
-}
-
-namespace {
-// If any clips have hidden data, don't allow older versions to open the
-// project.  Otherwise overlapping clips might result.
-ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
-   [](const AudacityProject& project) -> ProjectFormatVersion {
-      const TrackList& trackList = TrackList::Get(project);
-      for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto pChannel : TrackList::Channels(wt))
-            for (const auto& clip : GetAllClips(*pChannel))
-               if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
-                  return { 3, 1, 0, 0 };
-      return BaseProjectFormatVersion;
-   }
-);
-
-// If any clips have any stretch, don't allow older versions to open the
-// project.  Otherwise overlapping clips might result.
-ProjectFormatExtensionsRegistry::Extension stretchedClipsExtension(
-   [](const AudacityProject& project) -> ProjectFormatVersion {
-      const TrackList& trackList = TrackList::Get(project);
-      for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto pChannel : TrackList::Channels(wt))
-            for (const auto& clip : GetAllClips(*pChannel))
-               if (clip->GetStretchRatio() != 1.0)
-                  return { 3, 4, 0, 0 };
-      return BaseProjectFormatVersion;
-   }
-);
 }
 
 StringSetting AudioTrackNameSetting{

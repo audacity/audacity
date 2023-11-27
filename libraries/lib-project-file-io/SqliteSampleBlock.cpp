@@ -1068,6 +1068,7 @@ static size_t EstimateRemovedBlocks(
    auto &manager = UndoManager::Get(project);
 
    // Collect ids that survive
+   using namespace WaveTrackUtilities;
    SampleBlockIDSet wontDelete;
    auto f = [&](const UndoStackElem &elem) {
       if (auto pTracks = UndoTracks::Find(elem))
