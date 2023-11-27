@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "WaveTrackUtilities.h"
 #include "BasicUI.h"
+#include "SampleBlock.h"
 #include "Sequence.h"
 #include "UserException.h"
 #include "WaveClip.h"
@@ -361,4 +362,32 @@ void WaveTrackUtilities::DiscardTrimmed(WaveTrack &track)
          pClip->ClearRight(t1);
       }
    }
+}
+
+void WaveTrackUtilities::VisitBlocks(TrackList &tracks, BlockVisitor visitor,
+   SampleBlockIDSet *pIDs)
+{
+   for (auto wt : tracks.Any<const WaveTrack>())
+      for (const auto pChannel : TrackList::Channels(wt))
+         // Scan all clips within current track
+         for (const auto &clip : pChannel->GetAllClips())
+            // Scan all sample blocks within current clip
+            for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
+               auto blocks = clip->GetSequenceBlockArray(ii);
+               for (const auto &block : *blocks) {
+                  auto &pBlock = block.sb;
+                  if (pBlock) {
+                     if (pIDs && !pIDs->insert(pBlock->GetBlockID()).second)
+                        continue;
+                     if (visitor)
+                        visitor(*pBlock);
+                  }
+               }
+            }
+}
+
+void WaveTrackUtilities::InspectBlocks(const TrackList &tracks,
+   BlockInspector inspector, SampleBlockIDSet *pIDs)
+{
+   VisitBlocks(const_cast<TrackList &>(tracks), move(inspector), pIDs);
 }

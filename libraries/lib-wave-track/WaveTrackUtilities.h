@@ -15,12 +15,21 @@
 
 #include "Internat.h"
 #include "TranslatableString.h"
+#include <unordered_set>
 
 class sampleCount;
 class WaveTrack;
 using ProgressReporter = std::function<void(double)>;
 
+class SampleBlock;
+class TrackList;
+
 namespace WaveTrackUtilities {
+
+using SampleBlockID = long long;
+using SampleBlockIDSet = std::unordered_set<SampleBlockID>;
+using BlockVisitor = std::function<void(SampleBlock&)>;
+using BlockInspector = std::function<void(const SampleBlock&)>;
 
 //! Whether any clips, whose play regions intersect the interval, have non-unit
 //! stretch ratio
@@ -93,6 +102,17 @@ WAVE_TRACK_API bool HasHiddenData(const WaveTrack &track);
  @pre `track.IsLeader()`
  */
 WAVE_TRACK_API void DiscardTrimmed(WaveTrack &track);
+
+// Function to visit all sample blocks from a list of tracks.
+// If a set is supplied, then only visit once each unique block ID not already
+// in that set, and accumulate those into the set as a side-effect.
+// The visitor function may be null.
+WAVE_TRACK_API void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
+   SampleBlockIDSet *pIDs = nullptr);
+
+// Non-mutating version of the above
+WAVE_TRACK_API void InspectBlocks(const TrackList &tracks,
+   BlockInspector inspector, SampleBlockIDSet *pIDs = nullptr);
 }
 
 #endif

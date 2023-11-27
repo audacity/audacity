@@ -10,6 +10,7 @@
 #include "WaveChannelView.h"
 
 #include <cassert>
+#include <unordered_set>
 
 class WaveTrackShifter final : public TrackShifter {
 public:
