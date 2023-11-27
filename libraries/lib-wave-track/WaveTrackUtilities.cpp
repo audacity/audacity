@@ -336,3 +336,12 @@ void WaveTrackUtilities::ExpandCutLine(WaveTrack &track,
                clip2->ShiftBy(end - start);
    }
 }
+
+bool WaveTrackUtilities::HasHiddenData(const WaveTrack &track)
+{
+   assert(track.IsLeader());
+   const auto &&clips = track.Intervals();
+   return std::any_of(clips.begin(), clips.end(), [](const auto &pClip){
+      return pClip->GetTrimLeft() != 0 || pClip->GetTrimRight() != 0;
+   });
+}

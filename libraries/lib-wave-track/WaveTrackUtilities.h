@@ -81,6 +81,12 @@ WAVE_TRACK_API bool RemoveCutLine(WaveTrack &track, double cutLinePosition);
  */
 WAVE_TRACK_API void ExpandCutLine(WaveTrack &track, double cutLinePosition,
    double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
+
+//! Whether any clips have hidden audio
+/*!
+ @pre `track.IsLeader()`
+ */
+WAVE_TRACK_API bool HasHiddenData(const WaveTrack &track);
 }
 
 #endif

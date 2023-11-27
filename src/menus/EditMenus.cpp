@@ -169,7 +169,9 @@ bool HasHiddenData(const TrackList& trackList)
 {
    const auto range = trackList.Any<const WaveTrack>();
    return std::any_of(range.begin(), range.end(),
-      [](const WaveTrack *pTrack){ return pTrack->HasHiddenData(); });
+      [](const WaveTrack *pTrack){
+         return WaveTrackUtilities::HasHiddenData(*pTrack);
+   });
 }
 
 // Menu handler functions
@@ -424,7 +426,9 @@ std::shared_ptr<const TrackList> FindSourceTracks(const CommandContext &context)
    auto discardTrimmed = false;
    if (&context.project != &*clipboard.Project().lock()) {
       const auto waveClipCopyPolicy = TracksBehaviorsAudioTrackPastePolicy.Read();
-      if(waveClipCopyPolicy == wxT("Ask") && HasHiddenData(clipboard.GetTracks())) {
+      if (waveClipCopyPolicy == wxT("Ask") &&
+         HasHiddenData(clipboard.GetTracks()))
+      {
          AudioPasteDialog audioPasteDialog(
             &window,
             EstimateCopyBytesCount(clipboard.GetTracks(), tracks)

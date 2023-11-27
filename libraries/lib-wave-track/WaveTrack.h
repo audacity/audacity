@@ -888,12 +888,6 @@ public:
    //! Return all (wide) WaveClips sorted by clip play start time.
    IntervalConstHolders SortedIntervalArray() const;
 
-   //! Whether any clips have hidden audio
-   /*!
-    @pre `IsLeader()`
-    */
-   bool HasHiddenData() const;
-
    //! Remove hidden audio from all clips
    /*!
     @pre `IsLeader()`

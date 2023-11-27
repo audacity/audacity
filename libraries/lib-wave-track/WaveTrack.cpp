@@ -4488,16 +4488,6 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    return result;
 }
 
-bool WaveTrack::HasHiddenData() const
-{
-   assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto& clip : pChannel->GetClips())
-         if (clip->GetTrimLeft() != 0 || clip->GetTrimRight() != 0)
-            return true;
-   return false;
-}
-
 void WaveTrack::DiscardTrimmed()
 {
    assert(IsLeader());
