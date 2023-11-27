@@ -4488,7 +4488,7 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    return result;
 }
 
-auto WaveTrack::AllClipsIterator::operator ++ () -> AllClipsIterator &
+auto AllClipsIterator::operator ++ () -> AllClipsIterator &
 {
    // The unspecified sequence is a post-order, but there is no
    // promise whether sister nodes are ordered in time.
@@ -4504,7 +4504,7 @@ auto WaveTrack::AllClipsIterator::operator ++ () -> AllClipsIterator &
    return *this;
 }
 
-void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
+void AllClipsIterator::push(WaveClipHolders &clips)
 {
    auto pClips = &clips;
    while (!pClips->empty()) {
@@ -4554,7 +4554,7 @@ ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
       const TrackList& trackList = TrackList::Get(project);
       for (auto wt : trackList.Any<const WaveTrack>())
          for (const auto pChannel : TrackList::Channels(wt))
-            for (const auto& clip : pChannel->GetAllClips())
+            for (const auto& clip : GetAllClips(*pChannel))
                if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
                   return { 3, 1, 0, 0 };
       return BaseProjectFormatVersion;
@@ -4568,7 +4568,7 @@ ProjectFormatExtensionsRegistry::Extension stretchedClipsExtension(
       const TrackList& trackList = TrackList::Get(project);
       for (auto wt : trackList.Any<const WaveTrack>())
          for (const auto pChannel : TrackList::Channels(wt))
-            for (const auto& clip : pChannel->GetAllClips())
+            for (const auto& clip : GetAllClips(*pChannel))
                if (clip->GetStretchRatio() != 1.0)
                   return { 3, 4, 0, 0 };
       return BaseProjectFormatVersion;

@@ -370,7 +370,7 @@ void WaveTrackUtilities::VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    for (auto wt : tracks.Any<const WaveTrack>())
       for (const auto pChannel : TrackList::Channels(wt))
          // Scan all clips within current track
-         for (const auto &clip : pChannel->GetAllClips())
+         for (const auto &clip : GetAllClips(*pChannel))
             // Scan all sample blocks within current clip
             for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
                auto blocks = clip->GetSequenceBlockArray(ii);

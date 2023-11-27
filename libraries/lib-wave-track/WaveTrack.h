@@ -737,94 +737,6 @@ public:
     */
    ClipConstHolders GetClipInterfaces() const;
 
-   // Get mutative access to all clips (in some unspecified sequence),
-   // including those hidden in cutlines.
-   class AllClipsIterator
-      : public ValueIterator< WaveClip * >
-   {
-   public:
-      // Constructs an "end" iterator
-      AllClipsIterator () {}
-
-      // Construct a "begin" iterator
-      explicit AllClipsIterator( WaveTrack &track )
-      {
-         push( track.mClips );
-      }
-
-      WaveClip *operator * () const
-      {
-         if (mStack.empty())
-            return nullptr;
-         else
-            return mStack.back().first->get();
-      }
-
-      AllClipsIterator &operator ++ ();
-
-      // Define == well enough to serve for loop termination test
-      friend bool operator == (
-         const AllClipsIterator &a, const AllClipsIterator &b)
-      { return a.mStack.empty() == b.mStack.empty(); }
-
-      friend bool operator != (
-         const AllClipsIterator &a, const AllClipsIterator &b)
-      { return !( a == b ); }
-
-   private:
-
-      void push( WaveClipHolders &clips );
-
-      using Iterator = WaveClipHolders::iterator;
-      using Pair = std::pair< Iterator, Iterator >;
-      using Stack = std::vector< Pair >;
-
-      Stack mStack;
-   };
-
-   // Get const access to all clips (in some unspecified sequence),
-   // including those hidden in cutlines.
-   class AllClipsConstIterator
-      : public ValueIterator< const WaveClip * >
-   {
-   public:
-      // Constructs an "end" iterator
-      AllClipsConstIterator () {}
-
-      // Construct a "begin" iterator
-      explicit AllClipsConstIterator( const WaveTrack &track )
-         : mIter{ const_cast< WaveTrack& >( track ) }
-      {}
-
-      const WaveClip *operator * () const
-      { return *mIter; }
-
-      AllClipsConstIterator &operator ++ ()
-      { ++mIter; return *this; }
-
-      // Define == well enough to serve for loop termination test
-      friend bool operator == (
-         const AllClipsConstIterator &a, const AllClipsConstIterator &b)
-      { return a.mIter == b.mIter; }
-
-      friend bool operator != (
-         const AllClipsConstIterator &a, const AllClipsConstIterator &b)
-      { return !( a == b ); }
-
-   private:
-      AllClipsIterator mIter;
-   };
-
-   IteratorRange< AllClipsIterator > GetAllClips()
-   {
-      return { AllClipsIterator{ *this }, AllClipsIterator{ } };
-   }
-
-   IteratorRange< AllClipsConstIterator > GetAllClips() const
-   {
-      return { AllClipsConstIterator{ *this }, AllClipsConstIterator{ } };
-   }
-
    /// @pre IsLeader()
    //! Create new clip and add it to this track.
    /*!
@@ -1320,6 +1232,90 @@ private:
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
+
+// Get mutative access to all clips (in some unspecified sequence),
+// including those hidden in cutlines.
+class WAVE_TRACK_API AllClipsIterator : public ValueIterator<WaveClip *>
+{
+public:
+   // Constructs an "end" iterator
+   AllClipsIterator() {}
+
+   // Construct a "begin" iterator
+   explicit AllClipsIterator(WaveTrack &track)
+   {
+      push(track.GetClips());
+   }
+
+   WaveClip *operator *() const
+   {
+      if (mStack.empty())
+         return nullptr;
+      else
+         return mStack.back().first->get();
+   }
+
+   AllClipsIterator &operator ++();
+
+   // Define == well enough to serve for loop termination test
+   friend bool operator ==(
+      const AllClipsIterator &a, const AllClipsIterator &b)
+   { return a.mStack.empty() == b.mStack.empty(); }
+
+   friend bool operator !=(
+      const AllClipsIterator &a, const AllClipsIterator &b)
+   { return !(a == b); }
+
+private:
+   void push(WaveClipHolders &clips);
+   using Iterator = WaveClipHolders::iterator;
+   using Pair = std::pair<Iterator, Iterator>;
+   using Stack = std::vector<Pair>;
+   Stack mStack;
+};
+
+// Get const access to all clips (in some unspecified sequence),
+// including those hidden in cutlines.
+class WAVE_TRACK_API AllClipsConstIterator
+   : public ValueIterator<const WaveClip *>
+{
+public:
+   // Constructs an "end" iterator
+   AllClipsConstIterator() {}
+
+   // Construct a "begin" iterator
+   explicit AllClipsConstIterator(const WaveTrack &track)
+      : mIter{ const_cast<WaveTrack&>(track) }
+   {}
+
+   const WaveClip *operator *() const
+   { return *mIter; }
+
+   AllClipsConstIterator &operator ++()
+   { ++mIter; return *this; }
+
+   // Define == well enough to serve for loop termination test
+   friend bool operator ==(
+      const AllClipsConstIterator &a, const AllClipsConstIterator &b)
+   { return a.mIter == b.mIter; }
+
+   friend bool operator !=(
+      const AllClipsConstIterator &a, const AllClipsConstIterator &b)
+   { return !(a == b); }
+
+private:
+   AllClipsIterator mIter;
+};
+
+inline IteratorRange<AllClipsIterator> GetAllClips(WaveTrack &track)
+{
+   return { AllClipsIterator{ track }, AllClipsIterator{} };
+}
+
+inline IteratorRange<AllClipsConstIterator> GetAllClips(const WaveTrack &track)
+{
+   return { AllClipsConstIterator{ track }, AllClipsConstIterator{} };
+}
 
 WaveTrack &WaveChannel::GetTrack() {
    auto &result = static_cast<WaveTrack&>(DoGetChannelGroup());
