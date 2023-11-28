@@ -15,7 +15,7 @@
 #include <list>
 #include <vector>
 
-#include "MemoryX.h"
+#include "IteratorX.h"
 
 /*!
  * @brief A low overhead memory stream with O(1) append, low heap fragmentation and a linear memory view.

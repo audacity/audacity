@@ -28,6 +28,8 @@ set( SOURCES
    Composite.cpp
    Composite.h
    GlobalVariable.h
+   IteratorX.cpp
+   IteratorX.h
    MemoryX.cpp
    MemoryX.h
    MessageBuffer.h
