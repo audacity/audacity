@@ -463,6 +463,29 @@ bool WaveTrack::Interval::RemoveCutLine(double cutLinePosition)
    return true;
 }
 
+auto WaveTrack::Interval::GetCutLines(WaveTrack &track)
+   -> std::vector<IntervalHolder>
+{
+   if (!mpClip) {
+      assert(false);
+      return {};
+   }
+   auto &cutLines0 = mpClip->GetCutLines();
+   size_t nCutLines0 = cutLines0.size();
+   auto *pCutLines1 = mpClip1 ? &mpClip1->GetCutLines() : nullptr;
+   auto nCutLines1 = pCutLines1 ? pCutLines1->size() : 0;
+
+   std::vector<IntervalHolder> result;
+   result.reserve(nCutLines0);
+   for (size_t ii = 0; ii < nCutLines0; ++ii) {
+      auto pClip0 = cutLines0[ii];
+      auto pClip1 = ii < nCutLines1 ? (*pCutLines1)[ii] : nullptr;
+      auto pInterval = std::make_shared<Interval>(track, pClip0, pClip1);
+      result.emplace_back(move(pInterval));
+   }
+   return result;
+}
+
 void WaveTrack::Interval::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
    // TODO Progress denominator?

@@ -976,6 +976,14 @@ public:
        */
       bool RemoveCutLine(double cutLinePosition);
 
+      //! Construct an array of temporary Interval objects that point to
+      //! the cutlines
+      /*!
+       @param track is required to construct new Intervals because this
+       Interval does not store a back-reference to its track
+       */
+      std::vector<IntervalHolder> GetCutLines(WaveTrack &track);
+
       // Resample clip. This also will set the rate, but without changing
       // the length of the clip
       void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
