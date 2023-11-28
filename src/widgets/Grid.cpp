@@ -12,8 +12,6 @@
 \brief Supplies an accessible grid based on wxGrid.
 
 *//*******************************************************************/
-
-
 #include "Grid.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -26,6 +24,7 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
+#include "IteratorX.h"
 #include "NumericConverterFormats.h"
 
 #include "SelectedRegion.h"

@@ -7,16 +7,15 @@
   K. Soze
 
   **********************************************************************/
-
 #ifndef __AUDACITY_AUDIO_SETUP_TOOLBAR__
 #define __AUDACITY_AUDIO_SETUP_TOOLBAR__
 
 #include <optional>
 #include <vector>
 #include <wx/menu.h>
+#include "IteratorX.h"
 #include "ToolBar.h"
 #include "Observer.h"
-#include "MemoryX.h"
 
 enum class DeviceChangeMessage : char;
 

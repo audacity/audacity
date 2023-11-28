@@ -21,11 +21,10 @@ other settings.
   Also lets user decide how many channels to record.
 
 *//********************************************************************/
-
-
 #include "DevicePrefs.h"
 #include "AudioIOBase.h"
 
+#include "IteratorX.h"
 #include "RecordingPrefs.h"
 
 #include <wx/defs.h>

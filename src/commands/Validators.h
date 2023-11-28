@@ -45,7 +45,8 @@ a certain criterion. This is a base validator which allows anything.
 
 class wxArrayString;
 
-#include "MemoryX.h"
+#include <memory>
+#include "IteratorX.h"
 
 #include <wx/variant.h> // member variable
 
