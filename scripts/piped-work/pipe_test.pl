@@ -12,9 +12,8 @@ use warnings;
 use Time::HiRes qw( gettimeofday tv_interval );
 use List::Util qw( max );
 
-# Where should screenshots and exported tracks be saved?
+# Where should exported tracks be saved?
 our $home = $ENV{HOME};
-our $screenshotDir = $home.'/pipetest/';
 our $effectTestDir = $home.'/pipetest/';
 
 # Variables for pipe names
@@ -74,7 +73,9 @@ sub stopTiming{
 sub sendCommand{
    my $command = shift;
    if ($^O eq 'MSWin32') {
-      print TO_SRV "$command\r\n\0";
+      print TO_SRV "$command
+
+\r\n\0";
    } else {
       # Don't explicitly send \0 on Linux or reads after the first one fail...
       print TO_SRV "$command\n";
@@ -122,14 +123,6 @@ sub setPref{
    my $name = shift;
    my $val = shift;
    doCommand("SetPreference: PrefName=$name PrefValue=$val");
-}
-
-# Send a screenshot command
-sub screenshot{
-   my $filePath    = shift;
-   my $captureMode = shift;
-   my $background  = shift;
-   doCommand("Screenshot: FilePath=$filePath CaptureMode=$captureMode Background=$background");
 }
 
 # Send a menu command
@@ -197,7 +190,7 @@ sub help{
 
 # Get help on all of the listed commands
 sub fullHelp{
-   my @cmds = qw(BatchCommand CompareAudio MenuCommand GetMenus GetTrackInfo Help Message Screenshot Select SetTrackInfo);
+   my @cmds = qw(BatchCommand CompareAudio MenuCommand GetMenus GetTrackInfo Help Message Select SetTrackInfo);
    foreach my $cmd (@cmds){
       help($cmd);
    }
@@ -299,12 +292,10 @@ sub fullTest{
    syntaxError();
    extraSpaces();
    menuCommand("NewStereoTrack");
-   #screenshot($screenshotDir, "window", "None"); # (Slow)
    doCommand("Select: Mode=All");
    getMenuCommands();
    menuCommand("NewMonoTrack");
    batchFallback();
-   help("Screenshot");
    message("Hello!");
    getTrackInfo(0);
    deleteAll();
