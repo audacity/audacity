@@ -9,7 +9,6 @@
   Vitaly Sverchinsky split from Import.cpp
 
 **********************************************************************/
-
 #include "ImportStreamDialog.h"
 
 #include <wx/listbox.h>
@@ -18,7 +17,7 @@
 #include "ShuttleGui.h"
 
 #include "ImportPlugin.h"
-#include "MemoryX.h"
+#include "IteratorX.h"
 
 BEGIN_EVENT_TABLE( ImportStreamDialog, wxDialogWrapper )
    EVT_BUTTON( wxID_OK, ImportStreamDialog::OnOk )
