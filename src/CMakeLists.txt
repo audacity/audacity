@@ -611,8 +611,6 @@ list( APPEND SOURCES
       prefs/MidiIOPrefs.h
       prefs/ModulePrefs.cpp
       prefs/ModulePrefs.h
-      prefs/MousePrefs.cpp
-      prefs/MousePrefs.h
       prefs/PlaybackPrefs.cpp
       prefs/PlaybackPrefs.h
       prefs/PrefsDialog.cpp
