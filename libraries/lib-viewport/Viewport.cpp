@@ -400,9 +400,11 @@ void Viewport::UpdateScrollbarsForTracks()
 
 void Viewport::HandleResize()
 {
-   BasicUI::CallAfter( [this]{
-      UpdateScrollbarsForTracks();
-      Publish({ false, false, true });
+   BasicUI::CallAfter( [wthis = weak_from_this()]{
+      if (auto This = wthis.lock()) {
+         This->UpdateScrollbarsForTracks();
+         This->Publish({ false, false, true });
+      }
    });
 }
 
@@ -775,9 +777,11 @@ void Viewport::Redraw()
 {
    // Delay it until after channel views update their Y coordinates in response
    // to TrackList mesages
-   BasicUI::CallAfter([this]{
-      UpdateScrollbarsForTracks();
-      Publish({ true, false, false });
+   BasicUI::CallAfter([wthis = weak_from_this()]{
+      if (auto This = wthis.lock()) {
+         This->UpdateScrollbarsForTracks();
+         This->Publish({ true, false, false });
+      }
    });
 }
 
