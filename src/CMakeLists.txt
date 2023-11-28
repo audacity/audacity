@@ -128,10 +128,6 @@ list( APPEND SOURCES
       ListNavigationEnabled.h
       ListNavigationPanel.cpp
       ListNavigationPanel.h
-      Lyrics.cpp
-      Lyrics.h
-      LyricsWindow.cpp
-      LyricsWindow.h
       MenuCreator.cpp
       MenuCreator.h
       MixerBoard.cpp
