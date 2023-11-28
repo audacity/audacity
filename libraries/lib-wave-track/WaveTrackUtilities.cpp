@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "WaveTrackUtilities.h"
 #include "BasicUI.h"
+#include "Sequence.h"
 #include "UserException.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -247,4 +248,41 @@ bool WaveTrackUtilities::Reverse(WaveTrack &track,
       track.InsertInterval(clip);
 
    return rValue;
+}
+
+sampleCount WaveTrackUtilities::GetSequenceSamplesCount(const WaveTrack &track)
+{
+   assert(track.IsLeader());
+   sampleCount result{ 0 };
+   for (const auto &&pInterval : track.Intervals())
+      result += pInterval->GetSequenceSamplesCount();
+   return result;
+}
+
+size_t WaveTrackUtilities::CountBlocks(const WaveTrack &track)
+{
+   assert(track.IsLeader());
+   size_t result{};
+   for (const auto &&pInterval : track.Intervals())
+      result += pInterval->CountBlocks();
+   return result;
+}
+
+void WaveTrackUtilities::CloseLock(WaveTrack &track) noexcept
+{
+   assert(track.IsLeader());
+   for (const auto &&pClip : track.Intervals())
+      pClip->CloseLock();
+}
+
+bool WaveTrackUtilities::RemoveCutLine(WaveTrack &track, double cutLinePosition)
+{
+   assert(track.IsLeader());
+   bool removed = false;
+   for (const auto &&pClip : track.Intervals())
+      if (pClip->RemoveCutLine(cutLinePosition)) {
+         removed = true;
+         break;
+      }
+   return removed;
 }

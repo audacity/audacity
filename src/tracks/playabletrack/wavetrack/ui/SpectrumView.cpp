@@ -876,7 +876,7 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context, size_t channel,
    auto pLeader = *track.GetHolder()->Find(&track);
    assert(pLeader->IsLeader());
 
-   for (const auto pInterval :
+   for (const auto &&pInterval :
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals())
       DrawClipSpectrum(context, track, *pInterval, rect, mpSpectralData,
          &pInterval->GetClip() == selectedClip);

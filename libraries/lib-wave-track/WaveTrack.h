@@ -381,23 +381,6 @@ public:
 
    sampleCount GetVisibleSampleCount() const;
 
-   /*!
-    @return the total number of samples in all underlying sequences
-   of all clips, across all channels (including hidden audio but not
-   counting the cutlines)
-
-    @pre `IsLeader()`
-    */
-   sampleCount GetSequenceSamplesCount() const;
-
-   /*!
-    @return the total number of blocks in all underlying sequences of all clips,
-   across all channels (including hidden audio but not counting the cutlines)
-
-    @pre `IsLeader()`
-    */
-   size_t CountBlocks() const;
-
    sampleFormat GetSampleFormat() const override;
 
    /*!
@@ -726,13 +709,6 @@ public:
    // doing a copy and paste between projects.
    //
 
-   //! Should be called upon project close.  Not balanced by unlocking calls.
-   /*!
-    @pre `IsLeader()`
-    @excsafety{No-fail}
-    */
-   bool CloseLock() noexcept;
-
    //! Get access to the (visible) clips in the tracks, in unspecified order
    //! (not necessarily sequenced in time).
    /*!
@@ -745,8 +721,14 @@ public:
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
-   const WaveClip* GetLeftmostClip() const;
-   const WaveClip* GetRightmostClip() const;
+   const WaveClip* GetLeftmostNarrowClip() const;
+   const WaveClip* GetRightmostNarrowClip() const;
+
+   IntervalHolder GetLeftmostClip();
+   IntervalConstHolder GetLeftmostClip() const;
+
+   IntervalHolder GetRightmostClip();
+   IntervalConstHolder GetRightmostClip() const;
 
    /**
     * @brief Get access to the (visible) clips in the tracks, in unspecified
@@ -960,12 +942,6 @@ public:
    void ExpandCutLine(double cutLinePosition,
       double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
 
-   //! Remove cut line, without expanding the audio in it
-   /*
-    @pre `IsLeader()`
-    */
-   bool RemoveCutLine(double cutLinePosition);
-
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
@@ -1066,6 +1042,33 @@ public:
          sampleFormat format);
       bool StretchRatioEquals(double value) const;
 
+      /*! @excsafety{No-fail} */
+      void ShiftBy(double delta) noexcept;
+
+      sampleCount GetSequenceSamplesCount() const;
+      size_t CountBlocks() const;
+
+      void ConvertToSampleFormat(sampleFormat format,
+         const std::function<void(size_t)> & progressReport = {});
+
+      //! Silences the 'length' amount of samples starting from 'offset'
+      //! (relative to the play start)
+      void SetSilence(sampleCount offset, sampleCount length);
+
+      void CloseLock() noexcept;
+
+      SampleFormats GetSampleFormats() const;
+
+      /// Remove cut line, without expanding the audio in it
+      /*!
+       @return whether any cutline existed at the position and was removed
+       */
+      bool RemoveCutLine(double cutLinePosition);
+
+      // Resample clip. This also will set the rate, but without changing
+      // the length of the clip
+      void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
+
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
@@ -1084,6 +1087,13 @@ public:
 
       // Helper function in time of migration to wide clips
       template<typename Callable> void ForEachClip(const Callable& op) {
+         for (size_t channel = 0, channelCount = NChannels();
+            channel < channelCount; ++channel)
+            op(*GetClip(channel));
+      }
+
+      // Helper function in time of migration to wide clips
+      template<typename Callable> void ForEachClip(const Callable& op) const {
          for (size_t channel = 0, channelCount = NChannels();
             channel < channelCount; ++channel)
             op(*GetClip(channel));
@@ -1137,6 +1147,15 @@ public:
    const WaveClip* FindClipByName(const wxString& name) const;
 
    size_t NIntervals() const override;
+
+   /*!
+    @pre `IsLeader()`
+    */
+   IntervalHolder GetWideClip(size_t iInterval);
+   /*!
+    @pre `IsLeader()`
+    */
+   IntervalConstHolder GetWideClip(size_t iInterval) const;
 
    //!< used only during deserialization
    void SetLegacyFormat(sampleFormat format);

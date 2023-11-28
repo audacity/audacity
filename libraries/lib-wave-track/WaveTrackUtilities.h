@@ -38,4 +38,35 @@ using ProgressReport = std::function<bool(double)>;
 
 WAVE_TRACK_API bool Reverse(WaveTrack &track,
    sampleCount start, sampleCount len, const ProgressReport &report = {});
+
+/*!
+ @return the total number of samples in all underlying sequences
+of all clips, across all channels (including hidden audio but not
+counting the cutlines)
+
+ @pre `track.IsLeader()`
+ */
+WAVE_TRACK_API sampleCount GetSequenceSamplesCount(const WaveTrack &track);
+
+/*!
+ @return the total number of blocks in all underlying sequences of all clips,
+across all channels (including hidden audio but not counting the cutlines)
+
+ @pre `track.IsLeader()`
+ */
+WAVE_TRACK_API size_t CountBlocks(const WaveTrack &track);
+
+//! Should be called upon project close.  Not balanced by unlocking calls.
+/*!
+ @pre `track.IsLeader()`
+ @excsafety{No-fail}
+ */
+WAVE_TRACK_API void CloseLock(WaveTrack &track) noexcept;
+
+//! Remove cut line, without expanding the audio in it
+/*
+ @pre `track.IsLeader()`
+ @return whether any cutline existed at the position and was removed
+ */
+WAVE_TRACK_API bool RemoveCutLine(WaveTrack &track, double cutLinePosition);
 }

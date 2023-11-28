@@ -571,13 +571,14 @@ public:
    void
    OnProjectTempoChange(const std::optional<double>& oldTempo, double newTempo);
 
+   SampleFormats GetSampleFormats() const;
+
 private:
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range
    sampleCount TimeToSequenceSamples(double t) const;
 
    sampleCount GetNumSamples() const;
-   SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();
    std::vector<std::unique_ptr<Sequence>> GetEmptySequenceCopies() const;
    void StretchCutLines(double ratioChange);

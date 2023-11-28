@@ -31,6 +31,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackFocus.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "RealtimeEffectManager.h"
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/ThemePrefs.h"
@@ -265,7 +266,8 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
    // Simply finding a denominator for the progress dialog
    // Hidden samples are processed too, they should be counted as well
    // (Correctly counting all samples of all channels)
-   sampleCount totalSamples = pTrack->GetSequenceSamplesCount();
+   const sampleCount totalSamples =
+      WaveTrackUtilities::GetSequenceSamplesCount(*pTrack);
    sampleCount processedSamples{ 0 };
 
    // Below is the lambda function that is passed along the call chain to
@@ -766,9 +768,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
             std::numeric_limits<double>::epsilon() * std::max(a, b);
       };
       const auto eps = 0.5 / left.GetRate();
-      const auto rightIntervals = right.Intervals();
-      for(const auto& a : left.Intervals())
-      {
+      const auto &&rightIntervals = right.Intervals();
+      for (const auto &&a : left.Intervals()) {
          auto it = std::find_if(
             rightIntervals.begin(),
             rightIntervals.end(),
