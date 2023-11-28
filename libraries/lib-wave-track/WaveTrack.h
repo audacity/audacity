@@ -25,6 +25,7 @@
 #include <wx/longlong.h>
 
 class AudacityProject;
+class BlockArray;
 
 namespace BasicUI{ class ProgressDialog; }
 
@@ -119,6 +120,8 @@ public:
    size_t GetAppendBufferLen() const;
 
    int GetColourIndex() const;
+
+   BlockArray *GetSequenceBlockArray();
 
 private:
    const WaveClip &GetNarrowClip() const { return mNarrowClip; }

@@ -177,6 +177,14 @@ int WaveChannelInterval::GetColourIndex() const
    return GetNarrowClip().GetColourIndex();
 }
 
+BlockArray *WaveChannelInterval::GetSequenceBlockArray()
+{
+   return mNarrowClip.GetSequenceBlockArray(
+      0
+      // TODO wide wave tracks -- miChannel
+   );
+}
+
 WaveTrack::Interval::Interval(const ChannelGroup &group,
    const std::shared_ptr<WaveClip> &pClip,
    const std::shared_ptr<WaveClip> &pClip1
