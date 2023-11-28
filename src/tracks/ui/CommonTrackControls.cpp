@@ -127,10 +127,9 @@ BEGIN_POPUP_MENU(TrackMenuTable)
             up ? tracks.CanMoveUp(pTrack) : tracks.CanMoveDown(pTrack) );
       };
    };
+      //First section in the menu doesn't need BeginSection/EndSection
+      AppendItem( "Name", OnSetNameID, XXO("Re&name Track..."), POPUP_MENU_FN( OnSetName ) );
 
-   BeginSection( "Basic" );
-      AppendItem( "Name", OnSetNameID, XXO("&Name..."), POPUP_MENU_FN( OnSetName ) );
-   EndSection();
    BeginSection( "Move" );
       AppendItem( "Up",
          // It is not correct to use NormalizedKeyString::Display here --
