@@ -298,12 +298,3 @@ static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew ScrubbingToolBar{ project } }; }
 };
-
-namespace {
-AttachedToolBarMenuItem sAttachment{
-   /* i18n-hint: Clicking this menu item shows the toolbar
-      that enables Scrub or Seek playback and Scrub Ruler */
-   ScrubbingToolBar::ID(), wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar")
-};
-}
-
