@@ -30,7 +30,7 @@ struct ProjectSyncInfo
     * Should be 1 most of the time, but may be 0.5 or 2 to reduce the amount
     * of stretching needed to match the project tempo.
     */
-   const double recommendedStretchFactor;
+   const double stretchMinimizingPowOfTwo;
 
    /*!
     * It is common that loops fill up a bit more than the intended number of

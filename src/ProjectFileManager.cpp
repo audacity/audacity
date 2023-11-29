@@ -1302,11 +1302,10 @@ private:
    std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 };
 
-enum class UserResponseToMirPrompt
+struct UserResponseToMirPrompt
 {
-   ManualYes,
-   PreferenceYes,
-   No,
+   const bool yes;
+   const bool readFromPreference;
 };
 
 auto FormatTempo(double value)
@@ -1333,21 +1332,13 @@ UserWantsMirResultToConfigureProject(AudacityProject& project, double qpm)
       if (m.IsChecked())
          ImportExportPrefs::MusicFileImportSetting.Write(
             yes ? wxString("Yes") : wxString("No"));
-      return yes ? UserResponseToMirPrompt::ManualYes :
-                   UserResponseToMirPrompt::No;
+      constexpr auto readFromPreference = false;
+      return { yes, readFromPreference };
    }
-   else
-      return policy == wxString("Yes") ?
-                UserResponseToMirPrompt::PreferenceYes :
-                UserResponseToMirPrompt::No;
-}
-
-void ApplyMirResultToClip(
-   WaveTrack::Interval& clip, const MIR::ProjectSyncInfo& syncInfo)
-{
-   clip.SetRawAudioTempo(syncInfo.rawAudioTempo);
-   clip.TrimQuarternotesFromRight(syncInfo.excessDurationInQuarternotes);
-   clip.StretchBy(syncInfo.recommendedStretchFactor);
+   else{
+      constexpr auto readFromPreference = true;
+      return { policy == wxString("Yes"), readFromPreference };
+   }
 }
 
 void ReactOnMusicFileImport(
@@ -1368,45 +1359,53 @@ void ReactOnMusicFileImport(
    if (!musicInfo)
       return;
 
-   const auto projectTempo = ProjectTimeSignature::Get(project).GetTempo();
-   const auto syncInfo = musicInfo.GetProjectSyncInfo(projectTempo);
-
    const auto isFirstWaveTrack =
       TrackList::Get(project).Any<WaveTrack>().empty();
    const auto isBeatsAndMeasures =
       TimeDisplayModePreference.ReadEnum() == TimeDisplayMode::BeatsAndMeasures;
 
+   if (!isFirstWaveTrack && !isBeatsAndMeasures)
+      return;
+
+   const auto syncInfo = musicInfo.GetProjectSyncInfo(
+      ProjectTimeSignature::Get(project).GetTempo());
    const auto clips = newTrack.Intervals();
    assert(clips.size() == 1);
    const auto clip = *clips.begin();
 
-   if (!isFirstWaveTrack && !isBeatsAndMeasures)
+   if (!isFirstWaveTrack && isBeatsAndMeasures)
    {
-      // Do nothing.
+      clip->SetRawAudioTempo(syncInfo.rawAudioTempo);
+      clip->TrimQuarternotesFromRight(syncInfo.excessDurationInQuarternotes);
+      clip->StretchBy(syncInfo.stretchMinimizingPowOfTwo);
    }
-   else if (!isFirstWaveTrack && isBeatsAndMeasures)
-      ApplyMirResultToClip(*clip, syncInfo);
    else
    {
       // User interaction needed, do this asynchronously not to freeze the UI
       // during drag-and-drop.
       const auto pProj = project.shared_from_this();
-      BasicUI::CallAfter(
-         [=] {
-            const auto ans = UserWantsMirResultToConfigureProject(
-               *pProj, syncInfo.rawAudioTempo);
-            if (isBeatsAndMeasures || ans != UserResponseToMirPrompt::No)
-               ApplyMirResultToClip(*clip, syncInfo);
-            if (ans == UserResponseToMirPrompt::No)
-               return;
+      BasicUI::CallAfter([=] {
+         const auto ans = UserWantsMirResultToConfigureProject(
+            *pProj, syncInfo.rawAudioTempo);
+         if (isBeatsAndMeasures || ans.yes)
+         {
+            clip->SetRawAudioTempo(syncInfo.rawAudioTempo);
+            clip->TrimQuarternotesFromRight(
+               syncInfo.excessDurationInQuarternotes);
+         }
+         if (ans.yes)
+         {
             AdornedRulerPanel::Get(*pProj).SetTimeDisplayMode(
                TimeDisplayMode::BeatsAndMeasures);
             ProjectTimeSignature::Get(*pProj).SetTempo(syncInfo.rawAudioTempo);
-            if (ans == UserResponseToMirPrompt::ManualYes)
-               UndoManager::Get(*pProj).PushState(
-                  XO("Configure Project from Music File"),
-                  XO("Automatic Music Configuration"));
-         });
+         }
+         else if (isBeatsAndMeasures)
+            clip->StretchBy(syncInfo.stretchMinimizingPowOfTwo);
+         if (!ans.readFromPreference && ans.yes)
+            UndoManager::Get(*pProj).PushState(
+               XO("Configure Project from Music File"),
+               XO("Automatic Music Configuration"));
+      });
    }
 }
 } // namespace
