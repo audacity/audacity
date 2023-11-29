@@ -3867,18 +3867,6 @@ const WaveClip* WaveTrack::GetClipAtTime(double time) const
       clips.rbegin(), clips.rend(), [&](const WaveClip* const& clip) {
          return clip->WithinPlayRegion(time);
       });
-
-   // When two clips are immediately next to each other, the GetPlayEndTime() of the first clip
-   // and the GetPlayStartTime() of the second clip may not be exactly equal due to rounding errors.
-   // If "time" is the end time of the first of two such clips, and the end time is slightly
-   // less than the start time of the second clip, then the first rather than the
-   // second clip is found by the above code. So correct this.
-   if (p != clips.rend() && p != clips.rbegin() &&
-      time == (*p)->GetPlayEndTime() &&
-      (*p)->SharesBoundaryWithNextClip(*(p-1))) {
-      p--;
-   }
-
    return p != clips.rend() ? *p : nullptr;
 }
 
