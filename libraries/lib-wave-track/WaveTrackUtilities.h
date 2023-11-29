@@ -16,12 +16,12 @@
 #include "Internat.h"
 #include "IteratorX.h"
 #include "TranslatableString.h"
+#include "WaveTrack.h"
 #include <unordered_set>
 
 class SampleBlock;
 class sampleCount;
 class TrackList;
-class WaveClip;
 class WaveTrack;
 using ProgressReporter = std::function<void(double)>;
 
@@ -35,12 +35,18 @@ using SampleBlockIDSet = std::unordered_set<SampleBlockID>;
 using BlockVisitor = std::function<void(SampleBlock&)>;
 using BlockInspector = std::function<void(const SampleBlock&)>;
 
-using WaveClipHolder = std::shared_ptr<WaveClip>;
-using WaveClipHolders = std::vector<WaveClipHolder>;
+using IntervalHolder = std::shared_ptr<WaveTrack::Interval>;
+using IntervalHolders = std::vector<IntervalHolder>;
+using IntervalConstHolder = std::shared_ptr<const WaveTrack::Interval>;
 
-// Get mutative access to all clips (in some unspecified sequence),
-// including those hidden in cutlines.
-class WAVE_TRACK_API AllClipsIterator : public ValueIterator<WaveClip *>
+//! Get mutative access to all clips (in some unspecified sequence),
+//! including those hidden in cutlines.
+/*!
+ If clips are added to the track during the visit, not all may be visited.
+ If a clip is removed from the track during the visit, there will not be
+ dangling pointers, but a clip not in the track may be visited.
+ */
+class WAVE_TRACK_API AllClipsIterator : public ValueIterator<IntervalHolder>
 {
 public:
    // Constructs an "end" iterator
@@ -49,13 +55,7 @@ public:
    // Construct a "begin" iterator
    explicit AllClipsIterator(WaveTrack &track);
 
-   WaveClip *operator *() const
-   {
-      if (mStack.empty())
-         return nullptr;
-      else
-         return mStack.back().first->get();
-   }
+   value_type operator *() const;
 
    AllClipsIterator &operator ++();
 
@@ -69,17 +69,20 @@ public:
    { return !(a == b); }
 
 private:
-   void push(WaveClipHolders &clips);
-   using Iterator = WaveClipHolders::iterator;
-   using Pair = std::pair<Iterator, Iterator>;
-   using Stack = std::vector<Pair>;
+   using Stack = std::vector<std::pair<IntervalHolders, size_t>>;
+   void Push(IntervalHolders clips);
+
+   WaveTrack *mpTrack{};
    Stack mStack;
 };
 
-// Get const access to all clips (in some unspecified sequence),
-// including those hidden in cutlines.
+//! Get const access to all clips (in some unspecified sequence),
+//! including those hidden in cutlines.
+/*!
+ @copydoc AllClipsIterator
+ */
 class WAVE_TRACK_API AllClipsConstIterator
-   : public ValueIterator<const WaveClip *>
+   : public ValueIterator<IntervalConstHolder>
 {
 public:
    // Constructs an "end" iterator
@@ -90,8 +93,7 @@ public:
       : mIter{ const_cast<WaveTrack&>(track) }
    {}
 
-   const WaveClip *operator *() const
-   { return *mIter; }
+   value_type operator *() const { return *mIter; }
 
    AllClipsConstIterator &operator ++()
    { ++mIter; return *this; }

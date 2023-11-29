@@ -14,37 +14,52 @@
 #include "Sequence.h"
 #include "UserException.h"
 #include "WaveClip.h"
-#include "WaveTrack.h"
 #include <algorithm>
 
 WaveTrackUtilities::AllClipsIterator::AllClipsIterator(WaveTrack &track)
+   : mpTrack(&track)
 {
-   push(track.GetClips());
+   if (mpTrack) {
+      auto &&clips = mpTrack->Intervals();
+      Push({ clips.begin(), clips.end() });
+   }
+}
+
+auto WaveTrackUtilities::AllClipsIterator::operator *() const -> value_type
+{
+   if (mStack.empty())
+      return nullptr;
+   else {
+      auto &[intervals, ii] = mStack.back();
+      return intervals[ii];
+   }
 }
 
 auto WaveTrackUtilities::AllClipsIterator::operator ++ () -> AllClipsIterator &
 {
    // The unspecified sequence is a post-order, but there is no
    // promise whether sister nodes are ordered in time.
-   if ( !mStack.empty() ) {
-      auto &pair =  mStack.back();
-      if ( ++pair.first == pair.second ) {
+   if (mpTrack && !mStack.empty()) {
+      auto &[intervals, ii] = mStack.back();
+      if (++ii == intervals.size())
          mStack.pop_back();
-      }
       else
-         push( (*pair.first)->GetCutLines() );
+         Push(intervals[ii]->GetCutLines(*mpTrack));
    }
 
    return *this;
 }
 
-void WaveTrackUtilities::AllClipsIterator::push(WaveClipHolders &clips)
+void WaveTrackUtilities::AllClipsIterator::Push(IntervalHolders clips)
 {
-   auto pClips = &clips;
-   while (!pClips->empty()) {
-      auto first = pClips->begin();
-      mStack.push_back( Pair( first, pClips->end() ) );
-      pClips = &(*first)->GetCutLines();
+   if (!mpTrack)
+      return;
+
+   // Go depth first while there are cutlines
+   while (!clips.empty()) {
+      auto nextClips = clips[0]->GetCutLines(*mpTrack);
+      mStack.push_back({ move(clips), 0 });
+      clips = move(nextClips);
    }
 }
 
@@ -398,23 +413,22 @@ void WaveTrackUtilities::DiscardTrimmed(WaveTrack &track)
 void WaveTrackUtilities::VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs)
 {
-   for (auto wt : tracks.Any<const WaveTrack>())
-      for (const auto pChannel : TrackList::Channels(wt))
-         // Scan all clips within current track
-         for (const auto &clip : GetAllClips(*pChannel))
-            // Scan all sample blocks within current clip
-            for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
-               auto blocks = clip->GetSequenceBlockArray(ii);
-               for (const auto &block : *blocks) {
-                  auto &pBlock = block.sb;
-                  if (pBlock) {
-                     if (pIDs && !pIDs->insert(pBlock->GetBlockID()).second)
-                        continue;
-                     if (visitor)
-                        visitor(*pBlock);
-                  }
+   for (auto wt : tracks.Any<WaveTrack>())
+      // Scan all clips within current track
+      for (const auto &&pClip : GetAllClips(*wt))
+         // Scan all sample blocks within current clip
+         for (const auto &&pChannel : pClip->Channels()) {
+            auto blocks = pChannel->GetSequenceBlockArray();
+            for (const auto &block : *blocks) {
+               auto &pBlock = block.sb;
+               if (pBlock) {
+                  if (pIDs && !pIDs->insert(pBlock->GetBlockID()).second)
+                     continue;
+                  if (visitor)
+                     visitor(*pBlock);
                }
             }
+         }
 }
 
 void WaveTrackUtilities::InspectBlocks(const TrackList &tracks,
@@ -433,10 +447,9 @@ ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
    [](const AudacityProject& project) -> ProjectFormatVersion {
       const TrackList& trackList = TrackList::Get(project);
       for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto pChannel : TrackList::Channels(wt))
-            for (const auto& clip : GetAllClips(*pChannel))
-               if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
-                  return { 3, 1, 0, 0 };
+         for (const auto& clip : GetAllClips(*wt))
+            if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
+               return { 3, 1, 0, 0 };
       return BaseProjectFormatVersion;
    }
 );
@@ -447,10 +460,9 @@ ProjectFormatExtensionsRegistry::Extension stretchedClipsExtension(
    [](const AudacityProject& project) -> ProjectFormatVersion {
       const TrackList& trackList = TrackList::Get(project);
       for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto pChannel : TrackList::Channels(wt))
-            for (const auto& clip : GetAllClips(*pChannel))
-               if (clip->GetStretchRatio() != 1.0)
-                  return { 3, 4, 0, 0 };
+         for (const auto& clip : GetAllClips(*wt))
+            if (clip->GetStretchRatio() != 1.0)
+               return { 3, 4, 0, 0 };
       return BaseProjectFormatVersion;
    }
 );
