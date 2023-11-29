@@ -188,24 +188,22 @@ void WaveformVZoomHandle::DoZoom(
       {
          const float zoomFactor = 0.5f;
          const float currentRange = max - min;
+         const float nextRange = std::max(zoomFactor * currentRange, ZOOMLIMIT);
 
-         const float nextRange = zoomFactor * currentRange; 
-
-         if (nextRange > ZOOMLIMIT) {
-            min = -(0.5f * nextRange);
-            max = 0.5f * nextRange;
-         }
+         const float center = min + (currentRange / 2.0);
+         min = center - (nextRange / 2.0);
+         max = center + (nextRange / 2.0);
       }
       break;
    case kZoomOut:
       {
          const float zoomFactor = 2.0f;
          const float currentRange = max - min;
+         const float nextRange = zoomFactor * currentRange;
 
-         const float nextRange = zoomFactor * currentRange; 
-
-         min = std::max(-2.0f, -(0.5f * nextRange));
-         max = std::min(2.0f, 0.5f * nextRange);
+         const float center = min + (currentRange / 2.0);
+         min = std::max(-top, center - (0.5f * nextRange));
+         max = std::min(top, center + (0.5f * nextRange));
       }
       break;
    }
