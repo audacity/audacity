@@ -932,16 +932,6 @@ public:
    // clipidx1 and clipidx2 are indices into the clip list.
    bool MergeClips(int clipidx1, int clipidx2);
 
-   //! Expand cut line (that is, re-insert audio, then delete audio saved in
-   //! cut line)
-   /*
-    @pre `IsLeader()`
-    @param[out] cutlineStart start time of the insertion
-    @param[out] cutlineEnd end time of the insertion
-    */
-   void ExpandCutLine(double cutLinePosition,
-      double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
-
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 

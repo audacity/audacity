@@ -154,7 +154,8 @@ UIHandle::Result CutlineHandle::Click
 
       // When user presses left button on cut line, expand the line again
       double cutlineStart = 0, cutlineEnd = 0;
-      mpTrack->ExpandCutLine(mLocation.pos, &cutlineStart, &cutlineEnd);
+      WaveTrackUtilities::ExpandCutLine(*mpTrack,
+         mLocation.pos, &cutlineStart, &cutlineEnd);
       viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
    }
    else if (event.RightDown())
