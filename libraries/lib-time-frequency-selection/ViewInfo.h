@@ -225,8 +225,6 @@ public:
 
    bool bUpdateTrackIndicator;
 
-   bool bScrollBeyondZero;
-
    void WriteXMLAttributes(XMLWriter &xmlFile) const;
 
 private:
@@ -235,5 +233,4 @@ private:
    struct ProjectFileIORegistration;
 };
 
-extern TIME_FREQUENCY_SELECTION_API BoolSetting ScrollingPreference;
 #endif
