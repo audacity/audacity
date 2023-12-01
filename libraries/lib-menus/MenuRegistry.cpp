@@ -215,7 +215,7 @@ void MenuRegistry::Visit(Visitor<Traits> &visitor, AudacityProject &project)
          {wxT("/Optional/Extra/Part2"), wxT(
 "Navigation,Focus,Cursor,Track,Scriptables1,Scriptables2"
           )},
-         {wxT("/View/Windows"), wxT("UndoHistory,Karaoke,MixerBoard")},
+         {wxT("/View/Windows"), wxT("UndoHistory,MixerBoard")},
          {wxT("/Analyze/Analyzers/Windows"), wxT("ContrastAnalyser,PlotSpectrum")},
          {wxT("/Transport/Basic"), wxT("Play,Record,Scrubbing,Cursor")},
          {wxT("/View/Other/Toolbars/Toolbars/Other"), wxT(
@@ -232,7 +232,7 @@ void MenuRegistry::Visit(Visitor<Traits> &visitor, AudacityProject &project)
 "SetProject") },
          {wxT("/Optional/Extra/Part2/Scriptables2"), wxT(
 "Select,SetTrack,GetInfo,Message,Help,Import2,Export2,OpenProject2,"
-"SaveProject2,Drag,CompareAudio,Screenshot") },
+"SaveProject2,Drag,CompareAudio") },
       }
    };
 

@@ -19,7 +19,6 @@
 #include <wx/filedlg.h>
 #include "SelectFile.h"
 #include "AudacityMessageBox.h"
-#include "../widgets/VetoDialogHook.h"
 
 int BasicEffectUIServices::ShowClientInterface(const EffectPlugin &plugin,
    wxWindow &parent, wxDialog &dialog, EffectEditor *, bool forceModal) const
@@ -27,8 +26,6 @@ int BasicEffectUIServices::ShowClientInterface(const EffectPlugin &plugin,
    dialog.Layout();
    dialog.Fit();
    dialog.SetMinSize(dialog.GetSize());
-   if (VetoDialogHook::Call(&dialog))
-      return 0;
    if (plugin.SupportsRealtime() && !forceModal) {
       dialog.Show();
       // Return false to bypass effect processing
