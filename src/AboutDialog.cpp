@@ -128,6 +128,7 @@ void AboutDialog::CreateCreditsList()
       XO("%s, graphics");
 
    // The Audacity Team: developers and support
+   AddCredit(wxT("Antons \u010cinakovs"), testerFormat, roleTeamMember);
    AddCredit(wxT("Matthieu Hodgkinson"), developerFormat, roleTeamMember);
    AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
    AddCredit(wxT("Martin Keary"), roleTeamMember);
@@ -141,6 +142,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leo Wattenberg"), designerFormat, roleTeamMember);
    AddCredit(wxT("Jessica Williamson"), designerFormat, roleTeamMember);
+   
    
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
@@ -174,6 +176,7 @@ void AboutDialog::CreateCreditsList()
 
    // Contributors
    AddCredit(wxT("Lynn Allan"), developerFormat, roleContributor);
+   AddCredit(wxT("Johan Althoff (teetow)"), designerFormat, roleContributor);
    AddCredit(wxT("Brian Armstrong"), developerFormat, roleContributor);
    AddCredit(wxT("David Avery"), developerFormat, roleContributor);
    AddCredit(wxT("David Bailes"), accessibilityAdvisorFormat, roleContributor);
