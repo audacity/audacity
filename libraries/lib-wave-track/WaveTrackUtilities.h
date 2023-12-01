@@ -69,4 +69,14 @@ WAVE_TRACK_API void CloseLock(WaveTrack &track) noexcept;
  @return whether any cutline existed at the position and was removed
  */
 WAVE_TRACK_API bool RemoveCutLine(WaveTrack &track, double cutLinePosition);
+
+//! Expand cut line (that is, re-insert audio, then delete audio saved in
+//! cut line)
+/*
+ @pre `track.IsLeader()`
+ @param[out] cutlineStart start time of the insertion
+ @param[out] cutlineEnd end time of the insertion
+ */
+WAVE_TRACK_API void ExpandCutLine(WaveTrack &track, double cutLinePosition,
+   double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
 }

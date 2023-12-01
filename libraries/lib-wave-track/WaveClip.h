@@ -515,8 +515,8 @@ public:
     * in cutLineStart and cutLineEnd (if specified) if a cut line at this
     * position could be found. Return false otherwise. */
    bool FindCutLine(double cutLinePosition,
-                    double* cutLineStart = NULL,
-                    double *cutLineEnd = NULL) const;
+      double* cutLineStart = nullptr,
+      double *cutLineEnd = nullptr) const;
 
    /** Expand cut line (that is, re-insert audio, then DELETE audio saved in
     * cut line). Returns true if a cut line could be found and successfully

@@ -932,16 +932,6 @@ public:
    // clipidx1 and clipidx2 are indices into the clip list.
    bool MergeClips(int clipidx1, int clipidx2);
 
-   //! Expand cut line (that is, re-insert audio, then delete audio saved in
-   //! cut line)
-   /*
-    @pre `IsLeader()`
-    @param[out] cutlineStart start time of the insertion
-    @param[out] cutlineEnd end time of the insertion
-    */
-   void ExpandCutLine(double cutLinePosition,
-      double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
-
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
@@ -978,6 +968,9 @@ public:
          sampleFormat storedSampleFormat);
 
       ~Interval() override;
+
+      //! An invariant condition, for assertions
+      bool EqualSequenceLengthInvariant() const;
 
       void Append(constSamplePtr buffer[], sampleFormat format, size_t len);
       void Flush();
@@ -1081,6 +1074,15 @@ public:
       bool Paste(double t0, const Interval &src);
 
       const Envelope& GetEnvelope() const;
+
+      /** Find cut line at (approximately) this position. Returns true and fills
+       * in cutLineStart and cutLineEnd (if specified) if a cut line at this
+       * position could be found. Return false otherwise. */
+      bool FindCutLine(double cutLinePosition,
+         double* cutLineStart = nullptr,
+         double *cutLineEnd = nullptr) const;
+
+      void ExpandCutLine(double cutlinePosition);
 
    private:
       void SetEnvelope(const Envelope& envelope);
