@@ -232,7 +232,7 @@ void MenuRegistry::Visit(Visitor<Traits> &visitor, AudacityProject &project)
 "SetProject") },
          {wxT("/Optional/Extra/Part2/Scriptables2"), wxT(
 "Select,SetTrack,GetInfo,Message,Help,Import2,Export2,OpenProject2,"
-"SaveProject2,Drag,CompareAudio,Screenshot") },
+"SaveProject2,Drag,CompareAudio") },
       }
    };
 

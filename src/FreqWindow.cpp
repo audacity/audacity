@@ -86,7 +86,6 @@ the mouse around.
 #include "widgets/LogarithmicUpdater.h"
 #include "widgets/LinearDBFormat.h"
 #include "widgets/RealFormat.h"
-#include "widgets/VetoDialogHook.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -1244,8 +1243,6 @@ void OnPlotSpectrum(const CommandContext &context)
    auto freqWindow = &GetAttachedWindows(project)
       .Get< FrequencyPlotDialog >( sFrequencyWindowKey );
 
-   if( VetoDialogHook::Call( freqWindow ) )
-      return;
    freqWindow->Show(true);
    freqWindow->Raise();
    freqWindow->SetFocus();
