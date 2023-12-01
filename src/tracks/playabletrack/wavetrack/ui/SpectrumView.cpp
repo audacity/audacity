@@ -136,10 +136,8 @@ static UIHandlePtr BrushHandleHitTest(
    result = AssignUIHandlePtr(holder, result);
 
    //Make sure we are within the selected track
-   // Adjusting the selection edges can be turned off in
-   // the preferences...
    auto pTrack = pChannelView->FindTrack();
-   if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
+   if (!pTrack->GetSelected())
    {
       return result;
    }

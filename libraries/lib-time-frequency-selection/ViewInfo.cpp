@@ -263,8 +263,6 @@ void ViewInfo::UpdatePrefs()
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
    bScrollBeyondZero = ScrollingPreference.Read();
 #endif
-   gPrefs->Read(wxT("/GUI/AdjustSelectionEdges"), &bAdjustSelectionEdges,
-      true);
 
    UpdateSelectedPrefs( UpdateScrollPrefsID() );
 }

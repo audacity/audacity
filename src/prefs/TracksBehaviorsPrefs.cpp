@@ -98,9 +98,6 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Enable cut &lines"),
                     {wxT("/GUI/EnableCutLines"),
                      false});
-      S.TieCheckBox(XXO("Enable &dragging selection edges"),
-                    {wxT("/GUI/AdjustSelectionEdges"),
-                     true});
       S.TieCheckBox(XXO("Editing a clip can &move other clips"),
             EditClipsCanMove);
       S.TieCheckBox(

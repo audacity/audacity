@@ -226,7 +226,6 @@ public:
    bool bUpdateTrackIndicator;
 
    bool bScrollBeyondZero;
-   bool bAdjustSelectionEdges;
 
    void WriteXMLAttributes(XMLWriter &xmlFile) const;
 
