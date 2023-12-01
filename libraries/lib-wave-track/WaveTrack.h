@@ -829,10 +829,12 @@ public:
    //! Create new clip and add it to this track.
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
-    clip name may be provided
+    clip name may be provided, and a clip from which to copy all sample data.
+    @param offset desired sequence (not play) start time
     */
    IntervalHolder
-   CreateWideClip(double offset = .0, const wxString& name = wxEmptyString);
+   CreateWideClip(double offset = .0, const wxString& name = wxEmptyString,
+      const Interval *pToCopy = nullptr);
 
    //! Create new clip and add it to this track.
    /*!
@@ -994,6 +996,12 @@ public:
       bool IntersectsPlayRegion(double t0, double t1) const;
       bool WithinPlayRegion(double t) const;
 
+      /*!
+       * @brief [ < t and t < ), such that if the track were split at `t`, it would
+       * split this clip in two of lengths > 0.
+       */
+      bool SplitsPlayRegion(double t) const;
+
       double GetStretchRatio() const;
 
       sampleCount TimeToSamples(double time) const;
@@ -1016,6 +1024,8 @@ public:
 
       bool IsPlaceholder() const;
 
+      void MarkChanged();
+
       void SetSequenceStartTime(double t);
       void TrimLeftTo(double t);
       void TrimRightTo(double t);
@@ -1033,7 +1043,12 @@ public:
          const std::function<void(double)>& reportProgress,
          const ChannelGroup& group, const SampleBlockFactoryPtr& factory,
          sampleFormat format);
+
+      //! Checks for stretch-ratio equality, accounting for rounding errors.
+      //! @{
+      bool HasEqualStretchRatio(const Interval& other) const;
       bool StretchRatioEquals(double value) const;
+      //! @}
 
       /*! @excsafety{No-fail} */
       void ShiftBy(double delta) noexcept;
@@ -1085,6 +1100,9 @@ public:
       void ExpandCutLine(double cutlinePosition);
 
    private:
+      // TODO wide wave tracks -- remove friend
+      friend WaveTrack;
+
       void SetEnvelope(const Envelope& envelope);
 
       // Helper function in time of migration to wide clips
