@@ -27,6 +27,8 @@ class ShuttleGui;
 class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
 {
  public:
+   static BoolSetting TracksFitVerticallyZoomed;
+
    TracksPrefs(wxWindow * parent, wxWindowID winid);
    ~TracksPrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
