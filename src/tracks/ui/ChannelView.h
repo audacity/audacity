@@ -21,7 +21,7 @@ class TrackList;
 class ChannelVRulerControls;
 class TrackPanelResizerCell;
 
-class AUDACITY_DLL_API ChannelView /* not final */ : public CommonTrackCell
+class AUDACITY_DLL_API ChannelView /* not final */ : public CommonChannelCell
    , public std::enable_shared_from_this<ChannelView>
 {
    ChannelView(const ChannelView&) = delete;

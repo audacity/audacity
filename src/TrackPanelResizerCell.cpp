@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/mousestate.h>
 
 TrackPanelResizerCell::TrackPanelResizerCell(Channel &channel)
-   : CommonTrackCell{ channel.GetChannelGroup(), channel.GetChannelIndex() }
+   : CommonChannelCell{ channel.GetChannelGroup(), channel.GetChannelIndex() }
 {}
 
 std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest

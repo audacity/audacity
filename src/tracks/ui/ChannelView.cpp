@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <sstream>
 
 ChannelView::ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel)
-   : CommonTrackCell{ pTrack, iChannel }
+   : CommonChannelCell{ pTrack, iChannel }
    , vrulerSize{ 36, 0 }
 {
    DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );

@@ -18,7 +18,7 @@ class Channel;
 class TrackPanelResizeHandle;
 
 class TrackPanelResizerCell
-   : public CommonTrackCell
+   : public CommonChannelCell
    , public std::enable_shared_from_this< TrackPanelResizerCell >
 {
    TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;

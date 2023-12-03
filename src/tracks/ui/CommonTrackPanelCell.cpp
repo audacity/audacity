@@ -115,23 +115,14 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
    return hook ? hook( evt, pProject ) : RefreshCode::Cancelled;
 }
 
-CommonTrackCell::CommonTrackCell(
-   const std::shared_ptr<Track> &parent, size_t iChannel
-)  : mwTrack{ parent }
-   , miChannel{ iChannel }
-{
-   // TODO wide wave tracks -- remove assertion
-   assert(iChannel == 0);
-}
-
-CommonTrackCell::CommonTrackCell(ChannelGroup &group, size_t iChannel)
-   : CommonTrackCell{ static_cast<Track&>(group).shared_from_this(), iChannel }
+CommonTrackCell::CommonTrackCell(const std::shared_ptr<Track> &parent)
+   : mwTrack{ parent }
 {
 }
 
 CommonTrackCell::~CommonTrackCell() = default;
 
-void CommonTrackCell::Reparent( const std::shared_ptr<Track> &parent )
+void CommonTrackCell::Reparent(const std::shared_ptr<Track> &parent)
 {
    mwTrack = parent;
 }
@@ -141,14 +132,41 @@ std::shared_ptr<Track> CommonTrackCell::DoFindTrack()
    return mwTrack.lock();
 }
 
-std::shared_ptr<Channel> CommonTrackCell::DoFindChannel()
+CommonChannelCell::CommonChannelCell(
+   const std::shared_ptr<Track> &parent, size_t iChannel
+)  : mwTrack{ parent }
+   , miChannel{ iChannel }
+{
+   // TODO wide wave tracks -- remove assertion
+   assert(iChannel == 0);
+}
+
+CommonChannelCell::CommonChannelCell(ChannelGroup &group, size_t iChannel)
+   : CommonChannelCell{
+      static_cast<Track&>(group).shared_from_this(), iChannel }
+{
+}
+
+CommonChannelCell::~CommonChannelCell() = default;
+
+void CommonChannelCell::Reparent(const std::shared_ptr<Track> &parent)
+{
+   mwTrack = parent;
+}
+
+std::shared_ptr<Track> CommonChannelCell::DoFindTrack()
+{
+   return mwTrack.lock();
+}
+
+std::shared_ptr<Channel> CommonChannelCell::DoFindChannel()
 {
    if (const auto pTrack = FindTrack())
       return pTrack->GetChannel(miChannel);
    return {};
 }
 
-std::shared_ptr<const Channel> CommonTrackCell::DoFindChannel() const
+std::shared_ptr<const Channel> CommonChannelCell::DoFindChannel() const
 {
-   return const_cast<CommonTrackCell*>(this)->FindChannel();
+   return const_cast<CommonChannelCell*>(this)->FindChannel();
 }
