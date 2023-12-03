@@ -7,9 +7,8 @@ ChannelView.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
 #include "ChannelView.h"
-#include "Track.h"
+#include "ChannelAttachments.h"
 
 #include "ClientData.h"
 #include "PendingTracks.h"

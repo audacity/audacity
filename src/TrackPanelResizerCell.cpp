@@ -7,12 +7,10 @@ TrackPanelResizeHandle.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
-
 #include "TrackPanelResizerCell.h"
 
 #include "AColor.h"
-#include "Track.h"
+#include "ChannelAttachments.h"
 #include "TrackArtist.h"
 #include "TrackPanelDrawingContext.h"
 #include "TrackPanelResizeHandle.h"

@@ -18,6 +18,8 @@ reapplied to another track that must stay synchronized.
 ]]
 
 set( SOURCES
+   ChannelAttachments.cpp
+   ChannelAttachments.h
    PendingTracks.cpp
    PendingTracks.h
    TimeWarper.cpp
