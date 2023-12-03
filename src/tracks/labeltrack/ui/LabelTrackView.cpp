@@ -113,13 +113,15 @@ LabelTrackView::~LabelTrackView()
 {
 }
 
-void LabelTrackView::Reparent( const std::shared_ptr<Track> &parent )
+void LabelTrackView::Reparent(
+   const std::shared_ptr<Track> &parent, size_t iChannel)
 {
+   assert(iChannel == 0);
    auto oldParent = FindLabelTrack();
    auto newParent = track_cast<LabelTrack*>(parent.get());
    if (oldParent.get() != newParent)
       BindTo( newParent );
-   CommonChannelView::Reparent(parent);
+   CommonChannelView::Reparent(parent, iChannel);
 }
 
 void LabelTrackView::BindTo( LabelTrack *pParent )
@@ -141,9 +143,10 @@ void LabelTrackView::BindTo( LabelTrack *pParent )
    });
 }
 
-void LabelTrackView::CopyTo(Track &track) const
+void LabelTrackView::CopyTo(Track &track, size_t iChannel) const
 {
-   ChannelView::CopyTo(track);
+   assert(iChannel == 0);
+   ChannelView::CopyTo(track, iChannel);
    auto &other = ChannelView::Get(*track.GetChannel(0));
    if (const auto pOther = dynamic_cast<const LabelTrackView*>(&other)) {
       pOther->mNavigationIndex = mNavigationIndex;

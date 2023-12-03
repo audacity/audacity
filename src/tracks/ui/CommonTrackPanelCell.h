@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_COMMON_TRACK_PANEL_CELL__
 
 #include "TrackPanelCell.h"
-#include "TrackAttachment.h" // to inherit
+#include "ChannelAttachments.h" // to inherit
 
 #include <stdlib.h>
 #include <memory>
@@ -116,7 +116,7 @@ private:
 };
 
 class AUDACITY_DLL_API CommonChannelCell /* not final */
-   : public CommonTrackPanelCell, public TrackAttachment
+   : public CommonTrackPanelCell, public ChannelAttachment
 {
 public:
    //! Construct from a track and a channel index
@@ -132,7 +132,8 @@ public:
 
    std::shared_ptr<Track> DoFindTrack() override;
 
-   void Reparent( const std::shared_ptr<Track> &parent ) override;
+   void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
+      override;
 
    size_t GetChannelIndex() const { return miChannel; }
 

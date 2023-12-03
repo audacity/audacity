@@ -42,7 +42,8 @@ class AUDACITY_DLL_API LabelTrackView final : public CommonChannelView
    LabelTrackView( const LabelTrackView& ) = delete;
    LabelTrackView &operator=( const LabelTrackView& ) = delete;
 
-   void Reparent( const std::shared_ptr<Track> &parent ) override;
+   void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
+      override;
 
 public:
    enum : int { DefaultFontSize = 0 }; //system preferred
@@ -91,7 +92,7 @@ private:
    std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
    // Preserve some view state too for undo/redo purposes
-   void CopyTo( Track &track ) const override;
+   void CopyTo(Track &track, size_t iChannel) const override;
 
 public:
    static void DoEditLabels(

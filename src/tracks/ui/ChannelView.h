@@ -63,7 +63,7 @@ public:
    static int GetTotalHeight(const TrackList &list);
 
    // Copy view state, for undo/redo purposes
-   void CopyTo(Track &track) const override;
+   void CopyTo(Track &track, size_t iChannel) const override;
 
    bool GetMinimized() const { return mMinimized; }
    void SetMinimized( bool minimized );
@@ -108,10 +108,10 @@ public:
    // meaning that track has no such area.
    virtual std::shared_ptr<CommonTrackCell> GetAffordanceControls();
 
-   void WriteXMLAttributes( XMLWriter & ) const override;
+   void WriteXMLAttributes(XMLWriter &writer, size_t iChannel) const override;
    bool HandleXMLAttribute(
-      const std::string_view& attr, const XMLAttributeValueView& valueView )
-   override;
+      const std::string_view& attr, const XMLAttributeValueView& valueView,
+      size_t iChannel) override;
 
    // New virtual function.  The default just returns a one-element array
    // containing this.  Overrides might refine the Y axis.

@@ -57,7 +57,7 @@ int ChannelView::GetTotalHeight(const TrackList &list)
    return GetCumulativeHeight(*list.rbegin());
 }
 
-void ChannelView::CopyTo(Track &track) const
+void ChannelView::CopyTo(Track &track, size_t) const
 {
    auto &other = GetFromChannelGroup(track);
 
@@ -131,14 +131,15 @@ std::string MinimizedAttributeName(const ChannelView &view) {
 }
 }
 
-void ChannelView::WriteXMLAttributes(XMLWriter &xmlFile) const
+void ChannelView::WriteXMLAttributes(XMLWriter &xmlFile, size_t) const
 {
    xmlFile.WriteAttr(HeightAttributeName(*this), GetExpandedHeight());
    xmlFile.WriteAttr(MinimizedAttributeName(*this), GetMinimized());
 }
 
 bool ChannelView::HandleXMLAttribute(
-   const std::string_view& attr, const XMLAttributeValueView& valueView)
+   const std::string_view& attr, const XMLAttributeValueView& valueView,
+   size_t)
 {
    long nValue;
 

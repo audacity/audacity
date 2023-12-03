@@ -946,9 +946,9 @@ WaveChannelView::~WaveChannelView()
 {
 }
 
-void WaveChannelView::CopyTo(Track &track) const
+void WaveChannelView::CopyTo(Track &track, size_t iChannel) const
 {
-   ChannelView::CopyTo(track);
+   ChannelView::CopyTo(track, iChannel);
    auto &other = ChannelView::Get(*track.GetChannel(0));
    if (const auto pOther = dynamic_cast<WaveChannelView*>(&other)) {
       // only these fields are important to preserve in undo/redo history
@@ -1690,12 +1690,14 @@ wxRect ClipParameters::GetClipRect(const ClipTimes& clip,
     return wxRect();
 }
 
-void WaveChannelView::Reparent(const std::shared_ptr<Track> &parent)
+void WaveChannelView::Reparent(
+   const std::shared_ptr<Track> &parent, size_t iChannel)
 {
    // BuildSubViews(); // not really needed
-   CommonChannelView::Reparent(parent);
-   WaveChannelSubViews::ForEach([&parent](WaveChannelSubView &subView){
-      subView.Reparent(parent);
+   CommonChannelView::Reparent(parent, iChannel);
+   WaveChannelSubViews::ForEach([&parent, iChannel](WaveChannelSubView &subView)
+   {
+      subView.Reparent(parent, iChannel);
    });
    if (mpAffordanceCellControl)
       mpAffordanceCellControl->Reparent(parent);

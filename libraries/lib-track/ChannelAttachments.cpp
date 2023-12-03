@@ -11,7 +11,27 @@
 *//*******************************************************************/
 #include "ChannelAttachments.h"
 
-TrackAttachment &ChannelAttachmentsBase::Get(
+ChannelAttachment::~ChannelAttachment() = default;
+
+void ChannelAttachment::CopyTo(Track&, size_t) const
+{
+}
+
+void ChannelAttachment::Reparent(const std::shared_ptr<Track> &, size_t)
+{
+}
+
+void ChannelAttachment::WriteXMLAttributes(XMLWriter &, size_t) const
+{
+}
+
+bool ChannelAttachment::HandleXMLAttribute(
+   const std::string_view &, const XMLAttributeValueView &, size_t)
+{
+   return false;
+}
+
+ChannelAttachment &ChannelAttachmentsBase::Get(
    const AttachedTrackObjects::RegisteredFactory &key,
    Track &track, size_t iChannel)
 {
@@ -30,7 +50,7 @@ TrackAttachment &ChannelAttachmentsBase::Get(
    return *pObject;
 }
 
-TrackAttachment *ChannelAttachmentsBase::Find(
+ChannelAttachment *ChannelAttachmentsBase::Find(
    const AttachedTrackObjects::RegisteredFactory &key,
    Track *pTrack, size_t iChannel)
 {
@@ -58,30 +78,42 @@ ChannelAttachmentsBase::~ChannelAttachmentsBase() = default;
 
 void ChannelAttachmentsBase::CopyTo(Track &track) const
 {
-   for (auto &pAttachment : mAttachments)
-      if (pAttachment)
-         pAttachment->CopyTo(track);
+   // Maybe making a narrow empty copy so limit to the other track's number
+   // of channels
+   const size_t nn = std::min(mAttachments.size(), track.NChannels());
+   for (size_t ii = 0; ii < nn; ++ii) {
+      if (mAttachments[ii])
+         mAttachments[ii]->CopyTo(track, ii);
+   }
 }
 
 void ChannelAttachmentsBase::Reparent(const std::shared_ptr<Track> &parent)
 {
-   for (auto &pAttachment : mAttachments)
-      if (pAttachment)
-         pAttachment->Reparent(parent);
+   const size_t nn = mAttachments.size();
+   for (size_t ii = 0; ii < nn; ++ii) {
+      if (mAttachments[ii])
+         mAttachments[ii]->Reparent(parent, ii);
+   }
 }
 
 void ChannelAttachmentsBase::WriteXMLAttributes(XMLWriter &writer) const
 {
-   for (auto &pAttachment : mAttachments)
-      if (pAttachment)
-         pAttachment->WriteXMLAttributes(writer);
+   const size_t nn = mAttachments.size();
+   for (size_t ii = 0; ii < nn; ++ii) {
+      if (mAttachments[ii])
+         mAttachments[ii]->WriteXMLAttributes(writer, ii);
+   }
 }
 
 bool ChannelAttachmentsBase::HandleXMLAttribute(
    const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
-   return std::any_of(mAttachments.begin(), mAttachments.end(),
+   size_t ii = 0;
+   return any_of(mAttachments.begin(), mAttachments.end(),
    [&](auto &pAttachment) {
-      return pAttachment && pAttachment->HandleXMLAttribute(attr, valueView);
+      bool result = pAttachment &&
+         pAttachment->HandleXMLAttribute(attr, valueView, ii);
+      ++ii;
+      return result;
    });
 }

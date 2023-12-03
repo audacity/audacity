@@ -117,12 +117,13 @@ public:
    ~WaveChannelView() override;
 
    // Preserve some view state too for undo/redo purposes
-   void CopyTo( Track &track ) const override;
+   void CopyTo(Track &track, size_t iChannel) const override;
 
    std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
    // CommonChannelView implementation
-   void Reparent( const std::shared_ptr<Track> &parent ) override;
+   void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
+      override;
 
    static std::pair<
       bool, // if true, hit-testing is finished

@@ -149,7 +149,7 @@ CommonChannelCell::CommonChannelCell(ChannelGroup &group, size_t iChannel)
 
 CommonChannelCell::~CommonChannelCell() = default;
 
-void CommonChannelCell::Reparent(const std::shared_ptr<Track> &parent)
+void CommonChannelCell::Reparent(const std::shared_ptr<Track> &parent, size_t)
 {
    mwTrack = parent;
 }
