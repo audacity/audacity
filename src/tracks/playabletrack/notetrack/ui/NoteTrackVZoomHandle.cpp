@@ -42,9 +42,7 @@ namespace
    bool IsDragZooming(int zoomStart, int zoomEnd)
    {
       const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
-      bool bVZoom;
-      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-      return bVZoom && (abs(zoomEnd - zoomStart) > DragThreshold);
+      return abs(zoomEnd - zoomStart) > DragThreshold;
    }
 
 }
@@ -72,17 +70,12 @@ HitTestPreview NoteTrackVZoomHandle::HitPreview(const wxMouseState &state)
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
    static  wxCursor arrowCursor{ wxCURSOR_ARROW };
 
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-   bVZoom &= !state.RightIsDown();
-   const auto message = bVZoom ? 
-      XO("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.") :
-      XO("Right-click for menu.");
+   const auto message = 
+      XO("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
 
    return {
       message,
-      bVZoom ? (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor) : &arrowCursor
-      // , message
+      state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor
    };
 }
 
@@ -182,8 +175,6 @@ protected:
 // Note that these can be with or without spectrum view which
 // adds a constant.
 //const int kZoom1to1 = 1;
-//const int kZoomTimes2 = 2;
-//const int kZoomDiv2 = 3;
 //const int kZoomHalfWave = 4;
 //const int kZoomInByDrag = 5;
       kZoomIn = 6,
@@ -198,8 +189,6 @@ protected:
    void OnZoom( int iZoomCode );
 // void OnZoomFitVertical(wxCommandEvent&){ OnZoom( kZoom1to1 );};
    void OnZoomReset(wxCommandEvent&){ OnZoom( kZoomReset );};
-// void OnZoomDiv2Vertical(wxCommandEvent&){ OnZoom( kZoomDiv2 );};
-// void OnZoomTimes2Vertical(wxCommandEvent&){ OnZoom( kZoomTimes2 );};
 // void OnZoomHalfWave(wxCommandEvent&){ OnZoom( kZoomHalfWave );};
    void OnZoomInVertical(wxCommandEvent&){ OnZoom( kZoomIn );};
    void OnZoomOutVertical(wxCommandEvent&){ OnZoom( kZoomOut );};
@@ -260,8 +249,7 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
 BEGIN_POPUP_MENU(NoteTrackVRulerMenuTable)
 
    // Accelerators only if zooming enabled.
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+   bool bVZoom = true;
 
    BeginSection( "Zoom" );
       BeginSection( "Basic" );
@@ -324,10 +312,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
       return data.result;
    }
 
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-   bVZoom &= event.GetId() != kCaptureLostEventId;
-   if( !bVZoom )
+   if( event.GetId() == kCaptureLostEventId )
       return RefreshAll;
 
    NoteTrackDisplayData data{ *pTrack, evt.rect };

@@ -206,18 +206,6 @@ void OnZoomFitV(const CommandContext &context)
    ProjectHistory::Get( project ).ModifyState(true);
 }
 
-void OnAdvancedVZoom(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &commandManager = CommandManager::Get( project );
-
-   bool checked = !gPrefs->Read(wxT("/GUI/VerticalZooming"), 0L);
-   gPrefs->Write(wxT("/GUI/VerticalZooming"), checked);
-   gPrefs->Flush();
-   commandManager.Check(wxT("AdvancedVZoom"), checked);
-   MenuCreator::RebuildAllMenuBars();
-}
-
 void OnCollapseAllTracks(const CommandContext &context)
 {
    auto &project = context.project;
@@ -317,7 +305,6 @@ auto ViewMenu()
    Menu( wxT("View"), XXO("&View"),
       Section( "Basic",
          Menu( wxT("Zoom"), XXO("&Zoom"),
-            Section( "",
                Command( wxT("ZoomIn"), XXO("Zoom &In"), OnZoomIn,
                   ZoomInAvailableFlag(), wxT("Ctrl+1") ),
                Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), OnZoomNormal,
@@ -328,12 +315,6 @@ auto ViewMenu()
                   TimeSelectedFlag(), wxT("Ctrl+E") ),
                Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), OnZoomToggle,
                   TracksExistFlag(), wxT("Shift+Z") )
-            ),
-            Section( "",
-               Command( wxT("AdvancedVZoom"), XXO("Advanced &Vertical Zooming"),
-                  OnAdvancedVZoom, AlwaysEnabledFlag,
-                  Options{}.CheckTest( wxT("/GUI/VerticalZooming"), false ) )
-            )
          ),
 
          Menu( wxT("TrackSize"), XXO("T&rack Size"),

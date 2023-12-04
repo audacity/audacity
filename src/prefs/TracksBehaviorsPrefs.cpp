@@ -119,9 +119,6 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Enable scrolling left of &zero"),
                     ScrollingPreference);
 #endif
-      S.TieCheckBox(XXO("Advanced &vertical zooming"),
-                    {wxT("/GUI/VerticalZooming"),
-                     false});
 
       S.AddSpace(10);
 
