@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.2\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-11-15 12:00+0000\n"
+"PO-Revision-Date: 2023-12-04 05:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -1808,7 +1808,7 @@ msgstr "Nie można otworzyć pliku projektu"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
-msgstr "Nie udało się usunąć informacji automatycznego zapisywania z pliku projektu."
+msgstr "Nie udało się usunąć informacji o autozapisywaniu z pliku projektu."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
@@ -1855,7 +1855,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Nie można usunąć informacji z autozapisu, prawdopodobnie z powodu\n"
+"Nie można usunąć informacji o autozapisywaniu, prawdopodobnie z powodu\n"
 "ograniczonej ilości miejsca na urządzeniu pamięci masowej.\n"
 "\n"
 "%s"
