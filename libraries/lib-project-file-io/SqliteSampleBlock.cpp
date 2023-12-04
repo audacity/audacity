@@ -22,6 +22,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "UndoManager.h"
 #include "UndoTracks.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 #include "SentryHelper.h"
 #include <wx/log.h>
@@ -1063,9 +1064,11 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
 static size_t EstimateRemovedBlocks(
    AudacityProject &project, size_t begin, size_t end)
 {
+   using namespace WaveTrackUtilities;
    auto &manager = UndoManager::Get(project);
 
    // Collect ids that survive
+   using namespace WaveTrackUtilities;
    SampleBlockIDSet wontDelete;
    auto f = [&](const UndoStackElem &elem) {
       if (auto pTracks = UndoTracks::Find(elem))

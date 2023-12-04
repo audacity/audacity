@@ -25,6 +25,7 @@
 #include <wx/longlong.h>
 
 class AudacityProject;
+class BlockArray;
 
 namespace BasicUI{ class ProgressDialog; }
 
@@ -119,6 +120,8 @@ public:
    size_t GetAppendBufferLen() const;
 
    int GetColourIndex() const;
+
+   BlockArray *GetSequenceBlockArray();
 
 private:
    const WaveClip &GetNarrowClip() const { return mNarrowClip; }
@@ -737,94 +740,6 @@ public:
     */
    ClipConstHolders GetClipInterfaces() const;
 
-   // Get mutative access to all clips (in some unspecified sequence),
-   // including those hidden in cutlines.
-   class AllClipsIterator
-      : public ValueIterator< WaveClip * >
-   {
-   public:
-      // Constructs an "end" iterator
-      AllClipsIterator () {}
-
-      // Construct a "begin" iterator
-      explicit AllClipsIterator( WaveTrack &track )
-      {
-         push( track.mClips );
-      }
-
-      WaveClip *operator * () const
-      {
-         if (mStack.empty())
-            return nullptr;
-         else
-            return mStack.back().first->get();
-      }
-
-      AllClipsIterator &operator ++ ();
-
-      // Define == well enough to serve for loop termination test
-      friend bool operator == (
-         const AllClipsIterator &a, const AllClipsIterator &b)
-      { return a.mStack.empty() == b.mStack.empty(); }
-
-      friend bool operator != (
-         const AllClipsIterator &a, const AllClipsIterator &b)
-      { return !( a == b ); }
-
-   private:
-
-      void push( WaveClipHolders &clips );
-
-      using Iterator = WaveClipHolders::iterator;
-      using Pair = std::pair< Iterator, Iterator >;
-      using Stack = std::vector< Pair >;
-
-      Stack mStack;
-   };
-
-   // Get const access to all clips (in some unspecified sequence),
-   // including those hidden in cutlines.
-   class AllClipsConstIterator
-      : public ValueIterator< const WaveClip * >
-   {
-   public:
-      // Constructs an "end" iterator
-      AllClipsConstIterator () {}
-
-      // Construct a "begin" iterator
-      explicit AllClipsConstIterator( const WaveTrack &track )
-         : mIter{ const_cast< WaveTrack& >( track ) }
-      {}
-
-      const WaveClip *operator * () const
-      { return *mIter; }
-
-      AllClipsConstIterator &operator ++ ()
-      { ++mIter; return *this; }
-
-      // Define == well enough to serve for loop termination test
-      friend bool operator == (
-         const AllClipsConstIterator &a, const AllClipsConstIterator &b)
-      { return a.mIter == b.mIter; }
-
-      friend bool operator != (
-         const AllClipsConstIterator &a, const AllClipsConstIterator &b)
-      { return !( a == b ); }
-
-   private:
-      AllClipsIterator mIter;
-   };
-
-   IteratorRange< AllClipsIterator > GetAllClips()
-   {
-      return { AllClipsIterator{ *this }, AllClipsIterator{ } };
-   }
-
-   IteratorRange< AllClipsConstIterator > GetAllClips() const
-   {
-      return { AllClipsConstIterator{ *this }, AllClipsConstIterator{ } };
-   }
-
    /// @pre IsLeader()
    //! Create new clip and add it to this track.
    /*!
@@ -887,18 +802,6 @@ public:
    IntervalHolders SortedIntervalArray();
    //! Return all (wide) WaveClips sorted by clip play start time.
    IntervalConstHolders SortedIntervalArray() const;
-
-   //! Whether any clips have hidden audio
-   /*!
-    @pre `IsLeader()`
-    */
-   bool HasHiddenData() const;
-
-   //! Remove hidden audio from all clips
-   /*!
-    @pre `IsLeader()`
-    */
-   void DiscardTrimmed();
 
    //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
    /*!
@@ -1072,6 +975,14 @@ public:
        @return whether any cutline existed at the position and was removed
        */
       bool RemoveCutLine(double cutLinePosition);
+
+      //! Construct an array of temporary Interval objects that point to
+      //! the cutlines
+      /*!
+       @param track is required to construct new Intervals because this
+       Interval does not store a back-reference to its track
+       */
+      std::vector<IntervalHolder> GetCutLines(WaveTrack &track);
 
       // Resample clip. This also will set the rate, but without changing
       // the length of the clip
@@ -1358,25 +1269,6 @@ size_t WaveChannel::GetIdealBlockSize() {
 size_t WaveChannel::GetMaxBlockSize() const {
    return GetTrack().GetMaxBlockSize();
 }
-
-#include <unordered_set>
-class SampleBlock;
-using SampleBlockID = long long;
-using SampleBlockIDSet = std::unordered_set<SampleBlockID>;
-class TrackList;
-using BlockVisitor = std::function< void(SampleBlock&) >;
-using BlockInspector = std::function< void(const SampleBlock&) >;
-
-// Function to visit all sample blocks from a list of tracks.
-// If a set is supplied, then only visit once each unique block ID not already
-// in that set, and accumulate those into the set as a side-effect.
-// The visitor function may be null.
-void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
-   SampleBlockIDSet *pIDs = nullptr);
-
-// Non-mutating version of the above
-WAVE_TRACK_API void InspectBlocks(const TrackList &tracks,
-   BlockInspector inspector, SampleBlockIDSet *pIDs = nullptr);
 
 class ProjectRate;
 

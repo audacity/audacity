@@ -63,8 +63,6 @@ from the project that will own the track.
 
 #include "InconsistencyException.h"
 
-#include "ProjectFormatExtensionsRegistry.h"
-
 using std::max;
 
 WaveChannelInterval::~WaveChannelInterval() = default;
@@ -177,6 +175,14 @@ size_t WaveChannelInterval::GetAppendBufferLen() const
 int WaveChannelInterval::GetColourIndex() const
 {
    return GetNarrowClip().GetColourIndex();
+}
+
+BlockArray *WaveChannelInterval::GetSequenceBlockArray()
+{
+   return mNarrowClip.GetSequenceBlockArray(
+      0
+      // TODO wide wave tracks -- miChannel
+   );
 }
 
 WaveTrack::Interval::Interval(const ChannelGroup &group,
@@ -455,6 +461,29 @@ bool WaveTrack::Interval::RemoveCutLine(double cutLinePosition)
    ForEachClip([&](auto& clip) {
       result = clip.RemoveCutLine(cutLinePosition) || result; });
    return true;
+}
+
+auto WaveTrack::Interval::GetCutLines(WaveTrack &track)
+   -> std::vector<IntervalHolder>
+{
+   if (!mpClip) {
+      assert(false);
+      return {};
+   }
+   auto &cutLines0 = mpClip->GetCutLines();
+   size_t nCutLines0 = cutLines0.size();
+   auto *pCutLines1 = mpClip1 ? &mpClip1->GetCutLines() : nullptr;
+   auto nCutLines1 = pCutLines1 ? pCutLines1->size() : 0;
+
+   std::vector<IntervalHolder> result;
+   result.reserve(nCutLines0);
+   for (size_t ii = 0; ii < nCutLines0; ++ii) {
+      auto pClip0 = cutLines0[ii];
+      auto pClip1 = ii < nCutLines1 ? (*pCutLines1)[ii] : nullptr;
+      auto pInterval = std::make_shared<Interval>(track, pClip0, pClip1);
+      result.emplace_back(move(pInterval));
+   }
+   return result;
 }
 
 void WaveTrack::Interval::Resample(int rate, BasicUI::ProgressDialog *progress)
@@ -4488,90 +4517,6 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    return result;
 }
 
-bool WaveTrack::HasHiddenData() const
-{
-   assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      for (const auto& clip : pChannel->GetClips())
-         if (clip->GetTrimLeft() != 0 || clip->GetTrimRight() != 0)
-            return true;
-   return false;
-}
-
-void WaveTrack::DiscardTrimmed()
-{
-   assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      for (auto clip : pChannel->GetClips()) {
-         if (clip->GetTrimLeft() != 0) {
-            auto t0 = clip->GetPlayStartTime();
-            clip->SetTrimLeft(0);
-            clip->ClearLeft(t0);
-         }
-         if (clip->GetTrimRight() != 0) {
-            auto t1 = clip->GetPlayEndTime();
-            clip->SetTrimRight(0);
-            clip->ClearRight(t1);
-         }
-      }
-   }
-}
-
-auto WaveTrack::AllClipsIterator::operator ++ () -> AllClipsIterator &
-{
-   // The unspecified sequence is a post-order, but there is no
-   // promise whether sister nodes are ordered in time.
-   if ( !mStack.empty() ) {
-      auto &pair =  mStack.back();
-      if ( ++pair.first == pair.second ) {
-         mStack.pop_back();
-      }
-      else
-         push( (*pair.first)->GetCutLines() );
-   }
-
-   return *this;
-}
-
-void WaveTrack::AllClipsIterator::push( WaveClipHolders &clips )
-{
-   auto pClips = &clips;
-   while (!pClips->empty()) {
-      auto first = pClips->begin();
-      mStack.push_back( Pair( first, pClips->end() ) );
-      pClips = &(*first)->GetCutLines();
-   }
-}
-
-void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
-   SampleBlockIDSet *pIDs)
-{
-   for (auto wt : tracks.Any<const WaveTrack>())
-      for (const auto pChannel : TrackList::Channels(wt))
-         // Scan all clips within current track
-         for (const auto &clip : pChannel->GetAllClips())
-            // Scan all sample blocks within current clip
-            for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii) {
-               auto blocks = clip->GetSequenceBlockArray(ii);
-               for (const auto &block : *blocks) {
-                  auto &pBlock = block.sb;
-                  if (pBlock) {
-                     if (pIDs && !pIDs->insert(pBlock->GetBlockID()).second)
-                        continue;
-                     if (visitor)
-                        visitor(*pBlock);
-                  }
-               }
-            }
-}
-
-void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
-   SampleBlockIDSet *pIDs)
-{
-   VisitBlocks(
-      const_cast<TrackList &>(tracks), std::move( inspector ), pIDs );
-}
-
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
    return std::make_shared< WaveTrackFactory >(
       ProjectRate::Get( project ),
@@ -4602,36 +4547,6 @@ WaveTrackFactory &WaveTrackFactory::Reset( AudacityProject &project )
 void WaveTrackFactory::Destroy( AudacityProject &project )
 {
    project.AttachedObjects::Assign( key2, nullptr );
-}
-
-namespace {
-// If any clips have hidden data, don't allow older versions to open the
-// project.  Otherwise overlapping clips might result.
-ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
-   [](const AudacityProject& project) -> ProjectFormatVersion {
-      const TrackList& trackList = TrackList::Get(project);
-      for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto pChannel : TrackList::Channels(wt))
-            for (const auto& clip : pChannel->GetAllClips())
-               if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
-                  return { 3, 1, 0, 0 };
-      return BaseProjectFormatVersion;
-   }
-);
-
-// If any clips have any stretch, don't allow older versions to open the
-// project.  Otherwise overlapping clips might result.
-ProjectFormatExtensionsRegistry::Extension stretchedClipsExtension(
-   [](const AudacityProject& project) -> ProjectFormatVersion {
-      const TrackList& trackList = TrackList::Get(project);
-      for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto pChannel : TrackList::Channels(wt))
-            for (const auto& clip : pChannel->GetAllClips())
-               if (clip->GetStretchRatio() != 1.0)
-                  return { 3, 4, 0, 0 };
-      return BaseProjectFormatVersion;
-   }
-);
 }
 
 StringSetting AudioTrackNameSetting{

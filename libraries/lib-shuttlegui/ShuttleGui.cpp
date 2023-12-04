@@ -97,7 +97,7 @@ for registering for changes.
 
 
 
-#include "MemoryX.h"
+#include "IteratorX.h"
 #include "Prefs.h"
 #include "ShuttlePrefs.h"
 #include "Theme.h"

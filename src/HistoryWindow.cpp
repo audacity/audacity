@@ -48,8 +48,10 @@ undo memory so as to free up space.
 #include <unordered_set>
 #include "SampleBlock.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 namespace {
+using namespace WaveTrackUtilities;
 struct SpaceUsageCalculator {
    using Type = unsigned long long;
    using SpaceArray = std::vector<Type> ;

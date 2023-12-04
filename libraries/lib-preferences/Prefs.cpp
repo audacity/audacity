@@ -55,9 +55,9 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
-#include "Internat.h"
-#include "MemoryX.h"
 #include "BasicUI.h"
+#include "Internat.h"
+#include "IteratorX.h"
 #include "Observer.h"
 
 BoolSetting DefaultUpdatesCheckingFlag{

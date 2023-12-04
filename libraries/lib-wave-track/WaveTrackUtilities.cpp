@@ -10,11 +10,58 @@
 **********************************************************************/
 #include "WaveTrackUtilities.h"
 #include "BasicUI.h"
+#include "SampleBlock.h"
 #include "Sequence.h"
 #include "UserException.h"
 #include "WaveClip.h"
-#include "WaveTrack.h"
 #include <algorithm>
+
+WaveTrackUtilities::AllClipsIterator::AllClipsIterator(WaveTrack &track)
+   : mpTrack(&track)
+{
+   if (mpTrack) {
+      auto &&clips = mpTrack->Intervals();
+      Push({ clips.begin(), clips.end() });
+   }
+}
+
+auto WaveTrackUtilities::AllClipsIterator::operator *() const -> value_type
+{
+   if (mStack.empty())
+      return nullptr;
+   else {
+      auto &[intervals, ii] = mStack.back();
+      return intervals[ii];
+   }
+}
+
+auto WaveTrackUtilities::AllClipsIterator::operator ++ () -> AllClipsIterator &
+{
+   // The unspecified sequence is a post-order, but there is no
+   // promise whether sister nodes are ordered in time.
+   if (mpTrack && !mStack.empty()) {
+      auto &[intervals, ii] = mStack.back();
+      if (++ii == intervals.size())
+         mStack.pop_back();
+      else
+         Push(intervals[ii]->GetCutLines(*mpTrack));
+   }
+
+   return *this;
+}
+
+void WaveTrackUtilities::AllClipsIterator::Push(IntervalHolders clips)
+{
+   if (!mpTrack)
+      return;
+
+   // Go depth first while there are cutlines
+   while (!clips.empty()) {
+      auto nextClips = clips[0]->GetCutLines(*mpTrack);
+      mStack.push_back({ move(clips), 0 });
+      clips = move(nextClips);
+   }
+}
 
 const TranslatableString WaveTrackUtilities::defaultStretchRenderingTitle =
    XO("Pre-processing");
@@ -335,4 +382,88 @@ void WaveTrackUtilities::ExpandCutLine(WaveTrack &track,
             if (clip2->GetPlayStartTime() > clip->GetPlayStartTime())
                clip2->ShiftBy(end - start);
    }
+}
+
+bool WaveTrackUtilities::HasHiddenData(const WaveTrack &track)
+{
+   assert(track.IsLeader());
+   const auto &&clips = track.Intervals();
+   return std::any_of(clips.begin(), clips.end(), [](const auto &pClip){
+      return pClip->GetTrimLeft() != 0 || pClip->GetTrimRight() != 0;
+   });
+}
+
+void WaveTrackUtilities::DiscardTrimmed(WaveTrack &track)
+{
+   assert(track.IsLeader());
+   for (const auto &&pClip : track.Intervals()) {
+      if (pClip->GetTrimLeft() != 0) {
+         auto t0 = pClip->GetPlayStartTime();
+         pClip->SetTrimLeft(0);
+         pClip->ClearLeft(t0);
+      }
+      if (pClip->GetTrimRight() != 0) {
+         auto t1 = pClip->GetPlayEndTime();
+         pClip->SetTrimRight(0);
+         pClip->ClearRight(t1);
+      }
+   }
+}
+
+void WaveTrackUtilities::VisitBlocks(TrackList &tracks, BlockVisitor visitor,
+   SampleBlockIDSet *pIDs)
+{
+   for (auto wt : tracks.Any<WaveTrack>())
+      // Scan all clips within current track
+      for (const auto &&pClip : GetAllClips(*wt))
+         // Scan all sample blocks within current clip
+         for (const auto &&pChannel : pClip->Channels()) {
+            auto blocks = pChannel->GetSequenceBlockArray();
+            for (const auto &block : *blocks) {
+               auto &pBlock = block.sb;
+               if (pBlock) {
+                  if (pIDs && !pIDs->insert(pBlock->GetBlockID()).second)
+                     continue;
+                  if (visitor)
+                     visitor(*pBlock);
+               }
+            }
+         }
+}
+
+void WaveTrackUtilities::InspectBlocks(const TrackList &tracks,
+   BlockInspector inspector, SampleBlockIDSet *pIDs)
+{
+   VisitBlocks(const_cast<TrackList &>(tracks), move(inspector), pIDs);
+}
+
+#include "ProjectFormatExtensionsRegistry.h"
+
+namespace {
+using namespace WaveTrackUtilities;
+// If any clips have hidden data, don't allow older versions to open the
+// project.  Otherwise overlapping clips might result.
+ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
+   [](const AudacityProject& project) -> ProjectFormatVersion {
+      const TrackList& trackList = TrackList::Get(project);
+      for (auto wt : trackList.Any<const WaveTrack>())
+         for (const auto& clip : GetAllClips(*wt))
+            if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
+               return { 3, 1, 0, 0 };
+      return BaseProjectFormatVersion;
+   }
+);
+
+// If any clips have any stretch, don't allow older versions to open the
+// project.  Otherwise overlapping clips might result.
+ProjectFormatExtensionsRegistry::Extension stretchedClipsExtension(
+   [](const AudacityProject& project) -> ProjectFormatVersion {
+      const TrackList& trackList = TrackList::Get(project);
+      for (auto wt : trackList.Any<const WaveTrack>())
+         for (const auto& clip : GetAllClips(*wt))
+            if (clip->GetStretchRatio() != 1.0)
+               return { 3, 4, 0, 0 };
+      return BaseProjectFormatVersion;
+   }
+);
 }
