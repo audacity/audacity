@@ -29,6 +29,8 @@ set( SOURCES
    WaveClip.h
    WaveClipUtilities.cpp
    WaveClipUtilities.h
+   WaveformScale.cpp
+   WaveformScale.h
    WaveTrack.cpp
    WaveTrack.h
    WaveTrackSink.cpp
@@ -41,6 +43,7 @@ set( LIBRARIES
    lib-sample-track-interface
    lib-stretching-sequence-interface
    lib-track-selection-interface
+   wxwidgets::core
 )
 audacity_library( lib-wave-track "${SOURCES}" "${LIBRARIES}"
    "" ""
