@@ -285,13 +285,6 @@ void Viewport::UpdateScrollbarsForTracks()
    const double screen = viewInfo.GetScreenEndTime() - viewInfo.hpos;
    const double halfScreen = screen / 2.0;
 
-   // If we can scroll beyond zero,
-   // Add 1/2 of a screen of blank space to the end
-   // and another 1/2 screen before the beginning
-   // so that any point within the union of the selection and the track duration
-   // may be scrolled to the midline.
-   // May add even more to the end, so that you can always scroll a negative
-   // starting time up to the left edge.
    const double lowerBound = ScrollingLowerBoundTime();
    const double additional = screen / 4.0;
 
