@@ -38,4 +38,5 @@ public:
    bool DoOpenInDefaultBrowser(const wxString& url) override;
    std::unique_ptr<BasicUI::WindowPlacement> DoFindFocus() override;
    void DoSetFocus(const BasicUI::WindowPlacement& focus) override;
+   bool IsUsingRtlLayout() const override;
 };

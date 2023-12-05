@@ -354,3 +354,8 @@ void QtQuickUiServices::DoSetFocus(const WindowPlacement& focus)
    if(auto qwindow = QtQuickWindowPlacement::Get(focus))
       qwindow->requestActivate();
 }
+
+bool QtQuickUiServices::IsUsingRtlLayout() const
+{
+   return QGuiApplication::isRightToLeft();
+}
