@@ -554,11 +554,9 @@ sampleCount WaveTrack::Interval::GetPlayEndSample() const
    return mpClip->GetPlayEndSample();
 }
 
-bool WaveTrack::Interval::IntersectsPlayRegion(double t0, double t1) const
+bool WaveTrack::Interval::SplitsPlayRegion(double t) const
 {
-   // TODO wide wave tracks:  assuming that all 'narrow' clips share common
-   // boundaries
-   return mpClip->IntersectsPlayRegion(t0, t1);
+   return mpClip->SplitsPlayRegion(t);
 }
 
 bool WaveTrack::Interval::WithinPlayRegion(double t) const
@@ -566,9 +564,39 @@ bool WaveTrack::Interval::WithinPlayRegion(double t) const
    return mpClip->WithinPlayRegion(t);
 }
 
-bool WaveTrack::Interval::SplitsPlayRegion(double t) const
+bool WaveTrack::Interval::BeforePlayRegion(double t) const
 {
-   return mpClip->SplitsPlayRegion(t);
+   return mpClip->BeforePlayRegion(t);
+}
+
+bool WaveTrack::Interval::AtOrBeforePlayRegion(double t) const
+{
+   return mpClip->AtOrBeforePlayRegion(t);
+}
+
+bool WaveTrack::Interval::AfterPlayRegion(double t) const
+{
+   return mpClip->AfterPlayRegion(t);
+}
+
+bool WaveTrack::Interval::EntirelyWithinPlayRegion(double t0, double t1) const
+{
+   return mpClip->EntirelyWithinPlayRegion(t0, t1);
+}
+
+bool WaveTrack::Interval::PartlyWithinPlayRegion(double t0, double t1) const
+{
+   return mpClip->PartlyWithinPlayRegion(t0, t1);
+}
+
+bool WaveTrack::Interval::IntersectsPlayRegion(double t0, double t1) const
+{
+   return mpClip->IntersectsPlayRegion(t0, t1);
+}
+
+bool WaveTrack::Interval::CoversEntirePlayRegion(double t0, double t1) const
+{
+   return mpClip->CoversEntirePlayRegion(t0, t1);
 }
 
 double WaveTrack::Interval::GetStretchRatio() const
