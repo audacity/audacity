@@ -21,12 +21,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrack.h"
 #include "../../../../../images/Cursors.h"
 
-bool WaveChannelVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd)
+bool WaveChannelVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd, bool hasDragZoom)
 {
    const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-   return bVZoom && (abs(zoomEnd - zoomStart) > DragThreshold);
+   return hasDragZoom && (abs(zoomEnd - zoomStart) > DragThreshold);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,30 +56,24 @@ void WaveTrackVRulerMenuTable::UpdatePrefs()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-HitTestPreview WaveChannelVZoomHandle::HitPreview(const wxMouseState &state)
+HitTestPreview WaveChannelVZoomHandle::HitPreview(const bool bVZoom)
 {
-   static auto zoomInCursor =
-      ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
-   static auto zoomOutCursor =
-      ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
+   static wxCursor crossCursor{wxCURSOR_CROSS};
    static  wxCursor arrowCursor{ wxCURSOR_ARROW };
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-   bVZoom &= !state.RightIsDown();
    const auto message = bVZoom ? 
-      XO("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.") :
-      XO("Right-click for menu.");
+      XO("Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom.") :
+      XO("Right-click for menu. Ctrl+scroll to zoom.");
 
    return {
       message,
-      bVZoom ? (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor) : &arrowCursor
+      bVZoom ? &crossCursor : &arrowCursor
       // , message
    };
 }
 
 UIHandle::Result WaveChannelVZoomHandle::DoDrag(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject,
-   const int zoomStart, int &zoomEnd)
+   const int zoomStart, int &zoomEnd, bool hasDragZooming)
 {
    using namespace RefreshCode;
 
@@ -89,7 +81,7 @@ UIHandle::Result WaveChannelVZoomHandle::DoDrag(
    if ( event.RightIsDown() )
       return RefreshNone;
    zoomEnd = event.m_y;
-   if (IsDragZooming( zoomStart, zoomEnd ))
+   if (IsDragZooming( zoomStart, zoomEnd, hasDragZooming))
       return RefreshAll;
    return RefreshNone;
 }
@@ -125,23 +117,14 @@ UIHandle::Result WaveChannelVZoomHandle::DoRelease(
       return data.result;
    }
    else {
-      bool bVZoom;
-      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
       // Ignore Capture Lost event 
-      bVZoom &= event.GetId() != kCaptureLostEventId;
-      // shiftDown | rightUp | ZoomKind
-      //    T      |    T    | 1to1
-      //    T      |    F    | Out
-      //    F      |    -    | In
-      if( bVZoom ) {
-         if( shiftDown )
-            zoomStart = zoomEnd;
-         doZoom(pProject, pTrack,
-            shiftDown
-               ? (rightUp ? kZoom1to1 : kZoomOut)
-               : kZoomIn,
-            rect, zoomStart, zoomEnd, !shiftDown);
-      }
+      bool notLost = event.GetId() != kCaptureLostEventId;
+      // Shift+rightclick to reset zoom
+      if( shiftDown && notLost)
+         zoomStart = zoomEnd;
+      doZoom(pProject, pTrack, kZoom1to1,
+         rect, zoomStart, zoomEnd, !shiftDown);
+      
    }
 
    return UpdateVRuler | RefreshAll;
@@ -149,10 +132,10 @@ UIHandle::Result WaveChannelVZoomHandle::DoRelease(
 
 void WaveChannelVZoomHandle::DoDraw(
    TrackPanelDrawingContext &context,
-   const wxRect &rect, unsigned iPass, const int zoomStart, const int zoomEnd)
+   const wxRect &rect, unsigned iPass, const int zoomStart, const int zoomEnd, bool hasDragZoom)
 {
    if (iPass == TrackArtist::PassZooming) {
-      if (IsDragZooming(zoomStart, zoomEnd))
+      if (IsDragZooming(zoomStart, zoomEnd, hasDragZoom))
          ChannelVRulerControls::DrawZooming(context, rect, zoomStart, zoomEnd);
    }
 }

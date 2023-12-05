@@ -34,6 +34,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectWindows.h"
 #include "ScrubState.h"
 #include "TrackFocus.h"
+#include "prefs/TracksPrefs.h"
 #include "TransportUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -910,7 +911,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          auto newTracks = WaveTrackFactory::Get(*p).Create(recordingChannels);
          const auto first = *newTracks->begin();
          int trackCounter = 0;
-         const auto minimizeChannelView = recordingChannels > 2;
+         const auto minimizeChannelView = recordingChannels > 2
+            && !TracksPrefs::TracksFitVerticallyZoomed.Read();
          for (auto newTrack : newTracks->Any<WaveTrack>()) {
             // Quantize bounds to the rate of the new track.
             if (newTrack == first) {
