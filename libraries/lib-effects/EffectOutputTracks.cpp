@@ -8,16 +8,25 @@
 
 **********************************************************************/
 #include "EffectOutputTracks.h"
+#include "BasicUI.h"
 #include "SyncLock.h"
+#include "UserException.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 // Effect application counter
 int EffectOutputTracks::nEffectsDone = 0;
 
 EffectOutputTracks::EffectOutputTracks(
-   TrackList &tracks, bool allSyncLockSelected
-)  : mTracks{ tracks }
+   TrackList& tracks, EffectType effectType,
+   std::optional<TimeInterval> effectTimeInterval, bool allSyncLockSelected,
+   bool stretchSyncLocked)
+    : mTracks { tracks }
+    , mEffectType { effectType }
 {
+   assert(
+      !effectTimeInterval.has_value() ||
+      effectTimeInterval->first <= effectTimeInterval->second);
    // Reset map
    mIMap.clear();
    mOMap.clear();
@@ -36,6 +45,32 @@ EffectOutputTracks::EffectOutputTracks(
       mOMap.push_back(*list->begin());
       mOutputTracks->Append(std::move(*list));
    }
+
+   if (
+      effectTimeInterval.has_value() &&
+      effectTimeInterval->second > effectTimeInterval->first)
+   {
+      WaveTrackUtilities::WithStretchRenderingProgress(
+         [&](const ProgressReporter& parent)
+         {
+            const auto tracksToUnstretch =
+               (stretchSyncLocked ? mOutputTracks->Any<WaveTrack>() :
+                                    mOutputTracks->Selected<WaveTrack>()) +
+               [&](const WaveTrack* pTrack)
+            {
+               return WaveTrackUtilities::HasStretch(
+                  *pTrack, effectTimeInterval->first,
+                  effectTimeInterval->second);
+            };
+            BasicUI::SplitProgress(
+               tracksToUnstretch.begin(), tracksToUnstretch.end(),
+               [&](WaveTrack* aTrack, const ProgressReporter& child) {
+                  aTrack->ApplyStretchRatio(effectTimeInterval, child);
+               },
+               parent);
+         });
+   }
+
    // Invariant is established
    assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());
@@ -53,6 +88,28 @@ Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
    assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());
    return result;
+}
+
+Track *EffectOutputTracks::AddToOutputTracks(TrackList &&list)
+{
+   assert(list.Size() == 1);
+   mIMap.push_back(nullptr);
+   auto result = *list.begin();
+   mOMap.push_back(result);
+   mOutputTracks->Append(std::move(list));
+   // Invariant is maintained
+   assert(mIMap.size() == mOutputTracks->Size());
+   assert(mIMap.size() == mOMap.size());
+   return result;
+}
+
+const Track* EffectOutputTracks::GetMatchingInput(const Track& outTrack) const
+{
+   const auto it = std::find(mOMap.begin(), mOMap.end(), &outTrack);
+   if (it == mOMap.end())
+      return nullptr;
+   const auto index = it - mOMap.begin();
+   return mIMap[index];
 }
 
 // Replace tracks with successfully processed mOutputTracks copies.
@@ -90,9 +147,14 @@ void EffectOutputTracks::Commit()
       if (!mIMap[i])
          // This track was an addition to output tracks; add it to mTracks
          mTracks.AppendOne(std::move(*mOutputTracks));
-      else
+      else if (
+         mEffectType != EffectTypeNone && mEffectType != EffectTypeAnalyze)
          // Replace mTracks entry with the new track
          mTracks.ReplaceOne(*mIMap[i], std::move(*mOutputTracks));
+      else
+         // This output track was just a placeholder for pre-processing. Discard
+         // it.
+         mOutputTracks->Remove(*pOutputTrack);
       ++i;
    }
 

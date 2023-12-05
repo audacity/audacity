@@ -62,7 +62,7 @@ NumericFormatSymbol Default(const NumericConverterType& type)
 NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
    const FormatterContext& context, 
    const NumericConverterType& type,
-   const NumericFormatSymbol& formatIdentifier)
+   const NumericFormatID& formatIdentifier)
 {
    if (formatIdentifier.empty())
       return Default(type);
@@ -74,14 +74,6 @@ NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
 
    return result->symbol;
 }
-
-NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
-   const FormatterContext& context, const NumericConverterType& type,
-   const wxString& formatIdentifier)
-{
-   return Lookup(context, type, NumericFormatSymbol { formatIdentifier });
-}
-
 
 NUMERIC_FORMATS_API NumericFormatSymbol DefaultSelectionFormat()
 {
@@ -134,8 +126,8 @@ NUMERIC_FORMATS_API NumericFormatSymbol OctavesFormat()
     * in octaves */
    return { XO("octaves") };
 }
-NUMERIC_FORMATS_API NumericFormatSymbol
-GetBestDurationFormat(const NumericFormatSymbol& timeFormat)
+NUMERIC_FORMATS_API NumericFormatID
+GetBestDurationFormat(const NumericFormatID& timeFormat)
 {
    return timeFormat;
 }

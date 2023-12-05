@@ -13,15 +13,20 @@
 #define __AUDACITY_AUDIO_IO_SEQUENCES__
 
 #include "WideSampleSequence.h"
+class ChannelGroup;
 
 /*!
  Extends the interface for random access into a sample stream with tests for
  muting and solo
  */
-struct MIXER_API PlayableSequence : WideSampleSequence {
+struct MIXER_API PlayableSequence
+   // TODO wide wave tracks -- remove virtual
+   : virtual WideSampleSequence
+{
    ~PlayableSequence() override;
 
-   virtual bool IsLeader() const = 0; //!< To be removed
+   //! Find associated ChannelGroup if any
+   virtual const ChannelGroup *FindChannelGroup() const = 0;
 
    //! May vary asynchronously
    virtual bool GetSolo() const = 0;
@@ -53,15 +58,24 @@ struct MIXER_API RecordableSequence {
     *
     * @return true in case a block was flushed from memory to underlying DB
     */
-   virtual bool Append(constSamplePtr buffer, sampleFormat format,
-      size_t len, unsigned int stride = 1,
-      sampleFormat effectiveFormat = widestSampleFormat /*!<
+   virtual bool Append(
+      constSamplePtr buffer, sampleFormat format,
+      size_t len,
+      unsigned int stride,
+      sampleFormat effectiveFormat, /*!<
          Make the effective format of the data at least the minumum of this
          value and `format`.  (Maybe wider, if merging with preexistent data.)
          If the data are later narrowed from stored format, but not narrower
          than the effective, then no dithering will occur.
       */
+      size_t iChannel = 0
    ) = 0;
+
+   inline bool Append(constSamplePtr buffer, sampleFormat format,
+      size_t len, size_t iChannel = 0)
+   {
+      return Append(buffer, format, len, 1, widestSampleFormat, iChannel);
+   }
 
    virtual bool IsLeader() const = 0;
 

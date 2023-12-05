@@ -131,8 +131,10 @@ std::vector<wxString> BuildAVFormatPaths(int version)
 #elif defined(__WXMAC__)
       wxString::Format("libavformat.%d.dylib", version),
       wxString::Format("ffmpeg.%d.64bit.dylib", version),
+#elif defined(__OpenBSD__)
+      wxString::Format("libavformat.so"),
 #else
-      wxString::Format("libavformat.so.%d", version)
+      wxString::Format("libavformat.so.%d", version),
 #endif
 };
 }

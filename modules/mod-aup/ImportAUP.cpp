@@ -32,9 +32,8 @@
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "ProjectSelectionManager.h"
-#include "ProjectSettings.h"
 #include "ProjectSnap.h"
 #include "ProjectWindows.h"
 #include "Sequence.h"
@@ -43,7 +42,6 @@
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "toolbars/SelectionBar.h"
 #include "widgets/NumericTextCtrl.h"
 #include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"
@@ -318,8 +316,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
    auto &history = ProjectHistory::Get(mProject);
    auto &tracks = TrackList::Get(mProject);
    auto &viewInfo = ViewInfo::Get(mProject);
-   auto &settings = ProjectSettings::Get(mProject);
-   auto &selman = ProjectSelectionManager::Get(mProject);
+   auto &formats = ProjectNumericFormats::Get(mProject);
 
    auto oldNumTracks = tracks.Size();
    auto cleanup = finally([this, &tracks, oldNumTracks]{
@@ -351,10 +348,12 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
       progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
       return;
    }
-   else if(!mErrorMsg.empty())//i.e. warning
+   if(!mErrorMsg.empty())//i.e. warning
+   {
       ImportUtils::ShowMessageBox(mErrorMsg);
+      mErrorMsg = {};
+   }
    
-   // TODO wide wave tracks -- quit here if misaligned tracks are found.
    // (If we keep this entire source file at all)
 
    sampleCount processed = 0;
@@ -395,6 +394,33 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
    for (auto pClip : mClips)
       pClip->UpdateEnvelopeTrackLen();
 
+   ProjectFileManager::FixTracks(
+      tracks,
+      [&](const auto& errorMessage) { SetError(errorMessage); },
+      [&](const auto& unlinkReason) { SetWarning(XO(
+//i18n-hint: Text of the message dialog that may appear on attempt
+//to import an AUP project.
+//%s will be replaced with an explanation of the actual reason of
+//project modification.
+"%s\n"
+"This feature is not supported in Audacity versions past 3.3.3.\n"
+"These stereo tracks have been split into mono tracks.\n"
+"Please verify that everything works as intended before saving.")
+                     .Format(unlinkReason));
+      }
+   );
+
+   if(mHasParseError)
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
+   }
+   if(!mErrorMsg.empty())
+   {
+      ImportUtils::ShowMessageBox(mErrorMsg);
+      mErrorMsg = {};
+   }
+
    // If the active project is "dirty", then bypass the below updates as we don't
    // want to going changing things the user may have already set up.
    if (isDirty)
@@ -414,34 +440,22 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
 
    if (mProjectAttrs.haveselectionformat)
    {
-      selman.AS_SetSelectionFormat(NumericConverterFormats::Lookup(
-         FormatterContext::ProjectContext(mProject), NumericConverterType_TIME(),
-         mProjectAttrs.selectionformat));
+      formats.SetSelectionFormat(mProjectAttrs.selectionformat);
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
-      selman.TT_SetAudioTimeFormat(NumericConverterFormats::Lookup(
-         FormatterContext::ProjectContext(mProject), NumericConverterType_TIME(),
-         mProjectAttrs.audiotimeformat));
+      formats.SetAudioTimeFormat(mProjectAttrs.audiotimeformat);
    }
 
    if (mProjectAttrs.havefrequencyformat)
    {
-      selman.SSBL_SetFrequencySelectionFormatName(
-         NumericConverterFormats::Lookup(
-            FormatterContext::ProjectContext(mProject),
-            NumericConverterType_FREQUENCY(),
-         mProjectAttrs.frequencyformat));
+      formats.SetFrequencySelectionFormatName(mProjectAttrs.frequencyformat);
    }
 
    if (mProjectAttrs.havebandwidthformat)
    {
-      selman.SSBL_SetBandwidthSelectionFormatName(
-         NumericConverterFormats::Lookup(
-            FormatterContext::ProjectContext(mProject),
-            NumericConverterType_BANDWIDTH(),
-         mProjectAttrs.bandwidthformat));
+      formats.SetBandwidthSelectionFormatName(mProjectAttrs.bandwidthformat);
    }
 
    // PRL: It seems this must happen after SetSnapTo
@@ -452,7 +466,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
 
    if (mProjectAttrs.haveh)
    {
-      viewInfo.h = mProjectAttrs.h;
+      viewInfo.hpos = mProjectAttrs.h;
    }
 
    if (mProjectAttrs.havezoom)
@@ -557,6 +571,9 @@ void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
    {
       node.handler->HandleXMLEndTag(tag);
    }
+
+   if (tag == "wavetrack")
+      mWaveTrack->SetLegacyFormat(mFormat);
 
    mHandlers.pop_back();
 
@@ -1371,20 +1388,18 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    mAttrs.erase(mAttrs.begin());
 
    for (auto pTrack: range.Filter<WaveTrack>()) {
-      for (const auto pChannel : TrackList::Channels(pTrack)) {
-         // Most of the "import" tag attributes are the same as for "wavetrack" tags,
-         // so apply them via WaveTrack::HandleXMLTag().
-         bSuccess = pChannel->HandleXMLTag("wavetrack", mAttrs);
+      // Most of the "import" tag attributes are the same as for "wavetrack" tags,
+      // so apply them via WaveTrack::HandleXMLTag().
+      bSuccess = pTrack->HandleXMLTag("wavetrack", mAttrs);
 
-         // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
-         // so handle it here.
-         double dblValue;
-         for (auto pair : mAttrs) {
-            auto attr = pair.first;
-            auto value = pair.second;
-            if (attr == "offset" && value.TryGet(dblValue) && pChannel->IsLeader())
-               pChannel->MoveTo(dblValue);
-         }
+      // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
+      // so handle it here.
+      double dblValue;
+      for (auto pair : mAttrs) {
+         auto attr = pair.first;
+         auto value = pair.second;
+         if (attr == "offset" && value.TryGet(dblValue))
+            pTrack->MoveTo(dblValue);
       }
    }
    return bSuccess;

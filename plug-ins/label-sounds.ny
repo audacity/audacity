@@ -5,7 +5,7 @@ $type analyze
 $name (_ "Label Sounds")
 $debugbutton false
 $author (_ "Steve Daulton")
-$release 3.0.4-1
+$release 3.0.4-2
 $copyright (_ "GNU General Public License v2.0 or later")
 
 ;; License: GPL v2+
@@ -15,24 +15,25 @@ $copyright (_ "GNU General Public License v2.0 or later")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control threshold (_ "Threshold level (dB)") float "" -30 -100 0
-$control measurement (_ "Threshold measurement") choice (("peak" (_ "Peak level"))
+$control THRESHOLD (_ "Threshold level (dB)") float "" -30 -100 0
+$control MEASUREMENT (_ "Threshold measurement") choice (("peak" (_ "Peak level"))
                                                          ("avg" (_ "Average level"))
                                                          ("rms" (_ "RMS level"))) 0
-$control sil-dur (_ "Minimum silence duration") time "" 1 0.01 3600
-$control snd-dur (_ "Minimum label interval") time "" 1 0.01 7200
-$control type (_ "Label type") choice (("before" (_ "Point before sound"))
+$control SIL-DUR (_ "Minimum silence duration") time "" 1 0.01 3600
+$control SND-DUR (_ "Minimum label interval") time "" 1 0.01 7200
+$control TYPE (_ "Label type") choice (("before" (_ "Point before sound"))
                                        ("after" (_ "Point after sound"))
                                        ("around" (_ "Region around sounds"))
                                        ("between" (_ "Region between sounds"))) 2
-$control pre-offset (_ "Maximum leading silence") time "" 0 0 nil
-$control post-offset (_ "Maximum trailing silence") time "" 0 0 nil
+$control PRE-OFFSET (_ "Maximum leading silence") time "" 0 0 nil
+$control POST-OFFSET (_ "Maximum trailing silence") time "" 0 0 nil
 ;i18n-hint: Do not translate '##1'
-$control text (_ "Label text") string "" (_ "Sound ##1")
+$control TEXT (_ "Label text") string "" (_ "Sound ##1")
 
 
-(setf threshold (db-to-linear threshold))
+(setf thresh-lin (db-to-linear THRESHOLD))
 (setf max-labels 10000)  ;max number of labels to return
+
 
 (defun format-time (s)
   ;;; format time in seconds as h m s.
@@ -43,7 +44,8 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
   (format nil (_ "~ah ~am ~as")
       hh (- mm (* hh 60)) (rem (truncate s) 60))))
 
-(defun parse-label-text (txt)
+
+(defun parse-label-text ()
   ;;; Special character '#' represents an incremental digit.
   ;;; Return '(digits num pre-txt post-txt) for 
   ;;; (number-of-digits, initial-value, text-before-number, text-after-number),
@@ -56,8 +58,8 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
         (pre-txt "")
         (post-txt "")
         ch)
-    (dotimes (i (length txt))
-      (setf ch (char txt i))
+    (dotimes (i (length TEXT))
+      (setf ch (char TEXT i))
       (cond
         ((and (string= post-txt "") (char= ch #\#))
             (incf hashes))
@@ -82,6 +84,7 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
           (string-append pre-txt "#")))
       (list hashes num pre-txt post-txt)))
 
+
 (defun pad (n d)
   ;;; Return string, int 'n' padded to 'd' digits, or empty string.
   ;;; Used in formatting label text.
@@ -96,6 +99,7 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
             n)))
     (t "")))
 
+
 (defun to-mono (sig)
   ;;; Coerce sig to mono.
   (if (arrayp sig)
@@ -103,20 +107,22 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
              (s-abs (aref sig 1)))
       sig))
 
+
 (defun to-avg-mono (sig)
   ;;; Average of stereo channels
   (if (arrayp sig)
       (mult 0.5 (sum (aref sig 0)(aref sig 1)))
       sig))
 
+
 (defun reduce-srate (sig)
   ;;; Reduce sample rate to (about) 100 Hz.
   (let ((ratio (round (/ *sound-srate* 100))))
     (cond
-      ((= measurement 0)  ;Peak
+      ((= MEASUREMENT 0)  ;Peak
         (let ((sig (to-mono sig)))
           (snd-avg sig ratio ratio OP-PEAK)))
-      ((= measurement 1)  ;Average absolute level
+      ((= MEASUREMENT 1)  ;Average absolute level
         (let ((sig (to-avg-mono (s-abs sig))))
           (snd-avg sig ratio ratio OP-AVERAGE)))
       (t  ;RMS
@@ -128,29 +134,30 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
               (s-sqrt (mult 0.5 (sum left-mean-sq right-mean-sq))))
             (rms sig))))))
 
-(defun find-sounds (sig selection-start srate)
-  ;;; Return a list of sounds that are at least 'snd-dur' long,
-  ;;; separated by silences of at least 'sil-dur'.
-  (let ((snd-list ())
+
+(defun find-sounds (sig srate)
+  ;;; Return a list of sounds that are at least 'SND-DUR' long,
+  ;;; separated by silences of at least 'SIL-DUR'.
+  (let ((sel-start (get '*selection* 'start))
+        (snd-list ())
         (sample-count 0)
         (sil-count 0)
         (snd-count 0)
         (snd-start 0)
         (label-count 0)
-        ;convert min sound duration to samples
-        (snd-dur (* snd-dur srate))
-        (sil-dur (* sil-dur srate)))
+        (snd-samples (* SND-DUR srate))
+        (sil-samples (* SIL-DUR srate)))
     ;;Ignore samples before time = 0
-    (when (< selection-start 0)
-      (setf sample-count (truncate (* (abs selection-start) srate)))
+    (when (< sel-start 0)
+      (setf sample-count (truncate (* (abs sel-start) srate)))
       (dotimes (i sample-count)
         (snd-fetch sig)))
     ;;Main loop to find sounds.
     (do ((val (snd-fetch sig) (snd-fetch sig)))
         ((not val) snd-list)
       (cond
-        ((< val threshold)
-            (when (and (>= sil-count sil-dur)(>= snd-count snd-dur))
+        ((< val thresh-lin)
+            (when (and (>= sil-count sil-samples)(>= snd-count snd-samples))
               ;convert sample counts to seconds and push to list.
               (push (list (/ snd-start srate)
                           (/ (- sample-count sil-count) srate))
@@ -160,7 +167,7 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
                 (format t (_ "Too many silences detected.~%Only the first 10000 labels added."))
                 (return-from find-sounds snd-list))
               (setf snd-count 0)) ;Pushed to list, so reset sound sample counter.
-            (when (> snd-count 0) ;Sound is shorter than snd-dur, so keep counting.
+            (when (> snd-count 0) ;Sound is shorter than snd-samples, so keep counting.
               (incf snd-count))
             (incf sil-count))
         ;; Above threshold.
@@ -178,7 +185,7 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
 
 
 (defun return-labels (snd-list)
-  (setf text (parse-label-text text))
+  (setf textstr (parse-label-text))
   ; Selection may extend before t=0
   ; Find t=0 relative to selection so we can ensure 
   ; that we don't create hidden labels.
@@ -188,23 +195,23 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
         (label-end t1)
         (label-text "")
         (labels ())
-        (final-sound (if (= type 3) 1 0)) ;type 3 = regions  between sounds.
-        ;; Assign variable to parsed label text
-        (digits (first text))
-        (num (second text))
-        (pre-txt (third text))
-        (post-txt (fourth text)))
+        (final-sound (if (= TYPE 3) 1 0)) ;TYPE 3 = regions  between sounds.
+        ;; Assign variables to parsed label text
+        (digits (first textstr))
+        (num (second textstr))
+        (pre-txt (third textstr))
+        (post-txt (fourth textstr)))
     ;snd-list is in reverse chronological order
     (do ((i (1- (length snd-list)) (1- i)))
         ((< i final-sound) labels)
-      (case type
+      (case TYPE
         (3  ;;label silences.
             (setf start-time (second (nth i snd-list)))
             (setf end-time (first (nth (1- i) snd-list)))
             ;don't overlap next sound
-            (setf label-start (min end-time (+ start-time pre-offset)))
+            (setf label-start (min end-time (+ start-time PRE-OFFSET)))
             ;don't overlap previous sound
-            (setf label-end (max start-time (- end-time post-offset)))
+            (setf label-end (max start-time (- end-time POST-OFFSET)))
             ;ensure end is not before start
             (when (< (- label-end label-start) 0)
               (setf label-start (/ (+ label-end label-start) 2.0))
@@ -213,16 +220,17 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
             (setf start-time (first (nth i snd-list)))
             (setf end-time (second (nth i snd-list)))
             ;don't overlap t0 or previous sound.
-            (setf label-start (max t0 label-start (- start-time pre-offset)))
-            (setf label-end (+ end-time post-offset))
+            (setf label-start (max t0 label-start (- start-time PRE-OFFSET)))
+            (setf label-end (+ end-time POST-OFFSET))
             ;; Don't overlap following sounds.
             (when (> i 0)
               (setf label-end (min label-end (first (nth (1- i) snd-list)))))))
-      (setf label-text (format nil "~a~a~a"
+      (setf label-text (format nil
+                               "~a~a~a"
                                pre-txt
                                (pad num digits)
                                post-txt))
-      (case type
+      (case TYPE
         (0 (push (list label-start label-text) labels)) ;point label before sound
         (1 (push (list label-end label-text) labels))   ;point label after sound
         (2 (push (list label-start label-end label-text) labels)) ;sound region
@@ -233,24 +241,19 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
       (when num (incf num)))))
 
 
-;;  Bug 2352: Throw error if selection too long for Nyquist.
-(let* ((sel-start (get '*selection* 'start))
-       (sel-end (get '*selection* 'end))
-       (dur (- sel-end sel-start))
-       (samples (* dur *sound-srate*))
-       (max-samples (1- (power 2 31))))
-  (if (>= samples max-samples)
-      ;i18n-hint: '~a' will be replaced by a time duration
-      (format nil (_ "Error.~%Selection must be less than ~a.")
-              (format-time (/ max-samples *sound-srate*)))
-      ;; Selection OK, so run the analyzer.
-      (let ((sig (reduce-srate *track*)))
-        (setf *track* nil)
-        (setf snd-list (find-sounds sig sel-start (snd-srate sig)))
-        (cond
-          ((= (length snd-list) 0)
-            (format nil (_ "No sounds found.~%Try lowering 'Threshold level (dB)'.")))
-          ((and (= type 3) (= (length snd-list) 1))
-            (format nil (_ "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected.")))
-          (t
-            (return-labels snd-list))))))
+(let ((sig (reduce-srate *track*)))
+  (setf *track* nil)
+  (setf snd-list (find-sounds sig (snd-srate sig)))
+  (cond
+    ((= (length snd-list) 0)
+      (format nil
+              (_ "No sounds found.~%~
+                 Try lowering 'Threshold level (dB)'.")))
+    ((and (= TYPE 3)
+          (= (length snd-list) 1))
+      (format nil
+              (_ "Labelling regions between sounds requires~%~
+                 at least two sounds.~%~
+                 Only one sound detected.")))
+    (t
+      (return-labels snd-list))))

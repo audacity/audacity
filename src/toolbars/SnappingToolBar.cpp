@@ -30,7 +30,6 @@
 
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectSettings.h"
 #include "ViewInfo.h"
 
 #include "AllThemeResources.h"
@@ -49,83 +48,6 @@ TranslatableString GetSnapToLabel(Identifier snapTo)
    auto item = SnapFunctionsRegistry::Find(snapTo);
    return item != nullptr ? item->label : XO("Unknown");
 }
-
-// Build a popup menu based on snap functions registry
-struct PopupMenuBuilder final : public SnapRegistryVisitor
-{
-   template<typename Callback>
-   PopupMenuBuilder(Callback callback)
-       : menuStack { &menu }
-       , snapModeUpdated { std::move(callback) }
-   {
-      SnapFunctionsRegistry::Visit(*this);
-   }
-
-   void BeginGroup(const SnapRegistryGroup& item) override
-   {
-      if (item.Inlined())
-         return;
-
-      auto menu = safenew wxMenu;
-
-      menuStack.back()->AppendSubMenu(menu, item.Label().Translation());
-      menuStack.push_back(menu);
-   }
-
-   void EndGroup(const SnapRegistryGroup& item) override
-   {
-      assert(!menuStack.empty());
-
-      if (item.Inlined())
-      {
-         menuStack.back()->AppendSeparator();
-         return;
-      }
-
-      menuStack.pop_back();
-   }
-
-   void Visit(const SnapRegistryItem& item) override
-   {
-      auto menuItem = menuStack.back()->AppendCheckItem(wxID_ANY, item.label.Translation());
-
-      if (ReadSnapTo() == item.name)
-         menuItem->Check();
-
-      menuStack.back()->Bind(
-         wxEVT_MENU,
-         [this, id = item.name](wxCommandEvent&) { snapModeUpdated(id); },
-         menuItem->GetId());
-   }
-
-   wxMenu menu;
-   std::vector<wxMenu*> menuStack;
-   std::function<void(const Identifier& id)> snapModeUpdated;
-};
-
-// Build a linear list from all the items in the snap functions registry
-struct SnapToListBuilder final : public SnapRegistryVisitor
-{
-   SnapToListBuilder()
-   {
-      SnapFunctionsRegistry::Visit(*this);
-   }
-
-   void BeginGroup(const SnapRegistryGroup& item) override
-   {
-   }
-
-   void EndGroup(const SnapRegistryGroup& item) override
-   {
-   }
-
-   void Visit(const SnapRegistryItem& item) override
-   {
-      List.push_back(item.name);
-   }
-
-   std::vector<Identifier> List;
-};
 
 /*
  * This class provides a hack to use popup menu instead of the dropdown list.
@@ -152,7 +74,10 @@ public:
 
    void Init () override
    {
-      mSnapToList = std::move(SnapToListBuilder().List);
+      // Build a linear list from all the items in the snap functions registry
+      SnapFunctionsRegistry::Visit([this](const SnapRegistryItem& item, auto&) {
+         mSnapToList.push_back(item.name);
+      });
 
       UpdateCurrentIndex(ReadSnapTo());
    }
@@ -182,11 +107,49 @@ public:
 
    void OnPopup() override
    {
-      PopupMenuBuilder menuBuilder { [this](const auto& id) {
-         ProjectSnap::Get(mProject).SetSnapTo(id);
-      } };
+      // Build a popup menu based on snap functions registry
+      wxMenu menu;
+      std::vector<wxMenu*> menuStack{ &menu };
 
-      BasicMenu::Handle { &menuBuilder.menu }.Popup(
+      const auto visitor = std::tuple{
+         [&](const SnapRegistryGroup& item, auto &) {
+            if (item.Inlined())
+               return;
+
+            auto menu = safenew wxMenu;
+            
+            menuStack.back()->AppendSubMenu(menu, item.Label().Translation());
+            menuStack.push_back(menu);
+         },
+         [&, this](const SnapRegistryItem& item, auto &) {
+            auto menuItem = menuStack.back()->AppendCheckItem(wxID_ANY, item.label.Translation());
+
+            if (ReadSnapTo() == item.name)
+               menuItem->Check();
+
+            menuStack.back()->Bind(
+               wxEVT_MENU,
+               [this, id = item.name](wxCommandEvent&) {
+                  ProjectSnap::Get(mProject).SetSnapTo(id);
+               },
+               menuItem->GetId()
+            );
+         },
+         [&](const SnapRegistryGroup& item, auto &) {
+            assert(!menuStack.empty());
+            
+            if (item.Inlined())
+            {
+               menuStack.back()->AppendSeparator();
+               return;
+            }
+
+            menuStack.pop_back();
+         }
+      };
+      SnapFunctionsRegistry::Visit(visitor);
+
+      BasicMenu::Handle { &menu }.Popup(
          wxWidgetsWindowPlacement { GetComboCtrl() },
          { 0, GetComboCtrl()->GetSize().y });
 

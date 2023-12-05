@@ -167,14 +167,14 @@ void WavPackImportFileHandle::Import(ImportProgressListener &progressListener,
 
    outTracks.clear();
 
-   std::vector<std::shared_ptr<WaveTrack>> channels(mNumChannels);
-
-   for (size_t c = 0; c < mNumChannels; ++c)
-      channels[c] =
-         ImportUtils::NewWaveTrack(*trackFactory, mFormat, mSampleRate);
+   auto trackList = ImportUtils::NewWaveTrack(
+      *trackFactory,
+      mNumChannels,
+      mFormat,
+      mSampleRate);
 
    /* The number of samples to read in each loop */
-   const size_t SAMPLES_TO_READ = channels[0]->GetMaxBlockSize();
+   const size_t SAMPLES_TO_READ = (*trackList->Any<WaveTrack>().begin())->GetMaxBlockSize();
    uint32_t totalSamplesRead = 0;
 
    {
@@ -201,28 +201,47 @@ void WavPackImportFileHandle::Import(ImportProgressListener &progressListener,
                for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
                   int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
 
-            for (unsigned channel = 0; channel < mNumChannels; channel++) {
-               channels[channel]->Append(
-                  reinterpret_cast<constSamplePtr>(int16Buffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels, mFormat);
-            }
-
+            unsigned chn = 0;
+            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            {
+               channel.AppendBuffer(
+                  reinterpret_cast<constSamplePtr>(int16Buffer.get() + chn),
+                  mFormat,
+                  samplesRead,
+                  mNumChannels,
+                  mFormat
+               );
+               ++chn;
+            });
          } else if (mFormat == int24Sample || (wavpackMode & MODE_FLOAT) == MODE_FLOAT) {
-            for (unsigned channel = 0; channel < mNumChannels; channel++) {
-               channels[channel]->Append(
-                  reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels, mFormat);
-            }
-
+            unsigned chn = 0;
+            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            {
+               channel.AppendBuffer(
+                  reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + chn),
+                  mFormat,
+                  samplesRead,
+                  mNumChannels,
+                  mFormat
+               );
+               ++chn;
+            });
          } else {
             for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
                floatBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>(std::numeric_limits<int32_t>::max()));
-
-            for (unsigned channel = 0; channel < mNumChannels; channel++) {
-               channels[channel]->Append(
-                  reinterpret_cast<constSamplePtr>(floatBuffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels, mFormat);
-            }
+            
+            unsigned chn = 0;
+            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            {
+               channel.AppendBuffer(
+                  reinterpret_cast<constSamplePtr>(floatBuffer.get() + chn),
+                  mFormat,
+                  samplesRead,
+                  mNumChannels,
+                  mFormat
+               );
+               ++chn;
+            });
          }
 
          totalSamplesRead += samplesRead;
@@ -247,9 +266,8 @@ void WavPackImportFileHandle::Import(ImportProgressListener &progressListener,
       return;
    }
 
-   if (!channels.empty())
-      outTracks.push_back(ImportUtils::MakeTracks(channels));
-
+   ImportUtils::FinalizeImport(outTracks, trackList);
+   
    if (wavpackMode & MODE_VALID_TAG) {
       bool apeTag = wavpackMode & MODE_APETAG;
       int numItems = WavpackGetNumTagItems(mWavPackContext);

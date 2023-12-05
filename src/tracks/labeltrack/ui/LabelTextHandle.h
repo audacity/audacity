@@ -34,7 +34,7 @@ public:
       ( const std::shared_ptr<LabelTrack> &pLT, int labelNum );
    virtual ~LabelTextHandle();
 
-   std::shared_ptr<LabelTrack> GetTrack() const { return mpLT.lock(); }
+   std::shared_ptr<const Channel> FindChannel() const override;
    int GetLabelNum() const { return mLabelNum; }
 
    void Enter(bool forward, AudacityProject *) override;

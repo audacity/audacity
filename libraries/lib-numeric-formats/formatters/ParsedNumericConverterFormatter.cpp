@@ -1069,7 +1069,6 @@ static auto MakeGroup (const Identifier& identifier, NumericConverterType type,
 }
 
 static NumericConverterItemRegistrator sRegistration {
-   Registry::Placement { {}, {} },
    NumericConverterItems("parsed",
       // The sequence of these groups is unimportant because their numeric
       // converter types are all different

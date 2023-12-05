@@ -40,6 +40,9 @@ class SCREEN_GEOMETRY_API ZoomInfo /* not final */
 public:
    using int64 = std::int64_t;
 
+   /*!
+    @param start leftmost visible timeline position, in seconds
+    */
    ZoomInfo(double start, double pixelsPerSecond);
    ~ZoomInfo();
 
@@ -47,12 +50,12 @@ public:
    ZoomInfo(const ZoomInfo&) = delete;
    ZoomInfo& operator= (const ZoomInfo&) = delete;
 
-   int vpos;                    // vertical scroll pos
-
-   double h;                    // h pos in secs
+   //! Leftmost visible timeline position in seconds
+   double hpos;
 
 protected:
-   double zoom;                 // pixels per second
+   //! pixels per second
+   double zoom;
 
 public:
    // do NOT use this once to convert a pixel width to a duration!
@@ -147,7 +150,7 @@ public:
    // It is guaranteed that there is at least one entry and the position of the
    // first entry equals origin.
    // @param origin specifies the pixel position corresponding to time ViewInfo::h.
-   void FindIntervals(Intervals& results, int64 width, int64 origin = 0) const;
+   Intervals FindIntervals(int64 width, int64 origin = 0) const;
 
    enum FisheyeState {
       HIDDEN,

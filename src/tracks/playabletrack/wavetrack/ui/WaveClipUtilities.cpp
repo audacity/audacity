@@ -10,13 +10,18 @@
 
 #include "WaveClipUtilities.h"
 
-#include <cmath>
-#include <wx/debug.h>
+#include <algorithm>
 #include "SampleCount.h"
+#include <cassert>
+#include <cmath>
 
-void findCorrection(const std::vector<sampleCount> &oldWhere, size_t oldLen,
-   size_t newLen, double t0, double rate, double samplesPerPixel,
-   int &oldX0, double &correction)
+#include "ProjectHistory.h"
+#include "UndoManager.h"
+
+void findCorrection(
+   const std::vector<sampleCount>& oldWhere, size_t oldLen, size_t newLen,
+   double t0, double sampleRate, double stretchRatio, double samplesPerPixel,
+   int& oldX0, double& correction)
 {
    // Mitigate the accumulation of location errors
    // in copies of copies of ... of caches.
@@ -29,7 +34,7 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, size_t oldLen,
    const double denom = oldWhereLast - oldWhere0;
 
    // What sample would go in where[0] with no correction?
-   const double guessWhere0 = t0 * rate;
+   const double guessWhere0 = t0 * sampleRate / stretchRatio;
 
    if ( // Skip if old and NEW are disjoint:
       oldWhereLast <= guessWhere0 ||
@@ -51,18 +56,47 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, size_t oldLen,
       const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
       // What correction is needed to align the NEW cache with the old?
       const double correction0 = where0 - guessWhere0;
-      correction = std::max(-samplesPerPixel, std::min(samplesPerPixel, correction0));
-      wxASSERT(correction == correction0);
+      correction = std::clamp(correction0, -samplesPerPixel, samplesPerPixel);
+      assert(correction == correction0);
    }
 }
 
 void fillWhere(
-   std::vector<sampleCount> &where, size_t len, double bias, double correction,
-   double t0, double rate, double samplesPerPixel)
+   std::vector<sampleCount>& where, size_t len, bool addBias, double correction,
+   double t0, double sampleRate, double stretchRatio, double samplesPerPixel)
 {
    // Be careful to make the first value non-negative
-   const double w0 = 0.5 + correction + bias + t0 * rate;
+   const auto bias = addBias ? .5 : 0.;
+   const double w0 = 0.5 + correction + bias + t0 * sampleRate / stretchRatio;
    where[0] = sampleCount( std::max(0.0, floor(w0)) );
    for (decltype(len) x = 1; x < len + 1; x++)
       where[x] = sampleCount( floor(w0 + double(x) * samplesPerPixel) );
+}
+
+std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
+{
+    return {
+        { L"Cut", XO("Cut") },
+        { L"Copy", XO("Copy") },
+        { L"Paste", XO("Paste")  },
+        {},
+        { L"Split", XO("Split Clip") },
+        { L"Join", XO("Join Clips") },
+        { L"TrackMute", XO("Mute/Unmute Track") },
+        {},
+        { L"RenameClip", XO("Rename Clip...") },
+        { L"ChangeClipSpeed", XO("Change Speed...") },
+        { L"RenderClipStretching", XO("Render Clip Stretching") },
+     };;
+}
+
+void PushClipSpeedChangedUndoState(
+   AudacityProject& project, double speedInPercent)
+{
+    ProjectHistory::Get(project).PushState(
+       /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
+       XO("Changed Clip Speed to %.01f%%").Format(speedInPercent),
+       /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
+       XO("Changed Speed to %.01f%%").Format(speedInPercent),
+       UndoPush::CONSOLIDATE);
 }

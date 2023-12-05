@@ -33,7 +33,8 @@ public:
 
    virtual ~TrackPanelResizeHandle();
 
-   std::shared_ptr<Channel> FindChannel() const { return mwChannel.lock(); }
+   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<Channel> FindChannel();
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

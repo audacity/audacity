@@ -50,7 +50,7 @@ const TranslatableStrings ExportQualityNames{
 const TranslatableStrings ExportBitDepthNames {
    XO("16 bit"),
    XO("24 bit"),
-   XO("32 bit float "),
+   XO("32 bit float"),
 };
 
 /* 

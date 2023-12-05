@@ -15,6 +15,9 @@
 
 #include <wx/platinfo.h>
 
+#include "Prefs.h"
+#include "CodeConversions.h"
+
 namespace audacity
 {
 namespace network_manager
@@ -51,7 +54,7 @@ void GetOSString (std::ostringstream& output, const wxPlatformInfo& platformInfo
     output << "x64";
 #elif defined(__i386__) || defined(i386) || defined(_M_IX86) || defined(_X86_) || defined(__THW_INTEL)
     output << "x86";
-#elif defined(__arm64__) || defined(__aarch64__)
+#elif defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM64)
     output << "arm64";
 #elif defined(arm) || defined(__arm__) || defined(ARM) || defined(_ARM_)
     output << "arm";
@@ -60,6 +63,22 @@ void GetOSString (std::ostringstream& output, const wxPlatformInfo& platformInfo
 #endif
 }
 
+BoolSetting EnableSSLValidationPref { "/CURL/EnableSSLValidation", true };
+StringSetting ProxyStringPref { "/CURL/Proxy", "" };
+
+struct CurlConfig final : private PrefsListener
+{
+    std::string Proxy;
+    bool SSLValidation { true };
+
+    void UpdatePrefs() override
+    {
+       SSLValidation = EnableSSLValidationPref.Read();
+       Proxy = audacity::ToUTF8(ProxyStringPref.Read());
+    }
+};
+
+static CurlConfig gCurlConfig;
 }
 
 constexpr std::chrono::milliseconds CurlHandleManager::KEEP_ALIVE_IDLE;
@@ -104,7 +123,10 @@ CurlHandleManager::Handle::Handle(CurlHandleManager* owner, CURL* handle, Reques
 
     setOption (CURLOPT_NOSIGNAL, 1L);
 
-    enableSSLValidation();
+    if (gCurlConfig.SSLValidation)
+       enableSSLValidation();
+    else
+      disableSSLValidation();
 
     setOption (CURLOPT_ACCEPT_ENCODING, "");
 }
@@ -256,6 +278,8 @@ CurlHandleManager::CurlHandleManager ()
     ss << ")";
 
     mUserAgent = ss.str ();
+
+    mProxy = gCurlConfig.Proxy;
 }
 
 CurlHandleManager::~CurlHandleManager ()

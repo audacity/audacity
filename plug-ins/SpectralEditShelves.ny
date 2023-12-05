@@ -5,7 +5,7 @@ $preview linear
 $name (_ "Spectral Edit Shelves")
 $debugbutton false
 $author (_ "Paul Licameli")
-$release 2.3.0-1
+$release 2.3.0-2
 $copyright (_ "GNU General Public License v2.0 or later")
 
 ;; License: GPL v2+
@@ -18,7 +18,7 @@ $copyright (_ "GNU General Public License v2.0 or later")
 ;; Updated by Steve Daulton 2014 / 2015.
 
 
-$control control-gain (_ "Gain (dB)") real "" 0 -24 24
+$control CONTROL-GAIN (_ "Gain (dB)") real "" 0 -24 24
 
 (defmacro validate (hz)
 "If frequency is above Nyquist, don't use it"
@@ -67,11 +67,11 @@ $control control-gain (_ "Gain (dB)") real "" 0 -24 24
           (if f1 (validate f1))
           (if (not (or f0 f1))  ; 'validate' may return nil
               nil               ; Do nothing
-              (sum (prod env (wet sig control-gain f0 f1))
+              (sum (prod env (wet sig CONTROL-GAIN f0 f1))
                   (prod (diff 1.0 env) sig)))))))
 
 (catch 'error-message
   (setf p-err (format nil (_ "Error.~%")))
-  (if (= control-gain 0)
-      nil ; Do nothing
+  (if (= CONTROL-GAIN 0)
+      "" ; No-op
       (multichan-expand #'result *track*)))

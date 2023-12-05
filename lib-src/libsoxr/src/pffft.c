@@ -157,8 +157,12 @@ typedef __m128 v4sf;
 /*
   ARM NEON support macros
 */
-#elif !defined(PFFFT_SIMD_DISABLE) && (defined(__arm__) || defined(__aarch64__))
+#elif !defined(PFFFT_SIMD_DISABLE) && (defined(__arm__) || defined(__aarch64__) || defined(_M_ARM64))
+#if defined(_M_ARM64)
+#  include <arm64_neon.h>
+#  else
 #  include <arm_neon.h>
+#  endif
 typedef float32x4_t v4sf;
 #  define SIMD_SZ 4
 #  define VZERO() vdupq_n_f32(0)
@@ -182,7 +186,11 @@ typedef float32x4_t v4sf;
 #  define VALIGNED(ptr) ((((long)(ptr)) & 0x3) == 0)
 #else
 #  if !defined(PFFFT_SIMD_DISABLE)
-#    warning "building with simd disabled !\n";
+#   if defined(COMPILER_MSVC)
+#       pragma message ("building with simd disabled !\n")
+#   else
+#       warning "building with simd disabled !\n";
+#   endif
 #    define PFFFT_SIMD_DISABLE /* fallback to scalar code */
 #  endif
 #endif

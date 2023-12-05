@@ -15,19 +15,14 @@ Paul Licameli split from AudacityProject.h
 #include <wx/event.h> // to declare custom event type
 
 #include "ClientData.h" // to inherit
+#include "Observer.h"
 #include "Prefs.h" // to inherit
 #include "audacity/Types.h"
 
 class AudacityProject;
 
-// Sent to the project when certain settings change
-// See enum EventCode below for values of GetInt() identifying changed setting
-// The previous value of that setting can also be found using GetExtraLong()
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-   EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
-
 namespace ToolCodes {
-enum {
+enum : int {
    // The buttons that are in the Tools toolbar must be in correspondence
    // with the first few
    selectTool,
@@ -44,28 +39,28 @@ enum {
 };
 }
 
+struct ProjectSettingsEvent {
+   const enum Type : int {
+      ChangedTool,
+   } type;
+   const int oldValue;
+   const int newValue;
+};
+
 ///\brief Holds various per-project settings values,
 /// and sends events to the project when certain values change
 class AUDACITY_DLL_API ProjectSettings final
    : public ClientData::Base
+   , public Observer::Publisher<ProjectSettingsEvent>
    , private PrefsListener
 {
 public:
    static ProjectSettings &Get( AudacityProject &project );
    static const ProjectSettings &Get( const AudacityProject &project );
    
-   // Values retrievable from GetInt() of the event for settings change
-   enum EventCode : int {
-      ChangedTool,
-   };
-
    explicit ProjectSettings( AudacityProject &project );
    ProjectSettings( const ProjectSettings & ) = delete;
    ProjectSettings &operator=( const ProjectSettings & ) = delete;
-
-
-   bool GetTracksFitVerticallyZoomed() const { return mTracksFitVerticallyZoomed; } //lda
-   void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
 
    // Current tool
 
@@ -97,7 +92,6 @@ private:
    bool mbSmartSelection { false };
    bool mbOvertones { false };
    
-   bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mEmptyCanBeDirty;
    bool mShowSplashScreen;
 };

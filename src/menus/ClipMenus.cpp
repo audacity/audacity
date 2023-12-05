@@ -1,14 +1,14 @@
 #include "../CommonCommandFlags.h"
 #include "ProjectHistory.h"
 #include "SyncLock.h"
-#include "../TrackPanelAx.h"
-#include "../ProjectWindow.h"
+#include "TrackFocus.h"
+#include "Viewport.h"
 #include "UndoManager.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "../tracks/ui/TimeShiftHandle.h"
 
 #include <cassert>
@@ -510,7 +510,7 @@ void DoSelectClip(AudacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackFocus = TrackFocus::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    std::vector<FoundClip> results;
    FindClips(project, selectedRegion.t0(),
@@ -523,7 +523,7 @@ void DoSelectClip(AudacityProject &project, bool next)
       double t1 = results[0].endTime;
       selectedRegion.setTimes(t0, t1);
       ProjectHistory::Get( project ).ModifyState(false);
-      window.ScrollIntoView(selectedRegion.t0());
+      viewport.ScrollIntoView(selectedRegion.t0());
 
       // create and send message to screen reader
       TranslatableString message;
@@ -561,7 +561,7 @@ void DoCursorClipBoundary
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackFocus = TrackFocus::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    std::vector<FoundClipBoundary> results;
    FindClipBoundaries(project, next ? selectedRegion.t1() :
@@ -573,7 +573,7 @@ void DoCursorClipBoundary
       double time = results[0].time;
       selectedRegion.setTimes(time, time);
       ProjectHistory::Get( project ).ModifyState(false);
-      window.ScrollIntoView(selectedRegion.t0());
+      viewport.ScrollIntoView(selectedRegion.t0());
 
       auto message = ClipBoundaryMessage(results);
       trackFocus.MessageForScreenReader(message);
@@ -635,7 +635,7 @@ void DoClipLeftOrRight
 (AudacityProject &project, bool right, bool keyUp )
 {
    auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    if (keyUp) {
       undoManager.StopConsolidating();
@@ -650,18 +650,18 @@ void DoClipLeftOrRight
 
    auto amount = DoClipMove(project, tracks, isSyncLocked, right);
 
-   window.ScrollIntoView(selectedRegion.t0());
+   viewport.ScrollIntoView(selectedRegion.t0());
 
    if (amount != 0.0) {
-      auto message = right? XO("Time shifted clips to the right") :
-         XO("Time shifted clips to the left");
+      auto message = right? XO("Moved clips to the right") :
+         XO("Moved clips to the left");
 
       // The following use of the UndoPush flags is so that both a single
       // keypress (keydown, then keyup), and holding down a key
       // (multiple keydowns followed by a keyup) result in a single
       // entry in Audacity's history dialog.
       ProjectHistory::Get( project )
-         .PushState(message, XO("Time-Shift"), UndoPush::CONSOLIDATE);
+         .PushState(message, XO("Move audio clips"), UndoPush::CONSOLIDATE);
    }
 
    if ( amount == 0.0 )
@@ -746,15 +746,13 @@ void OnClipRight(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 
-BaseItemSharedPtr ClipSelectMenu()
+auto ClipSelectMenu()
 {
-   using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu {
+   static auto menu = std::shared_ptr{
    Menu( wxT("Clip"), XXO("Audi&o Clips"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
          XXO("Pre&vious Clip Boundary to Cursor"),
@@ -774,16 +772,11 @@ BaseItemSharedPtr ClipSelectMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT("Select/Basic"),
-   Indirect(ClipSelectMenu())
-};
+AttachedItem sAttachment1{ Indirect(ClipSelectMenu()), wxT("Select/Basic") };
 
-BaseItemSharedPtr ClipCursorItems()
+auto ClipCursorItems()
 {
-   using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( wxT("Clip"),
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
          OnCursorPrevClipBoundary,
@@ -797,16 +790,14 @@ BaseItemSharedPtr ClipCursorItems()
    return items;
 }
 
-AttachedItem sAttachment2{
+AttachedItem sAttachment2{ Indirect(ClipCursorItems()),
    { wxT("Transport/Basic/Cursor"),
-     { OrderingHint::Before, wxT("CursProjectStart") } },
-   Indirect(ClipCursorItems())
+     { OrderingHint::Before, wxT("CursProjectStart") } }
 };
 
-BaseItemSharedPtr ExtraTimeShiftItems()
+auto ExtraTimeShiftItems()
 {
-   using Options = CommandManager::Options;
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( wxT("TimeShift"),
       Command( wxT("ClipLeft"), XXO("Time Shift &Left"), OnClipLeft,
          TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() ),
@@ -816,9 +807,8 @@ BaseItemSharedPtr ExtraTimeShiftItems()
    return items;
 }
 
-AttachedItem sAttachment3{
-  { wxT("Optional/Extra/Part1/Edit"), { OrderingHint::End, {} } },
-   Indirect(ExtraTimeShiftItems())
+AttachedItem sAttachment3{ Indirect(ExtraTimeShiftItems()),
+  { wxT("Optional/Extra/Part1/Edit"), { OrderingHint::End, {} } }
 };
 
 }

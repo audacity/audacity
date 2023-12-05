@@ -24,10 +24,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "ShuttleGui.h"
+#include "SyncLock.h"
 #include "Theme.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
 #include "RealtimeEffectManager.h"
@@ -43,10 +44,9 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/frame.h>
 #include <wx/sizer.h>
 
-WaveTrackControls::~WaveTrackControls()
-{
-}
+#include "MixAndRender.h"
 
+WaveTrackControls::~WaveTrackControls() = default;
 
 std::vector<UIHandlePtr> WaveTrackControls::HitTest
 (const TrackPanelMouseState & st,
@@ -318,6 +318,7 @@ struct RateMenuTable : PopupMenuTable
    PlayableTrackControls::InitMenuData *mpData{};
 
    static int IdOfRate(int rate);
+   /// Sets the sample rate for a track
    void SetRate(WaveTrack * pTrack, double rate);
 
    void OnRateChange(wxCommandEvent & event);
@@ -378,13 +379,18 @@ int RateMenuTable::IdOfRate(int rate)
    return OnRateOtherID;
 }
 
-/// Sets the sample rate for a track, and if it is linked to
-/// another track, that one as well.
 void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
 {
    AudacityProject *const project = &mpData->project;
-   for (auto channel : TrackList::Channels(pTrack))
-      channel->SetRate(rate);
+   auto end1 = pTrack->GetEndTime();
+   pTrack->SetRate(rate);
+   if (SyncLockState::Get(*project).IsSyncLocked()) {
+      auto end2 = pTrack->GetEndTime();
+      for (auto pLocked : SyncLock::Group(pTrack)) {
+         if (pLocked != pTrack)
+            pLocked->SyncLockAdjust(end1, end2);
+      }
+   }
 
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
@@ -514,6 +520,8 @@ struct WaveTrackMenuTable : WaveTrackPopupMenuTable
 
    // TODO: more-than-two-channels
    // How should we define generalized channel manipulation operations?
+   /// @brief Splits stereo track into two mono tracks, preserving
+   /// panning if \p stereo is set
    void SplitStereo(bool stereo);
 
    void OnSwapChannels(wxCommandEvent & event);
@@ -746,49 +754,99 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    AudacityProject *const project = &mpData->project;
    auto &tracks = TrackList::Get( *project );
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack);
+   const auto first = tracks.Any<WaveTrack>().find(mpData->pTrack);
+   const auto left = *first;
+   const auto right = *std::next(first);
 
-   auto partner =
-      static_cast<WaveTrack*>(*tracks.Find(pTrack).advance(1));
+   const auto checkAligned = [](const WaveTrack& left, const WaveTrack& right)
+   {
+      auto eqTrims = [](double a, double b)
+      {
+         return std::abs(a - b) <=
+            std::numeric_limits<double>::epsilon() * std::max(a, b);
+      };
+      const auto eps = 0.5 / left.GetRate();
+      const auto rightIntervals = right.Intervals();
+      for(const auto& a : left.Intervals())
+      {
+         auto it = std::find_if(
+            rightIntervals.begin(),
+            rightIntervals.end(),
+            [&](const auto& b)
+            {
+               //Start() and End() are always snapped to a sample grid
+               return std::abs(a->Start() - b->Start()) < eps &&
+                  std::abs(a->End() - b->End()) < eps &&
+                  eqTrims(a->GetTrimLeft(), b->GetTrimLeft()) &&
+                  eqTrims(a->GetTrimRight(), b->GetTrimRight()) &&
+                  a->StretchRatioEquals(b->GetStretchRatio());
+            });
+         if(it == rightIntervals.end())
+            return false;
+      }
+      return true;
+   };
 
-   if (pTrack->GetRate() != partner->GetRate()) {
-      using namespace BasicUI;
-      ShowMessageBox(XO(
-"Mono tracks must have the same sample rate in order to be combined into a "
-"stereo track"),
-         MessageBoxOptions{}
-           .Caption(XO("Error"))
-           .IconStyle(Icon::Error));
-      return;
+   if(RealtimeEffectList::Get(*left).GetStatesCount() != 0 ||
+      RealtimeEffectList::Get(*right).GetStatesCount() != 0 ||
+      !checkAligned(*left, *right))
+   {
+      const auto answer = BasicUI::ShowMessageBox(
+         XO(
+"The tracks you are attempting to merge to stereo contain clips at\n"
+"different positions, or otherwise mismatching clips. Merging them\n"
+"will render the tracks.\n\n"
+"This causes any realtime effects to be applied to the waveform and\n"
+"hidden data to be removed. Additionally, the entire track will\n"
+"become one large clip.\n\n"
+"Do you wish to continue?"
+         ),
+         BasicUI::MessageBoxOptions{}
+            .ButtonStyle(BasicUI::Button::YesNo)
+            .Caption(XO("Combine mono to stereo")));
+      if(answer != BasicUI::MessageBoxResult::Yes)
+         return;
    }
 
-   bool bBothMinimizedp =
-      ((ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized()) &&
-       (ChannelView::Get(*partner->GetChannel(0)).GetMinimized()));
+   const auto viewMinimized =
+      ChannelView::Get(*left->GetChannel(0)).GetMinimized() &&
+      ChannelView::Get(*right->GetChannel(0)).GetMinimized();
+   const auto averageViewHeight =
+      (WaveChannelView::Get(*left).GetHeight() +
+      WaveChannelView::Get(*right).GetHeight()) / 2;
 
-   tracks.MakeMultiChannelTrack( *pTrack, 2, false );
+   left->SetPan(-1.0f);
+   right->SetPan(1.0f);
+   auto mix = MixAndRender(
+      TrackIterRange {
+         tracks.Any<const WaveTrack>().find(left),
+         ++tracks.Any<const WaveTrack>().find(right)
+      },
+      Mixer::WarpOptions{ tracks.GetOwner() },
+      (*first)->GetName(),
+      &WaveTrackFactory::Get(*project),
+      //use highest sample rate
+      std::max(left->GetRate(), right->GetRate()),
+      //use widest sample format
+      std::max(left->GetSampleFormat(), right->GetSampleFormat()),
+      0.0, 0.0);
 
-   // Set partner's parameters to match target.
-   partner->Merge(*pTrack);
+   const auto newTrack = *mix->begin();
 
-   pTrack->SetPan( 0.0f );
-
-   // Set NEW track heights and minimized state
-   auto
-      &view = WaveChannelView::Get(*pTrack),
-      &partnerView = WaveChannelView::Get(*partner);
-   view.SetMinimized(false);
-   partnerView.SetMinimized(false);
-   int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
-   view.SetExpandedHeight(AverageHeight);
-   partnerView.SetExpandedHeight(AverageHeight);
-   view.SetMinimized(bBothMinimizedp);
-   partnerView.SetMinimized(bBothMinimizedp);
-
+   tracks.Insert(*first, std::move(*mix));
+   tracks.Remove(*left);
+   tracks.Remove(*right);
+   
+   for(const auto& channel : newTrack->Channels())
+   {
+      // Set NEW track heights and minimized state
+      auto& view = ChannelView::Get(*channel);
+      view.SetMinimized(viewMinimized);
+      view.SetExpandedHeight(averageViewHeight);
+   }
    ProjectHistory::Get( *project ).PushState(
       /* i18n-hint: The string names a track */
-      XO("Made '%s' a stereo track").Format( pTrack->GetName() ),
+      XO("Made '%s' a stereo track").Format( newTrack->GetName() ),
       XO("Make Stereo"));
 
    using namespace RefreshCode;
@@ -798,32 +856,24 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 /// Split a stereo track (or more-than-stereo?) into two (or more) tracks...
 void WaveTrackMenuTable::SplitStereo(bool stereo)
 {
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack);
    AudacityProject *const project = &mpData->project;
-
-   // We can assume all channels of a WaveTrack are also WaveTrack
-   auto channelRange = pTrack->Channels<WaveTrack>();
 
    int totalHeight = 0;
    int nChannels = 0;
 
-   std::vector<WaveTrack *> channels;
-   for (auto pChannel : channelRange)
-      channels.push_back(pChannel.get());
+   const auto pTrack = mpData->pTrack;
+   static_cast<WaveTrack*>(pTrack)->CopyClipEnvelopes();
+   auto unlinkedTracks = TrackList::Get(*project).UnlinkChannels(*pTrack);
+   assert(unlinkedTracks.size() == 2);
+   if(stereo)
+   {
+      static_cast<WaveTrack*>(unlinkedTracks[0])->SetPan(-1.0f);
+      static_cast<WaveTrack*>(unlinkedTracks[1])->SetPan(1.0f);
+   }
 
-   TrackList::Get(*project).UnlinkChannels(*pTrack);
-
-   float pan = -1.0f;
-   for (const auto pChannel : channels) {
-      // See comment on channelRange
-      assert(pChannel);
-      auto &view = ChannelView::Get(*pChannel);
-      if (stereo) {
-         pChannel->SetPan(pan);
-         pan += 2.0f;
-      }
-
+   for (const auto track : unlinkedTracks) {
+      auto &view = ChannelView::Get(*track->GetChannel(0));
+      
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())
          view.SetExpandedHeight(view.GetMinimizedHeight());
@@ -833,35 +883,34 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    int averageHeight = totalHeight / nChannels;
 
-   for (const auto pChannel : channels)
+   for (const auto track : unlinkedTracks)
       // Make tracks the same height
-      ChannelView::Get(*pChannel).SetExpandedHeight(averageHeight);
+      ChannelView::Get(*track->GetChannel(0)).SetExpandedHeight(averageHeight);
 }
 
 /// Swap the left and right channels of a stero track...
 void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 {
+   // Fix assertion violation in `TrackPanel::OnEnsureVisible` by
+   // dispatching any queued event
+   // TODO wide wave tracks -- remove this when there is no "leader" distinction
+   // any more
+   wxTheApp->Yield();
+
    AudacityProject *const project = &mpData->project;
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   auto channels = TrackList::Channels( pTrack );
-   if (channels.size() != 2)
-      return;
-
    auto &trackFocus = TrackFocus::Get( *project );
-   Track *const focused = trackFocus.Get();
-   const bool hasFocus = channels.contains( focused );
-
-   auto partner = *channels.rbegin();
-
-   if (TrackList::SwapChannels(*pTrack)) {
-      auto &tracks = TrackList::Get( *project );
+   const auto pTrack = mpData->pTrack;
+   const bool hasFocus = trackFocus.Get() == pTrack;
+   static_cast<WaveTrack*>(pTrack)->CopyClipEnvelopes();
+   if (auto track = TrackList::SwapChannels(*pTrack))
+   {
       if (hasFocus)
-         trackFocus.Set(partner);
+         trackFocus.Set(track);
 
       ProjectHistory::Get( *project ).PushState(
          /* i18n-hint: The string names a track  */
-         XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
+         XO("Swapped Channels in '%s'").Format( track->GetName() ),
          XO("Swap Channels"));
    }
 
@@ -918,7 +967,7 @@ WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
 
 // drawing related
 #include "../../../../widgets/ASlider.h"
-#include "../../../../TrackInfo.h"
+#include "../../../ui/CommonTrackInfo.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 
@@ -932,7 +981,7 @@ void SliderDrawFunction
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
-   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   CommonTrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto wt = static_cast<const WaveTrack*>( pTrack );
    Selector( sliderRect, wt, captured, pParent )->OnPaint(*dc, highlight);
 }
@@ -944,7 +993,7 @@ void PanSliderDrawFunction
    auto target = dynamic_cast<PanSliderHandle*>( context.target.get() );
    auto dc = &context.dc;
    bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
 
    const auto artist = TrackArtist::Get( context );
    auto pParent = FindProjectFrame( artist->parent->GetProject() );
@@ -963,7 +1012,7 @@ void GainSliderDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    if( hit )
       hit=hit;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
 
    const auto artist = TrackArtist::Get( context );
    auto pParent = FindProjectFrame( artist->parent->GetProject() );
@@ -1043,7 +1092,7 @@ static const struct WaveTrackTCPLines
 
 void WaveTrackControls::GetGainRect(const wxPoint &topleft, wxRect & dest)
 {
-   TrackInfo::GetSliderHorizontalBounds( topleft, dest );
+   CommonTrackInfo::GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
    dest.y = topleft.y + results.first;
    dest.height = results.second;
@@ -1058,7 +1107,7 @@ void WaveTrackControls::GetPanRect(const wxPoint &topleft, wxRect & dest)
 
 unsigned WaveTrackControls::DefaultWaveTrackHeight()
 {
-   return TrackInfo::DefaultTrackHeight( waveTrackTCPLines );
+   return CommonTrackInfo::DefaultTrackHeight( waveTrackTCPLines );
 }
 
 const TCPLines &WaveTrackControls::GetTCPLines() const

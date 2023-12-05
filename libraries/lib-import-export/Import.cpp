@@ -11,12 +11,11 @@
 \file Import.cpp
 
   This file contains a general function which will import almost
-  any type of sampled audio file (i.e. anything except MIDI)
+  any type of sampled audio file (including MIDI)
   and return the tracks that were imported.  This function just
-  figures out which one to call; the actual importers are in
-  ImportPCM, ImportMP3, ImportOGG, ImportRawData, ImportLOF,
-  ImportFLAC and ImportAUP.
-
+  figures out which one to call; actual importers are registered and
+  exist for PCM, MP3, OGG, LOF, FLAC, AUP, and other formats
+\
 *//***************************************************************//**
 
 \class Format
@@ -27,9 +26,9 @@ It's defined in Import.h
 *//***************************************************************//**
 
 \class Importer
-\brief Class which actually imports the auido, using functions defined
-in ImportPCM.cpp, ImportMP3_*.cpp, ImportOGG.cpp, ImportRawData.cpp,
-ImportLOF.cpp, and ImportAUP.cpp.
+\brief Singleton class which actually imports the audio, using ImportPlugin
+objects that are registered by modules, which in turn are factories of
+ImportFileHandle
 
 *//******************************************************************/
 
@@ -125,9 +124,9 @@ static const auto PathStart = L"Importers";
 
 }
 
-Registry::GroupItemBase &Importer::ImporterItem::Registry()
+auto Importer::ImporterItem::Registry() -> Registry::GroupItem<Traits> &
 {
-   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
+   static Registry::GroupItem<Traits> registry{ PathStart };
    return registry;
 }
 
@@ -173,26 +172,21 @@ bool Importer::Initialize()
    using namespace Registry;
    static OrderingPreferenceInitializer init{
       PathStart,
-      { {wxT(""), wxT("AUP,PCM,OGG,FLAC,MP3,LOF,WavPack,FFmpeg") } }
-      // QT and GStreamer are only conditionally compiled and would get
-      // placed at the end if present
+      // FFmpeg is in default of all other modules that might handle a format
+      // better and specially; including MIDI import
+      { {wxT(""), wxT("AUP,PCM,OGG,FLAC,MP3,LOF,WavPack,portsmf,FFmpeg") } }
    };
 
-   static struct MyVisitor final : Visitor {
-      MyVisitor()
-      {
-         // Once only, visit the registry to collect the plug-ins properly
-         // sorted
-         GroupItem<Registry::DefaultTraits> top{ PathStart };
-         Registry::Visit( *this, &top, &ImporterItem::Registry() );
-      }
-
-      void Visit( SingleItem &item, const Path &path ) override
-      {
-         sImportPluginList().push_back(
-            static_cast<ImporterItem&>( item ).mpPlugin.get() );
-      }
-   } visitor;
+   // Once only, visit the registry to collect the plug-ins properly
+   // sorted
+   static std::once_flag flag;
+   std::call_once(flag, []{
+      GroupItem<Traits> top{ PathStart };
+      Registry::Visit(
+         [](const ImporterItem &item, auto&) {
+            sImportPluginList().push_back(item.mpPlugin.get()); },
+         &top, &ImporterItem::Registry());
+   });
 
    // Ordering of the unusable plugin list is not important.
 
@@ -501,17 +495,6 @@ bool Importer::Import( AudacityProject &project,
    auto cleanup = valueRestorer( pProj->mbBusyImporting, true );
 
    const FileExtension extension{ fName.AfterLast(wxT('.')) };
-
-   // Always refuse to import MIDI, even though the FFmpeg plugin pretends to know how (but makes very bad renderings)
-#ifdef USE_MIDI
-   // MIDI files must be imported, not opened
-   if (FileNames::IsMidi(fName)) {
-      errorMessage = XO(
-"\"%s\" \nis a MIDI file, not an audio file. \nAudacity cannot open this type of file for playing, but you can\nedit it by clicking File > Import > MIDI.")
-         .Format( fName );
-      return false;
-   }
-#endif
 
    // Bug #2647: Peter has a Word 2000 .doc file that is recognized and imported by FFmpeg.
    if (wxFileName(fName).GetExt() == wxT("doc")) {

@@ -29,9 +29,9 @@
 #include "LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectWindow.h"
 #include "SelectFile.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "tracks/labeltrack/ui/LabelTrackView.h"
 #include "AudacityMessageBox.h"
 #include "AudacityTextEntryDialog.h"
@@ -97,8 +97,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          LabelTrack *selectedTrack,
                          int index,
                          ViewInfo &viewinfo,
-                         const NumericFormatSymbol & format,
-                         const NumericFormatSymbol &freqFormat)
+                         const NumericFormatID & format,
+                         const NumericFormatID &freqFormat)
 : wxDialogWrapper(parent,
            wxID_ANY,
            XO("Edit Labels"),
@@ -529,7 +529,7 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
    // Remember the NEW format and repopulate grid
    mFormat = NumericConverterFormats::Lookup(
       FormatterContext::ProjectContext(mProject),
-      NumericConverterType_TIME(), event.GetString() );
+      NumericConverterType_TIME(), event.GetString()).Internal();
    TransferDataToWindow();
 
    event.Skip(false);
@@ -540,7 +540,7 @@ void LabelDialog::OnFreqUpdate(wxCommandEvent &event)
    // Remember the NEW format and repopulate grid
    mFreqFormat = NumericConverterFormats::Lookup(
       FormatterContext::ProjectContext(mProject),
-      NumericConverterType_FREQUENCY(), event.GetString() );
+      NumericConverterType_FREQUENCY(), event.GetString()).Internal();
    TransferDataToWindow();
 
    event.Skip(false);
@@ -749,7 +749,7 @@ void LabelDialog::OnSelectCell(wxGridEvent &event)
       RowData &rd = mData[event.GetRow()];
       mViewInfo->selectedRegion = rd.selectedRegion;
 
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
    }
 
    event.Skip();

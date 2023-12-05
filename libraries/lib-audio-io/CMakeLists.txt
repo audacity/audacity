@@ -22,6 +22,7 @@ set( SOURCES
    RingBuffer.h
 )
 set( LIBRARIES
+   lib-mixer-interface
    lib-project-rate-interface
    lib-realtime-effects
 )

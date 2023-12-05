@@ -770,7 +770,7 @@ AttachedToolBarMenuItem sAttachment{
 
 
 // Define some related menu items
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../CommonCommandFlags.h"
 
 namespace {
@@ -804,11 +804,11 @@ void OnAudioHost(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 // Under /MenuBar/Optional/Extra/Part1
-BaseItemSharedPtr ExtraDeviceMenu()
+auto ExtraDeviceMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Device"), XXO("De&vice"),
       Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
          OnInputDevice,
@@ -825,9 +825,8 @@ BaseItemSharedPtr ExtraDeviceMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   Placement{ wxT("Optional/Extra/Part1"), { OrderingHint::End } },
-   Indirect(ExtraDeviceMenu())
+AttachedItem sAttachment2{ Indirect(ExtraDeviceMenu()),
+   Placement{ wxT("Optional/Extra/Part1"), { OrderingHint::End } }
 };
 
 }

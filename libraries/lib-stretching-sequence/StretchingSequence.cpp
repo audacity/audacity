@@ -17,13 +17,12 @@
 
 namespace
 {
-std::vector<float*>
-GetOffsetBuffer(float* const* buffer, size_t numChannels, size_t offset)
+void
+GetOffsetBuffer(float **offsetBuffer,
+   float* const* buffer, size_t numChannels, size_t offset)
 {
-   std::vector<float*> offsetBuffer(numChannels);
    for (auto i = 0u; i < numChannels; ++i)
       offsetBuffer[i] = buffer[i] + offset;
-   return offsetBuffer;
 }
 } // namespace
 
@@ -54,8 +53,11 @@ bool StretchingSequence::GetNext(
           mActiveAudioSegmentIt != mAudioSegments.end())
    {
       const auto& segment = *mActiveAudioSegmentIt;
-      auto offsetBuffers =
-         GetOffsetBuffer(buffers, mSequence.NChannels(), numProcessedSamples);
+      // More-than-stereo isn't supported
+      assert(mSequence.NChannels() <= 2);
+      float *offsetBuffers[2]{};
+      GetOffsetBuffer(offsetBuffers,
+         buffers, mSequence.NChannels(), numProcessedSamples);
       numProcessedSamples += segment->GetFloats(
          offsetBuffers,
          numSamples - numProcessedSamples); // No need to reverse, we feed the
@@ -67,8 +69,11 @@ bool StretchingSequence::GetNext(
    const auto remaining = numSamples - numProcessedSamples;
    if (remaining > 0u)
    {
-      const auto offsetBuffers =
-         GetOffsetBuffer(buffers, mSequence.NChannels(), numProcessedSamples);
+      // More-than-stereo isn't supported
+      assert(mSequence.NChannels() <= 2);
+      float *offsetBuffers[2]{};
+      GetOffsetBuffer(
+         offsetBuffers, buffers, mSequence.NChannels(), numProcessedSamples);
       for (auto i = 0u; i < mSequence.NChannels(); ++i)
          std::fill(offsetBuffers[i], offsetBuffers[i] + remaining, 0.f);
    }
@@ -89,7 +94,7 @@ float StretchingSequence::GetChannelGain(int channel) const
    return mSequence.GetChannelGain(channel);
 }
 
-bool StretchingSequence::Get(size_t iChannel, size_t nBuffers,
+bool StretchingSequence::DoGet(size_t iChannel, size_t nBuffers,
    const samplePtr buffers[], sampleFormat format, sampleCount start,
    size_t len, bool backwards, fillFormat fill,
    bool mayThrow, sampleCount* pNumWithinClips) const
@@ -98,9 +103,9 @@ bool StretchingSequence::Get(size_t iChannel, size_t nBuffers,
       iChannel, nBuffers, buffers, format, start, len, backwards);
 }
 
-bool StretchingSequence::IsLeader() const
+const ChannelGroup *StretchingSequence::FindChannelGroup() const
 {
-   return mSequence.IsLeader();
+   return mSequence.FindChannelGroup();
 }
 
 bool StretchingSequence::GetSolo() const
@@ -158,14 +163,9 @@ bool StretchingSequence::GetFloats(
    for (auto i = 0u; i < nChannels; ++i)
       charBuffers.push_back(reinterpret_cast<samplePtr>(buffers[i]));
    constexpr auto iChannel = 0u;
-   return Get(
+   return DoGet(
       iChannel, nChannels, charBuffers.data(), sampleFormat::floatSample, start,
       len, backwards);
-}
-
-const WideSampleSequence* StretchingSequence::DoGetDecorated() const
-{
-   return &mSequence;
 }
 
 bool StretchingSequence::MutableGet(

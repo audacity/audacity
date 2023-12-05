@@ -173,25 +173,29 @@ class ExportOptionsCLEditor final
 {
    wxString mCommand {wxT("lame - \"%f\"")};
    bool mShowOutput {false};
+   bool mInitialized {false};
 public:
 
    ExportOptionsCLEditor() = default;
 
    void PopulateUI(ShuttleGui& S) override
    {
-      mHistory.Clear();
+      if(!mInitialized)
+      {
+         mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
-      mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
+         if (mHistory.empty()) {
+            mHistory.Append(wxT("ffmpeg -i - \"%f.opus\""));
+            mHistory.Append(wxT("ffmpeg -i - \"%f.wav\""));
+            mHistory.Append(wxT("ffmpeg -i - \"%f\""));
+            mHistory.Append(wxT("lame - \"%f\""));
+         }
 
-      if (mHistory.empty()) {
-         mHistory.Append(wxT("ffmpeg -i - \"%f.opus\""));
-         mHistory.Append(wxT("ffmpeg -i - \"%f.wav\""));
-         mHistory.Append(wxT("ffmpeg -i - \"%f\""));
-         mHistory.Append(wxT("lame - \"%f\""));
+         if(!mCommand.empty())
+            mHistory.Append(mCommand);
+
+         mInitialized = true;
       }
-
-      if(!mCommand.empty())
-         mHistory.Append(mCommand);
 
       mParent = wxGetTopLevelParent(S.GetParent());
 

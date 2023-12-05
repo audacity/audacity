@@ -30,7 +30,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
 
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
 
    // Iterate over the tracks
    bool bGoodResult = true;
@@ -58,13 +58,8 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
          }
 
          if (duration > 0.0) {
-            auto list = TrackList::Create(nullptr);
-            for (const auto pChannel : TrackList::Channels(&track)) {
-               // Create a temporary track
-               auto tmp = pChannel->EmptyCopy();
-               list->Add(tmp);
-               assert(tmp->IsLeader() == pChannel->IsLeader());
-            }
+            // Create a temporary track
+            auto list = track.WideEmptyCopy();
             // Fill with data
             if (!GenerateTrack(settings, *list))
                bGoodResult = false;
@@ -74,9 +69,15 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
                auto pProject = FindProject();
                const auto &selectedRegion =
                   ViewInfo::Get(*pProject).selectedRegion;
+               // According to https://manual.audacityteam.org/man/silence.html,
+               // generating silence with an audio selection should behave like
+               // the "Silence Audio" command, which doesn't affect track clip
+               // boundaries.
+               constexpr auto preserve = true;
+               constexpr auto merge = true;
                track.ClearAndPaste(
-                  selectedRegion.t0(), selectedRegion.t1(),
-                  *list, true, false, &warper);
+                  selectedRegion.t0(), selectedRegion.t1(), *list, preserve,
+                  merge, &warper);
             }
             else
                return;

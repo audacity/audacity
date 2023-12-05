@@ -128,12 +128,13 @@ void AboutDialog::CreateCreditsList()
       XO("%s, graphics");
 
    // The Audacity Team: developers and support
-   AddCredit(wxT("Gonzalo Guzm\u00E1n"), documentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Antons \u010cinakovs"), testerFormat, roleTeamMember);
+   AddCredit(wxT("Matthieu Hodgkinson"), developerFormat, roleTeamMember);
    AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
+   AddCredit(wxT("Yana Larina"), roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Ryan Miller"), testerFormat, roleTeamMember);
    AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
    AddCredit(wxT("K. Soze"), developerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
@@ -141,6 +142,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leo Wattenberg"), designerFormat, roleTeamMember);
    AddCredit(wxT("Jessica Williamson"), designerFormat, roleTeamMember);
+   
    
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
@@ -174,6 +176,7 @@ void AboutDialog::CreateCreditsList()
 
    // Contributors
    AddCredit(wxT("Lynn Allan"), developerFormat, roleContributor);
+   AddCredit(wxT("Johan Althoff (teetow)"), designerFormat, roleContributor);
    AddCredit(wxT("Brian Armstrong"), developerFormat, roleContributor);
    AddCredit(wxT("David Avery"), developerFormat, roleContributor);
    AddCredit(wxT("David Bailes"), accessibilityAdvisorFormat, roleContributor);
@@ -190,6 +193,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Anton Gerasimov"), developerFormat, roleContributor);
    AddCredit(wxT("Mitch Golden"), developerFormat, roleContributor);
    AddCredit(wxT("Brian Gunlogson"), developerFormat, roleContributor);
+   AddCredit(wxT("Gonzalo Guzm\u00E1n"), documentationAndSupportFormat, roleContributor);
    AddCredit(wxT("Andrew Hallendorff"), developerFormat, roleContributor);
    AddCredit(wxT("Robert H\u00E4nggi"), developerFormat, roleContributor);
    AddCredit(wxT("Jouni Helminen"), designerFormat, roleContributor);
@@ -207,6 +211,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Pietro Marcello"), developerFormat, roleContributor);
    AddCredit(wxT("Greg Mekkes"), developerFormat, roleContributor);
    AddCredit(wxT("Abe Milde"), developerFormat, roleContributor);
+   AddCredit(wxT("Ryan Miller"), testerFormat, roleContributor);
    AddCredit(wxT("Paul Nasca"), developerFormat, roleContributor);
    AddCredit(wxT("Clayton Otey"), developerFormat, roleContributor);
    AddCredit(wxT("Pavel Penikov"), testerFormat, roleContributor);
@@ -239,7 +244,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("[[https://libexpat.github.io/|expat]]"), roleLibrary);
    AddCredit(wxT("[[https://xiph.org/flac/|FLAC]]"), roleLibrary);
    AddCredit(wxT("[[http://lame.sourceforge.net/|LAME]]"), roleLibrary);
-   AddCredit(wxT("[[https://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
    AddCredit(wxT("[[http://www.mega-nerd.com/libsndfile/|libsndfile]]"), roleLibrary);
    AddCredit(wxT("[[https://sourceforge.net/p/soxr/wiki/Home/|libsoxr]]"), roleLibrary);
    AddCredit(
@@ -450,10 +454,8 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
       wxBitmap logo(AudacityLogoWithName_xpm); //v
 
-      // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
-      // our source, but this allows us to tweak the size - if we want to.
-      // It also makes it easier to revert to full size if we decide to.
-      const float fScale = 0.5f;// smaller size.
+      //Setup to scale the logo larger and smaller as necessary
+      const float fScale = 1.0f;
       wxImage RescaledImage(logo.ConvertToImage());
       wxColour MainColour(
          RescaledImage.GetRed(1,1),
@@ -511,11 +513,6 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    /* this builds up the list of information to go in the window in the string
     * informationStr */
-   informationStr
-      << wxT("<h2><center>")
-      << XO("Build Information")
-      << wxT("</center></h2>\n")
-      << VerCheckHtml();
  
    informationStr
       << wxT("<h3>")
@@ -611,10 +608,24 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr
       << wxT("<table>");   // start table of file formats supported
 
-   #if defined(USE_LIBID3TAG)
-   AddBuildinfoRow(&informationStr, wxT("libmpg123"), XO("MP3 Importing"), enabled);
+   #if defined(USE_LIBMPG123)
+   AddBuildinfoRow(&informationStr, wxT("libmpg123"), XO("MP3 Import"), enabled);
    #else
-   AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("libmpg123"), XO("MP3 Import"), disabled);
+   #endif
+
+   #if USE_LIBMP3LAME
+   AddBuildinfoRow(
+      &informationStr, wxT("libmp3lame"),
+      /* i18n-hint: LAME is the codec name. This name should not be translated
+       */
+      XO("MP3 Export"), enabled);
+   #else
+   AddBuildinfoRow(
+      &informationStr, wxT("libopus"),
+      /* i18n-hint: Opus is the codec name. This name should not be translated
+       */
+      XO("Opus Import and Export"), disabled);
    #endif
 
    #ifdef USE_LIBVORBIS
@@ -625,6 +636,19 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    #else
    AddBuildinfoRow(&informationStr, wxT("libvorbis"),
          XO("Ogg Vorbis Import and Export"), disabled);
+   #endif
+
+   #if USE_LIBVORBIS && USE_LIBOPUS && USE_OPUSFILE
+   AddBuildinfoRow(
+      &informationStr, wxT("libopus"),
+      /* i18n-hint: Opus is the codec name. This name should not be translated */
+      XO("Opus Import and Export"), enabled);
+   #else
+   AddBuildinfoRow(
+      &informationStr, wxT("libopus"),
+      /* i18n-hint: Opus is the codec name. This name should not be translated
+       */
+      XO("Opus Import and Export"), disabled);
    #endif
 
    #ifdef USE_LIBID3TAG
@@ -650,14 +674,6 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          enabled);
    # else
    AddBuildinfoRow(&informationStr, wxT("libtwolame"), XO("MP2 export"),
-         disabled);
-   # endif
-
-   # if USE_QUICKTIME
-   AddBuildinfoRow(&informationStr, wxT("QuickTime"), XO("Import via QuickTime"),
-         enabled);
-   # else
-   AddBuildinfoRow(&informationStr, wxT("QuickTime"), XO("Import via QuickTime"),
          disabled);
    # endif
 

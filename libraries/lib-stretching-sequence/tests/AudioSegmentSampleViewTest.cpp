@@ -21,12 +21,12 @@ TEST_CASE("AudioSegmentSampleView", "Copy returns expected values when")
       std::fill(buffer.begin(), buffer.end(), 1.f);
       SECTION("and asked MORE values than it holds.")
       {
-         REQUIRE(sut.Copy(buffer.data(), 4u) == 3u);
-         REQUIRE(buffer == std::vector<float> { 0.f, 0.f, 0.f, 1.f });
+         sut.Copy(buffer.data(), 4u);
+         REQUIRE(buffer == std::vector<float> { 0.f, 0.f, 0.f, 0.f });
       }
       SECTION("and asked FEWER values than it holds.")
       {
-         REQUIRE(sut.Copy(buffer.data(), 2u) == 2u);
+         sut.Copy(buffer.data(), 2u);
          REQUIRE(buffer == std::vector<float> { 0.f, 0.f, 1.f, 1.f });
       }
    }
@@ -44,13 +44,14 @@ TEST_CASE("AudioSegmentSampleView", "Copy returns expected values when")
       SECTION("and asked MORE values than it holds.")
       {
          std::vector<float> out(4u);
-         REQUIRE(sut.Copy(out.data(), out.size()) == length);
+         std::fill(out.begin(), out.end(), 123.f);
+         sut.Copy(out.data(), out.size());
          REQUIRE(out == std::vector<float> { 3.f, 4.f, 5.f, 0.f });
       }
       SECTION("and asked FEWER values than it holds.")
       {
          std::vector<float> out(2u);
-         REQUIRE(sut.Copy(out.data(), out.size()) == 2u);
+         sut.Copy(out.data(), out.size());
          REQUIRE(out == std::vector<float> { 3.f, 4.f });
       }
    }

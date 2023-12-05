@@ -16,11 +16,10 @@
 
 #include "AllThemeResources.h"
 #include "../widgets/AButton.h"
-#include "../Menus.h"
 #include "Project.h"
 
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
 #include "../commands/CommandDispatch.h"
 
 // flags so 1,2,4,8 etc.
@@ -45,12 +44,10 @@ void ToolBarButtons::OnButton(wxCommandEvent & event)
    // Be sure the pop-up happens even if there are exceptions, except for buttons which toggle.
    auto cleanup = finally( [&] { mButtons[id]->InteractionOver(); });
 
-   auto &cm = CommandManager::Get( mProject );
-
-   auto flags = MenuManager::Get(mProject).GetUpdateFlags();
+   auto flags = CommandManager::Get(mProject).GetUpdateFlags();
    const CommandContext context( mProject );
 
-   CommandDispatch::HandleTextualCommand(cm,
+   CommandDispatch::HandleTextualCommand(
       mButtonList[id].commandName, context, flags, false );
 
 #if defined(__WXMAC__)

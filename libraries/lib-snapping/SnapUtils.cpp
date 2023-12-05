@@ -24,40 +24,6 @@ const wxString OldSnapToKey = L"/SnapTo";
 const wxString SelectionFormatKey = L"/SelectionFormat";
 
 const auto PathStart = L"SnapFunctions";
-
-struct RegistryVisitor : public Registry::Visitor
-{
-   explicit RegistryVisitor(SnapRegistryVisitor& _visitor)
-       : visitor(_visitor)
-   {
-   }
-   
-   void BeginGroup(Registry::GroupItemBase& item, const Path&) final
-   {
-      auto group = dynamic_cast<SnapRegistryGroup*>(&item);
-
-      if (group != nullptr)
-         visitor.BeginGroup(*group);
-   }
-
-   void EndGroup(Registry::GroupItemBase& item, const Path&) final
-   {
-      auto group = dynamic_cast<SnapRegistryGroup*>(&item);
-
-      if (group != nullptr)
-         visitor.EndGroup(*group);
-   }
-
-   void Visit(Registry::SingleItem& item, const Path&) final
-   {
-      auto concreteItem = dynamic_cast<SnapRegistryItem*>(&item);
-
-      if (concreteItem != nullptr)
-         visitor.Visit(*concreteItem);
-   }
-
-   SnapRegistryVisitor& visitor;
-};
 } // namespace
 
 StringSetting SnapToSetting { SnapToKey, "seconds" };
@@ -135,61 +101,42 @@ Identifier ReadSnapTo()
    return snapTo;
 }
 
-Registry::GroupItemBase& SnapFunctionsRegistry::Registry()
+Registry::GroupItem<SnapRegistryTraits>& SnapFunctionsRegistry::Registry()
 {
    static Registry::GroupItem<SnapRegistryTraits> registry { PathStart };
    return registry;
 }
 
-void SnapFunctionsRegistry::Visit(SnapRegistryVisitor& visitor)
+void SnapFunctionsRegistry::Visit(const SnapRegistryVisitor& visitor)
 {
    static Registry::OrderingPreferenceInitializer init {
       PathStart,
       { { L"", L"beats,triplets,time,video,cd" } },
    };
 
-   RegistryVisitor registryVisitor { visitor };
    Registry::GroupItem<SnapRegistryTraits> top { PathStart };
-   Registry::Visit(registryVisitor, &top, &Registry());
+   Registry::VisitWithFunctions(visitor, &top, &Registry());
 }
 
-SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
+const SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
 {
-   using Cache = std::unordered_map<Identifier, SnapRegistryItem*>;
+   using Cache = std::unordered_map<Identifier, const SnapRegistryItem*>;
    static Cache cache;
 
    auto it = cache.find(id);
    if (it != cache.end())
       return it->second;
 
-   struct CacheUpdater final : Registry::Visitor
-   {
-      explicit CacheUpdater(Cache& _cache)
-          : cache(_cache)
+   auto visitor = [&](const SnapRegistryItem &item, auto&) {
+      auto it = cache.find(item.name);
+
+      if (it == cache.end())
       {
+         cache.insert({ item.name, &item });
       }
-
-      void Visit(Registry::SingleItem& item, const Path&) override
-      {
-         auto concreteItem = dynamic_cast<SnapRegistryItem*>(&item);
-
-         if (concreteItem == nullptr)
-            return;
-
-         auto it = cache.find(concreteItem->name);
-
-         if (it == cache.end())
-         {
-            cache.insert(
-               std::make_pair(concreteItem->name, concreteItem));
-         }
-      }
-
-      Cache& cache;
    };
 
-   CacheUpdater update { cache };
-   Registry::Visit(update, &Registry());
+   Registry::Visit(visitor, &Registry());
 
    it = cache.find(id);
 
@@ -232,12 +179,6 @@ SnapRegistryItem::SnapRegistryItem(
 }
 
 SnapRegistryItem::~SnapRegistryItem()
-{
-}
-
-SnapRegistryItemRegistrator::SnapRegistryItemRegistrator(
-   const Registry::Placement& placement, Registry::BaseItemPtr pItem)
-    : RegisteredItem { std::move(pItem), placement }
 {
 }
 
@@ -315,13 +256,25 @@ public:
          return { time, false };
       
       const auto multiplier = mMultiplierFunctor(project);
-      const auto step = (upwards ? 1.0 : -1.0) / multiplier;
-      const double result = time + step;
+
+      const auto eps =
+         std::max(1.0, time) * std::numeric_limits<double>::epsilon();
+
+      const auto current = static_cast<int>(std::floor(time * (1.0 + eps) * multiplier));
+      const auto next = upwards ? current + 1 : current - 1;
+
+      double result = next / multiplier;
 
       if (result < 0.0)
          return { 0.0, false };
 
-      return SnapWithMultiplier(result, multiplier, true);
+      while (static_cast<int>(std::floor(result * multiplier)) < next)
+         result += eps;
+
+      while (static_cast<int>(std::floor(result * multiplier)) > next)
+         result -= eps;
+
+      return { result, true };
    }
 
 private:
@@ -330,7 +283,7 @@ private:
 
 }
 
-Registry::BaseItemPtr TimeInvariantSnapFunction(
+std::unique_ptr<SnapRegistryItem> TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    MultiplierFunctor functor)
 {
@@ -338,7 +291,7 @@ Registry::BaseItemPtr TimeInvariantSnapFunction(
       functionId, label, std::move(functor));
 }
 
-Registry::BaseItemPtr TimeInvariantSnapFunction(
+std::unique_ptr<SnapRegistryItem> TimeInvariantSnapFunction(
    const Identifier& functionId, const TranslatableString& label,
    double multiplier)
 {

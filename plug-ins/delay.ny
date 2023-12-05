@@ -5,7 +5,7 @@ $preview linear
 $name (_ "Delay")
 $debugbutton false
 $author (_ "Steve Daulton")
-$release 2.4.2-1
+$release 2.4.2-2
 $copyright (_ "GNU General Public License v2.0")
 
 
@@ -17,17 +17,17 @@ $copyright (_ "GNU General Public License v2.0")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control delay-type (_ "Delay type") choice ((_ "Regular")
+$control DELAY-TYPE (_ "Delay type") choice ((_ "Regular")
                                              ("BouncingBall" (_ "Bouncing Ball"))
                                              ("ReverseBouncingBall" (_ "Reverse Bouncing Ball"))) 0
-$control dgain (_ "Delay level per echo (dB)") real "" -6 -30 1
-$control delay (_ "Delay time (seconds)") real "" 0.3 0 5
-$control pitch-type (_ "Pitch change effect") choice (("PitchTempo" (_ "Pitch/Tempo"))
+$control DGAIN (_ "Delay level per echo (dB)") real "" -6 -30 1
+$control DELAY (_ "Delay time (seconds)") real "" 0.3 0 5
+$control PITCH-TYPE (_ "Pitch change effect") choice (("PitchTempo" (_ "Pitch/Tempo"))
                                                       ("LQPitchShift" (_ "Low-quality Pitch Shift"))
                                                       ("HQPitchShift" (_ "High-quality Pitch Shift"))) 0
-$control shift (_ "Pitch change per echo (semitones)") real "" 0 -2 2
-$control number (_ "Number of echoes") int "" 5 1 30
-$control constrain (_ "Allow duration to change") choice ((_ "Yes")(_ "No")) 0 
+$control SHIFT (_ "Pitch change per echo (semitones)") real "" 0 -2 2
+$control NUMBER (_ "Number of echoes") int "" 5 1 30
+$control CONSTRAIN (_ "Allow duration to change") choice ((_ "Yes")(_ "No")) 0 
 
 
 ;; High-quality Pitch Shift option added, March 2023.
@@ -46,10 +46,10 @@ $control constrain (_ "Allow duration to change") choice ((_ "Yes")(_ "No")) 0
 
 ;;; Pitch shift audio.
 (defun p-shift (sig snd-len ratio)
-  (when (= shift 0)
+  (when (= SHIFT 0)
     ; no-op.
     (return-from p-shift sig))
-  (case pitch-type (0 (change-speed sig ratio))
+  (case PITCH-TYPE (0 (change-speed sig ratio))
                    (1 (lq-pitch sig ratio))
                    (t (hq-pitch sig snd-len ratio))))
 
@@ -74,9 +74,9 @@ $control constrain (_ "Allow duration to change") choice ((_ "Yes")(_ "No")) 0
         ; pitshift requires rates to match
         (progv '(*sound-srate*) (list 44100)
           (cond 
-            ((> shift 5)  ; reduce aliasing
+            ((> SHIFT 5)  ; reduce aliasing
               (pitshift (lp-wall sig (/ minrate ratio)) ratio 1))
-            ((< shift -2)  ; reduce sub-sonic frequencies
+            ((< SHIFT -2)  ; reduce sub-sonic frequencies
               (pitshift (hp sig 20) ratio 1))
             (T (pitshift sig ratio 1)))))))
 
@@ -98,30 +98,30 @@ $control constrain (_ "Allow duration to change") choice ((_ "Yes")(_ "No")) 0
 
 ;;; Apply effects to echo
 (defun modify (sig echo-num snd-len)
-  (let ((gain (db-to-linear (* echo-num dgain)))
-        (shift (* echo-num shift))
+  (let ((gain (db-to-linear (* echo-num DGAIN)))
         ; convert semitone shift to ratio.
-        (ratio (power 2.0 (/ (* echo-num shift) 12.0))))
-    (if (= pitch-type 0)
+        (ratio (power 2.0 (/ (* echo-num SHIFT) 12.0))))
+    (if (= PITCH-TYPE 0)
         (mult gain (change-speed sig ratio))
         (mult gain (p-shift sig snd-len ratio)))))
 
 
 ;;; Compute echoes.
 (defun delays (sig snd-len)
-  (when  (>= delay-type 1)  ; Bouncing delay.
-    (setf delay (/ delay number)))
+  (if (>= DELAY-TYPE 1)  ; Bouncing delay.
+      (setf time-shift (/ DELAY NUMBER))
+      (setf time-shift DELAY))
   ;; The echo loop.
   (let ((echo (s-rest 0)))
     (do ((count 1 (1+ count))
          (dly 0))
-         ((> count number)(sim echo sig))
+         ((> count NUMBER)(sim echo sig))
       (let ((modified-sig (modify sig count snd-len)))
         (setq dly 
-          (case delay-type
-            (0 (+ dly delay))
-            (1 (+ dly (* delay (- (1+ number) count))))
-            (2 (+ dly (* delay count)))))
+          (case DELAY-TYPE
+            (0 (+ dly time-shift))
+            (1 (+ dly (* time-shift (- (1+ NUMBER) count))))
+            (2 (+ dly (* time-shift count)))))
         (setf echo (sim
             (at 0 (cue echo))
             (at-abs dly
@@ -134,6 +134,6 @@ $control constrain (_ "Allow duration to change") choice ((_ "Yes")(_ "No")) 0
 
 (let* ((dur (get-duration 1))
        (output (multichan-expand #'delays *track* dur)))
-  (if (= constrain 1)
+  (if (= CONSTRAIN 1)
       (multichan-expand #'constrain-abs output dur)
       output))

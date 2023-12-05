@@ -30,6 +30,9 @@ class wxMemoryDC;
 class AButton;
 struct AudioIOEvent;
 struct TrackListEvent;
+class AudioSegmentSampleView;
+
+using ChannelGroupSampleView = std::vector<std::vector<AudioSegmentSampleView>>;
 
 // containment hierarchy:
 //    MixerBoardFrame -> MixerBoard -> MixerBoardScrolledWindow -> MixerTrackCluster(s)
@@ -71,6 +74,7 @@ class NoteTrack;
 #endif
 class PlayableTrack;
 
+class WaveChannel;
 class WaveTrack;
 class auStaticText;
 
@@ -85,7 +89,7 @@ public:
    virtual ~MixerTrackCluster() {}
 
    WaveTrack *GetWave() const;
-   WaveTrack *GetRight() const;
+   WaveChannel *GetRight() const;
 #ifdef EXPERIMENTAL_MIDI_OUT
    NoteTrack *GetNote() const;
 #endif
@@ -144,6 +148,7 @@ private:
    MixerTrackSlider* mSlider_Velocity;
 #endif
    wxWeakRef<MeterPanel> mMeter;
+   ChannelGroupSampleView mSampleView;
 
 public:
    DECLARE_EVENT_TABLE()
@@ -223,7 +228,7 @@ public:
    void UpdateWidth();
 
 private:
-   void ResetMeters(const bool bResetClipping);   
+   void ResetMeters(const bool bResetClipping);
    void RemoveTrackCluster(size_t nIndex);
    void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap,
       wxRect & bev, const TranslatableString & str, bool up );

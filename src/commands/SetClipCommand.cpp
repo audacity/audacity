@@ -19,11 +19,11 @@
 
 #include "SetClipCommand.h"
 
+#include "CommandContext.h"
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
@@ -85,49 +85,49 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetClipCommand::ApplyInner( const CommandContext &, Track * t )
+bool SetClipCommand::Apply(const CommandContext& context)
 {
-   // if no 'At' is specified, then any clip in any selected track will be set.
-   t->TypeSwitch([&](WaveTrack &waveTrack) {
-      WaveClipPointers ptrs( waveTrack.SortedClipArray());
-      for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
-         WaveClip * pClip = *it;
-         bool bFound =
-            !bHasContainsTime || (
-               ( pClip->GetPlayStartTime() <= mContainsTime ) &&
-               ( pClip->GetPlayEndTime() >= mContainsTime )
-            );
-         if( bFound )
+   for(const auto track : TrackList::Get(context.project))
+   {
+      if(!track->GetSelected())
+         continue;
+
+      // if no 'At' is specified, then any clip in any selected track will be set.
+      track->TypeSwitch([&](WaveTrack &waveTrack) {
+         for(const auto& interval : waveTrack.Intervals())
          {
-            // Inside this IF is where we actually apply the command
-
-            if( bHasColour )
-               pClip->SetColourIndex(mColour);
-            // No validation of overlap yet.  We assume the user is sensible!
-            if( bHasT0 )
-               pClip->SetPlayStartTime(mT0);
-            // \todo Use SetClip to move a clip between tracks too.
-            if( bHasName )
-               pClip->SetName(mName);
-
+            if(!bHasContainsTime || 
+               (interval->Start() <= mContainsTime &&
+               interval->End() >= mContainsTime ))
+            {
+               // Inside this IF is where we actually apply the command
+               if( bHasColour )
+                  interval->SetColorIndex(mColour);
+               // No validation of overlap yet.  We assume the user is sensible!
+               if( bHasT0 )
+                  interval->SetPlayStartTime(mT0);
+               // \todo Use SetClip to move a clip between tracks too.
+               if( bHasName )
+                  interval->SetName(mName);
+            }
          }
-      }
-   } );
+      } );
+   }
    return true;
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 
 AttachedItem sAttachment1{
-   wxT("Optional/Extra/Part2/Scriptables1"),
    // Note that the PLUGIN_SYMBOL must have a space between words,
    // whereas the short-form used here must not.
    // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
    // you would have to use "CompareAudio" here.)
    Command( wxT("SetClip"), XXO("Set Clip..."),
-      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+   wxT("Optional/Extra/Part2/Scriptables1")
 };
 }

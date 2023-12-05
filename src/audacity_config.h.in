@@ -13,6 +13,12 @@
 /* Define to 1 if you have the <alloca.h> header file. */
 #cmakedefine HAVE_ALLOCA_H 1
 
+/* Define to 1 if you have the <dlfcn.h> header file */
+#cmakedefine HAVE_DLFCN_H 1
+
+/* This is a quick hack to disable dladdr if it is not present in <dlfcn.h> */
+#cmakedefine DISABLE_DLADDR 1
+
 /* Define if GTK is available */
 #cmakedefine HAVE_GTK 1
 
@@ -60,6 +66,9 @@
 /* Define if mp3 support is implemented with the libmpg123 library */
 #cmakedefine USE_LIBMPG123 1
 
+/* Define if mp3 export support is implemented with the libmpg123 library */
+#cmakedefine USE_LIBMP3LAME 1
+
 /* Define if wavpack support is implemented with the wavpack library */
 #cmakedefine USE_WAVPACK 1
 
@@ -80,9 +89,6 @@
 
 /* Define if PortMixer support should be enabled */
 #cmakedefine USE_PORTMIXER 1
-
-/* Define if QuickTime importing is enabled (Mac OS X only) */
-#cmakedefine USE_QUICKTIME 1
 
 /* Define if SBSMS support should be enabled */
 #cmakedefine USE_SBSMS 1
@@ -107,3 +113,9 @@
 
 /* Use the Aqua theme on Mac */
 #cmakedefine USE_AQUA_THEME 1
+
+/* Define if libopus support should be enabled */
+#cmakedefine USE_LIBOPUS 1
+
+/* Define if opusfile support should be enabled */
+#cmakedefine USE_OPUSFILE 1

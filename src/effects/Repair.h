@@ -13,7 +13,7 @@
 
 #include "StatefulEffect.h"
 
-class WaveTrack;
+class WaveChannel;
 
 class EffectRepair final : public StatefulEffect
 {
@@ -42,7 +42,7 @@ public:
 private:
    // EffectRepair implementation
 
-   bool ProcessOne(int count, WaveTrack &track,
+   bool ProcessOne(int count, WaveChannel &track,
       sampleCount start, size_t len,
       size_t repairStart, // offset relative to start
       size_t repairLen);

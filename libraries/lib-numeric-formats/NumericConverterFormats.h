@@ -29,12 +29,7 @@ NUMERIC_FORMATS_API NumericFormatSymbol Default(const NumericConverterType& type
 //! Looks up the format, returns Default for the type if the format is not registered
 NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
    const FormatterContext& context, const NumericConverterType& type,
-   const wxString& formatIdentifier);
-
-//! Looks up the format, returns Default for the type if the format is not registered
-NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
-   const FormatterContext& context, const NumericConverterType& type,
-   const NumericFormatSymbol& formatIdentifier);
+   const NumericFormatID& formatIdentifier);
 
 NUMERIC_FORMATS_API NumericFormatSymbol DefaultSelectionFormat();
 NUMERIC_FORMATS_API NumericFormatSymbol TimeAndSampleFormat();
@@ -46,6 +41,6 @@ NUMERIC_FORMATS_API NumericFormatSymbol HertzFormat();
 NUMERIC_FORMATS_API NumericFormatSymbol OctavesFormat();
 
 //! Return the best duration format for the given time format. Currently is an identity function
-NUMERIC_FORMATS_API NumericFormatSymbol
-GetBestDurationFormat(const NumericFormatSymbol& timeFormat);
+NUMERIC_FORMATS_API NumericFormatID
+GetBestDurationFormat(const NumericFormatID& timeFormat);
 }

@@ -67,7 +67,7 @@ public:
 private:
    void Populate();
 
-   void GetAudio();
+   bool GetAudio();
 
    void PlotMouseEvent(wxMouseEvent & event);
    void PlotPaint(wxPaintEvent & event);

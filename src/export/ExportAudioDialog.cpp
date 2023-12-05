@@ -16,7 +16,6 @@
 
 #include "Export.h"
 #include "ExportUtils.h"
-#include "ProjectSettings.h"
 #include "WaveTrack.h"
 #include "LabelTrack.h"
 #include "Mix.h"
@@ -34,13 +33,13 @@
 #include <wx/event.h>
 
 #include "ShuttleGui.h"
-#include "ProjectWindow.h"
 #include "AudacityMessageBox.h"
 #include "Theme.h"
 #include "HelpSystem.h"
 #include "TagsEditor.h"
 #include "ExportFilePanel.h"
 #include "ExportProgressUI.h"
+#include "ImportExport.h"
 #include "WindowAccessible.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -54,7 +53,7 @@ ChoiceSetting ExportAudioExportRange { L"/ExportAudioDialog/ExportRange",
    {
       { "project", XO("Entire &Project") },
       { "split", XO("M&ultiple Files") },
-      { "selection", XO("Curren&t selection") }
+      { "selection", XO("Curren&t Selection") }
       
    },
    0, //project
@@ -76,8 +75,6 @@ ChoiceSetting ExportAudioSplitNamePolicy { L"/ExportAudioDialog/SplitNamePolicy"
    },
    0
 };
-
-IntSetting ExportAudioSampleRate { "L/ExportAudioDialog/SampleRate", 0 };//use project rate until overwritten
 
 BoolSetting ExportAudioIncludeAudioBeforeFirstLabel { L"/ExportAudioDialog/IncludeAudioBeforeFirstLabel", false };
 
@@ -169,19 +166,25 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    else
       filename.SetName(defaultName);
 
-   int sampleRate{};
-   ExportAudioSampleRate.Read(&sampleRate);
+   auto sampleRate = ImportExport::Get(project).GetPreferredExportRate();
+   if(sampleRate == ImportExport::InvalidRate)
+   {
+      auto& tracks = TrackList::Get(project);
+      for(const auto track : tracks.Any<WaveTrack>())
+         sampleRate = std::max(sampleRate, track->GetRate());
+   }
 
    wxString format = defaultFormat;
    if(format.empty())
       ExportAudioDefaultFormat.Read(&format);
 
-   mExportOptionsPanel->Init(filename, format, sampleRate);
+   mExportOptionsPanel->Init(filename, sampleRate, format);
 
    auto& tracks = TrackList::Get(mProject);
    const auto labelTracks = tracks.Any<LabelTrack>();
    const auto hasLabels = !labelTracks.empty() &&
       (*labelTracks.begin())->GetNumLabels() > 0;
+   const auto hasMultipleWaveTracks = tracks.Any<WaveTrack>().size() > 1;
 
    if(ExportUtils::FindExportWaveTracks(tracks, true).empty() ||
       ViewInfo::Get(mProject).selectedRegion.isPoint())
@@ -191,19 +194,33 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
       if(ExportAudioExportRange.Read() == "selection")
          mRangeProject->SetValue(true);
    }
+   else if (!hasLabels && !hasMultipleWaveTracks)
+      mRangeSelection->MoveAfterInTabOrder(mRangeProject);
    
    if(!hasLabels)
    {
       mSplitByLabels->Disable();
-      mSplitByTracks->SetValue(true);
-      if(ExportAudioExportRange.Read() != "split")
-         mSplitsPanel->Hide();
+      if (hasMultipleWaveTracks)
+         mSplitByTracks->SetValue(true);
    }
-   else
+
+   if (!hasMultipleWaveTracks)
    {
-      mRangeSplit->SetValue(true);
-      mSplitByLabels->SetValue(true);
+      mSplitByTracks->Disable();
+      if (hasLabels)
+         mSplitByLabels->SetValue(true);
    }
+
+   if (!hasLabels && !hasMultipleWaveTracks)
+   {
+      mRangeSplit->Disable();
+      if (ExportAudioExportRange.Read() == "split")
+         mRangeProject->SetValue(true);
+      mSplitsPanel->Hide();
+   }
+
+   if (ExportAudioExportRange.Read() != "split")
+      mSplitsPanel->Hide();
    
    mExportOptionsPanel->SetCustomMappingEnabled(!mRangeSplit->GetValue());
 
@@ -593,9 +610,9 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
    
    if(result == ExportResult::Success || result == ExportResult::Stopped)
    {
-      ExportAudioSampleRate.Write(mExportOptionsPanel->GetSampleRate());
+      ImportExport::Get(mProject).SetPreferredExportRate(mExportOptionsPanel->GetSampleRate());
+
       ExportAudioDefaultFormat.Write(selectedPlugin->GetFormatInfo(selectedFormat).format);
-      ExportAudioSampleRate.Write(mExportOptionsPanel->GetSampleRate());
       ExportAudioDefaultPath.Write(mExportOptionsPanel->GetPath());
 
       ShuttleGui S(this, eIsSavingToPrefs);
@@ -924,9 +941,7 @@ ExportResult ExportAudioDialog::DoExportSplitByTracks(const ExportPlugin& plugin
 
       /* Select the track */
       SelectionStateChanger changer2{ selectionState, tracks };
-      const auto range = TrackList::Channels(tr);
-      for (auto channel : range)
-         channel->SetSelected(true);
+      tr->SetSelected(true);
 
       // Export the data. "channels" are per track.
       ok = DoExport(plugin, formatIndex, parameters, activeSetting.filename, activeSetting.channels,
@@ -1022,10 +1037,11 @@ ExportResult ExportAudioDialog::DoExport(const ExportPlugin& plugin,
    {
       result = ExportProgressUI::Show(ExportTaskBuilder{}.SetPlugin(&plugin, formatIndex)
                                     .SetParameters(parameters)
-                                    .SetRange(t0, t1)
+                                    .SetRange(t0, t1, selectedOnly)
                                     .SetTags(&tags)
                                     .SetNumChannels(channels)
                                     .SetFileName(fullPath)
+                                    .SetSampleRate(mExportOptionsPanel->GetSampleRate())
                                     .Build(mProject));
    });
 

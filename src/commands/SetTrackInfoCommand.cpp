@@ -19,11 +19,6 @@ SetTrackVisualsCommand
 loops over selected tracks. Subclasses override ApplyInner() to change
 one track.
 
-\class SetChannelsBase
-\brief Base class for the various track modifying command classes, that
-loops over channels of selected tracks. Subclasses override ApplyInner() to
-change one channel.
-
 \class SetTrackStatusCommand
 \brief A SetChannelsBase that sets name, selected and focus.
 
@@ -43,11 +38,11 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "SetTrackInfoCommand.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Project.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "WaveTrack.h"
 #include "../prefs/WaveformSettings.h"
@@ -64,17 +59,6 @@ bool SetTrackBase::Apply(const CommandContext & context)
    for (auto t : tracks) {
       if (t->GetSelected())
          ApplyInner(context, *t);
-   }
-   return true;
-}
-
-bool SetChannelsBase::Apply(const CommandContext & context)
-{
-   auto &tracks = TrackList::Get(context.project);
-   for (auto t : tracks) {
-      if (t->GetSelected())
-         for (Track *channel : TrackList::Channels(t))
-            ApplyInner(context, channel);
    }
    return true;
 }
@@ -329,7 +313,7 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol( 2 );
       auto schemes = SpectrogramSettings::GetColorSchemeNames();
-      S.Optional( bHasSpecColorScheme).TieChoice( XC("Sche&me", "spectrum prefs"), mSpecColorScheme,
+      S.Optional( bHasSpecColorScheme).TieChoice( XC("Sche&me:", "spectrum prefs"), mSpecColorScheme,
          Msgids( schemes.data(), schemes.size() ) );
    }
    S.EndMultiColumn();
@@ -439,12 +423,11 @@ bool SetTrackCommand::VisitSettings( ConstSettingsVisitor & S )
    { return VisitSettings<true>(S); }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 
 AttachedItem sAttachment1{
-   wxT("Optional/Extra/Part2/Scriptables1"),
    Items( wxT(""),
       // Note that the PLUGIN_SYMBOL must have a space between words,
       // whereas the short-form used here must not.
@@ -456,16 +439,17 @@ AttachedItem sAttachment1{
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
-   )
+   ),
+   wxT("Optional/Extra/Part2/Scriptables1")
 };
 
 AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part2/Scriptables2"),
    // Note that the PLUGIN_SYMBOL must have a space between words,
    // whereas the short-form used here must not.
    // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
    // you would have to use "CompareAudio" here.)
    Command( wxT("SetTrack"), XXO("Set Track..."),
-      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+   wxT("Optional/Extra/Part2/Scriptables2")
 };
 }

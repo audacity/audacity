@@ -16,10 +16,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../widgets/BasicMenu.h"
 #include "BasicUI.h"
-#include "../../commands/CommandContext.h"
-#include "../../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
 #include "../../HitTestResult.h"
-#include "../../Menus.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "Track.h"
@@ -45,11 +44,14 @@ auto CommonTrackPanelCell::GetMenuItems(
 }
 
 unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
-   wxWindow *pParent, const wxPoint *pPoint, AudacityProject *pProject)
+   wxWindow *pParent, const wxPoint *pPoint, AudacityProject *const pProject)
 {
    const auto items = GetMenuItems( rect, pPoint, pProject );
    if (items.empty())
       return RefreshCode::RefreshNone;
+
+   auto &commandManager = CommandManager::Get(*pProject);
+   commandManager.UpdateMenus();
 
    // Set up command context with extras
    CommandContext context{ *pProject };
@@ -61,8 +63,7 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
    }
    context.temporarySelection.pTrack = FindTrack().get();
 
-   auto &commandManager = CommandManager::Get(*pProject);
-   auto flags = MenuManager::Get( *pProject ).GetUpdateFlags();
+   auto flags = commandManager.GetUpdateFlags();
 
    // Common dispatcher for the menu items
    auto dispatcher = [&]( wxCommandEvent &evt ){

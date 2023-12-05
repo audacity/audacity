@@ -20,9 +20,8 @@ SilenceSegment::SilenceSegment(size_t numChannels, sampleCount numSamples)
 }
 
 size_t
-SilenceSegment::GetFloats(std::vector<float*>& buffers, size_t numSamples)
+SilenceSegment::GetFloats(float *const *buffers, size_t numSamples)
 {
-   assert(buffers.size() == mNumChannels);
    const size_t numSamplesToProduce =
       std::min<long long>(mNumRemainingSamples.as_long_long(), numSamples);
    for (auto i = 0u; i < mNumChannels; ++i)

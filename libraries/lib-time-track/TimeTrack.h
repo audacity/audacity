@@ -57,7 +57,8 @@ class TIME_TRACK_API TimeTrack final
    TrackListHolder Copy(double t0, double t1, bool forClipboard) const override;
    void Clear(double t0, double t1) override;
    void Paste(double t, const Track &src) override;
-   void Silence(double t0, double t1) override;
+   void
+   Silence(double t0, double t1, ProgressReporter reportProgress = {}) override;
    void InsertSilence(double t, double len) override;
 
    // TimeTrack parameters

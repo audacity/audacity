@@ -68,8 +68,6 @@ namespace WaveChannelViewConstants
       // Note that these can be with or without spectrum view which
       // adds a constant.
       kZoom1to1 = 1,
-      kZoomTimes2,
-      kZoomDiv2,
       kZoomHalfWave,
       kZoomInByDrag,
       kZoomIn,

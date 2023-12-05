@@ -24,4 +24,8 @@ public:
    Result Click(const TrackPanelMouseEvent& event, AudacityProject* project) override;
 
    UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project) override;
+
+   bool HandlesRightClick() override;
+
+   UIHandle::Result Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent) override;
 };

@@ -17,16 +17,15 @@
 #include "WaveTrack.h"
 #include <cassert>
 
-WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
-   sampleCount start, bool isGenerator, bool isProcessor,
+WaveTrackSink::WaveTrackSink(WaveChannel &left, WaveChannel *pRight,
+   WaveTrack *pGenerated,
+   sampleCount start, bool isProcessor,
    sampleFormat effectiveFormat
 )  : mLeft{ left }, mpRight{ pRight }
-   , mGenLeft{ isGenerator ? left.EmptyCopy() : nullptr }
-   , mGenRight{ pRight && isGenerator ? pRight->EmptyCopy() : nullptr }
-   , mList{ mGenLeft
-      ? TrackList::Temporary(nullptr, mGenLeft, mGenRight)
-      : nullptr
-   }
+   , mpGenerated{ pGenerated }
+   , mGenLeft{ pGenerated ? (*pGenerated->Channels().begin()).get() : nullptr }
+   , mGenRight{ pRight && pGenerated
+      ? (*pGenerated->Channels().rbegin()).get() : nullptr }
    , mIsProcessor{ isProcessor }
    , mEffectiveFormat{ effectiveFormat }
    , mOutPos{ start }
@@ -50,7 +49,7 @@ bool WaveTrackSink::Acquire(Buffers &data)
       // (less than one block remains; maybe nonzero because of samples
       // discarded for initial latency correction)
       DoConsume(data);
-   return true;
+   return IsOk();
 }
 
 bool WaveTrackSink::Release(const Buffers &, size_t)
@@ -67,15 +66,17 @@ void WaveTrackSink::DoConsume(Buffers &data)
    if (inputBufferCnt > 0) {
       // Some data still unwritten
       if (mIsProcessor) {
-         mLeft.Set(data.GetReadPosition(0),
-            floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
-         if (mpRight)
-            mpRight->Set(data.GetReadPosition(1),
+         mOk = mOk &&
+            mLeft.Set(data.GetReadPosition(0),
                floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
+         if (mpRight)
+            mOk = mOk &&
+               mpRight->Set(data.GetReadPosition(1),
+                  floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
       }
       else if (mGenLeft) {
          mGenLeft->Append(data.GetReadPosition(0),
-            floatSample, inputBufferCnt);
+            floatSample, inputBufferCnt );
          if (mGenRight)
             mGenRight->Append(data.GetReadPosition(1),
                floatSample, inputBufferCnt);
@@ -93,10 +94,9 @@ void WaveTrackSink::DoConsume(Buffers &data)
    assert(data.BlockSize() <= data.Remaining());
 }
 
-std::shared_ptr<TrackList> WaveTrackSink::Flush(Buffers &data)
+void WaveTrackSink::Flush(Buffers &data)
 {
    DoConsume(data);
-   if (mGenLeft)
-      mGenLeft->Flush();
-   return mList;
+   if (mpGenerated)
+      mpGenerated->Flush();
 }

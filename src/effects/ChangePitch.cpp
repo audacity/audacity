@@ -249,7 +249,6 @@ std::unique_ptr<EffectEditor> EffectChangePitch::PopulateOrExchange(
    {
       S.StartVerticalLay();
       {
-         S.AddTitle(XO("Change Pitch without Changing Tempo"));
          S.AddTitle(
             XO("Estimated Start Pitch: %s%d (%.3f Hz)")
                .Format( pitch[m_nFromPitch], m_nFromOctave, m_FromFrequency) );

@@ -37,7 +37,6 @@
 #include "EffectEditor.h"
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
-#include "PasteOverPreservingClips.h"
 #include "ShuttleGui.h"
 
 #include "WaveClip.h"
@@ -197,7 +196,7 @@ bool EffectEqualization::VisitSettings(
    // Curve point parameters -- how many isn't known statically
    {
       curves[0].points.clear();
-   
+
       for (int i = 0; i < 200; i++)
       {
          const wxString nameFreq = wxString::Format("f%i",i);
@@ -289,7 +288,7 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
    if (index < 0)
       return {};
 
-   // mParams = 
+   // mParams =
    wxString params = FactoryPresets[index].values;
 
    CommandParameters eap(params);
@@ -365,10 +364,10 @@ bool EffectEqualization::Init()
 }
 
 struct EffectEqualization::Task {
-   Task(size_t M, size_t idealBlockLen, WaveTrack &track)
+   Task(size_t M, size_t idealBlockLen, WaveChannel &channel)
       : buffer{ idealBlockLen }
       , idealBlockLen{ idealBlockLen }
-      , output{ track }
+      , output{ channel }
       , leftTailRemaining{ (M - 1) / 2 }
    {
       memset(lastWindow, 0, windowSize * sizeof(float));
@@ -394,16 +393,16 @@ struct EffectEqualization::Task {
    float *thisWindow{ window1.get() };
    float *lastWindow{ window2.get() };
 
-   // a new WaveTrack to hold all of the output,
+   // a new WaveChannel to hold all of the output,
    // including 'tails' each end
-   WaveTrack &output;
+   WaveChannel &output;
 
    size_t leftTailRemaining;
 };
 
 bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 {
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
    mParameters.CalcFilter();
    bool bGoodResult = true;
 
@@ -418,19 +417,13 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto start = track->TimeToLongSamples(t0);
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
-         const auto data = CollectClipData(*track, start, len);
 
-         auto temp = TrackList::Create(nullptr);
-         for (const auto pChannel : TrackList::Channels(track)) {
-            auto pNewChannel = pChannel->EmptyCopy();
-            temp->Add(pNewChannel);
-            assert(pNewChannel->IsLeader() == pChannel->IsLeader());
-         }
+         auto temp = track->WideEmptyCopy();
          auto pTempTrack = *temp->Any<WaveTrack>().begin();
          pTempTrack->ConvertToSampleFormat(floatSample);
-         auto iter0 = TrackList::Channels(pTempTrack).begin();
-   
-         for (const auto pChannel : TrackList::Channels(track)) {
+         auto iter0 = pTempTrack->Channels().begin();
+
+         for (const auto pChannel : track->Channels()) {
             constexpr auto windowSize = EqualizationFilter::windowSize;
             const auto &M = mParameters.mM;
 
@@ -442,14 +435,14 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
                idealBlockLen += (L - (idealBlockLen % L));
             auto pNewChannel = *iter0++;
             Task task{ M, idealBlockLen, *pNewChannel };
-
             bGoodResult = ProcessOne(task, count, *pChannel, start, len);
             if (!bGoodResult)
                goto done;
          }
          pTempTrack->Flush();
-         PasteOverPreservingClips(data, *track, start, len,
-            **temp->Any<WaveTrack>().begin());
+         // Remove trailing data from the temp track
+         pTempTrack->Clear(t1 - t0, pTempTrack->GetEndTime());
+         track->ClearAndPaste(t0, t1, *pTempTrack, true, true);
       }
 
       count++;
@@ -481,7 +474,7 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 // EffectEqualization implementation
 
 bool EffectEqualization::ProcessOne(Task &task,
-   int count, const WaveTrack &t, sampleCount start, sampleCount len)
+   int count, const WaveChannel &t, sampleCount start, sampleCount len)
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
 

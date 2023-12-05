@@ -60,7 +60,6 @@ TranslatableString
 FileException::WriteFailureMessage(const wxFileName &fileName)
 {
    return XO("Audacity failed to write to a file.\n"
-     "Perhaps %s is not writable or the disk is full.\n"
-     "For tips on freeing up space, click the help button."
+     "Perhaps %s is not writable or the disk is full."
    ).Format(FileNames::AbbreviatePath(fileName));
 }

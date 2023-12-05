@@ -39,7 +39,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-audio-graph-interface
-   lib-registries-interface
    lib-xml-interface
 )
 audacity_library( lib-mixer "${SOURCES}" "${LIBRARIES}"

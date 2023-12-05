@@ -64,6 +64,8 @@ public:
 
    virtual ~LabelGlyphHandle();
 
+   std::shared_ptr<const Channel> FindChannel() const override;
+
    void Enter(bool forward, AudacityProject *) override;
 
    Result Click

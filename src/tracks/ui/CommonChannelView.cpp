@@ -11,6 +11,7 @@ Paul Licameli split from class TrackView (now called ChannelView)
 #include "CommonChannelView.h"
 
 #include "BackgroundCell.h"
+#include "CommonTrackInfo.h"
 #include "TimeShiftHandle.h"
 #include "TrackControls.h"
 #include "ZoomHandle.h"
@@ -19,7 +20,6 @@ Paul Licameli split from class TrackView (now called ChannelView)
 #include "../../ProjectSettings.h"
 #include "Track.h"
 #include "../../TrackArtist.h"
-#include "../../TrackInfo.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 
@@ -80,7 +80,7 @@ std::shared_ptr<TrackPanelCell> CommonChannelView::ContextMenuDelegate()
 
 int CommonChannelView::GetMinimizedHeight() const
 {
-   auto height = TrackInfo::MinimumTrackHeight();
+   auto height = CommonTrackInfo::MinimumTrackHeight();
    const auto pTrack = FindTrack();
    auto channels = TrackList::Channels(pTrack->SubstituteOriginalTrack().get());
    auto nChannels = channels.size();

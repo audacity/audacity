@@ -6,6 +6,8 @@ add_unit_test(
    SOURCES
       AudioContainerHelper.h
       AudioSegmentSampleViewTest.cpp
+      ClipSegmentTest.cpp
+      ClipTimeAndPitchSourceTest.cpp
       FloatVectorClip.cpp
       FloatVectorClip.h
       MockAudioSegmentFactory.h
@@ -17,7 +19,6 @@ add_unit_test(
       SilenceSegmentTest.cpp
       StretchingSequenceTest.cpp
       StretchingSequenceIntegrationTest.cpp
-      WaveClipSegmentTest.cpp
       TestWaveClipMaker.cpp
       TestWaveClipMaker.h
       TestWaveTrackMaker.cpp

@@ -18,9 +18,6 @@ It would be nice to create a NEW 'Bindings' class which both
 KeyConfigPrefs and MousePrefs use.
 
 *//*********************************************************************/
-
-
-
 #include "KeyConfigPrefs.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -34,10 +31,10 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/textctrl.h>
 
 #include "ActiveProject.h"
+#include "MenuCreator.h" // for KeyEventToKeyString
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectWindows.h"
-#include "../commands/CommandManager.h"
 #include "XMLFileReader.h"
 
 #include "SelectFile.h"
@@ -91,8 +88,7 @@ END_EVENT_TABLE()
 KeyConfigPrefs::KeyConfigPrefs(
    wxWindow * parent, wxWindowID winid, AudacityProject *pProject,
    const CommandID &name)
-/* i18n-hint: as in computer keyboard (not musical!) */
-:  PrefsPanel(parent, winid, XO("Keyboard")),
+:  PrefsPanel(parent, winid, XO("Shortcuts")),
    mView(NULL),
    mKey(NULL),
    mFilter(NULL),

@@ -7,17 +7,14 @@ ProjectManager.cpp
 Paul Licameli split from AudacityProject.cpp
 
 **********************************************************************/
-
 #include "ProjectManager.h"
-
-
 
 #include "ActiveProject.h"
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "Clipboard.h"
 #include "FileNames.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "ModuleManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -25,25 +22,21 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
-#include "ProjectSelectionManager.h"
-#include "ProjectWindows.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "SelectUtilities.h"
 #include "TrackPanel.h"
 #include "TrackUtilities.h"
 #include "UndoManager.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "Import.h"
-#include "import/ImportMIDI.h"
 #include "QualitySettings.h"
 #include "toolbars/MeterToolBar.h"
-#include "toolbars/SelectionBar.h"
-#include "toolbars/SpectralSelectionBar.h"
-#include "toolbars/TimeToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
@@ -171,6 +164,7 @@ void InitProjectWindow( ProjectWindow &window )
    if (!pProject)
       return;
    auto &project = *pProject;
+   auto &viewport = Viewport::Get(project);
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -292,7 +286,7 @@ void InitProjectWindow( ProjectWindow &window )
    // MM: Give track panel the focus to ensure keyboard commands work
    trackPanel.SetFocus();
 
-   window.FixScrollbars();
+   viewport.UpdateScrollbarsForTracks();
    ruler.SetLeftOffset(viewInfo.GetLeftOffset());  // bevel on AdornedRuler
 
    //
@@ -345,7 +339,7 @@ AudacityProject *ProjectManager::New()
    // There is a dependency on the order of initialisation.
    // The menus must be created, and registered, before
    // InitProjectWindows can UpdateMenus.
-   MenuManager::Get(project).CreateMenusAndCommands(project);
+   MenuCreator::Get(project).CreateMenusAndCommands();
 
    InitProjectWindow( window );
 
@@ -373,13 +367,7 @@ AudacityProject *ProjectManager::New()
    auto gAudioIO = AudioIO::Get();
    gAudioIO->SetListener(
       ProjectAudioManager::Get( project ).shared_from_this() );
-   auto &projectSelectionManager = ProjectSelectionManager::Get( project );
-   SelectionBar::Get( project ).SetListener( &projectSelectionManager );
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetListener( &projectSelectionManager );
-#endif
-   TimeToolBar::Get( project ).SetListener( &projectSelectionManager );
-      
+
    //Set the NEW project as active:
    SetActiveProject(p);
    
@@ -415,6 +403,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    const auto &settings = ProjectSettings::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &tracks = TrackList::Get( project );
+   auto &viewport = Viewport::Get(project);
    auto &window = ProjectWindow::Get( project );
    auto gAudioIO = AudioIO::Get();
 
@@ -449,7 +438,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       ProjectAudioManager::Get( project ).Stop();
 
       projectAudioIO.SetAudioIOToken(0);
-      window.RedrawProject();
+      viewport.Redraw();
    }
    else if (gAudioIO->IsMonitoring()) {
       gAudioIO->StopStream();
@@ -736,8 +725,8 @@ AudacityProject *ProjectManager::OpenProject(
 
       auto &projectFileIO = ProjectFileIO::Get( *pProject );
       if( projectFileIO.IsRecovered() ) {
-         auto &window = ProjectWindow::Get( *pProject );
-         window.Zoom( window.GetZoomOfToFit() );
+         auto &viewport = Viewport::Get(*pProject);
+         viewport.Zoom(viewport.GetZoomOfToFit());
          // "Project was recovered" replaces "Create new project" in Undo History.
          auto &undoManager = UndoManager::Get( *pProject );
          undoManager.RemoveStates(0, 1);

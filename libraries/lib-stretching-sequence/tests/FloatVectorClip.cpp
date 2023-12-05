@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include "FloatVectorClip.h"
+#include <cmath>
 
 FloatVectorClip::FloatVectorClip(
    int sampleRate, const std::vector<std::vector<float>>& audio)
@@ -37,14 +38,14 @@ FloatVectorClip::FloatVectorClip(
 }
 
 AudioSegmentSampleView FloatVectorClip::GetSampleView(
-   size_t iChannel, sampleCount start, size_t len) const
+   size_t iChannel, sampleCount start, size_t len, bool mayThrow) const
 {
    std::vector<BlockSampleView> blockViews {
       std::make_shared<std::vector<float>>(mAudio[iChannel])
    };
    // todo(mhodgkinson) review argument types.
    return AudioSegmentSampleView(
-      std::move(blockViews), start.as_size_t(), sampleCount { len });
+      std::move(blockViews), start.as_size_t(), len);
 }
 
 sampleCount FloatVectorClip::GetVisibleSampleCount() const
@@ -60,6 +61,11 @@ size_t FloatVectorClip::GetWidth() const
 int FloatVectorClip::GetRate() const
 {
    return mSampleRate;
+}
+
+sampleCount FloatVectorClip::TimeToSamples(double time) const
+{
+   return sampleCount(floor(time * GetRate() + 0.5));
 }
 
 double FloatVectorClip::GetPlayDuration() const

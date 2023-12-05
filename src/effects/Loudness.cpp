@@ -105,7 +105,7 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
    );
 
    // Iterate over each track
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
    bool bGoodResult = true;
    auto topMsg = XO("Normalizing Loudness...\n");
 
@@ -133,11 +133,11 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
       mProgressMsg =
          topMsg + XO("Analyzing: %s").Format(trackName);
 
-      const auto channels = TrackList::Channels(pTrack);
+      const auto channels = pTrack->Channels();
       auto nChannels = mStereoInd ? 1 : channels.size();
       mProcStereo = nChannels > 1;
 
-      const auto processOne = [&](WaveTrack &track){
+      const auto processOne = [&](WaveChannel &track){
          std::optional<EBUR128> loudnessProcessor;
          float RMS[2];
 
@@ -205,11 +205,11 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 
       if (mStereoInd) {
          for (const auto pChannel : channels)
-            if (!processOne(*pChannel))
+            if (!(bGoodResult = processOne(*pChannel)))
                goto done;
       }
       else {
-         if (!processOne(*pTrack))
+         if (!(bGoodResult = processOne(*pTrack)))
             break;
       }
    }
@@ -378,7 +378,7 @@ void EffectLoudness::FreeBuffers()
    mTrackBuffer[1].reset();
 }
 
-bool EffectLoudness::GetTrackRMS(WaveTrack &track,
+bool EffectLoudness::GetTrackRMS(WaveChannel &track,
    const double curT0, const double curT1, float &rms)
 {
    // set mRMS.  No progress bar here as it's fast.
@@ -393,7 +393,7 @@ bool EffectLoudness::GetTrackRMS(WaveTrack &track,
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool EffectLoudness::ProcessOne(WaveTrack &track, size_t nChannels,
+bool EffectLoudness::ProcessOne(WaveChannel &track, size_t nChannels,
    const double curT0, const double curT1, const float mult,
    EBUR128 *pLoudnessProcessor)
 {
@@ -432,7 +432,8 @@ bool EffectLoudness::ProcessOne(WaveTrack &track, size_t nChannels,
       else {
          if (!ProcessBufferBlock(mult))
             return false;
-         StoreBufferBlock(track, nChannels, s, blockLen);
+         if (!StoreBufferBlock(track, nChannels, s, blockLen))
+            return false;
       }
 
       // Increment s one blockfull of samples
@@ -443,11 +444,11 @@ bool EffectLoudness::ProcessOne(WaveTrack &track, size_t nChannels,
    return true;
 }
 
-void EffectLoudness::LoadBufferBlock(WaveTrack &track, size_t nChannels,
+void EffectLoudness::LoadBufferBlock(WaveChannel &track, size_t nChannels,
    sampleCount pos, size_t len)
 {
    size_t idx = 0;
-   const auto getOne = [&](WaveTrack &channel) {
+   const auto getOne = [&](WaveChannel &channel) {
       // Get the samples from the track and put them in the buffer
       channel.GetFloats(mTrackBuffer[idx].get(), pos, len);
    };
@@ -455,7 +456,7 @@ void EffectLoudness::LoadBufferBlock(WaveTrack &track, size_t nChannels,
    if (nChannels == 1)
       getOne(track);
    else
-      for (const auto channel : TrackList::Channels(&track)) {
+      for (const auto channel : track.GetTrack().Channels()) {
          getOne(*channel);
          ++idx;
       }
@@ -493,20 +494,25 @@ bool EffectLoudness::ProcessBufferBlock(const float mult)
    return true;
 }
 
-void EffectLoudness::StoreBufferBlock(WaveTrack &track, size_t nChannels,
+bool EffectLoudness::StoreBufferBlock(WaveChannel &track, size_t nChannels,
    sampleCount pos, size_t len)
 {
    size_t idx = 0;
-   const auto setOne = [&](WaveTrack &channel){
+   const auto setOne = [&](WaveChannel &channel){
       // Copy the newly-changed samples back onto the track.
-      channel.Set((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+      return channel.Set(
+         (samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
    };
 
    if (nChannels == 1)
-      setOne(track);
-   else for (auto channel : TrackList::Channels(&track)) {
-      setOne(*channel);
-      ++idx;
+      return setOne(track);
+   else {
+      for (auto channel : track.GetTrack().Channels()) {
+         if (!setOne(*channel))
+            return false;
+         ++idx;
+      }
+      return true;
    }
 }
 

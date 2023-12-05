@@ -106,7 +106,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    }
 
    //Iterate over each track
-   EffectOutputTracks outputs{ *mTracks };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
    bool bGoodResult = true;
    double progress = 0;
    TranslatableString topMsg;
@@ -137,7 +137,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
          float maxExtent{ std::numeric_limits<float>::lowest() };
          std::vector<float> offsets;
 
-         const auto channels = TrackList::Channels(track);
+         const auto channels = track->Channels();
          // mono or 'stereo tracks independently'
          const bool oneChannel = (channels.size() == 1 || mStereoInd);
          auto msg = oneChannel
@@ -199,7 +199,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
             else
                mMult = 1.0;
             if (false ==
-                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++)))
+                (bGoodResult = ProcessOne(*channel, msg, progress, *pOffset++)))
                goto break2;
             // TODO: more-than-two-channels-message
             msg = topMsg +
@@ -296,7 +296,7 @@ bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
 
 // EffectNormalize implementation
 
-bool EffectNormalize::AnalyseTrack(const WaveTrack &track,
+bool EffectNormalize::AnalyseTrack(const WaveChannel &track,
    const ProgressReport &report,
    const bool gain, const bool dc, const double curT0, const double curT1,
    float &offset, float &extent)
@@ -331,7 +331,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack &track,
 
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(const WaveTrack &track,
+bool EffectNormalize::AnalyseTrackData(const WaveChannel &track,
    const ProgressReport &report, const double curT0, const double curT1,
    float &offset)
 {
@@ -397,14 +397,14 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack &track,
 //and executes ProcessData, on it...
 // uses mMult and offset to normalize a track.
 // mMult must be set before this is called
-bool EffectNormalize::ProcessOne(
-   WaveTrack * track, const TranslatableString &msg, double &progress, float offset)
+bool EffectNormalize::ProcessOne(WaveChannel &track,
+   const TranslatableString &msg, double &progress, float offset)
 {
    bool rc = true;
 
    //Transform the marker timepoints to samples
-   auto start = track->TimeToLongSamples(mCurT0);
-   auto end = track->TimeToLongSamples(mCurT1);
+   auto start = track.TimeToLongSamples(mCurT0);
+   auto end = track.TimeToLongSamples(mCurT1);
 
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
@@ -413,7 +413,7 @@ bool EffectNormalize::ProcessOne(
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   Floats buffer{ track->GetMaxBlockSize() };
+   Floats buffer{ track.GetMaxBlockSize() };
 
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
@@ -422,18 +422,21 @@ bool EffectNormalize::ProcessOne(
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
+         track.GetBestBlockSize(s),
          end - s
       );
 
       //Get the samples from the track and put them in the buffer
-      track->GetFloats(buffer.get(), s, block);
+      track.GetFloats(buffer.get(), s, block);
 
       //Process the buffer.
       ProcessData(buffer.get(), block, offset);
 
       //Copy the newly-changed samples back onto the track.
-      track->Set((samplePtr) buffer.get(), floatSample, s, block);
+      if (!track.Set((samplePtr) buffer.get(), floatSample, s, block)) {
+         rc = false;
+         break;
+      }
 
       //Increment s one blockfull of samples
       s += block;

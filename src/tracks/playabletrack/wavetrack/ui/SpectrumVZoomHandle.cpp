@@ -30,6 +30,11 @@ SpectrumVZoomHandle::SpectrumVZoomHandle
 
 SpectrumVZoomHandle::~SpectrumVZoomHandle() = default;
 
+std::shared_ptr<const Channel> SpectrumVZoomHandle::FindChannel() const
+{
+   return mpTrack.lock();
+}
+
 void SpectrumVZoomHandle::Enter( bool, AudacityProject* )
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
@@ -55,13 +60,13 @@ UIHandle::Result SpectrumVZoomHandle::Drag
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    if (!pTrack)
       return Cancelled;
-   return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd);
+   return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd, true);
 }
 
 HitTestPreview SpectrumVZoomHandle::Preview
 (const TrackPanelMouseState &st, AudacityProject *)
 {
-   return WaveChannelVZoomHandle::HitPreview(st.state);
+   return WaveChannelVZoomHandle::HitPreview(true);
 }
 
 UIHandle::Result SpectrumVZoomHandle::Release
@@ -89,7 +94,7 @@ void SpectrumVZoomHandle::Draw(
    if (!mpTrack.lock()) //? TrackList::Lock()
       return;
    return WaveChannelVZoomHandle::DoDraw(
-      context, rect, iPass, mZoomStart, mZoomEnd );
+      context, rect, iPass, mZoomStart, mZoomEnd, true );
 }
 
 wxRect SpectrumVZoomHandle::DrawingArea(
@@ -128,8 +133,7 @@ void SpectrumVZoomHandle::DoZoom(
    const bool spectrumLinear =
       (SpectrogramSettings::Get(*pTrack).scaleType == SpectrogramSettings::stLinear);
 
-
-   bool bDragZoom = WaveChannelVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
+   bool bDragZoom = WaveChannelVZoomHandle::IsDragZooming(zoomStart, zoomEnd, true);
    // Add 100 if spectral to separate the kinds of zoom.
    const int kSpectral = 100;
 
@@ -173,8 +177,6 @@ void SpectrumVZoomHandle::DoZoom(
       }
       break;
    case kZoom1to1:
-   case kZoomDiv2:
-   case kZoomTimes2:
    case kZoomHalfWave:
       {
          // Zoom out full
@@ -268,45 +270,30 @@ PopupMenuTable &SpectrumVRulerMenuTable::Instance()
 }
 
 BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
-
-BeginSection( "Scales" );
-   {
-      const auto & names = SpectrogramSettings::GetScaleNames();
-      for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         AppendRadioItem( names[ii].Internal(),
-            OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
-            POPUP_MENU_FN( OnSpectrumScaleType ),
-            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-               WaveTrack *const wt =
-                  static_cast<SpectrumVRulerMenuTable&>( handler )
-                     .mpData->pTrack;
-               if ( id ==
-                  OnFirstSpectrumScaleID +
-                      static_cast<int>(SpectrogramSettings::Get(*wt).scaleType))
-                  menu.Check(id, true);
-            }
-         );
-      }
+   //Generate scales (Mel, Logarithmic, etc)
+   const auto & names = SpectrogramSettings::GetScaleNames();
+   for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
+      AppendRadioItem( names[ii].Internal(),
+         OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
+         POPUP_MENU_FN( OnSpectrumScaleType ),
+         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+            WaveTrack *const wt =
+               static_cast<SpectrumVRulerMenuTable&>( handler )
+                  .mpData->pTrack;
+            if ( id ==
+               OnFirstSpectrumScaleID +
+                     static_cast<int>(SpectrogramSettings::Get(*wt).scaleType))
+               menu.Check(id, true);
+         }
+      );
    }
-EndSection();
 
 
 BeginSection( "Zoom" );
-   // Accelerators only if zooming enabled.
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-
-   AppendItem( "Reset", OnZoomResetID,         XXO("Zoom Reset"),
-              POPUP_MENU_FN( OnZoomReset ) );
-   AppendItem( "Fit", OnZoomFitVerticalID,
-      MakeLabel( XXO("Zoom to Fit"), bVZoom, XXO("Shift-Right-Click") ),
-      POPUP_MENU_FN( OnZoomFitVertical ) );
-   AppendItem( "In", OnZoomInVerticalID,
-      MakeLabel( XXO("Zoom In"), bVZoom, XXO("Left-Click/Left-Drag") ),
-      POPUP_MENU_FN( OnZoomInVertical ) );
-   AppendItem( "Out", OnZoomOutVerticalID,
-      MakeLabel( XXO("Zoom Out"), bVZoom, XXO("Shift-Left-Click") ),
-      POPUP_MENU_FN( OnZoomOutVertical ) );
+   AppendItem( "In", OnZoomInVerticalID, XXO("Zoom In"),POPUP_MENU_FN( OnZoomInVertical ) );
+   AppendItem( "Out", OnZoomOutVerticalID, XXO("Zoom Out"), POPUP_MENU_FN( OnZoomOutVertical ) );
+   AppendItem( "Fit", OnZoomFitVerticalID, XXO("Zoom to Fit"), POPUP_MENU_FN( OnZoomFitVertical ) );
+   AppendItem( "Reset", OnZoomResetID, XXO("Reset Zoom"),POPUP_MENU_FN( OnZoomReset ) );
 EndSection();
 
 END_POPUP_MENU()

@@ -19,9 +19,8 @@ static const double gMinZoom = 0.001;
 }
 
 ZoomInfo::ZoomInfo(double start, double pixelsPerSecond)
-   : vpos(0)
-   , h(start)
-   , zoom(pixelsPerSecond)
+   : hpos{ start }
+   , zoom{ pixelsPerSecond }
 {
 }
 
@@ -37,7 +36,7 @@ double ZoomInfo::PositionToTime(int64 position,
    , bool // ignoreFisheye
 ) const
 {
-   return h + (position - origin) / zoom;
+   return hpos + (position - origin) / zoom;
 }
 
 
@@ -47,7 +46,7 @@ auto ZoomInfo::TimeToPosition(double projectTime,
    , bool // ignoreFisheye
 ) const -> int64
 {
-   double t = 0.5 + zoom * (projectTime - h) + origin ;
+   double t = 0.5 + zoom * (projectTime - hpos) + origin ;
    if( t < INT64_MIN )
       return INT64_MIN;
    if( t > INT64_MAX )
@@ -77,7 +76,7 @@ double ZoomInfo::GetZoom( ) const { return zoom;};
 
 double ZoomInfo::GetAbsoluteOffset(double offset) const
 {
-   return std::floor(0.5 + h * zoom + offset);
+   return std::floor(0.5 + hpos * zoom + offset);
 }
 
 double ZoomInfo::GetMaxZoom()
@@ -109,10 +108,10 @@ void ZoomInfo::ZoomBy(double multiplier)
    SetZoom(zoom * multiplier);
 }
 
-void ZoomInfo::FindIntervals(
-   Intervals& results, int64 width, int64 origin) const
+ZoomInfo::Intervals
+ZoomInfo::FindIntervals(int64 width, int64 origin) const
 {
-   results.clear();
+   ZoomInfo::Intervals results;
    results.reserve(2);
 
    const int64 rightmost(origin + (0.5 + width));
@@ -124,4 +123,5 @@ void ZoomInfo::FindIntervals(
    if (origin < rightmost)
       results.push_back(Interval(rightmost, 0, false));
    assert(!results.empty() && results[0].position == origin);
+   return results;
 }

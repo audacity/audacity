@@ -10,6 +10,7 @@
 
 #include "RealtimeEffectState.h"
 
+#include "Channel.h"
 #include "EffectInterface.h"
 #include "MessageBuffer.h"
 #include "PluginManager.h"
@@ -452,11 +453,12 @@ void AllocateChannelsToProcessors(
 }
 
 //! Set up processors to be visited repeatedly in Process.
-/*! The iteration over channels in AddSequence and Process must be the same */
+/*! The iteration over channels in AddGroup and Process must be the same */
 std::shared_ptr<EffectInstance>
-RealtimeEffectState::AddSequence(
-   const WideSampleSequence &sequence, unsigned chans, float sampleRate)
+RealtimeEffectState::AddGroup(
+   const ChannelGroup &group, unsigned chans, float sampleRate)
 {
+   assert(group.IsLeader());
    auto pInstance = EnsureInstance(sampleRate);
    if (!pInstance)
       return {};
@@ -478,9 +480,9 @@ RealtimeEffectState::AddSequence(
          return false;
    });
    if (mCurrentProcessor > first) {
-      // Remember the sampleRate of the sequence, so latency can be computed
+      // Remember the sampleRate of the group, so latency can be computed
       // later
-      mGroups[&sequence] = { first, sampleRate };
+      mGroups[&group] = { first, sampleRate };
       return pInstance;
    }
    return {};
@@ -529,10 +531,10 @@ bool RealtimeEffectState::ProcessStart(bool running)
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
 
-//! Visit the effect processors that were added in AddSequence
-/*! The iteration over channels in AddSequence and Process must be the same */
+//! Visit the effect processors that were added in AddGroup
+/*! The iteration over channels in AddGroup and Process must be the same */
 size_t RealtimeEffectState::Process(
-   const WideSampleSequence &sequence, unsigned chans,
+   const ChannelGroup &group, unsigned chans,
    const float *const *inbuf, float *const *outbuf, float *const dummybuf,
    size_t numSamples)
 {
@@ -548,7 +550,7 @@ size_t RealtimeEffectState::Process(
    const auto clientIn = stackAllocate(const float *, numAudioIn);
    const auto clientOut = stackAllocate(float *, numAudioOut);
    size_t len = 0;
-   const auto &pair = mGroups[&sequence];
+   const auto &pair = mGroups[&group];
    auto processor = pair.first;
    // Outer loop over processors
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,

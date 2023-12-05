@@ -20,6 +20,7 @@
 #include "FindClipping.h"
 #include "AnalysisTracks.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -99,7 +100,9 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
    int count = 0;
 
    // JC: Only process selected tracks.
-   for (auto t : inputTracks()->Selected<const WaveTrack>()) {
+   // PRL:  Compute the strech into temporary tracks.  Don't commit the stretch.
+   EffectOutputTracks temp { *mTracks, GetType(), { { mT0, mT1 } } };
+   for (auto t : temp.Get().Selected<const WaveTrack>()) {
       double trackStart = t->GetStartTime();
       double trackEnd = t->GetEndTime();
       double t0 = std::max(trackStart, mT0);
@@ -109,7 +112,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
          auto end = t->TimeToLongSamples(t1);
          auto len = end - start;
 
-         for (const auto pChannel : TrackList::Channels(t))
+         for (const auto pChannel : t->Channels())
             if (!ProcessOne(*lt, count++, *pChannel, start, len))
                return false;
       }
@@ -124,7 +127,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
 }
 
 bool EffectFindClipping::ProcessOne(LabelTrack &lt,
-   int count, const WaveTrack &wt, sampleCount start, sampleCount len)
+   int count, const WaveChannel &wt, sampleCount start, sampleCount len)
 {
    bool bGoodResult = true;
    size_t blockSize = (mStart * 1000);

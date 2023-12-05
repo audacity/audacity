@@ -57,7 +57,6 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
    auto &tracks = TrackList::Get(project);
    int applyCount = 0;
    Setting setting;
-   Worker worker(setting);
    for (auto wt : tracks.Any<WaveTrack>()) {
       using Type = long long;
       Type startSample{ std::numeric_limits<Type>::max() };
@@ -79,9 +78,11 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
       const auto t0 = wt->LongSamplesToTime(startSample);
       const auto len = endSample - startSample;
       const auto tLen = wt->LongSamplesToTime(len);
-      auto tempList = TrackList::Create(nullptr);
+      auto tempList = wt->WideEmptyCopy();
+      auto iter = (*tempList->Any<WaveTrack>().begin())->Channels().begin();
       long long processed{};
       for (auto pChannel : wt->Channels()) {
+         Worker worker{ (*iter++).get(), setting };
          auto &view = ChannelView::Get(*pChannel);
 
          if (auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)){
@@ -95,16 +96,10 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
                   // TODO make this correct in case start or end of spectral data in
                   // the channels differs
                   processed = std::max(processed, pSpectralData->GetLength());
-                  worker.Process(
-                     static_cast<WaveTrack*>(pChannel.get()), pSpectralData);
+                  worker.Process(*pChannel, pSpectralData);
                   applyCount += static_cast<int>(pSpectralData->dataHistory.size());
                   pSpectralData->clearAllData();
                }
-               // TODO make sure tempList gets as many channels as wt, if any
-               tempList->Add(worker.mOutputTrack);
-               assert(worker.mOutputTrack->IsLeader() ==
-                  static_cast<WaveTrack*>(pChannel.get())->IsLeader());
-               worker.mOutputTrack.reset();
             }
          }
       }
@@ -129,17 +124,15 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
    return applyCount > 0;
 }
 
-int SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
-                                                      long long int startSC,
-                                                      int hopSize,
-                                                      double threshold,
-                                                      int targetFreqBin)
+int SpectralDataManager::FindFrequencySnappingBin(const WaveChannel &channel,
+   long long int startSC, int hopSize, double threshold, int targetFreqBin)
 {
    Setting setting;
    setting.mNeedOutput = false;
-   Worker worker(setting);
+   Worker worker{ nullptr, setting };
 
-   return worker.ProcessSnapping(wt, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
+   return worker.ProcessSnapping(
+      channel, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
 }
 
 std::vector<int> SpectralDataManager::FindHighestFrequencyBins(WaveTrack *wt,
@@ -150,15 +143,18 @@ std::vector<int> SpectralDataManager::FindHighestFrequencyBins(WaveTrack *wt,
  {
    Setting setting;
    setting.mNeedOutput = false;
-   Worker worker(setting);
+   Worker worker{ nullptr, setting };
 
-   return worker.ProcessOvertones(wt, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
+   return worker.ProcessOvertones(*wt, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
  }
 
-SpectralDataManager::Worker::Worker(const Setting &setting)
-:TrackSpectrumTransformer{ setting.mNeedOutput, setting.mInWindowType, setting.mOutWindowType,
-                           setting.mWindowSize, setting.mStepsPerWindow,
-                           setting.mLeadingPadding, setting.mTrailingPadding}
+SpectralDataManager::Worker::Worker(
+   WaveChannel *pChannel, const Setting &setting
+)  : TrackSpectrumTransformer{ pChannel,
+      setting.mNeedOutput, setting.mInWindowType, setting.mOutWindowType,
+      setting.mWindowSize, setting.mStepsPerWindow,
+      setting.mLeadingPadding, setting.mTrailingPadding
+   }
 // Work members
 {
 }
@@ -172,7 +168,7 @@ bool SpectralDataManager::Worker::DoFinish() {
    return TrackSpectrumTransformer::DoFinish();
 }
 
-bool SpectralDataManager::Worker::Process(WaveTrack* wt,
+bool SpectralDataManager::Worker::Process(const WaveChannel &channel,
    const std::shared_ptr<SpectralData> &pSpectralData)
 {
    mpSpectralData = pSpectralData;
@@ -182,44 +178,39 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
    // a few initial windows that overlay the range only partially
    mStartHopNum = startSample / hopSize - (mStepsPerWindow - 1);
    mWindowCount = 0;
-   return TrackSpectrumTransformer::Process(Processor, wt, 1,
+   return TrackSpectrumTransformer::Process(Processor, channel, 1,
       mpSpectralData->GetCorrectedStartSample(), mpSpectralData->GetLength());
 }
 
-int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
-                                                  long long startSC,
-                                                  int hopSize,
-                                                  size_t winSize,
-                                                  double threshold,
-                                                  int targetFreqBin)
+int SpectralDataManager::Worker::ProcessSnapping(const WaveChannel &channel,
+   long long startSC, int hopSize, size_t winSize, double threshold,
+   int targetFreqBin)
 {
    mSnapThreshold = threshold;
    mSnapTargetFreqBin = targetFreqBin;
-   mSnapSamplingRate = wt->GetRate();
+   mSnapSamplingRate = channel.GetTrack().GetRate();
 
    startSC = std::max(static_cast<long long>(0), startSC - 2 * hopSize);
    // The calculated frequency peak will be stored in mReturnFreq
-   if (!TrackSpectrumTransformer::Process( SnappingProcessor, wt,
-                                           1, startSC, winSize))
+   if (!TrackSpectrumTransformer::Process(SnappingProcessor, channel,
+      1, startSC, winSize))
       return 0;
 
    return mSnapReturnFreqBin;
 }
 
-std::vector<int> SpectralDataManager::Worker::ProcessOvertones(WaveTrack *wt,
-                                                 long long startSC,
-                                                 int hopSize,
-                                                 size_t winSize,
-                                                 double threshold,
-                                                 int targetFreqBin)
-                                                 {
+std::vector<int> SpectralDataManager::Worker::ProcessOvertones(
+   const WaveChannel &channel, long long startSC, int hopSize, size_t winSize,
+   double threshold, int targetFreqBin)
+{
    mOvertonesThreshold = threshold;
    mSnapTargetFreqBin = targetFreqBin;
-   mSnapSamplingRate = wt->GetRate();
+   mSnapSamplingRate = channel.GetTrack().GetRate();
 
    startSC = std::max(static_cast<long long>(0), startSC - 2 * hopSize);
    // The calculated multiple frequency peaks will be stored in mOvertonesTargetFreqBin
-   TrackSpectrumTransformer::Process( OvertonesProcessor, wt, 1, startSC, winSize);
+   TrackSpectrumTransformer::Process(
+      OvertonesProcessor, channel, 1, startSC, winSize);
    return move( mOvertonesTargetFreqBin );
  }
 

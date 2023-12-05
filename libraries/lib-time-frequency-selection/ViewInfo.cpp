@@ -224,11 +224,11 @@ void PlayRegion::Notify()
    Publish({});
 }
 
-const TranslatableString LoopToggleText = XXO("&Loop On/Off");
+const TranslatableString LoopToggleText = XXO("Enable &Looping");
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
    []( AudacityProject &project ) {
-      return std::make_unique<ViewInfo>(0.0, 1.0, ZoomInfo::GetDefaultZoom());
+      return std::make_unique<ViewInfo>(0.0, ZoomInfo::GetDefaultZoom());
    }
 };
 
@@ -242,15 +242,9 @@ const ViewInfo &ViewInfo::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
+ViewInfo::ViewInfo(double start, double pixelsPerSecond)
    : ZoomInfo(start, pixelsPerSecond)
    , selectedRegion()
-   , total(screenDuration)
-   , sbarH(0)
-   , sbarScreen(1)
-   , sbarTotal(1)
-   , sbarScale(1.0)
-   , scrollStep(16)
    , bUpdateTrackIndicator(true)
    , bScrollBeyondZero(false)
 {
@@ -275,20 +269,12 @@ void ViewInfo::UpdatePrefs()
    UpdateSelectedPrefs( UpdateScrollPrefsID() );
 }
 
-void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime)
-{
-   h =
-      std::max(lowerBoundTime,
-         std::min(total - screenWidth / zoom,
-         beforeWidth / zoom));
-}
-
 void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile) const
 // may throw
 {
    selectedRegion.WriteXMLAttributes(xmlFile, "sel0", "sel1");
    xmlFile.WriteAttr(wxT("vpos"), vpos);
-   xmlFile.WriteAttr(wxT("h"), h, 10);
+   xmlFile.WriteAttr(wxT("h"), hpos, 10);
    xmlFile.WriteAttr(wxT("zoom"), zoom, 10);
 }
 
@@ -313,7 +299,7 @@ ProjectFileIORegistry::AttributeReaderEntries entries2 {
       // reassignment of vpos, except in handling the vertical scroll.
    } },
    { "h", [](auto &viewInfo, auto value){
-      viewInfo.h = value.Get(viewInfo.h);
+      viewInfo.hpos = value.Get(viewInfo.hpos);
    } },
    { "zoom", [](auto &viewInfo, auto value){
       viewInfo.zoom = value.Get(viewInfo.zoom);

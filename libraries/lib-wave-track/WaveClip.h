@@ -45,6 +45,7 @@ class WaveClip;
 using WaveClipHolder = std::shared_ptr< WaveClip >;
 using WaveClipHolders = std::vector < WaveClipHolder >;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+using ProgressReporter = std::function<void(double)>;
 
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
 // own the storage for those arrays.  If it does, it destroys them.
@@ -152,23 +153,33 @@ public:
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 
-   // Always gives non-negative answer, not more than sample sequence length
-   // even if t0 really falls outside that range
-   sampleCount TimeToSequenceSamples(double t) const;
-
-   int GetRate() const { return mRate; }
+   int GetRate() const override
+   {
+      return mRate;
+   }
 
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
 
-   double GetStretchRatio() const override { return 1.0; }
+   //! Stretches from left to the absolute time (if in expected range)
+   void StretchLeftTo(double to);
+   //! Sets from the right to the absolute time (if in expected range)
+   void StretchRightTo(double to);
+
+   double GetStretchRatio() const override;
+
+   //! Checks for stretch-ratio equality, accounting for rounding errors.
+   //! @{
+   bool HasEqualStretchRatio(const WaveClip& other) const;
+   bool StretchRatioEquals(double value) const;
+   //! @}
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
-   void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
+   void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
 
-   void SetColourIndex( int index ){ mColourIndex = index;};
-   int GetColourIndex( ) const { return mColourIndex;};
+   void SetColourIndex(int index) { mColourIndex = index; }
+   int GetColourIndex() const { return mColourIndex; }
 
    double GetSequenceStartTime() const noexcept;
    void SetSequenceStartTime(double startTime);
@@ -179,13 +190,29 @@ public:
    //! (but not counting the cutlines)
    sampleCount GetSequenceSamplesCount() const;
 
+   //! Closed-begin of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayStartTime() const noexcept override;
    void SetPlayStartTime(double time);
 
+   //! Open-end of play region. Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
    double GetPlayEndTime() const override;
 
+   //! Always a multiple of the track's sample period, whether the clip is
+   //! stretched or not.
+   double GetPlayDuration() const;
+
+   bool IsEmpty() const;
+
+   //! Real start time of the clip, quantized to raw sample rate (track's rate)
    sampleCount GetPlayStartSample() const;
+   //! Real end time of the clip, quantized to raw sample rate (track's rate)
    sampleCount GetPlayEndSample() const;
+
+   /*!
+    * Returns a number of raw samples, not accounting for stretching.
+    */
    sampleCount GetVisibleSampleCount() const override;
 
    //! Sets the play start offset in seconds from the beginning of the underlying sequence
@@ -211,12 +238,51 @@ public:
    /*! @excsafety{No-fail} */
    void ShiftBy(double delta) noexcept;
 
-   // One and only one of the following is true for a given t (unless the clip
-   // has zero length -- then BeforePlayStartTime() and AfterPlayEndTime() can both be true).
-   // WithinPlayRegion() is true if the time is substantially within the clip
+   //! The play region is an open-closed interval, [...), where "[ =
+   //! GetPlayStartTime()", and ") = GetPlayEndTime()."
+
+   /*!
+    * @brief [ < t and t < ), such that if the track were split at `t`, it would
+    * split this clip in two of lengths > 0.
+    */
+   bool SplitsPlayRegion(double t) const;
+   /*!
+    * @brief  t ∈ [...)
+    */
    bool WithinPlayRegion(double t) const;
-   bool BeforePlayStartTime(double t) const;
-   bool AfterPlayEndTime(double t) const;
+   /*!
+    * @brief  t < [
+    */
+   bool BeforePlayRegion(double t) const;
+   /*!
+    * @brief  t <= [
+    */
+   bool AtOrBeforePlayRegion(double t) const;
+   /*!
+    * @brief  ) <= t
+    */
+   bool AfterPlayRegion(double t) const;
+   /*!
+    * @brief t0 and t1 both ∈ [...)
+    * @pre t0 <= t1
+    */
+   bool EntirelyWithinPlayRegion(double t0, double t1) const;
+   /*!
+    * @brief t0 xor t1 ∈ [...)
+    * @pre t0 <= t1
+    */
+   bool PartlyWithinPlayRegion(double t0, double t1) const;
+   /*!
+    * @brief [t0, t1) ∩ [...) != ∅
+    * @pre t0 <= t1
+    */
+   bool IntersectsPlayRegion(double t0, double t1) const;
+   /*!
+    * @brief t0 <= [ and ) <= t1, such that removing [t0, t1) from the track
+    * deletes this clip.
+    * @pre t0 <= t1
+    */
+   bool CoversEntirePlayRegion(double t0, double t1) const;
 
    //! Counts number of samples within t0 and t1 region. t0 and t1 are
    //! rounded to the nearest clip sample boundary, i.e. relative to clips
@@ -233,11 +299,27 @@ public:
     * @pre `iChannel < GetWidth()`
     */
    AudioSegmentSampleView GetSampleView(
-      size_t iChannel, sampleCount start, size_t length) const override;
+      size_t iChannel, sampleCount start, size_t length,
+      bool mayThrow = true) const override;
+
+   /*!
+    * @brief Request interval samples within [t0, t1). `t0` and `t1` are
+    * truncated to the clip's play start and end. Stretching influences the
+    * number of samples fitting into [t0, t1), i.e., half as many for twice as
+    * large a stretch ratio, due to a larger spacing of the raw samples. The
+    * actual number of samples available from the returned view is queried
+    * through `AudioSegmentSampleView::GetSampleCount()`.
+    *
+    * @pre `iChannel < GetWidth()`
+    * @pre stretched samples in [t0, t1) can be counted in a `size_t`
+    */
+   AudioSegmentSampleView GetSampleView(
+      size_t iChannel, double t0, double t1, bool mayThrow = true) const;
 
    //! Get samples from one channel
    /*!
     @param ii identifies the channel
+    @param start relative to clip play start sample
     @pre `ii < GetWidth()`
     */
    bool GetSamples(size_t ii, samplePtr buffer, sampleFormat format,
@@ -246,6 +328,7 @@ public:
    //! Get (non-interleaved) samples from all channels
    /*!
     assume as many buffers available as GetWidth()
+    @param start relative to clip play start sample
     */
    bool GetSamples(samplePtr buffers[], sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
@@ -253,6 +336,7 @@ public:
    //! @param ii identifies the channel
    /*!
     @pre `ii < GetWidth()`
+    @param start relative to clip play start sample
     */
    void SetSamples(size_t ii, constSamplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
@@ -264,8 +348,46 @@ public:
       */
    );
 
+   /*!
+    * @param t relative to clip start sample
+    */
+   bool
+   GetFloatAtTime(double t, size_t iChannel, float& value, bool mayThrow) const;
+
+   //! Succeed with out-of-bounds requests, only changing what is in bounds.
+   //! @{
+   // clang-format off
+   /*!
+    * @brief Considers `buffer` as audio starting at `TimeToSamples(t)`
+    * (relative to clip play start time) and with equal stretch ratio. Samples
+    * at intersecting indices are then copied, leaving non-intersecting clip
+    * samples untouched. E.g.,
+    *     buffer:      [a b c d e]
+    *     clip  :            [x y z]
+    *     result:            [d e z]
+    */
+   // clang-format on
+   void SetFloatsFromTime(
+      double t, size_t iChannel, const float* buffer, size_t numSamples,
+      sampleFormat effectiveFormat);
+
+   /*!
+    * @brief Same as `SetFloatsFromTime`, but with `buffer` starting at
+    * `TimeToSamples(t0 -  SamplesToTime(numSideSamples))`.
+    * `[buffer, buffer + 2 * numSizeSamples + 1)` is assumed to be a valid span
+    * of addresses.
+    */
+   void SetFloatsCenteredAroundTime(
+      double t, size_t iChannel, const float* buffer, size_t numSideSamples,
+      sampleFormat effectiveFormat);
+
+   void SetFloatAtTime(
+      double t, size_t iChannel, float value, sampleFormat effectiveFormat);
+   //! @}
+
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
+   void SetEnvelope(std::unique_ptr<Envelope> p);
 
    //! @param ii identifies the channel
    /*!
@@ -318,8 +440,8 @@ public:
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
    //! @pre `GetWidth() == 1`
-   std::shared_ptr<SampleBlock> AppendNewBlock(
-      samplePtr buffer, sampleFormat format, size_t len);
+   std::shared_ptr<SampleBlock>
+   AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
 
    //! For use in importing pre-version-3 projects to preserve sharing of blocks
    //! @pre `GetWidth() == 1`
@@ -368,11 +490,12 @@ public:
    /// if there is at least one clip sample between t0 and t1, noop otherwise.
    void ClearAndAddCutLine(double t0, double t1);
 
-   //! Paste data from other clip, resampling it if not equal rate
    /*!
-    @return true and succeed if and only if `this->GetWidth() == other.GetWidth()`
+    * @return true and succeed if and only if `this->GetWidth() ==
+    * other.GetWidth()` and either this is empty or `this->GetStretchRatio() ==
+    * other.GetStretchRatio()`.
     */
-   bool Paste(double t0, const WaveClip &other);
+   bool Paste(double t0, const WaveClip& other);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */
@@ -429,7 +552,9 @@ public:
    void SetName(const wxString& name);
    const wxString& GetName() const;
 
-   sampleCount TimeToSamples(double time) const noexcept;
+   // TimeToSamples and SamplesToTime take clip stretch ratio into account.
+   // Use them to convert time / sample offsets.
+   sampleCount TimeToSamples(double time) const override;
    double SamplesToTime(sampleCount s) const noexcept;
 
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
@@ -444,15 +569,19 @@ public:
    size_t GetAppendBufferLen() const;
 
    void
-   OnProjectTempoChange(const std::optional<double>& oldTempo, double newTempo)
-   {
-      // Planned for use in https://github.com/audacity/audacity/issues/4850
-   }
+   OnProjectTempoChange(const std::optional<double>& oldTempo, double newTempo);
 
 private:
+   // Always gives non-negative answer, not more than sample sequence length
+   // even if t0 really falls outside that range
+   sampleCount TimeToSequenceSamples(double t) const;
+
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();
+   std::vector<std::unique_ptr<Sequence>> GetEmptySequenceCopies() const;
+   void StretchCutLines(double ratioChange);
+   double SnapToTrackSample(double time) const noexcept;
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
@@ -471,10 +600,20 @@ private:
       bool committed{ false };
    };
 
+   //! Real-time durations, i.e., stretching the clip modifies these.
+   //! @{
    double mSequenceOffset { 0 };
-   double mTrimLeft{ 0 };
-   double mTrimRight{ 0 };
+   double mTrimLeft { 0 };
+   double mTrimRight { 0 };
+   //! @}
 
+   // Used in GetStretchRatio which computes the factor, by which the sample
+   // interval is multiplied, to get a realtime duration.
+   double mClipStretchRatio = 1.;
+   std::optional<double> mRawAudioTempo;
+   std::optional<double> mProjectTempo;
+
+   //! Sample rate of the raw audio, i.e., before stretching.
    int mRate;
    int mColourIndex;
 

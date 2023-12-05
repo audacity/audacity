@@ -34,6 +34,16 @@ SliderHandle::~SliderHandle()
 {
 }
 
+std::shared_ptr<const Channel> SliderHandle::FindChannel() const
+{
+   return std::dynamic_pointer_cast<const Channel>(mpTrack.lock());
+}
+
+bool SliderHandle::IsDragging() const
+{
+   return mIsDragging;
+}
+
 UIHandle::Result SliderHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
@@ -56,7 +66,7 @@ UIHandle::Result SliderHandle::Click
       // Do not start a drag
       return result | RefreshCell | Cancelled;
    else {
-      mIsClicked = true;
+      mIsDragging = true;
       return result | RefreshCell;
    }
 }

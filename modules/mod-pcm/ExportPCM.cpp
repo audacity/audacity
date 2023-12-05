@@ -22,7 +22,6 @@
 #include "Prefs.h"
 #include "Tags.h"
 #include "Track.h"
-#include "wxWidgetsWindowPlacement.h"
 #include "wxFileNameWrapper.h"
 
 #include "Export.h"

@@ -257,7 +257,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
                auto helpBtn = S.AddBitmapButton(theTheme.Bitmap(bmpHelpIcon));
 
                const auto helpText =
-                  XO("Project Sample Rate used when recording new tracks and for playback, mixdowns and exports in this project")
+                  XO("Sample Rate used when recording new tracks, mixing down tracks and for playback in this project.")
                      .Translation();
                
                helpBtn->SetToolTip(helpText);

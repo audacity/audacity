@@ -66,13 +66,6 @@ TranslatableString Effect::GetDescription() const
    return {};
 }
 
-// EffectDefinitionInterface implementation
-
-EffectType Effect::GetType() const
-{
-   return EffectTypeNone;
-}
-
 EffectFamilySymbol Effect::GetFamily() const
 {
    // Unusually, the internal and visible strings differ for the built-in
@@ -191,11 +184,12 @@ const EffectSettingsManager& Effect::GetDefinition() const
    return *this;
 }
 
-NumericFormatSymbol Effect::GetSelectionFormat()
+NumericFormatID Effect::GetSelectionFormat()
 {
    if( !IsBatchProcessing() && FindProject() )
-      return ProjectNumericFormats::Get( *FindProject() ).GetSelectionFormat();
-   return NumericConverterFormats::HoursMinsSecondsFormat();
+      return ProjectNumericFormats::Get( *FindProject() )
+         .GetSelectionFormat();
+   return NumericConverterFormats::HoursMinsSecondsFormat().Internal();
 }
 
 wxString Effect::GetSavedStateGroup()

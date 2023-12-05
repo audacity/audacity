@@ -12,8 +12,8 @@
 
 #include "Project.h"
 
-#include "../commands/CommandManager.h"
-#include "../commands/CommandContext.h"
+#include "CommandManager.h"
+#include "CommandContext.h"
 
 namespace
 {
@@ -24,7 +24,7 @@ void SetTimeDisplayMode(const CommandContext& context, TimeDisplayMode type)
    auto& ruler = AdornedRulerPanel::Get(project);
    ruler.SetTimeDisplayMode(type);
 
-   CommandManager::Get(project).UpdateCheckmarks(project);
+   CommandManager::Get(project).UpdateCheckmarks();
 }
 
 void OnSetMinutesSeconds(const CommandContext& context)
@@ -43,17 +43,16 @@ TimeDisplayMode GetTimeDisplayMode(const AudacityProject& project)
    return panel.GetTimeDisplayMode();
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
-BaseItemSharedPtr ExtraSelectionMenu()
+auto ExtraSelectionMenu()
 {
-   using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu { Menu(
+   static auto menu = std::shared_ptr{ Menu(
       wxT("Timeline"), XXO("&Timeline"),
       Command(
          wxT("MinutesAndSeconds"), XXO("Minutes and Seconds"),
          OnSetMinutesSeconds, AlwaysEnabledFlag,
-         CommandManager::Options {}.CheckTest(
+         Options{}.CheckTest(
             [](const AudacityProject& project) {
                return GetTimeDisplayMode(project) ==
                       TimeDisplayMode::MinutesAndSeconds;
@@ -61,7 +60,7 @@ BaseItemSharedPtr ExtraSelectionMenu()
       Command(
          wxT("BeatsAndMeasures"), XXO("Beats and Measures"),
          OnSetBeatsAndMeasures, AlwaysEnabledFlag,
-         CommandManager::Options {}.CheckTest(
+         Options{}.CheckTest(
             [](const AudacityProject& project) {
                return GetTimeDisplayMode(project) ==
                       TimeDisplayMode::BeatsAndMeasures;
@@ -69,7 +68,7 @@ BaseItemSharedPtr ExtraSelectionMenu()
    return menu;
 }
 
-AttachedItem sAttachment2 { wxT("Optional/Extra/Part1"),
-   Indirect(ExtraSelectionMenu()) };
+AttachedItem sAttachment2 { Indirect(ExtraSelectionMenu()),
+   wxT("Optional/Extra/Part1") };
 
 } // namespace

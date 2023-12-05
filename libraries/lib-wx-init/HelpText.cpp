@@ -24,14 +24,6 @@
 #include "AllThemeResources.h"
 #include "Theme.h"
 
-#ifdef HAS_WHATS_NEW
-
-namespace
-{
-const char* WhatsNewURL = "https://audacityteam.org/3.2.0-video";
-}
-
-#endif
 
 wxString HtmlColourOfIndex( int i ){
    wxColour c =  theTheme.Colour(i);
@@ -199,66 +191,6 @@ TranslatableString TitleText( const wxString & Key )
 
 static wxString HelpTextBuiltIn( const wxString & Key )
 {
-   // PRL:  Is it necessary to define these outside of conditional compilation so that both get into the .pot file?
-   const auto alphamsg = XO(
-"<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.");
-   const auto betamsg = XO(
-"<br><br>The version of Audacity you are using is a <b>Beta test version</b>.");
-
-   if (Key == wxT("welcome"))
-   {
-      wxStringOutputStream o;
-      wxTextOutputStream s(o);
-      s
-#if defined(IS_ALPHA) || defined(IS_BETA)
-         << wxT("<hr><center><h3>")
-         << XO("Get the Official Released Version of Audacity")
-         << wxT("</h3></center>")
-         << VerCheckHtml()
-#ifdef IS_ALPHA
-         << alphamsg
-#else
-         << betamsg
-#endif
-         << wxT(" ")
-         << XO(
-"We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>")
-         << XO(
-"You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>")
-#endif
-
-         << wxT("<center><h3>")
-#ifndef HAS_WHATS_NEW
-         << wxT("Audacity ") << AUDACITY_VERSION_STRING
-#else
-         /* i18n-hint: %s is replaced with Audacity version */
-         << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING)
-         << wxT(R"(<p><a href=")") << WhatsNewURL << wxT(R"(">)")
-         << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="263" height="148" /></a></p>)")
-#endif
-         << wxT("</h3><h3>")
-         << XO("How to get help")
-         << wxT("</h3></center>")
-         << XO("These are our support methods:")
-         << wxT("<p><ul><li>")
-         /* i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.*/
-         << XO("[[help:Quick_Help|Quick Help]]")
-         << wxT("</li><li>")
-         << XO(
-/* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.*/
-" [[help:Main_Page|Manual]]")
-         << wxT("</li><li>")
-         << XO("[[https://support.audacityteam.org/|Tutorials & How-tos]]")
-         << wxT("</li><li>")
-         << XO(
-" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.")
-         << wxT("</li></ul></p>")
-   ;
-
-      auto result = o.GetString();
-
-      return WrapText( result );
-   }
    if(Key==wxT("wma-proprietary"))
    {
       wxStringOutputStream o;
@@ -268,7 +200,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          << XO(
 "Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
-the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| \
+the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| \
 FFmpeg library]] to your computer.")
          << wxT("</p><p>")
          <<  XO(
@@ -344,40 +276,3 @@ wxString FormatHtmlText( const wxString & Text ){
       wxT("</html>");
 }
 
-// Function to give the extra arguments to put on the version check string.
-const wxString VerCheckArgs(){
-   wxString result = wxString("from_ver=") + AUDACITY_VERSION_STRING;
-#ifdef REV_LONG
-   result += wxString("&CommitId=")+wxString(REV_LONG).Left(6);
-#endif
-   result += wxString("&Time=") + wxString( __DATE__ ) + wxString( __TIME__ );
-   result.Replace(" ","");
-   return result;
-}
-
-// Text of hyperlink to check versions.
-const wxString VerCheckHtml()
-{
-   wxStringOutputStream o;
-   wxTextOutputStream s(o);
-   s
-      << "<center>[["
-      << VerCheckUrl().GET()
-      << "|"
-      << XO("Check Online")
-      << "]]</center>\n";
-   return o.GetString();
-}
-
-// Url with Version check args attached.
-const URLString VerCheckUrl()
-{
-   //The version we intend to use for live Audacity.
-#define VER_CHECK_URL "https://www.audacityteam.org/download/?"
-//For testing of our scriptlet.
-//#define VER_CHECK_URL "http://www.audacityteam.org/slug/?"
-//For testing locally
-//#define VER_CHECK_URL "http://localhost:63342/WorkingDocs/demos/download.html?"
-
-   return wxString( wxT(VER_CHECK_URL)) +VerCheckArgs();
-}

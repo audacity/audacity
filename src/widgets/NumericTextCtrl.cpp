@@ -146,7 +146,7 @@ NumericTextCtrl::NumericTextCtrl(
                            const FormatterContext& context,
                            wxWindow *parent, wxWindowID id,
                            NumericConverterType type,
-                           const NumericFormatSymbol &formatName,
+                           const NumericFormatID &formatName,
                            double timeValue,
                            const Options &options,
                            const wxPoint &pos,
@@ -156,7 +156,6 @@ NumericTextCtrl::NumericTextCtrl(
    mBackgroundBitmap{},
    mDigitFont{},
    mLabelFont{},
-   mLastField(1),
    mAutoPos(options.autoPos)
    , mType(type)
 {
@@ -235,22 +234,22 @@ void NumericTextCtrl::UpdateAutoFocus()
    }
 }
 
-bool NumericTextCtrl::SetTypeAndFormatName(const NumericConverterType& type, const NumericFormatSymbol& formatName)
+bool NumericTextCtrl::SetTypeAndFormatName(const NumericConverterType& type, const NumericFormatID& formatName)
 {
    if (!NumericConverter::SetTypeAndFormatName(type, formatName))
       return false;
 
-   HandleFormatterChanged();
+   HandleFormatterChanged(true);
 
    return true;
 }
 
-bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol& formatName)
+bool NumericTextCtrl::SetFormatName(const NumericFormatID& formatName)
 {
    if (!NumericConverter::SetFormatName(formatName))
       return false;
 
-   HandleFormatterChanged();
+   HandleFormatterChanged(true);
 
    return true;
 }
@@ -260,7 +259,7 @@ bool NumericTextCtrl::SetCustomFormat(const TranslatableString& customFormat)
    if (!NumericConverter::SetCustomFormat(customFormat))
    return false;
 
-   HandleFormatterChanged();
+   HandleFormatterChanged(true);
 
    return true;
 }
@@ -576,17 +575,18 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 
    SetFocus();
 
-   std::vector<NumericFormatSymbol> symbols;
+   std::vector<NumericFormatID> symbols;
 
    NumericConverterRegistry::Visit(
       mContext,
       mType,
       [&menu, &symbols, this, i = ID_MENU](auto& item) mutable
       {
-         symbols.push_back(item.symbol);
+         const auto ID = item.symbol.Internal();
+         symbols.push_back(ID);
          menu.AppendRadioItem(i, item.symbol.Translation());
 
-         if (mFormatSymbol == item.symbol)
+         if (mFormatID == ID)
             menu.Check(i, true);
 
          ++i;
@@ -621,13 +621,13 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 
    for (const auto& symbol : symbols)
    {
-      if (!menu.IsChecked(menuIndex++) || mFormatSymbol == symbol)
+      if (!menu.IsChecked(menuIndex++) || mFormatID == symbol)
          continue;
          
       SetFormatName(symbol);
 
       wxCommandEvent e(eventType, GetId());
-      e.SetString(symbol.Internal());
+      e.SetString(symbol.GET());
       GetParent()->GetEventHandler()->AddPendingEvent(e);
 
       break;
@@ -687,20 +687,38 @@ void NumericTextCtrl::OnFocus(wxFocusEvent &event)
    event.Skip( false ); // PRL: not sure why, but preserving old behavior
 }
 
-void NumericTextCtrl::OnFormatUpdated()
+void NumericTextCtrl::OnFormatUpdated(bool resetFocus)
 {
-   NumericConverter::OnFormatUpdated();
-   HandleFormatterChanged();
+   NumericConverter::OnFormatUpdated(resetFocus);
+   HandleFormatterChanged(resetFocus);
 }
 
-void NumericTextCtrl::HandleFormatterChanged()
+void NumericTextCtrl::HandleFormatterChanged(bool resetFocus)
 {
+   const auto boxesCount = mBoxes.size();
    mBoxes.clear();
+
    Layout();
    Fit();
    ValueToControls();
    ControlsToValue();
-   UpdateAutoFocus();
+
+   const auto newBoxesCount = mBoxes.size();
+
+   if (resetFocus || boxesCount > newBoxesCount)
+   {
+      // Handle the case when format was changed as a result of
+      // user action or if the format shrunk for some reason
+      UpdateAutoFocus();
+   }
+   else
+   {
+      // Try to keep the focus on the same digit
+      mFocusedDigit += newBoxesCount - boxesCount;
+      // Perform sanity check for the focused digit index
+      if (mFocusedDigit >= newBoxesCount)
+         UpdateAutoFocus();
+   }
 }
 
 void NumericTextCtrl::OnCaptureKey(wxCommandEvent& event)
@@ -895,7 +913,6 @@ void NumericTextCtrl::SetFieldFocus(int  digit)
       return;
    }
    mFocusedDigit = digit;
-   mLastField = mFormatter->GetDigitInfos()[mFocusedDigit].field + 1;
 
    GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
                                 this,
@@ -1095,7 +1112,7 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
 }
 
 static void GetFraction( const FormatterContext& context, wxString &label, NumericConverterType type,
-   const NumericFormatSymbol &formatSymbol )
+   const NumericFormatID &formatSymbol )
 {
    auto result = NumericConverterRegistry::Find(context, type, formatSymbol);
 
@@ -1120,7 +1137,12 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
    auto & mFieldValueStrings = mCtrl->mFieldValueStrings;
 
    wxString ctrlString = mCtrl->GetString();
-   int field = mCtrl->GetFocusedField();
+   int field = mDigits[mCtrl->GetFocusedDigit()].field + 1;
+   // In bar formats, the size of the first field can automatically
+   // increase. So use the position of the focused digit from
+   // the end, rather than the start, to determine whether
+   // the focus has changed. See issue #5344.
+   int childIdFromEnd = mCtrl->mBoxes.size() - childId + 1;
 
    // Return the entire string including the control label
    // when the requested child ID is wxACC_SELF.  (Mainly when
@@ -1145,7 +1167,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
    // when the focus has been moved to another digit. This else if statement
    // ensures that this is the case, by using a cached value if nothing
    // has changed.
-   else if (childId == mLastDigit && ctrlString.IsSameAs(mLastCtrlString)) {
+   else if (childIdFromEnd == mLastDigit && ctrlString.IsSameAs(mLastCtrlString)) {
       *name = mCachedName;
    }
    else {
@@ -1163,7 +1185,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
 
          if (field > 1 && field == cnt) {
             if (mFields[field - 2].label == decimal) {
-               GetFraction( mCtrl->mContext, label, mCtrl->mType, mCtrl->mFormatSymbol );
+               GetFraction( mCtrl->mContext, label, mCtrl->mType, mCtrl->mFormatID);
             }
          }
          // If the field following this one represents fractions of a
@@ -1178,13 +1200,13 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
                  wxT(", ") +     // comma inserts a slight pause
                  mCtrl->GetString().at(mDigits[childId - 1].pos);
          mLastField = field;
-         mLastDigit = childId;
+         mLastDigit = childIdFromEnd;
       }
       // The user has moved from one digit to another within a field so
       // just report the digit under the cursor.
-      else if (mLastDigit != childId) {
+      else if (mLastDigit != childIdFromEnd) {
          *name = mCtrl->GetString().at(mDigits[childId - 1].pos);
-         mLastDigit = childId;
+         mLastDigit = childIdFromEnd;
       }
       // The user has updated the value of a field, so report the field's
       // value only.

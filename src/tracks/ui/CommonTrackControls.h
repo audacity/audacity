@@ -39,12 +39,7 @@ public:
       unsigned result;
    };
 
-   // This decides what details to draw in the track control panel, besides
-   // those at the bottom
-   virtual const TCPLines& GetTCPLines() const;
-
-   // To help subclasses define GetTCPLines
-   static const TCPLines& StaticTCPLines();
+   const TCPLines& GetTCPLines() const override;
 
 protected:
    // An override is supplied for derived classes to call through but it is

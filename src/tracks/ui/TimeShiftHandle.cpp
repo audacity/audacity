@@ -16,9 +16,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
-#include "../../Snap.h"
+#include "Snap.h"
 #include "SyncLock.h"
 #include "Track.h"
+#include "../../TrackArt.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -118,6 +119,11 @@ TimeShiftHandle::~TimeShiftHandle()
 {
 }
 
+std::shared_ptr<const Channel> TimeShiftHandle::FindChannel() const
+{
+   return std::dynamic_pointer_cast<const Channel>(GetTrack());
+}
+
 void ClipMoveState::DoHorizontalOffset(double offset)
 {
    if (!shifters.empty()) {
@@ -197,8 +203,8 @@ bool TrackShifter::CommonMayMigrateTo(Track &otherTrack)
       // Can migrate to another track of the same kind...
       if (otherTrack.SameKindAs(track)) {
          // ... with the same number of channels
-         auto myChannels = TrackList::Channels(&track);
-         auto otherChannels = TrackList::Channels(&otherTrack);
+         auto myChannels = track.Channels();
+         auto otherChannels = otherTrack.Channels();
          return (myChannels.size() == otherChannels.size());
       }
    }
@@ -335,7 +341,7 @@ void ClipMoveState::Init(
             shifter.SelectInterval( interval );
       }
    }
-   
+
    // Sync lock propagation of unfixing of intervals
    if ( syncLocked ) {
       bool change = true;
@@ -606,7 +612,7 @@ namespace {
       };
       if (!sameType(&track))
          return false;
-   
+
       // All tracks of the same kind as the captured track
       auto range = trackList.Any() + sameType;
 
@@ -669,7 +675,7 @@ namespace {
    {
       bool ok = true;
       double firstTolerance = tolerance;
-      
+
       // The desiredSlideAmount may change and the tolerance may get used up.
       for ( unsigned iPass = 0; iPass < 2 && ok; ++iPass ) {
          for ( auto &pair : state.shifters ) {
@@ -791,10 +797,10 @@ void TimeShiftHandle::DoSlideVertical(
    // Now check that the move is possible
    auto slideAmount = desiredSlideAmount;
    // The test for tolerance will need review with FishEye!
-   // The tolerance is supposed to be the time for one pixel,
-   // i.e. one pixel tolerance at current zoom.
+   // The tolerance is supposed to be the time for twenty pixels,
+   // i.e. twenty pixel tolerance at current zoom.
    double tolerance =
-      viewInfo.PositionToTime(xx + 1) - viewInfo.PositionToTime(xx);
+      viewInfo.PositionToTime(xx + 10) - viewInfo.PositionToTime(xx - 10);
    bool ok = CheckFit( mClipMoveState, correspondence, remover.detached,
       tolerance, slideAmount /*in,out*/ );
 
@@ -870,7 +876,7 @@ UIHandle::Result TimeShiftHandle::Drag
    double desiredSlideAmount = 0.0;
    if(!mSlideUpDownOnly)
    {
-      desiredSlideAmount = 
+      desiredSlideAmount =
          viewInfo.PositionToTime(event.m_x) -
          viewInfo.PositionToTime(mClipMoveState.mMouseClickX);
 
@@ -884,7 +890,7 @@ UIHandle::Result TimeShiftHandle::Drag
       // Scroll during vertical drag.
       // If the mouse is over a track that isn't the captured track,
       // decide which tracks the captured clips should go to.
-      // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
+      // Viewport::Get(*pProject).ShowTrack(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
 
       //move intervals with new start/end times
       DoSlideVertical(
@@ -947,7 +953,7 @@ UIHandle::Result TimeShiftHandle::Release
    for ( auto &pair : mClipMoveState.shifters )
       if (!pair.second->FinishMigration())
          MigrationFailure();
-   
+
    TranslatableString msg;
    bool consolidate;
    if (mDidSlideVertically) {
@@ -964,7 +970,7 @@ UIHandle::Result TimeShiftHandle::Release
          .Format( fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
-   ProjectHistory::Get( *pProject ).PushState(msg, XO("Time-Shift"),
+   ProjectHistory::Get( *pProject ).PushState(msg, XO("Move Clip"),
       consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::NONE));
 
    return result | FixScrollbars;
@@ -988,8 +994,8 @@ void TimeShiftHandle::Draw(
       auto &dc = context.dc;
       // Draw snap guidelines if we have any
       if ( mSnapManager ) {
-         mSnapManager->Draw(
-            &dc, mClipMoveState.snapLeft, mClipMoveState.snapRight );
+         TrackArt::DrawSnapLines(
+            &dc, mClipMoveState.snapLeft, mClipMoveState.snapRight);
       }
    }
 }

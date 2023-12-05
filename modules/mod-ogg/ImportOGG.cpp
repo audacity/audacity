@@ -131,7 +131,7 @@ private:
 
    ArrayOf<int> mStreamUsage;
    TranslatableStrings mStreamInfo;
-   std::list<ImportUtils::NewChannelGroup> mChannels;
+   std::vector<TrackListHolder> mStreams;
 };
 
 
@@ -215,28 +215,27 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
 
    //Number of streams used may be less than mVorbisFile->links,
    //but this way bitstream matches array index.
-   mChannels.resize(mVorbisFile->links);
+   mStreams.reserve(mVorbisFile->links);
 
-   int i = -1;
-   for (auto &link : mChannels)
+   for(int i = 0; i < mVorbisFile->links; ++i)
    {
-      ++i;
-
       //Stream is not used
       if (mStreamUsage[i] == 0)
       {
          //This is just a padding to keep bitstream number and
          //array indices matched.
+         mStreams.push_back({});
          continue;
       }
 
       vorbis_info *vi = ov_info(mVorbisFile.get(), i);
 
-      link.resize(vi->channels);
-
-      for (auto &channel : link)
-         // The format agrees with what is always passed to Append() below
-         channel = ImportUtils::NewWaveTrack(*trackFactory, int16Sample, vi->rate);
+      // The format agrees with what is always passed to Append() below
+      mStreams.push_back(ImportUtils::NewWaveTrack(
+         *trackFactory,
+         vi->channels,
+         int16Sample,
+         vi->rate));
    }
 
    /* The number of bytes to get from the codec in each run */
@@ -299,18 +298,21 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
 
          samplesRead = bytesRead / mVorbisFile->vi[bitstream].channels / sizeof(short);
 
-         /* give the data to the wavetracks */
-         auto iter = mChannels.begin();
-         std::advance(iter, bitstream);
          if (mStreamUsage[bitstream] != 0)
          {
-            auto iter2 = iter->begin();
-            for (int c = 0; c < mVorbisFile->vi[bitstream].channels; ++iter2, ++c)
-               iter2->get()->Append((char *)(mainBuffer.get() + c),
-               int16Sample,
-               samplesRead,
-               mVorbisFile->vi[bitstream].channels,
-               int16Sample);
+            /* give the data to the wavetracks */
+            unsigned chn = 0;
+            ImportUtils::ForEachChannel(**std::next(mStreams.begin(), bitstream), [&](auto& channel)
+            {
+               channel.AppendBuffer(
+                  (char *)(mainBuffer.get() + chn),
+                  int16Sample,
+                  samplesRead,
+                  mVorbisFile->vi[bitstream].channels,
+                  int16Sample
+               );
+               ++chn;
+            });
          }
 
          samplesSinceLastCallback += samplesRead;
@@ -335,10 +337,8 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
       return;
    }
 
-   for (auto &link : mChannels)
-      if (!link.empty())
-         outTracks.push_back(ImportUtils::MakeTracks(link));
-
+   ImportUtils::FinalizeImport(outTracks, mStreams);
+   
    //\todo { Extract comments from each stream? }
    if (mVorbisFile->vc[0].comments > 0) {
       tags->Clear();

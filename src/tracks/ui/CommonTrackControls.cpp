@@ -18,13 +18,13 @@ Paul Licameli split from TrackControls.cpp
 #include "ProjectHistory.h"
 #include "../../ProjectWindows.h"
 #include "../../TrackArtist.h"
-#include "../../TrackInfo.h"
+#include "CommonTrackInfo.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../TrackUtilities.h"
 #include <wx/textdlg.h>
 #include "../../commands/AudacityCommand.h"
-#include "../../commands/CommandManager.h"
+#include "CommandManager.h"
 #include "ShuttleGui.h"
 #include "Track.h"
 #include "../../widgets/PopupMenuTable.h"
@@ -127,10 +127,9 @@ BEGIN_POPUP_MENU(TrackMenuTable)
             up ? tracks.CanMoveUp(pTrack) : tracks.CanMoveDown(pTrack) );
       };
    };
+      //First section in the menu doesn't need BeginSection/EndSection
+      AppendItem( "Name", OnSetNameID, XXO("Re&name Track..."), POPUP_MENU_FN( OnSetName ) );
 
-   BeginSection( "Basic" );
-      AppendItem( "Name", OnSetNameID, XXO("&Name..."), POPUP_MENU_FN( OnSetName ) );
-   EndSection();
    BeginSection( "Move" );
       AppendItem( "Up",
          // It is not correct to use NormalizedKeyString::Display here --
@@ -275,7 +274,7 @@ unsigned CommonTrackControls::DoContextMenu(
 {
    using namespace RefreshCode;
    wxRect buttonRect;
-   TrackInfo::GetTitleBarRect(rect, buttonRect);
+   CommonTrackInfo::GetTitleBarRect(rect, buttonRect);
 
    auto track = FindTrack();
    if (!track)
@@ -380,7 +379,7 @@ void CommonTrackControls::Draw(
 
       if (pTrack)
          // Draw things within the track control panel
-         TrackInfo::DrawItems( context, rect, *pTrack );
+         CommonTrackInfo::DrawItems( context, rect, *pTrack );
 
       //mTrackInfo.DrawBordersWithin( dc, rect, *t );
    }
@@ -424,4 +423,9 @@ wxRect CommonTrackControls::DrawingArea(
       return { rect.x, rect.y, rect.width + 1, rect.height };
    else
       return rect;
+}
+
+const TCPLines &CommonTrackControls::GetTCPLines() const
+{
+   return CommonTrackInfo::StaticTCPLines();
 }

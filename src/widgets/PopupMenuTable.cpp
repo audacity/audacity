@@ -16,24 +16,22 @@ Paul Licameli split from TrackPanel.cpp
 PopupMenuTableEntry::~PopupMenuTableEntry()
 {}
 
-PopupSubMenu::~PopupSubMenu()
-{}
-
 PopupSubMenu::PopupSubMenu(const Identifier &stringId,
    const TranslatableString &caption, PopupMenuTable &table
 )  : GroupItem{ stringId }
-   , WholeMenu{ caption.empty() }
    , caption{ caption }
    , table{ table }
 {
 }
 
-PopupMenuVisitor::~PopupMenuVisitor() = default;
+PopupSubMenu::~PopupSubMenu()
+{}
 
-void *PopupMenuVisitor::GetComputedItemContext()
-{
-   return this;
-}
+auto PopupSubMenu::GetProperties() const -> Properties
+{ return caption.empty() ? Extension : Whole; }
+
+PopupMenuSection::~PopupMenuSection()
+{}
 
 PopupMenu::~PopupMenu() = default;
 
@@ -52,89 +50,74 @@ struct PopupMenuImpl : PopupMenu, wxMenu
    void *pUserData;
 };
 
-class PopupMenuBuilder : public PopupMenuVisitor {
+class PopupMenuBuilder : public MenuRegistry::Visitor<PopupMenuTableTraits> {
 public:
-   explicit
-   PopupMenuBuilder( PopupMenuTable &table, PopupMenuImpl &menu, void *pUserData )
-      : PopupMenuVisitor{ table }
-      , mMenu{ &menu }
-      , mRoot{ mMenu }
-      , mpUserData{ pUserData }
-   {}
+   PopupMenuBuilder(PopupMenuTable &table, PopupMenuImpl &menu, void *pUserData)
+   : MenuRegistry::Visitor<PopupMenuTableTraits>{ std::tuple{
+      [this](const PopupSubMenu &item, const auto &){
+         if (!item.caption.empty()) {
+            auto newMenu =
+               std::make_unique<PopupMenuImpl>(mMenu->pUserData);
+            mMenu = newMenu.get();
+            mMenus.push_back(std::move(newMenu));
+         }
+      },
 
-   void DoBeginGroup( Registry::GroupItemBase &item, const Path &path ) override;
-   void DoEndGroup( Registry::GroupItemBase &item, const Path &path ) override;
-   void DoVisit( Registry::SingleItem &item, const Path &path ) override;
-   void DoSeparator() override;
+      [this](const PopupMenuTableEntry &entry, const auto &){
+         switch (entry.type) {
+            case PopupMenuTable::Entry::Item:
+            {
+               mMenu->Append(entry.id, entry.caption.Translation());
+               break;
+            }
+            case PopupMenuTable::Entry::RadioItem:
+            {
+               mMenu->AppendRadioItem(entry.id, entry.caption.Translation());
+               break;
+            }
+            case PopupMenuTable::Entry::CheckItem:
+            {
+               mMenu->AppendCheckItem(entry.id, entry.caption.Translation());
+               break;
+            }
+            default:
+               assert(false);
+               break;
+         }
+
+         // This call is necessary for externally registered items, else
+         // harmlessly redundant
+         entry.handler.InitUserData(mpUserData);
+
+         if (entry.init)
+            entry.init(entry.handler, *mMenu, entry.id);
+
+         mMenu->Bind(
+            wxEVT_COMMAND_MENU_SELECTED, entry.func, &entry.handler, entry.id);
+      },
+
+      [this](const PopupSubMenu &item, const auto &){
+         if (!item.caption.empty()) {
+            auto subMenu = std::move(mMenus.back());
+            mMenus.pop_back();
+            mMenu = mMenus.empty() ? mRoot : mMenus.back().get();
+            mMenu->AppendSubMenu(subMenu.release(), item.caption.Translation());
+         }
+      }},
+
+      [this]() {
+         mMenu->AppendSeparator();
+      }
+   }
+   , mMenu{ &menu }
+   , mRoot{ mMenu }
+   , mpUserData{ pUserData }
+   {}
 
    std::vector< std::unique_ptr<PopupMenuImpl> > mMenus;
    PopupMenuImpl *mMenu, *mRoot;
    void *const mpUserData;
 };
-
-void PopupMenuBuilder::DoBeginGroup( Registry::GroupItemBase &item, const Path &path )
-{
-   if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
-      if ( !pItem->caption.empty() ) {
-         auto newMenu =
-            std::make_unique<PopupMenuImpl>( mMenu->pUserData );
-         mMenu = newMenu.get();
-         mMenus.push_back( std::move( newMenu ) );
-      }
-   }
-}
-
-void PopupMenuBuilder::DoEndGroup( Registry::GroupItemBase &item, const Path &path )
-{
-   if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
-      if ( !pItem->caption.empty() ) {
-         auto subMenu = std::move( mMenus.back() );
-         mMenus.pop_back();
-         mMenu = mMenus.empty() ? mRoot : mMenus.back().get();
-         mMenu->AppendSubMenu( subMenu.release(), pItem->caption.Translation());
-      }
-   }
-}
-
-void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
-{
-   auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
-   switch (pEntry->type) {
-      case PopupMenuTable::Entry::Item:
-      {
-         mMenu->Append(pEntry->id, pEntry->caption.Translation());
-         break;
-      }
-      case PopupMenuTable::Entry::RadioItem:
-      {
-         mMenu->AppendRadioItem(pEntry->id, pEntry->caption.Translation());
-         break;
-      }
-      case PopupMenuTable::Entry::CheckItem:
-      {
-         mMenu->AppendCheckItem(pEntry->id, pEntry->caption.Translation());
-         break;
-      }
-      default:
-         wxASSERT( false );
-         break;
-   }
-
-   // This call necessary for externally registered items, else harmlessly
-   // redundant
-   pEntry->handler.InitUserData( mpUserData );
-
-   if ( pEntry->init )
-      pEntry->init( pEntry->handler, *mMenu, pEntry->id );
-
-   mMenu->Bind(
-      wxEVT_COMMAND_MENU_SELECTED, pEntry->func, &pEntry->handler, pEntry->id);
-}
-
-void PopupMenuBuilder::DoSeparator()
-{
-   mMenu->AppendSeparator();
-}
 
 PopupMenuImpl::~PopupMenuImpl()
 {
@@ -156,14 +139,8 @@ void PopupMenuTable::ExtendMenu( PopupMenu &menu, PopupMenuTable &table )
    auto &theMenu = dynamic_cast<PopupMenuImpl&>(menu);
 
    PopupMenuBuilder visitor{ table, theMenu, theMenu.pUserData };
-   Registry::Visit(
-      visitor, table.Get( theMenu.pUserData ).get(), table.GetRegistry() );
-}
-
-void PopupMenuTable::RegisterItem(
-   const Registry::Placement &placement, Registry::BaseItemPtr pItem )
-{
-   Registry::RegisterItem( *mRegistry, placement, std::move( pItem ) );
+   Registry::VisitWithFunctions(visitor, table.Get(theMenu.pUserData).get(),
+      table.GetRegistry(), table);
 }
 
 void PopupMenuTable::Append(

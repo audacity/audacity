@@ -24,8 +24,8 @@
 #include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"
 
+class ChannelGroup;
 class EffectSettingsAccess;
-class WideSampleSequence;
 
 enum class RealtimeEffectStateChange { EffectOff, EffectOn };
 
@@ -69,9 +69,12 @@ public:
    //! Main thread sets up for playback
    std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
+   /*!
+    @pre `group.IsLeader()`
+    */
    std::shared_ptr<EffectInstance>
-   AddSequence(
-      const WideSampleSequence &sequence, unsigned chans, float sampleRate);
+   AddGroup(
+      const ChannelGroup &group, unsigned chans, float sampleRate);
    //! Worker thread begins a batch of samples
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);
@@ -79,7 +82,7 @@ public:
    /*!
     @return how many leading samples are discardable for latency
     */
-   size_t Process(const WideSampleSequence &sequence,
+   size_t Process(const ChannelGroup &group,
       unsigned chans, // How many channels the playback device needs
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers
@@ -185,7 +188,7 @@ private:
     @{
     */
     
-   std::unordered_map<const WideSampleSequence *, std::pair<size_t, double>>
+   std::unordered_map<const ChannelGroup *, std::pair<size_t, double>>
       mGroups;
 
    // This must not be reset to nullptr while a worker thread is running.

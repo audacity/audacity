@@ -11,23 +11,22 @@ Paul Licameli split from TrackMenus.cpp
 
 #include "CommonCommandFlags.h"
 #include "ProjectHistory.h"
-#include "ProjectWindow.h"
+
 #include "SelectUtilities.h"
 #include "TimeTrack.h"
-#include "TrackPanelAx.h"
-#include "../../../commands/CommandContext.h"
-#include "../../../commands/CommandManager.h"
+#include "TrackFocus.h"
+#include "Viewport.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "AudacityMessageBox.h"
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 void OnNewTimeTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
-   
 
    if (*tracks.Any<TimeTrack>().begin()) {
       AudacityMessageBox(
@@ -46,13 +45,14 @@ void OnNewTimeTrack(const CommandContext &context)
       .PushState(XO("Created new time track"), XO("New Track"));
 
    TrackFocus::Get(project).Set(t);
-   t->EnsureVisible();
+   Viewport::Get(project).ShowTrack(*t);
 }
 
-AttachedItem sAttachment{ wxT("Tracks/Add/Add"),
-     Command( wxT("NewTimeTrack"), XXO("&Time Track"),
+AttachedItem sAttachment{
+   Command( wxT("NewTimeTrack"), XXO("&Time Track"),
         OnNewTimeTrack, AudioIONotBusyFlag()
- )
+   ),
+   wxT("Tracks/Add/Add")
 };
 
 }

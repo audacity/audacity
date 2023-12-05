@@ -85,7 +85,7 @@ static const double kSliderWarp = 1.30105;      // warp power takes max from 100
 //
 
 const ComponentInterfaceSymbol EffectChangeSpeed::Symbol
-{ XO("Change Speed") };
+{ XO("Change Speed and Pitch") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectChangeSpeed > reg; }
 
@@ -107,7 +107,7 @@ EffectChangeSpeed::EffectChangeSpeed()
    mToVinyl = kVinyl_33AndAThird;
    mFromLength = 0.0;
    mToLength = 0.0;
-   mFormat = NumericConverterFormats::DefaultSelectionFormat();
+   mFormat = NumericConverterFormats::DefaultSelectionFormat().Internal();
    mbLoopDetect = false;
 
    SetLinearEffectFlag(true);
@@ -152,7 +152,7 @@ OptionalMessage
 EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mFromVinyl = kVinyl_33AndAThird;
-   mFormat = NumericConverterFormats::DefaultSelectionFormat();
+   mFormat = NumericConverterFormats::DefaultSelectionFormat().Internal();
 
    return Effect::LoadFactoryDefaults(settings);
 }
@@ -185,9 +185,7 @@ auto EffectChangeSpeed::FindGaps(
    // these gaps are for later deletion
    Gaps gaps;
    const auto newGap = [&](double st, double et){
-      gaps.emplace_back(
-         track.LongSamplesToTime(track.TimeToLongSamples(st)),
-         track.LongSamplesToTime(track.TimeToLongSamples(et)));
+      gaps.emplace_back(track.SnapToSample(st), track.SnapToSample(et));
    };
    double last = curT0;
    auto clips = track.SortedClipArray();
@@ -216,7 +214,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
    // Iterate over each track.
    // All needed because this effect needs to introduce
    // silence in the sync-lock group tracks to keep sync
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
    bool bGoodResult = true;
 
    mCurTrackNum = 0;
@@ -251,14 +249,13 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
             const auto gaps = FindGaps(outWaveTrack, mCurT0, mCurT1);
 
-            auto newTracks = TrackList::Create(nullptr);
-            for (const auto pChannel : TrackList::Channels(&outWaveTrack)) {
+            auto newTracks = outWaveTrack.WideEmptyCopy();
+            auto iter =
+               (*newTracks->Any<WaveTrack>().begin())->Channels().begin();
+            for (const auto pChannel : outWaveTrack.Channels()) {
                // ProcessOne() (implemented below) processes a single channel
-               if (const auto outputTrack = ProcessOne(*pChannel, start, end)) {
-                  newTracks->Add(outputTrack);
-                  assert(outputTrack->IsLeader() == pChannel->IsLeader());
+               if (ProcessOne(*pChannel, **iter++, start, end))
                   ++mCurTrackNum;
-               }
                else {
                   newTracks.reset();
                   break;
@@ -311,10 +308,10 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
       wxString formatId;
       GetConfig(GetDefinition(), PluginSettings::Private,
          CurrentSettingsGroup(),
-         wxT("TimeFormat"), formatId, mFormat.Internal());
+         wxT("TimeFormat"), formatId, mFormat.GET());
       mFormat = NumericConverterFormats::Lookup(
          FormatterContext::SampleRateContext(mProjectRate),
-         NumericConverterType_TIME(), formatId);
+         NumericConverterType_TIME(), formatId).Internal();
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(),
@@ -324,10 +321,6 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
 
    S.StartVerticalLay(0);
    {
-      S.AddSpace(0, 5);
-      S.AddTitle(XO("Change Speed, affecting both Tempo and Pitch"));
-      S.AddSpace(0, 10);
-
       // Speed multiplier and percent change controls.
       S.StartMultiColumn(4, wxCENTER);
       {
@@ -477,7 +470,7 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
 
    // TODO: just visit these effect settings the default way
    SetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
+      CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.GET());
    SetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
@@ -499,14 +492,10 @@ bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
-std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
-   const WaveTrack &track, sampleCount start, sampleCount end)
+bool EffectChangeSpeed::ProcessOne(
+   const WaveChannel &track, WaveChannel &outputTrack,
+   sampleCount start, sampleCount end)
 {
-   // initialization, per examples of Mixer::Mixer and
-   // EffectSoundTouch::ProcessOne
-
-   auto outputTrack = track.EmptyCopy();
-
    //Get the length of the selection (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
@@ -548,7 +537,7 @@ std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
       const auto outgen = results.second;
 
       if (outgen > 0)
-         outputTrack->Append((samplePtr)outBuffer.get(), floatSample,
+         outputTrack.Append((samplePtr)outBuffer.get(), floatSample,
                              outgen);
 
       // Increment samplePos
@@ -561,9 +550,7 @@ std::shared_ptr<WaveTrack> EffectChangeSpeed::ProcessOne(
       }
    }
 
-   if (bResult)
-      return outputTrack;
-   return {};
+   return bResult;
 }
 
 // handler implementations for EffectChangeSpeed
@@ -686,7 +673,7 @@ void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 {
    mFormat = NumericConverterFormats::Lookup(
       FormatterContext::SampleRateContext(mProjectRate),
-      NumericConverterType_TIME(), evt.GetString());
+      NumericConverterType_TIME(), evt.GetString()).Internal();
 
    mpFromLengthCtrl->SetFormatName(mFormat);
    // Update From/To Length controls (precision has changed).

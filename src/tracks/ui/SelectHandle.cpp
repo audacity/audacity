@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ChannelView.h"
 
 #include "AColor.h"
+#include "CommandManager.h"
 #include "../../SpectrumAnalyst.h"
 #include "../../LabelTrack.h"
 #include "NumberScale.h"
@@ -27,8 +28,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../SelectUtilities.h"
 #include "SelectionState.h"
 #include "SyncLock.h"
+#include "../../TrackArt.h"
 #include "../../TrackArtist.h"
-#include "../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -39,7 +41,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../images/Cursors.h"
 
 // Only for definition of SonifyBeginModifyState:
-//#include "../../NoteTrack.h"
+//#include "NoteTrack.h"
 
 enum {
    //This constant determines the size of the horizontal region (in pixels) around
@@ -54,7 +56,7 @@ enum {
 
 // #define SPECTRAL_EDITING_ESC_KEY
 
-bool SelectHandle::IsClicked() const
+bool SelectHandle::IsDragging() const
 {
    return mSelectionStateChanger.get() != NULL;
 }
@@ -457,6 +459,13 @@ SelectHandle::~SelectHandle()
 {
 }
 
+std::shared_ptr<const Channel> SelectHandle::FindChannel() const
+{
+   if (auto pView = mpView.lock())
+      return pView->FindChannel();
+   return nullptr;
+}
+
 namespace {
    // Is the distance between A and B less than D?
    template < class A, class B, class DIST > bool within(A a, B b, DIST d)
@@ -490,7 +499,7 @@ void SelectHandle::SetUseSnap(bool use, AudacityProject *project)
       // Repaint to turn the snap lines on or off
       mChangeHighlight = RefreshCode::RefreshAll;
 
-   if (IsClicked()) {
+   if (IsDragging()) {
       // Readjust the moving selection end
       AssignSelection(
          ViewInfo::Get( *project ),
@@ -502,7 +511,7 @@ void SelectHandle::SetUseSnap(bool use, AudacityProject *project)
 bool SelectHandle::HasSnap() const
 {
    return
-      (IsClicked() ? mSnapEnd : mSnapStart).snappedPoint;
+      (IsDragging() ? mSnapEnd : mSnapStart).snappedPoint;
 }
 
 bool SelectHandle::HasEscape(AudacityProject *) const
@@ -897,7 +906,7 @@ HitTestPreview SelectHandle::Preview
 
    TranslatableString tip;
    wxCursor *pCursor = SelectCursor();
-   if ( IsClicked() )
+   if (IsDragging())
       // Use same cursor as at the click
       SetTipAndCursorForBoundary
          (SelectionBoundary(mSelectionBoundary),
@@ -1026,9 +1035,9 @@ void SelectHandle::Draw(
       auto &dc = context.dc;
       // Draw snap guidelines if we have any
       if ( mSnapManager ) {
-         auto coord1 = (mUseSnap || IsClicked()) ? mSnapStart.outCoord : -1;
-         auto coord2 = (!mUseSnap || !IsClicked()) ? -1 : mSnapEnd.outCoord;
-         mSnapManager->Draw( &dc, coord1, coord2 );
+         auto coord1 = (mUseSnap || IsDragging()) ? mSnapStart.outCoord : -1;
+         auto coord2 = (!mUseSnap || !IsDragging()) ? -1 : mSnapEnd.outCoord;
+         TrackArt::DrawSnapLines(&dc, coord1, coord2);
       }
    }
 }
@@ -1099,14 +1108,14 @@ void SelectHandle::TimerHandler::OnTimer(Observer::Message)
 
    const auto project = mConnectedProject;
    const auto &trackPanel = TrackPanel::Get( *project );
-   auto &window = ProjectWindow::Get( *project );
+   auto &viewport = Viewport::Get(*project);
    if (mParent->mMostRecentX >= mParent->mRect.x + mParent->mRect.width) {
       mParent->mAutoScrolling = true;
-      window.TP_ScrollRight();
+      viewport.OnScrollRight();
    }
    else if (mParent->mMostRecentX < mParent->mRect.x) {
       mParent->mAutoScrolling = true;
-      window.TP_ScrollLeft();
+      viewport.OnScrollLeft();
    }
    else {
       // Bug1387:  enable autoscroll during drag, if the pointer is at either
@@ -1117,14 +1126,14 @@ void SelectHandle::TimerHandler::OnTimer(Observer::Message)
       trackPanel.ClientToScreen(&xx, &yy);
       if (xx == 0) {
          mParent->mAutoScrolling = true;
-         window.TP_ScrollLeft();
+         viewport.OnScrollLeft();
       }
       else {
          int width, height;
          ::wxDisplaySize(&width, &height);
          if (xx == width - 1) {
             mParent->mAutoScrolling = true;
-            window.TP_ScrollRight();
+            viewport.OnScrollRight();
          }
       }
    }

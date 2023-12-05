@@ -41,15 +41,15 @@ public:
     * \brief Initializes panel with export settings provided as arguments.
     * Call is required.
     * \param filename Default output filename
+    * \param sampleRate Export sample rate > 0
     * \param format Export format string identifier (see FormatInfo::format)
-    * \param sampleRate Pass 0(default) to initialize with project sample rate
     * \param channels Pass 0(default) to choose automatically depending on project tracks
     * \param parameters Pass empty(default) array to initialize with plugin defaults 
     * \param mixerSpec Try use custom channel mapping, `channels` argument will be igonred
     */
    void Init(const wxFileName& filename,
+             int sampleRate,
              const wxString& format = wxEmptyString,
-             int sampleRate = 0,
              int channels = 0,
              const ExportProcessor::Parameters& parameters = {},
              const MixerOptions::Downmix* mixerSpec = nullptr);
@@ -58,7 +58,7 @@ public:
    void SetCustomMappingEnabled(bool enabled);
 
    wxString GetPath() const;
-   wxString GetFullName() const;
+   wxString GetFullName();
 
    const ExportPlugin* GetPlugin() const;
    int GetFormat() const;
@@ -70,6 +70,9 @@ public:
 
 private:
 
+   void ValidateAndFixExt();
+
+   void OnFullNameFocusKill(wxFocusEvent& event);
    void OnFormatChange(wxCommandEvent& event);
    void OnSampleRateChange(wxCommandEvent& event);
    

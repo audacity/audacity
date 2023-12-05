@@ -29,8 +29,8 @@ public:
       std::shared_ptr<ClipInterface> left,
       std::shared_ptr<ClipInterface> right);
 
-   AudioSegmentSampleView
-   GetSampleView(size_t ii, sampleCount start, size_t len) const override;
+   AudioSegmentSampleView GetSampleView(
+      size_t ii, sampleCount start, size_t len, bool mayThrow) const override;
 
    sampleCount GetVisibleSampleCount() const override;
 
@@ -41,6 +41,8 @@ public:
    double GetPlayStartTime() const override;
 
    double GetPlayEndTime() const override;
+
+   sampleCount TimeToSamples(double time) const override;
 
    double GetStretchRatio() const override;
 

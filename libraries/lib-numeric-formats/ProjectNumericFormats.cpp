@@ -38,43 +38,42 @@ const ProjectNumericFormats &ProjectNumericFormats::Get(
 
 ProjectNumericFormats::ProjectNumericFormats(const AudacityProject& project)
    : mProject { project }
-   , mSelectionFormat{ NumericConverterFormats::Lookup(
-      FormatterContext::ProjectContext(project),
-      NumericConverterType_TIME(),
-      gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
+   , mSelectionFormat{
+      gPrefs->Read(wxT("/SelectionFormat"), wxT(""))
    }
-   , mFrequencySelectionFormatName{ NumericConverterFormats::Lookup(
-      FormatterContext::ProjectContext(project),
-      NumericConverterType_FREQUENCY(),
-      gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) )
+   , mFrequencySelectionFormatName{
+      gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))
    }
-   , mBandwidthSelectionFormatName{ NumericConverterFormats::Lookup(
-      FormatterContext::ProjectContext(project),
-      NumericConverterType_BANDWIDTH(),
-      gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
+   , mBandwidthSelectionFormatName{
+      gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))
    }
-   , mAudioTimeFormat{ NumericConverterFormats::Lookup(
-      FormatterContext::ProjectContext(project),
-      NumericConverterType_TIME(),
-      gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
+   , mAudioTimeFormat{
+      gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss"))
    }
 {}
 
 ProjectNumericFormats::~ProjectNumericFormats() = default;
 
-const NumericFormatSymbol &
+NumericFormatID
 ProjectNumericFormats::GetFrequencySelectionFormatName() const
 {
    return mFrequencySelectionFormatName;
 }
 
 void ProjectNumericFormats::SetFrequencySelectionFormatName(
-   const NumericFormatSymbol & formatName)
+   const NumericFormatID & formatName)
 {
-   mFrequencySelectionFormatName = formatName;
+   if (mFrequencySelectionFormatName != formatName) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedFrequencyFormat,
+         mFrequencySelectionFormatName, formatName
+      };
+      mFrequencySelectionFormatName = formatName;
+      Publish(e);
+   }
 }
 
-const NumericFormatSymbol &
+NumericFormatID
 ProjectNumericFormats::GetBandwidthSelectionFormatName() const
 {
    return mBandwidthSelectionFormatName;
@@ -88,28 +87,48 @@ NumericFormatSymbol ProjectNumericFormats::LookupFormat(
 }
 
 void ProjectNumericFormats::SetBandwidthSelectionFormatName(
-   const NumericFormatSymbol & formatName)
+   const NumericFormatID &formatName)
 {
-   mBandwidthSelectionFormatName = formatName;
+   if (mBandwidthSelectionFormatName != formatName) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedBandwidthFormat,
+         mBandwidthSelectionFormatName, formatName
+      };
+      mBandwidthSelectionFormatName = formatName;
+      Publish(e);
+   }
 }
 
-void ProjectNumericFormats::SetSelectionFormat(
-   const NumericFormatSymbol & format)
+void ProjectNumericFormats::SetSelectionFormat(const NumericFormatID &format)
 {
-   mSelectionFormat = format;
+   if (mSelectionFormat != format) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedSelectionFormat,
+         mSelectionFormat, format
+      };
+      mSelectionFormat = format;
+      Publish(e);
+   }
 }
 
-const NumericFormatSymbol & ProjectNumericFormats::GetSelectionFormat() const
+NumericFormatID ProjectNumericFormats::GetSelectionFormat() const
 {
    return mSelectionFormat;
 }
 
-void ProjectNumericFormats::SetAudioTimeFormat(const NumericFormatSymbol & format)
+void ProjectNumericFormats::SetAudioTimeFormat(const NumericFormatID &format)
 {
-   mAudioTimeFormat = format;
+   if (mAudioTimeFormat != format) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedAudioTimeFormat,
+         mAudioTimeFormat, format
+      };
+      mAudioTimeFormat = format;
+      Publish(e);
+   }
 }
 
-const NumericFormatSymbol & ProjectNumericFormats::GetAudioTimeFormat() const
+NumericFormatID ProjectNumericFormats::GetAudioTimeFormat() const
 {
    return mAudioTimeFormat;
 }
@@ -118,11 +137,11 @@ static ProjectFileIORegistry::AttributeWriterEntry entry {
 [](const AudacityProject &project, XMLWriter &xmlFile){
    auto &formats = ProjectNumericFormats::Get(project);
    xmlFile.WriteAttr(wxT("selectionformat"),
-                     formats.GetSelectionFormat().Internal());
+                     formats.GetSelectionFormat().GET());
    xmlFile.WriteAttr(wxT("frequencyformat"),
-                     formats.GetFrequencySelectionFormatName().Internal());
+                     formats.GetFrequencySelectionFormatName().GET());
    xmlFile.WriteAttr(wxT("bandwidthformat"),
-                     formats.GetBandwidthSelectionFormatName().Internal());
+                     formats.GetBandwidthSelectionFormatName().GET());
 }
 };
 
@@ -133,15 +152,12 @@ static ProjectFileIORegistry::AttributeReaderEntries entries {
    // Maybe that should be abandoned.  Enough to save changes in the user
    // preference file.
    { "selectionformat", [](auto &formats, auto value){
-      formats.SetSelectionFormat(formats.LookupFormat(
-              NumericConverterType_TIME(), value.ToWString()));
+      formats.SetSelectionFormat(value.ToWString());
    } },
    { "frequencyformat", [](auto &formats, auto value){
-           formats.SetFrequencySelectionFormatName(formats.LookupFormat(
-              NumericConverterType_FREQUENCY(), value.ToWString()));
+      formats.SetFrequencySelectionFormatName(value.ToWString());
    } },
    { "bandwidthformat", [](auto &formats, auto value){
-           formats.SetBandwidthSelectionFormatName(formats.LookupFormat(
-              NumericConverterType_BANDWIDTH(), value.ToWString()));
+      formats.SetBandwidthSelectionFormatName(value.ToWString());
    } },
 } };

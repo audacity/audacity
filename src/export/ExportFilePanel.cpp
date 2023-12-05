@@ -77,7 +77,7 @@ public:
       {
          S.StartMultiColumn(2, wxALIGN_CENTER_VERTICAL);
          {
-            S.Id(CustomSampleRateID).AddNumericTextBox(XO("New Sample Rate (Hz)"), wxString::Format("%d", mSampleRate), 0);
+            S.Id(CustomSampleRateID).AddNumericTextBox(XO("New sample rate (Hz):"), wxString::Format("%d", mSampleRate), 0);
          }
          S.EndMultiColumn();
       }
@@ -160,6 +160,7 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
       S.SetStretchyCol(1);
       
       mFullName = S.AddTextBox(XO("File &Name:"), {}, 0);
+      mFullName->Bind(wxEVT_KILL_FOCUS, &ExportFilePanel::OnFullNameFocusKill, this);
       S.AddSpace(1);
       
       mFolder = S.AddTextBox(XO("Fo&lder:"), {}, 0);
@@ -224,17 +225,15 @@ void ExportFilePanel::PopulateOrExchange(ShuttleGui& S)
 }
 
 void ExportFilePanel::Init(const wxFileName& filename,
-                           const wxString& format,
                            int sampleRate,
+                           const wxString& format,
                            int channels,
                            const ExportProcessor::Parameters& parameters,
                            const MixerOptions::Downmix* mixerSpec)
 {
    mFolder->SetValue(filename.GetPath());
    mFullName->SetValue(filename.GetFullName());
-   mSampleRate = sampleRate == 0
-      ? ProjectRate::Get(mProject).GetRate()
-      : sampleRate;
+   mSampleRate = sampleRate;
 
    auto selectedFormatIndex = 0;
    if(!format.empty())
@@ -321,8 +320,9 @@ wxString ExportFilePanel::GetPath() const
    return mFolder->GetValue();
 }
 
-wxString ExportFilePanel::GetFullName() const
+wxString ExportFilePanel::GetFullName()
 {
+   ValidateAndFixExt();
    return mFullName->GetValue();
 }
 
@@ -357,6 +357,48 @@ int ExportFilePanel::GetChannels() const
 MixerOptions::Downmix* ExportFilePanel::GetMixerSpec() const
 {
    return mMixerSpec.get();
+}
+
+void ExportFilePanel::ValidateAndFixExt()
+{
+   if(mSelectedPlugin == nullptr)
+      return;
+
+   const auto formatInfo = mSelectedPlugin->GetFormatInfo(mSelectedFormatIndex);
+   if(formatInfo.extensions.empty())
+      return;
+
+   wxFileName filename;
+   filename.SetFullName(mFullName->GetValue());
+
+   //Remove extra whitespaces
+   auto desiredExt = filename.GetExt().Trim().Trim(false);
+
+   auto it = std::find_if(
+      formatInfo.extensions.begin(),
+      formatInfo.extensions.end(),
+      // if typed extension uses different case (e.g. MP3 instead of mp3)
+      // we'll reset the file extension to one provided by FormatInfo
+      [&](const auto& ext) { return desiredExt.IsSameAs(ext, false); });
+
+   if(it == formatInfo.extensions.end())
+      it = formatInfo.extensions.begin();
+
+   if(!it->empty() && !it->IsSameAs(filename.GetExt()))
+   {
+      filename.SetExt(*it);
+      mFullName->SetValue(filename.GetFullName());
+   }
+}
+
+void ExportFilePanel::OnFullNameFocusKill(wxFocusEvent& event)
+{
+   //When user has finished typing make sure that file extension
+   //is one of extensions supplied by FormatInfo
+
+   event.Skip();
+
+   ValidateAndFixExt();
 }
 
 void ExportFilePanel::OnFormatChange(wxCommandEvent &event)
@@ -537,16 +579,20 @@ void ExportFilePanel::UpdateMaxChannels(unsigned maxChannels)
 void ExportFilePanel::UpdateSampleRateList()
 {
    auto availableRates = mOptionsHandler->GetSampleRateList();
-   
+   std::sort(availableRates.begin(), availableRates.end());
+
    const auto* rates = availableRates.empty() ? &DefaultRates : &availableRates;
    
    mRates->Clear();
    
    void* clientData;
-   const auto projectRate = static_cast<int>(ProjectRate::Get(mProject).GetRate());
    int customRate = mSampleRate;
    int selectedItemIndex = 0;
-   int preferredItemIndex = 0;
+   //Prefer lowest possible sample rate that is not less than mSampleRate.
+   //Initialize with highest value, so that if all available rates are less
+   //than mSampleRate then we will choose highest rate
+   int preferredRate = rates->back();
+   int preferredItemIndex = rates->size() - 1;
    for(auto rate : *rates)
    {
       *reinterpret_cast<int*>(&clientData) = rate;
@@ -559,9 +605,13 @@ void ExportFilePanel::UpdateSampleRateList()
          customRate = 0;
          selectedItemIndex = itemIndex;
       }
-      if(rate <= projectRate)
+      if(rate >= mSampleRate && rate < preferredRate)
+      {
          preferredItemIndex = itemIndex;
+         preferredRate = rate;
+      }
    }
+   
    if(rates == &DefaultRates)
    {
       if(customRate != 0)
@@ -576,7 +626,8 @@ void ExportFilePanel::UpdateSampleRateList()
    }
    else if(customRate != 0)//sample rate not in the list
    {
-      mSampleRate = (*rates)[preferredItemIndex];
+      auto selectedRate = (*rates)[preferredItemIndex];
+      mSampleRate = selectedRate;
       selectedItemIndex = preferredItemIndex;
    }
    mRates->SetSelection(selectedItemIndex);

@@ -68,7 +68,7 @@ public:
    static const ProjectAudioManager &Get( const AudacityProject &project );
 
    //! Find suitable tracks to record into, or return an empty array.
-   //! Returns channels not tracks, but always complete channel groups
+   //! Returns leader tracks only
    static WritableSampleTrackArray ChooseExistingRecordingTracks(
       AudacityProject &proj, bool selectedOnly,
       double targetRate = RATE_NOT_SELECTED);
@@ -153,13 +153,13 @@ private:
    void OnAudioIORate(int rate) override;
    void OnAudioIOStartRecording() override;
    void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlocks(const RecordableSequences &sequences) override;
+   void OnAudioIONewBlocks() override;
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
    void OnCheckpointFailure(ProjectFileIOMessage);
 
-   Observer::Subscription mCheckpointFailureSubcription;
+   Observer::Subscription mCheckpointFailureSubscription;
    AudacityProject &mProject;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
@@ -194,7 +194,7 @@ struct PropertiesOfSelected
 AUDACITY_DLL_API
 PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject &proj);
 
-#include "commands/CommandFlag.h"
+#include "CommandFlag.h"
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    &CanStopAudioStreamFlag();

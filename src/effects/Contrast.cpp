@@ -18,7 +18,7 @@
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectRate.h"
-#include "../ProjectWindow.h"
+#include "../ProjectWindowBase.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "FileNames.h"
@@ -26,7 +26,6 @@
 #include "HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "AudacityMessageBox.h"
-#include "../widgets/VetoDialogHook.h"
 
 #include <cmath>
 #include <limits>
@@ -82,7 +81,7 @@ bool ContrastDialog::GetDB(float &dB)
    }
 
    const auto first = *range.begin();
-   const auto channels = TrackList::Channels(first);
+   const auto channels = first->Channels();
    assert(mT0 <= mT1);
    // Ignore whitespace beyond ends of track.
    mT0 = std::max(mT0, first->GetStartTime());
@@ -251,7 +250,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_FOREGROUNDSTART_T,
                          NumericConverterType_TIME(),
-                         NumericConverterFormats::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat().Internal(),
                          0.0,
                          options);
          }
@@ -264,7 +263,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_FOREGROUNDEND_T,
                          NumericConverterType_TIME(),
-                         NumericConverterFormats::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat().Internal(),
                          0.0,
                          options);
          }
@@ -285,7 +284,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_BACKGROUNDSTART_T,
                          NumericConverterType_TIME(),
-                         NumericConverterFormats::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat().Internal(),
                          0.0,
                          options);
          }
@@ -298,7 +297,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
                          S.GetParent(), ID_BACKGROUNDEND_T,
                          NumericConverterType_TIME(),
-                         NumericConverterFormats::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat().Internal(),
                          0.0,
                          options);
          }
@@ -651,8 +650,8 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
 #include "ProjectWindows.h"
 
 namespace {
@@ -660,7 +659,7 @@ namespace {
 // Contrast window attached to each project is built on demand by:
 AttachedWindows::RegisteredFactory sContrastDialogKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
+      auto &window = GetProjectFrame(parent);
       return safenew ContrastDialog(
          &window, -1, XO("Contrast Analysis (WCAG 2 compliance)"),
          wxPoint{ 150, 150 }
@@ -673,25 +672,24 @@ namespace {
    void OnContrast(const CommandContext &context)
    {
       auto &project = context.project;
-      CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Contrast as Last Analyzer
+      CommandManager::Get(project).RegisterLastAnalyzer(context);
       auto contrastDialog = &GetAttachedWindows(project)
          .Get< ContrastDialog >( sContrastDialogKey );
 
       contrastDialog->CentreOnParent();
-      if( VetoDialogHook::Call( contrastDialog ) )
-         return;
       contrastDialog->Show();
    }
 }
 
 // Register that menu item
 
-using namespace MenuTable;
-AttachedItem sAttachment{ wxT("Analyze/Analyzers/Windows"),
+using namespace MenuRegistry;
+AttachedItem sAttachment{
    Command( wxT("ContrastAnalyser"), XXO("Contrast..."),
       OnContrast,
       AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
-      wxT("Ctrl+Shift+T") )
+      wxT("Ctrl+Shift+T") ),
+   wxT("Analyze/Analyzers/Windows")
 };
 
 }

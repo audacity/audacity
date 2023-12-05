@@ -97,7 +97,9 @@
 #include "ExportPluginRegistry.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
-#include "ProjectWindow.h"
+#include "ProjectWindows.h"
+
+#include <wx/frame.h>
 
 //----------------------------------------------------------------------------
 // ExportMP3Options
@@ -1449,7 +1451,30 @@ FileNames::FileTypes MP3Exporter::GetLibraryTypes()
    };
 }
 
-#else //!__WXMAC__
+#elif defined(__OpenBSD__)
+/* Values for OpenBSD systems */
+
+wxString MP3Exporter::GetLibraryPath()
+{
+   return wxT(LIBDIR);
+}
+
+wxString MP3Exporter::GetLibraryName()
+{
+   return wxT("libmp3lame.so");
+}
+
+FileNames::FileTypes MP3Exporter::GetLibraryTypes()
+{
+   return {
+      { XO("Only libmp3lame.so"), { wxT("libmp3lame.so") } },
+      { XO("Primary shared object files"), { wxT("so") }, true },
+      { XO("Extended libraries"), { wxT("so*") }, true },
+      FileNames::AllFiles
+   };
+}
+
+#else //!__OpenBSD__
 /* Values for Linux / Unix systems */
 
 wxString MP3Exporter::GetLibraryPath()
@@ -1680,7 +1705,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
 
    int rate = lrint(sampleRate);
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
-   wxWindow *parent = ProjectWindow::Find( &project );
+   wxWindow *parent = FindProjectFrame(&project);
 #endif // DISABLE_DYNAMIC_LOADING_LAME
    const auto &tracks = TrackList::Get( project );
    auto& exporter = context.exporter;
@@ -1689,7 +1714,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
    if (!exporter.InitLibrary(wxT(""))) {
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
-      throw ExportException(_("Could not initialize MP3 encoding library!"))
+      throw ExportException(_("Could not initialize MP3 encoding library!"));
    }
 #else
    if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {

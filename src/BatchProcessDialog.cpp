@@ -13,8 +13,6 @@
 \brief Shows progress in executing commands in MacroCommands.
 
 *//*******************************************************************/
-
-
 #include "BatchProcessDialog.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -26,6 +24,7 @@
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
+#include <wx/frame.h>
 #include <wx/log.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
@@ -37,21 +36,22 @@
 
 #include "Clipboard.h"
 #include "ShuttleGui.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
-#include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "SelectUtilities.h"
 #include "Track.h"
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "Effect.h"
 #include "effects/EffectUI.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 #include "UndoManager.h"
+#include "Viewport.h"
 
 #include "AllThemeResources.h"
 
@@ -463,7 +463,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
          auto success = GuardedCall< bool >([&] {
             ProjectFileManager::Get(*project).Import(files[i]);
-            ProjectWindow::Get(*project).ZoomAfterImport(nullptr);
+            Viewport::Get(*project).ZoomFitHorizontallyAndShowTrack(nullptr);
             SelectUtilities::DoSelectAll(*project);
             if (!mMacroCommands.ApplyMacro(mCatalog))
                return false;
@@ -772,7 +772,7 @@ void MacrosWindow::UpdateMenus()
 {
    // OK even on mac, as dialog is modal.
    auto p = &mProject;
-   MenuManager::Get(*p).RebuildMenuBar(*p);
+   MenuCreator::Get(*p).RebuildMenuBar();
 }
 
 void MacrosWindow::UpdateDisplay( bool bExpanded )
@@ -1383,43 +1383,44 @@ void MacrosWindow::UpdatePrefs()
 // The rest of this file installs hooks
 
 #include "CommonCommandFlags.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "effects/EffectManager.h"
-#include "ProjectWindows.h"
 namespace {
 
 AttachedWindows::RegisteredFactory sMacrosWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
+      auto &window = GetProjectFrame(parent);
       return safenew MacrosWindow(
          &window, parent, true
       );
    }
 };
 
+using MacroID = wxString;
+
 void OnApplyMacroDirectlyByName(
    const CommandContext& context, const MacroID& Name);
 
 void OnRepeatLastTool(const CommandContext& context)
 {
-   auto& menuManager = MenuManager::Get(context.project);
-   switch (menuManager.mLastToolRegistration) {
-     case MenuCreator::repeattypeplugin:
+   auto& commandManager = CommandManager::Get(context.project);
+   switch (commandManager.mLastToolRegistration) {
+     case CommandManager::repeattypeplugin:
      {
-        auto lastEffect = menuManager.mLastTool;
+        auto lastEffect = commandManager.mLastTool;
         if (!lastEffect.empty())
         {
            EffectUI::DoEffect(
-              lastEffect, context, menuManager.mRepeatToolFlags);
+              lastEffect, context, commandManager.mRepeatToolFlags);
         }
      }
        break;
-     case MenuCreator::repeattypeunique:
+     case CommandManager::repeattypeunique:
         CommandManager::Get(context.project).DoRepeatProcess(context,
-           menuManager.mLastToolRegisteredId);
+           commandManager.mLastToolRegisteredId);
         break;
-     case MenuCreator::repeattypeapplymacro:
-        OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
+     case CommandManager::repeattypeapplymacro:
+        OnApplyMacroDirectlyByName(context, commandManager.mLastTool);
         break;
    }
 }
@@ -1460,7 +1461,7 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame(project);
    //wxLogDebug( "Macro was: %s", context.parameter);
    ApplyMacroDialog dlg( &window, project );
    //const auto &Name = context.parameter;
@@ -1477,7 +1478,7 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 #endif
    /* i18n-hint: %s will be the name of the macro which will be
     * repeated if this menu item is chosen */
-   MenuManager::ModifyUndoMenuItems( project );
+   CommandManager::Get(project).ModifyUndoMenuItems();
 
    TranslatableString desc;
    EffectManager& em = EffectManager::Get();
@@ -1489,23 +1490,25 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
        undoManager.GetShortDescription(cur, &desc);
        commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat %s")
           .Format(desc));
-       auto& menuManager = MenuManager::Get(project);
-       menuManager.mLastTool = Name;
-       menuManager.mLastToolRegistration = MenuCreator::repeattypeapplymacro;
+       auto& commandManager = CommandManager::Get(project);
+       commandManager.mLastTool = Name;
+       commandManager.mLastToolRegistration =
+          CommandManager::repeattypeapplymacro;
    }
 
 }
 
-void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
+void PopulateMacrosMenu(MenuRegistry::MenuItems &items, CommandFlag flags)
 {
+   using namespace MenuRegistry;
    auto names = MacroCommands::GetNames(); // these names come from filenames
    for (const auto &name : names) {
       auto MacroID = ApplyMacroDialog::MacroIdOfName(name);
-      items.push_back(MenuTable::Command(MacroID,
+      items.push_back(MenuRegistry::Command(MacroID,
          Verbatim(name), // file name verbatim
          OnApplyMacroDirectly,
          flags,
-         CommandManager::Options{}.AllowInMacros()
+         Options{}.AllowInMacros()
       ));
    }
 }
@@ -1513,26 +1516,27 @@ void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
 const ReservedCommandFlag&
    HasLastToolFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project) {
-      auto& menuManager = MenuManager::Get(project);
-         if (menuManager.mLastToolRegistration == MenuCreator::repeattypeunique) return true;
-         return !menuManager.mLastTool.empty();
+      auto& commandManager = CommandManager::Get(project);
+         if (commandManager.mLastToolRegistration ==
+             CommandManager::repeattypeunique)
+            return true;
+         return !commandManager.mLastTool.empty();
       }
    }; return flag;
 }
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
-BaseItemSharedPtr PluginMenuItems()
+auto PluginMenuItems()
 {
-   using Options = CommandManager::Options;
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( "Macros",
       Section( "RepeatLast",
          // Delayed evaluation:
          [](AudacityProject &project)
          {
-            const auto &lastTool = MenuManager::Get(project).mLastTool;
+            const auto &lastTool = CommandManager::Get(project).mLastTool;
             TranslatableString buildMenuLabel;
             if (!lastTool.empty())
                buildMenuLabel = XO("Repeat %s")
@@ -1572,37 +1576,32 @@ BaseItemSharedPtr PluginMenuItems()
    return items;
 }
 
-AttachedItem sAttachment1{
-   wxT("Tools/Manage"),
-   Indirect(PluginMenuItems())
-};
+AttachedItem sAttachment1{ Indirect(PluginMenuItems()), wxT("Tools/Manage") };
 
-BaseItemSharedPtr ExtraScriptablesIMenu()
+auto ExtraScriptablesIMenu()
 {
    // These are the more useful to VI user Scriptables.
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables1"), XXO("Script&ables I") )
    };
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraScriptablesIMenu())
+AttachedItem sAttachment2{ Indirect(ExtraScriptablesIMenu()),
+   wxT("Optional/Extra/Part2")
 };
 
-BaseItemSharedPtr ExtraScriptablesIIMenu()
+auto ExtraScriptablesIIMenu()
 {
    // Less useful to VI users.
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables2"), XXO("Scripta&bles II") )
    };
    return menu;
 }
 
-AttachedItem sAttachment3{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraScriptablesIIMenu())
+AttachedItem sAttachment3{ Indirect(ExtraScriptablesIIMenu()),
+   wxT("Optional/Extra/Part2")
 };

@@ -16,8 +16,6 @@
 #include "QualitySettings.h"
 #include "BasicUI.h"
 
-#include <wx/filename.h>
-
 sampleFormat ImportUtils::ChooseFormat(sampleFormat effectiveFormat)
 {
    // Consult user preference
@@ -33,10 +31,13 @@ sampleFormat ImportUtils::ChooseFormat(sampleFormat effectiveFormat)
    return format;
 }
 
-std::shared_ptr<WaveTrack> ImportUtils::NewWaveTrack(
-   WaveTrackFactory &trackFactory, sampleFormat effectiveFormat, double rate)
+TrackListHolder
+ImportUtils::NewWaveTrack(WaveTrackFactory &trackFactory,
+                          unsigned nChannels,
+                          sampleFormat effectiveFormat,
+                          double rate)
 {
-   return trackFactory.Create(ChooseFormat(effectiveFormat), rate);
+   return trackFactory.Create(nChannels, ChooseFormat(effectiveFormat), rate);
 }
 
 void ImportUtils::ShowMessageBox(const TranslatableString &message, const TranslatableString& caption)
@@ -45,11 +46,30 @@ void ImportUtils::ShowMessageBox(const TranslatableString &message, const Transl
                            BasicUI::MessageBoxOptions().Caption(caption));
 }
 
-std::shared_ptr<TrackList>
-ImportUtils::MakeTracks(const NewChannelGroup &channels)
+void ImportUtils::FinalizeImport(TrackHolders& outTracks, const std::vector<TrackListHolder>& importedStreams)
 {
-   auto result = TrackList::Temporary(nullptr, channels);
-   for (const auto pTrack : result->Any<WaveTrack>())
-      pTrack->Flush();
-   return result;
+   for(auto& stream : importedStreams)
+      FinalizeImport(outTracks, stream);
+}
+
+void ImportUtils::FinalizeImport(TrackHolders& outTracks, TrackListHolder trackList)
+{
+   if(trackList->empty())
+      return;
+
+   for(const auto track : trackList->Any<WaveTrack>())
+      track->Flush();
+   
+   outTracks.push_back(std::move(trackList));
+}
+
+void ImportUtils::ForEachChannel(TrackList& trackList, const std::function<void(WaveChannel&)>& op)
+{
+   for(auto track : trackList.Any<WaveTrack>())
+   {
+      for(auto channel : track->Channels())
+      {
+         op(*channel);
+      }
+   }
 }

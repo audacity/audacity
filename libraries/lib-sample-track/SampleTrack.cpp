@@ -16,7 +16,6 @@ SampleTrack::SampleTrack() = default;
 
 SampleTrack::SampleTrack(const SampleTrack &other, ProtectedCreationArg &&a)
    : PlayableTrack(other, std::move(a))
-   , SampleTrackAttachments(other)
 {
 }
 

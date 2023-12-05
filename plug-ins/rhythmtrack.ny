@@ -5,7 +5,7 @@ $name (_ "Rhythm Track")
 $debugbutton false
 $preview linear
 $author (_ "Dominic Mazzoni, David R. Sky and Steve Daulton")
-$release 3.0.0-1
+$release 3.0.0-2
 $copyright (_ "GNU General Public License v2.0")
 
 
@@ -20,14 +20,14 @@ $copyright (_ "GNU General Public License v2.0")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control tempo (_ "Tempo (bpm)") real (_ "30 - 300 beats/minute") 120 30 300
-$control timesig (_ "Beats per bar") int (_ "1 - 20 beats/measure") 4 1 20
-$control swing (_ "Swing amount") float (_ "+/- 1") 0 -1 1
+$control TEMPO (_ "Tempo (bpm)") real (_ "30 - 300 beats/minute") 120 30 300
+$control TIMESIG (_ "Beats per bar") int (_ "1 - 20 beats/measure") 4 1 20
+$control SWING (_ "Swing amount") float (_ "+/- 1") 0 -1 1
 $control text (_ "Set 'Number of bars' to zero to enable the 'Rhythm track duration'.")
-$control bars (_ "Number of bars") int (_ "1 - 1000 bars") 16 0 1000
-$control click-track-dur (_ "Rhythm track duration") time (_ "Used if 'Number of bars' = 0") 0 0 nil  
-$control offset (_ "Start time offset") time (_ "Silence before first beat") 0 0 nil
-$control click-type (_ "Beat sound") choice (("Metronome" (_ "Metronome Tick"))
+$control BARS (_ "Number of bars") int (_ "1 - 1000 bars") 16 0 1000
+$control CLICK-TRACK-DUR (_ "Rhythm track duration") time (_ "Used if 'Number of bars' = 0") 0 0 nil  
+$control OFFSET (_ "Start time offset") time (_ "Silence before first beat") 0 0 nil
+$control CLICK-TYPE (_ "Beat sound") choice (("Metronome" (_ "Metronome Tick"))
                                              (_ "Ping (short)")
                                              (_ "Ping (long)")
                                              (_ "Cowbell")
@@ -36,8 +36,8 @@ $control click-type (_ "Beat sound") choice (("Metronome" (_ "Metronome Tick"))
                                              (_ "Drip (short)")
                                              (_ "Drip (long)")) 0
 
-$control high (_ "MIDI pitch of strong beat") int (_ "18 - 116") 84 18 116
-$control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
+$control HIGH (_ "MIDI pitch of strong beat") int (_ "18 - 116") 84 18 116
+$control LOW (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 
 
 ;; Helper functions:
@@ -50,8 +50,8 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 
 ;; Filtering causes changes amplitude, so we normalize to
 ;; achieve a predictable level.
-(defun normalize (sound)
-  (scale (/ (peak sound ny:all)) sound))
+(defun normalize (sig)
+  (scale (/ (peak sig ny:all)) sig))
 
 
 (defun s-rest-abs (d)
@@ -80,6 +80,7 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
             (mult (hzosc hz4)  0.0625))))
     440)))
 
+
 ;; Metronome tick by Steve Daulton.
 (defun metronome-tick (hz peak)
   (let* ((ln 300)
@@ -100,6 +101,7 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
       (mult (abs-env (pwlv 1.11 0.02 1.11 0.05 0 ))
         (jcrev (mult peak gain sig) 0.01 0.1)))))
 
+
 ;; Cowbell by Steve Daulton.
 (defun cowbell (hz)
   (sim
@@ -118,11 +120,13 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
     (sound-srate-abs 44100 (metronome-tick hz gain))
     *sound-srate*))
 
+
 (defun get-ping (pitch ticklen)
   (stretch-abs ticklen
     (mult
       (control-srate-abs *sound-srate* (pwl 0.005 amp 0.995 amp 1))
       (osc pitch))))
+
 
 (defun get-resonant-noise (pitch)
   (stretch-abs 0.05 ; 50 milliseconds
@@ -130,11 +134,13 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
       (control-srate-abs *sound-srate* (pwl 0.05 amp 0.95 amp 1))
       (normalize (lowpass2 (noise 1) (step-to-hz pitch) 20)))))
 
+
 (defun get-noise-click (pitch)
   (stretch-abs 0.005
     (mult
       (control-srate-abs *sound-srate* (pwl 0.005 amp 0.995 amp 1))
       (normalize (lowpass2 (noise 1) (step-to-hz pitch) 2)))))
+
 
 (defun get-drip (pitch ticklen)
   (stretch-abs ticklen
@@ -142,14 +148,16 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
       (control-srate-abs *sound-srate* (pwl 0.005 amp 0.995 amp 1))
       (normalize (drip (step-to-hz pitch))))))
 
+
 (defun get-cowbell (pitch)
   (mult 0.8 (cowbell (step-to-hz pitch))))
 
+
 ;; Make selected click
-(defun click (type accent)
-  (setq pitch (if (= accent 1) high low))
+(defun click (accent)
+  (setq pitch (if (= accent 1) HIGH LOW))
   (setq amp (if (= accent 1) 0.75 0.5))
-  (case type
+  (case CLICK-TYPE
     (0 (get-metronome-tick (step-to-hz pitch) amp))
     (1 (get-ping pitch 0.01))
     (2 (get-ping pitch 0.08))
@@ -168,11 +176,12 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 (defun makemeasure ()
   (setf *measure*
     (sim
-      (s-rest (* timesig beatlen)) ;required for trailing silence
-      (click click-type 1) ;accented beat
-      (simrep (x (- timesig 1))
-        (at-abs (* beatlen (+ x 1 (swing-adjust x swing)))
-            (cue (click click-type 0))))))) ;unaccented beat
+      (s-rest (* TIMESIG beatlen)) ;required for trailing silence
+      (click 1) ;accented beat
+      (simrep (count (- TIMESIG 1))
+        (at-abs (* beatlen (+ count 1 (swing-adjust count SWING)))
+            (cue (click 0))))))) ;unaccented beat
+
 
 (defun samplecount (total)
   ;;; Return number of samples required to reach target
@@ -184,7 +193,7 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 
 
 (defun get-measure (barnum)
-  (let ((end (* (1+ barnum) (* timesig beatlen)))
+  (let ((end (* (1+ barnum) (* TIMESIG beatlen)))
         required-samples)
     ;; Actual end time is integer samples
     (setf end (round (* end *sound-srate*)))
@@ -194,8 +203,8 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
   *measure*)
 
 
-(defun make-click-track (bars mdur)
-  (seqrep (i bars) (cue (get-measure i))))
+(defun make-click-track (barcount mdur)
+  (seqrep (i barcount) (cue (get-measure i))))
 
 
 ;;;;;;;;;;;;;;;;;
@@ -203,35 +212,36 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 ;;;;;;;;;;;;;;;;;
       
 
-(setf beatlen (/ 60.0 tempo))
+(setf beatlen (/ 60.0 TEMPO))
 
 ;call function to make one measure
 (makemeasure)
 
 ; If 'Number of bars' = 0, calculate bars from 'Rhythm track duration'.
-(when (= bars 0)
-  (setq bars (/ click-track-dur (* timesig beatlen))))
+(if (= BARS 0)
+    (setq barcount (/ CLICK-TRACK-DUR (* TIMESIG beatlen)))
+    (setf barcount BARS))
 
 ;if previewing, restrict number of bars
 (let ((preview (/ (get '*project* 'preview-duration)
-                  (* timesig beatlen))))
-  (if (not (get '*track* 'view))  ;NIL if previewing
-      (setq bars (min preview bars))))
+                  (* TIMESIG beatlen))))
+  (if *previewp*
+      (setf barcount (min preview barcount))))
 
 ;round up number of bars
-(setq bars (round-up bars))
+(setf barcount (round-up barcount))
 
 ;; Calculate LEN for progress bar.
-(setq len (/ (* 60.0 *sound-srate* timesig bars) tempo))
+(setf len (/ (* 60.0 *sound-srate* TIMESIG barcount) TEMPO))
 
 ;; Initialize sample count
 (setf addsamples (samplecount 0))
 
-(if (< bars 1)
-    (_ "Set either 'Number of bars' or
-'Rhythm track duration' to greater than zero.")
-    (if (get '*track* 'view) ;NIL if previewing
-        (seq (s-rest offset)
-             (make-click-track bars (* timesig beatlen)))
+(if (< barcount 1)
+    (format nil (_ "Set either 'Number of bars' or~%~
+                    'Rhythm track duration' to greater than zero."))
+    (if *previewp*
         ;; Don't preview the offset (silence).
-        (make-click-track bars (* timesig beatlen))))
+        (make-click-track barcount (* TIMESIG beatlen))
+        (seq (s-rest OFFSET)
+             (make-click-track barcount (* TIMESIG beatlen)))))

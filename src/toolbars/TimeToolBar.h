@@ -18,7 +18,7 @@
 #include "Observer.h"
 
 class NumericTextCtrl;
-class TimeToolBarListener;
+struct ProjectNumericFormatsEvent;
 
 class TimeToolBar final : public ToolBar
 {
@@ -43,35 +43,31 @@ public:
    void SetToDefaultSize() override;
    wxSize GetDockedSize() override;
    void SetDocked(ToolDock *dock, bool pushed) override;
-   void SetListener(TimeToolBarListener *l);
-   void SetAudioTimeFormat(const NumericFormatSymbol & format);
+   void SetAudioTimeFormat(const NumericFormatID & format);
    void ResizingDone() override;
 
 private:
    void SetResizingLimits();
    wxSize ComputeSizing(int digitH);
-   
+   void OnFormatsChanged(ProjectNumericFormatsEvent);
    void OnUpdate(wxCommandEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnIdle(wxIdleEvent &evt);
 
-   TimeToolBarListener *mListener;
    NumericTextCtrl *mAudioTime;
    float mDigitRatio;
-   bool mSettingInitialSize;
+   bool mSettingInitialSize = true;
 
    static const int minDigitH = 17;
    static const int maxDigitH = 100;
-   
+
+   Observer::Subscription mFormatChangedToFitValueSubscription;
+   Observer::Subscription mFormatsSubscription;
+
 public:
    
    DECLARE_CLASS(TimeToolBar)
    DECLARE_EVENT_TABLE()
 };
-
-inline wxSize TimeToolBar::ComputeSizing(int digitH)
-{
-   return mAudioTime->ComputeSizing(false, digitH * mDigitRatio, digitH);
-}
 
 #endif

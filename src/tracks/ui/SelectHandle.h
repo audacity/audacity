@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../UIHandle.h"
 #include "SelectedRegion.h"
-#include "../../Snap.h"
+#include "Snap.h"
 
 #include <vector>
 
@@ -48,7 +48,9 @@ public:
    
    virtual ~SelectHandle();
 
-   bool IsClicked() const;
+   std::shared_ptr<const Channel> FindChannel() const override;
+
+   bool IsDragging() const override;
 
    void SetUseSnap(bool use, AudacityProject *pProject);
    void Enter(bool forward, AudacityProject *pProject) override;

@@ -18,7 +18,7 @@
 
 //! Supplies implementations of all pure virtual functions of the base class
 //! except PopulateUI
-class BasicEffectUIServices
+class AUDACITY_DLL_API BasicEffectUIServices
    : public EffectUIServices
 {
 public:

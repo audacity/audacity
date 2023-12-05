@@ -172,8 +172,8 @@ extern long ptrtoabs();
 #endif
 #endif
 
-/* FreeBSD */
-#ifdef FreeBSD
+/* FreeBSD / OpenBSD */
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
 #if BYTE_ORDER == LITTLE_ENDIAN
 #define XL_LITTLE_ENDIAN
 #else

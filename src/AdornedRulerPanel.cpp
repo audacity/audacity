@@ -130,6 +130,9 @@ public:
       , mChoice( menuChoice )
    {}
 
+   std::shared_ptr<const Channel> FindChannel() const override
+   { return nullptr; }
+
    bool Clicked() const { return mClicked != Button::None; }
 
    static UIHandle::Result NeedChangeHighlight(
@@ -922,6 +925,9 @@ public:
       , mX( xx )
    {}
 
+   std::shared_ptr<const Channel> FindChannel() const override
+   { return nullptr; }
+
    static UIHandle::Result NeedChangeHighlight(
       const PlayheadHandle &oldState, const PlayheadHandle &newState)
    {
@@ -1554,7 +1560,7 @@ void AdornedRulerPanel::DoIdle()
      || mLastDrawnSelectedRegion != selectedRegion
      || mLastDrawnPlayRegion != std::pair{
          playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() }
-     || mLastDrawnH != viewInfo.h
+     || mLastDrawnH != viewInfo.hpos
      || mLastDrawnZoom != viewInfo.GetZoom()
      || mLastPlayRegionActive != viewInfo.playRegion.Active()
    ;
@@ -1594,7 +1600,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    const auto &playRegion = viewInfo.playRegion;
    const auto playRegionBounds = std::pair{
       playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() };
-   mLastDrawnH = viewInfo.h;
+   mLastDrawnH = viewInfo.hpos;
    mLastDrawnZoom = viewInfo.GetZoom();
    mLastDrawnPlayRegion = playRegionBounds;
    mLastDrawnSelectedRegion = viewInfo.selectedRegion;
@@ -2285,7 +2291,7 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 
    rulerMenu.AppendSeparator();
 
-   auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
+   auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Setting a loop region also makes an audio selection"));
    pDrag->Check(mPlayRegionDragsSelection && playRegion.Active());
    pDrag->Enable(playRegion.Active());
 
@@ -2574,11 +2580,12 @@ void AdornedRulerPanel::DoDrawPlayRegion(
    wxDC * dc, const wxRect &rectP, const wxRect &rectL, const wxRect &rectR)
 {
    const auto &viewInfo = ViewInfo::Get(*mProject);
-   const auto &playRegion = viewInfo.playRegion;
-   if (playRegion.IsLastActiveRegionClear())
-      return;
+   const auto& playRegion = viewInfo.playRegion;
 
    const bool isActive = (mLastPlayRegionActive = playRegion.Active());
+
+   if (playRegion.IsLastActiveRegionClear())
+      return;
 
    // Paint the selected region bolder if independently varying, else dim
    const auto color = TimelineLoopRegionColor(isActive);
@@ -2743,7 +2750,7 @@ void AdornedRulerPanel::ClearPlayRegion()
 
    auto &viewInfo = ViewInfo::Get( *GetProject() );
    auto &playRegion = viewInfo.playRegion;
-   playRegion.SetTimes( -1, -1 );
+   playRegion.Clear();
 
    Refresh();
 }
@@ -2905,8 +2912,7 @@ void AdornedRulerPanel::SetTimeDisplayMode(TimeDisplayMode type)
 
 // Attach menu item
 
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
 #include "CommonCommandFlags.h"
 
 namespace {
@@ -2915,16 +2921,15 @@ void OnTogglePinnedHead(const CommandContext &context)
    AdornedRulerPanel::Get( context.project ).TogglePinnedHead();
 }
 
-using namespace MenuTable;
-using Options = CommandManager::Options;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
-   { wxT("Transport/Other/Options/Part2"), { OrderingHint::Begin, {} } },
-   Command( wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
+   Command( wxT("PinnedHead"), XXO("Enable pinned play &head"),
       OnTogglePinnedHead,
       // Switching of scrolling on and off is permitted
       // even during transport
       AlwaysEnabledFlag,
       Options{}.CheckTest([](const AudacityProject&){
-         return TracksPrefs::GetPinnedHeadPreference(); } ) )
+         return TracksPrefs::GetPinnedHeadPreference(); } ) ),
+   { wxT("Transport/Other/Options/Part2"), { OrderingHint::Begin, {} } }
 };
 }

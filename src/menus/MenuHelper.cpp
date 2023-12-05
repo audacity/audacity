@@ -149,7 +149,7 @@ void AddEffectMenuItemGroup(
       }
    }
 
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    
    for (int i = 0; i < namesCnt; i++)
    {
@@ -170,7 +170,7 @@ void AddEffectMenuItemGroup(
                   Verbatim( plug->GetPath() ),
                   onMenuCommand,
                   flags[i],
-                  CommandManager::Options{}
+                  Options{}
                      .IsEffect()
                      .AllowInMacros()
                      .Parameter( plugs[i] ) ) );
@@ -191,7 +191,7 @@ void AddEffectMenuItemGroup(
                names[i],
                onMenuCommand,
                flags[i],
-               CommandManager::Options{}
+               Options{}
                   .IsEffect()
                   .AllowInMacros()
                   .Parameter( plugs[i] ) ) );
@@ -254,16 +254,6 @@ void AddSortedEffectMenuItems(
    }
 }
 
-auto MenuOrItems(const TranslatableString &label)
-   -> std::unique_ptr<MenuHelper::Group>
-{
-   using namespace MenuTable;
-   if (label.empty())
-      return Items("");
-   else
-      return Menu("", label);
-}
-
 auto MakeAddGroupItems(
    const EffectsMenuGroups& list,
    CommandFlag batchflags,
@@ -301,11 +291,21 @@ auto MakeAddGroupItems(
 
          if (!groupNames.empty())
          {
-            auto temp = MenuOrItems(p.first);
-            AddEffectMenuItemGroup(*temp,
-               groupNames, groupPlugs, groupFlags,
-               onMenuCommand);
-            items.push_back(move(temp));
+            using namespace MenuRegistry;
+            if (p.first.empty()) {
+               auto temp = Items("");
+               AddEffectMenuItemGroup(*temp,
+                  groupNames, groupPlugs, groupFlags,
+                  onMenuCommand);
+               items.push_back(move(temp));
+            }
+            else {
+               auto temp = Menu("", p.first);
+               AddEffectMenuItemGroup(*temp,
+                  groupNames, groupPlugs, groupFlags,
+                  onMenuCommand);
+               items.push_back(move(temp));
+            }
          }
       }
    };
@@ -318,7 +318,7 @@ void AddGroupedEffectMenuItems(
    GroupBy groupBy,
    void (*onMenuCommand)(const CommandContext&))
 {
-   using namespace MenuTable;
+   using namespace MenuRegistry;
 
    const auto UnknownGroupName = XO("Unknown");
    auto& effectManager = EffectManager::Get();
@@ -332,13 +332,22 @@ void AddGroupedEffectMenuItems(
 
    auto doAddGroup = [&]
    {
+      using namespace MenuRegistry;
       if(names.empty())
          return;
 
       const auto inSubmenu = !path.empty() && (names.size() > 1);
-      auto items = MenuOrItems(inSubmenu ? path.back() : TranslatableString{});
-      AddEffectMenuItemGroup(*items, names, group, flags, onMenuCommand);
-      parentTable->push_back(move(items));
+      const auto label = inSubmenu ? path.back() : TranslatableString{};
+      if (label.empty()) {
+         auto items = Items("");
+         AddEffectMenuItemGroup(*items, names, group, flags, onMenuCommand);
+         parentTable->push_back(move(items));
+      }
+      else {
+         auto items = Menu("", label);
+         AddEffectMenuItemGroup(*items, names, group, flags, onMenuCommand);
+         parentTable->push_back(move(items));
+      }
 
       names.clear();
       group.clear();
@@ -753,16 +762,19 @@ void MenuHelper::PopulateEffectsMenu(
       if(section.compare != nullptr)
          std::sort(section.plugins.begin(), section.plugins.end(), section.compare);
 
-      std::unique_ptr<Group> group;
-      if (menuItems.empty())
-         group = MenuTable::Items("");
-      else
-         group = MenuTable::Section("");
-      section.add(*group, section.plugins);
-
-      if (group->empty())
-         continue;
-
-      menuItems.push_back(move(group));
+      if (menuItems.empty()) {
+         auto group = MenuRegistry::Items("");
+         section.add(*group, section.plugins);
+         if (group->empty())
+            continue;
+         menuItems.push_back(move(group));
+      }
+      else {
+         auto group = MenuRegistry::Section("");
+         section.add(*group, section.plugins);
+         if (group->empty())
+            continue;
+         menuItems.push_back(move(group));
+      }
    }
 }

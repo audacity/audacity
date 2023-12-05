@@ -28,6 +28,13 @@ most commonly asked questions about Audacity.
 #include <wx/frame.h>
 #include <wx/html/htmlwin.h>
 #include <wx/statbmp.h>
+#include <wx/colour.h>
+#include <wx/sstream.h>
+#include <wx/txtstrm.h>
+
+#include "AllThemeResources.h"
+#include "Internat.h"
+#include "Theme.h"
 
 #include "FileNames.h"
 #include "Project.h"
@@ -46,6 +53,8 @@ most commonly asked questions about Audacity.
 
 #include "MemoryX.h"
 #include <wx/fs_mem.h>
+
+const char* WhatsNewURL = "https://audacityteam.org/3.4.0-video";
 
 namespace
 {
@@ -79,6 +88,69 @@ constexpr int HTMLWindowHeight = 425;
 #else
 constexpr int HTMLWindowHeight = 280;
 #endif
+
+namespace
+{
+wxString MakeWhatsNewText()
+{
+   // PRL:  Is it necessary to define these outside of conditional compilation
+   // so that both get into the .pot file?
+   const auto alphamsg = XO(
+      "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.");
+   const auto betamsg = XO(
+      "<br><br>The version of Audacity you are using is a <b>Beta test version</b>.");
+
+   wxStringOutputStream o;
+   wxTextOutputStream s(o);
+   s << wxT("<body bgcolor=") << theTheme.Colour(clrTrackInfo).GetAsString(wxC2S_HTML_SYNTAX) << wxT(">")
+     << wxT("<font color=") << theTheme.Colour(clrTrackPanelText).GetAsString(wxC2S_HTML_SYNTAX) << wxT(">")
+     << wxT("<p>")
+#if defined(IS_ALPHA) || defined(IS_BETA)
+     << wxT("<center><h3>")
+     << XO("Get the Official Released Version of Audacity")
+     << wxT("</h3></center>")
+     << wxT("<center>[[https://www.audacityteam.org/download|") << XO("Check Online") << wxT("]]</center>")
+#   ifdef IS_ALPHA
+     << alphamsg
+#   else
+     << betamsg
+#   endif
+     << wxT(" ")
+     << XO("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>")
+     << XO("You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>")
+#endif
+
+     << wxT("<center><h3>")
+#ifndef HAS_WHATS_NEW
+     << wxT("Audacity ") << AUDACITY_VERSION_STRING
+#else
+     /* i18n-hint: %s is replaced with Audacity version */
+     << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING)
+     << wxT(R"(</h3><p><a href=")") << WhatsNewURL << wxT(R"(">)")
+     << wxT(
+           R"(<img src="memory:whats_new_btn.jpeg" width="263" height="148" /></a></p>)")
+     << XO("<p>In this release we added Beats & Measures, Time Stretching and more.<br/>")
+     << XO("Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>").Format(WhatsNewURL)
+#endif
+     << wxT("<h3>") << XO("How to get help") << wxT("</h3></center>")
+     << XO("These are our support methods:")
+     << wxT("<p><ul><li>")
+     /* i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a
+        link.*/
+     << XO("[[help:Quick_Help|Quick Help]]") << wxT("</li><li>")
+     << XO(
+           /* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a
+              link.*/
+           " [[help:Main_Page|Manual]]")
+     << wxT("</li><li>")
+     << XO("[[https://support.audacityteam.org/|Tutorials & How-tos]]")
+     << wxT("</li><li>")
+     << XO(" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.")
+     << wxT("</li></ul></p>") << wxT("</p></font></body>");
+
+   return FormatHtmlText(o.GetString());
+}
+}
 
 SplashDialog * SplashDialog::pSelf=NULL;
 
@@ -131,10 +203,8 @@ void SplashDialog::Populate( ShuttleGui & S )
    m_pLogo = std::make_unique<wxBitmap>((const char **) AudacityLogoWithName_xpm); //v
 
 
-   // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
-   // our source, but this allows us to tweak the size - if we want to.
-   // It also makes it easier to revert to full size if we decide to.
-   const float fScale=0.5f;// smaller size.
+   //Setup to scale the logo larger and smaller as necessary
+   const float fScale=1.0f;
    wxImage RescaledImage( m_pLogo->ConvertToImage() );
    wxColour MainColour( 
       RescaledImage.GetRed(1,1), 
@@ -208,6 +278,6 @@ void SplashDialog::Show2( wxWindow * pParent )
       wxASSERT(pParent);
       pSelf = safenew SplashDialog( pParent );
    }
-   pSelf->mpHtml->SetPage(HelpText( wxT("welcome") ));
+   pSelf->mpHtml->SetPage(MakeWhatsNewText());
    pSelf->Show( true );
 }

@@ -65,7 +65,6 @@ def getStructure() :
     #do( 'Help: CommandName=Help' )
     #do( 'Help: CommandName=SetPreference' )
     #do( 'SetPreference: PrefName=GUI/Theme PrefValue=light' )
-    #do( 'Screenshot: CaptureMode=menus' )
     do( 'GetInfo: Type=Boxes' )
     do( 'GetInfo: Type=Menus' )
 

@@ -87,7 +87,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(XO("Options"));
    {
       // Start wording of options with a verb, if possible.
-      S.TieCheckBox(XXO("Play &other tracks while recording (overdub)"),
+      S.TieCheckBox(XXO("Hear &other tracks while recording (overdub)"),
                      {wxT("/AudioIO/Duplex"),
 #ifdef EXPERIMENTAL_DA
                       false
@@ -103,7 +103,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                     {wxT("/AudioIO/Playthrough"),
                      false});
 #endif
-      S.TieCheckBox(XXO("&Software playthrough of input"),
+      S.TieCheckBox(XXO("Audible input &monitoring"),
                     {wxT("/AudioIO/SWPlaythrough"),
                      false});
 #if !defined(__WXMAC__)

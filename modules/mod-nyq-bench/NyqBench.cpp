@@ -34,9 +34,8 @@
 #include "effects/EffectUI.h"
 #include "effects/nyquist/Nyquist.h"
 #include "../images/AudacityLogo.xpm"
-#include "../../src/commands/CommandContext.h"
-#include "../../src/commands/CommandManager.h"
-#include "widgets/AudacityMessageBox.h"
+#include "CommandContext.h"
+#include "AudacityMessageBox.h"
 
 #include "NyqBench.h"
 
@@ -104,7 +103,7 @@ CommandHandlerObject &findme(AudacityProject&)
 void RegisterMenuItems()
 {
   // Get here only after the module version check passes
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    static AttachedItem sAttachment{ wxT("Tools"),
       ( FinderScope( findme ), Section( wxT("NyquistWorkBench"),
          Command( wxT("NyqBench"), XXO("&Nyquist Workbench..."),

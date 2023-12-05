@@ -21,20 +21,11 @@ enum class sampleFormat : unsigned;
 
 class SampleTrack;
 
-using SampleTrackAttachments = ClientData::Site<
-   SampleTrack,
-   ClientData::Cloneable< ClientData::UniquePtr >,
-   ClientData::DeepCopying
->;
-
 class SAMPLE_TRACK_API SampleTrack /* not final */
    : public PlayableTrack
-   , public SampleTrackAttachments
    , public PlayableSequence
 {
 public:
-   using Attachments = SampleTrackAttachments;
-
    SampleTrack();
    SampleTrack(const SampleTrack &other, ProtectedCreationArg&&);
    ~SampleTrack() override;
@@ -74,8 +65,9 @@ public:
       const WritableSampleTrack &other, ProtectedCreationArg&&);
    ~WritableSampleTrack() override;
 
-   // Resolve lookup ambiguity
+   // Resolve ambiguous lookups
    using Track::IsLeader;
+   using ChannelGroup::NChannels;
 
    // Needed to resolve ambiguity with WideSampleSequence::GetRate, when this
    // abstract interface is used directly.

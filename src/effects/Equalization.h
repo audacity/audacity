@@ -17,6 +17,8 @@
 #include "StatefulEffect.h"
 #include "EqualizationUI.h"
 
+class WaveChannel;
+
 class EffectEqualization : public StatefulEffect
 {
 public:
@@ -67,7 +69,7 @@ private:
    // EffectEqualization implementation
 
    struct Task;
-   bool ProcessOne(Task &task, int count, const WaveTrack &t,
+   bool ProcessOne(Task &task, int count, const WaveChannel &t,
       sampleCount start, sampleCount len);
    
    wxWeakRef<wxWindow> mUIParent{};

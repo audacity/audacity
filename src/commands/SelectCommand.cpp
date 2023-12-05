@@ -35,11 +35,11 @@ explicitly code all three.
 #include <float.h>
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "EffectOutputTracks.h"
 #include "LoadCommands.h"
-#include "../ProjectSelectionManager.h"
+#include "ProjectSelectionManager.h"
 #include "../TrackPanel.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
@@ -47,6 +47,7 @@ explicitly code all three.
 #include "Effect.h"
 #include "ViewInfo.h"
 #include "CommandContext.h"
+#include "WaveTrack.h"
 
 
 const ComponentInterfaceSymbol SelectTimeCommand::Symbol
@@ -194,7 +195,8 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
    if( !bHasBottom )
       mBottom = 0.0;
 
-   ProjectSelectionManager::Get( context.project ).SSBL_ModifySpectralSelection(
+   ProjectSelectionManager::Get(context.project).ModifySpectralSelection(
+      WaveTrack::ProjectNyquistFrequency(context.project),
       mBottom, mTop, false);// false for not done.
    return true;
 }
@@ -306,12 +308,11 @@ bool SelectCommand::VisitSettings( ConstSettingsVisitor & S )
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 
 AttachedItem sAttachment1{
-   wxT("Optional/Extra/Part2/Scriptables1"),
    Items( wxT(""),
       // Note that the PLUGIN_SYMBOL must have a space between words,
       // whereas the short-form used here must not.
@@ -323,16 +324,17 @@ AttachedItem sAttachment1{
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SelectTracks"), XXO("Select Tracks..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
-   )
+   ),
+   wxT("Optional/Extra/Part2/Scriptables1")
 };
 
 AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part2/Scriptables2"),
    // Note that the PLUGIN_SYMBOL must have a space between words,
    // whereas the short-form used here must not.
    // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
    // you would have to use "CompareAudio" here.)
    Command( wxT("Select"), XXO("Select..."),
-      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+   wxT("Optional/Extra/Part2/Scriptables2")
 };
 }

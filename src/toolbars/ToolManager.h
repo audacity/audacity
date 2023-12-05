@@ -25,8 +25,7 @@
 #include "Observer.h"
 #include "ToolDock.h"
 
-#include "../commands/CommandFunctors.h"
-#include "../commands/CommandManager.h"
+#include "CommandFunctors.h"
 
 
 class wxCommandEvent;
@@ -241,7 +240,7 @@ public:
    DECLARE_EVENT_TABLE()
 };
 
-
+#include "MenuRegistry.h"
 
 // Construct a static instance of this class to add a menu item that shows and
 // hides a toolbar
@@ -255,7 +254,7 @@ struct AUDACITY_DLL_API AttachedToolBarMenuItem : CommandHandlerObject {
    void OnShowToolBar(const CommandContext &context);
 
    const Identifier mId;
-   const MenuTable::AttachedItem mAttachedItem;
+   const MenuRegistry::AttachedItem mAttachedItem;
    const std::vector< Identifier > mExcludeIds;
 };
 

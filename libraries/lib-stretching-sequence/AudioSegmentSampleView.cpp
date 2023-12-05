@@ -10,36 +10,41 @@
 **********************************************************************/
 #include "AudioSegmentSampleView.h"
 
+#include <cassert>
+#include <numeric>
+
 AudioSegmentSampleView::AudioSegmentSampleView(
-   std::vector<BlockSampleView> blockViews, size_t start, sampleCount length)
+   std::vector<BlockSampleView> blockViews, size_t start, size_t length)
     : mBlockViews { std::move(blockViews) }
     , mStart { start }
     , mLength { length }
     , mIsSilent { false }
 {
+   assert(
+      start + length <=
+      std::accumulate(
+         mBlockViews.begin(), mBlockViews.end(), 0u,
+         [](size_t acc, const auto& block) { return acc + block->size(); }));
 }
 
-AudioSegmentSampleView::AudioSegmentSampleView(sampleCount length)
+AudioSegmentSampleView::AudioSegmentSampleView(size_t length)
     : mLength { length }
     , mIsSilent { true }
 {
 }
 
-size_t AudioSegmentSampleView::Copy(float* buffer, size_t bufferSize) const
+void AudioSegmentSampleView::Copy(float* buffer, size_t bufferSize) const
 {
-   if (!mIsSilent)
-      return DoCopy(buffer, bufferSize);
-   const auto numOutputSamples = limitSampleBufferSize(bufferSize, mLength);
-   std::fill(buffer, buffer + numOutputSamples, 0.f);
-   return numOutputSamples;
+   mIsSilent ? std::fill(buffer, buffer + bufferSize, 0.f) :
+               DoCopy(buffer, bufferSize);
 }
 
-sampleCount AudioSegmentSampleView::GetSampleCount() const
+size_t AudioSegmentSampleView::GetSampleCount() const
 {
    return mLength;
 }
 
-size_t AudioSegmentSampleView::DoCopy(float* buffer, size_t bufferSize) const
+void AudioSegmentSampleView::DoCopy(float* buffer, size_t bufferSize) const
 {
    size_t toWrite { limitSampleBufferSize(bufferSize, mLength) };
    size_t written = 0u;
@@ -54,5 +59,5 @@ size_t AudioSegmentSampleView::DoCopy(float* buffer, size_t bufferSize) const
       written += toWriteFromBlock;
       offset = 0;
    }
-   return written;
+   std::fill(buffer + written, buffer + bufferSize, 0.f);
 }

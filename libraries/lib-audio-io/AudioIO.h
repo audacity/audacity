@@ -309,10 +309,11 @@ public:
    bool                mPauseRec;
    float               mSilenceLevel;
    /*! Read by a worker thread but unchanging during playback */
-   unsigned int        mNumCaptureChannels;
+   size_t              mNumCaptureChannels;
    /*! Read by a worker thread but unchanging during playback */
-   unsigned int        mNumPlaybackChannels;
+   size_t              mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
+   double              mCaptureRate{};
    unsigned long long  mLostSamples{ 0 };
    std::atomic<bool>   mAudioThreadShouldCallSequenceBufferExchangeOnce;
    std::atomic<bool>   mAudioThreadSequenceBufferExchangeLoopRunning;
@@ -432,23 +433,25 @@ public:
 
    //! Forwards to RealtimeEffectManager::AddState with proper init scope
    /*!
+    @pre `!pGroup || pGroup->IsLeader()`
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState>
    AddState(AudacityProject &project,
-      WideSampleSequence *pSequence, const PluginID & id);
+      ChannelGroup *pGroup, const PluginID & id);
 
    //! Forwards to RealtimeEffectManager::ReplaceState with proper init scope
    /*!
+    @pre `!pGroup || pGroup->IsLeader()`
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState>
    ReplaceState(AudacityProject &project,
-      WideSampleSequence *pSequence, size_t index, const PluginID & id);
+      ChannelGroup *pGroup, size_t index, const PluginID & id);
 
    //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
    void RemoveState(AudacityProject &project,
-      WideSampleSequence *pSequence,
+      ChannelGroup *pGroup,
       std::shared_ptr<RealtimeEffectState> pState);
 
    /** \brief Start up Portaudio for capture and recording as needed for
@@ -467,8 +470,11 @@ public:
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive()
     *
+    * @pre `p && p->FindChannelGroup() &&
+    *    p->FindChannelGroup()->IsLeader()` for all pointers `p` in
+    *    `sequences.playbackSequences`
     * @pre `p && p->IsLeader()` for all pointers `p` in
-    * `sequences.playbackSequences`
+    *    `sequences.captureSequences`
     */
 
    int StartStream(const TransportSequences &sequences,
@@ -527,8 +533,8 @@ public:
    wxArrayString GetInputSourceNames();
 
    sampleFormat GetCaptureFormat() { return mCaptureFormat; }
-   unsigned GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
-   unsigned GetNumCaptureChannels() const { return mNumCaptureChannels; }
+   size_t GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
+   size_t GetNumCaptureChannels() const { return mNumCaptureChannels; }
 
    // Meaning really capturing, not just pre-rolling
    bool IsCapturing() const;
@@ -600,9 +606,7 @@ private:
     * being floating point always. Returns true if the stream opened successfully
     * and false if it did not. */
    bool StartPortAudioStream(const AudioIOStartStreamOptions &options,
-                             unsigned int numPlaybackChannels,
-                             unsigned int numCaptureChannels,
-                             sampleFormat captureFormat);
+      unsigned int numPlaybackChannels, unsigned int numCaptureChannels);
 
    void SetOwningProject( const std::shared_ptr<AudacityProject> &pProject );
    void ResetOwningProject();

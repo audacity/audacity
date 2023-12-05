@@ -30,6 +30,7 @@
 #include "AudacityMessageBox.h"
 #include "Prefs.h"
 #include "SyncLock.h"
+#include "TimeWarper.h"
 
 #include "WaveTrack.h"
 
@@ -41,7 +42,7 @@ const EffectParameterMethods& EffectPaulstretch::Parameters() const
    return parameters;
 }
 
-/// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop 
+/// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop
 /// of the effect.
 class PaulStretch
 {
@@ -147,7 +148,7 @@ double EffectPaulstretch::CalcPreviewInputLength(
 bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 {
    // Pass true because sync lock adjustment is needed
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
    auto newT1 = mT1;
    int count = 0;
    // Process selected wave tracks first, to find the new t1 value
@@ -157,21 +158,20 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
       double t0 = mT0 < trackStart ? trackStart : mT0;
       double t1 = mT1 > trackEnd ? trackEnd : mT1;
       if (t1 > t0) {
-         auto tempList = TrackList::Create(nullptr);
-         const auto channels = TrackList::Channels(track);
+         auto tempList = track->WideEmptyCopy();
+         const auto channels = track->Channels();
+         auto iter = (*tempList->Any<WaveTrack>().begin())->Channels().begin();
          for (const auto pChannel : channels) {
-            const auto outputTrack = ProcessOne(*pChannel, t0, t1, count++);
-            if (!outputTrack)
+            if (!ProcessOne(*pChannel, **iter++, t0, t1, count++))
                return false;
-            tempList->Add(outputTrack);
-            // because it was made by EmptyCopy():
-            assert(outputTrack->IsLeader() == pChannel->IsLeader());
          }
          const auto pNewTrack = *tempList->Any<WaveTrack>().begin();
          pNewTrack->Flush();
          newT1 = std::max(newT1, mT0 + pNewTrack->GetEndTime());
-         track->Clear(t0, t1);
-         track->Paste(t0, *tempList);
+         PasteTimeWarper warper { t1, t0 + (*tempList->begin())->GetEndTime() };
+         constexpr auto preserve = false;
+         constexpr auto merge = true;
+         track->ClearAndPaste(t0, t1, *tempList, preserve, merge, &warper);
       }
       else
          count += track->NChannels();
@@ -267,14 +267,13 @@ size_t EffectPaulstretch::GetBufferSize(double rate) const
    return std::max<size_t>(stmp, 128);
 }
 
-std::shared_ptr<WaveTrack>
-EffectPaulstretch::ProcessOne(
-   const WaveTrack &track, double t0, double t1, int count)
+bool EffectPaulstretch::ProcessOne(const WaveChannel &track,
+   WaveChannel &outputTrack, double t0, double t1, int count)
 {
    const auto badAllocMessage =
       XO("Requested value exceeds memory capacity.");
 
-   const auto rate = track.GetRate();
+   const auto rate = track.GetTrack().GetRate();
    const auto stretch_buf_size = GetBufferSize(rate);
    if (stretch_buf_size == 0) {
       EffectUIServices::DoMessageBox(*this, badAllocMessage);
@@ -340,13 +339,10 @@ EffectPaulstretch::ProcessOne(
       return {};
    }
 
-
    auto dlen = len.as_double();
    double adjust_amount = dlen /
       (dlen - ((double)stretch_buf_size * 2.0));
    amount = 1.0 + (amount - 1.0) * adjust_amount;
-
-   auto outputTrack = track.EmptyCopy();
 
    try {
       // This encloses all the allocations of buffers, including those in
@@ -398,7 +394,7 @@ EffectPaulstretch::ProcessOne(
                }
             }
 
-            outputTrack->Append((samplePtr)stretch.out_buf.get(), floatSample, stretch.out_bufsize);
+            outputTrack.Append((samplePtr)stretch.out_buf.get(), floatSample, stretch.out_bufsize);
 
             nget = stretch.get_nsamples();
             if (TrackProgress(count,
@@ -411,12 +407,12 @@ EffectPaulstretch::ProcessOne(
       }
 
       if (!cancelled)
-         return outputTrack;
+         return true;
    }
    catch ( const std::bad_alloc& ) {
       EffectUIServices::DoMessageBox(*this, badAllocMessage);
    }
-   return {};
+   return false;
 };
 
 /*************************************************************/

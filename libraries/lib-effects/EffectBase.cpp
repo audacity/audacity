@@ -133,12 +133,13 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    }
 
    // This is happening inside EffectSettingsAccess::ModifySettings
-   auto newFormat = isSelection
-      ? NumericConverterFormats::TimeAndSampleFormat()
-      : NumericConverterFormats::DefaultSelectionFormat();
+   auto newFormat = (isSelection
+         ? NumericConverterFormats::TimeAndSampleFormat()
+         : NumericConverterFormats::DefaultSelectionFormat()
+      ).Internal();
    auto updater = [&](EffectSettings &settings) {
       settings.extra.SetDuration(duration);
-      settings.extra.SetDurationFormat( newFormat );
+      settings.extra.SetDurationFormat(newFormat);
       return nullptr;
    };
    // Update our copy of settings; update the EffectSettingsAccess too,

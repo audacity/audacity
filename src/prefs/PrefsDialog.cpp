@@ -13,8 +13,6 @@
 \brief Dialog that shows the current PrefsPanel in a tabbed divider.
 
 *//*******************************************************************/
-
-
 #include "PrefsDialog.h"
 
 #include <thread>
@@ -35,7 +33,7 @@
 #include "Prefs.h"
 #include "ProjectWindows.h"
 #include "ShuttleGui.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 
 #include "PrefsPanel.h"
 
@@ -856,7 +854,7 @@ void PrefsDialog::RecordExpansionState()
 }
 
 #include <wx/frame.h>
-#include "../Menus.h"
+#include "../MenuCreator.h"
 #include "Project.h"
 
 void DoReloadPreferences( AudacityProject &project )
@@ -875,7 +873,7 @@ void DoReloadPreferences( AudacityProject &project )
    //      rebuilding the menus while the PrefsDialog is still in the modal
    //      state.
    for (auto p : AllProjects{}) {
-      MenuManager::Get(*p).RebuildMenuBar(*p);
+      MenuCreator::Get(*p).RebuildMenuBar();
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:

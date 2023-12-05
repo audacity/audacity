@@ -220,7 +220,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                8);
 
             // i18n-hint Scheme refers to a color scheme for spectrogram colors
-            S.Id(ID_COLOR_SCHEME).TieChoice(XC("Sche&me", "spectrum prefs"),
+            S.Id(ID_COLOR_SCHEME).TieChoice(XC("Sche&me:", "spectrum prefs"),
                (int&)mTempSettings.colorScheme,
                Msgids( SpectrogramSettings::GetColorSchemeNames() ) );
          }
@@ -249,7 +249,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                XO("128"),
                XO("256"),
                XO("512"),
-               XO("1024 - default"),
+               XO("1024"),
                XO("2048"),
                XO("4096"),
                XO("8192"),

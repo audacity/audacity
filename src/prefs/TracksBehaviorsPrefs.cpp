@@ -101,9 +101,11 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Enable &dragging selection edges"),
                     {wxT("/GUI/AdjustSelectionEdges"),
                      true});
-      S
-         .TieCheckBox(XXO("Editing a clip can &move other clips"),
+      S.TieCheckBox(XXO("Editing a clip can &move other clips"),
             EditClipsCanMove);
+      S.TieCheckBox(
+         XXO("&Always paste audio as new clips"),
+         { wxT("/GUI/PasteAsNewClips"), false });
       S.TieCheckBox(XXO("\"Move track focus\" c&ycles repeatedly through tracks"),
                     {wxT("/GUI/CircularTrackNavigation"),
                      false});
@@ -117,9 +119,6 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Enable scrolling left of &zero"),
                     ScrollingPreference);
 #endif
-      S.TieCheckBox(XXO("Advanced &vertical zooming"),
-                    {wxT("/GUI/VerticalZooming"),
-                     false});
 
       S.AddSpace(10);
 
@@ -172,7 +171,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndRadioButtonGroup();
    }
    S.EndStatic();
-   
+
    S.EndScroller();
 }
 

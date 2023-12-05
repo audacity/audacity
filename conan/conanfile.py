@@ -125,6 +125,7 @@ class AudacityDependency:
     channel: str = None
     package_options: dict = None
     default_enabled: bool = False
+    override: bool = False
 
     def apply_options(self, conanfile, package):
         if self.package_options is not None:
@@ -149,6 +150,7 @@ class AudacityDependency:
 class wxWidgetsAudacityDependency(AudacityDependency):
     def __init__(self, package_options: dict = None):
         super().__init__("wxwidgets", "3.1.3.4-audacity", package_options=package_options)
+    override: bool = False
 
     def reference(self, conanfile):
         return f"{self.name}/3.1.3.4-audacity@audacity/stable"
@@ -344,7 +346,8 @@ class AudacityConan(ConanFile):
         AudacityDependency("wavpack", "5.6.0"),
         AudacityDependency("ogg", "1.3.5"),
         AudacityDependency("flac", "1.4.2"),
-        AudacityDependency("opus", "1.3.1"),
+        AudacityDependency("opus", "1.4.0", override=True),
+        AudacityDependency("opusfile", "0.12", package_options={ "shared": False, "http": False }),
         AudacityDependency("vorbis", "1.3.7"),
         AudacityDependency("libsndfile", "1.0.31", package_options={ "programs": False }),
 
@@ -386,7 +389,10 @@ class AudacityConan(ConanFile):
     def requirements(self):
         for dependency in self._dependencies:
             if getattr(self.options, f"use_{dependency.name}"):
-                dependency.requires(self)
+                if dependency.override:
+                    self.requires(dependency.reference(self), override=True)
+                else:
+                    self.requires(dependency.reference(self))
 
     def build_requirements(self):
         if self.settings.os not in ["Windows", "Macos"]:

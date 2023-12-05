@@ -1,5 +1,6 @@
 #include "../AdornedRulerPanel.h"
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "../CommonCommandFlags.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -8,17 +9,16 @@
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
-#include "../ProjectSelectionManager.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "SyncLock.h"
 #include "../TrackPanel.h"
+#include "Viewport.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../LabelTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
@@ -27,13 +27,18 @@
 // private helper classes and functions
 namespace {
 
+constexpr auto GetWindowSize(double projectRate)
+{
+   return size_t(std::max(1.0, projectRate / 100));
+}
+
 double NearestZeroCrossing(AudacityProject &project, double t0)
 {
    auto rate = ProjectRate::Get(project).GetRate();
    auto &tracks = TrackList::Get( project );
 
    // Window is 1/100th of a second.
-   auto windowSize = size_t(std::max(1.0, rate / 100));
+   auto windowSize = GetWindowSize(rate);
    Floats dist{ windowSize, true };
 
    int nTracks = 0;
@@ -172,7 +177,7 @@ double GridMove
 {
    auto& projectSnap = ProjectSnap::Get(project);
    auto &viewInfo = ViewInfo::Get( project );
-   
+
    auto result = projectSnap.SingleStep(t, minPix >= 0).time;
 
    if (
@@ -209,13 +214,11 @@ void MoveWhenAudioInactive
    auto &tracks = TrackList::Get(project);
    auto &ruler = AdornedRulerPanel::Get(project);
    const auto &settings = ProjectSnap::Get(project);
-   auto &window = ProjectWindow::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
    auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
-   const double end = std::max(
-      tracks.GetEndTime(), viewInfo.GetScreenEndTime());
 
    // Move the cursor
    // Already in cursor mode?
@@ -225,7 +228,6 @@ void MoveWhenAudioInactive
          t0, seekStep, timeUnit, snapMode);
       // constrain.
       newT = std::max(0.0, newT);
-      newT = std::min(newT, end);
       // Move
       viewInfo.selectedRegion.setT0(
          newT,
@@ -247,7 +249,7 @@ void MoveWhenAudioInactive
    }
 
    // Make sure NEW position is in view
-   window.ScrollIntoView(viewInfo.selectedRegion.t1());
+   viewport.ScrollIntoView(viewInfo.selectedRegion.t1());
    return;
 }
 
@@ -258,7 +260,7 @@ SelectionOperation operation)
    auto &viewInfo = ViewInfo::Get(project);
    auto &tracks = TrackList::Get(project);
    const auto &settings = ProjectSnap::Get(project);
-   auto &window = ProjectWindow::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    if (operation == CURSOR_MOVE)
    {
@@ -292,7 +294,7 @@ SelectionOperation operation)
       viewInfo.selectedRegion.setT1( newT );
 
    // Ensure it is visible
-   window.ScrollIntoView(newT);
+   viewport.ScrollIntoView(newT);
 }
 
 // Handle small cursor and play head movements
@@ -354,7 +356,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 {
    auto &viewInfo = ViewInfo::Get(project);
    auto &tracks = TrackList::Get(project);
-   auto &window = ProjectWindow::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    // step is negative, then is moving left.  step positive, moving right.
    // Move the left/right selection boundary, to expand the selection
@@ -403,7 +405,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
       viewInfo.selectedRegion.setT1( newT );
 
    // Ensure it is visible
-   window.ScrollIntoView(newT);
+   viewport.ScrollIntoView(newT);
 
    ProjectHistory::Get( project ).ModifyState(false);
 }
@@ -567,14 +569,14 @@ void OnSelectionRestore(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    if ((mRegionSave.t0() == 0.0) &&
        (mRegionSave.t1() == 0.0))
       return;
 
    selectedRegion = mRegionSave;
-   window.ScrollIntoView(selectedRegion.t0());
+   viewport.ScrollIntoView(selectedRegion.t0());
 
    ProjectHistory::Get( project ).ModifyState(false);
 }
@@ -618,6 +620,38 @@ void OnZeroCrossing(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   const auto& tracks = TrackList::Get(project);
+
+   // Selecting precise sample indices across tracks that may have clips with
+   // various stretch ratios in itself is not possible. Even in single-track
+   // mode, we cannot know what the final waveform will look like until
+   // stretching is applied, making this operation futile. Hence we disallow
+   // it if any stretched clip is involved.
+   const auto projectRate = ProjectRate(project).GetRate();
+   const auto searchWindowDuration = GetWindowSize(projectRate) / projectRate;
+   const auto wouldSearchStretchedClip =
+      [searchWindowDuration](const WaveTrack& track, double t) {
+         const auto clips = track.GetClipsIntersecting(
+            t - searchWindowDuration / 2, t + searchWindowDuration / 2);
+         return std::any_of(
+            clips.begin(), clips.end(),
+            [](const std::shared_ptr<const WaveClip>& clip) {
+               return !clip->StretchRatioEquals(1);
+            });
+      };
+   const auto selected = tracks.Selected<const WaveTrack>();
+   if (std::any_of(
+          selected.begin(), selected.end(), [&](const WaveTrack* track) {
+             return wouldSearchStretchedClip(*track, selectedRegion.t0()) ||
+                    wouldSearchStretchedClip(*track, selectedRegion.t1());
+          }))
+   {
+      using namespace BasicUI;
+      ShowMessageBox(
+         XO("Zero-crossing search regions intersect stretched clip(s)."),
+         MessageBoxOptions {}.Caption(XO("Error")).IconStyle(Icon::Error));
+      return;
+   }
 
    const double t0 = NearestZeroCrossing(project, selectedRegion.t0());
    if (selectedRegion.isPoint())
@@ -653,16 +687,16 @@ void OnSnapToPrior(const CommandContext &context)
 void OnSelToStart(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   window.Rewind(true);
+   auto &viewport = Viewport::Get(project);
+   viewport.ScrollToStart(true);
    ProjectHistory::Get( project ).ModifyState(false);
 }
 
 void OnSelToEnd(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   window.SkipEnd(true);
+   auto &viewport = Viewport::Get(project);
+   viewport.ScrollToEnd(true);
    ProjectHistory::Get( project ).ModifyState(false);
 }
 
@@ -711,22 +745,22 @@ void OnCursorSelStart(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    selectedRegion.collapseToT0();
    ProjectHistory::Get( project ).ModifyState(false);
-   window.ScrollIntoView(selectedRegion.t0());
+   viewport.ScrollIntoView(selectedRegion.t0());
 }
 
 void OnCursorSelEnd(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    selectedRegion.collapseToT1();
    ProjectHistory::Get( project ).ModifyState(false);
-   window.ScrollIntoView(selectedRegion.t1());
+   viewport.ScrollIntoView(selectedRegion.t1());
 }
 
 void OnCursorTrackStart(const CommandContext &context)
@@ -734,7 +768,7 @@ void OnCursorTrackStart(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
@@ -752,7 +786,7 @@ void OnCursorTrackStart(const CommandContext &context)
 
    selectedRegion.setTimes(minOffset, minOffset);
    ProjectHistory::Get(project).ModifyState(false);
-   window.ScrollIntoView(selectedRegion.t0());
+   viewport.ScrollIntoView(selectedRegion.t0());
 }
 
 void OnCursorTrackEnd(const CommandContext &context)
@@ -760,7 +794,7 @@ void OnCursorTrackEnd(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
-   auto &window = ProjectWindow::Get(project);
+   auto &viewport = Viewport::Get(project);
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
@@ -778,7 +812,7 @@ void OnCursorTrackEnd(const CommandContext &context)
 
    selectedRegion.setTimes(maxEndOffset, maxEndOffset);
    ProjectHistory::Get(project).ModifyState(false);
-   window.ScrollIntoView(selectedRegion.t1());
+   viewport.ScrollIntoView(selectedRegion.t1());
 }
 
 void OnSkipStart(const CommandContext &context)
@@ -903,11 +937,10 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 #define FN(X) (& SelectActions::Handler :: X)
 
 namespace {
-using namespace MenuTable;
-BaseItemSharedPtr SelectMenu()
+using namespace MenuRegistry;
+auto SelectMenu()
 {
-   using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: (verb) It's an item on a menu. */
    Menu( wxT("Select"), XXO("&Select"),
@@ -993,15 +1026,11 @@ BaseItemSharedPtr SelectMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(SelectMenu())
-};
+AttachedItem sAttachment1{ Indirect(SelectMenu()) };
 
-BaseItemSharedPtr ExtraSelectionMenu()
+auto ExtraSelectionMenu()
 {
-   using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Select"), XXO("&Selection"),
       Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
@@ -1040,16 +1069,14 @@ BaseItemSharedPtr ExtraSelectionMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraSelectionMenu())
+AttachedItem sAttachment2{ Indirect(ExtraSelectionMenu()),
+   wxT("Optional/Extra/Part1")
 };
 }
 
 namespace {
-BaseItemSharedPtr CursorMenu()
+auto CursorMenu()
 {
-   using Options = CommandManager::Options;
    static const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
    // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it
@@ -1057,7 +1084,7 @@ BaseItemSharedPtr CursorMenu()
    // GA: 'Skip to' moves the viewpoint to center of the track and preserves the
    // selection. 'Cursor to' does neither. 'Center at' might describe it better
    // than 'Skip'.
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XXO("&Cursor to"),
       Command( wxT("CursSelStart"), XXO("Selection Star&t"),
@@ -1089,15 +1116,13 @@ BaseItemSharedPtr CursorMenu()
    return menu;
 }
 
-AttachedItem sAttachment0{
-   wxT("Transport/Basic"),
-   Indirect(CursorMenu())
+AttachedItem sAttachment0{ Indirect(CursorMenu()),
+   wxT("Transport/Basic")
 };
 
-BaseItemSharedPtr ExtraCursorMenu()
+auto ExtraCursorMenu()
 {
-   using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Cursor"), XXO("&Cursor"),
       Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
@@ -1122,15 +1147,13 @@ BaseItemSharedPtr ExtraCursorMenu()
    return menu;
 }
 
-AttachedItem sAttachment4{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraCursorMenu())
+AttachedItem sAttachment4{ Indirect(ExtraCursorMenu()),
+   wxT("Optional/Extra/Part2")
 };
 
-BaseItemSharedPtr ExtraSeekMenu()
+auto ExtraSeekMenu()
 {
-   using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Seek"), XXO("See&k"),
       Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
@@ -1150,9 +1173,8 @@ BaseItemSharedPtr ExtraSeekMenu()
    return menu;
 }
 
-AttachedItem sAttachment5{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraSeekMenu())
+AttachedItem sAttachment5{ Indirect(ExtraSeekMenu()),
+   wxT("Optional/Extra/Part1")
 };
 
 }

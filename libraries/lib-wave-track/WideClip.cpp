@@ -16,10 +16,10 @@ WideClip::WideClip(
 {
 }
 
-AudioSegmentSampleView
-WideClip::GetSampleView(size_t ii, sampleCount start, size_t len) const
+AudioSegmentSampleView WideClip::GetSampleView(
+   size_t ii, sampleCount start, size_t len, bool mayThrow) const
 {
-   return mChannels[ii]->GetSampleView(0u, start, len);
+   return mChannels[ii]->GetSampleView(0u, start, len, mayThrow);
 }
 
 sampleCount WideClip::GetVisibleSampleCount() const
@@ -45,6 +45,11 @@ double WideClip::GetPlayStartTime() const
 double WideClip::GetPlayEndTime() const
 {
    return mChannels[0u]->GetPlayEndTime();
+}
+
+sampleCount WideClip::TimeToSamples(double time) const
+{
+   return mChannels[0u]->TimeToSamples(time);
 }
 
 double WideClip::GetStretchRatio() const

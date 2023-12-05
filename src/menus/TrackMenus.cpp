@@ -1,6 +1,5 @@
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
-#include "../Menus.h"
 #include "MixAndRender.h"
 
 #include "Prefs.h"
@@ -11,19 +10,19 @@
 #include "../ProjectSettings.h"
 #include "PluginManager.h"
 #include "ProjectStatus.h"
-#include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "ShuttleGui.h"
 #include "SyncLock.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "../TrackUtilities.h"
 #include "UndoManager.h"
 #include "WaveClip.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "QualitySettings.h"
@@ -52,7 +51,6 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
    auto rate = ProjectRate::Get(project).GetRate();
    auto defaultFormat = QualitySettings::SampleFormatChoice();
    auto &trackPanel = TrackPanel::Get(project);
-   auto &window = ProjectWindow::Get(project);
 
    auto trackRange = tracks.Selected<WaveTrack>();
    auto newTracks = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
@@ -133,14 +131,13 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
 
       trackPanel.SetFocus();
       TrackFocus::Get(project).Set(pNewTrack);
-      pNewTrack->EnsureVisible();
+      Viewport::Get(project).ShowTrack(*pNewTrack);
    }
 }
 
 void DoPanTracks(AudacityProject &project, float PanValue)
 {
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    // count selected wave tracks
    const auto range = tracks.Any< WaveTrack >();
@@ -184,7 +181,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
 
    TranslatableString action, shortAction;
    double delta = 0.0;
@@ -292,7 +289,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
             newPos += (t->GetEndTime() - t->GetStartTime());
       }
       if (index == kAlignEndToEnd)
-         window.DoZoomFit();
+         viewport.ZoomFitHorizontally();
    }
 
    if (delta != 0.0) {
@@ -589,7 +586,8 @@ void OnResample(const CommandContext &context)
    auto projectRate = ProjectRate::Get(project).GetRate();
    auto &tracks = TrackList::Get(project);
    auto &undoManager = UndoManager::Get(project);
-   auto &window = ProjectWindow::Get(project);
+   auto &viewport = Viewport::Get(project);
+   auto &window = GetProjectFrame(project);
 
    int newRate;
 
@@ -682,7 +680,7 @@ void OnResample(const CommandContext &context)
    undoManager.StopConsolidating();
 
    // Need to reset
-   window.FinishAutoScroll();
+   viewport.DoScroll();
 }
 
 void OnRemoveTracks(const CommandContext &context)
@@ -695,7 +693,6 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
    const auto solo = TracksBehaviorsSolo.ReadEnum();
    const auto soloSimple = (solo == SoloBehaviorSimple);
@@ -1134,13 +1131,11 @@ void OnTrackMoveBottom(const CommandContext &context)
 // Menu definitions
 
 // Under /MenuBar
-using namespace MenuTable;
-BaseItemSharedPtr TracksMenu()
+using namespace MenuRegistry;
+auto TracksMenu()
 {
    // Tracks Menu (formerly Project Menu)
-   using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Tracks"), XXO("&Tracks"),
       Section( "Add",
          Menu( wxT("Add"), XXO("Add &New") )
@@ -1154,7 +1149,7 @@ BaseItemSharedPtr TracksMenu()
             // Stereo to Mono is an oddball command that is also subject to control
             // by the plug-in manager, as if an effect.  Decide whether to show or
             // hide it.
-            [](AudacityProject&) -> BaseItemPtr {
+            [](AudacityProject&) -> std::unique_ptr<CommandItem> {
                const PluginID ID =
                   EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
                const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
@@ -1234,7 +1229,7 @@ BaseItemSharedPtr TracksMenu()
 
             Section( "",
                Command( wxT("MoveSelectionWithTracks"),
-                  XXO("&Move Selection with Tracks (on/off)"),
+                  XXO("&Move Selection with Tracks"),
                   OnMoveSelectionWithTracks,
                   AlwaysEnabledFlag,
                   Options{}.CheckTest( wxT("/GUI/MoveSelectionWithTracks"), false ) )
@@ -1273,7 +1268,7 @@ BaseItemSharedPtr TracksMenu()
       ),
 
       Section( "",
-         Command( wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"),
+         Command( wxT("SyncLock"), XXO("Keep tracks synchronized (Sync-&Lock)"),
             OnSyncLock, AlwaysEnabledFlag,
             Options{}.CheckTest(SyncLockTracks) )
       )
@@ -1282,15 +1277,11 @@ BaseItemSharedPtr TracksMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(TracksMenu())
-};
+AttachedItem sAttachment1{ Indirect(TracksMenu()) };
 
-BaseItemSharedPtr ExtraTrackMenu()
+auto ExtraTrackMenu()
 {
-   using Options = CommandManager::Options;
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Track"), XXO("&Track"),
       Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),
          OnTrackPan,
@@ -1340,9 +1331,8 @@ BaseItemSharedPtr ExtraTrackMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part2"),
-   Indirect(ExtraTrackMenu())
+AttachedItem sAttachment2{ Indirect(ExtraTrackMenu()),
+   wxT("Optional/Extra/Part2")
 };
 
 }

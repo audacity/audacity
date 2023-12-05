@@ -55,13 +55,13 @@ TEST_CASE("StretchingSequence integration tests")
       const auto track = trackMaker.Track({ minusClip, plusClip });
       constexpr auto backwards = false;
       AudioContainer sutOutput(totalLength, numChannels);
-      REQUIRE(sut->Get(
+      REQUIRE(sut->DoGet(
          iChannel, numChannels,
          AudioContainerHelper::GetData<char>(sutOutput).data(), floatSample, 0u,
          totalLength, backwards));
 
       AudioContainer waveTrackOutput(totalLength, numChannels);
-      REQUIRE(track->Get(
+      REQUIRE(track->DoGet(
          iChannel, numChannels,
          AudioContainerHelper::GetData<char>(waveTrackOutput).data(),
          floatSample, 0u, totalLength, backwards));

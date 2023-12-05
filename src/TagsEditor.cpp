@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  TagsEditor.cpp
- 
+
  Paul Licameli split from Tags.cpp
- 
+
  **********************************************************************/
 
 #include "TagsEditor.h"
@@ -42,7 +42,7 @@ class ComboEditor final : public wxGridCellChoiceEditor
 public:
    ComboEditor(const wxArrayString& choices, bool allowOthers = false)
    :  wxGridCellChoiceEditor(choices, allowOthers)
-   ,  m_choices{ choices }
+   ,  m_choices( choices )
    ,  m_allowOthers{ allowOthers }
    {
    }
@@ -1024,8 +1024,8 @@ bool TagsEditorDialog::EditProjectMetadata(AudacityProject &project,
 }
 
 // Attach menu item
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 
 namespace {
@@ -1036,11 +1036,11 @@ void OnEditMetadata(const CommandContext &context)
       XO("Edit Metadata Tags"), XO("Metadata Tags"));
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 AttachedItem sAttachment{
-   wxT("Edit/Other"),
-   Command( wxT("EditMetaData"), XXO("&Metadata"), OnEditMetadata,
-      AudioIONotBusyFlag() )
+   Command( wxT("EditMetaData"), XXO("&Metadata Editor"), OnEditMetadata,
+      AudioIONotBusyFlag() ),
+   wxT("Edit/Other")
 };
 }

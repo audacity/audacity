@@ -19,6 +19,7 @@ class WaveClip;
 
 namespace WaveTrackUtils
 {
+   //! Decide whether a clip is selected from its start and end times (only)
    bool IsClipSelected(const ViewInfo& viewInfo, const WaveClip& waveClip);
 
    template<typename Iter>

@@ -32,7 +32,7 @@
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "AColor.h"
 #include "WaveTrack.h"
 #include "effects/EffectUI.h"
@@ -47,7 +47,6 @@
 #include "ListNavigationPanel.h"
 #include "MovableControl.h"
 #include "menus/MenuHelper.h"
-#include "Menus.h"
 #include "prefs/EffectsPrefs.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -56,68 +55,52 @@
 
 namespace
 {
-   
-   class RealtimeEffectsMenuVisitor final : public MenuVisitor
-   {
+   using namespace MenuRegistry;
+   class RealtimeEffectsMenuVisitor final : public Visitor<Traits> {
       wxMenu& mMenu;
       wxMenu* mMenuPtr { nullptr };
       int mMenuItemIdCounter { wxID_HIGHEST };
       std::vector<Identifier> mIndexedPluginList;
       int mMenuLevelCounter { 0 };
    public:
-      
-      RealtimeEffectsMenuVisitor(wxMenu& menu)
-         : mMenu(menu), mMenuPtr(&mMenu) { }
-      
-      void DoBeginGroup( MenuTable::GroupItemBase &item, const Path& ) override
-      {
-         if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
+      RealtimeEffectsMenuVisitor(wxMenu& menu) : Visitor<Traits>{ std::tuple{
+      [this](const MenuRegistry::MenuItem &menuItem, const auto&) {
+         //Don't create a group item for root
+         if (mMenuLevelCounter != 0)
          {
-            //Don't create a group item for root
-            if (mMenuLevelCounter != 0)
-            {
-               auto submenu = std::make_unique<wxMenu>();
-               mMenuPtr->AppendSubMenu(submenu.get(), menuItem->GetTitle().Translation());
-               mMenuPtr = submenu.release();
-            }
-            ++mMenuLevelCounter;
+            auto submenu = std::make_unique<wxMenu>();
+            mMenuPtr->AppendSubMenu(submenu.get(), menuItem.GetTitle().Translation());
+            mMenuPtr = submenu.release();
          }
-      }
+         ++mMenuLevelCounter;
+      },
 
-      void DoEndGroup( MenuTable::GroupItemBase &item, const Path& ) override
-      {
-         if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
+      [this](const MenuRegistry::CommandItem &commandItem, const auto&) {
+         mMenuPtr->Append(mMenuItemIdCounter, commandItem.label_in.Translation());
+         mIndexedPluginList.push_back(commandItem.name);
+         ++mMenuItemIdCounter;
+      },
+
+      [this](const MenuRegistry::MenuItem &, const auto&) {
+         --mMenuLevelCounter;
+         if (mMenuLevelCounter != 0)
          {
-            --mMenuLevelCounter;
-            if (mMenuLevelCounter != 0)
-            {
-               assert(mMenuPtr->GetParent() != nullptr);
-               mMenuPtr = mMenuPtr->GetParent();
-            }
+            assert(mMenuPtr->GetParent() != nullptr);
+            mMenuPtr = mMenuPtr->GetParent();
          }
-      }
+      }},
 
-      void DoVisit( MenuTable::SingleItem &item, const Path& ) override
-      {
-         if(auto commandItem = dynamic_cast<MenuTable::CommandItem*>(&item))
-         {
-            mMenuPtr->Append(mMenuItemIdCounter, commandItem->label_in.Translation());
-            mIndexedPluginList.push_back(commandItem->name);
-            ++mMenuItemIdCounter;
-         }
-      }
-
-      void DoSeparator() override
-      {
+      [this]() {
          mMenuPtr->AppendSeparator();
-      }
-      
+      }}
+      , mMenu(menu), mMenuPtr(&mMenu)
+      {}
+
       Identifier GetPluginID(int menuIndex) const
       {
          assert(menuIndex >= wxID_HIGHEST && menuIndex < (wxID_HIGHEST + mIndexedPluginList.size()));
          return mIndexedPluginList[menuIndex - wxID_HIGHEST];
       }
-      
    };
 
    template <typename Visitor>
@@ -358,6 +341,8 @@ namespace
          enableButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
 
             mEffectState->SetActive(mEnableButton->IsDown());
+            if (mProject)
+               UndoManager::Get(*mProject).MarkUnsaved();
          });
 
          //Central button with effect name, show settings
@@ -586,7 +571,7 @@ class RealtimeEffectListWindow
    wxWindow* mAddEffectTutorialLink{nullptr};
    wxWindow* mEffectListContainer{nullptr};
 
-   std::unique_ptr<MenuTable::MenuItem> mEffectMenuRoot;
+   std::unique_ptr<MenuRegistry::MenuItem> mEffectMenuRoot;
    
    Observer::Subscription mEffectListItemMovedSubscription;
    Observer::Subscription mPluginsChangedSubscription;
@@ -752,6 +737,9 @@ public:
    
    std::optional<wxString> PickEffect(wxWindow* parent, const wxString& selectedEffectID) override
    {
+      if (mProject == nullptr)
+         return {};
+   
       wxMenu menu;
       if(!selectedEffectID.empty())
       {
@@ -762,7 +750,7 @@ public:
       
       RealtimeEffectsMenuVisitor visitor { menu };
       
-      Registry::Visit(visitor, mEffectMenuRoot.get());
+      Registry::VisitWithFunctions(visitor, mEffectMenuRoot.get(), {}, *mProject);
       
       int commandId = wxID_NONE;
       
@@ -786,7 +774,7 @@ public:
    
    void UpdateEffectMenuItems()
    {
-      using namespace MenuTable;
+      using namespace MenuRegistry;
       auto root = Menu("", TranslatableString{});
 
       static auto realtimeEffectPredicate = [](const PluginDescriptor& desc)
@@ -1107,6 +1095,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
             mEffectList->EnableEffects(mToggleEffects->IsDown());
          
             ProjectHistory::Get(mProject).ModifyState(false);
+            UndoManager::Get(mProject).MarkUnsaved();
          }
       });
 

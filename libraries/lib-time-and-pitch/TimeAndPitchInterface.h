@@ -18,13 +18,15 @@
 class TIME_AND_PITCH_API TimeAndPitchSource
 {
 public:
-   virtual ~TimeAndPitchSource() = default;
+   virtual ~TimeAndPitchSource();
    virtual void Pull(float* const*, size_t samplesPerChannel) = 0;
 };
 
 class TIME_AND_PITCH_API TimeAndPitchInterface
 {
 public:
+   static bool IsPassThroughMode(double stretchRatio);
+
    struct Parameters
    {
       std::optional<double> timeRatio;
@@ -33,5 +35,5 @@ public:
 
    virtual void GetSamples(float* const*, size_t) = 0;
 
-   virtual ~TimeAndPitchInterface() = default;
+   virtual ~TimeAndPitchInterface();
 };

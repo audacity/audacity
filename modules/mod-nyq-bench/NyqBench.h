@@ -17,7 +17,7 @@
 #include <ostream>
 #include <sstream>
 
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 #include "effects/nyquist/Nyquist.h"
 
 class wxFileName;

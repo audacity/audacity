@@ -35,7 +35,7 @@ void TimerRecordExportDialog::Bind(wxFileName& filename,
    mSampleRate = &sampleRate;
    mChannels = &channels;
    mParameters = &parameters;
-   mExportFilePanel->Init(filename, format, sampleRate, channels, parameters);
+   mExportFilePanel->Init(filename, sampleRate, format, channels, parameters);
 }
 
 void TimerRecordExportDialog::PopulateOrExchange(ShuttleGui& S)

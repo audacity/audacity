@@ -43,15 +43,23 @@ template< typename Object > using BarePtr = Object*;
  @sa ClientData::DeepCopying
  */
 template<
+   typename Covariant = void, // CRTP derived class when not void
    template<typename> class Owner = UniquePtr
 > struct REGISTRIES_API Cloneable
 {
-   using Base = Cloneable;
+   using Base = std::conditional_t<
+      std::is_void_v<Covariant>, Cloneable, Covariant
+   >;
    using PointerType = Owner< Base >;
 
-   virtual ~Cloneable();
+   Cloneable() = default;
+   Cloneable(const Cloneable&) = default;
+   Cloneable &operator=(const Cloneable &) = default;
+   virtual ~Cloneable() = default;
    virtual PointerType Clone() const = 0;
 };
+
+extern template struct REGISTRIES_API Cloneable<>;
 
 //! Utility to register hooks into a host class that attach client data
 /*!

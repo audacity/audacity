@@ -118,6 +118,8 @@ class TAGS_API Tags final
    bool IsEmpty();
    void Clear();
 
+   size_t Count() const;
+
    // UndoStateExtension implementation
    void RestoreUndoRedoState(AudacityProject &) override;
 

@@ -119,7 +119,7 @@ public:
    
    void Cancel()
    {
-      mCancelled.store(std::memory_order_release);
+      mCancelled.store(true, std::memory_order_release);
    }
    
    ExportResult GetResult() const
@@ -148,7 +148,7 @@ public:
    
    void OnProgress(double value) override
    {
-      mProgress.store(std::memory_order_release);
+      mProgress.store(value, std::memory_order_release);
    }
 
    void UpdateUI()
@@ -652,7 +652,8 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
             anonInfoPanel = s.StartInvisiblePanel();
             {
                AccessibleLinksFormatter privacyPolicy(XO(
-                  "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."));
+                  /*i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context. */
+                  "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."));
 
                privacyPolicy.FormatLink(
                   L"%s", XO("audio.com"), "https://audio.com");

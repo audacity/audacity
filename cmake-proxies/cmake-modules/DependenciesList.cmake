@@ -1,9 +1,24 @@
 # conan_package_options variable can be used to pass additional options to the conan install command.
+if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
+   if( NOT libjpeg_turbo_probed )
+      message(STATUS "Probing for libjpeg-turbo 3")
+      find_package(libjpeg-turbo 3 QUIET)
+      set(libjpeg_turbo_probed True CACHE INTERNAL "")
+      mark_as_advanced(libjpeg_turbo_probed)
+
+      if(TARGET libjpeg-turbo::jpeg AND NOT ${_OPT}force_local_jpeg)
+         message(STATUS "Found libjpeg-turbo 3")
+         message(STATUS "Forcing system version of libjpeg-turbo 3")
+         set( ${_OPT}use_jpeg "system" CACHE STRING "Use system libjpeg-turbo" FORCE )
+      endif()
+   endif()
+endif()
 
 audacity_find_package(ZLIB REQUIRED)
-audacity_find_package(EXPAT REQUIRED)
 audacity_find_package(PNG QUIET CONAN_PACKAGE_NAME libpng)
 audacity_find_package(JPEG QUIET CONAN_PACKAGE_NAME libjpeg-turbo)
+
+audacity_find_package(EXPAT REQUIRED)
 
 audacity_find_package(wxWidgets REQUIRED FIND_PACKAGE_OPTIONS COMPONENTS adv base core html qa xml net)
 
@@ -17,6 +32,7 @@ audacity_find_package(WavPack)
 audacity_find_package(Ogg OPTION_NAME libogg)
 audacity_find_package(FLAC OPTION_NAME libflac)
 audacity_find_package(Opus OPTION_NAME libopus)
+audacity_find_package(opusfile OPTION_NAME opusfile)
 audacity_find_package(Vorbis OPTION_NAME libvorbis)
 audacity_find_package(SndFile CONAN_PACKAGE_NAME libsndfile OPTION_NAME libsndfile)
 

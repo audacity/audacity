@@ -60,7 +60,9 @@ public:
    
    virtual ~BrushHandle();
 
-   bool IsClicked() const;
+   std::shared_ptr<const Channel> FindChannel() const override;
+
+   bool IsDragging() const override;
 
    void Enter(bool forward, AudacityProject *pProject) override;
 
@@ -89,6 +91,7 @@ private:
    std::shared_ptr<SpectralData> mpSpectralData;
 
    std::weak_ptr<Track> FindTrack();
+   std::weak_ptr<const Track> FindTrack() const;
 
    // TrackPanelDrawable implementation
    void Draw(

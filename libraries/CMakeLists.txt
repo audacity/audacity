@@ -45,7 +45,6 @@ set( LIBRARIES
    lib-vst3
    lib-snapping
    lib-vst
-   lib-lv2
    lib-ladspa
    lib-audio-unit
    lib-playable-track
@@ -53,7 +52,14 @@ set( LIBRARIES
    lib-mixer
    lib-channel
    lib-stretching-sequence
+   lib-menus
+   lib-note-track
+   lib-viewport
 )
+
+if ( ${_OPT}use_lv2 )
+   list( APPEND LIBRARIES lib-lv2)
+endif()
 
 if( NOT ${_OPT}enable_experimental_qt_support )
    list( APPEND LIBRARIES

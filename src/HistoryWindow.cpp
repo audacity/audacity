@@ -485,8 +485,8 @@ void HistoryDialog::UpdatePrefs()
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 
 namespace {
 
@@ -510,8 +510,8 @@ void OnHistory(const CommandContext &context)
 
 // Register that menu item
 
-using namespace MenuTable;
-AttachedItem sAttachment{ wxT("View/Windows"),
+using namespace MenuRegistry;
+AttachedItem sAttachment{
    // History window should be available either for UndoAvailableFlag
    // or RedoAvailableFlag,
    // but we can't make the AddItem flags and mask have both,
@@ -551,7 +551,8 @@ AttachedItem sAttachment{ wxT("View/Windows"),
    /* i18n-hint: Clicking this menu item shows the various editing steps
       that have been taken.*/
    Command( wxT("UndoHistory"), XXO("&History"), OnHistory,
-      AudioIONotBusyFlag() )
+      AudioIONotBusyFlag() ),
+   wxT("View/Windows")
 };
 
 }

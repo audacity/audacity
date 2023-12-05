@@ -25,9 +25,9 @@ private:
    NumericField(size_t digits, bool zeropad);
 
 public:
-   static NumericField ForRange(size_t range, bool zeropad = true);
+   static NumericField ForRange(size_t range, bool zeropad = true, size_t minDigits = 0);
    static NumericField WithDigits(size_t digits, bool zeropad = true);
-   
+
    NumericField(const NumericField&) = default;
    NumericField& operator=(const NumericField&) = default;
    // NumericField( NumericField && ) = default;
@@ -53,6 +53,8 @@ using DigitInfos = std::vector<DigitInfo>;
 
 struct NumericConverterFormatChangedMessage final
 {
+   double value;
+   bool shrunk;
 };
 
 struct NUMERIC_FORMATS_API NumericConverterFormatter /* not final */ :
@@ -66,6 +68,8 @@ struct NUMERIC_FORMATS_API NumericConverterFormatter /* not final */ :
       std::vector<wxString> fieldValueStrings;
    };
 
+   //! Potentially updates the format so it can fit the `value`. Default implementation is empty.
+   virtual void UpdateFormatForValue(double value, bool canShrink);
    //! @post result: `GetFields().size() == result.fieldValueStrings.size()`
    virtual ConversionResult
    ValueToString(double value, bool nearest) const = 0;
@@ -74,7 +78,7 @@ struct NUMERIC_FORMATS_API NumericConverterFormatter /* not final */ :
    StringToValue(const wxString& value) const = 0;
 
    virtual double SingleStep(double value, int digitIndex, bool upwards) const = 0;
-   
+
    const wxString& GetPrefix() const;
    const NumericFields& GetFields() const;
    const DigitInfos& GetDigitInfos() const;

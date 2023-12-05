@@ -51,35 +51,36 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
-#include "BasicUI.h"
-#include "../EffectEditor.h"
-#include "../EffectManager.h"
-#include "FileNames.h"
 #include "../../LabelTrack.h"
-#include "Languages.h"
-#include "../../NoteTrack.h"
-#include "TimeTrack.h"
-#include "../../prefs/SpectrogramSettings.h"
-#include "PluginManager.h"
-#include "Project.h"
-#include "ProjectRate.h"
-#include "ShuttleAutomation.h"
+#include "NoteTrack.h"
 #include "../../ShuttleGetDefinition.h"
-#include "ShuttleGui.h"
-#include "TempDirectory.h"
-#include "SyncLock.h"
-#include "ViewInfo.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-#include "../../widgets/valnum.h"
-#include "AudacityMessageBox.h"
-#include "Prefs.h"
-#include "wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
+#include "../../prefs/SpectrogramSettings.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
 #include "../../widgets/NumericTextCtrl.h"
+#include "../../widgets/valnum.h"
+#include "../EffectEditor.h"
+#include "../EffectManager.h"
+#include "AudacityMessageBox.h"
+#include "BasicUI.h"
+#include "FileNames.h"
+#include "Languages.h"
+#include "PluginManager.h"
+#include "Prefs.h"
 #include "ProgressDialog.h"
+#include "Project.h"
+#include "ProjectRate.h"
+#include "ShuttleAutomation.h"
+#include "ShuttleGui.h"
+#include "SyncLock.h"
+#include "TempDirectory.h"
+#include "TimeTrack.h"
+#include "TimeWarper.h"
+#include "ViewInfo.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "wxFileNameWrapper.h"
 
 #include "FileDialog/FileDialog.h"
 
@@ -143,8 +144,6 @@ END_EVENT_TABLE()
 NyquistEffect::NyquistEffect(const wxString &fName)
    : mIsPrompt{ fName == NYQUIST_PROMPT_ID }
 {
-   mOutputTrack[0] = mOutputTrack[1] = nullptr;
-
    mAction = XO("Applying Nyquist Effect...");
    mExternal = false;
    mCompiler = false;
@@ -663,6 +662,50 @@ bool NyquistEffect::Init()
 
 static void RegisterFunctions();
 
+//! Reads and writes Audacity's track objects, interchanging with Nyquist
+//! sound objects (implemented in the library layer written in C)
+struct NyquistEffect::NyxContext {
+   using ProgressReport = std::function<bool(double)>;
+
+   NyxContext(ProgressReport progressReport, double scale, double progressTot)
+      : mProgressReport{ move(progressReport) }
+      , mScale{ scale }
+      , mProgressTot{ progressTot }
+   {}
+
+   int GetCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen);
+   int PutCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen);
+   static int StaticGetCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen, void *userdata);
+   static int StaticPutCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen, void *userdata);
+
+   WaveTrack *mCurChannelGroup{};
+   WaveChannel       *mCurTrack[2]{};
+   sampleCount       mCurStart{};
+
+   unsigned          mCurNumChannels{}; //!< Not used in the callbacks
+
+   using Buffer = std::unique_ptr<float[]>;
+   Buffer            mCurBuffer[2]; //!< used only in GetCallback
+   sampleCount       mCurBufferStart[2]{};
+   size_t            mCurBufferLen[2]{};
+   sampleCount       mCurLen{};
+
+   std::shared_ptr<TrackList> mOutputTracks;
+
+   double            mProgressIn{};
+   double            mProgressOut{};
+
+   const ProgressReport mProgressReport;
+   const double mScale;
+   const double mProgressTot;
+
+   std::exception_ptr mpException{};
+};
+
 bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
    if (mIsPrompt && mControls.size() > 0 && !IsBatchProcessing()) {
@@ -710,10 +753,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    mOutputTime = 0;
    mCount = 0;
-   mProgressIn = 0;
-   mProgressOut = 0;
-   mProgressTot = 0;
-   mScale = (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups();
+   const auto scale =
+      (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups();
 
    mStop = false;
    mBreak = false;
@@ -729,7 +770,9 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    // to operate on the selected wave tracks
    std::optional<EffectOutputTracks> oOutputs;
    if (!bOnePassTool)
-      oOutputs.emplace(*mTracks, true);
+      oOutputs.emplace(
+         *mTracks, GetType(), EffectOutputTracks::TimeInterval { mT0, mT1 },
+         true, false);
 
    mNumSelectedChannels = bOnePassTool
       ? 0
@@ -851,10 +894,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       wxString isPreviewing = (this->IsPreviewing())? wxT("T") : wxT("NIL");
       mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing);
 
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
-                                 Internat::ToString(mT0));
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
-                                 Internat::ToString(mT1));
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList);
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
    }
@@ -877,6 +916,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    // to handle sync-lock group behavior the "old" way).
    mFirstInGroup = true;
    Track *gtLast = NULL;
+   double progressTot{};
 
    for (;
         bOnePassTool || pRange->first != pRange->second;
@@ -886,39 +926,46 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       mDebugOutputStr = mDebugOutput.Translation();
       mDebugOutput = Verbatim( "%s" ).Format( std::cref( mDebugOutputStr ) );
 
-      mCurTrack[0] = pRange ? *pRange->first : nullptr;
+      // New context for each channel group of input
+      NyxContext nyxContext{ [this](double frac){ return TotalProgress(frac); },
+         scale, progressTot };
+      auto &mCurNumChannels = nyxContext.mCurNumChannels;
+      auto &mCurChannelGroup = nyxContext.mCurChannelGroup;
+      auto &mCurTrack = nyxContext.mCurTrack;
+      auto &mCurStart = nyxContext.mCurStart;
+      auto &mCurLen = nyxContext.mCurLen;
+
+      mCurChannelGroup = pRange ? *pRange->first : nullptr;
+      mCurTrack[0] = mCurChannelGroup;
       mCurNumChannels = 1;
       if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {
          }
          else {
-            auto channels = TrackList::Channels(mCurTrack[0]);
-            if (channels.size() > 1) {
+            if (auto channels = mCurChannelGroup->Channels()
+               ; channels.size() > 1
+            ) {
                // TODO: more-than-two-channels
                // Pay attention to consistency of mNumSelectedChannels
                // with the running tally made by this loop!
                mCurNumChannels = 2;
 
-               mCurTrack[1] = * ++ channels.first;
-               mCurStart[1] = mCurTrack[1]->TimeToLongSamples(mT0);
+               mCurTrack[1] = (* ++ channels.first).get();
             }
 
             // Check whether we're in the same group as the last selected track
-            Track *gt = *SyncLock::Group(mCurTrack[0]).first;
+            Track *gt = *SyncLock::Group(mCurChannelGroup).first;
             mFirstInGroup = !gtLast || (gtLast != gt);
             gtLast = gt;
 
-            mCurStart[0] = mCurTrack[0]->TimeToLongSamples(mT0);
-            auto end = mCurTrack[0]->TimeToLongSamples(mT1);
-            mCurLen = end - mCurStart[0];
+            mCurStart = mCurChannelGroup->TimeToLongSamples(mT0);
+            auto end = mCurChannelGroup->TimeToLongSamples(mT1);
+            mCurLen = end - mCurStart;
 
             wxASSERT(mCurLen <= NYQ_MAX_LEN);
 
             mCurLen = std::min(mCurLen, mMaxLen);
          }
-
-         mProgressIn = 0.0;
-         mProgressOut = 0.0;
 
          // libnyquist breaks except in LC_NUMERIC=="C".
          //
@@ -978,9 +1025,20 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
+
+            const auto t0 =
+               mCurChannelGroup ? mCurChannelGroup->SnapToSample(mT0) : mT0;
+            const auto t1 =
+               mCurChannelGroup ? mCurChannelGroup->SnapToSample(mT1) : mT1;
+            mPerTrackProps += wxString::Format(
+               wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
+               Internat::ToString(t0));
+            mPerTrackProps += wxString::Format(
+               wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
+               Internat::ToString(t1));
          }
 
-         success = ProcessOne(oOutputs ? &*oOutputs : nullptr);
+         success = ProcessOne(nyxContext, oOutputs ? &*oOutputs : nullptr);
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -988,7 +1046,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          if (!success || bOnePassTool) {
             goto finish;
          }
-         mProgressTot += mProgressIn + mProgressOut;
+         progressTot += nyxContext.mProgressIn + nyxContext.mProgressOut;
       }
 
       mCount += mCurNumChannels;
@@ -1172,12 +1230,48 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
    return TransferDataFromEffectWindow();
 }
 
+namespace
+{
+wxString GetClipBoundaries(const Track* t)
+{
+   wxString clips;
+   const auto wt = dynamic_cast<const WaveTrack*>(t);
+   if (!wt)
+      return clips;
+   auto ca = wt->SortedClipArray();
+   // Each clip is a list (start-time, end-time)
+   // Limit number of clips added to avoid argument stack overflow error (bug
+   // 2300).
+   for (size_t i = 0, n = ca.size(); i < n; ++i)
+   {
+      if (i < 1000)
+      {
+         clips += wxString::Format(
+            wxT("(list (float %s) (float %s))"),
+            Internat::ToString(ca[i]->GetPlayStartTime()),
+            Internat::ToString(ca[i]->GetPlayEndTime()));
+      }
+      else if (i == 1000)
+      {
+         // If final clip is NIL, plug-in developer knows there are more than
+         // 1000 clips in channel.
+         clips += "NIL";
+      }
+      else if (i > 1000)
+      {
+         break;
+      }
+   }
+   return clips;
+};
+} // namespace
+
 // NyquistEffect implementation
 
-bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
+bool NyquistEffect::ProcessOne(
+   NyxContext &nyxContext, EffectOutputTracks *pOutputs)
 {
-   mpException = {};
-
+   const auto mCurNumChannels = nyxContext.mCurNumChannels;
    nyx_rval rval;
 
    wxString cmd;
@@ -1201,6 +1295,8 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       cmd += mPerTrackProps;
    }
 
+   const auto& mCurChannelGroup = nyxContext.mCurChannelGroup;
+
    if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
       // Set the track TYPE and VIEW properties
       wxString type;
@@ -1208,10 +1304,10 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       wxString bitFormat;
       wxString spectralEditp;
 
-      mCurTrack[0]->TypeSwitch(
+      mCurChannelGroup->TypeSwitch(
          [&](const WaveTrack &wt) {
             type = wxT("wave");
-            spectralEditp = SpectrogramSettings::Get(*mCurTrack[0])
+            spectralEditp = SpectrogramSettings::Get(*mCurChannelGroup)
                .SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we are
@@ -1253,7 +1349,7 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
-      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), EscapeString(mCurTrack[0]->GetName()));
+      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), EscapeString(mCurChannelGroup->GetName()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type);
       // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view);
@@ -1262,21 +1358,21 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp);
 
-      const double startTime = mCurTrack[0]->GetStartTime();
-      const double endTime = mCurTrack[0]->GetEndTime();
+      const double startTime = mCurChannelGroup->GetStartTime();
+      const double endTime = mCurChannelGroup->GetEndTime();
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
                               Internat::ToString(startTime));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
                               Internat::ToString(endTime));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
-                              Internat::ToString(mCurTrack[0]->GetGain()));
+                              Internat::ToString(mCurChannelGroup->GetGain()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),
-                              Internat::ToString(mCurTrack[0]->GetPan()));
+                              Internat::ToString(mCurChannelGroup->GetPan()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'RATE)\n"),
-                              Internat::ToString(mCurTrack[0]->GetRate()));
+                              Internat::ToString(mCurChannelGroup->GetRate()));
 
-      switch (mCurTrack[0]->GetSampleFormat())
+      switch (mCurChannelGroup->GetSampleFormat())
       {
          case int16Sample:
             bitFormat = wxT("16");
@@ -1291,31 +1387,25 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat);
 
       float maxPeakLevel = 0.0;  // Deprecated as of 2.1.3
-      wxString clips, peakString, rmsString;
+      const auto inClipBoundaries = GetClipBoundaries(
+         pOutputs ? pOutputs->GetMatchingInput(*mCurChannelGroup) : nullptr);
+      const auto outClipBoundaries = GetClipBoundaries(mCurChannelGroup);
+      wxString inClips, outClips, peakString, rmsString;
+      auto &mCurTrack = nyxContext.mCurTrack;
       for (size_t i = 0; i < mCurNumChannels; i++) {
-         auto ca = mCurTrack[i]->SortedClipArray();
          float maxPeak = 0.0;
-
-         // A list of clips for mono, or an array of lists for multi-channel.
-         if (mCurNumChannels > 1) {
-            clips += wxT("(list ");
+         if (mCurNumChannels > 1)
+         {
+            inClips += wxT("(list ");
+            outClips += wxT("(list ");
          }
-         // Each clip is a list (start-time, end-time)
-         // Limit number of clips added to avoid argument stack overflow error (bug 2300).
-         for (size_t i=0; i<ca.size(); i++) {
-            if (i < 1000) {
-               clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                         Internat::ToString(ca[i]->GetPlayStartTime()),
-                                         Internat::ToString(ca[i]->GetPlayEndTime()));
-            } else if (i == 1000) {
-               // If final clip is NIL, plug-in developer knows there are more than 1000 clips in channel.
-               clips += "NIL";
-            } else if (i > 1000) {
-               break;
-            }
+         inClips += inClipBoundaries;
+         outClips += outClipBoundaries;
+         if (mCurNumChannels > 1)
+         {
+            inClips += wxT(" )");
+            outClips += wxT(" )");
          }
-         if (mCurNumChannels > 1) clips += wxT(" )");
-
          float min, max;
          auto pair = mCurTrack[i]->GetMinMax(mT0, mT1); // may throw
          min = pair.first, max = pair.second;
@@ -1337,9 +1427,12 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
          }
       }
       // A list of clips for mono, or an array of lists for multi-channel.
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
-                              (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
-                              clips);
+      cmd += wxString::Format(
+         wxT("(putprop '*TRACK* %s%s ) 'INCLIPS)\n"),
+         (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "), inClips);
+      cmd += wxString::Format(
+         wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
+         (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "), outClips);
 
       (mCurNumChannels > 1)?
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'PEAK)\n"), peakString) :
@@ -1356,19 +1449,15 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
    }
 
    // If in tool mode, then we don't do anything with the track and selection.
-   if (GetType() == EffectTypeTool) {
+   if (GetType() == EffectTypeTool)
       nyx_set_audio_params(44100, 0);
-   }
-   else if (GetType() == EffectTypeGenerate) {
-      nyx_set_audio_params(mCurTrack[0]->GetRate(), 0);
-   }
+   else if (GetType() == EffectTypeGenerate)
+      nyx_set_audio_params(mCurChannelGroup->GetRate(), 0);
    else {
-      auto curLen = mCurLen.as_long_long();
-      nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
-
-      nyx_set_input_audio(StaticGetCallback, (void *)this,
-                          (int)mCurNumChannels,
-                          curLen, mCurTrack[0]->GetRate());
+      auto curLen = nyxContext.mCurLen.as_long_long();
+      nyx_set_audio_params(mCurChannelGroup->GetRate(), curLen);
+      nyx_set_input_audio(NyxContext::StaticGetCallback, &nyxContext,
+         (int)mCurNumChannels, curLen, mCurChannelGroup->GetRate());
    }
 
    // Restore the Nyquist sixteenth note symbol for Generate plug-ins.
@@ -1454,16 +1543,6 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
    else {
       cmd += mCmd;
    }
-
-   // Put the fetch buffers in a clean initial state
-   for (size_t i = 0; i < mCurNumChannels; i++)
-      mCurBuffer[i].reset();
-
-   // Guarantee release of memory when done
-   auto cleanup = finally( [&] {
-      for (size_t i = 0; i < mCurNumChannels; i++)
-         mCurBuffer[i].reset();
-   } );
 
    // Evaluate the expression, which may invoke the get callback, but often does
    // not, leaving that to delayed evaluation of the output sound
@@ -1629,59 +1708,39 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
       return false;
    }
 
-   std::shared_ptr<WaveTrack> outputTrack[2];
-
-   double rate = mCurTrack[0]->GetRate();
-   for (int i = 0; i < outChannels; i++) {
-      if (outChannels == (int)mCurNumChannels) {
-         rate = mCurTrack[i]->GetRate();
-      }
-
-      outputTrack[i] = mCurTrack[i]->EmptyCopy();
-      outputTrack[i]->SetRate( rate );
-
-      // Clean the initial buffer states again for the get callbacks
-      // -- is this really needed?
-      mCurBuffer[i].reset();
-   }
+   nyxContext.mOutputTracks = mCurChannelGroup->WideEmptyCopy();
+   auto out = (*nyxContext.mOutputTracks->Any<WaveTrack>().begin())
+      ->SharedPointer<WaveTrack>();
 
    // Now fully evaluate the sound
-   int success;
-   {
-      auto vr0 = valueRestorer( mOutputTrack[0], outputTrack[0].get() );
-      auto vr1 = valueRestorer( mOutputTrack[1], outputTrack[1].get() );
-      success = nyx_get_audio(StaticPutCallback, (void *)this);
-   }
+   int success = nyx_get_audio(NyxContext::StaticPutCallback, &nyxContext);
 
    // See if GetCallback found read errors
-   {
-      auto pException = mpException;
-      mpException = {};
-      if (pException)
-         std::rethrow_exception( pException );
-   }
+   if (auto pException = nyxContext.mpException)
+      std::rethrow_exception(pException);
 
    if (!success)
       return false;
 
-   mOutputTime = outputTrack[0]->GetEndTime();
+   mOutputTime = out->GetEndTime();
    if (mOutputTime <= 0) {
       EffectUIServices::DoMessageBox(
          *this, XO("Nyquist returned nil audio.\n"));
       return false;
    }
 
-   const auto &out = outputTrack[0];
    std::shared_ptr<TrackList> tempList;
    if (outChannels < static_cast<int>(mCurNumChannels)) {
       // Be careful to do this before duplication
-      outputTrack[0]->Flush();
-      outputTrack[1] = (*out->Duplicate()->begin())->SharedPointer<WaveTrack>();
-      tempList = TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
+      out->Flush();
+      // Must destroy one temporary list before repopulating another with
+      // correct channel grouping
+      nyxContext.mOutputTracks.reset();
+      tempList = out->MonoToStereo();
    }
    else {
-      tempList = TrackList::Temporary(nullptr, outputTrack[0], outputTrack[1]);
-      outputTrack[0]->Flush();
+      tempList = move(nyxContext.mOutputTracks);
+      out->Flush();
    }
 
    {
@@ -1691,15 +1750,16 @@ bool NyquistEffect::ProcessOne(EffectOutputTracks *pOutputs)
          ? (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime)
             == out->TimeToLongSamples(mT1))
          : mMergeClips != 0;
-      mCurTrack[0]
-         ->ClearAndPaste(mT0, mT1, *tempList, mRestoreSplits, bMergeClips);
+      PasteTimeWarper warper { mT1, mT0 + (*tempList->begin())->GetEndTime() };
+      mCurChannelGroup->ClearAndPaste(
+         mT0, mT1, *tempList, mRestoreSplits, bMergeClips, &warper);
    }
 
    // If we were first in the group adjust non-selected group tracks
    if (mFirstInGroup) {
-      for (auto t : SyncLock::Group(mCurTrack[0]))
+      for (auto t : SyncLock::Group(mCurChannelGroup))
          if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t))
-            t->SyncLockAdjust(mT1, mT0 + outputTrack[0]->GetEndTime());
+            t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
 
       // Only the first channel can be first in its group
       mFirstInGroup = false;
@@ -2495,36 +2555,33 @@ bool NyquistEffect::ParseCommand(const wxString & cmd)
    return ParseProgram(stream);
 }
 
-int NyquistEffect::StaticGetCallback(float *buffer, int channel,
-                                     int64_t start, int64_t len, int64_t totlen,
-                                     void *userdata)
+int NyquistEffect::NyxContext::StaticGetCallback(float *buffer, int channel,
+   int64_t start, int64_t len, int64_t totlen, void *userdata)
 {
-   NyquistEffect *This = (NyquistEffect *)userdata;
+   auto This = static_cast<NyxContext*>(userdata);
    return This->GetCallback(buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::GetCallback(float *buffer, int ch,
-                               int64_t start, int64_t len, int64_t WXUNUSED(totlen))
+int NyquistEffect::NyxContext::GetCallback(float *buffer, int ch,
+   int64_t start, int64_t len, int64_t)
 {
    if (mCurBuffer[ch]) {
-      if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
-          (mCurStart[ch] + start)+len >
-          mCurBufferStart[ch]+mCurBufferLen[ch]) {
+      if ((mCurStart + start) < mCurBufferStart[ch] ||
+          (mCurStart + start) + len >
+          mCurBufferStart[ch] + mCurBufferLen[ch]) {
          mCurBuffer[ch].reset();
       }
    }
 
    if (!mCurBuffer[ch]) {
-      mCurBufferStart[ch] = (mCurStart[ch] + start);
+      mCurBufferStart[ch] = (mCurStart + start);
       mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
 
-      if (mCurBufferLen[ch] < (size_t) len) {
+      if (mCurBufferLen[ch] < (size_t) len)
          mCurBufferLen[ch] = mCurTrack[ch]->GetIdealBlockSize();
-      }
 
-      mCurBufferLen[ch] =
-         limitSampleBufferSize( mCurBufferLen[ch],
-                                mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
+      mCurBufferLen[ch] = limitSampleBufferSize(mCurBufferLen[ch],
+         mCurStart + mCurLen - mCurBufferStart[ch]);
 
       // C++20
       // mCurBuffer[ch] = std::make_unique_for_overwrite(mCurBufferLen[ch]);
@@ -2542,55 +2599,49 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
 
    // We have guaranteed above that this is nonnegative and bounded by
    // mCurBufferLen[ch]:
-   auto offset = ( mCurStart[ch] + start - mCurBufferStart[ch] ).as_size_t();
+   auto offset = (mCurStart + start - mCurBufferStart[ch]).as_size_t();
    const void *src = &mCurBuffer[ch][offset];
    std::memcpy(buffer, src, len * sizeof(float));
 
    if (ch == 0) {
-      double progress = mScale *
-         ( (start+len)/ mCurLen.as_double() );
-
-      if (progress > mProgressIn) {
+      double progress = mScale * ((start + len) / mCurLen.as_double());
+      if (progress > mProgressIn)
          mProgressIn = progress;
-      }
-
-      if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+      if (mProgressReport(mProgressIn + mProgressOut + mProgressTot))
          return -1;
-      }
    }
 
    return 0;
 }
 
-int NyquistEffect::StaticPutCallback(float *buffer, int channel,
-                                     int64_t start, int64_t len, int64_t totlen,
-                                     void *userdata)
+int NyquistEffect::NyxContext::StaticPutCallback(float *buffer, int channel,
+   int64_t start, int64_t len, int64_t totlen, void *userdata)
 {
-   NyquistEffect *This = (NyquistEffect *)userdata;
+   auto This = static_cast<NyxContext*>(userdata);
    return This->PutCallback(buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::PutCallback(float *buffer, int channel,
-                               int64_t start, int64_t len, int64_t totlen)
+int NyquistEffect::NyxContext::PutCallback(float *buffer, int channel,
+   int64_t start, int64_t len, int64_t totlen)
 {
    // Don't let C++ exceptions propagate through the Nyquist library
    return GuardedCall<int>( [&] {
       if (channel == 0) {
-         double progress = mScale*((float)(start+len)/totlen);
-
-         if (progress > mProgressOut) {
+         double progress = mScale * ((float)(start + len) / totlen);
+         if (progress > mProgressOut)
             mProgressOut = progress;
-         }
-
-         if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+         if (mProgressReport(mProgressIn + mProgressOut + mProgressTot))
             return -1;
-         }
       }
 
-      mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len);
+      auto iChannel =
+         (*mOutputTracks->Any<WaveTrack>().begin())->Channels().begin();
+      std::advance(iChannel, channel);
+      const auto pChannel = *iChannel;
+      pChannel->Append((samplePtr)buffer, floatSample, len);
 
       return 0; // success
-   }, MakeSimpleGuard( -1 ) ); // translate all exceptions into failure
+   }, MakeSimpleGuard(-1)); // translate all exceptions into failure
 }
 
 void NyquistEffect::StaticOutputCallback(int c, void *This)

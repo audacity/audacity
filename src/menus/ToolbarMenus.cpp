@@ -1,6 +1,4 @@
-#include "../ProjectSettings.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "../toolbars/ToolManager.h"
 
 /// Namespace for functions for View Toolbar menu
@@ -8,13 +6,11 @@ namespace {
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
-BaseItemSharedPtr ToolbarsMenu()
+auto ToolbarsMenu()
 {
-   using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Section( wxT("Toolbars"),
       Menu( wxT("Toolbars"), XXO("&Toolbars"),
          Section( "Reset",
@@ -29,8 +25,7 @@ BaseItemSharedPtr ToolbarsMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   Placement{ wxT("View/Other"), { OrderingHint::Begin } },
-   Indirect(ToolbarsMenu())
+AttachedItem sAttachment1{ Indirect(ToolbarsMenu()),
+   Placement{ wxT("View/Other"), { OrderingHint::Begin } }
 };
 }

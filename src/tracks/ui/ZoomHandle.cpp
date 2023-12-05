@@ -83,6 +83,11 @@ ZoomHandle::~ZoomHandle()
 {
 }
 
+std::shared_ptr<const Channel> ZoomHandle::FindChannel() const
+{
+   return nullptr;
+}
+
 bool ZoomHandle::HandlesRightClick()
 {
    return true;
@@ -153,7 +158,7 @@ UIHandle::Result ZoomHandle::Release
 
       viewInfo.ZoomBy(multiplier);
 
-      viewInfo.h = left;
+      viewInfo.hpos = left;
    }
    else
    {
@@ -174,7 +179,7 @@ UIHandle::Result ZoomHandle::Release
       const double new_center_h =
          viewInfo.PositionToTime(event.m_x, trackLeftEdge);
 
-      viewInfo.h += (center_h - new_center_h);
+      viewInfo.hpos += (center_h - new_center_h);
    }
 
    mZoomEnd = mZoomStart = 0;

@@ -5,6 +5,7 @@
 
 if(NOT ${_OPT}enable_experimental_qt_support)
    set( MODULES
+   mod-midi-import-export
       mod-script-pipe
       mod-mp3
       mod-pcm
@@ -41,6 +42,10 @@ if(NOT ${_OPT}enable_experimental_qt_support)
 
    if ( USE_FFMPEG )
       list ( APPEND MODULES mod-ffmpeg )
+   endif()
+
+   if ( USE_LIBOPUS AND USE_OPUSFILE AND USE_LIBOGG )
+      list ( APPEND MODULES mod-opus )
    endif()
 endif()
 

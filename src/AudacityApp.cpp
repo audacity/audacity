@@ -14,11 +14,7 @@
 It handles initialization and termination by subclassing wxApp.
 
 *//*******************************************************************/
-
-
 #include "AudacityApp.h"
-
-
 
 #if 0
 // This may be used to debug memory leaks.
@@ -81,7 +77,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/ASlider.h"
 #include "Journal.h"
 #include "Languages.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "PathList.h"
 #include "PluginManager.h"
 #include "Project.h"
@@ -101,6 +97,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Track.h"
 #include "prefs/PrefsDialog.h"
 #include "Theme.h"
+#include "Viewport.h"
 #include "PlatformCompatibility.h"
 #include "AutoRecoveryDialog.h"
 #include "SplashDialog.h"
@@ -157,12 +154,8 @@ It handles initialization and termination by subclassing wxApp.
 #endif
 #endif
 
-// DA: Logo for Splash Screen
-#ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
-#else
-#include "../images/AudacityLogoWithName.xpm"
-#endif
+
+#include "../images/Audacity-splash.xpm"
 
 #include <thread>
 
@@ -419,11 +412,13 @@ void PopulatePreferences()
          gPrefs->DeleteEntry("/GUI/ToolBars/Share Audio/W");
    }
 
-   // We need to reset the toolbar layout for 3.3
-   if (std::pair { vMajor, vMinor } < std::pair { 3, 3 })
+   // We need to reset the toolbar layout and force the splash screen for 3.4
+   if (std::pair { vMajor, vMinor } < std::pair { 3, 4 })
    {
       if (gPrefs->Exists(wxT("/GUI/ToolBars")))
          gPrefs->DeleteGroup(wxT("/GUI/ToolBars"));
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
    }
 
    // write out the version numbers to the prefs file for future checking
@@ -503,6 +498,12 @@ void InitCrashreports()
 
 static bool gInited = false;
 static bool gIsQuitting = false;
+
+//Config instance that is set as current instance of `wxConfigBase`
+//and used to initialize `SettingsWX` objects created by
+//`audacity::ApplicationSettings` hook.
+//Created on demand by calling `audacity::ApplicationSettings::Call()`
+static std::shared_ptr<wxConfigBase> gConfig;
 
 static bool CloseAllProjects( bool force )
 {
@@ -714,14 +715,22 @@ class GnomeShutdown
  public:
    GnomeShutdown()
    {
+#ifdef __OpenBSD__
+      const char *libgnomeui = "libgnomeui-2.so";
+      const char *libgnome = "libgnome-2.so";
+#else
+      const char *libgnomeui = "libgnomeui-2.so.0";
+      const char *libgnome = "libgnome-2.so.0";
+#endif
+
       mArgv[0].reset(strdup("Audacity"));
 
-      mGnomeui = dlopen("libgnomeui-2.so.0", RTLD_NOW);
+      mGnomeui = dlopen(libgnomeui, RTLD_NOW);
       if (!mGnomeui) {
          return;
       }
 
-      mGnome = dlopen("libgnome-2.so.0", RTLD_NOW);
+      mGnome = dlopen(libgnome, RTLD_NOW);
       if (!mGnome) {
          return;
       }
@@ -1190,8 +1199,7 @@ bool AudacityApp::OnExceptionInMainLoop()
 
             // Forget pending changes in the TrackList
             TrackList::Get( *pProject ).ClearPendingTracks();
-
-            ProjectWindow::Get( *pProject ).RedrawProject();
+            Viewport::Get(*pProject).Redraw();
          }
 
          // Give the user an alert
@@ -1227,6 +1235,16 @@ bool AudacityApp::Initialize(int& argc, wxChar** argv)
       InitCrashreports();
    }
    return wxApp::Initialize(argc, argv);
+}
+
+void AudacityApp::CleanUp()
+{
+   //Reset the current wxConfigBase instance manually
+   //to avoid double deletion in wxWidgets 3.2
+   //See Bug #5511
+   wxConfigBase::Set(nullptr);
+   gConfig.reset();
+   wxApp::CleanUp();
 }
 
 #ifdef __WXMAC__
@@ -1477,8 +1495,8 @@ bool AudacityApp::InitPart2()
       Journal::SetInputFileName( journalFileName );
 
    // BG: Create a temporary window to set as the top window
-   wxImage logoimage((const char **)AudacityLogoWithName_xpm);
-   logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
+   wxImage logoimage((const char **)Audacity_splash_xpm);
+   logoimage.Scale(logoimage.GetWidth() * (2.0/3.0), logoimage.GetHeight() * (2.0/3.0), wxIMAGE_QUALITY_HIGH);
    if( GetLayoutDirection() == wxLayout_RightToLeft)
       logoimage = logoimage.Mirror();
    wxBitmap logo(logoimage);
@@ -1611,7 +1629,7 @@ bool AudacityApp::InitPart2()
       GetPreferencesVersion(vMajorInit, vMinorInit, vMicroInit);
       if (vMajorInit != AUDACITY_VERSION || vMinorInit != AUDACITY_RELEASE
          || vMicroInit != AUDACITY_REVISION) {
-         CommandManager::Get(*project).RemoveDuplicateShortcuts();
+         MenuCreator::Get(*project).RemoveDuplicateShortcuts();
       }
       //
       // Auto-recovery
@@ -2719,15 +2737,14 @@ void AudacityApp::AssociateFileTypes()
 static audacity::ApplicationSettings::Scope applicationSettingsScope {
    []{
       static std::once_flag configSetupFlag;
-      static std::shared_ptr<wxConfigBase> config;
       std::call_once(configSetupFlag, [&]{
          const auto configFileName = wxFileName { FileNames::Configuration() };
-         config = AudacityFileConfig::Create(
+         gConfig = AudacityFileConfig::Create(
             wxTheApp->GetAppName(), wxEmptyString,
             configFileName.GetFullPath(),
             wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
-         wxConfigBase::Set(config.get());
+         wxConfigBase::Set(gConfig.get());
       });
-      return std::make_unique<SettingsWX>(config);
+      return std::make_unique<SettingsWX>(gConfig);
    }
 };

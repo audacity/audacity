@@ -546,7 +546,7 @@ AttachedToolBarMenuItem sAttachment2{
 }
 
 // Now define other related menu items
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 
 namespace {
 void OnOutputGain(const CommandContext &context)
@@ -591,10 +591,10 @@ void OnInputGainDec(const CommandContext &context)
    tb.AdjustInputGain(-1);
 }
    
-using namespace MenuTable;
-BaseItemSharedPtr ExtraMixerMenu()
+using namespace MenuRegistry;
+auto ExtraMixerMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("Mixer"), XXO("Mi&xer"),
       Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
          OnOutputGain, AlwaysEnabledFlag ),
@@ -612,9 +612,8 @@ BaseItemSharedPtr ExtraMixerMenu()
    return menu;
 }
 
-AttachedItem sAttachment4{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraMixerMenu())
+AttachedItem sAttachment4{ Indirect(ExtraMixerMenu()),
+   wxT("Optional/Extra/Part1")
 };
 
 }

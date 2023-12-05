@@ -288,15 +288,15 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
 
    wxASSERT(mFile.get());
 
-   ImportUtils::NewChannelGroup channels(mInfo.channels);
-
-   for (size_t c = 0; c < mInfo.channels; ++c)
-      channels[c] =
-         ImportUtils::NewWaveTrack(*trackFactory, mFormat, mInfo.samplerate);
+   auto trackList = ImportUtils::NewWaveTrack(
+      *trackFactory,
+      mInfo.channels,
+      mFormat,
+      mInfo.samplerate);
 
    auto fileTotalFrames =
       (sampleCount)mInfo.frames; // convert from sf_count_t
-   auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
+   auto maxBlockSize = (*trackList->Any<WaveTrack>().begin())->GetMaxBlockSize();
 
    {
       // Otherwise, we're in the "copy" mode, where we read in the actual
@@ -351,8 +351,9 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
          }
 
          if (block) {
-            auto iter = channels.begin();
-            for(int c=0; c<mInfo.channels; ++iter, ++c) {
+            unsigned c = 0;
+            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            {
                if (mFormat==int16Sample) {
                   for(int j=0; j<block; j++)
                      ((short *)buffer.ptr())[j] =
@@ -364,11 +365,13 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
                         ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               iter->get()->Append(
+               channel.AppendBuffer(
                   buffer.ptr(),
                   (mFormat == int16Sample) ? int16Sample : floatSample,
-                  block, 1, mEffectiveFormat);
-            }
+                  block, 1, mEffectiveFormat
+               );
+               ++c;
+            });
             framescompleted += block;
          }
          if(fileTotalFrames > 0)
@@ -382,8 +385,7 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
       return;
    }
 
-   if (!channels.empty())
-      outTracks.push_back(ImportUtils::MakeTracks(channels));
+   ImportUtils::FinalizeImport(outTracks, trackList);
 
    const char *str;
 

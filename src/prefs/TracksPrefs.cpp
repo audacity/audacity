@@ -25,10 +25,16 @@
 //#include <wx/defs.h>
 
 #include "Prefs.h"
+#include "Project.h"
 #include "ShuttleGui.h"
+#include "UndoManager.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 
 int TracksPrefs::iPreferencePinned = -1;
+
+BoolSetting TracksPrefs::TracksFitVerticallyZoomed {
+   "/GUI/TracksFitVerticallyZoomed", false };
 
 namespace {
    const wxChar *PinnedHeadPreferenceKey()
@@ -324,9 +330,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Display"));
    {
-      S.TieCheckBox(XXO("Auto-&fit track height"),
-                    {wxT("/GUI/TracksFitVerticallyZoomed"),
-                     false});
+      S.TieCheckBox(XXO("Auto-&fit track height"), TracksFitVerticallyZoomed);
       S.TieCheckBox(XXO("Sho&w track name as overlay"),
                   {wxT("/GUI/ShowTrackNameInWaveform"),
                    false});
@@ -440,6 +444,7 @@ bool TracksPrefs::Commit()
    }
 
    AudioTrackNameSetting.Invalidate();
+   TracksFitVerticallyZoomed.Invalidate();
    return true;
 }
 
@@ -450,5 +455,27 @@ PrefsPanel::Registration sAttachment{ "Tracks",
       wxASSERT(parent); // to justify safenew
       return safenew TracksPrefs(parent, winid);
    }
+};
+
+//! Observer attached to each project applies the vertical zoom fit preference
+struct Handler : ClientData::Base {
+   explicit Handler(AudacityProject &project) : mProject{ project }
+      , mUndoSubscription{ UndoManager::Get(mProject)
+         .Subscribe([this](const UndoRedoMessage &message){
+            if (message.type == UndoRedoMessage::Pushed &&
+               TracksPrefs::TracksFitVerticallyZoomed.Read()
+            )
+               Viewport::Get(mProject).ZoomFitVertically(); })}
+   {}
+
+   Handler(const Handler &) = delete;
+   Handler &operator=(const Handler &) = delete;
+
+   AudacityProject &mProject;
+   const Observer::Subscription mUndoSubscription;
+}; // struct Handler
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   Callable::UniqueMaker<Handler, AudacityProject &>()
 };
 }

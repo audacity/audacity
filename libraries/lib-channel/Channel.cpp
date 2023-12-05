@@ -49,6 +49,19 @@ int Channel::FindChannelIndex() const
    return index;
 }
 
+size_t Channel::ReallyGetChannelIndex() const
+{
+   auto &group = ReallyDoGetChannelGroup();
+   int index = -1;
+   for (size_t ii = 0, nn = group.NChannels(); ii < nn; ++ii)
+      if (group.GetChannel(ii).get() == this) {
+         index = ii;
+         break;
+      }
+   assert(index >= 0);
+   return index;
+}
+
 const ChannelGroup &Channel::GetChannelGroup() const
 {
    assert(FindChannelIndex() >= 0);
@@ -66,7 +79,47 @@ size_t Channel::GetChannelIndex() const
    return FindChannelIndex();
 }
 
+ChannelGroup &Channel::ReallyDoGetChannelGroup() const
+{
+   return DoGetChannelGroup();
+}
+
 ChannelGroup::~ChannelGroup() = default;
+
+void ChannelGroup::Init(const ChannelGroup &orig)
+{
+   // Deep copy of any group data
+   mpGroupData = orig.mpGroupData ?
+      std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
+}
+
+void ChannelGroup::DestroyGroupData()
+{
+   mpGroupData.reset();
+}
+
+auto ChannelGroup::DetachGroupData() -> std::unique_ptr<ChannelGroupData>
+{
+   return move(mpGroupData);
+}
+
+void ChannelGroup::AssignGroupData(std::unique_ptr<ChannelGroupData> pGroupData)
+{
+   mpGroupData = move(pGroupData);
+}
+
+auto ChannelGroup::GetGroupData() -> ChannelGroupData &
+{
+   if (!mpGroupData)
+      // Make on demand
+      mpGroupData = std::make_unique<ChannelGroupData>();
+   return *mpGroupData;
+}
+
+auto ChannelGroup::GetGroupData() const -> const ChannelGroupData &
+{
+   return const_cast<ChannelGroup *>(this)->GetGroupData();
+}
 
 double ChannelGroup::GetStartTime() const
 {

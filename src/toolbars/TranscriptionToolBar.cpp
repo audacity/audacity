@@ -47,7 +47,7 @@
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 #include "../VoiceKey.h"
-#include "../ProjectWindow.h"
+
 #endif
 
 IMPLEMENT_CLASS(TranscriptionToolBar, ToolBar);
@@ -616,7 +616,7 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT0( newpos );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
       SetButton(false, mButtons[TTB_StartOn]);
    }
@@ -649,7 +649,7 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT0( newpos );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
       SetButton(false, mButtons[TTB_StartOn]);
    }
@@ -684,7 +684,7 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT1( newpos );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
       SetButton(false, mButtons[TTB_EndOn]);
    }
@@ -720,7 +720,7 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setT1( newpos );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
       SetButton(false, mButtons[TTB_EndOff]);
    }
@@ -760,7 +760,7 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setTimes(
          newstart.as_double() / rate, newend.as_double() /  rate );
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
    }
 
@@ -797,7 +797,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
       selectedRegion.setTimes(
          newstart.as_double() / rate, newend.as_double() / rate);
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
 
    }
 
@@ -851,7 +851,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
 #include "../LabelTrack.h"
 #include "ProjectHistory.h"
 #include "../TrackPanel.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 namespace {
 int DoAddLabel(
@@ -979,7 +979,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
          start = newEnd;
 
          DoAddLabel(mProject, SelectedRegion(newStartPos, newEndPos));
-      ProjectWindow::Get( mProject ).RedrawProject();
+      Viewport::Get(mProject).Redraw();
       }
       SetButton(false, mButtons[TTB_AutomateSelection]);
    }
@@ -1146,23 +1146,22 @@ void OnPlaySpeedDec(const CommandContext &context)
    }
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
-BaseItemSharedPtr ExtraPlayAtSpeedMenu()
+auto ExtraPlayAtSpeedMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
       Menu( wxT("PlayAtSpeed"), XXO("&Play-at-Speed") ) };
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT("Optional/Extra/Part1"),
-   Indirect(ExtraPlayAtSpeedMenu())
+AttachedItem sAttachment2{ Indirect(ExtraPlayAtSpeedMenu()),
+   wxT("Optional/Extra/Part1")
 };
 
-BaseItemSharedPtr ExtraPlayAtSpeedItems()
+auto ExtraPlayAtSpeedItems()
 {
-   static BaseItemSharedPtr items{
+   static auto items = std::shared_ptr{
    Items( "",
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
       Command( wxT("PlayAtSpeedLooped"), XXO("&Play-at-Speed"),
@@ -1181,10 +1180,9 @@ BaseItemSharedPtr ExtraPlayAtSpeedItems()
    return items;
 }
 
-AttachedItem sAttachment3{
+AttachedItem sAttachment3{ Indirect(ExtraPlayAtSpeedItems()),
    Placement{ wxT("Optional/Extra/Part1/PlayAtSpeed"),
-     OrderingHint::Begin },
-   Indirect(ExtraPlayAtSpeedItems())
+     OrderingHint::Begin }
 };
 
 }

@@ -20,13 +20,13 @@ Edward Hui
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../ProjectSettings.h"
-#include "../../ProjectWindow.h"
+
 #include "../../RefreshCode.h"
 #include "../../SelectUtilities.h"
 #include "SelectionState.h"
 #include "../../SpectralDataManager.h"
 #include "../../TrackArtist.h"
-#include "../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -54,7 +54,7 @@ enum {
 
 // #define SPECTRAL_EDITING_ESC_KEY
 
-bool BrushHandle::IsClicked() const
+bool BrushHandle::IsDragging() const
 {
    return mSelectionStateChanger.get() != NULL;
 }
@@ -170,6 +170,11 @@ BrushHandle::BrushHandle(
 
 BrushHandle::~BrushHandle()
 {
+}
+
+std::shared_ptr<const Channel> BrushHandle::FindChannel() const
+{
+   return std::dynamic_pointer_cast<const Channel>(FindTrack().lock());
 }
 
 namespace {
@@ -343,8 +348,9 @@ UIHandle::Result BrushHandle::Drag
          if(mIsSmartSelection){
             // Correct the y coord (snap to highest energy freq. bin)
             if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
-               int resFreqBin = SpectralDataManager::FindFrequencySnappingBin(wt,
-                                 h0 * hopSize, hopSize, mFreqSnappingRatio, bm);
+               int resFreqBin =
+                  SpectralDataManager::FindFrequencySnappingBin(*wt,
+                     h0 * hopSize, hopSize, mFreqSnappingRatio, bm);
                if(resFreqBin != - 1)
                   bm = resFreqBin;
             }
@@ -427,6 +433,11 @@ std::weak_ptr<Track> BrushHandle::FindTrack()
       return {};
    else
       return pView->FindTrack();
+}
+
+std::weak_ptr<const Track> BrushHandle::FindTrack() const
+{
+   return const_cast<BrushHandle&>(*this).FindTrack();
 }
 
 BrushHandle::StateSaver::~StateSaver() = default;

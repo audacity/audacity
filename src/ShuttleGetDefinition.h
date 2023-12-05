@@ -12,7 +12,7 @@
 #define __AUDACITY_SHUTTLE_GET_DEFINITION__
 
 #include "SettingsVisitor.h" // to inherit
-#include "commands/CommandTargets.h" // to inherit
+#include "CommandTargets.h" // to inherit
 
 /**************************************************************************//**
 \brief SettingsVisitor that retrieves a JSON format definition of a command's parameters.

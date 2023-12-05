@@ -86,7 +86,7 @@ MinMaxRMS MockSampleBlock::DoGetMinMaxRMS() const
    return { 0, 0, 0 };
 }
 
-BlockSampleView MockSampleBlock::GetFloatSampleView()
+BlockSampleView MockSampleBlock::GetFloatSampleView(bool mayThrow)
 {
    std::vector<float> floatData { reinterpret_cast<const float*>(data.data()),
                                   reinterpret_cast<const float*>(

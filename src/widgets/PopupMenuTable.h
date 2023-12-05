@@ -26,13 +26,17 @@ class wxCommandEvent;
 #include <memory>
 
 #include "Internat.h"
-#include "../commands/CommandManager.h"
+#include "CommandManager.h"
 
 class PopupMenuHandler;
+struct PopupMenuSection;
 class PopupMenuTable;
-struct PopupMenuVisitor;
+struct PopupMenuTableEntry;
+struct PopupSubMenu;
 struct PopupMenuTableTraits : Registry::DefaultTraits {
-   using ComputedItemContextType = PopupMenuVisitor;
+   using ComputedItemContextType = PopupMenuTable;
+   using LeafTypes = List<PopupMenuTableEntry>;
+   using NodeTypes = List<PopupMenuSection, PopupSubMenu>;
 };
 using PopupMenuGroupItem = Registry::GroupItem<PopupMenuTableTraits>;
 
@@ -68,7 +72,8 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    ~PopupMenuTableEntry() override;
 };
 
-struct AUDACITY_DLL_API PopupSubMenu : PopupMenuGroupItem, MenuTable::WholeMenu
+struct AUDACITY_DLL_API PopupSubMenu
+   : PopupMenuGroupItem, MenuRegistry::ItemProperties
 {
    TranslatableString caption;
    PopupMenuTable &table;
@@ -77,11 +82,15 @@ struct AUDACITY_DLL_API PopupSubMenu : PopupMenuGroupItem, MenuTable::WholeMenu
       const TranslatableString &caption_, PopupMenuTable &table );
 
    ~PopupSubMenu() override;
+   Properties GetProperties() const override;
 };
 
-struct PopupMenuSection : PopupMenuGroupItem, MenuTable::MenuSection
+struct PopupMenuSection
+   : PopupMenuGroupItem, MenuRegistry::ItemProperties
 {
    using PopupMenuGroupItem::PopupMenuGroupItem;
+   ~PopupMenuSection() override;
+   Properties GetProperties() const override { return Section; }
 };
 
 class PopupMenuHandler : public wxEvtHandler
@@ -101,13 +110,6 @@ public:
    virtual void InitUserData(void *pUserData) = 0;
 };
 
-struct PopupMenuVisitor : public MenuVisitor {
-   explicit PopupMenuVisitor( PopupMenuTable &table ) : mTable{ table } {}
-   ~PopupMenuVisitor() override;
-   void *GetComputedItemContext() override;
-   PopupMenuTable &mTable;
-};
-
 // Opaque structure built by PopupMenuTable::BuildMenu
 class AUDACITY_DLL_API PopupMenu
 {
@@ -122,7 +124,7 @@ public:
    using Entry = PopupMenuTableEntry;
 
    // Supply a nonempty caption for sub-menu tables
-   PopupMenuTable( const Identifier &id, const TranslatableString &caption = {} )
+   PopupMenuTable(const Identifier &id, const TranslatableString &caption = {})
       : mId{ id }
       , mCaption{ caption }
       , mRegistry{
@@ -139,9 +141,9 @@ public:
    const auto *GetRegistry() const { return mRegistry.get(); }
 
    // Typically statically constructed:
-   struct AttachedItem {
+   template<typename Ptr> struct AttachedItem {
       AttachedItem( PopupMenuTable &table,
-         const Registry::Placement &placement, Registry::BaseItemPtr pItem )
+         const Registry::Placement &placement, Ptr pItem )
       { table.RegisterItem( placement, std::move( pItem ) ); }
    };
 
@@ -167,15 +169,17 @@ public:
    template<typename Table, typename Factory>
    static auto Adapt(const Factory &factory)
    {
-      return [factory](PopupMenuVisitor &visitor){
-         auto &table = static_cast<Table&>(visitor.mTable);
-         return std::shared_ptr{ factory(table) };
+      return [factory](PopupMenuTable &table){
+         return std::shared_ptr{ factory(static_cast<Table&>(table)) };
       };
    }
 
 private:
-   void RegisterItem(
-      const Registry::Placement &placement, Registry::BaseItemPtr pItem );
+   template<typename Ptr> void RegisterItem(
+      const Registry::Placement &placement, Ptr pItem)
+   {
+      Registry::RegisterItem(*mRegistry, placement, move(pItem));
+   }
 
 protected:
    // This convenience function composes a label, with the following optional
@@ -220,7 +224,7 @@ protected:
    void BeginSection( const Identifier &name );
    void EndSection();
 
-   std::shared_ptr<PopupMenuGroupItem> mTop;
+   std::shared_ptr<PopupSubMenu> mTop;
    std::vector<PopupMenuGroupItem*> mStack;
    Identifier mId;
    TranslatableString mCaption;

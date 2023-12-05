@@ -673,7 +673,8 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(
 }
 
 wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(
-   const TranslatableString &Caption, const wxString &Value, const int nChars)
+   const TranslatableString& Caption, const wxString& Value, const int nChars,
+   bool acceptEnter)
 {
    const auto translated = Caption.Translation();
    HandleOptionality( Caption );
@@ -694,6 +695,9 @@ wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(
 #else
    long flags = wxTE_LEFT;
 #endif
+
+   if (acceptEnter)
+      flags = wxTE_PROCESS_ENTER;
 
    wxTextValidator Validator(wxFILTER_NUMERIC);
    mpWind = pTextCtrl = safenew wxTextCtrl(GetParent(), miId, Value,
@@ -1407,12 +1411,13 @@ wxTextCtrl * ShuttleGuiBase::DoTieTextBox(
 }
 
 wxTextCtrl * ShuttleGuiBase::DoTieNumericTextBox(
-   const TranslatableString &Prompt, WrappedType & WrappedRef, const int nChars)
+   const TranslatableString& Prompt, WrappedType& WrappedRef, const int nChars,
+   bool acceptEnter)
 {
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode == eIsCreating )
-      return AddNumericTextBox( Prompt, WrappedRef.ReadAsString(), nChars );
+      return AddNumericTextBox( Prompt, WrappedRef.ReadAsString(), nChars, acceptEnter );
 
    UseUpId();
    wxTextCtrl * pTextBox=NULL;
@@ -1671,18 +1676,20 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
    return DoTieTextBox( Prompt, WrappedRef, nChars );
 }
 
-wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
-   const TranslatableString &Prompt, int &Value, const int nChars)
+wxTextCtrl* ShuttleGuiBase::TieNumericTextBox(
+   const TranslatableString& Prompt, int& Value, const int nChars,
+   bool acceptEnter)
 {
-   WrappedType WrappedRef( Value );
-   return DoTieNumericTextBox( Prompt, WrappedRef, nChars );
+   WrappedType WrappedRef(Value);
+   return DoTieNumericTextBox(Prompt, WrappedRef, nChars, acceptEnter);
 }
 
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
-   const TranslatableString &Prompt, double &Value, const int nChars)
+   const TranslatableString& Prompt, double& Value, const int nChars,
+   bool acceptEnter)
 {
    WrappedType WrappedRef( Value );
-   return DoTieNumericTextBox( Prompt, WrappedRef, nChars );
+   return DoTieNumericTextBox( Prompt, WrappedRef, nChars, acceptEnter );
 }
 
 wxSlider * ShuttleGuiBase::TieSlider(
@@ -1951,14 +1958,14 @@ wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    const TranslatableString & Prompt,
    const DoubleSetting & Setting,
-   const int nChars)
+   const int nChars, bool acceptEnter)
 {
    wxTextCtrl * pText=(wxTextCtrl*)NULL;
 
    auto Value = Setting.GetDefault();
    WrappedType WrappedRef( Value );
    if( DoStep(1) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
-   if( DoStep(2) ) pText = DoTieNumericTextBox( Prompt, WrappedRef, nChars );
+   if( DoStep(2) ) pText = DoTieNumericTextBox( Prompt, WrappedRef, nChars, acceptEnter );
    if( DoStep(3) ) DoDataShuttle( Setting.GetPath(), WrappedRef );
    return pText;
 }

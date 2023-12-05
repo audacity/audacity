@@ -107,8 +107,11 @@ public:
    std::tuple<ExportPlugin*, int> FindFormat(const wxString& format, bool compareWithCase = false) const;
 
 private:
+   struct Traits : Registry::DefaultTraits {
+      using LeafTypes = List<ExportPluginRegistryItem>;
+   };
    struct IMPORT_EXPORT_API ExportPluginRegistryItem final : Registry::SingleItem {
-      static Registry::GroupItemBase &Registry();
+      static Registry::GroupItem<Traits> &Registry();
       ExportPluginRegistryItem(const Identifier &id, Factory factory );
       Factory mFactory;
    };

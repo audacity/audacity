@@ -19,19 +19,16 @@ renamed and focused on the smaller subproblem of repairing
 the audio, rather than actually finding the clicks.
 
 *//*******************************************************************/
-
-
-
 #include "Repair.h"
-#include "EffectOutputTracks.h"
 
 #include <math.h>
 
-#include "InterpolateAudio.h"
-#include "WaveTrack.h"
 #include "AudacityMessageBox.h"
-
+#include "EffectOutputTracks.h"
+#include "InterpolateAudio.h"
 #include "LoadEffects.h"
+#include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 const ComponentInterfaceSymbol EffectRepair::Symbol
 { XO("Repair") };
@@ -77,7 +74,9 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
    // This may be too much copying for EffectRepair. To support Cancel, may be
    // able to copy much less.
    // But for now, Cancel isn't supported without this.
-   EffectOutputTracks outputs{ *mTracks };
+   // Repair doesn't make sense for stretched clips, so don't pass a stretch
+   // interval.
+   EffectOutputTracks outputs { *mTracks, GetType(), {} };
    bool bGoodResult = true;
 
    int count = 0;
@@ -91,6 +90,13 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
          const auto repair0 = track->TimeToLongSamples(repair_t0);
          const auto repair1 = track->TimeToLongSamples(repair_t1);
          const auto repairLen = repair1 - repair0;
+         if (WaveTrackUtilities::HasStretch(*track, repair_t0, repair_t1)) {
+            EffectUIServices::DoMessageBox(*this,
+               XO(
+"The Repair effect cannot be applied within stretched or shrunk clips") );
+            bGoodResult = false;
+            break;
+         }
          if (repairLen > 128) {
             EffectUIServices::DoMessageBox(*this,
                XO(
@@ -119,7 +125,7 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
             break;
          }
 
-         for (const auto pChannel : TrackList::Channels(track))
+         for (const auto pChannel : track->Channels())
             if (!ProcessOne(count++, *pChannel, s0,
                // len is at most 5 * 128.
                len.as_size_t(),
@@ -140,17 +146,18 @@ done:
    return bGoodResult;
 }
 
-bool EffectRepair::ProcessOne(int count, WaveTrack &track,
+bool EffectRepair::ProcessOne(int count, WaveChannel &track,
    sampleCount start, size_t len, size_t repairStart, size_t repairLen)
 {
    Floats buffer{ len };
    track.GetFloats(buffer.get(), start, len);
    InterpolateAudio(buffer.get(), len, repairStart, repairLen);
-   track.Set((samplePtr)&buffer[repairStart], floatSample,
+   if (!track.Set((samplePtr)&buffer[repairStart], floatSample,
       start + repairStart, repairLen,
       // little repairs shouldn't force dither on rendering:
       narrowestSampleFormat
-   );
+   ))
+      return false;
    return !TrackProgress(count, 1.0); // TrackProgress returns true on Cancel.
 }
 

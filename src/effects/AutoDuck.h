@@ -19,6 +19,7 @@
 class wxBitmap;
 class wxTextCtrl;
 class ShuttleGui;
+class WaveChannel;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 
@@ -56,7 +57,7 @@ public:
 private:
    // EffectAutoDuck implementation
 
-   bool ApplyDuckFade(int trackNum, WaveTrack &track, double t0, double t1);
+   bool ApplyDuckFade(int trackNum, WaveChannel &track, double t0, double t1);
 
    void OnValueChanged(wxCommandEvent & evt);
 
@@ -71,7 +72,7 @@ private:
    double mThresholdDb;
    double mMaximumPause;
 
-   const WaveTrack *mControlTrack;
+   const WaveTrack *mControlTrack{};
 
    wxTextCtrl *mDuckAmountDbBox;
    wxTextCtrl *mInnerFadeDownLenBox;
@@ -82,7 +83,7 @@ private:
    wxTextCtrl *mMaximumPauseBox;
 
    class Panel;
-   Panel *mPanel;
+   Panel *mPanel{};
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()

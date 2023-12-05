@@ -90,8 +90,6 @@ namespace FileNames
 
    FILES_API wxString MkDir(const wxString &Str);
 
-   FILES_API bool IsMidi(const FilePath &fName);
-
    /** \brief A list of directories that should be searched for Audacity files
     * (plug-ins, help files, etc.).
     *

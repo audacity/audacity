@@ -27,9 +27,9 @@ MP3 and FFmpeg encoding libraries.
 ////////////////////////////////////////////////////////////////////////////////
 static const auto PathStart = wxT("LibraryPreferences");
 
-Registry::GroupItemBase &LibraryPrefs::PopulatorItem::Registry()
+auto LibraryPrefs::PopulatorItem::Registry() -> Registry::GroupItem<Traits> &
 {
-   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
+   static Registry::GroupItem<Traits> registry{ PathStart };
    return registry;
 }
 
@@ -107,22 +107,12 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   struct MyVisitor final : Visitor {
-      MyVisitor( ShuttleGui &S ) : S{ S }
-      {
-         // visit the registry to collect the plug-ins properly
-         // sorted
-         GroupItem<Registry::DefaultTraits> top{ PathStart };
-         Registry::Visit( *this, &top, &PopulatorItem::Registry() );
-      }
-
-      void Visit( Registry::SingleItem &item, const Path &path ) override
-      {
-         static_cast<PopulatorItem&>(item).mPopulator(S);
-      }
-
-      ShuttleGui &S;
-   } visitor{ S };
+   // visit the registry to collect the plug-ins properly
+   // sorted
+   GroupItem<Traits> top{ PathStart };
+   Registry::Visit(
+      [&](const PopulatorItem &item, auto &) { item.mPopulator(S); },
+      &top, &PopulatorItem::Registry());
 
    S.EndScroller();
 }

@@ -1,14 +1,14 @@
 #pragma once
 
 #include <functional>
-#include "commands/CommandManager.h"
+#include "MenuRegistry.h"
 #include "EffectInterface.h"
 
 class PluginDescriptor;
 
 namespace MenuHelper
 {
-using Group = MenuTable::GroupItemBase;
+using Group = MenuRegistry::GroupItem<MenuRegistry::Traits>;
 
 /// The effects come from a plug in list
 /// This code iterates through the list, adding effects into

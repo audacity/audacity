@@ -36,7 +36,6 @@ deps=(
    libavformat-dev
    libavutil-dev
    libid3tag0-dev
-   libmad0-dev
    libvamp-hostsdk3v5
    libogg-dev
    libvorbis-dev
@@ -62,6 +61,7 @@ deps=(
    libegl1-mesa-dev
    libmpg123-dev
    libwavpack-dev
+   libopusfile-dev
 )
 
 apt-get update

@@ -69,14 +69,10 @@
 
 *//*******************************************************************/
 
-
-
+#include <wx/frame.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
-#ifdef USE_MIDI
-#include "import/ImportMIDI.h"
-#endif // USE_MIDI
 #include "FileNames.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
@@ -85,7 +81,7 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectManager.h"
-#include "ProjectWindow.h"
+#include "Viewport.h"
 #include "ProjectWindows.h"
 #include "ImportUtils.h"
 
@@ -340,27 +336,6 @@ static Importer::RegisteredImportPlugin registered{ "LOF",
    std::make_unique< LOFImportPlugin >()
 };
 
-#ifdef USE_MIDI
-// return null on failure; if success, return the given project, or a NEW
-// one, if the given was null; create no NEW project if failure
-static AudacityProject *DoImportMIDIProject(
-   AudacityProject *pProject, const FilePath &fileName)
-{
-   AudacityProject *pNewProject {};
-   if ( !pProject )
-      pProject = pNewProject = ProjectManager::New();
-   auto cleanup = finally( [&]
-      { if ( pNewProject ) GetProjectFrame( *pNewProject ).Close(true); } );
-   
-   if ( DoImportMIDI( *pProject, fileName ) ) {
-      pNewProject = nullptr;
-      return pProject;
-   }
-   else
-      return nullptr;
-}
-#endif
-
 /** @brief Processes a single line from a LOF text file, doing whatever is
  * indicated on the line.
  *
@@ -456,24 +431,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       }
 
       // Do recursive call to import
-
-#ifdef USE_MIDI
-      // If file is a midi
-      if (FileNames::IsMidi(targetfile))
-      {
-         mProject = DoImportMIDIProject(mProject, targetfile);
-      }
-
-      // If not a midi, open audio file
-      else
-
-#else // !USE_MIDI
-         /* if we don't have midi support, go straight on to opening as an
-          * audio file. TODO: Some sort of message here? */
-
-#endif // USE_MIDI
-         mProject = ProjectManager::OpenProject( mProject, targetfile,
-            true /* addtohistory */, true /* reuseNonemptyProject */ );
+      mProject = ProjectManager::OpenProject( mProject, targetfile,
+         true /* addtohistory */, true /* reuseNonemptyProject */ );
 
       // Set tok to right after filename
       temptok2.SetString(targettoken);
@@ -558,13 +517,13 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
    if (callDurationFactor)
    {
       double longestDuration = TrackList::Get(*mProject).GetEndTime();
-      ProjectWindow::Get( *mProject ).ZoomBy(longestDuration / durationFactor);
+      Viewport::Get(*mProject).ZoomBy(longestDuration / durationFactor);
       callDurationFactor = false;
    }
 
    if (callScrollOffset)
    {
-      ProjectWindow::Get( *mProject ).TP_ScrollWindow(scrollOffset);
+      Viewport::Get(*mProject).SetHorizontalThumb(scrollOffset);
       callScrollOffset = false;
    }
 

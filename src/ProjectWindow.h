@@ -13,12 +13,8 @@ Paul Licameli split from AudacityProject.h
 
 #include <memory>
 #include "ProjectWindowBase.h" // to inherit
-#include "TrackPanelListener.h" // to inherit
 #include "Prefs.h"
-#include "Observer.h"
-
-class CommandContext;
-class Track;
+#include "Viewport.h"
 
 class wxScrollBar;
 class wxPanel;
@@ -35,8 +31,7 @@ struct ProjectWindowDestroyedMessage final : Observer::Message {};
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
 class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
-   , public TrackPanelListener
-   , public PrefsListener
+, public PrefsListener
    , public Observer::Publisher<ProjectWindowDestroyedMessage>
 {
 public:
@@ -45,8 +40,6 @@ public:
    static const ProjectWindow &Get( const AudacityProject &project );
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
-
-   static void OnResetWindow(const CommandContext& context);
 
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
@@ -62,8 +55,6 @@ public:
 
    bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
-
-   void Reset();
 
    /**
     * \brief Track list window is the parent container for TrackPanel
@@ -122,15 +113,6 @@ public:
    void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
 
-   void RedrawProject();
-
-   void Zoom(double level);
-   void ZoomInByFactor( double ZoomFactor );
-   void ZoomOutByFactor( double ZoomFactor );
-   void ZoomBy(double multiplier);
-   void ZoomAfterImport(Track *pTrack);
-   double GetZoomOfToFit() const;
-   void DoZoomFit();
    
    void ApplyUpdatedTheme();
 
@@ -139,42 +121,41 @@ public:
    wxScrollBar &GetVerticalScrollBar() { return *mVsbar; }
    wxScrollBar &GetHorizontalScrollBar() { return *mHsbar; }
 
-   void ScrollIntoView(double pos);
-   void ScrollIntoView(int x);
-
-   void OnScrollLeft();
-   void OnScrollRight();
-
-   void Rewind(bool shift);
-   void SkipEnd(bool shift);
-
    void OnScrollLeftButton(wxScrollEvent & event);
    void OnScrollRightButton(wxScrollEvent & event);
 
-   void FinishAutoScroll();
-   void FixScrollbars();
-
+   std::pair<int, int> ViewportSize() const;
    bool MayScrollBeyondZero() const;
-   double ScrollingLowerBoundTime() const;
-   // How many pixels are covered by the period from lowermost scrollable time, to the given time:
-   // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
-   double PixelWidthBeforeTime(double scrollto) const;
-   void SetHorizontalThumb(double scrollto);
+   unsigned MinimumTrackHeight() ;
+   bool IsTrackMinimized(const Track &track) ;
+   void SetMinimized(Track &track, bool minimized) ;
+   int GetTrackHeight(const Track &track) ;
+   void SetChannelHeights(Track &track, unsigned height) ;
+   int GetTotalHeight(const TrackList &trackList) ;
+   int GetHorizontalThumbPosition() const ;
+   int GetHorizontalThumbSize() const ;
+   int GetHorizontalRange() const ;
+   void SetHorizontalThumbPosition(int viewStart) ;
+   void SetHorizontalScrollbar(int position, int thumbSize,
+      int range, int pageSize, bool refresh) ;
+   void ShowHorizontalScrollbar(bool shown) ;
+
+   int GetVerticalThumbPosition() const ;
+   int GetVerticalThumbSize() const ;
+   int GetVerticalRange() const ;
+   void SetVerticalThumbPosition(int viewStart) ;
+   void SetVerticalScrollbar(int position, int thumbSize,
+      int range, int pageSize, bool refresh) ;
+   void ShowVerticalScrollbar(bool shown) ;
+
+   void SetToDefaultSize();
 
    // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
    // TrackPanel access
    wxSize GetTPTracksUsableArea() /* not override */;
    void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
-   void TP_RedrawScrollbars() override;
-   void TP_ScrollLeft() override;
-   void TP_ScrollRight() override;
-   void TP_ScrollWindow(double scrollto) override;
-   bool TP_ScrollUpDown(int delta) override;
-   void TP_HandleResize() override;
-
  private:
-
    void OnThemeChange(struct ThemeChangeMessage);
 
    // PrefsListener implementation
@@ -192,19 +173,12 @@ public:
    void OnMouseEvent(wxMouseEvent & event);
    void OnIconize(wxIconizeEvent &event);
    void OnSize(wxSizeEvent & event);
-   void HandleResize();
    void UpdateLayout();
    void OnShow(wxShowEvent & event);
    void OnMove(wxMoveEvent & event);
-   void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
-   void OnUndoPushedModified();
-   void OnUndoRedo();
-   void OnUndoReset();
    void OnProjectTitleChange(ProjectFileIOMessage);
-
-   bool mbInitializingScrollbar{ false };
 
 private:
    wxRect mNormalizedWindowState;
@@ -218,7 +192,6 @@ private:
 
    int mNextWindowID{};
 
-   bool mAutoScrolling{ false };
    bool mActive{ true };
    bool mIconized{ false };
    bool mShownOnce{ false };
@@ -228,13 +201,15 @@ private:
    bool mIsDeleting{ false };
 
 private:
+   void OnViewportMessage(const ViewportMessage &message);
 
-   Observer::Subscription mUndoSubscription
-      , mThemeChangeSubscription
-      , mTitleChangeSubcription
+   Observer::Subscription
+        mThemeChangeSubscription
+      , mTitleChangeSubscription
       , mSnappingChangedSubscription
    ;
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
+   const Observer::Subscription mViewportSubscription;
 
    DECLARE_EVENT_TABLE()
 };

@@ -11,28 +11,22 @@ Paul Licameli split from TrackPanel.cpp
 
 #ifdef USE_MIDI
 #include "NoteTrackControls.h"
-
-#include "NoteTrackButtonHandle.h"
-#include "Observer.h"
-#include "Theme.h"
-
+#include "NoteTrackDisplayData.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
 #include "../../ui/PlayableTrackButtonHandles.h"
+#include "NoteTrackButtonHandle.h"
 #include "NoteTrackSliderHandles.h"
-
-#include "../../../../HitTestResult.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
+#include "../../../ui/CommonTrackInfo.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
-#include "Project.h"
 #include "ProjectHistory.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../prefs/ThemePrefs.h"
-
-#include <mutex>
-#include <wx/app.h>
+#include "Theme.h"
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,7 +113,7 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
       || event.GetId() == OnDownOctaveID);
 
    const bool bDown = (OnDownOctaveID == event.GetId());
-   pTrack->ShiftNoteRange((bDown) ? -12 : 12);
+   NoteTrackRange::Get(*pTrack).ShiftNoteRange((bDown) ? -12 : 12);
 
    AudacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
@@ -145,7 +139,6 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 
 // drawing related
 #include "../../../../widgets/ASlider.h"
-#include "../../../../TrackInfo.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 
@@ -180,7 +173,7 @@ void SliderDrawFunction
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
-   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   CommonTrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto nt = static_cast<const NoteTrack*>( pTrack );
    Selector( sliderRect, nt, captured, pParent )->OnPaint(*dc, highlight);
 }
@@ -193,7 +186,7 @@ void VelocitySliderDrawFunction
    auto dc = &context.dc;
    auto target = dynamic_cast<VelocitySliderHandle*>( context.target.get() );
    bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
+   bool captured = hit && target->IsDragging();
 
    const auto artist = TrackArtist::Get( context );
    auto pParent = FindProjectFrame( artist->parent->GetProject() );
@@ -203,6 +196,103 @@ void VelocitySliderDrawFunction
       pParent, captured, hit);
 }
 #endif
+
+// Draws the midi channel toggle buttons within the given rect.
+// The rect should be evenly divisible by 4 on both axes.
+static void DrawLabelControls
+( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect, int highlightedChannel )
+{
+   dc.SetTextForeground(theTheme.Colour(clrLabelTrackText));
+   wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
+   wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
+
+   auto cellWidth = rect.width / 4;
+   auto cellHeight = rect.height / 4;
+
+   wxRect box;
+   for (int row = 0; row < 4; row++) {
+      for (int col = 0; col < 4; col++) {
+         // chanName is the "external" channel number (1-16)
+         // used by AColor and button labels
+         int chanName = row * 4 + col + 1;
+
+         box.x = rect.x + col * cellWidth;
+         box.y = rect.y + row * cellHeight;
+         box.width = cellWidth;
+         box.height = cellHeight;
+
+         bool visible = pTrack ? pTrack->IsVisibleChan(chanName - 1) : true;
+         if (visible) {
+            // highlightedChannel counts 0 based
+            if ( chanName == highlightedChannel + 1 )
+               AColor::LightMIDIChannel(&dc, chanName);
+            else
+               AColor::MIDIChannel(&dc, chanName);
+            dc.DrawRectangle(box);
+// two choices: channel is enabled (to see and play) when button is in
+// "up" position (original Audacity style) or in "down" position
+//
+#define CHANNEL_ON_IS_DOWN 1
+#if CHANNEL_ON_IS_DOWN
+            AColor::DarkMIDIChannel(&dc, chanName);
+#else
+            AColor::LightMIDIChannel(&dc, chanName);
+#endif
+            AColor::Line(dc, box.x, box.y, box.x + box.width - 1, box.y);
+            AColor::Line(dc, box.x, box.y, box.x, box.y + box.height - 1);
+
+#if CHANNEL_ON_IS_DOWN
+            AColor::LightMIDIChannel(&dc, chanName);
+#else
+            AColor::DarkMIDIChannel(&dc, chanName);
+#endif
+            AColor::Line(dc,
+                         box.x + box.width - 1, box.y,
+                         box.x + box.width - 1, box.y + box.height - 1);
+            AColor::Line(dc,
+                         box.x, box.y + box.height - 1,
+                         box.x + box.width - 1, box.y + box.height - 1);
+         } else {
+            if ( chanName == highlightedChannel + 1 )
+               AColor::LightMIDIChannel(&dc, chanName);
+            else
+               AColor::MIDIChannel(&dc, 0);
+            dc.DrawRectangle(box);
+#if CHANNEL_ON_IS_DOWN
+            AColor::LightMIDIChannel(&dc, 0);
+#else
+            AColor::DarkMIDIChannel(&dc, 0);
+#endif
+            AColor::Line(dc, box.x, box.y, box.x + box.width - 1, box.y);
+            AColor::Line(dc, box.x, box.y, box.x, box.y + box.height - 1);
+
+#if CHANNEL_ON_IS_DOWN
+            AColor::DarkMIDIChannel(&dc, 0);
+#else
+            AColor::LightMIDIChannel(&dc, 0);
+#endif
+            AColor::Line(dc,
+                         box.x + box.width - 1, box.y,
+                         box.x + box.width - 1, box.y + box.height - 1);
+            AColor::Line(dc,
+                         box.x, box.y + box.height - 1,
+                         box.x + box.width - 1, box.y + box.height - 1);
+
+         }
+
+         wxString text;
+         wxCoord w;
+         wxCoord h;
+
+         text.Printf(wxT("%d"), chanName);
+         dc.GetTextExtent(text, &w, &h);
+
+         dc.DrawText(text, box.x + (box.width - w) / 2, box.y + (box.height - h) / 2);
+      }
+   }
+   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
+   AColor::MIDIChannel(&dc, 0); // always return with gray color selected
+}
 
 void MidiControlsDrawFunction
 ( TrackPanelDrawingContext &context,
@@ -214,7 +304,7 @@ void MidiControlsDrawFunction
    auto &dc = context.dc;
    wxRect midiRect = rect;
    GetMidiControlsHorizontalBounds(rect, midiRect);
-   NoteTrack::DrawLabelControls
+   DrawLabelControls
       ( static_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
 }
 }
@@ -235,7 +325,7 @@ static const struct NoteTrackTCPLines
 
 void NoteTrackControls::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
 {
-   TrackInfo::GetSliderHorizontalBounds( topleft, dest );
+   CommonTrackInfo::GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemVelocity );
    dest.y = topleft.y + results.first;
    dest.height = results.second;
@@ -252,7 +342,7 @@ void NoteTrackControls::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
 
 unsigned NoteTrackControls::DefaultNoteTrackHeight()
 {
-   return TrackInfo::DefaultTrackHeight( noteTrackTCPLines );
+   return CommonTrackInfo::DefaultTrackHeight( noteTrackTCPLines );
 }
 
 const TCPLines &NoteTrackControls::GetTCPLines() const

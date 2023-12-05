@@ -22,15 +22,24 @@ double WideSampleSequence::LongSamplesToTime(sampleCount pos) const
    return pos.as_double() / GetRate();
 }
 
-const WideSampleSequence& WideSampleSequence::GetDecorated() const
+double WideSampleSequence::SnapToSample(double t) const
 {
-   const WideSampleSequence* innermost = this;
-   while (const auto newP = innermost->DoGetDecorated())
-      innermost = newP;
-   return *innermost;
+   return LongSamplesToTime(TimeToLongSamples(t));
 }
 
-const WideSampleSequence* WideSampleSequence::DoGetDecorated() const
+bool WideSampleSequence::GetFloats(size_t iChannel, size_t nBuffers,
+   float *const buffers[], sampleCount start, size_t len,
+   bool backwards, fillFormat fill,
+   bool mayThrow, sampleCount* pNumWithinClips) const
 {
-   return nullptr;
+   // Cast the pointers to pass them to DoGet() which handles multiple
+   // destination formats
+   const auto castBuffers = reinterpret_cast<const samplePtr*>(buffers);
+   const auto result = DoGet(
+      iChannel, nBuffers, castBuffers,
+      floatSample, start, len, backwards, fill, mayThrow, pNumWithinClips);
+   if (!result)
+      while (nBuffers--)
+         ClearSamples(castBuffers[nBuffers], floatSample, 0, len);
+   return result;
 }

@@ -12,9 +12,9 @@
 
 #include "PlayableTrack.h"
 #include "ProjectHistory.h"
-#include "ProjectWindow.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "TrackPanel.h"
+#include "Viewport.h"
 
 namespace TrackUtilities {
 
@@ -51,7 +51,7 @@ void DoRemoveTracks(AudacityProject &project)
    // If we actually have something left, then set focus and make sure it's seen
    if (f) {
       TrackFocus::Get(project).Set(f);
-      f->EnsureVisible();
+      Viewport::Get(project).ShowTrack(*f);
    }
 
    ProjectHistory::Get(project)
@@ -155,7 +155,6 @@ void DoRemoveTrack(AudacityProject &project, Track *toRemove)
 
    auto &tracks = TrackList::Get(project);
    auto &trackFocus = TrackFocus::Get(project);
-   auto &window = ProjectWindow::Get(project);
 
    const auto iter = tracks.Find(toRemove);
 
@@ -182,7 +181,7 @@ void DoRemoveTrack(AudacityProject &project, Track *toRemove)
       trackFocus.Set(**newFocus);
 
    ProjectHistory::Get(project).PushState(
-      XO("Removed track '%s.'").Format(name),
+      XO("Removed track '%s'.").Format(name),
       XO("Track Remove"));
 }
 

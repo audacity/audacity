@@ -21,11 +21,11 @@
 
 #include "../ActiveProject.h"
 #include "Project.h"
-#include "../ProjectWindow.h"
 #include "AppCommandEvent.h"
 #include "ScriptCommandRelay.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../commands/Command.h"
+#include "Viewport.h"
 
 CommandHandler::CommandHandler()
 {
@@ -51,6 +51,6 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
       wxUnusedVar(result);
 
       // Redraw the project
-      ProjectWindow::Get( context.project ).RedrawProject();
+      Viewport::Get(context.project).Redraw();
    }
 }

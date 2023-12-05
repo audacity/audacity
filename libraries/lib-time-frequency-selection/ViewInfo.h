@@ -173,7 +173,7 @@ private:
    void Notify();
 
    // Times:
-   static constexpr auto invalidValue = std::numeric_limits<double>::min();
+   static constexpr auto invalidValue = -std::numeric_limits<double>::infinity();
 
    double mStart { invalidValue };
    double mEnd { invalidValue };
@@ -194,7 +194,7 @@ public:
    static ViewInfo &Get( AudacityProject &project );
    static const ViewInfo &Get( const AudacityProject &project );
 
-   ViewInfo(double start, double screenDuration, double pixelsPerSecond);
+   ViewInfo(double start, double pixelsPerSecond);
    ViewInfo( const ViewInfo & ) = delete;
    ViewInfo &operator=( const ViewInfo & ) = delete;
 
@@ -207,12 +207,8 @@ public:
 
    double GetBeforeScreenWidth() const
    {
-      return h * zoom;
+      return hpos * zoom;
    }
-   void SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime = 0.0);
-
-   double GetTotalWidth() const
-   { return total * zoom; }
 
    // Current selection
 
@@ -221,20 +217,8 @@ public:
 
    // Scroll info
 
-   double total;                // total width in secs
-   // Current horizontal scroll bar positions, in pixels
-   wxInt64 sbarH;
-   wxInt64 sbarScreen;
-   wxInt64 sbarTotal;
-
-   // Internal wxScrollbar positions are only int in range, so multiply
-   // the above values with the following member to get the actual
-   // scroll bar positions as reported by the horizontal wxScrollbar's members
-   // i.e. units are scroll increments per pixel
-   double sbarScale;
-
-   // Vertical scroll step
-   int scrollStep;
+   //! Pixel distance from top of tracks to top of visible scrolled area
+   int vpos{ 0 };
 
    // Other stuff, mainly states (true or false) related to autoscroll and
    // drawing the waveform. Maybe this should be put somewhere else?

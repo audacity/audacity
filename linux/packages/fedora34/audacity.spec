@@ -32,7 +32,6 @@ BuildRequires: jack-audio-connection-kit-devel
 BuildRequires: ladspa-devel
 BuildRequires: lame-devel
 BuildRequires: libid3tag-devel
-BuildRequires: libmad-devel
 BuildRequires: taglib-devel
 BuildRequires: twolame-devel
 BuildRequires: libogg-devel

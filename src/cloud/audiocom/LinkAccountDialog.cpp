@@ -129,8 +129,8 @@ void LinkAccountDialog::OnTextChanged()
 } // namespace cloud::audiocom
 
 // Remaining code hooks this add-on into the application
-#include "../../commands/CommandContext.h"
-#include "../../commands/CommandManager.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
 
 namespace {
 // Define our extra menu item
@@ -140,11 +140,11 @@ void OnLinkAccount(const CommandContext&)
    dialog.ShowModal();
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
-   Placement{ wxT("Help/Extra"), { OrderingHint::Begin } },
       Command(
          wxT("LinkAccount"), XXO("L&ink audio.com account..."),
-         OnLinkAccount, AlwaysEnabledFlag) 
+         OnLinkAccount, AlwaysEnabledFlag),
+   Placement{ wxT("Help/Extra"), { OrderingHint::Begin } }
 };
 }

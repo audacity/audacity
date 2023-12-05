@@ -15,23 +15,21 @@
 #include "AudacityMessageBox.h"
 #include "AudioIO.h"
 #include "CommonCommandFlags.h"
-#include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectWindows.h"
 #include "ProjectRate.h"
-#include "ProjectSettings.h"
 #include "SelectionState.h"
 #include "SyncLock.h"
 #include "TimeDialog.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 
-#include "commands/CommandManager.h"
+#include "CommandManager.h"
 
 namespace {
 
@@ -91,7 +89,7 @@ void SelectNone( AudacityProject &project )
 void SelectAllIfNone( AudacityProject &project )
 {
    auto &viewInfo = ViewInfo::Get( project );
-   auto flags = MenuManager::Get( project ).GetUpdateFlags();
+   auto flags = CommandManager::Get( project ).GetUpdateFlags();
    if((flags & EditableTracksSelectedFlag()).none() ||
       viewInfo.selectedRegion.isPoint())
       DoSelectAllAudio( project );
@@ -103,7 +101,7 @@ bool SelectAllIfNoneAndAllowed( AudacityProject &project )
 {
    auto allowed = gPrefs->ReadBool(wxT("/GUI/SelectAllOnNone"), false);
    auto &viewInfo = ViewInfo::Get( project );
-   auto flags = MenuManager::Get( project ).GetUpdateFlags();
+   auto flags = CommandManager::Get( project ).GetUpdateFlags();
 
    if((flags & EditableTracksSelectedFlag()).none() ||
       viewInfo.selectedRegion.isPoint()) {
@@ -184,7 +182,7 @@ void ActivatePlayRegion(AudacityProject &project)
    }
 
    // Ensure the proper state of looping in the menu
-   CommandManager::Get( project ).UpdateCheckmarks( project );
+   CommandManager::Get(project).UpdateCheckmarks();
 }
 
 void InactivatePlayRegion(AudacityProject &project)
@@ -198,7 +196,7 @@ void InactivatePlayRegion(AudacityProject &project)
    playRegion.SetTimes( selectedRegion.t0(), selectedRegion.t1() );
 
    // Ensure the proper state of looping in the menu
-   CommandManager::Get( project ).UpdateCheckmarks( project );
+   CommandManager::Get(project).UpdateCheckmarks();
 }
 
 void TogglePlayRegion(AudacityProject &project)
@@ -216,6 +214,9 @@ void ClearPlayRegion(AudacityProject &project)
    auto &viewInfo = ViewInfo::Get( project );
    auto &playRegion = viewInfo.playRegion;
    playRegion.Clear();
+
+   if (playRegion.Active())
+      InactivatePlayRegion(project);
 }
 
 void SetPlayRegionToSelection(AudacityProject &project)

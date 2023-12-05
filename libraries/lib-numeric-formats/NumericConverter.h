@@ -17,6 +17,7 @@
 #define __AUDACITY_NUMERIC_CONVERTER__
 
 #include <memory>
+#include <numeric>
 
 #include "NumericConverterType.h"
 #include "NumericConverterFormatter.h"
@@ -25,12 +26,14 @@
 #include "ComponentInterfaceSymbol.h"
 #include "TranslatableString.h"
 
+struct FormatChangedToFitValueMessage final { double value; };
 
-class NUMERIC_FORMATS_API NumericConverter /* not final */
+class NUMERIC_FORMATS_API NumericConverter /* not final */ :
+    public Observer::Publisher<FormatChangedToFitValueMessage>
 {
 public:
    NumericConverter(const FormatterContext& context, NumericConverterType type,
-                    const NumericFormatSymbol & formatName = {},
+                    const NumericFormatID & formatName = {},
                     double value = 0.0f);
 
    virtual ~NumericConverter();  
@@ -50,11 +53,11 @@ private:
 
 public:
    // returns true if the format type really changed:
-   bool SetTypeAndFormatName(const NumericConverterType& type, const NumericFormatSymbol& formatName);
+   bool SetTypeAndFormatName(const NumericConverterType& type, const NumericFormatID& formatName);
    // returns true if the format name really changed:
-   bool SetFormatName(const NumericFormatSymbol & formatName);
+   bool SetFormatName(const NumericFormatID &formatName);
    // Could be empty if custom format is used
-   NumericFormatSymbol GetFormatName() const;
+   NumericFormatID GetFormatName() const;
 
    bool SetCustomFormat(const TranslatableString& customFormat);
 
@@ -67,6 +70,8 @@ public:
    double GetValue();
    wxString GetString();
 
+   void UpdateFormatToFit(double value);
+
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
    void Adjust(int steps, int dir, int focusedDigit);
@@ -76,22 +81,22 @@ public:
 
 protected:
    bool UpdateFormatter();
-   virtual void OnFormatUpdated();
+   virtual void OnFormatUpdated(bool resetFocus);
 
    FormatterContext mContext;
 
    NumericConverterType mType;
 
-   double         mValue;
-
-   double         mMinValue;
-   double         mMaxValue;
+   double         mMinValue { 0.0 };
+   double         mMaxValue { std::numeric_limits<double>::max() };
    double         mInvalidValue { -1 };
+
+   double         mValue { mInvalidValue };
 
    std::unique_ptr<NumericConverterFormatter>
                  mFormatter;
    
-   NumericFormatSymbol mFormatSymbol;
+   NumericFormatID mFormatID;
    TranslatableString mCustomFormat;
 
    // Formatted mValue, by ValueToControls().

@@ -547,8 +547,7 @@ void DBConnection::CheckpointThread(sqlite3 *db, const FilePath &fileName)
             : TranslatableString{};
          auto message = XO(
             "Disk is full.\n"
-            "%s\n"
-            "For tips on freeing up space, click the help button."
+            "%s"
          ).Format(message1);
 
          // Stop trying to checkpoint

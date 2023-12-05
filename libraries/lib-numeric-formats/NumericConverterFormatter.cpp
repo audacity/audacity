@@ -42,10 +42,11 @@ NumericField::NumericField(size_t _digits, bool zeropad)
       formatStr = "%d";
 }
 
-NumericField NumericField::ForRange(size_t range, bool zeropad)
+NumericField NumericField::ForRange(size_t range, bool zeropad, size_t minDigits)
 {
    // Previously, Audacity used 5 digits by default (why?)
-   return NumericField(range > 1 ? CalculateDigits(range) : 5, zeropad);
+   return NumericField(
+      range > 1 ? std::max(minDigits, CalculateDigits(range)) : 5, zeropad);
 }
 
 NumericField NumericField::WithDigits(size_t digits, bool zeropad)
@@ -54,6 +55,10 @@ NumericField NumericField::WithDigits(size_t digits, bool zeropad)
 }
 
 NumericConverterFormatter::~NumericConverterFormatter()
+{
+}
+
+void NumericConverterFormatter::UpdateFormatForValue(double, bool)
 {
 }
 

@@ -106,8 +106,8 @@ void TrackPanelResizerCell::Draw(
 using ResizerCellAttachments = ChannelAttachments<TrackPanelResizerCell>;
 
 static const AttachedTrackObjects::RegisteredFactory key{
-   [](Track &){
-      return std::make_shared<ResizerCellAttachments>(
+   [](Track &track){
+      return std::make_shared<ResizerCellAttachments>(track,
          [](Track &track, size_t iChannel) {
             // ChannelAttachments promises this precondition
             assert(iChannel <= track.NChannels());

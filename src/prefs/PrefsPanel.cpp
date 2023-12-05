@@ -13,9 +13,10 @@ Paul Licameli split from PrefsDialog.cpp
 
 static const auto PathStart = L"Preferences";
 
-Registry::GroupItemBase &PrefsPanel::PrefsItem::Registry()
+
+auto PrefsPanel::PrefsItem::Registry() -> Registry::GroupItem<Traits>&
 {
-   static Registry::GroupItem<Registry::DefaultTraits> registry{ PathStart };
+   static Registry::GroupItem<Traits> registry{ PathStart };
    return registry;
 }
 
@@ -25,39 +26,6 @@ PrefsPanel::PrefsItem::PrefsItem(const wxString &name,
    , factory{ factory }
    , expanded{ expanded }
 {}
-
-// Collects registry tree nodes into a vector, in preorder.
-struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
-   Visitor( PrefsPanel::Factories &factories_ )
-      : factories{ factories_ }
-   {
-      childCounts.push_back( 0 );
-   }
-   void BeginGroup( Registry::GroupItemBase &item, const Path & ) override
-   {
-      auto pItem = dynamic_cast<PrefsItem*>( &item );
-      if (!pItem || !pItem->factory)
-         return;
-      indices.push_back( factories.size() );
-      factories.emplace_back( pItem->factory, 0, pItem->expanded );
-      ++childCounts.back();
-      childCounts.push_back( 0 );
-   }
-   void EndGroup( Registry::GroupItemBase &item, const Path & ) override
-   {
-      auto pItem = dynamic_cast<PrefsItem*>( &item );
-      if (!pItem || !pItem->factory)
-         return;
-      auto &factory = factories[ indices.back() ];
-      factory.nChildren = childCounts.back();
-      childCounts.pop_back();
-      indices.pop_back();
-   }
-
-   PrefsPanel::Factories &factories;
-   std::vector<size_t> childCounts;
-   std::vector<size_t> indices;
-};
 
 PluginPath PrefsPanel::GetPath() const
 { return BUILTIN_PREFS_PANEL_PREFIX + GetSymbol().Internal(); }
@@ -109,19 +77,43 @@ PrefsPanel::Factories
       PathStart,
       {
          {wxT(""),
-       wxT("Device,Playback,Recording,Quality,GUI,Tracks,ImportExport,Directories,Warnings,Effects,KeyConfig,Mouse")
+       wxT("Device,Playback,Recording,Quality,GUI,Tracks,Directories,Warnings,Effects,KeyConfig,Mouse")
          },
          {wxT("/Tracks"), wxT("TracksBehaviors,Spectrum")},
       }
    };
 
-   static Factories factories;
+   static Factories sFactories;
    static std::once_flag flag;
 
-   std::call_once( flag, []{
-      PrefsItem::Visitor visitor{ factories };
-      Registry::GroupItem<Registry::DefaultTraits> top{ PathStart };
-      Registry::Visit( visitor, &top, &PrefsItem::Registry() );
-   } );
-   return factories;
+   std::call_once(flag, []{
+      // Collect registry tree nodes into a vector, in preorder.
+      std::vector<size_t> childCounts;
+      std::vector<size_t> indices;
+      childCounts.push_back(0);
+      Factories factories;
+
+      Registry::GroupItem<Traits> top{ PathStart };
+      Registry::Visit(std::tuple{
+         [&](const PrefsItem &item, auto&) {
+            if (!item.factory)
+               return;
+            indices.push_back(factories.size());
+            factories.emplace_back(item.factory, 0, item.expanded);
+            ++childCounts.back();
+            childCounts.push_back(0);
+         },
+         Registry::NoOp,
+         [&](const PrefsItem &item, auto&) {
+            if (!item.factory)
+               return;
+            auto &factory = factories[indices.back()];
+            factory.nChildren = childCounts.back();
+            childCounts.pop_back();
+            indices.pop_back();
+         }
+      }, &top, &PrefsItem::Registry());
+      sFactories.swap(factories);
+   });
+   return sFactories;
 }

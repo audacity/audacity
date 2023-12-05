@@ -25,18 +25,18 @@ Paul Licameli split from TrackPanel.cpp
 #include "ProjectHistory.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "../../../ProjectWindow.h"
 #include "../../../ProjectWindows.h"
 #include "../../../RefreshCode.h"
 #include "SyncLock.h"
 #include "Theme.h"
 #include "../../../TrackArt.h"
 #include "../../../TrackArtist.h"
-#include "../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "AudacityTextEntryDialog.h"
 #include "wxWidgetsWindowPlacement.h"
 
@@ -850,7 +850,9 @@ void LabelTrackView::Draw
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       bool highlightTrack = false;
       auto target = dynamic_cast<LabelTextHandle*>(context.target.get());
-      highlightTrack = target && target->GetTrack().get() == this;
+      highlightTrack = target &&
+         target->FindChannel().get() ==
+            static_cast<const LabelTrack*>(FindTrack().get());
 #endif
       int i = -1; for (const auto &labelStruct : mLabels) { ++i;
          bool highlight = false;
@@ -1454,7 +1456,7 @@ unsigned LabelTrackView::KeyDown(
    // Make sure caret is in view
    int x;
    if (CalcCursorX( *project, &x ))
-      ProjectWindow::Get( *project ).ScrollIntoView(x);
+      Viewport::Get(*project).ScrollIntoView(x);
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
@@ -1761,7 +1763,7 @@ bool LabelTrackView::DoKeyDown(
                mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
-               ProjectWindow::Get(project).ScrollIntoView(labelStruct.selectedRegion.t0());
+               Viewport::Get(project).ScrollIntoView(labelStruct.selectedRegion.t0());
                // message for screen reader
                /* i18n-hint:
                   String is replaced by the name of a label,
@@ -1908,7 +1910,7 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
 
    // Bug 2044.  parent can be nullptr after a context switch.
    if( !parent )
-      parent = &GetProjectFrame( project );
+      parent = &GetProjectFrame(project);
 
    if( parent )
    {
@@ -2276,7 +2278,7 @@ void LabelTrackView::DoEditLabels
       freqFormat = formats.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame(project);
 
    LabelDialog dlg(&window, project, &tracks,
                    lt, index,
@@ -2309,7 +2311,7 @@ int LabelTrackView::DialogForLabelName(
       - 39;
    position.y += 2;  // just below the bottom of the track
    position = trackPanel.ClientToScreen(position);
-   auto &window = GetProjectFrame( project );
+   auto &window = GetProjectFrame(project);
    AudacityTextEntryDialog dialog{ &window,
       XO("Name:"),
       XO("New label"),

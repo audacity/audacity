@@ -1,23 +1,23 @@
 #include "../CommonCommandFlags.h"
 #include "FileNames.h"
 #include "../LabelTrack.h"
+#include "MenuCreator.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectSettings.h"
 #include "../ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindows.h"
-#include "../ProjectWindow.h"
+#include "Registry.h"
 #include "SelectFile.h"
 #include "../TagsEditor.h"
 #include "../SelectUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "CommandContext.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 #include "Import.h"
@@ -33,6 +33,7 @@
 
 #include <wx/app.h>
 #include <wx/menu.h>
+#include <wx/frame.h>
 
 #include "ExportPluginRegistry.h"
 #include "ProjectRate.h"
@@ -60,7 +61,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
             false);
          return;
       }
-      ExportAudioDialog dialog(&ProjectWindow::Get(project),
+      ExportAudioDialog dialog(&GetProjectFrame(project),
                                project,
                                project.GetProjectName(),
                                format);
@@ -140,7 +141,8 @@ void DoImport(const CommandContext &context, bool isRaw)
 {
    auto &project = context.project;
    auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
+   auto &window = GetProjectFrame(project);
 
    auto selectedFiles = ProjectFileManager::ShowOpenDialog(FileNames::Operation::Import);
    if (selectedFiles.size() == 0) {
@@ -158,8 +160,8 @@ void DoImport(const CommandContext &context, bool isRaw)
    auto cleanup = finally( [&] {
 
       Importer::SetLastOpenType({});
-      window.ZoomAfterImport(nullptr);
-      window.HandleResize(); // Adjust scrollers for NEW track sizes.
+      viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
+      viewport.HandleResize(); // Adjust scrollers for NEW track sizes.
    } );
 
    for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
@@ -239,7 +241,7 @@ void OnProjectReset(const CommandContext &context)
 void OnClose(const CommandContext &context )
 {
    auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
+   auto &window = GetProjectFrame(project);
    ProjectFileManager::Get( project ).SetMenuClose(true);
    window.Close();
 }
@@ -298,7 +300,7 @@ void OnExportLabels(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &window = GetProjectFrame( project );
+   auto &window = GetProjectFrame(project);
 
    /* i18n-hint: filename containing exported text from label tracks */
    wxString fName = _("labels.txt");
@@ -366,7 +368,8 @@ void OnImportLabels(const CommandContext &context)
    auto &project = context.project;
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
+   auto &viewport = Viewport::Get(project);
+   auto &window = GetProjectFrame(project);
 
    wxString fileName =
        SelectFile(FileNames::Operation::Open,
@@ -403,7 +406,7 @@ void OnImportLabels(const CommandContext &context)
          XO("Imported labels from '%s'").Format( fileName ),
             XO("Import Labels"));
 
-      window.ZoomAfterImport(nullptr);
+      viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
    }
 }
 
@@ -426,13 +429,11 @@ void OnExportFLAC(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
-BaseItemSharedPtr FileMenu()
+auto FileMenu()
 {
-   using Options = CommandManager::Options;
-
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
    Menu( wxT("File"), XXO("&File"),
       Section( "Basic",
          /*i18n-hint: "New" is an action (verb) to create a NEW project*/
@@ -463,7 +464,7 @@ BaseItemSharedPtr FileMenu()
             XXO("Recent &Files")
    #endif
             ,
-            Special( wxT("PopulateRecentFilesStep"),
+            MenuCreator::Special( wxT("PopulateRecentFilesStep"),
             [](AudacityProject &, wxMenu &theMenu){
                // Recent Files and Recent Projects menus
                auto &history = FileHistory::Global();
@@ -542,15 +543,11 @@ BaseItemSharedPtr FileMenu()
    return menu;
 }
 
-AttachedItem sAttachment1{
-   wxT(""),
-   Indirect(FileMenu())
-};
+AttachedItem sAttachment1{ Indirect(FileMenu()) };
 
-BaseItemSharedPtr HiddenFileMenu()
+auto HiddenFileMenu()
 {
-   static BaseItemSharedPtr menu
-   {
+   static auto menu = std::shared_ptr{
       ConditionalItems( wxT("HiddenFileItems"),
          []()
          {
@@ -568,14 +565,11 @@ BaseItemSharedPtr HiddenFileMenu()
    return menu;
 }
 
-AttachedItem sAttachment2{
-   wxT(""),
-   Indirect(HiddenFileMenu())
-};
+AttachedItem sAttachment2{ Indirect(HiddenFileMenu()) };
 
-BaseItemSharedPtr ExtraExportMenu()
+auto ExtraExportMenu()
 {
-   static BaseItemSharedPtr menu{
+   static auto menu = std::shared_ptr{
       Section( "Import-Export",
          Menu( wxT("Export"), XXO("&Export"),
             // Enable Export audio commands only when there are audio tracks.
@@ -593,8 +587,8 @@ BaseItemSharedPtr ExtraExportMenu()
 }
 
 AttachedItem sAttachment3{
-   wxT("Optional/Extra/Part1"),
-   Indirect( ExtraExportMenu() )
+   Indirect( ExtraExportMenu() ),
+   wxT("Optional/Extra/Part1")
 };
 
 }

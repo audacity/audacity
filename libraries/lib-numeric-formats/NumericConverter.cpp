@@ -45,7 +45,7 @@ different formats.
 //
 
 NumericConverter::NumericConverter(const FormatterContext& context, NumericConverterType type,
-                                   const NumericFormatSymbol & formatName,
+                                   const NumericFormatID & formatName,
                                    double value)
     : mContext { context }
     , mType { std::move(type) }
@@ -80,6 +80,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    if (!mFormatter)
       return;
 
+   UpdateFormatToFit(rawValue);
    auto result = mFormatter->ValueToString(rawValue, nearest);
 
    mValueString = std::move(result.valueString);
@@ -101,30 +102,31 @@ void NumericConverter::ControlsToValue()
                mInvalidValue;
 }
 
-bool NumericConverter::SetTypeAndFormatName (const NumericConverterType& type, const NumericFormatSymbol& formatName)
+bool NumericConverter::SetTypeAndFormatName (const NumericConverterType& type, const NumericFormatID& formatName)
 {
    if (mType != type)
    {
       // Ensure that the format change will happen,
       // duration formats lists matches the time list
-      mFormatSymbol = {};
+      mFormatID = {};
       mType = type;
    }
 
    return SetFormatName(formatName);
 }
 
-bool NumericConverter::SetFormatName(const NumericFormatSymbol& formatName)
+bool NumericConverter::SetFormatName(const NumericFormatID& formatName)
 {
-   if (mFormatSymbol == formatName && !formatName.empty())
+   if (mFormatID == formatName && !formatName.empty())
       return false;
 
-   const auto newFormat = NumericConverterFormats::Lookup(mContext, mType, formatName);
+   const auto newFormat =
+      NumericConverterFormats::Lookup(mContext, mType, formatName).Internal();
 
-   if (mFormatSymbol == newFormat)
+   if (mFormatID == newFormat)
       return false;
 
-   mFormatSymbol = newFormat;
+   mFormatID = newFormat;
    mCustomFormat = {};
 
    UpdateFormatter();
@@ -132,9 +134,9 @@ bool NumericConverter::SetFormatName(const NumericFormatSymbol& formatName)
    return true;
 }
 
-NumericFormatSymbol NumericConverter::GetFormatName() const
+NumericFormatID NumericConverter::GetFormatName() const
 {
-   return mFormatSymbol;
+   return mFormatID;
 }
 
 bool NumericConverter::SetCustomFormat(const TranslatableString& customFormat)
@@ -145,7 +147,7 @@ bool NumericConverter::SetCustomFormat(const TranslatableString& customFormat)
    if (!ParseFormatString(customFormat))
       return false;
 
-   mFormatSymbol = {};
+   mFormatID = {};
    mCustomFormat = customFormat;
 
    UpdateFormatter();
@@ -201,6 +203,11 @@ wxString NumericConverter::GetString()
    return mValueString;
 }
 
+void NumericConverter::UpdateFormatToFit(double value)
+{
+   mFormatter->UpdateFormatForValue(value, false);
+}
+
 int NumericConverter::GetSafeFocusedDigit(int focusedDigit) const noexcept
 {
    if (focusedDigit < 0)
@@ -222,9 +229,9 @@ void NumericConverter::Decrement(int focusedDigit)
 
 bool NumericConverter::UpdateFormatter()
 {
-   if (!mFormatSymbol.empty())
+   if (!mFormatID.empty())
    {
-      auto formatterItem = NumericConverterRegistry::Find(mContext, mType, mFormatSymbol);
+      auto formatterItem = NumericConverterRegistry::Find(mContext, mType, mFormatID);
 
       if (formatterItem == nullptr)
       {
@@ -242,14 +249,17 @@ bool NumericConverter::UpdateFormatter()
    if (mFormatter)
    {
       mFormatUpdatedSubscription =
-         mFormatter->Subscribe([this](auto) { OnFormatUpdated(); });
+         mFormatter->Subscribe([this](const auto& msg) {
+            OnFormatUpdated(false);
+            Publish({ msg.value });
+      });
    }
 
-   OnFormatUpdated();
+   OnFormatUpdated(true);
    return mFormatter != nullptr;
 }
 
-void NumericConverter::OnFormatUpdated()
+void NumericConverter::OnFormatUpdated(bool)
 {
    if (!mFormatter)
       return;

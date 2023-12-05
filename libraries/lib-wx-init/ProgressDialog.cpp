@@ -52,6 +52,10 @@
 
 #include "MemoryX.h"
 
+#ifdef __WXOSX_COCOA__
+extern "C" void NSBeep(void);
+#endif
+
 // This really should be a Preferences setting
 static const unsigned char beep[] =
 {
@@ -1657,7 +1661,13 @@ void ProgressDialog::Beep() const
 
       if (name.empty())
       {
+#ifdef __WXOSX_COCOA__
+         // wxSound::Create(size_t,const void*) isn't implemented;
+         // use the system beep function.
+         NSBeep();
+#else
          s.Create(sizeof(beep), beep);
+#endif
       }
       else
       {

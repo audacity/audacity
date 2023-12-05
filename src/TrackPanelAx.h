@@ -7,55 +7,56 @@
   Leland Lucius
 
 **********************************************************************/
-
 #ifndef __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 #define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 
-
+#include "TrackFocus.h" // to inherit
 
 #include <functional>
-#include <memory>
 
 #include <wx/setup.h> // for wxUSE_* macros
+#include <wx/weakref.h>
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h" // to inherit
 #endif
 
-#include "ClientData.h" // to inherit
-#include "Observer.h"
-
+class Viewport;
 class wxRect;
 class wxWindow;
 
-class AudacityProject;
-class Track;
-class TrackList;
-
 class TrackPanelAx final
+   : public TrackFocusCallbacks
 #if wxUSE_ACCESSIBILITY
-   : public WindowAccessible
+   , public WindowAccessible
 #endif
+   , public wxTrackable
 {
 public:
-   TrackPanelAx(AudacityProject &project);
-   virtual ~ TrackPanelAx();
+   // Adapts the mismatch of wxWeakPtr and std::weak_ptr
+   struct Adapter : TrackFocusCallbacks {
+      Adapter(TrackPanelAx *pAx) : mwAx{ pAx } {}
 
-   using RectangleFinder = std::function< wxRect( Track& ) >;
-   void SetFinder( const RectangleFinder &finder ) { mFinder = finder; }
+      ~Adapter() override;
+      void MessageForScreenReader(const TranslatableString& message) override;
+      void BeginChangeFocus() override;
+      void EndChangeFocus(const std::shared_ptr<Track> &track) override;
+      void UpdateAccessibility() override;
 
-   // Returns currently focused track or first one if none focused
-   std::shared_ptr<Track> GetFocus();
+   private:
+      const wxWeakRef<TrackPanelAx> mwAx;
+   };
 
-   // Changes focus to a specified track
-   // Return is the actual focused track, which may be different from
-   // the argument when that is null
-   std::shared_ptr<Track> SetFocus( std::shared_ptr<Track> track = {} );
+   using RectangleFinder = std::function< wxRect(Track&) >;
+
+   TrackPanelAx(std::weak_ptr<Viewport> wViewport,
+      std::weak_ptr<TrackFocus> wFocus, RectangleFinder finder);
+   ~TrackPanelAx() override;
 
    // Called to signal changes to a track
    void Updated();
 
-   void MessageForScreenReader(const TranslatableString& message);
+   void MessageForScreenReader(const TranslatableString& message) override;
 
 #if wxUSE_ACCESSIBILITY
    // Retrieves the address of an IDispatch interface for the specified child.
@@ -127,12 +128,12 @@ public:
 #endif
 
 private:
+   void BeginChangeFocus() override;
+   void EndChangeFocus(const std::shared_ptr<Track> &track) override;
+   void UpdateAccessibility() override;
 
-   TrackList &GetTracks();
-   int TrackNum( const std::shared_ptr<Track> &track );
-   std::shared_ptr<Track> FindTrack( int num );
-
-   AudacityProject &mProject;
+   std::weak_ptr<Viewport> mwViewport;
+   std::weak_ptr<TrackFocus> mwFocus;
 
 #if !wxUSE_ACCESSIBILITY
    wxWindow *mWindow{};
@@ -140,60 +141,9 @@ private:
 
    RectangleFinder mFinder;
 
-   std::weak_ptr<Track> mFocusedTrack;
-   int mNumFocusedTrack;
-
    wxString mMessage;
-   bool mTrackName;
-   int mMessageCount;
-};
-
-struct TrackFocusChangeMessage {};
-
-class AUDACITY_DLL_API TrackFocus final
-   : public ClientData::Base
-   , public Observer::Publisher<TrackFocusChangeMessage>
-   , public std::enable_shared_from_this<TrackFocus>
-{
-public:
-   static TrackFocus &Get( AudacityProject &project );
-   static const TrackFocus &Get( const AudacityProject &project );
-
-   explicit TrackFocus( AudacityProject &project );
-   ~TrackFocus() override;
-
-   TrackFocus( const TrackFocus & ) = delete;
-   TrackFocus& operator=( const TrackFocus & ) = delete;
-
-   /*!
-    @return the currently focused track, which may be null, otherwise is
-    a leader track
-   
-    This function is not const, because it may have a side effect of setting
-    a focus if none was already set
-    */
-   Track *Get();
-
-   // Set the track focus to a given track or to null
-   void Set( Track *pTrack );
-
-   void SetAccessible( wxWindow &owner,
-      std::unique_ptr< TrackPanelAx > pAccessible );
-
-   void MessageForScreenReader(const TranslatableString& message);
-
-   void UpdateAccessibility();
-
-private:
-   friend TrackPanelAx; // so it can Publish()
-
-   AudacityProject &mProject;
-
-#if wxUSE_ACCESSIBILITY
-   TrackPanelAx *mAx{};
-#else
-   std::unique_ptr<TrackPanelAx> mAx;
-#endif
+   int mMessageCount{ 0 };
+   bool mTrackName{ true };
 };
 
 #endif // __AUDACITY_TRACK_PANEL_ACCESSIBILITY__

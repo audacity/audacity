@@ -34,7 +34,7 @@ public:
 
    ~WaveformVZoomHandle() override;
 
-   std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
+   std::shared_ptr<const Channel> FindChannel() const override;
 
    void Enter( bool forward, AudacityProject * ) override;
 

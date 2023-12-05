@@ -5,7 +5,7 @@ $preview linear
 $name (_ "Shelf Filter")
 $debugbutton disabled
 $author (_ "Steve Daulton")
-$release 2.4.0
+$release 2.4.0-1
 $copyright (_ "GNU General Public License v2.0")
 
 ;; License: GPL v2
@@ -15,20 +15,20 @@ $copyright (_ "GNU General Public License v2.0")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control type (_ "Filter type") choice (("Low" (_ "Low-shelf"))
+$control TYPE (_ "Filter type") choice (("Low" (_ "Low-shelf"))
                                         ("High" (_ "High-shelf"))) 0
-$control hz (_ "Frequency (Hz)") int "" 1000 10 10000
-$control gain (_ "Amount (dB)") int "" -6 -72 72
+$control HZ (_ "Frequency (Hz)") int "" 1000 10 10000
+$control GAIN (_ "Amount (dB)") int "" -6 -72 72
 
 
-(cond ((> hz (/ *sound-srate* 2))
+(cond ((> HZ (/ *sound-srate* 2))
           (format nil (_ "Error.~%Frequency set too high for selected track.")))
-      ((> hz (/ *sound-srate* 2.1))  ;Handle edge case close to Nyquist frequency.
+      ((> HZ (/ *sound-srate* 2.1))  ;Handle edge case close to Nyquist frequency.
           (setf *track* (force-srate (* 2 *sound-srate*) *track*))
-          (if (= type 0)
-              (force-srate *sound-srate* (eq-lowshelf *track* hz gain))
-              (force-srate *sound-srate* (eq-highshelf *track* hz gain))))
-      ((= gain 0) "")  ; no-op
-      (t  (if (= type 0)
-              (eq-lowshelf *track* hz gain)
-              (eq-highshelf *track* hz gain))))
+          (if (= TYPE 0)
+              (force-srate *sound-srate* (eq-lowshelf *track* HZ GAIN))
+              (force-srate *sound-srate* (eq-highshelf *track* HZ GAIN))))
+      ((= GAIN 0) "")  ; no-op
+      (t  (if (= TYPE 0)
+              (eq-lowshelf *track* HZ GAIN)
+              (eq-highshelf *track* HZ GAIN))))

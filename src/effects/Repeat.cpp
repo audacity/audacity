@@ -30,7 +30,6 @@
 #include "ShuttleGui.h"
 #include "SyncLock.h"
 #include "WaveTrack.h"
-#include "WaveClip.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"
 
@@ -93,7 +92,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
-   EffectOutputTracks outputs{ *mTracks, true };
+   EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
 
    int nTrack = 0;
    bool bGoodResult = true;
@@ -122,11 +121,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          auto tempList = track.Copy(mT0, mT1);
          const auto firstTemp = *tempList->Any<const WaveTrack>().begin();
 
-         std::vector<wxString> clipNames;
-         for (auto clip : firstTemp->SortedClipArray()){
-            if (!clip->GetIsPlaceholder())
-               clipNames.push_back(clip->GetName());
-         }
+
 
          auto t0 = tc;
          for (size_t j = 0; j < repeatCount; ++j) {
@@ -141,25 +136,40 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          if (t0 > maxDestLen)
             maxDestLen = t0;
 
-         for (const auto pChannel : TrackList::Channels(&track)) {
-            auto clips = pChannel->SortedClipArray();
-            for (size_t i = 0; i < clips.size(); ++i) {
-               const auto eps = 0.5 / track.GetRate();
-               //Find first pasted clip
-               if (std::abs(clips[i]->GetPlayStartTime() - tc) > eps)
-                  continue;
+         const auto compareIntervals = [](const auto& a, const auto& b) {
+            return a->Start() < b->Start();
+         };
 
-               //Fix pasted clips names
-               for(size_t j = 0; j < repeatCount; ++j) {
-                  for (size_t k = 0; k < clipNames.size(); ++k)
-                     if (i + k < clips.size())
-                        clips[i + k]->SetName(clipNames[k]);
-                  i += clipNames.size();
+         const auto eps = 0.5 / track.GetRate();
+         auto sortedIntervals = std::vector(
+            track.Intervals().begin(),
+            track.Intervals().end()
+         );
+         auto sourceIntervals = std::vector(
+            firstTemp->Intervals().begin(),
+            firstTemp->Intervals().end()
+         );
+         std::sort(sortedIntervals.begin(), sortedIntervals.end(), compareIntervals);
+         std::sort(sourceIntervals.begin(), sourceIntervals.end(), compareIntervals);
+         for (auto it = sortedIntervals.begin(); it != sortedIntervals.end(); ++it)
+         {
+            const auto& interval = *it;
+            //Find first pasted interval
+            if (std::abs((*it)->GetPlayStartTime() - tc) > eps)
+               continue;
+
+            //Fix pasted clips names
+            for(int j = 0; j < repeatCount; ++j)
+            {
+               for (const auto& src : sourceIntervals)
+               {
+                  if(it == sortedIntervals.end())
+                     break;
+                  (*it++)->SetName(src->GetName());
                }
-               break;
             }
+            break;
          }
-
          nTrack++;
       }; },
       [&](Track &t)

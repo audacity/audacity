@@ -95,32 +95,17 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
-   // EmptyCopy carries over any interesting channel group information
-   // But make sure the left is unlinked before we re-link
-   // And reset pan and gain
-   auto mixLeft =
-      first->EmptyCopy(trackFactory->GetSampleBlockFactory(), false);
+   auto result = trackFactory->Create(mono ? 1 : 2, *first);
+   auto mix = static_cast<WaveTrack*>(*result->begin());
+   mix->SetPan(0);
+   mix->SetGain(1.0f);
+   mix->SetRate(rate);
+   mix->ConvertToSampleFormat(format);
+   if(!oneinput)
+      mix->SetName(newTrackName);
+   mix->MoveTo(mixStartTime);
 
-   // TODO: more-than-two-channels
-
-   decltype(mixLeft) mixRight{};
-   if (!mono)
-      mixRight = trackFactory->Create(format, rate);
-
-   auto result = TrackList::Temporary(nullptr, mixLeft, mixRight);
-
-   mixLeft->SetPan(0);
-   mixLeft->SetGain(1);
-   mixLeft->SetRate(rate);
-   mixLeft->ConvertToSampleFormat(format);
-   if (oneinput)
-      mixLeft->SetName(first->GetName()); /* set name of output track to be the same as the sole input track */
-   else
-      /* i18n-hint: noun, means a track, made by mixing other tracks */
-      mixLeft->SetName(newTrackName);
-   mixLeft->MoveTo(mixStartTime);
-
-   auto maxBlockLen = mixLeft->GetIdealBlockSize();
+   auto maxBlockLen = mix->GetIdealBlockSize();
 
    // If the caller didn't specify a time range, use the whole range in which
    // any input track had clips in it.
@@ -148,23 +133,17 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
          if (blockLen == 0)
             break;
 
-         if (mono) {
-            auto buffer = mixer.GetBuffer();
-            mixLeft->Append(buffer, format, blockLen, 1, effectiveFormat);
-         }
-         else {
-            auto buffer = mixer.GetBuffer(0);
-            mixLeft->Append(buffer, format, blockLen, 1, effectiveFormat);
-            buffer = mixer.GetBuffer(1);
-            mixRight->Append(buffer, format, blockLen, 1, effectiveFormat);
+         for(auto channel : mix->Channels())
+         {
+            auto buffer = mixer.GetBuffer(channel->ReallyGetChannelIndex());
+            channel->AppendBuffer(buffer, format, blockLen, 1, effectiveFormat);
          }
 
          updateResult = pProgress->Poll(
             mixer.MixGetCurrentTime() - startTime, endTime - startTime);
       }
    }
-
-   mixLeft->Flush();
+   mix->Flush();
    if (updateResult == ProgressResult::Cancelled ||
        updateResult == ProgressResult::Failed)
       return {};
@@ -181,10 +160,7 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    wxPrintf("Elapsed time: %f sec\n", elapsedTime);
    wxPrintf("Max number of tracks to mix in real time: %f\n", maxTracks);
 #endif
-
-      for (auto pTrack : { mixLeft, mixRight })
-         if (pTrack)
-            RealtimeEffectList::Get(*pTrack).Clear();
+      RealtimeEffectList::Get(*mix).Clear();
    }
 
    return result;

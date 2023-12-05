@@ -101,6 +101,53 @@ public:
          return mFields.size() == 2;
    }
 
+   void UpdateFields (size_t barsDigits)
+   {
+      mFields.clear();
+      mDigits.clear();
+
+      // Range is assumed to allow 999 bars.
+      auto& barsField =
+         mFields.emplace_back(NumericField::WithDigits(barsDigits));
+
+      barsField.label = L" " + mBarString + L" ";
+
+      // Beats format is 1 based. For the time point "0" the expected output is
+      // "1 bar 1 beat [1]" For this reason we use (uts + 1) as the "range". On
+      // top of that, we want at least two digits to be shown. NumericField
+      // accepts range as in [0, range), so add 1.
+
+      auto& beatsField = mFields.emplace_back(NumericField::ForRange(
+         std::max<size_t>(UPPER_BOUNDS[1], mUpperTimeSignature + 1)));
+
+      beatsField.label = L" " + mBeatString;
+
+      const auto hasFracPart = mFracPart > mLowerTimeSignature;
+
+      if (hasFracPart)
+      {
+         beatsField.label += L" ";
+         // See the reasoning above about the range
+         auto& fracField = mFields.emplace_back(NumericField::ForRange(
+            std::max(11, mFracPart / mLowerTimeSignature + 1)));
+      }
+
+      // Fill the aux mDigits structure
+      size_t pos = 0;
+      for (size_t i = 0; i < mFields.size(); i++)
+      {
+         mFields[i].pos = pos;
+
+         for (size_t j = 0; j < mFields[i].digits; j++)
+         {
+            mDigits.push_back(DigitInfo { i, j, pos });
+            pos++;
+         }
+
+         pos += mFields[i].label.length();
+      }
+   }
+
    void UpdateFormat(const AudacityProject& project)
    {
       auto& timeSignature = ProjectTimeSignature::Get(project);
@@ -137,47 +184,35 @@ public:
       if (formatOk)
          return ;
       
-      mFields.clear();
-      mDigits.clear();
-      
-      // Range is assumed to allow 999 bars.
-      auto& barsField =
-         mFields.emplace_back(NumericField::WithDigits(MIN_DIGITS[0]));
-      
-      barsField.label = L" " + mBarString + L" ";
+      UpdateFields(MIN_DIGITS[0]);
+   }
 
-      // Beats format is 1 based. For the time point "0" the expected output is
-      // "1 bar 1 beat [1]" For this reason we use (uts + 1) as the "range". On
-      // top of that, we want at least two digits to be shown. NumericField
-      // accepts range as in [0, range), so add 1.
+   void UpdateFormatForValue(double value, bool canShrink) override
+   {
+      // Beats formatter does not support negative values
+      value = std::max(0.0, value);
 
-      auto& beatsField = mFields.emplace_back(NumericField::ForRange(
-         std::max<size_t>(UPPER_BOUNDS[1], mUpperTimeSignature + 1)));
-      
-      beatsField.label = L" " + mBeatString;
+      // ForRange has a preserved weird behavior
+      const auto barsCount =
+         // Range is not inclusive
+         1 +
+         // Bars can start from 1
+         mFieldValueOffset +
+         static_cast<int>(std::floor(value / mFieldLengths[0]));
 
-      if (hasFracPart)
-      {
-         beatsField.label += L" ";
-         // See the reasoning above about the range
-         auto& fracField = mFields.emplace_back(NumericField::ForRange(
-            std::max(11, mFracPart / mLowerTimeSignature + 1)));
-      }
+      const auto barsField = NumericField::ForRange(
+         barsCount, true, MIN_DIGITS[0]);
 
-      // Fill the aux mDigits structure
-      size_t pos = 0;
-      for (size_t i = 0; i < mFields.size(); i++)
-      {
-         mFields[i].pos = pos;
+      const auto oldDigits = mFields[0].digits;
 
-         for (size_t j = 0; j < mFields[i].digits; j++)
-         {
-            mDigits.push_back(DigitInfo { i, j, pos });
-            pos++;
-         }
+      const bool updateNeeded = canShrink ? oldDigits != barsField.digits :
+                                            oldDigits < barsField.digits;
 
-         pos += mFields[i].label.length();
-      }
+      if (!updateNeeded)
+         return;
+
+      UpdateFields(barsField.digits);
+      Publish({ value, oldDigits > mFields[0].digits });
    }
 
    void UpdateResultString(ConversionResult& result) const
@@ -209,10 +244,16 @@ public:
          return result;
       }
 
+      // Calculate the epsilon only once, so the total loss of precision is addressed.
+      // This is a "multiplicative" epsilon, so there is no need to calculate 1 + eps every time.
+      const auto eps =
+         1.0 + std::max(1.0, value) * std::numeric_limits<double>::epsilon();
+
       for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex)
       {
          const auto fieldLength = mFieldLengths[fieldIndex];
-         const auto fieldValue = static_cast<int>(std::floor(value / fieldLength));
+         const auto fieldValue = std::max(
+            0, static_cast<int>(std::floor(value * eps / fieldLength)));
 
          result.fieldValueStrings[fieldIndex] = wxString::Format(
             mFields[fieldIndex].formatStr, fieldValue + mFieldValueOffset);
@@ -232,24 +273,28 @@ public:
          return std::nullopt;
 
       double t = 0.0;
-
+      size_t lastIndex = 0;
+      
       for (size_t i = 0; i < mFields.size(); i++)
       {
-         const auto pos = mFields[i].pos;
-         const auto digits = mFields[i].digits;
+         const auto& field = mFields[i];
 
-         if (pos >= valueString.size() || pos + digits > valueString.size())
-            return std::nullopt;
-
+         const size_t labelIndex = field.label.empty() ?
+                                      wxString::npos :
+                                      valueString.find(field.label, lastIndex); 
+            
          long val;
 
-         const auto fieldStringValue =
-            valueString.Mid(mFields[i].pos, mFields[i].digits);
+         const auto fieldStringValue = valueString.Mid(
+            lastIndex,
+            labelIndex == wxString::npos ? labelIndex : labelIndex - lastIndex);
 
          if (!fieldStringValue.ToLong(&val))
             return std::nullopt;
 
          t += (val - mFieldValueOffset) * mFieldLengths[i];
+
+         lastIndex = labelIndex + field.label.Length();
       }
 
       return t;
@@ -338,7 +383,7 @@ private:
    const bool mTimeFormat;
 };
 
-Registry::BaseItemPtr BuildBeatsGroup(bool timeFormat)
+auto BuildBeatsGroup(bool timeFormat)
 {
    return NumericConverterFormatterGroup(
       timeFormat ? "beatsTime" : "beatsDuration",
@@ -355,13 +400,13 @@ Registry::BaseItemPtr BuildBeatsGroup(bool timeFormat)
 }
 
 NumericConverterItemRegistrator beatsTime {
-   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedTime" } },
-   BuildBeatsGroup(true)
+   BuildBeatsGroup(true),
+   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedTime" } }
 };
 
 NumericConverterItemRegistrator beatsDuration {
-   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedDuration" } },
-   BuildBeatsGroup(false)
+   BuildBeatsGroup(false),
+   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedDuration" } }
 };
 } // namespace
 

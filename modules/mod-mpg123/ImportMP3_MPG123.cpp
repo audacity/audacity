@@ -152,7 +152,7 @@ private:
    wxFileOffset mFileLen { 0 };
 
    WaveTrackFactory* mTrackFactory { nullptr };
-   ImportUtils::NewChannelGroup mChannels;
+   TrackListHolder mTrackList;
    unsigned mNumChannels { 0 };
 
    mpg123_handle* mHandle { nullptr };
@@ -320,12 +320,16 @@ void MP3ImportFileHandle::Import(ImportProgressListener &progressListener,
          samples = reinterpret_cast<constSamplePtr>(conversionBuffer.data());
       }
       // Just copy the interleaved data to the channels
-      for (unsigned channel = 0; channel < mNumChannels; ++channel)
+      unsigned chn = 0;
+      ImportUtils::ForEachChannel(*mTrackList, [&](auto& channel)
       {
-         mChannels[channel]->Append(
-            samples + sizeof(float) * channel, floatSample, samplesCount,
-            mNumChannels, floatSample);
-      }
+         channel.AppendBuffer(
+            samples + sizeof(float) * chn,
+            floatSample, samplesCount,
+            mNumChannels,
+            floatSample);
+         ++chn;
+      });
    }
 
    if (ret != MPG123_DONE)
@@ -337,8 +341,7 @@ void MP3ImportFileHandle::Import(ImportProgressListener &progressListener,
       return;
    }
 
-   if (!mChannels.empty())
-      outTracks.push_back(ImportUtils::MakeTracks(mChannels));
+   ImportUtils::FinalizeImport(outTracks, mTrackList);
 
    ReadTags(tags);
    
@@ -353,7 +356,6 @@ bool MP3ImportFileHandle::SetupOutputFormat()
    mpg123_getformat(mHandle, &rate, &channels, &encoding);
 
    mNumChannels = channels == MPG123_MONO ? 1 : 2;
-   mChannels.resize(mNumChannels);
 
    if (encoding != MPG123_ENC_FLOAT_32 && encoding != MPG123_ENC_FLOAT_64)
    {
@@ -364,8 +366,11 @@ bool MP3ImportFileHandle::SetupOutputFormat()
 
    mFloat64Output = encoding == MPG123_ENC_FLOAT_64;
 
-   for (unsigned i = 0; i < mNumChannels; ++i)
-      mChannels[i] = ImportUtils::NewWaveTrack(*mTrackFactory, floatSample, rate);
+   mTrackList = ImportUtils::NewWaveTrack(
+      *mTrackFactory,
+      mNumChannels,
+      floatSample,
+      rate);
 
    return true;
 }

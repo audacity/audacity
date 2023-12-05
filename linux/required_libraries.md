@@ -10,7 +10,6 @@
 | libcurl           | >= 7.68.0     | libcurl-dev                                  |
 | ffmpeg            | >= 4.2.4      | libavcodec-dev libavformat-dev libavutil-dev |
 | libid3tag         | >= 0.15.1b    | libid3tag0-dev                               |
-| libmad            | >= 0.15.1b    | libmad0-dev                                  |
 | vamp-host-sdk     | >= 2.9.0      | N/A                                          |
 | libogg            | >= 1.3.4      | libogg-dev                                   |
 | libvorbis         | >= 1.3.6      | libvorbis-dev                                |

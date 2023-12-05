@@ -22,6 +22,7 @@
 #include "TrackArtist.h"
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
+#include "tracks/ui/EnvelopeHandle.h"
 
 namespace {
 void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
@@ -45,7 +46,7 @@ void EnvelopeEditor::DrawPoints(const Envelope &env,
    bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-   highlight = target && target->GetEnvelope() == this;
+   highlight = target && target->GetEnvelope() == &env;
 #endif
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
    dc.SetPen( pen );

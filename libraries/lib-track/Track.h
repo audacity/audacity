@@ -34,7 +34,6 @@
 
 class wxTextFile;
 class Track;
-class ProjectSettings;
 class AudacityProject;
 
 using TrackArray = std::vector< Track* >;
@@ -50,6 +49,8 @@ using ListOfTracks = std::list< std::shared_ptr< Track > >;
  else MSVC debug runtime complains. */
 using TrackNodePointer =
 std::pair< ListOfTracks::iterator, ListOfTracks* >;
+
+using ProgressReporter = std::function<void(double)>;
 
 inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
 { return a.second == b.second && a.first == b.first; }
@@ -251,13 +252,12 @@ public:
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
-   ListOfTracks* GetHolder() const { return mNode.second; }
+   inline TrackList* GetHolder() const;
 
    LinkType GetLinkType() const noexcept;
-   //! Returns true if the leader track has link type LinkType::Aligned
-   bool IsAlignedWithLeader() const;
 
    ChannelGroupData &GetGroupData();
+   //! May make group data on demand, but consider that logically const
    const ChannelGroupData &GetGroupData() const;
 
 protected:
@@ -267,14 +267,10 @@ protected:
     */
    void SetLinkType(LinkType linkType, bool completeList = true);
 
-   // Use this only to fix temporary inconsistency during deserialization!
-   void DestroyGroupData();
-
 private:
    int GetIndex() const;
    void SetIndex(int index);
 
-   ChannelGroupData &MakeGroupData();
    /*!
     @param completeList only influences debug build consistency checking
     */
@@ -314,14 +310,6 @@ private:
    //! Selectedness is always the same for all channels of a group
    bool GetSelected() const;
    virtual void SetSelected(bool s);
-
-   /*!
-    The owning TrackList emits a TRACK_REQUEST_VISIBLE event with the leader of
-    this track
-    The argument tells whether the last undo history state should be
-    updated for the appearance change
-    */
-   void EnsureVisible(bool modifyState = false);
 
 public:
 
@@ -386,7 +374,8 @@ public:
    /*!
     @pre `IsLeader()`
     */
-   virtual void Silence(double t0, double t1) = 0;
+   virtual void
+   Silence(double t0, double t1, ProgressReporter reportProgress = {}) = 0;
 
    /*!
     May assume precondition: t0 <= t1
@@ -398,6 +387,9 @@ private:
    //! Subclass responsibility implements only a part of Duplicate(), copying
    //! the track data proper (not associated data such as for groups and views)
    /*!
+    @param unstretchInterval If set, this time interval's stretching must be applied.
+    @pre `!unstretchInterval.has_value() ||
+       unstretchInterval->first < unstretchInterval->second`
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
@@ -478,17 +470,14 @@ public:
    // Return true iff the attribute is recognized.
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
 
-protected:
    const std::optional<double>& GetProjectTempo() const;
 
+protected:
    /*!
     @pre `IsLeader()`
     */
    virtual void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) = 0;
-
-private:
-   std::optional<double> mProjectTempo;
 };
 
 ENUMERATE_TRACK_TYPE(Track);
@@ -525,17 +514,12 @@ public:
    using Factory =
       std::function<std::shared_ptr<TrackAttachment>(Track &, size_t)>;
 
-   explicit ChannelAttachmentsBase(Factory factory)
-      : mFactory{ move(factory) }
-   {}
+   ChannelAttachmentsBase(Track &track, Factory factory);
    ~ChannelAttachmentsBase() override;
 
    // Override all the TrackAttachment virtuals and pass through to each
    void CopyTo(Track &track) const override;
    void Reparent(const std::shared_ptr<Track> &parent) override;
-   /*!
-    @pre `IsLeader()`
-    */
    void WriteXMLAttributes(XMLWriter &writer) const override;
    bool HandleXMLAttribute(
       const std::string_view& attr, const XMLAttributeValueView& valueView)
@@ -594,7 +578,7 @@ public:
     @tparam F returns a shared pointer to Attachment (or some subtype of it)
 
     @pre `f` never returns null
-   
+
     `f` may assume the precondition that the given channel index is less than
     the given track's number of channels
     */
@@ -603,8 +587,8 @@ public:
          std::invoke_result_t<F, Track&, size_t>, std::shared_ptr<Attachment>
       >>
    >
-   explicit ChannelAttachments(F &&f)
-      : ChannelAttachmentsBase{ std::forward<F>(f) }
+   explicit ChannelAttachments(Track &track, F &&f)
+      : ChannelAttachmentsBase{ track, std::forward<F>(f) }
    {}
 };
 
@@ -949,9 +933,6 @@ struct TrackListEvent
       //! Posted when certain fields of a track change.
       TRACK_DATA_CHANGE,
 
-      //! Posted when a track needs to be scrolled into view; leader track only
-      TRACK_REQUEST_VISIBLE,
-
       //! Posted when tracks are reordered but otherwise unchanged.
       /*! mpTrack points to the moved track that is earliest in the New ordering. */
       PERMUTED,
@@ -1165,8 +1146,7 @@ public:
       static auto Channels( TrackType *pTrack )
          -> TrackIterRange< TrackType >
    {
-      return Channels_<TrackType>(
-         static_cast<TrackList*>(pTrack->GetHolder())->Find(pTrack));
+      return Channels_<TrackType>(pTrack->GetHolder()->Find(pTrack));
    }
 
    //! Count channels of a track
@@ -1176,10 +1156,15 @@ public:
    }
 
    //! If the given track is one of a pair of channels, swap them
-   /*! @return success */
-   static bool SwapChannels(Track &track);
+   //! @return New left track on success
+   static Track* SwapChannels(Track &track);
 
    friend class Track;
+
+   //! @brief Inserts tracks form \p trackList starting from position where
+   //! \p before is located. If \p before is nullptr tracks are appended.
+   //! @pre `before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>())`
+   void Insert(const Track* before, TrackList&& trackList);
 
    /*!
     @pre `tracks` contains pointers only to leader tracks of this, and each of
@@ -1199,16 +1184,14 @@ public:
          { return static_cast< TrackKind* >( DoAdd( t ) ); }
 
    //! Removes linkage if track belongs to a group
-   void UnlinkChannels(Track& track);
+   std::vector<Track*> UnlinkChannels(Track& track);
    /** \brief Converts channels to a multichannel track.
    * @param first and the following must be in this list. Tracks should
    * not be a part of another group (not linked)
    * @param nChannels number of channels, for now only 2 channels supported
-   * @param aligned if true, the link type will be set to Track::LinkType::Aligned,
-   * or Track::LinkType::Group otherwise
    * @returns true on success, false if some prerequisites do not met
    */
-   bool MakeMultiChannelTrack(Track& first, int nChannels, bool aligned);
+   bool MakeMultiChannelTrack(Track& first, int nChannels);
 
    /*!
     Replace channel group `t` with the first group in the given list, return a
@@ -1297,6 +1280,15 @@ public:
 
    //! Remove all tracks from `list` and put them at the end of `this`
    void Append(TrackList &&list);
+
+   // Like RegisterPendingChangedTrack, but for a list of new tracks,
+   // not a replacement track.  Caller
+   // supplies the list, and there are no updates.
+   // Pending tracks will have an unassigned TrackId.
+   // Pending new tracks WILL occur in iterations, always after actual
+   // tracks, and in the sequence that they were added.  They can be
+   // distinguished from actual tracks by TrackId.
+   void RegisterPendingNewTracks(TrackList &&list);
 
    //! Remove first channel group (if any) from `list` and put it at the end of
    //! `this`
@@ -1395,8 +1387,6 @@ private:
    void PermutationEvent(TrackNodePointer node);
    void DataEvent(
       const std::shared_ptr<Track> &pTrack, bool allChannels, int code );
-   void EnsureVisibleEvent(
-      const std::shared_ptr<Track> &pTrack, bool modifyState );
    void DeletionEvent(std::weak_ptr<Track> node, bool duringReplace);
    void AdditionEvent(TrackNodePointer node);
    void ResizingEvent(TrackNodePointer node);
@@ -1431,18 +1421,10 @@ public:
     @pre `src->IsLeader()`
     @post result: `src->NChannels() == result.size()`
     */
-   std::vector<Track*> RegisterPendingChangedTrack(
+   Track* RegisterPendingChangedTrack(
       Updater updater,
       Track *src
    );
-
-   // Like the previous, but for a NEW track, not a replacement track.  Caller
-   // supplies the track, and there are no updates.
-   // Pending track will have an unassigned TrackId.
-   // Pending changed tracks WILL occur in iterations, always after actual
-   // tracks, and in the sequence that they were added.  They can be
-   // distinguished from actual tracks by TrackId.
-   void RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack );
 
    // Invoke the updaters of pending tracks.  Pass any exceptions from the
    // updater functions.
@@ -1476,5 +1458,8 @@ private:
    //! false for temporaries
    bool mAssignsIds{ true };
 };
+
+TrackList* Track::GetHolder() const {
+   return static_cast<TrackList*>(mNode.second); }
 
 #endif

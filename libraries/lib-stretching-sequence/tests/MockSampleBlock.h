@@ -43,7 +43,7 @@ public:
 
    MinMaxRMS DoGetMinMaxRMS() const override;
 
-   BlockSampleView GetFloatSampleView() override;
+   BlockSampleView GetFloatSampleView(bool mayThrow) override;
 
    const long long id;
    const sampleFormat srcFormat;

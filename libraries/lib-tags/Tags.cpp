@@ -301,6 +301,11 @@ void Tags::Clear()
    mMap.clear();
 }
 
+size_t Tags::Count() const
+{
+   return mMap.size();
+}
+
 namespace {
    bool EqualMaps(const TagMap &map1, const TagMap &map2)
    {

@@ -32,6 +32,7 @@ void AudacityApp::OnThemeChange(ThemeChangeMessage message)
 
    // This API only works 10.14+
    // Previous versions will always use Light appearance
+#if defined(__MAC_10_14) && defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_14
    if (@available(macOS 10.14, *))
    {
       NSAppearanceName appearanceName;
@@ -54,6 +55,7 @@ void AudacityApp::OnThemeChange(ThemeChangeMessage message)
       if (systemAppearance != nil)
          NSApp.appearance = systemAppearance;
    }
+#endif
 }
 
 #endif

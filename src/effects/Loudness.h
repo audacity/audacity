@@ -26,6 +26,7 @@ class wxChoice;
 class wxSimplebook;
 class EBUR128;
 class ShuttleGui;
+class WaveChannel;
 using Floats = ArrayOf<float>;
 
 class EffectLoudness final : public StatefulEffect
@@ -69,15 +70,15 @@ private:
 
    void AllocBuffers(TrackList &outputs);
    void FreeBuffers();
-   static bool GetTrackRMS(WaveTrack &track,
+   static bool GetTrackRMS(WaveChannel &track,
       double curT0, double curT1, float &rms);
-   bool ProcessOne(WaveTrack &track, size_t nChannels,
+   [[nodiscard]] bool ProcessOne(WaveChannel &track, size_t nChannels,
       double curT0, double curT1, float mult, EBUR128 *pLoudnessProcessor);
-   void LoadBufferBlock(WaveTrack &track, size_t nChannels,
+   void LoadBufferBlock(WaveChannel &track, size_t nChannels,
       sampleCount pos, size_t len);
    bool AnalyseBufferBlock(EBUR128 &loudnessProcessor);
    bool ProcessBufferBlock(float mult);
-   void StoreBufferBlock(WaveTrack &track, size_t nChannels,
+   [[nodiscard]] bool StoreBufferBlock(WaveChannel &track, size_t nChannels,
       sampleCount pos, size_t len);
 
    bool UpdateProgress();

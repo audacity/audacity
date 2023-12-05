@@ -55,8 +55,8 @@ void TimeTrack::CleanState()
 {
    mEnvelope = std::make_unique<BoundedEnvelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
 
-   SetRangeLower( 0.9 );
-   SetRangeUpper( 1.1 );
+   SetRangeLower( 0.2 );
+   SetRangeUpper( 2.0 );
    mDisplayLog = false;
 
    mEnvelope->SetTrackLen(DBL_MAX);
@@ -222,7 +222,8 @@ void TimeTrack::Paste(double t, const Track &src)
       (void)0;// intentionally do nothing.
 }
 
-void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))
+void TimeTrack::Silence(
+   double WXUNUSED(t0), double WXUNUSED(t1), ProgressReporter)
 {
    assert(IsLeader());
 }

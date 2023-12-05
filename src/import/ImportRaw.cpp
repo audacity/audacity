@@ -108,7 +108,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
 {
    outTracks.clear();
 
-   ImportUtils::NewChannelGroup results;
+   TrackListHolder trackList;
    auto updateResult = ProgressResult::Success;
 
    {
@@ -178,11 +178,9 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       const auto format = ImportUtils::ChooseFormat(
          sf_subtype_to_effective_format(encoding));
 
-      results.resize(numChannels);
-      for (size_t c = 0; c < numChannels; ++c)
-         results[c] = trackFactory->Create(format, rate);
+      trackList = trackFactory->Create(numChannels, format, rate);
 
-      const auto maxBlockSize = results[0]->GetMaxBlockSize();
+      const auto maxBlockSize = (*trackList->Any<WaveTrack>().begin())->GetMaxBlockSize();
 
       SampleBuffer srcbuffer(maxBlockSize * numChannels, format);
       SampleBuffer buffer(maxBlockSize, format);
@@ -220,23 +218,24 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
 
          if (block) {
             size_t c = 0;
-            for (const auto &pChannel : results) {
+            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            {
                if (format == int16Sample) {
-                  for (decltype(block) j = 0; j < block; ++j)
+                  for (size_t j = 0; j < block; ++j)
                      ((short *)buffer.ptr())[j] =
                      ((short *)srcbuffer.ptr())[numChannels * j + c];
                }
                else {
-                  for (decltype(block) j = 0; j < block; ++j)
+                  for (size_t j = 0; j < block; ++j)
                      ((float *)buffer.ptr())[j] =
                      ((float *)srcbuffer.ptr())[numChannels * j + c];
                }
 
-               pChannel->Append(buffer.ptr(),
+               channel.AppendBuffer(buffer.ptr(),
                   ((format == int16Sample) ? int16Sample : floatSample), block,
                   1, sf_subtype_to_effective_format(encoding));
                ++c;
-            }
+            });
             framescompleted += block;
          }
 
@@ -253,8 +252,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
       throw UserException{};
 
-   if (!results.empty())
-      outTracks.push_back(ImportUtils::MakeTracks(results));
+   ImportUtils::FinalizeImport(outTracks, trackList);
 }
 
 

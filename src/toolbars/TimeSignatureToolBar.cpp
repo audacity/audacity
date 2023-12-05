@@ -26,10 +26,10 @@
 
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectSettings.h"
 #include "ViewInfo.h"
 
 #include "AllThemeResources.h"
+#include "AudioIO.h"
 
 #include "ProjectTimeSignature.h"
 #include "wxArrayStringEx.h"
@@ -70,6 +70,7 @@ TimeSignatureToolBar::TimeSignatureToolBar(AudacityProject& project)
                   mLowerSignatureControl->SetValue(
                      wxString::Format("%d", settings.newLowerTimeSignature));
             }))
+    , mPlaybackStateChangedSubscription(AudioIO::Get()->Subscribe(*this, &TimeSignatureToolBar::OnAudioIOEvent))
 {
 }
 
@@ -77,7 +78,7 @@ TimeSignatureToolBar::~TimeSignatureToolBar() = default;
 
 bool TimeSignatureToolBar::ShownByDefault() const
 {
-   return false;
+   return true;
 }
 
 ToolBar::DockID TimeSignatureToolBar::DefaultDockID() const
@@ -151,7 +152,7 @@ void TimeSignatureToolBar::Populate()
       wxString::Format(
          "%d", ProjectTimeSignature::Get(mProject).GetLowerTimeSignature()),
       wxDefaultPosition, timeSigSize,
-      wxArrayStringEx { L"1", L"2", L"4", L"8", L"16", L"32", L"64" },
+      wxArrayStringEx { L"2", L"4", L"8", L"16", L"32", L"64" },
       wxCB_READONLY);
 
    mLowerSignatureControl->SetName(XO("Lower Time Signature").Translation());
@@ -233,6 +234,21 @@ void TimeSignatureToolBar::OnSize(wxSizeEvent& evt)
    evt.Skip();
 }
 
+void TimeSignatureToolBar::OnAudioIOEvent(const AudioIOEvent& event)
+{
+   switch(event.type)
+   {
+   case AudioIOEvent::PLAYBACK:
+   case AudioIOEvent::CAPTURE:
+      {
+         if(mTempoControl)
+            mTempoControl->Enable(!event.on);
+      } break;
+   default: break;
+   }
+}
+
+
 void TimeSignatureToolBar::AddTitle(
    const TranslatableString& Title, wxSizer* pSizer, int flags, int border,
    double fontMultiplier)
@@ -257,7 +273,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       for selecting a time range of audio */
-   TimeSignatureToolBar::ID(), wxT("ShowTimeSignatureTB"), XXO("Time Signature Toolbar (Beta)")
+   TimeSignatureToolBar::ID(), wxT("ShowTimeSignatureTB"), XXO("Time Signature Toolbar")
 };
 
 // Undo/redo handling of time signature changes

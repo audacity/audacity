@@ -194,6 +194,45 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
    REQUIRE(durationFormatter->SingleStep(0.0, 1, true) == Approx(15.0));
    REQUIRE(durationFormatter->SingleStep(0.0, 4, true) == Approx(0.5));
    REQUIRE(durationFormatter->SingleStep(0.0, 3, true) == Approx(5));
+
+   auto longFormatterTest = [&](double tempo)
+   {
+      timeSignature.SetTempo(tempo);
+      timeSignature.SetUpperTimeSignature(4);
+      timeSignature.SetLowerTimeSignature(4);
+
+      //const auto t = *basicFormatter->StringToValue("009 bar 02 beat");
+      //const auto r = basicFormatter->ValueToString(t, true).valueString;
+
+      //REQUIRE("009 bar 02 beat" == r);
+
+      for (int32_t bar = 0; bar < 100000; ++bar)
+      {
+         for (int32_t beat = 0; beat < 4; ++beat)
+         {
+            const auto value = bar * timeSignature.GetBarDuration() +
+                               beat * timeSignature.GetBeatDuration();
+
+            basicFormatter->UpdateFormatForValue(value, true);
+
+            const auto formattedString =
+               wxString::Format("%03d bar %02d beat", bar + 1, beat + 1);
+
+            REQUIRE(
+               *basicFormatter->StringToValue(formattedString) ==
+               Approx(value));
+
+            REQUIRE(
+               basicFormatter
+                  ->ValueToString(
+                     *basicFormatter->StringToValue(formattedString), true)
+                  .valueString == formattedString);
+         }
+      }
+   };
+
+   longFormatterTest(88);
+   longFormatterTest(117);
 }
 
 

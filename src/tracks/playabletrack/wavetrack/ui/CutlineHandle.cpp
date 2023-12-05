@@ -18,16 +18,19 @@ Paul Licameli split from TrackPanel.cpp
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../Snap.h" // for kPixelTolerance
+#include "Snap.h" // for kPixelTolerance
 #include "../../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "../../../../../images/Cursors.h"
 
-CutlineHandle::CutlineHandle
-( const std::shared_ptr<WaveTrack> &pTrack, WaveTrackLocation location )
+CutlineHandle::CutlineHandle(
+   const std::shared_ptr<WaveTrack> &pTrack,
+   WaveTrackLocations locations, WaveTrackLocation location
+)
    : mpTrack{ pTrack }
+   , mLocations{ move(locations) }
    , mLocation{ location }
 {
 }
@@ -39,42 +42,22 @@ void CutlineHandle::Enter(bool, AudacityProject *)
 #endif
 }
 
-HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
+HitTestPreview CutlineHandle::HitPreview(bool unsafe)
 {
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return {
-      (cutline
-       ? XO("Left-Click to expand, Right-Click to remove")
-       : XO("Left-Click to merge clips")),
-      (unsafe
-       ? &*disabledCursor
-       : &arrowCursor)
-   };
+   return { XO("Left-Click to expand, Right-Click to remove"),
+            (unsafe ? &*disabledCursor : &arrowCursor) };
 }
 namespace
 {
-   int FindMergeLine(WaveTrack *track, double time)
+   bool IsOverCutline(const WaveTrackLocations &locations,
+      const ViewInfo &viewInfo,
+      const wxRect &rect, const wxMouseState &state,
+      WaveTrackLocation *pmLocation)
    {
-      const double tolerance = 0.5 / track->GetRate();
-      int ii = 0;
-      for (const auto loc: WaveTrackLocations::Get(*track).Get()) {
-         if (loc.typ == WaveTrackLocation::locationMergePoint &&
-             fabs(time - loc.pos) < tolerance)
-            return ii;
-         ++ii;
-      }
-      return -1;
-   }
-   
-   bool IsOverCutline
-      (const ViewInfo &viewInfo, WaveTrack * track,
-       const wxRect &rect, const wxMouseState &state,
-       WaveTrackLocation *pmLocation)
-   {
-      for (auto loc: WaveTrackLocations::Get(*track).Get())
-      {
+      for (auto loc: locations) {
          const double x = viewInfo.TimeToPosition(loc.pos);
          if (x >= 0 && x < rect.width)
          {
@@ -96,27 +79,42 @@ namespace
    }
 }
 
-UIHandlePtr CutlineHandle::HitTest
-(std::weak_ptr<CutlineHandle> &holder,
- const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject,
- const std::shared_ptr<WaveTrack> &pTrack)
+UIHandlePtr CutlineHandle::HitTest(
+   std::weak_ptr<CutlineHandle> &holder,
+   const wxMouseState &state, const wxRect &rect,
+   const AudacityProject *pProject,
+   std::shared_ptr<WaveTrack> pTrack)
 {
-   auto &viewInfo = ViewInfo::Get( *pProject );
+   // Substitute the leader
+   if (!pTrack->GetOwner())
+      return {};
+   auto iter = pTrack->GetOwner()->Find(pTrack.get());
+   if (!*iter)
+      return {};
+   pTrack = (*iter)->SharedPointer<WaveTrack>();
+
+   auto &viewInfo = ViewInfo::Get(*pProject);
    /// method that tells us if the mouse event landed on an
    /// editable Cutline
 
+   auto locations = FindWaveTrackLocations(*pTrack);
    WaveTrackLocation location;
-   if (!IsOverCutline(viewInfo, pTrack.get(), rect, state, &location))
+   if (!IsOverCutline(locations, viewInfo, rect, state, &location))
       return {};
 
-   auto result = std::make_shared<CutlineHandle>( pTrack, location );
-   result = AssignUIHandlePtr( holder, result );
+   auto result =
+      std::make_shared<CutlineHandle>(pTrack, move(locations), location);
+   result = AssignUIHandlePtr(holder, result);
    return result;
 }
 
 CutlineHandle::~CutlineHandle()
 {
+}
+
+std::shared_ptr<const Channel> CutlineHandle::FindChannel() const
+{
+   return mpTrack;
 }
 
 bool CutlineHandle::HandlesRightClick()
@@ -149,54 +147,21 @@ UIHandle::Result CutlineHandle::Click
 
    if (event.LeftDown())
    {
-      if (mLocation.typ == WaveTrackLocation::locationCutLine)
-      {
-         mOperation = Expand;
-         mStartTime = viewInfo.selectedRegion.t0();
-         mEndTime = viewInfo.selectedRegion.t1();
+      mOperation = Expand;
+      mStartTime = viewInfo.selectedRegion.t0();
+      mEndTime = viewInfo.selectedRegion.t1();
 
-         // When user presses left button on cut line, expand the line again
-         double cutlineStart = 0, cutlineEnd = 0;
-         double *pCutlineStart = &cutlineStart, *pCutlineEnd = &cutlineEnd;
-
-         for (auto channel :
-              TrackList::Channels(mpTrack.get())) {
-            channel->ExpandCutLine(
-               mLocation.pos, pCutlineStart, pCutlineEnd);
-            if ( channel == mpTrack.get() )
-               pCutlineStart = pCutlineEnd = nullptr;
-         }
-
-         viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
-      }
-      else if (mLocation.typ == WaveTrackLocation::locationMergePoint) {
-         const double pos = mLocation.pos;
-         for (auto channel :
-              TrackList::Channels(mpTrack.get())) {
-            // Don't assume correspondence of merge points across channels!
-            int idx = FindMergeLine(channel, pos);
-            if (idx >= 0) {
-               auto location =
-                  WaveTrackLocations::Get(*channel).Get()[idx];
-               channel->MergeClips(
-                  location.clipidx1, location.clipidx2);
-            }
-         }
-
-         mOperation = Merge;
-      }
+      // When user presses left button on cut line, expand the line again
+      double cutlineStart = 0, cutlineEnd = 0;
+      mpTrack->ExpandCutLine(mLocation.pos, &cutlineStart, &cutlineEnd);
+      viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
    }
    else if (event.RightDown())
    {
-      bool removed = false;
-      for (auto channel :
-           TrackList::Channels(mpTrack.get()))
-         removed = channel->RemoveCutLine(mLocation.pos) || removed;
-
+      bool removed = mpTrack->RemoveCutLine(mLocation.pos);
       if (!removed)
          // Nothing happened, make no Undo item
          return Cancelled;
-
       mOperation = Remove;
    }
    else
@@ -215,8 +180,7 @@ HitTestPreview CutlineHandle::Preview
 (const TrackPanelMouseState &, AudacityProject *pProject)
 {
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-   auto bCutline = (mLocation.typ == WaveTrackLocation::locationCutLine);
-   return HitPreview( bCutline, unsafe );
+   return HitPreview( unsafe );
 }
 
 UIHandle::Result CutlineHandle::Release
@@ -228,10 +192,6 @@ UIHandle::Result CutlineHandle::Release
    switch (mOperation) {
    default:
       wxASSERT(false);
-   case Merge:
-      ProjectHistory::Get( *pProject )
-         .PushState(XO("Merged Clips"), XO("Merge"), UndoPush::CONSOLIDATE);
-      break;
    case Expand:
       ProjectHistory::Get( *pProject )
          .PushState(XO("Expanded Cut Line"), XO("Expand"));

@@ -86,8 +86,12 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    bool Get(samplePtr buffer, sampleFormat format,
             sampleCount start, size_t len, bool mayThrow) const;
 
+   /*!
+    Get a view of the lesser of `len` samples or what remains after `start`
+    @pre `start < GetNumSamples()`
+    */
    AudioSegmentSampleView
-   GetFloatSampleView(sampleCount start, size_t len) const;
+   GetFloatSampleView(sampleCount start, size_t len, bool mayThrow) const;
 
    //! Pass nullptr to set silence
    /*! Note that len is not size_t, because nullptr may be passed for buffer, in
@@ -154,7 +158,10 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    /*! @excsafety{Strong} */
    void InsertSilence(sampleCount s0, sampleCount len);
 
-   const SampleBlockFactoryPtr &GetFactory() { return mpFactory; }
+   const SampleBlockFactoryPtr& GetFactory() const
+   {
+      return mpFactory;
+   }
 
    //
    // XMLTagHandler callback methods for loading and saving

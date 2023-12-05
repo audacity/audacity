@@ -22,6 +22,7 @@ class wxCheckBox;
 class wxStaticText;
 class wxTextCtrl;
 class ShuttleGui;
+class WaveChannel;
 
 class EffectNormalize final : public StatefulEffect
 {
@@ -56,14 +57,14 @@ public:
 private:
    // EffectNormalize implementation
 
-   bool ProcessOne(
-      WaveTrack * t, const TranslatableString &msg, double& progress, float offset);
+   bool ProcessOne(WaveChannel &track,
+      const TranslatableString &msg, double& progress, float offset);
    using ProgressReport = std::function<bool(double fraction)>;
-   static bool AnalyseTrack(const WaveTrack &track,
+   static bool AnalyseTrack(const WaveChannel &track,
       const ProgressReport &report,
       bool gain, bool dc, double curT0, double curT1,
       float &offset, float &extent);
-   static bool AnalyseTrackData(const WaveTrack &track,
+   static bool AnalyseTrackData(const WaveChannel &track,
       const ProgressReport &report, double curT0, double curT1,
       float &offset);
    static double AnalyseDataDC(float *buffer, size_t len, double sum);

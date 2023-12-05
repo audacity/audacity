@@ -21,7 +21,7 @@
 
 #include "CommandContext.h"
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "ProjectHistory.h"
@@ -69,29 +69,26 @@ void SetEnvelopeCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetEnvelopeCommand::ApplyInner( const CommandContext &context, Track * t )
+bool SetEnvelopeCommand::ApplyInner(const CommandContext &context, Track &t)
 {
    // if no time is specified, then
    //   - delete deletes any envelope in selected tracks.
    //   - value is not set for any clip
-   t->TypeSwitch([&](WaveTrack &waveTrack) {
-      WaveClipPointers ptrs( waveTrack.SortedClipArray());
-      for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
-         WaveClip * pClip = *it;
+   t.TypeSwitch([&](WaveTrack &waveTrack) {
+      for (const auto pClip : waveTrack.SortedClipArray()) {
          bool bFound =
             !bHasT || (
-               ( pClip->GetPlayStartTime() <= mT) &&
-               ( pClip->GetPlayEndTime() >= mT )
+               (pClip->GetPlayStartTime() <= mT) &&
+               (pClip->GetPlayEndTime() >= mT)
             );
-         if( bFound )
-         {
+         if (bFound) {
             // Inside this IF is where we actually apply the command
             Envelope* pEnv = pClip->GetEnvelope();
             bool didSomething = false;
-            if( bHasDelete && mbDelete )
+            if (bHasDelete && mbDelete)
                pEnv->Clear(), didSomething = true;
-            if( bHasT && bHasV )
-               pEnv->InsertOrReplace( mT, pEnv->ClampValue( mV ) ),
+            if (bHasT && bHasV)
+               pEnv->InsertOrReplace(mT, pEnv->ClampValue(mV)),
                didSomething = true;
 
             if (didSomething)
@@ -104,21 +101,22 @@ bool SetEnvelopeCommand::ApplyInner( const CommandContext &context, Track * t )
       }
    } );
 
+
    return true;
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 
 AttachedItem sAttachment1{
-   wxT("Optional/Extra/Part2/Scriptables1"),
    // Note that the PLUGIN_SYMBOL must have a space between words,
    // whereas the short-form used here must not.
    // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
    // you would have to use "CompareAudio" here.)
    Command( wxT("SetEnvelope"), XXO("Set Envelope..."),
-      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+   wxT("Optional/Extra/Part2/Scriptables1")
 };
 }

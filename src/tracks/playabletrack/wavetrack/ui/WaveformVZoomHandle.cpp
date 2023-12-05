@@ -30,6 +30,11 @@ WaveformVZoomHandle::WaveformVZoomHandle(
 
 WaveformVZoomHandle::~WaveformVZoomHandle() = default;
 
+std::shared_ptr<const Channel> WaveformVZoomHandle::FindChannel() const
+{
+   return std::dynamic_pointer_cast<const Channel>(mpTrack.lock());
+}
+
 void WaveformVZoomHandle::Enter( bool, AudacityProject* )
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
@@ -55,13 +60,13 @@ UIHandle::Result WaveformVZoomHandle::Drag
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    if (!pTrack)
       return Cancelled;
-   return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd);
+   return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd, false);
 }
 
 HitTestPreview WaveformVZoomHandle::Preview
 (const TrackPanelMouseState &st, AudacityProject *)
 {
-   return WaveChannelVZoomHandle::HitPreview(st.state);
+   return WaveChannelVZoomHandle::HitPreview(false);
 }
 
 UIHandle::Result WaveformVZoomHandle::Release
@@ -89,7 +94,7 @@ void WaveformVZoomHandle::Draw(
    if (!mpTrack.lock()) //? TrackList::Lock()
       return;
    return WaveChannelVZoomHandle::DoDraw(
-      context, rect, iPass, mZoomStart, mZoomEnd);
+      context, rect, iPass, mZoomStart, mZoomEnd, false);
 }
 
 wxRect WaveformVZoomHandle::DrawingArea(
@@ -124,11 +129,6 @@ void WaveformVZoomHandle::DoZoom(
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
 
-   bool bDragZoom = WaveChannelVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
-
-   // Possibly override the zoom kind.
-   if( bDragZoom )
-      ZoomKind = kZoomInByDrag;
 
    float top=2.0;
    float half=0.5;
@@ -161,21 +161,6 @@ void WaveformVZoomHandle::DoZoom(
          max = 1.0;
       }
       break;
-   case kZoomDiv2:
-      {
-         // Zoom out even more than full :-)
-         // -2.0..+2.0 (or logarithmic equivalent)
-         min = -top;
-         max = top;
-      }
-      break;
-   case kZoomTimes2:
-      {
-         // Zoom in to -0.5..+0.5
-         min = -half;
-         max = half;
-      }
-      break;
    case kZoomHalfWave:
       {
          // Zoom to show fractionally more than the top half of the wave.
@@ -201,51 +186,24 @@ void WaveformVZoomHandle::DoZoom(
       break;
    case kZoomIn:
       {
-         // Enforce maximum vertical zoom
-         const float oldRange = max - min;
-         const float l = std::max(ZOOMLIMIT, 0.5f * oldRange);
-         const float ratio = l / (max - min);
+         const float zoomFactor = 0.5f;
+         const float currentRange = max - min;
+         const float nextRange = std::max(zoomFactor * currentRange, ZOOMLIMIT);
 
-         const float p1 = (zoomStart - ypos) / (float)height;
-         float c = (max * (1.0 - p1) + min * p1);
-         if (fixedMousePoint)
-            min = c - ratio * (1.0f - p1) * oldRange,
-            max = c + ratio * p1 * oldRange;
-         else
-            min = c - 0.5 * l,
-            max = c + 0.5 * l;
+         const float center = min + (currentRange / 2.0);
+         min = center - (nextRange / 2.0);
+         max = center + (nextRange / 2.0);
       }
       break;
    case kZoomOut:
       {
-         // Zoom out
-         if (min <= -1.0 && max >= 1.0) {
-            min = -top;
-            max = top;
-         }
-         else {
-            // limit to +/- 1 range unless already outside that range...
-            float minRange = (min < -1) ? -top : -1.0;
-            float maxRange = (max > 1) ? top : 1.0;
-            // and enforce vertical zoom limits.
-            const float p1 = (zoomStart - ypos) / (float)height;
-            if (fixedMousePoint) {
-               const float oldRange = max - min;
-               const float c = (max * (1.0 - p1) + min * p1);
-               min = std::min(maxRange - ZOOMLIMIT,
-                  std::max(minRange, c - 2 * (1.0f - p1) * oldRange));
-               max = std::max(minRange + ZOOMLIMIT,
-                  std::min(maxRange, c + 2 * p1 * oldRange));
-            }
-            else {
-               const float c = p1 * min + (1 - p1) * max;
-               const float l = (max - min);
-               min = std::min(maxRange - ZOOMLIMIT,
-                              std::max(minRange, c - l));
-               max = std::max(minRange + ZOOMLIMIT,
-                              std::min(maxRange, c + l));
-            }
-         }
+         const float zoomFactor = 2.0f;
+         const float currentRange = max - min;
+         const float nextRange = zoomFactor * currentRange;
+
+         const float center = min + (currentRange / 2.0);
+         min = std::max(-top, center - (0.5f * nextRange));
+         max = std::min(top, center + (0.5f * nextRange));
       }
       break;
    }
@@ -268,53 +226,36 @@ PopupMenuTable &WaveformVRulerMenuTable::Instance()
 }
 
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
-   // Accelerators only if zooming enabled.
-   bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
-
-   BeginSection( "Scales" );
-   {
-      const auto & names = WaveformSettings::GetScaleNames();
-      for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
-         AppendRadioItem( names[ii].Internal(),
-            OnFirstWaveformScaleID + ii, names[ii].Msgid(),
-            POPUP_MENU_FN( OnWaveformScaleType ),
-            []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-               const auto pData =
-                  static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
-               WaveTrack *const wt = pData->pTrack;
-               if ( id ==
-                  OnFirstWaveformScaleID +
-                  static_cast<int>(WaveformSettings::Get(*wt).scaleType) )
-                  menu.Check(id, true);
-            }
-          );
-      }
+   // this generates the linear(amp), log(dB), linear(dB) entries
+   const auto & names = WaveformSettings::GetScaleNames();
+   for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
+      AppendRadioItem( names[ii].Internal(),
+         OnFirstWaveformScaleID + ii, names[ii].Msgid(),
+         POPUP_MENU_FN( OnWaveformScaleType ),
+         []( PopupMenuHandler &handler, wxMenu &menu, int id ){
+            const auto pData =
+               static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
+            WaveTrack *const wt = pData->pTrack;
+            if ( id ==
+               OnFirstWaveformScaleID +
+               static_cast<int>(WaveformSettings::Get(*wt).scaleType) )
+               menu.Check(id, true);
+         }
+         );
    }
-   EndSection();
 
    BeginSection( "Zoom" );
       BeginSection( "Basic" );
-         AppendItem( "Reset", OnZoomFitVerticalID,
-            MakeLabel( XXO("Zoom Reset"), bVZoom, XXO("Shift-Right-Click") ),
-            POPUP_MENU_FN( OnZoomReset ) );
-         AppendItem( "TimesHalf", OnZoomDiv2ID,        XXO("Zoom x1/2"),
-            POPUP_MENU_FN( OnZoomDiv2Vertical ) );
-         AppendItem( "TimesTwo", OnZoomTimes2ID,      XXO("Zoom x2"),                       POPUP_MENU_FN( OnZoomTimes2Vertical ) );
+         AppendItem( "In", OnZoomInVerticalID, XXO("Zoom In"), POPUP_MENU_FN( OnZoomInVertical ) );
+         AppendItem( "Out", OnZoomOutVerticalID, XXO("Zoom Out"), POPUP_MENU_FN( OnZoomOutVertical ) );
+         AppendItem( "Reset", OnZoomFitVerticalID, XXO("Reset Zoom"), POPUP_MENU_FN( OnZoomReset ) );
+      EndSection();
 
    #ifdef EXPERIMENTAL_HALF_WAVE
-         AppendItem( "HalfWave", OnZoomHalfWaveID,    XXO("Half Wave"),                     POPUP_MENU_FN( OnZoomHalfWave ) );
-   #endif
-      EndSection();
-
       BeginSection( "InOut" );
-         AppendItem( "In", OnZoomInVerticalID,
-            MakeLabel( XXO("Zoom In"), bVZoom, XXO("Left-Click/Left-Drag") ),
-            POPUP_MENU_FN( OnZoomInVertical ) );
-         AppendItem( "Out", OnZoomOutVerticalID,
-            MakeLabel( XXO("Zoom Out"), bVZoom, XXO("Shift-Left-Click") ),
-            POPUP_MENU_FN( OnZoomOutVertical ) );
+         AppendItem( "HalfWave", OnZoomHalfWaveID, XXO("Half Wave"), POPUP_MENU_FN( OnZoomHalfWave ) );
       EndSection();
+   #endif
    EndSection();
 
 END_POPUP_MENU()
