@@ -53,3 +53,15 @@ bool ProjectFileIOExtensionRegistry::OnClose(AudacityProject& project)
 
    return ok;
 }
+
+bool ProjectFileIOExtensionRegistry::IsBlockLocked(
+   const AudacityProject& project, int64_t blockId)
+{
+   for (auto& extension : GetExtensions ())
+   {
+      if (extension->IsBlockLocked(project, blockId))
+         return true;
+   }
+
+   return false;
+}
