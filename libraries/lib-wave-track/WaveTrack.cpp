@@ -226,6 +226,12 @@ void WaveTrack::Interval::TrimRightTo(double t)
       GetClip(channel)->TrimRightTo(t);
 }
 
+void WaveTrack::Interval::TrimQuarternotesFromRight(double quarters)
+{
+   ForEachClip(
+      [quarters](auto& clip) { clip.TrimQuarternotesFromRight(quarters); });
+}
+
 void WaveTrack::Interval::SetTrimLeft(double t)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)
@@ -260,6 +266,12 @@ void WaveTrack::Interval::StretchRightTo(double t)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)
       GetClip(channel)->StretchRightTo(t);
+}
+
+void WaveTrack::Interval::StretchBy(double ratio)
+{
+   for (unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->StretchBy(ratio);
 }
 
 WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
@@ -419,6 +431,11 @@ double WaveTrack::Interval::GetStretchRatio() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common stretch ratio
    return mpClip->GetStretchRatio();
+}
+
+void WaveTrack::Interval::SetRawAudioTempo(double tempo)
+{
+   ForEachClip([&](auto& clip) { clip.SetRawAudioTempo(tempo); });
 }
 
 sampleCount WaveTrack::Interval::TimeToSamples(double time) const

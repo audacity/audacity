@@ -19,10 +19,13 @@
 #include "ImportExportPrefs.h"
 
 #include <wx/defs.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
 
 #include "NoteTrack.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
+#include "WindowAccessible.h"
 
 static const auto PathStart = wxT("ImportExportPreferences");
 
@@ -90,6 +93,22 @@ void ImportExportPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
+EnumSetting<bool> ImportExportPrefs::MusicFileImportSetting {
+   wxT("/FileFormats/MusicFileImportSettingChoice"),
+   {
+      /* i18n-hint: The music theory "beat" */
+      EnumValueSymbol {
+         wxT("Yes"),
+         XXO(
+            "S&witch view to Beats and Measures and align with musical grid") },
+      EnumValueSymbol { wxT("Ask"), XXO("&Ask me each time") },
+      EnumValueSymbol { wxT("No"), XXO("Do &nothing") },
+   },
+   1,
+   { false, true, false },
+   wxT("/FileFormats/MusicFileImportSetting"),
+};
+
 void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -109,6 +128,32 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       [&](const PopulatorItem &item, auto &) { item.mPopulator(S); },
       &top, &PopulatorItem::Registry());
 
+
+   auto musicImportsBox = S.StartStatic(XO("Music Imports"));
+   {
+      const auto header = S.AddVariableText(
+         XO("When Audacity detects music in file imported on empty project"));
+#if wxUSE_ACCESSIBILITY
+      if (musicImportsBox != nullptr)
+      {
+         musicImportsBox->SetName(header->GetLabel());
+         safenew WindowAccessible(musicImportsBox);
+      }
+#endif
+      S.StartPanel();
+      {
+         S.StartRadioButtonGroup(ImportExportPrefs::MusicFileImportSetting);
+         {
+            S.TieRadioButton();
+            S.TieRadioButton();
+            S.TieRadioButton();
+         }
+         S.EndRadioButtonGroup();
+      }
+      S.EndPanel();
+   }
+   S.EndStatic();
+
    S.EndScroller();
 }
 
@@ -116,7 +161,7 @@ bool ImportExportPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
-   
+
    return true;
 }
 
