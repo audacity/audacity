@@ -1108,6 +1108,13 @@ private:
    void HandleClear(
       double t0, double t1, bool addCutLines, bool split,
       bool clearByTrimming = false);
+
+   // This channel-major duplication of the above is transitional only
+   // May assume precondition: t0 <= t1
+   void HandleClearOne(
+      double t0, double t1, bool addCutLines, bool split,
+      bool clearByTrimming = false);
+
    /*
     * @brief Copy/Paste operations must preserve beat durations, but time
     * boundaries are expressed in seconds. For pasting to work, source and
