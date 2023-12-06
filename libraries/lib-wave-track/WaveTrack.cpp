@@ -2270,14 +2270,6 @@ void WaveTrack::HandleClear(
    // Only now, change the contents of this track
    // use No-fail-guarantee for the rest
 
-   const auto moveClipsLeft = !split && GetEditClipsCanMove();
-   if (moveClipsLeft)
-      // Clip is "behind" the region -- offset it unless we're splitting
-      // or we're using the "don't move other clips" mode
-      for (const auto& clip : mClips)
-         if (clip->AtOrBeforePlayRegion(t1))
-            clip->ShiftBy(-(t1 - t0));
-
    for (const auto &clip: clipsToDelete)
    {
       auto myIt = FindClip(mClips, clip);
@@ -2286,6 +2278,14 @@ void WaveTrack::HandleClear(
       else
          wxASSERT(false);
    }
+
+   const auto moveClipsLeft = !split && GetEditClipsCanMove();
+   if (moveClipsLeft)
+      // Clip is "behind" the region -- offset it unless we're splitting
+      // or we're using the "don't move other clips" mode
+      for (const auto& clip : mClips)
+         if (clip->AtOrBeforePlayRegion(t1))
+            clip->ShiftBy(-(t1 - t0));
 
    for (auto &clip: clipsToAdd)
       InsertClip(std::move(clip)); // transfer ownership
