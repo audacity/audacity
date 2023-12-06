@@ -946,10 +946,14 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
 
    transaction.Commit();
    MarkChanged();
+   AddCutLine(move(newClip));
+}
 
-   mCutLines.push_back(std::move(newClip));
-
-   // New cutline was copied from this so will have correct width
+void WaveClip::AddCutLine(WaveClipHolder pClip)
+{
+   assert(GetWidth() == pClip->GetWidth());
+   mCutLines.push_back(move(pClip));
+   // New clip is assumed to have correct width
    assert(CheckInvariants());
 }
 

@@ -967,9 +967,13 @@ public:
 
       /*!
        May assume precondition: t0 <= t1
-       @pre `IsLeader()`
        */
-      void ClearAndAddCutLine(double t0, double t1) /* not override */;
+      void ClearAndAddCutLine(double t0, double t1);
+   
+      //! Argument is non-const because it must share mutative access to the
+      //! underlying clip data
+      //! @pre `NChannels() == interval.NChannels()`
+      void AddCutLine(Interval &interval);
    
       /*!
        * @post result: `result->GetStretchRatio() == 1`

@@ -354,6 +354,13 @@ void WaveTrack::Interval::ClearAndAddCutLine(double t0, double t1)
       [&](auto& clip) { clip.ClearAndAddCutLine(t0, t1); });
 }
 
+void WaveTrack::Interval::AddCutLine(Interval &interval)
+{
+   assert(NChannels() == interval.NChannels());
+   size_t ii = 0;
+   ForEachClip([&](auto &clip) { clip.AddCutLine(interval.GetClip(ii++)); });
+}
+
 void WaveTrack::Interval::StretchLeftTo(double t)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)
