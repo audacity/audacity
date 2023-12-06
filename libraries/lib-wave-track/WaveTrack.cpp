@@ -2242,7 +2242,7 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
             // Don't modify this clip in place, because we want a strong
             // guarantee, and might modify another clip
             clipsToDelete.push_back(clip);
-            auto newClip = CopyClip(*clip);
+            auto newClip = CopyClip(*clip, true);
             newClip->ClearAndAddCutLine(t0, t1);
             clipsToAdd.push_back(move(newClip));
          }
@@ -2256,7 +2256,7 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
                   // Don't modify this clip in place, because we want a strong
                   // guarantee, and might modify another clip
                   clipsToDelete.push_back(clip);
-                  auto newClip = CopyClip(*clip);
+                  auto newClip = CopyClip(*clip, true);
                   newClip->TrimLeft(t1 - clip->GetPlayStartTime());
                   if (!split)
                      // If this is not a split-cut, where things are left in
@@ -2270,7 +2270,7 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
                   // Don't modify this clip in place, because we want a strong
                   // guarantee, and might modify another clip
                   clipsToDelete.push_back(clip);
-                  auto newClip = CopyClip(*clip);
+                  auto newClip = CopyClip(*clip, true);
                   newClip->TrimRight(clip->GetPlayEndTime() - t0);
 
                   clipsToAdd.push_back(move(newClip));
@@ -2279,11 +2279,11 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
                   // Delete in the middle of the clip...we actually create two
                   // NEW clips out of the left and right halves...
 
-                  auto leftClip = CopyClip(*clip);
+                  auto leftClip = CopyClip(*clip, true);
                   leftClip->TrimRight(clip->GetPlayEndTime() - t0);
                   clipsToAdd.push_back(move(leftClip));
 
-                  auto rightClip = CopyClip(*clip);
+                  auto rightClip = CopyClip(*clip, true);
                   rightClip->TrimLeft(t1 - clip->GetPlayStartTime());
                   if (!split)
                      // If this is not a split-cut, where things are left in
@@ -2300,7 +2300,7 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
                // Don't modify this clip in place, because we want a strong
                // guarantee, and might modify another clip
                clipsToDelete.push_back(clip);
-               auto newClip = CopyClip(*clip);
+               auto newClip = CopyClip(*clip, true);
 
                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
                newClip->Clear(t0,t1);
@@ -4005,13 +4005,14 @@ const WaveClip* WaveTrack::GetClipAtTime(double time) const
 }
 
 auto WaveTrack::CreateWideClip(double offset, const wxString& name,
-   const Interval *pToCopy) -> IntervalHolder
+   const Interval *pToCopy, bool copyCutlines) -> IntervalHolder
 {
    assert(IsLeader());
    WaveClipHolders holders;
    if (pToCopy)
       pToCopy->ForEachClip([&](const WaveClip &clip){
-         auto pNewClip = std::make_shared<WaveClip>(clip, mpFactory, true);
+         auto pNewClip =
+            std::make_shared<WaveClip>(clip, mpFactory, copyCutlines);
          pNewClip->SetName(name);
          pNewClip->SetSequenceStartTime(offset);
          holders.emplace_back(pNewClip);
@@ -4024,10 +4025,11 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
       holders[0], (holders.size() > 1) ? holders[1] : nullptr);
 }
 
-auto WaveTrack::CopyClip(const Interval &toCopy) -> IntervalHolder
+auto WaveTrack::CopyClip(const Interval &toCopy, bool copyCutlines)
+   -> IntervalHolder
 {
-   return
-      CreateWideClip(toCopy.GetSequenceStartTime(), toCopy.GetName(), &toCopy);
+   return CreateWideClip(toCopy.GetSequenceStartTime(),
+      toCopy.GetName(), &toCopy, copyCutlines);
 }
 
 auto WaveTrack::CreateClip(double offset, const wxString& name)

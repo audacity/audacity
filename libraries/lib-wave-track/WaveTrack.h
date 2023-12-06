@@ -717,15 +717,16 @@ public:
     */
    IntervalHolder
    CreateWideClip(double offset = .0, const wxString& name = wxEmptyString,
-      const Interval *pToCopy = nullptr);
+      const Interval *pToCopy = nullptr, bool copyCutlines = true);
 
    /// @pre IsLeader()
    //! Create new clip and add it to this track.
    /*!
     Returns a pointer to the newly created clip, using this track's block
-    factory but copying all else from the given clip.
+    factory but copying all else from the given clip, except possibly the
+    cutlines.
     */
-   IntervalHolder CopyClip(const Interval &toCopy);
+   IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
    //! Create new clip and add it to this track.
    /*!
