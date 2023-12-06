@@ -1639,16 +1639,14 @@ auto WaveTrack::CopyOne(
 void WaveTrack::Clear(double t0, double t1)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->HandleClear(t0, t1, false, false);
+   HandleClear(t0, t1, false, false);
 }
 
 /*! @excsafety{Strong} */
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->HandleClear(t0, t1, true, false);
+   HandleClear(t0, t1, true, false);
 }
 
 namespace {
@@ -2038,10 +2036,9 @@ void WaveTrack::ClearAndPasteOne(
 void WaveTrack::SplitDelete(double t0, double t1)
 {
    assert(IsLeader());
-   bool addCutLines = false;
-   bool split = true;
-   for (const auto pChannel : TrackList::Channels(this))
-      pChannel->HandleClear(t0, t1, addCutLines, split);
+   constexpr bool addCutLines = false;
+   constexpr bool split = true;
+   HandleClear(t0, t1, addCutLines, split);
 }
 
 namespace
@@ -2147,8 +2144,8 @@ bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 }
 
 /*! @excsafety{Strong} */
-void WaveTrack::HandleClear(
-   double t0, double t1, bool addCutLines, bool split, bool clearByTrimming)
+void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
+   const bool split, const bool clearByTrimming)
 {
    // For debugging, use an ASSERT so that we stop
    // closer to the problem.
@@ -2159,45 +2156,33 @@ void WaveTrack::HandleClear(
    t0 = SnapToSample(t0);
    t1 = SnapToSample(t1);
 
-   WaveClipPointers clipsToDelete;
-   WaveClipHolders clipsToAdd;
+   IntervalHolders clipsToDelete;
+   IntervalHolders clipsToAdd;
 
    // We only add cut lines when deleting in the middle of a single clip
    // The cut line code is not really prepared to handle other situations
    if (addCutLines)
-   {
-      for (const auto &clip : mClips)
-      {
-         if (clip->PartlyWithinPlayRegion(t0, t1))
-         {
+      for (const auto &&clip : Intervals())
+         if (clip->PartlyWithinPlayRegion(t0, t1)) {
             addCutLines = false;
             break;
          }
-      }
-   }
 
-   for (const auto &clip : mClips)
-   {
+   for (const auto &&clip : Intervals()) {
       if (clip->CoversEntirePlayRegion(t0, t1))
-      {
          // Whole clip must be deleted - remember this
-         clipsToDelete.push_back(clip.get());
-      }
-      else if (clip->IntersectsPlayRegion(t0, t1))
-      {
+         clipsToDelete.push_back(clip);
+      else if (clip->IntersectsPlayRegion(t0, t1)) {
          // Clip data is affected by command
-         if (addCutLines)
-         {
+         if (addCutLines) {
             // Don't modify this clip in place, because we want a strong
             // guarantee, and might modify another clip
-            clipsToDelete.push_back( clip.get() );
-            auto newClip =
-               std::make_shared<WaveClip>(*clip, mpFactory, true);
-            newClip->ClearAndAddCutLine( t0, t1 );
-            clipsToAdd.push_back( std::move( newClip ) );
+            clipsToDelete.push_back(clip);
+            auto newClip = CopyClip(*clip);
+            newClip->ClearAndAddCutLine(t0, t1);
+            clipsToAdd.push_back(move(newClip));
          }
-         else
-         {
+         else {
             if (split || clearByTrimming) {
                // Three cases:
 
@@ -2206,47 +2191,43 @@ void WaveTrack::HandleClear(
 
                   // Don't modify this clip in place, because we want a strong
                   // guarantee, and might modify another clip
-                  clipsToDelete.push_back( clip.get() );
-                  auto newClip =
-                     std::make_shared<WaveClip>(*clip, mpFactory, true);
+                  clipsToDelete.push_back(clip);
+                  auto newClip = CopyClip(*clip);
                   newClip->TrimLeft(t1 - clip->GetPlayStartTime());
                   if (!split)
                      // If this is not a split-cut, where things are left in
                      // place, we need to reposition the clip.
                      newClip->ShiftBy(t0 - t1);
-                  clipsToAdd.push_back( std::move( newClip ) );
+                  clipsToAdd.push_back(move(newClip));
                }
                else if (clip->AfterPlayRegion(t1)) {
                   // Delete to right edge
 
                   // Don't modify this clip in place, because we want a strong
                   // guarantee, and might modify another clip
-                  clipsToDelete.push_back( clip.get() );
-                  auto newClip =
-                     std::make_shared<WaveClip>(*clip, mpFactory, true);
+                  clipsToDelete.push_back(clip);
+                  auto newClip = CopyClip(*clip);
                   newClip->TrimRight(clip->GetPlayEndTime() - t0);
 
-                  clipsToAdd.push_back( std::move( newClip ) );
+                  clipsToAdd.push_back(move(newClip));
                }
                else {
                   // Delete in the middle of the clip...we actually create two
                   // NEW clips out of the left and right halves...
 
-                  auto leftClip =
-                     std::make_shared<WaveClip>(*clip, mpFactory, true);
+                  auto leftClip = CopyClip(*clip);
                   leftClip->TrimRight(clip->GetPlayEndTime() - t0);
-                  clipsToAdd.push_back(std::move(leftClip));
+                  clipsToAdd.push_back(move(leftClip));
 
-                  auto rightClip =
-                     std::make_shared<WaveClip>(*clip, mpFactory, true);
+                  auto rightClip = CopyClip(*clip);
                   rightClip->TrimLeft(t1 - clip->GetPlayStartTime());
                   if (!split)
                      // If this is not a split-cut, where things are left in
                      // place, we need to reposition the clip.
                      rightClip->ShiftBy(t0 - t1);
-                  clipsToAdd.push_back(std::move(rightClip));
+                  clipsToAdd.push_back(move(rightClip));
 
-                  clipsToDelete.push_back(clip.get());
+                  clipsToDelete.push_back(clip);
                }
             }
             else {
@@ -2254,14 +2235,13 @@ void WaveTrack::HandleClear(
 
                // Don't modify this clip in place, because we want a strong
                // guarantee, and might modify another clip
-               clipsToDelete.push_back( clip.get() );
-               auto newClip =
-                  std::make_shared<WaveClip>(*clip, mpFactory, true);
+               clipsToDelete.push_back(clip);
+               auto newClip = CopyClip(*clip);
 
                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
                newClip->Clear(t0,t1);
 
-               clipsToAdd.push_back( std::move( newClip ) );
+               clipsToAdd.push_back(move(newClip));
             }
          }
       }
@@ -2271,24 +2251,18 @@ void WaveTrack::HandleClear(
    // use No-fail-guarantee for the rest
 
    for (const auto &clip: clipsToDelete)
-   {
-      auto myIt = FindClip(mClips, clip);
-      if (myIt != mClips.end())
-         mClips.erase(myIt); // deletes the clip!
-      else
-         wxASSERT(false);
-   }
+      RemoveInterval(clip);
 
    const auto moveClipsLeft = !split && GetEditClipsCanMove();
    if (moveClipsLeft)
       // Clip is "behind" the region -- offset it unless we're splitting
       // or we're using the "don't move other clips" mode
-      for (const auto& clip : mClips)
+      for (const auto &&clip : Intervals())
          if (clip->AtOrBeforePlayRegion(t1))
             clip->ShiftBy(-(t1 - t0));
 
    for (auto &clip: clipsToAdd)
-      InsertClip(std::move(clip)); // transfer ownership
+      InsertInterval(move(clip));
 }
 
 /*! @excsafety{Strong} */
