@@ -4307,6 +4307,12 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
       holders[0], (holders.size() > 1) ? holders[1] : nullptr);
 }
 
+auto WaveTrack::CopyClip(const Interval &toCopy) -> IntervalHolder
+{
+   return
+      CreateWideClip(toCopy.GetSequenceStartTime(), toCopy.GetName(), &toCopy);
+}
+
 auto WaveTrack::CreateClip(double offset, const wxString& name)
    -> WaveClipHolder
 {

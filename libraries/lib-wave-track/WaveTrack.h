@@ -756,6 +756,14 @@ public:
    CreateWideClip(double offset = .0, const wxString& name = wxEmptyString,
       const Interval *pToCopy = nullptr);
 
+   /// @pre IsLeader()
+   //! Create new clip and add it to this track.
+   /*!
+    Returns a pointer to the newly created clip, using this track's block
+    factory but copying all else from the given clip.
+    */
+   IntervalHolder CopyClip(const Interval &toCopy);
+
    //! Create new clip and add it to this track.
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
