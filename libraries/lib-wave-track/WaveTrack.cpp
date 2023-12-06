@@ -69,6 +69,16 @@ from the project that will own the track.
 
 using std::max;
 
+WaveChannelInterval::WaveChannelInterval(WaveClipHolder pWideClip,
+   WaveClipHolder pNarrowClip, size_t iChannel
+)  : mpWideClip{ move(pWideClip) }
+   , mpNarrowClip{ move(pNarrowClip) }
+   , miChannel{ iChannel }
+{
+   assert(mpWideClip != nullptr);
+   assert(mpNarrowClip != nullptr);
+}
+
 WaveChannelInterval::~WaveChannelInterval() = default;
 
 bool WaveChannelInterval::Intersects(double t0, double t1) const
@@ -97,13 +107,13 @@ WaveChannelInterval::GetSampleView(double t0, double t1, bool mayThrow) const
 const Envelope &WaveChannelInterval::GetEnvelope() const
 {
    // Always the left clip's envelope
-   return *mWideClip.GetEnvelope();
+   return *GetWideClip().GetEnvelope();
 }
 
 Envelope &WaveChannelInterval::GetEnvelope()
 {
    // Always the left clip's envelope
-   return *mWideClip.GetEnvelope();
+   return *GetWideClip().GetEnvelope();
 }
 
 sampleCount WaveChannelInterval::GetVisibleSampleCount() const
@@ -209,7 +219,7 @@ int WaveChannelInterval::GetColourIndex() const
 
 BlockArray *WaveChannelInterval::GetSequenceBlockArray()
 {
-   return mNarrowClip.GetSequenceBlockArray(
+   return GetNarrowClip().GetSequenceBlockArray(
       0
       // TODO wide wave tracks -- miChannel
    );
@@ -218,32 +228,32 @@ BlockArray *WaveChannelInterval::GetSequenceBlockArray()
 std::pair<float, float>
 WaveChannelInterval::GetMinMax(double t0, double t1, bool mayThrow) const
 {
-   return mNarrowClip.GetMinMax(
+   return GetNarrowClip().GetMinMax(
       // TODO wide wave tracks -- miChannel
       0, t0, t1, mayThrow);
 }
 
 float WaveChannelInterval::GetRMS(double t0, double t1, bool mayThrow) const
 {
-   return mNarrowClip.GetRMS(
+   return GetNarrowClip().GetRMS(
       // TODO wide wave tracks -- miChannel
       0, t0, t1, mayThrow);
 }
 
 sampleCount WaveChannelInterval::GetPlayStartSample() const
 {
-   return mNarrowClip.GetPlayStartSample();
+   return GetNarrowClip().GetPlayStartSample();
 }
 
 sampleCount WaveChannelInterval::GetPlayEndSample() const
 {
-   return mNarrowClip.GetPlayEndSample();
+   return GetNarrowClip().GetPlayEndSample();
 }
 
 void WaveChannelInterval::SetSamples(constSamplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
-   return mNarrowClip.SetSamples(
+   return GetNarrowClip().SetSamples(
       // TODO wide wave tracks -- miChannel
       0, buffer, format, start, len, effectiveFormat);
 }
@@ -802,8 +812,7 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
    if (iChannel < NChannels()) {
       // TODO wide wave tracks: there will be only one, wide clip
       const auto pClip = (iChannel == 0 ? mpClip : mpClip1);
-      return std::make_shared<WaveChannelInterval>(*mpClip,
-         *pClip, iChannel);
+      return std::make_shared<WaveChannelInterval>(mpClip, pClip, iChannel);
    }
    return {};
 }

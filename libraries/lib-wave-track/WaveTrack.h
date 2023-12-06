@@ -43,6 +43,7 @@ class AudioSegmentSampleView;
 using WaveClipHolder = std::shared_ptr<WaveClip>;
 using WaveClipConstHolder = std::shared_ptr<const WaveClip>;
 using WaveClipHolders = std::vector<WaveClipHolder>;
+using WaveClipConstHolder = std::shared_ptr<const WaveClip>;
 using WaveClipConstHolders = std::vector<WaveClipConstHolder>;
 
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
@@ -70,19 +71,19 @@ class WAVE_TRACK_API WaveChannelInterval final
    , public ClipTimes
 {
 public:
-   //! Assume lifetime of this object nests in those of arguments
-   WaveChannelInterval(WaveClip &wideClip, WaveClip &narrowClip, size_t iChannel
-   )  : mWideClip{ wideClip }
-      , mNarrowClip{ narrowClip }
-      , miChannel{ iChannel }
-   {}
+   /*!
+    @pre `pWideClip != nullptr`
+    @pre `pNarrowClip != nullptr`
+    */
+   WaveChannelInterval(WaveClipHolder pWideClip,
+      WaveClipHolder pNarrowClip, size_t iChannel);
    ~WaveChannelInterval() override;
 
    friend bool operator ==(
       const WaveChannelInterval &x, const WaveChannelInterval &y
    ) {
-      return &x.mWideClip == &y.mWideClip &&
-         &x.mNarrowClip == &y.mNarrowClip &&
+      return x.mpWideClip == y.mpWideClip &&
+         x.mpNarrowClip == y.mpNarrowClip &&
          x.miChannel == y.miChannel;
    }
    friend bool operator !=(
@@ -91,9 +92,13 @@ public:
       return !(x == y);
    }
 
-   const WaveClip &GetWideClip() const { return mWideClip; }
-   WaveClip &GetClip() { return mNarrowClip; }
-   const WaveClip &GetClip() const { return mNarrowClip; }
+   const WaveClip &GetWideClip() const { return *mpWideClip; }
+   WaveClip &GetClip() { return *mpNarrowClip; }
+   const WaveClip &GetClip() const { return *mpNarrowClip; }
+
+   const WaveClipHolder &GetClipPtr() { return mpNarrowClip; }
+   WaveClipConstHolder GetClipPtr() const { return mpNarrowClip; }
+
    Envelope &GetEnvelope();
    const Envelope &GetEnvelope() const;
    size_t GetChannelIndex() const { return miChannel; }
@@ -183,11 +188,14 @@ public:
    );
 
 private:
-   WaveClip &GetNarrowClip() { return mNarrowClip; }
-   const WaveClip &GetNarrowClip() const { return mNarrowClip; }
+   WaveClip &GetWideClip() { return *mpWideClip; }
+   WaveClip &GetNarrowClip() { return *mpNarrowClip; }
+   const WaveClip &GetNarrowClip() const { return *mpNarrowClip; }
 
-   WaveClip &mWideClip;
-   WaveClip &mNarrowClip;
+   //! @invariant non-null
+   const WaveClipHolder mpWideClip;
+   //! @invariant non-null
+   const WaveClipHolder mpNarrowClip;
    const size_t miChannel;
 };
 
