@@ -885,6 +885,10 @@ public:
       void Append(constSamplePtr buffer[], sampleFormat format, size_t len);
       void Flush();
 
+      /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
+      /// operation (but without putting the cut audio to the clipboard)
+      void Clear(double t0, double t1);
+
       void SetName(const wxString& name);
       const wxString& GetName() const;
 
@@ -978,9 +982,22 @@ public:
       void StretchBy(double ratio);
       void SetTrimLeft(double t);
       void SetTrimRight(double t);
+
+      //! Moves play start position by deltaTime
+      void TrimLeft(double deltaTime);
+      //! Moves play end position by deltaTime
+      void TrimRight(double deltaTime);
+
+      //! Same as `TrimRight`, but expressed as quarter notes
       void ClearLeft(double t);
       void ClearRight(double t);
 
+      /*!
+       May assume precondition: t0 <= t1
+       @pre `IsLeader()`
+       */
+      void ClearAndAddCutLine(double t0, double t1) /* not override */;
+   
       /*!
        * @post result: `result->GetStretchRatio() == 1`
        */

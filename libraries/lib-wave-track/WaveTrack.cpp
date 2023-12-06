@@ -237,6 +237,11 @@ void WaveTrack::Interval::Flush()
    ForEachClip([](auto& clip) { clip.Flush(); });
 }
 
+void WaveTrack::Interval::Clear(double t0, double t1)
+{
+   ForEachClip([&](auto& clip) { clip.Clear(t0, t1); });
+}
+
 void WaveTrack::Interval::TrimLeftTo(double t)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)
@@ -267,6 +272,16 @@ void WaveTrack::Interval::SetTrimRight(double t)
       GetClip(channel)->SetTrimRight(t);
 }
 
+void WaveTrack::Interval::TrimLeft(double deltaTime)
+{
+   ForEachClip([&](auto &clip) { clip.TrimLeft(deltaTime); });
+}
+
+void WaveTrack::Interval::TrimRight(double deltaTime)
+{
+   ForEachClip([&](auto &clip) { clip.TrimRight(deltaTime); });
+}
+
 void WaveTrack::Interval::ClearLeft(double t)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)
@@ -277,6 +292,12 @@ void WaveTrack::Interval::ClearRight(double t)
 {
    for(unsigned channel = 0; channel < NChannels(); ++channel)
       GetClip(channel)->ClearRight(t);
+}
+
+void WaveTrack::Interval::ClearAndAddCutLine(double t0, double t1)
+{
+   ForEachClip(
+      [&](auto& clip) { clip.ClearAndAddCutLine(t0, t1); });
 }
 
 void WaveTrack::Interval::StretchLeftTo(double t)
