@@ -4292,10 +4292,25 @@ auto WaveTrack::SplitOneAt(double t) -> std::pair<WaveClipHolder, WaveClipHolder
 // Can't promise strong exception safety for a pair of tracks together
 bool WaveTrack::MergeClips(int clipidx1, int clipidx2)
 {
-   const auto channels = TrackList::Channels(this);
-   return std::all_of(channels.begin(), channels.end(),
-      [&](const auto pChannel){
-         return pChannel->MergeOneClipPair(clipidx1, clipidx2); });
+   const auto clip1 = GetWideClip(clipidx1);
+   const auto clip2 = GetWideClip(clipidx2);
+
+   if (!clip1 || !clip2)
+      return false; // Don't throw, just do nothing.
+
+   const auto stretchRatiosEqual = clip1->HasEqualStretchRatio(*clip2);
+   if (!stretchRatiosEqual)
+      return false;
+
+   // Append data from second clip to first clip
+   // use Strong-guarantee
+   bool success = clip1->Paste(clip1->GetPlayEndTime(), *clip2);
+   assert(success);  // assuming clips of the same track must have same width
+
+   // use No-fail-guarantee for the rest
+   // Delete second clip
+   RemoveInterval(clip2);
+   return true;
 }
 
 /*! @excsafety{Strong} */
