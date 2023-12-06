@@ -692,9 +692,6 @@ public:
    const WaveClipConstHolders &GetClips() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
-   const WaveClip* GetLeftmostNarrowClip() const;
-   const WaveClip* GetRightmostNarrowClip() const;
-
    IntervalHolder GetLeftmostClip();
    IntervalConstHolder GetLeftmostClip() const;
 
@@ -751,9 +748,6 @@ public:
    *  @return a pointer to a WaveClip at the end of the track
    */
    WaveClip* RightmostOrNewClip();
-
-   // Get the linear index of a given clip (-1 if the clip is not found)
-   int GetClipIndex(const WaveClip* clip) const;
 
    //! Get the nth clip in this WaveTrack (will return nullptr if not found).
    /*!
@@ -1133,15 +1127,12 @@ public:
    void CopyClipEnvelopes();
 
 private:
+   //! Get the linear index of a given clip (== number of clips if not found)
+   int GetClipIndex(const Interval &clip) const;
+
    void FlushOne();
    // May assume precondition: t0 <= t1
    void HandleClear(
-      double t0, double t1, bool addCutLines, bool split,
-      bool clearByTrimming = false);
-
-   // This channel-major duplication of the above is transitional only
-   // May assume precondition: t0 <= t1
-   void HandleClearOne(
       double t0, double t1, bool addCutLines, bool split,
       bool clearByTrimming = false);
 
@@ -1156,10 +1147,6 @@ private:
    void ClearAndPasteAtSameTempo(
       double t0, double t1, const WaveTrack& src, bool preserve, bool merge,
       const TimeWarper* effectWarper, bool clearByTrimming);
-   static void ClearAndPasteOne(
-      WaveTrack& track, double t0, double t1, double startTime, double endTime,
-      const WaveTrack& src, bool preserve, bool merge,
-      const TimeWarper* effectWarper, bool clearByTrimming);
 
    //! @pre All clips intersecting [t0, t1) have unit stretch ratio
    static void JoinOne(WaveTrack& track, double t0, double t1);
@@ -1170,7 +1157,6 @@ private:
    std::pair<WaveClipHolder, WaveClipHolder> SplitOneAt(double t);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
-   bool MergeOneClipPair(int clipidx1, int clipidx2);
    void ApplyStretchRatioOnIntervals(
       const IntervalHolders& intervals,
       const ProgressReporter& reportProgress);
@@ -1233,9 +1219,6 @@ private:
     */
    void
    PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, bool merge);
-   static void PasteOne(
-      WaveTrack& track, double t0, const WaveTrack& other, double startTime,
-      double insertDuration, bool merge = true);
 
    //! Whether all clips of a leader track have a common rate
    /*!
