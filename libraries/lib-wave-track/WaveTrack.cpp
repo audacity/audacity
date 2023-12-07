@@ -4333,7 +4333,7 @@ auto WaveTrack::SplitAt(double t0) -> std::pair<IntervalHolder, IntervalHolder>
    // Maybe SplitOneAt did not split, as when t0 is an endpoint.
    if (!firstfirst) {
       // If the first channel didn't split, neither should have the other
-      assert(!pairs[1].first);
+      assert(pairs.size() < 2 || !pairs[1].first);
       return {};
    }
 
