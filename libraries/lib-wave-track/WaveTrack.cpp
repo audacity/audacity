@@ -2675,9 +2675,9 @@ void WaveTrack::PasteOne(
 
     //wxPrintf("paste: we have at least one clip\n");
 
-    const auto clipAtT0 = track.GetIntervalAtTime(t0);
-    const auto otherFirstClip = other.GetLeftmostClip();
-    const auto otherLastClip = other.GetRightmostClip();
+    const auto clipAtT0 = track.GetClipAtTime(t0);
+    const auto otherFirstClip = other.GetLeftmostNarrowClip();
+    const auto otherLastClip = other.GetRightmostNarrowClip();
     const auto stretchRatiosMatch =
        !clipAtT0 || (clipAtT0->HasEqualStretchRatio(*otherFirstClip) &&
                      clipAtT0->HasEqualStretchRatio(*otherLastClip));
