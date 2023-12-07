@@ -2712,7 +2712,7 @@ void WaveTrack::PasteOne(
     if (editClipCanMove) {
         if (!singleClipMode) {
             // We need to insert multiple clips, so split the current clip and ...
-            track.SplitAt(t0);
+            track.SplitOneAt(t0);
         }
         //else if there is a clip at t0 insert new clip inside it and ...
 
@@ -2724,7 +2724,7 @@ void WaveTrack::PasteOne(
     else
     {
        if (!merge)
-          track.SplitAt(t0);
+          track.SplitOneAt(t0);
        const auto clipAtT0 = track.GetClipAtTime(t0);
        const auto t = clipAtT0 ? clipAtT0->GetPlayEndTime() : t0;
        if (!track.IsEmpty(t, t + insertDuration))
