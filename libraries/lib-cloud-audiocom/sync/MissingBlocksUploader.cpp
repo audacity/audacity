@@ -8,6 +8,7 @@
   Dmitry Vedenko
 
 **********************************************************************/
+
 #include "MissingBlocksUploader.h"
 
 #include "NetworkManager.h"
@@ -15,33 +16,37 @@
 #include "IResponse.h"
 #include "BasicUI.h"
 
+#include "DataUploader.h"
+
 #include "WavPackCompressor.h"
 
 namespace cloud::audiocom::sync
 {
 
 MissingBlocksUploader::MissingBlocksUploader(
-   std::shared_ptr<AudacityProject> project, std::vector<MissingBlock> blocks,
+   const ServiceConfig& serviceConfig, std::vector<BlockUploadTask> uploadTasks,
    MissingBlocksUploadProgressCallback progress)
-    : mProject { project }
-    , mBlocks { std::move(blocks) }
+    : mServiceConfig { serviceConfig }
+    , mUploadTasks { std::move(uploadTasks) }
     , mProgressCallback { std::move(progress) }
 {
-   mProgressData.TotalBlocks = mBlocks.size();
+   mProgressData.TotalBlocks = mUploadTasks.size();
 
    for (auto& thread : mProducerThread)
       thread = std::thread([this] { ProducerThread(); });
 
    mConsumerThread = std::thread([this] { ConsumerThread(); });
+
+   if (!mProgressCallback)
+      mProgressCallback = [](auto...) {};
 }
 
 MissingBlocksUploader::ProducedItem MissingBlocksUploader::ProduceBlock()
 {
    const auto index = mFirstUnprocessedBlockIndex++;
+   const auto& task = mUploadTasks[index];
 
-   const auto missingBlockId = mBlocks[index].Id;
-
-   return { mBlocks[index], CompressBlock(*mProject, missingBlockId) };
+   return { task, CompressBlock(task.Block) };
 }
 
 void MissingBlocksUploader::ConsumeBlock(ProducedItem item)
@@ -62,29 +67,14 @@ void MissingBlocksUploader::ConsumeBlock(ProducedItem item)
       ++mConcurrentUploads;
    }
 
-   using namespace audacity::network_manager;
-
-   auto request = Request(item.Block.UploadUrl);
-
-   request.setHeader(
-      common_headers::ContentType,
-      common_content_types::ApplicationXOctetStream);
-
-   auto response = NetworkManager::GetInstance().doPut(
-      request, item.CompressedData.data(), item.CompressedData.size());
-
-   item.CompressedData = {};
-
-   response->setRequestFinishedCallback(
-      [this, response, item = std::move(item)](auto)
+   DataUploader::Get().Upload(
+      mServiceConfig, item.Task.BlockUrls, std::move(item.CompressedData),
+      [this, task = item.Task](UploadResult result)
       {
-         if (response->getError() != NetworkError::NoError)
-         {
-            HandleFailedBlock(*response, item.Block.Id);
-            return;
-         }
-
-         ConfirmBlock(std::move(item));
+         if (result.Code != UploadResultCode::Success)
+            HandleFailedBlock(result, task);
+         else
+            ConfirmBlock(task);
       });
 }
 
@@ -125,75 +115,49 @@ MissingBlocksUploader::ProducedItem MissingBlocksUploader::PopBlockFromQueue()
    return std::move(item);
 }
 
-void MissingBlocksUploader::ConfirmBlock(ProducedItem item)
+void MissingBlocksUploader::ConfirmBlock(BlockUploadTask item)
 {
-   using namespace audacity::network_manager;
-
-   const auto request = Request(item.Block.ConfirmUrl);
-
-   auto response = NetworkManager::GetInstance().doPost(request, nullptr, 0);
-
-   response->setRequestFinishedCallback(
-      [this, response, item = std::move(item)](auto)
+   {
+      std::lock_guard<std::mutex> lock(mProgressDataMutex);
+      mProgressData.UploadedBlocks++;
+      if (mProgressCallback)
       {
-         if (response->getError() != NetworkError::NoError)
-         {
-            HandleFailedBlock(*response, item.Block.Id);
-            return;
-         }
-
-         {
-            std::lock_guard<std::mutex> lock(mProgressDataMutex);
-            mProgressData.UploadedBlocks++;
-            if (mProgressCallback)
+         BasicUI::CallAfter(
+            [this, task = std::move(item)]()
             {
-               BasicUI::CallAfter(
-                  [this, blockId = item.Block.Id]()
-                  {
-                     if (mProject)
-                        RemoveMissingBlock(*mProject, blockId);
+               std::lock_guard<std::mutex> lock(mProgressDataMutex);
+               mProgressCallback(mProgressData, task.Block, BlockAction::RemoveFromMissing);
+            });
+      }
+   }
 
-                     std::lock_guard<std::mutex> lock(mProgressDataMutex);
-                     mProgressCallback(mProgressData);
-                  });
-            }
-         }
-
-         {
-            std::lock_guard<std::mutex> lock(mUploadsMutex);
-            --mConcurrentUploads;
-            mUploadsNotFull.notify_one();
-         }
-      });
+   {
+      std::lock_guard<std::mutex> lock(mUploadsMutex);
+      --mConcurrentUploads;
+      mUploadsNotFull.notify_one();
+   }
 }
 
 void MissingBlocksUploader::HandleFailedBlock(
-   audacity::network_manager::IResponse& response, BlockID blockId)
+   const UploadResult& result, BlockUploadTask task)
 {
-   std::lock_guard<std::mutex> lock(mProgressDataMutex);
-
-   mProgressData.FailedBlocks++;
-
-   mProgressData.ErrorMessages.push_back(response.getErrorString());
-
-   if (response.getError() == audacity::network_manager::NetworkError::HTTPError)
    {
-      mProgressData.ErrorMessages.push_back(
-         std::to_string(response.getHTTPCode()) + ": " +
-         response.readAll<std::string>());
-   }
+      std::lock_guard<std::mutex> lock(mProgressDataMutex);
 
-   if (mProgressCallback)
-   {
-      const bool removeBlock = response.getHTTPCode() == 409;
+      mProgressData.FailedBlocks++;
+      mProgressData.ErrorMessages.push_back(result.ErrorMessage);
+
+      const auto action =
+         result.Code == UploadResultCode::Conflict ?
+            BlockAction::RemoveFromMissing :
+            (result.Code == UploadResultCode::Expired ? BlockAction::Expire :
+                                                        BlockAction::Ignore);
 
       BasicUI::CallAfter(
-         [this, removeBlock, blockId]()
+         [this, action, task = std::move(task)]()
          {
-            if (mProject && removeBlock)
-               RemoveMissingBlock(*mProject, blockId);
             std::lock_guard<std::mutex> lock(mProgressDataMutex);
-            mProgressCallback(mProgressData);
+            mProgressCallback(mProgressData, task.Block, action);
          });
    }
 
@@ -210,7 +174,7 @@ void MissingBlocksUploader::ProducerThread()
    {
       std::lock_guard<std::mutex> lock(mBlocksMutex);
 
-      if (mFirstUnprocessedBlockIndex >= mBlocks.size())
+      if (mFirstUnprocessedBlockIndex >= mUploadTasks.size())
          return;
 
       auto item = ProduceBlock();
@@ -218,17 +182,14 @@ void MissingBlocksUploader::ProducerThread()
       if (item.CompressedData.empty())
       {
          BasicUI::CallAfter(
-            [this, blockId = item.Block.Id]()
+            [this, task = std::move(item.Task)]()
             {
-               if (mProject)
-                  RemoveMissingBlock(*mProject, blockId);
-
                std::lock_guard<std::mutex> lock(mProgressDataMutex);
                mProgressData.FailedBlocks++;
-               mProgressCallback(mProgressData);
+               mProgressCallback(mProgressData, task.Block, BlockAction::RemoveFromMissing);
             });
 
-         return;
+         continue;
       }
 
       PushBlockToQueue(std::move(item));

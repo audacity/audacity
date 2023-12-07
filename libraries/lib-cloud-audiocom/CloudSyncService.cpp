@@ -13,6 +13,10 @@
 #include <algorithm>
 
 #include "sync/CloudProjectSnapshot.h"
+#include "sync/ProjectCloudExtension.h"
+
+#include "ServiceConfig.h"
+#include "OAuthService.h"
 
 #include "sqlite3.h"
 
@@ -21,39 +25,9 @@
 
 #include "BasicUI.h"
 
-namespace
-{
-// SQL Query to create the audio com cloud sync related table
-const char* createTableQuery = R"(
-CREATE TABLE IF NOT EXISTS audiocom_cloud_sync
-(
-   project_id INTEGER,
-   version INTEGER,
-   last_audio_preview_version INTEGER,
-   last_image_preview_version INTEGER,
-   PRIMARY KEY (project_id)
-);
-
-CREATE TABLE IF NOT EXISTS audio_com_pending_blocks
-(
-   project_id INTEGER,
-   block_id INTEGER,
-   PRIMARY KEY (project_id, block_id)
-);
-
-CREATE TABLE IF NOT EXISTS audio_com_missing_blocks
-(
-   project_id INTEGER,
-   block_id INTEGER,
-   upload_url TEXT,
-   confirm_url TEXT,
-   PRIMARY KEY (project_id, block_id)
-);
-)";
+#include <wx/log.h>
 
 
-
-} // namespace
 namespace cloud::audiocom
 {
 CloudSyncService& CloudSyncService::Get()
@@ -62,47 +36,37 @@ CloudSyncService& CloudSyncService::Get()
    return service;
 }
 
+void CloudSyncService::SaveToCloud(AudacityProject& project)
+{
+}
+
 void CloudSyncService::OnLoad(AudacityProject& project)
 {
 }
 
-void CloudSyncService::OnSave(
-   AudacityProject& project)
+void CloudSyncService::OnSave(AudacityProject& project)
 {
-   auto db = ProjectFileIO::Get(project).GetConnection().DB();
+   auto& cloudExtension = sync::ProjectCloudExtension::Get(project);
 
-   // Try to create the tables required for the cloud sync service
-   int rc = sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
+   mSnapshots.emplace_back(sync::CloudProjectSnapshot::Create(
+      GetServiceConfig(), GetOAuthService(), cloudExtension, [](const auto& update) {
+         wxLogDebug(
+            "Update: %lld/%lld\n\tproject uploaded: %d\n\tcompleted: %d\n\tsuccess: %d\n\t%s", update.SampleBlocksUploaded,
+            update.SampleBlocksCount, update.ProjectBlobUploaded,
+            update.Completed, update.Successful, update.ErrorMessage);
 
-   if (rc != SQLITE_OK)
-      return;
-
-   auto projectSnapshot =
-      std::make_unique<sync::CloudProjectSnapshot>(project);
-
-   mSnapshots.push_back(std::move(projectSnapshot));
-
-   auto snapshotPtr = mSnapshots.back().get();
-
-   snapshotPtr->SaveSnapshot(
-      [this, snapshotPtr](const sync::SnapshotOperationResult& result)
-      {
-         BasicUI::CallAfter(
-            [this, snapshotPtr]()
-            {
-               mSnapshots.erase(
-                  std::remove_if(
-                     mSnapshots.begin(), mSnapshots.end(),
-                     [snapshotPtr](const auto& v)
-                     { return v.get() == snapshotPtr; }),
-                  mSnapshots.end());
-            });
-      });
+   }));
 }
 
 bool CloudSyncService::OnClose(AudacityProject& project)
 {
    return true;
+}
+
+bool CloudSyncService::IsBlockLocked(
+   const AudacityProject& project, int64_t blockId) const
+{
+   return false;
 }
 
 namespace

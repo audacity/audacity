@@ -11,14 +11,22 @@
 #include "CloudProjectSnapshot.h"
 
 #include <algorithm>
+#include <future>
 
-#include <wx/log.h>
+#include "../ServiceConfig.h"
 
-#include "sqlite3.h"
+#include "BlockHasher.h"
+#include "ProjectCloudExtension.h"
+#include "DataUploader.h"
 
+#include "SampleBlock.h"
+#include "Sequence.h"
+#include "Track.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "Project.h"
 #include "MemoryX.h"
 
-#include "Project.h"
 #include "TransactionScope.h"
 
 #include "CodeConversions.h"
@@ -30,349 +38,345 @@
 
 #include "MissingBlocksUploader.h"
 
+#include "StringUtils.h"
+
 
 namespace cloud::audiocom::sync
 {
-namespace
+struct CloudProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 {
-const char* DeleteBlocksQuery =
-   "DELETE FROM audio_com_pending_blocks WHERE project_id = ? AND block_id = ?";
+   ProjectCloudExtension& Extension;
 
-const char* InsertBlocksQuery =
-   "INSERT INTO audio_com_pending_blocks VALUES (?, ?)";
+   SampleBlockIDSet BlockIds;
+
+   std::vector<LockedBlock> Blocks;
+   std::vector<BlockUploadTask> MissingBlocks;
+
+   std::unordered_map<int64_t, size_t> BlockIdToIndex;
+   std::unordered_map<std::string, size_t> BlockHashToIndex;
+
+   std::unique_ptr<BlockHasher> Hasher;
 
 
-std::pair<int64_t, int64_t> GetProjectInfo(AudacityProject& project)
-{
-   constexpr std::pair<int64_t, int64_t> unassignedProject = { UNASSIGNED_PROJECT_ID, 0LL };
+   std::future<void> UpdateCacheFuture;
+   std::vector<std::pair<int64_t, std::string>> NewHashes;
 
-   if (!CheckTableExists(project, "audiocom_cloud_sync"))
-      return unassignedProject;
+   std::function<void()> OnBlocksLocked;
 
-   auto db = GetProjectDatabaseHandle(project);
-
-   sqlite3_stmt* stmt = nullptr;
-
-   int rc = sqlite3_prepare_v2(
-      db, "SELECT project_id, version FROM audiocom_cloud_sync", -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return unassignedProject;
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   rc = sqlite3_step(stmt);
-
-   if (rc != SQLITE_ROW)
-      return unassignedProject;
-
-   return { sqlite3_column_int64(stmt, 0), sqlite3_column_int64(stmt, 1) };
-}
-
-void UpdateProjectInfo(AudacityProject& project, int64_t projectId, int64_t version)
-{
-   TransactionScope transaction(project, "CloudSaveUpdateProjectInfo");
-
-   auto db = GetProjectDatabaseHandle(project);
-
-   sqlite3_stmt* stmt = nullptr;
-
-   int rc = sqlite3_prepare_v2 (
-      db, "INSERT OR REPLACE INTO audiocom_cloud_sync VALUES (?, ?, -1, -1)", -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return;
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   sqlite3_bind_int64(stmt, 1, projectId);
-   sqlite3_bind_int64(stmt, 2, version);
-
-   rc = sqlite3_step(stmt);
-
-   if (rc != SQLITE_DONE)
-      return;
-
-   sqlite3_finalize(stmt);
-
-   rc = sqlite3_prepare_v2 (
-      db, "UPDATE audio_com_pending_blocks SET project_id = ? WHERE project_id = ?", -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return;
-
-   sqlite3_bind_int64(stmt, 1, projectId);
-   sqlite3_bind_int64(stmt, 2, UNASSIGNED_PROJECT_ID);
-
-   rc = sqlite3_step(stmt);
-
-   if (rc != SQLITE_DONE)
-      return;
-
-   sqlite3_finalize(stmt);
-
-   rc = sqlite3_prepare_v2 (
-      db, "DELETE FROM audiocom_cloud_sync WHERE project_id != ?", -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return;
-
-   sqlite3_bind_int64(stmt, 1, projectId);
-
-   rc = sqlite3_step(stmt);
-
-   if (rc != SQLITE_DONE)
-      return;
-
-   transaction.Commit();
-}
-
-std::vector<uint8_t> GetProjectData(AudacityProject& project)
-{
-   auto db = GetProjectDatabaseHandle(project);
-
-   sqlite3_stmt* stmt = nullptr;
-   int rc = sqlite3_prepare_v2(
-      db, "SELECT dict, doc FROM project WHERE id = 1", -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return {};
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   rc = sqlite3_step(stmt);
-
-   if (rc != SQLITE_ROW)
-      return {};
-
-   auto dictData = sqlite3_column_blob(stmt, 0);
-   auto dictDataSize = sqlite3_column_bytes(stmt, 0);
-
-   auto projectData = sqlite3_column_blob(stmt, 1);
-   auto projectDataSize = sqlite3_column_bytes(stmt, 1);
-
-   std::vector<uint8_t> result;
-   // SQLite uses `int` for size, and it is hard to imagine a project
-   // that would be larger than 2GB
-   result.resize(dictDataSize + projectDataSize + sizeof(int));
-
-   if (IsLittleEndian())
-      std::memcpy(result.data(), &dictDataSize, sizeof(int));
-   else
+   explicit ProjectBlocksLock(
+      ProjectCloudExtension& extension, AudacityProject& project, std::function<void()> onBlocksLocked)
+       : Extension { extension }
+       , OnBlocksLocked { std::move(onBlocksLocked) }
    {
-      int swapped = SwapIntBytes(dictDataSize);
-      std::memcpy(result.data(), &swapped, sizeof(int));
+      VisitBlocks(TrackList::Get(project));
+
+      Hasher = std::make_unique<BlockHasher>();
+      Hasher->ComputeHashes(
+         *this, Blocks,
+         [this]
+         {
+            CollectHashes();
+         });
    }
 
-   std::memcpy(result.data() + sizeof(int), dictData, dictDataSize);
-   std::memcpy(result.data() + sizeof(int) + dictDataSize, projectData, projectDataSize);
-
-   return result;
-}
-
-} // namespace
-
-CloudProjectSnapshot::CloudProjectSnapshot(
-   AudacityProject& project)
-    : mProject(project.shared_from_this())
-{
-   auto [id, version] = GetProjectInfo(project);
-
-   mCloudProjectId = id;
-   mCloudVersion = version;
-
-   mMissingBlocks = GetMissingBlocks(project);
-}
-
-CloudProjectSnapshot::~CloudProjectSnapshot() = default;
-
-void CloudProjectSnapshot::SaveSnapshot(SnapshotOperationCompleted callback)
-{
-   mCompletedCallback = std::move(callback);
-
-   mProjectBlocks = GetProjectBlocks(*mProject);
-   // Lock all the blocks in the project
-   UpdateDBPendingBlocks(mProjectBlocks);
-
-   CreateOrUpdateProject();
-}
-
-SampleBlockIDs CloudProjectSnapshot::GetDBPendingBlocks() const
-{
-   SampleBlockIDs result;
-
-   auto db = GetProjectDatabaseHandle(*mProject);
-
-   sqlite3_stmt* stmt = nullptr;
-
-   int rc = sqlite3_prepare_v2(
-      db, "SELECT block_id FROM audio_com_pending_blocks WHERE project_id = ? ORDER BY block_id ASC",
-      -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return result;
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   sqlite3_bind_int64(stmt, 1, mCloudProjectId);
-
-   rc = sqlite3_step(stmt);
-
-   while (rc == SQLITE_ROW)
+   ~ProjectBlocksLock() override
    {
-      result.push_back(sqlite3_column_int64(stmt, 0));
-      rc = sqlite3_step(stmt);
    }
 
-   return result;
-}
-
-void CloudProjectSnapshot::ModifyPendingBlocks(
-   std::string_view query, const SampleBlockIDs& blocks)
-{
-   auto db = GetProjectDatabaseHandle(*mProject);
-
-   sqlite3_stmt* stmt = nullptr;
-
-   int rc = sqlite3_prepare_v2(db, query.data(), query.size(), &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return;
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   for (auto block : blocks)
+   void VisitBlocks(TrackList& tracks)
    {
-      sqlite3_bind_int64(stmt, 1, mCloudProjectId);
-      sqlite3_bind_int64(stmt, 2, block);
+      for (auto wt : tracks.Any<const WaveTrack>())
+      {
+         for (const auto pChannel : TrackList::Channels(wt))
+         {
+            for (const auto& clip : pChannel->GetAllClips())
+            {
+               for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
+               {
+                  auto blocks = clip->GetSequenceBlockArray(ii);
 
-      rc = sqlite3_step(stmt);
+                  for (const auto& block : *blocks)
+                  {
+                     if (block.sb)
+                     {
+                        const auto id = block.sb->GetBlockID();
 
-      if (rc != SQLITE_DONE)
+                        if (!BlockIds.insert(id).second)
+                           continue;
+
+                        Blocks.push_back(
+                           { id, wt->GetSampleFormat(), block.sb });
+
+                        BlockIdToIndex[id] = Blocks.size() - 1;
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   void CollectHashes()
+   {
+      // TakeResult() will call UpdateHash() for each block
+      // not found in the cache
+      const auto result = Hasher->TakeResult();
+
+      for (const auto& [id, hash] : result)
+      {
+         auto it = BlockIdToIndex.find(id);
+
+         if (it == BlockIdToIndex.end ())
+         {
+            assert(false);
+            continue;
+         }
+
+         BlockHashToIndex[hash] = BlockIdToIndex[id];
+         Blocks[it->second].Hash = hash;
+      }
+
+      // This will potentially block, if the cache is being updated
+      // already
+      UpdateProjectHashesInCache();
+
+      if (OnBlocksLocked)
+         OnBlocksLocked();
+   }
+
+   void UpdateProjectHashesInCache()
+   {
+      if (!Extension.IsCloudProject())
          return;
 
-      sqlite3_reset(stmt);
+      UpdateCacheFuture = std::async(
+         std::launch::async, [this, hashes = std::move(NewHashes)] {});
    }
+
+   bool GetHash(int64_t blockId, std::string& hash) const override
+   {
+      return false;
+   }
+
+   void UpdateHash(int64_t blockId, const std::string& hash) override
+   {
+      NewHashes.emplace_back(blockId, hash);
+   }
+
+   void FillMissingBlocks (const std::vector<UploadUrls>& missingBlockUrls)
+   {
+      for (const auto& urls : missingBlockUrls)
+      {
+         auto it = BlockHashToIndex.find(urls.Id);
+
+         if (it == BlockHashToIndex.end ())
+         {
+            assert(false);
+            continue;
+         }
+
+         const auto index = it->second;
+
+         MissingBlocks.push_back(BlockUploadTask { urls, Blocks[index] });
+      }
+   }
+};
+
+CloudProjectSnapshot::CloudProjectSnapshot(
+   Tag, const ServiceConfig& config, const OAuthService& authService,
+   ProjectCloudExtension& extension, SnapshotOperationUpdated callback)
+    : mProjectCloudExtension { extension }
+    , mWeakProject { extension.GetProject() }
+    , mServiceConfig { config }
+    , mOAuthService { authService }
+    , mUpdateCallback { std::move(callback) }
+{
+
 }
 
-void CloudProjectSnapshot::UpdateDBPendingBlocks(const SampleBlockIDs& blocks)
+CloudProjectSnapshot::~CloudProjectSnapshot()
 {
-   TransactionScope transaction(*mProject, "CloudSaveUpdatePendingBlocks");
-
-   auto dbBlocks = GetDBPendingBlocks();
-
-   SampleBlockIDs toRemove;
-   SampleBlockIDs toAdd;
-
-   for (auto block : blocks)
-   {
-      // dbBlocks is sorted, see GetDBPendingBlocks
-      if (!std::binary_search(dbBlocks.begin(), dbBlocks.end(), block))
-         toAdd.push_back(block);
-   }
-
-   for (auto block : dbBlocks)
-   {
-      // Blocks are not sorted, so we have to use find
-      if (std::find(blocks.begin(), blocks.end(), block) == blocks.end())
-         toRemove.push_back(block);
-   }
-
-   ModifyPendingBlocks(DeleteBlocksQuery, toRemove);
-   ModifyPendingBlocks(InsertBlocksQuery, toAdd);
-
-   transaction.Commit();
 }
 
-void CloudProjectSnapshot::CreateOrUpdateProject()
+std::shared_ptr<CloudProjectSnapshot> CloudProjectSnapshot::Create(
+   const ServiceConfig& config, const OAuthService& authService,
+   ProjectCloudExtension& extension, SnapshotOperationUpdated callback,
+   bool forceCreateNewProject)
 {
+   auto project = extension.GetProject().lock();
+
+   if (!project)
+   {
+      if (callback)
+         callback({ 0, 0, false, false, false, { "Invalid project state" } });
+
+      return {};
+   }
+
+   if (!callback)
+      callback = [](const auto) {};
+
+   auto snapshot = std::make_shared<CloudProjectSnapshot>(
+      Tag {}, config, authService, extension, std::move(callback));
+
+   snapshot->mProjectBlocksLock = std::make_unique<ProjectBlocksLock>(
+      extension, *project,
+      [weakSnapshot = std::weak_ptr(snapshot), forceCreateNewProject]
+      {
+         auto snapshot = weakSnapshot.lock();
+
+         if (snapshot)
+            snapshot->UpdateProjectSnapshot(forceCreateNewProject);
+      });
+
+   return snapshot;
+}
+
+
+void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
+{
+   auto project = mWeakProject.lock();
+
+   if (project == nullptr)
+   {
+      mUpdateCallback(
+         { 0, 0, false, true, false, { "Invalid project state" } });
+      return;
+   }
+
+   const bool isCloudProject = mProjectCloudExtension.IsCloudProject();
+   const bool createNew = forceCreateNewProject || !isCloudProject;
+
+   ProjectForm projectForm;
+
+   if (createNew)
+      projectForm.Name = audacity::ToUTF8(project->GetProjectName());
+   else
+      projectForm.HeadSnapshotId = mProjectCloudExtension.GetSnapshotId();
+
+   projectForm.Hashes.reserve(mProjectBlocksLock->Blocks.size());
+   std::transform(
+      mProjectBlocksLock->Blocks.begin(), mProjectBlocksLock->Blocks.end(),
+      std::back_inserter(projectForm.Hashes),
+      [](const auto& block) { return block.Hash; });
+
    using namespace audacity::network_manager;
 
-   auto multipartData = std::make_unique<MultipartData>();
-
-   multipartData->Add("project", audacity::ToUTF8(mProject->GetProjectName()));
-   multipartData->Add("blocks", SerializeBlockIDs(mProjectBlocks));
-
-   if (mCloudProjectId != UNASSIGNED_PROJECT_ID)
-      multipartData->Add("version", std::to_string(mCloudVersion));
-
-   auto data = GetProjectData(*mProject);
-
-   // Data will be copied
-   multipartData->Add(
-      "file", common_content_types::ApplicationXOctetStream, data.data(),
-      data.size());
-
-   const auto url = std::string("http://localhost:8090") +
-                    (mCloudProjectId == UNASSIGNED_PROJECT_ID ?
-                        "/audacity/project" :
-                        "/audacity/project/" + std::to_string(mCloudProjectId));
+   const auto url = createNew ? mServiceConfig.GetCreateProjectUrl() :
+                                mServiceConfig.GetCreateSnapshotUrl(
+                                   mProjectCloudExtension.GetCloudProjectId());
 
    auto request = Request(url);
 
    request.setHeader(
-      common_headers::ContentType, common_content_types::MultipartFormData);
+      common_headers::ContentType, common_content_types::ApplicationJson);
    request.setHeader(
       common_headers::Accept, common_content_types::ApplicationJson);
-   //request.setHeader(common_headers::ContentEncoding, "gzip");
+   // request.setHeader(common_headers::ContentEncoding, "gzip");
 
-   // Todo: languages
+   const auto language =
+   mServiceConfig.GetAcceptLanguageValue();
+
+   if (!language.empty())
+      request.setHeader(
+         audacity::network_manager::common_headers::AcceptLanguage, language);
+
+   auto serializedForm = SerializeProjectForm(projectForm);
 
    auto response =
-      NetworkManager::GetInstance().doPost(request, std::move(multipartData));
+      NetworkManager::GetInstance().doPost(request, serializedForm.data(), serializedForm.size());
 
-   response->setRequestFinishedCallback ([this, response](auto response) {
-      const auto error = response->getError();
-
-      if (error != NetworkError::NoError)
+   response->setRequestFinishedCallback(
+      [this, response, createNew](auto response)
       {
-         auto errorMessage = response->getErrorString();
+         const auto error = response->getError();
 
-         if (error == NetworkError::HTTPError)
+         if (error != NetworkError::NoError)
          {
-            errorMessage += "\nHTTP code: " + std::to_string(response->getHTTPCode());
-            errorMessage += "\nResponse: " + response->readAll<std::string>();
-         }
+            auto errorMessage = response->getErrorString();
 
-         mCompletedCallback({ errorMessage, false });
-         return;
-      }
-
-      auto result =
-         DeserializeProjectResponse(response->readAll<std::string>());
-
-      if (!result.has_value())
-      {
-         mCompletedCallback(
-            { audacity::ToUTF8(XO("Invalid Response").Translation()), false });
-         return;
-      }
-
-      ProjectResponse projectResponse = *result;
-
-      mCloudProjectId = projectResponse.ProjectId;
-      mCloudVersion = projectResponse.Version;
-      mMissingBlocks = projectResponse.MissingBlocks;
-
-      UpdateProjectInfo(*mProject, mCloudProjectId, mCloudVersion);
-      UpdateDBPendingBlocks({});
-      AppendMissingBlocks(*mProject, mMissingBlocks);
-
-      if (mMissingBlocks.empty())
-         mCompletedCallback({ {}, true });
-      else
-      {
-         mMissingBlockUploader = std::make_unique<MissingBlocksUploader>(
-            mProject, mMissingBlocks,
-            [this](auto result)
+            if (error == NetworkError::HTTPError)
             {
-               wxLogDebug(
-                  "MissingBlocksUploader: %zu/%zu/%zu", result.UploadedBlocks,
-                  result.FailedBlocks, result.TotalBlocks);
-            });
-      }
-   });
+               errorMessage +=
+                  "\nHTTP code: " + std::to_string(response->getHTTPCode());
+               errorMessage +=
+                  "\nResponse: " + response->readAll<std::string>();
+            }
 
+            mUpdateCallback({ 0, 0, false, true, false, errorMessage });
+         }
+         else
+         {
+            const auto body = response->readAll<std::string>();
+            auto result =
+               DeserializeProjectResponse(body);
+
+            if (!result)
+            {
+               mUpdateCallback({ 0, 0, false, true, false,
+                                 audacity::ToUTF8(XO("Invalid Response: %s")
+                                                     .Format(body)
+                                                     .Translation()) });
+               return;
+            }
+
+            OnSnapshotCreated(*result, createNew);
+         }
+      });
+}
+
+void CloudProjectSnapshot::OnSnapshotCreated(
+   const ProjectResponse& response, bool newProject)
+{
+   auto project = mWeakProject.lock();
+
+   if (project == nullptr)
+   {
+      mUpdateCallback(
+         { 0, 0, false, true, false, { "Invalid project state" } });
+      return;
+   }
+
+   mProjectCloudExtension.SetSnapshotId(response.Snapshot.Id);
+
+   if (newProject)
+   {
+      mProjectCloudExtension.SetCloudProjectId(response.Project.Id);
+      mProjectBlocksLock->UpdateProjectHashesInCache();
+   }
+
+   mProjectBlocksLock->FillMissingBlocks(response.MissingBlocks);
+
+   DataUploader::Get().Upload(
+      mServiceConfig, response.FileUrls,
+      mProjectCloudExtension.GetUpdatedProjectContents(),
+      [this](UploadResult result)
+      {
+         if (result.Code != UploadResultCode::Success)
+         {
+            mUpdateCallback (
+               { 0, 0, false, true, false, std::move(result.ErrorMessage) });
+         }
+         else
+         {
+            mProjectUploaded.store(true, std::memory_order_release);
+            mUpdateCallback(
+               { 0, 0, true, false, false, std::move(result.ErrorMessage) });
+
+            mMissingBlockUploader = std::make_unique<MissingBlocksUploader>(
+               mServiceConfig, mProjectBlocksLock->MissingBlocks,
+               [this](auto result, auto block, auto action)
+               {
+                  const auto handledBlocks =
+                     result.UploadedBlocks + result.FailedBlocks;
+                  mUpdateCallback({ handledBlocks, result.TotalBlocks, true,
+                                    handledBlocks == result.TotalBlocks,
+                                    handledBlocks == result.TotalBlocks &&
+                                       result.FailedBlocks == 0,
+                                    Join(result.ErrorMessages, "\n") });
+               });
+         }
+      });
 }
 
 } // namespace cloud::audiocom::sync

@@ -1,0 +1,55 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  CloudProjectExtension.h
+
+  Dmitry Vedenko
+
+**********************************************************************/
+#pragma once
+
+#include <cstdint>
+#include <functional>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <vector>
+#include <unordered_map>
+
+#include "ClientData.h"
+
+class AudacityProject;
+
+namespace cloud::audiocom::sync
+{
+class ProjectCloudExtension final : public ClientData::Base
+{
+public:
+   explicit ProjectCloudExtension(AudacityProject& project);
+   ~ProjectCloudExtension() override;
+
+   static ProjectCloudExtension& Get(AudacityProject& project);
+   static const ProjectCloudExtension& Get(const AudacityProject& project);
+
+   bool IsCloudProject() const;
+
+   std::string_view GetCloudProjectId() const;
+   void SetCloudProjectId(std::string_view projectId);
+
+   std::string_view GetSnapshotId() const;
+   void SetSnapshotId(std::string_view snapshotId);
+
+   std::weak_ptr<AudacityProject> GetProject() const;
+
+   std::vector<uint8_t> GetUpdatedProjectContents() const;
+
+private:
+   
+   AudacityProject& mProject;
+
+   std::string mProjectId;
+   std::string mSnapshotId;
+};
+} // namespace cloud::audiocom::sync

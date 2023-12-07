@@ -15,42 +15,68 @@
 #include <string_view>
 #include <optional>
 #include <vector>
+#include <memory>
 
-struct sqlite3;
-class AudacityProject;
+enum class sampleFormat : unsigned;
+class SampleBlock;
+using SampleBlockPtr = std::shared_ptr<SampleBlock>;
 
 namespace cloud::audiocom::sync
 {
 using BlockID = int64_t;
-using SampleBlockIDs = std::vector<BlockID>;
+using BlockHash = std::string;
+using SampleBlockHashes = std::vector<BlockHash>;
 
-
-SampleBlockIDs GetProjectBlocks(const AudacityProject& project);
-
-std::string SerializeBlockIDs(const SampleBlockIDs& ids);
-
-struct MissingBlock final
+struct LockedBlock final
 {
    BlockID Id;
+   sampleFormat Format;
+   SampleBlockPtr Block;
+   BlockHash Hash;
+};
+
+struct ProjectForm final
+{
+   std::string Name;
+   std::string HeadSnapshotId;
+   std::vector<std::string> Tags;
+   SampleBlockHashes Hashes;
+};
+
+
+std::string SerializeProjectForm(const ProjectForm& form);
+
+struct UploadUrls final
+{
+   std::string Id;
    std::string UploadUrl;
-   std::string ConfirmUrl;
+   std::string SuccessUrl;
+   std::string FailUrl;
+};
+
+struct ProjectInfo final
+{
+   std::string Id;
+
+   int64_t Created;
+   int64_t Updated;
+};
+
+struct SnapshotInfo final
+{
+   std::string Id;
 };
 
 struct ProjectResponse final
 {
-   int64_t ProjectId;
-   int64_t Version;
-   std::vector<MissingBlock> MissingBlocks;
+   ProjectInfo Project;
+   SnapshotInfo Snapshot;
+
+   UploadUrls MixdownUrls;
+   UploadUrls FileUrls;
+   std::vector<UploadUrls> MissingBlocks;
 };
 
 std::optional<ProjectResponse> DeserializeProjectResponse(const std::string& data);
-
-sqlite3* GetProjectDatabaseHandle(AudacityProject& project);
-
-bool CheckTableExists(AudacityProject& project, std::string_view tableName);
-
-std::vector<MissingBlock> GetMissingBlocks(AudacityProject& project);
-bool AppendMissingBlocks(AudacityProject& project, const std::vector<MissingBlock>& blocks);
-void RemoveMissingBlock(AudacityProject& project, BlockID blockId);
 
 } // namespace cloud::audiocom::sync

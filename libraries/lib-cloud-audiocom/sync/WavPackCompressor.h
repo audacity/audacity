@@ -19,5 +19,5 @@ class AudacityProject;
 
 namespace cloud::audiocom::sync
 {
-std::vector<uint8_t> CompressBlock(AudacityProject& project, BlockID blockId);
+std::vector<uint8_t> CompressBlock(const LockedBlock& block);
 } // namespace cloud::audiocom::sync

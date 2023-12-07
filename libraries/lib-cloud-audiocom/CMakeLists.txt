@@ -19,14 +19,20 @@ set( SOURCES
    UserService.cpp
    UserService.h
 
+   sync/BlockHasher.cpp
+   sync/BlockHasher.h
+   sync/CloudProjectsDatabase.cpp
+   sync/CloudProjectsDatabase.h
    sync/CloudProjectSnapshot.cpp
    sync/CloudProjectSnapshot.h
    sync/CloudSyncUtils.cpp
    sync/CloudSyncUtils.h
-   sync/CloudSyncTask.cpp
-   sync/CloudSyncTask.h
+   sync/DataUploader.cpp
+   sync/DataUploader.h
    sync/MissingBlocksUploader.cpp
    sync/MissingBlocksUploader.h
+   sync/ProjectCloudExtension.cpp
+   sync/ProjectCloudExtension.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )
@@ -40,7 +46,8 @@ set ( LIBRARIES
    PUBLIC
       rapidjson::rapidjson # Protocol is JSON based
    PRIVATE
-      sqlite
+      lib-sqlite-helpers-interface
+      lib-crypto-interface
       wavpack::wavpack # Required for the WavPackCompressor
       wxwidgets::base # Required to retrieve the OS information
 )

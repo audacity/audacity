@@ -12,6 +12,7 @@
 
 #include <atomic>
 #include <array>
+#include <cstdint>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
@@ -24,18 +25,41 @@ namespace audacity::network_manager
 class IResponse;
 }
 
+class AudacityProject;
+
+
+namespace cloud::audiocom
+{
+class ServiceConfig;
+} // namespace cloud::audiocom
+
 namespace cloud::audiocom::sync
 {
+struct UploadResult;
+
 struct MissingBlocksUploadProgress final
 {
-   std::size_t TotalBlocks = 0;
-   std::size_t UploadedBlocks = 0;
-   std::size_t FailedBlocks = 0;
+   int64_t TotalBlocks = 0;
+   int64_t UploadedBlocks = 0;
+   int64_t FailedBlocks = 0;
 
    std::vector<std::string> ErrorMessages;
 };
 
-using MissingBlocksUploadProgressCallback = std::function<void(MissingBlocksUploadProgress)>;
+struct BlockUploadTask final
+{
+   UploadUrls BlockUrls;
+   LockedBlock Block;
+};
+
+enum class BlockAction
+{
+   RemoveFromMissing,
+   Expire,
+   Ignore,
+};
+
+using MissingBlocksUploadProgressCallback = std::function<void(const MissingBlocksUploadProgress&, const LockedBlock&, BlockAction)>;
 
 class MissingBlocksUploader final
 {
@@ -44,13 +68,14 @@ public:
    static constexpr auto NUM_UPLOADERS = 6;
    static constexpr auto RING_BUFFER_SIZE = 16;
 
-   MissingBlocksUploader(std::shared_ptr<AudacityProject> project,
-      std::vector<MissingBlock> blocks, MissingBlocksUploadProgressCallback progress);
+   MissingBlocksUploader(
+      const ServiceConfig& serviceConfig, std::vector<BlockUploadTask> uploadTasks,
+      MissingBlocksUploadProgressCallback progress);
 
 private:
    struct ProducedItem final
    {
-      MissingBlock Block;
+      BlockUploadTask Task;
       std::vector<uint8_t> CompressedData;
    };
 
@@ -60,14 +85,15 @@ private:
    void PushBlockToQueue(ProducedItem item);
    ProducedItem PopBlockFromQueue();
 
-   void ConfirmBlock(ProducedItem item);
-   void HandleFailedBlock(audacity::network_manager::IResponse& response, BlockID blockId);
+   void ConfirmBlock(BlockUploadTask task);
+   void HandleFailedBlock(const UploadResult& result, BlockUploadTask task);
 
    void ProducerThread();
    void ConsumerThread();
 
-   std::shared_ptr<AudacityProject> mProject;
-   std::vector<MissingBlock> mBlocks;
+   const ServiceConfig& mServiceConfig;
+
+   std::vector<BlockUploadTask> mUploadTasks;
    MissingBlocksUploadProgressCallback mProgressCallback;
 
    std::atomic_bool mIsRunning { true };

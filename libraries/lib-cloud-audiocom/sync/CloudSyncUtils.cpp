@@ -18,55 +18,147 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/reader.h>
 
-#include "sqlite3.h"
-
-#include "Track.h"
-#include "WaveTrack.h"
-#include "Sequence.h"
-#include "SampleBlock.h"
-#include "ProjectFileIO.h"
-#include "DBConnection.h"
 
 namespace cloud::audiocom::sync
 {
-static_assert(sizeof(SampleBlockID) == sizeof(BlockID));
-static_assert(std::is_signed_v<SampleBlockID> == std::is_signed_v<BlockID>);
 
-SampleBlockIDs GetProjectBlocks(const AudacityProject& project)
+namespace
 {
-   std::set<BlockID> result;
+std::optional<UploadUrls> DeserializeUploadUrls(const rapidjson::Value& value)
+{
+   if (!value.IsObject())
+      return {};
 
-   auto& tracks = TrackList::Get(project);
+   if (!value.HasMember("id") || !value["id"].IsString())
+      return {};
 
-   for (auto track : tracks.Any<const WaveTrack>())
-   {
-      for (auto interval : track->Intervals())
-      {
-         for (auto channel : interval->Channels())
-         {
-            auto& sequence = channel->GetSequence();
-            auto& blockArray = sequence.GetBlockArray();
+   if (!value.HasMember("url") || !value["url"].IsString())
+      return {};
 
-            for (auto& block : blockArray)
-               result.insert(block.sb->GetBlockID());
-         }
-      }
-   }
+   if (!value.HasMember("success") || !value["success"].IsString())
+      return {};
 
-   return SampleBlockIDs(result.begin(), result.end());
+   if (!value.HasMember("fail") || !value["fail"].IsString())
+      return {};
+
+   return UploadUrls {
+      value["id"].GetString(),
+      value["url"].GetString(),
+      value["success"].GetString(),
+      value["fail"].GetString(),
+   };
 }
 
-std::string SerializeBlockIDs(const SampleBlockIDs& ids)
+std::optional<UploadUrls> DeserializeUploadUrls(const rapidjson::Value& document, std::string_view key)
+{
+   if (!document.HasMember(key.data()))
+      return {};
+
+   const auto& value = document[key.data()];
+
+   return DeserializeUploadUrls(value);
+}
+
+std::optional<ProjectInfo> DeserializeProjectInfo(const rapidjson::Value& document, std::string_view key)
+{
+   if (!document.HasMember(key.data()))
+      return {};
+
+   const auto& value = document[key.data()];
+
+   if (!value.IsObject())
+      return {};
+
+   if (!value.HasMember("id") || !value["id"].IsString())
+      return {};
+
+   if (!value.HasMember("date_created") || !value["date_created"].IsInt64())
+      return {};
+
+   if (!value.HasMember("date_updated") || !value["date_updated"].IsInt64())
+      return {};
+
+   return ProjectInfo {
+      value["id"].GetString(),
+      value["date_created"].GetInt64(),
+      value["date_updated"].GetInt64(),
+   };
+}
+
+std::optional<SnapshotInfo> DeserializeSnapshotInfo (const rapidjson::Value& document, std::string_view key)
+{
+   if (!document.HasMember(key.data()))
+      return {};
+
+   const auto& value = document[key.data()];
+
+   if (!value.IsObject())
+      return {};
+
+   if (!value.HasMember("id") || !value["id"].IsString())
+      return {};
+
+   return SnapshotInfo{
+      value["id"].GetString(),
+   };
+}
+
+std::optional<std::vector<UploadUrls>> DeserializeBlockUrls (const rapidjson::Value& document, std::string_view key)
+{
+   if (!document.HasMember(key.data()))
+      return {};
+
+   const auto& value = document[key.data()];
+
+   if (!value.IsArray())
+      return {};
+
+   std::vector<UploadUrls> result;
+
+   for (const auto& url : value.GetArray ())
+   {
+      auto uploadUrls = DeserializeUploadUrls(url);
+
+      if (!uploadUrls)
+         return {};
+
+      result.push_back(std::move(*uploadUrls));
+   }
+
+   return result;
+}
+
+} // namespace
+
+std::string SerializeProjectForm(const ProjectForm& form)
 {
    using namespace rapidjson;
 
    Document document;
-   document.SetArray();
+   document.SetObject();
 
-   for (const auto& id : ids)
-   {
-      document.PushBack(id, document.GetAllocator());
-   }
+   if (!form.Name.empty())
+      document.AddMember(
+         "name", StringRef(form.Name.c_str()), document.GetAllocator());
+
+   if (!form.HeadSnapshotId.empty())
+      document.AddMember(
+         "head_snapshot_id", StringRef(form.HeadSnapshotId.c_str()),
+         document.GetAllocator());
+
+   Value tags(kArrayType);
+
+   for (const auto& tag : form.Tags)
+      tags.PushBack(StringRef(tag.c_str()), document.GetAllocator());
+
+   document.AddMember("tags", tags, document.GetAllocator());
+
+   Value hashesArray(kArrayType);
+
+   for (const auto& hash : form.Hashes)
+      hashesArray.PushBack(StringRef(hash.c_str()), document.GetAllocator());
+
+   document.AddMember("blocks", hashesArray, document.GetAllocator());
 
    StringBuffer buffer;
    Writer<StringBuffer> writer(buffer);
@@ -85,170 +177,33 @@ std::optional<ProjectResponse> DeserializeProjectResponse(const std::string& dat
    if (!document.IsObject())
       return {};
 
+   auto projectInfo = DeserializeProjectInfo(document, "project");
+   if (!projectInfo)
+      return {};
+
+   auto snapshotInfo = DeserializeSnapshotInfo(document, "snapshot");
+   if (!snapshotInfo)
+      return {};
+
+   auto fileUploadUrls = DeserializeUploadUrls(document, "file_upload");
+   if (!fileUploadUrls)
+      return {};
+
+   auto blockUrls = DeserializeBlockUrls(document, "blocks_upload");
+   if (!blockUrls)
+      return {};
+
+   auto mixdownUrls = DeserializeUploadUrls(document, "mixdown_urls");
+
    ProjectResponse result;
 
-   if (!document.HasMember("project_id") || !document["project_id"].IsInt64())
-      return {};
-
-   result.ProjectId = document["project_id"].GetInt64();
-
-   if (!document.HasMember("version") || !document["version"].IsInt64())
-      return {};
-
-   result.Version = document["version"].GetInt64();
-
-   if (!document.HasMember("missing_blocks") || !document["missing_blocks"].IsArray())
-      return {};
-
-   for (const auto& value : document["missing_blocks"].GetArray())
-   {
-      if (!value.IsObject())
-         return {};
-
-      if (!value.HasMember("block_id") || !value["block_id"].IsInt64())
-         return {};
-
-      if (!value.HasMember("upload_url") || !value["upload_url"].IsString())
-         return {};
-
-      if (!value.HasMember("confirm_url") || !value["confirm_url"].IsString())
-         return {};
-
-      result.MissingBlocks.push_back(MissingBlock {
-         value["block_id"].GetInt64(), value["upload_url"].GetString(),
-         value["confirm_url"].GetString() });
-   }
+   result.Project = std::move(*projectInfo);
+   result.Snapshot = std::move(*snapshotInfo);
+   result.FileUrls = std::move(*fileUploadUrls);
+   result.MixdownUrls = mixdownUrls ? std::move(*mixdownUrls) : UploadUrls {};
+   result.MissingBlocks = std::move(*blockUrls);
 
    return result;
-}
-
-sqlite3* GetProjectDatabaseHandle(AudacityProject& project)
-{
-   auto& io = ProjectFileIO::Get(project);
-   auto& db = io.GetConnection();
-   return db.DB();
-}
-
-bool CheckTableExists(AudacityProject& project, std::string_view tableName)
-{
-   auto db = GetProjectDatabaseHandle(project);
-
-   sqlite3_stmt* stmt = nullptr;
-
-   int rc = sqlite3_prepare_v2(
-      db,
-      "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?)",
-      -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return false;
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   sqlite3_bind_text(stmt, 1, tableName.data(), tableName.size(), nullptr);
-
-   rc = sqlite3_step(stmt);
-
-   if (rc != SQLITE_ROW)
-      return false;
-
-   return sqlite3_column_int(stmt, 0) == 1;
-}
-
-
-std::vector<MissingBlock> GetMissingBlocks(AudacityProject& project)
-{
-   if (!CheckTableExists(project, "audio_com_missing_blocks"))
-      return {};
-
-   auto db = GetProjectDatabaseHandle(project);
-
-   sqlite3_stmt* stmt = nullptr;
-
-   int rc = sqlite3_prepare_v2 (
-      db,
-      "SELECT block_id, upload_url, confirm_url FROM audio_com_missing_blocks",
-      -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return {};
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   std::vector<MissingBlock> result;
-
-   rc = sqlite3_step(stmt);
-
-   while (rc == SQLITE_ROW)
-   {
-      result.push_back (MissingBlock{
-         sqlite3_column_int64(stmt, 0),
-         reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
-         reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2)) });
-
-      rc = sqlite3_step(stmt);
-   }
-
-   return result;
-}
-
-bool AppendMissingBlocks(
-   AudacityProject& project, const std::vector<MissingBlock>& blocks)
-{
-   auto db = GetProjectDatabaseHandle(project);
-
-   sqlite3_stmt* stmt = nullptr;
-
-   int rc = sqlite3_prepare_v2 (
-      db,
-      "INSERT OR REPLACE INTO audio_com_missing_blocks (block_id, upload_url, confirm_url) VALUES (?, ?, ?)",
-      -1, &stmt, nullptr);
-
-   if (rc != SQLITE_OK)
-      return false;
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   for (const auto& block : blocks)
-   {
-      sqlite3_bind_int64(stmt, 1, block.Id);
-      sqlite3_bind_text(stmt, 2, block.UploadUrl.data(), block.UploadUrl.size(), nullptr);
-      sqlite3_bind_text(stmt, 3, block.ConfirmUrl.data(), block.ConfirmUrl.size(), nullptr);
-
-      rc = sqlite3_step(stmt);
-
-      if (rc != SQLITE_DONE)
-         return false;
-
-      sqlite3_reset(stmt);
-   }
-
-   return true;
-}
-
-void RemoveMissingBlock(AudacityProject& project, BlockID blockId)
-{
-   auto db = GetProjectDatabaseHandle(project);
-
-   sqlite3_stmt* stmt = nullptr;
-
-   int rc = sqlite3_prepare_v2(
-      db, "DELETE FROM audio_com_missing_blocks WHERE block_id = ?", -1, &stmt,
-      nullptr);
-
-   if (rc != SQLITE_OK)
-      return;
-
-   auto cleanup = finally([&stmt] { sqlite3_finalize(stmt); });
-
-   sqlite3_bind_int64(stmt, 1, blockId);
-
-   rc = sqlite3_step(stmt);
-
-   if (rc != SQLITE_DONE)
-      return;
-
-   sqlite3_reset(stmt);
 }
 
 } // namespace cloud::audiocom::sync
