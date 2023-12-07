@@ -37,8 +37,6 @@ bool EffectTwoPassSimpleMono::Process(
    }
    for (const auto pNewTrack : mWorkTracks->Any<WaveTrack>()) {
       pNewTrack->ConvertToSampleFormat(floatSample);
-      if (mT0 > 0)
-         pNewTrack->InsertSilence(0, mT0);
    }
 
    mTrackLists[0] = &outputs.Get();
@@ -70,14 +68,19 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
    for (auto track : (*mTrackLists[mPass]).Selected<WaveTrack>()) {
       auto outTrack = *outTracks;
 
-      // Get start and end times from track
-      double trackStart = track->GetStartTime();
-      double trackEnd = track->GetEndTime();
+      // Get start and end times from the orignal track
+      double trackStart = mPass == 0 ? track->GetStartTime() : (*outTracks)->GetStartTime();
+      double trackEnd = mPass == 0 ? track->GetEndTime() : (*outTracks)->GetEndTime();
 
       // Set the current bounds to whichever left marker is
       // greater and whichever right marker is less:
       mCurT0 = std::max(trackStart, mT0);
       mCurT1 = std::min(trackEnd, mT1);
+
+      // So that in ProcessOne(), when mPass == 0, samples are
+      // appended starting at mCurT0
+      if (!mSecondPassDisabled && mPass == 0 && mCurT0 > 0)
+            (*outTracks)->InsertSilence(0, mCurT0);
 
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
