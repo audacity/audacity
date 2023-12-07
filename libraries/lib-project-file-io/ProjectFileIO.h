@@ -119,7 +119,11 @@ public:
    std::optional<TentativeConnection>
       LoadProject(const FilePath &fileName, bool ignoreAutosave);
 
-   bool UpdateSaved(const TrackList *tracks = nullptr);
+   void SerializeProject(ProjectSerializer& serializer, const TrackList *tracks = nullptr);
+
+   bool UpdateSaved(ProjectSerializer& serializer);
+   bool UpdateSaved(const TrackList* tracks = nullptr);
+
    bool SaveProject(const FilePath &fileName, const TrackList *lastSaved);
    bool SaveCopy(const FilePath& fileName);
 

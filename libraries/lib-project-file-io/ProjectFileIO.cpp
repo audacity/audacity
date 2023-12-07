@@ -813,18 +813,33 @@ bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *schema /* = "main" */
 // An SQLite function that takes a blockid and looks it up in a set of
 // blockids captured during project load.  If the blockid isn't found
 // in the set, it will be deleted.
+namespace
+{
+struct ContextData final
+{
+   const AudacityProject& project;
+   const BlockIDs& blockids;
+};
+}
+
 void ProjectFileIO::InSet(sqlite3_context *context, int argc, sqlite3_value **argv)
 {
-   BlockIDs *blockids = (BlockIDs *) sqlite3_user_data(context);
+   auto contextData = reinterpret_cast<ContextData*>(sqlite3_user_data(context));
    SampleBlockID blockid = sqlite3_value_int64(argv[0]);
 
-   sqlite3_result_int(context, blockids->find(blockid) != blockids->end());
+   sqlite3_result_int(
+      context,
+      contextData->blockids.find(blockid) != contextData->blockids.end() ||
+         ProjectFileIOExtensionRegistry::IsBlockLocked(
+            contextData->project, blockid));
 }
 
 bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
 {
    auto db = DB();
    int rc;
+
+   ContextData contextData{ mProject, blockids };
 
    auto cleanup = finally([&]
    {
@@ -833,8 +848,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    });
 
    // Add the function used to verify each row's blockid against the set of active blockids
-   const void *p = &blockids;
-   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, const_cast<void*>(p), InSet, nullptr, nullptr);
+   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, &contextData, InSet, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
@@ -2098,24 +2112,27 @@ auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    return result;
 }
 
-bool ProjectFileIO::UpdateSaved(const TrackList *tracks)
+void ProjectFileIO::SerializeProject(
+   ProjectSerializer& serializer, const TrackList* tracks)
 {
-   ProjectSerializer doc;
-   WriteXMLHeader(doc);
-   WriteXML(doc, false, tracks);
+   WriteXMLHeader(serializer);
+   WriteXML(serializer, false, tracks);
+}
 
-   if (!WriteDoc("project", doc))
-   {
+bool ProjectFileIO::UpdateSaved(ProjectSerializer& serializer)
+{
+   if (!WriteDoc("project", serializer))
       return false;
-   }
 
    // Autosave no longer needed
-   if (!AutoSaveDelete())
-   {
-      return false;
-   }
+   return AutoSaveDelete();
+}
 
-   return true;
+bool ProjectFileIO::UpdateSaved(const TrackList* tracks)
+{
+   ProjectSerializer doc;
+   SerializeProject(doc, tracks);
+   return UpdateSaved(doc);
 }
 
 // REVIEW: This function is believed to report an error to the user in all cases 
