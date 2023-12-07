@@ -51,6 +51,8 @@ public:
    //! Returns the preferred language
    std::string GetAcceptLanguageValue() const;
 
+   std::string GetCreateProjectUrl() const;
+   std::string GetCreateSnapshotUrl(std::string_view projectId) const;
 private:
    std::string mApiEndpoint;
    std::string mOAuthClientID;

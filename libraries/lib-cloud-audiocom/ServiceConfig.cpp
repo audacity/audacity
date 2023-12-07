@@ -197,6 +197,20 @@ std::string ServiceConfig::GetAcceptLanguageValue() const
       return wxString::Format("%s;q=1.0, *;q=0.5", language).ToStdString();
 }
 
+std::string ServiceConfig::GetCreateProjectUrl() const
+{
+   return std::string("http://localhost:8090/audacity/project");
+}
+
+std::string
+ServiceConfig::GetCreateSnapshotUrl(std::string_view projectId) const
+{
+   return Substitute(
+      std::string(
+         "http://localhost:8090/audacity/project/{project_id}/snapshot"),
+      { { "project_id", projectId } });
+}
+
 const ServiceConfig& GetServiceConfig()
 {
    static ServiceConfig config;
