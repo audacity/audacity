@@ -6,6 +6,8 @@ def_vars()
 set(SOURCES
     HexHelpers.h
 
+    StringUtils.h
+
     UrlEncode.h
     UrlEncode.cpp
 

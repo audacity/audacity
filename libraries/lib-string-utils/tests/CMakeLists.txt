@@ -3,6 +3,7 @@ add_unit_test(
       lib-string-utils
    SOURCES
       FromCharsTests.cpp
+      StringUtils.cpp
    LIBRARIES
       lib-string-utils
       wxwidgets::base
