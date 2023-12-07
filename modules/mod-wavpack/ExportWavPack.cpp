@@ -165,6 +165,7 @@ public:
          {
             mListener->OnExportOptionChangeBegin();
             mListener->OnExportOptionChange(mOptions[OptionIDCreateCorrection]);
+            mListener->OnExportOptionChange(mOptions[OptionIDBitRate]);
             mListener->OnExportOptionChangeEnd();
          }
       }
@@ -220,9 +221,14 @@ private:
    void OnHybridModeChange(bool hybridMode)
    {
       if(hybridMode)
+      {
          mOptions[OptionIDCreateCorrection].flags &= ~ExportOption::Flags::ReadOnly;
-      else
+         mOptions[OptionIDBitRate].flags &= ~ExportOption::Flags::ReadOnly;
+
+      } else {
          mOptions[OptionIDCreateCorrection].flags |= ExportOption::Flags::ReadOnly;
+         mOptions[OptionIDBitRate].flags |= ExportOption::Flags::ReadOnly;
+      }
    }
 };
 
