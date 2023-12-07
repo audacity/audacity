@@ -3,13 +3,12 @@
 
   Audacity: A Digital Audio Editor
 
-  CloudSyncTask.cpp
+  AudioComModule.cpp
 
   Dmitry Vedenko
 
 **********************************************************************/
-#include "CloudSyncTask.h"
 
-namespace cloud::audiocom::sync
-{
-} // namespace cloud::audiocom::sync
+#include "ModuleConstants.h"
+
+DEFINE_MODULE_ENTRIES
