@@ -72,7 +72,7 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
          // If Tools toolbar were eliminated, we would keep these
          // The priority of these, in case more than one might apply at one
          // point, seems arbitrary
-         if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
+         if (nullptr != (result = EnvelopeHandle::WaveChannelHitTest(
             view.mEnvelopeHandle, st.state, st.rect,
             pProject, pTrack )))
             results.push_back(result);

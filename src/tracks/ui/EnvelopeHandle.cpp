@@ -96,31 +96,30 @@ UIHandlePtr EnvelopeHandle::TimeTrackHitTest(
       zoomMin, zoomMax, dB, dBRange, true);
 }
 
-UIHandlePtr EnvelopeHandle::WaveTrackHitTest
+UIHandlePtr EnvelopeHandle::WaveChannelHitTest
 (std::weak_ptr<EnvelopeHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt)
+ const AudacityProject *pProject, const std::shared_ptr<WaveChannel> &wc)
 {
    /// method that tells us if the mouse event landed on an
    /// envelope boundary.
    auto &viewInfo = ViewInfo::Get(*pProject);
    auto time = viewInfo.PositionToTime(state.m_x, rect.GetX());
-   const auto envelope = WaveChannelUtilities::GetEnvelopeAtTime(*wt, time);
+   const auto envelope = WaveChannelUtilities::GetEnvelopeAtTime(*wc, time);
    if (!envelope)
       return {};
 
    // Get envelope point, range 0.0 to 1.0
-   const bool dB = !WaveformSettings::Get(*wt).isLinear();
+   const bool dB = !WaveformSettings::Get(*wc).isLinear();
 
    float zoomMin, zoomMax;
-   auto &cache = WaveformScale::Get(*wt);
+   auto &cache = WaveformScale::Get(*wc);
    cache.GetDisplayBounds(zoomMin, zoomMax);
 
-   const float dBRange = WaveformSettings::Get(*wt).dBRange;
+   const float dBRange = WaveformSettings::Get(*wc).dBRange;
 
    return EnvelopeHandle::HitEnvelope(holder, state, rect, pProject, envelope,
-      std::dynamic_pointer_cast<const Channel>(wt),
-      zoomMin, zoomMax, dB, dBRange, false);
+      wc, zoomMin, zoomMax, dB, dBRange, false);
 }
 
 UIHandlePtr EnvelopeHandle::HitEnvelope(std::weak_ptr<EnvelopeHandle> &holder,
