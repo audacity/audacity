@@ -545,28 +545,6 @@ auto FileMenu()
 
 AttachedItem sAttachment1{ Indirect(FileMenu()) };
 
-auto HiddenFileMenu()
-{
-   static auto menu = std::shared_ptr{
-      ConditionalItems( wxT("HiddenFileItems"),
-         []()
-         {
-            // Ensures that these items never appear in a menu, but
-            // are still available to scripting
-            return false;
-         },
-         Menu( wxT("HiddenFileMenu"), XXO("Hidden File Menu"),
-            Command( wxT("ExportFLAC"), XXO("Export as FLAC"),
-               OnExportFLAC,
-               AudioIONotBusyFlag() )
-         )
-      )
-   };
-   return menu;
-}
-
-AttachedItem sAttachment2{ Indirect(HiddenFileMenu()) };
-
 auto ExtraExportMenu()
 {
    static auto menu = std::shared_ptr{
@@ -579,9 +557,8 @@ auto ExtraExportMenu()
                AudioIONotBusyFlag() | WaveTracksExistFlag() ),
             Command( wxT("ExportOgg"), XXO("Export as &OGG"), OnExportOgg,
                AudioIONotBusyFlag() | WaveTracksExistFlag() ),
-            Command( wxT("ExportFLAC"), XXO("Export as FLAC"),
-               OnExportFLAC,
-               AudioIONotBusyFlag() )
+            Command( wxT("ExportFLAC"), XXO("Export as FLAC"), OnExportFLAC, 
+               AudioIONotBusyFlag() | WaveTracksExistFlag() )
         ))};
    return menu;
 }
