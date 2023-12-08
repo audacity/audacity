@@ -502,6 +502,14 @@ bool WaveTrack::Interval::Paste(double t0, const Interval &src)
    return result;
 }
 
+/** Insert silence - note that this is an efficient operation for large
+ * amounts of silence */
+void WaveTrack::Interval::InsertSilence(
+   double t, double len, double *pEnvelopeValue)
+{
+   ForEachClip([&](auto& clip) { clip.InsertSilence(t, len, pEnvelopeValue); });
+}
+
 void WaveTrack::Interval::ShiftBy(double delta) noexcept
 {
    ForEachClip([&](auto& clip) { clip.ShiftBy(delta); });
@@ -2684,33 +2692,30 @@ void WaveTrack::InsertSilence(double t, double len)
    if (len <= 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   for (const auto pChannel : TrackList::Channels(this)) {
-      auto &clips = pChannel->mClips;
-      if (clips.empty()) {
-         // Special case if there is no clip yet
-         // TODO wide wave tracks -- match clip width
-         auto clip = std::make_shared<WaveClip>(1,
-            mpFactory, GetSampleFormat(), GetRate(), this->GetWaveColorIndex());
-         clip->InsertSilence(0, len);
-         // use No-fail-guarantee
-         pChannel->InsertClip(move(clip));
-      }
-      else
-      {
-         // Assume at most one clip contains t
-         const auto end = clips.end();
-         const auto it = std::find_if(clips.begin(), end,
-            [&](const WaveClipHolder &clip) { return clip->SplitsPlayRegion(t); } );
+   auto &&clips = Intervals();
+   if (clips.empty()) {
+      // Special case if there is no clip yet
+      // TODO wide wave tracks -- match clip width
+      auto clip = CreateWideClip(0);
+      clip->InsertSilence(0, len);
+      // use No-fail-guarantee
+      InsertInterval(move(clip));
+   }
+   else
+   {
+      // Assume at most one clip contains t
+      const auto end = clips.end();
+      const auto it = std::find_if(clips.begin(), end,
+         [&](const IntervalHolder &clip) { return clip->SplitsPlayRegion(t); } );
 
-         // use Strong-guarantee
-         if (it != end)
-            it->get()->InsertSilence(t, len);
+      // use Strong-guarantee
+      if (it != end)
+         (*it)->InsertSilence(t, len);
 
-         // use No-fail-guarantee
-         for (const auto &clip : clips)
-            if (clip->BeforePlayRegion(t))
-               clip->ShiftBy(len);
-      }
+      // use No-fail-guarantee
+      for (const auto &&clip : clips)
+         if (clip->BeforePlayRegion(t))
+            clip->ShiftBy(len);
    }
 }
 

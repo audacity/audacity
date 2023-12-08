@@ -1032,6 +1032,11 @@ public:
 
       bool Paste(double t0, const Interval &src);
 
+      /** Insert silence - note that this is an efficient operation for large
+       * amounts of silence */
+      void
+      InsertSilence(double t, double len, double *pEnvelopeValue = nullptr);
+
       const Envelope& GetEnvelope() const;
 
       /** Find cut line at (approximately) this position. Returns true and fills
