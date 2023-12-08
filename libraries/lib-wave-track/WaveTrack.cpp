@@ -1395,7 +1395,7 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
       return true;
 
    //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
-   for (const auto &&clip : Intervals())
+   for (const auto &clip : mClips)
    {
       if (clip->IntersectsPlayRegion(t0, t1)) {
          //wxPrintf("Overlapping clip: %.6f...%.6f\n",
