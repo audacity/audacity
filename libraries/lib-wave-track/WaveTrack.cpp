@@ -2729,18 +2729,20 @@ void WaveTrack::PasteOne(
        const auto t = clipAtT0 ? clipAtT0->GetPlayEndTime() : t0;
        if (!track.IsEmpty(t, t + insertDuration))
           throw notEnoughSpaceException;
-       if (clipAtT0 && clipAtT0->GetPlayStartTime() == t0)
-          clipAtT0->ShiftBy(insertDuration);
     }
 
-    if (singleClipMode) {
+    // See if the clipboard data is one clip only and if it should be merged. If
+    // edit-clip-can-move mode is checked, merging happens only if the pasting
+    // point splits a clip. If it isn't, merging also happens when the pasting
+    // point is at the exact beginning of a clip.
+    if (singleClipMode && merge) {
         // Single clip mode
         // wxPrintf("paste: checking for single clip mode!\n");
 
         WaveClip* insideClip = nullptr;
         for (const auto& clip : track.mClips) {
             if (editClipCanMove) {
-                if (clip->WithinPlayRegion(t0)) {
+                if (clip->SplitsPlayRegion(t0)) {
                     //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
                     //       t0, clip->GetStartTime(), clip->GetEndTime());
                     insideClip = clip.get();
@@ -2749,8 +2751,7 @@ void WaveTrack::PasteOne(
             }
             else {
                 // If clips are immovable we also allow prepending to clips
-                if (clip->WithinPlayRegion(t0) ||
-                    track.TimeToLongSamples(t0) == clip->GetPlayStartSample())
+                if (clip->WithinPlayRegion(t0))
                 {
                     insideClip = clip.get();
                     break;
