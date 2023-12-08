@@ -1561,26 +1561,23 @@ TrackListHolder WaveTrack::SplitCut(double t0, double t1)
 //Trim trims within a clip, rather than trimming everything.
 //If a bound is outside a clip, it trims everything.
 /*! @excsafety{Weak} */
-void WaveTrack::Trim (double t0, double t1)
+void WaveTrack::Trim(double t0, double t1)
 {
    assert(IsLeader());
    bool inside0 = false;
    bool inside1 = false;
 
-   const auto range = TrackList::Channels(this);
-   for (auto pChannel : range) {
-      for (const auto &clip : pChannel->mClips) {
-         if (t1 > clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
-            clip->SetTrimRight(
-               clip->GetTrimRight() + clip->GetPlayEndTime() - t1);
-            inside1 = true;
-         }
+   for (const auto &clip : Intervals()) {
+      if (t1 > clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
+         clip->SetTrimRight(
+            clip->GetTrimRight() + clip->GetPlayEndTime() - t1);
+         inside1 = true;
+      }
 
-         if (t0 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime()) {
-            clip->SetTrimLeft(
-               clip->GetTrimLeft() + t0 - clip->GetPlayStartTime());
-            inside0 = true;
-         }
+      if (t0 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime()) {
+         clip->SetTrimLeft(
+            clip->GetTrimLeft() + t0 - clip->GetPlayStartTime());
+         inside0 = true;
       }
    }
 
