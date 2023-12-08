@@ -1161,8 +1161,7 @@ private:
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
-      size_t iChannel, size_t nChannels);
-   std::pair<WaveClipHolder, WaveClipHolder> SplitOneAt(double t);
+     size_t iChannel, size_t nChannels);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
    void ApplyStretchRatioOnIntervals(

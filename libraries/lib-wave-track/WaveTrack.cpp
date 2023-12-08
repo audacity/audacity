@@ -3893,61 +3893,26 @@ bool WaveTrack::CanInsertClip(
 void WaveTrack::Split(double t0, double t1)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      pChannel->SplitOneAt(t0);
-      if (t0 != t1)
-         pChannel->SplitOneAt(t1);
-   }
+   SplitAt(t0);
+   if (t0 != t1)
+      SplitAt(t1);
 }
 
 /*! @excsafety{Weak} */
-auto WaveTrack::SplitAt(double t0) -> std::pair<IntervalHolder, IntervalHolder>
+auto WaveTrack::SplitAt(double t) -> std::pair<IntervalHolder, IntervalHolder>
 {
    assert(IsLeader());
-   std::vector<std::pair<WaveClipHolder, WaveClipHolder>> pairs;
-   for (const auto pChannel : TrackList::Channels(this)) {
-      pairs.emplace_back(pChannel->SplitOneAt(t0));
-   }
-
-   // Assume one channel at least!
-   assert(pairs.size() >= 1);
-   const auto firstfirst = pairs[0].first;
-
-   // Maybe SplitOneAt did not split, as when t0 is an endpoint.
-   if (!firstfirst) {
-      // If the first channel didn't split, neither should have the other
-      assert(pairs.size() < 2 || !pairs[1].first);
-      return {};
-   }
-
-   // Convert one or two channel-major "narrow" pairs to one interval-major
-   // "wide" pair
-   if (pairs.size() == 1)
-      return {
-         std::make_shared<Interval>(*this, firstfirst, nullptr),
-         std::make_shared<Interval>(*this, pairs[0].second, nullptr),
-      };
-   else
-      return {
-         std::make_shared<Interval>(*this, firstfirst, pairs[1].first),
-         std::make_shared<Interval>(*this, pairs[0].second, pairs[1].second)
-      };
-}
-
-/*! @excsafety{Weak} */
-auto WaveTrack::SplitOneAt(double t) -> std::pair<WaveClipHolder, WaveClipHolder>
-{
-   for (const auto &c : mClips) {
+   for (const auto &&c : Intervals()) {
       if (c->SplitsPlayRegion(t)) {
          t = SnapToSample(t);
-         auto newClip = std::make_shared<WaveClip>(*c, mpFactory, true);
+         auto newClip = CopyClip(*c, true);
          c->TrimRightTo(t);// put t on a sample
          newClip->TrimLeftTo(t);
          auto result = std::pair{ c, newClip };
 
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
-         InsertClip(move(newClip)); // transfer ownership
+         InsertInterval(move(newClip)); // transfer ownership
          return result;
       }
    }
