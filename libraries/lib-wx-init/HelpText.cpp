@@ -222,14 +222,6 @@ audio CDs]].")
       wxTextOutputStream s(o);
       s
 // *URL* will be replaced by whatever URL we are looking for.
-// DA: View the manual on line is expected.
-#ifdef EXPERIMENTAL_DA
-         << XO(
-"The Manual does not appear to be installed. \
-Please [[*URL*|view the Manual online]].<br><br>\
-To always view the Manual online, change \"Location of Manual\" in \
-Interface Preferences to \"From Internet\".")
-#else
          << XO(
 "The Manual does not appear to be installed. \
 Please [[*URL*|view the Manual online]] or \
@@ -237,7 +229,6 @@ Please [[*URL*|view the Manual online]] or \
 download the Manual]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
 Interface Preferences to \"From Internet\".")
-#endif
       ;
       return WrapText( o.GetString() );
    }

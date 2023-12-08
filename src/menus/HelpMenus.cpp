@@ -420,24 +420,10 @@ auto HelpMenu()
    static auto menu = std::shared_ptr{
    Menu( wxT("Help"), XXO("&Help"),
       Section( "Basic",
-         // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
-   #ifdef EXPERIMENTAL_DA
-         // DA: Has QuickFix menu item.
-         Command( wxT("QuickFix"), XXO("&Quick Fix..."), OnQuickFix,
-            AlwaysEnabledFlag ),
-         // DA: 'Getting Started' rather than 'Quick Help'.
-         Command( wxT("QuickHelp"), XXO("&Getting Started"), OnQuickHelp,
-            AlwaysEnabledFlag ),
-         // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-         Command( wxT("Manual"), XXO("Audacity &Manual"), OnManual,
-            AlwaysEnabledFlag )
-
-   #else
          Command( wxT("QuickHelp"), XXO("&Quick Help..."), OnQuickHelp,
             AlwaysEnabledFlag ),
          Command( wxT("Manual"), XXO("&Manual..."), OnManual,
             AlwaysEnabledFlag )
-   #endif
       ),
 
    #ifdef __WXMAC__
@@ -485,8 +471,7 @@ auto HelpMenu()
       ),
 
       Section( "Extra",
-         // DA: Does not fully support update checking.
-   #if !defined(EXPERIMENTAL_DA) && defined(HAVE_UPDATES_CHECK)
+   #if defined(HAVE_UPDATES_CHECK)
          Command( wxT("Updates"), XXO("&Check for Updates..."),
             OnCheckForUpdates,
             AlwaysEnabledFlag ),

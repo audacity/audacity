@@ -524,15 +524,7 @@ bool IsEnabledPlugin(const PluginDescriptor* plug)
 
 bool IsDefaultPlugin(const PluginDescriptor* plug)
 {
-   if (plug->IsEffectDefault()
-#ifdef EXPERIMENTAL_DA
-      // Move Nyquist prompt into nyquist group.
-      && (plug->GetSymbol() !=
-            ComponentInterfaceSymbol("Nyquist Effects Prompt"))
-      && (plug->GetSymbol() != ComponentInterfaceSymbol("Nyquist Tools Prompt"))
-      && (plug->GetSymbol() != ComponentInterfaceSymbol(NYQUIST_PROMPT_ID))
-#endif
-      )
+   if (plug->IsEffectDefault())
       return true;
    return false;
 }
