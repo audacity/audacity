@@ -1395,7 +1395,7 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
       return true;
 
    //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
-   for (const auto &&clip : Intervals())
+   for (const auto &clip : mClips)
    {
       if (clip->IntersectsPlayRegion(t0, t1)) {
          //wxPrintf("Overlapping clip: %.6f...%.6f\n",
@@ -2675,9 +2675,9 @@ void WaveTrack::PasteOne(
 
     //wxPrintf("paste: we have at least one clip\n");
 
-    const auto clipAtT0 = track.GetIntervalAtTime(t0);
-    const auto otherFirstClip = other.GetLeftmostClip();
-    const auto otherLastClip = other.GetRightmostClip();
+    const auto clipAtT0 = track.GetClipAtTime(t0);
+    const auto otherFirstClip = other.GetLeftmostNarrowClip();
+    const auto otherLastClip = other.GetRightmostNarrowClip();
     const auto stretchRatiosMatch =
        !clipAtT0 || (clipAtT0->HasEqualStretchRatio(*otherFirstClip) &&
                      clipAtT0->HasEqualStretchRatio(*otherLastClip));
@@ -2712,7 +2712,7 @@ void WaveTrack::PasteOne(
     if (editClipCanMove) {
         if (!singleClipMode) {
             // We need to insert multiple clips, so split the current clip and ...
-            track.SplitAt(t0);
+            track.SplitOneAt(t0);
         }
         //else if there is a clip at t0 insert new clip inside it and ...
 
@@ -2724,23 +2724,25 @@ void WaveTrack::PasteOne(
     else
     {
        if (!merge)
-          track.SplitAt(t0);
+          track.SplitOneAt(t0);
        const auto clipAtT0 = track.GetClipAtTime(t0);
        const auto t = clipAtT0 ? clipAtT0->GetPlayEndTime() : t0;
        if (!track.IsEmpty(t, t + insertDuration))
           throw notEnoughSpaceException;
-       if (clipAtT0 && clipAtT0->GetPlayStartTime() == t0)
-          clipAtT0->ShiftBy(insertDuration);
     }
 
-    if (singleClipMode) {
+    // See if the clipboard data is one clip only and if it should be merged. If
+    // edit-clip-can-move mode is checked, merging happens only if the pasting
+    // point splits a clip. If it isn't, merging also happens when the pasting
+    // point is at the exact beginning of a clip.
+    if (singleClipMode && merge) {
         // Single clip mode
         // wxPrintf("paste: checking for single clip mode!\n");
 
         WaveClip* insideClip = nullptr;
         for (const auto& clip : track.mClips) {
             if (editClipCanMove) {
-                if (clip->WithinPlayRegion(t0)) {
+                if (clip->SplitsPlayRegion(t0)) {
                     //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
                     //       t0, clip->GetStartTime(), clip->GetEndTime());
                     insideClip = clip.get();
@@ -2749,8 +2751,7 @@ void WaveTrack::PasteOne(
             }
             else {
                 // If clips are immovable we also allow prepending to clips
-                if (clip->WithinPlayRegion(t0) ||
-                    track.TimeToLongSamples(t0) == clip->GetPlayStartSample())
+                if (clip->WithinPlayRegion(t0))
                 {
                     insideClip = clip.get();
                     break;
@@ -4333,7 +4334,7 @@ auto WaveTrack::SplitAt(double t0) -> std::pair<IntervalHolder, IntervalHolder>
    // Maybe SplitOneAt did not split, as when t0 is an endpoint.
    if (!firstfirst) {
       // If the first channel didn't split, neither should have the other
-      assert(!pairs[1].first);
+      assert(pairs.size() < 2 || !pairs[1].first);
       return {};
    }
 
