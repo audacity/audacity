@@ -96,6 +96,12 @@ const Envelope &WaveChannelInterval::GetEnvelope() const
    return *mWideClip.GetEnvelope();
 }
 
+Envelope &WaveChannelInterval::GetEnvelope()
+{
+   // Always the left clip's envelope
+   return *mWideClip.GetEnvelope();
+}
+
 sampleCount WaveChannelInterval::GetVisibleSampleCount() const
 {
    return GetNarrowClip().GetVisibleSampleCount();
@@ -116,9 +122,24 @@ double WaveChannelInterval::GetPlayEndTime() const
    return GetNarrowClip().GetPlayEndTime();
 }
 
+double WaveChannelInterval::GetPlayDuration() const
+{
+   return GetPlayEndTime() - GetPlayStartTime();
+}
+
+bool WaveChannelInterval::WithinPlayRegion(double t) const
+{
+   return GetNarrowClip().WithinPlayRegion(t);
+}
+
 sampleCount WaveChannelInterval::TimeToSamples(double time) const
 {
    return GetNarrowClip().TimeToSamples(time);
+}
+
+double WaveChannelInterval::SamplesToTime(sampleCount s) const noexcept
+{
+   return GetNarrowClip().SamplesToTime(s);
 }
 
 double WaveChannelInterval::GetStretchRatio() const

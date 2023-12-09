@@ -80,6 +80,7 @@ public:
    const WaveClip &GetWideClip() const { return mWideClip; }
    WaveClip &GetClip() { return mNarrowClip; }
    const WaveClip &GetClip() const { return mNarrowClip; }
+   Envelope &GetEnvelope();
    const Envelope &GetEnvelope() const;
    size_t GetChannelIndex() const { return miChannel; }
 
@@ -104,7 +105,18 @@ public:
    int GetRate() const override;
    double GetPlayStartTime() const override;
    double GetPlayEndTime() const override;
+   double GetPlayDuration() const;
+
+   /*!
+    * @brief  t ∈ [...)
+    */
+   bool WithinPlayRegion(double t) const;
+
+   // TimeToSamples and SamplesToTime take clip stretch ratio into account.
+   // Use them to convert time / sample offsets.
    sampleCount TimeToSamples(double time) const override;
+   double SamplesToTime(sampleCount s) const noexcept;
+
    double GetStretchRatio() const override;
 
    double GetTrimLeft() const;
@@ -156,6 +168,7 @@ public:
    );
 
 private:
+   WaveClip &GetNarrowClip() { return mNarrowClip; }
    const WaveClip &GetNarrowClip() const { return mNarrowClip; }
 
    WaveClip &mWideClip;
