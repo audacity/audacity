@@ -352,41 +352,6 @@ public:
       */
    );
 
-   /*!
-    * @param t relative to clip start sample
-    */
-   bool
-   GetFloatAtTime(double t, size_t iChannel, float& value, bool mayThrow) const;
-
-   //! Succeed with out-of-bounds requests, only changing what is in bounds.
-   //! @{
-   // clang-format off
-   /*!
-    * @brief Considers `buffer` as audio starting at `TimeToSamples(t)`
-    * (relative to clip play start time) and with equal stretch ratio. Samples
-    * at intersecting indices are then copied, leaving non-intersecting clip
-    * samples untouched. E.g.,
-    *     buffer:      [a b c d e]
-    *     clip  :            [x y z]
-    *     result:            [d e z]
-    */
-   // clang-format on
-   void SetFloatsFromTime(
-      double t, size_t iChannel, const float* buffer, size_t numSamples,
-      sampleFormat effectiveFormat);
-
-   /*!
-    * @brief Same as `SetFloatsFromTime`, but with `buffer` starting at
-    * `TimeToSamples(t0 -  SamplesToTime(numSideSamples))`.
-    * `[buffer, buffer + 2 * numSizeSamples + 1)` is assumed to be a valid span
-    * of addresses.
-    */
-   void SetFloatsCenteredAroundTime(
-      double t, size_t iChannel, const float* buffer, size_t numSideSamples,
-      sampleFormat effectiveFormat);
-
-   void SetFloatAtTime(
-      double t, size_t iChannel, float value, sampleFormat effectiveFormat);
    //! @}
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
@@ -543,9 +508,6 @@ public:
    // AWD, Oct 2009: for pasting whitespace at the end of selection
    bool GetIsPlaceholder() const { return mIsPlaceholder; }
    void SetIsPlaceholder(bool val) { mIsPlaceholder = val; }
-
-   // used by commands which interact with clips using the keyboard
-   bool SharesBoundaryWithNextClip(const WaveClip* next) const;
 
    void SetName(const wxString& name);
    const wxString& GetName() const;

@@ -25,6 +25,8 @@ set( SOURCES
    WaveChannelUtilities.h
    WaveClip.cpp
    WaveClip.h
+   WaveClipUtilities.cpp
+   WaveClipUtilities.h
    WaveTrack.cpp
    WaveTrack.h
    WaveTrackSink.cpp

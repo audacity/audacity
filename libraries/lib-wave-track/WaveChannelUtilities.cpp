@@ -11,6 +11,7 @@
 #include "WaveChannelUtilities.h"
 #include "PlaybackDirection.h"
 #include "WaveClip.h"
+#include "WaveClipUtilities.h"
 #include "WaveTrack.h"
 
 #include <cmath>
@@ -205,7 +206,7 @@ bool WaveChannelUtilities::GetFloatAtTime(const WaveChannel &channel,
    if (!clip)
       return false;
    constexpr size_t iChannel = 0;
-   clip->GetFloatAtTime(
+   WaveClipUtilities::GetFloatAtTime(*clip,
       t - clip->GetPlayStartTime(), iChannel, value, mayThrow);
    return true;
 }
@@ -286,7 +287,7 @@ void WaveChannelUtilities::SetFloatsWithinTimeRange(WaveChannel &channel,
       for (auto i = 0u; i < numSamples; ++i)
          values[i] = producer(tt0 + clip->SamplesToTime(i));
       constexpr size_t iChannel = 0;
-      clip->SetFloatsFromTime(
+      WaveClipUtilities::SetFloatsFromTime(*clip,
          tt0 - clipStartTime, iChannel, values.data(), numSamples,
          effectiveFormat);
       clip = GetNextClip(channel, *clip, PlaybackDirection::forward);
