@@ -23,6 +23,7 @@ struct FFTParam;
 class NumberScale;
 class SpectrumPrefs;
 class wxArrayStringEx;
+class WaveChannel;
 class WaveTrack;
 
 class AUDACITY_DLL_API SpectrogramSettings
@@ -74,9 +75,14 @@ public:
    static const EnumValueSymbols &GetColorSchemeNames();
    static const TranslatableStrings &GetAlgorithmNames();
 
-   // Return either the track's independent settings or global defaults
+   //! Return either the track's independent settings or global defaults
    //! Mutative access to attachment even if the track argument is const
    static SpectrogramSettings &Get(const WaveTrack &track);
+
+   /*!
+    @copydoc Get(const WaveTrack &)
+    */
+   static SpectrogramSettings &Get(const WaveChannel &channel);
 
    // Force creation of track's independent settings
    static SpectrogramSettings &Own(WaveTrack &track);

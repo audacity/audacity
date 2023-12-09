@@ -118,6 +118,11 @@ SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
       return SpectrogramSettings::defaults();
 }
 
+SpectrogramSettings &SpectrogramSettings::Get(const WaveChannel &channel)
+{
+   return Get(channel.GetTrack());
+}
+
 SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
 {
    auto pSettings = track.GetGroupData().Attachments
