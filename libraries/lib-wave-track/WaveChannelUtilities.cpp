@@ -182,6 +182,7 @@ size_t WaveChannelUtilities::GetFloatsFromTime(const WaveChannel &channel,
    auto clip = GetClipAtTime(channel, t);
    auto numSamplesRead = 0u;
    const auto forward = direction == PlaybackDirection::forward;
+   const auto clips = SortedClipArray(channel);
    while (clip)
    {
       const auto args = GetSampleAccessArgs(
@@ -194,7 +195,7 @@ size_t WaveChannelUtilities::GetFloatsFromTime(const WaveChannel &channel,
       numSamplesRead += args.len;
       if (numSamplesRead >= numSamples)
          break;
-      clip = GetAdjacentClip(channel, *clip, direction);
+      clip = GetAdjacentClip(clips, *clip, direction);
    }
    return numSamplesRead;
 }
@@ -231,6 +232,7 @@ void WaveChannelUtilities::SetFloatsFromTime(WaveChannel &channel,
    auto clip = GetClipAtTime(channel, t);
    auto numSamplesWritten = 0u;
    const auto forward = direction == PlaybackDirection::forward;
+   const auto clips = SortedClipArray(channel);
    while (clip)
    {
       const auto args = GetSampleAccessArgs(
@@ -245,7 +247,7 @@ void WaveChannelUtilities::SetFloatsFromTime(WaveChannel &channel,
          if (numSamplesWritten >= numSamples)
             break;
       }
-      clip = GetAdjacentClip(channel, *clip, direction);
+      clip = GetAdjacentClip(clips, *clip, direction);
    }
 }
 
@@ -268,6 +270,7 @@ void WaveChannelUtilities::SetFloatsWithinTimeRange(WaveChannel &channel,
    t0 = std::max(t0, (*sortedClips.begin())->GetPlayStartTime());
    t1 = std::min(t1, (*sortedClips.rbegin())->GetPlayEndTime());
    auto clip = GetClipAtTime(channel, t0);
+   const auto clips = SortedClipArray(channel);
    while (clip) {
       const auto clipStartTime = clip->GetPlayStartTime();
       const auto clipEndTime = clip->GetPlayEndTime();
@@ -290,15 +293,29 @@ void WaveChannelUtilities::SetFloatsWithinTimeRange(WaveChannel &channel,
       WaveClipUtilities::SetFloatsFromTime(*clip,
          tt0 - clipStartTime, iChannel, values.data(), numSamples,
          effectiveFormat);
-      clip = GetNextClip(channel, *clip, PlaybackDirection::forward);
+      clip = GetNextClip(clips, *clip, PlaybackDirection::forward);
    }
 }
 
-const WaveClip*
-WaveChannelUtilities::GetAdjacentClip(const WaveChannel &channel,
-   const WaveClip& clip, PlaybackDirection direction)
+namespace {
+template<typename Clip>
+auto DoGetNextClip(const std::vector<Clip *> &clips,
+   const WaveClip& clip, PlaybackDirection direction) -> Clip *
 {
-   const auto neighbour = GetNextClip(channel, clip, direction);
+   const auto p = find(clips.begin(), clips.end(), &clip);
+   if (p == clips.end())
+      return nullptr;
+   else if (direction == PlaybackDirection::forward)
+      return p == clips.end() - 1 ? nullptr : *(p + 1);
+   else
+      return p == clips.begin() ? nullptr : *(p - 1);
+}
+
+template<typename Clip>
+auto DoGetAdjacentClip(const std::vector<Clip *> &clips,
+   const WaveClip& clip, PlaybackDirection direction) -> Clip *
+{
+   const auto neighbour = GetNextClip(clips, clip, direction);
    if (!neighbour)
       return nullptr;
    else if (direction == PlaybackDirection::forward)
@@ -312,32 +329,36 @@ WaveChannelUtilities::GetAdjacentClip(const WaveChannel &channel,
                 neighbour :
                 nullptr;
 }
-
-WaveClip *WaveChannelUtilities::GetAdjacentClip(WaveChannel &channel,
-   const WaveClip& clip, PlaybackDirection direction)
-{
-   return const_cast<WaveClip*>(
-      GetAdjacentClip(std::as_const(channel), clip, direction));
 }
 
-const WaveClip* WaveChannelUtilities::GetNextClip(const WaveChannel &channel,
+const WaveClip*
+WaveChannelUtilities::GetAdjacentClip(const WaveClipConstPointers &clips,
    const WaveClip& clip, PlaybackDirection direction)
 {
-   const auto clips = SortedClipArray(channel);
-   const auto p = std::find(clips.begin(), clips.end(), &clip);
-   if (p == clips.end())
-      return nullptr;
-   else if (direction == PlaybackDirection::forward)
-      return p == clips.end() - 1 ? nullptr : *(p + 1);
-   else
-      return p == clips.begin() ? nullptr : *(p - 1);
+   assert(IsSortedByPlayStartTime(clips));
+   return DoGetAdjacentClip(clips, clip, direction);
 }
 
-WaveClip* WaveChannelUtilities::GetNextClip(WaveChannel &channel,
+WaveClip *WaveChannelUtilities::GetAdjacentClip(const WaveClipPointers &clips,
    const WaveClip& clip, PlaybackDirection direction)
 {
-   return const_cast<WaveClip*>(
-      GetNextClip(std::as_const(channel), clip, direction));
+   assert(IsSortedByPlayStartTime(clips));
+   return DoGetAdjacentClip(clips, clip, direction);
+}
+
+const WaveClip* WaveChannelUtilities::GetNextClip(
+   const WaveClipConstPointers &clips,
+   const WaveClip& clip, PlaybackDirection direction)
+{
+   assert(IsSortedByPlayStartTime(clips));
+   return DoGetNextClip(clips, clip, direction);
+}
+
+WaveClip* WaveChannelUtilities::GetNextClip(const WaveClipPointers &clips,
+   const WaveClip& clip, PlaybackDirection direction)
+{
+   assert(IsSortedByPlayStartTime(clips));
+   return DoGetNextClip(clips, clip, direction);
 }
 
 Envelope* WaveChannelUtilities::GetEnvelopeAtTime(
@@ -351,6 +372,12 @@ Envelope* WaveChannelUtilities::GetEnvelopeAtTime(
       return nullptr;
 }
 
+bool WaveChannelUtilities::CompareClipsByPlayStartTime(
+   const WaveClip *x, const WaveClip *y)
+{
+   return x->GetPlayStartTime() < y->GetPlayStartTime();
+}
+
 auto WaveChannelUtilities::SortedClipArray(WaveChannel &channel)
    -> WaveClipPointers
 {
@@ -359,9 +386,7 @@ auto WaveChannelUtilities::SortedClipArray(WaveChannel &channel)
    // Get the (narrow) clips
    transform(clips.begin(), clips.end(), back_inserter(result),
       [](const auto &interval){ return &interval->GetClip(); });
-   sort(result.begin(), result.end(),
-      [](const WaveClip *x, const WaveClip *y){
-         return x->GetPlayStartTime() < y->GetPlayStartTime(); });
+   sort(result.begin(), result.end(), CompareClipsByPlayStartTime);
    return result;
 }
 

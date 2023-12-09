@@ -19,6 +19,7 @@ enum class sampleFormat : unsigned;
 class WaveChannel;
 class WaveClip;
 
+#include <algorithm>
 #include <functional>
 #include <utility>
 #include <vector>
@@ -27,6 +28,19 @@ namespace WaveChannelUtilities {
 
 using WaveClipPointers = std::vector<WaveClip*>;
 using WaveClipConstPointers = std::vector<const WaveClip*>;
+
+WAVE_TRACK_API
+bool CompareClipsByPlayStartTime(const WaveClip *x, const WaveClip *y);
+
+inline bool IsSortedByPlayStartTime(const WaveClipPointers &clips)
+{
+   return is_sorted(clips.begin(), clips.end(), CompareClipsByPlayStartTime);
+}
+
+inline bool IsSortedByPlayStartTime(const WaveClipConstPointers &clips)
+{
+   return is_sorted(clips.begin(), clips.end(), CompareClipsByPlayStartTime);
+}
 
 //! Get clips sorted by play start time
 WAVE_TRACK_API WaveClipPointers SortedClipArray(WaveChannel &channel);
@@ -135,27 +149,30 @@ WAVE_TRACK_API void SetFloatsFromTime(WaveChannel &channel,
 /*!
  @brief Similar to GetNextClip, but returns `nullptr` if the neighbour
  clip is not adjacent.
+ @pre `IsSortedByPlayStartTime(clips)`
  */
-WAVE_TRACK_API const WaveClip* GetAdjacentClip(const WaveChannel &channel,
+WAVE_TRACK_API
+const WaveClip* GetAdjacentClip(const WaveClipConstPointers &clips,
    const WaveClip& clip, PlaybackDirection searchDirection);
 
 /*!
- @copydoc GetAdjacentClip(const WaveClip&, PlaybackDirection) const
+ @copydoc GetAdjacentClip(const WaveClipConstPointers &,
+    const WaveClip&, PlaybackDirection) const
  */
-WAVE_TRACK_API WaveClip* GetAdjacentClip(WaveChannel &channel,
+WAVE_TRACK_API WaveClip* GetAdjacentClip(const WaveClipPointers &clips,
    const WaveClip& clip, PlaybackDirection searchDirection);
 
 /*!
  @brief Returns clips next to `clip` in the given direction, or `nullptr`
  * if there is none.
  */
-WAVE_TRACK_API const WaveClip* GetNextClip(const WaveChannel &channel,
+WAVE_TRACK_API const WaveClip* GetNextClip(const WaveClipConstPointers &clips,
    const WaveClip& clip, PlaybackDirection searchDirection);
 
 /*!
  @copydoc GetNextClip(const WaveClip&, PlaybackDirection) const
  */
-WAVE_TRACK_API WaveClip* GetNextClip(WaveChannel &channel,
+WAVE_TRACK_API WaveClip* GetNextClip(const WaveClipPointers &clips,
    const WaveClip& clip, PlaybackDirection searchDirection);
 }
 
