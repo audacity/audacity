@@ -78,6 +78,7 @@ effects from this one class.
 #include "TimeTrack.h"
 #include "TimeWarper.h"
 #include "ViewInfo.h"
+#include "WaveChannelUtilities.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
@@ -1407,7 +1408,8 @@ bool NyquistEffect::ProcessOne(
             outClips += wxT(" )");
          }
          float min, max;
-         auto pair = mCurTrack[i]->GetMinMax(mT0, mT1); // may throw
+         auto pair =
+            WaveChannelUtilities::GetMinMax(*mCurTrack[i], mT0, mT1); // may throw
          min = pair.first, max = pair.second;
          maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
          maxPeakLevel = wxMax(maxPeakLevel, maxPeak);
@@ -1419,7 +1421,8 @@ bool NyquistEffect::ProcessOne(
             peakString += wxT("nil ");
          }
 
-         float rms = mCurTrack[i]->GetRMS(mT0, mT1); // may throw
+         float rms =
+            WaveChannelUtilities::GetRMS(*mCurTrack[i], mT0, mT1); // may throw
          if (!std::isinf(rms) && !std::isnan(rms)) {
             rmsString += wxString::Format(wxT("(float %s) "), Internat::ToString(rms));
          } else {

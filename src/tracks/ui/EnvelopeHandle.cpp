@@ -25,6 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackArt.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 #include "../../../images/Cursors.h"
 
@@ -104,8 +105,7 @@ UIHandlePtr EnvelopeHandle::WaveTrackHitTest
    /// envelope boundary.
    auto &viewInfo = ViewInfo::Get(*pProject);
    auto time = viewInfo.PositionToTime(state.m_x, rect.GetX());
-   Envelope *const envelope = wt->GetEnvelopeAtTime(time);
-
+   const auto envelope = WaveChannelUtilities::GetEnvelopeAtTime(*wt, time);
    if (!envelope)
       return {};
 

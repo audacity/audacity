@@ -37,6 +37,7 @@
 
 #include "EffectOutputTracks.h"
 #include "ShuttleGui.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
 #include "../widgets/valnum.h"
@@ -198,7 +199,8 @@ bool EffectAmplify::Init()
    mPeak = 0.0;
    for (auto t : range) {
       for (const auto pChannel : t->Channels()) {
-         auto pair = pChannel->GetMinMax(mT0, mT1); // may throw
+         auto pair =
+            WaveChannelUtilities::GetMinMax(*pChannel, mT0, mT1); // may throw
          const float min = pair.first, max = pair.second;
          const float newpeak = std::max(fabs(min), fabs(max));
          mPeak = std::max<double>(mPeak, newpeak);

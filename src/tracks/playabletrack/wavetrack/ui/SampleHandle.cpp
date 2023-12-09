@@ -25,6 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
+#include "WaveChannelUtilities.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../../../../../images/Cursors.h"
@@ -119,6 +120,7 @@ UIHandlePtr SampleHandle::HitTest
  const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack)
 {
+   using namespace WaveChannelUtilities;
    const auto &viewInfo = ViewInfo::Get( *pProject );
 
    /// method that tells us if the mouse event landed on an
@@ -136,9 +138,8 @@ UIHandlePtr SampleHandle::HitTest
 
    // Just get one sample.
    float oneSample;
-   constexpr auto iChannel = 0u;
    constexpr auto mayThrow = false;
-   if (!wavetrack->GetFloatAtTime(tt, iChannel, oneSample, mayThrow))
+   if (!GetFloatAtTime(*wavetrack, tt, oneSample, mayThrow))
       return {};
 
    // Get y distance of envelope point from center line (in pixels).
@@ -147,8 +148,7 @@ UIHandlePtr SampleHandle::HitTest
    cache.GetDisplayBounds(zoomMin, zoomMax);
 
    double envValue = 1.0;
-   Envelope* env = wavetrack->GetEnvelopeAtTime(time);
-   if (env)
+   if (const auto env = GetEnvelopeAtTime(*wavetrack, time))
       // Calculate sample as it would be rendered
       envValue = env->GetValue(tt);
 
@@ -183,6 +183,7 @@ UIHandle::Result SampleHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
+   using namespace WaveChannelUtilities;
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if ( unsafe )
       return Cancelled;
@@ -236,11 +237,10 @@ UIHandle::Result SampleHandle::Click
       Floats newSampleRegion{ 1 + 2 * (size_t)SMOOTHING_BRUSH_RADIUS };
 
       //Get a sample from the clip to do some tricks on.
-      constexpr auto iChannel = 0u;
       constexpr auto mayThrow = false;
-      const auto sampleRegionRange = mClickedTrack->GetFloatsCenteredAroundTime(
-         t0, iChannel, sampleRegion.get(),
-         SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS, mayThrow);
+      const auto sampleRegionRange = GetFloatsCenteredAroundTime(*mClickedTrack,
+            t0, sampleRegion.get(),
+            SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS, mayThrow);
 
       //Go through each point of the smoothing brush and apply a smoothing operation.
       for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
@@ -291,8 +291,8 @@ UIHandle::Result SampleHandle::Click
       }
       // Set a range of samples around the mouse event
       // Don't require dithering later
-      mClickedTrack->SetFloatsCenteredAroundTime(
-         t0, iChannel, newSampleRegion.get(), SMOOTHING_BRUSH_RADIUS,
+      SetFloatsCenteredAroundTime(*mClickedTrack,
+         t0, newSampleRegion.get(), SMOOTHING_BRUSH_RADIUS,
          narrowestSampleFormat);
 
       // mLastDragSampleValue will not be used
@@ -310,9 +310,7 @@ UIHandle::Result SampleHandle::Click
       //Set the sample to the point of the mouse event
       // Don't require dithering later
 
-      constexpr auto iChannel = 0u;
-      mClickedTrack->SetFloatAtTime(
-         t0, iChannel, newLevel, narrowestSampleFormat);
+      SetFloatAtTime(*mClickedTrack, t0, newLevel, narrowestSampleFormat);
 
       mLastDragSampleValue = newLevel;
    }
@@ -350,6 +348,7 @@ UIHandle::Result SampleHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
+   using namespace WaveChannelUtilities;
    const wxMouseEvent &event = evt.event;
    const auto &viewInfo = ViewInfo::Get( *pProject );
 
@@ -414,9 +413,8 @@ UIHandle::Result SampleHandle::Drag
       // t may be outside t0 and t1, and we don't want to extrapolate.
       return std::clamp(value, std::min(v0, v1), std::max(v0, v1));
    };
-   constexpr auto iChannel = 0u;
-   mClickedTrack->SetFloatsWithinTimeRange(
-      editStart, editEnd, iChannel, interpolator, narrowestSampleFormat);
+   SetFloatsWithinTimeRange(*mClickedTrack,
+      editStart, editEnd, interpolator, narrowestSampleFormat);
 
    mLastDragPixel = x1;
    mLastDragSampleValue = newLevel;
@@ -463,6 +461,7 @@ UIHandle::Result SampleHandle::Cancel(AudacityProject *pProject)
 float SampleHandle::FindSampleEditingLevel
    (const wxMouseEvent &event, const ViewInfo &viewInfo, double t0)
 {
+   using namespace WaveChannelUtilities;
    // Calculate where the mouse is located vertically (between +/- 1)
    float zoomMin, zoomMax;
    auto &cache = WaveformScale::Get(*mClickedTrack);
@@ -478,9 +477,7 @@ float SampleHandle::FindSampleEditingLevel
 
    //Take the envelope into account
    const auto time = viewInfo.PositionToTime(event.m_x, mRect.x);
-   Envelope *const env = mClickedTrack->GetEnvelopeAtTime(time);
-   if (env)
-   {
+   if (const auto env = GetEnvelopeAtTime(*mClickedTrack, time)){
       // Calculate sample as it would be rendered
       double envValue = env->GetValue(t0);
       if (envValue > 0)

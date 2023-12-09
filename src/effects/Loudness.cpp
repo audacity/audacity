@@ -26,6 +26,7 @@
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "ShuttleGui.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "ProgressDialog.h"
@@ -382,7 +383,7 @@ bool EffectLoudness::GetTrackRMS(WaveChannel &track,
    const double curT0, const double curT1, float &rms)
 {
    // set mRMS.  No progress bar here as it's fast.
-   float _rms = track.GetRMS(curT0, curT1); // may throw
+   float _rms = WaveChannelUtilities::GetRMS(track, curT0, curT1); // may throw
    rms = _rms;
    return true;
 }

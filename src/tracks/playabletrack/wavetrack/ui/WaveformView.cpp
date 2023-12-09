@@ -31,6 +31,7 @@ Paul Licameli split from WaveChannelView.cpp
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
+#include "WaveChannelUtilities.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../../../../WaveTrackLocation.h"
@@ -92,7 +93,8 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
                auto &viewInfo = ViewInfo::Get(*pProject);
                auto time =
                   viewInfo.PositionToTime(st.state.m_x, st.rect.GetX());
-               auto envelope = pTrack->GetEnvelopeAtTime(time);
+               const auto envelope =
+                  WaveChannelUtilities::GetEnvelopeAtTime(*pTrack, time);
                result = EnvelopeHandle::HitAnywhere(
                   view.mEnvelopeHandle, envelope,
                   std::dynamic_pointer_cast<const Channel>(pTrack),

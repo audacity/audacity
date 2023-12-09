@@ -27,6 +27,7 @@
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "ShuttleGui.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "ProgressDialog.h"
@@ -305,7 +306,8 @@ bool EffectNormalize::AnalyseTrack(const WaveChannel &track,
    float min, max;
    if (gain) {
       // set mMin, mMax.  No progress bar here as it's fast.
-      auto pair = track.GetMinMax(curT0, curT1); // may throw
+      auto pair =
+         WaveChannelUtilities::GetMinMax(track, curT0, curT1); // may throw
       min = pair.first, max = pair.second;
 
       if (dc) {
