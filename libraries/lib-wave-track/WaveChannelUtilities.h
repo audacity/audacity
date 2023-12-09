@@ -17,49 +17,60 @@ class Envelope;
 enum class PlaybackDirection;
 enum class sampleFormat : unsigned;
 class WaveChannel;
-class WaveClip;
+class WaveChannelInterval;
 
 #include <algorithm>
 #include <functional>
+#include <memory>
 #include <utility>
 #include <vector>
 
 namespace WaveChannelUtilities {
 
-using WaveClipPointers = std::vector<WaveClip*>;
-using WaveClipConstPointers = std::vector<const WaveClip*>;
+using Clip = WaveChannelInterval;
+using ClipPointer = std::shared_ptr<Clip>;
+using ClipPointers = std::vector<ClipPointer>;
+using ClipConstPointer = std::shared_ptr<const Clip>;
+using ClipConstPointers = std::vector<ClipConstPointer>;
 
 WAVE_TRACK_API
-bool CompareClipsByPlayStartTime(const WaveClip *x, const WaveClip *y);
+bool CompareClipsByPlayStartTime(const Clip &x, const Clip &y);
 
-inline bool IsSortedByPlayStartTime(const WaveClipPointers &clips)
+inline bool CompareClipPointersByPlayStartTime(
+   const ClipConstPointer x, const ClipConstPointer y)
 {
-   return is_sorted(clips.begin(), clips.end(), CompareClipsByPlayStartTime);
+   return CompareClipsByPlayStartTime(*x, *y);
 }
 
-inline bool IsSortedByPlayStartTime(const WaveClipConstPointers &clips)
+inline bool IsSortedByPlayStartTime(const ClipPointers &clips)
 {
-   return is_sorted(clips.begin(), clips.end(), CompareClipsByPlayStartTime);
+   return is_sorted(
+      clips.begin(), clips.end(), CompareClipPointersByPlayStartTime);
+}
+
+inline bool IsSortedByPlayStartTime(const ClipConstPointers &clips)
+{
+   return is_sorted(
+      clips.begin(), clips.end(), CompareClipPointersByPlayStartTime);
 }
 
 //! Get clips sorted by play start time
-WAVE_TRACK_API WaveClipPointers SortedClipArray(WaveChannel &channel);
+WAVE_TRACK_API ClipPointers SortedClipArray(WaveChannel &channel);
 
 /*!
  @copydoc SortedClipArray(WaveChannel &)
  */
-WAVE_TRACK_API
-WaveClipConstPointers SortedClipArray(const WaveChannel &channel);
+WAVE_TRACK_API ClipConstPointers SortedClipArray(const WaveChannel &channel);
 
 //! When the time is both the end of a clip and the start of the next clip, the
 //! latter clip is returned.
-WAVE_TRACK_API WaveClip* GetClipAtTime(WaveChannel &channel, double time);
+WAVE_TRACK_API ClipPointer GetClipAtTime(WaveChannel &channel, double time);
 
 /*!
  @copydoc GetClipAtTime(WaveChannel&, double)
  */
 WAVE_TRACK_API
-const WaveClip* GetClipAtTime(const WaveChannel &channel, double time);
+ClipConstPointer GetClipAtTime(const WaveChannel &channel, double time);
 
 WAVE_TRACK_API Envelope* GetEnvelopeAtTime(WaveChannel &channel, double time);
 
@@ -95,6 +106,12 @@ GetFloatsCenteredAroundTime(const WaveChannel &channel,
  @return true if `GetClipAtTime(t) != nullptr`, false otherwise.
  */
 WAVE_TRACK_API bool GetFloatAtTime(const WaveChannel &channel,
+   double t, float& value, bool mayThrow);
+
+/*!
+ @copydoc GetFloatAtTime(const WaveChannel &, double, size_t, float &, bool)
+ */
+WAVE_TRACK_API bool GetFloatAtTime(const WaveChannelInterval &clip,
    double t, float& value, bool mayThrow);
 
 /*!
@@ -147,33 +164,41 @@ WAVE_TRACK_API void SetFloatsFromTime(WaveChannel &channel,
    sampleFormat effectiveFormat, PlaybackDirection direction);
 
 /*!
+ @copydoc SetFloatsFromTime(WaveChannel &, double, const float *, size_t,
+    sampleFormat, PlaybackDirection)
+ */
+WAVE_TRACK_API void SetFloatsFromTime(WaveChannelInterval &channel,
+   double t, const float* buffer, size_t numSamples,
+   sampleFormat effectiveFormat, PlaybackDirection direction);
+
+/*!
  @brief Similar to GetNextClip, but returns `nullptr` if the neighbour
  clip is not adjacent.
  @pre `IsSortedByPlayStartTime(clips)`
  */
 WAVE_TRACK_API
-const WaveClip* GetAdjacentClip(const WaveClipConstPointers &clips,
-   const WaveClip& clip, PlaybackDirection searchDirection);
+ClipConstPointer GetAdjacentClip(const ClipConstPointers &clips,
+   const Clip& clip, PlaybackDirection searchDirection);
 
 /*!
- @copydoc GetAdjacentClip(const WaveClipConstPointers &,
-    const WaveClip&, PlaybackDirection) const
+ @copydoc GetAdjacentClip(const ClipConstPointers &,
+    const Clip &, PlaybackDirection) const
  */
-WAVE_TRACK_API WaveClip* GetAdjacentClip(const WaveClipPointers &clips,
-   const WaveClip& clip, PlaybackDirection searchDirection);
+WAVE_TRACK_API ClipPointer GetAdjacentClip(const ClipPointers &clips,
+   const Clip& clip, PlaybackDirection searchDirection);
 
 /*!
  @brief Returns clips next to `clip` in the given direction, or `nullptr`
  * if there is none.
  */
-WAVE_TRACK_API const WaveClip* GetNextClip(const WaveClipConstPointers &clips,
-   const WaveClip& clip, PlaybackDirection searchDirection);
+WAVE_TRACK_API ClipConstPointer GetNextClip(const ClipConstPointers &clips,
+   const Clip& clip, PlaybackDirection searchDirection);
 
 /*!
- @copydoc GetNextClip(const WaveClip&, PlaybackDirection) const
+ @copydoc GetNextClip(const ClipConstPointers &, PlaybackDirection) const
  */
-WAVE_TRACK_API WaveClip* GetNextClip(const WaveClipPointers &clips,
-   const WaveClip& clip, PlaybackDirection searchDirection);
+WAVE_TRACK_API ClipPointer GetNextClip(const ClipPointers &clips,
+   const Clip& clip, PlaybackDirection searchDirection);
 }
 
 #endif
