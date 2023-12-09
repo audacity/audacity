@@ -171,7 +171,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
-   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
+   const auto wt = std::static_pointer_cast<WaveChannel>(FindChannel());
    std::vector<UIHandlePtr> results;
 
 #ifdef EXPERIMENTAL_BRUSH_TOOL
