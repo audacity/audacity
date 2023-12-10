@@ -2185,9 +2185,9 @@ void AudioIO::DrainRecordBuffers()
                   size_t size = floor( correction * mRate * mFactor);
                   SampleBuffer temp(size, mCaptureFormat);
                   ClearSamples(temp.ptr(), mCaptureFormat, 0, size);
-                  (*iter)->Append(temp.ptr(), mCaptureFormat, size, 1,
+                  (*iter)->Append(iChannel, temp.ptr(), mCaptureFormat, size, 1,
                      // Do not dither recordings
-                     narrowestSampleFormat, iChannel);
+                     narrowestSampleFormat);
                }
                else {
                   // Leftward shift
@@ -2290,10 +2290,10 @@ void AudioIO::DrainRecordBuffers()
 
             // Now append
             // see comment in second handler about guarantee
-            newBlocks = (*iter)->Append(
+            newBlocks = (*iter)->Append(iChannel,
                temp.ptr(), format, size, 1,
                // Do not dither recordings
-               narrowestSampleFormat, iChannel
+               narrowestSampleFormat
             ) || newBlocks;
          } // end loop over capture channels
 

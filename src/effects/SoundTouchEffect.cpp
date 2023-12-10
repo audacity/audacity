@@ -172,6 +172,10 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
    sampleCount start, sampleCount end,
    const TimeWarper &warper)
 {
+   // ProcessStereo handles the stereo case instead.  This is a precondition
+   // for Append:
+   assert(out.NChannels() == 1);
+
    pSoundTouch->setSampleRate(
       static_cast<unsigned int>((orig.GetRate() + 0.5)));
 
@@ -204,7 +208,7 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
          if (outputCount > 0) {
             Floats buffer2{ outputCount };
             pSoundTouch->receiveSamples(buffer2.get(), outputCount);
-            out.Append((samplePtr)buffer2.get(), floatSample, outputCount);
+            out.Append(0, (samplePtr)buffer2.get(), floatSample, outputCount);
          }
 
          //Increment s one blockfull of samples
@@ -222,7 +226,7 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
       if (outputCount > 0) {
          Floats buffer2{ outputCount };
          pSoundTouch->receiveSamples(buffer2.get(), outputCount);
-         out.Append((samplePtr)buffer2.get(), floatSample, outputCount);
+         out.Append(0, (samplePtr)buffer2.get(), floatSample, outputCount);
       }
 
       out.Flush();

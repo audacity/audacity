@@ -3168,7 +3168,8 @@ and no content already flushed to disk is lost. */
 bool WaveChannel::AppendBuffer(constSamplePtr buffer, sampleFormat format,
    size_t len, unsigned stride, sampleFormat effectiveFormat)
 {
-   return GetTrack().Append(buffer, format, len, stride, effectiveFormat);
+   return GetTrack()
+      .Append(0, buffer, format, len, stride, effectiveFormat);
 }
 
 /*! @excsafety{Partial}
@@ -3177,16 +3178,18 @@ and no content already flushed to disk is lost. */
 bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
    size_t len)
 {
-   return GetTrack().Append(buffer, format, len, 1, widestSampleFormat);
+   return GetTrack()
+      .Append(0, buffer, format, len, 1, widestSampleFormat);
 }
 
 /*! @excsafety{Partial}
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
-bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
-   size_t len, unsigned int stride, sampleFormat effectiveFormat,
-   size_t iChannel)
+bool WaveTrack::Append(size_t iChannel,
+   constSamplePtr buffer, sampleFormat format,
+   size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
+   assert(iChannel < NChannels());
    // TODO wide wave tracks -- there will be only one clip, and its `Append`
    // (or an overload) must take iChannel
    auto pTrack = this;

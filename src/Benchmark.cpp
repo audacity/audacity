@@ -415,7 +415,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       for (uint64_t b = 0; b < chunkSize; b++)
          block[b] = v;
 
-      t->Append((samplePtr)block.get(), SampleFormat, chunkSize);
+      t->Append(0, (samplePtr)block.get(), SampleFormat, chunkSize);
    }
    t->Flush();
 

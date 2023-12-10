@@ -172,7 +172,8 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
       // (for example), and no gains or envelopes, still there should be
       // dithering because of the averaging above, which may introduce samples
       // lying between the quantization levels.  So use widestSampleFormat.
-      outTrack->Append(buffer, floatSample, blockLen, 1, widestSampleFormat);
+      outTrack->Append(0,
+         buffer, floatSample, blockLen, 1, widestSampleFormat);
 
       curTime += blockLen;
       if (TotalProgress(curTime.as_double() / totalTime.as_double()))

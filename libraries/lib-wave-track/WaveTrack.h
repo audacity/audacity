@@ -546,9 +546,9 @@ public:
     track, then a new one is created.
     @return true if at least one complete block was created
     */
-   bool Append(constSamplePtr buffer, sampleFormat format,
+   bool Append(size_t iChannel, constSamplePtr buffer, sampleFormat format,
       size_t len, unsigned int stride = 1,
-      sampleFormat effectiveFormat = widestSampleFormat, size_t iChannel = 0)
+      sampleFormat effectiveFormat = widestSampleFormat)
    override;
 
    void Flush() override;
