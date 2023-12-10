@@ -298,12 +298,19 @@ void WaveChannelUtilities::SetFloatsWithinTimeRange(WaveChannel &channel,
 }
 
 namespace {
+/*!
+ @pre `IsSortedByPlayStartTime(clips)`
+ */
 template<typename Clip>
 auto DoGetNextClip(const std::vector<Clip *> &clips,
    const WaveClip& clip, PlaybackDirection direction) -> Clip *
 {
-   const auto p = find(clips.begin(), clips.end(), &clip);
-   if (p == clips.end())
+   assert(IsSortedByPlayStartTime(clips));
+   // Find first place greater than or equal to given clip
+   const auto p = lower_bound(clips.begin(), clips.end(), &clip,
+      CompareClipsByPlayStartTime);
+   // Fail if given clip is strictly less than that
+   if (p == clips.end() || CompareClipsByPlayStartTime(&clip, *p))
       return nullptr;
    else if (direction == PlaybackDirection::forward)
       return p == clips.end() - 1 ? nullptr : *(p + 1);
