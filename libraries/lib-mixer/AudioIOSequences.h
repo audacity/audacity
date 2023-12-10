@@ -55,6 +55,7 @@ struct MIXER_API RecordableSequence {
 
    /** @brief Append the sample data to the track. You must call Flush()
     after the last Append.
+    @pre `IsLeader()`
     @pre `iChannel < NChannels()`
     @return true in case a block was flushed from memory to underlying DB
     */
