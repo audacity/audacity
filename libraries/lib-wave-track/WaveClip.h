@@ -418,12 +418,6 @@ public:
     */
    const Sequence* GetSequence(size_t ii) const { return mSequences[ii].get(); }
 
-   /** WaveTrack calls this whenever data in the wave clip changes. It is
-    * called automatically when WaveClip has a chance to know that something
-    * has changed, like when member functions SetSamples() etc. are called. */
-   /*! @excsafety{No-fail} */
-   void MarkChanged();
-
    /** Getting high-level data for one channel for screen display and clipping
     * calculations and Contrast */
    /*!
@@ -578,6 +572,10 @@ public:
    SampleFormats GetSampleFormats() const;
 
 private:
+   //! Called by mutating operations; notifies listeners
+   /*! @excsafety{No-fail} */
+   void MarkChanged();
+
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range
    sampleCount TimeToSequenceSamples(double t) const;

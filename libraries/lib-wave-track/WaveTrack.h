@@ -979,8 +979,6 @@ public:
 
       bool IsPlaceholder() const;
 
-      void MarkChanged();
-
       void SetSequenceStartTime(double t);
       void TrimLeftTo(double t);
       void TrimRightTo(double t);

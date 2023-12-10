@@ -673,11 +673,6 @@ bool WaveTrack::Interval::IsPlaceholder() const
    return mpClip->GetIsPlaceholder();
 }
 
-void WaveTrack::Interval::MarkChanged()
-{
-   ForEachClip([](auto &clip){ clip.MarkChanged(); });
-}
-
 const Envelope& WaveTrack::Interval::GetEnvelope() const
 {
    return *mpClip->GetEnvelope();
@@ -2649,7 +2644,6 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
             const auto newClip =
                CreateWideClip(t0 - clip->GetTrimLeft(), name, clip.get());
             newClip->Resample(rate);
-            newClip->MarkChanged();
             track.InsertInterval(move(newClip));
         }
     }
@@ -2984,7 +2978,6 @@ void WaveTrack::PasteOne(
                 std::make_shared<WaveClip>(*clip, track.mpFactory, true);
             newClip->Resample(rate);
             newClip->ShiftBy(t0);
-            newClip->MarkChanged();
             if (pastingFromTempTrack)
                 //Clips from the tracks which aren't bound to any TrackList are
                 //considered to be new entities, thus named using "new" name template
@@ -4091,7 +4084,6 @@ bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
          clip->SetSamples(0,
             buffer + startDelta.as_size_t() * SAMPLE_SIZE(format),
             format, inclipDelta, samplesToCopy.as_size_t(), effectiveFormat );
-         clip->MarkChanged();
       }
    }
    return true;
