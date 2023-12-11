@@ -185,6 +185,39 @@ BlockArray *WaveChannelInterval::GetSequenceBlockArray()
    );
 }
 
+std::pair<float, float>
+WaveChannelInterval::GetMinMax(double t0, double t1, bool mayThrow) const
+{
+   return mNarrowClip.GetMinMax(
+      // TODO wide wave tracks -- miChannel
+      0, t0, t1, mayThrow);
+}
+
+float WaveChannelInterval::GetRMS(double t0, double t1, bool mayThrow) const
+{
+   return mNarrowClip.GetRMS(
+      // TODO wide wave tracks -- miChannel
+      0, t0, t1, mayThrow);
+}
+
+sampleCount WaveChannelInterval::GetPlayStartSample() const
+{
+   return mNarrowClip.GetPlayStartSample();
+}
+
+sampleCount WaveChannelInterval::GetPlayEndSample() const
+{
+   return mNarrowClip.GetPlayEndSample();
+}
+
+void WaveChannelInterval::SetSamples(constSamplePtr buffer, sampleFormat format,
+   sampleCount start, size_t len, sampleFormat effectiveFormat)
+{
+   return mNarrowClip.SetSamples(
+      // TODO wide wave tracks -- miChannel
+      0, buffer, format, start, len, effectiveFormat);
+}
+
 WaveTrack::Interval::Interval(const ChannelGroup &group,
    const std::shared_ptr<WaveClip> &pClip,
    const std::shared_ptr<WaveClip> &pClip1
@@ -3617,13 +3650,12 @@ std::pair<float, float> WaveChannel::GetMinMax(
    if (t0 == t1)
       return results;
 
-   for (const auto &clip: GetTrack().mClips)
+   for (const auto &&clip: Intervals())
    {
       if (t1 >= clip->GetPlayStartTime() && t0 <= clip->GetPlayEndTime())
       {
          clipFound = true;
-         // TODO wide wave tracks -- choose correct channel
-         auto clipResults = clip->GetMinMax(0, t0, t1, mayThrow);
+         auto clipResults = clip->GetMinMax(t0, t1, mayThrow);
          if (clipResults.first < results.first)
             results.first = clipResults.first;
          if (clipResults.second > results.second)
@@ -3653,7 +3685,7 @@ float WaveChannel::GetRMS(double t0, double t1, bool mayThrow) const
    double sumsq = 0.0;
    double duration = 0;
 
-   for (const auto &clip: GetTrack().mClips)
+   for (const auto &&clip: Intervals())
    {
       // If t1 == clip->GetStartTime() or t0 == clip->GetEndTime(), then the clip
       // is not inside the selection, so we don't want it.
@@ -3663,8 +3695,7 @@ float WaveChannel::GetRMS(double t0, double t1, bool mayThrow) const
          const auto clipStart = std::max(t0, clip->GetPlayStartTime());
          const auto clipEnd = std::min(t1, clip->GetPlayEndTime());
 
-         // TODO wide wave tracks -- choose correct channel
-         float cliprms = clip->GetRMS(0, t0, t1, mayThrow);
+         float cliprms = clip->GetRMS(t0, t1, mayThrow);
 
          sumsq += cliprms * cliprms * (clipEnd - clipStart);
          duration += (clipEnd - clipStart);
@@ -4048,7 +4079,7 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
 bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
-   for (const auto &clip: GetTrack().mClips)
+   for (const auto &&clip: Intervals())
    {
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
@@ -4081,7 +4112,7 @@ bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
             // samplesToCopy is positive and not more than len
          }
 
-         clip->SetSamples(0,
+         clip->SetSamples(
             buffer + startDelta.as_size_t() * SAMPLE_SIZE(format),
             format, inclipDelta, samplesToCopy.as_size_t(), effectiveFormat );
       }

@@ -123,6 +123,36 @@ public:
 
    BlockArray *GetSequenceBlockArray();
 
+   /*!
+    Getting high-level data for one channel for screen display and clipping
+    calculations and Contrast
+    */
+   std::pair<float, float> GetMinMax(double t0, double t1, bool mayThrow) const;
+
+   /*!
+    @copydoc GetMinMax
+    */
+   float GetRMS(double t0, double t1, bool mayThrow) const;
+
+   //! Real start time of the clip, quantized to raw sample rate (track's rate)
+   sampleCount GetPlayStartSample() const;
+
+   //! Real end time of the clip, quantized to raw sample rate (track's rate)
+   sampleCount GetPlayEndSample() const;
+
+   /*!
+    @param start relative to clip play start sample
+    */
+   void SetSamples(constSamplePtr buffer, sampleFormat format,
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
+
 private:
    const WaveClip &GetNarrowClip() const { return mNarrowClip; }
 
@@ -1310,8 +1340,6 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
-
-   friend WaveChannel;
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
