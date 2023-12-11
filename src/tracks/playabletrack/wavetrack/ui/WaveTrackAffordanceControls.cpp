@@ -50,7 +50,7 @@
 #include "../WaveTrackUtils.h"
 
 #include "WaveClipAdjustBorderHandle.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 
 #include "ChangeClipSpeedDialog.h"
 

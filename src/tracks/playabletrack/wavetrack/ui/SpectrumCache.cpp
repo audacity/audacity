@@ -14,7 +14,7 @@
 #include "RealFFTf.h"
 #include "Sequence.h"
 #include "Spectrum.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 #include "WaveTrack.h"
 #include "WideSampleSequence.h"
 #include <cmath>

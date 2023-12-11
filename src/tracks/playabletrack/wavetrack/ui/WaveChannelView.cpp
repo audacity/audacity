@@ -48,7 +48,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackAffordanceHandle.h"
 #include "WaveClipAdjustBorderHandle.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
