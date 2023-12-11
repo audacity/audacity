@@ -848,6 +848,9 @@ public:
          const SampleBlockFactoryPtr& factory, int rate,
          sampleFormat storedSampleFormat);
 
+      Interval(const Interval &) = delete;
+      Interval& operator=(const Interval &) = delete;
+
       ~Interval() override;
 
       //! An invariant condition, for assertions
