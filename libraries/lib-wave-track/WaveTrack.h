@@ -169,9 +169,6 @@ class WAVE_TRACK_API WaveChannel
 public:
    ~WaveChannel() override;
 
-   inline WaveTrack &GetTrack();
-   inline const WaveTrack &GetTrack() const;
-
    //! TODO wide wave tracks -- remove this
    inline WaveTrack &ReallyGetTrack();
    //! TODO wide wave tracks -- remove this
@@ -1348,20 +1345,6 @@ private:
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
 
-WaveTrack &WaveChannel::GetTrack() {
-   auto &result = static_cast<WaveTrack&>(DoGetChannelGroup());
-   // TODO wide wave tracks -- remove assertion
-   assert(&result == this);
-   return result;
-}
-
-const WaveTrack &WaveChannel::GetTrack() const {
-   auto &result = static_cast<const WaveTrack&>(DoGetChannelGroup());
-   // TODO wide wave tracks -- remove assertion
-   assert(&result == this);
-   return result;
-}
-
 WaveTrack &WaveChannel::ReallyGetTrack() {
    auto &result = static_cast<WaveTrack&>(ReallyDoGetChannelGroup());
    return result;
@@ -1373,15 +1356,15 @@ const WaveTrack &WaveChannel::ReallyGetTrack() const {
 }
 
 size_t WaveChannel::GetBestBlockSize(sampleCount t) const {
-   return GetTrack().GetBestBlockSize(t);
+   return ReallyGetTrack().GetBestBlockSize(t);
 }
 
 size_t WaveChannel::GetIdealBlockSize() {
-   return GetTrack().GetIdealBlockSize();
+   return ReallyGetTrack().GetIdealBlockSize();
 }
 
 size_t WaveChannel::GetMaxBlockSize() const {
-   return GetTrack().GetMaxBlockSize();
+   return ReallyGetTrack().GetMaxBlockSize();
 }
 
 class ProjectRate;

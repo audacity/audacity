@@ -456,7 +456,7 @@ void EffectLoudness::LoadBufferBlock(WaveChannel &track, size_t nChannels,
    if (nChannels == 1)
       getOne(track);
    else
-      for (const auto channel : track.GetTrack().Channels()) {
+      for (const auto channel : track.ReallyGetTrack().Channels()) {
          getOne(*channel);
          ++idx;
       }
@@ -506,7 +506,7 @@ bool EffectLoudness::StoreBufferBlock(WaveChannel &track, size_t nChannels,
    if (nChannels == 1)
       return setOne(track);
    else {
-      for (auto channel : track.GetTrack().Channels()) {
+      for (auto channel : track.ReallyGetTrack().Channels()) {
          if (!setOne(*channel))
             return false;
          ++idx;

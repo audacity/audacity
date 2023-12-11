@@ -188,7 +188,7 @@ int SpectralDataManager::Worker::ProcessSnapping(const WaveChannel &channel,
 {
    mSnapThreshold = threshold;
    mSnapTargetFreqBin = targetFreqBin;
-   mSnapSamplingRate = channel.GetTrack().GetRate();
+   mSnapSamplingRate = channel.ReallyGetTrack().GetRate();
 
    startSC = std::max(static_cast<long long>(0), startSC - 2 * hopSize);
    // The calculated frequency peak will be stored in mReturnFreq
@@ -205,7 +205,7 @@ std::vector<int> SpectralDataManager::Worker::ProcessOvertones(
 {
    mOvertonesThreshold = threshold;
    mSnapTargetFreqBin = targetFreqBin;
-   mSnapSamplingRate = channel.GetTrack().GetRate();
+   mSnapSamplingRate = channel.ReallyGetTrack().GetRate();
 
    startSC = std::max(static_cast<long long>(0), startSC - 2 * hopSize);
    // The calculated multiple frequency peaks will be stored in mOvertonesTargetFreqBin

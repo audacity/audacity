@@ -273,7 +273,7 @@ bool EffectPaulstretch::ProcessOne(const WaveChannel &track,
    const auto badAllocMessage =
       XO("Requested value exceeds memory capacity.");
 
-   const auto rate = track.GetTrack().GetRate();
+   const auto rate = track.ReallyGetTrack().GetRate();
    const auto stretch_buf_size = GetBufferSize(rate);
    if (stretch_buf_size == 0) {
       EffectUIServices::DoMessageBox(*this, badAllocMessage);
