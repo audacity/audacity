@@ -3195,7 +3195,7 @@ bool WaveChannel::AppendBuffer(constSamplePtr buffer, sampleFormat format,
    size_t len, unsigned stride, sampleFormat effectiveFormat)
 {
    const size_t iChannel = ReallyGetChannelIndex();
-   return ReallyGetTrack()
+   return GetTrack()
       .Append(iChannel, buffer, format, len, stride, effectiveFormat);
 }
 
@@ -3206,7 +3206,7 @@ bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
    size_t len)
 {
    const size_t iChannel = ReallyGetChannelIndex();
-   return ReallyGetTrack()
+   return GetTrack()
       .Append(iChannel, buffer, format, len, 1, widestSampleFormat);
 }
 

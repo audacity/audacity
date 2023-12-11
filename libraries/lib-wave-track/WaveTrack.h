@@ -169,10 +169,8 @@ class WAVE_TRACK_API WaveChannel
 public:
    ~WaveChannel() override;
 
-   //! TODO wide wave tracks -- remove this
-   inline WaveTrack &ReallyGetTrack();
-   //! TODO wide wave tracks -- remove this
-   inline const WaveTrack &ReallyGetTrack() const;
+   inline WaveTrack &GetTrack();
+   inline const WaveTrack &GetTrack() const;
 
    auto GetInterval(size_t iInterval) { return
       ::Channel::GetInterval<WaveChannelInterval>(iInterval); }
@@ -1345,26 +1343,26 @@ private:
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
 
-WaveTrack &WaveChannel::ReallyGetTrack() {
+WaveTrack &WaveChannel::GetTrack() {
    auto &result = static_cast<WaveTrack&>(ReallyDoGetChannelGroup());
    return result;
 }
 
-const WaveTrack &WaveChannel::ReallyGetTrack() const {
+const WaveTrack &WaveChannel::GetTrack() const {
    auto &result = static_cast<const WaveTrack&>(ReallyDoGetChannelGroup());
    return result;
 }
 
 size_t WaveChannel::GetBestBlockSize(sampleCount t) const {
-   return ReallyGetTrack().GetBestBlockSize(t);
+   return GetTrack().GetBestBlockSize(t);
 }
 
 size_t WaveChannel::GetIdealBlockSize() {
-   return ReallyGetTrack().GetIdealBlockSize();
+   return GetTrack().GetIdealBlockSize();
 }
 
 size_t WaveChannel::GetMaxBlockSize() const {
-   return ReallyGetTrack().GetMaxBlockSize();
+   return GetTrack().GetMaxBlockSize();
 }
 
 class ProjectRate;

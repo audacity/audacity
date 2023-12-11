@@ -1705,7 +1705,7 @@ WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
    const auto pChannel = static_cast<WaveChannel*>(FindChannel().get());
    if (!pChannel)
       return {};
-   auto &track = pChannel->ReallyGetTrack();
+   auto &track = pChannel->GetTrack();
    auto &leaderView = Get(**track.Channels().begin());
    if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
       leaderView.GetAffordanceControls()))
