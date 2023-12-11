@@ -453,7 +453,7 @@ wxAccStatus TrackPanelAx::GetState( int childId, long* state )
       *state = wxACC_STATE_SYSTEM_FOCUSABLE | wxACC_STATE_SYSTEM_SELECTABLE;
       if (t)
       {
-         if (t == pFocus->PeekFocus())
+         if (t == pFocus->PeekFocus() && GetWindow() == wxWindow::FindFocus())
          {
             *state |= wxACC_STATE_SYSTEM_FOCUSED;
          }
@@ -466,7 +466,8 @@ wxAccStatus TrackPanelAx::GetState( int childId, long* state )
    }
    else     // childId == wxACC_SELF
    {
-      *state = wxACC_STATE_SYSTEM_FOCUSABLE + wxACC_STATE_SYSTEM_FOCUSED;
+      // let wxWidgets use a standard accessible object for the state
+      return wxACC_NOT_IMPLEMENTED;
    }
 #endif
 
