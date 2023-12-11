@@ -397,7 +397,10 @@ public:
 
    double GetRate() const override;
    ///!brief Sets the new rate for the track without resampling it
-   ///!pre newRate > 0
+   /*!
+    @pre `IsLeader()`
+    @pre newRate > 0
+    */
    void SetRate(double newRate);
 
    // Multiplicative factor.  Only converted to dB for display.
@@ -1105,6 +1108,8 @@ public:
 
       void ExpandCutLine(double cutlinePosition);
 
+      void SetRate(int rate);
+
    private:
       // TODO wide wave tracks -- remove friend
       friend WaveTrack;
@@ -1259,7 +1264,6 @@ private:
 private:
    //Updates rate parameter only in WaveTrackData
    void DoSetRate(double newRate);
-   void SetClipRates(double newRate);
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;
    /*!

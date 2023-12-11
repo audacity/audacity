@@ -725,6 +725,11 @@ void WaveTrack::Interval::ExpandCutLine(double cutlinePosition)
    assert(EqualSequenceLengthInvariant());
 }
 
+void WaveTrack::Interval::SetRate(int rate)
+{
+   ForEachClip([=](auto &clip){ clip.SetRate(rate); });
+}
+
 void WaveTrack::Interval::SetEnvelope(const Envelope& envelope)
 {
    mpClip->SetEnvelope(std::make_unique<Envelope>(envelope));
@@ -1116,10 +1121,10 @@ WaveTrack::DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const
    return srcCopyList;
 }
 
-bool WaveTrack::LinkConsistencyFix(bool doFix)
+bool WaveTrack::LinkConsistencyFix(const bool doFix)
 {
+   // This implies satisfaction of the precondition of SetRate()
    assert(!doFix || IsLeader());
-
 
    const auto removeZeroClips = [](WaveClipHolders& clips) {
       // Check for zero-length clips and remove them
@@ -1353,24 +1358,19 @@ double WaveTrack::GetRate() const
 
 void WaveTrack::SetRate(double newRate)
 {
-   assert( newRate > 0 );
+   assert(IsLeader());
+   assert(newRate > 0);
    newRate = std::max( 1.0, newRate );
    DoSetRate(newRate);
 
-   for(const auto& channel : Channels())
-      channel->GetTrack().SetClipRates(newRate);
+   for (const auto &clip : Intervals())
+      clip->SetRate(newRate);
 }
 
 void WaveTrack::DoSetRate(double newRate)
 {
    auto &data = WaveTrackData::Get(*this);
    data.SetRate(static_cast<int>(newRate));
-}
-
-void WaveTrack::SetClipRates(double newRate)
-{
-   for (const auto &clip : mClips)
-      clip->SetRate(static_cast<int>(newRate));
 }
 
 float WaveTrack::GetGain() const
