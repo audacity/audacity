@@ -756,6 +756,14 @@ public:
    CreateWideClip(double offset = .0, const wxString& name = wxEmptyString,
       const Interval *pToCopy = nullptr);
 
+   /// @pre IsLeader()
+   //! Create new clip and add it to this track.
+   /*!
+    Returns a pointer to the newly created clip, using this track's block
+    factory but copying all else from the given clip.
+    */
+   IntervalHolder CopyClip(const Interval &toCopy);
+
    //! Create new clip and add it to this track.
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
@@ -885,6 +893,10 @@ public:
       void Append(constSamplePtr buffer[], sampleFormat format, size_t len);
       void Flush();
 
+      /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
+      /// operation (but without putting the cut audio to the clipboard)
+      void Clear(double t0, double t1);
+
       void SetName(const wxString& name);
       const wxString& GetName() const;
 
@@ -901,14 +913,48 @@ public:
       //! Real end time of the clip, quantized to raw sample rate (track's rate)
       sampleCount GetPlayEndSample() const;
 
-      bool IntersectsPlayRegion(double t0, double t1) const;
-      bool WithinPlayRegion(double t) const;
-
       /*!
        * @brief [ < t and t < ), such that if the track were split at `t`, it would
        * split this clip in two of lengths > 0.
        */
       bool SplitsPlayRegion(double t) const;
+      /*!
+       * @brief  t ∈ [...)
+       */
+      bool WithinPlayRegion(double t) const;
+      /*!
+       * @brief  t < [
+       */
+      bool BeforePlayRegion(double t) const;
+      /*!
+       * @brief  t <= [
+       */
+      bool AtOrBeforePlayRegion(double t) const;
+      /*!
+       * @brief  ) <= t
+       */
+      bool AfterPlayRegion(double t) const;
+      /*!
+       * @brief t0 and t1 both ∈ [...)
+       * @pre t0 <= t1
+       */
+      bool EntirelyWithinPlayRegion(double t0, double t1) const;
+      /*!
+       * @brief t0 xor t1 ∈ [...)
+       * @pre t0 <= t1
+       */
+      bool PartlyWithinPlayRegion(double t0, double t1) const;
+      /*!
+       * @brief [t0, t1) ∩ [...) != ∅
+       * @pre t0 <= t1
+       */
+      bool IntersectsPlayRegion(double t0, double t1) const;
+      /*!
+       * @brief t0 <= [ and ) <= t1, such that removing [t0, t1) from the track
+       * deletes this clip.
+       * @pre t0 <= t1
+       */
+      bool CoversEntirePlayRegion(double t0, double t1) const;
 
       double GetStretchRatio() const;
       void SetRawAudioTempo(double tempo);
@@ -944,9 +990,22 @@ public:
       void StretchBy(double ratio);
       void SetTrimLeft(double t);
       void SetTrimRight(double t);
+
+      //! Moves play start position by deltaTime
+      void TrimLeft(double deltaTime);
+      //! Moves play end position by deltaTime
+      void TrimRight(double deltaTime);
+
+      //! Same as `TrimRight`, but expressed as quarter notes
       void ClearLeft(double t);
       void ClearRight(double t);
 
+      /*!
+       May assume precondition: t0 <= t1
+       @pre `IsLeader()`
+       */
+      void ClearAndAddCutLine(double t0, double t1) /* not override */;
+   
       /*!
        * @post result: `result->GetStretchRatio() == 1`
        */
@@ -1108,6 +1167,13 @@ private:
    void HandleClear(
       double t0, double t1, bool addCutLines, bool split,
       bool clearByTrimming = false);
+
+   // This channel-major duplication of the above is transitional only
+   // May assume precondition: t0 <= t1
+   void HandleClearOne(
+      double t0, double t1, bool addCutLines, bool split,
+      bool clearByTrimming = false);
+
    /*
     * @brief Copy/Paste operations must preserve beat durations, but time
     * boundaries are expressed in seconds. For pasting to work, source and
