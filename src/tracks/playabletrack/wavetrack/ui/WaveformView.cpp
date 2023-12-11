@@ -945,7 +945,7 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
 //#include "tracks/ui/TimeShiftHandle.h"
 void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
    const WaveTrack &track,
-   const WaveClip* selectedClip,
+   const WaveTrack::Interval* selectedClip,
    const wxRect& rect,
    bool muted)
 {
@@ -979,8 +979,9 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
    for (const auto pInterval :
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
-      DrawClipWaveform(context, track, *pInterval, rect,
-         dB, muted, (&pInterval->GetClip() == selectedClip));
+      bool selected = selectedClip &&
+         WaveChannelView::WideClipContains(*selectedClip, pInterval->GetClip());
+      DrawClipWaveform(context, track, *pInterval, rect, dB, muted, selected);
    }
    DrawBoldBoundaries(context, track, rect);
 
@@ -1013,7 +1014,7 @@ void WaveformView::Draw(
       auto waveChannelView = GetWaveChannelView().lock();
       wxASSERT(waveChannelView.use_count());
 
-      auto selectedClip = waveChannelView->GetSelectedClip().lock();
+      auto selectedClip = waveChannelView->GetSelectedClip();
       DoDraw(context, GetChannelIndex(), *wt, selectedClip.get(), rect, muted);
 
 #if defined(__WXMAC__)

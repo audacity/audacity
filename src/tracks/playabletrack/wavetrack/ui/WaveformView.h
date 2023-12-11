@@ -38,7 +38,7 @@ private:
       const wxRect &rect, unsigned iPass ) override;
    static void DoDraw(TrackPanelDrawingContext &context, size_t channel,
       const WaveTrack &track,
-      const WaveClip* selectedClip,
+      const WaveTrack::Interval* selectedClip,
       const wxRect & rect,
       bool muted);
 
