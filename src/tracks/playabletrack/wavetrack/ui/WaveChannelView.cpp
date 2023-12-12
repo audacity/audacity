@@ -1717,13 +1717,6 @@ WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
    return {};
 }
 
-bool WaveChannelView::WideClipContains(
-   const WaveTrack::Interval &wideClip, const WaveClip &clip)
-{
-   return &clip == wideClip.GetClip(0).get()
-      || &clip == wideClip.GetClip(1).get();
-}
-
 void WaveChannelView::BuildSubViews() const
 {
    if (WaveChannelSubViews::size() == 0) {

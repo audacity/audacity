@@ -34,6 +34,7 @@ Paul Licameli split from WaveChannelView.cpp
 #include "WaveChannelUtilities.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "../../../../WaveTrackLocation.h"
 #include "../../../../prefs/WaveformSettings.h"
 
@@ -983,7 +984,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
       bool selected = selectedClip &&
-         WaveChannelView::WideClipContains(*selectedClip, pInterval->GetClip());
+         WaveTrackUtilities::WideClipContains(*selectedClip, *pInterval);
       DrawClipWaveform(context, track, *pInterval, rect, dB, muted, selected);
    }
    DrawBoldBoundaries(context, track, rect);

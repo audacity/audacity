@@ -33,8 +33,9 @@ Paul Licameli split from WaveChannelView.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "../../../../prefs/SpectrogramSettings.h"
 #include "WaveTrackLocation.h"
+#include "WaveTrackUtilities.h"
+#include "../../../../prefs/SpectrogramSettings.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -881,7 +882,7 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context, size_t channel,
       ->GetChannel(channel)->Intervals()
    ) {
       bool selected = selectedClip &&
-         WaveChannelView::WideClipContains(*selectedClip, pInterval->GetClip());
+         WaveTrackUtilities::WideClipContains(*selectedClip, *pInterval);
       DrawClipSpectrum(context, track, *pInterval, rect, mpSpectralData,
          selected);
    }

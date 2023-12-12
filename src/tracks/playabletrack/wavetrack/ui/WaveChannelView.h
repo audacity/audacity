@@ -156,8 +156,6 @@ public:
    void SetMultiView( bool value ) { DoGetMultiView() = value; }
 
    WaveTrack::IntervalHolder GetSelectedClip();
-   static bool WideClipContains(
-      const WaveTrack::Interval &wideClip, const WaveClip &clip);
 
    // Returns a visible subset of subviews, sorted in the same
    // order as they are supposed to be displayed
