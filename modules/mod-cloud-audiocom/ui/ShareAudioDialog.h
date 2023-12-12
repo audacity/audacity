@@ -31,7 +31,7 @@ class wxRadioButton;
 
 namespace cloud::audiocom
 {
-class UserImage;
+class UserPanel;
 
 struct UploadFailedPayload;
 struct UploadSuccessfulPayload;
@@ -69,9 +69,7 @@ private:
       
       wxWindow* root { nullptr };
 
-      UserImage* avatar { nullptr };
-      wxStaticText* name { nullptr };
-      wxButton* oauthButton { nullptr };
+      UserPanel* userPanel { nullptr };
       wxPanel* anonInfoPanel { nullptr };
       wxPanel* authorizedInfoPanel { nullptr };
       wxTextCtrl* trackTitle { nullptr };
@@ -80,10 +78,7 @@ private:
 
       void PopulateInitialStatePanel(ShuttleGui& s);
 
-      void UpdateUserData();
-      void OnLinkButtonPressed();
-
-      void SetAnonymousState();
+      void UpdateUserData(bool authorized);
 
       wxString GetTrackTitle() const;
       bool HasValidTitle() const;

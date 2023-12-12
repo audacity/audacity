@@ -37,8 +37,7 @@
 #include "UserService.h"
 
 #include "AuthorizationHandler.h"
-#include "LinkAccountDialog.h"
-#include "UserImage.h"
+#include "UserPanel.h"
 
 #include "CodeConversions.h"
 
@@ -52,16 +51,10 @@
 #include "HelpSystem.h"
 #include "ProjectRate.h"
 
-#ifdef HAS_CUSTOM_URL_HANDLING
-#include "URLSchemesRegistry.h"
-#endif
-
 namespace cloud::audiocom
 {
 namespace
 {
-const wxSize avatarSize = { 32, 32 };
-
 wxString GenerateTempPath(FileExtension extension)
 {
    const auto tempPath = GetUploadTempPath();
@@ -589,8 +582,6 @@ void ShareAudioDialog::UpdateProgress(uint64_t current, uint64_t total)
 
 ShareAudioDialog::InitialStatePanel::InitialStatePanel(ShareAudioDialog& parent)
     : parent { parent }
-    , mUserDataChangedSubscription(
-         GetUserService().Subscribe([this](const auto&) { UpdateUserData(); }))
 {
 }
 
@@ -602,36 +593,13 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
    {
       s.SetBorder(16);
 
-      s.StartHorizontalLay(wxEXPAND, 0);
-      {
-         avatar = safenew UserImage(s.GetParent(), avatarSize);
+      userPanel = safenew UserPanel { GetServiceConfig(), GetOAuthService(),
+                                      GetUserService(), true, s.GetParent() };
 
-         s.AddWindow(avatar);
+      mUserDataChangedSubscription = userPanel->Subscribe(
+         [this](auto message) { UpdateUserData(message.IsAuthorized); });
 
-         s.StartVerticalLay(wxEXPAND, 1);
-         {
-            s.SetBorder(0);
-            s.AddSpace(0, 0, 1);
-            name = s.AddVariableText(XO("Anonymous"));
-            s.AddSpace(0, 0, 1);
-         }
-         s.EndVerticalLay();
-
-         s.AddSpace(0, 0, 1);
-
-         s.StartVerticalLay(wxEXPAND, 1);
-         {
-            s.AddSpace(0, 0, 1);
-
-            s.SetBorder(16);
-            oauthButton = s.AddButton(XXO("&Link Account"));
-            oauthButton->Bind(
-               wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
-            s.AddSpace(0, 0, 1);
-         }
-         s.EndVerticalLay();
-      }
-      s.EndHorizontalLay();
+      s.Prop(0).AddWindow(userPanel, wxEXPAND);
 
       s.SetBorder(0);
 
@@ -681,102 +649,23 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
    s.EndVerticalLay();
    s.EndInvisiblePanel();
 
-   UpdateUserData();
+   UpdateUserData(
+      GetOAuthService().HasRefreshToken() &&
+      !GetUserService().GetUserSlug().empty());
 }
 
-void ShareAudioDialog::InitialStatePanel::UpdateUserData()
+void ShareAudioDialog::InitialStatePanel::UpdateUserData(bool authorized)
 {
-   auto rootParent = root->GetParent();
-   rootParent->Freeze();
-   
-   auto layoutUpdater = finally(
-      [rootParent = root->GetParent(), this]()
-      {
-         oauthButton->Fit();
-         rootParent->Fit();
-         rootParent->Layout();
+   parent.mIsAuthorised = authorized;
 
-         rootParent->Thaw();
-
-         rootParent->Refresh();
-      });
-
-   auto& oauthService = GetOAuthService();
-
-   if (!oauthService.HasRefreshToken())
-   {
-      SetAnonymousState();
-      return;
-   }
-
-   if (!oauthService.HasAccessToken())
-      oauthService.ValidateAuth({});
-
-   auto& userService = GetUserService();
-
-   if (userService.GetUserSlug().empty())
-   {
-      SetAnonymousState();
-      return;
-   }
-
-   const auto displayName = userService.GetDisplayName();
-
-   if (!displayName.empty())
-      name->SetLabel(displayName);
-
-   const auto avatarPath = userService.GetAvatarPath();
-
-   if (!avatarPath.empty())
-      avatar->SetBitmap(avatarPath);
-   else
-      avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
-
-   oauthButton->SetLabel(XXO("&Unlink Account").Translation());
-
-   parent.mIsAuthorised = true;
-
-   anonInfoPanel->Hide();
-   authorizedInfoPanel->Show();
+   anonInfoPanel->Show(!authorized);
+   authorizedInfoPanel->Show(authorized);
 
    if (parent.mContinueButton != nullptr)
-      parent.mContinueButton->Enable(!trackTitle->GetValue().empty());
-}
+      parent.mContinueButton->Enable(
+         authorized && !trackTitle->GetValue().empty());
 
-void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
-{
-   auto& oauthService = GetOAuthService();
-
-   if (oauthService.HasAccessToken())
-      oauthService.UnlinkAccount();
-   else
-   {
-      OpenInDefaultBrowser(
-         { audacity::ToWXString(GetServiceConfig().GetOAuthLoginPage()) });
-
-#ifdef HAS_CUSTOM_URL_HANDLING
-      if (!URLSchemesRegistry::Get().IsURLHandlingSupported())
-#endif
-      {
-         LinkAccountDialog dlg(root);
-         dlg.ShowModal();
-      }
-   }
-}
-
-void ShareAudioDialog::InitialStatePanel::SetAnonymousState()
-{
-   parent.mIsAuthorised = false;
-   
-   name->SetLabel(XO("Anonymous").Translation());
-   avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
-   oauthButton->SetLabel(XXO("&Link Account").Translation());
-
-   anonInfoPanel->Show();
-   authorizedInfoPanel->Hide();
-
-   if (parent.mContinueButton != nullptr)
-      parent.mContinueButton->Enable(false);
+   root->GetParent()->Layout();
 }
 
 wxString ShareAudioDialog::InitialStatePanel::GetTrackTitle() const

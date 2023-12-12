@@ -14,6 +14,8 @@ set( SOURCES
    ui/ShareAudioToolbar.h
    ui/UserImage.cpp
    ui/UserImage.h
+   ui/UserPanel.cpp
+   ui/UserPanel.h
 
    AudioComModule.cpp
    AuthorizationHandler.cpp
