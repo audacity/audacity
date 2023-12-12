@@ -284,9 +284,10 @@ static WaveClip::Caches::RegisteredFactory sKeyW{ [](WaveClip &clip) {
    return std::make_unique<WaveClipWaveformCache>(clip.GetWidth());
 } };
 
-WaveClipWaveformCache &WaveClipWaveformCache::Get( const WaveClip &clip )
+WaveClipWaveformCache &
+WaveClipWaveformCache::Get(const WaveChannelInterval &clip)
 {
-   return const_cast< WaveClip& >( clip ) // Consider it mutable data
+   return const_cast<WaveClip&>(clip.GetWideClip()) // Consider it mutable data
       .Caches::Get< WaveClipWaveformCache >( sKeyW );
 }
 

@@ -427,7 +427,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
    const sampleCount *where = 0;
    // Get the cache from the leader clip, but pass the WaveChannelInterval
    // to use the correct channel in the cache
-   bool updated = WaveClipSpectrumCache::Get(clip.GetWideClip()).GetSpectrogram(
+   bool updated = WaveClipSpectrumCache::Get(clip).GetSpectrogram(
       clip, freq, settings, where, (size_t)hiddenMid.width, t0,
       averagePixelsPerSecond);
    auto nBins = settings.NBins();
@@ -478,7 +478,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
    }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-   auto &clipCache = WaveClipSpectrumCache::Get(clip.GetWideClip());
+   auto &clipCache = WaveClipSpectrumCache::Get(clip);
    auto &specPxCache = clipCache.mSpecPxCaches[clip.GetChannelIndex()];
    if (!updated && specPxCache &&
       ((int)specPxCache->len == hiddenMid.height * hiddenMid.width)

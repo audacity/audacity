@@ -745,7 +745,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * sampleRate / stretchRatio;
 
-   auto &clipCache = WaveClipWaveformCache::Get(clip.GetWideClip());
+   auto &clipCache = WaveClipWaveformCache::Get(clip);
 
    {
       bool showIndividualSamples = false;
