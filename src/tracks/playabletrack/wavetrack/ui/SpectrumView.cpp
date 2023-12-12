@@ -881,8 +881,7 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context, size_t channel,
       ->GetChannel(channel)->Intervals()
    ) {
       bool selected = selectedClip &&
-         WaveChannelView::WideClipContains(
-            *selectedClip, pInterval->GetWideClip());
+         WaveChannelView::WideClipContains(*selectedClip, pInterval->GetClip());
       DrawClipSpectrum(context, track, *pInterval, rect, mpSpectralData,
          selected);
    }
