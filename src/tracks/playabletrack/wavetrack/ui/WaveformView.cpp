@@ -742,7 +742,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * sampleRate / stretchRatio;
 
-   auto &clipCache = WaveClipWaveformCache::Get(clip.GetClip());
+   auto &clipCache = WaveClipWaveformCache::Get(clip.GetWideClip());
 
    {
       bool showIndividualSamples = false;
@@ -981,7 +981,8 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
       bool selected = selectedClip &&
-         WaveChannelView::WideClipContains(*selectedClip, pInterval->GetClip());
+         WaveChannelView::WideClipContains(
+            *selectedClip, pInterval->GetWideClip());
       DrawClipWaveform(context, track, *pInterval, rect, dB, muted, selected);
    }
    DrawBoldBoundaries(context, track, rect);

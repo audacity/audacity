@@ -77,7 +77,7 @@ public:
    {}
    ~WaveChannelInterval() override;
 
-   const WaveClip &GetClip() const { return mWideClip; }
+   const WaveClip &GetWideClip() const { return mWideClip; }
    const Envelope &GetEnvelope() const;
    size_t GetChannelIndex() const { return miChannel; }
 
