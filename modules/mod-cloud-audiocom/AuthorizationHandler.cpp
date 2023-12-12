@@ -14,8 +14,8 @@
 
 #include "OAuthService.h"
 
-#include "LinkFailedDialog.h"
-#include "LinkSucceededDialog.h"
+#include "ui/LinkFailedDialog.h"
+#include "ui/LinkSucceededDialog.h"
 
 namespace cloud::audiocom
 {
