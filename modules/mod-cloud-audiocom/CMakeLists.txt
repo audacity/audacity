@@ -20,9 +20,9 @@ set( SOURCES
    AuthorizationHandler.h
 )
 
-if(${_OPT}has_url_schemes_support})
+if(${_OPT}has_url_schemes_support)
    list(APPEND SOURCES
-      ui/LinkURLHandler.cpp
+      LinkURLHandler.cpp
    )
 endif()
 
