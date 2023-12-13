@@ -2,8 +2,9 @@ set( TARGET mod-cloud-audiocom )
 
 set( SOURCES
    menus/Menus.cpp
-   ui/LinkAccountDialog.cpp
-   ui/LinkAccountDialog.h
+   ui/AudioComSyncUI.cpp
+   ui/CloudProjectPropertiesDialog.cpp
+   ui/CloudProjectPropertiesDialog.h
    ui/LinkWithTokenDialog.cpp
    ui/LinkWithTokenDialog.h
    ui/LinkFailedDialog.cpp
