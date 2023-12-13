@@ -140,8 +140,14 @@ struct AudioIOEvent {
    }
 };
 
+using MeterablePlaybackSequence = std::pair<
+   std::shared_ptr<const PlayableSequence>,
+   MeterPtrs
+>;
+using MeterablePlaybackSequences = std::vector<MeterablePlaybackSequence>;
+
 struct AUDIO_IO_API TransportSequences final {
-   ConstPlayableSequences playbackSequences;
+   MeterablePlaybackSequences playbackSequences;
    RecordableSequences captureSequences;
    std::vector<std::shared_ptr<const OtherPlayableSequence>>
       otherPlayableSequences;
@@ -331,7 +337,7 @@ public:
    RecordableSequences mCaptureSequences;
    /*! Read by worker threads but unchanging during playback */
    RingBuffers mPlaybackBuffers;
-   ConstPlayableSequences      mPlaybackSequences;
+   MeterablePlaybackSequences mPlaybackSequences;
    // Old gain is used in playback in linearly interpolating
    // the gain.
    std::vector<OldChannelGains> mOldChannelGains;
@@ -719,6 +725,8 @@ private:
 
    //! dispatch timer events on the main thread
    void Notify() override;
+
+   void ResetTrackMeters();
 
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;

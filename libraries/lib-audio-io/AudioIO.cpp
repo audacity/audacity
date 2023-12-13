@@ -112,7 +112,7 @@ AudioIO *AudioIO::Get()
 
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
-      const ConstPlayableSequences &playbackSequences,
+      const MeterablePlaybackSequences &playbackSequences,
       unsigned numPlaybackChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
@@ -124,7 +124,7 @@ struct AudioIoCallback::TransportState {
          // The following adds a new effect processor for each logical sequence.
          for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
             // An array only of non-null leaders should be given to us
-            const auto vt = playbackSequences[i].get();
+            const auto vt = playbackSequences[i].first.get();
             const auto pGroup = vt ? vt->FindChannelGroup() : nullptr;
             if (!(pGroup && pGroup->IsLeader())) {
                assert(false);
@@ -802,7 +802,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // precondition
    assert(std::all_of(
       sequences.playbackSequences.begin(), sequences.playbackSequences.end(),
-      [](const auto &pSequence){
+      [](const auto &pair){
+         auto &[pSequence, _] = pair;
          const auto pGroup =
             pSequence ? pSequence->FindChannelGroup() : nullptr;
          return pGroup && pGroup->IsLeader(); }
@@ -885,6 +886,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    auto cleanupSequences = finally([&]{
       if (!commit) {
          // Don't keep unnecessary shared pointers to sequences
+         ResetTrackMeters();
          mPlaybackSequences.clear();
          mCaptureSequences.clear();
          for(auto &ext : Extensions())
@@ -947,6 +949,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // Call this only after reassignment of mRate that might happen in the
    // previous call.
    mPlaybackSchedule.GetPolicy().Initialize( mPlaybackSchedule, mRate );
+
+   ResetTrackMeters();
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    auto range = Extensions();
@@ -1188,7 +1192,7 @@ bool AudioIO::AllocateBuffers(
             const size_t totalWidth = std::accumulate(
                mPlaybackSequences.begin(), mPlaybackSequences.end(), 0,
                [](size_t acc, const auto &pSequence){
-                  return acc + pSequence->NChannels(); });
+                  return acc + pSequence.first->NChannels(); });
 
             // mPlaybackBuffers buffers correspond many-to-one with
             // mPlaybackSequences
@@ -1232,7 +1236,7 @@ bool AudioIO::AllocateBuffers(
             mOldChannelGains.resize(mPlaybackSequences.size());
             size_t iBuffer = 0;
             for (unsigned int i = 0; i < mPlaybackSequences.size(); i++) {
-               const auto &pSequence = mPlaybackSequences[i];
+               const auto &pSequence = mPlaybackSequences[i].first;
                // Bug 1763 - We must fade in from zero to avoid a click on starting.
                mOldChannelGains[i][0] = 0.0;
                mOldChannelGains[i][1] = 0.0;
@@ -1632,6 +1636,7 @@ void AudioIO::StopStream()
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
 
+   ResetTrackMeters();
    mPlaybackSequences.clear();
    mCaptureSequences.clear();
 
@@ -1980,7 +1985,8 @@ bool AudioIO::ProcessPlaybackSlices(
                produced = mixer->Process(toProduce);
             //wxASSERT(produced <= toProduce);
             // Copy (non-interleaved) mixer outputs to one or more ring buffers
-            const auto nChannels = mPlaybackSequences[iSequence++]->NChannels();
+            const auto nChannels =
+               mPlaybackSequences[iSequence++].first->NChannels();
             for (size_t j = 0; j < nChannels; ++j) {
                auto warpedSamples = mixer->GetBuffer(j);
                const auto put = mPlaybackBuffers[iBuffer++]->Put(
@@ -2022,7 +2028,7 @@ void AudioIO::TransformPlayBuffers(
    const auto numPlaybackSequences = mPlaybackSequences.size();
    // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
-   for (const auto vt : mPlaybackSequences) {
+   for (const auto [vt, _] : mPlaybackSequences) {
       if (!vt)
          continue;
       const auto pGroup = vt->FindChannelGroup();
@@ -2463,7 +2469,7 @@ bool AudioIoCallback::FillOutputBuffers(
    // mPlaybackBuffers buffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
    for (unsigned tt = 0; tt < numPlaybackSequences; ++tt) {
-      auto vt = mPlaybackSequences[tt].get();
+      auto vt = mPlaybackSequences[tt].first.get();
       const auto width = vt->NChannels();
 
       // IF mono THEN clear 'the other' channel.
@@ -2805,7 +2811,7 @@ unsigned AudioIoCallback::CountSoloingSequences(){
    // MOVE_TO: CountSoloingSequences() function
    unsigned numSolo = 0;
    for (unsigned t = 0; t < numPlaybackSequences; t++ )
-      if (mPlaybackSequences[t]->GetSolo())
+      if (mPlaybackSequences[t].first->GetSolo())
          numSolo++;
    auto range = Extensions();
    numSolo += std::accumulate(range.begin(), range.end(), 0,
@@ -2839,7 +2845,7 @@ bool AudioIoCallback::SequenceHasBeenFadedOut(const OldChannelGains &gains)
 bool AudioIoCallback::AllSequencesAlreadySilent()
 {
    for (size_t ii = 0, nn = mPlaybackSequences.size(); ii < nn; ++ii) {
-      auto vt = mPlaybackSequences[ii];
+      auto vt = mPlaybackSequences[ii].first;
       const auto &oldGains = mOldChannelGains[ii];
       if (!(SequenceShouldBeSilent(*vt) && SequenceHasBeenFadedOut(oldGains)))
          return false;
@@ -3110,6 +3116,12 @@ bool AudioIO::IsCapturing() const
       GetNumCaptureChannels() > 0 &&
       mPlaybackSchedule.GetSequenceTime() >=
          mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
+}
+
+void AudioIO::ResetTrackMeters()
+{
+   for (auto &[_, meters] : mPlaybackSequences)
+      ResetMeters(meters, GetRate(), true);
 }
 
 BoolSetting SoundActivatedRecord{ "/AudioIO/SoundActivatedRecord", false };
