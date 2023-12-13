@@ -8,7 +8,7 @@
   Dmitry Vedenko
 
 **********************************************************************/
-#include "LinkAccountDialog.h"
+#include "LinkWithTokenDialog.h"
 
 #include <wx/button.h>
 #include <wx/textctrl.h>
@@ -28,7 +28,7 @@
 
 namespace cloud::audiocom
 {
-LinkAccountDialog::LinkAccountDialog(wxWindow* parent)
+LinkWithTokenDialog::LinkWithTokenDialog(wxWindow* parent)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Link account"), wxDefaultPosition, { 480, -1 },
          wxDEFAULT_DIALOG_STYLE)
@@ -78,16 +78,16 @@ LinkAccountDialog::LinkAccountDialog(wxWindow* parent)
    Centre();
 }
 
-LinkAccountDialog::~LinkAccountDialog()
+LinkWithTokenDialog::~LinkWithTokenDialog()
 {
    GetAuthorizationHandler().PopSuppressDialogs();
 }
 
-void LinkAccountDialog::OnContinue()
+void LinkWithTokenDialog::OnContinue()
 {
    mContinueButton->Disable();
 
-   wxWeakRef<LinkAccountDialog> weakDialog(this);
+   wxWeakRef<LinkWithTokenDialog> weakDialog(this);
    
    GetOAuthService().HandleLinkURI(
       audacity::ToUTF8(mToken->GetValue()),
@@ -121,7 +121,7 @@ void LinkAccountDialog::OnContinue()
       });
 }
 
-void LinkAccountDialog::OnTextChanged()
+void LinkWithTokenDialog::OnTextChanged()
 {
    mContinueButton->Enable(!mToken->GetValue().empty());
 }
@@ -136,7 +136,7 @@ namespace {
 // Define our extra menu item
 void OnLinkAccount(const CommandContext&)
 {
-   cloud::audiocom::LinkAccountDialog dialog;
+   cloud::audiocom::LinkWithTokenDialog dialog;
    dialog.ShowModal();
 }
 

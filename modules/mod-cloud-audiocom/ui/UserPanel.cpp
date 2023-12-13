@@ -21,7 +21,7 @@
 #   include "URLSchemesRegistry.h"
 #endif
 
-#include "LinkAccountDialog.h"
+#include "LinkWithTokenDialog.h"
 
 #include "ServiceConfig.h"
 #include "OAuthService.h"
@@ -146,7 +146,7 @@ void UserPanel::OnLinkButtonPressed()
       if (!URLSchemesRegistry::Get().IsURLHandlingSupported())
 #endif
       {
-         LinkAccountDialog dlg(this);
+         LinkWithTokenDialog dlg(this);
          dlg.ShowModal();
       }
    }

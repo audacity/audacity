@@ -4,6 +4,8 @@ set( SOURCES
    menus/Menus.cpp
    ui/LinkAccountDialog.cpp
    ui/LinkAccountDialog.h
+   ui/LinkWithTokenDialog.cpp
+   ui/LinkWithTokenDialog.h
    ui/LinkFailedDialog.cpp
    ui/LinkFailedDialog.h
    ui/LinkSucceededDialog.cpp
