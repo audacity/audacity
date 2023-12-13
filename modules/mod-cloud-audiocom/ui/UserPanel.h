@@ -42,7 +42,10 @@ public:
 
    ~UserPanel() override;
 
+   bool IsAuthorized() const;
+
 private:
+   void OnStateChaged(bool isAuthorized);
    void UpdateUserData();
    void OnLinkButtonPressed();
    void SetAnonymousState();
@@ -56,6 +59,8 @@ private:
    wxButton* mLinkButton {};
 
    Observer::Subscription mUserDataChangedSubscription;
+
+   bool mIsAuthorized { false };
 }; // class UserPanel
 
 } // namespace cloud::audiocom

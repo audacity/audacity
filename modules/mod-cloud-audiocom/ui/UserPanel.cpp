@@ -29,7 +29,6 @@
 
 #include "CodeConversions.h"
 
-#include "ShuttleGui.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
 
@@ -80,6 +79,20 @@ UserPanel::UserPanel(
 
 UserPanel::~UserPanel() = default;
 
+bool UserPanel::IsAuthorized() const
+{
+   return mIsAuthorized;
+}
+
+void UserPanel::OnStateChaged(bool isAuthorized)
+{
+   if (mIsAuthorized == isAuthorized)
+      return;
+
+   mIsAuthorized = isAuthorized;
+   Publish(UserPanelStateChangedMessage { isAuthorized });
+}
+
 void UserPanel::UpdateUserData()
 {
    Freeze();
@@ -128,7 +141,7 @@ void UserPanel::UpdateUserData()
 
    mLinkButton->SetLabel(XXO("&Unlink Account").Translation());
 
-   Publish(UserPanelStateChangedMessage { true });
+   OnStateChaged(true);
 }
 
 void UserPanel::OnLinkButtonPressed()
@@ -158,7 +171,7 @@ void UserPanel::SetAnonymousState()
    mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
    mLinkButton->SetLabel(XXO("&Link Account").Translation());
 
-   Publish(UserPanelStateChangedMessage { false });
+   OnStateChaged(false);
 }
 
 } // namespace cloud::audiocom
