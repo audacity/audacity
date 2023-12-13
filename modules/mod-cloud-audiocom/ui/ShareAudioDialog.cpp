@@ -662,8 +662,7 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData(bool authorized)
    authorizedInfoPanel->Show(authorized);
 
    if (parent.mContinueButton != nullptr)
-      parent.mContinueButton->Enable(
-         authorized && !trackTitle->GetValue().empty());
+      parent.mContinueButton->Enable(authorized && !GetTrackTitle().empty());
 
    root->GetParent()->Layout();
 }
