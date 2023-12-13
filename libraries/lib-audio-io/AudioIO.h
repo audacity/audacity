@@ -141,8 +141,14 @@ struct AudioIOEvent {
    }
 };
 
+using MeterablePlaybackSequence = std::pair<
+   std::shared_ptr<const PlayableSequence>,
+   MeterPtrs
+>;
+using MeterablePlaybackSequences = std::vector<MeterablePlaybackSequence>;
+
 struct AUDIO_IO_API TransportSequences final {
-   ConstPlayableSequences playbackSequences;
+   MeterablePlaybackSequences playbackSequences;
    RecordableSequences captureSequences;
    std::vector<std::shared_ptr<const OtherPlayableSequence>>
       otherPlayableSequences;
@@ -314,6 +320,8 @@ public:
    //! @invariant `mpSequence && mpSequence->FindChannelGroup()`
    struct AUDIO_IO_API Track {
       const std::shared_ptr<const PlayableSequence> mpSequence;
+      const MeterPtrs mMeters;
+
       std::unique_ptr<Mixer> mpMixer{};
       std::unique_ptr<PlaybackState> mpState;
       /*! Read by worker threads but unchanging during playback */
@@ -322,7 +330,7 @@ public:
       bool mHasLatency{ false };
 
       //! @pre `seq && seq->FindChannelGroup()`
-      Track(const std::shared_ptr<const PlayableSequence> &seq);
+      Track(const MeterablePlaybackSequence &seq);
       ~Track();
       void ResetData();
    };
@@ -725,6 +733,8 @@ private:
 
    //! dispatch timer events on the main thread
    void Notify() override;
+
+   void ResetTrackMeters();
 
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;

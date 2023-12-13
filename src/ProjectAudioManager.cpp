@@ -747,13 +747,12 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          transportTracks =
             MakeTransportTracks(TrackList::Get( *p ), false, true);
          for (const auto &wt : existingTracks) {
+            auto begin = transportTracks.playbackSequences.begin();
             auto end = transportTracks.playbackSequences.end();
-            auto it = std::find_if(
-               transportTracks.playbackSequences.begin(), end,
-               [&wt](const auto& playbackSequence) {
-                  return playbackSequence->FindChannelGroup() ==
-                         wt->FindChannelGroup();
-               });
+            auto it = find_if(begin, end, [&wt](const auto& meterableSequence) {
+               return meterableSequence.first->FindChannelGroup() ==
+                  wt->FindChannelGroup();
+            });
             if (it != end)
                transportTracks.playbackSequences.erase(it);
          }
@@ -852,7 +851,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             const auto &range = transportSequences.playbackSequences;
             bool prerollTrack = any_of(range.begin(), range.end(),
                [&](const auto &pSequence){
-                  return shared.get() == pSequence->FindChannelGroup(); });
+                  return shared.get() == pSequence.first->FindChannelGroup(); });
             if (prerollTrack)
                transportSequences.prerollSequences.push_back(shared);
 

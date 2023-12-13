@@ -110,11 +110,11 @@ AudioIO *AudioIO::Get()
    return static_cast< AudioIO* >( AudioIOBase::Get() );
 }
 
-AudioIoCallback::Track::Track(
-   const std::shared_ptr<const PlayableSequence> &seq
-)  : mpSequence{ seq }
+AudioIoCallback::Track::Track(const MeterablePlaybackSequence &seq)
+   : mpSequence{ seq.first }
+   , mMeters{ seq.second }
 {
-   assert(seq && seq->FindChannelGroup());
+   assert(seq.first && seq.first->FindChannelGroup());
 }
 
 AudioIoCallback::Track::~Track() = default;
@@ -818,7 +818,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // precondition
    assert(std::all_of(
       sequences.playbackSequences.begin(), sequences.playbackSequences.end(),
-      [](const auto &pSequence){
+      [](const auto &pair){
+         auto &[pSequence, _] = pair;
          const auto pGroup =
             pSequence ? pSequence->FindChannelGroup() : nullptr;
          return pGroup; }
@@ -905,6 +906,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    auto cleanupSequences = finally([&]{
       if (!commit) {
          // Don't keep unnecessary shared pointers to sequences
+         ResetTrackMeters();
          mPlaybackTracks.clear();
          mCaptureSequences.clear();
          for(auto &ext : Extensions())
@@ -973,6 +975,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    policy.Initialize(mPlaybackSchedule, state, mRate);
    // Initialize some state for scrubbing, or looping, etc.
    state.mpMessage = policy.PollUser(mPlaybackSchedule);
+
+   ResetTrackMeters();
 
    auto range = Extensions();
    successAudio = successAudio &&
@@ -1653,6 +1657,7 @@ void AudioIO::StopStream()
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
 
+   ResetTrackMeters();
    mPlaybackTracks.clear();
    mCaptureSequences.clear();
 
@@ -3272,6 +3277,12 @@ bool AudioIO::IsCapturing() const
       GetNumCaptureChannels() > 0 &&
       mPlaybackSchedule.GetSequenceTime() >=
          mPlaybackSchedule.mInitT0 + mRecordingSchedule.mPreRoll;
+}
+
+void AudioIO::ResetTrackMeters()
+{
+   for (auto &track : mPlaybackTracks)
+      ResetMeters(track.mMeters, GetRate(), true);
 }
 
 BoolSetting SoundActivatedRecord{ "/AudioIO/SoundActivatedRecord", false };

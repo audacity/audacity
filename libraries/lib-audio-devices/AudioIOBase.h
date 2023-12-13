@@ -305,7 +305,8 @@ protected:
     */
    static int getPlayDevIndex(const wxString &devName = {});
 
-   static void ResetMeters(MeterPtrs &meters, double rate, bool resetClipping);
+   static void ResetMeters(const MeterPtrs &meters, double rate,
+      bool resetClipping);
 
    /** \brief Array of audio sample rates to try to use
     *

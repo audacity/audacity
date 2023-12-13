@@ -334,7 +334,7 @@ void OnPunchAndRoll(const CommandContext &context)
    else
       // play recording tracks only
       for (auto &pTrack : tracks)
-         transportTracks.playbackSequences.push_back(pTrack);
+         transportTracks.playbackSequences.push_back({ pTrack, {} });
       
    // Unlike with the usual recording, a track may be chosen both for playback
    // and recording.

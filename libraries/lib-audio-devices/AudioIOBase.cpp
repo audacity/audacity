@@ -925,7 +925,7 @@ auto AudioIOBase::GetAllDeviceInfo() -> std::vector<AudioIODiagnostics>
    return result;
 }
 
-void AudioIOBase::ResetMeters(MeterPtrs &meters,
+void AudioIOBase::ResetMeters(const MeterPtrs &meters,
    double rate, bool resetClipping)
 {
    for (const auto &wMeter : meters)

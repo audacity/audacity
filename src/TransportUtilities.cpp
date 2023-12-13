@@ -214,7 +214,8 @@ TransportSequences MakeTransportTracks(
          + (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
          result.playbackSequences.push_back(
-            StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+            { StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()),
+               {} });
    }
    if (nonWaveToo) {
       const auto range = trackList.Any<const PlayableTrack>() +
