@@ -247,18 +247,8 @@ void PopulatePreferences()
    // User requested that the preferences be completely reset
    if (resetPrefs)
    {
-      // pop up a dialogue
-      auto prompt = XO(
-"Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset.");
-      int action = AudacityMessageBox(
-         prompt,
-         XO("Reset Audacity Preferences"),
-         wxYES_NO, NULL);
-      if (action == wxYES)   // reset
-      {
-         ResetPreferences();
-         writeLang = true;
-      }
+      ResetPreferences();
+      writeLang = true;
    }
 
    // Save the specified language
