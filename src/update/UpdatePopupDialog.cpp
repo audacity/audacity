@@ -16,6 +16,7 @@
 #include <wx/debug.h>
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
+#include <wx/display.h>
 
 enum { DontShowID = wxID_HIGHEST + 1 };
 
@@ -64,6 +65,11 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, const VersionPatch& vers
     Layout();
     Fit();
     Center();
+
+    wxSize sz = GetSize();
+    const auto maxHeight = std::max(1, wxDisplay().GetGeometry().GetHeight() - 100);
+    const auto minHeight = std::min({ sz.y, 600, maxHeight });
+    SetSizeHints(sz.x, minHeight, wxDefaultCoord, maxHeight);
 }
 
 UpdatePopupDialog::~UpdatePopupDialog()
