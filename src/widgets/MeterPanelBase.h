@@ -39,7 +39,7 @@ public:
    virtual void Clear() = 0;
    virtual void Reset(double sampleRate, bool resetClipping) = 0;
    virtual void Update(unsigned numChannels,
-      unsigned long numFrames, const float *sampleData) = 0;
+      unsigned long numFrames, const float *sampleData, bool interleaved) = 0;
    virtual bool IsDisabled() const = 0;
 
 private:

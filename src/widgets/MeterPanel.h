@@ -140,17 +140,13 @@ class AUDACITY_DLL_API MeterPanel final
     * recorded.
     * \param numFrames The number of frames (samples) in this data block. It is
     * assumed that there are the same number of frames in each channel.
-    * \param sampleData The audio data itself, as interleaved samples. So
-    * indexing through the array we get the first sample of channel, first
-    * sample of channel 2 etc up to the first sample of channel (numChannels),
-    * then the second sample of channel 1, second sample of channel 2, and so
-    * to the second sample of channel (numChannels). The last sample in the
-    * array will be the (numFrames) sample for channel (numChannels).
+    * \param sampleData The audio data itself
     *
     * The second overload is for ease of use in MixerBoard.
     */
    void Update(unsigned numChannels,
-      unsigned long numFrames, const float *sampleData) override;
+      unsigned long numFrames, const float *sampleData, bool interleaved)
+   override;
 
    // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
    //void UpdateDisplay(int numChannels, int numFrames,

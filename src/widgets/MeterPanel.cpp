@@ -836,23 +836,6 @@ void MeterPanel::Reset(double sampleRate, bool resetClipping)
    Refresh(false);
 }
 
-static float floatMax(float a, float b)
-{
-   return a>b? a: b;
-}
-
-/* Unused as yet.
-static int intmin(int a, int b)
-{
-   return a<b? a: b;
-}
-*/
-
-static int intmax(int a, int b)
-{
-   return a>b? a: b;
-}
-
 static float ClipZeroToOne(float z)
 {
    if (z > 1.0)
@@ -873,39 +856,43 @@ static float ToDB(float v, float range)
    return ClipZeroToOne((db + range) / range);
 }
 
-void MeterPanel::Update(
-   unsigned numChannels, unsigned long numFrames, const float *sampleData)
+void MeterPanel::Update(unsigned numChannels,
+   unsigned long numFrames, const float *sampleData, bool interleaved)
 {
    auto sptr = sampleData;
+   const auto majorStep = (interleaved ? numChannels : 1);
+   const auto minorStep = (interleaved ? 1 : numFrames);
    auto num = std::min(numChannels, mNumBars);
    MeterUpdateMsg msg;
 
    memset(&msg, 0, sizeof(msg));
    msg.numFrames = numFrames;
 
-   for(int i=0; i<numFrames; i++) {
-      for(unsigned int j=0; j<num; j++) {
-         msg.peak[j] = floatMax(msg.peak[j], fabs(sptr[j]));
-         msg.rms[j] += sptr[j]*sptr[j];
+   for (size_t i = 0; i < numFrames; ++i, sptr += majorStep) {
+      for (size_t j = 0; j < num; ++j) {
+         const auto sample = sptr[j * minorStep];
+         msg.peak[j] = std::max(msg.peak[j], fabs(sample));
+         msg.rms[j] += sample * sample;
 
          // In addition to looking for mNumPeakSamplesToClip peaked
          // samples in a row, also send the number of peaked samples
          // at the head and tail, in case there's a run of peaked samples
          // that crosses block boundaries
-         if (fabs(sptr[j])>=MAX_AUDIO) {
-            if (msg.headPeakCount[j]==i)
-               msg.headPeakCount[j]++;
-            msg.tailPeakCount[j]++;
+         if (fabs(sample) >= MAX_AUDIO) {
+            if (msg.headPeakCount[j] == i)
+               ++msg.headPeakCount[j];
+            ++msg.tailPeakCount[j];
             if (msg.tailPeakCount[j] > mNumPeakSamplesToClip)
                msg.clipping[j] = true;
          }
          else
             msg.tailPeakCount[j] = 0;
       }
-      sptr += numChannels;
    }
-   for(unsigned int j=0; j<mNumBars; j++)
-      msg.rms[j] = sqrt(msg.rms[j]/numFrames);
+   for (unsigned int j = 0; j < mNumBars; ++j) {
+      auto &rms = msg.rms[j];
+      rms = sqrt(rms / numFrames);
+   }
 
    mQueue.Put(msg);
 }
@@ -993,14 +980,13 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
          if (mDecay) {
             if (mDB) {
                float decayAmount = mDecayRate * deltaT / mDBRange;
-               mBar[j].peak = floatMax(msg.peak[j],
-                                       mBar[j].peak - decayAmount);
+               mBar[j].peak = std::max(msg.peak[j], mBar[j].peak - decayAmount);
             }
             else {
                double decayAmount = mDecayRate * deltaT;
                double decayFactor = DB_TO_LINEAR(-decayAmount);
-               mBar[j].peak = floatMax(msg.peak[j],
-                                       mBar[j].peak * decayFactor);
+               mBar[j].peak =
+                  std::max<float>(msg.peak[j], mBar[j].peak * decayFactor);
             }
          }
          else
@@ -1281,7 +1267,7 @@ void MeterPanel::HandleLayout(wxDC &dc)
    case VerticalStereo:
       // Determine required width of each side;
       lside = ltxtWidth + gap;
-      rside = intmax(mRulerWidth, rtxtWidth);
+      rside = std::max(mRulerWidth, rtxtWidth);
 
       // left is now the right edge of the icon or L label
       left = lside;
@@ -1388,7 +1374,7 @@ void MeterPanel::HandleLayout(wxDC &dc)
       mRightTextPos = wxPoint(left, (height * 3 / 4) - rtxtHeight / 2);
 
       // Add width of widest of the L/R characters
-      left += intmax(ltxtWidth, rtxtWidth); //, iconWidth);
+      left += std::max(ltxtWidth, rtxtWidth); //, iconWidth);
 
       mSliderPos = wxPoint{ left - gap, 0 };
 
@@ -1433,7 +1419,7 @@ void MeterPanel::HandleLayout(wxDC &dc)
       mRightTextPos = wxPoint(left, (height * 3 / 4) - (ltxtHeight / 2));
 
       // Add width of widest of the L/R characters
-      left += intmax(ltxtWidth, rtxtWidth);
+      left += std::max(ltxtWidth, rtxtWidth);
 
       mSliderPos = wxPoint{ left - gap, 0 };
 
