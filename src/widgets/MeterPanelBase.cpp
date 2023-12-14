@@ -36,10 +36,11 @@ struct MeterPanelBase::Forwarder : Meter
          mOwner->Reset( sampleRate, resetClipping );
    }
    void Update(unsigned numChannels,
-      unsigned long numFrames, const float *sampleData) override
+      unsigned long numFrames, const float *sampleData, bool interleaved)
+   override
    {
       if (mOwner)
-         mOwner->Update(numChannels, numFrames, sampleData);
+         mOwner->Update(numChannels, numFrames, sampleData, interleaved);
    }
    bool IsDisabled() const override
    {

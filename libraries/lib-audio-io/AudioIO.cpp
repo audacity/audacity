@@ -2788,7 +2788,8 @@ void AudioIoCallback::SendVuInputMeterData(
    const auto numCaptureChannels = mNumCaptureChannels;
    for (const auto &wMeter : mMasterInputMeters)
       if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
-         pMeter->Update(numCaptureChannels, framesPerBuffer, inputSamples);
+         pMeter->Update(numCaptureChannels,
+            framesPerBuffer, inputSamples, true);
 }
 
 /* Send data to playback VU meter if applicable */
@@ -2802,7 +2803,7 @@ void AudioIoCallback::SendVuOutputMeterData(
    for (const auto &wMeter : mMasterOutputMeters)
       if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
          pMeter->Update(numPlaybackChannels,
-            framesPerBuffer, outputMeterFloats);
+            framesPerBuffer, outputMeterFloats, true);
 }
 
 unsigned AudioIoCallback::CountSoloingSequences(){

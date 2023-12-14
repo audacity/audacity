@@ -19,7 +19,7 @@ public:
 
    //! This member function will be called from a low-latency thread.
    virtual void Update(unsigned numChannels,
-      unsigned long numFrames, const float *sampleData) = 0;
+      unsigned long numFrames, const float *sampleData, bool interleaved) = 0;
 
    //! This member function will be called from a low-latency thread.
    virtual bool IsDisabled() const = 0;
