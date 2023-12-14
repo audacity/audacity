@@ -20,6 +20,7 @@
 #include "CommandContext.h"
 #include "MenuRegistry.h"
 #include "../toolbars/ControlToolBar.h"
+#include "../toolbars/SelectionBar.h"
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
@@ -593,6 +594,13 @@ void OnSelectionRestore(const CommandContext &context)
    ProjectHistory::Get( project ).ModifyState(false);
 }
 
+void OnSelStrToClipboard(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &selectionBar = SelectionBar::Get( project );
+   selectionBar.SelectionToClipboard();
+}
+
 // Handler state:
 bool mCursorPositionHasBeenStored{ false };
 double mCursorPositionStored{ 0.0 };
@@ -1009,6 +1017,12 @@ auto SelectMenu()
                // Audacity had 'Retrieve Regio&n' here previously.
                Command( wxT("SelRestore"), XXO("Retrieve Selectio&n"),
                   FN(OnSelectionRestore), TracksExistFlag() )
+            ),
+
+            Section("",
+               Command(wxT("SelStrToClipboard"), XXO("Selection String to &Clipboard"),
+                  FN(OnSelStrToClipboard), AlwaysEnabledFlag,
+                  Options{}.LongName(XO("Selection Time Range String to Clipboard")))
             )
          )
 
