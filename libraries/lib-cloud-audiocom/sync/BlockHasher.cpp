@@ -36,27 +36,28 @@ public:
        , mOnComplete { std::move(onComplete) }
    {
       mResults.reserve(mThreadsCount);
-      mTasksLeft.store(mThreadsCount, std::memory_order_release);
 
+      const auto blocksCount = blocks.size();
       // Try to add no more that 1 extra block per thread
       const size_t blockPerThread = blocks.size() / mThreadsCount + 1;
 
       for (size_t i = 0; i < mThreadsCount; ++i)
       {
-         const auto next = i + 1;
-
-         const size_t startIndex = i * blockPerThread;
+         const size_t startIndex = i;
 
          if (startIndex >= blocks.size())
             break;
 
-         const size_t endIndex = std::min(next * blockPerThread, blocks.size());
+         mTasksLeft.fetch_add(1, std::memory_order_seq_cst);
 
-         const auto start = blocks.begin() + startIndex;
-         const auto end = blocks.begin() + endIndex;
+         std::vector<LockedBlock> threadBlocks;
+         threadBlocks.reserve(blockPerThread);
+
+         for (size_t j = startIndex; j < blocksCount; j += mThreadsCount)
+            threadBlocks.emplace_back(blocks[j]);
             
          mResults.emplace_back(std::async(std::launch::async,
-            [this, threadBlocks = std::vector(start, end ), i]()
+            [this, threadBlocks = std::move(threadBlocks)]()
             {
                Result result;
                SampleData sampleData;
@@ -64,7 +65,7 @@ public:
                for (const auto& block : threadBlocks)
                   result.emplace(block.Id, ComputeHash(sampleData, block));
 
-               if (mTasksLeft.fetch_sub(1, std::memory_order_acq_rel) == 1)
+               if (mTasksLeft.fetch_sub(1, std::memory_order_seq_cst) == 1)
                   NotifyReady();
 
                return result;
