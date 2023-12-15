@@ -45,6 +45,43 @@ CloudSyncService& CloudSyncService::Get()
 
 void CloudSyncService::SaveToCloud(AudacityProject& project)
 {
+   auto& cloudExtension = sync::ProjectCloudExtension::Get(project);
+
+   if (cloudExtension.IsCloudProject())
+   {
+      ProjectFileIO::Get(project).UpdateSaved(nullptr);
+      return;
+   }
+
+   if (!UI::Get())
+      return;
+
+   auto& ui = UI::Get()();
+
+   auto placement = ProjectFramePlacement(&project);
+   const auto result = ui.OnHandleSave(project, *placement);
+
+   if (!result.SaveToCloud)
+      return;
+
+   DoCloudSave(project, result.Title);
+}
+
+bool CloudSyncService::DoCloudSave(
+   AudacityProject& project, const std::string& title)
+{
+   auto& cloudExtension = sync::ProjectCloudExtension::Get(project);
+   cloudExtension.MarkPendingCloudSave();
+
+   const auto dir = CloudProjectsSavePath.Read();
+   FileNames::MkDir(dir);
+
+   project.SetProjectName(audacity::ToWXString(title));
+
+   const wxString filePath =
+      sync::MakeSafeProjectPath(dir, audacity::ToWXString(title));
+
+   return ProjectFileIO::Get(project).SaveProject(filePath, nullptr);
 }
 
 void CloudSyncService::OnLoad(AudacityProject& project)
@@ -68,17 +105,7 @@ bool CloudSyncService::OnSave(AudacityProject& project, bool fromTempProject)
    if (!result.SaveToCloud)
       return false;
 
-   auto& cloudExtension = sync::ProjectCloudExtension::Get(project);
-   cloudExtension.MarkPendingCloudSave();
-
-   const auto dir = CloudProjectsSavePath.Read();
-   FileNames::MkDir(dir);
-
-   project.SetProjectName(audacity::ToWXString(result.Title));
-
-   const wxString filePath = sync::MakeSafeProjectPath(dir, audacity::ToWXString(result.Title));
-
-   return ProjectFileIO::Get(project).SaveProject(filePath, nullptr);
+   return DoCloudSave(project, result.Title);
 }
 
 bool CloudSyncService::OnClose(AudacityProject& project)

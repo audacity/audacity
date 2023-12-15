@@ -39,9 +39,9 @@ class CloudProjectPropertiesDialog final : public wxDialogWrapper
    ~CloudProjectPropertiesDialog() override;
 
 public:
-   static FirstSaveResult Show(
+   static SaveResult Show(
       const ServiceConfig& serviceConfig, OAuthService& authService,
-      UserService& userService, const wxString& projectName, wxWindow* parent);
+      UserService& userService, const wxString& projectName, wxWindow* parent, bool allowLocalSave);
 
 private:
    void LayoutControls();

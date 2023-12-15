@@ -73,12 +73,14 @@ CloudProjectPropertiesDialog::~CloudProjectPropertiesDialog()
    GetAuthorizationHandler().PopSuppressDialogs();
 }
 
-FirstSaveResult CloudProjectPropertiesDialog::Show(
+SaveResult CloudProjectPropertiesDialog::Show(
    const ServiceConfig& serviceConfig, OAuthService& authService,
-   UserService& userService, const wxString& projectName, wxWindow* parent)
+   UserService& userService, const wxString& projectName, wxWindow* parent, bool allowLocalSave)
 {
    CloudProjectPropertiesDialog dialog { serviceConfig, authService,
                                          userService, projectName, parent };
+
+   dialog.mSaveLocally->Show(allowLocalSave);
 
    const auto resultCode = dialog.ShowModal();
 

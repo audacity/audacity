@@ -12,6 +12,7 @@
 
 #include "ProjectFileIOExtension.h"
 
+#include <string>
 #include <memory>
 #include <vector>
 
@@ -44,6 +45,7 @@ public:
 
    void SaveToCloud(AudacityProject& project);
 private:
+   bool DoCloudSave(AudacityProject& project, const std::string& title);
    void OnLoad(AudacityProject& project) override;
    bool OnSave(AudacityProject& project, bool fromTempProject) override;
    bool OnClose(AudacityProject& project) override;

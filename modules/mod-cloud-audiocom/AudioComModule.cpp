@@ -11,4 +11,26 @@
 
 #include "ModuleConstants.h"
 
-DEFINE_MODULE_ENTRIES
+#include "ui/MixdownPropertiesDialog.h"
+
+#include "ServiceConfig.h"
+#include "OAuthService.h"
+#include "UserService.h"
+
+DEFINE_VERSION_CHECK
+extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
+{
+   switch (type)
+   {
+   case ModuleInitialize:
+   {
+//       auto r = cloud::audiocom::sync::MixdownPropertiesDialog::Show(nullptr);
+// 
+//       exit(0);
+   }
+      break;
+   default:
+      break;
+   }
+   return 1;
+}

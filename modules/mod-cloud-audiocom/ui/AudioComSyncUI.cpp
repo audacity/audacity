@@ -33,7 +33,25 @@ class AudioComShareUI : public CloudSyncUI
 public:
    ~AudioComShareUI() override = default;
 
-   FirstSaveResult OnHandleFirstSave(
+   SaveResult SaveProject (
+      const AudacityProject& project, const BasicUI::WindowPlacement& placement, bool allowLocalSave)
+   {
+      auto parent = wxWidgetsWindowPlacement::GetParent(placement);
+
+      auto result = CloudProjectPropertiesDialog::Show(
+         GetServiceConfig(), GetOAuthService(), GetUserService(),
+         project.GetProjectName(), parent, allowLocalSave);
+
+      if (!MixdownDialogShown.Read())
+      {
+         result.PreviewSaveFrequency = MixdownPropertiesDialog::Show(parent);
+         MixdownDialogShown.Write(true);
+      }
+
+      return result;
+   }
+
+   SaveResult OnHandleFirstSave(
       const AudacityProject& project,
       const BasicUI::WindowPlacement& placement) override
    {
@@ -41,7 +59,7 @@ public:
 
       if (suppressSelectDialog)
       {
-         FirstSaveResult result;
+         SaveResult result;
          result.SaveToCloud = SaveToCloudByDefault.Read();
          result.PreviewSaveFrequency = MixdownGenerationFrequency.Read();
          return result;
@@ -54,28 +72,24 @@ public:
 
       if (saveLocation == wxID_CANCEL)
       {
-         FirstSaveResult result;
+         SaveResult result;
          result.Cancelled = true;
          return result;
       }
       else if (saveLocation == wxID_OK)
       {
-         FirstSaveResult result;
+         SaveResult result;
          result.SaveToCloud = false;
          return result;
       }
 
-      auto result = CloudProjectPropertiesDialog::Show(
-         GetServiceConfig(), GetOAuthService(), GetUserService(),
-         project.GetProjectName(), parent);
+      return SaveProject(project, placement, false);
+   }
 
-      if (!MixdownDialogShown.Read())
-      {
-         result.PreviewSaveFrequency = MixdownPropertiesDialog::Show(parent);
-         MixdownDialogShown.Write(true);
-      }
-
-      return result;
+   SaveResult OnHandleSave(
+      const AudacityProject& project, const BasicUI::WindowPlacement& placement) override
+   {
+      return SaveProject(project, placement, false);
    }
 
    bool OnUnauthorizedSave(const BasicUI::WindowPlacement& placement) override

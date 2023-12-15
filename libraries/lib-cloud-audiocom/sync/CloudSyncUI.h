@@ -28,7 +28,7 @@ enum class CloudProjectVisibility
    Public,
 };
 
-struct FirstSaveResult
+struct SaveResult
 {
    std::string Title;
    int PreviewSaveFrequency { 0 };
@@ -44,9 +44,14 @@ class CLOUD_AUDIOCOM_API CloudSyncUI /* not final */
 public:
    virtual ~CloudSyncUI();
 
-   virtual FirstSaveResult OnHandleFirstSave(
+   virtual SaveResult OnHandleFirstSave(
       const AudacityProject& project,
       const BasicUI::WindowPlacement& placement) = 0;
+
+   virtual SaveResult OnHandleSave(
+      const AudacityProject& project,
+      const BasicUI::WindowPlacement& placement) = 0;
+
    virtual bool OnUnauthorizedSave(const BasicUI::WindowPlacement& placement) = 0;
 };
 } // namespace cloud::audiocom::sync
