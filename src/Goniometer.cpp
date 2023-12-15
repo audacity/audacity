@@ -4,6 +4,8 @@
 #include "Track.h"
 #include "TrackArtist.h"
 #include "TrackPanelDrawingContext.h"
+#include "TransportUtilities.h"
+#include "WaveTrack.h"
 
 #include <wx/dc.h>
 
@@ -228,3 +230,14 @@ void Goniometer::Draw(
          doSample(ii, jj);
    }
 }
+
+static TransportUtilities::GetTrackMeters::WrapperScope scope{
+   [](const auto &prevFn) { return [prevFn](WaveTrack &track) {
+      MeterPtrs result;
+      if (prevFn)
+         result = prevFn(track);
+      if (track.NChannels() > 1)
+         result.push_back(Goniometer::Get(track).shared_from_this());
+      return result;
+   }; }
+};
