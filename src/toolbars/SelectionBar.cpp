@@ -228,15 +228,6 @@ void SelectionBar::AddTime(int id, wxSizer * pSizer)
       wxEVT_TEXT,
       [this, id](auto& evt) { ModifySelection(id, evt.GetInt() != 0); });
 
-   pCtrl->Bind(
-      wxEVT_CHAR_HOOK,
-      [this, id](auto& evt) {
-         if (evt.GetKeyCode() == wxS('C') && evt.ControlDown())
-            SelectionToClipboard();
-         else
-            evt.Skip();
-      });
-
    pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
 
    mTimeControls[id] = pCtrl;
