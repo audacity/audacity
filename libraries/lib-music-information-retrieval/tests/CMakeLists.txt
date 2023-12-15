@@ -1,10 +1,19 @@
+add_compile_definitions(
+   CMAKE_CURRENT_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
 add_unit_test(
    NAME
       lib-music-information-retrieval
    WAV_FILE_IO
    SOURCES
+      MirTestUtils.cpp
+      MirTestUtils.h
+      MirAudioReaders.h
       MusicInformationRetrievalTests.cpp
       StftFrameProviderTests.cpp
+      TatumQuantizationFitBenchmarking.cpp
+      TatumQuantizationFitVisualization.cpp
       WavMirAudioReader.cpp
       WavMirAudioReader.h
    LIBRARIES

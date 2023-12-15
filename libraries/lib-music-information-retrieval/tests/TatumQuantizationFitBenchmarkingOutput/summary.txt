@@ -1,0 +1,5 @@
+AUC: 0.9121725731895223
+Strict Threshold (Minutes-and-Seconds): 0.8367879995455243
+Lenient Threshold (Beats-and-Measures): 0.7336582045210642
+Octave error RMS: 0.1032027612046817
+Audio file checksum: -1840.312255859375
