@@ -11,6 +11,8 @@ set( SOURCES
    ui/LinkFailedDialog.h
    ui/LinkSucceededDialog.cpp
    ui/LinkSucceededDialog.h
+   ui/MixdownPropertiesDialog.cpp
+   ui/MixdownPropertiesDialog.h
    ui/ShareAudioDialog.cpp
    ui/ShareAudioDialog.h
    ui/ShareAudioToolbar.cpp
