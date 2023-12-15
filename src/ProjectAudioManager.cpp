@@ -446,7 +446,8 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             };
          token = gAudioIO->StartStream(
-            MakeTransportTracks(TrackList::Get(*p), false, nonWaveToo),
+            TransportUtilities::MakeTransportTracks(
+               TrackList::Get(*p), false, nonWaveToo),
             tcp0, tcp1, tcp1, myOptions);
       }
       else {
@@ -457,7 +458,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                t1 = latestEnd;
          }
          token = gAudioIO->StartStream(
-            MakeTransportTracks(tracks, false, nonWaveToo),
+            TransportUtilities::MakeTransportTracks(tracks, false, nonWaveToo),
             t0, t1, mixerLimit, options);
       }
       if (token != 0) {
@@ -744,8 +745,8 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          // playback.
          /* TODO: set up stereo tracks if that is how the user has set up
           * their preferences, and choose sample format based on prefs */
-         transportTracks =
-            MakeTransportTracks(TrackList::Get( *p ), false, true);
+         transportTracks = TransportUtilities::MakeTransportTracks(
+            TrackList::Get(*p), false, true);
          for (const auto &wt : existingTracks) {
             auto begin = transportTracks.playbackSequences.begin();
             auto end = transportTracks.playbackSequences.end();

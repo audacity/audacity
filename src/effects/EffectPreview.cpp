@@ -172,7 +172,7 @@ void EffectPreview(EffectBase &effect,
 
    if (success)
    {
-      auto tracks = MakeTransportTracks(*mTracks, true);
+      auto tracks = TransportUtilities::MakeTransportTracks(*mTracks, true);
 
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.

@@ -329,12 +329,16 @@ void OnPunchAndRoll(const CommandContext &context)
    const auto duplex = ProjectAudioManager::UseDuplex();
    if (duplex)
       // play all
-      transportTracks = MakeTransportTracks(
-         TrackList::Get( project ), false, true);
+      transportTracks = TransportUtilities::MakeTransportTracks(
+         TrackList::Get(project), false, true);
    else
       // play recording tracks only
-      for (auto &pTrack : tracks)
-         transportTracks.playbackSequences.push_back({ pTrack, {} });
+      for (auto &pTrack : tracks) {
+         MeterPtrs meters;
+         if (const auto pWaveTrack = dynamic_cast<WaveTrack *>(pTrack.get()))
+            meters = TransportUtilities::GetTrackMeters::Call(*pWaveTrack);
+         transportTracks.playbackSequences.push_back({ pTrack, move(meters) });
+      }
       
    // Unlike with the usual recording, a track may be chosen both for playback
    // and recording.

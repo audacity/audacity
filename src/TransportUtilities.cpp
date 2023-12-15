@@ -205,7 +205,7 @@ void TransportUtilities::DoStartPlaying(
    }
 }
 
-TransportSequences MakeTransportTracks(
+TransportSequences TransportUtilities::MakeTransportTracks(
    TrackList &trackList, bool selectedOnly, bool nonWaveToo)
 {
    TransportSequences result;
@@ -215,7 +215,7 @@ TransportSequences MakeTransportTracks(
       for (auto pTrack : range)
          result.playbackSequences.push_back(
             { StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()),
-               {} });
+               GetTrackMeters::Call(*pTrack) });
    }
    if (nonWaveToo) {
       const auto range = trackList.Any<const PlayableTrack>() +
