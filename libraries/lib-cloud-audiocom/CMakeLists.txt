@@ -8,6 +8,8 @@ set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 def_vars()
 
 set( SOURCES
+   CloudSettings.cpp
+   CloudSettings.h
    CloudSyncService.cpp
    CloudSyncService.h
    OAuthService.cpp
