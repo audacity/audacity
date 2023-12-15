@@ -165,6 +165,14 @@ bool BlockHasher::ComputeHashes(
    if (mWorkers != nullptr && !mWorkers->IsReady())
       return false;
 
+   if (blocks.empty())
+   {
+      if (onComplete)
+         onComplete();
+
+      return true;
+   }
+
    mWorkers = std::make_unique<Workers>(
       cache, std::move(blocks), std::move(onComplete));
 
