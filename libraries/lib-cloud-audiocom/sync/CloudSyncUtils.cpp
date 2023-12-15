@@ -238,7 +238,8 @@ namespace
 wxString SafeName (wxString name)
 {
    static const std::unordered_set<wxChar> invalidChars {
-      L'/', L'\\', L':', L'*', L'?', L'"', L'<', L'>', L'|', L'@', L'&'
+      L'/', L'\\', L':', L'*', L'?', L'"', L'\'', L'<', L'>', L'|', L'@',
+      L'&', '$',   L'%', L'^', L';', L'~', L'`',  L'[', L']', L'{', L'}',
    };
 
    for (size_t i = 0; i < name.length(); ++i)
