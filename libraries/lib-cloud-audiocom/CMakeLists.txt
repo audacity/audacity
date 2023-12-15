@@ -27,6 +27,8 @@ set( SOURCES
    sync/CloudProjectsDatabase.h
    sync/CloudProjectSnapshot.cpp
    sync/CloudProjectSnapshot.h
+   sync/CloudSyncUI.cpp
+   sync/CloudSyncUI.h
    sync/CloudSyncUtils.cpp
    sync/CloudSyncUtils.h
    sync/DataUploader.cpp
