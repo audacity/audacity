@@ -211,10 +211,6 @@ void SelectionBar::AddTitle(
    pSizer->Add( pTitle, 0, wxEXPAND | wxRIGHT, 5 );
 
    pTitle->Bind(
-      wxEVT_LEFT_DCLICK,
-      [this](auto& evt) { SelectionToClipboard(); });
-
-   pTitle->Bind(
       wxEVT_RIGHT_UP,
       [this](auto& evt) { SelectionToClipboard(); });
 }
