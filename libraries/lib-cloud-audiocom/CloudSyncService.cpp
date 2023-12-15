@@ -18,6 +18,7 @@
 #include "sync/CloudProjectSnapshot.h"
 #include "sync/ProjectCloudExtension.h"
 #include "sync/CloudSyncUI.h"
+#include "sync/CloudSyncUtils.h"
 
 #include "CodeConversions.h"
 
@@ -31,6 +32,7 @@
 #include "FileNames.h"
 
 #include <wx/log.h>
+#include "wxFileNameWrapper.h"
 
 
 namespace cloud::audiocom
@@ -74,18 +76,7 @@ bool CloudSyncService::OnSave(AudacityProject& project, bool fromTempProject)
 
    project.SetProjectName(audacity::ToWXString(result.Title));
 
-   wxString filePath;
-   bool available = false;
-
-   auto potentialFileId =
-      std::chrono::system_clock::now().time_since_epoch().count();
-
-   while (!available)
-   {
-      filePath = wxString::Format("%s/%lld.aup3", dir, potentialFileId);
-      available = !wxFileName::FileExists(filePath);
-      ++potentialFileId;
-   }
+   const wxString filePath = sync::MakeSafeProjectPath(dir, audacity::ToWXString(result.Title));
 
    return ProjectFileIO::Get(project).SaveProject(filePath, nullptr);
 }

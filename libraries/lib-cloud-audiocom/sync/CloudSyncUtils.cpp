@@ -12,6 +12,7 @@
 
 #include <numeric>
 #include <set>
+#include <unordered_set>
 
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
@@ -19,6 +20,8 @@
 #include <rapidjson/reader.h>
 
 #include <algorithm>
+
+#include "wxFileNameWrapper.h"
 
 namespace cloud::audiocom::sync
 {
@@ -228,6 +231,39 @@ DeserializeProjectResponse(const std::string& data)
    result.SyncState = std::move(*syncState);
 
    return result;
+}
+
+namespace
+{
+wxString SafeName (wxString name)
+{
+   static const std::unordered_set<wxChar> invalidChars {
+      L'/', L'\\', L':', L'*', L'?', L'"', L'<', L'>', L'|', L'@', L'&'
+   };
+
+   for (size_t i = 0; i < name.length(); ++i)
+   {
+      if (invalidChars.find(name[i]) != invalidChars.end())
+         name[i] = wxT('_');
+   }
+
+   return name;
+}
+} // namespace
+
+wxString
+MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName)
+{
+   const auto safeName = SafeName(projectName);
+
+   auto path = wxFileNameWrapper { rootDir, safeName, "aup3" };
+
+   int iteration = 0;
+   while (path.FileExists())
+      path.SetName(wxString::Format("%s_%d", safeName, ++iteration));
+
+
+   return path.GetFullPath();
 }
 
 } // namespace cloud::audiocom::sync

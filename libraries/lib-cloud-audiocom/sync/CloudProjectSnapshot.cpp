@@ -417,7 +417,7 @@ void CloudProjectSnapshot::OnSnapshotCreated(
                   if (completed)
                   {
                      mCompleted.store(true, std::memory_order_release);
-                     mProjectCloudExtension.OnSyncCompleted(succeeded);
+                     mProjectCloudExtension.OnSyncCompleted(false);
                   }
                });
          }

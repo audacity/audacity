@@ -13,11 +13,17 @@
 #include "CloudSettings.h"
 
 #include "FileNames.h"
+#include "wxFileNameWrapper.h"
 
 namespace cloud::audiocom
 {
-StringSetting CloudProjectsSavePath { "/cloud/audiocom/CloudProjectsSavePath",
-                                      [] {
-                                         return FileNames::DataDir() + "/cloud";
-                                      } };
+StringSetting CloudProjectsSavePath {
+   "/cloud/audiocom/CloudProjectsSavePath",
+   []
+   {
+      wxFileNameWrapper path { FileNames::DataDir(), "" };
+      path.AppendDir("CloudProjects");
+      return path.GetPath();
+   }
+};
 } // namespace cloud::audiocom

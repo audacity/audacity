@@ -17,6 +17,8 @@
 #include <vector>
 #include <memory>
 
+#include <wx/string.h>
+
 enum class sampleFormat : unsigned;
 class SampleBlock;
 using SampleBlockPtr = std::shared_ptr<SampleBlock>;
@@ -82,5 +84,8 @@ struct ProjectResponse final
 };
 
 std::optional<ProjectResponse> DeserializeProjectResponse(const std::string& data);
+
+wxString
+MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName);
 
 } // namespace cloud::audiocom::sync
