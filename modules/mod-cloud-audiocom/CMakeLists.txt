@@ -13,6 +13,8 @@ set( SOURCES
    ui/LinkSucceededDialog.h
    ui/MixdownPropertiesDialog.cpp
    ui/MixdownPropertiesDialog.h
+   ui/SelectSaveLocationDialog.cpp
+   ui/SelectSaveLocationDialog.h
    ui/ShareAudioDialog.cpp
    ui/ShareAudioDialog.h
    ui/ShareAudioToolbar.cpp
