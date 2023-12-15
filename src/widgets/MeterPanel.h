@@ -216,8 +216,8 @@ class AUDACITY_DLL_API MeterPanel final
    void HandleLayout(wxDC &dc);
    void SetActiveStyle(Style style);
    void SetBarAndClip(int iBar, bool vert);
-   void DrawMeterBar(wxDC &dc, MeterBar *meterBar);
-   void ResetBar(MeterBar *bar, bool resetClipping);
+   void DrawMeterBar(wxDC &dc, MeterBar &meterBar);
+   static void ResetBar(MeterBar &bar, bool resetClipping);
    void RepaintBarsNow();
    wxFont GetFont() const;
 
