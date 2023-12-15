@@ -199,16 +199,25 @@ std::string ServiceConfig::GetAcceptLanguageValue() const
 
 std::string ServiceConfig::GetCreateProjectUrl() const
 {
-   return std::string("http://localhost:8090/audacity/project");
+   return GetAPIUrl("/project");
 }
 
 std::string
 ServiceConfig::GetCreateSnapshotUrl(std::string_view projectId) const
 {
    return Substitute(
-      std::string(
-         "http://localhost:8090/audacity/project/{project_id}/snapshot"),
-      { { "project_id", projectId } });
+      std::string("{api_url}/project/{project_id}/snapshot"),
+      { { "api_url", mApiEndpoint }, { "project_id", projectId } });
+}
+
+std::string ServiceConfig::GetSnapshotSyncUrl(
+   std::string_view projectId, std::string_view snapshotId) const
+{
+   return Substitute(
+      std::string("{api_url}/project/{project_id}/snapshot/{snapshot_id}/sync"),
+      { { "api_url", mApiEndpoint },
+        { "project_id", projectId },
+        { "snapshot_id", snapshotId } });
 }
 
 const ServiceConfig& GetServiceConfig()
