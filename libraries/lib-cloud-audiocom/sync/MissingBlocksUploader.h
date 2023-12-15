@@ -72,7 +72,10 @@ public:
       const ServiceConfig& serviceConfig, std::vector<BlockUploadTask> uploadTasks,
       MissingBlocksUploadProgressCallback progress);
 
+   ~MissingBlocksUploader();
+
 private:
+
    struct ProducedItem final
    {
       BlockUploadTask Task;

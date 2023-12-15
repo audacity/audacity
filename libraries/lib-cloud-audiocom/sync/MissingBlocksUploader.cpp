@@ -41,6 +41,20 @@ MissingBlocksUploader::MissingBlocksUploader(
       mProgressCallback = [](auto...) {};
 }
 
+MissingBlocksUploader::~MissingBlocksUploader()
+{
+   mIsRunning.store(false, std::memory_order_release);
+
+   mRingBufferNotEmpty.notify_all();
+   mRingBufferNotFull.notify_all();
+   mUploadsNotFull.notify_all();
+
+   for (auto& thread : mProducerThread)
+      thread.join();
+
+   mConsumerThread.join();
+}
+
 MissingBlocksUploader::ProducedItem MissingBlocksUploader::ProduceBlock()
 {
    const auto index = mFirstUnprocessedBlockIndex++;
@@ -102,7 +116,13 @@ void MissingBlocksUploader::PushBlockToQueue(ProducedItem item)
 MissingBlocksUploader::ProducedItem MissingBlocksUploader::PopBlockFromQueue()
 {
    std::unique_lock<std::mutex> lock(mRingBufferMutex);
-   mRingBufferNotEmpty.wait(lock, [this] { return mRingBufferWriteIndex != mRingBufferReadIndex || !mIsRunning.load(std::memory_order_consume); });
+   mRingBufferNotEmpty.wait(
+      lock,
+      [this]
+      {
+         return mRingBufferWriteIndex != mRingBufferReadIndex ||
+                !mIsRunning.load(std::memory_order_consume);
+      });
 
    if (!mIsRunning.load(std::memory_order_relaxed))
       return {};
