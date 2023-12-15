@@ -659,47 +659,17 @@ void SelectionBar::FitToTimeControls()
    Updated();
 }
 
-void SelectionBar::SelectionToClipboard() {
+void SelectionBar::SelectionToClipboard()
+{
    wxString timeRange = wxT("");
-   const static wxRegEx reHead(wxT(R"(^(00[^\d\.]+)[\d\.])"), wxRE_ADVANCED);
-   const static wxRegEx reTail(wxT(R"((\.\d{3})[^\d]*$)"), wxRE_ADVANCED);
-   const static wxRegEx reLead0(wxT(R"(0(\d[^\d]*))"), wxRE_ADVANCED);
    int i = 0;
-   for (auto& ctrl : mTimeControls)
+   for (auto ctrl : mTimeControls)
    {
       if (ctrl == nullptr)
          continue;
       auto tmStr = ctrl->GetString();
       tmStr.Replace(wxT(" "), wxT(""));
-      // remove 00h00m 00时00分(zh_CN) 00時00分(zh_TW) 00時間00分(Japanese)
-      while (reHead.Matches(tmStr))
-         tmStr.Replace(reHead.GetMatch(tmStr, 1), wxT(""));
-      // replace 0.000=>''  0.100=>0.1  0.010=>0.01
-      if (reTail.Matches(tmStr)) {
-         auto dotnum = reTail.GetMatch(tmStr, 1);
-         const auto dncopy = dotnum;
-         if (dotnum[3] == wxS('0')) {
-            dotnum.erase(3, 1);
-            if (dotnum[2] == wxS('0')) {
-               dotnum.erase(2, 1);
-               if (dotnum[1] == wxS('0')) {
-                  dotnum.erase(1, 1);
-               }
-            }
-         }
-         if (dotnum == wxT(".")) dotnum = wxT("");
-         tmStr.Replace(dncopy, dotnum);
-      }
-      // replace 1m00s => 1m0s 05.123s => 5.123s 00.003s => 0.003s
-      wxString tmStrBeforeDot = tmStr;
-      wxString tmStrDotTail = wxT("");
-      const auto dotLoc = tmStr.Find(wxT("."));
-      if (dotLoc >= 0) {
-         tmStrBeforeDot = tmStr.substr(0, dotLoc);
-         tmStrDotTail = tmStr.Mid(dotLoc);
-      }
-      reLead0.ReplaceAll(&tmStrBeforeDot, wxT("\\1"));
-      timeRange += tmStrBeforeDot + tmStrDotTail;
+      timeRange += tmStr;
       timeRange += (i == 0)? wxT("-"): wxT("");
       ++i;
    }
