@@ -87,6 +87,8 @@ list( APPEND SOURCES
       CellularPanel.h
       Clipboard.cpp
       Clipboard.h
+      ClipMirAudioReader.cpp
+      ClipMirAudioReader.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
       CrashReport.cpp
@@ -1317,6 +1319,7 @@ set( AUDACITY_LIBRARIES
    lib-note-track-interface
    lib-viewport-interface
    lib-music-information-retrieval-interface
+   lib-wave-track-interface
 )
 
 if (USE_VST)
