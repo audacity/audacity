@@ -60,7 +60,7 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
                S.AddSpace(0, 16, 1);
 
                S.AddButton(XO("Save to cloud"), wxALIGN_LEFT)
-                  ->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_OK); });
+                  ->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_SAVE); });
             }
             S.EndPanel();
             S.StartPanel()->SetMinSize(wxSize { 232, -1 });
@@ -72,7 +72,7 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
                S.AddSpace(0, 16, 1);
 
                S.AddButton(XO("Save to computer"), wxALIGN_LEFT)
-                  ->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_CANCEL); });
+                  ->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_OK); });
             }
             S.EndPanel();
          }
@@ -91,7 +91,10 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
 
          checkbox->Bind(
          wxEVT_CHECKBOX, [checkbox](auto&)
-         { DoNotShowCloudSyncDialog.Write(checkbox->GetValue()); });
+         {
+            DoNotShowCloudSyncDialog.Write(checkbox->GetValue());
+            gPrefs->Flush();
+         });
    }
    S.EndVerticalLay();
 
