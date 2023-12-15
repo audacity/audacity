@@ -51,7 +51,7 @@ void AuthorizationHandler::PopSuppressDialogs()
 void AuthorizationHandler::OnAuthStateChanged(
    const AuthStateChangedMessage& message)
 {
-   if (mSuppressed > 0)
+   if (mSuppressed > 0 || message.silent)
       return;
 
    if (!message.errorMessage.empty())

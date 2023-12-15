@@ -117,7 +117,7 @@ void UserPanel::UpdateUserData()
    }
 
    if (!oauthService.HasAccessToken())
-      oauthService.ValidateAuth({});
+      oauthService.ValidateAuth({}, true);
 
    auto& userService = GetUserService();
 
