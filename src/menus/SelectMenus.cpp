@@ -594,7 +594,7 @@ void OnSelectionRestore(const CommandContext &context)
    ProjectHistory::Get( project ).ModifyState(false);
 }
 
-void OnSelStrToClipboard(const CommandContext &context)
+void OnCopySelTimestamp(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectionBar = SelectionBar::Get( project );
@@ -1017,14 +1017,7 @@ auto SelectMenu()
                // Audacity had 'Retrieve Regio&n' here previously.
                Command( wxT("SelRestore"), XXO("Retrieve Selectio&n"),
                   FN(OnSelectionRestore), TracksExistFlag() )
-            ),
-
-            Section("",
-               Command(wxT("SelStrToClipboard"), XXO("Selection String to &Clipboard"),
-                  FN(OnSelStrToClipboard), AlwaysEnabledFlag,
-                  Options{}.LongName(XO("Selection Time Range String to Clipboard")))
             )
-         )
 
          //////////////////////////////////////////////////////////////////////////
 
@@ -1038,9 +1031,14 @@ auto SelectMenu()
 
          Command( wxT("StoreCursorPosition"), XXO("Store Cursor Pos&ition"),
             FN(OnCursorPositionStore),
-            WaveTracksExistFlag() )
+            WaveTracksExistFlag() ),
          // Save cursor position is used in some selections.
          // Maybe there should be a restore for it?
+
+         Command( wxT("CopySelTimestamp"), XXO("Copy &Selection Timestamp"),
+            FN(OnCopySelTimestamp), AlwaysEnabledFlag,
+            Options{}.LongName( XO("Copy Selection Timestamp to Clipboard")))
+         )
       ),
 
       Section( "",
