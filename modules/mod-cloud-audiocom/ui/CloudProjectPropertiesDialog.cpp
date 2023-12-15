@@ -20,6 +20,7 @@
 
 #include "AuthorizationHandler.h"
 #include "CodeConversions.h"
+#include "CloudModuleSettings.h"
 #include "UserPanel.h"
 
 namespace cloud::audiocom::sync
@@ -81,7 +82,8 @@ FirstSaveResult CloudProjectPropertiesDialog::Show(
 
    const auto resultCode = dialog.ShowModal();
 
-   return { audacity::ToUTF8(dialog.GetProjectName()), 0,
+   return { audacity::ToUTF8(dialog.GetProjectName()),
+            MixdownGenerationFrequency.Read(),
             static_cast<CloudProjectVisibility>(
                dialog.mProjectVisibility->GetSelection()),
             resultCode == wxID_OK, resultCode == wxID_CANCEL };
