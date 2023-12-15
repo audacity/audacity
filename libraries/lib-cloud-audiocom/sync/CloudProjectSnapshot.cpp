@@ -14,8 +14,10 @@
 #include <future>
 
 #include "../ServiceConfig.h"
+#include "../OAuthService.h"
 
 #include "BlockHasher.h"
+#include "CloudProjectsDatabase.h"
 #include "ProjectCloudExtension.h"
 #include "DataUploader.h"
 
@@ -64,19 +66,22 @@ struct CloudProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
    std::function<void()> OnBlocksLocked;
 
    explicit ProjectBlocksLock(
-      ProjectCloudExtension& extension, AudacityProject& project, std::function<void()> onBlocksLocked)
+      ProjectCloudExtension& extension, AudacityProject& project,
+      std::function<void()> onBlocksLocked)
        : Extension { extension }
        , OnBlocksLocked { std::move(onBlocksLocked) }
    {
       VisitBlocks(TrackList::Get(project));
 
+      if (Extension.IsCloudProject())
+      {
+         CloudProjectsDatabase::Get().UpdateProjectBlockList(
+            Extension.GetCloudProjectId(), BlockIds);
+      }
+
       Hasher = std::make_unique<BlockHasher>();
-      Hasher->ComputeHashes(
-         *this, Blocks,
-         [this]
-         {
-            CollectHashes();
-         });
+
+      Hasher->ComputeHashes(*this, Blocks, [this] { CollectHashes(); });
    }
 
    ~ProjectBlocksLock() override
@@ -150,12 +155,26 @@ struct CloudProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
          return;
 
       UpdateCacheFuture = std::async(
-         std::launch::async, [this, hashes = std::move(NewHashes)] {});
+         std::launch::async, [this, hashes = std::move(NewHashes)] {
+            CloudProjectsDatabase::Get().UpdateBlockHashes(
+               Extension.GetCloudProjectId(), hashes);
+      });
    }
 
    bool GetHash(int64_t blockId, std::string& hash) const override
    {
-      return false;
+      if (!Extension.IsCloudProject())
+         return false;
+
+      auto cachedResult = CloudProjectsDatabase::Get().GetBlockHash(
+         Extension.GetCloudProjectId(), blockId);
+
+      if (!cachedResult)
+         return false;
+
+      hash = std::move(*cachedResult);
+
+      return true;
    }
 
    void UpdateHash(int64_t blockId, const std::string& hash) override
@@ -232,6 +251,11 @@ std::shared_ptr<CloudProjectSnapshot> CloudProjectSnapshot::Create(
    return snapshot;
 }
 
+bool CloudProjectSnapshot::IsCompleted() const
+{
+   return mCompleted.load(std::memory_order_acquire);
+}
+
 
 void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
 {
@@ -281,13 +305,16 @@ void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
       request.setHeader(
          audacity::network_manager::common_headers::AcceptLanguage, language);
 
+    request.setHeader(
+      common_headers::Authorization, mOAuthService.GetAccessToken());
+
    auto serializedForm = SerializeProjectForm(projectForm);
 
    auto response =
       NetworkManager::GetInstance().doPost(request, serializedForm.data(), serializedForm.size());
 
    response->setRequestFinishedCallback(
-      [this, response, createNew](auto response)
+      [this, response, createNew](auto)
       {
          const auto error = response->getError();
 
@@ -337,18 +364,16 @@ void CloudProjectSnapshot::OnSnapshotCreated(
       return;
    }
 
-   mProjectCloudExtension.SetSnapshotId(response.Snapshot.Id);
+   mProjectCloudExtension.OnSnapshotCreated(
+      response.Project.Id, response.Snapshot.Id);
 
    if (newProject)
-   {
-      mProjectCloudExtension.SetCloudProjectId(response.Project.Id);
       mProjectBlocksLock->UpdateProjectHashesInCache();
-   }
 
-   mProjectBlocksLock->FillMissingBlocks(response.MissingBlocks);
+   mProjectBlocksLock->FillMissingBlocks(response.SyncState.MissingBlocks);
 
    DataUploader::Get().Upload(
-      mServiceConfig, response.FileUrls,
+      mServiceConfig, response.SyncState.FileUrls,
       mProjectCloudExtension.GetUpdatedProjectContents(),
       [this](UploadResult result)
       {
@@ -363,19 +388,86 @@ void CloudProjectSnapshot::OnSnapshotCreated(
             mUpdateCallback(
                { 0, 0, true, false, false, std::move(result.ErrorMessage) });
 
+            if (mProjectBlocksLock->MissingBlocks.empty())
+            {
+               MarkSnapshotSynced(0);
+               return;
+            }
+
             mMissingBlockUploader = std::make_unique<MissingBlocksUploader>(
                mServiceConfig, mProjectBlocksLock->MissingBlocks,
                [this](auto result, auto block, auto action)
                {
                   const auto handledBlocks =
                      result.UploadedBlocks + result.FailedBlocks;
+
+                  const auto completed = handledBlocks == result.TotalBlocks;
+                  const bool succeeded = completed && result.FailedBlocks == 0;
+
+                  if (succeeded)
+                  {
+                     MarkSnapshotSynced(handledBlocks);
+                     return;
+                  }
+
                   mUpdateCallback({ handledBlocks, result.TotalBlocks, true,
-                                    handledBlocks == result.TotalBlocks,
-                                    handledBlocks == result.TotalBlocks &&
-                                       result.FailedBlocks == 0,
+                                    completed, succeeded,
                                     Join(result.ErrorMessages, "\n") });
+
+                  if (completed)
+                  {
+                     mCompleted.store(true, std::memory_order_release);
+                     mProjectCloudExtension.OnSyncCompleted(succeeded);
+                  }
                });
          }
+      });
+}
+
+void CloudProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
+{
+   using namespace audacity::network_manager;
+   Request request(mServiceConfig.GetSnapshotSyncUrl(
+      mProjectCloudExtension.GetCloudProjectId(),
+      mProjectCloudExtension.GetSnapshotId()));
+
+      const auto language = mServiceConfig.GetAcceptLanguageValue();
+
+   if (!language.empty())
+      request.setHeader(
+         audacity::network_manager::common_headers::AcceptLanguage, language);
+
+   request.setHeader(
+      common_headers::Authorization, mOAuthService.GetAccessToken());
+
+   auto response = NetworkManager::GetInstance().doPost(request, nullptr, 0);
+
+   response->setRequestFinishedCallback(
+      [this, response, blocksCount](auto)
+      {
+         const auto error = response->getError();
+
+         if (error != NetworkError::NoError)
+         {
+            auto errorMessage = response->getErrorString();
+
+            if (error == NetworkError::HTTPError)
+            {
+               errorMessage +=
+                  "\nHTTP code: " + std::to_string(response->getHTTPCode());
+               errorMessage +=
+                  "\nResponse: " + response->readAll<std::string>();
+            }
+
+            mUpdateCallback(
+               { blocksCount, blocksCount, true, true, false, errorMessage });
+            return;
+         }
+
+         mCompleted.store(true, std::memory_order_release);
+         mProjectCloudExtension.OnSyncCompleted(true);
+
+         mUpdateCallback({ blocksCount, blocksCount, true, true, true, {} });
       });
 }
 

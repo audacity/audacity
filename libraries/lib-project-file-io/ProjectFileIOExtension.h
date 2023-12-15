@@ -13,7 +13,7 @@
 #include <cstdint>
 
 class AudacityProject;
-class ProjectFileIO;
+class ProjectSerializer;
 
 class PROJECT_FILE_IO_API ProjectFileIOExtension /* not final */
 {
@@ -21,8 +21,9 @@ public:
    virtual ~ProjectFileIOExtension();
 
    virtual void OnLoad(AudacityProject& project) = 0;
-   virtual void OnSave(AudacityProject& project) = 0;
+   virtual bool OnSave(AudacityProject& project, bool fromTempProject) = 0;
    virtual bool OnClose(AudacityProject& project) = 0;
+   virtual void OnUpdateSaved(AudacityProject& project, const ProjectSerializer& serializer) = 0;
    virtual bool IsBlockLocked(const AudacityProject& project, int64_t blockId) const = 0;
 };
 
@@ -34,7 +35,8 @@ struct PROJECT_FILE_IO_API ProjectFileIOExtensionRegistry final
    };
 
    static void OnLoad(AudacityProject& project);
-   static void OnSave(AudacityProject& project);
+   static bool OnSave(AudacityProject& project, bool fromTempProject);
    static bool OnClose(AudacityProject& project);
+   static void OnUpdateSaved(AudacityProject& project, const ProjectSerializer& serializer);
    static bool IsBlockLocked(const AudacityProject& project, int64_t blockId);
 };

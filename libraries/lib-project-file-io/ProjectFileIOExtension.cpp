@@ -35,10 +35,13 @@ void ProjectFileIOExtensionRegistry::OnLoad(AudacityProject& project)
       extension->OnLoad(project);
 }
 
-void ProjectFileIOExtensionRegistry::OnSave(AudacityProject& project)
+bool ProjectFileIOExtensionRegistry::OnSave(
+   AudacityProject& project, bool fromTempProject)
 {
    for (auto& extension : GetExtensions())
-      extension->OnSave(project);
+      if(extension->OnSave(project, fromTempProject))
+         return true;
+   return false;
 }
 
 bool ProjectFileIOExtensionRegistry::OnClose(AudacityProject& project)
@@ -54,10 +57,17 @@ bool ProjectFileIOExtensionRegistry::OnClose(AudacityProject& project)
    return ok;
 }
 
+void ProjectFileIOExtensionRegistry::OnUpdateSaved(
+   AudacityProject& project, const ProjectSerializer& serializer)
+{
+   for (auto& extension : GetExtensions())
+      extension->OnUpdateSaved(project, serializer);
+}
+
 bool ProjectFileIOExtensionRegistry::IsBlockLocked(
    const AudacityProject& project, int64_t blockId)
 {
-   for (auto& extension : GetExtensions ())
+   for (auto& extension : GetExtensions())
    {
       if (extension->IsBlockLocked(project, blockId))
          return true;

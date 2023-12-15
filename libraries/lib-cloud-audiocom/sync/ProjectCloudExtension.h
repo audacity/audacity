@@ -21,6 +21,7 @@
 #include "ClientData.h"
 
 class AudacityProject;
+class ProjectSerializer;
 
 namespace cloud::audiocom::sync
 {
@@ -35,21 +36,33 @@ public:
 
    bool IsCloudProject() const;
 
-   std::string_view GetCloudProjectId() const;
-   void SetCloudProjectId(std::string_view projectId);
+   void MarkPendingCloudSave();
 
+   void OnLoad();
+
+   void OnSnapshotCreated(
+      std::string_view projectId, std::string_view snapshotId);
+
+   void OnSyncCompleted(bool successful);
+
+   std::string_view GetCloudProjectId() const;
    std::string_view GetSnapshotId() const;
-   void SetSnapshotId(std::string_view snapshotId);
+
+   bool OnUpdateSaved(const ProjectSerializer& serializer);
 
    std::weak_ptr<AudacityProject> GetProject() const;
-
-   std::vector<uint8_t> GetUpdatedProjectContents() const;
+   const std::vector<uint8_t>& GetUpdatedProjectContents() const;
 
 private:
-   
+   void UpdateIdFromDatabase();
+
    AudacityProject& mProject;
 
    std::string mProjectId;
    std::string mSnapshotId;
+
+   std::vector<uint8_t> mUpdatedProjectContents;
+
+   bool mPendingCloudSave { false };
 };
 } // namespace cloud::audiocom::sync

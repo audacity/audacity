@@ -536,7 +536,6 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 
    SetFileName(fileName);
 
-   ProjectFileIOExtensionRegistry::OnLoad(mProject);
    return true;
 }
 
@@ -2112,27 +2111,26 @@ auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    return result;
 }
 
-void ProjectFileIO::SerializeProject(
-   ProjectSerializer& serializer, const TrackList* tracks)
-{
-   WriteXMLHeader(serializer);
-   WriteXML(serializer, false, tracks);
-}
-
-bool ProjectFileIO::UpdateSaved(ProjectSerializer& serializer)
-{
-   if (!WriteDoc("project", serializer))
-      return false;
-
-   // Autosave no longer needed
-   return AutoSaveDelete();
-}
-
-bool ProjectFileIO::UpdateSaved(const TrackList* tracks)
+bool ProjectFileIO::UpdateSaved(const TrackList *tracks)
 {
    ProjectSerializer doc;
-   SerializeProject(doc, tracks);
-   return UpdateSaved(doc);
+   WriteXMLHeader(doc);
+   WriteXML(doc, false, tracks);
+
+   if (!WriteDoc("project", doc))
+   {
+      return false;
+   }
+
+   // Autosave no longer needed
+   if (!AutoSaveDelete())
+   {
+      return false;
+   }
+
+   ProjectFileIOExtensionRegistry::OnUpdateSaved(mProject, doc);
+
+   return true;
 }
 
 // REVIEW: This function is believed to report an error to the user in all cases 
@@ -2342,8 +2340,6 @@ bool ProjectFileIO::SaveProject(
 
    // Adjust the title
    SetProjectTitle();
-
-   ProjectFileIOExtensionRegistry::OnSave(mProject);
 
    return true;
 }

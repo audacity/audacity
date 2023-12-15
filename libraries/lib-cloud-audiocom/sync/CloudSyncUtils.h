@@ -39,7 +39,6 @@ struct ProjectForm final
 {
    std::string Name;
    std::string HeadSnapshotId;
-   std::vector<std::string> Tags;
    SampleBlockHashes Hashes;
 };
 
@@ -67,14 +66,19 @@ struct SnapshotInfo final
    std::string Id;
 };
 
+struct ProjectSyncState final
+{
+   UploadUrls MixdownUrls;
+   UploadUrls FileUrls;
+   std::vector<UploadUrls> MissingBlocks;
+};
+
 struct ProjectResponse final
 {
    ProjectInfo Project;
    SnapshotInfo Snapshot;
 
-   UploadUrls MixdownUrls;
-   UploadUrls FileUrls;
-   std::vector<UploadUrls> MissingBlocks;
+   ProjectSyncState SyncState;
 };
 
 std::optional<ProjectResponse> DeserializeProjectResponse(const std::string& data);

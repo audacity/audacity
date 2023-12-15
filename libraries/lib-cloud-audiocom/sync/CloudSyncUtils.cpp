@@ -18,6 +18,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/reader.h>
 
+#include <algorithm>
 
 namespace cloud::audiocom::sync
 {
@@ -122,10 +123,47 @@ std::optional<std::vector<UploadUrls>> DeserializeBlockUrls (const rapidjson::Va
       if (!uploadUrls)
          return {};
 
+      std::transform(
+         uploadUrls->Id.begin(), uploadUrls->Id.end(), uploadUrls->Id.begin(),
+         [](unsigned char c) { return std::toupper(c); });
+
       result.push_back(std::move(*uploadUrls));
    }
 
    return result;
+}
+
+std::optional<ProjectSyncState> DeserializeProjectSyncState (const rapidjson::Value& document)
+{
+   if (!document.IsObject())
+      return {};
+
+   auto mixdownUrls = DeserializeUploadUrls(document, "mixdown");
+   if (!mixdownUrls)
+      return {};
+
+   auto fileUploadUrls = DeserializeUploadUrls(document, "file");
+   if (!fileUploadUrls)
+      return {};
+
+   auto blockUrls = DeserializeBlockUrls(document, "blocks");
+   if (!blockUrls)
+      return {};
+
+   return ProjectSyncState{
+      std::move(*mixdownUrls),
+      std::move(*fileUploadUrls),
+      std::move(*blockUrls),
+   };
+}
+
+std::optional<ProjectSyncState> DeserializeProjectSyncState (
+   const rapidjson::Value& document, std::string_view key)
+{
+   if (!document.HasMember(key.data()))
+      return {};
+
+   return DeserializeProjectSyncState(document[key.data()]);
 }
 
 } // namespace
@@ -146,13 +184,6 @@ std::string SerializeProjectForm(const ProjectForm& form)
          "head_snapshot_id", StringRef(form.HeadSnapshotId.c_str()),
          document.GetAllocator());
 
-   Value tags(kArrayType);
-
-   for (const auto& tag : form.Tags)
-      tags.PushBack(StringRef(tag.c_str()), document.GetAllocator());
-
-   document.AddMember("tags", tags, document.GetAllocator());
-
    Value hashesArray(kArrayType);
 
    for (const auto& hash : form.Hashes)
@@ -167,7 +198,8 @@ std::string SerializeProjectForm(const ProjectForm& form)
    return buffer.GetString();
 }
 
-std::optional<ProjectResponse> DeserializeProjectResponse(const std::string& data)
+std::optional<ProjectResponse>
+DeserializeProjectResponse(const std::string& data)
 {
    using namespace rapidjson;
 
@@ -185,23 +217,15 @@ std::optional<ProjectResponse> DeserializeProjectResponse(const std::string& dat
    if (!snapshotInfo)
       return {};
 
-   auto fileUploadUrls = DeserializeUploadUrls(document, "file_upload");
-   if (!fileUploadUrls)
+   auto syncState = DeserializeProjectSyncState(document, "sync");
+   if (!syncState)
       return {};
-
-   auto blockUrls = DeserializeBlockUrls(document, "blocks_upload");
-   if (!blockUrls)
-      return {};
-
-   auto mixdownUrls = DeserializeUploadUrls(document, "mixdown_urls");
 
    ProjectResponse result;
 
    result.Project = std::move(*projectInfo);
    result.Snapshot = std::move(*snapshotInfo);
-   result.FileUrls = std::move(*fileUploadUrls);
-   result.MixdownUrls = mixdownUrls ? std::move(*mixdownUrls) : UploadUrls {};
-   result.MissingBlocks = std::move(*blockUrls);
+   result.SyncState = std::move(*syncState);
 
    return result;
 }

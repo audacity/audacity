@@ -62,12 +62,12 @@ public:
       ProjectCloudExtension& extension, SnapshotOperationUpdated callback,
       bool forceCreateNewProject = false);
 
+   bool IsCompleted() const;
 private:
-   void NotifyUpdate();
-
    void UpdateProjectSnapshot(bool forceCreateNew);
 
    void OnSnapshotCreated(const ProjectResponse& response, bool newProject);
+   void MarkSnapshotSynced(int64_t blocksCount);
 
    ProjectCloudExtension& mProjectCloudExtension;
    std::weak_ptr<AudacityProject> mWeakProject;
@@ -83,5 +83,7 @@ private:
    std::unique_ptr<MissingBlocksUploader> mMissingBlockUploader;
 
    std::atomic<bool> mProjectUploaded { false };
+
+   std::atomic<bool> mCompleted { false };
 };
 } // namespace cloud::audiocom::sync

@@ -65,6 +65,8 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "wxPanelWrapper.h"
 
+#include "ProjectFileIOExtension.h"
+
 #include <optional>
 #include <wx/frame.h>
 #include <wx/log.h>
@@ -243,6 +245,8 @@ auto ProjectFileManager::ReadProjectFile(
                &window);
          }
       }
+
+      ProjectFileIOExtensionRegistry::OnLoad(mProject);
    }
 
    return {
@@ -256,6 +260,11 @@ auto ProjectFileManager::ReadProjectFile(
 bool ProjectFileManager::Save()
 {
    auto &projectFileIO = ProjectFileIO::Get(mProject);
+
+   
+   if (ProjectFileIOExtensionRegistry::OnSave(
+          mProject, projectFileIO.IsTemporary()))
+      return true;
 
    // Prompt for file name?
    if (projectFileIO.IsTemporary())

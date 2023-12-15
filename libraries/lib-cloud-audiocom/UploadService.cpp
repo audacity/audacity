@@ -587,7 +587,7 @@ UploadOperationHandle UploadService::Upload(
       std::move(completedCallback), std::move(progressCallback));
 
    mOAuthService.ValidateAuth([operation, this](std::string_view authToken)
-                              { operation->InitiateUpload(authToken); });
+                              { operation->InitiateUpload(authToken); }, false);
 
    return UploadOperationHandle { operation };
 }
