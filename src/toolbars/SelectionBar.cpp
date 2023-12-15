@@ -45,6 +45,7 @@ selection range.
 #include <wx/notifmsg.h>
 #include <wx/regex.h>
 
+
 #include "AudioIO.h"
 #include "AColor.h"
 #include "../KeyboardCapture.h"
