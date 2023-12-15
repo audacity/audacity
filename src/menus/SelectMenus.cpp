@@ -1018,6 +1018,7 @@ auto SelectMenu()
                Command( wxT("SelRestore"), XXO("Retrieve Selectio&n"),
                   FN(OnSelectionRestore), TracksExistFlag() )
             )
+         )
 
          //////////////////////////////////////////////////////////////////////////
 
@@ -1037,8 +1038,7 @@ auto SelectMenu()
 
          Command( wxT("CopySelTimestamp"), XXO("Copy &Selection Timestamp"),
             FN(OnCopySelTimestamp), AlwaysEnabledFlag,
-            Options{}.LongName( XO("Copy Selection Timestamp to Clipboard")))
-         )
+            Options{}.LongName( XO("Copy Selection Timestamp to Clipboard") ) )
       ),
 
       Section( "",
