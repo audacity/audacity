@@ -11,6 +11,7 @@ set( SOURCES
    FFT.h
    InterpolateAudio.cpp
    InterpolateAudio.h
+   LinearFit.h
    Matrix.cpp
    Matrix.h
    RealFFTf.cpp
