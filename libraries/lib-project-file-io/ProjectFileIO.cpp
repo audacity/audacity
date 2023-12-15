@@ -2314,16 +2314,14 @@ bool ProjectFileIO::SaveProject(
       // And make it the active project file 
       UseConnection(std::move(newConn), fileName);
    }
-   else
+
+   if (!UpdateSaved(nullptr))
    {
-      if ( !UpdateSaved( nullptr ) ) {
-         ShowError( {},
-            XO("Error Saving Project"),
-            FileException::WriteFailureMessage(fileName),
-            "Error:_Disk_full_or_not_writable"
-            );
-         return false;
-      }
+      ShowError(
+         {}, XO("Error Saving Project"),
+         FileException::WriteFailureMessage(fileName),
+         "Error:_Disk_full_or_not_writable");
+      return false;
    }
 
    // Reaching this point defines success and all the rest are no-fail
