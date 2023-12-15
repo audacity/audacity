@@ -21,6 +21,10 @@ BoolSetting SaveToCloudByDefault {
    "/cloud/audiocom/SaveToCloudByDefault", false
 };
 
+BoolSetting MixdownDialogShown {
+   "/cloud/audiocom/MixdownDialogShown", false
+};
+
 IntSetting MixdownGenerationFrequency {
    "/cloud/audiocom/MixdownGenerationFrequency", 1
 };
