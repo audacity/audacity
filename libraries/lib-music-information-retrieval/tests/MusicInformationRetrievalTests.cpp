@@ -1,4 +1,7 @@
-#include <MusicInformationRetrieval.h>
+#include "MirAudioReaders.h"
+#include "MusicInformationRetrieval.h"
+#include "WavMirAudioReader.h"
+
 #include <catch2/catch.hpp>
 
 namespace MIR
@@ -72,7 +75,11 @@ TEST_CASE("GetProjectSyncInfo")
 {
    SECTION("stretchMinimizingPowOfTwo is as expected")
    {
-      MusicInformation info { "my/path\\foo_-_100BPM_Sticks_-_foo.wav", 10. };
+      constexpr auto whicheverView = FalsePositiveTolerance::Lenient;
+      std::function<void(double)> progressCallback;
+      MusicInformation info { "my/path\\foo_-_100BPM_Sticks_-_foo.wav", 10.,
+                              EmptyMirAudioReader {}, whicheverView,
+                              progressCallback };
       REQUIRE(info);
       REQUIRE(info.GetProjectSyncInfo(100).stretchMinimizingPowOfTwo == 1.);
 
