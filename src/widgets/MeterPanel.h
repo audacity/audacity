@@ -34,10 +34,13 @@ class AudacityProject;
 struct AudioIOEvent;
 
 struct MeterBar {
+   //! Given the bounding rectangle, subdivide it
+   void SetRectangles(wxRect bounding, bool vertical, bool clip);
+
    bool   vert{};
-   wxRect bevel{};         // Bevel around bar
-   wxRect rect{};         // True bar drawing area
-   wxRect rClip{};
+   wxRect bevel{}; // Bevel around bar
+   wxRect rect{}; // True bar drawing area
+   wxRect rClip{}; // Rectangle for clipping, nonoverlapping with bevel
 };
 
 class MeterAx;
@@ -143,7 +146,6 @@ class AUDACITY_DLL_API MeterPanel final
 
    void HandleLayout();
    void SetActiveStyle(Style style);
-   void SetBarAndClip(int iBar, bool vert);
    void DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
       MeterBar &meterBar, Stats &stats);
    void RepaintBarsNow();
