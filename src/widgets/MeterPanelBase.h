@@ -32,15 +32,10 @@ public:
    template< typename ...Args >
       MeterPanelBase( Args &&...args )
          : wxPanelWrapper( std::forward<Args>(args)... )
-      { Init(); }
+      {}
 
+   //! Expose a pointer to a Meter that can be tracked by std::weak_ptr
    std::shared_ptr<Meter> GetMeter() const;
-
-   virtual void Clear() = 0;
-   virtual void Reset(double sampleRate, bool resetClipping) = 0;
-   virtual void Update(unsigned numChannels,
-      unsigned long numFrames, const float *sampleData, bool interleaved) = 0;
-   virtual bool IsDisabled() const = 0;
 
 private:
    static bool s_AcceptsFocus;
@@ -53,8 +48,10 @@ private:
 public:
    static TempAllowFocus TemporarilyAllowFocus();
 
-private:
-   void Init();
+protected:
+   //! If the object can dynamic_cast to Meter, then the object returned by
+   //! GetMeter will forward calls to it
+   void Init(wxEvtHandler *pMeter);
 
    struct Forwarder;
    std::shared_ptr<Forwarder> mForwarder;
