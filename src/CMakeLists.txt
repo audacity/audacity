@@ -148,6 +148,8 @@ set( SOURCES
       MovableControl.cpp
       MovableControl.h
       NoteTrackEditing.cpp
+      PeakAndRmsMeter.cpp
+      PeakAndRmsMeter.h
       PitchName.cpp
       PitchName.h
       PluginDataModel.cpp
