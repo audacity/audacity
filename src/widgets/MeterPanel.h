@@ -34,6 +34,9 @@ class AudacityProject;
 struct AudioIOEvent;
 
 struct MeterBar {
+   // How many pixels between items?
+   static constexpr int gap = 2;
+
    //! Given the bounding rectangle, subdivide it
    void SetRectangles(wxRect bounding, bool vertical, bool clip);
 
@@ -41,6 +44,36 @@ struct MeterBar {
    wxRect bevel{}; // Bevel around bar
    wxRect rect{}; // True bar drawing area
    wxRect rClip{}; // Rectangle for clipping, nonoverlapping with bevel
+};
+
+class MeterPainter {
+public:
+   using Stats = PeakAndRmsMeter::Stats;
+
+   MeterPainter(bool clip, bool gradient, bool input,
+      int bgColor //!< Theme color code
+   );
+   void SetBackgroundColor(int bgColor);
+
+   void DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
+      const MeterBar &meterBar, Stats &stats) const;
+
+   bool GetGradient() const { return mGradient; }
+   void SetGradient(bool gradient) { mGradient = gradient; }
+
+   bool GetClip() const { return mClip; }
+
+   wxBrush   mBkgndBrush;
+
+private:
+   wxPen     mPen;
+   wxPen     mPeakPeakPen;
+   wxBrush   mBrush;
+   wxBrush   mRMSBrush;
+   wxBrush   mClipBrush;
+   wxBrush   mDisabledBkgndBrush;
+   bool mClip;
+   bool mGradient;
 };
 
 class MeterAx;
@@ -121,10 +154,11 @@ class AUDACITY_DLL_API MeterPanel final
    void SetName(const TranslatableString& name);
 
  private:
+   static constexpr int gap = MeterBar::gap;
+
    void UpdatePrefs() override;
    void UpdateSelectedPrefs( int ) override;
 
- private:
    //
    // Event handlers
    //
@@ -146,8 +180,6 @@ class AUDACITY_DLL_API MeterPanel final
 
    void HandleLayout();
    void SetActiveStyle(Style style);
-   void DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
-      MeterBar &meterBar, Stats &stats);
    void RepaintBarsNow();
    wxFont GetFont() const;
 
@@ -176,8 +208,6 @@ class AUDACITY_DLL_API MeterPanel final
 
    Style     mStyle{};
    Style     mDesiredStyle;
-   bool      mGradient;
-   bool      mClip;
    int       mNumPeakSamplesToClip;
    double    mPeakHoldDuration;
    double    mRate;
@@ -189,6 +219,8 @@ class AUDACITY_DLL_API MeterPanel final
 
    MeterBar  mBar[kMaxMeterBars]{};
 
+   MeterPainter mPainter;
+
    bool      mLayoutValid;
 
    std::unique_ptr<wxBitmap> mBitmap;
@@ -196,12 +228,6 @@ class AUDACITY_DLL_API MeterPanel final
    wxPoint   mRightTextPos;
    wxSize    mLeftSize;
    wxSize    mRightSize;
-   wxPen     mPen;
-   wxPen     mPeakPeakPen;
-   wxBrush   mBrush;
-   wxBrush   mRMSBrush;
-   wxBrush   mClipBrush;
-   wxBrush   mBkgndBrush;
    Ruler     mRuler;
    wxString  mLeftText;
    wxString  mRightText;

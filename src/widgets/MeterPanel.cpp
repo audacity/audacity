@@ -150,15 +150,48 @@ static const long MAX_REFRESH_RATE = 100;
 #include "../../images/SpeakerMenu.xpm"
 #include "../../images/MicMenu.xpm"
 
-// How many pixels between items?
-constexpr int gap = 2;
-
 const static wxChar *PrefStyles[] =
 {
    wxT("AutomaticStereo"),
    wxT("HorizontalStereo"),
    wxT("VerticalStereo")
 };
+
+MeterPainter::MeterPainter(bool clip, bool gradient, bool input, int bgColor)
+   : mClip{ clip }
+   , mGradient{ gradient }
+{
+   SetBackgroundColor(bgColor);
+   mPeakPeakPen = wxPen(theTheme.Colour(clrMeterPeak), 1, wxPENSTYLE_SOLID);
+
+   if (input) {
+      mPen       = wxPen(   theTheme.Colour( clrMeterInputPen         ), 1, wxPENSTYLE_SOLID);
+      mBrush     = wxBrush( theTheme.Colour( clrMeterInputBrush       ), wxBRUSHSTYLE_SOLID);
+      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterInputRMSBrush    ), wxBRUSHSTYLE_SOLID);
+      mClipBrush = wxBrush( theTheme.Colour( clrMeterInputClipBrush   ), wxBRUSHSTYLE_SOLID);
+//      mLightPen  = wxPen(   theTheme.Colour( clrMeterInputLightPen    ), 1, wxSOLID);
+//      mDarkPen   = wxPen(   theTheme.Colour( clrMeterInputDarkPen     ), 1, wxSOLID);
+   }
+   else {
+      mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxPENSTYLE_SOLID);
+      mBrush     = wxBrush( theTheme.Colour( clrMeterOutputBrush      ), wxBRUSHSTYLE_SOLID);
+      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterOutputRMSBrush   ), wxBRUSHSTYLE_SOLID);
+      mClipBrush = wxBrush( theTheme.Colour( clrMeterOutputClipBrush  ), wxBRUSHSTYLE_SOLID);
+//      mLightPen  = wxPen(   theTheme.Colour( clrMeterOutputLightPen   ), 1, wxSOLID);
+//      mDarkPen   = wxPen(   theTheme.Colour( clrMeterOutputDarkPen    ), 1, wxSOLID);
+   }
+
+//   mDisabledBkgndBrush = wxBrush(theTheme.Colour( clrMeterDisabledBrush), wxSOLID);
+   // No longer show a difference in the background colour when not monitoring.
+   // We have the tip instead.
+   mDisabledBkgndBrush = mBkgndBrush;
+}
+
+void MeterPainter::SetBackgroundColor(int bgColor)
+{
+   wxColour backgroundColour = theTheme.Colour(bgColor);
+   mBkgndBrush = wxBrush(backgroundColour, wxBRUSHSTYLE_SOLID);
+}
 
 enum {
    OnMeterUpdateID = 6000,
@@ -198,11 +231,10 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mHeight(size.y),
    mIsInput(isInput),
    mDesiredStyle(style),
-   mGradient(true),
-   mClip(true),
    mRate(0),
    mMonitoring(false),
    mActive(false),
+   mPainter{ true, true, isInput, clrMedium },
    mLayoutValid(false),
    mBitmap{},
    mRuler{ LinearUpdater::Instance(), LinearDBFormat::Instance() }
@@ -247,34 +279,13 @@ MeterPanel::MeterPanel(AudacityProject *project,
    UpdatePrefs();
 
    wxColour backgroundColour = theTheme.Colour( clrMedium);
-   mBkgndBrush = wxBrush(backgroundColour, wxBRUSHSTYLE_SOLID);
    SetBackgroundColour( backgroundColour );
-
-   mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
 
    mAudioIOStatusSubscription = AudioIO::Get()
       ->Subscribe(*this, &MeterPanel::OnAudioIOStatus);
 
    mAudioCaptureSubscription = AudioIO::Get()
       ->Subscribe(*this, &MeterPanel::OnAudioCapture);
-
-   if (mIsInput) {
-      mPen       = wxPen(   theTheme.Colour( clrMeterInputPen         ), 1, wxPENSTYLE_SOLID);
-      mBrush     = wxBrush( theTheme.Colour( clrMeterInputBrush       ), wxBRUSHSTYLE_SOLID);
-      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterInputRMSBrush    ), wxBRUSHSTYLE_SOLID);
-      mClipBrush = wxBrush( theTheme.Colour( clrMeterInputClipBrush   ), wxBRUSHSTYLE_SOLID);
-//      mLightPen  = wxPen(   theTheme.Colour( clrMeterInputLightPen    ), 1, wxSOLID);
-//      mDarkPen   = wxPen(   theTheme.Colour( clrMeterInputDarkPen     ), 1, wxSOLID);
-   }
-   else {
-      mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxPENSTYLE_SOLID);
-      mBrush     = wxBrush( theTheme.Colour( clrMeterOutputBrush      ), wxBRUSHSTYLE_SOLID);
-      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterOutputRMSBrush   ), wxBRUSHSTYLE_SOLID);
-      mClipBrush = wxBrush( theTheme.Colour( clrMeterOutputClipBrush  ), wxBRUSHSTYLE_SOLID);
-//      mLightPen  = wxPen(   theTheme.Colour( clrMeterOutputLightPen   ), 1, wxSOLID);
-//      mDarkPen   = wxPen(   theTheme.Colour( clrMeterOutputDarkPen    ), 1, wxSOLID);
-   }
-
 
    mTipTimer.SetOwner(this, OnTipTimeoutID);
    mTimer.SetOwner(this, OnMeterUpdateID);
@@ -294,7 +305,8 @@ void MeterPanel::UpdatePrefs()
    mMeterRefreshRate =
       std::max(MIN_REFRESH_RATE, std::min(MAX_REFRESH_RATE,
          gPrefs->Read(Key(wxT("RefreshRate")), 30L)));
-   mGradient = gPrefs->Read(Key(wxT("Bars")), wxT("Gradient")) == wxT("Gradient");
+   mPainter.SetGradient(
+      gPrefs->Read(Key(wxT("Bars")), wxT("Gradient")) == wxT("Gradient"));
    mDB = gPrefs->Read(Key(wxT("Type")), wxT("dB")) == wxT("dB");
    mMeterDisabled = gPrefs->Read(Key(wxT("Disabled")), 0L);
 
@@ -398,7 +410,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       dc.SelectObject(*mBitmap);
 
       dc.SetPen(*wxTRANSPARENT_PEN);
-      dc.SetBrush(mBkgndBrush);
+      dc.SetBrush(mPainter.mBkgndBrush);
       dc.DrawRectangle(0, 0, mWidth, mHeight);
 
       // MixerTrackCluster style has no icon or L/R labels
@@ -439,7 +451,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
          AColor::Bevel(dc, false, bar.bevel);
 
          // Draw the clip indicator bevel
-         if (mClip)
+         if (mPainter.GetClip())
          {
             AColor::Bevel(dc, false, bar.rClip);
          }
@@ -447,7 +459,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
          // Cache bar rect
          wxRect rect = bar.rect;
 
-         if (mGradient)
+         if (mPainter.GetGradient())
          {
             // Calculate the size of the two gradiant segments of the meter
             double gradw;
@@ -538,12 +550,13 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    // Go draw the meter bars, Left & Right channels using current levels
    for (unsigned int i = 0; i < mNumBars; i++)
-      DrawMeterBar(destDC, *mBitmap, mMeterDisabled, mBar[i], mStats[i]);
+      mPainter.DrawMeterBar(destDC, *mBitmap,
+         mMeterDisabled, mBar[i], mStats[i]);
 
    destDC.SetTextForeground( clrText );
 
    // We can have numbers over the bars, in which case we have to draw them each time.
-   if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
+    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
       mRuler.SetTickColour( clrText );
       // If the text colour is too similar to the meter colour, then we need a background
@@ -1015,7 +1028,7 @@ void MeterPanel::HandleLayout()
    int rtxtWidth = mRightSize.GetWidth();
    int rtxtHeight = mRightSize.GetHeight();
 
-   const auto clip = mClip;
+   const auto clip = mPainter.GetClip();
    auto &mBar0 = mBar[0];
    auto &mBar1 = mBar[1];
    switch (mStyle)
@@ -1280,8 +1293,9 @@ void MeterPanel::RepaintBarsNow()
    }
 }
 
-void MeterPanel::DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
-   MeterBar &bar, Stats &stats)
+void MeterPainter::DrawMeterBar(wxDC &dc,
+   wxBitmap &bitmap, bool disabled,
+   const MeterBar &bar, Stats &stats) const
 {
    // Cache some metrics
    wxCoord x = bar.rect.GetLeft();
@@ -1704,8 +1718,10 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
         {
            S.StartVerticalLay();
            {
-              gradient = S.AddRadioButton(XXO("Gradient"), true, mGradient);
-              rms = S.AddRadioButtonToGroup(XXO("RMS"), false, mGradient);
+              gradient = S.AddRadioButton(XXO("Gradient"), true,
+                  mPainter.GetGradient());
+              rms = S.AddRadioButtonToGroup(XXO("RMS"), false,
+                  mPainter.GetGradient());
            }
            S.EndVerticalLay();
         }
