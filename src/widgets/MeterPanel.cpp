@@ -201,6 +201,12 @@ MeterUpdateQueue::~MeterUpdateQueue()
 {
 }
 
+PeakAndRmsMeter::PeakAndRmsMeter(int dbRange)
+   : mDBRange{ dbRange }
+{}
+
+PeakAndRmsMeter::~PeakAndRmsMeter() = default;
+
 void MeterUpdateQueue::Clear()
 {
    mStart.store(0);
@@ -299,27 +305,23 @@ MeterPanel::MeterPanel(AudacityProject *project,
              float fDecayRate /*= 60.0f*/)
 : MeterPanelBase(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
-   mQueue{ 1024 },
    mWidth(size.x),
    mHeight(size.y),
    mIsInput(isInput),
    mDesiredStyle(style),
    mGradient(true),
-   mDB(true),
-   mDBRange(DecibelScaleCutoff.Read()),
    mDecay(true),
    mDecayRate(fDecayRate),
    mClip(true),
-   mNumPeakSamplesToClip(3),
    mPeakHoldDuration(3),
    mT(0),
    mRate(0),
    mMonitoring(false),
    mActive(false),
-   mNumBars(0),
    mLayoutValid(false),
    mBitmap{},
    mRuler{ LinearUpdater::Instance(), LinearDBFormat::Instance() }
+, PeakAndRmsMeter{ DecibelScaleCutoff.Read() }
 {
    // i18n-hint: Noun (the meter is used for playback or record level monitoring)
    SetName( XO("Meter") );
@@ -405,7 +407,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    MeterPanelBase::Init(this);
 }
 
-void MeterPanel::Clear()
+void PeakAndRmsMeter::Clear()
 {
    mQueue.Clear();
 }
@@ -885,19 +887,24 @@ void MeterPanel::Decrease(float steps)
    }
 }
 
+void PeakAndRmsMeter::Reset(double, bool resetClipping)
+{
+   for (int j = 0; j < kMaxMeterBars; j++)
+      mStats[j].Reset(resetClipping);
+   mQueue.Clear();
+}
+
 void MeterPanel::Reset(double sampleRate, bool resetClipping)
 {
    mT = 0;
    mRate = sampleRate;
-   for (int j = 0; j < kMaxMeterBars; j++)
-      mStats[j].Reset(resetClipping);
 
    // wxTimers seem to be a little unreliable - sometimes they stop for
    // no good reason, so this "primes" it every now and then...
    mTimer.Stop();
 
    // While it's stopped, empty the queue
-   mQueue.Clear();
+   PeakAndRmsMeter::Reset(sampleRate, resetClipping);
 
    mLayoutValid = false;
 
@@ -926,7 +933,7 @@ static float ToDB(float v, float range)
    return ClipZeroToOne((db + range) / range);
 }
 
-void MeterPanel::Update(unsigned numChannels,
+void PeakAndRmsMeter::Update(unsigned numChannels,
    unsigned long numFrames, const float *sampleData, bool interleaved)
 {
    auto sptr = sampleData;
@@ -1139,12 +1146,17 @@ bool MeterPanel::IsMonitoring() const
    return mMonitoring;
 }
 
-bool MeterPanel::IsClipping() const
+bool PeakAndRmsMeter::IsClipping() const
 {
    for (int c = 0; c < mNumBars; c++)
       if (mStats[c].clipping)
          return true;
    return false;
+}
+
+int PeakAndRmsMeter::GetDBRange() const
+{
+   return mDB ? mDBRange : -1;
 }
 
 void MeterPanel::SetActiveStyle(Style newStyle)
@@ -1795,7 +1807,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
    }
 }
 
-bool MeterPanel::IsDisabled() const
+bool PeakAndRmsMeter::IsDisabled() const
 {
    return mMeterDisabled != 0;
 }
