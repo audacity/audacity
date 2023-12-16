@@ -65,7 +65,6 @@ class MeterUpdateMsg
    wxString toStringIfClipped();
 };
 
-//
 // The MeterPanel passes itself messages via this queue so that it can
 // communicate between the audio thread and the GUI thread.
 // This class uses lock-free synchronization with atomics.
@@ -74,30 +73,11 @@ using MeterUpdateQueue = LockFreeQueue<MeterUpdateMsg>;
 
 class MeterAx;
 
-/********************************************************************//**
-\brief MeterPanel is a panel that paints the meter used for monitoring
-or playback.
-************************************************************************/
-class AUDACITY_DLL_API MeterPanel final
-   : public MeterPanelBase, public Meter
-   , private PrefsListener
+class AUDACITY_DLL_API PeakAndRmsMeter
+   : public Meter
    , public NonInterferingBase
 {
-   DECLARE_DYNAMIC_CLASS(MeterPanel)
-
- public:
-   // These should be kept in the same order as they appear
-   // in the menu
-   enum Style {
-      AutomaticStereo,
-      HorizontalStereo,
-      VerticalStereo,
-      MixerTrackCluster, // Doesn't show menu, icon, or L/R labels, but otherwise like VerticalStereo.
-      HorizontalStereoCompact, // Thinner.
-      VerticalStereoCompact, // Narrower.
-   };
-
-
+public:
    struct Stats {
       void Reset(bool resetClipping)
       {
@@ -120,6 +100,73 @@ class AUDACITY_DLL_API MeterPanel final
       float  peakPeakHold{ 0 };
    };
 
+   explicit PeakAndRmsMeter(int dbRange);
+   ~PeakAndRmsMeter() override;
+
+   void Clear() override;
+   void Reset(double sampleRate, bool resetClipping) override;
+
+   //! Update the meters with a block of audio data
+   /*!
+    Process the supplied block of audio data, extracting the peak and RMS
+    levels to send to the meter. Also record runs of clipped samples to detect
+    clipping that lies on block boundaries.
+    This method is thread-safe!  Feel free to call from a different thread
+    (like from an audio I/O callback).
+
+    @param numChannels The number of channels of audio being played back or
+    recorded.
+    @param numFrames The number of frames (samples) in this data block. It is
+    assumed that there are the same number of frames in each channel.
+    @param sampleData The audio data itself.
+    */
+   void Update(unsigned numChannels,
+      unsigned long numFrames, const float *sampleData, bool interleaved)
+   override;
+
+   //! Find out if the level meter is disabled or not.
+   /*!
+    This method is thread-safe!  Feel free to call from a
+    different thread (like from an audio I/O callback).
+    */
+   bool IsDisabled() const override;
+
+   bool IsClipping() const;
+   int GetDBRange() const;
+
+protected:
+   MeterUpdateQueue mQueue{ 1024 };
+   unsigned  mNumBars{ 0 };
+   Stats  mStats[kMaxMeterBars]{};
+   int mNumPeakSamplesToClip{ 3 };
+   bool mMeterDisabled{};
+   bool      mDB{ true };
+   int       mDBRange{ 60 };
+};
+
+/********************************************************************//**
+\brief MeterPanel is a panel that paints the meter used for monitoring
+or playback.
+************************************************************************/
+class AUDACITY_DLL_API MeterPanel final
+   : public MeterPanelBase
+   , public PeakAndRmsMeter
+   , private PrefsListener
+{
+   DECLARE_DYNAMIC_CLASS(MeterPanel)
+
+ public:
+   // These should be kept in the same order as they appear
+   // in the menu
+   enum Style {
+      AutomaticStereo,
+      HorizontalStereo,
+      VerticalStereo,
+      MixerTrackCluster, // Doesn't show menu, icon, or L/R labels, but otherwise like VerticalStereo.
+      HorizontalStereoCompact, // Thinner.
+      VerticalStereoCompact, // Narrower.
+   };
+
    MeterPanel(AudacityProject *,
          wxWindow* parent, wxWindowID id,
          bool isInput,
@@ -129,8 +176,6 @@ class AUDACITY_DLL_API MeterPanel final
          float fDecayRate = 60.0f);
 
    void SetFocusFromKbd() override;
-
-   void Clear() override;
 
    Style GetStyle() const { return mStyle; }
    Style GetDesiredStyle() const { return mDesiredStyle; }
@@ -143,27 +188,6 @@ class AUDACITY_DLL_API MeterPanel final
     */
    void Reset(double sampleRate, bool resetClipping) override;
 
-   /** \brief Update the meters with a block of audio data
-    *
-    * Process the supplied block of audio data, extracting the peak and RMS
-    * levels to send to the meter. Also record runs of clipped samples to detect
-    * clipping that lies on block boundaries.
-    * This method is thread-safe!  Feel free to call from a different thread
-    * (like from an audio I/O callback).
-    *
-    * First overload:
-    * \param numChannels The number of channels of audio being played back or
-    * recorded.
-    * \param numFrames The number of frames (samples) in this data block. It is
-    * assumed that there are the same number of frames in each channel.
-    * \param sampleData The audio data itself
-    *
-    * The second overload is for ease of use in MixerBoard.
-    */
-   void Update(unsigned numChannels,
-      unsigned long numFrames, const float *sampleData, bool interleaved)
-   override;
-
    // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
    //void UpdateDisplay(int numChannels, int numFrames,
    //                     // Need to make these double-indexed max and min arrays if we handle more than 2 channels.
@@ -171,19 +195,10 @@ class AUDACITY_DLL_API MeterPanel final
    //                     float* maxRight, float* rmsRight,
    //                     const size_t kSampleCount);
 
-   /** \brief Find out if the level meter is disabled or not.
-    *
-    * This method is thread-safe!  Feel free to call from a
-    * different thread (like from an audio I/O callback).
-    */
-   bool IsDisabled() const override;
-
    float GetPeakHold() const;
 
    bool IsMonitoring() const;
    bool IsActive() const;
-
-   bool IsClipping() const;
 
    void StartMonitoring();
    void StopMonitoring();
@@ -193,8 +208,6 @@ class AUDACITY_DLL_API MeterPanel final
    State SaveState();
    void RestoreState(const State &state);
    void SetMixer(wxCommandEvent& event);
-
-   int GetDBRange() const { return mDB ? mDBRange : -1; }
 
    bool ShowDialog();
    void Increase(float steps);
@@ -248,7 +261,6 @@ class AUDACITY_DLL_API MeterPanel final
    Observer::Subscription mAudioCaptureSubscription;
 
    AudacityProject *mProject;
-   MeterUpdateQueue mQueue;
    wxTimer          mTimer;
    wxTimer          mTipTimer;
 
@@ -263,8 +275,6 @@ class AUDACITY_DLL_API MeterPanel final
    Style     mStyle{};
    Style     mDesiredStyle;
    bool      mGradient;
-   bool      mDB;
-   int       mDBRange;
    bool      mDecay;
    float     mDecayRate{}; // dB/sec
    bool      mClip;
@@ -273,14 +283,11 @@ class AUDACITY_DLL_API MeterPanel final
    double    mT;
    double    mRate;
    long      mMeterRefreshRate{};
-   long      mMeterDisabled{}; //is used as a bool, needs long for easy gPrefs...
 
    bool      mMonitoring;
 
    bool      mActive;
 
-   unsigned  mNumBars;
-   Stats  mStats[kMaxMeterBars]{};
    MeterBar  mBar[kMaxMeterBars]{};
 
    bool      mLayoutValid;
