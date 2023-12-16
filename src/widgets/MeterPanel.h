@@ -35,8 +35,8 @@ struct AudioIOEvent;
 
 struct MeterBar {
    bool   vert{};
-   wxRect b{};         // Bevel around bar
-   wxRect r{};         // True bar drawing area
+   wxRect bevel{};         // Bevel around bar
+   wxRect rect{};         // True bar drawing area
    wxRect rClip{};
 };
 
