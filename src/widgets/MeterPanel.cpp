@@ -433,19 +433,19 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       }
 
       // Draw the meter bars at maximum levels
-      for (unsigned int i = 0; i < mNumBars; i++)
-      {
+      for (unsigned int i = 0; i < mNumBars; i++) {
+         const auto & bar = mBar[i];
          // Give it a recessed look
-         AColor::Bevel(dc, false, mBar[i].b);
+         AColor::Bevel(dc, false, bar.bevel);
 
          // Draw the clip indicator bevel
          if (mClip)
          {
-            AColor::Bevel(dc, false, mBar[i].rClip);
+            AColor::Bevel(dc, false, bar.rClip);
          }
 
          // Cache bar rect
-         wxRect r = mBar[i].r;
+         wxRect rect = bar.rect;
 
          if (mGradient)
          {
@@ -454,69 +454,72 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
             double gradh;
             if (mDB)
             {
-               gradw = (double) r.GetWidth() / mDBRange * 6.0;
-               gradh = (double) r.GetHeight() / mDBRange * 6.0;
+               gradw = (double) rect.GetWidth() / mDBRange * 6.0;
+               gradh = (double) rect.GetHeight() / mDBRange * 6.0;
             }
             else
             {
-               gradw = (double) r.GetWidth() / 100 * 25;
-               gradh = (double) r.GetHeight() / 100 * 25;
+               gradw = (double) rect.GetWidth() / 100 * 25;
+               gradh = (double) rect.GetHeight() / 100 * 25;
             }
 
-            if (mBar[i].vert)
+            if (bar.vert)
             {
                // Draw the "critical" segment (starts at top of meter and works down)
-               r.SetHeight(gradh);
-               dc.GradientFillLinear(r, red, yellow, wxSOUTH);
+               rect.SetHeight(gradh);
+               dc.GradientFillLinear(rect, red, yellow, wxSOUTH);
 
                // Draw the "warning" segment
-               r.SetTop(r.GetBottom());
-               dc.GradientFillLinear(r, yellow, green, wxSOUTH);
+               rect.SetTop(rect.GetBottom());
+               dc.GradientFillLinear(rect, yellow, green, wxSOUTH);
 
                // Draw the "safe" segment
-               r.SetTop(r.GetBottom());
-               r.SetBottom(mBar[i].r.GetBottom());
+               rect.SetTop(rect.GetBottom());
+               rect.SetBottom(bar.rect.GetBottom());
                dc.SetPen(*wxTRANSPARENT_PEN);
                dc.SetBrush(green);
-               dc.DrawRectangle(r);
+               dc.DrawRectangle(rect);
             }
             else
             {
                // Draw the "safe" segment
-               r.SetWidth(r.GetWidth() - (int) (gradw + gradw + 0.5));
+               rect.SetWidth(rect.GetWidth() - (int) (gradw + gradw + 0.5));
                dc.SetPen(*wxTRANSPARENT_PEN);
                dc.SetBrush(green);
-               dc.DrawRectangle(r);
+               dc.DrawRectangle(rect);
 
                // Draw the "warning"  segment
-               r.SetLeft(r.GetRight() + 1);
-               r.SetWidth(floor(gradw));
-               dc.GradientFillLinear(r, green, yellow);
+               rect.SetLeft(rect.GetRight() + 1);
+               rect.SetWidth(floor(gradw));
+               dc.GradientFillLinear(rect, green, yellow);
 
                // Draw the "critical" segment
-               r.SetLeft(r.GetRight() + 1);
-               r.SetRight(mBar[i].r.GetRight());
-               dc.GradientFillLinear(r, yellow, red);
+               rect.SetLeft(rect.GetRight() + 1);
+               rect.SetRight(bar.rect.GetRight());
+               dc.GradientFillLinear(rect, yellow, red);
             }
 #ifdef EXPERIMENTAL_METER_LED_STYLE
-            if (!mBar[i].vert)
+            if (!bar.vert)
             {
-               wxRect r = mBar[i].r;
+               wxRect rect = bar.rect;
                wxPen BackgroundPen;
                BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
                dc.SetPen( BackgroundPen );
                int i;
-               for(i=0;i<r.width;i++)
+               for(i = 0; i < rect.width; ++i)
                {
                   // 2 pixel spacing between the LEDs
                   if( (i%7)<2 ){
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
+                     AColor::Line( dc, i + rect.x, rect.y, i + rect.x,
+                        rect.y + rect.height );
                   } else {
                      // The LEDs have triangular ends.
                      // This code shapes the ends.
                      int j = abs( (i%7)-4);
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
-                     AColor::Line( dc, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
+                     AColor::Line( dc, i + rect.x, rect.y, i + rect.x,
+                        rect.y + j + 1);
+                     AColor::Line( dc, i + rect.x, rect.y + rect.height - j,
+                        i + rect.x, rect.y + rect.height);
                   }
                }
             }
@@ -925,28 +928,29 @@ void MeterPanel::SetActiveStyle(Style newStyle)
 void MeterPanel::SetBarAndClip(int iBar, bool vert)
 {
    // Save the orientation
-   mBar[iBar].vert = vert;
+   auto &bar = mBar[iBar];
+   bar.vert = vert;
 
    // Create the bar rectangle and educe to fit inside the bevel
-   mBar[iBar].r = mBar[iBar].b;
-   mBar[iBar].r.x += 1;
-   mBar[iBar].r.width -= 1;
-   mBar[iBar].r.y += 1;
-   mBar[iBar].r.height -= 1;
+   bar.rect = bar.bevel;
+   bar.rect.x += 1;
+   bar.rect.width -= 1;
+   bar.rect.y += 1;
+   bar.rect.height -= 1;
 
    if (vert)
    {
       if (mClip)
       {
          // Create the clip rectangle
-         mBar[iBar].rClip = mBar[iBar].b;
-         mBar[iBar].rClip.height = 3;
+         bar.rClip = bar.bevel;
+         bar.rClip.height = 3;
 
          // Make room for the clipping indicator
-         mBar[iBar].b.y += 3 + gap;
-         mBar[iBar].b.height -= 3 + gap;
-         mBar[iBar].r.y += 3 + gap;
-         mBar[iBar].r.height -= 3 + gap;
+         bar.bevel.y += 3 + gap;
+         bar.bevel.height -= 3 + gap;
+         bar.rect.y += 3 + gap;
+         bar.rect.height -= 3 + gap;
       }
    }
    else
@@ -954,13 +958,13 @@ void MeterPanel::SetBarAndClip(int iBar, bool vert)
       if (mClip)
       {
          // Make room for the clipping indicator
-         mBar[iBar].b.width -= 4;
-         mBar[iBar].r.width -= 4;
+         bar.bevel.width -= 4;
+         bar.rect.width -= 4;
 
          // Create the indicator rectangle
-         mBar[iBar].rClip = mBar[iBar].b;
-         mBar[iBar].rClip.x = mBar[iBar].b.GetRight() + 1 + gap; // +1 for bevel
-         mBar[iBar].rClip.width = 3;
+         bar.rClip = bar.bevel;
+         bar.rClip.x = bar.bevel.GetRight() + 1 + gap; // +1 for bevel
+         bar.rClip.width = 3;
       }
    }
 }
@@ -1037,20 +1041,20 @@ void MeterPanel::HandleLayout()
       mNumBars = 2;
 
       // Save dimensions of the left bevel
-      mBar[0].b = wxRect(left, top, barw, barh);
+      mBar[0].bevel = wxRect(left, top, barw, barh);
 
       // Save dimensions of the right bevel
-      mBar[1].b = mBar[0].b;
-      mBar[1].b.SetLeft(mBar[0].b.GetRight() + 1 + gap); // +1 for right edge
+      mBar[1].bevel = mBar[0].bevel;
+      mBar[1].bevel.SetLeft(mBar[0].bevel.GetRight() + 1 + gap); // +1 for right edge
 
       // Set bar and clipping indicator dimensions
       SetBarAndClip(0, true);
       SetBarAndClip(1, true);
 
-      mRuler.SetBounds(mBar[1].r.GetRight() + 1,   // +1 for the bevel
-                       mBar[1].r.GetTop(),
+      mRuler.SetBounds(mBar[1].rect.GetRight() + 1,   // +1 for the bevel
+                       mBar[1].rect.GetTop(),
                        mWidth,
-                       mBar[1].r.GetBottom());
+                       mBar[1].rect.GetBottom());
       mRuler.OfflimitsPixels(0, 0);
       break;
    case VerticalStereo:
@@ -1090,21 +1094,21 @@ void MeterPanel::HandleLayout()
       mNumBars = 2;
 
       // Save dimensions of the left bevel
-      mBar[0].b = wxRect(left, top, barw, barh);
+      mBar[0].bevel = wxRect(left, top, barw, barh);
 
       // Save dimensions of the right bevel
-      mBar[1].b = mBar[0].b;
-      mBar[1].b.SetLeft(mBar[0].b.GetRight() + 1 + gap); // +1 for right edge
+      mBar[1].bevel = mBar[0].bevel;
+      mBar[1].bevel.SetLeft(mBar[0].bevel.GetRight() + 1 + gap); // +1 for right edge
 
       // Set bar and clipping indicator dimensions
       SetBarAndClip(0, true);
       SetBarAndClip(1, true);
 
-      mRuler.SetBounds(mBar[1].r.GetRight() + 1,   // +1 for the bevel
-                       mBar[1].r.GetTop(),
+      mRuler.SetBounds(mBar[1].rect.GetRight() + 1,   // +1 for the bevel
+                       mBar[1].rect.GetTop(),
                        mWidth,
-                       mBar[1].r.GetBottom());
-      mRuler.OfflimitsPixels(mRightTextPos.y - gap, mBar[1].r.GetBottom());
+                       mBar[1].rect.GetBottom());
+      mRuler.OfflimitsPixels(mRightTextPos.y - gap, mBar[1].rect.GetBottom());
       break;
    case VerticalStereoCompact:
       // Ensure there's a margin between top edge of window and the meters
@@ -1126,24 +1130,24 @@ void MeterPanel::HandleLayout()
       mNumBars = 2;
 
       // Save dimensions of the left bevel
-      mBar[0].b = wxRect(left, top, barw, barh);
+      mBar[0].bevel = wxRect(left, top, barw, barh);
 
       // Save dimensions of the right bevel
-      mBar[1].b = mBar[0].b;
-      mBar[1].b.SetLeft(mBar[0].b.GetRight() + 1 + gap); // +1 for right edge
+      mBar[1].bevel = mBar[0].bevel;
+      mBar[1].bevel.SetLeft(mBar[0].bevel.GetRight() + 1 + gap); // +1 for right edge
 
       // Set bar and clipping indicator dimensions
       SetBarAndClip(0, true);
       SetBarAndClip(1, true);
 
       // L/R is centered horizontally under each bar
-      mLeftTextPos = wxPoint(mBar[0].b.GetLeft() + ((mBar[0].b.GetWidth() - ltxtWidth) / 2), top + barh + gap);
-      mRightTextPos = wxPoint(mBar[1].b.GetLeft() + ((mBar[1].b.GetWidth() - rtxtWidth) / 2), top + barh + gap);
+      mLeftTextPos = wxPoint(mBar[0].bevel.GetLeft() + ((mBar[0].bevel.GetWidth() - ltxtWidth) / 2), top + barh + gap);
+      mRightTextPos = wxPoint(mBar[1].bevel.GetLeft() + ((mBar[1].bevel.GetWidth() - rtxtWidth) / 2), top + barh + gap);
 
       mRuler.SetBounds((mWidth - mRulerWidth) / 2,
-                       mBar[1].r.GetTop(),
+                       mBar[1].rect.GetTop(),
                        (mWidth - mRulerWidth) / 2,
-                       mBar[1].r.GetBottom());
+                       mBar[1].rect.GetBottom());
       mRuler.OfflimitsPixels(0, 0);
       break;
    case HorizontalStereo:
@@ -1185,20 +1189,20 @@ void MeterPanel::HandleLayout()
       mNumBars = 2;
 
       // Save dimensions of the top bevel
-      mBar[0].b = wxRect(left, top, barw, barh);
+      mBar[0].bevel = wxRect(left, top, barw, barh);
 
       // Save dimensions of the bottom bevel
-      mBar[1].b = mBar[0].b;
-      mBar[1].b.SetTop(mBar[0].b.GetBottom() + 1 + gap); // +1 for bottom edge
+      mBar[1].bevel = mBar[0].bevel;
+      mBar[1].bevel.SetTop(mBar[0].bevel.GetBottom() + 1 + gap); // +1 for bottom edge
 
       // Set bar and clipping indicator dimensions
       SetBarAndClip(0, false);
       SetBarAndClip(1, false);
 
-      mRuler.SetBounds(mBar[1].r.GetLeft(),
-                       mBar[1].r.GetBottom() + 1, // +1 to fit below bevel
-                       mBar[1].r.GetRight(),
-                       mHeight - mBar[1].r.GetBottom() + 1);
+      mRuler.SetBounds(mBar[1].rect.GetLeft(),
+                       mBar[1].rect.GetBottom() + 1, // +1 to fit below bevel
+                       mBar[1].rect.GetRight(),
+                       mHeight - mBar[1].rect.GetBottom() + 1);
       break;
    case HorizontalStereoCompact:
       left = gap;
@@ -1230,24 +1234,24 @@ void MeterPanel::HandleLayout()
       mNumBars = 2;
 
       // Save dimensions of the top bevel
-      mBar[0].b = wxRect(left, top, barw, barh);
+      mBar[0].bevel = wxRect(left, top, barw, barh);
 
       // Save dimensions of the bottom bevel
       // Since the bars butt up against the window's top and bottom edges, we need
       // to include an extra pixel in the bottom bar when the window height and
       // meter height do not exactly match.
-      mBar[1].b = mBar[0].b;
-      mBar[1].b.SetTop(mBar[0].b.GetBottom() + 1 + gap); // +1 for bottom bevel
-      mBar[1].b.SetHeight(mHeight - mBar[1].b.GetTop() - 1); // +1 for bottom bevel
+      mBar[1].bevel = mBar[0].bevel;
+      mBar[1].bevel.SetTop(mBar[0].bevel.GetBottom() + 1 + gap); // +1 for bottom bevel
+      mBar[1].bevel.SetHeight(mHeight - mBar[1].bevel.GetTop() - 1); // +1 for bottom bevel
 
       // Add clipping indicators - do after setting bar/bevel dimensions above
       SetBarAndClip(0, false);
       SetBarAndClip(1, false);
 
-      mRuler.SetBounds(mBar[1].r.GetLeft(),
-                       mBar[1].b.GetTop() - (mRulerHeight / 2),
-                       mBar[1].r.GetRight(),
-                       mBar[1].b.GetTop() - (mRulerHeight / 2));
+      mRuler.SetBounds(mBar[1].rect.GetLeft(),
+                       mBar[1].bevel.GetTop() - (mRulerHeight / 2),
+                       mBar[1].rect.GetRight(),
+                       mBar[1].bevel.GetTop() - (mRulerHeight / 2));
       mRuler.OfflimitsPixels(0, 0);
       break;
    }
@@ -1276,10 +1280,10 @@ void MeterPanel::DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
    MeterBar &bar, Stats &stats)
 {
    // Cache some metrics
-   wxCoord x = bar.r.GetLeft();
-   wxCoord y = bar.r.GetTop();
-   wxCoord w = bar.r.GetWidth();
-   wxCoord h = bar.r.GetHeight();
+   wxCoord x = bar.rect.GetLeft();
+   wxCoord y = bar.rect.GetTop();
+   wxCoord w = bar.rect.GetWidth();
+   wxCoord h = bar.rect.GetHeight();
    wxCoord ht;
    wxCoord wd;
 
