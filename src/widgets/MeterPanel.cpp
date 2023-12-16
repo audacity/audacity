@@ -670,7 +670,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    // Go draw the meter bars, Left & Right channels using current levels
    for (unsigned int i = 0; i < mNumBars; i++)
    {
-      DrawMeterBar(destDC, mBar[i]);
+      DrawMeterBar(destDC, mBar[i], mStats[i]);
    }
 
    destDC.SetTextForeground( clrText );
@@ -888,7 +888,7 @@ void MeterPanel::Reset(double sampleRate, bool resetClipping)
    mT = 0;
    mRate = sampleRate;
    for (int j = 0; j < kMaxMeterBars; j++)
-      mBar[j].Reset(resetClipping);
+      mStats[j].Reset(resetClipping);
 
    // wxTimers seem to be a little unreliable - sometimes they stop for
    // no good reason, so this "primes" it every now and then...
@@ -1037,7 +1037,7 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 
       mT += deltaT;
       for(unsigned int j=0; j<mNumBars; j++) {
-         //
+         auto &stats = mStats[j];
          if (mDB) {
             msg.peak[j] = ToDB(msg.peak[j], mDBRange);
             msg.rms[j] = ToDB(msg.rms[j], mDBRange);
@@ -1046,38 +1046,38 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
          if (mDecay) {
             if (mDB) {
                float decayAmount = mDecayRate * deltaT / mDBRange;
-               mBar[j].peak = std::max(msg.peak[j], mBar[j].peak - decayAmount);
+               stats.peak = std::max(msg.peak[j], stats.peak - decayAmount);
             }
             else {
                double decayAmount = mDecayRate * deltaT;
                double decayFactor = DB_TO_LINEAR(-decayAmount);
-               mBar[j].peak =
-                  std::max<float>(msg.peak[j], mBar[j].peak * decayFactor);
+               stats.peak =
+                  std::max<float>(msg.peak[j], stats.peak * decayFactor);
             }
          }
          else
-            mBar[j].peak = msg.peak[j];
+            stats.peak = msg.peak[j];
 
          // This smooths out the RMS signal
          float smooth = pow(0.9, (double)msg.numFrames/1024.0);
-         mBar[j].rms = mBar[j].rms * smooth + msg.rms[j] * (1.0 - smooth);
+         stats.rms = stats.rms * smooth + msg.rms[j] * (1.0 - smooth);
 
-         if (mT - mBar[j].peakHoldTime > mPeakHoldDuration ||
-             mBar[j].peak > mBar[j].peakHold) {
-            mBar[j].peakHold = mBar[j].peak;
-            mBar[j].peakHoldTime = mT;
+         if (mT - stats.peakHoldTime > mPeakHoldDuration ||
+             stats.peak > stats.peakHold) {
+            stats.peakHold = stats.peak;
+            stats.peakHoldTime = mT;
          }
 
-         if (mBar[j].peak > mBar[j].peakPeakHold )
-            mBar[j].peakPeakHold = mBar[j].peak;
+         if (stats.peak > stats.peakPeakHold )
+            stats.peakPeakHold = stats.peak;
 
          if (msg.clipping[j] ||
-             mBar[j].tailPeakCount+msg.headPeakCount[j] >=
+             stats.tailPeakCount + msg.headPeakCount[j] >=
              mNumPeakSamplesToClip){
-            mBar[j].clipping = true;
+            stats.clipping = true;
          }
 
-         mBar[j].tailPeakCount = msg.tailPeakCount[j];
+         stats.tailPeakCount = msg.tailPeakCount[j];
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
          if (mT > AILA::Get().GetLastDecisionTime()) {
             discarded = false;
@@ -1113,7 +1113,7 @@ float MeterPanel::GetPeakHold() const
 {
    auto peakHold = .0f;
    for (unsigned int i = 0; i < mNumBars; i++)
-      peakHold = std::max(peakHold, mBar[i].peakPeakHold);
+      peakHold = std::max(peakHold, mStats[i].peakPeakHold);
    return peakHold;
 }
 
@@ -1140,7 +1140,7 @@ bool MeterPanel::IsMonitoring() const
 bool MeterPanel::IsClipping() const
 {
    for (int c = 0; c < mNumBars; c++)
-      if (mBar[c].clipping)
+      if (mStats[c].clipping)
          return true;
    return false;
 }
@@ -1533,7 +1533,7 @@ void MeterPanel::RepaintBarsNow()
    }
 }
 
-void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
+void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
 {
    // Cache some metrics
    wxCoord x = bar.r.GetLeft();
@@ -1558,7 +1558,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Copy as much of the predrawn meter bar as is required for the
          // current peak.
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         ht = (int)(bar.peak * (h - 1) + 0.5);
+         ht = (int)(stats.peak * (h - 1) + 0.5);
 
          // Blank out the rest
          if (h - ht)
@@ -1578,7 +1578,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Draw the "recent" peak hold line using the predrawn meter bar so that
          // it will be the same color as the original level.
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         ht = (int)(bar.peakHold * (h - 1) + 0.5);
+         ht = (int)(stats.peakHold * (h - 1) + 0.5);
          if (ht > 1)
          {
             dc.Blit(x, y + h - ht - 1, w, 2, &srcDC, x, y + h - ht - 1);
@@ -1587,7 +1587,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Draw the "maximum" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          dc.SetPen(mPeakPeakPen);
-         ht = (int)(bar.peakPeakHold * (h - 1) + 0.5);
+         ht = (int)(stats.peakPeakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
             AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
@@ -1601,7 +1601,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
       {
          // Calculate the peak position
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         wd = (int)(bar.peak * (w - 1) + 0.5);
+         wd = (int)(stats.peak * (w - 1) + 0.5);
 
          // Blank out the rest
          if (w - wd)
@@ -1622,7 +1622,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Draw the "recent" peak hold line using the predrawn meter bar so that
          // it will be the same color as the original level.
          // -1 to give a 2 pixel width
-         wd = (int)(bar.peakHold * (w - 1) + 0.5);
+         wd = (int)(stats.peakHold * (w - 1) + 0.5);
          if (wd > 1)
          {
             dc.Blit(x + wd - 1, y, 2, h, &srcDC, x + wd, y);
@@ -1631,7 +1631,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Draw the "maximum" peak hold line using a themed color
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          dc.SetPen(mPeakPeakPen);
-         wd = (int)(bar.peakPeakHold * (w - 1) + 0.5);
+         wd = (int)(stats.peakPeakHold * (w - 1) + 0.5);
          if (wd > 0)
          {
             AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
@@ -1651,7 +1651,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
       {
          // Calculate the peak position
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         ht = (int)(bar.peak * (h - 1) + 0.5);
+         ht = (int)(stats.peak * (h - 1) + 0.5);
 
          // Blank out the rest
          if (h - ht)
@@ -1672,7 +1672,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Draw the "recent" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          dc.SetPen(mPen);
-         ht = (int)(bar.peakHold * (h - 1) + 0.5);
+         ht = (int)(stats.peakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
             AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
@@ -1685,7 +1685,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Calculate the rms position
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          // +1 to include the rms position
-         ht = (int)(bar.rms * (h - 1) + 0.5);
+         ht = (int)(stats.rms * (h - 1) + 0.5);
 
          // Draw the RMS level
          dc.SetPen(*wxTRANSPARENT_PEN);
@@ -1698,7 +1698,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Draw the "maximum" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          dc.SetPen(mPeakPeakPen);
-         ht = (int)(bar.peakPeakHold * (h - 1) + 0.5);
+         ht = (int)(stats.peakPeakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
             AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
@@ -1712,7 +1712,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
       {
          // Calculate the peak position
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         wd = (int)(bar.peak * (w - 1) + 0.5);
+         wd = (int)(stats.peak * (w - 1) + 0.5);
 
          // Blank out the rest
          if (w - wd)
@@ -1733,7 +1733,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Draw the "recent" peak hold line
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          dc.SetPen(mPen);
-         wd = (int)(bar.peakHold * (w - 1) + 0.5);
+         wd = (int)(stats.peakHold * (w - 1) + 0.5);
          if (wd > 0)
          {
             AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
@@ -1745,7 +1745,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
 
          // Calculate the rms position
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         wd = (int)(bar.rms * (w - 1) + 0.5);
+         wd = (int)(stats.rms * (w - 1) + 0.5);
 
          // Draw the rms level 
          // +1 to include the rms position
@@ -1759,7 +1759,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
          // Draw the "maximum" peak hold line using a themed color
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          dc.SetPen(mPeakPeakPen);
-         wd = (int)(bar.peakPeakHold * (w - 1) + 0.5);
+         wd = (int)(stats.peakPeakHold * (w - 1) + 0.5);
          if (wd > 0)
          {
             AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
@@ -1776,8 +1776,8 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar)
    //       it is always "true".
    if (mClip)
    {
-      if (bar.clipping)
-      {
+      if (stats.clipping)
+       {
          dc.SetBrush(mClipBrush);
       }
       else
