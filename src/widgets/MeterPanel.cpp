@@ -397,18 +397,9 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       wxMemoryDC dc;
       dc.SelectObject(*mBitmap);
 
-      // Start with a clean background
-      // LLL:  Should research USE_AQUA_THEME usefulness...
-//#ifndef USE_AQUA_THEME
-      //if( !mMeterDisabled )
-      //{
-      //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
-      //}
-      mBkgndBrush.SetColour( GetBackgroundColour() );
       dc.SetPen(*wxTRANSPARENT_PEN);
       dc.SetBrush(mBkgndBrush);
       dc.DrawRectangle(0, 0, mWidth, mHeight);
-//#endif
 
       // MixerTrackCluster style has no icon or L/R labels
       if (mStyle != MixerTrackCluster)
