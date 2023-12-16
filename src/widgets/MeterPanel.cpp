@@ -818,9 +818,7 @@ void MeterPanel::Reset(double sampleRate, bool resetClipping)
    mT = 0;
    mRate = sampleRate;
    for (int j = 0; j < kMaxMeterBars; j++)
-   {
-      ResetBar(mBar[j], resetClipping);
-   }
+      mBar[j].Reset(resetClipping);
 
    // wxTimers seem to be a little unreliable - sometimes they stop for
    // no good reason, so this "primes" it every now and then...
@@ -1057,20 +1055,6 @@ wxFont MeterPanel::GetFont() const
 #endif
 
    return wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-}
-
-void MeterPanel::ResetBar(MeterBar &b, bool resetClipping)
-{
-   b.peak = 0.0;
-   b.rms = 0.0;
-   b.peakHold = 0.0;
-   b.peakHoldTime = 0.0;
-   if (resetClipping)
-   {
-      b.clipping = false;
-      b.peakPeakHold = 0.0;
-   }
-   b.tailPeakCount = 0;
 }
 
 bool MeterPanel::IsActive() const

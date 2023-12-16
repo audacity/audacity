@@ -38,17 +38,30 @@ struct AudioIOEvent;
 const int kMaxMeterBars = 2;
 
 struct MeterBar {
-   bool   vert;
-   wxRect b;         // Bevel around bar
-   wxRect r;         // True bar drawing area
-   float  peak;
-   float  rms;
-   float  peakHold;
-   double peakHoldTime;
-   wxRect rClip;
-   bool   clipping;
-   int    tailPeakCount;
-   float  peakPeakHold;
+   void Reset(bool resetClipping)
+   {
+      peak = 0.0;
+      rms = 0.0;
+      peakHold = 0.0;
+      peakHoldTime = 0.0;
+      if (resetClipping) {
+         clipping = false;
+         peakPeakHold = 0.0;
+      }
+      tailPeakCount = 0;
+   }
+
+   bool   vert{};
+   wxRect b{};         // Bevel around bar
+   wxRect r{};         // True bar drawing area
+   float  peak{ 0 };
+   float  rms{ 0 };
+   float  peakHold{ 0 };
+   double peakHoldTime{ 0 };
+   wxRect rClip{};
+   bool   clipping{ false };
+   int    tailPeakCount{ 0 };
+   float  peakPeakHold{ 0 };
 };
 
 class MeterUpdateMsg
@@ -216,7 +229,6 @@ class AUDACITY_DLL_API MeterPanel final
    void SetActiveStyle(Style style);
    void SetBarAndClip(int iBar, bool vert);
    void DrawMeterBar(wxDC &dc, MeterBar &meterBar);
-   static void ResetBar(MeterBar &bar, bool resetClipping);
    void RepaintBarsNow();
    wxFont GetFont() const;
 
