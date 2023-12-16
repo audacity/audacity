@@ -21,43 +21,44 @@ auto MeterPanelBase::TemporarilyAllowFocus() -> TempAllowFocus {
 
 struct MeterPanelBase::Forwarder : Meter
 {
-   explicit Forwarder( MeterPanelBase *pOwner )
-      : mOwner{ pOwner } {}
+   explicit Forwarder(wxEvtHandler *pMeter)
+      : mpMeter{ pMeter } {}
    ~Forwarder() override {}
 
    void Clear() override
    {
-      if (mOwner)
-         mOwner->Clear();
+      if (const auto pMeter = GetMeter())
+         pMeter->Clear();
    }
    void Reset(double sampleRate, bool resetClipping) override
    {
-      if (mOwner)
-         mOwner->Reset( sampleRate, resetClipping );
+      if (const auto pMeter = GetMeter())
+         pMeter->Reset(sampleRate, resetClipping);
    }
    void Update(unsigned numChannels,
       unsigned long numFrames, const float *sampleData, bool interleaved)
    override
    {
-      if (mOwner)
-         mOwner->Update(numChannels, numFrames, sampleData, interleaved);
+      if (const auto pMeter = GetMeter())
+         pMeter->Update(numChannels, numFrames, sampleData, interleaved);
    }
    bool IsDisabled() const override
    {
-      if (mOwner)
-         return mOwner->IsDisabled();
+      if (const auto pMeter = GetMeter())
+         return pMeter->IsDisabled();
       else
          return true;
    }
 
-   const wxWeakRef< MeterPanelBase > mOwner;
+   Meter *GetMeter() const { return dynamic_cast<Meter*>(mpMeter.get()); }
+   const wxWeakRef<wxEvtHandler> mpMeter;
 };
 
 MeterPanelBase::~MeterPanelBase() = default;
 
-void MeterPanelBase::Init()
+void MeterPanelBase::Init(wxEvtHandler *pMeter)
 {
-   mForwarder = std::make_shared< Forwarder >( this );
+   mForwarder = std::make_shared<Forwarder>(this);
 }
 
 std::shared_ptr<Meter> MeterPanelBase::GetMeter() const

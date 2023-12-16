@@ -333,6 +333,8 @@ MeterPanel::MeterPanel(AudacityProject *project,
    // balistics are right for 44KHz and a bit more frisky than they should be
    // for higher sample rates.
    Reset(44100.0, true);
+   
+   MeterPanelBase::Init(this);
 }
 
 void MeterPanel::Clear()

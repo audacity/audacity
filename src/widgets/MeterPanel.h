@@ -24,6 +24,7 @@
 
 #include "ASlider.h"
 #include "LockFreeQueue.h"
+#include "Meter.h"
 #include "MeterPanelBase.h" // to inherit
 #include "Observer.h"
 #include "Prefs.h"
@@ -78,7 +79,8 @@ class MeterAx;
 or playback.
 ************************************************************************/
 class AUDACITY_DLL_API MeterPanel final
-   : public MeterPanelBase, private PrefsListener
+   : public MeterPanelBase, public Meter
+   , private PrefsListener
    , public NonInterferingBase
 {
    DECLARE_DYNAMIC_CLASS(MeterPanel)
