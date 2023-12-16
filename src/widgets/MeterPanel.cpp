@@ -553,9 +553,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    // Go draw the meter bars, Left & Right channels using current levels
    for (unsigned int i = 0; i < mNumBars; i++)
-   {
-      DrawMeterBar(destDC, mBar[i], mStats[i]);
-   }
+      DrawMeterBar(destDC, *mBitmap, mMeterDisabled, mBar[i], mStats[i]);
 
    destDC.SetTextForeground( clrText );
 
@@ -1290,7 +1288,8 @@ void MeterPanel::RepaintBarsNow()
    }
 }
 
-void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
+void MeterPanel::DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
+   MeterBar &bar, Stats &stats)
 {
    // Cache some metrics
    wxCoord x = bar.r.GetLeft();
@@ -1302,13 +1301,13 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
 
    // Setup for erasing the background
    dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush);
+   dc.SetBrush(disabled ? mDisabledBkgndBrush : mBkgndBrush);
 
    if (mGradient)
    {
       // Map the predrawn bitmap into the source DC
       wxMemoryDC srcDC;
-      srcDC.SelectObject(*mBitmap);
+      srcDC.SelectObject(bitmap);
 
       if (bar.vert)
       {
@@ -1420,7 +1419,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
          // Draw the peak level
          // +/-1 to include the peak position
          dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBrush);
+         dc.SetBrush(disabled ? mDisabledBkgndBrush : mBrush);
          if (ht)
          {
             dc.DrawRectangle(x, y + h - ht - 1, w, ht + 1);
@@ -1446,7 +1445,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
 
          // Draw the RMS level
          dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
+         dc.SetBrush(disabled ? mDisabledBkgndBrush : mRMSBrush);
          if (ht)
          {
             dc.DrawRectangle(x, y + h - ht - 1, w, ht + 1);
@@ -1481,7 +1480,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
          // Draw the peak level
          // +1 to include peak position
          dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBrush);
+         dc.SetBrush(disabled ? mDisabledBkgndBrush : mBrush);
          if (wd)
          {
             dc.DrawRectangle(x, y, wd + 1, h);
@@ -1507,7 +1506,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
          // Draw the rms level 
          // +1 to include the rms position
          dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
+         dc.SetBrush(disabled ? mDisabledBkgndBrush : mRMSBrush);
          if (wd)
          {
             dc.DrawRectangle(x, y, wd + 1, h);
@@ -1539,7 +1538,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
       }
       else
       {
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush);
+         dc.SetBrush(disabled ? mDisabledBkgndBrush : mBkgndBrush);
       }
       dc.SetPen(*wxTRANSPARENT_PEN);
       wxRect r(bar.rClip.GetX() + 1,
