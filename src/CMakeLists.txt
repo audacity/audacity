@@ -139,6 +139,8 @@ list( APPEND SOURCES
       MouseWheelHandler.cpp
       MovableControl.cpp
       MovableControl.h
+      PeakAndRmsMeter.cpp
+      PeakAndRmsMeter.h
       PitchName.cpp
       PitchName.h
       PluginRegistrationDialog.cpp
