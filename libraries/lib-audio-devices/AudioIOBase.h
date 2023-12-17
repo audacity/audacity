@@ -30,7 +30,6 @@ typedef void PxMixer;
 class AudioIOBase;
 
 class AudacityProject;
-class AudioIOListener;
 class BoundedEnvelope;
 class Meter;
 using PRCrossfadeData = std::vector< std::vector < float > >;
@@ -53,7 +52,6 @@ struct AudioIOStartStreamOptions
    std::shared_ptr<AudacityProject> pProject;
    std::weak_ptr<Meter> captureMeter, playbackMeter;
    const BoundedEnvelope *envelope{}; // for time warping
-   std::shared_ptr< AudioIOListener > listener;
    double rate;
    mutable std::optional<double> pStartTime;
    double preRoll{ 0.0 };
