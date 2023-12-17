@@ -21,13 +21,6 @@
 class wxTextCtrl;
 class ShuttleGui;
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   #define AILA_DEF_TARGET_PEAK 92
-   #define AILA_DEF_DELTA_PEAK 2
-   #define AILA_DEF_ANALYSIS_TIME 1000
-   #define AILA_DEF_NUMBER_ANALYSIS 5
-#endif
-
 #define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ \
    L"Recording", \
    /* i18n-hint: modifier as in "Recording preferences", not progressive verb */ \

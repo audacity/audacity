@@ -115,10 +115,8 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "Gain.h"
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    #define LOWER_BOUND 0.0
    #define UPPER_BOUND 1.0
-#endif
 
 using std::max;
 using std::min;
@@ -257,9 +255,7 @@ AudioIO::AudioIO()
 
    mNumPauseFrames = 0;
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    mAILAActive = false;
-#endif
 
    mLastPaError = paNoError;
 
@@ -1015,9 +1011,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mpTransportState = std::make_unique<TransportState>(mOwningProject,
       mPlaybackSequences, mNumPlaybackChannels, mRate);
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
-#endif
 
    if (pStartTime)
    {
@@ -2333,7 +2327,6 @@ void AudioIoCallback::SetListener(
 }
 
 // Automated Input Level Adjustment - Automatically tries to find an acceptable input volume
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 
 #include "ProjectStatus.h"
 
@@ -2375,8 +2368,9 @@ double AudioIO::AILAGetLastDecisionTime() {
 
 void AudioIO::AILAProcess(double maxPeak) {
    const auto proj = mOwningProject.lock();
+   const auto pInputMeter = mInputMeter.lock();
    if (proj && mAILAActive) {
-      if (mInputMeter && mInputMeter->IsClipping()) {
+      if (pInputMeter && pInputMeter->IsClipping()) {
          mAILAClipped = true;
          wxPrintf("clipped");
       }
@@ -2391,7 +2385,7 @@ void AudioIO::AILAProcess(double maxPeak) {
          };
 
          putchar('\n');
-         mAILAMax = mInputMeter ? ToLinearIfDB(mAILAMax, mInputMeter->GetDBRange()) : 0.0;
+         mAILAMax = pInputMeter ? ToLinearIfDB(mAILAMax, pInputMeter->GetDBRange()) : 0.0;
          double iv = (double) Px_GetInputVolume(mPortMixer);
          unsigned short changetype = 0; //0 - no change, 1 - increase change, 2 - decrease change
          wxPrintf("mAILAAnalysisCounter:%d\n", mAILAAnalysisCounter);
@@ -2500,7 +2494,6 @@ void AudioIO::AILAProcess(double maxPeak) {
       }
    }
 }
-#endif
 
 static void DoSoftwarePlaythrough(constSamplePtr inputBuffer,
                                   sampleFormat inputFormat,
