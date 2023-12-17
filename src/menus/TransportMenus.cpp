@@ -828,7 +828,7 @@ auto TransportMenu()
                   Options{}.CheckTest( wxT("/AudioIO/SWPlaythrough"), false ) )
 
 
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
                ,
                Command( wxT("AutomatedInputLevelAdjustmentOnOff"),
                   XXO("A&utomated Recording Level Adjustment (on/off)"),
@@ -836,7 +836,7 @@ auto TransportMenu()
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
                   Options{}.CheckTest(
                      wxT("/AudioIO/AutomatedInputLevelAdjustment"), false ) )
-      #endif
+#endif
             )
          )
       )

@@ -115,8 +115,8 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "Gain.h"
 
-   #define LOWER_BOUND 0.0
-   #define UPPER_BOUND 1.0
+#define LOWER_BOUND 0.0
+#define UPPER_BOUND 1.0
 
 using std::max;
 using std::min;

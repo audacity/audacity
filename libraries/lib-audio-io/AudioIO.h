@@ -546,12 +546,12 @@ public:
    /** \brief Function to automatically set an acceptable volume
     *
     */
-      void AILAInitialize();
-      void AILADisable();
-      bool AILAIsActive();
-      void AILAProcess(double maxPeak);
-      void AILASetStartTime();
-      double AILAGetLastDecisionTime();
+   void AILAInitialize();
+   void AILADisable();
+   bool AILAIsActive();
+   void AILAProcess(double maxPeak);
+   void AILASetStartTime();
+   double AILAGetLastDecisionTime();
 
    bool IsAvailable(AudacityProject &project) const;
 

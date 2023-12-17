@@ -553,9 +553,9 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    projectAudioManager.SetLooping( false );
    projectAudioManager.SetCutting( false );
 
-   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      gAudioIO->AILADisable();
-   #endif
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   gAudioIO->AILADisable();
+#endif
 
    projectAudioManager.SetPausedOff();
    //Make sure you tell gAudioIO to unpause
@@ -999,9 +999,9 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
       }
 
       //Automated Input Level Adjustment Initialization
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         gAudioIO->AILAInitialize();
-      #endif
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+      gAudioIO->AILAInitialize();
+#endif
 
       int token =
          gAudioIO->StartStream(transportSequences, t0, t1, t1, options);
