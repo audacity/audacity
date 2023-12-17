@@ -24,10 +24,6 @@ void AdornedQtRulerPanel::paint(QPainter *painter)
    if (painter == nullptr)
       return;
 
-   auto object = qmlContext(this)->objectForName("root");
-   if (object == nullptr)
-      return;
-
    const auto w = width();
    const auto h = height();
 
@@ -75,28 +71,27 @@ void AdornedQtRulerPanel::paint(QPainter *painter)
    QPen pen = painter->pen();
    pen.setWidth(1);
 
-   auto font = object->property("textFont").value<QFont>();
-   font.setPixelSize(12);
-
-   auto textColor = object->property("textColor").value<QColor>();
-
-   for (qsizetype i = 0; i < values.count(); i++)
+   if (m_textColor.isValid())
    {
-      font.setBold(i % 5 == 0);
-      pen.setColor(textColor);
+      m_textFont.setPixelSize(12);
 
-      painter->setFont(font);
-      painter->setPen(pen);
-      painter->drawText(QRectF(values[i].first, 0, w, h / 2), Qt::AlignLeft | Qt::AlignVCenter, values[i].second);
+      for (qsizetype i = 0; i < values.count(); i++)
+      {
+         m_textFont.setBold(i % 5 == 0);
+         pen.setColor(m_textColor);
+
+         painter->setFont(m_textFont);
+         painter->setPen(pen);
+         painter->drawText(QRectF(values[i].first, 0, w, h / 2), Qt::AlignLeft | Qt::AlignVCenter, values[i].second);
+      }
    }
 
-   auto tickColor = object->property("separatorColor").value<QColor>();
-   if (tickColor.isValid())
+   if (m_tickColor.isValid())
    {
       for (auto i = 0; i < ticks.count(); ++i)
       {
-         tickColor.setAlphaF(i % 10 == 0 ? 0.6 : 1.0);
-         pen.setColor(tickColor);
+         m_tickColor.setAlphaF(i % 10 == 0 ? 0.6 : 1.0);
+         pen.setColor(m_tickColor);
 
          painter->setPen(pen);
          painter->drawLine(ticks[i]);
@@ -118,6 +113,51 @@ void AdornedQtRulerPanel::SetOffset(int offset)
       m_offset = offset;
       update();
       emit offsetChanged();
+   }
+}
+
+QFont AdornedQtRulerPanel::TextFont() const
+{
+   return m_textFont;
+}
+
+void AdornedQtRulerPanel::SetTextFont(const QFont& font)
+{
+   if (m_textFont != font)
+   {
+      m_textFont = font;
+      update();
+      emit textFontChanged();
+   }
+}
+
+QColor AdornedQtRulerPanel::TextColor() const
+{
+   return m_textColor;
+}
+
+void AdornedQtRulerPanel::SetTextColor(const QColor& color)
+{
+   if (m_textColor != color)
+   {
+      m_textColor = color;
+      update();
+      emit textColorChanged();
+   }
+}
+
+QColor AdornedQtRulerPanel::TickColor() const
+{
+   return m_tickColor;
+}
+
+void AdornedQtRulerPanel::SetTickColor(const QColor& color)
+{
+   if (m_tickColor != color)
+   {
+      m_tickColor = color;
+      update();
+      emit tickColorChanged();
    }
 }
 

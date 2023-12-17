@@ -79,6 +79,9 @@ Rectangle {
       id: ruler
       offset: playheadRecessSeparator.x
       anchors.fill: parent
+      textFont: root.textFont
+      textColor: root.textColor
+      tickColor: root.separatorColor
    }
 
    PlayheadCursor {
