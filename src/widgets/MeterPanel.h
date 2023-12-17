@@ -141,7 +141,7 @@ class AUDACITY_DLL_API MeterPanel final
    void OnMeterUpdate(wxTimerEvent &evt);
    void OnTipTimeout(wxTimerEvent& evt);
 
-   void HandleLayout(wxDC &dc);
+   void HandleLayout();
    void SetActiveStyle(Style style);
    void SetBarAndClip(int iBar, bool vert);
    void DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
