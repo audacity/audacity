@@ -671,7 +671,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
          meterFloatsArray[index] = 1.0;
 
    if (mMeter)
-      mMeter->UpdateDisplay(2, nFrames, meterFloatsArray.get());
+      mMeter->Update(2, nFrames, meterFloatsArray.get());
 }
 
 // private

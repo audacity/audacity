@@ -3161,10 +3161,9 @@ void AudioIoCallback::SendVuInputMeterData(
    auto pInputMeter = mInputMeter.lock();
    if ( !pInputMeter )
       return;
-   if( pInputMeter->IsMeterDisabled())
+   if (pInputMeter->IsDisabled())
       return;
-   pInputMeter->UpdateDisplay(
-      numCaptureChannels, framesPerBuffer, inputSamples);
+   pInputMeter->Update(numCaptureChannels, framesPerBuffer, inputSamples);
 }
 
 /* Send data to playback VU meter if applicable */
@@ -3177,11 +3176,11 @@ void AudioIoCallback::SendVuOutputMeterData(
    auto pOutputMeter = mOutputMeter.lock();
    if (!pOutputMeter)
       return;
-   if( pOutputMeter->IsMeterDisabled() )
+   if (pOutputMeter->IsDisabled())
       return;
    if( !outputMeterFloats)
       return;
-   pOutputMeter->UpdateDisplay(
+   pOutputMeter->Update(
       numPlaybackChannels, framesPerBuffer, outputMeterFloats);
 
       //v Vaughan, 2011-02-25: Moved this update back to TrackPanel::OnTimer()

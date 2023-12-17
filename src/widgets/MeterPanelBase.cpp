@@ -35,16 +35,16 @@ struct MeterPanelBase::Forwarder : Meter
       if (mOwner)
          mOwner->Reset( sampleRate, resetClipping );
    }
-   void UpdateDisplay(unsigned numChannels,
-                      unsigned long numFrames, const float *sampleData) override
+   void Update(unsigned numChannels,
+      unsigned long numFrames, const float *sampleData) override
    {
       if (mOwner)
-         mOwner->UpdateDisplay( numChannels, numFrames, sampleData );
+         mOwner->Update(numChannels, numFrames, sampleData);
    }
-   bool IsMeterDisabled() const override
+   bool IsDisabled() const override
    {
       if (mOwner)
-         return mOwner->IsMeterDisabled();
+         return mOwner->IsDisabled();
       else
          return true;
    }

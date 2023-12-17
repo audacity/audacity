@@ -149,8 +149,8 @@ class AUDACITY_DLL_API MeterPanel final
     *
     * The second overload is for ease of use in MixerBoard.
     */
-   void UpdateDisplay(unsigned numChannels,
-                      int numFrames, const float *sampleData) override;
+   void Update(unsigned numChannels,
+      unsigned long numFrames, const float *sampleData) override;
 
    // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
    //void UpdateDisplay(int numChannels, int numFrames,
@@ -164,7 +164,7 @@ class AUDACITY_DLL_API MeterPanel final
     * This method is thread-safe!  Feel free to call from a
     * different thread (like from an audio I/O callback).
     */
-   bool IsMeterDisabled() const override;
+   bool IsDisabled() const override;
 
    float GetPeakHold() const;
 
