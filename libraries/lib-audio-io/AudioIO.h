@@ -263,7 +263,7 @@ public:
    double         mAILAChangeFactor;
    double         mAILATopLevel;
    double         mAILAAnalysisEndTime;
-   double         mAILAAbsolutStartTime;
+   double         mAILAAbsoluteStartTime;
    unsigned short mAILALastChangeType;  //0 - no change, 1 - increase change, 2 - decrease change
 
    std::thread mAudioThread;
@@ -550,6 +550,9 @@ public:
     *
     */
    static bool ValidateDeviceNames(const wxString &play, const wxString &rec);
+
+   //! Return clock time according to PortAudio
+   double GetClockTime() const;
 
    /** \brief Function to automatically set an acceptable volume
     *
