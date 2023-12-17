@@ -255,8 +255,6 @@ AudioIO::AudioIO()
 
    mNumPauseFrames = 0;
 
-   mAILAActive = false;
-
    mLastPaError = paNoError;
 
    mLastRecordingOffset = 0.0;
@@ -1001,7 +999,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mpTransportState = std::make_unique<TransportState>(mOwningProject,
       mPlaybackSequences, mNumPlaybackChannels, mRate);
 
-   AILASetStartTime();
+   AILA::Get().SetStartTime();
 
    if (pStartTime)
    {
@@ -2320,7 +2318,15 @@ void AudioIoCallback::SetListener(
 
 #include "ProjectStatus.h"
 
-void AudioIO::AILAInitialize(double t0) {
+AILA &AILA::Get()
+{
+   static AILA instance;
+   return instance;
+}
+
+AILA::AILA() = default;
+
+void AILA::Initialize(double t0) {
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
    gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);
    gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mAILAGoalDelta,      AILA_DEF_DELTA_PEAK);
@@ -2339,20 +2345,20 @@ void AudioIO::AILAInitialize(double t0) {
    mAILAAnalysisEndTime    = -1.0;
 }
 
-void AudioIO::AILADisable() {
+void AILA::Disable() {
    mAILAActive = false;
 }
 
-bool AudioIO::AILAIsActive() {
+bool AILA::IsActive() {
    return mAILAActive;
 }
 
-void AudioIO::AILASetStartTime() {
+void AILA::SetStartTime() {
    mAILAAbsoluteStartTime = AudioIO::Get()->GetClockTime();
    wxPrintf("START TIME %f\n\n", mAILAAbsoluteStartTime);
 }
 
-double AudioIO::AILAGetLastDecisionTime() {
+double AILA::GetLastDecisionTime() {
    return mAILAAnalysisEndTime;
 }
 
@@ -2360,10 +2366,10 @@ double AudioIO::GetClockTime() const {
    return Pa_GetStreamTime(mPortStreamV19);
 }
 
-void AudioIO::AILAProcess(AudacityProject *proj,
+void AILA::Process(AudacityProject *proj,
    bool isClipping, int dBRange, double maxPeak)
 {
-   auto &audioIO = *this;
+   auto &audioIO = *AudioIO::Get();
    if (proj && mAILAActive) {
       if (isClipping) {
          mAILAClipped = true;
