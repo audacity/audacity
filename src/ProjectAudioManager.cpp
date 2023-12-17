@@ -7,8 +7,6 @@ ProjectAudioManager.cpp
 Paul Licameli split from ProjectManager.cpp
 
 **********************************************************************/
-
-
 #include "ProjectAudioManager.h"
 
 #include <wx/app.h>
@@ -17,6 +15,7 @@ Paul Licameli split from ProjectManager.cpp
 #include <algorithm>
 #include <numeric>
 
+#include "AILA.h"
 #include "AudioIO.h"
 #include "BasicUI.h"
 #include "CommandManager.h"

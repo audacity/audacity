@@ -59,6 +59,8 @@ set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 #
 set( SOURCES
    PRIVATE
+      AILA.cpp
+      AILA.h
       ActiveProject.cpp
       ActiveProject.h
       AboutDialog.cpp

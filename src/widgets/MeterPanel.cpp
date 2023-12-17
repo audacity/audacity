@@ -55,8 +55,9 @@
 
 #include <math.h>
 
-#include "AudioIO.h"
 #include "AColor.h"
+#include "AILA.h"
+#include "AudioIO.h"
 #include "../widgets/BasicMenu.h"
 #include "ImageManipulation.h"
 #include "Decibels.h"

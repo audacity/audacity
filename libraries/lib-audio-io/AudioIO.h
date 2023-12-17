@@ -29,11 +29,6 @@
 #include "SampleFormat.h"
 #include "TimeQueue.h" // member variable
 
-#define AILA_DEF_TARGET_PEAK 92.0
-#define AILA_DEF_DELTA_PEAK 2.0
-#define AILA_DEF_ANALYSIS_TIME 1000.0
-#define AILA_DEF_NUMBER_ANALYSIS 5
-
 class wxArrayString;
 class AudioIOBase;
 class AudioIO;
@@ -657,39 +652,5 @@ private:
 };
 
 AUDIO_IO_API extern BoolSetting SoundActivatedRecord;
-
-class AILA {
-public:
-   static AILA &Get();
-
-   void Initialize(double t0);
-   void Disable();
-   bool IsActive();
-   void Process(AudacityProject *pProject,
-      bool isClipping, int dBRange, double maxPeak);
-   double GetLastDecisionTime();
-
-private:
-   AILA();
-   void SetStartTime(const AudioIOEvent &evt);
-
-   const Observer::Subscription mSubscription;
-
-   bool           mAILAActive{ false };
-   bool           mAILAClipped{};
-   int            mAILATotalAnalysis{};
-   int            mAILAAnalysisCounter{};
-   double         mAILAMax{};
-   double         mAILAGoalPoint{};
-   double         mAILAGoalDelta{};
-   double         mAILAAnalysisTime{};
-   double         mAILALastStartTime{};
-   double         mAILAChangeFactor{};
-   double         mAILATopLevel{};
-   double         mAILAAnalysisEndTime{};
-   double         mAILAAbsoluteStartTime{};
-   //! 0 - no change, 1 - increase change, 2 - decrease change
-   unsigned short mAILALastChangeType{ 0 };
-};
 
 #endif
