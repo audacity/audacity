@@ -1027,7 +1027,7 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 
          mBar[j].tailPeakCount = msg.tailPeakCount[j];
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (mT > AudioIO::Get()->AILAGetLastDecisionTime()) {
+         if (mT > AILA::Get().GetLastDecisionTime()) {
             discarded = false;
             maxPeak = msg.peak[j] > maxPeak ? msg.peak[j] : maxPeak;
             wxPrintf("%f@%f ", msg.peak[j], mT);
@@ -1042,9 +1042,8 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 
    if (numChanges > 0) {
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      if (AudioIO::Get()->AILAIsActive() && mIsInput && !discarded) {
-         AudioIO::Get()
-            ->AILAProcess(mProject, IsClipping(), GetDBRange(), maxPeak);
+      if (AILA::Get().IsActive() && mIsInput && !discarded) {
+         AILA::Get().Process(mProject, IsClipping(), GetDBRange(), maxPeak);
          putchar('\n');
       }
 #endif

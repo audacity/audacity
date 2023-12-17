@@ -229,21 +229,6 @@ public:
    /// How many frames of zeros were output due to pauses?
    long    mNumPauseFrames;
 
-   bool           mAILAActive;
-   bool           mAILAClipped;
-   int            mAILATotalAnalysis;
-   int            mAILAAnalysisCounter;
-   double         mAILAMax;
-   double         mAILAGoalPoint;
-   double         mAILAGoalDelta;
-   double         mAILAAnalysisTime;
-   double         mAILALastStartTime;
-   double         mAILAChangeFactor;
-   double         mAILATopLevel;
-   double         mAILAAnalysisEndTime;
-   double         mAILAAbsoluteStartTime;
-   unsigned short mAILALastChangeType;  //0 - no change, 1 - increase change, 2 - decrease change
-
    std::thread mAudioThread;
    std::atomic<bool> mFinishAudioThread{ false };
 
@@ -550,17 +535,6 @@ public:
    //! Return clock time according to PortAudio
    double GetClockTime() const;
 
-   /** \brief Function to automatically set an acceptable volume
-    *
-    */
-   void AILAInitialize(double t0);
-   void AILADisable();
-   bool AILAIsActive();
-   void AILAProcess(AudacityProject *pProject,
-      bool isClipping, int dBRange, double maxPeak);
-   void AILASetStartTime();
-   double AILAGetLastDecisionTime();
-
    bool IsAvailable(AudacityProject &project) const;
 
    /** \brief Return a valid sample rate that is supported by the current I/O
@@ -683,5 +657,37 @@ private:
 };
 
 AUDIO_IO_API extern BoolSetting SoundActivatedRecord;
+
+class AILA {
+public:
+   static AILA &Get();
+
+   void Initialize(double t0);
+   void Disable();
+   bool IsActive();
+   void Process(AudacityProject *pProject,
+      bool isClipping, int dBRange, double maxPeak);
+   void SetStartTime();
+   double GetLastDecisionTime();
+
+private:
+   AILA();
+
+   bool           mAILAActive{ false };
+   bool           mAILAClipped{};
+   int            mAILATotalAnalysis{};
+   int            mAILAAnalysisCounter{};
+   double         mAILAMax{};
+   double         mAILAGoalPoint{};
+   double         mAILAGoalDelta{};
+   double         mAILAAnalysisTime{};
+   double         mAILALastStartTime{};
+   double         mAILAChangeFactor{};
+   double         mAILATopLevel{};
+   double         mAILAAnalysisEndTime{};
+   double         mAILAAbsoluteStartTime{};
+   //! 0 - no change, 1 - increase change, 2 - decrease change
+   unsigned short mAILALastChangeType{ 0 };
+};
 
 #endif
