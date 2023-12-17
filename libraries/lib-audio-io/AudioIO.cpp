@@ -2658,12 +2658,12 @@ double AudioIO::GetClockTime() const {
    return Pa_GetStreamTime(mPortStreamV19);
 }
 
-void AudioIO::AILAProcess(double maxPeak) {
+void AudioIO::AILAProcess(AudacityProject *proj,
+   bool isClipping, int dBRange, double maxPeak)
+{
    auto &audioIO = *this;
-   const auto proj = mOwningProject.lock();
-   const auto pInputMeter = mInputMeter.lock();
    if (proj && mAILAActive) {
-      if (pInputMeter && pInputMeter->IsClipping()) {
+      if (isClipping) {
          mAILAClipped = true;
          wxPrintf("clipped");
       }
@@ -2681,7 +2681,7 @@ void AudioIO::AILAProcess(double maxPeak) {
          };
 
          putchar('\n');
-         mAILAMax = pInputMeter ? ToLinearIfDB(mAILAMax, pInputMeter->GetDBRange()) : 0.0;
+         mAILAMax = ToLinearIfDB(mAILAMax, dBRange);
          auto settings = audioIO.GetMixer();
          auto &[_, inputVolume, __] = settings;
          const double iv = inputVolume;

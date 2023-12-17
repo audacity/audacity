@@ -556,7 +556,8 @@ public:
    void AILAInitialize(double t0);
    void AILADisable();
    bool AILAIsActive();
-   void AILAProcess(double maxPeak);
+   void AILAProcess(AudacityProject *pProject,
+      bool isClipping, int dBRange, double maxPeak);
    void AILASetStartTime();
    double AILAGetLastDecisionTime();
 
