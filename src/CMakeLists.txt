@@ -56,6 +56,8 @@ set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 #
 list( APPEND SOURCES
    PRIVATE
+      AILA.cpp
+      AILA.h
       ActiveProject.cpp
       ActiveProject.h
       AboutDialog.cpp

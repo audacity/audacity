@@ -17,9 +17,8 @@
   like playthrough, latency correction, and others.
 
 *//********************************************************************/
-
-
 #include "RecordingPrefs.h"
+#include "AILA.h"
 #include "AudioIO.h"
 
 #include <wx/defs.h>
