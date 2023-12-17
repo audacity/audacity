@@ -508,16 +508,20 @@ public:
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
 
+   struct MixerSettings {
+      int inputSource;
+      float inputVolume;
+      float playbackVolume;
+   };
+
    /* Mixer services are always available.  If no stream is running, these
     * methods use whatever device is specified by the preferences.  If a
     * stream *is* running, naturally they manipulate the mixer associated
     * with that stream.  If no mixer is available, output is emulated and
     * input is stuck at 1.0f (a gain is applied to output samples).
     */
-   void SetMixer(int inputSource, float inputVolume,
-                 float playbackVolume);
-   void GetMixer(int *inputSource, float *inputVolume,
-                 float *playbackVolume);
+   void SetMixer(MixerSettings settings);
+   MixerSettings GetMixer();
    /** @brief Find out if the input hardware level control is available
     *
     * Checks the mInputMixerWorks variable, which is set up in
