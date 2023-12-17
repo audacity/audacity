@@ -478,22 +478,15 @@ void MeterPanel::UpdateSelectedPrefs(int id)
 void MeterPanel::UpdateSliderControl()
 {
 #if USE_PORTMIXER
-   float inputVolume;
-   float playbackVolume;
-   int inputSource;
-
    // Show or hide the input slider based on whether it works
    auto gAudioIO = AudioIO::Get();
    if (mIsInput && mSlider)
       mSlider->SetEnabled(mEnabled && gAudioIO->InputMixerWorks());
-
-   gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
-
+   const auto [inputSource, inputVolume, playbackVolume] =
+      gAudioIO->GetMixer();
    const auto volume = mIsInput ? inputVolume : playbackVolume;
-
    if (mSlider && (mSlider->Get() != volume))
       mSlider->Set(volume);
-
 #endif // USE_PORTMIXER
 }
 
@@ -828,23 +821,16 @@ void MeterPanel::SetStyle(Style newStyle)
 void MeterPanel::SetMixer(wxCommandEvent & WXUNUSED(event))
 {
 #if USE_PORTMIXER
-   if (mSlider)
-   {
-      float inputVolume;
-      float outputVolume;
-      int inputSource;
-
+   if (mSlider) {
       Refresh();
-
       auto gAudioIO = AudioIO::Get();
-      gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
-
+      auto settings = gAudioIO->GetMixer();
+      auto &[inputSource, inputVolume, outputVolume] = settings;
       if (mIsInput)
          inputVolume = mSlider->Get();
       else
          outputVolume = mSlider->Get();
-
-      gAudioIO->SetMixer(inputSource, inputVolume, outputVolume);
+      gAudioIO->SetMixer(settings);
 
 #if wxUSE_ACCESSIBILITY
       GetAccessible()->NotifyEvent( wxACC_EVENT_OBJECT_VALUECHANGE,

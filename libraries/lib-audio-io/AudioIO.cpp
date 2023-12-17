@@ -377,9 +377,10 @@ void AudioIO::RemoveState(AudacityProject &project,
    RealtimeEffectManager::Get(project).RemoveState(pInit, pGroup, pState);
 }
 
-void AudioIO::SetMixer(int inputSource, float recordVolume,
-                       float playbackVolume)
+void AudioIO::SetMixer(MixerSettings settings)
 {
+   auto [recordDevice, recordVolume, playbackVolume] = settings;
+
    SetMixerOutputVol(playbackVolume);
    AudioIOPlaybackVolume.Write(playbackVolume);
 
@@ -390,38 +391,27 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
 
    float oldRecordVolume = Px_GetInputVolume(mixer);
 
-   AudioIoCallback::SetMixer(inputSource);
+   AudioIoCallback::SetMixer(recordDevice);
    if( oldRecordVolume != recordVolume )
       Px_SetInputVolume(mixer, recordVolume);
 
 #endif
 }
 
-void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
-                       float *playbackVolume)
+auto AudioIO::GetMixer() -> MixerSettings
 {
-   *playbackVolume = GetMixerOutputVol();
-
+   int recordDevice = 0;
+   float recordVolume = 1.0f;
+   float playbackVolume = GetMixerOutputVol();
 #if defined(USE_PORTMIXER)
-
-   PxMixer *mixer = mPortMixer;
-
-   if( mixer )
-   {
-      *recordDevice = Px_GetCurrentInputSource(mixer);
+   if (mPortMixer) {
+      recordDevice = Px_GetCurrentInputSource(mPortMixer);
 
       if (mInputMixerWorks)
-         *recordVolume = Px_GetInputVolume(mixer);
-      else
-         *recordVolume = 1.0f;
-
-      return;
+         recordVolume = Px_GetInputVolume(mPortMixer);
    }
-
 #endif
-
-   *recordDevice = 0;
-   *recordVolume = 1.0f;
+   return { recordDevice, recordVolume, playbackVolume };
 }
 
 bool AudioIO::InputMixerWorks()
