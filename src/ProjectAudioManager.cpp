@@ -1096,9 +1096,9 @@ void ProjectAudioManager::DispatchEvent(const AudioIOEvent &event)
    switch (event.type) {
    case AudioIOEvent::RateChange:
       return OnRate(event.rate);
-   case AudioIOEvent::StartRecording:
+   case AudioIOEvent::StartCapture:
       return OnStartRecording();
-   case AudioIOEvent::StopRecording:
+   case AudioIOEvent::StopCapture:
       return OnStopRecording();
    case AudioIOEvent::NewBlocks:
       return OnNewBlocks();
