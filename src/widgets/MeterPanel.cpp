@@ -1113,7 +1113,8 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
    if (numChanges > 0) {
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       if (AudioIO::Get()->AILAIsActive() && mIsInput && !discarded) {
-         AudioIO::Get()->AILAProcess(maxPeak);
+         AudioIO::Get()
+            ->AILAProcess(mProject, IsClipping(), GetDBRange(), maxPeak);
          putchar('\n');
       }
 #endif
