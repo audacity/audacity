@@ -452,7 +452,9 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    DrawOverlays(false);
    mRuler->DrawOverlays(false);
 
-   if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
+   if (IsAudioActive()
+      // && gAudioIO->GetNumCaptureChannels()
+   ) {
 
       // Periodically update the display while recording
 
@@ -463,7 +465,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
          Refresh( false );
       }
    }
-   if(mTimeCount > 1000)
+   if (mTimeCount > 1000)
       mTimeCount = 0;
 }
 
