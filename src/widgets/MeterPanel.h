@@ -47,7 +47,6 @@ struct MeterBar {
    double peakHoldTime;
    wxRect rClip;
    bool   clipping;
-   bool   isclipping; //ANSWER-ME: What's the diff between these bools?! "clipping" vs "isclipping" is not clear.
    int    tailPeakCount;
    float  peakPeakHold;
 };

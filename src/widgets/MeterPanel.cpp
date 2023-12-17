@@ -969,8 +969,6 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 
       mT += deltaT;
       for(unsigned int j=0; j<mNumBars; j++) {
-         mBar[j].isclipping = false;
-
          //
          if (mDB) {
             msg.peak[j] = ToDB(msg.peak[j], mDBRange);
@@ -1009,7 +1007,6 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
              mBar[j].tailPeakCount+msg.headPeakCount[j] >=
              mNumPeakSamplesToClip){
             mBar[j].clipping = true;
-            mBar[j].isclipping = true;
          }
 
          mBar[j].tailPeakCount = msg.tailPeakCount[j];
@@ -1073,7 +1070,6 @@ void MeterPanel::ResetBar(MeterBar &b, bool resetClipping)
       b.clipping = false;
       b.peakPeakHold = 0.0;
    }
-   b.isclipping = false;
    b.tailPeakCount = 0;
 }
 
