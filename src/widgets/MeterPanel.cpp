@@ -1041,7 +1041,7 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 
          mBar[j].tailPeakCount = msg.tailPeakCount[j];
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (mT > gAudioIO->AILAGetLastDecisionTime()) {
+         if (mT > AudioIO::Get()->AILAGetLastDecisionTime()) {
             discarded = false;
             maxPeak = msg.peak[j] > maxPeak ? msg.peak[j] : maxPeak;
             wxPrintf("%f@%f ", msg.peak[j], mT);
@@ -1056,8 +1056,8 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 
    if (numChanges > 0) {
       #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (gAudioIO->AILAIsActive() && mIsInput && !discarded) {
-            gAudioIO->AILAProcess(maxPeak);
+         if (AudioIO::Get()->AILAIsActive() && mIsInput && !discarded) {
+            AudioIO::Get()->AILAProcess(maxPeak);
             putchar('\n');
          }
       #endif
@@ -1081,7 +1081,7 @@ float MeterPanel::GetMaxPeak() const
 
    return(maxPeak);
 }
-
+ 
 float MeterPanel::GetPeakHold() const
 {
    auto peakHold = .0f;
