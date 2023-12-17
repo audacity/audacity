@@ -942,8 +942,8 @@ static float ToDB(float v, float range)
    return ClipZeroToOne((db + range) / range);
 }
 
-void MeterPanel::UpdateDisplay(
-   unsigned numChannels, int numFrames, const float *sampleData)
+void MeterPanel::Update(
+   unsigned numChannels, unsigned long numFrames, const float *sampleData)
 {
    auto sptr = sampleData;
    auto num = std::min(numChannels, mNumBars);
@@ -1561,7 +1561,7 @@ void MeterPanel::RepaintBarsNow()
       }
 
       // Immediate redraw (using wxPaintDC)
-      Update();
+      wxPanelWrapper::Update();
 
       return;
    }
@@ -1827,7 +1827,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
    }
 }
 
-bool MeterPanel::IsMeterDisabled() const
+bool MeterPanel::IsDisabled() const
 {
    return mMeterDisabled != 0;
 }
