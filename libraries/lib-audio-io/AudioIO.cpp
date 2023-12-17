@@ -936,9 +936,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       const auto &sequence0 = mCaptureSequences[0];
       captureFormat = sequence0->GetSampleFormat();
       captureRate = sequence0->GetRate();
-
-      // Tell project that we are about to start recording
-      EmitEvent(AudioIOEvent::StartRecording);
    }
 
    bool successAudio;
@@ -964,10 +961,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 #endif
 
    if (!successAudio) {
-      if (numCaptureChannels > 0)
-         EmitEvent(AudioIOEvent::StopRecording);
       mStreamToken = 0;
-
       return 0;
    }
 
@@ -1058,14 +1052,11 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       PaError err;
       err = Pa_StartStream( mPortStreamV19 );
 
-      if( err != paNoError )
-      {
+      if (err != paNoError) {
          mStreamToken = 0;
 
          StopAudioThread();
 
-         if (mNumCaptureChannels > 0)
-            EmitEvent(AudioIOEvent::StopRecording);
          StartStreamCleanup();
          // PRL: PortAudio error messages are sadly not internationalized
          BasicUI::ShowMessageBox(
@@ -1617,9 +1608,6 @@ void AudioIO::StopStream()
    mOutputMeter.reset();
    ResetOwningProject();
 
-   if (mNumCaptureChannels > 0)
-      EmitEvent(AudioIOEvent::StopRecording);
-
    BasicUI::CallAfter([this]{
       if (mPortStreamV19 && mNumCaptureChannels > 0)
          // Recording was restarted between StopStream and idle time
@@ -1635,11 +1623,7 @@ void AudioIO::StopStream()
       DelayActions(false);
    });
 
-   //
-   // Only set token to 0 after we're totally finished with everything
-   //
-   bool wasMonitoring = mStreamToken == 0;
-   mStreamToken = 0;
+   const bool wasMonitoring{ mStreamToken == 0 };
 
    {
       if (mNumPlaybackChannels > 0)
@@ -1649,6 +1633,10 @@ void AudioIO::StopStream()
             ? AudioIOEvent::StopMonitoring
             : AudioIOEvent::StopCapture);
    }
+
+   // Only set token to 0 after we're totally finished with everything,
+   // including observer callbacks
+   mStreamToken = 0;
 
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;

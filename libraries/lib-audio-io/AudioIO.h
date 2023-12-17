@@ -63,8 +63,6 @@ struct AudioIOEvent {
       StopPlayback,
       StartCapture,
       StopCapture,
-      StartRecording,
-      StopRecording,
       StartMonitoring,
       StopMonitoring,
       RateChange,
@@ -83,7 +81,6 @@ struct AudioIOEvent {
       switch (type) {
       case StartPlayback:
       case StartCapture:
-      case StartRecording:
       case StartMonitoring:
          return true;
       default:
@@ -96,7 +93,6 @@ struct AudioIOEvent {
       switch (type) {
       case StopPlayback:
       case StopCapture:
-      case StopRecording:
       case StopMonitoring:
          return true;
       default:
