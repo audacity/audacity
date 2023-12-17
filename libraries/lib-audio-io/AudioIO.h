@@ -63,8 +63,15 @@ struct AudioIOEvent {
       StopPlayback,
       StartCapture,
       StopCapture,
+      StartRecording,
+      StopRecording,
       StartMonitoring,
       StopMonitoring,
+      RateChange,
+      NewBlocks,
+      CommitRecording,
+      SoundActivationThresholdCrossedUp,
+      SoundActivationThresholdCrossedDown,
    } type;
 
    std::weak_ptr<AudacityProject> wProject{};
@@ -77,6 +84,7 @@ struct AudioIOEvent {
       switch (type) {
       case StartPlayback:
       case StartCapture:
+      case StartRecording:
       case StartMonitoring:
          return true;
       default:
@@ -89,6 +97,7 @@ struct AudioIOEvent {
       switch (type) {
       case StopPlayback:
       case StopCapture:
+      case StopRecording:
       case StopMonitoring:
          return true;
       default:
@@ -239,10 +248,6 @@ public:
    }
    //! @}
 
-   std::shared_ptr< AudioIOListener > GetListener() const
-      { return mListener.lock(); }
-   void SetListener( const std::shared_ptr< AudioIOListener > &listener);
-   
    // Part of the callback
    int CallbackDoSeek();
 
@@ -396,11 +401,6 @@ protected:
       return mMixerOutputVol.load(std::memory_order_relaxed); }
    void SetMixerOutputVol(float value) {
       mMixerOutputVol.store(value, std::memory_order_relaxed); }
-
-   /*! Pointer is read by a worker thread but unchanging during playback.
-    (Whether its overriding methods are race-free is not for AudioIO to ensure.)
-    */
-   std::weak_ptr< AudioIOListener > mListener;
 
    bool mUsingAlsa { false };
    bool mUsingJack { false };

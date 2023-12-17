@@ -67,11 +67,13 @@ const ProjectAudioManager &ProjectAudioManager::Get(
 
 ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
    : mProject{ project }
+   , mAudioIOSubscription{ AudioIO::Get()
+      ->Subscribe(*this, &ProjectAudioManager::DispatchEvent) }
+   , mCheckpointFailureSubscription{ ProjectFileIO::Get(mProject)
+      .Subscribe(*this, &ProjectAudioManager::OnCheckpointFailure) }
 {
    static ProjectStatus::RegisteredStatusWidthFunction
       registerStatusWidthFunction{ StatusWidthFunction };
-   mCheckpointFailureSubscription = ProjectFileIO::Get(project)
-      .Subscribe(*this, &ProjectAudioManager::OnCheckpointFailure);
 }
 
 ProjectAudioManager::~ProjectAudioManager() = default;
@@ -1086,7 +1088,32 @@ void ProjectAudioManager::CancelRecording()
    PendingTracks::Get(*project).ClearPendingTracks();
 }
 
-void ProjectAudioManager::OnAudioIORate(int rate)
+void ProjectAudioManager::DispatchEvent(const AudioIOEvent &event)
+{
+   if (event.wProject.lock().get() != &mProject)
+      return;
+
+   switch (event.type) {
+   case AudioIOEvent::RateChange:
+      return OnRate(event.rate);
+   case AudioIOEvent::StartRecording:
+      return OnStartRecording();
+   case AudioIOEvent::StopRecording:
+      return OnStopRecording();
+   case AudioIOEvent::NewBlocks:
+      return OnNewBlocks();
+   case AudioIOEvent::CommitRecording:
+      return OnCommitRecording();
+   case AudioIOEvent::SoundActivationThresholdCrossedUp:
+      return OnSoundActivationThreshold(true);
+   case AudioIOEvent::SoundActivationThresholdCrossedDown:
+      return OnSoundActivationThreshold(false);
+   default:
+      break;
+   }
+}
+
+void ProjectAudioManager::OnRate(int rate)
 {
    auto &project = mProject;
 
@@ -1097,14 +1124,14 @@ void ProjectAudioManager::OnAudioIORate(int rate)
    ProjectStatus::Get( project ).Set( display, RateStatusBarField() );
 }
 
-void ProjectAudioManager::OnAudioIOStartRecording()
+void ProjectAudioManager::OnStartRecording()
 {
    // Auto-save was done here before, but it is unnecessary, provided there
    // are sufficient autosaves when pushing or modifying undo states.
 }
 
 // This is called after recording has stopped and all tracks have flushed.
-void ProjectAudioManager::OnAudioIOStopRecording()
+void ProjectAudioManager::OnStopRecording()
 {
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
@@ -1141,7 +1168,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    }
 }
 
-void ProjectAudioManager::OnAudioIONewBlocks()
+void ProjectAudioManager::OnNewBlocks()
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
@@ -1221,9 +1248,6 @@ static ProjectAudioIO::DefaultOptions::Scope sScope {
 [](AudacityProject &project, bool newDefault) -> AudioIOStartStreamOptions {
    //! Invoke the library default implemantation directly bypassing the hook
    auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
-
-   //! Decorate with more info
-   options.listener = ProjectAudioManager::Get(project).shared_from_this();
 
    bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
    options.loopEnabled = loopEnabled;

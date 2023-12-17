@@ -14,7 +14,6 @@ Paul Licameli split from ProjectManager.h
 #include <memory>
 #include <vector>
 
-#include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
 #include "Observer.h"
 #include "Observer.h"
@@ -24,6 +23,7 @@ Paul Licameli split from ProjectManager.h
 constexpr int RATE_NOT_SELECTED{ -1 };
 
 class AudacityProject;
+struct AudioIOEvent;
 struct AudioIOStartStreamOptions;
 class TrackList;
 class SelectedRegion;
@@ -59,7 +59,6 @@ struct RecordingDropoutEvent {
 
 class AUDACITY_DLL_API ProjectAudioManager final
    : public ClientData::Base
-   , public AudioIOListener
    , public std::enable_shared_from_this< ProjectAudioManager >
    , public Observer::Publisher<RecordingDropoutEvent>
 {
@@ -149,17 +148,21 @@ private:
    void CancelRecording();
 
    // Audio IO callback methods
-   void OnAudioIORate(int rate) override;
-   void OnAudioIOStartRecording() override;
-   void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlocks() override;
-   void OnCommitRecording() override;
-   void OnSoundActivationThreshold(bool upward) override;
+   void DispatchEvent(const AudioIOEvent &event);
+   void OnRate(int rate);
+   void OnStartRecording();
+   void OnStopRecording();
+   void OnNewBlocks();
+   void OnCommitRecording();
+   void OnSoundActivationThreshold(bool upward);
 
    void OnCheckpointFailure(ProjectFileIOMessage);
 
-   Observer::Subscription mCheckpointFailureSubscription;
    AudacityProject &mProject;
+   const Observer::Subscription
+        mAudioIOSubscription
+      , mCheckpointFailureSubscription
+   ;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
 

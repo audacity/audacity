@@ -45,23 +45,10 @@ to the meters.
   occur before the buffer write due to out-of-order execution. Then A
   can see the flag and read the buffer before buffer writes complete.
 
-*//****************************************************************//**
-
-\class AudioIOListener
-\brief Monitors record play start/stop and new sample blocks.  Has
-callbacks for these events.
-
-*//****************************************************************//**
-
-\class AudioIOStartStreamOptions
-\brief struct holding stream options, including a pointer to the
-time warp info and AudioIOListener and whether the playback is looped.
-
 *//*******************************************************************/
 #include "AudioIO.h"
 
 #include "AudioIOExt.h"
-#include "AudioIOListener.h"
 
 #include "float_cast.h"
 #include "DeviceManager.h"
@@ -818,10 +805,9 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    mLastPaError = Pa_StartStream( mPortStreamV19 );
 
    // Update UI display only now, after all possibilities for error are past.
-   auto pListener = GetListener();
-   if ((mLastPaError == paNoError) && pListener) {
+   if (mLastPaError == paNoError) {
       // advertise the chosen I/O sample rate to the UI
-      pListener->OnAudioIORate((int)mRate);
+      EmitEvent(AudioIOEvent::RateChange, static_cast<int>(mRate));
       EmitEvent(AudioIOEvent::StartMonitoring);
    }
 }
@@ -905,7 +891,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    if (options.pCrossfadeData)
       mRecordingSchedule.mCrossfadeData.swap( *options.pCrossfadeData );
 
-   mListener = options.listener;
    mRate    = options.rate;
 
    mSeek    = 0;
@@ -950,8 +935,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    sampleFormat captureFormat = floatSample;
    double captureRate = 44100.0;
 
-   auto pListener = GetListener();
-
    if (sequences.playbackSequences.size() > 0
       || sequences.otherPlayableSequences.size() > 0)
       playbackChannels = 2;
@@ -978,8 +961,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       captureRate = sequence0->GetRate();
 
       // Tell project that we are about to start recording
-      if (pListener)
-         pListener->OnAudioIOStartRecording();
+      EmitEvent(AudioIOEvent::StartRecording);
    }
 
    bool successAudio;
@@ -1006,8 +988,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
               t0, mRate ); });
 
    if (!successAudio) {
-      if (pListener && numCaptureChannels > 0)
-         pListener->OnAudioIOStopRecording();
+      if (numCaptureChannels > 0)
+         EmitEvent(AudioIOEvent::StopRecording);
       mStreamToken = 0;
 
       return 0;
@@ -1112,8 +1094,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
          StopAudioThread();
 
-         if (pListener && mNumCaptureChannels > 0)
-            pListener->OnAudioIOStopRecording();
+         if (mNumCaptureChannels > 0)
+            EmitEvent(AudioIOEvent::StopRecording);
          StartStreamCleanup();
          // PRL: PortAudio error messages are sadly not internationalized
          BasicUI::ShowMessageBox(
@@ -1123,10 +1105,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    }
 
    // Update UI display only now, after all possibilities for error are past.
-   if (pListener) {
-      // advertise the chosen I/O sample rate to the UI
-      pListener->OnAudioIORate((int)mRate);
-   }
+   // advertise the chosen I/O sample rate to the UI
+   EmitEvent(AudioIOEvent::RateChange, static_cast<int>(mRate));
 
    if (numPlaybackChannels > 0)
       EmitEvent(AudioIOEvent::StartPlayback);
@@ -1417,20 +1397,18 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
 void AudioIO::Notify()
 {
-   auto pListener = GetListener();
-
    const auto newBlocksCount = mNewBlocksCount.load(std::memory_order_acquire);
    if (mLastNewBlocksCount != newBlocksCount) {
       mLastNewBlocksCount = newBlocksCount;
-      if (pListener)
-         pListener->OnAudioIONewBlocks();
+      EmitEvent(AudioIOEvent::NewBlocks);
    }
 
    const auto below = mLastBelow.load(std::memory_order_relaxed);
    if (mMainThreadLastBelow != below) {
       mMainThreadLastBelow = below;
-      if (pListener)
-         pListener->OnSoundActivationThreshold(!below);
+      EmitEvent(below
+         ? AudioIOEvent::SoundActivationThresholdCrossedDown
+         : AudioIOEvent::SoundActivationThresholdCrossedUp);
    }
 }
 
@@ -1561,8 +1539,6 @@ void AudioIO::StopStream()
    for( auto &ext : Extensions() )
       ext.StopOtherStream();
 
-   auto pListener = GetListener();
-
    // If there's no token, we were just monitoring, so we can
    // skip this next part...
    if (mStreamToken > 0) {
@@ -1645,8 +1621,7 @@ void AudioIO::StopStream()
                pScope->Commit();
          }
 
-         if (pListener)
-            pListener->OnCommitRecording();
+         EmitEvent(AudioIOEvent::CommitRecording);
       }
    }
 
@@ -1661,8 +1636,8 @@ void AudioIO::StopStream()
    mInputMeter.reset();
    mOutputMeter.reset();
 
-   if (pListener && mNumCaptureChannels > 0)
-      pListener->OnAudioIOStopRecording();
+   if (mNumCaptureChannels > 0)
+      EmitEvent(AudioIOEvent::StopRecording);
 
    BasicUI::CallAfter([this]{
       if (mPortStreamV19 && mNumCaptureChannels > 0)
@@ -1705,10 +1680,8 @@ void AudioIO::StopStream()
    mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
    mpState.reset();
 
-   if (pListener) {
-      // Tell UI to hide sample rate
-      pListener->OnAudioIORate(0);
-   }
+   // Tell UI to hide sample rate
+   EmitEvent(AudioIOEvent::RateChange, 0);
 
    // Don't cause a busy wait in the audio thread after stopping scrubbing
    mPlaybackSchedule.ResetMode();
@@ -2624,15 +2597,6 @@ void AudioIO::DrainRecordBuffers()
          throw;
    },
    delayedHandler );
-}
-
-void AudioIoCallback::SetListener(
-   const std::shared_ptr< AudioIOListener > &listener)
-{
-   if (IsBusy())
-      return;
-
-   mListener = listener;
 }
 
 double AudioIO::GetClockTime() const {
