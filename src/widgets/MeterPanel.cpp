@@ -1058,17 +1058,6 @@ void MeterPanel::OnTipTimeout(wxTimerEvent& evt)
       mSlider->ShowTip(true);
 }
 
-
-float MeterPanel::GetMaxPeak() const
-{
-   float maxPeak = 0.;
-
-   for(unsigned int j=0; j<mNumBars; j++)
-      maxPeak = mBar[j].peak > maxPeak ? mBar[j].peak : maxPeak;
-
-   return(maxPeak);
-}
- 
 float MeterPanel::GetPeakHold() const
 {
    auto peakHold = .0f;

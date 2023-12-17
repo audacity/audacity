@@ -166,13 +166,12 @@ class AUDACITY_DLL_API MeterPanel final
     */
    bool IsMeterDisabled() const override;
 
-   float GetMaxPeak() const override;
    float GetPeakHold() const;
 
    bool IsMonitoring() const;
    bool IsActive() const;
 
-   bool IsClipping() const override;
+   bool IsClipping() const;
 
    void StartMonitoring();
    void StopMonitoring();
@@ -183,7 +182,7 @@ class AUDACITY_DLL_API MeterPanel final
    void RestoreState(const State &state);
    void SetMixer(wxCommandEvent& event);
 
-   int GetDBRange() const override { return mDB ? mDBRange : -1; }
+   int GetDBRange() const { return mDB ? mDBRange : -1; }
 
    bool ShowDialog();
    void Increase(float steps);
