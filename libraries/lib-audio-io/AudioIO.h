@@ -667,11 +667,13 @@ public:
    bool IsActive();
    void Process(AudacityProject *pProject,
       bool isClipping, int dBRange, double maxPeak);
-   void SetStartTime();
    double GetLastDecisionTime();
 
 private:
    AILA();
+   void SetStartTime(const AudioIOEvent &evt);
+
+   const Observer::Subscription mSubscription;
 
    bool           mAILAActive{ false };
    bool           mAILAClipped{};

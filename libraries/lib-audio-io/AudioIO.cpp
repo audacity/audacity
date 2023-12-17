@@ -1023,8 +1023,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mpTransportState = std::make_unique<TransportState>(mOwningProject,
       mPlaybackTracks, numPlaybackChannels, mRate);
 
-   AILA::Get().SetStartTime();
-
    if (pStartTime)
    {
       // Calculate the NEW time position
@@ -2622,7 +2620,16 @@ AILA &AILA::Get()
    return instance;
 }
 
-AILA::AILA() = default;
+AILA::AILA()
+   : mSubscription{ AudioIO::Get()->Subscribe(*this, &AILA::SetStartTime) }
+{
+}
+
+// Guarantees that the subscription attaches at startup, but that
+// must be delayed somewhat from static initialization time
+static struct AILAInitializer { AILAInitializer() {
+   BasicUI::CallAfter([]{ AILA::Get(); });
+}} sAILAInitializer;
 
 void AILA::Initialize(double t0) {
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
@@ -2651,9 +2658,11 @@ bool AILA::IsActive() {
    return mAILAActive;
 }
 
-void AILA::SetStartTime() {
-   mAILAAbsoluteStartTime = AudioIO::Get()->GetClockTime();
-   wxPrintf("START TIME %f\n\n", mAILAAbsoluteStartTime);
+void AILA::SetStartTime(const AudioIOEvent &evt) {
+   if (evt.type == AudioIOEvent::CAPTURE && evt.on) {
+      mAILAAbsoluteStartTime = AudioIO::Get()->GetClockTime();
+      wxPrintf("START TIME %f\n\n", mAILAAbsoluteStartTime);
+   }
 }
 
 double AILA::GetLastDecisionTime() {
