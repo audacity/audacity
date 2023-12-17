@@ -546,7 +546,7 @@ public:
    /** \brief Function to automatically set an acceptable volume
     *
     */
-   void AILAInitialize();
+   void AILAInitialize(double t0);
    void AILADisable();
    bool AILAIsActive();
    void AILAProcess(double maxPeak);
