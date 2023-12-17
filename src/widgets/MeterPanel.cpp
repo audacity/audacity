@@ -393,14 +393,14 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    if (mLayoutValid == false || (mStyle == MixerTrackCluster ))
    {
-      // Create a NEW one using current size and select into the DC
+      // Go calculate all of the layout metrics
+      HandleLayout();
+   
+      // Create a new one using current size and select into the DC
       mBitmap = std::make_unique<wxBitmap>();
       mBitmap->Create(mWidth, mHeight, destDC);
       wxMemoryDC dc;
       dc.SelectObject(*mBitmap);
-
-      // Go calculate all of the layout metrics
-      HandleLayout(dc);
 
       // Start with a clean background
       // LLL:  Should research USE_AQUA_THEME usefulness...
@@ -543,9 +543,6 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       dc.SetTextForeground( clrText );
       // Draw the ruler
       mRuler.Draw(dc);
-
-      // Bitmap created...unselect
-      dc.SelectObject(wxNullBitmap);
    }
 
    // Copy predrawn bitmap to the dest DC
@@ -984,8 +981,11 @@ void MeterPanel::SetBarAndClip(int iBar, bool vert)
    }
 }
 
-void MeterPanel::HandleLayout(wxDC &dc)
+void MeterPanel::HandleLayout()
 {
+   // Needed only for text size computations
+   wxMemoryDC dc;
+
    // Refresh to reflect any language changes
    /* i18n-hint: One-letter abbreviation for Left, in VU Meter */
    mLeftText = _("L");
@@ -1397,9 +1397,6 @@ void MeterPanel::DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
             }
          }
       }
-
-      // No longer need the source DC, so unselect the predrawn bitmap
-      srcDC.SelectObject(wxNullBitmap);
    }
    else
    {
