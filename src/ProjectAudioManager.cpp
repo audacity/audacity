@@ -963,9 +963,9 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             Viewport::Get(project).ShowTrack(**trackList.rbegin());
       }
 
-      //Automated Input Level Adjustment Initialization
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      gAudioIO->AILAInitialize();
+      //Automated Input Level Adjustment Initialization
+      AudioIO::Get()->AILAInitialize(t0 - options.preRoll);
 #endif
 
       int token =

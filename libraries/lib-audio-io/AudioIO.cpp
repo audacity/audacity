@@ -2330,7 +2330,7 @@ void AudioIoCallback::SetListener(
 
 #include "ProjectStatus.h"
 
-void AudioIO::AILAInitialize() {
+void AudioIO::AILAInitialize(double t0) {
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
    gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);
    gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mAILAGoalDelta,      AILA_DEF_DELTA_PEAK);
@@ -2340,7 +2340,7 @@ void AudioIO::AILAInitialize() {
    mAILAGoalPoint         /= 100.0;
    mAILAAnalysisTime      /= 1000.0;
    mAILAMax                = 0.0;
-   mAILALastStartTime      = max(0.0, mPlaybackSchedule.mT0);
+   mAILALastStartTime      = max(0.0, t0);
    mAILAClipped            = false;
    mAILAAnalysisCounter    = 0;
    mAILAChangeFactor       = 1.0;
