@@ -48,29 +48,6 @@ struct MeterPanelBase::Forwarder : Meter
       else
          return true;
    }
-   float GetMaxPeak() const override
-   {
-      if (mOwner)
-         return mOwner->GetMaxPeak();
-      else
-         return 0.0;
-   }
-
-   bool IsClipping() const override
-   {
-      if (mOwner)
-         return mOwner->IsClipping();
-      else
-         return false;
-   }
-
-   int GetDBRange() const override
-   {
-      if (mOwner)
-         return mOwner->GetDBRange();
-      else
-         return 0.0;
-   }
 
    const wxWeakRef< MeterPanelBase > mOwner;
 };
