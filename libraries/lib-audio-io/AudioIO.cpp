@@ -2646,12 +2646,16 @@ bool AudioIO::AILAIsActive() {
 }
 
 void AudioIO::AILASetStartTime() {
-   mAILAAbsolutStartTime = Pa_GetStreamTime(mPortStreamV19);
-   wxPrintf("START TIME %f\n\n", mAILAAbsolutStartTime);
+   mAILAAbsoluteStartTime = AudioIO::Get()->GetClockTime();
+   wxPrintf("START TIME %f\n\n", mAILAAbsoluteStartTime);
 }
 
 double AudioIO::AILAGetLastDecisionTime() {
    return mAILAAnalysisEndTime;
+}
+
+double AudioIO::GetClockTime() const {
+   return Pa_GetStreamTime(mPortStreamV19);
 }
 
 void AudioIO::AILAProcess(double maxPeak) {
@@ -2666,7 +2670,10 @@ void AudioIO::AILAProcess(double maxPeak) {
 
       mAILAMax = max(mAILAMax, maxPeak);
 
-      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis) && mPlaybackSchedule.GetSequenceTime() - mAILALastStartTime >= mAILAAnalysisTime) {
+      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis)
+          && audioIO.GetStreamTime() - mAILALastStartTime >=
+          mAILAAnalysisTime)
+      {
          auto ToLinearIfDB = [](double value, int dbRange) {
             if (dbRange >= 0)
                value = pow(10.0, (-(1.0-value) * dbRange)/20.0);
@@ -2748,16 +2755,16 @@ void AudioIO::AILAProcess(double maxPeak) {
          }
 
          mAILAAnalysisCounter++;
-         //const PaStreamInfo* info = Pa_GetStreamInfo(mPortStreamV19);
+         //const PaStreamInfo* info = audioIO::GetClockTime();
          //double latency = 0.0;
          //if (info)
          //   latency = info->inputLatency;
          //mAILAAnalysisEndTime = mTime+latency;
-         mAILAAnalysisEndTime = Pa_GetStreamTime(mPortStreamV19) - mAILAAbsolutStartTime;
+         mAILAAnalysisEndTime = audioIO.GetClockTime() - mAILAAbsoluteStartTime;
          mAILAMax             = 0;
          wxPrintf("\tA decision was made @ %f\n", mAILAAnalysisEndTime);
          mAILAClipped         = false;
-         mAILALastStartTime   = mPlaybackSchedule.GetSequenceTime();
+         mAILALastStartTime   = audioIO.GetStreamTime();
 
          if (changetype == 0)
             mAILAChangeFactor *= 0.8; //time factor
