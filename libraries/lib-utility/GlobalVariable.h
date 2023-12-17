@@ -101,6 +101,17 @@ public:
          m_previous;
    };
 
+   //! Substitute a value, computed from the previously installed value
+   struct WrapperScope : Scope {
+      template<typename F,
+         typename sfinae = std::enable_if_t<std::is_convertible_v<
+            decltype(std::declval<F&&>()(std::declval<stored_type &>())),
+            mutable_type
+         >>
+      >
+      WrapperScope(F &&f) : Scope{ std::forward<F>(f)(Get()) } {}
+   };
+
    /*! @brief Can guarantee that the global variable's lifetime encloses
     those of other objects of static duration
     
