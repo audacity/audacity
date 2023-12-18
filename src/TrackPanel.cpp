@@ -1352,19 +1352,28 @@ struct ChannelStack final : TrackPanelGroup {
    wxCoord mLeftOffset;
 };
 
-// A track control panel, left of n vertical rulers and n channels
-// alternating with n - 1 resizers
+// A track control panel, plus a meter for WaveTrack,
+// left of n vertical rulers and n channels alternating with n - 1 resizers
 struct LabeledChannelGroup final : TrackPanelGroup {
    LabeledChannelGroup(
       const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
          : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
-   Subdivision Children(const wxRect &rect) override
-   { return { Axis::X, Refinement{
-      { rect.GetLeft(),
-         TrackControls::Get(*mpTrack).shared_from_this() },
-      { rect.GetLeft() + kTrackInfoWidth,
-        std::make_shared<ChannelStack>(mpTrack, mLeftOffset) }
-   } }; }
+   Subdivision Children( const wxRect &rect ) override
+   {
+      const bool isWaveTrack = !!dynamic_cast<const WaveTrack *>(mpTrack.get());
+      auto left = rect.GetLeft();
+      auto meterLeft = left + kTrackInfoWidth;
+      auto trackLeft = meterLeft + kMeterWidth;
+      Refinement refinement{ { left,
+         TrackControls::Get(*mpTrack).shared_from_this() } };
+      if (isWaveTrack)
+         refinement.emplace_back(meterLeft,
+            std::make_shared<EmptyPanelRect>(*mpTrack->Channels().first,
+               mpTrack->GetSelected() ? clrTrackInfoSelected : clrTrackInfo));
+      refinement.emplace_back(trackLeft,
+         std::make_shared<ChannelStack>(mpTrack, mLeftOffset));
+      return { Axis::X, move(refinement) };
+   }
 
    // TrackPanelDrawable implementation
    void Draw(TrackPanelDrawingContext &context,

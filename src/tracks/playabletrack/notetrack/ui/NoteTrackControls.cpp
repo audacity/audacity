@@ -145,7 +145,7 @@ using TCPLine = TrackInfo::TCPLine;
 #ifdef USE_MIDI
 enum : int {
    // PRL:  was it correct to include the margin?
-   kMidiCellWidth = ( ( kTrackInfoWidth + kLeftMargin ) / 4) - 2,
+   kMidiCellWidth = ( ( kTrackInfoWidth + kMeterWidth + kLeftMargin ) / 4) - 2,
    kMidiCellHeight = kTrackInfoBtnSize
 };
 #endif
