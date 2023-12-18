@@ -5,6 +5,7 @@
         <file>qml/CustomiseToolbar.qml</file>
         <file>qml/EditToolbar.qml</file>
         <file>qml/MasterVolumeToolbar.qml</file>
+        <file>qml/ScrollableRuler.qml</file>
         <file>qml/Sidebar.qml</file>
         <file>qml/SnappingButton.qml</file>
         <file>qml/TimelineRuler.qml</file>

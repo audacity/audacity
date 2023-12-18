@@ -1,6 +1,8 @@
 set(QAUDACITY ${CMAKE_PROJECT_NAME})
 
 set(APP_SOURCES
+   AdornedQtRulerPanel.cpp
+   AdornedQtRulerPanel.h
    EditToolbarHandler.cpp
    EditToolbarHandler.h
    ExtraMenu.cpp
@@ -46,6 +48,7 @@ set(QML_SOURCES
    qml/CustomiseToolbar.qml
    qml/EditToolbar.qml
    qml/MasterVolumeToolbar.qml
+   qml/ScrollableRuler.qml
    qml/Sidebar.qml
    qml/SnappingButton.qml
    qml/TimelineRuler.qml
@@ -81,6 +84,7 @@ audacity_qml_module(
       lib-project
       lib-audio-io
       lib-numeric-formats
+      lib-time-frequency-selection
 )
 
 set_target_properties(

@@ -21,9 +21,29 @@ ApplicationWindow {
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
    property string language: "en"
 
+   function disallowWindowResizing() {
+      root.flags =  Qt.Window | Qt.WindowTitleHint | Qt.CustomizeWindowHint | Qt.WindowCloseButtonHint | Qt.WindowSystemMenuHint
+      root.minimumWidth = root.width
+      root.minimumHeight = root.height
+      root.maximumWidth = root.width
+      root.maximumHeight = root.height
+   }
+
+   function allowWindowResizing() {
+      root.minimumWidth = window.minimumWidth
+      root.minimumHeight = window.minimumHeight
+      root.maximumWidth = window.maximumWidth
+      root.maximumHeight = window.maximumHeight
+      root.flags = Qt.Window
+   }
+
    QtObject {
-      id: testers
-      property bool volumeVisible: false
+      id: window
+
+      property int minimumWidth
+      property int minimumHeight
+      property int maximumWidth
+      property int maximumHeight
    }
 
    TranslationManager {
@@ -122,10 +142,11 @@ ApplicationWindow {
                onTriggered: {
                   UiTheme.changeTheme(text)
                   toolsToolbar.refreshSetup()
+                  timelineRuler.updateTheme()
                }
             }
 
-            onObjectAdded: themeMenu.insertItem(index, object)
+            onObjectAdded: (index, object) => themeMenu.insertItem(index, object)
             onObjectRemoved: themeMenu.removeItem(object)
          }
       }
@@ -153,7 +174,7 @@ ApplicationWindow {
                onTriggered : extraMenu.activate(index)
             }
 
-            onObjectAdded: extras.insertItem(index, object)
+            onObjectAdded: (index, object) => extras.insertItem(index, object)
             onObjectRemoved: extras.removeItem(object)
          }
       }
@@ -163,9 +184,19 @@ ApplicationWindow {
       id: toolsToolbar
 
       onSetupClicked: customiseToolbar.show()
-      onPlaybackStarted: timelineRuler.start()
-      onPlaybackStopped: timelineRuler.stop()
-      onPlaybackPaused: timelineRuler.pause()
+
+      onPlaybackStarted: {
+         trackCanvasView.contentItem.contentX = 0
+         scrollableRuler.start()
+         stalk.visible = true
+      }
+
+      onPlaybackStopped: {
+         stalk.visible = false
+         scrollableRuler.stop()
+      }
+
+      onPlaybackPaused: scrollableRuler.pause()
 
       onUpdateStatusBar: function(status) {
          statusBar.text = status
@@ -173,24 +204,92 @@ ApplicationWindow {
       }
    }
 
-   Rectangle {
-      id: trackCanvas
+   ScrollView {
+      id: trackCanvasView
       x: sidebar.width
       width: root.width - sidebar.width
-      color: UiTheme.backgroundColor3
-      anchors.top: timelineRuler.bottom
+      anchors.top: scrollableRuler.bottom
       anchors.bottom: footerId.top
+      contentWidth: trackCanvasBackground.width
 
-      WaveClipView {
-         id: waveClipView
-         x: 13
-         y: 0
-         height: 84
-         name: "Audio 1"
+      ScrollBar.horizontal.onVisualPositionChanged: {
+         scrollableRuler.scrollTo(trackCanvasView.contentItem.contentX)
+      }
 
-         onOptionsClicked: {
-            statusBar.text = waveClipView.name + " options clicked"
-            timer.restart()
+      Rectangle {
+         id: trackCanvasBackground
+         color: UiTheme.backgroundColor3
+
+         width: {
+            var contentWidth = trackCanvasBackground.childrenRect.x + trackCanvasBackground.childrenRect.width
+            if (contentWidth > trackCanvasView.width) {
+               return contentWidth
+            } else {
+               return trackCanvasView.width
+            }
+         }
+
+         height: {
+            var contentHeight = trackCanvasBackground.childrenRect.y + trackCanvasBackground.childrenRect.height
+            if (contentHeight > trackCanvasView.height) {
+               return contentHeight
+            } else {
+               return trackCanvasView.height
+            }
+         }
+
+         WaveClipView {
+            id: waveClipView
+            x: 13
+            y: 0
+            height: 84
+            name: "Audio 1"
+
+            onOptionsClicked: {
+               statusBar.text = waveClipView.name + " options clicked"
+               timer.restart()
+            }
+         }
+
+         WaveClipView {
+            id: waveClipView2
+            x: 13
+            y: 86
+            height: 124
+            name: "Stereo 1"
+
+            onOptionsClicked: {
+               statusBar.text = waveClipView2.name + " options clicked"
+               timer.restart()
+            }
+         }
+
+         WaveClipView {
+            id: waveClipView3
+            x: 13
+            y: 212
+            height: 124
+            name: "Mono 1"
+
+            onOptionsClicked: {
+               statusBar.text = waveClipView2.name + " options clicked"
+               timer.restart()
+            }
+         }
+
+         Rectangle {
+            id: stalk
+            x: 12
+            width: 3
+            anchors.top: trackCanvasBackground.top
+            anchors.bottom: trackCanvasBackground.bottom
+            color: UiTheme.fontColor2
+            visible: false
+
+            border {
+               color: UiTheme.backgroundColor4
+               width: 1
+            }
          }
       }
    }
@@ -212,12 +311,18 @@ ApplicationWindow {
       onTriggered: statusBar.text = ""
    }
 
-   TimelineRuler {
-      id: timelineRuler
-      x: sidebar.width + 1
-      width: root.width - sidebar.width - 1
-      height: 28
-      playheadCursorHeight: height / 2 + trackCanvas.height
+   ScrollableRuler {
+      id: scrollableRuler
+      x: sidebar.width
+      width: trackCanvasView.width
+      height: 32
+      contentWidth: trackCanvasBackground.width
+
+      onContentChanged: (playheadCursorPosition, scrolledTo) => {
+         stalk.x = playheadCursorPosition + 7
+         trackCanvasBackground.width = scrollableRuler.contentWidth
+         trackCanvasView.contentItem.contentX = scrolledTo
+      }
    }
 
    footer: Rectangle {
@@ -238,5 +343,12 @@ ApplicationWindow {
          width: parent.width
          color: UiTheme.strokeColor2
       }
+   }
+
+   Component.onCompleted: {
+      window.minimumWidth = root.minimumWidth
+      window.minimumHeight = root.minimumHeight
+      window.maximumWidth = root.maximumWidth
+      window.maximumHeight = root.maximumHeight
    }
 }
