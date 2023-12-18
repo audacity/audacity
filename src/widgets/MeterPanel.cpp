@@ -193,6 +193,17 @@ void MeterPainter::SetBackgroundColor(int bgColor)
    mBkgndBrush = wxBrush(backgroundColour, wxBRUSHSTYLE_SOLID);
 }
 
+void MeterPainter::AllocateBitmap(wxDC &dc, int width, int height)
+{
+   mBitmap = std::make_unique<wxBitmap>();
+   mBitmap->Create(width, height, dc);
+   wxMemoryDC memdc;
+   memdc.SelectObject(*mBitmap);
+   memdc.SetPen(*wxTRANSPARENT_PEN);
+   memdc.SetBrush(mBkgndBrush);
+   memdc.DrawRectangle(0, 0, width, height);
+}
+
 enum {
    OnMeterUpdateID = 6000,
    OnMonitorID,
@@ -236,7 +247,6 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mActive(false),
    mPainter{ true, true, isInput, clrMedium },
    mLayoutValid(false),
-   mBitmap{},
    mRuler{ LinearUpdater::Instance(), LinearDBFormat::Instance() }
 , PeakAndRmsMeter{ DecibelScaleCutoff.Read() }
 {
@@ -404,15 +414,11 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       HandleLayout();
    
       // Create a new one using current size and select into the DC
-      mBitmap = std::make_unique<wxBitmap>();
-      mBitmap->Create(mWidth, mHeight, destDC);
+      mPainter.AllocateBitmap(destDC, mWidth, mHeight);
       wxMemoryDC dc;
-      dc.SelectObject(*mBitmap);
+      dc.SelectObject(*mPainter.mBitmap);
 
-      dc.SetPen(*wxTRANSPARENT_PEN);
-      dc.SetBrush(mPainter.mBkgndBrush);
-      dc.DrawRectangle(0, 0, mWidth, mHeight);
-
+      // Paint text on the bitmap
       // MixerTrackCluster style has no icon or L/R labels
       if (mStyle != MixerTrackCluster)
       {
@@ -546,12 +552,11 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    }
 
    // Copy predrawn bitmap to the dest DC
-   destDC.DrawBitmap(*mBitmap, 0, 0);
+   destDC.DrawBitmap(*mPainter.mBitmap, 0, 0);
 
    // Go draw the meter bars, Left & Right channels using current levels
    for (unsigned int i = 0; i < mNumBars; i++)
-      mPainter.DrawMeterBar(destDC, *mBitmap,
-         mMeterDisabled, mBar[i], mStats[i]);
+      mPainter.DrawMeterBar(destDC, mMeterDisabled, mBar[i], mStats[i]);
 
    destDC.SetTextForeground( clrText );
 
@@ -1293,10 +1298,13 @@ void MeterPanel::RepaintBarsNow()
    }
 }
 
-void MeterPainter::DrawMeterBar(wxDC &dc,
-   wxBitmap &bitmap, bool disabled,
+void MeterPainter::DrawMeterBar(wxDC &dc, bool disabled,
    const MeterBar &bar, Stats &stats) const
 {
+   if (!mBitmap)
+      return;
+   auto &bitmap = *mBitmap;
+
    // Cache some metrics
    wxCoord x = bar.rect.GetLeft();
    wxCoord y = bar.rect.GetTop();

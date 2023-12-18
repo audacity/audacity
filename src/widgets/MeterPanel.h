@@ -55,7 +55,12 @@ public:
    );
    void SetBackgroundColor(int bgColor);
 
-   void DrawMeterBar(wxDC &dc, wxBitmap &bitmap, bool disabled,
+   //! Destroy any existing bitmap first; make new one filled with bg color
+   void AllocateBitmap(wxDC &dc, int width, int height);
+
+   //! Blit parts of the stored bitmap to dc and fill the rest as background,
+   //! according to levels in stats
+   void DrawMeterBar(wxDC &dc, bool disabled,
       const MeterBar &meterBar, Stats &stats) const;
 
    bool GetGradient() const { return mGradient; }
@@ -64,6 +69,7 @@ public:
    bool GetClip() const { return mClip; }
 
    wxBrush   mBkgndBrush;
+   std::unique_ptr<wxBitmap> mBitmap;
 
 private:
    wxPen     mPen;
@@ -223,7 +229,6 @@ class AUDACITY_DLL_API MeterPanel final
 
    bool      mLayoutValid;
 
-   std::unique_ptr<wxBitmap> mBitmap;
    wxPoint   mLeftTextPos;
    wxPoint   mRightTextPos;
    wxSize    mLeftSize;
