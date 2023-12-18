@@ -894,6 +894,8 @@ set( SOURCES
       widgets/LinearUpdater.h
       widgets/LogarithmicUpdater.cpp
       widgets/LogarithmicUpdater.h
+      widgets/MeterPainter.cpp
+      widgets/MeterPainter.h
       widgets/MeterPanel.cpp
       widgets/MeterPanel.h
       widgets/MeterPanelBase.cpp
