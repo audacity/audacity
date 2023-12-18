@@ -58,6 +58,9 @@ public:
    //! Destroy any existing bitmap first; make new one filled with bg color
    void AllocateBitmap(wxDC &dc, int width, int height);
 
+   //! Color the bitmap as for maximum levels
+   void FillBitmap(const MeterBar &bar, bool dB, int dBRange);
+
    //! Blit parts of the stored bitmap to dc and fill the rest as background,
    //! according to levels in stats
    void DrawMeterBar(wxDC &dc, bool disabled,

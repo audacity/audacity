@@ -204,6 +204,121 @@ void MeterPainter::AllocateBitmap(wxDC &dc, int width, int height)
    memdc.DrawRectangle(0, 0, width, height);
 }
 
+void MeterPainter::FillBitmap(const MeterBar &bar, bool dB, int dBRange)
+{
+   if (!mBitmap)
+      return;
+
+   wxMemoryDC dc;
+   dc.SelectObject(*mBitmap);
+
+   const auto bg = mBkgndBrush.GetColour();
+
+   // Setup the colors for the 3 sections of the meter bars
+   wxColor green(117, 215, 112);
+   wxColor yellow(255, 255, 0);
+   wxColor red(255, 0, 0);
+
+   // Bug #2473 - (Sort of) Hack to make text on meters more
+   // visible with darker backgrounds. It would be better to have
+   // different colors entirely and as part of the theme.
+   if (bg.GetLuminance() < 0.25) {
+      green = wxColor(117-100, 215-100, 112-100);
+      yellow = wxColor(255-100, 255-100, 0);
+      red = wxColor(255-100, 0, 0);
+   }
+   else if (bg.GetLuminance() < 0.50) {
+      green = wxColor(117-50, 215-50, 112-50);
+      yellow = wxColor(255-50, 255-50, 0);
+      red = wxColor(255-50, 0, 0);
+   }
+
+   // Give it a recessed look
+   AColor::Bevel(dc, false, bar.bevel);
+
+   // Draw the clip indicator bevel
+   if (mClip)
+      AColor::Bevel(dc, false, bar.rClip);
+
+   // Cache bar rect
+   wxRect rect = bar.rect;
+
+   if (mGradient) {
+      // Calculate the size of the two gradiant segments of the meter
+      double gradw;
+      double gradh;
+      if (dB) {
+         gradw = (double) rect.GetWidth() / dBRange * 6.0;
+         gradh = (double) rect.GetHeight() / dBRange * 6.0;
+      }
+      else {
+         gradw = (double) rect.GetWidth() / 100 * 25;
+         gradh = (double) rect.GetHeight() / 100 * 25;
+      }
+
+      if (bar.vert) {
+         // Draw the "critical" segment (starts at top of meter and works down)
+         rect.SetHeight(gradh);
+         dc.GradientFillLinear(rect, red, yellow, wxSOUTH);
+
+         // Draw the "warning" segment
+         rect.SetTop(rect.GetBottom());
+         dc.GradientFillLinear(rect, yellow, green, wxSOUTH);
+
+         // Draw the "safe" segment
+         rect.SetTop(rect.GetBottom());
+         rect.SetBottom(bar.rect.GetBottom());
+         dc.SetPen(*wxTRANSPARENT_PEN);
+         dc.SetBrush(green);
+         dc.DrawRectangle(rect);
+      }
+      else {
+         // Draw the "safe" segment
+         rect.SetWidth(rect.GetWidth() - (int) (gradw + gradw + 0.5));
+         dc.SetPen(*wxTRANSPARENT_PEN);
+         dc.SetBrush(green);
+         dc.DrawRectangle(rect);
+
+         // Draw the "warning"  segment
+         rect.SetLeft(rect.GetRight() + 1);
+         rect.SetWidth(floor(gradw));
+         dc.GradientFillLinear(rect, green, yellow);
+
+         // Draw the "critical" segment
+         rect.SetLeft(rect.GetRight() + 1);
+         rect.SetRight(bar.rect.GetRight());
+         dc.GradientFillLinear(rect, yellow, red);
+      }
+#ifdef EXPERIMENTAL_METER_LED_STYLE
+      if (!bar.vert)
+      {
+         wxRect rect = bar.rect;
+         wxPen BackgroundPen;
+         BackgroundPen
+            .SetColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+         dc.SetPen( BackgroundPen );
+         int i;
+         for(i = 0; i < rect.width; ++i)
+         {
+            // 2 pixel spacing between the LEDs
+            if( (i%7)<2 ){
+               AColor::Line( dc, i + rect.x, rect.y, i + rect.x,
+                  rect.y + rect.height );
+            } else {
+               // The LEDs have triangular ends.
+               // This code shapes the ends.
+               int j = abs( (i%7)-4);
+               AColor::Line( dc, i + rect.x, rect.y, i + rect.x,
+                  rect.y + j + 1);
+               AColor::Line( dc, i + rect.x, rect.y + rect.height - j,
+                  i + rect.x, rect.y + rect.height);
+            }
+         }
+      }
+#endif
+   }
+}
+
 enum {
    OnMeterUpdateID = 6000,
    OnMonitorID,
@@ -416,7 +531,8 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       // Create a new one using current size and select into the DC
       mPainter.AllocateBitmap(destDC, mWidth, mHeight);
       wxMemoryDC dc;
-      dc.SelectObject(*mPainter.mBitmap);
+      auto &bitmap = *mPainter.mBitmap;
+      dc.SelectObject(bitmap);
 
       // Paint text on the bitmap
       // MixerTrackCluster style has no icon or L/R labels
@@ -429,122 +545,14 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
          dc.DrawText(mRightText, mRightTextPos.x, mRightTextPos.y);
       }
 
-      // Setup the colors for the 3 sections of the meter bars
-      wxColor green(117, 215, 112);
-      wxColor yellow(255, 255, 0);
-      wxColor red(255, 0, 0);
-
-      // Bug #2473 - (Sort of) Hack to make text on meters more
-      // visible with darker backgrounds. It would be better to have
-      // different colors entirely and as part of the theme.
-      if (GetBackgroundColour().GetLuminance() < 0.25)
-      {
-         green = wxColor(117-100, 215-100, 112-100);
-         yellow = wxColor(255-100, 255-100, 0);
-         red = wxColor(255-100, 0, 0);
-      }
-      else if (GetBackgroundColour().GetLuminance() < 0.50)
-      {
-         green = wxColor(117-50, 215-50, 112-50);
-         yellow = wxColor(255-50, 255-50, 0);
-         red = wxColor(255-50, 0, 0);
-      }
-
       // Draw the meter bars at maximum levels
-      for (unsigned int i = 0; i < mNumBars; i++) {
-         const auto & bar = mBar[i];
-         // Give it a recessed look
-         AColor::Bevel(dc, false, bar.bevel);
+      dc.SelectObject(wxNullBitmap);
+      for (unsigned int i = 0; i < mNumBars; ++i)
+         mPainter.FillBitmap(mBar[i], mDB, mDBRange);
+      dc.SelectObject(bitmap);
 
-         // Draw the clip indicator bevel
-         if (mPainter.GetClip())
-         {
-            AColor::Bevel(dc, false, bar.rClip);
-         }
-
-         // Cache bar rect
-         wxRect rect = bar.rect;
-
-         if (mPainter.GetGradient())
-         {
-            // Calculate the size of the two gradiant segments of the meter
-            double gradw;
-            double gradh;
-            if (mDB)
-            {
-               gradw = (double) rect.GetWidth() / mDBRange * 6.0;
-               gradh = (double) rect.GetHeight() / mDBRange * 6.0;
-            }
-            else
-            {
-               gradw = (double) rect.GetWidth() / 100 * 25;
-               gradh = (double) rect.GetHeight() / 100 * 25;
-            }
-
-            if (bar.vert)
-            {
-               // Draw the "critical" segment (starts at top of meter and works down)
-               rect.SetHeight(gradh);
-               dc.GradientFillLinear(rect, red, yellow, wxSOUTH);
-
-               // Draw the "warning" segment
-               rect.SetTop(rect.GetBottom());
-               dc.GradientFillLinear(rect, yellow, green, wxSOUTH);
-
-               // Draw the "safe" segment
-               rect.SetTop(rect.GetBottom());
-               rect.SetBottom(bar.rect.GetBottom());
-               dc.SetPen(*wxTRANSPARENT_PEN);
-               dc.SetBrush(green);
-               dc.DrawRectangle(rect);
-            }
-            else
-            {
-               // Draw the "safe" segment
-               rect.SetWidth(rect.GetWidth() - (int) (gradw + gradw + 0.5));
-               dc.SetPen(*wxTRANSPARENT_PEN);
-               dc.SetBrush(green);
-               dc.DrawRectangle(rect);
-
-               // Draw the "warning"  segment
-               rect.SetLeft(rect.GetRight() + 1);
-               rect.SetWidth(floor(gradw));
-               dc.GradientFillLinear(rect, green, yellow);
-
-               // Draw the "critical" segment
-               rect.SetLeft(rect.GetRight() + 1);
-               rect.SetRight(bar.rect.GetRight());
-               dc.GradientFillLinear(rect, yellow, red);
-            }
-#ifdef EXPERIMENTAL_METER_LED_STYLE
-            if (!bar.vert)
-            {
-               wxRect rect = bar.rect;
-               wxPen BackgroundPen;
-               BackgroundPen
-                  .SetColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
-               dc.SetPen( BackgroundPen );
-               int i;
-               for(i = 0; i < rect.width; ++i)
-               {
-                  // 2 pixel spacing between the LEDs
-                  if( (i%7)<2 ){
-                     AColor::Line( dc, i + rect.x, rect.y, i + rect.x,
-                        rect.y + rect.height );
-                  } else {
-                     // The LEDs have triangular ends.
-                     // This code shapes the ends.
-                     int j = abs( (i%7)-4);
-                     AColor::Line( dc, i + rect.x, rect.y, i + rect.x,
-                        rect.y + j + 1);
-                     AColor::Line( dc, i + rect.x, rect.y + rect.height - j,
-                        i + rect.x, rect.y + rect.height);
-                  }
-               }
-            }
-#endif
-         }
-      }
+      // Paint a ruler on the bitmap, though for some styles this gets partly
+      // overpainted in DrawMeterBar, so must be painted again
       mRuler.SetTickColour( clrText );
       dc.SetTextForeground( clrText );
       // Draw the ruler
