@@ -13,6 +13,7 @@
 #include "MeterPainter.h"
 
 #include <wx/dcbuffer.h>
+#include <wx/settings.h>
 #include "AColor.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
@@ -179,32 +180,6 @@ void MeterPainter::FillBitmap(const MeterBar &bar, bool dB, int dBRange)
 #endif
    }
 }
-
-#if 0
-static const long MIN_REFRESH_RATE = 1;
-static const long MAX_REFRESH_RATE = 100;
-
-//
-// MeterPanel class
-//
-
-#include "../../images/SpeakerMenu.xpm"
-#include "../../images/MicMenu.xpm"
-
-const static wxChar *PrefStyles[] =
-{
-   wxT("AutomaticStereo"),
-   wxT("HorizontalStereo"),
-   wxT("VerticalStereo")
-};
-
-enum {
-   OnMeterUpdateID = 6000,
-   OnMonitorID,
-   OnPreferencesID,
-   OnTipTimeoutID
-};
-#endif
 
 void MeterBar::SetRectangles(wxRect bounding, bool vertical, bool clip)
 {

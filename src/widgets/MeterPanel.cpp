@@ -36,7 +36,6 @@
 #include <wx/dcbuffer.h>
 #include <wx/frame.h>
 #include <wx/menu.h>
-#include <wx/settings.h>
 #include <wx/textdlg.h>
 #include <wx/numdlg.h>
 #include <wx/radiobut.h>
