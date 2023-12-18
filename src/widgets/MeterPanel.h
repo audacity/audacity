@@ -56,6 +56,9 @@ public:
    void SetBackgroundColor(int bgColor);
 
    //! Destroy any existing bitmap first; make new one filled with bg color
+   /*!
+    @post `GetBitmap() != nullptr`
+    */
    void AllocateBitmap(wxDC &dc, int width, int height);
 
    //! Color the bitmap as for maximum levels
@@ -70,9 +73,9 @@ public:
    void SetGradient(bool gradient) { mGradient = gradient; }
 
    bool GetClip() const { return mClip; }
+   void SetClip(bool clip) { mClip = clip; }
 
-   wxBrush   mBkgndBrush;
-   std::unique_ptr<wxBitmap> mBitmap;
+   wxBitmap *GetBitmap() { return mBitmap.get(); }
 
 private:
    wxPen     mPen;
@@ -81,6 +84,8 @@ private:
    wxBrush   mRMSBrush;
    wxBrush   mClipBrush;
    wxBrush   mDisabledBkgndBrush;
+   wxBrush   mBkgndBrush;
+   std::unique_ptr<wxBitmap> mBitmap;
    bool mClip;
    bool mGradient;
 };

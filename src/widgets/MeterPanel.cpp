@@ -202,6 +202,7 @@ void MeterPainter::AllocateBitmap(wxDC &dc, int width, int height)
    memdc.SetPen(*wxTRANSPARENT_PEN);
    memdc.SetBrush(mBkgndBrush);
    memdc.DrawRectangle(0, 0, width, height);
+   assert(GetBitmap());
 }
 
 void MeterPainter::FillBitmap(const MeterBar &bar, bool dB, int dBRange)
@@ -530,8 +531,11 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    
       // Create a new one using current size and select into the DC
       mPainter.AllocateBitmap(destDC, mWidth, mHeight);
+      auto pBitmap = mPainter.GetBitmap();
+      assert(pBitmap);
+
       wxMemoryDC dc;
-      auto &bitmap = *mPainter.mBitmap;
+      auto &bitmap = *pBitmap;
       dc.SelectObject(bitmap);
 
       // Paint text on the bitmap
@@ -560,7 +564,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    }
 
    // Copy predrawn bitmap to the dest DC
-   destDC.DrawBitmap(*mPainter.mBitmap, 0, 0);
+   destDC.DrawBitmap(*mPainter.GetBitmap(), 0, 0);
 
    // Go draw the meter bars, Left & Right channels using current levels
    for (unsigned int i = 0; i < mNumBars; i++)
@@ -1734,10 +1738,11 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
         {
            S.StartVerticalLay();
            {
-              gradient = S.AddRadioButton(XXO("Gradient"), true,
-                  mPainter.GetGradient());
-              rms = S.AddRadioButtonToGroup(XXO("RMS"), false,
-                  mPainter.GetGradient());
+              const bool grad = mPainter.GetGradient();
+              gradient =
+                 S.AddRadioButton(XXO("Gradient"), true, grad);
+              rms =
+                 S.AddRadioButtonToGroup(XXO("RMS"), false, grad);
            }
            S.EndVerticalLay();
         }
