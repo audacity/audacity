@@ -66,7 +66,7 @@ public:
 private:
    void UpdateProjectSnapshot(bool forceCreateNew);
 
-   void OnSnapshotCreated(const ProjectResponse& response, bool newProject);
+   void OnSnapshotCreated(const CreateProjectResponse& response, bool newProject);
    void MarkSnapshotSynced(int64_t blocksCount);
 
    ProjectCloudExtension& mProjectCloudExtension;

@@ -55,17 +55,49 @@ struct UploadUrls final
    std::string FailUrl;
 };
 
-struct ProjectInfo final
+struct VersionInfo final
 {
    std::string Id;
-
+   std::string Name;
+   std::string SnapshotId;
    int64_t Created;
    int64_t Updated;
+};
+
+struct SnapshotBlockInfo final
+{
+   BlockHash Hash;
+   std::string Url;
 };
 
 struct SnapshotInfo final
 {
    std::string Id;
+
+   int64_t Created;
+   int64_t Updated;
+
+   std::string FileUrl;
+
+   std::vector<SnapshotBlockInfo> Blocks;
+};
+
+struct ProjectInfo final
+{
+   std::string Id;
+
+   std::string Username;
+   std::string AuthorName;
+   std::string Slug;
+   std::string Name;
+   std::string Details;
+
+   SnapshotInfo HeadSnapshot;
+   std::vector<VersionInfo> Versions;
+
+
+   int64_t Created;
+   int64_t Updated;
 };
 
 struct ProjectSyncState final
@@ -75,7 +107,7 @@ struct ProjectSyncState final
    std::vector<UploadUrls> MissingBlocks;
 };
 
-struct ProjectResponse final
+struct CreateProjectResponse final
 {
    ProjectInfo Project;
    SnapshotInfo Snapshot;
@@ -83,7 +115,21 @@ struct ProjectResponse final
    ProjectSyncState SyncState;
 };
 
-std::optional<ProjectResponse> DeserializeProjectResponse(const std::string& data);
+struct PaginationInfo final
+{
+   int TotalCount;
+   int PagesCount;
+   int CurrentPage;
+   int PageSize;
+};
+
+struct PaginatedProjectsResponse final
+{
+   std::vector<ProjectInfo> Items;
+   PaginationInfo Pagination;
+};
+
+std::optional<CreateProjectResponse> DeserializeCreateProjectResponse(const std::string& data);
 
 wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName);

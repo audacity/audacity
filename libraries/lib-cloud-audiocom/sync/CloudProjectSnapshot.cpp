@@ -186,7 +186,13 @@ struct CloudProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
    {
       for (const auto& urls : missingBlockUrls)
       {
-         auto it = BlockHashToIndex.find(urls.Id);
+         auto upperCaseId = urls.Id;
+
+         std::transform (
+            upperCaseId.begin(), upperCaseId.end(), upperCaseId.begin(),
+            [](auto c) { return std::toupper(c); });
+
+         auto it = BlockHashToIndex.find(upperCaseId);
 
          if (it == BlockHashToIndex.end ())
          {
@@ -336,7 +342,7 @@ void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
          {
             const auto body = response->readAll<std::string>();
             auto result =
-               DeserializeProjectResponse(body);
+               DeserializeCreateProjectResponse(body);
 
             if (!result)
             {
@@ -353,7 +359,7 @@ void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
 }
 
 void CloudProjectSnapshot::OnSnapshotCreated(
-   const ProjectResponse& response, bool newProject)
+   const CreateProjectResponse& response, bool newProject)
 {
    auto project = mWeakProject.lock();
 

@@ -28,145 +28,323 @@ namespace cloud::audiocom::sync
 
 namespace
 {
-std::optional<UploadUrls> DeserializeUploadUrls(const rapidjson::Value& value)
+bool Deserialize(const rapidjson::Value& value, std::string& result)
+{
+   if (!value.IsString())
+      return false;
+
+   result = value.GetString();
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, int& result)
+{
+   if (!value.IsInt64())
+      return false;
+
+   result = value.GetInt();
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, long& result)
+{
+   if (!value.IsInt64())
+      return false;
+
+   if (sizeof(long) == sizeof(int64_t))
+      result = value.GetInt64();
+   else
+      result = value.GetInt();
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, long long& result)
+{
+   if (!value.IsInt64())
+      return false;
+
+   result = value.GetInt64();
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, bool& result)
+{
+   if (!value.IsBool())
+      return false;
+
+   result = value.GetBool();
+
+   return true;
+}
+
+template <typename T>
+bool Deserialize(
+   const rapidjson::Value& value, std::string_view zKey, T& result);
+
+template <typename T>
+bool DeserializeArray(const rapidjson::Value& value, std::vector<T>& result);
+
+template <typename T>
+bool DeserializeArray(
+   const rapidjson::Value& value, std::string_view zKey, std::vector<T>& result)
+{
+   if (!value.IsObject() || !value.HasMember(zKey.data()))
+      return false;
+
+   return DeserializeArray(value[zKey.data()], result);
+}
+
+bool Deserialize(const rapidjson::Value& value, UploadUrls& urls)
 {
    if (!value.IsObject())
       return {};
 
-   if (!value.HasMember("id") || !value["id"].IsString())
+   UploadUrls tempUrls;
+
+   if (!Deserialize(value, "id", tempUrls.Id))
       return {};
 
-   if (!value.HasMember("url") || !value["url"].IsString())
+   if (!Deserialize(value, "url", tempUrls.UploadUrl))
       return {};
 
-   if (!value.HasMember("success") || !value["success"].IsString())
+   if (!Deserialize(value, "success", tempUrls.SuccessUrl))
       return {};
 
-   if (!value.HasMember("fail") || !value["fail"].IsString())
+   if (!Deserialize(value, "fail", tempUrls.FailUrl))
       return {};
 
-   return UploadUrls {
-      value["id"].GetString(),
-      value["url"].GetString(),
-      value["success"].GetString(),
-      value["fail"].GetString(),
-   };
+   urls = std::move(tempUrls);
+
+   return true;
 }
 
-std::optional<UploadUrls> DeserializeUploadUrls(const rapidjson::Value& document, std::string_view key)
+bool Deserialize(const rapidjson::Value& value, VersionInfo& urls)
 {
-   if (!document.HasMember(key.data()))
-      return {};
-
-   const auto& value = document[key.data()];
-
-   return DeserializeUploadUrls(value);
-}
-
-std::optional<ProjectInfo> DeserializeProjectInfo(const rapidjson::Value& document, std::string_view key)
-{
-   if (!document.HasMember(key.data()))
-      return {};
-
-   const auto& value = document[key.data()];
-
    if (!value.IsObject())
       return {};
 
-   if (!value.HasMember("id") || !value["id"].IsString())
+   VersionInfo tempVersion;
+
+   if (!Deserialize(value, "id", tempVersion.Id))
       return {};
 
-   if (!value.HasMember("date_created") || !value["date_created"].IsInt64())
+   if (!Deserialize(value, "name", tempVersion.Name))
       return {};
 
-   if (!value.HasMember("date_updated") || !value["date_updated"].IsInt64())
+   if (!Deserialize(value, "snapshot_id", tempVersion.SnapshotId))
       return {};
 
-   return ProjectInfo {
-      value["id"].GetString(),
-      value["date_created"].GetInt64(),
-      value["date_updated"].GetInt64(),
-   };
+   if (!Deserialize(value, "date_created", tempVersion.Created))
+      return {};
+
+   if (!Deserialize(value, "date_updated", tempVersion.Updated))
+      return {};
+
+   urls = std::move(tempVersion);
+
+   return true;
 }
 
-std::optional<SnapshotInfo> DeserializeSnapshotInfo (const rapidjson::Value& document, std::string_view key)
+bool Deserialize(const rapidjson::Value& value, SnapshotBlockInfo& urls)
 {
-   if (!document.HasMember(key.data()))
-      return {};
-
-   const auto& value = document[key.data()];
-
    if (!value.IsObject())
       return {};
 
-   if (!value.HasMember("id") || !value["id"].IsString())
+   SnapshotBlockInfo tempBlock;
+
+   if (!Deserialize(value, "hash", tempBlock.Hash))
       return {};
 
-   return SnapshotInfo{
-      value["id"].GetString(),
-   };
+   if (!Deserialize(value, "url", tempBlock.Url))
+      return {};
+
+   urls = std::move(tempBlock);
+
+   return true;
 }
 
-std::optional<std::vector<UploadUrls>> DeserializeBlockUrls (const rapidjson::Value& document, std::string_view key)
+bool Deserialize(const rapidjson::Value& value, SnapshotInfo& urls)
 {
-   if (!document.HasMember(key.data()))
+   if (!value.IsObject())
       return {};
 
-   const auto& value = document[key.data()];
+   SnapshotInfo tempSnapshot;
 
+   if (!Deserialize(value, "id", tempSnapshot.Id))
+      return {};
+
+   if (!Deserialize(value, "date_created", tempSnapshot.Created))
+      return {};
+
+   if (!Deserialize(value, "date_updated", tempSnapshot.Updated))
+      return {};
+
+   Deserialize(value, "file", tempSnapshot.FileUrl);
+   DeserializeArray(value, "blocks", tempSnapshot.Blocks);
+
+   urls = std::move(tempSnapshot);
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, ProjectInfo& urls)
+{
+   if (!value.IsObject())
+      return {};
+
+   ProjectInfo tempProject;
+
+   if (!Deserialize(value, "id", tempProject.Id))
+      return {};
+
+   if (!Deserialize(value, "username", tempProject.Username))
+      return {};
+
+   if (!Deserialize(value, "author_name", tempProject.AuthorName))
+      return {};
+
+   if (!Deserialize(value, "slug", tempProject.Slug))
+      return {};
+
+   if (!Deserialize(value, "name", tempProject.Name))
+      return {};
+
+   if (!Deserialize(value, "details", tempProject.Details))
+      return {};
+
+   if (!Deserialize(value, "date_created", tempProject.Created))
+      return {};
+
+   if (!Deserialize(value, "date_updated", tempProject.Updated))
+      return {};
+
+   Deserialize(value, "head", tempProject.HeadSnapshot);
+   DeserializeArray(value, "versions", tempProject.Versions);
+
+   urls = std::move(tempProject);
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, ProjectSyncState& urls)
+{
+   if (!value.IsObject())
+      return {};
+
+   ProjectSyncState tempState;
+
+   if (!Deserialize(value, "mixdown", tempState.MixdownUrls))
+      return {};
+
+   if (!Deserialize(value, "file", tempState.FileUrls))
+      return {};
+
+   if (!DeserializeArray(value, "blocks", tempState.MissingBlocks))
+      return {};
+
+   urls = std::move(tempState);
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, CreateProjectResponse& reponse)
+{
+   if (!value.IsObject())
+      return {};
+
+   CreateProjectResponse tempResponse;
+
+   if (!Deserialize(value, "project", tempResponse.Project))
+      return {};
+
+   if (!Deserialize(value, "snapshot", tempResponse.Snapshot))
+      return {};
+
+   if (!Deserialize(value, "sync", tempResponse.SyncState))
+      return {};
+
+   reponse = std::move(tempResponse);
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, PaginationInfo& info)
+{
+   if (!value.IsObject())
+      return {};
+
+   PaginationInfo tempInfo;
+
+   if (!Deserialize(value, "total", tempInfo.TotalCount))
+      return {};
+
+   if (!Deserialize(value, "pages", tempInfo.PagesCount))
+      return {};
+
+   if (!Deserialize(value, "page", tempInfo.CurrentPage))
+      return {};
+
+   if (!Deserialize(value, "size", tempInfo.PageSize))
+      return {};
+
+   info = std::move(tempInfo);
+
+   return true;
+}
+
+bool Deserialize(
+   const rapidjson::Value& value, PaginatedProjectsResponse& response)
+{
+   if (!value.IsObject())
+      return {};
+
+   PaginatedProjectsResponse tempResponse;
+
+   if (!DeserializeArray(value, "items", tempResponse.Items))
+      return {};
+
+   if (!Deserialize(value, "pagination", tempResponse.Pagination))
+      return {};
+
+   response = std::move(tempResponse);
+
+   return true;
+}
+
+template <typename T>
+bool Deserialize(
+   const rapidjson::Value& value, std::string_view zKey, T& result)
+{
+   if (!value.IsObject() || !value.HasMember(zKey.data()))
+      return false;
+
+   return Deserialize(value[zKey.data()], result);
+}
+
+template <typename T>
+bool DeserializeArray(const rapidjson::Value& value, std::vector<T>& result)
+{
    if (!value.IsArray())
-      return {};
+      return false;
 
-   std::vector<UploadUrls> result;
+   result.clear();
+   result.reserve(value.Size());
 
-   for (const auto& url : value.GetArray ())
+   for (const auto& item : value.GetArray())
    {
-      auto uploadUrls = DeserializeUploadUrls(url);
+      T value;
 
-      if (!uploadUrls)
-         return {};
+      if (!Deserialize(item, value))
+         return false;
 
-      std::transform(
-         uploadUrls->Id.begin(), uploadUrls->Id.end(), uploadUrls->Id.begin(),
-         [](unsigned char c) { return std::toupper(c); });
-
-      result.push_back(std::move(*uploadUrls));
+      result.push_back(std::move(value));
    }
 
-   return result;
-}
-
-std::optional<ProjectSyncState> DeserializeProjectSyncState (const rapidjson::Value& document)
-{
-   if (!document.IsObject())
-      return {};
-
-   auto mixdownUrls = DeserializeUploadUrls(document, "mixdown");
-   if (!mixdownUrls)
-      return {};
-
-   auto fileUploadUrls = DeserializeUploadUrls(document, "file");
-   if (!fileUploadUrls)
-      return {};
-
-   auto blockUrls = DeserializeBlockUrls(document, "blocks");
-   if (!blockUrls)
-      return {};
-
-   return ProjectSyncState{
-      std::move(*mixdownUrls),
-      std::move(*fileUploadUrls),
-      std::move(*blockUrls),
-   };
-}
-
-std::optional<ProjectSyncState> DeserializeProjectSyncState (
-   const rapidjson::Value& document, std::string_view key)
-{
-   if (!document.HasMember(key.data()))
-      return {};
-
-   return DeserializeProjectSyncState(document[key.data()]);
+   return true;
 }
 
 } // namespace
@@ -201,36 +379,20 @@ std::string SerializeProjectForm(const ProjectForm& form)
    return buffer.GetString();
 }
 
-std::optional<ProjectResponse>
-DeserializeProjectResponse(const std::string& data)
+std::optional<CreateProjectResponse>
+DeserializeCreateProjectResponse(const std::string& data)
 {
    using namespace rapidjson;
 
    Document document;
    document.Parse(data.c_str());
 
-   if (!document.IsObject())
-      return {};
+   CreateProjectResponse result;
 
-   auto projectInfo = DeserializeProjectInfo(document, "project");
-   if (!projectInfo)
-      return {};
+   if (Deserialize(document, result))
+      return std::move(result);
 
-   auto snapshotInfo = DeserializeSnapshotInfo(document, "snapshot");
-   if (!snapshotInfo)
-      return {};
-
-   auto syncState = DeserializeProjectSyncState(document, "sync");
-   if (!syncState)
-      return {};
-
-   ProjectResponse result;
-
-   result.Project = std::move(*projectInfo);
-   result.Snapshot = std::move(*snapshotInfo);
-   result.SyncState = std::move(*syncState);
-
-   return result;
+   return {};
 }
 
 namespace
