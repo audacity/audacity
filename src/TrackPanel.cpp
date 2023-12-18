@@ -82,6 +82,7 @@ is time to refresh some aspect of the screen.
 #include "TrackPanelResizerCell.h"
 #include "Viewport.h"
 #include "WaveTrack.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackMeter.h"
 
 #include "FrameStatistics.h"
 
@@ -1212,7 +1213,7 @@ struct VRulersAndChannels final : TrackPanelGroup {
 };
 
 //Simply fills area using specified brush and outlines borders
-class EmptyPanelRect final : public CommonTrackPanelCell
+class EmptyPanelRect : public CommonTrackPanelCell
 {
    //Required to keep selection behaviour similar to others
    std::shared_ptr<Channel> mpChannel;
@@ -1254,6 +1255,38 @@ public:
    }
 };
 
+static int ChooseBgColor(bool selected) {
+   return selected ? clrTrackInfoSelected : clrTrackInfo;
+}
+
+class WaveTrackMeterCell
+   : public EmptyPanelRect
+{
+public:
+   explicit WaveTrackMeterCell(std::shared_ptr<WaveTrack> pTrack)
+      : EmptyPanelRect{
+         *pTrack->Channels().first, ChooseBgColor(pTrack->IsSelected()) }
+      , mpMeter{ WaveTrackMeter::Get(*pTrack).shared_from_this() }
+      , mpTrack{ move(pTrack) }
+   {
+   }
+
+   void Draw(TrackPanelDrawingContext& context,
+      const wxRect& rect, unsigned iPass) override
+   {
+      EmptyPanelRect::Draw(context, rect, iPass);
+      if (const auto pWaveTrack =
+          dynamic_cast<const WaveTrack *>(mpTrack.get())) {
+         if (iPass == TrackArtist::PassBackground)
+            mpMeter->Draw(context.dc, rect, mpTrack->IsSelected());
+      }
+   }
+
+private:
+   std::shared_ptr<WaveTrackMeter> mpMeter;
+   const std::shared_ptr<WaveTrack> mpTrack;
+};
+
 //Simply place children one after another horizontally, without any specific logic
 struct HorizontalGroup final : TrackPanelGroup {
 
@@ -1292,8 +1325,7 @@ struct ChannelStack final : TrackPanelGroup {
          auto &view = ChannelView::Get(*pChannel);
          if (auto affordance = view.GetAffordanceControls()) {
             auto panelRect = std::make_shared<EmptyPanelRect>(pChannel,
-               mpTrack->GetSelected()
-                  ? clrTrackInfoSelected : clrTrackInfo);
+               ChooseBgColor(mpTrack->GetSelected()));
             Refinement hgroup {
                std::make_pair(rect.GetLeft() + 1, panelRect),
                std::make_pair(mLeftOffset, affordance)
@@ -1360,16 +1392,17 @@ struct LabeledChannelGroup final : TrackPanelGroup {
          : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
    {
-      const bool isWaveTrack = !!dynamic_cast<const WaveTrack *>(mpTrack.get());
+      // TODO remove this dynamic_cast, using an AttachedVirtualFunction instead
+      // to find out whether the track defines a meter
+      const auto pWaveTrack = std::dynamic_pointer_cast<WaveTrack>(mpTrack);
       auto left = rect.GetLeft();
       auto meterLeft = left + kTrackInfoWidth;
       auto trackLeft = meterLeft + kMeterWidth;
       Refinement refinement{ { left,
          TrackControls::Get(*mpTrack).shared_from_this() } };
-      if (isWaveTrack)
+      if (pWaveTrack)
          refinement.emplace_back(meterLeft,
-            std::make_shared<EmptyPanelRect>(*mpTrack->Channels().first,
-               mpTrack->GetSelected() ? clrTrackInfoSelected : clrTrackInfo));
+            std::make_shared<WaveTrackMeterCell>(pWaveTrack));
       refinement.emplace_back(trackLeft,
          std::make_shared<ChannelStack>(mpTrack, mLeftOffset));
       return { Axis::X, move(refinement) };

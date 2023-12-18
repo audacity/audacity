@@ -784,6 +784,8 @@ set( SOURCES
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+      tracks/playabletrack/wavetrack/ui/WaveTrackMeter.cpp
+      tracks/playabletrack/wavetrack/ui/WaveTrackMeter.h
       tracks/playabletrack/wavetrack/ui/WaveTrackShifter.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h
