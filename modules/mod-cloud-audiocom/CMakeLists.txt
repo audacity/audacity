@@ -35,7 +35,7 @@ set( SOURCES
 
 if(${_OPT}has_url_schemes_support)
    list(APPEND SOURCES
-      LinkURLHandler.cpp
+      LinkUrlHandler.cpp
    )
 endif()
 
