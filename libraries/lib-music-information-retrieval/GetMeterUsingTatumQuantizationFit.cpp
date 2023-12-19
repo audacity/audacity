@@ -172,23 +172,6 @@ double GetQuantizationDistance(
    return weightedAverage;
 }
 
-// Look at the amplitude across all scores. If our ODF is that of a musical
-// rhythm, then the contrast between good and bad quantizations should make a
-// big difference.
-double GetExperimentContrastMeasure(
-   const std::unordered_map<int, MIR::OnsetQuantization>& quantizations,
-   double minError)
-{
-   const auto maxErrorIt = std::max_element(
-      quantizations.begin(), quantizations.end(),
-      [](const std::pair<int, OnsetQuantization>& a,
-         const std::pair<int, OnsetQuantization>& b) {
-         return a.second.error < b.second.error;
-      });
-   const auto amplitude = maxErrorIt->second.error - minError;
-   return amplitude;
-}
-
 struct QuantizationExperiment
 {
    const OnsetQuantization bestFit;
@@ -224,9 +207,8 @@ QuantizationExperiment RunQuantizationExperiment(
 
    // Read the normalized distance, a value between 0 and 1, as a probability.
    const auto error = bestFitIt->second.error;
-   const auto contrast = GetExperimentContrastMeasure(quantizations, error);
    // The higher the contrast, the more likely the recording is a loop.
-   const auto score = 1 - error * (1 - contrast);
+   const auto score = 1 - error;
 
    const auto mostLikelyNumTatums = bestFitIt->first;
    const auto lag = bestFitIt->second.lag;

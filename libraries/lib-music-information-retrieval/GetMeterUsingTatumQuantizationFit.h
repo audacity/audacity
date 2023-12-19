@@ -16,9 +16,7 @@ hypotheses is tested. For each hypothesis, a tatum* quantization is tried,
 returning an average of the normalized distance between Onset Detection Function
 (ODF) peaks and the closest tatum, weighted by the ODF peak values. This yields
 a single scalar that strongly correlates with the fact that the audio is a loop
-or not. An additional measure is taken, based on the contrast between the best
-and worst quantization fits. Both quantization and contrast measures are
-combined to yield a final score for loop/non-loop classification.
+or not, and that we use for loop/non-loop classification.
 
 Besides this score, the classification stage also yields the most likely tatum
 rate, which still needs disambiguation to find the beat rate. The
