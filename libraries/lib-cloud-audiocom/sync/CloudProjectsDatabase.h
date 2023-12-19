@@ -16,6 +16,8 @@
 
 #include "sqlite/Connection.h"
 
+#include "CloudSyncUtils.h"
+
 namespace cloud::audiocom::sync
 {
 struct DBProjectData final
@@ -51,7 +53,7 @@ public:
 
    std::optional<DBProjectData> GetProjectDataForPath(const std::string& projectPath) const;
 
-   void UpdateProjectBlockList(const std::string_view& projectId, const std::unordered_set<int64_t> blockSet);
+   void UpdateProjectBlockList(const std::string_view& projectId, const SampleBlockIDSet& blockSet);
 
    std::optional<std::string> GetBlockHash(const std::string_view& projectId, int64_t blockId) const;
 

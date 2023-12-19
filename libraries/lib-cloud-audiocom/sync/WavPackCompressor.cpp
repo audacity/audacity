@@ -9,7 +9,6 @@
   Dmitry Vedenko
 
 **********************************************************************/
-#pragma once
 
 #include "WavPackCompressor.h"
 #include "SampleFormat.h"
@@ -143,7 +142,7 @@ struct Exporter final
    static int WriteBlock(void* id, void* data, int32_t length)
    {
       if (id == nullptr || data == nullptr || length == 0)
-         return true; 
+         return true;
 
       Exporter* exporter = static_cast<Exporter*>(id);
 

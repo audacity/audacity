@@ -142,7 +142,7 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
 }
 
 void CloudProjectsDatabase::UpdateProjectBlockList(
-   const std::string_view& projectId, const std::unordered_set<int64_t> blockSet)
+   const std::string_view& projectId, const SampleBlockIDSet& blockSet)
 {
    auto& connection = GetConnection();
 

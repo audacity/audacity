@@ -14,6 +14,7 @@
 #include <string>
 #include <string_view>
 #include <optional>
+#include <unordered_set>
 #include <vector>
 #include <memory>
 
@@ -22,6 +23,8 @@
 enum class sampleFormat : unsigned;
 class SampleBlock;
 using SampleBlockPtr = std::shared_ptr<SampleBlock>;
+using SampleBlockID = long long;
+using SampleBlockIDSet = std::unordered_set<SampleBlockID>;
 
 namespace cloud::audiocom::sync
 {
