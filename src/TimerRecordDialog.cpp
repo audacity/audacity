@@ -214,6 +214,7 @@ TimerRecordDialog::TimerRecordDialog(
    }
 
    m_iAutoExportSampleRate = ProjectRate::Get(mProject).GetRate();
+   m_iAutoExportChannels = AudioIORecordChannels.Read();
 
    ShuttleGui S(this, eIsCreating);
    this->PopulateOrExchange(S);
