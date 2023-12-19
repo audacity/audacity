@@ -734,6 +734,11 @@ bool WaveTrack::Interval::IsPlaceholder() const
    return mpClip->GetIsPlaceholder();
 }
 
+void WaveTrack::Interval::SetIsPlaceholder(bool val)
+{
+   ForEachClip([=](auto &clip){ clip.SetIsPlaceholder(val); });
+}
+
 const Envelope& WaveTrack::Interval::GetEnvelope() const
 {
    return *mpClip->GetEnvelope();
@@ -2876,6 +2881,8 @@ void WaveTrack::Join(
 
       RemoveWideClip(FindWideClip(*clip->GetClip(0)));
    }
+
+   InsertInterval(move(newClip));
 }
 
 /*! @excsafety{Partial}
@@ -3657,8 +3664,10 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
          holders.emplace_back(pNewClip);
       });
    else
-      for (auto channel : TrackList::Channels(this))
+      for (auto channel : TrackList::Channels(this)) {
          holders.emplace_back(channel->CreateClip(offset, name));
+         channel->mClips.pop_back();
+      }
 
    return std::make_shared<Interval>(*this,
       holders[0], (holders.size() > 1) ? holders[1] : nullptr);

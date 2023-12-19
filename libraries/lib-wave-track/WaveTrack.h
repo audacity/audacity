@@ -707,7 +707,8 @@ public:
    ClipConstHolders GetClipInterfaces() const;
 
    /// @pre IsLeader()
-   //! Create new clip and add it to this track.
+   //! Create new clip that uses this track's factory but do not add it to the
+   //! track
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
     clip name may be provided, and a clip from which to copy all sample data.
@@ -940,6 +941,7 @@ public:
          WideChannelGroupInterval::Channels<const WaveChannelInterval>(); }
 
       bool IsPlaceholder() const;
+      void SetIsPlaceholder(bool val);
 
       void SetSequenceStartTime(double t);
       void TrimLeftTo(double t);
