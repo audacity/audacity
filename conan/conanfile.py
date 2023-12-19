@@ -31,7 +31,7 @@ def global_copy_files(conanfile, dependency_info):
         copied_files = copy(conanfile, "*.so*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/{lib_dir}")
         for file in copied_files:
             if not os.path.islink(file):
-                subprocess.check_call([patchelf_path, "--add-rpath", "$ORIGIN", file])
+                subprocess.check_call([patchelf_path, "--add-rpath", "$ORIGIN", file], stdin=subprocess.DEVNULL)
 
 # Dataclass that holds the information about a dependency
 @dataclass
