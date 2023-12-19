@@ -44,58 +44,58 @@ static struct AILAInitializer { AILAInitializer() {
 }} sAILAInitializer;
 
 void AILA::Initialize(double t0) {
-   gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
-   gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);
-   gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mAILAGoalDelta,      AILA_DEF_DELTA_PEAK);
-   gPrefs->Read(wxT("/AudioIO/AnalysisTime"),          &mAILAAnalysisTime,   AILA_DEF_ANALYSIS_TIME);
-   gPrefs->Read(wxT("/AudioIO/NumberAnalysis"),        &mAILATotalAnalysis,  AILA_DEF_NUMBER_ANALYSIS);
-   mAILAGoalDelta         /= 100.0;
-   mAILAGoalPoint         /= 100.0;
-   mAILAAnalysisTime      /= 1000.0;
-   mAILAMax                = 0.0;
-   mAILALastStartTime      = max(0.0, t0);
-   mAILAClipped            = false;
-   mAILAAnalysisCounter    = 0;
-   mAILAChangeFactor       = 1.0;
-   mAILALastChangeType     = 0;
-   mAILATopLevel           = 1.0;
-   mAILAAnalysisEndTime    = -1.0;
+   gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mActive,         false);
+   gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mGoalPoint,      AILA_DEF_TARGET_PEAK);
+   gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mGoalDelta,      AILA_DEF_DELTA_PEAK);
+   gPrefs->Read(wxT("/AudioIO/AnalysisTime"),          &mAnalysisTime,   AILA_DEF_ANALYSIS_TIME);
+   gPrefs->Read(wxT("/AudioIO/NumberAnalysis"),        &mTotalAnalysis,  AILA_DEF_NUMBER_ANALYSIS);
+   mGoalDelta         /= 100.0;
+   mGoalPoint         /= 100.0;
+   mAnalysisTime      /= 1000.0;
+   mMax                = 0.0;
+   mLastStartTime      = max(0.0, t0);
+   mClipped            = false;
+   mAnalysisCounter    = 0;
+   mChangeFactor       = 1.0;
+   mLastChangeType     = 0;
+   mTopLevel           = 1.0;
+   mAnalysisEndTime    = -1.0;
 }
 
 void AILA::Disable() {
-   mAILAActive = false;
+   mActive = false;
 }
 
 bool AILA::IsActive() {
-   return mAILAActive;
+   return mActive;
 }
 
 void AILA::SetStartTime(const AudioIOEvent &evt) {
    if (evt.type == AudioIOEvent::CAPTURE && evt.on) {
-      mAILAAbsoluteStartTime = AudioIO::Get()->GetClockTime();
-      wxPrintf("START TIME %f\n\n", mAILAAbsoluteStartTime);
+      mAbsoluteStartTime = AudioIO::Get()->GetClockTime();
+      wxPrintf("START TIME %f\n\n", mAbsoluteStartTime);
    }
 }
 
 double AILA::GetLastDecisionTime() {
-   return mAILAAnalysisEndTime;
+   return mAnalysisEndTime;
 }
 
 void AILA::Process(AudacityProject *proj,
    bool isClipping, int dBRange, double maxPeak)
 {
    auto &audioIO = *AudioIO::Get();
-   if (proj && mAILAActive) {
+   if (proj && mActive) {
       if (isClipping) {
-         mAILAClipped = true;
+         mClipped = true;
          wxPrintf("clipped");
       }
 
-      mAILAMax = max(mAILAMax, maxPeak);
+      mMax = max(mMax, maxPeak);
 
-      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis)
-          && audioIO.GetStreamTime() - mAILALastStartTime >=
-          mAILAAnalysisTime)
+      if ((mTotalAnalysis == 0 || mAnalysisCounter < mTotalAnalysis)
+          && audioIO.GetStreamTime() - mLastStartTime >=
+          mAnalysisTime)
       {
          auto ToLinearIfDB = [](double value, int dbRange) {
             if (dbRange >= 0)
@@ -104,27 +104,27 @@ void AILA::Process(AudacityProject *proj,
          };
 
          putchar('\n');
-         mAILAMax = ToLinearIfDB(mAILAMax, dBRange);
+         mMax = ToLinearIfDB(mMax, dBRange);
          auto settings = audioIO.GetMixer();
          auto &[_, inputVolume, __] = settings;
          const double iv = inputVolume;
          unsigned short changetype = 0; //0 - no change, 1 - increase change, 2 - decrease change
-         wxPrintf("mAILAAnalysisCounter:%d\n", mAILAAnalysisCounter);
-         wxPrintf("\tmAILAClipped:%d\n", mAILAClipped);
-         wxPrintf("\tmAILAMax (linear):%f\n", mAILAMax);
-         wxPrintf("\tmAILAGoalPoint:%f\n", mAILAGoalPoint);
-         wxPrintf("\tmAILAGoalDelta:%f\n", mAILAGoalDelta);
+         wxPrintf("mAnalysisCounter:%d\n", mAnalysisCounter);
+         wxPrintf("\tmClipped:%d\n", mClipped);
+         wxPrintf("\tmMax (linear):%f\n", mMax);
+         wxPrintf("\tmGoalPoint:%f\n", mGoalPoint);
+         wxPrintf("\tmGoalDelta:%f\n", mGoalDelta);
          wxPrintf("\tiv:%f\n", iv);
-         wxPrintf("\tmAILAChangeFactor:%f\n", mAILAChangeFactor);
-         if (mAILAClipped || mAILAMax > mAILAGoalPoint + mAILAGoalDelta) {
+         wxPrintf("\tmChangeFactor:%f\n", mChangeFactor);
+         if (mClipped || mMax > mGoalPoint + mGoalDelta) {
             wxPrintf("too high:\n");
-            mAILATopLevel = min(mAILATopLevel, iv);
-            wxPrintf("\tmAILATopLevel:%f\n", mAILATopLevel);
+            mTopLevel = min(mTopLevel, iv);
+            wxPrintf("\tmTopLevel:%f\n", mTopLevel);
             //if clipped or too high
             if (iv <= LOWER_BOUND) {
                //we can't improve it more now
-               if (mAILATotalAnalysis != 0) {
-                  mAILAActive = false;
+               if (mTotalAnalysis != 0) {
+                  mActive = false;
                   ProjectStatus::Get( *proj ).Set(
                      XO(
 "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.") );
@@ -133,7 +133,7 @@ void AILA::Process(AudacityProject *proj,
             }
             else {
                inputVolume = max<float>(LOWER_BOUND,
-                  iv + (mAILAGoalPoint - mAILAMax) * mAILAChangeFactor);
+                  iv + (mGoalPoint - mMax) * mChangeFactor);
                audioIO.SetMixer(settings);
                auto msg = XO(
 "Automated Recording Level Adjustment decreased the volume to %f.")
@@ -145,13 +145,13 @@ void AILA::Process(AudacityProject *proj,
                wxPrintf("\tverified %f\n", check);
             }
          }
-         else if ( mAILAMax < mAILAGoalPoint - mAILAGoalDelta ) {
+         else if ( mMax < mGoalPoint - mGoalDelta ) {
             //if too low
             wxPrintf("too low:\n");
-            if (iv >= UPPER_BOUND || iv + 0.005 > mAILATopLevel) { //condition for too low volumes and/or variable volumes that cause mAILATopLevel to decrease too much
+            if (iv >= UPPER_BOUND || iv + 0.005 > mTopLevel) { //condition for too low volumes and/or variable volumes that cause mTopLevel to decrease too much
                //we can't improve it more
-               if (mAILATotalAnalysis != 0) {
-                  mAILAActive = false;
+               if (mTotalAnalysis != 0) {
+                  mActive = false;
                   ProjectStatus::Get( *proj ).Set(
                      XO(
 "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.") );
@@ -160,9 +160,9 @@ void AILA::Process(AudacityProject *proj,
             }
             else {
                inputVolume = min<float>(UPPER_BOUND,
-                  iv + (mAILAGoalPoint - mAILAMax) * mAILAChangeFactor);
-               if (inputVolume > mAILATopLevel) {
-                  inputVolume = (iv + mAILATopLevel) / 2.0;
+                  iv + (mGoalPoint - mMax) * mChangeFactor);
+               if (inputVolume > mTopLevel) {
+                  inputVolume = (iv + mTopLevel) / 2.0;
                   wxPrintf("\tTruncated vol:%f\n", inputVolume);
                }
                audioIO.SetMixer(settings);
@@ -177,35 +177,35 @@ void AILA::Process(AudacityProject *proj,
             }
          }
 
-         mAILAAnalysisCounter++;
+         mAnalysisCounter++;
          //const PaStreamInfo* info = audioIO::GetClockTime();
          //double latency = 0.0;
          //if (info)
          //   latency = info->inputLatency;
-         //mAILAAnalysisEndTime = mTime+latency;
-         mAILAAnalysisEndTime = audioIO.GetClockTime() - mAILAAbsoluteStartTime;
-         mAILAMax             = 0;
-         wxPrintf("\tA decision was made @ %f\n", mAILAAnalysisEndTime);
-         mAILAClipped         = false;
-         mAILALastStartTime   = audioIO.GetStreamTime();
+         //mAnalysisEndTime = mTime+latency;
+         mAnalysisEndTime = audioIO.GetClockTime() - mAbsoluteStartTime;
+         mMax             = 0;
+         wxPrintf("\tA decision was made @ %f\n", mAnalysisEndTime);
+         mClipped         = false;
+         mLastStartTime   = audioIO.GetStreamTime();
 
          if (changetype == 0)
-            mAILAChangeFactor *= 0.8; //time factor
-         else if (mAILALastChangeType == changetype)
-            mAILAChangeFactor *= 1.1; //concordance factor
+            mChangeFactor *= 0.8; //time factor
+         else if (mLastChangeType == changetype)
+            mChangeFactor *= 1.1; //concordance factor
          else
-            mAILAChangeFactor *= 0.7; //discordance factor
-         mAILALastChangeType = changetype;
+            mChangeFactor *= 0.7; //discordance factor
+         mLastChangeType = changetype;
          putchar('\n');
       }
 
-      if (mAILAActive && mAILATotalAnalysis != 0 && mAILAAnalysisCounter >= mAILATotalAnalysis) {
-         mAILAActive = false;
-         if (mAILAMax > mAILAGoalPoint + mAILAGoalDelta)
+      if (mActive && mTotalAnalysis != 0 && mAnalysisCounter >= mTotalAnalysis) {
+         mActive = false;
+         if (mMax > mGoalPoint + mGoalDelta)
             ProjectStatus::Get( *proj ).Set(
                XO(
 "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.") );
-         else if (mAILAMax < mAILAGoalPoint - mAILAGoalDelta)
+         else if (mMax < mGoalPoint - mGoalDelta)
             ProjectStatus::Get( *proj ).Set(
                XO(
 "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.") );

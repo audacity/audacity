@@ -40,21 +40,21 @@ private:
 
    const Observer::Subscription mSubscription;
 
-   bool           mAILAActive{ false };
-   bool           mAILAClipped{};
-   int            mAILATotalAnalysis{};
-   int            mAILAAnalysisCounter{};
-   double         mAILAMax{};
-   double         mAILAGoalPoint{};
-   double         mAILAGoalDelta{};
-   double         mAILAAnalysisTime{};
-   double         mAILALastStartTime{};
-   double         mAILAChangeFactor{};
-   double         mAILATopLevel{};
-   double         mAILAAnalysisEndTime{};
-   double         mAILAAbsoluteStartTime{};
+   bool           mActive{ false };
+   bool           mClipped{};
+   int            mTotalAnalysis{};
+   int            mAnalysisCounter{};
+   double         mMax{};
+   double         mGoalPoint{};
+   double         mGoalDelta{};
+   double         mAnalysisTime{};
+   double         mLastStartTime{};
+   double         mChangeFactor{};
+   double         mTopLevel{};
+   double         mAnalysisEndTime{};
+   double         mAbsoluteStartTime{};
    //! 0 - no change, 1 - increase change, 2 - decrease change
-   unsigned short mAILALastChangeType{ 0 };
+   unsigned short mLastChangeType{ 0 };
 };
 
 #endif
