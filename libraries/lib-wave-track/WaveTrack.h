@@ -41,8 +41,9 @@ class AudioSegmentSampleView;
 
 //! Clips are held by shared_ptr, not for sharing, but to allow weak_ptr
 using WaveClipHolder = std::shared_ptr<WaveClip>;
+using WaveClipConstHolder = std::shared_ptr<const WaveClip>;
 using WaveClipHolders = std::vector<WaveClipHolder>;
-using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+using WaveClipConstHolders = std::vector<WaveClipConstHolder>;
 
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
 
@@ -1239,6 +1240,9 @@ private:
 
    void ApplyStretchRatioOne(
       double t0, double t1, const ProgressReporter& reportProgress);
+
+   //! Used only in assertions checking invariants
+   bool ClipsAreUnique() const;
 
    SampleBlockFactoryPtr mpFactory;
 

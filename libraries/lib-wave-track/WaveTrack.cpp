@@ -3993,8 +3993,11 @@ void WaveTrack::InsertInterval(const IntervalHolder& interval)
    for (const auto pChannel : TrackList::Channels(this))
    {
       const auto clip = interval->GetClip(channel++);
-      if (clip)
+      if (clip) {
          pChannel->InsertClip(clip);
+         // Detect errors resulting in duplicate shared pointers to clips
+         assert(pChannel->ClipsAreUnique());
+      }
    }
 }
 
@@ -4086,6 +4089,12 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){
       return pA->GetPlayStartTime() < pB->GetPlayStartTime(); });
    return result;
+}
+
+bool WaveTrack::ClipsAreUnique() const
+{
+   return mClips.size() ==
+      std::set<WaveClipHolder>{ mClips.begin(), mClips.end() }.size();
 }
 
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
