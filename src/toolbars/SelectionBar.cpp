@@ -209,6 +209,7 @@ void SelectionBar::AddTitle(
    auStaticText * pTitle = safenew auStaticText(this, translated );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
+   pTitle->SetToolTip( XO("Right click copy timestamp").Translation() );
    pSizer->Add( pTitle, 0, wxEXPAND | wxRIGHT, 5 );
 
    pTitle->Bind(
