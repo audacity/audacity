@@ -27,6 +27,8 @@
 #include "Cursors32/BottomFrequencyCursor.xpm"
 #include "Cursors32/TopFrequencyCursor.xpm"
 #include "Cursors32/BandWidthCursor.xpm"
+#include "Cursors32/SelectionRight.xpm"
+#include "Cursors32/SelectionLeft.xpm"
 #ifdef USE_MIDI
 #include "Cursors32/StretchCursor.xpm"
 #include "Cursors32/StretchLeftCursor.xpm"
