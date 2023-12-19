@@ -10,6 +10,8 @@
 **********************************************************************/
 #include "CloudProjectsDatabase.h"
 
+#include <cassert>
+
 #include "AppEvents.h"
 #include "CodeConversions.h"
 #include "FileNames.h"
@@ -158,7 +160,7 @@ void CloudProjectsDatabase::UpdateProjectBlockList(
 
    if (!result.IsOk())
    {
-      DebugBreak();
+     assert(false);
    }
 }
 
