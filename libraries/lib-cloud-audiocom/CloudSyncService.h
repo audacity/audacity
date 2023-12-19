@@ -12,6 +12,7 @@
 
 #include "ProjectFileIOExtension.h"
 
+#include <functional>
 #include <string>
 #include <memory>
 #include <vector>
@@ -24,6 +25,7 @@ namespace sync
 {
 class CloudProjectSnapshot;
 class CloudSyncUI;
+class PaginatedProjectsResponse;
 }
 
 class CLOUD_AUDIOCOM_API CloudSyncService final : public ProjectFileIOExtension
@@ -42,6 +44,9 @@ public:
    {};
 
    static CloudSyncService& Get();
+
+   using GetProjectsCallback = std::function<void(sync::PaginatedProjectsResponse, std::string, bool)>;
+   void GetProjects(int page, int pageSize, GetProjectsCallback callback);
 
    void SaveToCloud(AudacityProject& project);
 private:

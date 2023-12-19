@@ -34,6 +34,10 @@
 #include <wx/log.h>
 #include "wxFileNameWrapper.h"
 
+#include "NetworkManager.h"
+#include "Request.h"
+#include "IResponse.h"
+
 
 namespace cloud::audiocom
 {
@@ -41,6 +45,93 @@ CloudSyncService& CloudSyncService::Get()
 {
    static CloudSyncService service;
    return service;
+}
+
+void CloudSyncService::GetProjects(
+   int page, int pageSize, GetProjectsCallback callback)
+{
+   using namespace audacity::network_manager;
+
+   if (!callback)
+      callback = [](auto...) {};
+
+   GetOAuthService().ValidateAuth(
+      [this, page, pageSize, callback = std::move(callback)](auto token)
+      {
+         if (token.empty())
+         {
+            BasicUI::CallAfter(
+               [this, page, pageSize, callback = std::move(callback)]
+               {
+                  if (UI::Get() && UI::Get()().OnAuthorizationRequired({}))
+                     GetProjects(page, pageSize, std::move(callback));
+                  else
+                  {
+                     callback(
+                        {},
+                        audacity::ToUTF8(
+                           XO("Authorization required").Translation()),
+                        false);
+                  }
+               });
+            return;
+         }
+
+         auto& serviceConfig = GetServiceConfig();
+         auto& oAuthService = GetOAuthService();
+
+         auto request = Request(serviceConfig.GetProjectsUrl(page, pageSize));
+
+         request.setHeader(
+            common_headers::ContentType, common_content_types::ApplicationJson);
+         request.setHeader(
+            common_headers::Accept, common_content_types::ApplicationJson);
+
+         const auto language = serviceConfig.GetAcceptLanguageValue();
+
+         if (!language.empty())
+            request.setHeader(
+               audacity::network_manager::common_headers::AcceptLanguage,
+               language);
+
+         request.setHeader(
+            common_headers::Authorization, oAuthService.GetAccessToken());
+
+         auto response = NetworkManager::GetInstance().doGet(request);
+
+         response->setRequestFinishedCallback(
+            [callback = std::move(callback), response](auto)
+            {
+               const auto& body = response->readAll<std::string>();
+
+               if (response->getError() != NetworkError::NoError)
+               {
+                  callback(
+                     sync::PaginatedProjectsResponse {},
+                     response->getError() != NetworkError::HTTPError ?
+                        response->getErrorString() :
+                        body,
+                     false);
+                  return;
+               }
+
+               auto projects = sync::DeserializePaginatedProjectsResponse(body);
+
+               if (!projects)
+               {
+                  callback (
+                        {},
+                     audacity::ToUTF8 (
+                           XO("Failed to deserialize projects response")
+                              .Translation()),
+                        false);
+                  return;
+               }
+
+               callback(std::move(*projects), {}, true);
+            });
+      },
+      true);
 }
 
 void CloudSyncService::SaveToCloud(AudacityProject& project)
@@ -142,7 +233,7 @@ void CloudSyncService::OnUpdateSaved(
                   auto placement = ProjectFramePlacement(project.get());
 
                   if (
-                     UI::Get() && UI::Get()().OnUnauthorizedSave(*placement))
+                     UI::Get() && UI::Get()().OnAuthorizationRequired(*placement))
                      CreateSnapshot(*project);
                });
             return;

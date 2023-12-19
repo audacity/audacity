@@ -55,6 +55,7 @@ public:
    std::string GetCreateSnapshotUrl(std::string_view projectId) const;
    std::string GetSnapshotSyncUrl(
       std::string_view projectId, std::string_view snapshotId) const;
+   std::string GetProjectsUrl(int page, int pageSize) const;
 
 private:
    std::string mApiEndpoint;

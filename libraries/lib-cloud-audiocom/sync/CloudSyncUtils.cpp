@@ -183,6 +183,12 @@ bool Deserialize(const rapidjson::Value& value, SnapshotInfo& urls)
    if (!Deserialize(value, "date_updated", tempSnapshot.Updated))
       return {};
 
+   if (!Deserialize(value, "file_size", tempSnapshot.FileSize))
+      return {};
+
+   if (!Deserialize(value, "blocks_size", tempSnapshot.BlocksSize))
+      return {};
+
    Deserialize(value, "file", tempSnapshot.FileUrl);
    DeserializeArray(value, "blocks", tempSnapshot.Blocks);
 
@@ -347,6 +353,17 @@ bool DeserializeArray(const rapidjson::Value& value, std::vector<T>& result)
    return true;
 }
 
+template<typename T> bool Deserialize (std::string_view data, T& result)
+{
+   rapidjson::Document document;
+   document.Parse(data.data(), data.size());
+
+   if (document.HasParseError())
+      return false;
+
+   return Deserialize(document, result);
+}
+
 } // namespace
 
 std::string SerializeProjectForm(const ProjectForm& form)
@@ -382,14 +399,20 @@ std::string SerializeProjectForm(const ProjectForm& form)
 std::optional<CreateProjectResponse>
 DeserializeCreateProjectResponse(const std::string& data)
 {
-   using namespace rapidjson;
-
-   Document document;
-   document.Parse(data.c_str());
-
    CreateProjectResponse result;
 
-   if (Deserialize(document, result))
+   if (Deserialize(data, result))
+      return std::move(result);
+
+   return {};
+}
+
+std::optional<PaginatedProjectsResponse>
+DeserializePaginatedProjectsResponse(const std::string& data)
+{
+   PaginatedProjectsResponse result;
+
+   if (Deserialize(data, result))
       return std::move(result);
 
    return {};

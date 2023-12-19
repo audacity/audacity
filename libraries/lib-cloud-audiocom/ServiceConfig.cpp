@@ -72,12 +72,14 @@ std::string Substitute(std::string pattern, std::initializer_list<std::pair<std:
    {
       auto pos = pattern.find(key);
 
-      if (pos > 0 && pos != std::string::npos)
+      while (pos > 0 && pos != std::string::npos)
       {
          // There is no need to check that pos + key.size() is valid, there
          // will be a zero terminator in the worst case.
          if (pattern[pos - 1] == '{' && pattern[pos + key.size()] == '}')
             pattern.replace(pos - 1, key.size() + 2, value);
+
+         pos = pattern.find(key, pos + 1);
       }
    }
 
@@ -205,8 +207,7 @@ std::string ServiceConfig::GetCreateProjectUrl() const
 std::string
 ServiceConfig::GetCreateSnapshotUrl(std::string_view projectId) const
 {
-   return Substitute(
-      std::string("{api_url}/project/{project_id}/snapshot"),
+   return Substitute("{api_url}/project/{project_id}/snapshot",
       { { "api_url", mApiEndpoint }, { "project_id", projectId } });
 }
 
@@ -214,10 +215,19 @@ std::string ServiceConfig::GetSnapshotSyncUrl(
    std::string_view projectId, std::string_view snapshotId) const
 {
    return Substitute(
-      std::string("{api_url}/project/{project_id}/snapshot/{snapshot_id}/sync"),
+      "{api_url}/project/{project_id}/snapshot/{snapshot_id}/sync",
       { { "api_url", mApiEndpoint },
         { "project_id", projectId },
         { "snapshot_id", snapshotId } });
+}
+
+std::string ServiceConfig::GetProjectsUrl(int page, int pageSize) const
+{
+   return Substitute(
+      "{api_url}/project?page={page}&per-page={page_size}",
+      { { "api_url", mApiEndpoint },
+        { "page", std::to_string(page) },
+        { "page_size", std::to_string(pageSize) } });
 }
 
 const ServiceConfig& GetServiceConfig()

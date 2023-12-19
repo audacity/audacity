@@ -52,6 +52,6 @@ public:
       const AudacityProject& project,
       const BasicUI::WindowPlacement& placement) = 0;
 
-   virtual bool OnUnauthorizedSave(const BasicUI::WindowPlacement& placement) = 0;
+   virtual bool OnAuthorizationRequired(const BasicUI::WindowPlacement& placement) = 0;
 };
 } // namespace cloud::audiocom::sync

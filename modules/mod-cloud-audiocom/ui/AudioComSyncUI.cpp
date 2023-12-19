@@ -92,7 +92,7 @@ public:
       return SaveProject(project, placement, false);
    }
 
-   bool OnUnauthorizedSave(const BasicUI::WindowPlacement& placement) override
+   bool OnAuthorizationRequired(const BasicUI::WindowPlacement& placement) override
    {
       return false;
    }
