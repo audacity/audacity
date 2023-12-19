@@ -442,6 +442,10 @@ std::optional<MusicalMeter> GetMeterUsingTatumQuantizationFit(
       return {};
 
    const auto possibleDivs = GetPossibleDivHierarchies(audioFileDuration);
+   if (possibleDivs.empty())
+      // The file is probably too short to be a loop.
+      return {};
+
    const auto possibleNumTatums = [&]() {
       std::vector<int> possibleNumTatums(possibleDivs.size());
       std::transform(
