@@ -106,7 +106,7 @@ if __name__ == '__main__':
                 '--profile:host', host_profile,
             ]
 
-            subprocess.check_call(conan_options)
+            subprocess.check_call(conan_options, stdin=subprocess.DEVNULL)
 
     with open(args_file_path, 'w') as args_file:
         args_file.write(args_string)
