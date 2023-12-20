@@ -25,6 +25,10 @@
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+#endif
+
 BEGIN_EVENT_TABLE(ExportFFmpegOptions, wxDialogWrapper)
    EVT_BUTTON(wxID_OK,ExportFFmpegOptions::OnOK)
    EVT_BUTTON(wxID_HELP,ExportFFmpegOptions::OnGetURL)
@@ -595,10 +599,17 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyRow(1);
             S.Id(FEAllFormatsID).AddButton(XXO("Show All Formats"));
             S.Id(FEAllCodecsID).AddButton(XXO("Show All Codecs"));
-            mFormatList = S.Id(FEFormatID).AddListBox(mFormatNames);
+            mFormatList = S.Id(FEFormatID).Name(XO("Formats")).
+               AddListBox(mFormatNames);
             mFormatList->DeselectAll();
-            mCodecList = S.Id(FECodecID).AddListBox(mCodecNames);
+            mCodecList = S.Id(FECodecID).Name(XO("Codecs")).
+               AddListBox(mCodecNames);
             mCodecList->DeselectAll();
+#if wxUSE_ACCESSIBILITY
+            // so that names can be set on standard controls
+            safenew WindowAccessible(mFormatList);
+            safenew WindowAccessible(mCodecList);
+#endif
          }
          S.EndMultiColumn();
          S.StartVerticalLay();
