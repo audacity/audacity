@@ -1198,10 +1198,18 @@ auto WaveTrack::GetWideClip(size_t iInterval) -> IntervalHolder
    if (iInterval < NIntervals()) {
       WaveClipHolder pClip = mClips[iInterval],
          pClip1;
-      if (auto right = ChannelGroup::GetChannel<WaveTrack>(1)
-         ; right && iInterval < right->mClips.size()
-      )
+
+      // TODO wide wave tracks
+      // Empty clip creation is needed, transitionally, to fix the peculiar
+      // case of Nyquist generators
+      if (const auto right = ChannelGroup::GetChannel<WaveTrack>(1)) {
+         while (iInterval >= right->mClips.size())
+            right->CreateClip(
+               WaveTrackData::Get(*right).GetOrigin(),
+               right->MakeNewClipName());
          pClip1 = right->mClips[iInterval];
+      }
+
       return std::make_shared<Interval>(*this, pClip, pClip1);
    }
    return {};
@@ -1560,6 +1568,8 @@ TrackListHolder WaveTrack::MonoToStereo()
    assert(!GetOwner());
 
    auto result = Duplicate();
+   DestroyGroupData();
+   result->Add(this->SharedPointer());
    result->MakeMultiChannelTrack(**result->begin(), 2);
 
    return result;
@@ -1723,7 +1733,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
    const auto srcNChannels = src.NChannels();
    assert(IsLeader());
    assert(src.IsLeader());
-   assert(srcNChannels == 1 || srcNChannels == NChannels());
+   assert(srcNChannels == NChannels());
    assert(
       GetProjectTempo().has_value() &&
       GetProjectTempo() == src.GetProjectTempo());
@@ -2467,7 +2477,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
 {
    assert(IsLeader());
    const auto otherNChannels = other.NChannels();
-   assert(otherNChannels == 1 || otherNChannels == NChannels());
+   assert(otherNChannels == NChannels());
    assert(
       GetProjectTempo().has_value() &&
       GetProjectTempo() == other.GetProjectTempo());
