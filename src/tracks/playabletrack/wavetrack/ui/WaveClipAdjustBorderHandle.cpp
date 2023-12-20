@@ -171,7 +171,7 @@ private:
                continue;
             }
 
-            for (const auto &&interval : track->Intervals()) {
+            for (const auto &interval : track->Intervals()) {
                addSnapPoint(interval->Start(), track);
                if(interval->Start() != interval->End())
                   addSnapPoint(interval->End(), track);
@@ -394,7 +394,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    //Test left and right boundaries of each clip
    //to determine which kind of adjustment is
    //more appropriate
-   for (const auto &&interval : waveTrack->Intervals()) {
+   for (const auto &interval : waveTrack->Intervals()) {
       const auto& clip = *interval->GetClip(0);
       if(!WaveChannelView::ClipDetailsVisible(clip, zoomInfo, rect))
          continue;

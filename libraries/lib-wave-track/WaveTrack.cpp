@@ -750,7 +750,7 @@ WaveTrack::GetNextInterval(const Interval& interval, PlaybackDirection searchDir
       ? std::numeric_limits<double>::max()
       : std::numeric_limits<double>::lowest();
 
-   for (const auto &&other : Intervals()) {
+   for (const auto &other : Intervals()) {
       if((searchDirection == PlaybackDirection::forward &&
          (other->Start() > interval.Start() && other->Start() < bestMatchTime))
          ||
@@ -774,7 +774,7 @@ WaveTrack::IntervalHolder WaveTrack::GetNextInterval(
 WaveTrack::IntervalHolder WaveTrack::GetIntervalAtTime(double t)
 {
    IntervalHolder result;
-   for (const auto &&interval : Intervals())
+   for (const auto &interval : Intervals())
       if (interval->WithinPlayRegion(t))
          return interval;
    return nullptr;
@@ -1092,7 +1092,7 @@ void WaveTrack::MoveTo(double origin)
 {
    double delta = origin - GetStartTime();
    assert(IsLeader());
-   for (const auto &&pInterval : Intervals())
+   for (const auto &pInterval : Intervals())
       // assume No-fail-guarantee
       pInterval->ShiftBy(delta);
    WaveTrackData::Get(*this).SetOrigin(origin);
@@ -1468,7 +1468,7 @@ void WaveTrack::ConvertToSampleFormat(sampleFormat format,
    const std::function<void(size_t)> & progressReport)
 {
    assert(IsLeader());
-   for (const auto &&pClip : Intervals())
+   for (const auto &pClip : Intervals())
       pClip->ConvertToSampleFormat(format, progressReport);
    WaveTrackData::Get(*this).SetSampleFormat(format);
 }
@@ -2200,13 +2200,13 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
    // We only add cut lines when deleting in the middle of a single clip
    // The cut line code is not really prepared to handle other situations
    if (addCutLines)
-      for (const auto &&clip : Intervals())
+      for (const auto &clip : Intervals())
          if (clip->PartlyWithinPlayRegion(t0, t1)) {
             addCutLines = false;
             break;
          }
 
-   for (const auto &&clip : Intervals()) {
+   for (const auto &clip : Intervals()) {
       if (clip->CoversEntirePlayRegion(t0, t1))
          // Whole clip must be deleted - remember this
          clipsToDelete.push_back(clip);
@@ -2295,7 +2295,7 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
    if (moveClipsLeft)
       // Clip is "behind" the region -- offset it unless we're splitting
       // or we're using the "don't move other clips" mode
-      for (const auto &&clip : Intervals())
+      for (const auto &clip : Intervals())
          if (clip->AtOrBeforePlayRegion(t1))
             clip->ShiftBy(-(t1 - t0));
 
@@ -2467,7 +2467,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          if (EditClipsCanMove.Read()) {
             const auto offset = newT1 - oldT1;
             const auto rate = GetRate();
-            for (const auto &&clip : Intervals())
+            for (const auto &clip : Intervals())
                if (clip->GetPlayStartTime() > oldT1 - (1.0 / rate))
                   clip->ShiftBy(offset);
          }
@@ -2795,7 +2795,7 @@ void WaveTrack::Silence(double t0, double t1, ProgressReporter reportProgress)
    auto start = TimeToLongSamples(t0);
    auto end = TimeToLongSamples(t1);
 
-   for (const auto &&pClip : Intervals()) {
+   for (const auto &pClip : Intervals()) {
       auto clipStart = pClip->GetPlayStartSample();
       auto clipEnd = pClip->GetPlayEndSample();
       if (clipEnd > start && clipStart < end) {
@@ -3036,7 +3036,7 @@ void WaveTrack::Disjoin(double t0, double t1)
 
    const size_t width = NChannels();
 
-   for (const auto &&interval : Intervals()) {
+   for (const auto &interval : Intervals()) {
       double startTime = interval->Start();
       double endTime = interval->End();
 
@@ -3118,11 +3118,11 @@ void WaveTrack::Join(
 {
    assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
-   const auto &&intervals = Intervals();
+   const auto &intervals = Intervals();
 
    {
       IntervalHolders intervalsToJoin;
-      for (const auto &&interval : intervals)
+      for (const auto &interval : intervals)
          if (interval->IntersectsPlayRegion(t0, t1))
             intervalsToJoin.push_back(interval);
       if (intervalsToJoin.size() < 2u)
@@ -3140,7 +3140,7 @@ void WaveTrack::Join(
    IntervalHolder newClip{};
 
    const auto rate = GetRate();
-   for (const auto &&clip: intervals) {
+   for (const auto &clip: intervals) {
       if (clip->IntersectsPlayRegion(t0, t1)) {
          // Put in sorted order
          auto it = clipsToDelete.begin(), end = clipsToDelete.end();
@@ -3650,7 +3650,7 @@ std::pair<float, float> WaveChannel::GetMinMax(
    if (t0 == t1)
       return results;
 
-   for (const auto &&clip: Intervals())
+   for (const auto &clip: Intervals())
    {
       if (t1 >= clip->GetPlayStartTime() && t0 <= clip->GetPlayEndTime())
       {
@@ -3685,7 +3685,7 @@ float WaveChannel::GetRMS(double t0, double t1, bool mayThrow) const
    double sumsq = 0.0;
    double duration = 0;
 
-   for (const auto &&clip: Intervals())
+   for (const auto &clip: Intervals())
    {
       // If t1 == clip->GetStartTime() or t0 == clip->GetEndTime(), then the clip
       // is not inside the selection, so we don't want it.
@@ -4036,7 +4036,7 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
 {
    std::vector<std::shared_ptr<const WaveChannelInterval>>
       intersectingIntervals;
-   for (const auto &&interval : Intervals())
+   for (const auto &interval : Intervals())
       if (interval->Intersects(t0, t1))
          intersectingIntervals.push_back(interval);
    if (intersectingIntervals.empty())
@@ -4079,7 +4079,7 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
 bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
-   for (const auto &&clip: Intervals())
+   for (const auto &clip: Intervals())
    {
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
@@ -4678,7 +4678,7 @@ void WaveTrack::ReplaceInterval(
 */
 void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
-   for (const auto &&pClip : Intervals())
+   for (const auto &pClip : Intervals())
       pClip->Resample(rate, progress);
    DoSetRate(rate);
 }
@@ -4723,7 +4723,7 @@ WaveClipConstPointers WaveTrack::SortedClipArray() const
 
 auto WaveTrack::SortedIntervalArray() -> IntervalHolders
 {
-   const auto &&intervals = Intervals();
+   const auto &intervals = Intervals();
    IntervalHolders result;
    copy(intervals.begin(), intervals.end(), back_inserter(result));
    sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){
@@ -4733,7 +4733,7 @@ auto WaveTrack::SortedIntervalArray() -> IntervalHolders
 
 auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
 {
-   const auto &&intervals = Intervals();
+   const auto &intervals = Intervals();
    IntervalConstHolders result;
    copy(intervals.begin(), intervals.end(), back_inserter(result));
    sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){

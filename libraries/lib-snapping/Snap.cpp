@@ -46,7 +46,7 @@ SnapPointArray FindCandidates(
    SnapPointArray candidates, const TrackList &tracks )
 {
    for (const auto track : tracks)
-      for (const auto &&interval : track->Intervals()) {
+      for (const auto &interval : track->Intervals()) {
          candidates.emplace_back(interval->Start(), track);
          if (interval->Start() != interval->End())
             candidates.emplace_back(interval->End(), track);
