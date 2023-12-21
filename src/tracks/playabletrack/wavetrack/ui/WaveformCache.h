@@ -25,7 +25,7 @@ struct WaveClipWaveformCache final : WaveClipListener
    std::vector<std::unique_ptr<WaveCache>> mWaveCaches;
    int mDirty { 0 };
 
-   static WaveClipWaveformCache &Get( const WaveClip &clip );
+   static WaveClipWaveformCache &Get(const WaveChannelInterval &clip);
 
    void MarkChanged() override; // NOFAIL-GUARANTEE
    void Invalidate() override; // NOFAIL-GUARANTEE

@@ -33,8 +33,9 @@ Paul Licameli split from WaveChannelView.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "../../../../prefs/SpectrogramSettings.h"
 #include "WaveTrackLocation.h"
+#include "WaveTrackUtilities.h"
+#include "../../../../prefs/SpectrogramSettings.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -426,7 +427,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
    const sampleCount *where = 0;
    // Get the cache from the leader clip, but pass the WaveChannelInterval
    // to use the correct channel in the cache
-   bool updated = WaveClipSpectrumCache::Get(clip.GetClip()).GetSpectrogram(
+   bool updated = WaveClipSpectrumCache::Get(clip).GetSpectrogram(
       clip, freq, settings, where, (size_t)hiddenMid.width, t0,
       averagePixelsPerSecond);
    auto nBins = settings.NBins();
@@ -477,7 +478,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
    }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-   auto &clipCache = WaveClipSpectrumCache::Get(clip.GetClip());
+   auto &clipCache = WaveClipSpectrumCache::Get(clip);
    auto &specPxCache = clipCache.mSpecPxCaches[clip.GetChannelIndex()];
    if (!updated && specPxCache &&
       ((int)specPxCache->len == hiddenMid.height * hiddenMid.width)
@@ -881,7 +882,7 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context, size_t channel,
       ->GetChannel(channel)->Intervals()
    ) {
       bool selected = selectedClip &&
-         WaveChannelView::WideClipContains(*selectedClip, pInterval->GetClip());
+         WaveTrackUtilities::WideClipContains(*selectedClip, *pInterval);
       DrawClipSpectrum(context, track, *pInterval, rect, mpSpectralData,
          selected);
    }

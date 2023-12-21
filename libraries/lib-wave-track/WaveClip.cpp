@@ -197,55 +197,6 @@ void WaveClip::SetSamples(size_t ii,
    MarkChanged();
 }
 
-bool WaveClip::GetFloatAtTime(
-   double t, size_t iChannel, float& value, bool mayThrow) const
-{
-   if (!WithinPlayRegion(t))
-      return false;
-   const auto start = TimeToSamples(t);
-   return GetSamples(
-      iChannel, reinterpret_cast<samplePtr>(&value), floatSample, start, 1u,
-      mayThrow);
-}
-
-void WaveClip::SetFloatsFromTime(
-   double t, size_t iChannel, const float* buffer, size_t numFloats,
-   sampleFormat effectiveFormat)
-{
-   const auto maybeNegativeStart = TimeToSamples(t);
-   const auto maybeOutOfBoundEnd = maybeNegativeStart + numFloats;
-   const auto effectiveStart = std::max(sampleCount { 0 }, maybeNegativeStart);
-   const auto effectiveEnd =
-      std::min(GetVisibleSampleCount(), maybeOutOfBoundEnd);
-   if (effectiveStart >= effectiveEnd)
-      return;
-   // Cannot be greater than `numFloats` -> safe cast
-   const auto effectiveLen = (effectiveEnd - effectiveStart).as_size_t();
-   // Cannot be greater than `numFloats` -> safe cast
-   const auto numLeadingZeros =
-      (effectiveStart - maybeNegativeStart).as_size_t();
-   const auto offsetBuffer =
-      reinterpret_cast<const char*>(buffer + numLeadingZeros);
-   SetSamples(
-      iChannel, offsetBuffer, floatSample, effectiveStart, effectiveLen,
-      effectiveFormat);
-}
-
-void WaveClip::SetFloatsCenteredAroundTime(
-   double t, size_t iChannel, const float* buffer, size_t numSideSamples,
-   sampleFormat effectiveFormat)
-{
-   SetFloatsFromTime(
-      t - SamplesToTime(numSideSamples), iChannel, buffer,
-      2 * numSideSamples + 1, effectiveFormat);
-}
-
-void WaveClip::SetFloatAtTime(
-   double t, size_t iChannel, float value, sampleFormat effectiveFormat)
-{
-   SetFloatsCenteredAroundTime(t, iChannel, &value, 0u, effectiveFormat);
-}
-
 void WaveClip::SetEnvelope(std::unique_ptr<Envelope> p)
 {
    mEnvelope = move(p);
@@ -1209,21 +1160,6 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
       MarkChanged();
    }
-}
-
-// Used by commands which interact with clips using the keyboard.
-// When two clips are immediately next to each other, the GetPlayEndTime()
-// of the first clip and the GetPlayStartTime() of the second clip may not
-// be exactly equal due to rounding errors.
-bool WaveClip::SharesBoundaryWithNextClip(const WaveClip* next) const
-{
-   double endThis = GetRate() * GetPlayStartTime() +
-                    GetVisibleSampleCount().as_double() * GetStretchRatio();
-   double startNext = next->GetRate() * next->GetPlayStartTime();
-
-   // given that a double has about 15 significant digits, using a criterion
-   // of half a sample should be safe in all normal usage.
-   return fabs(startNext - endThis) < 0.5;
 }
 
 void WaveClip::SetName(const wxString& name)

@@ -77,7 +77,10 @@ public:
    {}
    ~WaveChannelInterval() override;
 
-   const WaveClip &GetClip() const { return mWideClip; }
+   const WaveClip &GetWideClip() const { return mWideClip; }
+   WaveClip &GetClip() { return mNarrowClip; }
+   const WaveClip &GetClip() const { return mNarrowClip; }
+   Envelope &GetEnvelope();
    const Envelope &GetEnvelope() const;
    size_t GetChannelIndex() const { return miChannel; }
 
@@ -102,7 +105,18 @@ public:
    int GetRate() const override;
    double GetPlayStartTime() const override;
    double GetPlayEndTime() const override;
+   double GetPlayDuration() const;
+
+   /*!
+    * @brief  t ∈ [...)
+    */
+   bool WithinPlayRegion(double t) const;
+
+   // TimeToSamples and SamplesToTime take clip stretch ratio into account.
+   // Use them to convert time / sample offsets.
    sampleCount TimeToSamples(double time) const override;
+   double SamplesToTime(sampleCount s) const noexcept;
+
    double GetStretchRatio() const override;
 
    double GetTrimLeft() const;
@@ -154,6 +168,7 @@ public:
    );
 
 private:
+   WaveClip &GetNarrowClip() { return mNarrowClip; }
    const WaveClip &GetNarrowClip() const { return mNarrowClip; }
 
    WaveClip &mWideClip;
@@ -240,19 +255,6 @@ public:
     @return true if at least one complete block was created
     */
    bool Append(constSamplePtr buffer, sampleFormat format, size_t len);
-
-   // Get signed min and max sample values
-   /*!
-    @pre `t0 <= t1`
-    */
-   std::pair<float, float> GetMinMax(
-      double t0, double t1, bool mayThrow = true) const;
-
-   //! Get root-mean-square
-   /*!
-    @pre `t0 <= t1`
-    */
-   float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //! A hint for sizing of well aligned fetches
    inline size_t GetBestBlockSize(sampleCount t) const;
@@ -612,55 +614,6 @@ public:
       sampleCount* pNumWithinClips = nullptr) const override;
 
    /*!
-    * @brief Gets as many samples as it can, but no more than `2 *
-    * numSideSamples + 1`, centered around `t`. Reads nothing if
-    * `GetClipAtTime(t) == nullptr`. Useful to access samples across clip
-    * boundaries, as it spreads the read to adjacent clips, i.e., not separated
-    * by silence from clip at `t`.
-    *
-    * @return The begin and end indices of the samples in the buffer where
-    * samples could actually be copied.
-    */
-   std::pair<size_t, size_t> GetFloatsCenteredAroundTime(
-      double t, size_t iChannel, float* buffer, size_t numSideSamples,
-      bool mayThrow) const;
-
-   /*!
-    * @return true if `GetClipAtTime(t) != nullptr`, false otherwise.
-    */
-   bool
-   GetFloatAtTime(double t, size_t iChannel, float& value, bool mayThrow) const;
-
-   /*!
-    * @brief Similar to GetFloatsCenteredAroundTime, but for writing. Sets as
-    * many samples as it can according to the same rules as
-    * GetFloatsCenteredAroundTime. Leaves the other samples untouched. @see
-    * GetFloatsCenteredAroundTime
-    */
-   void SetFloatsCenteredAroundTime(
-      double t, size_t iChannel, const float* buffer, size_t numSideSamples,
-      sampleFormat effectiveFormat);
-
-   /*!
-    * @brief Sets sample nearest to `t` to `value`. Silently fails if
-    * `GetClipAtTime(t) == nullptr`.
-    */
-   void SetFloatAtTime(
-      double t, size_t iChannel, float value, sampleFormat effectiveFormat);
-
-   /*!
-    * @brief Provides a means of setting clip values as a function of time.
-    * Included are closest sample to t0 up to closest sample to t1, exclusively.
-    * If the given interval is empty, i.e., `t0 >= t1`, no action is taken.
-    * @param producer a function taking sample (absolute, not clip-relative)
-    * time and returning the desired value for the sample at that time.
-    */
-   void SetFloatsWithinTimeRange(
-      double t0, double t1, size_t iChannel,
-      const std::function<float(double sampleTime)>& producer,
-      sampleFormat effectiveFormat);
-
-   /*!
     * @brief Request samples within [t0, t1), not knowing in advance how
     * many this will be.
     *
@@ -683,40 +636,9 @@ public:
       double* buffer, size_t bufferLen, double t0,
       bool backwards) const override;
 
-   //
-   // MM: We now have more than one sequence and envelope per track, so
-   // instead of GetEnvelope() we have the following function which gives the
-   // envelope that contains the given time.
-   //
-   Envelope* GetEnvelopeAtTime(double time);
-
    const WaveClip* GetClipAtTime(double time) const;
    WaveClip* GetClipAtTime(double time);
    WaveClipConstHolders GetClipsIntersecting(double t0, double t1) const;
-
-   /*!
-    * @brief Returns clips next to `clip` in the given direction, or `nullptr`
-    * if there is none.
-    */
-   const WaveClip* GetNextClip(
-      const WaveClip& clip, PlaybackDirection searchDirection) const;
-   /*!
-    * @copydoc GetNextClip(const WaveClip&, PlaybackDirection) const
-    */
-   WaveClip*
-   GetNextClip(const WaveClip& clip, PlaybackDirection searchDirection);
-
-   /*!
-    * @brief Similar to GetNextClip, but returns `nullptr` if the neighbour
-    * clip is not adjacent.
-    */
-   const WaveClip* GetAdjacentClip(
-      const WaveClip& clip, PlaybackDirection searchDirection) const;
-   /*!
-    * @copydoc GetAdjacentClip(const WaveClip&, PlaybackDirection) const
-    */
-   WaveClip*
-   GetAdjacentClip(const WaveClip& clip, PlaybackDirection searchDirection);
 
    //
    // Getting information about the track's internal block sizes
@@ -1273,26 +1195,6 @@ private:
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
       bool backwards, fillFormat fill, bool mayThrow,
       sampleCount* pNumWithinClips) const;
-
-   /*!
-    * @brief Helper for GetFloatsCenteredAroundTime. If `direction ==
-    * PlaybackDirection::Backward`, fetches samples to the left of `t`,
-    * excluding `t`, without reversing. @see GetFloatsCenteredAroundTime
-    *
-    * @return The number of samples actually copied.
-    */
-   size_t GetFloatsFromTime(
-      double t, size_t iChannel, float* buffer, size_t numSamples,
-      bool mayThrow, PlaybackDirection direction) const;
-
-   /*!
-    * @brief Similar to GetFloatsFromTime, but for writing. Sets as many samples
-    * as it can according to the same rules as GetFloatsFromTime. Leaves the
-    * other samples untouched. @see GetFloatsFromTime
-    */
-   void SetFloatsFromTime(
-      double t, size_t iChannel, const float* buffer, size_t numSamples,
-      sampleFormat effectiveFormat, PlaybackDirection direction);
 
    void DoSetPan(float value);
    void DoSetGain(float value);

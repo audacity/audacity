@@ -48,7 +48,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackAffordanceHandle.h"
 #include "WaveClipAdjustBorderHandle.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
@@ -1715,13 +1715,6 @@ WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
       return *affordance->GetSelectedInterval();
    }
    return {};
-}
-
-bool WaveChannelView::WideClipContains(
-   const WaveTrack::Interval &wideClip, const WaveClip &clip)
-{
-   return &clip == wideClip.GetClip(0).get()
-      || &clip == wideClip.GetClip(1).get();
 }
 
 void WaveChannelView::BuildSubViews() const

@@ -27,7 +27,7 @@
 #include "ViewInfo.h"
 #include "ProjectHistory.h"
 #include "UndoManager.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 
 namespace {
 

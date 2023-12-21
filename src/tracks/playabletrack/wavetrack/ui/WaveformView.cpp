@@ -31,8 +31,10 @@ Paul Licameli split from WaveChannelView.cpp
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
+#include "WaveChannelUtilities.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "../../../../WaveTrackLocation.h"
 #include "../../../../prefs/WaveformSettings.h"
 
@@ -92,7 +94,8 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
                auto &viewInfo = ViewInfo::Get(*pProject);
                auto time =
                   viewInfo.PositionToTime(st.state.m_x, st.rect.GetX());
-               auto envelope = pTrack->GetEnvelopeAtTime(time);
+               const auto envelope =
+                  WaveChannelUtilities::GetEnvelopeAtTime(*pTrack, time);
                result = EnvelopeHandle::HitAnywhere(
                   view.mEnvelopeHandle, envelope,
                   std::dynamic_pointer_cast<const Channel>(pTrack),
@@ -742,7 +745,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * sampleRate / stretchRatio;
 
-   auto &clipCache = WaveClipWaveformCache::Get(clip.GetClip());
+   auto &clipCache = WaveClipWaveformCache::Get(clip);
 
    {
       bool showIndividualSamples = false;
@@ -981,7 +984,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
       bool selected = selectedClip &&
-         WaveChannelView::WideClipContains(*selectedClip, pInterval->GetClip());
+         WaveTrackUtilities::WideClipContains(*selectedClip, *pInterval);
       DrawClipWaveform(context, track, *pInterval, rect, dB, muted, selected);
    }
    DrawBoldBoundaries(context, track, rect);

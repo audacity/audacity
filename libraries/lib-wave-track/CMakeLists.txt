@@ -21,8 +21,12 @@ set( SOURCES
    SampleBlock.h
    Sequence.cpp
    Sequence.h
+   WaveChannelUtilities.cpp
+   WaveChannelUtilities.h
    WaveClip.cpp
    WaveClip.h
+   WaveClipUtilities.cpp
+   WaveClipUtilities.h
    WaveTrack.cpp
    WaveTrack.h
    WaveTrackSink.cpp

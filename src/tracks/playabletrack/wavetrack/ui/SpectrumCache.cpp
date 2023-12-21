@@ -14,7 +14,7 @@
 #include "RealFFTf.h"
 #include "Sequence.h"
 #include "Spectrum.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 #include "WaveTrack.h"
 #include "WideSampleSequence.h"
 #include <cmath>
@@ -589,9 +589,10 @@ static WaveClip::Caches::RegisteredFactory sKeyS{ [](WaveClip &clip){
    return std::make_unique<WaveClipSpectrumCache>(clip.GetWidth());
 } };
 
-WaveClipSpectrumCache &WaveClipSpectrumCache::Get( const WaveClip &clip )
+WaveClipSpectrumCache &
+WaveClipSpectrumCache::Get(const WaveChannelInterval &clip)
 {
-   return const_cast< WaveClip& >( clip ) // Consider it mutable data
+   return const_cast<WaveClip&>(clip.GetWideClip()) // Consider it mutable data
       .Caches::Get< WaveClipSpectrumCache >( sKeyS );
 }
 

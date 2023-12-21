@@ -111,7 +111,7 @@ struct WaveClipSpectrumCache final : WaveClipListener
    std::vector<std::unique_ptr<SpecCache>> mSpecCaches;
    int mDirty { 0 };
 
-   static WaveClipSpectrumCache &Get( const WaveClip &clip );
+   static WaveClipSpectrumCache &Get(const WaveChannelInterval &clip);
 
    void MarkChanged() override; // NOFAIL-GUARANTEE
    void Invalidate() override; // NOFAIL-GUARANTEE

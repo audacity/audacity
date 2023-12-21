@@ -5,6 +5,7 @@
 #include "Viewport.h"
 #include "UndoManager.h"
 #include "WaveClip.h"
+#include "WaveClipUtilities.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
@@ -63,7 +64,7 @@ double AdjustForFindingStartTimes(
       [&] (const WaveClip* const& clip) {
          return clip->GetPlayEndTime() == time; });
    if (q != clips.end() && q + 1 != clips.end() &&
-      (*q)->SharesBoundaryWithNextClip(*(q+1))) {
+      WaveClipUtilities::SharesBoundaryWithNextClip(**q, **(q+1))) {
       time = (*(q+1))->GetPlayStartTime();
    }
 
@@ -85,7 +86,7 @@ double AdjustForFindingEndTimes(
       [&] (const WaveClip* const& clip) {
          return clip->GetPlayStartTime() == time; });
    if (q != clips.end() && q != clips.begin() &&
-      (*(q - 1))->SharesBoundaryWithNextClip(*q)) {
+      WaveClipUtilities::SharesBoundaryWithNextClip(**(q - 1), **q)) {
       time = (*(q-1))->GetPlayEndTime();
    }
 
@@ -109,7 +110,7 @@ FoundClipBoundary FindNextClipBoundary
          return clip->GetPlayEndTime() > timeEnd; });
 
    if (pStart != clips.end() && pEnd != clips.end()) {
-      if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
+      if (WaveClipUtilities::SharesBoundaryWithNextClip(**pEnd, **pStart)) {
          // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
          result.time = (*pEnd)->GetPlayEndTime();
@@ -162,7 +163,7 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
          return clip->GetPlayEndTime() < timeEnd; });
 
    if (pStart != clips.rend() && pEnd != clips.rend()) {
-      if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
+      if (WaveClipUtilities::SharesBoundaryWithNextClip(**pEnd, **pStart)) {
          // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
          result.time = (*pStart)->GetPlayStartTime();

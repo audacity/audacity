@@ -2,13 +2,13 @@
 
   Audacity: A Digital Audio Editor
 
-  @file WaveClipUtilities.cpp
+  @file WaveClipUIUtilities.cpp
 
   Paul Licameli split from WaveClip.cpp
 
 **********************************************************************/
 
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 
 #include <algorithm>
 #include "SampleCount.h"
