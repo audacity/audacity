@@ -77,6 +77,19 @@ public:
    {}
    ~WaveChannelInterval() override;
 
+   friend bool operator ==(
+      const WaveChannelInterval &x, const WaveChannelInterval &y
+   ) {
+      return &x.mWideClip == &y.mWideClip &&
+         &x.mNarrowClip == &y.mNarrowClip &&
+         x.miChannel == y.miChannel;
+   }
+   friend bool operator !=(
+      const WaveChannelInterval &x, const WaveChannelInterval &y
+   ) {
+      return !(x == y);
+   }
+
    const WaveClip &GetWideClip() const { return mWideClip; }
    WaveClip &GetClip() { return mNarrowClip; }
    const WaveClip &GetClip() const { return mNarrowClip; }

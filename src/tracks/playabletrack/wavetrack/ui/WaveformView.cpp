@@ -57,11 +57,11 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
    auto &view = *this;
-   const auto pTrack =
-      std::static_pointer_cast< WaveTrack >( view.FindTrack() );
+   const auto pChannel =
+      std::static_pointer_cast<WaveChannel>(view.FindChannel());
 
    auto pair = WaveChannelSubView::DoDetailedHitTest(
-      st, pProject, currentTool, bMultiTool, pTrack);
+      st, pProject, currentTool, bMultiTool, pChannel);
    auto &results = pair.second;
 
    if (!pair.first) {
@@ -72,18 +72,19 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
          // If Tools toolbar were eliminated, we would keep these
          // The priority of these, in case more than one might apply at one
          // point, seems arbitrary
-         if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
+         if (nullptr != (result = EnvelopeHandle::WaveChannelHitTest(
             view.mEnvelopeHandle, st.state, st.rect,
-            pProject, pTrack )))
+            pProject, pChannel)))
             results.push_back(result);
-         if (NULL != (result = TimeShiftHandle::HitTest(
-            view.mTimeShiftHandle, st.state, st.rect, pTrack )))
+         if (nullptr != (result = TimeShiftHandle::HitTest(
+            view.mTimeShiftHandle, st.state, st.rect,
+               pChannel->GetTrack().SharedPointer())))
             // This is the hit test on the "grips" drawn left and
             // right in Multi only
             results.push_back(result);
-         if (NULL != (result = SampleHandle::HitTest(
+         if (nullptr != (result = SampleHandle::HitTest(
             view.mSampleHandle, st.state, st.rect,
-            pProject, pTrack )))
+            pProject, pChannel)))
             results.push_back(result);
       }
       else {
@@ -95,16 +96,16 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
                auto time =
                   viewInfo.PositionToTime(st.state.m_x, st.rect.GetX());
                const auto envelope =
-                  WaveChannelUtilities::GetEnvelopeAtTime(*pTrack, time);
+                  WaveChannelUtilities::GetEnvelopeAtTime(*pChannel, time);
                result = EnvelopeHandle::HitAnywhere(
                   view.mEnvelopeHandle, envelope,
-                  std::dynamic_pointer_cast<const Channel>(pTrack),
+                  std::dynamic_pointer_cast<const Channel>(pChannel),
                   false);
                break;
             }
             case ToolCodes::drawTool:
                result = SampleHandle::HitAnywhere(
-                  view.mSampleHandle, st.state, pTrack );
+                  view.mSampleHandle, st.state, pChannel);
                break;
             default:
                result = {};

@@ -58,7 +58,7 @@ public:
    > DoDetailedHitTest(
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
-      const std::shared_ptr<WaveTrack> &wt );
+      const std::shared_ptr<WaveChannel> &wt);
 
 protected:
    static void DrawBoldBoundaries(
@@ -130,7 +130,7 @@ public:
    > DoDetailedHitTest(
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
-      const std::shared_ptr<WaveTrack> &wt,
+      const std::shared_ptr<WaveChannel> &wt,
       CommonChannelView &view);
 
    std::vector<WaveChannelSubView::Type> GetDisplays() const;

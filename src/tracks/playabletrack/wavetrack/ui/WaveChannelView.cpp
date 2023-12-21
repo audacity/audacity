@@ -761,11 +761,12 @@ std::pair<
 > WaveChannelSubView::DoDetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool,
-   const std::shared_ptr<WaveTrack> &wt)
+   const std::shared_ptr<WaveChannel> &wc)
 {
+   const auto waveTrack = wc->GetTrack().SharedPointer<WaveTrack>();
    auto results = WaveChannelView::DoDetailedHitTest(
-      state, pProject, currentTool, bMultiTool, wt, *this);
-   if ( results.first )
+      state, pProject, currentTool, bMultiTool, wc, *this);
+   if (results.first)
       return results;
 
    auto pWaveChannelView = mwWaveChannelView.lock();
@@ -775,7 +776,7 @@ std::pair<
          *pWaveChannelView, *this, state ) )
          results.second.push_back( pHandle );
 
-      auto channels = TrackList::Channels(wt.get());
+      auto &&channels = waveTrack->Channels();
       if(channels.size() > 1) {
          // Only one cell is tested and we need to know
          // which one and it's relative location to the border.
@@ -794,8 +795,8 @@ std::pair<
             const auto bottomBorderHit = std::abs(py - state.rect.GetBottom())
                <= WaveChannelView::kChannelSeparatorThickness / 2;
 
-            auto currentChannel = channels.find(wt.get());
-            auto currentChannelIndex = std::distance(channels.begin(), currentChannel);
+            auto it = channels.find(wc);
+            auto currentChannelIndex = std::distance(channels.begin(), it);
 
             if (//for not-last-view check the bottom border hit
                ((currentChannelIndex != channels.size() - 1)
@@ -807,9 +808,9 @@ std::pair<
             {
                //depending on which border hit test succeeded on we
                //need to choose a proper target for resizing
-               auto it = bottomBorderHit ? currentChannel : currentChannel.advance(-1);
-               auto result = std::make_shared<TrackPanelResizeHandle>(
-                  (*it)->GetChannel(0), py);
+               if (!bottomBorderHit)
+                  --it;
+               auto result = std::make_shared<TrackPanelResizeHandle>(*it, py);
                result = AssignUIHandlePtr(mResizeHandle, result);
                results.second.push_back(result);
             }
@@ -833,8 +834,7 @@ std::pair<
           results.second.push_back(pHandle);
    }
    if (auto result = CutlineHandle::HitTest(
-      mCutlineHandle, state.state, state.rect,
-      pProject, wt ))
+      mCutlineHandle, state.state, state.rect, pProject, waveTrack))
       // This overriding test applies in all tools
       results.second.push_back(result);
 
@@ -979,7 +979,7 @@ std::pair< bool, std::vector<UIHandlePtr> >
 WaveChannelView::DoDetailedHitTest(
    const TrackPanelMouseState &st,
    const AudacityProject *pProject, int currentTool, bool bMultiTool,
-   const std::shared_ptr<WaveTrack> &pTrack,
+   const std::shared_ptr<WaveChannel> &pChannel,
    CommonChannelView &view)
 {
    // common hit-testing for different sub-view types, to help implement their
@@ -993,13 +993,14 @@ WaveChannelView::DoDetailedHitTest(
    std::vector<UIHandlePtr> results;
 
    const auto& viewInfo = ViewInfo::Get(*pProject);
+   const auto pTrack = pChannel->GetTrack().SharedPointer<WaveTrack>();
 
    for (auto& clip : pTrack->GetClips())
    {
       if (!WaveChannelView::ClipDetailsVisible(*clip, viewInfo, st.rect)
          && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
       {
-         auto &waveChannelView = WaveChannelView::Get(*pTrack);
+         auto &waveChannelView = WaveChannelView::Get(*pChannel);
          results.push_back(
             AssignUIHandlePtr(
                waveChannelView.mAffordanceHandle,
@@ -1013,8 +1014,8 @@ WaveChannelView::DoDetailedHitTest(
       // Ctrl modifier key in multi-tool overrides everything else
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
-      auto result = TimeShiftHandle::HitAnywhere(
-         view.mTimeShiftHandle, pTrack, false);
+      auto result = TimeShiftHandle::HitAnywhere(view.mTimeShiftHandle,
+         pTrack, false);
       if (result)
          results.push_back(result);
       return { true, results };

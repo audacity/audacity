@@ -26,7 +26,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveChannelUtilities.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../../../../../images/Cursors.h"
 #include "AudacityMessageBox.h"
@@ -37,7 +36,7 @@ static const int SMOOTHING_BRUSH_RADIUS = 5;
 static const double SMOOTHING_PROPORTION_MAX = 0.7;
 static const double SMOOTHING_PROPORTION_MIN = 0.0;
 
-SampleHandle::SampleHandle( const std::shared_ptr<WaveTrack> &pTrack )
+SampleHandle::SampleHandle(const std::shared_ptr<WaveChannel> &pTrack)
    : mClickedTrack{ pTrack }
 {
 }
@@ -72,20 +71,19 @@ HitTestPreview SampleHandle::HitPreview
    };
 }
 
-UIHandlePtr SampleHandle::HitAnywhere
-(std::weak_ptr<SampleHandle> &holder,
- const wxMouseState &WXUNUSED(state), const std::shared_ptr<WaveTrack> &pTrack)
+UIHandlePtr SampleHandle::HitAnywhere(std::weak_ptr<SampleHandle> &holder,
+ const wxMouseState &, const std::shared_ptr<WaveChannel> &pChannel)
 {
-   auto result = std::make_shared<SampleHandle>( pTrack );
+   auto result = std::make_shared<SampleHandle>(pChannel);
    result = AssignUIHandlePtr(holder, result);
    return result;
 }
 
 namespace {
-   inline double adjustTime(const WaveTrack& wt, double time)
+   inline double adjustTime(const WaveChannel& wt, double time)
    {
       // Round to an exact sample time
-      const auto clip = wt.GetClipAtTime(time);
+      const auto clip = WaveChannelUtilities::GetClipAtTime(wt, time);
       if (!clip)
          return wt.SnapToSample(time);
       const auto sampleOffset =
@@ -96,7 +94,7 @@ namespace {
    // Is the sample horizontally nearest to the cursor sufficiently separated
    // from its neighbors that the pencil tool should be allowed to drag it?
    bool SampleResolutionTest(
-      const ViewInfo& viewInfo, const WaveClip& clip,
+      const ViewInfo& viewInfo, const WaveChannelInterval& clip,
       const ZoomInfo::Intervals& intervals)
    {
       // Require more than 3 pixels per sample
@@ -115,23 +113,25 @@ namespace {
    }
 }
 
-UIHandlePtr SampleHandle::HitTest
-(std::weak_ptr<SampleHandle> &holder,
+UIHandlePtr SampleHandle::HitTest(std::weak_ptr<SampleHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack)
+ const AudacityProject *pProject, const std::shared_ptr<WaveChannel> &pChannel)
 {
    using namespace WaveChannelUtilities;
    const auto &viewInfo = ViewInfo::Get( *pProject );
 
    /// method that tells us if the mouse event landed on an
    /// editable sample
-   const auto wavetrack = pTrack.get();
+   if (!pChannel)
+      return {};
+   auto &waveChannel = *pChannel;
    const auto time = viewInfo.PositionToTime(state.m_x, rect.x);
-   const auto clickedClip = wavetrack->GetClipAtTime(time);
+   const auto clickedClip =
+      WaveChannelUtilities::GetClipAtTime(waveChannel, time);
    if (!clickedClip)
       return {};
 
-   const double tt = adjustTime(*wavetrack, time);
+   const double tt = adjustTime(waveChannel, time);
    const auto intervals = viewInfo.FindIntervals(rect.width);
    if (!SampleResolutionTest(viewInfo, *clickedClip, intervals))
       return {};
@@ -139,20 +139,22 @@ UIHandlePtr SampleHandle::HitTest
    // Just get one sample.
    float oneSample;
    constexpr auto mayThrow = false;
-   if (!GetFloatAtTime(*wavetrack, tt, oneSample, mayThrow))
+   if (!WaveChannelUtilities::GetFloatAtTime(waveChannel,
+      tt, oneSample, mayThrow))
       return {};
 
    // Get y distance of envelope point from center line (in pixels).
-   auto &cache = WaveformScale::Get(*wavetrack);
+   auto &cache = WaveformScale::Get(waveChannel);
    float zoomMin, zoomMax;
    cache.GetDisplayBounds(zoomMin, zoomMax);
 
    double envValue = 1.0;
-   if (const auto env = GetEnvelopeAtTime(*wavetrack, time))
+   if (const auto env =
+      WaveChannelUtilities::GetEnvelopeAtTime(waveChannel, time))
       // Calculate sample as it would be rendered
       envValue = env->GetValue(tt);
 
-   auto &settings = WaveformSettings::Get(*wavetrack);
+   auto &settings = WaveformSettings::Get(waveChannel);
    const bool dB = !settings.isLinear();
    int yValue = GetWaveYPos(oneSample * envValue,
       zoomMin, zoomMax,
@@ -167,7 +169,7 @@ UIHandlePtr SampleHandle::HitTest
    if (abs(yValue - yMouse) >= yTolerance)
       return {};
 
-   return HitAnywhere(holder, state, pTrack);
+   return HitAnywhere(holder, state, pChannel);
 }
 
 SampleHandle::~SampleHandle()
@@ -194,7 +196,7 @@ UIHandle::Result SampleHandle::Click
 
    const double t0 = viewInfo.PositionToTime(event.m_x, rect.x);
    const auto pTrack = mClickedTrack.get();
-   mClickedClip = pTrack->GetClipAtTime(t0);
+   mClickedClip = WaveChannelUtilities::GetClipAtTime(*pTrack, t0);
    if (!mClickedClip)
       return Cancelled;
 
@@ -324,8 +326,8 @@ UIHandle::Result SampleHandle::Click
 
 namespace
 {
-size_t GetLastEditableClipStartingFromNthClip(
-   size_t n, bool forward, const WaveClipPointers& sortedClips,
+size_t GetLastEditableClipStartingFromNthClip(size_t n, bool forward,
+   const WaveChannelUtilities::ClipPointers& sortedClips,
    const ViewInfo& viewInfo, const ZoomInfo::Intervals& intervals)
 {
    assert(n < sortedClips.size());
@@ -387,9 +389,11 @@ UIHandle::Result SampleHandle::Drag
    // only B had invisible samples, it'd mean one could not drag-draw from A
    // into C, but that probably isn't a behavior worthwhile much implementation
    // complications.
-   const auto clips = mClickedTrack->SortedClipArray();
-   const auto clickedClipIndex = std::distance(
-      clips.begin(), std::find(clips.begin(), clips.end(), mClickedClip));
+   const auto clips = WaveChannelUtilities::SortedClipArray(*mClickedTrack);
+   const auto iter = std::find_if(clips.begin(), clips.end(),
+      // Compare the intervals, not the pointers to them
+      [this](const auto &pClip){ return *pClip == *mClickedClip; });
+   const auto clickedClipIndex = std::distance(clips.begin(), iter);
    constexpr auto forward = true;
    const auto intervals = viewInfo.FindIntervals(mRect.width);
    const size_t leftmostEditable = GetLastEditableClipStartingFromNthClip(

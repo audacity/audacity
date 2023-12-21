@@ -57,6 +57,11 @@ WaveformSettings &WaveformSettings::Get(const WaveTrack &track)
       ::Get<WaveformSettings>(key1);
 }
 
+WaveformSettings &WaveformSettings::Get(const WaveChannel &channel)
+{
+   return Get(channel.GetTrack());
+}
+
 void WaveformSettings::Set(
    WaveTrack &track, std::unique_ptr<WaveformSettings> pSettings)
 {
@@ -205,6 +210,11 @@ WaveformScale &WaveformScale::Get(const WaveTrack &track)
    auto &mutTrack = const_cast<WaveTrack&>(track);
    return mutTrack.GetGroupData().Attachments
       ::Get<WaveformScale>(key2);
+}
+
+WaveformScale &WaveformScale::Get(const WaveChannel &channel)
+{
+   return Get(channel.GetTrack());
 }
 
 WaveformScale::~WaveformScale() = default;
