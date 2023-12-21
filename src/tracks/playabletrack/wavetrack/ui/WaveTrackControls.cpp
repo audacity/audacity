@@ -768,8 +768,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
             std::numeric_limits<double>::epsilon() * std::max(a, b);
       };
       const auto eps = 0.5 / left.GetRate();
-      const auto &&rightIntervals = right.Intervals();
-      for (const auto &&a : left.Intervals()) {
+      const auto &rightIntervals = right.Intervals();
+      for (const auto &a : left.Intervals()) {
          auto it = std::find_if(
             rightIntervals.begin(),
             rightIntervals.end(),

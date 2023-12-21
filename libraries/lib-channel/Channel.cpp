@@ -123,7 +123,7 @@ auto ChannelGroup::GetGroupData() const -> const ChannelGroupData &
 
 double ChannelGroup::GetStartTime() const
 {
-   const auto &&range = Intervals();
+   const auto &range = Intervals();
    if (range.empty())
       return 0;
    return std::accumulate(range.first, range.second,
@@ -134,7 +134,7 @@ double ChannelGroup::GetStartTime() const
 
 double ChannelGroup::GetEndTime() const
 {
-   const auto &&range = Intervals();
+   const auto &range = Intervals();
    if (range.empty())
       return 0;
    return std::accumulate(range.first, range.second,

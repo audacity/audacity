@@ -123,6 +123,36 @@ public:
 
    BlockArray *GetSequenceBlockArray();
 
+   /*!
+    Getting high-level data for one channel for screen display and clipping
+    calculations and Contrast
+    */
+   std::pair<float, float> GetMinMax(double t0, double t1, bool mayThrow) const;
+
+   /*!
+    @copydoc GetMinMax
+    */
+   float GetRMS(double t0, double t1, bool mayThrow) const;
+
+   //! Real start time of the clip, quantized to raw sample rate (track's rate)
+   sampleCount GetPlayStartSample() const;
+
+   //! Real end time of the clip, quantized to raw sample rate (track's rate)
+   sampleCount GetPlayEndSample() const;
+
+   /*!
+    @param start relative to clip play start sample
+    */
+   void SetSamples(constSamplePtr buffer, sampleFormat format,
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
+
 private:
    const WaveClip &GetNarrowClip() const { return mNarrowClip; }
 
@@ -141,11 +171,6 @@ public:
 
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
-
-   //! TODO wide wave tracks -- remove this
-   inline WaveTrack &ReallyGetTrack();
-   //! TODO wide wave tracks -- remove this
-   inline const WaveTrack &ReallyGetTrack() const;
 
    auto GetInterval(size_t iInterval) { return
       ::Channel::GetInterval<WaveChannelInterval>(iInterval); }
@@ -367,7 +392,10 @@ public:
 
    double GetRate() const override;
    ///!brief Sets the new rate for the track without resampling it
-   ///!pre newRate > 0
+   /*!
+    @pre `IsLeader()`
+    @pre newRate > 0
+    */
    void SetRate(double newRate);
 
    // Multiplicative factor.  Only converted to dB for display.
@@ -546,9 +574,9 @@ public:
     track, then a new one is created.
     @return true if at least one complete block was created
     */
-   bool Append(constSamplePtr buffer, sampleFormat format,
+   bool Append(size_t iChannel, constSamplePtr buffer, sampleFormat format,
       size_t len, unsigned int stride = 1,
-      sampleFormat effectiveFormat = widestSampleFormat, size_t iChannel = 0)
+      sampleFormat effectiveFormat = widestSampleFormat)
    override;
 
    void Flush() override;
@@ -979,8 +1007,6 @@ public:
 
       bool IsPlaceholder() const;
 
-      void MarkChanged();
-
       void SetSequenceStartTime(double t);
       void TrimLeftTo(double t);
       void TrimRightTo(double t);
@@ -1076,6 +1102,8 @@ public:
          double *cutLineEnd = nullptr) const;
 
       void ExpandCutLine(double cutlinePosition);
+
+      void SetRate(int rate);
 
    private:
       // TODO wide wave tracks -- remove friend
@@ -1231,7 +1259,6 @@ private:
 private:
    //Updates rate parameter only in WaveTrackData
    void DoSetRate(double newRate);
-   void SetClipRates(double newRate);
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;
    /*!
@@ -1312,32 +1339,16 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
-
-   friend WaveChannel;
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
 
 WaveTrack &WaveChannel::GetTrack() {
-   auto &result = static_cast<WaveTrack&>(DoGetChannelGroup());
-   // TODO wide wave tracks -- remove assertion
-   assert(&result == this);
-   return result;
-}
-
-const WaveTrack &WaveChannel::GetTrack() const {
-   auto &result = static_cast<const WaveTrack&>(DoGetChannelGroup());
-   // TODO wide wave tracks -- remove assertion
-   assert(&result == this);
-   return result;
-}
-
-WaveTrack &WaveChannel::ReallyGetTrack() {
    auto &result = static_cast<WaveTrack&>(ReallyDoGetChannelGroup());
    return result;
 }
 
-const WaveTrack &WaveChannel::ReallyGetTrack() const {
+const WaveTrack &WaveChannel::GetTrack() const {
    auto &result = static_cast<const WaveTrack&>(ReallyDoGetChannelGroup());
    return result;
 }

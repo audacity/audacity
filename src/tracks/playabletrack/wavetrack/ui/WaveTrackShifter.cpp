@@ -194,7 +194,6 @@ public:
          // Now that user has dropped the clip into a different track,
          // make sure the sample rate matches the destination track.
          pClip->Resample(rate);
-         pClip->MarkChanged();
       }
       return true;
    }

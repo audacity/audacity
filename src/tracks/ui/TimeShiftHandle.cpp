@@ -248,7 +248,7 @@ void TrackShifter::InitIntervals()
    auto &track = GetTrack();
    assert(track.IsLeader()); // postcondition
    mMoving.clear();
-   const auto &&range = track.Intervals();
+   const auto &range = track.Intervals();
    std::copy(range.begin(), range.end(), back_inserter(mFixed));
 }
 

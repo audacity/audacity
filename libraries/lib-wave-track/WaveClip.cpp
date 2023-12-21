@@ -1207,6 +1207,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       mRate = rate;
       Flush();
       Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
+      MarkChanged();
    }
 }
 
@@ -1393,7 +1394,8 @@ sampleCount WaveClip::GetSequenceStartSample() const
 
 void WaveClip::ShiftBy(double delta) noexcept
 {
-    SetSequenceStartTime(GetSequenceStartTime() + delta);
+   SetSequenceStartTime(GetSequenceStartTime() + delta);
+   MarkChanged();
 }
 
 bool WaveClip::SplitsPlayRegion(double t) const

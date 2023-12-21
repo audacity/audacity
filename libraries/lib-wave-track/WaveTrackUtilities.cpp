@@ -301,7 +301,7 @@ sampleCount WaveTrackUtilities::GetSequenceSamplesCount(const WaveTrack &track)
 {
    assert(track.IsLeader());
    sampleCount result{ 0 };
-   for (const auto &&pInterval : track.Intervals())
+   for (const auto &pInterval : track.Intervals())
       result += pInterval->GetSequenceSamplesCount();
    return result;
 }
@@ -310,7 +310,7 @@ size_t WaveTrackUtilities::CountBlocks(const WaveTrack &track)
 {
    assert(track.IsLeader());
    size_t result{};
-   for (const auto &&pInterval : track.Intervals())
+   for (const auto &pInterval : track.Intervals())
       result += pInterval->CountBlocks();
    return result;
 }
@@ -318,7 +318,7 @@ size_t WaveTrackUtilities::CountBlocks(const WaveTrack &track)
 void WaveTrackUtilities::CloseLock(WaveTrack &track) noexcept
 {
    assert(track.IsLeader());
-   for (const auto &&pClip : track.Intervals())
+   for (const auto &pClip : track.Intervals())
       pClip->CloseLock();
 }
 
@@ -326,7 +326,7 @@ bool WaveTrackUtilities::RemoveCutLine(WaveTrack &track, double cutLinePosition)
 {
    assert(track.IsLeader());
    bool removed = false;
-   for (const auto &&pClip : track.Intervals())
+   for (const auto &pClip : track.Intervals())
       if (pClip->RemoveCutLine(cutLinePosition)) {
          removed = true;
          break;
@@ -345,7 +345,7 @@ void WaveTrackUtilities::ExpandCutLine(WaveTrack &track,
 
    // Find clip which contains this cut line
    double start = 0, end = 0;
-   const auto &&clips = track.Intervals();
+   const auto &clips = track.Intervals();
    const auto pEnd = clips.end();
    const auto pClip = std::find_if(clips.begin(), pEnd,
       [&](const auto &clip) {
@@ -387,7 +387,7 @@ void WaveTrackUtilities::ExpandCutLine(WaveTrack &track,
 bool WaveTrackUtilities::HasHiddenData(const WaveTrack &track)
 {
    assert(track.IsLeader());
-   const auto &&clips = track.Intervals();
+   const auto &clips = track.Intervals();
    return std::any_of(clips.begin(), clips.end(), [](const auto &pClip){
       return pClip->GetTrimLeft() != 0 || pClip->GetTrimRight() != 0;
    });
@@ -396,7 +396,7 @@ bool WaveTrackUtilities::HasHiddenData(const WaveTrack &track)
 void WaveTrackUtilities::DiscardTrimmed(WaveTrack &track)
 {
    assert(track.IsLeader());
-   for (const auto &&pClip : track.Intervals()) {
+   for (const auto &pClip : track.Intervals()) {
       if (pClip->GetTrimLeft() != 0) {
          auto t0 = pClip->GetPlayStartTime();
          pClip->SetTrimLeft(0);
@@ -415,9 +415,9 @@ void WaveTrackUtilities::VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 {
    for (auto wt : tracks.Any<WaveTrack>())
       // Scan all clips within current track
-      for (const auto &&pClip : GetAllClips(*wt))
+      for (const auto &pClip : GetAllClips(*wt))
          // Scan all sample blocks within current clip
-         for (const auto &&pChannel : pClip->Channels()) {
+         for (const auto &pChannel : pClip->Channels()) {
             auto blocks = pChannel->GetSequenceBlockArray();
             for (const auto &block : *blocks) {
                auto &pBlock = block.sb;
