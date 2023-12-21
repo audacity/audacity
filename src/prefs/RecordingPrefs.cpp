@@ -88,13 +88,8 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       // Start wording of options with a verb, if possible.
       S.TieCheckBox(XXO("Hear &other tracks while recording (overdub)"),
-                     {wxT("/AudioIO/Duplex"),
-#ifdef EXPERIMENTAL_DA
-                      false
-#else
-                      true
-#endif
-                     });
+                     {wxT("/AudioIO/Duplex"), 
+                      true});
 
 //#if defined(__WXMAC__)
 // Bug 388.  Feature not supported on any Mac Hardware.

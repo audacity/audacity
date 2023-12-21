@@ -36,36 +36,12 @@ wxChar Internat::mDecimalSeparator = wxT('.'); // default
 // exclude is used by SanitiseFilename.
 wxArrayString Internat::exclude;
 
-// DA: Use tweaked translation mechanism to replace 'Audacity' by 'DarkAudacity'.
-#ifdef EXPERIMENTAL_DA
-// This function allows us to replace Audacity by DarkAudacity without peppering 
-// the source code with changes.  We split out this step, the customisation, as 
-// it is used on its own (without translation) in the wxTS macro.
-STRINGS_API const wxString& GetCustomSubstitution(const wxString& str2)
-{
-   // If contains 'DarkAudacity, already converted.
-   if( str2.Contains( "DarkAudacity" ))
-      return str2;
-   // If does not contain 'Audacity', nothing to do.
-   if( !str2.Contains( "Audacity" ))
-      return str2;
-   wxString str3 = str2;
-   str3.Replace( "Audacity", "DarkAudacity" );
-   str3.Replace( " an DarkAudacity", " a DarkAudacity" );
-   // DA also renames sync-lock(ed) as time-lock(ed).
-   str3.Replace( "Sync-Lock", "Time-Lock" );
-   str3.Replace( "Sync-&Lock", "Time-&Lock" );
-   str3.Replace( "Sync Lock", "Time Lock" );
-   return wxTranslations::GetUntranslatedString(str3);
-}
-#else 
 STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1)
 {
    return str1 ;
 }
-#endif
 
-// In any translated string, we can replace the name 'Audacity' by 'DarkAudacity'
+// In any translated string, we can replace the name 'Audacity' with fork names
 // without requiring translators to see extra strings for the two versions.
 STRINGS_API const wxString& GetCustomTranslation(const wxString& str1)
 {

@@ -152,13 +152,7 @@ SelectionBar::~SelectionBar()
 
 bool SelectionBar::ShownByDefault() const
 {
-   return
-#ifdef EXPERIMENTAL_DA
-      false
-#else
-      true
-#endif
-   ;
+   return true;
 }
 
 ToolBar::DockID SelectionBar::DefaultDockID() const

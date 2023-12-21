@@ -47,9 +47,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # NEW key assignment view for preferences
    KEY_VIEW
 
-   # DA: Enables dark audacity theme and customisations.
-   #DA
-
    # Define this so that sync-lock tiles shine through spectrogram.
    # The spectrogram pastes a bitmap over the tiles.
    # This makes it use alpha blending, most transparent where least intense.

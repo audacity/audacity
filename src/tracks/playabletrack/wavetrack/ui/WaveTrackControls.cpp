@@ -679,12 +679,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 
       AppendItem( "Split", OnSplitStereoID, XXO("Spl&it Stereo Track"),
          POPUP_MENU_FN( OnSplitStereo ), enableSplitStereo );
-   // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
-   #ifndef EXPERIMENTAL_DA
       AppendItem( "SplitToMono", OnSplitStereoMonoID,
          XXO("Split Stereo to Mo&no"), POPUP_MENU_FN( OnSplitStereoMono ),
          enableSplitStereo );
-   #endif
    EndSection();
 
    BeginSection( "Format" );
@@ -1079,14 +1076,10 @@ static const struct WaveTrackTCPLines
       { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
         PanSliderDrawFunction },
 
-#ifdef EXPERIMENTAL_DA
-      // DA: Does not have status information for a track.
-#else
       { TCPLine::kItemStatusInfo1, 12, 0,
         Status1DrawFunction },
       { TCPLine::kItemStatusInfo2, 12, 0,
         Status2DrawFunction },
-#endif
 
    } );
 } } waveTrackTCPLines;

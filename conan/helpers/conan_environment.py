@@ -69,7 +69,7 @@ class ConanVenvBuilder(venv.EnvBuilder):
     def post_setup(self, context):
         with ConanEnv(context.env_dir):
             cmd = [get_python(), '-m', 'pip', 'install', 'conan']
-            subprocess.check_call(cmd)
+            subprocess.check_call(cmd, stdin=subprocess.DEVNULL)
 
 
 def get_conan():
@@ -87,14 +87,14 @@ def get_conan():
 
 def get_conan_version():
     try:
-        version_string = subprocess.check_output([get_conan(), '--version']).decode('utf-8').strip()
+        version_string = subprocess.check_output([get_conan(), '--version'], stdin=subprocess.DEVNULL).decode('utf-8').strip()
         return version_tuple(version_string.split(' ')[-1])
     except FileNotFoundError:
         return None
 
 
 def upgrade_conan():
-    subprocess.check_call([get_python(), '-m', 'pip', 'install', '--upgrade', 'conan'])
+    subprocess.check_call([get_python(), '-m', 'pip', 'install', '--upgrade', 'conan'], stdin=subprocess.DEVNULL)
     return get_conan_version()
 
 

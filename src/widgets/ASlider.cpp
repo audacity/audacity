@@ -137,9 +137,7 @@ const int sliderFontSize = 10;
 const int sliderFontSize = 12;
 #endif
 
-#ifndef EXPERIMENTAL_DA
 #define OPTIONAL_SLIDER_TICKS
-#endif
 
 //
 // TipWindow

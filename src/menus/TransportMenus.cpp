@@ -424,11 +424,7 @@ void OnToggleSoundActivated(const CommandContext &WXUNUSED(context) )
 void OnTogglePlayRecording(const CommandContext &WXUNUSED(context) )
 {
    bool Duplex;
-#ifdef EXPERIMENTAL_DA
-   gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, false);
-#else
    gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, true);
-#endif
    gPrefs->Write(wxT("/AudioIO/Duplex"), !Duplex);
    gPrefs->Flush();
    ToolManager::ModifyAllProjectToolbarMenus();
@@ -831,13 +827,7 @@ auto TransportMenu()
                Command( wxT("Overdub"), XXO("Hear &other tracks during recording"),
                   OnTogglePlayRecording,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
-                  Options{}.CheckTest( wxT("/AudioIO/Duplex"),
-#ifdef EXPERIMENTAL_DA
-                     false
-#else
-                     true
-#endif
-                  ) ),
+                  Options{}.CheckTest( wxT("/AudioIO/Duplex"), true) ),
                Command( wxT("SWPlaythrough"), XXO("Enable audible input &monitoring"),
                   OnToggleSWPlaythrough,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),

@@ -4,7 +4,7 @@ import json
 from helpers.conan_environment import get_conan
 
 def list_remotes():
-    remotes = subprocess.check_output([get_conan(), 'remote', 'list', '--format', 'json']).decode('utf-8')
+    remotes = subprocess.check_output([get_conan(), 'remote', 'list', '--format', 'json'], stdin=subprocess.DEVNULL).decode('utf-8')
     return json.loads(remotes)
 
 
@@ -13,7 +13,7 @@ def remove_remote(remote_name:str):
     for remote in remotes:
         if remote['name'] != remote_name:
             continue
-        return subprocess.check_call([get_conan(), 'remote', 'remove', remote_name])
+        return subprocess.check_call([get_conan(), 'remote', 'remove', remote_name], stdin=subprocess.DEVNULL)
 
 
 def add_remote(name:str, url:str) -> None:
@@ -22,10 +22,10 @@ def add_remote(name:str, url:str) -> None:
         if remote['name'] != name:
             continue
         if remote['url'] != url:
-            subprocess.check_call([get_conan(), 'remote', 'update', '--url', name])
+            subprocess.check_call([get_conan(), 'remote', 'update', '--url', name], stdin=subprocess.DEVNULL)
         return
 
-    subprocess.check_call([get_conan(), 'remote', 'add', name, url])
+    subprocess.check_call([get_conan(), 'remote', 'add', name, url], stdin=subprocess.DEVNULL)
 
 
 def validate_remotes():

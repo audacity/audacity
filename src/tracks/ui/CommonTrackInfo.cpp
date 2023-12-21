@@ -45,17 +45,8 @@ using TCPLines = TrackInfo::TCPLines;
 static const TCPLines &commonTrackTCPLines()
 {
    static const TCPLines theLines{
-#ifdef EXPERIMENTAL_DA
-
-      { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 4,
-        &TrackInfo::CloseTitleDrawFunction },
-
-#else
-
       { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 0,
         &CommonTrackInfo::CloseTitleDrawFunction },
-
-#endif
    };
    return theLines;
 }
