@@ -51,6 +51,7 @@ public:
    sqlite::Connection& GetConnection();
    const sqlite::Connection& GetConnection() const;
 
+   std::optional<DBProjectData> GetProjectData(const std::string_view& projectId) const;
    std::optional<DBProjectData> GetProjectDataForPath(const std::string& projectPath) const;
    bool MarkProjectAsSynced(const std::string_view& projectId, const std::string_view& snapshotId);
 
@@ -65,6 +66,7 @@ public:
    bool OnProjectSnapshotCreated(const DBProjectData& projectData);
 
 private:
+   std::optional<DBProjectData> DoGetProjectData(sqlite::RunResult result) const;
    bool OpenConnection();
    sqlite::Connection mConnection;
 

@@ -88,6 +88,23 @@ const sqlite::Connection& CloudProjectsDatabase::GetConnection() const
    return const_cast<CloudProjectsDatabase*>(this)->GetConnection();
 }
 
+std::optional<DBProjectData>
+CloudProjectsDatabase::GetProjectData(const std::string_view& projectId) const
+{
+   auto& connection = GetConnection();
+
+   if (!connection)
+      return {};
+
+   auto statement = connection.CreateStatement(
+      "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status FROM projects WHERE project_id = ? LIMIT 1");
+
+   if (!statement)
+      return {};
+
+   return DoGetProjectData(statement->Prepare(projectId).Run());
+}
+
 std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
    const std::string& projectFilePath) const
 {
@@ -99,46 +116,10 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
    auto statement = connection.CreateStatement(
       "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status FROM projects WHERE local_path = ? LIMIT 1");
 
-   if (!statement)
+    if (!statement)
       return {};
 
-   auto result = statement->Prepare(projectFilePath).Run();
-
-   for (auto row : result)
-   {
-      DBProjectData data;
-
-      if (!row.Get(0, data.ProjectId))
-         return {};
-
-      if (!row.Get(1, data.SnapshotId))
-         return {};
-
-      if (!row.Get(2, data.SavesCount))
-         return {};
-
-      if (!row.Get(3, data.LastAudioPreview))
-         return {};
-
-      if (!row.Get(4, data.LocalPath))
-         return {};
-
-      if (!row.Get(5, data.LastModified))
-         return {};
-
-      if (!row.Get(6, data.LastRead))
-         return {};
-
-      int status;
-      if (!row.Get(7, status))
-         return {};
-
-      data.SyncStatus = static_cast<DBProjectData::SyncStatusType>(status);
-
-      return data;
-   }
-
-   return {};
+   return DoGetProjectData(statement->Prepare(projectFilePath).Run());
 }
 
 bool CloudProjectsDatabase::MarkProjectAsSynced(
@@ -260,6 +241,46 @@ bool CloudProjectsDatabase::OnProjectSnapshotCreated(
       projectData.SyncStatus).Run();
 
    return result.IsOk();
+}
+
+std::optional<DBProjectData>
+CloudProjectsDatabase::DoGetProjectData(sqlite::RunResult result) const
+{
+   for (auto row : result)
+   {
+      DBProjectData data;
+
+      if (!row.Get(0, data.ProjectId))
+         return {};
+
+      if (!row.Get(1, data.SnapshotId))
+         return {};
+
+      if (!row.Get(2, data.SavesCount))
+         return {};
+
+      if (!row.Get(3, data.LastAudioPreview))
+         return {};
+
+      if (!row.Get(4, data.LocalPath))
+         return {};
+
+      if (!row.Get(5, data.LastModified))
+         return {};
+
+      if (!row.Get(6, data.LastRead))
+         return {};
+
+      int status;
+      if (!row.Get(7, status))
+         return {};
+
+      data.SyncStatus = static_cast<DBProjectData::SyncStatusType>(status);
+
+      return data;
+   }
+
+   return {};
 }
 
 bool CloudProjectsDatabase::OpenConnection()
