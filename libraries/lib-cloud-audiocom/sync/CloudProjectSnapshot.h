@@ -33,10 +33,10 @@ class ProjectCloudExtension;
 
 struct SnapshotOperationStatus final
 {
-   int64_t SampleBlocksUploaded { 0 };
+   int64_t SampleBlocksProcessed { 0 };
    int64_t SampleBlocksCount { 0 };
 
-   bool ProjectBlobUploaded { false };
+   bool ProjectBlobProcessed { false };
    bool Completed { false };
    bool Successful { false };
 

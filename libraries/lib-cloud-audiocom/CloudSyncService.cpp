@@ -256,8 +256,8 @@ void CloudSyncService::CreateSnapshot(AudacityProject& project)
       {
          wxLogDebug(
             "Update: %lld/%lld\n\tproject uploaded: %d\n\tcompleted: %d\n\tsuccess: %d\n\t%s",
-            update.SampleBlocksUploaded, update.SampleBlocksCount,
-            update.ProjectBlobUploaded, update.Completed, update.Successful,
+            update.SampleBlocksProcessed, update.SampleBlocksCount,
+            update.ProjectBlobProcessed, update.Completed, update.Successful,
             update.ErrorMessage);
 
          if (update.Completed)
