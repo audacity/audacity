@@ -108,7 +108,7 @@ void ProjectCloudExtension::OnSnapshotCreated(
 
 void ProjectCloudExtension::OnSyncCompleted(bool successful)
 {
-   mPendingCloudSave = false;
+   mPendingCloudSave = !CloudProjectsDatabase::Get().MarkProjectAsSynced(mProjectId, mSnapshotId);
 }
 
 std::string_view ProjectCloudExtension::GetCloudProjectId() const

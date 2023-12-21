@@ -52,6 +52,7 @@ public:
    const sqlite::Connection& GetConnection() const;
 
    std::optional<DBProjectData> GetProjectDataForPath(const std::string& projectPath) const;
+   bool MarkProjectAsSynced(const std::string_view& projectId, const std::string_view& snapshotId);
 
    void UpdateProjectBlockList(const std::string_view& projectId, const SampleBlockIDSet& blockSet);
 

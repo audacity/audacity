@@ -141,6 +141,27 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
    return {};
 }
 
+bool CloudProjectsDatabase::MarkProjectAsSynced(
+   const std::string_view& projectId, const std::string_view& snapshotId)
+{
+   auto& connection = GetConnection();
+
+   if (!connection)
+      return false;
+
+   auto statement = connection.CreateStatement ("UPDATE projects SET sync_status = ? WHERE project_id = ? AND snapshot_id = ?");
+
+   if (!statement)
+      return false;
+
+   auto result = statement->Prepare(static_cast<int>(DBProjectData::SyncStatusSynced), projectId, snapshotId).Run();
+
+   if (!result.IsOk())
+      return false;
+
+   return result.GetModifiedRowsCount() > 0;
+}
+
 void CloudProjectsDatabase::UpdateProjectBlockList(
    const std::string_view& projectId, const SampleBlockIDSet& blockSet)
 {
