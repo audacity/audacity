@@ -43,6 +43,8 @@ Paul Licameli split from AudacityProject.cpp
 #include "BufferedStreamReader.h"
 #include "FromChars.h"
 
+#include "sqlite/SQLiteUtils.h"
+
 // Don't change this unless the file format changes
 // in an irrevocable way
 #define AUDACITY_FILE_FORMAT_VERSION "1.3.0"
@@ -161,57 +163,6 @@ static const char *ProjectFileSchema =
    "  samples              BLOB"
    ");";
 
-// This singleton handles initialization/shutdown of the SQLite library.
-// It is needed because our local SQLite is built with SQLITE_OMIT_AUTOINIT
-// defined.
-//
-// It's safe to use even if a system version of SQLite is used that didn't
-// have SQLITE_OMIT_AUTOINIT defined.
-class SQLiteIniter
-{
-public:
-   SQLiteIniter()
-   {
-      // Enable URI filenames for all connections
-      mRc = sqlite3_config(SQLITE_CONFIG_URI, 1);
-      if (mRc == SQLITE_OK)
-      {
-         mRc = sqlite3_config(SQLITE_CONFIG_LOG, LogCallback, nullptr);
-         if (mRc == SQLITE_OK)
-         {
-            mRc = sqlite3_initialize();
-         }
-      }
-
-#ifdef NO_SHM
-      if (mRc == SQLITE_OK)
-      {
-         // Use the "unix-excl" VFS to make access to the DB exclusive.  This gets
-         // rid of the "<database name>-shm" shared memory file.
-         //
-         // Though it shouldn't, it doesn't matter if this fails.
-         auto vfs = sqlite3_vfs_find("unix-excl");
-         if (vfs)
-         {
-            sqlite3_vfs_register(vfs, 1);
-         }
-      }
-#endif
-   }
-   ~SQLiteIniter()
-   {
-      // This function must be called single-threaded only
-      // It returns a value, but there's nothing we can do with it
-      (void) sqlite3_shutdown();
-   }
-
-   static void LogCallback(void *WXUNUSED(arg), int code, const char *msg)
-   {
-      wxLogMessage("sqlite3 message: (%d) %s", code, msg);
-   }
-
-   int mRc;
-};
 
 class SQLiteBlobStream final
 {
@@ -419,8 +370,16 @@ constexpr std::array<const char*, 2> BufferedProjectBlobStream::Columns;
 
 bool ProjectFileIO::InitializeSQL()
 {
-   static SQLiteIniter sqliteIniter;
-   return sqliteIniter.mRc == SQLITE_OK;
+   if (sqlite::Initialize().IsError())
+      return false;
+
+   sqlite::SetLogCallback(
+      [](int code, std::string_view message) {
+         // message is forwarded from SQLite, so it is null-terminated
+         wxLogMessage("SQLite error (%d): %s", code, message.data());
+      });
+
+   return true;
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileIOKey{

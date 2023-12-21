@@ -1,0 +1,97 @@
+/*
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-FileName: Result.h
+ * SPDX-FileContributor: Dmitry Vedenko
+ */
+
+#pragma once
+
+#include <type_traits>
+#include <variant>
+
+#include "Error.h"
+
+namespace sqlite
+{
+template<typename T>
+class Result final
+{
+public:
+   Result() = default;
+
+   Result(T&& value) noexcept(std::is_nothrow_move_constructible_v<T>)
+      : mValue (std::forward<T>(value))
+   {
+   }
+
+   Result (const Error& error) noexcept(std::is_nothrow_copy_constructible_v<Error>)
+      : mValue (error)
+   {
+   }
+
+   Result (Error&& error) noexcept(std::is_nothrow_move_constructible_v<Error>)
+      : mValue (std::move(error))
+   {
+   }
+
+   bool HasValue () const noexcept
+   {
+      return std::holds_alternative<T>(mValue);
+   }
+
+   T& operator* () &
+   {
+      if (!HasValue())
+         std::get<Error>(mValue).Raise();
+
+      return std::get<T>(mValue);
+   }
+
+   const T& operator*() const&
+   {
+      if (!HasValue())
+         std::get<Error>(mValue).Raise();
+
+      return std::get<T>(mValue);
+   }
+
+   T* operator-> () 
+   {
+      if (!HasValue())
+         std::get<Error>(mValue).Raise();
+
+      return &std::get<T>(mValue);
+   }
+
+   const T* operator-> () const
+   {
+      if (!HasValue())
+         std::get<Error>(mValue).Raise();
+
+      return &std::get<T>(mValue);
+   }
+
+   T&& operator* () &&
+   {
+      if (!HasValue())
+         std::get<Error>(mValue).Raise();
+
+      return std::move(std::get<T>(mValue));
+   }
+
+   explicit operator bool () const noexcept
+   {
+      return HasValue();
+   }
+
+   Error GetError () const noexcept
+   {
+      if (HasValue())
+         return Error();
+
+      return std::get<Error>(mValue);
+   }
+private:
+   std::variant<Error, T> mValue;
+};
+} // namespace sqlite
