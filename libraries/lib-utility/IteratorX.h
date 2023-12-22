@@ -242,4 +242,39 @@ OutContainer transform_container( InContainer &inContainer, Function &&fn )
       inContainer.begin(), inContainer.end(), fn );
 }
 
+template<typename Range, typename Function>
+void for_each_in_range(Range &&range, Function &&fn)
+{
+   std::for_each(range.begin(), range.end(), std::forward<Function>(fn));
+}
+
+template<typename Integral = int>
+class NumberIterator : public ValueIterator<Integral>
+{
+public:
+   explicit NumberIterator(Integral value) : mValue{ value } {}
+
+   Integral operator *() const { return mValue; }
+   NumberIterator &operator ++() { ++mValue; return *this; }
+   NumberIterator operator ++(int) const
+   { auto result = *this; ++result; return result; }
+
+   friend bool operator ==(NumberIterator x, NumberIterator y)
+   { return x.mValue == y.mValue; }
+   friend bool operator !=(NumberIterator x, NumberIterator y)
+   { return !(x == y); }
+
+private:
+   Integral mValue;
+};
+
+template<typename Integral> struct IotaRange
+   : IteratorRange<NumberIterator<Integral>>
+{
+   IotaRange(Integral inclusiveLower, Integral exclusiveUpper)
+      : IteratorRange<NumberIterator<Integral>>{
+         NumberIterator{ inclusiveLower }, NumberIterator{ exclusiveUpper } }
+   {}
+};
+
 #endif // __AUDACITY_MEMORY_X_H__
