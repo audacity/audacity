@@ -57,6 +57,10 @@ public:
       std::string_view projectId, std::string_view snapshotId) const;
    std::string GetProjectsUrl(int page, int pageSize) const;
 
+   std::string GetProjectInfoUrl(std::string_view projectId) const;
+   std::string GetSnapshotInfoUrl(
+      std::string_view projectId, std::string_view snapshotId) const;
+
 private:
    std::string mApiEndpoint;
    std::string mOAuthClientID;
