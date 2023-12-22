@@ -14,7 +14,6 @@
 #include "NetworkManager.h"
 #include "Request.h"
 #include "IResponse.h"
-#include "BasicUI.h"
 
 #include "DataUploader.h"
 
@@ -140,15 +139,9 @@ void MissingBlocksUploader::ConfirmBlock(BlockUploadTask item)
    {
       std::lock_guard<std::mutex> lock(mProgressDataMutex);
       mProgressData.UploadedBlocks++;
-      if (mProgressCallback)
-      {
-         BasicUI::CallAfter(
-            [this, task = std::move(item)]()
-            {
-               std::lock_guard<std::mutex> lock(mProgressDataMutex);
-               mProgressCallback(mProgressData, task.Block, BlockAction::RemoveFromMissing);
-            });
-      }
+
+      mProgressCallback(
+         mProgressData, item.Block, BlockAction::RemoveFromMissing);
    }
 
    {
@@ -173,12 +166,7 @@ void MissingBlocksUploader::HandleFailedBlock(
             (result.Code == UploadResultCode::Expired ? BlockAction::Expire :
                                                         BlockAction::Ignore);
 
-      BasicUI::CallAfter(
-         [this, action, task = std::move(task)]()
-         {
-            std::lock_guard<std::mutex> lock(mProgressDataMutex);
-            mProgressCallback(mProgressData, task.Block, action);
-         });
+      mProgressCallback(mProgressData, task.Block, action);
    }
 
    {
@@ -190,7 +178,7 @@ void MissingBlocksUploader::HandleFailedBlock(
 
 void MissingBlocksUploader::ProducerThread()
 {
-   while (mIsRunning.load (std::memory_order_consume))
+   while (mIsRunning.load(std::memory_order_consume))
    {
       std::lock_guard<std::mutex> lock(mBlocksMutex);
 
@@ -201,13 +189,10 @@ void MissingBlocksUploader::ProducerThread()
 
       if (item.CompressedData.empty())
       {
-         BasicUI::CallAfter(
-            [this, task = std::move(item.Task)]()
-            {
-               std::lock_guard<std::mutex> lock(mProgressDataMutex);
-               mProgressData.FailedBlocks++;
-               mProgressCallback(mProgressData, task.Block, BlockAction::RemoveFromMissing);
-            });
+         std::lock_guard<std::mutex> lock(mProgressDataMutex);
+         mProgressData.FailedBlocks++;
+         mProgressCallback(
+            mProgressData, item.Task.Block, BlockAction::RemoveFromMissing);
 
          continue;
       }
