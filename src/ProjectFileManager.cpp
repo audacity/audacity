@@ -982,7 +982,8 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
 #endif
          auto &project = chooser(false);
          // Undo history is incremented inside this:
-         if (Get(project).Import(fileName)) {
+         if (Get(project).ImportOneOfOne(fileName))
+         {
             // Undo history is incremented inside this:
             // Bug 2743: Don't zoom with lof.
             if (!fileName.AfterLast('.').IsSameAs(wxT("lof"), false))
@@ -1442,9 +1443,15 @@ void ReactOnMusicFileImport(
 }
 } // namespace
 
+bool ProjectFileManager::ImportOneOfOne(
+   const FilePath& fileName, bool addToHistory)
+{
+   return Import(fileName, 1, 1, addToHistory);
+}
+
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool ProjectFileManager::Import(
-   const FilePath &fileName,
+   const FilePath& fileName, size_t fileIndex, size_t numFiles,
    bool addToHistory /* = true */)
 {
    auto &project = mProject;
@@ -1533,7 +1540,11 @@ bool ProjectFileManager::Import(
          for (auto track : *trackList)
             track->OnProjectTempoChange(projectTempo);
 
-      ReactOnMusicFileImport(fileName.ToStdString(), newTracks, project);
+      // For now only do tempo detection for single-file imports. A dedicated
+      // issue exists to support multiple-file imports:
+      // https://github.com/audacity/audacity/issues/5726
+      if (numFiles == 1)
+         ReactOnMusicFileImport(fileName.ToStdString(), newTracks, project);
 
       if (addToHistory) {
          FileHistory::Global().Append(fileName);
