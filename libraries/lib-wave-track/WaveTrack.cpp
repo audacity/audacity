@@ -1200,10 +1200,15 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
       // Set the common channel group rate from the leader's rate
       if (mLegacyRate > 0)
       {
+         auto next = *TrackList::Channels(this).first.advance(1);
          SetRate(mLegacyRate);
          mLegacyRate = 0;
+         if (next)
+            next->mLegacyRate = 0;
          if (mLegacyFormat != undefinedSample)
             WaveTrackData::Get(*this).SetSampleFormat(mLegacyFormat);
+         if (next && next->mLegacyFormat != undefinedSample)
+            WaveTrackData::Get(*next).SetSampleFormat(mLegacyFormat);
       }
       removeZeroClips(mClips);
    }
