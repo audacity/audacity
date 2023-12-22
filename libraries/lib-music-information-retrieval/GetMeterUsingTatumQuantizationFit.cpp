@@ -10,6 +10,7 @@ Matthieu Hodgkinson
 **********************************************************************/
 
 #include "GetMeterUsingTatumQuantizationFit.h"
+#include "IteratorX.h"
 #include "MirAudioReader.h"
 #include "MirDsp.h"
 #include "MirUtils.h"
@@ -71,19 +72,14 @@ PossibleDivHierarchies GetPossibleDivHierarchies(double audioFileDuration)
    const int minNumBars =
       std::max(std::round(audioFileDuration / maxBarDuration), 1.);
    const int maxNumBars = std::round(audioFileDuration / minBarDuration);
-   std::vector<int> numBars(maxNumBars - minNumBars + 1);
-   std::iota(numBars.begin(), numBars.end(), minNumBars);
    PossibleDivHierarchies possibleDivHierarchies;
-   std::for_each(numBars.begin(), numBars.end(), [&](int numBars) {
+   for_each_in_range(IotaRange{ minNumBars, maxNumBars + 1 }, [&](int numBars) {
       const auto barDuration = audioFileDuration / numBars;
       const auto minBpb = std::clamp<int>(
          std::floor(minBpm * barDuration / 60), minBeatsPerBar, maxBeatsPerBar);
       const auto maxBpb = std::clamp<int>(
          std::ceil(maxBpm * barDuration / 60), minBeatsPerBar, maxBeatsPerBar);
-      std::vector<int> possibleBeatsPerBar(maxBpb - minBpb + 1);
-      std::iota(possibleBeatsPerBar.begin(), possibleBeatsPerBar.end(), minBpb);
-      std::for_each(
-         possibleBeatsPerBar.begin(), possibleBeatsPerBar.end(),
+      for_each_in_range(IotaRange{ minBpb, maxBpb + 1 },
          [&](int beatsPerBar) {
             std::for_each(
                possibleTatumsPerBeat.begin(), possibleTatumsPerBeat.end(),
@@ -114,15 +110,13 @@ int GetOnsetLag(const std::vector<float>& odf, int numTatums)
    const auto odfSamplesPerDiv = 1. * odf.size() / numTatums;
    auto max = std::numeric_limits<float>::lowest();
    auto lag = 0;
-   std::vector<int> tatumIndices(numTatums);
-   std::iota(tatumIndices.begin(), tatumIndices.end(), 0);
    while (true)
    {
-      const auto val = std::accumulate(
-         tatumIndices.begin(), tatumIndices.end(), 0.f, [&](float sum, int i) {
-            const int j = std::round(i * odfSamplesPerDiv) + lag;
-            return sum + (j < odf.size() ? odf[j] : 0.f);
-         });
+      auto val = 0.f;
+      for_each_in_range(IotaRange{ 0, numTatums }, [&](int i) {
+         const int j = std::round(i * odfSamplesPerDiv) + lag;
+         val += (j < odf.size() ? odf[j] : 0.f);
+      });
       if (val < max)
          break;
       max = val;
