@@ -418,6 +418,26 @@ DeserializePaginatedProjectsResponse(const std::string& data)
    return {};
 }
 
+std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data)
+{
+   ProjectInfo result;
+
+   if (Deserialize(data, result))
+      return std::move(result);
+
+   return {};
+}
+
+std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data)
+{
+   SnapshotInfo result;
+
+   if (Deserialize(data, result))
+      return std::move(result);
+
+   return {};
+}
+
 namespace
 {
 wxString SafeName (wxString name)

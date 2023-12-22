@@ -140,6 +140,9 @@ DeserializeCreateProjectResponse(const std::string& data);
 std::optional<PaginatedProjectsResponse>
 DeserializePaginatedProjectsResponse(const std::string& data);
 
+std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data);
+std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data);
+
 wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName);
 
