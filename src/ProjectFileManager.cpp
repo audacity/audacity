@@ -50,7 +50,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "TimeDisplayMode.h"
 #include "TrackFocus.h"
 #include "TrackPanel.h"
-#include "TrackPanelAx.h"
 #include "UndoManager.h"
 #include "UserException.h"
 #include "WaveClip.h"
@@ -59,7 +58,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "XMLFileReader.h"
 #include "import/ImportStreamDialog.h"
 #include "prefs/ImportExportPrefs.h"
-#include "toolbars/SelectionBar.h"
 #include "tracks/playabletrack/wavetrack/WaveTrackUtils.h"
 #include "widgets/FileHistory.h"
 #include "widgets/UnwritableLocationErrorDialog.h"
@@ -1346,10 +1344,9 @@ UserWantsMirResultToConfigureProject(AudacityProject& project, double qpm)
 }
 
 void ReactOnMusicFileImport(
-   const std::string& fileName, const TrackHolders& newTracks,
-   AudacityProject& project)
+   const std::string& fileName, TrackList& newTracks, AudacityProject& project)
 {
-   const auto waveTracks = newTracks[0]->Any<WaveTrack>();
+   const auto waveTracks = newTracks.Any<WaveTrack>();
    if (waveTracks.size() != 1)
       // Only do this when exactly one track is added.
       return;
@@ -1543,8 +1540,8 @@ bool ProjectFileManager::Import(
       // For now only do tempo detection for single-file imports. A dedicated
       // issue exists to support multiple-file imports:
       // https://github.com/audacity/audacity/issues/5726
-      if (numFiles == 1)
-         ReactOnMusicFileImport(fileName.ToStdString(), newTracks, project);
+      if (numFiles == 1 && !newTracks.empty() && newTracks[0])
+         ReactOnMusicFileImport(fileName.ToStdString(), *newTracks[0], project);
 
       if (addToHistory) {
          FileHistory::Global().Append(fileName);
