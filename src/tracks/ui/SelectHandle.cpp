@@ -64,14 +64,14 @@ bool SelectHandle::IsDragging() const
 namespace
 {
    /// Converts a frequency to screen y position.
-   wxInt64 FrequencyToPosition(const WaveTrack &wt,
+   wxInt64 FrequencyToPosition(const WaveChannel &wc,
       double frequency,
       wxInt64 trackTopEdge,
       int trackHeight)
    {
-      const auto &settings = SpectrogramSettings::Get(wt);
+      const auto &settings = SpectrogramSettings::Get(wc);
       float minFreq, maxFreq;
-      SpectrogramBounds::Get(wt).GetBounds(wt, minFreq, maxFreq);
+      SpectrogramBounds::Get(wc).GetBounds(wc, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const float p = numberScale.ValueToPosition(frequency);
       return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
@@ -207,15 +207,15 @@ namespace
       if (!viewInfo.selectedRegion.isPoint() &&
          t0 <= selend && selend < t1 &&
          isSpectralSelectionView(pChannelView)) {
+         auto pWc = pChannelView->FindChannel<const WaveChannel>();
          // Spectral selection track is always wave
-         auto pTrack = pChannelView->FindTrack();
-         assert(pTrack);
-         const auto &wt = *static_cast<const WaveTrack*>(pTrack.get());
+         assert(pWc);
+         auto &wc = *pWc;
          const wxInt64 bottomSel = (f0 >= 0)
-            ? FrequencyToPosition(wt, f0, rect.y, rect.height)
+            ? FrequencyToPosition(wc, f0, rect.y, rect.height)
             : rect.y + rect.height;
          const wxInt64 topSel = (f1 >= 0)
-            ? FrequencyToPosition(wt, f1, rect.y, rect.height)
+            ? FrequencyToPosition(wc, f1, rect.y, rect.height)
             : rect.y;
          wxInt64 signedBottomDist = (int)(yy - bottomSel);
          wxInt64 verticalDist = std::abs(signedBottomDist);
@@ -233,7 +233,7 @@ namespace
 #endif
             ) {
             const wxInt64 centerSel =
-               FrequencyToPosition(wt, fc, rect.y, rect.height);
+               FrequencyToPosition(wc, fc, rect.y, rect.height);
             const wxInt64 centerDist = abs((int)(yy - centerSel));
             if (centerDist < verticalDist)
                chooseCenter = true, verticalDist = centerDist,

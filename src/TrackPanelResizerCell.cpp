@@ -31,10 +31,9 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
 {
    (void)pProject;// Compiler food
    std::vector<UIHandlePtr> results;
-   auto pTrack = FindTrack();
-   if (pTrack) {
-      auto result = std::make_shared<TrackPanelResizeHandle>(
-         pTrack->GetChannel(0), st.state.m_y );
+   if (const auto pChannel = FindChannel()) {
+      auto result =
+         std::make_shared<TrackPanelResizeHandle>(pChannel, st.state.m_y);
       result = AssignUIHandlePtr(mResizeHandle, result);
       results.push_back(result);
    }
@@ -45,13 +44,16 @@ void TrackPanelResizerCell::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
-   if ( iPass == TrackArtist::PassMargins ) {
-      auto pTrack = FindTrack();
-      if ( pTrack ) {
+   if (iPass == TrackArtist::PassMargins) {
+      if (const auto pChannel = FindChannel()) {
+         const auto pTrack =
+            dynamic_cast<Track *>(&pChannel->ReallyGetChannelGroup());
+         if (!pTrack)
+            return;
          auto dc = &context.dc;
-         const bool last =
-            pTrack.get() == *TrackList::Channels( pTrack.get() ).rbegin();
-         if ( last ) {
+         const auto &channels = pTrack->Channels();
+         const bool last = (pChannel == *channels.rbegin());
+         if (last) {
             // Fill in separator area below a track
             AColor::TrackPanelBackground( dc, false );
             dc->DrawRectangle( rect );
@@ -65,7 +67,7 @@ void TrackPanelResizerCell::Draw(
             ADCChanger cleanup{ dc };
             
             // Paint the left part of the background
-            const auto artist = TrackArtist::Get( context );
+            const auto artist = TrackArtist::Get(context);
             auto labelw = artist->pZoomInfo->GetLeftOffset() - 1;
             AColor::MediumTrackInfo( dc, pTrack->GetSelected() );
             dc->DrawRectangle(
