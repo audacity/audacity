@@ -432,6 +432,20 @@ public:
       return { { this, 0 }, { this, NChannels() } };
    }
 
+   std::shared_ptr<Channel> NthChannel(size_t nChannel)
+   {
+      auto iter = Channels().begin();
+      std::advance(iter, nChannel);
+      return *iter;
+   }
+
+   std::shared_ptr<const Channel> NthChannel(size_t nChannel) const
+   {
+      auto iter = Channels().begin();
+      std::advance(iter, nChannel);
+      return *iter;
+   }
+
    /*!
       @}
       @name Acesss to intervals

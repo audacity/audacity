@@ -23,7 +23,7 @@ class AUDACITY_DLL_API CommonChannelView /* not final */ : public ChannelView
 {
 public:
    using ChannelView::ChannelView;
-   
+
    // Delegates the handling to the related TCP cell
    std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override;
 

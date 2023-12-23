@@ -18,11 +18,10 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <sstream>
 
-ChannelView::ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel)
-   : CommonChannelCell{ pTrack, iChannel }
-   , vrulerSize{ 36, 0 }
+ChannelView::ChannelView(const std::shared_ptr<Channel> &pChannel)
+   : CommonChannelCell{ pChannel }
 {
-   DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );
+   DoSetHeight(GetDefaultTrackHeight::Call(*pChannel));
 }
 
 ChannelView::~ChannelView()
@@ -57,9 +56,9 @@ int ChannelView::GetTotalHeight(const TrackList &list)
    return GetCumulativeHeight(*list.rbegin());
 }
 
-void ChannelView::CopyTo(Track &track, size_t) const
+void ChannelView::CopyTo(Track &track, size_t index) const
 {
-   auto &other = GetFromChannelGroup(track);
+   auto &other = GetFromChannelGroup(track, index);
 
    other.mMinimized = mMinimized;
    other.vrulerSize = vrulerSize;
@@ -87,12 +86,6 @@ ChannelView &ChannelView::GetFromChannelGroup(
 {
    auto &track = static_cast<Track&>(group);
    return ChannelViewAttachments::Get(keyC, track, iChannel);
-}
-
-const ChannelView &ChannelView::GetFromChannelGroup(
-   const ChannelGroup &group, size_t iChannel)
-{
-   return GetFromChannelGroup(const_cast<ChannelGroup &>(group), iChannel);
 }
 
 ChannelView *ChannelView::FindFromChannelGroup(
@@ -129,35 +122,32 @@ Track *ChannelView::ReallyFindTrack()
 
 namespace {
 // Append a channel number to a base attribute name unless it is 0
-std::string AttributeName(const ChannelView &view, std::string name) {
-   const auto index = view.GetChannelIndex();
-   if (index == 0)
-      return move(name);
+std::string AttributeName(std::string name, size_t index) {
    std::stringstream stream{ name };
    stream << index;
    return stream.str();
 }
-std::string HeightAttributeName(const ChannelView &view) {
-   return AttributeName(view, "height");
+std::string HeightAttributeName(size_t index) {
+   return AttributeName("height", index);
 }
-std::string MinimizedAttributeName(const ChannelView &view) {
-   return AttributeName(view, "minimized");
+std::string MinimizedAttributeName(size_t index) {
+   return AttributeName("minimized", index);
 }
 }
 
-void ChannelView::WriteXMLAttributes(XMLWriter &xmlFile, size_t) const
+void ChannelView::WriteXMLAttributes(XMLWriter &xmlFile, size_t index) const
 {
-   xmlFile.WriteAttr(HeightAttributeName(*this), GetExpandedHeight());
-   xmlFile.WriteAttr(MinimizedAttributeName(*this), GetMinimized());
+   xmlFile.WriteAttr(HeightAttributeName(index), GetExpandedHeight());
+   xmlFile.WriteAttr(MinimizedAttributeName(index), GetMinimized());
 }
 
 bool ChannelView::HandleXMLAttribute(
    const std::string_view& attr, const XMLAttributeValueView& valueView,
-   size_t)
+   size_t index)
 {
    long nValue;
 
-   if (attr == HeightAttributeName(*this) && valueView.TryGet(nValue)) {
+   if (attr == HeightAttributeName(index) && valueView.TryGet(nValue)) {
       // Bug 2803: Extreme values for track height (caused by integer overflow)
       // will stall Audacity as it tries to create an enormous vertical ruler.
       // So clamp to reasonable values.
@@ -165,7 +155,7 @@ bool ChannelView::HandleXMLAttribute(
       SetExpandedHeight(nValue);
       return true;
    }
-   else if (attr == MinimizedAttributeName(*this) && valueView.TryGet(nValue)) {
+   else if (attr == MinimizedAttributeName(index) && valueView.TryGet(nValue)) {
       SetMinimized(nValue != 0);
       return true;
    }
@@ -233,8 +223,8 @@ std::shared_ptr<CommonTrackCell> ChannelView::GetAffordanceControls()
 
 ChannelView &ChannelView::Get(Channel &channel)
 {
-   return GetFromChannelGroup(channel.GetChannelGroup(),
-      channel.GetChannelIndex());
+   return GetFromChannelGroup(channel.ReallyGetChannelGroup(),
+      channel.ReallyGetChannelIndex());
 }
 
 const ChannelView &ChannelView::Get(const Channel &channel)
@@ -247,7 +237,7 @@ ChannelView *ChannelView::Find(Channel *pChannel)
    if (!pChannel)
       return nullptr;
    return FindFromChannelGroup(
-      &pChannel->GetChannelGroup(), pChannel->GetChannelIndex());
+      &pChannel->ReallyGetChannelGroup(), pChannel->ReallyGetChannelIndex());
 }
 
 const ChannelView *ChannelView::Find(const Channel *pChannel)

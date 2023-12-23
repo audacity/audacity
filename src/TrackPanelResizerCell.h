@@ -25,18 +25,23 @@ class TrackPanelResizerCell
    TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
 public:
 
-   static TrackPanelResizerCell &Get(Channel &channel);
-   static const TrackPanelResizerCell &Get(const Channel &channel);
-
    /*!
     @pre `dynamic_cast<Track*>(&channel.GetChannelGroup()) != nullptr`
     */
-   explicit TrackPanelResizerCell(Channel &channel);
+   static TrackPanelResizerCell &Get(Channel &channel);
+   static const TrackPanelResizerCell &Get(const Channel &channel);
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *) override;
 
+   explicit TrackPanelResizerCell(const std::shared_ptr<Channel> &channel);
+
 private:
+   /*!
+    @pre `iChannel < group.NChannels()`
+    */
+   static TrackPanelResizerCell &GetFromChannelGroup(
+      ChannelGroup &group, size_t iChannel);
 
    // TrackPanelDrawable implementation
    void Draw(

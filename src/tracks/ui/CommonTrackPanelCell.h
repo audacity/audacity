@@ -119,14 +119,8 @@ class AUDACITY_DLL_API CommonChannelCell /* not final */
    : public CommonTrackPanelCell, public ChannelAttachment
 {
 public:
-   //! Construct from a track and a channel index
-   CommonChannelCell(const std::shared_ptr<Track> &pTrack, size_t iChannel);
-
-   //! Construct from a channel group and a channel index
-   /*!
-    @pre `dynamic_cast<Track&>(&group) != nullptr`
-    */
-   CommonChannelCell(ChannelGroup &group, size_t iChannel);
+   //! Construct from a channel
+   CommonChannelCell(const std::shared_ptr<Channel> &pChannel);
 
   ~CommonChannelCell();
 
@@ -134,8 +128,6 @@ public:
 
    void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
       override;
-
-   size_t GetChannelIndex() const { return miChannel; }
 
    //! May return null
    template<typename Subtype = Channel>
@@ -155,8 +147,7 @@ private:
    std::shared_ptr<Channel> DoFindChannel();
    std::shared_ptr<const Channel> DoFindChannel() const;
 
-   std::weak_ptr< Track > mwTrack;
-   const size_t miChannel;
+   std::weak_ptr<Channel> mwChannel;
 };
 
 #endif

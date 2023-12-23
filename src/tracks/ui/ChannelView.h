@@ -19,7 +19,6 @@ class Channel;
 class ChannelGroup;
 class TrackList;
 class ChannelVRulerControls;
-class TrackPanelResizerCell;
 
 class AUDACITY_DLL_API ChannelView /* not final */ : public CommonChannelCell
    , public std::enable_shared_from_this<ChannelView>
@@ -51,8 +50,7 @@ public:
     */
    static const ChannelView *Find(const Channel *pChannel);
 
-   //! Construct from a track and a channel index
-   ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel);
+   explicit ChannelView(const std::shared_ptr<Channel> &pChannel);
    virtual ~ChannelView() = 0;
 
    // some static conveniences, useful for summation over track iterator
@@ -152,12 +150,7 @@ private:
     @pre `iChannel < group.NChannels()`
     */
    static ChannelView &GetFromChannelGroup(
-      ChannelGroup &group, size_t iChannel = 0);
-   /*!
-    @copydoc Get(ChannelGroup&, size_t)
-    */
-   static const ChannelView &GetFromChannelGroup(
-      const ChannelGroup &group, size_t iChannel = 0);
+      ChannelGroup &group, size_t iChannel);
    /*!
     @pre `!pGroup || iChannel < pGroup->NChannels()`
     */
@@ -192,7 +185,7 @@ using GetDefaultTrackHeight =
 AttachedVirtualFunction<
    GetDefaultTrackHeightTag,
    int,
-   Track
+   Channel
 >;
 DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, GetDefaultTrackHeight);
 

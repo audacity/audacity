@@ -111,11 +111,7 @@ public:
    static WaveChannelView *Find(WaveChannel *pChannel);
    static const WaveChannelView *Find(const WaveChannel *pChannel);
 
-   //! Construct a view of one channel
-   /*!
-    @param channel which channel of a possibly wide wave track
-    */
-   WaveChannelView(const std::shared_ptr<Track> &pTrack, size_t channel);
+   using CommonChannelView::CommonChannelView;
    ~WaveChannelView() override;
 
    std::shared_ptr<WaveChannel> FindWaveChannel();

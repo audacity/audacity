@@ -45,6 +45,7 @@ from the project that will own the track.
 #include "float_cast.h"
 
 #include "AudioSegmentSampleView.h"
+#include "ChannelAttachments.h"
 #include "ClipTimeAndPitchSource.h"
 #include "Envelope.h"
 #include "Sequence.h"
@@ -1064,15 +1065,65 @@ TrackListHolder WaveTrackFactory::Create(size_t nChannels)
    return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
 }
 
+void WaveTrack::MoveAndSwapAttachments(WaveTrack &&other)
+{
+   this->AttachedTrackObjects::ForCorresponding(other,
+   [](TrackAttachment *pLeft, TrackAttachment *pRight){
+      // Precondition of callback from ClientData::Site
+      assert(pLeft && pRight);
+      const auto pLeftAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(pLeft);
+      const auto pRightAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(pRight);
+      // They should have come from the same factory of channel attachments
+      assert((pLeftAttachments == nullptr) == (pRightAttachments == nullptr));
+      if (pLeftAttachments) {
+         *pLeftAttachments = std::move(*pRightAttachments);
+         pLeftAttachments->SwapChannels();
+      }
+   });
+   other.DestroyAllChannelAttachments();
+}
+
+void WaveTrack::MergeChannelAttachments(WaveTrack &&other)
+{
+   this->AttachedTrackObjects::ForCorresponding(other,
+   [](TrackAttachment *pLeft, TrackAttachment *pRight){
+      // Precondition of callback from ClientData::Site
+      assert(pLeft && pRight);
+      const auto pLeftAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(pLeft);
+      const auto pRightAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(pRight);
+      // They should have come from the same factory of channel attachments
+      assert((pLeftAttachments == nullptr) == (pRightAttachments == nullptr));
+      if (pLeftAttachments)
+         pLeftAttachments->MakeStereo(std::move(*pRightAttachments));
+   });
+   other.DestroyAllChannelAttachments();
+}
+
+//! Erase all attachments for a given index
+void WaveTrack::EraseChannelAttachments(size_t ii)
+{
+   this->AttachedTrackObjects::ForEach(
+   [ii](TrackAttachment &attachment){
+      if (const auto pAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(&attachment))
+         pAttachments->Erase(ii);
+   });
+}
+
 TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
 {
-   auto channels = std::vector<std::shared_ptr<Track>>{ };
-   std::generate_n(
-      std::back_inserter(channels),
+   auto channels = std::vector<std::shared_ptr<WaveTrack>>{ };
+   generate_n(
+      back_inserter(channels),
       nChannels,
       [&] { return Create(format, rate); }
    );
    if (nChannels == 2) {
+      channels[0]->MergeChannelAttachments(std::move(*channels[1]));
       return TrackList::Temporary(nullptr, channels[0], channels[1]);
    }
    auto tempList = TrackList::Temporary(nullptr);
@@ -1083,13 +1134,14 @@ TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, 
 
 TrackListHolder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
 {
-   auto channels = std::vector<std::shared_ptr<Track>>{};
-   std::generate_n(
-      std::back_inserter(channels),
+   auto channels = std::vector<std::shared_ptr<WaveTrack>>{};
+   generate_n(
+      back_inserter(channels),
       nChannels,
       [&]{ return proto.EmptyCopy(mpFactory, false); }
    );
    if (nChannels == 2) {
+      channels[0]->MergeChannelAttachments(std::move(*channels[1]));
       return TrackList::Temporary(nullptr, channels[0], channels[1]);
    }
    auto tempList = TrackList::Temporary(nullptr);
@@ -1694,14 +1746,28 @@ TrackListHolder WaveTrack::WideEmptyCopy(
    return result;
 }
 
+void WaveTrack::DestroyAllChannelAttachments()
+{
+   AttachedTrackObjects::EraseIf([](TrackAttachment &attachment){
+      return nullptr != dynamic_cast<ChannelAttachmentsBase *>(&attachment);
+   });
+}
+
 TrackListHolder WaveTrack::MonoToStereo()
 {
    assert(!GetOwner());
 
+   // Make new track
    auto result = Duplicate();
+   auto &right = static_cast<WaveTrack&>(**result->begin());
+
+   // Destroy group data, but save other's channel attachments, in
+   // case they were copied with non-default state
    DestroyGroupData();
+   this->MergeChannelAttachments(std::move(right));
+
    result->Add(this->SharedPointer());
-   result->MakeMultiChannelTrack(**result->begin(), 2);
+   result->MakeMultiChannelTrack(right, 2);
 
    return result;
 }
@@ -1712,8 +1778,15 @@ TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       THROW_INCONSISTENCY_EXCEPTION;
 
    auto list = TrackList::Create(nullptr);
-   for (const auto pChannel : TrackList::Channels(this))
-      list->Add(CopyOne(*pChannel, t0, t1, forClipboard));
+   Holder first{};
+   for (const auto pChannel : TrackList::Channels(this)) {
+      auto holder = CopyOne(*pChannel, t0, t1, forClipboard);
+      if (!first)
+         first = holder;
+      else
+         first->MergeChannelAttachments(move(*holder));
+      list->Add(move(holder));
+   }
    return list;
 }
 

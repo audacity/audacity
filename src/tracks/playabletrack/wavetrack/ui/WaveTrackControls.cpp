@@ -861,13 +861,22 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    auto &track = static_cast<WaveTrack&>(mpData->track);
    track.CopyClipEnvelopes();
-   auto unlinkedTracks = TrackList::Get(*project).UnlinkChannels(track);
-   assert(unlinkedTracks.size() == 2);
-   if(stereo)
-   {
-      static_cast<WaveTrack*>(unlinkedTracks[0])->SetPan(-1.0f);
-      static_cast<WaveTrack*>(unlinkedTracks[1])->SetPan(1.0f);
+   const auto unlinkedTracks = [&]{
+      const auto tracks = TrackList::Get(*project).UnlinkChannels(track);
+      assert(tracks.size() == 2);
+      return std::vector<WaveTrack*>{
+         static_cast<WaveTrack*>(tracks[0]),
+         static_cast<WaveTrack*>(tracks[1]) };
+   }();
+
+   if (stereo) {
+      unlinkedTracks[0]->SetPan(-1.0f);
+      unlinkedTracks[1]->SetPan(1.0f);
    }
+
+   // Fix up the channel attachments to avoid waste of space
+   unlinkedTracks[0]->EraseChannelAttachments(1);
+   unlinkedTracks[1]->EraseChannelAttachments(0);
 
    for (const auto track : unlinkedTracks) {
       auto &view = ChannelView::Get(*track->GetChannel(0));
@@ -901,8 +910,11 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    auto &track = static_cast<WaveTrack&>(mpData->track);
    const bool hasFocus = trackFocus.Get() == &track;
    track.CopyClipEnvelopes();
+   auto pTrack = track.SharedPointer<WaveTrack>();
    if (auto newTrack = TrackList::SwapChannels(track))
    {
+      static_cast<WaveTrack*>(newTrack)
+         ->MoveAndSwapAttachments(std::move(*pTrack));
       if (hasFocus)
          trackFocus.Set(newTrack);
 
@@ -1231,9 +1243,9 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveTrackControls) {
    };
 }
 
-using GetDefaultWaveTrackHeight = GetDefaultTrackHeight::Override< WaveTrack >;
+using GetDefaultWaveTrackHeight = GetDefaultTrackHeight::Override<WaveChannel>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultWaveTrackHeight) {
-   return [](WaveTrack &) {
+   return [](WaveChannel &) {
       return WaveTrackControls::DefaultWaveTrackHeight();
    };
 }

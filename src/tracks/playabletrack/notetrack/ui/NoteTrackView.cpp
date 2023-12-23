@@ -32,8 +32,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/dc.h>
 
-NoteTrackView::NoteTrackView( const std::shared_ptr<Track> &pTrack )
-   : CommonChannelView{ pTrack, 0 }
+NoteTrackView::NoteTrackView(const std::shared_ptr<Channel> &pChannel)
+   : CommonChannelView{ pChannel }
 {
 }
 
@@ -63,7 +63,8 @@ std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest(
 using DoGetNoteTrackView = DoGetView::Override<NoteTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetNoteTrackView) {
    return [](NoteTrack &track, size_t) {
-      return std::make_shared<NoteTrackView>( track.SharedPointer() );
+      return std::make_shared<NoteTrackView>(
+         track.SharedPointer<NoteTrack>());
    };
 }
 

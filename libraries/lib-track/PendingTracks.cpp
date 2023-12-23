@@ -249,8 +249,7 @@ bool PendingTracks::ApplyPendingTracks()
    std::vector<std::shared_ptr<Track>> reinstated;
 
    for (const auto pendingTrack : *updated)
-      for (auto pChannel : TrackList::Channels(pendingTrack))
-         pChannel->ReparentAllAttachments();
+      pendingTrack->ReparentAllAttachments();
 
    while (!updated->empty()) {
       auto iter = updated->begin();

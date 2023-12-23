@@ -35,8 +35,8 @@ Paul Licameli split from TrackPanel.cpp
 
 using Doubles = ArrayOf<double>;
 
-TimeTrackView::TimeTrackView(const std::shared_ptr<Track> &pTrack)
-   : CommonChannelView{ pTrack, 0 }
+TimeTrackView::TimeTrackView(const std::shared_ptr<Channel> &pChannel)
+   : CommonChannelView{ pChannel }
 {
 }
 
@@ -60,7 +60,7 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
 using DoGetTimeTrackView = DoGetView::Override<TimeTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackView) {
    return [](TimeTrack &track, size_t) {
-      return std::make_shared<TimeTrackView>(track.SharedPointer());
+      return std::make_shared<TimeTrackView>(track.SharedPointer<TimeTrack>());
    };
 }
 

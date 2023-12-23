@@ -1152,7 +1152,20 @@ public:
    // TODO wide-wave-track: some other API
    void CopyClipEnvelopes();
 
+   //! Steal channel attachments from other for special stereo swap
+   void MoveAndSwapAttachments(WaveTrack &&other);
+
+   //! Steal channel attachments from other, then destroy the track attachment
+   //! slot
+   void MergeChannelAttachments(WaveTrack &&other);
+
+   //! Erase all attachments for a given index
+   void EraseChannelAttachments(size_t index);
+
 private:
+   // Just destroy channel attachments
+   void DestroyAllChannelAttachments();
+
    //! Get the linear index of a given clip (== number of clips if not found)
    int GetClipIndex(const Interval &clip) const;
 

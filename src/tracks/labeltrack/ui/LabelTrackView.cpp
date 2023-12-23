@@ -97,8 +97,8 @@ void LabelTrackView::Index::SetModified(bool modified)
    mModified = modified;
 }
 
-LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
-   : CommonChannelView{ pTrack, 0 }
+LabelTrackView::LabelTrackView(const std::shared_ptr<Channel> &pChannel)
+   : CommonChannelView{ pChannel }
 {
    ResetFont();
    CreateCustomGlyphs();
@@ -2351,7 +2351,8 @@ int LabelTrackView::DialogForLabelName(
 using DoGetLabelTrackView = DoGetView::Override<LabelTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetLabelTrackView) {
    return [](LabelTrack &track, size_t) {
-      return std::make_shared<LabelTrackView>( track.SharedPointer() );
+      return std::make_shared<LabelTrackView>(
+         track.SharedPointer<LabelTrack>());
    };
 }
 

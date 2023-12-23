@@ -109,16 +109,8 @@ TrackListHolder Track::Duplicate(DuplicateOptions options) const
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone(options.backup);
-
-   auto iter = TrackList::Channels(*result->begin()).begin();
-   if (GetOwner())
-      for (const auto pChannel : TrackList::Channels(this)) {
-         CopyAttachments(**iter, *pChannel, !options.shallowCopyAttachments);
-         ++iter;
-      }
-   else
-      CopyAttachments(**iter, *this, !options.shallowCopyAttachments);
-
+   // Attachments matter for leader only
+   CopyAttachments(**result->begin(), *this, !options.shallowCopyAttachments);
    return result;
 }
 

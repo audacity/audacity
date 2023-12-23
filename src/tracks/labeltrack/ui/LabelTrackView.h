@@ -52,7 +52,7 @@ public:
    static constexpr int LabelBarHeight { 6 }; 
 
    explicit
-   LabelTrackView( const std::shared_ptr<Track> &pTrack );
+   LabelTrackView(const std::shared_ptr<Channel> &pChannel);
    ~LabelTrackView() override;
 
    static LabelTrackView &Get( LabelTrack& );

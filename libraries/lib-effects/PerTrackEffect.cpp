@@ -299,9 +299,13 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             if (bGoodResult && tempList) {
                if (!results)
                   results = tempList;
-               else
+               else {
+                  if (!multichannel && !isLeader && narrowTrack)
+                     static_cast<WaveTrack*>(*results->rbegin())
+                        ->MergeChannelAttachments(move(*narrowTrack));
                   results->Append(std::move(*tempList));
                }
+            }
          }
          if (!bGoodResult)
             return;

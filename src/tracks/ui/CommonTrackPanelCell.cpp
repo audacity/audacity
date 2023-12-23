@@ -132,38 +132,30 @@ std::shared_ptr<Track> CommonTrackCell::DoFindTrack()
    return mwTrack.lock();
 }
 
-CommonChannelCell::CommonChannelCell(
-   const std::shared_ptr<Track> &parent, size_t iChannel
-)  : mwTrack{ parent }
-   , miChannel{ iChannel }
-{
-   // TODO wide wave tracks -- remove assertion
-   assert(iChannel == 0);
-}
-
-CommonChannelCell::CommonChannelCell(ChannelGroup &group, size_t iChannel)
-   : CommonChannelCell{
-      static_cast<Track&>(group).shared_from_this(), iChannel }
+CommonChannelCell::CommonChannelCell(const std::shared_ptr<Channel> &parent)
+   : mwChannel{ parent }
 {
 }
 
 CommonChannelCell::~CommonChannelCell() = default;
 
-void CommonChannelCell::Reparent(const std::shared_ptr<Track> &parent, size_t)
+void CommonChannelCell::Reparent(
+   const std::shared_ptr<Track> &parent, size_t iChannel)
 {
-   mwTrack = parent;
+   mwChannel = parent->NthChannel(iChannel);
 }
 
 std::shared_ptr<Track> CommonChannelCell::DoFindTrack()
 {
-   return mwTrack.lock();
+   Track *pTrack{};
+   if (const auto pChannel = mwChannel.lock())
+      pTrack = dynamic_cast<Track *>(&pChannel->ReallyGetChannelGroup());
+   return pTrack ? pTrack->SharedPointer() : nullptr;
 }
 
 std::shared_ptr<Channel> CommonChannelCell::DoFindChannel()
 {
-   if (const auto pTrack = FindTrack())
-      return pTrack->GetChannel(miChannel);
-   return {};
+   return mwChannel.lock();
 }
 
 std::shared_ptr<const Channel> CommonChannelCell::DoFindChannel() const

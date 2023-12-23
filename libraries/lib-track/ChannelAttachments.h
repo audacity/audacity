@@ -95,6 +95,10 @@ public:
     */
    void SwapChannels();
 
+   //! Erase attachment at a given index, if it existed, moving later-indexed
+   //! attachments to earlier indices
+   void Erase(size_t index);
+
 protected:
    /*!
     @pre `iChannel < track.NChannels()`

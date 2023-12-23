@@ -146,3 +146,9 @@ void ChannelAttachmentsBase::SwapChannels()
    mAttachments.resize(2);
    std::swap(mAttachments[0], mAttachments[1]);
 }
+
+void ChannelAttachmentsBase::Erase(size_t index)
+{
+   if (index < mAttachments.size())
+      mAttachments.erase(mAttachments.begin() + index);
+}

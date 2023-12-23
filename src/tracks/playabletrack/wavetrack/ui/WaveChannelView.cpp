@@ -929,16 +929,8 @@ const WaveChannelView *WaveChannelView::Find(const WaveChannel *pChannel)
    return Find(const_cast<WaveChannel*>(pChannel));
 }
 
-WaveChannelView::WaveChannelView(
-   const std::shared_ptr<Track> &pTrack, size_t channel
-)  : CommonChannelView{ pTrack, channel }
-{
-}
-
 WaveChannelSubView::WaveChannelSubView(WaveChannelView &waveChannelView)
-   : CommonChannelView{
-      // Just passing-through the constructor argument
-      waveChannelView.DoFindTrack(), waveChannelView.GetChannelIndex() }
+   : CommonChannelView{ waveChannelView.FindChannel() }
 {
    mwWaveChannelView = std::static_pointer_cast<WaveChannelView>(
       waveChannelView.shared_from_this() );
@@ -1546,8 +1538,11 @@ WaveChannelView::DoGetAffordance(Track& track)
 using DoGetWaveChannelView = DoGetView::Override<WaveTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveChannelView) {
    return [](WaveTrack &track, size_t iChannel) {
-      assert(iChannel < track.NChannels());
-      return std::make_shared<WaveChannelView>(track.SharedPointer(), iChannel);
+      auto channels = track.Channels();
+      assert(iChannel < channels.size());
+      auto &iter = channels.first;
+      std::advance(iter, iChannel);
+      return std::make_shared<WaveChannelView>(*iter);
    };
 }
 
@@ -1754,7 +1749,6 @@ WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
    if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
       leaderView.GetAffordanceControls()))
    {
-      assert(leaderView.GetChannelIndex() == 0);
       return *affordance->GetSelectedInterval();
    }
    return {};

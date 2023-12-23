@@ -22,8 +22,9 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dc.h>
 #include <wx/mousestate.h>
 
-TrackPanelResizerCell::TrackPanelResizerCell(Channel &channel)
-   : CommonChannelCell{ channel.GetChannelGroup(), channel.GetChannelIndex() }
+TrackPanelResizerCell::TrackPanelResizerCell(
+   const std::shared_ptr<Channel> &channel
+)  : CommonChannelCell{ channel }
 {}
 
 std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
@@ -112,17 +113,23 @@ static const AttachedTrackObjects::RegisteredFactory key{
             // ChannelAttachments promises this precondition
             assert(iChannel <= track.NChannels());
             return std::make_shared<TrackPanelResizerCell>(
-               *track.GetChannel(iChannel));
+               track.GetChannel(iChannel));
          }
       );
    }
 };
 
+TrackPanelResizerCell &TrackPanelResizerCell::GetFromChannelGroup(
+   ChannelGroup &group, size_t iChannel)
+{
+   auto &track = static_cast<Track&>(group);
+   return ResizerCellAttachments::Get(key, track, iChannel);
+}
+
 TrackPanelResizerCell &TrackPanelResizerCell::Get(Channel &channel)
 {
-   return ResizerCellAttachments::Get(key,
-      static_cast<Track &>(channel.GetChannelGroup()),
-      channel.GetChannelIndex());
+   return GetFromChannelGroup(channel.ReallyGetChannelGroup(),
+      channel.ReallyGetChannelIndex());
 }
 
 const TrackPanelResizerCell &TrackPanelResizerCell::Get(const Channel &channel)
