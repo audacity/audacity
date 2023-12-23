@@ -57,8 +57,7 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
    auto &view = *this;
-   const auto pChannel =
-      std::static_pointer_cast<WaveChannel>(view.FindChannel());
+   const auto pChannel = view.FindChannel<WaveChannel>();
 
    auto pair = WaveChannelSubView::DoDetailedHitTest(
       st, pProject, currentTool, bMultiTool, pChannel);

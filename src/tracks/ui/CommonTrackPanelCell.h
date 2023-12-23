@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <stdlib.h>
 #include <memory>
 #include <functional>
+#include <type_traits>
 #include "ComponentInterfaceSymbol.h"
 #include "GlobalVariable.h"
 
@@ -119,12 +120,23 @@ public:
    size_t GetChannelIndex() const { return miChannel; }
 
    //! May return null
-   std::shared_ptr<Channel> FindChannel();
+   template<typename Subtype = Channel>
+   auto FindChannel()
+      -> std::shared_ptr<Subtype>
+         { return std::dynamic_pointer_cast<Subtype>(DoFindChannel()); }
 
    //! May return null
-   std::shared_ptr<const Channel> FindChannel() const;
+   template<typename Subtype = const Channel>
+   auto FindChannel() const
+      -> std::enable_if_t<std::is_const_v<Subtype>,
+         std::shared_ptr<Subtype>
+      >
+         { return std::dynamic_pointer_cast<Subtype>(DoFindChannel()); }
 
 private:
+   std::shared_ptr<Channel> DoFindChannel();
+   std::shared_ptr<const Channel> DoFindChannel() const;
+
    std::weak_ptr< Track > mwTrack;
    const size_t miChannel;
 };

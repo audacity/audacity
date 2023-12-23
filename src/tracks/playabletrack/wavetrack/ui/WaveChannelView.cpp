@@ -1397,8 +1397,7 @@ namespace {
 using PMF = bool (WaveTrackAffordanceControls::*)(AudacityProject &);
 bool AnyAffordance(AudacityProject& project, WaveChannelView &view, PMF pmf)
 {
-   const auto pWaveChannel =
-      static_cast<WaveChannel*>(view.FindChannel().get());
+   const auto pWaveChannel = view.FindChannel<WaveChannel>();
    const auto pLeader = &pWaveChannel->GetTrack();
    auto& channelView = ChannelView::Get(*pLeader);
    if (const auto affordance =
@@ -1704,7 +1703,7 @@ void WaveChannelView::Reparent(const std::shared_ptr<Track> &parent)
 WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
 {
    // Find the leader
-   const auto pChannel = static_cast<WaveChannel*>(FindChannel().get());
+   const auto pChannel = FindChannel<WaveChannel>();
    if (!pChannel)
       return {};
    auto &track = pChannel->GetTrack();
