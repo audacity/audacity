@@ -111,11 +111,10 @@ unsigned WaveformVRulerControls::HandleWheelRotation(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const auto pTrack = FindTrack();
-   if (!pTrack)
+   const auto pChannel = FindChannel<WaveChannel>();
+   if (!pChannel)
       return RefreshNone;
-   const auto wt = static_cast<WaveTrack*>(pTrack.get());
-   return DoHandleWheelRotation( evt, pProject, wt );
+   return DoHandleWheelRotation(evt, pProject, pChannel->GetTrack());
 }
 
 namespace {
@@ -133,7 +132,7 @@ void SetLastScaleType(
 }
 
 unsigned WaveformVRulerControls::DoHandleWheelRotation(
-   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack *wt)
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack &wt)
 {
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;
@@ -148,8 +147,8 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
    auto steps = evt.steps;
 
    using namespace WaveChannelViewConstants;
-   auto &settings = WaveformSettings::Get(*wt);
-   auto &cache = WaveformScale::Get(*wt);
+   auto &settings = WaveformSettings::Get(wt);
+   auto &cache = WaveformScale::Get(wt);
    const bool isDB = !settings.isLinear();
    // Special cases for Waveform (logarithmic) dB only.
    // Set the bottom of the dB scale but only if it's visible
@@ -160,7 +159,6 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          return RefreshNone;
 
       float olddBRange = settings.dBRange;
-      auto &settings = WaveformSettings::Get(*wt);
       if (steps < 0)
          // Zoom out
          settings.NextLowerDBRange();
@@ -183,8 +181,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
          max = std::min(extreme, max * olddBRange / newdBRange);
          min = std::max(-extreme, min * olddBRange / newdBRange);
-         auto &cache = WaveformScale::Get(*wt);
-         SetLastdBRange(cache, *wt);
+         SetLastdBRange(cache, wt);
          cache.SetDisplayBounds(min, max);
       }
    }
@@ -204,19 +201,18 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
       {
          float topLimit = 2.0;
          if (isDB) {
-            const float dBRange = WaveformSettings::Get(*wt).dBRange;
+            const float dBRange = settings.dBRange;
             topLimit = (LINEAR_TO_DB(topLimit) + dBRange) / dBRange;
          }
          const float bottomLimit = -topLimit;
          float top, bottom;
-         auto &cache = WaveformScale::Get(*wt);
          cache.GetDisplayBounds(bottom, top);
          const float range = top - bottom;
          const float delta = range * steps * movement / height;
          float newTop = std::min(topLimit, top + delta);
          const float newBottom = std::max(bottomLimit, newTop - range);
          newTop = std::min(topLimit, newBottom + range);
-         WaveformScale::Get(*wt).SetDisplayBounds(newBottom, newTop);
+         cache.SetDisplayBounds(newBottom, newTop);
       }
    }
    else

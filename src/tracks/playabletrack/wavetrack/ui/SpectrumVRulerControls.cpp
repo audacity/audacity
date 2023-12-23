@@ -54,15 +54,14 @@ unsigned SpectrumVRulerControls::HandleWheelRotation(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const auto pTrack = FindTrack();
-   if (!pTrack)
+   const auto pChannel = FindChannel<WaveChannel>();
+   if (!pChannel)
       return RefreshNone;
-   const auto wt = static_cast<WaveTrack*>(pTrack.get());
-   return DoHandleWheelRotation( evt, pProject, wt );
+   return DoHandleWheelRotation(evt, pProject, pChannel->GetTrack());
 }
 
 unsigned SpectrumVRulerControls::DoHandleWheelRotation(
-   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack *wt)
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack &wt)
 {
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;
@@ -92,11 +91,11 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
       const int height = evt.rect.GetHeight();
       {
          const float delta = steps * movement / height;
-         SpectrogramSettings &settings = SpectrogramSettings::Own(*wt);
+         SpectrogramSettings &settings = SpectrogramSettings::Own(wt);
          const bool isLinear = settings.scaleType == SpectrogramSettings::stLinear;
          float bottom, top;
-         SpectrogramBounds::Get(*wt).GetBounds(*wt, bottom, top);
-         const double rate = wt->GetRate();
+         SpectrogramBounds::Get(wt).GetBounds(wt, bottom, top);
+         const double rate = wt.GetRate();
          const float bound = rate / 2;
          const NumberScale numberScale(settings.GetScale(bottom, top));
          float newTop =
@@ -108,7 +107,7 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
          std::min(bound,
                   numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
          
-         SpectrogramBounds::Get(*wt).SetBounds(newBottom, newTop);
+         SpectrogramBounds::Get(wt).SetBounds(newBottom, newTop);
       }
    }
    else

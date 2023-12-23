@@ -27,7 +27,7 @@ public:
    SpectrumVZoomHandle &operator=(const SpectrumVZoomHandle&) = default;
 
    static void DoZoom(
-      AudacityProject *pProject, WaveTrack *pTrack,
+      AudacityProject *pProject, WaveTrack &track,
       WaveChannelViewConstants::ZoomActions ZoomKind,
       const wxRect &rect, int zoomStart, int zoomEnd,
       bool fixedMousePoint);

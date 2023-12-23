@@ -36,7 +36,7 @@ public:
       AudacityProject *pProject) override;
    static unsigned DoHandleWheelRotation(
       const TrackPanelMouseEvent &evt, AudacityProject *pProject,
-      WaveTrack *wt);
+      WaveTrack &wt);
 
 private:
    // TrackPanelDrawable implementation
