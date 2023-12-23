@@ -24,8 +24,11 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/translation.h>
 
 ChannelVRulerControls::ChannelVRulerControls(
-   const std::shared_ptr<ChannelView> &pChannelView)
-  : mwChannelView{ pChannelView }
+   const std::shared_ptr<ChannelView> &pChannelView
+) : CommonTrackCell{
+      std::dynamic_pointer_cast<Track>(pChannelView->FindChannel()),
+      pChannelView->GetChannelIndex() }
+  , mwChannelView{ pChannelView }
 {
 }
 
