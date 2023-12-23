@@ -713,6 +713,16 @@ const SpectrogramBounds &SpectrogramBounds::Get(
    return Get(const_cast<WaveTrack&>(track));
 }
 
+SpectrogramBounds &SpectrogramBounds::Get(WaveChannel &channel)
+{
+   return Get(channel.GetTrack());
+}
+
+const SpectrogramBounds &SpectrogramBounds::Get(const WaveChannel &channel)
+{
+   return Get(const_cast<WaveChannel&>(channel));
+}
+
 SpectrogramBounds::~SpectrogramBounds() = default;
 
 auto SpectrogramBounds::Clone() const -> PointerType
@@ -721,8 +731,9 @@ auto SpectrogramBounds::Clone() const -> PointerType
 }
 
 void SpectrogramBounds::GetBounds(
-   const WaveTrack &wt, float &min, float &max) const
+   const WaveChannel &wc, float &min, float &max) const
 {
+   auto &wt = wc.GetTrack();
    const double rate = wt.GetRate();
 
    const auto &settings = SpectrogramSettings::Get(wt);
