@@ -47,7 +47,7 @@ private:
    // ChannelVRulerControls implementation
    void UpdateRuler( const wxRect &rect ) override;
 
-   static void DoUpdateVRuler(const wxRect &rect, const WaveTrack *wt);
+   static void DoUpdateVRuler(const wxRect &rect, const WaveTrack &wt);
 
    std::weak_ptr<SpectrumVZoomHandle> mVZoomHandle;
 };

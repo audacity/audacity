@@ -128,19 +128,19 @@ void SpectrumVRulerControls::Draw(
 
 void SpectrumVRulerControls::UpdateRuler( const wxRect &rect )
 {
-   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
-   if (!wt)
+   const auto pChannel = FindChannel<WaveChannel>();
+   if (!pChannel)
       return;
-   DoUpdateVRuler( rect, wt.get() );
+   DoUpdateVRuler(rect, pChannel->GetTrack());
 }
 
 void SpectrumVRulerControls::DoUpdateVRuler(
-   const wxRect &rect, const WaveTrack *wt )
+   const wxRect &rect, const WaveTrack &wt)
 {
    auto vruler = &WaveChannelVRulerControls::ScratchRuler();
-   const auto &settings = SpectrogramSettings::Get(*wt);
+   const auto &settings = SpectrogramSettings::Get(wt);
    float minFreq, maxFreq;
-   SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
+   SpectrogramBounds::Get(wt).GetBounds(wt, minFreq, maxFreq);
    vruler->SetDbMirrorValue(0.0);
    
    switch (settings.scaleType) {
@@ -200,6 +200,6 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       }
          break;
    }
-   auto &size = ChannelView::Get(*wt).vrulerSize;
+   auto &size = ChannelView::Get(wt).vrulerSize;
    vruler->GetMaxSize(&size.first, &size.second);
 }

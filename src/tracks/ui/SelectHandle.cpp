@@ -64,14 +64,14 @@ bool SelectHandle::IsDragging() const
 namespace
 {
    /// Converts a frequency to screen y position.
-   wxInt64 FrequencyToPosition(const WaveTrack *wt,
+   wxInt64 FrequencyToPosition(const WaveTrack &wt,
       double frequency,
       wxInt64 trackTopEdge,
       int trackHeight)
    {
-      const auto &settings = SpectrogramSettings::Get(*wt);
+      const auto &settings = SpectrogramSettings::Get(wt);
       float minFreq, maxFreq;
-      SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
+      SpectrogramBounds::Get(wt).GetBounds(wt, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const float p = numberScale.ValueToPosition(frequency);
       return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
@@ -114,15 +114,12 @@ namespace
 
    // This returns true if we're a spectral editing track.
    inline bool isSpectralSelectionView(const ChannelView *pChannelView) {
+      const WaveChannel *pChannel{};
       return
         pChannelView &&
         pChannelView->IsSpectral() &&
-        pChannelView->FindTrack() &&
-        pChannelView->FindTrack()->TypeSwitch<bool>(
-           [&](const WaveTrack &wt) {
-              const auto &settings = SpectrogramSettings::Get(wt);
-              return settings.SpectralSelectionEnabled();
-           });
+        (pChannel = pChannelView->FindChannel<const WaveChannel>().get()) &&
+        SpectrogramSettings::Get(*pChannel).SpectralSelectionEnabled();
    }
 
    enum SelectionBoundary {
@@ -212,8 +209,8 @@ namespace
          isSpectralSelectionView(pChannelView)) {
          // Spectral selection track is always wave
          auto pTrack = pChannelView->FindTrack();
-         const WaveTrack *const wt =
-           static_cast<const WaveTrack*>(pTrack.get());
+         assert(pTrack);
+         const auto &wt = *static_cast<const WaveTrack*>(pTrack.get());
          const wxInt64 bottomSel = (f0 >= 0)
             ? FrequencyToPosition(wt, f0, rect.y, rect.height)
             : rect.y + rect.height;

@@ -233,30 +233,30 @@ void WaveformVRulerControls::Draw(
 
 void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
 {
-   const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
-   if (!wt)
+   const auto pChannel = FindChannel<WaveChannel>();
+   if (!pChannel)
       return;
-   DoUpdateVRuler( rect, wt.get() );
+   DoUpdateVRuler(rect, pChannel->GetTrack());
 }
 
 static CustomUpdaterValue updater;
 
 void WaveformVRulerControls::DoUpdateVRuler(
-   const wxRect &rect, const WaveTrack *wt)
+   const wxRect &rect, const WaveTrack &wt)
 {
    auto vruler = &WaveChannelVRulerControls::ScratchRuler();
 
    // All waves have a ruler in the info panel
    // The ruler needs a bevelled surround.
-   auto &settings = WaveformSettings::Get(*wt);
+   auto &settings = WaveformSettings::Get(wt);
    const float dBRange = settings.dBRange;
 
    float min, max;
-   auto &cache = WaveformScale::Get(*wt);
+   auto &cache = WaveformScale::Get(wt);
    cache.GetDisplayBounds(min, max);
    const float lastdBRange = cache.GetLastDBRange();
    if (dBRange != lastdBRange)
-      SetLastdBRange(cache, *wt);
+      SetLastdBRange(cache, wt);
 
    auto scaleType = settings.scaleType;
    
@@ -268,8 +268,8 @@ void WaveformVRulerControls::DoUpdateVRuler(
           cache.GetLastScaleType() != -1)
       {
          // do a translation into the linear space
-         SetLastScaleType(cache, *wt);
-         SetLastdBRange(cache, *wt);
+         SetLastScaleType(cache, wt);
+         SetLastdBRange(cache, wt);
          float sign = (min >= 0 ? 1 : -1);
          if (min != 0.) {
             min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
@@ -346,16 +346,13 @@ void WaveformVRulerControls::DoUpdateVRuler(
    }
    else {
       vruler->SetUnits(XO("dB"));
-      
-      auto &cache = WaveformScale::Get(*wt);
-      
       if (cache.GetLastScaleType() != WaveformSettings::stLogarithmicDb &&
          // When Logarithmic Amp happens, put that here
           cache.GetLastScaleType() != -1)
       {
          // do a translation into the dB space
-         SetLastScaleType(cache, *wt);
-         SetLastdBRange(cache, *wt);
+         SetLastScaleType(cache, wt);
+         SetLastdBRange(cache, wt);
          float sign = (min >= 0 ? 1 : -1);
          if (min != 0.) {
             min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
@@ -374,7 +371,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
          cache.SetDisplayBounds(min, max);
       }
       else if (dBRange != lastdBRange) {
-         SetLastdBRange(cache, *wt);
+         SetLastdBRange(cache, wt);
          // Remap the max of the scale
          float newMax = max;
          
@@ -449,6 +446,6 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetLabelEdges(true);
       vruler->SetUpdater(&LinearUpdater::Instance());
    }
-   auto &size = ChannelView::Get(*wt).vrulerSize;
+   auto &size = ChannelView::Get(wt).vrulerSize;
    vruler->GetMaxSize(&size.first, &size.second);
 }
