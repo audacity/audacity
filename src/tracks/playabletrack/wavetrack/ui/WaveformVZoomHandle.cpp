@@ -23,8 +23,8 @@ Paul Licameli split from WaveChannelVZoomHandle.cpp
 #include "../../../../prefs/WaveformSettings.h"
 
 WaveformVZoomHandle::WaveformVZoomHandle(
-   const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y)
-      : mpTrack{ pTrack } , mZoomStart(y), mZoomEnd(y), mRect(rect)
+   const std::shared_ptr<WaveChannel> &pChannel, const wxRect &rect, int y)
+      : mpChannel{ pChannel } , mZoomStart(y), mZoomEnd(y), mRect(rect)
 {
 }
 
@@ -32,7 +32,7 @@ WaveformVZoomHandle::~WaveformVZoomHandle() = default;
 
 std::shared_ptr<const Channel> WaveformVZoomHandle::FindChannel() const
 {
-   return std::dynamic_pointer_cast<const Channel>(mpTrack.lock());
+   return mpChannel.lock();
 }
 
 void WaveformVZoomHandle::Enter( bool, AudacityProject* )
@@ -53,12 +53,12 @@ UIHandle::Result WaveformVZoomHandle::Click
    return RefreshCode::RefreshNone;
 }
 
-UIHandle::Result WaveformVZoomHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+UIHandle::Result WaveformVZoomHandle::Drag(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
-   if (!pTrack)
+   const auto pChannel = mpChannel.lock();
+   if (!pChannel)
       return Cancelled;
    return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd, false);
 }
@@ -69,15 +69,15 @@ HitTestPreview WaveformVZoomHandle::Preview
    return WaveChannelVZoomHandle::HitPreview(false);
 }
 
-UIHandle::Result WaveformVZoomHandle::Release
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
- wxWindow *pParent)
+UIHandle::Result WaveformVZoomHandle::Release(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+   wxWindow *pParent)
 {
-   const auto pTrack = TrackList::Get(*pProject).Lock(mpTrack);
-   if (!pTrack)
+   const auto pChannel = mpChannel.lock();
+   if (!pChannel)
       return RefreshCode::Cancelled;
    return WaveChannelVZoomHandle::DoRelease(
-      evt, pProject, pParent, *pTrack, mRect,
+      evt, pProject, pParent, pChannel->GetTrack(), mRect,
       DoZoom, WaveformVRulerMenuTable::Instance(),
       mZoomStart, mZoomEnd);
 }
@@ -93,7 +93,8 @@ void WaveformVZoomHandle::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
-   if (!mpTrack.lock()) //? TrackList::Lock()
+   const auto pChannel = mpChannel.lock();
+   if (!pChannel)
       return;
    return WaveChannelVZoomHandle::DoDraw(
       context, rect, iPass, mZoomStart, mZoomEnd, false);

@@ -22,9 +22,9 @@ Paul Licameli split from WaveChannelVZoomHandle.cpp
 #include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 
-SpectrumVZoomHandle::SpectrumVZoomHandle
-(const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y)
-   : mpTrack{ pTrack } , mZoomStart(y), mZoomEnd(y), mRect(rect)
+SpectrumVZoomHandle::SpectrumVZoomHandle(
+   const std::shared_ptr<WaveChannel> &pChannel, const wxRect &rect, int y
+)  : mpChannel{ pChannel }, mZoomStart(y), mZoomEnd(y), mRect(rect)
 {
 }
 
@@ -32,7 +32,12 @@ SpectrumVZoomHandle::~SpectrumVZoomHandle() = default;
 
 std::shared_ptr<const Channel> SpectrumVZoomHandle::FindChannel() const
 {
-   return mpTrack.lock();
+   return mpChannel.lock();
+}
+
+std::shared_ptr<WaveChannel> SpectrumVZoomHandle::FindWaveChannel()
+{
+   return mpChannel.lock();
 }
 
 void SpectrumVZoomHandle::Enter( bool, AudacityProject* )
@@ -53,12 +58,11 @@ UIHandle::Result SpectrumVZoomHandle::Click
    return RefreshCode::RefreshNone;
 }
 
-UIHandle::Result SpectrumVZoomHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+UIHandle::Result SpectrumVZoomHandle::Drag(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
-   if (!pTrack)
+   if (!FindChannel())
       return Cancelled;
    return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd, true);
 }
@@ -69,15 +73,15 @@ HitTestPreview SpectrumVZoomHandle::Preview
    return WaveChannelVZoomHandle::HitPreview(true);
 }
 
-UIHandle::Result SpectrumVZoomHandle::Release
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
- wxWindow *pParent)
+UIHandle::Result SpectrumVZoomHandle::Release(
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+   wxWindow *pParent)
 {
-   const auto pTrack = TrackList::Get(*pProject).Lock(mpTrack);
-   if (!pTrack)
+   const auto pChannel = FindWaveChannel();
+   if (!pChannel)
       return RefreshCode::Cancelled;
    return WaveChannelVZoomHandle::DoRelease(
-      evt, pProject, pParent, *pTrack, mRect,
+      evt, pProject, pParent, pChannel->GetTrack(), mRect,
       DoZoom, SpectrumVRulerMenuTable::Instance(),
       mZoomStart, mZoomEnd);
 }
@@ -93,7 +97,8 @@ void SpectrumVZoomHandle::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
-   if (!mpTrack.lock()) //? TrackList::Lock()
+   const auto pChannel = FindChannel();
+   if (!pChannel)
       return;
    return WaveChannelVZoomHandle::DoDraw(
       context, rect, iPass, mZoomStart, mZoomEnd, true );

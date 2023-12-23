@@ -92,10 +92,9 @@ std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    std::vector<UIHandlePtr> results;
 
    if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
-      auto pTrack = FindTrack()->SharedPointer<WaveTrack>(  );
-      if (pTrack) {
+      if (const auto pChannel = FindWaveChannel()) {
          auto result = std::make_shared<WaveformVZoomHandle>(
-            pTrack, st.rect, st.state.m_y );
+            pChannel, st.rect, st.state.m_y );
          result = AssignUIHandlePtr(mVZoomHandle, result);
          results.push_back(result);
       }
@@ -107,11 +106,16 @@ std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    return results;
 }
 
+std::shared_ptr<WaveChannel> WaveformVRulerControls::FindWaveChannel()
+{
+   return FindChannel<WaveChannel>();
+}
+
 unsigned WaveformVRulerControls::HandleWheelRotation(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const auto pChannel = FindChannel<WaveChannel>();
+   const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return RefreshNone;
    return DoHandleWheelRotation(evt, pProject, pChannel->GetTrack());
@@ -233,7 +237,7 @@ void WaveformVRulerControls::Draw(
 
 void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
 {
-   const auto pChannel = FindChannel<WaveChannel>();
+   const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return;
    DoUpdateVRuler(rect, pChannel->GetTrack());

@@ -14,6 +14,7 @@ Paul Licameli split from WaveChannelVZoomHandle.h
 #include "../../../../UIHandle.h" // to inherit
 #include "WaveChannelViewConstants.h"
 
+class WaveChannel;
 class WaveTrack;
 
 class WaveformVZoomHandle final : public UIHandle
@@ -21,8 +22,8 @@ class WaveformVZoomHandle final : public UIHandle
    WaveformVZoomHandle(const WaveformVZoomHandle&);
 
 public:
-   explicit WaveformVZoomHandle
-      (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y);
+   explicit WaveformVZoomHandle(
+      const std::shared_ptr<WaveChannel> &pChannel, const wxRect &rect, int y);
 
    WaveformVZoomHandle &operator=(const WaveformVZoomHandle&) = default;
 
@@ -67,7 +68,7 @@ private:
       TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
 
-   std::weak_ptr<WaveTrack> mpTrack;
+   std::weak_ptr<WaveChannel> mpChannel;
 
    int mZoomStart{}, mZoomEnd{};
    wxRect mRect{};

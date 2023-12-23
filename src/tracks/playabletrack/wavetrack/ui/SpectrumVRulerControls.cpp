@@ -35,10 +35,9 @@ std::vector<UIHandlePtr> SpectrumVRulerControls::HitTest(
    std::vector<UIHandlePtr> results;
 
    if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
-      auto pTrack = FindTrack()->SharedPointer<WaveTrack>(  );
-      if (pTrack) {
+      if (const auto pChannel = FindWaveChannel()) {
          auto result = std::make_shared<SpectrumVZoomHandle>(
-            pTrack, st.rect, st.state.m_y );
+            pChannel, st.rect, st.state.m_y);
          result = AssignUIHandlePtr(mVZoomHandle, result);
          results.push_back(result);
       }
@@ -54,10 +53,15 @@ unsigned SpectrumVRulerControls::HandleWheelRotation(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const auto pChannel = FindChannel<WaveChannel>();
+   const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return RefreshNone;
    return DoHandleWheelRotation(evt, pProject, pChannel->GetTrack());
+}
+
+std::shared_ptr<WaveChannel> SpectrumVRulerControls::FindWaveChannel()
+{
+   return FindChannel<WaveChannel>();
 }
 
 unsigned SpectrumVRulerControls::DoHandleWheelRotation(
@@ -128,7 +132,7 @@ void SpectrumVRulerControls::Draw(
 
 void SpectrumVRulerControls::UpdateRuler( const wxRect &rect )
 {
-   const auto pChannel = FindChannel<WaveChannel>();
+   const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return;
    DoUpdateVRuler(rect, pChannel->GetTrack());
