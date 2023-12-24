@@ -94,7 +94,7 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
 
 WaveTrack &WaveTrackPopupMenuTable::FindWaveTrack() const
 {
-   return *static_cast< WaveTrack* >( mpData->pTrack );
+   return static_cast<WaveTrack&>(mpData->track);
 };
 
 enum {
@@ -149,11 +149,11 @@ PopupMenuTableEntry::InitFunction initFn( const ValueFinder &findValue )
 {
    return [findValue]( PopupMenuHandler &handler, wxMenu &menu, int id ){
       auto pData = static_cast<Table&>( handler ).mpData;
-      const auto pTrack = static_cast<WaveTrack*>(pData->pTrack);
+      auto &track = static_cast<WaveTrack&>(pData->track);
       auto &project = pData->project;
       bool unsafe = ProjectAudioIO::Get( project ).IsAudioActive();
 
-      menu.Check( id, id == findValue( *pTrack ) );
+      menu.Check(id, id == findValue(track));
       menu.Enable( id, !unsafe );
    };
 };
@@ -232,7 +232,7 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 {
    int id = event.GetId();
    wxASSERT(id >= On16BitID && id <= OnFloatID);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
 
    sampleFormat newFormat = int16Sample;
 
@@ -251,7 +251,7 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
       wxASSERT(false);
       break;
    }
-   if (newFormat == pTrack->GetSampleFormat())
+   if (newFormat == track.GetSampleFormat())
       return; // Nothing to do.
 
    AudacityProject *const project = &mpData->project;
@@ -261,13 +261,13 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
                             pdlgHideStopButton };
 
    // Safe assumption for tracks associated with the context menu
-   assert(pTrack->IsLeader());
+   assert(track.IsLeader());
 
    // Simply finding a denominator for the progress dialog
    // Hidden samples are processed too, they should be counted as well
    // (Correctly counting all samples of all channels)
    const sampleCount totalSamples =
-      WaveTrackUtilities::GetSequenceSamplesCount(*pTrack);
+      WaveTrackUtilities::GetSequenceSamplesCount(track);
    sampleCount processedSamples{ 0 };
 
    // Below is the lambda function that is passed along the call chain to
@@ -290,13 +290,13 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 
    // We get here from the context menu only in the TrackControlPanel cell
    // which is always associated with a leader track
-   assert(pTrack->IsLeader());
-   pTrack->ConvertToSampleFormat(newFormat, progressUpdate);
+   assert(track.IsLeader());
+   track.ConvertToSampleFormat(newFormat, progressUpdate);
 
    ProjectHistory::Get( *project )
    /* i18n-hint: The strings name a track and a format */
       .PushState(XO("Changed '%s' to %s")
-         .Format( pTrack->GetName(), GetSampleFormatStr(newFormat) ),
+         .Format(track.GetName(), GetSampleFormatStr(newFormat)),
       XO("Format Change"));
 
    using namespace RefreshCode;
@@ -321,7 +321,7 @@ struct RateMenuTable : PopupMenuTable
 
    static int IdOfRate(int rate);
    /// Sets the sample rate for a track
-   void SetRate(WaveTrack * pTrack, double rate);
+   void SetRate(WaveTrack &track, double rate);
 
    void OnRateChange(wxCommandEvent & event);
    void OnRateOther(wxCommandEvent & event);
@@ -381,15 +381,15 @@ int RateMenuTable::IdOfRate(int rate)
    return OnRateOtherID;
 }
 
-void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
+void RateMenuTable::SetRate(WaveTrack &track, double rate)
 {
    AudacityProject *const project = &mpData->project;
-   auto end1 = pTrack->GetEndTime();
-   pTrack->SetRate(rate);
+   auto end1 = track.GetEndTime();
+   track.SetRate(rate);
    if (SyncLockState::Get(*project).IsSyncLocked()) {
-      auto end2 = pTrack->GetEndTime();
-      for (auto pLocked : SyncLock::Group(pTrack)) {
-         if (pLocked != pTrack)
+      auto end2 = track.GetEndTime();
+      for (auto pLocked : SyncLock::Group(&track)) {
+         if (pLocked != &track)
             pLocked->SyncLockAdjust(end1, end2);
       }
    }
@@ -399,7 +399,7 @@ void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
    ProjectHistory::Get( *project )
    /* i18n-hint: The string names a track */
       .PushState(XO("Changed '%s' to %s Hz")
-         .Format( pTrack->GetName(), rateString),
+         .Format(track.GetName(), rateString),
       XO("Rate Change"));
 }
 
@@ -409,9 +409,9 @@ void RateMenuTable::OnRateChange(wxCommandEvent & event)
 {
    int id = event.GetId();
    wxASSERT(id >= OnRate8ID && id <= OnRate384ID);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
 
-   SetRate(pTrack, gRates[id - OnRate8ID]);
+   SetRate(track, gRates[id - OnRate8ID]);
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -419,7 +419,7 @@ void RateMenuTable::OnRateChange(wxCommandEvent & event)
 
 void RateMenuTable::OnRateOther(wxCommandEvent &)
 {
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
 
    int newRate;
 
@@ -433,7 +433,7 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
       wxString rate;
       wxComboBox *cb;
 
-      rate.Printf(wxT("%ld"), lrint(pTrack->GetRate()));
+      rate.Printf(wxT("%ld"), lrint(track.GetRate()));
 
       wxArrayStringEx rates{
          wxT("8000") ,
@@ -491,7 +491,7 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
          mpData->pParent);
    }
 
-   SetRate(pTrack, newRate);
+   SetRate(track, newRate);
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
@@ -696,8 +696,8 @@ END_POPUP_MENU()
 
 void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 {
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   auto &view = WaveChannelView::Get(*pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
+   auto &view = WaveChannelView::Get(track);
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
@@ -716,13 +716,13 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    int idInt = event.GetId();
    wxASSERT(idInt >= OnSetDisplayId &&
             idInt <= lastDisplayId);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
 
    auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
-   auto &view = WaveChannelView::Get(*pTrack);
+   auto &view = WaveChannelView::Get(track);
    if (view.GetMultiView()) {
-      if (!WaveChannelView::Get(*pTrack)
+      if (!WaveChannelView::Get(track)
             .ToggleSubView(WaveChannelView::Display{ id } )) {
          // Trying to toggle off the last sub-view.  It was refused.
          // Decide what to do here.  Turn off multi-view instead?
@@ -736,7 +736,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       const bool wrongType =
          !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
-         WaveChannelView::Get(*pTrack).SetDisplay(WaveChannelView::Display{ id });
+         WaveChannelView::Get(track).SetDisplay(WaveChannelView::Display{ id });
 
          AudacityProject *const project = &mpData->project;
          ProjectHistory::Get( *project ).ModifyState(true);
@@ -753,7 +753,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    AudacityProject *const project = &mpData->project;
    auto &tracks = TrackList::Get( *project );
 
-   const auto first = tracks.Any<WaveTrack>().find(mpData->pTrack);
+   const auto first = tracks.Any<WaveTrack>().find(&mpData->track);
    const auto left = *first;
    const auto right = *std::next(first);
 
@@ -859,9 +859,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    int totalHeight = 0;
    int nChannels = 0;
 
-   const auto pTrack = mpData->pTrack;
-   static_cast<WaveTrack*>(pTrack)->CopyClipEnvelopes();
-   auto unlinkedTracks = TrackList::Get(*project).UnlinkChannels(*pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
+   track.CopyClipEnvelopes();
+   auto unlinkedTracks = TrackList::Get(*project).UnlinkChannels(track);
    assert(unlinkedTracks.size() == 2);
    if(stereo)
    {
@@ -898,17 +898,17 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    AudacityProject *const project = &mpData->project;
 
    auto &trackFocus = TrackFocus::Get( *project );
-   const auto pTrack = mpData->pTrack;
-   const bool hasFocus = trackFocus.Get() == pTrack;
-   static_cast<WaveTrack*>(pTrack)->CopyClipEnvelopes();
-   if (auto track = TrackList::SwapChannels(*pTrack))
+   auto &track = static_cast<WaveTrack&>(mpData->track);
+   const bool hasFocus = trackFocus.Get() == &track;
+   track.CopyClipEnvelopes();
+   if (auto newTrack = TrackList::SwapChannels(track))
    {
       if (hasFocus)
-         trackFocus.Set(track);
+         trackFocus.Set(newTrack);
 
       ProjectHistory::Get( *project ).PushState(
          /* i18n-hint: The string names a track  */
-         XO("Swapped Channels in '%s'").Format( track->GetName() ),
+         XO("Swapped Channels in '%s'").Format(newTrack->GetName()),
          XO("Swap Channels"));
    }
 
@@ -919,11 +919,11 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
 {
    SplitStereo(true);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
    AudacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project ).PushState(
    /* i18n-hint: The string names a track  */
-      XO("Split stereo track '%s'").Format( pTrack->GetName() ),
+      XO("Split stereo track '%s'").Format(track.GetName()),
       XO("Split"));
 
    using namespace RefreshCode;
@@ -934,11 +934,11 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
 void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
 {
    SplitStereo(false);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
    AudacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project ).PushState(
    /* i18n-hint: The string names a track  */
-      XO("Split Stereo to Mono '%s'").Format( pTrack->GetName() ),
+      XO("Split Stereo to Mono '%s'").Format(track.GetName()),
       XO("Split to Mono"));
 
    using namespace RefreshCode;

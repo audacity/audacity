@@ -991,16 +991,16 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
       return;
    }
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
 
    PrefsPanel::Factories factories;
-   // factories.push_back(WaveformPrefsFactory( pTrack ));
-   factories.push_back(SpectrumPrefsFactory( pTrack ));
+   // factories.push_back(WaveformPrefsFactory(&track));
+   factories.push_back(SpectrumPrefsFactory(&track));
    const int page =
       // (pTrack->GetDisplay() == WaveChannelViewConstants::Spectrum) ? 1 :
       0;
 
-   auto title = XO("%s:").Format( pTrack->GetName() );
+   auto title = XO("%s:").Format(track.GetName());
    ViewSettingsDialog dialog(
       mpData->pParent, mpData->project, title, factories, page);
 

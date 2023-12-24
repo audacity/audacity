@@ -1089,7 +1089,7 @@ BEGIN_POPUP_MENU(WaveColorMenuTable)
    static const auto fn = []( PopupMenuHandler &handler, wxMenu &menu, int id ){
       auto &me = static_cast<WaveColorMenuTable&>( handler );
       auto pData = me.mpData;
-      const auto &track = *static_cast<WaveTrack*>(pData->pTrack);
+      const auto &track = static_cast<WaveTrack&>(pData->track);
       auto &project = pData->project;
       bool unsafe = ProjectAudioIO::Get( project ).IsAudioActive();
 
@@ -1127,17 +1127,17 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 {
    int id = event.GetId();
    wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
 
    int newWaveColor = id - OnInstrument1ID;
 
    AudacityProject *const project = &mpData->project;
 
-   pTrack->SetWaveColorIndex(newWaveColor);
+   track.SetWaveColorIndex(newWaveColor);
 
    ProjectHistory::Get( *project )
       .PushState(XO("Changed '%s' to %s")
-         .Format( pTrack->GetName(), GetWaveColorStr(newWaveColor) ),
+         .Format(track.GetName(), GetWaveColorStr(newWaveColor)),
       XO("WaveColor Change"));
 
    using namespace RefreshCode;
