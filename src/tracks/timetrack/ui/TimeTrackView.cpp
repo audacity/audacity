@@ -162,6 +162,8 @@ void TimeTrackView::Draw(
       const auto artist = TrackArtist::Get(context);
       const auto &pendingTracks = *artist->pPendingTracks;
       const auto pTrack = FindTrack();
+      if (!pTrack)
+         return;
       const auto pList = pTrack->GetOwner();
       if (!pList)
          // Track isn't owned by a list.  Can't proceed!
@@ -185,9 +187,9 @@ void TimeTrackView::Draw(
       Ruler ruler{ updater, TimeFormat::Instance() };
       ruler.SetLabelEdges(false);
 
-      const auto tt = std::static_pointer_cast<const TimeTrack>(
+      const auto &tt = static_cast<const TimeTrack&>(
          pendingTracks.SubstitutePendingChangedTrack(*pTrack));
-      DrawTimeTrack(context, *tt, ruler, rect);
+      DrawTimeTrack(context, tt, ruler, rect);
    }
    CommonChannelView::Draw(context, rect, iPass);
 }

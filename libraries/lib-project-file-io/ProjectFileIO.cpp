@@ -1784,7 +1784,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
          // regular track list.  That is the one that we want to back up.
          // SubstitutePendingChangedTrack() fetches the shadow, if the track has
          // one, else it gives the same track back.
-         useTrack = pendingTracks.SubstitutePendingChangedTrack(t).get();
+         useTrack = &pendingTracks.SubstitutePendingChangedTrack(t);
       }
       else if (useTrack->GetId() == TrackId{}) {
          // This is a track added during a non-appending recording that is

@@ -81,11 +81,14 @@ std::shared_ptr<TrackPanelCell> CommonChannelView::ContextMenuDelegate()
 
 int CommonChannelView::GetMinimizedHeight() const
 {
-   auto height = CommonTrackInfo::MinimumTrackHeight();
-   std::shared_ptr<const Track> pTrack = FindTrack();
+   const auto height = CommonTrackInfo::MinimumTrackHeight();
+   auto pTrack = FindTrack();
+   if (!pTrack)
+      return height;
    if (const auto pList = pTrack->GetOwner()) {
       if (const auto p = pList->GetOwner()) {
-         pTrack = PendingTracks::Get(*p).SubstituteOriginalTrack(*pTrack);
+         pTrack = PendingTracks::Get(*p).SubstituteOriginalTrack(*pTrack)
+            .SharedPointer();
       }
    }
 

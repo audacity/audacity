@@ -92,18 +92,14 @@ bool SyncLock::IsSyncLockSelected(const Track *pTrack)
    if (!p || !SyncLockState::Get( *p ).IsSyncLocked())
       return false;
 
-   auto shTrack = PendingTracks::Get(*p).SubstituteOriginalTrack(*pTrack);
-   if (!shTrack)
-      return false;
-
-   const auto pOrigTrack = shTrack.get();
-   auto trackRange = Group( pOrigTrack );
+   auto &orig = PendingTracks::Get(*p).SubstituteOriginalTrack(*pTrack);
+   auto trackRange = Group(&orig);
 
    if (trackRange.size() <= 1) {
       // Not in a sync-locked group.
       // Return true iff selected and of a sync-lockable type.
-      return (IsSyncLockableNonSeparatorTrack( pOrigTrack ) ||
-              IsSeparatorTrack( pOrigTrack )) && pTrack->GetSelected();
+      return (IsSyncLockableNonSeparatorTrack(&orig) ||
+              IsSeparatorTrack(&orig)) && pTrack->GetSelected();
    }
 
    // Return true iff any track in the group is selected.

@@ -1004,12 +1004,15 @@ void WaveformView::Draw(
       const auto &pendingTracks = *artist->pPendingTracks;
       auto &dc = context.dc;
 
-      const auto wt = std::static_pointer_cast<const WaveTrack>(
-         pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
+      const auto track = FindTrack();
+      if (!track)
+         return;
+      const auto &wt = static_cast<const WaveTrack&>(
+         pendingTracks.SubstitutePendingChangedTrack(*track));
 
       const auto hasSolo = artist->hasSolo;
-      bool muted = (hasSolo || wt->GetMute()) &&
-      !wt->GetSolo();
+      bool muted = (hasSolo || wt.GetMute()) &&
+      !wt.GetSolo();
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
@@ -1020,7 +1023,7 @@ void WaveformView::Draw(
       wxASSERT(waveChannelView.use_count());
 
       auto selectedClip = waveChannelView->GetSelectedClip();
-      DoDraw(context, GetChannelIndex(), *wt, selectedClip.get(), rect, muted);
+      DoDraw(context, GetChannelIndex(), wt, selectedClip.get(), rect, muted);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);

@@ -79,8 +79,7 @@ auto finder(TrackId id, int &distance) {
 }
 }
 
-std::shared_ptr<Track>
-PendingTracks::SubstitutePendingChangedTrack(Track &track) const
+Track &PendingTracks::SubstitutePendingChangedTrack(Track &track) const
 {
    // Linear search.  Tracks in a project are usually very few.
    auto pTrack = &track;
@@ -97,19 +96,21 @@ PendingTracks::SubstitutePendingChangedTrack(Track &track) const
          auto channelIter = TrackList::Channels(&**it).begin();
          std::advance(channelIter, distance);
          pTrack = *channelIter;
+         // This should be provable from how RegisterPendingChangedTrack
+         // constructs the substitutes
+         assert(pTrack);
       }
    }
-   return pTrack->SharedPointer();
+   return *pTrack;
 }
 
-std::shared_ptr<const Track>
-PendingTracks::SubstitutePendingChangedTrack(const Track &track) const
+const Track &PendingTracks::SubstitutePendingChangedTrack(const Track &track)
+const
 {
    return SubstitutePendingChangedTrack(const_cast<Track&>(track));
 }
 
-std::shared_ptr<const Track>
-PendingTracks::SubstituteOriginalTrack(const Track &track) const
+const Track &PendingTracks::SubstituteOriginalTrack(const Track &track) const
 {
    auto pTrack = &track;
    // track might not be a leader
@@ -135,10 +136,13 @@ PendingTracks::SubstituteOriginalTrack(const Track &track) const
             auto channelIter = TrackList::Channels(&**it2).begin();
             std::advance(channelIter, distance2);
             pTrack = *channelIter;
+            // This should be provable from how RegisterPendingChangedTrack
+            // constructs the substitutes
+            assert(pTrack);
          }
       }
    }
-   return pTrack->SharedPointer();
+   return *pTrack;
 }
 
 Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)

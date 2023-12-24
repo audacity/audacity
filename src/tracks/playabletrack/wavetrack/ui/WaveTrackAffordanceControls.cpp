@@ -179,6 +179,8 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     const auto rect = state.rect;
 
     auto track = std::static_pointer_cast<WaveTrack>(FindTrack());
+    if (!track)
+       return {};
     // Assume only leader channels have affordance areas
     assert(track->IsLeader());
 
@@ -204,10 +206,10 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         );
     }
 
-    const auto waveTrack = std::static_pointer_cast<WaveTrack>(
+    auto &waveTrack = static_cast<WaveTrack&>(
        PendingTracks::Get(*pProject).SubstitutePendingChangedTrack(*track));
     auto& zoomInfo = ViewInfo::Get(*pProject);
-    const auto &intervals = waveTrack->Intervals();
+    const auto &intervals = waveTrack.Intervals();
     for(auto it = intervals.begin(); it != intervals.end(); ++it)
     {
         if (it == mEditedInterval)
@@ -246,6 +248,8 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
 {
     if (iPass == TrackArtist::PassBackground) {
         auto track = FindTrack();
+        if (!track)
+           return;
         const auto artist = TrackArtist::Get(context);
         const auto &pendingTracks = *artist->pPendingTracks;
 
@@ -253,7 +257,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
 
         mVisibleIntervals.clear();
 
-        const auto waveTrack = std::static_pointer_cast<WaveTrack>(
+        auto &waveTrack = static_cast<WaveTrack&>(
            pendingTracks.SubstitutePendingChangedTrack(*track));
         const auto& zoomInfo = *artist->pZoomInfo;
         {
@@ -266,7 +270,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             auto px = context.lastState.m_x;
             auto py = context.lastState.m_y;
 
-            const auto &intervals = waveTrack->Intervals();
+            const auto &intervals = waveTrack.Intervals();
             for(auto it = intervals.begin(); it != intervals.end(); ++it)
             {
                 auto interval = *it;

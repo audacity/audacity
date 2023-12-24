@@ -733,17 +733,21 @@ void NoteTrackView::Draw(
    const auto &pendingTracks = *artist->pPendingTracks;
 
    if ( iPass == TrackArtist::PassTracks ) {
-      const auto nt = std::static_pointer_cast<const NoteTrack>(
-         pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
+      const auto track = FindTrack();
+      if (!track)
+         return;
+      const auto &nt = static_cast<const NoteTrack&>(
+         pendingTracks.SubstitutePendingChangedTrack(*track));
       bool muted = false;
 #ifdef EXPERIMENTAL_MIDI_OUT
       const auto artist = TrackArtist::Get( context );
       const auto hasSolo = artist->hasSolo;
-      muted = (hasSolo || nt->GetMute()) && !nt->GetSolo();
+      muted = (hasSolo || nt.GetMute()) && !nt.GetSolo();
 #endif
 
 #ifdef EXPERIMENTAL_NOTETRACK_OVERLAY
-      TrackArt::DrawBackgroundWithSelection(context, rect, nt.get(), AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
+      TrackArt::DrawBackgroundWithSelection(context,
+         rect, &nt, AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
 #endif
       bool selected{ false };
       if (auto affordance = std::dynamic_pointer_cast<NoteTrackAffordanceControls>(GetAffordanceControls()))
@@ -751,7 +755,7 @@ void NoteTrackView::Draw(
          selected = affordance->IsSelected();
       }
 
-      DrawNoteTrack(context, nt.get(), rect, muted, selected);
+      DrawNoteTrack(context, &nt, rect, muted, selected);
    }
    CommonChannelView::Draw(context, rect, iPass);
 }

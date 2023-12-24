@@ -868,8 +868,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
    const bool hasSolo = GetTracks()->Any<PlayableTrack>()
       .any_of( [&](const PlayableTrack *pt) {
          pt = static_cast<const PlayableTrack *>(
-            pendingTracks.SubstitutePendingChangedTrack(*pt).get());
-         return (pt && pt->GetSolo());
+            &pendingTracks.SubstitutePendingChangedTrack(*pt));
+         return pt->GetSolo();
       } );
 
    mTrackArtist->drawEnvelope = envelopeFlag;
@@ -1081,8 +1081,7 @@ void DrawTrackName(int leftOffset, TrackPanelDrawingContext &context,
       return;
    const auto artist = TrackArtist::Get(context);
    const auto &pendingTracks = *artist->pPendingTracks;
-   auto &track =
-      *pendingTracks.SubstitutePendingChangedTrack(GetTrack(channel));
+   auto &track = pendingTracks.SubstitutePendingChangedTrack(GetTrack(channel));
    auto name = track.GetName();
    if (name.IsEmpty())
       return;

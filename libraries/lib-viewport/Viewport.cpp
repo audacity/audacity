@@ -280,7 +280,7 @@ void Viewport::UpdateScrollbarsForTracks()
       viewInfo.selectedRegion.t1(),
       [&pendingTracks](double acc, const Track *track){
          // Iterate over pending changed tracks if present.
-         track = pendingTracks.SubstitutePendingChangedTrack(*track).get();
+         track = &pendingTracks.SubstitutePendingChangedTrack(*track);
          return std::max(acc, track->GetEndTime());
       });
 

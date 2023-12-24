@@ -777,8 +777,8 @@ namespace {
 /// Draw calls other functions to draw the LabelTrack.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
-void LabelTrackView::Draw
-( TrackPanelDrawingContext &context, const wxRect & r ) const
+void LabelTrackView::Draw(TrackPanelDrawingContext &context, const wxRect & r)
+const
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -793,13 +793,15 @@ void LabelTrackView::Draw
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   const auto pTrack = std::static_pointer_cast< const LabelTrack >(
+   if (!FindTrack())
+      return;
+   const auto &track = static_cast<const LabelTrack&>(
       pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
-   const auto &mLabels = pTrack->GetLabels();
+   const auto &mLabels = track.GetLabels();
 
-   TrackArt::DrawBackgroundWithSelection( context, r, pTrack.get(),
+   TrackArt::DrawBackgroundWithSelection(context, r, &track,
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-      SyncLock::IsSelectedOrSyncLockSelected(pTrack.get()) );
+      SyncLock::IsSelectedOrSyncLockSelected(&track));
 
    wxCoord textWidth, textHeight;
 

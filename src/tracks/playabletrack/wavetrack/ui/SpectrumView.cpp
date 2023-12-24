@@ -897,8 +897,11 @@ void SpectrumView::Draw(
 
       auto &dc = context.dc;
  
-      const auto wt = std::static_pointer_cast<const WaveTrack>(
-         pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
+      const auto track = FindTrack();
+      if (!track)
+         return;
+      const auto &wt = static_cast<const WaveTrack&>(
+         pendingTracks.SubstitutePendingChangedTrack(*track));
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
@@ -909,7 +912,7 @@ void SpectrumView::Draw(
       wxASSERT(waveChannelView.use_count());
 
       auto selectedClip = waveChannelView->GetSelectedClip();
-      DoDraw(context, GetChannelIndex(), *wt, selectedClip.get(), rect);
+      DoDraw(context, GetChannelIndex(), wt, selectedClip.get(), rect);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);

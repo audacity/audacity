@@ -68,14 +68,17 @@ std::vector<UIHandlePtr> NoteTrackAffordanceControls::HitTest(const TrackPanelMo
    std::vector<UIHandlePtr> results;
    
    auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
-   const auto nt = std::static_pointer_cast<const NoteTrack>(
+   if (!track)
+      return {};
+   const auto &nt = static_cast<const NoteTrack&>(
       PendingTracks::Get(*pProject).SubstitutePendingChangedTrack(*track));
    
    const auto rect = state.rect;
    
    auto& zoomInfo = ViewInfo::Get(*pProject);
-   auto left = zoomInfo.TimeToPosition(nt->GetStartTime(), rect.x);
-   auto right = zoomInfo.TimeToPosition(nt->GetStartTime() + nt->GetSeq().get_real_dur(), rect.x);
+   auto left = zoomInfo.TimeToPosition(nt.GetStartTime(), rect.x);
+   auto right = zoomInfo.TimeToPosition(
+      nt.GetStartTime() + nt.GetSeq().get_real_dur(), rect.x);
    auto headerRect = wxRect(left, rect.y, right - left, rect.height);
    
    auto px = state.state.m_x;
@@ -109,14 +112,19 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
       const auto artist = TrackArtist::Get(context);
       const auto &pendingTracks = *artist->pPendingTracks;
 
-      const auto nt = std::static_pointer_cast<const NoteTrack>(
-         pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
+      const auto track = FindTrack();
+      if (!track)
+         return;
+      const auto &nt = static_cast<const NoteTrack&>(
+         pendingTracks.SubstitutePendingChangedTrack(*track));
       
-      TrackArt::DrawBackgroundWithSelection(context, rect, nt.get(), AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
+      TrackArt::DrawBackgroundWithSelection(context,
+         rect, &nt, AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
       
       const auto& zoomInfo = *artist->pZoomInfo;
-      auto left = zoomInfo.TimeToPosition(nt->GetStartTime(), rect.x);
-      auto right = zoomInfo.TimeToPosition(nt->GetStartTime() + nt->GetSeq().get_real_dur(), rect.x);
+      auto left = zoomInfo.TimeToPosition(nt.GetStartTime(), rect.x);
+      auto right = zoomInfo.TimeToPosition(
+         nt.GetStartTime() + nt.GetSeq().get_real_dur(), rect.x);
       auto clipRect = wxRect(left, rect.y, right - left + 1, rect.height);
       
       auto px = context.lastState.m_x;
@@ -133,7 +141,7 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
          context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
          context.dc.SetFont(wxFont(wxFontInfo()));
          const auto titleRect = TrackArt::DrawClipAffordance(context.dc, clipRect, highlight, selected);
-         TrackArt::DrawClipTitle(context.dc, titleRect, nt->GetName());
+         TrackArt::DrawClipTitle(context.dc, titleRect, nt.GetName());
       }
    }
 }
