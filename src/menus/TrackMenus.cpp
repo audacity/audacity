@@ -295,7 +295,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
    if (delta != 0.0) {
       // For a fixed-distance shift move sync-lock selected tracks also.
       for (auto t : tracks.Any()
-           + &SyncLock::IsSelectedOrSyncLockSelected )
+           + &SyncLock::IsSelectedOrSyncLockSelectedP)
          t->MoveTo(t->GetStartTime() + delta);
    }
 

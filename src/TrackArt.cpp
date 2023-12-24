@@ -803,8 +803,7 @@ void TrackArt::DrawBackgroundWithSelection(
       }
    };
 
-   if (SyncLock::IsSelectedOrSyncLockSelected(&track))
-   {
+   if (SyncLock::IsSelectedOrSyncLockSelected(track)) {
       // Rectangles before, within, after the selection
       wxRect before = rect;
       wxRect within = rect;

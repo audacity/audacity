@@ -189,7 +189,7 @@ void EditByLabel(
                            (tracks.Selected<PlayableTrack>()).empty());
 
    const auto tracksToEdit = tracks.Any<Track>() + [&](const auto pTrack) {
-      return SyncLock::IsSyncLockSelected(pTrack) ||
+      return SyncLock::IsSyncLockSelected(*pTrack) ||
              (notLocked && dynamic_cast<const PlayableTrack*>(pTrack) != nullptr);
    };
 
@@ -257,7 +257,7 @@ void EditClipboardByLabel(AudacityProject &project,
 
    for (auto t : tracks) {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
-      if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable)) {
+      if (SyncLock::IsSyncLockSelected(*t) || (notLocked && playable)) {
          // These tracks accumulate the needed clips, right to left:
          std::shared_ptr<TrackList> merged;
          for (size_t i = regions.size(); i--;) {

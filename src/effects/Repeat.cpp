@@ -100,7 +100,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
 
    outputs.Get().Any().VisitWhile(bGoodResult,
       [&](LabelTrack &track) {
-         if (SyncLock::IsSelectedOrSyncLockSelected(&track))
+         if (SyncLock::IsSelectedOrSyncLockSelected(track))
          {
             if (!track.Repeat(mT0, mT1, repeatCount))
                bGoodResult = false;
@@ -174,7 +174,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
       }; },
       [&](Track &t)
       {
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
       }
    );

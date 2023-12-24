@@ -388,7 +388,7 @@ void RateMenuTable::SetRate(WaveTrack &track, double rate)
    track.SetRate(rate);
    if (SyncLockState::Get(*project).IsSyncLocked()) {
       auto end2 = track.GetEndTime();
-      for (auto pLocked : SyncLock::Group(&track)) {
+      for (auto pLocked : SyncLock::Group(track)) {
          if (pLocked != &track)
             pLocked->SyncLockAdjust(end1, end2);
       }

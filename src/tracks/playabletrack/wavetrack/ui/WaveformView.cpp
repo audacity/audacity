@@ -718,7 +718,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    {
       double tt0, tt1;
       const auto &track = channel.GetTrack();
-      if (SyncLock::IsSelectedOrSyncLockSelected(&track)) {
+      if (SyncLock::IsSelectedOrSyncLockSelected(track)) {
          tt0 = track.SnapToSample(selectedRegion.t0());
          tt1 = track.SnapToSample(selectedRegion.t1());
       }

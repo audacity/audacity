@@ -40,19 +40,34 @@ private:
 
 class TRACK_SELECTION_API SyncLock {
 public:
-   //! @return pTrack is not null, sync lock is on, and some member of its group is selected
-   static bool IsSyncLockSelected( const Track *pTrack );
+   //! @return sync lock is on, and some member of track's group is selected
+   static bool IsSyncLockSelected(const Track &track);
+
+   //! @return pTrack is not null, sync lock is on, and some member of its
+   //! group is selected
+   /*!
+    Useful as a predicate for track iteration, which must test a pointer
+    */
+   static bool IsSyncLockSelectedP(const Track *pTrack)
+   { return pTrack && IsSyncLockSelected(*pTrack); }
+
+   //! @return track is selected, or is sync-lock selected
+   static bool IsSelectedOrSyncLockSelected(const Track &track);
 
    //! @return pTrack is not null, and is selected, or is sync-lock selected
-   static bool IsSelectedOrSyncLockSelected( const Track *pTrack );
+   /*!
+    Useful as a predicate for track iteration, which must test a pointer
+    */
+   static bool IsSelectedOrSyncLockSelectedP(const Track *pTrack)
+   { return pTrack && IsSelectedOrSyncLockSelected(*pTrack); }
 
-   /*! @pre `pTrack->GetOwner() != nullptr` */
-   static TrackIterRange< Track > Group( Track *pTrack );
+   /*! @pre `track.GetOwner() != nullptr` */
+   static TrackIterRange<Track> Group(Track &track);
 
    /*! @copydoc Group */
-   static TrackIterRange< const Track > Group( const Track *pTrack )
+   static TrackIterRange<const Track> Group(const Track &track)
    {
-      return Group(const_cast<Track*>(pTrack)).Filter<const Track>();
+      return Group(const_cast<Track&>(track)).Filter<const Track>();
    }
 };
 

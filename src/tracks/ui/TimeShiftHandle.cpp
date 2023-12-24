@@ -355,7 +355,7 @@ void ClipMoveState::Init(
             if (!shifter.SyncLocks())
                continue;
             auto &track = shifter.GetTrack();
-            auto group = SyncLock::Group(&track);
+            auto group = SyncLock::Group(track);
             if (group.size() <= 1)
                continue;
 

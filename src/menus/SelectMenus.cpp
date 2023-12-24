@@ -484,7 +484,7 @@ void OnSelectSyncLockSel(const CommandContext &context)
 
    bool selected = false;
    for (auto t : tracks.Any() + &Track::SupportsBasicEditing
-         + &SyncLock::IsSyncLockSelected - &Track::IsSelected) {
+         + &SyncLock::IsSyncLockSelectedP - &Track::IsSelected) {
       t->SetSelected(true);
       selected = true;
    }

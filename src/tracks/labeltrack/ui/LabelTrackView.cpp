@@ -801,7 +801,7 @@ const
 
    TrackArt::DrawBackgroundWithSelection(context, r, track,
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-      SyncLock::IsSelectedOrSyncLockSelected(&track));
+      SyncLock::IsSelectedOrSyncLockSelected(track));
 
    wxCoord textWidth, textHeight;
 

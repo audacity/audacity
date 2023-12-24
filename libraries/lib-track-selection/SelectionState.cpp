@@ -36,7 +36,7 @@ void SelectionState::SelectTrackLength(
    auto trackRange = syncLocked
    // If we have a sync-lock group and sync-lock linking is on,
    // check the sync-lock group tracks.
-   ? SyncLock::Group(&track)
+   ? SyncLock::Group(track)
 
    // Otherwise, check for one track
    : TrackList::SingletonRange(&track);

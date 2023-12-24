@@ -309,7 +309,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
       };
    const auto defaultTrackVisitor =
       [&](Track &t) {
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT0 + duration);
       };
 

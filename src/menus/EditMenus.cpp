@@ -296,7 +296,7 @@ void OnCut(const CommandContext &context)
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
 
-   (tracks.Any() + &SyncLock::IsSelectedOrSyncLockSelected).Visit(
+   (tracks.Any() + &SyncLock::IsSelectedOrSyncLockSelectedP).Visit(
 #if defined(USE_MIDI)
       [](NoteTrack&) {
          //if NoteTrack, it was cut, so do not clear anything
@@ -335,7 +335,7 @@ void OnDelete(const CommandContext &context)
    for (auto n : tracks) {
       if (!n->SupportsBasicEditing())
          continue;
-      if (SyncLock::IsSelectedOrSyncLockSelected(n)) {
+      if (SyncLock::IsSelectedOrSyncLockSelected(*n)) {
          n->Clear(selectedRegion.t0(), selectedRegion.t1());
       }
    }
@@ -585,7 +585,7 @@ void OnPaste(const CommandContext &context)
       if (iPair == endPair)
          // Nothing more to paste
          break;
-      auto group = SyncLock::Group(*range.first);
+      auto group = SyncLock::Group(**range.first);
       next = tracks.Find(*group.rbegin());
       ++next;
 

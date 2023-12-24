@@ -97,14 +97,15 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
    outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
          if ( !(lt.GetSelected() ||
-                (mustSync && SyncLock::IsSyncLockSelected(&lt))) )
+                (mustSync && SyncLock::IsSyncLockSelected(lt))) )
             return fallthrough();
          if (!ProcessLabelTrack(&lt, warper))
             bGoodResult = false;
       }; },
 #ifdef USE_MIDI
       [&](auto &&fallthrough){ return [&](NoteTrack &nt) {
-         if ( !(nt.GetSelected() || (mustSync && SyncLock::IsSyncLockSelected(&nt))) )
+         if (!(nt.GetSelected() ||
+               (mustSync && SyncLock::IsSyncLockSelected(nt))))
             return fallthrough();
          if (!ProcessNoteTrack(&nt, warper))
             bGoodResult = false;
@@ -154,7 +155,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
       [&](Track &t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels
-         if (mustSync && SyncLock::IsSyncLockSelected(&t))
+         if (mustSync && SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, warper.Warp(mT1));
       }
    );

@@ -286,7 +286,8 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
 {
    auto dc = &context.dc;
    bool selected = pTrack ? pTrack->GetSelected() : true;
-   bool syncLockSelected = pTrack ? SyncLock::IsSyncLockSelected(pTrack) : true;
+   bool syncLockSelected =
+      pTrack ? SyncLock::IsSyncLockSelected(*pTrack) : true;
    bool minimized =
       pTrack ? ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized() : false;
    {
