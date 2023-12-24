@@ -1237,12 +1237,12 @@ public:
    /// Make the list empty
    void Clear(bool sendEvent = true);
 
-   bool CanMoveUp(Track * t) const;
-   bool CanMoveDown(Track * t) const;
+   bool CanMoveUp(Track &t) const;
+   bool CanMoveDown(Track &t) const;
 
-   bool MoveUp(Track * t);
-   bool MoveDown(Track * t);
-   bool Move(Track * t, bool up) { return up ? MoveUp(t) : MoveDown(t); }
+   bool MoveUp(Track &t);
+   bool MoveDown(Track &t);
+   bool Move(Track &t, bool up) { return up ? MoveUp(t) : MoveDown(t); }
 
    // Return non-null only if the weak pointer is not, and the track is
    // owned by this list; constant time.
@@ -1343,8 +1343,8 @@ private:
       return { { b, b, e, pred }, { b, e, e, pred } };
    }
 
-   Track *GetPrev(Track * t, bool linked = false) const;
-   Track *GetNext(Track * t, bool linked = false) const;
+   Track *GetPrev(Track &, bool linked = false) const;
+   Track *GetNext(Track &, bool linked = false) const;
 
    template < typename TrackType >
       TrackIter< TrackType >

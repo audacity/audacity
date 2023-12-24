@@ -1036,7 +1036,7 @@ void OnTrackMute(const CommandContext &context)
       track = TrackFocus::Get( project ).Get();
 
    if (track) track->TypeSwitch( [&](PlayableTrack &t) {
-      TrackUtilities::DoTrackMute(project, &t, false);
+      TrackUtilities::DoTrackMute(project, t, false);
    });
 }
 
@@ -1046,7 +1046,7 @@ void OnTrackSolo(const CommandContext &context)
 
    const auto track = TrackFocus::Get( project ).Get();
    if (track) track->TypeSwitch( [&](PlayableTrack &t) {
-      TrackUtilities::DoTrackSolo(project, &t, false);
+      TrackUtilities::DoTrackSolo(project, t, false);
    });
 }
 
@@ -1069,7 +1069,7 @@ void OnTrackClose(const CommandContext &context)
       return;
    }
 
-   TrackUtilities::DoRemoveTrack(project, t);
+   TrackUtilities::DoRemoveTrack(project, *t);
 
    trackPanel.UpdateViewIfNoTracks();
    trackPanel.Refresh(false);
@@ -1082,8 +1082,8 @@ void OnTrackMoveUp(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    const auto focusedTrack = TrackFocus::Get( project ).Get();
-   if (tracks.CanMoveUp(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveUpID);
+   if (focusedTrack && tracks.CanMoveUp(*focusedTrack)) {
+      DoMoveTrack(project, *focusedTrack, TrackUtilities::OnMoveUpID);
       trackPanel.Refresh(false);
    }
 }
@@ -1095,8 +1095,8 @@ void OnTrackMoveDown(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    const auto focusedTrack = TrackFocus::Get( project ).Get();
-   if (tracks.CanMoveDown(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveDownID);
+   if (focusedTrack && tracks.CanMoveDown(*focusedTrack)) {
+      DoMoveTrack(project, *focusedTrack, TrackUtilities::OnMoveDownID);
       trackPanel.Refresh(false);
    }
 }
@@ -1108,8 +1108,8 @@ void OnTrackMoveTop(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    const auto focusedTrack = TrackFocus::Get( project ).Get();
-   if (tracks.CanMoveUp(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveTopID);
+   if (focusedTrack && tracks.CanMoveUp(*focusedTrack)) {
+      DoMoveTrack(project, *focusedTrack, TrackUtilities::OnMoveTopID);
       trackPanel.Refresh(false);
    }
 }
@@ -1121,8 +1121,8 @@ void OnTrackMoveBottom(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    const auto focusedTrack = TrackFocus::Get( project ).Get();
-   if (tracks.CanMoveDown(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveBottomID);
+   if (focusedTrack && tracks.CanMoveDown(*focusedTrack)) {
+      DoMoveTrack(project, *focusedTrack, TrackUtilities::OnMoveBottomID);
       trackPanel.Refresh(false);
    }
 }

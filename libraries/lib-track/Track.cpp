@@ -523,14 +523,14 @@ Track* TrackList::SwapChannels(Track &track)
    auto pOwner = track.GetOwner();
    if (!pOwner)
       return nullptr;
-   auto pPartner = pOwner->GetNext(&track, false);
+   auto pPartner = pOwner->GetNext(track, false);
    if (!pPartner)
       return nullptr;
 
    // Swap channels, avoiding copying of GroupData
    auto pData = track.DetachGroupData();
    assert(pData);
-   pOwner->MoveUp(pPartner);
+   pOwner->MoveUp(*pPartner);
    pPartner->AssignGroupData(move(pData));
    return pPartner;
 }
@@ -782,69 +782,64 @@ void TrackList::Clear(bool sendEvent)
 }
 
 /// Return a track in the list that comes after Track t
-Track *TrackList::GetNext(Track * t, bool linked) const
+Track *TrackList::GetNext(Track &t, bool linked) const
 {
-   if (t) {
-      auto node = t->GetNode();
-      if ( !isNull( node ) ) {
-         if ( linked && t->HasLinkedTrack() )
-            node = getNext( node );
+   auto node = t.GetNode();
+   if (!isNull(node)) {
+      if (linked && t.HasLinkedTrack())
+         node = getNext(node);
 
-         if ( !isNull( node ) )
-            node = getNext( node );
+      if (!isNull(node))
+         node = getNext(node);
 
-         if ( !isNull( node ) )
-            return node.first->get();
-      }
+      if (!isNull(node))
+         return node.first->get();
    }
-
    return nullptr;
 }
 
-Track *TrackList::GetPrev(Track * t, bool linked) const
+Track *TrackList::GetPrev(Track &t, bool linked) const
 {
-   if (t) {
-      TrackNodePointer prev;
-      auto node = t->GetNode();
-      if ( !isNull( node ) ) {
-         // linked is true and input track second in team?
+   TrackNodePointer prev;
+   auto node = t.GetNode();
+   if (!isNull(node)) {
+      // linked is true and input track second in team?
+      if (linked) {
+         prev = getPrev(node);
+         if (!isNull(prev) &&
+             !t.HasLinkedTrack() && t.GetLinkedTrack())
+            // Make it the first
+            node = prev;
+      }
+
+      prev = getPrev(node);
+      if (!isNull(prev)) {
+         // Back up once
+         node = prev;
+
+         // Back up twice sometimes when linked is true
          if (linked) {
-            prev = getPrev( node );
-            if( !isNull( prev ) &&
-                !t->HasLinkedTrack() && t->GetLinkedTrack() )
-               // Make it the first
+            prev = getPrev(node);
+            if( !isNull(prev) &&
+                !(*node.first)->HasLinkedTrack() &&
+               (*node.first)->GetLinkedTrack())
                node = prev;
          }
 
-         prev = getPrev( node );
-         if ( !isNull( prev ) ) {
-            // Back up once
-            node = prev;
-
-            // Back up twice sometimes when linked is true
-            if (linked) {
-               prev = getPrev( node );
-               if( !isNull( prev ) &&
-                   !(*node.first)->HasLinkedTrack() && (*node.first)->GetLinkedTrack() )
-                  node = prev;
-            }
-
-            return node.first->get();
-         }
+         return node.first->get();
       }
    }
-
    return nullptr;
 }
 
-bool TrackList::CanMoveUp(Track * t) const
+bool TrackList::CanMoveUp(Track &t) const
 {
-   return GetPrev(t, true) != NULL;
+   return GetPrev(t, true) != nullptr;
 }
 
-bool TrackList::CanMoveDown(Track * t) const
+bool TrackList::CanMoveDown(Track &t) const
 {
-   return GetNext(t, true) != NULL;
+   return GetNext(t, true) != nullptr;
 }
 
 // This is used when you want to swap the channel group starting
@@ -910,29 +905,23 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    PermutationEvent(s1);
 }
 
-bool TrackList::MoveUp(Track * t)
+bool TrackList::MoveUp(Track &t)
 {
-   if (t) {
-      Track *p = GetPrev(t, true);
-      if (p) {
-         SwapNodes(p->GetNode(), t->GetNode());
-         return true;
-      }
+   Track *p = GetPrev(t, true);
+   if (p) {
+      SwapNodes(p->GetNode(), t.GetNode());
+      return true;
    }
-
    return false;
 }
 
-bool TrackList::MoveDown(Track * t)
+bool TrackList::MoveDown(Track &t)
 {
-   if (t) {
-      Track *n = GetNext(t, true);
-      if (n) {
-         SwapNodes(t->GetNode(), n->GetNode());
-         return true;
-      }
+   Track *n = GetNext(t, true);
+   if (n) {
+      SwapNodes(t.GetNode(), n->GetNode());
+      return true;
    }
-
    return false;
 }
 

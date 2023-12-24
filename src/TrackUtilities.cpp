@@ -16,10 +16,7 @@
 #include "TrackPanel.h"
 #include "Viewport.h"
 
-namespace TrackUtilities {
-
-void DoRemoveTracks(AudacityProject &project)
-{
+void TrackUtilities::DoRemoveTracks(AudacityProject &project) {
    auto &tracks = TrackList::Get(project);
    auto &trackPanel = TrackPanel::Get(project);
 
@@ -60,12 +57,13 @@ void DoRemoveTracks(AudacityProject &project)
    trackPanel.UpdateViewIfNoTracks();
 }
 
-void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
+void TrackUtilities::DoTrackMute(
+   AudacityProject &project, Track &track, bool exclusive)
 {
-   auto &tracks = TrackList::Get( project );
+   auto &tracks = TrackList::Get(project);
 
    // Whatever t is, replace with lead channel
-   t = *tracks.Find(t);
+   const auto t = *tracks.Find(&track);
 
    // "exclusive" mute means mute the chosen track and unmute all others.
    if (exclusive) {
@@ -104,12 +102,13 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
    TrackFocus::Get( project ).UpdateAccessibility();
 }
 
-void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
+void  TrackUtilities::DoTrackSolo(
+   AudacityProject &project, Track &track, bool exclusive)
 {
    auto &tracks = TrackList::Get( project );
    
    // Whatever t is, replace with lead channel
-   t = *tracks.Find(t);
+   const auto t = *tracks.Find(&track);
 
    const auto pt = dynamic_cast<PlayableTrack *>( t );
    if (!pt)
@@ -148,15 +147,12 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
    TrackFocus::Get( project ).UpdateAccessibility();
 }
 
-void DoRemoveTrack(AudacityProject &project, Track *toRemove)
+void TrackUtilities::DoRemoveTrack(AudacityProject &project, Track &toRemove)
 {
-   if (!toRemove)
-      return;
-
    auto &tracks = TrackList::Get(project);
    auto &trackFocus = TrackFocus::Get(project);
 
-   const auto iter = tracks.Find(toRemove);
+   const auto iter = tracks.Find(&toRemove);
 
    // If it was focused, then NEW focus is the next or, if
    // unavailable, the previous track. (The NEW focus is set
@@ -171,7 +167,7 @@ void DoRemoveTrack(AudacityProject &project, Track *toRemove)
          newFocus.emplace(--iterPrev);
    }
 
-   wxString name = toRemove->GetName();
+   wxString name = toRemove.GetName();
 
    // By construction of iter
    assert((*iter)->IsLeader());
@@ -185,8 +181,8 @@ void DoRemoveTrack(AudacityProject &project, Track *toRemove)
       XO("Track Remove"));
 }
 
-void DoMoveTrack
-(AudacityProject &project, Track* target, MoveChoice choice)
+void TrackUtilities::DoMoveTrack(
+   AudacityProject &project, Track& target, MoveChoice choice)
 {
    auto &tracks = TrackList::Get( project );
 
@@ -231,9 +227,7 @@ void DoMoveTrack
 
    }
 
-   longDesc.Format(target->GetName());
+   longDesc.Format(target.GetName());
 
    ProjectHistory::Get( project ).PushState(longDesc, shortDesc);
-}
-
 }

@@ -124,7 +124,7 @@ BEGIN_POPUP_MENU(TrackMenuTable)
          const auto &tracks = TrackList::Get( pData->project );
          auto &track = pData->track;
          menu.Enable(id,
-            up ? tracks.CanMoveUp(&track) : tracks.CanMoveDown(&track));
+            up ? tracks.CanMoveUp(track) : tracks.CanMoveDown(track));
       };
    };
       //First section in the menu doesn't need BeginSection/EndSection
@@ -258,7 +258,7 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
       choice = TrackUtilities::OnMoveBottomID; break;
    }
 
-   TrackUtilities::DoMoveTrack(*project, &mpData->track, choice);
+   TrackUtilities::DoMoveTrack(*project, mpData->track, choice);
 
    // MoveTrack already refreshed TrackPanel, which means repaint will happen.
    // This is a harmless redundancy:

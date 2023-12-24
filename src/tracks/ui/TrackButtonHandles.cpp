@@ -160,7 +160,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges(const wxMouseEvent &,
       ProjectAudioManager::Get( *pProject ).StopIfPaused();
       if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:
-         TrackUtilities::DoRemoveTrack(*pProject, &toRemove);
+         TrackUtilities::DoRemoveTrack(*pProject, toRemove);
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)
