@@ -260,11 +260,9 @@ int PitchToY(double p, int bottom)
    background colors.
  */
 void DrawNoteBackground(TrackPanelDrawingContext &context,
-                                     const NoteTrack *track,
-                                     const wxRect &rect, const wxRect &sel,
-                                     const wxBrush &wb, const wxPen &wp,
-                                     const wxBrush &bb, const wxPen &bp,
-                                     const wxPen &mp)
+    const NoteTrack &track, const wxRect &rect, const wxRect &sel,
+    const wxBrush &wb, const wxPen &wp, const wxBrush &bb, const wxPen &bp,
+    const wxPen &mp)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -276,16 +274,16 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
    dc.DrawRectangle(sel); // fill rectangle with white keys background
 #endif
 
-   int left = TIME_TO_X(track->GetStartTime());
+   int left = TIME_TO_X(track.GetStartTime());
    if (left < sel.x) left = sel.x; // clip on left
 
-   int right = TIME_TO_X(track->GetStartTime() + track->GetSeq().get_real_dur());
+   int right = TIME_TO_X(track.GetStartTime() + track.GetSeq().get_real_dur());
    if (right > sel.x + sel.width) right = sel.x + sel.width; // clip on right
 
    // need overlap between MIDI data and the background region
    if (left >= right) return;
 
-   NoteTrackDisplayData data{ *track, rect };
+   NoteTrackDisplayData data{ track, rect };
    dc.SetBrush(bb);
    int octave = 0;
    // obottom is the window coordinate of octave divider line
@@ -322,7 +320,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
    }
 
    // draw bar lines
-   Alg_seq_ptr seq = &track->GetSeq();
+   Alg_seq_ptr seq = &track.GetSeq();
    // We assume that sliding a NoteTrack around slides the barlines
    // along with the notes. This means that when we write out a track
    // as Allegro or MIDI without the offset, we'll need to insert an
@@ -347,7 +345,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
       // map beat to time
       double t = seq->get_time_map()->beat_to_time(next_bar_beat);
       // map time to position
-      int xx = TIME_TO_X(t + track->GetStartTime());
+      int xx = TIME_TO_X(t + track.GetStartTime());
       if (xx > right) break;
       AColor::Line(dc, xx, sel.y, xx, sel.y + sel.height);
       next_bar_beat += beats_per_measure;
@@ -361,10 +359,7 @@ reserve a half-note-height margin at the top and bottom of the
 window and draw out-of-bounds notes here instead.
 */
 void DrawNoteTrack(TrackPanelDrawingContext &context,
-                                const NoteTrack *track,
-                                const wxRect & rect,
-                                bool muted,
-                                bool selected)
+   const NoteTrack &track, const wxRect & rect, bool muted, bool selected)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -378,12 +373,12 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    const double h = X_TO_TIME(rect.x);
    const double h1 = X_TO_TIME(rect.x + rect.width);
 
-   Alg_seq_ptr seq = &track->GetSeq();
+   Alg_seq_ptr seq = &track.GetSeq();
 
-   if (!track->GetSelected())
+   if (!track.GetSelected())
       sel0 = sel1 = 0.0;
 
-   NoteTrackDisplayData data{ *track, rect };
+   NoteTrackDisplayData data{ track, rect };
 
    // reserve 1/2 note height at top and bottom of track for
    // out-of-bounds notes
@@ -478,8 +473,8 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
       if (evt->get_type() == 'n') { // 'n' means a note
          Alg_note_ptr note = (Alg_note_ptr) evt;
          // if the note's channel is visible
-         if (track->IsVisibleChan(evt->chan)) {
-            double xx = note->time + track->GetStartTime();
+         if (track.IsVisibleChan(evt->chan)) {
+            double xx = note->time + track.GetStartTime();
             double x1 = xx + note->dur;
             if (xx < h1 && x1 > h) { // omit if outside box
                const char *shape = NULL;
@@ -707,14 +702,14 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    AColor::Line(dc, rect.x, rect.y + rect.height - marg - 1, // subtract 1 to get
                 rect.x + rect.width, rect.y + rect.height - marg - 1); // top of line
 
-   if (h == 0.0 && track->GetStartTime() < 0.0) {
+   if (h == 0.0 && track.GetStartTime() < 0.0) {
       TrackArt::DrawNegativeOffsetTrackArrows( context, rect );
    }
 
    //draw clip edges
    {
-      int left = TIME_TO_X(track->GetStartTime());
-      int right = TIME_TO_X(track->GetStartTime() + track->GetSeq().get_real_dur());
+      int left = TIME_TO_X(track.GetStartTime());
+      int right = TIME_TO_X(track.GetStartTime() + track.GetSeq().get_real_dur());
 
       TrackArt::DrawClipEdges(dc, wxRect(left, rect.GetTop(), right - left + 1, rect.GetHeight()), selected);
    }
@@ -747,7 +742,7 @@ void NoteTrackView::Draw(
 
 #ifdef EXPERIMENTAL_NOTETRACK_OVERLAY
       TrackArt::DrawBackgroundWithSelection(context,
-         rect, &nt, AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
+         rect, nt, AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
 #endif
       bool selected{ false };
       if (auto affordance = std::dynamic_pointer_cast<NoteTrackAffordanceControls>(GetAffordanceControls()))
@@ -755,7 +750,7 @@ void NoteTrackView::Draw(
          selected = affordance->IsSelected();
       }
 
-      DrawNoteTrack(context, &nt, rect, muted, selected);
+      DrawNoteTrack(context, nt, rect, muted, selected);
    }
    CommonChannelView::Draw(context, rect, iPass);
 }

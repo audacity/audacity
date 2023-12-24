@@ -62,7 +62,7 @@ public:
 
 protected:
    static void DrawBoldBoundaries(
-      TrackPanelDrawingContext &context, const WaveTrack &track,
+      TrackPanelDrawingContext &context, const WaveChannel &channel,
       const wxRect &rect);
 
    std::weak_ptr<WaveChannelView> GetWaveChannelView() const;

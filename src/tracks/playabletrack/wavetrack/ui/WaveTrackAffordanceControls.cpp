@@ -246,68 +246,71 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 
 void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass)
 {
-    if (iPass == TrackArtist::PassBackground) {
-        auto track = FindTrack();
-        if (!track)
-           return;
-        const auto artist = TrackArtist::Get(context);
-        const auto &pendingTracks = *artist->pPendingTracks;
+   if (iPass == TrackArtist::PassBackground) {
+      const auto track = FindTrack().get();
+      if (!track)
+         return;
+      const auto artist = TrackArtist::Get(context);
+      const auto &pendingTracks = *artist->pPendingTracks;
+      
+      // Color the background of the affordance rectangle (only one per track)
+      // as for the leader channel
+      TrackArt::DrawBackgroundWithSelection(context,
+         rect, **track->Channels().begin(),
+         artist->blankSelectedBrush, artist->blankBrush);
+      
+      mVisibleIntervals.clear();
+      
+      auto &waveTrack = static_cast<WaveTrack&>(
+         pendingTracks.SubstitutePendingChangedTrack(*track));
+      const auto& zoomInfo = *artist->pZoomInfo;
+      {
+         wxDCClipper dcClipper(context.dc, rect);
+         
+         context.dc.SetTextBackground(wxTransparentColor);
+         context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
+         context.dc.SetFont(mClipNameFont);
+         
+         auto px = context.lastState.m_x;
+         auto py = context.lastState.m_y;
+         
+         const auto &intervals = waveTrack.Intervals();
+         for(auto it = intervals.begin(); it != intervals.end(); ++it)
+         {
+             auto interval = *it;
+             auto affordanceRect
+                = ClipParameters::GetClipRect(*interval->GetClip(0), zoomInfo, rect);
 
-        TrackArt::DrawBackgroundWithSelection(context, rect, track.get(), artist->blankSelectedBrush, artist->blankBrush);
+             if(!WaveChannelView::ClipDetailsVisible(*interval->GetClip(0), zoomInfo, rect))
+             {
+                TrackArt::DrawClipFolded(context.dc, affordanceRect);
+                continue;
+             }
 
-        mVisibleIntervals.clear();
-
-        auto &waveTrack = static_cast<WaveTrack&>(
-           pendingTracks.SubstitutePendingChangedTrack(*track));
-        const auto& zoomInfo = *artist->pZoomInfo;
-        {
-            wxDCClipper dcClipper(context.dc, rect);
-
-            context.dc.SetTextBackground(wxTransparentColor);
-            context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
-            context.dc.SetFont(mClipNameFont);
-
-            auto px = context.lastState.m_x;
-            auto py = context.lastState.m_y;
-
-            const auto &intervals = waveTrack.Intervals();
-            for(auto it = intervals.begin(); it != intervals.end(); ++it)
-            {
-                auto interval = *it;
-                auto affordanceRect
-                   = ClipParameters::GetClipRect(*interval->GetClip(0), zoomInfo, rect);
-
-                if(!WaveChannelView::ClipDetailsVisible(*interval->GetClip(0), zoomInfo, rect))
-                {
-                   TrackArt::DrawClipFolded(context.dc, affordanceRect);
-                   continue;
-                }
-
-                const auto selected = GetSelectedInterval() == it;
-                const auto highlight = selected || affordanceRect.Contains(px, py);
-                const auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, highlight, selected);
-                if (mTextEditHelper && mEditedInterval == it)
-                {
-                    if(!mTextEditHelper->Draw(context.dc, titleRect))
-                    {
-                        mTextEditHelper->Cancel(nullptr);
-                        TrackArt::DrawAudioClipTitle(
-                           context.dc, titleRect, interval->GetName(),
-                           interval->GetStretchRatio(),
-                           interval->GetCentShift());
-                    }
-                }
-                else if (TrackArt::DrawAudioClipTitle(
-                            context.dc, titleRect, interval->GetName(),
-                            interval->GetStretchRatio(),
-                            interval->GetCentShift()))
-                {
-                   mVisibleIntervals.push_back(it);
-                }
-            }
-        }
-
-    }
+             const auto selected = GetSelectedInterval() == it;
+             const auto highlight = selected || affordanceRect.Contains(px, py);
+             const auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, highlight, selected);
+             if (mTextEditHelper && mEditedInterval == it)
+             {
+                 if(!mTextEditHelper->Draw(context.dc, titleRect))
+                 {
+                     mTextEditHelper->Cancel(nullptr);
+                     TrackArt::DrawAudioClipTitle(
+                        context.dc, titleRect, interval->GetName(),
+                        interval->GetStretchRatio(),
+                        interval->GetCentShift());
+                 }
+             }
+             else if (TrackArt::DrawAudioClipTitle(
+                         context.dc, titleRect, interval->GetName(),
+                         interval->GetStretchRatio(),
+                         interval->GetCentShift()))
+             {
+                mVisibleIntervals.push_back(it);
+             }
+         }
+      }      
+   }
 }
 
 bool WaveTrackAffordanceControls::IsIntervalVisible(const IntervalIterator& it) const noexcept

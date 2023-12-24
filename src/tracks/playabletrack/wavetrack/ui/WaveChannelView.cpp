@@ -843,7 +843,7 @@ std::pair<
 
 
 void WaveChannelSubView::DrawBoldBoundaries(
-   TrackPanelDrawingContext &context, const WaveTrack &track,
+   TrackPanelDrawingContext &context, const WaveChannel &channel,
    const wxRect &rect)
 {
    auto &dc = context.dc;
@@ -854,7 +854,8 @@ void WaveChannelSubView::DrawBoldBoundaries(
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
 #endif
-   for (const auto loc : FindWaveTrackLocations(track)) {
+   // x coordinates for bold lines will be the same across channels
+   for (const auto loc : FindWaveTrackLocations(channel.GetTrack())) {
       bool highlightLoc = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       highlightLoc =

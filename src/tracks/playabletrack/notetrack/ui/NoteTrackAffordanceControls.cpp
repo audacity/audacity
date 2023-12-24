@@ -119,7 +119,7 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
          pendingTracks.SubstitutePendingChangedTrack(*track));
       
       TrackArt::DrawBackgroundWithSelection(context,
-         rect, &nt, AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
+         rect, nt, AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
       
       const auto& zoomInfo = *artist->pZoomInfo;
       auto left = zoomInfo.TimeToPosition(nt.GetStartTime(), rect.x);

@@ -799,7 +799,7 @@ const
       pendingTracks.SubstitutePendingChangedChannel(*FindChannel()));
    const auto &mLabels = track.GetLabels();
 
-   TrackArt::DrawBackgroundWithSelection(context, r, &track,
+   TrackArt::DrawBackgroundWithSelection(context, r, track,
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
       SyncLock::IsSelectedOrSyncLockSelected(&track));
 
