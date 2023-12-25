@@ -205,6 +205,7 @@ void CloudProjectsDatabase::UpdateBlockHashes(
 
    const int localVar {};
    auto transaction = connection.BeginTransaction(
+      std::string("UpdateBlockHashes_") +
       std::to_string(reinterpret_cast<size_t>(&localVar)));
 
    auto statement = connection.CreateStatement (
