@@ -187,8 +187,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(XO("Automated Recording Level Adjustment"));
    {
       S.TieCheckBox(XXO("Enable Automated Recording Level Adjustment."),
-                    {wxT("/AudioIO/AutomatedInputLevelAdjustment"),
-                     false});
+                    AILA::Enabled);
 
       S.StartMultiColumn(2, wxEXPAND);
       {
@@ -282,6 +281,7 @@ bool RecordingPrefs::Commit()
    gPrefs->Read(wxT("/AudioIO/NumberAnalysis"), &value);
    if (value < 0)
       gPrefs->Write(wxT("/AudioIO/NumberAnalysis"), AILA_DEF_NUMBER_ANALYSIS);
+   AILA::Enabled.Invalidate();
 #endif
    return true;
 }

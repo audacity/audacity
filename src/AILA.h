@@ -17,6 +17,7 @@ class AudacityProject;
 struct AudioIOEvent;
 
 #include "Observer.h"
+#include "Prefs.h"
 
 #define AILA_DEF_TARGET_PEAK 92.0
 #define AILA_DEF_DELTA_PEAK 2.0
@@ -25,6 +26,8 @@ struct AudioIOEvent;
 
 class AILA {
 public:
+   static BoolSetting Enabled;
+
    static AILA &Get();
 
    void Initialize(double t0);
