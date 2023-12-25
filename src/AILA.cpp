@@ -29,6 +29,10 @@ using std::max;
 using std::min;
 
 BoolSetting AILA::Enabled{ "/AudioIO/AutomatedInputLevelAdjustment", false };
+IntSetting AILA::TargetPeak{ "/AudioIO/TargetPeak", 92 };
+IntSetting AILA::DeltaPeak{ "/AudioIO/DeltaPeakVolume", 2 };
+IntSetting AILA::AnalysisTime{ "/AudioIO/AnalysisTime", 1000 };
+IntSetting AILA::NumberAnalyses{ "/AudioIO/NumberAnalysis", 5 };
 
 AILA &AILA::Get()
 {
@@ -49,10 +53,10 @@ static struct AILAInitializer { AILAInitializer() {
 
 void AILA::Initialize(double t0) {
    mActive = Enabled.Read();
-   gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mGoalPoint,      AILA_DEF_TARGET_PEAK);
-   gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mGoalDelta,      AILA_DEF_DELTA_PEAK);
-   gPrefs->Read(wxT("/AudioIO/AnalysisTime"),          &mAnalysisTime,   AILA_DEF_ANALYSIS_TIME);
-   gPrefs->Read(wxT("/AudioIO/NumberAnalysis"),        &mTotalAnalysis,  AILA_DEF_NUMBER_ANALYSIS);
+   mGoalPoint = TargetPeak.Read();
+   mGoalDelta = DeltaPeak.Read();
+   mAnalysisTime = AnalysisTime.Read();
+   mTotalAnalysis = NumberAnalyses.Read();
    mGoalDelta         /= 100.0;
    mGoalPoint         /= 100.0;
    mAnalysisTime      /= 1000.0;
