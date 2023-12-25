@@ -19,14 +19,13 @@ struct AudioIOEvent;
 #include "Observer.h"
 #include "Prefs.h"
 
-#define AILA_DEF_TARGET_PEAK 92.0
-#define AILA_DEF_DELTA_PEAK 2.0
-#define AILA_DEF_ANALYSIS_TIME 1000.0
-#define AILA_DEF_NUMBER_ANALYSIS 5
-
 class AILA {
 public:
    static BoolSetting Enabled;
+   static IntSetting TargetPeak; // percentage
+   static IntSetting DeltaPeak; // percentage
+   static IntSetting AnalysisTime; // milliseconds
+   static IntSetting NumberAnalyses;
 
    static AILA &Get();
 
