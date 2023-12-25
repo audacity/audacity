@@ -7,6 +7,26 @@ import subprocess
 
 required_conan_version = ">=2.0.0"
 
+# Fix expat rpah on macOS
+def fix_expact_rpath(conanfile, filepath):
+    if conanfile.settings.os != "Macos":
+        return
+
+    # Force expat ID to be @rpath/libexpat.dylib
+    if 'expat' in filepath:
+        filename = os.path.basename(filepath)
+        print(f"Setting id of {filepath} to @rpath/{filename}")
+        subprocess.check_call(["install_name_tool", "-id", f"@rpath/{filename}", filepath])
+        return
+
+    deps = [dep.strip().split()[0] for dep in subprocess.check_output(["otool", "-L", filepath]).decode("utf-8").splitlines()]
+    for dep in deps:
+        if 'expat' not in dep:
+            continue
+        if not dep.startswith("@"):
+            print(f"=== Changing {dep} to @rpath/{os.path.basename(dep)} in {filepath} ===")
+            subprocess.check_call(["install_name_tool", "-change", dep, f"@rpath/{os.path.basename(dep)}", filepath])
+
 # A helper function that correctly copies the files from the Conan package to the
 # correct location in the build tree
 def global_copy_files(conanfile, dependency_info):
@@ -17,8 +37,16 @@ def global_copy_files(conanfile, dependency_info):
     elif conanfile.settings.os == "Macos":
         if len(dependency_info.cpp_info.libdirs) == 0:
             return
+
         copied_files = copy(conanfile, "*.dylib*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/Audacity.app/Contents/Frameworks")
-    elif conanfile.settings.os:
+
+        for file in copied_files:
+            if not os.path.islink(file):
+                try:
+                    fix_expact_rpath(conanfile, file)
+                except subprocess.CalledProcessError as e:
+                    conanfile.output.error(f"Failed to set id of {file}: {e}")
+    else:
         if len(dependency_info.cpp_info.libdirs) == 0:
             return
         # On Linux we also set the correct rpath for the copied libraries
