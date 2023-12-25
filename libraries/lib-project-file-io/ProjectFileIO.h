@@ -298,11 +298,6 @@ private:
 
    bool ShouldCompact(const std::vector<const TrackList *> &tracks);
 
-   // Gets values from SQLite B-tree structures
-   static unsigned int get2(const unsigned char *ptr);
-   static unsigned int get4(const unsigned char *ptr);
-   static int get_varint(const unsigned char *ptr, int64_t *out);
-
 private:
    Connection &CurrConn();
 
