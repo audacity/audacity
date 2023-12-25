@@ -16,7 +16,9 @@
 
 #include "AudioIO.h"
 #include "BasicUI.h"
+#include "ProjectAudioManager.h"
 #include "ProjectStatus.h"
+#include "toolbars/ToolManager.h"
 
 #include <wx/wxcrtvararg.h>
 
@@ -25,6 +27,8 @@
 
 using std::max;
 using std::min;
+
+BoolSetting AILA::Enabled{ "/AudioIO/AutomatedInputLevelAdjustment", false };
 
 AILA &AILA::Get()
 {
@@ -44,7 +48,7 @@ static struct AILAInitializer { AILAInitializer() {
 }} sAILAInitializer;
 
 void AILA::Initialize(double t0) {
-   gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mActive,         false);
+   mActive = Enabled.Read();
    gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mGoalPoint,      AILA_DEF_TARGET_PEAK);
    gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mGoalDelta,      AILA_DEF_DELTA_PEAK);
    gPrefs->Read(wxT("/AudioIO/AnalysisTime"),          &mAnalysisTime,   AILA_DEF_ANALYSIS_TIME);
@@ -218,3 +222,35 @@ void AILA::Process(AudacityProject *proj,
       }
    }
 }
+
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+#include "CommandContext.h"
+#include "CommonCommandFlags.h"
+
+namespace {
+void OnToggleAutomatedInputLevelAdjustment(const CommandContext &)
+{
+   AILA::Enabled.Toggle();
+   gPrefs->Flush();
+   ToolManager::ModifyAllProjectToolbarMenus();
+}
+
+using namespace MenuRegistry;
+
+// Register menu items
+
+AttachedItem sAttachment{
+   // Note that the PLUGIN_SYMBOL must have a space between words,
+   // whereas the short-form used here must not.
+   // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+   // you would have to use "CompareAudio" here.)
+   Command( wxT("AutomatedInputLevelAdjustmentOnOff"),
+      XXO("A&utomated Recording Level Adjustment (on/off)"),
+      OnToggleAutomatedInputLevelAdjustment,
+      AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
+      Options{}.CheckTest(AILA::Enabled) ),
+   wxT("Transport/Other/Options/Part2")
+};
+
+}
+#endif
