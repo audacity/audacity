@@ -245,7 +245,7 @@ AttachedItem sAttachment{
    // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
    // you would have to use "CompareAudio" here.)
    Command( wxT("AutomatedInputLevelAdjustmentOnOff"),
-      XXO("A&utomated Recording Level Adjustment (on/off)"),
+      XXO("A&utomated Recording Level Adjustment"),
       OnToggleAutomatedInputLevelAdjustment,
       AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
       Options{}.CheckTest(AILA::Enabled) ),
