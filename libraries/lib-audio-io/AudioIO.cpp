@@ -2355,7 +2355,7 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
 void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    float * outputMeterFloats,
    float * outputFloats,
-   const float * tempBuf,
+   float * tempBuf,
    bool drop,
    const unsigned long len,
    const PlayableSequence &ps,
@@ -2390,8 +2390,11 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    // framesPerBuffer, which is influenced by the portAudio implementation in
    // opaque ways
    float deltaGain = (gain - oldGain) / len;
-   for (unsigned i = 0; i < len; i++)
-      outputFloats[numPlaybackChannels*i+chan] += (oldGain + deltaGain * i) *tempBuf[i];
+   for (unsigned i = 0; i < len; ++i) {
+      auto &value = tempBuf[i];
+      value *= (oldGain + deltaGain * i);
+      outputFloats[numPlaybackChannels * i + chan] += value;
+   }
 };
 
 // Limit values to -1.0..+1.0
@@ -2475,11 +2478,6 @@ bool AudioIoCallback::FillOutputBuffers(
       auto vt = mPlaybackSequences[tt].first.get();
       const auto width = vt->NChannels();
 
-      // IF mono THEN clear 'the other' channel.
-      if (width < numPlaybackChannels)
-         // TODO: more-than-two-channels
-         memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
-
       // Check for asynchronous user changes in mute, solo, pause status
       discardable = drop = SequenceShouldBeSilent(*vt);
 
@@ -2516,6 +2514,13 @@ bool AudioIoCallback::FillOutputBuffers(
          ++iBuffer;
       }
 
+      // IF mono THEN clear 'the other' channel.
+      if (width < numPlaybackChannels)
+         // TODO: more-than-two-channels
+         // Replicate left sample data for the right, before applying pan
+         // differences
+         memcpy(tempBufs[1], tempBufs[0], framesPerBuffer * sizeof(float));
+
       // PRL:  More recent rewrites of SequenceBufferExchange should guarantee a
       // padding out of the ring buffers so that equal lengths are
       // available, so maxLen ought to increase from 0 only once
@@ -2540,12 +2545,14 @@ bool AudioIoCallback::FillOutputBuffers(
          AddToOutputChannel(0, outputMeterFloats, outputFloats,
             tempBufs[0], drop, len, *vt, gains[0]);
 
-         // If one of mPlaybackSequences is mono, this replicates it in both
-         // device channels
-         const auto iBuffer = std::min<size_t>(1, width - 1);
          AddToOutputChannel(1, outputMeterFloats, outputFloats,
-            tempBufs[iBuffer], drop, len, *vt, gains[1]);
+            tempBufs[1], drop, len, *vt, gains[1]);
       }
+
+      for (const auto &wMeter : mPlaybackSequences[tt].second)
+         if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
+            pMeter->Update(numPlaybackChannels,
+               framesPerBuffer, tempBuf, false); // non-interleaved
 
       CallbackCheckCompletion(mCallbackReturn, len);
       if (discardable) // no samples to process, they've been discarded

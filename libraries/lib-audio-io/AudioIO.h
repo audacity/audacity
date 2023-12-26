@@ -280,7 +280,8 @@ public:
    void AddToOutputChannel( unsigned int chan, // index into gains
       float * outputMeterFloats,
       float * outputFloats,
-      const float * tempBuf,
+      // This buffer is in/out.  Pan, gain, and microfading will be applied
+      float * tempBuf,
       bool drop,
       unsigned long len,
       const PlayableSequence &ps,
