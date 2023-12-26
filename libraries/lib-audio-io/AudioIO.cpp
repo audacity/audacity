@@ -2443,8 +2443,11 @@ bool AudioIoCallback::FillOutputBuffers(
    const auto tempBufs = stackAllocate(float *, numPlaybackChannels);
 
    // And these are larger structures....
-   for (unsigned int c = 0; c < numPlaybackChannels; c++)
-      tempBufs[c] = stackAllocate(float, framesPerBuffer);
+   // One contiguous, non-interleaved buffer
+   const auto tempBuf =
+      stackAllocate(float, numPlaybackChannels * framesPerBuffer);
+   for (size_t c = 0; c < numPlaybackChannels; ++c)
+      tempBufs[c] = tempBuf + c * framesPerBuffer;
    // ------ End of MEMORY ALLOCATION ---------------
 
    // Choose a common size to take from all ring buffers
