@@ -82,21 +82,18 @@ std::shared_ptr<TrackPanelCell> CommonChannelView::ContextMenuDelegate()
 int CommonChannelView::GetMinimizedHeight() const
 {
    const auto height = CommonTrackInfo::MinimumTrackHeight();
-   auto pTrack = FindTrack();
-   if (!pTrack)
+   auto pChannel = FindChannel().get();
+   if (!pChannel)
       return height;
-   if (const auto pList = pTrack->GetOwner()) {
-      if (const auto p = pList->GetOwner()) {
-         pTrack = PendingTracks::Get(*p).SubstituteOriginalTrack(*pTrack)
-            .SharedPointer();
-      }
-   }
+   const auto pTrack = dynamic_cast<const Track *>(pChannel);
+   if (const auto pList = pTrack->GetOwner())
+      if (const auto p = pList->GetOwner())
+          pChannel =
+            &PendingTracks::Get(*p).SubstituteOriginalChannel(*pChannel);
 
-   auto channels = TrackList::Channels(pTrack.get());
-   auto nChannels = channels.size();
-   auto begin = channels.begin();
-   auto index =
-      std::distance(begin, std::find(begin, channels.end(), pTrack.get()));
+   // Find index of the channel in its group and use that to round off correctly
+   const auto index = pChannel->ReallyGetChannelIndex();
+   const auto nChannels = pChannel->ReallyGetChannelGroup().Channels().size();
    return (height * (index + 1) / nChannels) - (height * index / nChannels);
 }
 

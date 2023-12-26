@@ -161,10 +161,11 @@ void TimeTrackView::Draw(
    if ( iPass == TrackArtist::PassTracks ) {
       const auto artist = TrackArtist::Get(context);
       const auto &pendingTracks = *artist->pPendingTracks;
-      const auto pTrack = FindTrack();
-      if (!pTrack)
+      const auto pChannel = FindChannel();
+      if (!pChannel)
          return;
-      const auto pList = pTrack->GetOwner();
+      const auto pList =
+         static_cast<const TimeTrack*>(pChannel.get())->GetOwner();
       if (!pList)
          // Track isn't owned by a list.  Can't proceed!
          return;
@@ -188,7 +189,7 @@ void TimeTrackView::Draw(
       ruler.SetLabelEdges(false);
 
       const auto &tt = static_cast<const TimeTrack&>(
-         pendingTracks.SubstitutePendingChangedTrack(*pTrack));
+         pendingTracks.SubstitutePendingChangedChannel(*pChannel));
       DrawTimeTrack(context, tt, ruler, rect);
    }
    CommonChannelView::Draw(context, rect, iPass);

@@ -1004,11 +1004,11 @@ void WaveformView::Draw(
       const auto &pendingTracks = *artist->pPendingTracks;
       auto &dc = context.dc;
 
-      const auto track = FindTrack();
-      if (!track)
+      const auto pChannel = FindChannel();
+      if (!pChannel)
          return;
       const auto &wt = static_cast<const WaveTrack&>(
-         pendingTracks.SubstitutePendingChangedTrack(*track));
+         pendingTracks.SubstitutePendingChangedChannel(*pChannel));
 
       const auto hasSolo = artist->hasSolo;
       bool muted = (hasSolo || wt.GetMute()) &&

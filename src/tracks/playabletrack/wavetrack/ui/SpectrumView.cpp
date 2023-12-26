@@ -897,11 +897,11 @@ void SpectrumView::Draw(
 
       auto &dc = context.dc;
  
-      const auto track = FindTrack();
-      if (!track)
+      const auto pChannel = FindChannel();
+      if (!pChannel)
          return;
       const auto &wt = static_cast<const WaveTrack&>(
-         pendingTracks.SubstitutePendingChangedTrack(*track));
+         pendingTracks.SubstitutePendingChangedChannel(*pChannel));
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();

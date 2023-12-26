@@ -733,11 +733,11 @@ void NoteTrackView::Draw(
    const auto &pendingTracks = *artist->pPendingTracks;
 
    if ( iPass == TrackArtist::PassTracks ) {
-      const auto track = FindTrack();
-      if (!track)
+      const auto pChannel = FindChannel();
+      if (!pChannel)
          return;
       const auto &nt = static_cast<const NoteTrack&>(
-         pendingTracks.SubstitutePendingChangedTrack(*track));
+         pendingTracks.SubstitutePendingChangedChannel(*pChannel));
       bool muted = false;
 #ifdef EXPERIMENTAL_MIDI_OUT
       const auto artist = TrackArtist::Get( context );

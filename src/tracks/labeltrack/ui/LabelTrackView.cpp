@@ -793,10 +793,10 @@ const
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   if (!FindTrack())
+   if (!FindChannel())
       return;
    const auto &track = static_cast<const LabelTrack&>(
-      pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
+      pendingTracks.SubstitutePendingChangedChannel(*FindChannel()));
    const auto &mLabels = track.GetLabels();
 
    TrackArt::DrawBackgroundWithSelection(context, r, &track,

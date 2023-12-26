@@ -14,7 +14,9 @@
 #include "Observer.h"
 
 class AudacityProject;
+class Channel;
 class Track;
+class TrackId;
 class TrackList;
 struct TrackListEvent;
 
@@ -43,9 +45,18 @@ public:
    void RegisterPendingNewTracks(TrackList &&list);
 
    //! Find anything registered with TrackList::RegisterPendingChangedTrack and
+   //! not yet cleared or applied; if no such exists, return the given channel
+   Channel &SubstitutePendingChangedChannel(Channel &channel) const;
+   const Channel &SubstitutePendingChangedChannel(const Channel &channel) const;
+
+   //! Find anything registered with TrackList::RegisterPendingChangedTrack and
    //! not yet cleared or applied; if no such exists, return the given track
    Track &SubstitutePendingChangedTrack(Track &track) const;
    const Track &SubstitutePendingChangedTrack(const Track &track) const;
+
+   //! If the channel is in a pending changed track, return the corresponding
+   //! original; else return the channel
+   const Channel &SubstituteOriginalChannel(const Channel &channel) const;
 
    //! If the track is a pending changed track, return the corresponding
    //! original; else return the track
@@ -103,6 +114,12 @@ public:
    bool HasPendingTracks() const;
 
 private:
+   std::pair<Track *, Channel *>
+   DoSubstitutePendingChangedChannel(Track &track, size_t channelIndex) const;
+
+   std::pair<const Track *, const Channel*>
+   DoSubstituteOriginalChannel(const Track &track, size_t channelIndex) const;
+
    TrackList &mTracks;
    Observer::Subscription mTrackListSubscription;
    std::vector<Updater> mUpdaters;
