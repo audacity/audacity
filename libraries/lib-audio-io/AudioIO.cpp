@@ -2660,24 +2660,29 @@ void AudioIoCallback::FillOutputBuffers(
    const auto endOutputFloats =
       outputFloats + numPlaybackChannels * framesPerBuffer;
 
+   // One contiguous, non-interleaved buffer
+   const auto tempBuf =
+      stackAllocate(float, numPlaybackChannels * framesPerBuffer);
+
    for (auto &track : mPlaybackTracks) {
       auto vt = track.mpSequence.get();
-
-      decltype(framesPerBuffer) len = 0;
-
+      size_t len = 0;
       assert(numPlaybackChannels > 0); // pre
-
-      // Consume from per-track RingBuffers.  For now, just discard.
-      // In future, per-track data will be forwarded inter-thread for updating
-      // meter display, synchronizing as closely as possible with the actual
-      // playback.
+      // Consume from per-track RingBuffers.
       for (size_t c = 0; c < numPlaybackChannels; ++c) {
-         len = track.mBuffers[c]->Discard(toGet);
+         ;
+         len = track.mBuffers[c]->Get(
+            reinterpret_cast<samplePtr>(tempBuf + c * framesPerBuffer),
+            floatSample, toGet);
          // This should be guaranteed by the producer thread, populating
          // the master buffer with the minumum of available lengths
          assert(len == toGet);
       }
       assert(len == toGet);
+      for (const auto &wMeter : track.mMeters)
+         if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
+            pMeter->Update(numPlaybackChannels,
+               framesPerBuffer, tempBuf, false); // non-interleaved
    }
 
    // Consume from the master buffers, and interleave
