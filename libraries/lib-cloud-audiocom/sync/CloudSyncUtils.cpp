@@ -189,7 +189,7 @@ bool Deserialize(const rapidjson::Value& value, SnapshotInfo& urls)
    if (!Deserialize(value, "blocks_size", tempSnapshot.BlocksSize))
       return {};
 
-   Deserialize(value, "file", tempSnapshot.FileUrl);
+   Deserialize(value, "file_url", tempSnapshot.FileUrl);
    DeserializeArray(value, "blocks", tempSnapshot.Blocks);
 
    urls = std::move(tempSnapshot);

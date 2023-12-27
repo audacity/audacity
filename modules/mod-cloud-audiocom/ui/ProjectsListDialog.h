@@ -13,6 +13,7 @@
 
 #include "wxPanelWrapper.h"
 
+class AudacityProject;
 class wxButton;
 class wxGrid;
 class wxGridTableBase;
@@ -26,7 +27,7 @@ class ProjectsListDialog final
    : public wxDialogWrapper
 {
 public:
-   explicit ProjectsListDialog(wxWindow* parent);
+   ProjectsListDialog(wxWindow* parent, AudacityProject* project);
 
 private:
    class ProjectsTableData;
@@ -36,6 +37,10 @@ private:
    void OnBeforeRefresh();
    void OnRefreshCopleted(bool success);
    void FormatPageLabel();
+
+   void OnOpen();
+
+   AudacityProject* mProject { nullptr };
 
    wxTextCtrl* mSearchCtrl { nullptr };
 

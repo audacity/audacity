@@ -36,7 +36,7 @@ struct SaveResult
       CloudProjectVisibility::Private
    };
    bool SaveToCloud { false };
-   bool Cancelled { false };
+   bool Cancelled { true };
 };
 
 class CLOUD_AUDIOCOM_API CloudSyncUI /* not final */
@@ -52,6 +52,20 @@ public:
       const AudacityProject& project,
       const BasicUI::WindowPlacement& placement) = 0;
 
-   virtual bool OnAuthorizationRequired(const BasicUI::WindowPlacement& placement) = 0;
-};
+   virtual bool
+   OnAuthorizationRequired(const BasicUI::WindowPlacement& placement) = 0;
+
+   virtual bool OnUploadProgress(
+      AudacityProject* project, double progress) = 0;
+   virtual void OnUploadFailed(
+      AudacityProject* project, std::string errorMessage) = 0;
+   virtual void OnUploadSucceeded(AudacityProject* project) = 0;
+
+   virtual void OnDownloadStarted() = 0;
+   virtual bool OnDownloadProgress(double progress) = 0;
+   virtual void OnDownloadFailed(std::string errorMessage, bool verbose) = 0;
+   virtual AudacityProject* OnDownloadSucceeded(
+      AudacityProject* targetProject, const std::string& path) = 0;
+}; // class CloudSyncUI
+
 } // namespace cloud::audiocom::sync

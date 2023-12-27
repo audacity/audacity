@@ -30,9 +30,12 @@ namespace cloud::audiocom::sync
 constexpr auto UNASSIGNED_PROJECT_ID = -1;
 
 class ProjectCloudExtension;
+class LocalProjectSnapshot;
 
 struct SnapshotOperationStatus final
 {
+   LocalProjectSnapshot* Snapshot { nullptr };
+
    int64_t SampleBlocksProcessed { 0 };
    int64_t SampleBlocksCount { 0 };
 
@@ -47,23 +50,32 @@ class MissingBlocksUploader;
 
 using SnapshotOperationUpdated = std::function<void(const SnapshotOperationStatus&)>;
 
-class CloudProjectSnapshot final : public std::enable_shared_from_this<CloudProjectSnapshot>
+class LocalProjectSnapshot final : public std::enable_shared_from_this<LocalProjectSnapshot>
 {
    struct Tag final {};
 
 public:
-   CloudProjectSnapshot(
+   LocalProjectSnapshot(
       Tag, const ServiceConfig& config, const OAuthService& authService,
       ProjectCloudExtension& extension, SnapshotOperationUpdated callback);
-   ~CloudProjectSnapshot();
+   ~LocalProjectSnapshot();
 
-   static std::shared_ptr<CloudProjectSnapshot> Create(
+   static std::shared_ptr<LocalProjectSnapshot> Create(
       const ServiceConfig& config, const OAuthService& authService,
       ProjectCloudExtension& extension, SnapshotOperationUpdated callback,
       bool forceCreateNewProject = false);
 
    bool IsCompleted() const;
+
+   double GetSyncProgress() const;
+
+   std::shared_ptr<AudacityProject> GetProject();
+
+   void Cancel();
+
 private:
+   void SetSyncProgress(int64_t uploadedBlocks, int64_t totalBlocks);
+
    void UpdateProjectSnapshot(bool forceCreateNew);
 
    void OnSnapshotCreated(const CreateProjectResponse& response, bool newProject);
@@ -81,6 +93,9 @@ private:
    std::unique_ptr<ProjectBlocksLock> mProjectBlocksLock;
 
    std::unique_ptr<MissingBlocksUploader> mMissingBlockUploader;
+
+   std::atomic<int64_t> mUploadedBlocks { 0 };
+   std::atomic<int64_t> mTotalBlocks { 0 };
 
    std::atomic<bool> mProjectUploaded { false };
 

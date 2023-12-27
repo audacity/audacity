@@ -179,6 +179,16 @@ public:
       return mResponse.Pagination.PagesCount;
    }
 
+   std::string_view GetSelectedProjectId () const
+   {
+      const auto selectedRow = mOwner.mProjectsTable->GetSelectedRows();
+
+      if (selectedRow.empty())
+         return {};
+
+      return mResponse.Items[selectedRow[0]].Id;
+   }
+
 private:
    ProjectsListDialog& mOwner;
    const int mPageSize;
@@ -186,8 +196,9 @@ private:
    PaginatedProjectsResponse mResponse;
 };
 
-ProjectsListDialog::ProjectsListDialog(wxWindow* parent)
+ProjectsListDialog::ProjectsListDialog(wxWindow* parent, AudacityProject* project)
     : wxDialogWrapper { parent, wxID_ANY, XO("Open from cloud") }
+    , mProject { project }
 {
    auto header = safenew  wxStaticText { this, wxID_ANY, XO("Cloud saved projects").Translation() };
    auto searchHeader = safenew  wxStaticText { this, wxID_ANY, XO("Search:").Translation() };
@@ -253,6 +264,11 @@ void ProjectsListDialog::SetupHandlers()
    mNextPageButton->Bind(
       wxEVT_BUTTON, [this](auto&) { mProjectsTableData->NextPage(); });
 
+   mOpenButton->Bind(wxEVT_BUTTON, [this](auto&) { OnOpen(); });
+
+   mProjectsTable->Bind(
+      wxEVT_GRID_CELL_LEFT_DCLICK, [this](auto&) { OnOpen(); });
+
    Bind(
       wxEVT_CHAR_HOOK,
       [this](auto& evt)
@@ -299,6 +315,18 @@ void ProjectsListDialog::FormatPageLabel()
                               mProjectsTableData->GetCurrentPage(),
                               mProjectsTableData->GetPagesCount())
                            .Translation());
+}
+
+void ProjectsListDialog::OnOpen()
+{
+   const auto selectedProjectId = mProjectsTableData->GetSelectedProjectId();
+
+   if (selectedProjectId.empty())
+      return;
+
+   EndModal(wxID_OK);
+
+   CloudSyncService::Get().OpenFromCloud(mProject, std::string(selectedProjectId));
 }
 
 } // namespace cloud::audiocom::sync

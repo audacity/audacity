@@ -217,7 +217,7 @@ void CloudProjectsDatabase::UpdateBlockHashes(
    transaction.Commit();
 }
 
-bool CloudProjectsDatabase::OnProjectSnapshotCreated(
+bool CloudProjectsDatabase::UpdateProjectData(
    const DBProjectData& projectData)
 {
    auto& connection = GetConnection();

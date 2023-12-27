@@ -13,6 +13,8 @@
 #include "CloudSyncService.h"
 #include "CommandContext.h"
 
+#include "ProjectWindow.h"
+
 #include "ui/ProjectsListDialog.h"
 
 namespace
@@ -24,8 +26,11 @@ void OnSaveToCloud(const CommandContext& context)
 }
 
 void OnOpenFromCloud (const CommandContext& context)
-{
-   cloud::audiocom::sync::ProjectsListDialog dialog { nullptr };
+{     
+   cloud::audiocom::sync::ProjectsListDialog dialog {
+      ProjectWindow::Find(&context.project), &context.project
+   };
+
    dialog.ShowModal();
 }
 

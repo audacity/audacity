@@ -63,7 +63,7 @@ public:
       const std::string_view& projectId,
       const std::vector<std::pair<int64_t, std::string>>& hashes);
 
-   bool OnProjectSnapshotCreated(const DBProjectData& projectData);
+   bool UpdateProjectData(const DBProjectData& projectData);
 
 private:
    std::optional<DBProjectData> DoGetProjectData(sqlite::RunResult result) const;

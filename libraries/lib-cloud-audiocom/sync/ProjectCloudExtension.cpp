@@ -100,8 +100,15 @@ void ProjectCloudExtension::OnSnapshotCreated(
    dbData.SyncStatus = DBProjectData::SyncStatusUploading;
    dbData.SavesCount++;
 
-   cloudDatabase.OnProjectSnapshotCreated(dbData);
+   cloudDatabase.UpdateProjectData(dbData);
 
+   mProjectId = projectId;
+   mSnapshotId = snapshotId;
+}
+
+void ProjectCloudExtension::OnSnapshotSynced(
+   std::string_view projectId, std::string_view snapshotId)
+{
    mProjectId = projectId;
    mSnapshotId = snapshotId;
 }

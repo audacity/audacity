@@ -25,18 +25,20 @@ set( SOURCES
    sync/BlockHasher.h
    sync/CloudProjectsDatabase.cpp
    sync/CloudProjectsDatabase.h
-   sync/CloudProjectSnapshot.cpp
-   sync/CloudProjectSnapshot.h
    sync/CloudSyncUI.cpp
    sync/CloudSyncUI.h
    sync/CloudSyncUtils.cpp
    sync/CloudSyncUtils.h
    sync/DataUploader.cpp
    sync/DataUploader.h
+   sync/LocalProjectSnapshot.cpp
+   sync/LocalProjectSnapshot.h
    sync/MissingBlocksUploader.cpp
    sync/MissingBlocksUploader.h
    sync/ProjectCloudExtension.cpp
    sync/ProjectCloudExtension.h
+   sync/RemoteProjectSnapshot.cpp
+   sync/RemoteProjectSnapshot.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )

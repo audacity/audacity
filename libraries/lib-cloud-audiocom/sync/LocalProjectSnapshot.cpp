@@ -8,7 +8,7 @@
   Dmitry Vedenko
 
 **********************************************************************/
-#include "CloudProjectSnapshot.h"
+#include "LocalProjectSnapshot.h"
 
 #include <algorithm>
 #include <future>
@@ -45,7 +45,7 @@
 
 namespace cloud::audiocom::sync
 {
-struct CloudProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
+struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 {
    ProjectCloudExtension& Extension;
 
@@ -186,13 +186,7 @@ struct CloudProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
    {
       for (const auto& urls : missingBlockUrls)
       {
-         auto upperCaseId = urls.Id;
-
-         std::transform (
-            upperCaseId.begin(), upperCaseId.end(), upperCaseId.begin(),
-            [](auto c) { return std::toupper(c); });
-
-         auto it = BlockHashToIndex.find(upperCaseId);
+         auto it = BlockHashToIndex.find(ToUpper(urls.Id));
 
          if (it == BlockHashToIndex.end ())
          {
@@ -207,7 +201,7 @@ struct CloudProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
    }
 };
 
-CloudProjectSnapshot::CloudProjectSnapshot(
+LocalProjectSnapshot::LocalProjectSnapshot(
    Tag, const ServiceConfig& config, const OAuthService& authService,
    ProjectCloudExtension& extension, SnapshotOperationUpdated callback)
     : mProjectCloudExtension { extension }
@@ -219,29 +213,27 @@ CloudProjectSnapshot::CloudProjectSnapshot(
 
 }
 
-CloudProjectSnapshot::~CloudProjectSnapshot()
+LocalProjectSnapshot::~LocalProjectSnapshot()
 {
 }
 
-std::shared_ptr<CloudProjectSnapshot> CloudProjectSnapshot::Create(
+std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
    const ServiceConfig& config, const OAuthService& authService,
    ProjectCloudExtension& extension, SnapshotOperationUpdated callback,
    bool forceCreateNewProject)
 {
    auto project = extension.GetProject().lock();
 
-   if (!project)
-   {
-      if (callback)
-         callback({ 0, 0, false, false, false, { "Invalid project state" } });
-
-      return {};
-   }
-
    if (!callback)
       callback = [](const auto) {};
 
-   auto snapshot = std::make_shared<CloudProjectSnapshot>(
+   if (!project)
+   {
+      callback({ nullptr, 0, 0, false, false, false, { "Invalid project state" } });
+      return {};
+   }
+
+   auto snapshot = std::make_shared<LocalProjectSnapshot>(
       Tag {}, config, authService, extension, std::move(callback));
 
    snapshot->mProjectBlocksLock = std::make_unique<ProjectBlocksLock>(
@@ -257,20 +249,48 @@ std::shared_ptr<CloudProjectSnapshot> CloudProjectSnapshot::Create(
    return snapshot;
 }
 
-bool CloudProjectSnapshot::IsCompleted() const
+bool LocalProjectSnapshot::IsCompleted() const
 {
    return mCompleted.load(std::memory_order_acquire);
 }
 
+void LocalProjectSnapshot::SetSyncProgress(
+   int64_t uploadedBlocks, int64_t totalBlocks)
+{
+   std::atomic_thread_fence(std::memory_order_release);
+   mUploadedBlocks.store(uploadedBlocks, std::memory_order_relaxed);
+   mTotalBlocks.store(totalBlocks, std::memory_order_relaxed);
+}
 
-void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
+double LocalProjectSnapshot::GetSyncProgress() const
+{
+   const auto uploadedBlocks = mUploadedBlocks.load(std::memory_order_relaxed);
+   const auto totalBlocks = mTotalBlocks.load(std::memory_order_relaxed);
+   const auto projectUploaded =
+      mProjectUploaded.load(std::memory_order_relaxed) ? 1 : 0;
+   std::atomic_thread_fence(std::memory_order_acquire);
+
+   return (uploadedBlocks + projectUploaded) /
+          static_cast<double>(totalBlocks + 1);
+}
+
+std::shared_ptr<AudacityProject> LocalProjectSnapshot::GetProject()
+{
+   return mWeakProject.lock();
+}
+
+void LocalProjectSnapshot::Cancel()
+{
+}
+
+void LocalProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
 {
    auto project = mWeakProject.lock();
 
    if (project == nullptr)
    {
       mUpdateCallback(
-         { 0, 0, false, true, false, { "Invalid project state" } });
+         { this, 0, 0, false, true, false, { "Invalid project state" } });
       return;
    }
 
@@ -336,7 +356,7 @@ void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
                   "\nResponse: " + response->readAll<std::string>();
             }
 
-            mUpdateCallback({ 0, 0, false, true, false, errorMessage });
+            mUpdateCallback({ this, 0, 0, false, true, false, errorMessage });
          }
          else
          {
@@ -346,7 +366,7 @@ void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
 
             if (!result)
             {
-               mUpdateCallback({ 0, 0, false, true, false,
+               mUpdateCallback({ this, 0, 0, false, true, false,
                                  audacity::ToUTF8(XO("Invalid Response: %s")
                                                      .Format(body)
                                                      .Translation()) });
@@ -358,7 +378,7 @@ void CloudProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
       });
 }
 
-void CloudProjectSnapshot::OnSnapshotCreated(
+void LocalProjectSnapshot::OnSnapshotCreated(
    const CreateProjectResponse& response, bool newProject)
 {
    auto project = mWeakProject.lock();
@@ -366,7 +386,7 @@ void CloudProjectSnapshot::OnSnapshotCreated(
    if (project == nullptr)
    {
       mUpdateCallback(
-         { 0, 0, false, true, false, { "Invalid project state" } });
+         { this, 0, 0, false, true, false, { "Invalid project state" } });
       return;
    }
 
@@ -385,14 +405,14 @@ void CloudProjectSnapshot::OnSnapshotCreated(
       {
          if (result.Code != UploadResultCode::Success)
          {
-            mUpdateCallback (
-               { 0, 0, false, true, false, std::move(result.ErrorMessage) });
+            mUpdateCallback({ this, 0, 0, false, true, false,
+                              std::move(result.ErrorMessage) });
          }
          else
          {
             mProjectUploaded.store(true, std::memory_order_release);
-            mUpdateCallback(
-               { 0, 0, true, false, false, std::move(result.ErrorMessage) });
+            mUpdateCallback({ this, 0, 0, true, false, false,
+                              std::move(result.ErrorMessage) });
 
             if (mProjectBlocksLock->MissingBlocks.empty())
             {
@@ -416,8 +436,10 @@ void CloudProjectSnapshot::OnSnapshotCreated(
                      return;
                   }
 
-                  mUpdateCallback({ handledBlocks, result.TotalBlocks, true,
-                                    completed, succeeded,
+                  SetSyncProgress(handledBlocks, result.TotalBlocks);
+
+                  mUpdateCallback({ this, handledBlocks, result.TotalBlocks,
+                                    true, completed, succeeded,
                                     Join(result.ErrorMessages, "\n") });
 
                   if (completed)
@@ -430,7 +452,7 @@ void CloudProjectSnapshot::OnSnapshotCreated(
       });
 }
 
-void CloudProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
+void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
 {
    using namespace audacity::network_manager;
    Request request(mServiceConfig.GetSnapshotSyncUrl(
@@ -465,15 +487,16 @@ void CloudProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
                   "\nResponse: " + response->readAll<std::string>();
             }
 
-            mUpdateCallback(
-               { blocksCount, blocksCount, true, true, false, errorMessage });
+            mUpdateCallback({ this, blocksCount, blocksCount, true, true, false,
+                              errorMessage });
             return;
          }
 
          mCompleted.store(true, std::memory_order_release);
          mProjectCloudExtension.OnSyncCompleted(true);
 
-         mUpdateCallback({ blocksCount, blocksCount, true, true, true, {} });
+         mUpdateCallback(
+            { this, blocksCount, blocksCount, true, true, true, {} });
       });
 }
 

@@ -43,6 +43,9 @@ public:
    void OnSnapshotCreated(
       std::string_view projectId, std::string_view snapshotId);
 
+   void OnSnapshotSynced (
+      std::string_view projectId, std::string_view snapshotId);
+
    void OnSyncCompleted(bool successful);
 
    std::string_view GetCloudProjectId() const;
