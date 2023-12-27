@@ -64,11 +64,7 @@ void WaveChannelVRulerControls::DoDraw(ChannelVRulerControls &controls,
       // Right align the ruler
       wxRect rr = rect;
       rr.width--;
-      
-      auto t = controls.FindTrack();
-      if ( !t )
-         return;
-
+   
 // Next code tests for a VRuler that is narrower than the rectangle
 // we are drawing into.  If so, it 'right aligns' the ruler into the 
 // rectangle.

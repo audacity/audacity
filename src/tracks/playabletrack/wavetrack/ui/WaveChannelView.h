@@ -46,6 +46,8 @@ public:
    explicit
    WaveChannelSubView(WaveChannelView &waveChannelView);
 
+   std::shared_ptr<WaveChannel> FindWaveChannel();
+
    virtual const Type &SubViewType() const = 0;
 
    // For undo and redo purpose
@@ -115,6 +117,8 @@ public:
     */
    WaveChannelView(const std::shared_ptr<Track> &pTrack, size_t channel);
    ~WaveChannelView() override;
+
+   std::shared_ptr<WaveChannel> FindWaveChannel();
 
    // Preserve some view state too for undo/redo purposes
    void CopyTo(Track &track, size_t iChannel) const override;

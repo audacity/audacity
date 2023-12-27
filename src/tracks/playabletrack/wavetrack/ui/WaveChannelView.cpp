@@ -83,8 +83,8 @@ const PlacementArray &PlacementArray::Get(const Track &track)
 
 WaveChannelSubViewPlacements &WaveChannelView::DoGetPlacements()
 {
-   auto &waveTrack = *std::dynamic_pointer_cast<WaveTrack>(FindTrack());
-   return PlacementArray::Get(waveTrack).mPlacements;
+   auto &waveChannel = *FindWaveChannel();
+   return PlacementArray::Get(waveChannel.GetTrack()).mPlacements;
 }
 
 const WaveChannelSubViewPlacements &WaveChannelView::DoGetPlacements() const
@@ -94,7 +94,7 @@ const WaveChannelSubViewPlacements &WaveChannelView::DoGetPlacements() const
 
 bool &WaveChannelView::DoGetMultiView()
 {
-   auto &waveTrack = *std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+   auto &waveTrack = FindWaveChannel()->GetTrack();
    return PlacementArray::Get(waveTrack).mMultiView;
 }
 
@@ -250,8 +250,7 @@ struct SubViewAdjuster
    {
       auto pView = mwView.lock();
       if ( pView ) {
-         auto pTrack = static_cast< WaveTrack* >( pView->FindTrack().get() );
-         WaveChannelView::Get(*pTrack).RestorePlacements(
+         WaveChannelView::Get(*pView->FindWaveChannel()).RestorePlacements(
             rollback ? mOrigPlacements : mNewPlacements);
       }
    }
@@ -887,18 +886,19 @@ auto WaveChannelSubView::GetMenuItems(
    const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject)
       -> std::vector<MenuItem>
 {
-   auto pTrack = static_cast<WaveTrack*>( FindTrack().get() );
-   if(pTrack != nullptr && pPosition != nullptr)
+   auto pChannel = FindWaveChannel();
+   if (pChannel != nullptr && pPosition != nullptr)
    {
+      auto &track = pChannel->GetTrack();
       const auto &viewInfo = ViewInfo::Get(*pProject);
       const auto t = viewInfo.PositionToTime(pPosition->x, rect.x);
-      if((pTrack->IsSelected() &&
+      if ((track.IsSelected() &&
          t > viewInfo.selectedRegion.t0() && t < viewInfo.selectedRegion.t1() &&
-         !WaveTrackUtilities::GetClipsIntersecting(*pTrack,
+         !WaveTrackUtilities::GetClipsIntersecting(track,
             viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1())
                .empty())
          ||
-         pTrack->GetClipAtTime(t))
+         track.GetClipAtTime(t))
       {
          return GetWaveClipMenuItems();
       }
@@ -944,12 +944,22 @@ WaveChannelSubView::WaveChannelSubView(WaveChannelView &waveChannelView)
       waveChannelView.shared_from_this() );
 }
 
+std::shared_ptr<WaveChannel> WaveChannelSubView::FindWaveChannel()
+{
+   return FindChannel<WaveChannel>();
+}
+
 void WaveChannelSubView::CopyToSubView(WaveChannelSubView *destSubView) const {
 
 }
 
 WaveChannelView::~WaveChannelView()
 {
+}
+
+std::shared_ptr<WaveChannel> WaveChannelView::FindWaveChannel()
+{
+   return FindChannel<WaveChannel>();
 }
 
 void WaveChannelView::CopyTo(Track &track, size_t iChannel) const
@@ -1405,7 +1415,7 @@ namespace {
 using PMF = bool (WaveTrackAffordanceControls::*)(AudacityProject &);
 bool AnyAffordance(AudacityProject& project, WaveChannelView &view, PMF pmf)
 {
-   const auto pWaveChannel = view.FindChannel<WaveChannel>();
+   const auto pWaveChannel = view.FindWaveChannel();
    const auto pLeader = &pWaveChannel->GetTrack();
    auto& channelView = ChannelView::Get(*pLeader);
    if (const auto affordance =
@@ -1713,7 +1723,7 @@ void WaveChannelView::Reparent(
 WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
 {
    // Find the leader
-   const auto pChannel = FindChannel<WaveChannel>();
+   const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return {};
    auto &track = pChannel->GetTrack();

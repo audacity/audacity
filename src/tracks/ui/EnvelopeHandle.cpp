@@ -189,36 +189,35 @@ UIHandle::Result EnvelopeHandle::Click
    const wxMouseEvent &event = evt.event;
    const auto &viewInfo = ViewInfo::Get( *pProject );
    const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
-   const auto pTrack = pView ? pView->FindTrack().get() : nullptr;
+   const auto pChannel = pView ? pView->FindChannel().get() : nullptr;
 
    mpEnvelopeEditor.reset();
 
    unsigned result = Cancelled;
-   if (pTrack)
-      result = pTrack->TypeSwitch< decltype(RefreshNone) >(
-      [&](WaveTrack &wt) {
-         if (!mEnvelope)
-            return Cancelled;
-
+   if (const auto pWt = dynamic_cast<WaveChannel*>(pChannel)) {
+      auto &wt = *pWt;
+      if (!mEnvelope)
+         result = Cancelled;
+      else {
          mLog = !WaveformSettings::Get(wt).isLinear();
          auto &cache = WaveformScale::Get(wt);
          cache.GetDisplayBounds(mLower, mUpper);
          mdBRange = WaveformSettings::Get(wt).dBRange;
          mpEnvelopeEditor = std::make_unique<EnvelopeEditor>(*mEnvelope, true);
-         return RefreshNone;
-      },
-      [&](TimeTrack &tt) {
-         if (!mEnvelope)
-            return Cancelled;
+         result = RefreshNone;
+      }
+   }
+   else if (const auto pTt = dynamic_cast<TimeTrack*>(pChannel)) {
+      auto &tt = *pTt;
+      if (!mEnvelope)
+         result = Cancelled;
+      else {
          GetTimeTrackData( *pProject, tt, mdBRange, mLog, mLower, mUpper);
          mpEnvelopeEditor = std::make_unique<EnvelopeEditor>(*mEnvelope, false);
 
-         return RefreshNone;
-      },
-      [](Track &) {
-         return Cancelled;
+         result = RefreshNone;
       }
-   );
+   }
 
    if (result & Cancelled)
       return result;

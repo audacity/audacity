@@ -130,7 +130,7 @@ void SpectrumVRulerControls::Draw(
    WaveChannelVRulerControls::DoDraw(*this, context, rect_, iPass);
 }
 
-void SpectrumVRulerControls::UpdateRuler( const wxRect &rect )
+void SpectrumVRulerControls::UpdateRuler(const wxRect &rect)
 {
    const auto pChannel = FindWaveChannel();
    if (!pChannel)

@@ -55,7 +55,7 @@ static WaveChannelSubViewType::RegisteredType reg{ sType };
 SpectrumView::SpectrumView(WaveChannelView &waveChannelView)
    : WaveChannelSubView(waveChannelView)
 {
-   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   const auto wt = FindWaveChannel();
    mpSpectralData = std::make_shared<SpectralData>(wt->GetRate());
    mOnBrushTool = false;
 }
@@ -138,8 +138,9 @@ static UIHandlePtr BrushHandleHitTest(
    result = AssignUIHandlePtr(holder, result);
 
    //Make sure we are within the selected track
-   auto pTrack = pChannelView->FindTrack();
-   if (!pTrack->GetSelected())
+   const auto pChannel = pChannelView->FindWaveChannel();
+   if (!pChannel ||
+       !pChannel->GetTrack().GetSelected())
    {
       return result;
    }
@@ -169,7 +170,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
-   const auto wt = FindChannel<WaveChannel>();
+   const auto wt = FindWaveChannel();
    std::vector<UIHandlePtr> results;
 
 #ifdef EXPERIMENTAL_BRUSH_TOOL
@@ -191,7 +192,9 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
 
 void SpectrumView::DoSetMinimized( bool minimized )
 {
-   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   const auto wt = FindWaveChannel();
+   if (!wt)
+      return;
 
 #ifdef EXPERIMENTAL_HALF_WAVE
    bool bHalfWave;

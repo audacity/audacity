@@ -63,8 +63,6 @@ namespace {
     virtual void Finish(AudacityProject& project) = 0;
     virtual void Cancel() = 0;
 
-    virtual std::shared_ptr<Track> FindTrack() const = 0;
-
     virtual void Draw(
         TrackPanelDrawingContext &context,
         const wxRect &rect,
@@ -213,11 +211,6 @@ public:
             FindSnapPoints(mTrack.get(), mRange),
             zoomInfo);
       }
-   }
-
-   std::shared_ptr<Track> FindTrack() const override
-   {
-      return mTrack;
    }
 
    bool Init(const TrackPanelMouseEvent& event) override
@@ -471,9 +464,9 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
     WaveChannelView& view, const AudacityProject* pProject,
     const TrackPanelMouseState& state)
 {
-    auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack());
+    auto waveChannel = view.FindWaveChannel();
     //For multichannel tracks, show adjustment handle only for the leader track
-    if (!waveTrack->IsLeader())
+    if (waveChannel->ReallyGetChannelIndex() != 0)
         return {};
 
     std::vector<UIHandlePtr> results;
@@ -485,7 +478,9 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
     if (py >= rect.GetTop() &&
         py <= (rect.GetTop() + static_cast<int>(rect.GetHeight() * 0.3)))
     {
-        return HitAnywhere(holder, waveTrack, pProject, state);
+        return HitAnywhere(holder,
+            waveChannel->GetTrack().SharedPointer<WaveTrack>(),
+            pProject, state);
     }
     return {};
 }
