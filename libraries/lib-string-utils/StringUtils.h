@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstring>
 #include <cwchar>
 #include <type_traits>
@@ -71,4 +72,18 @@ ResultType Join(
     }
 
     return result;
+}
+
+template<typename StringType>
+StringType ToLower (StringType str)
+{
+   std::transform(begin(str), end(str), begin(str), ::tolower);
+   return str;
+}
+
+template<typename StringType>
+StringType ToUpper (StringType str)
+{
+   std::transform(begin(str), end(str), begin(str), ::toupper);
+   return str;
 }
