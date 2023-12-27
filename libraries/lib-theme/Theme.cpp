@@ -889,11 +889,7 @@ void ThemeBase::WriteImageDefs( )
 teThemeType ThemeBase::GetFallbackThemeType(){
 // Fallback must be an internally supported type,
 // to guarantee it is found.
-#ifdef EXPERIMENTAL_DA
-   return "dark";
-#else
    return "light";
-#endif
 }
 
 /// Reads an image cache including images, cursors and colours.
@@ -1373,13 +1369,7 @@ ChoiceSetting &GUITheme()
       return symbols;
    };
 
-   constexpr int defaultTheme =
-#ifdef EXPERIMENTAL_DA
-      2 // "dark"
-#else
-      1 // "light"
-#endif
-   ;
+   constexpr int defaultTheme = 1; // "light"
 
    static ChoiceSetting setting {
       wxT("/GUI/Theme"), symbols(), defaultTheme

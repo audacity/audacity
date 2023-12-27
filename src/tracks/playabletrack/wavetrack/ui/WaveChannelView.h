@@ -14,17 +14,15 @@ Paul Licameli split from class WaveTrack
 #include "../../../ui/CommonChannelView.h"
 #include "ClientData.h"
 #include "SampleCount.h"
+#include "WaveTrack.h"
 namespace WaveChannelViewConstants{ enum Display : int; }
 struct WaveChannelSubViewType;
 
 class ClipTimes;
 class CutlineHandle;
 class TranslatableString;
-class SampleTrack;
 class WaveChannel;
-class WaveTrack;
 class WaveChannelView;
-class WaveClip;
 class WaveClipAdjustBorderHandle;
 class ZoomInfo;
 
@@ -157,8 +155,9 @@ public:
    bool GetMultiView() const { return DoGetMultiView(); }
    void SetMultiView( bool value ) { DoGetMultiView() = value; }
 
-
-   std::weak_ptr<WaveClip> GetSelectedClip();
+   WaveTrack::IntervalHolder GetSelectedClip();
+   static bool WideClipContains(
+      const WaveTrack::Interval &wideClip, const WaveClip &clip);
 
    // Returns a visible subset of subviews, sorted in the same
    // order as they are supposed to be displayed

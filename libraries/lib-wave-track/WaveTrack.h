@@ -139,6 +139,11 @@ public:
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
 
+   //! TODO wide wave tracks -- remove this
+   inline WaveTrack &ReallyGetTrack();
+   //! TODO wide wave tracks -- remove this
+   inline const WaveTrack &ReallyGetTrack() const;
+
    auto GetInterval(size_t iInterval) { return
       ::Channel::GetInterval<WaveChannelInterval>(iInterval); }
    auto GetInterval(size_t iInterval) const { return
@@ -951,6 +956,7 @@ public:
       bool WithinPlayRegion(double t) const;
 
       double GetStretchRatio() const;
+      void SetRawAudioTempo(double tempo);
 
       sampleCount TimeToSamples(double time) const;
       double SamplesToTime(sampleCount s) const;
@@ -975,8 +981,10 @@ public:
       void SetSequenceStartTime(double t);
       void TrimLeftTo(double t);
       void TrimRightTo(double t);
+      void TrimQuarternotesFromRight(double numQuarternotes);
       void StretchLeftTo(double t);
       void StretchRightTo(double t);
+      void StretchBy(double ratio);
       void SetTrimLeft(double t);
       void SetTrimRight(double t);
       void ClearLeft(double t);
@@ -1210,6 +1218,16 @@ const WaveTrack &WaveChannel::GetTrack() const {
    auto &result = static_cast<const WaveTrack&>(DoGetChannelGroup());
    // TODO wide wave tracks -- remove assertion
    assert(&result == this);
+   return result;
+}
+
+WaveTrack &WaveChannel::ReallyGetTrack() {
+   auto &result = static_cast<WaveTrack&>(ReallyDoGetChannelGroup());
+   return result;
+}
+
+const WaveTrack &WaveChannel::ReallyGetTrack() const {
+   auto &result = static_cast<const WaveTrack&>(ReallyDoGetChannelGroup());
    return result;
 }
 

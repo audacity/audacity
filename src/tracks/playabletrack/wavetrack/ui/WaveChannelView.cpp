@@ -1699,17 +1699,28 @@ void WaveChannelView::Reparent(const std::shared_ptr<Track> &parent)
       mpAffordanceCellControl->Reparent(parent);
 }
 
-std::weak_ptr<WaveClip> WaveChannelView::GetSelectedClip()
+WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
 {
-   if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(GetAffordanceControls()))
+   // Find the leader
+   const auto pChannel = static_cast<WaveChannel*>(FindChannel().get());
+   if (!pChannel)
+      return {};
+   auto &track = pChannel->ReallyGetTrack();
+   auto &leaderView = Get(**track.Channels().begin());
+   if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
+      leaderView.GetAffordanceControls()))
    {
-      assert(GetChannelIndex() == 0);
-      if(auto interval = *affordance->GetSelectedInterval())
-      {
-         return interval->GetClip(0);
-      }
+      assert(leaderView.GetChannelIndex() == 0);
+      return *affordance->GetSelectedInterval();
    }
    return {};
+}
+
+bool WaveChannelView::WideClipContains(
+   const WaveTrack::Interval &wideClip, const WaveClip &clip)
+{
+   return &clip == wideClip.GetClip(0).get()
+      || &clip == wideClip.GetClip(1).get();
 }
 
 void WaveChannelView::BuildSubViews() const

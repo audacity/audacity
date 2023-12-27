@@ -1318,6 +1318,7 @@ set( AUDACITY_LIBRARIES
    lib-menus-interface
    lib-note-track-interface
    lib-viewport-interface
+   lib-music-information-retrieval-interface
 )
 
 if (USE_VST)

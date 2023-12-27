@@ -77,12 +77,8 @@ void FileNames::InitializePathList()
          wxT("/var/tmp/audacity-%s"), wxGetUserId() ) );
    }
 
-// DA: Path env variable.
-#ifndef EXPERIMENTAL_DA
    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
-#else
-   wxString pathVar = wxGetenv(wxT("DARKAUDACITY_PATH"));
-#endif
+
    if (!pathVar.empty())
       FileNames::AddMultiPathsToPathList(pathVar, audacityPathList);
    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);

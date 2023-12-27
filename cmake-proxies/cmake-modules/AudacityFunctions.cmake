@@ -282,9 +282,9 @@ function( audacity_append_common_compiler_options var use_pch )
 
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
-      list( APPEND ${var} -DIS_ALPHA -DUSE_ALPHA_MANUAL )
+      list( APPEND ${var} -DIS_ALPHA )
    elseif( AUDACITY_BUILD_LEVEL EQUAL 1 )
-      list( APPEND ${var} -DIS_BETA -DUSE_ALPHA_MANUAL )
+      list( APPEND ${var} -DIS_BETA )
    else()
       list( APPEND ${var} -DIS_RELEASE )
    endif()

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-12-04 05:00+0000\n"
+"PO-Revision-Date: 2023-12-13 02:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -4920,7 +4920,7 @@ msgstr ""
 
 #: modules/mod-pcm/ImportPCM.cpp
 msgid "WAV, AIFF, and other uncompressed types"
-msgstr "WAV, AIFF i inne nieskompresowane typy"
+msgstr "Pliki WAV, AIFF i inne nieskompresowane typy"
 
 #: modules/mod-pcm/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"

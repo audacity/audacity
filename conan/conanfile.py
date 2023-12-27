@@ -10,6 +10,26 @@ import textwrap
 
 required_conan_version = ">=2.0.0"
 
+# Fix expat rpah on macOS
+def fix_expact_rpath(conanfile, filepath):
+    if conanfile.settings.os != "Macos":
+        return
+
+    # Force expat ID to be @rpath/libexpat.dylib
+    if 'expat' in filepath:
+        filename = os.path.basename(filepath)
+        print(f"Setting id of {filepath} to @rpath/{filename}")
+        subprocess.check_call(["install_name_tool", "-id", f"@rpath/{filename}", filepath])
+        return
+
+    deps = [dep.strip().split()[0] for dep in subprocess.check_output(["otool", "-L", filepath]).decode("utf-8").splitlines()]
+    for dep in deps:
+        if 'expat' not in dep:
+            continue
+        if not dep.startswith("@"):
+            print(f"=== Changing {dep} to @rpath/{os.path.basename(dep)} in {filepath} ===")
+            subprocess.check_call(["install_name_tool", "-change", dep, f"@rpath/{os.path.basename(dep)}", filepath])
+
 # Why is it not Conan? Copied from cmake_layout().
 def is_multi_config(conanfile):
     gen = conanfile.conf.get("tools.cmake.cmaketoolchain:generator", default=None)
@@ -101,21 +121,36 @@ def safe_linux_copy(conanfile, source, destination, keep_debug_symbols=True):
 # A helper function that correctly copies the files from the Conan package to the
 # correct location in the build tree
 def global_copy_files(conanfile, dependency_info):
-    copy_from = dependency_info.cpp_info.libdirs if conanfile.settings.os != "Windows" else dependency_info.cpp_info.bindirs
-    if len(copy_from) == 0:
-        return
-
     if conanfile.settings.os == "Windows":
-        copy(conanfile, "*.dll", dependency_info.cpp_info.bindirs[0], get_build_folder(conanfile))
+        if len(dependency_info.cpp_info.bindirs) == 0:
+            return
+        copy(conanfile, "*.dll", dependency_info.cpp_info.bindirs[0], f"{conanfile.build_folder}/{conanfile.settings.build_type}")
     elif conanfile.settings.os == "Macos":
-        copied_files = copy(conanfile, "*.dylib*", dependency_info.cpp_info.libdirs[0], get_macos_bundle_dir(conanfile, "Frameworks"))
+        if len(dependency_info.cpp_info.libdirs) == 0:
+            return
+
+        copied_files = copy(conanfile, "*.dylib*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/Audacity.app/Contents/Frameworks")
+
+        for file in copied_files:
+            if not os.path.islink(file):
+                try:
+                    fix_expact_rpath(conanfile, file)
+                except subprocess.CalledProcessError as e:
+                    conanfile.output.error(f"Failed to set id of {file}: {e}")
     else:
+        if len(dependency_info.cpp_info.libdirs) == 0:
+            return
         # On Linux we also set the correct rpath for the copied libraries
-        target_dir = get_linux_libdir(conanfile)
+        patchelf_path = os.path.join(conanfile.dependencies.build["patchelf"].cpp_info.bindirs[0], "patchelf")
 
-        conanfile.output.info(f"Copying files from {dependency_info.cpp_info.libdirs[0]} to {target_dir}")
-        safe_linux_copy(conanfile, dependency_info.cpp_info.libdirs[0], target_dir)
+        lib_dir = conanfile.options.lib_dir if conanfile.options.lib_dir else "lib/audacity"
 
+        conanfile.output.info(f"Copying files from {dependency_info.cpp_info.libdirs[0]} to {conanfile.build_folder}/{lib_dir}")
+
+        copied_files = copy(conanfile, "*.so*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/{lib_dir}")
+        for file in copied_files:
+            if not os.path.islink(file):
+                subprocess.check_call([patchelf_path, "--add-rpath", "$ORIGIN", file], stdin=subprocess.DEVNULL)
 
 # Dataclass that holds the information about a dependency
 @dataclass

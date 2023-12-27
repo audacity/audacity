@@ -43,15 +43,10 @@
 
 #include "BasicUI.h"
 
-#ifdef USE_ALPHA_MANUAL
-const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");
-const wxString HelpSystem::HelpServerHomeDir = wxT("/man/");
-const wxString HelpSystem::HelpServerManDir = wxT("/man/");
-#else
 const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
 const wxString HelpSystem::HelpServerHomeDir = wxT("/");
 const wxString HelpSystem::HelpServerManDir = wxT("/man/");
-#endif
+
 const wxString HelpSystem::LocalHelpManDir = wxT("/man/");
 
 namespace {
@@ -237,14 +232,10 @@ void HelpSystem::ShowHelp(wxWindow *parent,
                     bool alwaysDefaultBrowser)
 {
    wxASSERT(parent); // to justify safenew
-   wxString HelpMode = wxT("Local");
+   wxString HelpMode = wxT("Local"); //this probably always gets overwritten to FromInternet 
+                                     //TODO: remove code which handles local manual
 
-// DA: Default for DA is manual from internet.
-#ifdef EXPERIMENTAL_DA
    gPrefs->Read(wxT("/GUI/Help"), &HelpMode, {"FromInternet"} );
-#else
-   gPrefs->Read(wxT("/GUI/Help"), &HelpMode, {"Local"} );
-#endif
 
    {
       // these next lines are for legacy cfg files (pre 2.0) where we had different modes
@@ -354,16 +345,9 @@ void HelpSystem::ShowHelp(wxWindow *parent,
    }
    else if (releasePageName == L"Quick_Help")
    {
-// DA: No bundled help, by default, and different quick-help URL.
-#ifdef EXPERIMENTAL_DA
-      releasePageName = L"video" + ReleaseSuffix + anchor;
-      localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
-      webHelpPath = L"http://www.darkaudacity.com/";
-#else
       releasePageName = L"quick_help" + ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
       webHelpPath = L"https://" + HelpSystem::HelpHostname + HelpSystem::HelpServerHomeDir;
-#endif
    }
    // not a page name, but rather a full path (e.g. to wiki)
    // in which case do not do any substitutions.
@@ -405,11 +389,8 @@ void HelpSystem::ShowHelp(wxWindow *parent,
       webHelpPath = L"https://" + HelpSystem::HelpHostname + HelpSystem::HelpServerManDir;
    }
 
-#ifdef USE_ALPHA_MANUAL
-   webHelpPage = webHelpPath + PageName.GET();
-#else
    webHelpPage = webHelpPath + releasePageName;
-#endif
+
 
    wxLogMessage(wxT("Help button pressed: PageName %s, releasePageName %s"),
               PageName.GET(), releasePageName);

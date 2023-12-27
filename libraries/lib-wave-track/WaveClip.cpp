@@ -316,13 +316,19 @@ void WaveClip::StretchRightTo(double to)
    const auto oldPlayDuration = GetPlayEndTime() - pst;
    const auto newPlayDuration = to - pst;
    const auto ratioChange = newPlayDuration / oldPlayDuration;
-   mSequenceOffset = pst - mTrimLeft * ratioChange;
-   mTrimLeft *= ratioChange;
-   mTrimRight *= ratioChange;
-   mClipStretchRatio *= ratioChange;
+   StretchBy(ratioChange);
+}
+
+void WaveClip::StretchBy(double ratio)
+{
+   const auto pst = GetPlayStartTime();
+   mSequenceOffset = pst - mTrimLeft * ratio;
+   mTrimLeft *= ratio;
+   mTrimRight *= ratio;
+   mClipStretchRatio *= ratio;
    mEnvelope->SetOffset(mSequenceOffset);
-   mEnvelope->RescaleTimesBy(ratioChange);
-   StretchCutLines(ratioChange);
+   mEnvelope->RescaleTimesBy(ratio);
+   StretchCutLines(ratio);
 }
 
 void WaveClip::StretchCutLines(double ratioChange)
@@ -1101,6 +1107,11 @@ void WaveClip::SetRate(int rate)
    SetSequenceStartTime(GetSequenceStartTime() * ratio);
 }
 
+void WaveClip::SetRawAudioTempo(double tempo)
+{
+   mRawAudioTempo = tempo;
+}
+
 /*! @excsafety{Strong} */
 void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
@@ -1330,6 +1341,15 @@ void WaveClip::TrimLeft(double deltaTime)
 void WaveClip::TrimRight(double deltaTime)
 {
    SetTrimRight(mTrimRight + deltaTime);
+}
+
+void WaveClip::TrimQuarternotesFromRight(double quarters)
+{
+   assert(mRawAudioTempo.has_value());
+   if (!mRawAudioTempo.has_value())
+      return;
+   const auto secondsPerQuarter = 60 * GetStretchRatio() / *mRawAudioTempo;
+   TrimRight(quarters * secondsPerQuarter);
 }
 
 void WaveClip::TrimLeftTo(double to)

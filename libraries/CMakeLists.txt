@@ -55,6 +55,7 @@ set( LIBRARIES
    lib-menus
    lib-note-track
    lib-viewport
+   lib-music-information-retrieval
 )
 
 if ( ${_OPT}use_lv2 )

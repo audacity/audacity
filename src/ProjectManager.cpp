@@ -166,9 +166,6 @@ void InitProjectWindow( ProjectWindow &window )
    auto &project = *pProject;
    auto &viewport = Viewport::Get(project);
 
-#ifdef EXPERIMENTAL_DA2
-   SetBackgroundColour(theTheme.Colour( clrMedium ));
-#endif
    // Note that the first field of the status bar is a dummy, and its width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
    // if you move to the menu bar, the first field of the menu bar is cleared, which
@@ -312,10 +309,6 @@ void InitProjectWindow( ProjectWindow &window )
    auto msg = XO("Welcome to Audacity version %s")
       .Format( AUDACITY_VERSION_STRING );
    ProjectManager::Get( project ).SetStatusText( msg, mainStatusBarField );
-
-#ifdef EXPERIMENTAL_DA2
-   ClearBackground();// For wxGTK.
-#endif
 }
 
 AudacityProject *ProjectManager::New()
