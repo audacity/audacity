@@ -16,20 +16,16 @@ Button {
    font.pixelSize: 16
 
    function updateSelected(index) {
-      root.text = listModel.get(index).description
-      listModel.selectedIndex = index
-
-      for (var i = 0; i < listModel.count; i++) {
-         listModel.setProperty(i, "selected", i == index ? true : false)
-      }
+      root.text = handler.GetDescription(index)
+      prv.selectedIndex = index
    }
 
    ListBoxHandler {
       id: handler
    }
 
-   ListModel {
-      id: listModel
+   QtObject {
+      id: prv
       property int selectedIndex: -1
    }
 
@@ -72,8 +68,8 @@ Button {
       let screenCoordinates = mapToGlobal(0, 0)
 
       popup.x = screenCoordinates.x
-      popup.y = screenCoordinates.y - (listModel.selectedIndex * root.height)
-      popup.height = listModel.count * root.height
+      popup.y = screenCoordinates.y - (prv.selectedIndex * root.height)
+      popup.height = handler.rowCount() * root.height
 
       // Adjust popup's y coordinate if any of the list entries will be offscreen
       let popupTop = popup.y
@@ -110,7 +106,7 @@ Button {
          id: listView
          anchors.fill: parent
          clip: true
-         model: listModel
+         model: handler
          focus: true
          boundsBehavior: Flickable.StopAtBounds
 
@@ -133,7 +129,7 @@ Button {
                anchors.top: parent.top
                anchors.bottom: parent.bottom
                color: listEntry.hovering ? UiTheme.fontColor2 : UiTheme.fontColor1
-               text: listModel.get(index).selected ? String.fromCharCode(IconCode.TICK) : ""
+               text: index == prv.selectedIndex ? String.fromCharCode(IconCode.TICK) : ""
                font.family: UiTheme.iconFont.family
                font.pixelSize: 16
                horizontalAlignment: Text.AlignHCenter
@@ -146,7 +142,7 @@ Button {
                anchors.top: parent.top
                anchors.bottom: parent.bottom
                color: listEntry.hovering ? UiTheme.fontColor2 : UiTheme.fontColor1
-               text: listModel.get(index).description
+               text: model.description
                font.family: UiTheme.bodyFont.family
                font.pixelSize: 16
                verticalAlignment: Text.AlignVCenter
@@ -163,6 +159,7 @@ Button {
 
                onClicked: {
                   updateSelected(index)
+                  handler.HandleClickEvent(index)
                   popup.visible = false
                }
             }
@@ -171,18 +168,7 @@ Button {
    }
 
    Component.onCompleted: {
-      listModel.append({ "description" : "Item 1", "selected" : false })
-      listModel.append({ "description" : "Item 2", "selected" : false })
-      listModel.append({ "description" : "Item 3", "selected" : false })
-      listModel.append({ "description" : "Item 4", "selected" : false })
-      listModel.append({ "description" : "Item 5", "selected" : false })
-      listModel.append({ "description" : "Item 6", "selected" : false })
-      listModel.append({ "description" : "Item 7", "selected" : false })
-      listModel.append({ "description" : "Item 8", "selected" : false })
-      listModel.append({ "description" : "Item 9", "selected" : false })
-      listModel.append({ "description" : "Item 10", "selected" : false })
-
-      if (listModel.count > 0) {
+      if (handler.rowCount() > 0) {
          updateSelected(0)
       }
    }

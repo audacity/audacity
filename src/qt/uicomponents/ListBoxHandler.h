@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <memory>
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QByteArray>
 #include <QtCore/QHash>
@@ -22,6 +24,8 @@ class ListBoxHandler : public QAbstractListModel
    QML_ELEMENT
 
 public:
+   static std::unique_ptr<ListBoxHandler> Create();
+
    explicit ListBoxHandler(QObject *parent = nullptr);
    virtual ~ListBoxHandler() = default;
 
@@ -32,6 +36,8 @@ public:
    QHash<int, QByteArray> roleNames() const override;
 
    Q_INVOKABLE QRect GetAvailableGeometry() const;
+   Q_INVOKABLE QString GetDescription(int index) const;
+   Q_INVOKABLE void HandleClickEvent(int index);
 
 private:
    enum Roles
