@@ -2,6 +2,8 @@ set(MODULE_NAME uicomponents)
 
 set(MODULE_SOURCES
    IconCode.h
+   ListBoxHandler.cpp
+   ListBoxHandler.h
    MeterPanelHandler.cpp
    MeterPanelHandler.h
    ToolbarHandler.cpp
@@ -23,6 +25,7 @@ set(MODULE_QML_SOURCES
    qml/StereoTrackControlPanel.qml
    qml/StyledDial.qml
    qml/StyledIconLabel.qml
+   qml/StyledListBox.qml
    qml/StyledProgressBar.qml
    qml/StyledSlider.qml
    qml/StyledTextLabel.qml
