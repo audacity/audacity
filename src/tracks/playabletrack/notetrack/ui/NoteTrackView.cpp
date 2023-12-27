@@ -51,8 +51,7 @@ std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest(
 #ifdef USE_MIDI
 #ifdef EXPERIMENTAL_MIDI_STRETCHING
    result = StretchHandle::HitTest(
-      mStretchHandle, state, pProject,
-      std::static_pointer_cast<NoteTrack>(FindTrack()));
+      mStretchHandle, state, pProject, FindChannel<NoteTrack>());
    if (result)
       results.push_back(result);
 #endif

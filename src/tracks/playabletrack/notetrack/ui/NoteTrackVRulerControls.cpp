@@ -46,7 +46,7 @@ std::vector<UIHandlePtr> NoteTrackVRulerControls::HitTest
    UIHandlePtr result;
 
    if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
-      auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
+      const auto track = FindNoteTrack();
       result = NoteTrackVZoomHandle::HitTest(
          mVZoomHandle, st.state, track, st.rect);
       if (result)
@@ -57,6 +57,11 @@ std::vector<UIHandlePtr> NoteTrackVRulerControls::HitTest
    std::copy(more.begin(), more.end(), std::back_inserter(results));
 
    return results;
+}
+
+std::shared_ptr<NoteTrack> NoteTrackVRulerControls::FindNoteTrack()
+{
+   return FindChannel<NoteTrack>();
 }
 
 unsigned NoteTrackVRulerControls::HandleWheelRotation
@@ -72,12 +77,11 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
    // is a narrow enough target.
    evt.event.Skip(false);
 
-   const auto pTrack = FindTrack();
-   if (!pTrack)
+   const auto nt = FindNoteTrack();
+   if (!nt)
       return RefreshNone;
 
    auto steps = evt.steps;
-   const auto nt = static_cast<NoteTrack*>(pTrack.get());
 
    if (event.CmdDown() && !event.ShiftDown()) {
       NoteTrackDisplayData data{ *nt, evt.rect };
@@ -109,8 +113,8 @@ void NoteTrackVRulerControls::Draw(
 
    if ( iPass == TrackArtist::PassControls ) {
       // The note track draws a vertical keyboard to label pitches
-      auto track = std::static_pointer_cast<NoteTrack>( FindTrack() );
-      if ( !track )
+      auto track = FindNoteTrack();
+      if (!track)
          return;
 
       auto rect = rect_;
@@ -222,7 +226,7 @@ void NoteTrackVRulerControls::UpdateRuler(const wxRect &rect)
    // The note track isn't drawing a ruler at all!
    // But it needs to!
 
-   const auto nt = std::static_pointer_cast<NoteTrack>(FindTrack());
+   const auto nt = FindNoteTrack();
    if (!nt)
       return;
 

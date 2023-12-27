@@ -169,7 +169,7 @@ const LabelTrackView &LabelTrackView::Get(const LabelTrack &track)
 
 std::shared_ptr<LabelTrack> LabelTrackView::FindLabelTrack()
 {
-   return std::static_pointer_cast<LabelTrack>( FindTrack() );
+   return FindChannel<LabelTrack>();
 }
 
 std::shared_ptr<const LabelTrack> LabelTrackView::FindLabelTrack() const
@@ -858,8 +858,7 @@ const
       bool highlightTrack = false;
       auto target = dynamic_cast<LabelTextHandle*>(context.target.get());
       highlightTrack = target &&
-         target->FindChannel().get() ==
-            static_cast<const LabelTrack*>(FindTrack().get());
+         target->FindChannel().get() == FindChannel().get();
 #endif
       int i = -1; for (const auto &labelStruct : mLabels) { ++i;
          bool highlight = false;
@@ -2096,9 +2095,9 @@ int LabelTrackView::AddLabel(const SelectedRegion &selectedRegion,
    return pos;
 }
 
-void LabelTrackView::OnLabelAdded( const LabelTrackEvent &e )
+void LabelTrackView::OnLabelAdded(const LabelTrackEvent &e)
 {
-   if ( e.mpTrack.lock() != FindTrack() )
+   if (e.mpTrack.lock() != FindLabelTrack())
       return;
 
    const auto &title = e.mTitle;
@@ -2117,9 +2116,9 @@ void LabelTrackView::OnLabelAdded( const LabelTrackEvent &e )
       mRestoreFocus = -2;
 }
 
-void LabelTrackView::OnLabelDeleted( const LabelTrackEvent &e )
+void LabelTrackView::OnLabelDeleted(const LabelTrackEvent &e)
 {
-   if ( e.mpTrack.lock() != FindTrack() )
+   if (e.mpTrack.lock() != FindLabelTrack())
       return;
 
    auto index = e.mFormerPosition;
@@ -2135,9 +2134,9 @@ void LabelTrackView::OnLabelDeleted( const LabelTrackEvent &e )
       --mTextEditIndex;//NB: Keep cursor selection region
 }
 
-void LabelTrackView::OnLabelPermuted( const LabelTrackEvent &e )
+void LabelTrackView::OnLabelPermuted(const LabelTrackEvent &e)
 {
-   if ( e.mpTrack.lock() != FindTrack() )
+   if (e.mpTrack.lock() != FindLabelTrack())
       return;
 
    auto former = e.mFormerPosition;
@@ -2155,12 +2154,12 @@ void LabelTrackView::OnLabelPermuted( const LabelTrackEvent &e )
    fix(mTextEditIndex);
 }
 
-void LabelTrackView::OnSelectionChange( const LabelTrackEvent &e )
+void LabelTrackView::OnSelectionChange(const LabelTrackEvent &e)
 {
-   if ( e.mpTrack.lock() != FindTrack() )
+   if (e.mpTrack.lock() != FindLabelTrack())
       return;
 
-   if (!FindTrack()->GetSelected())
+   if (!FindLabelTrack()->GetSelected())
    {
        SetNavigationIndex(-1);
        ResetTextSelection();

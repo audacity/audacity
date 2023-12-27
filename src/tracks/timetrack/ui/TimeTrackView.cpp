@@ -49,9 +49,9 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
  const AudacityProject *pProject, int, bool)
 {
    std::vector<UIHandlePtr> results;
-   auto result = EnvelopeHandle::TimeTrackHitTest
-      ( mEnvelopeHandle, st.state, st.rect, pProject,
-        std::static_pointer_cast< TimeTrack >( FindTrack() ) );
+   auto result = EnvelopeHandle::TimeTrackHitTest(
+      mEnvelopeHandle, st.state, st.rect, pProject,
+      FindChannel<TimeTrack>());
    if (result)
       results.push_back(result);
    return results;
