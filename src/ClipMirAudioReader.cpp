@@ -31,6 +31,7 @@ long long ClipMirAudioReader::GetNumSamples() const
 void ClipMirAudioReader::ReadFloats(
    float* buffer, long long where, size_t numFrames) const
 {
+   std::fill(buffer, buffer + numFrames, 0.f);
    AddChannel(0, buffer, where, numFrames);
    if (mClip.GetWidth() == 1)
       return;
