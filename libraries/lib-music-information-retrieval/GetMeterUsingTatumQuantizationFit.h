@@ -68,9 +68,6 @@ class MirAudioReader;
 /*!
  * @brief Get the BPM of the given audio file, using the Tatum Quantization Fit
  * method.
- *
- * @param audio The audio file to analyze.
- * @param view The view in which the audio file is displayed.
  */
 std::optional<MusicalMeter> GetMeterUsingTatumQuantizationFit(
    const MirAudioReader& audio, FalsePositiveTolerance tolerance,

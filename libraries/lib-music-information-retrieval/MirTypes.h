@@ -38,8 +38,6 @@ struct MusicalMeter
    const std::optional<TimeSignature> timeSignature;
 };
 
-// Maps a combination of time-signature and number of bars (encoded as
-// string) to a score.
 struct OnsetQuantization
 {
    double error;

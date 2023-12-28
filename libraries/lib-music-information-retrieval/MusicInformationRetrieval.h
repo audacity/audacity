@@ -21,7 +21,6 @@
 namespace MIR
 {
 class MirAudioReader;
-struct BeatInfo;
 
 struct LoopClassifierSettings
 {
@@ -103,18 +102,7 @@ public:
    GetProjectSyncInfo(const std::optional<double>& projectTempo) const;
 
 private:
-   /*!
-    * For now we either detect constant tempo or no tempo. We may need to
-    * extend it to a `map<double , double >` when we have a master track with
-    * tempo automation.
-    * Note that BPM isn't quarter-notes per minute (QPM), which is the value we
-    * need to adjust project tempo. For this, a `timeSignature` is also needed.
-    * Else, the most likely QPM can be guessed, but there's always a risk of
-    * over- or underestimating by a factor of two.
-    */
-   const std::optional<double> mBpm;
-
-   const std::optional<TimeSignature> mTimeSignature;
+   const std::optional<MusicalMeter> mMusicalMeter;
 
    // Additional information (key(s), genre, etc) to be added here.
 };

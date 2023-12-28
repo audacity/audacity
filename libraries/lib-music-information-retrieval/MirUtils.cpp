@@ -29,16 +29,15 @@ constexpr bool IsPrimeDecompositionTwoThreeOnly(int n)
    return n == 1;
 }
 
-constexpr int CountThreesInPrimeDecomposition(int n)
-{
-   int count = 0;
-   while (n % 3 == 0)
-   {
-      ++count;
-      n /= 3;
-   }
-   return count;
-}
+static_assert(IsPrimeDecompositionTwoThreeOnly(1));
+static_assert(IsPrimeDecompositionTwoThreeOnly(2));
+static_assert(IsPrimeDecompositionTwoThreeOnly(3));
+static_assert(IsPrimeDecompositionTwoThreeOnly(4));
+static_assert(!IsPrimeDecompositionTwoThreeOnly(5));
+static_assert(IsPrimeDecompositionTwoThreeOnly(6));
+static_assert(!IsPrimeDecompositionTwoThreeOnly(7));
+static_assert(IsPrimeDecompositionTwoThreeOnly(8));
+static_assert(IsPrimeDecompositionTwoThreeOnly(9));
 
 // Function to generate numbers whose prime factorization contains only twos or
 // threes
@@ -55,10 +54,12 @@ std::vector<int> GetPowersOf2And3(int lower, int upper)
 std::vector<int> GetPossibleBarDivisors(int lower, int upper)
 {
    auto result = GetPowersOf2And3(lower, upper);
+   // Remove divisors that have more than two triplet levels. E.g. 3/4s are
+   // okay, 3/4s with swung ryhthms too, but beyond that it's probably very rare
+   // (e.g. swung 9/8 ??...)
    result.erase(
       std::remove_if(
-         result.begin(), result.end(),
-         [](int n) { return CountThreesInPrimeDecomposition(n) > 2; }),
+         result.begin(), result.end(), [](int n) { return n % 27 == 0; }),
       result.end());
    return result;
 }
@@ -81,10 +82,10 @@ std::vector<float> GetNormalizedHann(int size)
    std::vector<float> window(size);
    for (auto n = 0; n < size; ++n)
       window[n] = .5 * (1 - std::cos(2 * pi * n / size));
-   const auto windowSum = std::accumulate(window.begin(), window.end(), 0.);
+   const auto windowSum = std::accumulate(window.begin(), window.end(), 0.f);
    std::transform(
       window.begin(), window.end(), window.begin(),
-      [windowSum](double w) { return w / windowSum; });
+      [windowSum](float w) { return w / windowSum; });
    return window;
 }
 } // namespace MIR

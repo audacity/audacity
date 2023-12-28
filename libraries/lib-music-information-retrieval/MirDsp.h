@@ -24,10 +24,10 @@ class MirAudioReader;
 struct QuantizationFitDebugOutput;
 
 /*!
- * @brief Get the normalized, circular auto-correlation of a signal for a signal
- * `x` whose length already is a power of two. Since the output is symmetric,
- * only the left-hand side is returned, i.e., of size `N/2
- * + 1`, where `N` is the power of two the input was upsampled to.
+ * @brief Get the normalized, circular auto-correlation for a signal `x` whose
+ * length already is a power of two. Since the output is symmetric, only the
+ * left-hand side is returned, i.e., of size `N/2 + 1`, where `N` is the power
+ * of two the input was upsampled to.
  *
  * @pre `x.size()` is a power of two.
  * @post returned vector has size `x.size() / 2 + 1`.

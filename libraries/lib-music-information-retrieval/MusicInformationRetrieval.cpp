@@ -24,6 +24,10 @@ namespace MIR
 {
 namespace
 {
+// Normal distribution parameters obtained by fitting a gaussian in the GTZAN
+// dataset tempo values.
+static constexpr auto bpmExpectedValue = 126.3333;
+
 constexpr auto numTimeSignatures = static_cast<int>(TimeSignature::_count);
 
 auto RemovePathPrefix(const std::string& filename)
@@ -36,22 +40,16 @@ auto RemovePathPrefix(const std::string& filename)
 constexpr std::array<double, numTimeSignatures> quarternotesPerBeat { 2., 1.,
                                                                       1., 1.5 };
 
-void FillMetadata(
+std::optional<MusicalMeter> FillMetadata(
    const std::string& filename, const MirAudioReader& audio,
    FalsePositiveTolerance tolerance,
-   const std::function<void(double progress)>& progressCallback,
-   std::optional<double>& bpm, std::optional<TimeSignature>& timeSignature)
+   const std::function<void(double progress)>& progressCallback)
 {
    const auto bpmFromFilename = GetBpmFromFilename(filename);
    if (bpmFromFilename.has_value())
-      bpm = bpmFromFilename;
-   else if (const auto meter =
-               GetMusicalMeterFromSignal(audio, tolerance, progressCallback);
-            meter.has_value())
-   {
-      bpm = meter->bpm;
-      timeSignature = meter->timeSignature;
-   }
+      return MusicalMeter { *bpmFromFilename, {} };
+   else
+      return GetMusicalMeterFromSignal(audio, tolerance, progressCallback);
 }
 } // namespace
 
@@ -73,18 +71,16 @@ MusicInformation::MusicInformation(
    std::function<void(double progress)> progressCallback)
     : filename { RemovePathPrefix(filename) }
     , duration { duration }
+    , mMusicalMeter { FillMetadata(
+         filename, audio, tolerance, std::move(progressCallback)) }
 {
-   FillMetadata(
-      filename, audio, tolerance, std::move(progressCallback),
-      const_cast<std::optional<double>&>(mBpm),
-      const_cast<std::optional<TimeSignature>&>(mTimeSignature));
 }
 
 MusicInformation::operator bool() const
 {
    // For now suffices to say that we have detected music content if there is
    // rhythm.
-   return mBpm.has_value();
+   return mMusicalMeter.has_value();
 }
 
 ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
@@ -94,11 +90,12 @@ ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
    if (!*this)
       return {};
 
-   const auto error = *mBpm - bpmExpectedValue;
+   const auto error = mMusicalMeter->bpm - bpmExpectedValue;
 
    const auto qpm =
-      *mBpm * quarternotesPerBeat[static_cast<int>(
-                 mTimeSignature.value_or(TimeSignature::FourFour))];
+      mMusicalMeter->bpm *
+      quarternotesPerBeat[static_cast<int>(
+         mMusicalMeter->timeSignature.value_or(TimeSignature::FourFour))];
 
    auto recommendedStretch = 1.0;
    if (projectTempo.has_value())
@@ -113,7 +110,7 @@ ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
    if (0 < delta && delta / 8)
       excessDurationInQuarternotes = delta;
 
-   return { qpm, mTimeSignature, recommendedStretch,
+   return { qpm, mMusicalMeter->timeSignature, recommendedStretch,
             excessDurationInQuarternotes };
 }
 

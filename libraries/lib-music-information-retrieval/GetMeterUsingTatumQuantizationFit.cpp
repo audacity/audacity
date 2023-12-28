@@ -73,48 +73,52 @@ PossibleDivHierarchies GetPossibleDivHierarchies(double audioFileDuration)
       std::max(std::round(audioFileDuration / maxBarDuration), 1.);
    const int maxNumBars = std::round(audioFileDuration / minBarDuration);
    PossibleDivHierarchies possibleDivHierarchies;
-   for_each_in_range(IotaRange{ minNumBars, maxNumBars + 1 }, [&](int numBars) {
-      const auto barDuration = audioFileDuration / numBars;
-      const auto minBpb = std::clamp<int>(
-         std::floor(minBpm * barDuration / 60), minBeatsPerBar, maxBeatsPerBar);
-      const auto maxBpb = std::clamp<int>(
-         std::ceil(maxBpm * barDuration / 60), minBeatsPerBar, maxBeatsPerBar);
-      for_each_in_range(IotaRange{ minBpb, maxBpb + 1 },
-         [&](int beatsPerBar) {
-            std::for_each(
-               possibleTatumsPerBeat.begin(), possibleTatumsPerBeat.end(),
-               [&](double tatumsPerBeat) {
-                  const auto tatumsPerBar = beatsPerBar * tatumsPerBeat;
-                  const int numTatums = tatumsPerBar * numBars;
-                  const auto tatumRate = numTatums / audioFileDuration * 60;
-                  if (
-                     IsRound(tatumsPerBar) && minTatumsPerMinute < tatumRate &&
-                     tatumRate < maxTatumsPerMinute)
-                     possibleDivHierarchies[numTatums].push_back(
-                        BarDivision { numBars, beatsPerBar });
-               });
-         });
-   });
+   for_each_in_range(
+      IotaRange { minNumBars, maxNumBars + 1 }, [&](int numBars) {
+         const auto barDuration = audioFileDuration / numBars;
+         const auto minBpb = std::clamp<int>(
+            std::floor(minBpm * barDuration / 60), minBeatsPerBar,
+            maxBeatsPerBar);
+         const auto maxBpb = std::clamp<int>(
+            std::ceil(maxBpm * barDuration / 60), minBeatsPerBar,
+            maxBeatsPerBar);
+         for_each_in_range(
+            IotaRange { minBpb, maxBpb + 1 }, [&](int beatsPerBar) {
+               std::for_each(
+                  possibleTatumsPerBeat.begin(), possibleTatumsPerBeat.end(),
+                  [&](double tatumsPerBeat) {
+                     const auto tatumsPerBar = beatsPerBar * tatumsPerBeat;
+                     const int numTatums = tatumsPerBar * numBars;
+                     const auto tatumRate = numTatums / audioFileDuration * 60;
+                     if (
+                        IsRound(tatumsPerBar) &&
+                        minTatumsPerMinute < tatumRate &&
+                        tatumRate < maxTatumsPerMinute)
+                        possibleDivHierarchies[numTatums].push_back(
+                           BarDivision { numBars, beatsPerBar });
+                  });
+            });
+      });
    return possibleDivHierarchies;
 }
 
 int GetOnsetLag(const std::vector<float>& odf, int numTatums)
 {
    // Understandably, the first onset of a loop recording isn't typically
-   // centered on time 0, or the would be a click at the onset. The entire
+   // centered on time 0, or there would be a click at the onset. The entire
    // recording is therefore likely to have a small lag. It is important that we
    // take this lag into account for the quantization distance measure.
    // The code below is equivalent to cross-correlating the odf with a pulse
    // train of frequency `numTatums / odf.size()`. We take the position of the
    // first peak to be the lag.
-   const auto odfSamplesPerDiv = 1. * odf.size() / numTatums;
+   const auto pulseTrainPeriod = 1. * odf.size() / numTatums;
    auto max = std::numeric_limits<float>::lowest();
    auto lag = 0;
    while (true)
    {
       auto val = 0.f;
-      for_each_in_range(IotaRange{ 0, numTatums }, [&](int i) {
-         const int j = std::round(i * odfSamplesPerDiv) + lag;
+      for_each_in_range(IotaRange { 0, numTatums }, [&](int i) {
+         const int j = std::round(i * pulseTrainPeriod) + lag;
          val += (j < odf.size() ? odf[j] : 0.f);
       });
       if (val < max)
@@ -139,8 +143,8 @@ double GetQuantizationDistance(
    size_t size, int numDivisions, int lag)
 {
    std::vector<double> peakDistances(peakIndices.size());
-   const auto peakSum = std::accumulate(
-      peakValues.begin(), peakValues.end(), 0., std::plus<double> {});
+   const auto peakSum =
+      std::accumulate(peakValues.begin(), peakValues.end(), 0.);
    const auto odfSamplesPerDiv = 1. * size / numDivisions;
    std::transform(
       peakIndices.begin(), peakIndices.end(), peakDistances.begin(),
@@ -148,31 +152,21 @@ double GetQuantizationDistance(
          const auto shiftedIndex = peakIndex - lag;
          const auto closestDiv = std::round(shiftedIndex / odfSamplesPerDiv);
          // Normalized distance between 0 and 1:
-         const auto distance = 2 *
-                               (shiftedIndex - closestDiv * odfSamplesPerDiv) /
-                               odfSamplesPerDiv;
-         return distance < 0 ? -distance : distance;
+         const auto distance =
+            (shiftedIndex - closestDiv * odfSamplesPerDiv) / odfSamplesPerDiv;
+         // Mutliply by two such that the error spans `[0, 1)`.
+         return 2 * std::abs(distance);
       });
    // Calculate the score as the sum of the distances weighted by
    // the odf values:
    const auto weightedAverage =
       std::inner_product(
-         peakDistances.begin(), peakDistances.end(), peakValues.begin(), 0.,
-         [](double a, double b) { return a + b; },
-         [&](double distance, float peakValue) {
-            return distance * peakValue;
-         }) /
+         peakDistances.begin(), peakDistances.end(), peakValues.begin(), 0.) /
       peakSum;
    return weightedAverage;
 }
 
-struct QuantizationExperiment
-{
-   const OnsetQuantization bestFit;
-   const double score;
-};
-
-QuantizationExperiment RunQuantizationExperiment(
+OnsetQuantization RunQuantizationExperiment(
    const std::vector<float>& odf, const std::vector<int>& peakIndices,
    const std::vector<float>& peakValues,
    const std::vector<int>& possibleNumTatums,
@@ -199,15 +193,11 @@ QuantizationExperiment RunQuantizationExperiment(
          return a.second.error < b.second.error;
       });
 
-   // Read the normalized distance, a value between 0 and 1, as a probability.
    const auto error = bestFitIt->second.error;
-   // The higher the contrast, the more likely the recording is a loop.
-   const auto score = 1 - error;
-
    const auto mostLikelyNumTatums = bestFitIt->first;
    const auto lag = bestFitIt->second.lag;
 
-   return { error, lag, mostLikelyNumTatums, score };
+   return { error, lag, mostLikelyNumTatums };
 }
 
 std::optional<TimeSignature>
@@ -285,12 +275,12 @@ double GetBeatSelfSimilarityScore(
    // finding the closest peak, and average the values. Doing this rather
    // than evaluating only just one peak is more robust to rhythms which
    // miss beats.
-   auto harmonic = 1;
+   auto periodIndex = 1;
    auto sum = 0.;
    auto numIndices = 0;
    while (true)
    {
-      auto j = static_cast<int>(harmonic++ * lag + .5);
+      auto j = static_cast<int>(periodIndex++ * lag + .5);
       if (j >= odfAutoCorr.size())
          break;
       while (true)
@@ -311,24 +301,24 @@ double GetBeatSelfSimilarityScore(
    return sum / numIndices;
 }
 
-MusicalMeter GetMostLikelyMeterFromQuantizationExperiment(
-   const std::vector<float>& odf, int numTatums,
+size_t GetBestBarDivisionIndex(
    const std::vector<BarDivision>& possibleBarDivisions,
-   double audioFileDuration, QuantizationFitDebugOutput* debugOutput)
+   double audioFileDuration, int numTatums, const std::vector<float>& odf,
+   QuantizationFitDebugOutput* debugOutput)
+
 {
    const auto odfAutoCorr = GetNormalizedCircularAutocorr(odf);
    if (debugOutput)
       debugOutput->odfAutoCorr = odfAutoCorr;
-
    const auto odfAutocorrFullSize = 2 * (odfAutoCorr.size() - 1);
    assert(IsPowOfTwo(odfAutocorrFullSize));
    const auto odfAutoCorrSampleRate = odfAutocorrFullSize / audioFileDuration;
 
    std::vector<double> scores(possibleBarDivisions.size());
-   // These (still) only depend on the beat rate. We look at self-similarities
-   // at beat intervals, so to say, without examining the contents of the beats.
-   // Since several bar divisions may yield the same number of beats, we may be
-   // able to re-use some calculations.
+   // These (still) only depend on the beat rate. We look at
+   // self-similarities at beat intervals, so to say, without examining the
+   // contents of the beats. Since several bar divisions may yield the same
+   // number of beats, we may be able to re-use some calculations.
    std::unordered_map<int /*numBeats*/, double> autocorrScoreCache;
    std::transform(
       possibleBarDivisions.begin(), possibleBarDivisions.end(), scores.begin(),
@@ -345,22 +335,29 @@ MusicalMeter GetMostLikelyMeterFromQuantizationExperiment(
          return likelihood * selfSimilarityScore;
       });
 
+   return std::max_element(scores.begin(), scores.end()) - scores.begin();
+}
+
+MusicalMeter GetMostLikelyMeterFromQuantizationExperiment(
+   const std::vector<float>& odf, int numTatums,
+   const std::vector<BarDivision>& possibleBarDivisions,
+   double audioFileDuration, QuantizationFitDebugOutput* debugOutput)
+{
    const auto fourFourIt = std::find_if(
       possibleBarDivisions.begin(), possibleBarDivisions.end(),
       [&](const BarDivision& barDivision) {
          return GetTimeSignature(barDivision, numTatums) ==
                 TimeSignature::FourFour;
       });
-
    // If there is a possibility that this is a 4/4, we don't take any risk and
    // use this. When we get more clever and use the beat contents, we may be
    // more assertive.
-   const auto bestScoreIndex =
-      fourFourIt == possibleBarDivisions.end() ?
-         std::max_element(scores.begin(), scores.end()) - scores.begin() :
-         fourFourIt - possibleBarDivisions.begin();
-
-   const auto& barDivision = possibleBarDivisions[bestScoreIndex];
+   const auto winnerIndex = fourFourIt == possibleBarDivisions.end() ?
+                               GetBestBarDivisionIndex(
+                                  possibleBarDivisions, audioFileDuration,
+                                  numTatums, odf, debugOutput) :
+                               fourFourIt - possibleBarDivisions.begin();
+   const auto& barDivision = possibleBarDivisions[winnerIndex];
    const auto numBeats = barDivision.numBars * barDivision.beatsPerBar;
    const auto signature = GetTimeSignature(barDivision, numTatums);
    const auto bpm = 60. * numBeats / audioFileDuration;
@@ -375,8 +372,7 @@ bool IsSingleEvent(
    // will translate as one large peak and maybe a few much smaller ones. In
    // that case we can expect the average to be between these two groups.
    const auto peakAvg =
-      std::accumulate(
-         peakValues.begin(), peakValues.end(), 0., std::plus<double> {}) /
+      std::accumulate(peakValues.begin(), peakValues.end(), 0.) /
       peakIndices.size();
    const auto numPeaksAboveAvg =
       std::count_if(peakValues.begin(), peakValues.end(), [&](float v) {
@@ -434,22 +430,23 @@ std::optional<MusicalMeter> GetMeterUsingTatumQuantizationFit(
       odf, peakIndices, peakValues, possibleNumTatums, debugOutput);
 
    const auto winnerMeter = GetMostLikelyMeterFromQuantizationExperiment(
-      odf, experiment.bestFit.numDivisions,
-      possibleDivs.at(experiment.bestFit.numDivisions), audioFileDuration,
-      debugOutput);
+      odf, experiment.numDivisions, possibleDivs.at(experiment.numDivisions),
+      audioFileDuration, debugOutput);
+
+   const auto score = 1 - experiment.error;
 
    if (debugOutput)
    {
-      debugOutput->tatumQuantization = experiment.bestFit;
+      debugOutput->tatumQuantization = experiment;
       debugOutput->bpm = winnerMeter.bpm;
       debugOutput->timeSignature = winnerMeter.timeSignature;
       debugOutput->odf = odf;
       debugOutput->odfSr = odfSr;
       debugOutput->audioFileDuration = audioFileDuration;
-      debugOutput->score = experiment.score;
+      debugOutput->score = score;
    }
 
-   return experiment.score < loopClassifierSettings.at(tolerance).threshold ?
+   return score < loopClassifierSettings.at(tolerance).threshold ?
              std::optional<MusicalMeter> {} :
              winnerMeter;
 }

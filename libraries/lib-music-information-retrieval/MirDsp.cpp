@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "MirDsp.h"
 #include "FFT.h"
+#include "IteratorX.h"
 #include "MirAudioReader.h"
 #include "MirTypes.h"
 #include "MirUtils.h"
@@ -34,29 +35,34 @@ float GetNoveltyMeasure(
       });
 }
 
-std::vector<float>
-GetMovingAverage(const std::vector<float>& x, double sampleRate)
+std::vector<float> GetMovingAverage(const std::vector<float>& x, double hopRate)
 {
    constexpr auto smoothingWindowDuration = 0.2;
    // An odd number.
-   const int M = std::round(smoothingWindowDuration * sampleRate / 4) * 2 + 1;
+   const int M = std::round(smoothingWindowDuration * hopRate / 4) * 2 + 1;
    const auto window = GetNormalizedHann(2 * M + 1);
    auto n = 0;
    std::vector<float> movingAverage(x.size());
    std::transform(x.begin(), x.end(), movingAverage.begin(), [&](float) {
-      auto y = 0.;
-      for (auto i = -M; i <= M; ++i)
-      {
-         auto k = n + i;
-         if (k < 0)
-            k += x.size();
-         else if (k >= x.size())
-            k -= x.size();
-         y += x[k] * window[i + M];
-      }
+      const auto m = IotaRange(-M, M + 1);
+      const auto y =
+         std::accumulate(m.begin(), m.end(), 0., [&](double y, int i) {
+            auto k = n + i;
+            if (k < 0)
+               k += x.size();
+            else if (k >= x.size())
+               k -= x.size();
+            return y + x[k] * window[i + M];
+         });
       ++n;
-      constexpr auto smoothingThreshold = 1.5;
-      return y * smoothingThreshold;
+      // The moving average of the raw ODF will be subtracted from it to yield
+      // the final ODF, negative results being set to 0. (This is to remove
+      // noise of small ODF peaks before the method's quantization step.) The
+      // larger this multiplier, the less peaks will remain. This value was
+      // found by trial and error, using the benchmarking framework
+      // (see TatumQuantizationFitBenchmarking.cpp)
+      constexpr auto thresholdRaiser = 1.5;
+      return y * thresholdRaiser;
    });
    return movingAverage;
 }
@@ -64,6 +70,8 @@ GetMovingAverage(const std::vector<float>& x, double sampleRate)
 
 std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
 {
+   if (std::all_of(x.begin(), x.end(), [](float x) { return x == 0.f; }))
+      return x;
    const auto N = x.size();
    assert(IsPowOfTwo(N));
    PowerSpectrum(N, x.data(), x.data());
@@ -91,6 +99,7 @@ std::vector<float> GetOnsetDetectionFunction(
    const auto frameSize = frameProvider.GetFftSize();
    std::vector<float> buffer(frameSize);
    std::vector<float> odf;
+   odf.reserve(numFrames);
    const auto powSpecSize = frameSize / 2 + 1;
    std::vector<float> powSpec(powSpecSize);
    std::vector<float> prevPowSpec(powSpecSize);
@@ -104,7 +113,9 @@ std::vector<float> GetOnsetDetectionFunction(
       // either window it here or normalize it by frame size afterwards.
       PowerSpectrum(frameSize, buffer.data(), powSpec.data());
 
-      // Compress the frame as per Fundamentals of Music Processing, (6.5)
+      // Compress the frame as per section (6.5) in Müller, Meinard.
+      // Fundamentals of music processing: Audio, analysis, algorithms,
+      // applications. Vol. 5. Cham: Springer, 2015.
       constexpr auto gamma = 100.f;
       std::transform(
          powSpec.begin(), powSpec.end(), powSpec.begin(),
