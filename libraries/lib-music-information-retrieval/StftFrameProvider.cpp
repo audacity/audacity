@@ -1,3 +1,13 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  StftFrameProvider.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "StftFrameProvider.h"
 #include "MirAudioReader.h"
 #include "MirUtils.h"

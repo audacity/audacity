@@ -1,3 +1,13 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  MirUtils.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "MirUtils.h"
 
 #include <cmath>
