@@ -25,7 +25,7 @@ class ProjectSerializer;
 
 namespace cloud::audiocom::sync
 {
-class ProjectCloudExtension final : public ClientData::Base
+class CLOUD_AUDIOCOM_API ProjectCloudExtension final : public ClientData::Base
 {
 public:
    explicit ProjectCloudExtension(AudacityProject& project);
