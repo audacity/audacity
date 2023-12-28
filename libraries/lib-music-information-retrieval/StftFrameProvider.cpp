@@ -57,7 +57,7 @@ bool StftFrameProvider::GetNextFrame(std::vector<float>& frame)
 {
    if (mNumFramesProvided >= mNumFrames)
       return false;
-   frame.resize(mFftSize);
+   frame.resize(mFftSize, 0.f);
    const int firstReadPosition = mHopSize - mFftSize;
    int start = std::round(firstReadPosition + mNumFramesProvided * mHopSize);
    while (start < 0)

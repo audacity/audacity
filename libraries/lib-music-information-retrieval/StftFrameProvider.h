@@ -16,6 +16,14 @@ namespace MIR
 {
 class MirAudioReader;
 
+/*!
+ * Utility class to provide time-domain frames ready for FFT. The returned
+ * frames have power-of-two size and are already windowed with a Hann window,
+ * scaled such that it sums to unity. Also, `GetNumFrames()` is the closest
+ * power of two that satifsies a hop size of 10ms. This property facilitates the
+ * FFT analysis of transformation of the STFT frames to some scalar, e.g. the
+ * novelty values of an onset detection function.
+ */
 class StftFrameProvider
 {
 public:
