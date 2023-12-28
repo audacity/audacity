@@ -859,7 +859,7 @@ void WaveChannelSubView::DrawBoldBoundaries(
       bool highlightLoc = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       highlightLoc =
-         target2 && target2->GetTrack().get() == &track &&
+         target2 && target2->GetTrack().get() == &channel &&
          target2->GetLocation() == loc;
 #endif
       const int xx = zoomInfo.TimeToPosition(loc.pos);

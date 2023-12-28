@@ -855,7 +855,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
             auto target = dynamic_cast<SampleHandle*>(context.target.get());
-            highlight = target && target->FindChannel().get() == &track;
+            highlight = target && target->FindChannel().get() == &channel;
 #endif
             DrawIndividualSamples(
                context, leftOffset, rectPortion, zoomMin, zoomMax,
@@ -962,7 +962,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<TimeShiftHandle*>(context.target.get());
    gripHit = target && target->IsGripHit();
-   highlight = target && target->GetTrack().get() == &track;
+   highlight = target && target->FindChannel().get() == &channel;
 #endif
 
    const bool dB = !WaveformSettings::Get(channel).isLinear();
