@@ -50,6 +50,8 @@ public:
       LOOP = 0xEF1F,
       METRONOME = 0xEF20,
 
+      TICK = 0xEF31,
+
       SPEAKER_ON = 0xEF4E,
       SPEAKER_OFF = 0xEF52,
       VISIBILITY_ON = 0xEF53,

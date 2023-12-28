@@ -55,6 +55,19 @@ ApplicationWindow {
       visible: false
    }
 
+   Window {
+      id: listbox
+      width: 600
+      height: 400
+      color: UiTheme.backgroundColor3
+      title: qsTr("Styled Listbox")
+      visible: false
+
+      StyledListBox {
+         anchors.centerIn: parent
+      }
+   }
+
    MenuBar {
       Menu {
          title: qsTr("File")
@@ -153,12 +166,22 @@ ApplicationWindow {
 
       Menu {
          title: qsTr("Testers")
+
          MenuItem {
             text: qsTr("VolumeControl")
             checkable: true
             checked: enableVolumeTester
             onTriggered: {
                enableVolumeTester = !enableVolumeTester
+            }
+         }
+
+         MenuItem {
+            text: qsTr("Style Listbox")
+            checkable: true
+            checked: listbox.visible
+            onTriggered: {
+               listbox.visible = !listbox.visible
             }
          }
       }
