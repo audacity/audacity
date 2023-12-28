@@ -5,6 +5,8 @@ set( SOURCES
    ui/AudioComSyncUI.cpp
    ui/CloudProjectPropertiesDialog.cpp
    ui/CloudProjectPropertiesDialog.h
+   ui/CloudSyncStatusField.cpp
+   ui/CloudSyncStatusField.h
    ui/LinkWithTokenDialog.cpp
    ui/LinkWithTokenDialog.h
    ui/LinkFailedDialog.cpp

@@ -21,6 +21,7 @@
 #include "Project.h"
 #include "ProjectManager.h"
 
+#include "CloudSyncStatusField.h"
 #include "SelectSaveLocationDialog.h"
 #include "CloudProjectPropertiesDialog.h"
 #include "MixdownPropertiesDialog.h"
@@ -100,21 +101,38 @@ public:
    bool
    OnAuthorizationRequired(const BasicUI::WindowPlacement& placement) override
    {
+      
       return false;
    }
 
    bool OnUploadProgress(AudacityProject* project, double progress) override
    {
+      if (project == nullptr)
+         return false;
+
+      auto& statusField = CloudSyncStatusField::Get(*project);
+      statusField.SetUploadProgress(progress);
+
       return true;
    }
 
    void
    OnUploadFailed(AudacityProject* project, std::string errorMessage) override
    {
+      if (project == nullptr)
+         return;
+
+      auto& statusField = CloudSyncStatusField::Get(*project);
+      statusField.UploadCompleted(false);
    }
 
    void OnUploadSucceeded(AudacityProject* project) override
    {
+      if (project == nullptr)
+         return;
+
+      auto& statusField = CloudSyncStatusField::Get(*project);
+      statusField.UploadCompleted(true);
    }
 
    void OnDownloadStarted() override
