@@ -63,14 +63,14 @@ std::vector<int> GetPossibleBarDivisors(int lower, int upper)
    return result;
 }
 
-std::vector<int> GetPeakIndices(const std::vector<float>& odf)
+std::vector<int> GetPeakIndices(const std::vector<float>& x)
 {
    std::vector<int> peakIndices;
-   for (auto j = 1; j < odf.size() - 1; ++j)
+   for (auto j = 0; j < x.size(); ++j)
    {
-      const auto i = j == 0 ? odf.size() - 1 : j - 1;
-      const auto k = j == odf.size() - 1 ? 0 : j + 1;
-      if (odf[i] < odf[j] && odf[j] > odf[k])
+      const auto i = j == 0 ? x.size() - 1 : j - 1;
+      const auto k = j == x.size() - 1 ? 0 : j + 1;
+      if (x[i] < x[j] && x[j] > x[k])
          peakIndices.push_back(j);
    }
    return peakIndices;

@@ -24,7 +24,7 @@ static constexpr auto bpmExpectedValue = 126.3333;
 // threes
 std::vector<int> GetPossibleBarDivisors(int lower, int upper);
 
-std::vector<int> GetPeakIndices(const std::vector<float>& odf);
+std::vector<int> GetPeakIndices(const std::vector<float>& x);
 
 std::vector<float> GetNormalizedHann(int size);
 

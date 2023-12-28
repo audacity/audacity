@@ -38,8 +38,8 @@ struct LoopClassifierSettings
 
 static const std::unordered_map<FalsePositiveTolerance, LoopClassifierSettings>
    loopClassifierSettings {
-      { FalsePositiveTolerance::Strict, { .01, 0.844924559193146 } },
-      { FalsePositiveTolerance::Lenient, { .1, 0.7368346869161237 } },
+      { FalsePositiveTolerance::Strict, { .01, 0.8367879995455243 } },
+      { FalsePositiveTolerance::Lenient, { .1, 0.7336582045210642 } },
    };
 
 /*!
