@@ -1319,7 +1319,6 @@ set( AUDACITY_LIBRARIES
    lib-note-track-interface
    lib-viewport-interface
    lib-music-information-retrieval-interface
-   lib-wave-track-interface
 )
 
 if (USE_VST)
