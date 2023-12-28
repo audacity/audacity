@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  WavFileIO.cpp
+  Mp3FileReader.cpp
 
   Matthieu Hodgkinson
 
