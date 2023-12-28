@@ -68,9 +68,7 @@ void AudioSegmentSampleView::DoAdd(float* buffer, size_t bufferSize) const
       const auto toWriteFromBlock = std::min(block->size() - offset, toWrite);
       const auto src = block->data() + offset;
       const auto dst = buffer + written;
-      std::transform(
-         src, src + toWriteFromBlock, dst, dst,
-         [](float a, float b) { return a + b; });
+      std::transform(src, src + toWriteFromBlock, dst, dst, std::plus {});
       toWrite -= toWriteFromBlock;
       written += toWriteFromBlock;
       offset = 0;
