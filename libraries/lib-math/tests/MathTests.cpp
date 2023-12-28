@@ -1,3 +1,13 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  MathTests.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "LinearFit.h"
 
 #include <catch2/catch.hpp>
