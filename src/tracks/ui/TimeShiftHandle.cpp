@@ -476,14 +476,11 @@ UIHandle::Result TimeShiftHandle::Click(
    auto &viewInfo = ViewInfo::Get( *pProject );
 
    const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
-   const auto clickedTrack = pView ? pView->FindTrack().get() : nullptr;
-   if (!clickedTrack)
+   const auto pTrack = pView && pView->FindChannel() ?
+      dynamic_cast<Track *>(&pView->FindChannel()->ReallyGetChannelGroup())
+      : nullptr;
+   if (!pTrack)
       return RefreshCode::Cancelled;
-
-   auto &trackList = TrackList::Get(*pProject);
-   // Substitute the leader track before giving it to MakeTrackShifter
-   // and ClipMoveState::Init
-   const auto pTrack = *trackList.Find(clickedTrack);
 
    mClipMoveState.clear();
    mDidSlideVertically = false;
@@ -513,6 +510,7 @@ UIHandle::Result TimeShiftHandle::Click(
       // just do shifting of one whole track
    }
 
+   auto &trackList = TrackList::Get(*pProject);
    mClipMoveState.Init(*pProject, *pTrack,
       hitTestResult, move(pShifter), clickTime,
       viewInfo, trackList,

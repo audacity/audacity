@@ -74,6 +74,16 @@ ChannelGroup &Channel::GetChannelGroup()
    return DoGetChannelGroup();
 }
 
+const ChannelGroup &Channel::ReallyGetChannelGroup() const
+{
+   return ReallyDoGetChannelGroup();
+}
+
+ChannelGroup &Channel::ReallyGetChannelGroup()
+{
+   return ReallyDoGetChannelGroup();
+}
+
 size_t Channel::GetChannelIndex() const
 {
    return FindChannelIndex();

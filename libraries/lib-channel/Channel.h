@@ -186,6 +186,13 @@ public:
     */
    const ChannelGroup &GetChannelGroup() const;
 
+   //! Channel object's lifetime is assumed to be nested in its Track's
+   ChannelGroup &ReallyGetChannelGroup();
+   /*!
+    @copydoc ReallyGetChannelGroup()
+    */
+   const ChannelGroup &ReallyGetChannelGroup() const;
+
    /*!
     @return `ii` such that `this == GetChannelGroup().GetChannel(ii).get()`
     */
