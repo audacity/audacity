@@ -24,7 +24,7 @@ class MirAudioReader;
  * FFT analysis of transformation of the STFT frames to some scalar, e.g. the
  * novelty values of an onset detection function.
  */
-class StftFrameProvider
+class MUSIC_INFORMATION_RETRIEVAL_API StftFrameProvider
 {
 public:
    StftFrameProvider(const MirAudioReader& source);

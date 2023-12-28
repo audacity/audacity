@@ -4,6 +4,7 @@ add_unit_test(
    WAV_FILE_IO
    SOURCES
       MusicInformationRetrievalTests.cpp
+      StftFrameProviderTests.cpp
       WavMirAudioReader.cpp
       WavMirAudioReader.h
    LIBRARIES

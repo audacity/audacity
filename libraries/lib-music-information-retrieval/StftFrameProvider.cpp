@@ -35,8 +35,10 @@ double GetHopSize(int sampleRate, long long numSamples)
    // of two. This will spare us the need for resampling when we need to get the
    // autocorrelation of the ODF using an FFT.
    const auto idealHopSize = 0.01 * sampleRate;
-   const auto numFrames =
-      1 << (int)std::round(std::log2(numSamples / idealHopSize));
+   const int exponent = std::round(std::log2(numSamples / idealHopSize));
+   if (exponent < 0)
+      return 0;
+   const auto numFrames = 1 << exponent;
    return 1. * numSamples / numFrames;
 }
 } // namespace
@@ -46,11 +48,12 @@ StftFrameProvider::StftFrameProvider(const MirAudioReader& audio)
     , mFftSize { GetFrameSize(audio.GetSampleRate()) }
     , mHopSize { GetHopSize(audio.GetSampleRate(), audio.GetNumSamples()) }
     , mWindow { GetNormalizedHann(mFftSize) }
-    , mNumFrames { static_cast<int>(
-         std::round(audio.GetNumSamples() / mHopSize)) }
+    , mNumFrames { mHopSize > 0 ? static_cast<int>(std::round(
+                                     audio.GetNumSamples() / mHopSize)) :
+                                  0 }
     , mNumSamples { audio.GetNumSamples() }
 {
-   assert(IsPowOfTwo(mNumFrames));
+   assert(mNumFrames == 0 || IsPowOfTwo(mNumFrames));
 }
 
 bool StftFrameProvider::GetNextFrame(std::vector<float>& frame)
