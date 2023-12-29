@@ -707,15 +707,18 @@ public:
          return {};
       auto index = adjuster.FindIndex( subView );
       auto result = std::make_shared<SubViewCloseHandle>(
-         std::move( adjuster ), index, view.FindTrack(), rect );
+         std::move(adjuster), index, view.FindChannel(), rect);
       result = AssignUIHandlePtr( holder, result );
       return result;
    }
 
    SubViewCloseHandle(
       SubViewAdjuster &&adjuster, size_t index,
-      const std::shared_ptr<Track> &pTrack, const wxRect &rect )
-      : ButtonHandle{ pTrack, rect }
+      const std::shared_ptr<Channel> &pChannel, const wxRect &rect )
+      : ButtonHandle{ static_cast<Track&>(pChannel->ReallyGetChannelGroup())
+            .SharedPointer(),
+         rect }
+      , mpChannel{ pChannel }
       , mAdjuster{ std::move( adjuster ) }
       , mMySubView{ index }
    {
@@ -744,13 +747,14 @@ public:
       TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
       override
    {
-      if ( iPass == TrackArtist::PassMargins ) { // after PassTracks
-          CommonTrackInfo::DrawCloseButton(
-             context, GetButtonRect(rect), GetTrack().get(), this );
+      if (iPass == TrackArtist::PassMargins) { // after PassTracks
+         CommonTrackInfo::DrawCloseButton(
+            context, GetButtonRect(rect), mpChannel.lock().get(), this);
       }
    }
 
 private:
+   std::weak_ptr<Channel> mpChannel;
    SubViewAdjuster mAdjuster;
    size_t mMySubView{};
 };
