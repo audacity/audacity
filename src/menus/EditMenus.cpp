@@ -1039,10 +1039,11 @@ const ReservedCommandFlag
          return false;
 
       const auto selectedTracks = TrackList::Get(project).Selected<const WaveTrack>();
-      for(const auto track : selectedTracks)
+      for (const auto track : selectedTracks)
       {
          const auto selectedClips =
-            track->GetClipsIntersecting(viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1());
+            WaveTrackUtilities::GetClipsIntersecting(*track,
+               viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1());
          if(selectedClips.size() > 1)
             return true;
       }

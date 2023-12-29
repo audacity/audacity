@@ -206,6 +206,12 @@ WAVE_TRACK_API void InspectBlocks(const TrackList &tracks,
 
 WAVE_TRACK_API bool WideClipContains(
    const WaveTrack::Interval &wideClip, const WaveChannelInterval &clip);
+
+/*!
+ @pre t0 <= t1
+ */
+WAVE_TRACK_API WaveTrack::IntervalConstHolders
+GetClipsIntersecting(const WaveTrack &track, double t0, double t1);
 }
 
 #endif

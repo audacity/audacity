@@ -19,7 +19,6 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/graphics.h>
 
 #include "AColor.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"
 
 #include "../../../../../images/Cursors.h"
@@ -47,6 +46,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackAffordanceHandle.h"
+#include "WaveTrackUtilities.h"
 #include "WaveClipAdjustBorderHandle.h"
 #include "WaveClipUIUtilities.h"
 
@@ -894,7 +894,9 @@ auto WaveChannelSubView::GetMenuItems(
       const auto t = viewInfo.PositionToTime(pPosition->x, rect.x);
       if((pTrack->IsSelected() &&
          t > viewInfo.selectedRegion.t0() && t < viewInfo.selectedRegion.t1() &&
-         !pTrack->GetClipsIntersecting(viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1()).empty())
+         !WaveTrackUtilities::GetClipsIntersecting(*pTrack,
+            viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1())
+               .empty())
          ||
          pTrack->GetClipAtTime(t))
       {
@@ -1000,7 +1002,7 @@ WaveChannelView::DoDetailedHitTest(
    const auto& viewInfo = ViewInfo::Get(*pProject);
    const auto pTrack = pChannel->GetTrack().SharedPointer<WaveTrack>();
 
-   for (auto& clip : pTrack->GetClips())
+   for (const auto &clip : pChannel->Intervals())
    {
       if (!WaveChannelView::ClipDetailsVisible(*clip, viewInfo, st.rect)
          && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
@@ -1009,7 +1011,8 @@ WaveChannelView::DoDetailedHitTest(
          results.push_back(
             AssignUIHandlePtr(
                waveChannelView.mAffordanceHandle,
-               std::make_shared<WaveTrackAffordanceHandle>(pTrack, clip)
+               std::make_shared<WaveTrackAffordanceHandle>(
+                  pTrack, clip->GetClipPtr())
             )
          );
       }
@@ -1438,7 +1441,7 @@ bool WaveChannelView::ClipDetailsVisible(const ClipTimes& clip,
    return showSamples || clipRect.width >= kClipDetailedViewMinimumWidth;
 }
 
-wxRect WaveChannelView::ClipHitTestArea(const WaveClip& clip,
+wxRect WaveChannelView::ClipHitTestArea(const ClipTimes& clip,
    const ZoomInfo& zoomInfo, const wxRect& viewRect)
 {
    bool showSamples{ false };
@@ -1449,7 +1452,7 @@ wxRect WaveChannelView::ClipHitTestArea(const WaveClip& clip,
    return clipRect.Inflate(2, 0);
 }
 
-bool WaveChannelView::HitTest(const WaveClip& clip,
+bool WaveChannelView::HitTest(const ClipTimes& clip,
    const ZoomInfo& viewInfo, const wxRect& viewRect, const wxPoint& pos)
 {
    return ClipHitTestArea(clip, viewInfo, viewRect).Contains(pos);

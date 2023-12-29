@@ -182,8 +182,9 @@ public:
 
    static bool ClipDetailsVisible(
       const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
-   static wxRect ClipHitTestArea(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
-   static bool HitTest(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& rect, const wxPoint& pos);
+   static wxRect ClipHitTestArea(const ClipTimes& clip,
+      const ZoomInfo& zoomInfo, const wxRect& viewRect);
+   static bool HitTest(const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& rect, const wxPoint& pos);
 
    //FIXME: These functions do not push state to undo history
    //because attempt to do so leads to a focus lose which, in

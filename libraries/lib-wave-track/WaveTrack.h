@@ -668,7 +668,6 @@ public:
 
    const WaveClip* GetClipAtTime(double time) const;
    WaveClip* GetClipAtTime(double time);
-   WaveClipConstHolders GetClipsIntersecting(double t0, double t1) const;
 
    //
    // Getting information about the track's internal block sizes

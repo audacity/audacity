@@ -443,6 +443,19 @@ bool WaveTrackUtilities::WideClipContains(
       || &waveClip == wideClip.GetClip(1).get();
 }
 
+WaveTrack::IntervalConstHolders
+WaveTrackUtilities::GetClipsIntersecting(const WaveTrack &track,
+   double t0, double t1)
+{
+   assert(t0 <= t1);
+   WaveTrack::IntervalConstHolders result;
+   const auto &intervals = track.Intervals();
+   copy_if(intervals.begin(), intervals.end(), back_inserter(result),
+      [&](const auto &pClip){
+         return pClip->IntersectsPlayRegion(t0, t1); });
+   return result;
+}
+
 #include "ProjectFormatExtensionsRegistry.h"
 
 namespace {
