@@ -116,7 +116,6 @@ public:
    bool GetSuspended() const
       { return mSuspended.load(std::memory_order_relaxed); }
 
-   //! To be called only from main thread
    /*!
     Each time a processing scope starts in the audio thread, suspension state
     is tested, and plug-in instances may need to do things in response to the

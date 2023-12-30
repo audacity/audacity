@@ -239,8 +239,12 @@ bool AudioIO::ValidateDeviceNames(const wxString &play, const wxString &rec)
    return pInfo != nullptr && rInfo != nullptr && pInfo->hostApi == rInfo->hostApi;
 }
 
+static constexpr auto kTimerInterval = std::chrono::milliseconds{ 50 };
+
 AudioIO::AudioIO()
 {
+   wxTimer::Start(kTimerInterval.count());
+
    if (!std::atomic<double>{}.is_lock_free()) {
       // If this check fails, then the atomic<double> members in AudioIO.h
       // might be changed to atomic<float> to be more efficient with some
@@ -347,6 +351,8 @@ AudioIO::~AudioIO()
 
    mFinishAudioThread.store(true, std::memory_order_release);
    mAudioThread.join();
+
+   wxTimer::Stop();
 }
 
 std::shared_ptr<RealtimeEffectState>
@@ -470,6 +476,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    unsigned int numPlaybackChannels, unsigned int numCaptureChannels)
 {
    mLastBelow = IsPaused();
+   mMainThreadLastBelow = mLastBelow;
 
    auto sampleRate = options.rate;
    mNumPauseFrames = 0;
@@ -1408,6 +1415,25 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mpState.reset();
 }
 
+void AudioIO::Notify()
+{
+   auto pListener = GetListener();
+
+   const auto newBlocksCount = mNewBlocksCount.load(std::memory_order_acquire);
+   if (mLastNewBlocksCount != newBlocksCount) {
+      mLastNewBlocksCount = newBlocksCount;
+      if (pListener)
+         pListener->OnAudioIONewBlocks();
+   }
+
+   const auto below = mLastBelow.load(std::memory_order_relaxed);
+   if (mMainThreadLastBelow != below) {
+      mMainThreadLastBelow = below;
+      if (pListener)
+         pListener->OnSoundActivationThreshold(!below);
+   }
+}
+
 bool AudioIO::IsAvailable(AudacityProject &project) const
 {
    auto pOwningProject = mOwningProject.lock();
@@ -1427,6 +1453,10 @@ void AudioIO::StopStream()
    auto cleanup = finally ( [this] {
       ClearRecordingException();
       mRecordingSchedule.mCrossfadeData.clear(); // free arrays
+      mNewBlocksCount.store(0);
+      mLastBelow.store(false);
+      mLastNewBlocksCount = 0;
+      mMainThreadLastBelow = false;
    } );
 
    if( mPortStreamV19 == NULL )
@@ -1684,7 +1714,7 @@ void AudioIO::StopStream()
    mPlaybackSchedule.ResetMode();
 }
 
-void AudioIO::SetPaused(bool state)
+void AudioIoCallback::SetPaused(bool state)
 {
    // This may be called from more than one thread
    constexpr auto order = std::memory_order_relaxed;
@@ -2576,10 +2606,8 @@ void AudioIO::DrainRecordBuffers()
          mRecordingSchedule.mPosition += avail / mRate;
          mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
-         auto pListener = GetListener();
-         if (pListener && newBlocks)
-            pListener->OnAudioIONewBlocks();
-
+         if (newBlocks)
+            mNewBlocksCount.fetch_add(1, std::memory_order_release);
       }
       // end of record buffering
    },
@@ -2666,12 +2694,7 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
       }
    }
 
-   bool below = maxPeak < mSilenceLevel;
-   if (below != mLastBelow) {
-      if (const auto pListener = GetListener())
-         pListener->OnSoundActivationThreshold(!below);
-   }
-   mLastBelow = below;
+   mLastBelow.store(maxPeak < mSilenceLevel, std::memory_order_relaxed);
 }
 
 // Limit values to -1.0..+1.0

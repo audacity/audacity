@@ -15,6 +15,7 @@
 #include <memory>
 #include <vector>
 
+//! All methods will be called only on the main thread
 class AUDIO_IO_API AudioIOListener /* not final */ {
 public:
    AudioIOListener() {}
@@ -31,7 +32,7 @@ public:
    virtual void OnCommitRecording() = 0;
 
    //! During recording, the threshold for sound activation has been crossed
-   //! in one or the other direction; called on the low-latency thread!
+   //! in one or the other direction
    virtual void OnSoundActivationThreshold(bool upward) = 0;
 
 };

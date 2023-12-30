@@ -23,6 +23,7 @@
 #include <thread>
 #include <utility>
 #include <wx/atomic.h> // member variable
+#include <wx/timer.h>
 
 #include "PluginProvider.h" // for PluginID
 #include "Observer.h"
@@ -189,6 +190,9 @@ public:
       unsigned long framesPerBuffer,
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
+
+   /** \brief Pause and un-pause playback and recording */
+   void SetPaused(bool state);
 
    //! @name iteration over extensions, supporting range-for syntax
    //! @{
@@ -455,10 +459,6 @@ protected:
    //! Holds some state for duration of playback or recording
    std::unique_ptr<TransportState> mpTransportState;
 
-   //! Whether the last visit of the callback found volume below the sound
-   //! activation threshold
-   bool mLastBelow{ false };
-
 private:
    /*!
     Privatize the inherited array but give access by Extensions().
@@ -466,6 +466,14 @@ private:
     pointers to the subtype AudioIOExt
     */
    using AudioIOBase::mAudioIOExt;
+
+protected:
+   // Stored by the low-latency thread, loaded by the main
+   std::atomic<unsigned> mNewBlocksCount{ 0 };
+   //! Whether the last visit of the callback found volume below the sound
+   //! activation threshold
+   // Stored by the low-latency thread, loaded by the main
+   std::atomic<bool> mLastBelow{ false };
 };
 
 struct PaStreamInfo;
@@ -473,6 +481,7 @@ struct PaStreamInfo;
 class AUDIO_IO_API AudioIO final
    : public AudioIoCallback
    , public Observer::Publisher<AudioIOEvent>
+   , private wxTimer
 {
 
    AudioIO();
@@ -553,9 +562,6 @@ public:
    wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
    std::shared_ptr<AudacityProject> GetOwningProject() const
    { return mOwningProject.lock(); }
-
-   /** \brief Pause and un-pause playback and recording */
-   void SetPaused(bool state);
 
    struct MixerSettings {
       int inputSource;
@@ -715,10 +721,18 @@ private:
      * If bOnlyBuffers is specified, it only cleans up the buffers. */
    void StartStreamCleanup(bool bOnlyBuffers = false);
 
+   //! dispatch timer events on the main thread
+   void Notify() override;
+
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;
 
    bool mDelayingActions{ false };
+
+   // Used only by the main thread
+   unsigned mLastNewBlocksCount{ 0 };
+   // Used only by the main thread
+   bool mMainThreadLastBelow{ false };
 };
 
 AUDIO_IO_API extern BoolSetting SoundActivatedRecord;

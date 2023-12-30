@@ -1066,17 +1066,17 @@ void ProjectAudioManager::OnPause()
 
 void ProjectAudioManager::SetPaused(bool paused)
 {
-   mPaused.store(paused, std::memory_order::memory_order_relaxed);
+   mPaused = paused;
 }
 
 void ProjectAudioManager::SetPausedOff()
 {
-   mPaused.store(0, std::memory_order::memory_order_relaxed);
+   mPaused = false;
 }
 
 bool ProjectAudioManager::Paused() const
 {
-   return mPaused.load(std::memory_order_relaxed) == 1;
+   return mPaused;
 }
 
 
@@ -1146,6 +1146,8 @@ void ProjectAudioManager::OnAudioIONewBlocks()
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
 
+   // Maybe the CallAfter is no longer needed, now that this is called
+   // only on the main thread
    wxTheApp->CallAfter( [&]{ projectFileIO.AutoSave(true); });
 }
 

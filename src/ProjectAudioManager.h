@@ -166,9 +166,7 @@ private:
    //flag for cancellation of timer record.
    bool mTimerRecordCanceled{ false };
 
-   // Using int as the type for this atomic flag, allows us to toggle its value
-   // with an atomic operation.
-   std::atomic<int> mPaused{ 0 };
+   bool mPaused{ false };
 
    bool mAppending{ false };
    bool mLooping{ false };
