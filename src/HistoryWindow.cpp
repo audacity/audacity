@@ -236,11 +236,11 @@ void HistoryDialog::Populate(ShuttleGui & S)
    mList->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
 }
 
-void HistoryDialog::OnAudioIO(AudioIOEvent evt)
+void HistoryDialog::OnAudioIO(const AudioIOEvent &evt)
 {
-   if (evt.type == AudioIOEvent::MONITOR)
+   if (!(evt.Playing() || evt.Capturing()))
       return;
-   mAudioIOBusy = evt.on;
+   mAudioIOBusy = evt.Starting();
 
 #if defined(ALLOW_DISCARD)
    mDiscard->Enable(!mAudioIOBusy);

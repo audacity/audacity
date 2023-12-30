@@ -1386,10 +1386,10 @@ void MixerBoard::OnTrackSetChanged()
    Refresh();
 }
 
-void MixerBoard::OnStartStop(AudioIOEvent evt)
+void MixerBoard::OnStartStop(const AudioIOEvent &evt)
 {
-   if (evt.type == AudioIOEvent::PLAYBACK)
-      ResetMeters( evt.on );
+   if (evt.Playing())
+      ResetMeters(evt.Starting());
 }
 
 // class MixerBoardFrame

@@ -1526,12 +1526,12 @@ void AdornedRulerPanel::DoIdle()
       Refresh();
 }
 
-void AdornedRulerPanel::OnAudioStartStop(AudioIOEvent evt)
+void AdornedRulerPanel::OnAudioStartStop(const AudioIOEvent &evt)
 {
-   if (evt.type == AudioIOEvent::MONITOR)
+   if (!(evt.Playing() || evt.Capturing()))
       return;
-   if ( evt.type == AudioIOEvent::CAPTURE ) {
-      if (evt.on)
+   if (evt.Capturing()) {
+      if (evt.Starting())
       {
          mIsRecording = true;
          this->CellularPanel::CancelDragging( false );
@@ -1545,7 +1545,7 @@ void AdornedRulerPanel::OnAudioStartStop(AudioIOEvent evt)
       }
    }
 
-   if ( !evt.on )
+   if (evt.Stopping())
       // So that the play region is updated
       DoSelectionChange( mViewInfo->selectedRegion );
 }

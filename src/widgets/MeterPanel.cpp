@@ -1790,16 +1790,18 @@ void MeterPanel::StopMonitoring(){
    }
 }
 
-void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
+void MeterPanel::OnAudioIOStatus(const AudioIOEvent &evt)
 {
-   if (!mIsInput != (evt.type == AudioIOEvent::PLAYBACK))
+   const auto interested =
+      mIsInput ? (evt.Capturing() || evt.Monitoring()) : evt.Playing();
+   if (!interested)
       return;
 
-   AudacityProject *p = evt.pProject;
-   mActive = evt.on && (p == mProject);
-   if( mActive ){
+   const auto p = evt.wProject.lock().get();
+   mActive = evt.Starting() && (p == mProject);
+   if (mActive) {
       mTimer.Start(1000 / mMeterRefreshRate);
-      if (evt.type == AudioIOEvent::MONITOR)
+      if (evt.Monitoring())
          mMonitoring = mActive;
    } else {
       mTimer.Stop();
@@ -1811,14 +1813,11 @@ void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
       Refresh(false);
 }
 
-void MeterPanel::OnAudioCapture(AudioIOEvent event)
+void MeterPanel::OnAudioCapture(const AudioIOEvent &evt)
 {
-   if (
-      event.type == AudioIOEvent::CAPTURE &&
-      (event.pProject != mProject || !event.on))
+   if (evt.Capturing() && evt.wProject.lock().get() != mProject)
    {
-      mEnabled = !event.on;
-
+      mEnabled = evt.Stopping();
       if (mSlider)
          mSlider->SetEnabled(mEnabled);
    }

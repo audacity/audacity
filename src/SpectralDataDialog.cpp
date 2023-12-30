@@ -105,7 +105,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
       private:
          void Populate(ShuttleGui & S);
 
-         void OnAudioIO(AudioIOEvent ev);
+         void OnAudioIO(const AudioIOEvent &evt);
          void DoUpdate();
 
          void OnCloseWindow(wxCloseEvent &event);
@@ -239,10 +239,10 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
    SetMinSize(GetSize());
 }
 
-void SpectralDataDialog::OnAudioIO(AudioIOEvent ev)
+void SpectralDataDialog::OnAudioIO(const AudioIOEvent &evt)
 {
-   if (ev.type != AudioIOEvent::MONITOR)
-      mAudioIOBusy = ev.on;
+   if (evt.Playing() || evt.Capturing())
+      mAudioIOBusy = evt.Starting();
 }
 
 void SpectralDataDialog::UpdateDisplayForClipboard(ClipboardChangeMessage)

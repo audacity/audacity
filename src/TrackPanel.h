@@ -79,7 +79,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    void UpdatePrefs() override;
 
-   void OnAudioIO(AudioIOEvent);
+   void OnAudioIO(const AudioIOEvent &evt);
 
    void OnPaint(wxPaintEvent & event);
    void OnMouseEvent(wxMouseEvent & event);

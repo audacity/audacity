@@ -211,8 +211,8 @@ class AUDACITY_DLL_API MeterPanel final
    void OnSetFocus(wxFocusEvent &evt);
    void OnKillFocus(wxFocusEvent &evt);
 
-   void OnAudioIOStatus(AudioIOEvent);
-   void OnAudioCapture(AudioIOEvent);
+   void OnAudioIOStatus(const AudioIOEvent &event);
+   void OnAudioCapture(const AudioIOEvent &event);
 
    void OnMeterUpdate(wxTimerEvent &evt);
    void OnTipTimeout(wxTimerEvent& evt);

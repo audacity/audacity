@@ -822,9 +822,9 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
          CellularPanel::HandleCursorForPresentMouseState(); } );
 }
 
-void TrackPanel::OnAudioIO(AudioIOEvent evt)
+void TrackPanel::OnAudioIO(const AudioIOEvent &evt)
 {
-   if (evt.type == AudioIOEvent::MONITOR)
+   if (!(evt.Playing() || evt.Capturing()))
       return;
    // Some hit tests want to change their cursor to and from the ban symbol
    CallAfter( [this]{ CellularPanel::HandleCursorForPresentMouseState(); } );

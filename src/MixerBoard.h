@@ -236,7 +236,7 @@ private:
    void OnTimer(Observer::Message);
    void OnTrackSetChanged();
    void OnTrackChanged(const TrackListEvent &event);
-   void OnStartStop(AudioIOEvent);
+   void OnStartStop(const AudioIOEvent &evt);
 
 public:
    // mute & solo button images: Create once and store on MixerBoard for use in all MixerTrackClusters.

@@ -185,21 +185,12 @@ PitchAndSpeedDialog::PitchAndSpeedDialog(AudacityProject& project)
    {
       mAudioIOSubscription =
          audioIo->Subscribe([this](const AudioIOEvent& event) {
-            if (event.pProject != &mProject)
+            const auto pProject = event.wProject.lock().get();
+            if (pProject != &mProject ||
+                !(event.Capturing() || event.Playing()))
                return;
-            switch (event.type)
-            {
-            case AudioIOEvent::CAPTURE:
-            case AudioIOEvent::PLAYBACK:
-               if (const auto child = wxDialog::FindWindowById(speedCtrlId))
-                  child->Enable(!event.on);
-               break;
-            case AudioIOEvent::MONITOR:
-               break;
-            default:
-               // Unknown event type
-               assert(false);
-            }
+            if (const auto child = wxDialog::FindWindowById(speedCtrlId))
+               child->Enable(event.Stopping());
          });
    }
 }

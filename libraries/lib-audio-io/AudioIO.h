@@ -53,17 +53,86 @@ bool ValidateDeviceNames();
 enum class Acknowledge { eNone = 0, eStart, eStop };
 
 /*!
- Emitted by the global AudioIO object when play, recording, or monitoring
- starts or stops
+ Emitted by the global AudioIO object
 */
 struct AudioIOEvent {
-   AudacityProject *pProject;
+   //! Types of events, including state transitions.
    enum Type {
-      PLAYBACK,
-      CAPTURE,
-      MONITOR,
+      StartPlayback,
+      StopPlayback,
+      StartCapture,
+      StopCapture,
+      StartMonitoring,
+      StopMonitoring,
    } type;
-   bool on;
+
+   std::weak_ptr<AudacityProject> wProject{};
+
+   //! Meaningful only for type RateChange; 0 when stopping
+   const int rate{ 0 };
+
+   //! A convenience
+   bool Starting() const {
+      switch (type) {
+      case StartPlayback:
+      case StartCapture:
+      case StartMonitoring:
+         return true;
+      default:
+         return false;
+      }
+   }
+
+   //! A convenience
+   bool Stopping() const {
+      switch (type) {
+      case StopPlayback:
+      case StopCapture:
+      case StopMonitoring:
+         return true;
+      default:
+         return false;
+      }
+   }
+
+   //! A convenience.  This state is not mutually exclusive with Recording or
+   //! Monitoring
+   bool Playing() const {
+      switch (type) {
+         case StartPlayback:
+         case StopPlayback:
+         return true;
+      default:
+         return false;
+      }
+   }
+
+   //! A convenience.  This state is mutually exclusive with Monitoring
+   bool Capturing() const {
+      switch (type) {
+         case StartCapture:
+         case StopCapture:
+         return true;
+      default:
+         return false;
+      }
+   }
+
+   //! A convenience.  This state is mutually exclusive with Capturing
+   bool Monitoring() const {
+      switch (type) {
+         case StartMonitoring:
+         case StopMonitoring:
+         return true;
+      default:
+         return false;
+      }
+   }
+
+   //! A convenience
+   bool StateChange() const {
+      return Starting() || Stopping();
+   }
 };
 
 struct AUDIO_IO_API TransportSequences final {
@@ -562,7 +631,6 @@ public:
    void DelayActions(bool recording);
 
 private:
-
    bool DelayingActions() const;
 
    /** \brief Set the current VU meters - this should be done once after
@@ -629,6 +697,8 @@ private:
     * the recording buffers (i.e. the number of samples that can be read from
     * all record buffers without underflow). */
    size_t GetCommonlyAvailCapture();
+
+   void EmitEvent(AudioIOEvent::Type type, int rate = 0);
 
    /** \brief Allocate RingBuffer structures, and others, needed for playback
      * and recording.
