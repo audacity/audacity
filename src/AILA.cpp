@@ -79,7 +79,7 @@ bool AILA::IsActive() {
 }
 
 void AILA::SetStartTime(const AudioIOEvent &evt) {
-   if (evt.type == AudioIOEvent::CAPTURE && evt.on) {
+   if (evt.type == AudioIOEvent::StartCapture) {
       mAbsoluteStartTime = AudioIO::Get()->GetClockTime();
       wxPrintf("START TIME %f\n\n", mAbsoluteStartTime);
    }

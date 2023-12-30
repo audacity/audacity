@@ -236,16 +236,8 @@ void TimeSignatureToolBar::OnSize(wxSizeEvent& evt)
 
 void TimeSignatureToolBar::OnAudioIOEvent(const AudioIOEvent& event)
 {
-   switch(event.type)
-   {
-   case AudioIOEvent::PLAYBACK:
-   case AudioIOEvent::CAPTURE:
-      {
-         if(mTempoControl)
-            mTempoControl->Enable(!event.on);
-      } break;
-   default: break;
-   }
+   if (mTempoControl && (event.Playing() || event.Capturing()))
+      mTempoControl->Enable(event.Stopping());
 }
 
 

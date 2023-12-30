@@ -41,7 +41,7 @@ class HistoryDialog final : public wxDialogWrapper,
  private:
    void Populate(ShuttleGui & S);
 
-   void OnAudioIO(AudioIOEvent);
+   void OnAudioIO(const AudioIOEvent &evt);
    void DoUpdate();
    void UpdateLevels();
 

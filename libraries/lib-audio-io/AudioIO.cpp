@@ -789,8 +789,6 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
       return;
    }
 
-   Publish({ pOwningProject.get(), AudioIOEvent::MONITOR, true });
-
    // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
    // Now start the PortAudio stream!
    // TODO: ? Factor out and reuse error reporting code from end of
@@ -802,6 +800,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    if ((mLastPaError == paNoError) && pListener) {
       // advertise the chosen I/O sample rate to the UI
       pListener->OnAudioIORate((int)mRate);
+      EmitEvent(AudioIOEvent::StartMonitoring);
    }
 }
 
@@ -1093,11 +1092,10 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       pListener->OnAudioIORate((int)mRate);
    }
 
-   auto pOwningProject = mOwningProject.lock();
    if (mNumPlaybackChannels > 0)
-      Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, true });
+      EmitEvent(AudioIOEvent::StartPlayback);
    if (mNumCaptureChannels > 0)
-      Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, true });
+      EmitEvent(AudioIOEvent::StartCapture);
 
    commit = true;
 
@@ -1142,6 +1140,11 @@ void AudioIO::CallAfterRecording(PostRecordingAction action)
    // (Recording might start between now and then, but won't go far before
    // the action is done.  So the system isn't bulletproof yet.)
    BasicUI::CallAfter(move(action));
+}
+
+void AudioIO::EmitEvent(AudioIOEvent::Type type, int rate)
+{
+   Publish({ type, mOwningProject, rate });
 }
 
 bool AudioIO::AllocateBuffers(
@@ -1636,15 +1639,12 @@ void AudioIO::StopStream()
    mStreamToken = 0;
 
    {
-      auto pOwningProject = mOwningProject.lock();
       if (mNumPlaybackChannels > 0)
-         Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, false });
+         EmitEvent(AudioIOEvent::StopPlayback);
       if (mNumCaptureChannels > 0)
-         Publish({ pOwningProject.get(),
-            wasMonitoring
-               ? AudioIOEvent::MONITOR
-               : AudioIOEvent::CAPTURE,
-            false });
+         EmitEvent(wasMonitoring
+            ? AudioIOEvent::StopMonitoring
+            : AudioIOEvent::StopCapture);
    }
 
    mNumCaptureChannels = 0;
@@ -3151,8 +3151,6 @@ void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
       std::this_thread::sleep_for(sleepTime);
    }
 }
-
-
 
 bool AudioIO::IsCapturing() const
 {
