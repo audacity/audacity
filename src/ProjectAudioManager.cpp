@@ -1034,17 +1034,17 @@ void ProjectAudioManager::OnPause()
 
 void ProjectAudioManager::TogglePaused()
 {
-   mPaused.fetch_xor(1, std::memory_order::memory_order_relaxed);
+   mPaused = !mPaused;
 }
 
 void ProjectAudioManager::SetPausedOff()
 {
-   mPaused.store(0, std::memory_order::memory_order_relaxed);
+   mPaused = false;
 }
 
 bool ProjectAudioManager::Paused() const
 {
-   return mPaused.load(std::memory_order_relaxed) == 1;
+   return mPaused;
 }
 
 
@@ -1114,6 +1114,8 @@ void ProjectAudioManager::OnAudioIONewBlocks()
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
 
+   // Maybe the CallAfter is no longer needed, now that this is called
+   // only on the main thread
    wxTheApp->CallAfter( [&]{ projectFileIO.AutoSave(true); });
 }
 
@@ -1130,9 +1132,6 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    if (gAudioIO && &project == gAudioIO->GetOwningProject().get())
    {
       bool canStop =  CanStopAudioStream();
-
-      gAudioIO->SetPaused(!gAudioIO->IsPaused());
-
       if (canStop)
       {
          // Instead of calling ::OnPause here, we can simply do the only thing it does (i.e. toggling the pause state),
