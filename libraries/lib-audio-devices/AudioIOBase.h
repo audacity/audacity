@@ -108,9 +108,11 @@ public:
    AudioIOBase &operator=(const AudioIOBase &) = delete;
 
    void SetCaptureMeter(
-      const std::shared_ptr<AudacityProject> &project, const std::weak_ptr<Meter> &meter);
+      const std::shared_ptr<AudacityProject> &project, double rate,
+      const std::weak_ptr<Meter> &meter);
    void SetPlaybackMeter(
-      const std::shared_ptr<AudacityProject> &project, const std::weak_ptr<Meter> &meter);
+      const std::shared_ptr<AudacityProject> &project, double rate,
+      const std::weak_ptr<Meter> &meter);
 
    /** \brief update state after changing what audio devices are selected
     *
@@ -247,10 +249,6 @@ protected:
 
    /*! Read by worker threads but unchanging during playback */
    int                 mStreamToken{ 0 };
-
-   /// Audio playback rate in samples per second
-   /*! Read by worker threads but unchanging during playback */
-   double              mRate;
 
    PaStream           *mPortStreamV19;
 

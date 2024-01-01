@@ -195,6 +195,8 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
 
+   double GetRate() const { return mRate; }
+
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
 
@@ -467,6 +469,10 @@ private:
    using AudioIOBase::mAudioIOExt;
 
 protected:
+   /// Audio playback rate in samples per second
+   /*! Read by worker threads but unchanging during playback */
+   double mRate{ 44100.0 };
+
    // Stored by the low-latency thread, loaded by the main
    std::atomic<unsigned> mNewBlocksCount{ 0 };
    // Stored by the low-latency thread, loaded by the main
