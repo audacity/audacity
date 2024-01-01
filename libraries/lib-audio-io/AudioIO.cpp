@@ -619,7 +619,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       else
          captureParameters.suggestedLatency = latencyDuration/1000.0;
 
-      SetCaptureMeter( mOwningProject.lock(), options.captureMeter );
+      SetCaptureMeter(mOwningProject.lock(), mRate, options.captureMeter);
    }
 
    const auto deviceInfo = usePlayback ?

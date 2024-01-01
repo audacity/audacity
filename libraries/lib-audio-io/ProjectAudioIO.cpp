@@ -10,7 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectAudioIO.h"
 
-#include "AudioIOBase.h"
+#include "AudioIO.h"
 #include "Mix.h"
 #include "Project.h"
 #include "ProjectRate.h"
@@ -92,7 +92,8 @@ void ProjectAudioIO::SetPlaybackMeter(
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO)
    {
-      gAudioIO->SetPlaybackMeter( project.shared_from_this() , mPlaybackMeter );
+      gAudioIO->SetPlaybackMeter(
+         project.shared_from_this(), AudioIO::Get()->GetRate(), mPlaybackMeter);
    }
 }
 
@@ -110,7 +111,8 @@ void ProjectAudioIO::SetCaptureMeter(
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO)
    {
-      gAudioIO->SetCaptureMeter( project.shared_from_this(), mCaptureMeter );
+      gAudioIO->SetCaptureMeter(
+         project.shared_from_this(), AudioIO::Get()->GetRate(), mCaptureMeter);
    }
 }
 
