@@ -2700,8 +2700,11 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
                 //considered to be new entities, thus named using "new" name template
                 ? track.MakeNewClipName()
                 : track.MakeClipCopyName(clip->GetName());
+            const auto oldPlayStart = clip->GetPlayStartTime();
+            const auto newSequenceStart =
+               (oldPlayStart + t0) - clip->GetTrimLeft();
             const auto newClip =
-               CreateWideClip(t0 - clip->GetTrimLeft(), name, clip.get());
+               CreateWideClip(newSequenceStart, name, clip.get());
             newClip->Resample(rate);
             track.InsertInterval(move(newClip));
         }
