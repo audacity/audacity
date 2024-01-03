@@ -55,15 +55,16 @@ class ComboEditor;
 
 using TagMap = std::unordered_map< wxString, wxString >;
 
-#define TAG_TITLE     wxT("TITLE")
-#define TAG_ARTIST   wxT("ARTIST")
-#define TAG_ALBUM    wxT("ALBUM")
-#define TAG_TRACK    wxT("TRACKNUMBER")
-#define TAG_YEAR     wxT("YEAR")
-#define TAG_GENRE    wxT("GENRE")
-#define TAG_COMMENTS wxT("COMMENTS")
-#define TAG_SOFTWARE wxT("Software")
-#define TAG_COPYRIGHT wxT("Copyright")
+#define TAG_TITLE       wxT("TITLE")
+#define TAG_ARTIST      wxT("ARTIST")
+#define TAG_ALBUM       wxT("ALBUM")
+#define TAG_TRACK       wxT("TRACKNUMBER")
+#define TAG_YEAR        wxT("YEAR")
+#define TAG_GENRE       wxT("GENRE")
+#define TAG_COMMENTS    wxT("COMMENTS")
+#define TAG_SOFTWARE    wxT("Software")
+#define TAG_COPYRIGHT   wxT("Copyright")
+#define TAG_ACID        wxT("ACID")
 
 class TAGS_API Tags final
    : public XMLTagHandler

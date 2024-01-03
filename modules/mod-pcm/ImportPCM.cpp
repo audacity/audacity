@@ -33,11 +33,13 @@
 #error Requires libsndfile 1.0 or higher
 #endif
 
+#include "AcidizerTagSerialization.h"
 #include "FileFormats.h"
-#include "WaveTrack.h"
+#include "GetAcidizerTags.h"
 #include "ImportPlugin.h"
-#include "ImportUtils.h"
 #include "ImportProgressListener.h"
+#include "ImportUtils.h"
+#include "WaveTrack.h"
 
 #include <algorithm>
 
@@ -283,7 +285,7 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
                                  Tags *tags)
 {
    BeginImport();
-   
+
    outTracks.clear();
 
    wxASSERT(mFile.get());
@@ -319,7 +321,7 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
          progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
          return;
       }
-      
+
       SampleBuffer srcbuffer, buffer;
       wxASSERT(mInfo.channels >= 0);
       while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr() ||
@@ -433,6 +435,14 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
    if (str) {
       tags->SetTag(TAG_GENRE, UTF8CTOWX(str));
    }
+
+   // To begin with, only trust the Muse Hub, with whom we collaborate and can
+   // ensure they comply. In the future we may extend this list.
+   const std::vector<std::string> trustedDistributors { "Muse Hub" };
+   if (
+      const auto acidTags =
+         LibImportExport::GetAcidizerTags(*mFile, trustedDistributors))
+      tags->SetTag(TAG_ACID, LibImportExport::AcidizerTagsToString(*acidTags));
 
 #if defined(USE_LIBID3TAG)
    if (((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||

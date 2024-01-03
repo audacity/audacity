@@ -71,41 +71,98 @@ TEST_CASE("GetBpmFromFilename")
       std::all_of(success.begin(), success.end(), [](bool b) { return b; }));
 }
 
-TEST_CASE("GetProjectSyncInfo")
+namespace
 {
-   SECTION("stretchMinimizingPowOfTwo is as expected")
+constexpr auto isOneShot = true;
+constexpr auto filename100bpm = "my/path\\foo_-_100BPM_Sticks_-_foo.wav";
+const EmptyMirAudioReader emptyReader;
+const std::function<void(double)> emptyProgressCb;
+constexpr auto arbitraryTolerance = FalsePositiveTolerance::Lenient;
+const std::optional<LibFileFormats::AcidizerTags> noTags;
+} // namespace
+
+TEST_CASE("MusicInformation")
+{
+   using namespace LibFileFormats;
+
+   SECTION("operator bool")
    {
-      constexpr auto whicheverView = FalsePositiveTolerance::Lenient;
-      std::function<void(double)> progressCallback;
-      MusicInformation info { "my/path\\foo_-_100BPM_Sticks_-_foo.wav", 10.,
-                              EmptyMirAudioReader {}, whicheverView,
-                              progressCallback };
-      REQUIRE(info);
-      REQUIRE(info.GetProjectSyncInfo(100).stretchMinimizingPowOfTwo == 1.);
+      SECTION("returns false if ACID tag says one-shot")
+      REQUIRE(!MusicInformation { AcidizerTags { 120.0, isOneShot },
+                                  filename100bpm, emptyReader,
+                                  arbitraryTolerance, emptyProgressCb });
 
-      // Project tempo twice as fast. Without compensation, the audio would be
-      // stretched to 0.5 its length. Not stretching it at all may still yield
-      // musically interesting results.
-      REQUIRE(info.GetProjectSyncInfo(200).stretchMinimizingPowOfTwo == 2.);
+      SECTION("returns true if ACID tag says non-one-shot")
+      REQUIRE(MusicInformation { AcidizerTags { 120.0, !isOneShot },
+                                 "filenameWithoutBpm", emptyReader,
+                                 arbitraryTolerance, emptyProgressCb });
 
-      // Same principle applies in the following:
-      REQUIRE(info.GetProjectSyncInfo(400).stretchMinimizingPowOfTwo == 4.);
-      REQUIRE(info.GetProjectSyncInfo(50).stretchMinimizingPowOfTwo == .5);
-      REQUIRE(info.GetProjectSyncInfo(25).stretchMinimizingPowOfTwo == .25);
+      SECTION("BPM is invalid")
+      {
+         SECTION("returns true if filename has BPM")
+         REQUIRE(MusicInformation { AcidizerTags { 0.0, !isOneShot },
+                                    filename100bpm, emptyReader,
+                                    arbitraryTolerance, emptyProgressCb });
 
-      // Now testing edge cases:
-      REQUIRE(
-         info.GetProjectSyncInfo(100 * std::pow(2, .51))
-            .stretchMinimizingPowOfTwo == 2.);
-      REQUIRE(
-         info.GetProjectSyncInfo(100 * std::pow(2, .49))
-            .stretchMinimizingPowOfTwo == 1.);
-      REQUIRE(
-         info.GetProjectSyncInfo(100 * std::pow(2, -.49))
-            .stretchMinimizingPowOfTwo == 1.);
-      REQUIRE(
-         info.GetProjectSyncInfo(100 * std::pow(2, -.51))
-            .stretchMinimizingPowOfTwo == .5);
+         SECTION("returns false if filename has no BPM")
+         REQUIRE(!MusicInformation { AcidizerTags { 0.0, !isOneShot },
+                                     "filenameWithoutBpm", emptyReader,
+                                     arbitraryTolerance, emptyProgressCb });
+      }
+   }
+
+   SECTION("GetProjectSyncInfo")
+   {
+      SECTION("prioritizes ACID tags over filename")
+      {
+         MusicInformation info { AcidizerTags { 120.0, !isOneShot },
+                                 filename100bpm, emptyReader,
+                                 arbitraryTolerance, emptyProgressCb };
+         REQUIRE(info);
+         REQUIRE(info.GetProjectSyncInfo({}).rawAudioTempo == 120);
+      }
+
+      SECTION("falls back on filename if tag bpm is invalid")
+      {
+         MusicInformation info { AcidizerTags { 0.0, !isOneShot },
+                                 filename100bpm, emptyReader,
+                                 arbitraryTolerance, emptyProgressCb };
+         REQUIRE(info);
+         REQUIRE(info.GetProjectSyncInfo({}).rawAudioTempo == 100);
+      }
+
+      SECTION("stretchMinimizingPowOfTwo is as expected")
+      {
+         std::function<void(double)> progressCallback;
+         MusicInformation info { noTags, filename100bpm, emptyReader,
+                                 arbitraryTolerance, progressCallback };
+         REQUIRE(info);
+         REQUIRE(info.GetProjectSyncInfo(100).stretchMinimizingPowOfTwo == 1.);
+
+         // Project tempo twice as fast. Without compensation, the audio would
+         // be stretched to 0.5 its length. Not stretching it at all may still
+         // yield musically interesting results.
+         REQUIRE(info.GetProjectSyncInfo(200).stretchMinimizingPowOfTwo == 2.);
+
+         // Same principle applies in the following:
+         REQUIRE(info.GetProjectSyncInfo(400).stretchMinimizingPowOfTwo == 4.);
+         REQUIRE(info.GetProjectSyncInfo(50).stretchMinimizingPowOfTwo == .5);
+         REQUIRE(info.GetProjectSyncInfo(25).stretchMinimizingPowOfTwo == .25);
+
+         // Now testing edge cases:
+         REQUIRE(
+            info.GetProjectSyncInfo(100 * std::pow(2, .51))
+               .stretchMinimizingPowOfTwo == 2.);
+         REQUIRE(
+            info.GetProjectSyncInfo(100 * std::pow(2, .49))
+               .stretchMinimizingPowOfTwo == 1.);
+         REQUIRE(
+            info.GetProjectSyncInfo(100 * std::pow(2, -.49))
+               .stretchMinimizingPowOfTwo == 1.);
+         REQUIRE(
+            info.GetProjectSyncInfo(100 * std::pow(2, -.51))
+               .stretchMinimizingPowOfTwo == .5);
+      }
    }
 }
 } // namespace MIR
