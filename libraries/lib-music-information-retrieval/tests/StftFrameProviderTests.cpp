@@ -64,7 +64,8 @@ TEST_CASE("StftFrameProvider")
    }
    SECTION("respects MirAudioReader boundaries")
    {
-      StftFrameProvider sut { TestMirAudioReader { 123456 } };
+      TestMirAudioReader reader{ 123456 };
+      StftFrameProvider sut { reader };
       std::vector<float> frame;
       while (sut.GetNextFrame(frame))
          ;
