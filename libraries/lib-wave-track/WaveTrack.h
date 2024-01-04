@@ -41,8 +41,9 @@ class AudioSegmentSampleView;
 
 //! Clips are held by shared_ptr, not for sharing, but to allow weak_ptr
 using WaveClipHolder = std::shared_ptr<WaveClip>;
+using WaveClipConstHolder = std::shared_ptr<const WaveClip>;
 using WaveClipHolders = std::vector<WaveClipHolder>;
-using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+using WaveClipConstHolders = std::vector<WaveClipConstHolder>;
 
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
 
@@ -706,7 +707,8 @@ public:
    ClipConstHolders GetClipInterfaces() const;
 
    /// @pre IsLeader()
-   //! Create new clip and add it to this track.
+   //! Create new clip that uses this track's factory but do not add it to the
+   //! track
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
     clip name may be provided, and a clip from which to copy all sample data.
@@ -939,6 +941,7 @@ public:
          WideChannelGroupInterval::Channels<const WaveChannelInterval>(); }
 
       bool IsPlaceholder() const;
+      void SetIsPlaceholder(bool val);
 
       void SetSequenceStartTime(double t);
       void TrimLeftTo(double t);
@@ -1028,6 +1031,11 @@ public:
       void AppendSilence(double len, double envelopeValue);
 
       bool Paste(double t0, const Interval &src);
+
+      /** Insert silence - note that this is an efficient operation for large
+       * amounts of silence */
+      void
+      InsertSilence(double t, double len, double *pEnvelopeValue = nullptr);
 
       const Envelope& GetEnvelope() const;
 
@@ -1153,8 +1161,7 @@ private:
    static Holder CopyOne(const WaveTrack &track,
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
-      size_t iChannel, size_t nChannels);
-   std::pair<WaveClipHolder, WaveClipHolder> SplitOneAt(double t);
+     size_t iChannel, size_t nChannels);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
    void ApplyStretchRatioOnIntervals(
@@ -1239,6 +1246,9 @@ private:
 
    void ApplyStretchRatioOne(
       double t0, double t1, const ProgressReporter& reportProgress);
+
+   //! Used only in assertions checking invariants
+   bool ClipsAreUnique() const;
 
    SampleBlockFactoryPtr mpFactory;
 

@@ -502,6 +502,14 @@ bool WaveTrack::Interval::Paste(double t0, const Interval &src)
    return result;
 }
 
+/** Insert silence - note that this is an efficient operation for large
+ * amounts of silence */
+void WaveTrack::Interval::InsertSilence(
+   double t, double len, double *pEnvelopeValue)
+{
+   ForEachClip([&](auto& clip) { clip.InsertSilence(t, len, pEnvelopeValue); });
+}
+
 void WaveTrack::Interval::ShiftBy(double delta) noexcept
 {
    ForEachClip([&](auto& clip) { clip.ShiftBy(delta); });
@@ -732,6 +740,11 @@ double WaveTrack::Interval::GetTrimRight() const
 bool WaveTrack::Interval::IsPlaceholder() const
 {
    return mpClip->GetIsPlaceholder();
+}
+
+void WaveTrack::Interval::SetIsPlaceholder(bool val)
+{
+   ForEachClip([=](auto &clip){ clip.SetIsPlaceholder(val); });
 }
 
 const Envelope& WaveTrack::Interval::GetEnvelope() const
@@ -1556,26 +1569,23 @@ TrackListHolder WaveTrack::SplitCut(double t0, double t1)
 //Trim trims within a clip, rather than trimming everything.
 //If a bound is outside a clip, it trims everything.
 /*! @excsafety{Weak} */
-void WaveTrack::Trim (double t0, double t1)
+void WaveTrack::Trim(double t0, double t1)
 {
    assert(IsLeader());
    bool inside0 = false;
    bool inside1 = false;
 
-   const auto range = TrackList::Channels(this);
-   for (auto pChannel : range) {
-      for (const auto &clip : pChannel->mClips) {
-         if (t1 > clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
-            clip->SetTrimRight(
-               clip->GetTrimRight() + clip->GetPlayEndTime() - t1);
-            inside1 = true;
-         }
+   for (const auto &clip : Intervals()) {
+      if (t1 > clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
+         clip->SetTrimRight(
+            clip->GetTrimRight() + clip->GetPlayEndTime() - t1);
+         inside1 = true;
+      }
 
-         if (t0 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime()) {
-            clip->SetTrimLeft(
-               clip->GetTrimLeft() + t0 - clip->GetPlayStartTime());
-            inside0 = true;
-         }
+      if (t0 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime()) {
+         clip->SetTrimLeft(
+            clip->GetTrimLeft() + t0 - clip->GetPlayStartTime());
+         inside0 = true;
       }
    }
 
@@ -2682,33 +2692,30 @@ void WaveTrack::InsertSilence(double t, double len)
    if (len <= 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   for (const auto pChannel : TrackList::Channels(this)) {
-      auto &clips = pChannel->mClips;
-      if (clips.empty()) {
-         // Special case if there is no clip yet
-         // TODO wide wave tracks -- match clip width
-         auto clip = std::make_shared<WaveClip>(1,
-            mpFactory, GetSampleFormat(), GetRate(), this->GetWaveColorIndex());
-         clip->InsertSilence(0, len);
-         // use No-fail-guarantee
-         pChannel->InsertClip(move(clip));
-      }
-      else
-      {
-         // Assume at most one clip contains t
-         const auto end = clips.end();
-         const auto it = std::find_if(clips.begin(), end,
-            [&](const WaveClipHolder &clip) { return clip->SplitsPlayRegion(t); } );
+   auto &&clips = Intervals();
+   if (clips.empty()) {
+      // Special case if there is no clip yet
+      // TODO wide wave tracks -- match clip width
+      auto clip = CreateWideClip(0);
+      clip->InsertSilence(0, len);
+      // use No-fail-guarantee
+      InsertInterval(move(clip));
+   }
+   else
+   {
+      // Assume at most one clip contains t
+      const auto end = clips.end();
+      const auto it = std::find_if(clips.begin(), end,
+         [&](const IntervalHolder &clip) { return clip->SplitsPlayRegion(t); } );
 
-         // use Strong-guarantee
-         if (it != end)
-            it->get()->InsertSilence(t, len);
+      // use Strong-guarantee
+      if (it != end)
+         (*it)->InsertSilence(t, len);
 
-         // use No-fail-guarantee
-         for (const auto &clip : clips)
-            if (clip->BeforePlayRegion(t))
-               clip->ShiftBy(len);
-      }
+      // use No-fail-guarantee
+      for (const auto &&clip : clips)
+         if (clip->BeforePlayRegion(t))
+            clip->ShiftBy(len);
    }
 }
 
@@ -2876,6 +2883,8 @@ void WaveTrack::Join(
 
       RemoveWideClip(FindWideClip(*clip->GetClip(0)));
    }
+
+   InsertInterval(move(newClip));
 }
 
 /*! @excsafety{Partial}
@@ -3657,8 +3666,10 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
          holders.emplace_back(pNewClip);
       });
    else
-      for (auto channel : TrackList::Channels(this))
+      for (auto channel : TrackList::Channels(this)) {
          holders.emplace_back(channel->CreateClip(offset, name));
+         channel->mClips.pop_back();
+      }
 
    return std::make_shared<Interval>(*this,
       holders[0], (holders.size() > 1) ? holders[1] : nullptr);
@@ -3882,61 +3893,26 @@ bool WaveTrack::CanInsertClip(
 void WaveTrack::Split(double t0, double t1)
 {
    assert(IsLeader());
-   for (const auto pChannel : TrackList::Channels(this)) {
-      pChannel->SplitOneAt(t0);
-      if (t0 != t1)
-         pChannel->SplitOneAt(t1);
-   }
+   SplitAt(t0);
+   if (t0 != t1)
+      SplitAt(t1);
 }
 
 /*! @excsafety{Weak} */
-auto WaveTrack::SplitAt(double t0) -> std::pair<IntervalHolder, IntervalHolder>
+auto WaveTrack::SplitAt(double t) -> std::pair<IntervalHolder, IntervalHolder>
 {
    assert(IsLeader());
-   std::vector<std::pair<WaveClipHolder, WaveClipHolder>> pairs;
-   for (const auto pChannel : TrackList::Channels(this)) {
-      pairs.emplace_back(pChannel->SplitOneAt(t0));
-   }
-
-   // Assume one channel at least!
-   assert(pairs.size() >= 1);
-   const auto firstfirst = pairs[0].first;
-
-   // Maybe SplitOneAt did not split, as when t0 is an endpoint.
-   if (!firstfirst) {
-      // If the first channel didn't split, neither should have the other
-      assert(pairs.size() < 2 || !pairs[1].first);
-      return {};
-   }
-
-   // Convert one or two channel-major "narrow" pairs to one interval-major
-   // "wide" pair
-   if (pairs.size() == 1)
-      return {
-         std::make_shared<Interval>(*this, firstfirst, nullptr),
-         std::make_shared<Interval>(*this, pairs[0].second, nullptr),
-      };
-   else
-      return {
-         std::make_shared<Interval>(*this, firstfirst, pairs[1].first),
-         std::make_shared<Interval>(*this, pairs[0].second, pairs[1].second)
-      };
-}
-
-/*! @excsafety{Weak} */
-auto WaveTrack::SplitOneAt(double t) -> std::pair<WaveClipHolder, WaveClipHolder>
-{
-   for (const auto &c : mClips) {
+   for (const auto &&c : Intervals()) {
       if (c->SplitsPlayRegion(t)) {
          t = SnapToSample(t);
-         auto newClip = std::make_shared<WaveClip>(*c, mpFactory, true);
+         auto newClip = CopyClip(*c, true);
          c->TrimRightTo(t);// put t on a sample
          newClip->TrimLeftTo(t);
          auto result = std::pair{ c, newClip };
 
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
-         InsertClip(move(newClip)); // transfer ownership
+         InsertInterval(move(newClip)); // transfer ownership
          return result;
       }
    }
@@ -3993,8 +3969,11 @@ void WaveTrack::InsertInterval(const IntervalHolder& interval)
    for (const auto pChannel : TrackList::Channels(this))
    {
       const auto clip = interval->GetClip(channel++);
-      if (clip)
+      if (clip) {
          pChannel->InsertClip(clip);
+         // Detect errors resulting in duplicate shared pointers to clips
+         assert(pChannel->ClipsAreUnique());
+      }
    }
 }
 
@@ -4086,6 +4065,12 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){
       return pA->GetPlayStartTime() < pB->GetPlayStartTime(); });
    return result;
+}
+
+bool WaveTrack::ClipsAreUnique() const
+{
+   return mClips.size() ==
+      std::set<WaveClipHolder>{ mClips.begin(), mClips.end() }.size();
 }
 
 static auto TrackFactoryFactory = []( AudacityProject &project ) {

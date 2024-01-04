@@ -798,14 +798,21 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
    bool appendRecord = !sequences.captureSequences.empty();
 
-   auto makeNewClipName = [&](WaveTrack* track) {
+   auto insertEmptyInterval = [&](WaveTrack &track, double t0) {
+      wxString name;
       for (auto i = 1; ; ++i) {
          //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
-         auto name = XC("%s #%d", "clip name template")
-            .Format(track->GetName(), i).Translation();
-         if (track->FindClipByName(name) == nullptr)
-            return name;
+         name = XC("%s #%d", "clip name template")
+            .Format(track.GetName(), i).Translation();
+         if (track.FindClipByName(name) == nullptr)
+            break;
       }
+
+      auto clip = track.CreateWideClip(t0, name);
+      // So that the empty clip is not skipped for insertion:
+      clip->SetIsPlaceholder(true);
+      track.InsertInterval(clip);
+      clip->SetIsPlaceholder(false);
    };
 
    auto &pendingTracks = PendingTracks::Get(project);
@@ -876,7 +883,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                lastClip->WithinPlayRegion(recordingStart));
             if (!recordingStartsBeforeTrackEnd ||
                !lastClip->StretchRatioEquals(1))
-               pending->CreateWideClip(t0, makeNewClipName(pending));
+               insertEmptyInterval(*pending, t0);
             transportSequences.captureSequences
                .push_back(pending->SharedPointer<WaveTrack>());
          }
@@ -948,7 +955,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
 
             //create a new clip with a proper name before recording is started
-            newTrack->CreateWideClip(t0, makeNewClipName(newTrack));
+            insertEmptyInterval(*newTrack, t0);
 
             transportSequences.captureSequences.push_back(
                std::static_pointer_cast<WaveTrack>(newTrack->shared_from_this())

@@ -42,9 +42,10 @@ namespace BasicUI { class ProgressDialog; }
 class WaveClip;
 
 // Array of pointers that assume ownership
-using WaveClipHolder = std::shared_ptr< WaveClip >;
-using WaveClipHolders = std::vector < WaveClipHolder >;
-using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
+using WaveClipHolder = std::shared_ptr<WaveClip>;
+using WaveClipConstHolder = std::shared_ptr<const WaveClip>;
+using WaveClipHolders = std::vector <WaveClipHolder>;
+using WaveClipConstHolders = std::vector<WaveClipConstHolder>;
 using ProgressReporter = std::function<void(double)>;
 
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
