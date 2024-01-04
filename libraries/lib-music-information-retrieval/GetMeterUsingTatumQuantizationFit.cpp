@@ -342,23 +342,28 @@ size_t GetBestBarDivisionIndex(
 
 MusicalMeter GetMostLikelyMeterFromQuantizationExperiment(
    const std::vector<float>& odf, int numTatums,
-   const std::vector<BarDivision>& possibleBarDivisions,
-   double audioFileDuration, QuantizationFitDebugOutput* debugOutput)
+   std::vector<BarDivision> possibleBarDivisions, double audioFileDuration,
+   QuantizationFitDebugOutput* debugOutput)
 {
-   const auto fourFourIt = std::find_if(
-      possibleBarDivisions.begin(), possibleBarDivisions.end(),
-      [&](const BarDivision& barDivision) {
-         return GetTimeSignature(barDivision, numTatums) ==
-                TimeSignature::FourFour;
+   std::vector<BarDivision> fourFourDivs;
+   for_each_in_range(
+      IotaRange { 0u, possibleBarDivisions.size() }, [&](size_t i) {
+         if (
+            GetTimeSignature(possibleBarDivisions[i], numTatums) ==
+            TimeSignature::FourFour)
+            fourFourDivs.push_back(possibleBarDivisions[i]);
       });
-   // If there is a possibility that this is a 4/4, we don't take any risk and
-   // use this. When we get more clever and use the beat contents, we may be
+
+   // If there is one or more 4/4 possibilities, don't take any risk and only
+   // consider these because much more frequent, especially in the world of
+   // loops. When we get more clever about time-signature detection, we may be
    // more assertive.
-   const auto winnerIndex = fourFourIt == possibleBarDivisions.end() ?
-                               GetBestBarDivisionIndex(
-                                  possibleBarDivisions, audioFileDuration,
-                                  numTatums, odf, debugOutput) :
-                               fourFourIt - possibleBarDivisions.begin();
+   if (!fourFourDivs.empty())
+      std::swap(possibleBarDivisions, fourFourDivs);
+
+   const auto winnerIndex = GetBestBarDivisionIndex(
+      possibleBarDivisions, audioFileDuration, numTatums, odf, debugOutput);
+
    const auto& barDivision = possibleBarDivisions[winnerIndex];
    const auto numBeats = barDivision.numBars * barDivision.beatsPerBar;
    const auto signature = GetTimeSignature(barDivision, numTatums);
