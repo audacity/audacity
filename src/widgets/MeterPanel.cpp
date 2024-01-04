@@ -37,7 +37,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/frame.h>
 #include <wx/menu.h>
-#include <wx/settings.h>
+#include <wx/settings.h> // for wxSYS_COLOUR_3DFACE
 #include <wx/textdlg.h>
 #include <wx/numdlg.h>
 #include <wx/radiobut.h>
@@ -503,7 +503,8 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
             {
                wxRect rect = bar.rect;
                wxPen BackgroundPen;
-               BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
+               BackgroundPen
+                  .SetColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
                dc.SetPen( BackgroundPen );
                int i;
                for(i = 0; i < rect.width; ++i)
