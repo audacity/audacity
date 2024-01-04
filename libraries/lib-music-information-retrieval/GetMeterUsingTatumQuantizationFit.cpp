@@ -36,10 +36,12 @@ constexpr auto maxBpm = 200.;
 constexpr auto minBeatsPerBar = 2;
 constexpr auto maxBeatsPerBar = 4;
 constexpr std::array<int, 3> possibleBeatsPerBar { 2, 3, 4 };
-constexpr std::array<double, 9> possibleTatumsPerBeat {
-   1.,                             //
-   2. / 1, 3. / 1, 4. / 1, 6. / 1, //
-   1. / 2, 1. / 3, 1. / 4, 1. / 6  //
+constexpr std::array<std::pair<int, int>, 9> possibleTatumsPerBeat {
+   std::pair<int, int> { 1, 1 }, //
+   std::pair<int, int> { 2, 1 }, std::pair<int, int> { 3, 1 },
+   std::pair<int, int> { 4, 1 }, std::pair<int, int> { 6, 1 }, //
+   std::pair<int, int> { 1, 2 }, std::pair<int, int> { 1, 3 },
+   std::pair<int, int> { 1, 4 }, std::pair<int, int> { 1, 6 } //
 };
 
 // Number of bars and beats per bar dividing the input audio recording.
@@ -62,7 +64,7 @@ static_assert(!IsRound(2.5));
 using PossibleDivHierarchies =
    std::unordered_map<int /*num tatums*/, std::vector<BarDivision>>;
 
-// Gather a collection of possible number of divisions based on the assumption
+// Gather a collection of possible numbers of divisions based on the assumption
 // that the audio is a loop (hence there must be a round number of bars) and on
 // reasonable bar and tatum durations.
 PossibleDivHierarchies GetPossibleDivHierarchies(double audioFileDuration)
@@ -86,12 +88,21 @@ PossibleDivHierarchies GetPossibleDivHierarchies(double audioFileDuration)
             IotaRange { minBpb, maxBpb + 1 }, [&](int beatsPerBar) {
                std::for_each(
                   possibleTatumsPerBeat.begin(), possibleTatumsPerBeat.end(),
-                  [&](double tatumsPerBeat) {
-                     const auto tatumsPerBar = beatsPerBar * tatumsPerBeat;
-                     const int numTatums = tatumsPerBar * numBars;
-                     const auto tatumRate = numTatums / audioFileDuration * 60;
+                  [&](const std::pair<int, int>& tatumsPerBeat) {
+                     const auto [tatumsPerBeatNum, tatumsPerBeatDen] =
+                        tatumsPerBeat;
+
+                     // Number of tatums per bar must be round:
                      if (
-                        IsRound(tatumsPerBar) &&
+                        (beatsPerBar * tatumsPerBeatNum) % tatumsPerBeatDen !=
+                        0)
+                        return;
+
+                     const int tatumsPerBar =
+                        beatsPerBar * tatumsPerBeatNum / tatumsPerBeatDen;
+                     const int numTatums = tatumsPerBar * numBars;
+                     const auto tatumRate = 60. * numTatums / audioFileDuration;
+                     if (
                         minTatumsPerMinute < tatumRate &&
                         tatumRate < maxTatumsPerMinute)
                         possibleDivHierarchies[numTatums].push_back(
