@@ -107,7 +107,7 @@ ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
    const auto roundedNumQuarters = std::round(numQuarters);
    const auto delta = numQuarters - roundedNumQuarters;
    // If there is an excess less than a 32nd, we treat it as an edit error.
-   if (0 < delta && delta / 8)
+   if (0 < delta && delta < 1. / 8)
       excessDurationInQuarternotes = delta;
 
    return { qpm, mMusicalMeter->timeSignature, recommendedStretch,
