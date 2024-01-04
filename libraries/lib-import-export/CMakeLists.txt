@@ -12,6 +12,8 @@ set( SOURCES
    AcidizerTagSerialization.h
    Export.cpp
    Export.h
+   EditRiffTags.cpp
+   EditRiffTags.h
    ExportOptionsEditor.cpp
    ExportOptionsEditor.h
    ExportPlugin.cpp
@@ -51,3 +53,4 @@ set( LIBRARIES
 audacity_library( lib-import-export "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
+add_subdirectory(riff-test-util)
