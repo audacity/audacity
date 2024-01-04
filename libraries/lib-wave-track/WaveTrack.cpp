@@ -1220,7 +1220,9 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
       // Set the common channel group rate from the leader's rate
       if (mLegacyRate > 0)
       {
-         auto next = *TrackList::Channels(this).first.advance(1);
+         WaveTrack *next{};
+         if (linkType != LinkType::None)
+            next = *TrackList::Channels(this).first.advance(1);
          SetRate(mLegacyRate);
          mLegacyRate = 0;
          if (next)
