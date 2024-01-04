@@ -48,9 +48,9 @@ std::vector<float> GetMovingAverage(const std::vector<float>& x, double hopRate)
       const auto y =
          std::accumulate(m.begin(), m.end(), 0., [&](double y, int i) {
             auto k = n + i;
-            if (k < 0)
+            while (k < 0)
                k += x.size();
-            else if (k >= x.size())
+            while (k >= x.size())
                k -= x.size();
             return y + x[k] * window[i + M];
          });
@@ -127,10 +127,10 @@ std::vector<float> GetOnsetDetectionFunction(
       else
          odf.push_back(GetNoveltyMeasure(prevPowSpec, powSpec));
 
-      std::swap(prevPowSpec, powSpec);
-
       if (debugOutput)
          debugOutput->postProcessedStft.push_back(powSpec);
+
+      std::swap(prevPowSpec, powSpec);
 
       if (progressCallback)
          progressCallback(1. * ++frameCounter / numFrames);

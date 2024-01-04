@@ -25,7 +25,7 @@ tatum rate, is comb-filtered. The energy of the comb-filtering together with the
 BPM likelihood are combined together, and the BPM with largest score is
 returned.
 
-This approach is in some aspects alike existing tempo detection methods (e.g.
+This approach is in some aspects like existing tempo detection methods (e.g.
 Percival, Graham & Tzanetakis, George (2014), implemented in the Essentia
 framework at https://essentia.upf.edu/), insofar as it first derives an ODF and
 then somehow correlates it with expected rhythmic patterns. However, the

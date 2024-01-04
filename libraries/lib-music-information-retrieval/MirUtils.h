@@ -26,9 +26,8 @@ std::vector<int> GetPeakIndices(const std::vector<float>& x);
 std::vector<float> GetNormalizedHann(int size);
 
 /*!
- * @brief Returns the index of the maximum value in a vector. Useful when
- * dealing with symmetric spectra reduced only to their positive half.
- * See tests below for more details.
+ * @brief Useful when dealing with symmetric spectra reduced only to their
+ * positive half. See tests below for more details.
  * @param fullSize The size of the original vector. Must be strictly positive
  * and even, or the function will return 0.
  */

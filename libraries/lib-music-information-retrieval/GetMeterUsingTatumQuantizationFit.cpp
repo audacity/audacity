@@ -35,7 +35,6 @@ constexpr auto minBpm = 50.;
 constexpr auto maxBpm = 200.;
 constexpr auto minBeatsPerBar = 2;
 constexpr auto maxBeatsPerBar = 4;
-constexpr std::array<int, 3> possibleBeatsPerBar { 2, 3, 4 };
 constexpr std::array<std::pair<int, int>, 9> possibleTatumsPerBeat {
    std::pair<int, int> { 1, 1 }, //
    std::pair<int, int> { 2, 1 }, std::pair<int, int> { 3, 1 },
@@ -50,14 +49,6 @@ struct BarDivision
    const int numBars;
    const int beatsPerBar;
 };
-
-constexpr bool IsRound(double x)
-{
-   return static_cast<int>(x) == x;
-}
-
-static_assert(IsRound(1.));
-static_assert(!IsRound(2.5));
 
 // A map of possible number of tatums to a list of number of bars and beats per
 // bar which explain it.
