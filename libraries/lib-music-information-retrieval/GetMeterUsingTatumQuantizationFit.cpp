@@ -347,7 +347,7 @@ MusicalMeter GetMostLikelyMeterFromQuantizationExperiment(
 {
    std::vector<BarDivision> fourFourDivs;
    for_each_in_range(
-      IotaRange { 0u, possibleBarDivisions.size() }, [&](size_t i) {
+      IotaRange<size_t>(0, possibleBarDivisions.size()), [&](size_t i) {
          if (
             GetTimeSignature(possibleBarDivisions[i], numTatums) ==
             TimeSignature::FourFour)
