@@ -453,6 +453,9 @@ public:
    /// if there is at least one clip sample between t0 and t1, noop otherwise.
    void ClearAndAddCutLine(double t0, double t1);
 
+   //! @pre `GetWidth() == pClip->GetWidth()`
+   void AddCutLine(WaveClipHolder pClip);
+
    /*!
     * @return true and succeed if and only if `this->GetWidth() ==
     * other.GetWidth()` and either this is empty or `this->GetStretchRatio() ==
