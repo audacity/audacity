@@ -30,8 +30,13 @@ struct RocInfo
  * possible thresholds of a binary classifier. The area under the curve (AUC)
  * is a measure of the classifier's performance. The greater the AUC, the
  * better the classifier.
+ *
+ * @tparam Result has public members `truth`, boolean, and `score`, numeric
+ * @param results true classifications and scores of some population
+ * @pre at least one of `results` is really positive (`truth` is true), and at
+ * least one is really negative
+ * @pre `0. <= allowedFalsePositiveRate && allowedFalsePositiveRate <= 1.`
  */
-
 template <typename Result>
 RocInfo
 GetRocInfo(std::vector<Result> results, double allowedFalsePositiveRate = 0.)
@@ -50,8 +55,14 @@ GetRocInfo(std::vector<Result> results, double allowedFalsePositiveRate = 0.)
    std::sort(results.begin(), results.end(), [](const auto& a, const auto& b) {
       return a.score > b.score;
    });
+
    const auto numPositives = count_if(results.begin(), results.end(), truth);
    const auto numNegatives = results.size() - numPositives;
+
+   // Find true and false positive rates for various score thresholds.
+   // True positive and false positive counts are nondecreasing with i,
+   // therefore if false positive rate has increased at some i, true positive
+   // rate has not decreased.
    std::vector<double> truePositiveRates(results.size());
    std::vector<double> falsePositiveRates(results.size());
    for (size_t i = 0; i < results.size(); ++i)
@@ -66,7 +77,9 @@ GetRocInfo(std::vector<Result> results, double allowedFalsePositiveRate = 0.)
          static_cast<double>(numFalsePositives) / numNegatives;
    }
 
-   // Now compute the area under the curve.
+   // Now find the area under the non-decreasing curve with FPR as x-axis,
+   // TPR as y, and i as a parameter.  (This curve is within a square with unit
+   // side.)
    double auc = 0.;
    for (size_t i = 0; i <= results.size(); ++i)
    {
@@ -74,10 +87,12 @@ GetRocInfo(std::vector<Result> results, double allowedFalsePositiveRate = 0.)
       const auto rightFpr = i == results.size() ? 1. : falsePositiveRates[i];
       const auto leftTpr = i == 0 ? 0. : truePositiveRates[i - 1];
       const auto rightTpr = i == results.size() ? 1. : truePositiveRates[i];
-      auc += (rightTpr + leftTpr) * (rightFpr - leftFpr) / 2.;
+      const auto trapezoid = (rightTpr + leftTpr) * (rightFpr - leftFpr) / 2.;
+      assert(trapezoid >= 0); // See comments above
+      auc += trapezoid;
    }
 
-   // First breakpoint that doesn't satisfy the constraint.
+   // Find the parameter at which the x coordinate exceeds the allowed FPR.
    const auto it = std::upper_bound(
       falsePositiveRates.begin(), falsePositiveRates.end(),
       allowedFalsePositiveRate);
