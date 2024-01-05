@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <functional>
 #include <fstream>
 #include <numeric>
 #include <string>
@@ -35,11 +36,12 @@ template <typename Result>
 RocInfo
 GetRocInfo(std::vector<Result> results, double allowedFalsePositiveRate = 0.)
 {
+   const auto truth = std::mem_fn(&Result::truth);
+   const auto falsity = std::not_fn(truth);
+
    // There is at least one positive and one negative sample.
-   assert(std::any_of(
-      results.begin(), results.end(), [](const auto& s) { return s.truth; }));
-   assert(std::any_of(
-      results.begin(), results.end(), [](const auto& s) { return !s.truth; }));
+   assert(any_of(results.begin(), results.end(), truth));
+   assert(any_of(results.begin(), results.end(), falsity));
 
    assert(allowedFalsePositiveRate >= 0. && allowedFalsePositiveRate <= 1.);
    allowedFalsePositiveRate = std::clamp(allowedFalsePositiveRate, 0., 1.);
@@ -48,19 +50,16 @@ GetRocInfo(std::vector<Result> results, double allowedFalsePositiveRate = 0.)
    std::sort(results.begin(), results.end(), [](const auto& a, const auto& b) {
       return a.score > b.score;
    });
-   const auto numPositives = std::count_if(
-      results.begin(), results.end(), [](const auto& s) { return s.truth; });
+   const auto numPositives = count_if(results.begin(), results.end(), truth);
    const auto numNegatives = results.size() - numPositives;
    std::vector<double> truePositiveRates(results.size());
    std::vector<double> falsePositiveRates(results.size());
    for (size_t i = 0; i < results.size(); ++i)
    {
-      const auto numTruePositives = std::count_if(
-         results.begin(), results.begin() + i + 1,
-         [](const auto& s) { return s.truth; });
+      const auto numTruePositives = count_if(
+         results.begin(), results.begin() + i + 1, truth);
       const auto numFalsePositives = std::count_if(
-         results.begin(), results.begin() + i + 1,
-         [](const auto& s) { return !s.truth; });
+         results.begin(), results.begin() + i + 1, falsity);
       truePositiveRates[i] =
          static_cast<double>(numTruePositives) / numPositives;
       falsePositiveRates[i] =
