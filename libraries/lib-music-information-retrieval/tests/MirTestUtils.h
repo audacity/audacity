@@ -56,37 +56,42 @@ GetRocInfo(std::vector<Result> results, double allowedFalsePositiveRate = 0.)
       return a.score > b.score;
    });
 
+   const auto size = results.size();
    const auto numPositives = count_if(results.begin(), results.end(), truth);
-   const auto numNegatives = results.size() - numPositives;
+   const auto numNegatives = size - numPositives;
 
    // Find true and false positive rates for various score thresholds.
    // True positive and false positive counts are nondecreasing with i,
    // therefore if false positive rate has increased at some i, true positive
    // rate has not decreased.
-   std::vector<double> truePositiveRates(results.size());
-   std::vector<double> falsePositiveRates(results.size());
-   for (size_t i = 0; i < results.size(); ++i)
+   std::vector<double> truePositiveRates;
+   truePositiveRates.reserve(size);
+   std::vector<double> falsePositiveRates;
+   falsePositiveRates.reserve(size);
+   size_t numTruePositives = 0;
+   size_t numFalsePositives = 0;
+   for (const auto &result : results)
    {
-      const auto numTruePositives = count_if(
-         results.begin(), results.begin() + i + 1, truth);
-      const auto numFalsePositives = std::count_if(
-         results.begin(), results.begin() + i + 1, falsity);
-      truePositiveRates[i] =
-         static_cast<double>(numTruePositives) / numPositives;
-      falsePositiveRates[i] =
-         static_cast<double>(numFalsePositives) / numNegatives;
+      if (result.truth)
+         ++numTruePositives;
+      else
+         ++numFalsePositives;
+      truePositiveRates.push_back(
+         static_cast<double>(numTruePositives) / numPositives);
+      falsePositiveRates.push_back(
+         static_cast<double>(numFalsePositives) / numPositives);
    }
 
    // Now find the area under the non-decreasing curve with FPR as x-axis,
    // TPR as y, and i as a parameter.  (This curve is within a square with unit
    // side.)
    double auc = 0.;
-   for (size_t i = 0; i <= results.size(); ++i)
+   for (size_t i = 0; i <= size; ++i)
    {
       const auto leftFpr = i == 0 ? 0. : falsePositiveRates[i - 1];
-      const auto rightFpr = i == results.size() ? 1. : falsePositiveRates[i];
+      const auto rightFpr = i == size ? 1. : falsePositiveRates[i];
       const auto leftTpr = i == 0 ? 0. : truePositiveRates[i - 1];
-      const auto rightTpr = i == results.size() ? 1. : truePositiveRates[i];
+      const auto rightTpr = i == size ? 1. : truePositiveRates[i];
       const auto trapezoid = (rightTpr + leftTpr) * (rightFpr - leftFpr) / 2.;
       assert(trapezoid >= 0); // See comments above
       auc += trapezoid;
