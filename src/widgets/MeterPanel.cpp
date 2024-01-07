@@ -201,8 +201,9 @@ MeterUpdateQueue::~MeterUpdateQueue()
 {
 }
 
-PeakAndRmsMeter::PeakAndRmsMeter(int dbRange)
-   : mDBRange{ dbRange }
+PeakAndRmsMeter::PeakAndRmsMeter(int dbRange, float decayRate)
+   : mDecayRate{ decayRate }
+   , mDBRange{ dbRange }
 {}
 
 PeakAndRmsMeter::~PeakAndRmsMeter() = default;
@@ -301,8 +302,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
              bool isInput,
              const wxPoint& pos /*= wxDefaultPosition*/,
              const wxSize& size /*= wxDefaultSize*/,
-             Style style /*= HorizontalStereo*/,
-             float fDecayRate /*= 60.0f*/)
+             Style style /*= HorizontalStereo*/)
 : MeterPanelBase(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
    mWidth(size.x),
@@ -310,11 +310,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mIsInput(isInput),
    mDesiredStyle(style),
    mGradient(true),
-   mDecay(true),
-   mDecayRate(fDecayRate),
    mClip(true),
-   mPeakHoldDuration(3),
-   mT(0),
    mRate(0),
    mMonitoring(false),
    mActive(false),
@@ -887,8 +883,10 @@ void MeterPanel::Decrease(float steps)
    }
 }
 
-void PeakAndRmsMeter::Reset(double, bool resetClipping)
+void PeakAndRmsMeter::Reset(double sampleRate, bool resetClipping)
 {
+   mT = 0;
+   mRate = sampleRate;
    for (int j = 0; j < kMaxMeterBars; j++)
       mStats[j].Reset(resetClipping);
    mQueue.Clear();
@@ -896,7 +894,6 @@ void PeakAndRmsMeter::Reset(double, bool resetClipping)
 
 void MeterPanel::Reset(double sampleRate, bool resetClipping)
 {
-   mT = 0;
    mRate = sampleRate;
 
    // wxTimers seem to be a little unreliable - sometimes they stop for
@@ -913,16 +910,6 @@ void MeterPanel::Reset(double sampleRate, bool resetClipping)
    Refresh(false);
 }
 
-static float ClipZeroToOne(float z)
-{
-   if (z > 1.0)
-      return 1.0;
-   else if (z < 0.0)
-      return 0.0;
-   else
-      return z;
-}
-
 static float ToDB(float v, float range)
 {
    double db;
@@ -930,7 +917,7 @@ static float ToDB(float v, float range)
       db = LINEAR_TO_DB(fabs(v));
    else
       db = -999;
-   return ClipZeroToOne((db + range) / range);
+   return std::clamp((db + range) / range, 0.0, 1.0);
 }
 
 void PeakAndRmsMeter::Update(unsigned numChannels,
@@ -1019,10 +1006,10 @@ void PeakAndRmsMeter::Update(unsigned numChannels,
 //   mQueue.Put(msg);
 //}
 
-void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
+bool PeakAndRmsMeter::Poll()
 {
    MeterUpdateMsg msg;
-   int numChanges = 0;
+   unsigned numChanges = 0;
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    double maxPeak = 0.0;
    bool discarded = false;
@@ -1031,7 +1018,7 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
    // We shouldn't receive any events if the meter is disabled, but clear it to be safe
    if (mMeterDisabled) {
       mQueue.Clear();
-      return;
+      return false;
    }
 
 
@@ -1040,12 +1027,12 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
    // popping them off until there are none left.  It is necessary
    // to process all of them, otherwise we won't handle peaks and
    // peak-hold bars correctly.
-   while(mQueue.Get(msg)) {
-      numChanges++;
+   while (mQueue.Get(msg)) {
+      ++numChanges;
       double deltaT = msg.numFrames / mRate;
 
       mT += deltaT;
-      for(unsigned int j=0; j<mNumBars; j++) {
+      for(unsigned int j = 0; j < mNumBars; ++j) {
          auto &stats = mStats[j];
          if (mDB) {
             msg.peak[j] = ToDB(msg.peak[j], mDBRange);
@@ -1068,7 +1055,7 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
             stats.peak = msg.peak[j];
 
          // This smooths out the RMS signal
-         float smooth = pow(0.9, (double)msg.numFrames/1024.0);
+         float smooth = pow(0.9, (double)msg.numFrames / 1024.0);
          stats.rms = stats.rms * smooth + msg.rms[j] * (1.0 - smooth);
 
          if (mT - stats.peakHoldTime > mPeakHoldDuration ||
@@ -1108,8 +1095,14 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
          putchar('\n');
       }
 #endif
-      RepaintBarsNow();
    }
+   return numChanges > 0;
+}
+
+void MeterPanel::OnMeterUpdate(wxTimerEvent &)
+{
+   if (Poll())
+      RepaintBarsNow();
 }
 
 void MeterPanel::OnTipTimeout(wxTimerEvent& evt)
