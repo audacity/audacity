@@ -942,19 +942,15 @@ void PeakAndRmsMeter::Update(unsigned numChannels,
 //   mQueue.Put(msg);
 //}
 
-bool PeakAndRmsMeter::Poll()
+void PeakAndRmsMeter::Poll()
 {
    MeterUpdateMsg msg;
    unsigned numChanges = 0;
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   double maxPeak = 0.0;
-   bool discarded = false;
-#endif
 
    // We shouldn't receive any events if the meter is disabled, but clear it to be safe
    if (mMeterDisabled) {
       mQueue.Clear();
-      return false;
+      return;
    }
 
 
@@ -968,7 +964,7 @@ bool PeakAndRmsMeter::Poll()
       double deltaT = msg.numFrames / mRate;
 
       mT += deltaT;
-      for(unsigned int j = 0; j < mNumBars; ++j) {
+      for (size_t j = 0; j < mNumBars; ++j) {
          auto &stats = mStats[j];
          if (mDB) {
             msg.peak[j] = ToDB(msg.peak[j], mDBRange);
@@ -1010,35 +1006,51 @@ bool PeakAndRmsMeter::Poll()
          }
 
          stats.tailPeakCount = msg.tailPeakCount[j];
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (mT > AILA::Get().GetLastDecisionTime()) {
-            discarded = false;
-            maxPeak = msg.peak[j] > maxPeak ? msg.peak[j] : maxPeak;
-            wxPrintf("%f@%f ", msg.peak[j], mT);
-         }
-         else {
-            discarded = true;
-            wxPrintf("%f@%f discarded\n", msg.peak[j], mT);
-         }
-#endif
+         Receive(mT, msg);
       }
    } // while
+}
 
-   if (numChanges > 0) {
+void PeakAndRmsMeter::Receive(double, const MeterUpdateMsg &)
+{
+}
+
+void MeterPanel::Receive(
+   [[maybe_unused]] double time,
+   [[maybe_unused]] const MeterUpdateMsg &msg)
+{
+   ++mNumChanges;
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      if (AILA::Get().IsActive() && mIsInput && !discarded) {
-         AILA::Get().Process(mProject, IsClipping(), GetDBRange(), maxPeak);
-         putchar('\n');
+   for (size_t j = 0; j < mNumBars; ++j) {
+      if (time > AILA::Get().GetLastDecisionTime()) {
+         mDiscarded = false;
+         mMaxPeak = std::max<double>(msg.peak[j], mMaxPeak);
+         wxPrintf("%f@%f ", msg.peak[j], time);
       }
-#endif
+      else {
+         mDiscarded = true;
+         wxPrintf("%f@%f discarded\n", msg.peak[j], time);
+      }
    }
-   return numChanges > 0;
+#endif
 }
 
 void MeterPanel::OnMeterUpdate(wxTimerEvent &)
 {
-   if (Poll())
+   mMaxPeak = 0.0;
+   mNumChanges = 0;
+   mDiscarded = false;
+
+   Poll();
+   if (mNumChanges > 0) {
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+      if (AILA::Get().IsActive() && mIsInput && !mDiscarded) {
+         AILA::Get().Process(mProject, IsClipping(), GetDBRange(), mMaxPeak);
+         putchar('\n');
+      }
+#endif
       RepaintBarsNow();
+   }
 }
 
 void MeterPanel::OnTipTimeout(wxTimerEvent& evt)

@@ -116,9 +116,16 @@ public:
     Updates the member mStats, to detect clipping, sufficiently longheld peak,
     and a trailing exponential moving average of the RMS signal, which may be
     used in drawing
-    @return whether any messages were consumed
     */
-   bool Poll();
+   void Poll();
+
+   //! Receive one message corresponding to given time
+   /*!
+    Default implementation does nothing
+    @param time clock time relative to last Reset()
+    @param msg its `peak` and `rms` adjusted to dB when `mdB`
+    */
+   virtual void Receive(double time, const MeterUpdateMsg &msg);
 
    void Clear() override;
    void Reset(double sampleRate, bool resetClipping) override;
@@ -210,6 +217,8 @@ class AUDACITY_DLL_API MeterPanel final
     * different thread (like from an audio I/O callback).
     */
    void Reset(double sampleRate, bool resetClipping) override;
+
+   void Receive(double time, const MeterUpdateMsg &msg) override;
 
    // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
    //void UpdateDisplay(int numChannels, int numFrames,
@@ -336,6 +345,16 @@ class AUDACITY_DLL_API MeterPanel final
 
    bool mIsFocused{};
    wxRect mFocusRect;
+
+   /*! @name state variables during OnMeterUpdate
+     @{
+    */
+   double mMaxPeak{};
+   unsigned mNumChanges{};
+   bool mDiscarded{};
+   /*!
+     @}
+    */
 
    friend class MeterAx;
 
