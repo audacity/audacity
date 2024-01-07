@@ -73,6 +73,12 @@ using MeterUpdateQueue = LockFreeQueue<MeterUpdateMsg>;
 
 class MeterAx;
 
+/*!
+ This class uses a circular queue to communicate sample data from the
+ low-latency audio thread to the main thread.  If the main thread
+ does not consume frequently enough to leave sufficient empty space,
+ extra data from the other thread is simply lost.
+ */
 class AUDACITY_DLL_API PeakAndRmsMeter
    : public Meter
    , public NonInterferingBase
@@ -100,8 +106,19 @@ public:
       float  peakPeakHold{ 0 };
    };
 
-   explicit PeakAndRmsMeter(int dbRange);
+   PeakAndRmsMeter(int dbRange,
+      float decayRate = 60.0f // dB/sec
+   );
    ~PeakAndRmsMeter() override;
+
+   //! Call from the main thread to consume from the inter-thread queue
+   /*!
+    Updates the member mStats, to detect clipping, sufficiently longheld peak,
+    and a trailing exponential moving average of the RMS signal, which may be
+    used in drawing
+    @return whether any messages were consumed
+    */
+   bool Poll();
 
    void Clear() override;
    void Reset(double sampleRate, bool resetClipping) override;
@@ -136,12 +153,19 @@ public:
 
 protected:
    MeterUpdateQueue mQueue{ 1024 };
+   float     mDecayRate{}; // dB/sec
    unsigned  mNumBars{ 0 };
    Stats  mStats[kMaxMeterBars]{};
    int mNumPeakSamplesToClip{ 3 };
-   bool mMeterDisabled{};
-   bool      mDB{ true };
    int       mDBRange{ 60 };
+   bool      mDB{ true };
+   bool mMeterDisabled{};
+
+private:
+   double mRate{};
+   double mT{};
+   int mPeakHoldDuration{ 3 };
+   bool mDecay{ true };
 };
 
 /********************************************************************//**
@@ -172,8 +196,7 @@ class AUDACITY_DLL_API MeterPanel final
          bool isInput,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,
-         Style style = HorizontalStereo,
-         float fDecayRate = 60.0f);
+         Style style = HorizontalStereo);
 
    void SetFocusFromKbd() override;
 
@@ -275,12 +298,9 @@ class AUDACITY_DLL_API MeterPanel final
    Style     mStyle{};
    Style     mDesiredStyle;
    bool      mGradient;
-   bool      mDecay;
-   float     mDecayRate{}; // dB/sec
    bool      mClip;
    int       mNumPeakSamplesToClip;
    double    mPeakHoldDuration;
-   double    mT;
    double    mRate;
    long      mMeterRefreshRate{};
 
