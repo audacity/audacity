@@ -9,10 +9,12 @@
  **********************************************************************/
 #include "WaveTrackMeter.h"
 
+#include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "Decibels.h"
 #include "PeakAndRmsMeter.h"
 #include "../../../../widgets/MeterPainter.h"
+#include "TrackPanel.h"
 #include "TransportUtilities.h"
 #include "WaveTrack.h"
 
@@ -47,7 +49,19 @@ struct WaveTrackRmsMeter
 
       wxTimer::Start(1000 / mMeterRefreshRate);
    }
-   void Notify() override { PeakAndRmsMeter::Poll(); }
+   void Notify() override {
+      mNumChanges = 0;
+      PeakAndRmsMeter::Poll();
+      if (mNumChanges) {
+         if (auto pProject = GetActiveProject().lock())
+            TrackPanel::Get(*pProject).Refresh();
+      }
+   }
+   void Receive(double, const MeterUpdateMsg &) override {
+      ++mNumChanges;
+   }
+
+   unsigned mNumChanges{};
 };
 
 int ChooseBgColor(bool selected) {
