@@ -13,6 +13,7 @@
 #include "Decibels.h"
 #include "PeakAndRmsMeter.h"
 #include "../../../../widgets/MeterPainter.h"
+#include "TransportUtilities.h"
 #include "WaveTrack.h"
 
 #include <wx/dc.h>
@@ -55,6 +56,16 @@ int ChooseBgColor(bool selected) {
 
 const AttachedTrackObjects::RegisteredFactory key{
    [](Track &track){ return std::make_shared<WaveTrackMeter>(); } };
+
+TransportUtilities::GetTrackMeters::WrapperScope scope {
+   [](const auto &prevFn){ return [prevFn](WaveTrack &track){
+      MeterPtrs results;
+      if (prevFn)
+         results = prevFn(track);
+      results.push_back(WaveTrackMeter::Get(track).weak_from_this());
+      return results;
+   }; }
+};
 }
 
 struct WaveTrackMeter::Impl{
@@ -122,4 +133,25 @@ void WaveTrackMeter::Draw(wxDC &dc, wxRect rect, bool selected) {
          painter.DrawMeterBar(dc, meter.IsDisabled(), bar[i],
             meter.mStats[i]);
    }
+}
+
+void WaveTrackMeter::Update(unsigned numChannels,
+   unsigned long numFrames, const float *sampleData, bool interleaved)
+{
+   mpImpl->mpMeter->Update(numChannels, numFrames, sampleData, interleaved);
+}
+
+bool WaveTrackMeter::IsDisabled() const
+{
+   return mpImpl->mpMeter->IsDisabled();
+}
+
+void WaveTrackMeter::Clear()
+{
+   mpImpl->mpMeter->Clear();
+}
+
+void WaveTrackMeter::Reset(double sampleRate, bool resetClipping)
+{
+   mpImpl->mpMeter->Reset(sampleRate, resetClipping);
 }
