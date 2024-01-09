@@ -16,30 +16,33 @@
 
 namespace LibImportExport
 {
-std::string AcidizerTagsToString(const LibFileFormats::AcidizerTags& tags)
+using namespace LibFileFormats;
+
+std::string AcidizerTagsToString(const AcidizerTags& tags)
 {
    rapidjson::StringBuffer buffer;
    rapidjson::Writer<rapidjson::StringBuffer> writer { buffer };
    writer.StartObject();
    writer.Key("bpm");
-   writer.Double(tags.bpm);
+   writer.Double(tags.bpm.value_or(0.));
    writer.Key("isOneShot");
    writer.Bool(tags.isOneShot);
    writer.EndObject();
    return buffer.GetString();
 }
 
-std::optional<LibFileFormats::AcidizerTags>
-StringToAcidizerTags(const std::string& str)
+std::optional<AcidizerTags> StringToAcidizerTags(const std::string& str)
 {
    rapidjson::Document document;
    document.Parse(str.c_str());
    if (
       !document.IsObject() || !document.HasMember("bpm") ||
       !document.HasMember("isOneShot") || !document["bpm"].IsDouble() ||
-      !document["isOneShot"].IsBool())
+      document["bpm"].GetDouble() < 0 || !document["isOneShot"].IsBool())
       return {};
-   return LibFileFormats::AcidizerTags { document["bpm"].GetDouble(),
-                                         document["isOneShot"].GetBool() };
+   if (document["isOneShot"].GetBool())
+      return AcidizerTags::OneShot {};
+   else
+      return AcidizerTags::Loop { document["bpm"].GetDouble() };
 }
 } // namespace LibImportExport

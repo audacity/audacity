@@ -25,9 +25,10 @@ namespace LibImportExport
 {
 namespace
 {
+using namespace LibFileFormats;
 
 void WriteAndGetTmpFile(
-   SNDFILE*& file, const std::optional<LibFileFormats::AcidizerTags>& tags,
+   SNDFILE*& file, const std::optional<AcidizerTags>& tags,
    const std::optional<std::string>& distributor)
 {
    const std::string filename = tmpnam(nullptr);
@@ -76,8 +77,7 @@ TEST_CASE("GetAcidizerTags")
    {
       SNDFILE* file;
       WriteAndGetTmpFile(
-         file, LibFileFormats::AcidizerTags { 120, false },
-         { "Distributor Zen" });
+         file, AcidizerTags::Loop { 120. }, { "Distributor Zen" });
       const auto actual = GetAcidizerTags(
          *file, { "foo", "Distributor Z", "Distributor Zen 2" });
       REQUIRE(!actual.has_value());
@@ -87,9 +87,9 @@ TEST_CASE("GetAcidizerTags")
    SECTION(
       "returns valid info if there is loop info and the distributor is whitelisted")
    {
-      std::vector<LibFileFormats::AcidizerTags> expected {
-         { 120, false },
-         { 120, true },
+      std::vector<AcidizerTags> expected {
+         AcidizerTags::Loop { 120. },
+         AcidizerTags::OneShot {},
       };
       for (const auto& info : expected)
       {

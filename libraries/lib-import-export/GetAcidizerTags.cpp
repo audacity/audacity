@@ -26,8 +26,31 @@ std::optional<LibFileFormats::AcidizerTags> GetAcidizerTags(
       SF_FALSE)
       return {};
 
-   // There is loop info, but we can't trust it if the file is not from a
-   // trusted distributor:
+   if (
+      loopInfo.loop_mode == SF_LOOP_BACKWARD ||
+      loopInfo.loop_mode == SF_LOOP_ALTERNATING)
+      // Don't know what that is:
+      return {};
+
+   if (loopInfo.loop_mode == SF_LOOP_NONE)
+      return LibFileFormats::AcidizerTags::OneShot {};
+
+   if (loopInfo.num_beats != 0)
+   {
+      // Forward loop with number of beats set: all files like these I have seen
+      // so far were correctly tagged.
+      SF_INFO info;
+      if (
+         sf_command(&file, SFC_GET_CURRENT_SF_INFO, &info, sizeof(info)) ==
+         SF_FALSE)
+         return {};
+      const auto duration = 1. * info.frames / info.samplerate;
+      return LibFileFormats::AcidizerTags::Loop { 60. * loopInfo.num_beats /
+                                                  duration };
+   }
+
+   // There is loop info, but in some unexpected combination. We don't trust it
+   // unless it is from a trusted distributor.
    SF_CHUNK_INFO info;
    constexpr std::array<char, 4> listId = { 'L', 'I', 'S', 'T' };
    std::copy(listId.begin(), listId.end(), info.id);
@@ -76,8 +99,7 @@ std::optional<LibFileFormats::AcidizerTags> GetAcidizerTags(
       if (isTrusted)
          // Later we may want to get the key, too, but for now we're only
          // interested in BPM.
-         return { LibFileFormats::AcidizerTags {
-            loopInfo.bpm, loopInfo.loop_mode == SF_LOOP_NONE } };
+         return LibFileFormats::AcidizerTags::Loop { loopInfo.bpm };
    }
 
    // No luck:

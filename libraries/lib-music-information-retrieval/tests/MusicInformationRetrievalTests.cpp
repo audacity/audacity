@@ -73,39 +73,38 @@ TEST_CASE("GetBpmFromFilename")
 
 namespace
 {
+using namespace LibFileFormats;
 constexpr auto isOneShot = true;
 constexpr auto filename100bpm = "my/path\\foo_-_100BPM_Sticks_-_foo.wav";
 const EmptyMirAudioReader emptyReader;
 const std::function<void(double)> emptyProgressCb;
 constexpr auto arbitraryTolerance = FalsePositiveTolerance::Lenient;
-const std::optional<LibFileFormats::AcidizerTags> noTags;
+const std::optional<AcidizerTags> noTags;
 } // namespace
 
 TEST_CASE("MusicInformation")
 {
-   using namespace LibFileFormats;
-
    SECTION("operator bool")
    {
       SECTION("returns false if ACID tag says one-shot")
-      REQUIRE(!MusicInformation { AcidizerTags { 120.0, isOneShot },
-                                  filename100bpm, emptyReader,
-                                  arbitraryTolerance, emptyProgressCb });
+      REQUIRE(!MusicInformation { AcidizerTags::OneShot {}, filename100bpm,
+                                  emptyReader, arbitraryTolerance,
+                                  emptyProgressCb });
 
       SECTION("returns true if ACID tag says non-one-shot")
-      REQUIRE(MusicInformation { AcidizerTags { 120.0, !isOneShot },
+      REQUIRE(MusicInformation { AcidizerTags::Loop { 120.0 },
                                  "filenameWithoutBpm", emptyReader,
                                  arbitraryTolerance, emptyProgressCb });
 
       SECTION("BPM is invalid")
       {
          SECTION("returns true if filename has BPM")
-         REQUIRE(MusicInformation { AcidizerTags { 0.0, !isOneShot },
-                                    filename100bpm, emptyReader,
-                                    arbitraryTolerance, emptyProgressCb });
+         REQUIRE(MusicInformation { AcidizerTags::Loop { -1. }, filename100bpm,
+                                    emptyReader, arbitraryTolerance,
+                                    emptyProgressCb });
 
          SECTION("returns false if filename has no BPM")
-         REQUIRE(!MusicInformation { AcidizerTags { 0.0, !isOneShot },
+         REQUIRE(!MusicInformation { AcidizerTags::Loop { -1. },
                                      "filenameWithoutBpm", emptyReader,
                                      arbitraryTolerance, emptyProgressCb });
       }
@@ -115,18 +114,18 @@ TEST_CASE("MusicInformation")
    {
       SECTION("prioritizes ACID tags over filename")
       {
-         MusicInformation info { AcidizerTags { 120.0, !isOneShot },
-                                 filename100bpm, emptyReader,
-                                 arbitraryTolerance, emptyProgressCb };
+         MusicInformation info { AcidizerTags::Loop { 120. }, filename100bpm,
+                                 emptyReader, arbitraryTolerance,
+                                 emptyProgressCb };
          REQUIRE(info);
          REQUIRE(info.GetProjectSyncInfo({}).rawAudioTempo == 120);
       }
 
       SECTION("falls back on filename if tag bpm is invalid")
       {
-         MusicInformation info { AcidizerTags { 0.0, !isOneShot },
-                                 filename100bpm, emptyReader,
-                                 arbitraryTolerance, emptyProgressCb };
+         MusicInformation info { AcidizerTags::Loop { -1. }, filename100bpm,
+                                 emptyReader, arbitraryTolerance,
+                                 emptyProgressCb };
          REQUIRE(info);
          REQUIRE(info.GetProjectSyncInfo({}).rawAudioTempo == 100);
       }

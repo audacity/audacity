@@ -4,6 +4,7 @@
 #include "sndfile.h"
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <memory>
@@ -48,7 +49,7 @@ void AddAcidizerTags(
    // clang-format on
 
    SF_LOOP_INFO loopInfo {};
-   loopInfo.bpm = acidTags.bpm;
+   loopInfo.bpm = acidTags.bpm.value_or(0.);
    loopInfo.loop_mode = acidTags.isOneShot ? SF_LOOP_NONE : SF_LOOP_FORWARD;
 
    SF_CHUNK_INFO chunk;
@@ -65,15 +66,27 @@ void AddAcidizerTags(
    auto type = reinterpret_cast<uint32_t*>(dataUPtr.get());
    if (acidTags.isOneShot)
       *type |= 0x00000001;
+   else
+   {
+      // To get the number of beats, we need to know the duration of the file:
+      SF_INFO info;
+      const auto result =
+         sf_command(file, SFC_GET_CURRENT_SF_INFO, &info, sizeof(info));
+      assert(result == SF_ERR_NO_ERROR);
+      const auto duration = 1. * info.frames / info.samplerate;
+      auto numBeats = reinterpret_cast<uint32_t*>(dataUPtr.get() + 12);
+      *numBeats =
+         static_cast<uint32_t>(std::round(*acidTags.bpm * duration / 60.));
+
+      auto tempo = reinterpret_cast<float*>(dataUPtr.get() + 20);
+      *tempo = *acidTags.bpm;
+   }
 
    // Set the meter denominator 2 bytes to 4:
    auto numerator = reinterpret_cast<uint16_t*>(dataUPtr.get() + 16);
    *numerator |= 0x0004;
    auto denominator = reinterpret_cast<uint16_t*>(dataUPtr.get() + 18);
    *denominator |= 0x0004;
-
-   auto tempo = reinterpret_cast<float*>(dataUPtr.get() + 20);
-   *tempo = acidTags.bpm;
 
    const auto result = sf_set_chunk(file, &chunk);
    assert(result == SF_ERR_NO_ERROR);

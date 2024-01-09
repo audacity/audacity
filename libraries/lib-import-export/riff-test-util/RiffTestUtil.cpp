@@ -102,11 +102,10 @@ int main(int argc, char** argv)
       return 1;
    }
 
-   if (bpm.has_value() || isOneShot.has_value())
-   {
-      const AcidizerTags tags { bpm.value_or(0), isOneShot.value_or(false) };
-      LibImportExport::AddAcidizerTags(tags, file);
-   }
+   if (isOneShot.has_value() && *isOneShot)
+      LibImportExport::AddAcidizerTags(AcidizerTags::OneShot {}, file);
+   else if (bpm.has_value() && *bpm > 0)
+      LibImportExport::AddAcidizerTags(AcidizerTags::Loop { *bpm }, file);
 
    if (distributor.has_value())
       LibImportExport::AddDistributorInfo(*distributor, file);

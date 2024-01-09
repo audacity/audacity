@@ -13,19 +13,21 @@
 
 namespace LibImportExport
 {
+
+using namespace LibFileFormats;
+
 TEST_CASE("AcidizerTagSerialization")
 {
    SECTION("is transparent")
    {
-      const std::vector<LibFileFormats::AcidizerTags> testCases {
-         { 123., false }, { 456., true }
-      };
+      const std::vector<AcidizerTags> testCases { AcidizerTags::Loop { 123. },
+                                                  AcidizerTags::OneShot {} };
       for (const auto& testCase : testCases)
       {
          const auto str = AcidizerTagsToString(testCase);
          const auto tags = StringToAcidizerTags(str);
          REQUIRE(tags);
-         REQUIRE(tags->bpm == Approx(testCase.bpm));
+         REQUIRE(tags->bpm == testCase.bpm);
          REQUIRE(tags->isOneShot == testCase.isOneShot);
       }
    }
@@ -45,13 +47,21 @@ TEST_CASE("AcidizerTagSerialization")
             !StringToAcidizerTags("{\"bpm\":\"true\",\"isOneShot\":123.0}"));
       }
 
+      SECTION("sets bpm to null if is one-shot")
+      {
+         const auto result =
+            StringToAcidizerTags("{\"bpm\":123.0,\"isOneShot\":true}");
+         REQUIRE(result);
+         REQUIRE(!result->bpm);
+      }
+
       SECTION("doesn't care if there are extra fields")
       {
          const auto resultWithUnexpectedField = StringToAcidizerTags(
-            "{\"bpm\":123.0,\"isOneShot\":true,\"foo\":123}");
+            "{\"bpm\":123.0,\"isOneShot\":false,\"foo\":123}");
          REQUIRE(resultWithUnexpectedField);
          REQUIRE(resultWithUnexpectedField->bpm == Approx(123.));
-         REQUIRE(resultWithUnexpectedField->isOneShot == true);
+         REQUIRE(resultWithUnexpectedField->isOneShot == false);
       }
    }
 }

@@ -52,8 +52,8 @@ std::optional<MusicalMeter> FillMetadata(
       // rhythm and tempo, but in practice one-shots are not to be looped or
       // stretched.
       return {};
-   else if (tags.has_value() && tags->bpm > 30.)
-      return MusicalMeter { tags->bpm, std::optional<TimeSignature> {} };
+   else if (tags.has_value() && tags->bpm.has_value() && *tags->bpm > 30.)
+      return MusicalMeter { *tags->bpm, std::optional<TimeSignature> {} };
 
    // No tags or invalid tags: fall back onto filename:
    const auto bpmFromFilename = GetBpmFromFilename(filename);
