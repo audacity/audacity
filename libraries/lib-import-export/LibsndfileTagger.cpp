@@ -1,4 +1,4 @@
-#include "EditRiffTags.h"
+#include "LibsndfileTagger.h"
 #include "AcidizerTags.h"
 
 #include "sndfile.h"
@@ -8,11 +8,66 @@
 #include <cstdio>
 #include <cstring>
 #include <memory>
+#include <stdexcept>
 
 namespace LibImportExport
 {
-void AddAcidizerTags(
-   const LibFileFormats::AcidizerTags& acidTags, SNDFILE* file)
+namespace Test
+{
+LibsndfileTagger::LibsndfileTagger(double duration, const std::string& filename)
+    : mFilename { filename.empty() ? std::tmpnam(nullptr) : filename }
+{
+   SF_INFO sfInfo;
+   std::memset(&sfInfo, 0, sizeof(sfInfo));
+   sfInfo.samplerate = 44100;
+   sfInfo.channels = 1;
+   sfInfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+   sfInfo.sections = 1;
+   sfInfo.seekable = 1;
+   mFile = sf_open(mFilename.c_str(), SFM_WRITE, &sfInfo);
+   assert(mFile != nullptr);
+   if (duration > 0)
+   {
+      // Write zeros using sf_write_float
+      sfInfo.frames =
+         static_cast<sf_count_t>(std::round(duration * sfInfo.samplerate));
+      const auto numItems = sfInfo.channels * sfInfo.frames;
+      std::unique_ptr<short[]> zeros { new short[numItems] };
+      std::fill(zeros.get(), zeros.get() + numItems, 0);
+      const auto written = sf_write_short(mFile, zeros.get(), numItems);
+      if (written != numItems)
+         throw std::runtime_error("Failed to write audio to file");
+   }
+}
+
+LibsndfileTagger::~LibsndfileTagger()
+{
+   sf_close(mFile);
+}
+
+LibsndfileTagger::operator bool() const
+{
+   return mFile != nullptr;
+}
+
+SNDFILE& LibsndfileTagger::ReopenInReadMode()
+{
+   if (!mFile)
+      throw std::runtime_error("File is not open");
+
+   sf_close(mFile);
+   mDistributorData.reset();
+   mAcidData.reset();
+
+   SF_INFO sfInfo;
+   mFile = sf_open(mFilename.c_str(), SFM_READ, &sfInfo);
+   if (!mFile)
+      throw std::runtime_error("Failed to re-open file");
+   return *mFile;
+}
+
+void LibsndfileTagger::AddAcidizerTags(
+   const LibFileFormats::AcidizerTags& acidTags)
 {
    // Adapted from the ACID chunk readout code in libsndfile and its comment:
    // clang-format off
@@ -58,12 +113,13 @@ void AddAcidizerTags(
    chunk.id_size = 4;
    // All sizes listed above except the first two:
    chunk.datalen = 4 + 2 + 2 + 4 + 4 + 2 + 2 + 4;
-   const auto dataUPtr = std::make_unique<char[]>(chunk.datalen);
-   chunk.data = dataUPtr.get();
+   mAcidData = std::make_unique<uint8_t[]>(chunk.datalen);
+   std::memset(mAcidData.get(), 0, chunk.datalen);
+   chunk.data = mAcidData.get();
 
    // The type has 4 bytes, of which we may only set the 1st bit to 1 if the
    // loop is one-shot:
-   auto type = reinterpret_cast<uint32_t*>(dataUPtr.get());
+   auto type = reinterpret_cast<uint32_t*>(mAcidData.get());
    if (acidTags.isOneShot)
       *type |= 0x00000001;
    else
@@ -71,30 +127,32 @@ void AddAcidizerTags(
       // To get the number of beats, we need to know the duration of the file:
       SF_INFO info;
       const auto result =
-         sf_command(file, SFC_GET_CURRENT_SF_INFO, &info, sizeof(info));
+         sf_command(mFile, SFC_GET_CURRENT_SF_INFO, &info, sizeof(info));
       assert(result == SF_ERR_NO_ERROR);
       const auto duration = 1. * info.frames / info.samplerate;
-      auto numBeats = reinterpret_cast<uint32_t*>(dataUPtr.get() + 12);
+      auto numBeats = reinterpret_cast<uint32_t*>(mAcidData.get() + 12);
       *numBeats =
          static_cast<uint32_t>(std::round(*acidTags.bpm * duration / 60.));
 
-      auto tempo = reinterpret_cast<float*>(dataUPtr.get() + 20);
+      auto tempo = reinterpret_cast<float*>(mAcidData.get() + 20);
       *tempo = *acidTags.bpm;
    }
 
    // Set the meter denominator 2 bytes to 4:
-   auto numerator = reinterpret_cast<uint16_t*>(dataUPtr.get() + 16);
+   auto numerator = reinterpret_cast<uint16_t*>(mAcidData.get() + 16);
    *numerator |= 0x0004;
-   auto denominator = reinterpret_cast<uint16_t*>(dataUPtr.get() + 18);
+   auto denominator = reinterpret_cast<uint16_t*>(mAcidData.get() + 18);
    *denominator |= 0x0004;
 
-   const auto result = sf_set_chunk(file, &chunk);
+   const auto result = sf_set_chunk(mFile, &chunk);
    assert(result == SF_ERR_NO_ERROR);
 }
 
-void AddDistributorInfo(const std::string& distributor, SNDFILE* file)
+void LibsndfileTagger::AddDistributorInfo(const std::string& distributor)
 {
-   const int32_t distributorSize = distributor.size();
+   const uint32_t distributorSize = distributor.size();
+   // Why we didn't use `auto` the line above:
+   static_assert(sizeof(distributorSize) == 4);
    SF_CHUNK_INFO chunk;
    std::snprintf(chunk.id, sizeof(chunk.id), "LIST");
    chunk.id_size = 4;
@@ -106,16 +164,16 @@ void AddDistributorInfo(const std::string& distributor, SNDFILE* file)
    // the rest of the data stays word-aligned:
    while (chunk.datalen & 3)
       ++chunk.datalen;
-   const auto dataUPtr = std::make_unique<uint8_t[]>(chunk.datalen);
-   chunk.data = dataUPtr.get();
-   auto data = dataUPtr.get();
+   mDistributorData = std::make_unique<uint8_t[]>(chunk.datalen);
+   chunk.data = mDistributorData.get();
+   auto data = mDistributorData.get();
    std::memset(chunk.data, 0, chunk.datalen);
    auto pos = 0;
 
    std::memcpy(data + pos, listTypeID.data(), sizeof(listTypeID));
 
    pos += sizeof(listTypeID);
-   std::memcpy(data + pos, distributorTypeID.data(), sizeof(listTypeID));
+   std::memcpy(data + pos, distributorTypeID.data(), sizeof(distributorTypeID));
 
    pos += sizeof(distributorTypeID);
    std::memcpy(data + pos, &distributorSize, sizeof(distributorSize));
@@ -123,7 +181,8 @@ void AddDistributorInfo(const std::string& distributor, SNDFILE* file)
    pos += sizeof(distributorSize);
    std::memcpy(data + pos, distributor.data(), distributorSize);
 
-   const auto result = sf_set_chunk(file, &chunk);
+   const auto result = sf_set_chunk(mFile, &chunk);
    assert(result == SF_ERR_NO_ERROR);
 }
+} // namespace Test
 } // namespace LibImportExport

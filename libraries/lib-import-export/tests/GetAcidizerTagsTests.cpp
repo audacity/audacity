@@ -9,9 +9,8 @@
 
 **********************************************************************/
 #include "AcidizerTags.h"
-#include "EditRiffTags.h"
 #include "GetAcidizerTags.h"
-#include "MemoryX.h"
+#include "LibsndfileTagger.h"
 
 #include "FileFormats.h"
 #include "sndfile.h"
@@ -23,65 +22,26 @@
 
 namespace LibImportExport
 {
-namespace
-{
 using namespace LibFileFormats;
-
-void WriteAndGetTmpFile(
-   SNDFILE*& file, const std::optional<AcidizerTags>& tags,
-   const std::optional<std::string>& distributor)
-{
-   const std::string filename = tmpnam(nullptr);
-   // Write an empty file using libsndfile:
-   SF_INFO sfInfo;
-   sfInfo.samplerate = 44100;
-   sfInfo.channels = 1;
-   sfInfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-   file = sf_open(filename.c_str(), SFM_WRITE, &sfInfo);
-   REQUIRE(file != nullptr);
-   const std::vector<short> zero(sfInfo.frames, 0);
-   REQUIRE(sf_write_short(file, zero.data(), sfInfo.frames) == sfInfo.frames);
-
-   Finally Do = [&] {
-      // Close the file and reopen it for reading, re-using the same variable
-      // for further use:
-      const auto result = sf_close(file);
-      REQUIRE(result == SF_ERR_NO_ERROR);
-      file = sf_open(filename.c_str(), SFM_READ, &sfInfo);
-      if (file == nullptr)
-         std::cout << "Error opening " << filename << ": " << sf_strerror(file)
-                   << std::endl;
-      REQUIRE(file != nullptr);
-   };
-
-   if (tags.has_value())
-      AddAcidizerTags(*tags, file);
-
-   if (distributor.has_value())
-      AddDistributorInfo(*distributor, file);
-}
-} // namespace
 
 TEST_CASE("GetAcidizerTags")
 {
    SECTION("returns null if there is no loop info")
    {
-      SNDFILE* file;
-      WriteAndGetTmpFile(file, std::nullopt, std::nullopt);
-      const auto actual = GetAcidizerTags(*file, {});
+      Test::LibsndfileTagger tagger;
+      const auto actual = GetAcidizerTags(tagger.ReopenInReadMode(), {});
       REQUIRE(!actual.has_value());
-      sf_close(file);
    }
 
-   SECTION("returns null if there distributor isn't whitelisted")
+   SECTION("returns null if the distributor isn't whitelisted")
    {
-      SNDFILE* file;
-      WriteAndGetTmpFile(
-         file, AcidizerTags::Loop { 120. }, { "Distributor Zen" });
+      Test::LibsndfileTagger tagger;
+      tagger.AddAcidizerTags(AcidizerTags::Loop { 120. });
+      tagger.AddDistributorInfo("Distributor Zen");
       const auto actual = GetAcidizerTags(
-         *file, { "foo", "Distributor Z", "Distributor Zen 2" });
+         tagger.ReopenInReadMode(),
+         { "foo", "Distributor Z", "Distributor Zen 2" });
       REQUIRE(!actual.has_value());
-      sf_close(file);
    }
 
    SECTION(
@@ -91,15 +51,16 @@ TEST_CASE("GetAcidizerTags")
          AcidizerTags::Loop { 120. },
          AcidizerTags::OneShot {},
       };
-      for (const auto& info : expected)
+      for (const auto& tags : expected)
       {
-         SNDFILE* file;
-         WriteAndGetTmpFile(file, info, { "Trusted Distributor" });
-         const auto actual = GetAcidizerTags(*file, { "Trusted Distributor" });
+         Test::LibsndfileTagger tagger;
+         tagger.AddAcidizerTags(tags);
+         tagger.AddDistributorInfo("Trusted Distributor");
+         const auto actual = GetAcidizerTags(
+            tagger.ReopenInReadMode(), { "Trusted Distributor" });
          REQUIRE(actual.has_value());
-         REQUIRE(actual->bpm == info.bpm);
-         REQUIRE(actual->isOneShot == info.isOneShot);
-         sf_close(file);
+         REQUIRE(actual->bpm == tags.bpm);
+         REQUIRE(actual->isOneShot == tags.isOneShot);
       }
    }
 }

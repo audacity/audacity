@@ -12,8 +12,6 @@ set( SOURCES
    AcidizerTagSerialization.h
    Export.cpp
    Export.h
-   EditRiffTags.cpp
-   EditRiffTags.h
    ExportOptionsEditor.cpp
    ExportOptionsEditor.h
    ExportPlugin.cpp
@@ -38,7 +36,8 @@ set( SOURCES
    ImportProgressListener.h
    ImportUtils.cpp
    ImportUtils.h
-
+   LibsndfileTagger.cpp
+   LibsndfileTagger.h
    PlainExportOptionsEditor.cpp
    PlainExportOptionsEditor.h
 )

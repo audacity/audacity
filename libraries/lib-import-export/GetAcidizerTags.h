@@ -10,10 +10,11 @@
 **********************************************************************/
 #pragma once
 
-#include "sndfile.h"
 #include <optional>
 #include <string>
 #include <vector>
+
+typedef struct SNDFILE_tag SNDFILE;
 
 namespace LibFileFormats
 {

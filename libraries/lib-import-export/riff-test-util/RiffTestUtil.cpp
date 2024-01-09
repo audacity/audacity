@@ -13,104 +13,130 @@
 **********************************************************************/
 
 #include "AcidizerTags.h"
-#include "EditRiffTags.h"
+#include "LibsndfileTagger.h"
 
 #include "sndfile.h"
 #include <fstream>
 #include <iostream>
 #include <optional>
 
-int main(int argc, char** argv)
+namespace
+{
+void PrintHelp(const char* const* argv)
+{
+   std::cout
+      << std::endl
+      << "Test utility to tag files either the SoundForge or the MuseHub way."
+      << std::endl;
+   std::cout
+      << "(SoundForge prioritizes number-of-beats over tempo, and the other way round for MuseHub.)"
+      << std::endl
+      << std::endl;
+   std::cout
+      << "Usage: " << argv[0]
+      << " <outputFile> <duration (s)> [ MuseHub [ one-shot | <tempo (bpm)> ] | SoundForge [ one-shot | loop <num. beats> ] ]"
+      << std::endl
+      << std::endl;
+   std::cout << "Examples:" << std::endl << std::endl;
+
+   std::cout
+      << "Create a 10-second file and add 60 BPM information (MuseHub style):"
+      << std::endl;
+   std::cout << "riff-test-util output.wav 10.0 MuseHub 60.0" << std::endl
+             << std::endl;
+
+   std::cout
+      << "Create a 10-second file and specify 16 beats (SoundForge style):"
+      << std::endl;
+   std::cout << "riff-test-util output.wav 10.0 SoundForge 16.0" << std::endl
+             << std::endl;
+
+   std::cout << "Create a 3-second one-shot file:" << std::endl;
+   std::cout << "riff-test-util output.wav 3.0 SoundForge one-shot" << std::endl
+             << std::endl;
+}
+} // namespace
+
+int main(int argc, char* const* argv)
 {
    using namespace LibFileFormats;
 
-   if (argc < 3)
+   if (argc < 5)
    {
-      std::cout
-         << "Usage: " << argv[0]
-         << " <inputFile> <outputFile> [--bpm <bpm>] [--one-shot <zero for no>] "
-            "[--DistributedBy <distributor>]"
-         << std::endl;
+      PrintHelp(argv);
       return 1;
    }
 
    const std::string inputFile = argv[1];
-   const std::string outputFile = argv[2];
-
-   std::optional<double> bpm;
-   std::optional<bool> isOneShot;
-   std::optional<std::string> distributor;
-
-   for (int i = 3; i < argc; ++i)
+   auto duration = 0.;
+   try
    {
-      const std::string arg = argv[i];
-      if (arg == "--bpm")
-      {
-         if (i + 1 >= argc)
-         {
-            std::cout << "Missing argument for --bpm" << std::endl;
-            return 1;
-         }
-         bpm = std::stod(argv[i + 1]);
-         ++i;
-      }
-      else if (arg == "--one-shot")
-      {
-         if (i + 1 >= argc)
-         {
-            std::cout << "Missing argument for --one-shot" << std::endl;
-            return 1;
-         }
-         isOneShot = std::stoi(argv[i + 1]) != 0;
-         ++i;
-      }
-      else if (arg == "--DistributedBy")
-      {
-         if (i + 1 >= argc)
-         {
-            std::cout << "Missing argument for --DistributedBy" << std::endl;
-            return 1;
-         }
-         distributor = argv[i + 1];
-         ++i;
-      }
-      else
-      {
-         std::cout << "Unknown argument: " << arg << std::endl;
-         return 1;
-      }
+      duration = std::stod(argv[2]);
    }
-
-   // To begin with, just copy the input file and rename it to the output file
-   // (without using filesystem or libsndfile):
+   catch (std::invalid_argument& e)
    {
-      std::ifstream in(inputFile, std::ios::binary);
-      std::ofstream out(outputFile, std::ios::binary);
-      out << in.rdbuf();
-   }
-
-   if (!bpm.has_value() && !isOneShot.has_value() && !distributor.has_value())
-      return 0;
-
-   // Open the output file for writing:
-   SF_INFO sfInfo;
-   SNDFILE* file = sf_open(outputFile.c_str(), SFM_RDWR, &sfInfo);
-   if (file == nullptr)
-   {
-      std::cout << "Error opening " << outputFile << ": " << sf_strerror(file)
-                << std::endl;
+      std::cout << "Invalid duration: " << argv[2] << std::endl;
+      PrintHelp(argv);
       return 1;
    }
 
-   if (isOneShot.has_value() && *isOneShot)
-      LibImportExport::AddAcidizerTags(AcidizerTags::OneShot {}, file);
-   else if (bpm.has_value() && *bpm > 0)
-      LibImportExport::AddAcidizerTags(AcidizerTags::Loop { *bpm }, file);
+   LibImportExport::Test::LibsndfileTagger tagger { duration, inputFile };
+   if (!tagger)
+   {
+      std::cout << "Failed to open file: " << inputFile << std::endl;
+      return 1;
+   }
 
-   if (distributor.has_value())
-      LibImportExport::AddDistributorInfo(*distributor, file);
+   enum class Mode
+   {
+      Unknown,
+      MuseHub,
+      SoundForge,
+   };
+   const Mode mode = std::string { "MuseHub" } == argv[3] ? Mode::MuseHub :
+                     std::string { "SoundForge" } == argv[3] ?
+                                                            Mode::SoundForge :
+                                                            Mode::Unknown;
+   if (mode == Mode::Unknown)
+   {
+      std::cout << "Unknown mode: " << argv[3] << std::endl;
+      PrintHelp(argv);
+      return 1;
+   }
 
-   sf_close(file);
+   const auto isOneShot = argc >= 5 && std::string { "one-shot" } == argv[4];
+   if (isOneShot)
+   {
+      tagger.AddAcidizerTags(AcidizerTags::OneShot {});
+      return 0;
+   }
+
+   if (mode == Mode::MuseHub)
+      try
+      {
+         const auto bpm = std::stod(argv[4]);
+         tagger.AddAcidizerTags(AcidizerTags::Loop { bpm });
+         tagger.AddDistributorInfo("Muse Hub");
+      }
+      catch (std::invalid_argument& e)
+      {
+         std::cout << "Invalid BPM: " << argv[4] << std::endl;
+         PrintHelp(argv);
+         return 1;
+      }
+   else
+      try
+      {
+         const auto numBeats = std::stoi(argv[4]);
+         const auto bpm = numBeats / duration * 60;
+         tagger.AddAcidizerTags(AcidizerTags::Loop { bpm });
+      }
+      catch (std::invalid_argument& e)
+      {
+         std::cout << "Invalid number of beats: " << argv[5] << std::endl;
+         PrintHelp(argv);
+         return 1;
+      }
 
    return 0;
 }
