@@ -12,8 +12,7 @@
 
 #include "wxPanelWrapper.h"
 
-class WX_WRAPPERS_API AudacityDontAskAgainMessageDialog :
-    private wxDialogWrapper
+class WX_WRAPPERS_API AudacityDontAskAgainMessageDialog : public wxDialogWrapper
 {
 public:
    AudacityDontAskAgainMessageDialog(
