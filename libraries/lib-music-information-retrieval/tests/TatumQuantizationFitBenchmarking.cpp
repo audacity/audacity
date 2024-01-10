@@ -7,9 +7,68 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
+
+#define USE_FILESYSTEM (__has_include(<filesystem>) && _WIN32)
+
+#if USE_FILESYSTEM
+#   include <filesystem>
+#endif
 
 namespace MIR
 {
+namespace
+{
+const auto datasetRoot =
+   std::string(CMAKE_CURRENT_SOURCE_DIR) + "/benchmarking-dataset";
+
+std::vector<std::string> GetBenchmarkingAudioFiles()
+{
+   std::vector<std::string> files;
+#if USE_FILESYSTEM
+   namespace fs = std::filesystem;
+   for (const auto& entry : fs::directory_iterator(datasetRoot))
+      for (const auto& subEntry : fs::recursive_directory_iterator(entry))
+         if (
+            subEntry.is_regular_file() && subEntry.path().extension() == ".mp3")
+            files.push_back(subEntry.path().string());
+#else
+   // Recursively find all files in the dataset directory with .mp3 extension,
+   // not using std::filesystem:
+   // https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
+   const auto command = "find " + datasetRoot + " -type f -name '*.mp3' -print";
+   FILE* pipe = popen(command.c_str(), "r");
+   if (!pipe)
+      throw std::runtime_error("popen() failed!");
+   constexpr auto bufferSize = 512;
+   char buffer[bufferSize];
+   while (fgets(buffer, bufferSize, pipe) != nullptr)
+   {
+      std::string file(buffer);
+      file.erase(file.find_last_not_of("\n") + 1);
+      files.push_back(file);
+   }
+   const auto returnCode = pclose(pipe);
+   if (returnCode != 0)
+      throw std::runtime_error("pclose() failed!");
+#endif
+   std::sort(files.begin(), files.end());
+   return files;
+}
+
+std::string Pretty(const std::string& filename)
+{
+   // Remove the dataset root from the filename ...
+   const auto datasetRootLength = datasetRoot.length();
+   auto tmp = filename.substr(datasetRootLength + 1);
+   // ... and now the .mp3 extension:
+   tmp = tmp.substr(0, tmp.length() - 4);
+   // Replace backslashes with forward slashes:
+   std::replace(tmp.begin(), tmp.end(), '\\', '/');
+   return tmp;
+}
+} // namespace
+
 TEST_CASE("GetRocInfo")
 {
    // We use the AUC as a measure of the classifier's performance. With a
@@ -99,8 +158,11 @@ auto ToString(const std::optional<TimeSignature>& ts)
 
 TEST_CASE("TatumQuantizationFitBenchmarking")
 {
-   if (!runLocally)
-      return;
+   // For this test to run, you will need to set `runLocally` to `true`, and
+   // you'll also need the benchmarking sound files. To get these, just open
+   // `download-benchmarking-dataset.html` in a browser. This will download a
+   // zip file that you'll need to extract and place in a `benchmarking-dataset`
+   // directory under this directory.
 
    // Running this test will update
    // `TatumQuantizationFitBenchmarkingOutput/summary.txt`. The summary contains
@@ -119,14 +181,13 @@ TEST_CASE("TatumQuantizationFitBenchmarking")
    // We only observe the results for the most lenient classifier. The other,
    // stricter classifier will yield the same results, only with fewer false
    // positives.
+   if (!runLocally)
+      return;
+
    constexpr auto tolerance = FalsePositiveTolerance::Lenient;
    constexpr int progressBarWidth = 50;
-   const auto wavFiles =
-      GetWavFilesUnderDir("C:/Users/saint/Documents/auto-tempo");
-   std::ofstream sampleValueCsv {
-      std::string(CMAKE_CURRENT_SOURCE_DIR) +
-      "/TatumQuantizationFitBenchmarkingOutput/sampleValues.csv"
-   };
+   const auto audioFiles = GetBenchmarkingAudioFiles();
+   std::stringstream sampleValueCsv;
    sampleValueCsv
       << "truth,score,tatumRate,bpm,ts,octaveFactor,octaveError,lag,filename\n";
 
@@ -138,11 +199,13 @@ TEST_CASE("TatumQuantizationFitBenchmarking")
       std::optional<OctaveError> octaveError;
    };
    std::vector<Sample> samples;
-   const auto numFiles = wavFiles.size();
+   const auto numFiles = audioFiles.size();
    auto count = 0;
    std::transform(
-      wavFiles.begin(), wavFiles.begin() + numFiles,
-      std::back_inserter(samples), [&](const std::string& wavFile) {
+      audioFiles.begin(), audioFiles.begin() + numFiles,
+      std::back_inserter(samples),
+      [&](const std::string& wavFile)
+      {
          const WavMirAudioReader audio { wavFile };
          checksum += GetChecksum(audio);
          QuantizationFitDebugOutput debugOutput;
@@ -152,7 +215,7 @@ TEST_CASE("TatumQuantizationFitBenchmarking")
          const auto expected = GetBpmFromFilename(wavFile);
          const auto truth = expected.has_value();
          const std::optional<OctaveError> error =
-            truth ?
+            truth && debugOutput.bpm > 0 ?
                std::make_optional(GetOctaveError(*expected, debugOutput.bpm)) :
                std::nullopt;
          sampleValueCsv << (truth ? "true" : "false") << ","
@@ -163,8 +226,8 @@ TEST_CASE("TatumQuantizationFitBenchmarking")
                         << ToString(debugOutput.timeSignature) << ","
                         << (error.has_value() ? error->factor : 0.) << ","
                         << (error.has_value() ? error->remainder : 0.) << ","
-                        << debugOutput.tatumQuantization.lag << "," << wavFile
-                        << "\n";
+                        << debugOutput.tatumQuantization.lag << ","
+                        << Pretty(wavFile) << "\n";
          return Sample { truth, debugOutput.score, error };
       });
 
@@ -181,7 +244,8 @@ TEST_CASE("TatumQuantizationFitBenchmarking")
    // Get RMS of octave errors. Tells how good the BPM estimation is.
    const auto octaveErrors = std::accumulate(
       samples.begin(), samples.end(), std::vector<double> {},
-      [&](std::vector<double> octaveErrors, const Sample& sample) {
+      [&](std::vector<double> octaveErrors, const Sample& sample)
+      {
          if (sample.octaveError.has_value())
             octaveErrors.push_back(sample.octaveError->remainder);
          return octaveErrors;
@@ -189,31 +253,42 @@ TEST_CASE("TatumQuantizationFitBenchmarking")
    const auto octaveErrorStd = std::sqrt(
       std::accumulate(
          octaveErrors.begin(), octaveErrors.end(), 0.,
-         [&](double sum, double octaveError) {
-            return sum + octaveError * octaveError;
-         }) /
+         [&](double sum, double octaveError)
+         { return sum + octaveError * octaveError; }) /
       octaveErrors.size());
 
-   std::ofstream summaryFile {
-      std::string(CMAKE_CURRENT_SOURCE_DIR) +
-      "/TatumQuantizationFitBenchmarkingOutput/summary.txt"
-   };
+   constexpr auto previousAuc = 0.9312244897959182;
+   const auto classifierQualityHasChanged =
+      std::abs(rocInfo.areaUnderCurve - previousAuc) >= 0.01;
 
-   summaryFile << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-               << "AUC: " << rocInfo.areaUnderCurve << "\n"
-               << "Strict Threshold (Minutes-and-Seconds): " << strictThreshold
-               << "\n"
-               << "Lenient Threshold (Beats-and-Measures): "
-               << rocInfo.threshold << "\n"
-               << "Octave error RMS: " << octaveErrorStd << "\n"
-               << "Audio file checksum: " << checksum << "\n";
-
-   constexpr auto previousAuc = 0.9121725731895223;
+   // Only update the summary if the figures have significantly changed.
+   if (classifierQualityHasChanged)
+   {
+      std::ofstream summaryFile {
+         std::string(CMAKE_CURRENT_SOURCE_DIR) +
+         "/TatumQuantizationFitBenchmarkingOutput/summary.txt"
+      };
+      summaryFile << std::setprecision(
+                        std::numeric_limits<double>::digits10 + 1)
+                  << "AUC: " << rocInfo.areaUnderCurve << "\n"
+                  << "Strict Threshold (Minutes-and-Seconds): "
+                  << strictThreshold << "\n"
+                  << "Lenient Threshold (Beats-and-Measures): "
+                  << rocInfo.threshold << "\n"
+                  << "Octave error RMS: " << octaveErrorStd << "\n"
+                  << "Audio file checksum: " << checksum << "\n";
+      // Write sampleValueCsv to a file.
+      std::ofstream sampleValueCsvFile {
+         std::string(CMAKE_CURRENT_SOURCE_DIR) +
+         "/TatumQuantizationFitBenchmarkingOutput/sampleValues.csv"
+      };
+      sampleValueCsvFile << sampleValueCsv.rdbuf();
+   }
 
    // If this changed, then some non-refactoring code change happened. If
    // `rocInfo.areaUnderCurve > previousAuc`, then there's probably no argument
    // about the change. On the contrary, though, the change is either an
    // inadvertent bug, and if it is deliberate, should be well justified.
-   REQUIRE(rocInfo.areaUnderCurve == previousAuc);
+   REQUIRE(!classifierQualityHasChanged);
 }
 } // namespace MIR

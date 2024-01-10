@@ -19,7 +19,9 @@ TEST_CASE("TatumQuantizationFitVisualization")
    if (!runLocally)
       return;
 
-   const auto wavFile = "C:/Users/saint/Downloads/auto-tempo/sixEightDrum.wav";
+   const auto wavFile =
+      std::string { CMAKE_CURRENT_SOURCE_DIR } +
+      "/benchmarking-dataset/loops/Acoustic Loop Lucaz Collab 116BPM.wav.mp3";
    const WavMirAudioReader audio { wavFile };
    QuantizationFitDebugOutput debugOutput;
    const auto result = GetMusicalMeterFromSignal(
