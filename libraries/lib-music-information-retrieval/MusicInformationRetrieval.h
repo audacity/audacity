@@ -10,12 +10,45 @@
 **********************************************************************/
 #pragma once
 
+#include "MirTypes.h"
+
+#include <functional>
 #include <optional>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace MIR
 {
+class MirAudioReader;
+
+struct LoopClassifierSettings
+{
+   /*!
+    * False positive rate allowed for the classifier.
+    */
+   const double allowedFalsePositiveRate;
+
+   /*!
+    * Classifier score threshold above which the analyzed audio file can be
+    */
+   const double threshold;
+};
+
+/*!
+ * Tolerance-dependent thresholds, used internally by
+ * `GetMusicalMeterFromSignal` to decide whether to return a null or valid
+ * `MusicalMeter`. The value compared against these are scores which get higher
+ * as the signal is more likely to contain music content. They are obtained by
+ * running the `TatumQuantizationFitBenchmarking` test case. More information
+ * there.
+ */
+static const std::unordered_map<FalsePositiveTolerance, LoopClassifierSettings>
+   loopClassifierSettings {
+      { FalsePositiveTolerance::Strict, { .01, 0.8367879995455243 } },
+      { FalsePositiveTolerance::Lenient, { .1, 0.7336582045210642 } },
+   };
+
 /*!
  * Information needed to time-synchronize the audio file with the project.
  */
@@ -25,6 +58,11 @@ struct ProjectSyncInfo
     * The tempo of the raw audio file, in quarter-notes per minute.
     */
    const double rawAudioTempo;
+
+   /*!
+    * The time-signature of the raw audio file.
+    */
+   const std::optional<TimeSignature> timeSignature;
 
    /*!
     * Should be 1 most of the time, but may be 0.5 or 2 to reduce the amount
@@ -40,6 +78,9 @@ struct ProjectSyncInfo
    const double excessDurationInQuarternotes;
 };
 
+MUSIC_INFORMATION_RETRIEVAL_API int GetNumerator(TimeSignature ts);
+MUSIC_INFORMATION_RETRIEVAL_API int GetDenominator(TimeSignature ts);
+
 class MUSIC_INFORMATION_RETRIEVAL_API MusicInformation
 {
 public:
@@ -47,7 +88,10 @@ public:
     * @brief Construct a new Music Information object
     * @detail For now we only exploit the filename and duration ...
     */
-   MusicInformation(const std::string& filename, double duration);
+   MusicInformation(
+      const std::string& filename, double duration,
+      const MirAudioReader& source, FalsePositiveTolerance tolerance,
+      std::function<void(double progress)> progressCallback);
 
    const std::string filename;
    const double duration;
@@ -66,23 +110,18 @@ public:
    GetProjectSyncInfo(const std::optional<double>& projectTempo) const;
 
 private:
-   /*!
-    * For now we either detect constant tempo or no tempo. We may need to
-    * extend it to a `map<double , double >` when we have a master track with
-    * tempo automation.
-    * Note that BPM isn't quarter-notes per minute (QPM), which is the value we
-    * need to adjust project tempo. For this, a `timeSignature` is also needed.
-    * Else, the most likely QPM can be guessed, but there's always a risk of
-    * over- or underestimating by a factor of two.
-    */
-   std::optional<double> mBpm;
+   const std::optional<MusicalMeter> mMusicalMeter;
 
-   // Additional information (time signature(s), key(s), genre, etc) to be added
-   // here.
+   // Additional information (key(s), genre, etc) to be added here.
 };
 
 // Used internally by `MusicInformation`, made public for testing.
 MUSIC_INFORMATION_RETRIEVAL_API std::optional<double>
 GetBpmFromFilename(const std::string& filename);
 
+MUSIC_INFORMATION_RETRIEVAL_API std::optional<MusicalMeter>
+GetMusicalMeterFromSignal(
+   const MirAudioReader& source, FalsePositiveTolerance tolerance,
+   const std::function<void(double)>& progressCallback,
+   QuantizationFitDebugOutput* debugOutput = nullptr);
 } // namespace MIR

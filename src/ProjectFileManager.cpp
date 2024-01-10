@@ -20,6 +20,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "AudacityDontAskAgainMessageDialog.h"
 #include "AudacityMessageBox.h"
 #include "BasicUI.h"
+#include "ClipMirAudioReader.h"
 #include "CodeConversions.h"
 #include "Export.h"
 #include "HelpText.h"
@@ -49,19 +50,15 @@ Paul Licameli split from AudacityProject.cpp
 #include "TimeDisplayMode.h"
 #include "TrackFocus.h"
 #include "TrackPanel.h"
-#include "TrackPanelAx.h"
-#include "UndoManager.h"
 #include "UndoTracks.h"
+#include "UserException.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
-#include "wxFileNameWrapper.h"
-#include "Export.h"
-#include "Import.h"
-#include "ImportProgressListener.h"
-#include "ImportPlugin.h"
+#include "WideClip.h"
+#include "XMLFileReader.h"
 #include "import/ImportStreamDialog.h"
 #include "prefs/ImportExportPrefs.h"
-#include "toolbars/SelectionBar.h"
 #include "tracks/playabletrack/wavetrack/WaveTrackUtils.h"
 #include "widgets/FileHistory.h"
 #include "widgets/UnwritableLocationErrorDialog.h"
@@ -984,7 +981,8 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
 #endif
          auto &project = chooser(false);
          // Undo history is incremented inside this:
-         if (Get(project).Import(fileName)) {
+         if (Get(project).ImportOneOfOne(fileName))
+         {
             // Undo history is incremented inside this:
             // Bug 2743: Don't zoom with lof.
             if (!fileName.AfterLast('.').IsSameAs(wxT("lof"), false))
@@ -1347,10 +1345,9 @@ UserWantsMirResultToConfigureProject(AudacityProject& project, double qpm)
 }
 
 void ReactOnMusicFileImport(
-   const std::string& fileName, const TrackHolders& newTracks,
-   AudacityProject& project)
+   const std::string& fileName, TrackList& newTracks, AudacityProject& project)
 {
-   const auto waveTracks = newTracks[0]->Any<WaveTrack>();
+   const auto waveTracks = newTracks.Any<WaveTrack>();
    if (waveTracks.size() != 1)
       // Only do this when exactly one track is added.
       return;
@@ -1359,37 +1356,58 @@ void ReactOnMusicFileImport(
    const auto newTrackDuration =
       newTrack.GetEndTime() - newTrack.GetStartTime();
 
-   MIR::MusicInformation musicInfo { fileName, newTrackDuration };
-
-   if (!musicInfo)
-      return;
-
-   const auto isFirstWaveTrack =
-      TrackList::Get(project).Any<WaveTrack>().empty();
-   const auto isBeatsAndMeasures =
-      TimeDisplayModePreference.ReadEnum() == TimeDisplayMode::BeatsAndMeasures;
-
-   if (!isFirstWaveTrack && !isBeatsAndMeasures)
-      return;
-
-   const auto syncInfo = musicInfo.GetProjectSyncInfo(
-      ProjectTimeSignature::Get(project).GetTempo());
+   const auto wideClip = newTrack.GetClipInterfaces()[0];
+   const auto pProj = project.shared_from_this();
    const auto clips = newTrack.Intervals();
-   assert(clips.size() == 1);
-   const auto clip = *clips.begin();
 
-   if (!isFirstWaveTrack && isBeatsAndMeasures)
-   {
-      clip->SetRawAudioTempo(syncInfo.rawAudioTempo);
-      clip->TrimQuarternotesFromRight(syncInfo.excessDurationInQuarternotes);
-      clip->StretchBy(syncInfo.stretchMinimizingPowOfTwo);
-   }
-   else
-   {
-      // User interaction needed, do this asynchronously not to freeze the UI
-      // during drag-and-drop.
-      const auto pProj = project.shared_from_this();
-      BasicUI::CallAfter([=] {
+   // Query this here, not in the `CallAfter` lambda, or by then the project
+   // will have incorporated the file currently being imported.
+   const auto isFirstWaveTrack =
+      TrackList::Get(*pProj).Any<WaveTrack>().empty();
+
+   BasicUI::CallAfter([=] {
+      ClipMirAudioReader audio { *wideClip };
+
+      using namespace BasicUI;
+      auto progress = MakeProgress(
+         XO("Music Information Retrieval"), XO("Analyzing imported audio"),
+         ProgressShowCancel);
+      const auto reportProgress = [&](double progressFraction) {
+         const auto result = progress->Poll(progressFraction * 1000, 1000);
+         if (result != ProgressResult::Success)
+            throw UserException {};
+      };
+
+      const auto isBeatsAndMeasures = TimeDisplayModePreference.ReadEnum() ==
+                                      TimeDisplayMode::BeatsAndMeasures;
+
+      MIR::MusicInformation musicInfo {
+         fileName, newTrackDuration, audio,
+         isBeatsAndMeasures ? MIR::FalsePositiveTolerance::Lenient :
+                              MIR::FalsePositiveTolerance::Strict,
+         std::move(reportProgress)
+      };
+      progress.reset();
+
+      if (!musicInfo)
+         return;
+
+      if (!isFirstWaveTrack && !isBeatsAndMeasures)
+         return;
+
+      const auto syncInfo = musicInfo.GetProjectSyncInfo(
+         ProjectTimeSignature::Get(*pProj).GetTempo());
+      assert(clips.size() == 1);
+      const auto clip = *clips.begin();
+
+      if (!isFirstWaveTrack && isBeatsAndMeasures)
+      {
+         clip->SetRawAudioTempo(syncInfo.rawAudioTempo);
+         clip->TrimQuarternotesFromRight(syncInfo.excessDurationInQuarternotes);
+         clip->StretchBy(syncInfo.stretchMinimizingPowOfTwo);
+      }
+      else
+      {
          const auto ans = UserWantsMirResultToConfigureProject(
             *pProj, syncInfo.rawAudioTempo);
          if (isBeatsAndMeasures || ans.yes)
@@ -1402,7 +1420,15 @@ void ReactOnMusicFileImport(
          {
             AdornedRulerPanel::Get(*pProj).SetTimeDisplayMode(
                TimeDisplayMode::BeatsAndMeasures);
-            ProjectTimeSignature::Get(*pProj).SetTempo(syncInfo.rawAudioTempo);
+            auto& projTimeSignature = ProjectTimeSignature::Get(*pProj);
+            projTimeSignature.SetTempo(syncInfo.rawAudioTempo);
+            if (syncInfo.timeSignature.has_value())
+            {
+               projTimeSignature.SetUpperTimeSignature(
+                  MIR::GetNumerator(*syncInfo.timeSignature));
+               projTimeSignature.SetLowerTimeSignature(
+                  MIR::GetDenominator(*syncInfo.timeSignature));
+            }
          }
          else if (isBeatsAndMeasures)
             clip->StretchBy(syncInfo.stretchMinimizingPowOfTwo);
@@ -1410,14 +1436,20 @@ void ReactOnMusicFileImport(
             UndoManager::Get(*pProj).PushState(
                XO("Configure Project from Music File"),
                XO("Automatic Music Configuration"));
-      });
-   }
+      }
+   });
 }
 } // namespace
 
+bool ProjectFileManager::ImportOneOfOne(
+   const FilePath& fileName, bool addToHistory)
+{
+   return Import(fileName, 1, 1, addToHistory);
+}
+
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool ProjectFileManager::Import(
-   const FilePath &fileName,
+   const FilePath& fileName, size_t fileIndex, size_t numFiles,
    bool addToHistory /* = true */)
 {
    auto &project = mProject;
@@ -1506,7 +1538,11 @@ bool ProjectFileManager::Import(
          for (auto track : *trackList)
             track->OnProjectTempoChange(projectTempo);
 
-      ReactOnMusicFileImport(fileName.ToStdString(), newTracks, project);
+      // For now only do tempo detection for single-file imports. A dedicated
+      // issue exists to support multiple-file imports:
+      // https://github.com/audacity/audacity/issues/5726
+      if (numFiles == 1 && !newTracks.empty() && newTracks[0])
+         ReactOnMusicFileImport(fileName.ToStdString(), *newTracks[0], project);
 
       if (addToHistory) {
          FileHistory::Global().Append(fileName);

@@ -1,3 +1,13 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  AudacityDontAskAgainMessageDialog.cpp
+
+  A yes-no dialog with a don't-ask-again checkbox.
+
+**********************************************************************/
+
 #include "AudacityDontAskAgainMessageDialog.h"
 
 #include <wx/checkbox.h>

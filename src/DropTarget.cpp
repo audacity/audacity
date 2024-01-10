@@ -165,8 +165,10 @@ public:
             Viewport::Get(*mProject).HandleResize(); // Adjust scrollers for NEW track sizes.
          } );
 
-         for (const auto &name : sortednames)
-            ProjectFileManager::Get( *mProject ).Import(name);
+         const auto numFiles = sortednames.GetCount();
+         for (auto i = 0; i < numFiles; i++)
+            ProjectFileManager::Get(*mProject).Import(
+               sortednames[i], i + 1, numFiles);
 
          auto &viewport = Viewport::Get(*mProject);
          viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
@@ -185,7 +187,7 @@ static const AudacityProject::AttachedObjects::RegisteredFactory key{
       // We can import now, so become a drag target
       //   SetDropTarget(safenew AudacityDropTarget(this));
       //   mTrackPanel->SetDropTarget(safenew AudacityDropTarget(this));
-      
+
       TrackPanel::Get( project )
          .SetDropTarget(
             // SetDropTarget takes ownership

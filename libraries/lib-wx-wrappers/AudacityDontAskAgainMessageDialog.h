@@ -1,8 +1,18 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  AudacityDontAskAgainMessageDialog.h
+
+  A yes-no dialog with a don't-ask-again checkbox.
+
+**********************************************************************/
+
 #pragma once
 
 #include "wxPanelWrapper.h"
 
-class WX_WRAPPERS_API AudacityDontAskAgainMessageDialog : private wxDialogWrapper
+class WX_WRAPPERS_API AudacityDontAskAgainMessageDialog : public wxDialogWrapper
 {
 public:
    AudacityDontAskAgainMessageDialog(
