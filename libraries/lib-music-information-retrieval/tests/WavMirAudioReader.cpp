@@ -1,4 +1,6 @@
 #include "WavMirAudioReader.h"
+#include "AudioFileIO.h"
+#include "AudioFileInfo.h"
 
 #include <cassert>
 #include <exception>
@@ -9,10 +11,10 @@ namespace MIR
 WavMirAudioReader::WavMirAudioReader(
    const std::string& filename, std::optional<double> timeLimit)
 {
-   WavFileIO::Info info;
+   AudioFileInfo info;
    std::vector<std::vector<float>> samples;
-   if (!WavFileIO::Read(filename, samples, info))
-      throw std::runtime_error("Failed to read WAV file");
+   if (!AudioFileIO::Read(filename, samples, info))
+      throw std::runtime_error(std::string { "Failed to read " } + filename);
 
    const_cast<double&>(mSampleRate) = info.sampleRate;
    const auto limit = timeLimit.has_value() ?

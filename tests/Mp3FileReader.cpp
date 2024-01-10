@@ -9,11 +9,13 @@
 
 **********************************************************************/
 #include "Mp3FileReader.h"
+#include "AudioFileInfo.h"
 
 #include <mpg123.h>
 
 bool Mp3FileReader::Read(
-   const std::string& path, std::vector<std::vector<float>>& floats, Info& info)
+   const std::string& path, std::vector<std::vector<float>>& floats,
+   AudioFileInfo& info)
 {
    int error = MPG123_OK;
    mpg123_handle* handle = mpg123_new(nullptr, &error);

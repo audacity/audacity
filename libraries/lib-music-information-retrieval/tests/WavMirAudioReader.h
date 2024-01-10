@@ -2,7 +2,9 @@
 
 #include "MirAudioReader.h"
 
-#include <WavFileIO.h>
+#include <optional>
+#include <string>
+#include <vector>
 
 namespace MIR
 {

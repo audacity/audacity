@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  WavFileIO.h
+  AudioFileIO.h
 
   Matthieu Hodgkinson
 
@@ -17,13 +17,10 @@
 #include <string>
 #include <vector>
 
-struct WavFileIO
+struct AudioFileIO
 {
    static bool Read(
-      const std::string& path, std::vector<std::vector<float>>&, AudioFileInfo&,
+      const std::string& path, std::vector<std::vector<float>>& audio,
+      AudioFileInfo& info,
       const std::optional<std::chrono::seconds>& upTo = std::nullopt);
-
-   static bool Write(
-      const std::string& path, const std::vector<std::vector<float>>&,
-      int sampleRate);
 };
