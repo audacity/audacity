@@ -9,34 +9,70 @@
 
 **********************************************************************/
 #include "MusicInformationRetrieval.h"
+#include "GetMeterUsingTatumQuantizationFit.h"
+#include "MirAudioReader.h"
+#include "MirUtils.h"
+#include "StftFrameProvider.h"
 
+#include <array>
 #include <cassert>
 #include <cmath>
+#include <numeric>
 #include <regex>
 
 namespace MIR
 {
 namespace
 {
+// Normal distribution parameters obtained by fitting a gaussian in the GTZAN
+// dataset tempo values.
+static constexpr auto bpmExpectedValue = 126.3333;
+
+constexpr auto numTimeSignatures = static_cast<int>(TimeSignature::_count);
+
 auto RemovePathPrefix(const std::string& filename)
 {
    return filename.substr(filename.find_last_of("/\\") + 1);
 }
 
-// About right for a 4/4, which is the most common time signature.
-// When we get more clever, we may have different BPMs for different signatures,
-// i.e., about 64 BPM for 6/8, and 140 for 3/4.
-constexpr auto bpmExpectedValue = 120.;
-
 // When we get time-signature estimate, we may need a map for that, since 6/8
 // has 1.5 quarter notes per beat.
-constexpr auto quarternotesPerBeat = 1.;
+constexpr std::array<double, numTimeSignatures> quarternotesPerBeat { 2., 1.,
+                                                                      1., 1.5 };
+
+std::optional<MusicalMeter> FillMetadata(
+   const std::string& filename, const MirAudioReader& audio,
+   FalsePositiveTolerance tolerance,
+   const std::function<void(double progress)>& progressCallback)
+{
+   const auto bpmFromFilename = GetBpmFromFilename(filename);
+   if (bpmFromFilename.has_value())
+      return MusicalMeter { *bpmFromFilename, {} };
+   else
+      return GetMusicalMeterFromSignal(audio, tolerance, progressCallback);
+}
 } // namespace
 
-MusicInformation::MusicInformation(const std::string& filename, double duration)
+int GetNumerator(TimeSignature ts)
+{
+   constexpr std::array<int, numTimeSignatures> numerators = { 2, 4, 3, 6 };
+   return numerators[static_cast<int>(ts)];
+}
+
+int GetDenominator(TimeSignature ts)
+{
+   constexpr std::array<int, numTimeSignatures> denominators = { 2, 4, 4, 8 };
+   return denominators[static_cast<int>(ts)];
+}
+
+MusicInformation::MusicInformation(
+   const std::string& filename, double duration, const MirAudioReader& audio,
+   FalsePositiveTolerance tolerance,
+   std::function<void(double progress)> progressCallback)
     : filename { RemovePathPrefix(filename) }
     , duration { duration }
-    , mBpm { GetBpmFromFilename(filename) }
+    , mMusicalMeter { FillMetadata(
+         filename, audio, tolerance, std::move(progressCallback)) }
 {
 }
 
@@ -44,7 +80,7 @@ MusicInformation::operator bool() const
 {
    // For now suffices to say that we have detected music content if there is
    // rhythm.
-   return mBpm.has_value();
+   return mMusicalMeter.has_value();
 }
 
 ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
@@ -52,11 +88,14 @@ ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
 {
    assert(*this);
    if (!*this)
-      return { 0., 0. };
+      return {};
 
-   const auto error = *mBpm - bpmExpectedValue;
+   const auto error = mMusicalMeter->bpm - bpmExpectedValue;
 
-   const auto qpm = *mBpm * quarternotesPerBeat;
+   const auto qpm =
+      mMusicalMeter->bpm *
+      quarternotesPerBeat[static_cast<int>(
+         mMusicalMeter->timeSignature.value_or(TimeSignature::FourFour))];
 
    auto recommendedStretch = 1.0;
    if (projectTempo.has_value())
@@ -68,10 +107,11 @@ ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
    const auto roundedNumQuarters = std::round(numQuarters);
    const auto delta = numQuarters - roundedNumQuarters;
    // If there is an excess less than a 32nd, we treat it as an edit error.
-   if (0 < delta && delta / 8)
+   if (0 < delta && delta < 1. / 8)
       excessDurationInQuarternotes = delta;
 
-   return { qpm, recommendedStretch, excessDurationInQuarternotes };
+   return { qpm, mMusicalMeter->timeSignature, recommendedStretch,
+            excessDurationInQuarternotes };
 }
 
 std::optional<double> GetBpmFromFilename(const std::string& filename)
@@ -97,5 +137,18 @@ std::optional<double> GetBpmFromFilename(const std::string& filename)
          assert(false);
       }
    return {};
+}
+
+std::optional<MusicalMeter> GetMusicalMeterFromSignal(
+   const MirAudioReader& audio, FalsePositiveTolerance tolerance,
+   const std::function<void(double)>& progressCallback,
+   QuantizationFitDebugOutput* debugOutput)
+{
+   if (audio.GetNumSamples() / audio.GetSampleRate() > 60)
+      // A file longer than 1 minute is most likely not a loop, and processing
+      // it would be costly.
+      return {};
+   return GetMeterUsingTatumQuantizationFit(
+      audio, tolerance, progressCallback, debugOutput);
 }
 } // namespace MIR

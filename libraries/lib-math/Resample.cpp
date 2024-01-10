@@ -85,12 +85,12 @@ EnumSetting< int > Resample::BestMethodSetting
 
 //////////
 std::pair<size_t, size_t>
-      Resample::Process(double  factor,
-                        float  *inBuffer,
-                        size_t  inBufferLen,
-                        bool    lastFlag,
-                        float  *outBuffer,
-                        size_t  outBufferLen)
+      Resample::Process(double       factor,
+                        const float *inBuffer,
+                        size_t       inBufferLen,
+                        bool         lastFlag,
+                        float       *outBuffer,
+                        size_t       outBufferLen)
 {
    size_t idone, odone;
    if (mbWantConstRateResampling)

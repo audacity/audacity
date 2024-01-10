@@ -94,8 +94,21 @@ public:
    static AudacityProject *OpenFile( const ProjectChooserFn &chooser,
       const FilePath &fileName, bool addtohistory = true);
 
-   bool Import(const FilePath &fileName,
-               bool addToHistory = true);
+   /*!
+    * \brief Imports one of a list of files into the project. `fileNumber` and
+    * `numberOfFiles` must read like "1 of 3".
+    * @param fileNumber the number of the file in the list of files to be
+    * opened, starting from 1.
+    * @param numberOfFiles the total number of files to be opened.
+    */
+   bool Import(
+      const FilePath& fileName, size_t fileNumber, size_t numberOfFiles,
+      bool addToHistory = true);
+
+   /*!
+    * \brief A convenience function for importing a single file.
+    */
+   bool ImportOneOfOne(const FilePath& fileName, bool addToHistory = true);
 
    void Compact();
 
@@ -139,7 +152,7 @@ private:
    AudacityProject &mProject;
 
    std::shared_ptr<TrackList> mLastSavedTracks;
-   
+
    // Are we currently closing as the result of a menu command?
    bool mMenuClose{ false };
 };
