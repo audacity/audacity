@@ -55,6 +55,9 @@ if( ${_OPT}has_tests )
 
       if (ADD_UNIT_TEST_WAV_FILE_IO)
          target_sources( ${test_executable_name} PRIVATE
+            "${CMAKE_SOURCE_DIR}/tests/AudioFileInfo.h"
+            "${CMAKE_SOURCE_DIR}/tests/AudioFileIO.cpp"
+            "${CMAKE_SOURCE_DIR}/tests/AudioFileIO.h"
             "${CMAKE_SOURCE_DIR}/tests/Mp3FileReader.cpp"
             "${CMAKE_SOURCE_DIR}/tests/Mp3FileReader.h"
             "${CMAKE_SOURCE_DIR}/tests/WavFileIO.cpp"

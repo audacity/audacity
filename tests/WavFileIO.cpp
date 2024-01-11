@@ -9,25 +9,22 @@
 
 **********************************************************************/
 #include "WavFileIO.h"
+#include "AudioFileInfo.h"
 
 #include <cassert>
 #include <iostream>
 #include <sndfile.h>
 
 using namespace std::literals::string_literals;
-using Info = WavFileIO::Info;
 
 bool WavFileIO::Read(
    const std::string& inputPath, std::vector<std::vector<float>>& audio,
-   Info& info, const std::optional<std::chrono::seconds>& upTo)
+   AudioFileInfo& info, const std::optional<std::chrono::seconds>& upTo)
 {
    SF_INFO sfInfo;
    auto sndfile = sf_open(inputPath.c_str(), SFM_READ, &sfInfo);
    if (!sndfile)
-   {
-      std::cerr << "libsndfile could not read "s + inputPath << std::endl;
       return false;
-   }
    const auto numFramesToRead =
       upTo.has_value() ?
          std::min<int>(
@@ -61,6 +58,7 @@ bool WavFileIO::Write(
    const auto numChannels = audio.size();
    const auto numFrames = audio[0].size();
    SF_INFO sfInfo;
+
    sfInfo.channels = numChannels;
    sfInfo.frames = numFrames;
    sfInfo.samplerate = sampleRate;

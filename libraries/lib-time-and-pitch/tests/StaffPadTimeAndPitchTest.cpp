@@ -36,7 +36,7 @@ TEST_CASE("StaffPadTimeAndPitch")
       // outputDir = "C:/Users/saint/Downloads/StaffPadTimeAndPitchTestOut";
 
       std::vector<std::vector<float>> input;
-      WavFileIO::Info info;
+      AudioFileInfo info;
       REQUIRE(WavFileIO::Read(inputPath, input, info, upTo));
       for (const auto pitchRatio : std::vector<std::pair<int, int>> {
               { 4, 5 }, // major 3rd down
@@ -100,7 +100,7 @@ TEST_CASE("StaffPadTimeAndPitch")
       const auto inputPath =
          std::string(CMAKE_SOURCE_DIR) + "/tests/samples/AudacitySpectral.wav";
       std::vector<std::vector<float>> input;
-      WavFileIO::Info info;
+      AudioFileInfo info;
       REQUIRE(WavFileIO::Read(inputPath, input, info));
       AudioContainer container(info.numFrames, info.numChannels);
       TimeAndPitchInterface::Parameters params;
